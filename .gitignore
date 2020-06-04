@@ -1,0 +1,8 @@
+/tmp/
+/node_modules/
+
+/public/dist/**/*.js
+/secure/dist/**/*.js
+
+/public/src/config.js
+/secure/src/config.js
