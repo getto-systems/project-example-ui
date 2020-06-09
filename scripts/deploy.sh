@@ -5,8 +5,10 @@ deploy_main(){
 
   version=$(cat .release-version)
 
-  deploy_build_ui
   deploy_download_docs
+  rm -f public/dist/load.js
+
+  deploy_build_ui
 
   ./scripts/replace-root-path.sh
 
@@ -27,8 +29,6 @@ deploy_download_docs(){
   curl -sSL https://github.com/$GITHUB_DOCS_REPO/releases/download/$docs_version/docs.tar.gz -o docs.tar.gz
   tar -xz -f docs.tar.gz
   rm -f docs.tar.gz
-
-  rm -f public/dist/load.js
 }
 
 deploy_main
