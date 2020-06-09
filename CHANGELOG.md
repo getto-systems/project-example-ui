@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version : 0.1.8
+
+- fix: prepare : See merge request getto-systems-base/labo/project-example/ui!20
+
+
+
 ## Version : 0.1.7
 
 - fix: deploy.sh : See merge request getto-systems-base/labo/project-example/ui!18
