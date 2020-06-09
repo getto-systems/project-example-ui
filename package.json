@@ -6,19 +6,15 @@
   "scripts": {
     "start": "npm run prepare && npm run serve",
     "build": "npm run prepare && npm run webpack",
-
     "prepare": "npm run prepare:public & npm run prepare:secure",
     "prepare:public": "node public/prepare.js",
     "prepare:secure": "node secure/prepare.js",
-
     "serve": "npm run serve:public & npm run serve:secure",
     "serve:public": "webpack-dev-server --config public/webpack.config.js",
     "serve:secure": "webpack-dev-server --config secure/webpack.config.js",
-
     "webpack": "npm run webpack:public & npm run webpack:secure",
     "webpack:public": "webpack --mode production --config public/webpack.config.js",
     "webpack:secure": "webpack --mode production --config secure/webpack.config.js",
-
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
