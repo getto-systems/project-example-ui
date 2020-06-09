@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version : 0.1.3
+
+- fix: deploy.sh : See merge request getto-systems-base/labo/project-example/ui!9
+
+
 ## Version : 0.1.2
 
 - fix: webpack config : See merge request getto-systems-base/labo/project-example/ui!7
