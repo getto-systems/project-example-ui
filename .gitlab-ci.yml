@@ -61,7 +61,7 @@ release_deploy:
   when: on_success
 
   before_script:
-    - apt-get install -y python3-pip
+    - apt-get update && apt-get install -y python3-pip
     - pip3 install awscli
     - npm clean-install
   script:
