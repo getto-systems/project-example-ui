@@ -23,7 +23,7 @@ deploy_upload_docs(){
   docs_version=$(
     curl --silent "https://api.github.com/repos/$GITHUB_DOCS_REPO/releases/latest" | \
     grep '"tag_name":' | \
-    sed -E 's/.*"v([^"]+)".*/\1/' \
+    sed -E 's/.*"([^"]+)".*/\1/' \
   )
   curl -sSL https://github.com/$GITHUB_DOCS_REPO/releases/download/$docs_version/docs.tar.gz -o docs.tar.gz
   tar -xz -f docs.tar.gz
