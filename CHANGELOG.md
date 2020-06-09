@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version : 0.1.5
+
+- fix: deploy.sh : See merge request getto-systems-base/labo/project-example/ui!13
+
+
 ## Version : 0.1.4
 
 - fix: root path : See merge request getto-systems-base/labo/project-example/ui!11
