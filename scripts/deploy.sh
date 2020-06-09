@@ -28,7 +28,7 @@ deploy_download_docs(){
   tar -xz -f docs.tar.gz
   rm -f docs.tar.gz
 
-  rm public/dist/load.js
+  rm -f public/dist/load.js
 }
 
 deploy_main
