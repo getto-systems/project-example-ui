@@ -7,7 +7,15 @@ module.exports = {
     path: path.join(__dirname, "dist"),
     filename: "[name].js",
   },
-  devServer: {
+  devServer: devServer(),
+};
+
+function devServer() {
+  if (!process.env.WEBPACK_DEV_SERVER) {
+    return {};
+  }
+
+  return {
     contentBase: path.join(__dirname, "dist"),
 
     host: "0.0.0.0",
@@ -20,5 +28,5 @@ module.exports = {
 
     hot: true,
     sockPort: `${process.env.LABO_PORT_PREFIX}${process.env.SECURE_PORT}`,
-  },
-};
+  };
+}
