@@ -19,9 +19,6 @@ deploy_build_ui(){
 deploy_download_docs(){
   local docs_version
 
-  mkdir docs
-  cd docs
-
   docs_version=$(
     curl --silent "https://api.github.com/repos/$GITHUB_DOCS_REPO/releases/latest" | \
     grep '"tag_name":' | \
