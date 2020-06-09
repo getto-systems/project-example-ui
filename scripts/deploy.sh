@@ -5,16 +5,18 @@ deploy_main(){
 
   version=$(cat .release-version)
 
-  deploy_upload_ui
-  deploy_upload_docs
-}
-deploy_upload_ui(){
-  npm run build
+  deploy_build_ui
+  deploy_download_docs
 
-  deploy_upload public/dist s3://$AWS_S3_PUBLIC_BUCKET
-  deploy_upload secure/dist s3://$AWS_S3_SECURE_BUCKET
+  ./scripts/replace-root-path.sh
+
+  aws s3 sync public/dist s3://$AWS_S3_PUBLIC_BUCKET/$version
+  aws s3 sync secure/dist s3://$AWS_S3_SECURE_BUCKET/$version
 }
-deploy_upload_docs(){
+deploy_build_ui(){
+  npm run build
+}
+deploy_download_docs(){
   local docs_version
 
   mkdir docs
@@ -27,27 +29,7 @@ deploy_upload_docs(){
   )
   curl -sSL https://github.com/$GITHUB_DOCS_REPO/releases/download/$docs_version/docs.tar.gz -o docs.tar.gz
   tar -xz -f docs.tar.gz
-
-  deploy_upload public/dist/doc s3://$AWS_S3_PUBLIC_BUCKET doc
-  deploy_upload secure/dist/doc s3://$AWS_S3_SECURE_BUCKET doc
-}
-deploy_upload(){
-  local path
-  local root
-  local location
-  local url
-
-  path=$1
-  root=$2
-  location=$3
-
-  url=$root/$version
-
-  if [ -n "$location" ]; then
-    url=$url/$location
-  fi
-
-  aws s3 sync $path $url
+  rm -f docs.tar.gz
 }
 
 deploy_main
