@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version : 0.1.9
+
+- fix: gitlab ci : See merge request getto-systems-base/projects/example/ui!22
+
+
 ## Version : 0.1.8
 
 - fix: prepare : See merge request getto-systems-base/labo/project-example/ui!20
