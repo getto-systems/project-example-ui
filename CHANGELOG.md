@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version : 0.1.10
+
+- fix: gitlab ci : See merge request getto-systems-base/projects/example/ui!24
+- version bumped: 0.1.9 : See merge request getto-systems-base/projects/example/ui!23
+- fix: gitlab ci : See merge request getto-systems-base/projects/example/ui!22
+
+
 ## Version : 0.1.9
 
 - fix: gitlab ci : See merge request getto-systems-base/projects/example/ui!22
