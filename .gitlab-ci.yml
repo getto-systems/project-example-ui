@@ -34,7 +34,7 @@ release:
   stage: release
   only:
     refs:
-      - release@getto-systems-base/labo/project-example/ui
+      - release@getto-systems-base/projects/example/ui
     changes:
       - .release-version
   except:
@@ -51,7 +51,7 @@ release_deploy:
   stage: release_deploy
   only:
     refs:
-      - release@getto-systems-base/labo/project-example/ui
+      - release@getto-systems-base/projects/example/ui
     changes:
       - .release-version
   except:
@@ -71,7 +71,7 @@ release_success:
   stage: release_notify
   only:
     refs:
-      - release@getto-systems-base/labo/project-example/ui
+      - release@getto-systems-base/projects/example/ui
     changes:
       - .release-version
   except:
@@ -93,7 +93,7 @@ release_failure:
   stage: release_notify
   only:
     refs:
-      - release@getto-systems-base/labo/project-example/ui
+      - release@getto-systems-base/projects/example/ui
     changes:
       - .release-version
   except:
