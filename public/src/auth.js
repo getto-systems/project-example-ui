@@ -1,13 +1,16 @@
-export function auth(domain, path) {
+export function auth(domain, nonce) {
   return new Promise(async (resolve) => {
     let response;
 
     try {
-      response = await fetch(`https://${domain}/auth/renew`, {
+      response = await fetch(`https://${domain}`, {
         method: "POST",
         credentials: "include",
+        headers: {
+          "X-Getto-Example-ID-Handler": "ticket/extend",
+        },
         body: JSON.stringify({
-          path,
+          nonce,
         }),
       });
     } catch(e) {
@@ -17,7 +20,7 @@ export function auth(domain, path) {
 
     if (response.ok) {
       const data = await response.json();
-      resolve(data.token);
+      resolve(data);
       return;
     }
 
@@ -64,13 +67,15 @@ export function auth(domain, path) {
       let auth_response;
 
       try {
-        auth_response = await fetch(`https://${domain}/auth/password`, {
+        auth_response = await fetch(`https://${domain}`, {
           method: "POST",
           credentials: "include",
+          headers: {
+            "X-Getto-Example-ID-Handler": "password/verify",
+          },
           body: JSON.stringify({
             user_id: user_id_val,
             password: password_val,
-            path,
           }),
         });
       } catch(e) {
@@ -80,7 +85,7 @@ export function auth(domain, path) {
 
       if (auth_response.ok) {
         const data = await auth_response.json();
-        resolve(data.token);
+        resolve(data);
         form.remove();
         return false;
       }
