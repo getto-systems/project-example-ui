@@ -1,3 +1,13 @@
 DOCKER_WRAPPER_IMAGE_node(){ head -1 .gitlab-ci.yml | sed "s/.*node:\(.*\)/\1/"; }
 
-DOCKER_WRAPPER_SERVER_OPTS_npm(){ echo "-p ${LABO_PORT_PREFIX}${PUBLIC_PORT}:${PUBLIC_APP_PORT} -p ${LABO_PORT_PREFIX}${SECURE_PORT}:${SECURE_APP_PORT}"; }
+DOCKER_WRAPPER_APP(){
+  npm-server http $1 npm start
+}
+DOCKER_WRAPPER_LOGS(){
+  case "$1" in
+    *)
+      npm-server http logs
+      ;;
+  esac
+}
+DOCKER_WRAPPER_SERVER_OPTS_http(){ echo "-p ${LABO_PORT_PREFIX}${PUBLIC_PORT}:${PUBLIC_APP_PORT} -p ${LABO_PORT_PREFIX}${SECURE_PORT}:${SECURE_APP_PORT}"; }
