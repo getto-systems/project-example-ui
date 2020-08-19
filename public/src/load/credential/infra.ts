@@ -1,15 +1,14 @@
-import { Nonce, NonceValue, Credential, ApiRoles, Success } from "./data";
+import { Nonce, NonceValue, ApiRoles } from "./data";
 
 export type Infra = {
-    idClient: IDClient,
     credentials: CredentialRepository,
-}
-
-export interface IDClient {
-    renew(nonce: NonceValue): Promise<Credential>;
 }
 
 export interface CredentialRepository {
     findNonce(): Promise<Nonce>;
     storeRoles(roles: ApiRoles): Promise<Success>;
+    storeNonce(nonce: NonceValue): Promise<Success>;
 }
+
+export type Success = Readonly<true>;
+export const success: Success = true

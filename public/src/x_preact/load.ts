@@ -3,10 +3,12 @@ import { useState, useEffect } from "preact/hooks";
 
 import { LoadUsecase, initLoad, LoadView } from "../load";
 
-import { authAction } from "../load/auth/core";
-import { initMemoryCredential } from "../load/auth/repository/credential/memory";
-import { initSimulateIDClient } from "../load/auth/client/id/simulate";
-import { nonceNotFound } from "../load/auth/data";
+import { credentialAction } from "../load/credential/core";
+import { initMemoryCredential } from "../load/credential/repository/credential/memory";
+
+import { renewAction } from "../load/renew/core";
+import { initSimulateRenewClient } from "../load/renew/client/renew/simulate";
+import { nonceNotFound } from "../load/credential/data";
 
 import { scriptAction } from "../load/script/core";
 import { initBrowserLocation } from "../load/script/location/browser";
@@ -14,6 +16,7 @@ import { env } from "../y_global/env";
 
 import { LoadScript } from "./load/load_script";
 import { PasswordLogin } from "./load/password_login";
+import { html } from "htm/preact";
 
 (async () => {
     render(h(main(await initUsecase()), {}), document.body);
@@ -21,9 +24,11 @@ import { PasswordLogin } from "./load/password_login";
 
 function initUsecase() {
     return initLoad({
-        auth: authAction({
+        credential: credentialAction({
             credentials: initMemoryCredential(nonceNotFound),
-            idClient: initSimulateIDClient(),
+        }),
+        renew: renewAction({
+            renewClient: initSimulateRenewClient("NONCE", ["admin", "development"]),
         }),
         script: scriptAction({
             env: {
@@ -47,6 +52,9 @@ function main(load: LoadUsecase) {
 
             case "password-login":
                 return h(PasswordLogin(load.initPasswordLoginComponent()), {});
+
+            case "error":
+                return html`なんかえらった: ${view.err}`
 
             default:
                 return assertNever(view)
