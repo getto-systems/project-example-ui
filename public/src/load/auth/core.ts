@@ -1,4 +1,5 @@
-import { Auth, AuthAction, authorized, unauthorized, success } from "./data";
+import { AuthAction } from "./action";
+import { Auth, authorized, unauthorized, success } from "./data";
 import { Infra } from "./infra";
 
 export function authAction(infra: Infra): AuthAction {

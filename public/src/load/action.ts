@@ -1,5 +1,5 @@
-import { AuthAction } from "./auth/data";
-import { ScriptAction } from "./script/data";
+import { AuthAction } from "./auth/action";
+import { ScriptAction } from "./script/action";
 
 export type LoadAction = {
     auth: AuthAction,

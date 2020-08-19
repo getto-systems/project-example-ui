@@ -1,31 +1,24 @@
 import { LoadAction } from "./load/action";
 import { LoadScriptComponent, initLoadScriptComponent } from "./load/load_script";
+import { PasswordLoginComponent, initPasswordLoginComponent } from "./load/password_login";
 
 export interface LoadUsecase {
-    initial: LoadView,
-    registerTransitionSetter(setter: LoadTransitionSetter): void,
+    initial: LoadView;
+    registerTransitionSetter(setter: LoadTransitionSetter): void;
 
-    initLoadScriptComponent(): LoadScriptComponent,
+    initLoadScriptComponent(): LoadScriptComponent;
+    initPasswordLoginComponent(): PasswordLoginComponent;
 }
 export interface LoadTransitionSetter {
     (view: LoadView): void;
 }
 
 export type LoadView =
-    Readonly<"load-script"> |
-    Readonly<"password-login">;
+    Readonly<{ name: "load-script" }> |
+    Readonly<{ name: "password-login" }>;
 
-function loadScript(): LoadView {
-    return "load-script"
-}
-function passwordLogin(): LoadView {
-    return "password-login"
-}
-
-export const LoadViews = {
-    LoadScript: loadScript(),
-    PasswordLogin: passwordLogin(),
-}
+const LoadScriptView: LoadView = { name: "load-script" };
+const PasswordLoginView: LoadView = { name: "password-login" };
 
 export async function initLoad(action: LoadAction): Promise<LoadUsecase> {
     let transition = initialLoadTransitionState();
@@ -37,16 +30,19 @@ export async function initLoad(action: LoadAction): Promise<LoadUsecase> {
         initLoadScriptComponent() {
             return initLoadScriptComponent(action);
         },
+        initPasswordLoginComponent() {
+            return initPasswordLoginComponent(action);
+        },
     };
 
     async function initial(): Promise<LoadView> {
         const auth = await action.auth.renew();
         if (auth.authorized) {
-            return LoadViews.LoadScript;
+            return LoadScriptView;
         }
 
         //return await action.login.selected();
-        return LoadViews.PasswordLogin;
+        return PasswordLoginView;
     }
 
     function registerTransitionSetter(setter: LoadTransitionSetter) {
