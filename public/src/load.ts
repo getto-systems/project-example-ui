@@ -27,6 +27,10 @@ function errorView(err: string): LoadView {
 export async function initLoad(action: LoadAction): Promise<LoadUsecase> {
     let transition = initialLoadTransitionState();
 
+    function logined() {
+        transitionTo(LoadScriptView);
+    }
+
     return {
         initial: await initial(),
         registerTransitionSetter,
@@ -35,7 +39,7 @@ export async function initLoad(action: LoadAction): Promise<LoadUsecase> {
             return initLoadScriptComponent(action);
         },
         initPasswordLoginComponent() {
-            return initPasswordLoginComponent(action);
+            return initPasswordLoginComponent(action, logined);
         },
     };
 

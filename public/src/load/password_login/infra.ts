@@ -1,27 +1,21 @@
-import { Nonce, NonceValue, ApiRoles } from "../credential/data";
+import { NonceValue, ApiRoles, LoginError } from "../credential/data";
+import { Password } from "./data";
 
 export type Infra = {
-    loginClient: LoginClient,
-    credentials: CredentialRepository,
+    passwordLoginClient: PasswordLoginClient,
 }
 
-export interface LoginClient {
-    login(nonce: NonceValue): Promise<Credential>;
-}
-
-export interface CredentialRepository {
-    findNonce(): Promise<Nonce>;
-    storeRoles(roles: ApiRoles): Promise<Success>;
+export interface PasswordLoginClient {
+    login(password: Password): Promise<Credential>;
 }
 
 export type Credential =
-    Readonly<{ authorized: false }> |
+    Readonly<{ authorized: false, err: LoginError }> |
     Readonly<{ authorized: true, nonce: NonceValue, roles: ApiRoles }>;
 
-export const credentialUnauthorized: Credential = { authorized: false }
-export function credentialAuthorized(nonce: NonceValue, roles: ApiRoles): Credential {
-    return { authorized: true, nonce: nonce, roles: roles };
+export function credentialUnauthorized(err: LoginError): Credential {
+    return { authorized: false, err: err }
 }
-
-export type Success = Readonly<true>;
-export const success: Success = true
+export function credentialAuthorized(nonce: NonceValue, roles: ApiRoles): Credential {
+    return { authorized: true, nonce: nonce, roles: roles }
+}

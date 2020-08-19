@@ -5,7 +5,7 @@ export function initSimulateRenewClient(targetNonce: NonceValue, roles: ApiRoles
     return {
         async renew(nonce: NonceValue): Promise<Credential> {
             if (nonce !== targetNonce) {
-                return credentialUnauthorized;
+                return credentialUnauthorized("unauthorized");
             }
 
             return credentialAuthorized(roles);

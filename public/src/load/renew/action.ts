@@ -1,5 +1,5 @@
-import { NonceValue, Renewed } from "../credential/data";
+import { NonceValue, Renew } from "../credential/data";
 
 export interface RenewAction {
-    (nonce: NonceValue): Promise<Renewed>;
+    (nonce: NonceValue): Promise<Renew>;
 }

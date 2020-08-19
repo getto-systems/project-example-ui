@@ -14,20 +14,50 @@ export function nonce(nonce: NonceValue): Nonce {
     return { found: true, value: nonce };
 }
 
-export interface Renewer {
-    (nonce: NonceValue): Promise<Renewed>;
-}
-
-export type Renewed =
-    Readonly<{ renewed: false }> |
-    Readonly<{ renewed: true, roles: ApiRoles }>;
-export const renewFailed: Renewed = { renewed: false };
-export function renewSuccess(roles: ApiRoles): Renewed {
-    return { renewed: true, roles: roles }
-}
-
-export type Authorized =
-    Readonly<{ authorized: false }> |
+export type Authorized<T> =
+    Readonly<{ authorized: false, err: T }> |
     Readonly<{ authorized: true }>;
-export const unauthorized: Authorized = { authorized: false }
-export const authorized: Authorized = { authorized: true }
+export function unauthorized<T>(err: T): Authorized<T> {
+    return { authorized: false, err: err }
+}
+export function authorized<T>(): Authorized<T> {
+    return { authorized: true }
+}
+
+export interface Renewer {
+    (nonce: NonceValue): Promise<Renew>;
+}
+
+export type Renew =
+    Readonly<{ renew: false, err: RenewError }> |
+    Readonly<{ renew: true, roles: ApiRoles }>;
+export function renewFailed(err: RenewError): Renew {
+    return { renew: false, err: err }
+}
+export function renewSuccess(roles: ApiRoles): Renew {
+    return { renew: true, roles: roles }
+}
+
+export type RenewError =
+    Readonly<"timeout"> |
+    Readonly<"unauthorized"> |
+    Readonly<"empty-nonce">;
+
+export interface Loginer {
+    (): Promise<Login>;
+}
+
+export type Login =
+    Readonly<{ login: false, err: LoginError }> |
+    Readonly<{ login: true, nonce: NonceValue, roles: ApiRoles }>;
+export function loginFailed(err: LoginError): Login {
+    return { login: false, err: err }
+}
+export function loginSuccess(nonce: NonceValue, roles: ApiRoles): Login {
+    return { login: true, nonce: nonce, roles: roles }
+}
+
+export type LoginError =
+    Readonly<"timeout"> |
+    Readonly<"match-failed"> |
+    Readonly<"empty-input">;

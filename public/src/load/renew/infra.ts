@@ -1,4 +1,4 @@
-import { NonceValue, ApiRoles } from "../credential/data";
+import { NonceValue, ApiRoles, RenewError } from "../credential/data";
 
 export type Infra = {
     renewClient: RenewClient,
@@ -9,10 +9,12 @@ export interface RenewClient {
 }
 
 export type Credential =
-    Readonly<{ authorized: false }> |
+    Readonly<{ authorized: false, err: RenewError }> |
     Readonly<{ authorized: true, roles: ApiRoles }>;
 
-export const credentialUnauthorized: Credential = { authorized: false }
+export function credentialUnauthorized(err: RenewError): Credential {
+    return { authorized: false, err: err }
+}
 export function credentialAuthorized(roles: ApiRoles): Credential {
     return { authorized: true, roles: roles };
 }
