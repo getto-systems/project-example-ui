@@ -15,10 +15,14 @@ export interface LoadTransitionSetter {
 
 export type LoadView =
     Readonly<{ name: "load-script" }> |
-    Readonly<{ name: "password-login" }>;
+    Readonly<{ name: "password-login" }> |
+    Readonly<{ name: "error", err: string }>;
 
 const LoadScriptView: LoadView = { name: "load-script" };
 const PasswordLoginView: LoadView = { name: "password-login" };
+function errorView(err: string): LoadView {
+    return { name: "error", err: err }
+}
 
 export async function initLoad(action: LoadAction): Promise<LoadUsecase> {
     let transition = initialLoadTransitionState();
@@ -36,13 +40,17 @@ export async function initLoad(action: LoadAction): Promise<LoadUsecase> {
     };
 
     async function initial(): Promise<LoadView> {
-        const auth = await action.auth.renew();
-        if (auth.authorized) {
-            return LoadScriptView;
-        }
+        try {
+            const result = await action.credential.renewApiRoles(action.renew);
+            if (result.authorized) {
+                return LoadScriptView;
+            }
 
-        //return await action.login.selected();
-        return PasswordLoginView;
+            //return await action.login.selected();
+            return PasswordLoginView;
+        } catch (err) {
+            return errorView(`${err}`);
+        }
     }
 
     function registerTransitionSetter(setter: LoadTransitionSetter) {
@@ -83,6 +91,9 @@ export async function initLoad(action: LoadAction): Promise<LoadUsecase> {
             case "registered":
                 transition.setter(view);
                 return;
+
+            default:
+                return assertNever(transition);
         }
     }
 }
@@ -94,4 +105,8 @@ type LoadTransitionState =
 
 function initialLoadTransitionState(): LoadTransitionState {
     return { state: "initial" }
+}
+
+function assertNever(_: never): never {
+    throw new Error("NEVER");
 }
