@@ -1,11 +1,23 @@
+/* eslint-disable */
 const fs = require("fs");
 const path = require("path");
 
 module.exports = {
-  entry: { load: path.join(__dirname, "src/load") },
+  entry: { load: path.join(__dirname, "src/x_preact/load.ts") },
   output: {
     path: path.join(__dirname, "dist"),
     filename: "[name].js",
+  },
+  module: {
+    rules: [
+      {
+        test: /\.ts$/,
+        loader: "ts-loader",
+        resolve: {
+          extensions: [".ts"],
+        },
+      },
+    ],
   },
   devServer: devServer(),
 };
