@@ -3,7 +3,7 @@ import { PathnameLocation } from "../infra";
 
 export function initBrowserLocation(location: Location): PathnameLocation {
     return {
-        pathname(): Pathname {
+        async pathname(): Promise<Pathname> {
             return location.pathname;
         },
     };

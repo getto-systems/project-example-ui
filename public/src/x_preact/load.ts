@@ -1,22 +1,28 @@
 import { render, h } from "preact";
 import { useState, useEffect } from "preact/hooks";
 
-import { LoadUsecase, initLoad, LoadViews } from "../load";
-import { nonce } from "../load/auth/data";
+import { LoadUsecase, initLoad, LoadView } from "../load";
+
 import { authAction } from "../load/auth/core";
 import { initMemoryCredential } from "../load/auth/repository/credential/memory";
 import { initSimulateIDClient } from "../load/auth/client/id/simulate";
+import { nonceNotFound } from "../load/auth/data";
+
 import { scriptAction } from "../load/script/core";
-import { env } from "../env";
 import { initBrowserLocation } from "../load/script/location/browser";
+import { env } from "../y_global/env";
 
 import { LoadScript } from "./load/load_script";
-import { html } from "htm/preact";
+import { PasswordLogin } from "./load/password_login";
 
 (async () => {
-    render(h(main(await initLoad({
+    render(h(main(await initUsecase()), {}), document.body);
+})();
+
+function initUsecase() {
+    return initLoad({
         auth: authAction({
-            credentials: initMemoryCredential(nonce("NONCE")),
+            credentials: initMemoryCredential(nonceNotFound),
             idClient: initSimulateIDClient(),
         }),
         script: scriptAction({
@@ -25,23 +31,25 @@ import { html } from "htm/preact";
             },
             location: initBrowserLocation(location),
         }),
-    })), {}), document.body);
-})();
+    });
+}
 
 function main(load: LoadUsecase) {
     return () => {
-        const [view, setView] = useState(load.initial);
+        const [view, setView] = useState<LoadView>(load.initial);
         useEffect(() => {
             load.registerTransitionSetter(setView)
         }, []);
 
-        switch (view) {
-            case LoadViews.LoadScript:
+        switch (view.name) {
+            case "load-script":
                 return h(LoadScript(load.initLoadScriptComponent()), {});
 
+            case "password-login":
+                return h(PasswordLogin(load.initPasswordLoginComponent()), {});
+
             default:
-                //assertNever(view)
-                return html`なんかしらんけど: ${view}`
+                return assertNever(view)
         }
     }
 }

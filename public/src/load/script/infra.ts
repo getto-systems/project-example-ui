@@ -10,5 +10,5 @@ export type Env = Readonly<{
 }>
 
 export interface PathnameLocation {
-    pathname(): Pathname;
+    pathname(): Promise<Pathname>;
 }

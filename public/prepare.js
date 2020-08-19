@@ -23,4 +23,4 @@ const data = "export const env = " + JSON.stringify(env, null, "    ");
 
 console.log(data);
 
-fs.writeFileSync(path.join(__dirname, "src/env.ts"), data);
+fs.writeFileSync(path.join(__dirname, "src/y_global/env.ts"), data);

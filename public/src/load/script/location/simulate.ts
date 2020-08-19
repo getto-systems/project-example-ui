@@ -3,7 +3,7 @@ import { PathnameLocation } from "../infra";
 
 export function initSimulateLocation(pathname: Pathname): PathnameLocation {
     return {
-        pathname(): Pathname {
+        async pathname(): Promise<Pathname> {
             return pathname;
         },
     };

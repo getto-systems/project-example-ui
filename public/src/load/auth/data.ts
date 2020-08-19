@@ -1,16 +1,12 @@
-export type Auth = Authorized | Unauthorized;
+export type Auth =
+    Readonly<{ authorized: true }> |
+    Readonly<{ authorized: false }>;
 
-export interface AuthAction {
-    renew(): Promise<Auth>;
-}
-
-type Authorized = Readonly<{ authorized: true }>
-type Unauthorized = Readonly<{ authorized: false }>
-
-export const authorized: Authorized = { authorized: true }
-export const unauthorized: Unauthorized = { authorized: false }
+export const authorized: Auth = { authorized: true }
+export const unauthorized: Auth = { authorized: false }
 
 export type NonceValue = Readonly<string>;
+
 export type ApiRoles = Readonly<Array<string>>;
 export function apiRoles(roles: Array<string>): ApiRoles {
     return roles;

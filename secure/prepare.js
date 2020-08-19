@@ -1,3 +1,4 @@
+/* eslint-disable */
 const fs = require("fs");
 const path = require("path");
 
@@ -13,8 +14,8 @@ if (env.isProduction) {
   env.version = fs.readFileSync(path.join(__dirname, "../.release-version")).trim();
 }
 
-const data = "export const env = " + JSON.stringify(env, null, "  ");
+const data = "export const env = " + JSON.stringify(env, null, "    ");
 
 console.log(data);
 
-fs.writeFileSync(path.join(__dirname, "./src/env.js"), data);
+fs.writeFileSync(path.join(__dirname, "./src/y_global/env.ts"), data);
