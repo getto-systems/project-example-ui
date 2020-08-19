@@ -1,1 +1,5 @@
-document.getElementById("main").innerHTML = "It worked!";
+(() => {
+  const main = document.createElement("main");
+  main.innerHTML = "It worked!";
+  document.body.appendChild(main);
+})();
