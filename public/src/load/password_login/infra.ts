@@ -1,12 +1,12 @@
 import { NonceValue, ApiRoles, LoginError } from "../credential/data";
-import { Password } from "./data";
+import { LoginID, Password } from "./data";
 
 export type Infra = {
     passwordLoginClient: PasswordLoginClient,
 }
 
 export interface PasswordLoginClient {
-    login(password: Password): Promise<Credential>;
+    login(loginID: LoginID, password: Password): Promise<Credential>;
 }
 
 export type Credential =

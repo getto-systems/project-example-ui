@@ -1,6 +1,6 @@
 import { Login } from "../credential/data";
-import { Password } from "./data";
+import { LoginID, Password } from "./data";
 
 export interface PasswordLoginAction {
-    (password: Password): Promise<Login>;
+    (loginID: LoginID, password: Password): Promise<Login>;
 }
