@@ -3,6 +3,7 @@ import { useState, useEffect } from "preact/hooks";
 
 import { LoadUsecase, initLoad, LoadView } from "../load";
 
+import { CredentialRepository } from "../load/credential/infra";
 import { credentialAction } from "../load/credential/core";
 import { initMemoryCredential } from "../load/credential/repository/credential/memory";
 
@@ -15,6 +16,7 @@ import { PasswordLoginClient } from "../load/password_login/infra";
 import { passwordLoginAction } from "../load/password_login/core";
 import { initSimulatePasswordLoginClient } from "../load/password_login/client/password_login/simulate";
 
+import { ScriptEnv, PathnameLocation } from "../load/script/infra";
 import { scriptAction } from "../load/script/core";
 import { initBrowserLocation } from "../load/script/location/browser";
 import { env } from "../y_global/env";
@@ -33,7 +35,7 @@ import { html } from "htm/preact";
 function initUsecase(): Promise<LoadUsecase> {
     return initLoad({
         credential: credentialAction({
-            credentials: initMemoryCredential(nonceNotFound),
+            credentials: initCredentialRepository(),
         }),
         renew: renewAction({
             renewClient: initRenewClient(),
@@ -42,15 +44,20 @@ function initUsecase(): Promise<LoadUsecase> {
             passwordLoginClient: initPasswordLoginClient(),
         }),
         script: scriptAction({
-            env: {
-                secureServer: env.server.secure,
-            },
-            location: initBrowserLocation(location),
+            env: initScriptEnv(),
+            location: initPathnameLocation(),
         }),
     });
 
+    function initCredentialRepository(): CredentialRepository {
+        return initMemoryCredential(nonceNotFound);
+    }
+
     function initRenewClient(): RenewClient {
-        return initSimulateRenewClient(simulateNonce(), simulateApiRoles());
+        return initSimulateRenewClient(
+            simulateNonce(),
+            simulateApiRoles(),
+        );
     }
     function initPasswordLoginClient(): PasswordLoginClient {
         return initSimulatePasswordLoginClient(
@@ -59,6 +66,15 @@ function initUsecase(): Promise<LoadUsecase> {
             simulateNonce(),
             simulateApiRoles(),
         )
+    }
+
+    function initScriptEnv(): ScriptEnv {
+        return {
+            secureServer: env.server.secure,
+        }
+    }
+    function initPathnameLocation(): PathnameLocation {
+        return initBrowserLocation(location);
     }
 
     function simulateNonce(): NonceValue {

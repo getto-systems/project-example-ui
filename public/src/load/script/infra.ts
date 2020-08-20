@@ -1,11 +1,11 @@
 import { Pathname } from "./data";
 
 export type Infra = {
-    env: Env,
+    env: ScriptEnv,
     location: PathnameLocation,
 }
 
-export type Env = Readonly<{
+export type ScriptEnv = Readonly<{
     secureServer: Readonly<string>,
 }>
 
