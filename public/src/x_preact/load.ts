@@ -1,32 +1,29 @@
 import { render, h } from "preact";
+import { html } from "htm/preact";
 import { useState, useEffect } from "preact/hooks";
 
 import { LoadUsecase, initLoad, LoadView } from "../load";
+import { LoadScript } from "./load/load_script";
+import { PasswordLogin } from "./load/password_login";
 
-import { CredentialRepository } from "../load/credential/infra";
-import { credentialAction } from "../load/credential/core";
 import { initMemoryCredential } from "../load/credential/repository/credential/memory";
-
-import { RenewClient } from "../load/renew/infra";
-import { renewAction } from "../load/renew/core";
 import { initSimulateRenewClient } from "../load/renew/client/renew/simulate";
-import { nonceNotFound } from "../load/credential/data";
-
-import { PasswordLoginClient } from "../load/password_login/infra";
-import { passwordLoginAction } from "../load/password_login/core";
 import { initSimulatePasswordLoginClient } from "../load/password_login/client/password_login/simulate";
-
-import { ScriptEnv, PathnameLocation } from "../load/script/infra";
-import { scriptAction } from "../load/script/core";
 import { initBrowserLocation } from "../load/script/location/browser";
 import { env } from "../y_global/env";
 
-import { NonceValue, ApiRoles } from "../load/credential/data";
-import { LoginID, Password } from "../load/password_login/data";
+import { CredentialRepository } from "../load/credential/infra";
+import { RenewClient } from "../load/renew/infra";
+import { PasswordLoginClient } from "../load/password_login/infra";
+import { ScriptEnv, PathnameLocation } from "../load/script/infra";
 
-import { LoadScript } from "./load/load_script";
-import { PasswordLogin } from "./load/password_login";
-import { html } from "htm/preact";
+import { credentialAction } from "../load/credential/core";
+import { renewAction } from "../load/renew/core";
+import { passwordLoginAction } from "../load/password_login/core";
+import { scriptAction } from "../load/script/core";
+
+import { NonceValue, nonceNotFound, ApiRoles } from "../load/credential/data";
+import { LoginID, Password } from "../load/password_login/data";
 
 (async () => {
     render(h(main(await initUsecase()), {}), document.body);
