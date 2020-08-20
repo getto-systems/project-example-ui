@@ -1,11 +1,11 @@
 import { NonceValue, ApiRoles } from "../../../credential/data";
-import { Password } from "../../data";
+import { LoginID, Password } from "../../data";
 import { PasswordLoginClient, Credential, credentialUnauthorized, credentialAuthorized } from "../../infra";
 
-export function initSimulatePasswordLoginClient(targetPassword: Password, nonce: NonceValue, roles: ApiRoles): PasswordLoginClient {
+export function initSimulatePasswordLoginClient(targetLoginID: LoginID, targetPassword: Password, nonce: NonceValue, roles: ApiRoles): PasswordLoginClient {
     return {
-        async login(password: Password): Promise<Credential> {
-            if (password.loginID !== targetPassword.loginID || password.password !== targetPassword.password) {
+        async login(loginID: LoginID, password: Password): Promise<Credential> {
+            if (loginID.loginID !== targetLoginID.loginID || password.password !== targetPassword.password) {
                 return credentialUnauthorized("match-failed");
             }
 

@@ -1,13 +1,14 @@
 import { LoadAction, LoadLogined } from "./action";
-import { Password, LoginID, RawPassword } from "./password_login/data";
-import { Login, LoginError, loginFailed } from "./credential/data";
+import { LoginID, Password } from "./password_login/data";
+import { Login, LoginError } from "./credential/data";
 
 // bcrypt を想定しているので、72 バイト以上のパスワードは無効
 export const PASSWORD_MAX_LENGTH = 72;
 
 export interface PasswordLoginComponent {
     initial: PasswordLoginState;
-    setPassword(password: Password): PasswordLoginState;
+    setLoginID(loginID: string): PasswordLoginState;
+    setPassword(password: string): PasswordLoginState;
     login(): [PasswordLoginState, Promise<PasswordLoginState>];
 }
 
@@ -48,15 +49,26 @@ function unknownError(err: string): PasswordLoginError {
 
 export function initPasswordLoginComponent(action: LoadAction, logined: LoadLogined): PasswordLoginComponent {
     let passwordStore = initialPasswordStore;
+    let validation = validate(passwordStore);
 
     return {
         initial: { state: "initial" },
-        setPassword(password: Password): PasswordLoginState {
-            passwordStore = inputPassword(password);
-            return validPassword();
+        setLoginID(loginID: string): PasswordLoginState {
+            passwordStore = {
+                loginID: { loginID: loginID },
+                password: passwordStore.password,
+            }
+            return validatePasswordStore();
+        },
+        setPassword(password: string): PasswordLoginState {
+            passwordStore = {
+                loginID: passwordStore.loginID,
+                password: { password: password },
+            }
+            return validatePasswordStore();
         },
         login(): [PasswordLoginState, Promise<PasswordLoginState>] {
-            const state = validPassword();
+            const state = passwordState();
             if (state.state !== "password-ok") {
                 return [state, Promise.resolve(state)];
             }
@@ -84,40 +96,38 @@ export function initPasswordLoginComponent(action: LoadAction, logined: LoadLogi
     }
 
     async function login(): Promise<Login> {
-        if (passwordStore.state === "input") {
-            return action.passwordLogin(passwordStore.password);
-        }
-        return Promise.resolve(loginFailed("empty-input"));
+        return action.passwordLogin(passwordStore.loginID, passwordStore.password);
     }
 
-    function validPassword(): PasswordLoginState {
-        if (passwordStore.state === "input") {
-            if (
-                !passwordStore.validation.loginID.valid ||
-                !passwordStore.validation.password.valid
-            ) {
-                return {
-                    state: "password-error",
-                    password: passwordStore.validation,
-                }
-            }
+    function validatePasswordStore(): PasswordLoginState {
+        validation = validate(passwordStore);
+        return passwordState();
+    }
+
+    function passwordState(): PasswordLoginState {
+        if (
+            validation.loginID.valid &&
+            validation.password.valid
+        ) {
+            return { state: "password-ok" }
         }
-        return { state: "password-ok" }
+        return {
+            state: "password-error",
+            password: validation,
+        }
     }
 }
 
-type PasswordStore =
-    Readonly<{ state: "initial" }> |
-    Readonly<{ state: "input", password: Password, validation: PasswordValidation }>;
+type PasswordStore = Readonly<{ loginID: LoginID, password: Password }>;
 
-const initialPasswordStore: PasswordStore = { state: "initial" }
-function inputPassword(password: Password): PasswordStore {
-    return { state: "input", password: password, validation: validate(password) }
+const initialPasswordStore: PasswordStore = {
+    loginID: { loginID: "" },
+    password: { password: "" },
 }
 
-function validate(password: Password): PasswordValidation {
-    const loginIDState = validateLoginID(password.loginID);
-    const passwordState = validatePassword(password.password);
+function validate(store: PasswordStore): PasswordValidation {
+    const loginIDState = validateLoginID(store.loginID);
+    const passwordState = validatePassword(store.password);
 
     return {
         loginID: loginIDState,
@@ -128,7 +138,7 @@ function validate(password: Password): PasswordValidation {
 function validateLoginID(loginID: LoginID): ValidateState<ValidateLoginIDError> {
     const errors: Array<ValidateLoginIDError> = [];
 
-    if (loginID.length === 0) {
+    if (loginID.loginID.length === 0) {
         errors.push("empty");
     }
 
@@ -137,13 +147,13 @@ function validateLoginID(loginID: LoginID): ValidateState<ValidateLoginIDError> 
     }
     return { valid: true }
 }
-function validatePassword(password: RawPassword): ValidateState<ValidatePasswordError> {
+function validatePassword(password: Password): ValidateState<ValidatePasswordError> {
     const errors: Array<ValidatePasswordError> = [];
 
-    if (password.length === 0) {
+    if (password.password.length === 0) {
         errors.push("empty");
     }
-    if (password.length > PASSWORD_MAX_LENGTH) {
+    if (password.password.length > PASSWORD_MAX_LENGTH) {
         errors.push("too-long");
     }
 

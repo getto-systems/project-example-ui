@@ -20,7 +20,7 @@ import { initBrowserLocation } from "../load/script/location/browser";
 import { env } from "../y_global/env";
 
 import { NonceValue, ApiRoles } from "../load/credential/data";
-import { Password } from "../load/password_login/data";
+import { LoginID, Password } from "../load/password_login/data";
 
 import { LoadScript } from "./load/load_script";
 import { PasswordLogin } from "./load/password_login";
@@ -54,6 +54,7 @@ function initUsecase(): Promise<LoadUsecase> {
     }
     function initPasswordLoginClient(): PasswordLoginClient {
         return initSimulatePasswordLoginClient(
+            simulateLoginID(),
             simulatePassword(),
             simulateNonce(),
             simulateApiRoles(),
@@ -66,8 +67,11 @@ function initUsecase(): Promise<LoadUsecase> {
     function simulateApiRoles(): ApiRoles {
         return ["admin", "development"]
     }
+    function simulateLoginID(): LoginID {
+        return { loginID: "admin" }
+    }
     function simulatePassword(): Password {
-        return { loginID: "admin", password: "password" }
+        return { password: "password" }
     }
 }
 
