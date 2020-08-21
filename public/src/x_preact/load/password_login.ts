@@ -5,6 +5,7 @@ import {
     PasswordLoginComponent,
     PasswordLoginState,
     AuthState,
+    AuthDelayed,
     LoginIDState,
     PasswordState,
     LoginIDValidationError,
@@ -56,7 +57,10 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
 
                 const [newState, promise] = component.login();
                 setPasswordLoginState(newState);
-                promise.then(setPasswordLoginState);
+                promise.then((delayed: AuthDelayed) => {
+                    setPasswordLoginState(delayed.state);
+                    delayed.promise.then(setPasswordLoginState);
+                });
 
                 const button = document.getElementById("login-submit");
                 if (button) {
@@ -223,9 +227,10 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
                         `
 
                     case "try-to-login":
+                    case "delayed-to-login":
                         return html`
                             <button type="button" class="button button_saving">
-                                <i class="lnir lnir-spinner-11 lnir-is-spinning"></i> ログイン中
+                                <i class="lnir lnir-spinner lnir-is-spinning"></i> ログイン中
                             </button>
                         `
 
@@ -245,6 +250,17 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
                             <dl class="form form_error">
                                 <dd class="form__field">
                                     <p class="form__message">正しく入力してください</p>
+                                </dd>
+                            </dl>
+                        `
+
+                    case "delayed-to-login":
+                        return html`
+                            <dl class="form form_warning">
+                                <dd class="form__field">
+                                    <p class="form__message">
+                                        認証に時間がかかっています <i class="lnir lnir-spinner lnir-is-spinning"></i>
+                                    </p>
                                 </dd>
                             </dl>
                         `

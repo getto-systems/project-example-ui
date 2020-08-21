@@ -11,7 +11,7 @@ export interface PasswordLoginComponent {
     showPassword(): PasswordLoginState;
     hidePassword(): PasswordLoginState;
 
-    login(): [PasswordLoginState, Promise<PasswordLoginState>];
+    login(): [PasswordLoginState, Promise<AuthDelayed>];
 
     transitionToPasswordReset(): void;
 }
@@ -41,13 +41,28 @@ export type PasswordValidationError =
     Readonly<"too-long">
 
 // bcrypt を想定しているので、72 バイト以上のパスワードは無効
-export const PASSWORD_MAX_LENGTH = 72;
+const PASSWORD_MAX_LENGTH = 72;
 
 export type AuthState =
     Readonly<{ state: "initial" }> |
     Readonly<{ state: "failed-to-validation" }> |
     Readonly<{ state: "try-to-login" }> |
+    Readonly<{ state: "delayed-to-login" }> |
     Readonly<{ state: "failed-to-login", err: PasswordLoginError }>
+
+// 認証まで 1秒以上かかったら「遅れています」
+const AUTH_DELAY_LIMIT = 1 * 1000;
+
+type AuthDelayLimit = { type: "auth-delay-limit" }
+const authDelayLimit: AuthDelayLimit = { type: "auth-delay-limit" }
+
+export type AuthDelayed = Readonly<{
+    state: PasswordLoginState,
+    promise: Promise<PasswordLoginState>,
+}>
+function noDelayed(state: PasswordLoginState): AuthDelayed {
+    return { state: state, promise: Promise.resolve(state) }
+}
 
 export type PasswordLoginError =
     Readonly<{ type: "handled", err: Readonly<LoginError> }> |
@@ -89,10 +104,10 @@ export function initPasswordLoginComponent(action: LoadAction, transition: Passw
             return currentState();
         },
 
-        login(): [PasswordLoginState, Promise<PasswordLoginState>] {
+        login(): [PasswordLoginState, Promise<AuthDelayed>] {
             if (authState.state === "try-to-login") {
                 const state = currentState();
-                return [state, Promise.resolve(state)];
+                return [state, Promise.resolve(noDelayed(state))]
             }
 
             loginIDStore = storeLoginID(loginIDStore.loginID);
@@ -104,14 +119,14 @@ export function initPasswordLoginComponent(action: LoadAction, transition: Passw
             ) {
                 authState = { state: "failed-to-validation" }
                 const state = currentState();
-                return [state, Promise.resolve(state)];
+                return [state, Promise.resolve(noDelayed(state))]
             }
 
             authState = { state: "try-to-login" }
 
             return [
                 currentState(),
-                passwordLogin(),
+                delayLimited(passwordLogin()),
             ]
         },
 
@@ -153,9 +168,12 @@ export function initPasswordLoginComponent(action: LoadAction, transition: Passw
 
     async function passwordLogin(): Promise<PasswordLoginState> {
         try {
-            const result = await action.credential.login(() => {
+            const promise = action.credential.login(() => {
                 return action.passwordLogin(loginIDStore.loginID, passwordStore.password);
             });
+
+            const result = await promise;
+
             if (result.authorized) {
                 loginIDStore = initialLoginIDStore;
                 passwordStore = initialPasswordStore;
@@ -169,6 +187,25 @@ export function initPasswordLoginComponent(action: LoadAction, transition: Passw
         }
 
         return currentState();
+    }
+
+    async function delayLimited(promise: Promise<PasswordLoginState>): Promise<AuthDelayed> {
+        const limit = new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(authDelayLimit);
+            }, AUTH_DELAY_LIMIT);
+        });
+
+        const winner = await Promise.race([promise, limit]);
+        if (winner === authDelayLimit) {
+            authState = { state: "delayed-to-login" }
+            return {
+                state: currentState(),
+                promise: promise,
+            }
+        }
+
+        return noDelayed(currentState())
     }
 }
 
