@@ -25,10 +25,15 @@ function errorView(err: string): LoadView {
 }
 
 export async function initLoad(action: LoadAction): Promise<LoadUsecase> {
-    let transition = initialLoadTransitionState();
+    let transitionState = initialLoadTransitionState();
 
-    function logined() {
-        transitionTo(LoadScriptView);
+    const transition = {
+        logined() {
+            transitionTo(LoadScriptView);
+        },
+        passwordReset() {
+            //transitionTo(PasswordResetView);
+        },
     }
 
     return {
@@ -39,7 +44,7 @@ export async function initLoad(action: LoadAction): Promise<LoadUsecase> {
             return initLoadScriptComponent(action);
         },
         initPasswordLoginComponent() {
-            return initPasswordLoginComponent(action, logined);
+            return initPasswordLoginComponent(action, transition);
         },
     };
 
@@ -64,11 +69,11 @@ export async function initLoad(action: LoadAction): Promise<LoadUsecase> {
 
         let nextState: state = { state: "empty" }
 
-        if (transition.state === "transition-to") {
-            nextState = { state: "hasNext", view: transition.view }
+        if (transitionState.state === "transition-to") {
+            nextState = { state: "hasNext", view: transitionState.view }
         }
 
-        transition = {
+        transitionState = {
             state: "registered",
             setter: setter,
         }
@@ -79,25 +84,25 @@ export async function initLoad(action: LoadAction): Promise<LoadUsecase> {
     }
 
     function transitionTo(view: LoadView) {
-        switch (transition.state) {
+        switch (transitionState.state) {
             case "initial":
-                transition = {
+                transitionState = {
                     state: "transition-to",
                     view: view,
                 };
                 return;
             case "transition-to":
-                transition = {
+                transitionState = {
                     state: "transition-to",
                     view: view,
                 };
                 return;
             case "registered":
-                transition.setter(view);
+                transitionState.setter(view);
                 return;
 
             default:
-                return assertNever(transition);
+                return assertNever(transitionState);
         }
     }
 }
