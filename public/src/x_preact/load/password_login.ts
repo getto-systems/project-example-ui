@@ -28,12 +28,12 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
             <aside class="login">
                 <section class="login__box">
                     ${loginHeader()}
-                    ${loginForm(passwordLoginState.loginID, passwordLoginState.password, passwordLoginState.auth)}
+                    ${loginForm(passwordLoginState.auth, passwordLoginState.loginID, passwordLoginState.password)}
                 </section>
             </aside>
         `
 
-        function loginForm(loginIDState: LoginIDState, passwordState: PasswordState, authState: AuthState): VNode {
+        function loginForm(authState: AuthState, loginIDState: LoginIDState, passwordState: PasswordState): VNode {
             return html`
                 <form onSubmit="${onSubmit}">
                     <big>
@@ -51,12 +51,17 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
                 </form>
             `
 
-            function onSubmit(e: MouseEvent) {
+            function onSubmit(e: Event) {
                 e.preventDefault();
 
                 const [newState, promise] = component.login();
                 setPasswordLoginState(newState);
                 promise.then(setPasswordLoginState);
+
+                const button = document.getElementById("login-submit");
+                if (button) {
+                    button.blur();
+                }
             }
         }
 
@@ -168,10 +173,18 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
                 function show(e: MouseEvent) {
                     e.preventDefault();
                     setPasswordLoginState(component.showPassword());
+
+                    if (e.target instanceof HTMLElement) {
+                        e.target.blur();
+                    }
                 }
                 function hide(e: MouseEvent) {
                     e.preventDefault();
                     setPasswordLoginState(component.hidePassword());
+
+                    if (e.target instanceof HTMLElement) {
+                        e.target.blur();
+                    }
                 }
 
                 function character(): string {
@@ -203,8 +216,10 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
                     case "initial":
                     case "failed-to-validation":
                     case "failed-to-login":
+                        // id="login-submit" は onSubmit で button.blur() するのに使用している
+                        // SubmitEvent が使用可能になったら不必要になる
                         return html`
-                            <button class="button button_save">ログイン</button>
+                            <button id="login-submit" class="button button_save">ログイン</button>
                         `
 
                     case "try-to-login":
@@ -255,8 +270,7 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
                         case "handled":
                             switch (err.err) {
                                 case "timeout":
-                                    // TODO 再試行したい
-                                    return "認証に時間がかかっています";
+                                    return "タイムアウトのため認証に失敗しました";
 
                                 case "match-failed":
                                     return "ログインIDかパスワードが違います";
