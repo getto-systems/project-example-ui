@@ -2,9 +2,10 @@ import { render, h } from "preact";
 import { html } from "htm/preact";
 import { useState, useEffect } from "preact/hooks";
 
-import { LoadUsecase, initLoad, LoadView } from "../load";
 import { LoadScript } from "./load/load_script";
 import { PasswordLogin } from "./load/password_login";
+
+import { LoadUsecase, initLoad, LoadView } from "../load";
 
 import { initMemoryCredential } from "../load/credential/repository/credential/memory";
 import { initSimulateRenewClient } from "../load/renew/client/renew/simulate";
