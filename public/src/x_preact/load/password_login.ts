@@ -62,6 +62,8 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
                     delayed.promise.then(setPasswordLoginState);
                 });
 
+                // submitter を blur する
+                // SubmitEvent が使えないので直接 getElementById している
                 const button = document.getElementById("login-submit");
                 if (button) {
                     button.blur();

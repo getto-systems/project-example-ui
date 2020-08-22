@@ -55,7 +55,11 @@ export async function initLoad(action: LoadAction): Promise<LoadUsecase> {
                 return LoadScriptView;
             }
 
-            //return await action.login.selected();
+            if (result.err === "server-error") {
+                return errorView(result.err);
+            }
+
+            // TODO パスワードリセットを追加したら選択した View を表示する
             return PasswordLoginView;
         } catch (err) {
             return errorView(`${err}`);

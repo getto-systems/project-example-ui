@@ -16,7 +16,7 @@ export function nonce(nonce: NonceValue): Nonce {
 
 export type Authorized<T> =
     Readonly<{ authorized: false, err: T }> |
-    Readonly<{ authorized: true }>;
+    Readonly<{ authorized: true }>
 export function unauthorized<T>(err: T): Authorized<T> {
     return { authorized: false, err: err }
 }
@@ -30,7 +30,7 @@ export interface Renewer {
 
 export type Renew =
     Readonly<{ renew: false, err: RenewError }> |
-    Readonly<{ renew: true, roles: ApiRoles }>;
+    Readonly<{ renew: true, roles: ApiRoles }>
 export function renewFailed(err: RenewError): Renew {
     return { renew: false, err: err }
 }
@@ -39,9 +39,11 @@ export function renewSuccess(roles: ApiRoles): Renew {
 }
 
 export type RenewError =
-    Readonly<"timeout"> |
-    Readonly<"unauthorized"> |
-    Readonly<"empty-nonce">;
+    Readonly<"empty-nonce"> |
+    Readonly<"bad-request"> |
+    Readonly<"bad-response"> |
+    Readonly<"invalid-ticket"> |
+    Readonly<"server-error">
 
 export interface Loginer {
     (): Promise<Login>;
@@ -61,4 +63,4 @@ export type LoginError =
     Readonly<"bad-request"> |
     Readonly<"bad-response"> |
     Readonly<"invalid-password-login"> |
-    Readonly<"server-error">;
+    Readonly<"server-error">
