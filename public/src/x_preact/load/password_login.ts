@@ -285,11 +285,17 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
 
                         case "handled":
                             switch (err.err) {
-                                case "timeout":
-                                    return "タイムアウトのため認証に失敗しました";
+                                case "bad-request":
+                                    return "アプリケーションエラーにより認証に失敗しました";
 
-                                case "match-failed":
+                                case "bad-response":
+                                    return "レスポンスエラーにより認証に失敗しました";
+
+                                case "invalid-password-login":
                                     return "ログインIDかパスワードが違います";
+
+                                case "server-error":
+                                    return "サーバーエラーにより認証に失敗しました";
 
                                 default:
                                     return assertNever(err);

@@ -58,5 +58,7 @@ export function loginSuccess(nonce: NonceValue, roles: ApiRoles): Login {
 }
 
 export type LoginError =
-    Readonly<"timeout"> |
-    Readonly<"match-failed">;
+    Readonly<"bad-request"> |
+    Readonly<"bad-response"> |
+    Readonly<"invalid-password-login"> |
+    Readonly<"server-error">;

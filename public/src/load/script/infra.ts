@@ -6,7 +6,7 @@ export type Infra = {
 }
 
 export type ScriptEnv = Readonly<{
-    secureServer: Readonly<string>,
+    secureServerHost: Readonly<string>,
 }>
 
 export interface PathnameLocation {
