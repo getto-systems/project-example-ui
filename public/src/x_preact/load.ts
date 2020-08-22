@@ -7,7 +7,7 @@ import { PasswordLogin } from "./load/password_login";
 
 import { LoadUsecase, initLoad, LoadView } from "../load";
 
-import { initMemoryCredential } from "../load/credential/repository/credential/memory";
+import { initStorageCredential } from "../load/credential/repository/credential/storage";
 import { initSimulateRenewClient } from "../load/renew/client/renew/simulate";
 import { initSimulatePasswordLoginClient } from "../load/password_login/client/password_login/simulate";
 import { initBrowserLocation } from "../load/script/location/browser";
@@ -48,7 +48,7 @@ function initUsecase(): Promise<LoadUsecase> {
     });
 
     function initCredentialRepository(): CredentialRepository {
-        return initMemoryCredential(nonceNotFound);
+        return initStorageCredential(localStorage, "GETTO-EXAMPLE-CREDENTIAL");
     }
 
     function initRenewClient(): RenewClient {
