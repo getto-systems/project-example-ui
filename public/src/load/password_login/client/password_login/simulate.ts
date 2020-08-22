@@ -12,7 +12,7 @@ export function initSimulatePasswordLoginClient(targetLoginID: LoginID, targetPa
                     }
 
                     resolve(credentialAuthorized(nonce, roles));
-                }, 100);
+                }, 0);
             });
         },
     };
