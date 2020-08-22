@@ -6,10 +6,8 @@ const env = {
   isProduction: false,
   version: "dist",
 
-  server: {
-    id: process.env.ID_SERVER,
-    secure: process.env.SECURE_SERVER,
-  },
+  secureServerHost: process.env.SECURE_SERVER_HOST,
+  idServerURL: process.env.ID_SERVER_URL,
 };
 
 if (process.env.BUILD_ENV) {

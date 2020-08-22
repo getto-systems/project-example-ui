@@ -9,7 +9,7 @@ import { LoadUsecase, initLoad, LoadView } from "../load";
 
 import { initStorageCredential } from "../load/credential/repository/credential/storage";
 import { initSimulateRenewClient } from "../load/renew/client/renew/simulate";
-import { initSimulatePasswordLoginClient } from "../load/password_login/client/password_login/simulate";
+import { initFetchPasswordLoginClient } from "../load/password_login/client/password_login/fetch";
 import { initBrowserLocation } from "../load/script/location/browser";
 import { env } from "../y_global/env";
 
@@ -23,8 +23,7 @@ import { renewAction } from "../load/renew/core";
 import { passwordLoginAction } from "../load/password_login/core";
 import { scriptAction } from "../load/script/core";
 
-import { NonceValue, nonceNotFound, ApiRoles } from "../load/credential/data";
-import { LoginID, Password } from "../load/password_login/data";
+import { NonceValue, ApiRoles } from "../load/credential/data";
 
 (async () => {
     render(h(main(await initUsecase()), {}), document.body);
@@ -58,17 +57,12 @@ function initUsecase(): Promise<LoadUsecase> {
         );
     }
     function initPasswordLoginClient(): PasswordLoginClient {
-        return initSimulatePasswordLoginClient(
-            simulateLoginID(),
-            simulatePassword(),
-            simulateNonce(),
-            simulateApiRoles(),
-        )
+        return initFetchPasswordLoginClient(env.authServerURL);
     }
 
     function initScriptEnv(): ScriptEnv {
         return {
-            secureServer: env.server.secure,
+            secureServerHost: env.secureServerHost,
         }
     }
     function initPathnameLocation(): PathnameLocation {
@@ -80,12 +74,6 @@ function initUsecase(): Promise<LoadUsecase> {
     }
     function simulateApiRoles(): ApiRoles {
         return ["admin", "development"]
-    }
-    function simulateLoginID(): LoginID {
-        return { loginID: "admin" }
-    }
-    function simulatePassword(): Password {
-        return { password: "password" }
     }
 }
 

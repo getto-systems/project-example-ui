@@ -8,7 +8,7 @@ export function initSimulatePasswordLoginClient(targetLoginID: LoginID, targetPa
             return new Promise((resolve) => {
                 setTimeout(() => {
                     if (loginID.loginID !== targetLoginID.loginID || password.password !== targetPassword.password) {
-                        resolve(credentialUnauthorized("match-failed"));
+                        resolve(credentialUnauthorized("invalid-password-login"));
                     }
 
                     resolve(credentialAuthorized(nonce, roles));
