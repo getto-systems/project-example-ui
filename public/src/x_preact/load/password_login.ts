@@ -292,7 +292,7 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
                                     return "ログインIDかパスワードが違います";
 
                                 default:
-                                    return assertNever(err.err);
+                                    return assertNever(err);
                             }
 
                         default:
