@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## Version : 0.2.0
+
+- fix: bump ignore : See merge request getto-systems-base/projects/example/ui!44
+- fix: fetch : See merge request getto-systems-base/projects/example/ui!42
+- fix: renew error : See merge request getto-systems-base/projects/example/ui!41
+- feature: password login : See merge request getto-systems-base/projects/example/ui!40
+- update: typescript : See merge request getto-systems-base/projects/example/ui!39
+- add: credential storage impl : See merge request getto-systems-base/projects/example/ui!38
+- fix: css version : See merge request getto-systems-base/projects/example/ui!37
+- support: delayed : See merge request getto-systems-base/projects/example/ui!36
+- fix: password login : See merge request getto-systems-base/projects/example/ui!35
+- feature: password login : See merge request getto-systems-base/projects/example/ui!34
+- fix: import order : See merge request getto-systems-base/projects/example/ui!33
+- fix: load : See merge request getto-systems-base/projects/example/ui!32
+- fix: password input : See merge request getto-systems-base/projects/example/ui!31
+- add: password_login : See merge request getto-systems-base/projects/example/ui!30
+- refactor: credential : See merge request getto-systems-base/projects/example/ui!29
+- add: password-login skelton : See merge request getto-systems-base/projects/example/ui!28
+- initialize: preact : See merge request getto-systems-base/projects/example/ui!27
+- merge: docs : See merge request getto-systems-base/projects/example/ui!26
+
+
 ## Version : 0.1.10
 
 - fix: gitlab ci : See merge request getto-systems-base/projects/example/ui!24
