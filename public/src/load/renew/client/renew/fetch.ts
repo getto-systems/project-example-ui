@@ -1,31 +1,26 @@
 import { NonceValue, ApiRoles, apiRoles } from "../../../credential/data";
-import { LoginID, Password } from "../../data";
-import { PasswordLoginClient, Credential, credentialUnauthorized, credentialAuthorized } from "../../infra";
+import { RenewClient, Credential, credentialUnauthorized, credentialAuthorized } from "../../infra";
 
-export function initFetchPasswordLoginClient(authServerURL: string): PasswordLoginClient {
+export function initFetchRenewClient(authServerURL: string): RenewClient {
     return {
-        async login(loginID: LoginID, password: Password): Promise<Credential> {
+        async renew(nonce: NonceValue): Promise<Credential> {
             const response = await fetch(authServerURL, {
                 method: "POST",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-Getto-Example-ID-Handler": "PasswordLogin",
+                    "X-Getto-Example-ID-Handler": "Renew",
+                    "X-GETTO-EXAMPLE-ID-TicketNonce": nonce,
                 },
-                body: JSON.stringify({
-                    login_id: loginID.loginID,
-                    password: password.password,
-                }),
             });
 
             if (response.ok) {
-                const nonce = response.headers.get("X-GETTO-EXAMPLE-ID-TicketNonce");
                 const roles = response.headers.get("X-GETTO-EXAMPLE-ID-ApiRoles");
 
                 if (nonce && roles) {
                     try {
-                        const data = parseCredential(nonce, roles);
-                        return credentialAuthorized(data.nonce, data.roles);
+                        const data = parseCredential(roles);
+                        return credentialAuthorized(data.roles);
                     } catch (err) {
                         return credentialUnauthorized("bad-response");
                     }
@@ -36,7 +31,7 @@ export function initFetchPasswordLoginClient(authServerURL: string): PasswordLog
             if (body.message) {
                 switch (body.message) {
                     case "bad-request":
-                    case "invalid-password-login":
+                    case "invalid-ticket":
                         return credentialUnauthorized(body.message);
                 }
             }
@@ -46,13 +41,11 @@ export function initFetchPasswordLoginClient(authServerURL: string): PasswordLog
     }
 
     type Data = Readonly<{
-        nonce: NonceValue,
         roles: ApiRoles,
     }>
 
-    function parseCredential(nonce: string, roles: string): Data {
+    function parseCredential(roles: string): Data {
         return {
-            nonce: nonce,
             roles: parseApiRoles(roles),
         }
     }

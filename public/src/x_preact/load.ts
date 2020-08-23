@@ -8,7 +8,7 @@ import { PasswordLogin } from "./load/password_login";
 import { LoadUsecase, initLoad, LoadView } from "../load";
 
 import { initStorageCredential } from "../load/credential/repository/credential/storage";
-import { initSimulateRenewClient } from "../load/renew/client/renew/simulate";
+import { initFetchRenewClient } from "../load/renew/client/renew/fetch";
 import { initFetchPasswordLoginClient } from "../load/password_login/client/password_login/fetch";
 import { initBrowserLocation } from "../load/script/location/browser";
 import { env } from "../y_global/env";
@@ -22,8 +22,6 @@ import { credentialAction } from "../load/credential/core";
 import { renewAction } from "../load/renew/core";
 import { passwordLoginAction } from "../load/password_login/core";
 import { scriptAction } from "../load/script/core";
-
-import { NonceValue, ApiRoles } from "../load/credential/data";
 
 (async () => {
     render(h(main(await initUsecase()), {}), document.body);
@@ -51,10 +49,7 @@ function initUsecase(): Promise<LoadUsecase> {
     }
 
     function initRenewClient(): RenewClient {
-        return initSimulateRenewClient(
-            simulateNonce(),
-            simulateApiRoles(),
-        );
+        return initFetchRenewClient(env.authServerURL);
     }
     function initPasswordLoginClient(): PasswordLoginClient {
         return initFetchPasswordLoginClient(env.authServerURL);
@@ -67,13 +62,6 @@ function initUsecase(): Promise<LoadUsecase> {
     }
     function initPathnameLocation(): PathnameLocation {
         return initBrowserLocation(location);
-    }
-
-    function simulateNonce(): NonceValue {
-        return "NONCE";
-    }
-    function simulateApiRoles(): ApiRoles {
-        return ["admin", "development"]
     }
 }
 
@@ -92,7 +80,7 @@ function main(load: LoadUsecase) {
                 return h(PasswordLogin(load.initPasswordLoginComponent()), {});
 
             case "error":
-                return html`なんかえらった: ${view.err}`
+                return html`なんかえらった！: ${view.err}`
 
             default:
                 return assertNever(view)
