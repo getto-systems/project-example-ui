@@ -7,7 +7,7 @@ const env = {
   version: "dist",
 
   secureServerHost: process.env.SECURE_SERVER_HOST,
-  idServerURL: process.env.ID_SERVER_URL,
+  authServerURL: process.env.AUTH_SERVER_URL,
 };
 
 if (process.env.BUILD_ENV) {

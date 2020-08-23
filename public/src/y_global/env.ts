@@ -1,6 +1,6 @@
 export const env = {
     "isProduction": false,
     "version": "dist",
-    "secureServerHost": "shun.dev.getto.systems:10688",
-    "authServerURL": "https://shun.dev.getto.systems:10643"
+    "secureServerHost": "dev-example-secure.shun.dev.getto.systems",
+    "authServerURL": "https://dev-example-auth.shun.dev.getto.systems"
 }
