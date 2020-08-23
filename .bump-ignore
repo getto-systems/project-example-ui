@@ -1,3 +1,12 @@
 /*
-!/public/dist/**/*.html
-!/secure/dist/**/*.html
+
+!/public/
+/public/*
+!/public/src/
+!/public/dist/
+/public/dist/css/
+/public/dist/fonts/
+
+!/secure/
+/secure/*
+!/secure/src/
