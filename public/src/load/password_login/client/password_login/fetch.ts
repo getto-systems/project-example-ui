@@ -1,4 +1,4 @@
-import { NonceValue, ApiRoles, apiRoles } from "../../../credential/data";
+import { NonceValue, ApiRoles } from "../../../credential/data";
 import { LoginID, Password } from "../../data";
 import { PasswordLoginClient, Credential, credentialUnauthorized, credentialAuthorized } from "../../infra";
 
@@ -33,12 +33,10 @@ export function initFetchPasswordLoginClient(authServerURL: string): PasswordLog
             }
 
             const body = await response.json();
-            if (body.message) {
-                switch (body.message) {
-                    case "bad-request":
-                    case "invalid-password-login":
-                        return credentialUnauthorized(body.message);
-                }
+            switch (body.message) {
+                case "bad-request":
+                case "invalid-password-login":
+                    return credentialUnauthorized(body.message);
             }
 
             return credentialUnauthorized("server-error");
@@ -53,23 +51,23 @@ export function initFetchPasswordLoginClient(authServerURL: string): PasswordLog
     function parseCredential(nonce: string, roles: string): Data {
         return {
             nonce: nonce,
-            roles: parseApiRoles(roles),
+            roles: parseApiRoles(JSON.parse(atob(roles))),
         }
     }
-    function parseApiRoles(roles: string): ApiRoles {
-        const rawRoles = JSON.parse(atob(roles));
-        if (rawRoles instanceof Array) {
-            const parsedRoles: Array<string> = [];
-            parsedRoles.forEach((val) => {
-                if (typeof val !== "string") {
-                    throw "parse error";
-                }
-                parsedRoles.push(val);
-            });
+}
 
-            return apiRoles(parsedRoles);
-        }
-
+function parseApiRoles(roles: unknown): ApiRoles {
+    if (!(roles instanceof Array)) {
         throw "parse error";
     }
+
+    const parsedRoles: Array<string> = [];
+    roles.forEach((val: unknown) => {
+        if (typeof val !== "string") {
+            throw "parse error";
+        }
+        parsedRoles.push(val);
+    });
+
+    return parsedRoles;
 }

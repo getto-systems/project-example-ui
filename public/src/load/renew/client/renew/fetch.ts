@@ -1,4 +1,4 @@
-import { NonceValue, ApiRoles, apiRoles } from "../../../credential/data";
+import { NonceValue, ApiRoles } from "../../../credential/data";
 import { RenewClient, Credential, credentialUnauthorized, credentialAuthorized } from "../../infra";
 
 export function initFetchRenewClient(authServerURL: string): RenewClient {
@@ -17,7 +17,7 @@ export function initFetchRenewClient(authServerURL: string): RenewClient {
             if (response.ok) {
                 const roles = response.headers.get("X-GETTO-EXAMPLE-ID-ApiRoles");
 
-                if (nonce && roles) {
+                if (roles) {
                     try {
                         const data = parseCredential(roles);
                         return credentialAuthorized(data.roles);
@@ -28,12 +28,10 @@ export function initFetchRenewClient(authServerURL: string): RenewClient {
             }
 
             const body = await response.json();
-            if (body.message) {
-                switch (body.message) {
-                    case "bad-request":
-                    case "invalid-ticket":
-                        return credentialUnauthorized(body.message);
-                }
+            switch (body.message) {
+                case "bad-request":
+                case "invalid-ticket":
+                    return credentialUnauthorized(body.message);
             }
 
             return credentialUnauthorized("server-error");
@@ -46,23 +44,23 @@ export function initFetchRenewClient(authServerURL: string): RenewClient {
 
     function parseCredential(roles: string): Data {
         return {
-            roles: parseApiRoles(roles),
+            roles: parseApiRoles(JSON.parse(atob(roles))),
         }
     }
-    function parseApiRoles(roles: string): ApiRoles {
-        const rawRoles = JSON.parse(atob(roles));
-        if (rawRoles instanceof Array) {
-            const parsedRoles: Array<string> = [];
-            parsedRoles.forEach((val) => {
-                if (typeof val !== "string") {
-                    throw "parse error";
-                }
-                parsedRoles.push(val);
-            });
+}
 
-            return apiRoles(parsedRoles);
-        }
-
+function parseApiRoles(roles: unknown): ApiRoles {
+    if (!(roles instanceof Array)) {
         throw "parse error";
     }
+
+    const parsedRoles: Array<string> = [];
+    roles.forEach((val: unknown) => {
+        if (typeof val !== "string") {
+            throw "parse error";
+        }
+        parsedRoles.push(val);
+    });
+
+    return parsedRoles;
 }
