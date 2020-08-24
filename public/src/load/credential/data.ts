@@ -1,9 +1,5 @@
 export type NonceValue = Readonly<string>;
-
 export type ApiRoles = Readonly<Array<string>>;
-export function apiRoles(roles: Array<string>): ApiRoles {
-    return roles;
-}
 
 export type Nonce =
     Readonly<{ found: false }> |
