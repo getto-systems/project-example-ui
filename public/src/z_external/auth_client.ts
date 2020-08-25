@@ -1,6 +1,6 @@
 export interface AuthClient {
-    renew(param: RenewParam): Promise<Credential>
-    passwordLogin(param: PasswordLoginParam): Promise<Credential>
+    renew(param: RenewParam): Promise<Credential>;
+    passwordLogin(param: PasswordLoginParam): Promise<Credential>;
 }
 
 export type RenewParam = Readonly<{ nonce: string }>
