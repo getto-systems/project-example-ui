@@ -1,13 +1,15 @@
 export interface AuthClient {
-    renew(param: RenewParam): Promise<RenewResponse>
-    passwordLogin(param: PasswordLoginParam): Promise<PasswordLoginResponse>
+    renew(param: RenewParam): Promise<Credential>
+    passwordLogin(param: PasswordLoginParam): Promise<Credential>
 }
 
 export type RenewParam = Readonly<{ nonce: string }>
-export type RenewResponse = Readonly<{ roles: Array<string> }>
-
 export type PasswordLoginParam = Readonly<{ loginID: string, password: string }>
-export type PasswordLoginResponse = Readonly<{ nonce: string, roles: Array<string> }>
+
+type Credential = Readonly<{
+    nonce: string,
+    roles: Array<string>,
+}>
 
 export function initAuthClient(authServerURL: string): AuthClient {
     return new AuthClientImpl(authServerURL);
@@ -20,7 +22,7 @@ class AuthClientImpl implements AuthClient {
         this.authServerURL = authServerURL;
     }
 
-    async renew(params: RenewParam): Promise<RenewResponse> {
+    async renew(params: RenewParam): Promise<Credential> {
         const response = await fetch(this.authServerURL, {
             method: "POST",
             credentials: "include",
@@ -34,7 +36,7 @@ class AuthClientImpl implements AuthClient {
         return await parseCredential(response);
     }
 
-    async passwordLogin(params: PasswordLoginParam): Promise<PasswordLoginResponse> {
+    async passwordLogin(params: PasswordLoginParam): Promise<Credential> {
         const response = await fetch(this.authServerURL, {
             method: "POST",
             credentials: "include",
@@ -52,12 +54,7 @@ class AuthClientImpl implements AuthClient {
     }
 }
 
-type Data = Readonly<{
-    nonce: string,
-    roles: Array<string>,
-}>
-
-async function parseCredential(response: Response): Promise<Data> {
+async function parseCredential(response: Response): Promise<Credential> {
     if (response.ok) {
         try {
             const nonce = response.headers.get("X-GETTO-EXAMPLE-ID-TicketNonce");
