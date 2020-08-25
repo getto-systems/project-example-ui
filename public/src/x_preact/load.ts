@@ -11,7 +11,7 @@ import { initStorageCredential } from "../load/credential/repository/credential/
 import { initFetchRenewClient } from "../load/renew/client/renew/fetch";
 import { initFetchPasswordLoginClient } from "../load/password_login/client/password_login/fetch";
 import { initBrowserLocation } from "../load/script/location/browser";
-import { env } from "../y_global/env";
+import { env } from "../y_static/env";
 
 import { CredentialRepository } from "../load/credential/infra";
 import { RenewClient } from "../load/renew/infra";

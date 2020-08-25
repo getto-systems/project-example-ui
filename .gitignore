@@ -4,5 +4,5 @@
 /public/dist/**/*.js
 /secure/dist/**/*.js
 
-/public/src/env.js
-/secure/src/env.js
+/public/src/y_static/env.ts
+/secure/src/y_static/env.ts
