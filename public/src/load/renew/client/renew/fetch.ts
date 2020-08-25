@@ -1,66 +1,24 @@
-import { NonceValue, ApiRoles } from "../../../credential/data";
+import { NonceValue } from "../../../credential/data";
 import { RenewClient, Credential, credentialUnauthorized, credentialAuthorized } from "../../infra";
+import { AuthClient } from "../../../../z_external/auth_client";
 
-export function initFetchRenewClient(authServerURL: string): RenewClient {
+export function initFetchRenewClient(authClient: AuthClient): RenewClient {
     return {
         async renew(nonce: NonceValue): Promise<Credential> {
-            const response = await fetch(authServerURL, {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-Getto-Example-ID-Handler": "Renew",
-                    "X-GETTO-EXAMPLE-ID-TicketNonce": nonce,
-                },
-            });
-
-            if (response.ok) {
-                const roles = response.headers.get("X-GETTO-EXAMPLE-ID-ApiRoles");
-
-                if (roles) {
-                    try {
-                        const data = parseCredential(roles);
-                        return credentialAuthorized(data.roles);
-                    } catch (err) {
-                        return credentialUnauthorized("bad-response");
-                    }
+            const response = await authClient.renew({ nonce: nonce });
+            if (response.success) {
+                return credentialAuthorized(response.roles);
+            } else {
+                switch (response.message) {
+                    case "empty-nonce":
+                    case "bad-request":
+                    case "bad-response":
+                    case "invalid-ticket":
+                        return credentialUnauthorized(response.message);
+                    default:
+                        return credentialUnauthorized("server-error");
                 }
             }
-
-            const body = await response.json();
-            switch (body.message) {
-                case "bad-request":
-                case "invalid-ticket":
-                    return credentialUnauthorized(body.message);
-            }
-
-            return credentialUnauthorized("server-error");
         },
     }
-
-    type Data = Readonly<{
-        roles: ApiRoles,
-    }>
-
-    function parseCredential(roles: string): Data {
-        return {
-            roles: parseApiRoles(JSON.parse(atob(roles))),
-        }
-    }
-}
-
-function parseApiRoles(roles: unknown): ApiRoles {
-    if (!(roles instanceof Array)) {
-        throw "parse error";
-    }
-
-    const parsedRoles: Array<string> = [];
-    roles.forEach((val: unknown) => {
-        if (typeof val !== "string") {
-            throw "parse error";
-        }
-        parsedRoles.push(val);
-    });
-
-    return parsedRoles;
 }
