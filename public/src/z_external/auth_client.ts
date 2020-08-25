@@ -31,48 +31,14 @@ class AuthClientImpl implements AuthClient {
             headers: {
                 "Content-Type": "application/json",
                 "X-Getto-Example-ID-Handler": "Renew",
-                "X-GETTO-EXAMPLE-ID-TicketNonce": params.nonce,
+                "X-Getto-Example-ID-TicketNonce": params.nonce,
             },
         });
 
-        if (response.ok) {
-            const roles = response.headers.get("X-GETTO-EXAMPLE-ID-ApiRoles");
-
-            if (roles) {
-                try {
-                    const data = parseCredential(roles);
-                    return success(data.roles);
-                } catch (err) {
-                    return failure("bad-response");
-                }
-            }
-        }
-
-        const body = await response.json();
-        if (body.message) {
-            return failure(body.message);
-        } else {
-            return failure("server-error");
-        }
-
-        //private
-
-        type Data = Readonly<{
-            roles: Array<string>,
-        }>
-
-        function parseCredential(roles: string): Data {
-            return {
-                roles: parseApiRoles(JSON.parse(atob(roles))),
-            }
-        }
-
-        function success(roles: Array<string>): RenewResponse {
-            return { success: true, roles: roles }
-        }
-
-        function failure(message: string): RenewResponse {
-            return { success: false, message: message }
+        try {
+            return success(await parseCredential(response));
+        } catch (err) {
+            return failure(err);
         }
     }
 
@@ -90,60 +56,67 @@ class AuthClientImpl implements AuthClient {
             }),
         });
 
-        if (response.ok) {
-            const nonce = response.headers.get("X-GETTO-EXAMPLE-ID-TicketNonce");
-            const roles = response.headers.get("X-GETTO-EXAMPLE-ID-ApiRoles");
-
-            if (nonce && roles) {
-                try {
-                    const data = parseCredential(nonce, roles);
-                    return success(data.nonce, data.roles);
-                } catch (err) {
-                    return failure("bad-response");
-                }
-            }
-        }
-
-        const body = await response.json();
-        if (body.message) {
-            return failure(body.message);
-        } else {
-            return failure("server-error");
-        }
-
-        //private
-
-        type Data = Readonly<{
-            nonce: string,
-            roles: Array<string>,
-        }>
-
-        function parseCredential(nonce: string, roles: string): Data {
-            return {
-                nonce: nonce,
-                roles: parseApiRoles(JSON.parse(atob(roles))),
-            }
-        }
-
-        function success(nonce: string, roles: Array<string>): PasswordLoginResponse {
-            return { success: true, nonce: nonce, roles: roles }
-        }
-
-        function failure(message: string): PasswordLoginResponse {
-            return { success: false, message: message }
+        try {
+            return success(await parseCredential(response));
+        } catch (err) {
+            return failure(err);
         }
     }
 }
 
+type Data = Readonly<{
+    nonce: string,
+    roles: Array<string>,
+}>
+
+async function parseCredential(response: Response): Promise<Data> {
+    if (response.ok) {
+        try {
+            const nonce = response.headers.get("X-GETTO-EXAMPLE-ID-TicketNonce");
+            const roles = response.headers.get("X-GETTO-EXAMPLE-ID-ApiRoles");
+
+            if (!nonce) {
+                throw "nonce is empty";
+            }
+            if (!roles) {
+                throw "roles is empty";
+            }
+
+            return {
+                nonce: nonce,
+                roles: parseApiRoles(JSON.parse(atob(roles))),
+            }
+        } catch (err) {
+            // TODO ここでエラーを握りつぶさない方法を考えたい
+            throw "bad-response";
+        }
+    } else {
+        const body = await response.json();
+        if (typeof body.message === "string") {
+            throw body.message;
+        } else {
+            throw "server-error";
+        }
+    }
+}
+
+function success(data: Data): PasswordLoginResponse {
+    return { success: true, nonce: data.nonce, roles: data.roles }
+}
+
+function failure(message: string): PasswordLoginResponse {
+    return { success: false, message: message }
+}
+
 function parseApiRoles(roles: unknown): Array<string> {
     if (!(roles instanceof Array)) {
-        throw "parse error";
+        throw "parse error: roles is not array";
     }
 
     const parsedRoles: Array<string> = [];
     roles.forEach((val: unknown) => {
         if (typeof val !== "string") {
-            throw "parse error";
+            throw "parse error: role element is not array";
         }
         parsedRoles.push(val);
     });
