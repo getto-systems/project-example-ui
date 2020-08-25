@@ -23,11 +23,15 @@ import { renewAction } from "../load/renew/core";
 import { passwordLoginAction } from "../load/password_login/core";
 import { scriptAction } from "../load/script/core";
 
+import { initAuthClient } from "../z_external/auth_client";
+
 (async () => {
     render(h(main(await initUsecase()), {}), document.body);
 })();
 
 function initUsecase(): Promise<LoadUsecase> {
+    const authClient = initAuthClient(env.authServerURL);
+
     return initLoad({
         credential: credentialAction({
             credentials: initCredentialRepository(),
@@ -49,10 +53,10 @@ function initUsecase(): Promise<LoadUsecase> {
     }
 
     function initRenewClient(): RenewClient {
-        return initFetchRenewClient(env.authServerURL);
+        return initFetchRenewClient(authClient);
     }
     function initPasswordLoginClient(): PasswordLoginClient {
-        return initFetchPasswordLoginClient(env.authServerURL);
+        return initFetchPasswordLoginClient(authClient);
     }
 
     function initScriptEnv(): ScriptEnv {
