@@ -1,20 +1,23 @@
 import { NonceValue } from "../../../credential/data";
 import { RenewClient, Credential, credentialUnauthorized, credentialAuthorized } from "../../infra";
-import { AuthClient } from "../../../../z_external/auth_client";
 
-export function initFetchRenewClient(authClient: AuthClient): RenewClient {
+interface renewClient {
+    renew(param: { nonce: string }): Promise<{ roles: Array<string> }>
+}
+
+export function initFetchRenewClient(authClient: renewClient): RenewClient {
     return {
         async renew(nonce: NonceValue): Promise<Credential> {
-            const response = await authClient.renew({ nonce: nonce });
-            if (response.success) {
+            try {
+                const response = await authClient.renew({ nonce: nonce });
                 return credentialAuthorized(response.roles);
-            } else {
-                switch (response.message) {
+            } catch (err) {
+                switch (err) {
                     case "empty-nonce":
-                    case "bad-request":
                     case "bad-response":
+                    case "bad-request":
                     case "invalid-ticket":
-                        return credentialUnauthorized(response.message);
+                        return credentialUnauthorized(err);
                     default:
                         return credentialUnauthorized("server-error");
                 }

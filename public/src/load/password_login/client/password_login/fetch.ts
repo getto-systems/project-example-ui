@@ -1,23 +1,26 @@
 import { LoginID, Password } from "../../data";
 import { PasswordLoginClient, Credential, credentialUnauthorized, credentialAuthorized } from "../../infra";
-import { AuthClient } from "../../../../z_external/auth_client";
 
-export function initFetchPasswordLoginClient(authClient: AuthClient): PasswordLoginClient {
+interface passwordLoginClient {
+    passwordLogin(param: { loginID: string, password: string }): Promise<{ nonce: string, roles: Array<string> }>
+}
+
+export function initFetchPasswordLoginClient(authClient: passwordLoginClient): PasswordLoginClient {
     return {
         async login(loginID: LoginID, password: Password): Promise<Credential> {
-            const response = await authClient.passwordLogin({
-                loginID: loginID.loginID,
-                password: password.password,
-            });
+            try {
+                const response = await authClient.passwordLogin({
+                    loginID: loginID.loginID,
+                    password: password.password,
+                });
 
-            if (response.success) {
                 return credentialAuthorized(response.nonce, response.roles);
-            } else {
-                switch (response.message) {
-                    case "bad-request":
+            } catch (err) {
+                switch (err) {
                     case "bad-response":
+                    case "bad-request":
                     case "invalid-password-login":
-                        return credentialUnauthorized(response.message);
+                        return credentialUnauthorized(err);
                     default:
                         return credentialUnauthorized("server-error");
                 }

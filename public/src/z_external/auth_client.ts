@@ -4,14 +4,10 @@ export interface AuthClient {
 }
 
 export type RenewParam = Readonly<{ nonce: string }>
-export type RenewResponse =
-    Readonly<{ success: true, roles: Array<string> }> |
-    Readonly<{ success: false, message: string }>
+export type RenewResponse = Readonly<{ roles: Array<string> }>
 
 export type PasswordLoginParam = Readonly<{ loginID: string, password: string }>
-export type PasswordLoginResponse =
-    Readonly<{ success: true, nonce: string, roles: Array<string> }> |
-    Readonly<{ success: false, message: string }>
+export type PasswordLoginResponse = Readonly<{ nonce: string, roles: Array<string> }>
 
 export function initAuthClient(authServerURL: string): AuthClient {
     return new AuthClientImpl(authServerURL);
@@ -35,11 +31,7 @@ class AuthClientImpl implements AuthClient {
             },
         });
 
-        try {
-            return success(await parseCredential(response));
-        } catch (err) {
-            return failure(err);
-        }
+        return await parseCredential(response);
     }
 
     async passwordLogin(params: PasswordLoginParam): Promise<PasswordLoginResponse> {
@@ -56,11 +48,7 @@ class AuthClientImpl implements AuthClient {
             }),
         });
 
-        try {
-            return success(await parseCredential(response));
-        } catch (err) {
-            return failure(err);
-        }
+        return await parseCredential(response);
     }
 }
 
@@ -98,14 +86,6 @@ async function parseCredential(response: Response): Promise<Data> {
             throw "server-error";
         }
     }
-}
-
-function success(data: Data): PasswordLoginResponse {
-    return { success: true, nonce: data.nonce, roles: data.roles }
-}
-
-function failure(message: string): PasswordLoginResponse {
-    return { success: false, message: message }
 }
 
 function parseApiRoles(roles: unknown): Array<string> {

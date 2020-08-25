@@ -36,8 +36,8 @@ export function renewSuccess(roles: ApiRoles): Renew {
 
 export type RenewError =
     Readonly<"empty-nonce"> |
-    Readonly<"bad-request"> |
     Readonly<"bad-response"> |
+    Readonly<"bad-request"> |
     Readonly<"invalid-ticket"> |
     Readonly<"server-error">
 
@@ -56,7 +56,7 @@ export function loginSuccess(nonce: NonceValue, roles: ApiRoles): Login {
 }
 
 export type LoginError =
-    Readonly<"bad-request"> |
     Readonly<"bad-response"> |
+    Readonly<"bad-request"> |
     Readonly<"invalid-password-login"> |
     Readonly<"server-error">
