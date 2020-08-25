@@ -33,7 +33,7 @@ class AuthClientImpl implements AuthClient {
             },
         });
 
-        return await parseCredential(response);
+        return await parseResponse(response);
     }
 
     async passwordLogin(params: PasswordLoginParam): Promise<Credential> {
@@ -50,38 +50,38 @@ class AuthClientImpl implements AuthClient {
             }),
         });
 
-        return await parseCredential(response);
+        return await parseResponse(response);
     }
 }
 
-async function parseCredential(response: Response): Promise<Credential> {
-    if (response.ok) {
-        try {
-            const nonce = response.headers.get("X-GETTO-EXAMPLE-ID-TicketNonce");
-            const roles = response.headers.get("X-GETTO-EXAMPLE-ID-ApiRoles");
-
-            if (!nonce) {
-                throw "nonce is empty";
-            }
-            if (!roles) {
-                throw "roles is empty";
-            }
-
-            return {
-                nonce: nonce,
-                roles: parseApiRoles(JSON.parse(atob(roles))),
-            }
-        } catch (err) {
-            // TODO ここでエラーを握りつぶさない方法を考えたい
-            throw "bad-response";
-        }
-    } else {
+async function parseResponse(response: Response): Promise<Credential> {
+    if (!response.ok) {
         const body = await response.json();
         if (typeof body.message === "string") {
             throw body.message;
         } else {
             throw "server-error";
         }
+    }
+
+    try {
+        const nonce = response.headers.get("X-GETTO-EXAMPLE-ID-TicketNonce");
+        const roles = response.headers.get("X-GETTO-EXAMPLE-ID-ApiRoles");
+
+        if (!nonce) {
+            throw "nonce is empty";
+        }
+        if (!roles) {
+            throw "roles is empty";
+        }
+
+        return {
+            nonce: nonce,
+            roles: parseApiRoles(JSON.parse(atob(roles))),
+        }
+    } catch (err) {
+        // TODO ここでエラーを握りつぶさない方法を考えたい
+        throw "bad-response";
     }
 }
 
