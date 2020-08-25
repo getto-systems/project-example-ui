@@ -2,6 +2,8 @@ import { render, h } from "preact";
 import { html } from "htm/preact";
 import { useState, useEffect } from "preact/hooks";
 
+import { initAuthClient } from "../z_external/auth_client";
+
 import { LoadScript } from "./load/load_script";
 import { PasswordLogin } from "./load/password_login";
 
@@ -22,8 +24,6 @@ import { credentialAction } from "../load/credential/core";
 import { renewAction } from "../load/renew/core";
 import { passwordLoginAction } from "../load/password_login/core";
 import { scriptAction } from "../load/script/core";
-
-import { initAuthClient } from "../z_external/auth_client";
 
 (async () => {
     render(h(main(await initUsecase()), {}), document.body);
