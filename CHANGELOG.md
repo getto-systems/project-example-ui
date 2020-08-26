@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version : 0.3.1
+
+- fix: prepare : See merge request getto-systems-base/projects/example/ui!58
+
+
 ## Version : 0.3.0
 
 - fix: deploy : See merge request getto-systems-base/projects/example/ui!56
