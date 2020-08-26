@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version : 0.3.2
+
+- fix: metadata : See merge request getto-systems-base/projects/example/ui!60
+
+
 ## Version : 0.3.1
 
 - fix: prepare : See merge request getto-systems-base/projects/example/ui!58
