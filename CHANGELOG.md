@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## Version : 0.3.0
+
+- fix: deploy : See merge request getto-systems-base/projects/example/ui!56
+- fix: auth_client : See merge request getto-systems-base/projects/example/ui!55
+- refactor: auth_client : See merge request getto-systems-base/projects/example/ui!54
+- refactor: auth_client : See merge request getto-systems-base/projects/example/ui!53
+- refactor: auth_client : See merge request getto-systems-base/projects/example/ui!52
+- refactor: auth_client : See merge request getto-systems-base/projects/example/ui!51
+- fix: import order : See merge request getto-systems-base/projects/example/ui!50
+- refactor: auth_client : See merge request getto-systems-base/projects/example/ui!49
+- rename: y_static : See merge request getto-systems-base/projects/example/ui!48
+- update: package : See merge request getto-systems-base/projects/example/ui!47
+- fix: parse api roles : See merge request getto-systems-base/projects/example/ui!46
+
+
 ## Version : 0.2.0
 
 - fix: bump ignore : See merge request getto-systems-base/projects/example/ui!44
