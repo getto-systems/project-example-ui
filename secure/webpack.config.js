@@ -5,15 +5,15 @@ module.exports = {
   entry: () => {
     const entry = {};
 
-    entry["index"]  = path.join(__dirname, "src/index");
+    entry["index"]  = path.join(__dirname, "lib/index");
 
     /*
-    entry["docs/index"]  = path.join(__dirname, "src/docs/index.ts");
-    entry["docs/server"] = path.join(__dirname, "src/docs/server.ts");
-    entry["docs/id"]     = path.join(__dirname, "src/docs/id.ts");
+    entry["docs/index"]  = path.join(__dirname, "lib/docs/index.ts");
+    entry["docs/server"] = path.join(__dirname, "lib/docs/server.ts");
+    entry["docs/id"]     = path.join(__dirname, "lib/docs/id.ts");
 
-    entry["docs/detail/server"] = path.join(__dirname, "src/docs/detail/server.ts");
-    entry["docs/detail/id"]     = path.join(__dirname, "src/docs/detail/id.ts");
+    entry["docs/detail/server"] = path.join(__dirname, "lib/docs/detail/server.ts");
+    entry["docs/detail/id"]     = path.join(__dirname, "lib/docs/detail/id.ts");
     */
 
     return entry;
