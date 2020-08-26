@@ -11,7 +11,7 @@ if (process.env.BUILD_ENV) {
   env.isProduction = (process.env.BUILD_ENV == "PRODUCTION");
 }
 if (env.isProduction) {
-  env.version = fs.readFileSync(path.join(__dirname, "../.release-version")).trim();
+  env.version = fs.readFileSync(path.join(__dirname, "../.release-version"), "utf8").trim();
 }
 
 const data = "export const env = " + JSON.stringify(env, null, "    ");
