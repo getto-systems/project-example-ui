@@ -5,7 +5,10 @@ const headers = {
     "object-src 'none'",
     "base-uri 'none'",
     "form-action 'self'",
-    "connect-src 'self'",
+    "connect-src " + [
+      "'self'",
+      "https://auth.example.getto.systems/",
+    ].join(" "),
     "frame-src 'none'",
     "frame-ancestors 'none'",
     "img-src 'self'",
