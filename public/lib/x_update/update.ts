@@ -2,12 +2,20 @@ import { env } from "../y_static/env";
 
 (async () => {
     const nextVersion = await find(env.version);
-    if (nextVersion.found) {
-        const path = barePathname(env.version, location.pathname);
-        if (path.versioned) {
+    const path = parsePathname(env.version, location.pathname);
+    if (path.isApplication) {
+        // ロケーション情報を引き継いで遷移
+        if (nextVersion.found) {
             location.href = `/${nextVersion.version}/${path.pathname}${location.search}${location.hash}`;
         } else {
+            // 次のパージョンが見つからない場合は何もしない
+        }
+    } else {
+        // トップに遷移
+        if (nextVersion.found) {
             location.href = `/${nextVersion.version}/index.html`;
+        } else {
+            location.href = `/${env.version}/index.html`;
         }
     }
 })();
@@ -16,18 +24,18 @@ type NextVersion =
     Readonly<{ found: false }> |
     Readonly<{ found: true, version: string }>
 
-type BarePathname =
-    Readonly<{ versioned: false }> |
-    Readonly<{ versioned: true, pathname: string }>
+type AppPathname =
+    Readonly<{ isApplication: false }> |
+    Readonly<{ isApplication: true, pathname: string }>
 
-function barePathname(current: string, pathname: string): BarePathname {
+function parsePathname(current: string, pathname: string): AppPathname {
     const regexp = new RegExp(`^/${current}/`);
     if (!pathname.match(regexp)) {
-        return { versioned: false }
+        return { isApplication: false }
     }
 
     return {
-        versioned: true,
+        isApplication: true,
         pathname: pathname.replace(regexp, ""),
     }
 }
