@@ -2,28 +2,40 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Getto Example</title>
+
   <link rel="stylesheet" href="https://trellis.getto.systems/css/2.4.0/getto.css">
+  <link rel="stylesheet" href="/dist/css/line-icons.min.css">
+  <link rel="stylesheet" href="/dist/css/font.min.css">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
 </head>
 <body>
   <main>
-    <section class="login__box">
-      <header class="login__header">
-        <cite class="login__brand">GETTO</cite>
-        <strong class="login__title">Example</strong>
-        <cite class="login__subTitle">code templates</cite>
-      </header>
-      <big>
-        <section class="login__body">
-          <div>
-            <div class="loading loading_login">
-              <i class="lnir lnir-spinner lnir-is-spinning"></i>
-              <p class="loading__message">読み込み中です</p>
+    <aside class="login">
+      <section class="login__box">
+        <header class="login__header">
+          <cite class="login__brand">GETTO</cite>
+          <strong class="login__title">Example</strong>
+          <cite class="login__subTitle">code templates</cite>
+        </header>
+        <big>
+          <section class="login__body">
+            <div>
+              <div class="loading loading_login">
+                <i class="lnir lnir-spinner lnir-is-spinning"></i>
+                <p class="loading__message">読み込み中です</p>
+              </div>
             </div>
-          </div>
-        </section>
-      </big>
-    </section>
+          </section>
+        </big>
+      </section>
+    </aside>
   </main>
   <script src="/update.js"></script>
 </body>

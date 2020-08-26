@@ -13,7 +13,7 @@ deploy_build_ui(){
   npm run build
 }
 deploy_rewrite_version(){
-  for file in $(find */dist -name '*.html'); do
+  for file in $(find public/dist public/root -name '*.html'); do
     if [ -f "$file" ]; then
       sed -i -e "s|/dist/|/$version/|g" "$file"
     fi
