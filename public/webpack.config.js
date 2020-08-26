@@ -2,7 +2,10 @@
 const path = require("path");
 
 module.exports = {
-  entry: { load: path.join(__dirname, "src/x_preact/load.ts") },
+  entry: {
+    load: path.join(__dirname, "lib/x_preact/load.ts"),
+    update: path.join(__dirname, "lib/x_update/update.ts"),
+  },
   output: {
     path: path.join(__dirname, "dist"),
     filename: "[name].js",

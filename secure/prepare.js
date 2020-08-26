@@ -18,4 +18,4 @@ const data = "export const env = " + JSON.stringify(env, null, "    ");
 
 console.log(data);
 
-fs.writeFileSync(path.join(__dirname, "./src/y_static/env.ts"), data);
+fs.writeFileSync(path.join(__dirname, "./lib/y_static/env.ts"), data);
