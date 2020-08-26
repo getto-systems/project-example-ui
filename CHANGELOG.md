@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version : 0.3.4
+
+- fix: deploy : See merge request getto-systems-base/projects/example/ui!64
+
+
 ## Version : 0.3.3
 
 - fix: root index : See merge request getto-systems-base/projects/example/ui!62
