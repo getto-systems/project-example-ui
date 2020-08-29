@@ -21,10 +21,7 @@ type Credential =
         roles: ApiRoles,
     }>
 
-type Data =
-    Readonly<{ type: "all", nonce: NonceValue, roles: ApiRoles }> |
-    Readonly<{ type: "nonce", nonce: NonceValue }> |
-    Readonly<{ type: "roles", roles: ApiRoles }>
+type Data = Readonly<{ nonce: NonceValue, roles: ApiRoles }>
 
 type Update =
     Readonly<{ type: "nonce", nonce: NonceValue }> |
@@ -60,7 +57,6 @@ class Repository implements CredentialRepository {
             switch (data.type) {
                 case "nonce":
                     return {
-                        type: "all",
                         nonce: data.nonce,
                         roles: credential.roles,
                     }
@@ -68,13 +64,12 @@ class Repository implements CredentialRepository {
                 case "roles":
                     if (credential.nonce.found) {
                         return {
-                            type: "all",
                             nonce: credential.nonce.value,
                             roles: data.roles,
                         }
                     } else {
                         return {
-                            type: "roles",
+                            nonce: "",
                             roles: data.roles,
                         }
                     }
@@ -86,13 +81,13 @@ class Repository implements CredentialRepository {
             switch (data.type) {
                 case "nonce":
                     return {
-                        type: "nonce",
                         nonce: data.nonce,
+                        roles: [],
                     }
 
                 case "roles":
                     return {
-                        type: "roles",
+                        nonce: "",
                         roles: data.roles,
                     }
 
@@ -136,23 +131,8 @@ class CredentialStorageImpl implements CredentialStorage {
         const f = CredentialMessage;
         const credential = new f();
 
-        switch (data.type) {
-            case "all":
-                credential.nonce = data.nonce;
-                credential.roles = Array.from(data.roles);
-                break;
-
-            case "nonce":
-                credential.nonce = data.nonce;
-                break;
-
-            case "roles":
-                credential.roles = Array.from(data.roles);
-                break;
-
-            default:
-                return assertNever(data);
-        }
+        credential.nonce = data.nonce;
+        credential.roles = Array.from(data.roles);
 
         const arr = f.encode(credential).finish();
         this.storage.setItem(this.key, encodeUint8ArrayToBase64String(arr));
