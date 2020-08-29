@@ -116,12 +116,12 @@ class CredentialStorageImpl implements CredentialStorage {
         const raw = this.storage.getItem(this.key);
         if (raw) {
             try {
-                const auth = CredentialMessage.decode(decodeBase64StringToUint8Array(raw));
+                const credential = CredentialMessage.decode(decodeBase64StringToUint8Array(raw));
 
                 return {
                     found: true,
-                    nonce: auth.nonce ? nonce(auth.nonce) : nonceNotFound,
-                    roles: auth.roles ? auth.roles : [],
+                    nonce: credential.nonce ? nonce(credential.nonce) : nonceNotFound,
+                    roles: credential.roles ? credential.roles : [],
                 }
             } catch (err) {
                 // パースできないデータの場合はキーを削除する
@@ -134,27 +134,27 @@ class CredentialStorageImpl implements CredentialStorage {
 
     setItem(data: Data): Success {
         const f = CredentialMessage;
-        const auth = new f();
+        const credential = new f();
 
         switch (data.type) {
             case "all":
-                auth.nonce = data.nonce;
-                auth.roles = Array.from(data.roles);
+                credential.nonce = data.nonce;
+                credential.roles = Array.from(data.roles);
                 break;
 
             case "nonce":
-                auth.nonce = data.nonce;
+                credential.nonce = data.nonce;
                 break;
 
             case "roles":
-                auth.roles = Array.from(data.roles);
+                credential.roles = Array.from(data.roles);
                 break;
 
             default:
                 return assertNever(data);
         }
 
-        const arr = f.encode(auth).finish();
+        const arr = f.encode(credential).finish();
         this.storage.setItem(this.key, encodeUint8ArrayToBase64String(arr));
 
         return success;
