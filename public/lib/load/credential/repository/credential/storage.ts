@@ -1,3 +1,6 @@
+import { decodeBase64StringToUint8Array, encodeUint8ArrayToBase64String } from "../../../../z_external/protocol_buffers_util";
+import { CredentialMessage } from "../../../../y_static/local_storage_pb.js";
+
 import { Nonce, nonce, nonceNotFound, NonceValue, ApiRoles } from "../../data";
 import { CredentialRepository, Success, success } from "../../infra";
 
@@ -19,9 +22,9 @@ type Credential =
     }>
 
 type Data =
-    Readonly<{ nonce: NonceValue, roles: ApiRoles }> |
-    Readonly<{ nonce: NonceValue }> |
-    Readonly<{ roles: ApiRoles }>
+    Readonly<{ type: "all", nonce: NonceValue, roles: ApiRoles }> |
+    Readonly<{ type: "nonce", nonce: NonceValue }> |
+    Readonly<{ type: "roles", roles: ApiRoles }>
 
 type Update =
     Readonly<{ type: "nonce", nonce: NonceValue }> |
@@ -57,6 +60,7 @@ class Repository implements CredentialRepository {
             switch (data.type) {
                 case "nonce":
                     return {
+                        type: "all",
                         nonce: data.nonce,
                         roles: credential.roles,
                     }
@@ -64,11 +68,13 @@ class Repository implements CredentialRepository {
                 case "roles":
                     if (credential.nonce.found) {
                         return {
+                            type: "all",
                             nonce: credential.nonce.value,
                             roles: data.roles,
                         }
                     } else {
                         return {
+                            type: "roles",
                             roles: data.roles,
                         }
                     }
@@ -80,11 +86,13 @@ class Repository implements CredentialRepository {
             switch (data.type) {
                 case "nonce":
                     return {
+                        type: "nonce",
                         nonce: data.nonce,
                     }
 
                 case "roles":
                     return {
+                        type: "roles",
                         roles: data.roles,
                     }
 
@@ -108,25 +116,12 @@ class CredentialStorageImpl implements CredentialStorage {
         const raw = this.storage.getItem(this.key);
         if (raw) {
             try {
-                const data = JSON.parse(raw);
-                if (!data.roles) {
-                    throw "parse error";
-                }
+                const auth = CredentialMessage.decode(decodeBase64StringToUint8Array(raw));
 
-                const roles = parseApiRoles(data.roles);
-
-                if (data.nonce) {
-                    return {
-                        found: true,
-                        nonce: nonce(data.nonce),
-                        roles: roles,
-                    }
-                } else {
-                    return {
-                        found: true,
-                        nonce: nonceNotFound,
-                        roles: roles,
-                    }
+                return {
+                    found: true,
+                    nonce: auth.nonce ? nonce(auth.nonce) : nonceNotFound,
+                    roles: auth.roles ? auth.roles : [],
                 }
             } catch (err) {
                 // パースできないデータの場合はキーを削除する
@@ -138,25 +133,32 @@ class CredentialStorageImpl implements CredentialStorage {
     }
 
     setItem(data: Data): Success {
-        this.storage.setItem(this.key, JSON.stringify(data));
+        const f = CredentialMessage;
+        const auth = new f();
+
+        switch (data.type) {
+            case "all":
+                auth.nonce = data.nonce;
+                auth.roles = Array.from(data.roles);
+                break;
+
+            case "nonce":
+                auth.nonce = data.nonce;
+                break;
+
+            case "roles":
+                auth.roles = Array.from(data.roles);
+                break;
+
+            default:
+                return assertNever(data);
+        }
+
+        const arr = f.encode(auth).finish();
+        this.storage.setItem(this.key, encodeUint8ArrayToBase64String(arr));
+
         return success;
     }
-}
-
-function parseApiRoles(roles: unknown): ApiRoles {
-    if (!(roles instanceof Array)) {
-        throw "parse error";
-    }
-
-    const parsedRoles: Array<string> = [];
-    roles.forEach((val: unknown) => {
-        if (typeof val !== "string") {
-            throw "parse error";
-        }
-        parsedRoles.push(val);
-    });
-
-    return parsedRoles;
 }
 
 function assertNever(_: never): never {
