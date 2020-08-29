@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message CredentialMessage {
+  string nonce = 1;
+  repeated string roles = 2;
+}
