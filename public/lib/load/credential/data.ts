@@ -7,6 +7,9 @@ export type Nonce =
 
 export const nonceNotFound: Nonce = { found: false }
 export function nonce(nonce: NonceValue): Nonce {
+    if (nonce === "") {
+        return nonceNotFound;
+    }
     return { found: true, value: nonce };
 }
 
