@@ -6,6 +6,3 @@
 
 /public/src/y_static/env.ts
 /secure/src/y_static/env.ts
-
-/public/*.d.ts
-/public/lib/y_static/*_pb.js
