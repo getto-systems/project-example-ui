@@ -7,6 +7,7 @@ stages:
   - release_notify
 
 variables:
+  GIT_SUBMODULE_STRATEGY: recursive
   TRELLIS_GIT_POST: https://trellis.getto.systems/git/post/1.5.2
   TRELLIS_CI_BUMP_VERSION: https://trellis.getto.systems/ci/bump-version/1.10.2
   TRELLIS_PSYCHER_GETTO: https://trellis.getto.systems/psycher/getto/2.7.2
@@ -28,7 +29,7 @@ bump_version:
     - export PATH=$PATH:./vendor/getto-systems/git-post/bin
   script:
     - curl $TRELLIS_CI_BUMP_VERSION/bump_version.sh | bash
-    - curl $TRELLIS_CI_BUMP_VERSION/request.sh | bash -s -- ./.message/bump.sh
+    - curl $TRELLIS_CI_BUMP_VERSION/request.sh | bash -s -- ./.ci/message/bump.sh
 
 release:
   stage: release
@@ -65,7 +66,7 @@ release_deploy:
     - pip3 install awscli
     - npm clean-install
   script:
-    - ./scripts/deploy.sh
+    - ./.ci/deploy.sh
 
 release_success:
   stage: release_notify
