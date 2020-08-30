@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version : 0.5.0
+
+- use: protocol buffers : See merge request getto-systems-base/projects/example/ui!76
+
+
 ## Version : 0.4.0
 
 - fix: auth_client : See merge request getto-systems-base/projects/example/ui!74
