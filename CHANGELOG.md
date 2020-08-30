@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version : 0.4.0
+
+- fix: auth_client : See merge request getto-systems-base/projects/example/ui!74
+- fix: bump ignore : See merge request getto-systems-base/projects/example/ui!73
+
+
 ## Version : 0.3.5
 
 - use: protocol buffers : See merge request getto-systems-base/projects/example/ui!71
