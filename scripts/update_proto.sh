@@ -10,13 +10,13 @@ update_proto_main(){
 
   target=$1
 
-  for proto in $(find $target/proto -name '*.proto'); do
-    file=${proto#$target/proto/}
+  for proto in $(find proto -name '*.proto'); do
+    file=${proto#proto/}
     file=${file%.proto}
     name=$(echo $file | sed 's|/|_|g')
 
     pb_path=$target/lib/y_static/${file}_pb.js
-    d_path=$target/${name}_pb.d.ts
+    d_path=$target/types/${name}_pb.d.ts
 
     rm -f $pb_path $d_path && \
     mkdir -p $(dirname $pb_path) && \
