@@ -68,8 +68,8 @@ async function parseResponse(response: Response): Promise<Credential> {
     }
 
     try {
-        const nonce = response.headers.get("X-GETTO-EXAMPLE-ID-TICKET-NONCE");
-        const credential = response.headers.get("X-GETTO-EXAMPLE-ID-API-CREDENTIAL");
+        const nonce = response.headers.get("x-getto-example-id-ticket-nonce");
+        const credential = response.headers.get("x-getto-example-id-api-credential");
 
         if (!nonce) {
             throw "nonce is empty";
