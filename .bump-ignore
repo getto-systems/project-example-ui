@@ -2,11 +2,11 @@
 
 !/public/
 /public/*
-!/public/src/
+!/public/lib/
 !/public/dist/
 /public/dist/css/
 /public/dist/fonts/
 
 !/secure/
 /secure/*
-!/secure/src/
+!/secure/lib/
