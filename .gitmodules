@@ -1,0 +1,3 @@
+[submodule "public/proto/auth"]
+	path = public/proto/auth
+	url = https://github.com/getto-systems/project-example-auth-protocol_buffers.git
