@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Version : 0.3.5
+
+- use: protocol buffers : See merge request getto-systems-base/projects/example/ui!71
+- add: protocol buffers files : See merge request getto-systems-base/projects/example/ui!70
+- fix: nonce factory method : See merge request getto-systems-base/projects/example/ui!69
+- refactor: credential data : See merge request getto-systems-base/projects/example/ui!68
+- refactor: var name : See merge request getto-systems-base/projects/example/ui!67
+- use: protocol buffers in local storage : See merge request getto-systems-base/projects/example/ui!66
+
+
 ## Version : 0.3.4
 
 - fix: deploy : See merge request getto-systems-base/projects/example/ui!64
