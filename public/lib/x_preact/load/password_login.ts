@@ -12,6 +12,7 @@ import {
     PasswordValidationError,
     PasswordLoginError,
 } from "../../load/password_login";
+import { PasswordCharacter } from "../../load/password_login/data";
 
 interface component {
     (): VNode;
@@ -165,12 +166,16 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
                 switch (state.state) {
                     case "hide":
                         return html`
-                            <a href="#" onClick=${show}><i class="lnir lnir-key-alt"></i> パスワードを表示 ${character()}</a>
+                            <a href="#" onClick=${show}>
+                                <i class="lnir lnir-key-alt"></i> パスワードを表示 ${character(state.character)}
+                            </a>
                         `
                     case "show":
                         return html`
-                            <a href="#" onClick=${hide}><i class="lnir lnir-key-alt"></i> パスワードを隠す ${character()}</a>
-                            <p class="form__help">${state.password.password}</p>
+                            <a href="#" onClick=${hide}>
+                                <i class="lnir lnir-key-alt"></i> パスワードを隠す ${character(state.character)}
+                            </a>
+                            <p class="form__help">${password(state.password.password)}</p>
                         `
                     default:
                         return assertNever(state);
@@ -193,8 +198,8 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
                     }
                 }
 
-                function character(): string {
-                    switch (state.character.type) {
+                function character(character: PasswordCharacter): string {
+                    switch (character.type) {
                         case "ascii":
                             return "";
 
@@ -202,7 +207,15 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
                             return "(マルチバイト文字が含まれています)";
 
                         default:
-                            return assertNever(state.character)
+                            return assertNever(character)
+                    }
+                }
+
+                function password(password: string): string {
+                    if (password.length === 0) {
+                        return "(入力されていません)";
+                    } else {
+                        return password;
                     }
                 }
             }
