@@ -1,5 +1,6 @@
-import { decodeBase64StringToUint8Array } from "./protocol_buffers_util";
+import { decodeBase64StringToUint8Array, encodeUint8ArrayToBase64String } from "./protocol_buffers_util";
 import { ApiCredentialMessage } from "../y_static/auth/credential_pb.js";
+import { PasswordLoginMessage } from "../y_static/auth/password_login_pb.js";
 
 export interface AuthClient {
     renew(param: RenewParam): Promise<Credential>;
@@ -29,11 +30,9 @@ class AuthClientImpl implements AuthClient {
         const response = await fetch(this.authServerURL, {
             method: "POST",
             credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                "X-GETTO-EXAMPLE-ID-HANDLER": "Renew",
+            headers: requestHeaders("Renew", {
                 "X-GETTO-EXAMPLE-ID-TICKET-NONCE": params.nonce,
-            },
+            }),
         });
 
         return await parseResponse(response);
@@ -43,18 +42,33 @@ class AuthClientImpl implements AuthClient {
         const response = await fetch(this.authServerURL, {
             method: "POST",
             credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                "X-GETTO-EXAMPLE-ID-HANDLER": "PasswordLogin",
-            },
-            body: JSON.stringify({
-                login_id: params.loginID,
-                password: params.password,
-            }),
+            headers: requestHeaders("PasswordLogin", {}),
+            body: (() => {
+                const f = PasswordLoginMessage;
+                const passwordLogin = new f();
+
+                passwordLogin.loginId = params.loginID;
+                passwordLogin.password = params.password;
+
+                const arr = f.encode(passwordLogin).finish();
+                return encodeUint8ArrayToBase64String(arr);
+            })(),
         });
 
         return await parseResponse(response);
     }
+}
+
+function requestHeaders(handler: string, additional_headers: Record<string, string>): Record<string, string> {
+    const headers: Record<string, string> = {
+        "X-GETTO-EXAMPLE-ID-HANDLER": handler,
+    }
+
+    for (const key in additional_headers) {
+        headers[key] = additional_headers[key];
+    }
+
+    return headers;
 }
 
 async function parseResponse(response: Response): Promise<Credential> {
@@ -68,8 +82,8 @@ async function parseResponse(response: Response): Promise<Credential> {
     }
 
     try {
-        const nonce = response.headers.get("x-getto-example-id-ticket-nonce");
-        const credential = response.headers.get("x-getto-example-id-api-credential");
+        const nonce = response.headers.get("X-GETTO-EXAMPLE-ID-TICKET-NONCE");
+        const credential = response.headers.get("X-GETTO-EXAMPLE-ID-API-CREDENTIAL");
 
         if (!nonce) {
             throw "nonce is empty";
