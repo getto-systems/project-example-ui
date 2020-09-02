@@ -1,21 +1,27 @@
-import { NonceValue, ApiRoles, LoginError } from "../credential/data";
-import { LoginID, Password } from "./data";
+import { LoginID, NonceValue, ApiRoles } from "../credential/data";
+import { Password } from "../password/data";
 
 export type Infra = {
     passwordLoginClient: PasswordLoginClient,
 }
 
 export interface PasswordLoginClient {
-    login(loginID: LoginID, password: Password): Promise<Credential>;
+    login(loginID: LoginID, password: Password): Promise<LoginResponse>
 }
 
-export type Credential =
-    Readonly<{ authorized: false, err: LoginError }> |
-    Readonly<{ authorized: true, nonce: NonceValue, roles: ApiRoles }>;
+export type LoginResponse =
+    Readonly<{ success: false, err: LoginError }> |
+    Readonly<{ success: true, nonce: NonceValue, roles: ApiRoles }>
+export function loginFailed(err: LoginError): LoginResponse {
+    return { success: false, err }
+}
+export function loginSuccess(nonce: NonceValue, roles: ApiRoles): LoginResponse {
+    return { success: true, nonce, roles }
+}
 
-export function credentialUnauthorized(err: LoginError): Credential {
-    return { authorized: false, err: err }
-}
-export function credentialAuthorized(nonce: NonceValue, roles: ApiRoles): Credential {
-    return { authorized: true, nonce: nonce, roles: roles }
-}
+export type LoginError =
+    Readonly<{ type: "bad-request" }> |
+    Readonly<{ type: "invalid-password-login" }> |
+    Readonly<{ type: "server-error" }> |
+    Readonly<{ type: "bad-response", err: string }> |
+    Readonly<{ type: "infra-error", err: string }>

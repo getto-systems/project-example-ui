@@ -1,52 +1,57 @@
 import { VNode } from "preact";
 import { html } from "htm/preact";
 import { useState, /* useEffect */ } from "preact/hooks";
-import {
-    PasswordLoginComponent,
-    PasswordLoginState,
-    AuthState,
-    AuthDelayed,
-    LoginIDState,
-    PasswordState,
-    LoginIDValidationError,
-    PasswordValidationError,
-    PasswordLoginError,
-} from "../../load/password_login";
-import { PasswordCharacter } from "../../load/password_login/data";
+import { LoginIDValidationError } from "../../load/credential/data";
+import { Password, PasswordValidationError } from "../../load/password/data";
+import { LoginState, LoginBoard, LoginIDBoard, PasswordBoard, PasswordView, LoginError } from "../../load/password_login/data";
+import { PasswordLoginState, PasswordLoginComponent } from "../../load/password_login";
 
 interface component {
     (): VNode;
 }
 
-export function PasswordLogin(component: PasswordLoginComponent): component {
+export function PasswordLogin(initialState: PasswordLoginState, component: PasswordLoginComponent): component {
     return (): VNode => {
-        const [passwordLoginState, setPasswordLoginState] = useState<PasswordLoginState>(component.initial);
+        const [passwordLoginState, setPasswordLoginState] = useState(initialState);
 
-        if (passwordLoginState.state !== "active") {
-            return html``
+        switch (passwordLoginState.state) {
+            case "active":
+                return html`
+                    <aside class="login">
+                        <section class="login__box">
+                            ${loginHeader()}
+                            ${loginForm(passwordLoginState.login, passwordLoginState.board)}
+                        </section>
+                    </aside>
+                `
+
+            case "try-to-store-credential":
+                passwordLoginState.next.then(setPasswordLoginState);
+                return html``
+
+            case "failed-to-store-credential":
+                // TODO エラー画面を用意
+                return html`保存に失敗: ${passwordLoginState.err}`
+
+            case "success":
+                return html``
+
+            default:
+                return assertNever(passwordLoginState);
         }
 
-        return html`
-            <aside class="login">
-                <section class="login__box">
-                    ${loginHeader()}
-                    ${loginForm(passwordLoginState.auth, passwordLoginState.loginID, passwordLoginState.password)}
-                </section>
-            </aside>
-        `
-
-        function loginForm(authState: AuthState, loginIDState: LoginIDState, passwordState: PasswordState): VNode {
+        function loginForm(state: LoginState, board: LoginBoard): VNode {
             return html`
                 <form onSubmit="${onSubmit}">
                     <big>
                         <section class="login__body">
-                            ${loginID(loginIDState)}
-                            ${password(passwordState)}
+                            ${loginID(board.loginID)}
+                            ${password(board.password)}
                         </section>
                     </big>
                     <big>
                         <section class="login__footer button__container">
-                            ${loginButton(authState)}
+                            ${loginButton(state)}
                             ${passwordResetLink()}
                         </section>
                     </big>
@@ -56,12 +61,7 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
             function onSubmit(e: Event) {
                 e.preventDefault();
 
-                const [newState, promise] = component.login();
-                setPasswordLoginState(newState);
-                promise.then((delayed: AuthDelayed) => {
-                    setPasswordLoginState(delayed.state);
-                    delayed.promise.then(setPasswordLoginState);
-                });
+                setPasswordLoginState(component.login());
 
                 // submitter を blur する
                 // SubmitEvent が使えないので直接 getElementById している
@@ -72,38 +72,36 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
             }
         }
 
-        function loginID(state: LoginIDState): VNode {
+        function loginID(board: LoginIDBoard): VNode {
             return html`
-                <dl class="form ${state.validation.valid ? "" : "form_error"}">
+                <dl class="form ${board.err.length == 0 ? "" : "form_error"}">
                     <dt class="form__header"><label for="login-id">ログインID</label></dt>
                     <dd class="form__field">
-                        <input type="text" class="input_fill" id="login-id" onInput=${onInput} onChange=${onInput}/>
-                        ${validationErrorMessage()}
+                        <input type="text" class="input_fill" id="login-id" onInput=${onInput} onChange=${onChange}/>
+                        ${board.err.map(validationError)}
                     </dd>
                 </dl>
             `
 
             function onInput(e: InputEvent) {
                 if (e.target instanceof HTMLInputElement) {
-                    setPasswordLoginState(component.setLoginID({
+                    setPasswordLoginState(component.inputLoginID({
+                        loginID: e.target.value,
+                    }));
+                }
+            }
+            function onChange(e: InputEvent) {
+                if (e.target instanceof HTMLInputElement) {
+                    setPasswordLoginState(component.changeLoginID({
                         loginID: e.target.value,
                     }));
                 }
             }
 
-            function validationErrorMessage(): VNode {
-                if (state.validation.valid) {
-                    return html``
-                }
-
-                return html`${state.validation.err.map((err: LoginIDValidationError) => {
-                    return html`<p class="form__message">${validationError(err)}</p>`
-                })}`;
-            }
-            function validationError(err: LoginIDValidationError): string {
+            function validationError(err: LoginIDValidationError): VNode {
                 switch (err) {
                     case "empty":
-                        return "ログインIDを入力してください";
+                        return html`<p class="form__message">ログインIDを入力してください</p>`
 
                     default:
                         return assertNever(err);
@@ -111,50 +109,43 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
             }
         }
 
-        function password(state: PasswordState): VNode {
+        function password(board: PasswordBoard): VNode {
             return html`
-                <dl class="form ${state.validation.valid ? "" : "form_error"}">
+                <dl class="form ${board.err.length == 0 ? "" : "form_error"}">
                     <dt class="form__header"><label for="password">パスワード</label></dt>
                     <dd class="form__field">
-                        <input type="password" class="input_fill" id="password" onInput=${onInput} onChange=${onInput}/>
-                        ${validationErrorMessage()}
-                        <p class="form__help">${viewPassword()}</p>
+                        <input type="password" class="input_fill" id="password" onInput=${onInput} onChange=${onChange}/>
+                        ${board.err.map(validationError)}
+                        <p class="form__help">${viewPassword(board.view)}</p>
                     </dd>
                 </dl>
             `
 
             function onInput(e: InputEvent) {
                 if (e.target instanceof HTMLInputElement) {
-                    setPasswordLoginState(component.setPassword({
+                    setPasswordLoginState(component.inputPassword({
+                        password: e.target.value,
+                    }));
+                }
+            }
+            function onChange(e: InputEvent) {
+                if (e.target instanceof HTMLInputElement) {
+                    setPasswordLoginState(component.changePassword({
                         password: e.target.value,
                     }));
                 }
             }
 
-            function validationErrorMessage(): VNode {
-                if (state.validation.valid) {
-                    return html``
-                }
-
-                return html`${state.validation.err.map((err: PasswordValidationError) => {
-                    return html`<p class="form__message">${validationError(err)}</p>`
-                })}`;
-            }
-            function validationError(err: PasswordValidationError): string {
+            function validationError(err: PasswordValidationError): VNode {
                 switch (err) {
                     case "empty":
-                        return "パスワードを入力してください";
+                        return html`<p class="form__message">パスワードを入力してください</p>`
 
                     case "too-long":
-                        switch (state.character.type) {
-                            case "ascii":
-                                return "パスワードが長すぎます(72文字以内)";
-
-                            case "complex":
-                                return "パスワードが長すぎます(18文字程度)";
-
-                            default:
-                                return assertNever(state.character)
+                        if (board.character.complex) {
+                            return html`<p class="form__message">パスワードが長すぎます(18文字程度)</p>`
+                        } else {
+                            return html`<p class="form__message">パスワードが長すぎます(72文字以内)</p>`
                         }
 
                     default:
@@ -162,23 +153,20 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
                 }
             }
 
-            function viewPassword(): VNode {
-                switch (state.state) {
-                    case "hide":
-                        return html`
-                            <a href="#" onClick=${show}>
-                                <i class="lnir lnir-key-alt"></i> パスワードを表示 ${character(state.character)}
-                            </a>
-                        `
-                    case "show":
-                        return html`
-                            <a href="#" onClick=${hide}>
-                                <i class="lnir lnir-key-alt"></i> パスワードを隠す ${character(state.character)}
-                            </a>
-                            <p class="form__help">${password(state.password.password)}</p>
-                        `
-                    default:
-                        return assertNever(state);
+            function viewPassword(view: PasswordView): VNode {
+                if (view.show) {
+                    return html`
+                        <a href="#" onClick=${hide}>
+                            <i class="lnir lnir-key-alt"></i> パスワードを隠す ${characterHelp()}
+                        </a>
+                        <p class="form__help">${password(view.password)}</p>
+                    `
+                } else {
+                    return html`
+                        <a href="#" onClick=${show}>
+                            <i class="lnir lnir-key-alt"></i> パスワードを表示 ${characterHelp()}
+                        </a>
+                    `
                 }
 
                 function show(e: MouseEvent) {
@@ -198,30 +186,25 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
                     }
                 }
 
-                function character(character: PasswordCharacter): string {
-                    switch (character.type) {
-                        case "ascii":
-                            return "";
-
-                        case "complex":
-                            return "(マルチバイト文字が含まれています)";
-
-                        default:
-                            return assertNever(character)
-                    }
-                }
-
-                function password(password: string): string {
-                    if (password.length === 0) {
+                function password(password: Password): string {
+                    if (password.password.length === 0) {
                         return "(入力されていません)";
                     } else {
-                        return password;
+                        return password.password;
                     }
+                }
+            }
+
+            function characterHelp(): string {
+                if (board.character.complex) {
+                    return "(マルチバイト文字が含まれています)";
+                } else {
+                    return "";
                 }
             }
         }
 
-        function loginButton(state: AuthState): VNode {
+        function loginButton(state: LoginState): VNode {
             return html`
                 <div>
                     ${button()}
@@ -232,8 +215,7 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
 
             function button(): VNode {
                 switch (state.state) {
-                    case "initial":
-                    case "failed-to-validation":
+                    case "initial-login":
                     case "failed-to-login":
                         // id="login-submit" は onSubmit で button.blur() するのに使用している
                         // SubmitEvent が使用可能になったら不必要になる
@@ -242,12 +224,14 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
                         `
 
                     case "try-to-login":
-                    case "delayed-to-login":
                         return html`
                             <button type="button" class="button button_saving">
                                 <i class="lnir lnir-spinner lnir-is-spinning"></i> ログイン中
                             </button>
                         `
+
+                    case "succeed-to-login":
+                        return html``
 
                     default:
                         return assertNever(state);
@@ -256,29 +240,23 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
 
             function error(): VNode {
                 switch (state.state) {
-                    case "initial":
-                    case "try-to-login":
+                    case "initial-login":
+                    case "succeed-to-login":
                         return html``
 
-                    case "failed-to-validation":
-                        return html`
-                            <dl class="form form_error">
-                                <dd class="form__field">
-                                    <p class="form__message">正しく入力してください</p>
-                                </dd>
-                            </dl>
-                        `
-
-                    case "delayed-to-login":
-                        return html`
-                            <dl class="form form_warning">
-                                <dd class="form__field">
-                                    <p class="form__message">
-                                        認証に時間がかかっています <i class="lnir lnir-spinner lnir-is-spinning"></i>
-                                    </p>
-                                </dd>
-                            </dl>
-                        `
+                    case "try-to-login":
+                        if (state.delayed) {
+                            return html`
+                                <dl class="form form_warning">
+                                    <dd class="form__field">
+                                        <p class="form__message">
+                                            認証に時間がかかっています <i class="lnir lnir-spinner lnir-is-spinning"></i>
+                                        </p>
+                                    </dd>
+                                </dl>
+                            `
+                        }
+                        return html``
 
                     case "failed-to-login":
                         return html`
@@ -291,34 +269,6 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
 
                     default:
                         return assertNever(state);
-                }
-
-                function loginErrorMessage(err: PasswordLoginError): string {
-                    switch (err.type) {
-                        case "unknown":
-                            return "システムエラーにより認証に失敗しました";
-
-                        case "handled":
-                            switch (err.err) {
-                                case "bad-request":
-                                    return "アプリケーションエラーにより認証に失敗しました";
-
-                                case "bad-response":
-                                    return "レスポンスエラーにより認証に失敗しました";
-
-                                case "invalid-password-login":
-                                    return "ログインIDかパスワードが違います";
-
-                                case "server-error":
-                                    return "サーバーエラーにより認証に失敗しました";
-
-                                default:
-                                    return assertNever(err);
-                            }
-
-                        default:
-                            return assertNever(err);
-                    }
                 }
             }
         }
@@ -340,6 +290,28 @@ export function PasswordLogin(component: PasswordLoginComponent): component {
                 <cite class="login__subTitle">code templates</cite>
             </header>
         `
+    }
+}
+
+function loginErrorMessage(err: LoginError): string {
+    switch (err.type) {
+        case "bad-request":
+            return "アプリケーションエラーにより認証に失敗しました";
+
+        case "bad-response":
+            return "レスポンスエラーにより認証に失敗しました";
+
+        case "invalid-password-login":
+            return "ログインIDかパスワードが違います";
+
+        case "server-error":
+            return "サーバーエラーにより認証に失敗しました";
+
+        case "infra-error":
+            return "ネットワークエラーにより認証に失敗しました";
+
+        default:
+            return assertNever(err);
     }
 }
 

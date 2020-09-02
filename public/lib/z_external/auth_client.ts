@@ -3,17 +3,24 @@ import { ApiCredentialMessage } from "../y_static/auth/credential_pb.js";
 import { PasswordLoginMessage } from "../y_static/auth/password_login_pb.js";
 
 export interface AuthClient {
-    renew(param: RenewParam): Promise<Credential>;
-    passwordLogin(param: PasswordLoginParam): Promise<Credential>;
+    renew(param: RenewParam): Promise<AuthResponse>;
+    passwordLogin(param: PasswordLoginParam): Promise<AuthResponse>;
 }
 
 export type RenewParam = Readonly<{ nonce: string }>
 export type PasswordLoginParam = Readonly<{ loginID: string, password: string }>
 
-type Credential = Readonly<{
-    nonce: string,
-    roles: Array<string>,
-}>
+type AuthResponse =
+    Readonly<{ success: true, nonce: string, roles: Array<string> }> |
+    Readonly<{ success: false, err: AuthError }>
+function authSuccess(nonce: string, roles: Array<string>): AuthResponse {
+    return { success: true, nonce, roles }
+}
+function authFailed(err: AuthError): AuthResponse {
+    return { success: false, err }
+}
+
+type AuthError = Readonly<{ type: string, err: string }>
 
 export function initAuthClient(authServerURL: string): AuthClient {
     return new AuthClientImpl(authServerURL);
@@ -26,7 +33,7 @@ class AuthClientImpl implements AuthClient {
         this.authServerURL = authServerURL;
     }
 
-    async renew(params: RenewParam): Promise<Credential> {
+    async renew(params: RenewParam): Promise<AuthResponse> {
         const response = await fetch(this.authServerURL, {
             method: "POST",
             credentials: "include",
@@ -38,7 +45,7 @@ class AuthClientImpl implements AuthClient {
         return await parseResponse(response);
     }
 
-    async passwordLogin(params: PasswordLoginParam): Promise<Credential> {
+    async passwordLogin(params: PasswordLoginParam): Promise<AuthResponse> {
         const response = await fetch(this.authServerURL, {
             method: "POST",
             credentials: "include",
@@ -71,14 +78,13 @@ function requestHeaders(handler: string, additional_headers: Record<string, stri
     return headers;
 }
 
-async function parseResponse(response: Response): Promise<Credential> {
+async function parseResponse(response: Response): Promise<AuthResponse> {
     if (!response.ok) {
         const body = await response.json();
-        if (typeof body.message === "string") {
-            throw body.message;
-        } else {
-            throw "server-error";
-        }
+        return authFailed({
+            type: typeof body.message === "string" ? body.message : "server-error",
+            err: "",
+        });
     }
 
     try {
@@ -94,12 +100,8 @@ async function parseResponse(response: Response): Promise<Credential> {
 
         const apiCredential = ApiCredentialMessage.decode(decodeBase64StringToUint8Array(credential));
 
-        return {
-            nonce: nonce,
-            roles: apiCredential.roles ? apiCredential.roles : [],
-        }
+        return authSuccess(nonce, apiCredential.roles ? apiCredential.roles : []);
     } catch (err) {
-        // TODO ここでエラーを握りつぶさない方法を考えたい
-        throw "bad-response";
+        return authFailed({ type: "bad-response", err });
     }
 }

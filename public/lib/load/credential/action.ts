@@ -1,6 +1,8 @@
-import { Renewer, RenewError, Loginer, LoginError, Authorized } from "./data";
+import { NonceValue, ApiRoles, LoginID, LoginIDValidationError, RenewState, StoreState } from "./data";
 
 export interface CredentialAction {
-    renewApiRoles(renewer: Renewer): Promise<Authorized<RenewError>>;
-    login(loginer: Loginer): Promise<Authorized<LoginError>>;
+    validateLoginID(loginID: LoginID): Array<LoginIDValidationError>
+
+    store(nonce: NonceValue, roles: ApiRoles): Promise<StoreState>
+    renew(): Promise<RenewState>
 }

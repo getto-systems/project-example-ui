@@ -1,65 +1,44 @@
-export type NonceValue = Readonly<string>;
-export type ApiRoles = Readonly<Array<string>>;
+export type LoginID = Readonly<{ loginID: Readonly<string> }>
+
+export type LoginIDValidationError = "empty";
+
+export type NonceValue = Readonly<{ nonce: Readonly<string> }>
+export type ApiRoles = Readonly<{ roles: Readonly<Array<Readonly<string>>> }>
 
 export type Nonce =
     Readonly<{ found: false }> |
-    Readonly<{ found: true, value: NonceValue }>;
-
+    Readonly<{ found: true, value: NonceValue }>
 export const nonceNotFound: Nonce = { found: false }
 export function nonce(nonce: NonceValue): Nonce {
-    if (nonce === "") {
+    if (nonce.nonce === "") {
         return nonceNotFound;
     }
-    return { found: true, value: nonce };
+    return { found: true, value: nonce }
 }
 
-export type Authorized<T> =
-    Readonly<{ authorized: false, err: T }> |
-    Readonly<{ authorized: true }>
-export function unauthorized<T>(err: T): Authorized<T> {
-    return { authorized: false, err: err }
+export type RenewState =
+    Readonly<{ success: false, err: RenewError }> |
+    Readonly<{ success: true }>
+export function renewFailure(err: RenewError): RenewState {
+    return { success: false, err }
 }
-export function authorized<T>(): Authorized<T> {
-    return { authorized: true }
-}
-
-export interface Renewer {
-    (nonce: NonceValue): Promise<Renew>;
-}
-
-export type Renew =
-    Readonly<{ renew: false, err: RenewError }> |
-    Readonly<{ renew: true, roles: ApiRoles }>
-export function renewFailed(err: RenewError): Renew {
-    return { renew: false, err: err }
-}
-export function renewSuccess(roles: ApiRoles): Renew {
-    return { renew: true, roles: roles }
-}
+export const renewSuccess: RenewState = { success: true }
 
 export type RenewError =
-    Readonly<"empty-nonce"> |
-    Readonly<"bad-response"> |
-    Readonly<"bad-request"> |
-    Readonly<"invalid-ticket"> |
-    Readonly<"server-error">
+    Readonly<{ type: "empty-nonce" }> |
+    Readonly<{ type: "bad-request" }> |
+    Readonly<{ type: "invalid-ticket" }> |
+    Readonly<{ type: "server-error" }> |
+    Readonly<{ type: "bad-response", err: string }> |
+    Readonly<{ type: "infra-error", err: string }>
 
-export interface Loginer {
-    (): Promise<Login>;
+export type StoreState =
+    Readonly<{ success: false, err: StoreError }> |
+    Readonly<{ success: true }>
+export function loginFailure(err: StoreError): StoreState {
+    return { success: false, err }
 }
+export const loginSuccess: StoreState = { success: true }
 
-export type Login =
-    Readonly<{ login: false, err: LoginError }> |
-    Readonly<{ login: true, nonce: NonceValue, roles: ApiRoles }>;
-export function loginFailed(err: LoginError): Login {
-    return { login: false, err: err }
-}
-export function loginSuccess(nonce: NonceValue, roles: ApiRoles): Login {
-    return { login: true, nonce: nonce, roles: roles }
-}
-
-export type LoginError =
-    Readonly<"bad-response"> |
-    Readonly<"bad-request"> |
-    Readonly<"invalid-password-login"> |
-    Readonly<"server-error">
+export type StoreError =
+    Readonly<{ type: "infra-error", err: string }>

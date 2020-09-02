@@ -1,19 +1,21 @@
-import { NonceValue, ApiRoles } from "../../../credential/data";
-import { LoginID, Password } from "../../data";
-import { PasswordLoginClient, Credential, credentialUnauthorized, credentialAuthorized } from "../../infra";
+import { LoginID, NonceValue, ApiRoles } from "../../../credential/data";
+import { Password } from "../../../password/data";
+import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../infra";
 
 export function initSimulatePasswordLoginClient(targetLoginID: LoginID, targetPassword: Password, nonce: NonceValue, roles: ApiRoles): PasswordLoginClient {
     return {
-        login(loginID: LoginID, password: Password): Promise<Credential> {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    if (loginID.loginID !== targetLoginID.loginID || password.password !== targetPassword.password) {
-                        resolve(credentialUnauthorized("invalid-password-login"));
-                    }
+        login,
+    }
 
-                    resolve(credentialAuthorized(nonce, roles));
-                }, 0);
-            });
-        },
-    };
+    function login(loginID: LoginID, password: Password): Promise<LoginResponse> {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                if (loginID.loginID !== targetLoginID.loginID || password.password !== targetPassword.password) {
+                    resolve(loginFailed({ type: "invalid-password-login" }));
+                } else {
+                    resolve(loginSuccess(nonce, roles));
+                }
+            }, 5 * 1000);
+        });
+    }
 }

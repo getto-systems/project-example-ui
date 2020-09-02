@@ -1,75 +1,88 @@
+import { RenewError } from "./load/credential/data";
+
 import { LoadAction } from "./load/action";
-import { LoadScriptComponent, initLoadScriptComponent } from "./load/load_script";
-import { PasswordLoginComponent, initPasswordLoginComponent } from "./load/password_login";
+import { LoadScriptInit, initLoadScript } from "./load/load_script";
+import { PasswordLoginInit, initPasswordLogin } from "./load/password_login";
+import { PasswordResetInit, initPasswordReset } from "./load/password_reset";
+
+export type LoadInit = [LoadState, LoadUsecase]
 
 export interface LoadUsecase {
-    initial: LoadView;
     registerTransitionSetter(setter: LoadTransitionSetter): void;
-
-    initLoadScriptComponent(): LoadScriptComponent;
-    initPasswordLoginComponent(): PasswordLoginComponent;
 }
 export interface LoadTransitionSetter {
-    (view: LoadView): void;
+    (view: LoadState): void;
 }
 
-export type LoadView =
-    Readonly<{ name: "load-script" }> |
-    Readonly<{ name: "password-login" }> |
-    Readonly<{ name: "error", err: string }>;
-
-const LoadScriptView: LoadView = { name: "load-script" };
-const PasswordLoginView: LoadView = { name: "password-login" };
-function errorView(err: string): LoadView {
-    return { name: "error", err: err }
+export type LoadState =
+    Readonly<{ view: "load-script", init: LoadScriptInit }> |
+    Readonly<{ view: "password-login", init: PasswordLoginInit }> |
+    Readonly<{ view: "password-reset", init: PasswordResetInit }> |
+    Readonly<{ view: "error", err: RenewError }>;
+function viewLoadScript(init: LoadScriptInit): LoadState {
+    return { view: "load-script", init }
+}
+function viewPasswordLogin(init: PasswordLoginInit): LoadState {
+    return { view: "password-login", init }
+}
+function viewPasswordReset(init: PasswordResetInit): LoadState {
+    return { view: "password-reset", init }
+}
+function viewError(err: RenewError): LoadState {
+    return { view: "error", err }
 }
 
-export async function initLoad(action: LoadAction): Promise<LoadUsecase> {
-    let transitionState = initialLoadTransitionState();
+export async function initLoad(url: Readonly<URL>, action: LoadAction): Promise<LoadInit> {
+    // TODO load/transition にアクションを定義
+    let transitionState = initialLoadTransitionState;
 
     const transition = {
         logined() {
-            transitionTo(LoadScriptView);
-        },
-        passwordReset() {
-            //transitionTo(PasswordResetView);
+            transitionTo(loadScriptView());
         },
     }
 
-    return {
-        initial: await initial(),
+    const usecase = {
         registerTransitionSetter,
+    }
 
-        initLoadScriptComponent() {
-            return initLoadScriptComponent(action);
-        },
-        initPasswordLoginComponent() {
-            return initPasswordLoginComponent(action, transition);
-        },
-    };
+    return [await initial(), usecase]
 
-    async function initial(): Promise<LoadView> {
-        try {
-            const result = await action.credential.renewApiRoles(action.renew);
-            if (result.authorized) {
-                return LoadScriptView;
-            }
+    function loadScriptView(): LoadState {
+        return viewLoadScript(initLoadScript(action));
+    }
+    function passwordLoginView(): LoadState {
+        return viewPasswordLogin(initPasswordLogin(action, transition));
+    }
+    function passwordResetView(): LoadState {
+        return viewPasswordReset(initPasswordReset(url, action, transition));
+    }
 
-            if (result.err === "server-error") {
-                return errorView(result.err);
-            }
+    async function initial(): Promise<LoadState> {
+        const renew = await action.credential.renew();
+        if (renew.success) {
+            return loadScriptView();
+        }
 
-            // TODO パスワードリセットを追加したら選択した View を表示する
-            return PasswordLoginView;
-        } catch (err) {
-            return errorView(`${err}`);
+        switch (renew.err.type) {
+            case "server-error":
+            case "bad-response":
+            case "infra-error":
+                return viewError(renew.err);
+            default:
+                // ログイン前画面ではアンダースコアで始まる query string を使用する
+                if (url.searchParams.get("_password_reset")) {
+                    return passwordResetView();
+                } else {
+                    return passwordLoginView();
+                }
         }
     }
 
     function registerTransitionSetter(setter: LoadTransitionSetter) {
         type state =
             Readonly<{ state: "empty" }> |
-            Readonly<{ state: "hasNext", view: LoadView }>;
+            Readonly<{ state: "hasNext", view: LoadState }>;
 
         let nextState: state = { state: "empty" }
 
@@ -87,7 +100,7 @@ export async function initLoad(action: LoadAction): Promise<LoadUsecase> {
         }
     }
 
-    function transitionTo(view: LoadView) {
+    function transitionTo(view: LoadState) {
         switch (transitionState.state) {
             case "initial":
                 transitionState = {
@@ -113,12 +126,10 @@ export async function initLoad(action: LoadAction): Promise<LoadUsecase> {
 
 type LoadTransitionState =
     Readonly<{ state: "initial" }> |
-    Readonly<{ state: "transition-to", view: LoadView }> |
+    Readonly<{ state: "transition-to", view: LoadState }> |
     Readonly<{ state: "registered", setter: LoadTransitionSetter }>;
 
-function initialLoadTransitionState(): LoadTransitionState {
-    return { state: "initial" }
-}
+const initialLoadTransitionState: LoadTransitionState = { state: "initial" }
 
 function assertNever(_: never): never {
     throw new Error("NEVER");

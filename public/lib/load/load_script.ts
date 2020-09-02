@@ -1,35 +1,22 @@
 import { LoadAction } from "./action";
-import { ScriptPath } from "./script/data";
+import { LoadedScript } from "./script/data";
 
-export interface LoadScriptComponent {
-    initial: LoadScriptState;
-    getScriptPath(): Promise<LoadScriptState>;
-}
+export type LoadScriptInit = [LoadScriptState];
 
 export type LoadScriptState =
-    Readonly<{ state: "initial" }> |
-    Readonly<{ state: "loaded", scriptPath: ScriptPath }>;
-
-export type LoadScriptError = Readonly<{
-    err: string,
-}>
-function error(err: string): LoadScriptError {
-    return { err: err }
+    Readonly<{ state: "initial", next: Promise<LoadScriptState> }> |
+    Readonly<{ state: "loaded", script: LoadedScript }>;
+function loadScriptInitial(next: Promise<LoadScriptState>): LoadScriptState {
+    return { state: "initial", next }
+}
+function loadScriptLoaded(script: LoadedScript): LoadScriptState {
+    return { state: "loaded", script }
 }
 
-function loaded(scriptPath: ScriptPath): LoadScriptState {
-    return { state: "loaded", scriptPath: scriptPath }
-}
+export function initLoadScript(action: LoadAction): LoadScriptInit {
+    return [loadScriptInitial(loadScript())];
 
-export function initLoadScriptComponent(action: LoadAction): LoadScriptComponent {
-    return {
-        initial: { state: "initial" },
-        async getScriptPath() {
-            try {
-                return loaded(await action.script.getPath())
-            } catch (err) {
-                throw error(`${err}`);
-            }
-        },
+    async function loadScript(): Promise<LoadScriptState> {
+        return loadScriptLoaded(await action.script.load());
     }
 }

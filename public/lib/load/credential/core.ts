@@ -1,47 +1,64 @@
 import { CredentialAction } from "./action";
-import { Renewer, RenewError, Loginer, LoginError, Authorized, authorized, unauthorized } from "./data";
-import { Infra, success } from "./infra";
+import {
+    LoginID,
+    LoginIDValidationError,
+    NonceValue,
+    ApiRoles,
+    StoreState,
+    loginSuccess,
+    loginFailure,
+    RenewState,
+    renewSuccess,
+    renewFailure,
+} from "./data";
+import { Infra } from "./infra";
 
 export function credentialAction(infra: Infra): CredentialAction {
     return {
-        async renewApiRoles(renewer: Renewer): Promise<Authorized<RenewError>> {
+        validateLoginID,
+
+        store,
+        renew,
+    }
+
+    function validateLoginID(loginID: LoginID): Array<LoginIDValidationError> {
+        const errors: Array<LoginIDValidationError> = [];
+
+        if (loginID.loginID.length === 0) {
+            errors.push("empty");
+        }
+
+        return errors;
+    }
+
+    async function renew(): Promise<RenewState> {
+        try {
             const nonce = await infra.credentials.findNonce();
             if (nonce.found) {
-                const result = await renewer(nonce.value);
-                if (result.renew) {
-                    const stored = await infra.credentials.storeRoles(result.roles);
-                    if (stored === success) {
-                        return authorized();
-                    }
-                    return assertNever(stored)
+                const response = await infra.renewClient.renew(nonce.value);
+                if (response.success) {
+                    await infra.credentials.storeRoles(response.roles);
+                    return renewSuccess;
                 }
 
-                return unauthorized(result.err);
+                return renewFailure(response.err);
             }
 
-            return unauthorized("empty-nonce");
-        },
-        async login(loginer: Loginer): Promise<Authorized<LoginError>> {
-            const result = await loginer();
-            if (result.login) {
-                const roleStored = await infra.credentials.storeRoles(result.roles);
-                if (roleStored !== success) {
-                    return assertNever(roleStored);
-                }
-
-                const nonceStored = await infra.credentials.storeNonce(result.nonce);
-                if (nonceStored !== success) {
-                    return assertNever(nonceStored);
-                }
-
-                return authorized();
-            }
-
-            return unauthorized(result.err);
-        },
+            return renewFailure({ type: "empty-nonce" });
+        } catch (err) {
+            return renewFailure({ type: "infra-error", err });
+        }
     }
-}
 
-function assertNever(_: never): never {
-    throw new Error("NEVER");
+    async function store(nonce: NonceValue, roles: ApiRoles): Promise<StoreState> {
+        try {
+            await Promise.all([
+                infra.credentials.storeNonce(nonce),
+                infra.credentials.storeRoles(roles),
+            ]);
+            return loginSuccess;
+        } catch (err) {
+            return loginFailure({ type: "infra-error", err });
+        }
+    }
 }

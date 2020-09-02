@@ -1,10 +1,10 @@
-import { Pathname } from "../data";
+import { Pathname, pathname } from "../data";
 import { PathnameLocation } from "../infra";
 
 export function initBrowserLocation(location: Location): PathnameLocation {
     return {
         async pathname(): Promise<Pathname> {
-            return location.pathname;
+            return pathname(location.pathname);
         },
     };
 }
