@@ -1,5 +1,5 @@
-import { ScriptPath } from "./data";
+import { LoadedScript } from "./data";
 
 export interface ScriptAction {
-    getPath(): Promise<ScriptPath>;
+    load(): Promise<LoadedScript>;
 }

@@ -2,14 +2,14 @@ import { decodeBase64StringToUint8Array, encodeUint8ArrayToBase64String } from "
 import { CredentialMessage } from "../../../../y_static/local_storage_pb.js";
 
 import { Nonce, nonce, nonceNotFound, NonceValue, ApiRoles } from "../../data";
-import { CredentialRepository, Success, success } from "../../infra";
+import { CredentialRepository } from "../../infra";
 
 export function initStorageCredential(storage: Storage, key: string): CredentialRepository {
     return new Repository(new CredentialStorageImpl(storage, key));
 }
 
 interface CredentialStorage {
-    setItem(data: Data): Success;
+    setItem(data: Data): void;
     getItem(): Credential;
 }
 
@@ -43,12 +43,12 @@ class Repository implements CredentialRepository {
         return credential.nonce;
     }
 
-    async storeRoles(roles: ApiRoles): Promise<Success> {
-        return this.storage.setItem(this.newCredential({ type: "roles", roles: roles }));
+    async storeRoles(roles: ApiRoles): Promise<void> {
+        this.storage.setItem(this.newCredential({ type: "roles", roles: roles }));
     }
 
-    async storeNonce(value: NonceValue): Promise<Success> {
-        return this.storage.setItem(this.newCredential({ type: "nonce", nonce: value }));
+    async storeNonce(value: NonceValue): Promise<void> {
+        this.storage.setItem(this.newCredential({ type: "nonce", nonce: value }));
     }
 
     newCredential(data: Update): Data {
@@ -69,7 +69,7 @@ class Repository implements CredentialRepository {
                         }
                     } else {
                         return {
-                            nonce: "",
+                            nonce: { nonce: "" },
                             roles: data.roles,
                         }
                     }
@@ -82,12 +82,12 @@ class Repository implements CredentialRepository {
                 case "nonce":
                     return {
                         nonce: data.nonce,
-                        roles: [],
+                        roles: { roles: [] },
                     }
 
                 case "roles":
                     return {
-                        nonce: "",
+                        nonce: { nonce: "" },
                         roles: data.roles,
                     }
 
@@ -115,8 +115,8 @@ class CredentialStorageImpl implements CredentialStorage {
 
                 return {
                     found: true,
-                    nonce: credential.nonce ? nonce(credential.nonce) : nonceNotFound,
-                    roles: credential.roles ? credential.roles : [],
+                    nonce: credential.nonce ? nonce({ nonce: credential.nonce }) : nonceNotFound,
+                    roles: { roles: credential.roles ? credential.roles : [] },
                 }
             } catch (err) {
                 // パースできないデータの場合はキーを削除する
@@ -127,17 +127,15 @@ class CredentialStorageImpl implements CredentialStorage {
         return { found: false }
     }
 
-    setItem(data: Data): Success {
+    setItem(data: Data): void {
         const f = CredentialMessage;
         const credential = new f();
 
-        credential.nonce = data.nonce;
-        credential.roles = Array.from(data.roles);
+        credential.nonce = data.nonce.nonce;
+        credential.roles = Array.from(data.roles.roles);
 
         const arr = f.encode(credential).finish();
         this.storage.setItem(this.key, encodeUint8ArrayToBase64String(arr));
-
-        return success;
     }
 }
 

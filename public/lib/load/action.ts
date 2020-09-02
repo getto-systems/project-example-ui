@@ -1,15 +1,13 @@
 import { CredentialAction } from "./credential/action";
-import { RenewAction } from "./renew/action";
+import { PasswordAction } from "./password/action";
 import { PasswordLoginAction } from "./password_login/action";
+import { PasswordResetAction } from "./password_reset/action";
 import { ScriptAction } from "./script/action";
 
 export type LoadAction = {
     credential: CredentialAction,
-    renew: RenewAction,
+    password: PasswordAction,
     passwordLogin: PasswordLoginAction,
+    passwordReset: PasswordResetAction,
     script: ScriptAction,
-}
-
-export interface LoadLogined {
-    (): void;
 }
