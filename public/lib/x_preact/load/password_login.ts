@@ -10,7 +10,9 @@ interface PreactComponent {
     (): VNode;
 }
 
-interface Component {
+interface PasswordLoginPreactComponent {
+    setUpdate(setState: PasswordLoginUpdate): void
+
     inputLoginID(loginID: LoginID): void
     changeLoginID(loginID: LoginID): void
 
@@ -25,52 +27,75 @@ interface Component {
     map(state: LoginState): void
 }
 
-export function PasswordLogin(initialState: PasswordLoginState, passwordLoginComponent: PasswordLoginComponent): PreactComponent {
+interface PasswordLoginUpdate {
+    (state: PasswordLoginState): void
+}
+
+export function PasswordLogin(initialState: PasswordLoginState, baseComponent: PasswordLoginComponent): PreactComponent {
+    let update: PasswordLoginUpdate = (state: PasswordLoginState) => {
+        console.log(state);
+    }
+
+    const component: PasswordLoginPreactComponent = {
+        setUpdate(setter: PasswordLoginUpdate) { update = setter; },
+
+        inputLoginID(loginID: LoginID) { update(baseComponent.inputLoginID(loginID)); },
+        changeLoginID(loginID: LoginID) { update(baseComponent.changeLoginID(loginID)); },
+
+        inputPassword(password: Password) { update(baseComponent.inputPassword(password)); },
+        changePassword(password: Password) { update(baseComponent.changePassword(password)); },
+
+        showPassword() { update(baseComponent.showPassword()); },
+        hidePassword() { update(baseComponent.hidePassword()); },
+
+        login() { update(baseComponent.login()); },
+
+        map(state: LoginState) { update(baseComponent.map(state)); },
+    }
+
     return (): VNode => {
         const [state, setState] = useState(initialState);
+        component.setUpdate(setState);
 
-        const component: Component = {
-            inputLoginID(loginID: LoginID) { setState(passwordLoginComponent.inputLoginID(loginID)); },
-            changeLoginID(loginID: LoginID) { setState(passwordLoginComponent.changeLoginID(loginID)); },
+        awaitNextState();
 
-            inputPassword(password: Password) { setState(passwordLoginComponent.inputPassword(password)); },
-            changePassword(password: Password) { setState(passwordLoginComponent.changePassword(password)); },
+        return view();
 
-            showPassword() { setState(passwordLoginComponent.showPassword()); },
-            hidePassword() { setState(passwordLoginComponent.hidePassword()); },
+        function awaitNextState(): void {
+            switch (state.state) {
+                case "active":
+                    switch (state.login.state) {
+                        case "try-to-login":
+                            state.login.next.then(component.map);
+                    }
+                    break;
 
-            login() { setState(passwordLoginComponent.login()); },
-
-            map(state: LoginState) { setState(passwordLoginComponent.map(state)); },
+                case "try-to-store-credential":
+                    state.next.then(update);
+                    break;
+            }
         }
 
-        switch (state.state) {
-            case "active":
-                switch (state.login.state) {
-                    case "try-to-login":
-                        state.login.next.then(component.map);
-                }
+        function view(): VNode {
+            switch (state.state) {
+                case "active":
+                    return viewActive(state.login, state.board, component);
 
-                return viewActive(state.login, state.board, component);
+                case "try-to-store-credential":
+                    return html``
 
-            case "try-to-store-credential":
-                state.next.then(setState);
-                return html``
+                case "failed-to-store-credential":
+                    // TODO エラー画面を用意
+                    return html`保存に失敗: ${state.err}`
 
-            case "failed-to-store-credential":
-                // TODO エラー画面を用意
-                return html`保存に失敗: ${state.err}`
-
-            case "success":
-                return html``
-
-            default:
-                return assertNever(state);
+                case "success":
+                    return html``
+            }
         }
     }
 }
 
-function viewActive(login: LoginState, board: LoginBoard, component: Component): VNode {
+function viewActive(login: LoginState, board: LoginBoard, component: PasswordLoginPreactComponent): VNode {
     return html`
         <aside class="login">
             <section class="login__box">
@@ -148,15 +173,15 @@ function viewActive(login: LoginState, board: LoginBoard, component: Component):
 
     function password(password: PasswordBoard): VNode {
         return html`
-                <dl class="form ${password.err.length == 0 ? "" : "form_error"}">
-                    <dt class="form__header"><label for="password">パスワード</label></dt>
-                    <dd class="form__field">
-                        <input type="password" class="input_fill" id="password" onInput=${onInput} onChange=${onChange}/>
-                        ${password.err.map(validationError)}
-                        <p class="form__help">${viewPassword(password.view)}</p>
-                    </dd>
-                </dl>
-            `
+            <dl class="form ${password.err.length == 0 ? "" : "form_error"}">
+                <dt class="form__header"><label for="password">パスワード</label></dt>
+                <dd class="form__field">
+                    <input type="password" class="input_fill" id="password" onInput=${onInput} onChange=${onChange}/>
+                    ${password.err.map(validationError)}
+                    <p class="form__help">${viewPassword(password.view)}</p>
+                </dd>
+            </dl>
+        `
 
         function onInput(e: InputEvent) {
             component.inputPassword(getPassword(e));
@@ -191,17 +216,17 @@ function viewActive(login: LoginState, board: LoginBoard, component: Component):
         function viewPassword(view: PasswordView): VNode {
             if (view.show) {
                 return html`
-                        <a href="#" onClick=${hide}>
-                            <i class="lnir lnir-key-alt"></i> パスワードを隠す ${characterHelp()}
-                        </a>
-                        <p class="form__help">${extractPassword(view.password)}</p>
-                    `
+                    <a href="#" onClick=${hide}>
+                        <i class="lnir lnir-key-alt"></i> パスワードを隠す ${characterHelp()}
+                    </a>
+                    <p class="form__help">${extractPassword(view.password)}</p>
+                `
             } else {
                 return html`
-                        <a href="#" onClick=${show}>
-                            <i class="lnir lnir-key-alt"></i> パスワードを表示 ${characterHelp()}
-                        </a>
-                    `
+                    <a href="#" onClick=${show}>
+                        <i class="lnir lnir-key-alt"></i> パスワードを表示 ${characterHelp()}
+                    </a>
+                `
             }
 
             function show(e: MouseEvent) {
@@ -241,12 +266,12 @@ function viewActive(login: LoginState, board: LoginBoard, component: Component):
 
     function loginButton(): VNode {
         return html`
-                <div>
-                    ${button()}
-                    <div class="vertical vertical_small"></div>
-                    ${error()}
-                </div>
-            `
+            <div>
+                ${button()}
+                <div class="vertical vertical_small"></div>
+                ${error()}
+            </div>
+        `
 
         function button(): VNode {
             switch (login.state) {
@@ -333,13 +358,14 @@ function viewActive(login: LoginState, board: LoginBoard, component: Component):
 
     function passwordResetLink(): VNode {
         return html`
-                <div class="login__link">
-                    <a href="#"><i class="lnir lnir-question-circle"></i> パスワードを忘れた方</a>
-                </div>
-            `
+            <div class="login__link">
+                <a href="#"><i class="lnir lnir-question-circle"></i> パスワードを忘れた方</a>
+            </div>
+        `
     }
 }
 
+// TODO password reset でも同じものを使うので共有したい
 function loginHeader(): VNode {
     return html`
         <header class="login__header">
