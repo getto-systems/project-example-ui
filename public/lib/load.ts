@@ -1,12 +1,10 @@
 import { LoadAction } from "./load/action";
+import { Transitioner } from "./load/transition";
 import { LoadScriptInit, initLoadScript } from "./load/load_script";
 import { PasswordLoginInit, initPasswordLogin } from "./load/password_login";
 import { PasswordResetInit, initPasswordReset } from "./load/password_reset";
 
-import {
-    TransitionState, initialTransition, transitionStacked, transitionRegistered,
-    TransitionSetter,
-} from "./action/transition/data";
+import { TransitionSetter } from "./action/transition/data";
 import { RenewError } from "./action/credential/data";
 
 export type LoadInit = [LoadUsecase, LoadState]
@@ -34,16 +32,16 @@ function error(err: RenewError): LoadState {
 }
 
 export async function initLoad(action: LoadAction, url: Readonly<URL>): Promise<LoadInit> {
-    const manager = new TransitionManager();
+    const transitioner = new Transitioner<LoadState>();
 
     const transition = {
         logined() {
-            manager.transitionTo(loadScriptView());
+            transitioner.transitionTo(loadScriptView());
         },
     }
 
     const usecase = {
-        registerTransitionSetter: manager.register,
+        registerTransitionSetter: transitioner.register,
     }
 
     return [usecase, await initial()]
@@ -81,44 +79,4 @@ export async function initLoad(action: LoadAction, url: Readonly<URL>): Promise<
     function passwordResetView(): LoadState {
         return passwordReset(initPasswordReset(action, url, transition));
     }
-}
-
-class TransitionManager {
-    state: TransitionState<LoadState>
-
-    constructor() {
-        this.state = initialTransition();
-    }
-
-    transitionTo(view: LoadState): void {
-        switch (this.state.state) {
-            case "initial":
-            case "stacked":
-                this.state = transitionStacked(view);
-                return;
-
-            case "registered":
-                this.state.setter(view);
-                return;
-
-            default:
-                return assertNever(this.state);
-        }
-    }
-
-    register(setter: TransitionSetter<LoadState>): void {
-        if (this.state.state === "stacked") {
-            ((view) => {
-                setTimeout(() => {
-                    setter(view);
-                }, 0);
-            })(this.state.view);
-        }
-
-        this.state = transitionRegistered(setter);
-    }
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER");
 }
