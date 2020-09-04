@@ -13,12 +13,14 @@ import {
 } from "./data";
 
 export interface PasswordResetAction {
+    initResetTokenRecord(): ResetTokenRecord
+
     initCreateSessionStore(loginID: LoginIDRecord): CreateSessionStore
     initCreateSessionApi(): CreateSessionApi
 
     initPollingStatusApi(): PollingStatusApi
 
-    initResetStore(loginID: LoginIDRecord, password: PasswordRecord): ResetStore
+    initResetStore(resetToken: ResetTokenRecord, loginID: LoginIDRecord, password: PasswordRecord): ResetStore
     initResetApi(): ResetApi
 }
 

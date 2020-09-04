@@ -260,6 +260,7 @@ class ResetComponentImpl implements ResetComponent {
 
     constructor(action: LoadAction) {
         this.store = action.passwordReset.initResetStore(
+            action.passwordReset.initResetTokenRecord(),
             action.credential.initLoginIDRecord(),
             action.password.initPasswordRecord(),
         );

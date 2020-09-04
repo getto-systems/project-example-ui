@@ -33,6 +33,8 @@ const RESET_DELAY_LIMIT_SECOND = 1;
 
 export function passwordResetAction(infra: Infra): PasswordResetAction {
     return {
+        initResetTokenRecord,
+
         initCreateSessionStore,
         initCreateSessionApi,
 
@@ -40,6 +42,10 @@ export function passwordResetAction(infra: Infra): PasswordResetAction {
 
         initResetStore,
         initResetApi,
+    }
+
+    function initResetTokenRecord(): ResetTokenRecord {
+        return new ResetTokenRecordImpl();
     }
 
     function initCreateSessionStore(loginID: LoginIDRecord): CreateSessionStore {
@@ -53,8 +59,8 @@ export function passwordResetAction(infra: Infra): PasswordResetAction {
         return new PollingStatusApiImpl(infra.passwordResetClient);
     }
 
-    function initResetStore(loginID: LoginIDRecord, password: PasswordRecord): ResetStore {
-        return new ResetStoreImpl(new ResetTokenRecordImpl(), loginID, password);
+    function initResetStore(resetToken: ResetTokenRecord, loginID: LoginIDRecord, password: PasswordRecord): ResetStore {
+        return new ResetStoreImpl(resetToken, loginID, password);
     }
     function initResetApi(): ResetApi {
         return new ResetApiImpl(infra.passwordResetClient);

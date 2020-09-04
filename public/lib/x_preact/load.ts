@@ -85,6 +85,7 @@ function main(initialState: LoadState, usecase: LoadUsecase) {
     return () => {
         const [state, setState] = useState(initialState);
         useEffect(() => {
+            // TODO たぶんこのあたりで setInterval で renew し続けるようにする
             usecase.registerTransitionSetter(setState)
         }, []);
 

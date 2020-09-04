@@ -5,6 +5,7 @@ export interface PasswordAction {
 }
 
 export interface PasswordRecord {
+    // TODO history が必要なやつに実装したら必要なくなる
     addChangedListener(listener: PasswordListener): void
 
     currentBoard(): PasswordBoard
