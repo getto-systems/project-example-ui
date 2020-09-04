@@ -1,17 +1,9 @@
 import { Infra, PasswordResetClient, SendTokenError } from "./infra";
 
-import { LoginIDRecord } from "../credential/action";
-import { PasswordRecord } from "../password/action";
-import {
-    ResetTokenRecord,
-    PasswordResetAction,
-    CreateSessionStore, CreateSessionApi,
-    PollingStatusApi,
-    ResetStore, ResetApi,
-} from "./action";
-
 import { LoginIDBoard } from "../credential/data";
+import { LoginIDRecord } from "../credential/action";
 import { PasswordBoard } from "../password/data";
+import { PasswordRecord } from "../password/action";
 import {
     Session,
     ResetToken, ResetTokenBoard, ResetTokenValidationError, ValidResetToken,
@@ -26,6 +18,13 @@ import {
 
     ValidContent, validContent, invalidContent,
 } from "./data";
+import {
+    ResetTokenRecord,
+    PasswordResetAction,
+    CreateSessionStore, CreateSessionApi,
+    PollingStatusApi,
+    ResetStore, ResetApi,
+} from "./action";
 
 // 「遅くなっています」を表示するまでの秒数
 const CREATE_SESSION_DELAY_LIMIT_SECOND = 1;

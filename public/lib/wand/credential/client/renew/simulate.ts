@@ -1,5 +1,6 @@
-import { NonceValue, ApiRoles } from "../../../credential/data";
 import { RenewClient, RenewResponse, renewSuccess, renewFailed } from "../../infra";
+
+import { NonceValue, ApiRoles } from "../../../credential/data";
 
 export function initSimulateRenewClient(targetNonce: NonceValue, roles: ApiRoles): RenewClient {
     return {

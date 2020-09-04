@@ -1,5 +1,6 @@
-import { Pathname } from "../data";
 import { PathnameLocation, PathnameFound } from "../infra";
+
+import { Pathname } from "../data";
 
 export function initSimulateLocation(pathname: Pathname): PathnameLocation {
     return {

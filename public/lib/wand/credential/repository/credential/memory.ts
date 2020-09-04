@@ -1,5 +1,6 @@
-import { Nonce, nonce, NonceValue, ApiRoles } from "../../data";
 import { CredentialRepository } from "../../infra";
+
+import { Nonce, nonce, NonceValue, ApiRoles } from "../../data";
 
 export function initMemoryCredential(initialNonce: Nonce): CredentialRepository {
     const data: { nonce: Nonce, roles: ApiRoles } = {

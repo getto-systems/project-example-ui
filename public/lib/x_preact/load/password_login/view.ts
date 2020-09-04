@@ -1,8 +1,8 @@
 import { VNode } from "preact";
 import { html } from "htm/preact";
 
-import { PasswordLoginState } from "../../../load/password_login";
 import { PreactBaseComponent, PreactLoginComponent } from "./component";
+import { PasswordLoginState } from "../../../load/password_login";
 
 import { LoginID, LoginIDBoard, LoginIDValidationError } from "../../../wand/credential/data";
 import { Password, PasswordBoard, PasswordView, PasswordValidationError } from "../../../wand/password/data";

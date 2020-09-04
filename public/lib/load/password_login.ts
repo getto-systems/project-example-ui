@@ -1,10 +1,9 @@
 import { LoadAction } from "./action";
 
-import { PasswordLoginTransition, LoginStore, LoginApi } from "../wand/password_login/action";
-
 import { LoginID, NonceValue, ApiRoles, StoreError } from "../wand/credential/data";
 import { Password } from "../wand/password/data";
 import { LoginBoard, LoginState } from "../wand/password_login/data";
+import { PasswordLoginTransition, LoginStore, LoginApi } from "../wand/password_login/action";
 
 export type PasswordLoginInit = [PasswordLoginComponent, PasswordLoginState]
 

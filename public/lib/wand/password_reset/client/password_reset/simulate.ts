@@ -1,26 +1,14 @@
-import { LoginID, NonceValue, ApiRoles } from "../../../credential/data";
-import { Password } from "../../../password/data";
-import {
-    Session,
-    ResetToken,
-} from "../../data";
 import {
     PasswordResetClient,
-    CreateSessionResponse,
-    createSessionSuccess,
-    createSessionFailed,
-    SendTokenResponse,
-    SendTokenError,
-    sendTokenSuccess,
-    //sendTokenFailed,
-    GetStatusResponse,
-    getStatusDone,
-    getStatusPolling,
-    getStatusFailed,
-    ResetResponse,
-    resetSuccess,
-    resetFailed,
+    CreateSessionResponse, createSessionSuccess, createSessionFailed,
+    SendTokenResponse, SendTokenError, sendTokenSuccess, //sendTokenFailed,
+    GetStatusResponse, getStatusDone, getStatusPolling, getStatusFailed,
+    ResetResponse, resetSuccess, resetFailed,
 } from "../../infra";
+
+import { LoginID, NonceValue, ApiRoles } from "../../../credential/data";
+import { Password } from "../../../password/data";
+import { Session, ResetToken } from "../../data";
 
 export function initSimulatePasswordResetClient(targetLoginID: LoginID, nonce: NonceValue, roles: ApiRoles): PasswordResetClient {
     type TokenState =

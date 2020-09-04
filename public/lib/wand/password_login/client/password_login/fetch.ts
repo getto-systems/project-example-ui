@@ -1,6 +1,7 @@
+import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../infra";
+
 import { LoginID } from "../../../credential/data";
 import { Password } from "../../../password/data";
-import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../infra";
 
 interface AuthClient {
     passwordLogin(param: { loginID: string, password: string }): Promise<AuthLoginResponse>

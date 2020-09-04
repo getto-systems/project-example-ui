@@ -1,6 +1,7 @@
+import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../infra";
+
 import { LoginID, NonceValue, ApiRoles } from "../../../credential/data";
 import { Password } from "../../../password/data";
-import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../infra";
 
 export function initSimulatePasswordLoginClient(targetLoginID: LoginID, targetPassword: Password, nonce: NonceValue, roles: ApiRoles): PasswordLoginClient {
     return {

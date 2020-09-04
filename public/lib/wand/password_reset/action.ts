@@ -1,8 +1,7 @@
-import { LoginIDRecord } from "../credential/action";
-import { PasswordRecord } from "../password/action";
-
 import { LoginIDBoard } from "../credential/data";
+import { LoginIDRecord } from "../credential/action";
 import { PasswordBoard } from "../password/data";
+import { PasswordRecord } from "../password/action";
 import {
     Session,
     ResetToken, ResetTokenBoard, ValidResetToken,
