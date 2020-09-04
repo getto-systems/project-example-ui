@@ -1,9 +1,9 @@
-import { RenewError } from "./load/credential/data";
-
 import { LoadAction } from "./load/action";
 import { LoadScriptInit, initLoadScript } from "./load/load_script";
 import { PasswordLoginInit, initPasswordLogin } from "./load/password_login";
 import { PasswordResetInit, initPasswordReset } from "./load/password_reset";
+
+import { RenewError } from "./action/credential/data";
 
 export type LoadInit = [LoadState, LoadUsecase]
 
