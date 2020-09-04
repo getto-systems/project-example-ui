@@ -4,9 +4,9 @@ import { html } from "htm/preact";
 import { PasswordLoginState } from "../../../load/password_login";
 import { PreactBaseComponent, PreactLoginComponent } from "./component";
 
-import { LoginID, LoginIDBoard, LoginIDValidationError } from "../../../action/credential/data";
-import { Password, PasswordBoard, PasswordView, PasswordValidationError } from "../../../action/password/data";
-import { LoginState, LoginBoard, LoginError } from "../../../action/password_login/data";
+import { LoginID, LoginIDBoard, LoginIDValidationError } from "../../../wand/credential/data";
+import { Password, PasswordBoard, PasswordView, PasswordValidationError } from "../../../wand/password/data";
+import { LoginState, LoginBoard, LoginError } from "../../../wand/password_login/data";
 
 export function view(component: PreactBaseComponent, state: PasswordLoginState): VNode {
     switch (state.type) {

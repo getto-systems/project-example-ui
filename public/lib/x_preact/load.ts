@@ -10,23 +10,23 @@ import { PasswordLogin } from "./load/password_login";
 
 import { LoadInit, LoadState, LoadUsecase, initLoad } from "../load";
 
-import { initStorageCredential } from "../action/credential/repository/credential/storage";
-import { initFetchRenewClient } from "../action/credential/client/renew/fetch";
-import { initFetchPasswordLoginClient } from "../action/password_login/client/password_login/fetch";
-import { initSimulatePasswordResetClient } from "../action/password_reset/client/password_reset/simulate";
-import { initBrowserLocation } from "../action/script/location/browser";
+import { initStorageCredential } from "../wand/credential/repository/credential/storage";
+import { initFetchRenewClient } from "../wand/credential/client/renew/fetch";
+import { initFetchPasswordLoginClient } from "../wand/password_login/client/password_login/fetch";
+import { initSimulatePasswordResetClient } from "../wand/password_reset/client/password_reset/simulate";
+import { initBrowserLocation } from "../wand/script/location/browser";
 import { env } from "../y_static/env";
 
-import { CredentialRepository, RenewClient } from "../action/credential/infra";
-import { PasswordLoginClient } from "../action/password_login/infra";
-import { PasswordResetClient } from "../action/password_reset/infra";
-import { ScriptEnv, PathnameLocation } from "../action/script/infra";
+import { CredentialRepository, RenewClient } from "../wand/credential/infra";
+import { PasswordLoginClient } from "../wand/password_login/infra";
+import { PasswordResetClient } from "../wand/password_reset/infra";
+import { ScriptEnv, PathnameLocation } from "../wand/script/infra";
 
-import { credentialAction } from "../action/credential/core";
-import { passwordAction } from "../action/password/core";
-import { passwordLoginAction } from "../action/password_login/core";
-import { passwordResetAction } from "../action/password_reset/core";
-import { scriptAction } from "../action/script/core";
+import { credentialAction } from "../wand/credential/core";
+import { passwordAction } from "../wand/password/core";
+import { passwordLoginAction } from "../wand/password_login/core";
+import { passwordResetAction } from "../wand/password_reset/core";
+import { scriptAction } from "../wand/script/core";
 
 (async () => {
     render(h(main(...await initUsecase()), {}), document.body);

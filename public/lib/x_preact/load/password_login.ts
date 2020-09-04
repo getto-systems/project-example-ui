@@ -6,8 +6,8 @@ import { view } from "./password_login/view";
 import { PreactBaseComponent, PreactLoginComponent } from "./password_login/component";
 import { PasswordLoginState, PasswordLoginComponent, LoginComponent } from "../../load/password_login";
 
-import { LoginID } from "../../action/credential/data";
-import { Password } from "../../action/password/data";
+import { LoginID } from "../../wand/credential/data";
+import { Password } from "../../wand/password/data";
 
 interface PreactComponent {
     (): VNode;
