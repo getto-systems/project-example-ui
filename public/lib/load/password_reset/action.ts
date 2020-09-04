@@ -13,18 +13,18 @@ import {
 } from "./data";
 
 export interface PasswordResetAction {
-    initCreateSessionBoardStore(
+    initCreateSessionStore(
         loginIDValidator: LoginIDValidator,
-    ): CreateSessionBoardStore
+    ): CreateSessionStore
     initCreateSessionApi(): CreateSessionApi
 
     initPollingStatusApi(): PollingStatusApi
 
-    initResetBoardStore(
+    initResetStore(
         loginIDValidator: LoginIDValidator,
         passwordValidator: PasswordValidator,
         passwordCharacterChekcer: PasswordCharacterChecker,
-    ): ResetBoardStore
+    ): ResetStore
     initResetApi(): ResetApi
 }
 
@@ -32,14 +32,14 @@ export interface PasswordResetTransition {
     logined(): void
 }
 
-export interface CreateSessionBoardStore {
+export interface CreateSessionStore {
     currentBoard(): CreateSessionBoard
 
     inputLoginID(loginID: LoginID): CreateSessionBoard
     changeLoginID(loginID: LoginID): CreateSessionBoard
 
     content(): ValidContent<CreateSessionBoardContent>
-    clearBoard(): void
+    clear(): void
 }
 export interface CreateSessionApi {
     currentState(): CreateSessionState
@@ -51,7 +51,7 @@ export interface PollingStatusApi {
     pollingStatus(session: Session): PollingStatusState
 }
 
-export interface ResetBoardStore {
+export interface ResetStore {
     currentBoard(): ResetBoard
 
     setResetToken(resetToken: ResetToken): ResetBoard
@@ -66,7 +66,7 @@ export interface ResetBoardStore {
     hidePassword(): ResetBoard
 
     content(): ValidContent<ResetBoardContent>
-    clearBoard(): void
+    clear(): void
 }
 
 export interface ResetApi {

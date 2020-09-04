@@ -9,9 +9,9 @@ import {
 } from "../password/action";
 import {
     PasswordResetAction,
-    CreateSessionBoardStore, CreateSessionApi,
+    CreateSessionStore, CreateSessionApi,
     PollingStatusApi,
-    ResetBoardStore, ResetApi,
+    ResetStore, ResetApi,
 } from "./action";
 
 import { LoginID, LoginIDBoard } from "../credential/data";
@@ -41,19 +41,19 @@ const RESET_DELAY_LIMIT_SECOND = 1;
 
 export function passwordResetAction(infra: Infra): PasswordResetAction {
     return {
-        initCreateSessionBoardStore,
+        initCreateSessionStore,
         initCreateSessionApi,
 
         initPollingStatusApi,
 
-        initResetBoardStore,
+        initResetStore,
         initResetApi,
     }
 
-    function initCreateSessionBoardStore(
+    function initCreateSessionStore(
         loginIDValidator: LoginIDValidator,
-    ): CreateSessionBoardStore {
-        return new CreateSessionBoardStoreImpl(
+    ): CreateSessionStore {
+        return new CreateSessionStoreImpl(
             loginIDValidator,
         );
     }
@@ -67,12 +67,12 @@ export function passwordResetAction(infra: Infra): PasswordResetAction {
         return new PollingStatusApiImpl(infra.passwordResetClient);
     }
 
-    function initResetBoardStore(
+    function initResetStore(
         loginIDValidator: LoginIDValidator,
         passwordValidator: PasswordValidator,
         passwordCharacterChekcer: PasswordCharacterChecker,
-    ): ResetBoardStore {
-        return new ResetBoardStoreImpl(
+    ): ResetStore {
+        return new ResetStoreImpl(
             loginIDValidator,
             passwordValidator,
             passwordCharacterChekcer,
@@ -92,7 +92,7 @@ const emptyLoginID: LoginIDBoardSource = {
     board: { err: [] },
 }
 
-class CreateSessionBoardStoreImpl implements CreateSessionBoardStore {
+class CreateSessionStoreImpl implements CreateSessionStore {
     loginIDValidator: LoginIDValidator
 
     loginID: LoginIDBoardSource
@@ -141,7 +141,7 @@ class CreateSessionBoardStoreImpl implements CreateSessionBoardStore {
         return this.loginID.loginID;
     }
 
-    clearBoard(): void {
+    clear(): void {
         this.loginID = emptyLoginID;
     }
 }
@@ -309,7 +309,7 @@ const emptyPassword: PasswordBoardSource = {
     },
 }
 
-class ResetBoardStoreImpl implements ResetBoardStore {
+class ResetStoreImpl implements ResetStore {
     resetToken: ResetTokenBoardSource
     loginID: LoginIDBoardSource
     password: PasswordBoardSource
@@ -421,7 +421,7 @@ class ResetBoardStoreImpl implements ResetBoardStore {
         return this.password.password;
     }
 
-    clearBoard(): void {
+    clear(): void {
         this.resetToken = emptyResetToken;
         this.loginID = emptyLoginID;
         this.password = emptyPassword;

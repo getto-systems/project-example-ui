@@ -2,16 +2,15 @@ import { LoadAction } from "./action";
 
 import {
     PasswordResetTransition,
-    CreateSessionBoardStore, CreateSessionApi,
+    CreateSessionStore, CreateSessionApi,
     PollingStatusApi,
-    ResetBoardStore, ResetApi,
+    ResetStore, ResetApi,
 } from "./password_reset/action";
 
-import { LoginID, StoreError, NonceValue, ApiRoles, StoreState } from "./credential/data";
+import { LoginID, NonceValue, ApiRoles, StoreState, StoreError } from "./credential/data";
 import { Password } from "./password/data";
 import {
-    Session,
-    ResetToken,
+    Session, ResetToken,
     CreateSessionBoard, CreateSessionState,
     PollingStatusState,
     ResetBoard, ResetState,
@@ -92,9 +91,9 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
 
     function initialState(): PasswordResetState {
         // ログイン前の画面ではアンダースコアから始まるクエリを使用する
-        const resetToken = url.searchParams.get("_password_reset_token");
-        if (resetToken) {
-            return reset.initialState({ token: resetToken });
+        const token = url.searchParams.get("_password_reset_token");
+        if (token) {
+            return reset.initialState({ token });
         }
 
         return createSession.initialState();
@@ -103,13 +102,13 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
     function nextState(state: PasswordResetState): PasswordResetNextState {
         switch (state.type) {
             case "create-session":
-                return createSessionState(...state.state);
+                return mapCreateSessionState(...state.state);
 
             case "polling-status":
-                return pollingStatusState(state.state);
+                return mapPollingStatusState(state.state);
 
             case "reset":
-                return resetState(...state.state);
+                return mapResetState(...state.state);
 
             case "try-to-store-credential":
                 return passwordResetNextState(state.promise);
@@ -122,7 +121,7 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
                 return assertNever(state);
         }
 
-        function createSessionState(_board: CreateSessionBoard, state: CreateSessionState): PasswordResetNextState {
+        function mapCreateSessionState(_board: CreateSessionBoard, state: CreateSessionState): PasswordResetNextState {
             switch (state.state) {
                 case "initial-create-session":
                 case "try-to-create-session":
@@ -136,7 +135,7 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
                     return assertNever(state);
             }
         }
-        function pollingStatusState(state: PollingStatusState): PasswordResetNextState {
+        function mapPollingStatusState(state: PollingStatusState): PasswordResetNextState {
             switch (state.state) {
                 case "initial-polling-status":
                     return passwordResetStatic;
@@ -153,7 +152,7 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
                     return assertNever(state);
             }
         }
-        function resetState(_board: ResetBoard, state: ResetState): PasswordResetNextState {
+        function mapResetState(_board: ResetBoard, state: ResetState): PasswordResetNextState {
             switch (state.state) {
                 case "initial-reset":
                 case "try-to-reset":
@@ -169,7 +168,7 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
         }
 
         async function startPolling(session: Session): Promise<PasswordResetState> {
-            createSession.clearBoard();
+            createSession.clearStore();
 
             return pollingStatus.initialState(session);
         }
@@ -179,7 +178,7 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
         }
 
         async function storeCredential(nonce: NonceValue, roles: ApiRoles): Promise<PasswordResetState> {
-            reset.clearBoard();
+            reset.clearStore();
 
             return passwordResetTryToStoreCredential(map(action.credential.store(nonce, roles)));
 
@@ -202,11 +201,11 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
 }
 
 class CreateSessionComponentImpl implements CreateSessionComponent {
-    store: CreateSessionBoardStore
+    store: CreateSessionStore
     api: CreateSessionApi
 
     constructor(action: LoadAction) {
-        this.store = action.passwordReset.initCreateSessionBoardStore(
+        this.store = action.passwordReset.initCreateSessionStore(
             action.credential.validateLoginID,
         );
         this.api = action.passwordReset.initCreateSessionApi();
@@ -231,8 +230,8 @@ class CreateSessionComponentImpl implements CreateSessionComponent {
             return passwordResetCreateSession([this.store.currentBoard(), this.api.currentState()]);
         }
     }
-    clearBoard(): void {
-        this.store.clearBoard();
+    clearStore(): void {
+        this.store.clear();
     }
 }
 
@@ -249,11 +248,11 @@ class PollingStatusComponentImpl {
 }
 
 class ResetComponentImpl implements ResetComponent {
-    store: ResetBoardStore
+    store: ResetStore
     api: ResetApi
 
     constructor(action: LoadAction) {
-        this.store = action.passwordReset.initResetBoardStore(
+        this.store = action.passwordReset.initResetStore(
             action.credential.validateLoginID,
             action.password.validatePassword,
             action.password.checkPasswordCharacter,
@@ -294,8 +293,8 @@ class ResetComponentImpl implements ResetComponent {
             return passwordReset([this.store.currentBoard(), this.api.currentState()]);
         }
     }
-    clearBoard(): void {
-        this.store.clearBoard();
+    clearStore(): void {
+        this.store.clear();
     }
 }
 
