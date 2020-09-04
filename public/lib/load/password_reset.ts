@@ -1,6 +1,7 @@
 import { LoadAction } from "./action";
 
-import { LoginID, NonceValue, ApiRoles, StoreState, StoreError } from "../wand/credential/data";
+import { LoginID, NonceValue, ApiRoles, StoreCredentialState } from "../wand/credential/data";
+import { StoreCredentialApi } from "../wand/credential/action";
 import { Password } from "../wand/password/data";
 import {
     Session, ResetToken,
@@ -26,27 +27,21 @@ export interface PasswordResetComponent {
 
 export type PasswordResetState =
     Readonly<{ type: "create-session", state: [CreateSessionBoard, CreateSessionState] }> |
-    Readonly<{ type: "polling-status", state: PollingStatusState }> |
+    Readonly<{ type: "polling-status", state: [PollingStatusState] }> |
     Readonly<{ type: "reset", state: [ResetBoard, ResetState] }> |
-    Readonly<{ type: "try-to-store-credential", promise: Promise<PasswordResetState> }> |
-    Readonly<{ type: "failed-to-store-credential", err: StoreError }> |
-    Readonly<{ type: "success" }>
-function passwordResetCreateSession(state: [CreateSessionBoard, CreateSessionState]): PasswordResetState {
+    Readonly<{ type: "store-credential", state: [StoreCredentialState] }>
+function CreateSession(state: [CreateSessionBoard, CreateSessionState]): PasswordResetState {
     return { type: "create-session", state }
 }
-function passwordResetPollingStatus(state: PollingStatusState): PasswordResetState {
+function PollingStatus(state: [PollingStatusState]): PasswordResetState {
     return { type: "polling-status", state }
 }
-function passwordReset(state: [ResetBoard, ResetState]): PasswordResetState {
+function Reset(state: [ResetBoard, ResetState]): PasswordResetState {
     return { type: "reset", state }
 }
-function passwordResetTryToStoreCredential(promise: Promise<PasswordResetState>): PasswordResetState {
-    return { type: "try-to-store-credential", promise }
+function StoreCredential(state: [StoreCredentialState]): PasswordResetState {
+    return { type: "store-credential", state }
 }
-function passwordResetFailedToStoreCredential(err: StoreError): PasswordResetState {
-    return { type: "failed-to-store-credential", err }
-}
-const passwordResetSuccess: PasswordResetState = { type: "success" }
 
 export type PasswordResetNextState =
     Readonly<{ hasNext: false }> |
@@ -79,6 +74,8 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
     const createSession = new CreateSessionComponentImpl(action);
     const pollingStatus = new PollingStatusComponentImpl(action);
     const reset = new ResetComponentImpl(action);
+    const storeCredential = new StoreCredentialComponentImpl(action);
+
     const component: PasswordResetComponent = {
         nextState,
 
@@ -101,26 +98,19 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
     function nextState(state: PasswordResetState): PasswordResetNextState {
         switch (state.type) {
             case "create-session":
-                return mapCreateSessionState(...state.state);
+                return nextCreateSession(...state.state);
 
             case "polling-status":
-                return mapPollingStatusState(state.state);
+                return nextPollingStatus(...state.state);
 
             case "reset":
-                return mapResetState(...state.state);
+                return nextReset(...state.state);
 
-            case "try-to-store-credential":
-                return passwordResetNextState(state.promise);
-
-            case "failed-to-store-credential":
-            case "success":
-                return passwordResetStatic;
-
-            default:
-                return assertNever(state);
+            case "store-credential":
+                return nextStoreCredential(...state.state);
         }
 
-        function mapCreateSessionState(_board: CreateSessionBoard, state: CreateSessionState): PasswordResetNextState {
+        function nextCreateSession(_board: CreateSessionBoard, state: CreateSessionState): PasswordResetNextState {
             switch (state.state) {
                 case "initial-create-session":
                 case "try-to-create-session":
@@ -134,7 +124,7 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
                     return assertNever(state);
             }
         }
-        function mapPollingStatusState(state: PollingStatusState): PasswordResetNextState {
+        function nextPollingStatus(state: PollingStatusState): PasswordResetNextState {
             switch (state.state) {
                 case "initial-polling-status":
                     return passwordResetStatic;
@@ -146,12 +136,9 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
                 case "failed-to-polling-status":
                 case "succeed-to-polling-status":
                     return passwordResetStatic;
-
-                default:
-                    return assertNever(state);
             }
         }
-        function mapResetState(_board: ResetBoard, state: ResetState): PasswordResetNextState {
+        function nextReset(_board: ResetBoard, state: ResetState): PasswordResetNextState {
             switch (state.state) {
                 case "initial-reset":
                 case "try-to-reset":
@@ -159,42 +146,30 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
                     return passwordResetStatic;
 
                 case "succeed-to-reset":
-                    return passwordResetNextState(storeCredential(state.nonce, state.roles));
+                    return passwordResetNextState(storeCredential.store(state.nonce, state.roles));
+            }
+        }
+        function nextStoreCredential(state: StoreCredentialState): PasswordResetNextState {
+            switch (state.state) {
+                case "initial-store-credential":
+                case "failed-to-store-credential":
+                    return passwordResetStatic;
 
-                default:
-                    return assertNever(state);
+                case "try-to-store-credential":
+                    return passwordResetNextState(state.promise.then(storeCredential.mapApi));
+
+                case "succeed-to-store-credential":
+                    transition.logined();
+                    return passwordResetStatic;
             }
         }
 
         async function startPolling(session: Session): Promise<PasswordResetState> {
-            createSession.clearStore();
-
             return pollingStatus.initialState(session);
         }
 
         async function polling(promise: Promise<PollingStatusState>): Promise<PasswordResetState> {
-            return passwordResetPollingStatus(await promise);
-        }
-
-        async function storeCredential(nonce: NonceValue, roles: ApiRoles): Promise<PasswordResetState> {
-            reset.clearStore();
-
-            return passwordResetTryToStoreCredential(map(action.credential.store(nonce, roles)));
-
-            async function map(promise: Promise<StoreState>): Promise<PasswordResetState> {
-                const state = await promise;
-
-                if (state.success) {
-                    // 画面の遷移は state を返してから行う
-                    setTimeout(() => {
-                        transition.logined();
-                    }, 0);
-
-                    return passwordResetSuccess;
-                } else {
-                    return passwordResetFailedToStoreCredential(state.err);
-                }
-            }
+            return PollingStatus([await promise]);
         }
     }
 }
@@ -211,7 +186,7 @@ class CreateSessionComponentImpl implements CreateSessionComponent {
     }
 
     currentState(): PasswordResetState {
-        return passwordResetCreateSession([this.store.currentBoard(), this.api.currentState()]);
+        return CreateSession([this.store.currentBoard(), this.api.currentState()]);
     }
 
     inputLoginID(loginID: LoginID): PasswordResetState {
@@ -229,15 +204,21 @@ class CreateSessionComponentImpl implements CreateSessionComponent {
             return this.currentState();
         }
     }
-    clearStore(): void {
-        this.store.clear();
-    }
 
     mapStore(board: CreateSessionBoard): PasswordResetState {
-        return passwordResetCreateSession([board, this.api.currentState()]);
+        return CreateSession([board, this.api.currentState()]);
     }
     mapApi(state: CreateSessionState): PasswordResetState {
-        return passwordResetCreateSession([this.store.currentBoard(), state]);
+        switch (state.state) {
+            case "initial-create-session":
+            case "try-to-create-session":
+            case "failed-to-create-session":
+                return CreateSession([this.store.currentBoard(), state]);
+
+            case "succeed-to-create-session":
+                this.store.clear();
+                return CreateSession([this.store.currentBoard(), state]);
+        }
     }
 }
 
@@ -249,7 +230,7 @@ class PollingStatusComponentImpl {
     }
 
     initialState(session: Session): PasswordResetState {
-        return passwordResetPollingStatus(this.api.pollingStatus(session));
+        return PollingStatus([this.api.pollingStatus(session)]);
     }
 }
 
@@ -270,7 +251,7 @@ class ResetComponentImpl implements ResetComponent {
         return this.mapStore(this.store.mapResetToken(this.store.resetToken().set(resetToken)));
     }
     currentState(): PasswordResetState {
-        return passwordReset([this.store.currentBoard(), this.api.currentState()]);
+        return Reset([this.store.currentBoard(), this.api.currentState()]);
     }
 
     inputLoginID(loginID: LoginID): PasswordResetState {
@@ -302,15 +283,41 @@ class ResetComponentImpl implements ResetComponent {
             return this.currentState();
         }
     }
-    clearStore(): void {
-        this.store.clear();
-    }
 
     mapStore(board: ResetBoard): PasswordResetState {
-        return passwordReset([board, this.api.currentState()]);
+        return Reset([board, this.api.currentState()]);
     }
     mapApi(state: ResetState): PasswordResetState {
-        return passwordReset([this.store.currentBoard(), state]);
+        switch (state.state) {
+            case "initial-reset":
+            case "try-to-reset":
+            case "failed-to-reset":
+                return Reset([this.store.currentBoard(), state]);
+
+            case "succeed-to-reset":
+                this.store.clear();
+                return Reset([this.store.currentBoard(), state]);
+        }
+    }
+}
+
+class StoreCredentialComponentImpl {
+    api: StoreCredentialApi
+
+    constructor(action: LoadAction) {
+        this.api = action.credential.initStoreCredentialApi();
+    }
+
+    currentState(): PasswordResetState {
+        return StoreCredential([this.api.currentState()]);
+    }
+
+    async store(nonce: NonceValue, roles: ApiRoles): Promise<PasswordResetState> {
+        return this.mapApi(this.api.store(nonce, roles));
+    }
+
+    mapApi(state: StoreCredentialState): PasswordResetState {
+        return StoreCredential([state]);
     }
 }
 

@@ -39,13 +39,19 @@ export type RenewError =
     Readonly<{ type: "bad-response", err: string }> |
     Readonly<{ type: "infra-error", err: string }>
 
-export type StoreState =
-    Readonly<{ success: false, err: StoreError }> |
-    Readonly<{ success: true }>
-export function loginFailure(err: StoreError): StoreState {
-    return { success: false, err }
+export type StoreCredentialState =
+    Readonly<{ state: "initial-store-credential" }> |
+    Readonly<{ state: "try-to-store-credential", promise: Promise<StoreCredentialState> }> |
+    Readonly<{ state: "failed-to-store-credential", err: StoreCredentialError }> |
+    Readonly<{ state: "succeed-to-store-credential" }>
+export const initialStoreCredential: StoreCredentialState = { state: "initial-store-credential" }
+export function tryToStoreCredential(promise: Promise<StoreCredentialState>): StoreCredentialState {
+    return { state: "try-to-store-credential", promise }
 }
-export const loginSuccess: StoreState = { success: true }
+export function failedToStoreCredential(err: StoreCredentialError): StoreCredentialState {
+    return { state: "failed-to-store-credential", err }
+}
+export const succeedToStoreCredential: StoreCredentialState = { state: "succeed-to-store-credential" }
 
-export type StoreError =
+export type StoreCredentialError =
     Readonly<{ type: "infra-error", err: string }>

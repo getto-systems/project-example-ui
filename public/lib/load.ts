@@ -37,7 +37,10 @@ export async function initLoad(action: LoadAction, url: Readonly<URL>): Promise<
 
     const transition = {
         logined() {
-            transitioner.transitionTo(loadScriptView());
+            // 画面の遷移は state を返してから行う
+            setTimeout(() => {
+                transitioner.transitionTo(loadScriptView());
+            }, 0);
         },
     }
 

@@ -4,7 +4,7 @@ import { html } from "htm/preact";
 import { PreactBaseComponent, PreactLoginComponent } from "./component";
 import { PasswordLoginState } from "../../../load/password_login";
 
-import { LoginID, LoginIDBoard, LoginIDValidationError } from "../../../wand/credential/data";
+import { LoginID, LoginIDBoard, LoginIDValidationError, StoreCredentialState } from "../../../wand/credential/data";
 import { Password, PasswordBoard, PasswordView, PasswordValidationError } from "../../../wand/password/data";
 import { LoginState, LoginBoard, LoginError } from "../../../wand/password_login/data";
 
@@ -13,15 +13,8 @@ export function view(component: PreactBaseComponent, state: PasswordLoginState):
         case "login":
             return viewLogin(component.login, ...state.state);
 
-        case "try-to-store-credential":
-            return html``
-
-        case "failed-to-store-credential":
-            // TODO エラー画面を用意
-            return html`保存に失敗: ${state.err}`
-
-        case "success":
-            return html``
+        case "store-credential":
+            return viewStoreCredential(...state.state);
     }
 }
 
@@ -279,6 +272,22 @@ function viewLogin(component: PreactLoginComponent, board: LoginBoard, state: Lo
                 <a href="#"><i class="lnir lnir-question-circle"></i> パスワードがわからない方</a>
             </div>
         `
+    }
+}
+
+function viewStoreCredential(state: StoreCredentialState): VNode {
+    switch (state.state) {
+        case "initial-store-credential":
+        case "try-to-store-credential":
+            // 短時間で遷移するはずなので描画はしない
+            return html``
+
+        case "failed-to-store-credential":
+            // TODO エラー画面を用意
+            return html`保存に失敗: ${state.err}`
+
+        case "succeed-to-store-credential":
+            return html``
     }
 }
 
