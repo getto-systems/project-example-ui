@@ -35,6 +35,7 @@ class AuthClientImpl implements AuthClient {
     }
 
     async renew(params: RenewParam): Promise<AuthResponse> {
+        // TODO fetch はモバイルで使えないっぽいので xhr に書き換え
         const response = await fetch(this.authServerURL, {
             method: "POST",
             credentials: "include",
