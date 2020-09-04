@@ -1,5 +1,9 @@
 import { ScriptAction } from "./action";
-import { Pathname, ScriptPath, scriptPath, LoadedScript, loaded, loadError } from "./data";
+import {
+    Pathname,
+    ScriptPath,
+    LoadState, tryToLoad, failedToLoad, succeedToLoad,
+} from "./data";
 import { Infra } from "./infra";
 
 export function scriptAction(infra: Infra): ScriptAction {
@@ -7,19 +11,21 @@ export function scriptAction(infra: Infra): ScriptAction {
         load,
     }
 
-    async function load(): Promise<LoadedScript> {
-        try {
-            return loaded(secureScriptPath(
-                infra.env.secureServerHost,
-                await infra.location.pathname(),
-            ));
-        } catch (err) {
-            return loadError({ type: "infra-error", err });
+    function load(): LoadState {
+        return tryToLoad(loadScript());
+    }
+
+    async function loadScript(): Promise<LoadState> {
+        const pathname = await infra.location.pathname();
+        if (pathname.found) {
+            return succeedToLoad(secureScriptPath(infra.env.secureServerHost, pathname.pathname));
+        } else {
+            return failedToLoad({ type: "infra-error", err: pathname.err });
         }
     }
 }
 
 function secureScriptPath(secureHost: string, pathname: Pathname): ScriptPath {
     // secure host に html と同じパスで js がホストされている
-    return scriptPath(`//${secureHost}${pathname.pathname.replace(/\.html$/, ".js")}`);
+    return { path: `//${secureHost}${pathname.pathname.replace(/\.html$/, ".js")}` };
 }

@@ -16,7 +16,14 @@ import {
     ResetBoard, ResetState,
 } from "./password_reset/data";
 
-export type PasswordResetInit = [PasswordResetState, PasswordResetComponent]
+export type PasswordResetInit = [PasswordResetComponent, PasswordResetState]
+
+export interface PasswordResetComponent {
+    nextState(state: PasswordResetState): PasswordResetNextState
+
+    createSession: CreateSessionComponent
+    reset: ResetComponent
+}
 
 export type PasswordResetState =
     Readonly<{ type: "create-session", state: [CreateSessionBoard, CreateSessionState] }> |
@@ -42,13 +49,6 @@ function passwordResetFailedToStoreCredential(err: StoreError): PasswordResetSta
 }
 const passwordResetSuccess: PasswordResetState = { type: "success" }
 
-export interface PasswordResetComponent {
-    nextState(state: PasswordResetState): PasswordResetNextState
-
-    createSession: CreateSessionComponent
-    reset: ResetComponent
-}
-
 export type PasswordResetNextState =
     Readonly<{ hasNext: false }> |
     Readonly<{ hasNext: true, promise: Promise<PasswordResetState> }>
@@ -59,16 +59,16 @@ function passwordResetNextState(promise: Promise<PasswordResetState>) {
 
 export interface CreateSessionComponent {
     inputLoginID(loginID: LoginID): PasswordResetState
-    changeLoginID(loginID: LoginID): PasswordResetState
+    changeLoginID(): PasswordResetState
 
     createSession(): PasswordResetState
 }
 export interface ResetComponent {
     inputLoginID(loginID: LoginID): PasswordResetState
-    changeLoginID(loginID: LoginID): PasswordResetState
+    changeLoginID(): PasswordResetState
 
     inputPassword(password: Password): PasswordResetState
-    changePassword(password: Password): PasswordResetState
+    changePassword(): PasswordResetState
 
     showPassword(): PasswordResetState
     hidePassword(): PasswordResetState
@@ -87,7 +87,7 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
         reset,
     }
 
-    return [initialState(), component];
+    return [component, initialState()];
 
     function initialState(): PasswordResetState {
         // ログイン前の画面ではアンダースコアから始まるクエリを使用する
@@ -96,7 +96,7 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
             return reset.initialState({ token });
         }
 
-        return createSession.initialState();
+        return createSession.currentState();
     }
 
     function nextState(state: PasswordResetState): PasswordResetNextState {
@@ -206,32 +206,39 @@ class CreateSessionComponentImpl implements CreateSessionComponent {
 
     constructor(action: LoadAction) {
         this.store = action.passwordReset.initCreateSessionStore(
-            action.credential.validateLoginID,
+            action.credential.initLoginIDRecord(),
         );
         this.api = action.passwordReset.initCreateSessionApi();
     }
 
-    initialState(): PasswordResetState {
+    currentState(): PasswordResetState {
         return passwordResetCreateSession([this.store.currentBoard(), this.api.currentState()]);
     }
 
     inputLoginID(loginID: LoginID): PasswordResetState {
-        return passwordResetCreateSession([this.store.inputLoginID(loginID), this.api.currentState()]);
+        return this.mapStore(this.store.mapLoginID(this.store.loginID().input(loginID)));
     }
-    changeLoginID(loginID: LoginID): PasswordResetState {
-        return passwordResetCreateSession([this.store.changeLoginID(loginID), this.api.currentState()]);
+    changeLoginID(): PasswordResetState {
+        return this.mapStore(this.store.mapLoginID(this.store.loginID().change()));
     }
 
     createSession(): PasswordResetState {
         const content = this.store.content();
         if (content.valid) {
-            return passwordResetCreateSession([this.store.currentBoard(), this.api.createSession(content.content)]);
+            return this.mapApi(this.api.createSession(content.content));
         } else {
-            return passwordResetCreateSession([this.store.currentBoard(), this.api.currentState()]);
+            return this.currentState();
         }
     }
     clearStore(): void {
         this.store.clear();
+    }
+
+    mapStore(board: CreateSessionBoard): PasswordResetState {
+        return passwordResetCreateSession([board, this.api.currentState()]);
+    }
+    mapApi(state: CreateSessionState): PasswordResetState {
+        return passwordResetCreateSession([this.store.currentBoard(), state]);
     }
 }
 
@@ -253,48 +260,57 @@ class ResetComponentImpl implements ResetComponent {
 
     constructor(action: LoadAction) {
         this.store = action.passwordReset.initResetStore(
-            action.credential.validateLoginID,
-            action.password.validatePassword,
-            action.password.checkPasswordCharacter,
+            action.credential.initLoginIDRecord(),
+            action.password.initPasswordRecord(),
         );
         this.api = action.passwordReset.initResetApi();
     }
 
     initialState(resetToken: ResetToken): PasswordResetState {
-        return passwordReset([this.store.setResetToken(resetToken), this.api.currentState()]);
+        return this.mapStore(this.store.mapResetToken(this.store.resetToken().set(resetToken)));
+    }
+    currentState(): PasswordResetState {
+        return passwordReset([this.store.currentBoard(), this.api.currentState()]);
     }
 
     inputLoginID(loginID: LoginID): PasswordResetState {
-        return passwordReset([this.store.inputLoginID(loginID), this.api.currentState()]);
+        return this.mapStore(this.store.mapLoginID(this.store.loginID().input(loginID)));
     }
-    changeLoginID(loginID: LoginID): PasswordResetState {
-        return passwordReset([this.store.changeLoginID(loginID), this.api.currentState()]);
+    changeLoginID(): PasswordResetState {
+        return this.mapStore(this.store.mapLoginID(this.store.loginID().change()));
     }
 
     inputPassword(password: Password): PasswordResetState {
-        return passwordReset([this.store.inputPassword(password), this.api.currentState()]);
+        return this.mapStore(this.store.mapPassword(this.store.password().input(password)));
     }
-    changePassword(password: Password): PasswordResetState {
-        return passwordReset([this.store.changePassword(password), this.api.currentState()]);
+    changePassword(): PasswordResetState {
+        return this.mapStore(this.store.mapPassword(this.store.password().change()));
     }
 
     showPassword(): PasswordResetState {
-        return passwordReset([this.store.showPassword(), this.api.currentState()]);
+        return this.mapStore(this.store.mapPassword(this.store.password().show()));
     }
     hidePassword(): PasswordResetState {
-        return passwordReset([this.store.hidePassword(), this.api.currentState()]);
+        return this.mapStore(this.store.mapPassword(this.store.password().hide()));
     }
 
     reset(): PasswordResetState {
         const content = this.store.content();
         if (content.valid) {
-            return passwordReset([this.store.currentBoard(), this.api.reset(content.content)]);
+            return this.mapApi(this.api.reset(content.content));
         } else {
-            return passwordReset([this.store.currentBoard(), this.api.currentState()]);
+            return this.currentState();
         }
     }
     clearStore(): void {
         this.store.clear();
+    }
+
+    mapStore(board: ResetBoard): PasswordResetState {
+        return passwordReset([board, this.api.currentState()]);
+    }
+    mapApi(state: ResetState): PasswordResetState {
+        return passwordReset([this.store.currentBoard(), state]);
     }
 }
 

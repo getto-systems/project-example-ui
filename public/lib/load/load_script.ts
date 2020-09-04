@@ -1,21 +1,13 @@
 import { LoadAction } from "./action";
-import { LoadedScript } from "./script/data";
+import { LoadState } from "./script/data";
 
-export type LoadScriptInit = [LoadScriptState, LoadScriptComponent];
-
-export type LoadScriptState =
-    Readonly<{ state: "initial", promise: Promise<LoadScriptState> }> |
-    Readonly<{ state: "loaded", script: LoadedScript }>;
-function loadScriptInitial(promise: Promise<LoadScriptState>): LoadScriptState {
-    return { state: "initial", promise }
-}
-function loadScriptLoaded(script: LoadedScript): LoadScriptState {
-    return { state: "loaded", script }
-}
+export type LoadScriptInit = [LoadScriptComponent, LoadScriptState];
 
 export interface LoadScriptComponent {
     nextState(state: LoadScriptState): LoadScriptNextState
 }
+
+export type LoadScriptState = LoadState
 
 export type LoadScriptNextState =
     Readonly<{ hasNext: false }> |
@@ -30,26 +22,16 @@ export function initLoadScript(action: LoadAction): LoadScriptInit {
         nextState,
     }
 
-    return [loadScriptInitial(loadScript()), component];
+    return [component, action.script.load()]
 
     function nextState(state: LoadScriptState): LoadScriptNextState {
         switch (state.state) {
-            case "initial":
+            case "try-to-load":
                 return loadScriptNextState(state.promise);
 
-            case "loaded":
+            case "failed-to-load":
+            case "succeed-to-load":
                 return loadScriptStatic;
-
-            default:
-                return assertNever(state);
         }
     }
-
-    async function loadScript(): Promise<LoadScriptState> {
-        return loadScriptLoaded(await action.script.load());
-    }
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER");
 }

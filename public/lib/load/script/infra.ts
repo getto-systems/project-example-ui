@@ -10,5 +10,9 @@ export type ScriptEnv = Readonly<{
 }>
 
 export interface PathnameLocation {
-    pathname(): Promise<Pathname>;
+    pathname(): Promise<PathnameFound>;
 }
+
+export type PathnameFound =
+    Readonly<{ found: false, err: string }> |
+    Readonly<{ found: true, pathname: Pathname }>

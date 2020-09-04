@@ -1,5 +1,5 @@
-import { LoadedScript } from "./data";
+import { LoadState } from "./data";
 
 export interface ScriptAction {
-    load(): Promise<LoadedScript>;
+    load(): LoadState;
 }
