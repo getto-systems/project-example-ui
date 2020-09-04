@@ -1,10 +1,11 @@
-import { ScriptAction } from "./action";
+import { Infra } from "./infra";
+
 import {
     Pathname,
     ScriptPath,
     LoadState, tryToLoad, failedToLoad, succeedToLoad,
 } from "./data";
-import { Infra } from "./infra";
+import { ScriptAction } from "./action";
 
 export function scriptAction(infra: Infra): ScriptAction {
     return {

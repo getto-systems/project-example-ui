@@ -1,8 +1,9 @@
 import { decodeBase64StringToUint8Array, encodeUint8ArrayToBase64String } from "../../../../z_external/protocol_buffers_util";
 import { CredentialMessage } from "../../../../y_static/local_storage_pb.js";
 
-import { Nonce, nonce, nonceNotFound, NonceValue, ApiRoles } from "../../data";
 import { CredentialRepository } from "../../infra";
+
+import { Nonce, nonce, nonceNotFound, NonceValue, ApiRoles } from "../../data";
 
 export function initStorageCredential(storage: Storage, key: string): CredentialRepository {
     return new Repository(new CredentialStorageImpl(storage, key));

@@ -1,9 +1,9 @@
-import { PasswordAction, PasswordRecord, PasswordListener } from "./action";
 import {
     Password, PasswordBoard, PasswordValidationError, ValidPassword,
     PasswordCharacter, simplePassword, complexPassword,
     PasswordView, showPassword, hidePassword,
 } from "./data";
+import { PasswordAction, PasswordRecord, PasswordListener } from "./action";
 
 export function passwordAction(): PasswordAction {
     return {

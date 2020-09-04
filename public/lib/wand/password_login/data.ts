@@ -1,5 +1,5 @@
-import { Password, PasswordBoard } from "../password/data";
 import { LoginID, LoginIDBoard, NonceValue, ApiRoles } from "../credential/data";
+import { Password, PasswordBoard } from "../password/data";
 
 export type LoginBoard = Readonly<[LoginIDBoard, PasswordBoard]>
 export type LoginContent = Readonly<[LoginID, Password]>

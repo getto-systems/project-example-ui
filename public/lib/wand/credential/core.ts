@@ -1,11 +1,13 @@
+import { Infra } from "./infra";
+
 import { CredentialAction, LoginIDRecord, LoginIDListener } from "./action";
+
 import {
     LoginID, LoginIDBoard, LoginIDValidationError, ValidLoginID,
     NonceValue, ApiRoles,
     StoreState, loginSuccess, loginFailure,
     RenewState, renewSuccess, renewFailure,
 } from "./data";
-import { Infra } from "./infra";
 
 export function credentialAction(infra: Infra): CredentialAction {
     return {
