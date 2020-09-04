@@ -4,8 +4,8 @@ import { LoadScriptInit, initLoadScript } from "./load/load_script";
 import { PasswordLoginInit, initPasswordLogin } from "./load/password_login";
 import { PasswordResetInit, initPasswordReset } from "./load/password_reset";
 
-import { TransitionSetter } from "./action/transition/data";
-import { RenewError } from "./action/credential/data";
+import { TransitionSetter } from "./wand/transition/data";
+import { RenewError } from "./wand/credential/data";
 
 export type LoadInit = [LoadUsecase, LoadState]
 
@@ -50,23 +50,23 @@ export async function initLoad(action: LoadAction, url: Readonly<URL>): Promise<
         const renew = await action.credential.renew();
         if (renew.success) {
             return loadScriptView();
-        } else {
-            switch (renew.err.type) {
-                case "empty-nonce":
-                case "invalid-ticket":
-                    // ログイン前画面ではアンダースコアで始まる query string を使用する
-                    if (url.searchParams.get("_password_reset")) {
-                        return passwordResetView();
-                    } else {
-                        return passwordLoginView();
-                    }
+        }
 
-                case "bad-request":
-                case "server-error":
-                case "bad-response":
-                case "infra-error":
-                    return error(renew.err);
-            }
+        switch (renew.err.type) {
+            case "empty-nonce":
+            case "invalid-ticket":
+                // ログイン前画面ではアンダースコアで始まる query string を使用する
+                if (url.searchParams.get("_password_reset")) {
+                    return passwordResetView();
+                } else {
+                    return passwordLoginView();
+                }
+
+            case "bad-request":
+            case "server-error":
+            case "bad-response":
+            case "infra-error":
+                return error(renew.err);
         }
     }
 

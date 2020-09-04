@@ -1,7 +1,7 @@
 import {
     TransitionState, initialTransition, transitionStacked, transitionRegistered,
     TransitionSetter,
-} from "../action/transition/data";
+} from "../wand/transition/data";
 
 export class Transitioner<T> {
     state: TransitionState<T>
