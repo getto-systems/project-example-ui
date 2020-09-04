@@ -1,5 +1,6 @@
 import { LoadAction } from "./action";
-import { LoadState } from "./script/data";
+
+import { LoadState } from "../action/script/data";
 
 export type LoadScriptInit = [LoadScriptComponent, LoadScriptState];
 

@@ -1,9 +1,10 @@
 import { LoadAction } from "./action";
-import { PasswordLoginTransition, LoginStore, LoginApi } from "./password_login/action";
 
-import { LoginID, NonceValue, ApiRoles, StoreError } from "./credential/data";
-import { Password } from "./password/data";
-import { LoginBoard, LoginState } from "./password_login/data";
+import { PasswordLoginTransition, LoginStore, LoginApi } from "../action/password_login/action";
+
+import { LoginID, NonceValue, ApiRoles, StoreError } from "../action/credential/data";
+import { Password } from "../action/password/data";
+import { LoginBoard, LoginState } from "../action/password_login/data";
 
 export type PasswordLoginInit = [PasswordLoginComponent, PasswordLoginState]
 
