@@ -276,7 +276,7 @@ function viewLogin(component: PreactLoginComponent, board: LoginBoard, state: Lo
     function passwordResetLink(): VNode {
         return html`
             <div class="login__link">
-                <a href="#"><i class="lnir lnir-question-circle"></i> パスワードを忘れた方</a>
+                <a href="#"><i class="lnir lnir-question-circle"></i> パスワードがわからない方</a>
             </div>
         `
     }
