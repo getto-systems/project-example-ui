@@ -15,7 +15,7 @@ update_proto_main(){
     file=${file%.proto}
     name=$(echo $file | sed 's|/|_|g')
 
-    pb_path=$target/lib/y_static/${file}_pb.js
+    pb_path=$target/lib/${file}_pb.js
     d_path=$target/types/${name}_pb.d.ts
 
     rm -f $pb_path $d_path && \

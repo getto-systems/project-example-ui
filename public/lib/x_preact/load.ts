@@ -2,7 +2,7 @@ import { render, h } from "preact";
 import { html } from "htm/preact";
 import { useState, useEffect } from "preact/hooks";
 
-import { initAuthClient } from "../z_external/auth_client";
+import { initAuthClient } from "../z_external/auth_client/auth_client";
 
 import { LoadScript } from "./load/load_script";
 import { PasswordLogin } from "./load/password_login";

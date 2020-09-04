@@ -1,6 +1,6 @@
-import { decodeBase64StringToUint8Array, encodeUint8ArrayToBase64String } from "./protocol_buffers_util";
-import { ApiCredentialMessage } from "../y_static/auth/credential_pb.js";
-import { PasswordLoginMessage } from "../y_static/auth/password_login_pb.js";
+import { decodeBase64StringToUint8Array, encodeUint8ArrayToBase64String } from "../../z_external/protocol_buffers_util";
+import { ApiCredentialMessage } from "./y_static/auth/credential_pb.js";
+import { PasswordLoginMessage } from "./y_static/auth/password_login_pb.js";
 
 export interface AuthClient {
     renew(param: RenewParam): Promise<AuthResponse>;
