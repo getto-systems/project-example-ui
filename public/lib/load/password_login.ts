@@ -1,6 +1,7 @@
 import { LoadAction } from "./action";
 
-import { LoginID, NonceValue, ApiRoles, StoreError } from "../wand/credential/data";
+import { LoginID, NonceValue, ApiRoles, StoreCredentialState } from "../wand/credential/data";
+import { StoreCredentialApi } from "../wand/credential/action";
 import { Password } from "../wand/password/data";
 import { LoginBoard, LoginState } from "../wand/password_login/data";
 import { PasswordLoginTransition, LoginStore, LoginApi } from "../wand/password_login/action";
@@ -15,19 +16,13 @@ export interface PasswordLoginComponent {
 
 export type PasswordLoginState =
     Readonly<{ type: "login", state: [LoginBoard, LoginState] }> |
-    Readonly<{ type: "try-to-store-credential", promise: Promise<PasswordLoginState> }> |
-    Readonly<{ type: "failed-to-store-credential", err: StoreError }> |
-    Readonly<{ type: "success" }>
-function passwordLogin(state: [LoginBoard, LoginState]): PasswordLoginState {
+    Readonly<{ type: "store-credential", state: [StoreCredentialState] }>
+function Login(state: [LoginBoard, LoginState]): PasswordLoginState {
     return { type: "login", state }
 }
-function passwordLoginTryToStoreCredential(promise: Promise<PasswordLoginState>): PasswordLoginState {
-    return { type: "try-to-store-credential", promise }
+function StoreCredential(state: [StoreCredentialState]): PasswordLoginState {
+    return { type: "store-credential", state }
 }
-function passwordLoginFailedToStoreCredential(err: StoreError): PasswordLoginState {
-    return { type: "failed-to-store-credential", err }
-}
-const passwordLoginSuccess: PasswordLoginState = { type: "success" }
 
 export type PasswordLoginNextState =
     Readonly<{ hasNext: false }> |
@@ -53,7 +48,9 @@ export interface LoginComponent {
 }
 
 export function initPasswordLogin(action: LoadAction, transition: PasswordLoginTransition): PasswordLoginInit {
-    const login = new LoginComponentImpl(action, transition);
+    const login = new LoginComponentImpl(action);
+    const storeCredential = new StoreCredentialComponentImpl(action);
+
     const component = {
         nextState,
 
@@ -67,12 +64,8 @@ export function initPasswordLogin(action: LoadAction, transition: PasswordLoginT
             case "login":
                 return nextLogin(...state.state);
 
-            case "try-to-store-credential":
-                return passwordLoginNextState(state.promise);
-
-            case "failed-to-store-credential":
-            case "success":
-                return passwordLoginStatic;
+            case "store-credential":
+                return nextStoreCredential(...state.state);
         }
 
     }
@@ -80,51 +73,45 @@ export function initPasswordLogin(action: LoadAction, transition: PasswordLoginT
         switch (state.state) {
             case "initial-login":
             case "failed-to-login":
-            case "succeed-to-login":
                 return passwordLoginStatic;
 
             case "try-to-login":
                 return passwordLoginNextState(state.promise.then(login.mapApi));
+
+            case "succeed-to-login":
+                return passwordLoginNextState(storeCredential.store(state.nonce, state.roles));
         }
     }
-}
+    function nextStoreCredential(state: StoreCredentialState): PasswordLoginNextState {
+        switch (state.state) {
+            case "initial-store-credential":
+            case "failed-to-store-credential":
+                return passwordLoginStatic;
 
-interface StoreCredential {
-    (nonce: NonceValue, roles: ApiRoles): Promise<PasswordLoginState>
+            case "try-to-store-credential":
+                return passwordLoginNextState(state.promise.then(storeCredential.mapApi));
+
+            case "succeed-to-store-credential":
+                transition.logined();
+                return passwordLoginStatic;
+        }
+    }
 }
 
 class LoginComponentImpl implements LoginComponent {
     store: LoginStore
     api: LoginApi
 
-    storeCredential: StoreCredential
-
-    constructor(action: LoadAction, transition: PasswordLoginTransition) {
+    constructor(action: LoadAction) {
         this.store = action.passwordLogin.initLoginStore(
             action.credential.initLoginIDRecord(),
             action.password.initPasswordRecord(),
         );
         this.api = action.passwordLogin.initLoginApi();
-
-        this.storeCredential = storeCredential;
-
-        async function storeCredential(nonce: NonceValue, roles: ApiRoles): Promise<PasswordLoginState> {
-            const result = await action.credential.store(nonce, roles);
-            if (!result.success) {
-                return passwordLoginFailedToStoreCredential(result.err);
-            }
-
-            // 画面の遷移は state を返してから行う
-            setTimeout(() => {
-                transition.logined();
-            }, 0);
-
-            return passwordLoginSuccess;
-        }
     }
 
     currentState(): PasswordLoginState {
-        return passwordLogin([this.store.currentBoard(), this.api.currentState()]);
+        return Login([this.store.currentBoard(), this.api.currentState()]);
     }
 
     inputLoginID(loginID: LoginID): PasswordLoginState {
@@ -158,18 +145,38 @@ class LoginComponentImpl implements LoginComponent {
     }
 
     mapStore(board: LoginBoard): PasswordLoginState {
-        return passwordLogin([board, this.api.currentState()]);
+        return Login([board, this.api.currentState()]);
     }
     mapApi(state: LoginState): PasswordLoginState {
         switch (state.state) {
             case "initial-login":
             case "try-to-login":
             case "failed-to-login":
-                return passwordLogin([this.store.currentBoard(), state]);
+                return Login([this.store.currentBoard(), state]);
 
             case "succeed-to-login":
                 this.store.clear();
-                return passwordLoginTryToStoreCredential(this.storeCredential(state.nonce, state.roles));
+                return Login([this.store.currentBoard(), state]);
         }
+    }
+}
+
+class StoreCredentialComponentImpl {
+    api: StoreCredentialApi
+
+    constructor(action: LoadAction) {
+        this.api = action.credential.initStoreCredentialApi();
+    }
+
+    currentState(): PasswordLoginState {
+        return StoreCredential([this.api.currentState()]);
+    }
+
+    async store(nonce: NonceValue, roles: ApiRoles): Promise<PasswordLoginState> {
+        return this.mapApi(this.api.store(nonce, roles));
+    }
+
+    mapApi(state: StoreCredentialState): PasswordLoginState {
+        return StoreCredential([state]);
     }
 }

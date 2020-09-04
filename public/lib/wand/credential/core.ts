@@ -1,20 +1,20 @@
-import { Infra } from "./infra";
+import { Infra, CredentialRepository } from "./infra";
 
-import { CredentialAction, LoginIDRecord, LoginIDListener } from "./action";
+import { CredentialAction, StoreCredentialApi, LoginIDRecord, LoginIDListener } from "./action";
 
 import {
     LoginID, LoginIDBoard, LoginIDValidationError, ValidLoginID,
     NonceValue, ApiRoles,
-    StoreState, loginSuccess, loginFailure,
     RenewState, renewSuccess, renewFailure,
+    StoreCredentialState, initialStoreCredential, tryToStoreCredential, failedToStoreCredential, succeedToStoreCredential,
 } from "./data";
 
 export function credentialAction(infra: Infra): CredentialAction {
     return {
         initLoginIDRecord,
 
-        store,
         renew,
+        initStoreCredentialApi,
     }
 
     function initLoginIDRecord(): LoginIDRecord {
@@ -40,15 +40,36 @@ export function credentialAction(infra: Infra): CredentialAction {
         }
     }
 
-    async function store(nonce: NonceValue, roles: ApiRoles): Promise<StoreState> {
+    function initStoreCredentialApi(): StoreCredentialApi {
+        return new StoreCredentialApiImpl(infra.credentials);
+    }
+}
+
+class StoreCredentialApiImpl implements StoreCredentialApi {
+    credentials: CredentialRepository
+
+    state: StoreCredentialState = initialStoreCredential
+
+    constructor(credentials: CredentialRepository) {
+        this.credentials = credentials;
+    }
+
+    currentState(): StoreCredentialState {
+        return this.state;
+    }
+    store(nonce: NonceValue, roles: ApiRoles): StoreCredentialState {
+        return tryToStoreCredential(this.storePromise(nonce, roles));
+    }
+
+    async storePromise(nonce: NonceValue, roles: ApiRoles): Promise<StoreCredentialState> {
         try {
             await Promise.all([
-                infra.credentials.storeNonce(nonce),
-                infra.credentials.storeRoles(roles),
+                this.credentials.storeNonce(nonce),
+                this.credentials.storeRoles(roles),
             ]);
-            return loginSuccess;
+            return succeedToStoreCredential;
         } catch (err) {
-            return loginFailure({ type: "infra-error", err });
+            return failedToStoreCredential({ type: "infra-error", err });
         }
     }
 }
