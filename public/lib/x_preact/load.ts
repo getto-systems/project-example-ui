@@ -1,9 +1,10 @@
-import { render, h } from "preact";
+import { render, h, VNode } from "preact";
 import { html } from "htm/preact";
 import { useState, useEffect } from "preact/hooks";
 
 import { initAuthClient } from "../z_external/auth_client/auth_client";
 
+import { LoadAction } from "../load/action";
 import { LoadScript } from "./load/load_script";
 import { PasswordLogin } from "./load/password_login";
 
@@ -32,10 +33,10 @@ import { scriptAction } from "../action/script/core";
 })();
 
 function initUsecase(): Promise<LoadInit> {
-    const authClient = initAuthClient(env.authServerURL);
     const url = new URL(location.toString());
+    const authClient = initAuthClient(env.authServerURL);
 
-    return initLoad(url, {
+    const action: LoadAction = {
         credential: credentialAction({
             credentials: initCredentialRepository(),
             renewClient: initRenewClient(),
@@ -51,7 +52,9 @@ function initUsecase(): Promise<LoadInit> {
             env: initScriptEnv(),
             location: initPathnameLocation(),
         }),
-    });
+    }
+
+    return initLoad(action, url);
 
     function initCredentialRepository(): CredentialRepository {
         return initStorageCredential(localStorage, "GETTO-EXAMPLE-CREDENTIAL");
@@ -81,8 +84,8 @@ function initUsecase(): Promise<LoadInit> {
     }
 }
 
-function main(initialState: LoadState, usecase: LoadUsecase) {
-    return () => {
+function main(usecase: LoadUsecase, initialState: LoadState) {
+    return (): VNode => {
         const [state, setState] = useState(initialState);
         useEffect(() => {
             // TODO たぶんこのあたりで setInterval で renew し続けるようにする
@@ -103,13 +106,6 @@ function main(initialState: LoadState, usecase: LoadUsecase) {
             case "error":
                 // TODO エラー画面を用意
                 return html`なんかえらった！: ${state.err}`
-
-            default:
-                return assertNever(state)
         }
     }
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER");
 }
