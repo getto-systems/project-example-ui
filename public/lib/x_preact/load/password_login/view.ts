@@ -2,16 +2,16 @@ import { VNode } from "preact";
 import { html } from "htm/preact";
 
 import { PasswordLoginState } from "../../../load/password_login";
-import { PasswordLoginPreactComponent } from "./component";
+import { PreactBaseComponent, PreactLoginComponent } from "./component";
 
 import { LoginID, LoginIDBoard, LoginIDValidationError } from "../../../load/credential/data";
 import { Password, PasswordBoard, PasswordView, PasswordValidationError } from "../../../load/password/data";
 import { LoginState, LoginBoard, LoginError } from "../../../load/password_login/data";
 
-export function view(component: PasswordLoginPreactComponent, state: PasswordLoginState): VNode {
-    switch (state.state) {
-        case "active":
-            return viewActive(state.login, state.board, component);
+export function view(component: PreactBaseComponent, state: PasswordLoginState): VNode {
+    switch (state.type) {
+        case "login":
+            return viewLogin(component.login, ...state.state);
 
         case "try-to-store-credential":
             return html``
@@ -25,23 +25,23 @@ export function view(component: PasswordLoginPreactComponent, state: PasswordLog
     }
 }
 
-function viewActive(login: LoginState, board: LoginBoard, component: PasswordLoginPreactComponent): VNode {
+function viewLogin(component: PreactLoginComponent, board: LoginBoard, state: LoginState): VNode {
     return html`
         <aside class="login">
             <section class="login__box">
                 ${loginHeader()}
-                ${loginForm()}
+                ${loginForm(...board)}
             </section>
         </aside>
     `
 
-    function loginForm(): VNode {
+    function loginForm(loginID: LoginIDBoard, password: PasswordBoard): VNode {
         return html`
             <form onSubmit="${onSubmit}">
                 <big>
                     <section class="login__body">
-                        ${loginID(board.loginID)}
-                        ${password(board.password)}
+                        ${loginIDForm(loginID)}
+                        ${passwordForm(password)}
                     </section>
                 </big>
                 <big>
@@ -66,9 +66,9 @@ function viewActive(login: LoginState, board: LoginBoard, component: PasswordLog
         }
     }
 
-    function loginID(loginID: LoginIDBoard): VNode {
+    function loginIDForm(loginID: LoginIDBoard): VNode {
         return html`
-            <dl class="form ${loginID.err.length == 0 ? "" : "form_error"}">
+            <dl class="form ${valid(loginID) ? "" : "form_error"}">
                 <dt class="form__header"><label for="login-id">ログインID</label></dt>
                 <dd class="form__field">
                     <input type="text" class="input_fill" id="login-id" onInput=${onInput} onChange=${onChange}/>
@@ -81,7 +81,8 @@ function viewActive(login: LoginState, board: LoginBoard, component: PasswordLog
             component.inputLoginID(getLoginID(e));
         }
         function onChange(e: InputEvent) {
-            component.changeLoginID(getLoginID(e));
+            component.inputLoginID(getLoginID(e));
+            component.changeLoginID();
         }
         function getLoginID(e: InputEvent): LoginID {
             if (e.target instanceof HTMLInputElement) {
@@ -94,16 +95,13 @@ function viewActive(login: LoginState, board: LoginBoard, component: PasswordLog
             switch (err) {
                 case "empty":
                     return html`<p class="form__message">ログインIDを入力してください</p>`
-
-                default:
-                    return assertNever(err);
             }
         }
     }
 
-    function password(password: PasswordBoard): VNode {
+    function passwordForm(password: PasswordBoard): VNode {
         return html`
-            <dl class="form ${password.err.length == 0 ? "" : "form_error"}">
+            <dl class="form ${valid(password) ? "" : "form_error"}">
                 <dt class="form__header"><label for="password">パスワード</label></dt>
                 <dd class="form__field">
                     <input type="password" class="input_fill" id="password" onInput=${onInput} onChange=${onChange}/>
@@ -117,7 +115,8 @@ function viewActive(login: LoginState, board: LoginBoard, component: PasswordLog
             component.inputPassword(getPassword(e));
         }
         function onChange(e: InputEvent) {
-            component.changePassword(getPassword(e));
+            component.inputPassword(getPassword(e));
+            component.changePassword();
         }
         function getPassword(e: InputEvent): Password {
             if (e.target instanceof HTMLInputElement) {
@@ -137,9 +136,6 @@ function viewActive(login: LoginState, board: LoginBoard, component: PasswordLog
                     } else {
                         return html`<p class="form__message">パスワードが長すぎます(72文字以内)</p>`
                     }
-
-                default:
-                    return assertNever(err);
             }
         }
 
@@ -204,7 +200,7 @@ function viewActive(login: LoginState, board: LoginBoard, component: PasswordLog
         `
 
         function button(): VNode {
-            switch (login.state) {
+            switch (state.state) {
                 case "initial-login":
                 case "failed-to-login":
                     // id="login-submit" は onSubmit で button.blur() するのに使用している
@@ -222,20 +218,17 @@ function viewActive(login: LoginState, board: LoginBoard, component: PasswordLog
 
                 case "succeed-to-login":
                     return html``
-
-                default:
-                    return assertNever(login);
             }
         }
 
         function error(): VNode {
-            switch (login.state) {
+            switch (state.state) {
                 case "initial-login":
                 case "succeed-to-login":
                     return html``
 
                 case "try-to-login":
-                    if (login.delayed) {
+                    if (state.delayed) {
                         return html`
                             <dl class="form form_warning">
                                 <dd class="form__field">
@@ -253,13 +246,10 @@ function viewActive(login: LoginState, board: LoginBoard, component: PasswordLog
                     return html`
                         <dl class="form form_error">
                             <dd class="form__field">
-                                ${loginErrorMessage(login.err)}
+                                ${loginErrorMessage(state.err)}
                             </dd>
                         </dl>
                     `
-
-                default:
-                    return assertNever(login);
             }
 
             function loginErrorMessage(err: LoginError): VNode {
@@ -278,9 +268,6 @@ function viewActive(login: LoginState, board: LoginBoard, component: PasswordLog
 
                     case "infra-error":
                         return html`<p class="form__message">ネットワークエラーにより認証に失敗しました</p>`;
-
-                    default:
-                        return assertNever(err);
                 }
             }
         }
@@ -306,6 +293,6 @@ function loginHeader(): VNode {
     `
 }
 
-function assertNever(_: never): never {
-    throw new Error("NEVER");
+function valid<T>(board: { err: Array<T> }): boolean {
+    return board.err.length === 0;
 }

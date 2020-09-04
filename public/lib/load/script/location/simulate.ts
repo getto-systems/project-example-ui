@@ -1,10 +1,10 @@
 import { Pathname } from "../data";
-import { PathnameLocation } from "../infra";
+import { PathnameLocation, PathnameFound } from "../infra";
 
 export function initSimulateLocation(pathname: Pathname): PathnameLocation {
     return {
-        async pathname(): Promise<Pathname> {
-            return pathname;
+        async pathname(): Promise<PathnameFound> {
+            return { found: true, pathname };
         },
     };
 }

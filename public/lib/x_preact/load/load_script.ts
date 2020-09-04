@@ -9,7 +9,7 @@ interface PreactComponent {
     (): VNode
 }
 
-export function LoadScript(initialState: LoadScriptState, baseComponent: LoadScriptComponent): PreactComponent {
+export function LoadScript(baseComponent: LoadScriptComponent, initialState: LoadScriptState): PreactComponent {
     const component = new LoadScriptPreactComponentImpl(baseComponent);
 
     return (): VNode => {

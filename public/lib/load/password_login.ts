@@ -1,41 +1,33 @@
 import { LoadAction } from "./action";
-import { PasswordLoginTransition } from "./password_login/action";
-import { Password } from "./password/data";
+import { PasswordLoginTransition, LoginStore, LoginApi } from "./password_login/action";
+
 import { LoginID, NonceValue, ApiRoles, StoreError } from "./credential/data";
+import { Password } from "./password/data";
 import { LoginBoard, LoginState } from "./password_login/data";
 
 export type PasswordLoginInit = [PasswordLoginComponent, PasswordLoginState]
 
-export type PasswordLoginState =
-    Readonly<{ state: "active", board: LoginBoard, login: LoginState }> |
-    Readonly<{ state: "try-to-store-credential", promise: Promise<PasswordLoginState> }> |
-    Readonly<{ state: "failed-to-store-credential", err: StoreError }> |
-    Readonly<{ state: "success" }>
-function passwordLoginActive(board: LoginBoard, login: LoginState): PasswordLoginState {
-    return { state: "active", board, login }
-}
-function passwordLoginTryToStoreCredential(promise: Promise<PasswordLoginState>): PasswordLoginState {
-    return { state: "try-to-store-credential", promise }
-}
-function passwordLoginFailedToStoreCredential(err: StoreError): PasswordLoginState {
-    return { state: "failed-to-store-credential", err }
-}
-const passwordLoginSuccess: PasswordLoginState = { state: "success" }
-
 export interface PasswordLoginComponent {
     nextState(state: PasswordLoginState): PasswordLoginNextState
 
-    inputLoginID(loginID: LoginID): PasswordLoginState
-    changeLoginID(loginID: LoginID): PasswordLoginState
-
-    inputPassword(password: Password): PasswordLoginState
-    changePassword(password: Password): PasswordLoginState
-
-    showPassword(): PasswordLoginState
-    hidePassword(): PasswordLoginState
-
-    login(): PasswordLoginState
+    login: LoginComponent
 }
+
+export type PasswordLoginState =
+    Readonly<{ type: "login", state: [LoginBoard, LoginState] }> |
+    Readonly<{ type: "try-to-store-credential", promise: Promise<PasswordLoginState> }> |
+    Readonly<{ type: "failed-to-store-credential", err: StoreError }> |
+    Readonly<{ type: "success" }>
+function passwordLogin(state: [LoginBoard, LoginState]): PasswordLoginState {
+    return { type: "login", state }
+}
+function passwordLoginTryToStoreCredential(promise: Promise<PasswordLoginState>): PasswordLoginState {
+    return { type: "try-to-store-credential", promise }
+}
+function passwordLoginFailedToStoreCredential(err: StoreError): PasswordLoginState {
+    return { type: "failed-to-store-credential", err }
+}
+const passwordLoginSuccess: PasswordLoginState = { type: "success" }
 
 export type PasswordLoginNextState =
     Readonly<{ hasNext: false }> |
@@ -45,49 +37,35 @@ function passwordLoginNextState(promise: Promise<PasswordLoginState>) {
     return { hasNext: true, promise }
 }
 
-export function initPasswordLogin(action: LoadAction, transition: PasswordLoginTransition): PasswordLoginInit {
-    const board = action.passwordLogin.initLoginBoardStore(
-        action.credential.validateLoginID,
-        action.password.validatePassword,
-        action.password.checkPasswordCharacter,
-    );
-    const api = action.passwordLogin.initLoginApi();
+export interface LoginComponent {
+    currentState(): PasswordLoginState
 
+    inputLoginID(loginID: LoginID): PasswordLoginState
+    changeLoginID(): PasswordLoginState
+
+    inputPassword(password: Password): PasswordLoginState
+    changePassword(): PasswordLoginState
+
+    showPassword(): PasswordLoginState
+    hidePassword(): PasswordLoginState
+
+    login(): PasswordLoginState
+}
+
+export function initPasswordLogin(action: LoadAction, transition: PasswordLoginTransition): PasswordLoginInit {
+    const login = new LoginComponentImpl(action, transition);
     const component = {
         nextState,
-
-        inputLoginID,
-        changeLoginID,
-
-        inputPassword,
-        changePassword,
-
-        showPassword,
-        hidePassword,
 
         login,
     }
 
-    return [
-        component,
-        passwordLoginActive(board.currentBoard(), api.currentState()),
-    ]
+    return [component, login.currentState()]
 
     function nextState(state: PasswordLoginState): PasswordLoginNextState {
-        switch (state.state) {
-            case "active":
-                switch (state.login.state) {
-                    case "initial-login":
-                    case "failed-to-login":
-                    case "succeed-to-login":
-                        return passwordLoginStatic;
-
-                    case "try-to-login":
-                        return passwordLoginNextState(state.login.promise.then(mapLoginState));
-
-                    default:
-                        return assertNever(state.login);
-                }
+        switch (state.type) {
+            case "login":
+                return nextLogin(...state.state);
 
             case "try-to-store-credential":
                 return passwordLoginNextState(state.promise);
@@ -95,72 +73,103 @@ export function initPasswordLogin(action: LoadAction, transition: PasswordLoginT
             case "failed-to-store-credential":
             case "success":
                 return passwordLoginStatic;
-
-            default:
-                return assertNever(state);
         }
 
-        function mapLoginState(state: LoginState): PasswordLoginState {
-            switch (state.state) {
-                case "initial-login":
-                case "try-to-login":
-                case "failed-to-login":
-                    return passwordLoginActive(board.currentBoard(), state);
+    }
+    function nextLogin(_board: LoginBoard, state: LoginState): PasswordLoginNextState {
+        switch (state.state) {
+            case "initial-login":
+            case "failed-to-login":
+            case "succeed-to-login":
+                return passwordLoginStatic;
 
-                case "succeed-to-login":
-                    board.clear();
-                    return passwordLoginTryToStoreCredential(storeCredential(state.nonce, state.roles));
-
-                default:
-                    return assertNever(state);
-            }
-
-            async function storeCredential(nonce: NonceValue, roles: ApiRoles): Promise<PasswordLoginState> {
-                const result = await action.credential.store(nonce, roles);
-                if (!result.success) {
-                    return passwordLoginFailedToStoreCredential(result.err);
-                }
-
-                // 画面の遷移は state を返してから行う
-                setTimeout(() => {
-                    transition.logined();
-                }, 0);
-
-                return passwordLoginSuccess;
-            }
+            case "try-to-login":
+                return passwordLoginNextState(state.promise.then(login.mapApi));
         }
-    }
-
-    function inputLoginID(loginID: LoginID): PasswordLoginState {
-        return passwordLoginActive(board.inputLoginID(loginID), api.currentState());
-    }
-    function changeLoginID(loginID: LoginID): PasswordLoginState {
-        return passwordLoginActive(board.changeLoginID(loginID), api.currentState());
-    }
-
-    function inputPassword(password: Password): PasswordLoginState {
-        return passwordLoginActive(board.inputPassword(password), api.currentState());
-    }
-    function changePassword(password: Password): PasswordLoginState {
-        return passwordLoginActive(board.changePassword(password), api.currentState());
-    }
-
-    function showPassword(): PasswordLoginState {
-        return passwordLoginActive(board.showPassword(), api.currentState());
-    }
-    function hidePassword(): PasswordLoginState {
-        return passwordLoginActive(board.hidePassword(), api.currentState());
-    }
-
-    function login(): PasswordLoginState {
-        const content = board.content();
-        if (!content.valid) {
-            return passwordLoginActive(board.currentBoard(), api.currentState());
-        }
-        return passwordLoginActive(board.currentBoard(), api.login(content.loginID, content.password));
     }
 }
 
-function assertNever(_: never): never {
-    throw new Error("NEVER");
+interface StoreCredential {
+    (nonce: NonceValue, roles: ApiRoles): Promise<PasswordLoginState>
+}
+
+class LoginComponentImpl implements LoginComponent {
+    store: LoginStore
+    api: LoginApi
+
+    storeCredential: StoreCredential
+
+    constructor(action: LoadAction, transition: PasswordLoginTransition) {
+        this.store = action.passwordLogin.initLoginStore(
+            action.credential.initLoginIDRecord(),
+            action.password.initPasswordRecord(),
+        );
+        this.api = action.passwordLogin.initLoginApi();
+
+        this.storeCredential = storeCredential;
+
+        async function storeCredential(nonce: NonceValue, roles: ApiRoles): Promise<PasswordLoginState> {
+            const result = await action.credential.store(nonce, roles);
+            if (!result.success) {
+                return passwordLoginFailedToStoreCredential(result.err);
+            }
+
+            // 画面の遷移は state を返してから行う
+            setTimeout(() => {
+                transition.logined();
+            }, 0);
+
+            return passwordLoginSuccess;
+        }
+    }
+
+    currentState(): PasswordLoginState {
+        return passwordLogin([this.store.currentBoard(), this.api.currentState()]);
+    }
+
+    inputLoginID(loginID: LoginID): PasswordLoginState {
+        return this.mapStore(this.store.mapLoginID(this.store.loginID().input(loginID)));
+    }
+    changeLoginID(): PasswordLoginState {
+        return this.mapStore(this.store.mapLoginID(this.store.loginID().change()));
+    }
+
+    inputPassword(password: Password): PasswordLoginState {
+        return this.mapStore(this.store.mapPassword(this.store.password().input(password)));
+    }
+    changePassword(): PasswordLoginState {
+        return this.mapStore(this.store.mapPassword(this.store.password().change()));
+    }
+
+    showPassword(): PasswordLoginState {
+        return this.mapStore(this.store.mapPassword(this.store.password().show()));
+    }
+    hidePassword(): PasswordLoginState {
+        return this.mapStore(this.store.mapPassword(this.store.password().hide()));
+    }
+
+    login(): PasswordLoginState {
+        const content = this.store.content();
+        if (content.valid) {
+            return this.mapApi(this.api.login(content.content));
+        } else {
+            return this.currentState();
+        }
+    }
+
+    mapStore(board: LoginBoard): PasswordLoginState {
+        return passwordLogin([board, this.api.currentState()]);
+    }
+    mapApi(state: LoginState): PasswordLoginState {
+        switch (state.state) {
+            case "initial-login":
+            case "try-to-login":
+            case "failed-to-login":
+                return passwordLogin([this.store.currentBoard(), state]);
+
+            case "succeed-to-login":
+                this.store.clear();
+                return passwordLoginTryToStoreCredential(this.storeCredential(state.nonce, state.roles));
+        }
+    }
 }

@@ -1,14 +1,17 @@
 import { Password, PasswordBoard } from "../password/data";
 import { LoginID, LoginIDBoard, NonceValue, ApiRoles } from "../credential/data";
 
-export type LoginBoard = Readonly<{ loginID: LoginIDBoard, password: PasswordBoard }>
+export type LoginBoard = Readonly<[LoginIDBoard, PasswordBoard]>
+export type LoginContent = Readonly<[LoginID, Password]>
 
-export type LoginBoardContent =
+export type ValidContent<T> =
     Readonly<{ valid: false }> |
-    Readonly<{ valid: true, loginID: LoginID, password: Password }>
-export const invalidLoginBoardContent: LoginBoardContent = { valid: false }
-export function validLoginBoardContent(loginID: LoginID, password: Password): LoginBoardContent {
-    return { valid: true, loginID, password }
+    Readonly<{ valid: true, content: T }>
+export function invalidContent<T>(): ValidContent<T> {
+    return { valid: false }
+}
+export function validContent<T>(content: T): ValidContent<T> {
+    return { valid: true, content }
 }
 
 export type LoginState =

@@ -1,12 +1,16 @@
 import { LoginID } from "../../../load/credential/data";
 import { Password } from "../../../load/password/data";
 
-export interface PasswordLoginPreactComponent {
+export interface PreactBaseComponent {
+    login: PreactLoginComponent
+}
+
+export interface PreactLoginComponent {
     inputLoginID(loginID: LoginID): void
-    changeLoginID(loginID: LoginID): void
+    changeLoginID(): void
 
     inputPassword(password: Password): void
-    changePassword(password: Password): void
+    changePassword(): void
 
     showPassword(): void
     hidePassword(): void

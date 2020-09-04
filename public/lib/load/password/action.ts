@@ -1,13 +1,24 @@
-import { Password, PasswordValidationError, PasswordCharacter } from "./data";
+import { Password, PasswordBoard, ValidPassword } from "./data";
 
 export interface PasswordAction {
-    validatePassword(password: Password): Array<PasswordValidationError>
-    checkPasswordCharacter(password: Password): PasswordCharacter
+    initPasswordRecord(): PasswordRecord
 }
 
-export interface PasswordValidator {
-    (password: Password): Array<PasswordValidationError>
+export interface PasswordRecord {
+    addChangedListener(listener: PasswordListener): void
+
+    currentBoard(): PasswordBoard
+
+    input(password: Password): PasswordBoard
+    change(): PasswordBoard
+
+    show(): PasswordBoard
+    hide(): PasswordBoard
+
+    validate(): ValidPassword
+    clear(): void
 }
-export interface PasswordCharacterChecker {
-    (password: Password): PasswordCharacter
+
+export interface PasswordListener {
+    (password: Password): void
 }

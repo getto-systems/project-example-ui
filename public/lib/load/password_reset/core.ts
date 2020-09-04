@@ -1,35 +1,27 @@
 import { Infra, PasswordResetClient, SendTokenError } from "./infra";
 
+import { LoginIDRecord } from "../credential/action";
+import { PasswordRecord } from "../password/action";
 import {
-    LoginIDValidator,
-} from "../credential/action";
-import {
-    PasswordValidator,
-    PasswordCharacterChecker,
-} from "../password/action";
-import {
+    ResetTokenRecord,
     PasswordResetAction,
     CreateSessionStore, CreateSessionApi,
     PollingStatusApi,
     ResetStore, ResetApi,
 } from "./action";
 
-import { LoginID, LoginIDBoard } from "../credential/data";
-import {
-    Password,
-    PasswordBoard,
-    PasswordView, showPassword, hidePassword, updatePasswordView,
-} from "../password/data";
+import { LoginIDBoard } from "../credential/data";
+import { PasswordBoard } from "../password/data";
 import {
     Session,
-    ResetToken,
+    ResetToken, ResetTokenBoard, ResetTokenValidationError, ValidResetToken,
 
-    CreateSessionBoard, CreateSessionBoardContent,
+    CreateSessionBoard, CreateSessionContent,
     CreateSessionState, initialCreateSession, tryToCreateSession, delayedToCreateSession, failedToCreateSession, succeedToCreateSession,
 
     PollingStatusState, initialPollingStatus, tryToPollingStatus, retryToPollingStatus, failedToPollingStatus, succeedToPollingStatus,
 
-    ResetBoard, ResetBoardContent,
+    ResetBoard, ResetContent,
     ResetState, initialReset, tryToReset, delayedToReset, failedToReset, succeedToReset,
 
     ValidContent, validContent, invalidContent,
@@ -50,99 +42,58 @@ export function passwordResetAction(infra: Infra): PasswordResetAction {
         initResetApi,
     }
 
-    function initCreateSessionStore(
-        loginIDValidator: LoginIDValidator,
-    ): CreateSessionStore {
-        return new CreateSessionStoreImpl(
-            loginIDValidator,
-        );
+    function initCreateSessionStore(loginID: LoginIDRecord): CreateSessionStore {
+        return new CreateSessionStoreImpl(loginID);
     }
     function initCreateSessionApi(): CreateSessionApi {
-        return new CreateSessionApiImpl(
-            infra.passwordResetClient,
-        );
+        return new CreateSessionApiImpl(infra.passwordResetClient);
     }
 
     function initPollingStatusApi(): PollingStatusApi {
         return new PollingStatusApiImpl(infra.passwordResetClient);
     }
 
-    function initResetStore(
-        loginIDValidator: LoginIDValidator,
-        passwordValidator: PasswordValidator,
-        passwordCharacterChekcer: PasswordCharacterChecker,
-    ): ResetStore {
-        return new ResetStoreImpl(
-            loginIDValidator,
-            passwordValidator,
-            passwordCharacterChekcer,
-        );
+    function initResetStore(loginID: LoginIDRecord, password: PasswordRecord): ResetStore {
+        return new ResetStoreImpl(new ResetTokenRecordImpl(), loginID, password);
     }
     function initResetApi(): ResetApi {
-        return new ResetApiImpl(
-            infra.passwordResetClient,
-        );
+        return new ResetApiImpl(infra.passwordResetClient);
     }
-}
-
-export type LoginIDBoardSource =
-    { loginID: LoginID, board: LoginIDBoard }
-const emptyLoginID: LoginIDBoardSource = {
-    loginID: { loginID: "" },
-    board: { err: [] },
 }
 
 class CreateSessionStoreImpl implements CreateSessionStore {
-    loginIDValidator: LoginIDValidator
+    impl: {
+        loginID: LoginIDRecord
+    }
 
-    loginID: LoginIDBoardSource
+    constructor(loginID: LoginIDRecord) {
+        this.impl = { loginID }
+    }
 
-    constructor(
-        loginIDValidator: LoginIDValidator,
-    ) {
-        this.loginIDValidator = loginIDValidator;
-
-        this.loginID = emptyLoginID;
+    loginID(): LoginIDRecord {
+        return this.impl.loginID;
     }
 
     currentBoard(): CreateSessionBoard {
-        return {
-            loginID: this.loginID.board,
-        }
+        return [this.loginID().currentBoard()];
     }
 
-    inputLoginID(loginID: LoginID): CreateSessionBoard {
-        return this.updateLoginID(loginID);
-    }
-    changeLoginID(loginID: LoginID): CreateSessionBoard {
-        return this.updateLoginID(loginID);
-    }
-    updateLoginID(loginID: LoginID): CreateSessionBoard {
-        this.loginID.loginID = loginID;
-        this.loginID.board = { err: this.loginIDValidator(loginID) };
-        return this.currentBoard();
-    }
-    validateLoginID(loginID: LoginID): void {
-        this.loginID.board = { err: this.loginIDValidator(loginID) };
+    mapLoginID(loginIDBoard: LoginIDBoard): CreateSessionBoard {
+        return [loginIDBoard];
     }
 
-    content(): ValidContent<CreateSessionBoardContent> {
-        const loginID = this.currentLoginID();
-
-        this.validateLoginID(loginID);
-
-        if (this.loginID.board.err.length > 0) {
+    content(): ValidContent<CreateSessionContent> {
+        const loginID = this.loginID().validate();
+        if (!loginID.valid) {
             return invalidContent();
         }
 
-        return validContent({ loginID });
-    }
-    currentLoginID(): LoginID {
-        return this.loginID.loginID;
+        return validContent([loginID.content]);
     }
 
-    clear(): void {
-        this.loginID = emptyLoginID;
+    clear(): CreateSessionBoard {
+        this.loginID().clear();
+        return this.currentBoard();
     }
 }
 
@@ -166,7 +117,7 @@ class CreateSessionApiImpl implements CreateSessionApi {
         return this.state;
     }
 
-    createSession(content: CreateSessionBoardContent): CreateSessionState {
+    createSession(content: CreateSessionContent): CreateSessionState {
         if (this.state.state === "try-to-create-session") {
             return this.currentState();
         } else {
@@ -174,8 +125,8 @@ class CreateSessionApiImpl implements CreateSessionApi {
         }
     }
 
-    async requestCreateSession(content: CreateSessionBoardContent): Promise<CreateSessionState> {
-        const response = await this.client.createSession(content.loginID);
+    async requestCreateSession(content: CreateSessionContent): Promise<CreateSessionState> {
+        const response = await this.client.createSession(...content);
         if (response.success) {
             return succeedToCreateSession(response.session);
         } else {
@@ -292,139 +243,117 @@ class PollingStatusApiImpl implements PollingStatusApi {
     }
 }
 
-export type ResetTokenBoardSource =
-    { resetToken: ResetToken }
-const emptyResetToken: ResetTokenBoardSource = {
-    resetToken: { token: "" },
+const EMPTY_RESET_TOKEN: ResetToken = { token: "" }
+const ERROR: {
+    ok: Array<ResetTokenValidationError>,
+    empty: Array<ResetTokenValidationError>,
+} = {
+    ok: [],
+    empty: ["empty"],
 }
 
-export type PasswordBoardSource =
-    { password: Password, board: PasswordBoard }
-const emptyPassword: PasswordBoardSource = {
-    password: { password: "" },
-    board: {
-        character: { complex: false },
-        view: { show: false },
-        err: [],
-    },
-}
+class ResetTokenRecordImpl implements ResetTokenRecord {
+    resetToken: ResetToken = EMPTY_RESET_TOKEN
+    err: Array<ResetTokenValidationError> = ERROR.ok
 
-class ResetStoreImpl implements ResetStore {
-    resetToken: ResetTokenBoardSource
-    loginID: LoginIDBoardSource
-    password: PasswordBoardSource
-
-    loginIDValidator: LoginIDValidator
-    passwordValidator: PasswordValidator
-    passwordCharacterChekcer: PasswordCharacterChecker
-
-    constructor(
-        loginIDValidator: LoginIDValidator,
-        passwordValidator: PasswordValidator,
-        passwordCharacterChekcer: PasswordCharacterChecker,
-    ) {
-        this.loginIDValidator = loginIDValidator;
-        this.passwordValidator = passwordValidator;
-        this.passwordCharacterChekcer = passwordCharacterChekcer;
-
-        this.resetToken = emptyResetToken;
-        this.loginID = emptyLoginID;
-        this.password = emptyPassword;
-    }
-
-    currentBoard(): ResetBoard {
+    currentBoard(): ResetTokenBoard {
         return {
-            loginID: this.loginID.board,
-            password: this.password.board,
+            err: this.err,
         }
     }
 
-    setResetToken(resetToken: ResetToken): ResetBoard {
-        this.resetToken.resetToken = resetToken;
+    set(resetToken: ResetToken): ResetTokenBoard {
+        this.resetToken = resetToken;
+        this.err = validateResetToken(this.resetToken);
         return this.currentBoard();
     }
 
-    inputLoginID(loginID: LoginID): ResetBoard {
-        return this.updateLoginID(loginID);
-    }
-    changeLoginID(loginID: LoginID): ResetBoard {
-        return this.updateLoginID(loginID);
-    }
-    updateLoginID(loginID: LoginID): ResetBoard {
-        this.loginID.loginID = loginID;
-        this.loginID.board = { err: this.loginIDValidator(loginID) };
-        return this.currentBoard();
-    }
-    validateLoginID(loginID: LoginID): void {
-        this.loginID.board = { err: this.loginIDValidator(loginID) };
-    }
-
-    inputPassword(password: Password): ResetBoard {
-        return this.updatePassword(password);
-    }
-    changePassword(password: Password): ResetBoard {
-        return this.updatePassword(password);
-    }
-    updatePassword(password: Password): ResetBoard {
-        this.password.password = password;
-        this.password.board = {
-            character: this.passwordCharacterChekcer(password),
-            view: updatePasswordView(this.password.board.view, password),
-            err: this.passwordValidator(password),
+    validate(): ValidResetToken {
+        this.err = validateResetToken(this.resetToken);
+        if (this.err.length > 0) {
+            return { valid: false }
+        } else {
+            return { valid: true, content: this.resetToken }
         }
-        return this.currentBoard();
-    }
-    validatePassword(password: Password): void {
-        this.password.board = {
-            character: this.password.board.character,
-            view: this.password.board.view,
-            err: this.passwordValidator(password),
-        }
-    }
-
-    showPassword(): ResetBoard {
-        return this.updatePasswordView(showPassword(this.currentPassword()));
-    }
-    hidePassword(): ResetBoard {
-        return this.updatePasswordView(hidePassword);
-    }
-    updatePasswordView(view: PasswordView): ResetBoard {
-        this.password.board = { character: this.password.board.character, view, err: this.password.board.err };
-        return this.currentBoard();
-    }
-
-    content(): ValidContent<ResetBoardContent> {
-        const resetToken = this.currentResetToken();
-        const loginID = this.currentLoginID();
-        const password = this.currentPassword();
-
-        this.validateLoginID(loginID);
-        this.validatePassword(password);
-
-        if (
-            resetToken.token === "" ||
-            this.loginID.board.err.length > 0 ||
-            this.password.board.err.length > 0
-        ) {
-            return invalidContent();
-        }
-
-        return validContent({ resetToken, loginID, password });
-    }
-    currentResetToken(): ResetToken {
-        return this.resetToken.resetToken;
-    }
-    currentLoginID(): LoginID {
-        return this.loginID.loginID;
-    }
-    currentPassword(): Password {
-        return this.password.password;
     }
 
     clear(): void {
-        this.resetToken = emptyResetToken;
-        this.loginID = emptyLoginID;
-        this.password = emptyPassword;
+        this.resetToken = EMPTY_RESET_TOKEN;
+        this.err = ERROR.ok;
+    }
+}
+
+function validateResetToken(resetToken: ResetToken): Array<ResetTokenValidationError> {
+    if (resetToken.token.length === 0) {
+        return ERROR.empty;
+    }
+
+    return ERROR.ok;
+}
+
+class ResetStoreImpl implements ResetStore {
+    impl: {
+        resetToken: ResetTokenRecord
+        loginID: LoginIDRecord
+        password: PasswordRecord
+    }
+
+    constructor(resetToken: ResetTokenRecord, loginID: LoginIDRecord, password: PasswordRecord) {
+        this.impl = { resetToken, loginID, password }
+    }
+
+    resetToken(): ResetTokenRecord {
+        return this.impl.resetToken;
+    }
+    loginID(): LoginIDRecord {
+        return this.impl.loginID;
+    }
+    password(): PasswordRecord {
+        return this.impl.password;
+    }
+
+    currentBoard(): ResetBoard {
+        return [
+            this.resetToken().currentBoard(),
+            this.loginID().currentBoard(),
+            this.password().currentBoard(),
+        ]
+    }
+
+    mapResetToken(resetTokenBoard: ResetTokenBoard): ResetBoard {
+        return [resetTokenBoard, this.loginID().currentBoard(), this.password().currentBoard()]
+    }
+    mapLoginID(loginIDBoard: LoginIDBoard): ResetBoard {
+        return [this.resetToken().currentBoard(), loginIDBoard, this.password().currentBoard()]
+    }
+    mapPassword(passwordBoard: PasswordBoard): ResetBoard {
+        return [this.resetToken().currentBoard(), this.loginID().currentBoard(), passwordBoard]
+    }
+
+    content(): ValidContent<ResetContent> {
+        const resetToken = this.resetToken().validate();
+        if (!resetToken.valid) {
+            return invalidContent();
+        }
+
+        const loginID = this.loginID().validate();
+        if (!loginID.valid) {
+            return invalidContent();
+        }
+
+        const password = this.password().validate();
+        if (!password.valid) {
+            return invalidContent();
+        }
+
+        return validContent([resetToken.content, loginID.content, password.content]);
+    }
+
+    clear(): ResetBoard {
+        this.resetToken().clear();
+        this.loginID().clear();
+        this.password().clear();
+        return this.currentBoard();
     }
 }
 
@@ -447,7 +376,7 @@ class ResetApiImpl implements ResetApi {
         return this.state;
     }
 
-    reset(content: ResetBoardContent): ResetState {
+    reset(content: ResetContent): ResetState {
         if (this.state.state === "try-to-reset") {
             return this.currentState();
         } else {
@@ -455,8 +384,8 @@ class ResetApiImpl implements ResetApi {
         }
     }
 
-    async requestReset(content: ResetBoardContent): Promise<ResetState> {
-        const response = await this.client.reset(content.resetToken, content.loginID, content.password);
+    async requestReset(content: ResetContent): Promise<ResetState> {
+        const response = await this.client.reset(...content);
         if (response.success) {
             return succeedToReset(response.nonce, response.roles);
         } else {

@@ -4,6 +4,15 @@ import { Password, PasswordBoard } from "../password/data";
 export type Session = Readonly<{ sessionID: Readonly<string> }>
 export type ResetToken = Readonly<{ token: Readonly<string> }>
 
+export type ResetTokenBoard =
+    Readonly<{ err: Array<ResetTokenValidationError> }>
+
+export type ResetTokenValidationError = "empty";
+
+export type ValidResetToken =
+    Readonly<{ valid: false }> |
+    Readonly<{ valid: true, content: ResetToken }>
+
 // TODO log 以外にも対応
 export type Destination =
     Readonly<{ type: "log" }>
@@ -17,8 +26,8 @@ export type DoneStatus =
     Readonly<{ success: true, at: string }> |
     Readonly<{ success: false, at: string }>
 
-export type CreateSessionBoard = Readonly<{ loginID: LoginIDBoard }>
-export type CreateSessionBoardContent = Readonly<{ loginID: LoginID }>
+export type CreateSessionBoard = Readonly<[LoginIDBoard]>
+export type CreateSessionContent = Readonly<[LoginID]>
 
 export type CreateSessionState =
     Readonly<{ state: "initial-create-session" }> |
@@ -59,8 +68,8 @@ export function succeedToPollingStatus(dest: Destination, status: DoneStatus): P
     return { state: "succeed-to-polling-status", dest, status }
 }
 
-export type ResetBoard = Readonly<{ loginID: LoginIDBoard, password: PasswordBoard }>
-export type ResetBoardContent = Readonly<{ resetToken: ResetToken, loginID: LoginID, password: Password }>
+export type ResetBoard = Readonly<[ResetTokenBoard, LoginIDBoard, PasswordBoard]>
+export type ResetContent = Readonly<[ResetToken, LoginID, Password]>
 
 export type ResetState =
     Readonly<{ state: "initial-reset" }> |

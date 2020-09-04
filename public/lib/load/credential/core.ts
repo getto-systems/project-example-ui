@@ -1,34 +1,22 @@
-import { CredentialAction } from "./action";
+import { CredentialAction, LoginIDRecord, LoginIDListener } from "./action";
 import {
-    LoginID,
-    LoginIDValidationError,
-    NonceValue,
-    ApiRoles,
-    StoreState,
-    loginSuccess,
-    loginFailure,
-    RenewState,
-    renewSuccess,
-    renewFailure,
+    LoginID, LoginIDBoard, LoginIDValidationError, ValidLoginID,
+    NonceValue, ApiRoles,
+    StoreState, loginSuccess, loginFailure,
+    RenewState, renewSuccess, renewFailure,
 } from "./data";
 import { Infra } from "./infra";
 
 export function credentialAction(infra: Infra): CredentialAction {
     return {
-        validateLoginID,
+        initLoginIDRecord,
 
         store,
         renew,
     }
 
-    function validateLoginID(loginID: LoginID): Array<LoginIDValidationError> {
-        const errors: Array<LoginIDValidationError> = [];
-
-        if (loginID.loginID.length === 0) {
-            errors.push("empty");
-        }
-
-        return errors;
+    function initLoginIDRecord(): LoginIDRecord {
+        return new LoginIDRecordImpl();
     }
 
     async function renew(): Promise<RenewState> {
@@ -61,4 +49,64 @@ export function credentialAction(infra: Infra): CredentialAction {
             return loginFailure({ type: "infra-error", err });
         }
     }
+}
+
+const EMPTY_LOGIN_ID: LoginID = { loginID: "" }
+const ERROR: {
+    ok: Array<LoginIDValidationError>,
+    empty: Array<LoginIDValidationError>,
+} = {
+    ok: [],
+    empty: ["empty"],
+}
+
+class LoginIDRecordImpl implements LoginIDRecord {
+    loginID: LoginID = EMPTY_LOGIN_ID
+    err: Array<LoginIDValidationError> = ERROR.ok
+
+    onChange: Array<LoginIDListener> = []
+
+    addChangedListener(listener: LoginIDListener): void {
+        this.onChange.push(listener);
+    }
+
+    currentBoard(): LoginIDBoard {
+        return {
+            err: this.err,
+        }
+    }
+
+    input(loginID: LoginID): LoginIDBoard {
+        this.loginID = loginID;
+        this.err = validateLoginID(this.loginID);
+        return this.currentBoard();
+    }
+    change(): LoginIDBoard {
+        this.onChange.forEach((listener) => {
+            listener(this.loginID);
+        });
+        return this.currentBoard();
+    }
+
+    validate(): ValidLoginID {
+        this.err = validateLoginID(this.loginID);
+        if (this.err.length > 0) {
+            return { valid: false }
+        } else {
+            return { valid: true, content: this.loginID }
+        }
+    }
+
+    clear(): void {
+        this.loginID = EMPTY_LOGIN_ID;
+        this.err = ERROR.ok;
+    }
+}
+
+function validateLoginID(loginID: LoginID): Array<LoginIDValidationError> {
+    if (loginID.loginID.length === 0) {
+        return ERROR.empty;
+    }
+
+    return ERROR.ok;
 }

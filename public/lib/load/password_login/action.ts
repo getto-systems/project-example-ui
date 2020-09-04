@@ -1,17 +1,12 @@
-import { LoginIDValidator } from "../credential/action";
-import { PasswordValidator, PasswordCharacterChecker } from "../password/action";
+import { LoginIDRecord } from "../credential/action";
+import { PasswordRecord } from "../password/action";
 
-import { LoginID } from "../credential/data";
-import { Password } from "../password/data";
-import { LoginBoard, LoginBoardContent, LoginState } from "./data";
+import { LoginIDBoard } from "../credential/data";
+import { PasswordBoard } from "../password/data";
+import { LoginBoard, LoginContent, ValidContent, LoginState } from "./data";
 
 export interface PasswordLoginAction {
-    initLoginBoardStore(
-        loginIDValidator: LoginIDValidator,
-        passwordValidator: PasswordValidator,
-        passwordCharacterChekcer: PasswordCharacterChecker,
-    ): LoginBoardStore
-
+    initLoginStore(loginID: LoginIDRecord, password: PasswordRecord): LoginStore
     initLoginApi(): LoginApi
 }
 
@@ -19,23 +14,20 @@ export interface PasswordLoginTransition {
     logined(): void
 }
 
-export interface LoginBoardStore {
+export interface LoginStore {
+    loginID(): LoginIDRecord
+    password(): PasswordRecord
+
     currentBoard(): LoginBoard
 
-    inputLoginID(loginID: LoginID): LoginBoard
-    changeLoginID(loginID: LoginID): LoginBoard
+    mapLoginID(loginID: LoginIDBoard): LoginBoard
+    mapPassword(password: PasswordBoard): LoginBoard
 
-    inputPassword(password: Password): LoginBoard
-    changePassword(password: Password): LoginBoard
-
-    showPassword(): LoginBoard
-    hidePassword(): LoginBoard
-
-    content(): LoginBoardContent
+    content(): ValidContent<LoginContent>
     clear(): LoginBoard
 }
 
 export interface LoginApi {
     currentState(): LoginState
-    login(loginID: LoginID, password: Password): LoginState
+    login(content: LoginContent): LoginState
 }

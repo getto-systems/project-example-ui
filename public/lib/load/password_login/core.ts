@@ -1,341 +1,102 @@
 import { Infra, PasswordLoginClient } from "./infra";
 
-import { LoginIDValidator } from "../credential/action";
-import { PasswordValidator, PasswordCharacterChecker } from "../password/action";
-import { PasswordLoginAction, LoginBoardStore, LoginApi } from "./action";
+import { LoginIDRecord } from "../credential/action";
+import { PasswordRecord } from "../password/action";
+import { PasswordLoginAction, LoginStore, LoginApi } from "./action";
 
-import { LoginID, LoginIDBoard } from "../credential/data";
+import { LoginIDBoard } from "../credential/data";
+import { PasswordBoard } from "../password/data";
 import {
-    Password,
-    PasswordBoard,
-    PasswordView, showPassword, hidePassword, updatePasswordView,
-} from "../password/data";
-import {
-    LoginBoard,
-    LoginBoardContent, invalidLoginBoardContent, validLoginBoardContent,
+    LoginBoard, LoginContent,
+    ValidContent, invalidContent, validContent,
     LoginState, initialLogin, tryToLogin, delayedToLogin, failedToLogin, succeedToLogin,
 } from "./data";
 
 export function passwordLoginAction(infra: Infra): PasswordLoginAction {
     return {
-        initLoginBoardStore,
+        initLoginStore,
         initLoginApi,
     }
 
-    function initLoginBoardStore(
-        loginIDValidator: LoginIDValidator,
-        passwordValidator: PasswordValidator,
-        passwordCharacterChekcer: PasswordCharacterChecker,
-    ): LoginBoardStore {
-        return new LoginBoardStoreImpl(
-            loginIDValidator,
-            passwordValidator,
-            passwordCharacterChekcer,
-        );
+    function initLoginStore(loginID: LoginIDRecord, password: PasswordRecord): LoginStore {
+        return new LoginStoreImpl(loginID, password);
     }
-
     function initLoginApi(): LoginApi {
         return new LoginApiImpl(infra.passwordLoginClient);
     }
 }
 
-export type LoginIDBoardSource =
-    { loginID: LoginID, board: LoginIDBoard }
+/* TODO undo/redo が必要なやつの土台として使える、かも
+type HistoryItem =
+    Readonly<{ type: "loginID", loginID: LoginID }> |
+    Readonly<{ type: "password", password: Password }>
+ */
 
-export type PasswordBoardSource =
-    { password: Password, board: PasswordBoard }
-
-class LoginBoardStoreImpl implements LoginBoardStore {
-    loginID: LoginIDBoardSource
-    password: PasswordBoardSource
-
-    loginIDValidator: LoginIDValidator
-    passwordValidator: PasswordValidator
-    passwordCharacterChekcer: PasswordCharacterChecker
-
-    constructor(
-        loginIDValidator: LoginIDValidator,
-        passwordValidator: PasswordValidator,
-        passwordCharacterChekcer: PasswordCharacterChecker,
-    ) {
-        this.loginIDValidator = loginIDValidator;
-        this.passwordValidator = passwordValidator;
-        this.passwordCharacterChekcer = passwordCharacterChekcer;
-
-        this.loginID = {
-            loginID: { loginID: "" },
-            board: { err: [] },
-        }
-        this.password = {
-            password: { password: "" },
-            board: {
-                character: { complex: false },
-                view: { show: false },
-                err: [],
-            },
-        }
+class LoginStoreImpl implements LoginStore {
+    impl: {
+        loginID: LoginIDRecord
+        password: PasswordRecord
     }
+
+    //history: Array<HistoryItem> = []
+
+    constructor(loginID: LoginIDRecord, password: PasswordRecord) {
+        this.impl = {
+            loginID,
+            password,
+        }
+
+        //this.loginID().addChangedListener(this.loginIDChanged);
+        //this.password().addChangedListener(this.passwordChanged);
+    }
+
+    loginID(): LoginIDRecord {
+        return this.impl.loginID;
+    }
+    password(): PasswordRecord {
+        return this.impl.password;
+    }
+
+    /*
+    loginIDChanged(loginID: LoginID): void {
+        this.history.push({ type: "loginID", loginID });
+    }
+    passwordChanged(password: Password): void {
+        this.history.push({ type: "password", password });
+    }
+     */
 
     currentBoard(): LoginBoard {
-        return {
-            loginID: this.loginID.board,
-            password: this.password.board,
-        }
+        return [this.loginID().currentBoard(), this.password().currentBoard()]
     }
 
-    inputLoginID(loginID: LoginID): LoginBoard {
-        return this.updateLoginID(loginID);
+    mapLoginID(loginIDBoard: LoginIDBoard): LoginBoard {
+        return [loginIDBoard, this.password().currentBoard()]
     }
-    changeLoginID(loginID: LoginID): LoginBoard {
-        return this.updateLoginID(loginID);
-    }
-    updateLoginID(loginID: LoginID): LoginBoard {
-        this.loginID.loginID = loginID;
-        this.loginID.board = { err: this.loginIDValidator(loginID) };
-        return this.currentBoard();
-    }
-    validateLoginID(loginID: LoginID): void {
-        this.loginID.board = { err: this.loginIDValidator(loginID) };
+    mapPassword(passwordBoard: PasswordBoard): LoginBoard {
+        return [this.loginID().currentBoard(), passwordBoard]
     }
 
-    inputPassword(password: Password): LoginBoard {
-        return this.updatePassword(password);
-    }
-    changePassword(password: Password): LoginBoard {
-        return this.updatePassword(password);
-    }
-    updatePassword(password: Password): LoginBoard {
-        this.password.password = password;
-        this.password.board = {
-            character: this.passwordCharacterChekcer(password),
-            view: updatePasswordView(this.password.board.view, password),
-            err: this.passwordValidator(password),
-        }
-        return this.currentBoard();
-    }
-    validatePassword(password: Password): void {
-        this.password.board = {
-            character: this.password.board.character,
-            view: this.password.board.view,
-            err: this.passwordValidator(password),
-        }
-    }
-
-    showPassword(): LoginBoard {
-        this.updatePasswordView(showPassword(this.currentPassword()));
-        return this.currentBoard();
-    }
-    hidePassword(): LoginBoard {
-        this.updatePasswordView(hidePassword);
-        return this.currentBoard();
-    }
-    updatePasswordView(view: PasswordView): void {
-        this.password.board = { character: this.password.board.character, view, err: this.password.board.err };
-    }
-
-    content(): LoginBoardContent {
-        const loginID = this.currentLoginID();
-        const password = this.currentPassword();
-
-        this.validateLoginID(loginID);
-        this.validatePassword(password);
-
-        if (
-            this.loginID.board.err.length > 0 ||
-            this.password.board.err.length > 0
-        ) {
-            return invalidLoginBoardContent;
+    content(): ValidContent<LoginContent> {
+        const loginID = this.loginID().validate();
+        if (!loginID.valid) {
+            return invalidContent();
         }
 
-        return validLoginBoardContent(loginID, password);
-    }
-    currentLoginID(): LoginID {
-        return this.loginID.loginID;
-    }
-    currentPassword(): Password {
-        return this.password.password;
+        const password = this.password().validate();
+        if (!password.valid) {
+            return invalidContent();
+        }
+
+        return validContent([loginID.content, password.content]);
     }
 
     clear(): LoginBoard {
-        this.loginID = {
-            loginID: { loginID: "" },
-            board: { err: [] },
-        }
-        this.password = {
-            password: { password: "" },
-            board: {
-                character: { complex: false },
-                view: { show: false },
-                err: [],
-            },
-        }
+        this.loginID().clear();
+        this.password().clear();
         return this.currentBoard();
     }
 }
-
-/* TODO undo, redo が必要なやつの土台として使える、かも
-class LoginBoardStoreImpl implements LoginBoardStore {
-    boards: Array<BoardSource>
-
-    loginIDValidator: LoginIDValidator
-    passwordValidator: PasswordValidator
-    passwordCharacterChekcer: PasswordCharacterChecker
-
-    constructor(
-        loginIDValidator: LoginIDValidator,
-        passwordValidator: PasswordValidator,
-        passwordCharacterChekcer: PasswordCharacterChecker,
-    ) {
-        this.loginIDValidator = loginIDValidator;
-        this.passwordValidator = passwordValidator;
-        this.passwordCharacterChekcer = passwordCharacterChekcer;
-
-        this.boards = [];
-        this.pushNewBoardSource();
-    }
-
-    currentBoard(): LoginBoard {
-        return {
-            loginID: this.currentBoardSource().loginID.board,
-            password: this.currentBoardSource().password.board,
-        }
-    }
-
-    inputLoginID(loginID: LoginID): LoginBoard {
-        this.updateLoginID(loginID);
-        return this.currentBoard();
-    }
-    changeLoginID(loginID: LoginID): LoginBoard {
-        this.updateLoginID(loginID);
-        this.pushNewBoardSource();
-        return this.currentBoard();
-    }
-    updateLoginID(loginID: LoginID): void {
-        const source = this.currentBoardSource().loginID;
-        source.loginID = loginID;
-        source.board = { err: this.loginIDValidator(loginID) };
-    }
-    validateLoginID(loginID: LoginID): void {
-        this.currentBoardSource().loginID.board = { err: this.loginIDValidator(loginID) };
-    }
-
-    inputPassword(password: Password): LoginBoard {
-        this.updatePassword(password);
-        return this.currentBoard();
-    }
-    changePassword(password: Password): LoginBoard {
-        this.updatePassword(password);
-        this.pushNewBoardSource();
-        return this.currentBoard();
-    }
-    updatePassword(password: Password): void {
-        const source = this.currentBoardSource().password;
-        source.password = password;
-        source.board = {
-            character: this.passwordCharacterChekcer(password),
-            view: updatePasswordView(source.board.view, password),
-            err: this.passwordValidator(password),
-        }
-    }
-    validatePassword(password: Password): void {
-        const source = this.currentBoardSource().password;
-        source.board = {
-            character: source.board.character,
-            view: source.board.view,
-            err: this.passwordValidator(password),
-        }
-    }
-
-    showPassword(): LoginBoard {
-        this.updatePasswordView(showPassword(this.currentPassword()));
-        return this.currentBoard();
-    }
-    hidePassword(): LoginBoard {
-        this.updatePasswordView(hidePassword);
-        return this.currentBoard();
-    }
-    updatePasswordView(view: PasswordView): void {
-        const source = this.currentBoardSource().password;
-        source.board = { character: source.board.character, view, err: source.board.err };
-    }
-
-    content(): LoginBoardContent {
-        const loginID = this.currentLoginID();
-        const password = this.currentPassword();
-
-        this.validateLoginID(loginID);
-        this.validatePassword(password);
-
-        if (
-            this.currentBoardSource().loginID.board.err.length > 0 ||
-            this.currentBoardSource().password.board.err.length > 0
-        ) {
-            return invalidBoardContent;
-        }
-
-        return validBoardContent(loginID, password);
-    }
-    currentLoginID(): LoginID {
-        for (let i = this.boards.length - 1; i >= 0; i--) {
-            const source = this.boards[i];
-            if (source.loginID.loginID.loginID !== "") {
-                return source.loginID.loginID;
-            }
-        }
-        return { loginID: "" };
-    }
-    currentPassword(): Password {
-        for (let i = this.boards.length - 1; i >= 0; i--) {
-            const source = this.boards[i];
-            if (source.password.password.password !== "") {
-                return source.password.password;
-            }
-        }
-        return { password: "" };
-    }
-
-    clear(): LoginBoard {
-        this.boards = [];
-        this.pushNewBoardSource();
-        return this.currentBoard();
-    }
-
-    currentBoardSource(): BoardSource {
-        return this.boards[this.boards.length - 1];
-    }
-
-    pushNewBoardSource(): void {
-        if (this.boards.length === 0) {
-            this.boards.push({
-                loginID: {
-                    loginID: { loginID: "" },
-                    board: { err: [] },
-                },
-                password: {
-                    password: { password: "" },
-                    board: {
-                        character: { complex: false },
-                        view: { show: false },
-                        err: [],
-                    },
-                },
-            });
-        } else {
-            const current = this.currentBoardSource();
-            this.boards.push({
-                loginID: {
-                    loginID: { loginID: "" },
-                    board: current.loginID.board,
-                },
-                password: {
-                    password: { password: "" },
-                    board: current.password.board,
-                },
-            });
-        }
-    }
-}
-*/
 
 const LOGIN_DELAY_LIMIT_SECOND = 1;
 
@@ -353,7 +114,7 @@ class LoginApiImpl implements LoginApi {
         return this.state;
     }
 
-    login(loginID: LoginID, password: Password): LoginState {
+    login(content: LoginContent): LoginState {
         if (this.state.state === "try-to-login") {
             return this.state;
         }
@@ -363,7 +124,7 @@ class LoginApiImpl implements LoginApi {
         return this.state;
 
         async function exec(client: PasswordLoginClient): Promise<LoginState> {
-            const response = await client.login(loginID, password);
+            const response = await client.login(...content);
             if (response.success) {
                 return succeedToLogin(response.nonce, response.roles);
             }
