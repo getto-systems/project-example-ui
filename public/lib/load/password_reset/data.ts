@@ -1,20 +1,8 @@
-import { LoginID, LoginIDValidationError, NonceValue, ApiRoles } from "../credential/data";
+import { LoginID, LoginIDBoard, NonceValue, ApiRoles } from "../credential/data";
+import { Password, PasswordBoard } from "../password/data";
 
 export type Session = Readonly<{ sessionID: Readonly<string> }>
 export type ResetToken = Readonly<{ token: Readonly<string> }>
-
-export type ResetBoard = Readonly<{ loginID: LoginIDBoard }>
-
-export type LoginIDBoard =
-    Readonly<{ err: Array<LoginIDValidationError> }>
-
-export type ResetBoardContent =
-    Readonly<{ valid: false }> |
-    Readonly<{ valid: true, loginID: LoginID }>
-export const invalidResetBoardContent: ResetBoardContent = { valid: false }
-export function validResetBoardContent(loginID: LoginID): ResetBoardContent {
-    return { valid: true, loginID }
-}
 
 // TODO log 以外にも対応
 export type Destination =
@@ -29,17 +17,20 @@ export type DoneStatus =
     Readonly<{ success: true, at: string }> |
     Readonly<{ success: false, at: string }>
 
+export type CreateSessionBoard = Readonly<{ loginID: LoginIDBoard }>
+export type CreateSessionBoardContent = Readonly<{ loginID: LoginID }>
+
 export type CreateSessionState =
     Readonly<{ state: "initial-create-session" }> |
-    Readonly<{ state: "try-to-create-session", delayed: boolean, next: Promise<CreateSessionState> }> |
+    Readonly<{ state: "try-to-create-session", delayed: boolean, promise: Promise<CreateSessionState> }> |
     Readonly<{ state: "failed-to-create-session", err: CreateSessionError }> |
     Readonly<{ state: "succeed-to-create-session", session: Session }>
 export const initialCreateSession: CreateSessionState = { state: "initial-create-session" }
-export function tryToCreateSession(next: Promise<CreateSessionState>): CreateSessionState {
-    return { state: "try-to-create-session", delayed: false, next }
+export function tryToCreateSession(promise: Promise<CreateSessionState>): CreateSessionState {
+    return { state: "try-to-create-session", delayed: false, promise }
 }
-export function delayedToCreateSession(next: Promise<CreateSessionState>): CreateSessionState {
-    return { state: "try-to-create-session", delayed: true, next }
+export function delayedToCreateSession(promise: Promise<CreateSessionState>): CreateSessionState {
+    return { state: "try-to-create-session", delayed: true, promise }
 }
 export function failedToCreateSession(err: CreateSessionError): CreateSessionState {
     return { state: "failed-to-create-session", err }
@@ -49,15 +40,17 @@ export function succeedToCreateSession(session: Session): CreateSessionState {
 }
 
 export type PollingStatusState =
-    Readonly<{ state: "initial-polling-status", next: Promise<PollingStatusState> }> |
-    Readonly<{ state: "try-to-polling-status", dest: Destination, status: PollingStatus, next: Promise<PollingStatusState> }> |
+    Readonly<{ state: "initial-polling-status" }> |
+    Readonly<{ state: "try-to-polling-status", promise: Promise<PollingStatusState> }> |
+    Readonly<{ state: "retry-to-polling-status", dest: Destination, status: PollingStatus, promise: Promise<PollingStatusState> }> |
     Readonly<{ state: "failed-to-polling-status", err: PollingStatusError }> |
     Readonly<{ state: "succeed-to-polling-status", dest: Destination, status: DoneStatus }>
-export function initialPollingStatus(next: Promise<PollingStatusState>): PollingStatusState {
-    return { state: "initial-polling-status", next }
+export const initialPollingStatus: PollingStatusState = { state: "initial-polling-status" }
+export function tryToPollingStatus(promise: Promise<PollingStatusState>): PollingStatusState {
+    return { state: "try-to-polling-status", promise }
 }
-export function tryToPollingStatus(dest: Destination, status: PollingStatus, next: Promise<PollingStatusState>): PollingStatusState {
-    return { state: "try-to-polling-status", dest, status, next }
+export function retryToPollingStatus(dest: Destination, status: PollingStatus, promise: Promise<PollingStatusState>): PollingStatusState {
+    return { state: "retry-to-polling-status", dest, status, promise }
 }
 export function failedToPollingStatus(err: PollingStatusError): PollingStatusState {
     return { state: "failed-to-polling-status", err }
@@ -66,17 +59,20 @@ export function succeedToPollingStatus(dest: Destination, status: DoneStatus): P
     return { state: "succeed-to-polling-status", dest, status }
 }
 
+export type ResetBoard = Readonly<{ loginID: LoginIDBoard, password: PasswordBoard }>
+export type ResetBoardContent = Readonly<{ resetToken: ResetToken, loginID: LoginID, password: Password }>
+
 export type ResetState =
     Readonly<{ state: "initial-reset" }> |
-    Readonly<{ state: "try-to-reset", delayed: boolean, next: Promise<ResetState> }> |
+    Readonly<{ state: "try-to-reset", delayed: boolean, promise: Promise<ResetState> }> |
     Readonly<{ state: "failed-to-reset", err: ResetError }> |
     Readonly<{ state: "succeed-to-reset", nonce: NonceValue, roles: ApiRoles }>
 export const initialReset: ResetState = { state: "initial-reset" }
-export function tryToReset(next: Promise<ResetState>): ResetState {
-    return { state: "try-to-reset", delayed: false, next }
+export function tryToReset(promise: Promise<ResetState>): ResetState {
+    return { state: "try-to-reset", delayed: false, promise }
 }
-export function delayedToReset(next: Promise<ResetState>): ResetState {
-    return { state: "try-to-reset", delayed: true, next }
+export function delayedToReset(promise: Promise<ResetState>): ResetState {
+    return { state: "try-to-reset", delayed: true, promise }
 }
 export function failedToReset(err: ResetError): ResetState {
     return { state: "failed-to-reset", err }
@@ -105,3 +101,13 @@ export type ResetError =
     Readonly<{ type: "server-error" }> |
     Readonly<{ type: "bad-response", err: string }> |
     Readonly<{ type: "infra-error", err: string }>
+
+export type ValidContent<T> =
+    Readonly<{ valid: false }> |
+    Readonly<{ valid: true, content: T }>
+export function invalidContent<T>(): ValidContent<T> {
+    return { valid: false }
+}
+export function validContent<T>(content: T): ValidContent<T> {
+    return { valid: true, content }
+}

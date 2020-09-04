@@ -1,5 +1,8 @@
-import { LoginID, LoginIDValidationError } from "../credential/data";
-import { Password, PasswordValidationError, PasswordCharacter } from "../password/data";
+import { LoginIDValidator } from "../credential/action";
+import { PasswordValidator, PasswordCharacterChecker } from "../password/action";
+
+import { LoginID } from "../credential/data";
+import { Password } from "../password/data";
 import { LoginBoard, LoginBoardContent, LoginState } from "./data";
 
 export interface PasswordLoginAction {
@@ -14,16 +17,6 @@ export interface PasswordLoginAction {
 
 export interface PasswordLoginTransition {
     logined(): void
-}
-
-export interface LoginIDValidator {
-    (loginID: LoginID): Array<LoginIDValidationError>
-}
-export interface PasswordValidator {
-    (password: Password): Array<PasswordValidationError>
-}
-export interface PasswordCharacterChecker {
-    (password: Password): PasswordCharacter
 }
 
 export interface LoginBoardStore {

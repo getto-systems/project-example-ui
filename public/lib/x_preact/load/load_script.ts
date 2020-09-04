@@ -1,60 +1,52 @@
 import { VNode } from "preact";
-import { html } from "htm/preact";
 import { useState, useEffect } from "preact/hooks";
-import { LoadScriptState } from "../../load/load_script";
-import { LoadedScript } from "../../load/script/data";
+
+import { appendScript, view } from "./load_script/view";
+
+import { LoadScriptState, LoadScriptComponent } from "../../load/load_script";
 
 interface PreactComponent {
     (): VNode
 }
 
-export function LoadScript(initialState: LoadScriptState): PreactComponent {
+export function LoadScript(initialState: LoadScriptState, baseComponent: LoadScriptComponent): PreactComponent {
+    const component = new LoadScriptPreactComponentImpl(baseComponent);
+
     return (): VNode => {
-        const [state, setState] = useState(initialState);
+        const state = component.useState(...useState(initialState));
 
         useEffect(() => {
-            // script タグは body.appendChild しないとスクリプトがロードされないので useEffect で追加する
-            if (state.state === "loaded" && state.script.success) {
-                appendScript(state.script.path.path);
-            }
+            appendScript(state);
         }, [state]);
 
-        switch (state.state) {
-            case "initial":
-                state.next.then(setState);
+        return view(state);
+    }
+}
 
-                return viewInitial();
+class LoadScriptPreactComponentImpl {
+    component: LoadScriptComponent
+    setState: LoadScriptSetState
 
-            case "loaded":
-                return viewLoaded(state.script);
-
-            default:
-                return assertNever(state);
+    constructor(component: LoadScriptComponent) {
+        this.component = component;
+        this.setState = (_state: LoadScriptState) => {
+            // useState() で再設定されるのでここには到達しない
+            throw new Error("NEVER");
         }
     }
-}
 
-function viewInitial(): VNode {
-    // path の取得には時間がかからないはずなので空を返す
-    return html``
-}
+    useState(state: LoadScriptState, setState: LoadScriptSetState): LoadScriptState {
+        this.setState = setState;
 
-function viewLoaded(script: LoadedScript): VNode {
-    if (script.success) {
-        // script の描画は useEffect でするので、本体は空で返す
-        return html``
-    } else {
-        // TODO エラー画面を用意
-        return html`load-error: ${script.err.err}`
+        const next = this.component.nextState(state);
+        if (next.hasNext) {
+            next.promise.then(this.setState);
+        }
+
+        return state;
     }
 }
 
-function appendScript(path: string) {
-    const script = document.createElement("script");
-    script.src = path;
-    document.body.appendChild(script);
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER");
+interface LoadScriptSetState {
+    (state: LoadScriptState): void
 }

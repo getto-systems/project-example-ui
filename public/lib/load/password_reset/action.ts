@@ -1,22 +1,30 @@
-import { LoginID, LoginIDValidationError } from "../credential/data";
+import { LoginIDValidator } from "../credential/action";
+import { PasswordValidator, PasswordCharacterChecker } from "../password/action";
+
+import { LoginID } from "../credential/data";
 import { Password } from "../password/data";
 import {
-    ResetBoard,
-    ResetBoardContent,
     Session,
     ResetToken,
-    CreateSessionState,
+    CreateSessionBoard, CreateSessionBoardContent, CreateSessionState,
     PollingStatusState,
-    ResetState,
+    ResetBoard, ResetBoardContent, ResetState,
+    ValidContent,
 } from "./data";
 
 export interface PasswordResetAction {
+    initCreateSessionBoardStore(
+        loginIDValidator: LoginIDValidator,
+    ): CreateSessionBoardStore
+    initCreateSessionApi(): CreateSessionApi
+
+    initPollingStatusApi(): PollingStatusApi
+
     initResetBoardStore(
         loginIDValidator: LoginIDValidator,
+        passwordValidator: PasswordValidator,
+        passwordCharacterChekcer: PasswordCharacterChecker,
     ): ResetBoardStore
-
-    initCreateSessionApi(): CreateSessionApi
-    initPollingStatusApi(): PollingStatusApi
     initResetApi(): ResetApi
 }
 
@@ -24,30 +32,44 @@ export interface PasswordResetTransition {
     logined(): void
 }
 
-export interface LoginIDValidator {
-    (loginID: LoginID): Array<LoginIDValidationError>
+export interface CreateSessionBoardStore {
+    currentBoard(): CreateSessionBoard
+
+    inputLoginID(loginID: LoginID): CreateSessionBoard
+    changeLoginID(loginID: LoginID): CreateSessionBoard
+
+    content(): ValidContent<CreateSessionBoardContent>
+    clearBoard(): void
+}
+export interface CreateSessionApi {
+    currentState(): CreateSessionState
+    createSession(content: CreateSessionBoardContent): CreateSessionState
+}
+
+export interface PollingStatusApi {
+    currentState(): PollingStatusState
+    pollingStatus(session: Session): PollingStatusState
 }
 
 export interface ResetBoardStore {
     currentBoard(): ResetBoard
 
+    setResetToken(resetToken: ResetToken): ResetBoard
+
     inputLoginID(loginID: LoginID): ResetBoard
     changeLoginID(loginID: LoginID): ResetBoard
 
-    content(): ResetBoardContent
-    clear(): ResetBoard
-}
+    inputPassword(password: Password): ResetBoard
+    changePassword(password: Password): ResetBoard
 
-export interface CreateSessionApi {
-    currentState(): CreateSessionState
-    createSession(loginID: LoginID): CreateSessionState
-}
+    showPassword(): ResetBoard
+    hidePassword(): ResetBoard
 
-export interface PollingStatusApi {
-    pollingStatus(session: Session): PollingStatusState
+    content(): ValidContent<ResetBoardContent>
+    clearBoard(): void
 }
 
 export interface ResetApi {
     currentState(): ResetState
-    reset(resetToken: ResetToken, loginID: LoginID, password: Password): ResetState
+    reset(content: ResetBoardContent): ResetState
 }
