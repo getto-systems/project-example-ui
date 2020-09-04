@@ -1,5 +1,8 @@
 export type LoginID = Readonly<{ loginID: Readonly<string> }>
 
+export type LoginIDBoard =
+    Readonly<{ err: Array<LoginIDValidationError> }>
+
 export type LoginIDValidationError = "empty";
 
 export type NonceValue = Readonly<{ nonce: Readonly<string> }>

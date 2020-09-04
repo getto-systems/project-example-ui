@@ -1,5 +1,5 @@
-import { Password, PasswordValidationError, PasswordCharacter } from "../password/data";
-import { LoginID, LoginIDValidationError, NonceValue, ApiRoles } from "../credential/data";
+import { Password, PasswordBoard } from "../password/data";
+import { LoginID, LoginIDBoard, NonceValue, ApiRoles } from "../credential/data";
 
 export type LoginBoard = Readonly<{ loginID: LoginIDBoard, password: PasswordBoard }>
 
@@ -11,37 +11,17 @@ export function validLoginBoardContent(loginID: LoginID, password: Password): Lo
     return { valid: true, loginID, password }
 }
 
-export type LoginIDBoard =
-    Readonly<{ err: Array<LoginIDValidationError> }>
-
-export type PasswordBoard =
-    Readonly<{ character: PasswordCharacter, view: PasswordView, err: Array<PasswordValidationError> }>
-
-export type PasswordView =
-    Readonly<{ show: false }> |
-    Readonly<{ show: true, password: Password }>
-export const hidePassword: PasswordView = { show: false }
-export function showPassword(password: Password): PasswordView {
-    return { show: true, password }
-}
-export function updatePasswordView(view: PasswordView, password: Password): PasswordView {
-    if (view.show) {
-        return { show: true, password }
-    }
-    return view;
-}
-
 export type LoginState =
     Readonly<{ state: "initial-login" }> |
-    Readonly<{ state: "try-to-login", delayed: boolean, next: Promise<LoginState> }> |
+    Readonly<{ state: "try-to-login", delayed: boolean, promise: Promise<LoginState> }> |
     Readonly<{ state: "failed-to-login", err: LoginError }> |
     Readonly<{ state: "succeed-to-login", nonce: NonceValue, roles: ApiRoles }>
 export const initialLogin: LoginState = { state: "initial-login" }
-export function tryToLogin(next: Promise<LoginState>): LoginState {
-    return { state: "try-to-login", delayed: false, next }
+export function tryToLogin(promise: Promise<LoginState>): LoginState {
+    return { state: "try-to-login", delayed: false, promise }
 }
-export function delayedToLogin(next: Promise<LoginState>): LoginState {
-    return { state: "try-to-login", delayed: true, next }
+export function delayedToLogin(promise: Promise<LoginState>): LoginState {
+    return { state: "try-to-login", delayed: true, promise }
 }
 export function failedToLogin(err: LoginError): LoginState {
     return { state: "failed-to-login", err }

@@ -55,27 +55,27 @@ export async function initLoad(url: Readonly<URL>, action: LoadAction): Promise<
         return viewPasswordLogin(initPasswordLogin(action, transition));
     }
     function passwordResetView(): LoadState {
-        return viewPasswordReset(initPasswordReset(url, action, transition));
+        return viewPasswordReset(initPasswordReset(action, url, transition));
     }
 
     async function initial(): Promise<LoadState> {
         const renew = await action.credential.renew();
         if (renew.success) {
             return loadScriptView();
-        }
-
-        switch (renew.err.type) {
-            case "server-error":
-            case "bad-response":
-            case "infra-error":
-                return viewError(renew.err);
-            default:
-                // ログイン前画面ではアンダースコアで始まる query string を使用する
-                if (url.searchParams.get("_password_reset")) {
-                    return passwordResetView();
-                } else {
-                    return passwordLoginView();
-                }
+        } else {
+            switch (renew.err.type) {
+                case "server-error":
+                case "bad-response":
+                case "infra-error":
+                    return viewError(renew.err);
+                default:
+                    // ログイン前画面ではアンダースコアで始まる query string を使用する
+                    if (url.searchParams.get("_password_reset")) {
+                        return passwordResetView();
+                    } else {
+                        return passwordLoginView();
+                    }
+            }
         }
     }
 

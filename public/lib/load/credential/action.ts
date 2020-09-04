@@ -6,3 +6,7 @@ export interface CredentialAction {
     store(nonce: NonceValue, roles: ApiRoles): Promise<StoreState>
     renew(): Promise<RenewState>
 }
+
+export interface LoginIDValidator {
+    (loginID: LoginID): Array<LoginIDValidationError>
+}

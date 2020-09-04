@@ -1,32 +1,20 @@
-import { LoginID } from "../credential/data";
-import { Password } from "../password/data";
+import { Infra, PasswordLoginClient } from "./infra";
+
+import { LoginIDValidator } from "../credential/action";
+import { PasswordValidator, PasswordCharacterChecker } from "../password/action";
+import { PasswordLoginAction, LoginBoardStore, LoginApi } from "./action";
+
+import { LoginID, LoginIDBoard } from "../credential/data";
+import {
+    Password,
+    PasswordBoard,
+    PasswordView, showPassword, hidePassword, updatePasswordView,
+} from "../password/data";
 import {
     LoginBoard,
-    LoginBoardContent,
-    invalidLoginBoardContent,
-    validLoginBoardContent,
-    LoginIDBoard,
-    PasswordBoard,
-    PasswordView,
-    showPassword,
-    hidePassword,
-    updatePasswordView,
-    LoginState,
-    initialLogin,
-    tryToLogin,
-    delayedToLogin,
-    failedToLogin,
-    succeedToLogin,
+    LoginBoardContent, invalidLoginBoardContent, validLoginBoardContent,
+    LoginState, initialLogin, tryToLogin, delayedToLogin, failedToLogin, succeedToLogin,
 } from "./data";
-import {
-    PasswordLoginAction,
-    LoginBoardStore,
-    LoginIDValidator,
-    PasswordValidator,
-    PasswordCharacterChecker,
-    LoginApi,
-} from "./action";
-import { Infra, PasswordLoginClient } from "./infra";
 
 export function passwordLoginAction(infra: Infra): PasswordLoginAction {
     return {
