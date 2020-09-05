@@ -1,20 +1,20 @@
 import { LoadAction } from "./action";
 
-import { LoginID, NonceValue, ApiRoles, StoreCredentialState } from "../wand/credential/data";
-import { StoreCredentialApi } from "../wand/credential/action";
-import { Password } from "../wand/password/data";
+import { LoginID, NonceValue, ApiRoles, StoreCredentialState } from "../ability/credential/data";
+import { StoreCredentialApi } from "../ability/credential/action";
+import { Password } from "../ability/password/data";
 import {
     Session, ResetToken,
     CreateSessionBoard, CreateSessionState,
     PollingStatusState,
     ResetBoard, ResetState,
-} from "../wand/password_reset/data";
+} from "../ability/password_reset/data";
 import {
     PasswordResetTransition,
     CreateSessionStore, CreateSessionApi,
     PollingStatusApi,
     ResetStore, ResetApi,
-} from "../wand/password_reset/action";
+} from "../ability/password_reset/action";
 
 export type PasswordResetInit = [PasswordResetComponent, PasswordResetState]
 
