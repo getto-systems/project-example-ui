@@ -1,8 +1,8 @@
-import { CredentialAction } from "../wand/credential/action";
-import { PasswordAction } from "../wand/password/action";
-import { PasswordLoginAction } from "../wand/password_login/action";
-import { PasswordResetAction } from "../wand/password_reset/action";
-import { ScriptAction } from "../wand/script/action";
+import { CredentialAction } from "../ability/credential/action";
+import { PasswordAction } from "../ability/password/action";
+import { PasswordLoginAction } from "../ability/password_login/action";
+import { PasswordResetAction } from "../ability/password_reset/action";
+import { ScriptAction } from "../ability/script/action";
 
 export type LoadAction = {
     credential: CredentialAction,

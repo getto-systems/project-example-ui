@@ -1,10 +1,10 @@
 import { LoadAction } from "./action";
 
-import { LoginID, NonceValue, ApiRoles, StoreCredentialState } from "../wand/credential/data";
-import { StoreCredentialApi } from "../wand/credential/action";
-import { Password } from "../wand/password/data";
-import { LoginBoard, LoginState } from "../wand/password_login/data";
-import { PasswordLoginTransition, LoginStore, LoginApi } from "../wand/password_login/action";
+import { LoginID, NonceValue, ApiRoles, StoreCredentialState } from "../ability/credential/data";
+import { StoreCredentialApi } from "../ability/credential/action";
+import { Password } from "../ability/password/data";
+import { LoginBoard, LoginState } from "../ability/password_login/data";
+import { PasswordLoginTransition, LoginStore, LoginApi } from "../ability/password_login/action";
 
 export type PasswordLoginInit = [PasswordLoginComponent, PasswordLoginState]
 

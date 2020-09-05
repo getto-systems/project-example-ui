@@ -5,8 +5,8 @@ import { LoadScriptInit, initLoadScript } from "./load/load_script";
 import { PasswordLoginInit, initPasswordLogin } from "./load/password_login";
 import { PasswordResetInit, initPasswordReset } from "./load/password_reset";
 
-import { TransitionSetter } from "./wand/transition/data";
-import { RenewError } from "./wand/credential/data";
+import { TransitionSetter } from "./ability/transition/data";
+import { RenewError } from "./ability/credential/data";
 
 export type LoadInit = [LoadUsecase, LoadState]
 

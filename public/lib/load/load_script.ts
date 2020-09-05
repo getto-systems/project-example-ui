@@ -1,6 +1,6 @@
 import { LoadAction } from "./action";
 
-import { LoadState } from "../wand/script/data";
+import { LoadState } from "../ability/script/data";
 
 export type LoadScriptInit = [LoadScriptComponent, LoadScriptState];
 

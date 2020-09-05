@@ -1,5 +1,5 @@
-import { LoginID } from "../../../wand/credential/data";
-import { Password } from "../../../wand/password/data";
+import { LoginID } from "../../../ability/credential/data";
+import { Password } from "../../../ability/password/data";
 
 export interface PreactBaseComponent {
     login: PreactLoginComponent
