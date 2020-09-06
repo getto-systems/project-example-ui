@@ -11,13 +11,19 @@ type AuthLoginResponse =
     Readonly<{ success: true, nonce: string, roles: Array<string> }> |
     Readonly<{ success: false, err: { type: string, err: string } }>
 
-export function initFetchPasswordLoginClient(authClient: AuthClient): PasswordLoginClient {
-    return {
-        login,
+export function initFetchPasswordLoginClient(client: AuthClient): PasswordLoginClient {
+    return new FetchPasswordLoginClient(client);
+}
+
+class FetchPasswordLoginClient implements PasswordLoginClient {
+    client: AuthClient
+
+    constructor(client: AuthClient) {
+        this.client = client;
     }
 
-    async function login(loginID: LoginID, password: Password): Promise<LoginResponse> {
-        const response = await authClient.passwordLogin({
+    async login(loginID: LoginID, password: Password): Promise<LoginResponse> {
+        const response = await this.client.passwordLogin({
             loginID: loginID.loginID,
             password: password.password,
         });

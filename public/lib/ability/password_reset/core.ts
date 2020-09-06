@@ -30,39 +30,37 @@ import {
 const CREATE_SESSION_DELAY_LIMIT_SECOND = 1;
 const RESET_DELAY_LIMIT_SECOND = 1;
 
-export function passwordResetAction(infra: Infra): PasswordResetAction {
-    return {
-        initResetTokenRecord,
+export function initPasswordResetAction(infra: Infra): PasswordResetAction {
+    return new PasswordResetActionImpl(infra);
+}
 
-        initCreateSessionStore,
-        initCreateSessionApi,
+class PasswordResetActionImpl implements PasswordResetAction {
+    infra: Infra
 
-        initPollingStatusApi,
-
-        initResetStore,
-        initResetApi,
+    constructor(infra: Infra) {
+        this.infra = infra;
     }
 
-    function initResetTokenRecord(): ResetTokenRecord {
+    initResetTokenRecord(): ResetTokenRecord {
         return new ResetTokenRecordImpl();
     }
 
-    function initCreateSessionStore(loginID: LoginIDRecord): CreateSessionStore {
+    initCreateSessionStore(loginID: LoginIDRecord): CreateSessionStore {
         return new CreateSessionStoreImpl(loginID);
     }
-    function initCreateSessionApi(): CreateSessionApi {
-        return new CreateSessionApiImpl(infra.passwordResetClient);
+    initCreateSessionApi(): CreateSessionApi {
+        return new CreateSessionApiImpl(this.infra.passwordResetClient);
     }
 
-    function initPollingStatusApi(): PollingStatusApi {
-        return new PollingStatusApiImpl(infra.passwordResetClient);
+    initPollingStatusApi(): PollingStatusApi {
+        return new PollingStatusApiImpl(this.infra.passwordResetClient);
     }
 
-    function initResetStore(resetToken: ResetTokenRecord, loginID: LoginIDRecord, password: PasswordRecord): ResetStore {
+    initResetStore(resetToken: ResetTokenRecord, loginID: LoginIDRecord, password: PasswordRecord): ResetStore {
         return new ResetStoreImpl(resetToken, loginID, password);
     }
-    function initResetApi(): ResetApi {
-        return new ResetApiImpl(infra.passwordResetClient);
+    initResetApi(): ResetApi {
+        return new ResetApiImpl(this.infra.passwordResetClient);
     }
 }
 

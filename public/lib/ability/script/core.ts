@@ -7,19 +7,25 @@ import {
 } from "./data";
 import { ScriptAction } from "./action";
 
-export function scriptAction(infra: Infra): ScriptAction {
-    return {
-        load,
+export function initScriptAction(infra: Infra): ScriptAction {
+    return new ScriptActionImpl(infra);
+}
+
+class ScriptActionImpl implements ScriptAction {
+    infra: Infra
+
+    constructor(infra: Infra) {
+        this.infra = infra;
     }
 
-    function load(): LoadState {
-        return tryToLoad(loadScript());
+    load(): LoadState {
+        return tryToLoad(this.loadScript());
     }
 
-    async function loadScript(): Promise<LoadState> {
-        const pathname = await infra.location.pathname();
+    async loadScript(): Promise<LoadState> {
+        const pathname = await this.infra.location.pathname();
         if (pathname.found) {
-            return succeedToLoad(secureScriptPath(infra.env.secureServerHost, pathname.pathname));
+            return succeedToLoad(secureScriptPath(this.infra.env.secureServerHost, pathname.pathname));
         } else {
             return failedToLoad({ type: "infra-error", err: pathname.err });
         }

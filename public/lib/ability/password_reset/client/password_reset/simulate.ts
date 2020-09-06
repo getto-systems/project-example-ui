@@ -10,30 +10,39 @@ import { LoginID, NonceValue, ApiRoles } from "../../../credential/data";
 import { Password } from "../../../password/data";
 import { Session, ResetToken } from "../../data";
 
-export function initSimulatePasswordResetClient(targetLoginID: LoginID, nonce: NonceValue, roles: ApiRoles): PasswordResetClient {
-    type TokenState =
-        Readonly<{ state: "initial" }> |
-        Readonly<{ state: "waiting", since: string }> |
-        Readonly<{ state: "sending", since: string }> |
-        Readonly<{ state: "success", at: string }> |
-        Readonly<{ state: "failed", err: SendTokenError }>
+export function initSimulatePasswordResetClient(targetLoginID: LoginID, returnNonce: NonceValue, returnRoles: ApiRoles): PasswordResetClient {
+    return new SimulatePasswordResetClient(targetLoginID, returnNonce, returnRoles);
+}
 
-    let tokenState: TokenState = { state: "initial" }
+type TokenState =
+    Readonly<{ state: "initial" }> |
+    Readonly<{ state: "waiting", since: string }> |
+    Readonly<{ state: "sending", since: string }> |
+    Readonly<{ state: "success", at: string }> |
+    Readonly<{ state: "failed", err: SendTokenError }>
 
-    const targetSession = { sessionID: "session" }
+class SimulatePasswordResetClient implements PasswordResetClient {
+    tokenState: TokenState = { state: "initial" }
 
-    return {
-        createSession,
-        sendToken,
-        getStatus,
-        reset,
+    targetSession = { sessionID: "session" }
+
+    targetLoginID: LoginID
+
+    returnNonce: NonceValue
+    returnRoles: ApiRoles
+
+    constructor(targetLoginID: LoginID, returnNonce: NonceValue, returnRoles: ApiRoles) {
+        this.targetLoginID = targetLoginID;
+
+        this.returnNonce = returnNonce;
+        this.returnRoles = returnRoles;
     }
 
-    function createSession(loginID: LoginID): Promise<CreateSessionResponse> {
+    createSession(loginID: LoginID): Promise<CreateSessionResponse> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                if (loginID.loginID === targetLoginID.loginID) {
-                    resolve(createSessionSuccess(targetSession));
+                if (loginID.loginID === this.targetLoginID.loginID) {
+                    resolve(createSessionSuccess(this.targetSession));
                 } else {
                     resolve(createSessionFailed({ type: "invalid-password-reset" }));
                 }
@@ -41,16 +50,20 @@ export function initSimulatePasswordResetClient(targetLoginID: LoginID, nonce: N
         });
     }
 
-    function sendToken(): Promise<SendTokenResponse> {
-        setTimeout(() => {
-            tokenState = { state: "waiting", since: "" }
-        }, 1 * 1000);
-        setTimeout(() => {
-            tokenState = { state: "sending", since: "" }
-        }, 1 * 1000);
-        setTimeout(() => {
-            tokenState = { state: "success", at: "" }
-        }, 1 * 1000);
+    toWaiting(): void {
+        this.tokenState = { state: "waiting", since: "" }
+    }
+    toSending(): void {
+        this.tokenState = { state: "sending", since: "" }
+    }
+    toSuccess(): void {
+        this.tokenState = { state: "success", at: "" }
+    }
+
+    sendToken(): Promise<SendTokenResponse> {
+        setTimeout(this.toWaiting, 1 * 1000);
+        setTimeout(this.toSending, 2 * 1000);
+        setTimeout(this.toSuccess, 3 * 1000);
 
         return new Promise((resolve) => {
             setTimeout(() => {
@@ -59,45 +72,50 @@ export function initSimulatePasswordResetClient(targetLoginID: LoginID, nonce: N
         });
     }
 
-    function getStatus(session: Session): Promise<GetStatusResponse> {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                if (session.sessionID !== targetSession.sessionID) {
-                    reject(getStatusFailed({ type: "invalid-password-reset" }));
-                    return;
-                }
-
-                switch (tokenState.state) {
-                    case "initial":
-                        resolve(getStatusFailed({ type: "infra-error", err: "not initialized" }));
-                        return;
-
-                    case "waiting":
-                    case "sending":
-                        resolve(getStatusPolling({ type: "log" }, { sending: false, since: tokenState.since }));
-                        return;
-
-                    case "success":
-                        resolve(getStatusDone({ type: "log" }, { success: true, at: tokenState.at }));
-                        return;
-
-                    case "failed":
-                        resolve(getStatusFailed(tokenState.err));
-                        return;
-                }
-            }, 5 * 1000);
+    getStatus(session: Session): Promise<GetStatusResponse> {
+        return new Promise((resolve) => {
+            ((simulate) => {
+                setTimeout(() => {
+                    resolve(simulate(session));
+                }, 5 * 1000);
+            })(this.getStatusSimulate);
         });
     }
+    getStatusSimulate(session: Session): GetStatusResponse {
+        if (session.sessionID !== this.targetSession.sessionID) {
+            return getStatusFailed({ type: "invalid-password-reset" });
+        }
 
-    function reset(token: ResetToken, loginID: LoginID, _password: Password): Promise<ResetResponse> {
+        switch (this.tokenState.state) {
+            case "initial":
+                return getStatusFailed({ type: "infra-error", err: "not initialized" });
+
+            case "waiting":
+            case "sending":
+                return getStatusPolling({ type: "log" }, { sending: false, since: this.tokenState.since });
+
+            case "success":
+                return getStatusDone({ type: "log" }, { success: true, at: this.tokenState.at });
+
+            case "failed":
+                return getStatusFailed(this.tokenState.err);
+        }
+    }
+
+    reset(token: ResetToken, loginID: LoginID, password: Password): Promise<ResetResponse> {
         return new Promise((resolve) => {
-            setTimeout(() => {
-                if (loginID.loginID !== targetLoginID.loginID) {
-                    resolve(resetFailed({ type: "invalid-password-reset" }));
-                } else {
-                    resolve(resetSuccess(nonce, roles));
-                }
-            }, 5 * 1000);
+            ((simulate) => {
+                setTimeout(() => {
+                    resolve(simulate(token, loginID, password));
+                }, 5 * 1000);
+            })(this.resetSimulate);
         });
+    }
+    resetSimulate(token: ResetToken, loginID: LoginID, _password: Password): ResetResponse {
+        if (loginID.loginID !== this.targetLoginID.loginID) {
+            return resetFailed({ type: "invalid-password-reset" });
+        } else {
+            return resetSuccess(this.returnNonce, this.returnRoles);
+        }
     }
 }

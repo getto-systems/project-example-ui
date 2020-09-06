@@ -10,14 +10,20 @@ type AuthRenewResponse =
     Readonly<{ success: true, roles: Array<string> }> |
     Readonly<{ success: false, err: { type: string, err: string } }>
 
-export function initFetchRenewClient(authClient: AuthClient): RenewClient {
-    return {
-        renew,
+export function initFetchRenewClient(client: AuthClient): RenewClient {
+    return new FetchRenewClient(client);
+}
+
+class FetchRenewClient implements RenewClient {
+    client: AuthClient
+
+    constructor(client: AuthClient) {
+        this.client = client;
     }
 
-    async function renew(nonce: NonceValue): Promise<RenewResponse> {
+    async renew(nonce: NonceValue): Promise<RenewResponse> {
         try {
-            const response = await authClient.renew({ nonce: nonce.nonce });
+            const response = await this.client.renew({ nonce: nonce.nonce });
             if (response.success) {
                 return renewSuccess({ roles: Array.from(response.roles) });
             } else {

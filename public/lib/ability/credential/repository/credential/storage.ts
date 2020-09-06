@@ -5,30 +5,11 @@ import { CredentialRepository } from "../../infra";
 
 import { Nonce, nonce, nonceNotFound, NonceValue, ApiRoles } from "../../data";
 
-export function initStorageCredential(storage: Storage, key: string): CredentialRepository {
-    return new Repository(new CredentialStorageImpl(storage, key));
+export function initStorageCredentialRepository(storage: Storage, key: string): CredentialRepository {
+    return new StorageCredentialRepository(new CredentialStorageImpl(storage, key));
 }
 
-interface CredentialStorage {
-    setItem(data: Data): void;
-    getItem(): Credential;
-}
-
-type Credential =
-    Readonly<{ found: false }> |
-    Readonly<{
-        found: true,
-        nonce: Nonce,
-        roles: ApiRoles,
-    }>
-
-type Data = Readonly<{ nonce: NonceValue, roles: ApiRoles }>
-
-type Update =
-    Readonly<{ type: "nonce", nonce: NonceValue }> |
-    Readonly<{ type: "roles", roles: ApiRoles }>
-
-class Repository implements CredentialRepository {
+class StorageCredentialRepository implements CredentialRepository {
     storage: CredentialStorage;
 
     constructor(storage: CredentialStorage) {
@@ -74,9 +55,6 @@ class Repository implements CredentialRepository {
                             roles: data.roles,
                         }
                     }
-
-                default:
-                    return assertNever(data);
             }
         } else {
             switch (data.type) {
@@ -91,13 +69,29 @@ class Repository implements CredentialRepository {
                         nonce: { nonce: "" },
                         roles: data.roles,
                     }
-
-                default:
-                    return assertNever(data);
             }
         }
     }
 }
+
+interface CredentialStorage {
+    setItem(data: Data): void;
+    getItem(): Credential;
+}
+
+type Credential =
+    Readonly<{ found: false }> |
+    Readonly<{
+        found: true,
+        nonce: Nonce,
+        roles: ApiRoles,
+    }>
+
+type Data = Readonly<{ nonce: NonceValue, roles: ApiRoles }>
+
+type Update =
+    Readonly<{ type: "nonce", nonce: NonceValue }> |
+    Readonly<{ type: "roles", roles: ApiRoles }>
 
 class CredentialStorageImpl implements CredentialStorage {
     storage: Storage;
@@ -138,8 +132,4 @@ class CredentialStorageImpl implements CredentialStorage {
         const arr = f.encode(credential).finish();
         this.storage.setItem(this.key, encodeUint8ArrayToBase64String(arr));
     }
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER");
 }

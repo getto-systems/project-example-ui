@@ -5,12 +5,12 @@ import {
 } from "./data";
 import { PasswordAction, PasswordRecord, PasswordListener } from "./action";
 
-export function passwordAction(): PasswordAction {
-    return {
-        initPasswordRecord,
-    }
+export function initPasswordAction(): PasswordAction {
+    return new PasswordActionImpl();
+}
 
-    function initPasswordRecord(): PasswordRecord {
+class PasswordActionImpl implements PasswordAction {
+    initPasswordRecord(): PasswordRecord {
         return new PasswordRecordImpl();
     }
 }
