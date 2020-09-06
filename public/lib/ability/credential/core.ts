@@ -9,25 +9,28 @@ import {
     StoreCredentialState, initialStoreCredential, tryToStoreCredential, failedToStoreCredential, succeedToStoreCredential,
 } from "./data";
 
-export function credentialAction(infra: Infra): CredentialAction {
-    return {
-        initLoginIDRecord,
+export function initCredentialAction(infra: Infra): CredentialAction {
+    return new CredentialActionImpl(infra);
+}
 
-        renew,
-        initStoreCredentialApi,
+class CredentialActionImpl implements CredentialAction {
+    infra: Infra
+
+    constructor(infra: Infra) {
+        this.infra = infra;
     }
 
-    function initLoginIDRecord(): LoginIDRecord {
+    initLoginIDRecord(): LoginIDRecord {
         return new LoginIDRecordImpl();
     }
 
-    async function renew(): Promise<RenewState> {
+    async renew(): Promise<RenewState> {
         try {
-            const nonce = await infra.credentials.findNonce();
+            const nonce = await this.infra.credentials.findNonce();
             if (nonce.found) {
-                const response = await infra.renewClient.renew(nonce.value);
+                const response = await this.infra.renewClient.renew(nonce.value);
                 if (response.success) {
-                    await infra.credentials.storeRoles(response.roles);
+                    await this.infra.credentials.storeRoles(response.roles);
                     return renewSuccess;
                 }
 
@@ -40,8 +43,8 @@ export function credentialAction(infra: Infra): CredentialAction {
         }
     }
 
-    function initStoreCredentialApi(): StoreCredentialApi {
-        return new StoreCredentialApiImpl(infra.credentials);
+    initStoreCredentialApi(): StoreCredentialApi {
+        return new StoreCredentialApiImpl(this.infra.credentials);
     }
 }
 

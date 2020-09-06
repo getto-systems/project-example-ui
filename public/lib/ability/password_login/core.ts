@@ -11,17 +11,22 @@ import {
 } from "./data";
 import { PasswordLoginAction, LoginStore, LoginApi } from "./action";
 
-export function passwordLoginAction(infra: Infra): PasswordLoginAction {
-    return {
-        initLoginStore,
-        initLoginApi,
+export function initPasswordLoginAction(infra: Infra): PasswordLoginAction {
+    return new PasswordLoginActionImpl(infra);
+}
+
+class PasswordLoginActionImpl implements PasswordLoginAction {
+    infra: Infra
+
+    constructor(infra: Infra) {
+        this.infra = infra;
     }
 
-    function initLoginStore(loginID: LoginIDRecord, password: PasswordRecord): LoginStore {
+    initLoginStore(loginID: LoginIDRecord, password: PasswordRecord): LoginStore {
         return new LoginStoreImpl(loginID, password);
     }
-    function initLoginApi(): LoginApi {
-        return new LoginApiImpl(infra.passwordLoginClient);
+    initLoginApi(): LoginApi {
+        return new LoginApiImpl(this.infra.passwordLoginClient);
     }
 }
 
