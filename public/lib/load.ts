@@ -11,7 +11,8 @@ import { RenewError } from "./ability/credential/data";
 export type LoadInit = [LoadUsecase, LoadState]
 
 export interface LoadUsecase {
-    registerTransitionSetter(setter: TransitionSetter<LoadState>): void;
+    initialLoadState(url: URL): Promise<LoadState>
+    registerTransitionSetter(setter: TransitionSetter<LoadState>): void
 }
 
 export type LoadState =
@@ -32,28 +33,44 @@ function error(err: RenewError): LoadState {
     return { view: "error", err }
 }
 
-export async function initLoad(action: LoadAction, url: Readonly<URL>): Promise<LoadInit> {
-    const transitioner = new Transitioner<LoadState>();
+export function initLoad(action: LoadAction): LoadUsecase {
+    return new LoadUsecaseImpl(action);
+}
 
-    const transition = {
-        logined() {
-            // 画面の遷移は state を返してから行う
-            setTimeout(() => {
-                transitioner.transitionTo(loadScriptView());
-            }, 0);
-        },
+interface LoadTransition {
+    logined(): void
+}
+
+class LoadUsecaseImpl implements LoadUsecase {
+    action: LoadAction
+
+    transitioner: Transitioner<LoadState>
+    transition: LoadTransition
+
+    constructor(action: LoadAction) {
+        this.action = action;
+
+        this.transitioner = new Transitioner();
+
+        const transitionTo = this.transitioner.transitionTo;
+        const loadScriptView = this.loadScriptView;
+
+        this.transition = {
+            logined() {
+                // 画面の遷移は state を返してから行う
+                setTimeout(() => {
+                    transitionTo(loadScriptView());
+                }, 0);
+            },
+        }
     }
 
-    const usecase = {
-        registerTransitionSetter: transitioner.register,
-    }
+    async initialLoadState(url: Readonly<URL>): Promise<LoadState> {
+        // TODO たぶんこのあたりで setInterval で renew し続けるようにする
 
-    return [usecase, await initial()]
-
-    async function initial(): Promise<LoadState> {
-        const renew = await action.credential.renew();
+        const renew = await this.action.credential.renew();
         if (renew.success) {
-            return loadScriptView();
+            return this.loadScriptView();
         }
 
         switch (renew.err.type) {
@@ -61,9 +78,9 @@ export async function initLoad(action: LoadAction, url: Readonly<URL>): Promise<
             case "invalid-ticket":
                 // ログイン前画面ではアンダースコアで始まる query string を使用する
                 if (url.searchParams.get("_password_reset")) {
-                    return passwordResetView();
+                    return this.passwordResetView(url);
                 } else {
-                    return passwordLoginView();
+                    return this.passwordLoginView();
                 }
 
             case "bad-request":
@@ -74,13 +91,17 @@ export async function initLoad(action: LoadAction, url: Readonly<URL>): Promise<
         }
     }
 
-    function loadScriptView(): LoadState {
-        return loadScript(initLoadScript(action));
+    loadScriptView(): LoadState {
+        return loadScript(initLoadScript(this.action));
     }
-    function passwordLoginView(): LoadState {
-        return passwordLogin(initPasswordLogin(action, transition));
+    passwordLoginView(): LoadState {
+        return passwordLogin(initPasswordLogin(this.action, this.transition));
     }
-    function passwordResetView(): LoadState {
-        return passwordReset(initPasswordReset(action, url, transition));
+    passwordResetView(url: Readonly<URL>): LoadState {
+        return passwordReset(initPasswordReset(this.action, url, this.transition));
+    }
+
+    registerTransitionSetter(setter: TransitionSetter<LoadState>): void {
+        this.transitioner.register(setter);
     }
 }
