@@ -1,4 +1,4 @@
-import { initAuthClient } from "../z_external/auth_client/auth_client";
+import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_client";
 
 import { LoadAction } from "../load/action";
 
@@ -22,38 +22,41 @@ import { initPasswordLoginAction } from "../ability/password_login/core";
 import { initPasswordResetAction } from "../ability/password_reset/core";
 import { initScriptAction } from "../ability/script/core";
 
-export function mainLoad(): Promise<LoadInit> {
-    const url = new URL(location.toString());
-    const authClient = initAuthClient(env.authServerURL);
+export async function initUsecase(browserLocation: Location): Promise<LoadInit> {
+    const load = initLoad(initLoadAction());
+    const url = new URL(browserLocation.toString());
+    return [load, await load.initialLoadState(url)];
 
-    const action: LoadAction = {
-        credential: initCredentialAction({
-            credentials: initCredentialRepository(),
-            renewClient: initRenewClient(),
-        }),
-        password: initPasswordAction(),
-        passwordLogin: initPasswordLoginAction({
-            passwordLoginClient: initPasswordLoginClient(),
-        }),
-        passwordReset: initPasswordResetAction({
-            passwordResetClient: initPasswordResetClient(),
-        }),
-        script: initScriptAction({
-            env: initScriptEnv(),
-            location: initPathnameLocation(),
-        }),
+    function initLoadAction(): LoadAction {
+        const authClient = initAuthClient(env.authServerURL);
+
+        return {
+            credential: initCredentialAction({
+                credentials: initCredentialRepository(),
+                renewClient: initRenewClient(authClient),
+            }),
+            password: initPasswordAction(),
+            passwordLogin: initPasswordLoginAction({
+                passwordLoginClient: initPasswordLoginClient(authClient),
+            }),
+            passwordReset: initPasswordResetAction({
+                passwordResetClient: initPasswordResetClient(),
+            }),
+            script: initScriptAction({
+                env: initScriptEnv(),
+                location: initPathnameLocation(browserLocation),
+            }),
+        }
     }
-
-    return initLoad(action, url);
 
     function initCredentialRepository(): CredentialRepository {
         return initStorageCredentialRepository(localStorage, "GETTO-EXAMPLE-CREDENTIAL");
     }
 
-    function initRenewClient(): RenewClient {
+    function initRenewClient(authClient: AuthClient): RenewClient {
         return initFetchRenewClient(authClient);
     }
-    function initPasswordLoginClient(): PasswordLoginClient {
+    function initPasswordLoginClient(authClient: AuthClient): PasswordLoginClient {
         return initFetchPasswordLoginClient(authClient);
     }
     function initPasswordResetClient(): PasswordResetClient {
@@ -69,7 +72,7 @@ export function mainLoad(): Promise<LoadInit> {
             secureServerHost: env.secureServerHost,
         }
     }
-    function initPathnameLocation(): PathnameLocation {
-        return initBrowserPathnameLocation(location);
+    function initPathnameLocation(browserLocation: Location): PathnameLocation {
+        return initBrowserPathnameLocation(browserLocation);
     }
 }

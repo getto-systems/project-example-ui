@@ -1,25 +1,21 @@
 import { render, h, VNode } from "preact";
+import { useState } from "preact/hooks";
 import { html } from "htm/preact";
-import { useState, useEffect } from "preact/hooks";
 
 import { LoadScript } from "./load/load_script";
 import { PasswordLogin } from "./load/password_login";
 
-import { mainLoad } from "../z_main/load";
-
+import { initUsecase } from "../z_main/load";
 import { LoadState, LoadUsecase } from "../load";
 
 (async () => {
-    render(h(main(...await mainLoad()), {}), document.body);
+    render(h(main(...await initUsecase(location)), {}), document.body);
 })();
 
-function main(usecase: LoadUsecase, initialState: LoadState) {
+function main(load: LoadUsecase, initialState: LoadState) {
     return (): VNode => {
         const [state, setState] = useState(initialState);
-        useEffect(() => {
-            // TODO たぶんこのあたりで setInterval で renew し続けるようにする
-            usecase.registerTransitionSetter(setState)
-        }, []);
+        load.registerTransitionSetter(setState)
 
         switch (state.view) {
             case "load-script":
@@ -29,7 +25,7 @@ function main(usecase: LoadUsecase, initialState: LoadState) {
                 return h(PasswordLogin(...state.init), {});
 
             case "password-reset":
-                //return h(PasswordLogin(state.component), {});
+                //return h(PasswordReset(...state.init), {});
                 return html`ここでパスワードリセット！`
 
             case "error":
