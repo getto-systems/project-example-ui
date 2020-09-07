@@ -1,25 +1,42 @@
-import { VNode } from "preact";
+import { h, VNode } from "preact";
 import { useState, useEffect } from "preact/hooks";
 
 import { appendScript, view } from "./load_script/view";
 
-import { LoadScriptState, LoadScriptComponent } from "../../load/load_script";
+import { LoadScriptState, LoadScriptComponent, ScriptComponent } from "../../load/load_script";
 
 import { ScriptState } from "../../ability/script/data";
 
-interface PreactLoginScriptComponent {
+export interface PreactComponent {
     (): VNode
 }
 
-export function LoadScript(component: LoadScriptComponent, initialState: LoadScriptState): PreactLoginScriptComponent {
-    const [initialScriptState] = initialState;
-
+export function LoadScript(component: LoadScriptComponent, initialState: LoadScriptState): PreactComponent {
     return (): VNode => {
-        const [scriptState, setScriptState] = useState(initialScriptState);
+        const [state, setState] = useState(initialState);
         component.handleEvent({
-            onScriptStateChanged: (promise: Promise<ScriptState>) => {
-                promise.then(setScriptState);
+            onLoadScriptStateChanged: (promise: Promise<LoadScriptState>) => {
+                promise.then(setState);
             },
+        });
+
+        switch (state.type) {
+            /*
+            case "store-credential":
+                return StoreCredential(...component.initStoreCredential());
+             */
+
+            case "load-script":
+                return h(Script(...component.initScript()), {});
+        }
+    }
+}
+
+function Script(component: ScriptComponent, initialState: ScriptState): PreactComponent {
+    return (): VNode => {
+        const [scriptState, setScriptState] = useState(initialState);
+        component.handleEvent({
+            onScriptStateChanged: setScriptState,
         });
 
         useEffect(() => {
