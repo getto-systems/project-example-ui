@@ -4,7 +4,7 @@ import { CredentialAction, StoreCredentialApi, LoginIDRecord, LoginIDListener } 
 
 import {
     LoginID, LoginIDBoard, LoginIDValidationError, ValidLoginID,
-    NonceValue, ApiRoles,
+    Nonce, ApiRoles,
     RenewState, renewSuccess, renewFailure,
     StoreCredentialState, initialStoreCredential, tryToStoreCredential, failedToStoreCredential, succeedToStoreCredential,
 } from "./data";
@@ -60,11 +60,11 @@ class StoreCredentialApiImpl implements StoreCredentialApi {
     currentState(): StoreCredentialState {
         return this.state;
     }
-    store(nonce: NonceValue, roles: ApiRoles): StoreCredentialState {
+    store(nonce: Nonce, roles: ApiRoles): StoreCredentialState {
         return tryToStoreCredential(this.storePromise(nonce, roles));
     }
 
-    async storePromise(nonce: NonceValue, roles: ApiRoles): Promise<StoreCredentialState> {
+    async storePromise(nonce: Nonce, roles: ApiRoles): Promise<StoreCredentialState> {
         try {
             await Promise.all([
                 this.credentials.storeNonce(nonce),

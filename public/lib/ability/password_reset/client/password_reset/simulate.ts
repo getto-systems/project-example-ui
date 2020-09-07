@@ -6,11 +6,11 @@ import {
     ResetResponse, resetSuccess, resetFailed,
 } from "../../infra";
 
-import { LoginID, NonceValue, ApiRoles } from "../../../credential/data";
+import { LoginID, Nonce, ApiRoles } from "../../../credential/data";
 import { Password } from "../../../password/data";
 import { Session, ResetToken } from "../../data";
 
-export function initSimulatePasswordResetClient(targetLoginID: LoginID, returnNonce: NonceValue, returnRoles: ApiRoles): PasswordResetClient {
+export function initSimulatePasswordResetClient(targetLoginID: LoginID, returnNonce: Nonce, returnRoles: ApiRoles): PasswordResetClient {
     return new SimulatePasswordResetClient(targetLoginID, returnNonce, returnRoles);
 }
 
@@ -28,10 +28,10 @@ class SimulatePasswordResetClient implements PasswordResetClient {
 
     targetLoginID: LoginID
 
-    returnNonce: NonceValue
+    returnNonce: Nonce
     returnRoles: ApiRoles
 
-    constructor(targetLoginID: LoginID, returnNonce: NonceValue, returnRoles: ApiRoles) {
+    constructor(targetLoginID: LoginID, returnNonce: Nonce, returnRoles: ApiRoles) {
         this.targetLoginID = targetLoginID;
 
         this.returnNonce = returnNonce;

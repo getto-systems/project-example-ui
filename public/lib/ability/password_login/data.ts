@@ -1,4 +1,4 @@
-import { LoginID, LoginIDBoard, NonceValue, ApiRoles } from "../credential/data";
+import { LoginID, LoginIDBoard, Nonce, ApiRoles } from "../credential/data";
 import { Password, PasswordBoard } from "../password/data";
 
 export type LoginBoard = Readonly<[LoginIDBoard, PasswordBoard]>
@@ -18,7 +18,7 @@ export type LoginState =
     Readonly<{ state: "initial-login" }> |
     Readonly<{ state: "try-to-login", delayed: boolean, promise: Promise<LoginState> }> |
     Readonly<{ state: "failed-to-login", err: LoginError }> |
-    Readonly<{ state: "succeed-to-login", nonce: NonceValue, roles: ApiRoles }>
+    Readonly<{ state: "succeed-to-login", nonce: Nonce, roles: ApiRoles }>
 export const initialLogin: LoginState = { state: "initial-login" }
 export function tryToLogin(promise: Promise<LoginState>): LoginState {
     return { state: "try-to-login", delayed: false, promise }
@@ -29,7 +29,7 @@ export function delayedToLogin(promise: Promise<LoginState>): LoginState {
 export function failedToLogin(err: LoginError): LoginState {
     return { state: "failed-to-login", err }
 }
-export function succeedToLogin(nonce: NonceValue, roles: ApiRoles): LoginState {
+export function succeedToLogin(nonce: Nonce, roles: ApiRoles): LoginState {
     return { state: "succeed-to-login", nonce, roles }
 }
 

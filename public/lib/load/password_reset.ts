@@ -1,6 +1,6 @@
 import { LoadAction } from "./action";
 
-import { LoginID, NonceValue, ApiRoles, StoreCredentialState } from "../ability/credential/data";
+import { LoginID, Nonce, ApiRoles, StoreCredentialState } from "../ability/credential/data";
 import { StoreCredentialApi } from "../ability/credential/action";
 import { Password } from "../ability/password/data";
 import {
@@ -312,7 +312,7 @@ class StoreCredentialComponentImpl {
         return StoreCredential([this.api.currentState()]);
     }
 
-    async store(nonce: NonceValue, roles: ApiRoles): Promise<PasswordResetState> {
+    async store(nonce: Nonce, roles: ApiRoles): Promise<PasswordResetState> {
         return this.mapApi(this.api.store(nonce, roles));
     }
 
