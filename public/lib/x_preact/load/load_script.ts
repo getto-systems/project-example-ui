@@ -5,48 +5,27 @@ import { appendScript, view } from "./load_script/view";
 
 import { LoadScriptState, LoadScriptComponent } from "../../load/load_script";
 
-interface PreactComponent {
+import { LoadState } from "../../ability/script/data";
+
+interface PreactLoginScriptComponent {
     (): VNode
 }
 
-export function LoadScript(baseComponent: LoadScriptComponent, initialState: LoadScriptState): PreactComponent {
-    const component = new LoadScriptPreactComponentImpl(baseComponent);
+export function LoadScript(component: LoadScriptComponent, initialState: LoadScriptState): PreactLoginScriptComponent {
+    const [initialLoadState] = initialState;
 
     return (): VNode => {
-        const state = component.useState(...useState(initialState));
+        const [loadState, setLoadState] = useState(initialLoadState);
+        component.handleEvent({
+            onLoadStateChanged: (promise: Promise<LoadState>) => {
+                promise.then(setLoadState);
+            },
+        });
 
         useEffect(() => {
-            appendScript(state);
-        }, [state]);
+            appendScript(loadState);
+        }, [loadState]);
 
-        return view(state);
+        return view(loadState);
     }
-}
-
-class LoadScriptPreactComponentImpl {
-    component: LoadScriptComponent
-    setState: LoadScriptSetState
-
-    constructor(component: LoadScriptComponent) {
-        this.component = component;
-        this.setState = (_state: LoadScriptState) => {
-            // useState() で再設定されるのでここには到達しない
-            throw new Error("NEVER");
-        }
-    }
-
-    useState(state: LoadScriptState, setState: LoadScriptSetState): LoadScriptState {
-        this.setState = setState;
-
-        const next = this.component.nextState(state);
-        if (next.hasNext) {
-            next.promise.then(this.setState);
-        }
-
-        return state;
-    }
-}
-
-interface LoadScriptSetState {
-    (state: LoadScriptState): void
 }

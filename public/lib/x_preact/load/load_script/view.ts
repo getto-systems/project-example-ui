@@ -1,9 +1,9 @@
 import { VNode } from "preact";
 import { html } from "htm/preact";
 
-import { LoadScriptState } from "../../../load/load_script";
+import { LoadState } from "../../../ability/script/data";
 
-export function appendScript(state: LoadScriptState): void {
+export function appendScript(state: LoadState): void {
     // script タグは body.appendChild しないとスクリプトがロードされないので useEffect で追加する
     if (state.state === "succeed-to-load") {
         const script = document.createElement("script");
@@ -12,8 +12,11 @@ export function appendScript(state: LoadScriptState): void {
     }
 }
 
-export function view(state: LoadScriptState): VNode {
+export function view(state: LoadState): VNode {
     switch (state.state) {
+        case "initial-load":
+            return html``
+
         case "try-to-load":
             // path の取得には時間がかからないはずなので空を返す
             return html``
@@ -25,12 +28,5 @@ export function view(state: LoadScriptState): VNode {
         case "succeed-to-load":
             // script の追加は appendScript でするので、本体は空で返す
             return html``
-
-        default:
-            return assertNever(state);
     }
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER");
 }

@@ -1,38 +1,37 @@
 import { LoadAction } from "./action";
 
-import { LoadState } from "../ability/script/data";
+import { LoadState, LoadStateEventHandler } from "../ability/script/data";
+import { ScriptApi } from "../ability/script/action";
 
-export type LoadScriptInit = [LoadScriptComponent, LoadScriptState];
+export type LoadScriptInit = [LoadScriptComponent, LoadScriptState]
 
 export interface LoadScriptComponent {
-    nextState(state: LoadScriptState): LoadScriptNextState
+    handleEvent(event: LoadScriptEventHandler): void
 }
 
-export type LoadScriptState = LoadState
-
-export type LoadScriptNextState =
-    Readonly<{ hasNext: false }> |
-    Readonly<{ hasNext: true, promise: Promise<LoadScriptState> }>
-const loadScriptStatic: LoadScriptNextState = { hasNext: false }
-function loadScriptNextState(promise: Promise<LoadScriptState>): LoadScriptNextState {
-    return { hasNext: true, promise }
+export type LoadScriptEventHandler = {
+    onLoadStateChanged: LoadStateEventHandler,
 }
+
+export type LoadScriptState = [LoadState]
 
 export function initLoadScript(action: LoadAction): LoadScriptInit {
-    const component = {
-        nextState,
+    const component = new LoadScriptComponentImpl(action.script.initScriptApi());
+    return [component, component.currentState()]
+}
+
+class LoadScriptComponentImpl implements LoadScriptComponent {
+    api: ScriptApi
+
+    constructor(api: ScriptApi) {
+        this.api = api;
     }
 
-    return [component, action.script.load()]
+    currentState(): LoadScriptState {
+        return [this.api.currentState()]
+    }
 
-    function nextState(state: LoadScriptState): LoadScriptNextState {
-        switch (state.state) {
-            case "try-to-load":
-                return loadScriptNextState(state.promise);
-
-            case "failed-to-load":
-            case "succeed-to-load":
-                return loadScriptStatic;
-        }
+    handleEvent(event: LoadScriptEventHandler): void {
+        this.api.load(event.onLoadStateChanged);
     }
 }
