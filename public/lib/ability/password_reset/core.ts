@@ -1,9 +1,17 @@
 import { Infra, PasswordResetClient, SendTokenError } from "./infra";
 
-import { LoginIDBoard } from "../credential/data";
-import { LoginIDRecord } from "../credential/action";
-import { PasswordBoard } from "../password/data";
+import { LoginIDRecord } from "../auth_credential/action";
 import { PasswordRecord } from "../password/action";
+import {
+    ResetTokenRecord,
+    PasswordResetAction,
+    CreateSessionStore, CreateSessionApi,
+    PollingStatusApi,
+    ResetStore, ResetApi,
+} from "./action";
+
+import { LoginIDBoard } from "../auth_credential/data";
+import { PasswordBoard } from "../password/data";
 import {
     Session,
     ResetToken, ResetTokenBoard, ResetTokenValidationError, ValidResetToken,
@@ -18,13 +26,6 @@ import {
 
     ValidContent, validContent, invalidContent,
 } from "./data";
-import {
-    ResetTokenRecord,
-    PasswordResetAction,
-    CreateSessionStore, CreateSessionApi,
-    PollingStatusApi,
-    ResetStore, ResetApi,
-} from "./action";
 
 // 「遅くなっています」を表示するまでの秒数
 const CREATE_SESSION_DELAY_LIMIT_SECOND = 1;
@@ -390,7 +391,7 @@ class ResetApiImpl implements ResetApi {
     async requestReset(content: ResetContent): Promise<ResetState> {
         const response = await this.client.reset(...content);
         if (response.success) {
-            return succeedToReset(response.nonce, response.roles);
+            return succeedToReset(response.authCredential);
         } else {
             return failedToReset(response.err);
         }

@@ -6,7 +6,7 @@ import { PasswordLoginInit, initPasswordLogin } from "./load/password_login";
 import { PasswordResetInit, initPasswordReset } from "./load/password_reset";
 
 import { TransitionSetter } from "./ability/transition/data";
-import { RenewError } from "./ability/credential/data";
+import { RenewError } from "./ability/auth_credential/data";
 
 export type LoadInit = [LoadUsecase, LoadState]
 
@@ -68,7 +68,7 @@ class LoadUsecaseImpl implements LoadUsecase {
     async initialLoadState(url: Readonly<URL>): Promise<LoadState> {
         // TODO たぶんこのあたりで setInterval で renew し続けるようにする
 
-        const renew = await this.action.credential.renew();
+        const renew = await this.action.authCredential.renew();
         if (renew.success) {
             return this.loadScriptView();
         }

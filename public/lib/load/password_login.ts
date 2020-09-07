@@ -1,7 +1,7 @@
 import { LoadAction } from "./action";
 
-import { LoginID, TicketNonce, ApiRoles, StoreCredentialState } from "../ability/credential/data";
-import { StoreCredentialApi } from "../ability/credential/action";
+import { LoginID, AuthCredential, StoreCredentialState } from "../ability/auth_credential/data";
+import { StoreCredentialApi } from "../ability/auth_credential/action";
 import { Password } from "../ability/password/data";
 import { LoginBoard, LoginState } from "../ability/password_login/data";
 import { PasswordLoginTransition, LoginStore, LoginApi } from "../ability/password_login/action";
@@ -79,7 +79,7 @@ export function initPasswordLogin(action: LoadAction, transition: PasswordLoginT
                 return passwordLoginNextState(state.promise.then(login.mapApi));
 
             case "succeed-to-login":
-                return passwordLoginNextState(storeCredential.store(state.nonce, state.roles));
+                return passwordLoginNextState(storeCredential.store(state.authCredential));
         }
     }
     function nextStoreCredential(state: StoreCredentialState): PasswordLoginNextState {
@@ -104,7 +104,7 @@ class LoginComponentImpl implements LoginComponent {
 
     constructor(action: LoadAction) {
         this.store = action.passwordLogin.initLoginStore(
-            action.credential.initLoginIDRecord(),
+            action.authCredential.initLoginIDRecord(),
             action.password.initPasswordRecord(),
         );
         this.api = action.passwordLogin.initLoginApi();
@@ -165,15 +165,15 @@ class StoreCredentialComponentImpl {
     api: StoreCredentialApi
 
     constructor(action: LoadAction) {
-        this.api = action.credential.initStoreCredentialApi();
+        this.api = action.authCredential.initStoreCredentialApi();
     }
 
     currentState(): PasswordLoginState {
         return StoreCredential([this.api.currentState()]);
     }
 
-    async store(nonce: TicketNonce, roles: ApiRoles): Promise<PasswordLoginState> {
-        return this.mapApi(this.api.store(nonce, roles));
+    async store(authCredential: AuthCredential): Promise<PasswordLoginState> {
+        return this.mapApi(this.api.store(authCredential));
     }
 
     mapApi(state: StoreCredentialState): PasswordLoginState {

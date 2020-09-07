@@ -4,7 +4,7 @@ import { html } from "htm/preact";
 import { PreactBaseComponent, PreactLoginComponent } from "./component";
 import { PasswordLoginState } from "../../../load/password_login";
 
-import { LoginID, LoginIDBoard, LoginIDValidationError, StoreCredentialState } from "../../../ability/credential/data";
+import { LoginID, LoginIDBoard, LoginIDValidationError, StoreCredentialState } from "../../../ability/auth_credential/data";
 import { Password, PasswordBoard, PasswordView, PasswordValidationError } from "../../../ability/password/data";
 import { LoginState, LoginBoard, LoginError } from "../../../ability/password_login/data";
 

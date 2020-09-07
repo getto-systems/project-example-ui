@@ -1,4 +1,4 @@
-import { LoginID, LoginIDBoard, TicketNonce, ApiRoles } from "../credential/data";
+import { LoginID, LoginIDBoard, AuthCredential } from "../auth_credential/data";
 import { Password, PasswordBoard } from "../password/data";
 
 export type Session = Readonly<{ sessionID: Readonly<string> }>
@@ -75,7 +75,7 @@ export type ResetState =
     Readonly<{ state: "initial-reset" }> |
     Readonly<{ state: "try-to-reset", delayed: boolean, promise: Promise<ResetState> }> |
     Readonly<{ state: "failed-to-reset", err: ResetError }> |
-    Readonly<{ state: "succeed-to-reset", nonce: TicketNonce, roles: ApiRoles }>
+    Readonly<{ state: "succeed-to-reset", authCredential: AuthCredential }>
 export const initialReset: ResetState = { state: "initial-reset" }
 export function tryToReset(promise: Promise<ResetState>): ResetState {
     return { state: "try-to-reset", delayed: false, promise }
@@ -86,8 +86,8 @@ export function delayedToReset(promise: Promise<ResetState>): ResetState {
 export function failedToReset(err: ResetError): ResetState {
     return { state: "failed-to-reset", err }
 }
-export function succeedToReset(nonce: TicketNonce, roles: ApiRoles): ResetState {
-    return { state: "succeed-to-reset", nonce, roles }
+export function succeedToReset(authCredential: AuthCredential): ResetState {
+    return { state: "succeed-to-reset", authCredential }
 }
 
 export type CreateSessionError =

@@ -1,11 +1,11 @@
-import { CredentialAction } from "../ability/credential/action";
+import { AuthCredentialAction } from "../ability/auth_credential/action";
 import { PasswordAction } from "../ability/password/action";
 import { PasswordLoginAction } from "../ability/password_login/action";
 import { PasswordResetAction } from "../ability/password_reset/action";
 import { ScriptAction } from "../ability/script/action";
 
 export type LoadAction = {
-    credential: CredentialAction,
+    authCredential: AuthCredentialAction,
     password: PasswordAction,
     passwordLogin: PasswordLoginAction,
     passwordReset: PasswordResetAction,

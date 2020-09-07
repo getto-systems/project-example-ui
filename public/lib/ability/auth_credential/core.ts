@@ -1,19 +1,19 @@
-import { Infra, CredentialRepository } from "./infra";
+import { Infra, AuthCredentialRepository } from "./infra";
 
-import { CredentialAction, StoreCredentialApi, LoginIDRecord, LoginIDListener } from "./action";
+import { AuthCredentialAction, StoreCredentialApi, LoginIDRecord, LoginIDListener } from "./action";
 
 import {
     LoginID, LoginIDBoard, LoginIDValidationError, ValidLoginID,
-    TicketNonce, ApiRoles,
+    AuthCredential,
     RenewState, renewSuccess, renewFailure,
     StoreCredentialState, initialStoreCredential, tryToStoreCredential, failedToStoreCredential, succeedToStoreCredential,
 } from "./data";
 
-export function initCredentialAction(infra: Infra): CredentialAction {
-    return new CredentialActionImpl(infra);
+export function initAuthCredentialAction(infra: Infra): AuthCredentialAction {
+    return new AuthCredentialActionImpl(infra);
 }
 
-class CredentialActionImpl implements CredentialAction {
+class AuthCredentialActionImpl implements AuthCredentialAction {
     infra: Infra
 
     constructor(infra: Infra) {
@@ -26,11 +26,11 @@ class CredentialActionImpl implements CredentialAction {
 
     async renew(): Promise<RenewState> {
         try {
-            const nonce = await this.infra.credentials.findNonce();
-            if (nonce.found) {
-                const response = await this.infra.renewClient.renew(nonce.value);
+            const ticketNonce = await this.infra.authCredentials.findTicketNonce();
+            if (ticketNonce.found) {
+                const response = await this.infra.renewClient.renew(ticketNonce.ticketNonce);
                 if (response.success) {
-                    await this.infra.credentials.storeRoles(response.roles);
+                    await this.infra.authCredentials.storeAuthCredential(response.authCredential);
                     return renewSuccess;
                 }
 
@@ -44,32 +44,30 @@ class CredentialActionImpl implements CredentialAction {
     }
 
     initStoreCredentialApi(): StoreCredentialApi {
-        return new StoreCredentialApiImpl(this.infra.credentials);
+        return new StoreCredentialApiImpl(this.infra.authCredentials);
     }
 }
 
 class StoreCredentialApiImpl implements StoreCredentialApi {
-    credentials: CredentialRepository
+    authCredentials: AuthCredentialRepository
 
     state: StoreCredentialState = initialStoreCredential
 
-    constructor(credentials: CredentialRepository) {
-        this.credentials = credentials;
+    constructor(authCredentials: AuthCredentialRepository) {
+        this.authCredentials = authCredentials;
     }
 
     currentState(): StoreCredentialState {
         return this.state;
     }
-    store(nonce: TicketNonce, roles: ApiRoles): StoreCredentialState {
-        return tryToStoreCredential(this.storePromise(nonce, roles));
+    store(authCredential: AuthCredential): StoreCredentialState {
+        return tryToStoreCredential(this.storePromise(authCredential));
     }
 
-    async storePromise(nonce: TicketNonce, roles: ApiRoles): Promise<StoreCredentialState> {
+    async storePromise(authCredential: AuthCredential): Promise<StoreCredentialState> {
+        // TODO infra からの return を返すべき。あと、エラーは infra で包むべき
         try {
-            await Promise.all([
-                this.credentials.storeNonce(nonce),
-                this.credentials.storeRoles(roles),
-            ]);
+            await this.authCredentials.storeAuthCredential(authCredential);
             return succeedToStoreCredential;
         } catch (err) {
             return failedToStoreCredential({ type: "infra-error", err });
