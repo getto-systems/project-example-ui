@@ -1,28 +1,28 @@
-import { CredentialRepository, NonceFound, nonceFound } from "../../infra";
+import { CredentialRepository, TicketNonceFound, ticketNonceFound } from "../../infra";
 
 import { NonceValue, ApiRoles } from "../../data";
 
-export function initMemoryCredentialRepository(initialNonce: NonceFound): CredentialRepository {
+export function initMemoryCredentialRepository(initialNonce: TicketNonceFound): CredentialRepository {
     return new MemoryCredentialRepository(initialNonce);
 }
 
 class MemoryCredentialRepository implements CredentialRepository {
-    data: { nonce: NonceFound, roles: ApiRoles }
+    data: { nonce: TicketNonceFound, roles: ApiRoles }
 
-    constructor(initialNonce: NonceFound) {
+    constructor(initialNonce: TicketNonceFound) {
         this.data = {
             nonce: initialNonce,
             roles: { roles: [] },
         }
     }
 
-    async findNonce(): Promise<NonceFound> {
+    async findNonce(): Promise<TicketNonceFound> {
         return this.data.nonce;
     }
     async storeRoles(roles: ApiRoles): Promise<void> {
         this.data.roles = roles;
     }
     async storeNonce(value: NonceValue): Promise<void> {
-        this.data.nonce = nonceFound(value);
+        this.data.nonce = ticketNonceFound(value);
     }
 }

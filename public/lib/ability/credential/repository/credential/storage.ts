@@ -1,7 +1,7 @@
 import { decodeBase64StringToUint8Array, encodeUint8ArrayToBase64String } from "../../../../z_external/protocol_buffers_util";
 import { CredentialMessage } from "../../../../y_static/local_storage_pb.js";
 
-import { CredentialRepository, NonceFound, nonceFound, nonceNotFound } from "../../infra";
+import { CredentialRepository, TicketNonceFound, ticketNonceFound, ticketNonceNotFound } from "../../infra";
 
 import { NonceValue, ApiRoles } from "../../data";
 
@@ -16,10 +16,10 @@ class StorageCredentialRepository implements CredentialRepository {
         this.storage = storage;
     }
 
-    async findNonce(): Promise<NonceFound> {
+    async findNonce(): Promise<TicketNonceFound> {
         const credential = this.storage.getItem();
         if (!credential.found) {
-            return nonceNotFound;
+            return ticketNonceNotFound;
         }
 
         return credential.nonce;
@@ -83,7 +83,7 @@ type Credential =
     Readonly<{ found: false }> |
     Readonly<{
         found: true,
-        nonce: NonceFound,
+        nonce: TicketNonceFound,
         roles: ApiRoles,
     }>
 
@@ -110,7 +110,7 @@ class CredentialStorageImpl implements CredentialStorage {
 
                 return {
                     found: true,
-                    nonce: credential.nonce ? nonceFound({ nonce: credential.nonce }) : nonceNotFound,
+                    nonce: credential.nonce ? ticketNonceFound({ nonce: credential.nonce }) : ticketNonceNotFound,
                     roles: { roles: credential.roles ? credential.roles : [] },
                 }
             } catch (err) {
