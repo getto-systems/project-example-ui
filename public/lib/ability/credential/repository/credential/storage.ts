@@ -3,7 +3,7 @@ import { CredentialMessage } from "../../../../y_static/local_storage_pb.js";
 
 import { CredentialRepository, TicketNonceFound, ticketNonceFound, ticketNonceNotFound } from "../../infra";
 
-import { Nonce, ApiRoles } from "../../data";
+import { TicketNonce, ApiRoles } from "../../data";
 
 export function initStorageCredentialRepository(storage: Storage, key: string): CredentialRepository {
     return new StorageCredentialRepository(new CredentialStorageImpl(storage, key));
@@ -29,7 +29,7 @@ class StorageCredentialRepository implements CredentialRepository {
         this.storage.setItem(this.newCredential({ type: "roles", roles: roles }));
     }
 
-    async storeNonce(value: Nonce): Promise<void> {
+    async storeNonce(value: TicketNonce): Promise<void> {
         this.storage.setItem(this.newCredential({ type: "nonce", nonce: value }));
     }
 
@@ -87,10 +87,10 @@ type Credential =
         roles: ApiRoles,
     }>
 
-type Data = Readonly<{ nonce: Nonce, roles: ApiRoles }>
+type Data = Readonly<{ nonce: TicketNonce, roles: ApiRoles }>
 
 type Update =
-    Readonly<{ type: "nonce", nonce: Nonce }> |
+    Readonly<{ type: "nonce", nonce: TicketNonce }> |
     Readonly<{ type: "roles", roles: ApiRoles }>
 
 class CredentialStorageImpl implements CredentialStorage {
