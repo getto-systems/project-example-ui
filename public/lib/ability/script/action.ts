@@ -1,10 +1,10 @@
-import { LoadState, LoadStateEventHandler } from "./data";
+import { ScriptState, ScriptStateEventHandler } from "./data";
 
 export interface ScriptAction {
     initScriptApi(): ScriptApi
 }
 
 export interface ScriptApi {
-    currentState(): LoadState
-    load(handler: LoadStateEventHandler): void
+    currentState(): ScriptState
+    load(handler: ScriptStateEventHandler): void
 }
