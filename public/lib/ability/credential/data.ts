@@ -12,17 +12,6 @@ export type ValidLoginID =
 export type NonceValue = Readonly<{ nonce: Readonly<string> }>
 export type ApiRoles = Readonly<{ roles: Readonly<Array<Readonly<string>>> }>
 
-export type Nonce =
-    Readonly<{ found: false }> |
-    Readonly<{ found: true, value: NonceValue }>
-export const nonceNotFound: Nonce = { found: false }
-export function nonce(nonce: NonceValue): Nonce {
-    if (nonce.nonce === "") {
-        return nonceNotFound;
-    }
-    return { found: true, value: nonce }
-}
-
 export type RenewState =
     Readonly<{ success: false, err: RenewError }> |
     Readonly<{ success: true }>

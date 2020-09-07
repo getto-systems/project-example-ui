@@ -1,9 +1,9 @@
 import { decodeBase64StringToUint8Array, encodeUint8ArrayToBase64String } from "../../../../z_external/protocol_buffers_util";
 import { CredentialMessage } from "../../../../y_static/local_storage_pb.js";
 
-import { CredentialRepository } from "../../infra";
+import { CredentialRepository, NonceFound, nonceFound, nonceNotFound } from "../../infra";
 
-import { Nonce, nonce, nonceNotFound, NonceValue, ApiRoles } from "../../data";
+import { NonceValue, ApiRoles } from "../../data";
 
 export function initStorageCredentialRepository(storage: Storage, key: string): CredentialRepository {
     return new StorageCredentialRepository(new CredentialStorageImpl(storage, key));
@@ -16,7 +16,7 @@ class StorageCredentialRepository implements CredentialRepository {
         this.storage = storage;
     }
 
-    async findNonce(): Promise<Nonce> {
+    async findNonce(): Promise<NonceFound> {
         const credential = this.storage.getItem();
         if (!credential.found) {
             return nonceNotFound;
@@ -83,7 +83,7 @@ type Credential =
     Readonly<{ found: false }> |
     Readonly<{
         found: true,
-        nonce: Nonce,
+        nonce: NonceFound,
         roles: ApiRoles,
     }>
 
@@ -110,7 +110,7 @@ class CredentialStorageImpl implements CredentialStorage {
 
                 return {
                     found: true,
-                    nonce: credential.nonce ? nonce({ nonce: credential.nonce }) : nonceNotFound,
+                    nonce: credential.nonce ? nonceFound({ nonce: credential.nonce }) : nonceNotFound,
                     roles: { roles: credential.roles ? credential.roles : [] },
                 }
             } catch (err) {

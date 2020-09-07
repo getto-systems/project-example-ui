@@ -11,3 +11,9 @@ export type LoadAction = {
     passwordReset: PasswordResetAction,
     script: ScriptAction,
 }
+
+/* TODO Event を使えば Transition しなくて済む
+export interface LoadEvent {
+    credentialFetched(credential: AuthCredential): void
+}
+ */
