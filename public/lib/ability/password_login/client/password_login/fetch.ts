@@ -1,6 +1,6 @@
 import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../infra";
 
-import { LoginID } from "../../../credential/data";
+import { LoginID } from "../../../auth_credential/data";
 import { Password } from "../../../password/data";
 
 interface AuthClient {
@@ -8,7 +8,7 @@ interface AuthClient {
 }
 
 type AuthLoginResponse =
-    Readonly<{ success: true, nonce: string, roles: Array<string> }> |
+    Readonly<{ success: true, authCredential: { ticketNonce: string, apiCredential: { apiRoles: Array<string> } } }> |
     Readonly<{ success: false, err: { type: string, err: string } }>
 
 export function initFetchPasswordLoginClient(client: AuthClient): PasswordLoginClient {
@@ -29,7 +29,12 @@ class FetchPasswordLoginClient implements PasswordLoginClient {
         });
 
         if (response.success) {
-            return loginSuccess({ nonce: response.nonce }, { roles: response.roles });
+            return loginSuccess({
+                ticketNonce: { ticketNonce: response.authCredential.ticketNonce },
+                apiCredential: {
+                    apiRoles: { apiRoles: response.authCredential.apiCredential.apiRoles },
+                },
+            });
         }
 
         switch (response.err.type) {

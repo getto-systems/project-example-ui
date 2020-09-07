@@ -1,10 +1,10 @@
 import {
     LoginID, LoginIDBoard, ValidLoginID,
-    TicketNonce, ApiRoles,
+    AuthCredential,
     RenewState, StoreCredentialState,
 } from "./data";
 
-export interface CredentialAction {
+export interface AuthCredentialAction {
     initLoginIDRecord(): LoginIDRecord
 
     renew(): Promise<RenewState>
@@ -29,5 +29,5 @@ export interface LoginIDListener {
 
 export interface StoreCredentialApi {
     currentState(): StoreCredentialState
-    store(nonce: TicketNonce, roles: ApiRoles): StoreCredentialState
+    store(authCredential: AuthCredential): StoreCredentialState
 }

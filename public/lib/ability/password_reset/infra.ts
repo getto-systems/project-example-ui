@@ -1,4 +1,4 @@
-import { LoginID, TicketNonce, ApiRoles } from "../credential/data";
+import { LoginID, AuthCredential } from "../auth_credential/data";
 import { Password } from "../password/data";
 import {
     Session,
@@ -73,12 +73,12 @@ export type GetStatusError =
 
 export type ResetResponse =
     Readonly<{ success: false, err: ResetError }> |
-    Readonly<{ success: true, nonce: TicketNonce, roles: ApiRoles }>
+    Readonly<{ success: true, authCredential: AuthCredential }>
 export function resetFailed(err: ResetError): ResetResponse {
     return { success: false, err }
 }
-export function resetSuccess(nonce: TicketNonce, roles: ApiRoles): ResetResponse {
-    return { success: true, nonce, roles }
+export function resetSuccess(authCredential: AuthCredential): ResetResponse {
+    return { success: true, authCredential }
 }
 
 export type ResetError =

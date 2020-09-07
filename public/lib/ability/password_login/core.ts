@@ -1,9 +1,10 @@
 import { Infra, PasswordLoginClient } from "./infra";
 
-import { LoginIDBoard } from "../credential/data";
-import { LoginIDRecord } from "../credential/action";
-import { PasswordBoard } from "../password/data";
+import { LoginIDRecord } from "../auth_credential/action";
 import { PasswordRecord } from "../password/action";
+
+import { LoginIDBoard } from "../auth_credential/data";
+import { PasswordBoard } from "../password/data";
 import {
     LoginBoard, LoginContent,
     ValidContent, invalidContent, validContent,
@@ -130,7 +131,7 @@ class LoginApiImpl implements LoginApi {
         async function exec(client: PasswordLoginClient): Promise<LoginState> {
             const response = await client.login(...content);
             if (response.success) {
-                return succeedToLogin(response.nonce, response.roles);
+                return succeedToLogin(response.authCredential);
             }
             return failedToLogin(response.err);
         }

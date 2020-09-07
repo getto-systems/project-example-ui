@@ -6,12 +6,12 @@ import {
     ResetResponse, resetSuccess, resetFailed,
 } from "../../infra";
 
-import { LoginID, TicketNonce, ApiRoles } from "../../../credential/data";
+import { LoginID, AuthCredential } from "../../../auth_credential/data";
 import { Password } from "../../../password/data";
 import { Session, ResetToken } from "../../data";
 
-export function initSimulatePasswordResetClient(targetLoginID: LoginID, returnNonce: TicketNonce, returnRoles: ApiRoles): PasswordResetClient {
-    return new SimulatePasswordResetClient(targetLoginID, returnNonce, returnRoles);
+export function initSimulatePasswordResetClient(targetLoginID: LoginID, returnAuthCredential: AuthCredential): PasswordResetClient {
+    return new SimulatePasswordResetClient(targetLoginID, returnAuthCredential);
 }
 
 type TokenState =
@@ -28,14 +28,12 @@ class SimulatePasswordResetClient implements PasswordResetClient {
 
     targetLoginID: LoginID
 
-    returnNonce: TicketNonce
-    returnRoles: ApiRoles
+    returnAuthCredential: AuthCredential
 
-    constructor(targetLoginID: LoginID, returnNonce: TicketNonce, returnRoles: ApiRoles) {
+    constructor(targetLoginID: LoginID, returnAuthCredential: AuthCredential) {
         this.targetLoginID = targetLoginID;
 
-        this.returnNonce = returnNonce;
-        this.returnRoles = returnRoles;
+        this.returnAuthCredential = returnAuthCredential;
     }
 
     createSession(loginID: LoginID): Promise<CreateSessionResponse> {
@@ -115,7 +113,7 @@ class SimulatePasswordResetClient implements PasswordResetClient {
         if (loginID.loginID !== this.targetLoginID.loginID) {
             return resetFailed({ type: "invalid-password-reset" });
         } else {
-            return resetSuccess(this.returnNonce, this.returnRoles);
+            return resetSuccess(this.returnAuthCredential);
         }
     }
 }

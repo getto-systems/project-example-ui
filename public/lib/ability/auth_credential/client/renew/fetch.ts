@@ -1,13 +1,13 @@
 import { RenewClient, RenewResponse, renewSuccess, renewFailed } from "../../infra";
 
-import { TicketNonce } from "../../../credential/data";
+import { TicketNonce } from "../../../auth_credential/data";
 
 interface AuthClient {
     renew(param: { nonce: string }): Promise<AuthRenewResponse>
 }
 
 type AuthRenewResponse =
-    Readonly<{ success: true, roles: Array<string> }> |
+    Readonly<{ success: true, authCredential: { ticketNonce: string, apiCredential: { apiRoles: Array<string> } } }> |
     Readonly<{ success: false, err: { type: string, err: string } }>
 
 export function initFetchRenewClient(client: AuthClient): RenewClient {
@@ -21,11 +21,16 @@ class FetchRenewClient implements RenewClient {
         this.client = client;
     }
 
-    async renew(nonce: TicketNonce): Promise<RenewResponse> {
+    async renew(ticketNonce: TicketNonce): Promise<RenewResponse> {
         try {
-            const response = await this.client.renew({ nonce: nonce.nonce });
+            const response = await this.client.renew({ nonce: ticketNonce.ticketNonce });
             if (response.success) {
-                return renewSuccess({ roles: Array.from(response.roles) });
+                return renewSuccess({
+                    ticketNonce: { ticketNonce: response.authCredential.ticketNonce },
+                    apiCredential: {
+                        apiRoles: { apiRoles: response.authCredential.apiCredential.apiRoles },
+                    },
+                });
             } else {
                 switch (response.err.type) {
                     case "empty-nonce":

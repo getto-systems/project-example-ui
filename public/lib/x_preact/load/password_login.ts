@@ -6,7 +6,7 @@ import { view } from "./password_login/view";
 import { PreactBaseComponent, PreactLoginComponent } from "./password_login/component";
 import { PasswordLoginState, PasswordLoginComponent, LoginComponent } from "../../load/password_login";
 
-import { LoginID } from "../../ability/credential/data";
+import { LoginID } from "../../ability/auth_credential/data";
 import { Password } from "../../ability/password/data";
 
 interface PreactComponent {

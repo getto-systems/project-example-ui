@@ -1,4 +1,4 @@
-import { LoginID } from "../../../ability/credential/data";
+import { LoginID } from "../../../ability/auth_credential/data";
 import { Password } from "../../../ability/password/data";
 
 export interface PreactBaseComponent {

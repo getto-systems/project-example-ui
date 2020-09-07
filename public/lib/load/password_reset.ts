@@ -1,7 +1,7 @@
 import { LoadAction } from "./action";
 
-import { LoginID, TicketNonce, ApiRoles, StoreCredentialState } from "../ability/credential/data";
-import { StoreCredentialApi } from "../ability/credential/action";
+import { LoginID, AuthCredential, StoreCredentialState } from "../ability/auth_credential/data";
+import { StoreCredentialApi } from "../ability/auth_credential/action";
 import { Password } from "../ability/password/data";
 import {
     Session, ResetToken,
@@ -146,7 +146,7 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
                     return passwordResetStatic;
 
                 case "succeed-to-reset":
-                    return passwordResetNextState(storeCredential.store(state.nonce, state.roles));
+                    return passwordResetNextState(storeCredential.store(state.authCredential));
             }
         }
         function nextStoreCredential(state: StoreCredentialState): PasswordResetNextState {
@@ -180,7 +180,7 @@ class CreateSessionComponentImpl implements CreateSessionComponent {
 
     constructor(action: LoadAction) {
         this.store = action.passwordReset.initCreateSessionStore(
-            action.credential.initLoginIDRecord(),
+            action.authCredential.initLoginIDRecord(),
         );
         this.api = action.passwordReset.initCreateSessionApi();
     }
@@ -241,7 +241,7 @@ class ResetComponentImpl implements ResetComponent {
     constructor(action: LoadAction) {
         this.store = action.passwordReset.initResetStore(
             action.passwordReset.initResetTokenRecord(),
-            action.credential.initLoginIDRecord(),
+            action.authCredential.initLoginIDRecord(),
             action.password.initPasswordRecord(),
         );
         this.api = action.passwordReset.initResetApi();
@@ -305,15 +305,15 @@ class StoreCredentialComponentImpl {
     api: StoreCredentialApi
 
     constructor(action: LoadAction) {
-        this.api = action.credential.initStoreCredentialApi();
+        this.api = action.authCredential.initStoreCredentialApi();
     }
 
     currentState(): PasswordResetState {
         return StoreCredential([this.api.currentState()]);
     }
 
-    async store(nonce: TicketNonce, roles: ApiRoles): Promise<PasswordResetState> {
-        return this.mapApi(this.api.store(nonce, roles));
+    async store(authCredential: AuthCredential): Promise<PasswordResetState> {
+        return this.mapApi(this.api.store(authCredential));
     }
 
     mapApi(state: StoreCredentialState): PasswordResetState {
