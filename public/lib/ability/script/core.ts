@@ -4,7 +4,7 @@ import {
     Pathname,
     ScriptPath,
     ScriptState, initialScript, tryToLoadScript, failedToLoadScript, succeedToLoadScript,
-    ScriptStateEventHandler,
+    ScriptEventHandler,
 } from "./data";
 import { ScriptAction, ScriptApi } from "./action";
 
@@ -41,28 +41,20 @@ class ScriptApiImpl implements ScriptApi {
         return this.state;
     }
 
-    stateChanged(handler: ScriptStateEventHandler, promise: Promise<ScriptState>): void {
-        handler(this.updateState(promise));
-    }
-    async updateState(promise: Promise<ScriptState>): Promise<ScriptState> {
-        this.state = await promise;
-        return this.state;
+    load(handler: ScriptEventHandler): void {
+        if (this.state.state === "initial-script") {
+            this.updateState(handler, tryToLoadScript);
+        }
     }
 
-    load(handler: ScriptStateEventHandler): void {
-        switch (this.state.state) {
-            case "initial-script":
-                this.state = tryToLoadScript;
-                this.stateChanged(handler, this.loadScript());
-                return;
+    updateState(handler: ScriptEventHandler, state: ScriptState): void {
+        this.state = state;
+        handler(this.state);
 
-            case "try-to-load-script":
-            case "failed-to-load-script":
-            case "succeed-to-load-script":
-                return;
-
-            default:
-                return assertNever(this.state);
+        if (state.state === "try-to-load-script") {
+            this.loadScript().then((state) => {
+                this.updateState(handler, state);
+            });
         }
     }
 
@@ -79,8 +71,4 @@ class ScriptApiImpl implements ScriptApi {
 function secureScriptPath(secureHost: string, pathname: Pathname): ScriptPath {
     // secure host に html と同じパスで js がホストされている
     return { scriptPath: `//${secureHost}${pathname.pathname.replace(/\.html$/, ".js")}` };
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER");
 }

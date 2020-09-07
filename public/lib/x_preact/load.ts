@@ -19,7 +19,7 @@ function main(load: LoadUsecase, initialState: LoadState) {
 
         switch (state.view) {
             case "load-script":
-                return h(LoadScript(...state.init), {});
+                return h(LoadScript(...load.initLoadScript()), {});
 
             case "password-login":
                 return h(PasswordLogin(...state.init), {});

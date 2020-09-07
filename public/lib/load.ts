@@ -13,16 +13,16 @@ export type LoadInit = [LoadUsecase, LoadState]
 export interface LoadUsecase {
     initialLoadState(url: URL): Promise<LoadState>
     registerTransitionSetter(setter: TransitionSetter<LoadState>): void
+
+    initLoadScript(): LoadScriptInit
 }
 
 export type LoadState =
-    Readonly<{ view: "load-script", init: LoadScriptInit }> |
+    Readonly<{ view: "load-script" }> |
     Readonly<{ view: "password-login", init: PasswordLoginInit }> |
     Readonly<{ view: "password-reset", init: PasswordResetInit }> |
     Readonly<{ view: "error", err: RenewError }>;
-function loadScript(init: LoadScriptInit): LoadState {
-    return { view: "load-script", init }
-}
+const loadScript: LoadState = { view: "load-script" }
 function passwordLogin(init: PasswordLoginInit): LoadState {
     return { view: "password-login", init }
 }
@@ -53,13 +53,12 @@ class LoadUsecaseImpl implements LoadUsecase {
         this.transitioner = new Transitioner();
 
         const transitionTo = this.transitioner.transitionTo;
-        const loadScriptView = this.loadScriptView;
 
         this.transition = {
             logined() {
                 // 画面の遷移は state を返してから行う
                 setTimeout(() => {
-                    transitionTo(loadScriptView());
+                    transitionTo(loadScript);
                 }, 0);
             },
         }
@@ -70,7 +69,7 @@ class LoadUsecaseImpl implements LoadUsecase {
 
         const renew = await this.action.authCredential.renew();
         if (renew.success) {
-            return this.loadScriptView();
+            return loadScript;
         }
 
         switch (renew.err.type) {
@@ -91,9 +90,6 @@ class LoadUsecaseImpl implements LoadUsecase {
         }
     }
 
-    loadScriptView(): LoadState {
-        return loadScript(initLoadScript(this.action));
-    }
     passwordLoginView(): LoadState {
         return passwordLogin(initPasswordLogin(this.action, this.transition));
     }
@@ -103,5 +99,9 @@ class LoadUsecaseImpl implements LoadUsecase {
 
     registerTransitionSetter(setter: TransitionSetter<LoadState>): void {
         this.transitioner.register(setter);
+    }
+
+    initLoadScript(): LoadScriptInit {
+        return initLoadScript(this.action);
     }
 }

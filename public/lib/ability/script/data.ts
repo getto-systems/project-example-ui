@@ -15,8 +15,8 @@ export function succeedToLoadScript(scriptPath: ScriptPath): ScriptState {
     return { state: "succeed-to-load-script", scriptPath }
 }
 
-export interface ScriptStateEventHandler {
-    (promise: Promise<ScriptState>): void
+export interface ScriptEventHandler {
+    (state: ScriptState): void
 }
 
 export type ScriptError =
