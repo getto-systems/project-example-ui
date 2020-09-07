@@ -5,19 +5,19 @@ export type Infra = {
     renewClient: RenewClient,
 }
 
-export type NonceFound =
+export type TicketNonceFound =
     Readonly<{ found: false }> |
     Readonly<{ found: true, value: NonceValue }>
-export const nonceNotFound: NonceFound = { found: false }
-export function nonceFound(nonce: NonceValue): NonceFound {
+export const ticketNonceNotFound: TicketNonceFound = { found: false }
+export function ticketNonceFound(nonce: NonceValue): TicketNonceFound {
     if (nonce.nonce === "") {
-        return nonceNotFound;
+        return ticketNonceNotFound;
     }
     return { found: true, value: nonce }
 }
 
 export interface CredentialRepository {
-    findNonce(): Promise<NonceFound>
+    findNonce(): Promise<TicketNonceFound>
     storeRoles(roles: ApiRoles): Promise<void>
     storeNonce(nonce: NonceValue): Promise<void>
 }
