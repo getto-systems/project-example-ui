@@ -1,12 +1,23 @@
-import { Nonce, NonceValue, ApiRoles, RenewError } from "./data";
+import { NonceValue, ApiRoles, RenewError } from "./data";
 
 export type Infra = {
     credentials: CredentialRepository,
     renewClient: RenewClient,
 }
 
+export type NonceFound =
+    Readonly<{ found: false }> |
+    Readonly<{ found: true, value: NonceValue }>
+export const nonceNotFound: NonceFound = { found: false }
+export function nonceFound(nonce: NonceValue): NonceFound {
+    if (nonce.nonce === "") {
+        return nonceNotFound;
+    }
+    return { found: true, value: nonce }
+}
+
 export interface CredentialRepository {
-    findNonce(): Promise<Nonce>
+    findNonce(): Promise<NonceFound>
     storeRoles(roles: ApiRoles): Promise<void>
     storeNonce(nonce: NonceValue): Promise<void>
 }
