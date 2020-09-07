@@ -3,8 +3,8 @@ import { Infra, ScriptEnv, PathnameLocation } from "./infra";
 import {
     Pathname,
     ScriptPath,
-    LoadState, initialLoad, tryToLoad, failedToLoad, succeedToLoad,
-    LoadStateEventHandler,
+    ScriptState, initialScript, tryToLoadScript, failedToLoadScript, succeedToLoadScript,
+    ScriptStateEventHandler,
 } from "./data";
 import { ScriptAction, ScriptApi } from "./action";
 
@@ -28,37 +28,37 @@ class ScriptApiImpl implements ScriptApi {
     scriptEnv: ScriptEnv
     pathnameLocation: PathnameLocation
 
-    state: LoadState
+    state: ScriptState
 
     constructor(scriptEnv: ScriptEnv, pathnameLocation: PathnameLocation) {
         this.scriptEnv = scriptEnv;
         this.pathnameLocation = pathnameLocation;
 
-        this.state = initialLoad;
+        this.state = initialScript;
     }
 
-    currentState(): LoadState {
+    currentState(): ScriptState {
         return this.state;
     }
 
-    stateChanged(handler: LoadStateEventHandler, promise: Promise<LoadState>): void {
+    stateChanged(handler: ScriptStateEventHandler, promise: Promise<ScriptState>): void {
         handler(this.updateState(promise));
     }
-    async updateState(promise: Promise<LoadState>): Promise<LoadState> {
+    async updateState(promise: Promise<ScriptState>): Promise<ScriptState> {
         this.state = await promise;
         return this.state;
     }
 
-    load(handler: LoadStateEventHandler): void {
+    load(handler: ScriptStateEventHandler): void {
         switch (this.state.state) {
-            case "initial-load":
-                this.state = tryToLoad;
+            case "initial-script":
+                this.state = tryToLoadScript;
                 this.stateChanged(handler, this.loadScript());
                 return;
 
-            case "try-to-load":
-            case "failed-to-load":
-            case "succeed-to-load":
+            case "try-to-load-script":
+            case "failed-to-load-script":
+            case "succeed-to-load-script":
                 return;
 
             default:
@@ -66,19 +66,19 @@ class ScriptApiImpl implements ScriptApi {
         }
     }
 
-    async loadScript(): Promise<LoadState> {
+    async loadScript(): Promise<ScriptState> {
         const pathname = await this.pathnameLocation.pathname();
         if (pathname.found) {
-            return succeedToLoad(secureScriptPath(this.scriptEnv.secureServerHost, pathname.pathname));
+            return succeedToLoadScript(secureScriptPath(this.scriptEnv.secureServerHost, pathname.pathname));
         } else {
-            return failedToLoad({ type: "infra-error", err: pathname.err });
+            return failedToLoadScript({ type: "infra-error", err: pathname.err });
         }
     }
 }
 
 function secureScriptPath(secureHost: string, pathname: Pathname): ScriptPath {
     // secure host に html と同じパスで js がホストされている
-    return { path: `//${secureHost}${pathname.pathname.replace(/\.html$/, ".js")}` };
+    return { scriptPath: `//${secureHost}${pathname.pathname.replace(/\.html$/, ".js")}` };
 }
 
 function assertNever(_: never): never {

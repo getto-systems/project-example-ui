@@ -5,27 +5,27 @@ import { appendScript, view } from "./load_script/view";
 
 import { LoadScriptState, LoadScriptComponent } from "../../load/load_script";
 
-import { LoadState } from "../../ability/script/data";
+import { ScriptState } from "../../ability/script/data";
 
 interface PreactLoginScriptComponent {
     (): VNode
 }
 
 export function LoadScript(component: LoadScriptComponent, initialState: LoadScriptState): PreactLoginScriptComponent {
-    const [initialLoadState] = initialState;
+    const [initialScriptState] = initialState;
 
     return (): VNode => {
-        const [loadState, setLoadState] = useState(initialLoadState);
+        const [scriptState, setScriptState] = useState(initialScriptState);
         component.handleEvent({
-            onLoadStateChanged: (promise: Promise<LoadState>) => {
-                promise.then(setLoadState);
+            onScriptStateChanged: (promise: Promise<ScriptState>) => {
+                promise.then(setScriptState);
             },
         });
 
         useEffect(() => {
-            appendScript(loadState);
-        }, [loadState]);
+            appendScript(scriptState);
+        }, [scriptState]);
 
-        return view(loadState);
+        return view(scriptState);
     }
 }

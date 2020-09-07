@@ -1,6 +1,6 @@
 import { LoadAction } from "./action";
 
-import { LoadState, LoadStateEventHandler } from "../ability/script/data";
+import { ScriptState, ScriptStateEventHandler } from "../ability/script/data";
 import { ScriptApi } from "../ability/script/action";
 
 export type LoadScriptInit = [LoadScriptComponent, LoadScriptState]
@@ -10,10 +10,10 @@ export interface LoadScriptComponent {
 }
 
 export type LoadScriptEventHandler = {
-    onLoadStateChanged: LoadStateEventHandler,
+    onScriptStateChanged: ScriptStateEventHandler,
 }
 
-export type LoadScriptState = [LoadState]
+export type LoadScriptState = [ScriptState]
 
 export function initLoadScript(action: LoadAction): LoadScriptInit {
     const component = new LoadScriptComponentImpl(action.script.initScriptApi());
@@ -32,6 +32,6 @@ class LoadScriptComponentImpl implements LoadScriptComponent {
     }
 
     handleEvent(event: LoadScriptEventHandler): void {
-        this.api.load(event.onLoadStateChanged);
+        this.api.load(event.onScriptStateChanged);
     }
 }
