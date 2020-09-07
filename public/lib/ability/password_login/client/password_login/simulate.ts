@@ -1,12 +1,12 @@
 import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../infra";
 
-import { LoginID, NonceValue, ApiRoles } from "../../../credential/data";
+import { LoginID, TicketNonce, ApiRoles } from "../../../credential/data";
 import { Password } from "../../../password/data";
 
 export function initSimulatePasswordLoginClient(
     targetLoginID: LoginID,
     targetPassword: Password,
-    returnNonce: NonceValue,
+    returnNonce: TicketNonce,
     returnRoles: ApiRoles,
 ): PasswordLoginClient {
     return new SimulatePasswordLoginClient(targetLoginID, targetPassword, returnNonce, returnRoles);
@@ -16,10 +16,10 @@ class SimulatePasswordLoginClient implements PasswordLoginClient {
     targetLoginID: LoginID
     targetPassword: Password
 
-    returnNonce: NonceValue
+    returnNonce: TicketNonce
     returnRoles: ApiRoles
 
-    constructor(targetLoginID: LoginID, targetPassword: Password, returnNonce: NonceValue, returnRoles: ApiRoles) {
+    constructor(targetLoginID: LoginID, targetPassword: Password, returnNonce: TicketNonce, returnRoles: ApiRoles) {
         this.targetLoginID = targetLoginID;
         this.targetPassword = targetPassword;
         this.returnNonce = returnNonce;

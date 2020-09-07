@@ -9,7 +9,7 @@ export type ValidLoginID =
     Readonly<{ valid: false }> |
     Readonly<{ valid: true, content: LoginID }>
 
-export type NonceValue = Readonly<{ nonce: Readonly<string> }>
+export type TicketNonce = Readonly<{ nonce: Readonly<string> }>
 export type ApiRoles = Readonly<{ roles: Readonly<Array<Readonly<string>>> }>
 
 export type RenewState =

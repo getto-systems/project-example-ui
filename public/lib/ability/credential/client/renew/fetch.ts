@@ -1,6 +1,6 @@
 import { RenewClient, RenewResponse, renewSuccess, renewFailed } from "../../infra";
 
-import { NonceValue } from "../../../credential/data";
+import { TicketNonce } from "../../../credential/data";
 
 interface AuthClient {
     renew(param: { nonce: string }): Promise<AuthRenewResponse>
@@ -21,7 +21,7 @@ class FetchRenewClient implements RenewClient {
         this.client = client;
     }
 
-    async renew(nonce: NonceValue): Promise<RenewResponse> {
+    async renew(nonce: TicketNonce): Promise<RenewResponse> {
         try {
             const response = await this.client.renew({ nonce: nonce.nonce });
             if (response.success) {

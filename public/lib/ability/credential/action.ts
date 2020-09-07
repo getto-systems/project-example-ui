@@ -1,6 +1,6 @@
 import {
     LoginID, LoginIDBoard, ValidLoginID,
-    NonceValue, ApiRoles,
+    TicketNonce, ApiRoles,
     RenewState, StoreCredentialState,
 } from "./data";
 
@@ -29,5 +29,5 @@ export interface LoginIDListener {
 
 export interface StoreCredentialApi {
     currentState(): StoreCredentialState
-    store(nonce: NonceValue, roles: ApiRoles): StoreCredentialState
+    store(nonce: TicketNonce, roles: ApiRoles): StoreCredentialState
 }

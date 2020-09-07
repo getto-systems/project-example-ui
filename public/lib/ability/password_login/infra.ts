@@ -1,4 +1,4 @@
-import { LoginID, NonceValue, ApiRoles } from "../credential/data";
+import { LoginID, TicketNonce, ApiRoles } from "../credential/data";
 import { Password } from "../password/data";
 
 export type Infra = {
@@ -11,11 +11,11 @@ export interface PasswordLoginClient {
 
 export type LoginResponse =
     Readonly<{ success: false, err: LoginError }> |
-    Readonly<{ success: true, nonce: NonceValue, roles: ApiRoles }>
+    Readonly<{ success: true, nonce: TicketNonce, roles: ApiRoles }>
 export function loginFailed(err: LoginError): LoginResponse {
     return { success: false, err }
 }
-export function loginSuccess(nonce: NonceValue, roles: ApiRoles): LoginResponse {
+export function loginSuccess(nonce: TicketNonce, roles: ApiRoles): LoginResponse {
     return { success: true, nonce, roles }
 }
 
