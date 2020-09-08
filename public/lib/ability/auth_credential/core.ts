@@ -6,6 +6,7 @@ import {
     LoginID, LoginIDBoard, LoginIDValidationError, ValidLoginID,
     AuthCredential,
     RenewState, renewSuccess, renewFailure,
+    RenewEvent,
     StoreCredentialState, initialStoreCredential, tryToStoreCredential, failedToStoreCredential, succeedToStoreCredential,
 } from "./data";
 
@@ -45,6 +46,39 @@ class AuthCredentialActionImpl implements AuthCredentialAction {
 
     initStoreCredentialApi(): StoreCredentialApi {
         return new StoreCredentialApiImpl(this.infra.authCredentials);
+    }
+
+    async renew_withEvent(event: RenewEvent): Promise<void> {
+        // TODO エラーは infra で包む
+        try {
+            const ticketNonce = await this.infra.authCredentials.findTicketNonce();
+            if (!ticketNonce.found) {
+                // TODO ticket-nonce-not-found がいい
+                event.failedToRenew({ type: "empty-nonce" });
+                return
+            }
+
+            // TODO delayed する
+            const response = await this.infra.renewClient.renew(ticketNonce.ticketNonce);
+            if (!response.success) {
+                event.failedToRenew(response.err);
+                return;
+            }
+
+            // TODO エラーは infra で包む
+            try {
+                event.tryToStore();
+
+                await this.infra.authCredentials.storeAuthCredential(response.authCredential);
+
+                event.succeedToRenew();
+            } catch (err) {
+                event.failedToStore({ type: "infra-error", err });
+                return;
+            }
+        } catch (err) {
+            event.failedToRenew({ type: "infra-error", err });
+        }
     }
 }
 
