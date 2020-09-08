@@ -1,6 +1,7 @@
 import { AuthAction, AuthEvent } from "../auth/action";
+import { RenewEvent } from "../ability/auth_credential/action";
 
-import { RenewEvent, RenewError, StoreError } from "../ability/auth_credential/data";
+import { RenewError, StoreError } from "../ability/auth_credential/data";
 
 export interface RenewComponent {
     initialState(): RenewState

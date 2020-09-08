@@ -1,12 +1,11 @@
 import { Infra, AuthCredentialRepository } from "./infra";
 
-import { AuthCredentialAction, StoreCredentialApi, LoginIDRecord, LoginIDListener } from "./action";
+import { AuthCredentialAction, RenewEvent, StoreCredentialApi, LoginIDRecord, LoginIDListener } from "./action";
 
 import {
     LoginID, LoginIDBoard, LoginIDValidationError, ValidLoginID,
     AuthCredential,
     RenewState, renewSuccess, renewFailure,
-    RenewEvent,
     StoreCredentialState, initialStoreCredential, tryToStoreCredential, failedToStoreCredential, succeedToStoreCredential,
 } from "./data";
 

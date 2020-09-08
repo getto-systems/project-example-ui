@@ -24,15 +24,6 @@ export type ApiCredential = Readonly<{
 //export type ApiNonce = Readonly<{ apiNonce: Readonly<string> }>
 export type ApiRoles = Readonly<{ apiRoles: Readonly<Array<Readonly<string>>> }>
 
-export interface RenewEvent {
-    tryToRenew(): void
-    delayedToRenew(): void
-    failedToRenew(err: RenewError): void
-    tryToStore(): void
-    failedToStore(err: StoreError): void
-    succeedToRenew(): void
-}
-
 export type RenewError =
     Readonly<{ type: "empty-nonce" }> |
     Readonly<{ type: "bad-request" }> |
