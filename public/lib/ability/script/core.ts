@@ -6,7 +6,7 @@ import {
     ScriptState, initialScript, tryToLoadScript, failedToLoadScript, succeedToLoadScript,
     ScriptEventHandler,
 } from "./data";
-import { ScriptAction, ScriptApi } from "./action";
+import { ScriptAction, ScriptEvent, ScriptApi } from "./action";
 
 export function initScriptAction(infra: Infra): ScriptAction {
     return new ScriptActionImpl(infra);
@@ -17,6 +17,24 @@ class ScriptActionImpl implements ScriptAction {
 
     constructor(infra: Infra) {
         this.infra = infra;
+    }
+
+    async load_withEvent(event: ScriptEvent): Promise<void> {
+        event.tryToLoad();
+
+        const result = await this.infra.location.pathname();
+        if (!result.found) {
+            event.failedToLoad({ type: "infra-error", err: result.err });
+            return;
+        }
+
+        event.succeedToLoad(secureScriptPath(this.infra.env.secureServerHost, result.pathname));
+        return;
+
+        function secureScriptPath(secureHost: string, pathname: Pathname): ScriptPath {
+            // secure host に html と同じパスで js がホストされている
+            return { scriptPath: `//${secureHost}${pathname.pathname.replace(/\.html$/, ".js")}` };
+        }
     }
 
     initialScriptState(): ScriptState {
