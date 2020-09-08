@@ -14,7 +14,7 @@ function main(auth: AuthUsecase) {
         const [state, setState] = useState<AuthState>(auth.initialState());
         auth.onStateChange(setState);
 
-        switch (state.view) {
+        switch (state.type) {
             case "renew":
                 return h(Renew(auth.initRenew()), {});
 
