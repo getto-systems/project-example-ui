@@ -53,8 +53,7 @@ class LoadScriptComponentImpl implements LoadScriptComponent {
     }
 
     initScript(): ScriptInit {
-        const component = new ScriptComponentImpl(this.action.script.initScriptApi());
-        return [component, ...component.currentState()]
+        return [new ScriptComponentImpl(this.action.script.initScriptApi()), this.action.script.initialScriptState()]
     }
 }
 
@@ -63,10 +62,6 @@ class ScriptComponentImpl implements ScriptComponent {
 
     constructor(api: ScriptApi) {
         this.api = api;
-    }
-
-    currentState(): [ScriptState] {
-        return [this.api.currentState()]
     }
 
     handleEvent(event: ScriptEvent): void {

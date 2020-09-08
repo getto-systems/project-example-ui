@@ -19,6 +19,9 @@ class ScriptActionImpl implements ScriptAction {
         this.infra = infra;
     }
 
+    initialScriptState(): ScriptState {
+        return initialScript;
+    }
     initScriptApi(): ScriptApi {
         return new ScriptApiImpl(this.infra.env, this.infra.location);
     }
@@ -28,47 +31,36 @@ class ScriptApiImpl implements ScriptApi {
     scriptEnv: ScriptEnv
     pathnameLocation: PathnameLocation
 
-    state: ScriptState
+    initial: boolean
 
     constructor(scriptEnv: ScriptEnv, pathnameLocation: PathnameLocation) {
         this.scriptEnv = scriptEnv;
         this.pathnameLocation = pathnameLocation;
 
-        this.state = initialScript;
-    }
-
-    currentState(): ScriptState {
-        return this.state;
+        this.initial = true;
     }
 
     load(handler: ScriptEventHandler): void {
-        if (this.state.state === "initial-script") {
-            this.updateState(handler, tryToLoadScript);
+        if (this.initial) {
+            this.initial = false;
+            handler(tryToLoadScript);
+            this.loadScript(handler);
         }
     }
 
-    updateState(handler: ScriptEventHandler, state: ScriptState): void {
-        this.state = state;
-        handler(this.state);
-
-        if (state.state === "try-to-load-script") {
-            this.loadScript().then((state) => {
-                this.updateState(handler, state);
-            });
-        }
-    }
-
-    async loadScript(): Promise<ScriptState> {
+    async loadScript(handler: ScriptEventHandler): Promise<void> {
         const pathname = await this.pathnameLocation.pathname();
         if (pathname.found) {
-            return succeedToLoadScript(secureScriptPath(this.scriptEnv.secureServerHost, pathname.pathname));
+            handler(succeedToLoadScript(secureScriptPath(this.scriptEnv.secureServerHost, pathname.pathname)));
+            return;
         } else {
-            return failedToLoadScript({ type: "infra-error", err: pathname.err });
+            handler(failedToLoadScript({ type: "infra-error", err: pathname.err }));
+            return;
+        }
+
+        function secureScriptPath(secureHost: string, pathname: Pathname): ScriptPath {
+            // secure host に html と同じパスで js がホストされている
+            return { scriptPath: `//${secureHost}${pathname.pathname.replace(/\.html$/, ".js")}` };
         }
     }
-}
-
-function secureScriptPath(secureHost: string, pathname: Pathname): ScriptPath {
-    // secure host に html と同じパスで js がホストされている
-    return { scriptPath: `//${secureHost}${pathname.pathname.replace(/\.html$/, ".js")}` };
 }
