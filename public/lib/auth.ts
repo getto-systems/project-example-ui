@@ -58,16 +58,6 @@ class AuthUsecaseImpl implements AuthUsecase {
      */
 }
 
-type EventHolder<T> =
-    Readonly<{ hasEvent: false }> |
-    Readonly<{ hasEvent: true, event: T }>
-function unwrap<T>(holder: EventHolder<T>): T {
-    if (!holder.hasEvent) {
-        throw new Error("event is not initialized");
-    }
-    return holder.event;
-}
-
 class AuthEventImpl implements AuthEvent {
     url: Readonly<URL>
     stateChanged: AuthEventHandler
@@ -96,4 +86,14 @@ class AuthEventImpl implements AuthEvent {
     succeedToAuth(): void {
         this.stateChanged({ type: "load-application" });
     }
+}
+
+type EventHolder<T> =
+    Readonly<{ hasEvent: false }> |
+    Readonly<{ hasEvent: true, event: T }>
+function unwrap<T>(holder: EventHolder<T>): T {
+    if (!holder.hasEvent) {
+        throw new Error("event is not initialized");
+    }
+    return holder.event;
 }

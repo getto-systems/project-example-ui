@@ -57,16 +57,6 @@ class RenewComponentImpl implements RenewComponent {
     }
 }
 
-type EventHolder<T> =
-    Readonly<{ hasEvent: false }> |
-    Readonly<{ hasEvent: true, event: T }>
-function unwrap<T>(holder: EventHolder<T>): T {
-    if (!holder.hasEvent) {
-        throw new Error("event is not initialized");
-    }
-    return holder.event;
-}
-
 class EventImpl implements RenewEvent, StoreEvent {
     authEvent: AuthEvent
     stateChanged: RenewEventHandler
@@ -113,6 +103,16 @@ class EventImpl implements RenewEvent, StoreEvent {
     succeedToStore(): void {
         this.authEvent.succeedToAuth();
     }
+}
+
+type EventHolder<T> =
+    Readonly<{ hasEvent: false }> |
+    Readonly<{ hasEvent: true, event: T }>
+function unwrap<T>(holder: EventHolder<T>): T {
+    if (!holder.hasEvent) {
+        throw new Error("event is not initialized");
+    }
+    return holder.event;
 }
 
 function assertNever(_: never): never {
