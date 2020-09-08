@@ -24,13 +24,14 @@ export type ApiCredential = Readonly<{
 //export type ApiNonce = Readonly<{ apiNonce: Readonly<string> }>
 export type ApiRoles = Readonly<{ apiRoles: Readonly<Array<Readonly<string>>> }>
 
-export type RenewState =
-    Readonly<{ success: false, err: RenewError }> |
-    Readonly<{ success: true }>
-export function renewFailure(err: RenewError): RenewState {
-    return { success: false, err }
+export interface RenewEvent {
+    tryToRenew(): void
+    delayedToRenew(): void
+    failedToRenew(err: RenewError): void
+    tryToStore(): void
+    failedToStore(err: StoreError): void
+    succeedToRenew(): void
 }
-export const renewSuccess: RenewState = { success: true }
 
 export type RenewError =
     Readonly<{ type: "empty-nonce" }> |
@@ -39,6 +40,20 @@ export type RenewError =
     Readonly<{ type: "server-error" }> |
     Readonly<{ type: "bad-response", err: string }> |
     Readonly<{ type: "infra-error", err: string }>
+
+export type StoreError =
+    Readonly<{ type: "infra-error", err: string }>
+
+
+// TODO 以下、必要なくなったら削除
+
+export type RenewState =
+    Readonly<{ success: false, err: RenewError }> |
+    Readonly<{ success: true }>
+export function renewFailure(err: RenewError): RenewState {
+    return { success: false, err }
+}
+export const renewSuccess: RenewState = { success: true }
 
 export type StoreCredentialState =
     Readonly<{ state: "initial-store-credential" }> |

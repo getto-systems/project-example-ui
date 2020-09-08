@@ -1,7 +1,9 @@
 import {
     LoginID, LoginIDBoard, ValidLoginID,
     AuthCredential,
-    RenewState, StoreCredentialState,
+    RenewState,
+    StoreCredentialState,
+    RenewEvent,
 } from "./data";
 
 export interface AuthCredentialAction {
@@ -9,6 +11,8 @@ export interface AuthCredentialAction {
 
     renew(): Promise<RenewState>
     initStoreCredentialApi(): StoreCredentialApi
+
+    renew_withEvent(event: RenewEvent): Promise<void>
 }
 
 export interface LoginIDRecord {
