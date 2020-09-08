@@ -17,6 +17,8 @@ export function initAuthCredentialAction(infra: Infra): AuthCredentialAction {
     return new AuthCredentialActionImpl(infra);
 }
 
+const RENEW_DELAYED_SECOND = delaySecond(1);
+
 class AuthCredentialActionImpl implements AuthCredentialAction {
     infra: Infra
 
@@ -61,8 +63,9 @@ class AuthCredentialActionImpl implements AuthCredentialAction {
                 return { success: false }
             }
 
-            // TODO delayed する
-            const response = await this.infra.renewClient.renew(ticketNonce.ticketNonce);
+            // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
+            const promise = this.infra.renewClient.renew(ticketNonce.ticketNonce);
+            const response = await delayed(promise, RENEW_DELAYED_SECOND, event.delayedToRenew);
             if (!response.success) {
                 event.failedToRenew(response.err);
                 return { success: false }
@@ -174,4 +177,29 @@ function validateLoginID(loginID: LoginID): Array<LoginIDValidationError> {
     }
 
     return ERROR.ok;
+}
+
+async function delayed<T>(promise: Promise<T>, time: DelayTime, handler: DelayedHandler): Promise<T> {
+    const DELAYED_MARKER = { DELAYED: true }
+    const delayed = new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(DELAYED_MARKER);
+        }, time.milli_second);
+    });
+
+    const winner = await Promise.race([promise, delayed]);
+    if (winner === DELAYED_MARKER) {
+        handler();
+    }
+
+    return promise;
+}
+
+type DelayTime = { milli_second: number }
+function delaySecond(second: number): DelayTime {
+    return { milli_second: second * 1000 }
+}
+
+interface DelayedHandler {
+    (): void
 }
