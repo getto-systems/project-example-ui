@@ -83,7 +83,25 @@ class EventImpl implements RenewEvent, StoreEvent {
         this.stateChanged({ type: "delayed-to-renew" });
     }
     failedToRenew(err: RenewError): void {
-        this.authEvent.failedToRenew(err);
+        switch (err.type) {
+            case "empty-nonce":
+            case "invalid-ticket":
+                this.authEvent.tryToLogin();
+                return;
+
+            case "bad-request":
+            case "server-error":
+                this.authEvent.failedToAuth({ type: err.type, err: "" });
+                return;
+
+            case "bad-response":
+            case "infra-error":
+                this.authEvent.failedToAuth(err);
+                return;
+
+            default:
+                return assertNever(err);
+        }
     }
 
     tryToStore(): void {
@@ -93,6 +111,10 @@ class EventImpl implements RenewEvent, StoreEvent {
         this.stateChanged({ type: "failed-to-store", err });
     }
     succeedToStore(): void {
-        this.authEvent.succeedToRenew();
+        this.authEvent.succeedToAuth();
     }
+}
+
+function assertNever(_: never): never {
+    throw new Error("NEVER");
 }

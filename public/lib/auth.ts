@@ -1,9 +1,7 @@
-import { AuthAction, AuthEvent } from "./auth/action";
+import { AuthAction, AuthEvent, AuthError } from "./auth/action";
 
 import { RenewComponent, initRenew } from "./auth/renew";
 //import { LoadApplicationComponent, initLoadApplication } from "./auth/load_application";
-
-import { RenewError } from "./ability/auth_credential/data";
 
 export interface AuthUsecase {
     initialState(): AuthState
@@ -14,14 +12,9 @@ export interface AuthUsecase {
 }
 
 export type AuthState =
-    Readonly<{ view: "renew" }> |
-    Readonly<{ view: "load-application" }> |
-    Readonly<{ view: "error", err: string }>
-const auth_Renew: AuthState = { view: "renew" }
-const auth_LoadApplication: AuthState = { view: "load-application" }
-function auth_Error(err: string): AuthState {
-    return { view: "error", err }
-}
+    Readonly<{ type: "renew" }> |
+    Readonly<{ type: "load-application" }> |
+    Readonly<{ type: "error", err: AuthError }>
 
 export interface AuthEventHandler {
     (state: AuthState): void
@@ -44,7 +37,7 @@ class AuthUsecaseImpl implements AuthUsecase {
     }
 
     initialState(): AuthState {
-        return auth_Renew;
+        return { type: "renew" };
     }
 
     onStateChange(stateChanged: AuthEventHandler): void {
@@ -84,9 +77,9 @@ class AuthEventImpl implements AuthEvent {
         this.stateChanged = stateChanged;
     }
 
-    failedToRenew(err: RenewError): void {
+    tryToLogin(): void {
         // TODO ちゃんとログイン画面に遷移するように
-        this.stateChanged(auth_Error(`ここでログインフォーム: ${err}`));
+        this.stateChanged({ type: "error", err: { type: "login", err: "ここでログインフォーム" } });
 
         // ログイン前画面ではアンダースコアで始まる query string を使用する
         /*
@@ -97,7 +90,10 @@ class AuthEventImpl implements AuthEvent {
         }
          */
     }
-    succeedToRenew(): void {
-        this.stateChanged(auth_LoadApplication);
+    failedToAuth(err: AuthError): void {
+        this.stateChanged({ type: "error", err });
+    }
+    succeedToAuth(): void {
+        this.stateChanged({ type: "load-application" });
     }
 }

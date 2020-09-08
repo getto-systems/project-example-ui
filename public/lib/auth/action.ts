@@ -1,4 +1,3 @@
-import { RenewError } from "../ability/auth_credential/data";
 import { AuthCredentialAction } from "../ability/auth_credential/action";
 //import { PasswordAction } from "../ability/password/action";
 //import { PasswordLoginAction } from "../ability/password_login/action";
@@ -16,6 +15,9 @@ export type AuthAction = {
 }
 
 export interface AuthEvent {
-    failedToRenew(err: RenewError): void
-    succeedToRenew(): void
+    tryToLogin(): void
+    failedToAuth(err: AuthError): void
+    succeedToAuth(): void
 }
+
+export type AuthError = Readonly<{ type: string, err: string }>
