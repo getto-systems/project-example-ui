@@ -1,6 +1,10 @@
 import { Infra, AuthCredentialRepository } from "./infra";
 
-import { AuthCredentialAction, RenewEvent, StoreCredentialApi, LoginIDRecord, LoginIDListener } from "./action";
+import {
+    AuthCredentialAction,
+    RenewResult, RenewEvent, StoreEvent,
+    StoreCredentialApi, LoginIDRecord, LoginIDListener,
+} from "./action";
 
 import {
     LoginID, LoginIDBoard, LoginIDValidationError, ValidLoginID,
@@ -47,36 +51,40 @@ class AuthCredentialActionImpl implements AuthCredentialAction {
         return new StoreCredentialApiImpl(this.infra.authCredentials);
     }
 
-    async renew_withEvent(event: RenewEvent): Promise<void> {
+    async renew_withEvent(event: RenewEvent): Promise<RenewResult> {
         // TODO エラーは infra で包む
         try {
             const ticketNonce = await this.infra.authCredentials.findTicketNonce();
             if (!ticketNonce.found) {
                 // TODO ticket-nonce-not-found がいい
                 event.failedToRenew({ type: "empty-nonce" });
-                return
+                return { success: false }
             }
 
             // TODO delayed する
             const response = await this.infra.renewClient.renew(ticketNonce.ticketNonce);
             if (!response.success) {
                 event.failedToRenew(response.err);
-                return;
+                return { success: false }
             }
 
-            // TODO エラーは infra で包む
-            try {
-                event.tryToStore();
-
-                await this.infra.authCredentials.storeAuthCredential(response.authCredential);
-
-                event.succeedToRenew();
-            } catch (err) {
-                event.failedToStore({ type: "infra-error", err });
-                return;
-            }
+            return { success: true, authCredential: response.authCredential };
         } catch (err) {
             event.failedToRenew({ type: "infra-error", err });
+            return { success: false }
+        }
+    }
+
+    async store_withEvent(event: StoreEvent, authCredential: AuthCredential): Promise<void> {
+        // TODO エラーは infra で包む
+        try {
+            event.tryToStore();
+
+            await this.infra.authCredentials.storeAuthCredential(authCredential);
+
+            event.succeedToStore();
+        } catch (err) {
+            event.failedToStore({ type: "infra-error", err });
         }
     }
 }
