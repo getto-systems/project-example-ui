@@ -3,15 +3,16 @@ import { useState } from "preact/hooks";
 import { html } from "htm/preact";
 
 import { init } from "../z_main/auth";
-import { AuthState, AuthUsecase } from "../auth";
+import { AuthUsecase } from "../auth";
 
 import { Renew } from "./auth/renew";
+import { LoadApplication } from "./auth/load_application";
 
 render(h(main(init(location, localStorage)), {}), document.body);
 
 function main(auth: AuthUsecase) {
     return (): VNode => {
-        const [state, setState] = useState<AuthState>(auth.initialState());
+        const [state, setState] = useState(auth.initialState());
         auth.onStateChange(setState);
 
         switch (state.type) {
@@ -19,8 +20,7 @@ function main(auth: AuthUsecase) {
                 return h(Renew(auth.initRenew()), {});
 
             case "load-application":
-                return html`ここでスクリプトをロード！`
-            //return h(LoadApplication(auth.initLoadApplication()), {});
+                return h(LoadApplication(auth.initLoadApplication()), {});
 
             /*
             case "password-login":

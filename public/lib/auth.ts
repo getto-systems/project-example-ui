@@ -1,14 +1,14 @@
 import { AuthAction, AuthEvent, AuthError } from "./auth/action";
 
 import { RenewComponent, initRenew } from "./auth/renew";
-//import { LoadApplicationComponent, initLoadApplication } from "./auth/load_application";
+import { LoadApplicationComponent, initLoadApplication } from "./auth/load_application";
 
 export interface AuthUsecase {
     initialState(): AuthState
     onStateChange(stateChanged: AuthEventHandler): void
 
     initRenew(): RenewComponent
-    //initLoadApplication(): LoadApplicationComponent
+    initLoadApplication(): LoadApplicationComponent
 }
 
 export type AuthState =
@@ -50,12 +50,9 @@ class AuthUsecaseImpl implements AuthUsecase {
     initRenew(): RenewComponent {
         return initRenew(this.action, this.event());
     }
-
-    /*
     initLoadApplication(): LoadApplicationComponent {
         return initLoadApplication(this.action, this.event());
     }
-     */
 }
 
 class AuthEventImpl implements AuthEvent {
