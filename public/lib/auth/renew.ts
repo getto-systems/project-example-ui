@@ -1,5 +1,5 @@
 import { AuthAction, AuthEvent } from "../auth/action";
-import { RenewEvent } from "../ability/auth_credential/action";
+import { RenewEvent, StoreEvent } from "../ability/auth_credential/action";
 
 import { RenewError, StoreError } from "../ability/auth_credential/data";
 
@@ -7,7 +7,7 @@ export interface RenewComponent {
     initialState(): RenewState
     onStateChange(stateChanged: RenewEventHandler): void
 
-    renew(): void
+    renew(): Promise<void>
 }
 
 export type RenewState =
@@ -16,13 +16,6 @@ export type RenewState =
     Readonly<{ type: "delayed-to-renew" }> |
     Readonly<{ type: "try-to-store" }> |
     Readonly<{ type: "failed-to-store", err: StoreError }>
-const renew_Initial: RenewState = { type: "initial-renew" }
-const renew_Try: RenewState = { type: "try-to-renew" }
-const renew_Delayed: RenewState = { type: "delayed-to-renew" }
-const store_Try: RenewState = { type: "try-to-store" }
-function store_Failed(err: StoreError): RenewState {
-    return { type: "failed-to-store", err }
-}
 
 export interface RenewEventHandler {
     (state: RenewState): void
@@ -35,7 +28,7 @@ export function initRenew(action: AuthAction, authEvent: AuthEvent): RenewCompon
 class RenewComponentImpl implements RenewComponent {
     action: AuthAction
     authEvent: AuthEvent
-    eventHolder: EventHolder<RenewEvent>
+    eventHolder: EventHolder<EventImpl>
 
     constructor(action: AuthAction, authEvent: AuthEvent) {
         this.action = action;
@@ -44,18 +37,23 @@ class RenewComponentImpl implements RenewComponent {
     }
 
     initialState(): RenewState {
-        return renew_Initial;
+        return { type: "initial-renew" };
     }
 
     onStateChange(stateChanged: RenewEventHandler): void {
-        this.eventHolder = { hasEvent: true, event: new RenewEventImpl(this.authEvent, stateChanged) }
+        this.eventHolder = { hasEvent: true, event: new EventImpl(this.authEvent, stateChanged) }
     }
-    event(): RenewEvent {
+    event(): EventImpl {
         return unwrap(this.eventHolder);
     }
 
-    renew(): void {
-        this.action.authCredential.renew_withEvent(this.event());
+    async renew(): Promise<void> {
+        const result = await this.action.authCredential.renew_withEvent(this.event());
+        if (!result.success) {
+            return;
+        }
+
+        this.action.authCredential.store_withEvent(this.event(), result.authCredential);
     }
 }
 
@@ -69,7 +67,7 @@ function unwrap<T>(holder: EventHolder<T>): T {
     return holder.event;
 }
 
-class RenewEventImpl implements RenewEvent {
+class EventImpl implements RenewEvent, StoreEvent {
     authEvent: AuthEvent
     stateChanged: RenewEventHandler
 
@@ -79,21 +77,22 @@ class RenewEventImpl implements RenewEvent {
     }
 
     tryToRenew(): void {
-        this.stateChanged(renew_Try);
+        this.stateChanged({ type: "try-to-renew" });
     }
     delayedToRenew(): void {
-        this.stateChanged(renew_Delayed);
+        this.stateChanged({ type: "delayed-to-renew" });
     }
     failedToRenew(err: RenewError): void {
         this.authEvent.failedToRenew(err);
     }
+
     tryToStore(): void {
-        this.stateChanged(store_Try);
+        this.stateChanged({ type: "try-to-store" });
     }
     failedToStore(err: StoreError): void {
-        this.stateChanged(store_Failed(err));
+        this.stateChanged({ type: "failed-to-store", err });
     }
-    succeedToRenew(): void {
+    succeedToStore(): void {
         this.authEvent.succeedToRenew();
     }
 }
