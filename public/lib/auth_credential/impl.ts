@@ -28,8 +28,7 @@ class AuthCredentialActionImpl implements AuthCredentialAction {
         }
 
         if (!findResponse.found) {
-            // TODO ticket-nonce-not-found がいい
-            event.failedToRenew({ type: "empty-nonce" });
+            event.failedToRenew({ type: "ticket-nonce-not-found" });
             return { success: false }
         }
 

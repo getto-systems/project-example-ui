@@ -7,6 +7,7 @@ import {
 import { Content } from "../input/data";
 
 export interface PasswordResetSessionAction {
+    // TODO createSession を startSession にしたい
     createSession(event: SessionEvent, content: [Content<LoginID>]): Promise<SessionResult>
     startPollingStatus(event: PollingStatusEvent, session: Session): Promise<void>
 }

@@ -17,7 +17,7 @@ export type ApiCredential = Readonly<{
 export type ApiRoles = Readonly<{ apiRoles: Readonly<Array<Readonly<string>>> }>
 
 export type RenewError =
-    Readonly<{ type: "empty-nonce" }> |
+    Readonly<{ type: "ticket-nonce-not-found" }> |
     Readonly<{ type: "bad-request" }> |
     Readonly<{ type: "invalid-ticket" }> |
     Readonly<{ type: "server-error" }> |
