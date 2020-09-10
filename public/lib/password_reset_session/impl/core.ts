@@ -1,14 +1,14 @@
-import { Infra, Config, PasswordResetSessionClient } from "./infra"
+import { Infra, Config, PasswordResetSessionClient } from "../infra"
 
 import {
     PasswordResetSessionAction,
     SessionEvent, SessionResult,
     PollingStatusEvent,
-} from "./action"
+} from "../action"
 
-import { LoginID } from "../auth_credential/data"
-import { InputContent, Session, PollingStatusError } from "./data"
-import { Content } from "../input/data"
+import { LoginID } from "../../auth_credential/data"
+import { InputContent, Session, PollingStatusError } from "../data"
+import { Content } from "../../input/data"
 
 export function initPasswordResetSessionAction(infra: Infra): PasswordResetSessionAction {
     return new PasswordResetSessionActionImpl(infra)
