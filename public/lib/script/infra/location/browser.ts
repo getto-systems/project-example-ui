@@ -1,4 +1,4 @@
-import { PathnameLocation, PathnameFound } from "../../infra";
+import { PathnameLocation, PathnameResponse } from "../../infra";
 
 export function initBrowserPathnameLocation(browserLocation: Location): PathnameLocation {
     return new BrowserPathnameLocation(browserLocation);
@@ -11,7 +11,11 @@ class BrowserPathnameLocation implements PathnameLocation {
         this.browserLocation = browserLocation;
     }
 
-    async pathname(): Promise<PathnameFound> {
-        return { found: true, pathname: { pathname: this.browserLocation.pathname } };
+    pathname(): PathnameResponse {
+        try {
+            return { success: true, pathname: { pathname: this.browserLocation.pathname } }
+        } catch (err) {
+            return { success: false, err: { type: "infra-error", err } }
+        }
     }
 }

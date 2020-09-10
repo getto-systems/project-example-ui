@@ -27,10 +27,6 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
                 component.load();
                 return html``
 
-            case "try-to-load":
-                // path の取得には時間がかからないはずなので空を返す
-                return html``
-
             case "failed-to-load":
                 // TODO エラー画面を用意
                 return html`ERROR: ${state.err}`

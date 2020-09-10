@@ -12,7 +12,6 @@ export interface LoadApplicationComponent {
 
 export type LoadState =
     Readonly<{ type: "initial-load" }> |
-    Readonly<{ type: "try-to-load" }> |
     Readonly<{ type: "failed-to-load", err: ScriptError }> |
     Readonly<{ type: "succeed-to-load", scriptPath: ScriptPath }>
 
@@ -47,7 +46,7 @@ class Component implements LoadApplicationComponent {
     }
 
     async load(): Promise<void> {
-        await this.action.script.load_withEvent(this.event());
+        await this.action.script.load(this.event());
     }
 }
 
@@ -60,9 +59,6 @@ class ComponentEvent implements ScriptEvent {
         this.authEvent = authEvent;
     }
 
-    tryToLoad(): void {
-        this.stateChanged({ type: "try-to-load" });
-    }
     failedToLoad(err: ScriptError): void {
         this.stateChanged({ type: "failed-to-load", err });
     }
