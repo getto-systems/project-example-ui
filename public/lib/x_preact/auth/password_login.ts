@@ -33,10 +33,6 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
             case "delayed-to-login":
                 return LoginView(delayedToLoginForm());
 
-            case "try-to-store":
-                // TODO これはなくなるはず
-                return html``
-
             case "failed-to-store":
                 // TODO エラー画面を用意
                 return html`ログインできませんでした: ${state.err}`

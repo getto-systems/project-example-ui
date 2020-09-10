@@ -24,7 +24,6 @@ export type LoginState =
     Readonly<{ type: "try-to-login" }> |
     Readonly<{ type: "delayed-to-login" }> |
     Readonly<{ type: "failed-to-login", content: InputContent, err: LoginError }> |
-    Readonly<{ type: "try-to-store" }> |
     Readonly<{ type: "failed-to-store", err: StoreError }>
 
 export interface LoginEventHandler {
@@ -99,9 +98,6 @@ class ComponentEvent implements LoginEvent, StoreEvent {
         this.stateChanged({ type: "failed-to-login", content, err });
     }
 
-    tryToStore(): void {
-        this.stateChanged({ type: "try-to-store" });
-    }
     failedToStore(err: StoreError): void {
         this.stateChanged({ type: "failed-to-store", err });
     }

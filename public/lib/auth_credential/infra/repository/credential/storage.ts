@@ -1,9 +1,9 @@
 import { decodeBase64StringToUint8Array, encodeUint8ArrayToBase64String } from "../../../../z_external/protocol_buffers_util";
 import { CredentialMessage } from "../../../../y_static/local_storage_pb.js";
 
-import { AuthCredentialRepository, TicketNonceFound, ticketNonceFound, ticketNonceNotFound } from "../../../infra";
+import { AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra";
 
-import { AuthCredential } from "../../../data";
+import { AuthCredential, TicketNonce } from "../../../data";
 
 export function initStorageAuthCredentialRepository(storage: Storage, key: string): AuthCredentialRepository {
     return new StorageAuthCredentialRepository(new AuthCredentialStorageImpl(storage, key));
@@ -16,17 +16,26 @@ class StorageAuthCredentialRepository implements AuthCredentialRepository {
         this.storage = storage;
     }
 
-    async findTicketNonce(): Promise<TicketNonceFound> {
-        const authCredential = this.storage.getItem();
-        if (!authCredential.found) {
-            return ticketNonceNotFound;
-        }
+    findTicketNonce(): FindResponse<TicketNonce> {
+        try {
+            const authCredential = this.storage.getItem();
+            if (!authCredential.found) {
+                return { success: true, found: false };
+            }
 
-        return ticketNonceFound(authCredential.authCredential.ticketNonce);
+            return { success: true, found: true, content: authCredential.authCredential.ticketNonce };
+        } catch (err) {
+            return { success: false, err: { type: "infra-error", err } }
+        }
     }
 
-    async storeAuthCredential(authCredential: AuthCredential): Promise<void> {
-        this.storage.setItem(authCredential);
+    storeAuthCredential(authCredential: AuthCredential): StoreResponse {
+        try {
+            this.storage.setItem(authCredential);
+            return { success: true }
+        } catch (err) {
+            return { success: false, err: { type: "infra-error", err } }
+        }
     }
 }
 

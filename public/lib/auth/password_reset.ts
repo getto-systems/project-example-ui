@@ -24,7 +24,6 @@ export type ResetState =
     Readonly<{ type: "try-to-reset" }> |
     Readonly<{ type: "delayed-to-reset" }> |
     Readonly<{ type: "failed-to-reset", content: InputContent, err: ResetError }> |
-    Readonly<{ type: "try-to-store" }> |
     Readonly<{ type: "failed-to-store", err: StoreError }>
 
 export interface ResetEventHandler {
@@ -103,9 +102,6 @@ class ComponentEvent implements ResetEvent, StoreEvent {
         this.stateChanged({ type: "failed-to-reset", content, err });
     }
 
-    tryToStore(): void {
-        this.stateChanged({ type: "try-to-store" });
-    }
     failedToStore(err: StoreError): void {
         this.stateChanged({ type: "failed-to-store", err });
     }
