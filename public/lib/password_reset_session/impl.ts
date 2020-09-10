@@ -116,11 +116,11 @@ class PollingStatus {
 
     async sendToken(): Promise<void> {
         const response = await this.client.sendToken();
-        if (response.success) {
-            this.sendTokenState = { type: "success" }
-        } else {
+        if (!response.success) {
             this.sendTokenState = { type: "failed", err: response.err }
+            return;
         }
+        this.sendTokenState = { type: "success" }
     }
 
     wait(time: WaitTime): Promise<void> {

@@ -12,14 +12,6 @@ export type Config = Readonly<{
 
 export type DelayTime = Readonly<{ delay_milli_second: number }>
 
-// TODO 整理が終わったら名前を変える
-export interface Password_Record {
-    get(): Password
-    update(password: Password): void
-    show(): void
-    hide(): void
-}
-
 export interface PasswordLoginClient {
     login(loginID: LoginID, password: Password): Promise<LoginResponse>
 }
