@@ -2,11 +2,11 @@ import { LoginIDComponent, initLoginID } from "./password_login/login_id";
 import { PasswordComponent, initPassword } from "./password_login/password";
 
 import { AuthAction, AuthEvent } from "../auth/action";
-import { StoreEvent } from "../ability/auth_credential/action";
-import { ResetEvent } from "../ability/password_reset/action";
+import { StoreEvent } from "../auth_credential/action";
+import { ResetEvent } from "../password_reset/action";
 
-import { StoreError } from "../ability/auth_credential/data";
-import { InputContent, ResetToken, ResetError } from "../ability/password_reset/data";
+import { StoreError } from "../auth_credential/data";
+import { InputContent, ResetToken, ResetError } from "../password_reset/data";
 
 export interface PasswordResetComponent {
     fields(): PasswordResetFieldComponents

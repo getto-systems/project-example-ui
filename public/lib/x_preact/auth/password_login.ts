@@ -8,8 +8,8 @@ import { PasswordForm } from "./form/password";
 
 import { PasswordLoginComponent } from "../../auth/password_login";
 
-import { InputContent, LoginError } from "../../ability/password_login/data";
-import { hasValue, noValue } from "../../ability/input/data";
+import { InputContent, LoginError } from "../../password_login/data";
+import { hasValue, noValue } from "../../input/data";
 
 interface PreactComponent {
     (): VNode;

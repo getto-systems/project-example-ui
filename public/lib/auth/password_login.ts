@@ -2,11 +2,11 @@ import { LoginIDComponent, initLoginID } from "./password_login/login_id";
 import { PasswordComponent, initPassword } from "./password_login/password";
 
 import { AuthAction, AuthEvent } from "../auth/action";
-import { StoreEvent } from "../ability/auth_credential/action";
-import { LoginEvent } from "../ability/password_login/action";
+import { StoreEvent } from "../auth_credential/action";
+import { LoginEvent } from "../password_login/action";
 
-import { StoreError } from "../ability/auth_credential/data";
-import { InputContent, LoginError } from "../ability/password_login/data";
+import { StoreError } from "../auth_credential/data";
+import { InputContent, LoginError } from "../password_login/data";
 
 export interface PasswordLoginComponent {
     fields(): PasswordLoginFieldComponents

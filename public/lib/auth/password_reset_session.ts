@@ -1,13 +1,13 @@
 import { LoginIDComponent, initLoginID } from "./password_login/login_id";
 
 import { AuthAction } from "../auth/action";
-import { SessionEvent, PollingStatusEvent } from "../ability/password_reset_session/action";
+import { SessionEvent, PollingStatusEvent } from "../password_reset_session/action";
 
 import {
     InputContent,
     SessionError,
     PollingStatusError, PollingStatus, DoneStatus,
-} from "../ability/password_reset_session/data";
+} from "../password_reset_session/data";
 
 export interface PasswordResetSessionComponent {
     fields(): PasswordResetSessionFieldComponents

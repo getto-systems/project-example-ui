@@ -4,26 +4,26 @@ import { AuthAction } from "../auth/action";
 
 import { AuthUsecase, initAuthUsecase } from "../auth";
 
-import { initStorageAuthCredentialRepository } from "../ability/auth_credential/repository/credential/storage";
-import { initFetchRenewClient } from "../ability/auth_credential/client/renew/fetch";
-import { initBrowserPathnameLocation } from "../ability/script/location/browser";
-import { initFetchPasswordLoginClient } from "../ability/password_login/client/password_login/fetch";
-import { initSimulatePasswordResetSessionClient } from "../ability/password_reset_session/infra/client/password_reset_session/simulate";
-import { initSimulatePasswordResetClient } from "../ability/password_reset/client/password_reset/simulate";
+import { initStorageAuthCredentialRepository } from "../auth_credential/repository/credential/storage";
+import { initFetchRenewClient } from "../auth_credential/client/renew/fetch";
+import { initBrowserPathnameLocation } from "../script/location/browser";
+import { initFetchPasswordLoginClient } from "../password_login/client/password_login/fetch";
+import { initSimulatePasswordResetSessionClient } from "../password_reset_session/infra/client/password_reset_session/simulate";
+import { initSimulatePasswordResetClient } from "../password_reset/client/password_reset/simulate";
 import { env } from "../y_static/env";
 
-import { AuthCredentialRepository, RenewClient } from "../ability/auth_credential/infra";
-import { ScriptEnv, PathnameLocation } from "../ability/script/infra";
-import { PasswordLoginClient } from "../ability/password_login/infra";
-import { PasswordResetSessionClient } from "../ability/password_reset_session/infra";
-import { PasswordResetClient } from "../ability/password_reset/infra";
+import { AuthCredentialRepository, RenewClient } from "../auth_credential/infra";
+import { ScriptEnv, PathnameLocation } from "../script/infra";
+import { PasswordLoginClient } from "../password_login/infra";
+import { PasswordResetSessionClient } from "../password_reset_session/infra";
+import { PasswordResetClient } from "../password_reset/infra";
 
-import { initAuthCredentialAction } from "../ability/auth_credential/core";
-import { initScriptAction } from "../ability/script/core";
-import { initPasswordAction } from "../ability/password/core";
-import { initPasswordLoginAction } from "../ability/password_login/core";
-import { initPasswordResetSessionAction } from "../ability/password_reset_session/core";
-import { initPasswordResetAction } from "../ability/password_reset/core";
+import { initAuthCredentialAction } from "../auth_credential/core";
+import { initScriptAction } from "../script/core";
+import { initPasswordAction } from "../password/core";
+import { initPasswordLoginAction } from "../password_login/core";
+import { initPasswordResetSessionAction } from "../password_reset_session/core";
+import { initPasswordResetAction } from "../password_reset/core";
 
 export function init(browserLocation: Location, storage: Storage): AuthUsecase {
     const url = new URL(browserLocation.toString());

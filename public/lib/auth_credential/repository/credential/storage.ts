@@ -1,5 +1,5 @@
-import { decodeBase64StringToUint8Array, encodeUint8ArrayToBase64String } from "../../../../z_external/protocol_buffers_util";
-import { CredentialMessage } from "../../../../y_static/local_storage_pb.js";
+import { decodeBase64StringToUint8Array, encodeUint8ArrayToBase64String } from "../../../z_external/protocol_buffers_util";
+import { CredentialMessage } from "../../../y_static/local_storage_pb.js";
 
 import { AuthCredentialRepository, TicketNonceFound, ticketNonceFound, ticketNonceNotFound } from "../../infra";
 

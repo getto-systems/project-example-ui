@@ -1,8 +1,8 @@
 import { AuthAction } from "../../auth/action";
-import { PasswordField, PasswordEvent } from "../../ability/password/action";
+import { PasswordField, PasswordEvent } from "../../password/action";
 
-import { Password, PasswordError, PasswordCharacter, PasswordView } from "../../ability/password/data";
-import { InputValue, Content, Valid } from "../../ability/input/data";
+import { Password, PasswordError, PasswordCharacter, PasswordView } from "../../password/data";
+import { InputValue, Content, Valid } from "../../input/data";
 
 export interface PasswordComponent {
     initialState(): PasswordState
