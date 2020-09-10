@@ -4,8 +4,8 @@ import { AuthAction } from "../auth/action";
 
 import { AuthUsecase, initAuthUsecase } from "../auth";
 
-import { initStorageAuthCredentialRepository } from "../auth_credential/repository/credential/storage";
-import { initFetchRenewClient } from "../auth_credential/client/renew/fetch";
+import { initStorageAuthCredentialRepository } from "../auth_credential/infra/repository/credential/storage";
+import { initFetchRenewClient } from "../auth_credential/infra/client/renew/fetch";
 import { initBrowserPathnameLocation } from "../script/location/browser";
 import { initFetchPasswordLoginClient } from "../password_login/client/password_login/fetch";
 import { initSimulatePasswordResetSessionClient } from "../password_reset_session/infra/client/password_reset_session/simulate";

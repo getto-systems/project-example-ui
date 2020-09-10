@@ -1,6 +1,6 @@
-import { AuthCredentialRepository, TicketNonceFound, ticketNonceFound } from "../../infra";
+import { AuthCredentialRepository, TicketNonceFound, ticketNonceFound } from "../../../infra";
 
-import { AuthCredential, ApiCredential } from "../../data";
+import { AuthCredential, ApiCredential } from "../../../data";
 
 export function initMemoryAuthCredentialRepository(initialNonce: TicketNonceFound): AuthCredentialRepository {
     return new MemoryAuthCredentialRepository(initialNonce);
