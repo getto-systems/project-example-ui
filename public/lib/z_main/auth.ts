@@ -9,7 +9,7 @@ import { initFetchRenewClient } from "../auth_credential/infra/client/renew/fetc
 import { initBrowserPathnameLocation } from "../script/location/browser";
 import { initFetchPasswordLoginClient } from "../password_login/infra/client/password_login/fetch";
 import { initSimulatePasswordResetSessionClient } from "../password_reset_session/infra/client/password_reset_session/simulate";
-import { initSimulatePasswordResetClient } from "../password_reset/client/password_reset/simulate";
+import { initSimulatePasswordResetClient } from "../password_reset/infra/client/password_reset/simulate";
 import { env } from "../y_static/env";
 
 import { AuthCredentialRepository, RenewClient } from "../auth_credential/infra";
