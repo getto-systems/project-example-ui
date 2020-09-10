@@ -1,27 +1,25 @@
-import { AuthCredential, TicketNonce, RenewError } from "./data";
+import { AuthCredential, TicketNonce, StoreError, RenewError } from "./data";
 
 export type Infra = {
     authCredentials: AuthCredentialRepository,
     renewClient: RenewClient,
 }
 
-export type TicketNonceFound =
-    Readonly<{ found: false }> |
-    Readonly<{ found: true, ticketNonce: TicketNonce }>
-export const ticketNonceNotFound: TicketNonceFound = { found: false }
-export function ticketNonceFound(ticketNonce: TicketNonce): TicketNonceFound {
-    if (ticketNonce.ticketNonce === "") {
-        return ticketNonceNotFound;
-    }
-    return { found: true, ticketNonce }
+export interface AuthCredentialRepository {
+    findTicketNonce(): FindResponse<TicketNonce>
+    // TODO
+    //findApiNonce(): ApiNonceFound
+    storeAuthCredential(authCredential: AuthCredential): StoreResponse
 }
 
-export interface AuthCredentialRepository {
-    findTicketNonce(): Promise<TicketNonceFound>
-    // TODO
-    //findApiNonce(): Promise<ApiNonceFound>
-    storeAuthCredential(authCredential: AuthCredential): Promise<void>
-}
+export type FindResponse<T> =
+    Readonly<{ success: false, err: StoreError }> |
+    Readonly<{ success: true, found: false }> |
+    Readonly<{ success: true, found: true, content: T }>
+
+export type StoreResponse =
+    Readonly<{ success: false, err: StoreError }> |
+    Readonly<{ success: true }>
 
 export interface RenewClient {
     renew(ticketNonce: TicketNonce): Promise<RenewResponse>

@@ -1,15 +1,15 @@
-import { AuthCredentialRepository, TicketNonceFound, ticketNonceFound } from "../../../infra";
+import { AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra";
 
-import { AuthCredential, ApiCredential } from "../../../data";
+import { AuthCredential, TicketNonce, ApiCredential } from "../../../data";
 
-export function initMemoryAuthCredentialRepository(initialNonce: TicketNonceFound): AuthCredentialRepository {
+export function initMemoryAuthCredentialRepository(initialNonce: TicketNonce): AuthCredentialRepository {
     return new MemoryAuthCredentialRepository(initialNonce);
 }
 
 class MemoryAuthCredentialRepository implements AuthCredentialRepository {
-    data: { ticketNonce: TicketNonceFound, apiCredential: ApiCredential }
+    data: { ticketNonce: TicketNonce, apiCredential: ApiCredential }
 
-    constructor(initialNonce: TicketNonceFound) {
+    constructor(initialNonce: TicketNonce) {
         this.data = {
             ticketNonce: initialNonce,
             apiCredential: {
@@ -18,11 +18,12 @@ class MemoryAuthCredentialRepository implements AuthCredentialRepository {
         }
     }
 
-    async findTicketNonce(): Promise<TicketNonceFound> {
-        return this.data.ticketNonce;
+    findTicketNonce(): FindResponse<TicketNonce> {
+        return { success: true, found: true, content: this.data.ticketNonce };
     }
-    async storeAuthCredential(authCredential: AuthCredential): Promise<void> {
-        this.data.ticketNonce = ticketNonceFound(authCredential.ticketNonce);
+    storeAuthCredential(authCredential: AuthCredential): StoreResponse {
+        this.data.ticketNonce = authCredential.ticketNonce;
         this.data.apiCredential = authCredential.apiCredential;
+        return { success: true }
     }
 }

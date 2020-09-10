@@ -19,7 +19,7 @@ export function Renew(component: RenewComponent): PreactComponent {
                 return html``
 
             case "try-to-renew":
-            case "try-to-store":
+                // すぐに帰ってくる想定
                 return html``
 
             case "delayed-to-renew":

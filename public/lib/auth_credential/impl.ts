@@ -10,7 +10,7 @@ export function initAuthCredentialAction(infra: Infra): AuthCredentialAction {
 }
 
 // TODO infra に設定オブジェクト的なものを置いたほうがいい
-const RENEW_DELAYED_TIME = delaySecond(1);
+const RENEW_DELAYED_TIME = delaySecond(0.5);
 
 class AuthCredentialActionImpl implements AuthCredentialAction {
     infra: Infra
@@ -24,41 +24,37 @@ class AuthCredentialActionImpl implements AuthCredentialAction {
     }
 
     async renew(event: RenewEvent): Promise<RenewResult> {
-        // TODO エラーは infra で包む
-        try {
-            const ticketNonce = await this.infra.authCredentials.findTicketNonce();
-            if (!ticketNonce.found) {
-                // TODO ticket-nonce-not-found がいい
-                event.failedToRenew({ type: "empty-nonce" });
-                return { success: false }
-            }
-
-            // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-            const promise = this.infra.renewClient.renew(ticketNonce.ticketNonce);
-            const response = await delayed(promise, RENEW_DELAYED_TIME, event.delayedToRenew);
-            if (!response.success) {
-                event.failedToRenew(response.err);
-                return { success: false }
-            }
-
-            return { success: true, authCredential: response.authCredential };
-        } catch (err) {
-            event.failedToRenew({ type: "infra-error", err });
+        const findResponse = this.infra.authCredentials.findTicketNonce();
+        if (!findResponse.success) {
+            event.failedToRenew(findResponse.err);
             return { success: false }
         }
+
+        if (!findResponse.found) {
+            // TODO ticket-nonce-not-found がいい
+            event.failedToRenew({ type: "empty-nonce" });
+            return { success: false }
+        }
+
+        // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
+        const promise = this.infra.renewClient.renew(findResponse.content);
+        const response = await delayed(promise, RENEW_DELAYED_TIME, event.delayedToRenew);
+        if (!response.success) {
+            event.failedToRenew(response.err);
+            return { success: false }
+        }
+
+        return { success: true, authCredential: response.authCredential };
     }
 
     async store(event: StoreEvent, authCredential: AuthCredential): Promise<void> {
-        // TODO エラーは infra で包む
-        try {
-            event.tryToStore();
-
-            await this.infra.authCredentials.storeAuthCredential(authCredential);
-
-            event.succeedToStore();
-        } catch (err) {
-            event.failedToStore({ type: "infra-error", err });
+        const response = this.infra.authCredentials.storeAuthCredential(authCredential);
+        if (!response.success) {
+            event.failedToStore(response.err);
+            return;
         }
+
+        event.succeedToStore();
     }
 }
 

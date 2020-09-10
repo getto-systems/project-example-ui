@@ -14,7 +14,6 @@ export type RenewState =
     Readonly<{ type: "initial-renew" }> |
     Readonly<{ type: "try-to-renew" }> |
     Readonly<{ type: "delayed-to-renew" }> |
-    Readonly<{ type: "try-to-store" }> |
     Readonly<{ type: "failed-to-store", err: StoreError }>
 
 export interface RenewEventHandler {
@@ -94,9 +93,6 @@ class ComponentEvent implements RenewEvent, StoreEvent {
         }
     }
 
-    tryToStore(): void {
-        this.stateChanged({ type: "try-to-store" });
-    }
     failedToStore(err: StoreError): void {
         this.stateChanged({ type: "failed-to-store", err });
     }

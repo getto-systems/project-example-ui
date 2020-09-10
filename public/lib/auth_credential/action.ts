@@ -32,7 +32,6 @@ export interface RenewEvent {
 }
 
 export interface StoreEvent {
-    tryToStore(): void
     failedToStore(err: StoreError): void
     succeedToStore(): void
 }
