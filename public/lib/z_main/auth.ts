@@ -30,10 +30,12 @@ export function init(browserLocation: Location, storage: Storage): AuthUsecase {
     return initAuthUsecase(url, initAuthAction());
 
     function initAuthAction(): AuthAction {
+        const config = initConfig();
         const authClient = initAuthClient(env.authServerURL);
 
         return {
             authCredential: initAuthCredentialAction({
+                config,
                 authCredentials: initAuthCredentialRepository(),
                 renewClient: initRenewClient(authClient),
             }),
@@ -44,14 +46,31 @@ export function init(browserLocation: Location, storage: Storage): AuthUsecase {
             password: initPasswordAction(),
 
             passwordLogin: initPasswordLoginAction({
+                config,
                 passwordLoginClient: initPasswordLoginClient(authClient),
             }),
             passwordResetSession: initPasswordResetSessionAction({
+                config,
                 passwordResetSessionClient: initPasswordResetSessionClient(),
             }),
             passwordReset: initPasswordResetAction({
+                config,
                 passwordResetClient: initPasswordResetClient(),
             }),
+        }
+    }
+
+    function initConfig(): Config {
+        return {
+            renewDelayTime: delaySecond(0.5),
+
+            passwordLoginDelayTime: delaySecond(1),
+
+            passwordResetCreateSessionDelayTime: delaySecond(1),
+            passwordResetPollingWaitTime: waitSecond(0.25),
+            passwordResetPollingLimit: { limit: 40 },
+
+            passwordResetDelayTime: delaySecond(1),
         }
     }
 
@@ -89,3 +108,27 @@ export function init(browserLocation: Location, storage: Storage): AuthUsecase {
         return initBrowserPathnameLocation(browserLocation);
     }
 }
+
+type Config = Readonly<{
+    renewDelayTime: DelayTime,
+
+    passwordLoginDelayTime: DelayTime,
+
+    passwordResetCreateSessionDelayTime: DelayTime,
+    passwordResetPollingWaitTime: WaitTime,
+    passwordResetPollingLimit: Limit,
+
+    passwordResetDelayTime: DelayTime,
+}>
+
+type DelayTime = { delay_milli_second: number }
+function delaySecond(second: number): DelayTime {
+    return { delay_milli_second: second * 1000 }
+}
+
+type WaitTime = { wait_milli_second: number }
+function waitSecond(second: number): WaitTime {
+    return { wait_milli_second: second * 1000 }
+}
+
+type Limit = { limit: number }

@@ -1,9 +1,16 @@
 import { AuthCredential, TicketNonce, StoreError, RenewError } from "./data";
 
-export type Infra = {
+export type Infra = Readonly<{
+    config: Config,
     authCredentials: AuthCredentialRepository,
     renewClient: RenewClient,
-}
+}>
+
+export type Config = Readonly<{
+    renewDelayTime: DelayTime,
+}>
+
+export type DelayTime = Readonly<{ delay_milli_second: number }>
 
 export interface AuthCredentialRepository {
     findTicketNonce(): FindResponse<TicketNonce>

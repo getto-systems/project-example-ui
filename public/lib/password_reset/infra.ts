@@ -2,9 +2,16 @@ import { LoginID, AuthCredential } from "../auth_credential/data";
 import { Password } from "../password/data";
 import { ResetToken } from "./data";
 
-export type Infra = {
+export type Infra = Readonly<{
+    config: Config,
     passwordResetClient: PasswordResetClient,
-}
+}>
+
+export type Config = Readonly<{
+    passwordResetDelayTime: DelayTime,
+}>
+
+export type DelayTime = Readonly<{ delay_milli_second: number }>
 
 export interface PasswordResetClient {
     reset(token: ResetToken, loginID: LoginID, password: Password): Promise<ResetResponse>

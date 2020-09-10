@@ -1,9 +1,16 @@
 import { LoginID, AuthCredential } from "../auth_credential/data";
 import { Password } from "../password/data";
 
-export type Infra = {
+export type Infra = Readonly<{
+    config: Config,
     passwordLoginClient: PasswordLoginClient,
-}
+}>
+
+export type Config = Readonly<{
+    passwordLoginDelayTime: DelayTime,
+}>
+
+export type DelayTime = Readonly<{ delay_milli_second: number }>
 
 // TODO 整理が終わったら名前を変える
 export interface Password_Record {
