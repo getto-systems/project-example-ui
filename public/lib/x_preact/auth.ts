@@ -31,11 +31,9 @@ function main(usecase: AuthUsecase) {
                 //return h(PasswordReset(...state.init), {});
                 return html`ここでパスワードリセット！`
 
-            /*
             case "password-reset":
                 //return h(PasswordReset(...state.init), {});
                 return html`ここでパスワードリセット！`
-             */
 
             case "error":
                 // TODO エラー画面を用意

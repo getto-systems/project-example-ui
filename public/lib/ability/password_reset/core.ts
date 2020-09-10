@@ -3,6 +3,7 @@ import { Infra, PasswordResetClient, SendTokenError } from "./infra";
 import { LoginIDRecord } from "../auth_credential/action";
 import { PasswordRecord } from "../password/action";
 import {
+    ResetEvent, ResetResult,
     ResetTokenRecord,
     PasswordResetAction,
     CreateSessionStore, CreateSessionApi,
@@ -10,9 +11,10 @@ import {
     ResetStore, ResetApi,
 } from "./action";
 
-import { LoginIDBoard } from "../auth_credential/data";
-import { PasswordBoard } from "../password/data";
+import { LoginID, LoginIDBoard } from "../auth_credential/data";
+import { Password, PasswordBoard } from "../password/data";
 import {
+    InputContent,
     Session,
     ResetToken, ResetTokenBoard, ResetTokenValidationError, ValidResetToken,
 
@@ -26,10 +28,11 @@ import {
 
     ValidContent, validContent, invalidContent,
 } from "./data";
+import { Content } from "../input/data";
 
 // 「遅くなっています」を表示するまでの秒数
 const CREATE_SESSION_DELAY_LIMIT_SECOND = 1;
-const RESET_DELAY_LIMIT_SECOND = 1;
+const RESET_DELAYED_TIME = delaySecond(1);
 
 export function initPasswordResetAction(infra: Infra): PasswordResetAction {
     return new PasswordResetActionImpl(infra);
@@ -40,6 +43,46 @@ class PasswordResetActionImpl implements PasswordResetAction {
 
     constructor(infra: Infra) {
         this.infra = infra;
+    }
+
+    async reset(event: ResetEvent, resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<ResetResult> {
+        const content = mapContent(...fields);
+        if (!content.valid) {
+            event.failedToReset(mapInput(...fields), { type: "validation-error" });
+            return { success: false }
+        }
+
+        event.tryToReset();
+
+        // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
+        const promise = this.infra.passwordResetClient.reset(resetToken, ...content.content);
+        const response = await delayed(promise, RESET_DELAYED_TIME, event.delayedToReset);
+        if (!response.success) {
+            event.failedToReset(mapInput(...fields), response.err);
+            return { success: false }
+        }
+
+        return { success: true, authCredential: response.authCredential }
+
+        type ValidContent =
+            Readonly<{ valid: false }> |
+            Readonly<{ valid: true, content: [LoginID, Password] }>
+
+        function mapContent(loginID: Content<LoginID>, password: Content<Password>): ValidContent {
+            if (
+                !loginID.valid ||
+                !password.valid
+            ) {
+                return { valid: false }
+            }
+            return { valid: true, content: [loginID.content, password.content] }
+        }
+        function mapInput(loginID: Content<LoginID>, password: Content<Password>): InputContent {
+            return {
+                loginID: loginID.input,
+                password: password.input,
+            }
+        }
     }
 
     initResetTokenRecord(): ResetTokenRecord {
@@ -247,7 +290,7 @@ class PollingStatusApiImpl implements PollingStatusApi {
     }
 }
 
-const EMPTY_RESET_TOKEN: ResetToken = { token: "" }
+const EMPTY_RESET_TOKEN: ResetToken = { resetToken: "" }
 const ERROR: {
     ok: Array<ResetTokenValidationError>,
     empty: Array<ResetTokenValidationError>,
@@ -288,7 +331,7 @@ class ResetTokenRecordImpl implements ResetTokenRecord {
 }
 
 function validateResetToken(resetToken: ResetToken): Array<ResetTokenValidationError> {
-    if (resetToken.token.length === 0) {
+    if (resetToken.resetToken.length === 0) {
         return ERROR.empty;
     }
 
@@ -405,7 +448,7 @@ class ResetApiImpl implements ResetApi {
                 new Promise((resolve) => {
                     setTimeout(() => {
                         resolve(delayedMarker);
-                    }, RESET_DELAY_LIMIT_SECOND * 1000);
+                    }, 1 * 1000);
                 }),
             ]);
 
@@ -418,6 +461,31 @@ class ResetApiImpl implements ResetApi {
             return failedToReset({ type: "infra-error", err });
         }
     }
+}
+
+async function delayed<T>(promise: Promise<T>, time: DelayTime, handler: DelayedHandler): Promise<T> {
+    const DELAYED_MARKER = { DELAYED: true }
+    const delayed = new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(DELAYED_MARKER);
+        }, time.milli_second);
+    });
+
+    const winner = await Promise.race([promise, delayed]);
+    if (winner === DELAYED_MARKER) {
+        handler();
+    }
+
+    return await promise;
+}
+
+type DelayTime = { milli_second: number }
+function delaySecond(second: number): DelayTime {
+    return { milli_second: second * 1000 }
+}
+
+interface DelayedHandler {
+    (): void
 }
 
 function assertNever(_: never): never {
