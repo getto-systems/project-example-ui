@@ -2,6 +2,7 @@ import { VNode } from "preact";
 import { useState } from "preact/hooks";
 import { html } from "htm/preact";
 
+import { LoginView } from "./login_view";
 import { LoginIDForm } from "./form/login_id";
 import { PasswordForm } from "./form/password";
 
@@ -21,16 +22,16 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
 
         switch (state.type) {
             case "initial-login":
-                return loginForm(initialLoginForm(component));
+                return LoginView(initialLoginForm(component));
 
             case "failed-to-login":
-                return loginForm(failedToLoginForm(component, state.content, state.err));
+                return LoginView(failedToLoginForm(component, state.content, state.err));
 
             case "try-to-login":
-                return loginForm(tryToLoginForm());
+                return LoginView(tryToLoginForm());
 
             case "delayed-to-login":
-                return loginForm(delayedToLoginForm());
+                return LoginView(delayedToLoginForm());
 
             case "try-to-store":
                 // TODO これはなくなるはず
@@ -41,22 +42,6 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
                 return html`ログインできませんでした: ${state.err}`
         }
     }
-}
-
-// TODO password reset でも同じものを使うので共有したい
-function loginForm(content: VNode): VNode {
-    return html`
-        <aside class="login">
-            <section class="login__box">
-                <header class="login__header">
-                    <cite class="login__brand">GETTO</cite>
-                    <strong class="login__title">Example</strong>
-                    <cite class="login__subTitle">code templates</cite>
-                </header>
-                ${content}
-            </section>
-        </aside>
-    `
 }
 
 function initialLoginForm(component: PasswordLoginComponent): VNode {
