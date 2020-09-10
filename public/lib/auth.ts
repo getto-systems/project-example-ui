@@ -4,6 +4,7 @@ import { RenewComponent, initRenew } from "./auth/renew";
 import { LoadApplicationComponent, initLoadApplication } from "./auth/load_application";
 
 import { PasswordLoginComponent, initPasswordLogin } from "./auth/password_login";
+import { PasswordResetSessionComponent, initPasswordResetSession } from "./auth/password_reset_session";
 
 export interface AuthUsecase {
     initialState(): AuthState
@@ -14,6 +15,7 @@ export type AuthState =
     Readonly<{ type: "renew", component: RenewComponent }> |
     Readonly<{ type: "load-application", component: LoadApplicationComponent }> |
     Readonly<{ type: "password-login", component: PasswordLoginComponent }> |
+    Readonly<{ type: "password-reset-session", component: PasswordResetSessionComponent }> |
     Readonly<{ type: "error", err: AuthError }>
 
 export interface AuthEventHandler {
@@ -60,17 +62,14 @@ class UsecaseEvent implements AuthEvent {
     }
 
     tryToLogin(): void {
-        // TODO Reset とスイッチするように
-        this.stateChanged({ type: "password-login", component: initPasswordLogin(this.action, this) });
-
         // ログイン前画面ではアンダースコアで始まる query string を使用する
-        /*
-        if (url.searchParams.get("_password_reset")) {
-            this.stateChanged(auth_PasswordReset);
-        } else {
-            this.stateChanged(auth_PasswordLogin);
+        if (this.url.searchParams.get("_password_reset_session")) {
+            this.stateChanged({ type: "password-reset-session", component: initPasswordResetSession(this.action) });
+            return;
         }
-         */
+
+        // 特に指定が無ければパスワードログイン
+        this.stateChanged({ type: "password-login", component: initPasswordLogin(this.action, this) });
     }
     failedToAuth(err: AuthError): void {
         this.stateChanged({ type: "error", err });
