@@ -1,9 +1,11 @@
 import { LoginIDRecord } from "../auth_credential/action";
 import { PasswordRecord } from "../password/action";
 
-import { LoginIDBoard } from "../auth_credential/data";
-import { PasswordBoard } from "../password/data";
+import { LoginID, LoginIDBoard, AuthCredential } from "../auth_credential/data";
+import { Password, PasswordBoard } from "../password/data";
 import {
+    InputContent,
+    ResetError,
     Session,
     ResetToken, ResetTokenBoard, ValidResetToken,
     CreateSessionBoard, CreateSessionContent, CreateSessionState,
@@ -11,6 +13,7 @@ import {
     ResetBoard, ResetContent, ResetState,
     ValidContent,
 } from "./data";
+import { Content } from "../input/data";
 
 export interface PasswordResetAction {
     initResetTokenRecord(): ResetTokenRecord
@@ -22,6 +25,18 @@ export interface PasswordResetAction {
 
     initResetStore(resetToken: ResetTokenRecord, loginID: LoginIDRecord, password: PasswordRecord): ResetStore
     initResetApi(): ResetApi
+
+    reset(event: ResetEvent, resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<ResetResult>
+}
+
+export type ResetResult =
+    Readonly<{ success: false }> |
+    Readonly<{ success: true, authCredential: AuthCredential }>
+
+export interface ResetEvent {
+    tryToReset(): void
+    delayedToReset(): void
+    failedToReset(content: InputContent, err: ResetError): void
 }
 
 export interface PasswordResetTransition {

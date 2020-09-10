@@ -87,9 +87,9 @@ export function initPasswordReset(action: LoadAction, url: Readonly<URL>, transi
 
     function initialState(): PasswordResetState {
         // ログイン前の画面ではアンダースコアから始まるクエリを使用する
-        const token = url.searchParams.get("_password_reset_token");
-        if (token) {
-            return reset.initialState({ token });
+        const resetToken = url.searchParams.get("_password_reset_token");
+        if (resetToken) {
+            return reset.initialState({ resetToken });
         }
 
         return createSession.currentState();

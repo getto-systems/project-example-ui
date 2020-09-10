@@ -5,6 +5,7 @@ import { LoadApplicationComponent, initLoadApplication } from "./auth/load_appli
 
 import { PasswordLoginComponent, initPasswordLogin } from "./auth/password_login";
 import { PasswordResetSessionComponent, initPasswordResetSession } from "./auth/password_reset_session";
+import { PasswordResetComponent, initPasswordReset } from "./auth/password_reset";
 
 export interface AuthUsecase {
     initialState(): AuthState
@@ -16,6 +17,7 @@ export type AuthState =
     Readonly<{ type: "load-application", component: LoadApplicationComponent }> |
     Readonly<{ type: "password-login", component: PasswordLoginComponent }> |
     Readonly<{ type: "password-reset-session", component: PasswordResetSessionComponent }> |
+    Readonly<{ type: "password-reset", component: PasswordResetComponent }> |
     Readonly<{ type: "error", err: AuthError }>
 
 export interface AuthEventHandler {
@@ -65,6 +67,12 @@ class UsecaseEvent implements AuthEvent {
         // ログイン前画面ではアンダースコアで始まる query string を使用する
         if (this.url.searchParams.get("_password_reset_session")) {
             this.stateChanged({ type: "password-reset-session", component: initPasswordResetSession(this.action) });
+            return;
+        }
+
+        const resetToken = this.url.searchParams.get("_password_reset_token");
+        if (resetToken) {
+            this.stateChanged({ type: "password-reset", component: initPasswordReset(this.action, this, { resetToken }) });
             return;
         }
 

@@ -3,7 +3,7 @@ import { ScriptAction } from "../ability/script/action";
 import { PasswordAction } from "../ability/password/action";
 import { PasswordLoginAction } from "../ability/password_login/action";
 import { PasswordResetSessionAction } from "../ability/password_reset_session/action";
-//import { PasswordResetAction } from "../ability/password_reset/action";
+import { PasswordResetAction } from "../ability/password_reset/action";
 
 export type AuthAction = {
     authCredential: AuthCredentialAction,
@@ -12,9 +12,7 @@ export type AuthAction = {
 
     passwordLogin: PasswordLoginAction,
     passwordResetSession: PasswordResetSessionAction,
-    /*
     passwordReset: PasswordResetAction,
-     */
 }
 
 export interface AuthEvent {

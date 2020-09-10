@@ -1,8 +1,14 @@
 import { LoginID, LoginIDBoard, AuthCredential } from "../auth_credential/data";
 import { Password, PasswordBoard } from "../password/data";
+import { InputValue } from "../input/data";
+
+export type InputContent = Readonly<{
+    loginID: InputValue,
+    password: InputValue,
+}>
 
 export type Session = Readonly<{ sessionID: Readonly<string> }>
-export type ResetToken = Readonly<{ token: Readonly<string> }>
+export type ResetToken = Readonly<{ resetToken: Readonly<string> }>
 
 export type ResetTokenBoard =
     Readonly<{ err: Array<ResetTokenValidationError> }>
@@ -105,6 +111,7 @@ export type PollingStatusError =
     Readonly<{ type: "infra-error", err: string }>
 
 export type ResetError =
+    Readonly<{ type: "validation-error" }> |
     Readonly<{ type: "bad-request" }> |
     Readonly<{ type: "invalid-password-reset" }> |
     Readonly<{ type: "server-error" }> |
