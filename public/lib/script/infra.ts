@@ -1,4 +1,4 @@
-import { Pathname } from "./data";
+import { Pathname, PathnameError } from "./data";
 
 export type Infra = {
     env: ScriptEnv,
@@ -10,9 +10,9 @@ export type ScriptEnv = Readonly<{
 }>
 
 export interface PathnameLocation {
-    pathname(): Promise<PathnameFound>;
+    pathname(): PathnameResponse
 }
 
-export type PathnameFound =
-    Readonly<{ found: false, err: string }> |
-    Readonly<{ found: true, pathname: Pathname }>
+export type PathnameResponse =
+    Readonly<{ success: false, err: PathnameError }> |
+    Readonly<{ success: true, pathname: Pathname }>
