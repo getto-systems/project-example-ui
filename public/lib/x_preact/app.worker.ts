@@ -1,5 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const ctx: Worker = self as any
+// TODO あとで削除
+
+const ctx: Worker = self as any // eslint-disable-line @typescript-eslint/no-explicit-any
 
 ctx.postMessage({ foo: "bar" })
 

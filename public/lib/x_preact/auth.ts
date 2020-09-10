@@ -10,6 +10,16 @@ import { LoadApplication } from "./auth/load_application"
 
 import { PasswordLogin } from "./auth/password_login"
 
+// TODO あとで削除
+import Worker from "worker-loader!./app.worker"
+
+const worker = new Worker()
+
+worker.postMessage({ a: 1 })
+worker.addEventListener("message", (event) => {
+    console.log(event)
+})
+
 render(h(main(init(location, localStorage)), {}), document.body)
 
 function main(usecase: AuthUsecase) {
