@@ -19,13 +19,13 @@ function main(auth: AuthUsecase) {
 
         switch (state.type) {
             case "renew":
-                return h(Renew(auth.initRenew()), {});
+                return h(Renew(state.component), {});
 
             case "load-application":
-                return h(LoadApplication(auth.initLoadApplication()), {});
+                return h(LoadApplication(state.component), {});
 
             case "password-login":
-                return h(PasswordLogin(auth.initPasswordLogin()), {});
+                return h(PasswordLogin(state.component), {});
 
             /*
             case "password-reset":

@@ -8,17 +8,12 @@ import { PasswordLoginComponent, initPasswordLogin } from "./auth/password_login
 export interface AuthUsecase {
     initialState(): AuthState
     onStateChange(stateChanged: AuthEventHandler): void
-
-    initRenew(): RenewComponent
-    initLoadApplication(): LoadApplicationComponent
-
-    initPasswordLogin(): PasswordLoginComponent
 }
 
 export type AuthState =
-    Readonly<{ type: "renew" }> |
-    Readonly<{ type: "load-application" }> |
-    Readonly<{ type: "password-login" }> |
+    Readonly<{ type: "renew", component: RenewComponent }> |
+    Readonly<{ type: "load-application", component: LoadApplicationComponent }> |
+    Readonly<{ type: "password-login", component: PasswordLoginComponent }> |
     Readonly<{ type: "error", err: AuthError }>
 
 export interface AuthEventHandler {
@@ -42,40 +37,31 @@ class Usecase implements AuthUsecase {
     }
 
     initialState(): AuthState {
-        return { type: "renew" };
+        return { type: "renew", component: initRenew(this.action, this.event()) }
     }
 
     onStateChange(stateChanged: AuthEventHandler): void {
-        this.eventHolder = { hasEvent: true, event: new UsecaseEvent(this.url, stateChanged) }
+        this.eventHolder = { hasEvent: true, event: new UsecaseEvent(stateChanged, this.url, this.action) }
     }
     event(): AuthEvent {
         return unwrap(this.eventHolder);
     }
-
-    initRenew(): RenewComponent {
-        return initRenew(this.action, this.event());
-    }
-    initLoadApplication(): LoadApplicationComponent {
-        return initLoadApplication(this.action, this.event());
-    }
-
-    initPasswordLogin(): PasswordLoginComponent {
-        return initPasswordLogin(this.action, this.event());
-    }
 }
 
 class UsecaseEvent implements AuthEvent {
-    url: Readonly<URL>
     stateChanged: AuthEventHandler
+    url: Readonly<URL>
+    action: AuthAction
 
-    constructor(url: Readonly<URL>, stateChanged: AuthEventHandler) {
-        this.url = url;
+    constructor(stateChanged: AuthEventHandler, url: Readonly<URL>, action: AuthAction) {
         this.stateChanged = stateChanged;
+        this.url = url;
+        this.action = action;
     }
 
     tryToLogin(): void {
         // TODO Reset とスイッチするように
-        this.stateChanged({ type: "password-login" });
+        this.stateChanged({ type: "password-login", component: initPasswordLogin(this.action, this) });
 
         // ログイン前画面ではアンダースコアで始まる query string を使用する
         /*
@@ -90,7 +76,7 @@ class UsecaseEvent implements AuthEvent {
         this.stateChanged({ type: "error", err });
     }
     succeedToAuth(): void {
-        this.stateChanged({ type: "load-application" });
+        this.stateChanged({ type: "load-application", component: initLoadApplication(this.action, this) });
     }
 }
 
