@@ -1,13 +1,13 @@
-import { AuthAction, AuthEvent, AuthError } from "./auth/action";
+import { AuthAction, AuthEvent, AuthError } from "./auth/action"
 
-import { RenewComponent, initRenew } from "./auth/renew";
-import { LoadApplicationComponent, initLoadApplication } from "./auth/load_application";
+import { RenewComponent, initRenew } from "./auth/renew"
+import { LoadApplicationComponent, initLoadApplication } from "./auth/load_application"
 
-import { PasswordLoginComponent, initPasswordLogin } from "./auth/password_login";
-import { PasswordResetSessionComponent, initPasswordResetSession } from "./auth/password_reset_session";
-import { PasswordResetComponent, initPasswordReset } from "./auth/password_reset";
+import { PasswordLoginComponent, initPasswordLogin } from "./auth/password_login"
+import { PasswordResetSessionComponent, initPasswordResetSession } from "./auth/password_reset_session"
+import { PasswordResetComponent, initPasswordReset } from "./auth/password_reset"
 
-import { ResetToken } from "./password_reset/data";
+import { ResetToken } from "./password_reset/data"
 
 export interface AuthUsecase {
     initialState(): AuthState
@@ -34,7 +34,7 @@ export interface AuthEventHandler {
 }
 
 export function initAuthUsecase(url: Readonly<URL>, action: AuthAction): AuthUsecase {
-    return new Usecase(url, action);
+    return new Usecase(url, action)
 }
 
 class Usecase implements AuthUsecase {
@@ -44,8 +44,8 @@ class Usecase implements AuthUsecase {
     eventHolder: EventHolder<UsecaseEvent>
 
     constructor(url: Readonly<URL>, action: AuthAction) {
-        this.url = url;
-        this.action = action;
+        this.url = url
+        this.action = action
         this.eventHolder = { hasEvent: false }
     }
 
@@ -57,24 +57,24 @@ class Usecase implements AuthUsecase {
         this.eventHolder = { hasEvent: true, event: new UsecaseEvent(stateChanged, this.url) }
     }
     event(): AuthEvent {
-        return unwrap(this.eventHolder);
+        return unwrap(this.eventHolder)
     }
 
     initRenew(): RenewComponent {
-        return initRenew(this.action, this.event());
+        return initRenew(this.action, this.event())
     }
     initLoadApplication(): LoadApplicationComponent {
-        return initLoadApplication(this.action, this.event());
+        return initLoadApplication(this.action, this.event())
     }
 
     initPasswordLogin(): PasswordLoginComponent {
-        return initPasswordLogin(this.action, this.event());
+        return initPasswordLogin(this.action, this.event())
     }
     initPasswordResetSession(): PasswordResetSessionComponent {
-        return initPasswordResetSession(this.action);
+        return initPasswordResetSession(this.action)
     }
     initPasswordReset(resetToken: ResetToken): PasswordResetComponent {
-        return initPasswordReset(this.action, this.event(), resetToken);
+        return initPasswordReset(this.action, this.event(), resetToken)
     }
 }
 
@@ -83,31 +83,31 @@ class UsecaseEvent implements AuthEvent {
     url: Readonly<URL>
 
     constructor(stateChanged: AuthEventHandler, url: Readonly<URL>) {
-        this.stateChanged = stateChanged;
-        this.url = url;
+        this.stateChanged = stateChanged
+        this.url = url
     }
 
     tryToLogin(): void {
         // ログイン前画面ではアンダースコアで始まる query string を使用する
         if (this.url.searchParams.get("_password_reset_session")) {
-            this.stateChanged({ type: "password-reset-session" });
-            return;
+            this.stateChanged({ type: "password-reset-session" })
+            return
         }
 
-        const resetToken = this.url.searchParams.get("_password_reset_token");
+        const resetToken = this.url.searchParams.get("_password_reset_token")
         if (resetToken) {
-            this.stateChanged({ type: "password-reset", resetToken: { resetToken } });
-            return;
+            this.stateChanged({ type: "password-reset", resetToken: { resetToken } })
+            return
         }
 
         // 特に指定が無ければパスワードログイン
-        this.stateChanged({ type: "password-login" });
+        this.stateChanged({ type: "password-login" })
     }
     failedToAuth(err: AuthError): void {
-        this.stateChanged({ type: "error", err });
+        this.stateChanged({ type: "error", err })
     }
     succeedToAuth(): void {
-        this.stateChanged({ type: "load-application" });
+        this.stateChanged({ type: "load-application" })
     }
 }
 
@@ -116,7 +116,7 @@ type EventHolder<T> =
     Readonly<{ hasEvent: true, event: T }>
 function unwrap<T>(holder: EventHolder<T>): T {
     if (!holder.hasEvent) {
-        throw new Error("event is not initialized");
+        throw new Error("event is not initialized")
     }
-    return holder.event;
+    return holder.event
 }

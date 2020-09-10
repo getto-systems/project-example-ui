@@ -1,37 +1,37 @@
-import { VNode } from "preact";
-import { useState } from "preact/hooks";
-import { html } from "htm/preact";
+import { VNode } from "preact"
+import { useState } from "preact/hooks"
+import { html } from "htm/preact"
 
-import { LoginView } from "./login_view";
-import { LoginIDForm } from "./form/login_id";
-import { PasswordForm } from "./form/password";
+import { LoginView } from "./login_view"
+import { LoginIDForm } from "./form/login_id"
+import { PasswordForm } from "./form/password"
 
-import { PasswordLoginComponent } from "../../auth/password_login";
+import { PasswordLoginComponent } from "../../auth/password_login"
 
-import { InputContent, LoginError } from "../../password_login/data";
-import { hasValue, noValue } from "../../input/data";
+import { InputContent, LoginError } from "../../password_login/data"
+import { hasValue, noValue } from "../../input/data"
 
 interface PreactComponent {
-    (): VNode;
+    (): VNode
 }
 
 export function PasswordLogin(component: PasswordLoginComponent): PreactComponent {
     return () => {
-        const [state, setState] = useState(component.initialState());
-        component.onStateChange(setState);
+        const [state, setState] = useState(component.initialState())
+        component.onStateChange(setState)
 
         switch (state.type) {
             case "initial-login":
-                return LoginView(initialLoginForm(component));
+                return LoginView(initialLoginForm(component))
 
             case "failed-to-login":
-                return LoginView(failedToLoginForm(component, state.content, state.err));
+                return LoginView(failedToLoginForm(component, state.content, state.err))
 
             case "try-to-login":
-                return LoginView(tryToLoginForm());
+                return LoginView(tryToLoginForm())
 
             case "delayed-to-login":
-                return LoginView(delayedToLoginForm());
+                return LoginView(delayedToLoginForm())
 
             case "failed-to-store":
                 // TODO エラー画面を用意
@@ -41,7 +41,7 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
 }
 
 function initialLoginForm(component: PasswordLoginComponent): VNode {
-    const [loginID, password] = component.fields();
+    const [loginID, password] = component.fields()
 
     return html`
         <form onSubmit="${onSubmit}">
@@ -65,12 +65,12 @@ function initialLoginForm(component: PasswordLoginComponent): VNode {
     `
 
     function onSubmit(e: Event) {
-        loginFormSubmit(e);
-        component.login();
+        loginFormSubmit(e)
+        component.login()
     }
 }
 function failedToLoginForm(component: PasswordLoginComponent, content: InputContent, err: LoginError): VNode {
-    const [loginID, password] = component.fields();
+    const [loginID, password] = component.fields()
 
     return html`
         <form onSubmit="${onSubmit}">
@@ -96,8 +96,8 @@ function failedToLoginForm(component: PasswordLoginComponent, content: InputCont
     `
 
     function onSubmit(e: Event) {
-        loginFormSubmit(e);
-        component.login();
+        loginFormSubmit(e)
+        component.login()
     }
 
     function error(): VNode {
@@ -112,22 +112,22 @@ function failedToLoginForm(component: PasswordLoginComponent, content: InputCont
         function message(): VNode {
             switch (err.type) {
                 case "validation-error":
-                    return html`<p class="form__message">正しく入力してください</p>`;
+                    return html`<p class="form__message">正しく入力してください</p>`
 
                 case "bad-request":
-                    return html`<p class="form__message">アプリケーションエラーにより認証に失敗しました</p>`;
+                    return html`<p class="form__message">アプリケーションエラーにより認証に失敗しました</p>`
 
                 case "invalid-password-login":
-                    return html`<p class="form__message">ログインIDかパスワードが違います</p>`;
+                    return html`<p class="form__message">ログインIDかパスワードが違います</p>`
 
                 case "server-error":
-                    return html`<p class="form__message">サーバーエラーにより認証に失敗しました</p>`;
+                    return html`<p class="form__message">サーバーエラーにより認証に失敗しました</p>`
 
                 case "bad-response":
-                    return html`<p class="form__message">レスポンスエラーにより認証に失敗しました</p>`;
+                    return html`<p class="form__message">レスポンスエラーにより認証に失敗しました</p>`
 
                 case "infra-error":
-                    return html`<p class="form__message">ネットワークエラーにより認証に失敗しました</p>`;
+                    return html`<p class="form__message">ネットワークエラーにより認証に失敗しました</p>`
             }
         }
     }
@@ -139,17 +139,17 @@ function loginButton(): VNode {
     return html`<button id="login-submit" class="button button_save">ログイン</button>`
 }
 function loginFormSubmit(e: Event): void {
-    e.preventDefault();
+    e.preventDefault()
 
     // submitter を blur する
-    blurLoginButton();
+    blurLoginButton()
 }
 function blurLoginButton(): void {
     // submitter を blur する
     // SubmitEvent が使えないので直接 getElementById している
-    const button = document.getElementById("login-submit");
+    const button = document.getElementById("login-submit")
     if (button) {
-        button.blur();
+        button.blur()
     }
 }
 

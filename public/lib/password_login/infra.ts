@@ -1,5 +1,5 @@
-import { LoginID, AuthCredential } from "../auth_credential/data";
-import { Password } from "../password/data";
+import { LoginID, AuthCredential } from "../auth_credential/data"
+import { Password } from "../password/data"
 
 export type Infra = Readonly<{
     config: Config,

@@ -1,7 +1,7 @@
-import { AuthCredential, LoginID } from "../auth_credential/data";
-import { Password } from "../password/data";
-import { InputContent, LoginError } from "./data";
-import { Content } from "../input/data";
+import { AuthCredential, LoginID } from "../auth_credential/data"
+import { Password } from "../password/data"
+import { InputContent, LoginError } from "./data"
+import { Content } from "../input/data"
 
 export interface PasswordLoginAction {
     login(event: LoginEvent, content: [Content<LoginID>, Content<Password>]): Promise<LoginResult>

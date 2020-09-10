@@ -1,4 +1,4 @@
-import { InputValue } from "../input/data";
+import { InputValue } from "../input/data"
 
 export type InputContent = Readonly<{
     loginID: InputValue,

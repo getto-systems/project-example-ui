@@ -1,9 +1,9 @@
-import { AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra";
+import { AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra"
 
-import { AuthCredential, TicketNonce, ApiCredential } from "../../../data";
+import { AuthCredential, TicketNonce, ApiCredential } from "../../../data"
 
 export function initMemoryAuthCredentialRepository(initialNonce: TicketNonce): AuthCredentialRepository {
-    return new MemoryAuthCredentialRepository(initialNonce);
+    return new MemoryAuthCredentialRepository(initialNonce)
 }
 
 class MemoryAuthCredentialRepository implements AuthCredentialRepository {
@@ -19,11 +19,11 @@ class MemoryAuthCredentialRepository implements AuthCredentialRepository {
     }
 
     findTicketNonce(): FindResponse<TicketNonce> {
-        return { success: true, found: true, content: this.data.ticketNonce };
+        return { success: true, found: true, content: this.data.ticketNonce }
     }
     storeAuthCredential(authCredential: AuthCredential): StoreResponse {
-        this.data.ticketNonce = authCredential.ticketNonce;
-        this.data.apiCredential = authCredential.apiCredential;
+        this.data.ticketNonce = authCredential.ticketNonce
+        this.data.apiCredential = authCredential.apiCredential
         return { success: true }
     }
 }

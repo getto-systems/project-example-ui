@@ -1,4 +1,4 @@
-import { AuthCredential, TicketNonce, StoreError, RenewError } from "./data";
+import { AuthCredential, TicketNonce, StoreError, RenewError } from "./data"
 
 export type Infra = Readonly<{
     config: Config,

@@ -1,37 +1,37 @@
-import { Infra } from "./infra";
+import { Infra } from "./infra"
 
-import { ResetEvent, ResetResult, PasswordResetAction } from "./action";
+import { ResetEvent, ResetResult, PasswordResetAction } from "./action"
 
-import { LoginID } from "../auth_credential/data";
-import { Password } from "../password/data";
-import { InputContent, ResetToken } from "./data";
-import { Content } from "../input/data";
+import { LoginID } from "../auth_credential/data"
+import { Password } from "../password/data"
+import { InputContent, ResetToken } from "./data"
+import { Content } from "../input/data"
 
 export function initPasswordResetAction(infra: Infra): PasswordResetAction {
-    return new PasswordResetActionImpl(infra);
+    return new PasswordResetActionImpl(infra)
 }
 
 class PasswordResetActionImpl implements PasswordResetAction {
     infra: Infra
 
     constructor(infra: Infra) {
-        this.infra = infra;
+        this.infra = infra
     }
 
     async reset(event: ResetEvent, resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<ResetResult> {
-        const content = mapContent(...fields);
+        const content = mapContent(...fields)
         if (!content.valid) {
-            event.failedToReset(mapInput(...fields), { type: "validation-error" });
+            event.failedToReset(mapInput(...fields), { type: "validation-error" })
             return { success: false }
         }
 
-        event.tryToReset();
+        event.tryToReset()
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const promise = this.infra.passwordResetClient.reset(resetToken, ...content.content);
-        const response = await delayed(promise, this.infra.config.passwordResetDelayTime, event.delayedToReset);
+        const promise = this.infra.passwordResetClient.reset(resetToken, ...content.content)
+        const response = await delayed(promise, this.infra.config.passwordResetDelayTime, event.delayedToReset)
         if (!response.success) {
-            event.failedToReset(mapInput(...fields), response.err);
+            event.failedToReset(mapInput(...fields), response.err)
             return { success: false }
         }
 
@@ -63,16 +63,16 @@ async function delayed<T>(promise: Promise<T>, time: DelayTime, handler: Delayed
     const DELAYED_MARKER = { DELAYED: true }
     const delayed = new Promise((resolve) => {
         setTimeout(() => {
-            resolve(DELAYED_MARKER);
-        }, time.delay_milli_second);
-    });
+            resolve(DELAYED_MARKER)
+        }, time.delay_milli_second)
+    })
 
-    const winner = await Promise.race([promise, delayed]);
+    const winner = await Promise.race([promise, delayed])
     if (winner === DELAYED_MARKER) {
-        handler();
+        handler()
     }
 
-    return await promise;
+    return await promise
 }
 
 type DelayTime = { delay_milli_second: number }

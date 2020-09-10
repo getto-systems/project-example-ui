@@ -1,5 +1,5 @@
-import { Password, PasswordCharacter, PasswordView, PasswordError } from "./data";
-import { InputValue, Content, Valid } from "../input/data";
+import { Password, PasswordCharacter, PasswordView, PasswordError } from "./data"
+import { InputValue, Content, Valid } from "../input/data"
 
 export interface PasswordAction {
     initPasswordField(): PasswordField

@@ -1,4 +1,4 @@
-import { InputValue } from "../input/data";
+import { InputValue } from "../input/data"
 
 export type Password = Readonly<{ password: Readonly<string> }>
 
@@ -17,4 +17,4 @@ export function showPassword(password: InputValue): PasswordView {
     return { show: true, password }
 }
 
-export type PasswordError = "empty" | "too-long";
+export type PasswordError = "empty" | "too-long"

@@ -1,5 +1,5 @@
 export type LoginID = Readonly<{ loginID: Readonly<string> }>
-export type LoginIDError = "empty";
+export type LoginIDError = "empty"
 
 export type AuthCredential = Readonly<{
     ticketNonce: TicketNonce,

@@ -19,6 +19,10 @@ module.exports = {
           extensions: [".ts"],
         },
       },
+      {
+        test: /\.worker\.js$/,
+        loader: "worker-loader",
+      },
     ],
   },
   devServer: {

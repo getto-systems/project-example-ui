@@ -1,5 +1,5 @@
-import { LoginID, LoginIDError, AuthCredential, RenewError, StoreError } from "./data";
-import { InputValue, Content, Valid } from "../input/data";
+import { LoginID, LoginIDError, AuthCredential, RenewError, StoreError } from "./data"
+import { InputValue, Content, Valid } from "../input/data"
 
 export interface AuthCredentialAction {
     initLoginIDField(): LoginIDField

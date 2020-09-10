@@ -1,4 +1,4 @@
-import { Pathname, PathnameError } from "./data";
+import { Pathname, PathnameError } from "./data"
 
 export type Infra = Readonly<{
     env: ScriptEnv,

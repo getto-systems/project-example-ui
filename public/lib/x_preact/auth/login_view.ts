@@ -1,5 +1,5 @@
-import { VNode } from "preact";
-import { html } from "htm/preact";
+import { VNode } from "preact"
+import { html } from "htm/preact"
 
 export function LoginView(content: VNode): VNode {
     return html`

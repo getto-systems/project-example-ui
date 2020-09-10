@@ -1,10 +1,10 @@
-import { LoginID } from "../auth_credential/data";
+import { LoginID } from "../auth_credential/data"
 import {
     InputContent,
     Session, SessionError,
     PollingStatus, DoneStatus, PollingStatusError,
-} from "./data";
-import { Content } from "../input/data";
+} from "./data"
+import { Content } from "../input/data"
 
 export interface PasswordResetSessionAction {
     // TODO createSession を startSession にしたい

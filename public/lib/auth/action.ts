@@ -1,9 +1,9 @@
-import { AuthCredentialAction } from "../auth_credential/action";
-import { ScriptAction } from "../script/action";
-import { PasswordAction } from "../password/action";
-import { PasswordLoginAction } from "../password_login/action";
-import { PasswordResetSessionAction } from "../password_reset_session/action";
-import { PasswordResetAction } from "../password_reset/action";
+import { AuthCredentialAction } from "../auth_credential/action"
+import { ScriptAction } from "../script/action"
+import { PasswordAction } from "../password/action"
+import { PasswordLoginAction } from "../password_login/action"
+import { PasswordResetSessionAction } from "../password_reset_session/action"
+import { PasswordResetAction } from "../password_reset/action"
 
 export type AuthAction = {
     authCredential: AuthCredentialAction,

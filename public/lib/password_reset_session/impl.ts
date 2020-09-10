@@ -1,40 +1,40 @@
-import { Infra, Config, PasswordResetSessionClient } from "./infra";
+import { Infra, Config, PasswordResetSessionClient } from "./infra"
 
 import {
     PasswordResetSessionAction,
     SessionEvent, SessionResult,
     PollingStatusEvent,
-} from "./action";
+} from "./action"
 
-import { LoginID } from "../auth_credential/data";
-import { InputContent, Session, PollingStatusError } from "./data";
-import { Content } from "../input/data";
+import { LoginID } from "../auth_credential/data"
+import { InputContent, Session, PollingStatusError } from "./data"
+import { Content } from "../input/data"
 
 export function initPasswordResetSessionAction(infra: Infra): PasswordResetSessionAction {
-    return new PasswordResetSessionActionImpl(infra);
+    return new PasswordResetSessionActionImpl(infra)
 }
 
 class PasswordResetSessionActionImpl implements PasswordResetSessionAction {
     infra: Infra
 
     constructor(infra: Infra) {
-        this.infra = infra;
+        this.infra = infra
     }
 
     async createSession(event: SessionEvent, fields: [Content<LoginID>]): Promise<SessionResult> {
-        const content = mapContent(...fields);
+        const content = mapContent(...fields)
         if (!content.valid) {
-            event.failedToCreateSession(mapInput(...fields), { type: "validation-error" });
+            event.failedToCreateSession(mapInput(...fields), { type: "validation-error" })
             return { success: false }
         }
 
-        event.tryToCreateSession();
+        event.tryToCreateSession()
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const promise = this.infra.passwordResetSessionClient.createSession(...content.content);
-        const response = await delayed(promise, this.infra.config.passwordResetCreateSessionDelayTime, event.delayedToCreateSession);
+        const promise = this.infra.passwordResetSessionClient.createSession(...content.content)
+        const response = await delayed(promise, this.infra.config.passwordResetCreateSessionDelayTime, event.delayedToCreateSession)
         if (!response.success) {
-            event.failedToCreateSession(mapInput(...fields), response.err);
+            event.failedToCreateSession(mapInput(...fields), response.err)
             return { success: false }
         }
 
@@ -58,7 +58,7 @@ class PasswordResetSessionActionImpl implements PasswordResetSessionAction {
     }
 
     async startPollingStatus(event: PollingStatusEvent, session: Session): Promise<void> {
-        new PollingStatus(this.infra.config, this.infra.passwordResetSessionClient).startPolling(event, session);
+        new PollingStatus(this.infra.config, this.infra.passwordResetSessionClient).startPolling(event, session)
     }
 }
 
@@ -74,51 +74,51 @@ class PollingStatus {
     sendTokenState: SendTokenState
 
     constructor(config: Config, client: PasswordResetSessionClient) {
-        this.config = config;
-        this.client = client;
+        this.config = config
+        this.client = client
 
         this.sendTokenState = { type: "initial" }
     }
 
     async startPolling(event: PollingStatusEvent, session: Session): Promise<void> {
-        event.tryToPollingStatus();
+        event.tryToPollingStatus()
 
-        this.sendToken();
+        this.sendToken()
 
-        let count = 0;
+        let count = 0
 
         while (count < this.config.passwordResetPollingLimit.limit) {
-            count += 1;
+            count += 1
 
             if (this.sendTokenState.type === "failed") {
-                event.failedToPollingStatus(this.sendTokenState.err);
-                return;
+                event.failedToPollingStatus(this.sendTokenState.err)
+                return
             }
 
-            const response = await this.client.getStatus(session);
+            const response = await this.client.getStatus(session)
             if (!response.success) {
-                event.failedToPollingStatus(response.err);
-                return;
+                event.failedToPollingStatus(response.err)
+                return
             }
 
             if (response.done) {
-                event.succeedToSendToken(response.status);
-                return;
+                event.succeedToSendToken(response.status)
+                return
             }
 
-            event.retryToPollingStatus(response.status);
+            event.retryToPollingStatus(response.status)
 
-            await this.wait(this.config.passwordResetPollingWaitTime);
+            await this.wait(this.config.passwordResetPollingWaitTime)
         }
 
-        event.failedToPollingStatus({ type: "infra-error", err: "overflow polling limit" });
+        event.failedToPollingStatus({ type: "infra-error", err: "overflow polling limit" })
     }
 
     async sendToken(): Promise<void> {
-        const response = await this.client.sendToken();
+        const response = await this.client.sendToken()
         if (!response.success) {
             this.sendTokenState = { type: "failed", err: response.err }
-            return;
+            return
         }
         this.sendTokenState = { type: "success" }
     }
@@ -126,9 +126,9 @@ class PollingStatus {
     wait(time: WaitTime): Promise<void> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                resolve();
-            }, time.wait_milli_second);
-        });
+                resolve()
+            }, time.wait_milli_second)
+        })
     }
 }
 
@@ -136,16 +136,16 @@ async function delayed<T>(promise: Promise<T>, time: DelayTime, handler: Delayed
     const DELAYED_MARKER = { DELAYED: true }
     const delayed = new Promise((resolve) => {
         setTimeout(() => {
-            resolve(DELAYED_MARKER);
-        }, time.delay_milli_second);
-    });
+            resolve(DELAYED_MARKER)
+        }, time.delay_milli_second)
+    })
 
-    const winner = await Promise.race([promise, delayed]);
+    const winner = await Promise.race([promise, delayed])
     if (winner === DELAYED_MARKER) {
-        handler();
+        handler()
     }
 
-    return await promise;
+    return await promise
 }
 
 type DelayTime = { delay_milli_second: number }
