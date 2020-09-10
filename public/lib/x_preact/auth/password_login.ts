@@ -24,16 +24,16 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
 
         switch (state.type) {
             case "initial-login":
-                return initialLogin(component);
+                return loginForm(initialLoginForm(component));
 
             case "failed-to-login":
-                return failedToLogin(component, state.content, state.err);
+                return loginForm(failedToLoginForm(component, state.content, state.err));
 
             case "try-to-login":
-                return tryToLogin();
+                return loginForm(tryToLoginForm());
 
             case "delayed-to-login":
-                return delayedToLogin();
+                return loginForm(delayedToLoginForm());
 
             case "try-to-store":
                 // TODO これはなくなるはず
@@ -46,42 +46,12 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
     }
 }
 
-function initialLogin(component: PasswordLoginComponent): VNode {
+function loginForm(content: VNode): VNode {
     return html`
         <aside class="login">
             <section class="login__box">
                 ${loginHeader()}
-                ${initialLoginForm(component)}
-            </section>
-        </aside>
-    `
-}
-function failedToLogin(component: PasswordLoginComponent, content: InputContent, err: LoginError): VNode {
-    return html`
-        <aside class="login">
-            <section class="login__box">
-                ${loginHeader()}
-                ${failedToLoginForm(component, content, err)}
-            </section>
-        </aside>
-    `
-}
-function tryToLogin(): VNode {
-    return html`
-        <aside class="login">
-            <section class="login__box">
-                ${loginHeader()}
-                ${tryToLoginForm()}
-            </section>
-        </aside>
-    `
-}
-function delayedToLogin(): VNode {
-    return html`
-        <aside class="login">
-            <section class="login__box">
-                ${loginHeader()}
-                ${delayedToLoginForm()}
+                ${content}
             </section>
         </aside>
     `
@@ -259,6 +229,7 @@ function delayedToLoginForm(): VNode {
     `
 }
 
+// TODO 別ファイルに分けられるはず
 type LoginIDProps = {
     initial: InitialValue,
 }
@@ -306,6 +277,7 @@ function LoginIDForm(component: LoginIDComponent): PreactPropsComponent<LoginIDP
     }
 }
 
+// TODO 別ファイルに分けられるはず
 type PasswordProps = {
     initial: InitialValue,
 }
