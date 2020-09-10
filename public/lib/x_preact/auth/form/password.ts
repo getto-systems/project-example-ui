@@ -4,8 +4,8 @@ import { html } from "htm/preact";
 
 import { PasswordComponent, PasswordState } from "../../../auth/password_login/password";
 
-import { PasswordView } from "../../../ability/password/data";
-import { InputValue, InitialValue } from "../../../ability/input/data";
+import { PasswordView } from "../../../password/data";
+import { InputValue, InitialValue } from "../../../input/data";
 
 interface PreactComponent {
     (props: Props): VNode;

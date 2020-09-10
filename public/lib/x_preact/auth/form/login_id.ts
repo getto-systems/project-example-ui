@@ -4,7 +4,7 @@ import { html } from "htm/preact";
 
 import { LoginIDComponent, LoginIDState } from "../../../auth/password_login/login_id";
 
-import { InitialValue } from "../../../ability/input/data";
+import { InitialValue } from "../../../input/data";
 
 interface PreactComponent {
     (props: Props): VNode;

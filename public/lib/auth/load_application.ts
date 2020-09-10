@@ -1,7 +1,7 @@
 import { AuthAction, AuthEvent } from "../auth/action";
-import { ScriptEvent } from "../ability/script/action";
+import { ScriptEvent } from "../script/action";
 
-import { ScriptPath, ScriptError } from "../ability/script/data";
+import { ScriptPath, ScriptError } from "../script/data";
 
 export interface LoadApplicationComponent {
     initialState(): LoadState

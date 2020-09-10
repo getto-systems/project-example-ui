@@ -1,8 +1,8 @@
 import { AuthAction } from "../../auth/action";
-import { LoginIDField, LoginIDEvent } from "../../ability/auth_credential/action";
+import { LoginIDField, LoginIDEvent } from "../../auth_credential/action";
 
-import { LoginID, LoginIDError } from "../../ability/auth_credential/data";
-import { InputValue, InitialValue, Content, Valid } from "../../ability/input/data";
+import { LoginID, LoginIDError } from "../../auth_credential/data";
+import { InputValue, InitialValue, Content, Valid } from "../../input/data";
 
 export interface LoginIDComponent {
     initialState(): LoginIDState
