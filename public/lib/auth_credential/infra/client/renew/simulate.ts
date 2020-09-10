@@ -1,6 +1,6 @@
-import { RenewClient, RenewResponse, renewSuccess, renewFailed } from "../../infra";
+import { RenewClient, RenewResponse, renewSuccess, renewFailed } from "../../../infra";
 
-import { TicketNonce, ApiCredential } from "../../../auth_credential/data";
+import { TicketNonce, ApiCredential } from "../../../../auth_credential/data";
 
 export function initSimulateRenewClient(targetTicketNonce: TicketNonce, returnApiCredential: ApiCredential): RenewClient {
     return new SimulateRenewClient(targetTicketNonce, returnApiCredential);
