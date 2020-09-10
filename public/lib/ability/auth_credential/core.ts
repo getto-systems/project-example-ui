@@ -1,23 +1,9 @@
-import { Infra, AuthCredentialRepository } from "./infra";
+import { Infra } from "./infra";
 
-import {
-    AuthCredentialAction,
-    LoginIDField, LoginIDEvent,
-    RenewResult, RenewEvent, StoreEvent,
-    StoreCredentialApi, LoginIDRecord, LoginIDListener,
-} from "./action";
+import { AuthCredentialAction, LoginIDField, LoginIDEvent, RenewResult, RenewEvent, StoreEvent } from "./action";
 
-import {
-    LoginID, LoginIDError, LoginIDBoard, LoginIDValidationError, ValidLoginID,
-    AuthCredential,
-    RenewState, renewSuccess, renewFailure,
-    StoreCredentialState, initialStoreCredential, tryToStoreCredential, failedToStoreCredential, succeedToStoreCredential,
-} from "./data";
-import {
-    InputValue,
-    Content, validContent, invalidContent,
-    Valid, noError, hasError,
-} from "../input/data";
+import { LoginID, LoginIDError, AuthCredential } from "./data";
+import { InputValue, Content, validContent, invalidContent, Valid, noError, hasError } from "../input/data";
 
 export function initAuthCredentialAction(infra: Infra): AuthCredentialAction {
     return new AuthCredentialActionImpl(infra);
@@ -36,34 +22,8 @@ class AuthCredentialActionImpl implements AuthCredentialAction {
     initLoginIDField(): LoginIDField {
         return new LoginIDFieldImpl();
     }
-    initLoginIDRecord(): LoginIDRecord {
-        return new LoginIDRecordImpl();
-    }
 
-    async renew(): Promise<RenewState> {
-        try {
-            const ticketNonce = await this.infra.authCredentials.findTicketNonce();
-            if (ticketNonce.found) {
-                const response = await this.infra.renewClient.renew(ticketNonce.ticketNonce);
-                if (response.success) {
-                    await this.infra.authCredentials.storeAuthCredential(response.authCredential);
-                    return renewSuccess;
-                }
-
-                return renewFailure(response.err);
-            }
-
-            return renewFailure({ type: "empty-nonce" });
-        } catch (err) {
-            return renewFailure({ type: "infra-error", err });
-        }
-    }
-
-    initStoreCredentialApi(): StoreCredentialApi {
-        return new StoreCredentialApiImpl(this.infra.authCredentials);
-    }
-
-    async renew_withEvent(event: RenewEvent): Promise<RenewResult> {
+    async renew(event: RenewEvent): Promise<RenewResult> {
         // TODO エラーは infra で包む
         try {
             const ticketNonce = await this.infra.authCredentials.findTicketNonce();
@@ -88,7 +48,7 @@ class AuthCredentialActionImpl implements AuthCredentialAction {
         }
     }
 
-    async store_withEvent(event: StoreEvent, authCredential: AuthCredential): Promise<void> {
+    async store(event: StoreEvent, authCredential: AuthCredential): Promise<void> {
         // TODO エラーは infra で包む
         try {
             event.tryToStore();
@@ -138,86 +98,15 @@ class LoginIDFieldImpl implements LoginIDField {
     }
 }
 
-class StoreCredentialApiImpl implements StoreCredentialApi {
-    authCredentials: AuthCredentialRepository
-
-    state: StoreCredentialState = initialStoreCredential
-
-    constructor(authCredentials: AuthCredentialRepository) {
-        this.authCredentials = authCredentials;
-    }
-
-    currentState(): StoreCredentialState {
-        return this.state;
-    }
-    store(authCredential: AuthCredential): StoreCredentialState {
-        return tryToStoreCredential(this.storePromise(authCredential));
-    }
-
-    async storePromise(authCredential: AuthCredential): Promise<StoreCredentialState> {
-        // TODO infra からの return を返すべき。あと、エラーは infra で包むべき
-        try {
-            await this.authCredentials.storeAuthCredential(authCredential);
-            return succeedToStoreCredential;
-        } catch (err) {
-            return failedToStoreCredential({ type: "infra-error", err });
-        }
-    }
-}
-
-const EMPTY_LOGIN_ID: LoginID = { loginID: "" }
 const ERROR: {
-    ok: Array<LoginIDValidationError>,
-    empty: Array<LoginIDValidationError>,
+    ok: Array<LoginIDError>,
+    empty: Array<LoginIDError>,
 } = {
     ok: [],
     empty: ["empty"],
 }
 
-class LoginIDRecordImpl implements LoginIDRecord {
-    loginID: LoginID = EMPTY_LOGIN_ID
-    err: Array<LoginIDValidationError> = ERROR.ok
-
-    onChange: Array<LoginIDListener> = []
-
-    addChangedListener(listener: LoginIDListener): void {
-        this.onChange.push(listener);
-    }
-
-    currentBoard(): LoginIDBoard {
-        return {
-            err: this.err,
-        }
-    }
-
-    input(loginID: LoginID): LoginIDBoard {
-        this.loginID = loginID;
-        this.err = validateLoginID(this.loginID.loginID);
-        return this.currentBoard();
-    }
-    change(): LoginIDBoard {
-        this.onChange.forEach((listener) => {
-            listener(this.loginID);
-        });
-        return this.currentBoard();
-    }
-
-    validate(): ValidLoginID {
-        this.err = validateLoginID(this.loginID.loginID);
-        if (this.err.length > 0) {
-            return { valid: false }
-        } else {
-            return { valid: true, content: this.loginID }
-        }
-    }
-
-    clear(): void {
-        this.loginID = EMPTY_LOGIN_ID;
-        this.err = ERROR.ok;
-    }
-}
-
-function validateLoginID(loginID: string): Array<LoginIDValidationError> {
+function validateLoginID(loginID: string): Array<LoginIDError> {
     if (loginID.length === 0) {
         return ERROR.empty;
     }

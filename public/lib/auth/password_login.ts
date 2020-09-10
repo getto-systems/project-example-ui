@@ -76,7 +76,7 @@ class Component implements PasswordLoginComponent {
             return;
         }
 
-        await this.action.authCredential.store_withEvent(this.event(), result.authCredential);
+        await this.action.authCredential.store(this.event(), result.authCredential);
     }
 }
 

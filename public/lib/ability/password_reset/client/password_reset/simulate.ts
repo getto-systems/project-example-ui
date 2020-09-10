@@ -8,7 +8,8 @@ import {
 
 import { LoginID, AuthCredential } from "../../../auth_credential/data";
 import { Password } from "../../../password/data";
-import { Session, ResetToken } from "../../data";
+import { Session } from "../../../password_reset_session/data";
+import { ResetToken } from "../../data";
 
 export function initSimulatePasswordResetClient(targetLoginID: LoginID, returnAuthCredential: AuthCredential): PasswordResetClient {
     return new SimulatePasswordResetClient(targetLoginID, returnAuthCredential);

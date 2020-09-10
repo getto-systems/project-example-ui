@@ -4,8 +4,8 @@ import { html } from "htm/preact";
 
 import { PasswordComponent, PasswordState } from "../../../auth/password_login/password";
 
-import { Password, PasswordView } from "../../../ability/password/data";
-import { InitialValue } from "../../../ability/input/data";
+import { PasswordView } from "../../../ability/password/data";
+import { InputValue, InitialValue } from "../../../ability/input/data";
 
 interface PreactComponent {
     (props: Props): VNode;
@@ -97,12 +97,11 @@ export function PasswordForm(component: PasswordComponent): PreactComponent {
                 }
             }
 
-            // TODO ・・・あれ？ InputValue にしたんじゃなかったっけ？
-            function extractPassword(password: Password): string {
-                if (password.password.length === 0) {
+            function extractPassword(password: InputValue): string {
+                if (password.inputValue.length === 0) {
                     return "(入力されていません)";
                 } else {
-                    return password.password;
+                    return password.inputValue;
                 }
             }
         }

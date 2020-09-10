@@ -4,7 +4,6 @@ const path = require("path");
 module.exports = {
   entry: {
     auth: path.join(__dirname, "lib/x_preact/auth.ts"),
-    load: path.join(__dirname, "lib/x_preact/load.ts"),
     update: path.join(__dirname, "lib/x_update/update.ts"),
   },
   output: {

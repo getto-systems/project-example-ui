@@ -1,12 +1,7 @@
 import { LoginID, AuthCredential } from "../auth_credential/data";
 import { Password } from "../password/data";
-import {
-    Session,
-    ResetToken,
-    Destination,
-    PollingStatus,
-    DoneStatus,
-} from "./data";
+import { Session, Destination, PollingStatus, DoneStatus } from "../password_reset_session/data";
+import { ResetToken } from "./data";
 
 export type Infra = {
     passwordResetClient: PasswordResetClient,
