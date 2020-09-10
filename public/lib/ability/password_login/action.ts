@@ -1,14 +1,27 @@
 import { LoginIDRecord } from "../auth_credential/action";
 import { PasswordRecord } from "../password/action";
 
-import { LoginIDBoard } from "../auth_credential/data";
-import { PasswordBoard } from "../password/data";
-import { LoginBoard, LoginContent, ValidContent, LoginState } from "./data";
+import { AuthCredential, LoginID, LoginIDBoard } from "../auth_credential/data";
+import { Password, PasswordBoard } from "../password/data";
+import { LoginBoard, LoginContent, InputContent, ValidContent, LoginState, LoginError } from "./data";
+import { Content } from "../input/data";
 
 export interface PasswordLoginAction {
+    login(event: LoginEvent, content: [Content<LoginID>, Content<Password>]): Promise<LoginResult>
+
     initLoginStore(loginID: LoginIDRecord, password: PasswordRecord): LoginStore
     initLoginApi(): LoginApi
 }
+
+export interface LoginEvent {
+    tryToLogin(): void
+    delayedToLogin(): void
+    failedToLogin(content: InputContent, err: LoginError): void
+}
+
+export type LoginResult =
+    Readonly<{ success: false }> |
+    Readonly<{ success: true, authCredential: AuthCredential }>
 
 export interface PasswordLoginTransition {
     logined(): void

@@ -1,8 +1,18 @@
 import { LoginID, LoginIDBoard, AuthCredential } from "../auth_credential/data";
 import { Password, PasswordBoard } from "../password/data";
+import { InputValue } from "../input/data";
 
 export type LoginBoard = Readonly<[LoginIDBoard, PasswordBoard]>
 export type LoginContent = Readonly<[LoginID, Password]>
+
+export type InputContent = Readonly<{
+    loginID: InputValue,
+    password: InputValue,
+}>
+
+export type ValidLoginContent =
+    Readonly<{ valid: false }> |
+    Readonly<{ valid: true, content: LoginContent }>
 
 export type ValidContent<T> =
     Readonly<{ valid: false }> |
@@ -34,6 +44,7 @@ export function succeedToLogin(authCredential: AuthCredential): LoginState {
 }
 
 export type LoginError =
+    Readonly<{ type: "validation-error" }> |
     Readonly<{ type: "bad-request" }> |
     Readonly<{ type: "invalid-password-login" }> |
     Readonly<{ type: "server-error" }> |

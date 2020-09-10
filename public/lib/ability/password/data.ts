@@ -19,6 +19,7 @@ export function showPassword(password: Password): PasswordView {
 }
 
 export type PasswordValidationError = "empty" | "too-long";
+export type PasswordError = "empty" | "too-long";
 
 export type ValidPassword =
     Readonly<{ valid: false }> |

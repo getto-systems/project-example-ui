@@ -21,13 +21,13 @@ export interface LoadEventHandler {
 }
 
 export function initLoadApplication(action: AuthAction, authEvent: AuthEvent): LoadApplicationComponent {
-    return new LoadApplicationComponentImpl(action, authEvent);
+    return new Component(action, authEvent);
 }
 
-class LoadApplicationComponentImpl implements LoadApplicationComponent {
+class Component implements LoadApplicationComponent {
     action: AuthAction
     authEvent: AuthEvent
-    eventHolder: EventHolder<EventImpl>
+    eventHolder: EventHolder<ComponentEvent>
 
     constructor(action: AuthAction, authEvent: AuthEvent) {
         this.action = action;
@@ -40,24 +40,24 @@ class LoadApplicationComponentImpl implements LoadApplicationComponent {
     }
 
     onStateChange(stateChanged: LoadEventHandler): void {
-        this.eventHolder = { hasEvent: true, event: new EventImpl(this.authEvent, stateChanged) }
+        this.eventHolder = { hasEvent: true, event: new ComponentEvent(stateChanged, this.authEvent) }
     }
-    event(): EventImpl {
+    event(): ComponentEvent {
         return unwrap(this.eventHolder);
     }
 
-    load(): Promise<void> {
-        return this.action.script.load_withEvent(this.event());
+    async load(): Promise<void> {
+        await this.action.script.load_withEvent(this.event());
     }
 }
 
-class EventImpl implements ScriptEvent {
-    authEvent: AuthEvent
+class ComponentEvent implements ScriptEvent {
     stateChanged: LoadEventHandler
+    authEvent: AuthEvent
 
-    constructor(authEvent: AuthEvent, stateChanged: LoadEventHandler) {
-        this.authEvent = authEvent;
+    constructor(stateChanged: LoadEventHandler, authEvent: AuthEvent) {
         this.stateChanged = stateChanged;
+        this.authEvent = authEvent;
     }
 
     tryToLoad(): void {

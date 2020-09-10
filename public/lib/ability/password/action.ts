@@ -1,7 +1,24 @@
-import { Password, PasswordBoard, ValidPassword } from "./data";
+import { Password, PasswordCharacter, PasswordView, PasswordError, PasswordBoard, ValidPassword } from "./data";
+import { InputValue, InitialValue, Content, Valid } from "../input/data";
 
 export interface PasswordAction {
+    initPasswordField(): PasswordField
     initPasswordRecord(): PasswordRecord
+}
+
+export interface PasswordField {
+    initialState(initial: InitialValue): [Valid<PasswordError>, PasswordCharacter, PasswordView]
+
+    setPassword(event: PasswordEvent, input: InputValue): void
+    showPassword(event: PasswordEvent): void
+    hidePassword(event: PasswordEvent): void
+    validate(event: PasswordEvent): Content<Password>
+
+    toPassword(): Content<Password>
+}
+
+export interface PasswordEvent {
+    updated(valid: Valid<PasswordError>, character: PasswordCharacter, view: PasswordView): void
 }
 
 export interface PasswordRecord {

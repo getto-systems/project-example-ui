@@ -3,17 +3,22 @@ import { AuthAction, AuthEvent, AuthError } from "./auth/action";
 import { RenewComponent, initRenew } from "./auth/renew";
 import { LoadApplicationComponent, initLoadApplication } from "./auth/load_application";
 
+import { PasswordLoginComponent, initPasswordLogin } from "./auth/password_login";
+
 export interface AuthUsecase {
     initialState(): AuthState
     onStateChange(stateChanged: AuthEventHandler): void
 
     initRenew(): RenewComponent
     initLoadApplication(): LoadApplicationComponent
+
+    initPasswordLogin(): PasswordLoginComponent
 }
 
 export type AuthState =
     Readonly<{ type: "renew" }> |
     Readonly<{ type: "load-application" }> |
+    Readonly<{ type: "password-login" }> |
     Readonly<{ type: "error", err: AuthError }>
 
 export interface AuthEventHandler {
@@ -21,14 +26,14 @@ export interface AuthEventHandler {
 }
 
 export function initAuthUsecase(url: Readonly<URL>, action: AuthAction): AuthUsecase {
-    return new AuthUsecaseImpl(url, action);
+    return new Usecase(url, action);
 }
 
-class AuthUsecaseImpl implements AuthUsecase {
+class Usecase implements AuthUsecase {
     url: Readonly<URL>
     action: AuthAction
 
-    eventHolder: EventHolder<AuthEvent>
+    eventHolder: EventHolder<UsecaseEvent>
 
     constructor(url: Readonly<URL>, action: AuthAction) {
         this.url = url;
@@ -41,7 +46,7 @@ class AuthUsecaseImpl implements AuthUsecase {
     }
 
     onStateChange(stateChanged: AuthEventHandler): void {
-        this.eventHolder = { hasEvent: true, event: new AuthEventImpl(this.url, stateChanged) }
+        this.eventHolder = { hasEvent: true, event: new UsecaseEvent(this.url, stateChanged) }
     }
     event(): AuthEvent {
         return unwrap(this.eventHolder);
@@ -53,9 +58,13 @@ class AuthUsecaseImpl implements AuthUsecase {
     initLoadApplication(): LoadApplicationComponent {
         return initLoadApplication(this.action, this.event());
     }
+
+    initPasswordLogin(): PasswordLoginComponent {
+        return initPasswordLogin(this.action, this.event());
+    }
 }
 
-class AuthEventImpl implements AuthEvent {
+class UsecaseEvent implements AuthEvent {
     url: Readonly<URL>
     stateChanged: AuthEventHandler
 
@@ -65,8 +74,8 @@ class AuthEventImpl implements AuthEvent {
     }
 
     tryToLogin(): void {
-        // TODO ちゃんとログイン画面に遷移するように
-        this.stateChanged({ type: "error", err: { type: "login", err: "ここでログインフォーム" } });
+        // TODO Reset とスイッチするように
+        this.stateChanged({ type: "password-login" });
 
         // ログイン前画面ではアンダースコアで始まる query string を使用する
         /*

@@ -4,6 +4,7 @@ export type LoginIDBoard =
     Readonly<{ err: Array<LoginIDValidationError> }>
 
 export type LoginIDValidationError = "empty";
+export type LoginIDError = "empty";
 
 export type ValidLoginID =
     Readonly<{ valid: false }> |

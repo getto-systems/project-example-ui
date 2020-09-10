@@ -5,6 +5,14 @@ export type Infra = {
     passwordLoginClient: PasswordLoginClient,
 }
 
+// TODO 整理が終わったら名前を変える
+export interface Password_Record {
+    get(): Password
+    update(password: Password): void
+    show(): void
+    hide(): void
+}
+
 export interface PasswordLoginClient {
     login(loginID: LoginID, password: Password): Promise<LoginResponse>
 }
