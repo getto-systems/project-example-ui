@@ -1,5 +1,5 @@
 import { Password, PasswordCharacter, PasswordView, PasswordError, PasswordBoard, ValidPassword } from "./data";
-import { InputValue, InitialValue, Content, Valid } from "../input/data";
+import { InputValue, Content, Valid } from "../input/data";
 
 export interface PasswordAction {
     initPasswordField(): PasswordField
@@ -7,7 +7,7 @@ export interface PasswordAction {
 }
 
 export interface PasswordField {
-    initialState(initial: InitialValue): [Valid<PasswordError>, PasswordCharacter, PasswordView]
+    initialState(): [Valid<PasswordError>, PasswordCharacter, PasswordView]
 
     setPassword(event: PasswordEvent, input: InputValue): void
     showPassword(event: PasswordEvent): void

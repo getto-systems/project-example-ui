@@ -14,7 +14,7 @@ import {
     StoreCredentialState, initialStoreCredential, tryToStoreCredential, failedToStoreCredential, succeedToStoreCredential,
 } from "./data";
 import {
-    InputValue, InitialValue,
+    InputValue,
     Content, validContent, invalidContent,
     Valid, noError, hasError,
 } from "../input/data";
@@ -109,13 +109,8 @@ class LoginIDFieldImpl implements LoginIDField {
         this.loginID = { inputValue: "" };
     }
 
-    initialState(initial: InitialValue): [Valid<LoginIDError>] {
-        if (!initial.hasValue) {
-            return [noError()]
-        }
-
-        this.loginID = initial.value;
-        return this.state()
+    initialState(): [Valid<LoginIDError>] {
+        return [noError()]
     }
 
     setLoginID(event: LoginIDEvent, input: InputValue): void {

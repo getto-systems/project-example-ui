@@ -6,7 +6,7 @@ import {
     PasswordView, showPassword, hidePassword,
 } from "./data";
 import {
-    InputValue, InitialValue,
+    InputValue,
     Content, validContent, invalidContent,
     Valid, noError, hasError,
 } from "../input/data";
@@ -33,13 +33,8 @@ class PasswordFieldImpl implements PasswordField {
         this.visible = false;
     }
 
-    initialState(initial: InitialValue): [Valid<PasswordError>, PasswordCharacter, PasswordView] {
-        if (!initial.hasValue) {
-            return [noError(), { complex: false }, { show: false }]
-        }
-
-        this.password = initial.value;
-        return this.state();
+    initialState(): [Valid<PasswordError>, PasswordCharacter, PasswordView] {
+        return [noError(), { complex: false }, { show: false }]
     }
 
     setPassword(event: PasswordEvent, input: InputValue): void {

@@ -25,8 +25,7 @@ function main(auth: AuthUsecase) {
                 return h(LoadApplication(auth.initLoadApplication()), {});
 
             case "password-login":
-                //return h(PasswordLogin(auth.initPasswordLogin()), {});
-                return html`LOGIN`
+                return h(PasswordLogin(auth.initPasswordLogin()), {});
 
             /*
             case "password-reset":
