@@ -1,4 +1,4 @@
-import { PathnameLocation, PathnameFound } from "../infra";
+import { PathnameLocation, PathnameFound } from "../../infra";
 
 export function initBrowserPathnameLocation(browserLocation: Location): PathnameLocation {
     return new BrowserPathnameLocation(browserLocation);
