@@ -1,9 +1,5 @@
 import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_client"
 
-import { AuthAction } from "../auth/action"
-
-import { AuthUsecase, initAuthUsecase } from "../auth"
-
 import { initStorageAuthCredentialRepository } from "../auth_credential/impl/repository/credential/storage"
 import { initFetchRenewClient } from "../auth_credential/impl/client/renew/fetch"
 import { initBrowserPathnameLocation } from "../script/impl/location/browser"
@@ -12,18 +8,21 @@ import { initSimulatePasswordResetSessionClient } from "../password_reset_sessio
 import { initSimulatePasswordResetClient } from "../password_reset/impl/client/password_reset/simulate"
 import { env } from "../y_static/env"
 
-import { AuthCredentialRepository, RenewClient } from "../auth_credential/infra"
-import { ScriptEnv, PathnameLocation } from "../script/infra"
-import { PasswordLoginClient } from "../password_login/infra"
-import { PasswordResetSessionClient } from "../password_reset_session/infra"
-import { PasswordResetClient } from "../password_reset/infra"
-
 import { initAuthCredentialAction } from "../auth_credential/impl/core"
 import { initScriptAction } from "../script/impl/core"
 import { initPasswordAction } from "../password/impl/core"
 import { initPasswordLoginAction } from "../password_login/impl/core"
 import { initPasswordResetSessionAction } from "../password_reset_session/impl/core"
 import { initPasswordResetAction } from "../password_reset/impl/core"
+
+import { AuthUsecase, initAuthUsecase } from "../auth"
+import { AuthAction } from "../auth/action"
+
+import { AuthCredentialRepository, RenewClient } from "../auth_credential/infra"
+import { ScriptEnv, PathnameLocation } from "../script/infra"
+import { PasswordLoginClient } from "../password_login/infra"
+import { PasswordResetSessionClient } from "../password_reset_session/infra"
+import { PasswordResetClient } from "../password_reset/infra"
 
 export function init(browserLocation: Location, storage: Storage): AuthUsecase {
     const url = new URL(browserLocation.toString())
