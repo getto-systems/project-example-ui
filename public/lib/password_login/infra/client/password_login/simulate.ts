@@ -1,7 +1,7 @@
-import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../infra";
+import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra";
 
-import { LoginID, AuthCredential } from "../../../auth_credential/data";
-import { Password } from "../../../password/data";
+import { LoginID, AuthCredential } from "../../../../auth_credential/data";
+import { Password } from "../../../../password/data";
 
 export function initSimulatePasswordLoginClient(
     targetLoginID: LoginID,
