@@ -12,10 +12,10 @@ import { PasswordLogin } from "./auth/password_login";
 
 render(h(main(init(location, localStorage)), {}), document.body);
 
-function main(auth: AuthUsecase) {
+function main(usecase: AuthUsecase) {
     return (): VNode => {
-        const [state, setState] = useState(auth.initialState());
-        auth.onStateChange(setState);
+        const [state, setState] = useState(usecase.initialState());
+        usecase.onStateChange(setState);
 
         switch (state.type) {
             case "renew":
