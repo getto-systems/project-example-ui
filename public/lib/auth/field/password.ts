@@ -4,7 +4,7 @@ import { PasswordField, PasswordEvent } from "../../password/action";
 import { Password, PasswordError, PasswordCharacter, PasswordView } from "../../password/data";
 import { InputValue, Content, Valid } from "../../input/data";
 
-export interface PasswordComponent {
+export interface PasswordFieldComponent {
     initialState(): PasswordState
     onStateChange(stateChanged: PasswordEventHandler): void
 
@@ -21,11 +21,11 @@ export interface PasswordEventHandler {
     (state: PasswordState): void
 }
 
-export function initPassword(action: AuthAction): PasswordComponent {
+export function initPasswordField(action: AuthAction): PasswordFieldComponent {
     return new Component(action.password.initPasswordField());
 }
 
-class Component implements PasswordComponent {
+class Component implements PasswordFieldComponent {
     password: PasswordField
     eventHolder: EventHolder<ComponentEvent>
 

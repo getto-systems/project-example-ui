@@ -1,5 +1,5 @@
-import { LoginIDComponent, initLoginID } from "./password_login/login_id";
-import { PasswordComponent, initPassword } from "./password_login/password";
+import { LoginIDFieldComponent, initLoginIDField } from "./field/login_id";
+import { PasswordFieldComponent, initPasswordField } from "./field/password";
 
 import { AuthAction, AuthEvent } from "../auth/action";
 import { StoreEvent } from "../auth_credential/action";
@@ -17,7 +17,7 @@ export interface PasswordLoginComponent {
     login(): Promise<void>
 }
 
-export type PasswordLoginFieldComponents = [LoginIDComponent, PasswordComponent]
+export type PasswordLoginFieldComponents = [LoginIDFieldComponent, PasswordFieldComponent]
 
 export type LoginState =
     Readonly<{ type: "initial-login" }> |
@@ -35,8 +35,8 @@ export function initPasswordLogin(action: AuthAction, authEvent: AuthEvent): Pas
 }
 
 class Component implements PasswordLoginComponent {
-    loginID: LoginIDComponent
-    password: PasswordComponent
+    loginID: LoginIDFieldComponent
+    password: PasswordFieldComponent
 
     action: AuthAction
     authEvent: AuthEvent
@@ -47,8 +47,8 @@ class Component implements PasswordLoginComponent {
         this.authEvent = authEvent;
         this.eventHolder = { hasEvent: false }
 
-        this.loginID = initLoginID(this.action);
-        this.password = initPassword(this.action);
+        this.loginID = initLoginIDField(this.action);
+        this.password = initPasswordField(this.action);
     }
 
     fields(): PasswordLoginFieldComponents {

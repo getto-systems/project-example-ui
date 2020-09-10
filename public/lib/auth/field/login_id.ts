@@ -2,9 +2,9 @@ import { AuthAction } from "../../auth/action";
 import { LoginIDField, LoginIDEvent } from "../../auth_credential/action";
 
 import { LoginID, LoginIDError } from "../../auth_credential/data";
-import { InputValue, InitialValue, Content, Valid } from "../../input/data";
+import { InputValue, Content, Valid } from "../../input/data";
 
-export interface LoginIDComponent {
+export interface LoginIDFieldComponent {
     initialState(): LoginIDState
     onStateChange(stateChanged: LoginIDEventHandler): void
 
@@ -19,11 +19,11 @@ export interface LoginIDEventHandler {
     (state: LoginIDState): void
 }
 
-export function initLoginID(action: AuthAction): LoginIDComponent {
+export function initLoginIDField(action: AuthAction): LoginIDFieldComponent {
     return new Component(action.authCredential.initLoginIDField());
 }
 
-class Component implements LoginIDComponent {
+class Component implements LoginIDFieldComponent {
     loginID: LoginIDField
     eventHolder: EventHolder<ComponentEvent>
 

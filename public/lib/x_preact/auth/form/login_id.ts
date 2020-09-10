@@ -2,7 +2,7 @@ import { VNode } from "preact";
 import { useState, useEffect } from "preact/hooks";
 import { html } from "htm/preact";
 
-import { LoginIDComponent, LoginIDState } from "../../../auth/password_login/login_id";
+import { LoginIDFieldComponent, LoginIDState } from "../../../auth/field/login_id";
 
 import { InitialValue } from "../../../input/data";
 
@@ -14,7 +14,7 @@ type Props = {
     initial: InitialValue,
 }
 
-export function LoginIDForm(component: LoginIDComponent): PreactComponent {
+export function LoginIDForm(component: LoginIDFieldComponent): PreactComponent {
     return (props: Props): VNode => {
         const [state, setState] = useState(component.initialState());
         component.onStateChange(setState);

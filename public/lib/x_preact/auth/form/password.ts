@@ -2,7 +2,7 @@ import { VNode } from "preact";
 import { useState, useEffect } from "preact/hooks";
 import { html } from "htm/preact";
 
-import { PasswordComponent, PasswordState } from "../../../auth/password_login/password";
+import { PasswordFieldComponent, PasswordState } from "../../../auth/field/password";
 
 import { PasswordView } from "../../../password/data";
 import { InputValue, InitialValue } from "../../../input/data";
@@ -15,7 +15,7 @@ type Props = {
     initial: InitialValue,
 }
 
-export function PasswordForm(component: PasswordComponent): PreactComponent {
+export function PasswordForm(component: PasswordFieldComponent): PreactComponent {
     return (props: Props): VNode => {
         const [state, setState] = useState(component.initialState());
         component.onStateChange(setState);
