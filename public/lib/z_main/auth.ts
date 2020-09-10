@@ -18,12 +18,12 @@ import { PasswordLoginClient } from "../password_login/infra";
 import { PasswordResetSessionClient } from "../password_reset_session/infra";
 import { PasswordResetClient } from "../password_reset/infra";
 
-import { initAuthCredentialAction } from "../auth_credential/core";
-import { initScriptAction } from "../script/core";
-import { initPasswordAction } from "../password/core";
-import { initPasswordLoginAction } from "../password_login/core";
-import { initPasswordResetSessionAction } from "../password_reset_session/core";
-import { initPasswordResetAction } from "../password_reset/core";
+import { initAuthCredentialAction } from "../auth_credential/impl";
+import { initScriptAction } from "../script/impl";
+import { initPasswordAction } from "../password/impl";
+import { initPasswordLoginAction } from "../password_login/impl";
+import { initPasswordResetSessionAction } from "../password_reset_session/impl";
+import { initPasswordResetAction } from "../password_reset/impl";
 
 export function init(browserLocation: Location, storage: Storage): AuthUsecase {
     const url = new URL(browserLocation.toString());
