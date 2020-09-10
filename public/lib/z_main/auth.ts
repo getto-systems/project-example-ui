@@ -1,29 +1,28 @@
 import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_client"
 
-import { AuthAction } from "../auth/action"
+import { initStorageAuthCredentialRepository } from "../auth_credential/impl/repository/credential/storage"
+import { initFetchRenewClient } from "../auth_credential/impl/client/renew/fetch"
+import { initBrowserPathnameLocation } from "../script/impl/location/browser"
+import { initFetchPasswordLoginClient } from "../password_login/impl/client/password_login/fetch"
+import { initSimulatePasswordResetSessionClient } from "../password_reset_session/impl/client/password_reset_session/simulate"
+import { initSimulatePasswordResetClient } from "../password_reset/impl/client/password_reset/simulate"
+import { env } from "../y_static/env"
+
+import { initAuthCredentialAction } from "../auth_credential/impl/core"
+import { initScriptAction } from "../script/impl/core"
+import { initPasswordAction } from "../password/impl/core"
+import { initPasswordLoginAction } from "../password_login/impl/core"
+import { initPasswordResetSessionAction } from "../password_reset_session/impl/core"
+import { initPasswordResetAction } from "../password_reset/impl/core"
 
 import { AuthUsecase, initAuthUsecase } from "../auth"
-
-import { initStorageAuthCredentialRepository } from "../auth_credential/infra/repository/credential/storage"
-import { initFetchRenewClient } from "../auth_credential/infra/client/renew/fetch"
-import { initBrowserPathnameLocation } from "../script/infra/location/browser"
-import { initFetchPasswordLoginClient } from "../password_login/infra/client/password_login/fetch"
-import { initSimulatePasswordResetSessionClient } from "../password_reset_session/infra/client/password_reset_session/simulate"
-import { initSimulatePasswordResetClient } from "../password_reset/infra/client/password_reset/simulate"
-import { env } from "../y_static/env"
+import { AuthAction } from "../auth/action"
 
 import { AuthCredentialRepository, RenewClient } from "../auth_credential/infra"
 import { ScriptEnv, PathnameLocation } from "../script/infra"
 import { PasswordLoginClient } from "../password_login/infra"
 import { PasswordResetSessionClient } from "../password_reset_session/infra"
 import { PasswordResetClient } from "../password_reset/infra"
-
-import { initAuthCredentialAction } from "../auth_credential/impl"
-import { initScriptAction } from "../script/impl"
-import { initPasswordAction } from "../password/impl"
-import { initPasswordLoginAction } from "../password_login/impl"
-import { initPasswordResetSessionAction } from "../password_reset_session/impl"
-import { initPasswordResetAction } from "../password_reset/impl"
 
 export function init(browserLocation: Location, storage: Storage): AuthUsecase {
     const url = new URL(browserLocation.toString())

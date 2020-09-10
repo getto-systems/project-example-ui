@@ -1,9 +1,9 @@
-import { Infra } from "./infra"
+import { Infra } from "../infra"
 
-import { AuthCredentialAction, LoginIDField, LoginIDEvent, RenewResult, RenewEvent, StoreEvent } from "./action"
+import { AuthCredentialAction, LoginIDField, LoginIDEvent, RenewResult, RenewEvent, StoreEvent } from "../action"
 
-import { LoginID, LoginIDError, AuthCredential } from "./data"
-import { InputValue, Content, validContent, invalidContent, Valid, noError, hasError } from "../input/data"
+import { LoginID, LoginIDError, AuthCredential } from "../data"
+import { InputValue, Content, validContent, invalidContent, Valid, noError, hasError } from "../../input/data"
 
 export function initAuthCredentialAction(infra: Infra): AuthCredentialAction {
     return new AuthCredentialActionImpl(infra)

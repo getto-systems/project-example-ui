@@ -1,37 +1,37 @@
-import { Infra } from "./infra"
+import { Infra } from "../infra"
 
-import { ResetEvent, ResetResult, PasswordResetAction } from "./action"
+import { PasswordLoginAction, LoginEvent, LoginResult } from "../action"
 
-import { LoginID } from "../auth_credential/data"
-import { Password } from "../password/data"
-import { InputContent, ResetToken } from "./data"
-import { Content } from "../input/data"
+import { LoginID } from "../../auth_credential/data"
+import { Password } from "../../password/data"
+import { InputContent } from "../data"
+import { Content } from "../../input/data"
 
-export function initPasswordResetAction(infra: Infra): PasswordResetAction {
-    return new PasswordResetActionImpl(infra)
+export function initPasswordLoginAction(infra: Infra): PasswordLoginAction {
+    return new PasswordLoginActionImpl(infra)
 }
 
-class PasswordResetActionImpl implements PasswordResetAction {
+class PasswordLoginActionImpl implements PasswordLoginAction {
     infra: Infra
 
     constructor(infra: Infra) {
         this.infra = infra
     }
 
-    async reset(event: ResetEvent, resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<ResetResult> {
+    async login(event: LoginEvent, fields: [Content<LoginID>, Content<Password>]): Promise<LoginResult> {
         const content = mapContent(...fields)
         if (!content.valid) {
-            event.failedToReset(mapInput(...fields), { type: "validation-error" })
+            event.failedToLogin(mapInput(...fields), { type: "validation-error" })
             return { success: false }
         }
 
-        event.tryToReset()
+        event.tryToLogin()
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const promise = this.infra.passwordResetClient.reset(resetToken, ...content.content)
-        const response = await delayed(promise, this.infra.config.passwordResetDelayTime, event.delayedToReset)
+        const promise = this.infra.passwordLoginClient.login(...content.content)
+        const response = await delayed(promise, this.infra.config.passwordLoginDelayTime, event.delayedToLogin)
         if (!response.success) {
-            event.failedToReset(mapInput(...fields), response.err)
+            event.failedToLogin(mapInput(...fields), response.err)
             return { success: false }
         }
 

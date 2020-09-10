@@ -1,7 +1,7 @@
-import { Infra } from "./infra"
+import { Infra } from "../infra"
 
-import { Pathname, ScriptPath } from "./data"
-import { ScriptAction, ScriptEvent } from "./action"
+import { Pathname, ScriptPath } from "../data"
+import { ScriptAction, ScriptEvent } from "../action"
 
 export function initScriptAction(infra: Infra): ScriptAction {
     return new ScriptActionImpl(infra)
