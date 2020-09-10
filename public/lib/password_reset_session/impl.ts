@@ -115,16 +115,11 @@ class PollingStatus {
     }
 
     async sendToken(): Promise<void> {
-        // TODO エラーは infra で吸収
-        try {
-            const response = await this.client.sendToken();
-            if (response.success) {
-                this.sendTokenState = { type: "success" }
-            } else {
-                this.sendTokenState = { type: "failed", err: response.err }
-            }
-        } catch (err) {
-            this.sendTokenState = { type: "failed", err: { type: "infra-error", err } }
+        const response = await this.client.sendToken();
+        if (response.success) {
+            this.sendTokenState = { type: "success" }
+        } else {
+            this.sendTokenState = { type: "failed", err: response.err }
         }
     }
 
