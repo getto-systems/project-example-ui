@@ -48,12 +48,12 @@ class Component implements RenewComponent {
     }
 
     async renew(): Promise<void> {
-        const result = await this.action.authCredential.renew_withEvent(this.event());
+        const result = await this.action.authCredential.renew(this.event());
         if (!result.success) {
             return;
         }
 
-        await this.action.authCredential.store_withEvent(this.event(), result.authCredential);
+        await this.action.authCredential.store(this.event(), result.authCredential);
     }
 }
 

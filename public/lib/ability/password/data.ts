@@ -1,7 +1,6 @@
-export type Password = Readonly<{ password: Readonly<string> }>
+import { InputValue } from "../input/data";
 
-export type PasswordBoard =
-    Readonly<{ character: PasswordCharacter, view: PasswordView, err: Array<PasswordValidationError> }>
+export type Password = Readonly<{ password: Readonly<string> }>
 
 // complex : 2バイト以上の文字を含むか？
 export type PasswordCharacter =
@@ -12,15 +11,10 @@ export const complexPassword: PasswordCharacter = { complex: true }
 
 export type PasswordView =
     Readonly<{ show: false }> |
-    Readonly<{ show: true, password: Password }>
+    Readonly<{ show: true, password: InputValue }>
 export const hidePassword: PasswordView = { show: false }
-export function showPassword(password: Password): PasswordView {
+export function showPassword(password: InputValue): PasswordView {
     return { show: true, password }
 }
 
-export type PasswordValidationError = "empty" | "too-long";
 export type PasswordError = "empty" | "too-long";
-
-export type ValidPassword =
-    Readonly<{ valid: false }> |
-    Readonly<{ valid: true, content: Password }>
