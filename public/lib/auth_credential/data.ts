@@ -9,7 +9,7 @@ export type AuthCredential = Readonly<{
 export type TicketNonce = Readonly<{ ticketNonce: Readonly<string> }>
 
 export type ApiCredential = Readonly<{
-    // TODO
+    // TODO api nonce を追加する
     //apiNonce: ApiNonce,
     apiRoles: ApiRoles,
 }>

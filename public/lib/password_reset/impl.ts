@@ -7,9 +7,6 @@ import { Password } from "../password/data";
 import { InputContent, ResetToken } from "./data";
 import { Content } from "../input/data";
 
-// 「遅くなっています」を表示するまでの秒数
-const RESET_DELAYED_TIME = delaySecond(1);
-
 export function initPasswordResetAction(infra: Infra): PasswordResetAction {
     return new PasswordResetActionImpl(infra);
 }
@@ -32,7 +29,7 @@ class PasswordResetActionImpl implements PasswordResetAction {
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const promise = this.infra.passwordResetClient.reset(resetToken, ...content.content);
-        const response = await delayed(promise, RESET_DELAYED_TIME, event.delayedToReset);
+        const response = await delayed(promise, this.infra.config.passwordResetDelayTime, event.delayedToReset);
         if (!response.success) {
             event.failedToReset(mapInput(...fields), response.err);
             return { success: false }
@@ -67,7 +64,7 @@ async function delayed<T>(promise: Promise<T>, time: DelayTime, handler: Delayed
     const delayed = new Promise((resolve) => {
         setTimeout(() => {
             resolve(DELAYED_MARKER);
-        }, time.milli_second);
+        }, time.delay_milli_second);
     });
 
     const winner = await Promise.race([promise, delayed]);
@@ -78,10 +75,7 @@ async function delayed<T>(promise: Promise<T>, time: DelayTime, handler: Delayed
     return await promise;
 }
 
-type DelayTime = { milli_second: number }
-function delaySecond(second: number): DelayTime {
-    return { milli_second: second * 1000 }
-}
+type DelayTime = { delay_milli_second: number }
 
 interface DelayedHandler {
     (): void

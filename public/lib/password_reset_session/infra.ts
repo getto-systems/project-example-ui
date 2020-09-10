@@ -5,9 +5,20 @@ import {
     PollingStatus, DoneStatus, PollingStatusError,
 } from "./data";
 
-export type Infra = {
+export type Infra = Readonly<{
+    config: Config,
     passwordResetSessionClient: PasswordResetSessionClient,
-}
+}>
+
+export type Config = Readonly<{
+    passwordResetCreateSessionDelayTime: DelayTime,
+    passwordResetPollingWaitTime: WaitTime,
+    passwordResetPollingLimit: Limit,
+}>
+
+export type DelayTime = Readonly<{ delay_milli_second: number }>
+export type WaitTime = Readonly<{ wait_milli_second: number }>
+export type Limit = Readonly<{ limit: number }>
 
 export interface PasswordResetSessionClient {
     createSession(loginID: LoginID): Promise<SessionResponse>

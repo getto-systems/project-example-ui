@@ -1,9 +1,9 @@
 import { Pathname, PathnameError } from "./data";
 
-export type Infra = {
+export type Infra = Readonly<{
     env: ScriptEnv,
     location: PathnameLocation,
-}
+}>
 
 export type ScriptEnv = Readonly<{
     secureServerHost: Readonly<string>,

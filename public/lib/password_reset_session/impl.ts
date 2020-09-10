@@ -1,4 +1,4 @@
-import { Infra, PasswordResetSessionClient } from "./infra";
+import { Infra, Config, PasswordResetSessionClient } from "./infra";
 
 import {
     PasswordResetSessionAction,
@@ -13,11 +13,6 @@ import { Content } from "../input/data";
 export function initPasswordResetSessionAction(infra: Infra): PasswordResetSessionAction {
     return new PasswordResetSessionActionImpl(infra);
 }
-
-// TODO infra に設定オブジェクト的なものを置いたほうがいい
-const CREATE_SESSION_DELAYED_TIME = delaySecond(1);
-const POLLING_WAIT_TIME = delaySecond(1);
-const POLLING_LIMIT = 30;
 
 class PasswordResetSessionActionImpl implements PasswordResetSessionAction {
     infra: Infra
@@ -37,7 +32,7 @@ class PasswordResetSessionActionImpl implements PasswordResetSessionAction {
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const promise = this.infra.passwordResetSessionClient.createSession(...content.content);
-        const response = await delayed(promise, CREATE_SESSION_DELAYED_TIME, event.delayedToCreateSession);
+        const response = await delayed(promise, this.infra.config.passwordResetCreateSessionDelayTime, event.delayedToCreateSession);
         if (!response.success) {
             event.failedToCreateSession(mapInput(...fields), response.err);
             return { success: false }
@@ -63,7 +58,7 @@ class PasswordResetSessionActionImpl implements PasswordResetSessionAction {
     }
 
     async startPollingStatus(event: PollingStatusEvent, session: Session): Promise<void> {
-        new PollingStatus(this.infra.passwordResetSessionClient).startPolling(event, session);
+        new PollingStatus(this.infra.config, this.infra.passwordResetSessionClient).startPolling(event, session);
     }
 }
 
@@ -73,11 +68,13 @@ type SendTokenState =
     Readonly<{ type: "success" }>
 
 class PollingStatus {
+    config: Config
     client: PasswordResetSessionClient
 
     sendTokenState: SendTokenState
 
-    constructor(client: PasswordResetSessionClient) {
+    constructor(config: Config, client: PasswordResetSessionClient) {
+        this.config = config;
         this.client = client;
 
         this.sendTokenState = { type: "initial" }
@@ -90,7 +87,7 @@ class PollingStatus {
 
         let count = 0;
 
-        while (count < POLLING_LIMIT) {
+        while (count < this.config.passwordResetPollingLimit.limit) {
             count += 1;
 
             if (this.sendTokenState.type === "failed") {
@@ -111,7 +108,7 @@ class PollingStatus {
 
             event.retryToPollingStatus(response.status);
 
-            await this.wait(POLLING_WAIT_TIME);
+            await this.wait(this.config.passwordResetPollingWaitTime);
         }
 
         event.failedToPollingStatus({ type: "infra-error", err: "overflow polling limit" });
@@ -131,11 +128,11 @@ class PollingStatus {
         }
     }
 
-    wait(time: DelayTime): Promise<void> {
+    wait(time: WaitTime): Promise<void> {
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve();
-            }, time.milli_second);
+            }, time.wait_milli_second);
         });
     }
 }
@@ -145,7 +142,7 @@ async function delayed<T>(promise: Promise<T>, time: DelayTime, handler: Delayed
     const delayed = new Promise((resolve) => {
         setTimeout(() => {
             resolve(DELAYED_MARKER);
-        }, time.milli_second);
+        }, time.delay_milli_second);
     });
 
     const winner = await Promise.race([promise, delayed]);
@@ -156,10 +153,8 @@ async function delayed<T>(promise: Promise<T>, time: DelayTime, handler: Delayed
     return await promise;
 }
 
-type DelayTime = { milli_second: number }
-function delaySecond(second: number): DelayTime {
-    return { milli_second: second * 1000 }
-}
+type DelayTime = { delay_milli_second: number }
+type WaitTime = { wait_milli_second: number }
 
 interface DelayedHandler {
     (): void
