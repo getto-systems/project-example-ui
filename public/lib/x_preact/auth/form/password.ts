@@ -1,14 +1,14 @@
-import { VNode } from "preact";
-import { useState, useEffect } from "preact/hooks";
-import { html } from "htm/preact";
+import { VNode } from "preact"
+import { useState, useEffect } from "preact/hooks"
+import { html } from "htm/preact"
 
-import { PasswordFieldComponent, PasswordState } from "../../../auth/field/password";
+import { PasswordFieldComponent, PasswordState } from "../../../auth/field/password"
 
-import { PasswordView } from "../../../password/data";
-import { InputValue, InitialValue } from "../../../input/data";
+import { PasswordView } from "../../../password/data"
+import { InputValue, InitialValue } from "../../../input/data"
 
 interface PreactComponent {
-    (props: Props): VNode;
+    (props: Props): VNode
 }
 
 type Props = {
@@ -17,15 +17,15 @@ type Props = {
 
 export function PasswordForm(component: PasswordFieldComponent): PreactComponent {
     return (props: Props): VNode => {
-        const [state, setState] = useState(component.initialState());
-        component.onStateChange(setState);
+        const [state, setState] = useState(component.initialState())
+        component.onStateChange(setState)
 
         useEffect(() => {
             if (props.initial.hasValue) {
-                setInputValue("password", props.initial.value.inputValue);
-                component.setPassword(props.initial.value);
+                setInputValue("password", props.initial.value.inputValue)
+                component.setPassword(props.initial.value)
             }
-        }, []);
+        }, [])
 
         return html`
             <dl class="form ${state.result.valid ? "" : "form_error"}">
@@ -40,7 +40,7 @@ export function PasswordForm(component: PasswordFieldComponent): PreactComponent
 
         function onInput(e: InputEvent) {
             if (e.target instanceof HTMLInputElement) {
-                component.setPassword({ inputValue: e.target.value });
+                component.setPassword({ inputValue: e.target.value })
             }
         }
 
@@ -61,7 +61,7 @@ export function PasswordForm(component: PasswordFieldComponent): PreactComponent
                             return html`<p class="form__message">パスワードが長すぎます(72文字以内)</p>`
                         }
                 }
-            });
+            })
         }
 
         function view(view: PasswordView): VNode {
@@ -81,44 +81,44 @@ export function PasswordForm(component: PasswordFieldComponent): PreactComponent
             }
 
             function show(e: MouseEvent) {
-                linkClicked(e);
-                component.showPassword();
+                linkClicked(e)
+                component.showPassword()
             }
             function hide(e: MouseEvent) {
-                linkClicked(e);
-                component.hidePassword();
+                linkClicked(e)
+                component.hidePassword()
             }
             function linkClicked(e: MouseEvent) {
-                e.preventDefault();
+                e.preventDefault()
 
                 // クリック後 focus 状態になるのでキャンセル
                 if (e.target instanceof HTMLElement) {
-                    e.target.blur();
+                    e.target.blur()
                 }
             }
 
             function extractPassword(password: InputValue): string {
                 if (password.inputValue.length === 0) {
-                    return "(入力されていません)";
+                    return "(入力されていません)"
                 } else {
-                    return password.inputValue;
+                    return password.inputValue
                 }
             }
         }
 
         function characterHelp(): string {
             if (state.character.complex) {
-                return "(マルチバイト文字が含まれています)";
+                return "(マルチバイト文字が含まれています)"
             } else {
-                return "";
+                return ""
             }
         }
     }
 }
 
 function setInputValue(id: string, value: string): void {
-    const input = document.getElementById(id);
+    const input = document.getElementById(id)
     if (input instanceof HTMLInputElement) {
-        input.value = value;
+        input.value = value
     }
 }

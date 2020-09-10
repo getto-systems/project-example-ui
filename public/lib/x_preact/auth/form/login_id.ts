@@ -1,13 +1,13 @@
-import { VNode } from "preact";
-import { useState, useEffect } from "preact/hooks";
-import { html } from "htm/preact";
+import { VNode } from "preact"
+import { useState, useEffect } from "preact/hooks"
+import { html } from "htm/preact"
 
-import { LoginIDFieldComponent, LoginIDState } from "../../../auth/field/login_id";
+import { LoginIDFieldComponent, LoginIDState } from "../../../auth/field/login_id"
 
-import { InitialValue } from "../../../input/data";
+import { InitialValue } from "../../../input/data"
 
 interface PreactComponent {
-    (props: Props): VNode;
+    (props: Props): VNode
 }
 
 type Props = {
@@ -16,15 +16,15 @@ type Props = {
 
 export function LoginIDForm(component: LoginIDFieldComponent): PreactComponent {
     return (props: Props): VNode => {
-        const [state, setState] = useState(component.initialState());
-        component.onStateChange(setState);
+        const [state, setState] = useState(component.initialState())
+        component.onStateChange(setState)
 
         useEffect(() => {
             if (props.initial.hasValue) {
-                setInputValue("login-id", props.initial.value.inputValue);
-                component.setLoginID(props.initial.value);
+                setInputValue("login-id", props.initial.value.inputValue)
+                component.setLoginID(props.initial.value)
             }
-        }, []);
+        }, [])
 
         return html`
             <dl class="form ${state.result.valid ? "" : "form_error"}">
@@ -38,7 +38,7 @@ export function LoginIDForm(component: LoginIDFieldComponent): PreactComponent {
 
         function onInput(e: InputEvent) {
             if (e.target instanceof HTMLInputElement) {
-                component.setLoginID({ inputValue: e.target.value });
+                component.setLoginID({ inputValue: e.target.value })
             }
         }
 
@@ -52,14 +52,14 @@ export function LoginIDForm(component: LoginIDFieldComponent): PreactComponent {
                     case "empty":
                         return html`<p class="form__message">ログインIDを入力してください</p>`
                 }
-            });
+            })
         }
     }
 }
 
 function setInputValue(id: string, value: string): void {
-    const input = document.getElementById(id);
+    const input = document.getElementById(id)
     if (input instanceof HTMLInputElement) {
-        input.value = value;
+        input.value = value
     }
 }

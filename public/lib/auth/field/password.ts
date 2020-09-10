@@ -1,8 +1,8 @@
-import { AuthAction } from "../../auth/action";
-import { PasswordField, PasswordEvent } from "../../password/action";
+import { AuthAction } from "../../auth/action"
+import { PasswordField, PasswordEvent } from "../../password/action"
 
-import { Password, PasswordError, PasswordCharacter, PasswordView } from "../../password/data";
-import { InputValue, Content, Valid } from "../../input/data";
+import { Password, PasswordError, PasswordCharacter, PasswordView } from "../../password/data"
+import { InputValue, Content, Valid } from "../../input/data"
 
 export interface PasswordFieldComponent {
     initialState(): PasswordState
@@ -22,7 +22,7 @@ export interface PasswordEventHandler {
 }
 
 export function initPasswordField(action: AuthAction): PasswordFieldComponent {
-    return new Component(action.password.initPasswordField());
+    return new Component(action.password.initPasswordField())
 }
 
 class Component implements PasswordFieldComponent {
@@ -30,33 +30,33 @@ class Component implements PasswordFieldComponent {
     eventHolder: EventHolder<ComponentEvent>
 
     constructor(password: PasswordField) {
-        this.password = password;
+        this.password = password
         this.eventHolder = { hasEvent: false }
     }
 
     initialState(): PasswordState {
-        const [result, character, view] = this.password.initialState();
-        return { type: "input-password", result, character, view };
+        const [result, character, view] = this.password.initialState()
+        return { type: "input-password", result, character, view }
     }
 
     onStateChange(stateChanged: PasswordEventHandler): void {
         this.eventHolder = { hasEvent: true, event: new ComponentEvent(stateChanged) }
     }
     event(): ComponentEvent {
-        return unwrap(this.eventHolder);
+        return unwrap(this.eventHolder)
     }
 
     async validate(): Promise<Content<Password>> {
-        return this.password.validate(this.event());
+        return this.password.validate(this.event())
     }
     async setPassword(passwrod: InputValue): Promise<void> {
-        this.password.setPassword(this.event(), passwrod);
+        this.password.setPassword(this.event(), passwrod)
     }
     async showPassword(): Promise<void> {
-        this.password.showPassword(this.event());
+        this.password.showPassword(this.event())
     }
     async hidePassword(): Promise<void> {
-        this.password.hidePassword(this.event());
+        this.password.hidePassword(this.event())
     }
 }
 
@@ -64,11 +64,11 @@ class ComponentEvent implements PasswordEvent {
     stateChanged: PasswordEventHandler
 
     constructor(stateChanged: PasswordEventHandler) {
-        this.stateChanged = stateChanged;
+        this.stateChanged = stateChanged
     }
 
     updated(result: Valid<PasswordError>, character: PasswordCharacter, view: PasswordView): void {
-        this.stateChanged({ type: "input-password", result, character, view });
+        this.stateChanged({ type: "input-password", result, character, view })
     }
 }
 
@@ -77,7 +77,7 @@ type EventHolder<T> =
     Readonly<{ hasEvent: true, event: T }>
 function unwrap<T>(holder: EventHolder<T>): T {
     if (!holder.hasEvent) {
-        throw new Error("event is not initialized");
+        throw new Error("event is not initialized")
     }
-    return holder.event;
+    return holder.event
 }

@@ -1,14 +1,14 @@
-import { PathnameLocation, PathnameResponse } from "../../infra";
+import { PathnameLocation, PathnameResponse } from "../../infra"
 
 export function initBrowserPathnameLocation(browserLocation: Location): PathnameLocation {
-    return new BrowserPathnameLocation(browserLocation);
+    return new BrowserPathnameLocation(browserLocation)
 }
 
 class BrowserPathnameLocation implements PathnameLocation {
     browserLocation: Location
 
     constructor(browserLocation: Location) {
-        this.browserLocation = browserLocation;
+        this.browserLocation = browserLocation
     }
 
     pathname(): PathnameResponse {

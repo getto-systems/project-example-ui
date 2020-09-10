@@ -1,24 +1,24 @@
-import { env } from "../y_static/env";
+import { env } from "../y_static/env"
 
 (async () => {
-    const nextVersion = await find(env.version);
-    const path = parsePathname(env.version, location.pathname);
+    const nextVersion = await find(env.version)
+    const path = parsePathname(env.version, location.pathname)
     if (path.isApplication) {
         // ロケーション情報を引き継いで遷移
         if (nextVersion.found) {
-            location.href = `/${nextVersion.version}/${path.pathname}${location.search}${location.hash}`;
+            location.href = `/${nextVersion.version}/${path.pathname}${location.search}${location.hash}`
         } else {
             // 次のパージョンが見つからない場合は何もしない
         }
     } else {
         // トップに遷移
         if (nextVersion.found) {
-            location.href = `/${nextVersion.version}/index.html`;
+            location.href = `/${nextVersion.version}/index.html`
         } else {
-            location.href = `/${env.version}/index.html`;
+            location.href = `/${env.version}/index.html`
         }
     }
-})();
+})()
 
 type NextVersion =
     Readonly<{ found: false }> |
@@ -29,7 +29,7 @@ type AppPathname =
     Readonly<{ isApplication: true, pathname: string }>
 
 function parsePathname(current: string, pathname: string): AppPathname {
-    const regexp = new RegExp(`^/${current}/`);
+    const regexp = new RegExp(`^/${current}/`)
     if (!pathname.match(regexp)) {
         return { isApplication: false }
     }
@@ -51,30 +51,30 @@ type Deploy =
     Readonly<{ found: true, version: Version }>
 
 async function find(current: string): Promise<NextVersion> {
-    const result = parse(current);
+    const result = parse(current)
     if (!result.valid) {
         return { found: false }
     }
 
-    let deploy = await findNextDeploy(result.version);
+    let deploy = await findNextDeploy(result.version)
     if (!deploy.found) {
         return { found: false }
     }
 
     while (deploy.found) {
-        const nextDeploy: Deploy = await findNextDeploy(deploy.version);
+        const nextDeploy: Deploy = await findNextDeploy(deploy.version)
         if (!nextDeploy.found) {
-            break;
+            break
         }
 
-        deploy = nextDeploy;
+        deploy = nextDeploy
     }
 
-    return { found: true, version: versionString(deploy.version) };
+    return { found: true, version: versionString(deploy.version) }
 }
 
 function parse(version: string): ParsedVersion {
-    const splits = version.split(".");
+    const splits = version.split(".")
     if (splits.length !== 3) {
         return { valid: false }
     }
@@ -90,29 +90,29 @@ function parse(version: string): ParsedVersion {
 }
 
 async function findNextDeploy(version: Version): Promise<Deploy> {
-    const nextMinor = nextMinorVersion(version);
+    const nextMinor = nextMinorVersion(version)
     if (await deployed(nextMinor)) {
         return { found: true, version: nextMinor }
     }
 
-    const nextPatch = nextPatchVersion(version);
+    const nextPatch = nextPatchVersion(version)
     if (await deployed(nextPatch)) {
         return { found: true, version: nextPatch }
     }
 
-    return { found: false };
+    return { found: false }
 }
 
 async function deployed(version: Version): Promise<boolean> {
     const response = await fetch(`/${versionString(version)}/index.html`, {
         method: "HEAD",
-    });
+    })
 
     if (response.ok) {
-        return true;
+        return true
     }
 
-    return false;
+    return false
 }
 
 function nextMinorVersion(version: Version): Version {
@@ -131,5 +131,5 @@ function nextPatchVersion(version: Version): Version {
 }
 
 function versionString(v: Version): string {
-    return `${v.major}.${v.minor}.${v.patch}`;
+    return `${v.major}.${v.minor}.${v.patch}`
 }

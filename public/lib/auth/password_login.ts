@@ -1,12 +1,12 @@
-import { LoginIDFieldComponent, initLoginIDField } from "./field/login_id";
-import { PasswordFieldComponent, initPasswordField } from "./field/password";
+import { LoginIDFieldComponent, initLoginIDField } from "./field/login_id"
+import { PasswordFieldComponent, initPasswordField } from "./field/password"
 
-import { AuthAction, AuthEvent } from "../auth/action";
-import { StoreEvent } from "../auth_credential/action";
-import { LoginEvent } from "../password_login/action";
+import { AuthAction, AuthEvent } from "../auth/action"
+import { StoreEvent } from "../auth_credential/action"
+import { LoginEvent } from "../password_login/action"
 
-import { StoreError } from "../auth_credential/data";
-import { InputContent, LoginError } from "../password_login/data";
+import { StoreError } from "../auth_credential/data"
+import { InputContent, LoginError } from "../password_login/data"
 
 export interface PasswordLoginComponent {
     fields(): PasswordLoginFieldComponents
@@ -31,7 +31,7 @@ export interface LoginEventHandler {
 }
 
 export function initPasswordLogin(action: AuthAction, authEvent: AuthEvent): PasswordLoginComponent {
-    return new Component(action, authEvent);
+    return new Component(action, authEvent)
 }
 
 class Component implements PasswordLoginComponent {
@@ -43,12 +43,12 @@ class Component implements PasswordLoginComponent {
     eventHolder: EventHolder<ComponentEvent>
 
     constructor(action: AuthAction, authEvent: AuthEvent) {
-        this.action = action;
-        this.authEvent = authEvent;
+        this.action = action
+        this.authEvent = authEvent
         this.eventHolder = { hasEvent: false }
 
-        this.loginID = initLoginIDField(this.action);
-        this.password = initPasswordField(this.action);
+        this.loginID = initLoginIDField(this.action)
+        this.password = initPasswordField(this.action)
     }
 
     fields(): PasswordLoginFieldComponents {
@@ -56,26 +56,26 @@ class Component implements PasswordLoginComponent {
     }
 
     initialState(): LoginState {
-        return { type: "initial-login" };
+        return { type: "initial-login" }
     }
 
     onStateChange(stateChanged: LoginEventHandler): void {
         this.eventHolder = { hasEvent: true, event: new ComponentEvent(stateChanged, this.authEvent) }
     }
     event(): ComponentEvent {
-        return unwrap(this.eventHolder);
+        return unwrap(this.eventHolder)
     }
 
     async login(): Promise<void> {
         const result = await this.action.passwordLogin.login(this.event(), await Promise.all([
             this.loginID.validate(),
             this.password.validate(),
-        ]));
+        ]))
         if (!result.success) {
-            return;
+            return
         }
 
-        await this.action.authCredential.store(this.event(), result.authCredential);
+        await this.action.authCredential.store(this.event(), result.authCredential)
     }
 }
 
@@ -84,25 +84,25 @@ class ComponentEvent implements LoginEvent, StoreEvent {
     authEvent: AuthEvent
 
     constructor(stateChanged: LoginEventHandler, authEvent: AuthEvent) {
-        this.stateChanged = stateChanged;
-        this.authEvent = authEvent;
+        this.stateChanged = stateChanged
+        this.authEvent = authEvent
     }
 
     tryToLogin(): void {
-        this.stateChanged({ type: "try-to-login" });
+        this.stateChanged({ type: "try-to-login" })
     }
     delayedToLogin(): void {
-        this.stateChanged({ type: "delayed-to-login" });
+        this.stateChanged({ type: "delayed-to-login" })
     }
     failedToLogin(content: InputContent, err: LoginError): void {
-        this.stateChanged({ type: "failed-to-login", content, err });
+        this.stateChanged({ type: "failed-to-login", content, err })
     }
 
     failedToStore(err: StoreError): void {
-        this.stateChanged({ type: "failed-to-store", err });
+        this.stateChanged({ type: "failed-to-store", err })
     }
     succeedToStore(): void {
-        this.authEvent.succeedToAuth();
+        this.authEvent.succeedToAuth()
     }
 }
 
@@ -111,7 +111,7 @@ type EventHolder<T> =
     Readonly<{ hasEvent: true, event: T }>
 function unwrap<T>(holder: EventHolder<T>): T {
     if (!holder.hasEvent) {
-        throw new Error("event is not initialized");
+        throw new Error("event is not initialized")
     }
-    return holder.event;
+    return holder.event
 }

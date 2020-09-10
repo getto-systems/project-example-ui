@@ -1,9 +1,9 @@
-import { LoginID } from "../auth_credential/data";
+import { LoginID } from "../auth_credential/data"
 import {
     Session, SessionError,
     Destination,
     PollingStatus, DoneStatus, PollingStatusError,
-} from "./data";
+} from "./data"
 
 export type Infra = Readonly<{
     config: Config,

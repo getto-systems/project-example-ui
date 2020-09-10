@@ -1,11 +1,11 @@
-import { PasswordResetClient, ResetResponse, resetSuccess, resetFailed } from "../../../infra";
+import { PasswordResetClient, ResetResponse, resetSuccess, resetFailed } from "../../../infra"
 
-import { LoginID, AuthCredential } from "../../../../auth_credential/data";
-import { Password } from "../../../../password/data";
-import { ResetToken } from "../../../data";
+import { LoginID, AuthCredential } from "../../../../auth_credential/data"
+import { Password } from "../../../../password/data"
+import { ResetToken } from "../../../data"
 
 export function initSimulatePasswordResetClient(targetLoginID: LoginID, returnAuthCredential: AuthCredential): PasswordResetClient {
-    return new SimulatePasswordResetClient(targetLoginID, returnAuthCredential);
+    return new SimulatePasswordResetClient(targetLoginID, returnAuthCredential)
 }
 
 class SimulatePasswordResetClient implements PasswordResetClient {
@@ -14,25 +14,25 @@ class SimulatePasswordResetClient implements PasswordResetClient {
     returnAuthCredential: AuthCredential
 
     constructor(targetLoginID: LoginID, returnAuthCredential: AuthCredential) {
-        this.targetLoginID = targetLoginID;
+        this.targetLoginID = targetLoginID
 
-        this.returnAuthCredential = returnAuthCredential;
+        this.returnAuthCredential = returnAuthCredential
     }
 
     reset(token: ResetToken, loginID: LoginID, password: Password): Promise<ResetResponse> {
         return new Promise((resolve) => {
             ((simulate) => {
                 setTimeout(() => {
-                    resolve(simulate(token, loginID, password));
-                }, 5 * 1000);
-            })(this.resetSimulate);
-        });
+                    resolve(simulate(token, loginID, password))
+                }, 5 * 1000)
+            })(this.resetSimulate)
+        })
     }
     resetSimulate(token: ResetToken, loginID: LoginID, _password: Password): ResetResponse {
         if (loginID.loginID !== this.targetLoginID.loginID) {
-            return resetFailed({ type: "invalid-password-reset" });
+            return resetFailed({ type: "invalid-password-reset" })
         } else {
-            return resetSuccess(this.returnAuthCredential);
+            return resetSuccess(this.returnAuthCredential)
         }
     }
 }

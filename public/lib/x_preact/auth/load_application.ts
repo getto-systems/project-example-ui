@@ -1,8 +1,8 @@
-import { VNode } from "preact";
-import { useState, useEffect } from "preact/hooks";
-import { html } from "htm/preact";
+import { VNode } from "preact"
+import { useState, useEffect } from "preact/hooks"
+import { html } from "htm/preact"
 
-import { LoadApplicationComponent } from "../../auth/load_application";
+import { LoadApplicationComponent } from "../../auth/load_application"
 
 export interface PreactComponent {
     (): VNode
@@ -10,21 +10,21 @@ export interface PreactComponent {
 
 export function LoadApplication(component: LoadApplicationComponent): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(component.initialState());
-        component.onStateChange(setState);
+        const [state, setState] = useState(component.initialState())
+        component.onStateChange(setState)
 
         useEffect(() => {
             // script タグは body.appendChild しないとスクリプトがロードされないので useEffect で追加する
             if (state.type === "succeed-to-load") {
-                const script = document.createElement("script");
-                script.src = state.scriptPath.scriptPath;
-                document.body.appendChild(script);
+                const script = document.createElement("script")
+                script.src = state.scriptPath.scriptPath
+                document.body.appendChild(script)
             }
-        }, [state]);
+        }, [state])
 
         switch (state.type) {
             case "initial-load":
-                component.load();
+                component.load()
                 return html``
 
             case "failed-to-load":

@@ -1,4 +1,4 @@
-import { ScriptPath, ScriptError } from "./data";
+import { ScriptPath, ScriptError } from "./data"
 
 export interface ScriptAction {
     load(event: ScriptEvent): Promise<void>

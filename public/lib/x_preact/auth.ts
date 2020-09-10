@@ -1,38 +1,38 @@
-import { render, h, VNode } from "preact";
-import { useState } from "preact/hooks";
-import { html } from "htm/preact";
+import { render, h, VNode } from "preact"
+import { useState } from "preact/hooks"
+import { html } from "htm/preact"
 
-import { init } from "../z_main/auth";
-import { AuthUsecase } from "../auth";
+import { init } from "../z_main/auth"
+import { AuthUsecase } from "../auth"
 
-import { Renew } from "./auth/renew";
-import { LoadApplication } from "./auth/load_application";
+import { Renew } from "./auth/renew"
+import { LoadApplication } from "./auth/load_application"
 
-import { PasswordLogin } from "./auth/password_login";
+import { PasswordLogin } from "./auth/password_login"
 
-render(h(main(init(location, localStorage)), {}), document.body);
+render(h(main(init(location, localStorage)), {}), document.body)
 
 function main(usecase: AuthUsecase) {
     return (): VNode => {
-        const [state, setState] = useState(usecase.initialState());
-        usecase.onStateChange(setState);
+        const [state, setState] = useState(usecase.initialState())
+        usecase.onStateChange(setState)
 
         switch (state.type) {
             case "renew":
-                return h(Renew(usecase.initRenew()), {});
+                return h(Renew(usecase.initRenew()), {})
 
             case "load-application":
-                return h(LoadApplication(usecase.initLoadApplication()), {});
+                return h(LoadApplication(usecase.initLoadApplication()), {})
 
             case "password-login":
-                return h(PasswordLogin(usecase.initPasswordLogin()), {});
+                return h(PasswordLogin(usecase.initPasswordLogin()), {})
 
             case "password-reset-session":
-                //return h(PasswordReset(...state.init), {});
+                //return h(PasswordReset(...state.init), {})
                 return html`ここでパスワードリセット！`
 
             case "password-reset":
-                //return h(PasswordReset(...state.init), {});
+                //return h(PasswordReset(...state.init), {})
                 return html`ここでパスワードリセット！`
 
             case "error":

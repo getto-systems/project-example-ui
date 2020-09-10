@@ -1,8 +1,8 @@
-import { VNode } from "preact";
-import { useState } from "preact/hooks";
-import { html } from "htm/preact";
+import { VNode } from "preact"
+import { useState } from "preact/hooks"
+import { html } from "htm/preact"
 
-import { RenewComponent } from "../../auth/renew";
+import { RenewComponent } from "../../auth/renew"
 
 export interface PreactComponent {
     (): VNode
@@ -10,12 +10,12 @@ export interface PreactComponent {
 
 export function Renew(component: RenewComponent): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(component.initialState());
-        component.onStateChange(setState);
+        const [state, setState] = useState(component.initialState())
+        component.onStateChange(setState)
 
         switch (state.type) {
             case "initial-renew":
-                component.renew();
+                component.renew()
                 return html``
 
             case "try-to-renew":

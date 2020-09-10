@@ -1,26 +1,26 @@
-import { PasswordAction, PasswordField, PasswordEvent } from "./action";
+import { PasswordAction, PasswordField, PasswordEvent } from "./action"
 
 import {
     Password, PasswordError,
     PasswordCharacter, simplePassword, complexPassword,
     PasswordView, showPassword, hidePassword,
-} from "./data";
+} from "./data"
 import {
     InputValue,
     Content, validContent, invalidContent,
     Valid, noError, hasError,
-} from "../input/data";
+} from "../input/data"
 
 // bcrypt を想定しているので、72 バイト以上のパスワードは無効
-const PASSWORD_MAX_BYTES = 72;
+const PASSWORD_MAX_BYTES = 72
 
 export function initPasswordAction(): PasswordAction {
-    return new PasswordActionImpl();
+    return new PasswordActionImpl()
 }
 
 class PasswordActionImpl implements PasswordAction {
     initPasswordField(): PasswordField {
-        return new PasswordFieldImpl();
+        return new PasswordFieldImpl()
     }
 }
 
@@ -29,8 +29,8 @@ class PasswordFieldImpl implements PasswordField {
     visible: boolean
 
     constructor() {
-        this.password = { inputValue: "" };
-        this.visible = false;
+        this.password = { inputValue: "" }
+        this.visible = false
     }
 
     initialState(): [Valid<PasswordError>, PasswordCharacter, PasswordView] {
@@ -38,43 +38,43 @@ class PasswordFieldImpl implements PasswordField {
     }
 
     setPassword(event: PasswordEvent, input: InputValue): void {
-        this.password = input;
-        this.validate(event);
+        this.password = input
+        this.validate(event)
     }
     showPassword(event: PasswordEvent): void {
-        this.visible = true;
-        this.validate(event);
+        this.visible = true
+        this.validate(event)
     }
     hidePassword(event: PasswordEvent): void {
-        this.visible = false;
-        this.validate(event);
+        this.visible = false
+        this.validate(event)
     }
     validate(event: PasswordEvent): Content<Password> {
-        const state = this.state();
-        event.updated(...state);
-        return this.content(state[0]);
+        const state = this.state()
+        event.updated(...state)
+        return this.content(state[0])
     }
 
     toPassword(): Content<Password> {
-        return this.content(this.state()[0]);
+        return this.content(this.state()[0])
     }
     view(): PasswordView {
         if (this.visible) {
-            return showPassword(this.password);
+            return showPassword(this.password)
         } else {
-            return hidePassword;
+            return hidePassword
         }
     }
 
     state(): [Valid<PasswordError>, PasswordCharacter, PasswordView] {
-        const result = hasError(validatePassword(this.password.inputValue));
-        return [result, checkCharacter(this.password.inputValue), this.view()];
+        const result = hasError(validatePassword(this.password.inputValue))
+        return [result, checkCharacter(this.password.inputValue), this.view()]
     }
     content(result: Valid<PasswordError>): Content<Password> {
         if (!result.valid) {
-            return invalidContent(this.password);
+            return invalidContent(this.password)
         }
-        return validContent(this.password, { password: this.password.inputValue });
+        return validContent(this.password, { password: this.password.inputValue })
     }
 }
 
@@ -90,20 +90,20 @@ const ERROR: {
 
 function validatePassword(password: string): Array<PasswordError> {
     if (password.length === 0) {
-        return ERROR.empty;
+        return ERROR.empty
     }
 
     if (Buffer.byteLength(password, 'utf8') > PASSWORD_MAX_BYTES) {
-        return ERROR.tooLong;
+        return ERROR.tooLong
     }
 
-    return [];
+    return []
 }
 function checkCharacter(password: string): PasswordCharacter {
     for (let i = 0; i < password.length; i++) {
         if (password.charCodeAt(i) >= 128) {
-            return complexPassword;
+            return complexPassword
         }
     }
-    return simplePassword;
+    return simplePassword
 }
