@@ -47,7 +47,7 @@ class PasswordLoginActionImpl implements PasswordLoginAction {
             return { success: false }
         }
 
-        return { success: true, authCredential: response.authCredential };
+        return { success: true, authCredential: response.authCredential }
 
         function mapContent(loginID: Content<LoginID>, password: Content<Password>): ValidLoginContent {
             if (

@@ -8,18 +8,21 @@ import { initStorageAuthCredentialRepository } from "../ability/auth_credential/
 import { initFetchRenewClient } from "../ability/auth_credential/client/renew/fetch";
 import { initBrowserPathnameLocation } from "../ability/script/location/browser";
 import { initFetchPasswordLoginClient } from "../ability/password_login/client/password_login/fetch";
+import { initSimulatePasswordResetSessionClient } from "../ability/password_reset_session/infra/client/password_reset_session/simulate";
 //import { initSimulatePasswordResetClient } from "../ability/password_reset/client/password_reset/simulate";
 import { env } from "../y_static/env";
 
 import { AuthCredentialRepository, RenewClient } from "../ability/auth_credential/infra";
 import { ScriptEnv, PathnameLocation } from "../ability/script/infra";
 import { PasswordLoginClient } from "../ability/password_login/infra";
+import { PasswordResetSessionClient } from "../ability/password_reset_session/infra";
 //import { PasswordResetClient } from "../ability/password_reset/infra";
 
 import { initAuthCredentialAction } from "../ability/auth_credential/core";
 import { initScriptAction } from "../ability/script/core";
 import { initPasswordAction } from "../ability/password/core";
 import { initPasswordLoginAction } from "../ability/password_login/core";
+import { initPasswordResetSessionAction } from "../ability/password_reset_session/core";
 //import { initPasswordResetAction } from "../ability/password_reset/core";
 
 export function init(browserLocation: Location, storage: Storage): AuthUsecase {
@@ -43,6 +46,9 @@ export function init(browserLocation: Location, storage: Storage): AuthUsecase {
             passwordLogin: initPasswordLoginAction({
                 passwordLoginClient: initPasswordLoginClient(authClient),
             }),
+            passwordResetSession: initPasswordResetSessionAction({
+                passwordResetSessionClient: initPasswordResetSessionClient(),
+            }),
             /*
             passwordReset: initPasswordResetAction({
                 passwordResetClient: initPasswordResetClient(),
@@ -60,6 +66,9 @@ export function init(browserLocation: Location, storage: Storage): AuthUsecase {
     }
     function initPasswordLoginClient(authClient: AuthClient): PasswordLoginClient {
         return initFetchPasswordLoginClient(authClient);
+    }
+    function initPasswordResetSessionClient(): PasswordResetSessionClient {
+        return initSimulatePasswordResetSessionClient({ loginID: "admin" });
     }
 
     function initScriptEnv(): ScriptEnv {

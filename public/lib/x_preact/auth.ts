@@ -27,6 +27,10 @@ function main(usecase: AuthUsecase) {
             case "password-login":
                 return h(PasswordLogin(state.component), {});
 
+            case "password-reset-session":
+                //return h(PasswordReset(...state.init), {});
+                return html`ここでパスワードリセット！`
+
             /*
             case "password-reset":
                 //return h(PasswordReset(...state.init), {});
