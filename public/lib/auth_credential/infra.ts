@@ -14,7 +14,7 @@ export type DelayTime = Readonly<{ delay_milli_second: number }>
 
 export interface AuthCredentialRepository {
     findTicketNonce(): FindResponse<TicketNonce>
-    // TODO
+    // TODO find api nonce を追加
     //findApiNonce(): ApiNonceFound
     storeAuthCredential(authCredential: AuthCredential): StoreResponse
 }
