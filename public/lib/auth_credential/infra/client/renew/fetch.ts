@@ -33,7 +33,6 @@ class FetchRenewClient implements RenewClient {
                 });
             } else {
                 switch (response.err.type) {
-                    case "empty-nonce":
                     case "bad-request":
                     case "invalid-ticket":
                     case "server-error":

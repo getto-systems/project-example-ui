@@ -73,7 +73,7 @@ class ComponentEvent implements RenewEvent, StoreEvent {
     }
     failedToRenew(err: RenewError): void {
         switch (err.type) {
-            case "empty-nonce":
+            case "ticket-nonce-not-found":
             case "invalid-ticket":
                 this.authEvent.tryToLogin();
                 return;
