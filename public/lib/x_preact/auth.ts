@@ -8,6 +8,8 @@ import { AuthUsecase } from "../auth";
 import { Renew } from "./auth/renew";
 import { LoadApplication } from "./auth/load_application";
 
+import { PasswordLogin } from "./auth/password_login";
+
 render(h(main(init(location, localStorage)), {}), document.body);
 
 function main(auth: AuthUsecase) {
@@ -22,10 +24,11 @@ function main(auth: AuthUsecase) {
             case "load-application":
                 return h(LoadApplication(auth.initLoadApplication()), {});
 
-            /*
             case "password-login":
-                return h(PasswordLogin(...state.init), {});
+                //return h(PasswordLogin(auth.initPasswordLogin()), {});
+                return html`LOGIN`
 
+            /*
             case "password-reset":
                 //return h(PasswordReset(...state.init), {});
                 return html`ここでパスワードリセット！`

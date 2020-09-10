@@ -22,13 +22,13 @@ export interface RenewEventHandler {
 }
 
 export function initRenew(action: AuthAction, authEvent: AuthEvent): RenewComponent {
-    return new RenewComponentImpl(action, authEvent);
+    return new Component(action, authEvent);
 }
 
-class RenewComponentImpl implements RenewComponent {
+class Component implements RenewComponent {
     action: AuthAction
     authEvent: AuthEvent
-    eventHolder: EventHolder<EventImpl>
+    eventHolder: EventHolder<ComponentEvent>
 
     constructor(action: AuthAction, authEvent: AuthEvent) {
         this.action = action;
@@ -41,9 +41,9 @@ class RenewComponentImpl implements RenewComponent {
     }
 
     onStateChange(stateChanged: RenewEventHandler): void {
-        this.eventHolder = { hasEvent: true, event: new EventImpl(this.authEvent, stateChanged) }
+        this.eventHolder = { hasEvent: true, event: new ComponentEvent(stateChanged, this.authEvent) }
     }
-    event(): EventImpl {
+    event(): ComponentEvent {
         return unwrap(this.eventHolder);
     }
 
@@ -53,17 +53,17 @@ class RenewComponentImpl implements RenewComponent {
             return;
         }
 
-        this.action.authCredential.store_withEvent(this.event(), result.authCredential);
+        await this.action.authCredential.store_withEvent(this.event(), result.authCredential);
     }
 }
 
-class EventImpl implements RenewEvent, StoreEvent {
-    authEvent: AuthEvent
+class ComponentEvent implements RenewEvent, StoreEvent {
     stateChanged: RenewEventHandler
+    authEvent: AuthEvent
 
-    constructor(authEvent: AuthEvent, stateChanged: RenewEventHandler) {
-        this.authEvent = authEvent;
+    constructor(stateChanged: RenewEventHandler, authEvent: AuthEvent) {
         this.stateChanged = stateChanged;
+        this.authEvent = authEvent;
     }
 
     tryToRenew(): void {

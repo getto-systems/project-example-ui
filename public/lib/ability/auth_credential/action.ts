@@ -1,20 +1,35 @@
 import {
-    LoginID, LoginIDBoard, ValidLoginID,
+    LoginID, LoginIDBoard, ValidLoginID, LoginIDError,
     AuthCredential,
     RenewError,
     StoreError,
     RenewState,
     StoreCredentialState,
 } from "./data";
+import { InputValue, InitialValue, Content, Valid } from "../input/data";
 
 export interface AuthCredentialAction {
     initLoginIDRecord(): LoginIDRecord
+    initLoginIDField(): LoginIDField
 
     renew(): Promise<RenewState>
     initStoreCredentialApi(): StoreCredentialApi
 
     renew_withEvent(event: RenewEvent): Promise<RenewResult>
     store_withEvent(event: StoreEvent, authCredential: AuthCredential): Promise<void>
+}
+
+export interface LoginIDField {
+    initialState(initial: InitialValue): [Valid<LoginIDError>]
+
+    setLoginID(event: LoginIDEvent, input: InputValue): void
+    validate(event: LoginIDEvent): Content<LoginID>
+
+    toLoginID(): Content<LoginID>
+}
+
+export interface LoginIDEvent {
+    updated(valid: Valid<LoginIDError>): void
 }
 
 export type RenewResult =

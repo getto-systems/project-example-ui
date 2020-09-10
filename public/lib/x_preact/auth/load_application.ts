@@ -24,6 +24,9 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
 
         switch (state.type) {
             case "initial-load":
+                component.load();
+                return html``
+
             case "try-to-load":
                 // path の取得には時間がかからないはずなので空を返す
                 return html``

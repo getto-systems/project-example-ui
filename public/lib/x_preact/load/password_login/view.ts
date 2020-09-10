@@ -247,6 +247,9 @@ function viewLogin(component: PreactLoginComponent, board: LoginBoard, state: Lo
 
             function loginErrorMessage(err: LoginError): VNode {
                 switch (err.type) {
+                    case "validation-error":
+                        return html`<p class="form__message">正しく入力してください</p>`;
+
                     case "bad-request":
                         return html`<p class="form__message">アプリケーションエラーにより認証に失敗しました</p>`;
 

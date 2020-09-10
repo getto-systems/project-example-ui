@@ -1,17 +1,85 @@
+import { PasswordAction, PasswordField, PasswordEvent, PasswordRecord, PasswordListener } from "./action";
+
 import {
-    Password, PasswordBoard, PasswordValidationError, ValidPassword,
+    Password, PasswordError, PasswordBoard, PasswordValidationError, ValidPassword,
     PasswordCharacter, simplePassword, complexPassword,
     PasswordView, showPassword, hidePassword,
 } from "./data";
-import { PasswordAction, PasswordRecord, PasswordListener } from "./action";
+import {
+    InputValue, InitialValue,
+    Content, validContent, invalidContent,
+    Valid, noError, hasError,
+} from "../input/data";
 
 export function initPasswordAction(): PasswordAction {
     return new PasswordActionImpl();
 }
 
 class PasswordActionImpl implements PasswordAction {
+    initPasswordField(): PasswordField {
+        return new PasswordFieldImpl();
+    }
     initPasswordRecord(): PasswordRecord {
         return new PasswordRecordImpl();
+    }
+}
+
+class PasswordFieldImpl implements PasswordField {
+    password: InputValue
+    visible: boolean
+
+    constructor() {
+        this.password = { inputValue: "" };
+        this.visible = false;
+    }
+
+    initialState(initial: InitialValue): [Valid<PasswordError>, PasswordCharacter, PasswordView] {
+        if (!initial.hasValue) {
+            return [noError(), { complex: false }, { show: false }]
+        }
+
+        this.password = initial.value;
+        return this.state();
+    }
+
+    setPassword(event: PasswordEvent, input: InputValue): void {
+        this.password = input;
+        this.validate(event);
+    }
+    showPassword(event: PasswordEvent): void {
+        this.visible = true;
+        this.validate(event);
+    }
+    hidePassword(event: PasswordEvent): void {
+        this.visible = false;
+        this.validate(event);
+    }
+    validate(event: PasswordEvent): Content<Password> {
+        const state = this.state();
+        event.updated(...state);
+        return this.content(state[0]);
+    }
+
+    toPassword(): Content<Password> {
+        return this.content(this.state()[0]);
+    }
+    view(): PasswordView {
+        if (this.visible) {
+            return showPassword({ password: this.password.inputValue });
+        } else {
+            return hidePassword;
+        }
+    }
+
+    state(): [Valid<PasswordError>, PasswordCharacter, PasswordView] {
+        const result = hasError(validatePassword(this.password.inputValue));
+        return [result, checkCharacter(this.password.inputValue), this.view()];
+    }
+    content(result: Valid<PasswordError>): Content<Password> {
+        if (!result.valid) {
+            return invalidContent(this.password);
+        }
+        return validContent(this.password, { password: this.password.inputValue });
     }
 }
 
@@ -52,7 +120,7 @@ class PasswordRecordImpl implements PasswordRecord {
     input(password: Password): PasswordBoard {
         this.password = password;
         this.character = this.checkCharacter(password);
-        this.err = validatePassword(this.password);
+        this.err = validatePassword(this.password.password);
         return this.currentBoard();
     }
     change(): PasswordBoard {
@@ -81,7 +149,7 @@ class PasswordRecordImpl implements PasswordRecord {
     }
 
     validate(): ValidPassword {
-        this.err = validatePassword(this.password);
+        this.err = validatePassword(this.password.password);
         if (this.err.length > 0) {
             return { valid: false }
         } else {
@@ -97,14 +165,22 @@ class PasswordRecordImpl implements PasswordRecord {
     }
 }
 
-function validatePassword(password: Password): Array<PasswordValidationError> {
-    if (password.password.length === 0) {
+function validatePassword(password: string): Array<PasswordValidationError> {
+    if (password.length === 0) {
         return ERROR.empty;
     }
 
-    if (Buffer.byteLength(password.password, 'utf8') > PASSWORD_MAX_BYTES) {
+    if (Buffer.byteLength(password, 'utf8') > PASSWORD_MAX_BYTES) {
         return ERROR.tooLong;
     }
 
     return [];
+}
+function checkCharacter(password: string): PasswordCharacter {
+    for (let i = 0; i < password.length; i++) {
+        if (password.charCodeAt(i) >= 128) {
+            return complexPassword;
+        }
+    }
+    return simplePassword;
 }

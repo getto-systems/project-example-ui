@@ -15,6 +15,9 @@ export function Renew(component: RenewComponent): PreactComponent {
 
         switch (state.type) {
             case "initial-renew":
+                component.renew();
+                return html``
+
             case "try-to-renew":
             case "try-to-store":
                 return html``
