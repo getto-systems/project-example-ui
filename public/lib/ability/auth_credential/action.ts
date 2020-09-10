@@ -6,7 +6,7 @@ import {
     RenewState,
     StoreCredentialState,
 } from "./data";
-import { InputValue, InitialValue, Content, Valid } from "../input/data";
+import { InputValue, Content, Valid } from "../input/data";
 
 export interface AuthCredentialAction {
     initLoginIDRecord(): LoginIDRecord
@@ -20,7 +20,7 @@ export interface AuthCredentialAction {
 }
 
 export interface LoginIDField {
-    initialState(initial: InitialValue): [Valid<LoginIDError>]
+    initialState(): [Valid<LoginIDError>]
 
     setLoginID(event: LoginIDEvent, input: InputValue): void
     validate(event: LoginIDEvent): Content<LoginID>

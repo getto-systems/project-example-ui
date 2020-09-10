@@ -5,7 +5,7 @@ import { LoginID, LoginIDError } from "../../ability/auth_credential/data";
 import { InputValue, InitialValue, Content, Valid } from "../../ability/input/data";
 
 export interface LoginIDComponent {
-    initialState(initial: InitialValue): LoginIDState
+    initialState(): LoginIDState
     onStateChange(stateChanged: LoginIDEventHandler): void
 
     validate(): Promise<Content<LoginID>>
@@ -32,8 +32,8 @@ class Component implements LoginIDComponent {
         this.eventHolder = { hasEvent: false }
     }
 
-    initialState(initial: InitialValue): LoginIDState {
-        const [result] = this.loginID.initialState(initial);
+    initialState(): LoginIDState {
+        const [result] = this.loginID.initialState();
         return { type: "input-login-id", result };
     }
 

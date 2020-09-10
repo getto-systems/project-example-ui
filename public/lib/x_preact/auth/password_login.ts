@@ -94,8 +94,8 @@ function initialLoginForm(component: PasswordLoginComponent): VNode {
         <form onSubmit="${onSubmit}">
             <big>
                 <section class="login__body">
-                    <${LoginIDForm(loginID)} iniital="${noValue}"/>
-                    <${PasswordForm(password)} iniital="${noValue}"/>
+                    <${LoginIDForm(loginID)} initial="${noValue}"/>
+                    <${PasswordForm(password)} initial="${noValue}"/>
                 </section>
             </big>
             <big>
@@ -265,15 +265,13 @@ type LoginIDProps = {
 
 function LoginIDForm(component: LoginIDComponent): PreactPropsComponent<LoginIDProps> {
     return (props: LoginIDProps): VNode => {
-        const [state, setState] = useState(component.initialState(props.initial));
+        const [state, setState] = useState(component.initialState());
         component.onStateChange(setState);
 
         useEffect(() => {
             if (props.initial.hasValue) {
-                const input = document.getElementById("login-id");
-                if (input instanceof HTMLInputElement) {
-                    input.value = props.initial.value.inputValue;
-                }
+                setInputValue("login-id", props.initial.value.inputValue);
+                component.setLoginID(props.initial.value);
             }
         }, []);
 
@@ -314,15 +312,13 @@ type PasswordProps = {
 
 function PasswordForm(component: PasswordComponent): PreactPropsComponent<PasswordProps> {
     return (props: PasswordProps): VNode => {
-        const [state, setState] = useState(component.initialState(props.initial));
+        const [state, setState] = useState(component.initialState());
         component.onStateChange(setState);
 
         useEffect(() => {
             if (props.initial.hasValue) {
-                const input = document.getElementById("password");
-                if (input instanceof HTMLInputElement) {
-                    input.value = props.initial.value.inputValue;
-                }
+                setInputValue("password", props.initial.value.inputValue);
+                component.setPassword(props.initial.value);
             }
         }, []);
 
@@ -433,4 +429,11 @@ function loginHeader(): VNode {
             <cite class="login__subTitle">code templates</cite>
         </header>
     `
+}
+
+function setInputValue(id: string, value: string): void {
+    const input = document.getElementById(id);
+    if (input instanceof HTMLInputElement) {
+        input.value = value;
+    }
 }

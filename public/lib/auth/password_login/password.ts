@@ -2,10 +2,10 @@ import { AuthAction } from "../../auth/action";
 import { PasswordField, PasswordEvent } from "../../ability/password/action";
 
 import { Password, PasswordError, PasswordCharacter, PasswordView } from "../../ability/password/data";
-import { InputValue, InitialValue, Content, Valid } from "../../ability/input/data";
+import { InputValue, Content, Valid } from "../../ability/input/data";
 
 export interface PasswordComponent {
-    initialState(initial: InitialValue): PasswordState
+    initialState(): PasswordState
     onStateChange(stateChanged: PasswordEventHandler): void
 
     validate(): Promise<Content<Password>>
@@ -34,8 +34,8 @@ class Component implements PasswordComponent {
         this.eventHolder = { hasEvent: false }
     }
 
-    initialState(initial: InitialValue): PasswordState {
-        const [result, character, view] = this.password.initialState(initial);
+    initialState(): PasswordState {
+        const [result, character, view] = this.password.initialState();
         return { type: "input-password", result, character, view };
     }
 
