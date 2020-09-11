@@ -21,4 +21,9 @@ export interface AuthEvent {
     succeedToAuth(): void
 }
 
-export type AuthError = Readonly<{ type: string, err: string }>
+export type AuthError =
+    Readonly<{ type: "bad-request" }> |
+    Readonly<{ type: "server-error" }> |
+    Readonly<{ type: "script-not-found" }> |
+    Readonly<{ type: "bad-response", err: string }> |
+    Readonly<{ type: "infra-error", err: string }>
