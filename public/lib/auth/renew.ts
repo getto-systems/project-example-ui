@@ -1,7 +1,11 @@
-import { AuthAction, AuthEvent } from "../auth/action"
-import { RenewEvent, StoreEvent } from "../credential/action"
+import { AuthEvent } from "../auth/action"
+import { CredentialAction, RenewEvent, StoreEvent } from "../credential/action"
 
 import { RenewError, StoreError } from "../credential/data"
+
+export interface RenewAction {
+    credential: CredentialAction,
+}
 
 export interface RenewComponent {
     initialState: RenewState
@@ -21,18 +25,18 @@ export interface RenewEventHandler {
     (state: RenewState): void
 }
 
-export function initRenew(action: AuthAction, authEvent: AuthEvent): RenewComponent {
+export function initRenew(action: RenewAction, authEvent: AuthEvent): RenewComponent {
     return new Component(action, authEvent)
 }
 
 class Component implements RenewComponent {
-    action: AuthAction
+    action: RenewAction
     authEvent: AuthEvent
     eventHolder: EventHolder<ComponentEvent>
 
     initialState: RenewState = { type: "initial-renew" }
 
-    constructor(action: AuthAction, authEvent: AuthEvent) {
+    constructor(action: RenewAction, authEvent: AuthEvent) {
         this.action = action
         this.authEvent = authEvent
         this.eventHolder = { hasEvent: false }
@@ -46,12 +50,12 @@ class Component implements RenewComponent {
     }
 
     async renew(): Promise<void> {
-        const result = await this.action.authCredential.renew(this.event())
+        const result = await this.action.credential.renew(this.event())
         if (!result.success) {
             return
         }
 
-        await this.action.authCredential.store(this.event(), result.authCredential)
+        await this.action.credential.store(this.event(), result.authCredential)
     }
 }
 

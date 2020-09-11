@@ -1,4 +1,4 @@
-import { AuthCredentialAction } from "../credential/action"
+import { CredentialAction } from "../credential/action"
 import { ScriptAction } from "../script/action"
 import { PasswordAction } from "../password/action"
 import { PasswordLoginAction } from "../password_login/action"
@@ -9,8 +9,7 @@ import { RenewError } from "../credential/data"
 import { CheckError } from "../script/data"
 
 export type AuthAction = {
-    // TODO rename: credential: CredentialAction
-    authCredential: AuthCredentialAction,
+    credential: CredentialAction,
     script: ScriptAction,
     password: PasswordAction,
 

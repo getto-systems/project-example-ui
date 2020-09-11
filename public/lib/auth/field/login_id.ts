@@ -20,7 +20,7 @@ export interface LoginIDEventHandler {
 }
 
 export function initLoginIDField(action: AuthAction): LoginIDFieldComponent {
-    return new Component(action.authCredential.initLoginIDField())
+    return new Component(action.credential.initLoginIDField())
 }
 
 class Component implements LoginIDFieldComponent {
