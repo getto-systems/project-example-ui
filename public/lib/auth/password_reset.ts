@@ -9,9 +9,11 @@ import { StoreError } from "../credential/data"
 import { InputContent, ResetToken, ResetError } from "../password_reset/data"
 
 export interface PasswordResetComponent {
-    fields(): PasswordResetFieldComponents
+    loginID: LoginIDFieldComponent
+    password: PasswordFieldComponent
 
-    initialState(): ResetState
+    initialState: ResetState
+
     onStateChange(stateChanged: ResetEventHandler): void
 
     reset(): Promise<void>
@@ -44,6 +46,8 @@ class Component implements PasswordResetComponent {
 
     resetToken: ResetToken
 
+    initialState: ResetState = { type: "initial-reset" }
+
     constructor(action: AuthAction, authEvent: AuthEvent, resetToken: ResetToken) {
         this.action = action
         this.authEvent = authEvent
@@ -53,14 +57,6 @@ class Component implements PasswordResetComponent {
 
         this.loginID = initLoginIDField(this.action)
         this.password = initPasswordField(this.action)
-    }
-
-    fields(): PasswordResetFieldComponents {
-        return [this.loginID, this.password]
-    }
-
-    initialState(): ResetState {
-        return { type: "initial-reset" }
     }
 
     onStateChange(stateChanged: ResetEventHandler): void {

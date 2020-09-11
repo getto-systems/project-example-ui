@@ -10,7 +10,7 @@ export interface PreactComponent {
 
 export function Renew(component: RenewComponent): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(component.initialState())
+        const [state, setState] = useState(component.initialState)
         component.onStateChange(setState)
 
         switch (state.type) {

@@ -4,7 +4,7 @@ import { ScriptEvent } from "../script/action"
 import { ScriptPath, CheckError } from "../script/data"
 
 export interface LoadApplicationComponent {
-    initialState(): LoadState
+    initialState: LoadState
     onStateChange(stateChanged: LoadEventHandler): void
 
     load(currentLocation: Readonly<Location>): Promise<void>
@@ -36,13 +36,11 @@ class Component implements LoadApplicationComponent {
     action: AuthAction
     event: LoadApplicationComponentEvent
 
+    initialState: LoadState = { type: "initial-load" }
+
     constructor(action: AuthAction, event: LoadApplicationComponentEvent) {
         this.action = action
         this.event = event
-    }
-
-    initialState(): LoadState {
-        return { type: "initial-load" }
     }
 
     onStateChange(stateChanged: LoadEventHandler): void {

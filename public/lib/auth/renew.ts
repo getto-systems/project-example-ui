@@ -4,7 +4,8 @@ import { RenewEvent, StoreEvent } from "../credential/action"
 import { RenewError, StoreError } from "../credential/data"
 
 export interface RenewComponent {
-    initialState(): RenewState
+    initialState: RenewState
+
     onStateChange(stateChanged: RenewEventHandler): void
 
     renew(): Promise<void>
@@ -29,14 +30,12 @@ class Component implements RenewComponent {
     authEvent: AuthEvent
     eventHolder: EventHolder<ComponentEvent>
 
+    initialState: RenewState = { type: "initial-renew" }
+
     constructor(action: AuthAction, authEvent: AuthEvent) {
         this.action = action
         this.authEvent = authEvent
         this.eventHolder = { hasEvent: false }
-    }
-
-    initialState(): RenewState {
-        return { type: "initial-renew" }
     }
 
     onStateChange(stateChanged: RenewEventHandler): void {

@@ -10,7 +10,7 @@ export interface PreactComponent {
 
 export function LoadApplication(component: LoadApplicationComponent): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(component.initialState())
+        const [state, setState] = useState(component.initialState)
         component.onStateChange(setState)
 
         useEffect(() => {

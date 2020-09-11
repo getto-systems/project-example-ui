@@ -24,8 +24,13 @@ import { PasswordLoginClient } from "../password_login/infra"
 import { PasswordResetSessionClient } from "../password_reset_session/infra"
 import { PasswordResetClient } from "../password_reset/infra"
 
-export function init(currentLocation: Readonly<Location>, storage: Storage): AuthUsecase {
-    return initAuthUsecase(currentLocation, initAuthAction())
+export function init(): AuthUsecase {
+    const backbone = {
+        currentLocation: location,
+        storage: localStorage,
+    }
+
+    return initAuthUsecase(backbone.currentLocation, initAuthAction())
 
     function initAuthAction(): AuthAction {
         const config = initConfig()
@@ -75,7 +80,7 @@ export function init(currentLocation: Readonly<Location>, storage: Storage): Aut
     }
 
     function initAuthCredentialRepository(): AuthCredentialRepository {
-        return initStorageAuthCredentialRepository(storage, "GETTO-EXAMPLE-CREDENTIAL")
+        return initStorageAuthCredentialRepository(backbone.storage, "GETTO-EXAMPLE-CREDENTIAL")
     }
 
     function initRenewClient(authClient: AuthClient): RenewClient {

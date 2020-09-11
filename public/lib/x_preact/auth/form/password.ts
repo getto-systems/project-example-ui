@@ -17,7 +17,7 @@ type Props = {
 
 export function PasswordForm(component: PasswordFieldComponent): PreactComponent {
     return (props: Props): VNode => {
-        const [state, setState] = useState(component.initialState())
+        const [state, setState] = useState(component.initialState)
         component.onStateChange(setState)
 
         useEffect(() => {

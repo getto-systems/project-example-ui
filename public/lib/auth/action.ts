@@ -9,6 +9,7 @@ import { RenewError } from "../credential/data"
 import { CheckError } from "../script/data"
 
 export type AuthAction = {
+    // TODO rename: credential: CredentialAction
     authCredential: AuthCredentialAction,
     script: ScriptAction,
     password: PasswordAction,
