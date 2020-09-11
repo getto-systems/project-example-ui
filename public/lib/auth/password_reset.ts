@@ -75,7 +75,7 @@ class Component implements PasswordResetComponent {
             return
         }
 
-        await this.action.authCredential.store(this.event(), result.authCredential)
+        await this.action.credential.store(this.event(), result.authCredential)
     }
 }
 

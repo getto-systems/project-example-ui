@@ -8,7 +8,7 @@ import { initSimulatePasswordResetSessionClient } from "../password_reset_sessio
 import { initSimulatePasswordResetClient } from "../password_reset/impl/client/password_reset/simulate"
 import { env } from "../y_static/env"
 
-import { initAuthCredentialAction } from "../credential/impl/core"
+import { initCredentialAction } from "../credential/impl/core"
 import { initScriptAction } from "../script/impl/core"
 import { initPasswordAction } from "../password/impl/core"
 import { initPasswordLoginAction } from "../password_login/impl/core"
@@ -37,7 +37,7 @@ export function init(): AuthUsecase {
         const authClient = initAuthClient(env.authServerURL)
 
         return {
-            authCredential: initAuthCredentialAction({
+            credential: initCredentialAction({
                 config,
                 authCredentials: initAuthCredentialRepository(),
                 renewClient: initRenewClient(authClient),

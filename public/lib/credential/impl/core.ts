@@ -1,15 +1,15 @@
 import { Infra } from "../infra"
 
-import { AuthCredentialAction, LoginIDField, LoginIDEvent, RenewResult, RenewEvent, StoreEvent } from "../action"
+import { CredentialAction, LoginIDField, LoginIDEvent, RenewResult, RenewEvent, StoreEvent } from "../action"
 
 import { LoginID, LoginIDError, AuthCredential } from "../data"
 import { InputValue, Content, validContent, invalidContent, Valid, noError, hasError } from "../../input/data"
 
-export function initAuthCredentialAction(infra: Infra): AuthCredentialAction {
-    return new AuthCredentialActionImpl(infra)
+export function initCredentialAction(infra: Infra): CredentialAction {
+    return new CredentialActionImpl(infra)
 }
 
-class AuthCredentialActionImpl implements AuthCredentialAction {
+class CredentialActionImpl implements CredentialAction {
     infra: Infra
 
     constructor(infra: Infra) {

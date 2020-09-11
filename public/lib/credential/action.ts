@@ -1,7 +1,7 @@
 import { LoginID, LoginIDError, AuthCredential, RenewError, StoreError } from "./data"
 import { InputValue, Content, Valid } from "../input/data"
 
-export interface AuthCredentialAction {
+export interface CredentialAction {
     initLoginIDField(): LoginIDField
 
     renew(event: RenewEvent): Promise<RenewResult>
