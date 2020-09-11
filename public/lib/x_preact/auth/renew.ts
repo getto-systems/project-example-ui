@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { useState } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { RenewComponent } from "../../auth/renew"
+import { RenewComponent } from "../../auth/renew/action"
 
 export interface PreactComponent {
     (): VNode

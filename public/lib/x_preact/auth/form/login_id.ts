@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { LoginIDFieldComponent, LoginIDState } from "../../../auth/field/login_id"
+import { LoginIDFieldComponent, LoginIDFieldComponentState } from "../../../auth/field/login_id/action"
 
 import { InitialValue } from "../../../input/data"
 
@@ -42,7 +42,7 @@ export function LoginIDForm(component: LoginIDFieldComponent): PreactComponent {
             }
         }
 
-        function error(state: LoginIDState): Array<VNode> {
+        function error(state: LoginIDFieldComponentState): Array<VNode> {
             if (state.result.valid) {
                 return []
             }

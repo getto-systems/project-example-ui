@@ -1,42 +1,18 @@
-import { LoginIDFieldComponent } from "./field/login_id"
+import { LoginIDFieldComponent } from "../../field/login_id/action"
 
-import { PasswordResetSessionAction, SessionEvent, PollingStatusEvent } from "../password_reset_session/action"
+import {
+    PasswordResetSessionComponentAction,
+    PasswordResetSessionComponent,
+    PasswordResetSessionComponentEvent,
+    PasswordResetSessionComponentState,
+    PasswordResetSessionComponentStateHandler,
+} from "../action"
 
 import {
     InputContent,
     SessionError,
     PollingStatusError, PollingStatus, DoneStatus,
-} from "../password_reset_session/data"
-
-export interface PasswordResetSessionComponentAction {
-    passwordResetSession: PasswordResetSessionAction
-}
-
-export interface PasswordResetSessionComponent {
-    loginID: LoginIDFieldComponent
-
-    initialState: ResetSessionState
-
-    onStateChange(stateChanged: ResetSessionEventHandler): void
-
-    createSession(): Promise<void>
-}
-
-export type PasswordResetSessionFieldComponents = [LoginIDFieldComponent]
-
-export type ResetSessionState =
-    Readonly<{ type: "initial-reset-session" }> |
-    Readonly<{ type: "try-to-create-session" }> |
-    Readonly<{ type: "delayed-to-create-session" }> |
-    Readonly<{ type: "failed-to-create-session", content: InputContent, err: SessionError }> |
-    Readonly<{ type: "try-to-polling-status" }> |
-    Readonly<{ type: "retry-to-polling-status", status: PollingStatus }> |
-    Readonly<{ type: "failed-to-polling-status", err: PollingStatusError }> |
-    Readonly<{ type: "succeed-to-send-token", status: DoneStatus }>
-
-export interface ResetSessionEventHandler {
-    (state: ResetSessionState): void
-}
+} from "../../../password_reset_session/data"
 
 export function initPasswordResetSession(loginID: LoginIDFieldComponent, action: PasswordResetSessionComponentAction): PasswordResetSessionComponent {
     return new Component(loginID, action)
@@ -48,7 +24,7 @@ class Component implements PasswordResetSessionComponent {
     action: PasswordResetSessionComponentAction
     eventHolder: EventHolder<ComponentEvent>
 
-    initialState: ResetSessionState = { type: "initial-reset-session" }
+    initialState: PasswordResetSessionComponentState = { type: "initial-reset-session" }
 
     constructor(loginID: LoginIDFieldComponent, action: PasswordResetSessionComponentAction) {
         this.action = action
@@ -57,7 +33,7 @@ class Component implements PasswordResetSessionComponent {
         this.loginID = loginID
     }
 
-    onStateChange(stateChanged: ResetSessionEventHandler): void {
+    onStateChange(stateChanged: PasswordResetSessionComponentStateHandler): void {
         this.eventHolder = { hasEvent: true, event: new ComponentEvent(stateChanged) }
     }
     event(): ComponentEvent {
@@ -74,10 +50,10 @@ class Component implements PasswordResetSessionComponent {
     }
 }
 
-class ComponentEvent implements SessionEvent, PollingStatusEvent {
-    stateChanged: ResetSessionEventHandler
+class ComponentEvent implements PasswordResetSessionComponentEvent {
+    stateChanged: PasswordResetSessionComponentStateHandler
 
-    constructor(stateChanged: ResetSessionEventHandler) {
+    constructor(stateChanged: PasswordResetSessionComponentStateHandler) {
         this.stateChanged = stateChanged
     }
 

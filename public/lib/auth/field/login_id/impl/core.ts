@@ -1,25 +1,16 @@
-import { AuthAction } from "../../auth/action"
-import { LoginIDField, LoginIDEvent } from "../../credential/action"
+import {
+    LoginIDFieldComponentAction,
+    LoginIDFieldComponent,
+    LoginIDFieldComponentEvent,
+    LoginIDFieldComponentState,
+    LoginIDFieldComponentStateHandler,
+} from "../action"
+import { LoginIDField } from "../../../../credential/action"
 
-import { LoginID, LoginIDError } from "../../credential/data"
-import { InputValue, Content, Valid } from "../../input/data"
+import { LoginID, LoginIDError } from "../../../../credential/data"
+import { InputValue, Content, Valid } from "../../../../input/data"
 
-export interface LoginIDFieldComponent {
-    initialState: LoginIDState
-    onStateChange(stateChanged: LoginIDEventHandler): void
-
-    validate(): Promise<Content<LoginID>>
-    setLoginID(loginID: InputValue): Promise<void>
-}
-
-export type LoginIDState =
-    Readonly<{ type: "input-login-id", result: Valid<LoginIDError> }>
-
-export interface LoginIDEventHandler {
-    (state: LoginIDState): void
-}
-
-export function initLoginIDField(action: AuthAction): LoginIDFieldComponent {
+export function initLoginIDField(action: LoginIDFieldComponentAction): LoginIDFieldComponent {
     return new Component(action.credential.initLoginIDField())
 }
 
@@ -27,14 +18,14 @@ class Component implements LoginIDFieldComponent {
     loginID: LoginIDField
     eventHolder: EventHolder<ComponentEvent>
 
-    initialState: LoginIDState = { type: "input-login-id", result: { valid: true } }
+    initialState: LoginIDFieldComponentState = { type: "input-login-id", result: { valid: true } }
 
     constructor(loginID: LoginIDField) {
         this.loginID = loginID
         this.eventHolder = { hasEvent: false }
     }
 
-    onStateChange(stateChanged: LoginIDEventHandler): void {
+    onStateChange(stateChanged: LoginIDFieldComponentStateHandler): void {
         this.eventHolder = { hasEvent: true, event: new ComponentEvent(stateChanged) }
     }
     event(): ComponentEvent {
@@ -49,10 +40,10 @@ class Component implements LoginIDFieldComponent {
     }
 }
 
-class ComponentEvent implements LoginIDEvent {
-    stateChanged: LoginIDEventHandler
+class ComponentEvent implements LoginIDFieldComponentEvent {
+    stateChanged: LoginIDFieldComponentStateHandler
 
-    constructor(stateChanged: LoginIDEventHandler) {
+    constructor(stateChanged: LoginIDFieldComponentStateHandler) {
         this.stateChanged = stateChanged
     }
 
