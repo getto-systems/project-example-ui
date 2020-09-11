@@ -100,6 +100,7 @@ export function init(url: Readonly<URL>, storage: Storage): AuthUsecase {
     }
 
     function initCheckClient(): CheckClient {
+        // TODO ちゃんとした実装を用意
         return initSimulateCheckClient({ success: true })
     }
 }
