@@ -3,7 +3,7 @@ import { CredentialAction, RenewEvent, StoreEvent } from "../credential/action"
 
 import { RenewError, StoreError } from "../credential/data"
 
-export interface RenewAction {
+export interface RenewComponentAction {
     credential: CredentialAction,
 }
 
@@ -25,18 +25,18 @@ export interface RenewEventHandler {
     (state: RenewState): void
 }
 
-export function initRenew(action: RenewAction, authEvent: AuthEvent): RenewComponent {
+export function initRenew(action: RenewComponentAction, authEvent: AuthEvent): RenewComponent {
     return new Component(action, authEvent)
 }
 
 class Component implements RenewComponent {
-    action: RenewAction
+    action: RenewComponentAction
     authEvent: AuthEvent
     eventHolder: EventHolder<ComponentEvent>
 
     initialState: RenewState = { type: "initial-renew" }
 
-    constructor(action: RenewAction, authEvent: AuthEvent) {
+    constructor(action: RenewComponentAction, authEvent: AuthEvent) {
         this.action = action
         this.authEvent = authEvent
         this.eventHolder = { hasEvent: false }
