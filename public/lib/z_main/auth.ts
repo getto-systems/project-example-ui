@@ -2,7 +2,7 @@ import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_clien
 
 import { initStorageAuthCredentialRepository } from "../credential/impl/repository/credential/storage"
 import { initFetchRenewClient } from "../credential/impl/client/renew/fetch"
-import { initBrowserPathnameLocation } from "../script/impl/location/browser"
+import { initSimulateCheckClient } from "../script/impl/client/check/simulate"
 import { initFetchPasswordLoginClient } from "../password_login/impl/client/password_login/fetch"
 import { initSimulatePasswordResetSessionClient } from "../password_reset_session/impl/client/password_reset_session/simulate"
 import { initSimulatePasswordResetClient } from "../password_reset/impl/client/password_reset/simulate"
@@ -19,13 +19,12 @@ import { AuthUsecase, initAuthUsecase } from "../auth"
 import { AuthAction } from "../auth/action"
 
 import { AuthCredentialRepository, RenewClient } from "../credential/infra"
-import { ScriptEnv, PathnameLocation } from "../script/infra"
+import { CheckClient } from "../script/infra"
 import { PasswordLoginClient } from "../password_login/infra"
 import { PasswordResetSessionClient } from "../password_reset_session/infra"
 import { PasswordResetClient } from "../password_reset/infra"
 
-export function init(browserLocation: Location, storage: Storage): AuthUsecase {
-    const url = new URL(browserLocation.toString())
+export function init(url: Readonly<URL>, storage: Storage): AuthUsecase {
     return initAuthUsecase(url, initAuthAction())
 
     function initAuthAction(): AuthAction {
@@ -39,8 +38,8 @@ export function init(browserLocation: Location, storage: Storage): AuthUsecase {
                 renewClient: initRenewClient(authClient),
             }),
             script: initScriptAction({
-                env: initScriptEnv(),
-                location: initPathnameLocation(browserLocation),
+                config,
+                checkClient: initCheckClient(),
             }),
             password: initPasswordAction(),
 
@@ -61,6 +60,8 @@ export function init(browserLocation: Location, storage: Storage): AuthUsecase {
 
     function initConfig(): Config {
         return {
+            secureServerHost: env.secureServerHost,
+
             renewDelayTime: delaySecond(0.5),
 
             passwordLoginDelayTime: delaySecond(1),
@@ -98,17 +99,14 @@ export function init(browserLocation: Location, storage: Storage): AuthUsecase {
         )
     }
 
-    function initScriptEnv(): ScriptEnv {
-        return {
-            secureServerHost: env.secureServerHost,
-        }
-    }
-    function initPathnameLocation(browserLocation: Location): PathnameLocation {
-        return initBrowserPathnameLocation(browserLocation)
+    function initCheckClient(): CheckClient {
+        return initSimulateCheckClient({ success: true })
     }
 }
 
 type Config = Readonly<{
+    secureServerHost: string,
+
     renewDelayTime: DelayTime,
 
     passwordLoginDelayTime: DelayTime,

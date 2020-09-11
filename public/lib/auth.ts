@@ -64,7 +64,7 @@ class Usecase implements AuthUsecase {
         return initRenew(this.action, this.event())
     }
     initLoadApplication(): LoadApplicationComponent {
-        return initLoadApplication(this.action, this.event())
+        return initLoadApplication(this.action, this.event(), this.url)
     }
 
     initPasswordLogin(): PasswordLoginComponent {

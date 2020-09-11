@@ -1,18 +1,18 @@
-import { Pathname, PathnameError } from "./data"
+import { ScriptPath, CheckError } from "./data"
 
 export type Infra = Readonly<{
-    env: ScriptEnv,
-    location: PathnameLocation,
+    config: Config,
+    checkClient: CheckClient,
 }>
 
-export type ScriptEnv = Readonly<{
+export type Config = Readonly<{
     secureServerHost: Readonly<string>,
 }>
 
-export interface PathnameLocation {
-    pathname(): PathnameResponse
+export interface CheckClient {
+    checkStatus(scriptPath: ScriptPath): Promise<CheckResponse>
 }
 
-export type PathnameResponse =
-    Readonly<{ success: false, err: PathnameError }> |
-    Readonly<{ success: true, pathname: Pathname }>
+export type CheckResponse =
+    Readonly<{ success: false, err: CheckError }> |
+    Readonly<{ success: true }>

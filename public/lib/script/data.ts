@@ -1,8 +1,5 @@
-export type Pathname = Readonly<{ pathname: Readonly<string> }>
 export type ScriptPath = Readonly<{ scriptPath: Readonly<string> }>
 
-export type PathnameError =
-    Readonly<{ type: "infra-error", err: string }>
-
-export type ScriptError =
+export type CheckError =
+    Readonly<{ type: "not-found" }> |
     Readonly<{ type: "infra-error", err: string }>

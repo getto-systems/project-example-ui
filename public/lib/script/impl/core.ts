@@ -1,6 +1,6 @@
 import { Infra } from "../infra"
 
-import { Pathname, ScriptPath } from "../data"
+import { ScriptPath } from "../data"
 import { ScriptAction, ScriptEvent } from "../action"
 
 export function initScriptAction(infra: Infra): ScriptAction {
@@ -14,19 +14,19 @@ class ScriptActionImpl implements ScriptAction {
         this.infra = infra
     }
 
-    async load(event: ScriptEvent): Promise<void> {
-        const result = this.infra.location.pathname()
-        if (!result.success) {
-            event.failedToLoad(result.err)
-            return
-        }
+    async load(event: ScriptEvent, url: Readonly<URL>): Promise<void> {
+        const scriptPath = secureScriptPath(this.infra.config.secureServerHost, url.pathname)
+        event.tryToLoad(scriptPath)
 
-        event.succeedToLoad(secureScriptPath(this.infra.env.secureServerHost, result.pathname))
+        const response = await this.infra.checkClient.checkStatus(scriptPath)
+        if (!response.success) {
+            event.failedToLoad(response.err)
+        }
         return
 
-        function secureScriptPath(secureHost: string, pathname: Pathname): ScriptPath {
+        function secureScriptPath(secureHost: string, pathname: string): ScriptPath {
             // secure host に html と同じパスで js がホストされている
-            return { scriptPath: `//${secureHost}${pathname.pathname.replace(/\.html$/, ".js")}` }
+            return { scriptPath: `//${secureHost}${pathname.replace(/\.html$/, ".js")}` }
         }
     }
 }

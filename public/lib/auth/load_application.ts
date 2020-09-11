@@ -1,7 +1,7 @@
 import { AuthAction, AuthEvent } from "../auth/action"
 import { ScriptEvent } from "../script/action"
 
-import { ScriptPath, ScriptError } from "../script/data"
+import { ScriptPath, CheckError } from "../script/data"
 
 export interface LoadApplicationComponent {
     initialState(): LoadState
@@ -12,25 +12,27 @@ export interface LoadApplicationComponent {
 
 export type LoadState =
     Readonly<{ type: "initial-load" }> |
-    Readonly<{ type: "failed-to-load", err: ScriptError }> |
-    Readonly<{ type: "succeed-to-load", scriptPath: ScriptPath }>
+    Readonly<{ type: "try-to-load", scriptPath: ScriptPath }> |
+    Readonly<{ type: "failed-to-load", err: CheckError }>
 
 export interface LoadEventHandler {
     (state: LoadState): void
 }
 
-export function initLoadApplication(action: AuthAction, authEvent: AuthEvent): LoadApplicationComponent {
-    return new Component(action, authEvent)
+export function initLoadApplication(action: AuthAction, authEvent: AuthEvent, url: Readonly<URL>): LoadApplicationComponent {
+    return new Component(action, authEvent, url)
 }
 
 class Component implements LoadApplicationComponent {
     action: AuthAction
     authEvent: AuthEvent
+    url: Readonly<URL>
     eventHolder: EventHolder<ComponentEvent>
 
-    constructor(action: AuthAction, authEvent: AuthEvent) {
+    constructor(action: AuthAction, authEvent: AuthEvent, url: Readonly<URL>) {
         this.action = action
         this.authEvent = authEvent
+        this.url = url
         this.eventHolder = { hasEvent: false }
     }
 
@@ -46,7 +48,7 @@ class Component implements LoadApplicationComponent {
     }
 
     async load(): Promise<void> {
-        await this.action.script.load(this.event())
+        await this.action.script.load(this.event(), this.url)
     }
 }
 
@@ -59,11 +61,22 @@ class ComponentEvent implements ScriptEvent {
         this.authEvent = authEvent
     }
 
-    failedToLoad(err: ScriptError): void {
-        this.stateChanged({ type: "failed-to-load", err })
+    tryToLoad(scriptPath: ScriptPath): void {
+        this.stateChanged({ type: "try-to-load", scriptPath })
     }
-    succeedToLoad(scriptPath: ScriptPath): void {
-        this.stateChanged({ type: "succeed-to-load", scriptPath })
+    failedToLoad(err: CheckError): void {
+        switch (err.type) {
+            case "not-found":
+                this.authEvent.failedToAuth({ type: "script-not-found" })
+                return
+
+            case "infra-error":
+                this.authEvent.failedToAuth(err)
+                return
+
+            default:
+                return assertNever(err)
+        }
     }
 }
 
@@ -75,4 +88,8 @@ function unwrap<T>(holder: EventHolder<T>): T {
         throw new Error("event is not initialized")
     }
     return holder.event
+}
+
+function assertNever(_: never): never {
+    throw new Error("NEVER")
 }
