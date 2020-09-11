@@ -1,41 +1,17 @@
-import { LoginIDFieldComponent } from "./field/login_id"
-import { PasswordFieldComponent } from "./field/password"
+import { LoginIDFieldComponent } from "../../field/login_id/action"
+import { PasswordFieldComponent } from "../../field/password/action"
 
-import { AuthEvent } from "../auth/action"
-import { CredentialAction, StoreEvent } from "../credential/action"
-import { PasswordResetAction, ResetEvent } from "../password_reset/action"
+import { AuthEvent } from "../../../auth/action"
+import {
+    PasswordResetComponentAction,
+    PasswordResetComponent,
+    PasswordResetComponentEvent,
+    PasswordResetComponentState,
+    PasswordResetComponentStateHandler,
+} from "../action"
 
-import { StoreError } from "../credential/data"
-import { InputContent, ResetToken, ResetError } from "../password_reset/data"
-
-export interface PasswordResetComponentAction {
-    credential: CredentialAction
-    passwordReset: PasswordResetAction
-}
-
-export interface PasswordResetComponent {
-    loginID: LoginIDFieldComponent
-    password: PasswordFieldComponent
-
-    initialState: ResetState
-
-    onStateChange(stateChanged: ResetEventHandler): void
-
-    reset(): Promise<void>
-}
-
-export type PasswordResetFieldComponents = [LoginIDFieldComponent, PasswordFieldComponent]
-
-export type ResetState =
-    Readonly<{ type: "initial-reset" }> |
-    Readonly<{ type: "try-to-reset" }> |
-    Readonly<{ type: "delayed-to-reset" }> |
-    Readonly<{ type: "failed-to-reset", content: InputContent, err: ResetError }> |
-    Readonly<{ type: "failed-to-store", err: StoreError }>
-
-export interface ResetEventHandler {
-    (state: ResetState): void
-}
+import { StoreError } from "../../../credential/data"
+import { InputContent, ResetToken, ResetError } from "../../../password_reset/data"
 
 export function initPasswordReset(loginID: LoginIDFieldComponent, password: PasswordFieldComponent, action: PasswordResetComponentAction, authEvent: AuthEvent, resetToken: ResetToken): PasswordResetComponent {
     return new Component(loginID, password, action, authEvent, resetToken)
@@ -51,7 +27,7 @@ class Component implements PasswordResetComponent {
 
     resetToken: ResetToken
 
-    initialState: ResetState = { type: "initial-reset" }
+    initialState: PasswordResetComponentState = { type: "initial-reset" }
 
     constructor(loginID: LoginIDFieldComponent, password: PasswordFieldComponent, action: PasswordResetComponentAction, authEvent: AuthEvent, resetToken: ResetToken) {
         this.action = action
@@ -64,7 +40,7 @@ class Component implements PasswordResetComponent {
         this.password = password
     }
 
-    onStateChange(stateChanged: ResetEventHandler): void {
+    onStateChange(stateChanged: PasswordResetComponentStateHandler): void {
         this.eventHolder = { hasEvent: true, event: new ComponentEvent(stateChanged, this.authEvent) }
     }
     event(): ComponentEvent {
@@ -84,11 +60,11 @@ class Component implements PasswordResetComponent {
     }
 }
 
-class ComponentEvent implements ResetEvent, StoreEvent {
-    stateChanged: ResetEventHandler
+class ComponentEvent implements PasswordResetComponentEvent {
+    stateChanged: PasswordResetComponentStateHandler
     authEvent: AuthEvent
 
-    constructor(stateChanged: ResetEventHandler, authEvent: AuthEvent) {
+    constructor(stateChanged: PasswordResetComponentStateHandler, authEvent: AuthEvent) {
         this.stateChanged = stateChanged
         this.authEvent = authEvent
     }

@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { PasswordFieldComponent, PasswordState } from "../../../auth/field/password"
+import { PasswordFieldComponent, PasswordFieldComponentState } from "../../../auth/field/password/action"
 
 import { PasswordView } from "../../../password/data"
 import { InputValue, InitialValue } from "../../../input/data"
@@ -44,7 +44,7 @@ export function PasswordForm(component: PasswordFieldComponent): PreactComponent
             }
         }
 
-        function error(state: PasswordState): Array<VNode> {
+        function error(state: PasswordFieldComponentState): Array<VNode> {
             if (state.result.valid) {
                 return []
             }

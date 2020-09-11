@@ -1,31 +1,13 @@
-import { AuthEvent } from "../auth/action"
-import { ScriptAction, ScriptEvent } from "../script/action"
+import { AuthEvent } from "../../../auth/action"
+import {
+    LoadApplicationComponentAction,
+    LoadApplicationComponent,
+    LoadApplicationComponentEvent,
+    LoadApplicationComponentState,
+    LoadApplicationComponentStateHandler,
+} from "../action"
 
-import { ScriptPath, CheckError } from "../script/data"
-
-export interface LoadApplicationComponentAction {
-    script: ScriptAction,
-}
-
-export interface LoadApplicationComponent {
-    initialState: LoadState
-    onStateChange(stateChanged: LoadEventHandler): void
-
-    load(currentLocation: Readonly<Location>): Promise<void>
-}
-
-export interface LoadApplicationComponentEvent extends ScriptEvent {
-    onStateChange(stateChanged: LoadEventHandler): void
-}
-
-export type LoadState =
-    Readonly<{ type: "initial-load" }> |
-    Readonly<{ type: "try-to-load", scriptPath: ScriptPath }> |
-    Readonly<{ type: "failed-to-load", err: CheckError }>
-
-export interface LoadEventHandler {
-    (state: LoadState): void
-}
+import { ScriptPath, CheckError } from "../../../script/data"
 
 export function initLoadApplication(action: LoadApplicationComponentAction, authEvent: AuthEvent): LoadApplicationComponent {
     const event = new LoadApplicationComponentEventImpl(authEvent)
@@ -40,14 +22,14 @@ class Component implements LoadApplicationComponent {
     action: LoadApplicationComponentAction
     event: LoadApplicationComponentEvent
 
-    initialState: LoadState = { type: "initial-load" }
+    initialState: LoadApplicationComponentState = { type: "initial-load" }
 
     constructor(action: LoadApplicationComponentAction, event: LoadApplicationComponentEvent) {
         this.action = action
         this.event = event
     }
 
-    onStateChange(stateChanged: LoadEventHandler): void {
+    onStateChange(stateChanged: LoadApplicationComponentStateHandler): void {
         this.event.onStateChange(stateChanged)
     }
 
@@ -58,16 +40,16 @@ class Component implements LoadApplicationComponent {
 
 class LoadApplicationComponentEventImpl implements LoadApplicationComponentEvent {
     authEvent: AuthEvent
-    eventHolder: EventHolder<LoadEventHandler>
+    eventHolder: EventHolder<LoadApplicationComponentStateHandler>
 
     constructor(authEvent: AuthEvent) {
         this.authEvent = authEvent
         this.eventHolder = { hasEvent: false }
     }
-    onStateChange(stateChanged: LoadEventHandler): void {
+    onStateChange(stateChanged: LoadApplicationComponentStateHandler): void {
         this.eventHolder = { hasEvent: true, event: stateChanged }
     }
-    stateChanged(state: LoadState): void {
+    stateChanged(state: LoadApplicationComponentState): void {
         unwrap(this.eventHolder)(state)
     }
 

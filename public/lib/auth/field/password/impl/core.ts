@@ -1,35 +1,24 @@
-import { AuthAction } from "../../auth/action"
-import { PasswordField, PasswordEvent } from "../../password/action"
+import {
+    PasswordFieldComponentAction,
+    PasswordFieldComponent,
+    PasswordFieldComponentEvent,
+    PasswordFieldComponentState,
+    PasswordFieldComponentStateHandler,
+} from "../action"
+import { PasswordField } from "../../../../password/action"
 
-import { Password, PasswordError, PasswordCharacter, PasswordView } from "../../password/data"
-import { InputValue, Content, Valid } from "../../input/data"
+import { Password, PasswordError, PasswordCharacter, PasswordView } from "../../../../password/data"
+import { InputValue, Content, Valid } from "../../../../input/data"
 
-export interface PasswordFieldComponent {
-    initialState: PasswordState
-    onStateChange(stateChanged: PasswordEventHandler): void
-
-    validate(): Promise<Content<Password>>
-    setPassword(password: InputValue): Promise<void>
-    showPassword(): Promise<void>
-    hidePassword(): Promise<void>
-}
-
-export type PasswordState =
-    Readonly<{ type: "input-password", result: Valid<PasswordError>, character: PasswordCharacter, view: PasswordView }>
-
-export interface PasswordEventHandler {
-    (state: PasswordState): void
-}
-
-export function initPasswordField(action: AuthAction): PasswordFieldComponent {
+export function initPasswordField(action: PasswordFieldComponentAction): PasswordFieldComponent {
     return new Component(action.password.initPasswordField())
 }
 
 class Component implements PasswordFieldComponent {
     password: PasswordField
-    eventHolder: EventHolder<ComponentEvent>
+    eventHolder: EventHolder<PasswordFieldComponentEvent>
 
-    initialState: PasswordState = {
+    initialState: PasswordFieldComponentState = {
         type: "input-password",
         result: { valid: true },
         character: { complex: false },
@@ -41,10 +30,10 @@ class Component implements PasswordFieldComponent {
         this.eventHolder = { hasEvent: false }
     }
 
-    onStateChange(stateChanged: PasswordEventHandler): void {
+    onStateChange(stateChanged: PasswordFieldComponentStateHandler): void {
         this.eventHolder = { hasEvent: true, event: new ComponentEvent(stateChanged) }
     }
-    event(): ComponentEvent {
+    event(): PasswordFieldComponentEvent {
         return unwrap(this.eventHolder)
     }
 
@@ -62,10 +51,10 @@ class Component implements PasswordFieldComponent {
     }
 }
 
-class ComponentEvent implements PasswordEvent {
-    stateChanged: PasswordEventHandler
+class ComponentEvent implements PasswordFieldComponentEvent {
+    stateChanged: PasswordFieldComponentStateHandler
 
-    constructor(stateChanged: PasswordEventHandler) {
+    constructor(stateChanged: PasswordFieldComponentStateHandler) {
         this.stateChanged = stateChanged
     }
 

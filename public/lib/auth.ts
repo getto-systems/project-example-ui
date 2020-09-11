@@ -1,14 +1,19 @@
 import { AuthAction, AuthEvent, AuthError } from "./auth/action"
 
-import { RenewComponent, initRenew } from "./auth/renew"
-import { LoadApplicationComponent, initLoadApplication } from "./auth/load_application"
+import { initRenew } from "./auth/renew/impl/core"
+import { initLoadApplication } from "./auth/load_application/impl/core"
+import { initLoginIDField } from "./auth/field/login_id/impl/core"
+import { initPasswordField } from "./auth/field/password/impl/core"
+import { initPasswordLogin } from "./auth/password_login/impl/core"
+import { initPasswordReset } from "./auth/password_reset/impl/core"
+import { initPasswordResetSession } from "./auth/password_reset_session/impl/core"
 
-import { initLoginIDField } from "./auth/field/login_id"
-import { initPasswordField } from "./auth/field/password"
+import { RenewComponent } from "./auth/renew/action"
+import { LoadApplicationComponent } from "./auth/load_application/action"
 
-import { PasswordLoginComponent, initPasswordLogin } from "./auth/password_login"
-import { PasswordResetSessionComponent, initPasswordResetSession } from "./auth/password_reset_session"
-import { PasswordResetComponent, initPasswordReset } from "./auth/password_reset"
+import { PasswordLoginComponent } from "./auth/password_login/action"
+import { PasswordResetSessionComponent } from "./auth/password_reset_session/action"
+import { PasswordResetComponent } from "./auth/password_reset/action"
 
 import { ResetToken } from "./password_reset/data"
 

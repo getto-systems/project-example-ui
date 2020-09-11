@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { LoadApplicationComponent } from "../../auth/load_application"
+import { LoadApplicationComponent } from "../../auth/load_application/action"
 
 export interface PreactComponent {
     (): VNode

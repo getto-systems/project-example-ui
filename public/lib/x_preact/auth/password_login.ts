@@ -6,7 +6,7 @@ import { LoginView } from "./login_view"
 import { LoginIDForm } from "./form/login_id"
 import { PasswordForm } from "./form/password"
 
-import { PasswordLoginComponent } from "../../auth/password_login"
+import { PasswordLoginComponent } from "../../auth/password_login/action"
 
 import { InputContent, LoginError } from "../../password_login/data"
 import { hasValue, noValue } from "../../input/data"

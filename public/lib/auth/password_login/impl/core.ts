@@ -1,41 +1,17 @@
-import { LoginIDFieldComponent } from "./field/login_id"
-import { PasswordFieldComponent } from "./field/password"
+import { LoginIDFieldComponent } from "../../field/login_id/action"
+import { PasswordFieldComponent } from "../../field/password/action"
 
-import { AuthEvent } from "../auth/action"
-import { CredentialAction, StoreEvent } from "../credential/action"
-import { PasswordLoginAction, LoginEvent } from "../password_login/action"
+import { AuthEvent } from "../../../auth/action"
+import {
+    PasswordLoginComponentAction,
+    PasswordLoginComponent,
+    PasswordLoginComponentEvent,
+    PasswordLoginComponentState,
+    PasswordLoginComponentStateHandler,
+} from "../action"
 
-import { StoreError } from "../credential/data"
-import { InputContent, LoginError } from "../password_login/data"
-
-export interface PasswordLoginComponentAction {
-    credential: CredentialAction
-    passwordLogin: PasswordLoginAction
-}
-
-export interface PasswordLoginComponent {
-    loginID: LoginIDFieldComponent
-    password: PasswordFieldComponent
-
-    initialState: LoginState
-
-    onStateChange(stateChanged: LoginEventHandler): void
-
-    login(): Promise<void>
-}
-
-export type PasswordLoginFieldComponents = [LoginIDFieldComponent, PasswordFieldComponent]
-
-export type LoginState =
-    Readonly<{ type: "initial-login" }> |
-    Readonly<{ type: "try-to-login" }> |
-    Readonly<{ type: "delayed-to-login" }> |
-    Readonly<{ type: "failed-to-login", content: InputContent, err: LoginError }> |
-    Readonly<{ type: "failed-to-store", err: StoreError }>
-
-export interface LoginEventHandler {
-    (state: LoginState): void
-}
+import { StoreError } from "../../../credential/data"
+import { InputContent, LoginError } from "../../../password_login/data"
 
 export function initPasswordLogin(loginID: LoginIDFieldComponent, password: PasswordFieldComponent, action: PasswordLoginComponentAction, authEvent: AuthEvent): PasswordLoginComponent {
     return new Component(loginID, password, action, authEvent)
@@ -49,7 +25,7 @@ class Component implements PasswordLoginComponent {
     authEvent: AuthEvent
     eventHolder: EventHolder<ComponentEvent>
 
-    initialState: LoginState = { type: "initial-login" }
+    initialState: PasswordLoginComponentState = { type: "initial-login" }
 
     constructor(loginID: LoginIDFieldComponent, password: PasswordFieldComponent, action: PasswordLoginComponentAction, authEvent: AuthEvent) {
         this.action = action
@@ -60,7 +36,7 @@ class Component implements PasswordLoginComponent {
         this.password = password
     }
 
-    onStateChange(stateChanged: LoginEventHandler): void {
+    onStateChange(stateChanged: PasswordLoginComponentStateHandler): void {
         this.eventHolder = { hasEvent: true, event: new ComponentEvent(stateChanged, this.authEvent) }
     }
     event(): ComponentEvent {
@@ -80,11 +56,11 @@ class Component implements PasswordLoginComponent {
     }
 }
 
-class ComponentEvent implements LoginEvent, StoreEvent {
-    stateChanged: LoginEventHandler
+class ComponentEvent implements PasswordLoginComponentEvent {
+    stateChanged: PasswordLoginComponentStateHandler
     authEvent: AuthEvent
 
-    constructor(stateChanged: LoginEventHandler, authEvent: AuthEvent) {
+    constructor(stateChanged: PasswordLoginComponentStateHandler, authEvent: AuthEvent) {
         this.stateChanged = stateChanged
         this.authEvent = authEvent
     }
