@@ -65,18 +65,7 @@ class ComponentEvent implements ScriptEvent {
         this.stateChanged({ type: "try-to-load", scriptPath })
     }
     failedToLoad(err: CheckError): void {
-        switch (err.type) {
-            case "not-found":
-                this.authEvent.failedToAuth({ type: "script-not-found" })
-                return
-
-            case "infra-error":
-                this.authEvent.failedToAuth(err)
-                return
-
-            default:
-                return assertNever(err)
-        }
+        this.authEvent.failedToAuth({ type: "check", err })
     }
 }
 
@@ -88,8 +77,4 @@ function unwrap<T>(holder: EventHolder<T>): T {
         throw new Error("event is not initialized")
     }
     return holder.event
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER")
 }
