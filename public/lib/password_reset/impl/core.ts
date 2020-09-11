@@ -2,7 +2,7 @@ import { Infra } from "../infra"
 
 import { ResetEvent, ResetResult, PasswordResetAction } from "../action"
 
-import { LoginID } from "../../auth_credential/data"
+import { LoginID } from "../../credential/data"
 import { Password } from "../../password/data"
 import { InputContent, ResetToken } from "../data"
 import { Content } from "../../input/data"

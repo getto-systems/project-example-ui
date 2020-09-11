@@ -1,4 +1,4 @@
-import { LoginID, AuthCredential } from "../auth_credential/data"
+import { LoginID, AuthCredential } from "../credential/data"
 import { Password } from "../password/data"
 import { InputContent, ResetError, ResetToken } from "./data"
 import { Content } from "../input/data"

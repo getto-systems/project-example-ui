@@ -2,7 +2,7 @@ import { Infra } from "../infra"
 
 import { PasswordLoginAction, LoginEvent, LoginResult } from "../action"
 
-import { LoginID } from "../../auth_credential/data"
+import { LoginID } from "../../credential/data"
 import { Password } from "../../password/data"
 import { InputContent } from "../data"
 import { Content } from "../../input/data"

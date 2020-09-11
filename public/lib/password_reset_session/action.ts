@@ -1,4 +1,4 @@
-import { LoginID } from "../auth_credential/data"
+import { LoginID } from "../credential/data"
 import {
     InputContent,
     Session, SessionError,

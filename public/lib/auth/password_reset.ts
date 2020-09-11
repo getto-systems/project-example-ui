@@ -2,10 +2,10 @@ import { LoginIDFieldComponent, initLoginIDField } from "./field/login_id"
 import { PasswordFieldComponent, initPasswordField } from "./field/password"
 
 import { AuthAction, AuthEvent } from "../auth/action"
-import { StoreEvent } from "../auth_credential/action"
+import { StoreEvent } from "../credential/action"
 import { ResetEvent } from "../password_reset/action"
 
-import { StoreError } from "../auth_credential/data"
+import { StoreError } from "../credential/data"
 import { InputContent, ResetToken, ResetError } from "../password_reset/data"
 
 export interface PasswordResetComponent {

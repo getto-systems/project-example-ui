@@ -5,7 +5,7 @@ import {
     StatusResponse, getStatusDone, getStatusPolling, getStatusFailed,
 } from "../../../infra"
 
-import { LoginID } from "../../../../auth_credential/data"
+import { LoginID } from "../../../../credential/data"
 import { Session, PollingStatusError } from "../../../data"
 
 export function initSimulatePasswordResetSessionClient(targetLoginID: LoginID): PasswordResetSessionClient {
