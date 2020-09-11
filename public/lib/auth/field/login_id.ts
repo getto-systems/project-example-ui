@@ -1,7 +1,7 @@
 import { AuthAction } from "../../auth/action"
-import { LoginIDField, LoginIDEvent } from "../../auth_credential/action"
+import { LoginIDField, LoginIDEvent } from "../../credential/action"
 
-import { LoginID, LoginIDError } from "../../auth_credential/data"
+import { LoginID, LoginIDError } from "../../credential/data"
 import { InputValue, Content, Valid } from "../../input/data"
 
 export interface LoginIDFieldComponent {

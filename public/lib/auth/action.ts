@@ -1,4 +1,4 @@
-import { AuthCredentialAction } from "../auth_credential/action"
+import { AuthCredentialAction } from "../credential/action"
 import { ScriptAction } from "../script/action"
 import { PasswordAction } from "../password/action"
 import { PasswordLoginAction } from "../password_login/action"

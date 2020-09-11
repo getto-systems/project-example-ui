@@ -6,7 +6,7 @@ import {
     PollingStatusEvent,
 } from "../action"
 
-import { LoginID } from "../../auth_credential/data"
+import { LoginID } from "../../credential/data"
 import { InputContent, Session, PollingStatusError } from "../data"
 import { Content } from "../../input/data"
 
