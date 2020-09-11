@@ -33,18 +33,18 @@ export interface AuthEventHandler {
     (state: AuthState): void
 }
 
-export function initAuthUsecase(url: Readonly<URL>, action: AuthAction): AuthUsecase {
-    return new Usecase(url, action)
+export function initAuthUsecase(currentLocation: Readonly<Location>, action: AuthAction): AuthUsecase {
+    return new Usecase(currentLocation, action)
 }
 
 class Usecase implements AuthUsecase {
-    url: Readonly<URL>
+    currentLocation: Readonly<Location>
     action: AuthAction
 
     eventHolder: EventHolder<UsecaseEvent>
 
-    constructor(url: Readonly<URL>, action: AuthAction) {
-        this.url = url
+    constructor(currentLocation: Readonly<Location>, action: AuthAction) {
+        this.currentLocation = currentLocation
         this.action = action
         this.eventHolder = { hasEvent: false }
     }
@@ -54,7 +54,7 @@ class Usecase implements AuthUsecase {
     }
 
     onStateChange(stateChanged: AuthEventHandler): void {
-        this.eventHolder = { hasEvent: true, event: new UsecaseEvent(stateChanged, this.url) }
+        this.eventHolder = { hasEvent: true, event: new UsecaseEvent(stateChanged, this.currentLocation) }
     }
     event(): AuthEvent {
         return unwrap(this.eventHolder)
@@ -64,7 +64,7 @@ class Usecase implements AuthUsecase {
         return initRenew(this.action, this.event())
     }
     initLoadApplication(): LoadApplicationComponent {
-        return initLoadApplication(this.action, this.event(), this.url)
+        return initLoadApplication(this.action, this.event())
     }
 
     initPasswordLogin(): PasswordLoginComponent {
@@ -80,21 +80,22 @@ class Usecase implements AuthUsecase {
 
 class UsecaseEvent implements AuthEvent {
     stateChanged: AuthEventHandler
-    url: Readonly<URL>
+    currentLocation: Readonly<Location>
 
-    constructor(stateChanged: AuthEventHandler, url: Readonly<URL>) {
+    constructor(stateChanged: AuthEventHandler, currentLocation: Readonly<Location>) {
         this.stateChanged = stateChanged
-        this.url = url
+        this.currentLocation = currentLocation
     }
 
     tryToLogin(): void {
         // ログイン前画面ではアンダースコアで始まる query string を使用する
-        if (this.url.searchParams.get("_password_reset_session")) {
+        const url = new URL(this.currentLocation.toString())
+        if (url.searchParams.get("_password_reset_session")) {
             this.stateChanged({ type: "password-reset-session" })
             return
         }
 
-        const resetToken = this.url.searchParams.get("_password_reset_token")
+        const resetToken = url.searchParams.get("_password_reset_token")
         if (resetToken) {
             this.stateChanged({ type: "password-reset", resetToken: { resetToken } })
             return

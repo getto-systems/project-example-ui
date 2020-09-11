@@ -7,7 +7,11 @@ export interface LoadApplicationComponent {
     initialState(): LoadState
     onStateChange(stateChanged: LoadEventHandler): void
 
-    load(): Promise<void>
+    load(currentLocation: Readonly<Location>): Promise<void>
+}
+
+export interface LoadApplicationComponentEvent extends ScriptEvent { // eslint-disable-line @typescript-eslint/no-empty-interface
+    onStateChange(stateChanged: LoadEventHandler): void
 }
 
 export type LoadState =
@@ -19,21 +23,22 @@ export interface LoadEventHandler {
     (state: LoadState): void
 }
 
-export function initLoadApplication(action: AuthAction, authEvent: AuthEvent, url: Readonly<URL>): LoadApplicationComponent {
-    return new Component(action, authEvent, url)
+export function initLoadApplication(action: AuthAction, authEvent: AuthEvent): LoadApplicationComponent {
+    const event = new LoadApplicationComponentEventImpl(authEvent)
+    return new Component(action, event)
+}
+
+export function initLoadApplicationWorker(action: AuthAction, event: LoadApplicationComponentEvent): LoadApplicationComponent {
+    return new Component(action, event)
 }
 
 class Component implements LoadApplicationComponent {
     action: AuthAction
-    authEvent: AuthEvent
-    url: Readonly<URL>
-    eventHolder: EventHolder<ComponentEvent>
+    event: LoadApplicationComponentEvent
 
-    constructor(action: AuthAction, authEvent: AuthEvent, url: Readonly<URL>) {
+    constructor(action: AuthAction, event: LoadApplicationComponentEvent) {
         this.action = action
-        this.authEvent = authEvent
-        this.url = url
-        this.eventHolder = { hasEvent: false }
+        this.event = event
     }
 
     initialState(): LoadState {
@@ -41,24 +46,27 @@ class Component implements LoadApplicationComponent {
     }
 
     onStateChange(stateChanged: LoadEventHandler): void {
-        this.eventHolder = { hasEvent: true, event: new ComponentEvent(stateChanged, this.authEvent) }
-    }
-    event(): ComponentEvent {
-        return unwrap(this.eventHolder)
+        this.event.onStateChange(stateChanged)
     }
 
-    async load(): Promise<void> {
-        await this.action.script.load(this.event(), this.url)
+    async load(currentLocation: Readonly<Location>): Promise<void> {
+        await this.action.script.load(this.event, currentLocation)
     }
 }
 
-class ComponentEvent implements ScriptEvent {
-    stateChanged: LoadEventHandler
+class LoadApplicationComponentEventImpl implements LoadApplicationComponentEvent {
     authEvent: AuthEvent
+    eventHolder: EventHolder<LoadEventHandler>
 
-    constructor(stateChanged: LoadEventHandler, authEvent: AuthEvent) {
-        this.stateChanged = stateChanged
+    constructor(authEvent: AuthEvent) {
         this.authEvent = authEvent
+        this.eventHolder = { hasEvent: false }
+    }
+    onStateChange(stateChanged: LoadEventHandler): void {
+        this.eventHolder = { hasEvent: true, event: stateChanged }
+    }
+    stateChanged(state: LoadState): void {
+        unwrap(this.eventHolder)(state)
     }
 
     tryToLoad(scriptPath: ScriptPath): void {

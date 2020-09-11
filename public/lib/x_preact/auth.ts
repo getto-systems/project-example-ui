@@ -10,7 +10,7 @@ import { LoadApplication } from "./auth/load_application"
 
 import { PasswordLogin } from "./auth/password_login"
 
-render(h(main(init(new URL(location.toString()), localStorage)), {}), document.body)
+render(h(main(init(location, localStorage)), {}), document.body)
 
 function main(usecase: AuthUsecase) {
     return (): VNode => {

@@ -24,8 +24,8 @@ import { PasswordLoginClient } from "../password_login/infra"
 import { PasswordResetSessionClient } from "../password_reset_session/infra"
 import { PasswordResetClient } from "../password_reset/infra"
 
-export function init(url: Readonly<URL>, storage: Storage): AuthUsecase {
-    return initAuthUsecase(url, initAuthAction())
+export function init(currentLocation: Readonly<Location>, storage: Storage): AuthUsecase {
+    return initAuthUsecase(currentLocation, initAuthAction())
 
     function initAuthAction(): AuthAction {
         const config = initConfig()
