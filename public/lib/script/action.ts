@@ -1,7 +1,7 @@
 import { ScriptPath, CheckError } from "./data"
 
 export interface ScriptAction {
-    load(event: ScriptEvent, url: Readonly<URL>): Promise<void>
+    load(event: ScriptEvent, currentLocation: Readonly<Location>): Promise<void>
 }
 
 export interface ScriptEvent {

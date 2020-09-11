@@ -24,7 +24,7 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
 
         switch (state.type) {
             case "initial-load":
-                component.load()
+                component.load(location)
                 return html``
 
             case "try-to-load":

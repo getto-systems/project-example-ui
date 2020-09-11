@@ -14,8 +14,8 @@ class ScriptActionImpl implements ScriptAction {
         this.infra = infra
     }
 
-    async load(event: ScriptEvent, url: Readonly<URL>): Promise<void> {
-        const scriptPath = secureScriptPath(this.infra.config.secureServerHost, url.pathname)
+    async load(event: ScriptEvent, currentLocation: Readonly<Location>): Promise<void> {
+        const scriptPath = secureScriptPath(this.infra.config.secureServerHost, new URL(currentLocation.toString()).pathname)
         event.tryToLoad(scriptPath)
 
         const response = await this.infra.checkClient.checkStatus(scriptPath)
