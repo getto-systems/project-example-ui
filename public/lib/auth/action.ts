@@ -5,6 +5,9 @@ import { PasswordLoginAction } from "../password_login/action"
 import { PasswordResetSessionAction } from "../password_reset_session/action"
 import { PasswordResetAction } from "../password_reset/action"
 
+import { RenewError } from "../credential/data"
+import { CheckError } from "../script/data"
+
 export type AuthAction = {
     authCredential: AuthCredentialAction,
     script: ScriptAction,
@@ -22,8 +25,5 @@ export interface AuthEvent {
 }
 
 export type AuthError =
-    Readonly<{ type: "bad-request" }> |
-    Readonly<{ type: "server-error" }> |
-    Readonly<{ type: "script-not-found" }> |
-    Readonly<{ type: "bad-response", err: string }> |
-    Readonly<{ type: "infra-error", err: string }>
+    Readonly<{ type: "renew", err: RenewError }> |
+    Readonly<{ type: "check", err: CheckError }>

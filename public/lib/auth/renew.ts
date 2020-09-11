@@ -80,12 +80,9 @@ class ComponentEvent implements RenewEvent, StoreEvent {
 
             case "bad-request":
             case "server-error":
-                this.authEvent.failedToAuth(err)
-                return
-
             case "bad-response":
             case "infra-error":
-                this.authEvent.failedToAuth(err)
+                this.authEvent.failedToAuth({ type: "renew", err })
                 return
 
             default:
