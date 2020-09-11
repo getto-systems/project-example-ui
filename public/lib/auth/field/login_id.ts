@@ -5,7 +5,7 @@ import { LoginID, LoginIDError } from "../../credential/data"
 import { InputValue, Content, Valid } from "../../input/data"
 
 export interface LoginIDFieldComponent {
-    initialState(): LoginIDState
+    initialState: LoginIDState
     onStateChange(stateChanged: LoginIDEventHandler): void
 
     validate(): Promise<Content<LoginID>>
@@ -27,14 +27,11 @@ class Component implements LoginIDFieldComponent {
     loginID: LoginIDField
     eventHolder: EventHolder<ComponentEvent>
 
+    initialState: LoginIDState = { type: "input-login-id", result: { valid: true } }
+
     constructor(loginID: LoginIDField) {
         this.loginID = loginID
         this.eventHolder = { hasEvent: false }
-    }
-
-    initialState(): LoginIDState {
-        const [result] = this.loginID.initialState()
-        return { type: "input-login-id", result }
     }
 
     onStateChange(stateChanged: LoginIDEventHandler): void {

@@ -16,7 +16,7 @@ type Props = {
 
 export function LoginIDForm(component: LoginIDFieldComponent): PreactComponent {
     return (props: Props): VNode => {
-        const [state, setState] = useState(component.initialState())
+        const [state, setState] = useState(component.initialState)
         component.onStateChange(setState)
 
         useEffect(() => {

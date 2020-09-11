@@ -10,7 +10,7 @@ import { PasswordResetComponent, initPasswordReset } from "./auth/password_reset
 import { ResetToken } from "./password_reset/data"
 
 export interface AuthUsecase {
-    initialState(): AuthState
+    initialState: AuthState
     onStateChange(stateChanged: AuthEventHandler): void
 
     initRenew(): RenewComponent
@@ -43,14 +43,12 @@ class Usecase implements AuthUsecase {
 
     eventHolder: EventHolder<UsecaseEvent>
 
+    initialState: AuthState = { type: "renew" }
+
     constructor(currentLocation: Readonly<Location>, action: AuthAction) {
         this.currentLocation = currentLocation
         this.action = action
         this.eventHolder = { hasEvent: false }
-    }
-
-    initialState(): AuthState {
-        return { type: "renew" }
     }
 
     onStateChange(stateChanged: AuthEventHandler): void {

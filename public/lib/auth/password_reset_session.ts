@@ -10,9 +10,10 @@ import {
 } from "../password_reset_session/data"
 
 export interface PasswordResetSessionComponent {
-    fields(): PasswordResetSessionFieldComponents
+    loginID: LoginIDFieldComponent
 
-    initialState(): ResetSessionState
+    initialState: ResetSessionState
+
     onStateChange(stateChanged: ResetSessionEventHandler): void
 
     createSession(): Promise<void>
@@ -44,19 +45,13 @@ class Component implements PasswordResetSessionComponent {
     action: AuthAction
     eventHolder: EventHolder<ComponentEvent>
 
+    initialState: ResetSessionState = { type: "initial-reset-session" }
+
     constructor(action: AuthAction) {
         this.action = action
         this.eventHolder = { hasEvent: false }
 
         this.loginID = initLoginIDField(this.action)
-    }
-
-    fields(): PasswordResetSessionFieldComponents {
-        return [this.loginID]
-    }
-
-    initialState(): ResetSessionState {
-        return { type: "initial-reset-session" }
     }
 
     onStateChange(stateChanged: ResetSessionEventHandler): void {

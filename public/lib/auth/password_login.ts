@@ -9,9 +9,11 @@ import { StoreError } from "../credential/data"
 import { InputContent, LoginError } from "../password_login/data"
 
 export interface PasswordLoginComponent {
-    fields(): PasswordLoginFieldComponents
+    loginID: LoginIDFieldComponent
+    password: PasswordFieldComponent
 
-    initialState(): LoginState
+    initialState: LoginState
+
     onStateChange(stateChanged: LoginEventHandler): void
 
     login(): Promise<void>
@@ -42,6 +44,8 @@ class Component implements PasswordLoginComponent {
     authEvent: AuthEvent
     eventHolder: EventHolder<ComponentEvent>
 
+    initialState: LoginState = { type: "initial-login" }
+
     constructor(action: AuthAction, authEvent: AuthEvent) {
         this.action = action
         this.authEvent = authEvent
@@ -49,14 +53,6 @@ class Component implements PasswordLoginComponent {
 
         this.loginID = initLoginIDField(this.action)
         this.password = initPasswordField(this.action)
-    }
-
-    fields(): PasswordLoginFieldComponents {
-        return [this.loginID, this.password]
-    }
-
-    initialState(): LoginState {
-        return { type: "initial-login" }
     }
 
     onStateChange(stateChanged: LoginEventHandler): void {

@@ -5,7 +5,7 @@ import { Password, PasswordError, PasswordCharacter, PasswordView } from "../../
 import { InputValue, Content, Valid } from "../../input/data"
 
 export interface PasswordFieldComponent {
-    initialState(): PasswordState
+    initialState: PasswordState
     onStateChange(stateChanged: PasswordEventHandler): void
 
     validate(): Promise<Content<Password>>
@@ -29,14 +29,16 @@ class Component implements PasswordFieldComponent {
     password: PasswordField
     eventHolder: EventHolder<ComponentEvent>
 
+    initialState: PasswordState = {
+        type: "input-password",
+        result: { valid: true },
+        character: { complex: false },
+        view: { show: false },
+    }
+
     constructor(password: PasswordField) {
         this.password = password
         this.eventHolder = { hasEvent: false }
-    }
-
-    initialState(): PasswordState {
-        const [result, character, view] = this.password.initialState()
-        return { type: "input-password", result, character, view }
     }
 
     onStateChange(stateChanged: PasswordEventHandler): void {

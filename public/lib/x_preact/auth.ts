@@ -3,18 +3,19 @@ import { useState } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { init } from "../z_main/auth"
-import { AuthUsecase } from "../auth"
 
 import { Renew } from "./auth/renew"
 import { LoadApplication } from "./auth/load_application"
 
 import { PasswordLogin } from "./auth/password_login"
 
-render(h(main(init(location, localStorage)), {}), document.body)
+render(h(main(), {}), document.body)
 
-function main(usecase: AuthUsecase) {
+function main() {
+    const usecase = init()
+
     return (): VNode => {
-        const [state, setState] = useState(usecase.initialState())
+        const [state, setState] = useState(usecase.initialState)
         usecase.onStateChange(setState)
 
         switch (state.type) {

@@ -16,8 +16,8 @@ interface PreactComponent {
 }
 
 export function PasswordLogin(component: PasswordLoginComponent): PreactComponent {
-    return () => {
-        const [state, setState] = useState(component.initialState())
+    return (): VNode => {
+        const [state, setState] = useState(component.initialState)
         component.onStateChange(setState)
 
         switch (state.type) {
@@ -41,14 +41,12 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
 }
 
 function initialLoginForm(component: PasswordLoginComponent): VNode {
-    const [loginID, password] = component.fields()
-
     return html`
         <form onSubmit="${onSubmit}">
             <big>
                 <section class="login__body">
-                    <${LoginIDForm(loginID)} initial="${noValue}"/>
-                    <${PasswordForm(password)} initial="${noValue}"/>
+                    <${LoginIDForm(component.loginID)} initial="${noValue}"/>
+                    <${PasswordForm(component.password)} initial="${noValue}"/>
                 </section>
             </big>
             <big>
@@ -70,14 +68,12 @@ function initialLoginForm(component: PasswordLoginComponent): VNode {
     }
 }
 function failedToLoginForm(component: PasswordLoginComponent, content: InputContent, err: LoginError): VNode {
-    const [loginID, password] = component.fields()
-
     return html`
         <form onSubmit="${onSubmit}">
             <big>
                 <section class="login__body">
-                    <${LoginIDForm(loginID)} initial="${hasValue(content.loginID)}"/>
-                    <${PasswordForm(password)} initial="${hasValue(content.password)}"/>
+                    <${LoginIDForm(component.loginID)} initial="${hasValue(content.loginID)}"/>
+                    <${PasswordForm(component.password)} initial="${hasValue(content.password)}"/>
                 </section>
             </big>
             <big>
