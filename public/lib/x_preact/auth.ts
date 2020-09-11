@@ -12,13 +12,13 @@ import { PasswordLogin } from "./auth/password_login"
 
 // TODO あとで削除
 import Worker from "worker-loader!./app.worker"
+import Worker2 from "worker-loader!./app2.worker"
 
 const worker = new Worker()
-
 worker.postMessage({ a: 1 })
-worker.addEventListener("message", (event) => {
-    console.log(event)
-})
+
+const worker2 = new Worker2()
+worker2.postMessage({ b: 1 })
 
 render(h(main(init(location, localStorage)), {}), document.body)
 

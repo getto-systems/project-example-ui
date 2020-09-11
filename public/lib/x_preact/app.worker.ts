@@ -6,4 +6,6 @@ ctx.postMessage({ foo: "bar" })
 
 ctx.addEventListener("message", (event) => {
     console.log(event.data)
+
+    console.log(location);
 })
