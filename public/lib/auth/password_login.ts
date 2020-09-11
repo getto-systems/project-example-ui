@@ -1,12 +1,17 @@
-import { LoginIDFieldComponent, initLoginIDField } from "./field/login_id"
-import { PasswordFieldComponent, initPasswordField } from "./field/password"
+import { LoginIDFieldComponent } from "./field/login_id"
+import { PasswordFieldComponent } from "./field/password"
 
-import { AuthAction, AuthEvent } from "../auth/action"
-import { StoreEvent } from "../credential/action"
-import { LoginEvent } from "../password_login/action"
+import { AuthEvent } from "../auth/action"
+import { CredentialAction, StoreEvent } from "../credential/action"
+import { PasswordLoginAction, LoginEvent } from "../password_login/action"
 
 import { StoreError } from "../credential/data"
 import { InputContent, LoginError } from "../password_login/data"
+
+export interface PasswordLoginComponentAction {
+    credential: CredentialAction
+    passwordLogin: PasswordLoginAction
+}
 
 export interface PasswordLoginComponent {
     loginID: LoginIDFieldComponent
@@ -32,27 +37,27 @@ export interface LoginEventHandler {
     (state: LoginState): void
 }
 
-export function initPasswordLogin(action: AuthAction, authEvent: AuthEvent): PasswordLoginComponent {
-    return new Component(action, authEvent)
+export function initPasswordLogin(loginID: LoginIDFieldComponent, password: PasswordFieldComponent, action: PasswordLoginComponentAction, authEvent: AuthEvent): PasswordLoginComponent {
+    return new Component(loginID, password, action, authEvent)
 }
 
 class Component implements PasswordLoginComponent {
     loginID: LoginIDFieldComponent
     password: PasswordFieldComponent
 
-    action: AuthAction
+    action: PasswordLoginComponentAction
     authEvent: AuthEvent
     eventHolder: EventHolder<ComponentEvent>
 
     initialState: LoginState = { type: "initial-login" }
 
-    constructor(action: AuthAction, authEvent: AuthEvent) {
+    constructor(loginID: LoginIDFieldComponent, password: PasswordFieldComponent, action: PasswordLoginComponentAction, authEvent: AuthEvent) {
         this.action = action
         this.authEvent = authEvent
         this.eventHolder = { hasEvent: false }
 
-        this.loginID = initLoginIDField(this.action)
-        this.password = initPasswordField(this.action)
+        this.loginID = loginID
+        this.password = password
     }
 
     onStateChange(stateChanged: LoginEventHandler): void {

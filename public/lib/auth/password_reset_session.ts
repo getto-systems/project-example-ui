@@ -1,13 +1,16 @@
-import { LoginIDFieldComponent, initLoginIDField } from "./field/login_id"
+import { LoginIDFieldComponent } from "./field/login_id"
 
-import { AuthAction } from "../auth/action"
-import { SessionEvent, PollingStatusEvent } from "../password_reset_session/action"
+import { PasswordResetSessionAction, SessionEvent, PollingStatusEvent } from "../password_reset_session/action"
 
 import {
     InputContent,
     SessionError,
     PollingStatusError, PollingStatus, DoneStatus,
 } from "../password_reset_session/data"
+
+export interface PasswordResetSessionComponentAction {
+    passwordResetSession: PasswordResetSessionAction
+}
 
 export interface PasswordResetSessionComponent {
     loginID: LoginIDFieldComponent
@@ -35,23 +38,23 @@ export interface ResetSessionEventHandler {
     (state: ResetSessionState): void
 }
 
-export function initPasswordResetSession(action: AuthAction): PasswordResetSessionComponent {
-    return new Component(action)
+export function initPasswordResetSession(loginID: LoginIDFieldComponent, action: PasswordResetSessionComponentAction): PasswordResetSessionComponent {
+    return new Component(loginID, action)
 }
 
 class Component implements PasswordResetSessionComponent {
     loginID: LoginIDFieldComponent
 
-    action: AuthAction
+    action: PasswordResetSessionComponentAction
     eventHolder: EventHolder<ComponentEvent>
 
     initialState: ResetSessionState = { type: "initial-reset-session" }
 
-    constructor(action: AuthAction) {
+    constructor(loginID: LoginIDFieldComponent, action: PasswordResetSessionComponentAction) {
         this.action = action
         this.eventHolder = { hasEvent: false }
 
-        this.loginID = initLoginIDField(this.action)
+        this.loginID = loginID
     }
 
     onStateChange(stateChanged: ResetSessionEventHandler): void {

@@ -3,6 +3,9 @@ import { AuthAction, AuthEvent, AuthError } from "./auth/action"
 import { RenewComponent, initRenew } from "./auth/renew"
 import { LoadApplicationComponent, initLoadApplication } from "./auth/load_application"
 
+import { initLoginIDField } from "./auth/field/login_id"
+import { initPasswordField } from "./auth/field/password"
+
 import { PasswordLoginComponent, initPasswordLogin } from "./auth/password_login"
 import { PasswordResetSessionComponent, initPasswordResetSession } from "./auth/password_reset_session"
 import { PasswordResetComponent, initPasswordReset } from "./auth/password_reset"
@@ -66,13 +69,18 @@ class Usecase implements AuthUsecase {
     }
 
     initPasswordLogin(): PasswordLoginComponent {
-        return initPasswordLogin(this.action, this.event())
+        const loginID = initLoginIDField(this.action)
+        const password = initPasswordField(this.action)
+        return initPasswordLogin(loginID, password, this.action, this.event())
     }
     initPasswordResetSession(): PasswordResetSessionComponent {
-        return initPasswordResetSession(this.action)
+        const loginID = initLoginIDField(this.action)
+        return initPasswordResetSession(loginID, this.action)
     }
     initPasswordReset(resetToken: ResetToken): PasswordResetComponent {
-        return initPasswordReset(this.action, this.event(), resetToken)
+        const loginID = initLoginIDField(this.action)
+        const password = initPasswordField(this.action)
+        return initPasswordReset(loginID, password, this.action, this.event(), resetToken)
     }
 }
 

@@ -1,12 +1,17 @@
-import { LoginIDFieldComponent, initLoginIDField } from "./field/login_id"
-import { PasswordFieldComponent, initPasswordField } from "./field/password"
+import { LoginIDFieldComponent } from "./field/login_id"
+import { PasswordFieldComponent } from "./field/password"
 
-import { AuthAction, AuthEvent } from "../auth/action"
-import { StoreEvent } from "../credential/action"
-import { ResetEvent } from "../password_reset/action"
+import { AuthEvent } from "../auth/action"
+import { CredentialAction, StoreEvent } from "../credential/action"
+import { PasswordResetAction, ResetEvent } from "../password_reset/action"
 
 import { StoreError } from "../credential/data"
 import { InputContent, ResetToken, ResetError } from "../password_reset/data"
+
+export interface PasswordResetComponentAction {
+    credential: CredentialAction
+    passwordReset: PasswordResetAction
+}
 
 export interface PasswordResetComponent {
     loginID: LoginIDFieldComponent
@@ -32,15 +37,15 @@ export interface ResetEventHandler {
     (state: ResetState): void
 }
 
-export function initPasswordReset(action: AuthAction, authEvent: AuthEvent, resetToken: ResetToken): PasswordResetComponent {
-    return new Component(action, authEvent, resetToken)
+export function initPasswordReset(loginID: LoginIDFieldComponent, password: PasswordFieldComponent, action: PasswordResetComponentAction, authEvent: AuthEvent, resetToken: ResetToken): PasswordResetComponent {
+    return new Component(loginID, password, action, authEvent, resetToken)
 }
 
 class Component implements PasswordResetComponent {
     loginID: LoginIDFieldComponent
     password: PasswordFieldComponent
 
-    action: AuthAction
+    action: PasswordResetComponentAction
     authEvent: AuthEvent
     eventHolder: EventHolder<ComponentEvent>
 
@@ -48,15 +53,15 @@ class Component implements PasswordResetComponent {
 
     initialState: ResetState = { type: "initial-reset" }
 
-    constructor(action: AuthAction, authEvent: AuthEvent, resetToken: ResetToken) {
+    constructor(loginID: LoginIDFieldComponent, password: PasswordFieldComponent, action: PasswordResetComponentAction, authEvent: AuthEvent, resetToken: ResetToken) {
         this.action = action
         this.authEvent = authEvent
         this.eventHolder = { hasEvent: false }
 
         this.resetToken = resetToken
 
-        this.loginID = initLoginIDField(this.action)
-        this.password = initPasswordField(this.action)
+        this.loginID = loginID
+        this.password = password
     }
 
     onStateChange(stateChanged: ResetEventHandler): void {
