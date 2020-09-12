@@ -1,5 +1,17 @@
 import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_client"
 
+import { initAuthComponent, initAuthComponentEvent } from "../auth/impl/core"
+
+import { initRenewComponent, initRenewComponentEvent } from "../auth/renew/impl/core"
+import { initLoadApplicationComponent, initLoadApplicationComponentEvent } from "../auth/load_application/impl/core"
+
+import { initLoginIDFieldComponent, initLoginIDFieldComponentEvent } from "../auth/field/login_id/impl/core"
+import { initPasswordFieldComponent, initPasswordFieldComponentEvent } from "../auth/field/password/impl/core"
+
+import { initPasswordLoginComponent, initPasswordLoginComponentEvent } from "../auth/password_login/impl/core"
+import { initPasswordResetComponent, initPasswordResetComponentEvent } from "../auth/password_reset/impl/core"
+import { initPasswordResetSessionComponent, initPasswordResetSessionComponentEvent } from "../auth/password_reset_session/impl/core"
+
 import { initStorageAuthCredentialRepository } from "../credential/impl/repository/credential/storage"
 import { initFetchRenewClient } from "../credential/impl/client/renew/fetch"
 import { initSimulateCheckClient } from "../script/impl/client/check/simulate"
@@ -15,8 +27,7 @@ import { initPasswordLoginAction } from "../password_login/impl/core"
 import { initPasswordResetSessionAction } from "../password_reset_session/impl/core"
 import { initPasswordResetAction } from "../password_reset/impl/core"
 
-import { AuthUsecase, initAuthUsecase } from "../auth"
-import { AuthAction } from "../auth/action"
+import { AuthComponent, AuthComponentEvent, AuthComponentEventInit } from "../auth/action"
 
 import { AuthCredentialRepository, RenewClient } from "../credential/infra"
 import { CheckClient } from "../script/infra"
@@ -24,47 +35,42 @@ import { PasswordLoginClient } from "../password_login/infra"
 import { PasswordResetSessionClient } from "../password_reset_session/infra"
 import { PasswordResetClient } from "../password_reset/infra"
 
-export function init(): AuthUsecase {
-    const backbone = {
-        currentLocation: location,
-        storage: localStorage,
-    }
+import { RenewComponentAction, RenewComponent, RenewComponentEventInit } from "../auth/renew/action"
+import { LoadApplicationComponentAction, LoadApplicationComponent, LoadApplicationComponentEventInit } from "../auth/load_application/action"
 
-    return initAuthUsecase(backbone.currentLocation, initAuthAction())
+import { LoginIDFieldComponentAction, LoginIDFieldComponent, LoginIDFieldComponentEventInit } from "../auth/field/login_id/action"
+import { PasswordFieldComponentAction, PasswordFieldComponent, PasswordFieldComponentEventInit } from "../auth/field/password/action"
 
-    function initAuthAction(): AuthAction {
-        const config = initConfig()
-        const authClient = initAuthClient(env.authServerURL)
+import { PasswordLoginComponentAction, PasswordLoginComponent, PasswordLoginComponentEventInit } from "../auth/password_login/action"
+import { PasswordResetSessionComponentAction, PasswordResetSessionComponent, PasswordResetSessionComponentEventInit } from "../auth/password_reset_session/action"
+import { PasswordResetComponentAction, PasswordResetComponent, PasswordResetComponentEventInit } from "../auth/password_reset/action"
 
-        return {
-            credential: initCredentialAction({
-                config,
-                authCredentials: initAuthCredentialRepository(),
-                renewClient: initRenewClient(authClient),
-            }),
-            script: initScriptAction({
-                config,
-                checkClient: initCheckClient(),
-            }),
-            password: initPasswordAction(),
+import { CredentialAction } from "../credential/action"
+import { ScriptAction } from "../script/action"
 
-            passwordLogin: initPasswordLoginAction({
-                config,
-                passwordLoginClient: initPasswordLoginClient(authClient),
-            }),
-            passwordResetSession: initPasswordResetSessionAction({
-                config,
-                passwordResetSessionClient: initPasswordResetSessionClient(),
-            }),
-            passwordReset: initPasswordResetAction({
-                config,
-                passwordResetClient: initPasswordResetClient(),
-            }),
-        }
-    }
+import { PasswordAction } from "../password/action"
 
-    function initConfig(): Config {
-        return {
+import { PasswordLoginAction } from "../password_login/action"
+import { PasswordResetSessionAction } from "../password_reset_session/action"
+import { PasswordResetAction } from "../password_reset/action"
+
+import { ResetToken } from "../password_reset/data"
+
+export class ComponentLoader {
+    currentLocation: Location
+    credentialStorage: Storage
+
+    authClient: AuthClient
+
+    config: Config
+
+    constructor() {
+        this.currentLocation = location
+        this.credentialStorage = localStorage
+
+        this.authClient = initAuthClient(env.authServerURL)
+
+        this.config = {
             secureServerHost: env.secureServerHost,
 
             renewDelayTime: delaySecond(0.5),
@@ -79,20 +85,159 @@ export function init(): AuthUsecase {
         }
     }
 
-    function initAuthCredentialRepository(): AuthCredentialRepository {
-        return initStorageAuthCredentialRepository(backbone.storage, "GETTO-EXAMPLE-CREDENTIAL")
+    initAuthComponent(): [AuthComponent, AuthComponentEventInit] {
+        return [
+            initAuthComponent(this.currentLocation),
+            initAuthComponentEvent(this.currentLocation),
+        ]
     }
 
-    function initRenewClient(authClient: AuthClient): RenewClient {
-        return initFetchRenewClient(authClient)
+    initRenewComponent(event: AuthComponentEvent): [RenewComponent, RenewComponentEventInit] {
+        return [
+            initRenewComponent(this.initRenewComponentAction()),
+            initRenewComponentEvent(event),
+        ]
     }
-    function initPasswordLoginClient(authClient: AuthClient): PasswordLoginClient {
-        return initFetchPasswordLoginClient(authClient)
+    initLoadApplicationComponent(event: AuthComponentEvent): [LoadApplicationComponent, LoadApplicationComponentEventInit] {
+        return [
+            initLoadApplicationComponent(this.initLoadApplicationComponentAction()),
+            initLoadApplicationComponentEvent(event),
+        ]
     }
-    function initPasswordResetSessionClient(): PasswordResetSessionClient {
+    initPasswordLoginComponent(event: AuthComponentEvent): [PasswordLoginComponent, PasswordLoginComponentEventInit] {
+        return [
+            initPasswordLoginComponent(
+                this.initLoginIDFieldComponent(),
+                this.initPasswordFieldComponent(),
+                this.initPasswordLoginComponentAction(),
+            ),
+            initPasswordLoginComponentEvent(event),
+        ]
+    }
+    initPasswordResetSession(): [PasswordResetSessionComponent, PasswordResetSessionComponentEventInit] {
+        return [
+            initPasswordResetSessionComponent(
+                this.initLoginIDFieldComponent(),
+                this.initPasswordResetSessionComponentAction(),
+            ),
+            initPasswordResetSessionComponentEvent(),
+        ]
+    }
+    initPasswordReset(event: AuthComponentEvent, resetToken: ResetToken): [PasswordResetComponent, PasswordResetComponentEventInit] {
+        return [
+            initPasswordResetComponent(
+                this.initLoginIDFieldComponent(),
+                this.initPasswordFieldComponent(),
+                this.initPasswordResetComponentAction(),
+                resetToken,
+            ),
+            initPasswordResetComponentEvent(event),
+        ]
+    }
+
+    initLoginIDFieldComponent(): [LoginIDFieldComponent, LoginIDFieldComponentEventInit] {
+        return [
+            initLoginIDFieldComponent(this.initLoginIDFieldComponentAction()),
+            initLoginIDFieldComponentEvent(),
+        ]
+    }
+    initPasswordFieldComponent(): [PasswordFieldComponent, PasswordFieldComponentEventInit] {
+        return [
+            initPasswordFieldComponent(this.initPasswordFieldComponentAction()),
+            initPasswordFieldComponentEvent(),
+        ]
+    }
+
+    initRenewComponentAction(): RenewComponentAction {
+        return {
+            credential: this.initCredentialAction(),
+        }
+    }
+    initLoadApplicationComponentAction(): LoadApplicationComponentAction {
+        return {
+            script: this.initScriptAction(),
+        }
+    }
+
+    initLoginIDFieldComponentAction(): LoginIDFieldComponentAction {
+        return {
+            credential: this.initCredentialAction(),
+        }
+    }
+    initPasswordFieldComponentAction(): PasswordFieldComponentAction {
+        return {
+            password: this.initPasswordAction(),
+        }
+    }
+
+    initPasswordLoginComponentAction(): PasswordLoginComponentAction {
+        return {
+            credential: this.initCredentialAction(),
+            passwordLogin: this.initPasswordLoginAction(),
+        }
+    }
+    initPasswordResetSessionComponentAction(): PasswordResetSessionComponentAction {
+        return {
+            passwordResetSession: this.initPasswordResetSessionAction(),
+        }
+    }
+    initPasswordResetComponentAction(): PasswordResetComponentAction {
+        return {
+            credential: this.initCredentialAction(),
+            passwordReset: this.initPasswordResetAction(),
+        }
+    }
+
+    initCredentialAction(): CredentialAction {
+        return initCredentialAction({
+            config: this.config,
+            authCredentials: this.initAuthCredentialRepository(),
+            renewClient: this.initRenewClient(),
+        })
+    }
+    initScriptAction(): ScriptAction {
+        return initScriptAction({
+            config: this.config,
+            checkClient: this.initCheckClient(),
+        })
+    }
+
+    initPasswordAction(): PasswordAction {
+        return initPasswordAction()
+    }
+
+    initPasswordLoginAction(): PasswordLoginAction {
+        return initPasswordLoginAction({
+            config: this.config,
+            passwordLoginClient: this.initPasswordLoginClient(),
+        })
+    }
+    initPasswordResetSessionAction(): PasswordResetSessionAction {
+        return initPasswordResetSessionAction({
+            config: this.config,
+            passwordResetSessionClient: this.initPasswordResetSessionClient(),
+        })
+    }
+    initPasswordResetAction(): PasswordResetAction {
+        return initPasswordResetAction({
+            config: this.config,
+            passwordResetClient: this.initPasswordResetClient(),
+        })
+    }
+
+    initAuthCredentialRepository(): AuthCredentialRepository {
+        return initStorageAuthCredentialRepository(this.credentialStorage, "GETTO-EXAMPLE-CREDENTIAL")
+    }
+    initRenewClient(): RenewClient {
+        return initFetchRenewClient(this.authClient)
+    }
+    initPasswordLoginClient(): PasswordLoginClient {
+        return initFetchPasswordLoginClient(this.authClient)
+    }
+    initPasswordResetSessionClient(): PasswordResetSessionClient {
         return initSimulatePasswordResetSessionClient({ loginID: "admin" })
     }
-    function initPasswordResetClient(): PasswordResetClient {
+    initPasswordResetClient(): PasswordResetClient {
         return initSimulatePasswordResetClient(
             { loginID: "admin" },
             {
@@ -104,7 +249,7 @@ export function init(): AuthUsecase {
         )
     }
 
-    function initCheckClient(): CheckClient {
+    initCheckClient(): CheckClient {
         // TODO ちゃんとした実装を用意
         return initSimulateCheckClient({ success: true })
     }

@@ -1,7 +1,7 @@
 import { LoginIDFieldComponent, LoginIDFieldComponentEventInit } from "../../field/login_id/action"
 import { PasswordFieldComponent, PasswordFieldComponentEventInit } from "../../field/password/action"
 
-import { AuthEvent } from "../../../auth/action"
+import { AuthComponentEvent } from "../../../auth/action"
 import {
     PasswordLoginComponentAction,
     PasswordLoginComponent,
@@ -24,7 +24,7 @@ export function initPasswordLoginComponent(
 ): PasswordLoginComponent {
     return new Component(loginID, password, action)
 }
-export function initPasswordLoginComponentEvent(authEvent: AuthEvent): PasswordLoginComponentEventInit {
+export function initPasswordLoginComponentEvent(authEvent: AuthComponentEvent): PasswordLoginComponentEventInit {
     return (stateChanged) => new ComponentEvent(authEvent, stateChanged)
 }
 
@@ -88,10 +88,10 @@ class Component implements PasswordLoginComponent {
 }
 
 class ComponentEvent implements PasswordLoginComponentEvent {
-    authEvent: AuthEvent
+    authEvent: AuthComponentEvent
     stateChanged: PasswordLoginComponentStateHandler
 
-    constructor(authEvent: AuthEvent, stateChanged: PasswordLoginComponentStateHandler) {
+    constructor(authEvent: AuthComponentEvent, stateChanged: PasswordLoginComponentStateHandler) {
         this.authEvent = authEvent
         this.stateChanged = stateChanged
     }
