@@ -9,17 +9,26 @@ export interface LoginIDFieldComponentAction {
 
 export interface LoginIDFieldComponent {
     initialState: LoginIDFieldComponentState
-    onStateChange(stateChanged: LoginIDFieldComponentStateHandler): void
 
-    validate(): Promise<Content<LoginID>>
-    setLoginID(loginID: InputValue): Promise<void>
+    onChange(changed: LoginIDContentHandler): void
+
+    set(event: LoginIDFieldComponentEvent, loginID: InputValue): Promise<void>
+    validate(event: LoginIDFieldComponentEvent): Promise<void>
 }
-
-export interface LoginIDFieldComponentEvent extends LoginIDEvent { }
 
 export type LoginIDFieldComponentState =
     Readonly<{ type: "input-login-id", result: Valid<LoginIDError> }>
 
+export interface LoginIDFieldComponentEvent extends LoginIDEvent { } // eslint-disable-line @typescript-eslint/no-empty-interface
+
+export interface LoginIDFieldComponentEventInit {
+    (stateChanged: LoginIDFieldComponentStateHandler): LoginIDFieldComponentEvent
+}
+
 export interface LoginIDFieldComponentStateHandler {
     (state: LoginIDFieldComponentState): void
+}
+
+export interface LoginIDContentHandler {
+    (content: Content<LoginID>): void
 }

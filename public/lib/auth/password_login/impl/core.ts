@@ -1,68 +1,99 @@
-import { LoginIDFieldComponent } from "../../field/login_id/action"
-import { PasswordFieldComponent } from "../../field/password/action"
+import { LoginIDFieldComponent, LoginIDFieldComponentEventInit } from "../../field/login_id/action"
+import { PasswordFieldComponent, PasswordFieldComponentEventInit } from "../../field/password/action"
 
 import { AuthEvent } from "../../../auth/action"
 import {
     PasswordLoginComponentAction,
     PasswordLoginComponent,
-    PasswordLoginComponentEvent,
     PasswordLoginComponentState,
+    PasswordLoginComponentEvent,
+    PasswordLoginComponentEventInit,
     PasswordLoginComponentStateHandler,
+    SubmitHandler,
 } from "../action"
 
-import { StoreError } from "../../../credential/data"
+import { LoginID, StoreError } from "../../../credential/data"
+import { Password } from "../../../password/data"
 import { InputContent, LoginError } from "../../../password_login/data"
+import { Content } from "../../../input/data"
 
-export function initPasswordLogin(loginID: LoginIDFieldComponent, password: PasswordFieldComponent, action: PasswordLoginComponentAction, authEvent: AuthEvent): PasswordLoginComponent {
-    return new Component(loginID, password, action, authEvent)
+export function initPasswordLoginComponent(
+    loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit],
+    password: [PasswordFieldComponent, PasswordFieldComponentEventInit],
+    action: PasswordLoginComponentAction,
+): PasswordLoginComponent {
+    return new Component(loginID, password, action)
+}
+export function initPasswordLoginComponentEvent(authEvent: AuthEvent): PasswordLoginComponentEventInit {
+    return (stateChanged) => new ComponentEvent(authEvent, stateChanged)
 }
 
 class Component implements PasswordLoginComponent {
-    loginID: LoginIDFieldComponent
-    password: PasswordFieldComponent
+    loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit]
+    password: [PasswordFieldComponent, PasswordFieldComponentEventInit]
 
     action: PasswordLoginComponentAction
-    authEvent: AuthEvent
-    eventHolder: EventHolder<ComponentEvent>
 
     initialState: PasswordLoginComponentState = { type: "initial-login" }
 
-    constructor(loginID: LoginIDFieldComponent, password: PasswordFieldComponent, action: PasswordLoginComponentAction, authEvent: AuthEvent) {
-        this.action = action
-        this.authEvent = authEvent
-        this.eventHolder = { hasEvent: false }
+    submitHandlers: Array<SubmitHandler>
 
+    content: {
+        loginID: Content<LoginID>
+        password: Content<Password>
+    }
+
+    constructor(
+        loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit],
+        password: [PasswordFieldComponent, PasswordFieldComponentEventInit],
+        action: PasswordLoginComponentAction,
+    ) {
         this.loginID = loginID
         this.password = password
+
+        this.action = action
+
+        this.submitHandlers = []
+
+        this.content = {
+            loginID: { input: { inputValue: "" }, valid: false },
+            password: { input: { inputValue: "" }, valid: false },
+        }
+
+        this.loginID[0].onChange((content: Content<LoginID>) => {
+            this.content.loginID = content
+        })
+        this.password[0].onChange((content: Content<Password>) => {
+            this.content.password = content
+        })
     }
 
-    onStateChange(stateChanged: PasswordLoginComponentStateHandler): void {
-        this.eventHolder = { hasEvent: true, event: new ComponentEvent(stateChanged, this.authEvent) }
-    }
-    event(): ComponentEvent {
-        return unwrap(this.eventHolder)
+    onSubmit(handler: SubmitHandler): void {
+        this.submitHandlers.push(handler)
     }
 
-    async login(): Promise<void> {
-        const result = await this.action.passwordLogin.login(this.event(), await Promise.all([
-            this.loginID.validate(),
-            this.password.validate(),
-        ]))
+    async login(event: PasswordLoginComponentEvent): Promise<void> {
+        await Promise.all(this.submitHandlers.map((handler) => handler()))
+
+        const result = await this.action.passwordLogin.login(event, [
+            this.content.loginID,
+            this.content.password,
+        ])
         if (!result.success) {
             return
         }
 
-        await this.action.credential.store(this.event(), result.authCredential)
+        await this.action.credential.store(event, result.authCredential)
     }
 }
 
 class ComponentEvent implements PasswordLoginComponentEvent {
-    stateChanged: PasswordLoginComponentStateHandler
     authEvent: AuthEvent
+    stateChanged: PasswordLoginComponentStateHandler
 
-    constructor(stateChanged: PasswordLoginComponentStateHandler, authEvent: AuthEvent) {
-        this.stateChanged = stateChanged
+    constructor(authEvent: AuthEvent, stateChanged: PasswordLoginComponentStateHandler) {
         this.authEvent = authEvent
+        this.stateChanged = stateChanged
     }
 
     tryToLogin(): void {
@@ -81,14 +112,4 @@ class ComponentEvent implements PasswordLoginComponentEvent {
     succeedToStore(): void {
         this.authEvent.succeedToAuth()
     }
-}
-
-type EventHolder<T> =
-    Readonly<{ hasEvent: false }> |
-    Readonly<{ hasEvent: true, event: T }>
-function unwrap<T>(holder: EventHolder<T>): T {
-    if (!holder.hasEvent) {
-        throw new Error("event is not initialized")
-    }
-    return holder.event
 }

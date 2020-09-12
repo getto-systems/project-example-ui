@@ -2,16 +2,19 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { LoadApplicationComponent } from "../../auth/load_application/action"
+import {
+    LoadApplicationComponent,
+    LoadApplicationComponentEventInit,
+} from "../../auth/load_application/action"
 
 export interface PreactComponent {
     (): VNode
 }
 
-export function LoadApplication(component: LoadApplicationComponent): PreactComponent {
+export function LoadApplication(component: LoadApplicationComponent, initEvent: LoadApplicationComponentEventInit): PreactComponent {
     return (): VNode => {
         const [state, setState] = useState(component.initialState)
-        component.onStateChange(setState)
+        const event = initEvent(setState)
 
         useEffect(() => {
             // script タグは body.appendChild しないとスクリプトがロードされないので useEffect で追加する
@@ -24,7 +27,7 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
 
         switch (state.type) {
             case "initial-load":
-                component.load(location)
+                component.load(event, location)
                 return html``
 
             case "try-to-load":

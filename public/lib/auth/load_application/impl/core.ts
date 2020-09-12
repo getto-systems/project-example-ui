@@ -2,55 +2,42 @@ import { AuthEvent } from "../../../auth/action"
 import {
     LoadApplicationComponentAction,
     LoadApplicationComponent,
-    LoadApplicationComponentEvent,
     LoadApplicationComponentState,
+    LoadApplicationComponentEvent,
+    LoadApplicationComponentEventInit,
     LoadApplicationComponentStateHandler,
 } from "../action"
 
 import { ScriptPath, CheckError } from "../../../script/data"
 
-export function initLoadApplication(action: LoadApplicationComponentAction, authEvent: AuthEvent): LoadApplicationComponent {
-    const event = new LoadApplicationComponentEventImpl(authEvent)
-    return new Component(action, event)
+export function initLoadApplicationComponent(action: LoadApplicationComponentAction): LoadApplicationComponent {
+    return new Component(action)
 }
-
-export function initLoadApplicationWorker(action: LoadApplicationComponentAction, event: LoadApplicationComponentEvent): LoadApplicationComponent {
-    return new Component(action, event)
+export function initLoadApplicationComponentEvent(authEvent: AuthEvent): LoadApplicationComponentEventInit {
+    return (stateChanged) => new ComponentEvent(authEvent, stateChanged)
 }
 
 class Component implements LoadApplicationComponent {
     action: LoadApplicationComponentAction
-    event: LoadApplicationComponentEvent
 
     initialState: LoadApplicationComponentState = { type: "initial-load" }
 
-    constructor(action: LoadApplicationComponentAction, event: LoadApplicationComponentEvent) {
+    constructor(action: LoadApplicationComponentAction) {
         this.action = action
-        this.event = event
     }
 
-    onStateChange(stateChanged: LoadApplicationComponentStateHandler): void {
-        this.event.onStateChange(stateChanged)
-    }
-
-    async load(currentLocation: Readonly<Location>): Promise<void> {
-        await this.action.script.load(this.event, currentLocation)
+    async load(event: LoadApplicationComponentEvent, currentLocation: Readonly<Location>): Promise<void> {
+        await this.action.script.load(event, currentLocation)
     }
 }
 
-class LoadApplicationComponentEventImpl implements LoadApplicationComponentEvent {
+class ComponentEvent implements LoadApplicationComponentEvent {
     authEvent: AuthEvent
-    eventHolder: EventHolder<LoadApplicationComponentStateHandler>
+    stateChanged: LoadApplicationComponentStateHandler
 
-    constructor(authEvent: AuthEvent) {
+    constructor(authEvent: AuthEvent, stateChanged: LoadApplicationComponentStateHandler) {
         this.authEvent = authEvent
-        this.eventHolder = { hasEvent: false }
-    }
-    onStateChange(stateChanged: LoadApplicationComponentStateHandler): void {
-        this.eventHolder = { hasEvent: true, event: stateChanged }
-    }
-    stateChanged(state: LoadApplicationComponentState): void {
-        unwrap(this.eventHolder)(state)
+        this.stateChanged = stateChanged
     }
 
     tryToLoad(scriptPath: ScriptPath): void {
@@ -59,14 +46,4 @@ class LoadApplicationComponentEventImpl implements LoadApplicationComponentEvent
     failedToLoad(err: CheckError): void {
         this.authEvent.failedToAuth({ type: "check", err })
     }
-}
-
-type EventHolder<T> =
-    Readonly<{ hasEvent: false }> |
-    Readonly<{ hasEvent: true, event: T }>
-function unwrap<T>(holder: EventHolder<T>): T {
-    if (!holder.hasEvent) {
-        throw new Error("event is not initialized")
-    }
-    return holder.event
 }

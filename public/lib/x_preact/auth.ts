@@ -20,13 +20,13 @@ function main() {
 
         switch (state.type) {
             case "renew":
-                return h(Renew(usecase.initRenew()), {})
+                return h(Renew(...usecase.initRenew()), {})
 
             case "load-application":
-                return h(LoadApplication(usecase.initLoadApplication()), {})
+                return h(LoadApplication(...usecase.initLoadApplication()), {})
 
             case "password-login":
-                return h(PasswordLogin(usecase.initPasswordLogin()), {})
+                return h(PasswordLogin(...usecase.initPasswordLogin()), {})
 
             case "password-reset-session":
                 //return h(PasswordReset(...state.init), {})

@@ -6,14 +6,10 @@ export interface PasswordAction {
 }
 
 export interface PasswordField {
-    initialState(): [Valid<PasswordError>, PasswordCharacter, PasswordView]
-
-    setPassword(event: PasswordEvent, input: InputValue): void
-    showPassword(event: PasswordEvent): void
-    hidePassword(event: PasswordEvent): void
+    set(event: PasswordEvent, input: InputValue): Content<Password>
+    show(event: PasswordEvent): void
+    hide(event: PasswordEvent): void
     validate(event: PasswordEvent): Content<Password>
-
-    toPassword(): Content<Password>
 }
 
 export interface PasswordEvent {
