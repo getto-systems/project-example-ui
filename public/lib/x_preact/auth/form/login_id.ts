@@ -2,7 +2,11 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { LoginIDFieldComponent, LoginIDFieldComponentState } from "../../../auth/field/login_id/action"
+import {
+    LoginIDFieldComponent,
+    LoginIDFieldComponentState,
+    LoginIDFieldComponentEventInit,
+} from "../../../auth/field/login_id/action"
 
 import { InitialValue } from "../../../input/data"
 
@@ -14,16 +18,30 @@ type Props = {
     initial: InitialValue,
 }
 
-export function LoginIDForm(component: LoginIDFieldComponent): PreactComponent {
+interface FormComponent {
+    onSubmit(handler: SubmitHandler): void
+}
+
+interface SubmitHandler {
+    (): Promise<void>
+}
+
+export function LoginIDForm(
+    formComponent: FormComponent,
+    component: LoginIDFieldComponent,
+    initEvent: LoginIDFieldComponentEventInit,
+): PreactComponent {
     return (props: Props): VNode => {
         const [state, setState] = useState(component.initialState)
-        component.onStateChange(setState)
+        const event = initEvent(setState)
 
         useEffect(() => {
             if (props.initial.hasValue) {
                 setInputValue("login-id", props.initial.value.inputValue)
-                component.setLoginID(props.initial.value)
+                component.set(event, props.initial.value)
             }
+
+            formComponent.onSubmit(() => component.validate(event))
         }, [])
 
         return html`
@@ -38,7 +56,7 @@ export function LoginIDForm(component: LoginIDFieldComponent): PreactComponent {
 
         function onInput(e: InputEvent) {
             if (e.target instanceof HTMLInputElement) {
-                component.setLoginID({ inputValue: e.target.value })
+                component.set(event, { inputValue: e.target.value })
             }
         }
 

@@ -8,19 +8,20 @@ export interface LoadApplicationComponentAction {
 
 export interface LoadApplicationComponent {
     initialState: LoadApplicationComponentState
-    onStateChange(stateChanged: LoadApplicationComponentStateHandler): void
 
-    load(currentLocation: Readonly<Location>): Promise<void>
-}
-
-export interface LoadApplicationComponentEvent extends ScriptEvent {
-    onStateChange(stateChanged: LoadApplicationComponentStateHandler): void
+    load(event: LoadApplicationComponentEvent, currentLocation: Readonly<Location>): Promise<void>
 }
 
 export type LoadApplicationComponentState =
     Readonly<{ type: "initial-load" }> |
     Readonly<{ type: "try-to-load", scriptPath: ScriptPath }> |
     Readonly<{ type: "failed-to-load", err: CheckError }>
+
+export interface LoadApplicationComponentEvent extends ScriptEvent { } // eslint-disable-line @typescript-eslint/no-empty-interface
+
+export interface LoadApplicationComponentEventInit {
+    (stateChanged: LoadApplicationComponentStateHandler): LoadApplicationComponentEvent
+}
 
 export interface LoadApplicationComponentStateHandler {
     (state: LoadApplicationComponentState): void

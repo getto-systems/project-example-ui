@@ -1,5 +1,5 @@
-import { LoginIDFieldComponent } from "../field/login_id/action"
-import { PasswordFieldComponent } from "../field/password/action"
+import { LoginIDFieldComponent, LoginIDFieldComponentEventInit } from "../field/login_id/action"
+import { PasswordFieldComponent, PasswordFieldComponentEventInit } from "../field/password/action"
 
 import { CredentialAction, StoreEvent } from "../../credential/action"
 import { PasswordResetAction, ResetEvent } from "../../password_reset/action"
@@ -13,17 +13,13 @@ export interface PasswordResetComponentAction {
 }
 
 export interface PasswordResetComponent {
-    loginID: LoginIDFieldComponent
-    password: PasswordFieldComponent
+    loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit]
+    password: [PasswordFieldComponent, PasswordFieldComponentEventInit]
 
     initialState: PasswordResetComponentState
 
-    onStateChange(stateChanged: PasswordResetComponentStateHandler): void
-
-    reset(): Promise<void>
+    reset(event: PasswordResetComponentEvent): Promise<void>
 }
-
-export interface PasswordResetComponentEvent extends ResetEvent, StoreEvent { }
 
 export type PasswordResetComponentState =
     Readonly<{ type: "initial-reset" }> |
@@ -31,6 +27,12 @@ export type PasswordResetComponentState =
     Readonly<{ type: "delayed-to-reset" }> |
     Readonly<{ type: "failed-to-reset", content: InputContent, err: ResetError }> |
     Readonly<{ type: "failed-to-store", err: StoreError }>
+
+export interface PasswordResetComponentEvent extends ResetEvent, StoreEvent { }
+
+export interface PasswordResetComponentEventInit {
+    (stateChanged: PasswordResetComponentStateHandler): PasswordResetComponentEvent
+}
 
 export interface PasswordResetComponentStateHandler {
     (state: PasswordResetComponentState): void

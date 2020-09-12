@@ -1,4 +1,4 @@
-import { LoginIDFieldComponent } from "../field/login_id/action"
+import { LoginIDFieldComponent, LoginIDFieldComponentEventInit } from "../field/login_id/action"
 
 import { PasswordResetSessionAction, SessionEvent, PollingStatusEvent } from "../../password_reset_session/action"
 
@@ -13,16 +13,12 @@ export interface PasswordResetSessionComponentAction {
 }
 
 export interface PasswordResetSessionComponent {
-    loginID: LoginIDFieldComponent
+    loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit]
 
     initialState: PasswordResetSessionComponentState
 
-    onStateChange(stateChanged: PasswordResetSessionComponentStateHandler): void
-
-    createSession(): Promise<void>
+    createSession(event: PasswordResetSessionComponentEvent): Promise<void>
 }
-
-export interface PasswordResetSessionComponentEvent extends SessionEvent, PollingStatusEvent { }
 
 export type PasswordResetSessionComponentState =
     Readonly<{ type: "initial-reset-session" }> |
@@ -33,6 +29,12 @@ export type PasswordResetSessionComponentState =
     Readonly<{ type: "retry-to-polling-status", status: PollingStatus }> |
     Readonly<{ type: "failed-to-polling-status", err: PollingStatusError }> |
     Readonly<{ type: "succeed-to-send-token", status: DoneStatus }>
+
+export interface PasswordResetSessionComponentEvent extends SessionEvent, PollingStatusEvent { }
+
+export interface PasswordResetSessionComponentEventInit {
+    (stateChanged: PasswordResetSessionComponentStateHandler): PasswordResetSessionComponentEvent
+}
 
 export interface PasswordResetSessionComponentStateHandler {
     (state: PasswordResetSessionComponentState): void

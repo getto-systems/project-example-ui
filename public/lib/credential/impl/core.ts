@@ -3,7 +3,7 @@ import { Infra } from "../infra"
 import { CredentialAction, LoginIDField, LoginIDEvent, RenewResult, RenewEvent, StoreEvent } from "../action"
 
 import { LoginID, LoginIDError, AuthCredential } from "../data"
-import { InputValue, Content, validContent, invalidContent, Valid, noError, hasError } from "../../input/data"
+import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../input/data"
 
 export function initCredentialAction(infra: Infra): CredentialAction {
     return new CredentialActionImpl(infra)
@@ -61,22 +61,14 @@ class LoginIDFieldImpl implements LoginIDField {
         this.loginID = { inputValue: "" }
     }
 
-    initialState(): [Valid<LoginIDError>] {
-        return [noError()]
-    }
-
-    setLoginID(event: LoginIDEvent, input: InputValue): void {
+    set(event: LoginIDEvent, input: InputValue): Content<LoginID> {
         this.loginID = input
-        this.validate(event)
+        return this.validate(event)
     }
     validate(event: LoginIDEvent): Content<LoginID> {
         const state = this.state()
         event.updated(...state)
         return this.content(state[0])
-    }
-
-    toLoginID(): Content<LoginID> {
-        return this.content(this.state()[0])
     }
 
     state(): [Valid<LoginIDError>] {

@@ -1,62 +1,84 @@
-import { LoginIDFieldComponent } from "../../field/login_id/action"
-import { PasswordFieldComponent } from "../../field/password/action"
+import { LoginIDFieldComponent, LoginIDFieldComponentEventInit } from "../../field/login_id/action"
+import { PasswordFieldComponent, PasswordFieldComponentEventInit } from "../../field/password/action"
 
 import { AuthEvent } from "../../../auth/action"
 import {
     PasswordResetComponentAction,
     PasswordResetComponent,
-    PasswordResetComponentEvent,
     PasswordResetComponentState,
+    PasswordResetComponentEvent,
+    PasswordResetComponentEventInit,
     PasswordResetComponentStateHandler,
 } from "../action"
 
-import { StoreError } from "../../../credential/data"
+import { LoginID, StoreError } from "../../../credential/data"
+import { Password } from "../../../password/data"
 import { InputContent, ResetToken, ResetError } from "../../../password_reset/data"
+import { Content } from "../../../input/data"
 
-export function initPasswordReset(loginID: LoginIDFieldComponent, password: PasswordFieldComponent, action: PasswordResetComponentAction, authEvent: AuthEvent, resetToken: ResetToken): PasswordResetComponent {
-    return new Component(loginID, password, action, authEvent, resetToken)
+export function initPasswordResetComponent(
+    loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit],
+    password: [PasswordFieldComponent, PasswordFieldComponentEventInit],
+    action: PasswordResetComponentAction,
+    resetToken: ResetToken,
+): PasswordResetComponent {
+    return new Component(loginID, password, action, resetToken)
+}
+export function initPasswordResetComponentEvent(authEvent: AuthEvent): PasswordResetComponentEventInit {
+    return (stateChanged) => new ComponentEvent(authEvent, stateChanged)
 }
 
 class Component implements PasswordResetComponent {
-    loginID: LoginIDFieldComponent
-    password: PasswordFieldComponent
+    loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit]
+    password: [PasswordFieldComponent, PasswordFieldComponentEventInit]
 
     action: PasswordResetComponentAction
-    authEvent: AuthEvent
-    eventHolder: EventHolder<ComponentEvent>
 
     resetToken: ResetToken
 
+    content: {
+        loginID: Content<LoginID>
+        password: Content<Password>
+    }
+
     initialState: PasswordResetComponentState = { type: "initial-reset" }
 
-    constructor(loginID: LoginIDFieldComponent, password: PasswordFieldComponent, action: PasswordResetComponentAction, authEvent: AuthEvent, resetToken: ResetToken) {
+    constructor(
+        loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit],
+        password: [PasswordFieldComponent, PasswordFieldComponentEventInit],
+        action: PasswordResetComponentAction,
+        resetToken: ResetToken,
+    ) {
+        this.loginID = loginID
+        this.password = password
+
         this.action = action
-        this.authEvent = authEvent
-        this.eventHolder = { hasEvent: false }
 
         this.resetToken = resetToken
 
-        this.loginID = loginID
-        this.password = password
+        this.content = {
+            loginID: { input: { inputValue: "" }, valid: false },
+            password: { input: { inputValue: "" }, valid: false },
+        }
+
+        this.loginID[0].onChange((content: Content<LoginID>) => {
+            this.content.loginID = content
+        })
+        this.password[0].onChange((content: Content<Password>) => {
+            this.content.password = content
+        })
     }
 
-    onStateChange(stateChanged: PasswordResetComponentStateHandler): void {
-        this.eventHolder = { hasEvent: true, event: new ComponentEvent(stateChanged, this.authEvent) }
-    }
-    event(): ComponentEvent {
-        return unwrap(this.eventHolder)
-    }
-
-    async reset(): Promise<void> {
-        const result = await this.action.passwordReset.reset(this.event(), this.resetToken, await Promise.all([
-            this.loginID.validate(),
-            this.password.validate(),
+    async reset(event: PasswordResetComponentEvent): Promise<void> {
+        const result = await this.action.passwordReset.reset(event, this.resetToken, await Promise.all([
+            this.content.loginID,
+            this.content.password,
         ]))
         if (!result.success) {
             return
         }
 
-        await this.action.credential.store(this.event(), result.authCredential)
+        await this.action.credential.store(event, result.authCredential)
     }
 }
 
@@ -64,7 +86,7 @@ class ComponentEvent implements PasswordResetComponentEvent {
     stateChanged: PasswordResetComponentStateHandler
     authEvent: AuthEvent
 
-    constructor(stateChanged: PasswordResetComponentStateHandler, authEvent: AuthEvent) {
+    constructor(authEvent: AuthEvent, stateChanged: PasswordResetComponentStateHandler) {
         this.stateChanged = stateChanged
         this.authEvent = authEvent
     }
@@ -85,14 +107,4 @@ class ComponentEvent implements PasswordResetComponentEvent {
     succeedToStore(): void {
         this.authEvent.succeedToAuth()
     }
-}
-
-type EventHolder<T> =
-    Readonly<{ hasEvent: false }> |
-    Readonly<{ hasEvent: true, event: T }>
-function unwrap<T>(holder: EventHolder<T>): T {
-    if (!holder.hasEvent) {
-        throw new Error("event is not initialized")
-    }
-    return holder.event
 }

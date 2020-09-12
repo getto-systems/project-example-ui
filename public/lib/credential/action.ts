@@ -9,12 +9,8 @@ export interface CredentialAction {
 }
 
 export interface LoginIDField {
-    initialState(): [Valid<LoginIDError>]
-
-    setLoginID(event: LoginIDEvent, input: InputValue): void
+    set(event: LoginIDEvent, input: InputValue): Content<LoginID>
     validate(event: LoginIDEvent): Content<LoginID>
-
-    toLoginID(): Content<LoginID>
 }
 
 export interface LoginIDEvent {

@@ -2,21 +2,26 @@ import {
     PasswordFieldComponentAction,
     PasswordFieldComponent,
     PasswordFieldComponentEvent,
+    PasswordFieldComponentEventInit,
     PasswordFieldComponentState,
     PasswordFieldComponentStateHandler,
+    PasswordContentHandler,
 } from "../action"
 import { PasswordField } from "../../../../password/action"
 
 import { Password, PasswordError, PasswordCharacter, PasswordView } from "../../../../password/data"
 import { InputValue, Content, Valid } from "../../../../input/data"
 
-export function initPasswordField(action: PasswordFieldComponentAction): PasswordFieldComponent {
+export function initPasswordFieldComponent(action: PasswordFieldComponentAction): PasswordFieldComponent {
     return new Component(action.password.initPasswordField())
+}
+export function initPasswordFieldComponentEvent(): PasswordFieldComponentEventInit {
+    return (stateChanged) => new ComponentEvent(stateChanged)
 }
 
 class Component implements PasswordFieldComponent {
     password: PasswordField
-    eventHolder: EventHolder<PasswordFieldComponentEvent>
+    eventHolder: EventHolder<PasswordContentHandler>
 
     initialState: PasswordFieldComponentState = {
         type: "input-password",
@@ -30,24 +35,27 @@ class Component implements PasswordFieldComponent {
         this.eventHolder = { hasEvent: false }
     }
 
-    onStateChange(stateChanged: PasswordFieldComponentStateHandler): void {
-        this.eventHolder = { hasEvent: true, event: new ComponentEvent(stateChanged) }
-    }
-    event(): PasswordFieldComponentEvent {
-        return unwrap(this.eventHolder)
+    onChange(changed: PasswordContentHandler): void {
+        this.eventHolder = { hasEvent: true, event: changed }
     }
 
-    async validate(): Promise<Content<Password>> {
-        return this.password.validate(this.event())
+    async validate(event: PasswordFieldComponentEvent): Promise<void> {
+        this.fireChanged(this.password.validate(event))
     }
-    async setPassword(passwrod: InputValue): Promise<void> {
-        this.password.setPassword(this.event(), passwrod)
+    async set(event: PasswordFieldComponentEvent, passwrod: InputValue): Promise<void> {
+        this.fireChanged(this.password.set(event, passwrod))
     }
-    async showPassword(): Promise<void> {
-        this.password.showPassword(this.event())
+    async show(event: PasswordFieldComponentEvent): Promise<void> {
+        this.password.show(event)
     }
-    async hidePassword(): Promise<void> {
-        this.password.hidePassword(this.event())
+    async hide(event: PasswordFieldComponentEvent): Promise<void> {
+        this.password.hide(event)
+    }
+
+    fireChanged(content: Content<Password>): void {
+        if (this.eventHolder.hasEvent) {
+            this.eventHolder.event(content)
+        }
     }
 }
 
@@ -66,9 +74,3 @@ class ComponentEvent implements PasswordFieldComponentEvent {
 type EventHolder<T> =
     Readonly<{ hasEvent: false }> |
     Readonly<{ hasEvent: true, event: T }>
-function unwrap<T>(holder: EventHolder<T>): T {
-    if (!holder.hasEvent) {
-        throw new Error("event is not initialized")
-    }
-    return holder.event
-}

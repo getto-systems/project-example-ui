@@ -2,7 +2,11 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { PasswordFieldComponent, PasswordFieldComponentState } from "../../../auth/field/password/action"
+import {
+    PasswordFieldComponent,
+    PasswordFieldComponentState,
+    PasswordFieldComponentEventInit,
+} from "../../../auth/field/password/action"
 
 import { PasswordView } from "../../../password/data"
 import { InputValue, InitialValue } from "../../../input/data"
@@ -15,16 +19,30 @@ type Props = {
     initial: InitialValue,
 }
 
-export function PasswordForm(component: PasswordFieldComponent): PreactComponent {
+interface FormComponent {
+    onSubmit(handler: SubmitHandler): void
+}
+
+interface SubmitHandler {
+    (): Promise<void>
+}
+
+export function PasswordForm(
+    formComponent: FormComponent,
+    component: PasswordFieldComponent,
+    initEvent: PasswordFieldComponentEventInit,
+): PreactComponent {
     return (props: Props): VNode => {
         const [state, setState] = useState(component.initialState)
-        component.onStateChange(setState)
+        const event = initEvent(setState)
 
         useEffect(() => {
             if (props.initial.hasValue) {
                 setInputValue("password", props.initial.value.inputValue)
-                component.setPassword(props.initial.value)
+                component.set(event, props.initial.value)
             }
+
+            formComponent.onSubmit(() => component.validate(event))
         }, [])
 
         return html`
@@ -40,7 +58,7 @@ export function PasswordForm(component: PasswordFieldComponent): PreactComponent
 
         function onInput(e: InputEvent) {
             if (e.target instanceof HTMLInputElement) {
-                component.setPassword({ inputValue: e.target.value })
+                component.set(event, { inputValue: e.target.value })
             }
         }
 
@@ -82,11 +100,11 @@ export function PasswordForm(component: PasswordFieldComponent): PreactComponent
 
             function show(e: MouseEvent) {
                 linkClicked(e)
-                component.showPassword()
+                component.show(event)
             }
             function hide(e: MouseEvent) {
                 linkClicked(e)
-                component.hidePassword()
+                component.hide(event)
             }
             function linkClicked(e: MouseEvent) {
                 e.preventDefault()

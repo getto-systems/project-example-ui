@@ -2,54 +2,47 @@ import { AuthEvent } from "../../../auth/action"
 import {
     RenewComponentAction,
     RenewComponent,
-    RenewComponentEvent,
     RenewComponentState,
+    RenewComponentEvent,
+    RenewComponentEventInit,
     RenewComponentStateHandler,
 } from "../action"
 
 import { RenewError, StoreError } from "../../../credential/data"
 
-export function initRenew(action: RenewComponentAction, authEvent: AuthEvent): RenewComponent {
-    return new Component(action, authEvent)
+export function initRenewComponent(action: RenewComponentAction): RenewComponent {
+    return new Component(action)
+}
+export function initRenewComponentEvent(authEvent: AuthEvent): RenewComponentEventInit {
+    return (stateChanged) => new ComponentEvent(authEvent, stateChanged)
 }
 
 class Component implements RenewComponent {
     action: RenewComponentAction
-    authEvent: AuthEvent
-    eventHolder: EventHolder<ComponentEvent>
 
     initialState: RenewComponentState = { type: "initial-renew" }
 
-    constructor(action: RenewComponentAction, authEvent: AuthEvent) {
+    constructor(action: RenewComponentAction) {
         this.action = action
-        this.authEvent = authEvent
-        this.eventHolder = { hasEvent: false }
     }
 
-    onStateChange(stateChanged: RenewComponentStateHandler): void {
-        this.eventHolder = { hasEvent: true, event: new ComponentEvent(stateChanged, this.authEvent) }
-    }
-    event(): ComponentEvent {
-        return unwrap(this.eventHolder)
-    }
-
-    async renew(): Promise<void> {
-        const result = await this.action.credential.renew(this.event())
+    async renew(event: RenewComponentEvent): Promise<void> {
+        const result = await this.action.credential.renew(event)
         if (!result.success) {
             return
         }
 
-        await this.action.credential.store(this.event(), result.authCredential)
+        await this.action.credential.store(event, result.authCredential)
     }
 }
 
 class ComponentEvent implements RenewComponentEvent {
-    stateChanged: RenewComponentStateHandler
     authEvent: AuthEvent
+    stateChanged: RenewComponentStateHandler
 
-    constructor(stateChanged: RenewComponentStateHandler, authEvent: AuthEvent) {
-        this.stateChanged = stateChanged
+    constructor(authEvent: AuthEvent, stateChanged: RenewComponentStateHandler) {
         this.authEvent = authEvent
+        this.stateChanged = stateChanged
     }
 
     tryToRenew(): void {
@@ -83,16 +76,6 @@ class ComponentEvent implements RenewComponentEvent {
     succeedToStore(): void {
         this.authEvent.succeedToAuth()
     }
-}
-
-type EventHolder<T> =
-    Readonly<{ hasEvent: false }> |
-    Readonly<{ hasEvent: true, event: T }>
-function unwrap<T>(holder: EventHolder<T>): T {
-    if (!holder.hasEvent) {
-        throw new Error("event is not initialized")
-    }
-    return holder.event
 }
 
 function assertNever(_: never): never {

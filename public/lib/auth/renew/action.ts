@@ -9,18 +9,20 @@ export interface RenewComponentAction {
 export interface RenewComponent {
     initialState: RenewComponentState
 
-    onStateChange(stateChanged: RenewComponentStateHandler): void
-
-    renew(): Promise<void>
+    renew(event: RenewComponentEvent): Promise<void>
 }
-
-export interface RenewComponentEvent extends RenewEvent, StoreEvent { }
 
 export type RenewComponentState =
     Readonly<{ type: "initial-renew" }> |
     Readonly<{ type: "try-to-renew" }> |
     Readonly<{ type: "delayed-to-renew" }> |
     Readonly<{ type: "failed-to-store", err: StoreError }>
+
+export interface RenewComponentEvent extends RenewEvent, StoreEvent { }
+
+export interface RenewComponentEventInit {
+    (stateChanged: RenewComponentStateHandler): RenewComponentEvent
+}
 
 export interface RenewComponentStateHandler {
     (state: RenewComponentState): void

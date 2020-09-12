@@ -1,19 +1,19 @@
 import { AuthAction, AuthEvent, AuthError } from "./auth/action"
 
-import { initRenew } from "./auth/renew/impl/core"
-import { initLoadApplication } from "./auth/load_application/impl/core"
-import { initLoginIDField } from "./auth/field/login_id/impl/core"
-import { initPasswordField } from "./auth/field/password/impl/core"
-import { initPasswordLogin } from "./auth/password_login/impl/core"
-import { initPasswordReset } from "./auth/password_reset/impl/core"
-import { initPasswordResetSession } from "./auth/password_reset_session/impl/core"
+import { initRenewComponent, initRenewComponentEvent } from "./auth/renew/impl/core"
+import { initLoadApplicationComponent, initLoadApplicationComponentEvent } from "./auth/load_application/impl/core"
+import { initLoginIDFieldComponent, initLoginIDFieldComponentEvent } from "./auth/field/login_id/impl/core"
+import { initPasswordFieldComponent, initPasswordFieldComponentEvent } from "./auth/field/password/impl/core"
+import { initPasswordLoginComponent, initPasswordLoginComponentEvent } from "./auth/password_login/impl/core"
+import { initPasswordResetComponent, initPasswordResetComponentEvent } from "./auth/password_reset/impl/core"
+import { initPasswordResetSessionComponent, initPasswordResetSessionComponentEvent } from "./auth/password_reset_session/impl/core"
 
-import { RenewComponent } from "./auth/renew/action"
-import { LoadApplicationComponent } from "./auth/load_application/action"
+import { RenewComponent, RenewComponentEventInit } from "./auth/renew/action"
+import { LoadApplicationComponent, LoadApplicationComponentEventInit } from "./auth/load_application/action"
 
-import { PasswordLoginComponent } from "./auth/password_login/action"
-import { PasswordResetSessionComponent } from "./auth/password_reset_session/action"
-import { PasswordResetComponent } from "./auth/password_reset/action"
+import { PasswordLoginComponent, PasswordLoginComponentEventInit } from "./auth/password_login/action"
+import { PasswordResetSessionComponent, PasswordResetSessionComponentEventInit } from "./auth/password_reset_session/action"
+import { PasswordResetComponent, PasswordResetComponentEventInit } from "./auth/password_reset/action"
 
 import { ResetToken } from "./password_reset/data"
 
@@ -21,12 +21,12 @@ export interface AuthUsecase {
     initialState: AuthState
     onStateChange(stateChanged: AuthEventHandler): void
 
-    initRenew(): RenewComponent
-    initLoadApplication(): LoadApplicationComponent
+    initRenew(): [RenewComponent, RenewComponentEventInit]
+    initLoadApplication(): [LoadApplicationComponent, LoadApplicationComponentEventInit]
 
-    initPasswordLogin(): PasswordLoginComponent
-    initPasswordResetSession(): PasswordResetSessionComponent
-    initPasswordReset(resetToken: ResetToken): PasswordResetComponent
+    initPasswordLogin(): [PasswordLoginComponent, PasswordLoginComponentEventInit]
+    initPasswordResetSession(): [PasswordResetSessionComponent, PasswordResetSessionComponentEventInit]
+    initPasswordReset(resetToken: ResetToken): [PasswordResetComponent, PasswordResetComponentEventInit]
 }
 
 export type AuthState =
@@ -66,26 +66,48 @@ class Usecase implements AuthUsecase {
         return unwrap(this.eventHolder)
     }
 
-    initRenew(): RenewComponent {
-        return initRenew(this.action, this.event())
+    initRenew(): [RenewComponent, RenewComponentEventInit] {
+        return [
+            initRenewComponent(this.action),
+            initRenewComponentEvent(this.event()),
+        ]
     }
-    initLoadApplication(): LoadApplicationComponent {
-        return initLoadApplication(this.action, this.event())
+    initLoadApplication(): [LoadApplicationComponent, LoadApplicationComponentEventInit] {
+        return [
+            initLoadApplicationComponent(this.action),
+            initLoadApplicationComponentEvent(this.event()),
+        ]
     }
 
-    initPasswordLogin(): PasswordLoginComponent {
-        const loginID = initLoginIDField(this.action)
-        const password = initPasswordField(this.action)
-        return initPasswordLogin(loginID, password, this.action, this.event())
+    initPasswordLogin(): [PasswordLoginComponent, PasswordLoginComponentEventInit] {
+        return [
+            initPasswordLoginComponent(
+                [initLoginIDFieldComponent(this.action), initLoginIDFieldComponentEvent()],
+                [initPasswordFieldComponent(this.action), initPasswordFieldComponentEvent()],
+                this.action,
+            ),
+            initPasswordLoginComponentEvent(this.event()),
+        ]
     }
-    initPasswordResetSession(): PasswordResetSessionComponent {
-        const loginID = initLoginIDField(this.action)
-        return initPasswordResetSession(loginID, this.action)
+    initPasswordResetSession(): [PasswordResetSessionComponent, PasswordResetSessionComponentEventInit] {
+        return [
+            initPasswordResetSessionComponent(
+                [initLoginIDFieldComponent(this.action), initLoginIDFieldComponentEvent()],
+                this.action,
+            ),
+            initPasswordResetSessionComponentEvent(),
+        ]
     }
-    initPasswordReset(resetToken: ResetToken): PasswordResetComponent {
-        const loginID = initLoginIDField(this.action)
-        const password = initPasswordField(this.action)
-        return initPasswordReset(loginID, password, this.action, this.event(), resetToken)
+    initPasswordReset(resetToken: ResetToken): [PasswordResetComponent, PasswordResetComponentEventInit] {
+        return [
+            initPasswordResetComponent(
+                [initLoginIDFieldComponent(this.action), initLoginIDFieldComponentEvent()],
+                [initPasswordFieldComponent(this.action), initPasswordFieldComponentEvent()],
+                this.action,
+                resetToken,
+            ),
+            initPasswordResetComponentEvent(this.event()),
+        ]
     }
 }
 

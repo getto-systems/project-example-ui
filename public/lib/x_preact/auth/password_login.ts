@@ -6,7 +6,11 @@ import { LoginView } from "./login_view"
 import { LoginIDForm } from "./form/login_id"
 import { PasswordForm } from "./form/password"
 
-import { PasswordLoginComponent } from "../../auth/password_login/action"
+import {
+    PasswordLoginComponent,
+    PasswordLoginComponentEventInit,
+    PasswordLoginComponentEvent,
+} from "../../auth/password_login/action"
 
 import { InputContent, LoginError } from "../../password_login/data"
 import { hasValue, noValue } from "../../input/data"
@@ -15,17 +19,17 @@ interface PreactComponent {
     (): VNode
 }
 
-export function PasswordLogin(component: PasswordLoginComponent): PreactComponent {
+export function PasswordLogin(component: PasswordLoginComponent, initEvent: PasswordLoginComponentEventInit): PreactComponent {
     return (): VNode => {
         const [state, setState] = useState(component.initialState)
-        component.onStateChange(setState)
+        const event = initEvent(setState)
 
         switch (state.type) {
             case "initial-login":
-                return LoginView(initialLoginForm(component))
+                return LoginView(initialLoginForm(component, event))
 
             case "failed-to-login":
-                return LoginView(failedToLoginForm(component, state.content, state.err))
+                return LoginView(failedToLoginForm(component, event, state.content, state.err))
 
             case "try-to-login":
                 return LoginView(tryToLoginForm())
@@ -40,13 +44,13 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
     }
 }
 
-function initialLoginForm(component: PasswordLoginComponent): VNode {
+function initialLoginForm(component: PasswordLoginComponent, event: PasswordLoginComponentEvent): VNode {
     return html`
         <form onSubmit="${onSubmit}">
             <big>
                 <section class="login__body">
-                    <${LoginIDForm(component.loginID)} initial="${noValue}"/>
-                    <${PasswordForm(component.password)} initial="${noValue}"/>
+                    <${LoginIDForm(component, ...component.loginID)} initial="${noValue}"/>
+                    <${PasswordForm(component, ...component.password)} initial="${noValue}"/>
                 </section>
             </big>
             <big>
@@ -64,16 +68,21 @@ function initialLoginForm(component: PasswordLoginComponent): VNode {
 
     function onSubmit(e: Event) {
         loginFormSubmit(e)
-        component.login()
+        component.login(event)
     }
 }
-function failedToLoginForm(component: PasswordLoginComponent, content: InputContent, err: LoginError): VNode {
+function failedToLoginForm(
+    component: PasswordLoginComponent,
+    event: PasswordLoginComponentEvent,
+    content: InputContent,
+    err: LoginError,
+): VNode {
     return html`
         <form onSubmit="${onSubmit}">
             <big>
                 <section class="login__body">
-                    <${LoginIDForm(component.loginID)} initial="${hasValue(content.loginID)}"/>
-                    <${PasswordForm(component.password)} initial="${hasValue(content.password)}"/>
+                    <${LoginIDForm(component, ...component.loginID)} initial="${hasValue(content.loginID)}"/>
+                    <${PasswordForm(component, ...component.password)} initial="${hasValue(content.password)}"/>
                 </section>
             </big>
             <big>
@@ -93,7 +102,7 @@ function failedToLoginForm(component: PasswordLoginComponent, content: InputCont
 
     function onSubmit(e: Event) {
         loginFormSubmit(e)
-        component.login()
+        component.login(event)
     }
 
     function error(): VNode {

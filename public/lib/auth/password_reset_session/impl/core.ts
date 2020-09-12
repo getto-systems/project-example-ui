@@ -1,52 +1,63 @@
-import { LoginIDFieldComponent } from "../../field/login_id/action"
+import { LoginIDFieldComponent, LoginIDFieldComponentEventInit } from "../../field/login_id/action"
 
 import {
     PasswordResetSessionComponentAction,
     PasswordResetSessionComponent,
-    PasswordResetSessionComponentEvent,
     PasswordResetSessionComponentState,
+    PasswordResetSessionComponentEvent,
+    PasswordResetSessionComponentEventInit,
     PasswordResetSessionComponentStateHandler,
 } from "../action"
 
-import {
-    InputContent,
-    SessionError,
-    PollingStatusError, PollingStatus, DoneStatus,
-} from "../../../password_reset_session/data"
+import { LoginID } from "../../../credential/data"
+import { InputContent, SessionError, PollingStatusError, PollingStatus, DoneStatus } from "../../../password_reset_session/data"
+import { Content } from "../../../input/data"
 
-export function initPasswordResetSession(loginID: LoginIDFieldComponent, action: PasswordResetSessionComponentAction): PasswordResetSessionComponent {
+export function initPasswordResetSessionComponent(
+    loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit],
+    action: PasswordResetSessionComponentAction,
+): PasswordResetSessionComponent {
     return new Component(loginID, action)
+}
+export function initPasswordResetSessionComponentEvent(): PasswordResetSessionComponentEventInit {
+    return (stateChanged) => new ComponentEvent(stateChanged)
 }
 
 class Component implements PasswordResetSessionComponent {
-    loginID: LoginIDFieldComponent
+    loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit]
 
     action: PasswordResetSessionComponentAction
-    eventHolder: EventHolder<ComponentEvent>
 
     initialState: PasswordResetSessionComponentState = { type: "initial-reset-session" }
 
-    constructor(loginID: LoginIDFieldComponent, action: PasswordResetSessionComponentAction) {
-        this.action = action
-        this.eventHolder = { hasEvent: false }
+    content: {
+        loginID: Content<LoginID>
+    }
 
+    constructor(
+        loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit],
+        action: PasswordResetSessionComponentAction,
+    ) {
         this.loginID = loginID
+
+        this.action = action
+
+        this.content = {
+            loginID: { input: { inputValue: "" }, valid: false },
+        }
+
+        this.loginID[0].onChange((content: Content<LoginID>) => {
+            this.content.loginID = content
+        })
     }
 
-    onStateChange(stateChanged: PasswordResetSessionComponentStateHandler): void {
-        this.eventHolder = { hasEvent: true, event: new ComponentEvent(stateChanged) }
-    }
-    event(): ComponentEvent {
-        return unwrap(this.eventHolder)
-    }
-
-    async createSession(): Promise<void> {
-        const result = await this.action.passwordResetSession.createSession(this.event(), [await this.loginID.validate()])
+    async createSession(event: PasswordResetSessionComponentEvent): Promise<void> {
+        const result = await this.action.passwordResetSession.createSession(event, [this.content.loginID])
         if (!result.success) {
             return
         }
 
-        await this.action.passwordResetSession.startPollingStatus(this.event(), result.session)
+        await this.action.passwordResetSession.startPollingStatus(event, result.session)
     }
 }
 
@@ -80,14 +91,4 @@ class ComponentEvent implements PasswordResetSessionComponentEvent {
     succeedToSendToken(status: DoneStatus): void {
         this.stateChanged({ type: "succeed-to-send-token", status })
     }
-}
-
-type EventHolder<T> =
-    Readonly<{ hasEvent: false }> |
-    Readonly<{ hasEvent: true, event: T }>
-function unwrap<T>(holder: EventHolder<T>): T {
-    if (!holder.hasEvent) {
-        throw new Error("event is not initialized")
-    }
-    return holder.event
 }
