@@ -2,7 +2,7 @@ import { render, h, VNode } from "preact"
 import { useState } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { init } from "../z_main/auth"
+import { ComponentLoader } from "../z_main/auth"
 
 import { Renew } from "./auth/renew"
 import { LoadApplication } from "./auth/load_application"
@@ -12,21 +12,22 @@ import { PasswordLogin } from "./auth/password_login"
 render(h(main(), {}), document.body)
 
 function main() {
-    const usecase = init()
+    const loader = new ComponentLoader()
+    const [component, initEvent] = loader.initAuthComponent()
 
     return (): VNode => {
-        const [state, setState] = useState(usecase.initialState)
-        usecase.onStateChange(setState)
+        const [state, setState] = useState(component.initialState)
+        const event = initEvent(setState)
 
         switch (state.type) {
             case "renew":
-                return h(Renew(...usecase.initRenew()), {})
+                return h(Renew(...loader.initRenewComponent(event)), {})
 
             case "load-application":
-                return h(LoadApplication(...usecase.initLoadApplication()), {})
+                return h(LoadApplication(...loader.initLoadApplicationComponent(event)), {})
 
             case "password-login":
-                return h(PasswordLogin(...usecase.initPasswordLogin()), {})
+                return h(PasswordLogin(...loader.initPasswordLoginComponent(event)), {})
 
             case "password-reset-session":
                 //return h(PasswordReset(...state.init), {})

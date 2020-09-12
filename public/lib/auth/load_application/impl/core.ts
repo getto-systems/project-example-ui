@@ -1,4 +1,4 @@
-import { AuthEvent } from "../../../auth/action"
+import { AuthComponentEvent } from "../../../auth/action"
 import {
     LoadApplicationComponentAction,
     LoadApplicationComponent,
@@ -13,7 +13,7 @@ import { ScriptPath, CheckError } from "../../../script/data"
 export function initLoadApplicationComponent(action: LoadApplicationComponentAction): LoadApplicationComponent {
     return new Component(action)
 }
-export function initLoadApplicationComponentEvent(authEvent: AuthEvent): LoadApplicationComponentEventInit {
+export function initLoadApplicationComponentEvent(authEvent: AuthComponentEvent): LoadApplicationComponentEventInit {
     return (stateChanged) => new ComponentEvent(authEvent, stateChanged)
 }
 
@@ -32,10 +32,10 @@ class Component implements LoadApplicationComponent {
 }
 
 class ComponentEvent implements LoadApplicationComponentEvent {
-    authEvent: AuthEvent
+    authEvent: AuthComponentEvent
     stateChanged: LoadApplicationComponentStateHandler
 
-    constructor(authEvent: AuthEvent, stateChanged: LoadApplicationComponentStateHandler) {
+    constructor(authEvent: AuthComponentEvent, stateChanged: LoadApplicationComponentStateHandler) {
         this.authEvent = authEvent
         this.stateChanged = stateChanged
     }
