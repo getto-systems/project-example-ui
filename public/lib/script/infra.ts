@@ -1,11 +1,11 @@
 import { ScriptPath, CheckError } from "./data"
 
 export type Infra = Readonly<{
-    config: Config,
+    hostConfig: HostConfig,
     checkClient: CheckClient,
 }>
 
-export type Config = Readonly<{
+export type HostConfig = Readonly<{
     secureServerHost: Readonly<string>,
 }>
 

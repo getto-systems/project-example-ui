@@ -3,7 +3,7 @@ import { useState } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { ComponentLoader } from "../z_main/auth"
-import { WorkerComponentLoader } from "../z_main/auth/worker"
+import { newLoadApplicationComponent } from "../z_main/auth/load_application_worker"
 
 import { Renew } from "./auth/renew"
 import { LoadApplication } from "./auth/load_application"
@@ -14,7 +14,6 @@ render(h(main(), {}), document.body)
 
 function main() {
     const loader = new ComponentLoader()
-    const workerLoader = new WorkerComponentLoader()
     const [component, initEvent] = loader.initAuthComponent()
 
     return (): VNode => {
@@ -29,7 +28,7 @@ function main() {
                 ), {})
 
             case "load-application":
-                return h(LoadApplication(workerLoader.initLoadApplicationComponent()), {})
+                return h(LoadApplication(newLoadApplicationComponent()), {})
 
             case "password-login":
                 return h(PasswordLogin(
