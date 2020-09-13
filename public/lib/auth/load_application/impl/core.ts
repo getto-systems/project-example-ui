@@ -17,7 +17,7 @@ export function initLoadApplicationComponent(
 ): LoadApplicationComponent {
     return new Component(handler, action, currentLocation)
 }
-export function initLoadApplicationWorkerComponent(init: InitWorker): LoadApplicationComponent {
+export function initLoadApplicationWorkerComponent(init: WorkerInit): LoadApplicationComponent {
     return new WorkerComponent(init)
 }
 export function initLoadApplicationComponentEventHandler(): LoadApplicationComponentEventHandler {
@@ -45,7 +45,9 @@ class Component implements LoadApplicationComponent {
         this.handler.onStateChange(stateChanged)
     }
 
-    terminalte(): void { } // eslint-disable-line @typescript-eslint/no-empty-function
+    terminalte(): void {
+        // WorkerComponent とインターフェイスを合わせるために必要
+    }
 
     trigger(_event: LoadApplicationComponentEvent): Promise<void> {
         // event は "load" だけなので単に呼び出す
@@ -53,7 +55,6 @@ class Component implements LoadApplicationComponent {
     }
 
     async load(): Promise<void> {
-        // event は "load" だけなので単に呼び出す
         await this.action.script.load(this.currentLocation)
     }
 }
@@ -83,18 +84,21 @@ class ComponentEventHandler implements LoadApplicationComponentEventHandler {
 class WorkerComponent implements LoadApplicationComponent {
     holder: WorkerHolder
 
-    constructor(init: InitWorker) {
+    constructor(init: WorkerInit) {
         this.holder = { set: false, init }
     }
 
     init(stateChanged: Publisher<LoadApplicationComponentState>): void {
         if (!this.holder.set) {
-            const worker = this.holder.init()
-            worker.addEventListener("message", (event) => {
-                stateChanged(event.data)
-            })
-            this.holder = { set: true, worker }
+            this.holder = { set: true, worker: this.initWorker(this.holder.init, stateChanged) }
         }
+    }
+    initWorker(init: WorkerInit, stateChanged: Publisher<LoadApplicationComponentState>): Worker {
+        const worker = init()
+        worker.addEventListener("message", (event) => {
+            stateChanged(event.data)
+        })
+        return worker
     }
 
     terminalte(): void {
@@ -119,9 +123,9 @@ interface Publisher<T> {
 }
 
 type WorkerHolder =
-    Readonly<{ set: false, init: InitWorker }> |
+    Readonly<{ set: false, init: WorkerInit }> |
     Readonly<{ set: true, worker: Worker }>
 
-interface InitWorker {
+interface WorkerInit {
     (): Worker
 }
