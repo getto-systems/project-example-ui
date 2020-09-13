@@ -58,28 +58,8 @@ class Component implements LoadApplicationComponent {
     }
 }
 
-class WorkerComponent implements LoadApplicationComponent {
-    worker: WorkerWrapper<LoadApplicationComponentEvent>
-
-    constructor(init: InitWorker) {
-        this.worker = new WorkerWrapper(init)
-    }
-
-    init(stateChanged: Publisher<LoadApplicationComponentState>): void {
-        this.worker.init(stateChanged)
-    }
-
-    terminalte(): void {
-        this.worker.terminalte()
-    }
-
-    async trigger(event: LoadApplicationComponentEvent): Promise<void> {
-        this.worker.postMessage(event)
-    }
-}
-
 class ComponentEventHandler implements LoadApplicationComponentEventHandler {
-    holder: Holder<LoadApplicationComponentState>
+    holder: PublisherHolder<LoadApplicationComponentState>
 
     constructor() {
         this.holder = { set: false }
@@ -100,14 +80,14 @@ class ComponentEventHandler implements LoadApplicationComponentEventHandler {
     }
 }
 
-class WorkerWrapper<T> {
+class WorkerComponent implements LoadApplicationComponent {
     holder: WorkerHolder
 
     constructor(init: InitWorker) {
         this.holder = { set: false, init }
     }
 
-    init(stateChanged: Publisher<LoadApplicationComponentState>) {
+    init(stateChanged: Publisher<LoadApplicationComponentState>): void {
         if (!this.holder.set) {
             const worker = this.holder.init()
             worker.addEventListener("message", (event) => {
@@ -117,20 +97,20 @@ class WorkerWrapper<T> {
         }
     }
 
-    terminalte() {
+    terminalte(): void {
         if (this.holder.set) {
             this.holder.worker.terminate()
         }
     }
 
-    postMessage(event: T): void {
+    async trigger(event: LoadApplicationComponentEvent): Promise<void> {
         if (this.holder.set) {
             this.holder.worker.postMessage(event)
         }
     }
 }
 
-type Holder<T> =
+type PublisherHolder<T> =
     Readonly<{ set: false }> |
     Readonly<{ set: true, pub: Publisher<T> }>
 
@@ -138,16 +118,10 @@ interface Publisher<T> {
     (state: T): void
 }
 
-type WorkerPath = { workerPath: string }
-
 type WorkerHolder =
     Readonly<{ set: false, init: InitWorker }> |
     Readonly<{ set: true, worker: Worker }>
 
 interface InitWorker {
     (): Worker
-}
-
-interface Terminate {
-    (): void
 }
