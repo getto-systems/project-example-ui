@@ -3,7 +3,7 @@ import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_clien
 import { initAuthComponent, initAuthComponentEvent } from "../auth/impl/core"
 
 import { initRenewComponent, initRenewComponentEvent } from "../auth/renew/impl/core"
-import { initLoadApplicationComponent, initLoadApplicationComponentEvent } from "../auth/load_application/impl/core"
+import { initLoadApplicationComponent, initLoadApplicationComponentEventHandler } from "../auth/load_application/impl/core"
 
 import { initLoginIDFieldComponent, initLoginIDFieldComponentEvent } from "../auth/field/login_id/impl/core"
 import { initPasswordFieldComponent, initPasswordFieldComponentEvent } from "../auth/field/password/impl/core"
@@ -36,7 +36,7 @@ import { PasswordResetSessionClient } from "../password_reset_session/infra"
 import { PasswordResetClient } from "../password_reset/infra"
 
 import { RenewComponentAction, RenewComponent, RenewComponentEventInit } from "../auth/renew/action"
-import { LoadApplicationComponentAction, LoadApplicationComponent, LoadApplicationComponentEventInit } from "../auth/load_application/action"
+import { LoadApplicationComponentAction, LoadApplicationComponent, LoadApplicationComponentEventHandler } from "../auth/load_application/action"
 
 import { LoginIDFieldComponentAction, LoginIDFieldComponent, LoginIDFieldComponentEventInit } from "../auth/field/login_id/action"
 import { PasswordFieldComponentAction, PasswordFieldComponent, PasswordFieldComponentEventInit } from "../auth/field/password/action"
@@ -92,47 +92,53 @@ export class ComponentLoader {
         ]
     }
 
-    initRenewComponent(event: AuthComponentEvent): [RenewComponent, RenewComponentEventInit] {
-        return [
-            initRenewComponent(this.initRenewComponentAction()),
-            initRenewComponentEvent(event),
-        ]
+    initRenewComponent(): RenewComponent {
+        return initRenewComponent(this.initRenewComponentAction())
     }
-    initLoadApplicationComponent(event: AuthComponentEvent): [LoadApplicationComponent, LoadApplicationComponentEventInit] {
-        return [
-            initLoadApplicationComponent(this.initLoadApplicationComponentAction()),
-            initLoadApplicationComponentEvent(event),
-        ]
+    initRenewComponentEvent(event: AuthComponentEvent): RenewComponentEventInit {
+        return initRenewComponentEvent(event)
     }
-    initPasswordLoginComponent(event: AuthComponentEvent): [PasswordLoginComponent, PasswordLoginComponentEventInit] {
-        return [
-            initPasswordLoginComponent(
-                this.initLoginIDFieldComponent(),
-                this.initPasswordFieldComponent(),
-                this.initPasswordLoginComponentAction(),
-            ),
-            initPasswordLoginComponentEvent(event),
-        ]
+
+    initLoadApplicationComponent(): LoadApplicationComponent {
+        const handler = initLoadApplicationComponentEventHandler()
+        return initLoadApplicationComponent(
+            handler,
+            this.initLoadApplicationComponentAction(handler),
+            this.currentLocation,
+        )
     }
-    initPasswordResetSession(): [PasswordResetSessionComponent, PasswordResetSessionComponentEventInit] {
-        return [
-            initPasswordResetSessionComponent(
-                this.initLoginIDFieldComponent(),
-                this.initPasswordResetSessionComponentAction(),
-            ),
-            initPasswordResetSessionComponentEvent(),
-        ]
+
+    initPasswordLoginComponent(): PasswordLoginComponent {
+        return initPasswordLoginComponent(
+            this.initLoginIDFieldComponent(),
+            this.initPasswordFieldComponent(),
+            this.initPasswordLoginComponentAction(),
+        )
     }
-    initPasswordReset(event: AuthComponentEvent, resetToken: ResetToken): [PasswordResetComponent, PasswordResetComponentEventInit] {
-        return [
-            initPasswordResetComponent(
-                this.initLoginIDFieldComponent(),
-                this.initPasswordFieldComponent(),
-                this.initPasswordResetComponentAction(),
-                resetToken,
-            ),
-            initPasswordResetComponentEvent(event),
-        ]
+    initPasswordLoginComponentEvent(event: AuthComponentEvent): PasswordLoginComponentEventInit {
+        return initPasswordLoginComponentEvent(event)
+    }
+
+    initPasswordResetSession(): PasswordResetSessionComponent {
+        return initPasswordResetSessionComponent(
+            this.initLoginIDFieldComponent(),
+            this.initPasswordResetSessionComponentAction(),
+        )
+    }
+    initPasswordResetSessionEvent(): PasswordResetSessionComponentEventInit {
+        return initPasswordResetSessionComponentEvent()
+    }
+
+    initPasswordReset(resetToken: ResetToken): PasswordResetComponent {
+        return initPasswordResetComponent(
+            this.initLoginIDFieldComponent(),
+            this.initPasswordFieldComponent(),
+            this.initPasswordResetComponentAction(),
+            resetToken,
+        )
+    }
+    initPasswordResetEvent(event: AuthComponentEvent): PasswordResetComponentEventInit {
+        return initPasswordResetComponentEvent(event)
     }
 
     initLoginIDFieldComponent(): [LoginIDFieldComponent, LoginIDFieldComponentEventInit] {
@@ -153,9 +159,9 @@ export class ComponentLoader {
             credential: this.initCredentialAction(),
         }
     }
-    initLoadApplicationComponentAction(): LoadApplicationComponentAction {
+    initLoadApplicationComponentAction(handler: LoadApplicationComponentEventHandler): LoadApplicationComponentAction {
         return {
-            script: this.initScriptAction(),
+            script: this.initScriptAction(handler),
         }
     }
 
@@ -195,8 +201,8 @@ export class ComponentLoader {
             renewClient: this.initRenewClient(),
         })
     }
-    initScriptAction(): ScriptAction {
-        return initScriptAction({
+    initScriptAction(handler: LoadApplicationComponentEventHandler): ScriptAction {
+        return initScriptAction(handler, {
             config: this.config,
             checkClient: this.initCheckClient(),
         })

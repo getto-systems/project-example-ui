@@ -1,28 +1,33 @@
-import { ScriptAction, ScriptEvent } from "../../script/action"
+import { ScriptAction } from "../../script/action"
 
-import { ScriptPath, CheckError } from "../../script/data"
+import {
+    LoadApplicationComponentState,
+    LoadApplicationComponentEvent,
+} from "./data"
+
+import { ScriptEvent } from "../../script/data"
+
+export interface LoadApplicationComponent {
+    init(stateChanged: Publisher<LoadApplicationComponentState>): void
+    terminalte(): void
+    trigger(event: LoadApplicationComponentEvent): Promise<void>
+}
 
 export interface LoadApplicationComponentAction {
     script: ScriptAction,
 }
 
-export interface LoadApplicationComponent {
-    initialState: LoadApplicationComponentState
+export interface LoadApplicationComponentEventHandler {
+    holder: Holder<LoadApplicationComponentState>
 
-    load(event: LoadApplicationComponentEvent, currentLocation: Readonly<Location>): Promise<void>
+    onStateChange(pub: Publisher<LoadApplicationComponentState>): void
+
+    handleScriptEvent(event: ScriptEvent): void
 }
 
-export type LoadApplicationComponentState =
-    Readonly<{ type: "initial-load" }> |
-    Readonly<{ type: "try-to-load", scriptPath: ScriptPath }> |
-    Readonly<{ type: "failed-to-load", err: CheckError }>
-
-export interface LoadApplicationComponentEvent extends ScriptEvent { } // eslint-disable-line @typescript-eslint/no-empty-interface
-
-export interface LoadApplicationComponentEventInit {
-    (stateChanged: LoadApplicationComponentStateHandler): LoadApplicationComponentEvent
+interface Publisher<T> {
+    (state: T): void
 }
-
-export interface LoadApplicationComponentStateHandler {
-    (state: LoadApplicationComponentState): void
-}
+type Holder<T> =
+    Readonly<{ set: false }> |
+    Readonly<{ set: true, pub: Publisher<T> }>
