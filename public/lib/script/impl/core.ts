@@ -20,8 +20,9 @@ class ScriptActionImpl implements ScriptAction {
         this.handler.handleScriptEvent(event)
     }
 
+    // TODO Location ではなく CurrentPathname を指定するようにする
     async load(currentLocation: Readonly<Location>): Promise<void> {
-        const scriptPath = secureScriptPath(this.infra.config.secureServerHost, currentLocation)
+        const scriptPath = secureScriptPath(this.infra.hostConfig.secureServerHost, currentLocation)
         this.publish({ type: "try-to-load", scriptPath })
 
         const response = await this.infra.checkClient.checkStatus(scriptPath)

@@ -3,7 +3,6 @@ import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_clien
 import { initAuthComponent, initAuthComponentEvent } from "../auth/impl/core"
 
 import { initRenewComponent, initRenewComponentEvent } from "../auth/renew/impl/core"
-import { initLoadApplicationComponent, initLoadApplicationComponentEventHandler } from "../auth/load_application/impl/core"
 
 import { initLoginIDFieldComponent, initLoginIDFieldComponentEvent } from "../auth/field/login_id/impl/core"
 import { initPasswordFieldComponent, initPasswordFieldComponentEvent } from "../auth/field/password/impl/core"
@@ -21,7 +20,6 @@ import { initSimulatePasswordResetClient } from "../password_reset/impl/client/p
 import { env } from "../y_static/env"
 
 import { initCredentialAction } from "../credential/impl/core"
-import { initScriptAction } from "../script/impl/core"
 import { initPasswordAction } from "../password/impl/core"
 import { initPasswordLoginAction } from "../password_login/impl/core"
 import { initPasswordResetSessionAction } from "../password_reset_session/impl/core"
@@ -36,7 +34,6 @@ import { PasswordResetSessionClient } from "../password_reset_session/infra"
 import { PasswordResetClient } from "../password_reset/infra"
 
 import { RenewComponentAction, RenewComponent, RenewComponentEventInit } from "../auth/renew/action"
-import { LoadApplicationComponentAction, LoadApplicationComponent, LoadApplicationComponentEventHandler } from "../auth/load_application/action"
 
 import { LoginIDFieldComponentAction, LoginIDFieldComponent, LoginIDFieldComponentEventInit } from "../auth/field/login_id/action"
 import { PasswordFieldComponentAction, PasswordFieldComponent, PasswordFieldComponentEventInit } from "../auth/field/password/action"
@@ -46,7 +43,6 @@ import { PasswordResetSessionComponentAction, PasswordResetSessionComponent, Pas
 import { PasswordResetComponentAction, PasswordResetComponent, PasswordResetComponentEventInit } from "../auth/password_reset/action"
 
 import { CredentialAction } from "../credential/action"
-import { ScriptAction } from "../script/action"
 
 import { PasswordAction } from "../password/action"
 
@@ -97,15 +93,6 @@ export class ComponentLoader {
     }
     initRenewComponentEvent(event: AuthComponentEvent): RenewComponentEventInit {
         return initRenewComponentEvent(event)
-    }
-
-    initLoadApplicationComponent(): LoadApplicationComponent {
-        const handler = initLoadApplicationComponentEventHandler()
-        return initLoadApplicationComponent(
-            handler,
-            this.initLoadApplicationComponentAction(handler),
-            this.currentLocation,
-        )
     }
 
     initPasswordLoginComponent(): PasswordLoginComponent {
@@ -159,11 +146,6 @@ export class ComponentLoader {
             credential: this.initCredentialAction(),
         }
     }
-    initLoadApplicationComponentAction(handler: LoadApplicationComponentEventHandler): LoadApplicationComponentAction {
-        return {
-            script: this.initScriptAction(handler),
-        }
-    }
 
     initLoginIDFieldComponentAction(): LoginIDFieldComponentAction {
         return {
@@ -199,12 +181,6 @@ export class ComponentLoader {
             config: this.config,
             authCredentials: this.initAuthCredentialRepository(),
             renewClient: this.initRenewClient(),
-        })
-    }
-    initScriptAction(handler: LoadApplicationComponentEventHandler): ScriptAction {
-        return initScriptAction(handler, {
-            config: this.config,
-            checkClient: this.initCheckClient(),
         })
     }
 
