@@ -17,6 +17,7 @@ import { Password } from "../../../password/data"
 import { InputContent, LoginError } from "../../../password_login/data"
 import { Content } from "../../../input/data"
 
+// TODO loginID と password を fields にまとめたい
 export function initPasswordLoginComponent(
     loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit],
     password: [PasswordFieldComponent, PasswordFieldComponentEventInit],

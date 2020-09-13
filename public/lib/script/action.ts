@@ -1,10 +1,9 @@
-import { ScriptPath, CheckError } from "./data"
+import { ScriptEvent } from "./data"
 
 export interface ScriptAction {
-    load(event: ScriptEvent, currentLocation: Readonly<Location>): Promise<void>
+    load(currentLocation: Readonly<Location>): Promise<void>
 }
 
-export interface ScriptEvent {
-    tryToLoad(scriptPath: ScriptPath): void
-    failedToLoad(err: CheckError): void
+export interface ScriptEventHandler {
+    handleScriptEvent(event: ScriptEvent): void
 }
