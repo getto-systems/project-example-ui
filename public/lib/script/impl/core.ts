@@ -1,7 +1,8 @@
 import { Infra } from "../infra"
 
-import { ScriptPath, ScriptEvent } from "../data"
 import { ScriptAction, ScriptEventHandler } from "../action"
+
+import { PagePathname, ScriptPath, ScriptEvent } from "../data"
 
 export function initScriptAction(handler: ScriptEventHandler, infra: Infra): ScriptAction {
     return new ScriptActionImpl(handler, infra)
@@ -20,21 +21,18 @@ class ScriptActionImpl implements ScriptAction {
         this.handler.handleScriptEvent(event)
     }
 
-    // TODO Location ではなく CurrentPathname を指定するようにする
-    async load(currentLocation: Readonly<Location>): Promise<void> {
-        const scriptPath = secureScriptPath(this.infra.hostConfig.secureServerHost, currentLocation)
+    async load(pagePathname: PagePathname): Promise<void> {
+        const scriptPath = secureScriptPath(this.infra.hostConfig.secureServerHost, pagePathname)
         this.publish({ type: "try-to-load", scriptPath })
 
         const response = await this.infra.checkClient.checkStatus(scriptPath)
         if (!response.success) {
             this.publish({ type: "failed-to-load", err: response.err })
         }
-        return
-
-        function secureScriptPath(secureHost: string, currentLocation: Readonly<Location>): ScriptPath {
-            // secure host にアクセス中の html と同じパスで js がホストされている
-            const pathname = new URL(currentLocation.toString()).pathname
-            return { scriptPath: `//${secureHost}${pathname.replace(/\.html$/, ".js")}` }
-        }
     }
+}
+
+function secureScriptPath(secureHost: string, pagePathname: PagePathname): ScriptPath {
+    // secure host にアクセス中の html と同じパスで js がホストされている
+    return { scriptPath: `//${secureHost}${pagePathname.pagePathname.replace(/\.html$/, ".js")}` }
 }

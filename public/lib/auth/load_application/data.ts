@@ -1,4 +1,4 @@
-import { ScriptPath, CheckError } from "../../script/data"
+import { PagePathname, ScriptPath, CheckError } from "../../script/data"
 
 export type LoadApplicationComponentState =
     Readonly<{ type: "initial-load" }> |
@@ -7,4 +7,4 @@ export type LoadApplicationComponentState =
 export const initialLoadApplicationComponentState: LoadApplicationComponentState = { type: "initial-load" }
 
 export type LoadApplicationComponentEvent =
-    Readonly<{ type: "load" }>
+    Readonly<{ type: "load", pagePathname: PagePathname }>
