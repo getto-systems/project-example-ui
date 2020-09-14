@@ -1,6 +1,6 @@
-import { initLoadApplicationWorkerComponent } from "../../auth/load_application/impl/core"
+import { initLoadApplicationWorkerComponent } from "../../../auth/load_application/impl/core"
 
-import { LoadApplicationComponent } from "../../auth/load_application/action"
+import { LoadApplicationComponent } from "../../../auth/load_application/action"
 
 export function newLoadApplicationComponent(): LoadApplicationComponent {
     return initLoadApplicationWorkerComponent(

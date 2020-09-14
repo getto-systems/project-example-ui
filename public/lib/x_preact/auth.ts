@@ -3,7 +3,7 @@ import { useState } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { ComponentLoader } from "../z_main/auth"
-import { newLoadApplicationComponent } from "../z_main/auth/load_application_worker"
+import { newLoadApplicationComponent } from "../z_main/auth/worker/load_application"
 
 import { Renew } from "./auth/renew"
 import { LoadApplication } from "./auth/load_application"

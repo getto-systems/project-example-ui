@@ -8,6 +8,6 @@ component.init((state) => {
     ctx.postMessage(state)
 })
 
-ctx.addEventListener('message', async (event) => {
+ctx.addEventListener("message", (event) => {
     component.trigger(event.data)
 })

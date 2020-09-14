@@ -1,4 +1,4 @@
-export type CurrentPathname = Readonly<{ currentPathname: Readonly<string> }>
+export type PagePathname = Readonly<{ pagePathname: Readonly<string> }>
 export type ScriptPath = Readonly<{ scriptPath: Readonly<string> }>
 
 export type CheckError =

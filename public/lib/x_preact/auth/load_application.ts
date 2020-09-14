@@ -15,19 +15,16 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
         const [state, setState] = useState(initialLoadApplicationComponentState)
         useEffect(() => {
             component.init(setState)
-            //component.trigger({ type: "load", currentLocation: { currentLocation: location.toString() } })
-            component.trigger({ type: "load" })
+            component.trigger({ type: "load", pagePathname: { pagePathname: new URL(location.toString()).pathname } })
             return () => component.terminalte()
         }, [])
 
         useEffect(() => {
             // script タグは body.appendChild しないとスクリプトがロードされないので useEffect で追加する
             if (state.type === "try-to-load") {
-                /*
                 const script = document.createElement("script")
                 script.src = state.scriptPath.scriptPath
                 document.body.appendChild(script)
-                 */
             }
         }, [state])
 
@@ -37,7 +34,7 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
 
             case "try-to-load":
                 // script の追加は appendScript でするので、本体は空で返す
-                return html`ここでろーど！`
+                return html``
 
             case "failed-to-load":
                 // TODO エラー画面を用意

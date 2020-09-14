@@ -1,7 +1,7 @@
-import { ScriptEvent } from "./data"
+import { PagePathname, ScriptEvent } from "./data"
 
 export interface ScriptAction {
-    load(currentLocation: Readonly<Location>): Promise<void>
+    load(pagePathname: PagePathname): Promise<void>
 }
 
 export interface ScriptEventHandler {

@@ -8,7 +8,7 @@ import {
     LoadApplicationComponentState,
     LoadApplicationComponentEvent,
 } from "../data"
-import { ScriptEvent } from "../../../script/data"
+import { PagePathname, ScriptEvent } from "../../../script/data"
 
 export function initLoadApplicationComponent(
     handler: LoadApplicationComponentEventHandler,
@@ -49,13 +49,13 @@ class Component implements LoadApplicationComponent {
         // WorkerComponent とインターフェイスを合わせるために必要
     }
 
-    trigger(_event: LoadApplicationComponentEvent): Promise<void> {
+    trigger(event: LoadApplicationComponentEvent): Promise<void> {
         // event は "load" だけなので単に呼び出す
-        return this.load()
+        return this.load(event.pagePathname)
     }
 
-    async load(): Promise<void> {
-        await this.action.script.load(this.currentLocation)
+    async load(pagePathname: PagePathname): Promise<void> {
+        await this.action.script.load(pagePathname)
     }
 }
 
