@@ -2,7 +2,7 @@ import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_clien
 
 import { initAuthComponent, initAuthComponentEventHandler } from "../auth/impl/core"
 
-import { initRenewComponent, initRenewComponentEvent } from "../auth/renew/impl/core"
+import { initRenewComponentDeprecated, initRenewComponentEvent } from "../auth/renew/impl/core"
 
 import { initLoginIDFieldComponent } from "../auth/field/login_id/impl/core"
 import { initPasswordFieldComponent } from "../auth/field/password/impl/core"
@@ -32,7 +32,7 @@ import { PasswordLoginClient } from "../password_login/infra"
 import { PasswordResetSessionClient } from "../password_reset_session/infra"
 import { PasswordResetClient } from "../password_reset/infra"
 
-import { RenewComponentAction, RenewComponent, RenewComponentEventInit } from "../auth/renew/action"
+import { RenewComponentAction, RenewComponentDeprecated, RenewComponentEventInit } from "../auth/renew/action"
 
 import { LoginIDFieldComponentAction } from "../auth/field/login_id/action"
 import { PasswordFieldComponentAction } from "../auth/field/password/action"
@@ -93,8 +93,8 @@ export class ComponentLoader {
         ]
     }
 
-    initRenewComponent(): RenewComponent {
-        return initRenewComponent(this.initRenewComponentAction())
+    initRenewComponent(): RenewComponentDeprecated {
+        return initRenewComponentDeprecated(this.initRenewComponentAction())
     }
     initRenewComponentEvent(handler: AuthComponentEventHandler): RenewComponentEventInit {
         return initRenewComponentEvent(handler)

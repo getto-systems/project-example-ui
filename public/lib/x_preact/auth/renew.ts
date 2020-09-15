@@ -3,7 +3,7 @@ import { useState } from "preact/hooks"
 import { html } from "htm/preact"
 
 import {
-    RenewComponent,
+    RenewComponentDeprecated,
     RenewComponentEventInit,
 } from "../../auth/renew/action"
 
@@ -11,7 +11,7 @@ export interface PreactComponent {
     (): VNode
 }
 
-export function Renew(component: RenewComponent, initEvent: RenewComponentEventInit): PreactComponent {
+export function Renew(component: RenewComponentDeprecated, initEvent: RenewComponentEventInit): PreactComponent {
     return (): VNode => {
         const [state, setState] = useState(component.initialState)
         const event = initEvent(setState)
