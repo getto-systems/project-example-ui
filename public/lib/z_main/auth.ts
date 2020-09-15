@@ -20,6 +20,7 @@ import { initSimulatePasswordResetClient } from "../password_reset/impl/client/p
 import { env } from "../y_static/env"
 
 import { initCredentialAction } from "../credential/impl/core"
+import { initLoginIDFieldAction } from "../field/login_id/impl/core"
 import { initPasswordFieldAction } from "../field/password/impl/core"
 import { initPasswordLoginAction } from "../password_login/impl/core"
 import { initPasswordResetSessionAction } from "../password_reset_session/impl/core"
@@ -44,6 +45,7 @@ import { PasswordResetComponentAction, PasswordResetComponent, PasswordResetComp
 
 import { CredentialAction } from "../credential/action"
 
+import { LoginIDFieldAction } from "../field/login_id/action"
 import { PasswordFieldAction } from "../field/password/action"
 
 import { PasswordLoginAction } from "../password_login/action"
@@ -149,12 +151,12 @@ export class ComponentLoader {
 
     initLoginIDFieldComponentAction(): LoginIDFieldComponentAction {
         return {
-            credential: this.initCredentialAction(),
+            loginIDField: this.initLoginIDFieldAction(),
         }
     }
     initPasswordFieldComponentAction(): PasswordFieldComponentAction {
         return {
-            password: this.initPasswordFieldAction(),
+            passwordField: this.initPasswordFieldAction(),
         }
     }
 
@@ -184,6 +186,9 @@ export class ComponentLoader {
         })
     }
 
+    initLoginIDFieldAction(): LoginIDFieldAction {
+        return initLoginIDFieldAction()
+    }
     initPasswordFieldAction(): PasswordFieldAction {
         return initPasswordFieldAction()
     }

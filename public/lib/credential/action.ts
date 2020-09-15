@@ -1,20 +1,8 @@
-import { LoginID, LoginIDError, AuthCredential, RenewError, StoreError } from "./data"
-import { InputValue, Content, Valid } from "../input/data"
+import { AuthCredential, RenewError, StoreError } from "./data"
 
 export interface CredentialAction {
-    initLoginIDField(): LoginIDField
-
     renew(event: RenewEvent): Promise<RenewResult>
     store(event: StoreEvent, authCredential: AuthCredential): Promise<void>
-}
-
-export interface LoginIDField {
-    set(event: LoginIDEvent, input: InputValue): Content<LoginID>
-    validate(event: LoginIDEvent): Content<LoginID>
-}
-
-export interface LoginIDEvent {
-    updated(valid: Valid<LoginIDError>): void
 }
 
 export type RenewResult =

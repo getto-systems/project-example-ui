@@ -14,7 +14,7 @@ import { Password } from "../../../../password/data"
 import { InputValue, Content, Valid } from "../../../../input/data"
 
 export function initPasswordFieldComponent(action: PasswordFieldComponentAction): PasswordFieldComponent {
-    return new Component(action.password.initPasswordField())
+    return new Component(action.passwordField.initPasswordField())
 }
 export function initPasswordFieldComponentEvent(): PasswordFieldComponentEventInit {
     return (stateChanged) => new ComponentEvent(stateChanged)

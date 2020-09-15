@@ -1,9 +1,8 @@
 import { Infra } from "../infra"
 
-import { CredentialAction, LoginIDField, LoginIDEvent, RenewResult, RenewEvent, StoreEvent } from "../action"
+import { CredentialAction, RenewResult, RenewEvent, StoreEvent } from "../action"
 
-import { LoginID, LoginIDError, AuthCredential } from "../data"
-import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../input/data"
+import { AuthCredential } from "../data"
 
 export function initCredentialAction(infra: Infra): CredentialAction {
     return new CredentialActionImpl(infra)
@@ -14,10 +13,6 @@ class CredentialActionImpl implements CredentialAction {
 
     constructor(infra: Infra) {
         this.infra = infra
-    }
-
-    initLoginIDField(): LoginIDField {
-        return new LoginIDFieldImpl()
     }
 
     async renew(event: RenewEvent): Promise<RenewResult> {
@@ -52,50 +47,6 @@ class CredentialActionImpl implements CredentialAction {
 
         event.succeedToStore()
     }
-}
-
-class LoginIDFieldImpl implements LoginIDField {
-    loginID: InputValue
-
-    constructor() {
-        this.loginID = { inputValue: "" }
-    }
-
-    set(event: LoginIDEvent, input: InputValue): Content<LoginID> {
-        this.loginID = input
-        return this.validate(event)
-    }
-    validate(event: LoginIDEvent): Content<LoginID> {
-        const state = this.state()
-        event.updated(...state)
-        return this.content(state[0])
-    }
-
-    state(): [Valid<LoginIDError>] {
-        return [hasError(validateLoginID(this.loginID.inputValue))]
-    }
-    content(result: Valid<LoginIDError>): Content<LoginID> {
-        if (!result.valid) {
-            return invalidContent(this.loginID)
-        }
-        return validContent(this.loginID, { loginID: this.loginID.inputValue })
-    }
-}
-
-const ERROR: {
-    ok: Array<LoginIDError>,
-    empty: Array<LoginIDError>,
-} = {
-    ok: [],
-    empty: ["empty"],
-}
-
-function validateLoginID(loginID: string): Array<LoginIDError> {
-    if (loginID.length === 0) {
-        return ERROR.empty
-    }
-
-    return ERROR.ok
 }
 
 async function delayed<T>(promise: Promise<T>, time: DelayTime, handler: DelayedHandler): Promise<T> {
