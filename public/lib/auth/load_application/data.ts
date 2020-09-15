@@ -3,7 +3,7 @@ import { PagePathname, ScriptPath, CheckError } from "../../script/data"
 export interface LoadApplicationComponent {
     init(stateChanged: Publisher<LoadApplicationComponentState>): void
     terminate(): void
-    trigger(event: LoadApplicationComponentEvent): Promise<void>
+    trigger(operation: LoadApplicationComponentOperation): Promise<void>
 }
 
 export type LoadApplicationComponentState =
@@ -13,7 +13,7 @@ export type LoadApplicationComponentState =
 
 export const initialLoadApplicationComponentState: LoadApplicationComponentState = { type: "initial-load" }
 
-export type LoadApplicationComponentEvent =
+export type LoadApplicationComponentOperation =
     Readonly<{ type: "load", pagePathname: PagePathname }>
 
 interface Publisher<T> {

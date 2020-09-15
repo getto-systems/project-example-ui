@@ -6,7 +6,7 @@ import {
 import {
     LoadApplicationComponent,
     LoadApplicationComponentState,
-    LoadApplicationComponentEvent,
+    LoadApplicationComponentOperation,
 } from "../data"
 import { PagePathname, ScriptEvent } from "../../../script/data"
 
@@ -50,9 +50,9 @@ class Component implements LoadApplicationComponent {
         // WorkerComponent とインターフェイスを合わせるために必要
     }
 
-    trigger(event: LoadApplicationComponentEvent): Promise<void> {
-        // event は "load" だけなので単に呼び出す
-        return this.load(event.pagePathname)
+    trigger(operation: LoadApplicationComponentOperation): Promise<void> {
+        // type は "load" だけなので単に呼び出す
+        return this.load(operation.pagePathname)
     }
 
     async load(pagePathname: PagePathname): Promise<void> {
@@ -108,9 +108,9 @@ class WorkerComponent implements LoadApplicationComponent {
         }
     }
 
-    async trigger(event: LoadApplicationComponentEvent): Promise<void> {
+    async trigger(operation: LoadApplicationComponentOperation): Promise<void> {
         if (this.holder.set) {
-            this.holder.worker.postMessage(event)
+            this.holder.worker.postMessage(operation)
         }
     }
 }
