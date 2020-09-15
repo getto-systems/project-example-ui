@@ -22,7 +22,7 @@ export type PasswordFieldError = "empty" | "too-long"
 
 export type PasswordFieldEvent = Readonly<{
     type: "succeed-to-update-login-id",
-    valid: Valid<PasswordFieldError>,
+    result: Valid<PasswordFieldError>,
     content: Content<Password>,
     character: PasswordCharacter,
     view: PasswordView,
