@@ -13,8 +13,7 @@ export interface LoginIDFieldComponent {
     onContentChanged(contentChanged: LoginIDContentHandler): void
     init(stateChanged: LoginIDFieldComponentStateHandler): void
 
-    set(loginID: InputValue): Promise<void>
-    validate(): Promise<void>
+    trigger(event: LoginIDFieldComponentEvent): Promise<void>
 }
  */
 
@@ -23,8 +22,8 @@ export interface LoginIDFieldComponentDeprecated {
 
     onChange(changed: LoginIDContentHandler): void
 
-    set(event: LoginIDFieldComponentEvent, loginID: InputValue): Promise<void>
-    validate(event: LoginIDFieldComponentEvent): Promise<void>
+    set(event: LoginIDFieldComponentEventPublisher, loginID: InputValue): Promise<void>
+    validate(event: LoginIDFieldComponentEventPublisher): Promise<void>
 }
 
 export type LoginIDFieldComponentState =
@@ -32,10 +31,10 @@ export type LoginIDFieldComponentState =
 
 export interface LoginIDFieldComponentEventHandler extends LoginIDFieldEventHandler { } // eslint-disable-line @typescript-eslint/no-empty-interface
 
-export interface LoginIDFieldComponentEvent extends LoginIDFieldEventPublisher { } // eslint-disable-line @typescript-eslint/no-empty-interface
+export interface LoginIDFieldComponentEventPublisher extends LoginIDFieldEventPublisher { } // eslint-disable-line @typescript-eslint/no-empty-interface
 
 export interface LoginIDFieldComponentEventInit {
-    (stateChanged: LoginIDFieldComponentStateHandler): LoginIDFieldComponentEvent
+    (stateChanged: LoginIDFieldComponentStateHandler): LoginIDFieldComponentEventPublisher
 }
 
 export interface LoginIDFieldComponentStateHandler {
