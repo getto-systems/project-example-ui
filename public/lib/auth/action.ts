@@ -31,24 +31,6 @@ export type AuthEvent =
     Readonly<{ type: "try-to-store-credential" }> |
     Readonly<{ type: "succeed-to-login" }>
 
-export interface AuthComponentDeprecated {
-    initialState: AuthComponentState
-}
-
-export interface AuthComponentEventPublisher {
-    tryToLogin(): void
-    failedToAuth(err: AuthComponentError): void
-    succeedToAuth(): void
-}
-
-export interface AuthComponentEventInit {
-    (stateChanged: AuthComponentStateHandler): AuthComponentEventPublisher
-}
-
-export interface AuthComponentStateHandler {
-    (state: AuthComponentState): void
-}
-
 interface Publisher<T> {
     (state: T): void
 }
