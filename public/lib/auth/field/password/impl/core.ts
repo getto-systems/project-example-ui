@@ -1,10 +1,7 @@
-import {
-    PasswordFieldComponent,
-    PasswordFieldComponentAction,
-} from "../action"
+import { PasswordFieldComponentAction } from "../action"
 import { PasswordField, PasswordFieldEventHandler } from "../../../../field/password/action"
 
-import { PasswordFieldComponentState } from "../data"
+import { PasswordFieldComponent, PasswordFieldComponentState } from "../data"
 
 import { PasswordFieldEvent } from "../../../../field/password/data"
 import { Password } from "../../../../password/data"
