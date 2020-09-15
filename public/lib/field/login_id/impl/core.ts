@@ -1,4 +1,4 @@
-import { LoginIDFieldAction, LoginIDField, LoginIDFieldEvent } from "../action"
+import { LoginIDFieldAction, LoginIDField, LoginIDFieldEventPublisher } from "../action"
 
 import { LoginIDFieldError } from "../data"
 import { LoginID } from "../../../credential/data"
@@ -19,11 +19,11 @@ class LoginIDFieldImpl implements LoginIDField {
         this.loginID = { inputValue: "" }
     }
 
-    set(event: LoginIDFieldEvent, input: InputValue): Content<LoginID> {
+    set(event: LoginIDFieldEventPublisher, input: InputValue): Content<LoginID> {
         this.loginID = input
         return this.validate(event)
     }
-    validate(event: LoginIDFieldEvent): Content<LoginID> {
+    validate(event: LoginIDFieldEventPublisher): Content<LoginID> {
         const state = this.state()
         event.updated(...state)
         return this.content(state[0])
