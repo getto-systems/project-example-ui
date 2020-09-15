@@ -1,5 +1,3 @@
-import { LoginIDFieldComponent } from "../../field/login_id/action"
-
 import {
     PasswordResetSessionComponentAction,
     PasswordResetSessionComponent,
@@ -8,6 +6,8 @@ import {
     PasswordResetSessionComponentEventInit,
     PasswordResetSessionComponentStateHandler,
 } from "../action"
+
+import { LoginIDFieldComponent } from "../../field/login_id/data"
 
 import { LoginID } from "../../../credential/data"
 import { InputContent, SessionError, PollingStatusError, PollingStatus, DoneStatus } from "../../../password_reset_session/data"

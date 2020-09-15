@@ -1,10 +1,8 @@
 import { PasswordField } from "../../../field/password/action"
 
 import { PasswordFieldError, PasswordCharacter, PasswordView } from "../../../field/password/data"
-import { Valid } from "../../../input/data"
-
 import { Password } from "../../../password/data"
-import { Content } from "../../../input/data"
+import { Valid, Content } from "../../../input/data"
 
 export interface PasswordFieldComponent {
     onContentChange(contentChanged: Publisher<Content<Password>>): void
