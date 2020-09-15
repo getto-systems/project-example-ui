@@ -3,7 +3,7 @@ import {
     LoginIDFieldComponentDeprecated,
     LoginIDFieldComponentState,
     LoginIDFieldComponentEventHandler,
-    LoginIDFieldComponentEvent,
+    LoginIDFieldComponentEventPublisher,
     LoginIDFieldComponentEventInit,
     LoginIDFieldComponentStateHandler,
     LoginIDContentHandler,
@@ -39,10 +39,10 @@ class Component implements LoginIDFieldComponentDeprecated {
         this.eventHolder = { hasEvnt: true, event: changed }
     }
 
-    async set(event: LoginIDFieldComponentEvent, loginID: InputValue): Promise<void> {
+    async set(event: LoginIDFieldComponentEventPublisher, loginID: InputValue): Promise<void> {
         this.fireChanged(this.loginID.set(event, loginID))
     }
-    async validate(event: LoginIDFieldComponentEvent): Promise<void> {
+    async validate(event: LoginIDFieldComponentEventPublisher): Promise<void> {
         this.fireChanged(this.loginID.validate(event))
     }
 
@@ -71,7 +71,7 @@ class ComponentEventHandler implements LoginIDFieldComponentEventHandler {
     }
 }
 
-class ComponentEvent implements LoginIDFieldComponentEvent {
+class ComponentEvent implements LoginIDFieldComponentEventPublisher {
     stateChanged: LoginIDFieldComponentStateHandler
 
     constructor(stateChanged: LoginIDFieldComponentStateHandler) {
