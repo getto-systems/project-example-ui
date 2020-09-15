@@ -1,6 +1,6 @@
 import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_client"
 
-import { initAuthComponent, initAuthComponentEvent } from "../auth/impl/core"
+import { initAuthComponentDeprecated, initAuthComponentEvent } from "../auth/impl/core"
 
 import { initRenewComponent, initRenewComponentEvent } from "../auth/renew/impl/core"
 
@@ -88,7 +88,7 @@ export class ComponentLoader {
 
     initAuthComponent(): [AuthComponentDeprecated, AuthComponentEventInit] {
         return [
-            initAuthComponent(this.currentLocation),
+            initAuthComponentDeprecated(this.currentLocation),
             initAuthComponentEvent(this.currentLocation),
         ]
     }

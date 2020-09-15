@@ -8,14 +8,14 @@ import {
 
 import { AuthComponentError } from "../data"
 
-export function initAuthComponent(currentLocation: Readonly<Location>): AuthComponentDeprecated {
-    return new Usecase(currentLocation)
+export function initAuthComponentDeprecated(currentLocation: Readonly<Location>): AuthComponentDeprecated {
+    return new UsecaseDeprecated(currentLocation)
 }
 export function initAuthComponentEvent(currentLocation: Readonly<Location>): AuthComponentEventInit {
     return (stateChanged) => new ComponentEvent(currentLocation, stateChanged)
 }
 
-class Usecase implements AuthComponentDeprecated {
+class UsecaseDeprecated implements AuthComponentDeprecated {
     currentLocation: Readonly<Location>
 
     initialState: AuthComponentState = { type: "renew" }
