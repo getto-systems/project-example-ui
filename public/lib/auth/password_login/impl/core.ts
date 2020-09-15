@@ -1,4 +1,4 @@
-import { AuthComponentEventPublisher } from "../../../auth/action"
+import { AuthComponentEventHandler } from "../../../auth/action"
 import {
     PasswordLoginComponentAction,
     PasswordLoginComponent,
@@ -25,7 +25,7 @@ export function initPasswordLoginComponent(
 ): PasswordLoginComponent {
     return new Component(loginID, password, action)
 }
-export function initPasswordLoginComponentEvent(authEvent: AuthComponentEventPublisher): PasswordLoginComponentEventInit {
+export function initPasswordLoginComponentEvent(authEvent: AuthComponentEventHandler): PasswordLoginComponentEventInit {
     return (stateChanged) => new ComponentEvent(authEvent, stateChanged)
 }
 
@@ -89,10 +89,10 @@ class Component implements PasswordLoginComponent {
 }
 
 class ComponentEvent implements PasswordLoginComponentEvent {
-    authEvent: AuthComponentEventPublisher
+    authEvent: AuthComponentEventHandler
     stateChanged: PasswordLoginComponentStateHandler
 
-    constructor(authEvent: AuthComponentEventPublisher, stateChanged: PasswordLoginComponentStateHandler) {
+    constructor(authEvent: AuthComponentEventHandler, stateChanged: PasswordLoginComponentStateHandler) {
         this.authEvent = authEvent
         this.stateChanged = stateChanged
     }
@@ -111,6 +111,6 @@ class ComponentEvent implements PasswordLoginComponentEvent {
         this.stateChanged({ type: "failed-to-store", err })
     }
     succeedToStore(): void {
-        this.authEvent.succeedToAuth()
+        this.authEvent.handleAuthEvent({ type: "succeed-to-login" })
     }
 }

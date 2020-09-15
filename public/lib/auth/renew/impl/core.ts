@@ -1,4 +1,4 @@
-import { AuthComponentEventPublisher } from "../../../auth/action"
+import { AuthComponentEventHandler } from "../../../auth/action"
 import {
     RenewComponentAction,
     RenewComponent,
@@ -13,7 +13,7 @@ import { RenewError, StoreError } from "../../../credential/data"
 export function initRenewComponent(action: RenewComponentAction): RenewComponent {
     return new Component(action)
 }
-export function initRenewComponentEvent(authEvent: AuthComponentEventPublisher): RenewComponentEventInit {
+export function initRenewComponentEvent(authEvent: AuthComponentEventHandler): RenewComponentEventInit {
     return (stateChanged) => new ComponentEvent(authEvent, stateChanged)
 }
 
@@ -37,10 +37,10 @@ class Component implements RenewComponent {
 }
 
 class ComponentEvent implements RenewComponentEvent {
-    authEvent: AuthComponentEventPublisher
+    authEvent: AuthComponentEventHandler
     stateChanged: RenewComponentStateHandler
 
-    constructor(authEvent: AuthComponentEventPublisher, stateChanged: RenewComponentStateHandler) {
+    constructor(authEvent: AuthComponentEventHandler, stateChanged: RenewComponentStateHandler) {
         this.authEvent = authEvent
         this.stateChanged = stateChanged
     }
@@ -55,14 +55,14 @@ class ComponentEvent implements RenewComponentEvent {
         switch (err.type) {
             case "ticket-nonce-not-found":
             case "invalid-ticket":
-                this.authEvent.tryToLogin()
+                this.authEvent.handleAuthEvent({ type: "try-to-login" })
                 return
 
             case "bad-request":
             case "server-error":
             case "bad-response":
             case "infra-error":
-                this.authEvent.failedToAuth({ type: "renew", err })
+                this.authEvent.handleAuthEvent({ type: "failed-to-login", err: { type: "renew", err } })
                 return
 
             default:
@@ -74,7 +74,7 @@ class ComponentEvent implements RenewComponentEvent {
         this.stateChanged({ type: "failed-to-store", err })
     }
     succeedToStore(): void {
-        this.authEvent.succeedToAuth()
+        this.authEvent.handleAuthEvent({ type: "succeed-to-login" })
     }
 }
 
