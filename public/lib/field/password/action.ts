@@ -1,9 +1,21 @@
-import { PasswordCharacter, PasswordView, PasswordError } from "./data"
+import { PasswordCharacter, PasswordView, PasswordError, PasswordFieldEvent } from "./data"
 import { Password } from "../../password/data"
 import { InputValue, Content, Valid } from "../../input/data"
 
 export interface PasswordFieldAction {
+    initPasswordField(handler: PasswordFieldEventHandler): PasswordField
     initPasswordFieldDeprecated(): PasswordFieldDeprecated
+}
+
+export interface PasswordField {
+    set(input: InputValue): void
+    show(): void
+    hide(): void
+    validate(): void
+}
+
+export interface PasswordFieldEventHandler {
+    handlePasswordFieldEvent(event: PasswordFieldEvent): void
 }
 
 export interface PasswordFieldDeprecated {

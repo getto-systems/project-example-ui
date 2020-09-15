@@ -30,16 +30,16 @@ class Field implements LoginIDField {
         this.validate()
     }
     validate(): void {
-        const [valid, content] = this.toLoginID()
+        const [content, valid] = this.content()
         this.handler.handleLoginIDFieldEvent({ type: "succeed-to-update-login-id", valid, content })
     }
 
-    toLoginID(): [Valid<LoginIDFieldError>, Content<LoginID>] {
+    content(): [Content<LoginID>, Valid<LoginIDFieldError>] {
         const result = hasError(validateLoginID(this.loginID.inputValue))
         if (!result.valid) {
-            return [result, invalidContent(this.loginID)]
+            return [invalidContent(this.loginID), result]
         }
-        return [result, validContent(this.loginID, { loginID: this.loginID.inputValue })]
+        return [validContent(this.loginID, { loginID: this.loginID.inputValue }), result]
     }
 }
 
