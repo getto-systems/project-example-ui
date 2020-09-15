@@ -8,7 +8,7 @@ import {
     PasswordFieldComponentEventInit,
 } from "../../../auth/field/password/action"
 
-import { PasswordView } from "../../../password/data"
+import { PasswordView } from "../../../field/password/data"
 import { InputValue, InitialValue } from "../../../input/data"
 
 interface PreactComponent {
