@@ -3,7 +3,7 @@ import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import {
-    PasswordFieldComponent,
+    PasswordFieldComponentDeprecated,
     PasswordFieldComponentState,
     PasswordFieldComponentEventInit,
 } from "../../../auth/field/password/action"
@@ -29,7 +29,7 @@ interface SubmitHandler {
 
 export function PasswordForm(
     formComponent: FormComponent,
-    component: PasswordFieldComponent,
+    component: PasswordFieldComponentDeprecated,
     initEvent: PasswordFieldComponentEventInit,
 ): PreactComponent {
     return (props: Props): VNode => {

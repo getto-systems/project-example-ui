@@ -8,24 +8,24 @@ export interface PasswordFieldComponentAction {
     passwordField: PasswordFieldAction
 }
 
-export interface PasswordFieldComponent {
+export interface PasswordFieldComponentDeprecated {
     initialState: PasswordFieldComponentState
 
     onChange(changed: PasswordContentHandler): void
 
-    validate(event: PasswordFieldComponentEvent): Promise<void>
-    set(event: PasswordFieldComponentEvent, password: InputValue): Promise<void>
-    show(event: PasswordFieldComponentEvent): Promise<void>
-    hide(event: PasswordFieldComponentEvent): Promise<void>
+    validate(event: PasswordFieldComponentEventPublisher): Promise<void>
+    set(event: PasswordFieldComponentEventPublisher, password: InputValue): Promise<void>
+    show(event: PasswordFieldComponentEventPublisher): Promise<void>
+    hide(event: PasswordFieldComponentEventPublisher): Promise<void>
 }
 
 export type PasswordFieldComponentState =
     Readonly<{ type: "input-password", result: Valid<PasswordError>, character: PasswordCharacter, view: PasswordView }>
 
-export interface PasswordFieldComponentEvent extends PasswordFieldEventPublisher { } // eslint-disable-line @typescript-eslint/no-empty-interface
+export interface PasswordFieldComponentEventPublisher extends PasswordFieldEventPublisher { } // eslint-disable-line @typescript-eslint/no-empty-interface
 
 export interface PasswordFieldComponentEventInit {
-    (stateChanged: PasswordFieldComponentStateHandler): PasswordFieldComponentEvent
+    (stateChanged: PasswordFieldComponentStateHandler): PasswordFieldComponentEventPublisher
 }
 
 export interface PasswordFieldComponentStateHandler {

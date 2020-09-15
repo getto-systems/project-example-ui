@@ -1,7 +1,7 @@
 import {
     PasswordFieldComponentAction,
-    PasswordFieldComponent,
-    PasswordFieldComponentEvent,
+    PasswordFieldComponentDeprecated,
+    PasswordFieldComponentEventPublisher,
     PasswordFieldComponentEventInit,
     PasswordFieldComponentState,
     PasswordFieldComponentStateHandler,
@@ -13,14 +13,14 @@ import { PasswordError, PasswordCharacter, PasswordView } from "../../../../fiel
 import { Password } from "../../../../password/data"
 import { InputValue, Content, Valid } from "../../../../input/data"
 
-export function initPasswordFieldComponent(action: PasswordFieldComponentAction): PasswordFieldComponent {
+export function initPasswordFieldComponentDeprecated(action: PasswordFieldComponentAction): PasswordFieldComponentDeprecated {
     return new Component(action.passwordField.initPasswordFieldDeprecated())
 }
 export function initPasswordFieldComponentEvent(): PasswordFieldComponentEventInit {
     return (stateChanged) => new ComponentEvent(stateChanged)
 }
 
-class Component implements PasswordFieldComponent {
+class Component implements PasswordFieldComponentDeprecated {
     password: PasswordFieldDeprecated
     eventHolder: EventHolder<PasswordContentHandler>
 
@@ -40,16 +40,16 @@ class Component implements PasswordFieldComponent {
         this.eventHolder = { hasEvent: true, event: changed }
     }
 
-    async validate(event: PasswordFieldComponentEvent): Promise<void> {
+    async validate(event: PasswordFieldComponentEventPublisher): Promise<void> {
         this.fireChanged(this.password.validate(event))
     }
-    async set(event: PasswordFieldComponentEvent, passwrod: InputValue): Promise<void> {
+    async set(event: PasswordFieldComponentEventPublisher, passwrod: InputValue): Promise<void> {
         this.fireChanged(this.password.set(event, passwrod))
     }
-    async show(event: PasswordFieldComponentEvent): Promise<void> {
+    async show(event: PasswordFieldComponentEventPublisher): Promise<void> {
         this.password.show(event)
     }
-    async hide(event: PasswordFieldComponentEvent): Promise<void> {
+    async hide(event: PasswordFieldComponentEventPublisher): Promise<void> {
         this.password.hide(event)
     }
 
@@ -60,7 +60,7 @@ class Component implements PasswordFieldComponent {
     }
 }
 
-class ComponentEvent implements PasswordFieldComponentEvent {
+class ComponentEvent implements PasswordFieldComponentEventPublisher {
     stateChanged: PasswordFieldComponentStateHandler
 
     constructor(stateChanged: PasswordFieldComponentStateHandler) {
