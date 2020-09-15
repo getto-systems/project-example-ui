@@ -26,8 +26,6 @@ import { initPasswordLoginAction } from "../password_login/impl/core"
 import { initPasswordResetSessionAction } from "../password_reset_session/impl/core"
 import { initPasswordResetAction } from "../password_reset/impl/core"
 
-import { AuthComponent, AuthComponentEventHandler } from "../auth/action"
-
 import { AuthCredentialRepository, RenewClient } from "../credential/infra"
 import { CheckClient } from "../script/infra"
 import { PasswordLoginClient } from "../password_login/infra"
@@ -52,6 +50,7 @@ import { PasswordLoginAction } from "../password_login/action"
 import { PasswordResetSessionAction } from "../password_reset_session/action"
 import { PasswordResetAction } from "../password_reset/action"
 
+import { AuthComponent, AuthComponentEventHandler } from "../auth/data"
 import { LoginIDFieldComponent } from "../auth/field/login_id/data"
 import { PasswordFieldComponent } from "../auth/field/password/data"
 

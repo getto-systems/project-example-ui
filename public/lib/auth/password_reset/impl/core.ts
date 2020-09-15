@@ -1,4 +1,3 @@
-import { AuthComponentEventHandler } from "../../../auth/action"
 import {
     PasswordResetComponentAction,
     PasswordResetComponent,
@@ -8,6 +7,7 @@ import {
     PasswordResetComponentStateHandler,
 } from "../action"
 
+import { AuthComponentEventHandler } from "../../../auth/data"
 import { LoginIDFieldComponent } from "../../field/login_id/data"
 import { PasswordFieldComponent } from "../../field/password/data"
 
