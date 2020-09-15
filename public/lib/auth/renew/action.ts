@@ -6,10 +6,10 @@ export interface RenewComponentAction {
     credential: CredentialAction,
 }
 
-export interface RenewComponent {
+export interface RenewComponentDeprecated {
     initialState: RenewComponentState
 
-    renew(event: RenewComponentEvent): Promise<void>
+    renew(event: RenewComponentEventPublisher): Promise<void>
 }
 
 export type RenewComponentState =
@@ -18,10 +18,10 @@ export type RenewComponentState =
     Readonly<{ type: "delayed-to-renew" }> |
     Readonly<{ type: "failed-to-store", err: StoreError }>
 
-export interface RenewComponentEvent extends RenewEvent, StoreEvent { }
+export interface RenewComponentEventPublisher extends RenewEvent, StoreEvent { }
 
 export interface RenewComponentEventInit {
-    (stateChanged: RenewComponentStateHandler): RenewComponentEvent
+    (stateChanged: RenewComponentStateHandler): RenewComponentEventPublisher
 }
 
 export interface RenewComponentStateHandler {

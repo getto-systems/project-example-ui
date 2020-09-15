@@ -1,8 +1,8 @@
 import {
     RenewComponentAction,
-    RenewComponent,
+    RenewComponentDeprecated,
     RenewComponentState,
-    RenewComponentEvent,
+    RenewComponentEventPublisher,
     RenewComponentEventInit,
     RenewComponentStateHandler,
 } from "../action"
@@ -11,14 +11,14 @@ import { AuthComponentEventHandler } from "../../../auth/data"
 
 import { RenewError, StoreError } from "../../../credential/data"
 
-export function initRenewComponent(action: RenewComponentAction): RenewComponent {
-    return new Component(action)
+export function initRenewComponentDeprecated(action: RenewComponentAction): RenewComponentDeprecated {
+    return new ComponentDeprecated(action)
 }
 export function initRenewComponentEvent(authEvent: AuthComponentEventHandler): RenewComponentEventInit {
     return (stateChanged) => new ComponentEvent(authEvent, stateChanged)
 }
 
-class Component implements RenewComponent {
+class ComponentDeprecated implements RenewComponentDeprecated {
     action: RenewComponentAction
 
     initialState: RenewComponentState = { type: "initial-renew" }
@@ -27,7 +27,7 @@ class Component implements RenewComponent {
         this.action = action
     }
 
-    async renew(event: RenewComponentEvent): Promise<void> {
+    async renew(event: RenewComponentEventPublisher): Promise<void> {
         const result = await this.action.credential.renew(event)
         if (!result.success) {
             return
@@ -37,7 +37,7 @@ class Component implements RenewComponent {
     }
 }
 
-class ComponentEvent implements RenewComponentEvent {
+class ComponentEvent implements RenewComponentEventPublisher {
     authEvent: AuthComponentEventHandler
     stateChanged: RenewComponentStateHandler
 
