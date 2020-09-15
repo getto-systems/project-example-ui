@@ -7,26 +7,26 @@ import {
     LoginIDFieldComponentStateHandler,
     LoginIDContentHandler,
 } from "../action"
-import { LoginIDField } from "../../../../field/login_id/action"
+import { LoginIDFieldDeprecated } from "../../../../field/login_id/action"
 
 import { LoginID } from "../../../../credential/data"
 import { LoginIDFieldError } from "../../../../field/login_id/data"
 import { InputValue, Content, Valid } from "../../../../input/data"
 
 export function initLoginIDFieldComponent(action: LoginIDFieldComponentAction): LoginIDFieldComponent {
-    return new Component(action.loginIDField.initLoginIDField())
+    return new Component(action.loginIDField.initLoginIDFieldDeprecated())
 }
 export function initLoginIDFieldComponentEvent(): LoginIDFieldComponentEventInit {
     return (stateChanged) => new ComponentEvent(stateChanged)
 }
 
 class Component implements LoginIDFieldComponent {
-    loginID: LoginIDField
+    loginID: LoginIDFieldDeprecated
     eventHolder: EventHolder<LoginIDContentHandler>
 
     initialState: LoginIDFieldComponentState = { type: "input-login-id", result: { valid: true } }
 
-    constructor(loginID: LoginIDField) {
+    constructor(loginID: LoginIDFieldDeprecated) {
         this.loginID = loginID
         this.eventHolder = { hasEvnt: false }
     }
