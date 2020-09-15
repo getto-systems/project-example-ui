@@ -3,10 +3,10 @@ import { LoginID } from "../../credential/data"
 import { InputValue, Content, Valid } from "../../input/data"
 
 export interface LoginIDFieldAction {
-    initLoginIDField(): LoginIDField
+    initLoginIDFieldDeprecated(): LoginIDFieldDeprecated
 }
 
-export interface LoginIDField {
+export interface LoginIDFieldDeprecated {
     set(event: LoginIDFieldEventPublisher, input: InputValue): Content<LoginID>
     validate(event: LoginIDFieldEventPublisher): Content<LoginID>
 }

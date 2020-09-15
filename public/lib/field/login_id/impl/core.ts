@@ -1,4 +1,4 @@
-import { LoginIDFieldAction, LoginIDField, LoginIDFieldEventPublisher } from "../action"
+import { LoginIDFieldAction, LoginIDFieldDeprecated, LoginIDFieldEventPublisher } from "../action"
 
 import { LoginIDFieldError } from "../data"
 import { LoginID } from "../../../credential/data"
@@ -6,13 +6,13 @@ import { InputValue, Content, validContent, invalidContent, Valid, hasError } fr
 
 export function initLoginIDFieldAction(): LoginIDFieldAction {
     return {
-        initLoginIDField(): LoginIDField {
+        initLoginIDFieldDeprecated(): LoginIDFieldDeprecated {
             return new LoginIDFieldImpl()
         },
     }
 }
 
-class LoginIDFieldImpl implements LoginIDField {
+class LoginIDFieldImpl implements LoginIDFieldDeprecated {
     loginID: InputValue
 
     constructor() {
