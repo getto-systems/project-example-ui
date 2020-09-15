@@ -5,7 +5,7 @@ import { Password } from "../../../password/data"
 import { InputValue, Content, Valid } from "../../../input/data"
 
 export interface PasswordFieldComponentAction {
-    password: PasswordFieldAction
+    passwordField: PasswordFieldAction
 }
 
 export interface PasswordFieldComponent {

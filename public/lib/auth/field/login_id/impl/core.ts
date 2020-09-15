@@ -7,13 +7,14 @@ import {
     LoginIDFieldComponentStateHandler,
     LoginIDContentHandler,
 } from "../action"
-import { LoginIDField } from "../../../../credential/action"
+import { LoginIDField } from "../../../../field/login_id/action"
 
-import { LoginID, LoginIDError } from "../../../../credential/data"
+import { LoginID } from "../../../../credential/data"
+import { LoginIDFieldError } from "../../../../field/login_id/data"
 import { InputValue, Content, Valid } from "../../../../input/data"
 
 export function initLoginIDFieldComponent(action: LoginIDFieldComponentAction): LoginIDFieldComponent {
-    return new Component(action.credential.initLoginIDField())
+    return new Component(action.loginIDField.initLoginIDField())
 }
 export function initLoginIDFieldComponentEvent(): LoginIDFieldComponentEventInit {
     return (stateChanged) => new ComponentEvent(stateChanged)
@@ -55,7 +56,7 @@ class ComponentEvent implements LoginIDFieldComponentEvent {
         this.stateChanged = stateChanged
     }
 
-    updated(result: Valid<LoginIDError>): void {
+    updated(result: Valid<LoginIDFieldError>): void {
         this.stateChanged({ type: "input-login-id", result })
     }
 }
