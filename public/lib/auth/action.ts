@@ -1,7 +1,7 @@
 import { AuthComponentError } from "./data"
 import { ResetToken } from "../password_reset/data"
 
-export interface AuthComponent {
+export interface AuthComponentDeprecated {
     initialState: AuthComponentState
 }
 
@@ -13,14 +13,14 @@ export type AuthComponentState =
     Readonly<{ type: "password-reset", resetToken: ResetToken }> |
     Readonly<{ type: "error", err: AuthComponentError }>
 
-export interface AuthComponentEvent {
+export interface AuthComponentEventPublisher {
     tryToLogin(): void
     failedToAuth(err: AuthComponentError): void
     succeedToAuth(): void
 }
 
 export interface AuthComponentEventInit {
-    (stateChanged: AuthComponentStateHandler): AuthComponentEvent
+    (stateChanged: AuthComponentStateHandler): AuthComponentEventPublisher
 }
 
 export interface AuthComponentStateHandler {

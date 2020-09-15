@@ -1,4 +1,4 @@
-import { AuthComponentEvent } from "../../../auth/action"
+import { AuthComponentEventPublisher } from "../../../auth/action"
 import {
     PasswordLoginComponentAction,
     PasswordLoginComponent,
@@ -25,7 +25,7 @@ export function initPasswordLoginComponent(
 ): PasswordLoginComponent {
     return new Component(loginID, password, action)
 }
-export function initPasswordLoginComponentEvent(authEvent: AuthComponentEvent): PasswordLoginComponentEventInit {
+export function initPasswordLoginComponentEvent(authEvent: AuthComponentEventPublisher): PasswordLoginComponentEventInit {
     return (stateChanged) => new ComponentEvent(authEvent, stateChanged)
 }
 
@@ -89,10 +89,10 @@ class Component implements PasswordLoginComponent {
 }
 
 class ComponentEvent implements PasswordLoginComponentEvent {
-    authEvent: AuthComponentEvent
+    authEvent: AuthComponentEventPublisher
     stateChanged: PasswordLoginComponentStateHandler
 
-    constructor(authEvent: AuthComponentEvent, stateChanged: PasswordLoginComponentStateHandler) {
+    constructor(authEvent: AuthComponentEventPublisher, stateChanged: PasswordLoginComponentStateHandler) {
         this.authEvent = authEvent
         this.stateChanged = stateChanged
     }
