@@ -11,7 +11,7 @@ export interface LoadApplicationComponentAction {
 
 export interface LoadApplicationComponent {
     init(stateChanged: Publisher<LoadApplicationComponentState>): void
-    terminalte(): void
+    terminate(): void
     trigger(event: LoadApplicationComponentEvent): Promise<void>
 }
 

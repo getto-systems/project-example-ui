@@ -45,7 +45,7 @@ class Component implements LoadApplicationComponent {
         this.handler.onStateChange(stateChanged)
     }
 
-    terminalte(): void {
+    terminate(): void {
         // WorkerComponent とインターフェイスを合わせるために必要
     }
 
@@ -101,7 +101,7 @@ class WorkerComponent implements LoadApplicationComponent {
         return worker
     }
 
-    terminalte(): void {
+    terminate(): void {
         if (this.holder.set) {
             this.holder.worker.terminate()
         }
