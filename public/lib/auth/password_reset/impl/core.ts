@@ -1,4 +1,4 @@
-import { LoginIDFieldComponent, LoginIDFieldComponentEventInit } from "../../field/login_id/action"
+import { LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit } from "../../field/login_id/action"
 import { PasswordFieldComponent, PasswordFieldComponentEventInit } from "../../field/password/action"
 
 import { AuthComponentEvent } from "../../../auth/action"
@@ -17,7 +17,7 @@ import { InputContent, ResetToken, ResetError } from "../../../password_reset/da
 import { Content } from "../../../input/data"
 
 export function initPasswordResetComponent(
-    loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit],
+    loginID: [LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit],
     password: [PasswordFieldComponent, PasswordFieldComponentEventInit],
     action: PasswordResetComponentAction,
     resetToken: ResetToken,
@@ -29,7 +29,7 @@ export function initPasswordResetComponentEvent(authEvent: AuthComponentEvent): 
 }
 
 class Component implements PasswordResetComponent {
-    loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit]
+    loginID: [LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit]
     password: [PasswordFieldComponent, PasswordFieldComponentEventInit]
 
     action: PasswordResetComponentAction
@@ -44,7 +44,7 @@ class Component implements PasswordResetComponent {
     initialState: PasswordResetComponentState = { type: "initial-reset" }
 
     constructor(
-        loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit],
+        loginID: [LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit],
         password: [PasswordFieldComponent, PasswordFieldComponentEventInit],
         action: PasswordResetComponentAction,
         resetToken: ResetToken,

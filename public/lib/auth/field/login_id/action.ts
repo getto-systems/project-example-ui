@@ -8,7 +8,17 @@ export interface LoginIDFieldComponentAction {
     loginIDField: LoginIDFieldAction
 }
 
+/*
 export interface LoginIDFieldComponent {
+    onContentChanged(contentChanged: LoginIDContentHandler): void
+    init(stateChanged: LoginIDFieldComponentStateHandler): void
+
+    set(loginID: InputValue): Promise<void>
+    validate(): Promise<void>
+}
+ */
+
+export interface LoginIDFieldComponentDeprecated {
     initialState: LoginIDFieldComponentState
 
     onChange(changed: LoginIDContentHandler): void

@@ -36,7 +36,7 @@ import { PasswordResetClient } from "../password_reset/infra"
 
 import { RenewComponentAction, RenewComponent, RenewComponentEventInit } from "../auth/renew/action"
 
-import { LoginIDFieldComponentAction, LoginIDFieldComponent, LoginIDFieldComponentEventInit } from "../auth/field/login_id/action"
+import { LoginIDFieldComponentAction, LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit } from "../auth/field/login_id/action"
 import { PasswordFieldComponentAction, PasswordFieldComponent, PasswordFieldComponentEventInit } from "../auth/field/password/action"
 
 import { PasswordLoginComponentAction, PasswordLoginComponent, PasswordLoginComponentEventInit } from "../auth/password_login/action"
@@ -130,7 +130,7 @@ export class ComponentLoader {
         return initPasswordResetComponentEvent(event)
     }
 
-    initLoginIDFieldComponent(): [LoginIDFieldComponent, LoginIDFieldComponentEventInit] {
+    initLoginIDFieldComponent(): [LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit] {
         return [
             initLoginIDFieldComponent(this.initLoginIDFieldComponentAction()),
             initLoginIDFieldComponentEvent(),

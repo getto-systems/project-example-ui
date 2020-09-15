@@ -1,4 +1,4 @@
-import { LoginIDFieldComponent, LoginIDFieldComponentEventInit } from "../../field/login_id/action"
+import { LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit } from "../../field/login_id/action"
 
 import {
     PasswordResetSessionComponentAction,
@@ -14,7 +14,7 @@ import { InputContent, SessionError, PollingStatusError, PollingStatus, DoneStat
 import { Content } from "../../../input/data"
 
 export function initPasswordResetSessionComponent(
-    loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit],
+    loginID: [LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit],
     action: PasswordResetSessionComponentAction,
 ): PasswordResetSessionComponent {
     return new Component(loginID, action)
@@ -24,7 +24,7 @@ export function initPasswordResetSessionComponentEvent(): PasswordResetSessionCo
 }
 
 class Component implements PasswordResetSessionComponent {
-    loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit]
+    loginID: [LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit]
 
     action: PasswordResetSessionComponentAction
 
@@ -35,7 +35,7 @@ class Component implements PasswordResetSessionComponent {
     }
 
     constructor(
-        loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit],
+        loginID: [LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit],
         action: PasswordResetSessionComponentAction,
     ) {
         this.loginID = loginID

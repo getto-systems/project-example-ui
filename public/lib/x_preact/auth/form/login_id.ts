@@ -3,7 +3,7 @@ import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import {
-    LoginIDFieldComponent,
+    LoginIDFieldComponentDeprecated,
     LoginIDFieldComponentState,
     LoginIDFieldComponentEventInit,
 } from "../../../auth/field/login_id/action"
@@ -28,7 +28,7 @@ interface SubmitHandler {
 
 export function LoginIDForm(
     formComponent: FormComponent,
-    component: LoginIDFieldComponent,
+    component: LoginIDFieldComponentDeprecated,
     initEvent: LoginIDFieldComponentEventInit,
 ): PreactComponent {
     return (props: Props): VNode => {
