@@ -7,10 +7,10 @@ export interface LoginIDFieldAction {
 }
 
 export interface LoginIDField {
-    set(event: LoginIDFieldEvent, input: InputValue): Content<LoginID>
-    validate(event: LoginIDFieldEvent): Content<LoginID>
+    set(event: LoginIDFieldEventPublisher, input: InputValue): Content<LoginID>
+    validate(event: LoginIDFieldEventPublisher): Content<LoginID>
 }
 
-export interface LoginIDFieldEvent {
+export interface LoginIDFieldEventPublisher {
     updated(valid: Valid<LoginIDFieldError>): void
 }

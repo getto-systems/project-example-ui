@@ -1,4 +1,4 @@
-import { LoginIDFieldAction, LoginIDFieldEvent } from "../../../field/login_id/action"
+import { LoginIDFieldAction, LoginIDFieldEventPublisher } from "../../../field/login_id/action"
 
 import { LoginID } from "../../../credential/data"
 import { LoginIDFieldError } from "../../../field/login_id/data"
@@ -20,7 +20,7 @@ export interface LoginIDFieldComponent {
 export type LoginIDFieldComponentState =
     Readonly<{ type: "input-login-id", result: Valid<LoginIDFieldError> }>
 
-export interface LoginIDFieldComponentEvent extends LoginIDFieldEvent { } // eslint-disable-line @typescript-eslint/no-empty-interface
+export interface LoginIDFieldComponentEvent extends LoginIDFieldEventPublisher { } // eslint-disable-line @typescript-eslint/no-empty-interface
 
 export interface LoginIDFieldComponentEventInit {
     (stateChanged: LoginIDFieldComponentStateHandler): LoginIDFieldComponentEvent
