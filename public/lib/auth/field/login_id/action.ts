@@ -12,7 +12,7 @@ export interface LoginIDFieldComponentAction {
 export interface LoginIDFieldComponent {
     onContentChanged(contentChanged: LoginIDContentHandler): void
     init(stateChanged: LoginIDFieldComponentStateHandler): void
-
+    terminate(): void
     trigger(event: LoginIDFieldComponentEvent): Promise<void>
 }
  */
