@@ -7,13 +7,11 @@ import { initScriptAction } from "../../script/impl/core"
 
 import { CheckClient } from "../../script/infra"
 
-import {
-    LoadApplicationComponent,
-    LoadApplicationComponentAction,
-    LoadApplicationComponentEventHandler,
-} from "../../auth/load_application/action"
+import { LoadApplicationComponentAction, LoadApplicationComponentEventHandler } from "../../auth/load_application/action"
 
 import { ScriptAction } from "../../script/action"
+
+import { LoadApplicationComponent } from "../../auth/load_application/data"
 
 export function newLoadApplicationComponent(currentLocation: Readonly<Location>): LoadApplicationComponent {
     const handler = initLoadApplicationComponentEventHandler()
