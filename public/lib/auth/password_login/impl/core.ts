@@ -1,5 +1,3 @@
-import { LoginIDFieldComponent } from "../../field/login_id/action"
-
 import { AuthComponentEvent } from "../../../auth/action"
 import {
     PasswordLoginComponentAction,
@@ -11,6 +9,7 @@ import {
     SubmitHandler,
 } from "../action"
 
+import { LoginIDFieldComponent } from "../../field/login_id/data"
 import { PasswordFieldComponent } from "../../field/password/data"
 
 import { LoginID, StoreError } from "../../../credential/data"

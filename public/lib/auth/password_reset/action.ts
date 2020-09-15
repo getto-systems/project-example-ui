@@ -1,8 +1,8 @@
-import { LoginIDFieldComponent } from "../field/login_id/action"
-import { PasswordFieldComponent } from "../field/password/data"
-
 import { CredentialAction, StoreEvent } from "../../credential/action"
 import { PasswordResetAction, ResetEvent } from "../../password_reset/action"
+
+import { LoginIDFieldComponent } from "../field/login_id/data"
+import { PasswordFieldComponent } from "../field/password/data"
 
 import { StoreError } from "../../credential/data"
 import { InputContent, ResetError } from "../../password_reset/data"

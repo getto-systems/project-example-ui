@@ -2,8 +2,11 @@ import { VNode } from "preact"
 import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { LoginIDFieldComponent } from "../../../auth/field/login_id/action"
-import { LoginIDFieldComponentState, initialLoginIDFieldComponentState } from "../../../auth/field/login_id/data"
+import {
+    LoginIDFieldComponent,
+    LoginIDFieldComponentState,
+    initialLoginIDFieldComponentState,
+} from "../../../auth/field/login_id/data"
 
 import { InitialValue } from "../../../input/data"
 

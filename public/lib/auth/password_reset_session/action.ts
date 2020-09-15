@@ -1,6 +1,6 @@
-import { LoginIDFieldComponent } from "../field/login_id/action"
-
 import { PasswordResetSessionAction, SessionEvent, PollingStatusEvent } from "../../password_reset_session/action"
+
+import { LoginIDFieldComponent } from "../field/login_id/data"
 
 import {
     InputContent,
