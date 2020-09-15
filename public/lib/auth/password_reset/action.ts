@@ -1,5 +1,5 @@
 import { LoginIDFieldComponent } from "../field/login_id/action"
-import { PasswordFieldComponentDeprecated, PasswordFieldComponentEventInit } from "../field/password/action"
+import { PasswordFieldComponent } from "../field/password/action"
 
 import { CredentialAction, StoreEvent } from "../../credential/action"
 import { PasswordResetAction, ResetEvent } from "../../password_reset/action"
@@ -14,7 +14,7 @@ export interface PasswordResetComponentAction {
 
 export interface PasswordResetComponent {
     loginID: LoginIDFieldComponent
-    password: [PasswordFieldComponentDeprecated, PasswordFieldComponentEventInit]
+    password: PasswordFieldComponent
 
     initialState: PasswordResetComponentState
 

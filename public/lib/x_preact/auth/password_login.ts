@@ -50,7 +50,7 @@ function initialLoginForm(component: PasswordLoginComponent, event: PasswordLogi
             <big>
                 <section class="login__body">
                     <${LoginIDForm(component, component.loginID)} initial="${noValue}"/>
-                    <${PasswordForm(component, ...component.password)} initial="${noValue}"/>
+                    <${PasswordForm(component, component.password)} initial="${noValue}"/>
                 </section>
             </big>
             <big>
@@ -82,7 +82,7 @@ function failedToLoginForm(
             <big>
                 <section class="login__body">
                     <${LoginIDForm(component, component.loginID)} initial="${hasValue(content.loginID)}"/>
-                    <${PasswordForm(component, ...component.password)} initial="${hasValue(content.password)}"/>
+                    <${PasswordForm(component, component.password)} initial="${hasValue(content.password)}"/>
                 </section>
             </big>
             <big>

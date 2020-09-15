@@ -1,12 +1,10 @@
 import { VNode } from "preact"
-import { useState, useEffect } from "preact/hooks"
+import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import {
-    PasswordFieldComponentDeprecated,
-    PasswordFieldComponentState,
-    PasswordFieldComponentEventInit,
-} from "../../../auth/field/password/action"
+import { PasswordFieldComponent, PasswordFieldComponentState } from "../../../auth/field/password/action"
+
+import { initialPasswordFieldComponentState } from "../../../auth/field/password/data"
 
 import { PasswordView } from "../../../field/password/data"
 import { InputValue, InitialValue } from "../../../input/data"
@@ -27,29 +25,29 @@ interface SubmitHandler {
     (): Promise<void>
 }
 
-export function PasswordForm(
-    formComponent: FormComponent,
-    component: PasswordFieldComponentDeprecated,
-    initEvent: PasswordFieldComponentEventInit,
-): PreactComponent {
+export function PasswordForm(formComponent: FormComponent, component: PasswordFieldComponent): PreactComponent {
     return (props: Props): VNode => {
-        const [state, setState] = useState(component.initialState)
-        const event = initEvent(setState)
+        const [state, setState] = useState(initialPasswordFieldComponentState)
+        const input = useRef<HTMLInputElement>()
 
         useEffect(() => {
+            component.init(setState)
+
             if (props.initial.hasValue) {
-                setInputValue("password", props.initial.value.inputValue)
-                component.set(event, props.initial.value)
+                if (input.current) {
+                    input.current.value = props.initial.value.inputValue
+                }
+                component.field.set(props.initial.value)
             }
 
-            formComponent.onSubmit(() => component.validate(event))
+            formComponent.onSubmit(async () => component.field.validate())
         }, [])
 
         return html`
             <dl class="form ${state.result.valid ? "" : "form_error"}">
                 <dt class="form__header"><label for="password">パスワード</label></dt>
                 <dd class="form__field">
-                    <input type="password" class="input_fill" id="password" onInput=${onInput}/>
+                    <input type="password" class="input_fill" ref="${input}" onInput=${onInput}/>
                     ${error(state)}
                     <p class="form__help">${view(state.view)}</p>
                 </dd>
@@ -58,7 +56,7 @@ export function PasswordForm(
 
         function onInput(e: InputEvent) {
             if (e.target instanceof HTMLInputElement) {
-                component.set(event, { inputValue: e.target.value })
+                component.field.set({ inputValue: e.target.value })
             }
         }
 
@@ -100,11 +98,11 @@ export function PasswordForm(
 
             function show(e: MouseEvent) {
                 linkClicked(e)
-                component.show(event)
+                component.field.show()
             }
             function hide(e: MouseEvent) {
                 linkClicked(e)
-                component.hide(event)
+                component.field.hide()
             }
             function linkClicked(e: MouseEvent) {
                 e.preventDefault()
@@ -131,12 +129,5 @@ export function PasswordForm(
                 return ""
             }
         }
-    }
-}
-
-function setInputValue(id: string, value: string): void {
-    const input = document.getElementById(id)
-    if (input instanceof HTMLInputElement) {
-        input.value = value
     }
 }

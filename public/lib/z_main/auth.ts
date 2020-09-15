@@ -5,7 +5,7 @@ import { initAuthComponent, initAuthComponentEvent } from "../auth/impl/core"
 import { initRenewComponent, initRenewComponentEvent } from "../auth/renew/impl/core"
 
 import { initLoginIDFieldComponent } from "../auth/field/login_id/impl/core"
-import { initPasswordFieldComponentDeprecated, initPasswordFieldComponentEvent } from "../auth/field/password/impl/core"
+import { initPasswordFieldComponent } from "../auth/field/password/impl/core"
 
 import { initPasswordLoginComponent, initPasswordLoginComponentEvent } from "../auth/password_login/impl/core"
 import { initPasswordResetComponent, initPasswordResetComponentEvent } from "../auth/password_reset/impl/core"
@@ -37,7 +37,7 @@ import { PasswordResetClient } from "../password_reset/infra"
 import { RenewComponentAction, RenewComponent, RenewComponentEventInit } from "../auth/renew/action"
 
 import { LoginIDFieldComponent, LoginIDFieldComponentAction } from "../auth/field/login_id/action"
-import { PasswordFieldComponentAction, PasswordFieldComponentDeprecated, PasswordFieldComponentEventInit } from "../auth/field/password/action"
+import { PasswordFieldComponentAction, PasswordFieldComponent } from "../auth/field/password/action"
 
 import { PasswordLoginComponentAction, PasswordLoginComponent, PasswordLoginComponentEventInit } from "../auth/password_login/action"
 import { PasswordResetSessionComponentAction, PasswordResetSessionComponent, PasswordResetSessionComponentEventInit } from "../auth/password_reset_session/action"
@@ -133,11 +133,8 @@ export class ComponentLoader {
     initLoginIDFieldComponent(): LoginIDFieldComponent {
         return initLoginIDFieldComponent(this.initLoginIDFieldComponentAction())
     }
-    initPasswordFieldComponent(): [PasswordFieldComponentDeprecated, PasswordFieldComponentEventInit] {
-        return [
-            initPasswordFieldComponentDeprecated(this.initPasswordFieldComponentAction()),
-            initPasswordFieldComponentEvent(),
-        ]
+    initPasswordFieldComponent(): PasswordFieldComponent {
+        return initPasswordFieldComponent(this.initPasswordFieldComponentAction())
     }
 
     initRenewComponentAction(): RenewComponentAction {

@@ -14,7 +14,7 @@ import { PasswordError, PasswordCharacter, PasswordView, PasswordFieldEvent } fr
 import { Password } from "../../../../password/data"
 import { InputValue, Content, Valid } from "../../../../input/data"
 
-export function initLoginIDFieldComponent(action: PasswordFieldComponentAction): PasswordFieldComponent {
+export function initPasswordFieldComponent(action: PasswordFieldComponentAction): PasswordFieldComponent {
     return new Component(action)
 }
 export function initPasswordFieldComponentDeprecated(action: PasswordFieldComponentAction): PasswordFieldComponentDeprecated {

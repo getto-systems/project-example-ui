@@ -1,5 +1,5 @@
 import { LoginIDFieldComponent } from "../../field/login_id/action"
-import { PasswordFieldComponentDeprecated, PasswordFieldComponentEventInit } from "../../field/password/action"
+import { PasswordFieldComponent } from "../../field/password/action"
 
 import { AuthComponentEvent } from "../../../auth/action"
 import {
@@ -18,7 +18,7 @@ import { Content } from "../../../input/data"
 
 export function initPasswordResetComponent(
     loginID: LoginIDFieldComponent,
-    password: [PasswordFieldComponentDeprecated, PasswordFieldComponentEventInit],
+    password: PasswordFieldComponent,
     action: PasswordResetComponentAction,
     resetToken: ResetToken,
 ): PasswordResetComponent {
@@ -30,7 +30,7 @@ export function initPasswordResetComponentEvent(authEvent: AuthComponentEvent): 
 
 class Component implements PasswordResetComponent {
     loginID: LoginIDFieldComponent
-    password: [PasswordFieldComponentDeprecated, PasswordFieldComponentEventInit]
+    password: PasswordFieldComponent
 
     action: PasswordResetComponentAction
 
@@ -45,7 +45,7 @@ class Component implements PasswordResetComponent {
 
     constructor(
         loginID: LoginIDFieldComponent,
-        password: [PasswordFieldComponentDeprecated, PasswordFieldComponentEventInit],
+        password: PasswordFieldComponent,
         action: PasswordResetComponentAction,
         resetToken: ResetToken,
     ) {
@@ -64,7 +64,7 @@ class Component implements PasswordResetComponent {
         this.loginID.onContentChange((content: Content<LoginID>) => {
             this.content.loginID = content
         })
-        this.password[0].onChange((content: Content<Password>) => {
+        this.password.onContentChange((content: Content<Password>) => {
             this.content.password = content
         })
     }
