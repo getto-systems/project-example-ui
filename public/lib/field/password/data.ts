@@ -16,8 +16,6 @@ export function showPassword(password: InputValue): PasswordView {
     return { show: true, password }
 }
 
-// TODO あとで消す
-export type PasswordError = "empty" | "too-long"
 export type PasswordFieldError = "empty" | "too-long"
 
 export type PasswordFieldEvent = Readonly<{
