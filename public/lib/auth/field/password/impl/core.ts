@@ -7,9 +7,10 @@ import {
     PasswordFieldComponentStateHandler,
     PasswordContentHandler,
 } from "../action"
-import { PasswordField } from "../../../../password/action"
+import { PasswordField } from "../../../../field/password/action"
 
-import { Password, PasswordError, PasswordCharacter, PasswordView } from "../../../../password/data"
+import { PasswordError, PasswordCharacter, PasswordView } from "../../../../field/password/data"
+import { Password } from "../../../../password/data"
 import { InputValue, Content, Valid } from "../../../../input/data"
 
 export function initPasswordFieldComponent(action: PasswordFieldComponentAction): PasswordFieldComponent {

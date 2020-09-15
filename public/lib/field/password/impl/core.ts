@@ -1,20 +1,21 @@
-import { PasswordAction, PasswordField, PasswordEvent } from "../action"
+import { PasswordFieldAction, PasswordField, PasswordFieldEvent } from "../action"
 
 import {
-    Password, PasswordError,
+    PasswordError,
     PasswordCharacter, simplePassword, complexPassword,
     PasswordView, showPassword, hidePassword,
 } from "../data"
-import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../input/data"
+import { Password } from "../../../password/data"
+import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../../input/data"
 
 // bcrypt を想定しているので、72 バイト以上のパスワードは無効
 const PASSWORD_MAX_BYTES = 72
 
-export function initPasswordAction(): PasswordAction {
-    return new PasswordActionImpl()
+export function initPasswordFieldAction(): PasswordFieldAction {
+    return new PasswordFieldActionImpl()
 }
 
-class PasswordActionImpl implements PasswordAction {
+class PasswordFieldActionImpl implements PasswordFieldAction {
     initPasswordField(): PasswordField {
         return new PasswordFieldImpl()
     }
@@ -29,19 +30,19 @@ class PasswordFieldImpl implements PasswordField {
         this.visible = false
     }
 
-    set(event: PasswordEvent, input: InputValue): Content<Password> {
+    set(event: PasswordFieldEvent, input: InputValue): Content<Password> {
         this.password = input
         return this.validate(event)
     }
-    show(event: PasswordEvent): void {
+    show(event: PasswordFieldEvent): void {
         this.visible = true
         this.validate(event)
     }
-    hide(event: PasswordEvent): void {
+    hide(event: PasswordFieldEvent): void {
         this.visible = false
         this.validate(event)
     }
-    validate(event: PasswordEvent): Content<Password> {
+    validate(event: PasswordFieldEvent): Content<Password> {
         const state = this.state()
         event.updated(...state)
         return this.content(state[0])

@@ -1,10 +1,11 @@
-import { PasswordAction, PasswordEvent } from "../../../password/action"
+import { PasswordFieldAction, PasswordFieldEvent } from "../../../field/password/action"
 
-import { Password, PasswordError, PasswordCharacter, PasswordView } from "../../../password/data"
+import { PasswordError, PasswordCharacter, PasswordView } from "../../../field/password/data"
+import { Password } from "../../../password/data"
 import { InputValue, Content, Valid } from "../../../input/data"
 
 export interface PasswordFieldComponentAction {
-    password: PasswordAction
+    password: PasswordFieldAction
 }
 
 export interface PasswordFieldComponent {
@@ -21,7 +22,7 @@ export interface PasswordFieldComponent {
 export type PasswordFieldComponentState =
     Readonly<{ type: "input-password", result: Valid<PasswordError>, character: PasswordCharacter, view: PasswordView }>
 
-export interface PasswordFieldComponentEvent extends PasswordEvent { } // eslint-disable-line @typescript-eslint/no-empty-interface
+export interface PasswordFieldComponentEvent extends PasswordFieldEvent { } // eslint-disable-line @typescript-eslint/no-empty-interface
 
 export interface PasswordFieldComponentEventInit {
     (stateChanged: PasswordFieldComponentStateHandler): PasswordFieldComponentEvent
