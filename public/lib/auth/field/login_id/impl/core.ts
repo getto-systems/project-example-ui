@@ -14,8 +14,8 @@ import { LoginID } from "../../../../credential/data"
 import { LoginIDFieldError, LoginIDFieldEvent } from "../../../../field/login_id/data"
 import { InputValue, Content, Valid } from "../../../../input/data"
 
-export function initLoginIDFieldComponent(action: LoginIDFieldComponentAction): LoginIDFieldComponentDeprecated {
-    return new Component(action.loginIDField.initLoginIDFieldDeprecated())
+export function initLoginIDFieldComponentDeprecated(action: LoginIDFieldComponentAction): LoginIDFieldComponentDeprecated {
+    return new ComponentDeprecated(action.loginIDField.initLoginIDFieldDeprecated())
 }
 export function initLoginIDFieldComponentEventHandler(): LoginIDFieldComponentEventHandler {
     return new ComponentEventHandler()
@@ -24,7 +24,7 @@ export function initLoginIDFieldComponentEvent(): LoginIDFieldComponentEventInit
     return (stateChanged) => new ComponentEvent(stateChanged)
 }
 
-class Component implements LoginIDFieldComponentDeprecated {
+class ComponentDeprecated implements LoginIDFieldComponentDeprecated {
     loginID: LoginIDFieldDeprecated
     eventHolder: EventHolder<LoginIDContentHandler>
 

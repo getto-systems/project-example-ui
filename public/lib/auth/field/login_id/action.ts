@@ -8,14 +8,16 @@ export interface LoginIDFieldComponentAction {
     loginIDField: LoginIDFieldAction
 }
 
-/*
 export interface LoginIDFieldComponent {
     onContentChanged(contentChanged: LoginIDContentHandler): void
     init(stateChanged: LoginIDFieldComponentStateHandler): void
     terminate(): void
     trigger(event: LoginIDFieldComponentEvent): Promise<void>
 }
- */
+
+export type LoginIDFieldComponentEvent =
+    Readonly<{ type: "set", loginID: InputValue }> |
+    Readonly<{ type: "validate" }>
 
 export interface LoginIDFieldComponentDeprecated {
     initialState: LoginIDFieldComponentState
