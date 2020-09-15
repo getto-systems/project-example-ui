@@ -3,16 +3,16 @@ import { Password } from "../../password/data"
 import { InputValue, Content, Valid } from "../../input/data"
 
 export interface PasswordFieldAction {
-    initPasswordField(): PasswordField
+    initPasswordFieldDeprecated(): PasswordFieldDeprecated
 }
 
-export interface PasswordField {
-    set(event: PasswordFieldEvent, input: InputValue): Content<Password>
-    show(event: PasswordFieldEvent): void
-    hide(event: PasswordFieldEvent): void
-    validate(event: PasswordFieldEvent): Content<Password>
+export interface PasswordFieldDeprecated {
+    set(event: PasswordFieldEventPublisher, input: InputValue): Content<Password>
+    show(event: PasswordFieldEventPublisher): void
+    hide(event: PasswordFieldEventPublisher): void
+    validate(event: PasswordFieldEventPublisher): Content<Password>
 }
 
-export interface PasswordFieldEvent {
+export interface PasswordFieldEventPublisher {
     updated(valid: Valid<PasswordError>, character: PasswordCharacter, view: PasswordView): void
 }

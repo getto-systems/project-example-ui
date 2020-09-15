@@ -1,4 +1,4 @@
-import { PasswordFieldAction, PasswordField, PasswordFieldEvent } from "../action"
+import { PasswordFieldAction, PasswordFieldDeprecated, PasswordFieldEventPublisher } from "../action"
 
 import {
     PasswordError,
@@ -16,12 +16,12 @@ export function initPasswordFieldAction(): PasswordFieldAction {
 }
 
 class Action implements PasswordFieldAction {
-    initPasswordField(): PasswordField {
+    initPasswordFieldDeprecated(): PasswordFieldDeprecated {
         return new Field()
     }
 }
 
-class Field implements PasswordField {
+class Field implements PasswordFieldDeprecated {
     password: InputValue
     visible: boolean
 
@@ -30,19 +30,19 @@ class Field implements PasswordField {
         this.visible = false
     }
 
-    set(event: PasswordFieldEvent, input: InputValue): Content<Password> {
+    set(event: PasswordFieldEventPublisher, input: InputValue): Content<Password> {
         this.password = input
         return this.validate(event)
     }
-    show(event: PasswordFieldEvent): void {
+    show(event: PasswordFieldEventPublisher): void {
         this.visible = true
         this.validate(event)
     }
-    hide(event: PasswordFieldEvent): void {
+    hide(event: PasswordFieldEventPublisher): void {
         this.visible = false
         this.validate(event)
     }
-    validate(event: PasswordFieldEvent): Content<Password> {
+    validate(event: PasswordFieldEventPublisher): Content<Password> {
         const state = this.state()
         event.updated(...state)
         return this.content(state[0])

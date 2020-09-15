@@ -7,21 +7,21 @@ import {
     PasswordFieldComponentStateHandler,
     PasswordContentHandler,
 } from "../action"
-import { PasswordField } from "../../../../field/password/action"
+import { PasswordFieldDeprecated } from "../../../../field/password/action"
 
 import { PasswordError, PasswordCharacter, PasswordView } from "../../../../field/password/data"
 import { Password } from "../../../../password/data"
 import { InputValue, Content, Valid } from "../../../../input/data"
 
 export function initPasswordFieldComponent(action: PasswordFieldComponentAction): PasswordFieldComponent {
-    return new Component(action.passwordField.initPasswordField())
+    return new Component(action.passwordField.initPasswordFieldDeprecated())
 }
 export function initPasswordFieldComponentEvent(): PasswordFieldComponentEventInit {
     return (stateChanged) => new ComponentEvent(stateChanged)
 }
 
 class Component implements PasswordFieldComponent {
-    password: PasswordField
+    password: PasswordFieldDeprecated
     eventHolder: EventHolder<PasswordContentHandler>
 
     initialState: PasswordFieldComponentState = {
@@ -31,7 +31,7 @@ class Component implements PasswordFieldComponent {
         view: { show: false },
     }
 
-    constructor(password: PasswordField) {
+    constructor(password: PasswordFieldDeprecated) {
         this.password = password
         this.eventHolder = { hasEvent: false }
     }
