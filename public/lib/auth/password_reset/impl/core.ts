@@ -1,4 +1,4 @@
-import { AuthComponentEventPublisher } from "../../../auth/action"
+import { AuthComponentEventHandler } from "../../../auth/action"
 import {
     PasswordResetComponentAction,
     PasswordResetComponent,
@@ -24,7 +24,7 @@ export function initPasswordResetComponent(
 ): PasswordResetComponent {
     return new Component(loginID, password, action, resetToken)
 }
-export function initPasswordResetComponentEvent(authEvent: AuthComponentEventPublisher): PasswordResetComponentEventInit {
+export function initPasswordResetComponentEvent(authEvent: AuthComponentEventHandler): PasswordResetComponentEventInit {
     return (stateChanged) => new ComponentEvent(authEvent, stateChanged)
 }
 
@@ -84,9 +84,9 @@ class Component implements PasswordResetComponent {
 
 class ComponentEvent implements PasswordResetComponentEvent {
     stateChanged: PasswordResetComponentStateHandler
-    authEvent: AuthComponentEventPublisher
+    authEvent: AuthComponentEventHandler
 
-    constructor(authEvent: AuthComponentEventPublisher, stateChanged: PasswordResetComponentStateHandler) {
+    constructor(authEvent: AuthComponentEventHandler, stateChanged: PasswordResetComponentStateHandler) {
         this.stateChanged = stateChanged
         this.authEvent = authEvent
     }
@@ -105,6 +105,6 @@ class ComponentEvent implements PasswordResetComponentEvent {
         this.stateChanged({ type: "failed-to-store", err })
     }
     succeedToStore(): void {
-        this.authEvent.succeedToAuth()
+        this.authEvent.handleAuthEvent({ type: "succeed-to-login" })
     }
 }

@@ -1,6 +1,6 @@
 import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_client"
 
-import { initAuthComponentDeprecated, initAuthComponentEvent } from "../auth/impl/core"
+import { initAuthComponent, initAuthComponentEventHandler } from "../auth/impl/core"
 
 import { initRenewComponent, initRenewComponentEvent } from "../auth/renew/impl/core"
 
@@ -26,7 +26,7 @@ import { initPasswordLoginAction } from "../password_login/impl/core"
 import { initPasswordResetSessionAction } from "../password_reset_session/impl/core"
 import { initPasswordResetAction } from "../password_reset/impl/core"
 
-import { AuthComponentDeprecated, AuthComponentEventPublisher, AuthComponentEventInit } from "../auth/action"
+import { AuthComponent, AuthComponentEventHandler } from "../auth/action"
 
 import { AuthCredentialRepository, RenewClient } from "../credential/infra"
 import { CheckClient } from "../script/infra"
@@ -86,18 +86,19 @@ export class ComponentLoader {
         }
     }
 
-    initAuthComponent(): [AuthComponentDeprecated, AuthComponentEventInit] {
+    initAuthComponent(): [AuthComponent, AuthComponentEventHandler] {
+        const handler = initAuthComponentEventHandler(this.currentLocation)
         return [
-            initAuthComponentDeprecated(this.currentLocation),
-            initAuthComponentEvent(this.currentLocation),
+            initAuthComponent(handler),
+            handler,
         ]
     }
 
     initRenewComponent(): RenewComponent {
         return initRenewComponent(this.initRenewComponentAction())
     }
-    initRenewComponentEvent(event: AuthComponentEventPublisher): RenewComponentEventInit {
-        return initRenewComponentEvent(event)
+    initRenewComponentEvent(handler: AuthComponentEventHandler): RenewComponentEventInit {
+        return initRenewComponentEvent(handler)
     }
 
     initPasswordLoginComponent(): PasswordLoginComponent {
@@ -107,8 +108,8 @@ export class ComponentLoader {
             this.initPasswordLoginComponentAction(),
         )
     }
-    initPasswordLoginComponentEvent(event: AuthComponentEventPublisher): PasswordLoginComponentEventInit {
-        return initPasswordLoginComponentEvent(event)
+    initPasswordLoginComponentEvent(handler: AuthComponentEventHandler): PasswordLoginComponentEventInit {
+        return initPasswordLoginComponentEvent(handler)
     }
 
     initPasswordResetSession(): PasswordResetSessionComponent {
@@ -129,8 +130,8 @@ export class ComponentLoader {
             resetToken,
         )
     }
-    initPasswordResetEvent(event: AuthComponentEventPublisher): PasswordResetComponentEventInit {
-        return initPasswordResetComponentEvent(event)
+    initPasswordResetEvent(handler: AuthComponentEventHandler): PasswordResetComponentEventInit {
+        return initPasswordResetComponentEvent(handler)
     }
 
     initLoginIDFieldComponent(): LoginIDFieldComponent {
