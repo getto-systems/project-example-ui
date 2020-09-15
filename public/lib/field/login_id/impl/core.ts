@@ -1,4 +1,4 @@
-import { LoginIDFieldAction, LoginIDField, LoginIDFieldEventHandler, LoginIDFieldDeprecated, LoginIDFieldEventPublisher } from "../action"
+import { LoginIDFieldAction, LoginIDField, LoginIDFieldEventHandler } from "../action"
 
 import { LoginIDFieldError } from "../data"
 import { LoginID } from "../../../credential/data"
@@ -17,9 +17,6 @@ class Action implements LoginIDFieldAction {
 
     initLoginIDField(): LoginIDField {
         return new Field(this.handler)
-    }
-    initLoginIDFieldDeprecated(): LoginIDFieldDeprecated {
-        return new FieldDeprecated()
     }
 }
 
@@ -49,34 +46,6 @@ class Field implements LoginIDField {
             return [result, invalidContent(this.loginID)]
         }
         return [result, validContent(this.loginID, { loginID: this.loginID.inputValue })]
-    }
-}
-
-class FieldDeprecated implements LoginIDFieldDeprecated {
-    loginID: InputValue
-
-    constructor() {
-        this.loginID = { inputValue: "" }
-    }
-
-    set(event: LoginIDFieldEventPublisher, input: InputValue): Content<LoginID> {
-        this.loginID = input
-        return this.validate(event)
-    }
-    validate(event: LoginIDFieldEventPublisher): Content<LoginID> {
-        const state = this.state()
-        event.updated(...state)
-        return this.content(state[0])
-    }
-
-    state(): [Valid<LoginIDFieldError>] {
-        return [hasError(validateLoginID(this.loginID.inputValue))]
-    }
-    content(result: Valid<LoginIDFieldError>): Content<LoginID> {
-        if (!result.valid) {
-            return invalidContent(this.loginID)
-        }
-        return validContent(this.loginID, { loginID: this.loginID.inputValue })
     }
 }
 
