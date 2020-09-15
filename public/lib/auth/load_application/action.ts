@@ -1,11 +1,9 @@
-import { ScriptAction } from "../../script/action"
+import { ScriptAction, ScriptEventHandler } from "../../script/action"
 
 import {
     LoadApplicationComponentState,
     LoadApplicationComponentEvent,
 } from "./data"
-
-import { ScriptEvent } from "../../script/data"
 
 export interface LoadApplicationComponentAction {
     script: ScriptAction,
@@ -17,9 +15,8 @@ export interface LoadApplicationComponent {
     trigger(event: LoadApplicationComponentEvent): Promise<void>
 }
 
-export interface LoadApplicationComponentEventHandler {
+export interface LoadApplicationComponentEventHandler extends ScriptEventHandler {
     onStateChange(pub: Publisher<LoadApplicationComponentState>): void
-    handleScriptEvent(event: ScriptEvent): void
 }
 
 interface Publisher<T> {
