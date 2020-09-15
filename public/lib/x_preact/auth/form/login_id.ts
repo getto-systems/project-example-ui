@@ -37,7 +37,7 @@ export function LoginIDForm(
                 component.field.set(props.initial.value)
             }
 
-            formComponent.onSubmit(() => component.field.validate())
+            formComponent.onSubmit(async () => component.field.validate())
 
             return () => component.terminate()
         }, [])

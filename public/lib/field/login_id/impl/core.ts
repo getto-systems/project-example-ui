@@ -25,11 +25,11 @@ class Field implements LoginIDField {
         this.loginID = { inputValue: "" }
     }
 
-    async set(input: InputValue): Promise<void> {
+    set(input: InputValue): void {
         this.loginID = input
         this.validate()
     }
-    async validate(): Promise<void> {
+    validate(): void {
         const [valid, content] = this.toLoginID()
         this.handler.handleLoginIDFieldEvent({ type: "succeed-to-update-login-id", valid, content })
     }

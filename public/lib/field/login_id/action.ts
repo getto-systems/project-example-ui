@@ -6,8 +6,8 @@ export interface LoginIDFieldAction {
 }
 
 export interface LoginIDField {
-    set(input: InputValue): Promise<void>
-    validate(): Promise<void>
+    set(input: InputValue): void
+    validate(): void
 }
 
 export interface LoginIDFieldEventHandler {
