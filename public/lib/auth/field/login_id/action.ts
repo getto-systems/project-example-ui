@@ -12,6 +12,7 @@ export interface LoginIDFieldComponentAction {
 export interface LoginIDFieldComponent {
     onContentChange(contentChanged: Publisher<Content<LoginID>>): void
     init(stateChanged: Publisher<LoginIDFieldComponentState>): void
+    terminate(): void
 
     field: LoginIDField
 }

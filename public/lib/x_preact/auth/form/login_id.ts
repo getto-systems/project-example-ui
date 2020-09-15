@@ -29,15 +29,17 @@ export function LoginIDForm(
 ): PreactComponent {
     return (props: Props): VNode => {
         const [state, setState] = useState(initialLoginIDFieldComponentState)
-        component.init(setState)
-
         useEffect(() => {
+            component.init(setState)
+
             if (props.initial.hasValue) {
                 setInputValue("login-id", props.initial.value.inputValue)
                 component.field.set(props.initial.value)
             }
 
             formComponent.onSubmit(() => component.field.validate())
+
+            return () => component.terminate()
         }, [])
 
         return html`

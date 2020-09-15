@@ -33,6 +33,9 @@ class Component implements LoginIDFieldComponent {
     init(stateChanged: Publisher<LoginIDFieldComponentState>): void {
         this.handler.onStateChange(stateChanged)
     }
+    terminate(): void {
+        // WebComponent のインターフェイスと合わせるために必要
+    }
 }
 
 class ComponentEventHandler implements LoginIDFieldComponentEventHandler {
