@@ -37,7 +37,7 @@ import { PasswordResetClient } from "../password_reset/infra"
 import { RenewComponentAction, RenewComponent, RenewComponentEventInit } from "../auth/renew/action"
 
 import { LoginIDFieldComponent, LoginIDFieldComponentAction } from "../auth/field/login_id/action"
-import { PasswordFieldComponentAction, PasswordFieldComponent } from "../auth/field/password/action"
+import { PasswordFieldComponentAction } from "../auth/field/password/action"
 
 import { PasswordLoginComponentAction, PasswordLoginComponent, PasswordLoginComponentEventInit } from "../auth/password_login/action"
 import { PasswordResetSessionComponentAction, PasswordResetSessionComponent, PasswordResetSessionComponentEventInit } from "../auth/password_reset_session/action"
@@ -51,6 +51,8 @@ import { PasswordFieldAction } from "../field/password/action"
 import { PasswordLoginAction } from "../password_login/action"
 import { PasswordResetSessionAction } from "../password_reset_session/action"
 import { PasswordResetAction } from "../password_reset/action"
+
+import { PasswordFieldComponent } from "../auth/field/password/data"
 
 import { ResetToken } from "../password_reset/data"
 
