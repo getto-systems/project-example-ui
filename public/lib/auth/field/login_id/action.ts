@@ -1,4 +1,4 @@
-import { LoginIDField, LoginIDFieldAction, LoginIDFieldEventHandler } from "../../../field/login_id/action"
+import { LoginIDField, LoginIDFieldAction } from "../../../field/login_id/action"
 
 import { LoginIDFieldComponentState } from "./data"
 
@@ -15,11 +15,6 @@ export interface LoginIDFieldComponent {
     terminate(): void
 
     field: LoginIDField
-}
-
-export interface LoginIDFieldComponentEventHandler extends LoginIDFieldEventHandler {
-    onContentChange(contentChanged: Publisher<Content<LoginID>>): void
-    onStateChange(stateChanged: Publisher<LoginIDFieldComponentState>): void
 }
 
 interface Publisher<T> {

@@ -1,6 +1,6 @@
-import { LoginIDFieldComponentAction, LoginIDFieldComponent, LoginIDFieldComponentEventHandler } from "../action"
+import { LoginIDFieldComponentAction, LoginIDFieldComponent } from "../action"
 
-import { LoginIDField } from "../../../../field/login_id/action"
+import { LoginIDField, LoginIDFieldEventHandler } from "../../../../field/login_id/action"
 
 import { LoginIDFieldComponentState } from "../data"
 
@@ -8,23 +8,17 @@ import { LoginID } from "../../../../credential/data"
 import { LoginIDFieldEvent } from "../../../../field/login_id/data"
 import { Content } from "../../../../input/data"
 
-export function initLoginIDFieldComponent(handler: LoginIDFieldComponentEventHandler, action: LoginIDFieldComponentAction): LoginIDFieldComponent {
-    return new Component(handler, action.loginIDField.initLoginIDField())
-}
-export function initLoginIDFieldComponentEventHandler(): LoginIDFieldComponentEventHandler {
-    return new ComponentEventHandler()
+export function initLoginIDFieldComponent(action: LoginIDFieldComponentAction): LoginIDFieldComponent {
+    return new Component(action)
 }
 
 class Component implements LoginIDFieldComponent {
-    handler: LoginIDFieldComponentEventHandler
+    handler: ComponentEventHandler
     field: LoginIDField
 
-    constructor(
-        handler: LoginIDFieldComponentEventHandler,
-        field: LoginIDField,
-    ) {
-        this.handler = handler
-        this.field = field
+    constructor(action: LoginIDFieldComponentAction) {
+        this.handler = new ComponentEventHandler()
+        this.field = action.loginIDField.initLoginIDField(this.handler)
     }
 
     onContentChange(contentChanged: Publisher<Content<LoginID>>): void {
@@ -34,11 +28,11 @@ class Component implements LoginIDFieldComponent {
         this.handler.onStateChange(stateChanged)
     }
     terminate(): void {
-        // WebComponent のインターフェイスと合わせるために必要
+        // terminate が必要な component とインターフェイスを合わせるために必要
     }
 }
 
-class ComponentEventHandler implements LoginIDFieldComponentEventHandler {
+class ComponentEventHandler implements LoginIDFieldEventHandler {
     holder: {
         content: PublisherHolder<Content<LoginID>>,
         state: PublisherHolder<LoginIDFieldComponentState>,
@@ -58,17 +52,20 @@ class ComponentEventHandler implements LoginIDFieldComponentEventHandler {
         this.holder.state = { set: true, pub }
     }
 
-    publish(content: Content<LoginID>, state: LoginIDFieldComponentState): void {
+    publishContent(content: Content<LoginID>): void {
         if (this.holder.content.set) {
             this.holder.content.pub(content)
         }
+    }
+    publishState(state: LoginIDFieldComponentState): void {
         if (this.holder.state.set) {
             this.holder.state.pub(state)
         }
     }
 
     handleLoginIDFieldEvent(event: LoginIDFieldEvent): void {
-        this.publish(event.content, { type: "input-login-id", result: event.valid })
+        this.publishContent(event.content)
+        this.publishState({ type: "input-login-id", result: event.valid })
     }
 }
 
