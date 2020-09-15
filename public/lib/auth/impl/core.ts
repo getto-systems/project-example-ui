@@ -3,7 +3,7 @@ import {
     AuthComponentEventHandler,
     AuthEvent,
     AuthComponentState,
-} from "../action"
+} from "../data"
 
 export function initAuthComponent(handler: AuthComponentEventHandler): AuthComponent {
     return new Component(handler)

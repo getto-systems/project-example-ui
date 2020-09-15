@@ -2,15 +2,15 @@ import { render, h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { ComponentLoader } from "../z_main/auth"
-import { newLoadApplicationComponent } from "../z_main/auth/worker/load_application"
-
-import { initialAuthComponentState } from "../auth/action"
-
 import { Renew } from "./auth/renew"
 import { LoadApplication } from "./auth/load_application"
 
 import { PasswordLogin } from "./auth/password_login"
+
+import { ComponentLoader } from "../z_main/auth"
+import { newLoadApplicationComponent } from "../z_main/auth/worker/load_application"
+
+import { initialAuthComponentState } from "../auth/data"
 
 render(h(main(), {}), document.body)
 

@@ -1,4 +1,3 @@
-import { AuthComponentEventHandler } from "../../../auth/action"
 import {
     RenewComponentAction,
     RenewComponent,
@@ -7,6 +6,8 @@ import {
     RenewComponentEventInit,
     RenewComponentStateHandler,
 } from "../action"
+
+import { AuthComponentEventHandler } from "../../../auth/data"
 
 import { RenewError, StoreError } from "../../../credential/data"
 
