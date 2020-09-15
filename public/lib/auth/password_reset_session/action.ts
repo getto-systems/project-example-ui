@@ -1,4 +1,4 @@
-import { LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit } from "../field/login_id/action"
+import { LoginIDFieldComponent } from "../field/login_id/action"
 
 import { PasswordResetSessionAction, SessionEvent, PollingStatusEvent } from "../../password_reset_session/action"
 
@@ -13,7 +13,7 @@ export interface PasswordResetSessionComponentAction {
 }
 
 export interface PasswordResetSessionComponent {
-    loginID: [LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit]
+    loginID: LoginIDFieldComponent
 
     initialState: PasswordResetSessionComponentState
 

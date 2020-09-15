@@ -49,7 +49,7 @@ function initialLoginForm(component: PasswordLoginComponent, event: PasswordLogi
         <form onSubmit="${onSubmit}">
             <big>
                 <section class="login__body">
-                    <${LoginIDForm(component, ...component.loginID)} initial="${noValue}"/>
+                    <${LoginIDForm(component, component.loginID)} initial="${noValue}"/>
                     <${PasswordForm(component, ...component.password)} initial="${noValue}"/>
                 </section>
             </big>
@@ -81,7 +81,7 @@ function failedToLoginForm(
         <form onSubmit="${onSubmit}">
             <big>
                 <section class="login__body">
-                    <${LoginIDForm(component, ...component.loginID)} initial="${hasValue(content.loginID)}"/>
+                    <${LoginIDForm(component, component.loginID)} initial="${hasValue(content.loginID)}"/>
                     <${PasswordForm(component, ...component.password)} initial="${hasValue(content.password)}"/>
                 </section>
             </big>

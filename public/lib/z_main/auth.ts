@@ -4,7 +4,7 @@ import { initAuthComponent, initAuthComponentEvent } from "../auth/impl/core"
 
 import { initRenewComponent, initRenewComponentEvent } from "../auth/renew/impl/core"
 
-import { initLoginIDFieldComponentDeprecated, initLoginIDFieldComponentEventHandler, initLoginIDFieldComponentEvent } from "../auth/field/login_id/impl/core"
+import { initLoginIDFieldComponent, initLoginIDFieldComponentEventHandler } from "../auth/field/login_id/impl/core"
 import { initPasswordFieldComponent, initPasswordFieldComponentEvent } from "../auth/field/password/impl/core"
 
 import { initPasswordLoginComponent, initPasswordLoginComponentEvent } from "../auth/password_login/impl/core"
@@ -36,7 +36,7 @@ import { PasswordResetClient } from "../password_reset/infra"
 
 import { RenewComponentAction, RenewComponent, RenewComponentEventInit } from "../auth/renew/action"
 
-import { LoginIDFieldComponentAction, LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit } from "../auth/field/login_id/action"
+import { LoginIDFieldComponent, LoginIDFieldComponentAction, LoginIDFieldComponentEventHandler } from "../auth/field/login_id/action"
 import { PasswordFieldComponentAction, PasswordFieldComponent, PasswordFieldComponentEventInit } from "../auth/field/password/action"
 
 import { PasswordLoginComponentAction, PasswordLoginComponent, PasswordLoginComponentEventInit } from "../auth/password_login/action"
@@ -130,11 +130,9 @@ export class ComponentLoader {
         return initPasswordResetComponentEvent(event)
     }
 
-    initLoginIDFieldComponent(): [LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit] {
-        return [
-            initLoginIDFieldComponentDeprecated(this.initLoginIDFieldComponentAction()),
-            initLoginIDFieldComponentEvent(),
-        ]
+    initLoginIDFieldComponent(): LoginIDFieldComponent {
+        const handler = initLoginIDFieldComponentEventHandler()
+        return initLoginIDFieldComponent(handler, this.initLoginIDFieldComponentAction(handler))
     }
     initPasswordFieldComponent(): [PasswordFieldComponent, PasswordFieldComponentEventInit] {
         return [
@@ -149,8 +147,7 @@ export class ComponentLoader {
         }
     }
 
-    initLoginIDFieldComponentAction(): LoginIDFieldComponentAction {
-        const handler = initLoginIDFieldComponentEventHandler()
+    initLoginIDFieldComponentAction(handler: LoginIDFieldComponentEventHandler): LoginIDFieldComponentAction {
         return {
             loginIDField: this.initLoginIDFieldAction(handler),
         }

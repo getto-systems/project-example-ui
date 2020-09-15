@@ -1,23 +1,21 @@
 import { LoginIDFieldAction, LoginIDFieldEventHandler, LoginIDFieldEventPublisher } from "../../../field/login_id/action"
 
+import { LoginIDFieldComponentState } from "./data"
+
 import { LoginID } from "../../../credential/data"
-import { LoginIDFieldError } from "../../../field/login_id/data"
-import { InputValue, Content, Valid } from "../../../input/data"
+import { InputValue, Content } from "../../../input/data"
 
 export interface LoginIDFieldComponentAction {
     loginIDField: LoginIDFieldAction
 }
 
 export interface LoginIDFieldComponent {
-    onContentChanged(contentChanged: LoginIDContentHandler): void
-    init(stateChanged: LoginIDFieldComponentStateHandler): void
-    terminate(): void
-    trigger(event: LoginIDFieldComponentEvent): Promise<void>
-}
+    onContentChange(contentChanged: Publisher<Content<LoginID>>): void
+    init(stateChanged: Publisher<LoginIDFieldComponentState>): void
 
-export type LoginIDFieldComponentEvent =
-    Readonly<{ type: "set", loginID: InputValue }> |
-    Readonly<{ type: "validate" }>
+    set(loginID: InputValue): Promise<void>
+    validate(): Promise<void>
+}
 
 export interface LoginIDFieldComponentDeprecated {
     initialState: LoginIDFieldComponentState
@@ -28,10 +26,10 @@ export interface LoginIDFieldComponentDeprecated {
     validate(event: LoginIDFieldComponentEventPublisher): Promise<void>
 }
 
-export type LoginIDFieldComponentState =
-    Readonly<{ type: "input-login-id", result: Valid<LoginIDFieldError> }>
-
-export interface LoginIDFieldComponentEventHandler extends LoginIDFieldEventHandler { } // eslint-disable-line @typescript-eslint/no-empty-interface
+export interface LoginIDFieldComponentEventHandler extends LoginIDFieldEventHandler {
+    onContentChange(contentChanged: LoginIDContentHandler): void
+    onStateChange(stateChanged: LoginIDFieldComponentStateHandler): void
+}
 
 export interface LoginIDFieldComponentEventPublisher extends LoginIDFieldEventPublisher { } // eslint-disable-line @typescript-eslint/no-empty-interface
 
@@ -39,10 +37,16 @@ export interface LoginIDFieldComponentEventInit {
     (stateChanged: LoginIDFieldComponentStateHandler): LoginIDFieldComponentEventPublisher
 }
 
+// TODO あとで消す
 export interface LoginIDFieldComponentStateHandler {
     (state: LoginIDFieldComponentState): void
 }
 
+// TODO あとで消す
 export interface LoginIDContentHandler {
     (content: Content<LoginID>): void
+}
+
+interface Publisher<T> {
+    (state: T): void
 }
