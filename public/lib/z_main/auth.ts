@@ -4,7 +4,7 @@ import { initAuthComponent, initAuthComponentEvent } from "../auth/impl/core"
 
 import { initRenewComponent, initRenewComponentEvent } from "../auth/renew/impl/core"
 
-import { initLoginIDFieldComponent, initLoginIDFieldComponentEventHandler, initLoginIDFieldComponentEvent } from "../auth/field/login_id/impl/core"
+import { initLoginIDFieldComponentDeprecated, initLoginIDFieldComponentEventHandler, initLoginIDFieldComponentEvent } from "../auth/field/login_id/impl/core"
 import { initPasswordFieldComponent, initPasswordFieldComponentEvent } from "../auth/field/password/impl/core"
 
 import { initPasswordLoginComponent, initPasswordLoginComponentEvent } from "../auth/password_login/impl/core"
@@ -132,7 +132,7 @@ export class ComponentLoader {
 
     initLoginIDFieldComponent(): [LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit] {
         return [
-            initLoginIDFieldComponent(this.initLoginIDFieldComponentAction()),
+            initLoginIDFieldComponentDeprecated(this.initLoginIDFieldComponentAction()),
             initLoginIDFieldComponentEvent(),
         ]
     }
