@@ -4,7 +4,7 @@ import { initAuthComponent, initAuthComponentEvent } from "../auth/impl/core"
 
 import { initRenewComponent, initRenewComponentEvent } from "../auth/renew/impl/core"
 
-import { initLoginIDFieldComponent, initLoginIDFieldComponentEventHandler } from "../auth/field/login_id/impl/core"
+import { initLoginIDFieldComponent } from "../auth/field/login_id/impl/core"
 import { initPasswordFieldComponent, initPasswordFieldComponentEvent } from "../auth/field/password/impl/core"
 
 import { initPasswordLoginComponent, initPasswordLoginComponentEvent } from "../auth/password_login/impl/core"
@@ -36,7 +36,7 @@ import { PasswordResetClient } from "../password_reset/infra"
 
 import { RenewComponentAction, RenewComponent, RenewComponentEventInit } from "../auth/renew/action"
 
-import { LoginIDFieldComponent, LoginIDFieldComponentAction, LoginIDFieldComponentEventHandler } from "../auth/field/login_id/action"
+import { LoginIDFieldComponent, LoginIDFieldComponentAction } from "../auth/field/login_id/action"
 import { PasswordFieldComponentAction, PasswordFieldComponent, PasswordFieldComponentEventInit } from "../auth/field/password/action"
 
 import { PasswordLoginComponentAction, PasswordLoginComponent, PasswordLoginComponentEventInit } from "../auth/password_login/action"
@@ -45,7 +45,7 @@ import { PasswordResetComponentAction, PasswordResetComponent, PasswordResetComp
 
 import { CredentialAction } from "../credential/action"
 
-import { LoginIDFieldAction, LoginIDFieldEventHandler } from "../field/login_id/action"
+import { LoginIDFieldAction } from "../field/login_id/action"
 import { PasswordFieldAction } from "../field/password/action"
 
 import { PasswordLoginAction } from "../password_login/action"
@@ -131,8 +131,7 @@ export class ComponentLoader {
     }
 
     initLoginIDFieldComponent(): LoginIDFieldComponent {
-        const handler = initLoginIDFieldComponentEventHandler()
-        return initLoginIDFieldComponent(handler, this.initLoginIDFieldComponentAction(handler))
+        return initLoginIDFieldComponent(this.initLoginIDFieldComponentAction())
     }
     initPasswordFieldComponent(): [PasswordFieldComponent, PasswordFieldComponentEventInit] {
         return [
@@ -147,9 +146,9 @@ export class ComponentLoader {
         }
     }
 
-    initLoginIDFieldComponentAction(handler: LoginIDFieldComponentEventHandler): LoginIDFieldComponentAction {
+    initLoginIDFieldComponentAction(): LoginIDFieldComponentAction {
         return {
-            loginIDField: this.initLoginIDFieldAction(handler),
+            loginIDField: this.initLoginIDFieldAction(),
         }
     }
     initPasswordFieldComponentAction(): PasswordFieldComponentAction {
@@ -184,8 +183,8 @@ export class ComponentLoader {
         })
     }
 
-    initLoginIDFieldAction(handler: LoginIDFieldEventHandler): LoginIDFieldAction {
-        return initLoginIDFieldAction(handler)
+    initLoginIDFieldAction(): LoginIDFieldAction {
+        return initLoginIDFieldAction()
     }
     initPasswordFieldAction(): PasswordFieldAction {
         return initPasswordFieldAction()

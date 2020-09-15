@@ -2,7 +2,7 @@ import { LoginIDFieldEvent } from "./data"
 import { InputValue } from "../../input/data"
 
 export interface LoginIDFieldAction {
-    initLoginIDField(): LoginIDField
+    initLoginIDField(handler: LoginIDFieldEventHandler): LoginIDField
 }
 
 export interface LoginIDField {

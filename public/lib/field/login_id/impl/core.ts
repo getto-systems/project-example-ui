@@ -4,19 +4,13 @@ import { LoginIDFieldError } from "../data"
 import { LoginID } from "../../../credential/data"
 import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../../input/data"
 
-export function initLoginIDFieldAction(handler: LoginIDFieldEventHandler): LoginIDFieldAction {
-    return new Action(handler)
+export function initLoginIDFieldAction(): LoginIDFieldAction {
+    return new Action()
 }
 
 class Action implements LoginIDFieldAction {
-    handler: LoginIDFieldEventHandler
-
-    constructor(handler: LoginIDFieldEventHandler) {
-        this.handler = handler
-    }
-
-    initLoginIDField(): LoginIDField {
-        return new Field(this.handler)
+    initLoginIDField(handler: LoginIDFieldEventHandler): LoginIDField {
+        return new Field(handler)
     }
 }
 
