@@ -1,4 +1,4 @@
-import { LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit } from "../../field/login_id/action"
+import { LoginIDFieldComponent } from "../../field/login_id/action"
 import { PasswordFieldComponent, PasswordFieldComponentEventInit } from "../../field/password/action"
 
 import { AuthComponentEvent } from "../../../auth/action"
@@ -19,7 +19,7 @@ import { Content } from "../../../input/data"
 
 // TODO loginID と password を fields にまとめたい
 export function initPasswordLoginComponent(
-    loginID: [LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit],
+    loginID: LoginIDFieldComponent,
     password: [PasswordFieldComponent, PasswordFieldComponentEventInit],
     action: PasswordLoginComponentAction,
 ): PasswordLoginComponent {
@@ -30,7 +30,7 @@ export function initPasswordLoginComponentEvent(authEvent: AuthComponentEvent): 
 }
 
 class Component implements PasswordLoginComponent {
-    loginID: [LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit]
+    loginID: LoginIDFieldComponent
     password: [PasswordFieldComponent, PasswordFieldComponentEventInit]
 
     action: PasswordLoginComponentAction
@@ -45,7 +45,7 @@ class Component implements PasswordLoginComponent {
     }
 
     constructor(
-        loginID: [LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit],
+        loginID: LoginIDFieldComponent,
         password: [PasswordFieldComponent, PasswordFieldComponentEventInit],
         action: PasswordLoginComponentAction,
     ) {
@@ -61,7 +61,7 @@ class Component implements PasswordLoginComponent {
             password: { input: { inputValue: "" }, valid: false },
         }
 
-        this.loginID[0].onChange((content: Content<LoginID>) => {
+        this.loginID.onContentChange((content: Content<LoginID>) => {
             this.content.loginID = content
         })
         this.password[0].onChange((content: Content<Password>) => {

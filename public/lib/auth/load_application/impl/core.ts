@@ -28,6 +28,7 @@ class Component implements LoadApplicationComponent {
     handler: LoadApplicationComponentEventHandler
     action: LoadApplicationComponentAction
 
+    // TODO いらない
     currentLocation: Readonly<Location>
 
     constructor(
