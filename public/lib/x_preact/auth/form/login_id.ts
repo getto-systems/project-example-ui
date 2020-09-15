@@ -1,5 +1,5 @@
 import { VNode } from "preact"
-import { useState, useEffect } from "preact/hooks"
+import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { LoginIDFieldComponent } from "../../../auth/field/login_id/action"
@@ -29,11 +29,15 @@ export function LoginIDForm(
 ): PreactComponent {
     return (props: Props): VNode => {
         const [state, setState] = useState(initialLoginIDFieldComponentState)
+        const input = useRef<HTMLInputElement>()
+
         useEffect(() => {
             component.init(setState)
 
             if (props.initial.hasValue) {
-                setInputValue("login-id", props.initial.value.inputValue)
+                if (input.current) {
+                    input.current.value = props.initial.value.inputValue
+                }
                 component.field.set(props.initial.value)
             }
 
@@ -43,13 +47,15 @@ export function LoginIDForm(
         }, [])
 
         return html`
-            <dl class="form ${state.result.valid ? "" : "form_error"}">
-                <dt class="form__header"><label for="login-id">ログインID</label></dt>
-                <dd class="form__field">
-                    <input type="text" class="input_fill" id="login-id" onInput=${onInput}/>
-                    ${error(state)}
-                </dd>
-            </dl>
+            <label>
+                <dl class="form ${state.result.valid ? "" : "form_error"}">
+                    <dt class="form__header">ログインID</dt>
+                    <dd class="form__field">
+                        <input type="text" class="input_fill" ref=${input} onInput=${onInput}/>
+                        ${error(state)}
+                    </dd>
+                </dl>
+            </label>
         `
 
         function onInput(e: InputEvent) {
@@ -70,12 +76,5 @@ export function LoginIDForm(
                 }
             })
         }
-    }
-}
-
-function setInputValue(id: string, value: string): void {
-    const input = document.getElementById(id)
-    if (input instanceof HTMLInputElement) {
-        input.value = value
     }
 }
