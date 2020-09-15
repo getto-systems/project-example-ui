@@ -2,9 +2,9 @@ import { VNode } from "preact"
 import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { PasswordFieldComponent, PasswordFieldComponentState } from "../../../auth/field/password/action"
+import { PasswordFieldComponent } from "../../../auth/field/password/action"
 
-import { initialPasswordFieldComponentState } from "../../../auth/field/password/data"
+import { initialPasswordFieldComponentState, PasswordFieldComponentState } from "../../../auth/field/password/data"
 
 import { PasswordView } from "../../../field/password/data"
 import { InputValue, InitialValue } from "../../../input/data"

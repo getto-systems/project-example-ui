@@ -1,4 +1,4 @@
-import { PasswordFieldAction, PasswordField, PasswordFieldEventHandler, PasswordFieldDeprecated, PasswordFieldEventPublisher } from "../action"
+import { PasswordFieldAction, PasswordField, PasswordFieldEventHandler } from "../action"
 
 import {
     PasswordFieldError,
@@ -18,9 +18,6 @@ export function initPasswordFieldAction(): PasswordFieldAction {
 class Action implements PasswordFieldAction {
     initPasswordField(handler: PasswordFieldEventHandler): PasswordField {
         return new Field(handler)
-    }
-    initPasswordFieldDeprecated(): PasswordFieldDeprecated {
-        return new FieldDeprecated()
     }
 }
 
@@ -69,52 +66,6 @@ class Field implements PasswordField {
         } else {
             return hidePassword
         }
-    }
-}
-
-class FieldDeprecated implements PasswordFieldDeprecated {
-    password: InputValue
-    visible: boolean
-
-    constructor() {
-        this.password = { inputValue: "" }
-        this.visible = false
-    }
-
-    set(event: PasswordFieldEventPublisher, input: InputValue): Content<Password> {
-        this.password = input
-        return this.validate(event)
-    }
-    show(event: PasswordFieldEventPublisher): void {
-        this.visible = true
-        this.validate(event)
-    }
-    hide(event: PasswordFieldEventPublisher): void {
-        this.visible = false
-        this.validate(event)
-    }
-    validate(event: PasswordFieldEventPublisher): Content<Password> {
-        const state = this.state()
-        event.updated(...state)
-        return this.content(state[0])
-    }
-
-    state(): [Valid<PasswordFieldError>, PasswordCharacter, PasswordView] {
-        const result = hasError(validatePassword(this.password.inputValue))
-        return [result, checkCharacter(this.password.inputValue), this.view()]
-    }
-    view(): PasswordView {
-        if (this.visible) {
-            return showPassword(this.password)
-        } else {
-            return hidePassword
-        }
-    }
-    content(result: Valid<PasswordFieldError>): Content<Password> {
-        if (!result.valid) {
-            return invalidContent(this.password)
-        }
-        return validContent(this.password, { password: this.password.inputValue })
     }
 }
 
