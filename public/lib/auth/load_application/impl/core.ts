@@ -1,10 +1,10 @@
 import {
-    LoadApplicationComponent,
     LoadApplicationComponentAction,
     LoadApplicationComponentEventHandler,
 } from "../action"
 
 import {
+    LoadApplicationComponent,
     LoadApplicationComponentState,
     LoadApplicationComponentEvent,
 } from "../data"
