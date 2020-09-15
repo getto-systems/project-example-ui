@@ -12,14 +12,16 @@ import { InputValue, Content, validContent, invalidContent, Valid, hasError } fr
 const PASSWORD_MAX_BYTES = 72
 
 export function initPasswordFieldAction(): PasswordFieldAction {
-    return {
-        initPasswordField(): PasswordField {
-            return new PasswordFieldImpl()
-        },
+    return new Action()
+}
+
+class Action implements PasswordFieldAction {
+    initPasswordField(): PasswordField {
+        return new Field()
     }
 }
 
-class PasswordFieldImpl implements PasswordField {
+class Field implements PasswordField {
     password: InputValue
     visible: boolean
 

@@ -1,9 +1,19 @@
-import { LoginIDFieldError } from "./data"
+import { LoginIDFieldEvent, LoginIDFieldError } from "./data"
 import { LoginID } from "../../credential/data"
 import { InputValue, Content, Valid } from "../../input/data"
 
 export interface LoginIDFieldAction {
+    initLoginIDField(): LoginIDField
     initLoginIDFieldDeprecated(): LoginIDFieldDeprecated
+}
+
+export interface LoginIDField {
+    set(input: InputValue): Promise<void>
+    validate(): Promise<void>
+}
+
+export interface LoginIDFieldEventHandler {
+    handleLoginIDFieldEvent(event: LoginIDFieldEvent): void
 }
 
 export interface LoginIDFieldDeprecated {

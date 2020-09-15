@@ -2,6 +2,7 @@ import {
     LoginIDFieldComponentAction,
     LoginIDFieldComponent,
     LoginIDFieldComponentState,
+    LoginIDFieldComponentEventHandler,
     LoginIDFieldComponentEvent,
     LoginIDFieldComponentEventInit,
     LoginIDFieldComponentStateHandler,
@@ -10,11 +11,14 @@ import {
 import { LoginIDFieldDeprecated } from "../../../../field/login_id/action"
 
 import { LoginID } from "../../../../credential/data"
-import { LoginIDFieldError } from "../../../../field/login_id/data"
+import { LoginIDFieldError, LoginIDFieldEvent } from "../../../../field/login_id/data"
 import { InputValue, Content, Valid } from "../../../../input/data"
 
 export function initLoginIDFieldComponent(action: LoginIDFieldComponentAction): LoginIDFieldComponent {
     return new Component(action.loginIDField.initLoginIDFieldDeprecated())
+}
+export function initLoginIDFieldComponentEventHandler(): LoginIDFieldComponentEventHandler {
+    return new ComponentEventHandler()
 }
 export function initLoginIDFieldComponentEvent(): LoginIDFieldComponentEventInit {
     return (stateChanged) => new ComponentEvent(stateChanged)
@@ -49,6 +53,24 @@ class Component implements LoginIDFieldComponent {
     }
 }
 
+class ComponentEventHandler implements LoginIDFieldComponentEventHandler {
+    holder: PublisherHolder<LoginIDFieldComponentState>
+
+    constructor() {
+        this.holder = { set: false }
+    }
+
+    publish(state: LoginIDFieldComponentState): void {
+        if (this.holder.set) {
+            this.holder.pub(state)
+        }
+    }
+
+    handleLoginIDFieldEvent(event: LoginIDFieldEvent): void {
+        this.publish({ type: "input-login-id", result: event.valid })
+    }
+}
+
 class ComponentEvent implements LoginIDFieldComponentEvent {
     stateChanged: LoginIDFieldComponentStateHandler
 
@@ -64,3 +86,11 @@ class ComponentEvent implements LoginIDFieldComponentEvent {
 type EventHolder<T> =
     Readonly<{ hasEvnt: false }> |
     Readonly<{ hasEvnt: true, event: T }>
+
+type PublisherHolder<T> =
+    Readonly<{ set: false }> |
+    Readonly<{ set: true, pub: Publisher<T> }>
+
+interface Publisher<T> {
+    (state: T): void
+}
