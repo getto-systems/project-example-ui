@@ -1,4 +1,4 @@
-import { LoginIDFieldComponent, LoginIDFieldComponentEventInit } from "../../field/login_id/action"
+import { LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit } from "../../field/login_id/action"
 import { PasswordFieldComponent, PasswordFieldComponentEventInit } from "../../field/password/action"
 
 import { AuthComponentEvent } from "../../../auth/action"
@@ -19,7 +19,7 @@ import { Content } from "../../../input/data"
 
 // TODO loginID と password を fields にまとめたい
 export function initPasswordLoginComponent(
-    loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit],
+    loginID: [LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit],
     password: [PasswordFieldComponent, PasswordFieldComponentEventInit],
     action: PasswordLoginComponentAction,
 ): PasswordLoginComponent {
@@ -30,7 +30,7 @@ export function initPasswordLoginComponentEvent(authEvent: AuthComponentEvent): 
 }
 
 class Component implements PasswordLoginComponent {
-    loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit]
+    loginID: [LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit]
     password: [PasswordFieldComponent, PasswordFieldComponentEventInit]
 
     action: PasswordLoginComponentAction
@@ -45,7 +45,7 @@ class Component implements PasswordLoginComponent {
     }
 
     constructor(
-        loginID: [LoginIDFieldComponent, LoginIDFieldComponentEventInit],
+        loginID: [LoginIDFieldComponentDeprecated, LoginIDFieldComponentEventInit],
         password: [PasswordFieldComponent, PasswordFieldComponentEventInit],
         action: PasswordLoginComponentAction,
     ) {
