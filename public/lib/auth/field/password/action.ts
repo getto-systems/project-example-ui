@@ -1,4 +1,4 @@
-import { PasswordFieldAction, PasswordFieldEventPublisher } from "../../../field/password/action"
+import { PasswordField, PasswordFieldAction, PasswordFieldEventPublisher } from "../../../field/password/action"
 
 import { PasswordError, PasswordCharacter, PasswordView } from "../../../field/password/data"
 import { Password } from "../../../password/data"
@@ -6,6 +6,14 @@ import { InputValue, Content, Valid } from "../../../input/data"
 
 export interface PasswordFieldComponentAction {
     passwordField: PasswordFieldAction
+}
+
+export interface PasswordFieldComponent {
+    onContentChange(contentChanged: Publisher<Content<Password>>): void
+    init(stateChanged: Publisher<PasswordFieldComponentState>): void
+    terminate(): void
+
+    field: PasswordField
 }
 
 export interface PasswordFieldComponentDeprecated {
@@ -34,4 +42,8 @@ export interface PasswordFieldComponentStateHandler {
 
 export interface PasswordContentHandler {
     (content: Content<Password>): void
+}
+
+interface Publisher<T> {
+    (state: T): void
 }

@@ -50,8 +50,8 @@ class Field implements PasswordField {
         this.validate()
     }
     validate(): void {
-        const [content, valid, character, view] = this.content()
-        this.handler.handlePasswordFieldEvent({ type: "succeed-to-update-login-id", valid, content, character, view })
+        const [content, result, character, view] = this.content()
+        this.handler.handlePasswordFieldEvent({ type: "succeed-to-update-login-id", result, content, character, view })
     }
 
     content(): [Content<Password>, Valid<PasswordFieldError>, PasswordCharacter, PasswordView] {
