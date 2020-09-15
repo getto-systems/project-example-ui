@@ -1,4 +1,4 @@
-import { AuthComponentEvent } from "../../../auth/action"
+import { AuthComponentEventPublisher } from "../../../auth/action"
 import {
     RenewComponentAction,
     RenewComponent,
@@ -13,7 +13,7 @@ import { RenewError, StoreError } from "../../../credential/data"
 export function initRenewComponent(action: RenewComponentAction): RenewComponent {
     return new Component(action)
 }
-export function initRenewComponentEvent(authEvent: AuthComponentEvent): RenewComponentEventInit {
+export function initRenewComponentEvent(authEvent: AuthComponentEventPublisher): RenewComponentEventInit {
     return (stateChanged) => new ComponentEvent(authEvent, stateChanged)
 }
 
@@ -37,10 +37,10 @@ class Component implements RenewComponent {
 }
 
 class ComponentEvent implements RenewComponentEvent {
-    authEvent: AuthComponentEvent
+    authEvent: AuthComponentEventPublisher
     stateChanged: RenewComponentStateHandler
 
-    constructor(authEvent: AuthComponentEvent, stateChanged: RenewComponentStateHandler) {
+    constructor(authEvent: AuthComponentEventPublisher, stateChanged: RenewComponentStateHandler) {
         this.authEvent = authEvent
         this.stateChanged = stateChanged
     }

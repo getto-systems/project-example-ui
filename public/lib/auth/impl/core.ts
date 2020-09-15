@@ -1,21 +1,21 @@
 import {
-    AuthComponent,
+    AuthComponentDeprecated,
     AuthComponentState,
-    AuthComponentEvent,
+    AuthComponentEventPublisher,
     AuthComponentEventInit,
     AuthComponentStateHandler,
 } from "../action"
 
 import { AuthComponentError } from "../data"
 
-export function initAuthComponent(currentLocation: Readonly<Location>): AuthComponent {
+export function initAuthComponent(currentLocation: Readonly<Location>): AuthComponentDeprecated {
     return new Usecase(currentLocation)
 }
 export function initAuthComponentEvent(currentLocation: Readonly<Location>): AuthComponentEventInit {
     return (stateChanged) => new ComponentEvent(currentLocation, stateChanged)
 }
 
-class Usecase implements AuthComponent {
+class Usecase implements AuthComponentDeprecated {
     currentLocation: Readonly<Location>
 
     initialState: AuthComponentState = { type: "renew" }
@@ -25,7 +25,7 @@ class Usecase implements AuthComponent {
     }
 }
 
-class ComponentEvent implements AuthComponentEvent {
+class ComponentEvent implements AuthComponentEventPublisher {
     currentLocation: Readonly<Location>
     stateChanged: AuthComponentStateHandler
 
