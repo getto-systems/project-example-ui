@@ -22,20 +22,22 @@ export function initPasswordFieldAction(): PasswordFieldAction {
 }
 
 class Action implements PasswordFieldAction {
-    initPasswordField(): [PasswordField, PasswordFieldEventSubscriber] {
-        const pubsub = new EventPubSub()
-        return [new Field(pubsub), pubsub]
+    initPasswordField(): PasswordField {
+        return new Field()
     }
 }
 
 class Field implements PasswordField {
     pub: PasswordFieldEventPublisher
+    sub: PasswordFieldEventSubscriber
 
     password: InputValue
     visible: boolean
 
-    constructor(pub: PasswordFieldEventPublisher) {
-        this.pub = pub
+    constructor() {
+        const pubsub = new EventPubSub()
+        this.pub = pubsub
+        this.sub = pubsub
 
         this.password = { inputValue: "" }
         this.visible = false

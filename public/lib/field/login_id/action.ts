@@ -3,10 +3,11 @@ import { LoginIDFieldEvent } from "./data"
 import { InputValue, Content } from "../../input/data"
 
 export interface LoginIDFieldAction {
-    initLoginIDField(): [LoginIDField, LoginIDFieldEventSubscriber]
+    initLoginIDField(): LoginIDField
 }
 
 export interface LoginIDField {
+    sub: LoginIDFieldEventSubscriber
     set(input: InputValue): void
     validate(): void
 }

@@ -1,5 +1,5 @@
 import { PasswordFieldComponentAction } from "../action"
-import { PasswordField, PasswordFieldEventSubscriber } from "../../../../field/password/action"
+import { PasswordField } from "../../../../field/password/action"
 
 import { PasswordFieldComponent, PasswordFieldComponentState } from "../data"
 
@@ -8,23 +8,21 @@ import { Password } from "../../../../password/data"
 import { Content } from "../../../../input/data"
 
 export function initPasswordFieldComponent(action: PasswordFieldComponentAction): PasswordFieldComponent {
-    return new Component(...action.passwordField.initPasswordField())
+    return new Component(action.passwordField.initPasswordField())
 }
 
 class Component implements PasswordFieldComponent {
     field: PasswordField
-    sub: PasswordFieldEventSubscriber
 
-    constructor(field: PasswordField, sub: PasswordFieldEventSubscriber) {
+    constructor(field: PasswordField) {
         this.field = field
-        this.sub = sub
     }
 
     onContentChange(contentChanged: Publisher<Content<Password>>): void {
-        this.sub.onPasswordFieldContentChanged(contentChanged)
+        this.field.sub.onPasswordFieldContentChanged(contentChanged)
     }
     init(stateChanged: Publisher<PasswordFieldComponentState>): void {
-        this.sub.onPasswordFieldStateChanged((event) => {
+        this.field.sub.onPasswordFieldStateChanged((event) => {
             stateChanged(map(event))
 
             function map(event: PasswordFieldEvent): PasswordFieldComponentState {

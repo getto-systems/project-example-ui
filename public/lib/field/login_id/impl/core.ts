@@ -14,19 +14,21 @@ export function initLoginIDFieldAction(): LoginIDFieldAction {
 }
 
 class Action implements LoginIDFieldAction {
-    initLoginIDField(): [LoginIDField, LoginIDFieldEventSubscriber] {
-        const pubsub = new FieldEventPubSub()
-        return [new Field(pubsub), pubsub]
+    initLoginIDField(): LoginIDField {
+        return new Field()
     }
 }
 
 class Field implements LoginIDField {
     pub: LoginIDFieldEventPublisher
+    sub: LoginIDFieldEventSubscriber
 
     loginID: InputValue
 
-    constructor(pub: LoginIDFieldEventPublisher) {
-        this.pub = pub
+    constructor() {
+        const pubsub = new FieldEventPubSub()
+        this.pub = pubsub
+        this.sub = pubsub
 
         this.loginID = { inputValue: "" }
     }

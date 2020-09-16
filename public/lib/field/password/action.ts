@@ -3,10 +3,11 @@ import { PasswordFieldEvent } from "./data"
 import { InputValue, Content } from "../../input/data"
 
 export interface PasswordFieldAction {
-    initPasswordField(): [PasswordField, PasswordFieldEventSubscriber]
+    initPasswordField(): PasswordField
 }
 
 export interface PasswordField {
+    sub: PasswordFieldEventSubscriber
     set(input: InputValue): void
     show(): void
     hide(): void
