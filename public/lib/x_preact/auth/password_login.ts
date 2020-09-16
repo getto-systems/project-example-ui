@@ -3,8 +3,8 @@ import { useState } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { LoginView } from "./login_view"
-import { LoginIDForm } from "./form/login_id"
-import { PasswordForm } from "./form/password"
+import { LoginIDField } from "./field/login_id"
+import { PasswordField } from "./field/password"
 
 import {
     PasswordLoginComponent,
@@ -49,8 +49,8 @@ function initialLoginForm(component: PasswordLoginComponent, event: PasswordLogi
         <form onSubmit="${onSubmit}">
             <big>
                 <section class="login__body">
-                    <${LoginIDForm(component, component.loginID)} initial="${noValue}"/>
-                    <${PasswordForm(component, component.password)} initial="${noValue}"/>
+                    <${LoginIDField(component, component.loginID)} initial="${noValue}"/>
+                    <${PasswordField(component, component.password)} initial="${noValue}"/>
                 </section>
             </big>
             <big>
@@ -81,8 +81,8 @@ function failedToLoginForm(
         <form onSubmit="${onSubmit}">
             <big>
                 <section class="login__body">
-                    <${LoginIDForm(component, component.loginID)} initial="${hasValue(content.loginID)}"/>
-                    <${PasswordForm(component, component.password)} initial="${hasValue(content.password)}"/>
+                    <${LoginIDField(component, component.loginID)} initial="${hasValue(content.loginID)}"/>
+                    <${PasswordField(component, component.password)} initial="${hasValue(content.password)}"/>
                 </section>
             </big>
             <big>

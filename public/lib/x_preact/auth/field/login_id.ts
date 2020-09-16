@@ -26,7 +26,7 @@ interface SubmitHandler {
     (): Promise<void>
 }
 
-export function LoginIDForm(
+export function LoginIDField(
     formComponent: FormComponent,
     component: LoginIDFieldComponent,
 ): PreactComponent {

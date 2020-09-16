@@ -27,7 +27,7 @@ interface SubmitHandler {
     (): Promise<void>
 }
 
-export function PasswordForm(formComponent: FormComponent, component: PasswordFieldComponent): PreactComponent {
+export function PasswordField(formComponent: FormComponent, component: PasswordFieldComponent): PreactComponent {
     return (props: Props): VNode => {
         const [state, setState] = useState(initialPasswordFieldComponentState)
         const input = useRef<HTMLInputElement>()
