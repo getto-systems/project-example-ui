@@ -4,7 +4,7 @@ import { InputContent, LoginError } from "./data"
 import { Content } from "../field/data"
 
 export interface PasswordLoginAction {
-    login(event: LoginEventPublisher, content: [Content<LoginID>, Content<Password>]): Promise<LoginResult>
+    loginDeprecated(event: LoginEventPublisher, content: [Content<LoginID>, Content<Password>]): Promise<LoginResult>
 }
 
 export interface LoginEventPublisher {

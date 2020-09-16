@@ -18,7 +18,7 @@ class PasswordLoginActionImpl implements PasswordLoginAction {
         this.infra = infra
     }
 
-    async login(event: LoginEventPublisher, fields: [Content<LoginID>, Content<Password>]): Promise<LoginResult> {
+    async loginDeprecated(event: LoginEventPublisher, fields: [Content<LoginID>, Content<Password>]): Promise<LoginResult> {
         const content = mapContent(...fields)
         if (!content.valid) {
             event.failedToLogin(mapInput(...fields), { type: "validation-error" })
