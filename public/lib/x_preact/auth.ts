@@ -10,7 +10,6 @@ import { LoadApplication } from "./auth/load_application"
 import { PasswordLogin } from "./auth/password_login"
 
 import { ComponentLoader } from "../z_main/auth"
-import { newLoadApplicationComponent } from "../z_main/auth/worker/load_application"
 
 import { initialAuthUsecaseState } from "../auth/data"
 
@@ -18,7 +17,7 @@ render(h(main(), {}), document.body)
 
 function main() {
     const loader = new ComponentLoader()
-    const [usecase, handler] = loader.initAuthUsecase()
+    const usecase = loader.initAuthUsecase()
 
     return (): VNode => {
         const [state, setState] = useState(initialAuthUsecaseState)
@@ -40,10 +39,10 @@ function main() {
                 return h(StoreCredential(usecase.component.storeCredential, state.authCredential), {})
 
             case "load-application":
-                return h(LoadApplication(newLoadApplicationComponent()), {})
+                return h(LoadApplication(usecase.component.loadApplication), {})
 
             case "password-login":
-                return h(PasswordLogin(loader.initPasswordLoginComponent()), {})
+                return h(PasswordLogin(usecase.component.passwordLogin), {})
 
             case "password-reset-session":
                 //return h(PasswordReset(...state.init), {})

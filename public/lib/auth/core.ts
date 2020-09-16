@@ -58,6 +58,14 @@ class Usecase implements AuthUsecase {
                     return
             }
         })
+
+        this.component.passwordLogin.hook((state) => {
+            switch (state.type) {
+                case "succeed-to-login":
+                    this.storeCredential(state.authCredential)
+                    return
+            }
+        })
     }
 
     init(pub: Publisher<AuthUsecaseState>): void {

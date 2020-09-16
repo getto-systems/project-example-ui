@@ -4,13 +4,14 @@ import { LoginIDFieldComponent } from "../field/login_id/data"
 import { PasswordFieldComponent } from "../field/password/data"
 
 import { AuthCredential } from "../../credential/data"
-import { InputContent, LoginError } from "../../password_login/data"
+import { InputContent, LoginEvent, LoginError } from "../../password_login/data"
 
 export interface PasswordLoginComponentAction {
     passwordLogin: PasswordLoginAction
 }
 
 export interface PasswordLoginComponent {
+    hook(stateChanged: Publisher<LoginEvent>): void
     init(stateChanged: Publisher<PasswordLoginComponentState>): void
     terminate(): void
     trigger(operation: PasswordLoginComponentOperation): Promise<void>
