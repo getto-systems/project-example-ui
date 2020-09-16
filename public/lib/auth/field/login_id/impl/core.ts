@@ -6,7 +6,7 @@ import { LoginIDFieldComponent, LoginIDFieldComponentState } from "../data"
 
 import { LoginID } from "../../../../credential/data"
 import { LoginIDFieldEvent } from "../../../../field/login_id/data"
-import { Content } from "../../../../input/data"
+import { Content } from "../../../../field/data"
 
 export function initLoginIDFieldComponent(action: LoginIDFieldComponentAction): LoginIDFieldComponent {
     return new Component(action.loginIDField.initLoginIDField())

@@ -8,7 +8,7 @@ import {
 
 import { LoginID } from "../../credential/data"
 import { InputContent, Session, PollingStatusError } from "../data"
-import { Content } from "../../input/data"
+import { Content } from "../../field/data"
 
 export function initPasswordResetSessionAction(infra: Infra): PasswordResetSessionAction {
     return new PasswordResetSessionActionImpl(infra)

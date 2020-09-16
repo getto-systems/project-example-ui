@@ -8,7 +8,7 @@ import {
     initialLoginIDFieldComponentState,
 } from "../../../auth/field/login_id/data"
 
-import { InitialValue } from "../../../input/data"
+import { InitialValue } from "../../../field/data"
 
 interface PreactComponent {
     (props: Props): VNode

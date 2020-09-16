@@ -12,7 +12,7 @@ import {
     PasswordView, showPassword, hidePassword,
 } from "../data"
 import { Password } from "../../../password/data"
-import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../../input/data"
+import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../../field/data"
 
 // bcrypt を想定しているので、72 バイト以上のパスワードは無効
 const PASSWORD_MAX_BYTES = 72

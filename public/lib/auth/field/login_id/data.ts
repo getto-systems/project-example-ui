@@ -2,7 +2,7 @@ import { LoginIDField } from "../../../field/login_id/action"
 
 import { LoginIDFieldError } from "../../../field/login_id/data"
 import { LoginID } from "../../../credential/data"
-import { Valid, Content } from "../../../input/data"
+import { Valid, Content } from "../../../field/data"
 
 export interface LoginIDFieldComponent {
     onContentChange(contentChanged: Publisher<Content<LoginID>>): void
