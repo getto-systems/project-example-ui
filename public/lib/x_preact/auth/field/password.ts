@@ -19,15 +19,7 @@ type Props = {
     initial: InitialValue,
 }
 
-interface FormComponent {
-    onSubmit(handler: SubmitHandler): void
-}
-
-interface SubmitHandler {
-    (): Promise<void>
-}
-
-export function PasswordField(formComponent: FormComponent, component: PasswordFieldComponent): PreactComponent {
+export function PasswordField(component: PasswordFieldComponent): PreactComponent {
     return (props: Props): VNode => {
         const [state, setState] = useState(initialPasswordFieldComponentState)
         const input = useRef<HTMLInputElement>()
@@ -42,7 +34,7 @@ export function PasswordField(formComponent: FormComponent, component: PasswordF
                 component.field.set(props.initial.value)
             }
 
-            formComponent.onSubmit(async () => component.field.validate())
+            return () => component.terminate()
         }, [])
 
         return html`
