@@ -22,7 +22,7 @@ import { initSimulatePasswordResetClient } from "../password_reset/impl/client/p
 import { env } from "../y_static/env"
 
 import { initCredentialAction, initCredentialEventPubSub } from "../credential/impl/core"
-import { initRenewCredentialAction, initRenewCredentialEventPubSub } from "../renew_credential/impl/core"
+import { initRenewCredentialAction } from "../renew_credential/impl/core"
 import { initLoginIDFieldAction } from "../field/login_id/impl/core"
 import { initPasswordFieldAction } from "../field/password/impl/core"
 import { initPasswordLoginAction } from "../password_login/impl/core"
@@ -48,7 +48,7 @@ import { PasswordResetSessionComponentAction, PasswordResetSessionComponent, Pas
 import { PasswordResetComponentAction, PasswordResetComponent, PasswordResetComponentEventInit } from "../auth/password_reset/action"
 
 import { CredentialAction, CredentialEventPublisher } from "../credential/action"
-import { RenewCredentialAction, RenewCredentialEventPublisher } from "../renew_credential/action"
+import { RenewCredentialAction } from "../renew_credential/action"
 
 import { LoginIDFieldAction } from "../field/login_id/action"
 import { PasswordFieldAction } from "../field/password/action"
@@ -112,8 +112,7 @@ export class ComponentLoader {
         return initFetchCredentialComponent(sub, this.initFetchCredentialComponentAction(pub))
     }
     initRenewCredentialComponent(): RenewCredentialComponent {
-        const [pub, sub] = initRenewCredentialEventPubSub()
-        return initRenewCredentialComponent(sub, this.initRenewCredentialComponentAction(pub))
+        return initRenewCredentialComponent(this.initRenewCredentialComponentAction())
     }
     initStoreCredentialComponent(): StoreCredentialComponent {
         const [pub, sub] = initCredentialEventPubSub()
@@ -165,9 +164,9 @@ export class ComponentLoader {
             credential: this.initCredentialAction(pub),
         }
     }
-    initRenewCredentialComponentAction(pub: RenewCredentialEventPublisher): RenewCredentialComponentAction {
+    initRenewCredentialComponentAction(): RenewCredentialComponentAction {
         return {
-            renewCredential: this.initRenewCredentialAction(pub),
+            renewCredential: this.initRenewCredentialAction(),
         }
     }
     initStoreCredentialComponentAction(pub: CredentialEventPublisher): StoreCredentialComponentAction {
@@ -210,8 +209,8 @@ export class ComponentLoader {
             authCredentials: this.initAuthCredentialRepository(),
         })
     }
-    initRenewCredentialAction(pub: RenewCredentialEventPublisher): RenewCredentialAction {
-        return initRenewCredentialAction(pub, {
+    initRenewCredentialAction(): RenewCredentialAction {
+        return initRenewCredentialAction({
             timeConfig: this.config,
             renewClient: this.initRenewClient(),
         })

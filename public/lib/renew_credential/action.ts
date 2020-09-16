@@ -2,10 +2,9 @@ import { TicketNonce } from "../credential/data"
 import { RenewCredentialEvent } from "./data"
 
 export interface RenewCredentialAction {
+    sub: RenewCredentialEventSubscriber
     renewCredential(ticketNonce: TicketNonce): Promise<void>
 }
-
-export type RenewCredentialEventPubSub = [RenewCredentialEventPublisher, RenewCredentialEventSubscriber]
 
 export interface RenewCredentialEventPublisher {
     publishRenewCredentialEvent(event: RenewCredentialEvent): void

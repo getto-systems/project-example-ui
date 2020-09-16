@@ -2,7 +2,6 @@ import { Infra } from "../infra"
 
 import {
     RenewCredentialAction,
-    RenewCredentialEventPubSub,
     RenewCredentialEventPublisher,
     RenewCredentialEventSubscriber,
 } from "../action"
@@ -11,21 +10,22 @@ import { RenewCredentialEvent } from "../data"
 
 import { TicketNonce } from "../../credential/data"
 
-export function initRenewCredentialAction(pub: RenewCredentialEventPublisher, infra: Infra): RenewCredentialAction {
-    return new Action(pub, infra)
-}
-export function initRenewCredentialEventPubSub(): RenewCredentialEventPubSub {
-    const pubsub = new EventPubSub()
-    return [pubsub, pubsub]
+export function initRenewCredentialAction(infra: Infra): RenewCredentialAction {
+    return new Action(infra)
 }
 
 class Action implements RenewCredentialAction {
-    pub: RenewCredentialEventPublisher
     infra: Infra
 
-    constructor(pub: RenewCredentialEventPublisher, infra: Infra) {
-        this.pub = pub
+    pub: RenewCredentialEventPublisher
+    sub: RenewCredentialEventSubscriber
+
+    constructor(infra: Infra) {
         this.infra = infra
+
+        const pubsub = new EventPubSub()
+        this.pub = pubsub
+        this.sub = pubsub
     }
 
     async renewCredential(ticketNonce: TicketNonce): Promise<void> {

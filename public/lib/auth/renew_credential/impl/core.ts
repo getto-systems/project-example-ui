@@ -2,8 +2,6 @@ import {
     RenewCredentialComponentAction,
 } from "../action"
 
-import { RenewCredentialEventSubscriber } from "../../../renew_credential/action"
-
 import {
     RenewCredentialComponent,
     RenewCredentialComponentState,
@@ -13,21 +11,16 @@ import {
 import { TicketNonce } from "../../../credential/data"
 import { RenewCredentialEvent } from "../../../renew_credential/data"
 
-export function initRenewCredentialComponent(
-    sub: RenewCredentialEventSubscriber,
-    action: RenewCredentialComponentAction,
-): RenewCredentialComponent {
-    return new Component(sub, action)
+export function initRenewCredentialComponent(action: RenewCredentialComponentAction): RenewCredentialComponent {
+    return new Component(action)
 }
 
 class Component implements RenewCredentialComponent {
     holder: PublisherHolder<RenewCredentialEvent>
-    sub: RenewCredentialEventSubscriber
     action: RenewCredentialComponentAction
 
-    constructor(sub: RenewCredentialEventSubscriber, action: RenewCredentialComponentAction) {
+    constructor(action: RenewCredentialComponentAction) {
         this.holder = { set: false }
-        this.sub = sub
         this.action = action
     }
 
@@ -35,7 +28,7 @@ class Component implements RenewCredentialComponent {
         this.holder = { set: true, pub }
     }
     init(stateChanged: Publisher<RenewCredentialComponentState>): void {
-        this.sub.onRenewCredential((event) => {
+        this.action.renewCredential.sub.onRenewCredential((event) => {
             if (this.holder.set) {
                 this.holder.pub(event)
             }
