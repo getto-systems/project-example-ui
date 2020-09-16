@@ -1,7 +1,7 @@
-import { TicketNonce, FetchEvent, FetchError } from "../../credential/data"
+import { TicketNonce, FetchError } from "../../credential/data"
 
 export interface FetchCredentialComponent {
-    hook(stateChanged: Publisher<FetchEvent>): void
+    hook(stateChanged: Publisher<FetchCredentialComponentState>): void
     init(stateChanged: Publisher<FetchCredentialComponentState>): void
     terminate(): void
     fetch(): Promise<void>

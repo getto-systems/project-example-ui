@@ -9,7 +9,7 @@ export function initStoreCredentialComponent(action: StoreCredentialComponentAct
 }
 
 class Component implements StoreCredentialComponent {
-    holder: PublisherHolder<StoreEvent>
+    holder: PublisherHolder<StoreCredentialComponentState>
     action: StoreCredentialComponentAction
 
     constructor(action: StoreCredentialComponentAction) {
@@ -17,15 +17,16 @@ class Component implements StoreCredentialComponent {
         this.action = action
     }
 
-    hook(pub: Publisher<StoreEvent>): void {
+    hook(pub: Publisher<StoreCredentialComponentState>): void {
         this.holder = { set: true, pub }
     }
     init(stateChanged: Publisher<StoreCredentialComponentState>): void {
         this.action.credential.sub.onStore((event) => {
+            const state = map(event)
             if (this.holder.set) {
-                this.holder.pub(event)
+                this.holder.pub(state)
             }
-            stateChanged(map(event))
+            stateChanged(state)
 
             function map(event: StoreEvent): StoreCredentialComponentState {
                 return event

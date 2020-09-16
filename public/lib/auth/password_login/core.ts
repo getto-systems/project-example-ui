@@ -17,12 +17,15 @@ export function initPasswordLoginComponent(
 ): PasswordLoginComponent {
     return new Component(action, field)
 }
+export function initPasswordLoginWorkerComponent(init: WorkerInit, field: PasswordLoginComponentField): PasswordLoginComponent {
+    return new WorkerComponent(init, field)
+}
 
 class Component implements PasswordLoginComponent {
     action: PasswordLoginComponentAction
     field: PasswordLoginComponentField
 
-    holder: PublisherHolder<LoginEvent>
+    holder: PublisherHolder<PasswordLoginComponentState>
 
     content: {
         loginID: Content<LoginID>
@@ -48,15 +51,16 @@ class Component implements PasswordLoginComponent {
         })
     }
 
-    hook(pub: Publisher<LoginEvent>): void {
+    hook(pub: Publisher<PasswordLoginComponentState>): void {
         this.holder = { set: true, pub }
     }
     init(stateChanged: Publisher<PasswordLoginComponentState>): void {
         this.action.passwordLogin.sub.onLoginEvent((event) => {
+            const state = map(event)
             if (this.holder.set) {
-                this.holder.pub(event)
+                this.holder.pub(state)
             }
-            stateChanged(map(event))
+            stateChanged(state)
 
             function map(event: LoginEvent): PasswordLoginComponentState {
                 return event
@@ -84,10 +88,68 @@ class Component implements PasswordLoginComponent {
     }
 }
 
+class WorkerComponent implements PasswordLoginComponent {
+    worker: WorkerHolder
+    holder: PublisherHolder<PasswordLoginComponentState>
+
+    field: PasswordLoginComponentField
+
+    constructor(init: WorkerInit, field: PasswordLoginComponentField) {
+        this.worker = { set: false, init }
+        this.holder = { set: false }
+
+        this.field = field
+    }
+
+    hook(pub: Publisher<PasswordLoginComponentState>): void {
+        this.holder = { set: true, pub }
+    }
+    init(stateChanged: Publisher<PasswordLoginComponentState>): void {
+        if (!this.worker.set) {
+            this.worker = {
+                set: true,
+                instance: this.initWorker(this.worker.init, (state) => {
+                    if (this.holder.set) {
+                        this.holder.pub(state)
+                    }
+                    stateChanged(state)
+                }),
+            }
+        }
+    }
+    initWorker(init: WorkerInit, stateChanged: Publisher<PasswordLoginComponentState>): Worker {
+        const worker = init()
+        worker.addEventListener("message", (event) => {
+            stateChanged(event.data)
+        })
+        return worker
+    }
+
+    terminate(): void {
+        if (this.worker.set) {
+            this.worker.instance.terminate()
+        }
+    }
+
+    async trigger(operation: PasswordLoginComponentOperation): Promise<void> {
+        if (this.worker.set) {
+            this.worker.instance.postMessage(operation)
+        }
+    }
+}
+
 type PublisherHolder<T> =
     Readonly<{ set: false }> |
     Readonly<{ set: true, pub: Publisher<T> }>
 
 interface Publisher<T> {
     (state: T): void
+}
+
+type WorkerHolder =
+    Readonly<{ set: false, init: WorkerInit }> |
+    Readonly<{ set: true, instance: Worker }>
+
+interface WorkerInit {
+    (): Worker
 }
