@@ -1,13 +1,13 @@
 import {
     LoadApplicationComponentAction,
-} from "../action"
+} from "./action"
 
 import {
     LoadApplicationComponent,
     LoadApplicationComponentState,
     LoadApplicationComponentOperation,
-} from "../data"
-import { PagePathname, ScriptEvent } from "../../../script/data"
+} from "./data"
+import { PagePathname, ScriptEvent } from "../../script/data"
 
 export function initLoadApplicationComponent(action: LoadApplicationComponentAction): LoadApplicationComponent {
     return new Component(action)

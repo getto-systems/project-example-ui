@@ -1,17 +1,17 @@
 import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_client"
 
-import { initAuthUsecase, initAuthUsecaseEventHandler } from "../auth/impl/core"
+import { initAuthUsecase, initAuthUsecaseEventHandler } from "../auth/core"
 
-import { initFetchCredentialComponent } from "../auth/fetch_credential/impl/core"
-import { initRenewCredentialComponent } from "../auth/renew_credential/impl/core"
-import { initStoreCredentialComponent } from "../auth/store_credential/impl/core"
+import { initFetchCredentialComponent } from "../auth/fetch_credential/core"
+import { initRenewCredentialComponent } from "../auth/renew_credential/core"
+import { initStoreCredentialComponent } from "../auth/store_credential/core"
 
-import { initLoginIDFieldComponent } from "../auth/field/login_id/impl/core"
-import { initPasswordFieldComponent } from "../auth/field/password/impl/core"
+import { initLoginIDFieldComponent } from "../auth/field/login_id/core"
+import { initPasswordFieldComponent } from "../auth/field/password/core"
 
-import { initPasswordLoginComponent, initPasswordLoginComponentEvent } from "../auth/password_login/impl/core"
-import { initPasswordResetComponent, initPasswordResetComponentEvent } from "../auth/password_reset/impl/core"
-import { initPasswordResetSessionComponent, initPasswordResetSessionComponentEvent } from "../auth/password_reset_session/impl/core"
+import { initPasswordLoginComponent, initPasswordLoginComponentEvent } from "../auth/password_login/core"
+import { initPasswordResetComponent, initPasswordResetComponentEvent } from "../auth/password_reset/core"
+import { initPasswordResetSessionComponent, initPasswordResetSessionComponentEvent } from "../auth/password_reset_session/core"
 
 import { initStorageAuthCredentialRepository } from "../credential/impl/repository/credential/storage"
 import { initFetchRenewClient } from "../renew_credential/impl/client/renew/fetch"

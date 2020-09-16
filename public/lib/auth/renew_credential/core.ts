@@ -1,15 +1,15 @@
 import {
     RenewCredentialComponentAction,
-} from "../action"
+} from "./action"
 
 import {
     RenewCredentialComponent,
     RenewCredentialComponentState,
     RenewCredentialComponentOperation,
-} from "../data"
+} from "./data"
 
-import { TicketNonce } from "../../../credential/data"
-import { RenewCredentialEvent } from "../../../renew_credential/data"
+import { TicketNonce } from "../../credential/data"
+import { RenewCredentialEvent } from "../../renew_credential/data"
 
 export function initRenewCredentialComponent(action: RenewCredentialComponentAction): RenewCredentialComponent {
     return new Component(action)

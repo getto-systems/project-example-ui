@@ -4,9 +4,9 @@ import {
     AuthComponent,
     AuthUsecaseEventHandler,
     AuthEvent,
-} from "../data"
+} from "./data"
 
-import { AuthCredential, TicketNonce } from "../../credential/data"
+import { AuthCredential, TicketNonce } from "../credential/data"
 
 export function initAuthUsecase(currentLocation: Readonly<Location>, component: AuthComponent): AuthUsecase {
     return new Usecase(currentLocation, component)

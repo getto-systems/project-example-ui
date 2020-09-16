@@ -1,11 +1,11 @@
-import { PasswordFieldComponentAction } from "../action"
-import { PasswordField } from "../../../../field/password/action"
+import { PasswordFieldComponentAction } from "./action"
+import { PasswordField } from "../../../field/password/action"
 
-import { PasswordFieldComponent, PasswordFieldComponentState } from "../data"
+import { PasswordFieldComponent, PasswordFieldComponentState } from "./data"
 
-import { PasswordFieldEvent } from "../../../../field/password/data"
-import { Password } from "../../../../password/data"
-import { Content } from "../../../../field/data"
+import { PasswordFieldEvent } from "../../../field/password/data"
+import { Password } from "../../../password/data"
+import { Content } from "../../../field/data"
 
 export function initPasswordFieldComponent(action: PasswordFieldComponentAction): PasswordFieldComponent {
     return new Component(action.passwordField.initPasswordField())

@@ -1,8 +1,8 @@
-import { FetchCredentialComponentAction } from "../action"
+import { FetchCredentialComponentAction } from "./action"
 
-import { FetchCredentialComponent, FetchCredentialComponentState } from "../data"
+import { FetchCredentialComponent, FetchCredentialComponentState } from "./data"
 
-import { FetchEvent } from "../../../credential/data"
+import { FetchEvent } from "../../credential/data"
 
 export function initFetchCredentialComponent(action: FetchCredentialComponentAction): FetchCredentialComponent {
     return new Component(action)
