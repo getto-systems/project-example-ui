@@ -1,39 +1,41 @@
 import { StoreCredentialComponentAction } from "../action"
+import { CredentialEventSubscriber } from "../../../credential/action"
 
-import { StoreCredentialComponent, StoreCredentialComponentState, StoreCredentialComponentEventHandler } from "../data"
+import { StoreCredentialComponent, StoreCredentialComponentState } from "../data"
 
-import { AuthCredential, FetchEvent, StoreEvent } from "../../../credential/data"
+import { AuthCredential, StoreEvent } from "../../../credential/data"
 
 export function initStoreCredentialComponent(
-    handler: StoreCredentialComponentEventHandler,
+    sub: CredentialEventSubscriber,
     action: StoreCredentialComponentAction,
 ): StoreCredentialComponent {
-    return new Component(handler, action)
-}
-export function initStoreCredentialComponentEventHandler(): StoreCredentialComponentEventHandler {
-    return new ComponentEventHandler()
+    return new Component(sub, action)
 }
 
 class Component implements StoreCredentialComponent {
-    holder: PublisherHolder<StoreCredentialComponentState>
-    handler: StoreCredentialComponentEventHandler
+    holder: PublisherHolder<StoreEvent>
+    sub: CredentialEventSubscriber
     action: StoreCredentialComponentAction
 
-    constructor(handler: StoreCredentialComponentEventHandler, action: StoreCredentialComponentAction) {
+    constructor(sub: CredentialEventSubscriber, action: StoreCredentialComponentAction) {
         this.holder = { set: false }
-        this.handler = handler
+        this.sub = sub
         this.action = action
     }
 
-    hook(pub: Publisher<StoreCredentialComponentState>): void {
+    hook(pub: Publisher<StoreEvent>): void {
         this.holder = { set: true, pub }
     }
     init(stateChanged: Publisher<StoreCredentialComponentState>): void {
-        this.handler.onStateChange((state) => {
+        this.sub.onStore((event) => {
             if (this.holder.set) {
-                this.holder.pub(state)
+                this.holder.pub(event)
             }
-            stateChanged(state)
+            stateChanged(map(event))
+
+            function map(event: StoreEvent): StoreCredentialComponentState {
+                return event
+            }
         })
     }
     terminate(): void {
@@ -41,31 +43,6 @@ class Component implements StoreCredentialComponent {
     }
     store(authCredential: AuthCredential): Promise<void> {
         return this.action.credential.store(authCredential)
-    }
-}
-
-class ComponentEventHandler implements StoreCredentialComponentEventHandler {
-    holder: PublisherHolder<StoreCredentialComponentState>
-
-    constructor() {
-        this.holder = { set: false }
-    }
-
-    onStateChange(pub: Publisher<StoreCredentialComponentState>): void {
-        this.holder = { set: true, pub }
-    }
-
-    handleFetchEvent(_event: FetchEvent): void {
-        // StoreComponent ではこのイベントは発生しない
-    }
-    handleStoreEvent(event: StoreEvent): void {
-        this.publish(event)
-    }
-
-    publish(state: StoreCredentialComponentState): void {
-        if (this.holder.set) {
-            this.holder.pub(state)
-        }
     }
 }
 

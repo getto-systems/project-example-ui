@@ -1,71 +1,48 @@
 import { FetchCredentialComponentAction } from "../action"
+import { CredentialEventSubscriber } from "../../../credential/action"
 
-import { FetchCredentialComponent, FetchCredentialComponentState, FetchCredentialComponentEventHandler } from "../data"
+import { FetchCredentialComponent, FetchCredentialComponentState } from "../data"
 
-import { FetchEvent, StoreEvent } from "../../../credential/data"
+import { FetchEvent } from "../../../credential/data"
 
 export function initFetchCredentialComponent(
-    handler: FetchCredentialComponentEventHandler,
+    sub: CredentialEventSubscriber,
     action: FetchCredentialComponentAction,
 ): FetchCredentialComponent {
-    return new Component(handler, action)
-}
-export function initFetchCredentialComponentEventHandler(): FetchCredentialComponentEventHandler {
-    return new ComponentEventHandler()
+    return new Component(sub, action)
 }
 
 class Component implements FetchCredentialComponent {
-    holder: PublisherHolder<FetchCredentialComponentState>
-    handler: FetchCredentialComponentEventHandler
+    holder: PublisherHolder<FetchEvent>
+    sub: CredentialEventSubscriber
     action: FetchCredentialComponentAction
 
-    constructor(handler: FetchCredentialComponentEventHandler, action: FetchCredentialComponentAction) {
+    constructor(sub: CredentialEventSubscriber, action: FetchCredentialComponentAction) {
         this.holder = { set: false }
-        this.handler = handler
+        this.sub = sub
         this.action = action
     }
 
-    hook(pub: Publisher<FetchCredentialComponentState>): void {
+    hook(pub: Publisher<FetchEvent>): void {
         this.holder = { set: true, pub }
     }
     init(stateChanged: Publisher<FetchCredentialComponentState>): void {
-        this.handler.onStateChange((state) => {
+        this.sub.onFetch((event) => {
             if (this.holder.set) {
-                this.holder.pub(state)
+                this.holder.pub(event)
             }
-            stateChanged(state)
+            stateChanged(map(event))
         })
+
+        function map(event: FetchEvent): FetchCredentialComponentState {
+            return event
+        }
     }
     terminate(): void {
         // terminate が必要な component とインターフェイスを合わせるために必要
     }
     fetch(): Promise<void> {
         return this.action.credential.fetch()
-    }
-}
-
-class ComponentEventHandler implements FetchCredentialComponentEventHandler {
-    holder: PublisherHolder<FetchCredentialComponentState>
-
-    constructor() {
-        this.holder = { set: false }
-    }
-
-    onStateChange(pub: Publisher<FetchCredentialComponentState>): void {
-        this.holder = { set: true, pub }
-    }
-
-    handleFetchEvent(event: FetchEvent): void {
-        this.publish(event)
-    }
-    handleStoreEvent(_event: StoreEvent): void {
-        // FetchComponent ではこのイベントは発生しない
-    }
-
-    publish(state: FetchCredentialComponentState): void {
-        if (this.holder.set) {
-            this.holder.pub(state)
-        }
     }
 }
 
