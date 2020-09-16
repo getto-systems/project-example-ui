@@ -6,16 +6,16 @@ import {
     PasswordLoginComponentEventInit,
     PasswordLoginComponentStateHandler,
     SubmitHandler,
-} from "../action"
+} from "./action"
 
-import { AuthUsecaseEventHandler } from "../../../auth/data"
-import { LoginIDFieldComponent } from "../../field/login_id/data"
-import { PasswordFieldComponent } from "../../field/password/data"
+import { AuthUsecaseEventHandler } from "../../auth/data"
+import { LoginIDFieldComponent } from "../field/login_id/data"
+import { PasswordFieldComponent } from "../field/password/data"
 
-import { LoginID, StoreError } from "../../../credential/data"
-import { Password } from "../../../password/data"
-import { InputContent, LoginError } from "../../../password_login/data"
-import { Content } from "../../../field/data"
+import { LoginID, StoreError } from "../../credential/data"
+import { Password } from "../../password/data"
+import { InputContent, LoginError } from "../../password_login/data"
+import { Content } from "../../field/data"
 
 // TODO loginID と password を fields にまとめたい
 export function initPasswordLoginComponent(

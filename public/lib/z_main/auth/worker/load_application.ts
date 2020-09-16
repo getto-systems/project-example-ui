@@ -1,4 +1,4 @@
-import { initLoadApplicationWorkerComponent } from "../../../auth/load_application/impl/core"
+import { initLoadApplicationWorkerComponent } from "../../../auth/load_application/core"
 
 import { LoadApplicationComponent } from "../../../auth/load_application/data"
 

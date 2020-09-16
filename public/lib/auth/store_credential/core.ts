@@ -1,8 +1,8 @@
-import { StoreCredentialComponentAction } from "../action"
+import { StoreCredentialComponentAction } from "./action"
 
-import { StoreCredentialComponent, StoreCredentialComponentState } from "../data"
+import { StoreCredentialComponent, StoreCredentialComponentState } from "./data"
 
-import { AuthCredential, StoreEvent } from "../../../credential/data"
+import { AuthCredential, StoreEvent } from "../../credential/data"
 
 export function initStoreCredentialComponent(action: StoreCredentialComponentAction): StoreCredentialComponent {
     return new Component(action)

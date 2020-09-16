@@ -1,6 +1,6 @@
 import { env } from "../../y_static/env"
 
-import { initLoadApplicationComponent } from "../../auth/load_application/impl/core"
+import { initLoadApplicationComponent } from "../../auth/load_application/core"
 
 import { initSimulateCheckClient } from "../../script/impl/client/check/simulate"
 import { initScriptAction } from "../../script/impl/core"
