@@ -1,13 +1,12 @@
 import { AuthCredential, FetchEvent, StoreEvent, StoreError } from "./data"
 
 export interface CredentialAction {
+    sub: CredentialEventSubscriber
     fetch(): Promise<void>
     store(authCredential: AuthCredential): Promise<void>
 
     storeDeprecated(event: StoreEventPublisher, authCredential: AuthCredential): Promise<void>
 }
-
-export type CredentialEventPubSub = [CredentialEventPublisher, CredentialEventSubscriber]
 
 export interface CredentialEventPublisher {
     publishFetchEvent(event: FetchEvent): void

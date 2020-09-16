@@ -1,25 +1,19 @@
 import { StoreCredentialComponentAction } from "../action"
-import { CredentialEventSubscriber } from "../../../credential/action"
 
 import { StoreCredentialComponent, StoreCredentialComponentState } from "../data"
 
 import { AuthCredential, StoreEvent } from "../../../credential/data"
 
-export function initStoreCredentialComponent(
-    sub: CredentialEventSubscriber,
-    action: StoreCredentialComponentAction,
-): StoreCredentialComponent {
-    return new Component(sub, action)
+export function initStoreCredentialComponent(action: StoreCredentialComponentAction): StoreCredentialComponent {
+    return new Component(action)
 }
 
 class Component implements StoreCredentialComponent {
     holder: PublisherHolder<StoreEvent>
-    sub: CredentialEventSubscriber
     action: StoreCredentialComponentAction
 
-    constructor(sub: CredentialEventSubscriber, action: StoreCredentialComponentAction) {
+    constructor(action: StoreCredentialComponentAction) {
         this.holder = { set: false }
-        this.sub = sub
         this.action = action
     }
 
@@ -27,7 +21,7 @@ class Component implements StoreCredentialComponent {
         this.holder = { set: true, pub }
     }
     init(stateChanged: Publisher<StoreCredentialComponentState>): void {
-        this.sub.onStore((event) => {
+        this.action.credential.sub.onStore((event) => {
             if (this.holder.set) {
                 this.holder.pub(event)
             }

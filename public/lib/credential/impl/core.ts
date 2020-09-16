@@ -2,7 +2,6 @@ import { Infra } from "../infra"
 
 import {
     CredentialAction,
-    CredentialEventPubSub,
     CredentialEventPublisher,
     CredentialEventSubscriber,
     StoreEventPublisher,
@@ -12,21 +11,22 @@ import { FetchEvent, StoreEvent } from "../data"
 
 import { AuthCredential } from "../data"
 
-export function initCredentialAction(pub: CredentialEventPublisher, infra: Infra): CredentialAction {
-    return new Action(pub, infra)
-}
-export function initCredentialEventPubSub(): CredentialEventPubSub {
-    const pubsub = new EventPubSub()
-    return [pubsub, pubsub]
+export function initCredentialAction(infra: Infra): CredentialAction {
+    return new Action(infra)
 }
 
 class Action implements CredentialAction {
-    pub: CredentialEventPublisher
     infra: Infra
 
-    constructor(pub: CredentialEventPublisher, infra: Infra) {
-        this.pub = pub
+    pub: CredentialEventPublisher
+    sub: CredentialEventSubscriber
+
+    constructor(infra: Infra) {
         this.infra = infra
+
+        const pubsub = new EventPubSub()
+        this.pub = pubsub
+        this.sub = pubsub
     }
 
     async fetch(): Promise<void> {

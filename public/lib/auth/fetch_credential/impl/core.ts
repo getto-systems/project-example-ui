@@ -1,25 +1,19 @@
 import { FetchCredentialComponentAction } from "../action"
-import { CredentialEventSubscriber } from "../../../credential/action"
 
 import { FetchCredentialComponent, FetchCredentialComponentState } from "../data"
 
 import { FetchEvent } from "../../../credential/data"
 
-export function initFetchCredentialComponent(
-    sub: CredentialEventSubscriber,
-    action: FetchCredentialComponentAction,
-): FetchCredentialComponent {
-    return new Component(sub, action)
+export function initFetchCredentialComponent(action: FetchCredentialComponentAction): FetchCredentialComponent {
+    return new Component(action)
 }
 
 class Component implements FetchCredentialComponent {
     holder: PublisherHolder<FetchEvent>
-    sub: CredentialEventSubscriber
     action: FetchCredentialComponentAction
 
-    constructor(sub: CredentialEventSubscriber, action: FetchCredentialComponentAction) {
+    constructor(action: FetchCredentialComponentAction) {
         this.holder = { set: false }
-        this.sub = sub
         this.action = action
     }
 
@@ -27,7 +21,7 @@ class Component implements FetchCredentialComponent {
         this.holder = { set: true, pub }
     }
     init(stateChanged: Publisher<FetchCredentialComponentState>): void {
-        this.sub.onFetch((event) => {
+        this.action.credential.sub.onFetch((event) => {
             if (this.holder.set) {
                 this.holder.pub(event)
             }
