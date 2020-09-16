@@ -13,7 +13,7 @@ import {
 } from "../../auth/password_login/action"
 
 import { InputContent, LoginError } from "../../password_login/data"
-import { hasValue, noValue } from "../../input/data"
+import { hasValue, noValue } from "../../field/data"
 
 interface PreactComponent {
     (): VNode

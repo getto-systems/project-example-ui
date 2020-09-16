@@ -7,7 +7,7 @@ import {
 
 import { LoginIDFieldEvent, LoginIDFieldError } from "../data"
 import { LoginID } from "../../../credential/data"
-import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../../input/data"
+import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../../field/data"
 
 export function initLoginIDFieldAction(): LoginIDFieldAction {
     return new Action()

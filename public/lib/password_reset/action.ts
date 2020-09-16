@@ -1,7 +1,7 @@
 import { LoginID, AuthCredential } from "../credential/data"
 import { Password } from "../password/data"
 import { InputContent, ResetError, ResetToken } from "./data"
-import { Content } from "../input/data"
+import { Content } from "../field/data"
 
 export interface PasswordResetAction {
     reset(event: ResetEvent, resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<ResetResult>

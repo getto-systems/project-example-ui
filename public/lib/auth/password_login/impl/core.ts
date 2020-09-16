@@ -15,7 +15,7 @@ import { PasswordFieldComponent } from "../../field/password/data"
 import { LoginID, StoreError } from "../../../credential/data"
 import { Password } from "../../../password/data"
 import { InputContent, LoginError } from "../../../password_login/data"
-import { Content } from "../../../input/data"
+import { Content } from "../../../field/data"
 
 // TODO loginID と password を fields にまとめたい
 export function initPasswordLoginComponent(

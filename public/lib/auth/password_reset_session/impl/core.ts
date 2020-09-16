@@ -11,7 +11,7 @@ import { LoginIDFieldComponent } from "../../field/login_id/data"
 
 import { LoginID } from "../../../credential/data"
 import { InputContent, SessionError, PollingStatusError, PollingStatus, DoneStatus } from "../../../password_reset_session/data"
-import { Content } from "../../../input/data"
+import { Content } from "../../../field/data"
 
 export function initPasswordResetSessionComponent(
     loginID: LoginIDFieldComponent,

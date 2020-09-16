@@ -1,6 +1,6 @@
 import { LoginID } from "../../credential/data"
 import { LoginIDFieldEvent } from "./data"
-import { InputValue, Content } from "../../input/data"
+import { InputValue, Content } from "../../field/data"
 
 export interface LoginIDFieldAction {
     initLoginIDField(): LoginIDField

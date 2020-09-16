@@ -4,7 +4,7 @@ import {
     Session, SessionError,
     PollingStatus, DoneStatus, PollingStatusError,
 } from "./data"
-import { Content } from "../input/data"
+import { Content } from "../field/data"
 
 export interface PasswordResetSessionAction {
     // TODO createSession を startSession にしたい

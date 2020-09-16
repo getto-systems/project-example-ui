@@ -14,7 +14,7 @@ import { PasswordFieldComponent } from "../../field/password/data"
 import { LoginID, StoreError } from "../../../credential/data"
 import { Password } from "../../../password/data"
 import { InputContent, ResetToken, ResetError } from "../../../password_reset/data"
-import { Content } from "../../../input/data"
+import { Content } from "../../../field/data"
 
 export function initPasswordResetComponent(
     loginID: LoginIDFieldComponent,

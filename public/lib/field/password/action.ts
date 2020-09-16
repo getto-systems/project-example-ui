@@ -1,6 +1,6 @@
 import { Password } from "../../password/data"
 import { PasswordFieldEvent } from "./data"
-import { InputValue, Content } from "../../input/data"
+import { InputValue, Content } from "../../field/data"
 
 export interface PasswordFieldAction {
     initPasswordField(): PasswordField

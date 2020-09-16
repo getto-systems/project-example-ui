@@ -5,7 +5,7 @@ import { PasswordLoginAction, LoginEvent, LoginResult } from "../action"
 import { LoginID } from "../../credential/data"
 import { Password } from "../../password/data"
 import { InputContent } from "../data"
-import { Content } from "../../input/data"
+import { Content } from "../../field/data"
 
 export function initPasswordLoginAction(infra: Infra): PasswordLoginAction {
     return new PasswordLoginActionImpl(infra)

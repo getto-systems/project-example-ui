@@ -1,5 +1,5 @@
 import { LoginID } from "../../credential/data"
-import { Valid, Content } from "../../input/data"
+import { Valid, Content } from "../../field/data"
 
 export type LoginIDFieldError = "empty"
 

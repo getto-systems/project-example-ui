@@ -9,7 +9,7 @@ import {
 } from "../../../auth/field/password/data"
 
 import { PasswordView } from "../../../field/password/data"
-import { InputValue, InitialValue } from "../../../input/data"
+import { InputValue, InitialValue } from "../../../field/data"
 
 interface PreactComponent {
     (props: Props): VNode
