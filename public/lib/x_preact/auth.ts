@@ -2,7 +2,9 @@ import { render, h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { Fetch } from "./auth/fetch"
 import { Renew } from "./auth/renew"
+import { Store } from "./auth/store"
 import { LoadApplication } from "./auth/load_application"
 
 import { PasswordLogin } from "./auth/password_login"
@@ -10,30 +12,34 @@ import { PasswordLogin } from "./auth/password_login"
 import { ComponentLoader } from "../z_main/auth"
 import { newLoadApplicationComponent } from "../z_main/auth/worker/load_application"
 
-import { initialAuthComponentState } from "../auth/data"
+import { initialAuthUsecaseState } from "../auth/data"
 
 render(h(main(), {}), document.body)
 
 function main() {
     const loader = new ComponentLoader()
-    const [component, handler] = loader.initAuthComponent()
+    const [usecase, handler] = loader.initAuthUsecase()
 
     return (): VNode => {
-        const [state, setState] = useState(initialAuthComponentState)
+        const [state, setState] = useState(initialAuthUsecaseState)
         useEffect(() => {
-            component.init(setState)
-            return () => component.terminate()
+            usecase.init(setState)
+            return () => usecase.terminate()
         })
 
+        // TODO useErrorBoundary とか使ってエラーの処理をする
+
         switch (state.type) {
+            case "fetch":
+                return h(Fetch(usecase.component.fetch), {})
+
             case "renew":
-                return h(Renew(
-                    loader.initRenewComponent(),
-                    loader.initRenewComponentEvent(handler),
-                ), {})
+                return h(Renew(usecase.component.renew, state.ticketNonce), {})
+
+            case "store":
+                return h(Store(usecase.component.store, state.authCredential), {})
 
             case "load-application":
-            case "store-credential":
                 return h(LoadApplication(newLoadApplicationComponent()), {})
 
             case "password-login":

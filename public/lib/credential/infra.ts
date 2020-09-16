@@ -13,16 +13,16 @@ export type Config = Readonly<{
 export type DelayTime = Readonly<{ delay_milli_second: number }>
 
 export interface AuthCredentialRepository {
-    findTicketNonce(): FindResponse<TicketNonce>
+    findTicketNonce(): FindResponse
     // TODO find api nonce を追加
     //findApiNonce(): ApiNonceFound
     storeAuthCredential(authCredential: AuthCredential): StoreResponse
 }
 
-export type FindResponse<T> =
+export type FindResponse =
     Readonly<{ success: false, err: StoreError }> |
     Readonly<{ success: true, found: false }> |
-    Readonly<{ success: true, found: true, content: T }>
+    Readonly<{ success: true, found: true, ticketNonce: TicketNonce }>
 
 export type StoreResponse =
     Readonly<{ success: false, err: StoreError }> |

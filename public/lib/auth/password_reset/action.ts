@@ -1,4 +1,4 @@
-import { CredentialAction, StoreEvent } from "../../credential/action"
+import { CredentialAction, StoreEventPublisher } from "../../credential/action"
 import { PasswordResetAction, ResetEvent } from "../../password_reset/action"
 
 import { LoginIDFieldComponent } from "../field/login_id/data"
@@ -28,7 +28,7 @@ export type PasswordResetComponentState =
     Readonly<{ type: "failed-to-reset", content: InputContent, err: ResetError }> |
     Readonly<{ type: "failed-to-store", err: StoreError }>
 
-export interface PasswordResetComponentEvent extends ResetEvent, StoreEvent { }
+export interface PasswordResetComponentEvent extends ResetEvent, StoreEventPublisher { }
 
 export interface PasswordResetComponentEventInit {
     (stateChanged: PasswordResetComponentStateHandler): PasswordResetComponentEvent

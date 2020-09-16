@@ -1,8 +1,10 @@
 import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_client"
 
-import { initAuthComponent, initAuthComponentEventHandler } from "../auth/impl/core"
+import { initAuthUsecase, initAuthUsecaseEventHandler } from "../auth/impl/core"
 
-import { initRenewComponentDeprecated, initRenewComponentEvent } from "../auth/renew/impl/core"
+import { initFetchComponent, initFetchComponentEventHandler } from "../auth/fetch/impl/core"
+import { initRenewComponent, initRenewComponentEventHandler } from "../auth/renew/impl/core"
+import { initStoreComponent, initStoreComponentEventHandler } from "../auth/store/impl/core"
 
 import { initLoginIDFieldComponent } from "../auth/field/login_id/impl/core"
 import { initPasswordFieldComponent } from "../auth/field/password/impl/core"
@@ -32,7 +34,9 @@ import { PasswordLoginClient } from "../password_login/infra"
 import { PasswordResetSessionClient } from "../password_reset_session/infra"
 import { PasswordResetClient } from "../password_reset/infra"
 
-import { RenewComponentAction, RenewComponentDeprecated, RenewComponentEventInit } from "../auth/renew/action"
+import { FetchComponentAction } from "../auth/fetch/action"
+import { RenewComponentAction } from "../auth/renew/action"
+import { StoreComponentAction } from "../auth/store/action"
 
 import { LoginIDFieldComponentAction } from "../auth/field/login_id/action"
 import { PasswordFieldComponentAction } from "../auth/field/password/action"
@@ -41,7 +45,7 @@ import { PasswordLoginComponentAction, PasswordLoginComponent, PasswordLoginComp
 import { PasswordResetSessionComponentAction, PasswordResetSessionComponent, PasswordResetSessionComponentEventInit } from "../auth/password_reset_session/action"
 import { PasswordResetComponentAction, PasswordResetComponent, PasswordResetComponentEventInit } from "../auth/password_reset/action"
 
-import { CredentialAction } from "../credential/action"
+import { CredentialAction, CredentialEventHandler } from "../credential/action"
 
 import { LoginIDFieldAction } from "../field/login_id/action"
 import { PasswordFieldAction } from "../field/password/action"
@@ -50,10 +54,14 @@ import { PasswordLoginAction } from "../password_login/action"
 import { PasswordResetSessionAction } from "../password_reset_session/action"
 import { PasswordResetAction } from "../password_reset/action"
 
-import { AuthComponent, AuthComponentEventHandler } from "../auth/data"
+import { AuthUsecase, AuthUsecaseEventHandler } from "../auth/data"
+import { FetchComponent, FetchComponentEventHandler } from "../auth/fetch/data"
+import { RenewComponent, RenewComponentEventHandler } from "../auth/renew/action"
+import { StoreComponent, StoreComponentEventHandler } from "../auth/store/data"
 import { LoginIDFieldComponent } from "../auth/field/login_id/data"
 import { PasswordFieldComponent } from "../auth/field/password/data"
 
+import { FetchEvent, RenewEvent, StoreEvent } from "../credential/data"
 import { ResetToken } from "../password_reset/data"
 
 export class ComponentLoader {
@@ -85,19 +93,29 @@ export class ComponentLoader {
         }
     }
 
-    initAuthComponent(): [AuthComponent, AuthComponentEventHandler] {
-        const handler = initAuthComponentEventHandler(this.currentLocation)
+    initAuthUsecase(): [AuthUsecase, AuthUsecaseEventHandler] {
+        const handler = initAuthUsecaseEventHandler(this.currentLocation)
         return [
-            initAuthComponent(handler),
+            initAuthUsecase(handler, {
+                fetch: this.initFetchComponent(),
+                renew: this.initRenewComponent(),
+                store: this.initStoreComponent(),
+            }),
             handler,
         ]
     }
 
-    initRenewComponent(): RenewComponentDeprecated {
-        return initRenewComponentDeprecated(this.initRenewComponentAction())
+    initFetchComponent(): FetchComponent {
+        const handler = initFetchComponentEventHandler()
+        return initFetchComponent(handler, this.initFetchComponentAction(handler))
     }
-    initRenewComponentEvent(handler: AuthComponentEventHandler): RenewComponentEventInit {
-        return initRenewComponentEvent(handler)
+    initRenewComponent(): RenewComponent {
+        const handler = initRenewComponentEventHandler()
+        return initRenewComponent(handler, this.initRenewComponentAction(handler))
+    }
+    initStoreComponent(): StoreComponent {
+        const handler = initStoreComponentEventHandler()
+        return initStoreComponent(handler, this.initStoreComponentAction(handler))
     }
 
     initPasswordLoginComponent(): PasswordLoginComponent {
@@ -107,7 +125,7 @@ export class ComponentLoader {
             this.initPasswordLoginComponentAction(),
         )
     }
-    initPasswordLoginComponentEvent(handler: AuthComponentEventHandler): PasswordLoginComponentEventInit {
+    initPasswordLoginComponentEvent(handler: AuthUsecaseEventHandler): PasswordLoginComponentEventInit {
         return initPasswordLoginComponentEvent(handler)
     }
 
@@ -129,7 +147,7 @@ export class ComponentLoader {
             resetToken,
         )
     }
-    initPasswordResetEvent(handler: AuthComponentEventHandler): PasswordResetComponentEventInit {
+    initPasswordResetEvent(handler: AuthUsecaseEventHandler): PasswordResetComponentEventInit {
         return initPasswordResetComponentEvent(handler)
     }
 
@@ -140,9 +158,19 @@ export class ComponentLoader {
         return initPasswordFieldComponent(this.initPasswordFieldComponentAction())
     }
 
-    initRenewComponentAction(): RenewComponentAction {
+    initFetchComponentAction(handler: FetchComponentEventHandler): FetchComponentAction {
         return {
-            credential: this.initCredentialAction(),
+            credential: this.initCredentialAction(handler),
+        }
+    }
+    initRenewComponentAction(handler: RenewComponentEventHandler): RenewComponentAction {
+        return {
+            credential: this.initCredentialAction(handler),
+        }
+    }
+    initStoreComponentAction(handler: StoreComponentEventHandler): StoreComponentAction {
+        return {
+            credential: this.initCredentialAction(handler),
         }
     }
 
@@ -159,7 +187,7 @@ export class ComponentLoader {
 
     initPasswordLoginComponentAction(): PasswordLoginComponentAction {
         return {
-            credential: this.initCredentialAction(),
+            credential: this.initCredentialAction(new NullCredentialEventHandler()),
             passwordLogin: this.initPasswordLoginAction(),
         }
     }
@@ -170,13 +198,13 @@ export class ComponentLoader {
     }
     initPasswordResetComponentAction(): PasswordResetComponentAction {
         return {
-            credential: this.initCredentialAction(),
+            credential: this.initCredentialAction(new NullCredentialEventHandler()),
             passwordReset: this.initPasswordResetAction(),
         }
     }
 
-    initCredentialAction(): CredentialAction {
-        return initCredentialAction({
+    initCredentialAction(handler: CredentialEventHandler): CredentialAction {
+        return initCredentialAction(handler, {
             config: this.config,
             authCredentials: this.initAuthCredentialRepository(),
             renewClient: this.initRenewClient(),
@@ -237,6 +265,12 @@ export class ComponentLoader {
         // TODO ちゃんとした実装を用意
         return initSimulateCheckClient({ success: true })
     }
+}
+
+class NullCredentialEventHandler implements CredentialEventHandler {
+    handleFetchEvent(_evnet: FetchEvent) { } // eslint-disable-line @typescript-eslint/no-empty-function
+    handleRenewEvent(_evnet: RenewEvent) { } // eslint-disable-line @typescript-eslint/no-empty-function
+    handleStoreEvent(_evnet: StoreEvent) { } // eslint-disable-line @typescript-eslint/no-empty-function
 }
 
 type Config = Readonly<{
