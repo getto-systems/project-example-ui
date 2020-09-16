@@ -34,10 +34,5 @@ export interface RenewClient {
 
 export type RenewResponse =
     Readonly<{ success: false, err: RenewError }> |
-    Readonly<{ success: true, authCredential: AuthCredential }>
-export function renewFailed(err: RenewError): RenewResponse {
-    return { success: false, err }
-}
-export function renewSuccess(authCredential: AuthCredential): RenewResponse {
-    return { success: true, authCredential }
-}
+    Readonly<{ success: true, hasCredential: false }> |
+    Readonly<{ success: true, hasCredential: true, authCredential: AuthCredential }>

@@ -37,6 +37,9 @@ class Usecase implements AuthUsecase {
     async store(authCredential: AuthCredential): Promise<void> {
         this.handler.handleAuthEvent({ type: "try-to-store", authCredential })
     }
+    async tryToLogin(): Promise<void> {
+        this.handler.handleAuthEvent({ type: "try-to-login" })
+    }
     async loadApplication(): Promise<void> {
         this.handler.handleAuthEvent({ type: "succeed-to-login" })
     }

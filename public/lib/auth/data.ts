@@ -14,6 +14,7 @@ export interface AuthUsecase {
 
     renew(ticketNonce: TicketNonce): Promise<void>
     store(authCredential: AuthCredential): Promise<void>
+    tryToLogin(): Promise<void>
     loadApplication(): Promise<void>
 }
 

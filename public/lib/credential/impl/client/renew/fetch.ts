@@ -1,4 +1,4 @@
-import { RenewClient, RenewResponse, renewSuccess, renewFailed } from "../../../infra"
+import { RenewClient, RenewResponse } from "../../../infra"
 
 import { TicketNonce } from "../../../../credential/data"
 
@@ -25,28 +25,34 @@ class FetchRenewClient implements RenewClient {
         try {
             const response = await this.client.renew({ nonce: ticketNonce.ticketNonce })
             if (response.success) {
-                return renewSuccess({
-                    ticketNonce: { ticketNonce: response.authCredential.ticketNonce },
-                    apiCredential: {
-                        apiRoles: { apiRoles: response.authCredential.apiCredential.apiRoles },
+                return {
+                    success: true,
+                    hasCredential: true,
+                    authCredential: {
+                        ticketNonce: { ticketNonce: response.authCredential.ticketNonce },
+                        apiCredential: {
+                            apiRoles: { apiRoles: response.authCredential.apiCredential.apiRoles },
+                        },
                     },
-                })
+                }
             } else {
                 switch (response.err.type) {
-                    case "bad-request":
                     case "invalid-ticket":
+                        return { success: true, hasCredential: false }
+
+                    case "bad-request":
                     case "server-error":
-                        return renewFailed({ type: response.err.type })
+                        return { success: false, err: { type: response.err.type } }
 
                     case "bad-response":
-                        return renewFailed({ type: "bad-response", err: response.err.err })
+                        return { success: false, err: { type: "bad-response", err: response.err.err } }
 
                     default:
-                        return renewFailed({ type: "infra-error", err: response.err.err })
+                        return { success: false, err: { type: "infra-error", err: response.err.err } }
                 }
             }
         } catch (err) {
-            return renewFailed({ type: "infra-error", err })
+            return { success: false, err: { type: "infra-error", err } }
         }
     }
 }

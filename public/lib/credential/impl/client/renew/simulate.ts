@@ -1,4 +1,4 @@
-import { RenewClient, RenewResponse, renewSuccess, renewFailed } from "../../../infra"
+import { RenewClient, RenewResponse } from "../../../infra"
 
 import { TicketNonce, ApiCredential } from "../../../../credential/data"
 
@@ -18,11 +18,15 @@ class SimulateRenewClient implements RenewClient {
 
     async renew(ticketNonce: TicketNonce): Promise<RenewResponse> {
         if (ticketNonce !== this.targetTicketNonce) {
-            return renewFailed({ type: "invalid-ticket" })
+            return { success: true, hasCredential: false }
         }
-        return renewSuccess({
-            ticketNonce: this.targetTicketNonce,
-            apiCredential: this.returnApiCredential,
-        })
+        return {
+            success: true,
+            hasCredential: true,
+            authCredential: {
+                ticketNonce: this.targetTicketNonce,
+                apiCredential: this.returnApiCredential,
+            },
+        }
     }
 }
