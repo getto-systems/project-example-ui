@@ -2,7 +2,7 @@ import { FetchCredentialComponentAction } from "../action"
 
 import { FetchCredentialComponent, FetchCredentialComponentState, FetchCredentialComponentEventHandler } from "../data"
 
-import { FetchEvent, RenewEvent, StoreEvent } from "../../../credential/data"
+import { FetchEvent, StoreEvent } from "../../../credential/data"
 
 export function initFetchCredentialComponent(
     handler: FetchCredentialComponentEventHandler,
@@ -47,9 +47,6 @@ class ComponentEventHandler implements FetchCredentialComponentEventHandler {
 
     handleFetchEvent(event: FetchEvent): void {
         this.publish(event)
-    }
-    handleRenewEvent(_event: RenewEvent): void {
-        // FetchComponent ではこのイベントは発生しない
     }
     handleStoreEvent(_event: StoreEvent): void {
         // FetchComponent ではこのイベントは発生しない

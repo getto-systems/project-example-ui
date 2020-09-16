@@ -2,7 +2,7 @@ import { Infra } from "../infra"
 
 import { CredentialAction, CredentialEventHandler, StoreEventPublisher } from "../action"
 
-import { AuthCredential, TicketNonce } from "../data"
+import { AuthCredential } from "../data"
 
 export function initCredentialAction(handler: CredentialEventHandler, infra: Infra): CredentialAction {
     return new Action(handler, infra)
@@ -29,23 +29,6 @@ class Action implements CredentialAction {
         }
         this.handler.handleFetchEvent({ type: "succeed-to-fetch", ticketNonce: found.ticketNonce })
     }
-    async renew(ticketNonce: TicketNonce): Promise<void> {
-        // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const response = await delayed(
-            this.infra.renewClient.renew(ticketNonce),
-            this.infra.config.renewDelayTime,
-            () => this.handler.handleRenewEvent({ type: "delayed-to-renew" }),
-        )
-        if (!response.success) {
-            this.handler.handleRenewEvent({ type: "failed-to-renew", err: response.err })
-            return
-        }
-        if (!response.hasCredential) {
-            this.handler.handleRenewEvent({ type: "require-login" })
-            return
-        }
-        this.handler.handleRenewEvent({ type: "succeed-to-renew", authCredential: response.authCredential })
-    }
     async store(authCredential: AuthCredential): Promise<void> {
         const response = this.infra.authCredentials.storeAuthCredential(authCredential)
         if (!response.success) {
@@ -64,26 +47,4 @@ class Action implements CredentialAction {
 
         event.succeedToStore()
     }
-}
-
-async function delayed<T>(promise: Promise<T>, time: DelayTime, handler: DelayedHandler): Promise<T> {
-    const DELAYED_MARKER = { DELAYED: true }
-    const delayed = new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(DELAYED_MARKER)
-        }, time.delay_milli_second)
-    })
-
-    const winner = await Promise.race([promise, delayed])
-    if (winner === DELAYED_MARKER) {
-        handler()
-    }
-
-    return await promise
-}
-
-type DelayTime = { delay_milli_second: number }
-
-interface DelayedHandler {
-    (): void
 }
