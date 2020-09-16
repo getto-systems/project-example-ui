@@ -1,8 +1,8 @@
-import { RenewCredentialError } from "../../renew_credential/data"
+import { RenewCredentialEvent, RenewCredentialError } from "../../renew_credential/data"
 import { AuthCredential, TicketNonce } from "../../credential/data"
 
 export interface RenewCredentialComponent {
-    hook(stateChanged: Publisher<RenewCredentialComponentState>): void
+    hook(stateChanged: Publisher<RenewCredentialEvent>): void
     init(stateChanged: Publisher<RenewCredentialComponentState>): void
     terminate(): void
     trigger(operation: RenewCredentialComponentOperation): Promise<void>

@@ -1,7 +1,7 @@
-import { AuthCredential, StoreError } from "../../credential/data"
+import { AuthCredential, StoreEvent, StoreError } from "../../credential/data"
 
 export interface StoreCredentialComponent {
-    hook(stateChanged: Publisher<StoreCredentialComponentState>): void
+    hook(stateChanged: Publisher<StoreEvent>): void
     init(stateChanged: Publisher<StoreCredentialComponentState>): void
     terminate(): void
     store(authCredential: AuthCredential): Promise<void>
