@@ -15,16 +15,26 @@ export function initStoreCredentialComponentEventHandler(): StoreCredentialCompo
 }
 
 class Component implements StoreCredentialComponent {
+    holder: PublisherHolder<StoreCredentialComponentState>
     handler: StoreCredentialComponentEventHandler
     action: StoreCredentialComponentAction
 
     constructor(handler: StoreCredentialComponentEventHandler, action: StoreCredentialComponentAction) {
+        this.holder = { set: false }
         this.handler = handler
         this.action = action
     }
 
+    hook(pub: Publisher<StoreCredentialComponentState>): void {
+        this.holder = { set: true, pub }
+    }
     init(stateChanged: Publisher<StoreCredentialComponentState>): void {
-        this.handler.onStateChange(stateChanged)
+        this.handler.onStateChange((state) => {
+            if (this.holder.set) {
+                this.holder.pub(state)
+            }
+            stateChanged(state)
+        })
     }
     terminate(): void {
         // terminate が必要な component とインターフェイスを合わせるために必要

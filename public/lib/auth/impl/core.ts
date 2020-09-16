@@ -22,6 +22,38 @@ class Usecase implements AuthUsecase {
     constructor(handler: AuthUsecaseEventHandler, component: AuthComponent) {
         this.handler = handler
         this.component = component
+
+        this.component.fetchCredential.hook((state) => {
+            switch (state.type) {
+                case "unauthorized":
+                    this.tryToLogin()
+                    return
+
+                case "succeed-to-fetch":
+                    this.renewCredential(state.ticketNonce)
+                    return
+            }
+        })
+
+        this.component.renewCredential.hook((state) => {
+            switch (state.type) {
+                case "unauthorized":
+                    this.tryToLogin()
+                    return
+
+                case "succeed-to-renew":
+                    this.storeCredential(state.authCredential)
+                    return
+            }
+        })
+
+        this.component.storeCredential.hook((state) => {
+            switch (state.type) {
+                case "succeed-to-store":
+                    this.loadApplication()
+                    return
+            }
+        })
     }
 
     init(stateChanged: Publisher<AuthUsecaseState>): void {

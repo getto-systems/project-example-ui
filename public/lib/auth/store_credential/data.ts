@@ -3,6 +3,7 @@ import { CredentialEventHandler } from "../../credential/action"
 import { AuthCredential, StoreError } from "../../credential/data"
 
 export interface StoreCredentialComponent {
+    hook(stateChanged: Publisher<StoreCredentialComponentState>): void
     init(stateChanged: Publisher<StoreCredentialComponentState>): void
     terminate(): void
     store(authCredential: AuthCredential): Promise<void>
