@@ -1,27 +1,31 @@
 import {
     AuthUsecase,
-    AuthUsecaseEventHandler,
     AuthUsecaseState,
     AuthComponent,
+    AuthUsecaseEventHandler,
     AuthEvent,
 } from "../data"
 
 import { AuthCredential, TicketNonce } from "../../credential/data"
 
-export function initAuthUsecase(handler: AuthUsecaseEventHandler, component: AuthComponent): AuthUsecase {
-    return new Usecase(handler, component)
+export function initAuthUsecase(currentLocation: Readonly<Location>, component: AuthComponent): AuthUsecase {
+    return new Usecase(currentLocation, component)
 }
 export function initAuthUsecaseEventHandler(currentLocation: Readonly<Location>): AuthUsecaseEventHandler {
     return new UsecaseEventHandler(currentLocation)
 }
 
 class Usecase implements AuthUsecase {
-    handler: AuthUsecaseEventHandler
+    holder: UsecasePublisherHolder
     component: AuthComponent
 
-    constructor(handler: AuthUsecaseEventHandler, component: AuthComponent) {
-        this.handler = handler
+    currentLocation: Readonly<Location>
+
+    constructor(currentLocation: Readonly<Location>, component: AuthComponent) {
+        this.holder = { set: false, stack: false }
         this.component = component
+
+        this.currentLocation = currentLocation
 
         this.component.fetchCredential.hook((state) => {
             switch (state.type) {
@@ -56,24 +60,35 @@ class Usecase implements AuthUsecase {
         })
     }
 
-    init(stateChanged: Publisher<AuthUsecaseState>): void {
-        this.handler.onStateChange(stateChanged)
+    init(pub: Publisher<AuthUsecaseState>): void {
+        if (this.holder.stack) {
+            pub(this.holder.state)
+        }
+        this.holder = { set: true, stack: false, pub }
     }
     terminate(): void {
         // terminate が必要な component とインターフェイスを合わせるために必要
     }
 
+    publish(state: AuthUsecaseState): void {
+        if (this.holder.set) {
+            this.holder.pub(state)
+        } else {
+            this.holder = { set: false, stack: true, state }
+        }
+    }
+
     async renewCredential(ticketNonce: TicketNonce): Promise<void> {
-        this.handler.handleAuthEvent({ type: "try-to-renew-credential", ticketNonce })
+        this.publish({ type: "renew-credential", ticketNonce })
     }
     async storeCredential(authCredential: AuthCredential): Promise<void> {
-        this.handler.handleAuthEvent({ type: "try-to-store-credential", authCredential })
+        this.publish({ type: "store-credential", authCredential })
     }
     async tryToLogin(): Promise<void> {
-        this.handler.handleAuthEvent({ type: "try-to-login" })
+        this.publish(loginState(this.currentLocation))
     }
     async loadApplication(): Promise<void> {
-        this.handler.handleAuthEvent({ type: "succeed-to-login" })
+        this.publish({ type: "load-application" })
     }
 }
 
@@ -118,6 +133,10 @@ class UsecaseEventHandler implements AuthUsecaseEventHandler {
     }
 }
 
+type PublisherHolder<T> =
+    Readonly<{ set: false }> |
+    Readonly<{ set: true, pub: Publisher<T> }>
+
 function loginState(currentLocation: Readonly<Location>): AuthUsecaseState {
     // ログイン前画面ではハッシュ部分を使用して画面の切り替えを行う
     const url = new URL(currentLocation.toString())
@@ -134,9 +153,10 @@ function loginState(currentLocation: Readonly<Location>): AuthUsecaseState {
     return { type: "password-login" }
 }
 
-type PublisherHolder<T> =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, pub: Publisher<T> }>
+type UsecasePublisherHolder =
+    Readonly<{ set: false, stack: false }> |
+    Readonly<{ set: false, stack: true, state: AuthUsecaseState }> |
+    Readonly<{ set: true, stack: false, pub: Publisher<AuthUsecaseState> }>
 
 interface Publisher<T> {
     (state: T): void

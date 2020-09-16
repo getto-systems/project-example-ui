@@ -97,14 +97,13 @@ export class ComponentLoader {
     }
 
     initAuthUsecase(): [AuthUsecase, AuthUsecaseEventHandler] {
-        const handler = initAuthUsecaseEventHandler(this.currentLocation)
         return [
-            initAuthUsecase(handler, {
+            initAuthUsecase(this.currentLocation, {
                 fetchCredential: this.initFetchCredentialComponent(),
                 renewCredential: this.initRenewCredentialComponent(),
                 storeCredential: this.initStoreCredentialComponent(),
             }),
-            handler,
+            initAuthUsecaseEventHandler(this.currentLocation),
         ]
     }
 
