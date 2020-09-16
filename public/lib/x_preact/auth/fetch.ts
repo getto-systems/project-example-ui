@@ -14,7 +14,8 @@ export interface PreactComponent {
 }
 
 export interface Next {
-    (ticketNonce: TicketNonce): void
+    tryToLogin(): void
+    renew(ticketNonce: TicketNonce): void
 }
 
 export function Fetch(component: FetchComponent, next: Next): PreactComponent {
@@ -34,8 +35,12 @@ export function Fetch(component: FetchComponent, next: Next): PreactComponent {
                 // TODO エラー画面を用意
                 return html`ERROR: ${state.err}`
 
+            case "require-login":
+                next.tryToLogin()
+                return html``
+
             case "succeed-to-fetch":
-                next(state.ticketNonce)
+                next.renew(state.ticketNonce)
                 return html``
         }
     }

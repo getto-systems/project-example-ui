@@ -24,7 +24,7 @@ class Action implements CredentialAction {
             return
         }
         if (!found.found) {
-            this.handler.handleFetchEvent({ type: "failed-to-fetch", err: { type: "ticket-nonce-not-found" } })
+            this.handler.handleFetchEvent({ type: "require-login" })
             return
         }
         this.handler.handleFetchEvent({ type: "succeed-to-fetch", ticketNonce: found.ticketNonce })

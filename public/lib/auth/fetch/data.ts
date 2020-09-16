@@ -11,6 +11,7 @@ export interface FetchComponent {
 export type FetchComponentState =
     Readonly<{ type: "initial-fetch" }> |
     Readonly<{ type: "failed-to-fetch", err: FetchError }> |
+    Readonly<{ type: "require-login" }> |
     Readonly<{ type: "succeed-to-fetch", ticketNonce: TicketNonce }>
 
 export const initialFetchComponentState: FetchComponentState = { type: "initial-fetch" }
