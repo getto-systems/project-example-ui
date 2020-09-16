@@ -2,9 +2,9 @@ import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_clien
 
 import { initAuthUsecase, initAuthUsecaseEventHandler } from "../auth/impl/core"
 
-import { initFetchCredentialComponent, initFetchCredentialComponentEventHandler } from "../auth/fetch_credential/impl/core"
+import { initFetchCredentialComponent } from "../auth/fetch_credential/impl/core"
 import { initRenewCredentialComponent } from "../auth/renew_credential/impl/core"
-import { initStoreCredentialComponent, initStoreCredentialComponentEventHandler } from "../auth/store_credential/impl/core"
+import { initStoreCredentialComponent } from "../auth/store_credential/impl/core"
 
 import { initLoginIDFieldComponent } from "../auth/field/login_id/impl/core"
 import { initPasswordFieldComponent } from "../auth/field/password/impl/core"
@@ -21,7 +21,7 @@ import { initSimulatePasswordResetSessionClient } from "../password_reset_sessio
 import { initSimulatePasswordResetClient } from "../password_reset/impl/client/password_reset/simulate"
 import { env } from "../y_static/env"
 
-import { initCredentialAction } from "../credential/impl/core"
+import { initCredentialAction, initCredentialEventPubSub } from "../credential/impl/core"
 import { initRenewCredentialAction, initRenewCredentialEventPubSub } from "../renew_credential/impl/core"
 import { initLoginIDFieldAction } from "../field/login_id/impl/core"
 import { initPasswordFieldAction } from "../field/password/impl/core"
@@ -47,7 +47,7 @@ import { PasswordLoginComponentAction, PasswordLoginComponent, PasswordLoginComp
 import { PasswordResetSessionComponentAction, PasswordResetSessionComponent, PasswordResetSessionComponentEventInit } from "../auth/password_reset_session/action"
 import { PasswordResetComponentAction, PasswordResetComponent, PasswordResetComponentEventInit } from "../auth/password_reset/action"
 
-import { CredentialAction, CredentialEventHandler } from "../credential/action"
+import { CredentialAction, CredentialEventPublisher } from "../credential/action"
 import { RenewCredentialAction, RenewCredentialEventPublisher } from "../renew_credential/action"
 
 import { LoginIDFieldAction } from "../field/login_id/action"
@@ -58,9 +58,9 @@ import { PasswordResetSessionAction } from "../password_reset_session/action"
 import { PasswordResetAction } from "../password_reset/action"
 
 import { AuthUsecase, AuthUsecaseEventHandler } from "../auth/data"
-import { FetchCredentialComponent, FetchCredentialComponentEventHandler } from "../auth/fetch_credential/data"
+import { FetchCredentialComponent } from "../auth/fetch_credential/data"
 import { RenewCredentialComponent } from "../auth/renew_credential/data"
-import { StoreCredentialComponent, StoreCredentialComponentEventHandler } from "../auth/store_credential/data"
+import { StoreCredentialComponent } from "../auth/store_credential/data"
 import { LoginIDFieldComponent } from "../auth/field/login_id/data"
 import { PasswordFieldComponent } from "../auth/field/password/data"
 
@@ -108,16 +108,16 @@ export class ComponentLoader {
     }
 
     initFetchCredentialComponent(): FetchCredentialComponent {
-        const handler = initFetchCredentialComponentEventHandler()
-        return initFetchCredentialComponent(handler, this.initFetchCredentialComponentAction(handler))
+        const [pub, sub] = initCredentialEventPubSub()
+        return initFetchCredentialComponent(sub, this.initFetchCredentialComponentAction(pub))
     }
     initRenewCredentialComponent(): RenewCredentialComponent {
         const [pub, sub] = initRenewCredentialEventPubSub()
         return initRenewCredentialComponent(sub, this.initRenewCredentialComponentAction(pub))
     }
     initStoreCredentialComponent(): StoreCredentialComponent {
-        const handler = initStoreCredentialComponentEventHandler()
-        return initStoreCredentialComponent(handler, this.initStoreCredentialComponentAction(handler))
+        const [pub, sub] = initCredentialEventPubSub()
+        return initStoreCredentialComponent(sub, this.initStoreCredentialComponentAction(pub))
     }
 
     initPasswordLoginComponent(): PasswordLoginComponent {
@@ -160,9 +160,9 @@ export class ComponentLoader {
         return initPasswordFieldComponent(this.initPasswordFieldComponentAction())
     }
 
-    initFetchCredentialComponentAction(handler: FetchCredentialComponentEventHandler): FetchCredentialComponentAction {
+    initFetchCredentialComponentAction(pub: CredentialEventPublisher): FetchCredentialComponentAction {
         return {
-            credential: this.initCredentialAction(handler),
+            credential: this.initCredentialAction(pub),
         }
     }
     initRenewCredentialComponentAction(pub: RenewCredentialEventPublisher): RenewCredentialComponentAction {
@@ -170,9 +170,9 @@ export class ComponentLoader {
             renewCredential: this.initRenewCredentialAction(pub),
         }
     }
-    initStoreCredentialComponentAction(handler: StoreCredentialComponentEventHandler): StoreCredentialComponentAction {
+    initStoreCredentialComponentAction(pub: CredentialEventPublisher): StoreCredentialComponentAction {
         return {
-            credential: this.initCredentialAction(handler),
+            credential: this.initCredentialAction(pub),
         }
     }
 
@@ -189,7 +189,7 @@ export class ComponentLoader {
 
     initPasswordLoginComponentAction(): PasswordLoginComponentAction {
         return {
-            credential: this.initCredentialAction(new NullCredentialEventHandler()),
+            credential: this.initCredentialAction(new NullCredentialEventPublisher()),
             passwordLogin: this.initPasswordLoginAction(),
         }
     }
@@ -200,13 +200,13 @@ export class ComponentLoader {
     }
     initPasswordResetComponentAction(): PasswordResetComponentAction {
         return {
-            credential: this.initCredentialAction(new NullCredentialEventHandler()),
+            credential: this.initCredentialAction(new NullCredentialEventPublisher()),
             passwordReset: this.initPasswordResetAction(),
         }
     }
 
-    initCredentialAction(handler: CredentialEventHandler): CredentialAction {
-        return initCredentialAction(handler, {
+    initCredentialAction(pub: CredentialEventPublisher): CredentialAction {
+        return initCredentialAction(pub, {
             authCredentials: this.initAuthCredentialRepository(),
         })
     }
@@ -273,9 +273,9 @@ export class ComponentLoader {
     }
 }
 
-class NullCredentialEventHandler implements CredentialEventHandler {
-    handleFetchEvent(_evnet: FetchEvent) { } // eslint-disable-line @typescript-eslint/no-empty-function
-    handleStoreEvent(_evnet: StoreEvent) { } // eslint-disable-line @typescript-eslint/no-empty-function
+class NullCredentialEventPublisher implements CredentialEventPublisher {
+    publishFetchEvent(_evnet: FetchEvent) { } // eslint-disable-line @typescript-eslint/no-empty-function
+    publishStoreEvent(_evnet: StoreEvent) { } // eslint-disable-line @typescript-eslint/no-empty-function
 }
 
 type Config = Readonly<{
