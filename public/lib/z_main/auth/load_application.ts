@@ -1,36 +1,21 @@
 import { env } from "../../y_static/env"
 
-import { initLoadApplicationComponent, initLoadApplicationComponentEventHandler } from "../../auth/load_application/impl/core"
+import { initLoadApplicationComponent } from "../../auth/load_application/impl/core"
 
 import { initSimulateCheckClient } from "../../script/impl/client/check/simulate"
 import { initScriptAction } from "../../script/impl/core"
 
 import { CheckClient } from "../../script/infra"
 
-import { LoadApplicationComponentAction, LoadApplicationComponentEventHandler } from "../../auth/load_application/action"
-
-import { ScriptAction } from "../../script/action"
-
 import { LoadApplicationComponent } from "../../auth/load_application/data"
 
-export function newLoadApplicationComponent(currentLocation: Readonly<Location>): LoadApplicationComponent {
-    const handler = initLoadApplicationComponentEventHandler()
-    return initLoadApplicationComponent(
-        handler,
-        newLoadApplicationComponentAction(handler),
-        currentLocation,
-    )
-}
-function newLoadApplicationComponentAction(handler: LoadApplicationComponentEventHandler): LoadApplicationComponentAction {
-    return {
-        script: newScriptAction(handler),
-    }
-}
-
-function newScriptAction(handler: LoadApplicationComponentEventHandler): ScriptAction {
-    return initScriptAction(handler, {
+export function newLoadApplicationComponent(): LoadApplicationComponent {
+    const [scriptAction, scriptSub] = initScriptAction({
         hostConfig: newHostConfig(),
         checkClient: newCheckClient(),
+    })
+    return initLoadApplicationComponent(scriptSub, {
+        script: scriptAction,
     })
 }
 

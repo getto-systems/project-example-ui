@@ -1,7 +1,8 @@
 import {
     LoadApplicationComponentAction,
-    LoadApplicationComponentEventHandler,
 } from "../action"
+
+import { ScriptEventSubscriber } from "../../../script/action"
 
 import {
     LoadApplicationComponent,
@@ -11,39 +12,35 @@ import {
 import { PagePathname, ScriptEvent } from "../../../script/data"
 
 export function initLoadApplicationComponent(
-    handler: LoadApplicationComponentEventHandler,
+    sub: ScriptEventSubscriber,
     action: LoadApplicationComponentAction,
-    currentLocation: Readonly<Location>,
 ): LoadApplicationComponent {
-    return new Component(handler, action, currentLocation)
+    return new Component(sub, action)
 }
 export function initLoadApplicationWorkerComponent(init: WorkerInit): LoadApplicationComponent {
     return new WorkerComponent(init)
 }
-export function initLoadApplicationComponentEventHandler(): LoadApplicationComponentEventHandler {
-    return new ComponentEventHandler()
-}
 
 class Component implements LoadApplicationComponent {
-    handler: LoadApplicationComponentEventHandler
+    sub: ScriptEventSubscriber
     action: LoadApplicationComponentAction
 
-    // TODO いらない
-    currentLocation: Readonly<Location>
-
     constructor(
-        handler: LoadApplicationComponentEventHandler,
+        sub: ScriptEventSubscriber,
         action: LoadApplicationComponentAction,
-        currentLocation: Readonly<Location>,
     ) {
-        this.handler = handler
-
+        this.sub = sub
         this.action = action
-        this.currentLocation = currentLocation
     }
 
     init(stateChanged: Publisher<LoadApplicationComponentState>): void {
-        this.handler.onStateChange(stateChanged)
+        this.sub.onScriptEvent((event) => {
+            stateChanged(map(event))
+
+            function map(event: ScriptEvent): LoadApplicationComponentState {
+                return event
+            }
+        })
     }
 
     terminate(): void {
@@ -57,28 +54,6 @@ class Component implements LoadApplicationComponent {
 
     async load(pagePathname: PagePathname): Promise<void> {
         await this.action.script.load(pagePathname)
-    }
-}
-
-class ComponentEventHandler implements LoadApplicationComponentEventHandler {
-    holder: PublisherHolder<LoadApplicationComponentState>
-
-    constructor() {
-        this.holder = { set: false }
-    }
-
-    onStateChange(pub: Publisher<LoadApplicationComponentState>): void {
-        this.holder = { set: true, pub }
-    }
-
-    handleScriptEvent(event: ScriptEvent): void {
-        this.publish(event)
-    }
-
-    publish(state: LoadApplicationComponentState): void {
-        if (this.holder.set) {
-            this.holder.pub(state)
-        }
     }
 }
 
@@ -114,10 +89,6 @@ class WorkerComponent implements LoadApplicationComponent {
         }
     }
 }
-
-type PublisherHolder<T> =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, pub: Publisher<T> }>
 
 interface Publisher<T> {
     (state: T): void
