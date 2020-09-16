@@ -48,15 +48,15 @@ class Component implements LoadApplicationComponent {
 }
 
 class WorkerComponent implements LoadApplicationComponent {
-    holder: WorkerHolder
+    worker: WorkerHolder
 
     constructor(init: WorkerInit) {
-        this.holder = { set: false, init }
+        this.worker = { set: false, init }
     }
 
     init(stateChanged: Publisher<LoadApplicationComponentState>): void {
-        if (!this.holder.set) {
-            this.holder = { set: true, worker: this.initWorker(this.holder.init, stateChanged) }
+        if (!this.worker.set) {
+            this.worker = { set: true, instance: this.initWorker(this.worker.init, stateChanged) }
         }
     }
     initWorker(init: WorkerInit, stateChanged: Publisher<LoadApplicationComponentState>): Worker {
@@ -68,14 +68,14 @@ class WorkerComponent implements LoadApplicationComponent {
     }
 
     terminate(): void {
-        if (this.holder.set) {
-            this.holder.worker.terminate()
+        if (this.worker.set) {
+            this.worker.instance.terminate()
         }
     }
 
     async trigger(operation: LoadApplicationComponentOperation): Promise<void> {
-        if (this.holder.set) {
-            this.holder.worker.postMessage(operation)
+        if (this.worker.set) {
+            this.worker.instance.postMessage(operation)
         }
     }
 }
@@ -86,7 +86,7 @@ interface Publisher<T> {
 
 type WorkerHolder =
     Readonly<{ set: false, init: WorkerInit }> |
-    Readonly<{ set: true, worker: Worker }>
+    Readonly<{ set: true, instance: Worker }>
 
 interface WorkerInit {
     (): Worker

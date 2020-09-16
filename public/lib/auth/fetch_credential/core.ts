@@ -9,7 +9,7 @@ export function initFetchCredentialComponent(action: FetchCredentialComponentAct
 }
 
 class Component implements FetchCredentialComponent {
-    holder: PublisherHolder<FetchEvent>
+    holder: PublisherHolder<FetchCredentialComponentState>
     action: FetchCredentialComponentAction
 
     constructor(action: FetchCredentialComponentAction) {
@@ -17,15 +17,16 @@ class Component implements FetchCredentialComponent {
         this.action = action
     }
 
-    hook(pub: Publisher<FetchEvent>): void {
+    hook(pub: Publisher<FetchCredentialComponentState>): void {
         this.holder = { set: true, pub }
     }
     init(stateChanged: Publisher<FetchCredentialComponentState>): void {
         this.action.credential.sub.onFetch((event) => {
+            const state = map(event)
             if (this.holder.set) {
-                this.holder.pub(event)
+                this.holder.pub(state)
             }
-            stateChanged(map(event))
+            stateChanged(state)
         })
 
         function map(event: FetchEvent): FetchCredentialComponentState {

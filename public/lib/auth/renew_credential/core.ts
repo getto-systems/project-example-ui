@@ -16,7 +16,7 @@ export function initRenewCredentialComponent(action: RenewCredentialComponentAct
 }
 
 class Component implements RenewCredentialComponent {
-    holder: PublisherHolder<RenewCredentialEvent>
+    holder: PublisherHolder<RenewCredentialComponentState>
     action: RenewCredentialComponentAction
 
     constructor(action: RenewCredentialComponentAction) {
@@ -24,15 +24,16 @@ class Component implements RenewCredentialComponent {
         this.action = action
     }
 
-    hook(pub: Publisher<RenewCredentialEvent>): void {
+    hook(pub: Publisher<RenewCredentialComponentState>): void {
         this.holder = { set: true, pub }
     }
     init(stateChanged: Publisher<RenewCredentialComponentState>): void {
         this.action.renewCredential.sub.onRenewCredential((event) => {
+            const state = map(event)
             if (this.holder.set) {
-                this.holder.pub(event)
+                this.holder.pub(state)
             }
-            stateChanged(map(event))
+            stateChanged(state)
         })
 
         function map(event: RenewCredentialEvent): RenewCredentialComponentState {
