@@ -10,12 +10,11 @@ import { CheckClient } from "../../script/infra"
 import { LoadApplicationComponent } from "../../auth/load_application/data"
 
 export function newLoadApplicationComponent(): LoadApplicationComponent {
-    const [scriptAction, scriptSub] = initScriptAction({
-        hostConfig: newHostConfig(),
-        checkClient: newCheckClient(),
-    })
-    return initLoadApplicationComponent(scriptSub, {
-        script: scriptAction,
+    return initLoadApplicationComponent({
+        script: initScriptAction({
+            hostConfig: newHostConfig(),
+            checkClient: newCheckClient(),
+        }),
     })
 }
 

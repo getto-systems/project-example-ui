@@ -1,6 +1,7 @@
 import { PagePathname, ScriptEvent } from "./data"
 
 export interface ScriptAction {
+    sub: ScriptEventSubscriber
     load(pagePathname: PagePathname): Promise<void>
 }
 

@@ -4,18 +4,22 @@ import { ScriptAction, ScriptEventPublisher, ScriptEventSubscriber } from "../ac
 
 import { PagePathname, ScriptPath, ScriptEvent } from "../data"
 
-export function initScriptAction(infra: Infra): [ScriptAction, ScriptEventSubscriber] {
-    const pubsub = new EventPubSub()
-    return [new Action(pubsub, infra), pubsub]
+export function initScriptAction(infra: Infra): ScriptAction {
+    return new Action(infra)
 }
 
 class Action implements ScriptAction {
-    pub: ScriptEventPublisher
     infra: Infra
 
-    constructor(pub: ScriptEventPublisher, infra: Infra) {
-        this.pub = pub
+    pub: ScriptEventPublisher
+    sub: ScriptEventSubscriber
+
+    constructor(infra: Infra) {
         this.infra = infra
+
+        const pubsub = new EventPubSub()
+        this.pub = pubsub
+        this.sub = pubsub
     }
 
     async load(pagePathname: PagePathname): Promise<void> {

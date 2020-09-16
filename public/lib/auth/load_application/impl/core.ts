@@ -2,8 +2,6 @@ import {
     LoadApplicationComponentAction,
 } from "../action"
 
-import { ScriptEventSubscriber } from "../../../script/action"
-
 import {
     LoadApplicationComponent,
     LoadApplicationComponentState,
@@ -11,30 +9,22 @@ import {
 } from "../data"
 import { PagePathname, ScriptEvent } from "../../../script/data"
 
-export function initLoadApplicationComponent(
-    sub: ScriptEventSubscriber,
-    action: LoadApplicationComponentAction,
-): LoadApplicationComponent {
-    return new Component(sub, action)
+export function initLoadApplicationComponent(action: LoadApplicationComponentAction): LoadApplicationComponent {
+    return new Component(action)
 }
 export function initLoadApplicationWorkerComponent(init: WorkerInit): LoadApplicationComponent {
     return new WorkerComponent(init)
 }
 
 class Component implements LoadApplicationComponent {
-    sub: ScriptEventSubscriber
     action: LoadApplicationComponentAction
 
-    constructor(
-        sub: ScriptEventSubscriber,
-        action: LoadApplicationComponentAction,
-    ) {
-        this.sub = sub
+    constructor(action: LoadApplicationComponentAction) {
         this.action = action
     }
 
     init(stateChanged: Publisher<LoadApplicationComponentState>): void {
-        this.sub.onScriptEvent((event) => {
+        this.action.script.sub.onScriptEvent((event) => {
             stateChanged(map(event))
 
             function map(event: ScriptEvent): LoadApplicationComponentState {
