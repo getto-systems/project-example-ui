@@ -1,26 +1,29 @@
-import { FetchComponentAction } from "../action"
+import { FetchCredentialComponentAction } from "../action"
 
-import { FetchComponent, FetchComponentState, FetchComponentEventHandler } from "../data"
+import { FetchCredentialComponent, FetchCredentialComponentState, FetchCredentialComponentEventHandler } from "../data"
 
 import { FetchEvent, RenewEvent, StoreEvent } from "../../../credential/data"
 
-export function initFetchComponent(handler: FetchComponentEventHandler, action: FetchComponentAction): FetchComponent {
+export function initFetchCredentialComponent(
+    handler: FetchCredentialComponentEventHandler,
+    action: FetchCredentialComponentAction,
+): FetchCredentialComponent {
     return new Component(handler, action)
 }
-export function initFetchComponentEventHandler(): FetchComponentEventHandler {
+export function initFetchCredentialComponentEventHandler(): FetchCredentialComponentEventHandler {
     return new ComponentEventHandler()
 }
 
-class Component implements FetchComponent {
-    handler: FetchComponentEventHandler
-    action: FetchComponentAction
+class Component implements FetchCredentialComponent {
+    handler: FetchCredentialComponentEventHandler
+    action: FetchCredentialComponentAction
 
-    constructor(handler: FetchComponentEventHandler, action: FetchComponentAction) {
+    constructor(handler: FetchCredentialComponentEventHandler, action: FetchCredentialComponentAction) {
         this.handler = handler
         this.action = action
     }
 
-    init(stateChanged: Publisher<FetchComponentState>): void {
+    init(stateChanged: Publisher<FetchCredentialComponentState>): void {
         this.handler.onStateChange(stateChanged)
     }
     terminate(): void {
@@ -31,14 +34,14 @@ class Component implements FetchComponent {
     }
 }
 
-class ComponentEventHandler implements FetchComponentEventHandler {
-    holder: PublisherHolder<FetchComponentState>
+class ComponentEventHandler implements FetchCredentialComponentEventHandler {
+    holder: PublisherHolder<FetchCredentialComponentState>
 
     constructor() {
         this.holder = { set: false }
     }
 
-    onStateChange(pub: Publisher<FetchComponentState>): void {
+    onStateChange(pub: Publisher<FetchCredentialComponentState>): void {
         this.holder = { set: true, pub }
     }
 
@@ -52,7 +55,7 @@ class ComponentEventHandler implements FetchComponentEventHandler {
         // FetchComponent ではこのイベントは発生しない
     }
 
-    publish(state: FetchComponentState): void {
+    publish(state: FetchCredentialComponentState): void {
         if (this.holder.set) {
             this.holder.pub(state)
         }

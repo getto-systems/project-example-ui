@@ -3,9 +3,9 @@ import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import {
-    FetchComponent,
-    initialFetchComponentState,
-} from "../../auth/fetch/data"
+    FetchCredentialComponent,
+    initialFetchCredentialComponentState,
+} from "../../auth/fetch_credential/data"
 
 import { TicketNonce } from "../../credential/data"
 
@@ -15,12 +15,12 @@ export interface PreactComponent {
 
 export interface Next {
     tryToLogin(): void
-    renew(ticketNonce: TicketNonce): void
+    renewCredential(ticketNonce: TicketNonce): void
 }
 
-export function Fetch(component: FetchComponent, next: Next): PreactComponent {
+export function FetchCredential(component: FetchCredentialComponent, next: Next): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(initialFetchComponentState)
+        const [state, setState] = useState(initialFetchCredentialComponentState)
         useEffect(() => {
             component.init(setState)
             component.fetch()
@@ -40,7 +40,7 @@ export function Fetch(component: FetchComponent, next: Next): PreactComponent {
                 return html``
 
             case "succeed-to-fetch":
-                next.renew(state.ticketNonce)
+                next.renewCredential(state.ticketNonce)
                 return html``
         }
     }

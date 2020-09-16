@@ -2,17 +2,17 @@ import { CredentialAction, CredentialEventHandler } from "../../credential/actio
 
 import { AuthCredential, TicketNonce, RenewError } from "../../credential/data"
 
-export interface RenewComponentAction {
+export interface RenewCredentialComponentAction {
     credential: CredentialAction,
 }
 
-export interface RenewComponent {
-    init(stateChanged: Publisher<RenewComponentState>): void
+export interface RenewCredentialComponent {
+    init(stateChanged: Publisher<RenewCredentialComponentState>): void
     terminate(): void
-    trigger(operation: RenewComponentOperation): Promise<void>
+    trigger(operation: RenewCredentialComponentOperation): Promise<void>
 }
 
-export type RenewComponentState =
+export type RenewCredentialComponentState =
     Readonly<{ type: "initial-renew" }> |
     Readonly<{ type: "try-to-renew" }> |
     Readonly<{ type: "delayed-to-renew" }> |
@@ -20,13 +20,13 @@ export type RenewComponentState =
     Readonly<{ type: "failed-to-renew", err: RenewError }> |
     Readonly<{ type: "succeed-to-renew", authCredential: AuthCredential }>
 
-export const initialRenewComponentState: RenewComponentState = { type: "initial-renew" }
+export const initialRenewCredentialComponentState: RenewCredentialComponentState = { type: "initial-renew" }
 
-export type RenewComponentOperation =
+export type RenewCredentialComponentOperation =
     Readonly<{ type: "renew", ticketNonce: TicketNonce }>
 
-export interface RenewComponentEventHandler extends CredentialEventHandler {
-    onStateChange(stateChanged: Publisher<RenewComponentState>): void
+export interface RenewCredentialComponentEventHandler extends CredentialEventHandler {
+    onStateChange(stateChanged: Publisher<RenewCredentialComponentState>): void
 }
 
 interface Publisher<T> {

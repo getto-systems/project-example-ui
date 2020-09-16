@@ -31,11 +31,11 @@ class Usecase implements AuthUsecase {
         // terminate が必要な component とインターフェイスを合わせるために必要
     }
 
-    async renew(ticketNonce: TicketNonce): Promise<void> {
-        this.handler.handleAuthEvent({ type: "try-to-renew", ticketNonce })
+    async renewCredential(ticketNonce: TicketNonce): Promise<void> {
+        this.handler.handleAuthEvent({ type: "try-to-renew-credential", ticketNonce })
     }
-    async store(authCredential: AuthCredential): Promise<void> {
-        this.handler.handleAuthEvent({ type: "try-to-store", authCredential })
+    async storeCredential(authCredential: AuthCredential): Promise<void> {
+        this.handler.handleAuthEvent({ type: "try-to-store-credential", authCredential })
     }
     async tryToLogin(): Promise<void> {
         this.handler.handleAuthEvent({ type: "try-to-login" })
@@ -65,11 +65,11 @@ class UsecaseEventHandler implements AuthUsecaseEventHandler {
     }
     map(event: AuthEvent): AuthUsecaseState {
         switch (event.type) {
-            case "try-to-renew":
-                return { type: "renew", ticketNonce: event.ticketNonce }
+            case "try-to-renew-credential":
+                return { type: "renew-credential", ticketNonce: event.ticketNonce }
 
-            case "try-to-store":
-                return { type: "store", authCredential: event.authCredential }
+            case "try-to-store-credential":
+                return { type: "store-credential", authCredential: event.authCredential }
 
             case "try-to-login":
                 return loginState(this.currentLocation)
