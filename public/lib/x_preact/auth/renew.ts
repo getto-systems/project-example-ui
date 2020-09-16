@@ -14,7 +14,8 @@ export interface PreactComponent {
 }
 
 export interface Next {
-    (authCredential: AuthCredential): void
+    tryToLogin(): void
+    loadApplication(authCredential: AuthCredential): void
 }
 
 export function Renew(component: RenewComponent, ticketNonce: TicketNonce, next: Next): PreactComponent {
@@ -48,8 +49,12 @@ export function Renew(component: RenewComponent, ticketNonce: TicketNonce, next:
                 // TODO エラー画面を用意
                 return html`ERROR: ${state.err}`
 
+            case "require-login":
+                next.tryToLogin()
+                return html``
+
             case "succeed-to-renew":
-                next(state.authCredential)
+                next.loadApplication(state.authCredential)
                 return html``
         }
     }

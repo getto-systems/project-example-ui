@@ -1,6 +1,6 @@
 import { Infra } from "../infra"
 
-import { CredentialAction, CredentialEventHandler, RenewResult, RenewEventPublisher, StoreEventPublisher } from "../action"
+import { CredentialAction, CredentialEventHandler, StoreEventPublisher } from "../action"
 
 import { AuthCredential, TicketNonce } from "../data"
 
@@ -40,6 +40,10 @@ class Action implements CredentialAction {
             this.handler.handleRenewEvent({ type: "failed-to-renew", err: response.err })
             return
         }
+        if (!response.hasCredential) {
+            this.handler.handleRenewEvent({ type: "require-login" })
+            return
+        }
         this.handler.handleRenewEvent({ type: "succeed-to-renew", authCredential: response.authCredential })
     }
     async store(authCredential: AuthCredential): Promise<void> {
@@ -49,29 +53,6 @@ class Action implements CredentialAction {
             return
         }
         this.handler.handleStoreEvent({ type: "succeed-to-store" })
-    }
-
-    async renewDeprecated(event: RenewEventPublisher): Promise<RenewResult> {
-        const findResponse = this.infra.authCredentials.findTicketNonce()
-        if (!findResponse.success) {
-            event.failedToRenew(findResponse.err)
-            return { success: false }
-        }
-
-        if (!findResponse.found) {
-            event.failedToRenew({ type: "ticket-nonce-not-found" })
-            return { success: false }
-        }
-
-        // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const promise = this.infra.renewClient.renew(findResponse.ticketNonce)
-        const response = await delayed(promise, this.infra.config.renewDelayTime, event.delayedToRenew)
-        if (!response.success) {
-            event.failedToRenew(response.err)
-            return { success: false }
-        }
-
-        return { success: true, authCredential: response.authCredential }
     }
 
     async storeDeprecated(event: StoreEventPublisher, authCredential: AuthCredential): Promise<void> {

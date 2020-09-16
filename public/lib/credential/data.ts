@@ -26,13 +26,12 @@ export type FetchError =
 export type RenewEvent =
     Readonly<{ type: "try-to-renew" }> |
     Readonly<{ type: "delayed-to-renew" }> |
+    Readonly<{ type: "require-login" }> |
     Readonly<{ type: "failed-to-renew", err: RenewError }> |
     Readonly<{ type: "succeed-to-renew", authCredential: AuthCredential }>
 
 export type RenewError =
-    Readonly<{ type: "ticket-nonce-not-found" }> |
     Readonly<{ type: "bad-request" }> |
-    Readonly<{ type: "invalid-ticket" }> |
     Readonly<{ type: "server-error" }> |
     Readonly<{ type: "bad-response", err: string }> |
     Readonly<{ type: "infra-error", err: string }>

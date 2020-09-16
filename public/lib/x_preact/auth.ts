@@ -36,8 +36,13 @@ function main() {
                 }), {})
 
             case "renew":
-                return h(Renew(usecase.component.renew, state.ticketNonce, (authCredential) => {
-                    usecase.store(authCredential)
+                return h(Renew(usecase.component.renew, state.ticketNonce, {
+                    tryToLogin() {
+                        usecase.tryToLogin()
+                    },
+                    loadApplication(authCredential) {
+                        usecase.store(authCredential)
+                    },
                 }), {})
 
             case "store":

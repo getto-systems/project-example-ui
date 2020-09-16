@@ -4,27 +4,15 @@ import {
     RenewComponentState,
     RenewComponentOperation,
     RenewComponentEventHandler,
-    RenewComponentDeprecated,
-    RenewComponentEventPublisher,
-    RenewComponentEventInit,
-    RenewComponentStateHandler,
 } from "../action"
 
-import { AuthUsecaseEventHandler } from "../../../auth/data"
-
-import { TicketNonce, FetchEvent, RenewEvent, StoreEvent, RenewError, StoreError } from "../../../credential/data"
+import { TicketNonce, FetchEvent, RenewEvent, StoreEvent } from "../../../credential/data"
 
 export function initRenewComponent(handler: RenewComponentEventHandler, action: RenewComponentAction): RenewComponent {
     return new Component(handler, action)
 }
 export function initRenewComponentEventHandler(): RenewComponentEventHandler {
     return new ComponentEventHandler()
-}
-export function initRenewComponentDeprecated(action: RenewComponentAction): RenewComponentDeprecated {
-    return new ComponentDeprecated(action)
-}
-export function initRenewComponentEvent(authEvent: AuthUsecaseEventHandler): RenewComponentEventInit {
-    return (stateChanged) => new ComponentEvent(authEvent, stateChanged)
 }
 
 class Component implements RenewComponent {
@@ -85,69 +73,4 @@ type PublisherHolder<T> =
 
 interface Publisher<T> {
     (state: T): void
-}
-
-class ComponentDeprecated implements RenewComponentDeprecated {
-    action: RenewComponentAction
-
-    initialState: RenewComponentState = { type: "initial-renew" }
-
-    constructor(action: RenewComponentAction) {
-        this.action = action
-    }
-
-    async renew(event: RenewComponentEventPublisher): Promise<void> {
-        const result = await this.action.credential.renewDeprecated(event)
-        if (!result.success) {
-            return
-        }
-
-        await this.action.credential.storeDeprecated(event, result.authCredential)
-    }
-}
-
-class ComponentEvent implements RenewComponentEventPublisher {
-    authEvent: AuthUsecaseEventHandler
-    stateChanged: RenewComponentStateHandler
-
-    constructor(authEvent: AuthUsecaseEventHandler, stateChanged: RenewComponentStateHandler) {
-        this.authEvent = authEvent
-        this.stateChanged = stateChanged
-    }
-
-    tryToRenew(): void {
-        this.stateChanged({ type: "try-to-renew" })
-    }
-    delayedToRenew(): void {
-        this.stateChanged({ type: "delayed-to-renew" })
-    }
-    failedToRenew(err: RenewError): void {
-        switch (err.type) {
-            case "ticket-nonce-not-found":
-            case "invalid-ticket":
-                this.authEvent.handleAuthEvent({ type: "try-to-login" })
-                return
-
-            case "bad-request":
-            case "server-error":
-            case "bad-response":
-            case "infra-error":
-                this.authEvent.handleAuthEvent({ type: "failed-to-login", err: { type: "renew", err } })
-                return
-
-            default:
-                return assertNever(err)
-        }
-    }
-
-    failedToStore(err: StoreError): void {
-        this.stateChanged({ type: "failed-to-renew", err })
-    }
-    succeedToStore(): void {
-        this.authEvent.handleAuthEvent({ type: "succeed-to-login" })
-    }
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER")
 }
