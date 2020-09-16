@@ -2,8 +2,7 @@ import { FetchCredentialComponent } from "./fetch_credential/data"
 import { RenewCredentialComponent } from "./renew_credential/action"
 import { StoreCredentialComponent } from "./store_credential/data"
 
-import { AuthCredential, TicketNonce, RenewError } from "../credential/data"
-import { CheckError } from "../script/data"
+import { AuthCredential, TicketNonce } from "../credential/data"
 import { ResetToken } from "../password_reset/data"
 
 export interface AuthUsecase {
@@ -25,14 +24,9 @@ export type AuthUsecaseState =
     Readonly<{ type: "load-application" }> |
     Readonly<{ type: "password-login" }> |
     Readonly<{ type: "password-reset-session" }> |
-    Readonly<{ type: "password-reset", resetToken: ResetToken }> |
-    Readonly<{ type: "error", err: AuthUsecaseError }>
+    Readonly<{ type: "password-reset", resetToken: ResetToken }>
 
 export const initialAuthUsecaseState: AuthUsecaseState = { type: "fetch-credential" }
-
-export type AuthUsecaseError =
-    Readonly<{ type: "renew", err: RenewError }> |
-    Readonly<{ type: "load", err: CheckError }>
 
 export interface AuthComponent {
     fetchCredential: FetchCredentialComponent
@@ -52,7 +46,6 @@ export type AuthEvent =
     Readonly<{ type: "try-to-renew-credential", ticketNonce: TicketNonce }> |
     Readonly<{ type: "try-to-store-credential", authCredential: AuthCredential }> |
     Readonly<{ type: "try-to-login" }> |
-    Readonly<{ type: "failed-to-login", err: AuthUsecaseError }> |
     Readonly<{ type: "succeed-to-login" }>
 
 interface Publisher<T> {
