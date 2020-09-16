@@ -1,6 +1,6 @@
 import { LoginIDFieldComponentAction } from "../action"
 
-import { LoginIDField, LoginIDFieldEventSubscriber } from "../../../../field/login_id/action"
+import { LoginIDField } from "../../../../field/login_id/action"
 
 import { LoginIDFieldComponent, LoginIDFieldComponentState } from "../data"
 
@@ -9,23 +9,21 @@ import { LoginIDFieldEvent } from "../../../../field/login_id/data"
 import { Content } from "../../../../input/data"
 
 export function initLoginIDFieldComponent(action: LoginIDFieldComponentAction): LoginIDFieldComponent {
-    return new Component(...action.loginIDField.initLoginIDField())
+    return new Component(action.loginIDField.initLoginIDField())
 }
 
 class Component implements LoginIDFieldComponent {
     field: LoginIDField
-    sub: LoginIDFieldEventSubscriber
 
-    constructor(field: LoginIDField, sub: LoginIDFieldEventSubscriber) {
+    constructor(field: LoginIDField) {
         this.field = field
-        this.sub = sub
     }
 
     onContentChange(contentChanged: Publisher<Content<LoginID>>): void {
-        this.sub.onLoginIDFieldContentChanged(contentChanged)
+        this.field.sub.onLoginIDFieldContentChanged(contentChanged)
     }
     init(stateChanged: Publisher<LoginIDFieldComponentState>): void {
-        this.sub.onLoginIDFieldStateChanged((event) => {
+        this.field.sub.onLoginIDFieldStateChanged((event) => {
             stateChanged(map(event))
 
             function map(event: LoginIDFieldEvent): LoginIDFieldComponentState {
