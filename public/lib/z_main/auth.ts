@@ -14,7 +14,7 @@ import { initPasswordResetComponent, initPasswordResetComponentEvent } from "../
 import { initPasswordResetSessionComponent, initPasswordResetSessionComponentEvent } from "../auth/password_reset_session/impl/core"
 
 import { initStorageAuthCredentialRepository } from "../credential/impl/repository/credential/storage"
-import { initFetchRenewClient } from "../credential/impl/client/renew/fetch"
+import { initFetchRenewClient } from "../renew_credential/impl/client/renew/fetch"
 import { initSimulateCheckClient } from "../script/impl/client/check/simulate"
 import { initFetchPasswordLoginClient } from "../password_login/impl/client/password_login/fetch"
 import { initSimulatePasswordResetSessionClient } from "../password_reset_session/impl/client/password_reset_session/simulate"
@@ -29,7 +29,8 @@ import { initPasswordLoginAction } from "../password_login/impl/core"
 import { initPasswordResetSessionAction } from "../password_reset_session/impl/core"
 import { initPasswordResetAction } from "../password_reset/impl/core"
 
-import { AuthCredentialRepository, RenewClient } from "../credential/infra"
+import { AuthCredentialRepository } from "../credential/infra"
+import { RenewClient } from "../renew_credential/infra"
 import { CheckClient } from "../script/infra"
 import { PasswordLoginClient } from "../password_login/infra"
 import { PasswordResetSessionClient } from "../password_reset_session/infra"
@@ -63,7 +64,7 @@ import { StoreCredentialComponent, StoreCredentialComponentEventHandler } from "
 import { LoginIDFieldComponent } from "../auth/field/login_id/data"
 import { PasswordFieldComponent } from "../auth/field/password/data"
 
-import { FetchEvent, RenewEvent, StoreEvent } from "../credential/data"
+import { FetchEvent, StoreEvent } from "../credential/data"
 import { ResetToken } from "../password_reset/data"
 
 export class ComponentLoader {
@@ -207,9 +208,7 @@ export class ComponentLoader {
 
     initCredentialAction(handler: CredentialEventHandler): CredentialAction {
         return initCredentialAction(handler, {
-            config: this.config,
             authCredentials: this.initAuthCredentialRepository(),
-            renewClient: this.initRenewClient(),
         })
     }
     initRenewCredentialAction(pub: RenewCredentialEventPublisher): RenewCredentialAction {
@@ -277,7 +276,6 @@ export class ComponentLoader {
 
 class NullCredentialEventHandler implements CredentialEventHandler {
     handleFetchEvent(_evnet: FetchEvent) { } // eslint-disable-line @typescript-eslint/no-empty-function
-    handleRenewEvent(_evnet: RenewEvent) { } // eslint-disable-line @typescript-eslint/no-empty-function
     handleStoreEvent(_evnet: StoreEvent) { } // eslint-disable-line @typescript-eslint/no-empty-function
 }
 
