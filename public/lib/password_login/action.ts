@@ -4,10 +4,10 @@ import { InputContent, LoginError } from "./data"
 import { Content } from "../field/data"
 
 export interface PasswordLoginAction {
-    login(event: LoginEvent, content: [Content<LoginID>, Content<Password>]): Promise<LoginResult>
+    login(event: LoginEventPublisher, content: [Content<LoginID>, Content<Password>]): Promise<LoginResult>
 }
 
-export interface LoginEvent {
+export interface LoginEventPublisher {
     tryToLogin(): void
     delayedToLogin(): void
     failedToLogin(content: InputContent, err: LoginError): void

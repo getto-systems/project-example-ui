@@ -1,6 +1,6 @@
 import { Infra } from "../infra"
 
-import { PasswordLoginAction, LoginEvent, LoginResult } from "../action"
+import { PasswordLoginAction, LoginEventPublisher, LoginResult } from "../action"
 
 import { LoginID } from "../../credential/data"
 import { Password } from "../../password/data"
@@ -18,7 +18,7 @@ class PasswordLoginActionImpl implements PasswordLoginAction {
         this.infra = infra
     }
 
-    async login(event: LoginEvent, fields: [Content<LoginID>, Content<Password>]): Promise<LoginResult> {
+    async login(event: LoginEventPublisher, fields: [Content<LoginID>, Content<Password>]): Promise<LoginResult> {
         const content = mapContent(...fields)
         if (!content.valid) {
             event.failedToLogin(mapInput(...fields), { type: "validation-error" })
