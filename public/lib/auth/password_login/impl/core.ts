@@ -8,7 +8,7 @@ import {
     SubmitHandler,
 } from "../action"
 
-import { AuthComponentEventHandler } from "../../../auth/data"
+import { AuthUsecaseEventHandler } from "../../../auth/data"
 import { LoginIDFieldComponent } from "../../field/login_id/data"
 import { PasswordFieldComponent } from "../../field/password/data"
 
@@ -25,7 +25,7 @@ export function initPasswordLoginComponent(
 ): PasswordLoginComponent {
     return new Component(loginID, password, action)
 }
-export function initPasswordLoginComponentEvent(authEvent: AuthComponentEventHandler): PasswordLoginComponentEventInit {
+export function initPasswordLoginComponentEvent(authEvent: AuthUsecaseEventHandler): PasswordLoginComponentEventInit {
     return (stateChanged) => new ComponentEvent(authEvent, stateChanged)
 }
 
@@ -84,15 +84,15 @@ class Component implements PasswordLoginComponent {
             return
         }
 
-        await this.action.credential.store(event, result.authCredential)
+        await this.action.credential.storeDeprecated(event, result.authCredential)
     }
 }
 
 class ComponentEvent implements PasswordLoginComponentEvent {
-    authEvent: AuthComponentEventHandler
+    authEvent: AuthUsecaseEventHandler
     stateChanged: PasswordLoginComponentStateHandler
 
-    constructor(authEvent: AuthComponentEventHandler, stateChanged: PasswordLoginComponentStateHandler) {
+    constructor(authEvent: AuthUsecaseEventHandler, stateChanged: PasswordLoginComponentStateHandler) {
         this.authEvent = authEvent
         this.stateChanged = stateChanged
     }

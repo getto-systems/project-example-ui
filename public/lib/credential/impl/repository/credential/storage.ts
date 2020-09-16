@@ -3,7 +3,7 @@ import { CredentialMessage } from "../../../../y_static/local_storage_pb.js"
 
 import { AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra"
 
-import { AuthCredential, TicketNonce } from "../../../data"
+import { AuthCredential } from "../../../data"
 
 export function initStorageAuthCredentialRepository(storage: Storage, key: string): AuthCredentialRepository {
     return new StorageAuthCredentialRepository(new AuthCredentialStorageImpl(storage, key))
@@ -16,14 +16,14 @@ class StorageAuthCredentialRepository implements AuthCredentialRepository {
         this.storage = storage
     }
 
-    findTicketNonce(): FindResponse<TicketNonce> {
+    findTicketNonce(): FindResponse {
         try {
             const authCredential = this.storage.getItem()
             if (!authCredential.found) {
                 return { success: true, found: false }
             }
 
-            return { success: true, found: true, content: authCredential.authCredential.ticketNonce }
+            return { success: true, found: true, ticketNonce: authCredential.authCredential.ticketNonce }
         } catch (err) {
             return { success: false, err: { type: "infra-error", err } }
         }

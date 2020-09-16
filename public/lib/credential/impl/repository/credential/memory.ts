@@ -18,8 +18,8 @@ class MemoryAuthCredentialRepository implements AuthCredentialRepository {
         }
     }
 
-    findTicketNonce(): FindResponse<TicketNonce> {
-        return { success: true, found: true, content: this.data.ticketNonce }
+    findTicketNonce(): FindResponse {
+        return { success: true, found: true, ticketNonce: this.data.ticketNonce }
     }
     storeAuthCredential(authCredential: AuthCredential): StoreResponse {
         this.data.ticketNonce = authCredential.ticketNonce

@@ -1,4 +1,4 @@
-import { CredentialAction, StoreEvent } from "../../credential/action"
+import { CredentialAction, StoreEventPublisher } from "../../credential/action"
 import { PasswordLoginAction, LoginEvent } from "../../password_login/action"
 
 import { LoginIDFieldComponent } from "../field/login_id/data"
@@ -30,7 +30,7 @@ export type PasswordLoginComponentState =
     Readonly<{ type: "failed-to-login", content: InputContent, err: LoginError }> |
     Readonly<{ type: "failed-to-store", err: StoreError }>
 
-export interface PasswordLoginComponentEvent extends LoginEvent, StoreEvent { }
+export interface PasswordLoginComponentEvent extends LoginEvent, StoreEventPublisher { }
 
 export interface PasswordLoginComponentEventInit {
     (stateChanged: PasswordLoginComponentStateHandler): PasswordLoginComponentEvent

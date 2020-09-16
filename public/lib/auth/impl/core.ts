@@ -1,25 +1,28 @@
 import {
+    AuthUsecase,
+    AuthUsecaseEventHandler,
+    AuthUsecaseState,
     AuthComponent,
-    AuthComponentEventHandler,
     AuthEvent,
-    AuthComponentState,
 } from "../data"
 
-export function initAuthComponent(handler: AuthComponentEventHandler): AuthComponent {
-    return new Component(handler)
+export function initAuthUsecase(handler: AuthUsecaseEventHandler, component: AuthComponent): AuthUsecase {
+    return new Usecase(handler, component)
 }
-export function initAuthComponentEventHandler(currentLocation: Readonly<Location>): AuthComponentEventHandler {
-    return new ComponentEventHandler(currentLocation)
+export function initAuthUsecaseEventHandler(currentLocation: Readonly<Location>): AuthUsecaseEventHandler {
+    return new UsecaseEventHandler(currentLocation)
 }
 
-class Component implements AuthComponent {
-    handler: AuthComponentEventHandler
+class Usecase implements AuthUsecase {
+    handler: AuthUsecaseEventHandler
+    component: AuthComponent
 
-    constructor(handler: AuthComponentEventHandler) {
+    constructor(handler: AuthUsecaseEventHandler, component: AuthComponent) {
         this.handler = handler
+        this.component = component
     }
 
-    init(stateChanged: Publisher<AuthComponentState>): void {
+    init(stateChanged: Publisher<AuthUsecaseState>): void {
         this.handler.onStateChange(stateChanged)
     }
     terminate(): void {
@@ -27,8 +30,8 @@ class Component implements AuthComponent {
     }
 }
 
-class ComponentEventHandler implements AuthComponentEventHandler {
-    holder: PublisherHolder<AuthComponentState>
+class UsecaseEventHandler implements AuthUsecaseEventHandler {
+    holder: PublisherHolder<AuthUsecaseState>
 
     currentLocation: Readonly<Location>
 
@@ -38,14 +41,14 @@ class ComponentEventHandler implements AuthComponentEventHandler {
         this.currentLocation = currentLocation
     }
 
-    onStateChange(pub: Publisher<AuthComponentState>): void {
+    onStateChange(pub: Publisher<AuthUsecaseState>): void {
         this.holder = { set: true, pub }
     }
 
     handleAuthEvent(event: AuthEvent): void {
         this.publish(this.map(event))
     }
-    map(event: AuthEvent): AuthComponentState {
+    map(event: AuthEvent): AuthUsecaseState {
         switch (event.type) {
             case "try-to-login":
                 return loginState(this.currentLocation)
@@ -53,22 +56,22 @@ class ComponentEventHandler implements AuthComponentEventHandler {
             case "failed-to-login":
                 return { type: "error", err: event.err }
 
-            case "try-to-store-credential":
-                return { type: "store-credential" }
+            case "try-to-store":
+                return { type: "store", authCredential: event.authCredential }
 
             case "succeed-to-login":
                 return { type: "load-application" }
         }
     }
 
-    publish(state: AuthComponentState): void {
+    publish(state: AuthUsecaseState): void {
         if (this.holder.set) {
             this.holder.pub(state)
         }
     }
 }
 
-function loginState(currentLocation: Readonly<Location>): AuthComponentState {
+function loginState(currentLocation: Readonly<Location>): AuthUsecaseState {
     // ログイン前画面ではハッシュ部分を使用して画面の切り替えを行う
     const url = new URL(currentLocation.toString())
 

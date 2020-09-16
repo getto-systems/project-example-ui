@@ -1,24 +1,29 @@
 import { VNode } from "preact"
-import { useState } from "preact/hooks"
+import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import {
-    RenewComponentDeprecated,
-    RenewComponentEventInit,
+    RenewComponent,
+    initialRenewComponentState,
 } from "../../auth/renew/action"
+
+import { TicketNonce } from "../../credential/data"
 
 export interface PreactComponent {
     (): VNode
 }
 
-export function Renew(component: RenewComponentDeprecated, initEvent: RenewComponentEventInit): PreactComponent {
+export function Renew(component: RenewComponent, ticketNonce: TicketNonce): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(component.initialState)
-        const event = initEvent(setState)
+        const [state, setState] = useState(initialRenewComponentState)
+        useEffect(() => {
+            component.init(setState)
+            component.trigger({ type: "renew", ticketNonce })
+            return () => component.terminate()
+        }, [])
 
         switch (state.type) {
             case "initial-renew":
-                component.renew(event)
                 return html``
 
             case "try-to-renew":
@@ -35,9 +40,13 @@ export function Renew(component: RenewComponentDeprecated, initEvent: RenewCompo
                     </p>
                 `
 
-            case "failed-to-store":
+            case "failed-to-renew":
                 // TODO エラー画面を用意
                 return html`ERROR: ${state.err}`
+
+            case "succeed-to-renew":
+                // TODO load-application に遷移
+                return html`renewed: ${state.authCredential.ticketNonce.ticketNonce}`
         }
     }
 }
