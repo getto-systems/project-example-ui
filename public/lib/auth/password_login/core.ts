@@ -3,7 +3,7 @@ import {
     PasswordLoginComponent,
     PasswordLoginComponentState,
     PasswordLoginComponentOperation,
-    PasswordLoginComponentFields,
+    PasswordLoginComponentField,
 } from "./action"
 
 import { LoginID } from "../../credential/data"
@@ -13,14 +13,14 @@ import { Content } from "../../field/data"
 
 export function initPasswordLoginComponent(
     action: PasswordLoginComponentAction,
-    fields: PasswordLoginComponentFields,
+    field: PasswordLoginComponentField,
 ): PasswordLoginComponent {
-    return new Component(action, fields)
+    return new Component(action, field)
 }
 
 class Component implements PasswordLoginComponent {
     action: PasswordLoginComponentAction
-    fields: PasswordLoginComponentFields
+    field: PasswordLoginComponentField
 
     holder: PublisherHolder<LoginEvent>
 
@@ -29,9 +29,9 @@ class Component implements PasswordLoginComponent {
         password: Content<Password>
     }
 
-    constructor(action: PasswordLoginComponentAction, fields: PasswordLoginComponentFields) {
+    constructor(action: PasswordLoginComponentAction, field: PasswordLoginComponentField) {
         this.action = action
-        this.fields = fields
+        this.field = field
 
         this.holder = { set: false }
 
@@ -40,10 +40,10 @@ class Component implements PasswordLoginComponent {
             password: { input: { inputValue: "" }, valid: false },
         }
 
-        this.fields.loginID.onContentChange((content: Content<LoginID>) => {
+        this.field.loginID.onContentChange((content: Content<LoginID>) => {
             this.content.loginID = content
         })
-        this.fields.password.onContentChange((content: Content<Password>) => {
+        this.field.password.onContentChange((content: Content<Password>) => {
             this.content.password = content
         })
     }
@@ -73,8 +73,8 @@ class Component implements PasswordLoginComponent {
 
     async login(): Promise<void> {
         await Promise.all([
-            this.fields.loginID.field.validate(),
-            this.fields.password.field.validate(),
+            this.field.loginID.field.validate(),
+            this.field.password.field.validate(),
         ])
 
         await this.action.passwordLogin.login([
