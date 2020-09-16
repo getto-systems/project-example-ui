@@ -1,5 +1,5 @@
 import { VNode } from "preact"
-import { useState } from "preact/hooks"
+import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { LoginView } from "./login_view"
@@ -8,8 +8,7 @@ import { PasswordField } from "./field/password"
 
 import {
     PasswordLoginComponent,
-    PasswordLoginComponentEventInit,
-    PasswordLoginComponentEvent,
+    initialPasswordLoginComponentState,
 } from "../../auth/password_login/action"
 
 import { InputContent, LoginError } from "../../password_login/data"
@@ -19,17 +18,20 @@ interface PreactComponent {
     (): VNode
 }
 
-export function PasswordLogin(component: PasswordLoginComponent, initEvent: PasswordLoginComponentEventInit): PreactComponent {
+export function PasswordLogin(component: PasswordLoginComponent): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(component.initialState)
-        const event = initEvent(setState)
+        const [state, setState] = useState(initialPasswordLoginComponentState)
+        useEffect(() => {
+            component.init(setState)
+            return () => component.terminate()
+        }, [])
 
         switch (state.type) {
             case "initial-login":
-                return LoginView(initialLoginForm(component, event))
+                return LoginView(initialLoginForm(component))
 
             case "failed-to-login":
-                return LoginView(failedToLoginForm(component, event, state.content, state.err))
+                return LoginView(failedToLoginForm(component, state.content, state.err))
 
             case "try-to-login":
                 return LoginView(tryToLoginForm())
@@ -37,20 +39,19 @@ export function PasswordLogin(component: PasswordLoginComponent, initEvent: Pass
             case "delayed-to-login":
                 return LoginView(delayedToLoginForm())
 
-            case "failed-to-store":
-                // TODO エラー画面を用意
-                return html`ログインできませんでした: ${state.err}`
+            case "succeed-to-login":
+                return html``
         }
     }
 }
 
-function initialLoginForm(component: PasswordLoginComponent, event: PasswordLoginComponentEvent): VNode {
+function initialLoginForm(component: PasswordLoginComponent): VNode {
     return html`
         <form onSubmit="${onSubmit}">
             <big>
                 <section class="login__body">
-                    <${LoginIDField(component, component.loginID)} initial="${noValue}"/>
-                    <${PasswordField(component, component.password)} initial="${noValue}"/>
+                    <${LoginIDField(component.fields.loginID)} initial="${noValue}"/>
+                    <${PasswordField(component.fields.password)} initial="${noValue}"/>
                 </section>
             </big>
             <big>
@@ -68,21 +69,16 @@ function initialLoginForm(component: PasswordLoginComponent, event: PasswordLogi
 
     function onSubmit(e: Event) {
         loginFormSubmit(e)
-        component.login(event)
+        component.trigger({ type: "login" })
     }
 }
-function failedToLoginForm(
-    component: PasswordLoginComponent,
-    event: PasswordLoginComponentEvent,
-    content: InputContent,
-    err: LoginError,
-): VNode {
+function failedToLoginForm(component: PasswordLoginComponent, content: InputContent, err: LoginError): VNode {
     return html`
         <form onSubmit="${onSubmit}">
             <big>
                 <section class="login__body">
-                    <${LoginIDField(component, component.loginID)} initial="${hasValue(content.loginID)}"/>
-                    <${PasswordField(component, component.password)} initial="${hasValue(content.password)}"/>
+                    <${LoginIDField(component.fields.loginID)} initial="${hasValue(content.loginID)}"/>
+                    <${PasswordField(component.fields.password)} initial="${hasValue(content.password)}"/>
                 </section>
             </big>
             <big>
@@ -102,7 +98,7 @@ function failedToLoginForm(
 
     function onSubmit(e: Event) {
         loginFormSubmit(e)
-        component.login(event)
+        component.trigger({ type: "login" })
     }
 
     function error(): VNode {

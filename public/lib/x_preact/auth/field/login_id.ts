@@ -18,18 +18,7 @@ type Props = {
     initial: InitialValue,
 }
 
-interface FormComponent {
-    onSubmit(handler: SubmitHandler): void
-}
-
-interface SubmitHandler {
-    (): Promise<void>
-}
-
-export function LoginIDField(
-    formComponent: FormComponent,
-    component: LoginIDFieldComponent,
-): PreactComponent {
+export function LoginIDField(component: LoginIDFieldComponent): PreactComponent {
     return (props: Props): VNode => {
         const [state, setState] = useState(initialLoginIDFieldComponentState)
         const input = useRef<HTMLInputElement>()
@@ -43,8 +32,6 @@ export function LoginIDField(
                 }
                 component.field.set(props.initial.value)
             }
-
-            formComponent.onSubmit(async () => component.field.validate())
 
             return () => component.terminate()
         }, [])

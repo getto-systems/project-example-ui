@@ -43,10 +43,7 @@ function main() {
                 return h(LoadApplication(newLoadApplicationComponent()), {})
 
             case "password-login":
-                return h(PasswordLogin(
-                    loader.initPasswordLoginComponent(),
-                    loader.initPasswordLoginComponentEvent(handler),
-                ), {})
+                return h(PasswordLogin(loader.initPasswordLoginComponent()), {})
 
             case "password-reset-session":
                 //return h(PasswordReset(...state.init), {})
