@@ -3,32 +3,37 @@ import {
     RenewCredentialComponent,
     RenewCredentialComponentState,
     RenewCredentialComponentOperation,
-    RenewCredentialComponentEventHandler,
 } from "../action"
 
-import { TicketNonce, FetchEvent, RenewEvent, StoreEvent } from "../../../credential/data"
+import { RenewCredentialEventPublisher } from "../../../renew_credential/action"
+
+import { TicketNonce } from "../../../credential/data"
+import { RenewCredentialEvent } from "../../../renew_credential/data"
 
 export function initRenewCredentialComponent(
-    handler: RenewCredentialComponentEventHandler,
+    pub: RenewCredentialEventPublisher,
     action: RenewCredentialComponentAction,
 ): RenewCredentialComponent {
-    return new Component(handler, action)
-}
-export function initRenewCredentialComponentEventHandler(): RenewCredentialComponentEventHandler {
-    return new ComponentEventHandler()
+    return new Component(pub, action)
 }
 
 class Component implements RenewCredentialComponent {
-    handler: RenewCredentialComponentEventHandler
+    pub: RenewCredentialEventPublisher
     action: RenewCredentialComponentAction
 
-    constructor(handler: RenewCredentialComponentEventHandler, action: RenewCredentialComponentAction) {
-        this.handler = handler
+    constructor(pub: RenewCredentialEventPublisher, action: RenewCredentialComponentAction) {
+        this.pub = pub
         this.action = action
     }
 
     init(stateChanged: Publisher<RenewCredentialComponentState>): void {
-        this.handler.onStateChange(stateChanged)
+        this.pub.onRenewCredential((event) => {
+            stateChanged(map(event))
+        })
+
+        function map(event: RenewCredentialEvent): RenewCredentialComponentState {
+            return event
+        }
     }
     terminate(): void {
         // terminate が必要な component とインターフェイスを合わせるために必要
@@ -38,35 +43,7 @@ class Component implements RenewCredentialComponent {
     }
 
     renew(ticketNonce: TicketNonce): Promise<void> {
-        return this.action.credential.renew(ticketNonce)
-    }
-}
-
-class ComponentEventHandler implements RenewCredentialComponentEventHandler {
-    holder: PublisherHolder<RenewCredentialComponentState>
-
-    constructor() {
-        this.holder = { set: false }
-    }
-
-    onStateChange(pub: Publisher<RenewCredentialComponentState>): void {
-        this.holder = { set: true, pub }
-    }
-
-    handleFetchEvent(_event: FetchEvent): void {
-        // RenewComponent ではこのイベントは発生しない
-    }
-    handleRenewEvent(event: RenewEvent): void {
-        this.publish(event)
-    }
-    handleStoreEvent(_event: StoreEvent): void {
-        // RenewComponent ではこのイベントは発生しない
-    }
-
-    publish(state: RenewCredentialComponentState): void {
-        if (this.holder.set) {
-            this.holder.pub(state)
-        }
+        return this.action.renewCredential.renewCredential(ticketNonce)
     }
 }
 
