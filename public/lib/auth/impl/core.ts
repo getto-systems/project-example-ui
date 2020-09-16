@@ -74,9 +74,6 @@ class UsecaseEventHandler implements AuthUsecaseEventHandler {
             case "try-to-login":
                 return loginState(this.currentLocation)
 
-            case "failed-to-login":
-                return { type: "error", err: event.err }
-
             case "succeed-to-login":
                 return { type: "load-application" }
         }
