@@ -22,6 +22,8 @@ class Component implements PasswordLoginComponent {
     action: PasswordLoginComponentAction
     fields: PasswordLoginComponentFields
 
+    holder: PublisherHolder<LoginEvent>
+
     content: {
         loginID: Content<LoginID>
         password: Content<Password>
@@ -30,6 +32,8 @@ class Component implements PasswordLoginComponent {
     constructor(action: PasswordLoginComponentAction, fields: PasswordLoginComponentFields) {
         this.action = action
         this.fields = fields
+
+        this.holder = { set: false }
 
         this.content = {
             loginID: { input: { inputValue: "" }, valid: false },
@@ -44,8 +48,14 @@ class Component implements PasswordLoginComponent {
         })
     }
 
+    hook(pub: Publisher<LoginEvent>): void {
+        this.holder = { set: true, pub }
+    }
     init(stateChanged: Publisher<PasswordLoginComponentState>): void {
         this.action.passwordLogin.sub.onLoginEvent((event) => {
+            if (this.holder.set) {
+                this.holder.pub(event)
+            }
             stateChanged(map(event))
 
             function map(event: LoginEvent): PasswordLoginComponentState {
@@ -73,6 +83,10 @@ class Component implements PasswordLoginComponent {
         ])
     }
 }
+
+type PublisherHolder<T> =
+    Readonly<{ set: false }> |
+    Readonly<{ set: true, pub: Publisher<T> }>
 
 interface Publisher<T> {
     (state: T): void

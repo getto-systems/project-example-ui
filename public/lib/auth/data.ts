@@ -1,6 +1,9 @@
 import { FetchCredentialComponent } from "./fetch_credential/data"
 import { RenewCredentialComponent } from "./renew_credential/data"
 import { StoreCredentialComponent } from "./store_credential/data"
+import { LoadApplicationComponent } from "./load_application/data"
+
+import { PasswordLoginComponent } from "./password_login/action"
 
 import { AuthCredential, TicketNonce } from "../credential/data"
 import { ResetToken } from "../password_reset/data"
@@ -27,6 +30,9 @@ export interface AuthComponent {
     fetchCredential: FetchCredentialComponent
     renewCredential: RenewCredentialComponent
     storeCredential: StoreCredentialComponent
+    loadApplication: LoadApplicationComponent
+
+    passwordLogin: PasswordLoginComponent
 }
 
 export interface AuthUsecaseEventHandler extends AuthEventHandler {

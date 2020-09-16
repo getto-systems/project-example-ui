@@ -1,6 +1,8 @@
 import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_client"
 
-import { initAuthUsecase, initAuthUsecaseEventHandler } from "../auth/core"
+import { newLoadApplicationComponent } from "./auth/worker/load_application"
+
+import { initAuthUsecase } from "../auth/core"
 
 import { initFetchCredentialComponent } from "../auth/fetch_credential/core"
 import { initRenewCredentialComponent } from "../auth/renew_credential/core"
@@ -95,15 +97,15 @@ export class ComponentLoader {
         }
     }
 
-    initAuthUsecase(): [AuthUsecase, AuthUsecaseEventHandler] {
-        return [
-            initAuthUsecase(this.currentLocation, {
-                fetchCredential: this.initFetchCredentialComponent(),
-                renewCredential: this.initRenewCredentialComponent(),
-                storeCredential: this.initStoreCredentialComponent(),
-            }),
-            initAuthUsecaseEventHandler(this.currentLocation),
-        ]
+    initAuthUsecase(): AuthUsecase {
+        return initAuthUsecase(this.currentLocation, {
+            fetchCredential: this.initFetchCredentialComponent(),
+            renewCredential: this.initRenewCredentialComponent(),
+            storeCredential: this.initStoreCredentialComponent(),
+            loadApplication: newLoadApplicationComponent(),
+
+            passwordLogin: this.initPasswordLoginComponent(),
+        })
     }
 
     initFetchCredentialComponent(): FetchCredentialComponent {
