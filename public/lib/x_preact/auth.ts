@@ -31,13 +31,19 @@ function main() {
 
         switch (state.type) {
             case "fetch":
-                return h(Fetch(usecase.component.fetch), {})
+                return h(Fetch(usecase.component.fetch, (ticketNonce) => {
+                    usecase.renew(ticketNonce)
+                }), {})
 
             case "renew":
-                return h(Renew(usecase.component.renew, state.ticketNonce), {})
+                return h(Renew(usecase.component.renew, state.ticketNonce, (authCredential) => {
+                    usecase.store(authCredential)
+                }), {})
 
             case "store":
-                return h(Store(usecase.component.store, state.authCredential), {})
+                return h(Store(usecase.component.store, state.authCredential, () => {
+                    usecase.loadApplication()
+                }), {})
 
             case "load-application":
                 return h(LoadApplication(newLoadApplicationComponent()), {})

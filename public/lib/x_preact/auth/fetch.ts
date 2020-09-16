@@ -7,11 +7,17 @@ import {
     initialFetchComponentState,
 } from "../../auth/fetch/data"
 
+import { TicketNonce } from "../../credential/data"
+
 export interface PreactComponent {
     (): VNode
 }
 
-export function Fetch(component: FetchComponent): PreactComponent {
+export interface Next {
+    (ticketNonce: TicketNonce): void
+}
+
+export function Fetch(component: FetchComponent, next: Next): PreactComponent {
     return (): VNode => {
         const [state, setState] = useState(initialFetchComponentState)
         useEffect(() => {
@@ -29,8 +35,8 @@ export function Fetch(component: FetchComponent): PreactComponent {
                 return html`ERROR: ${state.err}`
 
             case "succeed-to-fetch":
-                // TODO renew に遷移
-                return html`fetched: ${state.ticketNonce.ticketNonce}`
+                next(state.ticketNonce)
+                return html``
         }
     }
 }

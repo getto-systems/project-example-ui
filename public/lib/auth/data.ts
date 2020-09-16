@@ -11,6 +11,10 @@ export interface AuthUsecase {
     terminate(): void
 
     component: AuthComponent
+
+    renew(ticketNonce: TicketNonce): Promise<void>
+    store(authCredential: AuthCredential): Promise<void>
+    loadApplication(): Promise<void>
 }
 
 export type AuthUsecaseState =
@@ -44,9 +48,10 @@ export interface AuthEventHandler {
 }
 
 export type AuthEvent =
+    Readonly<{ type: "try-to-renew", ticketNonce: TicketNonce }> |
+    Readonly<{ type: "try-to-store", authCredential: AuthCredential }> |
     Readonly<{ type: "try-to-login" }> |
     Readonly<{ type: "failed-to-login", err: AuthUsecaseError }> |
-    Readonly<{ type: "try-to-store", authCredential: AuthCredential }> |
     Readonly<{ type: "succeed-to-login" }>
 
 interface Publisher<T> {

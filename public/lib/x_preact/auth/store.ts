@@ -13,7 +13,11 @@ export interface PreactComponent {
     (): VNode
 }
 
-export function Store(component: StoreComponent, authCredential: AuthCredential): PreactComponent {
+export interface Next {
+    (): void
+}
+
+export function Store(component: StoreComponent, authCredential: AuthCredential, next: Next): PreactComponent {
     return (): VNode => {
         const [state, setState] = useState(initialStoreComponentState)
         useEffect(() => {
@@ -31,8 +35,8 @@ export function Store(component: StoreComponent, authCredential: AuthCredential)
                 return html`ERROR: ${state.err}`
 
             case "succeed-to-store":
-                // TODO load-application に遷移
-                return html`stored`
+                next()
+                return html``
         }
     }
 }
