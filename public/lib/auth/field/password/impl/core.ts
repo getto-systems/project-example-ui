@@ -1,5 +1,5 @@
 import { PasswordFieldComponentAction } from "../action"
-import { PasswordField, PasswordFieldEventHandler } from "../../../../field/password/action"
+import { PasswordField, PasswordFieldEventSubscriber } from "../../../../field/password/action"
 
 import { PasswordFieldComponent, PasswordFieldComponentState } from "../data"
 
@@ -8,63 +8,32 @@ import { Password } from "../../../../password/data"
 import { Content } from "../../../../input/data"
 
 export function initPasswordFieldComponent(action: PasswordFieldComponentAction): PasswordFieldComponent {
-    return new Component(action)
+    return new Component(...action.passwordField.initPasswordField())
 }
 
 class Component implements PasswordFieldComponent {
-    handler: ComponentEventHandler
     field: PasswordField
+    sub: PasswordFieldEventSubscriber
 
-    constructor(action: PasswordFieldComponentAction) {
-        this.handler = new ComponentEventHandler()
-        this.field = action.passwordField.initPasswordField(this.handler)
+    constructor(field: PasswordField, sub: PasswordFieldEventSubscriber) {
+        this.field = field
+        this.sub = sub
     }
 
     onContentChange(contentChanged: Publisher<Content<Password>>): void {
-        this.handler.onContentChange(contentChanged)
+        this.sub.onPasswordFieldContentChanged(contentChanged)
     }
     init(stateChanged: Publisher<PasswordFieldComponentState>): void {
-        this.handler.onStateChange(stateChanged)
+        this.sub.onPasswordFieldStateChanged((event) => {
+            stateChanged(map(event))
+
+            function map(event: PasswordFieldEvent): PasswordFieldComponentState {
+                return event
+            }
+        })
     }
     terminate(): void {
         // terminate が必要な component とインターフェイスを合わせるために必要
-    }
-}
-
-class ComponentEventHandler implements PasswordFieldEventHandler {
-    holder: {
-        content: PublisherHolder<Content<Password>>,
-        state: PublisherHolder<PasswordFieldComponentState>,
-    }
-
-    constructor() {
-        this.holder = {
-            content: { set: false },
-            state: { set: false },
-        }
-    }
-
-    onContentChange(pub: Publisher<Content<Password>>): void {
-        this.holder.content = { set: true, pub }
-    }
-    onStateChange(pub: Publisher<PasswordFieldComponentState>): void {
-        this.holder.state = { set: true, pub }
-    }
-
-    publishContent(content: Content<Password>): void {
-        if (this.holder.content.set) {
-            this.holder.content.pub(content)
-        }
-    }
-    publishState(state: PasswordFieldComponentState): void {
-        if (this.holder.state.set) {
-            this.holder.state.pub(state)
-        }
-    }
-
-    handlePasswordFieldEvent(event: PasswordFieldEvent): void {
-        this.publishContent(event.content)
-        this.publishState({ type: "input-password", result: event.result, character: event.character, view: event.view })
     }
 }
 

@@ -1,8 +1,9 @@
+import { Password } from "../../password/data"
 import { PasswordFieldEvent } from "./data"
-import { InputValue } from "../../input/data"
+import { InputValue, Content } from "../../input/data"
 
 export interface PasswordFieldAction {
-    initPasswordField(handler: PasswordFieldEventHandler): PasswordField
+    initPasswordField(): [PasswordField, PasswordFieldEventSubscriber]
 }
 
 export interface PasswordField {
@@ -12,6 +13,15 @@ export interface PasswordField {
     validate(): void
 }
 
-export interface PasswordFieldEventHandler {
-    handlePasswordFieldEvent(event: PasswordFieldEvent): void
+export interface PasswordFieldEventPublisher {
+    publishPasswordFieldEvent(event: PasswordFieldEvent): void
+}
+
+export interface PasswordFieldEventSubscriber {
+    onPasswordFieldStateChanged(stateChanged: Publisher<PasswordFieldEvent>): void
+    onPasswordFieldContentChanged(contentChanged: Publisher<Content<Password>>): void
+}
+
+interface Publisher<T> {
+    (state: T): void
 }

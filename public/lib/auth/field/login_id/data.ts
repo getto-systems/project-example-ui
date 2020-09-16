@@ -13,9 +13,12 @@ export interface LoginIDFieldComponent {
 }
 
 export type LoginIDFieldComponentState =
-    Readonly<{ type: "input-login-id", result: Valid<LoginIDFieldError> }>
+    Readonly<{ type: "succeed-to-update-login-id", result: Valid<LoginIDFieldError> }>
 
-export const initialLoginIDFieldComponentState: LoginIDFieldComponentState = { type: "input-login-id", result: { valid: true } }
+export const initialLoginIDFieldComponentState: LoginIDFieldComponentState = {
+    type: "succeed-to-update-login-id",
+    result: { valid: true },
+}
 
 interface Publisher<T> {
     (state: T): void

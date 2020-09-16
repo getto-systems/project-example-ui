@@ -1,8 +1,9 @@
+import { LoginID } from "../../credential/data"
 import { LoginIDFieldEvent } from "./data"
-import { InputValue } from "../../input/data"
+import { InputValue, Content } from "../../input/data"
 
 export interface LoginIDFieldAction {
-    initLoginIDField(handler: LoginIDFieldEventHandler): LoginIDField
+    initLoginIDField(): [LoginIDField, LoginIDFieldEventSubscriber]
 }
 
 export interface LoginIDField {
@@ -10,6 +11,15 @@ export interface LoginIDField {
     validate(): void
 }
 
-export interface LoginIDFieldEventHandler {
-    handleLoginIDFieldEvent(event: LoginIDFieldEvent): void
+export interface LoginIDFieldEventPublisher {
+    publishLoginIDFieldEvent(event: LoginIDFieldEvent): void
+}
+
+export interface LoginIDFieldEventSubscriber {
+    onLoginIDFieldStateChanged(stateChanged: Publisher<LoginIDFieldEvent>): void
+    onLoginIDFieldContentChanged(contentChanged: Publisher<Content<LoginID>>): void
+}
+
+interface Publisher<T> {
+    (state: T): void
 }
