@@ -6,6 +6,8 @@ import {
     AuthEvent,
 } from "../data"
 
+import { AuthCredential, TicketNonce } from "../../credential/data"
+
 export function initAuthUsecase(handler: AuthUsecaseEventHandler, component: AuthComponent): AuthUsecase {
     return new Usecase(handler, component)
 }
@@ -27,6 +29,16 @@ class Usecase implements AuthUsecase {
     }
     terminate(): void {
         // terminate が必要な component とインターフェイスを合わせるために必要
+    }
+
+    async renew(ticketNonce: TicketNonce): Promise<void> {
+        this.handler.handleAuthEvent({ type: "try-to-renew", ticketNonce })
+    }
+    async store(authCredential: AuthCredential): Promise<void> {
+        this.handler.handleAuthEvent({ type: "try-to-store", authCredential })
+    }
+    async loadApplication(): Promise<void> {
+        this.handler.handleAuthEvent({ type: "succeed-to-login" })
     }
 }
 
@@ -50,14 +62,17 @@ class UsecaseEventHandler implements AuthUsecaseEventHandler {
     }
     map(event: AuthEvent): AuthUsecaseState {
         switch (event.type) {
+            case "try-to-renew":
+                return { type: "renew", ticketNonce: event.ticketNonce }
+
+            case "try-to-store":
+                return { type: "store", authCredential: event.authCredential }
+
             case "try-to-login":
                 return loginState(this.currentLocation)
 
             case "failed-to-login":
                 return { type: "error", err: event.err }
-
-            case "try-to-store":
-                return { type: "store", authCredential: event.authCredential }
 
             case "succeed-to-login":
                 return { type: "load-application" }

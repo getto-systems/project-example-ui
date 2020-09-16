@@ -7,13 +7,17 @@ import {
     initialRenewComponentState,
 } from "../../auth/renew/action"
 
-import { TicketNonce } from "../../credential/data"
+import { AuthCredential, TicketNonce } from "../../credential/data"
 
 export interface PreactComponent {
     (): VNode
 }
 
-export function Renew(component: RenewComponent, ticketNonce: TicketNonce): PreactComponent {
+export interface Next {
+    (authCredential: AuthCredential): void
+}
+
+export function Renew(component: RenewComponent, ticketNonce: TicketNonce, next: Next): PreactComponent {
     return (): VNode => {
         const [state, setState] = useState(initialRenewComponentState)
         useEffect(() => {
@@ -45,8 +49,8 @@ export function Renew(component: RenewComponent, ticketNonce: TicketNonce): Prea
                 return html`ERROR: ${state.err}`
 
             case "succeed-to-renew":
-                // TODO load-application に遷移
-                return html`renewed: ${state.authCredential.ticketNonce.ticketNonce}`
+                next(state.authCredential)
+                return html``
         }
     }
 }
