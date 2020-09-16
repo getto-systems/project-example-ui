@@ -1,6 +1,11 @@
 import { Infra } from "../infra"
 
-import { RenewCredentialAction, RenewCredentialEventPublisher } from "../action"
+import {
+    RenewCredentialAction,
+    RenewCredentialEventPubSub,
+    RenewCredentialEventPublisher,
+    RenewCredentialEventSubscriber,
+} from "../action"
 
 import { RenewCredentialEvent } from "../data"
 
@@ -9,8 +14,9 @@ import { TicketNonce } from "../../credential/data"
 export function initRenewCredentialAction(pub: RenewCredentialEventPublisher, infra: Infra): RenewCredentialAction {
     return new Action(pub, infra)
 }
-export function initRenewCredentialEventPublisher(): RenewCredentialEventPublisher {
-    return new EventPublisher()
+export function initRenewCredentialEventPubSub(): RenewCredentialEventPubSub {
+    const pubsub = new EventPubSub()
+    return [pubsub, pubsub]
 }
 
 class Action implements RenewCredentialAction {
@@ -41,7 +47,7 @@ class Action implements RenewCredentialAction {
     }
 }
 
-class EventPublisher implements RenewCredentialEventPublisher {
+class EventPubSub implements RenewCredentialEventPublisher, RenewCredentialEventSubscriber {
     holder: {
         renew: PublisherHolder<RenewCredentialEvent>
     }

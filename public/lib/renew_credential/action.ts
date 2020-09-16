@@ -5,10 +5,14 @@ export interface RenewCredentialAction {
     renewCredential(ticketNonce: TicketNonce): Promise<void>
 }
 
-export interface RenewCredentialEventPublisher {
-    onRenewCredential(pub: Publisher<RenewCredentialEvent>): void
+export type RenewCredentialEventPubSub = [RenewCredentialEventPublisher, RenewCredentialEventSubscriber]
 
+export interface RenewCredentialEventPublisher {
     publishRenewCredentialEvent(event: RenewCredentialEvent): void
+}
+
+export interface RenewCredentialEventSubscriber {
+    onRenewCredential(pub: Publisher<RenewCredentialEvent>): void
 }
 
 interface Publisher<T> {
