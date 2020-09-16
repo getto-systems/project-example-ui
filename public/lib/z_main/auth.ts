@@ -22,7 +22,7 @@ import { initSimulatePasswordResetClient } from "../password_reset/impl/client/p
 import { env } from "../y_static/env"
 
 import { initCredentialAction } from "../credential/impl/core"
-import { initRenewCredentialAction, initRenewCredentialEventPublisher } from "../renew_credential/impl/core"
+import { initRenewCredentialAction, initRenewCredentialEventPubSub } from "../renew_credential/impl/core"
 import { initLoginIDFieldAction } from "../field/login_id/impl/core"
 import { initPasswordFieldAction } from "../field/password/impl/core"
 import { initPasswordLoginAction } from "../password_login/impl/core"
@@ -113,8 +113,8 @@ export class ComponentLoader {
         return initFetchCredentialComponent(handler, this.initFetchCredentialComponentAction(handler))
     }
     initRenewCredentialComponent(): RenewCredentialComponent {
-        const pub = initRenewCredentialEventPublisher()
-        return initRenewCredentialComponent(pub, this.initRenewCredentialComponentAction(pub))
+        const [pub, sub] = initRenewCredentialEventPubSub()
+        return initRenewCredentialComponent(sub, this.initRenewCredentialComponentAction(pub))
     }
     initStoreCredentialComponent(): StoreCredentialComponent {
         const handler = initStoreCredentialComponentEventHandler()
