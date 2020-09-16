@@ -17,10 +17,10 @@ export type ApiRoles = Readonly<{ apiRoles: Readonly<Array<Readonly<string>>> }>
 
 export type FetchEvent =
     Readonly<{ type: "failed-to-fetch", err: FetchError }> |
+    Readonly<{ type: "require-login" }> |
     Readonly<{ type: "succeed-to-fetch", ticketNonce: TicketNonce }>
 
 export type FetchError =
-    Readonly<{ type: "ticket-nonce-not-found" }> |
     Readonly<{ type: "infra-error", err: string }>
 
 export type RenewEvent =

@@ -14,7 +14,7 @@ export interface PreactComponent {
 }
 
 export interface Next {
-    (): void
+    loadApplication(): void
 }
 
 export function Store(component: StoreComponent, authCredential: AuthCredential, next: Next): PreactComponent {
@@ -35,7 +35,7 @@ export function Store(component: StoreComponent, authCredential: AuthCredential,
                 return html`ERROR: ${state.err}`
 
             case "succeed-to-store":
-                next()
+                next.loadApplication()
                 return html``
         }
     }
