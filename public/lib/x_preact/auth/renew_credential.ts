@@ -2,23 +2,15 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import {
-    RenewCredentialComponent,
-    initialRenewCredentialComponentState,
-} from "../../auth/renew_credential/action"
+import { RenewCredentialComponent, initialRenewCredentialComponentState } from "../../auth/renew_credential/data"
 
-import { AuthCredential, TicketNonce } from "../../credential/data"
+import { TicketNonce } from "../../credential/data"
 
 export interface PreactComponent {
     (): VNode
 }
 
-export interface Next {
-    tryToLogin(): void
-    loadApplication(authCredential: AuthCredential): void
-}
-
-export function RenewCredential(component: RenewCredentialComponent, ticketNonce: TicketNonce, next: Next): PreactComponent {
+export function RenewCredential(component: RenewCredentialComponent, ticketNonce: TicketNonce): PreactComponent {
     return (): VNode => {
         const [state, setState] = useState(initialRenewCredentialComponentState)
         useEffect(() => {
@@ -29,6 +21,8 @@ export function RenewCredential(component: RenewCredentialComponent, ticketNonce
 
         switch (state.type) {
             case "initial-renew":
+            case "unauthorized":
+            case "succeed-to-renew":
                 return html``
 
             case "try-to-renew":
@@ -48,14 +42,6 @@ export function RenewCredential(component: RenewCredentialComponent, ticketNonce
             case "failed-to-renew":
                 // TODO エラー画面を用意
                 return html`ERROR: ${state.err}`
-
-            case "unauthorized":
-                next.tryToLogin()
-                return html``
-
-            case "succeed-to-renew":
-                next.loadApplication(state.authCredential)
-                return html``
         }
     }
 }

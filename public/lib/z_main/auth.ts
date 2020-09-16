@@ -59,7 +59,7 @@ import { PasswordResetAction } from "../password_reset/action"
 
 import { AuthUsecase, AuthUsecaseEventHandler } from "../auth/data"
 import { FetchCredentialComponent, FetchCredentialComponentEventHandler } from "../auth/fetch_credential/data"
-import { RenewCredentialComponent } from "../auth/renew_credential/action"
+import { RenewCredentialComponent } from "../auth/renew_credential/data"
 import { StoreCredentialComponent, StoreCredentialComponentEventHandler } from "../auth/store_credential/data"
 import { LoginIDFieldComponent } from "../auth/field/login_id/data"
 import { PasswordFieldComponent } from "../auth/field/password/data"

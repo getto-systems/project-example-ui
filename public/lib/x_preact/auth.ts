@@ -25,19 +25,19 @@ function main() {
         useEffect(() => {
             usecase.init(setState)
             return () => usecase.terminate()
-        })
+        }, [])
 
         // TODO useErrorBoundary とか使ってエラーの処理をする
 
         switch (state.type) {
             case "fetch-credential":
-                return h(FetchCredential(usecase.component.fetchCredential, usecase), {})
+                return h(FetchCredential(usecase.component.fetchCredential), {})
 
             case "renew-credential":
-                return h(RenewCredential(usecase.component.renewCredential, state.ticketNonce, usecase), {})
+                return h(RenewCredential(usecase.component.renewCredential, state.ticketNonce), {})
 
             case "store-credential":
-                return h(StoreCredential(usecase.component.storeCredential, state.authCredential, usecase), {})
+                return h(StoreCredential(usecase.component.storeCredential, state.authCredential), {})
 
             case "load-application":
                 return h(LoadApplication(newLoadApplicationComponent()), {})

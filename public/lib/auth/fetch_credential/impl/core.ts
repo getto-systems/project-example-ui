@@ -15,16 +15,26 @@ export function initFetchCredentialComponentEventHandler(): FetchCredentialCompo
 }
 
 class Component implements FetchCredentialComponent {
+    holder: PublisherHolder<FetchCredentialComponentState>
     handler: FetchCredentialComponentEventHandler
     action: FetchCredentialComponentAction
 
     constructor(handler: FetchCredentialComponentEventHandler, action: FetchCredentialComponentAction) {
+        this.holder = { set: false }
         this.handler = handler
         this.action = action
     }
 
+    hook(pub: Publisher<FetchCredentialComponentState>): void {
+        this.holder = { set: true, pub }
+    }
     init(stateChanged: Publisher<FetchCredentialComponentState>): void {
-        this.handler.onStateChange(stateChanged)
+        this.handler.onStateChange((state) => {
+            if (this.holder.set) {
+                this.holder.pub(state)
+            }
+            stateChanged(state)
+        })
     }
     terminate(): void {
         // terminate が必要な component とインターフェイスを合わせるために必要

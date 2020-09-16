@@ -1,5 +1,5 @@
 import { FetchCredentialComponent } from "./fetch_credential/data"
-import { RenewCredentialComponent } from "./renew_credential/action"
+import { RenewCredentialComponent } from "./renew_credential/data"
 import { StoreCredentialComponent } from "./store_credential/data"
 
 import { AuthCredential, TicketNonce } from "../credential/data"
@@ -10,11 +10,6 @@ export interface AuthUsecase {
     terminate(): void
 
     component: AuthComponent
-
-    renewCredential(ticketNonce: TicketNonce): Promise<void>
-    storeCredential(authCredential: AuthCredential): Promise<void>
-    tryToLogin(): Promise<void>
-    loadApplication(): Promise<void>
 }
 
 export type AuthUsecaseState =

@@ -3,6 +3,7 @@ import { CredentialEventHandler } from "../../credential/action"
 import { TicketNonce, FetchError } from "../../credential/data"
 
 export interface FetchCredentialComponent {
+    hook(stateChanged: Publisher<FetchCredentialComponentState>): void
     init(stateChanged: Publisher<FetchCredentialComponentState>): void
     terminate(): void
     fetch(): Promise<void>
@@ -11,7 +12,7 @@ export interface FetchCredentialComponent {
 export type FetchCredentialComponentState =
     Readonly<{ type: "initial-fetch" }> |
     Readonly<{ type: "failed-to-fetch", err: FetchError }> |
-    Readonly<{ type: "require-login" }> |
+    Readonly<{ type: "unauthorized" }> |
     Readonly<{ type: "succeed-to-fetch", ticketNonce: TicketNonce }>
 
 export const initialFetchCredentialComponentState: FetchCredentialComponentState = { type: "initial-fetch" }

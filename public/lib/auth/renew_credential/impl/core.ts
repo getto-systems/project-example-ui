@@ -1,11 +1,14 @@
 import {
     RenewCredentialComponentAction,
-    RenewCredentialComponent,
-    RenewCredentialComponentState,
-    RenewCredentialComponentOperation,
 } from "../action"
 
 import { RenewCredentialEventPublisher } from "../../../renew_credential/action"
+
+import {
+    RenewCredentialComponent,
+    RenewCredentialComponentState,
+    RenewCredentialComponentOperation,
+} from "../data"
 
 import { TicketNonce } from "../../../credential/data"
 import { RenewCredentialEvent } from "../../../renew_credential/data"
@@ -18,16 +21,24 @@ export function initRenewCredentialComponent(
 }
 
 class Component implements RenewCredentialComponent {
+    holder: PublisherHolder<RenewCredentialEvent>
     pub: RenewCredentialEventPublisher
     action: RenewCredentialComponentAction
 
     constructor(pub: RenewCredentialEventPublisher, action: RenewCredentialComponentAction) {
+        this.holder = { set: false }
         this.pub = pub
         this.action = action
     }
 
+    hook(pub: Publisher<RenewCredentialEvent>): void {
+        this.holder = { set: true, pub }
+    }
     init(stateChanged: Publisher<RenewCredentialComponentState>): void {
         this.pub.onRenewCredential((event) => {
+            if (this.holder.set) {
+                this.holder.pub(event)
+            }
             stateChanged(map(event))
         })
 
