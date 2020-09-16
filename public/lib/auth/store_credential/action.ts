@@ -1,5 +1,5 @@
 import { CredentialAction } from "../../credential/action"
 
-export interface FetchComponentAction {
+export interface StoreCredentialComponentAction {
     credential: CredentialAction
 }

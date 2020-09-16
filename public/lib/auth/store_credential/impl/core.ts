@@ -1,26 +1,29 @@
-import { StoreComponentAction } from "../action"
+import { StoreCredentialComponentAction } from "../action"
 
-import { StoreComponent, StoreComponentState, StoreComponentEventHandler } from "../data"
+import { StoreCredentialComponent, StoreCredentialComponentState, StoreCredentialComponentEventHandler } from "../data"
 
 import { AuthCredential, FetchEvent, RenewEvent, StoreEvent } from "../../../credential/data"
 
-export function initStoreComponent(handler: StoreComponentEventHandler, action: StoreComponentAction): StoreComponent {
+export function initStoreCredentialComponent(
+    handler: StoreCredentialComponentEventHandler,
+    action: StoreCredentialComponentAction,
+): StoreCredentialComponent {
     return new Component(handler, action)
 }
-export function initStoreComponentEventHandler(): StoreComponentEventHandler {
+export function initStoreCredentialComponentEventHandler(): StoreCredentialComponentEventHandler {
     return new ComponentEventHandler()
 }
 
-class Component implements StoreComponent {
-    handler: StoreComponentEventHandler
-    action: StoreComponentAction
+class Component implements StoreCredentialComponent {
+    handler: StoreCredentialComponentEventHandler
+    action: StoreCredentialComponentAction
 
-    constructor(handler: StoreComponentEventHandler, action: StoreComponentAction) {
+    constructor(handler: StoreCredentialComponentEventHandler, action: StoreCredentialComponentAction) {
         this.handler = handler
         this.action = action
     }
 
-    init(stateChanged: Publisher<StoreComponentState>): void {
+    init(stateChanged: Publisher<StoreCredentialComponentState>): void {
         this.handler.onStateChange(stateChanged)
     }
     terminate(): void {
@@ -31,14 +34,14 @@ class Component implements StoreComponent {
     }
 }
 
-class ComponentEventHandler implements StoreComponentEventHandler {
-    holder: PublisherHolder<StoreComponentState>
+class ComponentEventHandler implements StoreCredentialComponentEventHandler {
+    holder: PublisherHolder<StoreCredentialComponentState>
 
     constructor() {
         this.holder = { set: false }
     }
 
-    onStateChange(pub: Publisher<StoreComponentState>): void {
+    onStateChange(pub: Publisher<StoreCredentialComponentState>): void {
         this.holder = { set: true, pub }
     }
 
@@ -52,7 +55,7 @@ class ComponentEventHandler implements StoreComponentEventHandler {
         this.publish(event)
     }
 
-    publish(state: StoreComponentState): void {
+    publish(state: StoreCredentialComponentState): void {
         if (this.holder.set) {
             this.holder.pub(state)
         }

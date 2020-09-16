@@ -2,9 +2,9 @@ import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_clien
 
 import { initAuthUsecase, initAuthUsecaseEventHandler } from "../auth/impl/core"
 
-import { initFetchComponent, initFetchComponentEventHandler } from "../auth/fetch/impl/core"
-import { initRenewComponent, initRenewComponentEventHandler } from "../auth/renew/impl/core"
-import { initStoreComponent, initStoreComponentEventHandler } from "../auth/store/impl/core"
+import { initFetchCredentialComponent, initFetchCredentialComponentEventHandler } from "../auth/fetch_credential/impl/core"
+import { initRenewCredentialComponent, initRenewCredentialComponentEventHandler } from "../auth/renew_credential/impl/core"
+import { initStoreCredentialComponent, initStoreCredentialComponentEventHandler } from "../auth/store_credential/impl/core"
 
 import { initLoginIDFieldComponent } from "../auth/field/login_id/impl/core"
 import { initPasswordFieldComponent } from "../auth/field/password/impl/core"
@@ -34,9 +34,9 @@ import { PasswordLoginClient } from "../password_login/infra"
 import { PasswordResetSessionClient } from "../password_reset_session/infra"
 import { PasswordResetClient } from "../password_reset/infra"
 
-import { FetchComponentAction } from "../auth/fetch/action"
-import { RenewComponentAction } from "../auth/renew/action"
-import { StoreComponentAction } from "../auth/store/action"
+import { FetchCredentialComponentAction } from "../auth/fetch_credential/action"
+import { RenewCredentialComponentAction } from "../auth/renew_credential/action"
+import { StoreCredentialComponentAction } from "../auth/store_credential/action"
 
 import { LoginIDFieldComponentAction } from "../auth/field/login_id/action"
 import { PasswordFieldComponentAction } from "../auth/field/password/action"
@@ -55,9 +55,9 @@ import { PasswordResetSessionAction } from "../password_reset_session/action"
 import { PasswordResetAction } from "../password_reset/action"
 
 import { AuthUsecase, AuthUsecaseEventHandler } from "../auth/data"
-import { FetchComponent, FetchComponentEventHandler } from "../auth/fetch/data"
-import { RenewComponent, RenewComponentEventHandler } from "../auth/renew/action"
-import { StoreComponent, StoreComponentEventHandler } from "../auth/store/data"
+import { FetchCredentialComponent, FetchCredentialComponentEventHandler } from "../auth/fetch_credential/data"
+import { RenewCredentialComponent, RenewCredentialComponentEventHandler } from "../auth/renew_credential/action"
+import { StoreCredentialComponent, StoreCredentialComponentEventHandler } from "../auth/store_credential/data"
 import { LoginIDFieldComponent } from "../auth/field/login_id/data"
 import { PasswordFieldComponent } from "../auth/field/password/data"
 
@@ -97,25 +97,25 @@ export class ComponentLoader {
         const handler = initAuthUsecaseEventHandler(this.currentLocation)
         return [
             initAuthUsecase(handler, {
-                fetch: this.initFetchComponent(),
-                renew: this.initRenewComponent(),
-                store: this.initStoreComponent(),
+                fetchCredential: this.initFetchCredentialComponent(),
+                renewCredential: this.initRenewCredentialComponent(),
+                storeCredential: this.initStoreCredentialComponent(),
             }),
             handler,
         ]
     }
 
-    initFetchComponent(): FetchComponent {
-        const handler = initFetchComponentEventHandler()
-        return initFetchComponent(handler, this.initFetchComponentAction(handler))
+    initFetchCredentialComponent(): FetchCredentialComponent {
+        const handler = initFetchCredentialComponentEventHandler()
+        return initFetchCredentialComponent(handler, this.initFetchCredentialComponentAction(handler))
     }
-    initRenewComponent(): RenewComponent {
-        const handler = initRenewComponentEventHandler()
-        return initRenewComponent(handler, this.initRenewComponentAction(handler))
+    initRenewCredentialComponent(): RenewCredentialComponent {
+        const handler = initRenewCredentialComponentEventHandler()
+        return initRenewCredentialComponent(handler, this.initRenewCredentialComponentAction(handler))
     }
-    initStoreComponent(): StoreComponent {
-        const handler = initStoreComponentEventHandler()
-        return initStoreComponent(handler, this.initStoreComponentAction(handler))
+    initStoreCredentialComponent(): StoreCredentialComponent {
+        const handler = initStoreCredentialComponentEventHandler()
+        return initStoreCredentialComponent(handler, this.initStoreCredentialComponentAction(handler))
     }
 
     initPasswordLoginComponent(): PasswordLoginComponent {
@@ -158,17 +158,17 @@ export class ComponentLoader {
         return initPasswordFieldComponent(this.initPasswordFieldComponentAction())
     }
 
-    initFetchComponentAction(handler: FetchComponentEventHandler): FetchComponentAction {
+    initFetchCredentialComponentAction(handler: FetchCredentialComponentEventHandler): FetchCredentialComponentAction {
         return {
             credential: this.initCredentialAction(handler),
         }
     }
-    initRenewComponentAction(handler: RenewComponentEventHandler): RenewComponentAction {
+    initRenewCredentialComponentAction(handler: RenewCredentialComponentEventHandler): RenewCredentialComponentAction {
         return {
             credential: this.initCredentialAction(handler),
         }
     }
-    initStoreComponentAction(handler: StoreComponentEventHandler): StoreComponentAction {
+    initStoreCredentialComponentAction(handler: StoreCredentialComponentEventHandler): StoreCredentialComponentAction {
         return {
             credential: this.initCredentialAction(handler),
         }

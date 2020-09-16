@@ -3,9 +3,9 @@ import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import {
-    StoreComponent,
-    initialStoreComponentState,
-} from "../../auth/store/data"
+    StoreCredentialComponent,
+    initialStoreCredentialComponentState,
+} from "../../auth/store_credential/data"
 
 import { AuthCredential } from "../../credential/data"
 
@@ -17,9 +17,9 @@ export interface Next {
     loadApplication(): void
 }
 
-export function Store(component: StoreComponent, authCredential: AuthCredential, next: Next): PreactComponent {
+export function StoreCredential(component: StoreCredentialComponent, authCredential: AuthCredential, next: Next): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(initialStoreComponentState)
+        const [state, setState] = useState(initialStoreCredentialComponentState)
         useEffect(() => {
             component.init(setState)
             component.store(authCredential)

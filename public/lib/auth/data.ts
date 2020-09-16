@@ -1,6 +1,6 @@
-import { FetchComponent } from "./fetch/data"
-import { RenewComponent } from "./renew/action"
-import { StoreComponent } from "./store/data"
+import { FetchCredentialComponent } from "./fetch_credential/data"
+import { RenewCredentialComponent } from "./renew_credential/action"
+import { StoreCredentialComponent } from "./store_credential/data"
 
 import { AuthCredential, TicketNonce, RenewError } from "../credential/data"
 import { CheckError } from "../script/data"
@@ -12,32 +12,32 @@ export interface AuthUsecase {
 
     component: AuthComponent
 
-    renew(ticketNonce: TicketNonce): Promise<void>
-    store(authCredential: AuthCredential): Promise<void>
+    renewCredential(ticketNonce: TicketNonce): Promise<void>
+    storeCredential(authCredential: AuthCredential): Promise<void>
     tryToLogin(): Promise<void>
     loadApplication(): Promise<void>
 }
 
 export type AuthUsecaseState =
-    Readonly<{ type: "fetch" }> |
-    Readonly<{ type: "renew", ticketNonce: TicketNonce }> |
-    Readonly<{ type: "store", authCredential: AuthCredential }> |
+    Readonly<{ type: "fetch-credential" }> |
+    Readonly<{ type: "renew-credential", ticketNonce: TicketNonce }> |
+    Readonly<{ type: "store-credential", authCredential: AuthCredential }> |
     Readonly<{ type: "load-application" }> |
     Readonly<{ type: "password-login" }> |
     Readonly<{ type: "password-reset-session" }> |
     Readonly<{ type: "password-reset", resetToken: ResetToken }> |
     Readonly<{ type: "error", err: AuthUsecaseError }>
 
-export const initialAuthUsecaseState: AuthUsecaseState = { type: "fetch" }
+export const initialAuthUsecaseState: AuthUsecaseState = { type: "fetch-credential" }
 
 export type AuthUsecaseError =
     Readonly<{ type: "renew", err: RenewError }> |
     Readonly<{ type: "load", err: CheckError }>
 
 export interface AuthComponent {
-    fetch: FetchComponent
-    renew: RenewComponent
-    store: StoreComponent
+    fetchCredential: FetchCredentialComponent
+    renewCredential: RenewCredentialComponent
+    storeCredential: StoreCredentialComponent
 }
 
 export interface AuthUsecaseEventHandler extends AuthEventHandler {
@@ -49,8 +49,8 @@ export interface AuthEventHandler {
 }
 
 export type AuthEvent =
-    Readonly<{ type: "try-to-renew", ticketNonce: TicketNonce }> |
-    Readonly<{ type: "try-to-store", authCredential: AuthCredential }> |
+    Readonly<{ type: "try-to-renew-credential", ticketNonce: TicketNonce }> |
+    Readonly<{ type: "try-to-store-credential", authCredential: AuthCredential }> |
     Readonly<{ type: "try-to-login" }> |
     Readonly<{ type: "failed-to-login", err: AuthUsecaseError }> |
     Readonly<{ type: "succeed-to-login" }>

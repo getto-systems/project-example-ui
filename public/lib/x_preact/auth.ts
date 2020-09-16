@@ -2,9 +2,9 @@ import { render, h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { Fetch } from "./auth/fetch"
-import { Renew } from "./auth/renew"
-import { Store } from "./auth/store"
+import { FetchCredential } from "./auth/fetch_credential"
+import { RenewCredential } from "./auth/renew_credential"
+import { StoreCredential } from "./auth/store_credential"
 import { LoadApplication } from "./auth/load_application"
 
 import { PasswordLogin } from "./auth/password_login"
@@ -30,14 +30,14 @@ function main() {
         // TODO useErrorBoundary とか使ってエラーの処理をする
 
         switch (state.type) {
-            case "fetch":
-                return h(Fetch(usecase.component.fetch, usecase), {})
+            case "fetch-credential":
+                return h(FetchCredential(usecase.component.fetchCredential, usecase), {})
 
-            case "renew":
-                return h(Renew(usecase.component.renew, state.ticketNonce, usecase), {})
+            case "renew-credential":
+                return h(RenewCredential(usecase.component.renewCredential, state.ticketNonce, usecase), {})
 
-            case "store":
-                return h(Store(usecase.component.store, state.authCredential, usecase), {})
+            case "store-credential":
+                return h(StoreCredential(usecase.component.storeCredential, state.authCredential, usecase), {})
 
             case "load-application":
                 return h(LoadApplication(newLoadApplicationComponent()), {})
