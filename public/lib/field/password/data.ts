@@ -19,7 +19,7 @@ export function showPassword(password: InputValue): PasswordView {
 export type PasswordFieldError = "empty" | "too-long"
 
 export type PasswordFieldEvent = Readonly<{
-    type: "succeed-to-update-login-id",
+    type: "succeed-to-update-password",
     result: Valid<PasswordFieldError>,
     content: Content<Password>,
     character: PasswordCharacter,

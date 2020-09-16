@@ -12,11 +12,15 @@ export interface PasswordFieldComponent {
     field: PasswordField
 }
 
-export type PasswordFieldComponentState =
-    Readonly<{ type: "input-password", result: Valid<PasswordFieldError>, character: PasswordCharacter, view: PasswordView }>
+export type PasswordFieldComponentState = Readonly<{
+    type: "succeed-to-update-password",
+    result: Valid<PasswordFieldError>,
+    character: PasswordCharacter,
+    view: PasswordView,
+}>
 
 export const initialPasswordFieldComponentState: PasswordFieldComponentState = {
-    type: "input-password",
+    type: "succeed-to-update-password",
     result: { valid: true },
     character: { complex: false },
     view: { show: false },

@@ -1,6 +1,11 @@
-import { LoginIDFieldAction, LoginIDField, LoginIDFieldEventHandler } from "../action"
+import {
+    LoginIDFieldAction,
+    LoginIDField,
+    LoginIDFieldEventPublisher,
+    LoginIDFieldEventSubscriber,
+} from "../action"
 
-import { LoginIDFieldError } from "../data"
+import { LoginIDFieldEvent, LoginIDFieldError } from "../data"
 import { LoginID } from "../../../credential/data"
 import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../../input/data"
 
@@ -9,18 +14,19 @@ export function initLoginIDFieldAction(): LoginIDFieldAction {
 }
 
 class Action implements LoginIDFieldAction {
-    initLoginIDField(handler: LoginIDFieldEventHandler): LoginIDField {
-        return new Field(handler)
+    initLoginIDField(): [LoginIDField, LoginIDFieldEventSubscriber] {
+        const pubsub = new FieldEventPubSub()
+        return [new Field(pubsub), pubsub]
     }
 }
 
 class Field implements LoginIDField {
-    handler: LoginIDFieldEventHandler
+    pub: LoginIDFieldEventPublisher
 
     loginID: InputValue
 
-    constructor(handler: LoginIDFieldEventHandler) {
-        this.handler = handler
+    constructor(pub: LoginIDFieldEventPublisher) {
+        this.pub = pub
 
         this.loginID = { inputValue: "" }
     }
@@ -30,8 +36,8 @@ class Field implements LoginIDField {
         this.validate()
     }
     validate(): void {
-        const [content, valid] = this.content()
-        this.handler.handleLoginIDFieldEvent({ type: "succeed-to-update-login-id", valid, content })
+        const [content, result] = this.content()
+        this.pub.publishLoginIDFieldEvent({ type: "succeed-to-update-login-id", result, content })
     }
 
     content(): [Content<LoginID>, Valid<LoginIDFieldError>] {
@@ -41,6 +47,44 @@ class Field implements LoginIDField {
         }
         return [validContent(this.loginID, { loginID: this.loginID.inputValue }), result]
     }
+}
+
+class FieldEventPubSub implements LoginIDFieldEventPublisher, LoginIDFieldEventSubscriber {
+    holder: {
+        field: PublisherHolder<LoginIDFieldEvent>
+        content: PublisherHolder<Content<LoginID>>
+    }
+
+    constructor() {
+        this.holder = {
+            field: { set: false },
+            content: { set: false },
+        }
+    }
+
+    onLoginIDFieldStateChanged(pub: Publisher<LoginIDFieldEvent>): void {
+        this.holder.field = { set: true, pub }
+    }
+    onLoginIDFieldContentChanged(pub: Publisher<Content<LoginID>>): void {
+        this.holder.content = { set: true, pub }
+    }
+
+    publishLoginIDFieldEvent(event: LoginIDFieldEvent): void {
+        if (this.holder.field.set) {
+            this.holder.field.pub(event)
+        }
+        if (this.holder.content.set) {
+            this.holder.content.pub(event.content)
+        }
+    }
+}
+
+type PublisherHolder<T> =
+    Readonly<{ set: false }> |
+    Readonly<{ set: true, pub: Publisher<T> }>
+
+interface Publisher<T> {
+    (state: T): void
 }
 
 const ERROR: {

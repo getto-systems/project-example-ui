@@ -1,6 +1,12 @@
-import { PasswordFieldAction, PasswordField, PasswordFieldEventHandler } from "../action"
+import {
+    PasswordFieldAction,
+    PasswordField,
+    PasswordFieldEventPublisher,
+    PasswordFieldEventSubscriber,
+} from "../action"
 
 import {
+    PasswordFieldEvent,
     PasswordFieldError,
     PasswordCharacter, simplePassword, complexPassword,
     PasswordView, showPassword, hidePassword,
@@ -16,19 +22,20 @@ export function initPasswordFieldAction(): PasswordFieldAction {
 }
 
 class Action implements PasswordFieldAction {
-    initPasswordField(handler: PasswordFieldEventHandler): PasswordField {
-        return new Field(handler)
+    initPasswordField(): [PasswordField, PasswordFieldEventSubscriber] {
+        const pubsub = new EventPubSub()
+        return [new Field(pubsub), pubsub]
     }
 }
 
 class Field implements PasswordField {
-    handler: PasswordFieldEventHandler
+    pub: PasswordFieldEventPublisher
 
     password: InputValue
     visible: boolean
 
-    constructor(handler: PasswordFieldEventHandler) {
-        this.handler = handler
+    constructor(pub: PasswordFieldEventPublisher) {
+        this.pub = pub
 
         this.password = { inputValue: "" }
         this.visible = false
@@ -48,7 +55,7 @@ class Field implements PasswordField {
     }
     validate(): void {
         const [content, result, character, view] = this.content()
-        this.handler.handlePasswordFieldEvent({ type: "succeed-to-update-login-id", result, content, character, view })
+        this.pub.publishPasswordFieldEvent({ type: "succeed-to-update-password", result, content, character, view })
     }
 
     content(): [Content<Password>, Valid<PasswordFieldError>, PasswordCharacter, PasswordView] {
@@ -67,6 +74,44 @@ class Field implements PasswordField {
             return hidePassword
         }
     }
+}
+
+class EventPubSub implements PasswordFieldEventPublisher, PasswordFieldEventSubscriber {
+    holder: {
+        field: PublisherHolder<PasswordFieldEvent>
+        content: PublisherHolder<Content<Password>>
+    }
+
+    constructor() {
+        this.holder = {
+            field: { set: false },
+            content: { set: false },
+        }
+    }
+
+    onPasswordFieldStateChanged(pub: Publisher<PasswordFieldEvent>): void {
+        this.holder.field = { set: true, pub }
+    }
+    onPasswordFieldContentChanged(pub: Publisher<Content<Password>>): void {
+        this.holder.content = { set: true, pub }
+    }
+
+    publishPasswordFieldEvent(event: PasswordFieldEvent): void {
+        if (this.holder.field.set) {
+            this.holder.field.pub(event)
+        }
+        if (this.holder.content.set) {
+            this.holder.content.pub(event.content)
+        }
+    }
+}
+
+type PublisherHolder<T> =
+    Readonly<{ set: false }> |
+    Readonly<{ set: true, pub: Publisher<T> }>
+
+interface Publisher<T> {
+    (state: T): void
 }
 
 const ERROR: {
