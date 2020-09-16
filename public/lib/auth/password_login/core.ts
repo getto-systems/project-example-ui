@@ -76,7 +76,7 @@ class Component implements PasswordLoginComponent {
     async login(event: PasswordLoginComponentEvent): Promise<void> {
         await Promise.all(this.submitHandlers.map((handler) => handler()))
 
-        const result = await this.action.passwordLogin.login(event, [
+        const result = await this.action.passwordLogin.loginDeprecated(event, [
             this.content.loginID,
             this.content.password,
         ])
