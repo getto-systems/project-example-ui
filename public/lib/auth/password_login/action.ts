@@ -16,10 +16,10 @@ export interface PasswordLoginComponent {
     terminate(): void
     trigger(operation: PasswordLoginComponentOperation): Promise<void>
 
-    fields: PasswordLoginComponentFields
+    field: PasswordLoginComponentField
 }
 
-export type PasswordLoginComponentFields = Readonly<{
+export type PasswordLoginComponentField = Readonly<{
     loginID: LoginIDFieldComponent
     password: PasswordFieldComponent
 }>
