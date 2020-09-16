@@ -49,7 +49,7 @@ export function RenewCredential(component: RenewCredentialComponent, ticketNonce
                 // TODO エラー画面を用意
                 return html`ERROR: ${state.err}`
 
-            case "require-login":
+            case "unauthorized":
                 next.tryToLogin()
                 return html``
 
