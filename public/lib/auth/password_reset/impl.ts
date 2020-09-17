@@ -1,11 +1,14 @@
 import {
     PasswordResetComponentAction,
     PasswordResetComponent,
+    PasswordResetWorkerComponentHelper,
+} from "./component"
+
+import {
     PasswordResetComponentState,
     PasswordResetComponentOperation,
     PasswordResetWorkerComponentState,
-    PasswordResetWorkerComponentHelper,
-} from "./action"
+} from "./data"
 
 import { LoginIDFieldComponentState } from "../field/login_id/data"
 import { PasswordFieldComponentState } from "../field/password/data"
