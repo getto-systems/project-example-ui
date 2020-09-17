@@ -13,7 +13,7 @@ import { initLoginIDFieldComponent } from "../auth/field/login_id/core"
 import { initPasswordFieldComponent } from "../auth/field/password/core"
 
 import { initPasswordResetComponent, initPasswordResetComponentEvent } from "../auth/password_reset/core"
-import { initPasswordResetSessionComponent, initPasswordResetSessionComponentEvent } from "../auth/password_reset_session/core"
+import { initPasswordResetSessionComponent } from "../auth/password_reset_session/core"
 
 import { initStorageAuthCredentialRepository } from "../credential/impl/repository/credential/storage"
 import { initFetchRenewClient } from "../renew_credential/impl/client/renew/fetch"
@@ -42,7 +42,7 @@ import { StoreCredentialComponentAction } from "../auth/store_credential/action"
 import { LoginIDFieldComponentAction } from "../auth/field/login_id/action"
 import { PasswordFieldComponentAction } from "../auth/field/password/action"
 
-import { PasswordResetSessionComponentAction, PasswordResetSessionComponent, PasswordResetSessionComponentEventInit } from "../auth/password_reset_session/action"
+import { PasswordResetSessionComponentAction, PasswordResetSessionComponent } from "../auth/password_reset_session/action"
 import { PasswordResetComponentAction, PasswordResetComponent, PasswordResetComponentEventInit } from "../auth/password_reset/action"
 
 import { CredentialAction } from "../credential/action"
@@ -114,13 +114,7 @@ export class ComponentLoader {
     }
 
     initPasswordResetSession(): PasswordResetSessionComponent {
-        return initPasswordResetSessionComponent(
-            this.initLoginIDFieldComponent(),
-            this.initPasswordResetSessionComponentAction(),
-        )
-    }
-    initPasswordResetSessionEvent(): PasswordResetSessionComponentEventInit {
-        return initPasswordResetSessionComponentEvent()
+        return initPasswordResetSessionComponent(this.initPasswordResetSessionComponentAction())
     }
 
     initPasswordReset(resetToken: ResetToken): PasswordResetComponent {
@@ -172,6 +166,7 @@ export class ComponentLoader {
     initPasswordResetSessionComponentAction(): PasswordResetSessionComponentAction {
         return {
             passwordResetSession: this.initPasswordResetSessionAction(),
+            loginIDField: this.initLoginIDFieldAction(),
         }
     }
     initPasswordResetComponentAction(): PasswordResetComponentAction {

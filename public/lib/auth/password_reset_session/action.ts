@@ -1,6 +1,9 @@
-import { PasswordResetSessionAction, SessionEventSender, PollingStatusEventSender } from "../../password_reset_session/action"
+import { LoginIDFieldComponentState } from "../field/login_id/data"
 
-import { LoginIDFieldComponent } from "../field/login_id/data"
+import { PasswordResetSessionAction } from "../../password_reset_session/action"
+import { LoginIDFieldAction } from "../../field/login_id/action"
+
+import { LoginIDFieldOperation } from "../../field/login_id/data"
 
 import {
     InputContent,
@@ -10,14 +13,15 @@ import {
 
 export interface PasswordResetSessionComponentAction {
     passwordResetSession: PasswordResetSessionAction
+    loginIDField: LoginIDFieldAction
 }
 
 export interface PasswordResetSessionComponent {
-    loginID: LoginIDFieldComponent
-
-    initialState: PasswordResetSessionComponentState
-
-    createSession(event: PasswordResetSessionComponentEvent): Promise<void>
+    hook(stateChanged: Publisher<PasswordResetSessionComponentState>): void
+    init(stateChanged: Publisher<PasswordResetSessionComponentState>): void
+    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void
+    terminate(): void
+    trigger(operation: PasswordResetSessionComponentOperation): Promise<void>
 }
 
 export type PasswordResetSessionComponentState =
@@ -30,12 +34,12 @@ export type PasswordResetSessionComponentState =
     Readonly<{ type: "failed-to-polling-status", err: PollingStatusError }> |
     Readonly<{ type: "succeed-to-send-token", status: DoneStatus }>
 
-export interface PasswordResetSessionComponentEvent extends SessionEventSender, PollingStatusEventSender { }
+export const initialPasswordResetSessionComponentState: PasswordResetSessionComponentState = { type: "initial-reset-session" }
 
-export interface PasswordResetSessionComponentEventInit {
-    (stateChanged: PasswordResetSessionComponentStateHandler): PasswordResetSessionComponentEvent
-}
+export type PasswordResetSessionComponentOperation =
+    Readonly<{ type: "create-session" }> |
+    Readonly<{ type: "field-login_id", operation: LoginIDFieldOperation }>
 
-export interface PasswordResetSessionComponentStateHandler {
-    (state: PasswordResetSessionComponentState): void
+interface Publisher<T> {
+    (state: T): void
 }

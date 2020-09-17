@@ -157,6 +157,7 @@ type SendTokenState =
     Readonly<{ type: "failed", err: PollingStatusError }> |
     Readonly<{ type: "success" }>
 
+// TODO worker ってなまえはよくない
 class PollingStatusWorker {
     timeConfig: TimeConfig
     client: PasswordResetSessionClient
@@ -170,6 +171,7 @@ class PollingStatusWorker {
         this.sendTokenState = { type: "initial" }
     }
 
+    // TODO EventSender は削除予定
     async startPolling(event: PollingStatusEventSender, session: Session): Promise<void> {
         event.tryToPollingStatus()
 
