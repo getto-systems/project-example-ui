@@ -1,6 +1,6 @@
 import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
 
-import { LoginID } from "../../../../credential/data"
+import { LoginID } from "../../../../login_id/data"
 import { Password } from "../../../../password/data"
 
 interface AuthClient {

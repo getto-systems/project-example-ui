@@ -1,6 +1,3 @@
-// TODO login_id に移動したい
-export type LoginID = Readonly<{ loginID: Readonly<string> }>
-
 export type AuthCredential = Readonly<{
     ticketNonce: TicketNonce,
     apiCredential: ApiCredential,

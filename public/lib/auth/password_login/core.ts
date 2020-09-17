@@ -13,7 +13,7 @@ import { PasswordFieldComponentState } from "../field/password/data"
 import { LoginIDField } from "../../field/login_id/action"
 import { PasswordField } from "../../field/password/action"
 
-import { LoginID } from "../../credential/data"
+import { LoginID } from "../../login_id/data"
 import { Password } from "../../password/data"
 import { LoginEvent } from "../../password_login/data"
 import { Content } from "../../field/data"

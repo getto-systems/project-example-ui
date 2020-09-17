@@ -1,4 +1,4 @@
-import { LoginID } from "../../credential/data"
+import { LoginID } from "../../login_id/data"
 import { InputValue, Valid, Content } from "../../field/data"
 
 export type LoginIDFieldError = "empty"

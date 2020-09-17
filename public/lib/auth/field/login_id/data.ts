@@ -1,7 +1,7 @@
 import { LoginIDField } from "../../../field/login_id/action"
 
 import { LoginIDFieldError } from "../../../field/login_id/data"
-import { LoginID } from "../../../credential/data"
+import { LoginID } from "../../../login_id/data"
 import { Valid, Content } from "../../../field/data"
 
 export interface LoginIDFieldComponent {
