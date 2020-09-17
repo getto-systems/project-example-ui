@@ -1,13 +1,6 @@
-import {
-    AuthUsecase,
-    AuthComponent,
-    AuthUsecaseEventHandler,
-} from "./component"
+import { AuthUsecase, AuthComponent, AuthUsecaseEventHandler } from "./component"
 
-import {
-    AuthUsecaseState,
-    AuthEvent,
-} from "./data"
+import { AuthUsecaseState, AuthEvent } from "./data"
 
 import { AuthCredential, TicketNonce } from "../credential/data"
 

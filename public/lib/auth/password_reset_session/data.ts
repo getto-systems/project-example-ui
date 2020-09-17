@@ -1,12 +1,11 @@
 import { LoginIDFieldComponentState } from "../field/login_id/data"
 
-import { LoginIDFieldOperation } from "../../field/login_id/data"
-
 import {
     CreateSessionInputContent,
     CreateSessionError,
     PollingStatusError, PollingStatus, DoneStatus,
 } from "../../password_reset/data"
+import { LoginIDFieldOperation } from "../../field/login_id/data"
 
 export type PasswordResetSessionComponentState =
     Readonly<{ type: "initial-reset-session" }> |

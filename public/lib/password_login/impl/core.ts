@@ -1,10 +1,6 @@
 import { Infra } from "../infra"
 
-import {
-    PasswordLoginAction,
-    PasswordLoginEventPublisher,
-    PasswordLoginEventSubscriber,
-} from "../action"
+import { PasswordLoginAction, PasswordLoginEventPublisher, PasswordLoginEventSubscriber } from "../action"
 
 import { LoginID } from "../../login_id/data"
 import { Password } from "../../password/data"

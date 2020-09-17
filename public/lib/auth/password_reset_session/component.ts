@@ -1,13 +1,13 @@
-import { LoginIDFieldComponentState } from "../field/login_id/data"
-
-import { PasswordResetAction } from "../../password_reset/action"
-import { LoginIDFieldAction } from "../../field/login_id/action"
-
 import {
     PasswordResetSessionComponentState,
     PasswordResetSessionComponentOperation,
     PasswordResetSessionWorkerComponentState,
 } from "./data"
+
+import { LoginIDFieldComponentState } from "../field/login_id/data"
+
+import { PasswordResetAction } from "../../password_reset/action"
+import { LoginIDFieldAction } from "../../field/login_id/action"
 
 export interface PasswordResetSessionComponentAction {
     passwordReset: PasswordResetAction

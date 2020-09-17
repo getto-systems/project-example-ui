@@ -1,6 +1,6 @@
+import { LoginEvent } from "./data"
 import { LoginID } from "../login_id/data"
 import { Password } from "../password/data"
-import { LoginEvent } from "./data"
 import { Content } from "../field/data"
 
 export interface PasswordLoginAction {

@@ -1,10 +1,6 @@
 import { Infra, TimeConfig, PasswordResetSessionClient } from "../infra"
 
-import {
-    PasswordResetAction,
-    PasswordResetEventPublisher,
-    PasswordResetEventSubscriber,
-} from "../action"
+import { PasswordResetAction, PasswordResetEventPublisher, PasswordResetEventSubscriber } from "../action"
 
 import {
     CreateSessionInputContent, ResetInputContent,

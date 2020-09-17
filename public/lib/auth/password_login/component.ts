@@ -1,11 +1,11 @@
+import { PasswordLoginComponentState, PasswordLoginComponentOperation, PasswordLoginWorkerComponentState } from "./data"
+
 import { LoginIDFieldComponentState } from "../field/login_id/data"
 import { PasswordFieldComponentState } from "../field/password/data"
 
 import { PasswordLoginAction } from "../../password_login/action"
 import { LoginIDFieldAction } from "../../field/login_id/action"
 import { PasswordFieldAction } from "../../field/password/action"
-
-import { PasswordLoginComponentState, PasswordLoginComponentOperation, PasswordLoginWorkerComponentState } from "./data"
 
 export interface PasswordLoginComponentAction {
     passwordLogin: PasswordLoginAction
