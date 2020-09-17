@@ -1,8 +1,8 @@
-import { LoginIDFieldComponentAction } from "./action"
+import { LoginIDFieldComponent, LoginIDFieldComponentAction } from "./component"
 
 import { LoginIDField } from "../../../field/login_id/action"
 
-import { LoginIDFieldComponent, LoginIDFieldComponentState } from "./data"
+import { LoginIDFieldComponentState } from "./data"
 
 import { LoginID } from "../../../login_id/data"
 import { LoginIDFieldEvent } from "../../../field/login_id/data"
