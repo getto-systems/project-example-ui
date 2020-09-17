@@ -1,24 +1,28 @@
-import { CredentialAction, StoreEventPublisher } from "../../credential/action"
-import { PasswordResetAction, ResetEventSender } from "../../password_reset/action"
+import { LoginIDFieldComponentState } from "../field/login_id/data"
+import { PasswordFieldComponentState } from "../field/password/data"
 
-import { LoginIDFieldComponent } from "../field/login_id/data"
-import { PasswordFieldComponent } from "../field/password/data"
+import { PasswordResetAction } from "../../password_reset/action"
+import { LoginIDFieldAction } from "../../field/login_id/action"
+import { PasswordFieldAction } from "../../field/password/action"
 
-import { StoreError } from "../../credential/data"
-import { InputContent, ResetError } from "../../password_reset/data"
+import { AuthCredential } from "../../credential/data"
+import { InputContent, ResetToken, ResetError } from "../../password_reset/data"
+import { LoginIDFieldOperation } from "../../field/login_id/data"
+import { PasswordFieldOperation } from "../../field/password/data"
 
 export interface PasswordResetComponentAction {
-    credential: CredentialAction
     passwordReset: PasswordResetAction
+    loginIDField: LoginIDFieldAction
+    passwordField: PasswordFieldAction
 }
 
 export interface PasswordResetComponent {
-    loginID: LoginIDFieldComponent
-    password: PasswordFieldComponent
-
-    initialState: PasswordResetComponentState
-
-    reset(event: PasswordResetComponentEvent): Promise<void>
+    hook(stateChanged: Publisher<PasswordResetComponentState>): void
+    init(stateChanged: Publisher<PasswordResetComponentState>): void
+    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void
+    initPasswordField(stateChanged: Publisher<PasswordFieldComponentState>): void
+    terminate(): void
+    trigger(operation: PasswordResetComponentOperation): Promise<void>
 }
 
 export type PasswordResetComponentState =
@@ -26,14 +30,26 @@ export type PasswordResetComponentState =
     Readonly<{ type: "try-to-reset" }> |
     Readonly<{ type: "delayed-to-reset" }> |
     Readonly<{ type: "failed-to-reset", content: InputContent, err: ResetError }> |
-    Readonly<{ type: "failed-to-store", err: StoreError }>
+    Readonly<{ type: "succeed-to-reset", authCredential: AuthCredential }>
 
-export interface PasswordResetComponentEvent extends ResetEventSender, StoreEventPublisher { }
+export const initialPasswordResetComponentState: PasswordResetComponentState = { type: "initial-reset" }
 
-export interface PasswordResetComponentEventInit {
-    (stateChanged: PasswordResetComponentStateHandler): PasswordResetComponentEvent
+export type PasswordResetComponentOperation =
+    Readonly<{ type: "reset", resetToken: ResetToken }> |
+    Readonly<{ type: "field-login_id", operation: LoginIDFieldOperation }> |
+    Readonly<{ type: "field-password", operation: PasswordFieldOperation }>
+
+export interface PasswordResetWorkerComponentHelper {
+    mapPasswordResetComponentState(state: PasswordResetComponentState): PasswordResetWorkerComponentState
+    mapLoginIDFieldComponentState(state: LoginIDFieldComponentState): PasswordResetWorkerComponentState
+    mapPasswordFieldComponentState(state: PasswordFieldComponentState): PasswordResetWorkerComponentState
 }
 
-export interface PasswordResetComponentStateHandler {
-    (state: PasswordResetComponentState): void
+export type PasswordResetWorkerComponentState =
+    Readonly<{ type: "password_reset", state: PasswordResetComponentState }> |
+    Readonly<{ type: "field-login_id", state: LoginIDFieldComponentState }> |
+    Readonly<{ type: "field-password", state: PasswordFieldComponentState }>
+
+interface Publisher<T> {
+    (state: T): void
 }

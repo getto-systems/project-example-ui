@@ -3,6 +3,7 @@ import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_clien
 import { newLoadApplicationComponent } from "./auth/worker/load_application"
 import { newPasswordLoginComponent } from "./auth/worker/password_login"
 import { newPasswordResetSessionComponent } from "./auth/worker/password_reset_session"
+import { newPasswordResetComponent } from "./auth/worker/password_reset"
 
 import { initAuthUsecase } from "../auth/core"
 
@@ -10,48 +11,24 @@ import { initFetchCredentialComponent } from "../auth/fetch_credential/core"
 import { initRenewCredentialComponent } from "../auth/renew_credential/core"
 import { initStoreCredentialComponent } from "../auth/store_credential/core"
 
-import { initLoginIDFieldComponent } from "../auth/field/login_id/core"
-import { initPasswordFieldComponent } from "../auth/field/password/core"
-
-import { initPasswordResetComponent, initPasswordResetComponentEvent } from "../auth/password_reset/core"
-
 import { initStorageAuthCredentialRepository } from "../credential/impl/repository/credential/storage"
 import { initFetchRenewClient } from "../renew_credential/impl/client/renew/fetch"
-import { initSimulatePasswordResetClient } from "../password_reset/impl/client/password_reset/simulate"
 import { env } from "../y_static/env"
 
 import { initCredentialAction } from "../credential/impl/core"
 import { initRenewCredentialAction } from "../renew_credential/impl/core"
-import { initLoginIDFieldAction } from "../field/login_id/impl/core"
-import { initPasswordFieldAction } from "../field/password/impl/core"
-import { initPasswordResetAction } from "../password_reset/impl/core"
 
 import { AuthCredentialRepository } from "../credential/infra"
 import { RenewClient } from "../renew_credential/infra"
-import { PasswordResetClient } from "../password_reset/infra"
 
 import { FetchCredentialComponentAction } from "../auth/fetch_credential/action"
 import { RenewCredentialComponentAction } from "../auth/renew_credential/action"
 import { StoreCredentialComponentAction } from "../auth/store_credential/action"
 
-import { LoginIDFieldComponentAction } from "../auth/field/login_id/action"
-import { PasswordFieldComponentAction } from "../auth/field/password/action"
-
-import { PasswordResetComponentAction, PasswordResetComponent, PasswordResetComponentEventInit } from "../auth/password_reset/action"
-
 import { CredentialAction } from "../credential/action"
 import { RenewCredentialAction } from "../renew_credential/action"
 
-import { LoginIDFieldAction } from "../field/login_id/action"
-import { PasswordFieldAction } from "../field/password/action"
-
-import { PasswordResetAction } from "../password_reset/action"
-
-import { AuthUsecase, AuthUsecaseEventHandler } from "../auth/data"
-import { LoginIDFieldComponent } from "../auth/field/login_id/data"
-import { PasswordFieldComponent } from "../auth/field/password/data"
-
-import { ResetToken } from "../password_reset/data"
+import { AuthUsecase } from "../auth/data"
 
 export class ComponentLoader {
     currentLocation: Location
@@ -92,26 +69,8 @@ export class ComponentLoader {
 
             passwordLogin: newPasswordLoginComponent(),
             passwordResetSession: newPasswordResetSessionComponent(),
+            passwordReset: newPasswordResetComponent(),
         })
-    }
-
-    initPasswordReset(resetToken: ResetToken): PasswordResetComponent {
-        return initPasswordResetComponent(
-            this.initLoginIDFieldComponent(),
-            this.initPasswordFieldComponent(),
-            this.initPasswordResetComponentAction(),
-            resetToken,
-        )
-    }
-    initPasswordResetEvent(handler: AuthUsecaseEventHandler): PasswordResetComponentEventInit {
-        return initPasswordResetComponentEvent(handler)
-    }
-
-    initLoginIDFieldComponent(): LoginIDFieldComponent {
-        return initLoginIDFieldComponent(this.initLoginIDFieldComponentAction())
-    }
-    initPasswordFieldComponent(): PasswordFieldComponent {
-        return initPasswordFieldComponent(this.initPasswordFieldComponentAction())
     }
 
     initFetchCredentialComponentAction(credential: CredentialAction): FetchCredentialComponentAction {
@@ -127,24 +86,6 @@ export class ComponentLoader {
         }
     }
 
-    initLoginIDFieldComponentAction(): LoginIDFieldComponentAction {
-        return {
-            loginIDField: this.initLoginIDFieldAction(),
-        }
-    }
-    initPasswordFieldComponentAction(): PasswordFieldComponentAction {
-        return {
-            passwordField: this.initPasswordFieldAction(),
-        }
-    }
-
-    initPasswordResetComponentAction(): PasswordResetComponentAction {
-        return {
-            credential: this.initCredentialAction(),
-            passwordReset: this.initPasswordResetAction(),
-        }
-    }
-
     initCredentialAction(): CredentialAction {
         return initCredentialAction({
             authCredentials: this.initAuthCredentialRepository(),
@@ -157,36 +98,11 @@ export class ComponentLoader {
         })
     }
 
-    initLoginIDFieldAction(): LoginIDFieldAction {
-        return initLoginIDFieldAction()
-    }
-    initPasswordFieldAction(): PasswordFieldAction {
-        return initPasswordFieldAction()
-    }
-
-    initPasswordResetAction(): PasswordResetAction {
-        return initPasswordResetAction({
-            config: this.config,
-            passwordResetClient: this.initPasswordResetClient(),
-        })
-    }
-
     initAuthCredentialRepository(): AuthCredentialRepository {
         return initStorageAuthCredentialRepository(this.credentialStorage, "GETTO-EXAMPLE-CREDENTIAL")
     }
     initRenewClient(): RenewClient {
         return initFetchRenewClient(this.authClient)
-    }
-    initPasswordResetClient(): PasswordResetClient {
-        return initSimulatePasswordResetClient(
-            { loginID: "admin" },
-            {
-                ticketNonce: { ticketNonce: "ticket-nonce" },
-                apiCredential: {
-                    apiRoles: { apiRoles: ["admin", "development"] },
-                },
-            },
-        )
     }
 }
 

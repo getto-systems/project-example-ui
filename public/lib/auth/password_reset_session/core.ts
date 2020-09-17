@@ -96,6 +96,8 @@ class Component implements PasswordResetSessionComponent {
     }
 
     createSession(): Promise<void> {
+        this.field.loginID.validate()
+
         return this.action.passwordResetSession.createSession([this.content.loginID])
     }
 }

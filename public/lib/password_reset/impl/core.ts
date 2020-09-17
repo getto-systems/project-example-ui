@@ -4,8 +4,6 @@ import {
     PasswordResetAction,
     PasswordResetEventPublisher,
     PasswordResetEventSubscriber,
-    ResetEventSender,
-    ResetResult,
 } from "../action"
 
 import { InputContent, ResetToken, ResetEvent } from "../data"
@@ -44,7 +42,7 @@ class PasswordResetActionImpl implements PasswordResetAction {
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const response = await delayed(
             this.infra.passwordResetClient.reset(resetToken, ...content.content),
-            this.infra.config.passwordResetDelayTime,
+            this.infra.timeConfig.passwordResetDelayTime,
             () => this.pub.publishResetEvent({ type: "delayed-to-reset" }),
         )
         if (!response.success) {
@@ -54,46 +52,6 @@ class PasswordResetActionImpl implements PasswordResetAction {
 
         this.pub.publishResetEvent({ type: "succeed-to-reset", authCredential: response.authCredential })
         return
-
-        type ValidContent =
-            Readonly<{ valid: false }> |
-            Readonly<{ valid: true, content: [LoginID, Password] }>
-
-        function mapContent(loginID: Content<LoginID>, password: Content<Password>): ValidContent {
-            if (
-                !loginID.valid ||
-                !password.valid
-            ) {
-                return { valid: false }
-            }
-            return { valid: true, content: [loginID.content, password.content] }
-        }
-        function mapInput(loginID: Content<LoginID>, password: Content<Password>): InputContent {
-            return {
-                loginID: loginID.input,
-                password: password.input,
-            }
-        }
-    }
-
-    async reset_DEPRECATED(event: ResetEventSender, resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<ResetResult> {
-        const content = mapContent(...fields)
-        if (!content.valid) {
-            event.failedToReset(mapInput(...fields), { type: "validation-error" })
-            return { success: false }
-        }
-
-        event.tryToReset()
-
-        // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const promise = this.infra.passwordResetClient.reset(resetToken, ...content.content)
-        const response = await delayed(promise, this.infra.config.passwordResetDelayTime, event.delayedToReset)
-        if (!response.success) {
-            event.failedToReset(mapInput(...fields), response.err)
-            return { success: false }
-        }
-
-        return { success: true, authCredential: response.authCredential }
 
         type ValidContent =
             Readonly<{ valid: false }> |

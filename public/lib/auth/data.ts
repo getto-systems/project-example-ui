@@ -5,6 +5,7 @@ import { LoadApplicationComponent } from "./load_application/data"
 
 import { PasswordLoginComponent } from "./password_login/action"
 import { PasswordResetSessionComponent } from "./password_reset_session/action"
+import { PasswordResetComponent } from "./password_reset/action"
 
 import { AuthCredential, TicketNonce } from "../credential/data"
 import { ResetToken } from "../password_reset/data"
@@ -35,6 +36,7 @@ export interface AuthComponent {
 
     passwordLogin: PasswordLoginComponent
     passwordResetSession: PasswordResetSessionComponent
+    passwordReset: PasswordResetComponent
 }
 
 export interface AuthUsecaseEventHandler extends AuthEventHandler {

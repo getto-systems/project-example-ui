@@ -10,6 +10,7 @@ module.exports = {
     "auth/load_application": path.join(__dirname, "lib/x_worker/auth/load_application.ts"),
     "auth/password_login": path.join(__dirname, "lib/x_worker/auth/password_login.ts"),
     "auth/password_reset_session": path.join(__dirname, "lib/x_worker/auth/password_reset_session.ts"),
+    "auth/password_reset": path.join(__dirname, "lib/x_worker/auth/password_reset.ts"),
   },
   output: {
     path: path.join(__dirname, "dist"),
