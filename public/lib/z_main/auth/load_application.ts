@@ -1,13 +1,13 @@
 import { env } from "../../y_static/env"
 
-import { initLoadApplicationComponent } from "../../auth/load_application/core"
+import { initLoadApplicationComponent } from "../../auth/load_application/impl"
 
 import { initSimulateCheckClient } from "../../script/impl/client/check/simulate"
 import { initScriptAction } from "../../script/impl/core"
 
 import { CheckClient } from "../../script/infra"
 
-import { LoadApplicationComponent } from "../../auth/load_application/data"
+import { LoadApplicationComponent } from "../../auth/load_application/component"
 
 export function newLoadApplicationComponent(): LoadApplicationComponent {
     return initLoadApplicationComponent({
