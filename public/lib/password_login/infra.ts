@@ -2,11 +2,11 @@ import { LoginID, AuthCredential } from "../credential/data"
 import { Password } from "../password/data"
 
 export type Infra = Readonly<{
-    config: Config,
+    timeConfig: TimeConfig,
     passwordLoginClient: PasswordLoginClient,
 }>
 
-export type Config = Readonly<{
+export type TimeConfig = Readonly<{
     passwordLoginDelayTime: DelayTime,
 }>
 
