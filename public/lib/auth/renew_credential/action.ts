@@ -1,5 +1,5 @@
-import { RenewCredentialAction } from "../../renew_credential/action"
+import { CredentialAction } from "../../credential/action"
 
 export interface RenewCredentialComponentAction {
-    renewCredential: RenewCredentialAction
+    credential: CredentialAction
 }
