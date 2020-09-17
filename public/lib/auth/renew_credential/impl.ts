@@ -1,12 +1,6 @@
-import {
-    RenewCredentialComponentAction,
-} from "./action"
+import { RenewCredentialComponent, RenewCredentialComponentAction } from "./component"
 
-import {
-    RenewCredentialComponent,
-    RenewCredentialComponentState,
-    RenewCredentialComponentOperation,
-} from "./data"
+import { RenewCredentialComponentState } from "./data"
 
 import { TicketNonce, RenewEvent } from "../../credential/data"
 
@@ -41,9 +35,6 @@ class Component implements RenewCredentialComponent {
     }
     terminate(): void {
         // terminate が必要な component とインターフェイスを合わせるために必要
-    }
-    trigger(operation: RenewCredentialComponentOperation): Promise<void> {
-        return this.renew(operation.ticketNonce)
     }
 
     renew(ticketNonce: TicketNonce): Promise<void> {
