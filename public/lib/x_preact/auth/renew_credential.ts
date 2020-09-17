@@ -2,7 +2,8 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { RenewCredentialComponent, initialRenewCredentialComponentState } from "../../auth/renew_credential/data"
+import { RenewCredentialComponent } from "../../auth/renew_credential/component"
+import { initialRenewCredentialComponentState } from "../../auth/renew_credential/data"
 
 import { TicketNonce } from "../../credential/data"
 
@@ -15,7 +16,7 @@ export function RenewCredential(component: RenewCredentialComponent, ticketNonce
         const [state, setState] = useState(initialRenewCredentialComponentState)
         useEffect(() => {
             component.init(setState)
-            component.trigger({ type: "renew", ticketNonce })
+            component.renew(ticketNonce)
             return () => component.terminate()
         }, [])
 
