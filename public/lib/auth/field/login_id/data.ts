@@ -13,10 +13,10 @@ export interface LoginIDFieldComponent {
 }
 
 export type LoginIDFieldComponentState =
-    Readonly<{ type: "succeed-to-update-login-id", result: Valid<LoginIDFieldError> }>
+    Readonly<{ type: "succeed-to-update-login_id", result: Valid<LoginIDFieldError> }>
 
 export const initialLoginIDFieldComponentState: LoginIDFieldComponentState = {
-    type: "succeed-to-update-login-id",
+    type: "succeed-to-update-login_id",
     result: { valid: true },
 }
 

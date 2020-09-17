@@ -3,7 +3,6 @@ import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import {
-    PasswordFieldComponent,
     PasswordFieldComponentState,
     initialPasswordFieldComponentState,
 } from "../../../auth/field/password/data"
@@ -19,22 +18,30 @@ type Props = {
     initial: InitialValue,
 }
 
-export function PasswordField(component: PasswordFieldComponent): PreactComponent {
+interface FormComponent {
+    initPasswordField(stateChanged: Publisher<PasswordFieldComponentState>): void
+    trigger(operation: FieldOperation): Promise<void>
+}
+
+type FieldOperation =
+    Readonly<{ type: "field-password", operation: { type: "set-password", password: InputValue } }> |
+    Readonly<{ type: "field-password", operation: { type: "show-password" } }> |
+    Readonly<{ type: "field-password", operation: { type: "hide-password" } }>
+
+export function PasswordField(component: FormComponent): PreactComponent {
     return (props: Props): VNode => {
         const [state, setState] = useState(initialPasswordFieldComponentState)
         const input = useRef<HTMLInputElement>()
 
         useEffect(() => {
-            component.init(setState)
+            component.initPasswordField(setState)
 
             if (props.initial.hasValue) {
                 if (input.current) {
                     input.current.value = props.initial.value.inputValue
                 }
-                component.field.set(props.initial.value)
+                setPassword(component, props.initial.value)
             }
-
-            return () => component.terminate()
         }, [])
 
         return html`
@@ -50,7 +57,7 @@ export function PasswordField(component: PasswordFieldComponent): PreactComponen
 
         function onInput(e: InputEvent) {
             if (e.target instanceof HTMLInputElement) {
-                component.field.set({ inputValue: e.target.value })
+                setPassword(component, { inputValue: e.target.value })
             }
         }
 
@@ -92,11 +99,11 @@ export function PasswordField(component: PasswordFieldComponent): PreactComponen
 
             function show(e: MouseEvent) {
                 linkClicked(e)
-                component.field.show()
+                showPassword(component)
             }
             function hide(e: MouseEvent) {
                 linkClicked(e)
-                component.field.hide()
+                hidePassword(component)
             }
             function linkClicked(e: MouseEvent) {
                 e.preventDefault()
@@ -124,4 +131,18 @@ export function PasswordField(component: PasswordFieldComponent): PreactComponen
             }
         }
     }
+}
+
+function setPassword(component: FormComponent, password: InputValue): void {
+    component.trigger({ type: "field-password", operation: { type: "set-password", password } })
+}
+function showPassword(component: FormComponent): void {
+    component.trigger({ type: "field-password", operation: { type: "show-password" } })
+}
+function hidePassword(component: FormComponent): void {
+    component.trigger({ type: "field-password", operation: { type: "hide-password" } })
+}
+
+interface Publisher<T> {
+    (state: T): void
 }

@@ -3,12 +3,11 @@ import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import {
-    LoginIDFieldComponent,
     LoginIDFieldComponentState,
     initialLoginIDFieldComponentState,
 } from "../../../auth/field/login_id/data"
 
-import { InitialValue } from "../../../field/data"
+import { InputValue, InitialValue } from "../../../field/data"
 
 interface PreactComponent {
     (props: Props): VNode
@@ -18,22 +17,28 @@ type Props = {
     initial: InitialValue,
 }
 
-export function LoginIDField(component: LoginIDFieldComponent): PreactComponent {
+interface FormComponent {
+    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void
+    trigger(operation: FieldOperation): Promise<void>
+}
+
+type FieldOperation =
+    Readonly<{ type: "field-login_id", operation: { type: "set-login_id", loginID: InputValue } }>
+
+export function LoginIDField(component: FormComponent): PreactComponent {
     return (props: Props): VNode => {
         const [state, setState] = useState(initialLoginIDFieldComponentState)
         const input = useRef<HTMLInputElement>()
 
         useEffect(() => {
-            component.init(setState)
+            component.initLoginIDField(setState)
 
             if (props.initial.hasValue) {
                 if (input.current) {
                     input.current.value = props.initial.value.inputValue
                 }
-                component.field.set(props.initial.value)
+                setLoginID(component, props.initial.value)
             }
-
-            return () => component.terminate()
         }, [])
 
         return html`
@@ -50,7 +55,7 @@ export function LoginIDField(component: LoginIDFieldComponent): PreactComponent 
 
         function onInput(e: InputEvent) {
             if (e.target instanceof HTMLInputElement) {
-                component.field.set({ inputValue: e.target.value })
+                setLoginID(component, { inputValue: e.target.value })
             }
         }
 
@@ -67,4 +72,12 @@ export function LoginIDField(component: LoginIDFieldComponent): PreactComponent 
             })
         }
     }
+}
+
+function setLoginID(component: FormComponent, loginID: InputValue): void {
+    component.trigger({ type: "field-login_id", operation: { type: "set-login_id", loginID } })
+}
+
+interface Publisher<T> {
+    (state: T): void
 }

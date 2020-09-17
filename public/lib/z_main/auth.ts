@@ -119,13 +119,7 @@ export class ComponentLoader {
     }
 
     initPasswordLoginComponent(): PasswordLoginComponent {
-        return initPasswordLoginComponent(
-            this.initPasswordLoginComponentAction(),
-            {
-                loginID: this.initLoginIDFieldComponent(),
-                password: this.initPasswordFieldComponent(),
-            }
-        )
+        return initPasswordLoginComponent(this.initPasswordLoginComponentAction())
     }
 
     initPasswordResetSession(): PasswordResetSessionComponent {
@@ -187,6 +181,8 @@ export class ComponentLoader {
     initPasswordLoginComponentAction(): PasswordLoginComponentAction {
         return {
             passwordLogin: this.initPasswordLoginAction(),
+            loginIDField: this.initLoginIDFieldAction(),
+            passwordField: this.initPasswordFieldAction(),
         }
     }
     initPasswordResetSessionComponentAction(): PasswordResetSessionComponentAction {

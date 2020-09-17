@@ -6,6 +6,7 @@ import {
 } from "../action"
 
 import {
+    PasswordFieldOperation,
     PasswordFieldEvent,
     PasswordFieldError,
     PasswordCharacter, simplePassword, complexPassword,
@@ -41,6 +42,25 @@ class Field implements PasswordField {
 
         this.password = { inputValue: "" }
         this.visible = false
+    }
+
+    trigger(operation: PasswordFieldOperation): void {
+        switch (operation.type) {
+            case "set-password":
+                this.set(operation.password)
+                return
+
+            case "show-password":
+                this.show()
+                return
+
+            case "hide-password":
+                this.hide()
+                return
+
+            default:
+                assertNever(operation)
+        }
     }
 
     set(input: InputValue): void {
@@ -144,4 +164,8 @@ function checkCharacter(password: string): PasswordCharacter {
         }
     }
     return simplePassword
+}
+
+function assertNever(_: never): never {
+    throw new Error("NEVER")
 }
