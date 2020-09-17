@@ -1,8 +1,5 @@
 import { LoginIDFieldComponentState } from "../field/login_id/data"
 
-import { PasswordResetAction } from "../../password_reset/action"
-import { LoginIDFieldAction } from "../../field/login_id/action"
-
 import { LoginIDFieldOperation } from "../../field/login_id/data"
 
 import {
@@ -10,18 +7,6 @@ import {
     CreateSessionError,
     PollingStatusError, PollingStatus, DoneStatus,
 } from "../../password_reset/data"
-
-export interface PasswordResetSessionComponentAction {
-    passwordReset: PasswordResetAction
-    loginIDField: LoginIDFieldAction
-}
-
-export interface PasswordResetSessionComponent {
-    init(stateChanged: Publisher<PasswordResetSessionComponentState>): void
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void
-    terminate(): void
-    trigger(operation: PasswordResetSessionComponentOperation): Promise<void>
-}
 
 export type PasswordResetSessionComponentState =
     Readonly<{ type: "initial-reset-session" }> |
@@ -39,15 +24,6 @@ export type PasswordResetSessionComponentOperation =
     Readonly<{ type: "create-session" }> |
     Readonly<{ type: "field-login_id", operation: LoginIDFieldOperation }>
 
-export interface PasswordResetSessionWorkerComponentHelper {
-    mapPasswordResetSessionComponentState(state: PasswordResetSessionComponentState): PasswordResetSessionWorkerComponentState
-    mapLoginIDFieldComponentState(state: LoginIDFieldComponentState): PasswordResetSessionWorkerComponentState
-}
-
 export type PasswordResetSessionWorkerComponentState =
     Readonly<{ type: "password_login", state: PasswordResetSessionComponentState }> |
     Readonly<{ type: "field-login_id", state: LoginIDFieldComponentState }>
-
-interface Publisher<T> {
-    (state: T): void
-}

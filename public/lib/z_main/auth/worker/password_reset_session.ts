@@ -1,6 +1,6 @@
-import { initPasswordResetSessionWorkerComponent } from "../../../auth/password_reset_session/core"
+import { initPasswordResetSessionWorkerComponent } from "../../../auth/password_reset_session/impl"
 
-import { PasswordResetSessionComponent } from "../../../auth/password_reset_session/action"
+import { PasswordResetSessionComponent } from "../../../auth/password_reset_session/component"
 
 export function newPasswordResetSessionComponent(): PasswordResetSessionComponent {
     return initPasswordResetSessionWorkerComponent(
