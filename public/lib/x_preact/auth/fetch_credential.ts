@@ -2,7 +2,8 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { FetchCredentialComponent, initialFetchCredentialComponentState } from "../../auth/fetch_credential/data"
+import { FetchCredentialComponent } from "../../auth/fetch_credential/component"
+import { initialFetchCredentialComponentState } from "../../auth/fetch_credential/data"
 
 export interface PreactComponent {
     (): VNode
