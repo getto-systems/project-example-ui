@@ -10,7 +10,7 @@ import {
 import { LoginIDFieldComponentState } from "../field/login_id/data"
 
 import { LoginID } from "../../credential/data"
-import { CreateSessionEvent, PollingStatusEvent } from "../../password_reset_session/data"
+import { CreateSessionEvent, PollingStatusEvent } from "../../password_reset/data"
 import { LoginIDField } from "../../field/login_id/action"
 import { Content } from "../../field/data"
 
@@ -55,7 +55,7 @@ class Component implements PasswordResetSessionComponent {
     }
 
     init(stateChanged: Publisher<PasswordResetSessionComponentState>): void {
-        this.action.passwordResetSession.sub.onCreateSessionEvent((event) => {
+        this.action.passwordReset.sub.onCreateSessionEvent((event) => {
             stateChanged(map(event, this.action))
 
             function map(event: CreateSessionEvent, action: PasswordResetSessionComponentAction): PasswordResetSessionComponentState {
@@ -66,12 +66,12 @@ class Component implements PasswordResetSessionComponent {
                         return event
 
                     case "succeed-to-create-session":
-                        action.passwordResetSession.startPollingStatus(event.session)
+                        action.passwordReset.startPollingStatus(event.session)
                         return { type: "try-to-polling-status" }
                 }
             }
         })
-        this.action.passwordResetSession.sub.onPollingStatusEvent((event) => {
+        this.action.passwordReset.sub.onPollingStatusEvent((event) => {
             stateChanged(map(event))
 
             function map(event: PollingStatusEvent): PasswordResetSessionComponentState {
@@ -97,8 +97,7 @@ class Component implements PasswordResetSessionComponent {
 
     createSession(): Promise<void> {
         this.field.loginID.validate()
-
-        return this.action.passwordResetSession.createSession([this.content.loginID])
+        return this.action.passwordReset.createSession([this.content.loginID])
     }
 }
 

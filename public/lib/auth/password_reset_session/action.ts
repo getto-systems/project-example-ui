@@ -1,18 +1,18 @@
 import { LoginIDFieldComponentState } from "../field/login_id/data"
 
-import { PasswordResetSessionAction } from "../../password_reset_session/action"
+import { PasswordResetAction } from "../../password_reset/action"
 import { LoginIDFieldAction } from "../../field/login_id/action"
 
 import { LoginIDFieldOperation } from "../../field/login_id/data"
 
 import {
-    InputContent,
+    CreateSessionInputContent,
     CreateSessionError,
     PollingStatusError, PollingStatus, DoneStatus,
-} from "../../password_reset_session/data"
+} from "../../password_reset/data"
 
 export interface PasswordResetSessionComponentAction {
-    passwordResetSession: PasswordResetSessionAction
+    passwordReset: PasswordResetAction
     loginIDField: LoginIDFieldAction
 }
 
@@ -27,7 +27,7 @@ export type PasswordResetSessionComponentState =
     Readonly<{ type: "initial-reset-session" }> |
     Readonly<{ type: "try-to-create-session" }> |
     Readonly<{ type: "delayed-to-create-session" }> |
-    Readonly<{ type: "failed-to-create-session", content: InputContent, err: CreateSessionError }> |
+    Readonly<{ type: "failed-to-create-session", content: CreateSessionInputContent, err: CreateSessionError }> |
     Readonly<{ type: "try-to-polling-status" }> |
     Readonly<{ type: "retry-to-polling-status", status: PollingStatus }> |
     Readonly<{ type: "failed-to-polling-status", err: PollingStatusError }> |
