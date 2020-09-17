@@ -6,10 +6,8 @@ import { LoginView } from "./login_view"
 import { LoginIDField } from "./field/login_id"
 import { PasswordField } from "./field/password"
 
-import {
-    PasswordLoginComponent,
-    initialPasswordLoginComponentState,
-} from "../../auth/password_login/action"
+import { PasswordLoginComponent } from "../../auth/password_login/component"
+import { initialPasswordLoginComponentState } from "../../auth/password_login/data"
 
 import { InputContent, LoginError } from "../../password_login/data"
 import { hasValue, noValue } from "../../field/data"
