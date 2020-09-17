@@ -6,7 +6,7 @@ import { LoginIDFieldAction } from "../../field/login_id/action"
 import { PasswordFieldAction } from "../../field/password/action"
 
 import { AuthCredential } from "../../credential/data"
-import { InputContent, ResetToken, ResetError } from "../../password_reset/data"
+import { ResetInputContent, ResetToken, ResetError } from "../../password_reset/data"
 import { LoginIDFieldOperation } from "../../field/login_id/data"
 import { PasswordFieldOperation } from "../../field/password/data"
 
@@ -29,7 +29,7 @@ export type PasswordResetComponentState =
     Readonly<{ type: "initial-reset" }> |
     Readonly<{ type: "try-to-reset" }> |
     Readonly<{ type: "delayed-to-reset" }> |
-    Readonly<{ type: "failed-to-reset", content: InputContent, err: ResetError }> |
+    Readonly<{ type: "failed-to-reset", content: ResetInputContent, err: ResetError }> |
     Readonly<{ type: "succeed-to-reset", authCredential: AuthCredential }>
 
 export const initialPasswordResetComponentState: PasswordResetComponentState = { type: "initial-reset" }
