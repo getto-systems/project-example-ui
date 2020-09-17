@@ -21,9 +21,9 @@ import { initCredentialAction } from "../credential/impl/core"
 
 import { AuthCredentialRepository, RenewClient } from "../credential/infra"
 
-import { CredentialAction } from "../credential/action"
+import { AuthUsecase } from "../auth/component"
 
-import { AuthUsecase } from "../auth/data"
+import { CredentialAction } from "../credential/action"
 
 export class ComponentLoader {
     initCredentialStorage: Init<Storage>
