@@ -43,7 +43,7 @@ class Action implements PasswordLoginAction {
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const response = await delayed(
             this.infra.passwordLoginClient.login(...content.content),
-            this.infra.config.passwordLoginDelayTime,
+            this.infra.timeConfig.passwordLoginDelayTime,
             () => this.pub.publishLoginEvent({ type: "delayed-to-login" }),
         )
         if (!response.success) {
@@ -86,7 +86,7 @@ class Action implements PasswordLoginAction {
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const promise = this.infra.passwordLoginClient.login(...content.content)
-        const response = await delayed(promise, this.infra.config.passwordLoginDelayTime, event.delayedToLogin)
+        const response = await delayed(promise, this.infra.timeConfig.passwordLoginDelayTime, event.delayedToLogin)
         if (!response.success) {
             event.failedToLogin(mapInput(...fields), response.err)
             return { success: false }

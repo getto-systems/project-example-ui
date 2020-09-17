@@ -1,6 +1,7 @@
 import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_client"
 
 import { newLoadApplicationComponent } from "./auth/worker/load_application"
+import { newPasswordLoginComponent } from "./auth/worker/password_login"
 
 import { initAuthUsecase } from "../auth/core"
 
@@ -11,14 +12,12 @@ import { initStoreCredentialComponent } from "../auth/store_credential/core"
 import { initLoginIDFieldComponent } from "../auth/field/login_id/core"
 import { initPasswordFieldComponent } from "../auth/field/password/core"
 
-import { initPasswordLoginComponent } from "../auth/password_login/core"
 import { initPasswordResetComponent, initPasswordResetComponentEvent } from "../auth/password_reset/core"
 import { initPasswordResetSessionComponent, initPasswordResetSessionComponentEvent } from "../auth/password_reset_session/core"
 
 import { initStorageAuthCredentialRepository } from "../credential/impl/repository/credential/storage"
 import { initFetchRenewClient } from "../renew_credential/impl/client/renew/fetch"
 import { initSimulateCheckClient } from "../script/impl/client/check/simulate"
-import { initFetchPasswordLoginClient } from "../password_login/impl/client/password_login/fetch"
 import { initSimulatePasswordResetSessionClient } from "../password_reset_session/impl/client/password_reset_session/simulate"
 import { initSimulatePasswordResetClient } from "../password_reset/impl/client/password_reset/simulate"
 import { env } from "../y_static/env"
@@ -27,14 +26,12 @@ import { initCredentialAction } from "../credential/impl/core"
 import { initRenewCredentialAction } from "../renew_credential/impl/core"
 import { initLoginIDFieldAction } from "../field/login_id/impl/core"
 import { initPasswordFieldAction } from "../field/password/impl/core"
-import { initPasswordLoginAction } from "../password_login/impl/core"
 import { initPasswordResetSessionAction } from "../password_reset_session/impl/core"
 import { initPasswordResetAction } from "../password_reset/impl/core"
 
 import { AuthCredentialRepository } from "../credential/infra"
 import { RenewClient } from "../renew_credential/infra"
 import { CheckClient } from "../script/infra"
-import { PasswordLoginClient } from "../password_login/infra"
 import { PasswordResetSessionClient } from "../password_reset_session/infra"
 import { PasswordResetClient } from "../password_reset/infra"
 
@@ -45,7 +42,6 @@ import { StoreCredentialComponentAction } from "../auth/store_credential/action"
 import { LoginIDFieldComponentAction } from "../auth/field/login_id/action"
 import { PasswordFieldComponentAction } from "../auth/field/password/action"
 
-import { PasswordLoginComponentAction, PasswordLoginComponent } from "../auth/password_login/action"
 import { PasswordResetSessionComponentAction, PasswordResetSessionComponent, PasswordResetSessionComponentEventInit } from "../auth/password_reset_session/action"
 import { PasswordResetComponentAction, PasswordResetComponent, PasswordResetComponentEventInit } from "../auth/password_reset/action"
 
@@ -55,7 +51,6 @@ import { RenewCredentialAction } from "../renew_credential/action"
 import { LoginIDFieldAction } from "../field/login_id/action"
 import { PasswordFieldAction } from "../field/password/action"
 
-import { PasswordLoginAction } from "../password_login/action"
 import { PasswordResetSessionAction } from "../password_reset_session/action"
 import { PasswordResetAction } from "../password_reset/action"
 
@@ -104,7 +99,7 @@ export class ComponentLoader {
             storeCredential: this.initStoreCredentialComponent(),
             loadApplication: newLoadApplicationComponent(),
 
-            passwordLogin: this.initPasswordLoginComponent(),
+            passwordLogin: newPasswordLoginComponent(),
         })
     }
 
@@ -116,10 +111,6 @@ export class ComponentLoader {
     }
     initStoreCredentialComponent(): StoreCredentialComponent {
         return initStoreCredentialComponent(this.initStoreCredentialComponentAction())
-    }
-
-    initPasswordLoginComponent(): PasswordLoginComponent {
-        return initPasswordLoginComponent(this.initPasswordLoginComponentAction())
     }
 
     initPasswordResetSession(): PasswordResetSessionComponent {
@@ -178,13 +169,6 @@ export class ComponentLoader {
         }
     }
 
-    initPasswordLoginComponentAction(): PasswordLoginComponentAction {
-        return {
-            passwordLogin: this.initPasswordLoginAction(),
-            loginIDField: this.initLoginIDFieldAction(),
-            passwordField: this.initPasswordFieldAction(),
-        }
-    }
     initPasswordResetSessionComponentAction(): PasswordResetSessionComponentAction {
         return {
             passwordResetSession: this.initPasswordResetSessionAction(),
@@ -216,12 +200,6 @@ export class ComponentLoader {
         return initPasswordFieldAction()
     }
 
-    initPasswordLoginAction(): PasswordLoginAction {
-        return initPasswordLoginAction({
-            config: this.config,
-            passwordLoginClient: this.initPasswordLoginClient(),
-        })
-    }
     initPasswordResetSessionAction(): PasswordResetSessionAction {
         return initPasswordResetSessionAction({
             config: this.config,
@@ -240,9 +218,6 @@ export class ComponentLoader {
     }
     initRenewClient(): RenewClient {
         return initFetchRenewClient(this.authClient)
-    }
-    initPasswordLoginClient(): PasswordLoginClient {
-        return initFetchPasswordLoginClient(this.authClient)
     }
     initPasswordResetSessionClient(): PasswordResetSessionClient {
         return initSimulatePasswordResetSessionClient({ loginID: "admin" })

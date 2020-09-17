@@ -8,6 +8,7 @@ module.exports = {
     "auth": path.join(__dirname, "lib/x_preact/auth.ts"),
 
     "auth/load_application": path.join(__dirname, "lib/x_worker/auth/load_application.ts"),
+    "auth/password_login": path.join(__dirname, "lib/x_worker/auth/password_login.ts"),
   },
   output: {
     path: path.join(__dirname, "dist"),
