@@ -1,9 +1,9 @@
 import { FetchCredentialComponent } from "./fetch_credential/component"
 import { RenewCredentialComponent } from "./renew_credential/data"
 import { StoreCredentialComponent } from "./store_credential/data"
-import { LoadApplicationComponent } from "./load_application/data"
+import { LoadApplicationComponent } from "./load_application/component"
 
-import { PasswordLoginComponent } from "./password_login/action"
+import { PasswordLoginComponent } from "./password_login/component"
 import { PasswordResetSessionComponent } from "./password_reset_session/action"
 import { PasswordResetComponent } from "./password_reset/action"
 
