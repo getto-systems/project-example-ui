@@ -1,4 +1,4 @@
-import { FetchCredentialComponentAction } from "./action"
+import { FetchCredentialComponentAction } from "./component"
 
 import { FetchCredentialComponent, FetchCredentialComponentState } from "./data"
 
