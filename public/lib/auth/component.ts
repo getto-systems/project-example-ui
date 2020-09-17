@@ -5,7 +5,7 @@ import { LoadApplicationComponent } from "./load_application/component"
 
 import { PasswordLoginComponent } from "./password_login/component"
 import { PasswordResetSessionComponent } from "./password_reset_session/action"
-import { PasswordResetComponent } from "./password_reset/action"
+import { PasswordResetComponent } from "./password_reset/component"
 
 import { AuthUsecaseState, AuthEvent } from "./data"
 
