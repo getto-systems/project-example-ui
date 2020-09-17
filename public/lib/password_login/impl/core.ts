@@ -4,8 +4,6 @@ import {
     PasswordLoginAction,
     PasswordLoginEventPublisher,
     PasswordLoginEventSubscriber,
-    LoginEventPublisher,
-    LoginResult,
 } from "../action"
 
 import { LoginID } from "../../credential/data"
@@ -53,46 +51,6 @@ class Action implements PasswordLoginAction {
 
         this.pub.publishLoginEvent({ type: "succeed-to-login", authCredential: response.authCredential })
         return
-
-        type ValidContent =
-            Readonly<{ valid: false }> |
-            Readonly<{ valid: true, content: [LoginID, Password] }>
-
-        function mapContent(loginID: Content<LoginID>, password: Content<Password>): ValidContent {
-            if (
-                !loginID.valid ||
-                !password.valid
-            ) {
-                return { valid: false }
-            }
-            return { valid: true, content: [loginID.content, password.content] }
-        }
-        function mapInput(loginID: Content<LoginID>, password: Content<Password>): InputContent {
-            return {
-                loginID: loginID.input,
-                password: password.input,
-            }
-        }
-    }
-
-    async loginDeprecated(event: LoginEventPublisher, fields: [Content<LoginID>, Content<Password>]): Promise<LoginResult> {
-        const content = mapContent(...fields)
-        if (!content.valid) {
-            event.failedToLogin(mapInput(...fields), { type: "validation-error" })
-            return { success: false }
-        }
-
-        event.tryToLogin()
-
-        // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const promise = this.infra.passwordLoginClient.login(...content.content)
-        const response = await delayed(promise, this.infra.timeConfig.passwordLoginDelayTime, event.delayedToLogin)
-        if (!response.success) {
-            event.failedToLogin(mapInput(...fields), response.err)
-            return { success: false }
-        }
-
-        return { success: true, authCredential: response.authCredential }
 
         type ValidContent =
             Readonly<{ valid: false }> |
