@@ -1,6 +1,6 @@
-import { CredentialAction } from "../../credential/action"
-
 import { RenewCredentialComponentState } from "./data"
+
+import { CredentialAction } from "../../credential/action"
 
 import { TicketNonce } from "../../credential/data"
 

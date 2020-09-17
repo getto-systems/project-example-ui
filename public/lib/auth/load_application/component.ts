@@ -1,6 +1,6 @@
-import { ScriptAction } from "../../script/action"
-
 import { LoadApplicationComponentState, LoadApplicationComponentOperation } from "./data"
+
+import { ScriptAction } from "../../script/action"
 
 export interface LoadApplicationComponent {
     init(stateChanged: Publisher<LoadApplicationComponentState>): void

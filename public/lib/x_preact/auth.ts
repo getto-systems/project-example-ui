@@ -1,3 +1,5 @@
+import { ComponentLoader } from "../z_main/auth"
+
 import { render, h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
@@ -8,8 +10,6 @@ import { StoreCredential } from "./auth/store_credential"
 import { LoadApplication } from "./auth/load_application"
 
 import { PasswordLogin } from "./auth/password_login"
-
-import { ComponentLoader } from "../z_main/auth"
 
 import { initialAuthUsecaseState } from "../auth/data"
 

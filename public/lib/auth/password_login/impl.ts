@@ -1,14 +1,6 @@
-import {
-    PasswordLoginComponentAction,
-    PasswordLoginComponent,
-    PasswordLoginWorkerComponentHelper,
-} from "./component"
+import { PasswordLoginComponentAction, PasswordLoginComponent, PasswordLoginWorkerComponentHelper } from "./component"
 
-import {
-    PasswordLoginComponentState,
-    PasswordLoginComponentOperation,
-    PasswordLoginWorkerComponentState,
-} from "./data"
+import { PasswordLoginComponentState, PasswordLoginComponentOperation, PasswordLoginWorkerComponentState } from "./data"
 
 import { LoginIDFieldComponentState } from "../field/login_id/data"
 import { PasswordFieldComponentState } from "../field/password/data"

@@ -7,9 +7,7 @@ import {
     StoreEventPublisher,
 } from "../action"
 
-import { FetchEvent, RenewEvent, StoreEvent } from "../data"
-
-import { AuthCredential, TicketNonce } from "../data"
+import { AuthCredential, TicketNonce, FetchEvent, RenewEvent, StoreEvent } from "../data"
 
 export function initCredentialAction(infra: Infra): CredentialAction {
     return new Action(infra)

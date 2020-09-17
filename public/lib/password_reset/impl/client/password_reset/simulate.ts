@@ -1,9 +1,9 @@
 import { PasswordResetClient, ResetResponse, resetSuccess, resetFailed } from "../../../infra"
 
+import { ResetToken } from "../../../data"
 import { AuthCredential } from "../../../../credential/data"
 import { LoginID } from "../../../../login_id/data"
 import { Password } from "../../../../password/data"
-import { ResetToken } from "../../../data"
 
 export function initSimulatePasswordResetClient(targetLoginID: LoginID, returnAuthCredential: AuthCredential): PasswordResetClient {
     return new SimulatePasswordResetClient(targetLoginID, returnAuthCredential)
