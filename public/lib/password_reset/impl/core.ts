@@ -1,6 +1,6 @@
 import { Infra } from "../infra"
 
-import { ResetEvent, ResetResult, PasswordResetAction } from "../action"
+import { ResetEventSender, ResetResult, PasswordResetAction } from "../action"
 
 import { LoginID } from "../../credential/data"
 import { Password } from "../../password/data"
@@ -18,7 +18,7 @@ class PasswordResetActionImpl implements PasswordResetAction {
         this.infra = infra
     }
 
-    async reset(event: ResetEvent, resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<ResetResult> {
+    async reset_DEPRECATED(event: ResetEventSender, resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<ResetResult> {
         const content = mapContent(...fields)
         if (!content.valid) {
             event.failedToReset(mapInput(...fields), { type: "validation-error" })
