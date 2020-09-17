@@ -4,11 +4,9 @@ import {
     PasswordResetSessionAction,
     PasswordResetSessionEventPublisher,
     PasswordResetSessionEventSubscriber,
-    SessionEventSender, SessionResult,
-    PollingStatusEventSender,
 } from "../action"
 
-import { InputContent, Session, PollingStatus, DoneStatus, CreateSessionEvent, PollingStatusEvent, PollingStatusError } from "../data"
+import { InputContent, Session, CreateSessionEvent, PollingStatusEvent, PollingStatusError } from "../data"
 
 import { LoginID } from "../../credential/data"
 import { Content } from "../../field/data"
@@ -84,71 +82,7 @@ class Action implements PasswordResetSessionAction {
     }
 
     async startPollingStatus(session: Session): Promise<void> {
-        const event = new EventWrapper(this.pub)
-        new PollingStatusWorker(this.infra.timeConfig, this.infra.passwordResetSessionClient).startPolling(event, session)
-    }
-
-    async createSession_DEPRECATED(event: SessionEventSender, fields: [Content<LoginID>]): Promise<SessionResult> {
-        const content = mapContent(...fields)
-        if (!content.valid) {
-            event.failedToCreateSession(mapInput(...fields), { type: "validation-error" })
-            return { success: false }
-        }
-
-        event.tryToCreateSession()
-
-        // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const promise = this.infra.passwordResetSessionClient.createSession(...content.content)
-        const response = await delayed(promise, this.infra.timeConfig.passwordResetCreateSessionDelayTime, event.delayedToCreateSession)
-        if (!response.success) {
-            event.failedToCreateSession(mapInput(...fields), response.err)
-            return { success: false }
-        }
-
-        return { success: true, session: response.session }
-
-        type ValidContent =
-            Readonly<{ valid: false }> |
-            Readonly<{ valid: true, content: [LoginID] }>
-
-        function mapContent(loginID: Content<LoginID>): ValidContent {
-            if (!loginID.valid) {
-                return { valid: false }
-            }
-            return { valid: true, content: [loginID.content] }
-        }
-        function mapInput(loginID: Content<LoginID>): InputContent {
-            return {
-                loginID: loginID.input,
-            }
-        }
-    }
-
-    async startPollingStatus_DEPRECATED(event: PollingStatusEventSender, session: Session): Promise<void> {
-        new PollingStatusWorker(this.infra.timeConfig, this.infra.passwordResetSessionClient).startPolling(event, session)
-    }
-}
-
-// TODO 必要なくなったら削除
-class EventWrapper {
-    pub: PasswordResetSessionEventPublisher
-
-    constructor(pub: PasswordResetSessionEventPublisher) {
-        this.pub = pub
-    }
-
-    tryToPollingStatus(): void {
-        this.pub.publishPollingStatusEvent({ type: "try-to-polling-status" })
-    }
-    retryToPollingStatus(status: PollingStatus): void {
-        this.pub.publishPollingStatusEvent({ type: "retry-to-polling-status", status })
-    }
-    failedToPollingStatus(err: PollingStatusError): void {
-        this.pub.publishPollingStatusEvent({ type: "failed-to-polling-status", err })
-    }
-
-    succeedToSendToken(status: DoneStatus): void {
-        this.pub.publishPollingStatusEvent({ type: "succeed-to-send-token", status })
+        new StatusPoller(this.infra.timeConfig, this.infra.passwordResetSessionClient, this.pub).startPolling(session)
     }
 }
 
@@ -157,23 +91,23 @@ type SendTokenState =
     Readonly<{ type: "failed", err: PollingStatusError }> |
     Readonly<{ type: "success" }>
 
-// TODO worker ってなまえはよくない
-class PollingStatusWorker {
+class StatusPoller {
     timeConfig: TimeConfig
     client: PasswordResetSessionClient
+    pub: PasswordResetSessionEventPublisher
 
     sendTokenState: SendTokenState
 
-    constructor(timeConfig: TimeConfig, client: PasswordResetSessionClient) {
+    constructor(timeConfig: TimeConfig, client: PasswordResetSessionClient, pub: PasswordResetSessionEventPublisher) {
         this.timeConfig = timeConfig
         this.client = client
+        this.pub = pub
 
         this.sendTokenState = { type: "initial" }
     }
 
-    // TODO EventSender は削除予定
-    async startPolling(event: PollingStatusEventSender, session: Session): Promise<void> {
-        event.tryToPollingStatus()
+    async startPolling(session: Session): Promise<void> {
+        this.pub.publishPollingStatusEvent({ type: "try-to-polling-status" })
 
         this.sendToken()
 
@@ -183,27 +117,30 @@ class PollingStatusWorker {
             count += 1
 
             if (this.sendTokenState.type === "failed") {
-                event.failedToPollingStatus(this.sendTokenState.err)
+                this.pub.publishPollingStatusEvent({ type: "failed-to-polling-status", err: this.sendTokenState.err })
                 return
             }
 
             const response = await this.client.getStatus(session)
             if (!response.success) {
-                event.failedToPollingStatus(response.err)
+                this.pub.publishPollingStatusEvent({ type: "failed-to-polling-status", err: response.err })
                 return
             }
 
             if (response.done) {
-                event.succeedToSendToken(response.status)
+                this.pub.publishPollingStatusEvent({ type: "succeed-to-send-token", status: response.status })
                 return
             }
 
-            event.retryToPollingStatus(response.status)
+            this.pub.publishPollingStatusEvent({ type: "retry-to-polling-status", status: response.status })
 
             await wait(this.timeConfig.passwordResetPollingWaitTime)
         }
 
-        event.failedToPollingStatus({ type: "infra-error", err: "overflow polling limit" })
+        this.pub.publishPollingStatusEvent({
+            type: "failed-to-polling-status",
+            err: { type: "infra-error", err: "overflow polling limit" },
+        })
     }
 
     async sendToken(): Promise<void> {
