@@ -1,8 +1,11 @@
 import {
     AuthUsecase,
-    AuthUsecaseState,
     AuthComponent,
     AuthUsecaseEventHandler,
+} from "./component"
+
+import {
+    AuthUsecaseState,
     AuthEvent,
 } from "./data"
 
