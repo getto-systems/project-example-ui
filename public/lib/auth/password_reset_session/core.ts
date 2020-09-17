@@ -52,12 +52,12 @@ class Component implements PasswordResetSessionComponent {
     }
 
     async createSession(event: PasswordResetSessionComponentEvent): Promise<void> {
-        const result = await this.action.passwordResetSession.createSession(event, [this.content.loginID])
+        const result = await this.action.passwordResetSession.createSession_DEPRECATED(event, [this.content.loginID])
         if (!result.success) {
             return
         }
 
-        await this.action.passwordResetSession.startPollingStatus(event, result.session)
+        await this.action.passwordResetSession.startPollingStatus_DEPRECATED(event, result.session)
     }
 }
 
