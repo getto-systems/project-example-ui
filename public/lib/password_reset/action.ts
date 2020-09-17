@@ -1,11 +1,11 @@
-import { LoginID, AuthCredential } from "../credential/data"
+import { LoginID } from "../credential/data"
 import { Password } from "../password/data"
-import { InputContent, ResetEvent, ResetError, ResetToken } from "./data"
+import { ResetEvent, ResetToken } from "./data"
 import { Content } from "../field/data"
 
 export interface PasswordResetAction {
     sub: PasswordResetEventSubscriber
-    reset_DEPRECATED(event: ResetEventSender, resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<ResetResult>
+    reset(resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<void>
 }
 
 export interface PasswordResetEventPublisher {
@@ -18,14 +18,4 @@ export interface PasswordResetEventSubscriber {
 
 interface Publisher<T> {
     (state: T): void
-}
-
-export type ResetResult =
-    Readonly<{ success: false }> |
-    Readonly<{ success: true, authCredential: AuthCredential }>
-
-export interface ResetEventSender {
-    tryToReset(): void
-    delayedToReset(): void
-    failedToReset(content: InputContent, err: ResetError): void
 }

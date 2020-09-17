@@ -108,13 +108,11 @@ class Component implements PasswordLoginComponent {
         }
     }
 
-    async login(): Promise<void> {
-        await Promise.all([
-            this.field.loginID.validate(),
-            this.field.password.validate(),
-        ])
+    login(): Promise<void> {
+        this.field.loginID.validate()
+        this.field.password.validate()
 
-        await this.action.passwordLogin.login([
+        return this.action.passwordLogin.login([
             this.content.loginID,
             this.content.password,
         ])

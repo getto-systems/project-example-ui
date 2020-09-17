@@ -3,11 +3,11 @@ import { Password } from "../password/data"
 import { ResetToken } from "./data"
 
 export type Infra = Readonly<{
-    config: Config,
+    timeConfig: TimeConfig,
     passwordResetClient: PasswordResetClient,
 }>
 
-export type Config = Readonly<{
+export type TimeConfig = Readonly<{
     passwordResetDelayTime: DelayTime,
 }>
 

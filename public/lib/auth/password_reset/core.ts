@@ -2,109 +2,215 @@ import {
     PasswordResetComponentAction,
     PasswordResetComponent,
     PasswordResetComponentState,
-    PasswordResetComponentEvent,
-    PasswordResetComponentEventInit,
-    PasswordResetComponentStateHandler,
+    PasswordResetComponentOperation,
+    PasswordResetWorkerComponentState,
+    PasswordResetWorkerComponentHelper,
 } from "./action"
 
-import { AuthUsecaseEventHandler } from "../../auth/data"
-import { LoginIDFieldComponent } from "../field/login_id/data"
-import { PasswordFieldComponent } from "../field/password/data"
+import { LoginIDFieldComponentState } from "../field/login_id/data"
+import { PasswordFieldComponentState } from "../field/password/data"
 
-import { LoginID, StoreError } from "../../credential/data"
+import { LoginIDField } from "../../field/login_id/action"
+import { PasswordField } from "../../field/password/action"
+
+import { LoginID } from "../../credential/data"
 import { Password } from "../../password/data"
-import { InputContent, ResetToken, ResetError } from "../../password_reset/data"
+import { ResetToken, ResetEvent } from "../../password_reset/data"
 import { Content } from "../../field/data"
 
-export function initPasswordResetComponent(
-    loginID: LoginIDFieldComponent,
-    password: PasswordFieldComponent,
-    action: PasswordResetComponentAction,
-    resetToken: ResetToken,
-): PasswordResetComponent {
-    return new Component(loginID, password, action, resetToken)
+export function initPasswordResetComponent(action: PasswordResetComponentAction): PasswordResetComponent {
+    return new Component(action)
 }
-export function initPasswordResetComponentEvent(authEvent: AuthUsecaseEventHandler): PasswordResetComponentEventInit {
-    return (stateChanged) => new ComponentEvent(authEvent, stateChanged)
+export function initPasswordResetWorkerComponent(init: WorkerInit): PasswordResetComponent {
+    return new WorkerComponent(init)
+}
+export function initPasswordResetWorkerComponentHelper(): PasswordResetWorkerComponentHelper {
+    return {
+        mapPasswordResetComponentState,
+        mapLoginIDFieldComponentState,
+        mapPasswordFieldComponentState,
+    }
 }
 
 class Component implements PasswordResetComponent {
-    loginID: LoginIDFieldComponent
-    password: PasswordFieldComponent
-
     action: PasswordResetComponentAction
 
-    resetToken: ResetToken
+    holder: PublisherHolder<PasswordResetComponentState>
+
+    field: {
+        loginID: LoginIDField
+        password: PasswordField
+    }
 
     content: {
         loginID: Content<LoginID>
         password: Content<Password>
     }
 
-    initialState: PasswordResetComponentState = { type: "initial-reset" }
-
-    constructor(
-        loginID: LoginIDFieldComponent,
-        password: PasswordFieldComponent,
-        action: PasswordResetComponentAction,
-        resetToken: ResetToken,
-    ) {
-        this.loginID = loginID
-        this.password = password
-
+    constructor(action: PasswordResetComponentAction) {
         this.action = action
 
-        this.resetToken = resetToken
+        this.holder = { set: false }
+
+        this.field = {
+            loginID: this.action.loginIDField.initLoginIDField(),
+            password: this.action.passwordField.initPasswordField(),
+        }
 
         this.content = {
             loginID: { input: { inputValue: "" }, valid: false },
             password: { input: { inputValue: "" }, valid: false },
         }
 
-        this.loginID.onContentChange((content: Content<LoginID>) => {
+        this.field.loginID.sub.onLoginIDFieldContentChanged((content: Content<LoginID>) => {
             this.content.loginID = content
         })
-        this.password.onContentChange((content: Content<Password>) => {
+        this.field.password.sub.onPasswordFieldContentChanged((content: Content<Password>) => {
             this.content.password = content
         })
     }
 
-    async reset(event: PasswordResetComponentEvent): Promise<void> {
-        const result = await this.action.passwordReset.reset_DEPRECATED(event, this.resetToken, await Promise.all([
+    hook(pub: Publisher<PasswordResetComponentState>): void {
+        this.holder = { set: true, pub }
+    }
+    init(stateChanged: Publisher<PasswordResetComponentState>): void {
+        this.action.passwordReset.sub.onResetEvent((event) => {
+            const state = map(event)
+            if (this.holder.set) {
+                this.holder.pub(state)
+            }
+            stateChanged(state)
+
+            function map(event: ResetEvent): PasswordResetComponentState {
+                return event
+            }
+        })
+    }
+    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void {
+        this.field.loginID.sub.onLoginIDFieldStateChanged(stateChanged)
+    }
+    initPasswordField(stateChanged: Publisher<PasswordFieldComponentState>): void {
+        this.field.password.sub.onPasswordFieldStateChanged(stateChanged)
+    }
+    terminate(): void {
+        // terminate が必要な component とインターフェイスを合わせるために必要
+    }
+    trigger(operation: PasswordResetComponentOperation): Promise<void> {
+        switch (operation.type) {
+            case "reset":
+                return this.reset(operation.resetToken)
+
+            case "field-login_id":
+                return Promise.resolve(this.field.loginID.trigger(operation.operation))
+
+            case "field-password":
+                return Promise.resolve(this.field.password.trigger(operation.operation))
+        }
+    }
+
+    async reset(resetToken: ResetToken): Promise<void> {
+        this.field.loginID.validate()
+        this.field.password.validate()
+
+        return this.action.passwordReset.reset(resetToken, [
             this.content.loginID,
             this.content.password,
-        ]))
-        if (!result.success) {
-            return
-        }
-
-        await this.action.credential.storeDeprecated(event, result.authCredential)
+        ])
     }
 }
 
-class ComponentEvent implements PasswordResetComponentEvent {
-    stateChanged: PasswordResetComponentStateHandler
-    authEvent: AuthUsecaseEventHandler
+class WorkerComponent implements PasswordResetComponent {
+    worker: WorkerHolder
+    holder: PublisherHolder<PasswordResetComponentState>
 
-    constructor(authEvent: AuthUsecaseEventHandler, stateChanged: PasswordResetComponentStateHandler) {
-        this.stateChanged = stateChanged
-        this.authEvent = authEvent
-    }
-
-    tryToReset(): void {
-        this.stateChanged({ type: "try-to-reset" })
-    }
-    delayedToReset(): void {
-        this.stateChanged({ type: "delayed-to-reset" })
-    }
-    failedToReset(content: InputContent, err: ResetError): void {
-        this.stateChanged({ type: "failed-to-reset", content, err })
+    constructor(init: WorkerInit) {
+        this.worker = { set: false, init }
+        this.holder = { set: false }
     }
 
-    failedToStore(err: StoreError): void {
-        this.stateChanged({ type: "failed-to-store", err })
+    hook(pub: Publisher<PasswordResetComponentState>): void {
+        this.holder = { set: true, pub }
     }
-    succeedToStore(): void {
-        this.authEvent.handleAuthEvent({ type: "succeed-to-login" })
+    init(stateChanged: Publisher<PasswordResetComponentState>): void {
+        if (!this.worker.set) {
+            this.worker = {
+                set: true,
+                instance: this.initWorker(this.worker.init, (state) => {
+                    if (this.holder.set) {
+                        this.holder.pub(state)
+                    }
+                    stateChanged(state)
+                }),
+            }
+        }
     }
+    initWorker(init: WorkerInit, stateChanged: Publisher<PasswordResetComponentState>): Worker {
+        const worker = init()
+        worker.addEventListener("message", (event) => {
+            const state = event.data as PasswordResetWorkerComponentState
+            if (state.type === "password_reset") {
+                stateChanged(state.state)
+            }
+        })
+        return worker
+    }
+
+    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void {
+        if (this.worker.set) {
+            this.worker.instance.addEventListener("message", (event) => {
+                const state = event.data as PasswordResetWorkerComponentState
+                if (state.type === "field-login_id") {
+                    stateChanged(state.state)
+                }
+            })
+        }
+    }
+    initPasswordField(stateChanged: Publisher<PasswordFieldComponentState>): void {
+        if (this.worker.set) {
+            this.worker.instance.addEventListener("message", (event) => {
+                const state = event.data as PasswordResetWorkerComponentState
+                if (state.type === "field-password") {
+                    stateChanged(state.state)
+                }
+            })
+        }
+    }
+
+    terminate(): void {
+        if (this.worker.set) {
+            this.worker.instance.terminate()
+        }
+    }
+
+    async trigger(operation: PasswordResetComponentOperation): Promise<void> {
+        if (this.worker.set) {
+            this.worker.instance.postMessage(operation)
+        }
+    }
+}
+
+function mapPasswordResetComponentState(state: PasswordResetComponentState): PasswordResetWorkerComponentState {
+    return { type: "password_reset", state }
+}
+function mapLoginIDFieldComponentState(state: LoginIDFieldComponentState): PasswordResetWorkerComponentState {
+    return { type: "field-login_id", state }
+}
+function mapPasswordFieldComponentState(state: PasswordFieldComponentState): PasswordResetWorkerComponentState {
+    return { type: "field-password", state }
+}
+
+type PublisherHolder<T> =
+    Readonly<{ set: false }> |
+    Readonly<{ set: true, pub: Publisher<T> }>
+
+interface Publisher<T> {
+    (state: T): void
+}
+
+type WorkerHolder =
+    Readonly<{ set: false, init: WorkerInit }> |
+    Readonly<{ set: true, instance: Worker }>
+
+interface WorkerInit {
+    (): Worker
 }
