@@ -1,4 +1,4 @@
-import { LoginID } from "../../credential/data"
+import { LoginID } from "../../login_id/data"
 import { LoginIDFieldOperation, LoginIDFieldEvent } from "./data"
 import { InputValue, Content } from "../../field/data"
 

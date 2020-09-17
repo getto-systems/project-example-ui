@@ -9,7 +9,7 @@ import {
 
 import { LoginIDFieldComponentState } from "../field/login_id/data"
 
-import { LoginID } from "../../credential/data"
+import { LoginID } from "../../login_id/data"
 import { CreateSessionEvent, PollingStatusEvent } from "../../password_reset/data"
 import { LoginIDField } from "../../field/login_id/action"
 import { Content } from "../../field/data"

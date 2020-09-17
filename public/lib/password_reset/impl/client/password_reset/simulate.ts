@@ -1,6 +1,7 @@
 import { PasswordResetClient, ResetResponse, resetSuccess, resetFailed } from "../../../infra"
 
-import { LoginID, AuthCredential } from "../../../../credential/data"
+import { AuthCredential } from "../../../../credential/data"
+import { LoginID } from "../../../../login_id/data"
 import { Password } from "../../../../password/data"
 import { ResetToken } from "../../../data"
 

@@ -6,7 +6,7 @@ import {
     PasswordLoginEventSubscriber,
 } from "../action"
 
-import { LoginID } from "../../credential/data"
+import { LoginID } from "../../login_id/data"
 import { Password } from "../../password/data"
 import { InputContent, LoginEvent } from "../data"
 import { Content } from "../../field/data"
