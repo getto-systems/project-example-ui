@@ -1,5 +1,4 @@
-import { RenewCredentialError } from "../../renew_credential/data"
-import { AuthCredential, TicketNonce } from "../../credential/data"
+import { AuthCredential, TicketNonce, RenewError } from "../../credential/data"
 
 export interface RenewCredentialComponent {
     hook(stateChanged: Publisher<RenewCredentialComponentState>): void
@@ -13,7 +12,7 @@ export type RenewCredentialComponentState =
     Readonly<{ type: "try-to-renew" }> |
     Readonly<{ type: "delayed-to-renew" }> |
     Readonly<{ type: "unauthorized" }> |
-    Readonly<{ type: "failed-to-renew", err: RenewCredentialError }> |
+    Readonly<{ type: "failed-to-renew", err: RenewError }> |
     Readonly<{ type: "succeed-to-renew", authCredential: AuthCredential }>
 
 export const initialRenewCredentialComponentState: RenewCredentialComponentState = { type: "initial-renew" }

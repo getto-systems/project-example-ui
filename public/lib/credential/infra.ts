@@ -1,8 +1,25 @@
-import { AuthCredential, TicketNonce, StoreError } from "./data"
+import { AuthCredential, TicketNonce, RenewError, StoreError } from "./data"
 
 export type Infra = Readonly<{
+    timeConfig: TimeConfig,
+    renewClient: RenewClient,
     authCredentials: AuthCredentialRepository,
 }>
+
+export type TimeConfig = Readonly<{
+    renewDelayTime: DelayTime,
+}>
+
+export type DelayTime = Readonly<{ delay_milli_second: number }>
+
+export interface RenewClient {
+    renew(ticketNonce: TicketNonce): Promise<RenewResponse>
+}
+
+export type RenewResponse =
+    Readonly<{ success: false, err: RenewError }> |
+    Readonly<{ success: true, hasCredential: false }> |
+    Readonly<{ success: true, hasCredential: true, authCredential: AuthCredential }>
 
 export interface AuthCredentialRepository {
     findTicketNonce(): FindResponse

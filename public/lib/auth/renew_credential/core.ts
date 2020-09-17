@@ -8,8 +8,7 @@ import {
     RenewCredentialComponentOperation,
 } from "./data"
 
-import { TicketNonce } from "../../credential/data"
-import { RenewCredentialEvent } from "../../renew_credential/data"
+import { TicketNonce, RenewEvent } from "../../credential/data"
 
 export function initRenewCredentialComponent(action: RenewCredentialComponentAction): RenewCredentialComponent {
     return new Component(action)
@@ -28,7 +27,7 @@ class Component implements RenewCredentialComponent {
         this.holder = { set: true, pub }
     }
     init(stateChanged: Publisher<RenewCredentialComponentState>): void {
-        this.action.renewCredential.sub.onRenewCredential((event) => {
+        this.action.credential.sub.onRenew((event) => {
             const state = map(event)
             if (this.holder.set) {
                 this.holder.pub(state)
@@ -36,7 +35,7 @@ class Component implements RenewCredentialComponent {
             stateChanged(state)
         })
 
-        function map(event: RenewCredentialEvent): RenewCredentialComponentState {
+        function map(event: RenewEvent): RenewCredentialComponentState {
             return event
         }
     }
@@ -48,7 +47,7 @@ class Component implements RenewCredentialComponent {
     }
 
     renew(ticketNonce: TicketNonce): Promise<void> {
-        return this.action.renewCredential.renewCredential(ticketNonce)
+        return this.action.credential.renew(ticketNonce)
     }
 }
 

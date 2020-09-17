@@ -17,7 +17,7 @@ render(h(main(), {}), document.body)
 
 function main() {
     const loader = new ComponentLoader()
-    const usecase = loader.initAuthUsecase()
+    const usecase = loader.initAuthUsecase(location)
 
     return (): VNode => {
         const [state, setState] = useState(initialAuthUsecaseState)
