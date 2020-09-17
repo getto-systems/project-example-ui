@@ -1,4 +1,4 @@
-import { newLoadApplicationComponent } from "../../z_main/auth/load_application"
+import { newLoadApplicationComponent } from "../../main/auth/load_application"
 
 const ctx: Worker = self as any // eslint-disable-line @typescript-eslint/no-explicit-any
 

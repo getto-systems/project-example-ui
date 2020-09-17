@@ -1,4 +1,4 @@
-import { newPasswordResetSessionComponent, newWorkerHelper } from "../../z_main/auth/password_reset_session"
+import { newPasswordResetSessionComponent, newWorkerHelper } from "../../main/auth/password_reset_session"
 
 const ctx: Worker = self as any // eslint-disable-line @typescript-eslint/no-explicit-any
 

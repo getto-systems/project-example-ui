@@ -1,4 +1,4 @@
-import { ComponentLoader } from "../z_main/auth"
+import { ComponentLoader } from "../main/auth"
 
 import { render, h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"

@@ -1,4 +1,4 @@
-import { newPasswordLoginComponent, newWorkerHelper } from "../../z_main/auth/password_login"
+import { newPasswordLoginComponent, newWorkerHelper } from "../../main/auth/password_login"
 
 const ctx: Worker = self as any // eslint-disable-line @typescript-eslint/no-explicit-any
 
