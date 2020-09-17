@@ -1,16 +1,5 @@
-import { PasswordField } from "../../../field/password/action"
-
 import { PasswordFieldError, PasswordCharacter, PasswordView } from "../../../field/password/data"
-import { Password } from "../../../password/data"
-import { Valid, Content } from "../../../field/data"
-
-export interface PasswordFieldComponent {
-    onContentChange(contentChanged: Publisher<Content<Password>>): void
-    init(stateChanged: Publisher<PasswordFieldComponentState>): void
-    terminate(): void
-
-    field: PasswordField
-}
+import { Valid } from "../../../field/data"
 
 export type PasswordFieldComponentState = Readonly<{
     type: "succeed-to-update-password",
@@ -24,8 +13,4 @@ export const initialPasswordFieldComponentState: PasswordFieldComponentState = {
     result: { valid: true },
     character: { complex: false },
     view: { show: false },
-}
-
-interface Publisher<T> {
-    (state: T): void
 }

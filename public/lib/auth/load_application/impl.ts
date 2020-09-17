@@ -1,12 +1,7 @@
-import {
-    LoadApplicationComponentAction,
-} from "./action"
+import { LoadApplicationComponent, LoadApplicationComponentAction } from "./component"
 
-import {
-    LoadApplicationComponent,
-    LoadApplicationComponentState,
-    LoadApplicationComponentOperation,
-} from "./data"
+import { LoadApplicationComponentState, LoadApplicationComponentOperation } from "./data"
+
 import { PagePathname, ScriptEvent } from "../../script/data"
 
 export function initLoadApplicationComponent(action: LoadApplicationComponentAction): LoadApplicationComponent {
