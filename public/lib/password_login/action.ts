@@ -1,12 +1,11 @@
-import { AuthCredential, LoginID } from "../credential/data"
+import { LoginID } from "../credential/data"
 import { Password } from "../password/data"
-import { InputContent, LoginEvent, LoginError } from "./data"
+import { LoginEvent } from "./data"
 import { Content } from "../field/data"
 
 export interface PasswordLoginAction {
     sub: PasswordLoginEventSubscriber
     login(content: [Content<LoginID>, Content<Password>]): Promise<void>
-    loginDeprecated(event: LoginEventPublisher, content: [Content<LoginID>, Content<Password>]): Promise<LoginResult>
 }
 
 export interface PasswordLoginEventPublisher {
@@ -20,13 +19,3 @@ export interface PasswordLoginEventSubscriber {
 interface Publisher<T> {
     (state: T): void
 }
-
-export interface LoginEventPublisher {
-    tryToLogin(): void
-    delayedToLogin(): void
-    failedToLogin(content: InputContent, err: LoginError): void
-}
-
-export type LoginResult =
-    Readonly<{ success: false }> |
-    Readonly<{ success: true, authCredential: AuthCredential }>
