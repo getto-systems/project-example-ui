@@ -1,3 +1,4 @@
+import { env } from "../y_static/env"
 import { initAuthClient } from "../z_external/auth_client/auth_client"
 
 import { newTimeConfig } from "./auth/config"
@@ -11,11 +12,10 @@ import { initAuthUsecase } from "../auth/impl"
 
 import { initFetchCredentialComponent } from "../auth/fetch_credential/impl"
 import { initRenewCredentialComponent } from "../auth/renew_credential/impl"
-import { initStoreCredentialComponent } from "../auth/store_credential/core"
+import { initStoreCredentialComponent } from "../auth/store_credential/impl"
 
 import { initStorageAuthCredentialRepository } from "../credential/impl/repository/credential/storage"
 import { initFetchRenewClient } from "../credential/impl/client/renew/fetch"
-import { env } from "../y_static/env"
 
 import { initCredentialAction } from "../credential/impl/core"
 

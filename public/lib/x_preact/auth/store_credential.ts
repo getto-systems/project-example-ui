@@ -2,7 +2,8 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { StoreCredentialComponent, initialStoreCredentialComponentState } from "../../auth/store_credential/data"
+import { StoreCredentialComponent } from "../../auth/store_credential/component"
+import { initialStoreCredentialComponentState } from "../../auth/store_credential/data"
 
 import { AuthCredential } from "../../credential/data"
 
