@@ -202,7 +202,7 @@ export class ComponentLoader {
 
     initPasswordResetSessionAction(): PasswordResetSessionAction {
         return initPasswordResetSessionAction({
-            config: this.config,
+            timeConfig: this.config,
             passwordResetSessionClient: this.initPasswordResetSessionClient(),
         })
     }

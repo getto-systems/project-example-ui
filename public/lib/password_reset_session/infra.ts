@@ -1,16 +1,16 @@
 import { LoginID } from "../credential/data"
 import {
-    Session, SessionError,
+    Session, CreateSessionError,
     Destination,
     PollingStatus, DoneStatus, PollingStatusError,
 } from "./data"
 
 export type Infra = Readonly<{
-    config: Config,
+    timeConfig: TimeConfig,
     passwordResetSessionClient: PasswordResetSessionClient,
 }>
 
-export type Config = Readonly<{
+export type TimeConfig = Readonly<{
     passwordResetCreateSessionDelayTime: DelayTime,
     passwordResetPollingWaitTime: WaitTime,
     passwordResetPollingLimit: Limit,
@@ -27,9 +27,9 @@ export interface PasswordResetSessionClient {
 }
 
 export type SessionResponse =
-    Readonly<{ success: false, err: SessionError }> |
+    Readonly<{ success: false, err: CreateSessionError }> |
     Readonly<{ success: true, session: Session }>
-export function createSessionFailed(err: SessionError): SessionResponse {
+export function createSessionFailed(err: CreateSessionError): SessionResponse {
     return { success: false, err }
 }
 export function createSessionSuccess(session: Session): SessionResponse {
