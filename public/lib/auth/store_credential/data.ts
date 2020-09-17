@@ -1,11 +1,4 @@
-import { AuthCredential, StoreError } from "../../credential/data"
-
-export interface StoreCredentialComponent {
-    hook(stateChanged: Publisher<StoreCredentialComponentState>): void
-    init(stateChanged: Publisher<StoreCredentialComponentState>): void
-    terminate(): void
-    store(authCredential: AuthCredential): Promise<void>
-}
+import { StoreError } from "../../credential/data"
 
 export type StoreCredentialComponentState =
     Readonly<{ type: "initial-store" }> |
@@ -13,7 +6,3 @@ export type StoreCredentialComponentState =
     Readonly<{ type: "succeed-to-store" }>
 
 export const initialStoreCredentialComponentState: StoreCredentialComponentState = { type: "initial-store" }
-
-interface Publisher<T> {
-    (state: T): void
-}
