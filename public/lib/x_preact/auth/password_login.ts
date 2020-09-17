@@ -50,8 +50,8 @@ function initialLoginForm(component: PasswordLoginComponent): VNode {
         <form onSubmit="${onSubmit}">
             <big>
                 <section class="login__body">
-                    <${LoginIDField(component.field.loginID)} initial="${noValue}"/>
-                    <${PasswordField(component.field.password)} initial="${noValue}"/>
+                    <${LoginIDField(component)} initial="${noValue}"/>
+                    <${PasswordField(component)} initial="${noValue}"/>
                 </section>
             </big>
             <big>
@@ -77,8 +77,8 @@ function failedToLoginForm(component: PasswordLoginComponent, content: InputCont
         <form onSubmit="${onSubmit}">
             <big>
                 <section class="login__body">
-                    <${LoginIDField(component.field.loginID)} initial="${hasValue(content.loginID)}"/>
-                    <${PasswordField(component.field.password)} initial="${hasValue(content.password)}"/>
+                    <${LoginIDField(component)} initial="${hasValue(content.loginID)}"/>
+                    <${PasswordField(component)} initial="${hasValue(content.password)}"/>
                 </section>
             </big>
             <big>

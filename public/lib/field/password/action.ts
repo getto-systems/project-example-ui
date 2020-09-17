@@ -1,5 +1,5 @@
 import { Password } from "../../password/data"
-import { PasswordFieldEvent } from "./data"
+import { PasswordFieldOperation, PasswordFieldEvent } from "./data"
 import { InputValue, Content } from "../../field/data"
 
 export interface PasswordFieldAction {
@@ -8,6 +8,7 @@ export interface PasswordFieldAction {
 
 export interface PasswordField {
     sub: PasswordFieldEventSubscriber
+    trigger(operation: PasswordFieldOperation): void
     set(input: InputValue): void
     show(): void
     hide(): void

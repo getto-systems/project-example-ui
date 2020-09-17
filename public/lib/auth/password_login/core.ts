@@ -3,50 +3,69 @@ import {
     PasswordLoginComponent,
     PasswordLoginComponentState,
     PasswordLoginComponentOperation,
-    PasswordLoginComponentField,
+    PasswordLoginWorkerComponentHelper,
+    PasswordLoginWorkerComponentState,
 } from "./action"
+
+import { LoginIDFieldComponentState } from "../field/login_id/data"
+import { PasswordFieldComponentState } from "../field/password/data"
+
+import { LoginIDField } from "../../field/login_id/action"
+import { PasswordField } from "../../field/password/action"
 
 import { LoginID } from "../../credential/data"
 import { Password } from "../../password/data"
 import { LoginEvent } from "../../password_login/data"
 import { Content } from "../../field/data"
 
-export function initPasswordLoginComponent(
-    action: PasswordLoginComponentAction,
-    field: PasswordLoginComponentField,
-): PasswordLoginComponent {
-    return new Component(action, field)
+export function initPasswordLoginComponent(action: PasswordLoginComponentAction): PasswordLoginComponent {
+    return new Component(action)
 }
-export function initPasswordLoginWorkerComponent(init: WorkerInit, field: PasswordLoginComponentField): PasswordLoginComponent {
-    return new WorkerComponent(init, field)
+export function initPasswordLoginWorkerComponent(init: WorkerInit): PasswordLoginComponent {
+    return new WorkerComponent(init)
+}
+export function initPasswordLoginWorkerComponentHelper(): PasswordLoginWorkerComponentHelper {
+    return {
+        mapPasswordLoginComponentState,
+        mapLoginIDFieldComponentState,
+        mapPasswordFieldComponentState,
+    }
 }
 
 class Component implements PasswordLoginComponent {
     action: PasswordLoginComponentAction
-    field: PasswordLoginComponentField
 
     holder: PublisherHolder<PasswordLoginComponentState>
+
+    field: {
+        loginID: LoginIDField
+        password: PasswordField
+    }
 
     content: {
         loginID: Content<LoginID>
         password: Content<Password>
     }
 
-    constructor(action: PasswordLoginComponentAction, field: PasswordLoginComponentField) {
+    constructor(action: PasswordLoginComponentAction) {
         this.action = action
-        this.field = field
 
         this.holder = { set: false }
+
+        this.field = {
+            loginID: this.action.loginIDField.initLoginIDField(),
+            password: this.action.passwordField.initPasswordField(),
+        }
 
         this.content = {
             loginID: { input: { inputValue: "" }, valid: false },
             password: { input: { inputValue: "" }, valid: false },
         }
 
-        this.field.loginID.onContentChange((content: Content<LoginID>) => {
+        this.field.loginID.sub.onLoginIDFieldContentChanged((content: Content<LoginID>) => {
             this.content.loginID = content
         })
-        this.field.password.onContentChange((content: Content<Password>) => {
+        this.field.password.sub.onPasswordFieldContentChanged((content: Content<Password>) => {
             this.content.password = content
         })
     }
@@ -67,18 +86,32 @@ class Component implements PasswordLoginComponent {
             }
         })
     }
+    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void {
+        this.field.loginID.sub.onLoginIDFieldStateChanged(stateChanged)
+    }
+    initPasswordField(stateChanged: Publisher<PasswordFieldComponentState>): void {
+        this.field.password.sub.onPasswordFieldStateChanged(stateChanged)
+    }
     terminate(): void {
         // terminate が必要な component とインターフェイスを合わせるために必要
     }
-    trigger(_operation: PasswordLoginComponentOperation): Promise<void> {
-        // "login" だけなので単に呼び出す
-        return this.login()
+    trigger(operation: PasswordLoginComponentOperation): Promise<void> {
+        switch (operation.type) {
+            case "login":
+                return this.login()
+
+            case "field-login_id":
+                return Promise.resolve(this.field.loginID.trigger(operation.operation))
+
+            case "field-password":
+                return Promise.resolve(this.field.password.trigger(operation.operation))
+        }
     }
 
     async login(): Promise<void> {
         await Promise.all([
-            this.field.loginID.field.validate(),
-            this.field.password.field.validate(),
+            this.field.loginID.validate(),
+            this.field.password.validate(),
         ])
 
         await this.action.passwordLogin.login([
@@ -92,13 +125,9 @@ class WorkerComponent implements PasswordLoginComponent {
     worker: WorkerHolder
     holder: PublisherHolder<PasswordLoginComponentState>
 
-    field: PasswordLoginComponentField
-
-    constructor(init: WorkerInit, field: PasswordLoginComponentField) {
+    constructor(init: WorkerInit) {
         this.worker = { set: false, init }
         this.holder = { set: false }
-
-        this.field = field
     }
 
     hook(pub: Publisher<PasswordLoginComponentState>): void {
@@ -120,9 +149,33 @@ class WorkerComponent implements PasswordLoginComponent {
     initWorker(init: WorkerInit, stateChanged: Publisher<PasswordLoginComponentState>): Worker {
         const worker = init()
         worker.addEventListener("message", (event) => {
-            stateChanged(event.data)
+            const state = event.data as PasswordLoginWorkerComponentState
+            if (state.type === "password_login") {
+                stateChanged(state.state)
+            }
         })
         return worker
+    }
+
+    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void {
+        if (this.worker.set) {
+            this.worker.instance.addEventListener("message", (event) => {
+                const state = event.data as PasswordLoginWorkerComponentState
+                if (state.type === "field-login_id") {
+                    stateChanged(state.state)
+                }
+            })
+        }
+    }
+    initPasswordField(stateChanged: Publisher<PasswordFieldComponentState>): void {
+        if (this.worker.set) {
+            this.worker.instance.addEventListener("message", (event) => {
+                const state = event.data as PasswordLoginWorkerComponentState
+                if (state.type === "field-password") {
+                    stateChanged(state.state)
+                }
+            })
+        }
     }
 
     terminate(): void {
@@ -136,6 +189,16 @@ class WorkerComponent implements PasswordLoginComponent {
             this.worker.instance.postMessage(operation)
         }
     }
+}
+
+function mapPasswordLoginComponentState(state: PasswordLoginComponentState): PasswordLoginWorkerComponentState {
+    return { type: "password_login", state }
+}
+function mapLoginIDFieldComponentState(state: LoginIDFieldComponentState): PasswordLoginWorkerComponentState {
+    return { type: "field-login_id", state }
+}
+function mapPasswordFieldComponentState(state: PasswordFieldComponentState): PasswordLoginWorkerComponentState {
+    return { type: "field-password", state }
 }
 
 type PublisherHolder<T> =

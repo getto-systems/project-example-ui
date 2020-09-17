@@ -5,7 +5,7 @@ import {
     LoginIDFieldEventSubscriber,
 } from "../action"
 
-import { LoginIDFieldEvent, LoginIDFieldError } from "../data"
+import { LoginIDFieldOperation, LoginIDFieldEvent, LoginIDFieldError } from "../data"
 import { LoginID } from "../../../credential/data"
 import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../../field/data"
 
@@ -33,13 +33,17 @@ class Field implements LoginIDField {
         this.loginID = { inputValue: "" }
     }
 
+    trigger(operation: LoginIDFieldOperation): void {
+        this.set(operation.loginID)
+    }
+
     set(input: InputValue): void {
         this.loginID = input
         this.validate()
     }
     validate(): void {
         const [content, result] = this.content()
-        this.pub.publishLoginIDFieldEvent({ type: "succeed-to-update-login-id", result, content })
+        this.pub.publishLoginIDFieldEvent({ type: "succeed-to-update-login_id", result, content })
     }
 
     content(): [Content<LoginID>, Valid<LoginIDFieldError>] {
