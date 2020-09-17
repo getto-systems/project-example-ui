@@ -70,7 +70,7 @@ class Component implements PasswordResetComponent {
     }
 
     async reset(event: PasswordResetComponentEvent): Promise<void> {
-        const result = await this.action.passwordReset.reset(event, this.resetToken, await Promise.all([
+        const result = await this.action.passwordReset.reset_DEPRECATED(event, this.resetToken, await Promise.all([
             this.content.loginID,
             this.content.password,
         ]))
