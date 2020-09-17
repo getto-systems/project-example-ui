@@ -17,7 +17,6 @@ export interface PasswordResetSessionComponentAction {
 }
 
 export interface PasswordResetSessionComponent {
-    hook(stateChanged: Publisher<PasswordResetSessionComponentState>): void
     init(stateChanged: Publisher<PasswordResetSessionComponentState>): void
     initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void
     terminate(): void
@@ -39,6 +38,15 @@ export const initialPasswordResetSessionComponentState: PasswordResetSessionComp
 export type PasswordResetSessionComponentOperation =
     Readonly<{ type: "create-session" }> |
     Readonly<{ type: "field-login_id", operation: LoginIDFieldOperation }>
+
+export interface PasswordResetSessionWorkerComponentHelper {
+    mapPasswordResetSessionComponentState(state: PasswordResetSessionComponentState): PasswordResetSessionWorkerComponentState
+    mapLoginIDFieldComponentState(state: LoginIDFieldComponentState): PasswordResetSessionWorkerComponentState
+}
+
+export type PasswordResetSessionWorkerComponentState =
+    Readonly<{ type: "password_login", state: PasswordResetSessionComponentState }> |
+    Readonly<{ type: "field-login_id", state: LoginIDFieldComponentState }>
 
 interface Publisher<T> {
     (state: T): void

@@ -1,4 +1,4 @@
-import { AuthClient, initAuthClient } from "../../z_external/auth_client/auth_client"
+import { initAuthClient } from "../../z_external/auth_client/auth_client"
 import { env } from "../../y_static/env"
 
 import { newTimeConfig } from "./config"
@@ -16,12 +16,10 @@ import { PasswordLoginClient } from "../../password_login/infra"
 import { PasswordLoginComponent, PasswordLoginWorkerComponentHelper } from "../../auth/password_login/action"
 
 export function newPasswordLoginComponent(): PasswordLoginComponent {
-    const authClient = initAuthClient(env.authServerURL)
-
     return initPasswordLoginComponent({
         passwordLogin: initPasswordLoginAction({
             timeConfig: newTimeConfig(),
-            passwordLoginClient: newPasswordLoginClient(authClient),
+            passwordLoginClient: newPasswordLoginClient(),
         }),
         loginIDField: initLoginIDFieldAction(),
         passwordField: initPasswordFieldAction(),
@@ -32,6 +30,6 @@ export function newWorkerHelper(): PasswordLoginWorkerComponentHelper {
     return initPasswordLoginWorkerComponentHelper()
 }
 
-function newPasswordLoginClient(authClient: AuthClient): PasswordLoginClient {
-    return initFetchPasswordLoginClient(authClient)
+function newPasswordLoginClient(): PasswordLoginClient {
+    return initFetchPasswordLoginClient(initAuthClient(env.authServerURL))
 }

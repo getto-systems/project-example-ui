@@ -3,6 +3,8 @@ import {
     PasswordResetSessionComponent,
     PasswordResetSessionComponentState,
     PasswordResetSessionComponentOperation,
+    PasswordResetSessionWorkerComponentHelper,
+    PasswordResetSessionWorkerComponentState,
 } from "./action"
 
 import { LoginIDFieldComponentState } from "../field/login_id/data"
@@ -15,11 +17,18 @@ import { Content } from "../../field/data"
 export function initPasswordResetSessionComponent(action: PasswordResetSessionComponentAction): PasswordResetSessionComponent {
     return new Component(action)
 }
+export function initPasswordResetSessionWorkerComponent(init: WorkerInit): PasswordResetSessionComponent {
+    return new WorkerComponent(init)
+}
+export function initPasswordResetSessionWorkerComponentHelper(): PasswordResetSessionWorkerComponentHelper {
+    return {
+        mapPasswordResetSessionComponentState,
+        mapLoginIDFieldComponentState,
+    }
+}
 
 class Component implements PasswordResetSessionComponent {
     action: PasswordResetSessionComponentAction
-
-    holder: PublisherHolder<PasswordResetSessionComponentState>
 
     field: {
         loginID: LoginIDField
@@ -31,8 +40,6 @@ class Component implements PasswordResetSessionComponent {
 
     constructor(action: PasswordResetSessionComponentAction) {
         this.action = action
-
-        this.holder = { set: false }
 
         this.field = {
             loginID: action.loginIDField.initLoginIDField(),
@@ -47,16 +54,9 @@ class Component implements PasswordResetSessionComponent {
         })
     }
 
-    hook(pub: Publisher<PasswordResetSessionComponentState>): void {
-        this.holder = { set: true, pub }
-    }
     init(stateChanged: Publisher<PasswordResetSessionComponentState>): void {
         this.action.passwordResetSession.sub.onCreateSessionEvent((event) => {
-            const state = map(event, this.action)
-            if (this.holder.set) {
-                this.holder.pub(state)
-            }
-            stateChanged(state)
+            stateChanged(map(event, this.action))
 
             function map(event: CreateSessionEvent, action: PasswordResetSessionComponentAction): PasswordResetSessionComponentState {
                 switch (event.type) {
@@ -72,11 +72,7 @@ class Component implements PasswordResetSessionComponent {
             }
         })
         this.action.passwordResetSession.sub.onPollingStatusEvent((event) => {
-            const state = map(event)
-            if (this.holder.set) {
-                this.holder.pub(state)
-            }
-            stateChanged(state)
+            stateChanged(map(event))
 
             function map(event: PollingStatusEvent): PasswordResetSessionComponentState {
                 return event
@@ -104,10 +100,85 @@ class Component implements PasswordResetSessionComponent {
     }
 }
 
+class WorkerComponent implements PasswordResetSessionComponent {
+    worker: WorkerHolder
+    holder: PublisherHolder<PasswordResetSessionComponentState>
+
+    constructor(init: WorkerInit) {
+        this.worker = { set: false, init }
+        this.holder = { set: false }
+    }
+
+    hook(pub: Publisher<PasswordResetSessionComponentState>): void {
+        this.holder = { set: true, pub }
+    }
+    init(stateChanged: Publisher<PasswordResetSessionComponentState>): void {
+        if (!this.worker.set) {
+            this.worker = {
+                set: true,
+                instance: this.initWorker(this.worker.init, (state) => {
+                    if (this.holder.set) {
+                        this.holder.pub(state)
+                    }
+                    stateChanged(state)
+                }),
+            }
+        }
+    }
+    initWorker(init: WorkerInit, stateChanged: Publisher<PasswordResetSessionComponentState>): Worker {
+        const worker = init()
+        worker.addEventListener("message", (event) => {
+            const state = event.data as PasswordResetSessionWorkerComponentState
+            if (state.type === "password_login") {
+                stateChanged(state.state)
+            }
+        })
+        return worker
+    }
+
+    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void {
+        if (this.worker.set) {
+            this.worker.instance.addEventListener("message", (event) => {
+                const state = event.data as PasswordResetSessionWorkerComponentState
+                if (state.type === "field-login_id") {
+                    stateChanged(state.state)
+                }
+            })
+        }
+    }
+
+    terminate(): void {
+        if (this.worker.set) {
+            this.worker.instance.terminate()
+        }
+    }
+
+    async trigger(operation: PasswordResetSessionComponentOperation): Promise<void> {
+        if (this.worker.set) {
+            this.worker.instance.postMessage(operation)
+        }
+    }
+}
+
+function mapPasswordResetSessionComponentState(state: PasswordResetSessionComponentState): PasswordResetSessionWorkerComponentState {
+    return { type: "password_login", state }
+}
+function mapLoginIDFieldComponentState(state: LoginIDFieldComponentState): PasswordResetSessionWorkerComponentState {
+    return { type: "field-login_id", state }
+}
+
 type PublisherHolder<T> =
     Readonly<{ set: false }> |
     Readonly<{ set: true, pub: Publisher<T> }>
 
 interface Publisher<T> {
     (state: T): void
+}
+
+type WorkerHolder =
+    Readonly<{ set: false, init: WorkerInit }> |
+    Readonly<{ set: true, instance: Worker }>
+
+interface WorkerInit {
+    (): Worker
 }

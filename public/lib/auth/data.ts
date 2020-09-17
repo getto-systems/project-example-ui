@@ -4,6 +4,7 @@ import { StoreCredentialComponent } from "./store_credential/data"
 import { LoadApplicationComponent } from "./load_application/data"
 
 import { PasswordLoginComponent } from "./password_login/action"
+import { PasswordResetSessionComponent } from "./password_reset_session/action"
 
 import { AuthCredential, TicketNonce } from "../credential/data"
 import { ResetToken } from "../password_reset/data"
@@ -33,6 +34,7 @@ export interface AuthComponent {
     loadApplication: LoadApplicationComponent
 
     passwordLogin: PasswordLoginComponent
+    passwordResetSession: PasswordResetSessionComponent
 }
 
 export interface AuthUsecaseEventHandler extends AuthEventHandler {
