@@ -1,4 +1,4 @@
-import { PasswordResetSessionAction, SessionEvent, PollingStatusEvent } from "../../password_reset_session/action"
+import { PasswordResetSessionAction, SessionEventSender, PollingStatusEventSender } from "../../password_reset_session/action"
 
 import { LoginIDFieldComponent } from "../field/login_id/data"
 
@@ -30,7 +30,7 @@ export type PasswordResetSessionComponentState =
     Readonly<{ type: "failed-to-polling-status", err: PollingStatusError }> |
     Readonly<{ type: "succeed-to-send-token", status: DoneStatus }>
 
-export interface PasswordResetSessionComponentEvent extends SessionEvent, PollingStatusEvent { }
+export interface PasswordResetSessionComponentEvent extends SessionEventSender, PollingStatusEventSender { }
 
 export interface PasswordResetSessionComponentEventInit {
     (stateChanged: PasswordResetSessionComponentStateHandler): PasswordResetSessionComponentEvent

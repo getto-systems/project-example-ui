@@ -2,8 +2,8 @@ import { Infra, Config, PasswordResetSessionClient } from "../infra"
 
 import {
     PasswordResetSessionAction,
-    SessionEvent, SessionResult,
-    PollingStatusEvent,
+    SessionEventSender, SessionResult,
+    PollingStatusEventSender,
 } from "../action"
 
 import { LoginID } from "../../credential/data"
@@ -21,7 +21,7 @@ class PasswordResetSessionActionImpl implements PasswordResetSessionAction {
         this.infra = infra
     }
 
-    async createSession(event: SessionEvent, fields: [Content<LoginID>]): Promise<SessionResult> {
+    async createSession_DEPRECATED(event: SessionEventSender, fields: [Content<LoginID>]): Promise<SessionResult> {
         const content = mapContent(...fields)
         if (!content.valid) {
             event.failedToCreateSession(mapInput(...fields), { type: "validation-error" })
@@ -57,7 +57,7 @@ class PasswordResetSessionActionImpl implements PasswordResetSessionAction {
         }
     }
 
-    async startPollingStatus(event: PollingStatusEvent, session: Session): Promise<void> {
+    async startPollingStatus_DEPRECATED(event: PollingStatusEventSender, session: Session): Promise<void> {
         new PollingStatus(this.infra.config, this.infra.passwordResetSessionClient).startPolling(event, session)
     }
 }
@@ -80,7 +80,7 @@ class PollingStatus {
         this.sendTokenState = { type: "initial" }
     }
 
-    async startPolling(event: PollingStatusEvent, session: Session): Promise<void> {
+    async startPolling(event: PollingStatusEventSender, session: Session): Promise<void> {
         event.tryToPollingStatus()
 
         this.sendToken()

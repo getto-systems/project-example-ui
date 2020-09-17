@@ -8,16 +8,16 @@ import { Content } from "../field/data"
 
 export interface PasswordResetSessionAction {
     // TODO createSession を startSession にしたい
-    createSession(event: SessionEvent, content: [Content<LoginID>]): Promise<SessionResult>
-    startPollingStatus(event: PollingStatusEvent, session: Session): Promise<void>
+    createSession_DEPRECATED(event: SessionEventSender, content: [Content<LoginID>]): Promise<SessionResult>
+    startPollingStatus_DEPRECATED(event: PollingStatusEventSender, session: Session): Promise<void>
 }
 
-export interface SessionEvent {
+export interface SessionEventSender {
     tryToCreateSession(): void
     delayedToCreateSession(): void
     failedToCreateSession(content: InputContent, err: SessionError): void
 }
-export interface PollingStatusEvent {
+export interface PollingStatusEventSender {
     tryToPollingStatus(): void
     retryToPollingStatus(status: PollingStatus): void
     failedToPollingStatus(err: PollingStatusError): void
