@@ -1,6 +1,6 @@
-import { FetchCredentialComponentAction } from "./action"
+import { FetchCredentialComponent, FetchCredentialComponentAction } from "./component"
 
-import { FetchCredentialComponent, FetchCredentialComponentState } from "./data"
+import { FetchCredentialComponentState } from "./data"
 
 import { FetchEvent } from "../../credential/data"
 

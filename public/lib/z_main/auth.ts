@@ -7,9 +7,9 @@ import { newPasswordLoginComponent } from "./auth/worker/password_login"
 import { newPasswordResetSessionComponent } from "./auth/worker/password_reset_session"
 import { newPasswordResetComponent } from "./auth/worker/password_reset"
 
-import { initAuthUsecase } from "../auth/core"
+import { initAuthUsecase } from "../auth/impl"
 
-import { initFetchCredentialComponent } from "../auth/fetch_credential/core"
+import { initFetchCredentialComponent } from "../auth/fetch_credential/impl"
 import { initRenewCredentialComponent } from "../auth/renew_credential/core"
 import { initStoreCredentialComponent } from "../auth/store_credential/core"
 

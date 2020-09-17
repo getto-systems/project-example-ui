@@ -1,4 +1,4 @@
-import { FetchCredentialComponent } from "./fetch_credential/data"
+import { FetchCredentialComponent } from "./fetch_credential/component"
 import { RenewCredentialComponent } from "./renew_credential/data"
 import { StoreCredentialComponent } from "./store_credential/data"
 import { LoadApplicationComponent } from "./load_application/data"
