@@ -4,7 +4,7 @@ import { LoginIDFieldComponent } from "../field/login_id/data"
 
 import {
     InputContent,
-    SessionError,
+    CreateSessionError,
     PollingStatusError, PollingStatus, DoneStatus,
 } from "../../password_reset_session/data"
 
@@ -24,7 +24,7 @@ export type PasswordResetSessionComponentState =
     Readonly<{ type: "initial-reset-session" }> |
     Readonly<{ type: "try-to-create-session" }> |
     Readonly<{ type: "delayed-to-create-session" }> |
-    Readonly<{ type: "failed-to-create-session", content: InputContent, err: SessionError }> |
+    Readonly<{ type: "failed-to-create-session", content: InputContent, err: CreateSessionError }> |
     Readonly<{ type: "try-to-polling-status" }> |
     Readonly<{ type: "retry-to-polling-status", status: PollingStatus }> |
     Readonly<{ type: "failed-to-polling-status", err: PollingStatusError }> |

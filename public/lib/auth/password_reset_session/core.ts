@@ -10,7 +10,7 @@ import {
 import { LoginIDFieldComponent } from "../field/login_id/data"
 
 import { LoginID } from "../../credential/data"
-import { InputContent, SessionError, PollingStatusError, PollingStatus, DoneStatus } from "../../password_reset_session/data"
+import { InputContent, CreateSessionError, PollingStatusError, PollingStatus, DoneStatus } from "../../password_reset_session/data"
 import { Content } from "../../field/data"
 
 export function initPasswordResetSessionComponent(
@@ -74,7 +74,7 @@ class ComponentEvent implements PasswordResetSessionComponentEvent {
     delayedToCreateSession(): void {
         this.stateChanged({ type: "delayed-to-create-session" })
     }
-    failedToCreateSession(content: InputContent, err: SessionError): void {
+    failedToCreateSession(content: InputContent, err: CreateSessionError): void {
         this.stateChanged({ type: "failed-to-create-session", content, err })
     }
 
