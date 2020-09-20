@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { LoginView } from "./login_view"
+import { LoginView } from "./layout"
 import { LoginIDField } from "./field/login_id"
 import { PasswordField } from "./field/password"
 
@@ -101,8 +101,8 @@ function failedToLoginForm(component: PasswordLoginComponent, content: InputCont
 
     function error(): VNode {
         return html`
-            <dl class="form form_error">
-                <dd class="form__field">
+            <dl class="form_error">
+                <dd>
                     ${message()}
                 </dd>
             </dl>

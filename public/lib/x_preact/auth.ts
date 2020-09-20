@@ -1,56 +1,7 @@
-import { ComponentLoader } from "../main/auth"
+import { newAuthUsecase } from "../main/auth"
 
-import { render, h, VNode } from "preact"
-import { useState, useEffect } from "preact/hooks"
-import { html } from "htm/preact"
+import { Main } from "./auth/main"
 
-import { FetchCredential } from "./auth/fetch_credential"
-import { RenewCredential } from "./auth/renew_credential"
-import { StoreCredential } from "./auth/store_credential"
-import { LoadApplication } from "./auth/load_application"
+import { render, h } from "preact"
 
-import { PasswordLogin } from "./auth/password_login"
-
-import { initialAuthUsecaseState } from "../auth/data"
-
-render(h(main(), {}), document.body)
-
-function main() {
-    const loader = new ComponentLoader()
-    const usecase = loader.initAuthUsecase(location)
-
-    return (): VNode => {
-        const [state, setState] = useState(initialAuthUsecaseState)
-        useEffect(() => {
-            usecase.init(setState)
-            return () => usecase.terminate()
-        }, [])
-
-        // TODO useErrorBoundary とか使ってエラーの処理をする
-
-        switch (state.type) {
-            case "fetch-credential":
-                return h(FetchCredential(usecase.component.fetchCredential), {})
-
-            case "renew-credential":
-                return h(RenewCredential(usecase.component.renewCredential, state.ticketNonce), {})
-
-            case "store-credential":
-                return h(StoreCredential(usecase.component.storeCredential, state.authCredential), {})
-
-            case "load-application":
-                return h(LoadApplication(usecase.component.loadApplication), {})
-
-            case "password-login":
-                return h(PasswordLogin(usecase.component.passwordLogin), {})
-
-            case "password-reset-session":
-                //return h(PasswordReset(...state.init), {})
-                return html`ここでパスワードリセット！`
-
-            case "password-reset":
-                //return h(PasswordReset(...state.init), {})
-                return html`ここでパスワードリセット！`
-        }
-    }
-}
+render(h(Main(newAuthUsecase(location)), {}), document.body)

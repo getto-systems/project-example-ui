@@ -1,17 +1,10 @@
 /* eslint-disable */
 const path = require("path");
-const WorkerPlugin = require('worker-plugin');
 
 module.exports = {
   entry: {
     "update": path.join(__dirname, "lib/x_update/update.ts"),
-    "auth": path.join(__dirname, "lib/x_preact/auth.ts"),
-    "mock/auth": path.join(__dirname, "lib/x_preact/mock/auth.ts"),
-
-    "auth/load_application": path.join(__dirname, "lib/x_worker/auth/load_application.ts"),
-    "auth/password_login": path.join(__dirname, "lib/x_worker/auth/password_login.ts"),
-    "auth/password_reset_session": path.join(__dirname, "lib/x_worker/auth/password_reset_session.ts"),
-    "auth/password_reset": path.join(__dirname, "lib/x_worker/auth/password_reset.ts"),
+    "auth": path.join(__dirname, "lib/x_preact/mock/auth.ts"),
   },
   output: {
     path: path.join(__dirname, "dist"),
@@ -29,9 +22,6 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new WorkerPlugin(),
-  ],
   devServer: {
     contentBase: path.join(__dirname),
     publicPath: "/dist/",

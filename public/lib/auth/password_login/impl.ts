@@ -119,7 +119,7 @@ class WorkerComponent implements PasswordLoginComponent {
     holder: PublisherHolder<PasswordLoginComponentState>
 
     constructor(init: WorkerInit) {
-        this.worker = { set: false, init }
+        this.worker = { set: false, stack: [], init }
         this.holder = { set: false }
     }
 
@@ -128,18 +128,17 @@ class WorkerComponent implements PasswordLoginComponent {
     }
     init(stateChanged: Publisher<PasswordLoginComponentState>): void {
         if (!this.worker.set) {
-            this.worker = {
-                set: true,
-                instance: this.initWorker(this.worker.init, (state) => {
-                    if (this.holder.set) {
-                        this.holder.pub(state)
-                    }
-                    stateChanged(state)
-                }),
-            }
+            const instance = this.initWorker(this.worker.init, this.worker.stack, (state) => {
+                if (this.holder.set) {
+                    this.holder.pub(state)
+                }
+                stateChanged(state)
+            })
+
+            this.worker = { set: true, instance }
         }
     }
-    initWorker(init: WorkerInit, stateChanged: Publisher<PasswordLoginComponentState>): Worker {
+    initWorker(init: WorkerInit, stack: Array<WorkerSetup>, stateChanged: Publisher<PasswordLoginComponentState>): Worker {
         const worker = init()
         worker.addEventListener("message", (event) => {
             const state = event.data as PasswordLoginWorkerComponentState
@@ -147,12 +146,21 @@ class WorkerComponent implements PasswordLoginComponent {
                 stateChanged(state.state)
             }
         })
+        stack.forEach((setup) => {
+            setup(worker)
+        })
         return worker
     }
 
     initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void {
         if (this.worker.set) {
-            this.worker.instance.addEventListener("message", (event) => {
+            setup(this.worker.instance)
+        } else {
+            this.worker.stack.push(setup)
+        }
+
+        function setup(worker: Worker): void {
+            worker.addEventListener("message", (event) => {
                 const state = event.data as PasswordLoginWorkerComponentState
                 if (state.type === "field-login_id") {
                     stateChanged(state.state)
@@ -162,7 +170,13 @@ class WorkerComponent implements PasswordLoginComponent {
     }
     initPasswordField(stateChanged: Publisher<PasswordFieldComponentState>): void {
         if (this.worker.set) {
-            this.worker.instance.addEventListener("message", (event) => {
+            setup(this.worker.instance)
+        } else {
+            this.worker.stack.push(setup)
+        }
+
+        function setup(worker: Worker): void {
+            worker.addEventListener("message", (event) => {
                 const state = event.data as PasswordLoginWorkerComponentState
                 if (state.type === "field-password") {
                     stateChanged(state.state)
@@ -203,9 +217,13 @@ interface Publisher<T> {
 }
 
 type WorkerHolder =
-    Readonly<{ set: false, init: WorkerInit }> |
+    Readonly<{ set: false, stack: Array<WorkerSetup>, init: WorkerInit }> |
     Readonly<{ set: true, instance: Worker }>
 
 interface WorkerInit {
     (): Worker
+}
+
+interface WorkerSetup {
+    (worker: Worker): void
 }

@@ -15,3 +15,15 @@ export function LoginView(content: VNode): VNode {
         </aside>
     `
 }
+
+export function ErrorView(title: VNode, content: VNode, footer: VNode): VNode {
+    return LoginView(html`
+        <section class="login__message">
+            <h3 class="login__message__header">${title}</h3>
+            <section class="login__message__body paragraph">${content}</section>
+        </section>
+        <section class="login__footer">
+            ${footer}
+        </section>
+    `)
+}
