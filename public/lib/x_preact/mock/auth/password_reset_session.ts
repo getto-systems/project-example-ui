@@ -25,58 +25,22 @@ class Init {
         return { type: "delayed-to-create-session" }
     }
     failedToCreateSession_validation_error(): PasswordResetSessionComponentState {
-        return {
-            type: "failed-to-create-session",
-            content: {
-                loginID: { inputValue: "" },
-            },
-            err: { type: "validation-error" },
-        }
+        return { type: "failed-to-create-session", err: { type: "validation-error" } }
     }
     failedToCreateSession_bad_request(): PasswordResetSessionComponentState {
-        return {
-            type: "failed-to-create-session",
-            content: {
-                loginID: { inputValue: "" },
-            },
-            err: { type: "bad-request" },
-        }
+        return { type: "failed-to-create-session", err: { type: "bad-request" } }
     }
     failedToCreateSession_invalid_password_reset(): PasswordResetSessionComponentState {
-        return {
-            type: "failed-to-create-session",
-            content: {
-                loginID: { inputValue: "" },
-            },
-            err: { type: "invalid-password-reset" },
-        }
+        return { type: "failed-to-create-session", err: { type: "invalid-password-reset" } }
     }
     failedToCreateSession_server_error(): PasswordResetSessionComponentState {
-        return {
-            type: "failed-to-create-session",
-            content: {
-                loginID: { inputValue: "" },
-            },
-            err: { type: "server-error" },
-        }
+        return { type: "failed-to-create-session", err: { type: "server-error" } }
     }
     failedToCreateSession_bad_response(): PasswordResetSessionComponentState {
-        return {
-            type: "failed-to-create-session",
-            content: {
-                loginID: { inputValue: "" },
-            },
-            err: { type: "bad-response", err: "error" },
-        }
+        return { type: "failed-to-create-session", err: { type: "bad-response", err: "error" } }
     }
     failedToCreateSession_infra_error(): PasswordResetSessionComponentState {
-        return {
-            type: "failed-to-create-session",
-            content: {
-                loginID: { inputValue: "" },
-            },
-            err: { type: "infra-error", err: "error" },
-        }
+        return { type: "failed-to-create-session", err: { type: "infra-error", err: "error" } }
     }
     tryToPollingStatus(): PasswordResetSessionComponentState {
         return { type: "try-to-polling-status" }

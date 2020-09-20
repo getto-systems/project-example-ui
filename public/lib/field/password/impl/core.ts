@@ -85,9 +85,9 @@ class Field implements PasswordField {
         const character = checkCharacter(this.password.inputValue)
         const view = this.view()
         if (!result.valid) {
-            return [invalidContent(this.password), result, character, view]
+            return [invalidContent(), result, character, view]
         }
-        return [validContent(this.password, { password: this.password.inputValue }), result, character, view]
+        return [validContent({ password: this.password.inputValue }), result, character, view]
     }
     view(): PasswordView {
         if (this.visible) {

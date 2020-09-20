@@ -7,7 +7,7 @@ import { PasswordFieldComponentState } from "../../../auth/field/password/data"
 export function newPasswordLoginComponent(): PasswordLoginComponent {
     const init = new Init()
     return new Component(
-        init.initialLogin(),
+        init.failedToLogin_infra_error(),
         init.loginIDValid(),
         init.passwordValid(),
     )
@@ -24,64 +24,22 @@ class Init {
         return { type: "delayed-to-login" }
     }
     failedToLogin_validation_error(): PasswordLoginComponentState {
-        return {
-            type: "failed-to-login",
-            content: {
-                loginID: { inputValue: "" },
-                password: { inputValue: "" },
-            },
-            err: { type: "validation-error" },
-        }
+        return { type: "failed-to-login", err: { type: "validation-error" } }
     }
     failedToLogin_bad_request(): PasswordLoginComponentState {
-        return {
-            type: "failed-to-login",
-            content: {
-                loginID: { inputValue: "" },
-                password: { inputValue: "" },
-            },
-            err: { type: "bad-request" },
-        }
+        return { type: "failed-to-login", err: { type: "bad-request" } }
     }
     failedToLogin_invalid_password_login(): PasswordLoginComponentState {
-        return {
-            type: "failed-to-login",
-            content: {
-                loginID: { inputValue: "" },
-                password: { inputValue: "" },
-            },
-            err: { type: "invalid-password-login" },
-        }
+        return { type: "failed-to-login", err: { type: "invalid-password-login" } }
     }
     failedToLogin_server_error(): PasswordLoginComponentState {
-        return {
-            type: "failed-to-login",
-            content: {
-                loginID: { inputValue: "" },
-                password: { inputValue: "" },
-            },
-            err: { type: "server-error" },
-        }
+        return { type: "failed-to-login", err: { type: "server-error" } }
     }
     failedToLogin_bad_response(): PasswordLoginComponentState {
-        return {
-            type: "failed-to-login",
-            content: {
-                loginID: { inputValue: "" },
-                password: { inputValue: "" },
-            },
-            err: { type: "bad-response", err: "error" },
-        }
+        return { type: "failed-to-login", err: { type: "bad-response", err: "error" } }
     }
     failedToLogin_infra_error(): PasswordLoginComponentState {
-        return {
-            type: "failed-to-login",
-            content: {
-                loginID: { inputValue: "" },
-                password: { inputValue: "" },
-            },
-            err: { type: "infra-error", err: "error" },
-        }
+        return { type: "failed-to-login", err: { type: "infra-error", err: "error" } }
     }
 
     loginIDValid(): LoginIDFieldComponentState {

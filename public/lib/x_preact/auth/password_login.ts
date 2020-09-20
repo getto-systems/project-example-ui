@@ -1,5 +1,5 @@
 import { VNode } from "preact"
-import { useState, useEffect } from "preact/hooks"
+import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { LoginView } from "./layout"
@@ -9,8 +9,7 @@ import { PasswordField } from "./field/password"
 import { PasswordLoginComponent } from "../../auth/password_login/component"
 import { initialPasswordLoginComponentState } from "../../auth/password_login/data"
 
-import { InputContent, LoginError } from "../../password_login/data"
-import { hasValue, noValue } from "../../field/data"
+import { LoginError } from "../../password_login/data"
 
 interface PreactComponent {
     (): VNode
@@ -19,6 +18,7 @@ interface PreactComponent {
 export function PasswordLogin(component: PasswordLoginComponent): PreactComponent {
     return (): VNode => {
         const [state, setState] = useState(initialPasswordLoginComponentState)
+        const submit = useRef<HTMLButtonElement>()
         useEffect(() => {
             component.init(setState)
             return () => component.terminate()
@@ -26,78 +26,76 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
 
         switch (state.type) {
             case "initial-login":
-                return LoginView(initialLoginForm(component))
+                return LoginView(initialLoginForm(component, loginButton(), onSubmit))
 
             case "failed-to-login":
-                return LoginView(failedToLoginForm(component, state.content, state.err))
+                return LoginView(failedToLoginForm(component, state.err, loginButton(), onSubmit))
 
             case "try-to-login":
-                return LoginView(tryToLoginForm())
+                return LoginView(tryToLoginForm(component, loginButton_connecting()))
 
             case "delayed-to-login":
-                return LoginView(delayedToLoginForm())
+                return LoginView(delayedToLoginForm(component, loginButton_connecting()))
 
             case "succeed-to-login":
                 return html``
         }
+
+        function loginButton() {
+            return html`<button ref="${submit}" class="button button_save">ログイン</button>`
+        }
+        function loginButton_connecting(): VNode {
+            return html`
+                <button type="button" class="button button_saving">
+                    ログインしています
+                    ${" "}
+                    <i class="lnir lnir-spinner lnir-is-spinning"></i>
+                </button>
+            `
+        }
+        function onSubmit(e: Event) {
+            e.preventDefault()
+
+            if (submit.current) {
+                submit.current.blur()
+            }
+
+            component.trigger({ type: "login" })
+        }
     }
 }
 
-function initialLoginForm(component: PasswordLoginComponent): VNode {
+function initialLoginForm(component: PasswordLoginComponent, button: VNode, onSubmit: Handler<Event>): VNode {
     return html`
-        <form onSubmit="${onSubmit}">
-            <big>
-                <section class="login__body">
-                    <${LoginIDField(component)} initial="${noValue}"/>
-                    <${PasswordField(component)} initial="${noValue}"/>
-                </section>
-            </big>
-            <big>
+        <big>
+            <form onSubmit="${onSubmit}">
+                ${loginFields(component)}
                 <section class="login__footer button__container">
                     <div>
-                        ${loginButton()}
+                        ${button}
                     </div>
-                    <div class="login__link">
-                        ${passwordResetLink()}
-                    </div>
+                    ${passwordResetLink()}
                 </section>
-            </big>
-        </form>
+            </form>
+        </big>
     `
-
-    function onSubmit(e: Event) {
-        loginFormSubmit(e)
-        component.trigger({ type: "login" })
-    }
 }
-function failedToLoginForm(component: PasswordLoginComponent, content: InputContent, err: LoginError): VNode {
+function failedToLoginForm(component: PasswordLoginComponent, err: LoginError, button: VNode, onSubmit: Handler<Event>): VNode {
     return html`
-        <form onSubmit="${onSubmit}">
-            <big>
-                <section class="login__body">
-                    <${LoginIDField(component)} initial="${hasValue(content.loginID)}"/>
-                    <${PasswordField(component)} initial="${hasValue(content.password)}"/>
-                </section>
-            </big>
-            <big>
+        <big>
+            <form onSubmit="${onSubmit}">
+                ${loginFields(component)}
                 <section class="login__footer button__container">
                     <div>
-                        ${loginButton()}
+                        ${button}
                         <div class="vertical vertical_small"></div>
                         ${error()}
                     </div>
-                    <div class="login__link">
-                        ${passwordResetLink()}
-                    </div>
+                    ${passwordResetLink()}
                 </section>
-            </big>
-        </form>
+            </form>
+        </big>
     `
-
-    function onSubmit(e: Event) {
-        loginFormSubmit(e)
-        component.trigger({ type: "login" })
-    }
 
     function error(): VNode {
         return html`
@@ -131,64 +129,61 @@ function failedToLoginForm(component: PasswordLoginComponent, content: InputCont
         }
     }
 }
-
-function loginButton(): VNode {
-    // id="login-submit" は onSubmit で button.blur() するのに使用している
-    // SubmitEvent が使用可能になったら不必要になる
-    return html`<button id="login-submit" class="button button_save">ログイン</button>`
-}
-function loginFormSubmit(e: Event): void {
-    e.preventDefault()
-
-    // submitter を blur する
-    blurLoginButton()
-}
-function blurLoginButton(): void {
-    // submitter を blur する
-    // SubmitEvent が使えないので直接 getElementById している
-    const button = document.getElementById("login-submit")
-    if (button) {
-        button.blur()
-    }
-}
-
-function passwordResetLink(): VNode {
-    return html`<a href="#"><i class="lnir lnir-question-circle"></i> パスワードがわからない方</a>`
-}
-
-function tryToLoginForm(): VNode {
-    // TODO 「ログインしています」にスタイルをあてる
-    // spinner だけ、でもいいかな
+function tryToLoginForm(component: PasswordLoginComponent, button: VNode): VNode {
     return html`
-        <div>
-            <big>
-                ログインしています
-            </big>
-        </div>
-    `
-}
-function delayedToLoginForm(): VNode {
-    // TODO 「ログインしています」にスタイルをあてる
-    // こっちはちゃんとしたメッセージとともに表示する
-    return html`
-        <div>
-            <big>
-                ログインしています
-            </big>
-            <big>
+        <big>
+            <section>
+                ${loginFields(component)}
                 <section class="login__footer button__container">
                     <div>
+                        ${button}
+                    </div>
+                    ${passwordResetLink()}
+                </section>
+            </section>
+        </big>
+    `
+}
+function delayedToLoginForm(component: PasswordLoginComponent, button: VNode): VNode {
+    return html`
+        <big>
+            <section>
+                ${loginFields(component)}
+                <section class="login__footer button__container">
+                    <div>
+                        ${button}
                         <dl class="form form_warning">
                             <dd class="form__field">
+                                <p class="form__message">認証に時間がかかっています</p>
                                 <p class="form__message">
-                                    認証に時間がかかっています <i class="lnir lnir-spinner lnir-is-spinning"></i><br/>
-                                    1分以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
+                                    30秒以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
                                 </p>
                             </dd>
                         </dl>
                     </div>
+                    ${passwordResetLink()}
                 </section>
-            </big>
+            </section>
+        </big>
+    `
+}
+
+function loginFields(component: PasswordLoginComponent): VNode {
+    return html`
+        <section class="login__body">
+            <${LoginIDField(component)}/>
+            <${PasswordField(component)}/>
+        </section>
+    `
+}
+function passwordResetLink(): VNode {
+    return html`
+        <div class="login__link">
+            <a href="#"><i class="lnir lnir-question-circle"></i> パスワードがわからない方</a>
         </div>
     `
+}
+
+interface Handler<T> {
+    (event: T): void
 }

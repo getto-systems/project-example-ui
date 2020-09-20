@@ -24,64 +24,22 @@ class Init {
         return { type: "delayed-to-reset" }
     }
     failedToReset_validation_error(): PasswordResetComponentState {
-        return {
-            type: "failed-to-reset",
-            content: {
-                loginID: { inputValue: "" },
-                password: { inputValue: "" },
-            },
-            err: { type: "validation-error" },
-        }
+        return { type: "failed-to-reset", err: { type: "validation-error" } }
     }
     failedToReset_bad_request(): PasswordResetComponentState {
-        return {
-            type: "failed-to-reset",
-            content: {
-                loginID: { inputValue: "" },
-                password: { inputValue: "" },
-            },
-            err: { type: "bad-request" },
-        }
+        return { type: "failed-to-reset", err: { type: "bad-request" } }
     }
     failedToReset_invalid_password_reset(): PasswordResetComponentState {
-        return {
-            type: "failed-to-reset",
-            content: {
-                loginID: { inputValue: "" },
-                password: { inputValue: "" },
-            },
-            err: { type: "invalid-password-reset" },
-        }
+        return { type: "failed-to-reset", err: { type: "invalid-password-reset" } }
     }
     failedToReset_server_error(): PasswordResetComponentState {
-        return {
-            type: "failed-to-reset",
-            content: {
-                loginID: { inputValue: "" },
-                password: { inputValue: "" },
-            },
-            err: { type: "server-error" },
-        }
+        return { type: "failed-to-reset", err: { type: "server-error" } }
     }
     failedToReset_bad_response(): PasswordResetComponentState {
-        return {
-            type: "failed-to-reset",
-            content: {
-                loginID: { inputValue: "" },
-                password: { inputValue: "" },
-            },
-            err: { type: "bad-response", err: "error" },
-        }
+        return { type: "failed-to-reset", err: { type: "bad-response", err: "error" } }
     }
     failedToReset_infra_error(): PasswordResetComponentState {
-        return {
-            type: "failed-to-reset",
-            content: {
-                loginID: { inputValue: "" },
-                password: { inputValue: "" },
-            },
-            err: { type: "infra-error", err: "error" },
-        }
+        return { type: "failed-to-reset", err: { type: "infra-error", err: "error" } }
     }
 
     loginIDValid(): LoginIDFieldComponentState {

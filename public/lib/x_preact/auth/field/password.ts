@@ -5,14 +5,10 @@ import { html } from "htm/preact"
 import { PasswordFieldComponentState, initialPasswordFieldComponentState } from "../../../auth/field/password/data"
 
 import { PasswordView } from "../../../field/password/data"
-import { InputValue, InitialValue } from "../../../field/data"
+import { InputValue } from "../../../field/data"
 
 interface PreactComponent {
-    (props: Props): VNode
-}
-
-type Props = {
-    initial: InitialValue,
+    (): VNode
 }
 
 interface FormComponent {
@@ -26,19 +22,12 @@ type FieldOperation =
     Readonly<{ type: "field-password", operation: { type: "hide-password" } }>
 
 export function PasswordField(component: FormComponent): PreactComponent {
-    return (props: Props): VNode => {
+    return (): VNode => {
         const [state, setState] = useState(initialPasswordFieldComponentState)
         const input = useRef<HTMLInputElement>()
 
         useEffect(() => {
             component.initPasswordField(setState)
-
-            if (props.initial.hasValue) {
-                if (input.current) {
-                    input.current.value = props.initial.value.inputValue
-                }
-                setPassword(component, props.initial.value)
-            }
         }, [])
 
         return html`
