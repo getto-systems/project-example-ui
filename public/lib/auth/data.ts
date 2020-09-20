@@ -11,9 +11,3 @@ export type AuthUsecaseState =
     Readonly<{ type: "password-reset", resetToken: ResetToken }>
 
 export const initialAuthUsecaseState: AuthUsecaseState = { type: "fetch-credential" }
-
-export type AuthEvent =
-    Readonly<{ type: "try-to-renew-credential", ticketNonce: TicketNonce }> |
-    Readonly<{ type: "try-to-store-credential", authCredential: AuthCredential }> |
-    Readonly<{ type: "try-to-login" }> |
-    Readonly<{ type: "succeed-to-login" }>

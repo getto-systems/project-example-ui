@@ -1,14 +1,11 @@
-import { AuthUsecase, AuthComponent, AuthUsecaseEventHandler } from "./component"
+import { AuthUsecase, AuthComponent } from "./component"
 
-import { AuthUsecaseState, AuthEvent } from "./data"
+import { AuthUsecaseState } from "./data"
 
 import { AuthCredential, TicketNonce } from "../credential/data"
 
 export function initAuthUsecase(currentLocation: Readonly<Location>, component: AuthComponent): AuthUsecase {
     return new Usecase(currentLocation, component)
-}
-export function initAuthUsecaseEventHandler(currentLocation: Readonly<Location>): AuthUsecaseEventHandler {
-    return new UsecaseEventHandler(currentLocation)
 }
 
 class Usecase implements AuthUsecase {
@@ -104,61 +101,17 @@ class Usecase implements AuthUsecase {
     }
 }
 
-class UsecaseEventHandler implements AuthUsecaseEventHandler {
-    holder: PublisherHolder<AuthUsecaseState>
-
-    currentLocation: Readonly<Location>
-
-    constructor(currentLocation: Readonly<Location>) {
-        this.holder = { set: false }
-
-        this.currentLocation = currentLocation
-    }
-
-    onStateChange(pub: Publisher<AuthUsecaseState>): void {
-        this.holder = { set: true, pub }
-    }
-
-    handleAuthEvent(event: AuthEvent): void {
-        this.publish(this.map(event))
-    }
-    map(event: AuthEvent): AuthUsecaseState {
-        switch (event.type) {
-            case "try-to-renew-credential":
-                return { type: "renew-credential", ticketNonce: event.ticketNonce }
-
-            case "try-to-store-credential":
-                return { type: "store-credential", authCredential: event.authCredential }
-
-            case "try-to-login":
-                return loginState(this.currentLocation)
-
-            case "succeed-to-login":
-                return { type: "load-application" }
-        }
-    }
-
-    publish(state: AuthUsecaseState): void {
-        if (this.holder.set) {
-            this.holder.pub(state)
-        }
-    }
-}
-
-type PublisherHolder<T> =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, pub: Publisher<T> }>
-
 function loginState(currentLocation: Readonly<Location>): AuthUsecaseState {
-    // ログイン前画面ではハッシュ部分を使用して画面の切り替えを行う
+    // ログイン前画面ではアンダースコアから始まるクエリを使用する
     const url = new URL(currentLocation.toString())
 
-    if (url.hash === "password-reset-session") {
+    if (url.searchParams.get("_password_reset") !== null) {
         return { type: "password-reset-session" }
     }
 
-    if (url.hash.startsWith("password-reset-")) {
-        return { type: "password-reset", resetToken: { resetToken: url.hash.replace(/^password-reset-/, "") } }
+    const resetToken = url.searchParams.get("_password_reset_token")
+    if (resetToken) {
+        return { type: "password-reset", resetToken: { resetToken } }
     }
 
     // 特に指定が無ければパスワードログイン

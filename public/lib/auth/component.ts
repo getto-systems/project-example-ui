@@ -7,7 +7,7 @@ import { PasswordLoginComponent } from "./password_login/component"
 import { PasswordResetSessionComponent } from "./password_reset_session/component"
 import { PasswordResetComponent } from "./password_reset/component"
 
-import { AuthUsecaseState, AuthEvent } from "./data"
+import { AuthUsecaseState } from "./data"
 
 export interface AuthUsecase {
     init(stateChanged: Publisher<AuthUsecaseState>): void
@@ -25,14 +25,6 @@ export interface AuthComponent {
     passwordLogin: PasswordLoginComponent
     passwordResetSession: PasswordResetSessionComponent
     passwordReset: PasswordResetComponent
-}
-
-export interface AuthUsecaseEventHandler extends AuthEventHandler {
-    onStateChange(pub: Publisher<AuthUsecaseState>): void
-}
-
-export interface AuthEventHandler {
-    handleAuthEvent(event: AuthEvent): void
 }
 
 interface Publisher<T> {
