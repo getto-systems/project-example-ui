@@ -5,13 +5,10 @@ import { StoreCredentialComponentState } from "../../../auth/store_credential/da
 import { AuthCredential } from "../../../credential/data"
 
 export function newStoreCredentialComponent(): StoreCredentialComponent {
-    return new Component(new Init().initialStore())
+    return new Component(new Init().failedToStore())
 }
 
 class Init {
-    initialStore(): StoreCredentialComponentState {
-        return { type: "initial-store" }
-    }
     failedToStore(): StoreCredentialComponentState {
         return { type: "failed-to-store", err: { type: "infra-error", err: "error" } }
     }

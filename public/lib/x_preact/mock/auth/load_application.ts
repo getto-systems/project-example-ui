@@ -3,16 +3,10 @@ import { LoadApplicationComponent } from "../../../auth/load_application/compone
 import { LoadApplicationComponentState, LoadApplicationComponentOperation } from "../../../auth/load_application/data"
 
 export function newLoadApplicationComponent(): LoadApplicationComponent {
-    return new Component(new Init().initialLoad())
+    return new Component(new Init().failedToLoad_infra_error())
 }
 
 class Init {
-    initialLoad(): LoadApplicationComponentState {
-        return { type: "initial-load" }
-    }
-    tryToLoad(): LoadApplicationComponentState {
-        return { type: "try-to-load", scriptPath: { scriptPath: "script-path" } }
-    }
     failedToLoad_not_found(): LoadApplicationComponentState {
         return { type: "failed-to-load", err: { type: "not-found" } }
     }

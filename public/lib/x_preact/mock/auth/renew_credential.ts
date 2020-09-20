@@ -5,16 +5,10 @@ import { RenewCredentialComponentState } from "../../../auth/renew_credential/da
 import { TicketNonce } from "../../../credential/data"
 
 export function newRenewCredentialComponent(): RenewCredentialComponent {
-    return new Component(new Init().initialRenew())
+    return new Component(new Init().failedToRenew_infra_error())
 }
 
 class Init {
-    initialRenew(): RenewCredentialComponentState {
-        return { type: "initial-renew" }
-    }
-    tryToRenew(): RenewCredentialComponentState {
-        return { type: "try-to-renew" }
-    }
     delayedToRenew(): RenewCredentialComponentState {
         return { type: "delayed-to-renew" }
     }
@@ -29,9 +23,6 @@ class Init {
     }
     failedToRenew_infra_error(): RenewCredentialComponentState {
         return { type: "failed-to-renew", err: { type: "infra-error", err: "error" } }
-    }
-    unauthorized(): RenewCredentialComponentState {
-        return { type: "unauthorized" }
     }
 }
 

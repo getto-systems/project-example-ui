@@ -3,7 +3,6 @@ import { Infra, TimeConfig, PasswordResetSessionClient } from "../infra"
 import { PasswordResetAction, PasswordResetEventPublisher, PasswordResetEventSubscriber } from "../action"
 
 import {
-    CreateSessionInputContent, ResetInputContent,
     Session, CreateSessionEvent, PollingStatusEvent, PollingStatusError,
     ResetToken, ResetEvent,
 } from "../data"
@@ -33,11 +32,7 @@ class PasswordResetActionImpl implements PasswordResetAction {
     async createSession(fields: [Content<LoginID>]): Promise<void> {
         const content = mapContent(...fields)
         if (!content.valid) {
-            this.pub.publishCreateSessionEvent({
-                type: "failed-to-create-session",
-                content: mapInput(...fields),
-                err: { type: "validation-error" },
-            })
+            this.pub.publishCreateSessionEvent({ type: "failed-to-create-session", err: { type: "validation-error" } })
             return
         }
 
@@ -50,18 +45,11 @@ class PasswordResetActionImpl implements PasswordResetAction {
             () => this.pub.publishCreateSessionEvent({ type: "delayed-to-create-session" }),
         )
         if (!response.success) {
-            this.pub.publishCreateSessionEvent({
-                type: "failed-to-create-session",
-                content: mapInput(...fields),
-                err: response.err,
-            })
+            this.pub.publishCreateSessionEvent({ type: "failed-to-create-session", err: response.err })
             return
         }
 
-        this.pub.publishCreateSessionEvent({
-            type: "succeed-to-create-session",
-            session: response.session,
-        })
+        this.pub.publishCreateSessionEvent({ type: "succeed-to-create-session", session: response.session })
 
         return
 
@@ -75,11 +63,6 @@ class PasswordResetActionImpl implements PasswordResetAction {
             }
             return { valid: true, content: [loginID.content] }
         }
-        function mapInput(loginID: Content<LoginID>): CreateSessionInputContent {
-            return {
-                loginID: loginID.input,
-            }
-        }
     }
 
     async startPollingStatus(session: Session): Promise<void> {
@@ -89,7 +72,7 @@ class PasswordResetActionImpl implements PasswordResetAction {
     async reset(resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<void> {
         const content = mapContent(...fields)
         if (!content.valid) {
-            this.pub.publishResetEvent({ type: "failed-to-reset", content: mapInput(...fields), err: { type: "validation-error" } })
+            this.pub.publishResetEvent({ type: "failed-to-reset", err: { type: "validation-error" } })
             return
         }
 
@@ -102,7 +85,7 @@ class PasswordResetActionImpl implements PasswordResetAction {
             () => this.pub.publishResetEvent({ type: "delayed-to-reset" }),
         )
         if (!response.success) {
-            this.pub.publishResetEvent({ type: "failed-to-reset", content: mapInput(...fields), err: response.err })
+            this.pub.publishResetEvent({ type: "failed-to-reset", err: response.err })
             return
         }
 
@@ -121,12 +104,6 @@ class PasswordResetActionImpl implements PasswordResetAction {
                 return { valid: false }
             }
             return { valid: true, content: [loginID.content, password.content] }
-        }
-        function mapInput(loginID: Content<LoginID>, password: Content<Password>): ResetInputContent {
-            return {
-                loginID: loginID.input,
-                password: password.input,
-            }
         }
     }
 }

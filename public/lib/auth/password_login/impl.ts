@@ -53,8 +53,8 @@ class Component implements PasswordLoginComponent {
         }
 
         this.content = {
-            loginID: { input: { inputValue: "" }, valid: false },
-            password: { input: { inputValue: "" }, valid: false },
+            loginID: { valid: false },
+            password: { valid: false },
         }
 
         this.field.loginID.sub.onLoginIDFieldContentChanged((content: Content<LoginID>) => {

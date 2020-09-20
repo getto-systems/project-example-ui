@@ -4,14 +4,10 @@ import { html } from "htm/preact"
 
 import { LoginIDFieldComponentState, initialLoginIDFieldComponentState } from "../../../auth/field/login_id/data"
 
-import { InputValue, InitialValue } from "../../../field/data"
+import { InputValue } from "../../../field/data"
 
 interface PreactComponent {
-    (props: Props): VNode
-}
-
-type Props = {
-    initial: InitialValue,
+    (): VNode
 }
 
 interface FormComponent {
@@ -23,19 +19,12 @@ type FieldOperation =
     Readonly<{ type: "field-login_id", operation: { type: "set-login_id", loginID: InputValue } }>
 
 export function LoginIDField(component: FormComponent): PreactComponent {
-    return (props: Props): VNode => {
+    return (): VNode => {
         const [state, setState] = useState(initialLoginIDFieldComponentState)
         const input = useRef<HTMLInputElement>()
 
         useEffect(() => {
             component.initLoginIDField(setState)
-
-            if (props.initial.hasValue) {
-                if (input.current) {
-                    input.current.value = props.initial.value.inputValue
-                }
-                setLoginID(component, props.initial.value)
-            }
         }, [])
 
         return html`

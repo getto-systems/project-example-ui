@@ -2,10 +2,12 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { ErrorView } from "./layout"
+
 import { StoreCredentialComponent } from "../../auth/store_credential/component"
 import { initialStoreCredentialComponentState } from "../../auth/store_credential/data"
 
-import { AuthCredential } from "../../credential/data"
+import { AuthCredential, StoreError } from "../../credential/data"
 
 export interface PreactComponent {
     (): VNode
@@ -26,8 +28,20 @@ export function StoreCredential(component: StoreCredentialComponent, authCredent
                 return html``
 
             case "failed-to-store":
-                // TODO エラー画面を用意
-                return html`ERROR: ${state.err}`
+                return ErrorView(...failedContent(state.err))
         }
+    }
+
+    function failedContent(err: StoreError): [VNode, VNode, VNode] {
+        return [
+            html`アプリケーションの初期化に失敗しました`,
+            html`
+                <p>ブラウザが LocalStorage にアクセスできませんでした</p>
+                <p>(詳細: ${err.err})</p>
+                <div class="vertical vertical_medium"></div>
+                <p>お手数ですが、上記メッセージを管理者に伝えてください</p>
+            `,
+            html``,
+        ]
     }
 }

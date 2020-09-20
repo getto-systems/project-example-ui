@@ -12,7 +12,7 @@ import { AuthUsecase, AuthComponent } from "../../../auth/component"
 import { AuthUsecaseState } from "../../../auth/data"
 
 export function newAuthUsecase(): AuthUsecase {
-    return new Usecase(new Init().fetchCredential())
+    return new Usecase(new Init().passwordLogin())
 }
 
 class Init {

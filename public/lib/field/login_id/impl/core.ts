@@ -49,9 +49,9 @@ class Field implements LoginIDField {
     content(): [Content<LoginID>, Valid<LoginIDFieldError>] {
         const result = hasError(validateLoginID(this.loginID.inputValue))
         if (!result.valid) {
-            return [invalidContent(this.loginID), result]
+            return [invalidContent(), result]
         }
-        return [validContent(this.loginID, { loginID: this.loginID.inputValue }), result]
+        return [validContent({ loginID: this.loginID.inputValue }), result]
     }
 }
 

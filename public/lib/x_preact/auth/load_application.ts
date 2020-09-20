@@ -2,9 +2,13 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { ErrorView } from "./layout"
+
 import { LoadApplicationComponent } from "../../auth/load_application/component"
 
 import { initialLoadApplicationComponentState } from "../../auth/load_application/data"
+
+import { CheckError } from "../../script/data"
 
 export interface PreactComponent {
     (): VNode
@@ -37,8 +41,32 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
                 return html``
 
             case "failed-to-load":
-                // TODO エラー画面を用意
-                return html`ERROR: ${state.err}`
+                return ErrorView(...failedContent(state.err))
+        }
+    }
+
+    function failedContent(err: CheckError): [VNode, VNode, VNode] {
+        return [
+            html`アプリケーションの初期化に失敗しました`,
+            html`
+                ${errorMessage()}
+                <div class="vertical vertical_medium"></div>
+                <p>お手数ですが、上記メッセージを管理者に伝えてください</p>
+            `,
+            html``,
+        ]
+
+        function errorMessage(): VNode {
+            switch (err.type) {
+                case "not-found":
+                    return html`<p>スクリプトが見つかりませんでした</p>`
+
+                case "infra-error":
+                    return html`
+                        <p>ネットワーク通信時にエラーが発生しました</p>
+                        <p>(詳細: ${err.err})</p>
+                    `
+            }
         }
     }
 }

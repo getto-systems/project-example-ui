@@ -2,7 +2,7 @@ import { LoginIDFieldComponentState } from "../field/login_id/data"
 import { PasswordFieldComponentState } from "../field/password/data"
 
 import { AuthCredential } from "../../credential/data"
-import { InputContent, LoginError } from "../../password_login/data"
+import { LoginError } from "../../password_login/data"
 import { LoginIDFieldOperation } from "../../field/login_id/data"
 import { PasswordFieldOperation } from "../../field/password/data"
 
@@ -10,7 +10,7 @@ export type PasswordLoginComponentState =
     Readonly<{ type: "initial-login" }> |
     Readonly<{ type: "try-to-login" }> |
     Readonly<{ type: "delayed-to-login" }> |
-    Readonly<{ type: "failed-to-login", content: InputContent, err: LoginError }> |
+    Readonly<{ type: "failed-to-login", err: LoginError }> |
     Readonly<{ type: "succeed-to-login", authCredential: AuthCredential }>
 
 export const initialPasswordLoginComponentState: PasswordLoginComponentState = { type: "initial-login" }

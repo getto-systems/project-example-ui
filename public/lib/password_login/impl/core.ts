@@ -4,7 +4,7 @@ import { PasswordLoginAction, PasswordLoginEventPublisher, PasswordLoginEventSub
 
 import { LoginID } from "../../login_id/data"
 import { Password } from "../../password/data"
-import { InputContent, LoginEvent } from "../data"
+import { LoginEvent } from "../data"
 import { Content } from "../../field/data"
 
 export function initPasswordLoginAction(infra: Infra): PasswordLoginAction {
@@ -28,7 +28,7 @@ class Action implements PasswordLoginAction {
     async login(fields: [Content<LoginID>, Content<Password>]): Promise<void> {
         const content = mapContent(...fields)
         if (!content.valid) {
-            this.pub.publishLoginEvent({ type: "failed-to-login", content: mapInput(...fields), err: { type: "validation-error" } })
+            this.pub.publishLoginEvent({ type: "failed-to-login", err: { type: "validation-error" } })
             return
         }
 
@@ -41,7 +41,7 @@ class Action implements PasswordLoginAction {
             () => this.pub.publishLoginEvent({ type: "delayed-to-login" }),
         )
         if (!response.success) {
-            this.pub.publishLoginEvent({ type: "failed-to-login", content: mapInput(...fields), err: response.err })
+            this.pub.publishLoginEvent({ type: "failed-to-login", err: response.err })
             return
         }
 
@@ -60,12 +60,6 @@ class Action implements PasswordLoginAction {
                 return { valid: false }
             }
             return { valid: true, content: [loginID.content, password.content] }
-        }
-        function mapInput(loginID: Content<LoginID>, password: Content<Password>): InputContent {
-            return {
-                loginID: loginID.input,
-                password: password.input,
-            }
         }
     }
 }

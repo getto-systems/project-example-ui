@@ -49,7 +49,7 @@ class Component implements PasswordResetSessionComponent {
         }
 
         this.content = {
-            loginID: { input: { inputValue: "" }, valid: false },
+            loginID: { valid: false },
         }
 
         this.field.loginID.sub.onLoginIDFieldContentChanged((content: Content<LoginID>) => {

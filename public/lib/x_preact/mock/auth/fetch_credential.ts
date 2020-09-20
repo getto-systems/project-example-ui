@@ -7,9 +7,6 @@ export function newFetchCredentialComponent(): FetchCredentialComponent {
 }
 
 class Init {
-    initialFetch(): FetchCredentialComponentState {
-        return { type: "initial-fetch" }
-    }
     failedToFetch(): FetchCredentialComponentState {
         return { type: "failed-to-fetch", err: { type: "infra-error", err: "error" } }
     }
