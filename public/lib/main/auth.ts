@@ -26,44 +26,36 @@ import { AuthUsecase } from "../auth/component"
 
 import { CredentialAction } from "../credential/action"
 
-export class ComponentLoader {
-    initCredentialStorage: Init<Storage>
+export function newAuthUsecase(currentLocation: Readonly<Location>): AuthUsecase {
+    const credential = newCredentialAction()
 
-    constructor() {
-        this.initCredentialStorage = () => localStorage
-    }
+    return initAuthUsecase(currentLocation, {
+        fetchCredential: initFetchCredentialComponent({ credential }),
+        renewCredential: initRenewCredentialComponent({ credential }),
+        storeCredential: initStoreCredentialComponent({ credential }),
+        loadApplication: newLoadApplicationComponent(),
 
-    initAuthUsecase(currentLocation: Readonly<Location>): AuthUsecase {
-        const credential = this.initCredentialAction()
-
-        return initAuthUsecase(currentLocation, {
-            fetchCredential: initFetchCredentialComponent({ credential }),
-            renewCredential: initRenewCredentialComponent({ credential }),
-            storeCredential: initStoreCredentialComponent({ credential }),
-            loadApplication: newLoadApplicationComponent(),
-
-            passwordLogin: newPasswordLoginComponent(),
-            passwordResetSession: newPasswordResetSessionComponent(),
-            passwordReset: newPasswordResetComponent(),
-        })
-    }
-
-    initCredentialAction(): CredentialAction {
-        return initCredentialAction({
-            timeConfig: newTimeConfig(),
-            renewClient: this.initRenewClient(),
-            authCredentials: this.initAuthCredentialRepository(),
-        })
-    }
-
-    initAuthCredentialRepository(): AuthCredentialRepository {
-        return initStorageAuthCredentialRepository(this.initCredentialStorage(), "GETTO-EXAMPLE-CREDENTIAL")
-    }
-    initRenewClient(): RenewClient {
-        return initFetchRenewClient(initAuthClient(env.authServerURL))
-    }
+        passwordLogin: newPasswordLoginComponent(),
+        passwordResetSession: newPasswordResetSessionComponent(),
+        passwordReset: newPasswordResetComponent(),
+    })
 }
 
-interface Init<T> {
-    (): T
+function getCredentialStorage(): [Storage, string] {
+    return [localStorage, "GETTO-EXAMPLE-AUTH-CREDENTIAL"]
+}
+
+function newCredentialAction(): CredentialAction {
+    return initCredentialAction({
+        timeConfig: newTimeConfig(),
+        renewClient: newRenewClient(),
+        authCredentials: newAuthCredentialRepository(),
+    })
+}
+
+function newAuthCredentialRepository(): AuthCredentialRepository {
+    return initStorageAuthCredentialRepository(...getCredentialStorage())
+}
+function newRenewClient(): RenewClient {
+    return initFetchRenewClient(initAuthClient(env.authServerURL))
 }
