@@ -1,7 +1,7 @@
 import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
 
 import { LoginID, loginIDToString } from "../../../../login_id/data"
-import { Password } from "../../../../password/data"
+import { Password, passwordToString } from "../../../../password/data"
 
 interface AuthClient {
     passwordLogin(param: { loginID: string, password: string }): Promise<AuthLoginResponse>
@@ -25,7 +25,7 @@ class FetchPasswordLoginClient implements PasswordLoginClient {
     async login(loginID: LoginID, password: Password): Promise<LoginResponse> {
         const response = await this.client.passwordLogin({
             loginID: loginIDToString(loginID),
-            password: password.password,
+            password: passwordToString(password),
         })
 
         if (response.success) {

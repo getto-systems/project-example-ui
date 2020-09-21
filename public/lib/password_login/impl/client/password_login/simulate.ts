@@ -27,7 +27,7 @@ class SimulatePasswordLoginClient implements PasswordLoginClient {
     login(loginID: LoginID, password: Password): Promise<LoginResponse> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                if (loginID !== this.targetLoginID || password.password !== this.targetPassword.password) {
+                if (loginID !== this.targetLoginID || password !== this.targetPassword) {
                     resolve(loginFailed({ type: "invalid-password-login" }))
                 } else {
                     resolve(loginSuccess(this.returnAuthCredential))
