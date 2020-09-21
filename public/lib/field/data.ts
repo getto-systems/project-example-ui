@@ -1,4 +1,14 @@
-export type InputValue = { inputValue: string }
+export type InputValue = Readonly<_InputValue>
+
+export function initInputValue(inputValue: string): InputValue {
+    return inputValue as _InputValue
+}
+
+export function inputValueToString(inputValue: InputValue): Readonly<string> {
+    return inputValue as unknown as string
+}
+
+type _InputValue = string & { InputValue: never }
 
 export type Content<T> =
     Readonly<{ valid: true, content: T }> |

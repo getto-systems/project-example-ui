@@ -5,7 +5,7 @@ export function initPassword(password: string): Password {
 }
 
 export function passwordToString(password: Password): Readonly<string> {
-    return `${password}`
+    return password as unknown as string
 }
 
 type _Password = string & { Password: never }

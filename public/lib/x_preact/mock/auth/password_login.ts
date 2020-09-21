@@ -4,6 +4,8 @@ import { PasswordLoginComponentState, PasswordLoginComponentOperation } from "..
 import { LoginIDFieldComponentState } from "../../../auth/field/login_id/data"
 import { PasswordFieldComponentState } from "../../../auth/field/password/data"
 
+import { initInputValue } from "../../../field/data"
+
 export function newPasswordLoginComponent(): PasswordLoginComponent {
     const init = new Init()
     return new Component(
@@ -94,7 +96,7 @@ class Init {
             type: "succeed-to-update-password",
             result: { valid: true },
             character: { complex: false },
-            view: { show: true, password: { inputValue: "password" } },
+            view: { show: true, password: initInputValue("password") },
         }
     }
 }

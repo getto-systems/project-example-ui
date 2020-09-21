@@ -13,7 +13,11 @@ import {
     PasswordView, showPassword, hidePassword,
 } from "../data"
 import { Password, initPassword } from "../../../password/data"
-import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../../field/data"
+import {
+    InputValue, initInputValue, inputValueToString,
+    Content, validContent, invalidContent,
+    Valid, hasError,
+} from "../../../field/data"
 
 // bcrypt を想定しているので、72 バイト以上のパスワードは無効
 const PASSWORD_MAX_BYTES = 72
@@ -40,7 +44,7 @@ class Field implements PasswordField {
         this.pub = pubsub
         this.sub = pubsub
 
-        this.password = { inputValue: "" }
+        this.password = initInputValue("")
         this.visible = false
     }
 
@@ -81,13 +85,14 @@ class Field implements PasswordField {
     }
 
     content(): [Content<Password>, Valid<PasswordFieldError>, PasswordCharacter, PasswordView] {
-        const result = hasError(validatePassword(this.password.inputValue))
-        const character = checkCharacter(this.password.inputValue)
+        const password = inputValueToString(this.password)
+        const result = hasError(validatePassword(password))
+        const character = checkCharacter(password)
         const view = this.view()
         if (!result.valid) {
             return [invalidContent(), result, character, view]
         }
-        return [validContent(initPassword(this.password.inputValue)), result, character, view]
+        return [validContent(initPassword(password)), result, character, view]
     }
     view(): PasswordView {
         if (this.visible) {

@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { LoginIDFieldComponentState, initialLoginIDFieldComponentState } from "../../../auth/field/login_id/data"
 
-import { InputValue } from "../../../field/data"
+import { InputValue, initInputValue } from "../../../field/data"
 
 interface PreactComponent {
     (): VNode
@@ -41,7 +41,7 @@ export function LoginIDField(component: FormComponent): PreactComponent {
 
         function onInput(e: InputEvent) {
             if (e.target instanceof HTMLInputElement) {
-                setLoginID(component, { inputValue: e.target.value })
+                setLoginID(component, initInputValue(e.target.value))
             }
         }
 

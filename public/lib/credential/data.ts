@@ -1,3 +1,29 @@
+export type AuthCredential = Readonly<{
+    ticketNonce: TicketNonce,
+    apiCredential: ApiCredential,
+}>
+export type AuthCredentialSerialized = Readonly<{
+    ticketNonce: string,
+    apiCredential: {
+        apiRoles: Array<string>
+    },
+}>
+
+export type ApiCredential = Readonly<{
+    // TODO api nonce を追加する
+    //apiNonce: ApiNonce,
+    apiRoles: ApiRoles,
+}>
+
+export function serializeAuthCredential(authCredential: AuthCredential): AuthCredentialSerialized {
+    return {
+        ticketNonce: ticketNonceToString(authCredential.ticketNonce),
+        apiCredential: {
+            apiRoles: authCredential.apiCredential.apiRoles.map((apiRole) => apiRole as unknown as string),
+        },
+    }
+}
+
 export type TicketNonce = Readonly<_TicketNonce>
 
 export function initTicketNonce(ticketNonce: string): TicketNonce {
@@ -5,7 +31,7 @@ export function initTicketNonce(ticketNonce: string): TicketNonce {
 }
 
 export function ticketNonceToString(ticketNonce: TicketNonce): Readonly<string> {
-    return `${ticketNonce}`
+    return ticketNonce as unknown as string
 }
 
 type _TicketNonce = string & { TicketNonce: never }
@@ -19,32 +45,6 @@ export function initApiRoles(apiRoles: Array<string>): ApiRoles {
 }
 
 type _ApiRole = string & { ApiRole: never }
-
-export type AuthCredential = Readonly<{
-    ticketNonce: TicketNonce,
-    apiCredential: ApiCredential,
-}>
-export type AuthCredentialSerialized = Readonly<{
-    ticketNonce: string,
-    apiCredential: {
-        apiRoles: Array<string>
-    },
-}>
-
-export function serializeAuthCredential(authCredential: AuthCredential): AuthCredentialSerialized {
-    return {
-        ticketNonce: ticketNonceToString(authCredential.ticketNonce),
-        apiCredential: {
-            apiRoles: authCredential.apiCredential.apiRoles.map((apiRole) => `${apiRole}`),
-        },
-    }
-}
-
-export type ApiCredential = Readonly<{
-    // TODO api nonce を追加する
-    //apiNonce: ApiNonce,
-    apiRoles: ApiRoles,
-}>
 
 export type FetchEvent =
     Readonly<{ type: "failed-to-fetch", err: FetchError }> |
