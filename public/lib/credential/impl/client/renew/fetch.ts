@@ -1,6 +1,8 @@
 import { RenewClient, RenewResponse } from "../../../infra"
 
-import { TicketNonce, initTicketNonce, ticketNonceToString, initApiRoles } from "../../../../credential/data"
+import { initTicketNonce, ticketNonceToString, initApiRoles } from "../../../../credential/adapter"
+
+import { TicketNonce } from "../../../../credential/data"
 
 interface AuthClient {
     renew(param: { nonce: string }): Promise<AuthRenewResponse>

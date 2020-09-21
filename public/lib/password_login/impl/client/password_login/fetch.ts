@@ -1,9 +1,9 @@
 import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
 
+import { initTicketNonce, initApiRoles } from "../../../../credential/adapter"
 import { loginIDToString } from "../../../../login_id/adapter"
 import { passwordToString } from "../../../../password/adapter"
 
-import { initTicketNonce, initApiRoles } from "../../../../credential/data"
 import { LoginID } from "../../../../login_id/data"
 import { Password } from "../../../../password/data"
 
