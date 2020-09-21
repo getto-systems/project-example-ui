@@ -12,7 +12,7 @@ import {
     PasswordCharacter, simplePassword, complexPassword,
     PasswordView, showPassword, hidePassword,
 } from "../data"
-import { Password } from "../../../password/data"
+import { Password, initPassword } from "../../../password/data"
 import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../../field/data"
 
 // bcrypt を想定しているので、72 バイト以上のパスワードは無効
@@ -87,7 +87,7 @@ class Field implements PasswordField {
         if (!result.valid) {
             return [invalidContent(), result, character, view]
         }
-        return [validContent({ password: this.password.inputValue }), result, character, view]
+        return [validContent(initPassword(this.password.inputValue)), result, character, view]
     }
     view(): PasswordView {
         if (this.visible) {
