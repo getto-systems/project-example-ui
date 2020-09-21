@@ -1,5 +1,6 @@
 import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
 
+import { initTicketNonce } from "../../../../credential/data"
 import { LoginID, loginIDToString } from "../../../../login_id/data"
 import { Password, passwordToString } from "../../../../password/data"
 
@@ -30,7 +31,7 @@ class FetchPasswordLoginClient implements PasswordLoginClient {
 
         if (response.success) {
             return loginSuccess({
-                ticketNonce: { ticketNonce: response.authCredential.ticketNonce },
+                ticketNonce: initTicketNonce(response.authCredential.ticketNonce),
                 apiCredential: {
                     apiRoles: { apiRoles: response.authCredential.apiCredential.apiRoles },
                 },

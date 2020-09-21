@@ -1,6 +1,6 @@
 import { RenewClient, RenewResponse } from "../../../infra"
 
-import { TicketNonce } from "../../../../credential/data"
+import { TicketNonce, initTicketNonce, ticketNonceToString } from "../../../../credential/data"
 
 interface AuthClient {
     renew(param: { nonce: string }): Promise<AuthRenewResponse>
@@ -23,13 +23,13 @@ class FetchRenewClient implements RenewClient {
 
     async renew(ticketNonce: TicketNonce): Promise<RenewResponse> {
         try {
-            const response = await this.client.renew({ nonce: ticketNonce.ticketNonce })
+            const response = await this.client.renew({ nonce: ticketNonceToString(ticketNonce) })
             if (response.success) {
                 return {
                     success: true,
                     hasCredential: true,
                     authCredential: {
-                        ticketNonce: { ticketNonce: response.authCredential.ticketNonce },
+                        ticketNonce: initTicketNonce(response.authCredential.ticketNonce),
                         apiCredential: {
                             apiRoles: { apiRoles: response.authCredential.apiCredential.apiRoles },
                         },
