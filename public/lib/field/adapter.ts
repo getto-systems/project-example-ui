@@ -8,4 +8,4 @@ export function inputValueToString(inputValue: InputValue): Readonly<string> {
     return inputValue as unknown as string
 }
 
-type _InputValue = string & { InputValue: never }
+type _InputValue = string & InputValue

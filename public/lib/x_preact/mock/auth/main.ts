@@ -7,11 +7,11 @@ import { newPasswordLoginComponent } from "./password_login"
 import { newPasswordResetSessionComponent } from "./password_reset_session"
 import { newPasswordResetComponent } from "./password_reset"
 
+import { initTicketNonce, initApiRoles } from "../../../credential/adapter"
+
 import { AuthUsecase, AuthComponent } from "../../../auth/component"
 
 import { AuthUsecaseState } from "../../../auth/data"
-
-import { initTicketNonce, initApiRoles } from "../../../credential/data"
 
 export function newAuthUsecase(): AuthUsecase {
     return new Usecase(new Init().passwordLogin())

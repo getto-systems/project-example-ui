@@ -4,7 +4,9 @@ import { decodeBase64StringToUint8Array, encodeUint8ArrayToBase64String } from "
 
 import { AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra"
 
-import { AuthCredential, serializeAuthCredential, initTicketNonce, initApiRoles } from "../../../data"
+import { serializeAuthCredential, initTicketNonce, initApiRoles } from "../../../adapter"
+
+import { AuthCredential } from "../../../data"
 
 export function initStorageAuthCredentialRepository(storage: Storage, key: string): AuthCredentialRepository {
     return new StorageAuthCredentialRepository(new AuthCredentialStorageImpl(storage, key))
