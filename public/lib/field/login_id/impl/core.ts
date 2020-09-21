@@ -6,7 +6,7 @@ import {
 } from "../action"
 
 import { LoginIDFieldOperation, LoginIDFieldEvent, LoginIDFieldError } from "../data"
-import { LoginID } from "../../../login_id/data"
+import { LoginID, initLoginID } from "../../../login_id/data"
 import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../../field/data"
 
 export function initLoginIDFieldAction(): LoginIDFieldAction {
@@ -51,7 +51,7 @@ class Field implements LoginIDField {
         if (!result.valid) {
             return [invalidContent(), result]
         }
-        return [validContent({ loginID: this.loginID.inputValue }), result]
+        return [validContent(initLoginID(this.loginID.inputValue)), result]
     }
 }
 

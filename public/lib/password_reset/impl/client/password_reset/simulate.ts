@@ -30,7 +30,7 @@ class SimulatePasswordResetClient implements PasswordResetClient {
         })
     }
     resetSimulate(token: ResetToken, loginID: LoginID, _password: Password): ResetResponse {
-        if (loginID.loginID !== this.targetLoginID.loginID) {
+        if (loginID !== this.targetLoginID) {
             return resetFailed({ type: "invalid-password-reset" })
         } else {
             return resetSuccess(this.returnAuthCredential)
