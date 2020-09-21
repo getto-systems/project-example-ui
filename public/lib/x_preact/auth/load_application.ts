@@ -4,11 +4,13 @@ import { html } from "htm/preact"
 
 import { ErrorView } from "./layout"
 
+import { initPagePathname, scriptPathToString } from "../../script/adapter"
+
 import { LoadApplicationComponent } from "../../auth/load_application/component"
 
 import { initialLoadApplicationComponentState } from "../../auth/load_application/data"
 
-import { initPagePathname, scriptPathToString, CheckError } from "../../script/data"
+import { CheckError } from "../../script/data"
 
 export interface PreactComponent {
     (): VNode
