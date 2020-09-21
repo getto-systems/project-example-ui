@@ -1,17 +1,29 @@
+export type TicketNonce = Readonly<_TicketNonce>
+
+export function initTicketNonce(ticketNonce: string): TicketNonce {
+    return ticketNonce as _TicketNonce
+}
+
+export function ticketNonceToString(ticketNonce: TicketNonce): Readonly<string> {
+    return `${ticketNonce}`
+}
+
+type _TicketNonce = string & { TicketNonce: never }
+
+//export type ApiNonce = Readonly<{ apiNonce: Readonly<string> }>
+
+export type ApiRoles = Readonly<{ apiRoles: Readonly<Array<Readonly<string>>> }>
+
 export type AuthCredential = Readonly<{
     ticketNonce: TicketNonce,
     apiCredential: ApiCredential,
 }>
-
-export type TicketNonce = Readonly<{ ticketNonce: Readonly<string> }>
 
 export type ApiCredential = Readonly<{
     // TODO api nonce を追加する
     //apiNonce: ApiNonce,
     apiRoles: ApiRoles,
 }>
-//export type ApiNonce = Readonly<{ apiNonce: Readonly<string> }>
-export type ApiRoles = Readonly<{ apiRoles: Readonly<Array<Readonly<string>>> }>
 
 export type FetchEvent =
     Readonly<{ type: "failed-to-fetch", err: FetchError }> |

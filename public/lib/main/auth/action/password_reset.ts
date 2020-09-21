@@ -9,6 +9,7 @@ import { PasswordResetSessionClient, PasswordResetClient } from "../../../passwo
 
 import { PasswordResetAction } from "../../../password_reset/action"
 
+import { initTicketNonce } from "../../../credential/data"
 import { initLoginID } from "../../../login_id/data"
 
 export function newPasswordResetAction(): PasswordResetAction {
@@ -29,7 +30,7 @@ function newPasswordResetClient(): PasswordResetClient {
     return initSimulatePasswordResetClient(
         initLoginID("loginID"),
         {
-            ticketNonce: { ticketNonce: "nonce" },
+            ticketNonce: initTicketNonce("ticket-nonce"),
             apiCredential: {
                 apiRoles: { apiRoles: ["admin", "dev"] },
             },
