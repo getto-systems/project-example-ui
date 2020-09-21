@@ -4,7 +4,7 @@ import { decodeBase64StringToUint8Array, encodeUint8ArrayToBase64String } from "
 
 import { AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra"
 
-import { AuthCredential, initTicketNonce, ticketNonceToString } from "../../../data"
+import { AuthCredential, serializeAuthCredential, initTicketNonce, initApiRoles } from "../../../data"
 
 export function initStorageAuthCredentialRepository(storage: Storage, key: string): AuthCredentialRepository {
     return new StorageAuthCredentialRepository(new AuthCredentialStorageImpl(storage, key))
@@ -69,7 +69,7 @@ class AuthCredentialStorageImpl implements AuthCredentialStorage {
                     authCredential: {
                         ticketNonce: initTicketNonce(message.nonce ? message.nonce : ""),
                         apiCredential: {
-                            apiRoles: { apiRoles: message.roles ? message.roles : [] },
+                            apiRoles: initApiRoles(message.roles ? message.roles : []),
                         },
                     },
                 }
@@ -86,8 +86,10 @@ class AuthCredentialStorageImpl implements AuthCredentialStorage {
         const f = CredentialMessage
         const message = new f()
 
-        message.nonce = ticketNonceToString(authCredential.ticketNonce)
-        message.roles = Array.from(authCredential.apiCredential.apiRoles.apiRoles)
+        const data = serializeAuthCredential(authCredential)
+
+        message.nonce = data.ticketNonce
+        message.roles = data.apiCredential.apiRoles
 
         const arr = f.encode(message).finish()
         this.storage.setItem(this.key, encodeUint8ArrayToBase64String(arr))

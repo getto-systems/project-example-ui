@@ -13,7 +13,7 @@ class MemoryAuthCredentialRepository implements AuthCredentialRepository {
         this.data = {
             ticketNonce: initialNonce,
             apiCredential: {
-                apiRoles: { apiRoles: [] },
+                apiRoles: [],
             },
         }
     }
