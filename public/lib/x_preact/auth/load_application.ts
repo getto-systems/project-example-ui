@@ -8,7 +8,7 @@ import { LoadApplicationComponent } from "../../auth/load_application/component"
 
 import { initialLoadApplicationComponentState } from "../../auth/load_application/data"
 
-import { CheckError } from "../../script/data"
+import { initPagePathname, scriptPathToString, CheckError } from "../../script/data"
 
 export interface PreactComponent {
     (): VNode
@@ -19,7 +19,7 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
         const [state, setState] = useState(initialLoadApplicationComponentState)
         useEffect(() => {
             component.init(setState)
-            component.trigger({ type: "load", pagePathname: { pagePathname: new URL(location.toString()).pathname } })
+            component.trigger({ type: "load", pagePathname: initPagePathname(new URL(location.toString())) })
             return () => component.terminate()
         }, [])
 
@@ -27,7 +27,7 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
             // script タグは body.appendChild しないとスクリプトがロードされないので useEffect で追加する
             if (state.type === "try-to-load") {
                 const script = document.createElement("script")
-                script.src = state.scriptPath.scriptPath
+                script.src = scriptPathToString(state.scriptPath)
                 document.body.appendChild(script)
             }
         }, [state])
