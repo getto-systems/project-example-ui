@@ -12,12 +12,33 @@ type _TicketNonce = string & { TicketNonce: never }
 
 //export type ApiNonce = Readonly<{ apiNonce: Readonly<string> }>
 
-export type ApiRoles = Readonly<{ apiRoles: Readonly<Array<Readonly<string>>> }>
+export type ApiRoles = Readonly<Array<Readonly<_ApiRole>>>
+
+export function initApiRoles(apiRoles: Array<string>): ApiRoles {
+    return apiRoles.map((apiRole) => apiRole as _ApiRole)
+}
+
+type _ApiRole = string & { ApiRole: never }
 
 export type AuthCredential = Readonly<{
     ticketNonce: TicketNonce,
     apiCredential: ApiCredential,
 }>
+export type AuthCredentialSerialized = Readonly<{
+    ticketNonce: string,
+    apiCredential: {
+        apiRoles: Array<string>
+    },
+}>
+
+export function serializeAuthCredential(authCredential: AuthCredential): AuthCredentialSerialized {
+    return {
+        ticketNonce: ticketNonceToString(authCredential.ticketNonce),
+        apiCredential: {
+            apiRoles: authCredential.apiCredential.apiRoles.map((apiRole) => `${apiRole}`),
+        },
+    }
+}
 
 export type ApiCredential = Readonly<{
     // TODO api nonce を追加する

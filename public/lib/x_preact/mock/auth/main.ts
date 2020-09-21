@@ -11,7 +11,7 @@ import { AuthUsecase, AuthComponent } from "../../../auth/component"
 
 import { AuthUsecaseState } from "../../../auth/data"
 
-import { initTicketNonce } from "../../../credential/data"
+import { initTicketNonce, initApiRoles } from "../../../credential/data"
 
 export function newAuthUsecase(): AuthUsecase {
     return new Usecase(new Init().passwordLogin())
@@ -28,7 +28,7 @@ class Init {
         return {
             type: "store-credential", authCredential: {
                 ticketNonce: initTicketNonce("ticket-nonce"),
-                apiCredential: { apiRoles: { apiRoles: ["admin", "dev"] } },
+                apiCredential: { apiRoles: initApiRoles(["admin", "dev"]) },
             }
         }
     }
