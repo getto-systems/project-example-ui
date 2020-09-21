@@ -7,10 +7,11 @@ import { initSimulatePasswordResetClient } from "../../../password_reset/impl/cl
 
 import { PasswordResetSessionClient, PasswordResetClient } from "../../../password_reset/infra"
 
+import { initLoginID } from "../../../login_id/adapter"
+
 import { PasswordResetAction } from "../../../password_reset/action"
 
 import { initTicketNonce, initApiRoles } from "../../../credential/data"
-import { initLoginID } from "../../../login_id/data"
 
 export function newPasswordResetAction(): PasswordResetAction {
     return initPasswordResetAction({

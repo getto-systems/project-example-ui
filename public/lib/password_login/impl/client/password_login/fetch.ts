@@ -1,8 +1,11 @@
 import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
 
+import { loginIDToString } from "../../../../login_id/adapter"
+import { passwordToString } from "../../../../password/adapter"
+
 import { initTicketNonce, initApiRoles } from "../../../../credential/data"
-import { LoginID, loginIDToString } from "../../../../login_id/data"
-import { Password, passwordToString } from "../../../../password/data"
+import { LoginID } from "../../../../login_id/data"
+import { Password } from "../../../../password/data"
 
 interface AuthClient {
     passwordLogin(param: { loginID: string, password: string }): Promise<AuthLoginResponse>

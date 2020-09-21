@@ -1,3 +1,5 @@
+import { initLoginID } from "../../../login_id/adapter"
+
 import {
     LoginIDFieldAction,
     LoginIDField,
@@ -6,7 +8,7 @@ import {
 } from "../action"
 
 import { LoginIDFieldOperation, LoginIDFieldEvent, LoginIDFieldError } from "../data"
-import { LoginID, initLoginID } from "../../../login_id/data"
+import { LoginID } from "../../../login_id/data"
 import {
     InputValue, initInputValue, inputValueToString,
     Content, validContent, invalidContent,
