@@ -1,3 +1,5 @@
+import { initPassword } from "../../../password/adapter"
+
 import {
     PasswordFieldAction,
     PasswordField,
@@ -12,7 +14,7 @@ import {
     PasswordCharacter, simplePassword, complexPassword,
     PasswordView, showPassword, hidePassword,
 } from "../data"
-import { Password, initPassword } from "../../../password/data"
+import { Password } from "../../../password/data"
 import {
     InputValue, initInputValue, inputValueToString,
     Content, validContent, invalidContent,
