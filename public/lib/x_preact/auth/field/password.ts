@@ -2,10 +2,12 @@ import { VNode } from "preact"
 import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { initInputValue, inputValueToString } from "../../../field/adapter"
+
 import { PasswordFieldComponentState, initialPasswordFieldComponentState } from "../../../auth/field/password/data"
 
 import { PasswordView } from "../../../field/password/data"
-import { InputValue, initInputValue, inputValueToString } from "../../../field/data"
+import { InputValue } from "../../../field/data"
 
 interface PreactComponent {
     (): VNode
@@ -100,11 +102,12 @@ export function PasswordField(component: FormComponent): PreactComponent {
                 }
             }
 
-            function extractPassword(password: InputValue): string {
+            function extractPassword(inputValue: InputValue): string {
+                const password = inputValueToString(inputValue)
                 if (password.length === 0) {
                     return "(入力されていません)"
                 } else {
-                    return inputValueToString(password)
+                    return password
                 }
             }
         }

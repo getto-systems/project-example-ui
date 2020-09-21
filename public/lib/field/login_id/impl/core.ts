@@ -1,3 +1,4 @@
+import { initInputValue, inputValueToString } from "../../../field/adapter"
 import { initLoginID } from "../../../login_id/adapter"
 
 import {
@@ -9,11 +10,7 @@ import {
 
 import { LoginIDFieldOperation, LoginIDFieldEvent, LoginIDFieldError } from "../data"
 import { LoginID } from "../../../login_id/data"
-import {
-    InputValue, initInputValue, inputValueToString,
-    Content, validContent, invalidContent,
-    Valid, hasError,
-} from "../../../field/data"
+import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../../field/data"
 
 export function initLoginIDFieldAction(): LoginIDFieldAction {
     return new Action()
