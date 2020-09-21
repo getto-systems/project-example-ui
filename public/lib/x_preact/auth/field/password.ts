@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { PasswordFieldComponentState, initialPasswordFieldComponentState } from "../../../auth/field/password/data"
 
 import { PasswordView } from "../../../field/password/data"
-import { InputValue } from "../../../field/data"
+import { InputValue, initInputValue, inputValueToString } from "../../../field/data"
 
 interface PreactComponent {
     (): VNode
@@ -43,7 +43,7 @@ export function PasswordField(component: FormComponent): PreactComponent {
 
         function onInput(e: InputEvent) {
             if (e.target instanceof HTMLInputElement) {
-                setPassword(component, { inputValue: e.target.value })
+                setPassword(component, initInputValue(e.target.value))
             }
         }
 
@@ -101,10 +101,10 @@ export function PasswordField(component: FormComponent): PreactComponent {
             }
 
             function extractPassword(password: InputValue): string {
-                if (password.inputValue.length === 0) {
+                if (password.length === 0) {
                     return "(入力されていません)"
                 } else {
-                    return password.inputValue
+                    return inputValueToString(password)
                 }
             }
         }

@@ -7,7 +7,11 @@ import {
 
 import { LoginIDFieldOperation, LoginIDFieldEvent, LoginIDFieldError } from "../data"
 import { LoginID, initLoginID } from "../../../login_id/data"
-import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../../field/data"
+import {
+    InputValue, initInputValue, inputValueToString,
+    Content, validContent, invalidContent,
+    Valid, hasError,
+} from "../../../field/data"
 
 export function initLoginIDFieldAction(): LoginIDFieldAction {
     return new Action()
@@ -30,7 +34,7 @@ class Field implements LoginIDField {
         this.pub = pubsub
         this.sub = pubsub
 
-        this.loginID = { inputValue: "" }
+        this.loginID = initInputValue("")
     }
 
     trigger(operation: LoginIDFieldOperation): void {
@@ -47,11 +51,12 @@ class Field implements LoginIDField {
     }
 
     content(): [Content<LoginID>, Valid<LoginIDFieldError>] {
-        const result = hasError(validateLoginID(this.loginID.inputValue))
+        const loginID = inputValueToString(this.loginID)
+        const result = hasError(validateLoginID(loginID))
         if (!result.valid) {
             return [invalidContent(), result]
         }
-        return [validContent(initLoginID(this.loginID.inputValue)), result]
+        return [validContent(initLoginID(loginID)), result]
     }
 }
 

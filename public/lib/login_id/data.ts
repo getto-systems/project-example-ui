@@ -5,7 +5,7 @@ export function initLoginID(loginID: string): LoginID {
 }
 
 export function loginIDToString(loginID: LoginID): Readonly<string> {
-    return `${loginID}`
+    return loginID as unknown as string
 }
 
 type _LoginID = string & { LoginID: never }
