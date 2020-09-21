@@ -33,7 +33,7 @@ class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
     createSession(loginID: LoginID): Promise<SessionResponse> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                if (loginID.loginID === this.targetLoginID.loginID) {
+                if (loginID === this.targetLoginID) {
                     resolve(createSessionSuccess(this.targetSession))
                 } else {
                     resolve(createSessionFailed({ type: "invalid-password-reset" }))

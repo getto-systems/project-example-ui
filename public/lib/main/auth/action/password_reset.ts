@@ -9,6 +9,8 @@ import { PasswordResetSessionClient, PasswordResetClient } from "../../../passwo
 
 import { PasswordResetAction } from "../../../password_reset/action"
 
+import { initLoginID } from "../../../login_id/data"
+
 export function newPasswordResetAction(): PasswordResetAction {
     return initPasswordResetAction({
         timeConfig: newTimeConfig(),
@@ -19,13 +21,13 @@ export function newPasswordResetAction(): PasswordResetAction {
 
 function newPasswordResetSessionClient(): PasswordResetSessionClient {
     //return initFetchPasswordResetSessionClient(initAuthClient(env.authServerURL))
-    return initSimulatePasswordResetSessionClient({ loginID: "loginID" })
+    return initSimulatePasswordResetSessionClient(initLoginID("loginID"))
 }
 
 function newPasswordResetClient(): PasswordResetClient {
     //return initFetchPasswordResetClient(initAuthClient(env.authServerURL))
     return initSimulatePasswordResetClient(
-        { loginID: "loginID" },
+        initLoginID("loginID"),
         {
             ticketNonce: { ticketNonce: "nonce" },
             apiCredential: {
