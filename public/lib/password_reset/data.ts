@@ -1,8 +1,7 @@
 import { AuthCredential } from "../credential/data"
 
-export type Session = Readonly<{ sessionID: Readonly<string> }>
-
-export type ResetToken = Readonly<{ resetToken: Readonly<string> }>
+export type SessionID = { SessionID: never }
+export type ResetToken = { ResetToken: never }
 
 // TODO log 以外にも対応
 export type Destination =
@@ -10,18 +9,14 @@ export type Destination =
 
 // TODO since と at を時間型にしたい
 export type PollingStatus =
-    Readonly<{ sending: false, since: string }> |
-    Readonly<{ sending: true, since: string }>
-
-export type DoneStatus =
-    Readonly<{ success: true, at: string }> |
-    Readonly<{ success: false, at: string }>
+    Readonly<{ sending: false }> |
+    Readonly<{ sending: true }>
 
 export type CreateSessionEvent =
     Readonly<{ type: "try-to-create-session" }> |
     Readonly<{ type: "delayed-to-create-session" }> |
     Readonly<{ type: "failed-to-create-session", err: CreateSessionError }> |
-    Readonly<{ type: "succeed-to-create-session", session: Session }>
+    Readonly<{ type: "succeed-to-create-session", sessionID: SessionID }>
 
 // TODO invalid-password-reset -> invalid-password-reset-session
 export type CreateSessionError =
@@ -34,9 +29,10 @@ export type CreateSessionError =
 
 export type PollingStatusEvent =
     Readonly<{ type: "try-to-polling-status" }> |
-    Readonly<{ type: "retry-to-polling-status", status: PollingStatus }> |
+    Readonly<{ type: "retry-to-polling-status", dest: Destination, status: PollingStatus }> |
     Readonly<{ type: "failed-to-polling-status", err: PollingStatusError }> |
-    Readonly<{ type: "succeed-to-send-token", status: DoneStatus }>
+    Readonly<{ type: "failed-to-send-token", dest: Destination, err: SendTokenError }> |
+    Readonly<{ type: "succeed-to-send-token", dest: Destination }>
 
 // TODO invalid-password-reset -> invalid-password-reset-session
 export type PollingStatusError =
@@ -44,6 +40,9 @@ export type PollingStatusError =
     Readonly<{ type: "invalid-password-reset" }> |
     Readonly<{ type: "server-error" }> |
     Readonly<{ type: "bad-response", err: string }> |
+    Readonly<{ type: "infra-error", err: string }>
+
+export type SendTokenError =
     Readonly<{ type: "infra-error", err: string }>
 
 export type ResetEvent =

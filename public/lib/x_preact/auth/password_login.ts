@@ -24,54 +24,56 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
             return () => component.terminate()
         }, [])
 
-        function view(onSubmit: Handler<Event>, content: VNode): VNode {
+        function view(onSubmit: Handler<Event>, button: VNode, footer: VNode): VNode {
             return LoginView(html`
-                <big>
-                    <form onSubmit="${onSubmit}">
-                        ${loginFields(component)}
-                        <section class="login__footer button__container">
-                            ${content}
-                            ${passwordResetLink()}
+                <form onSubmit="${onSubmit}">
+                    <big>
+                        <section class="login__body">
+                            <${LoginIDField(component)}/>
+                            <${PasswordField(component)}/>
                         </section>
-                    </form>
-                </big>
+                    </big>
+                </form>
+                <footer class="login__footer">
+                    <div class="button__container">
+                        <div>
+                            <big>${button}</big>
+                        </div>
+                        <div class="login__link">
+                            <a href="?_password_reset">
+                                <i class="lnir lnir-question-circle"></i> パスワードがわからない方
+                            </a>
+                        </div>
+                    </div>
+                    ${footer}
+                </footer>
             `)
         }
 
         switch (state.type) {
             case "initial-login":
-                return view(onSubmit_login, html`
-                    <div>
-                        ${loginButton()}
-                    </div>
-                `)
+                return view(onSubmit_login, loginButton(), html``)
 
             case "failed-to-login":
-                return view(onSubmit_login, html`
-                    <div>
-                        ${loginButton()}
-                        ${loginMessage("form_error", loginError(state.err))}
-                    </div>
+                return view(onSubmit_login, loginButton(), html`
+                    <aside>
+                        ${formMessage("form_error", loginError(state.err))}
+                    </aside>
                 `)
 
             case "try-to-login":
-                return view(onSubmit_noop, html`
-                    <div>
-                        ${loginButton_connecting()}
-                    </div>
-                `)
+                return view(onSubmit_noop, loginButton_connecting(), html``)
 
             case "delayed-to-login":
-                return view(onSubmit_noop, html`
-                    <div>
-                        ${loginButton_connecting()}
-                        ${loginMessage("form_warning", html`
+                return view(onSubmit_noop, loginButton_connecting(), html`
+                    <aside>
+                        ${formMessage("form_warning", html`
                             <p class="form__message">認証に時間がかかっています</p>
                             <p class="form__message">
                                 30秒以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
                             </p>
                         `)}
-                    </div>
+                    </aside>
                 `)
 
             case "succeed-to-login":
@@ -106,27 +108,12 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
     }
 }
 
-function loginFields(component: PasswordLoginComponent): VNode {
-    return html`
-        <section class="login__body">
-            <${LoginIDField(component)}/>
-            <${PasswordField(component)}/>
-        </section>
-    `
-}
-function loginMessage(messageClass: string, content: VNode): VNode {
+function formMessage(messageClass: string, content: VNode): VNode {
     return html`
         <div class="vertical vertical_small"></div>
         <dl class="${messageClass}">
             <dd>${content}</dd>
         </dl>
-    `
-}
-function passwordResetLink(): VNode {
-    return html`
-        <div class="login__link">
-            <a href="?_password_reset"><i class="lnir lnir-question-circle"></i> パスワードがわからない方</a>
-        </div>
     `
 }
 
@@ -145,10 +132,16 @@ function loginError(err: LoginError): VNode {
             return html`<p class="form__message">サーバーエラーにより認証に失敗しました</p>`
 
         case "bad-response":
-            return html`<p class="form__message">レスポンスエラーにより認証に失敗しました</p>`
+            return html`
+                <p class="form__message">レスポンスエラーにより認証に失敗しました</p>
+                <p class="form__message">(詳細: ${err.err})</p>
+            `
 
         case "infra-error":
-            return html`<p class="form__message">ネットワークエラーにより認証に失敗しました</p>`
+            return html`
+                <p class="form__message">ネットワークエラーにより認証に失敗しました</p>
+                <p class="form__message">(詳細: ${err.err})</p>
+            `
     }
 }
 

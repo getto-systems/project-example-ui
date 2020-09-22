@@ -3,7 +3,8 @@ import { Infra, TimeConfig, PasswordResetSessionClient } from "../infra"
 import { PasswordResetAction, PasswordResetEventPublisher, PasswordResetEventSubscriber } from "../action"
 
 import {
-    Session, CreateSessionEvent, PollingStatusEvent, PollingStatusError,
+    SessionID,
+    CreateSessionEvent, PollingStatusEvent, PollingStatusError,
     ResetToken, ResetEvent,
 } from "../data"
 
@@ -49,7 +50,7 @@ class PasswordResetActionImpl implements PasswordResetAction {
             return
         }
 
-        this.pub.publishCreateSessionEvent({ type: "succeed-to-create-session", session: response.session })
+        this.pub.publishCreateSessionEvent({ type: "succeed-to-create-session", sessionID: response.sessionID })
 
         return
 
@@ -65,8 +66,8 @@ class PasswordResetActionImpl implements PasswordResetAction {
         }
     }
 
-    async startPollingStatus(session: Session): Promise<void> {
-        new StatusPoller(this.infra.timeConfig, this.infra.passwordResetSessionClient, this.pub).startPolling(session)
+    async startPollingStatus(sessionID: SessionID): Promise<void> {
+        new StatusPoller(this.infra.timeConfig, this.infra.passwordResetSessionClient, this.pub).startPolling(sessionID)
     }
 
     async reset(resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<void> {
@@ -128,7 +129,7 @@ class StatusPoller {
         this.sendTokenState = { type: "initial" }
     }
 
-    async startPolling(session: Session): Promise<void> {
+    async startPolling(sessionID: SessionID): Promise<void> {
         this.pub.publishPollingStatusEvent({ type: "try-to-polling-status" })
 
         this.sendToken()
@@ -143,18 +144,30 @@ class StatusPoller {
                 return
             }
 
-            const response = await this.client.getStatus(session)
+            const response = await this.client.getStatus(sessionID)
             if (!response.success) {
                 this.pub.publishPollingStatusEvent({ type: "failed-to-polling-status", err: response.err })
                 return
             }
 
             if (response.done) {
-                this.pub.publishPollingStatusEvent({ type: "succeed-to-send-token", status: response.status })
+                if (response.send) {
+                    this.pub.publishPollingStatusEvent({ type: "succeed-to-send-token", dest: response.dest })
+                } else {
+                    this.pub.publishPollingStatusEvent({
+                        type: "failed-to-send-token",
+                        dest: response.dest,
+                        err: { type: "infra-error", err: response.err },
+                    })
+                }
                 return
             }
 
-            this.pub.publishPollingStatusEvent({ type: "retry-to-polling-status", status: response.status })
+            this.pub.publishPollingStatusEvent({
+                type: "retry-to-polling-status",
+                dest: response.dest,
+                status: response.status,
+            })
 
             await wait(this.timeConfig.passwordResetPollingWaitTime)
         }

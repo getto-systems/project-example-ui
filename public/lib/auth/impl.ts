@@ -1,3 +1,5 @@
+import { initResetToken } from "../password_reset/adapter"
+
 import { AuthUsecase, AuthComponent } from "./component"
 
 import { AuthUsecaseState } from "./data"
@@ -111,7 +113,7 @@ function loginState(currentLocation: Readonly<Location>): AuthUsecaseState {
 
     const resetToken = url.searchParams.get("_password_reset_token")
     if (resetToken) {
-        return { type: "password-reset", resetToken: { resetToken } }
+        return { type: "password-reset", resetToken: initResetToken(resetToken) }
     }
 
     // 特に指定が無ければパスワードログイン

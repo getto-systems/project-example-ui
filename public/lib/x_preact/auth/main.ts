@@ -8,6 +8,7 @@ import { StoreCredential } from "./store_credential"
 import { LoadApplication } from "./load_application"
 
 import { PasswordLogin } from "./password_login"
+import { PasswordResetSession } from "./password_reset_session"
 
 import { AuthUsecase } from "../../auth/component"
 import { initialAuthUsecaseState } from "../../auth/data"
@@ -39,8 +40,7 @@ export function Main(usecase: AuthUsecase) {
                 return h(PasswordLogin(usecase.component.passwordLogin), {})
 
             case "password-reset-session":
-                //return h(PasswordReset(...state.init), {})
-                return html`ここでパスワードリセット！`
+                return h(PasswordResetSession(usecase.component.passwordResetSession), {})
 
             case "password-reset":
                 //return h(PasswordReset(...state.init), {})

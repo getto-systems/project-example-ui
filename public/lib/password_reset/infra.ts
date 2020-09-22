@@ -1,8 +1,9 @@
 import {
-    Session, CreateSessionError,
+    SessionID, CreateSessionError,
     Destination,
-    PollingStatus, DoneStatus, PollingStatusError,
     ResetToken,
+    PollingStatus,
+    PollingStatusError,
 } from "./data"
 
 import { AuthCredential } from "../credential/data"
@@ -30,17 +31,17 @@ export type Limit = Readonly<{ limit: number }>
 export interface PasswordResetSessionClient {
     createSession(loginID: LoginID): Promise<SessionResponse>
     sendToken(): Promise<SendTokenResponse>
-    getStatus(session: Session): Promise<StatusResponse>
+    getStatus(sessionID: SessionID): Promise<GetStatusResponse>
 }
 
 export type SessionResponse =
     Readonly<{ success: false, err: CreateSessionError }> |
-    Readonly<{ success: true, session: Session }>
+    Readonly<{ success: true, sessionID: SessionID }>
 export function createSessionFailed(err: CreateSessionError): SessionResponse {
     return { success: false, err }
 }
-export function createSessionSuccess(session: Session): SessionResponse {
-    return { success: true, session }
+export function createSessionSuccess(sessionID: SessionID): SessionResponse {
+    return { success: true, sessionID }
 }
 
 export type SendTokenResponse =
@@ -51,18 +52,22 @@ export function sendTokenFailed(err: PollingStatusError): SendTokenResponse {
 }
 export const sendTokenSuccess: SendTokenResponse = { success: true }
 
-export type StatusResponse =
+export type GetStatusResponse =
     Readonly<{ success: false, err: PollingStatusError }> |
     Readonly<{ success: true, done: false, dest: Destination, status: PollingStatus }> |
-    Readonly<{ success: true, done: true, dest: Destination, status: DoneStatus }>
-export function getStatusFailed(err: PollingStatusError): StatusResponse {
+    Readonly<{ success: true, done: true, send: false, dest: Destination, err: string }> |
+    Readonly<{ success: true, done: true, send: true, dest: Destination }>
+export function getStatusFailed(err: PollingStatusError): GetStatusResponse {
     return { success: false, err }
 }
-export function getStatusPolling(dest: Destination, status: PollingStatus): StatusResponse {
+export function getStatusPolling(dest: Destination, status: PollingStatus): GetStatusResponse {
     return { success: true, done: false, dest, status }
 }
-export function getStatusDone(dest: Destination, status: DoneStatus): StatusResponse {
-    return { success: true, done: true, dest, status }
+export function getStatusSendFailed(dest: Destination, err: string): GetStatusResponse {
+    return { success: true, done: true, send: false, dest, err }
+}
+export function getStatusSend(dest: Destination): GetStatusResponse {
+    return { success: true, done: true, send: true, dest }
 }
 
 export interface PasswordResetClient {
