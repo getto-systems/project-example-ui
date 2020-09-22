@@ -12,20 +12,20 @@ import { initResetToken } from "../../../password_reset/adapter"
 
 import { AuthUsecase, AuthComponent } from "../../../auth/component"
 
-import { AuthUsecaseState } from "../../../auth/data"
+import { AuthState } from "../../../auth/data"
 
 export function newAuthUsecase(): AuthUsecase {
     return new Usecase(new Init().passwordResetSession())
 }
 
 class Init {
-    fetchCredential(): AuthUsecaseState {
+    fetchCredential(): AuthState {
         return { type: "fetch-credential" }
     }
-    renewCredential(): AuthUsecaseState {
+    renewCredential(): AuthState {
         return { type: "renew-credential", ticketNonce: initTicketNonce("ticket-nonce") }
     }
-    storeCredential(): AuthUsecaseState {
+    storeCredential(): AuthState {
         return {
             type: "store-credential", authCredential: {
                 ticketNonce: initTicketNonce("ticket-nonce"),
@@ -33,26 +33,26 @@ class Init {
             }
         }
     }
-    loadApplication(): AuthUsecaseState {
+    loadApplication(): AuthState {
         return { type: "load-application" }
     }
 
-    passwordLogin(): AuthUsecaseState {
+    passwordLogin(): AuthState {
         return { type: "password-login" }
     }
-    passwordResetSession(): AuthUsecaseState {
+    passwordResetSession(): AuthState {
         return { type: "password-reset-session" }
     }
-    passwordReset(): AuthUsecaseState {
+    passwordReset(): AuthState {
         return { type: "password-reset", resetToken: initResetToken("reset-token") }
     }
 }
 
 class Usecase implements AuthUsecase {
-    state: AuthUsecaseState
+    state: AuthState
     component: AuthComponent
 
-    constructor(state: AuthUsecaseState) {
+    constructor(state: AuthState) {
         this.state = state
 
         this.component = {
@@ -67,7 +67,7 @@ class Usecase implements AuthUsecase {
         }
     }
 
-    init(stateChanged: Publisher<AuthUsecaseState>): void {
+    init(stateChanged: Publisher<AuthState>): void {
         stateChanged(this.state)
     }
     terminate(): void {

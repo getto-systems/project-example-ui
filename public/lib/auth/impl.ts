@@ -2,7 +2,7 @@ import { initResetToken } from "../password_reset/adapter"
 
 import { AuthUsecase, AuthComponent } from "./component"
 
-import { AuthUsecaseState } from "./data"
+import { AuthState } from "./data"
 
 import { AuthCredential, TicketNonce } from "../credential/data"
 
@@ -71,7 +71,7 @@ class Usecase implements AuthUsecase {
         })
     }
 
-    init(pub: Publisher<AuthUsecaseState>): void {
+    init(pub: Publisher<AuthState>): void {
         if (this.holder.stack) {
             pub(this.holder.state)
         }
@@ -81,7 +81,7 @@ class Usecase implements AuthUsecase {
         // terminate が必要な component とインターフェイスを合わせるために必要
     }
 
-    publish(state: AuthUsecaseState): void {
+    publish(state: AuthState): void {
         if (this.holder.set) {
             this.holder.pub(state)
         } else {
@@ -103,7 +103,7 @@ class Usecase implements AuthUsecase {
     }
 }
 
-function loginState(currentLocation: Location): AuthUsecaseState {
+function loginState(currentLocation: Location): AuthState {
     // ログイン前画面ではアンダースコアから始まるクエリを使用する
     const url = new URL(currentLocation.toString())
 
@@ -122,8 +122,8 @@ function loginState(currentLocation: Location): AuthUsecaseState {
 
 type StateHolder =
     Readonly<{ set: false, stack: false }> |
-    Readonly<{ set: false, stack: true, state: AuthUsecaseState }> |
-    Readonly<{ set: true, stack: false, pub: Publisher<AuthUsecaseState> }>
+    Readonly<{ set: false, stack: true, state: AuthState }> |
+    Readonly<{ set: true, stack: false, pub: Publisher<AuthState> }>
 
 interface Publisher<T> {
     (state: T): void
