@@ -119,13 +119,13 @@ class Component implements PasswordLoginComponent {
     hook(_stateChanged: Publisher<PasswordLoginState>): void {
         // mock では特に何もしない
     }
-    init(stateChanged: Publisher<PasswordLoginState>): void {
+    onStateChange(stateChanged: Publisher<PasswordLoginState>): void {
         stateChanged(this.state)
     }
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void {
+    onLoginIDFieldStateChange(stateChanged: Publisher<LoginIDFieldState>): void {
         stateChanged(this.loginID)
     }
-    initPasswordField(stateChanged: Publisher<PasswordFieldState>): void {
+    onPasswordFieldStateChange(stateChanged: Publisher<PasswordFieldState>): void {
         stateChanged(this.password)
     }
     terminate(): void {

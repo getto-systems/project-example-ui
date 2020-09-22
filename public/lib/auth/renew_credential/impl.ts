@@ -20,7 +20,7 @@ class Component implements RenewCredentialComponent {
     hook(pub: Publisher<RenewCredentialState>): void {
         this.listener.push(pub)
     }
-    init(stateChanged: Publisher<RenewCredentialState>): void {
+    onStateChange(stateChanged: Publisher<RenewCredentialState>): void {
         this.action.credential.sub.onRenew((event) => {
             const state = map(event)
             this.listener.forEach(pub => pub(state))

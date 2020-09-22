@@ -6,7 +6,7 @@ import { TicketNonce } from "../../credential/data"
 
 export interface RenewCredentialComponent {
     hook(stateChanged: Publisher<RenewCredentialState>): void
-    init(stateChanged: Publisher<RenewCredentialState>): void
+    onStateChange(stateChanged: Publisher<RenewCredentialState>): void
     terminate(): void
     renew(ticketNonce: TicketNonce): Promise<void>
 }

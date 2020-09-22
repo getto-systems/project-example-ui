@@ -17,7 +17,7 @@ export function Main(usecase: AuthUsecase) {
     return (): VNode => {
         const [state, setState] = useState(initialAuthState)
         useEffect(() => {
-            usecase.init(setState)
+            usecase.onStateChange(setState)
             return () => usecase.terminate()
         }, [])
 

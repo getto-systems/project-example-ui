@@ -4,7 +4,7 @@ import { CredentialAction } from "../../credential/action"
 
 export interface FetchCredentialComponent {
     hook(stateChanged: Publisher<FetchCredentialState>): void
-    init(stateChanged: Publisher<FetchCredentialState>): void
+    onStateChange(stateChanged: Publisher<FetchCredentialState>): void
     terminate(): void
     fetch(): Promise<void>
 }

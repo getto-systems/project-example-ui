@@ -25,7 +25,7 @@ class Component implements LoadApplicationComponent {
     hook(_stateChanged: Publisher<LoadApplicationState>): void {
         // mock では特に何もしない
     }
-    init(stateChanged: Publisher<LoadApplicationState>): void {
+    onStateChange(stateChanged: Publisher<LoadApplicationState>): void {
         stateChanged(this.state)
     }
     terminate(): void {

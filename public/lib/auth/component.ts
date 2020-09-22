@@ -10,7 +10,7 @@ import { PasswordResetComponent } from "./password_reset/component"
 import { AuthState } from "./data"
 
 export interface AuthUsecase {
-    init(stateChanged: Publisher<AuthState>): void
+    onStateChange(stateChanged: Publisher<AuthState>): void
     terminate(): void
 
     component: AuthComponent

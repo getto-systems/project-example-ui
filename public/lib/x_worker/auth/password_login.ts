@@ -5,13 +5,13 @@ const ctx: Worker = self as any // eslint-disable-line @typescript-eslint/no-exp
 const component = newPasswordLoginComponent()
 const helper = newWorkerHelper()
 
-component.init((state) => {
+component.onStateChange((state) => {
     ctx.postMessage(helper.mapPasswordLoginState(state))
 })
-component.initLoginIDField((state) => {
+component.onLoginIDFieldStateChange((state) => {
     ctx.postMessage(helper.mapLoginIDFieldState(state))
 })
-component.initPasswordField((state) => {
+component.onPasswordFieldStateChange((state) => {
     ctx.postMessage(helper.mapPasswordFieldState(state))
 })
 

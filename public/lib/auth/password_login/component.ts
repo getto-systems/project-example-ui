@@ -15,9 +15,9 @@ export interface PasswordLoginComponentAction {
 
 export interface PasswordLoginComponent {
     hook(stateChanged: Publisher<PasswordLoginState>): void
-    init(stateChanged: Publisher<PasswordLoginState>): void
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void
-    initPasswordField(stateChanged: Publisher<PasswordFieldState>): void
+    onStateChange(stateChanged: Publisher<PasswordLoginState>): void
+    onLoginIDFieldStateChange(stateChanged: Publisher<LoginIDFieldState>): void
+    onPasswordFieldStateChange(stateChanged: Publisher<PasswordFieldState>): void
     terminate(): void
     trigger(operation: PasswordLoginComponentOperation): Promise<void>
 }

@@ -19,7 +19,7 @@ export function PasswordResetSession(component: PasswordResetSessionComponent): 
         const [state, setState] = useState(initialPasswordResetSessionState)
         const submit = useRef<HTMLButtonElement>()
         useEffect(() => {
-            component.init(setState)
+            component.onStateChange(setState)
             return () => component.terminate()
         }, [])
 

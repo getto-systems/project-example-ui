@@ -70,7 +70,7 @@ class Component implements PasswordResetComponent {
     hook(pub: Publisher<PasswordResetState>): void {
         this.listener.push(pub)
     }
-    init(stateChanged: Publisher<PasswordResetState>): void {
+    onStateChange(stateChanged: Publisher<PasswordResetState>): void {
         this.action.passwordReset.sub.onResetEvent((event) => {
             const state = map(event)
             this.listener.forEach(pub => pub(state))
@@ -81,10 +81,10 @@ class Component implements PasswordResetComponent {
             }
         })
     }
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void {
+    onLoginIDFieldStateChange(stateChanged: Publisher<LoginIDFieldState>): void {
         this.field.loginID.sub.onLoginIDFieldEvent(stateChanged)
     }
-    initPasswordField(stateChanged: Publisher<PasswordFieldState>): void {
+    onPasswordFieldStateChange(stateChanged: Publisher<PasswordFieldState>): void {
         this.field.password.sub.onPasswordFieldEvent(stateChanged)
     }
     terminate(): void {
@@ -126,7 +126,7 @@ class WorkerComponent implements PasswordResetComponent {
     hook(pub: Publisher<PasswordResetState>): void {
         this.listener.push(pub)
     }
-    init(stateChanged: Publisher<PasswordResetState>): void {
+    onStateChange(stateChanged: Publisher<PasswordResetState>): void {
         if (!this.worker.set) {
             const instance = this.initWorker(this.worker.init, this.worker.stack, (state) => {
                 this.listener.forEach(pub => pub(state))
@@ -149,7 +149,7 @@ class WorkerComponent implements PasswordResetComponent {
         return worker
     }
 
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void {
+    onLoginIDFieldStateChange(stateChanged: Publisher<LoginIDFieldState>): void {
         if (this.worker.set) {
             setup(this.worker.instance)
         } else {
@@ -165,7 +165,7 @@ class WorkerComponent implements PasswordResetComponent {
             })
         }
     }
-    initPasswordField(stateChanged: Publisher<PasswordFieldState>): void {
+    onPasswordFieldStateChange(stateChanged: Publisher<PasswordFieldState>): void {
         if (this.worker.set) {
             setup(this.worker.instance)
         } else {

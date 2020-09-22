@@ -14,7 +14,7 @@ interface PreactComponent {
 }
 
 interface FormComponent {
-    initPasswordField(stateChanged: Publisher<PasswordFieldState>): void
+    onPasswordFieldStateChange(stateChanged: Publisher<PasswordFieldState>): void
     trigger(operation: FieldOperation): Promise<void>
 }
 
@@ -29,7 +29,7 @@ export function PasswordField(component: FormComponent): PreactComponent {
         const input = useRef<HTMLInputElement>()
 
         useEffect(() => {
-            component.initPasswordField(setState)
+            component.onPasswordFieldStateChange(setState)
         }, [])
 
         return html`

@@ -67,7 +67,7 @@ class Usecase implements AuthUsecase {
         }
     }
 
-    init(stateChanged: Publisher<AuthState>): void {
+    onStateChange(stateChanged: Publisher<AuthState>): void {
         stateChanged(this.state)
     }
     terminate(): void {

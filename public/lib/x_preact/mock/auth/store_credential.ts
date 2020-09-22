@@ -24,7 +24,7 @@ class Component implements StoreCredentialComponent {
     hook(_stateChanged: Publisher<StoreCredentialState>): void {
         // mock では特に何もしない
     }
-    init(stateChanged: Publisher<StoreCredentialState>): void {
+    onStateChange(stateChanged: Publisher<StoreCredentialState>): void {
         stateChanged(this.state)
     }
     terminate(): void {

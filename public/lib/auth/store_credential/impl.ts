@@ -20,7 +20,7 @@ class Component implements StoreCredentialComponent {
     hook(pub: Publisher<StoreCredentialState>): void {
         this.listener.push(pub)
     }
-    init(stateChanged: Publisher<StoreCredentialState>): void {
+    onStateChange(stateChanged: Publisher<StoreCredentialState>): void {
         this.action.credential.sub.onStore((event) => {
             const state = map(event)
             this.listener.forEach(pub => pub(state))
