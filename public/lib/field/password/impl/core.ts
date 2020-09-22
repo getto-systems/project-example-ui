@@ -103,38 +103,20 @@ class Field implements PasswordField {
 }
 
 class EventPubSub implements PasswordFieldEventPublisher, PasswordFieldEventSubscriber {
-    holder: {
-        field: PublisherHolder<PasswordFieldEvent>
-        content: PublisherHolder<Content<Password>>
-    }
+    listener: Publisher<PasswordFieldEvent>[]
 
     constructor() {
-        this.holder = {
-            field: { set: false },
-            content: { set: false },
-        }
+        this.listener = []
     }
 
-    onPasswordFieldStateChanged(pub: Publisher<PasswordFieldEvent>): void {
-        this.holder.field = { set: true, pub }
-    }
-    onPasswordFieldContentChanged(pub: Publisher<Content<Password>>): void {
-        this.holder.content = { set: true, pub }
+    onPasswordFieldEvent(pub: Publisher<PasswordFieldEvent>): void {
+        this.listener.push(pub)
     }
 
     publishPasswordFieldEvent(event: PasswordFieldEvent): void {
-        if (this.holder.field.set) {
-            this.holder.field.pub(event)
-        }
-        if (this.holder.content.set) {
-            this.holder.content.pub(event.content)
-        }
+        this.listener.forEach(pub => pub(event))
     }
 }
-
-type PublisherHolder<T> =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, pub: Publisher<T> }>
 
 interface Publisher<T> {
     (state: T): void

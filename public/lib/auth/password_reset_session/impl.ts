@@ -12,9 +12,11 @@ import {
 
 import { LoginIDFieldComponentState } from "../field/login_id/data"
 
+import { LoginIDField } from "../../field/login_id/action"
+
 import { LoginID } from "../../login_id/data"
 import { CreateSessionEvent, PollingStatusEvent } from "../../password_reset/data"
-import { LoginIDField } from "../../field/login_id/action"
+import { LoginIDFieldEvent } from "../../field/login_id/data"
 import { Content } from "../../field/data"
 
 export function initPasswordResetSessionComponent(action: PasswordResetSessionComponentAction): PasswordResetSessionComponent {
@@ -52,8 +54,8 @@ class Component implements PasswordResetSessionComponent {
             loginID: { valid: false },
         }
 
-        this.field.loginID.sub.onLoginIDFieldContentChanged((content: Content<LoginID>) => {
-            this.content.loginID = content
+        this.field.loginID.sub.onLoginIDFieldEvent((event: LoginIDFieldEvent) => {
+            this.content.loginID = event.content
         })
     }
 
@@ -83,7 +85,7 @@ class Component implements PasswordResetSessionComponent {
         })
     }
     initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void {
-        this.field.loginID.sub.onLoginIDFieldStateChanged(stateChanged)
+        this.field.loginID.sub.onLoginIDFieldEvent(stateChanged)
     }
     terminate(): void {
         // terminate が必要な component とインターフェイスを合わせるために必要

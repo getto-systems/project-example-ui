@@ -11,6 +11,8 @@ import { PasswordField } from "../../field/password/action"
 import { LoginID } from "../../login_id/data"
 import { Password } from "../../password/data"
 import { ResetToken, ResetEvent } from "../../password_reset/data"
+import { LoginIDFieldEvent } from "../../field/login_id/data"
+import { PasswordFieldEvent } from "../../field/password/data"
 import { Content } from "../../field/data"
 
 export function initPasswordResetComponent(action: PasswordResetComponentAction): PasswordResetComponent {
@@ -57,11 +59,11 @@ class Component implements PasswordResetComponent {
             password: { valid: false },
         }
 
-        this.field.loginID.sub.onLoginIDFieldContentChanged((content: Content<LoginID>) => {
-            this.content.loginID = content
+        this.field.loginID.sub.onLoginIDFieldEvent((event: LoginIDFieldEvent) => {
+            this.content.loginID = event.content
         })
-        this.field.password.sub.onPasswordFieldContentChanged((content: Content<Password>) => {
-            this.content.password = content
+        this.field.password.sub.onPasswordFieldEvent((event: PasswordFieldEvent) => {
+            this.content.password = event.content
         })
     }
 
@@ -82,10 +84,10 @@ class Component implements PasswordResetComponent {
         })
     }
     initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void {
-        this.field.loginID.sub.onLoginIDFieldStateChanged(stateChanged)
+        this.field.loginID.sub.onLoginIDFieldEvent(stateChanged)
     }
     initPasswordField(stateChanged: Publisher<PasswordFieldComponentState>): void {
-        this.field.password.sub.onPasswordFieldStateChanged(stateChanged)
+        this.field.password.sub.onPasswordFieldEvent(stateChanged)
     }
     terminate(): void {
         // terminate が必要な component とインターフェイスを合わせるために必要

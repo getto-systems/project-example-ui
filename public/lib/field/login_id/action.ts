@@ -1,6 +1,5 @@
-import { LoginID } from "../../login_id/data"
 import { LoginIDFieldOperation, LoginIDFieldEvent } from "./data"
-import { InputValue, Content } from "../../field/data"
+import { InputValue } from "../../field/data"
 
 export interface LoginIDFieldAction {
     initLoginIDField(): LoginIDField
@@ -18,8 +17,7 @@ export interface LoginIDFieldEventPublisher {
 }
 
 export interface LoginIDFieldEventSubscriber {
-    onLoginIDFieldStateChanged(stateChanged: Publisher<LoginIDFieldEvent>): void
-    onLoginIDFieldContentChanged(contentChanged: Publisher<Content<LoginID>>): void
+    onLoginIDFieldEvent(pub: Publisher<LoginIDFieldEvent>): void
 }
 
 interface Publisher<T> {

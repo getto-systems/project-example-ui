@@ -1,6 +1,5 @@
 import { PasswordFieldOperation, PasswordFieldEvent } from "./data"
-import { Password } from "../../password/data"
-import { InputValue, Content } from "../../field/data"
+import { InputValue } from "../../field/data"
 
 export interface PasswordFieldAction {
     initPasswordField(): PasswordField
@@ -20,8 +19,7 @@ export interface PasswordFieldEventPublisher {
 }
 
 export interface PasswordFieldEventSubscriber {
-    onPasswordFieldStateChanged(stateChanged: Publisher<PasswordFieldEvent>): void
-    onPasswordFieldContentChanged(contentChanged: Publisher<Content<Password>>): void
+    onPasswordFieldEvent(pub: Publisher<PasswordFieldEvent>): void
 }
 
 interface Publisher<T> {
