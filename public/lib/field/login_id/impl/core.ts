@@ -60,38 +60,20 @@ class Field implements LoginIDField {
 }
 
 class FieldEventPubSub implements LoginIDFieldEventPublisher, LoginIDFieldEventSubscriber {
-    holder: {
-        field: PublisherHolder<LoginIDFieldEvent>
-        content: PublisherHolder<Content<LoginID>>
-    }
+    listener: Publisher<LoginIDFieldEvent>[]
 
     constructor() {
-        this.holder = {
-            field: { set: false },
-            content: { set: false },
-        }
+        this.listener = []
     }
 
-    onLoginIDFieldStateChanged(pub: Publisher<LoginIDFieldEvent>): void {
-        this.holder.field = { set: true, pub }
-    }
-    onLoginIDFieldContentChanged(pub: Publisher<Content<LoginID>>): void {
-        this.holder.content = { set: true, pub }
+    onLoginIDFieldEvent(pub: Publisher<LoginIDFieldEvent>): void {
+        this.listener.push(pub)
     }
 
     publishLoginIDFieldEvent(event: LoginIDFieldEvent): void {
-        if (this.holder.field.set) {
-            this.holder.field.pub(event)
-        }
-        if (this.holder.content.set) {
-            this.holder.content.pub(event.content)
-        }
+        this.listener.forEach(pub => pub(event))
     }
 }
-
-type PublisherHolder<T> =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, pub: Publisher<T> }>
 
 interface Publisher<T> {
     (state: T): void
