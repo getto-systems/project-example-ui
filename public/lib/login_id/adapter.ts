@@ -1,11 +1,9 @@
 import { LoginID } from "./data"
 
 export function initLoginID(loginID: string): LoginID {
-    return loginID as _LoginID
+    return loginID as string & LoginID
 }
 
-export function loginIDToString(loginID: LoginID): Readonly<string> {
+export function loginIDToString(loginID: LoginID): string {
     return loginID as unknown as string
 }
-
-type _LoginID = string & LoginID

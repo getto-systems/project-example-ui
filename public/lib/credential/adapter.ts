@@ -16,20 +16,16 @@ export type AuthCredentialSerialized = Readonly<{
 }>
 
 export function initTicketNonce(ticketNonce: string): TicketNonce {
-    return ticketNonce as _TicketNonce
+    return ticketNonce as string & TicketNonce
 }
 
-export function ticketNonceToString(ticketNonce: TicketNonce): Readonly<string> {
+export function ticketNonceToString(ticketNonce: TicketNonce): string {
     return ticketNonce as unknown as string
 }
-
-type _TicketNonce = string & TicketNonce
 
 // TODO ApiNonce を追加
 //export type _ApiNonce = string & ApiNonce
 
 export function initApiRoles(apiRoles: Array<string>): ApiRoles {
-    return apiRoles.map((apiRole) => apiRole as _ApiRole)
+    return apiRoles.map((apiRole) => apiRole as string & ApiRole)
 }
-
-type _ApiRole = string & ApiRole

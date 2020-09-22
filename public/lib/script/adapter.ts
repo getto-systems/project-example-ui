@@ -1,21 +1,17 @@
 import { PagePathname, ScriptPath } from "./data"
 
 export function initPagePathname(url: Readonly<URL>): PagePathname {
-    return url.pathname as _PagePathname
+    return url.pathname as string & PagePathname
 }
 
-export function pagePathnameToString(pagePathname: PagePathname): Readonly<string> {
+export function pagePathnameToString(pagePathname: PagePathname): string {
     return pagePathname as unknown as string
 }
 
-type _PagePathname = string & PagePathname
-
 export function initScriptPath(scriptPath: string): ScriptPath {
-    return scriptPath as _ScriptPath
+    return scriptPath as string & ScriptPath
 }
 
-export function scriptPathToString(scriptPath: ScriptPath): Readonly<string> {
+export function scriptPathToString(scriptPath: ScriptPath): string {
     return scriptPath as unknown as string
 }
-
-type _ScriptPath = string & ScriptPath
