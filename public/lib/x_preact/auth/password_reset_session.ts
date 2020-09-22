@@ -6,7 +6,7 @@ import { LoginView } from "./layout"
 import { LoginIDField } from "./field/login_id"
 
 import { PasswordResetSessionComponent } from "../../auth/password_reset_session/component"
-import { initialPasswordResetSessionComponentState } from "../../auth/password_reset_session/data"
+import { initialPasswordResetSessionState } from "../../auth/password_reset_session/data"
 
 import { Destination, PollingStatus, CreateSessionError, PollingStatusError, SendTokenError } from "../../password_reset/data"
 
@@ -16,7 +16,7 @@ interface PreactComponent {
 
 export function PasswordResetSession(component: PasswordResetSessionComponent): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(initialPasswordResetSessionComponentState)
+        const [state, setState] = useState(initialPasswordResetSessionState)
         const submit = useRef<HTMLButtonElement>()
         useEffect(() => {
             component.init(setState)

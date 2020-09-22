@@ -1,9 +1,9 @@
 import { PasswordResetComponentAction, PasswordResetComponent, PasswordResetWorkerComponentHelper } from "./component"
 
-import { PasswordResetComponentState, PasswordResetComponentOperation, PasswordResetWorkerComponentState } from "./data"
+import { PasswordResetState, PasswordResetComponentOperation, PasswordResetWorkerState } from "./data"
 
-import { LoginIDFieldComponentState } from "../field/login_id/data"
-import { PasswordFieldComponentState } from "../field/password/data"
+import { LoginIDFieldState } from "../field/login_id/data"
+import { PasswordFieldState } from "../field/password/data"
 
 import { LoginIDField } from "../../field/login_id/action"
 import { PasswordField } from "../../field/password/action"
@@ -23,16 +23,16 @@ export function initPasswordResetWorkerComponent(init: WorkerInit): PasswordRese
 }
 export function initPasswordResetWorkerComponentHelper(): PasswordResetWorkerComponentHelper {
     return {
-        mapPasswordResetComponentState,
-        mapLoginIDFieldComponentState,
-        mapPasswordFieldComponentState,
+        mapPasswordResetState,
+        mapLoginIDFieldState,
+        mapPasswordFieldState,
     }
 }
 
 class Component implements PasswordResetComponent {
     action: PasswordResetComponentAction
 
-    listener: Publisher<PasswordResetComponentState>[]
+    listener: Publisher<PasswordResetState>[]
 
     field: {
         loginID: LoginIDField
@@ -67,24 +67,24 @@ class Component implements PasswordResetComponent {
         })
     }
 
-    hook(pub: Publisher<PasswordResetComponentState>): void {
+    hook(pub: Publisher<PasswordResetState>): void {
         this.listener.push(pub)
     }
-    init(stateChanged: Publisher<PasswordResetComponentState>): void {
+    init(stateChanged: Publisher<PasswordResetState>): void {
         this.action.passwordReset.sub.onResetEvent((event) => {
             const state = map(event)
             this.listener.forEach(pub => pub(state))
             stateChanged(state)
 
-            function map(event: ResetEvent): PasswordResetComponentState {
+            function map(event: ResetEvent): PasswordResetState {
                 return event
             }
         })
     }
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void {
+    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void {
         this.field.loginID.sub.onLoginIDFieldEvent(stateChanged)
     }
-    initPasswordField(stateChanged: Publisher<PasswordFieldComponentState>): void {
+    initPasswordField(stateChanged: Publisher<PasswordFieldState>): void {
         this.field.password.sub.onPasswordFieldEvent(stateChanged)
     }
     terminate(): void {
@@ -116,17 +116,17 @@ class Component implements PasswordResetComponent {
 
 class WorkerComponent implements PasswordResetComponent {
     worker: WorkerHolder
-    listener: Publisher<PasswordResetComponentState>[]
+    listener: Publisher<PasswordResetState>[]
 
     constructor(init: WorkerInit) {
         this.worker = { set: false, stack: [], init }
         this.listener = []
     }
 
-    hook(pub: Publisher<PasswordResetComponentState>): void {
+    hook(pub: Publisher<PasswordResetState>): void {
         this.listener.push(pub)
     }
-    init(stateChanged: Publisher<PasswordResetComponentState>): void {
+    init(stateChanged: Publisher<PasswordResetState>): void {
         if (!this.worker.set) {
             const instance = this.initWorker(this.worker.init, this.worker.stack, (state) => {
                 this.listener.forEach(pub => pub(state))
@@ -135,10 +135,10 @@ class WorkerComponent implements PasswordResetComponent {
             this.worker = { set: true, instance }
         }
     }
-    initWorker(init: WorkerInit, stack: WorkerSetup[], stateChanged: Publisher<PasswordResetComponentState>): Worker {
+    initWorker(init: WorkerInit, stack: WorkerSetup[], stateChanged: Publisher<PasswordResetState>): Worker {
         const worker = init()
         worker.addEventListener("message", (event) => {
-            const state = event.data as PasswordResetWorkerComponentState
+            const state = event.data as PasswordResetWorkerState
             if (state.type === "password_reset") {
                 stateChanged(state.state)
             }
@@ -149,7 +149,7 @@ class WorkerComponent implements PasswordResetComponent {
         return worker
     }
 
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void {
+    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void {
         if (this.worker.set) {
             setup(this.worker.instance)
         } else {
@@ -158,14 +158,14 @@ class WorkerComponent implements PasswordResetComponent {
 
         function setup(worker: Worker): void {
             worker.addEventListener("message", (event) => {
-                const state = event.data as PasswordResetWorkerComponentState
+                const state = event.data as PasswordResetWorkerState
                 if (state.type === "field-login_id") {
                     stateChanged(state.state)
                 }
             })
         }
     }
-    initPasswordField(stateChanged: Publisher<PasswordFieldComponentState>): void {
+    initPasswordField(stateChanged: Publisher<PasswordFieldState>): void {
         if (this.worker.set) {
             setup(this.worker.instance)
         } else {
@@ -174,7 +174,7 @@ class WorkerComponent implements PasswordResetComponent {
 
         function setup(worker: Worker): void {
             worker.addEventListener("message", (event) => {
-                const state = event.data as PasswordResetWorkerComponentState
+                const state = event.data as PasswordResetWorkerState
                 if (state.type === "field-password") {
                     stateChanged(state.state)
                 }
@@ -195,13 +195,13 @@ class WorkerComponent implements PasswordResetComponent {
     }
 }
 
-function mapPasswordResetComponentState(state: PasswordResetComponentState): PasswordResetWorkerComponentState {
+function mapPasswordResetState(state: PasswordResetState): PasswordResetWorkerState {
     return { type: "password_reset", state }
 }
-function mapLoginIDFieldComponentState(state: LoginIDFieldComponentState): PasswordResetWorkerComponentState {
+function mapLoginIDFieldState(state: LoginIDFieldState): PasswordResetWorkerState {
     return { type: "field-login_id", state }
 }
-function mapPasswordFieldComponentState(state: PasswordFieldComponentState): PasswordResetWorkerComponentState {
+function mapPasswordFieldState(state: PasswordFieldState): PasswordResetWorkerState {
     return { type: "field-password", state }
 }
 

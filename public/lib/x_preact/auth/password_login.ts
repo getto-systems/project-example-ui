@@ -7,7 +7,7 @@ import { LoginIDField } from "./field/login_id"
 import { PasswordField } from "./field/password"
 
 import { PasswordLoginComponent } from "../../auth/password_login/component"
-import { initialPasswordLoginComponentState } from "../../auth/password_login/data"
+import { initialPasswordLoginState } from "../../auth/password_login/data"
 
 import { LoginError } from "../../password_login/data"
 
@@ -17,7 +17,7 @@ interface PreactComponent {
 
 export function PasswordLogin(component: PasswordLoginComponent): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(initialPasswordLoginComponentState)
+        const [state, setState] = useState(initialPasswordLoginState)
         const submit = useRef<HTMLButtonElement>()
         useEffect(() => {
             component.init(setState)

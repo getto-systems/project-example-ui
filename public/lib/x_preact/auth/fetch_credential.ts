@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { ErrorView } from "./layout"
 
 import { FetchCredentialComponent } from "../../auth/fetch_credential/component"
-import { initialFetchCredentialComponentState } from "../../auth/fetch_credential/data"
+import { initialFetchCredentialState } from "../../auth/fetch_credential/data"
 
 import { FetchError } from "../../credential/data"
 
@@ -15,7 +15,7 @@ export interface PreactComponent {
 
 export function FetchCredential(component: FetchCredentialComponent): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(initialFetchCredentialComponentState)
+        const [state, setState] = useState(initialFetchCredentialState)
         useEffect(() => {
             component.init(setState)
             component.fetch()

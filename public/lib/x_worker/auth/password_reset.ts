@@ -6,13 +6,13 @@ const component = newPasswordResetComponent()
 const helper = newWorkerHelper()
 
 component.init((state) => {
-    ctx.postMessage(helper.mapPasswordResetComponentState(state))
+    ctx.postMessage(helper.mapPasswordResetState(state))
 })
 component.initLoginIDField((state) => {
-    ctx.postMessage(helper.mapLoginIDFieldComponentState(state))
+    ctx.postMessage(helper.mapLoginIDFieldState(state))
 })
 component.initPasswordField((state) => {
-    ctx.postMessage(helper.mapPasswordFieldComponentState(state))
+    ctx.postMessage(helper.mapPasswordFieldState(state))
 })
 
 ctx.addEventListener("message", (event) => {

@@ -8,7 +8,7 @@ import { initPagePathname, scriptPathToString } from "../../script/adapter"
 
 import { LoadApplicationComponent } from "../../auth/load_application/component"
 
-import { initialLoadApplicationComponentState } from "../../auth/load_application/data"
+import { initialLoadApplicationState } from "../../auth/load_application/data"
 
 import { CheckError } from "../../script/data"
 
@@ -18,7 +18,7 @@ export interface PreactComponent {
 
 export function LoadApplication(component: LoadApplicationComponent): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(initialLoadApplicationComponentState)
+        const [state, setState] = useState(initialLoadApplicationState)
         useEffect(() => {
             component.init(setState)
             component.trigger({ type: "load", pagePathname: initPagePathname(new URL(location.toString())) })

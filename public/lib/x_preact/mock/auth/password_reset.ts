@@ -2,9 +2,9 @@ import { initInputValue } from "../../../field/adapter"
 
 import { PasswordResetComponent } from "../../../auth/password_reset/component"
 
-import { PasswordResetComponentState, PasswordResetComponentOperation } from "../../../auth/password_reset/data"
-import { LoginIDFieldComponentState } from "../../../auth/field/login_id/data"
-import { PasswordFieldComponentState } from "../../../auth/field/password/data"
+import { PasswordResetState, PasswordResetComponentOperation } from "../../../auth/password_reset/data"
+import { LoginIDFieldState } from "../../../auth/field/login_id/data"
+import { PasswordFieldState } from "../../../auth/field/password/data"
 
 export function newPasswordResetComponent(): PasswordResetComponent {
     const init = new Init()
@@ -16,42 +16,42 @@ export function newPasswordResetComponent(): PasswordResetComponent {
 }
 
 class Init {
-    initialReset(): PasswordResetComponentState {
+    initialReset(): PasswordResetState {
         return { type: "initial-reset" }
     }
-    tryToReset(): PasswordResetComponentState {
+    tryToReset(): PasswordResetState {
         return { type: "try-to-reset" }
     }
-    delayedToReset(): PasswordResetComponentState {
+    delayedToReset(): PasswordResetState {
         return { type: "delayed-to-reset" }
     }
-    failedToReset_validation_error(): PasswordResetComponentState {
+    failedToReset_validation_error(): PasswordResetState {
         return { type: "failed-to-reset", err: { type: "validation-error" } }
     }
-    failedToReset_bad_request(): PasswordResetComponentState {
+    failedToReset_bad_request(): PasswordResetState {
         return { type: "failed-to-reset", err: { type: "bad-request" } }
     }
-    failedToReset_invalid_password_reset(): PasswordResetComponentState {
+    failedToReset_invalid_password_reset(): PasswordResetState {
         return { type: "failed-to-reset", err: { type: "invalid-password-reset" } }
     }
-    failedToReset_server_error(): PasswordResetComponentState {
+    failedToReset_server_error(): PasswordResetState {
         return { type: "failed-to-reset", err: { type: "server-error" } }
     }
-    failedToReset_bad_response(): PasswordResetComponentState {
+    failedToReset_bad_response(): PasswordResetState {
         return { type: "failed-to-reset", err: { type: "bad-response", err: "error" } }
     }
-    failedToReset_infra_error(): PasswordResetComponentState {
+    failedToReset_infra_error(): PasswordResetState {
         return { type: "failed-to-reset", err: { type: "infra-error", err: "error" } }
     }
 
-    loginIDValid(): LoginIDFieldComponentState {
+    loginIDValid(): LoginIDFieldState {
         return { type: "succeed-to-update-login_id", result: { valid: true } }
     }
-    loginIDInvalid_empty(): LoginIDFieldComponentState {
+    loginIDInvalid_empty(): LoginIDFieldState {
         return { type: "succeed-to-update-login_id", result: { valid: false, err: ["empty"] } }
     }
 
-    passwordValid(): PasswordFieldComponentState {
+    passwordValid(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
             result: { valid: true },
@@ -59,7 +59,7 @@ class Init {
             view: { show: false },
         }
     }
-    passwordInvalid_empty(): PasswordFieldComponentState {
+    passwordInvalid_empty(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
             result: { valid: false, err: ["empty"] },
@@ -67,7 +67,7 @@ class Init {
             view: { show: false },
         }
     }
-    passwordInvalid_too_long(): PasswordFieldComponentState {
+    passwordInvalid_too_long(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
             result: { valid: false, err: ["too-long"] },
@@ -75,7 +75,7 @@ class Init {
             view: { show: false },
         }
     }
-    passwordComplexInvalid_too_long(): PasswordFieldComponentState {
+    passwordComplexInvalid_too_long(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
             result: { valid: false, err: ["too-long"] },
@@ -83,7 +83,7 @@ class Init {
             view: { show: false },
         }
     }
-    passwordComplex(): PasswordFieldComponentState {
+    passwordComplex(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
             result: { valid: true },
@@ -91,7 +91,7 @@ class Init {
             view: { show: false },
         }
     }
-    passwordView(): PasswordFieldComponentState {
+    passwordView(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
             result: { valid: true },
@@ -102,30 +102,30 @@ class Init {
 }
 
 class Component implements PasswordResetComponent {
-    state: PasswordResetComponentState
-    loginID: LoginIDFieldComponentState
-    password: PasswordFieldComponentState
+    state: PasswordResetState
+    loginID: LoginIDFieldState
+    password: PasswordFieldState
 
     constructor(
-        state: PasswordResetComponentState,
-        loginID: LoginIDFieldComponentState,
-        password: PasswordFieldComponentState,
+        state: PasswordResetState,
+        loginID: LoginIDFieldState,
+        password: PasswordFieldState,
     ) {
         this.state = state
         this.loginID = loginID
         this.password = password
     }
 
-    hook(_stateChanged: Publisher<PasswordResetComponentState>): void {
+    hook(_stateChanged: Publisher<PasswordResetState>): void {
         // mock では特に何もしない
     }
-    init(stateChanged: Publisher<PasswordResetComponentState>): void {
+    init(stateChanged: Publisher<PasswordResetState>): void {
         stateChanged(this.state)
     }
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void {
+    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void {
         stateChanged(this.loginID)
     }
-    initPasswordField(stateChanged: Publisher<PasswordFieldComponentState>): void {
+    initPasswordField(stateChanged: Publisher<PasswordFieldState>): void {
         stateChanged(this.password)
     }
     terminate(): void {

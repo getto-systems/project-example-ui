@@ -1,6 +1,6 @@
 import { StoreCredentialComponent } from "../../../auth/store_credential/component"
 
-import { StoreCredentialComponentState } from "../../../auth/store_credential/data"
+import { StoreCredentialState } from "../../../auth/store_credential/data"
 
 import { AuthCredential } from "../../../credential/data"
 
@@ -9,22 +9,22 @@ export function newStoreCredentialComponent(): StoreCredentialComponent {
 }
 
 class Init {
-    failedToStore(): StoreCredentialComponentState {
+    failedToStore(): StoreCredentialState {
         return { type: "failed-to-store", err: { type: "infra-error", err: "error" } }
     }
 }
 
 class Component implements StoreCredentialComponent {
-    state: StoreCredentialComponentState
+    state: StoreCredentialState
 
-    constructor(state: StoreCredentialComponentState) {
+    constructor(state: StoreCredentialState) {
         this.state = state
     }
 
-    hook(_stateChanged: Publisher<StoreCredentialComponentState>): void {
+    hook(_stateChanged: Publisher<StoreCredentialState>): void {
         // mock では特に何もしない
     }
-    init(stateChanged: Publisher<StoreCredentialComponentState>): void {
+    init(stateChanged: Publisher<StoreCredentialState>): void {
         stateChanged(this.state)
     }
     terminate(): void {

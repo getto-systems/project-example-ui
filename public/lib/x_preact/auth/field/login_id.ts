@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { initInputValue } from "../../../field/adapter"
 
-import { LoginIDFieldComponentState, initialLoginIDFieldComponentState } from "../../../auth/field/login_id/data"
+import { LoginIDFieldState, initialLoginIDFieldState } from "../../../auth/field/login_id/data"
 
 import { InputValue } from "../../../field/data"
 
@@ -13,7 +13,7 @@ interface PreactComponent {
 }
 
 interface FormComponent {
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void
+    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void
     trigger(operation: FieldOperation): Promise<void>
 }
 
@@ -22,7 +22,7 @@ type FieldOperation =
 
 export function LoginIDField(component: FormComponent): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(initialLoginIDFieldComponentState)
+        const [state, setState] = useState(initialLoginIDFieldState)
         const input = useRef<HTMLInputElement>()
 
         useEffect(() => {
@@ -47,7 +47,7 @@ export function LoginIDField(component: FormComponent): PreactComponent {
             }
         }
 
-        function error(state: LoginIDFieldComponentState): VNode[] {
+        function error(state: LoginIDFieldState): VNode[] {
             if (state.result.valid) {
                 return []
             }

@@ -1,10 +1,10 @@
 import {
-    PasswordResetSessionComponentState,
+    PasswordResetSessionState,
     PasswordResetSessionComponentOperation,
-    PasswordResetSessionWorkerComponentState,
+    PasswordResetSessionWorkerState,
 } from "./data"
 
-import { LoginIDFieldComponentState } from "../field/login_id/data"
+import { LoginIDFieldState } from "../field/login_id/data"
 
 import { PasswordResetAction } from "../../password_reset/action"
 import { LoginIDFieldAction } from "../../field/login_id/action"
@@ -15,15 +15,15 @@ export interface PasswordResetSessionComponentAction {
 }
 
 export interface PasswordResetSessionComponent {
-    init(stateChanged: Publisher<PasswordResetSessionComponentState>): void
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void
+    init(stateChanged: Publisher<PasswordResetSessionState>): void
+    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void
     terminate(): void
     trigger(operation: PasswordResetSessionComponentOperation): Promise<void>
 }
 
 export interface PasswordResetSessionWorkerComponentHelper {
-    mapPasswordResetSessionComponentState(state: PasswordResetSessionComponentState): PasswordResetSessionWorkerComponentState
-    mapLoginIDFieldComponentState(state: LoginIDFieldComponentState): PasswordResetSessionWorkerComponentState
+    mapPasswordResetSessionState(state: PasswordResetSessionState): PasswordResetSessionWorkerState
+    mapLoginIDFieldState(state: LoginIDFieldState): PasswordResetSessionWorkerState
 }
 
 interface Publisher<T> {

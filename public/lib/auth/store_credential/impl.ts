@@ -1,6 +1,6 @@
 import { StoreCredentialComponent, StoreCredentialComponentAction } from "./component"
 
-import { StoreCredentialComponentState } from "./data"
+import { StoreCredentialState } from "./data"
 
 import { AuthCredential, StoreEvent } from "../../credential/data"
 
@@ -9,7 +9,7 @@ export function initStoreCredentialComponent(action: StoreCredentialComponentAct
 }
 
 class Component implements StoreCredentialComponent {
-    listener: Publisher<StoreCredentialComponentState>[]
+    listener: Publisher<StoreCredentialState>[]
     action: StoreCredentialComponentAction
 
     constructor(action: StoreCredentialComponentAction) {
@@ -17,16 +17,16 @@ class Component implements StoreCredentialComponent {
         this.action = action
     }
 
-    hook(pub: Publisher<StoreCredentialComponentState>): void {
+    hook(pub: Publisher<StoreCredentialState>): void {
         this.listener.push(pub)
     }
-    init(stateChanged: Publisher<StoreCredentialComponentState>): void {
+    init(stateChanged: Publisher<StoreCredentialState>): void {
         this.action.credential.sub.onStore((event) => {
             const state = map(event)
             this.listener.forEach(pub => pub(state))
             stateChanged(state)
 
-            function map(event: StoreEvent): StoreCredentialComponentState {
+            function map(event: StoreEvent): StoreCredentialState {
                 return event
             }
         })

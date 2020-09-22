@@ -1,31 +1,31 @@
 import { LoadApplicationComponent } from "../../../auth/load_application/component"
 
-import { LoadApplicationComponentState, LoadApplicationComponentOperation } from "../../../auth/load_application/data"
+import { LoadApplicationState, LoadApplicationComponentOperation } from "../../../auth/load_application/data"
 
 export function newLoadApplicationComponent(): LoadApplicationComponent {
     return new Component(new Init().failedToLoad_infra_error())
 }
 
 class Init {
-    failedToLoad_not_found(): LoadApplicationComponentState {
+    failedToLoad_not_found(): LoadApplicationState {
         return { type: "failed-to-load", err: { type: "not-found" } }
     }
-    failedToLoad_infra_error(): LoadApplicationComponentState {
+    failedToLoad_infra_error(): LoadApplicationState {
         return { type: "failed-to-load", err: { type: "infra-error", err: "error" } }
     }
 }
 
 class Component implements LoadApplicationComponent {
-    state: LoadApplicationComponentState
+    state: LoadApplicationState
 
-    constructor(state: LoadApplicationComponentState) {
+    constructor(state: LoadApplicationState) {
         this.state = state
     }
 
-    hook(_stateChanged: Publisher<LoadApplicationComponentState>): void {
+    hook(_stateChanged: Publisher<LoadApplicationState>): void {
         // mock では特に何もしない
     }
-    init(stateChanged: Publisher<LoadApplicationComponentState>): void {
+    init(stateChanged: Publisher<LoadApplicationState>): void {
         stateChanged(this.state)
     }
     terminate(): void {

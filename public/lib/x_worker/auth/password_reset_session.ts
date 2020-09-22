@@ -6,10 +6,10 @@ const component = newPasswordResetSessionComponent()
 const helper = newWorkerHelper()
 
 component.init((state) => {
-    ctx.postMessage(helper.mapPasswordResetSessionComponentState(state))
+    ctx.postMessage(helper.mapPasswordResetSessionState(state))
 })
 component.initLoginIDField((state) => {
-    ctx.postMessage(helper.mapLoginIDFieldComponentState(state))
+    ctx.postMessage(helper.mapLoginIDFieldState(state))
 })
 
 ctx.addEventListener("message", (event) => {

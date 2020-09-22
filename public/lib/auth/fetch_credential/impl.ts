@@ -1,6 +1,6 @@
 import { FetchCredentialComponent, FetchCredentialComponentAction } from "./component"
 
-import { FetchCredentialComponentState } from "./data"
+import { FetchCredentialState } from "./data"
 
 import { FetchEvent } from "../../credential/data"
 
@@ -9,7 +9,7 @@ export function initFetchCredentialComponent(action: FetchCredentialComponentAct
 }
 
 class Component implements FetchCredentialComponent {
-    listener: Publisher<FetchCredentialComponentState>[]
+    listener: Publisher<FetchCredentialState>[]
     action: FetchCredentialComponentAction
 
     constructor(action: FetchCredentialComponentAction) {
@@ -17,17 +17,17 @@ class Component implements FetchCredentialComponent {
         this.action = action
     }
 
-    hook(pub: Publisher<FetchCredentialComponentState>): void {
+    hook(pub: Publisher<FetchCredentialState>): void {
         this.listener.push(pub)
     }
-    init(stateChanged: Publisher<FetchCredentialComponentState>): void {
+    init(stateChanged: Publisher<FetchCredentialState>): void {
         this.action.credential.sub.onFetch((event) => {
             const state = map(event)
             this.listener.forEach(pub => pub(state))
             stateChanged(state)
         })
 
-        function map(event: FetchEvent): FetchCredentialComponentState {
+        function map(event: FetchEvent): FetchCredentialState {
             return event
         }
     }

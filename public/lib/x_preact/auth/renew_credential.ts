@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { ErrorView } from "./layout"
 
 import { RenewCredentialComponent } from "../../auth/renew_credential/component"
-import { initialRenewCredentialComponentState } from "../../auth/renew_credential/data"
+import { initialRenewCredentialState } from "../../auth/renew_credential/data"
 
 import { TicketNonce, RenewError } from "../../credential/data"
 
@@ -15,7 +15,7 @@ export interface PreactComponent {
 
 export function RenewCredential(component: RenewCredentialComponent, ticketNonce: TicketNonce): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(initialRenewCredentialComponentState)
+        const [state, setState] = useState(initialRenewCredentialState)
         useEffect(() => {
             component.init(setState)
             component.renew(ticketNonce)
