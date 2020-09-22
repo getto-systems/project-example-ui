@@ -60,7 +60,7 @@ export function PasswordResetSession(component: PasswordResetSessionComponent): 
         function errorView(title: VNode, content: VNode): VNode {
             return LoginView(html`
                 <section class="login__message">
-                    <h3 class="login__message__header">${title}</h3>
+                    <h3 class="login__message__title">${title}</h3>
                     <section class="login__message__body paragraph">
                         ${content}
                         <div class="vertical vertical_medium"></div>
@@ -120,7 +120,7 @@ export function PasswordResetSession(component: PasswordResetSessionComponent): 
             case "succeed-to-send-token":
                 return LoginView(html`
                     <section class="login__message">
-                        <h3 class="login__message__header">リセットトークンを送信しました</h3>
+                        <h3 class="login__message__title">リセットトークンを送信しました</h3>
                         <section class="login__message__body paragraph">
                             ${sendTokenMessage(state.dest)}
                         </section>
