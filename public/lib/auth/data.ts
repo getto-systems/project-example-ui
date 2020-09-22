@@ -1,7 +1,7 @@
 import { AuthCredential, TicketNonce } from "../credential/data"
 import { ResetToken } from "../password_reset/data"
 
-export type AuthUsecaseState =
+export type AuthState =
     Readonly<{ type: "fetch-credential" }> |
     Readonly<{ type: "renew-credential", ticketNonce: TicketNonce }> |
     Readonly<{ type: "store-credential", authCredential: AuthCredential }> |
@@ -10,4 +10,4 @@ export type AuthUsecaseState =
     Readonly<{ type: "password-reset-session" }> |
     Readonly<{ type: "password-reset", resetToken: ResetToken }>
 
-export const initialAuthUsecaseState: AuthUsecaseState = { type: "fetch-credential" }
+export const initialAuthState: AuthState = { type: "fetch-credential" }

@@ -11,11 +11,11 @@ import { PasswordLogin } from "./password_login"
 import { PasswordResetSession } from "./password_reset_session"
 
 import { AuthUsecase } from "../../auth/component"
-import { initialAuthUsecaseState } from "../../auth/data"
+import { initialAuthState } from "../../auth/data"
 
 export function Main(usecase: AuthUsecase) {
     return (): VNode => {
-        const [state, setState] = useState(initialAuthUsecaseState)
+        const [state, setState] = useState(initialAuthState)
         useEffect(() => {
             usecase.init(setState)
             return () => usecase.terminate()
