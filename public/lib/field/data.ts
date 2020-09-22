@@ -12,11 +12,11 @@ export function invalidContent<T>(): Content<T> {
 
 export type Valid<T> =
     Readonly<{ valid: true }> |
-    Readonly<{ valid: false, err: Array<T> }>
+    Readonly<{ valid: false, err: T[] }>
 export function noError<T>(): Valid<T> {
     return { valid: true }
 }
-export function hasError<T>(err: Array<T>): Valid<T> {
+export function hasError<T>(err: T[]): Valid<T> {
     if (err.length === 0) {
         return { valid: true }
     }

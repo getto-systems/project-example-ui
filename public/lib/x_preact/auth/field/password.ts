@@ -49,7 +49,7 @@ export function PasswordField(component: FormComponent): PreactComponent {
             }
         }
 
-        function error(state: PasswordFieldComponentState): Array<VNode> {
+        function error(state: PasswordFieldComponentState): VNode[] {
             if (state.result.valid) {
                 return []
             }

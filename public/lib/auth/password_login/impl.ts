@@ -136,7 +136,7 @@ class WorkerComponent implements PasswordLoginComponent {
             this.worker = { set: true, instance }
         }
     }
-    initWorker(init: WorkerInit, stack: Array<WorkerSetup>, stateChanged: Publisher<PasswordLoginComponentState>): Worker {
+    initWorker(init: WorkerInit, stack: WorkerSetup[], stateChanged: Publisher<PasswordLoginComponentState>): Worker {
         const worker = init()
         worker.addEventListener("message", (event) => {
             const state = event.data as PasswordLoginWorkerComponentState
@@ -211,7 +211,7 @@ interface Publisher<T> {
 }
 
 type WorkerHolder =
-    Readonly<{ set: false, stack: Array<WorkerSetup>, init: WorkerInit }> |
+    Readonly<{ set: false, stack: WorkerSetup[], init: WorkerInit }> |
     Readonly<{ set: true, instance: Worker }>
 
 interface WorkerInit {
