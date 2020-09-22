@@ -9,23 +9,21 @@ export function initRenewCredentialComponent(action: RenewCredentialComponentAct
 }
 
 class Component implements RenewCredentialComponent {
-    holder: PublisherHolder<RenewCredentialComponentState>
+    listener: Publisher<RenewCredentialComponentState>[]
     action: RenewCredentialComponentAction
 
     constructor(action: RenewCredentialComponentAction) {
-        this.holder = { set: false }
+        this.listener = []
         this.action = action
     }
 
     hook(pub: Publisher<RenewCredentialComponentState>): void {
-        this.holder = { set: true, pub }
+        this.listener.push(pub)
     }
     init(stateChanged: Publisher<RenewCredentialComponentState>): void {
         this.action.credential.sub.onRenew((event) => {
             const state = map(event)
-            if (this.holder.set) {
-                this.holder.pub(state)
-            }
+            this.listener.forEach(pub => pub(state))
             stateChanged(state)
         })
 
@@ -41,10 +39,6 @@ class Component implements RenewCredentialComponent {
         return this.action.credential.renew(ticketNonce)
     }
 }
-
-type PublisherHolder<T> =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, pub: Publisher<T> }>
 
 interface Publisher<T> {
     (state: T): void

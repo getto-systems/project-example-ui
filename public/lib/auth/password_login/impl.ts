@@ -32,7 +32,7 @@ export function initPasswordLoginWorkerComponentHelper(): PasswordLoginWorkerCom
 class Component implements PasswordLoginComponent {
     action: PasswordLoginComponentAction
 
-    holder: PublisherHolder<PasswordLoginComponentState>
+    listener: Publisher<PasswordLoginComponentState>[]
 
     field: {
         loginID: LoginIDField
@@ -47,7 +47,7 @@ class Component implements PasswordLoginComponent {
     constructor(action: PasswordLoginComponentAction) {
         this.action = action
 
-        this.holder = { set: false }
+        this.listener = []
 
         this.field = {
             loginID: this.action.loginIDField.initLoginIDField(),
@@ -68,14 +68,12 @@ class Component implements PasswordLoginComponent {
     }
 
     hook(pub: Publisher<PasswordLoginComponentState>): void {
-        this.holder = { set: true, pub }
+        this.listener.push(pub)
     }
     init(stateChanged: Publisher<PasswordLoginComponentState>): void {
         this.action.passwordLogin.sub.onLoginEvent((event) => {
             const state = map(event)
-            if (this.holder.set) {
-                this.holder.pub(state)
-            }
+            this.listener.forEach(pub => pub(state))
             stateChanged(state)
 
             function map(event: LoginEvent): PasswordLoginComponentState {
@@ -118,22 +116,20 @@ class Component implements PasswordLoginComponent {
 
 class WorkerComponent implements PasswordLoginComponent {
     worker: WorkerHolder
-    holder: PublisherHolder<PasswordLoginComponentState>
+    listener: Publisher<PasswordLoginComponentState>[]
 
     constructor(init: WorkerInit) {
         this.worker = { set: false, stack: [], init }
-        this.holder = { set: false }
+        this.listener = []
     }
 
     hook(pub: Publisher<PasswordLoginComponentState>): void {
-        this.holder = { set: true, pub }
+        this.listener.push(pub)
     }
     init(stateChanged: Publisher<PasswordLoginComponentState>): void {
         if (!this.worker.set) {
             const instance = this.initWorker(this.worker.init, this.worker.stack, (state) => {
-                if (this.holder.set) {
-                    this.holder.pub(state)
-                }
+                this.listener.forEach(pub => pub(state))
                 stateChanged(state)
             })
 
@@ -209,10 +205,6 @@ function mapLoginIDFieldComponentState(state: LoginIDFieldComponentState): Passw
 function mapPasswordFieldComponentState(state: PasswordFieldComponentState): PasswordLoginWorkerComponentState {
     return { type: "field-password", state }
 }
-
-type PublisherHolder<T> =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, pub: Publisher<T> }>
 
 interface Publisher<T> {
     (state: T): void

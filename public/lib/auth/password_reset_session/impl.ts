@@ -108,22 +108,14 @@ class Component implements PasswordResetSessionComponent {
 
 class WorkerComponent implements PasswordResetSessionComponent {
     worker: WorkerHolder
-    holder: PublisherHolder<PasswordResetSessionComponentState>
 
     constructor(init: WorkerInit) {
         this.worker = { set: false, stack: [], init }
-        this.holder = { set: false }
     }
 
-    hook(pub: Publisher<PasswordResetSessionComponentState>): void {
-        this.holder = { set: true, pub }
-    }
     init(stateChanged: Publisher<PasswordResetSessionComponentState>): void {
         if (!this.worker.set) {
             const instance = this.initWorker(this.worker.init, this.worker.stack, (state) => {
-                if (this.holder.set) {
-                    this.holder.pub(state)
-                }
                 stateChanged(state)
             })
             this.worker = { set: true, instance }
@@ -179,10 +171,6 @@ function mapPasswordResetSessionComponentState(state: PasswordResetSessionCompon
 function mapLoginIDFieldComponentState(state: LoginIDFieldComponentState): PasswordResetSessionWorkerComponentState {
     return { type: "field-login_id", state }
 }
-
-type PublisherHolder<T> =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, pub: Publisher<T> }>
 
 interface Publisher<T> {
     (state: T): void

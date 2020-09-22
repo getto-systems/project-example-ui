@@ -79,50 +79,40 @@ class Action implements CredentialAction {
 }
 
 class EventPubSub implements CredentialEventPublisher, CredentialEventSubscriber {
-    holder: {
-        fetch: PublisherHolder<FetchEvent>
-        renew: PublisherHolder<RenewEvent>
-        store: PublisherHolder<StoreEvent>
+    listener: {
+        fetch: Publisher<FetchEvent>[]
+        renew: Publisher<RenewEvent>[]
+        store: Publisher<StoreEvent>[]
     }
 
     constructor() {
-        this.holder = {
-            fetch: { set: false },
-            renew: { set: false },
-            store: { set: false },
+        this.listener = {
+            fetch: [],
+            renew: [],
+            store: [],
         }
     }
 
     onFetch(pub: Publisher<FetchEvent>): void {
-        this.holder.fetch = { set: true, pub }
+        this.listener.fetch.push(pub)
     }
     onRenew(pub: Publisher<RenewEvent>): void {
-        this.holder.renew = { set: true, pub }
+        this.listener.renew.push(pub)
     }
     onStore(pub: Publisher<StoreEvent>): void {
-        this.holder.store = { set: true, pub }
+        this.listener.store.push(pub)
     }
 
     publishFetchEvent(event: FetchEvent): void {
-        if (this.holder.fetch.set) {
-            this.holder.fetch.pub(event)
-        }
+        this.listener.fetch.forEach(pub => pub(event))
     }
     publishRenewEvent(event: RenewEvent): void {
-        if (this.holder.renew.set) {
-            this.holder.renew.pub(event)
-        }
+        this.listener.renew.forEach(pub => pub(event))
     }
     publishStoreEvent(event: StoreEvent): void {
-        if (this.holder.store.set) {
-            this.holder.store.pub(event)
-        }
+        this.listener.store.forEach(pub => pub(event))
     }
 }
-
-type PublisherHolder<T> =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, pub: Publisher<T> }>
 
 interface Publisher<T> {
     (state: T): void

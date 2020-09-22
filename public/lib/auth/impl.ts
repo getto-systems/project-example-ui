@@ -11,7 +11,7 @@ export function initAuthUsecase(currentLocation: Location, component: AuthCompon
 }
 
 class Usecase implements AuthUsecase {
-    holder: UsecasePublisherHolder
+    holder: StateHolder
     component: AuthComponent
 
     currentLocation: Location
@@ -120,7 +120,7 @@ function loginState(currentLocation: Location): AuthUsecaseState {
     return { type: "password-login" }
 }
 
-type UsecasePublisherHolder =
+type StateHolder =
     Readonly<{ set: false, stack: false }> |
     Readonly<{ set: false, stack: true, state: AuthUsecaseState }> |
     Readonly<{ set: true, stack: false, pub: Publisher<AuthUsecaseState> }>

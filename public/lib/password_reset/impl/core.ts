@@ -189,44 +189,38 @@ class StatusPoller {
 }
 
 class EventPubSub implements PasswordResetEventPublisher, PasswordResetEventSubscriber {
-    holder: {
-        createSession: PublisherHolder<CreateSessionEvent>
-        pollingStatus: PublisherHolder<PollingStatusEvent>
-        reset: PublisherHolder<ResetEvent>
+    listener: {
+        createSession: Publisher<CreateSessionEvent>[]
+        pollingStatus: Publisher<PollingStatusEvent>[]
+        reset: Publisher<ResetEvent>[]
     }
 
     constructor() {
-        this.holder = {
-            createSession: { set: false },
-            pollingStatus: { set: false },
-            reset: { set: false },
+        this.listener = {
+            createSession: [],
+            pollingStatus: [],
+            reset: [],
         }
     }
 
     onCreateSessionEvent(pub: Publisher<CreateSessionEvent>): void {
-        this.holder.createSession = { set: true, pub }
+        this.listener.createSession.push(pub)
     }
     onPollingStatusEvent(pub: Publisher<PollingStatusEvent>): void {
-        this.holder.pollingStatus = { set: true, pub }
+        this.listener.pollingStatus.push(pub)
     }
     onResetEvent(pub: Publisher<ResetEvent>): void {
-        this.holder.reset = { set: true, pub }
+        this.listener.reset.push(pub)
     }
 
     publishCreateSessionEvent(event: CreateSessionEvent): void {
-        if (this.holder.createSession.set) {
-            this.holder.createSession.pub(event)
-        }
+        this.listener.createSession.forEach(pub => pub(event))
     }
     publishPollingStatusEvent(event: PollingStatusEvent): void {
-        if (this.holder.pollingStatus.set) {
-            this.holder.pollingStatus.pub(event)
-        }
+        this.listener.pollingStatus.forEach(pub => pub(event))
     }
     publishResetEvent(event: ResetEvent): void {
-        if (this.holder.reset.set) {
-            this.holder.reset.pub(event)
-        }
+        this.listener.reset.forEach(pub => pub(event))
     }
 }
 
@@ -260,10 +254,6 @@ type WaitTime = { wait_milli_second: number }
 interface DelayedHandler {
     (): void
 }
-
-type PublisherHolder<T> =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, pub: Publisher<T> }>
 
 interface Publisher<T> {
     (status: T): void

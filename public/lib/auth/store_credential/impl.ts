@@ -9,23 +9,21 @@ export function initStoreCredentialComponent(action: StoreCredentialComponentAct
 }
 
 class Component implements StoreCredentialComponent {
-    holder: PublisherHolder<StoreCredentialComponentState>
+    listener: Publisher<StoreCredentialComponentState>[]
     action: StoreCredentialComponentAction
 
     constructor(action: StoreCredentialComponentAction) {
-        this.holder = { set: false }
+        this.listener = []
         this.action = action
     }
 
     hook(pub: Publisher<StoreCredentialComponentState>): void {
-        this.holder = { set: true, pub }
+        this.listener.push(pub)
     }
     init(stateChanged: Publisher<StoreCredentialComponentState>): void {
         this.action.credential.sub.onStore((event) => {
             const state = map(event)
-            if (this.holder.set) {
-                this.holder.pub(state)
-            }
+            this.listener.forEach(pub => pub(state))
             stateChanged(state)
 
             function map(event: StoreEvent): StoreCredentialComponentState {
@@ -40,10 +38,6 @@ class Component implements StoreCredentialComponent {
         return this.action.credential.store(authCredential)
     }
 }
-
-type PublisherHolder<T> =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, pub: Publisher<T> }>
 
 interface Publisher<T> {
     (state: T): void

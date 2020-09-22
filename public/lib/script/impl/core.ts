@@ -41,30 +41,24 @@ function secureScriptPath(secureHost: string, pagePathname: PagePathname): Scrip
 }
 
 class EventPubSub implements ScriptEventPublisher, ScriptEventSubscriber {
-    holder: {
-        script: PublisherHolder<ScriptEvent>
+    listener: {
+        script: Publisher<ScriptEvent>[]
     }
 
     constructor() {
-        this.holder = {
-            script: { set: false },
+        this.listener = {
+            script: [],
         }
     }
 
     onScriptEvent(pub: Publisher<ScriptEvent>): void {
-        this.holder.script = { set: true, pub }
+        this.listener.script.push(pub)
     }
 
     publishScriptEvent(event: ScriptEvent): void {
-        if (this.holder.script.set) {
-            this.holder.script.pub(event)
-        }
+        this.listener.script.forEach(pub => pub(event))
     }
 }
-
-type PublisherHolder<T> =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, pub: Publisher<T> }>
 
 interface Publisher<T> {
     (state: T): void
