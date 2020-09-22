@@ -2,10 +2,12 @@ import {
     PasswordResetSessionClient,
     SessionResponse, createSessionSuccess, createSessionFailed,
     SendTokenResponse,
-    StatusResponse, getStatusDone, getStatusPolling, getStatusFailed,
+    GetStatusResponse, getStatusSend, getStatusPolling, getStatusFailed,
 } from "../../../infra"
 
-import { Session, PollingStatusError } from "../../../data"
+import { initSessionID } from "../../../adapter"
+
+import { SessionID, PollingStatusError } from "../../../data"
 import { LoginID } from "../../../../login_id/data"
 
 export function initSimulatePasswordResetSessionClient(targetLoginID: LoginID): PasswordResetSessionClient {
@@ -14,15 +16,15 @@ export function initSimulatePasswordResetSessionClient(targetLoginID: LoginID): 
 
 type TokenState =
     Readonly<{ state: "initial" }> |
-    Readonly<{ state: "waiting", since: string }> |
-    Readonly<{ state: "sending", since: string }> |
-    Readonly<{ state: "success", at: string }> |
+    Readonly<{ state: "waiting" }> |
+    Readonly<{ state: "sending" }> |
+    Readonly<{ state: "success" }> |
     Readonly<{ state: "failed", err: PollingStatusError }>
 
 class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
     tokenState: TokenState = { state: "initial" }
 
-    targetSession = { sessionID: "session" }
+    targetSessionID = initSessionID("session-id")
 
     targetLoginID: LoginID
 
@@ -34,7 +36,7 @@ class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
         return new Promise((resolve) => {
             setTimeout(() => {
                 if (loginID === this.targetLoginID) {
-                    resolve(createSessionSuccess(this.targetSession))
+                    resolve(createSessionSuccess(this.targetSessionID))
                 } else {
                     resolve(createSessionFailed({ type: "invalid-password-reset" }))
                 }
@@ -43,13 +45,13 @@ class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
     }
 
     toWaiting(): void {
-        this.tokenState = { state: "waiting", since: "" }
+        this.tokenState = { state: "waiting" }
     }
     toSending(): void {
-        this.tokenState = { state: "sending", since: "" }
+        this.tokenState = { state: "sending" }
     }
     toSuccess(): void {
-        this.tokenState = { state: "success", at: "" }
+        this.tokenState = { state: "success" }
     }
 
     sendToken(): Promise<SendTokenResponse> {
@@ -64,17 +66,17 @@ class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
         })
     }
 
-    getStatus(session: Session): Promise<StatusResponse> {
+    getStatus(sessionID: SessionID): Promise<GetStatusResponse> {
         return new Promise((resolve) => {
             ((simulate) => {
                 setTimeout(() => {
-                    resolve(simulate(session))
+                    resolve(simulate(sessionID))
                 }, 5 * 1000)
             })(this.getStatusSimulate)
         })
     }
-    getStatusSimulate(session: Session): StatusResponse {
-        if (session.sessionID !== this.targetSession.sessionID) {
+    getStatusSimulate(sessionID: SessionID): GetStatusResponse {
+        if (sessionID !== this.targetSessionID) {
             return getStatusFailed({ type: "invalid-password-reset" })
         }
 
@@ -83,11 +85,13 @@ class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
                 return getStatusFailed({ type: "infra-error", err: "not initialized" })
 
             case "waiting":
+                return getStatusPolling({ type: "log" }, { sending: false })
+
             case "sending":
-                return getStatusPolling({ type: "log" }, { sending: false, since: this.tokenState.since })
+                return getStatusPolling({ type: "log" }, { sending: true })
 
             case "success":
-                return getStatusDone({ type: "log" }, { success: true, at: this.tokenState.at })
+                return getStatusSend({ type: "log" })
 
             case "failed":
                 return getStatusFailed(this.tokenState.err)

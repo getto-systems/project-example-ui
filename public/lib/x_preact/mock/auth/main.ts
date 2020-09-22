@@ -8,13 +8,14 @@ import { newPasswordResetSessionComponent } from "./password_reset_session"
 import { newPasswordResetComponent } from "./password_reset"
 
 import { initTicketNonce, initApiRoles } from "../../../credential/adapter"
+import { initResetToken } from "../../../password_reset/adapter"
 
 import { AuthUsecase, AuthComponent } from "../../../auth/component"
 
 import { AuthUsecaseState } from "../../../auth/data"
 
 export function newAuthUsecase(): AuthUsecase {
-    return new Usecase(new Init().passwordLogin())
+    return new Usecase(new Init().passwordResetSession())
 }
 
 class Init {
@@ -43,7 +44,7 @@ class Init {
         return { type: "password-reset-session" }
     }
     passwordReset(): AuthUsecaseState {
-        return { type: "password-reset", resetToken: { resetToken: "reset-token" } }
+        return { type: "password-reset", resetToken: initResetToken("reset-token") }
     }
 }
 

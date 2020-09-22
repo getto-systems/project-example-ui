@@ -9,7 +9,7 @@ import { LoginIDFieldComponentState } from "../../../auth/field/login_id/data"
 export function newPasswordResetSessionComponent(): PasswordResetSessionComponent {
     const init = new Init()
     return new Component(
-        init.initialResetSession(),
+        init.succeedToSendToken(),
         init.loginIDValid(),
     )
 }
@@ -46,10 +46,10 @@ class Init {
         return { type: "try-to-polling-status" }
     }
     retryToPollingStatus_waiting(): PasswordResetSessionComponentState {
-        return { type: "retry-to-polling-status", status: { sending: false, since: "" } }
+        return { type: "retry-to-polling-status", dest: { type: "log" }, status: { sending: false } }
     }
     retryToPollingStatus_sending(): PasswordResetSessionComponentState {
-        return { type: "retry-to-polling-status", status: { sending: true, since: "" } }
+        return { type: "retry-to-polling-status", dest: { type: "log" }, status: { sending: true } }
     }
     failedToPollingStatus_bad_request(): PasswordResetSessionComponentState {
         return { type: "failed-to-polling-status", err: { type: "bad-request" } }
@@ -66,12 +66,11 @@ class Init {
     failedToPollingStatus_infra_error(): PasswordResetSessionComponentState {
         return { type: "failed-to-polling-status", err: { type: "infra-error", err: "error" } }
     }
-    succeedToSendToken_success(): PasswordResetSessionComponentState {
-        return { type: "succeed-to-send-token", status: { success: true, at: "" } }
+    failedToSendToken(): PasswordResetSessionComponentState {
+        return { type: "failed-to-send-token", dest: { type: "log" }, err: { type: "infra-error", err: "error" } }
     }
-    succeedToSendToken_failed(): PasswordResetSessionComponentState {
-        // TODO これは failed-to-send-token にするべきかな
-        return { type: "succeed-to-send-token", status: { success: false, at: "" } }
+    succeedToSendToken(): PasswordResetSessionComponentState {
+        return { type: "succeed-to-send-token", dest: { type: "log" } }
     }
 
     loginIDValid(): LoginIDFieldComponentState {

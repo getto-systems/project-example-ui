@@ -69,7 +69,7 @@ class Component implements PasswordResetSessionComponent {
                         return event
 
                     case "succeed-to-create-session":
-                        action.passwordReset.startPollingStatus(event.session)
+                        action.passwordReset.startPollingStatus(event.sessionID)
                         return { type: "try-to-polling-status" }
                 }
             }
