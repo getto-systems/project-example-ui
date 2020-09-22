@@ -1,6 +1,6 @@
 import { AuthCredential, RenewError } from "../../credential/data"
 
-export type RenewCredentialComponentState =
+export type RenewCredentialState =
     Readonly<{ type: "initial-renew" }> |
     Readonly<{ type: "try-to-renew" }> |
     Readonly<{ type: "delayed-to-renew" }> |
@@ -8,4 +8,4 @@ export type RenewCredentialComponentState =
     Readonly<{ type: "failed-to-renew", err: RenewError }> |
     Readonly<{ type: "succeed-to-renew", authCredential: AuthCredential }>
 
-export const initialRenewCredentialComponentState: RenewCredentialComponentState = { type: "initial-renew" }
+export const initialRenewCredentialState: RenewCredentialState = { type: "initial-renew" }

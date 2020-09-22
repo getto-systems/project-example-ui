@@ -1,10 +1,10 @@
-import { FetchCredentialComponentState } from "./data"
+import { FetchCredentialState } from "./data"
 
 import { CredentialAction } from "../../credential/action"
 
 export interface FetchCredentialComponent {
-    hook(stateChanged: Publisher<FetchCredentialComponentState>): void
-    init(stateChanged: Publisher<FetchCredentialComponentState>): void
+    hook(stateChanged: Publisher<FetchCredentialState>): void
+    init(stateChanged: Publisher<FetchCredentialState>): void
     terminate(): void
     fetch(): Promise<void>
 }

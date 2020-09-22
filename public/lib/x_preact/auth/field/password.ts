@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { initInputValue, inputValueToString } from "../../../field/adapter"
 
-import { PasswordFieldComponentState, initialPasswordFieldComponentState } from "../../../auth/field/password/data"
+import { PasswordFieldState, initialPasswordFieldState } from "../../../auth/field/password/data"
 
 import { PasswordView } from "../../../field/password/data"
 import { InputValue } from "../../../field/data"
@@ -14,7 +14,7 @@ interface PreactComponent {
 }
 
 interface FormComponent {
-    initPasswordField(stateChanged: Publisher<PasswordFieldComponentState>): void
+    initPasswordField(stateChanged: Publisher<PasswordFieldState>): void
     trigger(operation: FieldOperation): Promise<void>
 }
 
@@ -25,7 +25,7 @@ type FieldOperation =
 
 export function PasswordField(component: FormComponent): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(initialPasswordFieldComponentState)
+        const [state, setState] = useState(initialPasswordFieldState)
         const input = useRef<HTMLInputElement>()
 
         useEffect(() => {
@@ -49,7 +49,7 @@ export function PasswordField(component: FormComponent): PreactComponent {
             }
         }
 
-        function error(state: PasswordFieldComponentState): VNode[] {
+        function error(state: PasswordFieldState): VNode[] {
             if (state.result.valid) {
                 return []
             }

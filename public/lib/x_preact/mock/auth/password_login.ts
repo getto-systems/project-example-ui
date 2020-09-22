@@ -2,9 +2,9 @@ import { initInputValue } from "../../../field/adapter"
 
 import { PasswordLoginComponent } from "../../../auth/password_login/component"
 
-import { PasswordLoginComponentState, PasswordLoginComponentOperation } from "../../../auth/password_login/data"
-import { LoginIDFieldComponentState } from "../../../auth/field/login_id/data"
-import { PasswordFieldComponentState } from "../../../auth/field/password/data"
+import { PasswordLoginState, PasswordLoginComponentOperation } from "../../../auth/password_login/data"
+import { LoginIDFieldState } from "../../../auth/field/login_id/data"
+import { PasswordFieldState } from "../../../auth/field/password/data"
 
 export function newPasswordLoginComponent(): PasswordLoginComponent {
     const init = new Init()
@@ -16,42 +16,42 @@ export function newPasswordLoginComponent(): PasswordLoginComponent {
 }
 
 class Init {
-    initialLogin(): PasswordLoginComponentState {
+    initialLogin(): PasswordLoginState {
         return { type: "initial-login" }
     }
-    tryToLogin(): PasswordLoginComponentState {
+    tryToLogin(): PasswordLoginState {
         return { type: "try-to-login" }
     }
-    delayedToLogin(): PasswordLoginComponentState {
+    delayedToLogin(): PasswordLoginState {
         return { type: "delayed-to-login" }
     }
-    failedToLogin_validation_error(): PasswordLoginComponentState {
+    failedToLogin_validation_error(): PasswordLoginState {
         return { type: "failed-to-login", err: { type: "validation-error" } }
     }
-    failedToLogin_bad_request(): PasswordLoginComponentState {
+    failedToLogin_bad_request(): PasswordLoginState {
         return { type: "failed-to-login", err: { type: "bad-request" } }
     }
-    failedToLogin_invalid_password_login(): PasswordLoginComponentState {
+    failedToLogin_invalid_password_login(): PasswordLoginState {
         return { type: "failed-to-login", err: { type: "invalid-password-login" } }
     }
-    failedToLogin_server_error(): PasswordLoginComponentState {
+    failedToLogin_server_error(): PasswordLoginState {
         return { type: "failed-to-login", err: { type: "server-error" } }
     }
-    failedToLogin_bad_response(): PasswordLoginComponentState {
+    failedToLogin_bad_response(): PasswordLoginState {
         return { type: "failed-to-login", err: { type: "bad-response", err: "error" } }
     }
-    failedToLogin_infra_error(): PasswordLoginComponentState {
+    failedToLogin_infra_error(): PasswordLoginState {
         return { type: "failed-to-login", err: { type: "infra-error", err: "error" } }
     }
 
-    loginIDValid(): LoginIDFieldComponentState {
+    loginIDValid(): LoginIDFieldState {
         return { type: "succeed-to-update-login_id", result: { valid: true } }
     }
-    loginIDInvalid_empty(): LoginIDFieldComponentState {
+    loginIDInvalid_empty(): LoginIDFieldState {
         return { type: "succeed-to-update-login_id", result: { valid: false, err: ["empty"] } }
     }
 
-    passwordValid(): PasswordFieldComponentState {
+    passwordValid(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
             result: { valid: true },
@@ -59,7 +59,7 @@ class Init {
             view: { show: false },
         }
     }
-    passwordInvalid_empty(): PasswordFieldComponentState {
+    passwordInvalid_empty(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
             result: { valid: false, err: ["empty"] },
@@ -67,7 +67,7 @@ class Init {
             view: { show: false },
         }
     }
-    passwordInvalid_too_long(): PasswordFieldComponentState {
+    passwordInvalid_too_long(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
             result: { valid: false, err: ["too-long"] },
@@ -75,7 +75,7 @@ class Init {
             view: { show: false },
         }
     }
-    passwordComplexInvalid_too_long(): PasswordFieldComponentState {
+    passwordComplexInvalid_too_long(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
             result: { valid: false, err: ["too-long"] },
@@ -83,7 +83,7 @@ class Init {
             view: { show: false },
         }
     }
-    passwordComplex(): PasswordFieldComponentState {
+    passwordComplex(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
             result: { valid: true },
@@ -91,7 +91,7 @@ class Init {
             view: { show: false },
         }
     }
-    passwordView(): PasswordFieldComponentState {
+    passwordView(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
             result: { valid: true },
@@ -102,30 +102,30 @@ class Init {
 }
 
 class Component implements PasswordLoginComponent {
-    state: PasswordLoginComponentState
-    loginID: LoginIDFieldComponentState
-    password: PasswordFieldComponentState
+    state: PasswordLoginState
+    loginID: LoginIDFieldState
+    password: PasswordFieldState
 
     constructor(
-        state: PasswordLoginComponentState,
-        loginID: LoginIDFieldComponentState,
-        password: PasswordFieldComponentState,
+        state: PasswordLoginState,
+        loginID: LoginIDFieldState,
+        password: PasswordFieldState,
     ) {
         this.state = state
         this.loginID = loginID
         this.password = password
     }
 
-    hook(_stateChanged: Publisher<PasswordLoginComponentState>): void {
+    hook(_stateChanged: Publisher<PasswordLoginState>): void {
         // mock では特に何もしない
     }
-    init(stateChanged: Publisher<PasswordLoginComponentState>): void {
+    init(stateChanged: Publisher<PasswordLoginState>): void {
         stateChanged(this.state)
     }
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void {
+    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void {
         stateChanged(this.loginID)
     }
-    initPasswordField(stateChanged: Publisher<PasswordFieldComponentState>): void {
+    initPasswordField(stateChanged: Publisher<PasswordFieldState>): void {
         stateChanged(this.password)
     }
     terminate(): void {

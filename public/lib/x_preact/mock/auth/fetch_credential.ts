@@ -1,28 +1,28 @@
 import { FetchCredentialComponent } from "../../../auth/fetch_credential/component"
 
-import { FetchCredentialComponentState } from "../../../auth/fetch_credential/data"
+import { FetchCredentialState } from "../../../auth/fetch_credential/data"
 
 export function newFetchCredentialComponent(): FetchCredentialComponent {
     return new Component(new Init().failedToFetch())
 }
 
 class Init {
-    failedToFetch(): FetchCredentialComponentState {
+    failedToFetch(): FetchCredentialState {
         return { type: "failed-to-fetch", err: { type: "infra-error", err: "error" } }
     }
 }
 
 class Component implements FetchCredentialComponent {
-    state: FetchCredentialComponentState
+    state: FetchCredentialState
 
-    constructor(state: FetchCredentialComponentState) {
+    constructor(state: FetchCredentialState) {
         this.state = state
     }
 
-    hook(_stateChanged: Publisher<FetchCredentialComponentState>): void {
+    hook(_stateChanged: Publisher<FetchCredentialState>): void {
         // mock では特に何もしない
     }
-    init(stateChanged: Publisher<FetchCredentialComponentState>): void {
+    init(stateChanged: Publisher<FetchCredentialState>): void {
         stateChanged(this.state)
     }
     terminate(): void {

@@ -1,12 +1,12 @@
-import { RenewCredentialComponentState } from "./data"
+import { RenewCredentialState } from "./data"
 
 import { CredentialAction } from "../../credential/action"
 
 import { TicketNonce } from "../../credential/data"
 
 export interface RenewCredentialComponent {
-    hook(stateChanged: Publisher<RenewCredentialComponentState>): void
-    init(stateChanged: Publisher<RenewCredentialComponentState>): void
+    hook(stateChanged: Publisher<RenewCredentialState>): void
+    init(stateChanged: Publisher<RenewCredentialState>): void
     terminate(): void
     renew(ticketNonce: TicketNonce): Promise<void>
 }

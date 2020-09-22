@@ -1,6 +1,6 @@
 import { LoadApplicationComponent, LoadApplicationComponentAction } from "./component"
 
-import { LoadApplicationComponentState, LoadApplicationComponentOperation } from "./data"
+import { LoadApplicationState, LoadApplicationComponentOperation } from "./data"
 
 import { PagePathname, ScriptEvent } from "../../script/data"
 
@@ -18,11 +18,11 @@ class Component implements LoadApplicationComponent {
         this.action = action
     }
 
-    init(stateChanged: Publisher<LoadApplicationComponentState>): void {
+    init(stateChanged: Publisher<LoadApplicationState>): void {
         this.action.script.sub.onScriptEvent((event) => {
             stateChanged(map(event))
 
-            function map(event: ScriptEvent): LoadApplicationComponentState {
+            function map(event: ScriptEvent): LoadApplicationState {
                 return event
             }
         })
@@ -49,12 +49,12 @@ class WorkerComponent implements LoadApplicationComponent {
         this.worker = { set: false, init }
     }
 
-    init(stateChanged: Publisher<LoadApplicationComponentState>): void {
+    init(stateChanged: Publisher<LoadApplicationState>): void {
         if (!this.worker.set) {
             this.worker = { set: true, instance: this.initWorker(this.worker.init, stateChanged) }
         }
     }
-    initWorker(init: WorkerInit, stateChanged: Publisher<LoadApplicationComponentState>): Worker {
+    initWorker(init: WorkerInit, stateChanged: Publisher<LoadApplicationState>): Worker {
         const worker = init()
         worker.addEventListener("message", (event) => {
             stateChanged(event.data)

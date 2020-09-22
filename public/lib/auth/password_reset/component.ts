@@ -1,7 +1,7 @@
-import { PasswordResetComponentState, PasswordResetComponentOperation, PasswordResetWorkerComponentState } from "./data"
+import { PasswordResetState, PasswordResetComponentOperation, PasswordResetWorkerState } from "./data"
 
-import { LoginIDFieldComponentState } from "../field/login_id/data"
-import { PasswordFieldComponentState } from "../field/password/data"
+import { LoginIDFieldState } from "../field/login_id/data"
+import { PasswordFieldState } from "../field/password/data"
 
 import { PasswordResetAction } from "../../password_reset/action"
 import { LoginIDFieldAction } from "../../field/login_id/action"
@@ -14,18 +14,18 @@ export interface PasswordResetComponentAction {
 }
 
 export interface PasswordResetComponent {
-    hook(stateChanged: Publisher<PasswordResetComponentState>): void
-    init(stateChanged: Publisher<PasswordResetComponentState>): void
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void
-    initPasswordField(stateChanged: Publisher<PasswordFieldComponentState>): void
+    hook(stateChanged: Publisher<PasswordResetState>): void
+    init(stateChanged: Publisher<PasswordResetState>): void
+    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void
+    initPasswordField(stateChanged: Publisher<PasswordFieldState>): void
     terminate(): void
     trigger(operation: PasswordResetComponentOperation): Promise<void>
 }
 
 export interface PasswordResetWorkerComponentHelper {
-    mapPasswordResetComponentState(state: PasswordResetComponentState): PasswordResetWorkerComponentState
-    mapLoginIDFieldComponentState(state: LoginIDFieldComponentState): PasswordResetWorkerComponentState
-    mapPasswordFieldComponentState(state: PasswordFieldComponentState): PasswordResetWorkerComponentState
+    mapPasswordResetState(state: PasswordResetState): PasswordResetWorkerState
+    mapLoginIDFieldState(state: LoginIDFieldState): PasswordResetWorkerState
+    mapPasswordFieldState(state: PasswordFieldState): PasswordResetWorkerState
 }
 
 interface Publisher<T> {

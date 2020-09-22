@@ -1,6 +1,6 @@
 import { RenewCredentialComponent, RenewCredentialComponentAction } from "./component"
 
-import { RenewCredentialComponentState } from "./data"
+import { RenewCredentialState } from "./data"
 
 import { TicketNonce, RenewEvent } from "../../credential/data"
 
@@ -9,7 +9,7 @@ export function initRenewCredentialComponent(action: RenewCredentialComponentAct
 }
 
 class Component implements RenewCredentialComponent {
-    listener: Publisher<RenewCredentialComponentState>[]
+    listener: Publisher<RenewCredentialState>[]
     action: RenewCredentialComponentAction
 
     constructor(action: RenewCredentialComponentAction) {
@@ -17,17 +17,17 @@ class Component implements RenewCredentialComponent {
         this.action = action
     }
 
-    hook(pub: Publisher<RenewCredentialComponentState>): void {
+    hook(pub: Publisher<RenewCredentialState>): void {
         this.listener.push(pub)
     }
-    init(stateChanged: Publisher<RenewCredentialComponentState>): void {
+    init(stateChanged: Publisher<RenewCredentialState>): void {
         this.action.credential.sub.onRenew((event) => {
             const state = map(event)
             this.listener.forEach(pub => pub(state))
             stateChanged(state)
         })
 
-        function map(event: RenewEvent): RenewCredentialComponentState {
+        function map(event: RenewEvent): RenewCredentialState {
             return event
         }
     }

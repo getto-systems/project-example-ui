@@ -1,12 +1,12 @@
-import { StoreCredentialComponentState } from "./data"
+import { StoreCredentialState } from "./data"
 
 import { CredentialAction } from "../../credential/action"
 
 import { AuthCredential } from "../../credential/data"
 
 export interface StoreCredentialComponent {
-    hook(stateChanged: Publisher<StoreCredentialComponentState>): void
-    init(stateChanged: Publisher<StoreCredentialComponentState>): void
+    hook(stateChanged: Publisher<StoreCredentialState>): void
+    init(stateChanged: Publisher<StoreCredentialState>): void
     terminate(): void
     store(authCredential: AuthCredential): Promise<void>
 }

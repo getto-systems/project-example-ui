@@ -1,10 +1,10 @@
 import { PasswordResetSessionComponent } from "../../../auth/password_reset_session/component"
 
 import {
-    PasswordResetSessionComponentState,
+    PasswordResetSessionState,
     PasswordResetSessionComponentOperation,
 } from "../../../auth/password_reset_session/data"
-import { LoginIDFieldComponentState } from "../../../auth/field/login_id/data"
+import { LoginIDFieldState } from "../../../auth/field/login_id/data"
 
 export function newPasswordResetSessionComponent(): PasswordResetSessionComponent {
     const init = new Init()
@@ -15,91 +15,91 @@ export function newPasswordResetSessionComponent(): PasswordResetSessionComponen
 }
 
 class Init {
-    initialResetSession(): PasswordResetSessionComponentState {
+    initialResetSession(): PasswordResetSessionState {
         return { type: "initial-reset-session" }
     }
-    tryToCreateSession(): PasswordResetSessionComponentState {
+    tryToCreateSession(): PasswordResetSessionState {
         return { type: "try-to-create-session" }
     }
-    delayedToCreateSession(): PasswordResetSessionComponentState {
+    delayedToCreateSession(): PasswordResetSessionState {
         return { type: "delayed-to-create-session" }
     }
-    failedToCreateSession_validation_error(): PasswordResetSessionComponentState {
+    failedToCreateSession_validation_error(): PasswordResetSessionState {
         return { type: "failed-to-create-session", err: { type: "validation-error" } }
     }
-    failedToCreateSession_bad_request(): PasswordResetSessionComponentState {
+    failedToCreateSession_bad_request(): PasswordResetSessionState {
         return { type: "failed-to-create-session", err: { type: "bad-request" } }
     }
-    failedToCreateSession_invalid_password_reset(): PasswordResetSessionComponentState {
+    failedToCreateSession_invalid_password_reset(): PasswordResetSessionState {
         return { type: "failed-to-create-session", err: { type: "invalid-password-reset" } }
     }
-    failedToCreateSession_server_error(): PasswordResetSessionComponentState {
+    failedToCreateSession_server_error(): PasswordResetSessionState {
         return { type: "failed-to-create-session", err: { type: "server-error" } }
     }
-    failedToCreateSession_bad_response(): PasswordResetSessionComponentState {
+    failedToCreateSession_bad_response(): PasswordResetSessionState {
         return { type: "failed-to-create-session", err: { type: "bad-response", err: "error" } }
     }
-    failedToCreateSession_infra_error(): PasswordResetSessionComponentState {
+    failedToCreateSession_infra_error(): PasswordResetSessionState {
         return { type: "failed-to-create-session", err: { type: "infra-error", err: "error" } }
     }
-    tryToPollingStatus(): PasswordResetSessionComponentState {
+    tryToPollingStatus(): PasswordResetSessionState {
         return { type: "try-to-polling-status" }
     }
-    retryToPollingStatus_waiting(): PasswordResetSessionComponentState {
+    retryToPollingStatus_waiting(): PasswordResetSessionState {
         return { type: "retry-to-polling-status", dest: { type: "log" }, status: { sending: false } }
     }
-    retryToPollingStatus_sending(): PasswordResetSessionComponentState {
+    retryToPollingStatus_sending(): PasswordResetSessionState {
         return { type: "retry-to-polling-status", dest: { type: "log" }, status: { sending: true } }
     }
-    failedToPollingStatus_bad_request(): PasswordResetSessionComponentState {
+    failedToPollingStatus_bad_request(): PasswordResetSessionState {
         return { type: "failed-to-polling-status", err: { type: "bad-request" } }
     }
-    failedToPollingStatus_invalid_password_reset(): PasswordResetSessionComponentState {
+    failedToPollingStatus_invalid_password_reset(): PasswordResetSessionState {
         return { type: "failed-to-polling-status", err: { type: "invalid-password-reset" } }
     }
-    failedToPollingStatus_server_error(): PasswordResetSessionComponentState {
+    failedToPollingStatus_server_error(): PasswordResetSessionState {
         return { type: "failed-to-polling-status", err: { type: "server-error" } }
     }
-    failedToPollingStatus_bad_response(): PasswordResetSessionComponentState {
+    failedToPollingStatus_bad_response(): PasswordResetSessionState {
         return { type: "failed-to-polling-status", err: { type: "bad-response", err: "error" } }
     }
-    failedToPollingStatus_infra_error(): PasswordResetSessionComponentState {
+    failedToPollingStatus_infra_error(): PasswordResetSessionState {
         return { type: "failed-to-polling-status", err: { type: "infra-error", err: "error" } }
     }
-    failedToSendToken(): PasswordResetSessionComponentState {
+    failedToSendToken(): PasswordResetSessionState {
         return { type: "failed-to-send-token", dest: { type: "log" }, err: { type: "infra-error", err: "error" } }
     }
-    succeedToSendToken(): PasswordResetSessionComponentState {
+    succeedToSendToken(): PasswordResetSessionState {
         return { type: "succeed-to-send-token", dest: { type: "log" } }
     }
 
-    loginIDValid(): LoginIDFieldComponentState {
+    loginIDValid(): LoginIDFieldState {
         return { type: "succeed-to-update-login_id", result: { valid: true } }
     }
-    loginIDInvalid_empty(): LoginIDFieldComponentState {
+    loginIDInvalid_empty(): LoginIDFieldState {
         return { type: "succeed-to-update-login_id", result: { valid: false, err: ["empty"] } }
     }
 }
 
 class Component implements PasswordResetSessionComponent {
-    state: PasswordResetSessionComponentState
-    loginID: LoginIDFieldComponentState
+    state: PasswordResetSessionState
+    loginID: LoginIDFieldState
 
     constructor(
-        state: PasswordResetSessionComponentState,
-        loginID: LoginIDFieldComponentState,
+        state: PasswordResetSessionState,
+        loginID: LoginIDFieldState,
     ) {
         this.state = state
         this.loginID = loginID
     }
 
-    hook(_stateChanged: Publisher<PasswordResetSessionComponentState>): void {
+    hook(_stateChanged: Publisher<PasswordResetSessionState>): void {
         // mock では特に何もしない
     }
-    init(stateChanged: Publisher<PasswordResetSessionComponentState>): void {
+    init(stateChanged: Publisher<PasswordResetSessionState>): void {
         stateChanged(this.state)
     }
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldComponentState>): void {
+    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void {
         stateChanged(this.loginID)
     }
     terminate(): void {

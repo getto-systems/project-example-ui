@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { ErrorView } from "./layout"
 
 import { StoreCredentialComponent } from "../../auth/store_credential/component"
-import { initialStoreCredentialComponentState } from "../../auth/store_credential/data"
+import { initialStoreCredentialState } from "../../auth/store_credential/data"
 
 import { AuthCredential, StoreError } from "../../credential/data"
 
@@ -15,7 +15,7 @@ export interface PreactComponent {
 
 export function StoreCredential(component: StoreCredentialComponent, authCredential: AuthCredential): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(initialStoreCredentialComponentState)
+        const [state, setState] = useState(initialStoreCredentialState)
         useEffect(() => {
             component.init(setState)
             component.store(authCredential)
