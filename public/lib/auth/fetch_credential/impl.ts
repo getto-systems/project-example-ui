@@ -9,23 +9,21 @@ export function initFetchCredentialComponent(action: FetchCredentialComponentAct
 }
 
 class Component implements FetchCredentialComponent {
-    holder: PublisherHolder<FetchCredentialComponentState>
+    listener: Publisher<FetchCredentialComponentState>[]
     action: FetchCredentialComponentAction
 
     constructor(action: FetchCredentialComponentAction) {
-        this.holder = { set: false }
+        this.listener = []
         this.action = action
     }
 
     hook(pub: Publisher<FetchCredentialComponentState>): void {
-        this.holder = { set: true, pub }
+        this.listener.push(pub)
     }
     init(stateChanged: Publisher<FetchCredentialComponentState>): void {
         this.action.credential.sub.onFetch((event) => {
             const state = map(event)
-            if (this.holder.set) {
-                this.holder.pub(state)
-            }
+            this.listener.forEach(pub => pub(state))
             stateChanged(state)
         })
 
@@ -40,10 +38,6 @@ class Component implements FetchCredentialComponent {
         return this.action.credential.fetch()
     }
 }
-
-type PublisherHolder<T> =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, pub: Publisher<T> }>
 
 interface Publisher<T> {
     (state: T): void

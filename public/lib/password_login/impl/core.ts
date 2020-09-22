@@ -65,30 +65,24 @@ class Action implements PasswordLoginAction {
 }
 
 class EventPubSub implements PasswordLoginEventPublisher, PasswordLoginEventSubscriber {
-    holder: {
-        login: PublisherHolder<LoginEvent>
+    listener: {
+        login: Publisher<LoginEvent>[]
     }
 
     constructor() {
-        this.holder = {
-            login: { set: false },
+        this.listener = {
+            login: [],
         }
     }
 
     onLoginEvent(pub: Publisher<LoginEvent>): void {
-        this.holder.login = { set: true, pub }
+        this.listener.login.push(pub)
     }
 
     publishLoginEvent(event: LoginEvent): void {
-        if (this.holder.login.set) {
-            this.holder.login.pub(event)
-        }
+        this.listener.login.forEach(pub => pub(event))
     }
 }
-
-type PublisherHolder<T> =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, pub: Publisher<T> }>
 
 interface Publisher<T> {
     (state: T): void
