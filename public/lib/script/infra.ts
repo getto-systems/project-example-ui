@@ -6,7 +6,7 @@ export type Infra = Readonly<{
 }>
 
 export type HostConfig = Readonly<{
-    secureServerHost: Readonly<string>,
+    secureServerHost: string,
 }>
 
 export interface CheckClient {

@@ -6,7 +6,7 @@ import { AuthUsecaseState } from "./data"
 
 import { AuthCredential, TicketNonce } from "../credential/data"
 
-export function initAuthUsecase(currentLocation: Readonly<Location>, component: AuthComponent): AuthUsecase {
+export function initAuthUsecase(currentLocation: Location, component: AuthComponent): AuthUsecase {
     return new Usecase(currentLocation, component)
 }
 
@@ -14,9 +14,9 @@ class Usecase implements AuthUsecase {
     holder: UsecasePublisherHolder
     component: AuthComponent
 
-    currentLocation: Readonly<Location>
+    currentLocation: Location
 
-    constructor(currentLocation: Readonly<Location>, component: AuthComponent) {
+    constructor(currentLocation: Location, component: AuthComponent) {
         this.holder = { set: false, stack: false }
         this.component = component
 
@@ -103,7 +103,7 @@ class Usecase implements AuthUsecase {
     }
 }
 
-function loginState(currentLocation: Readonly<Location>): AuthUsecaseState {
+function loginState(currentLocation: Location): AuthUsecaseState {
     // ログイン前画面ではアンダースコアから始まるクエリを使用する
     const url = new URL(currentLocation.toString())
 

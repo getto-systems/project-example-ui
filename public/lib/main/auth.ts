@@ -26,13 +26,14 @@ import { AuthUsecase } from "../auth/component"
 
 import { CredentialAction } from "../credential/action"
 
-export function newAuthUsecase(currentLocation: Readonly<Location>): AuthUsecase {
+export function newAuthUsecase(currentLocation: Location): AuthUsecase {
     const credential = newCredentialAction()
 
     return initAuthUsecase(currentLocation, {
         fetchCredential: initFetchCredentialComponent({ credential }),
         renewCredential: initRenewCredentialComponent({ credential }),
         storeCredential: initStoreCredentialComponent({ credential }),
+
         loadApplication: newLoadApplicationComponent(),
 
         passwordLogin: newPasswordLoginComponent(),
