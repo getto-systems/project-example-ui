@@ -13,7 +13,7 @@ interface PreactComponent {
 }
 
 interface FormComponent {
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void
+    onLoginIDFieldStateChange(stateChanged: Publisher<LoginIDFieldState>): void
     trigger(operation: FieldOperation): Promise<void>
 }
 
@@ -26,7 +26,7 @@ export function LoginIDField(component: FormComponent): PreactComponent {
         const input = useRef<HTMLInputElement>()
 
         useEffect(() => {
-            component.initLoginIDField(setState)
+            component.onLoginIDFieldStateChange(setState)
         }, [])
 
         return html`

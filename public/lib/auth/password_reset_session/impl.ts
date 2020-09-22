@@ -59,7 +59,7 @@ class Component implements PasswordResetSessionComponent {
         })
     }
 
-    init(stateChanged: Publisher<PasswordResetSessionState>): void {
+    onStateChange(stateChanged: Publisher<PasswordResetSessionState>): void {
         this.action.passwordReset.sub.onCreateSessionEvent((event) => {
             stateChanged(map(event, this.action))
 
@@ -84,7 +84,7 @@ class Component implements PasswordResetSessionComponent {
             }
         })
     }
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void {
+    onLoginIDFieldStateChange(stateChanged: Publisher<LoginIDFieldState>): void {
         this.field.loginID.sub.onLoginIDFieldEvent(stateChanged)
     }
     terminate(): void {
@@ -113,7 +113,7 @@ class WorkerComponent implements PasswordResetSessionComponent {
         this.worker = { set: false, stack: [], init }
     }
 
-    init(stateChanged: Publisher<PasswordResetSessionState>): void {
+    onStateChange(stateChanged: Publisher<PasswordResetSessionState>): void {
         if (!this.worker.set) {
             const instance = this.initWorker(this.worker.init, this.worker.stack, (state) => {
                 stateChanged(state)
@@ -135,7 +135,7 @@ class WorkerComponent implements PasswordResetSessionComponent {
         return worker
     }
 
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void {
+    onLoginIDFieldStateChange(stateChanged: Publisher<LoginIDFieldState>): void {
         if (this.worker.set) {
             setup(this.worker.instance)
         } else {

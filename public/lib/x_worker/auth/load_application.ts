@@ -4,7 +4,7 @@ const ctx: Worker = self as any // eslint-disable-line @typescript-eslint/no-exp
 
 const component = newLoadApplicationComponent()
 
-component.init((state) => {
+component.onStateChange((state) => {
     ctx.postMessage(state)
 })
 

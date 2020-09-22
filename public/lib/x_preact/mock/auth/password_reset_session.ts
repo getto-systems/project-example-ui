@@ -96,10 +96,10 @@ class Component implements PasswordResetSessionComponent {
     hook(_stateChanged: Publisher<PasswordResetSessionState>): void {
         // mock では特に何もしない
     }
-    init(stateChanged: Publisher<PasswordResetSessionState>): void {
+    onStateChange(stateChanged: Publisher<PasswordResetSessionState>): void {
         stateChanged(this.state)
     }
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void {
+    onLoginIDFieldStateChange(stateChanged: Publisher<LoginIDFieldState>): void {
         stateChanged(this.loginID)
     }
     terminate(): void {

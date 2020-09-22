@@ -15,8 +15,8 @@ export interface PasswordResetSessionComponentAction {
 }
 
 export interface PasswordResetSessionComponent {
-    init(stateChanged: Publisher<PasswordResetSessionState>): void
-    initLoginIDField(stateChanged: Publisher<LoginIDFieldState>): void
+    onStateChange(stateChanged: Publisher<PasswordResetSessionState>): void
+    onLoginIDFieldStateChange(stateChanged: Publisher<LoginIDFieldState>): void
     terminate(): void
     trigger(operation: PasswordResetSessionComponentOperation): Promise<void>
 }

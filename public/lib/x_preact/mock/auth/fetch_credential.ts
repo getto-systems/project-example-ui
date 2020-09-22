@@ -22,7 +22,7 @@ class Component implements FetchCredentialComponent {
     hook(_stateChanged: Publisher<FetchCredentialState>): void {
         // mock では特に何もしない
     }
-    init(stateChanged: Publisher<FetchCredentialState>): void {
+    onStateChange(stateChanged: Publisher<FetchCredentialState>): void {
         stateChanged(this.state)
     }
     terminate(): void {

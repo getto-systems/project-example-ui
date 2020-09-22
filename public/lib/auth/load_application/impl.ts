@@ -18,7 +18,7 @@ class Component implements LoadApplicationComponent {
         this.action = action
     }
 
-    init(stateChanged: Publisher<LoadApplicationState>): void {
+    onStateChange(stateChanged: Publisher<LoadApplicationState>): void {
         this.action.script.sub.onScriptEvent((event) => {
             stateChanged(map(event))
 
@@ -49,7 +49,7 @@ class WorkerComponent implements LoadApplicationComponent {
         this.worker = { set: false, init }
     }
 
-    init(stateChanged: Publisher<LoadApplicationState>): void {
+    onStateChange(stateChanged: Publisher<LoadApplicationState>): void {
         if (!this.worker.set) {
             this.worker = { set: true, instance: this.initWorker(this.worker.init, stateChanged) }
         }

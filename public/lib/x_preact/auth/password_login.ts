@@ -20,7 +20,7 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
         const [state, setState] = useState(initialPasswordLoginState)
         const submit = useRef<HTMLButtonElement>()
         useEffect(() => {
-            component.init(setState)
+            component.onStateChange(setState)
             return () => component.terminate()
         }, [])
 

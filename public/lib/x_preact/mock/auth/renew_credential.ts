@@ -36,7 +36,7 @@ class Component implements RenewCredentialComponent {
     hook(_stateChanged: Publisher<RenewCredentialState>): void {
         // mock では特に何もしない
     }
-    init(stateChanged: Publisher<RenewCredentialState>): void {
+    onStateChange(stateChanged: Publisher<RenewCredentialState>): void {
         stateChanged(this.state)
     }
     terminate(): void {

@@ -20,7 +20,7 @@ class Component implements FetchCredentialComponent {
     hook(pub: Publisher<FetchCredentialState>): void {
         this.listener.push(pub)
     }
-    init(stateChanged: Publisher<FetchCredentialState>): void {
+    onStateChange(stateChanged: Publisher<FetchCredentialState>): void {
         this.action.credential.sub.onFetch((event) => {
             const state = map(event)
             this.listener.forEach(pub => pub(state))

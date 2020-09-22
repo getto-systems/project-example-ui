@@ -17,7 +17,7 @@ export function FetchCredential(component: FetchCredentialComponent): PreactComp
     return (): VNode => {
         const [state, setState] = useState(initialFetchCredentialState)
         useEffect(() => {
-            component.init(setState)
+            component.onStateChange(setState)
             component.fetch()
             return () => component.terminate()
         }, [])

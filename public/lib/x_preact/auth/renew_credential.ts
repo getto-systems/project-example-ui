@@ -17,7 +17,7 @@ export function RenewCredential(component: RenewCredentialComponent, ticketNonce
     return (): VNode => {
         const [state, setState] = useState(initialRenewCredentialState)
         useEffect(() => {
-            component.init(setState)
+            component.onStateChange(setState)
             component.renew(ticketNonce)
             return () => component.terminate()
         }, [])

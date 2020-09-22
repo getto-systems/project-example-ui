@@ -20,7 +20,7 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
     return (): VNode => {
         const [state, setState] = useState(initialLoadApplicationState)
         useEffect(() => {
-            component.init(setState)
+            component.onStateChange(setState)
             component.trigger({ type: "load", pagePathname: initPagePathname(new URL(location.toString())) })
             return () => component.terminate()
         }, [])

@@ -6,7 +6,7 @@ import { AuthCredential } from "../../credential/data"
 
 export interface StoreCredentialComponent {
     hook(stateChanged: Publisher<StoreCredentialState>): void
-    init(stateChanged: Publisher<StoreCredentialState>): void
+    onStateChange(stateChanged: Publisher<StoreCredentialState>): void
     terminate(): void
     store(authCredential: AuthCredential): Promise<void>
 }

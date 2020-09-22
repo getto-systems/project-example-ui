@@ -17,7 +17,7 @@ export function StoreCredential(component: StoreCredentialComponent, authCredent
     return (): VNode => {
         const [state, setState] = useState(initialStoreCredentialState)
         useEffect(() => {
-            component.init(setState)
+            component.onStateChange(setState)
             component.store(authCredential)
             return () => component.terminate()
         }, [])

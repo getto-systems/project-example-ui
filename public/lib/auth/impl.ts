@@ -71,7 +71,7 @@ class Usecase implements AuthUsecase {
         })
     }
 
-    init(pub: Publisher<AuthState>): void {
+    onStateChange(pub: Publisher<AuthState>): void {
         if (this.holder.stack) {
             pub(this.holder.state)
         }
