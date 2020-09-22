@@ -1,6 +1,6 @@
 import { PagePathname, ScriptPath } from "./data"
 
-export function initPagePathname(url: Readonly<URL>): PagePathname {
+export function initPagePathname(url: URL): PagePathname {
     return url.pathname as string & PagePathname
 }
 
