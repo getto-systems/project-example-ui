@@ -121,7 +121,7 @@ class WorkerComponent implements PasswordResetSessionComponent {
             this.worker = { set: true, instance }
         }
     }
-    initWorker(init: WorkerInit, stack: Array<WorkerSetup>, stateChanged: Publisher<PasswordResetSessionComponentState>): Worker {
+    initWorker(init: WorkerInit, stack: WorkerSetup[], stateChanged: Publisher<PasswordResetSessionComponentState>): Worker {
         const worker = init()
         worker.addEventListener("message", (event) => {
             const state = event.data as PasswordResetSessionWorkerComponentState
@@ -177,7 +177,7 @@ interface Publisher<T> {
 }
 
 type WorkerHolder =
-    Readonly<{ set: false, stack: Array<WorkerSetup>, init: WorkerInit }> |
+    Readonly<{ set: false, stack: WorkerSetup[], init: WorkerInit }> |
     Readonly<{ set: true, instance: Worker }>
 
 interface WorkerInit {

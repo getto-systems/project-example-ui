@@ -9,7 +9,7 @@ interface AuthClient {
 }
 
 type AuthRenewResponse =
-    Readonly<{ success: true, authCredential: { ticketNonce: string, apiCredential: { apiRoles: Array<string> } } }> |
+    Readonly<{ success: true, authCredential: { ticketNonce: string, apiCredential: { apiRoles: string[] } } }> |
     Readonly<{ success: false, err: { type: string, err: string } }>
 
 export function initFetchRenewClient(client: AuthClient): RenewClient {

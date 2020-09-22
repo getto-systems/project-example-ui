@@ -47,7 +47,7 @@ export function LoginIDField(component: FormComponent): PreactComponent {
             }
         }
 
-        function error(state: LoginIDFieldComponentState): Array<VNode> {
+        function error(state: LoginIDFieldComponentState): VNode[] {
             if (state.result.valid) {
                 return []
             }

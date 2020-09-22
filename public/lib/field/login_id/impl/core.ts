@@ -80,14 +80,14 @@ interface Publisher<T> {
 }
 
 const ERROR: {
-    ok: Array<LoginIDFieldError>,
-    empty: Array<LoginIDFieldError>,
+    ok: LoginIDFieldError[],
+    empty: LoginIDFieldError[],
 } = {
     ok: [],
     empty: ["empty"],
 }
 
-function validateLoginID(loginID: string): Array<LoginIDFieldError> {
+function validateLoginID(loginID: string): LoginIDFieldError[] {
     if (loginID.length === 0) {
         return ERROR.empty
     }

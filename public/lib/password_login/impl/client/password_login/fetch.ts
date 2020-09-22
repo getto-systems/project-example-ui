@@ -12,7 +12,7 @@ interface AuthClient {
 }
 
 type AuthLoginResponse =
-    Readonly<{ success: true, authCredential: { ticketNonce: string, apiCredential: { apiRoles: Array<string> } } }> |
+    Readonly<{ success: true, authCredential: { ticketNonce: string, apiCredential: { apiRoles: string[] } } }> |
     Readonly<{ success: false, err: { type: string, err: string } }>
 
 export function initFetchPasswordLoginClient(client: AuthClient): PasswordLoginClient {

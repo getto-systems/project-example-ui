@@ -12,9 +12,9 @@ export type RenewParam = Readonly<{ nonce: string }>
 export type PasswordLoginParam = Readonly<{ loginID: string, password: string }>
 
 type AuthResponse =
-    Readonly<{ success: true, authCredential: { ticketNonce: string, apiCredential: { apiRoles: Array<string> } } }> |
+    Readonly<{ success: true, authCredential: { ticketNonce: string, apiCredential: { apiRoles: string[] } } }> |
     Readonly<{ success: false, err: AuthError }>
-function authSuccess(ticketNonce: string, apiRoles: Array<string>): AuthResponse {
+function authSuccess(ticketNonce: string, apiRoles: string[]): AuthResponse {
     return { success: true, authCredential: { ticketNonce, apiCredential: { apiRoles } } }
 }
 function authFailed(err: AuthError): AuthResponse {

@@ -123,16 +123,16 @@ interface Publisher<T> {
 }
 
 const ERROR: {
-    ok: Array<PasswordFieldError>,
-    empty: Array<PasswordFieldError>,
-    tooLong: Array<PasswordFieldError>,
+    ok: PasswordFieldError[]
+    empty: PasswordFieldError[]
+    tooLong: PasswordFieldError[]
 } = {
     ok: [],
     empty: ["empty"],
     tooLong: ["too-long"],
 }
 
-function validatePassword(password: string): Array<PasswordFieldError> {
+function validatePassword(password: string): PasswordFieldError[] {
     if (password.length === 0) {
         return ERROR.empty
     }

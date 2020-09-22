@@ -13,7 +13,7 @@ export type TicketNonce = { TicketNonce: never }
 
 //export type ApiNonce = { ApiNonce: never }
 
-export type ApiRoles = Readonly<Array<Readonly<ApiRole>>>
+export type ApiRoles = ApiRole[]
 export type ApiRole = { ApiRole: never }
 
 export type FetchEvent =

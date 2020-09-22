@@ -11,7 +11,7 @@ export function serializeAuthCredential(authCredential: AuthCredential): AuthCre
 export type AuthCredentialSerialized = Readonly<{
     ticketNonce: string,
     apiCredential: {
-        apiRoles: Array<string>
+        apiRoles: string[]
     },
 }>
 
@@ -26,6 +26,6 @@ export function ticketNonceToString(ticketNonce: TicketNonce): string {
 // TODO ApiNonce を追加
 //export type _ApiNonce = string & ApiNonce
 
-export function initApiRoles(apiRoles: Array<string>): ApiRoles {
+export function initApiRoles(apiRoles: string[]): ApiRoles {
     return apiRoles.map((apiRole) => apiRole as string & ApiRole)
 }
