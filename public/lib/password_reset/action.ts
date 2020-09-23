@@ -12,9 +12,9 @@ export interface PasswordResetAction {
 }
 
 export interface PasswordResetEventPublisher {
-    publishCreateSessionEvent(event: CreateSessionEvent): void
-    publishPollingStatusEvent(event: PollingStatusEvent): void
-    publishResetEvent(event: ResetEvent): void
+    dispatchCreateSessionEvent(event: CreateSessionEvent): void
+    dispatchPollingStatusEvent(event: PollingStatusEvent): void
+    dispatchResetEvent(event: ResetEvent): void
 }
 
 export interface PasswordResetEventSubscriber {

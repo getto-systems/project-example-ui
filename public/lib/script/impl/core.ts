@@ -25,14 +25,14 @@ class Action implements ScriptAction {
     }
 
     async load(pagePathname: PagePathname): Promise<void> {
-        const publish = (event: ScriptEvent) => this.pub.publishScriptEvent(event)
+        const dispatch = (event: ScriptEvent) => this.pub.dispatchScriptEvent(event)
 
         const scriptPath = secureScriptPath(this.infra.hostConfig.secureServerHost, pagePathname)
-        publish({ type: "try-to-load", scriptPath })
+        dispatch({ type: "try-to-load", scriptPath })
 
         const response = await this.infra.checkClient.checkStatus(scriptPath)
         if (!response.success) {
-            publish({ type: "failed-to-load", err: response.err })
+            dispatch({ type: "failed-to-load", err: response.err })
         }
     }
 }
@@ -57,7 +57,7 @@ class EventPubSub implements ScriptEventPublisher, ScriptEventSubscriber {
         this.listener.script.push(pub)
     }
 
-    publishScriptEvent(event: ScriptEvent): void {
+    dispatchScriptEvent(event: ScriptEvent): void {
         this.listener.script.forEach(pub => pub(event))
     }
 }

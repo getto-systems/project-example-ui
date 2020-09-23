@@ -9,7 +9,7 @@ export interface PasswordLoginAction {
 }
 
 export interface PasswordLoginEventPublisher {
-    publishLoginEvent(event: LoginEvent): void
+    dispatchLoginEvent(event: LoginEvent): void
 }
 
 export interface PasswordLoginEventSubscriber {

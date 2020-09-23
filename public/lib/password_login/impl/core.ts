@@ -26,28 +26,28 @@ class Action implements PasswordLoginAction {
     }
 
     async login(fields: [Content<LoginID>, Content<Password>]): Promise<void> {
-        const publish = (event: LoginEvent) => this.pub.publishLoginEvent(event)
+        const dispatch = (event: LoginEvent) => this.pub.dispatchLoginEvent(event)
 
         const content = mapContent(...fields)
         if (!content.valid) {
-            publish({ type: "failed-to-login", err: { type: "validation-error" } })
+            dispatch({ type: "failed-to-login", err: { type: "validation-error" } })
             return
         }
 
-        publish({ type: "try-to-login" })
+        dispatch({ type: "try-to-login" })
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const response = await delayed(
             this.infra.passwordLoginClient.login(...content.content),
             this.infra.timeConfig.passwordLoginDelayTime,
-            () => publish({ type: "delayed-to-login" }),
+            () => dispatch({ type: "delayed-to-login" }),
         )
         if (!response.success) {
-            publish({ type: "failed-to-login", err: response.err })
+            dispatch({ type: "failed-to-login", err: response.err })
             return
         }
 
-        publish({ type: "succeed-to-login", authCredential: response.authCredential })
+        dispatch({ type: "succeed-to-login", authCredential: response.authCredential })
         return
 
         type ValidContent =
@@ -81,7 +81,7 @@ class EventPubSub implements PasswordLoginEventPublisher, PasswordLoginEventSubs
         this.listener.login.push(pub)
     }
 
-    publishLoginEvent(event: LoginEvent): void {
+    dispatchLoginEvent(event: LoginEvent): void {
         this.listener.login.forEach(pub => pub(event))
     }
 }

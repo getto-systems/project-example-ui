@@ -69,7 +69,7 @@ class Usecase implements AuthUsecase {
         // terminate が必要な component とインターフェイスを合わせるために必要
     }
 
-    publish(state: AuthState): void {
+    dispatch(state: AuthState): void {
         if (this.holder.set) {
             this.holder.pub(state)
         } else {
@@ -78,13 +78,13 @@ class Usecase implements AuthUsecase {
     }
 
     async storeCredential(authCredential: AuthCredential): Promise<void> {
-        this.publish({ type: "store-credential", authCredential })
+        this.dispatch({ type: "store-credential", authCredential })
     }
     async tryToLogin(): Promise<void> {
-        this.publish(loginState(this.currentLocation))
+        this.dispatch(loginState(this.currentLocation))
     }
     async loadApplication(): Promise<void> {
-        this.publish({ type: "load-application" })
+        this.dispatch({ type: "load-application" })
     }
 }
 

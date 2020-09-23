@@ -7,8 +7,8 @@ export interface CredentialAction {
 }
 
 export interface CredentialEventPublisher {
-    publishRenewEvent(event: RenewEvent): void
-    publishStoreEvent(event: StoreEvent): void
+    dispatchRenewEvent(event: RenewEvent): void
+    dispatchStoreEvent(event: StoreEvent): void
 }
 
 export interface CredentialEventSubscriber {
