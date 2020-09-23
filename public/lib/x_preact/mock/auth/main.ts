@@ -1,4 +1,3 @@
-import { newFetchCredentialComponent } from "./fetch_credential"
 import { newRenewCredentialComponent } from "./renew_credential"
 import { newStoreCredentialComponent } from "./store_credential"
 import { newLoadApplicationComponent } from "./load_application"
@@ -15,15 +14,12 @@ import { AuthUsecase, AuthComponent } from "../../../auth/component"
 import { AuthState } from "../../../auth/data"
 
 export function newAuthUsecase(): AuthUsecase {
-    return new Usecase(new Init().passwordReset())
+    return new Usecase(new Init().renewCredential())
 }
 
 class Init {
-    fetchCredential(): AuthState {
-        return { type: "fetch-credential" }
-    }
     renewCredential(): AuthState {
-        return { type: "renew-credential", ticketNonce: initTicketNonce("ticket-nonce") }
+        return { type: "renew-credential" }
     }
     storeCredential(): AuthState {
         return {
@@ -56,7 +52,6 @@ class Usecase implements AuthUsecase {
         this.state = state
 
         this.component = {
-            fetchCredential: newFetchCredentialComponent(),
             renewCredential: newRenewCredentialComponent(),
             storeCredential: newStoreCredentialComponent(),
             loadApplication: newLoadApplicationComponent(),

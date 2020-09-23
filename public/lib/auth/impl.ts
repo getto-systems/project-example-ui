@@ -4,7 +4,7 @@ import { AuthUsecase, AuthComponent } from "./component"
 
 import { AuthState } from "./data"
 
-import { AuthCredential, TicketNonce } from "../credential/data"
+import { AuthCredential } from "../credential/data"
 
 export function initAuthUsecase(currentLocation: Location, component: AuthComponent): AuthUsecase {
     return new Usecase(currentLocation, component)
@@ -22,26 +22,14 @@ class Usecase implements AuthUsecase {
 
         this.currentLocation = currentLocation
 
-        this.component.fetchCredential.hook((state) => {
-            switch (state.type) {
-                case "unauthorized":
-                    this.tryToLogin()
-                    return
-
-                case "succeed-to-fetch":
-                    this.renewCredential(state.ticketNonce)
-                    return
-            }
-        })
-
         this.component.renewCredential.hook((state) => {
             switch (state.type) {
-                case "unauthorized":
+                case "required-to-login":
                     this.tryToLogin()
                     return
 
                 case "succeed-to-renew":
-                    this.storeCredential(state.authCredential)
+                    this.loadApplication()
                     return
             }
         })
@@ -89,9 +77,6 @@ class Usecase implements AuthUsecase {
         }
     }
 
-    async renewCredential(ticketNonce: TicketNonce): Promise<void> {
-        this.publish({ type: "renew-credential", ticketNonce })
-    }
     async storeCredential(authCredential: AuthCredential): Promise<void> {
         this.publish({ type: "store-credential", authCredential })
     }

@@ -1,4 +1,3 @@
-import { FetchCredentialComponent } from "./fetch_credential/component"
 import { RenewCredentialComponent } from "./renew_credential/component"
 import { StoreCredentialComponent } from "./store_credential/component"
 import { LoadApplicationComponent } from "./load_application/component"
@@ -17,7 +16,6 @@ export interface AuthUsecase {
 }
 
 export interface AuthComponent {
-    fetchCredential: FetchCredentialComponent
     renewCredential: RenewCredentialComponent
     storeCredential: StoreCredentialComponent
     loadApplication: LoadApplicationComponent

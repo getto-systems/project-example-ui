@@ -2,15 +2,16 @@ import { RenewCredentialComponent } from "../../../auth/renew_credential/compone
 
 import { RenewCredentialState } from "../../../auth/renew_credential/data"
 
-import { TicketNonce } from "../../../credential/data"
-
 export function newRenewCredentialComponent(): RenewCredentialComponent {
-    return new Component(new Init().failedToRenew_infra_error())
+    return new Component(new Init().delayedToRenew())
 }
 
 class Init {
     delayedToRenew(): RenewCredentialState {
         return { type: "delayed-to-renew" }
+    }
+    failedToFetch_infra_error(): RenewCredentialState {
+        return { type: "failed-to-fetch", err: { type: "infra-error", err: "error" } }
     }
     failedToRenew_bad_request(): RenewCredentialState {
         return { type: "failed-to-renew", err: { type: "bad-request" } }
@@ -42,7 +43,7 @@ class Component implements RenewCredentialComponent {
     terminate(): void {
         // mock では特に何もしない
     }
-    renew(_ticketNonce: TicketNonce): Promise<void> {
+    renew(): Promise<void> {
         // mock では特に何もしない
         return Promise.resolve()
     }

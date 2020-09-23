@@ -1,7 +1,6 @@
 import { h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 
-import { FetchCredential } from "./fetch_credential"
 import { RenewCredential } from "./renew_credential"
 import { StoreCredential } from "./store_credential"
 import { LoadApplication } from "./load_application"
@@ -24,11 +23,8 @@ export function Main(usecase: AuthUsecase) {
         // TODO useErrorBoundary とか使ってエラーの処理をする
 
         switch (state.type) {
-            case "fetch-credential":
-                return h(FetchCredential(usecase.component.fetchCredential), {})
-
             case "renew-credential":
-                return h(RenewCredential(usecase.component.renewCredential, state.ticketNonce), {})
+                return h(RenewCredential(usecase.component.renewCredential), {})
 
             case "store-credential":
                 return h(StoreCredential(usecase.component.storeCredential, state.authCredential), {})
