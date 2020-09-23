@@ -22,11 +22,9 @@ class SimulatePasswordResetClient implements PasswordResetClient {
 
     reset(token: ResetToken, loginID: LoginID, password: Password): Promise<ResetResponse> {
         return new Promise((resolve) => {
-            ((simulate) => {
-                setTimeout(() => {
-                    resolve(simulate(token, loginID, password))
-                }, 5 * 1000)
-            })(this.resetSimulate)
+            setTimeout(() => {
+                resolve(this.resetSimulate(token, loginID, password))
+            }, 0.3 * 1000)
         })
     }
     resetSimulate(token: ResetToken, loginID: LoginID, _password: Password): ResetResponse {

@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { LoginView } from "./layout"
+import { LoginHeader } from "./layout"
 import { LoginIDField } from "./password_login/field/login_id"
 import { PasswordField } from "./password_login/field/password"
 
@@ -25,29 +25,34 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
         }, [])
 
         function view(onSubmit: Handler<Event>, button: VNode, footer: VNode): VNode {
-            return LoginView(html`
-                <form onSubmit="${onSubmit}">
-                    <big>
-                        <section class="login__body">
-                            <${LoginIDField(component)}/>
-                            <${PasswordField(component)}/>
+            return html`
+                <aside class="login">
+                    <form class="login__box" onSubmit="${onSubmit}">
+                        ${LoginHeader()}
+                        <section>
+                            <big>
+                                <section class="login__body">
+                                    <${LoginIDField(component)}/>
+                                    <${PasswordField(component)}/>
+                                </section>
+                            </big>
                         </section>
-                    </big>
-                </form>
-                <footer class="login__footer">
-                    <div class="button__container">
-                        <div>
-                            <big>${button}</big>
-                        </div>
-                        <div class="login__link">
-                            <a href="?_password_reset">
-                                <i class="lnir lnir-question-circle"></i> パスワードがわからない方
-                            </a>
-                        </div>
-                    </div>
-                    ${footer}
-                </footer>
-            `)
+                        <footer class="login__footer">
+                            <div class="button__container">
+                                <div>
+                                    <big>${button}</big>
+                                </div>
+                                <div class="login__link">
+                                    <a href="?_password_reset=create">
+                                        <i class="lnir lnir-question-circle"></i> パスワードがわからない方
+                                    </a>
+                                </div>
+                            </div>
+                            ${footer}
+                        </footer>
+                    </form>
+                </aside>
+            `
         }
 
         switch (state.type) {

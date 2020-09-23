@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { LoginView } from "./layout"
+import { LoginHeader, ErrorView } from "./layout"
 import { LoginIDField } from "./password_reset_session/field/login_id"
 
 import { PasswordResetSessionComponent } from "../../auth/password_reset_session/component"
@@ -24,53 +24,58 @@ export function PasswordResetSession(component: PasswordResetSessionComponent): 
         }, [])
 
         function createSessionView(onSubmit: Handler<Event>, button: VNode, footer: VNode): VNode {
-            return LoginView(html`
-                <form onSubmit="${onSubmit}">
-                    <big>
-                        <section class="login__body">
-                            <${LoginIDField(component)}/>
+            return html`
+                <aside class="login">
+                    <form class="login__box" onSubmit="${onSubmit}">
+                        ${LoginHeader()}
+                        <section>
+                            <big>
+                                <section class="login__body">
+                                    <${LoginIDField(component)}/>
+                                </section>
+                            </big>
                         </section>
-                    </big>
-                </form>
-                <footer class="login__footer">
-                    <div class="button__container">
-                        <div>
-                            <big>${button}</big>
-                        </div>
-                        ${loginLink()}
-                    </div>
-                    ${footer}
-                </footer>
-            `)
+                        <footer class="login__footer">
+                            <div class="button__container">
+                                <div>
+                                    <big>${button}</big>
+                                </div>
+                                ${loginLink()}
+                            </div>
+                            ${footer}
+                        </footer>
+                    </form>
+                </aside>
+            `
         }
         function pollingStatusView(content: VNode): VNode {
-            return LoginView(html`
-                <section>
-                    <big>
-                        <section class="loading loading_login">
-                            <i class="lnir lnir-spinner lnir-is-spinning"></i>
-                            ${content}
+            return html`
+                <aside class="login">
+                    <section class="login__box">
+                        ${LoginHeader()}
+                        <section>
+                            <big>
+                                <section class="loading loading_login">
+                                    <i class="lnir lnir-spinner lnir-is-spinning"></i>
+                                    ${content}
+                                </section>
+                            </big>
                         </section>
-                    </big>
-                </section>
-                <footer class="login__footer button__container">
-                </footer>
-            `)
+                        <footer class="login__footer button__container"></footer>
+                    </section>
+                </aside>
+            `
         }
         function errorView(title: VNode, content: VNode): VNode {
-            return LoginView(html`
-                <section class="login__message">
-                    <h3 class="login__message__title">${title}</h3>
-                    <section class="login__message__body paragraph">
-                        ${content}
-                        <div class="vertical vertical_medium"></div>
-                        <p>お手数ですが、上記メッセージを管理者にお伝えください</p>
-                    </section>
-                </section>
-                <footer class="login__footer button__container">
+            return ErrorView(title, html`
+                ${content}
+                <div class="vertical vertical_medium"></div>
+                <p>お手数ですが、上記メッセージを管理者にお伝えください</p>
+            `, html`
+                <section class="button__container">
                     <div></div>
                     ${loginLink()}
-                </footer>
+                </section>
             `)
         }
 
@@ -118,17 +123,11 @@ export function PasswordResetSession(component: PasswordResetSessionComponent): 
                 return errorView(html`リセットトークンの送信に失敗しました`, sendTokenError(state.err))
 
             case "succeed-to-send-token":
-                return LoginView(html`
-                    <section class="login__message">
-                        <h3 class="login__message__title">リセットトークンを送信しました</h3>
-                        <section class="login__message__body paragraph">
-                            ${sendTokenMessage(state.dest)}
-                        </section>
-                    </section>
-                    <footer class="login__footer button__container">
+                return ErrorView(html`リセットトークンを送信しました`, sendTokenMessage(state.dest), html`
+                    <section class="button__container">
                         <div></div>
                         ${loginLink()}
-                    </footer>
+                    </section>
                 `)
         }
 
