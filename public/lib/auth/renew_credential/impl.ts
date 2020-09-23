@@ -2,7 +2,7 @@ import { RenewCredentialComponent, RenewCredentialComponentAction } from "./comp
 
 import { RenewCredentialState } from "./data"
 
-import { RenewEvent } from "../../credential/data"
+import { RenewEvent, StoreEvent } from "../../credential/data"
 
 export function initRenewCredentialComponent(action: RenewCredentialComponentAction): RenewCredentialComponent {
     return new Component(action)
@@ -26,8 +26,13 @@ class Component implements RenewCredentialComponent {
             this.listener.forEach(dispatch => dispatch(state))
             stateChanged(state)
         })
+        this.action.credential.sub.onStore((event) => {
+            const state = map(event)
+            this.listener.forEach(dispatch => dispatch(state))
+            stateChanged(state)
+        })
 
-        function map(event: RenewEvent): RenewCredentialState {
+        function map(event: RenewEvent | StoreEvent): RenewCredentialState {
             return event
         }
     }

@@ -40,29 +40,21 @@ class Action implements CredentialAction {
         }
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const renewResponse = await delayed(
+        const response = await delayed(
             this.infra.renewClient.renew(found.ticketNonce),
             this.infra.timeConfig.renewDelayTime,
             () => dispatch({ type: "delayed-to-renew" }),
         )
-        if (!renewResponse.success) {
-            dispatch({ type: "failed-to-renew", err: renewResponse.err })
+        if (!response.success) {
+            dispatch({ type: "failed-to-renew", err: response.err })
             return
         }
-        if (!renewResponse.hasCredential) {
+        if (!response.hasCredential) {
             dispatch({ type: "required-to-login" })
             return
         }
 
-        const storeResponse = this.infra.authCredentials.storeAuthCredential(renewResponse.authCredential)
-        if (!storeResponse.success) {
-            dispatch({ type: "failed-to-store", err: storeResponse.err })
-            return
-        }
-
-        dispatch({ type: "succeed-to-renew" })
-
-        this.setRenewInterval(found.ticketNonce)
+        this.store(response.authCredential)
     }
 
     async store(authCredential: AuthCredential): Promise<void> {

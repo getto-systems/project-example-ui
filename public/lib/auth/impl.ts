@@ -28,7 +28,7 @@ class Usecase implements AuthUsecase {
                     this.tryToLogin()
                     return
 
-                case "succeed-to-renew":
+                case "succeed-to-store":
                     this.loadApplication()
                     return
             }
