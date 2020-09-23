@@ -2,7 +2,7 @@ import { env } from "../../y_static/env"
 
 import { initLoadApplicationComponent } from "../../auth/load_application/impl"
 
-import { initSimulateCheckClient } from "../../script/impl/client/check/simulate"
+import { initFetchCheckClient } from "../../script/impl/client/check/fetch"
 import { initScriptAction } from "../../script/impl/core"
 
 import { CheckClient } from "../../script/infra"
@@ -19,8 +19,7 @@ export function newLoadApplicationComponent(): LoadApplicationComponent {
 }
 
 function newCheckClient(): CheckClient {
-    // TODO ちゃんとした実装を用意
-    return initSimulateCheckClient({ success: true })
+    return initFetchCheckClient()
 }
 
 function newHostConfig(): HostConfig {
