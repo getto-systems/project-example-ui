@@ -9,7 +9,7 @@ import { LoginIDFieldState } from "../../../auth/field/login_id/data"
 export function newPasswordResetSessionComponent(): PasswordResetSessionComponent {
     const init = new Init()
     return new Component(
-        init.succeedToSendToken(),
+        init.initialResetSession(),
         init.loginIDValid(),
     )
 }

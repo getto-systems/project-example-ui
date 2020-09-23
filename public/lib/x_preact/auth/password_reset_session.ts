@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { LoginView } from "./layout"
-import { LoginIDField } from "./field/login_id"
+import { LoginIDField } from "./password_reset_session/field/login_id"
 
 import { PasswordResetSessionComponent } from "../../auth/password_reset_session/component"
 import { initialPasswordResetSessionState } from "../../auth/password_reset_session/data"
