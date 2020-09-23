@@ -8,6 +8,6 @@ export type RenewCredentialState =
     Readonly<{ type: "delayed-to-renew" }> |
     Readonly<{ type: "failed-to-renew", err: RenewError }> |
     Readonly<{ type: "failed-to-store", err: StoreError }> |
-    Readonly<{ type: "succeed-to-renew" }>
+    Readonly<{ type: "succeed-to-store" }>
 
 export const initialRenewCredentialState: RenewCredentialState = { type: "initial-renew" }

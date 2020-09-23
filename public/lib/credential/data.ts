@@ -21,9 +21,7 @@ export type RenewEvent =
     Readonly<{ type: "failed-to-fetch", err: FetchError }> |
     Readonly<{ type: "try-to-renew" }> |
     Readonly<{ type: "delayed-to-renew" }> |
-    Readonly<{ type: "failed-to-renew", err: RenewError }> |
-    Readonly<{ type: "failed-to-store", err: StoreError }> |
-    Readonly<{ type: "succeed-to-renew" }>
+    Readonly<{ type: "failed-to-renew", err: RenewError }>
 
 export type FetchError =
     Readonly<{ type: "infra-error", err: string }>
