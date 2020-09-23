@@ -2,7 +2,7 @@ import { FetchError, RenewError, StoreError } from "../../credential/data"
 
 export type RenewCredentialState =
     Readonly<{ type: "initial-renew" }> |
-    Readonly<{ type: "unauthorized" }> |
+    Readonly<{ type: "required-to-login" }> |
     Readonly<{ type: "failed-to-fetch", err: FetchError }> |
     Readonly<{ type: "try-to-renew" }> |
     Readonly<{ type: "delayed-to-renew" }> |

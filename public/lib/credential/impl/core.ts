@@ -33,7 +33,7 @@ class Action implements CredentialAction {
             return
         }
         if (!found.found) {
-            this.pub.publishRenewEvent({ type: "unauthorized" })
+            this.pub.publishRenewEvent({ type: "required-to-login" })
             return
         }
 
@@ -48,7 +48,7 @@ class Action implements CredentialAction {
             return
         }
         if (!renewResponse.hasCredential) {
-            this.pub.publishRenewEvent({ type: "unauthorized" })
+            this.pub.publishRenewEvent({ type: "required-to-login" })
             return
         }
 

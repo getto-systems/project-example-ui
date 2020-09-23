@@ -24,7 +24,7 @@ export function RenewCredential(component: RenewCredentialComponent): PreactComp
 
         switch (state.type) {
             case "initial-renew":
-            case "unauthorized":
+            case "required-to-login":
             case "succeed-to-renew":
                 return html``
 

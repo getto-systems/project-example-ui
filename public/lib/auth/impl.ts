@@ -24,7 +24,7 @@ class Usecase implements AuthUsecase {
 
         this.component.renewCredential.hook((state) => {
             switch (state.type) {
-                case "unauthorized":
+                case "required-to-login":
                     this.tryToLogin()
                     return
 
