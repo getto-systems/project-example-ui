@@ -12,7 +12,7 @@ export interface CredentialEventPublisher {
 }
 
 export interface CredentialEventSubscriber {
-    onRenew(stateChanged: Dispatcher<RenewEvent>): void
+    onRenew(stateChanged: Dispatcher<RenewEvent | StoreEvent>): void
     onStore(stateChanged: Dispatcher<StoreEvent>): void
 }
 
