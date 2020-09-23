@@ -28,7 +28,7 @@ class StorageAuthCredentialRepository implements AuthCredentialRepository {
 
             return { success: true, found: true, ticketNonce: authCredential.authCredential.ticketNonce }
         } catch (err) {
-            return { success: false, err: { type: "infra-error", err } }
+            return { success: false, err: { type: "infra-error", err: `${err}` } }
         }
     }
 
@@ -38,7 +38,7 @@ class StorageAuthCredentialRepository implements AuthCredentialRepository {
             this.storage.setItem(authCredential)
             return { success: true }
         } catch (err) {
-            return { success: false, err: { type: "infra-error", err } }
+            return { success: false, err: { type: "infra-error", err: `${err}` } }
         }
     }
 }
