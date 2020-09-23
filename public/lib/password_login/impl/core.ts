@@ -26,26 +26,28 @@ class Action implements PasswordLoginAction {
     }
 
     async login(fields: [Content<LoginID>, Content<Password>]): Promise<void> {
+        const publish = (event: LoginEvent) => this.pub.publishLoginEvent(event)
+
         const content = mapContent(...fields)
         if (!content.valid) {
-            this.pub.publishLoginEvent({ type: "failed-to-login", err: { type: "validation-error" } })
+            publish({ type: "failed-to-login", err: { type: "validation-error" } })
             return
         }
 
-        this.pub.publishLoginEvent({ type: "try-to-login" })
+        publish({ type: "try-to-login" })
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const response = await delayed(
             this.infra.passwordLoginClient.login(...content.content),
             this.infra.timeConfig.passwordLoginDelayTime,
-            () => this.pub.publishLoginEvent({ type: "delayed-to-login" }),
+            () => publish({ type: "delayed-to-login" }),
         )
         if (!response.success) {
-            this.pub.publishLoginEvent({ type: "failed-to-login", err: response.err })
+            publish({ type: "failed-to-login", err: response.err })
             return
         }
 
-        this.pub.publishLoginEvent({ type: "succeed-to-login", authCredential: response.authCredential })
+        publish({ type: "succeed-to-login", authCredential: response.authCredential })
         return
 
         type ValidContent =

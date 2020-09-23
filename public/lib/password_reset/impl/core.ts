@@ -31,26 +31,28 @@ class PasswordResetActionImpl implements PasswordResetAction {
     }
 
     async createSession(fields: [Content<LoginID>]): Promise<void> {
+        const publish = (event: CreateSessionEvent) => this.pub.publishCreateSessionEvent(event)
+
         const content = mapContent(...fields)
         if (!content.valid) {
-            this.pub.publishCreateSessionEvent({ type: "failed-to-create-session", err: { type: "validation-error" } })
+            publish({ type: "failed-to-create-session", err: { type: "validation-error" } })
             return
         }
 
-        this.pub.publishCreateSessionEvent({ type: "try-to-create-session" })
+        publish({ type: "try-to-create-session" })
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const response = await delayed(
             this.infra.passwordResetSessionClient.createSession(...content.content),
             this.infra.timeConfig.passwordResetCreateSessionDelayTime,
-            () => this.pub.publishCreateSessionEvent({ type: "delayed-to-create-session" }),
+            () => publish({ type: "delayed-to-create-session" }),
         )
         if (!response.success) {
-            this.pub.publishCreateSessionEvent({ type: "failed-to-create-session", err: response.err })
+            publish({ type: "failed-to-create-session", err: response.err })
             return
         }
 
-        this.pub.publishCreateSessionEvent({ type: "succeed-to-create-session", sessionID: response.sessionID })
+        publish({ type: "succeed-to-create-session", sessionID: response.sessionID })
 
         return
 
@@ -67,30 +69,33 @@ class PasswordResetActionImpl implements PasswordResetAction {
     }
 
     async startPollingStatus(sessionID: SessionID): Promise<void> {
-        new StatusPoller(this.infra.timeConfig, this.infra.passwordResetSessionClient, this.pub).startPolling(sessionID)
+        const publish = (event: PollingStatusEvent) => this.pub.publishPollingStatusEvent(event)
+        new StatusPoller(this.infra.timeConfig, this.infra.passwordResetSessionClient, publish).startPolling(sessionID)
     }
 
     async reset(resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<void> {
+        const publish = (event: ResetEvent) => this.pub.publishResetEvent(event)
+
         const content = mapContent(...fields)
         if (!content.valid) {
-            this.pub.publishResetEvent({ type: "failed-to-reset", err: { type: "validation-error" } })
+            publish({ type: "failed-to-reset", err: { type: "validation-error" } })
             return
         }
 
-        this.pub.publishResetEvent({ type: "try-to-reset" })
+        publish({ type: "try-to-reset" })
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const response = await delayed(
             this.infra.passwordResetClient.reset(resetToken, ...content.content),
             this.infra.timeConfig.passwordResetDelayTime,
-            () => this.pub.publishResetEvent({ type: "delayed-to-reset" }),
+            () => publish({ type: "delayed-to-reset" }),
         )
         if (!response.success) {
-            this.pub.publishResetEvent({ type: "failed-to-reset", err: response.err })
+            publish({ type: "failed-to-reset", err: response.err })
             return
         }
 
-        this.pub.publishResetEvent({ type: "succeed-to-reset", authCredential: response.authCredential })
+        publish({ type: "succeed-to-reset", authCredential: response.authCredential })
         return
 
         type ValidContent =
@@ -117,11 +122,11 @@ type SendTokenState =
 class StatusPoller {
     timeConfig: TimeConfig
     client: PasswordResetSessionClient
-    pub: PasswordResetEventPublisher
+    pub: Publisher<PollingStatusEvent>
 
     sendTokenState: SendTokenState
 
-    constructor(timeConfig: TimeConfig, client: PasswordResetSessionClient, pub: PasswordResetEventPublisher) {
+    constructor(timeConfig: TimeConfig, client: PasswordResetSessionClient, pub: Publisher<PollingStatusEvent>) {
         this.timeConfig = timeConfig
         this.client = client
         this.pub = pub
@@ -130,7 +135,7 @@ class StatusPoller {
     }
 
     async startPolling(sessionID: SessionID): Promise<void> {
-        this.pub.publishPollingStatusEvent({ type: "try-to-polling-status" })
+        this.pub({ type: "try-to-polling-status" })
 
         this.sendToken()
 
@@ -140,21 +145,21 @@ class StatusPoller {
             count += 1
 
             if (this.sendTokenState.type === "failed") {
-                this.pub.publishPollingStatusEvent({ type: "failed-to-polling-status", err: this.sendTokenState.err })
+                this.pub({ type: "failed-to-polling-status", err: this.sendTokenState.err })
                 return
             }
 
             const response = await this.client.getStatus(sessionID)
             if (!response.success) {
-                this.pub.publishPollingStatusEvent({ type: "failed-to-polling-status", err: response.err })
+                this.pub({ type: "failed-to-polling-status", err: response.err })
                 return
             }
 
             if (response.done) {
                 if (response.send) {
-                    this.pub.publishPollingStatusEvent({ type: "succeed-to-send-token", dest: response.dest })
+                    this.pub({ type: "succeed-to-send-token", dest: response.dest })
                 } else {
-                    this.pub.publishPollingStatusEvent({
+                    this.pub({
                         type: "failed-to-send-token",
                         dest: response.dest,
                         err: { type: "infra-error", err: response.err },
@@ -163,7 +168,7 @@ class StatusPoller {
                 return
             }
 
-            this.pub.publishPollingStatusEvent({
+            this.pub({
                 type: "retry-to-polling-status",
                 dest: response.dest,
                 status: response.status,
@@ -172,7 +177,7 @@ class StatusPoller {
             await wait(this.timeConfig.passwordResetPollingWaitTime)
         }
 
-        this.pub.publishPollingStatusEvent({
+        this.pub({
             type: "failed-to-polling-status",
             err: { type: "infra-error", err: "overflow polling limit" },
         })

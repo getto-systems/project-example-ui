@@ -25,12 +25,14 @@ class Action implements ScriptAction {
     }
 
     async load(pagePathname: PagePathname): Promise<void> {
+        const publish = (event: ScriptEvent) => this.pub.publishScriptEvent(event)
+
         const scriptPath = secureScriptPath(this.infra.hostConfig.secureServerHost, pagePathname)
-        this.pub.publishScriptEvent({ type: "try-to-load", scriptPath })
+        publish({ type: "try-to-load", scriptPath })
 
         const response = await this.infra.checkClient.checkStatus(scriptPath)
         if (!response.success) {
-            this.pub.publishScriptEvent({ type: "failed-to-load", err: response.err })
+            publish({ type: "failed-to-load", err: response.err })
         }
     }
 }

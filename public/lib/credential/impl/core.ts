@@ -27,13 +27,15 @@ class Action implements CredentialAction {
     }
 
     async renew(): Promise<void> {
+        const publish = (event: RenewEvent) => this.pub.publishRenewEvent(event)
+
         const found = this.infra.authCredentials.findTicketNonce()
         if (!found.success) {
-            this.pub.publishRenewEvent({ type: "failed-to-fetch", err: found.err })
+            publish({ type: "failed-to-fetch", err: found.err })
             return
         }
         if (!found.found) {
-            this.pub.publishRenewEvent({ type: "required-to-login" })
+            publish({ type: "required-to-login" })
             return
         }
 
@@ -41,35 +43,37 @@ class Action implements CredentialAction {
         const renewResponse = await delayed(
             this.infra.renewClient.renew(found.ticketNonce),
             this.infra.timeConfig.renewDelayTime,
-            () => this.pub.publishRenewEvent({ type: "delayed-to-renew" }),
+            () => publish({ type: "delayed-to-renew" }),
         )
         if (!renewResponse.success) {
-            this.pub.publishRenewEvent({ type: "failed-to-renew", err: renewResponse.err })
+            publish({ type: "failed-to-renew", err: renewResponse.err })
             return
         }
         if (!renewResponse.hasCredential) {
-            this.pub.publishRenewEvent({ type: "required-to-login" })
+            publish({ type: "required-to-login" })
             return
         }
 
         const storeResponse = this.infra.authCredentials.storeAuthCredential(renewResponse.authCredential)
         if (!storeResponse.success) {
-            this.pub.publishRenewEvent({ type: "failed-to-store", err: storeResponse.err })
+            publish({ type: "failed-to-store", err: storeResponse.err })
             return
         }
 
-        this.pub.publishRenewEvent({ type: "succeed-to-renew" })
+        publish({ type: "succeed-to-renew" })
 
         this.setRenewInterval(found.ticketNonce)
     }
 
     async store(authCredential: AuthCredential): Promise<void> {
+        const publish = (event: StoreEvent) => this.pub.publishStoreEvent(event)
+
         const response = this.infra.authCredentials.storeAuthCredential(authCredential)
         if (!response.success) {
-            this.pub.publishStoreEvent({ type: "failed-to-store", err: response.err })
+            publish({ type: "failed-to-store", err: response.err })
             return
         }
-        this.pub.publishStoreEvent({ type: "succeed-to-store" })
+        publish({ type: "succeed-to-store" })
 
         this.setRenewInterval(authCredential.ticketNonce)
     }
