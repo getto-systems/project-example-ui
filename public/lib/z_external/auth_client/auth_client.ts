@@ -24,35 +24,30 @@ function authFailed(err: AuthError): AuthResponse {
 type AuthError = Readonly<{ type: string, err: string }>
 
 export function initAuthClient(authServerURL: string): AuthClient {
-    return new AuthClientImpl(authServerURL)
+    return new Client(authServerURL)
 }
 
-class AuthClientImpl implements AuthClient {
+class Client implements AuthClient {
     authServerURL: string
 
     constructor(authServerURL: string) {
         this.authServerURL = authServerURL
     }
 
-    async renew(params: RenewParam): Promise<AuthResponse> {
-        // TODO fetch はモバイルで使えないっぽいので xhr に書き換え
-        const response = await fetch(this.authServerURL, {
-            method: "POST",
-            credentials: "include",
-            headers: requestHeaders("Renew", {
-                "X-GETTO-EXAMPLE-ID-TICKET-NONCE": params.nonce,
-            }),
+    renew(params: RenewParam): Promise<AuthResponse> {
+        return this.authRequest("Renew", {
+            header: [
+                ["X-GETTO-EXAMPLE-ID-TICKET-NONCE", params.nonce],
+            ],
+            body: noBody,
+            response: parseAuthResponse,
         })
-
-        return await parseResponse(response)
     }
 
     async passwordLogin(params: PasswordLoginParam): Promise<AuthResponse> {
-        const response = await fetch(this.authServerURL, {
-            method: "POST",
-            credentials: "include",
-            headers: requestHeaders("PasswordLogin", {}),
-            body: (() => {
+        return this.authRequest("PasswordLogin", {
+            header: [],
+            body: hasBody(() => {
                 const f = PasswordLoginMessage
                 const passwordLogin = new f()
 
@@ -61,37 +56,75 @@ class AuthClientImpl implements AuthClient {
 
                 const arr = f.encode(passwordLogin).finish()
                 return encodeUint8ArrayToBase64String(arr)
-            })(),
+            }),
+            response: parseAuthResponse,
         })
+    }
 
-        return await parseResponse(response)
+    authRequest(handler: string, authRequest: AuthRequest): Promise<AuthResponse> {
+        return new Promise((resolve) => {
+            try {
+                const request = new XMLHttpRequest()
+
+                request.addEventListener("load", () => {
+                    resolve(authRequest.response(request))
+                })
+                request.addEventListener("error", () => {
+                    resolve(errorResponse(request))
+                })
+
+                request.withCredentials = true
+
+                request.open("POST", this.authServerURL)
+
+                authRequest.header.concat([["X-GETTO-EXAMPLE-ID-HANDLER", handler]]).forEach((header) => {
+                    request.setRequestHeader(...header)
+                })
+
+                request.send(bodyString(authRequest.body))
+            } catch (err) {
+                resolve(authFailed({ type: "infra-error", err: `${err}` }))
+            }
+        })
     }
 }
 
-function requestHeaders(handler: string, additional_headers: Record<string, string>): Record<string, string> {
-    const headers: Record<string, string> = {
-        "X-GETTO-EXAMPLE-ID-HANDLER": handler,
-    }
+type AuthRequest = Readonly<{
+    header: [string, string][]
+    body: AuthRequestBody
+    response: AuthResponseHandler
+}>
 
-    for (const key in additional_headers) {
-        headers[key] = additional_headers[key]
+type AuthRequestBody =
+    Readonly<{ hasBody: false }> |
+    Readonly<{ hasBody: true, body: string }>
+const noBody: AuthRequestBody = { hasBody: false }
+function hasBody(producer: AuthRequestBodyProducer): AuthRequestBody {
+    return { hasBody: true, body: producer() }
+}
+function bodyString(body: AuthRequestBody): string | null {
+    if (!body.hasBody) {
+        return null
     }
-
-    return headers
+    return body.body
 }
 
-async function parseResponse(response: Response): Promise<AuthResponse> {
-    if (!response.ok) {
-        const body = await response.json()
-        return authFailed({
-            type: typeof body.message === "string" ? body.message : "server-error",
-            err: "",
-        })
+interface AuthRequestBodyProducer {
+    (): string
+}
+
+interface AuthResponseHandler {
+    (request: XMLHttpRequest): AuthResponse
+}
+
+function parseAuthResponse(request: XMLHttpRequest): AuthResponse {
+    if (request.status !== 200) {
+        return errorResponse(request)
     }
 
     try {
-        const nonce = response.headers.get("X-GETTO-EXAMPLE-ID-TICKET-NONCE")
-        const credential = response.headers.get("X-GETTO-EXAMPLE-ID-API-CREDENTIAL")
+        const nonce = request.getResponseHeader("X-GETTO-EXAMPLE-ID-TICKET-NONCE")
+        const credential = request.getResponseHeader("X-GETTO-EXAMPLE-ID-API-CREDENTIAL")
 
         if (!nonce) {
             throw "nonce is empty"
@@ -104,6 +137,15 @@ async function parseResponse(response: Response): Promise<AuthResponse> {
 
         return authSuccess(nonce, apiCredential.roles ? apiCredential.roles : [])
     } catch (err) {
-        return authFailed({ type: "bad-response", err })
+        return authFailed({ type: "bad-response", err: `${err}` })
+    }
+}
+
+function errorResponse(request: XMLHttpRequest): AuthResponse {
+    try {
+        const response = JSON.parse(request.responseText)
+        return authFailed({ type: response.message || "server-error", err: "" })
+    } catch (err) {
+        return authFailed({ type: "server-error", err: `${err}` })
     }
 }

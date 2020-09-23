@@ -54,7 +54,7 @@ class FetchRenewClient implements RenewClient {
                 }
             }
         } catch (err) {
-            return { success: false, err: { type: "infra-error", err } }
+            return { success: false, err: { type: "infra-error", err: `${err}` } }
         }
     }
 }
