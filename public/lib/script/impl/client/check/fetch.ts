@@ -14,13 +14,11 @@ class Client implements CheckClient {
             try {
                 // TODO CloudFront のリソース読み込みができるか、本番環境で確認しないといけない
                 const request = new XMLHttpRequest()
-                request.addEventListener("readystatechange", (_e: Event) => {
-                    if (request.status >= 200 && request.status < 400) {
-                        resolve({ success: true })
-                    }
+                request.addEventListener("load", (_e: Event) => {
+                    resolve({ success: true })
                 })
                 request.addEventListener("error", (_e: Event) => {
-                    resolve({ success: false, err: { type: "infra-error", err: "request error" } })
+                    resolve({ success: false, err: { type: "not-found" } })
                 })
                 request.withCredentials = true
                 request.open("HEAD", scriptPathToString(scriptPath))
