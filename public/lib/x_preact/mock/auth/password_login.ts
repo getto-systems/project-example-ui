@@ -9,7 +9,7 @@ import { PasswordFieldState } from "../../../auth/field/password/data"
 export function newPasswordLoginComponent(): PasswordLoginComponent {
     const init = new Init()
     return new Component(
-        init.delayedToLogin(),
+        init.initialLogin(),
         init.loginIDValid(),
         init.passwordValid(),
     )

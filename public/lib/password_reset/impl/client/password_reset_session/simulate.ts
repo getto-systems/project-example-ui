@@ -40,7 +40,7 @@ class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
                 } else {
                     resolve(createSessionFailed({ type: "invalid-password-reset" }))
                 }
-            }, 5 * 1000)
+            }, 0.3 * 1000)
         })
     }
 
@@ -55,24 +55,22 @@ class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
     }
 
     sendToken(): Promise<SendTokenResponse> {
-        setTimeout(this.toWaiting, 1 * 1000)
-        setTimeout(this.toSending, 2 * 1000)
-        setTimeout(this.toSuccess, 3 * 1000)
+        setTimeout(() => this.toWaiting(), 1 * 1000)
+        setTimeout(() => this.toSending(), 2 * 1000)
+        setTimeout(() => this.toSuccess(), 3 * 1000)
 
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve({ success: true })
-            }, 5 * 1000)
+            }, 0.3 * 1000)
         })
     }
 
     getStatus(sessionID: SessionID): Promise<GetStatusResponse> {
         return new Promise((resolve) => {
-            ((simulate) => {
-                setTimeout(() => {
-                    resolve(simulate(sessionID))
-                }, 5 * 1000)
-            })(this.getStatusSimulate)
+            setTimeout(() => {
+                resolve(this.getStatusSimulate(sessionID))
+            }, 0.3 * 1000)
         })
     }
     getStatusSimulate(sessionID: SessionID): GetStatusResponse {
@@ -82,8 +80,6 @@ class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
 
         switch (this.tokenState.state) {
             case "initial":
-                return getStatusFailed({ type: "infra-error", err: "not initialized" })
-
             case "waiting":
                 return getStatusPolling({ type: "log" }, { sending: false })
 
