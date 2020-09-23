@@ -43,12 +43,12 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
                 return html``
 
             case "failed-to-load":
-                return ErrorView(...failedContent(state.err))
+                return failedContent(state.err)
         }
     }
 
-    function failedContent(err: CheckError): [VNode, VNode, VNode] {
-        return [
+    function failedContent(err: CheckError): VNode {
+        return ErrorView(
             html`アプリケーションの初期化に失敗しました`,
             html`
                 ${errorMessage()}
@@ -56,7 +56,7 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
                 <p>お手数ですが、上記メッセージを管理者に伝えてください</p>
             `,
             html``,
-        ]
+        )
 
         function errorMessage(): VNode {
             switch (err.type) {

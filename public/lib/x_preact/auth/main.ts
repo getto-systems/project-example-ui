@@ -1,5 +1,7 @@
 import { h, VNode } from "preact"
-import { useState, useEffect } from "preact/hooks"
+import { useState, useEffect, useErrorBoundary } from "preact/hooks"
+
+import { ApplicationError } from "./application_error"
 
 import { RenewCredential } from "./renew_credential"
 import { StoreCredential } from "./store_credential"
@@ -14,13 +16,20 @@ import { initialAuthState } from "../../auth/data"
 
 export function Main(usecase: AuthUsecase) {
     return (): VNode => {
+        const [error, _resetError] = useErrorBoundary((err) => {
+            // ここでエラーをどこかに投げたい、けど認証前なのでこれでお茶を濁す
+            console.log(err)
+        })
+
         const [state, setState] = useState(initialAuthState)
         useEffect(() => {
             usecase.onStateChange(setState)
             return () => usecase.terminate()
         }, [])
 
-        // TODO useErrorBoundary とか使ってエラーの処理をする
+        if (error) {
+            return h(ApplicationError, {})
+        }
 
         switch (state.type) {
             case "renew-credential":
