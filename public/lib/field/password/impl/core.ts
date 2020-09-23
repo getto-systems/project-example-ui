@@ -80,7 +80,7 @@ class Field implements PasswordField {
     }
     validate(): void {
         const [content, result, character, view] = this.content()
-        this.pub.publishPasswordFieldEvent({ type: "succeed-to-update-password", result, content, character, view })
+        this.pub.dispatchPasswordFieldEvent({ type: "succeed-to-update-password", result, content, character, view })
     }
 
     content(): [Content<Password>, Valid<PasswordFieldError>, PasswordCharacter, PasswordView] {
@@ -113,7 +113,7 @@ class EventPubSub implements PasswordFieldEventPublisher, PasswordFieldEventSubs
         this.listener.push(pub)
     }
 
-    publishPasswordFieldEvent(event: PasswordFieldEvent): void {
+    dispatchPasswordFieldEvent(event: PasswordFieldEvent): void {
         this.listener.forEach(pub => pub(event))
     }
 }

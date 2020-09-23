@@ -6,7 +6,7 @@ export interface ScriptAction {
 }
 
 export interface ScriptEventPublisher {
-    publishScriptEvent(event: ScriptEvent): void
+    dispatchScriptEvent(event: ScriptEvent): void
 }
 
 export interface ScriptEventSubscriber {

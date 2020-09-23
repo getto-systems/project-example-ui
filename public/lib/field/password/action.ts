@@ -15,7 +15,7 @@ export interface PasswordField {
 }
 
 export interface PasswordFieldEventPublisher {
-    publishPasswordFieldEvent(event: PasswordFieldEvent): void
+    dispatchPasswordFieldEvent(event: PasswordFieldEvent): void
 }
 
 export interface PasswordFieldEventSubscriber {

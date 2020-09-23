@@ -46,7 +46,7 @@ class Field implements LoginIDField {
     }
     validate(): void {
         const [content, result] = this.content()
-        this.pub.publishLoginIDFieldEvent({ type: "succeed-to-update-login_id", result, content })
+        this.pub.dispatchLoginIDFieldEvent({ type: "succeed-to-update-login_id", result, content })
     }
 
     content(): [Content<LoginID>, Valid<LoginIDFieldError>] {
@@ -70,7 +70,7 @@ class FieldEventPubSub implements LoginIDFieldEventPublisher, LoginIDFieldEventS
         this.listener.push(pub)
     }
 
-    publishLoginIDFieldEvent(event: LoginIDFieldEvent): void {
+    dispatchLoginIDFieldEvent(event: LoginIDFieldEvent): void {
         this.listener.forEach(pub => pub(event))
     }
 }

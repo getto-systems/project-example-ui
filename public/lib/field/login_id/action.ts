@@ -13,7 +13,7 @@ export interface LoginIDField {
 }
 
 export interface LoginIDFieldEventPublisher {
-    publishLoginIDFieldEvent(event: LoginIDFieldEvent): void
+    dispatchLoginIDFieldEvent(event: LoginIDFieldEvent): void
 }
 
 export interface LoginIDFieldEventSubscriber {
