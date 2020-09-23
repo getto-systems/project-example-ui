@@ -25,8 +25,6 @@ export type RenewResponse =
 
 export interface AuthCredentialRepository {
     findTicketNonce(): FindResponse
-    // TODO find api nonce を追加
-    //findApiNonce(): ApiNonceFound
     storeAuthCredential(authCredential: AuthCredential): StoreResponse
 }
 

@@ -7,7 +7,6 @@ export type ResetToken = { ResetToken: never }
 export type Destination =
     Readonly<{ type: "log" }>
 
-// TODO since と at を時間型にしたい
 export type PollingStatus =
     Readonly<{ sending: false }> |
     Readonly<{ sending: true }>

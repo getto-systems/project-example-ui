@@ -33,6 +33,7 @@ class StorageAuthCredentialRepository implements AuthCredentialRepository {
     }
 
     storeAuthCredential(authCredential: AuthCredential): StoreResponse {
+        // TODO たふん TicketNonce と ApiCredential を別々に保存するべき
         try {
             this.storage.setItem(authCredential)
             return { success: true }
