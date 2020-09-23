@@ -12,10 +12,10 @@ export interface CredentialEventPublisher {
 }
 
 export interface CredentialEventSubscriber {
-    onRenew(stateChanged: Publisher<RenewEvent>): void
-    onStore(stateChanged: Publisher<StoreEvent>): void
+    onRenew(stateChanged: Dispatcher<RenewEvent>): void
+    onStore(stateChanged: Dispatcher<StoreEvent>): void
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

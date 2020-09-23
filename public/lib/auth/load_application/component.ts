@@ -3,7 +3,7 @@ import { LoadApplicationState, LoadApplicationComponentOperation } from "./data"
 import { ScriptAction } from "../../script/action"
 
 export interface LoadApplicationComponent {
-    onStateChange(stateChanged: Publisher<LoadApplicationState>): void
+    onStateChange(stateChanged: Dispatcher<LoadApplicationState>): void
     terminate(): void
     trigger(operation: LoadApplicationComponentOperation): Promise<void>
 }
@@ -12,6 +12,6 @@ export interface LoadApplicationComponentAction {
     script: ScriptAction,
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

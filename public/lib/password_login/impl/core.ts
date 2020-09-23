@@ -68,7 +68,7 @@ class Action implements PasswordLoginAction {
 
 class EventPubSub implements PasswordLoginEventPublisher, PasswordLoginEventSubscriber {
     listener: {
-        login: Publisher<LoginEvent>[]
+        login: Dispatcher<LoginEvent>[]
     }
 
     constructor() {
@@ -77,16 +77,16 @@ class EventPubSub implements PasswordLoginEventPublisher, PasswordLoginEventSubs
         }
     }
 
-    onLoginEvent(pub: Publisher<LoginEvent>): void {
-        this.listener.login.push(pub)
+    onLoginEvent(dispatch: Dispatcher<LoginEvent>): void {
+        this.listener.login.push(dispatch)
     }
 
     dispatchLoginEvent(event: LoginEvent): void {
-        this.listener.login.forEach(pub => pub(event))
+        this.listener.login.forEach(dispatch => dispatch(event))
     }
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }
 

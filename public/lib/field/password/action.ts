@@ -19,9 +19,9 @@ export interface PasswordFieldEventPublisher {
 }
 
 export interface PasswordFieldEventSubscriber {
-    onPasswordFieldEvent(pub: Publisher<PasswordFieldEvent>): void
+    onPasswordFieldEvent(dispatch: Dispatcher<PasswordFieldEvent>): void
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

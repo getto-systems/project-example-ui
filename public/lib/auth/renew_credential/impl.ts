@@ -9,7 +9,7 @@ export function initRenewCredentialComponent(action: RenewCredentialComponentAct
 }
 
 class Component implements RenewCredentialComponent {
-    listener: Publisher<RenewCredentialState>[]
+    listener: Dispatcher<RenewCredentialState>[]
     action: RenewCredentialComponentAction
 
     constructor(action: RenewCredentialComponentAction) {
@@ -17,13 +17,13 @@ class Component implements RenewCredentialComponent {
         this.action = action
     }
 
-    hook(pub: Publisher<RenewCredentialState>): void {
-        this.listener.push(pub)
+    hook(dispatch: Dispatcher<RenewCredentialState>): void {
+        this.listener.push(dispatch)
     }
-    onStateChange(stateChanged: Publisher<RenewCredentialState>): void {
+    onStateChange(stateChanged: Dispatcher<RenewCredentialState>): void {
         this.action.credential.sub.onRenew((event) => {
             const state = map(event)
-            this.listener.forEach(pub => pub(state))
+            this.listener.forEach(dispatch => dispatch(state))
             stateChanged(state)
         })
 
@@ -40,6 +40,6 @@ class Component implements RenewCredentialComponent {
     }
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

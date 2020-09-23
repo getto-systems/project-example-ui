@@ -14,10 +14,10 @@ export interface PasswordResetComponentAction {
 }
 
 export interface PasswordResetComponent {
-    hook(stateChanged: Publisher<PasswordResetState>): void
-    onStateChange(stateChanged: Publisher<PasswordResetState>): void
-    onLoginIDFieldStateChange(stateChanged: Publisher<LoginIDFieldState>): void
-    onPasswordFieldStateChange(stateChanged: Publisher<PasswordFieldState>): void
+    hook(stateChanged: Dispatcher<PasswordResetState>): void
+    onStateChange(stateChanged: Dispatcher<PasswordResetState>): void
+    onLoginIDFieldStateChange(stateChanged: Dispatcher<LoginIDFieldState>): void
+    onPasswordFieldStateChange(stateChanged: Dispatcher<PasswordFieldState>): void
     terminate(): void
     trigger(operation: PasswordResetComponentOperation): Promise<void>
 }
@@ -28,6 +28,6 @@ export interface PasswordResetWorkerComponentHelper {
     mapPasswordFieldState(state: PasswordFieldState): PasswordResetWorkerState
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

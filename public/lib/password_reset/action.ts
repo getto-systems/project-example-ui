@@ -18,11 +18,11 @@ export interface PasswordResetEventPublisher {
 }
 
 export interface PasswordResetEventSubscriber {
-    onCreateSessionEvent(stateChanged: Publisher<CreateSessionEvent>): void
-    onPollingStatusEvent(stateChanged: Publisher<PollingStatusEvent>): void
-    onResetEvent(stateChanged: Publisher<ResetEvent>): void
+    onCreateSessionEvent(stateChanged: Dispatcher<CreateSessionEvent>): void
+    onPollingStatusEvent(stateChanged: Dispatcher<PollingStatusEvent>): void
+    onResetEvent(stateChanged: Dispatcher<ResetEvent>): void
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

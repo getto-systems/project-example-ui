@@ -34,10 +34,10 @@ class Component implements RenewCredentialComponent {
         this.state = state
     }
 
-    hook(_stateChanged: Publisher<RenewCredentialState>): void {
+    hook(_stateChanged: Dispatcher<RenewCredentialState>): void {
         // mock では特に何もしない
     }
-    onStateChange(stateChanged: Publisher<RenewCredentialState>): void {
+    onStateChange(stateChanged: Dispatcher<RenewCredentialState>): void {
         stateChanged(this.state)
     }
     terminate(): void {
@@ -49,6 +49,6 @@ class Component implements RenewCredentialComponent {
     }
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

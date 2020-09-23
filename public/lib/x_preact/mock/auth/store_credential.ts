@@ -21,10 +21,10 @@ class Component implements StoreCredentialComponent {
         this.state = state
     }
 
-    hook(_stateChanged: Publisher<StoreCredentialState>): void {
+    hook(_stateChanged: Dispatcher<StoreCredentialState>): void {
         // mock では特に何もしない
     }
-    onStateChange(stateChanged: Publisher<StoreCredentialState>): void {
+    onStateChange(stateChanged: Dispatcher<StoreCredentialState>): void {
         stateChanged(this.state)
     }
     terminate(): void {
@@ -36,6 +36,6 @@ class Component implements StoreCredentialComponent {
     }
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

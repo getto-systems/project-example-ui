@@ -14,10 +14,10 @@ export interface PasswordLoginComponentAction {
 }
 
 export interface PasswordLoginComponent {
-    hook(stateChanged: Publisher<PasswordLoginState>): void
-    onStateChange(stateChanged: Publisher<PasswordLoginState>): void
-    onLoginIDFieldStateChange(stateChanged: Publisher<LoginIDFieldState>): void
-    onPasswordFieldStateChange(stateChanged: Publisher<PasswordFieldState>): void
+    hook(stateChanged: Dispatcher<PasswordLoginState>): void
+    onStateChange(stateChanged: Dispatcher<PasswordLoginState>): void
+    onLoginIDFieldStateChange(stateChanged: Dispatcher<LoginIDFieldState>): void
+    onPasswordFieldStateChange(stateChanged: Dispatcher<PasswordFieldState>): void
     terminate(): void
     trigger(operation: PasswordLoginComponentOperation): Promise<void>
 }
@@ -28,6 +28,6 @@ export interface PasswordLoginWorkerComponentHelper {
     mapPasswordFieldState(state: PasswordFieldState): PasswordLoginWorkerState
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

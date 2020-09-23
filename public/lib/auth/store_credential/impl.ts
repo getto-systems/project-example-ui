@@ -9,7 +9,7 @@ export function initStoreCredentialComponent(action: StoreCredentialComponentAct
 }
 
 class Component implements StoreCredentialComponent {
-    listener: Publisher<StoreCredentialState>[]
+    listener: Dispatcher<StoreCredentialState>[]
     action: StoreCredentialComponentAction
 
     constructor(action: StoreCredentialComponentAction) {
@@ -17,13 +17,13 @@ class Component implements StoreCredentialComponent {
         this.action = action
     }
 
-    hook(pub: Publisher<StoreCredentialState>): void {
-        this.listener.push(pub)
+    hook(dispatch: Dispatcher<StoreCredentialState>): void {
+        this.listener.push(dispatch)
     }
-    onStateChange(stateChanged: Publisher<StoreCredentialState>): void {
+    onStateChange(stateChanged: Dispatcher<StoreCredentialState>): void {
         this.action.credential.sub.onStore((event) => {
             const state = map(event)
-            this.listener.forEach(pub => pub(state))
+            this.listener.forEach(dispatch => dispatch(state))
             stateChanged(state)
 
             function map(event: StoreEvent): StoreCredentialState {
@@ -39,6 +39,6 @@ class Component implements StoreCredentialComponent {
     }
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

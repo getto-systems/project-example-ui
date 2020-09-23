@@ -62,7 +62,7 @@ class Usecase implements AuthUsecase {
         }
     }
 
-    onStateChange(stateChanged: Publisher<AuthState>): void {
+    onStateChange(stateChanged: Dispatcher<AuthState>): void {
         stateChanged(this.state)
     }
     terminate(): void {
@@ -70,6 +70,6 @@ class Usecase implements AuthUsecase {
     }
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

@@ -122,11 +122,11 @@ type SendTokenState =
 class StatusPoller {
     timeConfig: TimeConfig
     client: PasswordResetSessionClient
-    dispatch: Publisher<PollingStatusEvent>
+    dispatch: Dispatcher<PollingStatusEvent>
 
     sendTokenState: SendTokenState
 
-    constructor(timeConfig: TimeConfig, client: PasswordResetSessionClient, dispatch: Publisher<PollingStatusEvent>) {
+    constructor(timeConfig: TimeConfig, client: PasswordResetSessionClient, dispatch: Dispatcher<PollingStatusEvent>) {
         this.timeConfig = timeConfig
         this.client = client
         this.dispatch = dispatch
@@ -195,9 +195,9 @@ class StatusPoller {
 
 class EventPubSub implements PasswordResetEventPublisher, PasswordResetEventSubscriber {
     listener: {
-        createSession: Publisher<CreateSessionEvent>[]
-        pollingStatus: Publisher<PollingStatusEvent>[]
-        reset: Publisher<ResetEvent>[]
+        createSession: Dispatcher<CreateSessionEvent>[]
+        pollingStatus: Dispatcher<PollingStatusEvent>[]
+        reset: Dispatcher<ResetEvent>[]
     }
 
     constructor() {
@@ -208,24 +208,24 @@ class EventPubSub implements PasswordResetEventPublisher, PasswordResetEventSubs
         }
     }
 
-    onCreateSessionEvent(pub: Publisher<CreateSessionEvent>): void {
-        this.listener.createSession.push(pub)
+    onCreateSessionEvent(dispatch: Dispatcher<CreateSessionEvent>): void {
+        this.listener.createSession.push(dispatch)
     }
-    onPollingStatusEvent(pub: Publisher<PollingStatusEvent>): void {
-        this.listener.pollingStatus.push(pub)
+    onPollingStatusEvent(dispatch: Dispatcher<PollingStatusEvent>): void {
+        this.listener.pollingStatus.push(dispatch)
     }
-    onResetEvent(pub: Publisher<ResetEvent>): void {
-        this.listener.reset.push(pub)
+    onResetEvent(dispatch: Dispatcher<ResetEvent>): void {
+        this.listener.reset.push(dispatch)
     }
 
     dispatchCreateSessionEvent(event: CreateSessionEvent): void {
-        this.listener.createSession.forEach(pub => pub(event))
+        this.listener.createSession.forEach(dispatch => dispatch(event))
     }
     dispatchPollingStatusEvent(event: PollingStatusEvent): void {
-        this.listener.pollingStatus.forEach(pub => pub(event))
+        this.listener.pollingStatus.forEach(dispatch => dispatch(event))
     }
     dispatchResetEvent(event: ResetEvent): void {
-        this.listener.reset.forEach(pub => pub(event))
+        this.listener.reset.forEach(dispatch => dispatch(event))
     }
 }
 
@@ -260,6 +260,6 @@ interface DelayedHandler {
     (): void
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (status: T): void
 }
