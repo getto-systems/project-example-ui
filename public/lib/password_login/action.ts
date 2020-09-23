@@ -13,9 +13,9 @@ export interface PasswordLoginEventPublisher {
 }
 
 export interface PasswordLoginEventSubscriber {
-    onLoginEvent(stateChanged: Publisher<LoginEvent>): void
+    onLoginEvent(stateChanged: Dispatcher<LoginEvent>): void
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

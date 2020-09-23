@@ -59,11 +59,11 @@ class Usecase implements AuthUsecase {
         })
     }
 
-    onStateChange(pub: Publisher<AuthState>): void {
+    onStateChange(dispatch: Dispatcher<AuthState>): void {
         if (this.holder.stack) {
-            pub(this.holder.state)
+            dispatch(this.holder.state)
         }
-        this.holder = { set: true, stack: false, pub }
+        this.holder = { set: true, stack: false, dispatch }
     }
     terminate(): void {
         // terminate が必要な component とインターフェイスを合わせるために必要
@@ -71,7 +71,7 @@ class Usecase implements AuthUsecase {
 
     dispatch(state: AuthState): void {
         if (this.holder.set) {
-            this.holder.pub(state)
+            this.holder.dispatch(state)
         } else {
             this.holder = { set: false, stack: true, state }
         }
@@ -108,8 +108,8 @@ function loginState(currentLocation: Location): AuthState {
 type StateHolder =
     Readonly<{ set: false, stack: false }> |
     Readonly<{ set: false, stack: true, state: AuthState }> |
-    Readonly<{ set: true, stack: false, pub: Publisher<AuthState> }>
+    Readonly<{ set: true, stack: false, dispatch: Dispatcher<AuthState> }>
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

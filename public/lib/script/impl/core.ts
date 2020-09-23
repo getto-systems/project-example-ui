@@ -44,7 +44,7 @@ function secureScriptPath(secureHost: string, pagePathname: PagePathname): Scrip
 
 class EventPubSub implements ScriptEventPublisher, ScriptEventSubscriber {
     listener: {
-        script: Publisher<ScriptEvent>[]
+        script: Dispatcher<ScriptEvent>[]
     }
 
     constructor() {
@@ -53,15 +53,15 @@ class EventPubSub implements ScriptEventPublisher, ScriptEventSubscriber {
         }
     }
 
-    onScriptEvent(pub: Publisher<ScriptEvent>): void {
-        this.listener.script.push(pub)
+    onScriptEvent(dispatch: Dispatcher<ScriptEvent>): void {
+        this.listener.script.push(dispatch)
     }
 
     dispatchScriptEvent(event: ScriptEvent): void {
-        this.listener.script.forEach(pub => pub(event))
+        this.listener.script.forEach(dispatch => dispatch(event))
     }
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

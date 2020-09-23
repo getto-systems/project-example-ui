@@ -60,22 +60,22 @@ class Field implements LoginIDField {
 }
 
 class FieldEventPubSub implements LoginIDFieldEventPublisher, LoginIDFieldEventSubscriber {
-    listener: Publisher<LoginIDFieldEvent>[]
+    listener: Dispatcher<LoginIDFieldEvent>[]
 
     constructor() {
         this.listener = []
     }
 
-    onLoginIDFieldEvent(pub: Publisher<LoginIDFieldEvent>): void {
-        this.listener.push(pub)
+    onLoginIDFieldEvent(dispatch: Dispatcher<LoginIDFieldEvent>): void {
+        this.listener.push(dispatch)
     }
 
     dispatchLoginIDFieldEvent(event: LoginIDFieldEvent): void {
-        this.listener.forEach(pub => pub(event))
+        this.listener.forEach(dispatch => dispatch(event))
     }
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }
 

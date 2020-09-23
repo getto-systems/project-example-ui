@@ -18,7 +18,7 @@ class Component implements LoadApplicationComponent {
         this.action = action
     }
 
-    onStateChange(stateChanged: Publisher<LoadApplicationState>): void {
+    onStateChange(stateChanged: Dispatcher<LoadApplicationState>): void {
         this.action.script.sub.onScriptEvent((event) => {
             stateChanged(map(event))
 
@@ -49,12 +49,12 @@ class WorkerComponent implements LoadApplicationComponent {
         this.worker = { set: false, init }
     }
 
-    onStateChange(stateChanged: Publisher<LoadApplicationState>): void {
+    onStateChange(stateChanged: Dispatcher<LoadApplicationState>): void {
         if (!this.worker.set) {
             this.worker = { set: true, instance: this.initWorker(this.worker.init, stateChanged) }
         }
     }
-    initWorker(init: WorkerInit, stateChanged: Publisher<LoadApplicationState>): Worker {
+    initWorker(init: WorkerInit, stateChanged: Dispatcher<LoadApplicationState>): Worker {
         const worker = init()
         worker.addEventListener("message", (event) => {
             stateChanged(event.data)
@@ -75,7 +75,7 @@ class WorkerComponent implements LoadApplicationComponent {
     }
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }
 

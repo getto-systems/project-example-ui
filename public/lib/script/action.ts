@@ -10,9 +10,9 @@ export interface ScriptEventPublisher {
 }
 
 export interface ScriptEventSubscriber {
-    onScriptEvent(event: Publisher<ScriptEvent>): void
+    onScriptEvent(event: Dispatcher<ScriptEvent>): void
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

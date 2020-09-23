@@ -102,8 +102,8 @@ class Action implements CredentialAction {
 
 class EventPubSub implements CredentialEventPublisher, CredentialEventSubscriber {
     listener: {
-        renew: Publisher<RenewEvent>[]
-        store: Publisher<StoreEvent>[]
+        renew: Dispatcher<RenewEvent>[]
+        store: Dispatcher<StoreEvent>[]
     }
 
     constructor() {
@@ -113,22 +113,22 @@ class EventPubSub implements CredentialEventPublisher, CredentialEventSubscriber
         }
     }
 
-    onRenew(pub: Publisher<RenewEvent>): void {
-        this.listener.renew.push(pub)
+    onRenew(dispatch: Dispatcher<RenewEvent>): void {
+        this.listener.renew.push(dispatch)
     }
-    onStore(pub: Publisher<StoreEvent>): void {
-        this.listener.store.push(pub)
+    onStore(dispatch: Dispatcher<StoreEvent>): void {
+        this.listener.store.push(dispatch)
     }
 
     dispatchRenewEvent(event: RenewEvent): void {
-        this.listener.renew.forEach(pub => pub(event))
+        this.listener.renew.forEach(dispatch => dispatch(event))
     }
     dispatchStoreEvent(event: StoreEvent): void {
-        this.listener.store.forEach(pub => pub(event))
+        this.listener.store.forEach(dispatch => dispatch(event))
     }
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }
 

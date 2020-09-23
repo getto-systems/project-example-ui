@@ -103,22 +103,22 @@ class Field implements PasswordField {
 }
 
 class EventPubSub implements PasswordFieldEventPublisher, PasswordFieldEventSubscriber {
-    listener: Publisher<PasswordFieldEvent>[]
+    listener: Dispatcher<PasswordFieldEvent>[]
 
     constructor() {
         this.listener = []
     }
 
-    onPasswordFieldEvent(pub: Publisher<PasswordFieldEvent>): void {
-        this.listener.push(pub)
+    onPasswordFieldEvent(dispatch: Dispatcher<PasswordFieldEvent>): void {
+        this.listener.push(dispatch)
     }
 
     dispatchPasswordFieldEvent(event: PasswordFieldEvent): void {
-        this.listener.forEach(pub => pub(event))
+        this.listener.forEach(dispatch => dispatch(event))
     }
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }
 

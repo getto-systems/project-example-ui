@@ -11,7 +11,7 @@ interface PreactComponent {
 }
 
 interface FormComponent {
-    onLoginIDFieldStateChange(stateChanged: Publisher<LoginIDFieldState>): void
+    onLoginIDFieldStateChange(stateChanged: Dispatcher<LoginIDFieldState>): void
     trigger(operation: LoginIDFieldOperation): Promise<void>
 }
 
@@ -38,6 +38,6 @@ export function LoginIDField(component: FormComponent): PreactComponent {
     }
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

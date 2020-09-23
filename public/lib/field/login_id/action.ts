@@ -17,9 +17,9 @@ export interface LoginIDFieldEventPublisher {
 }
 
 export interface LoginIDFieldEventSubscriber {
-    onLoginIDFieldEvent(pub: Publisher<LoginIDFieldEvent>): void
+    onLoginIDFieldEvent(dispatch: Dispatcher<LoginIDFieldEvent>): void
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

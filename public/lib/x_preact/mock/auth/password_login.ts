@@ -116,16 +116,16 @@ class Component implements PasswordLoginComponent {
         this.password = password
     }
 
-    hook(_stateChanged: Publisher<PasswordLoginState>): void {
+    hook(_stateChanged: Dispatcher<PasswordLoginState>): void {
         // mock では特に何もしない
     }
-    onStateChange(stateChanged: Publisher<PasswordLoginState>): void {
+    onStateChange(stateChanged: Dispatcher<PasswordLoginState>): void {
         stateChanged(this.state)
     }
-    onLoginIDFieldStateChange(stateChanged: Publisher<LoginIDFieldState>): void {
+    onLoginIDFieldStateChange(stateChanged: Dispatcher<LoginIDFieldState>): void {
         stateChanged(this.loginID)
     }
-    onPasswordFieldStateChange(stateChanged: Publisher<PasswordFieldState>): void {
+    onPasswordFieldStateChange(stateChanged: Dispatcher<PasswordFieldState>): void {
         stateChanged(this.password)
     }
     terminate(): void {
@@ -148,6 +148,6 @@ class Component implements PasswordLoginComponent {
     }
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

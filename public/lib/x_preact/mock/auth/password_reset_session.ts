@@ -93,13 +93,13 @@ class Component implements PasswordResetSessionComponent {
         this.loginID = loginID
     }
 
-    hook(_stateChanged: Publisher<PasswordResetSessionState>): void {
+    hook(_stateChanged: Dispatcher<PasswordResetSessionState>): void {
         // mock では特に何もしない
     }
-    onStateChange(stateChanged: Publisher<PasswordResetSessionState>): void {
+    onStateChange(stateChanged: Dispatcher<PasswordResetSessionState>): void {
         stateChanged(this.state)
     }
-    onLoginIDFieldStateChange(stateChanged: Publisher<LoginIDFieldState>): void {
+    onLoginIDFieldStateChange(stateChanged: Dispatcher<LoginIDFieldState>): void {
         stateChanged(this.loginID)
     }
     terminate(): void {
@@ -118,6 +118,6 @@ class Component implements PasswordResetSessionComponent {
     }
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }

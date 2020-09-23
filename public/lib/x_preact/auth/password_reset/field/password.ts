@@ -11,7 +11,7 @@ interface PreactComponent {
 }
 
 interface FormComponent {
-    onPasswordFieldStateChange(stateChanged: Publisher<PasswordFieldState>): void
+    onPasswordFieldStateChange(stateChanged: Dispatcher<PasswordFieldState>): void
     trigger(operation: PasswordFieldOperation): Promise<void>
 }
 
@@ -39,6 +39,6 @@ export function PasswordField(component: FormComponent): PreactComponent {
     }
 }
 
-interface Publisher<T> {
+interface Dispatcher<T> {
     (state: T): void
 }
