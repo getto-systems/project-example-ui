@@ -105,8 +105,10 @@ class EventPubSub implements CredentialEventPublisher, CredentialEventSubscriber
         }
     }
 
-    onRenew(dispatch: Dispatcher<RenewEvent>): void {
+    onRenew(dispatch: Dispatcher<RenewEvent | StoreEvent>): void {
+        // renew は同時に store も呼び出す
         this.listener.renew.push(dispatch)
+        this.listener.store.push(dispatch)
     }
     onStore(dispatch: Dispatcher<StoreEvent>): void {
         this.listener.store.push(dispatch)

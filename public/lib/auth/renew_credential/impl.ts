@@ -26,11 +26,6 @@ class Component implements RenewCredentialComponent {
             this.listener.forEach(dispatch => dispatch(state))
             stateChanged(state)
         })
-        this.action.credential.sub.onStore((event) => {
-            const state = map(event)
-            this.listener.forEach(dispatch => dispatch(state))
-            stateChanged(state)
-        })
 
         function map(event: RenewEvent | StoreEvent): RenewCredentialState {
             return event
