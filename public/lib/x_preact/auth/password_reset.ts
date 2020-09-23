@@ -3,21 +3,21 @@ import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { LoginView } from "./layout"
-import { LoginIDField } from "./password_login/field/login_id"
-import { PasswordField } from "./password_login/field/password"
+import { LoginIDField } from "./password_reset/field/login_id"
+import { PasswordField } from "./password_reset/field/password"
 
-import { PasswordLoginComponent } from "../../auth/password_login/component"
-import { initialPasswordLoginState } from "../../auth/password_login/data"
+import { PasswordResetComponent } from "../../auth/password_reset/component"
+import { initialPasswordResetState } from "../../auth/password_reset/data"
 
-import { LoginError } from "../../password_login/data"
+import { ResetToken, ResetError } from "../../password_reset/data"
 
 interface PreactComponent {
     (): VNode
 }
 
-export function PasswordLogin(component: PasswordLoginComponent): PreactComponent {
+export function PasswordReset(component: PasswordResetComponent, resetToken: ResetToken): PreactComponent {
     return (): VNode => {
-        const [state, setState] = useState(initialPasswordLoginState)
+        const [state, setState] = useState(initialPasswordResetState)
         const submit = useRef<HTMLButtonElement>()
         useEffect(() => {
             component.onStateChange(setState)
@@ -41,7 +41,7 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
                         </div>
                         <div class="login__link">
                             <a href="?_password_reset">
-                                <i class="lnir lnir-question-circle"></i> パスワードがわからない方
+                                <i class="lnir lnir-direction"></i> トークンを再送信する
                             </a>
                         </div>
                     </div>
@@ -51,24 +51,24 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
         }
 
         switch (state.type) {
-            case "initial-login":
-                return view(onSubmit_login, loginButton(), html``)
+            case "initial-reset":
+                return view(onSubmit_login, resetButton(), html``)
 
-            case "failed-to-login":
-                return view(onSubmit_login, loginButton(), html`
+            case "failed-to-reset":
+                return view(onSubmit_login, resetButton(), html`
                     <aside>
-                        ${formMessage("form_error", loginError(state.err))}
+                        ${formMessage("form_error", resetError(state.err))}
                     </aside>
                 `)
 
-            case "try-to-login":
-                return view(onSubmit_noop, loginButton_connecting(), html``)
+            case "try-to-reset":
+                return view(onSubmit_noop, resetButton_connecting(), html``)
 
-            case "delayed-to-login":
-                return view(onSubmit_noop, loginButton_connecting(), html`
+            case "delayed-to-reset":
+                return view(onSubmit_noop, resetButton_connecting(), html`
                     <aside>
                         ${formMessage("form_warning", html`
-                            <p class="form__message">認証に時間がかかっています</p>
+                            <p class="form__message">リセットに時間がかかっています</p>
                             <p class="form__message">
                                 30秒以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
                             </p>
@@ -76,17 +76,17 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
                     </aside>
                 `)
 
-            case "succeed-to-login":
+            case "succeed-to-reset":
                 return html``
         }
 
-        function loginButton() {
-            return html`<button ref="${submit}" class="button button_save">ログイン</button>`
+        function resetButton() {
+            return html`<button ref="${submit}" class="button button_save">パスワードリセット</button>`
         }
-        function loginButton_connecting(): VNode {
+        function resetButton_connecting(): VNode {
             return html`
                 <button type="button" class="button button_saving">
-                    ログインしています
+                    パスワードをリセットしています
                     ${" "}
                     <i class="lnir lnir-spinner lnir-is-spinning"></i>
                 </button>
@@ -100,7 +100,7 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
                 submit.current.blur()
             }
 
-            component.trigger({ type: "login" })
+            component.trigger({ type: "reset", resetToken })
         }
         function onSubmit_noop(e: Event) {
             e.preventDefault()
@@ -117,7 +117,7 @@ function formMessage(messageClass: string, content: VNode): VNode {
     `
 }
 
-function loginError(err: LoginError): VNode {
+function resetError(err: ResetError): VNode {
     switch (err.type) {
         case "validation-error":
             return html`<p class="form__message">正しく入力してください</p>`
@@ -125,8 +125,8 @@ function loginError(err: LoginError): VNode {
         case "bad-request":
             return html`<p class="form__message">アプリケーションエラーにより認証に失敗しました</p>`
 
-        case "invalid-password-login":
-            return html`<p class="form__message">ログインIDかパスワードが違います</p>`
+        case "invalid-password-reset":
+            return html`<p class="form__message">ログインIDが最初に入力したものと違います</p>`
 
         case "server-error":
             return html`<p class="form__message">サーバーエラーにより認証に失敗しました</p>`

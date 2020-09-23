@@ -1,123 +1,91 @@
 import { VNode } from "preact"
-import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { initInputValue, inputValueToString } from "../../../field/adapter"
 
-import { PasswordFieldState, initialPasswordFieldState } from "../../../auth/field/password/data"
+import { PasswordFieldError, PasswordCharacter, PasswordView } from "../../../field/password/data"
+import { InputValue, Valid } from "../../../field/data"
 
-import { PasswordView } from "../../../field/password/data"
-import { InputValue } from "../../../field/data"
-
-interface PreactComponent {
-    (): VNode
-}
-
-interface FormComponent {
-    onPasswordFieldStateChange(stateChanged: Publisher<PasswordFieldState>): void
-    trigger(operation: FieldOperation): Promise<void>
-}
-
-type FieldOperation =
+export type PasswordFieldOperation =
     Readonly<{ type: "field-password", operation: { type: "set-password", password: InputValue } }> |
     Readonly<{ type: "field-password", operation: { type: "show-password" } }> |
     Readonly<{ type: "field-password", operation: { type: "hide-password" } }>
 
-export function PasswordField(component: FormComponent): PreactComponent {
-    return (): VNode => {
-        const [state, setState] = useState(initialPasswordFieldState)
-        const input = useRef<HTMLInputElement>()
-
-        useEffect(() => {
-            component.onPasswordFieldStateChange(setState)
-        }, [])
-
-        return html`
-            <dl class="form ${state.result.valid ? "" : "form_error"}">
-                <dt class="form__header"><label for="password">パスワード</label></dt>
-                <dd class="form__field">
-                    <input type="password" class="input_fill" ref="${input}" onInput=${onInput}/>
-                    ${error(state)}
-                    <p class="form__help">${view(state.view)}</p>
-                </dd>
-            </dl>
-        `
-
-        function onInput(e: InputEvent) {
-            if (e.target instanceof HTMLInputElement) {
-                setPassword(component, initInputValue(e.target.value))
-            }
+export function onPasswordInput(component: FormComponent): Publisher<InputEvent> {
+    return (e: InputEvent): void => {
+        if (e.target instanceof HTMLInputElement) {
+            setPassword(component, initInputValue(e.target.value))
         }
+    }
+}
 
-        function error(state: PasswordFieldState): VNode[] {
-            if (state.result.valid) {
-                return []
-            }
+export function passwordFieldError(result: Valid<PasswordFieldError>, character: PasswordCharacter): VNode[] {
+    if (result.valid) {
+        return []
+    }
 
-            return state.result.err.map((err) => {
-                switch (err) {
-                    case "empty":
-                        return html`<p class="form__message">パスワードを入力してください</p>`
+    return result.err.map((err) => {
+        switch (err) {
+            case "empty":
+                return html`<p class="form__message">パスワードを入力してください</p>`
 
-                    case "too-long":
-                        if (state.character.complex) {
-                            return html`<p class="form__message">パスワードが長すぎます(18文字程度)</p>`
-                        } else {
-                            return html`<p class="form__message">パスワードが長すぎます(72文字以内)</p>`
-                        }
-                }
-            })
-        }
-
-        function view(view: PasswordView): VNode {
-            if (view.show) {
-                return html`
-                    <a href="#" onClick=${hide}>
-                        <i class="lnir lnir-key-alt"></i> パスワードを隠す ${characterHelp()}
-                    </a>
-                    <p class="form__help">${extractPassword(view.password)}</p>
-                `
-            } else {
-                return html`
-                    <a href="#" onClick=${show}>
-                        <i class="lnir lnir-key-alt"></i> パスワードを表示 ${characterHelp()}
-                    </a>
-                `
-            }
-
-            function show(e: MouseEvent) {
-                linkClicked(e)
-                showPassword(component)
-            }
-            function hide(e: MouseEvent) {
-                linkClicked(e)
-                hidePassword(component)
-            }
-            function linkClicked(e: MouseEvent) {
-                e.preventDefault()
-
-                // クリック後 focus 状態になるのでキャンセル
-                if (e.target instanceof HTMLElement) {
-                    e.target.blur()
-                }
-            }
-
-            function extractPassword(inputValue: InputValue): string {
-                const password = inputValueToString(inputValue)
-                if (password.length === 0) {
-                    return "(入力されていません)"
+            case "too-long":
+                if (character.complex) {
+                    return html`<p class="form__message">パスワードが長すぎます(18文字程度)</p>`
                 } else {
-                    return password
+                    return html`<p class="form__message">パスワードが長すぎます(72文字以内)</p>`
                 }
-            }
         }
+    })
+}
 
-        function characterHelp(): string {
-            if (state.character.complex) {
-                return "(マルチバイト文字が含まれています)"
-            } else {
-                return ""
-            }
+export function passwordView(component: FormComponent, view: PasswordView, character: PasswordCharacter): VNode {
+    if (view.show) {
+        return html`
+            <a href="#" onClick=${hide}>
+                <i class="lnir lnir-key-alt"></i> パスワードを隠す ${characterHelp()}
+            </a>
+            <p class="form__help">${extractPassword(view.password)}</p>
+        `
+    } else {
+        return html`
+            <a href="#" onClick=${show}>
+                <i class="lnir lnir-key-alt"></i> パスワードを表示 ${characterHelp()}
+            </a>
+        `
+    }
+
+    function extractPassword(inputValue: InputValue): string {
+        const password = inputValueToString(inputValue)
+        if (password.length === 0) {
+            return "(入力されていません)"
+        } else {
+            return password
+        }
+    }
+
+    function characterHelp(): string {
+        if (character.complex) {
+            return "(マルチバイト文字が含まれています)"
+        } else {
+            return ""
+        }
+    }
+
+    function show(e: MouseEvent) {
+        linkClicked(e)
+        showPassword(component)
+    }
+    function hide(e: MouseEvent) {
+        linkClicked(e)
+        hidePassword(component)
+    }
+    function linkClicked(e: MouseEvent) {
+        e.preventDefault()
+
+        // クリック後 focus 状態になるのでキャンセル
+        if (e.target instanceof HTMLElement) {
+            e.target.blur()
         }
     }
 }
@@ -130,6 +98,10 @@ function showPassword(component: FormComponent): void {
 }
 function hidePassword(component: FormComponent): void {
     component.trigger({ type: "field-password", operation: { type: "hide-password" } })
+}
+
+interface FormComponent {
+    trigger(operation: PasswordFieldOperation): Promise<void>
 }
 
 interface Publisher<T> {

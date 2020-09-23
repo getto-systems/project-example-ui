@@ -1,6 +1,5 @@
 import { h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
-import { html } from "htm/preact"
 
 import { FetchCredential } from "./fetch_credential"
 import { RenewCredential } from "./renew_credential"
@@ -9,6 +8,7 @@ import { LoadApplication } from "./load_application"
 
 import { PasswordLogin } from "./password_login"
 import { PasswordResetSession } from "./password_reset_session"
+import { PasswordReset } from "./password_reset"
 
 import { AuthUsecase } from "../../auth/component"
 import { initialAuthState } from "../../auth/data"
@@ -43,8 +43,7 @@ export function Main(usecase: AuthUsecase) {
                 return h(PasswordResetSession(usecase.component.passwordResetSession), {})
 
             case "password-reset":
-                //return h(PasswordReset(...state.init), {})
-                return html`ここでパスワードリセット！`
+                return h(PasswordReset(usecase.component.passwordReset, state.resetToken), {})
         }
     }
 }

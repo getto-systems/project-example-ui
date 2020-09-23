@@ -15,7 +15,7 @@ import { AuthUsecase, AuthComponent } from "../../../auth/component"
 import { AuthState } from "../../../auth/data"
 
 export function newAuthUsecase(): AuthUsecase {
-    return new Usecase(new Init().passwordResetSession())
+    return new Usecase(new Init().passwordReset())
 }
 
 class Init {
