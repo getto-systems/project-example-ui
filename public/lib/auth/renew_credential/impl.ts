@@ -2,7 +2,7 @@ import { RenewCredentialComponent, RenewCredentialComponentAction } from "./comp
 
 import { RenewCredentialState } from "./data"
 
-import { TicketNonce, RenewEvent } from "../../credential/data"
+import { RenewEvent } from "../../credential/data"
 
 export function initRenewCredentialComponent(action: RenewCredentialComponentAction): RenewCredentialComponent {
     return new Component(action)
@@ -35,8 +35,8 @@ class Component implements RenewCredentialComponent {
         // terminate が必要な component とインターフェイスを合わせるために必要
     }
 
-    renew(ticketNonce: TicketNonce): Promise<void> {
-        return this.action.credential.renew(ticketNonce)
+    renew(): Promise<void> {
+        return this.action.credential.renew()
     }
 }
 

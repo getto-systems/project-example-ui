@@ -8,9 +8,11 @@ export type Infra = Readonly<{
 
 export type TimeConfig = Readonly<{
     renewDelayTime: DelayTime,
+    renewIntervalTime: IntervalTime,
 }>
 
 export type DelayTime = Readonly<{ delay_milli_second: number }>
+export type IntervalTime = Readonly<{ interval_milli_second: number }>
 
 export interface RenewClient {
     renew(ticketNonce: TicketNonce): Promise<RenewResponse>

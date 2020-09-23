@@ -11,7 +11,6 @@ import { newPasswordResetComponent } from "./auth/worker/password_reset"
 
 import { initAuthUsecase } from "../auth/impl"
 
-import { initFetchCredentialComponent } from "../auth/fetch_credential/impl"
 import { initRenewCredentialComponent } from "../auth/renew_credential/impl"
 import { initStoreCredentialComponent } from "../auth/store_credential/impl"
 
@@ -30,7 +29,6 @@ export function newAuthUsecase(currentLocation: Location): AuthUsecase {
     const credential = newCredentialAction()
 
     return initAuthUsecase(currentLocation, {
-        fetchCredential: initFetchCredentialComponent({ credential }),
         renewCredential: initRenewCredentialComponent({ credential }),
         storeCredential: initStoreCredentialComponent({ credential }),
 

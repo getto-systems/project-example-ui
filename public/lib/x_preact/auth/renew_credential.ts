@@ -7,18 +7,18 @@ import { ErrorView } from "./layout"
 import { RenewCredentialComponent } from "../../auth/renew_credential/component"
 import { initialRenewCredentialState } from "../../auth/renew_credential/data"
 
-import { TicketNonce, RenewError } from "../../credential/data"
+import { FetchError, RenewError } from "../../credential/data"
 
 export interface PreactComponent {
     (): VNode
 }
 
-export function RenewCredential(component: RenewCredentialComponent, ticketNonce: TicketNonce): PreactComponent {
+export function RenewCredential(component: RenewCredentialComponent): PreactComponent {
     return (): VNode => {
         const [state, setState] = useState(initialRenewCredentialState)
         useEffect(() => {
             component.onStateChange(setState)
-            component.renew(ticketNonce)
+            component.renew()
             return () => component.terminate()
         }, [])
 
@@ -29,58 +29,87 @@ export function RenewCredential(component: RenewCredentialComponent, ticketNonce
                 return html``
 
             case "try-to-renew":
-                // すぐに帰ってくる想定
+                // すぐに帰ってくるはずなので何も描画しない
                 return html``
 
             case "delayed-to-renew":
-                return ErrorView(...delayedContent())
+                return delayedContent()
+
+            case "failed-to-fetch":
+            case "failed-to-store":
+                return fetchFailedContent(state.err)
 
             case "failed-to-renew":
-                return ErrorView(...failedContent(state.err))
+                return renewFailedContent(state.err)
         }
     }
 
-    function delayedContent(): [VNode, VNode, VNode] {
-        return [
+    function delayedContent(): VNode {
+        return ErrorView(
             html`認証に時間がかかっています`,
             html`
-                <p>30秒以上かかるようなら何かがおかしいので、お手数ですが管理者に連絡をお願いします。</p>
+                <p>
+                    30秒以上かかるようなら何かがおかしいので、
+                    <br/>
+                    お手数ですが管理者に連絡をお願いします。
+                </p>
             `,
             html``,
-        ]
+        )
     }
 
-    function failedContent(err: RenewError): [VNode, VNode, VNode] {
-        return [
+    function fetchFailedContent(err: FetchError): VNode {
+        return ErrorView(
             html`認証に失敗しました`,
-            html`
-                ${errorMessage()}
-                <div class="vertical vertical_medium"></div>
-                <p>お手数ですが、上記メッセージを管理者に伝えてください</p>
-            `,
+            errorMessage(fetchError(err)),
             html``,
-        ]
-
-        function errorMessage(): VNode {
-            switch (err.type) {
-                case "bad-request":
-                    return html`<p>認証情報の送信処理でエラーが発生しました</p>`
-
-                case "server-error":
-                    return html`<p>サーバーの認証処理でエラーが発生しました</p>`
-
-                case "bad-response":
-                    return html`
-                        <p>サーバーから送信されたデータがエラーでした</p>
-                        <p>(詳細: ${err.err})</p>
-                    `
-
-                case "infra-error":
-                    return html`
-                        <p>ネットワーク通信時にエラーが発生しました</p>
-                        <p>(詳細: ${err.err})</p>
-                    `
-            }
-        }
+        )
     }
+    function renewFailedContent(err: RenewError): VNode {
+        return ErrorView(
+            html`認証に失敗しました`,
+            errorMessage(renewError(err)),
+            html``,
+        )
+    }
+}
+
+function fetchError(err: FetchError): VNode {
+    switch (err.type) {
+        case "infra-error":
+            return html`
+                <p>ブラウザが LocalStorage にアクセスできませんでした</p>
+                <p>(詳細: ${err.err})</p>
+            `
+    }
+}
+
+function renewError(err: RenewError): VNode {
+    switch (err.type) {
+        case "bad-request":
+            return html`<p>認証情報の送信処理でエラーが発生しました</p>`
+
+        case "server-error":
+            return html`<p>サーバーの認証処理でエラーが発生しました</p>`
+
+        case "bad-response":
+            return html`
+                <p>サーバーから送信されたデータがエラーでした</p>
+                <p>(詳細: ${err.err})</p>
+            `
+
+        case "infra-error":
+            return html`
+                <p>ネットワーク通信時にエラーが発生しました</p>
+                <p>(詳細: ${err.err})</p>
+            `
+    }
+}
+
+function errorMessage(content: VNode): VNode {
+    return html`
+        ${content}
+        <div class="vertical vertical_medium"></div>
+        <p>お手数ですが、上記メッセージを管理者に伝えてください</p>
+    `
 }

@@ -4,10 +4,9 @@ import {
     CredentialAction,
     CredentialEventPublisher,
     CredentialEventSubscriber,
-    StoreEventPublisher,
 } from "../action"
 
-import { AuthCredential, TicketNonce, FetchEvent, RenewEvent, StoreEvent } from "../data"
+import { AuthCredential, TicketNonce, RenewEvent, StoreEvent } from "../data"
 
 export function initCredentialAction(infra: Infra): CredentialAction {
     return new Action(infra)
@@ -27,35 +26,41 @@ class Action implements CredentialAction {
         this.sub = pubsub
     }
 
-    async fetch(): Promise<void> {
+    async renew(): Promise<void> {
         const found = this.infra.authCredentials.findTicketNonce()
         if (!found.success) {
-            this.pub.publishFetchEvent({ type: "failed-to-fetch", err: found.err })
+            this.pub.publishRenewEvent({ type: "failed-to-fetch", err: found.err })
             return
         }
         if (!found.found) {
-            this.pub.publishFetchEvent({ type: "unauthorized" })
-            return
-        }
-        this.pub.publishFetchEvent({ type: "succeed-to-fetch", ticketNonce: found.ticketNonce })
-    }
-
-    async renew(ticketNonce: TicketNonce): Promise<void> {
-        // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const response = await delayed(
-            this.infra.renewClient.renew(ticketNonce),
-            this.infra.timeConfig.renewDelayTime,
-            () => this.pub.publishRenewEvent({ type: "delayed-to-renew" }),
-        )
-        if (!response.success) {
-            this.pub.publishRenewEvent({ type: "failed-to-renew", err: response.err })
-            return
-        }
-        if (!response.hasCredential) {
             this.pub.publishRenewEvent({ type: "unauthorized" })
             return
         }
-        this.pub.publishRenewEvent({ type: "succeed-to-renew", authCredential: response.authCredential })
+
+        // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
+        const renewResponse = await delayed(
+            this.infra.renewClient.renew(found.ticketNonce),
+            this.infra.timeConfig.renewDelayTime,
+            () => this.pub.publishRenewEvent({ type: "delayed-to-renew" }),
+        )
+        if (!renewResponse.success) {
+            this.pub.publishRenewEvent({ type: "failed-to-renew", err: renewResponse.err })
+            return
+        }
+        if (!renewResponse.hasCredential) {
+            this.pub.publishRenewEvent({ type: "unauthorized" })
+            return
+        }
+
+        const storeResponse = this.infra.authCredentials.storeAuthCredential(renewResponse.authCredential)
+        if (!storeResponse.success) {
+            this.pub.publishRenewEvent({ type: "failed-to-store", err: storeResponse.err })
+            return
+        }
+
+        this.pub.publishRenewEvent({ type: "succeed-to-renew" })
+
+        this.setRenewInterval(found.ticketNonce)
     }
 
     async store(authCredential: AuthCredential): Promise<void> {
@@ -65,37 +70,45 @@ class Action implements CredentialAction {
             return
         }
         this.pub.publishStoreEvent({ type: "succeed-to-store" })
+
+        this.setRenewInterval(authCredential.ticketNonce)
     }
 
-    async storeDeprecated(event: StoreEventPublisher, authCredential: AuthCredential): Promise<void> {
-        const response = this.infra.authCredentials.storeAuthCredential(authCredential)
-        if (!response.success) {
-            event.failedToStore(response.err)
-            return
-        }
+    setRenewInterval(ticketNonce: TicketNonce): void {
+        let continueInterval = true
+        setInterval(async () => {
+            if (!continueInterval) {
+                return
+            }
 
-        event.succeedToStore()
+            const renewResponse = await this.infra.renewClient.renew(ticketNonce)
+            if (!renewResponse.success || !renewResponse.hasCredential) {
+                continueInterval = false
+                return
+            }
+
+            const storeResponse = this.infra.authCredentials.storeAuthCredential(renewResponse.authCredential)
+            if (!storeResponse.success) {
+                continueInterval = false
+                return
+            }
+        }, this.infra.timeConfig.renewIntervalTime.interval_milli_second)
     }
 }
 
 class EventPubSub implements CredentialEventPublisher, CredentialEventSubscriber {
     listener: {
-        fetch: Publisher<FetchEvent>[]
         renew: Publisher<RenewEvent>[]
         store: Publisher<StoreEvent>[]
     }
 
     constructor() {
         this.listener = {
-            fetch: [],
             renew: [],
             store: [],
         }
     }
 
-    onFetch(pub: Publisher<FetchEvent>): void {
-        this.listener.fetch.push(pub)
-    }
     onRenew(pub: Publisher<RenewEvent>): void {
         this.listener.renew.push(pub)
     }
@@ -103,9 +116,6 @@ class EventPubSub implements CredentialEventPublisher, CredentialEventSubscriber
         this.listener.store.push(pub)
     }
 
-    publishFetchEvent(event: FetchEvent): void {
-        this.listener.fetch.forEach(pub => pub(event))
-    }
     publishRenewEvent(event: RenewEvent): void {
         this.listener.renew.forEach(pub => pub(event))
     }

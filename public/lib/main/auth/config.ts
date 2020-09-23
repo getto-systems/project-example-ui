@@ -1,6 +1,7 @@
 export function newTimeConfig(): TimeConfig {
     return {
         renewDelayTime: delaySecond(0.5),
+        renewIntervalTime: intervalMinute(2),
 
         passwordLoginDelayTime: delaySecond(1),
 
@@ -14,6 +15,7 @@ export function newTimeConfig(): TimeConfig {
 
 type TimeConfig = Readonly<{
     renewDelayTime: DelayTime,
+    renewIntervalTime: IntervalTime,
 
     passwordLoginDelayTime: DelayTime,
 
@@ -27,6 +29,14 @@ type TimeConfig = Readonly<{
 type DelayTime = { delay_milli_second: number }
 function delaySecond(second: number): DelayTime {
     return { delay_milli_second: second * 1000 }
+}
+
+type IntervalTime = { interval_milli_second: number }
+function intervalSecond(second: number): IntervalTime {
+    return { interval_milli_second: second * 1000 }
+}
+function intervalMinute(minute: number): IntervalTime {
+    return intervalSecond(minute * 60)
 }
 
 type WaitTime = { wait_milli_second: number }
