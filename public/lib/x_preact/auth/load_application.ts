@@ -8,9 +8,7 @@ import { initPagePathname, scriptPathToString } from "../../script/adapter"
 
 import { LoadApplicationComponent } from "../../auth/load_application/component"
 
-import { initialLoadApplicationState } from "../../auth/load_application/data"
-
-import { CheckError } from "../../script/data"
+import { initialLoadApplicationState, CheckError } from "../../auth/load_application/data"
 
 export interface PreactComponent {
     (): VNode
@@ -30,6 +28,9 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
             if (state.type === "try-to-load") {
                 const script = document.createElement("script")
                 script.src = scriptPathToString(state.scriptPath)
+                script.onerror = (_err) => {
+                    setState({ type: "failed-to-load", err: { type: "not-found" } })
+                }
                 document.body.appendChild(script)
             }
         }, [state])
@@ -47,7 +48,7 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
         }
     }
 
-    function failedContent(err: CheckError): VNode {
+    function failedContent(_err: CheckError): VNode {
         return ErrorView(
             html`アプリケーションの初期化に失敗しました`,
             html`
@@ -59,16 +60,7 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
         )
 
         function errorMessage(): VNode {
-            switch (err.type) {
-                case "not-found":
-                    return html`<p>スクリプトが見つかりませんでした</p>`
-
-                case "infra-error":
-                    return html`
-                        <p>ネットワーク通信時にエラーが発生しました</p>
-                        <p>(詳細: ${err.err})</p>
-                    `
-            }
+            return html`<p>スクリプトが見つかりませんでした</p>`
         }
     }
 }
