@@ -3,11 +3,11 @@ const path = require("path");
 
 module.exports = {
   entry: {
-    "update": path.join(__dirname, "lib/x_update/update.ts"),
-    "auth": path.join(__dirname, "lib/x_preact/mock/auth.ts"),
+    "update": path.join(__dirname, "../lib/x_update/update.ts"),
+    "auth": path.join(__dirname, "../lib/x_preact/mock/auth.ts"),
   },
   output: {
-    path: path.join(__dirname, "dist"),
+    path: path.join(__dirname, "../dist"),
     filename: "[name].js",
     globalObject: "self",
   },
@@ -23,7 +23,7 @@ module.exports = {
     ],
   },
   devServer: {
-    contentBase: path.join(__dirname),
+    contentBase: path.join(__dirname, ".."),
     publicPath: "/dist/",
 
     host: "0.0.0.0",
