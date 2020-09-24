@@ -4,7 +4,7 @@ import { PasswordResetAction, PasswordResetEventPublisher, PasswordResetEventSub
 
 import {
     SessionID,
-    CreateSessionEvent, PollingStatusEvent, PollingStatusError,
+    StartSessionEvent, PollingStatusEvent, PollingStatusError,
     ResetToken, ResetEvent,
 } from "../data"
 
@@ -30,29 +30,29 @@ class PasswordResetActionImpl implements PasswordResetAction {
         this.sub = pubsub
     }
 
-    async createSession(fields: [Content<LoginID>]): Promise<void> {
-        const dispatch = (event: CreateSessionEvent) => this.pub.dispatchCreateSessionEvent(event)
+    async startSession(fields: [Content<LoginID>]): Promise<void> {
+        const dispatch = (event: StartSessionEvent) => this.pub.dispatchStartSessionEvent(event)
 
         const content = mapContent(...fields)
         if (!content.valid) {
-            dispatch({ type: "failed-to-create-session", err: { type: "validation-error" } })
+            dispatch({ type: "failed-to-start-session", err: { type: "validation-error" } })
             return
         }
 
-        dispatch({ type: "try-to-create-session" })
+        dispatch({ type: "try-to-start-session" })
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const response = await delayed(
-            this.infra.passwordResetSessionClient.createSession(...content.content),
-            this.infra.timeConfig.passwordResetCreateSessionDelayTime,
-            () => dispatch({ type: "delayed-to-create-session" }),
+            this.infra.passwordResetSessionClient.startSession(...content.content),
+            this.infra.timeConfig.passwordResetStartSessionDelayTime,
+            () => dispatch({ type: "delayed-to-start-session" }),
         )
         if (!response.success) {
-            dispatch({ type: "failed-to-create-session", err: response.err })
+            dispatch({ type: "failed-to-start-session", err: response.err })
             return
         }
 
-        dispatch({ type: "succeed-to-create-session", sessionID: response.sessionID })
+        dispatch({ type: "succeed-to-start-session", sessionID: response.sessionID })
 
         return
 
@@ -195,21 +195,21 @@ class StatusPoller {
 
 class EventPubSub implements PasswordResetEventPublisher, PasswordResetEventSubscriber {
     listener: {
-        createSession: Dispatcher<CreateSessionEvent>[]
+        startSession: Dispatcher<StartSessionEvent>[]
         pollingStatus: Dispatcher<PollingStatusEvent>[]
         reset: Dispatcher<ResetEvent>[]
     }
 
     constructor() {
         this.listener = {
-            createSession: [],
+            startSession: [],
             pollingStatus: [],
             reset: [],
         }
     }
 
-    onCreateSessionEvent(dispatch: Dispatcher<CreateSessionEvent>): void {
-        this.listener.createSession.push(dispatch)
+    onStartSessionEvent(dispatch: Dispatcher<StartSessionEvent>): void {
+        this.listener.startSession.push(dispatch)
     }
     onPollingStatusEvent(dispatch: Dispatcher<PollingStatusEvent>): void {
         this.listener.pollingStatus.push(dispatch)
@@ -218,8 +218,8 @@ class EventPubSub implements PasswordResetEventPublisher, PasswordResetEventSubs
         this.listener.reset.push(dispatch)
     }
 
-    dispatchCreateSessionEvent(event: CreateSessionEvent): void {
-        this.listener.createSession.forEach(dispatch => dispatch(event))
+    dispatchStartSessionEvent(event: StartSessionEvent): void {
+        this.listener.startSession.forEach(dispatch => dispatch(event))
     }
     dispatchPollingStatusEvent(event: PollingStatusEvent): void {
         this.listener.pollingStatus.forEach(dispatch => dispatch(event))

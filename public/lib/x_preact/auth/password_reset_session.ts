@@ -8,7 +8,7 @@ import { LoginIDField } from "./password_reset_session/field/login_id"
 import { PasswordResetSessionComponent } from "../../auth/password_reset_session/component"
 import { initialPasswordResetSessionState } from "../../auth/password_reset_session/data"
 
-import { Destination, PollingStatus, CreateSessionError, PollingStatusError, SendTokenError } from "../../password_reset/data"
+import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../password_reset/data"
 
 interface PreactComponent {
     (): VNode
@@ -23,7 +23,7 @@ export function PasswordResetSession(component: PasswordResetSessionComponent): 
             return () => component.terminate()
         }, [])
 
-        function createSessionView(onSubmit: Handler<Event>, button: VNode, footer: VNode): VNode {
+        function startSessionView(onSubmit: Handler<Event>, button: VNode, footer: VNode): VNode {
             return html`
                 <aside class="login">
                     <form class="login__box" onSubmit="${onSubmit}">
@@ -81,20 +81,20 @@ export function PasswordResetSession(component: PasswordResetSessionComponent): 
 
         switch (state.type) {
             case "initial-reset-session":
-                return createSessionView(onSubmit_createSession, createSessionButton(), html``)
+                return startSessionView(onSubmit_startSession, startSessionButton(), html``)
 
-            case "failed-to-create-session":
-                return createSessionView(onSubmit_createSession, createSessionButton(), html`
+            case "failed-to-start-session":
+                return startSessionView(onSubmit_startSession, startSessionButton(), html`
                     <aside>
-                        ${formMessage("form_error", createSessionError(state.err))}
+                        ${formMessage("form_error", startSessionError(state.err))}
                     </aside>
                 `)
 
-            case "try-to-create-session":
-                return createSessionView(onSubmit_noop, createSessionButton_connecting(), html``)
+            case "try-to-start-session":
+                return startSessionView(onSubmit_noop, startSessionButton_connecting(), html``)
 
-            case "delayed-to-create-session":
-                return createSessionView(onSubmit_noop, createSessionButton_connecting(), html`
+            case "delayed-to-start-session":
+                return startSessionView(onSubmit_noop, startSessionButton_connecting(), html`
                     <aside>
                         ${formMessage("form_warning", html`
                             <p class="form__message">トークンの送信に時間がかかっています</p>
@@ -131,10 +131,10 @@ export function PasswordResetSession(component: PasswordResetSessionComponent): 
                 `)
         }
 
-        function createSessionButton() {
+        function startSessionButton() {
             return html`<button ref="${submit}" class="button button_save">トークン送信</button>`
         }
-        function createSessionButton_connecting(): VNode {
+        function startSessionButton_connecting(): VNode {
             return html`
                 <button type="button" class="button button_saving">
                     トークンを送信しています
@@ -144,14 +144,14 @@ export function PasswordResetSession(component: PasswordResetSessionComponent): 
             `
         }
 
-        function onSubmit_createSession(e: Event) {
+        function onSubmit_startSession(e: Event) {
             e.preventDefault()
 
             if (submit.current) {
                 submit.current.blur()
             }
 
-            component.trigger({ type: "create-session" })
+            component.trigger({ type: "start-session" })
         }
         function onSubmit_noop(e: Event) {
             e.preventDefault()
@@ -201,7 +201,7 @@ function sendTokenMessage(dest: Destination): VNode {
     }
 }
 
-function createSessionError(err: CreateSessionError): VNode {
+function startSessionError(err: StartSessionError): VNode {
     switch (err.type) {
         case "validation-error":
             return html`<p class="form__message">正しく入力してください</p>`

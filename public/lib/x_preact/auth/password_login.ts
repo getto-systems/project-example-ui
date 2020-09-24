@@ -43,7 +43,7 @@ export function PasswordLogin(component: PasswordLoginComponent): PreactComponen
                                     <big>${button}</big>
                                 </div>
                                 <div class="login__link">
-                                    <a href="?_password_reset=create">
+                                    <a href="?_password_reset=start">
                                         <i class="lnir lnir-question-circle"></i> パスワードがわからない方
                                     </a>
                                 </div>

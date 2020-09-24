@@ -1,6 +1,6 @@
 import {
     PasswordResetSessionClient,
-    SessionResponse, createSessionSuccess, createSessionFailed,
+    SessionResponse, startSessionSuccess, startSessionFailed,
     SendTokenResponse,
     GetStatusResponse, getStatusSend, getStatusPolling, getStatusFailed,
 } from "../../../infra"
@@ -32,13 +32,13 @@ class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
         this.targetLoginID = targetLoginID
     }
 
-    createSession(loginID: LoginID): Promise<SessionResponse> {
+    startSession(loginID: LoginID): Promise<SessionResponse> {
         return new Promise((resolve) => {
             setTimeout(() => {
                 if (loginID === this.targetLoginID) {
-                    resolve(createSessionSuccess(this.targetSessionID))
+                    resolve(startSessionSuccess(this.targetSessionID))
                 } else {
-                    resolve(createSessionFailed({ type: "invalid-password-reset" }))
+                    resolve(startSessionFailed({ type: "invalid-password-reset" }))
                 }
             }, 0.3 * 1000)
         })
