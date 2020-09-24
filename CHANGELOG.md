@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version : 0.5.3
+
+- fix: gitlab-ci : See merge request getto-systems-base/projects/example/ui!281
+
+
+
 ## Version : 0.5.2
 
 
