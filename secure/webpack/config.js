@@ -6,7 +6,7 @@ module.exports = {
   entry: () => {
     const entry = {};
 
-    entry["index"]  = path.join(__dirname, "../lib/index");
+    entry["index"]  = path.join(__dirname, "../lib/x_preact/home.ts");
 
     /*
     entry["docs/index"]  = path.join(__dirname, "../lib/docs/index.ts");
@@ -46,6 +46,7 @@ module.exports = {
 
     hot: true,
     sockPort: "443",
+    sockHost: process.env.SECURE_SERVER_HOST,
 
     disableHostCheck: true,
   },
