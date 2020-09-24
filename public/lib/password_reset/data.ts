@@ -17,7 +17,6 @@ export type StartSessionEvent =
     Readonly<{ type: "failed-to-start-session", err: StartSessionError }> |
     Readonly<{ type: "succeed-to-start-session", sessionID: SessionID }>
 
-// TODO invalid-password-reset -> invalid-password-reset-session
 export type StartSessionError =
     Readonly<{ type: "validation-error" }> |
     Readonly<{ type: "bad-request" }> |
@@ -33,7 +32,6 @@ export type PollingStatusEvent =
     Readonly<{ type: "failed-to-send-token", dest: Destination, err: SendTokenError }> |
     Readonly<{ type: "succeed-to-send-token", dest: Destination }>
 
-// TODO invalid-password-reset -> invalid-password-reset-session
 export type PollingStatusError =
     Readonly<{ type: "bad-request" }> |
     Readonly<{ type: "invalid-password-reset" }> |

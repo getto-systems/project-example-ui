@@ -1,19 +1,4 @@
-import { AuthCredential, TicketNonce, ApiRoles, ApiRole } from "./data"
-
-export function serializeAuthCredential(authCredential: AuthCredential): AuthCredentialSerialized {
-    return {
-        ticketNonce: ticketNonceToString(authCredential.ticketNonce),
-        apiCredential: {
-            apiRoles: authCredential.apiCredential.apiRoles.map((apiRole) => apiRole as unknown as string),
-        },
-    }
-}
-export type AuthCredentialSerialized = Readonly<{
-    ticketNonce: string,
-    apiCredential: {
-        apiRoles: string[]
-    },
-}>
+import { ApiCredential, TicketNonce, ApiRoles, ApiRole } from "./data"
 
 export function initTicketNonce(ticketNonce: string): TicketNonce {
     return ticketNonce as string & TicketNonce
@@ -29,3 +14,12 @@ export function ticketNonceToString(ticketNonce: TicketNonce): string {
 export function initApiRoles(apiRoles: string[]): ApiRoles {
     return apiRoles.map((apiRole) => apiRole as string & ApiRole)
 }
+
+export function serializeApiCredential(apiCredential: ApiCredential): ApiCredentialSerialized {
+    return {
+        apiRoles: apiCredential.apiRoles.map((apiRole) => apiRole as unknown as string),
+    }
+}
+export type ApiCredentialSerialized = Readonly<{
+    apiRoles: string[]
+}>
