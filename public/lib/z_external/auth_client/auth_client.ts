@@ -62,7 +62,7 @@ class Client implements AuthClient {
     }
 
     authRequest(handler: string, authRequest: AuthRequest): Promise<AuthResponse> {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             try {
                 const request = new XMLHttpRequest()
 
@@ -84,7 +84,7 @@ class Client implements AuthClient {
 
                 request.send(bodyString(authRequest.body))
             } catch (err) {
-                resolve(authFailed({ type: "infra-error", err: `${err}` }))
+                reject(err)
             }
         })
     }
