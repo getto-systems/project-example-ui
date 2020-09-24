@@ -5,9 +5,8 @@ const WorkerPlugin = require('worker-plugin');
 module.exports = {
   entry: {
     "update": path.join(__dirname, "../lib/x_update/update.ts"),
-    "auth": path.join(__dirname, "../lib/x_preact/auth.ts"),
-    "mock/auth": path.join(__dirname, "../lib/x_preact/mock/auth.ts"),
 
+    "auth": path.join(__dirname, "../lib/x_preact/auth.ts"),
     "auth/load_application": path.join(__dirname, "../lib/x_worker/auth/load_application.ts"),
     "auth/password_login": path.join(__dirname, "../lib/x_worker/auth/password_login.ts"),
     "auth/password_reset_session": path.join(__dirname, "../lib/x_worker/auth/password_reset_session.ts"),
