@@ -3,15 +3,12 @@ import { LoadApplicationComponent } from "../../../auth/load_application/compone
 import { LoadApplicationState, LoadApplicationComponentOperation } from "../../../auth/load_application/data"
 
 export function newLoadApplicationComponent(): LoadApplicationComponent {
-    return new Component(new Init().failedToLoad_infra_error())
+    return new Component(new Init().failedToLoad_not_found())
 }
 
 class Init {
     failedToLoad_not_found(): LoadApplicationState {
         return { type: "failed-to-load", err: { type: "not-found" } }
-    }
-    failedToLoad_infra_error(): LoadApplicationState {
-        return { type: "failed-to-load", err: { type: "infra-error", err: "error" } }
     }
 }
 

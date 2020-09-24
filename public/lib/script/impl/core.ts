@@ -29,11 +29,6 @@ class Action implements ScriptAction {
 
         const scriptPath = secureScriptPath(this.infra.hostConfig.secureServerHost, pagePathname)
         dispatch({ type: "try-to-load", scriptPath })
-
-        const response = await this.infra.checkClient.checkStatus(scriptPath)
-        if (!response.success) {
-            dispatch({ type: "failed-to-load", err: response.err })
-        }
     }
 }
 
