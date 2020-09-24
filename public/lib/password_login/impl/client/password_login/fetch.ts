@@ -27,31 +27,35 @@ class FetchPasswordLoginClient implements PasswordLoginClient {
     }
 
     async login(loginID: LoginID, password: Password): Promise<LoginResponse> {
-        const response = await this.client.passwordLogin({
-            loginID: loginIDToString(loginID),
-            password: passwordToString(password),
-        })
-
-        if (response.success) {
-            return loginSuccess({
-                ticketNonce: initTicketNonce(response.authCredential.ticketNonce),
-                apiCredential: {
-                    apiRoles: initApiRoles(response.authCredential.apiCredential.apiRoles),
-                },
+        try {
+            const response = await this.client.passwordLogin({
+                loginID: loginIDToString(loginID),
+                password: passwordToString(password),
             })
-        }
 
-        switch (response.err.type) {
-            case "bad-request":
-            case "invalid-password-login":
-            case "server-error":
-                return loginFailed({ type: response.err.type })
+            if (response.success) {
+                return loginSuccess({
+                    ticketNonce: initTicketNonce(response.authCredential.ticketNonce),
+                    apiCredential: {
+                        apiRoles: initApiRoles(response.authCredential.apiCredential.apiRoles),
+                    },
+                })
+            }
 
-            case "bad-response":
-                return loginFailed({ type: "bad-response", err: response.err.err })
+            switch (response.err.type) {
+                case "bad-request":
+                case "invalid-password-login":
+                case "server-error":
+                    return loginFailed({ type: response.err.type })
 
-            default:
-                return loginFailed({ type: "infra-error", err: response.err.err })
+                case "bad-response":
+                    return loginFailed({ type: "bad-response", err: response.err.err })
+
+                default:
+                    return loginFailed({ type: "infra-error", err: response.err.err })
+            }
+        } catch (err) {
+            return loginFailed({ type: "infra-error", err: `${err}` })
         }
     }
 }
