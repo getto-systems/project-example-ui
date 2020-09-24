@@ -18,29 +18,29 @@ class Init {
     initialResetSession(): PasswordResetSessionState {
         return { type: "initial-reset-session" }
     }
-    tryToCreateSession(): PasswordResetSessionState {
-        return { type: "try-to-create-session" }
+    tryToStartSession(): PasswordResetSessionState {
+        return { type: "try-to-start-session" }
     }
-    delayedToCreateSession(): PasswordResetSessionState {
-        return { type: "delayed-to-create-session" }
+    delayedToStartSession(): PasswordResetSessionState {
+        return { type: "delayed-to-start-session" }
     }
-    failedToCreateSession_validation_error(): PasswordResetSessionState {
-        return { type: "failed-to-create-session", err: { type: "validation-error" } }
+    failedToStartSession_validation_error(): PasswordResetSessionState {
+        return { type: "failed-to-start-session", err: { type: "validation-error" } }
     }
-    failedToCreateSession_bad_request(): PasswordResetSessionState {
-        return { type: "failed-to-create-session", err: { type: "bad-request" } }
+    failedToStartSession_bad_request(): PasswordResetSessionState {
+        return { type: "failed-to-start-session", err: { type: "bad-request" } }
     }
-    failedToCreateSession_invalid_password_reset(): PasswordResetSessionState {
-        return { type: "failed-to-create-session", err: { type: "invalid-password-reset" } }
+    failedToStartSession_invalid_password_reset(): PasswordResetSessionState {
+        return { type: "failed-to-start-session", err: { type: "invalid-password-reset" } }
     }
-    failedToCreateSession_server_error(): PasswordResetSessionState {
-        return { type: "failed-to-create-session", err: { type: "server-error" } }
+    failedToStartSession_server_error(): PasswordResetSessionState {
+        return { type: "failed-to-start-session", err: { type: "server-error" } }
     }
-    failedToCreateSession_bad_response(): PasswordResetSessionState {
-        return { type: "failed-to-create-session", err: { type: "bad-response", err: "error" } }
+    failedToStartSession_bad_response(): PasswordResetSessionState {
+        return { type: "failed-to-start-session", err: { type: "bad-response", err: "error" } }
     }
-    failedToCreateSession_infra_error(): PasswordResetSessionState {
-        return { type: "failed-to-create-session", err: { type: "infra-error", err: "error" } }
+    failedToStartSession_infra_error(): PasswordResetSessionState {
+        return { type: "failed-to-start-session", err: { type: "infra-error", err: "error" } }
     }
     tryToPollingStatus(): PasswordResetSessionState {
         return { type: "try-to-polling-status" }
@@ -107,7 +107,7 @@ class Component implements PasswordResetSessionComponent {
     }
     trigger(operation: PasswordResetSessionComponentOperation): Promise<void> {
         switch (operation.type) {
-            case "create-session":
+            case "start-session":
                 alert("ここでセッションを作成！")
                 return Promise.resolve()
 

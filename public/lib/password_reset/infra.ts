@@ -1,5 +1,5 @@
 import {
-    SessionID, CreateSessionError,
+    SessionID, StartSessionError,
     Destination,
     ResetToken,
     PollingStatus,
@@ -17,7 +17,7 @@ export type Infra = Readonly<{
 }>
 
 export type TimeConfig = Readonly<{
-    passwordResetCreateSessionDelayTime: DelayTime,
+    passwordResetStartSessionDelayTime: DelayTime,
     passwordResetPollingWaitTime: WaitTime,
     passwordResetPollingLimit: Limit,
 
@@ -29,18 +29,18 @@ export type WaitTime = Readonly<{ wait_milli_second: number }>
 export type Limit = Readonly<{ limit: number }>
 
 export interface PasswordResetSessionClient {
-    createSession(loginID: LoginID): Promise<SessionResponse>
+    startSession(loginID: LoginID): Promise<SessionResponse>
     sendToken(): Promise<SendTokenResponse>
     getStatus(sessionID: SessionID): Promise<GetStatusResponse>
 }
 
 export type SessionResponse =
-    Readonly<{ success: false, err: CreateSessionError }> |
+    Readonly<{ success: false, err: StartSessionError }> |
     Readonly<{ success: true, sessionID: SessionID }>
-export function createSessionFailed(err: CreateSessionError): SessionResponse {
+export function startSessionFailed(err: StartSessionError): SessionResponse {
     return { success: false, err }
 }
-export function createSessionSuccess(sessionID: SessionID): SessionResponse {
+export function startSessionSuccess(sessionID: SessionID): SessionResponse {
     return { success: true, sessionID }
 }
 

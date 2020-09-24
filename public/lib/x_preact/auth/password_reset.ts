@@ -43,7 +43,7 @@ export function PasswordReset(component: PasswordResetComponent, resetToken: Res
                                     <big>${button}</big>
                                 </div>
                                 <div class="login__link">
-                                    <a href="?_password_reset=create">
+                                    <a href="?_password_reset=start">
                                         <i class="lnir lnir-direction"></i> トークンを再送信する
                                     </a>
                                 </div>

@@ -67,6 +67,7 @@ class Client implements AuthClient {
                 const request = new XMLHttpRequest()
 
                 request.addEventListener("load", () => {
+                    // TODO start session とかだとここが変わるはずなんだよね
                     resolve(authRequest.response(request))
                 })
                 request.addEventListener("error", () => {

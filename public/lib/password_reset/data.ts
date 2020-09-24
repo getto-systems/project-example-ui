@@ -11,14 +11,14 @@ export type PollingStatus =
     Readonly<{ sending: false }> |
     Readonly<{ sending: true }>
 
-export type CreateSessionEvent =
-    Readonly<{ type: "try-to-create-session" }> |
-    Readonly<{ type: "delayed-to-create-session" }> |
-    Readonly<{ type: "failed-to-create-session", err: CreateSessionError }> |
-    Readonly<{ type: "succeed-to-create-session", sessionID: SessionID }>
+export type StartSessionEvent =
+    Readonly<{ type: "try-to-start-session" }> |
+    Readonly<{ type: "delayed-to-start-session" }> |
+    Readonly<{ type: "failed-to-start-session", err: StartSessionError }> |
+    Readonly<{ type: "succeed-to-start-session", sessionID: SessionID }>
 
 // TODO invalid-password-reset -> invalid-password-reset-session
-export type CreateSessionError =
+export type StartSessionError =
     Readonly<{ type: "validation-error" }> |
     Readonly<{ type: "bad-request" }> |
     Readonly<{ type: "invalid-password-reset" }> |

@@ -92,7 +92,7 @@ function loginState(currentLocation: Location): AuthState {
     // ログイン前画面ではアンダースコアから始まるクエリを使用する
     const url = new URL(currentLocation.toString())
 
-    if (url.searchParams.get("_password_reset") === "create") {
+    if (url.searchParams.get("_password_reset") === "start") {
         return { type: "password-reset-session" }
     }
 

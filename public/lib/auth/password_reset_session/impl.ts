@@ -15,7 +15,7 @@ import { LoginIDFieldState } from "../field/login_id/data"
 import { LoginIDField } from "../../field/login_id/action"
 
 import { LoginID } from "../../login_id/data"
-import { CreateSessionEvent, PollingStatusEvent } from "../../password_reset/data"
+import { StartSessionEvent, PollingStatusEvent } from "../../password_reset/data"
 import { LoginIDFieldEvent } from "../../field/login_id/data"
 import { Content } from "../../field/data"
 
@@ -60,17 +60,17 @@ class Component implements PasswordResetSessionComponent {
     }
 
     onStateChange(stateChanged: Dispatcher<PasswordResetSessionState>): void {
-        this.action.passwordReset.sub.onCreateSessionEvent((event) => {
+        this.action.passwordReset.sub.onStartSessionEvent((event) => {
             stateChanged(map(event, this.action))
 
-            function map(event: CreateSessionEvent, action: PasswordResetSessionComponentAction): PasswordResetSessionState {
+            function map(event: StartSessionEvent, action: PasswordResetSessionComponentAction): PasswordResetSessionState {
                 switch (event.type) {
-                    case "try-to-create-session":
-                    case "delayed-to-create-session":
-                    case "failed-to-create-session":
+                    case "try-to-start-session":
+                    case "delayed-to-start-session":
+                    case "failed-to-start-session":
                         return event
 
-                    case "succeed-to-create-session":
+                    case "succeed-to-start-session":
                         action.passwordReset.startPollingStatus(event.sessionID)
                         return { type: "try-to-polling-status" }
                 }
@@ -92,17 +92,17 @@ class Component implements PasswordResetSessionComponent {
     }
     trigger(operation: PasswordResetSessionComponentOperation): Promise<void> {
         switch (operation.type) {
-            case "create-session":
-                return this.createSession()
+            case "start-session":
+                return this.startSession()
 
             case "field-login_id":
                 return Promise.resolve(this.field.loginID.trigger(operation.operation))
         }
     }
 
-    createSession(): Promise<void> {
+    startSession(): Promise<void> {
         this.field.loginID.validate()
-        return this.action.passwordReset.createSession([this.content.loginID])
+        return this.action.passwordReset.startSession([this.content.loginID])
     }
 }
 
