@@ -1,5 +1,6 @@
 /* eslint-disable */
 const path = require("path");
+const WorkerPlugin = require('worker-plugin');
 
 module.exports = {
   entry: () => {
@@ -27,9 +28,15 @@ module.exports = {
       {
         test: /\.ts$/,
         loader: "ts-loader",
+        resolve: {
+          extensions: [".ts"],
+        },
       },
     ],
   },
+  plugins: [
+    new WorkerPlugin(),
+  ],
   devServer: {
     contentBase: path.join(__dirname, ".."),
     publicPath: "/dist/",
