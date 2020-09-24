@@ -53,7 +53,10 @@ function newCredentialAction(): CredentialAction {
 }
 
 function newAuthCredentialRepository(): AuthCredentialRepository {
-    return initStorageAuthCredentialRepository(getCredentialStorage())
+    return initStorageAuthCredentialRepository(getCredentialStorage(), {
+        ticketNonce: "GETTO-EXAMPLE-TICKET-NONCE",
+        apiCredential: "GETTO-EXAMPLE-API-CREDENTIAL",
+    })
 }
 function newRenewClient(): RenewClient {
     return initFetchRenewClient(initAuthClient(env.authServerURL))

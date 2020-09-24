@@ -14,6 +14,11 @@ export type TimeConfig = Readonly<{
 export type DelayTime = Readonly<{ delay_milli_second: number }>
 export type IntervalTime = Readonly<{ interval_milli_second: number }>
 
+export type StorageKey = Readonly<{
+    ticketNonce: string
+    apiCredential: string
+}>
+
 export interface RenewClient {
     renew(ticketNonce: TicketNonce): Promise<RenewResponse>
 }

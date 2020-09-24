@@ -2,24 +2,24 @@ import { ApiCredentialMessage } from "../../../../y_static/local_storage_pb.js"
 
 import { decodeBase64StringToUint8Array, encodeUint8ArrayToBase64String } from "../../../../z_external/protocol_buffers_util"
 
-import { AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra"
+import {
+    StorageKey,
+    AuthCredentialRepository, FindResponse, StoreResponse,
+} from "../../../infra"
 
 import { initTicketNonce, initApiRoles, ticketNonceToString, serializeApiCredential } from "../../../adapter"
 
 import { AuthCredential, TicketNonce, ApiCredential } from "../../../data"
 
-export function initStorageAuthCredentialRepository(storage: Storage): AuthCredentialRepository {
-    return new Repository(storage)
+export function initStorageAuthCredentialRepository(storage: Storage, key: StorageKey): AuthCredentialRepository {
+    return new Repository(storage, key)
 }
 
 class Repository implements AuthCredentialRepository {
     storage: AuthCredentialStorage
 
-    constructor(storage: Storage) {
-        this.storage = new AuthCredentialStorageImpl(storage, {
-            ticketNonce: "GETTO-EXAMPLE-TICKET-NONCE",
-            apiCredential: "GETTO-EXAMPLE-API-CREDENTIAL",
-        })
+    constructor(storage: Storage, key: StorageKey) {
+        this.storage = new AuthCredentialStorageImpl(storage, key)
     }
 
     findTicketNonce(): FindResponse {
@@ -57,11 +57,6 @@ interface AuthCredentialStorage {
 type Found<T> =
     Readonly<{ found: false }> |
     Readonly<{ found: true, content: T }>
-
-type StorageKey = Readonly<{
-    ticketNonce: string
-    apiCredential: string
-}>
 
 class AuthCredentialStorageImpl implements AuthCredentialStorage {
     storage: Storage
