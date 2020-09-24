@@ -40,8 +40,8 @@ export function newAuthUsecase(currentLocation: Location): AuthUsecase {
     })
 }
 
-function getCredentialStorage(): [Storage, string] {
-    return [localStorage, "GETTO-EXAMPLE-AUTH-CREDENTIAL"]
+function getCredentialStorage(): Storage {
+    return localStorage
 }
 
 function newCredentialAction(): CredentialAction {
@@ -53,7 +53,10 @@ function newCredentialAction(): CredentialAction {
 }
 
 function newAuthCredentialRepository(): AuthCredentialRepository {
-    return initStorageAuthCredentialRepository(...getCredentialStorage())
+    return initStorageAuthCredentialRepository(getCredentialStorage(), {
+        ticketNonce: "GETTO-EXAMPLE-TICKET-NONCE",
+        apiCredential: "GETTO-EXAMPLE-API-CREDENTIAL",
+    })
 }
 function newRenewClient(): RenewClient {
     return initFetchRenewClient(initAuthClient(env.authServerURL))

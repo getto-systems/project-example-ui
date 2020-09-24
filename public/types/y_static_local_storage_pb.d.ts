@@ -1,95 +1,95 @@
 import * as $protobuf from "protobufjs";
-/** Properties of a CredentialMessage. */
-export interface ICredentialMessage {
+/** Properties of an ApiCredentialMessage. */
+export interface IApiCredentialMessage {
 
-    /** CredentialMessage nonce */
+    /** ApiCredentialMessage nonce */
     nonce?: (string|null);
 
-    /** CredentialMessage roles */
+    /** ApiCredentialMessage roles */
     roles?: (string[]|null);
 }
 
-/** Represents a CredentialMessage. */
-export class CredentialMessage implements ICredentialMessage {
+/** Represents an ApiCredentialMessage. */
+export class ApiCredentialMessage implements IApiCredentialMessage {
 
     /**
-     * Constructs a new CredentialMessage.
+     * Constructs a new ApiCredentialMessage.
      * @param [properties] Properties to set
      */
-    constructor(properties?: ICredentialMessage);
+    constructor(properties?: IApiCredentialMessage);
 
-    /** CredentialMessage nonce. */
+    /** ApiCredentialMessage nonce. */
     public nonce: string;
 
-    /** CredentialMessage roles. */
+    /** ApiCredentialMessage roles. */
     public roles: string[];
 
     /**
-     * Creates a new CredentialMessage instance using the specified properties.
+     * Creates a new ApiCredentialMessage instance using the specified properties.
      * @param [properties] Properties to set
-     * @returns CredentialMessage instance
+     * @returns ApiCredentialMessage instance
      */
-    public static create(properties?: ICredentialMessage): CredentialMessage;
+    public static create(properties?: IApiCredentialMessage): ApiCredentialMessage;
 
     /**
-     * Encodes the specified CredentialMessage message. Does not implicitly {@link CredentialMessage.verify|verify} messages.
-     * @param message CredentialMessage message or plain object to encode
+     * Encodes the specified ApiCredentialMessage message. Does not implicitly {@link ApiCredentialMessage.verify|verify} messages.
+     * @param message ApiCredentialMessage message or plain object to encode
      * @param [writer] Writer to encode to
      * @returns Writer
      */
-    public static encode(message: ICredentialMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+    public static encode(message: IApiCredentialMessage, writer?: $protobuf.Writer): $protobuf.Writer;
 
     /**
-     * Encodes the specified CredentialMessage message, length delimited. Does not implicitly {@link CredentialMessage.verify|verify} messages.
-     * @param message CredentialMessage message or plain object to encode
+     * Encodes the specified ApiCredentialMessage message, length delimited. Does not implicitly {@link ApiCredentialMessage.verify|verify} messages.
+     * @param message ApiCredentialMessage message or plain object to encode
      * @param [writer] Writer to encode to
      * @returns Writer
      */
-    public static encodeDelimited(message: ICredentialMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+    public static encodeDelimited(message: IApiCredentialMessage, writer?: $protobuf.Writer): $protobuf.Writer;
 
     /**
-     * Decodes a CredentialMessage message from the specified reader or buffer.
+     * Decodes an ApiCredentialMessage message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
-     * @returns CredentialMessage
+     * @returns ApiCredentialMessage
      * @throws {Error} If the payload is not a reader or valid buffer
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CredentialMessage;
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): ApiCredentialMessage;
 
     /**
-     * Decodes a CredentialMessage message from the specified reader or buffer, length delimited.
+     * Decodes an ApiCredentialMessage message from the specified reader or buffer, length delimited.
      * @param reader Reader or buffer to decode from
-     * @returns CredentialMessage
+     * @returns ApiCredentialMessage
      * @throws {Error} If the payload is not a reader or valid buffer
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
-    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): CredentialMessage;
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): ApiCredentialMessage;
 
     /**
-     * Verifies a CredentialMessage message.
+     * Verifies an ApiCredentialMessage message.
      * @param message Plain object to verify
      * @returns `null` if valid, otherwise the reason why it is not
      */
     public static verify(message: { [k: string]: any }): (string|null);
 
     /**
-     * Creates a CredentialMessage message from a plain object. Also converts values to their respective internal types.
+     * Creates an ApiCredentialMessage message from a plain object. Also converts values to their respective internal types.
      * @param object Plain object
-     * @returns CredentialMessage
+     * @returns ApiCredentialMessage
      */
-    public static fromObject(object: { [k: string]: any }): CredentialMessage;
+    public static fromObject(object: { [k: string]: any }): ApiCredentialMessage;
 
     /**
-     * Creates a plain object from a CredentialMessage message. Also converts values to other types if specified.
-     * @param message CredentialMessage
+     * Creates a plain object from an ApiCredentialMessage message. Also converts values to other types if specified.
+     * @param message ApiCredentialMessage
      * @param [options] Conversion options
      * @returns Plain object
      */
-    public static toObject(message: CredentialMessage, options?: $protobuf.IConversionOptions): { [k: string]: any };
+    public static toObject(message: ApiCredentialMessage, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
     /**
-     * Converts this CredentialMessage to JSON.
+     * Converts this ApiCredentialMessage to JSON.
      * @returns JSON object
      */
     public toJSON(): { [k: string]: any };
