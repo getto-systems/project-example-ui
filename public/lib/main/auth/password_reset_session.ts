@@ -10,7 +10,7 @@ import { initLoginIDFieldAction } from "../../field/login_id/impl/core"
 import {
     PasswordResetSessionComponent,
     PasswordResetSessionWorkerComponentHelper,
-} from "../../auth/component/password_reset_session/component"
+} from "../../auth/component/password_reset_session"
 
 export function newPasswordResetSessionComponent(): PasswordResetSessionComponent {
     return initPasswordResetSessionComponent({
