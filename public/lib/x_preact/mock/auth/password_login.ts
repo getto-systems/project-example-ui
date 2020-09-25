@@ -1,8 +1,7 @@
 import { initInputValue } from "../../../field/adapter"
 
-import { PasswordLoginComponent } from "../../../auth/component/password_login/component"
+import { PasswordLoginComponent, PasswordLoginState, PasswordLoginComponentOperation } from "../../../auth/component/password_login"
 
-import { PasswordLoginState, PasswordLoginComponentOperation } from "../../../auth/component/password_login/data"
 import { LoginIDFieldState } from "../../../auth/component/field/login_id"
 import { PasswordFieldState } from "../../../auth/component/field/password"
 

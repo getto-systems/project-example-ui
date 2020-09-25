@@ -2,7 +2,7 @@ import { RenewCredentialComponent } from "./component/renew_credential/component
 import { StoreCredentialComponent } from "./component/store_credential/component"
 import { LoadApplicationComponent } from "./component/load_application"
 
-import { PasswordLoginComponent } from "./component/password_login/component"
+import { PasswordLoginComponent } from "./component/password_login"
 import { PasswordResetSessionComponent } from "./component/password_reset_session/component"
 import { PasswordResetComponent } from "./component/password_reset/component"
 

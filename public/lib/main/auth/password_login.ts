@@ -14,7 +14,7 @@ import { initFetchPasswordLoginClient } from "../../password_login/impl/client/p
 
 import { PasswordLoginClient } from "../../password_login/infra"
 
-import { PasswordLoginComponent, PasswordLoginWorkerComponentHelper } from "../../auth/component/password_login/component"
+import { PasswordLoginComponent, PasswordLoginWorkerComponentHelper } from "../../auth/component/password_login"
 
 export function newPasswordLoginComponent(): PasswordLoginComponent {
     return initPasswordLoginComponent({
