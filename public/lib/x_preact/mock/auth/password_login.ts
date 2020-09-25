@@ -4,7 +4,7 @@ import { PasswordLoginComponent } from "../../../auth/component/password_login/c
 
 import { PasswordLoginState, PasswordLoginComponentOperation } from "../../../auth/component/password_login/data"
 import { LoginIDFieldState } from "../../../auth/component/field/login_id"
-import { PasswordFieldState } from "../../../auth/component/field/password/data"
+import { PasswordFieldState } from "../../../auth/component/field/password"
 
 export function newPasswordLoginComponent(): PasswordLoginComponent {
     const init = new Init()

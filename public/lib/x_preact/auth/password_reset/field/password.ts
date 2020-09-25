@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { PasswordFieldOperation, onPasswordInput, passwordView, passwordFieldError } from "../../field/password"
 
-import { PasswordFieldState, initialPasswordFieldState } from "../../../../auth/component/field/password/data"
+import { PasswordFieldState, initialPasswordFieldState } from "../../../../auth/component/field/password"
 
 interface PreactComponent {
     (): VNode

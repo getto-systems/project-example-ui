@@ -1,7 +1,7 @@
 import { PasswordLoginState, PasswordLoginComponentOperation, PasswordLoginWorkerState } from "./data"
 
 import { LoginIDFieldState } from "../field/login_id"
-import { PasswordFieldState } from "../field/password/data"
+import { PasswordFieldState } from "../field/password"
 
 import { PasswordLoginAction } from "../../../password_login/action"
 import { LoginIDFieldAction } from "../../../field/login_id/action"

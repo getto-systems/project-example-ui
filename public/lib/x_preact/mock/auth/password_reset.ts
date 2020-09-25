@@ -4,7 +4,7 @@ import { PasswordResetComponent } from "../../../auth/component/password_reset/c
 
 import { PasswordResetState, PasswordResetComponentOperation } from "../../../auth/component/password_reset/data"
 import { LoginIDFieldState } from "../../../auth/component/field/login_id"
-import { PasswordFieldState } from "../../../auth/component/field/password/data"
+import { PasswordFieldState } from "../../../auth/component/field/password"
 
 export function newPasswordResetComponent(): PasswordResetComponent {
     const init = new Init()
