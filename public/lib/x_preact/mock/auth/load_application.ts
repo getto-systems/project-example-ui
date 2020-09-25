@@ -1,6 +1,8 @@
-import { LoadApplicationComponent } from "../../../auth/component/load_application/component"
-
-import { LoadApplicationState, LoadApplicationComponentOperation } from "../../../auth/component/load_application/data"
+import {
+    LoadApplicationComponent,
+    LoadApplicationState,
+    LoadApplicationComponentOperation,
+} from "../../../auth/component/load_application"
 
 export function newLoadApplicationComponent(): LoadApplicationComponent {
     return new Component(new Init().failedToLoad_not_found())

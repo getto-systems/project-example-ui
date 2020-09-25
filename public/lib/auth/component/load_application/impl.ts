@@ -1,6 +1,9 @@
-import { LoadApplicationComponent, LoadApplicationComponentAction } from "./component"
-
-import { LoadApplicationState, LoadApplicationComponentOperation } from "./data"
+import {
+    LoadApplicationComponent,
+    LoadApplicationComponentAction,
+    LoadApplicationState,
+    LoadApplicationComponentOperation,
+} from "../load_application"
 
 import { PagePathname, ScriptEvent } from "../../../script/data"
 
