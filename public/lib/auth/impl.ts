@@ -1,8 +1,6 @@
 import { initResetToken } from "../password_reset/adapter"
 
-import { AuthUsecase, AuthComponent } from "./usecase"
-
-import { AuthState } from "./data"
+import { AuthUsecase, AuthComponent, AuthState } from "./usecase"
 
 import { AuthCredential } from "../credential/data"
 
