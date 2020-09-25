@@ -21,11 +21,12 @@ class Component implements LoadApplicationComponent {
         this.state = state
     }
 
-    hook(_stateChanged: Post<LoadApplicationState>): void {
-        // mock では特に何もしない
-    }
     onStateChange(stateChanged: Post<LoadApplicationState>): void {
         stateChanged(this.state)
+    }
+
+    init(): void {
+        // mock では特に何もしない
     }
     terminate(): void {
         // mock では特に何もしない

@@ -18,3 +18,5 @@ component.onPasswordFieldStateChange((state) => {
 ctx.addEventListener("message", (event) => {
     component.trigger(event.data)
 })
+
+component.init()

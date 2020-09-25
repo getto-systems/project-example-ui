@@ -17,20 +17,25 @@ export function initLoadApplicationWorkerComponent(init: WorkerInit): LoadApplic
 class Component implements LoadApplicationComponent {
     action: LoadApplicationComponentAction
 
+    listener: Post<LoadApplicationState>[]
+
     constructor(action: LoadApplicationComponentAction) {
         this.action = action
+        this.action.script.sub.onScriptEvent((event) => {
+            const state = mapEvent(event)
+            this.listener.forEach(post => post(state))
+        })
+
+        this.listener = []
     }
 
     onStateChange(stateChanged: Post<LoadApplicationState>): void {
-        this.action.script.sub.onScriptEvent((event) => {
-            stateChanged(map(event))
-
-            function map(event: ScriptEvent): LoadApplicationState {
-                return event
-            }
-        })
+        this.listener.push(stateChanged)
     }
 
+    init(): void {
+        // WorkerComponent とインターフェイスを合わせるために必要
+    }
     terminate(): void {
         // WorkerComponent とインターフェイスを合わせるために必要
     }
@@ -48,21 +53,28 @@ class Component implements LoadApplicationComponent {
 class WorkerComponent implements LoadApplicationComponent {
     worker: WorkerHolder
 
+    listener: Post<LoadApplicationState>[]
+
     constructor(init: WorkerInit) {
         this.worker = { set: false, init }
+        this.listener = []
     }
 
     onStateChange(stateChanged: Post<LoadApplicationState>): void {
-        if (!this.worker.set) {
-            this.worker = { set: true, instance: this.initWorker(this.worker.init, stateChanged) }
-        }
+        this.listener.push(stateChanged)
     }
-    initWorker(init: WorkerInit, stateChanged: Post<LoadApplicationState>): Worker {
-        const worker = init()
-        worker.addEventListener("message", (event) => {
-            stateChanged(event.data)
-        })
-        return worker
+
+    init(): void {
+        if (!this.worker.set) {
+            const instance = this.worker.init()
+
+            instance.addEventListener("message", (event) => {
+                const state = event.data as LoadApplicationState
+                this.listener.forEach(post => post(state))
+            })
+
+            this.worker = { set: true, instance }
+        }
     }
 
     terminate(): void {
@@ -76,6 +88,10 @@ class WorkerComponent implements LoadApplicationComponent {
             this.worker.instance.postMessage(operation)
         }
     }
+}
+
+function mapEvent(event: ScriptEvent): LoadApplicationState {
+    return event
 }
 
 interface Post<T> {

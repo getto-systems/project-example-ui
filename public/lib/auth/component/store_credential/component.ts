@@ -3,8 +3,8 @@ import { CredentialAction } from "../../../credential/action"
 import { AuthCredential, StoreError } from "../../../credential/data"
 
 export interface StoreCredentialComponent {
-    hook(stateChanged: Post<StoreCredentialState>): void
     onStateChange(stateChanged: Post<StoreCredentialState>): void
+    init(): void
     terminate(): void
     store(authCredential: AuthCredential): Promise<void>
 }

@@ -25,6 +25,7 @@ export function RenewCredential(component: RenewCredentialComponent): PreactComp
         const [state, setState] = useState(initialRenewCredentialState)
         useEffect(() => {
             component.onStateChange(setState)
+            component.init()
             component.trigger({ type: "renew", param: props.param })
             return () => component.terminate()
         }, [])

@@ -9,6 +9,7 @@ import { LoginIDFieldOperation } from "../../../field/login_id/data"
 export interface PasswordResetSessionComponent {
     onStateChange(stateChanged: Post<PasswordResetSessionState>): void
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
+    init(): void
     terminate(): void
     trigger(operation: PasswordResetSessionComponentOperation): Promise<void>
 }
@@ -36,7 +37,7 @@ export interface PasswordResetSessionWorkerComponentHelper {
 }
 
 export type PasswordResetSessionWorkerState =
-    Readonly<{ type: "password_login", state: PasswordResetSessionState }> |
+    Readonly<{ type: "password_reset_session", state: PasswordResetSessionState }> |
     Readonly<{ type: "field-login_id", state: LoginIDFieldState }>
 
 export interface PasswordResetSessionComponentAction {

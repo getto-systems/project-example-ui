@@ -51,6 +51,10 @@ class Component implements PasswordResetComponent {
 
     constructor(action: PasswordResetComponentAction) {
         this.action = action
+        this.action.passwordReset.sub.onResetEvent((event) => {
+            const state = mapEvent(event)
+            this.listener.forEach(post => post(state))
+        })
 
         this.listener = []
 
@@ -72,19 +76,8 @@ class Component implements PasswordResetComponent {
         })
     }
 
-    hook(post: Post<PasswordResetState>): void {
-        this.listener.push(post)
-    }
     onStateChange(stateChanged: Post<PasswordResetState>): void {
-        this.action.passwordReset.sub.onResetEvent((event) => {
-            const state = map(event)
-            this.listener.forEach(post => post(state))
-            stateChanged(state)
-
-            function map(event: ResetEvent): PasswordResetState {
-                return event
-            }
-        })
+        this.listener.push(stateChanged)
     }
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
         this.field.loginID.sub.onLoginIDFieldEvent(stateChanged)
@@ -92,8 +85,12 @@ class Component implements PasswordResetComponent {
     onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void {
         this.field.password.sub.onPasswordFieldEvent(stateChanged)
     }
+
+    init(): void {
+        // WorkerComponent とインターフェイスを合わせるために必要
+    }
     terminate(): void {
-        // terminate が必要な component とインターフェイスを合わせるために必要
+        // WorkerComponent とインターフェイスを合わせるために必要
     }
     trigger(operation: PasswordResetComponentOperation): Promise<void> {
         switch (operation.type) {
@@ -121,69 +118,57 @@ class Component implements PasswordResetComponent {
 
 class WorkerComponent implements PasswordResetComponent {
     worker: WorkerHolder
-    listener: Post<PasswordResetState>[]
+
+    listener: {
+        passwordReset: Post<PasswordResetState>[]
+        loginID: Post<LoginIDFieldState>[]
+        password: Post<PasswordFieldState>[]
+    }
 
     constructor(init: WorkerInit) {
-        this.worker = { set: false, stack: [], init }
-        this.listener = []
+        this.worker = { set: false, init }
+        this.listener = {
+            passwordReset: [],
+            loginID: [],
+            password: [],
+        }
     }
 
-    hook(post: Post<PasswordResetState>): void {
-        this.listener.push(post)
-    }
     onStateChange(stateChanged: Post<PasswordResetState>): void {
-        if (!this.worker.set) {
-            const instance = this.initWorker(this.worker.init, this.worker.stack, (state) => {
-                this.listener.forEach(post => post(state))
-                stateChanged(state)
-            })
-            this.worker = { set: true, instance }
-        }
+        this.listener.passwordReset.push(stateChanged)
     }
-    initWorker(init: WorkerInit, stack: WorkerSetup[], stateChanged: Post<PasswordResetState>): Worker {
-        const worker = init()
-        worker.addEventListener("message", (event) => {
-            const state = event.data as PasswordResetWorkerState
-            if (state.type === "password_reset") {
-                stateChanged(state.state)
-            }
-        })
-        stack.forEach((setup) => {
-            setup(worker)
-        })
-        return worker
-    }
-
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
-        if (this.worker.set) {
-            setup(this.worker.instance)
-        } else {
-            this.worker.stack.push(setup)
-        }
-
-        function setup(worker: Worker): void {
-            worker.addEventListener("message", (event) => {
-                const state = event.data as PasswordResetWorkerState
-                if (state.type === "field-login_id") {
-                    stateChanged(state.state)
-                }
-            })
-        }
+        this.listener.loginID.push(stateChanged)
     }
     onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void {
-        if (this.worker.set) {
-            setup(this.worker.instance)
-        } else {
-            this.worker.stack.push(setup)
-        }
+        this.listener.password.push(stateChanged)
+    }
 
-        function setup(worker: Worker): void {
-            worker.addEventListener("message", (event) => {
+    init(): void {
+        if (!this.worker.set) {
+            const instance = this.worker.init()
+
+            instance.addEventListener("message", (event) => {
                 const state = event.data as PasswordResetWorkerState
-                if (state.type === "field-password") {
-                    stateChanged(state.state)
+                switch (state.type) {
+                    case "password_reset":
+                        this.listener.passwordReset.forEach(post => post(state.state))
+                        return
+
+                    case "field-login_id":
+                        this.listener.loginID.forEach(post => post(state.state))
+                        return
+
+                    case "field-password":
+                        this.listener.password.forEach(post => post(state.state))
+                        return
+
+                    default:
+                        assertNever(state)
                 }
             })
+
+            this.worker = { set: true, instance }
         }
     }
 
@@ -198,6 +183,10 @@ class WorkerComponent implements PasswordResetComponent {
             this.worker.instance.postMessage(operation)
         }
     }
+}
+
+function mapEvent(event: ResetEvent): PasswordResetState {
+    return event
 }
 
 function mapPasswordResetState(state: PasswordResetState): PasswordResetWorkerState {
@@ -215,12 +204,13 @@ interface Post<T> {
 }
 
 type WorkerHolder =
-    Readonly<{ set: false, stack: WorkerSetup[], init: WorkerInit }> |
+    Readonly<{ set: false, init: WorkerInit }> |
     Readonly<{ set: true, instance: Worker }>
 
 interface WorkerInit {
     (): Worker
 }
-interface WorkerSetup {
-    (worker: Worker): void
+
+function assertNever(_: never): never {
+    throw new Error("NEVER")
 }

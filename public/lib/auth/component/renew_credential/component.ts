@@ -3,8 +3,8 @@ import { CredentialAction } from "../../../credential/action"
 import { FetchError, RenewError, StoreError } from "../../../credential/data"
 
 export interface RenewCredentialComponent {
-    hook(stateChanged: Post<RenewCredentialState>): void
     onStateChange(stateChanged: Post<RenewCredentialState>): void
+    init(): void
     terminate(): void
     trigger(operation: RenewCredentialOperation): Promise<void>
 }
