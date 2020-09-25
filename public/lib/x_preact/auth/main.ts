@@ -39,19 +39,35 @@ export function Main(props: Props): VNode {
             return EMPTY_CONTENT
 
         case "renew-credential":
-            return h(RenewCredential, { component: props.usecase.component.renewCredential, param: state.param })
+            return h(RenewCredential, {
+                component: props.usecase.component.renewCredential,
+                param: state.param,
+            })
 
         case "load-application":
-            return h(LoadApplication, { component: props.usecase.component.loadApplication, param: state.param })
+            return h(LoadApplication, {
+                component: props.usecase.component.loadApplication,
+                param: state.param,
+            })
 
         case "password-login":
-            return h(PasswordLogin, { component: props.usecase.component.passwordLogin })
+            return h(PasswordLogin, {
+                component: props.usecase.component.passwordLogin,
+                link: props.usecase.link,
+            })
 
         case "password-reset-session":
-            return h(PasswordResetSession, { component: props.usecase.component.passwordResetSession })
+            return h(PasswordResetSession, {
+                component: props.usecase.component.passwordResetSession,
+                link: props.usecase.link,
+            })
 
         case "password-reset":
-            return h(PasswordReset, { component: props.usecase.component.passwordReset, param: state.param })
+            return h(PasswordReset, {
+                component: props.usecase.component.passwordReset,
+                link: props.usecase.link,
+                param: state.param,
+            })
 
         case "failed-to-fetch":
         case "failed-to-store":

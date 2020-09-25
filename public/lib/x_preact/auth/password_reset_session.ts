@@ -5,6 +5,8 @@ import { html } from "htm/preact"
 import { LoginHeader, ErrorView } from "./layout"
 import { LoginIDField } from "./password_reset_session/field/login_id"
 
+import { TopLink } from "../../link"
+
 import {
     PasswordResetSessionComponent,
     initialPasswordResetSessionState,
@@ -14,6 +16,7 @@ import { Destination, PollingStatus, StartSessionError, PollingStatusError, Send
 
 type Props = Readonly<{
     component: PasswordResetSessionComponent
+    link: TopLink
 }>
 
 export function PasswordResetSession(props: Props): VNode {
@@ -41,7 +44,7 @@ export function PasswordResetSession(props: Props): VNode {
                             <div>
                                 <big>${button}</big>
                             </div>
-                            ${loginLink()}
+                            ${loginLink(props.link)}
                         </div>
                         ${footer}
                     </footer>
@@ -75,7 +78,7 @@ export function PasswordResetSession(props: Props): VNode {
         `, html`
             <section class="button__container">
                 <div></div>
-                ${loginLink()}
+                ${loginLink(props.link)}
             </section>
         `)
     }
@@ -127,7 +130,7 @@ export function PasswordResetSession(props: Props): VNode {
             return ErrorView(html`リセットトークンを送信しました`, sendTokenMessage(state.dest), html`
                 <section class="button__container">
                     <div></div>
-                    ${loginLink()}
+                    ${loginLink(props.link)}
                 </section>
             `)
     }
@@ -168,10 +171,10 @@ function formMessage(messageClass: string, content: VNode): VNode {
     `
 }
 
-function loginLink(): VNode {
+function loginLink(link: TopLink): VNode {
     return html`
         <div class="login__link">
-            <a href="?_password_login">
+            <a href="${link.auth.passwordLoginHref()}">
                 <i class="lnir lnir-user"></i> ログインIDとパスワードでログインする
             </a>
         </div>

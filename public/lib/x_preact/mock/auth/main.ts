@@ -1,3 +1,5 @@
+import { newTopLink } from "../../../main/link"
+
 import { newRenewCredentialComponent } from "./renew_credential"
 import { newLoadApplicationComponent } from "./load_application"
 
@@ -13,6 +15,7 @@ import { packTicketNonce } from "../../../credential/adapter"
 import { packResetToken } from "../../../password_reset/adapter"
 import { packPagePathname } from "../../../script/adapter"
 
+import { TopLink } from "../../../link"
 import { AuthUsecase, AuthComponent, AuthState } from "../../../auth/usecase"
 
 export function newAuthUsecase(): AuthUsecase {
@@ -51,12 +54,13 @@ class Init {
 }
 
 class Usecase implements AuthUsecase {
-    state: AuthState
+    link: TopLink
     component: AuthComponent
 
-    constructor(state: AuthState) {
-        this.state = state
+    state: AuthState
 
+    constructor(state: AuthState) {
+        this.link = newTopLink()
         this.component = {
             renewCredential: newRenewCredentialComponent(),
             loadApplication: newLoadApplicationComponent(),
@@ -65,6 +69,8 @@ class Usecase implements AuthUsecase {
             passwordResetSession: newPasswordResetSessionComponent(),
             passwordReset: newPasswordResetComponent(),
         }
+
+        this.state = state
     }
 
     onStateChange(stateChanged: Post<AuthState>): void {

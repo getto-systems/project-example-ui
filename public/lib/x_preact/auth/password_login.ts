@@ -6,12 +6,15 @@ import { LoginHeader } from "./layout"
 import { LoginIDField } from "./password_login/field/login_id"
 import { PasswordField } from "./password_login/field/password"
 
+import { TopLink } from "../../link"
+
 import { PasswordLoginComponent, initialPasswordLoginState } from "../../auth/component/password_login/component"
 
 import { LoginError } from "../../password_login/data"
 
 type Props = Readonly<{
     component: PasswordLoginComponent
+    link: TopLink
 }>
 
 export function PasswordLogin(props: Props): VNode {
@@ -41,7 +44,7 @@ export function PasswordLogin(props: Props): VNode {
                                 <big>${button}</big>
                             </div>
                             <div class="login__link">
-                                <a href="?_password_reset=start">
+                                <a href="${props.link.auth.passwordResetSessionHref()}">
                                     <i class="lnir lnir-question-circle"></i> パスワードがわからない方
                                 </a>
                             </div>
