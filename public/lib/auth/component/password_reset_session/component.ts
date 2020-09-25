@@ -9,8 +9,7 @@ import { LoginIDFieldOperation } from "../../../field/login_id/data"
 export interface PasswordResetSessionComponent {
     onStateChange(stateChanged: Post<PasswordResetSessionState>): void
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
-    init(): void
-    terminate(): void
+    init(): Terminate
     trigger(operation: PasswordResetSessionComponentOperation): Promise<void>
 }
 
@@ -47,4 +46,8 @@ export interface PasswordResetSessionComponentAction {
 
 interface Post<T> {
     (state: T): void
+}
+
+interface Terminate {
+    (): void
 }

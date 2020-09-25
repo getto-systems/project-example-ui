@@ -14,8 +14,7 @@ export interface PasswordResetComponent {
     onStateChange(stateChanged: Post<PasswordResetState>): void
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
     onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void
-    init(): void
-    terminate(): void
+    init(): Terminate
     trigger(operation: PasswordResetComponentOperation): Promise<void>
 }
 
@@ -65,4 +64,8 @@ export interface PasswordResetParamEventSubscriber {
 
 interface Post<T> {
     (state: T): void
+}
+
+interface Terminate {
+    (): void
 }

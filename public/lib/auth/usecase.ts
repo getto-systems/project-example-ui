@@ -8,12 +8,9 @@ import { PasswordResetComponent } from "./component/password_reset/component"
 import { ResetToken } from "../password_reset/data"
 
 export interface AuthUsecase {
-    onStateChange(stateChanged: Post<AuthState>): void
-
-    init(): void
-    terminate(): void
-
     component: AuthComponent
+    onStateChange(stateChanged: Post<AuthState>): void
+    init(): Terminate
 }
 
 export interface AuthLocation {
@@ -50,4 +47,8 @@ export type StoreError =
 
 interface Post<T> {
     (state: T): void
+}
+
+interface Terminate {
+    (): void
 }

@@ -25,18 +25,22 @@ class Component implements LoadApplicationComponent {
         stateChanged(this.state)
     }
 
-    init(): void {
-        // mock では特に何もしない
+    init(): Terminate {
+        return () => this.terminate()
     }
     terminate(): void {
         // mock では特に何もしない
     }
-    trigger(_operation: LoadApplicationComponentOperation): Promise<void> {
+
+    async trigger(_operation: LoadApplicationComponentOperation): Promise<void> {
         // mock では特に何もしない
-        return Promise.resolve()
     }
 }
 
 interface Post<T> {
     (state: T): void
+}
+
+interface Terminate {
+    (): void
 }

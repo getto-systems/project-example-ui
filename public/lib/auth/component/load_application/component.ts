@@ -4,8 +4,7 @@ import { ScriptPath } from "../../../script/data"
 
 export interface LoadApplicationComponent {
     onStateChange(stateChanged: Post<LoadApplicationState>): void
-    init(): void
-    terminate(): void
+    init(): Terminate
     trigger(operation: LoadApplicationComponentOperation): Promise<void>
 }
 
@@ -31,4 +30,8 @@ export interface LoadApplicationComponentAction {
 
 interface Post<T> {
     (state: T): void
+}
+
+interface Terminate {
+    (): void
 }

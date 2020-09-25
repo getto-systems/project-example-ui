@@ -1,6 +1,5 @@
 import {
     RenewCredentialComponent,
-    RenewCredentialParam,
     RenewCredentialState,
     RenewCredentialOperation,
 } from "../../../auth/component/renew_credential/component"
@@ -34,17 +33,12 @@ class Component implements RenewCredentialComponent {
         this.state = state
     }
 
-    setParam(_param: RenewCredentialParam): RenewCredentialComponent {
-        // mock では特に何もしない
-        return this
-    }
-
     onStateChange(stateChanged: Post<RenewCredentialState>): void {
         stateChanged(this.state)
     }
 
-    init(): void {
-        // mock では特に何もしない
+    init(): Terminate {
+        return () => this.terminate()
     }
     terminate(): void {
         // mock では特に何もしない
@@ -57,4 +51,8 @@ class Component implements RenewCredentialComponent {
 
 interface Post<T> {
     (state: T): void
+}
+
+interface Terminate {
+    (): void
 }

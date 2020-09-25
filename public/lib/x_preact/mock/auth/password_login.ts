@@ -129,29 +129,34 @@ class Component implements PasswordLoginComponent {
         stateChanged(this.password)
     }
 
-    init(): void {
-        // mock では特に何もしない
+    init(): Terminate {
+        return () => this.terminate()
     }
     terminate(): void {
         // mock では特に何もしない
     }
-    trigger(operation: PasswordLoginComponentOperation): Promise<void> {
+
+    async trigger(operation: PasswordLoginComponentOperation): Promise<void> {
         switch (operation.type) {
             case "login":
                 alert("ここでログイン！")
-                return Promise.resolve()
+                return
 
             case "field-login_id":
                 // field のイベントは特にフィードバックしない
-                return Promise.resolve()
+                return
 
             case "field-password":
                 // field のイベントは特にフィードバックしない
-                return Promise.resolve()
+                return
         }
     }
 }
 
 interface Post<T> {
     (state: T): void
+}
+
+interface Terminate {
+    (): void
 }

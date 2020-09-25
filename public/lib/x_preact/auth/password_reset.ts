@@ -20,8 +20,7 @@ export function PasswordReset(props: Props): VNode {
     const submit = useRef<HTMLButtonElement>()
     useEffect(() => {
         props.component.onStateChange(setState)
-        props.component.init()
-        return () => props.component.terminate()
+        return props.component.init()
     }, [])
 
     function view(onSubmit: Handler<Event>, button: VNode, footer: VNode): VNode {

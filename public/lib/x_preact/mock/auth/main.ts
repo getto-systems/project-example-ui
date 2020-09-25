@@ -66,8 +66,9 @@ class Usecase implements AuthUsecase {
     onStateChange(stateChanged: Post<AuthState>): void {
         stateChanged(this.state)
     }
-    async init(): Promise<void> {
-        // mock では特に何もしない
+
+    init(): Terminate {
+        return () => this.terminate()
     }
     terminate(): void {
         // mock では特に何もしない
@@ -76,4 +77,8 @@ class Usecase implements AuthUsecase {
 
 interface Post<T> {
     (state: T): void
+}
+
+interface Terminate {
+    (): void
 }

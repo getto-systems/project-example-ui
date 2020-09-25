@@ -22,8 +22,7 @@ export function LoadApplication(props: Props): VNode {
     const [state, setState] = useState(initialLoadApplicationState)
     useEffect(() => {
         props.component.onStateChange(setState)
-        props.component.init()
-        return () => props.component.terminate()
+        return props.component.init()
     }, [])
 
     useEffect(() => {
