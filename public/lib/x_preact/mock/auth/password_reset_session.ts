@@ -1,9 +1,9 @@
-import { PasswordResetSessionComponent } from "../../../auth/component/password_reset_session/component"
-
 import {
+    PasswordResetSessionComponent,
     PasswordResetSessionState,
     PasswordResetSessionComponentOperation,
-} from "../../../auth/component/password_reset_session/data"
+} from "../../../auth/component/password_reset_session"
+
 import { LoginIDFieldState } from "../../../auth/component/field/login_id"
 
 export function newPasswordResetSessionComponent(): PasswordResetSessionComponent {

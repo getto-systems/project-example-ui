@@ -1,7 +1,17 @@
-import { LoginIDFieldState } from "../field/login_id"
+import { LoginIDFieldState } from "./field/login_id"
 
-import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../../password_reset/data"
-import { LoginIDFieldOperation } from "../../../field/login_id/data"
+import { PasswordResetAction } from "../../password_reset/action"
+import { LoginIDFieldAction } from "../../field/login_id/action"
+
+import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../password_reset/data"
+import { LoginIDFieldOperation } from "../../field/login_id/data"
+
+export interface PasswordResetSessionComponent {
+    onStateChange(stateChanged: Post<PasswordResetSessionState>): void
+    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
+    terminate(): void
+    trigger(operation: PasswordResetSessionComponentOperation): Promise<void>
+}
 
 export type PasswordResetSessionState =
     Readonly<{ type: "initial-reset-session" }> |
@@ -20,6 +30,20 @@ export type PasswordResetSessionComponentOperation =
     Readonly<{ type: "start-session" }> |
     Readonly<{ type: "field-login_id", operation: LoginIDFieldOperation }>
 
+export interface PasswordResetSessionWorkerComponentHelper {
+    mapPasswordResetSessionState(state: PasswordResetSessionState): PasswordResetSessionWorkerState
+    mapLoginIDFieldState(state: LoginIDFieldState): PasswordResetSessionWorkerState
+}
+
 export type PasswordResetSessionWorkerState =
     Readonly<{ type: "password_login", state: PasswordResetSessionState }> |
     Readonly<{ type: "field-login_id", state: LoginIDFieldState }>
+
+export interface PasswordResetSessionComponentAction {
+    passwordReset: PasswordResetAction
+    loginIDField: LoginIDFieldAction
+}
+
+interface Post<T> {
+    (state: T): void
+}
