@@ -1,6 +1,8 @@
-import { RenewCredentialComponent, RenewCredentialComponentAction } from "./component"
-
-import { RenewCredentialState } from "./data"
+import {
+    RenewCredentialComponentAction,
+    RenewCredentialComponent,
+    RenewCredentialState,
+} from "../renew_credential"
 
 import { RenewEvent, StoreEvent } from "../../../credential/data"
 
