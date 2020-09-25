@@ -144,7 +144,7 @@ class WorkerComponent implements PasswordResetComponent {
         this.listener.password.push(stateChanged)
     }
 
-    init(): void {
+    async init(): Promise<void> {
         if (!this.worker.set) {
             const instance = this.worker.init()
 
