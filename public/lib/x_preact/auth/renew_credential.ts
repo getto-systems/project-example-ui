@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { ErrorView } from "./layout"
+import { loginError } from "./layout"
 
 import {
     RenewCredentialComponent,
@@ -54,7 +54,7 @@ export function RenewCredential(props: Props): VNode {
     }
 
     function delayedContent(): VNode {
-        return ErrorView(
+        return loginError(
             html`認証に時間がかかっています`,
             html`
                 <p>
@@ -68,7 +68,7 @@ export function RenewCredential(props: Props): VNode {
     }
 
     function renewFailedContent(err: RenewError): VNode {
-        return ErrorView(
+        return loginError(
             html`認証に失敗しました`,
             errorMessage(renewError(err)),
             html``,

@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-export function LoginHeader(): VNode {
+export function loginHeader(): VNode {
     return html`
         <header class="login__header">
             <cite class="login__brand">GETTO</cite>
@@ -11,11 +11,11 @@ export function LoginHeader(): VNode {
     `
 }
 
-export function ErrorView(title: VNode, content: VNode, footer: VNode): VNode {
+export function loginError(title: VNode, content: VNode, footer: VNode): VNode {
     return html`
         <aside class="login">
             <section class="login__box">
-                ${LoginHeader()}
+                ${loginHeader()}
                 <section class="login__message">
                     <h3 class="login__message__title">${title}</h3>
                     <section class="login__message__body paragraph">${content}</section>

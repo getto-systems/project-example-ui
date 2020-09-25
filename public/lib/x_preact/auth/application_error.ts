@@ -1,10 +1,10 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { ErrorView } from "./layout"
+import { loginError } from "./layout"
 
 export function ApplicationError(): VNode {
-    return ErrorView(
+    return loginError(
         html`アプリケーション実行中にエラーが発生しました`,
         html`
             <p>エラーが発生したため、アプリケーションは動作を停止しました</p>
