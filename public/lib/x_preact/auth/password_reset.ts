@@ -6,13 +6,17 @@ import { LoginHeader } from "./layout"
 import { LoginIDField } from "./password_reset/field/login_id"
 import { PasswordField } from "./password_reset/field/password"
 
-import { PasswordResetComponent, initialPasswordResetState } from "../../auth/component/password_reset/component"
+import {
+    PasswordResetComponent,
+    PasswordResetParam,
+    initialPasswordResetState,
+} from "../../auth/component/password_reset/component"
 
-import { ResetToken, ResetError } from "../../password_reset/data"
+import { ResetError } from "../../password_reset/data"
 
 type Props = Readonly<{
     component: PasswordResetComponent
-    resetToken: ResetToken
+    param: PasswordResetParam
 }>
 
 export function PasswordReset(props: Props): VNode {
@@ -22,6 +26,10 @@ export function PasswordReset(props: Props): VNode {
         props.component.onStateChange(setState)
         return props.component.init()
     }, [])
+
+    useEffect(() => {
+        props.component.trigger({ type: "set-param", param: props.param })
+    }, [props.param])
 
     function view(onSubmit: Handler<Event>, button: VNode, footer: VNode): VNode {
         return html`
@@ -104,7 +112,7 @@ export function PasswordReset(props: Props): VNode {
             submit.current.blur()
         }
 
-        props.component.trigger({ type: "reset", resetToken: props.resetToken })
+        props.component.trigger({ type: "reset" })
     }
     function onSubmit_noop(e: Event) {
         e.preventDefault()

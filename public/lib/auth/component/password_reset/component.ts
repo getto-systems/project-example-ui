@@ -30,7 +30,8 @@ export type PasswordResetState =
 export const initialPasswordResetState: PasswordResetState = { type: "initial-reset" }
 
 export type PasswordResetComponentOperation =
-    Readonly<{ type: "reset", resetToken: ResetToken }> |
+    Readonly<{ type: "set-param", param: PasswordResetParam }> |
+    Readonly<{ type: "reset" }> |
     Readonly<{ type: "field-login_id", operation: LoginIDFieldOperation }> |
     Readonly<{ type: "field-password", operation: PasswordFieldOperation }>
 
