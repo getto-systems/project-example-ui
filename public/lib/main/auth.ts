@@ -14,27 +14,27 @@ import { initStorageAuthCredentialRepository } from "../auth/impl/repository/aut
 
 import { initRenewCredentialComponent } from "../auth/component/renew_credential/impl"
 
-import { initStorageAuthCredentialRepository as initCredentialRepository } from "../credential/impl/repository/credential/storage"
 import { initFetchRenewClient } from "../credential/impl/client/renew/fetch"
 
 import { initCredentialAction } from "../credential/impl/core"
 
-import { AuthCredentialRepository, RenewClient } from "../credential/infra"
+import { RenewClient } from "../credential/infra"
 
 import { AuthUsecase } from "../auth/usecase"
+import { RenewCredentialComponent } from "../auth/component/renew_credential/component"
 
 import { CredentialAction } from "../credential/action"
 
 export function newAuthUsecase(currentLocation: Location): AuthUsecase {
-    const credential = newCredentialAction()
+    const credentialStorage: Storage = localStorage
 
     return initAuthUsecase({
-        authCredentials: initStorageAuthCredentialRepository(localStorage, {
+        authCredentials: initStorageAuthCredentialRepository(credentialStorage, {
             ticketNonce: "GETTO-EXAMPLE-TICKET-NONCE",
             apiCredential: "GETTO-EXAMPLE-API-CREDENTIAL",
         }),
     }, currentLocation, {
-        renewCredential: initRenewCredentialComponent({ credential }),
+        renewCredential: newRenewCredentialComponent(),
         loadApplication: newLoadApplicationComponent(),
 
         passwordLogin: newPasswordLoginComponent(),
@@ -43,24 +43,17 @@ export function newAuthUsecase(currentLocation: Location): AuthUsecase {
     })
 }
 
-function getCredentialStorage(): Storage {
-    return localStorage
+function newRenewCredentialComponent(): RenewCredentialComponent {
+    return initRenewCredentialComponent({ credential: newCredentialAction() })
 }
 
 function newCredentialAction(): CredentialAction {
     return initCredentialAction({
         timeConfig: newTimeConfig(),
         renewClient: newRenewClient(),
-        authCredentials: newAuthCredentialRepository(),
     })
 }
 
-function newAuthCredentialRepository(): AuthCredentialRepository {
-    return initCredentialRepository(getCredentialStorage(), {
-        ticketNonce: "GETTO-EXAMPLE-TICKET-NONCE",
-        apiCredential: "GETTO-EXAMPLE-API-CREDENTIAL",
-    })
-}
 function newRenewClient(): RenewClient {
     return initFetchRenewClient(initAuthClient(env.authServerURL))
 }

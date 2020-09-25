@@ -34,6 +34,10 @@ class Usecase implements AuthUsecase {
                     return
 
                 case "succeed-to-renew":
+                    this.loadApplication(state.authCredential)
+                    return
+
+                case "succeed-to-renew-interval":
                     this.storeCredential(state.authCredential)
                     return
             }
@@ -42,7 +46,7 @@ class Usecase implements AuthUsecase {
         this.component.passwordLogin.onStateChange((state) => {
             switch (state.type) {
                 case "succeed-to-login":
-                    this.storeCredential(state.authCredential)
+                    this.loadApplication(state.authCredential)
                     return
             }
         })
@@ -50,7 +54,7 @@ class Usecase implements AuthUsecase {
         this.component.passwordReset.onStateChange((state) => {
             switch (state.type) {
                 case "succeed-to-reset":
-                    this.storeCredential(state.authCredential)
+                    this.loadApplication(state.authCredential)
                     return
             }
         })
@@ -84,17 +88,17 @@ class Usecase implements AuthUsecase {
     tryToLogin(): void {
         this.post(loginState(this.currentLocation))
     }
-
+    loadApplication(authCredential: AuthCredential): void {
+        this.storeCredential(authCredential)
+        this.component.renewCredential.trigger({ type: "set-renew-interval", ticketNonce: authCredential.ticketNonce })
+        this.post({ type: "load-application" })
+    }
     storeCredential(authCredential: AuthCredential): void {
         const response = this.infra.authCredentials.storeAuthCredential(authCredential)
         if (!response.success) {
             this.post({ type: "failed-to-store", err: response.err })
             return
         }
-
-        this.component.renewCredential.trigger({ type: "set-renew-interval", ticketNonce: authCredential.ticketNonce })
-
-        this.post({ type: "load-application" })
     }
 }
 
