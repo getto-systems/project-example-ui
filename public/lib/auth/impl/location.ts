@@ -1,8 +1,11 @@
 import { packResetToken } from "../../password_reset/adapter"
+import { packPagePathname } from "../../script/adapter"
 
 import { AuthLocation } from "../infra"
 
 import { AuthState } from "../usecase"
+
+import { PagePathname } from "../../script/data"
 
 export function initAuthLocation(currentLocation: Location): AuthLocation {
     return new AuthLocationImpl(currentLocation)
@@ -30,5 +33,9 @@ class AuthLocationImpl implements AuthLocation {
 
         // 特に指定が無ければパスワードログイン
         return { type: "password-login" }
+    }
+
+    currentPagePathname(): PagePathname {
+        return packPagePathname(new URL(this.currentLocation.toString()))
     }
 }

@@ -1,4 +1,5 @@
 import { packRenewCredentialParam } from "../component/renew_credential/param"
+import { packLoadApplicationParam } from "../component/load_application/param"
 
 import { AuthUsecase, AuthComponent, AuthState } from "../usecase"
 import { Infra } from "../infra"
@@ -87,7 +88,10 @@ class Usecase implements AuthUsecase {
         this.component.renewCredential.trigger({ type: "set-renew-interval", ticketNonce: authCredential.ticketNonce })
 
         this.storeCredential(authCredential)
-        this.post({ type: "load-application" })
+        this.post({
+            type: "load-application",
+            param: packLoadApplicationParam(this.infra.authLocation.currentPagePathname()),
+        })
     }
     storeCredential(authCredential: AuthCredential): void {
         const response = this.infra.authCredentials.storeAuthCredential(authCredential)

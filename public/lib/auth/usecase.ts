@@ -1,5 +1,5 @@
 import { RenewCredentialComponent, RenewCredentialParam } from "./component/renew_credential/component"
-import { LoadApplicationComponent } from "./component/load_application/component"
+import { LoadApplicationComponent, LoadApplicationParam } from "./component/load_application/component"
 
 import { PasswordLoginComponent } from "./component/password_login/component"
 import { PasswordResetSessionComponent } from "./component/password_reset_session/component"
@@ -35,7 +35,7 @@ export type AuthState =
     Readonly<{ type: "failed-to-fetch", err: FetchError }> |
     Readonly<{ type: "failed-to-store", err: StoreError }> |
     Readonly<{ type: "renew-credential", param: RenewCredentialParam }> |
-    Readonly<{ type: "load-application" }> |
+    Readonly<{ type: "load-application", param: LoadApplicationParam }> |
     Readonly<{ type: "password-login" }> |
     Readonly<{ type: "password-reset-session" }> |
     Readonly<{ type: "password-reset", resetToken: ResetToken }>

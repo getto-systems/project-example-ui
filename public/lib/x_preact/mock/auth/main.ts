@@ -6,9 +6,11 @@ import { newPasswordResetSessionComponent } from "./password_reset_session"
 import { newPasswordResetComponent } from "./password_reset"
 
 import { packRenewCredentialParam } from "../../../auth/component/renew_credential/param"
+import { packLoadApplicationParam } from "../../../auth/component/load_application/param"
 
 import { packTicketNonce } from "../../../credential/adapter"
 import { packResetToken } from "../../../password_reset/adapter"
+import { packPagePathname } from "../../../script/adapter"
 
 import { AuthUsecase, AuthComponent, AuthState } from "../../../auth/usecase"
 
@@ -21,10 +23,16 @@ class Init {
         return { type: "initial" }
     }
     renewCredential(): AuthState {
-        return { type: "renew-credential", param: packRenewCredentialParam(packTicketNonce("ticket-nonce")) }
+        return {
+            type: "renew-credential",
+            param: packRenewCredentialParam(packTicketNonce("ticket-nonce")),
+        }
     }
     loadApplication(): AuthState {
-        return { type: "load-application" }
+        return {
+            type: "load-application",
+            param: packLoadApplicationParam(packPagePathname(new URL("https://example.com/index.html"))),
+        }
     }
 
     passwordLogin(): AuthState {

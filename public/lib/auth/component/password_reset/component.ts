@@ -19,7 +19,7 @@ export interface PasswordResetComponent {
     trigger(operation: PasswordResetComponentOperation): Promise<void>
 }
 
-export type PasswordResetParam = { never: PasswordResetParam }
+export type PasswordResetParam = { PasswordResetParam: never }
 
 export type PasswordResetState =
     Readonly<{ type: "initial-reset" }> |

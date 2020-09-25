@@ -4,21 +4,30 @@ import { html } from "htm/preact"
 
 import { ErrorView } from "./layout"
 
-import { packPagePathname, unpackScriptPath } from "../../script/adapter"
+import { unpackScriptPath } from "../../script/adapter"
 
-import { LoadApplicationComponent, initialLoadApplicationState, CheckError } from "../../auth/component/load_application/component"
+import {
+    LoadApplicationComponent,
+    LoadApplicationParam,
+    initialLoadApplicationState,
+    CheckError,
+} from "../../auth/component/load_application/component"
 
 export interface PreactComponent {
-    (): VNode
+    (props: Props): VNode
 }
 
+type Props = Readonly<{
+    param: LoadApplicationParam
+}>
+
 export function LoadApplication(component: LoadApplicationComponent): PreactComponent {
-    return (): VNode => {
+    return (props: Props): VNode => {
         const [state, setState] = useState(initialLoadApplicationState)
         useEffect(() => {
             component.onStateChange(setState)
             component.init()
-            component.trigger({ type: "load", pagePathname: packPagePathname(new URL(location.toString())) })
+            component.trigger({ type: "load", param: props.param })
             return () => component.terminate()
         }, [])
 

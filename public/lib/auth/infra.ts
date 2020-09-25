@@ -1,6 +1,7 @@
 import { AuthState, FetchError, StoreError } from "./usecase"
 
 import { AuthCredential, TicketNonce } from "../credential/data"
+import { PagePathname } from "../script/data"
 
 export type Infra = Readonly<{
     authLocation: AuthLocation
@@ -9,6 +10,7 @@ export type Infra = Readonly<{
 
 export interface AuthLocation {
     detect(): AuthState
+    currentPagePathname(): PagePathname
 }
 
 export interface AuthCredentialRepository {

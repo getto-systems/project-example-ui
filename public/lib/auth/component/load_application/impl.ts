@@ -1,3 +1,5 @@
+import { unpackLoadApplicationParam } from "./param"
+
 import {
     LoadApplicationComponent,
     LoadApplicationComponentAction,
@@ -42,7 +44,7 @@ class Component implements LoadApplicationComponent {
 
     trigger(operation: LoadApplicationComponentOperation): Promise<void> {
         // type は "load" だけなので単に呼び出す
-        return this.load(operation.pagePathname)
+        return this.load(unpackLoadApplicationParam(operation.param).pagePathname)
     }
 
     async load(pagePathname: PagePathname): Promise<void> {
