@@ -9,7 +9,7 @@ import { newPasswordResetComponent } from "./password_reset"
 import { initTicketNonce, initApiRoles } from "../../../credential/adapter"
 import { initResetToken } from "../../../password_reset/adapter"
 
-import { AuthUsecase, AuthComponent } from "../../../auth/component"
+import { AuthUsecase, AuthComponent } from "../../../auth/usecase"
 
 import { AuthState } from "../../../auth/data"
 

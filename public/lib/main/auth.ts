@@ -21,7 +21,7 @@ import { initCredentialAction } from "../credential/impl/core"
 
 import { AuthCredentialRepository, RenewClient } from "../credential/infra"
 
-import { AuthUsecase } from "../auth/component"
+import { AuthUsecase } from "../auth/usecase"
 
 import { CredentialAction } from "../credential/action"
 
