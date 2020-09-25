@@ -7,9 +7,9 @@ import { initSimulatePasswordResetClient } from "../../../password_reset/impl/cl
 
 import { PasswordResetSessionClient, PasswordResetClient } from "../../../password_reset/infra"
 
-import { initTicketNonce, initApiRoles } from "../../../credential/adapter"
+import { packTicketNonce, packApiRoles } from "../../../credential/adapter"
 
-import { initLoginID } from "../../../login_id/adapter"
+import { packLoginID } from "../../../login_id/adapter"
 
 import { PasswordResetAction } from "../../../password_reset/action"
 
@@ -23,17 +23,17 @@ export function newPasswordResetAction(): PasswordResetAction {
 
 function newPasswordResetSessionClient(): PasswordResetSessionClient {
     //return initFetchPasswordResetSessionClient(initAuthClient(env.authServerURL))
-    return initSimulatePasswordResetSessionClient(initLoginID("loginID"))
+    return initSimulatePasswordResetSessionClient(packLoginID("loginID"))
 }
 
 function newPasswordResetClient(): PasswordResetClient {
     //return initFetchPasswordResetClient(initAuthClient(env.authServerURL))
     return initSimulatePasswordResetClient(
-        initLoginID("loginID"),
+        packLoginID("loginID"),
         {
-            ticketNonce: initTicketNonce("ticket-nonce"),
+            ticketNonce: packTicketNonce("ticket-nonce"),
             apiCredential: {
-                apiRoles: initApiRoles(["admin", "dev"]),
+                apiRoles: packApiRoles(["admin", "dev"]),
             },
         },
     )

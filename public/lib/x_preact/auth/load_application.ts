@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { ErrorView } from "./layout"
 
-import { initPagePathname, scriptPathToString } from "../../script/adapter"
+import { packPagePathname, unpackScriptPath } from "../../script/adapter"
 
 import { LoadApplicationComponent, initialLoadApplicationState, CheckError } from "../../auth/component/load_application/component"
 
@@ -17,7 +17,7 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
         const [state, setState] = useState(initialLoadApplicationState)
         useEffect(() => {
             component.onStateChange(setState)
-            component.trigger({ type: "load", pagePathname: initPagePathname(new URL(location.toString())) })
+            component.trigger({ type: "load", pagePathname: packPagePathname(new URL(location.toString())) })
             return () => component.terminate()
         }, [])
 
@@ -25,7 +25,7 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
             // script タグは body.appendChild しないとスクリプトがロードされないので useEffect で追加する
             if (state.type === "try-to-load") {
                 const script = document.createElement("script")
-                script.src = scriptPathToString(state.scriptPath)
+                script.src = unpackScriptPath(state.scriptPath)
                 script.onerror = (_err) => {
                     setState({ type: "failed-to-load", err: { type: "not-found" } })
                 }

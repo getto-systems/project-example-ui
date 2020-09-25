@@ -1,20 +1,29 @@
-import { initResetToken } from "../password_reset/adapter"
+import { packRenewCredentialParam } from "../component/renew_credential/param"
 
-import { AuthUsecase, AuthComponent, AuthState } from "./usecase"
+import { packResetToken } from "../../password_reset/adapter"
 
-import { AuthCredential } from "../credential/data"
+import { AuthUsecase, AuthComponent, AuthState } from "../usecase"
+import { Infra } from "../infra"
 
-export function initAuthUsecase(currentLocation: Location, component: AuthComponent): AuthUsecase {
-    return new Usecase(currentLocation, component)
+import { RenewCredentialParam } from "../component/renew_credential/component"
+
+import { AuthCredential } from "../../credential/data"
+
+export function initAuthUsecase(infra: Infra, currentLocation: Location, component: AuthComponent): AuthUsecase {
+    return new Usecase(infra, currentLocation, component)
 }
 
 class Usecase implements AuthUsecase {
+    infra: Infra
+
     holder: StateHolder
     component: AuthComponent
 
     currentLocation: Location
 
-    constructor(currentLocation: Location, component: AuthComponent) {
+    constructor(infra: Infra, currentLocation: Location, component: AuthComponent) {
+        this.infra = infra
+
         this.holder = { set: false, stack: false }
         this.component = component
 
@@ -67,6 +76,20 @@ class Usecase implements AuthUsecase {
         // terminate が必要な component とインターフェイスを合わせるために必要
     }
 
+    async init(): Promise<void> {
+        const found = this.infra.authCredentials.findTicketNonce()
+        if (!found.success) {
+            this.post({ type: "failed-to-fetch", err: found.err })
+            return
+        }
+        if (!found.found) {
+            this.tryToLogin()
+            return
+        }
+
+        this.tryToRenew(packRenewCredentialParam(found.content))
+    }
+
     post(state: AuthState): void {
         if (this.holder.set) {
             this.holder.post(state)
@@ -75,6 +98,9 @@ class Usecase implements AuthUsecase {
         }
     }
 
+    async tryToRenew(param: RenewCredentialParam): Promise<void> {
+        this.post({ type: "renew-credential", param })
+    }
     async storeCredential(authCredential: AuthCredential): Promise<void> {
         this.post({ type: "store-credential", authCredential })
     }
@@ -96,7 +122,7 @@ function loginState(currentLocation: Location): AuthState {
 
     const resetToken = url.searchParams.get("_password_reset_token")
     if (resetToken) {
-        return { type: "password-reset", resetToken: initResetToken(resetToken) }
+        return { type: "password-reset", resetToken: packResetToken(resetToken) }
     }
 
     // 特に指定が無ければパスワードログイン

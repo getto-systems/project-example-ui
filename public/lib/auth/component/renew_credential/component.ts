@@ -6,8 +6,10 @@ export interface RenewCredentialComponent {
     hook(stateChanged: Post<RenewCredentialState>): void
     onStateChange(stateChanged: Post<RenewCredentialState>): void
     terminate(): void
-    renew(): Promise<void>
+    trigger(operation: RenewCredentialOperation): Promise<void>
 }
+
+export type RenewCredentialParam = { never: RenewCredentialParam }
 
 export type RenewCredentialState =
     Readonly<{ type: "initial-renew" }> |
@@ -20,6 +22,9 @@ export type RenewCredentialState =
     Readonly<{ type: "succeed-to-store" }>
 
 export const initialRenewCredentialState: RenewCredentialState = { type: "initial-renew" }
+
+export type RenewCredentialOperation =
+    Readonly<{ type: "renew", param: RenewCredentialParam }>
 
 export interface RenewCredentialComponentAction {
     credential: CredentialAction

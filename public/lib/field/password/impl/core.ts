@@ -1,5 +1,5 @@
-import { initInputValue, inputValueToString } from "../../../field/adapter"
-import { initPassword } from "../../../password/adapter"
+import { packInputValue, unpackInputValue } from "../../../field/adapter"
+import { packPassword } from "../../../password/adapter"
 
 import {
     PasswordFieldAction,
@@ -43,7 +43,7 @@ class Field implements PasswordField {
         this.pub = pubsub
         this.sub = pubsub
 
-        this.password = initInputValue("")
+        this.password = packInputValue("")
         this.visible = false
     }
 
@@ -84,14 +84,14 @@ class Field implements PasswordField {
     }
 
     content(): [Content<Password>, Valid<PasswordFieldError>, PasswordCharacter, PasswordView] {
-        const password = inputValueToString(this.password)
+        const password = unpackInputValue(this.password)
         const result = hasError(validatePassword(password))
         const character = checkCharacter(password)
         const view = this.view()
         if (!result.valid) {
             return [invalidContent(), result, character, view]
         }
-        return [validContent(initPassword(password)), result, character, view]
+        return [validContent(packPassword(password)), result, character, view]
     }
     view(): PasswordView {
         if (this.visible) {

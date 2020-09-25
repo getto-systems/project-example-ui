@@ -5,7 +5,7 @@ import {
     GetStatusResponse, getStatusSend, getStatusPolling, getStatusFailed,
 } from "../../../infra"
 
-import { initSessionID } from "../../../adapter"
+import { packSessionID } from "../../../adapter"
 
 import { SessionID, PollingStatusError } from "../../../data"
 import { LoginID } from "../../../../login_id/data"
@@ -24,7 +24,7 @@ type TokenState =
 class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
     tokenState: TokenState = { state: "initial" }
 
-    targetSessionID = initSessionID("session-id")
+    targetSessionID = packSessionID("session-id")
 
     targetLoginID: LoginID
 

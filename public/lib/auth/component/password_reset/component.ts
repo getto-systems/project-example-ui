@@ -19,6 +19,8 @@ export interface PasswordResetComponent {
     trigger(operation: PasswordResetComponentOperation): Promise<void>
 }
 
+export type PasswordResetParam = { never: PasswordResetParam }
+
 export type PasswordResetState =
     Readonly<{ type: "initial-reset" }> |
     Readonly<{ type: "try-to-reset" }> |
@@ -48,6 +50,17 @@ export interface PasswordResetComponentAction {
     passwordReset: PasswordResetAction
     loginIDField: LoginIDFieldAction
     passwordField: PasswordFieldAction
+}
+
+export type PasswordResetParamEvent =
+    Readonly<{ type: "succeed-to-load", resetToken: ResetToken }>
+
+export interface PasswordResetParamEventPublisher {
+    postPasswordResetParamEvent(event: PasswordResetParamEvent): void
+}
+
+export interface PasswordResetParamEventSubscriber {
+    onPasswordResetParamEvent(stateChanged: Post<PasswordResetParamEvent>): void
 }
 
 interface Post<T> {

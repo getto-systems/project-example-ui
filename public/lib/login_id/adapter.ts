@@ -1,9 +1,9 @@
 import { LoginID } from "./data"
 
-export function initLoginID(loginID: string): LoginID {
-    return loginID as string & LoginID
+export function packLoginID(loginID: string): LoginID {
+    return loginID as LoginID & string
 }
 
-export function loginIDToString(loginID: LoginID): string {
+export function unpackLoginID(loginID: LoginID): string {
     return loginID as unknown as string
 }
