@@ -11,7 +11,7 @@ import { PasswordLogin } from "./password_login"
 import { PasswordResetSession } from "./password_reset_session"
 import { PasswordReset } from "./password_reset"
 
-import { AuthUsecase } from "../../auth/component"
+import { AuthUsecase } from "../../auth/usecase"
 import { initialAuthState } from "../../auth/data"
 
 export function Main(usecase: AuthUsecase) {
