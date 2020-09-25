@@ -1,4 +1,13 @@
-import { FetchError, RenewError, StoreError } from "../../../credential/data"
+import { CredentialAction } from "../../credential/action"
+
+import { FetchError, RenewError, StoreError } from "../../credential/data"
+
+export interface RenewCredentialComponent {
+    hook(stateChanged: Post<RenewCredentialState>): void
+    onStateChange(stateChanged: Post<RenewCredentialState>): void
+    terminate(): void
+    renew(): Promise<void>
+}
 
 export type RenewCredentialState =
     Readonly<{ type: "initial-renew" }> |
@@ -11,3 +20,11 @@ export type RenewCredentialState =
     Readonly<{ type: "succeed-to-store" }>
 
 export const initialRenewCredentialState: RenewCredentialState = { type: "initial-renew" }
+
+export interface RenewCredentialComponentAction {
+    credential: CredentialAction
+}
+
+interface Post<T> {
+    (state: T): void
+}

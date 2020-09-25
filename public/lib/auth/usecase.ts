@@ -1,4 +1,4 @@
-import { RenewCredentialComponent } from "./component/renew_credential/component"
+import { RenewCredentialComponent } from "./component/renew_credential"
 import { StoreCredentialComponent } from "./component/store_credential/component"
 import { LoadApplicationComponent } from "./component/load_application"
 
