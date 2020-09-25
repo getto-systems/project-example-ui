@@ -22,7 +22,8 @@ export type CheckError =
     Readonly<{ type: "not-found" }>
 
 export type LoadApplicationComponentOperation =
-    Readonly<{ type: "load", param: LoadApplicationParam }>
+    Readonly<{ type: "set-param", param: LoadApplicationParam }> |
+    Readonly<{ type: "load" }>
 
 export interface LoadApplicationComponentAction {
     script: ScriptAction,

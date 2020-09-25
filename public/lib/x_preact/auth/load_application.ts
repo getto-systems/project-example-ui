@@ -23,9 +23,18 @@ export function LoadApplication(props: Props): VNode {
     useEffect(() => {
         props.component.onStateChange(setState)
         props.component.init()
-        props.component.trigger({ type: "load", param: props.param })
         return () => props.component.terminate()
     }, [])
+
+    useEffect(() => {
+        props.component.trigger({ type: "set-param", param: props.param })
+    }, [props.param])
+
+    useEffect(() => {
+        if (state.type === "initial-load") {
+            props.component.trigger({ type: "load" })
+        }
+    }, [state])
 
     useEffect(() => {
         // script タグは body.appendChild しないとスクリプトがロードされないので useEffect で追加する

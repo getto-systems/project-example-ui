@@ -3,6 +3,7 @@ import { unpackLoadApplicationParam } from "./param"
 import {
     LoadApplicationComponent,
     LoadApplicationComponentAction,
+    LoadApplicationParam,
     LoadApplicationState,
     LoadApplicationComponentOperation,
 } from "../load_application/component"
@@ -20,6 +21,10 @@ class Component implements LoadApplicationComponent {
     action: LoadApplicationComponentAction
     listener: Post<LoadApplicationState>[]
 
+    param: Param<{
+        pagePathname: PagePathname
+    }>
+
     constructor(action: LoadApplicationComponentAction) {
         this.action = action
         this.action.script.sub.onScriptEvent((event) => {
@@ -28,6 +33,7 @@ class Component implements LoadApplicationComponent {
         })
 
         this.listener = []
+        this.param = { set: false }
     }
 
     onStateChange(stateChanged: Post<LoadApplicationState>): void {
@@ -42,12 +48,19 @@ class Component implements LoadApplicationComponent {
     }
 
     trigger(operation: LoadApplicationComponentOperation): Promise<void> {
-        // type は "load" だけなので単に呼び出す
-        return this.load(unpackLoadApplicationParam(operation.param).pagePathname)
+        switch (operation.type) {
+            case "set-param":
+                console.log(operation.type)
+                return this.setParam(operation.param)
+
+            case "load":
+                console.log(operation.type)
+                return this.action.script.load(unwrap(this.param).pagePathname)
+        }
     }
 
-    async load(pagePathname: PagePathname): Promise<void> {
-        await this.action.script.load(pagePathname)
+    async setParam(param: LoadApplicationParam): Promise<void> {
+        this.param = { set: true, param: unpackLoadApplicationParam(param) }
     }
 }
 
@@ -105,4 +118,15 @@ type WorkerHolder =
 
 interface WorkerInit {
     (): Worker
+}
+
+type Param<T> =
+    Readonly<{ set: false }> |
+    Readonly<{ set: true, param: T }>
+
+function unwrap<T>(param: Param<T>): T {
+    if (!param.set) {
+        throw new Error("not initialized")
+    }
+    return param.param
 }

@@ -18,15 +18,23 @@ type Props = {
 }
 
 export function RenewCredential(props: Props): VNode {
-    props.component.trigger({ type: "set-param", ...props })
-
     const [state, setState] = useState(initialRenewCredentialState)
     useEffect(() => {
         props.component.onStateChange(setState)
         props.component.init()
-        props.component.trigger({ type: "renew" })
         return () => props.component.terminate()
     }, [])
+
+    useEffect(() => {
+        props.component.trigger({ type: "set-param", param: props.param })
+    }, [props.param])
+
+    useEffect(() => {
+        if (state.type === "initial-renew") {
+            props.component.trigger({ type: "renew" })
+        }
+    }, [state])
+
 
     switch (state.type) {
         case "initial-renew":
