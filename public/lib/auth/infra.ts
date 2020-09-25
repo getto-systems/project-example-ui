@@ -1,10 +1,15 @@
-import { FetchError, StoreError } from "./usecase"
+import { AuthState, FetchError, StoreError } from "./usecase"
 
 import { AuthCredential, TicketNonce } from "../credential/data"
 
 export type Infra = Readonly<{
+    authLocation: AuthLocation
     authCredentials: AuthCredentialRepository
 }>
+
+export interface AuthLocation {
+    detect(): AuthState
+}
 
 export interface AuthCredentialRepository {
     findTicketNonce(): FindResponse<TicketNonce>

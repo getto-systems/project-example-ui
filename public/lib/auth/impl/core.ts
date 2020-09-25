@@ -1,14 +1,12 @@
 import { packRenewCredentialParam } from "../component/renew_credential/param"
 
-import { packResetToken } from "../../password_reset/adapter"
-
 import { AuthUsecase, AuthComponent, AuthState } from "../usecase"
 import { Infra } from "../infra"
 
 import { AuthCredential } from "../../credential/data"
 
-export function initAuthUsecase(infra: Infra, currentLocation: Location, component: AuthComponent): AuthUsecase {
-    return new Usecase(infra, currentLocation, component)
+export function initAuthUsecase(infra: Infra, component: AuthComponent): AuthUsecase {
+    return new Usecase(infra, component)
 }
 
 class Usecase implements AuthUsecase {
@@ -17,15 +15,11 @@ class Usecase implements AuthUsecase {
 
     component: AuthComponent
 
-    currentLocation: Location
-
-    constructor(infra: Infra, currentLocation: Location, component: AuthComponent) {
+    constructor(infra: Infra, component: AuthComponent) {
         this.infra = infra
         this.listener = []
 
         this.component = component
-
-        this.currentLocation = currentLocation
 
         this.component.renewCredential.onStateChange((state) => {
             switch (state.type) {
@@ -86,7 +80,7 @@ class Usecase implements AuthUsecase {
     }
 
     tryToLogin(): void {
-        this.post(loginState(this.currentLocation))
+        this.post(this.infra.authLocation.detect())
     }
     loadApplication(authCredential: AuthCredential): void {
         // 例外的に直接 trigger する : この直後に unmount するので画面へのフィードバックがないため
@@ -102,23 +96,6 @@ class Usecase implements AuthUsecase {
             return
         }
     }
-}
-
-function loginState(currentLocation: Location): AuthState {
-    // ログイン前画面ではアンダースコアから始まるクエリを使用する
-    const url = new URL(currentLocation.toString())
-
-    if (url.searchParams.get("_password_reset") === "start") {
-        return { type: "password-reset-session" }
-    }
-
-    const resetToken = url.searchParams.get("_password_reset_token")
-    if (resetToken) {
-        return { type: "password-reset", resetToken: packResetToken(resetToken) }
-    }
-
-    // 特に指定が無ければパスワードログイン
-    return { type: "password-login" }
 }
 
 interface Post<T> {
