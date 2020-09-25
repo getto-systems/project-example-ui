@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { LoginIDFieldOperation, loginIDFieldError, onLoginIDInput } from "../../field/login_id"
 
-import { LoginIDFieldState, initialLoginIDFieldState } from "../../../../auth/component/field/login_id/data"
+import { LoginIDFieldState, initialLoginIDFieldState } from "../../../../auth/component/field/login_id"
 
 interface PreactComponent {
     (): VNode

@@ -3,7 +3,7 @@ import { initInputValue } from "../../../field/adapter"
 import { PasswordResetComponent } from "../../../auth/component/password_reset/component"
 
 import { PasswordResetState, PasswordResetComponentOperation } from "../../../auth/component/password_reset/data"
-import { LoginIDFieldState } from "../../../auth/component/field/login_id/data"
+import { LoginIDFieldState } from "../../../auth/component/field/login_id"
 import { PasswordFieldState } from "../../../auth/component/field/password/data"
 
 export function newPasswordResetComponent(): PasswordResetComponent {

@@ -1,6 +1,6 @@
 import { PasswordResetState, PasswordResetComponentOperation, PasswordResetWorkerState } from "./data"
 
-import { LoginIDFieldState } from "../field/login_id/data"
+import { LoginIDFieldState } from "../field/login_id"
 import { PasswordFieldState } from "../field/password/data"
 
 import { PasswordResetAction } from "../../../password_reset/action"
