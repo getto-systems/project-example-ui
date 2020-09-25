@@ -1,6 +1,9 @@
+import { unpackPasswordResetParam } from "./param"
+
 import {
     PasswordResetComponentAction,
     PasswordResetComponent,
+    PasswordResetParam,
     PasswordResetState,
     PasswordResetComponentOperation,
     PasswordResetWorkerState,
@@ -36,8 +39,11 @@ export function initPasswordResetWorkerComponentHelper(): PasswordResetWorkerCom
 
 class Component implements PasswordResetComponent {
     action: PasswordResetComponentAction
-
     listener: Post<PasswordResetState>[]
+
+    param: Param<{
+        resetToken: ResetToken
+    }>
 
     field: {
         loginID: LoginIDField
@@ -57,6 +63,7 @@ class Component implements PasswordResetComponent {
         })
 
         this.listener = []
+        this.param = { set: false }
 
         this.field = {
             loginID: this.action.loginIDField.initLoginIDField(),
@@ -94,8 +101,11 @@ class Component implements PasswordResetComponent {
     }
     trigger(operation: PasswordResetComponentOperation): Promise<void> {
         switch (operation.type) {
+            case "set-param":
+                return this.setParam(operation.param)
+
             case "reset":
-                return this.reset(operation.resetToken)
+                return this.reset()
 
             case "field-login_id":
                 return Promise.resolve(this.field.loginID.trigger(operation.operation))
@@ -105,11 +115,15 @@ class Component implements PasswordResetComponent {
         }
     }
 
-    async reset(resetToken: ResetToken): Promise<void> {
+    async setParam(param: PasswordResetParam): Promise<void> {
+        this.param = { set: true, param: unpackPasswordResetParam(param) }
+    }
+
+    async reset(): Promise<void> {
         this.field.loginID.validate()
         this.field.password.validate()
 
-        return this.action.passwordReset.reset(resetToken, [
+        return this.action.passwordReset.reset(unwrap(this.param).resetToken, [
             this.content.loginID,
             this.content.password,
         ])
@@ -212,6 +226,17 @@ type WorkerHolder =
 
 interface WorkerInit {
     (): Worker
+}
+
+type Param<T> =
+    Readonly<{ set: false }> |
+    Readonly<{ set: true, param: Readonly<T> }>
+
+function unwrap<T>(param: Param<T>): Readonly<T> {
+    if (!param.set) {
+        throw new Error("not initialized")
+    }
+    return param.param
 }
 
 interface Terminate {

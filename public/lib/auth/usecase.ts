@@ -3,9 +3,7 @@ import { LoadApplicationComponent, LoadApplicationParam } from "./component/load
 
 import { PasswordLoginComponent } from "./component/password_login/component"
 import { PasswordResetSessionComponent } from "./component/password_reset_session/component"
-import { PasswordResetComponent } from "./component/password_reset/component"
-
-import { ResetToken } from "../password_reset/data"
+import { PasswordResetComponent, PasswordResetParam } from "./component/password_reset/component"
 
 export interface AuthUsecase {
     component: AuthComponent
@@ -35,7 +33,7 @@ export type AuthState =
     Readonly<{ type: "load-application", param: LoadApplicationParam }> |
     Readonly<{ type: "password-login" }> |
     Readonly<{ type: "password-reset-session" }> |
-    Readonly<{ type: "password-reset", resetToken: ResetToken }>
+    Readonly<{ type: "password-reset", param: PasswordResetParam }>
 
 export const initialAuthState: AuthState = { type: "initial" }
 

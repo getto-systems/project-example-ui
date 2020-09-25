@@ -126,9 +126,9 @@ interface WorkerInit {
 
 type Param<T> =
     Readonly<{ set: false }> |
-    Readonly<{ set: true, param: T }>
+    Readonly<{ set: true, param: Readonly<T> }>
 
-function unwrap<T>(param: Param<T>): T {
+function unwrap<T>(param: Param<T>): Readonly<T> {
     if (!param.set) {
         throw new Error("not initialized")
     }

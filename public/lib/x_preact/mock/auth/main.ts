@@ -7,6 +7,7 @@ import { newPasswordResetComponent } from "./password_reset"
 
 import { packRenewCredentialParam } from "../../../auth/component/renew_credential/param"
 import { packLoadApplicationParam } from "../../../auth/component/load_application/param"
+import { packPasswordResetParam } from "../../../auth/component/password_reset/param"
 
 import { packTicketNonce } from "../../../credential/adapter"
 import { packResetToken } from "../../../password_reset/adapter"
@@ -42,7 +43,10 @@ class Init {
         return { type: "password-reset-session" }
     }
     passwordReset(): AuthState {
-        return { type: "password-reset", resetToken: packResetToken("reset-token") }
+        return {
+            type: "password-reset",
+            param: packPasswordResetParam(packResetToken("reset-token"))
+        }
     }
 }
 

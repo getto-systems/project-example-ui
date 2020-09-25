@@ -1,3 +1,5 @@
+import { packPasswordResetParam } from "../../auth/component/password_reset/param"
+
 import { packResetToken } from "../../password_reset/adapter"
 import { packPagePathname } from "../../script/adapter"
 
@@ -28,7 +30,7 @@ class AuthLocationImpl implements AuthLocation {
 
         const resetToken = url.searchParams.get("_password_reset_token")
         if (resetToken) {
-            return { type: "password-reset", resetToken: packResetToken(resetToken) }
+            return { type: "password-reset", param: packPasswordResetParam(packResetToken(resetToken)) }
         }
 
         // 特に指定が無ければパスワードログイン

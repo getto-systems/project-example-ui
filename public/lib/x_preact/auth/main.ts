@@ -51,7 +51,7 @@ export function Main(props: Props): VNode {
             return h(PasswordResetSession, { component: props.usecase.component.passwordResetSession })
 
         case "password-reset":
-            return h(PasswordReset, { component: props.usecase.component.passwordReset, resetToken: state.resetToken })
+            return h(PasswordReset, { component: props.usecase.component.passwordReset, param: state.param })
 
         case "failed-to-fetch":
         case "failed-to-store":
