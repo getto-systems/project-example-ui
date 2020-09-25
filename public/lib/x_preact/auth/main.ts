@@ -3,7 +3,7 @@ import { html } from "htm/preact"
 import { useState, useEffect, useErrorBoundary } from "preact/hooks"
 
 import { ApplicationError } from "./application_error"
-import { ErrorView } from "./layout"
+import { loginError } from "./layout"
 
 import { RenewCredential } from "./renew_credential"
 import { LoadApplication } from "./load_application"
@@ -76,7 +76,7 @@ export function Main(props: Props): VNode {
 }
 
 function StorageError(err: FetchError | StoreError): VNode {
-    return ErrorView(
+    return loginError(
         html`アプリケーションの初期化に失敗しました`,
         html`
             <p>ブラウザが LocalStorage にアクセスできませんでした</p>

@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { ErrorView } from "./layout"
+import { loginError } from "./layout"
 
 import { unpackScriptPath } from "../../script/adapter"
 
@@ -61,7 +61,7 @@ export function LoadApplication(props: Props): VNode {
 }
 
 function failedContent(_err: CheckError): VNode {
-    return ErrorView(
+    return loginError(
         html`アプリケーションの初期化に失敗しました`,
         html`
             <p>スクリプトが見つかりませんでした</p>

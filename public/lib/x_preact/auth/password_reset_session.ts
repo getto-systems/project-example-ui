@@ -2,7 +2,7 @@ import { h, VNode } from "preact"
 import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { LoginHeader, ErrorView } from "./layout"
+import { loginHeader, loginError } from "./layout"
 import { LoginIDField } from "./password_reset_session/field/login_id"
 
 import { TopLink } from "../../link"
@@ -31,7 +31,7 @@ export function PasswordResetSession(props: Props): VNode {
         return html`
             <aside class="login">
                 <form class="login__box" onSubmit="${onSubmit}">
-                    ${LoginHeader()}
+                    ${loginHeader()}
                     <section>
                         <big>
                             <section class="login__body">
@@ -56,7 +56,7 @@ export function PasswordResetSession(props: Props): VNode {
         return html`
             <aside class="login">
                 <section class="login__box">
-                    ${LoginHeader()}
+                    ${loginHeader()}
                     <section>
                         <big>
                             <section class="loading loading_login">
@@ -71,7 +71,7 @@ export function PasswordResetSession(props: Props): VNode {
         `
     }
     function errorView(title: VNode, content: VNode): VNode {
-        return ErrorView(title, html`
+        return loginError(title, html`
             ${content}
             <div class="vertical vertical_medium"></div>
             <p>お手数ですが、上記メッセージを管理者にお伝えください</p>
@@ -127,7 +127,7 @@ export function PasswordResetSession(props: Props): VNode {
             return errorView(html`リセットトークンの送信に失敗しました`, sendTokenError(state.err))
 
         case "succeed-to-send-token":
-            return ErrorView(html`リセットトークンを送信しました`, sendTokenMessage(state.dest), html`
+            return loginError(html`リセットトークンを送信しました`, sendTokenMessage(state.dest), html`
                 <section class="button__container">
                     <div></div>
                     ${loginLink(props.link)}

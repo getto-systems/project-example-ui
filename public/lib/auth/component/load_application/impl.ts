@@ -50,11 +50,9 @@ class Component implements LoadApplicationComponent {
     trigger(operation: LoadApplicationComponentOperation): Promise<void> {
         switch (operation.type) {
             case "set-param":
-                console.log(operation.type)
                 return this.setParam(operation.param)
 
             case "load":
-                console.log(operation.type)
                 return this.action.script.load(unwrap(this.param).pagePathname)
         }
     }

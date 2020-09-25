@@ -2,7 +2,7 @@ import { h, VNode } from "preact"
 import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { LoginHeader } from "./layout"
+import { loginHeader } from "./layout"
 import { LoginIDField } from "./password_reset/field/login_id"
 import { PasswordField } from "./password_reset/field/password"
 
@@ -38,7 +38,7 @@ export function PasswordReset(props: Props): VNode {
         return html`
             <aside class="login">
                 <form class="login__box" onSubmit="${onSubmit}">
-                    ${LoginHeader()}
+                    ${loginHeader()}
                     <section>
                         <big>
                             <section class="login__body">
