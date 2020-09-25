@@ -1,26 +1,29 @@
 import { packRenewCredentialParam } from "../component/renew_credential/param"
 import { packLoadApplicationParam } from "../component/load_application/param"
 
+import { TopLink } from "../../link"
 import { AuthUsecase, AuthComponent, AuthState } from "../usecase"
 import { Infra } from "../infra"
 
 import { AuthCredential } from "../../credential/data"
 
-export function initAuthUsecase(infra: Infra, component: AuthComponent): AuthUsecase {
-    return new Usecase(infra, component)
+export function initAuthUsecase(link: TopLink, component: AuthComponent, infra: Infra): AuthUsecase {
+    return new Usecase(link, component, infra)
 }
 
 class Usecase implements AuthUsecase {
+    link: TopLink
+    component: AuthComponent
+
     infra: Infra
     listener: Post<AuthState>[]
 
-    component: AuthComponent
+    constructor(link: TopLink, component: AuthComponent, infra: Infra) {
+        this.link = link
+        this.component = component
 
-    constructor(infra: Infra, component: AuthComponent) {
         this.infra = infra
         this.listener = []
-
-        this.component = component
 
         this.component.renewCredential.onStateChange((state) => {
             switch (state.type) {

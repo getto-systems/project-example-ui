@@ -4,6 +4,8 @@ import { initAuthClient } from "../z_external/auth_client/auth_client"
 
 import { newTimeConfig } from "./auth/config"
 
+import { newTopLink } from "./link"
+
 import { newLoadApplicationComponent } from "./auth/worker/load_application"
 import { newPasswordLoginComponent } from "./auth/worker/password_login"
 import { newPasswordResetSessionComponent } from "./auth/worker/password_reset_session"
@@ -27,19 +29,19 @@ import { RenewCredentialComponent } from "../auth/component/renew_credential/com
 import { CredentialAction } from "../credential/action"
 
 export function newAuthUsecase(currentLocation: Location, credentialStorage: Storage): AuthUsecase {
-    return initAuthUsecase({
-        authLocation: initAuthLocation(currentLocation),
-        authCredentials: initStorageAuthCredentialRepository(credentialStorage, {
-            ticketNonce: "GETTO-EXAMPLE-TICKET-NONCE",
-            apiCredential: "GETTO-EXAMPLE-API-CREDENTIAL",
-        }),
-    }, {
+    return initAuthUsecase(newTopLink(), {
         renewCredential: newRenewCredentialComponent(),
         loadApplication: newLoadApplicationComponent(),
 
         passwordLogin: newPasswordLoginComponent(),
         passwordResetSession: newPasswordResetSessionComponent(),
         passwordReset: newPasswordResetComponent(),
+    }, {
+        authLocation: initAuthLocation(currentLocation),
+        authCredentials: initStorageAuthCredentialRepository(credentialStorage, {
+            ticketNonce: "GETTO-EXAMPLE-TICKET-NONCE",
+            apiCredential: "GETTO-EXAMPLE-API-CREDENTIAL",
+        }),
     })
 }
 
