@@ -1,10 +1,10 @@
 import { env } from "../../y_static/env"
 
-import { initLoadApplicationComponent } from "../../auth/load_application/impl"
+import { initLoadApplicationComponent } from "../../auth/component/load_application/impl"
 
 import { initScriptAction } from "../../script/impl/core"
 
-import { LoadApplicationComponent } from "../../auth/load_application/component"
+import { LoadApplicationComponent } from "../../auth/component/load_application/component"
 
 export function newLoadApplicationComponent(): LoadApplicationComponent {
     return initLoadApplicationComponent({

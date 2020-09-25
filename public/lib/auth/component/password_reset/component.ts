@@ -3,9 +3,9 @@ import { PasswordResetState, PasswordResetComponentOperation, PasswordResetWorke
 import { LoginIDFieldState } from "../field/login_id/data"
 import { PasswordFieldState } from "../field/password/data"
 
-import { PasswordResetAction } from "../../password_reset/action"
-import { LoginIDFieldAction } from "../../field/login_id/action"
-import { PasswordFieldAction } from "../../field/password/action"
+import { PasswordResetAction } from "../../../password_reset/action"
+import { LoginIDFieldAction } from "../../../field/login_id/action"
+import { PasswordFieldAction } from "../../../field/password/action"
 
 export interface PasswordResetComponentAction {
     passwordReset: PasswordResetAction

@@ -1,7 +1,7 @@
 import { LoginIDFieldState } from "../field/login_id/data"
 
-import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../password_reset/data"
-import { LoginIDFieldOperation } from "../../field/login_id/data"
+import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../../password_reset/data"
+import { LoginIDFieldOperation } from "../../../field/login_id/data"
 
 export type PasswordResetSessionState =
     Readonly<{ type: "initial-reset-session" }> |

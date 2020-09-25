@@ -6,9 +6,9 @@ import { ErrorView } from "./layout"
 
 import { initPagePathname, scriptPathToString } from "../../script/adapter"
 
-import { LoadApplicationComponent } from "../../auth/load_application/component"
+import { LoadApplicationComponent } from "../../auth/component/load_application/component"
 
-import { initialLoadApplicationState, CheckError } from "../../auth/load_application/data"
+import { initialLoadApplicationState, CheckError } from "../../auth/component/load_application/data"
 
 export interface PreactComponent {
     (): VNode

@@ -6,8 +6,8 @@ import {
 
 import { LoginIDFieldState } from "../field/login_id/data"
 
-import { PasswordResetAction } from "../../password_reset/action"
-import { LoginIDFieldAction } from "../../field/login_id/action"
+import { PasswordResetAction } from "../../../password_reset/action"
+import { LoginIDFieldAction } from "../../../field/login_id/action"
 
 export interface PasswordResetSessionComponentAction {
     passwordReset: PasswordResetAction

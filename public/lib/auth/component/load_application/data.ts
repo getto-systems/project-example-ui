@@ -1,4 +1,4 @@
-import { PagePathname, ScriptPath } from "../../script/data"
+import { PagePathname, ScriptPath } from "../../../script/data"
 
 export type LoadApplicationState =
     Readonly<{ type: "initial-load" }> |

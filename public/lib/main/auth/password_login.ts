@@ -4,7 +4,7 @@ import { initAuthClient } from "../../z_external/auth_client/auth_client"
 
 import { newTimeConfig } from "./config"
 
-import { initPasswordLoginComponent, initPasswordLoginWorkerComponentHelper } from "../../auth/password_login/impl"
+import { initPasswordLoginComponent, initPasswordLoginWorkerComponentHelper } from "../../auth/component/password_login/impl"
 
 import { initPasswordLoginAction } from "../../password_login/impl/core"
 import { initLoginIDFieldAction } from "../../field/login_id/impl/core"
@@ -14,7 +14,7 @@ import { initFetchPasswordLoginClient } from "../../password_login/impl/client/p
 
 import { PasswordLoginClient } from "../../password_login/infra"
 
-import { PasswordLoginComponent, PasswordLoginWorkerComponentHelper } from "../../auth/password_login/component"
+import { PasswordLoginComponent, PasswordLoginWorkerComponentHelper } from "../../auth/component/password_login/component"
 
 export function newPasswordLoginComponent(): PasswordLoginComponent {
     return initPasswordLoginComponent({

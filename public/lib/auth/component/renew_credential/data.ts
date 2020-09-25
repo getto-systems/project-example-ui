@@ -1,4 +1,4 @@
-import { FetchError, RenewError, StoreError } from "../../credential/data"
+import { FetchError, RenewError, StoreError } from "../../../credential/data"
 
 export type RenewCredentialState =
     Readonly<{ type: "initial-renew" }> |

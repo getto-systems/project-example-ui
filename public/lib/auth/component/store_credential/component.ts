@@ -1,8 +1,8 @@
 import { StoreCredentialState } from "./data"
 
-import { CredentialAction } from "../../credential/action"
+import { CredentialAction } from "../../../credential/action"
 
-import { AuthCredential } from "../../credential/data"
+import { AuthCredential } from "../../../credential/data"
 
 export interface StoreCredentialComponent {
     hook(stateChanged: Post<StoreCredentialState>): void

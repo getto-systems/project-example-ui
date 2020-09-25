@@ -2,7 +2,7 @@ import { StoreCredentialComponent, StoreCredentialComponentAction } from "./comp
 
 import { StoreCredentialState } from "./data"
 
-import { AuthCredential, StoreEvent } from "../../credential/data"
+import { AuthCredential, StoreEvent } from "../../../credential/data"
 
 export function initStoreCredentialComponent(action: StoreCredentialComponentAction): StoreCredentialComponent {
     return new Component(action)

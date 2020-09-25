@@ -1,10 +1,10 @@
 import { LoginIDFieldState } from "../field/login_id/data"
 import { PasswordFieldState } from "../field/password/data"
 
-import { AuthCredential } from "../../credential/data"
-import { LoginError } from "../../password_login/data"
-import { LoginIDFieldOperation } from "../../field/login_id/data"
-import { PasswordFieldOperation } from "../../field/password/data"
+import { AuthCredential } from "../../../credential/data"
+import { LoginError } from "../../../password_login/data"
+import { LoginIDFieldOperation } from "../../../field/login_id/data"
+import { PasswordFieldOperation } from "../../../field/password/data"
 
 export type PasswordLoginState =
     Readonly<{ type: "initial-login" }> |
