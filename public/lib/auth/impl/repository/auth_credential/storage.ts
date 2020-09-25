@@ -7,9 +7,9 @@ import {
     AuthCredentialRepository, FindResponse, StoreResponse,
 } from "../../../infra"
 
-import { packTicketNonce, packApiRoles, unpackTicketNonce, unpackApiCredential } from "../../../adapter"
+import { packTicketNonce, packApiRoles, unpackTicketNonce, unpackApiCredential } from "../../../../credential/adapter"
 
-import { AuthCredential, TicketNonce, ApiCredential } from "../../../data"
+import { AuthCredential, TicketNonce, ApiCredential } from "../../../../credential/data"
 
 export function initStorageAuthCredentialRepository(storage: Storage, key: StorageKey): AuthCredentialRepository {
     return new Repository(storage, key)
@@ -22,14 +22,14 @@ class Repository implements AuthCredentialRepository {
         this.storage = new AuthCredentialStorageImpl(storage, key)
     }
 
-    findTicketNonce(): FindResponse {
+    findTicketNonce(): FindResponse<TicketNonce> {
         try {
             const found = this.storage.getTicketNonce()
             if (!found.found) {
                 return { success: true, found: false }
             }
 
-            return { success: true, found: true, ticketNonce: found.content }
+            return { success: true, found: true, content: found.content }
         } catch (err) {
             return { success: false, err: { type: "infra-error", err: `${err}` } }
         }

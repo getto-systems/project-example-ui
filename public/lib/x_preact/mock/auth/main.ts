@@ -6,8 +6,10 @@ import { newPasswordLoginComponent } from "./password_login"
 import { newPasswordResetSessionComponent } from "./password_reset_session"
 import { newPasswordResetComponent } from "./password_reset"
 
-import { initTicketNonce, initApiRoles } from "../../../credential/adapter"
-import { initResetToken } from "../../../password_reset/adapter"
+import { packRenewCredentialParam } from "../../../auth/component/renew_credential/param"
+
+import { packTicketNonce, packApiRoles } from "../../../credential/adapter"
+import { packResetToken } from "../../../password_reset/adapter"
 
 import { AuthUsecase, AuthComponent, AuthState } from "../../../auth/usecase"
 
@@ -17,13 +19,13 @@ export function newAuthUsecase(): AuthUsecase {
 
 class Init {
     renewCredential(): AuthState {
-        return { type: "renew-credential" }
+        return { type: "renew-credential", param: packRenewCredentialParam(packTicketNonce("ticket-nonce")) }
     }
     storeCredential(): AuthState {
         return {
             type: "store-credential", authCredential: {
-                ticketNonce: initTicketNonce("ticket-nonce"),
-                apiCredential: { apiRoles: initApiRoles(["admin", "dev"]) },
+                ticketNonce: packTicketNonce("ticket-nonce"),
+                apiCredential: { apiRoles: packApiRoles(["admin", "dev"]) },
             }
         }
     }
@@ -38,7 +40,7 @@ class Init {
         return { type: "password-reset-session" }
     }
     passwordReset(): AuthState {
-        return { type: "password-reset", resetToken: initResetToken("reset-token") }
+        return { type: "password-reset", resetToken: packResetToken("reset-token") }
     }
 }
 
@@ -64,6 +66,9 @@ class Usecase implements AuthUsecase {
         stateChanged(this.state)
     }
     terminate(): void {
+        // mock では特に何もしない
+    }
+    async init(): Promise<void> {
         // mock では特に何もしない
     }
 }

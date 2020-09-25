@@ -1,4 +1,4 @@
-import { initInputValue } from "../../../field/adapter"
+import { packInputValue } from "../../../field/adapter"
 
 import {
     PasswordLoginComponent,
@@ -99,7 +99,7 @@ class Init {
             type: "succeed-to-update-password",
             result: { valid: true },
             character: { complex: false },
-            view: { show: true, password: initInputValue("password") },
+            view: { show: true, password: packInputValue("password") },
         }
     }
 }

@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { initInputValue } from "../../../field/adapter"
+import { packInputValue } from "../../../field/adapter"
 
 import { LoginIDFieldError } from "../../../field/login_id/data"
 import { InputValue, Valid } from "../../../field/data"
@@ -25,7 +25,7 @@ export function loginIDFieldError(result: Valid<LoginIDFieldError>): VNode[] {
 export function onLoginIDInput(component: FormComponent): Post<InputEvent> {
     return (e: InputEvent): void => {
         if (e.target instanceof HTMLInputElement) {
-            setLoginID(component, initInputValue(e.target.value))
+            setLoginID(component, packInputValue(e.target.value))
         }
     }
 }

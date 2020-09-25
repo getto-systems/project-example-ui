@@ -9,12 +9,13 @@ import { newPasswordLoginComponent } from "./auth/worker/password_login"
 import { newPasswordResetSessionComponent } from "./auth/worker/password_reset_session"
 import { newPasswordResetComponent } from "./auth/worker/password_reset"
 
-import { initAuthUsecase } from "../auth/impl"
+import { initAuthUsecase } from "../auth/impl/core"
+import { initStorageAuthCredentialRepository } from "../auth/impl/repository/auth_credential/storage"
 
 import { initRenewCredentialComponent } from "../auth/component/renew_credential/impl"
 import { initStoreCredentialComponent } from "../auth/component/store_credential/impl"
 
-import { initStorageAuthCredentialRepository } from "../credential/impl/repository/credential/storage"
+import { initStorageAuthCredentialRepository as initCredentialRepository } from "../credential/impl/repository/credential/storage"
 import { initFetchRenewClient } from "../credential/impl/client/renew/fetch"
 
 import { initCredentialAction } from "../credential/impl/core"
@@ -28,7 +29,12 @@ import { CredentialAction } from "../credential/action"
 export function newAuthUsecase(currentLocation: Location): AuthUsecase {
     const credential = newCredentialAction()
 
-    return initAuthUsecase(currentLocation, {
+    return initAuthUsecase({
+        authCredentials: initStorageAuthCredentialRepository(localStorage, {
+            ticketNonce: "GETTO-EXAMPLE-TICKET-NONCE",
+            apiCredential: "GETTO-EXAMPLE-API-CREDENTIAL",
+        }),
+    }, currentLocation, {
         renewCredential: initRenewCredentialComponent({ credential }),
         storeCredential: initStoreCredentialComponent({ credential }),
 
@@ -53,7 +59,7 @@ function newCredentialAction(): CredentialAction {
 }
 
 function newAuthCredentialRepository(): AuthCredentialRepository {
-    return initStorageAuthCredentialRepository(getCredentialStorage(), {
+    return initCredentialRepository(getCredentialStorage(), {
         ticketNonce: "GETTO-EXAMPLE-TICKET-NONCE",
         apiCredential: "GETTO-EXAMPLE-API-CREDENTIAL",
     })

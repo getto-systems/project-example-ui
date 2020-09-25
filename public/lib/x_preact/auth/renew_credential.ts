@@ -4,20 +4,28 @@ import { html } from "htm/preact"
 
 import { ErrorView } from "./layout"
 
-import { RenewCredentialComponent, initialRenewCredentialState } from "../../auth/component/renew_credential/component"
+import {
+    RenewCredentialComponent,
+    RenewCredentialParam,
+    initialRenewCredentialState,
+} from "../../auth/component/renew_credential/component"
 
 import { FetchError, RenewError } from "../../credential/data"
 
 export interface PreactComponent {
-    (): VNode
+    (props: Props): VNode
+}
+
+type Props = {
+    param: RenewCredentialParam
 }
 
 export function RenewCredential(component: RenewCredentialComponent): PreactComponent {
-    return (): VNode => {
+    return (props: Props): VNode => {
         const [state, setState] = useState(initialRenewCredentialState)
         useEffect(() => {
             component.onStateChange(setState)
-            component.renew()
+            component.trigger({ type: "renew", param: props.param })
             return () => component.terminate()
         }, [])
 

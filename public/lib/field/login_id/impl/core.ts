@@ -1,5 +1,5 @@
-import { initInputValue, inputValueToString } from "../../../field/adapter"
-import { initLoginID } from "../../../login_id/adapter"
+import { packInputValue, unpackInputValue } from "../../../field/adapter"
+import { packLoginID } from "../../../login_id/adapter"
 
 import {
     LoginIDFieldAction,
@@ -33,7 +33,7 @@ class Field implements LoginIDField {
         this.pub = pubsub
         this.sub = pubsub
 
-        this.loginID = initInputValue("")
+        this.loginID = packInputValue("")
     }
 
     trigger(operation: LoginIDFieldOperation): void {
@@ -50,12 +50,12 @@ class Field implements LoginIDField {
     }
 
     content(): [Content<LoginID>, Valid<LoginIDFieldError>] {
-        const loginID = inputValueToString(this.loginID)
+        const loginID = unpackInputValue(this.loginID)
         const result = hasError(validateLoginID(loginID))
         if (!result.valid) {
             return [invalidContent(), result]
         }
-        return [validContent(initLoginID(loginID)), result]
+        return [validContent(packLoginID(loginID)), result]
     }
 }
 

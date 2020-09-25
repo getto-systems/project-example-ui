@@ -15,7 +15,9 @@ interface PreactComponent {
 }
 
 export function PasswordReset(component: PasswordResetComponent, resetToken: ResetToken): PreactComponent {
-    return (): VNode => {
+    return (/* param: PasswordResetParam */): VNode => {
+        //component.trigger({ type: "set-param", param })
+
         const [state, setState] = useState(initialPasswordResetState)
         const submit = useRef<HTMLButtonElement>()
         useEffect(() => {

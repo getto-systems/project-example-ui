@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { initInputValue, inputValueToString } from "../../../field/adapter"
+import { packInputValue, unpackInputValue } from "../../../field/adapter"
 
 import { PasswordFieldError, PasswordCharacter, PasswordView } from "../../../field/password/data"
 import { InputValue, Valid } from "../../../field/data"
@@ -14,7 +14,7 @@ export type PasswordFieldOperation =
 export function onPasswordInput(component: FormComponent): Post<InputEvent> {
     return (e: InputEvent): void => {
         if (e.target instanceof HTMLInputElement) {
-            setPassword(component, initInputValue(e.target.value))
+            setPassword(component, packInputValue(e.target.value))
         }
     }
 }
@@ -56,7 +56,7 @@ export function passwordView(component: FormComponent, view: PasswordView, chara
     }
 
     function extractPassword(inputValue: InputValue): string {
-        const password = inputValueToString(inputValue)
+        const password = unpackInputValue(inputValue)
         if (password.length === 0) {
             return "(入力されていません)"
         } else {

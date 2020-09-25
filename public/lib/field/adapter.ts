@@ -1,9 +1,9 @@
 import { InputValue } from "./data"
 
-export function initInputValue(inputValue: string): InputValue {
-    return inputValue as string & InputValue
+export function packInputValue(inputValue: string): InputValue {
+    return inputValue as InputValue & string
 }
 
-export function inputValueToString(inputValue: InputValue): string {
+export function unpackInputValue(inputValue: InputValue): string {
     return inputValue as unknown as string
 }

@@ -1,18 +1,18 @@
 import { SessionID, ResetToken } from "./data"
 
-export function initSessionID(sessionID: string): SessionID {
-    return sessionID as string & SessionID
+export function packSessionID(sessionID: string): SessionID {
+    return sessionID as SessionID & string
 }
 
-export function sessionIDToString(sessionID: SessionID): string {
+export function unpackSessionID(sessionID: SessionID): string {
     return sessionID as unknown as string
 }
 
 
-export function initResetToken(resetToken: string): ResetToken {
-    return resetToken as string & ResetToken
+export function packResetToken(resetToken: string): ResetToken {
+    return resetToken as ResetToken & string
 }
 
-export function resetTokenToString(resetToken: ResetToken): string {
+export function unpackResetToken(resetToken: ResetToken): string {
     return resetToken as unknown as string
 }

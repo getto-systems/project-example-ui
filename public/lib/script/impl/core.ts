@@ -1,6 +1,6 @@
 import { Infra } from "../infra"
 
-import { initScriptPath, pagePathnameToString } from "../adapter"
+import { packScriptPath, unpackPagePathname } from "../adapter"
 
 import { ScriptAction, ScriptEventPublisher, ScriptEventSubscriber } from "../action"
 
@@ -34,7 +34,7 @@ class Action implements ScriptAction {
 
 function secureScriptPath(secureHost: string, pagePathname: PagePathname): ScriptPath {
     // secure host にアクセス中の html と同じパスで js がホストされている
-    return initScriptPath(`//${secureHost}${pagePathnameToString(pagePathname).replace(/\.html$/, ".js")}`)
+    return packScriptPath(`//${secureHost}${unpackPagePathname(pagePathname).replace(/\.html$/, ".js")}`)
 }
 
 class EventPubSub implements ScriptEventPublisher, ScriptEventSubscriber {

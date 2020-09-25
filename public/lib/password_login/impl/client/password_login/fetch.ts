@@ -1,8 +1,8 @@
 import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
 
-import { initTicketNonce, initApiRoles } from "../../../../credential/adapter"
-import { loginIDToString } from "../../../../login_id/adapter"
-import { passwordToString } from "../../../../password/adapter"
+import { packTicketNonce, packApiRoles } from "../../../../credential/adapter"
+import { unpackLoginID } from "../../../../login_id/adapter"
+import { unpackPassword } from "../../../../password/adapter"
 
 import { LoginID } from "../../../../login_id/data"
 import { Password } from "../../../../password/data"
@@ -29,15 +29,15 @@ class FetchPasswordLoginClient implements PasswordLoginClient {
     async login(loginID: LoginID, password: Password): Promise<LoginResponse> {
         try {
             const response = await this.client.passwordLogin({
-                loginID: loginIDToString(loginID),
-                password: passwordToString(password),
+                loginID: unpackLoginID(loginID),
+                password: unpackPassword(password),
             })
 
             if (response.success) {
                 return loginSuccess({
-                    ticketNonce: initTicketNonce(response.authCredential.ticketNonce),
+                    ticketNonce: packTicketNonce(response.authCredential.ticketNonce),
                     apiCredential: {
-                        apiRoles: initApiRoles(response.authCredential.apiCredential.apiRoles),
+                        apiRoles: packApiRoles(response.authCredential.apiCredential.apiRoles),
                     },
                 })
             }

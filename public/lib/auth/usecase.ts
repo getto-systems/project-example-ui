@@ -1,4 +1,4 @@
-import { RenewCredentialComponent } from "./component/renew_credential/component"
+import { RenewCredentialComponent, RenewCredentialParam } from "./component/renew_credential/component"
 import { StoreCredentialComponent } from "./component/store_credential/component"
 import { LoadApplicationComponent } from "./component/load_application/component"
 
@@ -12,8 +12,14 @@ import { ResetToken } from "../password_reset/data"
 export interface AuthUsecase {
     onStateChange(stateChanged: Post<AuthState>): void
     terminate(): void
+    init(): Promise<void>
 
     component: AuthComponent
+}
+
+export interface AuthLocation {
+    passwordLoginHref(): string
+    passwordResetSessionHref(): string
 }
 
 export interface AuthComponent {
@@ -27,14 +33,23 @@ export interface AuthComponent {
 }
 
 export type AuthState =
-    Readonly<{ type: "renew-credential" }> |
+    Readonly<{ type: "initial" }> |
+    Readonly<{ type: "failed-to-fetch", err: FetchError }> |
+    Readonly<{ type: "failed-to-store", err: StoreError }> |
+    Readonly<{ type: "renew-credential", param: RenewCredentialParam }> |
     Readonly<{ type: "store-credential", authCredential: AuthCredential }> |
     Readonly<{ type: "load-application" }> |
     Readonly<{ type: "password-login" }> |
     Readonly<{ type: "password-reset-session" }> |
     Readonly<{ type: "password-reset", resetToken: ResetToken }>
 
-export const initialAuthState: AuthState = { type: "renew-credential" }
+export const initialAuthState: AuthState = { type: "initial" }
+
+export type FetchError =
+    Readonly<{ type: "infra-error", err: string }>
+
+export type StoreError =
+    Readonly<{ type: "infra-error", err: string }>
 
 interface Post<T> {
     (state: T): void
