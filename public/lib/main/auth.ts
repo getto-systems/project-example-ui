@@ -11,8 +11,8 @@ import { newPasswordResetComponent } from "./auth/worker/password_reset"
 
 import { initAuthUsecase } from "../auth/impl"
 
-import { initRenewCredentialComponent } from "../auth/renew_credential/impl"
-import { initStoreCredentialComponent } from "../auth/store_credential/impl"
+import { initRenewCredentialComponent } from "../auth/component/renew_credential/impl"
+import { initStoreCredentialComponent } from "../auth/component/store_credential/impl"
 
 import { initStorageAuthCredentialRepository } from "../credential/impl/repository/credential/storage"
 import { initFetchRenewClient } from "../credential/impl/client/renew/fetch"

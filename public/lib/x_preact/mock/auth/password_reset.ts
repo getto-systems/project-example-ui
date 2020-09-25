@@ -1,10 +1,10 @@
 import { initInputValue } from "../../../field/adapter"
 
-import { PasswordResetComponent } from "../../../auth/password_reset/component"
+import { PasswordResetComponent } from "../../../auth/component/password_reset/component"
 
-import { PasswordResetState, PasswordResetComponentOperation } from "../../../auth/password_reset/data"
-import { LoginIDFieldState } from "../../../auth/field/login_id/data"
-import { PasswordFieldState } from "../../../auth/field/password/data"
+import { PasswordResetState, PasswordResetComponentOperation } from "../../../auth/component/password_reset/data"
+import { LoginIDFieldState } from "../../../auth/component/field/login_id/data"
+import { PasswordFieldState } from "../../../auth/component/field/password/data"
 
 export function newPasswordResetComponent(): PasswordResetComponent {
     const init = new Init()

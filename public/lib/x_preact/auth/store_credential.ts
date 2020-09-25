@@ -4,8 +4,8 @@ import { html } from "htm/preact"
 
 import { ErrorView } from "./layout"
 
-import { StoreCredentialComponent } from "../../auth/store_credential/component"
-import { initialStoreCredentialState } from "../../auth/store_credential/data"
+import { StoreCredentialComponent } from "../../auth/component/store_credential/component"
+import { initialStoreCredentialState } from "../../auth/component/store_credential/data"
 
 import { AuthCredential, StoreError } from "../../credential/data"
 

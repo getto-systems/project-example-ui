@@ -1,10 +1,10 @@
-import { PasswordResetSessionComponent } from "../../../auth/password_reset_session/component"
+import { PasswordResetSessionComponent } from "../../../auth/component/password_reset_session/component"
 
 import {
     PasswordResetSessionState,
     PasswordResetSessionComponentOperation,
-} from "../../../auth/password_reset_session/data"
-import { LoginIDFieldState } from "../../../auth/field/login_id/data"
+} from "../../../auth/component/password_reset_session/data"
+import { LoginIDFieldState } from "../../../auth/component/field/login_id/data"
 
 export function newPasswordResetSessionComponent(): PasswordResetSessionComponent {
     const init = new Init()

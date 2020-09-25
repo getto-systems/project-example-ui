@@ -12,12 +12,12 @@ import {
 
 import { LoginIDFieldState } from "../field/login_id/data"
 
-import { LoginIDField } from "../../field/login_id/action"
+import { LoginIDField } from "../../../field/login_id/action"
 
-import { LoginID } from "../../login_id/data"
-import { StartSessionEvent, PollingStatusEvent } from "../../password_reset/data"
-import { LoginIDFieldEvent } from "../../field/login_id/data"
-import { Content } from "../../field/data"
+import { LoginID } from "../../../login_id/data"
+import { StartSessionEvent, PollingStatusEvent } from "../../../password_reset/data"
+import { LoginIDFieldEvent } from "../../../field/login_id/data"
+import { Content } from "../../../field/data"
 
 export function initPasswordResetSessionComponent(action: PasswordResetSessionComponentAction): PasswordResetSessionComponent {
     return new Component(action)

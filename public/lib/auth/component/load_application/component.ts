@@ -1,6 +1,6 @@
 import { LoadApplicationState, LoadApplicationComponentOperation } from "./data"
 
-import { ScriptAction } from "../../script/action"
+import { ScriptAction } from "../../../script/action"
 
 export interface LoadApplicationComponent {
     onStateChange(stateChanged: Post<LoadApplicationState>): void

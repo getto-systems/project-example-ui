@@ -1,4 +1,4 @@
-import { StoreError } from "../../credential/data"
+import { StoreError } from "../../../credential/data"
 
 export type StoreCredentialState =
     Readonly<{ type: "initial-store" }> |

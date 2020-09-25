@@ -1,6 +1,6 @@
 import { RenewCredentialState } from "./data"
 
-import { CredentialAction } from "../../credential/action"
+import { CredentialAction } from "../../../credential/action"
 
 export interface RenewCredentialComponent {
     hook(stateChanged: Post<RenewCredentialState>): void

@@ -1,6 +1,6 @@
-import { initPasswordLoginWorkerComponent } from "../../../auth/password_login/impl"
+import { initPasswordLoginWorkerComponent } from "../../../auth/component/password_login/impl"
 
-import { PasswordLoginComponent } from "../../../auth/password_login/component"
+import { PasswordLoginComponent } from "../../../auth/component/password_login/component"
 
 export function newPasswordLoginComponent(): PasswordLoginComponent {
     return initPasswordLoginWorkerComponent(
