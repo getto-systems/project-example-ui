@@ -89,8 +89,10 @@ class Usecase implements AuthUsecase {
         this.post(loginState(this.currentLocation))
     }
     loadApplication(authCredential: AuthCredential): void {
-        this.storeCredential(authCredential)
+        // 例外的に直接 trigger する : この直後に unmount するので画面へのフィードバックがないため
         this.component.renewCredential.trigger({ type: "set-renew-interval", ticketNonce: authCredential.ticketNonce })
+
+        this.storeCredential(authCredential)
         this.post({ type: "load-application" })
     }
     storeCredential(authCredential: AuthCredential): void {
