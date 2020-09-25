@@ -18,7 +18,6 @@ export function initLoadApplicationWorkerComponent(init: WorkerInit): LoadApplic
 
 class Component implements LoadApplicationComponent {
     action: LoadApplicationComponentAction
-
     listener: Post<LoadApplicationState>[]
 
     constructor(action: LoadApplicationComponentAction) {

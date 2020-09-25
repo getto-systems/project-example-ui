@@ -23,7 +23,8 @@ export type RenewCredentialState =
 export const initialRenewCredentialState: RenewCredentialState = { type: "initial-renew" }
 
 export type RenewCredentialOperation =
-    Readonly<{ type: "renew", param: RenewCredentialParam }> |
+    Readonly<{ type: "set-param", param: RenewCredentialParam }> |
+    Readonly<{ type: "renew" }> |
     Readonly<{ type: "set-renew-interval", ticketNonce: TicketNonce }>
 
 export interface RenewCredentialComponentAction {
