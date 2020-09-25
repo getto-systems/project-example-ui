@@ -1,8 +1,8 @@
-import { AuthCredential, RenewEvent, StoreEvent } from "./data"
+import { AuthCredential, TicketNonce, RenewEvent, StoreEvent } from "./data"
 
 export interface CredentialAction {
     sub: CredentialEventSubscriber
-    renew(): Promise<void>
+    renew(ticketNonce: TicketNonce): Promise<void>
     store(authCredential: AuthCredential): Promise<void>
 }
 

@@ -1,3 +1,5 @@
+import { unpackRenewCredentialParam } from "./param"
+
 import {
     RenewCredentialComponentAction,
     RenewCredentialComponent,
@@ -36,8 +38,9 @@ class Component implements RenewCredentialComponent {
         // WorkerComponent とインターフェイスを合わせるために必要
     }
 
-    trigger(_operation: RenewCredentialOperation): Promise<void> {
-        return this.action.credential.renew()
+    trigger(operation: RenewCredentialOperation): Promise<void> {
+        const param = unpackRenewCredentialParam(operation.param)
+        return this.action.credential.renew(param.ticketNonce)
     }
 }
 

@@ -1,6 +1,6 @@
 import { CredentialAction } from "../../../credential/action"
 
-import { FetchError, RenewError, StoreError } from "../../../credential/data"
+import { RenewError, StoreError } from "../../../credential/data"
 
 export interface RenewCredentialComponent {
     onStateChange(stateChanged: Post<RenewCredentialState>): void
@@ -14,7 +14,6 @@ export type RenewCredentialParam = { never: RenewCredentialParam }
 export type RenewCredentialState =
     Readonly<{ type: "initial-renew" }> |
     Readonly<{ type: "required-to-login" }> |
-    Readonly<{ type: "failed-to-fetch", err: FetchError }> |
     Readonly<{ type: "try-to-renew" }> |
     Readonly<{ type: "delayed-to-renew" }> |
     Readonly<{ type: "failed-to-renew", err: RenewError }> |
