@@ -44,7 +44,7 @@ class Action implements CredentialAction {
             return
         }
 
-        this.store(response.authCredential)
+        post({ type: "succeed-to-renew", authCredential: response.authCredential })
     }
 
     async store(authCredential: AuthCredential): Promise<void> {
@@ -60,7 +60,8 @@ class Action implements CredentialAction {
         this.setRenewInterval(authCredential.ticketNonce)
     }
 
-    setRenewInterval(ticketNonce: TicketNonce): void {
+    async setRenewInterval(ticketNonce: TicketNonce): Promise<void> {
+        // unmount したあとに実行されるので、イベントは発行しない
         let continueInterval = true
         setInterval(async () => {
             if (!continueInterval) {
@@ -95,10 +96,8 @@ class EventPubSub implements CredentialEventPublisher, CredentialEventSubscriber
         }
     }
 
-    onRenew(post: Post<RenewEvent | StoreEvent>): void {
-        // renew は同時に store も呼び出す
+    onRenew(post: Post<RenewEvent>): void {
         this.listener.renew.push(post)
-        this.listener.store.push(post)
     }
     onStore(post: Post<StoreEvent>): void {
         this.listener.store.push(post)

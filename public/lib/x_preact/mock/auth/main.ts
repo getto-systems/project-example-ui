@@ -1,5 +1,4 @@
 import { newRenewCredentialComponent } from "./renew_credential"
-import { newStoreCredentialComponent } from "./store_credential"
 import { newLoadApplicationComponent } from "./load_application"
 
 import { newPasswordLoginComponent } from "./password_login"
@@ -8,26 +7,21 @@ import { newPasswordResetComponent } from "./password_reset"
 
 import { packRenewCredentialParam } from "../../../auth/component/renew_credential/param"
 
-import { packTicketNonce, packApiRoles } from "../../../credential/adapter"
+import { packTicketNonce } from "../../../credential/adapter"
 import { packResetToken } from "../../../password_reset/adapter"
 
 import { AuthUsecase, AuthComponent, AuthState } from "../../../auth/usecase"
 
 export function newAuthUsecase(): AuthUsecase {
-    return new Usecase(new Init().renewCredential())
+    return new Usecase(new Init().initial())
 }
 
 class Init {
+    initial(): AuthState {
+        return { type: "initial" }
+    }
     renewCredential(): AuthState {
         return { type: "renew-credential", param: packRenewCredentialParam(packTicketNonce("ticket-nonce")) }
-    }
-    storeCredential(): AuthState {
-        return {
-            type: "store-credential", authCredential: {
-                ticketNonce: packTicketNonce("ticket-nonce"),
-                apiCredential: { apiRoles: packApiRoles(["admin", "dev"]) },
-            }
-        }
     }
     loadApplication(): AuthState {
         return { type: "load-application" }
@@ -53,7 +47,6 @@ class Usecase implements AuthUsecase {
 
         this.component = {
             renewCredential: newRenewCredentialComponent(),
-            storeCredential: newStoreCredentialComponent(),
             loadApplication: newLoadApplicationComponent(),
 
             passwordLogin: newPasswordLoginComponent(),

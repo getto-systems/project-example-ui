@@ -7,8 +7,9 @@ import {
     RenewCredentialOperation,
 } from "../renew_credential/component"
 
-import { RenewEvent, StoreEvent } from "../../../credential/data"
+import { RenewEvent } from "../../../credential/data"
 
+// Renew は unmount した後も interval を維持したいので worker にはしない
 export function initRenewCredentialComponent(action: RenewCredentialComponentAction): RenewCredentialComponent {
     return new Component(action)
 }
@@ -39,12 +40,17 @@ class Component implements RenewCredentialComponent {
     }
 
     trigger(operation: RenewCredentialOperation): Promise<void> {
-        const param = unpackRenewCredentialParam(operation.param)
-        return this.action.credential.renew(param.ticketNonce)
+        switch (operation.type) {
+            case "renew":
+                return this.action.credential.renew(unpackRenewCredentialParam(operation.param).ticketNonce)
+
+            case "set-renew-interval":
+                return this.action.credential.setRenewInterval(operation.ticketNonce)
+        }
     }
 }
 
-function mapEvent(event: RenewEvent | StoreEvent): RenewCredentialState {
+function mapEvent(event: RenewEvent): RenewCredentialState {
     return event
 }
 

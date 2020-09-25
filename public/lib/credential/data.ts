@@ -20,7 +20,8 @@ export type RenewEvent =
     Readonly<{ type: "required-to-login" }> |
     Readonly<{ type: "try-to-renew" }> |
     Readonly<{ type: "delayed-to-renew" }> |
-    Readonly<{ type: "failed-to-renew", err: RenewError }>
+    Readonly<{ type: "failed-to-renew", err: RenewError }> |
+    Readonly<{ type: "succeed-to-renew", authCredential: AuthCredential }>
 
 export type RenewError =
     Readonly<{ type: "bad-request" }> |

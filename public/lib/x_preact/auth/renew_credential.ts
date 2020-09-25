@@ -10,7 +10,7 @@ import {
     initialRenewCredentialState,
 } from "../../auth/component/renew_credential/component"
 
-import { RenewError, StoreError } from "../../credential/data"
+import { RenewError } from "../../credential/data"
 
 export interface PreactComponent {
     (props: Props): VNode
@@ -33,7 +33,7 @@ export function RenewCredential(component: RenewCredentialComponent): PreactComp
         switch (state.type) {
             case "initial-renew":
             case "required-to-login":
-            case "succeed-to-store":
+            case "succeed-to-renew":
                 return EMPTY_CONTENT
 
             case "try-to-renew":
@@ -42,9 +42,6 @@ export function RenewCredential(component: RenewCredentialComponent): PreactComp
 
             case "delayed-to-renew":
                 return delayedContent()
-
-            case "failed-to-store":
-                return fetchFailedContent(state.err)
 
             case "failed-to-renew":
                 return renewFailedContent(state.err)
@@ -65,29 +62,12 @@ export function RenewCredential(component: RenewCredentialComponent): PreactComp
         )
     }
 
-    function fetchFailedContent(err: StoreError): VNode {
-        return ErrorView(
-            html`認証に失敗しました`,
-            errorMessage(fetchError(err)),
-            html``,
-        )
-    }
     function renewFailedContent(err: RenewError): VNode {
         return ErrorView(
             html`認証に失敗しました`,
             errorMessage(renewError(err)),
             html``,
         )
-    }
-}
-
-function fetchError(err: StoreError): VNode {
-    switch (err.type) {
-        case "infra-error":
-            return html`
-                <p>ブラウザが LocalStorage にアクセスできませんでした</p>
-                <p>(詳細: ${err.err})</p>
-            `
     }
 }
 

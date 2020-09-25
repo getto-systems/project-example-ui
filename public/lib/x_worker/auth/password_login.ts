@@ -3,6 +3,7 @@ import { newPasswordLoginComponent, newWorkerHelper } from "../../main/auth/pass
 const ctx: Worker = self as any // eslint-disable-line @typescript-eslint/no-explicit-any
 
 const component = newPasswordLoginComponent()
+
 const helper = newWorkerHelper()
 
 component.onStateChange((state) => {
@@ -18,3 +19,5 @@ component.onPasswordFieldStateChange((state) => {
 ctx.addEventListener("message", (event) => {
     component.trigger(event.data)
 })
+
+component.init()
