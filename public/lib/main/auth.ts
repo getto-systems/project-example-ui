@@ -10,6 +10,7 @@ import { newPasswordResetSessionComponent } from "./auth/worker/password_reset_s
 import { newPasswordResetComponent } from "./auth/worker/password_reset"
 
 import { initAuthUsecase } from "../auth/impl/core"
+import { initAuthLocation } from "../auth/impl/location"
 import { initStorageAuthCredentialRepository } from "../auth/impl/repository/auth_credential/storage"
 
 import { initRenewCredentialComponent } from "../auth/component/renew_credential/impl"
@@ -25,15 +26,14 @@ import { RenewCredentialComponent } from "../auth/component/renew_credential/com
 
 import { CredentialAction } from "../credential/action"
 
-export function newAuthUsecase(currentLocation: Location): AuthUsecase {
-    const credentialStorage: Storage = localStorage
-
+export function newAuthUsecase(currentLocation: Location, credentialStorage: Storage): AuthUsecase {
     return initAuthUsecase({
+        authLocation: initAuthLocation(currentLocation),
         authCredentials: initStorageAuthCredentialRepository(credentialStorage, {
             ticketNonce: "GETTO-EXAMPLE-TICKET-NONCE",
             apiCredential: "GETTO-EXAMPLE-API-CREDENTIAL",
         }),
-    }, currentLocation, {
+    }, {
         renewCredential: newRenewCredentialComponent(),
         loadApplication: newLoadApplicationComponent(),
 
