@@ -5,7 +5,7 @@ import { initPasswordResetComponent, initPasswordResetWorkerComponentHelper } fr
 import { initLoginIDFieldAction } from "../../field/login_id/impl/core"
 import { initPasswordFieldAction } from "../../field/password/impl/core"
 
-import { PasswordResetComponent, PasswordResetWorkerComponentHelper } from "../../auth/component/password_reset/component"
+import { PasswordResetComponent, PasswordResetWorkerComponentHelper } from "../../auth/component/password_reset"
 
 export function newPasswordResetComponent(): PasswordResetComponent {
     return initPasswordResetComponent({

@@ -6,8 +6,7 @@ import { LoginHeader } from "./layout"
 import { LoginIDField } from "./password_reset/field/login_id"
 import { PasswordField } from "./password_reset/field/password"
 
-import { PasswordResetComponent } from "../../auth/component/password_reset/component"
-import { initialPasswordResetState } from "../../auth/component/password_reset/data"
+import { PasswordResetComponent, initialPasswordResetState } from "../../auth/component/password_reset"
 
 import { ResetToken, ResetError } from "../../password_reset/data"
 

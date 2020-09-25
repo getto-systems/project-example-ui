@@ -1,6 +1,6 @@
 import { initPasswordResetWorkerComponent } from "../../../auth/component/password_reset/impl"
 
-import { PasswordResetComponent } from "../../../auth/component/password_reset/component"
+import { PasswordResetComponent } from "../../../auth/component/password_reset"
 
 export function newPasswordResetComponent(): PasswordResetComponent {
     return initPasswordResetWorkerComponent(
