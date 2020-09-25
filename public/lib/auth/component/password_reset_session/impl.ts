@@ -5,9 +5,9 @@ import {
     PasswordResetSessionComponentOperation,
     PasswordResetSessionWorkerState,
     PasswordResetSessionWorkerComponentHelper,
-} from "../password_reset_session"
+} from "../password_reset_session/component"
 
-import { LoginIDFieldState } from "../field/login_id"
+import { LoginIDFieldState } from "../field/login_id/component"
 
 import { LoginIDField } from "../../../field/login_id/action"
 

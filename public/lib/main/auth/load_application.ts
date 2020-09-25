@@ -4,7 +4,7 @@ import { initLoadApplicationComponent } from "../../auth/component/load_applicat
 
 import { initScriptAction } from "../../script/impl/core"
 
-import { LoadApplicationComponent } from "../../auth/component/load_application"
+import { LoadApplicationComponent } from "../../auth/component/load_application/component"
 
 export function newLoadApplicationComponent(): LoadApplicationComponent {
     return initLoadApplicationComponent({

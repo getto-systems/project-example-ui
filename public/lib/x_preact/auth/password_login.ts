@@ -6,7 +6,7 @@ import { LoginHeader } from "./layout"
 import { LoginIDField } from "./password_login/field/login_id"
 import { PasswordField } from "./password_login/field/password"
 
-import { PasswordLoginComponent, initialPasswordLoginState } from "../../auth/component/password_login"
+import { PasswordLoginComponent, initialPasswordLoginState } from "../../auth/component/password_login/component"
 
 import { LoginError } from "../../password_login/data"
 

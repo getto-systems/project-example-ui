@@ -2,7 +2,7 @@ import {
     StoreCredentialComponentAction,
     StoreCredentialComponent,
     StoreCredentialState,
-} from "../store_credential"
+} from "../store_credential/component"
 
 import { AuthCredential, StoreEvent } from "../../../credential/data"
 

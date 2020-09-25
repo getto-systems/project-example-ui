@@ -1,9 +1,13 @@
 import { initInputValue } from "../../../field/adapter"
 
-import { PasswordLoginComponent, PasswordLoginState, PasswordLoginComponentOperation } from "../../../auth/component/password_login"
+import {
+    PasswordLoginComponent,
+    PasswordLoginState,
+    PasswordLoginComponentOperation,
+} from "../../../auth/component/password_login/component"
 
-import { LoginIDFieldState } from "../../../auth/component/field/login_id"
-import { PasswordFieldState } from "../../../auth/component/field/password"
+import { LoginIDFieldState } from "../../../auth/component/field/login_id/component"
+import { PasswordFieldState } from "../../../auth/component/field/password/component"
 
 export function newPasswordLoginComponent(): PasswordLoginComponent {
     const init = new Init()

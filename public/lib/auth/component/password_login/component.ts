@@ -1,14 +1,14 @@
-import { LoginIDFieldState } from "./field/login_id"
-import { PasswordFieldState } from "./field/password"
+import { LoginIDFieldState } from "../field/login_id/component"
+import { PasswordFieldState } from "../field/password/component"
 
-import { PasswordLoginAction } from "../../password_login/action"
-import { LoginIDFieldAction } from "../../field/login_id/action"
-import { PasswordFieldAction } from "../../field/password/action"
+import { PasswordLoginAction } from "../../../password_login/action"
+import { LoginIDFieldAction } from "../../../field/login_id/action"
+import { PasswordFieldAction } from "../../../field/password/action"
 
-import { AuthCredential } from "../../credential/data"
-import { LoginError } from "../../password_login/data"
-import { LoginIDFieldOperation } from "../../field/login_id/data"
-import { PasswordFieldOperation } from "../../field/password/data"
+import { AuthCredential } from "../../../credential/data"
+import { LoginError } from "../../../password_login/data"
+import { LoginIDFieldOperation } from "../../../field/login_id/data"
+import { PasswordFieldOperation } from "../../../field/password/data"
 
 export interface PasswordLoginComponent {
     hook(stateChanged: Post<PasswordLoginState>): void

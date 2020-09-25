@@ -1,10 +1,10 @@
-import { LoginIDFieldState } from "./field/login_id"
+import { LoginIDFieldState } from "../field/login_id/component"
 
-import { PasswordResetAction } from "../../password_reset/action"
-import { LoginIDFieldAction } from "../../field/login_id/action"
+import { PasswordResetAction } from "../../../password_reset/action"
+import { LoginIDFieldAction } from "../../../field/login_id/action"
 
-import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../password_reset/data"
-import { LoginIDFieldOperation } from "../../field/login_id/data"
+import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../../password_reset/data"
+import { LoginIDFieldOperation } from "../../../field/login_id/data"
 
 export interface PasswordResetSessionComponent {
     onStateChange(stateChanged: Post<PasswordResetSessionState>): void

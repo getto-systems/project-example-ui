@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { ErrorView } from "./layout"
 
-import { RenewCredentialComponent, initialRenewCredentialState } from "../../auth/component/renew_credential"
+import { RenewCredentialComponent, initialRenewCredentialState } from "../../auth/component/renew_credential/component"
 
 import { FetchError, RenewError } from "../../credential/data"
 

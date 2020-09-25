@@ -1,6 +1,6 @@
-import { ScriptAction } from "../../script/action"
+import { ScriptAction } from "../../../script/action"
 
-import { PagePathname, ScriptPath } from "../../script/data"
+import { PagePathname, ScriptPath } from "../../../script/data"
 
 export interface LoadApplicationComponent {
     onStateChange(stateChanged: Post<LoadApplicationState>): void

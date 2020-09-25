@@ -1,10 +1,10 @@
-import { RenewCredentialComponent } from "./component/renew_credential"
-import { StoreCredentialComponent } from "./component/store_credential"
-import { LoadApplicationComponent } from "./component/load_application"
+import { RenewCredentialComponent } from "./component/renew_credential/component"
+import { StoreCredentialComponent } from "./component/store_credential/component"
+import { LoadApplicationComponent } from "./component/load_application/component"
 
-import { PasswordLoginComponent } from "./component/password_login"
-import { PasswordResetSessionComponent } from "./component/password_reset_session"
-import { PasswordResetComponent } from "./component/password_reset"
+import { PasswordLoginComponent } from "./component/password_login/component"
+import { PasswordResetSessionComponent } from "./component/password_reset_session/component"
+import { PasswordResetComponent } from "./component/password_reset/component"
 
 import { AuthCredential } from "../credential/data"
 import { ResetToken } from "../password_reset/data"

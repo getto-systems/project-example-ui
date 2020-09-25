@@ -5,7 +5,10 @@ import { html } from "htm/preact"
 import { LoginHeader, ErrorView } from "./layout"
 import { LoginIDField } from "./password_reset_session/field/login_id"
 
-import { PasswordResetSessionComponent, initialPasswordResetSessionState } from "../../auth/component/password_reset_session"
+import {
+    PasswordResetSessionComponent,
+    initialPasswordResetSessionState,
+} from "../../auth/component/password_reset_session/component"
 
 import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../password_reset/data"
 

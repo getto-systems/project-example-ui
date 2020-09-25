@@ -5,10 +5,10 @@ import {
     PasswordLoginComponentOperation,
     PasswordLoginWorkerState,
     PasswordLoginWorkerComponentHelper,
-} from "../password_login"
+} from "../password_login/component"
 
-import { LoginIDFieldState } from "../field/login_id"
-import { PasswordFieldState } from "../field/password"
+import { LoginIDFieldState } from "../field/login_id/component"
+import { PasswordFieldState } from "../field/password/component"
 
 import { LoginIDField } from "../../../field/login_id/action"
 import { PasswordField } from "../../../field/password/action"
