@@ -9,7 +9,7 @@ export interface RenewCredentialComponent {
     trigger(operation: RenewCredentialOperation): Promise<void>
 }
 
-export type RenewCredentialParam = { never: RenewCredentialParam }
+export type RenewCredentialParam = { RenewCredentialParam: never }
 
 export type RenewCredentialState =
     Readonly<{ type: "initial-renew" }> |

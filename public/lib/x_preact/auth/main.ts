@@ -40,7 +40,7 @@ export function Main(usecase: AuthUsecase) {
                 return h(RenewCredential(usecase.component.renewCredential), { param: state.param })
 
             case "load-application":
-                return h(LoadApplication(usecase.component.loadApplication), {})
+                return h(LoadApplication(usecase.component.loadApplication), { param: state.param })
 
             case "password-login":
                 return h(PasswordLogin(usecase.component.passwordLogin), {})

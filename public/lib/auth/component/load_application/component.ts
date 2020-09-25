@@ -1,6 +1,6 @@
 import { ScriptAction } from "../../../script/action"
 
-import { PagePathname, ScriptPath } from "../../../script/data"
+import { ScriptPath } from "../../../script/data"
 
 export interface LoadApplicationComponent {
     onStateChange(stateChanged: Post<LoadApplicationState>): void
@@ -8,6 +8,8 @@ export interface LoadApplicationComponent {
     terminate(): void
     trigger(operation: LoadApplicationComponentOperation): Promise<void>
 }
+
+export type LoadApplicationParam = { LoadApplicationParam: never }
 
 export type LoadApplicationState =
     Readonly<{ type: "initial-load" }> |
@@ -20,7 +22,7 @@ export type CheckError =
     Readonly<{ type: "not-found" }>
 
 export type LoadApplicationComponentOperation =
-    Readonly<{ type: "load", pagePathname: PagePathname }>
+    Readonly<{ type: "load", param: LoadApplicationParam }>
 
 export interface LoadApplicationComponentAction {
     script: ScriptAction,
