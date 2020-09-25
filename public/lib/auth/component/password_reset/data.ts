@@ -1,5 +1,5 @@
 import { LoginIDFieldState } from "../field/login_id"
-import { PasswordFieldState } from "../field/password/data"
+import { PasswordFieldState } from "../field/password"
 
 import { AuthCredential } from "../../../credential/data"
 import { ResetToken, ResetError } from "../../../password_reset/data"

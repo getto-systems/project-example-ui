@@ -3,7 +3,7 @@ import { PasswordLoginComponentAction, PasswordLoginComponent, PasswordLoginWork
 import { PasswordLoginState, PasswordLoginComponentOperation, PasswordLoginWorkerState } from "./data"
 
 import { LoginIDFieldState } from "../field/login_id"
-import { PasswordFieldState } from "../field/password/data"
+import { PasswordFieldState } from "../field/password"
 
 import { LoginIDField } from "../../../field/login_id/action"
 import { PasswordField } from "../../../field/password/action"
