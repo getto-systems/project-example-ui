@@ -1,4 +1,6 @@
-import { PagePathname, ScriptPath } from "../../../script/data"
+import { ScriptAction } from "../../script/action"
+
+import { PagePathname, ScriptPath } from "../../script/data"
 
 export type LoadApplicationState =
     Readonly<{ type: "initial-load" }> |
@@ -12,3 +14,17 @@ export type CheckError =
 
 export type LoadApplicationComponentOperation =
     Readonly<{ type: "load", pagePathname: PagePathname }>
+
+export interface LoadApplicationComponent {
+    onStateChange(stateChanged: Post<LoadApplicationState>): void
+    terminate(): void
+    trigger(operation: LoadApplicationComponentOperation): Promise<void>
+}
+
+export interface LoadApplicationComponentAction {
+    script: ScriptAction,
+}
+
+interface Post<T> {
+    (state: T): void
+}
