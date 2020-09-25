@@ -76,6 +76,16 @@ function Main(): VNode {
                                     </span>
                                 </a>
                             </li>
+                            <li class="menu__nav__item">
+                                <a class="menu__nav__link" href="/dist/docs/index.html">
+                                    <span class="menu__nav__item__label">
+                                        <i class="lnir lnir-files-alt"></i> ドキュメント
+                                    </span>
+                                    <span class="menu__nav__item__badge">
+                                        <span class="badge badge_alert">99</span>
+                                    </span>
+                                </a>
+                            </li>
                         </ul>
                     </details>
                 </nav>
