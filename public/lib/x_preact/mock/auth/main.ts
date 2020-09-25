@@ -9,9 +9,7 @@ import { newPasswordResetComponent } from "./password_reset"
 import { initTicketNonce, initApiRoles } from "../../../credential/adapter"
 import { initResetToken } from "../../../password_reset/adapter"
 
-import { AuthUsecase, AuthComponent } from "../../../auth/usecase"
-
-import { AuthState } from "../../../auth/data"
+import { AuthUsecase, AuthComponent, AuthState } from "../../../auth/usecase"
 
 export function newAuthUsecase(): AuthUsecase {
     return new Usecase(new Init().renewCredential())
