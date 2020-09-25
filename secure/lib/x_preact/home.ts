@@ -51,14 +51,7 @@ function Menu(): VNode {
         <aside class="layout__menu menu">
             ${menuHeader()}
             <nav id="menu" class="menu__body">
-                <section class="menu__box">
-                    <dl class="form">
-                        <dt class="form__header">シーズン</dt>
-                        <dd class="form__field">
-                            ことし
-                        </dd>
-                    </dl>
-                </section>
+                ${h(MenuBox, {})}
                 <details class="menu__nav" open="${true}">
                     <summary class="menu__nav__summary">
                         <span class="menu__nav__summary__label">MAIN</span>
@@ -84,9 +77,34 @@ function Menu(): VNode {
                         </li>
                     </ul>
                 </details>
+                <details class="menu__nav" open="${false}">
+                    <summary class="menu__nav__summary">
+                        DATA
+                    </summary>
+                    <ul class="menu__nav__items">
+                        <li class="menu__nav__item">
+                            <a class="menu__nav__link" href="/dist/docs/index.html">
+                                <i class="lnir lnir-book-alt"></i> データ
+                            </a>
+                        </li>
+                    </ul>
+                </details>
             </nav>
             ${menuFooter("dist")}
         </aside>
+    `
+}
+
+function MenuBox(): VNode {
+    return html`
+        <section class="menu__box">
+            <dl class="form">
+                <dt class="form__header">シーズン</dt>
+                <dd class="form__field">
+                    ことし
+                </dd>
+            </dl>
+        </section>
     `
 }
 
