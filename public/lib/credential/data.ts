@@ -21,17 +21,11 @@ export type RenewEvent =
     Readonly<{ type: "try-to-renew" }> |
     Readonly<{ type: "delayed-to-renew" }> |
     Readonly<{ type: "failed-to-renew", err: RenewError }> |
-    Readonly<{ type: "succeed-to-renew", authCredential: AuthCredential }>
+    Readonly<{ type: "succeed-to-renew", authCredential: AuthCredential }> |
+    Readonly<{ type: "succeed-to-renew-interval", authCredential: AuthCredential }>
 
 export type RenewError =
     Readonly<{ type: "bad-request" }> |
     Readonly<{ type: "server-error" }> |
     Readonly<{ type: "bad-response", err: string }> |
-    Readonly<{ type: "infra-error", err: string }>
-
-export type StoreEvent =
-    Readonly<{ type: "failed-to-store", err: StoreError }> |
-    Readonly<{ type: "succeed-to-store" }>
-
-export type StoreError =
     Readonly<{ type: "infra-error", err: string }>

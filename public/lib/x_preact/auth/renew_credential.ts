@@ -34,6 +34,7 @@ export function RenewCredential(component: RenewCredentialComponent): PreactComp
             case "initial-renew":
             case "required-to-login":
             case "succeed-to-renew":
+            case "succeed-to-renew-interval":
                 return EMPTY_CONTENT
 
             case "try-to-renew":

@@ -6,7 +6,7 @@ import {
     CredentialEventSubscriber,
 } from "../action"
 
-import { AuthCredential, TicketNonce, RenewEvent, StoreEvent } from "../data"
+import { TicketNonce, RenewEvent } from "../data"
 
 export function initCredentialAction(infra: Infra): CredentialAction {
     return new Action(infra)
@@ -47,38 +47,23 @@ class Action implements CredentialAction {
         post({ type: "succeed-to-renew", authCredential: response.authCredential })
     }
 
-    async store(authCredential: AuthCredential): Promise<void> {
-        const post = (event: StoreEvent) => this.pub.postStoreEvent(event)
-
-        const response = this.infra.authCredentials.storeAuthCredential(authCredential)
-        if (!response.success) {
-            post({ type: "failed-to-store", err: response.err })
-            return
-        }
-        post({ type: "succeed-to-store" })
-
-        this.setRenewInterval(authCredential.ticketNonce)
-    }
-
     async setRenewInterval(ticketNonce: TicketNonce): Promise<void> {
-        // unmount したあとに実行されるので、イベントは発行しない
+        const post = (event: RenewEvent) => this.pub.postRenewEvent(event)
+
         let continueInterval = true
         setInterval(async () => {
+            // unmount したあとに実行されるので、失敗イベントは発行しない
             if (!continueInterval) {
                 return
             }
 
-            const renewResponse = await this.infra.renewClient.renew(ticketNonce)
-            if (!renewResponse.success || !renewResponse.hasCredential) {
+            const response = await this.infra.renewClient.renew(ticketNonce)
+            if (!response.success || !response.hasCredential) {
                 continueInterval = false
                 return
             }
 
-            const storeResponse = this.infra.authCredentials.storeAuthCredential(renewResponse.authCredential)
-            if (!storeResponse.success) {
-                continueInterval = false
-                return
-            }
+            post({ type: "succeed-to-renew-interval", authCredential: response.authCredential })
         }, this.infra.timeConfig.renewIntervalTime.interval_milli_second)
     }
 }
@@ -86,28 +71,20 @@ class Action implements CredentialAction {
 class EventPubSub implements CredentialEventPublisher, CredentialEventSubscriber {
     listener: {
         renew: Post<RenewEvent>[]
-        store: Post<StoreEvent>[]
     }
 
     constructor() {
         this.listener = {
             renew: [],
-            store: [],
         }
     }
 
     onRenew(post: Post<RenewEvent>): void {
         this.listener.renew.push(post)
     }
-    onStore(post: Post<StoreEvent>): void {
-        this.listener.store.push(post)
-    }
 
     postRenewEvent(event: RenewEvent): void {
         this.listener.renew.forEach(post => post(event))
-    }
-    postStoreEvent(event: StoreEvent): void {
-        this.listener.store.forEach(post => post(event))
     }
 }
 
