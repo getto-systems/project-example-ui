@@ -26,22 +26,12 @@ class Action implements CredentialAction {
         this.sub = pubsub
     }
 
-    async renew(): Promise<void> {
+    async renew(ticketNonce: TicketNonce): Promise<void> {
         const post = (event: RenewEvent) => this.pub.postRenewEvent(event)
-
-        const found = this.infra.authCredentials.findTicketNonce()
-        if (!found.success) {
-            post({ type: "failed-to-fetch", err: found.err })
-            return
-        }
-        if (!found.found) {
-            post({ type: "required-to-login" })
-            return
-        }
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const response = await delayed(
-            this.infra.renewClient.renew(found.ticketNonce),
+            this.infra.renewClient.renew(ticketNonce),
             this.infra.timeConfig.renewDelayTime,
             () => post({ type: "delayed-to-renew" }),
         )

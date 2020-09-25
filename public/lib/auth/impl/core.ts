@@ -72,9 +72,6 @@ class Usecase implements AuthUsecase {
         }
         this.holder = { set: true, stack: false, post }
     }
-    terminate(): void {
-        // terminate が必要な component とインターフェイスを合わせるために必要
-    }
 
     async init(): Promise<void> {
         const found = this.infra.authCredentials.findTicketNonce()
@@ -88,6 +85,9 @@ class Usecase implements AuthUsecase {
         }
 
         this.tryToRenew(packRenewCredentialParam(found.content))
+    }
+    terminate(): void {
+        // terminate が必要な component とインターフェイスを合わせるために必要
     }
 
     post(state: AuthState): void {

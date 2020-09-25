@@ -12,9 +12,6 @@ class Init {
     delayedToRenew(): RenewCredentialState {
         return { type: "delayed-to-renew" }
     }
-    failedToFetch_infra_error(): RenewCredentialState {
-        return { type: "failed-to-fetch", err: { type: "infra-error", err: "error" } }
-    }
     failedToRenew_bad_request(): RenewCredentialState {
         return { type: "failed-to-renew", err: { type: "bad-request" } }
     }

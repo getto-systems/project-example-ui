@@ -10,7 +10,7 @@ import {
     initialRenewCredentialState,
 } from "../../auth/component/renew_credential/component"
 
-import { FetchError, RenewError } from "../../credential/data"
+import { RenewError, StoreError } from "../../credential/data"
 
 export interface PreactComponent {
     (props: Props): VNode
@@ -34,16 +34,15 @@ export function RenewCredential(component: RenewCredentialComponent): PreactComp
             case "initial-renew":
             case "required-to-login":
             case "succeed-to-store":
-                return html``
+                return EMPTY_CONTENT
 
             case "try-to-renew":
                 // すぐに帰ってくるはずなので何も描画しない
-                return html``
+                return EMPTY_CONTENT
 
             case "delayed-to-renew":
                 return delayedContent()
 
-            case "failed-to-fetch":
             case "failed-to-store":
                 return fetchFailedContent(state.err)
 
@@ -66,7 +65,7 @@ export function RenewCredential(component: RenewCredentialComponent): PreactComp
         )
     }
 
-    function fetchFailedContent(err: FetchError): VNode {
+    function fetchFailedContent(err: StoreError): VNode {
         return ErrorView(
             html`認証に失敗しました`,
             errorMessage(fetchError(err)),
@@ -82,7 +81,7 @@ export function RenewCredential(component: RenewCredentialComponent): PreactComp
     }
 }
 
-function fetchError(err: FetchError): VNode {
+function fetchError(err: StoreError): VNode {
     switch (err.type) {
         case "infra-error":
             return html`
@@ -121,3 +120,5 @@ function errorMessage(content: VNode): VNode {
         <p>お手数ですが、上記メッセージを管理者に伝えてください</p>
     `
 }
+
+const EMPTY_CONTENT: VNode = html``

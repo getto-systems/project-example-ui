@@ -18,13 +18,9 @@ export type ApiRole = { ApiRole: never }
 
 export type RenewEvent =
     Readonly<{ type: "required-to-login" }> |
-    Readonly<{ type: "failed-to-fetch", err: FetchError }> |
     Readonly<{ type: "try-to-renew" }> |
     Readonly<{ type: "delayed-to-renew" }> |
     Readonly<{ type: "failed-to-renew", err: RenewError }>
-
-export type FetchError =
-    Readonly<{ type: "infra-error", err: string }>
 
 export type RenewError =
     Readonly<{ type: "bad-request" }> |
