@@ -12,7 +12,7 @@ import { ResetToken } from "../password_reset/data"
 export interface AuthUsecase {
     onStateChange(stateChanged: Post<AuthState>): void
 
-    init(): Promise<void>
+    init(): void
     terminate(): void
 
     component: AuthComponent
