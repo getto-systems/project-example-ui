@@ -12,41 +12,36 @@ import {
 
 import { RenewError } from "../../credential/data"
 
-export interface PreactComponent {
-    (props: Props): VNode
-}
-
 type Props = {
+    component: RenewCredentialComponent
     param: RenewCredentialParam
 }
 
-export function RenewCredential(component: RenewCredentialComponent): PreactComponent {
-    return (props: Props): VNode => {
-        const [state, setState] = useState(initialRenewCredentialState)
-        useEffect(() => {
-            component.onStateChange(setState)
-            component.init()
-            component.trigger({ type: "renew", param: props.param })
-            return () => component.terminate()
-        }, [])
+export function RenewCredential(props: Props): VNode {
+    const [state, setState] = useState(initialRenewCredentialState)
+    useEffect(() => {
+        props.component.onStateChange(setState)
+        props.component.init()
+        props.component.trigger({ type: "renew", param: props.param })
+        return () => props.component.terminate()
+    }, [])
 
-        switch (state.type) {
-            case "initial-renew":
-            case "required-to-login":
-            case "succeed-to-renew":
-            case "succeed-to-renew-interval":
-                return EMPTY_CONTENT
+    switch (state.type) {
+        case "initial-renew":
+        case "required-to-login":
+        case "succeed-to-renew":
+        case "succeed-to-renew-interval":
+            return EMPTY_CONTENT
 
-            case "try-to-renew":
-                // すぐに帰ってくるはずなので何も描画しない
-                return EMPTY_CONTENT
+        case "try-to-renew":
+            // すぐに帰ってくるはずなので何も描画しない
+            return EMPTY_CONTENT
 
-            case "delayed-to-renew":
-                return delayedContent()
+        case "delayed-to-renew":
+            return delayedContent()
 
-            case "failed-to-renew":
-                return renewFailedContent(state.err)
-        }
+        case "failed-to-renew":
+            return renewFailedContent(state.err)
     }
 
     function delayedContent(): VNode {

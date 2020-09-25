@@ -6,36 +6,34 @@ import { LoginIDFieldOperation, loginIDFieldError, onLoginIDInput } from "../../
 
 import { LoginIDFieldState, initialLoginIDFieldState } from "../../../../auth/component/field/login_id/component"
 
-interface PreactComponent {
-    (): VNode
-}
+type Props = Readonly<{
+    component: FormComponent
+}>
 
 interface FormComponent {
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
     trigger(operation: LoginIDFieldOperation): Promise<void>
 }
 
-export function LoginIDField(component: FormComponent): PreactComponent {
-    return (): VNode => {
-        const [state, setState] = useState(initialLoginIDFieldState)
+export function LoginIDField(props: Props): VNode {
+    const [state, setState] = useState(initialLoginIDFieldState)
 
-        useEffect(() => {
-            component.onLoginIDFieldStateChange(setState)
-        }, [])
+    useEffect(() => {
+        props.component.onLoginIDFieldStateChange(setState)
+    }, [])
 
-        return html`
-            <label>
-                <dl class="form ${state.result.valid ? "" : "form_error"}">
-                    <dt class="form__header">ログインID</dt>
-                    <dd class="form__field">
-                        <input type="text" class="input_fill" onInput=${onLoginIDInput(component)}/>
-                        ${loginIDFieldError(state.result)}
-                        <p class="form__help">最初に入力したログインIDを入力してください</p>
-                    </dd>
-                </dl>
-            </label>
-        `
-    }
+    return html`
+        <label>
+            <dl class="form ${state.result.valid ? "" : "form_error"}">
+                <dt class="form__header">ログインID</dt>
+                <dd class="form__field">
+                    <input type="text" class="input_fill" onInput=${onLoginIDInput(props.component)}/>
+                    ${loginIDFieldError(state.result)}
+                    <p class="form__help">最初に入力したログインIDを入力してください</p>
+                </dd>
+            </dl>
+        </label>
+    `
 }
 
 interface Post<T> {

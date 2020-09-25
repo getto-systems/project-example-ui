@@ -1,7 +1,7 @@
+import { render, h } from "preact"
+
 import { newAuthUsecase } from "./auth/main"
 
 import { Main } from "../auth/main"
 
-import { render, h } from "preact"
-
-render(h(Main(newAuthUsecase()), {}), document.body)
+render(h(Main, { usecase: newAuthUsecase() }), document.body)

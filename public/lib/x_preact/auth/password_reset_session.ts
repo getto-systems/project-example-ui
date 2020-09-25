@@ -1,4 +1,4 @@
-import { VNode } from "preact"
+import { h, VNode } from "preact"
 import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
@@ -12,153 +12,151 @@ import {
 
 import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../password_reset/data"
 
-interface PreactComponent {
-    (): VNode
-}
+type Props = Readonly<{
+    component: PasswordResetSessionComponent
+}>
 
-export function PasswordResetSession(component: PasswordResetSessionComponent): PreactComponent {
-    return (): VNode => {
-        const [state, setState] = useState(initialPasswordResetSessionState)
-        const submit = useRef<HTMLButtonElement>()
-        useEffect(() => {
-            component.onStateChange(setState)
-            component.init()
-            return () => component.terminate()
-        }, [])
+export function PasswordResetSession(props: Props): VNode {
+    const [state, setState] = useState(initialPasswordResetSessionState)
+    const submit = useRef<HTMLButtonElement>()
+    useEffect(() => {
+        props.component.onStateChange(setState)
+        props.component.init()
+        return () => props.component.terminate()
+    }, [])
 
-        function startSessionView(onSubmit: Handler<Event>, button: VNode, footer: VNode): VNode {
-            return html`
-                <aside class="login">
-                    <form class="login__box" onSubmit="${onSubmit}">
-                        ${LoginHeader()}
-                        <section>
-                            <big>
-                                <section class="login__body">
-                                    <${LoginIDField(component)}/>
-                                </section>
-                            </big>
-                        </section>
-                        <footer class="login__footer">
-                            <div class="button__container">
-                                <div>
-                                    <big>${button}</big>
-                                </div>
-                                ${loginLink()}
-                            </div>
-                            ${footer}
-                        </footer>
-                    </form>
-                </aside>
-            `
-        }
-        function pollingStatusView(content: VNode): VNode {
-            return html`
-                <aside class="login">
-                    <section class="login__box">
-                        ${LoginHeader()}
-                        <section>
-                            <big>
-                                <section class="loading loading_login">
-                                    <i class="lnir lnir-spinner lnir-is-spinning"></i>
-                                    ${content}
-                                </section>
-                            </big>
-                        </section>
-                        <footer class="login__footer button__container"></footer>
+    function startSessionView(onSubmit: Handler<Event>, button: VNode, footer: VNode): VNode {
+        return html`
+            <aside class="login">
+                <form class="login__box" onSubmit="${onSubmit}">
+                    ${LoginHeader()}
+                    <section>
+                        <big>
+                            <section class="login__body">
+                                ${h(LoginIDField, props)}
+                            </section>
+                        </big>
                     </section>
+                    <footer class="login__footer">
+                        <div class="button__container">
+                            <div>
+                                <big>${button}</big>
+                            </div>
+                            ${loginLink()}
+                        </div>
+                        ${footer}
+                    </footer>
+                </form>
+            </aside>
+        `
+    }
+    function pollingStatusView(content: VNode): VNode {
+        return html`
+            <aside class="login">
+                <section class="login__box">
+                    ${LoginHeader()}
+                    <section>
+                        <big>
+                            <section class="loading loading_login">
+                                <i class="lnir lnir-spinner lnir-is-spinning"></i>
+                                ${content}
+                            </section>
+                        </big>
+                    </section>
+                    <footer class="login__footer button__container"></footer>
+                </section>
+            </aside>
+        `
+    }
+    function errorView(title: VNode, content: VNode): VNode {
+        return ErrorView(title, html`
+            ${content}
+            <div class="vertical vertical_medium"></div>
+            <p>お手数ですが、上記メッセージを管理者にお伝えください</p>
+        `, html`
+            <section class="button__container">
+                <div></div>
+                ${loginLink()}
+            </section>
+        `)
+    }
+
+    switch (state.type) {
+        case "initial-reset-session":
+            return startSessionView(onSubmit_startSession, startSessionButton(), html``)
+
+        case "failed-to-start-session":
+            return startSessionView(onSubmit_startSession, startSessionButton(), html`
+                <aside>
+                    ${formMessage("form_error", startSessionError(state.err))}
                 </aside>
-            `
-        }
-        function errorView(title: VNode, content: VNode): VNode {
-            return ErrorView(title, html`
-                ${content}
-                <div class="vertical vertical_medium"></div>
-                <p>お手数ですが、上記メッセージを管理者にお伝えください</p>
-            `, html`
+            `)
+
+        case "try-to-start-session":
+            return startSessionView(onSubmit_noop, startSessionButton_connecting(), html``)
+
+        case "delayed-to-start-session":
+            return startSessionView(onSubmit_noop, startSessionButton_connecting(), html`
+                <aside>
+                    ${formMessage("form_warning", html`
+                        <p class="form__message">トークンの送信に時間がかかっています</p>
+                        <p class="form__message">
+                            30秒以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
+                        </p>
+                    `)}
+                </aside>
+            `)
+
+        case "try-to-polling-status":
+            return pollingStatusView(html`
+                <p class="loading__message">リセットトークンを送信しています</p>
+            `)
+
+        case "retry-to-polling-status":
+            return pollingStatusView(html`
+                <p class="loading__message">リセットトークンを送信しています</p>
+                ${pollingStatus(state.dest, state.status)}
+            `)
+
+        case "failed-to-polling-status":
+            return errorView(html`ステータスの取得に失敗しました`, pollingStatusError(state.err))
+
+        case "failed-to-send-token":
+            return errorView(html`リセットトークンの送信に失敗しました`, sendTokenError(state.err))
+
+        case "succeed-to-send-token":
+            return ErrorView(html`リセットトークンを送信しました`, sendTokenMessage(state.dest), html`
                 <section class="button__container">
                     <div></div>
                     ${loginLink()}
                 </section>
             `)
+    }
+
+    function startSessionButton() {
+        return html`<button ref="${submit}" class="button button_save">トークン送信</button>`
+    }
+    function startSessionButton_connecting(): VNode {
+        return html`
+            <button type="button" class="button button_saving">
+                トークンを送信しています
+                ${" "}
+                <i class="lnir lnir-spinner lnir-is-spinning"></i>
+            </button>
+        `
+    }
+
+    function onSubmit_startSession(e: Event) {
+        e.preventDefault()
+
+        if (submit.current) {
+            submit.current.blur()
         }
 
-        switch (state.type) {
-            case "initial-reset-session":
-                return startSessionView(onSubmit_startSession, startSessionButton(), html``)
-
-            case "failed-to-start-session":
-                return startSessionView(onSubmit_startSession, startSessionButton(), html`
-                    <aside>
-                        ${formMessage("form_error", startSessionError(state.err))}
-                    </aside>
-                `)
-
-            case "try-to-start-session":
-                return startSessionView(onSubmit_noop, startSessionButton_connecting(), html``)
-
-            case "delayed-to-start-session":
-                return startSessionView(onSubmit_noop, startSessionButton_connecting(), html`
-                    <aside>
-                        ${formMessage("form_warning", html`
-                            <p class="form__message">トークンの送信に時間がかかっています</p>
-                            <p class="form__message">
-                                30秒以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
-                            </p>
-                        `)}
-                    </aside>
-                `)
-
-            case "try-to-polling-status":
-                return pollingStatusView(html`
-                    <p class="loading__message">リセットトークンを送信しています</p>
-                `)
-
-            case "retry-to-polling-status":
-                return pollingStatusView(html`
-                    <p class="loading__message">リセットトークンを送信しています</p>
-                    ${pollingStatus(state.dest, state.status)}
-                `)
-
-            case "failed-to-polling-status":
-                return errorView(html`ステータスの取得に失敗しました`, pollingStatusError(state.err))
-
-            case "failed-to-send-token":
-                return errorView(html`リセットトークンの送信に失敗しました`, sendTokenError(state.err))
-
-            case "succeed-to-send-token":
-                return ErrorView(html`リセットトークンを送信しました`, sendTokenMessage(state.dest), html`
-                    <section class="button__container">
-                        <div></div>
-                        ${loginLink()}
-                    </section>
-                `)
-        }
-
-        function startSessionButton() {
-            return html`<button ref="${submit}" class="button button_save">トークン送信</button>`
-        }
-        function startSessionButton_connecting(): VNode {
-            return html`
-                <button type="button" class="button button_saving">
-                    トークンを送信しています
-                    ${" "}
-                    <i class="lnir lnir-spinner lnir-is-spinning"></i>
-                </button>
-            `
-        }
-
-        function onSubmit_startSession(e: Event) {
-            e.preventDefault()
-
-            if (submit.current) {
-                submit.current.blur()
-            }
-
-            component.trigger({ type: "start-session" })
-        }
-        function onSubmit_noop(e: Event) {
-            e.preventDefault()
-        }
+        props.component.trigger({ type: "start-session" })
+    }
+    function onSubmit_noop(e: Event) {
+        e.preventDefault()
     }
 }
 

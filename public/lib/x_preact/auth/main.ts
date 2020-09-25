@@ -14,47 +14,49 @@ import { PasswordReset } from "./password_reset"
 
 import { AuthUsecase, initialAuthState, FetchError, StoreError } from "../../auth/usecase"
 
-export function Main(usecase: AuthUsecase) {
-    return (): VNode => {
-        const [error, _resetError] = useErrorBoundary((err) => {
-            // ここでエラーをどこかに投げたい、けど認証前なのでこれでお茶を濁す
-            console.log(err)
-        })
+type Props = Readonly<{
+    usecase: AuthUsecase
+}>
 
-        const [state, setState] = useState(initialAuthState)
-        useEffect(() => {
-            usecase.onStateChange(setState)
-            usecase.init()
-            return () => usecase.terminate()
-        }, [])
+export function Main(props: Props): VNode {
+    const [error, _resetError] = useErrorBoundary((err) => {
+        // ここでエラーをどこかに投げたい、けど認証前なのでこれでお茶を濁す
+        console.log(err)
+    })
 
-        if (error) {
-            return h(ApplicationError, {})
-        }
+    const [state, setState] = useState(initialAuthState)
+    useEffect(() => {
+        props.usecase.onStateChange(setState)
+        props.usecase.init()
+        return () => props.usecase.terminate()
+    }, [])
 
-        switch (state.type) {
-            case "initial":
-                return EMPTY_CONTENT
+    if (error) {
+        return h(ApplicationError, {})
+    }
 
-            case "renew-credential":
-                return h(RenewCredential(usecase.component.renewCredential), { param: state.param })
+    switch (state.type) {
+        case "initial":
+            return EMPTY_CONTENT
 
-            case "load-application":
-                return h(LoadApplication(usecase.component.loadApplication), { param: state.param })
+        case "renew-credential":
+            return h(RenewCredential, { component: props.usecase.component.renewCredential, param: state.param })
 
-            case "password-login":
-                return h(PasswordLogin(usecase.component.passwordLogin), {})
+        case "load-application":
+            return h(LoadApplication, { component: props.usecase.component.loadApplication, param: state.param })
 
-            case "password-reset-session":
-                return h(PasswordResetSession(usecase.component.passwordResetSession), {})
+        case "password-login":
+            return h(PasswordLogin, { component: props.usecase.component.passwordLogin })
 
-            case "password-reset":
-                return h(PasswordReset(usecase.component.passwordReset, state.resetToken), {})
+        case "password-reset-session":
+            return h(PasswordResetSession, { component: props.usecase.component.passwordResetSession })
 
-            case "failed-to-fetch":
-            case "failed-to-store":
-                return StorageError(state.err)
-        }
+        case "password-reset":
+            return h(PasswordReset, { component: props.usecase.component.passwordReset, resetToken: state.resetToken })
+
+        case "failed-to-fetch":
+        case "failed-to-store":
+            return StorageError(state.err)
     }
 }
 
