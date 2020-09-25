@@ -1,4 +1,4 @@
-import { VNode } from "preact"
+import { h, VNode } from "preact"
 import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
@@ -10,108 +10,105 @@ import { PasswordResetComponent, initialPasswordResetState } from "../../auth/co
 
 import { ResetToken, ResetError } from "../../password_reset/data"
 
-interface PreactComponent {
-    (): VNode
-}
+type Props = Readonly<{
+    component: PasswordResetComponent
+    resetToken: ResetToken
+}>
 
-export function PasswordReset(component: PasswordResetComponent, resetToken: ResetToken): PreactComponent {
-    return (/* param: PasswordResetParam */): VNode => {
-        //component.trigger({ type: "set-param", param })
+export function PasswordReset(props: Props): VNode {
+    const [state, setState] = useState(initialPasswordResetState)
+    const submit = useRef<HTMLButtonElement>()
+    useEffect(() => {
+        props.component.onStateChange(setState)
+        props.component.init()
+        return () => props.component.terminate()
+    }, [])
 
-        const [state, setState] = useState(initialPasswordResetState)
-        const submit = useRef<HTMLButtonElement>()
-        useEffect(() => {
-            component.onStateChange(setState)
-            component.init()
-            return () => component.terminate()
-        }, [])
-
-        function view(onSubmit: Handler<Event>, button: VNode, footer: VNode): VNode {
-            return html`
-                <aside class="login">
-                    <form class="login__box" onSubmit="${onSubmit}">
-                        ${LoginHeader()}
-                        <section>
-                            <big>
-                                <section class="login__body">
-                                    <${LoginIDField(component)}/>
-                                    <${PasswordField(component)}/>
-                                </section>
-                            </big>
-                        </section>
-                        <footer class="login__footer">
-                            <div class="button__container">
-                                <div>
-                                    <big>${button}</big>
-                                </div>
-                                <div class="login__link">
-                                    <a href="?_password_reset=start">
-                                        <i class="lnir lnir-direction"></i> トークンを再送信する
-                                    </a>
-                                </div>
+    function view(onSubmit: Handler<Event>, button: VNode, footer: VNode): VNode {
+        return html`
+            <aside class="login">
+                <form class="login__box" onSubmit="${onSubmit}">
+                    ${LoginHeader()}
+                    <section>
+                        <big>
+                            <section class="login__body">
+                                ${h(LoginIDField, props)}
+                                ${h(PasswordField, props)}
+                            </section>
+                        </big>
+                    </section>
+                    <footer class="login__footer">
+                        <div class="button__container">
+                            <div>
+                                <big>${button}</big>
                             </div>
-                            ${footer}
-                        </footer>
-                    </form>
+                            <div class="login__link">
+                                <a href="?_password_reset=start">
+                                    <i class="lnir lnir-direction"></i> トークンを再送信する
+                                </a>
+                            </div>
+                        </div>
+                        ${footer}
+                    </footer>
+                </form>
+            </aside>
+        `
+    }
+
+    switch (state.type) {
+        case "initial-reset":
+            return view(onSubmit_login, resetButton(), html``)
+
+        case "failed-to-reset":
+            return view(onSubmit_login, resetButton(), html`
+                <aside>
+                    ${formMessage("form_error", resetError(state.err))}
                 </aside>
-            `
+            `)
+
+        case "try-to-reset":
+            return view(onSubmit_noop, resetButton_connecting(), html``)
+
+        case "delayed-to-reset":
+            return view(onSubmit_noop, resetButton_connecting(), html`
+                <aside>
+                    ${formMessage("form_warning", html`
+                        <p class="form__message">リセットに時間がかかっています</p>
+                        <p class="form__message">
+                            30秒以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
+                        </p>
+                    `)}
+                </aside>
+            `)
+
+        case "succeed-to-reset":
+            return html``
+    }
+
+    function resetButton() {
+        return html`<button ref="${submit}" class="button button_save">パスワードリセット</button>`
+    }
+    function resetButton_connecting(): VNode {
+        return html`
+            <button type="button" class="button button_saving">
+                パスワードをリセットしています
+                ${" "}
+                <i class="lnir lnir-spinner lnir-is-spinning"></i>
+            </button>
+        `
+    }
+
+    function onSubmit_login(e: Event) {
+        e.preventDefault()
+
+        if (submit.current) {
+            submit.current.blur()
         }
 
-        switch (state.type) {
-            case "initial-reset":
-                return view(onSubmit_login, resetButton(), html``)
-
-            case "failed-to-reset":
-                return view(onSubmit_login, resetButton(), html`
-                    <aside>
-                        ${formMessage("form_error", resetError(state.err))}
-                    </aside>
-                `)
-
-            case "try-to-reset":
-                return view(onSubmit_noop, resetButton_connecting(), html``)
-
-            case "delayed-to-reset":
-                return view(onSubmit_noop, resetButton_connecting(), html`
-                    <aside>
-                        ${formMessage("form_warning", html`
-                            <p class="form__message">リセットに時間がかかっています</p>
-                            <p class="form__message">
-                                30秒以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
-                            </p>
-                        `)}
-                    </aside>
-                `)
-
-            case "succeed-to-reset":
-                return html``
-        }
-
-        function resetButton() {
-            return html`<button ref="${submit}" class="button button_save">パスワードリセット</button>`
-        }
-        function resetButton_connecting(): VNode {
-            return html`
-                <button type="button" class="button button_saving">
-                    パスワードをリセットしています
-                    ${" "}
-                    <i class="lnir lnir-spinner lnir-is-spinning"></i>
-                </button>
-            `
-        }
-
-        function onSubmit_login(e: Event) {
-            e.preventDefault()
-
-            if (submit.current) {
-                submit.current.blur()
-            }
-
-            component.trigger({ type: "reset", resetToken })
-        }
-        function onSubmit_noop(e: Event) {
-            e.preventDefault()
-        }
+        props.component.trigger({ type: "reset", resetToken: props.resetToken })
+    }
+    function onSubmit_noop(e: Event) {
+        e.preventDefault()
     }
 }
 
