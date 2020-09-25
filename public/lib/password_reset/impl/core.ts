@@ -31,28 +31,28 @@ class PasswordResetActionImpl implements PasswordResetAction {
     }
 
     async startSession(fields: [Content<LoginID>]): Promise<void> {
-        const dispatch = (event: StartSessionEvent) => this.pub.dispatchStartSessionEvent(event)
+        const post = (event: StartSessionEvent) => this.pub.postStartSessionEvent(event)
 
         const content = mapContent(...fields)
         if (!content.valid) {
-            dispatch({ type: "failed-to-start-session", err: { type: "validation-error" } })
+            post({ type: "failed-to-start-session", err: { type: "validation-error" } })
             return
         }
 
-        dispatch({ type: "try-to-start-session" })
+        post({ type: "try-to-start-session" })
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const response = await delayed(
             this.infra.passwordResetSessionClient.startSession(...content.content),
             this.infra.timeConfig.passwordResetStartSessionDelayTime,
-            () => dispatch({ type: "delayed-to-start-session" }),
+            () => post({ type: "delayed-to-start-session" }),
         )
         if (!response.success) {
-            dispatch({ type: "failed-to-start-session", err: response.err })
+            post({ type: "failed-to-start-session", err: response.err })
             return
         }
 
-        dispatch({ type: "succeed-to-start-session", sessionID: response.sessionID })
+        post({ type: "succeed-to-start-session", sessionID: response.sessionID })
 
         return
 
@@ -69,33 +69,33 @@ class PasswordResetActionImpl implements PasswordResetAction {
     }
 
     async startPollingStatus(sessionID: SessionID): Promise<void> {
-        const dispatch = (event: PollingStatusEvent) => this.pub.dispatchPollingStatusEvent(event)
-        new StatusPoller(this.infra.timeConfig, this.infra.passwordResetSessionClient, dispatch).startPolling(sessionID)
+        const post = (event: PollingStatusEvent) => this.pub.postPollingStatusEvent(event)
+        new StatusPoller(this.infra.timeConfig, this.infra.passwordResetSessionClient, post).startPolling(sessionID)
     }
 
     async reset(resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<void> {
-        const dispatch = (event: ResetEvent) => this.pub.dispatchResetEvent(event)
+        const post = (event: ResetEvent) => this.pub.postResetEvent(event)
 
         const content = mapContent(...fields)
         if (!content.valid) {
-            dispatch({ type: "failed-to-reset", err: { type: "validation-error" } })
+            post({ type: "failed-to-reset", err: { type: "validation-error" } })
             return
         }
 
-        dispatch({ type: "try-to-reset" })
+        post({ type: "try-to-reset" })
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const response = await delayed(
             this.infra.passwordResetClient.reset(resetToken, ...content.content),
             this.infra.timeConfig.passwordResetDelayTime,
-            () => dispatch({ type: "delayed-to-reset" }),
+            () => post({ type: "delayed-to-reset" }),
         )
         if (!response.success) {
-            dispatch({ type: "failed-to-reset", err: response.err })
+            post({ type: "failed-to-reset", err: response.err })
             return
         }
 
-        dispatch({ type: "succeed-to-reset", authCredential: response.authCredential })
+        post({ type: "succeed-to-reset", authCredential: response.authCredential })
         return
 
         type ValidContent =
@@ -122,20 +122,20 @@ type SendTokenState =
 class StatusPoller {
     timeConfig: TimeConfig
     client: PasswordResetSessionClient
-    dispatch: Dispatcher<PollingStatusEvent>
+    post: Post<PollingStatusEvent>
 
     sendTokenState: SendTokenState
 
-    constructor(timeConfig: TimeConfig, client: PasswordResetSessionClient, dispatch: Dispatcher<PollingStatusEvent>) {
+    constructor(timeConfig: TimeConfig, client: PasswordResetSessionClient, post: Post<PollingStatusEvent>) {
         this.timeConfig = timeConfig
         this.client = client
-        this.dispatch = dispatch
+        this.post = post
 
         this.sendTokenState = { type: "initial" }
     }
 
     async startPolling(sessionID: SessionID): Promise<void> {
-        this.dispatch({ type: "try-to-polling-status" })
+        this.post({ type: "try-to-polling-status" })
 
         this.sendToken()
 
@@ -145,21 +145,21 @@ class StatusPoller {
             count += 1
 
             if (this.sendTokenState.type === "failed") {
-                this.dispatch({ type: "failed-to-polling-status", err: this.sendTokenState.err })
+                this.post({ type: "failed-to-polling-status", err: this.sendTokenState.err })
                 return
             }
 
             const response = await this.client.getStatus(sessionID)
             if (!response.success) {
-                this.dispatch({ type: "failed-to-polling-status", err: response.err })
+                this.post({ type: "failed-to-polling-status", err: response.err })
                 return
             }
 
             if (response.done) {
                 if (response.send) {
-                    this.dispatch({ type: "succeed-to-send-token", dest: response.dest })
+                    this.post({ type: "succeed-to-send-token", dest: response.dest })
                 } else {
-                    this.dispatch({
+                    this.post({
                         type: "failed-to-send-token",
                         dest: response.dest,
                         err: { type: "infra-error", err: response.err },
@@ -168,7 +168,7 @@ class StatusPoller {
                 return
             }
 
-            this.dispatch({
+            this.post({
                 type: "retry-to-polling-status",
                 dest: response.dest,
                 status: response.status,
@@ -177,7 +177,7 @@ class StatusPoller {
             await wait(this.timeConfig.passwordResetPollingWaitTime)
         }
 
-        this.dispatch({
+        this.post({
             type: "failed-to-polling-status",
             err: { type: "infra-error", err: "overflow polling limit" },
         })
@@ -195,9 +195,9 @@ class StatusPoller {
 
 class EventPubSub implements PasswordResetEventPublisher, PasswordResetEventSubscriber {
     listener: {
-        startSession: Dispatcher<StartSessionEvent>[]
-        pollingStatus: Dispatcher<PollingStatusEvent>[]
-        reset: Dispatcher<ResetEvent>[]
+        startSession: Post<StartSessionEvent>[]
+        pollingStatus: Post<PollingStatusEvent>[]
+        reset: Post<ResetEvent>[]
     }
 
     constructor() {
@@ -208,24 +208,24 @@ class EventPubSub implements PasswordResetEventPublisher, PasswordResetEventSubs
         }
     }
 
-    onStartSessionEvent(dispatch: Dispatcher<StartSessionEvent>): void {
-        this.listener.startSession.push(dispatch)
+    onStartSessionEvent(post: Post<StartSessionEvent>): void {
+        this.listener.startSession.push(post)
     }
-    onPollingStatusEvent(dispatch: Dispatcher<PollingStatusEvent>): void {
-        this.listener.pollingStatus.push(dispatch)
+    onPollingStatusEvent(post: Post<PollingStatusEvent>): void {
+        this.listener.pollingStatus.push(post)
     }
-    onResetEvent(dispatch: Dispatcher<ResetEvent>): void {
-        this.listener.reset.push(dispatch)
+    onResetEvent(post: Post<ResetEvent>): void {
+        this.listener.reset.push(post)
     }
 
-    dispatchStartSessionEvent(event: StartSessionEvent): void {
-        this.listener.startSession.forEach(dispatch => dispatch(event))
+    postStartSessionEvent(event: StartSessionEvent): void {
+        this.listener.startSession.forEach(post => post(event))
     }
-    dispatchPollingStatusEvent(event: PollingStatusEvent): void {
-        this.listener.pollingStatus.forEach(dispatch => dispatch(event))
+    postPollingStatusEvent(event: PollingStatusEvent): void {
+        this.listener.pollingStatus.forEach(post => post(event))
     }
-    dispatchResetEvent(event: ResetEvent): void {
-        this.listener.reset.forEach(dispatch => dispatch(event))
+    postResetEvent(event: ResetEvent): void {
+        this.listener.reset.forEach(post => post(event))
     }
 }
 
@@ -260,6 +260,6 @@ interface DelayedHandler {
     (): void
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (status: T): void
 }

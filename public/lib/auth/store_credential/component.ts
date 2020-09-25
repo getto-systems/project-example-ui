@@ -5,8 +5,8 @@ import { CredentialAction } from "../../credential/action"
 import { AuthCredential } from "../../credential/data"
 
 export interface StoreCredentialComponent {
-    hook(stateChanged: Dispatcher<StoreCredentialState>): void
-    onStateChange(stateChanged: Dispatcher<StoreCredentialState>): void
+    hook(stateChanged: Post<StoreCredentialState>): void
+    onStateChange(stateChanged: Post<StoreCredentialState>): void
     terminate(): void
     store(authCredential: AuthCredential): Promise<void>
 }
@@ -15,6 +15,6 @@ export interface StoreCredentialComponentAction {
     credential: CredentialAction
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }

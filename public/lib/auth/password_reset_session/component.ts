@@ -15,8 +15,8 @@ export interface PasswordResetSessionComponentAction {
 }
 
 export interface PasswordResetSessionComponent {
-    onStateChange(stateChanged: Dispatcher<PasswordResetSessionState>): void
-    onLoginIDFieldStateChange(stateChanged: Dispatcher<LoginIDFieldState>): void
+    onStateChange(stateChanged: Post<PasswordResetSessionState>): void
+    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
     terminate(): void
     trigger(operation: PasswordResetSessionComponentOperation): Promise<void>
 }
@@ -26,6 +26,6 @@ export interface PasswordResetSessionWorkerComponentHelper {
     mapLoginIDFieldState(state: LoginIDFieldState): PasswordResetSessionWorkerState
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }

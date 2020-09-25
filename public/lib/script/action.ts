@@ -6,13 +6,13 @@ export interface ScriptAction {
 }
 
 export interface ScriptEventPublisher {
-    dispatchScriptEvent(event: ScriptEvent): void
+    postScriptEvent(event: ScriptEvent): void
 }
 
 export interface ScriptEventSubscriber {
-    onScriptEvent(event: Dispatcher<ScriptEvent>): void
+    onScriptEvent(event: Post<ScriptEvent>): void
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }

@@ -46,7 +46,7 @@ class Field implements LoginIDField {
     }
     validate(): void {
         const [content, result] = this.content()
-        this.pub.dispatchLoginIDFieldEvent({ type: "succeed-to-update-login_id", result, content })
+        this.pub.postLoginIDFieldEvent({ type: "succeed-to-update-login_id", result, content })
     }
 
     content(): [Content<LoginID>, Valid<LoginIDFieldError>] {
@@ -60,22 +60,22 @@ class Field implements LoginIDField {
 }
 
 class FieldEventPubSub implements LoginIDFieldEventPublisher, LoginIDFieldEventSubscriber {
-    listener: Dispatcher<LoginIDFieldEvent>[]
+    listener: Post<LoginIDFieldEvent>[]
 
     constructor() {
         this.listener = []
     }
 
-    onLoginIDFieldEvent(dispatch: Dispatcher<LoginIDFieldEvent>): void {
-        this.listener.push(dispatch)
+    onLoginIDFieldEvent(post: Post<LoginIDFieldEvent>): void {
+        this.listener.push(post)
     }
 
-    dispatchLoginIDFieldEvent(event: LoginIDFieldEvent): void {
-        this.listener.forEach(dispatch => dispatch(event))
+    postLoginIDFieldEvent(event: LoginIDFieldEvent): void {
+        this.listener.forEach(post => post(event))
     }
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }
 

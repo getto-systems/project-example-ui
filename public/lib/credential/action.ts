@@ -7,15 +7,15 @@ export interface CredentialAction {
 }
 
 export interface CredentialEventPublisher {
-    dispatchRenewEvent(event: RenewEvent): void
-    dispatchStoreEvent(event: StoreEvent): void
+    postRenewEvent(event: RenewEvent): void
+    postStoreEvent(event: StoreEvent): void
 }
 
 export interface CredentialEventSubscriber {
-    onRenew(stateChanged: Dispatcher<RenewEvent | StoreEvent>): void
-    onStore(stateChanged: Dispatcher<StoreEvent>): void
+    onRenew(stateChanged: Post<RenewEvent | StoreEvent>): void
+    onStore(stateChanged: Post<StoreEvent>): void
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }

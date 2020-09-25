@@ -59,32 +59,32 @@ class Usecase implements AuthUsecase {
         })
     }
 
-    onStateChange(dispatch: Dispatcher<AuthState>): void {
+    onStateChange(post: Post<AuthState>): void {
         if (this.holder.stack) {
-            dispatch(this.holder.state)
+            post(this.holder.state)
         }
-        this.holder = { set: true, stack: false, dispatch }
+        this.holder = { set: true, stack: false, post }
     }
     terminate(): void {
         // terminate が必要な component とインターフェイスを合わせるために必要
     }
 
-    dispatch(state: AuthState): void {
+    post(state: AuthState): void {
         if (this.holder.set) {
-            this.holder.dispatch(state)
+            this.holder.post(state)
         } else {
             this.holder = { set: false, stack: true, state }
         }
     }
 
     async storeCredential(authCredential: AuthCredential): Promise<void> {
-        this.dispatch({ type: "store-credential", authCredential })
+        this.post({ type: "store-credential", authCredential })
     }
     async tryToLogin(): Promise<void> {
-        this.dispatch(loginState(this.currentLocation))
+        this.post(loginState(this.currentLocation))
     }
     async loadApplication(): Promise<void> {
-        this.dispatch({ type: "load-application" })
+        this.post({ type: "load-application" })
     }
 }
 
@@ -108,8 +108,8 @@ function loginState(currentLocation: Location): AuthState {
 type StateHolder =
     Readonly<{ set: false, stack: false }> |
     Readonly<{ set: false, stack: true, state: AuthState }> |
-    Readonly<{ set: true, stack: false, dispatch: Dispatcher<AuthState> }>
+    Readonly<{ set: true, stack: false, post: Post<AuthState> }>
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }

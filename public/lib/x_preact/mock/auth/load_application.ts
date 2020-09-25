@@ -19,10 +19,10 @@ class Component implements LoadApplicationComponent {
         this.state = state
     }
 
-    hook(_stateChanged: Dispatcher<LoadApplicationState>): void {
+    hook(_stateChanged: Post<LoadApplicationState>): void {
         // mock では特に何もしない
     }
-    onStateChange(stateChanged: Dispatcher<LoadApplicationState>): void {
+    onStateChange(stateChanged: Post<LoadApplicationState>): void {
         stateChanged(this.state)
     }
     terminate(): void {
@@ -34,6 +34,6 @@ class Component implements LoadApplicationComponent {
     }
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }

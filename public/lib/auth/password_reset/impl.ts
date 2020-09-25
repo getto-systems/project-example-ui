@@ -32,7 +32,7 @@ export function initPasswordResetWorkerComponentHelper(): PasswordResetWorkerCom
 class Component implements PasswordResetComponent {
     action: PasswordResetComponentAction
 
-    listener: Dispatcher<PasswordResetState>[]
+    listener: Post<PasswordResetState>[]
 
     field: {
         loginID: LoginIDField
@@ -67,13 +67,13 @@ class Component implements PasswordResetComponent {
         })
     }
 
-    hook(dispatch: Dispatcher<PasswordResetState>): void {
-        this.listener.push(dispatch)
+    hook(post: Post<PasswordResetState>): void {
+        this.listener.push(post)
     }
-    onStateChange(stateChanged: Dispatcher<PasswordResetState>): void {
+    onStateChange(stateChanged: Post<PasswordResetState>): void {
         this.action.passwordReset.sub.onResetEvent((event) => {
             const state = map(event)
-            this.listener.forEach(dispatch => dispatch(state))
+            this.listener.forEach(post => post(state))
             stateChanged(state)
 
             function map(event: ResetEvent): PasswordResetState {
@@ -81,10 +81,10 @@ class Component implements PasswordResetComponent {
             }
         })
     }
-    onLoginIDFieldStateChange(stateChanged: Dispatcher<LoginIDFieldState>): void {
+    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
         this.field.loginID.sub.onLoginIDFieldEvent(stateChanged)
     }
-    onPasswordFieldStateChange(stateChanged: Dispatcher<PasswordFieldState>): void {
+    onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void {
         this.field.password.sub.onPasswordFieldEvent(stateChanged)
     }
     terminate(): void {
@@ -116,26 +116,26 @@ class Component implements PasswordResetComponent {
 
 class WorkerComponent implements PasswordResetComponent {
     worker: WorkerHolder
-    listener: Dispatcher<PasswordResetState>[]
+    listener: Post<PasswordResetState>[]
 
     constructor(init: WorkerInit) {
         this.worker = { set: false, stack: [], init }
         this.listener = []
     }
 
-    hook(dispatch: Dispatcher<PasswordResetState>): void {
-        this.listener.push(dispatch)
+    hook(post: Post<PasswordResetState>): void {
+        this.listener.push(post)
     }
-    onStateChange(stateChanged: Dispatcher<PasswordResetState>): void {
+    onStateChange(stateChanged: Post<PasswordResetState>): void {
         if (!this.worker.set) {
             const instance = this.initWorker(this.worker.init, this.worker.stack, (state) => {
-                this.listener.forEach(dispatch => dispatch(state))
+                this.listener.forEach(post => post(state))
                 stateChanged(state)
             })
             this.worker = { set: true, instance }
         }
     }
-    initWorker(init: WorkerInit, stack: WorkerSetup[], stateChanged: Dispatcher<PasswordResetState>): Worker {
+    initWorker(init: WorkerInit, stack: WorkerSetup[], stateChanged: Post<PasswordResetState>): Worker {
         const worker = init()
         worker.addEventListener("message", (event) => {
             const state = event.data as PasswordResetWorkerState
@@ -149,7 +149,7 @@ class WorkerComponent implements PasswordResetComponent {
         return worker
     }
 
-    onLoginIDFieldStateChange(stateChanged: Dispatcher<LoginIDFieldState>): void {
+    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
         if (this.worker.set) {
             setup(this.worker.instance)
         } else {
@@ -165,7 +165,7 @@ class WorkerComponent implements PasswordResetComponent {
             })
         }
     }
-    onPasswordFieldStateChange(stateChanged: Dispatcher<PasswordFieldState>): void {
+    onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void {
         if (this.worker.set) {
             setup(this.worker.instance)
         } else {
@@ -205,7 +205,7 @@ function mapPasswordFieldState(state: PasswordFieldState): PasswordResetWorkerSt
     return { type: "field-password", state }
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }
 

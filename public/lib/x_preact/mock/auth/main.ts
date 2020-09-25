@@ -62,7 +62,7 @@ class Usecase implements AuthUsecase {
         }
     }
 
-    onStateChange(stateChanged: Dispatcher<AuthState>): void {
+    onStateChange(stateChanged: Post<AuthState>): void {
         stateChanged(this.state)
     }
     terminate(): void {
@@ -70,6 +70,6 @@ class Usecase implements AuthUsecase {
     }
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }

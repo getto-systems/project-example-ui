@@ -116,16 +116,16 @@ class Component implements PasswordLoginComponent {
         this.password = password
     }
 
-    hook(_stateChanged: Dispatcher<PasswordLoginState>): void {
+    hook(_stateChanged: Post<PasswordLoginState>): void {
         // mock では特に何もしない
     }
-    onStateChange(stateChanged: Dispatcher<PasswordLoginState>): void {
+    onStateChange(stateChanged: Post<PasswordLoginState>): void {
         stateChanged(this.state)
     }
-    onLoginIDFieldStateChange(stateChanged: Dispatcher<LoginIDFieldState>): void {
+    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
         stateChanged(this.loginID)
     }
-    onPasswordFieldStateChange(stateChanged: Dispatcher<PasswordFieldState>): void {
+    onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void {
         stateChanged(this.password)
     }
     terminate(): void {
@@ -148,6 +148,6 @@ class Component implements PasswordLoginComponent {
     }
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }

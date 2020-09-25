@@ -26,28 +26,28 @@ class Action implements PasswordLoginAction {
     }
 
     async login(fields: [Content<LoginID>, Content<Password>]): Promise<void> {
-        const dispatch = (event: LoginEvent) => this.pub.dispatchLoginEvent(event)
+        const post = (event: LoginEvent) => this.pub.postLoginEvent(event)
 
         const content = mapContent(...fields)
         if (!content.valid) {
-            dispatch({ type: "failed-to-login", err: { type: "validation-error" } })
+            post({ type: "failed-to-login", err: { type: "validation-error" } })
             return
         }
 
-        dispatch({ type: "try-to-login" })
+        post({ type: "try-to-login" })
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const response = await delayed(
             this.infra.passwordLoginClient.login(...content.content),
             this.infra.timeConfig.passwordLoginDelayTime,
-            () => dispatch({ type: "delayed-to-login" }),
+            () => post({ type: "delayed-to-login" }),
         )
         if (!response.success) {
-            dispatch({ type: "failed-to-login", err: response.err })
+            post({ type: "failed-to-login", err: response.err })
             return
         }
 
-        dispatch({ type: "succeed-to-login", authCredential: response.authCredential })
+        post({ type: "succeed-to-login", authCredential: response.authCredential })
         return
 
         type ValidContent =
@@ -68,7 +68,7 @@ class Action implements PasswordLoginAction {
 
 class EventPubSub implements PasswordLoginEventPublisher, PasswordLoginEventSubscriber {
     listener: {
-        login: Dispatcher<LoginEvent>[]
+        login: Post<LoginEvent>[]
     }
 
     constructor() {
@@ -77,16 +77,16 @@ class EventPubSub implements PasswordLoginEventPublisher, PasswordLoginEventSubs
         }
     }
 
-    onLoginEvent(dispatch: Dispatcher<LoginEvent>): void {
-        this.listener.login.push(dispatch)
+    onLoginEvent(post: Post<LoginEvent>): void {
+        this.listener.login.push(post)
     }
 
-    dispatchLoginEvent(event: LoginEvent): void {
-        this.listener.login.forEach(dispatch => dispatch(event))
+    postLoginEvent(event: LoginEvent): void {
+        this.listener.login.forEach(post => post(event))
     }
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }
 
