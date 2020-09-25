@@ -51,6 +51,10 @@ class Component implements PasswordLoginComponent {
 
     constructor(action: PasswordLoginComponentAction) {
         this.action = action
+        this.action.passwordLogin.sub.onLoginEvent((event) => {
+            const state = mapEvent(event)
+            this.listener.forEach(post => post(state))
+        })
 
         this.listener = []
 
@@ -72,19 +76,8 @@ class Component implements PasswordLoginComponent {
         })
     }
 
-    hook(post: Post<PasswordLoginState>): void {
-        this.listener.push(post)
-    }
     onStateChange(stateChanged: Post<PasswordLoginState>): void {
-        this.action.passwordLogin.sub.onLoginEvent((event) => {
-            const state = map(event)
-            this.listener.forEach(post => post(state))
-            stateChanged(state)
-
-            function map(event: LoginEvent): PasswordLoginState {
-                return event
-            }
-        })
+        this.listener.push(stateChanged)
     }
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
         this.field.loginID.sub.onLoginIDFieldEvent(stateChanged)
@@ -92,8 +85,12 @@ class Component implements PasswordLoginComponent {
     onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void {
         this.field.password.sub.onPasswordFieldEvent(stateChanged)
     }
+
+    init(): void {
+        // WorkerComponent とインターフェイスを合わせるために必要
+    }
     terminate(): void {
-        // terminate が必要な component とインターフェイスを合わせるために必要
+        // WorkerComponent とインターフェイスを合わせるために必要
     }
     trigger(operation: PasswordLoginComponentOperation): Promise<void> {
         switch (operation.type) {
@@ -121,70 +118,57 @@ class Component implements PasswordLoginComponent {
 
 class WorkerComponent implements PasswordLoginComponent {
     worker: WorkerHolder
-    listener: Post<PasswordLoginState>[]
+
+    listener: {
+        passwordLogin: Post<PasswordLoginState>[]
+        loginID: Post<LoginIDFieldState>[]
+        password: Post<PasswordFieldState>[]
+    }
 
     constructor(init: WorkerInit) {
-        this.worker = { set: false, stack: [], init }
-        this.listener = []
+        this.worker = { set: false, init }
+        this.listener = {
+            passwordLogin: [],
+            loginID: [],
+            password: [],
+        }
     }
 
-    hook(post: Post<PasswordLoginState>): void {
-        this.listener.push(post)
-    }
     onStateChange(stateChanged: Post<PasswordLoginState>): void {
+        this.listener.passwordLogin.push(stateChanged)
+    }
+    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
+        this.listener.loginID.push(stateChanged)
+    }
+    onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void {
+        this.listener.password.push(stateChanged)
+    }
+
+    init(): void {
         if (!this.worker.set) {
-            const instance = this.initWorker(this.worker.init, this.worker.stack, (state) => {
-                this.listener.forEach(post => post(state))
-                stateChanged(state)
+            const instance = this.worker.init()
+
+            instance.addEventListener("message", (event) => {
+                const state = event.data as PasswordLoginWorkerState
+                switch (state.type) {
+                    case "password_login":
+                        this.listener.passwordLogin.forEach(post => post(state.state))
+                        return
+
+                    case "field-login_id":
+                        this.listener.loginID.forEach(post => post(state.state))
+                        return
+
+                    case "field-password":
+                        this.listener.password.forEach(post => post(state.state))
+                        return
+
+                    default:
+                        assertNever(state)
+                }
             })
 
             this.worker = { set: true, instance }
-        }
-    }
-    initWorker(init: WorkerInit, stack: WorkerSetup[], stateChanged: Post<PasswordLoginState>): Worker {
-        const worker = init()
-        worker.addEventListener("message", (event) => {
-            const state = event.data as PasswordLoginWorkerState
-            if (state.type === "password_login") {
-                stateChanged(state.state)
-            }
-        })
-        stack.forEach((setup) => {
-            setup(worker)
-        })
-        return worker
-    }
-
-    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
-        if (this.worker.set) {
-            setup(this.worker.instance)
-        } else {
-            this.worker.stack.push(setup)
-        }
-
-        function setup(worker: Worker): void {
-            worker.addEventListener("message", (event) => {
-                const state = event.data as PasswordLoginWorkerState
-                if (state.type === "field-login_id") {
-                    stateChanged(state.state)
-                }
-            })
-        }
-    }
-    onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void {
-        if (this.worker.set) {
-            setup(this.worker.instance)
-        } else {
-            this.worker.stack.push(setup)
-        }
-
-        function setup(worker: Worker): void {
-            worker.addEventListener("message", (event) => {
-                const state = event.data as PasswordLoginWorkerState
-                if (state.type === "field-password") {
-                    stateChanged(state.state)
-                }
-            })
         }
     }
 
@@ -199,6 +183,10 @@ class WorkerComponent implements PasswordLoginComponent {
             this.worker.instance.postMessage(operation)
         }
     }
+}
+
+function mapEvent(event: LoginEvent): PasswordLoginState {
+    return event
 }
 
 function mapPasswordLoginState(state: PasswordLoginState): PasswordLoginWorkerState {
@@ -216,13 +204,13 @@ interface Post<T> {
 }
 
 type WorkerHolder =
-    Readonly<{ set: false, stack: WorkerSetup[], init: WorkerInit }> |
+    Readonly<{ set: false, init: WorkerInit }> |
     Readonly<{ set: true, instance: Worker }>
 
 interface WorkerInit {
     (): Worker
 }
 
-interface WorkerSetup {
-    (worker: Worker): void
+function assertNever(_: never): never {
+    throw new Error("NEVER")
 }

@@ -17,6 +17,7 @@ export function LoadApplication(component: LoadApplicationComponent): PreactComp
         const [state, setState] = useState(initialLoadApplicationState)
         useEffect(() => {
             component.onStateChange(setState)
+            component.init()
             component.trigger({ type: "load", pagePathname: packPagePathname(new URL(location.toString())) })
             return () => component.terminate()
         }, [])

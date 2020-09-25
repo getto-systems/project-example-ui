@@ -11,34 +11,38 @@ export function initStoreCredentialComponent(action: StoreCredentialComponentAct
 }
 
 class Component implements StoreCredentialComponent {
-    listener: Post<StoreCredentialState>[]
     action: StoreCredentialComponentAction
 
+    listener: Post<StoreCredentialState>[]
+
     constructor(action: StoreCredentialComponentAction) {
-        this.listener = []
         this.action = action
-    }
-
-    hook(post: Post<StoreCredentialState>): void {
-        this.listener.push(post)
-    }
-    onStateChange(stateChanged: Post<StoreCredentialState>): void {
         this.action.credential.sub.onStore((event) => {
-            const state = map(event)
+            const state = mapEvent(event)
             this.listener.forEach(post => post(state))
-            stateChanged(state)
 
-            function map(event: StoreEvent): StoreCredentialState {
-                return event
-            }
         })
+
+        this.listener = []
+    }
+
+    onStateChange(stateChanged: Post<StoreCredentialState>): void {
+        this.listener.push(stateChanged)
+    }
+
+    init(): void {
+        // WorkerComponent とインターフェイスを合わせるために必要
     }
     terminate(): void {
-        // terminate が必要な component とインターフェイスを合わせるために必要
+        // WorkerComponent とインターフェイスを合わせるために必要
     }
     store(authCredential: AuthCredential): Promise<void> {
         return this.action.credential.store(authCredential)
     }
+}
+
+function mapEvent(event: StoreEvent): StoreCredentialState {
+    return event
 }
 
 interface Post<T> {

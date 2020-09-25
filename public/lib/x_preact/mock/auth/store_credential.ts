@@ -22,11 +22,12 @@ class Component implements StoreCredentialComponent {
         this.state = state
     }
 
-    hook(_stateChanged: Post<StoreCredentialState>): void {
-        // mock では特に何もしない
-    }
     onStateChange(stateChanged: Post<StoreCredentialState>): void {
         stateChanged(this.state)
+    }
+
+    init(): void {
+        // mock では特に何もしない
     }
     terminate(): void {
         // mock では特に何もしない

@@ -93,14 +93,15 @@ class Component implements PasswordResetSessionComponent {
         this.loginID = loginID
     }
 
-    hook(_stateChanged: Post<PasswordResetSessionState>): void {
-        // mock では特に何もしない
-    }
     onStateChange(stateChanged: Post<PasswordResetSessionState>): void {
         stateChanged(this.state)
     }
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
         stateChanged(this.loginID)
+    }
+
+    init(): void {
+        // mock では特に何もしない
     }
     terminate(): void {
         // mock では特に何もしない

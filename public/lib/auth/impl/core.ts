@@ -29,7 +29,7 @@ class Usecase implements AuthUsecase {
 
         this.currentLocation = currentLocation
 
-        this.component.renewCredential.hook((state) => {
+        this.component.renewCredential.onStateChange((state) => {
             switch (state.type) {
                 case "required-to-login":
                     this.tryToLogin()
@@ -41,7 +41,7 @@ class Usecase implements AuthUsecase {
             }
         })
 
-        this.component.storeCredential.hook((state) => {
+        this.component.storeCredential.onStateChange((state) => {
             switch (state.type) {
                 case "succeed-to-store":
                     this.loadApplication()
@@ -49,7 +49,7 @@ class Usecase implements AuthUsecase {
             }
         })
 
-        this.component.passwordLogin.hook((state) => {
+        this.component.passwordLogin.onStateChange((state) => {
             switch (state.type) {
                 case "succeed-to-login":
                     this.storeCredential(state.authCredential)
@@ -57,7 +57,7 @@ class Usecase implements AuthUsecase {
             }
         })
 
-        this.component.passwordReset.hook((state) => {
+        this.component.passwordReset.onStateChange((state) => {
             switch (state.type) {
                 case "succeed-to-reset":
                     this.storeCredential(state.authCredential)

@@ -12,35 +12,37 @@ export function initRenewCredentialComponent(action: RenewCredentialComponentAct
 }
 
 class Component implements RenewCredentialComponent {
-    listener: Post<RenewCredentialState>[]
     action: RenewCredentialComponentAction
+    listener: Post<RenewCredentialState>[]
 
     constructor(action: RenewCredentialComponentAction) {
-        this.listener = []
         this.action = action
-    }
-
-    hook(post: Post<RenewCredentialState>): void {
-        this.listener.push(post)
-    }
-    onStateChange(stateChanged: Post<RenewCredentialState>): void {
         this.action.credential.sub.onRenew((event) => {
-            const state = map(event)
+            const state = mapEvent(event)
             this.listener.forEach(post => post(state))
-            stateChanged(state)
         })
 
-        function map(event: RenewEvent | StoreEvent): RenewCredentialState {
-            return event
-        }
+        this.listener = []
+    }
+
+    onStateChange(stateChanged: Post<RenewCredentialState>): void {
+        this.listener.push(stateChanged)
+    }
+
+    init(): void {
+        // WorkerComponent とインターフェイスを合わせるために必要
     }
     terminate(): void {
-        // terminate が必要な component とインターフェイスを合わせるために必要
+        // WorkerComponent とインターフェイスを合わせるために必要
     }
 
     trigger(_operation: RenewCredentialOperation): Promise<void> {
         return this.action.credential.renew()
     }
+}
+
+function mapEvent(event: RenewEvent | StoreEvent): RenewCredentialState {
+    return event
 }
 
 interface Post<T> {

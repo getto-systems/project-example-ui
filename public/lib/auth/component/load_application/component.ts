@@ -4,6 +4,7 @@ import { PagePathname, ScriptPath } from "../../../script/data"
 
 export interface LoadApplicationComponent {
     onStateChange(stateChanged: Post<LoadApplicationState>): void
+    init(): void
     terminate(): void
     trigger(operation: LoadApplicationComponentOperation): Promise<void>
 }

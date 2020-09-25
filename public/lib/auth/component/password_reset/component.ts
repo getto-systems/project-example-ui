@@ -11,10 +11,10 @@ import { LoginIDFieldOperation } from "../../../field/login_id/data"
 import { PasswordFieldOperation } from "../../../field/password/data"
 
 export interface PasswordResetComponent {
-    hook(stateChanged: Post<PasswordResetState>): void
     onStateChange(stateChanged: Post<PasswordResetState>): void
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
     onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void
+    init(): void
     terminate(): void
     trigger(operation: PasswordResetComponentOperation): Promise<void>
 }

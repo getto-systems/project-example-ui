@@ -31,6 +31,7 @@ export function initPasswordResetSessionWorkerComponentHelper(): PasswordResetSe
 
 class Component implements PasswordResetSessionComponent {
     action: PasswordResetSessionComponentAction
+    listener: Post<PasswordResetSessionState>[]
 
     field: {
         loginID: LoginIDField
@@ -42,6 +43,22 @@ class Component implements PasswordResetSessionComponent {
 
     constructor(action: PasswordResetSessionComponentAction) {
         this.action = action
+        this.action.passwordReset.sub.onStartSessionEvent((event) => {
+            switch (event.type) {
+                case "succeed-to-start-session":
+                    this.action.passwordReset.startPollingStatus(event.sessionID)
+                    break
+            }
+
+            const state = mapStartSessionEvent(event)
+            this.listener.forEach(post => post(state))
+        })
+        this.action.passwordReset.sub.onPollingStatusEvent((event) => {
+            const state = mapPollingStatusEvent(event)
+            this.listener.forEach(post => post(state))
+        })
+
+        this.listener = []
 
         this.field = {
             loginID: action.loginIDField.initLoginIDField(),
@@ -57,35 +74,17 @@ class Component implements PasswordResetSessionComponent {
     }
 
     onStateChange(stateChanged: Post<PasswordResetSessionState>): void {
-        this.action.passwordReset.sub.onStartSessionEvent((event) => {
-            stateChanged(map(event, this.action))
-
-            function map(event: StartSessionEvent, action: PasswordResetSessionComponentAction): PasswordResetSessionState {
-                switch (event.type) {
-                    case "try-to-start-session":
-                    case "delayed-to-start-session":
-                    case "failed-to-start-session":
-                        return event
-
-                    case "succeed-to-start-session":
-                        action.passwordReset.startPollingStatus(event.sessionID)
-                        return { type: "try-to-polling-status" }
-                }
-            }
-        })
-        this.action.passwordReset.sub.onPollingStatusEvent((event) => {
-            stateChanged(map(event))
-
-            function map(event: PollingStatusEvent): PasswordResetSessionState {
-                return event
-            }
-        })
+        this.listener.push(stateChanged)
     }
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
         this.field.loginID.sub.onLoginIDFieldEvent(stateChanged)
     }
+
+    init(): void {
+        // WorkerComponent とインターフェイスを合わせるために必要
+    }
     terminate(): void {
-        // terminate が必要な component とインターフェイスを合わせるために必要
+        // WorkerComponent とインターフェイスを合わせるために必要
     }
     trigger(operation: PasswordResetSessionComponentOperation): Promise<void> {
         switch (operation.type) {
@@ -106,46 +105,47 @@ class Component implements PasswordResetSessionComponent {
 class WorkerComponent implements PasswordResetSessionComponent {
     worker: WorkerHolder
 
+    listener: {
+        passwordResetSession: Post<PasswordResetSessionState>[]
+        loginID: Post<LoginIDFieldState>[]
+    }
+
     constructor(init: WorkerInit) {
-        this.worker = { set: false, stack: [], init }
+        this.worker = { set: false, init }
+        this.listener = {
+            passwordResetSession: [],
+            loginID: [],
+        }
     }
 
     onStateChange(stateChanged: Post<PasswordResetSessionState>): void {
-        if (!this.worker.set) {
-            const instance = this.initWorker(this.worker.init, this.worker.stack, (state) => {
-                stateChanged(state)
-            })
-            this.worker = { set: true, instance }
-        }
+        this.listener.passwordResetSession.push(stateChanged)
     }
-    initWorker(init: WorkerInit, stack: WorkerSetup[], stateChanged: Post<PasswordResetSessionState>): Worker {
-        const worker = init()
-        worker.addEventListener("message", (event) => {
-            const state = event.data as PasswordResetSessionWorkerState
-            if (state.type === "password_login") {
-                stateChanged(state.state)
-            }
-        })
-        stack.forEach((setup) => {
-            setup(worker)
-        })
-        return worker
-    }
-
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
-        if (this.worker.set) {
-            setup(this.worker.instance)
-        } else {
-            this.worker.stack.push(setup)
-        }
+        this.listener.loginID.push(stateChanged)
+    }
 
-        function setup(worker: Worker): void {
-            worker.addEventListener("message", (event) => {
+    init(): void {
+        if (!this.worker.set) {
+            const instance = this.worker.init()
+
+            instance.addEventListener("message", (event) => {
                 const state = event.data as PasswordResetSessionWorkerState
-                if (state.type === "field-login_id") {
-                    stateChanged(state.state)
+                switch (state.type) {
+                    case "password_reset_session":
+                        this.listener.passwordResetSession.forEach(post => post(state.state))
+                        return
+
+                    case "field-login_id":
+                        this.listener.loginID.forEach(post => post(state.state))
+                        return
+
+                    default:
+                        assertNever(state)
                 }
             })
+
+            this.worker = { set: true, instance }
         }
     }
 
@@ -162,8 +162,23 @@ class WorkerComponent implements PasswordResetSessionComponent {
     }
 }
 
+function mapStartSessionEvent(event: StartSessionEvent): PasswordResetSessionState {
+    switch (event.type) {
+        case "try-to-start-session":
+        case "delayed-to-start-session":
+        case "failed-to-start-session":
+            return event
+
+        case "succeed-to-start-session":
+            return { type: "try-to-polling-status" }
+    }
+}
+function mapPollingStatusEvent(event: PollingStatusEvent): PasswordResetSessionState {
+    return event
+}
+
 function mapPasswordResetSessionState(state: PasswordResetSessionState): PasswordResetSessionWorkerState {
-    return { type: "password_login", state }
+    return { type: "password_reset_session", state }
 }
 function mapLoginIDFieldState(state: LoginIDFieldState): PasswordResetSessionWorkerState {
     return { type: "field-login_id", state }
@@ -174,12 +189,13 @@ interface Post<T> {
 }
 
 type WorkerHolder =
-    Readonly<{ set: false, stack: WorkerSetup[], init: WorkerInit }> |
+    Readonly<{ set: false, init: WorkerInit }> |
     Readonly<{ set: true, instance: Worker }>
 
 interface WorkerInit {
     (): Worker
 }
-interface WorkerSetup {
-    (worker: Worker): void
+
+function assertNever(_: never): never {
+    throw new Error("NEVER")
 }

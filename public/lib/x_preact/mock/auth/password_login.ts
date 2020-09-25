@@ -119,9 +119,6 @@ class Component implements PasswordLoginComponent {
         this.password = password
     }
 
-    hook(_stateChanged: Post<PasswordLoginState>): void {
-        // mock では特に何もしない
-    }
     onStateChange(stateChanged: Post<PasswordLoginState>): void {
         stateChanged(this.state)
     }
@@ -130,6 +127,10 @@ class Component implements PasswordLoginComponent {
     }
     onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void {
         stateChanged(this.password)
+    }
+
+    init(): void {
+        // mock では特に何もしない
     }
     terminate(): void {
         // mock では特に何もしない
