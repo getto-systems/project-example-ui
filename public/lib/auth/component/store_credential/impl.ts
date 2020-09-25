@@ -1,6 +1,8 @@
-import { StoreCredentialComponent, StoreCredentialComponentAction } from "./component"
-
-import { StoreCredentialState } from "./data"
+import {
+    StoreCredentialComponentAction,
+    StoreCredentialComponent,
+    StoreCredentialState,
+} from "../store_credential"
 
 import { AuthCredential, StoreEvent } from "../../../credential/data"
 

@@ -1,5 +1,5 @@
 import { RenewCredentialComponent } from "./component/renew_credential"
-import { StoreCredentialComponent } from "./component/store_credential/component"
+import { StoreCredentialComponent } from "./component/store_credential"
 import { LoadApplicationComponent } from "./component/load_application"
 
 import { PasswordLoginComponent } from "./component/password_login"
