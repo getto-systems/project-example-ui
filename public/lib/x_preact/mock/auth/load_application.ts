@@ -2,7 +2,7 @@ import {
     LoadApplicationComponent,
     LoadApplicationState,
     LoadApplicationComponentOperation,
-} from "../../../auth/component/load_application"
+} from "../../../auth/component/load_application/component"
 
 export function newLoadApplicationComponent(): LoadApplicationComponent {
     return new Component(new Init().failedToLoad_not_found())

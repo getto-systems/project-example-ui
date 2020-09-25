@@ -1,14 +1,14 @@
-import { LoginIDFieldState } from "./field/login_id"
-import { PasswordFieldState } from "./field/password"
+import { LoginIDFieldState } from "../field/login_id/component"
+import { PasswordFieldState } from "../field/password/component"
 
-import { PasswordResetAction } from "../../password_reset/action"
-import { LoginIDFieldAction } from "../../field/login_id/action"
-import { PasswordFieldAction } from "../../field/password/action"
+import { PasswordResetAction } from "../../../password_reset/action"
+import { LoginIDFieldAction } from "../../../field/login_id/action"
+import { PasswordFieldAction } from "../../../field/password/action"
 
-import { AuthCredential } from "../../credential/data"
-import { ResetToken, ResetError } from "../../password_reset/data"
-import { LoginIDFieldOperation } from "../../field/login_id/data"
-import { PasswordFieldOperation } from "../../field/password/data"
+import { AuthCredential } from "../../../credential/data"
+import { ResetToken, ResetError } from "../../../password_reset/data"
+import { LoginIDFieldOperation } from "../../../field/login_id/data"
+import { PasswordFieldOperation } from "../../../field/password/data"
 
 export interface PasswordResetComponent {
     hook(stateChanged: Post<PasswordResetState>): void

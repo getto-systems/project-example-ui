@@ -3,7 +3,7 @@ import {
     LoadApplicationComponentAction,
     LoadApplicationState,
     LoadApplicationComponentOperation,
-} from "../load_application"
+} from "../load_application/component"
 
 import { PagePathname, ScriptEvent } from "../../../script/data"
 
