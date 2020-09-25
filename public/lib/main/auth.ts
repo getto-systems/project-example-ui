@@ -13,7 +13,6 @@ import { initAuthUsecase } from "../auth/impl/core"
 import { initStorageAuthCredentialRepository } from "../auth/impl/repository/auth_credential/storage"
 
 import { initRenewCredentialComponent } from "../auth/component/renew_credential/impl"
-import { initStoreCredentialComponent } from "../auth/component/store_credential/impl"
 
 import { initStorageAuthCredentialRepository as initCredentialRepository } from "../credential/impl/repository/credential/storage"
 import { initFetchRenewClient } from "../credential/impl/client/renew/fetch"
@@ -36,8 +35,6 @@ export function newAuthUsecase(currentLocation: Location): AuthUsecase {
         }),
     }, currentLocation, {
         renewCredential: initRenewCredentialComponent({ credential }),
-        storeCredential: initStoreCredentialComponent({ credential }),
-
         loadApplication: newLoadApplicationComponent(),
 
         passwordLogin: newPasswordLoginComponent(),

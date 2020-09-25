@@ -5,8 +5,6 @@ import { packResetToken } from "../../password_reset/adapter"
 import { AuthUsecase, AuthComponent, AuthState } from "../usecase"
 import { Infra } from "../infra"
 
-import { RenewCredentialParam } from "../component/renew_credential/component"
-
 import { AuthCredential } from "../../credential/data"
 
 export function initAuthUsecase(infra: Infra, currentLocation: Location, component: AuthComponent): AuthUsecase {
@@ -15,16 +13,16 @@ export function initAuthUsecase(infra: Infra, currentLocation: Location, compone
 
 class Usecase implements AuthUsecase {
     infra: Infra
+    listener: Post<AuthState>[]
 
-    holder: StateHolder
     component: AuthComponent
 
     currentLocation: Location
 
     constructor(infra: Infra, currentLocation: Location, component: AuthComponent) {
         this.infra = infra
+        this.listener = []
 
-        this.holder = { set: false, stack: false }
         this.component = component
 
         this.currentLocation = currentLocation
@@ -35,16 +33,8 @@ class Usecase implements AuthUsecase {
                     this.tryToLogin()
                     return
 
-                case "succeed-to-store":
-                    this.loadApplication()
-                    return
-            }
-        })
-
-        this.component.storeCredential.onStateChange((state) => {
-            switch (state.type) {
-                case "succeed-to-store":
-                    this.loadApplication()
+                case "succeed-to-renew":
+                    this.storeCredential(state.authCredential)
                     return
             }
         })
@@ -66,11 +56,8 @@ class Usecase implements AuthUsecase {
         })
     }
 
-    onStateChange(post: Post<AuthState>): void {
-        if (this.holder.stack) {
-            post(this.holder.state)
-        }
-        this.holder = { set: true, stack: false, post }
+    onStateChange(stateChanged: Post<AuthState>): void {
+        this.listener.push(stateChanged)
     }
 
     init(): void {
@@ -84,30 +71,29 @@ class Usecase implements AuthUsecase {
             return
         }
 
-        this.tryToRenew(packRenewCredentialParam(found.content))
+        this.post({ type: "renew-credential", param: packRenewCredentialParam(found.content) })
     }
     terminate(): void {
         // component とインターフェイスを合わせるために必要
     }
 
     post(state: AuthState): void {
-        if (this.holder.set) {
-            this.holder.post(state)
-        } else {
-            this.holder = { set: false, stack: true, state }
-        }
+        this.listener.forEach(post => post(state))
     }
 
-    async tryToRenew(param: RenewCredentialParam): Promise<void> {
-        this.post({ type: "renew-credential", param })
-    }
-    async storeCredential(authCredential: AuthCredential): Promise<void> {
-        this.post({ type: "store-credential", authCredential })
-    }
-    async tryToLogin(): Promise<void> {
+    tryToLogin(): void {
         this.post(loginState(this.currentLocation))
     }
-    async loadApplication(): Promise<void> {
+
+    storeCredential(authCredential: AuthCredential): void {
+        const response = this.infra.authCredentials.storeAuthCredential(authCredential)
+        if (!response.success) {
+            this.post({ type: "failed-to-store", err: response.err })
+            return
+        }
+
+        this.component.renewCredential.trigger({ type: "set-renew-interval", ticketNonce: authCredential.ticketNonce })
+
         this.post({ type: "load-application" })
     }
 }
@@ -128,11 +114,6 @@ function loginState(currentLocation: Location): AuthState {
     // 特に指定が無ければパスワードログイン
     return { type: "password-login" }
 }
-
-type StateHolder =
-    Readonly<{ set: false, stack: false }> |
-    Readonly<{ set: false, stack: true, state: AuthState }> |
-    Readonly<{ set: true, stack: false, post: Post<AuthState> }>
 
 interface Post<T> {
     (state: T): void

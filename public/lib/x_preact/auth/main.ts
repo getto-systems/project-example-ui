@@ -6,7 +6,6 @@ import { ApplicationError } from "./application_error"
 import { ErrorView } from "./layout"
 
 import { RenewCredential } from "./renew_credential"
-import { StoreCredential } from "./store_credential"
 import { LoadApplication } from "./load_application"
 
 import { PasswordLogin } from "./password_login"
@@ -39,9 +38,6 @@ export function Main(usecase: AuthUsecase) {
 
             case "renew-credential":
                 return h(RenewCredential(usecase.component.renewCredential), { param: state.param })
-
-            case "store-credential":
-                return h(StoreCredential(usecase.component.storeCredential, state.authCredential), {})
 
             case "load-application":
                 return h(LoadApplication(usecase.component.loadApplication), {})
