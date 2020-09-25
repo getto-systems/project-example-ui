@@ -21,10 +21,10 @@ class Component implements StoreCredentialComponent {
         this.state = state
     }
 
-    hook(_stateChanged: Dispatcher<StoreCredentialState>): void {
+    hook(_stateChanged: Post<StoreCredentialState>): void {
         // mock では特に何もしない
     }
-    onStateChange(stateChanged: Dispatcher<StoreCredentialState>): void {
+    onStateChange(stateChanged: Post<StoreCredentialState>): void {
         stateChanged(this.state)
     }
     terminate(): void {
@@ -36,6 +36,6 @@ class Component implements StoreCredentialComponent {
     }
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }

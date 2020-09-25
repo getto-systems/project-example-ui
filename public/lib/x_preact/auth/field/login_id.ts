@@ -22,7 +22,7 @@ export function loginIDFieldError(result: Valid<LoginIDFieldError>): VNode[] {
     })
 }
 
-export function onLoginIDInput(component: FormComponent): Dispatcher<InputEvent> {
+export function onLoginIDInput(component: FormComponent): Post<InputEvent> {
     return (e: InputEvent): void => {
         if (e.target instanceof HTMLInputElement) {
             setLoginID(component, initInputValue(e.target.value))
@@ -38,6 +38,6 @@ interface FormComponent {
     trigger(operation: LoginIDFieldOperation): Promise<void>
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }

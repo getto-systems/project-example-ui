@@ -13,13 +13,13 @@ export interface LoginIDField {
 }
 
 export interface LoginIDFieldEventPublisher {
-    dispatchLoginIDFieldEvent(event: LoginIDFieldEvent): void
+    postLoginIDFieldEvent(event: LoginIDFieldEvent): void
 }
 
 export interface LoginIDFieldEventSubscriber {
-    onLoginIDFieldEvent(dispatch: Dispatcher<LoginIDFieldEvent>): void
+    onLoginIDFieldEvent(post: Post<LoginIDFieldEvent>): void
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }

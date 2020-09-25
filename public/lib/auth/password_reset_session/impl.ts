@@ -59,7 +59,7 @@ class Component implements PasswordResetSessionComponent {
         })
     }
 
-    onStateChange(stateChanged: Dispatcher<PasswordResetSessionState>): void {
+    onStateChange(stateChanged: Post<PasswordResetSessionState>): void {
         this.action.passwordReset.sub.onStartSessionEvent((event) => {
             stateChanged(map(event, this.action))
 
@@ -84,7 +84,7 @@ class Component implements PasswordResetSessionComponent {
             }
         })
     }
-    onLoginIDFieldStateChange(stateChanged: Dispatcher<LoginIDFieldState>): void {
+    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
         this.field.loginID.sub.onLoginIDFieldEvent(stateChanged)
     }
     terminate(): void {
@@ -113,7 +113,7 @@ class WorkerComponent implements PasswordResetSessionComponent {
         this.worker = { set: false, stack: [], init }
     }
 
-    onStateChange(stateChanged: Dispatcher<PasswordResetSessionState>): void {
+    onStateChange(stateChanged: Post<PasswordResetSessionState>): void {
         if (!this.worker.set) {
             const instance = this.initWorker(this.worker.init, this.worker.stack, (state) => {
                 stateChanged(state)
@@ -121,7 +121,7 @@ class WorkerComponent implements PasswordResetSessionComponent {
             this.worker = { set: true, instance }
         }
     }
-    initWorker(init: WorkerInit, stack: WorkerSetup[], stateChanged: Dispatcher<PasswordResetSessionState>): Worker {
+    initWorker(init: WorkerInit, stack: WorkerSetup[], stateChanged: Post<PasswordResetSessionState>): Worker {
         const worker = init()
         worker.addEventListener("message", (event) => {
             const state = event.data as PasswordResetSessionWorkerState
@@ -135,7 +135,7 @@ class WorkerComponent implements PasswordResetSessionComponent {
         return worker
     }
 
-    onLoginIDFieldStateChange(stateChanged: Dispatcher<LoginIDFieldState>): void {
+    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
         if (this.worker.set) {
             setup(this.worker.instance)
         } else {
@@ -172,7 +172,7 @@ function mapLoginIDFieldState(state: LoginIDFieldState): PasswordResetSessionWor
     return { type: "field-login_id", state }
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }
 

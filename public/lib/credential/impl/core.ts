@@ -27,15 +27,15 @@ class Action implements CredentialAction {
     }
 
     async renew(): Promise<void> {
-        const dispatch = (event: RenewEvent) => this.pub.dispatchRenewEvent(event)
+        const post = (event: RenewEvent) => this.pub.postRenewEvent(event)
 
         const found = this.infra.authCredentials.findTicketNonce()
         if (!found.success) {
-            dispatch({ type: "failed-to-fetch", err: found.err })
+            post({ type: "failed-to-fetch", err: found.err })
             return
         }
         if (!found.found) {
-            dispatch({ type: "required-to-login" })
+            post({ type: "required-to-login" })
             return
         }
 
@@ -43,14 +43,14 @@ class Action implements CredentialAction {
         const response = await delayed(
             this.infra.renewClient.renew(found.ticketNonce),
             this.infra.timeConfig.renewDelayTime,
-            () => dispatch({ type: "delayed-to-renew" }),
+            () => post({ type: "delayed-to-renew" }),
         )
         if (!response.success) {
-            dispatch({ type: "failed-to-renew", err: response.err })
+            post({ type: "failed-to-renew", err: response.err })
             return
         }
         if (!response.hasCredential) {
-            dispatch({ type: "required-to-login" })
+            post({ type: "required-to-login" })
             return
         }
 
@@ -58,14 +58,14 @@ class Action implements CredentialAction {
     }
 
     async store(authCredential: AuthCredential): Promise<void> {
-        const dispatch = (event: StoreEvent) => this.pub.dispatchStoreEvent(event)
+        const post = (event: StoreEvent) => this.pub.postStoreEvent(event)
 
         const response = this.infra.authCredentials.storeAuthCredential(authCredential)
         if (!response.success) {
-            dispatch({ type: "failed-to-store", err: response.err })
+            post({ type: "failed-to-store", err: response.err })
             return
         }
-        dispatch({ type: "succeed-to-store" })
+        post({ type: "succeed-to-store" })
 
         this.setRenewInterval(authCredential.ticketNonce)
     }
@@ -94,8 +94,8 @@ class Action implements CredentialAction {
 
 class EventPubSub implements CredentialEventPublisher, CredentialEventSubscriber {
     listener: {
-        renew: Dispatcher<RenewEvent>[]
-        store: Dispatcher<StoreEvent>[]
+        renew: Post<RenewEvent>[]
+        store: Post<StoreEvent>[]
     }
 
     constructor() {
@@ -105,24 +105,24 @@ class EventPubSub implements CredentialEventPublisher, CredentialEventSubscriber
         }
     }
 
-    onRenew(dispatch: Dispatcher<RenewEvent | StoreEvent>): void {
+    onRenew(post: Post<RenewEvent | StoreEvent>): void {
         // renew は同時に store も呼び出す
-        this.listener.renew.push(dispatch)
-        this.listener.store.push(dispatch)
+        this.listener.renew.push(post)
+        this.listener.store.push(post)
     }
-    onStore(dispatch: Dispatcher<StoreEvent>): void {
-        this.listener.store.push(dispatch)
+    onStore(post: Post<StoreEvent>): void {
+        this.listener.store.push(post)
     }
 
-    dispatchRenewEvent(event: RenewEvent): void {
-        this.listener.renew.forEach(dispatch => dispatch(event))
+    postRenewEvent(event: RenewEvent): void {
+        this.listener.renew.forEach(post => post(event))
     }
-    dispatchStoreEvent(event: StoreEvent): void {
-        this.listener.store.forEach(dispatch => dispatch(event))
+    postStoreEvent(event: StoreEvent): void {
+        this.listener.store.forEach(post => post(event))
     }
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }
 

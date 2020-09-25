@@ -15,13 +15,13 @@ export interface PasswordField {
 }
 
 export interface PasswordFieldEventPublisher {
-    dispatchPasswordFieldEvent(event: PasswordFieldEvent): void
+    postPasswordFieldEvent(event: PasswordFieldEvent): void
 }
 
 export interface PasswordFieldEventSubscriber {
-    onPasswordFieldEvent(dispatch: Dispatcher<PasswordFieldEvent>): void
+    onPasswordFieldEvent(post: Post<PasswordFieldEvent>): void
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }

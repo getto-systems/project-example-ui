@@ -11,17 +11,17 @@ export interface PasswordResetAction {
 }
 
 export interface PasswordResetEventPublisher {
-    dispatchStartSessionEvent(event: StartSessionEvent): void
-    dispatchPollingStatusEvent(event: PollingStatusEvent): void
-    dispatchResetEvent(event: ResetEvent): void
+    postStartSessionEvent(event: StartSessionEvent): void
+    postPollingStatusEvent(event: PollingStatusEvent): void
+    postResetEvent(event: ResetEvent): void
 }
 
 export interface PasswordResetEventSubscriber {
-    onStartSessionEvent(stateChanged: Dispatcher<StartSessionEvent>): void
-    onPollingStatusEvent(stateChanged: Dispatcher<PollingStatusEvent>): void
-    onResetEvent(stateChanged: Dispatcher<ResetEvent>): void
+    onStartSessionEvent(stateChanged: Post<StartSessionEvent>): void
+    onPollingStatusEvent(stateChanged: Post<PollingStatusEvent>): void
+    onResetEvent(stateChanged: Post<ResetEvent>): void
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }

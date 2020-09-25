@@ -11,7 +11,7 @@ interface PreactComponent {
 }
 
 interface FormComponent {
-    onLoginIDFieldStateChange(stateChanged: Dispatcher<LoginIDFieldState>): void
+    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
     trigger(operation: LoginIDFieldOperation): Promise<void>
 }
 
@@ -37,6 +37,6 @@ export function LoginIDField(component: FormComponent): PreactComponent {
     }
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }

@@ -25,10 +25,10 @@ class Action implements ScriptAction {
     }
 
     async load(pagePathname: PagePathname): Promise<void> {
-        const dispatch = (event: ScriptEvent) => this.pub.dispatchScriptEvent(event)
+        const post = (event: ScriptEvent) => this.pub.postScriptEvent(event)
 
         const scriptPath = secureScriptPath(this.infra.hostConfig.secureServerHost, pagePathname)
-        dispatch({ type: "try-to-load", scriptPath })
+        post({ type: "try-to-load", scriptPath })
     }
 }
 
@@ -39,7 +39,7 @@ function secureScriptPath(secureHost: string, pagePathname: PagePathname): Scrip
 
 class EventPubSub implements ScriptEventPublisher, ScriptEventSubscriber {
     listener: {
-        script: Dispatcher<ScriptEvent>[]
+        script: Post<ScriptEvent>[]
     }
 
     constructor() {
@@ -48,15 +48,15 @@ class EventPubSub implements ScriptEventPublisher, ScriptEventSubscriber {
         }
     }
 
-    onScriptEvent(dispatch: Dispatcher<ScriptEvent>): void {
-        this.listener.script.push(dispatch)
+    onScriptEvent(post: Post<ScriptEvent>): void {
+        this.listener.script.push(post)
     }
 
-    dispatchScriptEvent(event: ScriptEvent): void {
-        this.listener.script.forEach(dispatch => dispatch(event))
+    postScriptEvent(event: ScriptEvent): void {
+        this.listener.script.forEach(post => post(event))
     }
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }

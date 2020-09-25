@@ -11,7 +11,7 @@ export type PasswordFieldOperation =
     Readonly<{ type: "field-password", operation: { type: "show-password" } }> |
     Readonly<{ type: "field-password", operation: { type: "hide-password" } }>
 
-export function onPasswordInput(component: FormComponent): Dispatcher<InputEvent> {
+export function onPasswordInput(component: FormComponent): Post<InputEvent> {
     return (e: InputEvent): void => {
         if (e.target instanceof HTMLInputElement) {
             setPassword(component, initInputValue(e.target.value))
@@ -104,6 +104,6 @@ interface FormComponent {
     trigger(operation: PasswordFieldOperation): Promise<void>
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }

@@ -32,7 +32,7 @@ export function initPasswordLoginWorkerComponentHelper(): PasswordLoginWorkerCom
 class Component implements PasswordLoginComponent {
     action: PasswordLoginComponentAction
 
-    listener: Dispatcher<PasswordLoginState>[]
+    listener: Post<PasswordLoginState>[]
 
     field: {
         loginID: LoginIDField
@@ -67,13 +67,13 @@ class Component implements PasswordLoginComponent {
         })
     }
 
-    hook(dispatch: Dispatcher<PasswordLoginState>): void {
-        this.listener.push(dispatch)
+    hook(post: Post<PasswordLoginState>): void {
+        this.listener.push(post)
     }
-    onStateChange(stateChanged: Dispatcher<PasswordLoginState>): void {
+    onStateChange(stateChanged: Post<PasswordLoginState>): void {
         this.action.passwordLogin.sub.onLoginEvent((event) => {
             const state = map(event)
-            this.listener.forEach(dispatch => dispatch(state))
+            this.listener.forEach(post => post(state))
             stateChanged(state)
 
             function map(event: LoginEvent): PasswordLoginState {
@@ -81,10 +81,10 @@ class Component implements PasswordLoginComponent {
             }
         })
     }
-    onLoginIDFieldStateChange(stateChanged: Dispatcher<LoginIDFieldState>): void {
+    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
         this.field.loginID.sub.onLoginIDFieldEvent(stateChanged)
     }
-    onPasswordFieldStateChange(stateChanged: Dispatcher<PasswordFieldState>): void {
+    onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void {
         this.field.password.sub.onPasswordFieldEvent(stateChanged)
     }
     terminate(): void {
@@ -116,27 +116,27 @@ class Component implements PasswordLoginComponent {
 
 class WorkerComponent implements PasswordLoginComponent {
     worker: WorkerHolder
-    listener: Dispatcher<PasswordLoginState>[]
+    listener: Post<PasswordLoginState>[]
 
     constructor(init: WorkerInit) {
         this.worker = { set: false, stack: [], init }
         this.listener = []
     }
 
-    hook(dispatch: Dispatcher<PasswordLoginState>): void {
-        this.listener.push(dispatch)
+    hook(post: Post<PasswordLoginState>): void {
+        this.listener.push(post)
     }
-    onStateChange(stateChanged: Dispatcher<PasswordLoginState>): void {
+    onStateChange(stateChanged: Post<PasswordLoginState>): void {
         if (!this.worker.set) {
             const instance = this.initWorker(this.worker.init, this.worker.stack, (state) => {
-                this.listener.forEach(dispatch => dispatch(state))
+                this.listener.forEach(post => post(state))
                 stateChanged(state)
             })
 
             this.worker = { set: true, instance }
         }
     }
-    initWorker(init: WorkerInit, stack: WorkerSetup[], stateChanged: Dispatcher<PasswordLoginState>): Worker {
+    initWorker(init: WorkerInit, stack: WorkerSetup[], stateChanged: Post<PasswordLoginState>): Worker {
         const worker = init()
         worker.addEventListener("message", (event) => {
             const state = event.data as PasswordLoginWorkerState
@@ -150,7 +150,7 @@ class WorkerComponent implements PasswordLoginComponent {
         return worker
     }
 
-    onLoginIDFieldStateChange(stateChanged: Dispatcher<LoginIDFieldState>): void {
+    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
         if (this.worker.set) {
             setup(this.worker.instance)
         } else {
@@ -166,7 +166,7 @@ class WorkerComponent implements PasswordLoginComponent {
             })
         }
     }
-    onPasswordFieldStateChange(stateChanged: Dispatcher<PasswordFieldState>): void {
+    onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void {
         if (this.worker.set) {
             setup(this.worker.instance)
         } else {
@@ -206,7 +206,7 @@ function mapPasswordFieldState(state: PasswordFieldState): PasswordLoginWorkerSt
     return { type: "field-password", state }
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }
 

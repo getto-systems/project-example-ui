@@ -9,13 +9,13 @@ export interface PasswordLoginAction {
 }
 
 export interface PasswordLoginEventPublisher {
-    dispatchLoginEvent(event: LoginEvent): void
+    postLoginEvent(event: LoginEvent): void
 }
 
 export interface PasswordLoginEventSubscriber {
-    onLoginEvent(stateChanged: Dispatcher<LoginEvent>): void
+    onLoginEvent(stateChanged: Post<LoginEvent>): void
 }
 
-interface Dispatcher<T> {
+interface Post<T> {
     (state: T): void
 }
