@@ -38,8 +38,8 @@ class Component implements RenewCredentialComponent {
         this.listener.push(stateChanged)
     }
 
-    init(): void {
-        // WorkerComponent とインターフェイスを合わせるために必要
+    init(): Terminate {
+        return () => this.terminate()
     }
     terminate(): void {
         // WorkerComponent とインターフェイスを合わせるために必要
@@ -80,4 +80,8 @@ function unwrap<T>(param: Param<T>): T {
         throw new Error("not initialized")
     }
     return param.param
+}
+
+interface Terminate {
+    (): void
 }

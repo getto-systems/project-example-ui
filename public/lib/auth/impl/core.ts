@@ -59,7 +59,11 @@ class Usecase implements AuthUsecase {
         this.listener.push(stateChanged)
     }
 
-    init(): void {
+    init(): Terminate {
+        this.initUsecase()
+        return () => this.terminate()
+    }
+    initUsecase(): void {
         const found = this.infra.authCredentials.findTicketNonce()
         if (!found.success) {
             this.post({ type: "failed-to-fetch", err: found.err })
@@ -104,4 +108,8 @@ class Usecase implements AuthUsecase {
 
 interface Post<T> {
     (state: T): void
+}
+
+interface Terminate {
+    (): void
 }

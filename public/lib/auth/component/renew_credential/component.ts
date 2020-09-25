@@ -4,8 +4,7 @@ import { AuthCredential, TicketNonce, RenewError } from "../../../credential/dat
 
 export interface RenewCredentialComponent {
     onStateChange(stateChanged: Post<RenewCredentialState>): void
-    init(): void
-    terminate(): void
+    init(): Terminate
     trigger(operation: RenewCredentialOperation): Promise<void>
 }
 
@@ -33,4 +32,8 @@ export interface RenewCredentialComponentAction {
 
 interface Post<T> {
     (state: T): void
+}
+
+interface Terminate {
+    (): void
 }

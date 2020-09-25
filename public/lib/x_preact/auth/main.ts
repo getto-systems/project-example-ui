@@ -24,16 +24,15 @@ export function Main(props: Props): VNode {
         console.log(err)
     })
 
-    const [state, setState] = useState(initialAuthState)
-    useEffect(() => {
-        props.usecase.onStateChange(setState)
-        props.usecase.init()
-        return () => props.usecase.terminate()
-    }, [])
-
     if (error) {
         return h(ApplicationError, {})
     }
+
+    const [state, setState] = useState(initialAuthState)
+    useEffect(() => {
+        props.usecase.onStateChange(setState)
+        return props.usecase.init()
+    }, [])
 
     switch (state.type) {
         case "initial":

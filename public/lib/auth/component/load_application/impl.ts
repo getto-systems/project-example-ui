@@ -40,8 +40,8 @@ class Component implements LoadApplicationComponent {
         this.listener.push(stateChanged)
     }
 
-    init(): void {
-        // WorkerComponent とインターフェイスを合わせるために必要
+    init(): Terminate {
+        return () => this.terminate()
     }
     terminate(): void {
         // WorkerComponent とインターフェイスを合わせるために必要
@@ -78,7 +78,12 @@ class WorkerComponent implements LoadApplicationComponent {
         this.listener.push(stateChanged)
     }
 
-    init(): void {
+    init(): Terminate {
+        this.initComponent()
+        return () => this.terminate()
+    }
+
+    initComponent(): void {
         if (!this.worker.set) {
             const instance = this.worker.init()
 
@@ -90,7 +95,6 @@ class WorkerComponent implements LoadApplicationComponent {
             this.worker = { set: true, instance }
         }
     }
-
     terminate(): void {
         if (this.worker.set) {
             this.worker.instance.terminate()
@@ -129,4 +133,8 @@ function unwrap<T>(param: Param<T>): T {
         throw new Error("not initialized")
     }
     return param.param
+}
+
+interface Terminate {
+    (): void
 }

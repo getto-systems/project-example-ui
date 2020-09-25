@@ -100,25 +100,30 @@ class Component implements PasswordResetSessionComponent {
         stateChanged(this.loginID)
     }
 
-    init(): void {
-        // mock では特に何もしない
+    init(): Terminate {
+        return () => this.terminate()
     }
     terminate(): void {
         // mock では特に何もしない
     }
-    trigger(operation: PasswordResetSessionComponentOperation): Promise<void> {
+
+    async trigger(operation: PasswordResetSessionComponentOperation): Promise<void> {
         switch (operation.type) {
             case "start-session":
                 alert("ここでセッションを作成！")
-                return Promise.resolve()
+                return
 
             case "field-login_id":
                 // field のイベントは特にフィードバックしない
-                return Promise.resolve()
+                return
         }
     }
 }
 
 interface Post<T> {
     (state: T): void
+}
+
+interface Terminate {
+    (): void
 }

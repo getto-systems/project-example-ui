@@ -80,8 +80,8 @@ class Component implements PasswordResetSessionComponent {
         this.field.loginID.sub.onLoginIDFieldEvent(stateChanged)
     }
 
-    init(): void {
-        // WorkerComponent とインターフェイスを合わせるために必要
+    init(): Terminate {
+        return () => this.terminate()
     }
     terminate(): void {
         // WorkerComponent とインターフェイスを合わせるために必要
@@ -125,7 +125,11 @@ class WorkerComponent implements PasswordResetSessionComponent {
         this.listener.loginID.push(stateChanged)
     }
 
-    init(): void {
+    init(): Terminate {
+        this.initComponent()
+        return () => this.terminate()
+    }
+    initComponent(): void {
         if (!this.worker.set) {
             const instance = this.worker.init()
 
@@ -148,7 +152,6 @@ class WorkerComponent implements PasswordResetSessionComponent {
             this.worker = { set: true, instance }
         }
     }
-
     terminate(): void {
         if (this.worker.set) {
             this.worker.instance.terminate()
@@ -194,6 +197,10 @@ type WorkerHolder =
 
 interface WorkerInit {
     (): Worker
+}
+
+interface Terminate {
+    (): void
 }
 
 function assertNever(_: never): never {

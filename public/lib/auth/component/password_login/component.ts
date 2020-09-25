@@ -14,8 +14,7 @@ export interface PasswordLoginComponent {
     onStateChange(stateChanged: Post<PasswordLoginState>): void
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
     onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void
-    init(): void
-    terminate(): void
+    init(): Terminate
     trigger(operation: PasswordLoginComponentOperation): Promise<void>
 }
 
@@ -52,4 +51,8 @@ export interface PasswordLoginComponentAction {
 
 interface Post<T> {
     (state: T): void
+}
+
+interface Terminate {
+    (): void
 }
