@@ -2,8 +2,8 @@ import { h, VNode } from "preact"
 import { html } from "htm/preact"
 import { useState, useEffect, useErrorBoundary } from "preact/hooks"
 
-import { ApplicationError } from "./application_error"
-import { loginError } from "./layout"
+import { loginError } from "../layout"
+import { ApplicationError } from "../application_error"
 
 import { RenewCredential } from "./renew_credential"
 import { LoadApplication } from "./load_application"
@@ -25,7 +25,7 @@ export function Main(props: Props): VNode {
     })
 
     if (error) {
-        return h(ApplicationError, {})
+        return h(ApplicationError, { err: `${error}` })
     }
 
     const [state, setState] = useState(initialAuthState)

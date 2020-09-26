@@ -22,7 +22,8 @@ export type PasswordResetSessionState =
     Readonly<{ type: "retry-to-polling-status", dest: Destination, status: PollingStatus }> |
     Readonly<{ type: "failed-to-polling-status", err: PollingStatusError }> |
     Readonly<{ type: "failed-to-send-token", dest: Destination, err: SendTokenError }> |
-    Readonly<{ type: "succeed-to-send-token", dest: Destination }>
+    Readonly<{ type: "succeed-to-send-token", dest: Destination }> |
+    Readonly<{ type: "error", err: string }>
 
 export const initialPasswordResetSessionState: PasswordResetSessionState = { type: "initial-reset-session" }
 

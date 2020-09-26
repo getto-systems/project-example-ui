@@ -2,7 +2,9 @@ import { h, VNode } from "preact"
 import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { loginHeader, loginError } from "./layout"
+import { loginHeader, loginError } from "../layout"
+import { ApplicationError } from "../application_error"
+
 import { LoginIDField } from "./password_reset_session/field/login_id"
 
 import { TopLink } from "../../link"
@@ -133,6 +135,9 @@ export function PasswordResetSession(props: Props): VNode {
                     ${loginLink(props.link)}
                 </section>
             `)
+
+        case "error":
+            return h(ApplicationError, { err: state.err })
     }
 
     function startSessionButton() {

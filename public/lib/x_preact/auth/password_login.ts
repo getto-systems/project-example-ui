@@ -2,7 +2,9 @@ import { h, VNode } from "preact"
 import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { loginHeader } from "./layout"
+import { loginHeader } from "../layout"
+import { ApplicationError } from "../application_error"
+
 import { LoginIDField } from "./password_login/field/login_id"
 import { PasswordField } from "./password_login/field/password"
 
@@ -83,7 +85,10 @@ export function PasswordLogin(props: Props): VNode {
             `)
 
         case "succeed-to-login":
-            return html``
+            return EMPTY_CONTENT
+
+        case "error":
+            return h(ApplicationError, { err: state.err })
     }
 
     function loginButton() {
@@ -153,3 +158,5 @@ function loginError(err: LoginError): VNode {
 interface Handler<T> {
     (event: T): void
 }
+
+const EMPTY_CONTENT = html``

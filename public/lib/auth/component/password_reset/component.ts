@@ -29,7 +29,8 @@ export type PasswordResetState =
     Readonly<{ type: "try-to-reset" }> |
     Readonly<{ type: "delayed-to-reset" }> |
     Readonly<{ type: "failed-to-reset", err: ResetError }> |
-    Readonly<{ type: "succeed-to-reset", authCredential: AuthCredential }>
+    Readonly<{ type: "succeed-to-reset", authCredential: AuthCredential }> |
+    Readonly<{ type: "error", err: string }>
 
 export const initialPasswordResetState: PasswordResetState = { type: "initial-reset" }
 

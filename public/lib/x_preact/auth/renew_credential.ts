@@ -1,8 +1,9 @@
-import { VNode } from "preact"
+import { h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { loginError } from "./layout"
+import { loginError } from "../layout"
+import { ApplicationError } from "../application_error"
 
 import {
     RenewCredentialComponent,
@@ -51,6 +52,9 @@ export function RenewCredential(props: Props): VNode {
 
         case "failed-to-renew":
             return renewFailedContent(state.err)
+
+        case "error":
+            return h(ApplicationError, { err: state.err })
     }
 
     function delayedContent(): VNode {

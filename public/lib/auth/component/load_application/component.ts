@@ -17,7 +17,8 @@ export interface LoadApplicationParamPacker {
 export type LoadApplicationState =
     Readonly<{ type: "initial-load" }> |
     Readonly<{ type: "try-to-load", scriptPath: ScriptPath }> |
-    Readonly<{ type: "failed-to-load", err: CheckError }>
+    Readonly<{ type: "failed-to-load", err: CheckError }> |
+    Readonly<{ type: "error", err: string }>
 
 export const initialLoadApplicationState: LoadApplicationState = { type: "initial-load" }
 
