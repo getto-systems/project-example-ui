@@ -1,4 +1,17 @@
 import { AuthCredential } from "../credential/data"
+import { LoginID } from "../login_id/data"
+import { Password } from "../password/data"
+import { Content } from "../field/data"
+
+export type LoginContent = Readonly<{
+    loginID: Content<LoginID>
+    password: Content<Password>
+}>
+
+export type LoginFields = Readonly<{
+    loginID: LoginID
+    password: Password
+}>
 
 export type LoginEvent =
     Readonly<{ type: "try-to-login" }> |

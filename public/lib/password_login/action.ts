@@ -1,11 +1,8 @@
-import { LoginEvent } from "./data"
-import { LoginID } from "../login_id/data"
-import { Password } from "../password/data"
-import { Content } from "../field/data"
+import { LoginContent, LoginEvent } from "./data"
 
 export interface PasswordLoginAction {
     sub: PasswordLoginEventSubscriber
-    login(content: [Content<LoginID>, Content<Password>]): Promise<void>
+    login(content: LoginContent): Promise<void>
 }
 
 export interface PasswordLoginEventPublisher {

@@ -110,10 +110,7 @@ class Component implements PasswordLoginComponent {
         this.field.loginID.validate()
         this.field.password.validate()
 
-        return this.action.passwordLogin.login([
-            this.content.loginID,
-            this.content.password,
-        ])
+        return this.action.passwordLogin.login(this.content)
     }
 }
 
