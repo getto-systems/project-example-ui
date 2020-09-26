@@ -1,5 +1,3 @@
-import { unpackRenewCredentialParam } from "./param"
-
 import {
     RenewCredentialComponentAction,
     RenewCredentialComponent,
@@ -15,13 +13,23 @@ export function initRenewCredentialComponent(action: RenewCredentialComponentAct
     return new Component(action)
 }
 
+export function packRenewCredentialParam(ticketNonce: TicketNonce): RenewCredentialParam {
+    return { ticketNonce } as RenewCredentialParam & Param
+}
+
+function unpackRenewCredentialParam(param: RenewCredentialParam): Param {
+    return param as unknown as Param
+}
+
+type Param = {
+    ticketNonce: TicketNonce
+}
+
 class Component implements RenewCredentialComponent {
     action: RenewCredentialComponentAction
     listener: Post<RenewCredentialState>[]
 
-    param: Param<{
-        ticketNonce: TicketNonce
-    }>
+    param: ParamHolder<Param>
 
     constructor(action: RenewCredentialComponentAction) {
         this.action = action
@@ -71,11 +79,11 @@ interface Post<T> {
     (state: T): void
 }
 
-type Param<T> =
+type ParamHolder<T> =
     Readonly<{ set: false }> |
     Readonly<{ set: true, param: Readonly<T> }>
 
-function unwrap<T>(param: Param<T>): Readonly<T> {
+function unwrap<T>(param: ParamHolder<T>): Readonly<T> {
     if (!param.set) {
         throw new Error("not initialized")
     }

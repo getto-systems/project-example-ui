@@ -1,15 +1,22 @@
 import { AuthState, FetchError, StoreError } from "./usecase"
 
+import { RenewCredentialParamPacker } from "./component/renew_credential/component"
+
 import { AuthCredential, TicketNonce } from "../credential/data"
 import { PagePathname } from "../script/data"
 
 export type Infra = Readonly<{
+    param: AuthParam
     authLocation: AuthLocation
     authCredentials: AuthCredentialRepository
 }>
 
+export type AuthParam = Readonly<{
+    renewCredential: RenewCredentialParamPacker
+}>
+
 export interface AuthLocation {
-    detect(): AuthState
+    detect(param: AuthParam): AuthState
     currentPagePathname(): PagePathname
 }
 

@@ -3,7 +3,7 @@ import { packPasswordResetParam } from "../../auth/component/password_reset/para
 import { packResetToken } from "../../password_reset/adapter"
 import { packPagePathname } from "../../script/adapter"
 
-import { AuthLocation } from "../infra"
+import { AuthParam, AuthLocation } from "../infra"
 
 import { AuthState } from "../usecase"
 
@@ -20,7 +20,7 @@ class AuthLocationImpl implements AuthLocation {
         this.currentLocation = currentLocation
     }
 
-    detect(): AuthState {
+    detect(_param: AuthParam): AuthState {
         // ログイン前画面ではアンダースコアから始まるクエリを使用する
         const url = new URL(this.currentLocation.toString())
 
