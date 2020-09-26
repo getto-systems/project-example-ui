@@ -20,6 +20,10 @@ export interface PasswordResetComponent {
 
 export type PasswordResetParam = { PasswordResetParam: never }
 
+export interface PasswordResetParamPacker {
+    (resetToken: ResetToken): PasswordResetParam
+}
+
 export type PasswordResetState =
     Readonly<{ type: "initial-reset" }> |
     Readonly<{ type: "try-to-reset" }> |
