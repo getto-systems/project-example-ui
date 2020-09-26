@@ -31,7 +31,7 @@ class Component implements LoadApplicationComponent {
     action: LoadApplicationComponentAction
     listener: Post<LoadApplicationState>[]
 
-    param: ParamHolder<Param>
+    holder: ParamHolder<Param>
 
     constructor(action: LoadApplicationComponentAction) {
         this.action = action
@@ -41,11 +41,15 @@ class Component implements LoadApplicationComponent {
         })
 
         this.listener = []
-        this.param = { set: false }
+        this.holder = { set: false }
     }
 
     onStateChange(stateChanged: Post<LoadApplicationState>): void {
         this.listener.push(stateChanged)
+    }
+
+    post(state: LoadApplicationState): void {
+        this.listener.forEach(post => post(state))
     }
 
     init(): Terminate {
@@ -61,12 +65,20 @@ class Component implements LoadApplicationComponent {
                 return this.setParam(operation.param)
 
             case "load":
-                return this.action.script.load(unwrap(this.param).pagePathname)
+                if (this.holder.set) {
+                    return this.action.script.load(this.holder.param.pagePathname)
+                } else {
+                    return this.errorParamIsNotInitialized()
+                }
         }
     }
 
     async setParam(param: LoadApplicationParam): Promise<void> {
-        this.param = { set: true, param: unpackLoadApplicationParam(param) }
+        this.holder = { set: true, param: unpackLoadApplicationParam(param) }
+    }
+
+    async errorParamIsNotInitialized(): Promise<void> {
+        this.post({ type: "error", err: "param is not initialized" })
     }
 }
 
@@ -133,13 +145,6 @@ interface WorkerInit {
 type ParamHolder<T> =
     Readonly<{ set: false }> |
     Readonly<{ set: true, param: Readonly<T> }>
-
-function unwrap<T>(param: ParamHolder<T>): Readonly<T> {
-    if (!param.set) {
-        throw new Error("not initialized")
-    }
-    return param.param
-}
 
 interface Terminate {
     (): void
