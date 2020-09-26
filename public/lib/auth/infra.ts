@@ -1,6 +1,7 @@
 import { AuthState, FetchError, StoreError } from "./usecase"
 
 import { RenewCredentialParamPacker } from "./component/renew_credential/component"
+import { PasswordResetParamPacker } from "./component/password_reset/component"
 
 import { AuthCredential, TicketNonce } from "../credential/data"
 import { PagePathname } from "../script/data"
@@ -13,6 +14,7 @@ export type Infra = Readonly<{
 
 export type AuthParam = Readonly<{
     renewCredential: RenewCredentialParamPacker
+    passwordReset: PasswordResetParamPacker
 }>
 
 export interface AuthLocation {

@@ -1,5 +1,3 @@
-import { unpackPasswordResetParam } from "./param"
-
 import {
     PasswordResetComponentAction,
     PasswordResetComponent,
@@ -37,11 +35,23 @@ export function initPasswordResetWorkerComponentHelper(): PasswordResetWorkerCom
     }
 }
 
+export function packPasswordResetParam(resetToken: ResetToken): PasswordResetParam {
+    return { resetToken } as PasswordResetParam & Param
+}
+
+function unpackPasswordResetParam(param: PasswordResetParam): Param {
+    return param as unknown as Param
+}
+
+type Param = {
+    resetToken: ResetToken
+}
+
 class Component implements PasswordResetComponent {
     action: PasswordResetComponentAction
     listener: Post<PasswordResetState>[]
 
-    param: Param<{
+    param: ParamHolder<{
         resetToken: ResetToken
     }>
 
@@ -228,11 +238,11 @@ interface WorkerInit {
     (): Worker
 }
 
-type Param<T> =
+type ParamHolder<T> =
     Readonly<{ set: false }> |
     Readonly<{ set: true, param: Readonly<T> }>
 
-function unwrap<T>(param: Param<T>): Readonly<T> {
+function unwrap<T>(param: ParamHolder<T>): Readonly<T> {
     if (!param.set) {
         throw new Error("not initialized")
     }

@@ -1,5 +1,3 @@
-import { packPasswordResetParam } from "../../auth/component/password_reset/param"
-
 import { packResetToken } from "../../password_reset/adapter"
 import { packPagePathname } from "../../script/adapter"
 
@@ -20,7 +18,7 @@ class AuthLocationImpl implements AuthLocation {
         this.currentLocation = currentLocation
     }
 
-    detect(_param: AuthParam): AuthState {
+    detect(param: AuthParam): AuthState {
         // ログイン前画面ではアンダースコアから始まるクエリを使用する
         const url = new URL(this.currentLocation.toString())
 
@@ -30,7 +28,7 @@ class AuthLocationImpl implements AuthLocation {
 
         const resetToken = url.searchParams.get("_password_reset_token")
         if (resetToken) {
-            return { type: "password-reset", param: packPasswordResetParam(packResetToken(resetToken)) }
+            return { type: "password-reset", param: param.passwordReset(packResetToken(resetToken)) }
         }
 
         // 特に指定が無ければパスワードログイン
