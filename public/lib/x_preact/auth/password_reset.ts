@@ -8,7 +8,7 @@ import { ApplicationError } from "../application_error"
 import { LoginIDField } from "./password_reset/field/login_id"
 import { PasswordField } from "./password_reset/field/password"
 
-import { TopLink } from "../../link"
+import { TopLink } from "../../href"
 
 import {
     PasswordResetComponent,

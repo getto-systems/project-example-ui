@@ -1,4 +1,4 @@
-import { AuthLink } from "../../auth/link"
+import { AuthLink } from "../../auth/href"
 
 export function newAuthLink(): AuthLink {
     return {
