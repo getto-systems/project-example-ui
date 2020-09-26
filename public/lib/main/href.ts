@@ -1,9 +1,9 @@
-import { newAuthHref } from "./auth/href"
+import { initAuthHref } from "../auth/impl/href"
 
 import { AppHref } from "../href"
 
 export function newAppHref(): AppHref {
     return {
-        auth: newAuthHref(),
+        auth: initAuthHref(),
     }
 }

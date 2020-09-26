@@ -47,7 +47,7 @@ function Example(): VNode {
 }
 
 /*
-// 設定
+// ページ設定
 
 type Category =
     "main" |
@@ -71,15 +71,33 @@ const pages = [
     ]),
 ]
 
-const pageInfo = {
-    "home": { path: "/dist/index.html", icon: "home" },
-    "docs": { path: "/dist/docs/index.html", icon: "files-alt" },
+const path = {
+    "home": "/dist/index.html",
+    "docs": "/dist/docs/index.html",
 
-    "data": { path: "/dist/data.html", icon: "book-alt" },
-    "data/detail": { path: "/dist/data/detail.html", icon: "pencil" },
+    "data": "/dist/data.html",
+    "data/detail": "/dist/data/detail.html",
 }
 
-// データ
+// 表示用設定
+
+const title = {
+    "home": "ホーム",
+    "docs": "ドキュメント",
+
+    "data": "データ",
+    "data/detail": "編集",
+}
+
+const icon = {
+    "home": "home",
+    "docs": "files-alt",
+
+    "data": "book-alt",
+    "data/detail": "pencil",
+}
+
+// 実行時データ
 
 const nonce = "api-nonce"
 const roles = ["admin", "dev"]
