@@ -16,7 +16,11 @@ component.onPasswordFieldStateChange((state) => {
 })
 
 ctx.addEventListener("message", (event) => {
-    component.trigger(event.data)
+    try {
+        component.trigger(event.data)
+    } catch (err) {
+        ctx.postMessage({ type: "error", err: `${err}` })
+    }
 })
 
 component.init()

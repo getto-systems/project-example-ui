@@ -19,13 +19,13 @@ type Props = Readonly<{
 }>
 
 export function Main(props: Props): VNode {
-    const [error, _resetError] = useErrorBoundary((err) => {
+    const [err, _resetError] = useErrorBoundary((err) => {
         // ここでエラーをどこかに投げたい、けど認証前なのでこれでお茶を濁す
         console.log(err)
     })
 
-    if (error) {
-        return h(ApplicationError, { err: `${error}` })
+    if (err) {
+        return h(ApplicationError, { err: `${err}` })
     }
 
     const [state, setState] = useState(initialAuthState)
