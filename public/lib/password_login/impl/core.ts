@@ -37,7 +37,7 @@ class Action implements PasswordLoginAction {
         post({ type: "try-to-login" })
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const response = await delayed(
+        const response = await this.infra.delayed(
             this.infra.passwordLoginClient.login(...content.content),
             this.infra.timeConfig.passwordLoginDelayTime,
             () => post({ type: "delayed-to-login" }),
@@ -88,26 +88,4 @@ class EventPubSub implements PasswordLoginEventPublisher, PasswordLoginEventSubs
 
 interface Post<T> {
     (state: T): void
-}
-
-async function delayed<T>(promise: Promise<T>, time: DelayTime, handler: DelayedHandler): Promise<T> {
-    const DELAYED_MARKER = { DELAYED: true }
-    const delayed = new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(DELAYED_MARKER)
-        }, time.delay_milli_second)
-    })
-
-    const winner = await Promise.race([promise, delayed])
-    if (winner === DELAYED_MARKER) {
-        handler()
-    }
-
-    return await promise
-}
-
-type DelayTime = { delay_milli_second: number }
-
-interface DelayedHandler {
-    (): void
 }

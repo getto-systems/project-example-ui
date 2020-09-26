@@ -46,6 +46,57 @@ function Example(): VNode {
     `
 }
 
+/*
+// 設定
+
+type Category =
+    "main" |
+    "data"
+
+type Page =
+    "data" |
+    "data/detail" |
+    "home" |
+    "docs"
+
+const pages = [
+    menu("main", [
+        page("home", []),
+        page("docs", []),
+    ]),
+    menu("data", [
+        page("data", [
+            page("data/detail", []),
+        ]),
+    ]),
+]
+
+const pageInfo = {
+    "home": { path: "/dist/index.html", icon: "home" },
+    "docs": { path: "/dist/docs/index.html", icon: "files-alt" },
+
+    "data": { path: "/dist/data.html", icon: "book-alt" },
+    "data/detail": { path: "/dist/data/detail.html", icon: "pencil" },
+}
+
+// データ
+
+const nonce = "api-nonce"
+const roles = ["admin", "dev"]
+
+const pathname = "/dist/index.html"
+
+async function badge(_nonce) {
+    return {
+        "home": 99,
+    }
+}
+
+const season = "ことし"
+
+const version = "dist"
+ */
+
 function Menu(): VNode {
     return html`
         <aside class="layout__menu menu">

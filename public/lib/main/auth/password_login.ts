@@ -1,4 +1,5 @@
 import { env } from "../../y_static/env"
+import { delayed } from "../../z_external/delayed"
 
 import { initAuthClient } from "../../z_external/auth_client/auth_client"
 
@@ -21,6 +22,7 @@ export function newPasswordLoginComponent(): PasswordLoginComponent {
         passwordLogin: initPasswordLoginAction({
             timeConfig: newTimeConfig(),
             passwordLoginClient: newPasswordLoginClient(),
+            delayed,
         }),
         loginIDField: initLoginIDFieldAction(),
         passwordField: initPasswordFieldAction(),
