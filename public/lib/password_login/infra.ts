@@ -5,6 +5,7 @@ import { Password } from "../password/data"
 export type Infra = Readonly<{
     timeConfig: TimeConfig,
     passwordLoginClient: PasswordLoginClient,
+    delayed: Delayed
 }>
 
 export type TimeConfig = Readonly<{
@@ -33,3 +34,11 @@ export type LoginError =
     Readonly<{ type: "server-error" }> |
     Readonly<{ type: "bad-response", err: string }> |
     Readonly<{ type: "infra-error", err: string }>
+
+export interface Delayed {
+    <T>(promise: Promise<T>, time: DelayTime, handler: DelayedHandler): Promise<T>
+}
+
+interface DelayedHandler {
+    (): void
+}

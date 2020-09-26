@@ -1,4 +1,4 @@
-import { Infra, TimeConfig, PasswordResetSessionClient } from "../infra"
+import { Infra } from "../infra"
 
 import { PasswordResetAction, PasswordResetEventPublisher, PasswordResetEventSubscriber } from "../action"
 
@@ -42,7 +42,7 @@ class PasswordResetActionImpl implements PasswordResetAction {
         post({ type: "try-to-start-session" })
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const response = await delayed(
+        const response = await this.infra.delayed(
             this.infra.passwordResetSessionClient.startSession(...content.content),
             this.infra.timeConfig.passwordResetStartSessionDelayTime,
             () => post({ type: "delayed-to-start-session" }),
@@ -70,7 +70,7 @@ class PasswordResetActionImpl implements PasswordResetAction {
 
     async startPollingStatus(sessionID: SessionID): Promise<void> {
         const post = (event: PollingStatusEvent) => this.pub.postPollingStatusEvent(event)
-        new StatusPoller(this.infra.timeConfig, this.infra.passwordResetSessionClient, post).startPolling(sessionID)
+        new StatusPoller(this.infra, post).startPolling(sessionID)
     }
 
     async reset(resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<void> {
@@ -85,7 +85,7 @@ class PasswordResetActionImpl implements PasswordResetAction {
         post({ type: "try-to-reset" })
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const response = await delayed(
+        const response = await this.infra.delayed(
             this.infra.passwordResetClient.reset(resetToken, ...content.content),
             this.infra.timeConfig.passwordResetDelayTime,
             () => post({ type: "delayed-to-reset" }),
@@ -120,15 +120,13 @@ type SendTokenState =
     Readonly<{ type: "success" }>
 
 class StatusPoller {
-    timeConfig: TimeConfig
-    client: PasswordResetSessionClient
+    infra: Infra
     post: Post<PollingStatusEvent>
 
     sendTokenState: SendTokenState
 
-    constructor(timeConfig: TimeConfig, client: PasswordResetSessionClient, post: Post<PollingStatusEvent>) {
-        this.timeConfig = timeConfig
-        this.client = client
+    constructor(infra: Infra, post: Post<PollingStatusEvent>) {
+        this.infra = infra
         this.post = post
 
         this.sendTokenState = { type: "initial" }
@@ -139,17 +137,14 @@ class StatusPoller {
 
         this.sendToken()
 
-        let count = 0
-
-        while (count < this.timeConfig.passwordResetPollingLimit.limit) {
-            count += 1
+        for (let i_ = 0; i_ < this.infra.timeConfig.passwordResetPollingLimit.limit; i_++) {
 
             if (this.sendTokenState.type === "failed") {
                 this.post({ type: "failed-to-polling-status", err: this.sendTokenState.err })
                 return
             }
 
-            const response = await this.client.getStatus(sessionID)
+            const response = await this.infra.passwordResetSessionClient.getStatus(sessionID)
             if (!response.success) {
                 this.post({ type: "failed-to-polling-status", err: response.err })
                 return
@@ -174,7 +169,7 @@ class StatusPoller {
                 status: response.status,
             })
 
-            await wait(this.timeConfig.passwordResetPollingWaitTime)
+            await this.infra.wait(this.infra.timeConfig.passwordResetPollingWaitTime, () => null)
         }
 
         this.post({
@@ -184,7 +179,7 @@ class StatusPoller {
     }
 
     async sendToken(): Promise<void> {
-        const response = await this.client.sendToken()
+        const response = await this.infra.passwordResetSessionClient.sendToken()
         if (!response.success) {
             this.sendTokenState = { type: "failed", err: response.err }
             return
@@ -227,37 +222,6 @@ class EventPubSub implements PasswordResetEventPublisher, PasswordResetEventSubs
     postResetEvent(event: ResetEvent): void {
         this.listener.reset.forEach(post => post(event))
     }
-}
-
-async function delayed<T>(promise: Promise<T>, time: DelayTime, handler: DelayedHandler): Promise<T> {
-    const DELAYED_MARKER = { DELAYED: true }
-    const delayed = new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(DELAYED_MARKER)
-        }, time.delay_milli_second)
-    })
-
-    const winner = await Promise.race([promise, delayed])
-    if (winner === DELAYED_MARKER) {
-        handler()
-    }
-
-    return await promise
-}
-
-function wait(time: WaitTime): Promise<void> {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve()
-        }, time.wait_milli_second)
-    })
-}
-
-type DelayTime = { delay_milli_second: number }
-type WaitTime = { wait_milli_second: number }
-
-interface DelayedHandler {
-    (): void
 }
 
 interface Post<T> {

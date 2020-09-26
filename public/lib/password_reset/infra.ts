@@ -14,6 +14,8 @@ export type Infra = Readonly<{
     timeConfig: TimeConfig,
     passwordResetSessionClient: PasswordResetSessionClient,
     passwordResetClient: PasswordResetClient,
+    delayed: Delayed
+    wait: Wait
 }>
 
 export type TimeConfig = Readonly<{
@@ -90,3 +92,17 @@ export type ResetError =
     Readonly<{ type: "server-error" }> |
     Readonly<{ type: "bad-response", err: string }> |
     Readonly<{ type: "infra-error", err: string }>
+
+export interface Delayed {
+    <T>(promise: Promise<T>, time: DelayTime, delayTimeExceeded: DelayedHandler): Promise<T>
+}
+export interface Wait {
+    <T>(time: WaitTime, content: WaitContent<T>): Promise<T>
+}
+
+interface DelayedHandler {
+    (): void
+}
+interface WaitContent<T> {
+    (): T
+}

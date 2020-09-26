@@ -1,4 +1,5 @@
 import { env } from "../y_static/env"
+import { delayed } from "../z_external/delayed"
 
 import { initAuthClient } from "../z_external/auth_client/auth_client"
 
@@ -53,6 +54,7 @@ function newCredentialAction(): CredentialAction {
     return initCredentialAction({
         timeConfig: newTimeConfig(),
         renewClient: newRenewClient(),
+        delayed,
     })
 }
 

@@ -1,3 +1,5 @@
+import { delayed, wait } from "../../../z_external/delayed"
+
 import { newTimeConfig } from "../config"
 
 import { initPasswordResetAction } from "../../../password_reset/impl/core"
@@ -18,6 +20,8 @@ export function newPasswordResetAction(): PasswordResetAction {
         timeConfig: newTimeConfig(),
         passwordResetSessionClient: newPasswordResetSessionClient(),
         passwordResetClient: newPasswordResetClient(),
+        delayed,
+        wait,
     })
 }
 
