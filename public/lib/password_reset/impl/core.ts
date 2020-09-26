@@ -30,6 +30,7 @@ class PasswordResetActionImpl implements PasswordResetAction {
         this.sub = pubsub
     }
 
+    // TODO このタプルで受け取るのやめたほうがいいんじゃなかったっけ？
     async startSession(fields: [Content<LoginID>]): Promise<void> {
         const post = (event: StartSessionEvent) => this.pub.postStartSessionEvent(event)
 

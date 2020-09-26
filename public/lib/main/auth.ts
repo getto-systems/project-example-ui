@@ -16,7 +16,7 @@ import { initAuthUsecase } from "../auth/impl/core"
 import { initAuthLocation } from "../auth/impl/location"
 import { initStorageAuthCredentialRepository } from "../auth/impl/repository/auth_credential/storage"
 
-import { initRenewCredentialComponent } from "../auth/component/renew_credential/impl"
+import { initRenewCredentialComponent, packRenewCredentialParam } from "../auth/component/renew_credential/impl"
 
 import { initFetchRenewClient } from "../credential/impl/client/renew/fetch"
 
@@ -38,6 +38,9 @@ export function newAuthUsecase(currentLocation: Location, credentialStorage: Sto
         passwordResetSession: newPasswordResetSessionComponent(),
         passwordReset: newPasswordResetComponent(),
     }, {
+        param: {
+            renewCredential: packRenewCredentialParam,
+        },
         authLocation: initAuthLocation(currentLocation),
         authCredentials: initStorageAuthCredentialRepository(credentialStorage, {
             ticketNonce: "GETTO-EXAMPLE-TICKET-NONCE",

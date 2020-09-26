@@ -1,4 +1,3 @@
-import { packRenewCredentialParam } from "../component/renew_credential/param"
 import { packLoadApplicationParam } from "../component/load_application/param"
 
 import { TopLink } from "../../link"
@@ -77,7 +76,7 @@ class Usecase implements AuthUsecase {
             return
         }
 
-        this.post({ type: "renew-credential", param: packRenewCredentialParam(found.content) })
+        this.post({ type: "renew-credential", param: this.infra.param.renewCredential(found.content) })
     }
     terminate(): void {
         // component とインターフェイスを合わせるために必要
@@ -88,7 +87,7 @@ class Usecase implements AuthUsecase {
     }
 
     tryToLogin(): void {
-        this.post(this.infra.authLocation.detect())
+        this.post(this.infra.authLocation.detect(this.infra.param))
     }
     loadApplication(authCredential: AuthCredential): void {
         // 例外的に直接 trigger する : この直後に unmount するので画面へのフィードバックがないため

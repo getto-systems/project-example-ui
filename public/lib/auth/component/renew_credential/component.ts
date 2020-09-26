@@ -10,6 +10,10 @@ export interface RenewCredentialComponent {
 
 export type RenewCredentialParam = { RenewCredentialParam: never }
 
+export interface RenewCredentialParamPacker {
+    (ticketNonce: TicketNonce): RenewCredentialParam
+}
+
 export type RenewCredentialState =
     Readonly<{ type: "initial-renew" }> |
     Readonly<{ type: "required-to-login" }> |
