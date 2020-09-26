@@ -51,9 +51,7 @@ class Component implements PasswordResetComponent {
     action: PasswordResetComponentAction
     listener: Post<PasswordResetState>[]
 
-    param: ParamHolder<{
-        resetToken: ResetToken
-    }>
+    param: ParamHolder<Param>
 
     field: {
         loginID: LoginIDField
