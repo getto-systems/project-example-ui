@@ -3,6 +3,7 @@ import { html } from "htm/preact"
 import { useState, useEffect, useErrorBoundary } from "preact/hooks"
 
 import { loginError } from "../layout"
+
 import { ApplicationError } from "../application_error"
 
 import { RenewCredential } from "./renew_credential"
@@ -36,7 +37,7 @@ export function Main(props: Props): VNode {
     }, [])
 
     switch (state.type) {
-        case "initial":
+        case "initial-auth":
             return EMPTY_CONTENT
 
         case "renew-credential":
