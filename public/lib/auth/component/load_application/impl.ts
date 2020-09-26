@@ -65,11 +65,7 @@ class Component implements LoadApplicationComponent {
                 return this.setParam(operation.param)
 
             case "load":
-                if (this.holder.set) {
-                    return this.action.script.load(this.holder.param.pagePathname)
-                } else {
-                    return this.errorParamIsNotInitialized()
-                }
+                return this.load()
         }
     }
 
@@ -77,8 +73,12 @@ class Component implements LoadApplicationComponent {
         this.holder = { set: true, param: unpackLoadApplicationParam(param) }
     }
 
-    async errorParamIsNotInitialized(): Promise<void> {
-        this.post({ type: "error", err: "param is not initialized" })
+    async load(): Promise<void> {
+        if (this.holder.set) {
+            this.action.script.load(this.holder.param.pagePathname)
+        } else {
+            this.post({ type: "error", err: "param is not initialized" })
+        }
     }
 }
 
