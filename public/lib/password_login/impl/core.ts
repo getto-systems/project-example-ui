@@ -1,9 +1,8 @@
 import { Infra } from "../infra"
 
 import { PasswordLoginAction, PasswordLoginEventPublisher, PasswordLoginEventSubscriber } from "../action"
+import { LoginContent, LoginFields } from "../data"
 
-import { LoginID } from "../../login_id/data"
-import { Password } from "../../password/data"
 import { LoginEvent } from "../data"
 import { Content } from "../../field/data"
 
@@ -25,11 +24,11 @@ class Action implements PasswordLoginAction {
         this.sub = pubsub
     }
 
-    async login(fields: [Content<LoginID>, Content<Password>]): Promise<void> {
+    async login(content: LoginContent): Promise<void> {
         const post = (event: LoginEvent) => this.pub.postLoginEvent(event)
 
-        const content = mapContent(...fields)
-        if (!content.valid) {
+        const fields = mapContent(content)
+        if (!fields.valid) {
             post({ type: "failed-to-login", err: { type: "validation-error" } })
             return
         }
@@ -38,7 +37,7 @@ class Action implements PasswordLoginAction {
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const response = await this.infra.delayed(
-            this.infra.passwordLoginClient.login(...content.content),
+            this.infra.passwordLoginClient.login(fields.content.loginID, fields.content.password),
             this.infra.timeConfig.passwordLoginDelayTime,
             () => post({ type: "delayed-to-login" }),
         )
@@ -48,21 +47,22 @@ class Action implements PasswordLoginAction {
         }
 
         post({ type: "succeed-to-login", authCredential: response.authCredential })
-        return
+    }
+}
 
-        type ValidContent =
-            Readonly<{ valid: false }> |
-            Readonly<{ valid: true, content: [LoginID, Password] }>
-
-        function mapContent(loginID: Content<LoginID>, password: Content<Password>): ValidContent {
-            if (
-                !loginID.valid ||
-                !password.valid
-            ) {
-                return { valid: false }
-            }
-            return { valid: true, content: [loginID.content, password.content] }
-        }
+function mapContent(content: LoginContent): Content<LoginFields> {
+    if (
+        !content.loginID.valid ||
+        !content.password.valid
+    ) {
+        return { valid: false }
+    }
+    return {
+        valid: true,
+        content: {
+            loginID: content.loginID.content,
+            password: content.password.content,
+        },
     }
 }
 
