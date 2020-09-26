@@ -4,12 +4,12 @@ import { PasswordResetAction, PasswordResetEventPublisher, PasswordResetEventSub
 
 import {
     SessionID,
+    StartSessionContent, StartSessionFields,
     StartSessionEvent, PollingStatusEvent, PollingStatusError,
+    ResetContent, ResetFields,
     ResetToken, ResetEvent,
 } from "../data"
 
-import { LoginID } from "../../login_id/data"
-import { Password } from "../../password/data"
 import { Content } from "../../field/data"
 
 export function initPasswordResetAction(infra: Infra): PasswordResetAction {
@@ -30,12 +30,11 @@ class PasswordResetActionImpl implements PasswordResetAction {
         this.sub = pubsub
     }
 
-    // TODO このタプルで受け取るのやめたほうがいいんじゃなかったっけ？
-    async startSession(fields: [Content<LoginID>]): Promise<void> {
+    async startSession(content: StartSessionContent): Promise<void> {
         const post = (event: StartSessionEvent) => this.pub.postStartSessionEvent(event)
 
-        const content = mapContent(...fields)
-        if (!content.valid) {
+        const fields = mapStartSessionContent(content)
+        if (!fields.valid) {
             post({ type: "failed-to-start-session", err: { type: "validation-error" } })
             return
         }
@@ -44,7 +43,7 @@ class PasswordResetActionImpl implements PasswordResetAction {
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const response = await this.infra.delayed(
-            this.infra.passwordResetSessionClient.startSession(...content.content),
+            this.infra.passwordResetSessionClient.startSession(fields.content.loginID),
             this.infra.timeConfig.passwordResetStartSessionDelayTime,
             () => post({ type: "delayed-to-start-session" }),
         )
@@ -54,19 +53,6 @@ class PasswordResetActionImpl implements PasswordResetAction {
         }
 
         post({ type: "succeed-to-start-session", sessionID: response.sessionID })
-
-        return
-
-        type ValidContent =
-            Readonly<{ valid: false }> |
-            Readonly<{ valid: true, content: [LoginID] }>
-
-        function mapContent(loginID: Content<LoginID>): ValidContent {
-            if (!loginID.valid) {
-                return { valid: false }
-            }
-            return { valid: true, content: [loginID.content] }
-        }
     }
 
     async startPollingStatus(sessionID: SessionID): Promise<void> {
@@ -74,11 +60,11 @@ class PasswordResetActionImpl implements PasswordResetAction {
         new StatusPoller(this.infra, post).startPolling(sessionID)
     }
 
-    async reset(resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<void> {
+    async reset(resetToken: ResetToken, content: ResetContent): Promise<void> {
         const post = (event: ResetEvent) => this.pub.postResetEvent(event)
 
-        const content = mapContent(...fields)
-        if (!content.valid) {
+        const fields = mapResetContent(content)
+        if (!fields.valid) {
             post({ type: "failed-to-reset", err: { type: "validation-error" } })
             return
         }
@@ -87,7 +73,7 @@ class PasswordResetActionImpl implements PasswordResetAction {
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const response = await this.infra.delayed(
-            this.infra.passwordResetClient.reset(resetToken, ...content.content),
+            this.infra.passwordResetClient.reset(resetToken, fields.content.loginID, fields.content.password),
             this.infra.timeConfig.passwordResetDelayTime,
             () => post({ type: "delayed-to-reset" }),
         )
@@ -97,21 +83,34 @@ class PasswordResetActionImpl implements PasswordResetAction {
         }
 
         post({ type: "succeed-to-reset", authCredential: response.authCredential })
-        return
+    }
+}
 
-        type ValidContent =
-            Readonly<{ valid: false }> |
-            Readonly<{ valid: true, content: [LoginID, Password] }>
+function mapStartSessionContent(content: StartSessionContent): Content<StartSessionFields> {
+    if (!content.loginID.valid) {
+        return { valid: false }
+    }
+    return {
+        valid: true,
+        content: {
+            loginID: content.loginID.content,
+        },
+    }
+}
 
-        function mapContent(loginID: Content<LoginID>, password: Content<Password>): ValidContent {
-            if (
-                !loginID.valid ||
-                !password.valid
-            ) {
-                return { valid: false }
-            }
-            return { valid: true, content: [loginID.content, password.content] }
-        }
+function mapResetContent(content: ResetContent): Content<ResetFields> {
+    if (
+        !content.loginID.valid ||
+        !content.password.valid
+    ) {
+        return { valid: false }
+    }
+    return {
+        valid: true,
+        content: {
+            loginID: content.loginID.content,
+            password: content.password.content,
+        },
     }
 }
 

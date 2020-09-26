@@ -137,10 +137,7 @@ class Component implements PasswordResetComponent {
         this.field.password.validate()
 
         if (this.holder.set) {
-            this.action.passwordReset.reset(this.holder.param.resetToken, [
-                this.content.loginID,
-                this.content.password,
-            ])
+            this.action.passwordReset.reset(this.holder.param.resetToken, this.content)
         } else {
             this.post({ type: "error", err: "param is not initialized" })
         }
