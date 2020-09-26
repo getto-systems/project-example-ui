@@ -8,7 +8,7 @@ import { ApplicationError } from "../application_error"
 import { LoginIDField } from "./password_login/field/login_id"
 import { PasswordField } from "./password_login/field/password"
 
-import { TopLink } from "../../link"
+import { TopLink } from "../../href"
 
 import { PasswordLoginComponent, initialPasswordLoginState } from "../../auth/component/password_login/component"
 

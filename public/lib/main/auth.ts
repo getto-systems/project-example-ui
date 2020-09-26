@@ -5,7 +5,7 @@ import { initAuthClient } from "../z_external/auth_client/auth_client"
 
 import { newTimeConfig } from "./auth/config"
 
-import { newTopLink } from "./link"
+import { newTopLink } from "./href"
 
 import { newLoadApplicationComponent } from "./auth/worker/load_application"
 import { newPasswordLoginComponent } from "./auth/worker/password_login"

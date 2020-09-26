@@ -1,4 +1,4 @@
-import { TopLink } from "../../link"
+import { TopLink } from "../../href"
 import { AuthUsecase, AuthComponent, AuthState } from "../usecase"
 import { Infra } from "../infra"
 

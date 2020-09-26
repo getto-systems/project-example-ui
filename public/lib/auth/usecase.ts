@@ -1,4 +1,4 @@
-import { TopLink } from "../link"
+import { TopLink } from "../href"
 
 import { RenewCredentialComponent, RenewCredentialParam } from "./component/renew_credential/component"
 import { LoadApplicationComponent, LoadApplicationParam } from "./component/load_application/component"

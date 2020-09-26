@@ -1,6 +1,6 @@
-import { newAuthLink } from "./auth/link"
+import { newAuthLink } from "./auth/href"
 
-import { TopLink } from "../link"
+import { TopLink } from "../href"
 
 export function newTopLink(): TopLink {
     return {

@@ -1,4 +1,4 @@
-import { newTopLink } from "../../../main/link"
+import { newTopLink } from "../../../main/href"
 
 import { newRenewCredentialComponent } from "./renew_credential"
 import { newLoadApplicationComponent } from "./load_application"
@@ -15,7 +15,7 @@ import { packTicketNonce } from "../../../credential/adapter"
 import { packResetToken } from "../../../password_reset/adapter"
 import { packPagePathname } from "../../../script/adapter"
 
-import { TopLink } from "../../../link"
+import { TopLink } from "../../../href"
 import { AuthUsecase, AuthComponent, AuthState } from "../../../auth/usecase"
 
 export function newAuthUsecase(): AuthUsecase {
