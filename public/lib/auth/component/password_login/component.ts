@@ -23,7 +23,8 @@ export type PasswordLoginState =
     Readonly<{ type: "try-to-login" }> |
     Readonly<{ type: "delayed-to-login" }> |
     Readonly<{ type: "failed-to-login", err: LoginError }> |
-    Readonly<{ type: "succeed-to-login", authCredential: AuthCredential }>
+    Readonly<{ type: "succeed-to-login", authCredential: AuthCredential }> |
+    Readonly<{ type: "error", err: string }>
 
 export const initialPasswordLoginState: PasswordLoginState = { type: "initial-login" }
 

@@ -21,7 +21,8 @@ export type RenewCredentialState =
     Readonly<{ type: "delayed-to-renew" }> |
     Readonly<{ type: "failed-to-renew", err: RenewError }> |
     Readonly<{ type: "succeed-to-renew", authCredential: AuthCredential }> |
-    Readonly<{ type: "succeed-to-renew-interval", authCredential: AuthCredential }>
+    Readonly<{ type: "succeed-to-renew-interval", authCredential: AuthCredential }> |
+    Readonly<{ type: "error", err: string }>
 
 export const initialRenewCredentialState: RenewCredentialState = { type: "initial-renew" }
 

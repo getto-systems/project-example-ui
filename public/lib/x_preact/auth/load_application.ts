@@ -1,8 +1,9 @@
-import { VNode } from "preact"
+import { h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { loginError } from "./layout"
+import { loginError } from "../layout"
+import { ApplicationError } from "../application_error"
 
 import { unpackScriptPath } from "../../script/adapter"
 
@@ -49,14 +50,17 @@ export function LoadApplication(props: Props): VNode {
 
     switch (state.type) {
         case "initial-load":
-            return html``
+            return EMPTY_CONTENT
 
         case "try-to-load":
             // script の追加は appendScript でするので、本体は空で返す
-            return html``
+            return EMPTY_CONTENT
 
         case "failed-to-load":
             return failedContent(state.err)
+
+        case "error":
+            return h(ApplicationError, { err: state.err })
     }
 }
 
@@ -71,3 +75,5 @@ function failedContent(_err: CheckError): VNode {
         html``,
     )
 }
+
+const EMPTY_CONTENT = html``

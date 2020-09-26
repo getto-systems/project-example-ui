@@ -2,7 +2,9 @@ import { h, VNode } from "preact"
 import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { loginHeader } from "./layout"
+import { loginHeader } from "../layout"
+import { ApplicationError } from "../application_error"
+
 import { LoginIDField } from "./password_reset/field/login_id"
 import { PasswordField } from "./password_reset/field/password"
 
@@ -92,7 +94,10 @@ export function PasswordReset(props: Props): VNode {
             `)
 
         case "succeed-to-reset":
-            return html``
+            return EMPTY_CONTENT
+
+        case "error":
+            return h(ApplicationError, { err: state.err })
     }
 
     function resetButton() {
@@ -162,3 +167,5 @@ function resetError(err: ResetError): VNode {
 interface Handler<T> {
     (event: T): void
 }
+
+const EMPTY_CONTENT = html``
