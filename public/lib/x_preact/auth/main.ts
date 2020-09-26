@@ -21,6 +21,7 @@ type Props = Readonly<{
 export function Main(props: Props): VNode {
     const [err, _resetError] = useErrorBoundary((err) => {
         // ここでエラーをどこかに投げたい、けど認証前なのでこれでお茶を濁す
+        // worker の catch でもエラー通知を入れたい
         console.log(err)
     })
 

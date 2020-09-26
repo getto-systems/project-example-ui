@@ -51,7 +51,7 @@ class Component implements PasswordResetComponent {
     action: PasswordResetComponentAction
     listener: Post<PasswordResetState>[]
 
-    param: ParamHolder<Param>
+    holder: ParamHolder<Param>
 
     field: {
         loginID: LoginIDField
@@ -71,7 +71,7 @@ class Component implements PasswordResetComponent {
         })
 
         this.listener = []
-        this.param = { set: false }
+        this.holder = { set: false }
 
         this.field = {
             loginID: this.action.loginIDField.initLoginIDField(),
@@ -101,12 +101,17 @@ class Component implements PasswordResetComponent {
         this.field.password.sub.onPasswordFieldEvent(stateChanged)
     }
 
+    post(state: PasswordResetState): void {
+        this.listener.forEach(post => post(state))
+    }
+
     init(): Terminate {
         return () => this.terminate()
     }
     terminate(): void {
         // WorkerComponent とインターフェイスを合わせるために必要
     }
+
     trigger(operation: PasswordResetComponentOperation): Promise<void> {
         switch (operation.type) {
             case "set-param":
@@ -124,17 +129,21 @@ class Component implements PasswordResetComponent {
     }
 
     async setParam(param: PasswordResetParam): Promise<void> {
-        this.param = { set: true, param: unpackPasswordResetParam(param) }
+        this.holder = { set: true, param: unpackPasswordResetParam(param) }
     }
 
     async reset(): Promise<void> {
         this.field.loginID.validate()
         this.field.password.validate()
 
-        return this.action.passwordReset.reset(unwrap(this.param).resetToken, [
-            this.content.loginID,
-            this.content.password,
-        ])
+        if (this.holder.set) {
+            this.action.passwordReset.reset(this.holder.param.resetToken, [
+                this.content.loginID,
+                this.content.password,
+            ])
+        } else {
+            this.post({ type: "error", err: "param is not initialized" })
+        }
     }
 }
 
@@ -239,13 +248,6 @@ interface WorkerInit {
 type ParamHolder<T> =
     Readonly<{ set: false }> |
     Readonly<{ set: true, param: Readonly<T> }>
-
-function unwrap<T>(param: ParamHolder<T>): Readonly<T> {
-    if (!param.set) {
-        throw new Error("not initialized")
-    }
-    return param.param
-}
 
 interface Terminate {
     (): void
