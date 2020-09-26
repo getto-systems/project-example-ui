@@ -5,7 +5,7 @@ import { initAuthClient } from "../z_external/auth_client/auth_client"
 
 import { newTimeConfig } from "./auth/config"
 
-import { newTopLink } from "./href"
+import { newAppHref } from "./href"
 
 import { newLoadApplicationComponent } from "./auth/worker/load_application"
 import { newPasswordLoginComponent } from "./auth/worker/password_login"
@@ -32,7 +32,7 @@ import { RenewCredentialComponent } from "../auth/component/renew_credential/com
 import { CredentialAction } from "../credential/action"
 
 export function newAuthUsecase(currentLocation: Location, credentialStorage: Storage): AuthUsecase {
-    return initAuthUsecase(newTopLink(), {
+    return initAuthUsecase(newAppHref(), {
         renewCredential: newRenewCredentialComponent(),
         loadApplication: newLoadApplicationComponent(),
 

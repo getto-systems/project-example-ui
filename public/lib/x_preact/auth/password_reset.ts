@@ -8,7 +8,7 @@ import { ApplicationError } from "../application_error"
 import { LoginIDField } from "./password_reset/field/login_id"
 import { PasswordField } from "./password_reset/field/password"
 
-import { TopLink } from "../../href"
+import { AppHref } from "../../href"
 
 import {
     PasswordResetComponent,
@@ -20,7 +20,7 @@ import { ResetError } from "../../password_reset/data"
 
 type Props = Readonly<{
     component: PasswordResetComponent
-    link: TopLink
+    href: AppHref
     param: PasswordResetParam
 }>
 
@@ -55,7 +55,7 @@ export function PasswordReset(props: Props): VNode {
                                 <big>${button}</big>
                             </div>
                             <div class="login__link">
-                                <a href="${props.link.auth.passwordResetSessionHref()}">
+                                <a href="${props.href.auth.passwordResetSessionHref()}">
                                     <i class="lnir lnir-direction"></i> トークンを再送信する
                                 </a>
                             </div>

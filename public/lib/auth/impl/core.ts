@@ -1,22 +1,22 @@
-import { TopLink } from "../../href"
+import { AppHref } from "../../href"
 import { AuthUsecase, AuthComponent, AuthState } from "../usecase"
 import { Infra } from "../infra"
 
 import { AuthCredential } from "../../credential/data"
 
-export function initAuthUsecase(link: TopLink, component: AuthComponent, infra: Infra): AuthUsecase {
-    return new Usecase(link, component, infra)
+export function initAuthUsecase(href: AppHref, component: AuthComponent, infra: Infra): AuthUsecase {
+    return new Usecase(href, component, infra)
 }
 
 class Usecase implements AuthUsecase {
-    link: TopLink
+    href: AppHref
     component: AuthComponent
 
     infra: Infra
     listener: Post<AuthState>[]
 
-    constructor(link: TopLink, component: AuthComponent, infra: Infra) {
-        this.link = link
+    constructor(href: AppHref, component: AuthComponent, infra: Infra) {
+        this.href = href
         this.component = component
 
         this.infra = infra

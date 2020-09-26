@@ -54,19 +54,19 @@ export function Main(props: Props): VNode {
         case "password-login":
             return h(PasswordLogin, {
                 component: props.usecase.component.passwordLogin,
-                link: props.usecase.link,
+                href: props.usecase.href,
             })
 
         case "password-reset-session":
             return h(PasswordResetSession, {
                 component: props.usecase.component.passwordResetSession,
-                link: props.usecase.link,
+                href: props.usecase.href,
             })
 
         case "password-reset":
             return h(PasswordReset, {
                 component: props.usecase.component.passwordReset,
-                link: props.usecase.link,
+                href: props.usecase.href,
                 param: state.param,
             })
 
