@@ -1,13 +1,14 @@
-import { SessionID, ResetToken, StartSessionEvent, PollingStatusEvent, ResetEvent } from "./data"
-import { LoginID } from "../login_id/data"
-import { Password } from "../password/data"
-import { Content } from "../field/data"
+import {
+    SessionID, ResetToken,
+    StartSessionContent, StartSessionEvent, PollingStatusEvent,
+    ResetContent, ResetEvent,
+} from "./data"
 
 export interface PasswordResetAction {
     sub: PasswordResetEventSubscriber
-    startSession(content: [Content<LoginID>]): Promise<void>
+    startSession(content: StartSessionContent): Promise<void>
     startPollingStatus(sessionID: SessionID): Promise<void>
-    reset(resetToken: ResetToken, fields: [Content<LoginID>, Content<Password>]): Promise<void>
+    reset(resetToken: ResetToken, content: ResetContent): Promise<void>
 }
 
 export interface PasswordResetEventPublisher {
