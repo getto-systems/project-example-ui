@@ -29,7 +29,7 @@ class Component implements RenewCredentialComponent {
     action: RenewCredentialComponentAction
     listener: Post<RenewCredentialState>[]
 
-    param: ParamHolder<Param>
+    holder: ParamHolder<Param>
 
     constructor(action: RenewCredentialComponentAction) {
         this.action = action
@@ -39,11 +39,15 @@ class Component implements RenewCredentialComponent {
         })
 
         this.listener = []
-        this.param = { set: false }
+        this.holder = { set: false }
     }
 
     onStateChange(stateChanged: Post<RenewCredentialState>): void {
         this.listener.push(stateChanged)
+    }
+
+    post(state: RenewCredentialState): void {
+        this.listener.forEach(post => post(state))
     }
 
     init(): Terminate {
@@ -59,7 +63,7 @@ class Component implements RenewCredentialComponent {
                 return this.setParam(operation.param)
 
             case "renew":
-                return this.action.credential.renew(unwrap(this.param).ticketNonce)
+                return this.renew()
 
             case "set-renew-interval":
                 return this.action.credential.setRenewInterval(operation.ticketNonce)
@@ -67,7 +71,15 @@ class Component implements RenewCredentialComponent {
     }
 
     async setParam(param: RenewCredentialParam): Promise<void> {
-        this.param = { set: true, param: unpackRenewCredentialParam(param) }
+        this.holder = { set: true, param: unpackRenewCredentialParam(param) }
+    }
+
+    async renew(): Promise<void> {
+        if (this.holder.set) {
+            this.action.credential.renew(this.holder.param.ticketNonce)
+        } else {
+            this.post({ type: "error", err: "param is not initialized" })
+        }
     }
 }
 
@@ -82,13 +94,6 @@ interface Post<T> {
 type ParamHolder<T> =
     Readonly<{ set: false }> |
     Readonly<{ set: true, param: Readonly<T> }>
-
-function unwrap<T>(param: ParamHolder<T>): Readonly<T> {
-    if (!param.set) {
-        throw new Error("not initialized")
-    }
-    return param.param
-}
 
 interface Terminate {
     (): void
