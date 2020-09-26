@@ -19,12 +19,12 @@ import { AppHref } from "../../../href"
 import { AuthUsecase, AuthComponent, AuthState } from "../../../auth/usecase"
 
 export function newAuthUsecase(): AuthUsecase {
-    return new Usecase(new Init().initial())
+    return new Usecase(new Init().initialAuth())
 }
 
 class Init {
-    initial(): AuthState {
-        return { type: "initial" }
+    initialAuth(): AuthState {
+        return { type: "initial-auth" }
     }
     renewCredential(): AuthState {
         return {

@@ -24,7 +24,7 @@ export interface AuthComponent {
 }
 
 export type AuthState =
-    Readonly<{ type: "initial" }> |
+    Readonly<{ type: "initial-auth" }> |
     Readonly<{ type: "failed-to-fetch", err: FetchError }> |
     Readonly<{ type: "failed-to-store", err: StoreError }> |
     Readonly<{ type: "renew-credential", param: RenewCredentialParam }> |
@@ -33,7 +33,7 @@ export type AuthState =
     Readonly<{ type: "password-reset-session" }> |
     Readonly<{ type: "password-reset", param: PasswordResetParam }>
 
-export const initialAuthState: AuthState = { type: "initial" }
+export const initialAuthState: AuthState = { type: "initial-auth" }
 
 export type FetchError =
     Readonly<{ type: "infra-error", err: string }>
