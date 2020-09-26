@@ -8,7 +8,7 @@ import { newPasswordResetSessionComponent } from "./password_reset_session"
 import { newPasswordResetComponent } from "./password_reset"
 
 import { packRenewCredentialParam } from "../../../auth/component/renew_credential/impl"
-import { packLoadApplicationParam } from "../../../auth/component/load_application/param"
+import { packLoadApplicationParam } from "../../../auth/component/load_application/impl"
 import { packPasswordResetParam } from "../../../auth/component/password_reset/impl"
 
 import { packTicketNonce } from "../../../credential/adapter"

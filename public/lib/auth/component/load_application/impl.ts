@@ -1,5 +1,3 @@
-import { unpackLoadApplicationParam } from "./param"
-
 import {
     LoadApplicationComponent,
     LoadApplicationComponentAction,
@@ -17,13 +15,23 @@ export function initLoadApplicationWorkerComponent(init: WorkerInit): LoadApplic
     return new WorkerComponent(init)
 }
 
+export function packLoadApplicationParam(pagePathname: PagePathname): LoadApplicationParam {
+    return { pagePathname } as LoadApplicationParam & Param
+}
+
+function unpackLoadApplicationParam(param: LoadApplicationParam): Param {
+    return param as unknown as Param
+}
+
+type Param = {
+    pagePathname: PagePathname
+}
+
 class Component implements LoadApplicationComponent {
     action: LoadApplicationComponentAction
     listener: Post<LoadApplicationState>[]
 
-    param: Param<{
-        pagePathname: PagePathname
-    }>
+    param: ParamHolder<Param>
 
     constructor(action: LoadApplicationComponentAction) {
         this.action = action
@@ -122,11 +130,11 @@ interface WorkerInit {
     (): Worker
 }
 
-type Param<T> =
+type ParamHolder<T> =
     Readonly<{ set: false }> |
     Readonly<{ set: true, param: Readonly<T> }>
 
-function unwrap<T>(param: Param<T>): Readonly<T> {
+function unwrap<T>(param: ParamHolder<T>): Readonly<T> {
     if (!param.set) {
         throw new Error("not initialized")
     }

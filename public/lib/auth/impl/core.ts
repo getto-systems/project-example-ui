@@ -1,5 +1,3 @@
-import { packLoadApplicationParam } from "../component/load_application/param"
-
 import { TopLink } from "../../link"
 import { AuthUsecase, AuthComponent, AuthState } from "../usecase"
 import { Infra } from "../infra"
@@ -96,7 +94,7 @@ class Usecase implements AuthUsecase {
         this.storeCredential(authCredential)
         this.post({
             type: "load-application",
-            param: packLoadApplicationParam(this.infra.authLocation.currentPagePathname()),
+            param: this.infra.param.loadApplication(this.infra.authLocation.currentPagePathname()),
         })
     }
     storeCredential(authCredential: AuthCredential): void {

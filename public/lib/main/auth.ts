@@ -17,6 +17,7 @@ import { initAuthLocation } from "../auth/impl/location"
 import { initStorageAuthCredentialRepository } from "../auth/impl/repository/auth_credential/storage"
 
 import { initRenewCredentialComponent, packRenewCredentialParam } from "../auth/component/renew_credential/impl"
+import { packLoadApplicationParam } from "../auth/component/load_application/impl"
 import { packPasswordResetParam } from "../auth/component/password_reset/impl"
 
 import { initFetchRenewClient } from "../credential/impl/client/renew/fetch"
@@ -41,6 +42,7 @@ export function newAuthUsecase(currentLocation: Location, credentialStorage: Sto
     }, {
         param: {
             renewCredential: packRenewCredentialParam,
+            loadApplication: packLoadApplicationParam,
             passwordReset: packPasswordResetParam,
         },
         authLocation: initAuthLocation(currentLocation),

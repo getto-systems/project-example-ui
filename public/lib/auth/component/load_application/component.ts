@@ -1,6 +1,6 @@
 import { ScriptAction } from "../../../script/action"
 
-import { ScriptPath } from "../../../script/data"
+import { PagePathname, ScriptPath } from "../../../script/data"
 
 export interface LoadApplicationComponent {
     onStateChange(stateChanged: Post<LoadApplicationState>): void
@@ -9,6 +9,10 @@ export interface LoadApplicationComponent {
 }
 
 export type LoadApplicationParam = { LoadApplicationParam: never }
+
+export interface LoadApplicationParamPacker {
+    (pagePathname: PagePathname): LoadApplicationParam
+}
 
 export type LoadApplicationState =
     Readonly<{ type: "initial-load" }> |
