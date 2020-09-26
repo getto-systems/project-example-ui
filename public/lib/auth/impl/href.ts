@@ -1,6 +1,6 @@
 import { AuthHref } from "../../auth/href"
 
-export function newAuthHref(): AuthHref {
+export function initAuthHref(): AuthHref {
     return {
         passwordLoginHref,
         passwordResetSessionHref,
