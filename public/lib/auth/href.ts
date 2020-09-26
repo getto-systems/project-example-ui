@@ -1,4 +1,4 @@
-export interface AuthLink {
+export interface AuthHref {
     passwordLoginHref(): string
     passwordResetSessionHref(): string
 }

@@ -1,4 +1,4 @@
-import { TopLink } from "../href"
+import { AppHref } from "../href"
 
 import { RenewCredentialComponent, RenewCredentialParam } from "./component/renew_credential/component"
 import { LoadApplicationComponent, LoadApplicationParam } from "./component/load_application/component"
@@ -8,7 +8,7 @@ import { PasswordResetSessionComponent } from "./component/password_reset_sessio
 import { PasswordResetComponent, PasswordResetParam } from "./component/password_reset/component"
 
 export interface AuthUsecase {
-    link: TopLink
+    href: AppHref
     component: AuthComponent
     onStateChange(stateChanged: Post<AuthState>): void
     init(): Terminate

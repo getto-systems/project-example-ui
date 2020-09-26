@@ -1,6 +1,6 @@
-import { AuthLink } from "../../auth/href"
+import { AuthHref } from "../../auth/href"
 
-export function newAuthLink(): AuthLink {
+export function newAuthHref(): AuthHref {
     return {
         passwordLoginHref,
         passwordResetSessionHref,

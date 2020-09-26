@@ -7,7 +7,7 @@ import { ApplicationError } from "../application_error"
 
 import { LoginIDField } from "./password_reset_session/field/login_id"
 
-import { TopLink } from "../../href"
+import { AppHref } from "../../href"
 
 import {
     PasswordResetSessionComponent,
@@ -18,7 +18,7 @@ import { Destination, PollingStatus, StartSessionError, PollingStatusError, Send
 
 type Props = Readonly<{
     component: PasswordResetSessionComponent
-    link: TopLink
+    href: AppHref
 }>
 
 export function PasswordResetSession(props: Props): VNode {
@@ -46,7 +46,7 @@ export function PasswordResetSession(props: Props): VNode {
                             <div>
                                 <big>${button}</big>
                             </div>
-                            ${loginLink(props.link)}
+                            ${loginLink(props.href)}
                         </div>
                         ${footer}
                     </footer>
@@ -80,7 +80,7 @@ export function PasswordResetSession(props: Props): VNode {
         `, html`
             <section class="button__container">
                 <div></div>
-                ${loginLink(props.link)}
+                ${loginLink(props.href)}
             </section>
         `)
     }
@@ -132,7 +132,7 @@ export function PasswordResetSession(props: Props): VNode {
             return loginError(html`リセットトークンを送信しました`, sendTokenMessage(state.dest), html`
                 <section class="button__container">
                     <div></div>
-                    ${loginLink(props.link)}
+                    ${loginLink(props.href)}
                 </section>
             `)
 
@@ -176,10 +176,10 @@ function formMessage(messageClass: string, content: VNode): VNode {
     `
 }
 
-function loginLink(link: TopLink): VNode {
+function loginLink(href: AppHref): VNode {
     return html`
         <div class="login__link">
-            <a href="${link.auth.passwordLoginHref()}">
+            <a href="${href.auth.passwordLoginHref()}">
                 <i class="lnir lnir-user"></i> ログインIDとパスワードでログインする
             </a>
         </div>
