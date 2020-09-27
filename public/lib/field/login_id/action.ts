@@ -1,5 +1,4 @@
 import { LoginIDFieldOperation, LoginIDFieldEvent } from "./data"
-import { InputValue } from "../../field/data"
 
 export interface LoginIDFieldAction {
     initLoginIDField(): LoginIDField
@@ -8,7 +7,6 @@ export interface LoginIDFieldAction {
 export interface LoginIDField {
     sub: LoginIDFieldEventSubscriber
     trigger(operation: LoginIDFieldOperation): void
-    set(input: InputValue): void
     validate(): void
 }
 
