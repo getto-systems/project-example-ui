@@ -17,7 +17,6 @@ interface FormComponent {
 
 export function PasswordField(props: Props): VNode {
     const [state, setState] = useState(initialPasswordFieldState)
-
     useEffect(() => {
         props.component.onPasswordFieldStateChange(setState)
     }, [])

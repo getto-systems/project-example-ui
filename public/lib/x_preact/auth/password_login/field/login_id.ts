@@ -17,7 +17,6 @@ interface FormComponent {
 
 export function LoginIDField(props: Props): VNode {
     const [state, setState] = useState(initialLoginIDFieldState)
-
     useEffect(() => {
         props.component.onLoginIDFieldStateChange(setState)
     }, [])
