@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { onFieldInput } from "../../field/common"
+import { mapInputEvent, mapInputValue } from "../../field/common"
 import { passwordView, passwordFieldError } from "../../field/password"
 
 import { PasswordFieldState, initialPasswordFieldState } from "../../../../auth/component/field/password/component"
@@ -20,12 +20,15 @@ interface FormComponent {
 
 export function PasswordField(props: Props): VNode {
     const [state, setState] = useState(initialPasswordFieldState)
+    const [value, setValue] = useState("")
+    const setPassword = mapInputValue(setValue)
     useEffect(() => {
         props.component.onPasswordFieldStateChange(setState)
     }, [])
 
-    const onInput = onFieldInput((password) => {
+    const onInput = mapInputEvent((password) => {
         props.component.trigger({ type: "field-password", operation: { type: "set-password", password } })
+        setPassword(password)
     })
 
     const handler = {
@@ -42,7 +45,7 @@ export function PasswordField(props: Props): VNode {
             <dl class="form ${state.result.valid ? "" : "form_error"}">
                 <dt class="form__header">パスワード</dt>
                 <dd class="form__field">
-                    <input type="password" class="input_fill" onInput=${onInput}/>
+                    <input type="password" class="input_fill" value=${value} onInput=${onInput}/>
                     ${passwordFieldError(state.result, state.character)}
                     <p class="form__help">新しいパスワードを入力してください</p>
                     <p class="form__help">${passwordView(handler, state.view, state.character)}</p>
