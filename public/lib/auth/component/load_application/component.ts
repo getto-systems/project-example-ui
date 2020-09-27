@@ -11,23 +11,26 @@ export interface LoadApplicationComponent {
 export type LoadApplicationParam = { LoadApplicationParam: never }
 
 export interface LoadApplicationParamPacker {
-    (pagePathname: PagePathname): LoadApplicationParam
+    (param: { pagePathname: PagePathname, instantly: boolean }): LoadApplicationParam
 }
 
 export type LoadApplicationState =
     Readonly<{ type: "initial-load" }> |
     Readonly<{ type: "try-to-load", scriptPath: ScriptPath }> |
-    Readonly<{ type: "failed-to-load", err: CheckError }> |
+    Readonly<{ type: "failed-to-load", err: LoadError }> |
+    Readonly<{ type: "succeed-to-load", instantly: boolean }> |
     Readonly<{ type: "error", err: string }>
 
 export const initialLoadApplicationState: LoadApplicationState = { type: "initial-load" }
 
-export type CheckError =
-    Readonly<{ type: "not-found" }>
-
 export type LoadApplicationComponentOperation =
     Readonly<{ type: "set-param", param: LoadApplicationParam }> |
-    Readonly<{ type: "load" }>
+    Readonly<{ type: "load" }> |
+    Readonly<{ type: "failed-to-load", err: LoadError }> |
+    Readonly<{ type: "succeed-to-load" }>
+
+export type LoadError =
+    Readonly<{ type: "infra-error", err: string }>
 
 export interface LoadApplicationComponentAction {
     script: ScriptAction,

@@ -10,7 +10,7 @@ export function newLoadApplicationComponent(): LoadApplicationComponent {
 
 class Init {
     failedToLoad_not_found(): LoadApplicationState {
-        return { type: "failed-to-load", err: { type: "not-found" } }
+        return { type: "failed-to-load", err: { type: "infra-error", err: "error" } }
     }
 }
 

@@ -1,4 +1,4 @@
-import { Infra } from "../infra"
+import { Infra, RenewClient } from "../infra"
 
 import {
     CredentialAction,
@@ -6,7 +6,7 @@ import {
     CredentialEventSubscriber,
 } from "../action"
 
-import { TicketNonce, RenewEvent } from "../data"
+import { TicketNonce, RenewEvent, RenewRun } from "../data"
 
 export function initCredentialAction(infra: Infra): CredentialAction {
     return new Action(infra)
@@ -47,24 +47,33 @@ class Action implements CredentialAction {
         post({ type: "succeed-to-renew", authCredential: response.authCredential })
     }
 
-    async setRenewInterval(ticketNonce: TicketNonce): Promise<void> {
+    async setRenewInterval(ticketNonce: TicketNonce, run: RenewRun): Promise<void> {
         const post = (event: RenewEvent) => this.pub.postRenewEvent(event)
 
         let continueInterval = true
-        setInterval(async () => {
-            // unmount したあとに実行されるので、失敗イベントは発行しない
-            if (!continueInterval) {
-                return
-            }
 
-            const response = await this.infra.renewClient.renew(ticketNonce)
+        if (run.immediately) {
+            setTimeout(() => {
+                renewInBackground(this.infra.renewClient)
+            }, run.delay.delay_milli_second)
+        }
+
+        setInterval(async () => {
+            if (continueInterval) {
+                renewInBackground(this.infra.renewClient)
+            }
+        }, this.infra.timeConfig.renewIntervalTime.interval_milli_second)
+
+        async function renewInBackground(renewClient: RenewClient) {
+            // 画面へのフィードバックはしないので、失敗イベントは発行しない
+            const response = await renewClient.renew(ticketNonce)
             if (!response.success || !response.hasCredential) {
                 continueInterval = false
                 return
             }
 
             post({ type: "succeed-to-renew-interval", authCredential: response.authCredential })
-        }, this.infra.timeConfig.renewIntervalTime.interval_milli_second)
+        }
     }
 }
 

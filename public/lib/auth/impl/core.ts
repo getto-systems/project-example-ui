@@ -2,7 +2,7 @@ import { AppHref } from "../../href"
 import { AuthUsecase, AuthComponent, AuthState } from "../usecase"
 import { Infra } from "../infra"
 
-import { AuthCredential } from "../../credential/data"
+import { AuthCredential, AuthAt } from "../../credential/data"
 
 export function initAuthUsecase(href: AppHref, component: AuthComponent, infra: Infra): AuthUsecase {
     return new Usecase(href, component, infra)
@@ -21,6 +21,16 @@ class Usecase implements AuthUsecase {
 
         this.infra = infra
         this.listener = []
+
+        this.component.loadApplication.onStateChange((state) => {
+            switch (state.type) {
+                case "succeed-to-load":
+                    if (state.instantly) {
+                        this.tryToRenew()
+                    }
+                    return
+            }
+        })
 
         this.component.renewCredential.onStateChange((state) => {
             switch (state.type) {
@@ -64,17 +74,33 @@ class Usecase implements AuthUsecase {
         return () => this.terminate()
     }
     initUsecase(): void {
-        const found = this.infra.authCredentials.findTicketNonce()
-        if (!found.success) {
-            this.post({ type: "failed-to-fetch", err: found.err })
-            return
-        }
-        if (!found.found) {
-            this.tryToLogin()
+        const lastAuthAt = this.infra.authCredentials.findLastAuthAt()
+        if (!lastAuthAt.success) {
+            this.post({ type: "failed-to-fetch", err: lastAuthAt.err })
             return
         }
 
-        this.post({ type: "renew-credential", param: this.infra.param.renewCredential(found.content) })
+        if (this.infra.expires.hasExceeded(lastAuthAt, this.infra.timeConfig.instantLoadExpireTime)) {
+            const ticketNonce = this.infra.authCredentials.findTicketNonce()
+            if (!ticketNonce.success) {
+                this.post({ type: "failed-to-fetch", err: ticketNonce.err })
+                return
+            }
+            if (!ticketNonce.found) {
+                this.tryToLogin()
+                return
+            }
+
+            this.post({ type: "renew-credential", param: this.infra.param.renewCredential(ticketNonce.content) })
+        } else {
+            this.post({
+                type: "load-application",
+                param: this.infra.param.loadApplication({
+                    pagePathname: this.infra.authLocation.currentPagePathname(),
+                    instantly: true,
+                }),
+            })
+        }
     }
     terminate(): void {
         // component とインターフェイスを合わせるために必要
@@ -84,17 +110,49 @@ class Usecase implements AuthUsecase {
         this.listener.forEach(post => post(state))
     }
 
+    tryToRenew(): void {
+        const ticketNonce = this.infra.authCredentials.findTicketNonce()
+        if (!ticketNonce.success) {
+            this.post({ type: "failed-to-fetch", err: ticketNonce.err })
+            return
+        }
+        if (!ticketNonce.found) {
+            this.tryToLogin()
+            return
+        }
+
+        const lastAuthAt = this.infra.authCredentials.findLastAuthAt()
+        if (!lastAuthAt.success) {
+            this.post({ type: "failed-to-fetch", err: lastAuthAt.err })
+            return
+        }
+
+        // 例外的に直接 trigger する : 画面へのフィードバックを必要としないため
+        this.component.renewCredential.trigger({
+            type: "set-renew-interval",
+            ticketNonce: ticketNonce.content,
+            run: { immediately: true, delay: this.infra.runner.nextRun(lastAuthAt, this.infra.timeConfig.renewRunDelayTime) },
+        })
+    }
     tryToLogin(): void {
         this.post(this.infra.authLocation.detect(this.infra.param))
     }
     loadApplication(authCredential: AuthCredential): void {
-        // 例外的に直接 trigger する : この直後に unmount するので画面へのフィードバックがないため
-        this.component.renewCredential.trigger({ type: "set-renew-interval", ticketNonce: authCredential.ticketNonce })
-
         this.storeCredential(authCredential)
+
+        // 例外的に直接 trigger する : 画面へのフィードバックを必要としないため
+        this.component.renewCredential.trigger({
+            type: "set-renew-interval",
+            ticketNonce: authCredential.ticketNonce,
+            run: { immediately: false },
+        })
+
         this.post({
             type: "load-application",
-            param: this.infra.param.loadApplication(this.infra.authLocation.currentPagePathname()),
+            param: this.infra.param.loadApplication({
+                pagePathname: this.infra.authLocation.currentPagePathname(),
+                instantly: false,
+            }),
         })
     }
     storeCredential(authCredential: AuthCredential): void {
@@ -113,3 +171,9 @@ interface Post<T> {
 interface Terminate {
     (): void
 }
+
+type Found<T> =
+    Readonly<{ found: false }> |
+    Readonly<{ found: true, content: T }>
+
+type DelayTime = Readonly<{ delay_milli_second: number }>

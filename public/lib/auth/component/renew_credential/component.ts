@@ -1,6 +1,6 @@
 import { CredentialAction } from "../../../credential/action"
 
-import { AuthCredential, TicketNonce, RenewError } from "../../../credential/data"
+import { AuthCredential, TicketNonce, RenewError, RenewRun } from "../../../credential/data"
 
 export interface RenewCredentialComponent {
     onStateChange(stateChanged: Post<RenewCredentialState>): void
@@ -29,7 +29,7 @@ export const initialRenewCredentialState: RenewCredentialState = { type: "initia
 export type RenewCredentialOperation =
     Readonly<{ type: "set-param", param: RenewCredentialParam }> |
     Readonly<{ type: "renew" }> |
-    Readonly<{ type: "set-renew-interval", ticketNonce: TicketNonce }>
+    Readonly<{ type: "set-renew-interval", ticketNonce: TicketNonce, run: RenewRun }>
 
 export interface RenewCredentialComponentAction {
     credential: CredentialAction

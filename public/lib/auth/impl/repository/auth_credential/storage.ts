@@ -7,9 +7,13 @@ import {
     AuthCredentialRepository, FindResponse, StoreResponse,
 } from "../../../infra"
 
-import { packTicketNonce, packApiRoles, unpackTicketNonce, unpackApiCredential } from "../../../../credential/adapter"
+import {
+    packTicketNonce, unpackTicketNonce,
+    packApiRoles, unpackApiCredential,
+    packAuthAt, unpackAuthAt,
+} from "../../../../credential/adapter"
 
-import { AuthCredential, TicketNonce, ApiCredential } from "../../../../credential/data"
+import { AuthCredential, TicketNonce, ApiCredential, AuthAt } from "../../../../credential/data"
 
 export function initStorageAuthCredentialRepository(storage: Storage, key: StorageKey): AuthCredentialRepository {
     return new Repository(storage, key)
@@ -35,10 +39,24 @@ class Repository implements AuthCredentialRepository {
         }
     }
 
+    findLastAuthAt(): FindResponse<AuthAt> {
+        try {
+            const found = this.storage.getLastAuthAt()
+            if (!found.found) {
+                return { success: true, found: false }
+            }
+
+            return { success: true, found: true, content: found.content }
+        } catch (err) {
+            return { success: false, err: { type: "infra-error", err: `${err}` } }
+        }
+    }
+
     storeAuthCredential(authCredential: AuthCredential): StoreResponse {
         try {
             this.storage.setTicketNonce(authCredential.ticketNonce)
             this.storage.setApiCredential(authCredential.apiCredential)
+            this.storage.setLastAuthAt(authCredential.authAt)
             return { success: true }
         } catch (err) {
             return { success: false, err: { type: "infra-error", err: `${err}` } }
@@ -52,6 +70,9 @@ interface AuthCredentialStorage {
 
     setApiCredential(apiCredential: ApiCredential): void
     getApiCredential(): Found<ApiCredential>
+
+    setLastAuthAt(authAt: AuthAt): void
+    getLastAuthAt(): Found<AuthAt>
 }
 
 type Found<T> =
@@ -113,5 +134,18 @@ class AuthCredentialStorageImpl implements AuthCredentialStorage {
 
         const arr = f.encode(message).finish()
         this.storage.setItem(this.key.apiCredential, encodeUint8ArrayToBase64String(arr))
+    }
+
+    getLastAuthAt(): Found<AuthAt> {
+        const raw = this.storage.getItem(this.key.lastAuthAt)
+        if (raw) {
+            return { found: true, content: packAuthAt(new Date(raw)) }
+        }
+        return { found: false }
+    }
+
+    setLastAuthAt(authAt: AuthAt): void {
+        const date = unpackAuthAt(authAt)
+        this.storage.setItem(this.key.lastAuthAt, date.toISOString())
     }
 }

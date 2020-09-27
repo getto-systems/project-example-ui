@@ -1,4 +1,5 @@
 export type AuthCredential = Readonly<{
+    authAt: AuthAt
     ticketNonce: TicketNonce,
     apiCredential: ApiCredential,
 }>
@@ -15,6 +16,14 @@ export type TicketNonce = { TicketNonce: never }
 
 export type ApiRoles = ApiRole[]
 export type ApiRole = { ApiRole: never }
+
+export type AuthAt = { AuthAt: never }
+
+export type RenewRun =
+    Readonly<{ immediately: false }> |
+    Readonly<{ immediately: true, delay: DelayTime }>
+
+type DelayTime = Readonly<{ delay_milli_second: number }>
 
 export type RenewEvent =
     Readonly<{ type: "required-to-login" }> |
