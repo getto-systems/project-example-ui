@@ -2,9 +2,12 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { LoginIDFieldOperation, loginIDFieldError, onLoginIDInput } from "../../field/login_id"
+import { onFieldInput } from "../../field/common"
+import { loginIDFieldError } from "../../field/login_id"
 
 import { LoginIDFieldState, initialLoginIDFieldState } from "../../../../auth/component/field/login_id/component"
+
+import { LoginIDFieldOperation } from "../../../../field/login_id/data"
 
 type Props = Readonly<{
     component: FormComponent
@@ -12,7 +15,7 @@ type Props = Readonly<{
 
 interface FormComponent {
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
-    trigger(operation: LoginIDFieldOperation): Promise<void>
+    trigger(operation: { type: "field-login_id", operation: LoginIDFieldOperation }): Promise<void>
 }
 
 export function LoginIDField(props: Props): VNode {
@@ -21,12 +24,16 @@ export function LoginIDField(props: Props): VNode {
         props.component.onLoginIDFieldStateChange(setState)
     }, [])
 
+    const onInput = onFieldInput((loginID) => {
+        props.component.trigger({ type: "field-login_id", operation: { type: "set-login_id", loginID } })
+    })
+
     return html`
         <label>
             <dl class="form ${state.result.valid ? "" : "form_error"}">
                 <dt class="form__header">ログインID</dt>
                 <dd class="form__field">
-                    <input type="text" class="input_fill" onInput=${onLoginIDInput(props.component)}/>
+                    <input type="text" class="input_fill" onInput=${onInput}/>
                     ${loginIDFieldError(state.result)}
                     <p class="form__help">このログインIDに設定された送信先にリセットトークンを送信します</p>
                 </dd>
