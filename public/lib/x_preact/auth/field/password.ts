@@ -1,23 +1,10 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { packInputValue, unpackInputValue } from "../../../field/adapter"
+import { unpackInputValue } from "../../../field/adapter"
 
 import { PasswordFieldError, PasswordCharacter, PasswordView } from "../../../field/password/data"
 import { InputValue, Valid } from "../../../field/data"
-
-export type PasswordFieldOperation =
-    Readonly<{ type: "field-password", operation: { type: "set-password", password: InputValue } }> |
-    Readonly<{ type: "field-password", operation: { type: "show-password" } }> |
-    Readonly<{ type: "field-password", operation: { type: "hide-password" } }>
-
-export function onPasswordInput(component: FormComponent): Post<InputEvent> {
-    return (e: InputEvent): void => {
-        if (e.target instanceof HTMLInputElement) {
-            setPassword(component, packInputValue(e.target.value))
-        }
-    }
-}
 
 export function passwordFieldError(result: Valid<PasswordFieldError>, character: PasswordCharacter): VNode[] {
     if (result.valid) {
@@ -39,7 +26,12 @@ export function passwordFieldError(result: Valid<PasswordFieldError>, character:
     })
 }
 
-export function passwordView(component: FormComponent, view: PasswordView, character: PasswordCharacter): VNode {
+export interface PasswordViewHandler {
+    show(): void
+    hide(): void
+}
+
+export function passwordView(handler: PasswordViewHandler, view: PasswordView, character: PasswordCharacter): VNode {
     if (view.show) {
         return html`
             <a href="#" onClick=${hide}>
@@ -74,11 +66,11 @@ export function passwordView(component: FormComponent, view: PasswordView, chara
 
     function show(e: MouseEvent) {
         linkClicked(e)
-        showPassword(component)
+        handler.show()
     }
     function hide(e: MouseEvent) {
         linkClicked(e)
-        hidePassword(component)
+        handler.hide()
     }
     function linkClicked(e: MouseEvent) {
         e.preventDefault()
@@ -88,20 +80,6 @@ export function passwordView(component: FormComponent, view: PasswordView, chara
             e.target.blur()
         }
     }
-}
-
-function setPassword(component: FormComponent, password: InputValue): void {
-    component.trigger({ type: "field-password", operation: { type: "set-password", password } })
-}
-function showPassword(component: FormComponent): void {
-    component.trigger({ type: "field-password", operation: { type: "show-password" } })
-}
-function hidePassword(component: FormComponent): void {
-    component.trigger({ type: "field-password", operation: { type: "hide-password" } })
-}
-
-interface FormComponent {
-    trigger(operation: PasswordFieldOperation): Promise<void>
 }
 
 interface Post<T> {
