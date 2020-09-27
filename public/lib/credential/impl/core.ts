@@ -65,7 +65,7 @@ class Action implements CredentialAction {
         }, this.infra.timeConfig.renewIntervalTime.interval_milli_second)
 
         async function renewInBackground(renewClient: RenewClient) {
-            // 画面へフィードバックできないため、失敗イベントは発行しない
+            // 画面へのフィードバックはしないので、失敗イベントは発行しない
             const response = await renewClient.renew(ticketNonce)
             if (!response.success || !response.hasCredential) {
                 continueInterval = false

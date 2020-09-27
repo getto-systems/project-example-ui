@@ -23,12 +23,10 @@ export type PasswordFieldOperation =
     Readonly<{ type: "show-password" }> |
     Readonly<{ type: "hide-password" }>
 
-export type PasswordFieldEvent =
-    Readonly<{
-        type: "succeed-to-update-password"
-        inputValue: InputValue
-        result: Valid<PasswordFieldError>
-        content: Content<Password>
-        character: PasswordCharacter
-        view: PasswordView
-    }>
+export type PasswordFieldEvent = Readonly<{
+    type: "succeed-to-update-password",
+    result: Valid<PasswordFieldError>,
+    content: Content<Password>,
+    character: PasswordCharacter,
+    view: PasswordView,
+}>

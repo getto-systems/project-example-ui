@@ -1,5 +1,3 @@
-import { packInputValue } from "../../../field/adapter"
-
 import {
     PasswordResetSessionComponent,
     PasswordResetSessionState,
@@ -76,10 +74,10 @@ class Init {
     }
 
     loginIDValid(): LoginIDFieldState {
-        return { type: "succeed-to-update-login_id", inputValue: packInputValue(""), result: { valid: true } }
+        return { type: "succeed-to-update-login_id", result: { valid: true } }
     }
     loginIDInvalid_empty(): LoginIDFieldState {
-        return { type: "succeed-to-update-login_id", inputValue: packInputValue(""), result: { valid: false, err: ["empty"] } }
+        return { type: "succeed-to-update-login_id", result: { valid: false, err: ["empty"] } }
     }
 }
 
