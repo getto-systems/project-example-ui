@@ -11,6 +11,10 @@ export type PasswordFieldOperation =
     Readonly<{ type: "field-password", operation: { type: "show-password" } }> |
     Readonly<{ type: "field-password", operation: { type: "hide-password" } }>
 
+export function password(state: { inputValue: InputValue }): string {
+    return unpackInputValue(state.inputValue)
+}
+
 export function onPasswordInput(component: FormComponent): Post<InputEvent> {
     return (e: InputEvent): void => {
         if (e.target instanceof HTMLInputElement) {

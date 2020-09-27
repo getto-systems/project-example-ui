@@ -2,7 +2,7 @@ import { AppHref } from "../../href"
 import { AuthUsecase, AuthComponent, AuthState } from "../usecase"
 import { Infra } from "../infra"
 
-import { AuthCredential, AuthAt } from "../../credential/data"
+import { AuthCredential } from "../../credential/data"
 
 export function initAuthUsecase(href: AppHref, component: AuthComponent, infra: Infra): AuthUsecase {
     return new Usecase(href, component, infra)
@@ -74,6 +74,16 @@ class Usecase implements AuthUsecase {
         return () => this.terminate()
     }
     initUsecase(): void {
+        const ticketNonce = this.infra.authCredentials.findTicketNonce()
+        if (!ticketNonce.success) {
+            this.post({ type: "failed-to-fetch", err: ticketNonce.err })
+            return
+        }
+        if (!ticketNonce.found) {
+            this.tryToLogin()
+            return
+        }
+
         const lastAuthAt = this.infra.authCredentials.findLastAuthAt()
         if (!lastAuthAt.success) {
             this.post({ type: "failed-to-fetch", err: lastAuthAt.err })
@@ -81,16 +91,6 @@ class Usecase implements AuthUsecase {
         }
 
         if (this.infra.expires.hasExceeded(lastAuthAt, this.infra.timeConfig.instantLoadExpireTime)) {
-            const ticketNonce = this.infra.authCredentials.findTicketNonce()
-            if (!ticketNonce.success) {
-                this.post({ type: "failed-to-fetch", err: ticketNonce.err })
-                return
-            }
-            if (!ticketNonce.found) {
-                this.tryToLogin()
-                return
-            }
-
             this.post({ type: "renew-credential", param: this.infra.param.renewCredential(ticketNonce.content) })
         } else {
             this.post({
@@ -111,23 +111,21 @@ class Usecase implements AuthUsecase {
     }
 
     tryToRenew(): void {
+        // 画面へフィードバックできないため、失敗イベントは発行しない
         const ticketNonce = this.infra.authCredentials.findTicketNonce()
         if (!ticketNonce.success) {
-            this.post({ type: "failed-to-fetch", err: ticketNonce.err })
             return
         }
         if (!ticketNonce.found) {
-            this.tryToLogin()
             return
         }
 
         const lastAuthAt = this.infra.authCredentials.findLastAuthAt()
         if (!lastAuthAt.success) {
-            this.post({ type: "failed-to-fetch", err: lastAuthAt.err })
             return
         }
 
-        // 例外的に直接 trigger する : 画面へのフィードバックを必要としないため
+        // 例外的に直接 trigger する : 画面へフィードバックできないため
         this.component.renewCredential.trigger({
             type: "set-renew-interval",
             ticketNonce: ticketNonce.content,
@@ -140,7 +138,7 @@ class Usecase implements AuthUsecase {
     loadApplication(authCredential: AuthCredential): void {
         this.storeCredential(authCredential)
 
-        // 例外的に直接 trigger する : 画面へのフィードバックを必要としないため
+        // 例外的に直接 trigger する : 画面へフィードバックできないため
         this.component.renewCredential.trigger({
             type: "set-renew-interval",
             ticketNonce: authCredential.ticketNonce,

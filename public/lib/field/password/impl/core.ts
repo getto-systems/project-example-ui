@@ -79,19 +79,19 @@ class Field implements PasswordField {
         this.validate()
     }
     validate(): void {
-        const [content, result, character, view] = this.content()
-        this.pub.postPasswordFieldEvent({ type: "succeed-to-update-password", result, content, character, view })
+        const content = this.content()
+        this.pub.postPasswordFieldEvent({ type: "succeed-to-update-password", inputValue: this.password, ...content })
     }
 
-    content(): [Content<Password>, Valid<PasswordFieldError>, PasswordCharacter, PasswordView] {
+    content(): { content: Content<Password>, result: Valid<PasswordFieldError>, character: PasswordCharacter, view: PasswordView } {
         const password = unpackInputValue(this.password)
         const result = hasError(validatePassword(password))
         const character = checkCharacter(password)
         const view = this.view()
         if (!result.valid) {
-            return [invalidContent(), result, character, view]
+            return { content: invalidContent(), result, character, view }
         }
-        return [validContent(packPassword(password)), result, character, view]
+        return { content: validContent(packPassword(password)), result, character, view }
     }
     view(): PasswordView {
         if (this.visible) {

@@ -7,4 +7,9 @@ export type LoginIDFieldOperation =
     Readonly<{ type: "set-login_id", loginID: InputValue }>
 
 export type LoginIDFieldEvent =
-    Readonly<{ type: "succeed-to-update-login_id", result: Valid<LoginIDFieldError>, content: Content<LoginID> }>
+    Readonly<{
+        type: "succeed-to-update-login_id",
+        inputValue: InputValue,
+        result: Valid<LoginIDFieldError>,
+        content: Content<LoginID>,
+    }>

@@ -48,15 +48,16 @@ class Init {
     }
 
     loginIDValid(): LoginIDFieldState {
-        return { type: "succeed-to-update-login_id", result: { valid: true } }
+        return { type: "succeed-to-update-login_id", inputValue: packInputValue(""), result: { valid: true } }
     }
     loginIDInvalid_empty(): LoginIDFieldState {
-        return { type: "succeed-to-update-login_id", result: { valid: false, err: ["empty"] } }
+        return { type: "succeed-to-update-login_id", inputValue: packInputValue(""), result: { valid: false, err: ["empty"] } }
     }
 
     passwordValid(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
+            inputValue: packInputValue(""),
             result: { valid: true },
             character: { complex: false },
             view: { show: false },
@@ -65,6 +66,7 @@ class Init {
     passwordInvalid_empty(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
+            inputValue: packInputValue(""),
             result: { valid: false, err: ["empty"] },
             character: { complex: false },
             view: { show: false },
@@ -73,6 +75,7 @@ class Init {
     passwordInvalid_too_long(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
+            inputValue: packInputValue(""),
             result: { valid: false, err: ["too-long"] },
             character: { complex: false },
             view: { show: false },
@@ -81,6 +84,7 @@ class Init {
     passwordComplexInvalid_too_long(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
+            inputValue: packInputValue(""),
             result: { valid: false, err: ["too-long"] },
             character: { complex: true },
             view: { show: false },
@@ -89,6 +93,7 @@ class Init {
     passwordComplex(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
+            inputValue: packInputValue(""),
             result: { valid: true },
             character: { complex: true },
             view: { show: false },
@@ -97,6 +102,7 @@ class Init {
     passwordView(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
+            inputValue: packInputValue(""),
             result: { valid: true },
             character: { complex: false },
             view: { show: true, password: packInputValue("password") },
