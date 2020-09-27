@@ -1,19 +1,19 @@
 import { RenewClient, RenewResponse } from "../../../infra"
 
-import { TicketNonce, ApiCredential } from "../../../../credential/data"
+import { AuthCredential, TicketNonce } from "../../../../credential/data"
 
-export function initSimulateRenewClient(targetTicketNonce: TicketNonce, returnApiCredential: ApiCredential): RenewClient {
-    return new SimulateRenewClient(targetTicketNonce, returnApiCredential)
+export function initSimulateRenewClient(targetTicketNonce: TicketNonce, returnAuthCredential: AuthCredential): RenewClient {
+    return new SimulateRenewClient(targetTicketNonce, returnAuthCredential)
 }
 
 class SimulateRenewClient implements RenewClient {
     targetTicketNonce: TicketNonce
 
-    returnApiCredential: ApiCredential
+    returnAuthCredential: AuthCredential
 
-    constructor(targetTicketNonce: TicketNonce, returnApiCredential: ApiCredential) {
+    constructor(targetTicketNonce: TicketNonce, returnAuthCredential: AuthCredential) {
         this.targetTicketNonce = targetTicketNonce
-        this.returnApiCredential = returnApiCredential
+        this.returnAuthCredential = returnAuthCredential
     }
 
     async renew(ticketNonce: TicketNonce): Promise<RenewResponse> {
@@ -23,10 +23,7 @@ class SimulateRenewClient implements RenewClient {
         return {
             success: true,
             hasCredential: true,
-            authCredential: {
-                ticketNonce: this.targetTicketNonce,
-                apiCredential: this.returnApiCredential,
-            },
+            authCredential: this.returnAuthCredential,
         }
     }
 }

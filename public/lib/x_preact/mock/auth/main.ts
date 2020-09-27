@@ -35,7 +35,10 @@ class Init {
     loadApplication(): AuthState {
         return {
             type: "load-application",
-            param: packLoadApplicationParam(packPagePathname(new URL("https://example.com/index.html"))),
+            param: packLoadApplicationParam({
+                pagePathname: packPagePathname(new URL("https://example.com/index.html")),
+                instantly: false,
+            }),
         }
     }
 

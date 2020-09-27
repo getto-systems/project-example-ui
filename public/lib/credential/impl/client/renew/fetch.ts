@@ -1,6 +1,6 @@
 import { RenewClient, RenewResponse } from "../../../infra"
 
-import { packTicketNonce, unpackTicketNonce, packApiRoles } from "../../../../credential/adapter"
+import { packTicketNonce, unpackTicketNonce, packApiRoles, packAuthAt } from "../../../../credential/adapter"
 
 import { TicketNonce } from "../../../../credential/data"
 
@@ -35,6 +35,7 @@ class FetchRenewClient implements RenewClient {
                         apiCredential: {
                             apiRoles: packApiRoles(response.authCredential.apiCredential.apiRoles),
                         },
+                        authAt: packAuthAt(new Date()),
                     },
                 }
             } else {

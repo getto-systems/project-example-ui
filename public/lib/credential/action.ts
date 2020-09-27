@@ -1,10 +1,10 @@
-import { TicketNonce, RenewEvent } from "./data"
+import { TicketNonce, RenewEvent, RenewRun } from "./data"
 
 export interface CredentialAction {
     sub: CredentialEventSubscriber
 
     renew(ticketNonce: TicketNonce): Promise<void>
-    setRenewInterval(ticketNonce: TicketNonce): Promise<void>
+    setRenewInterval(ticketNonce: TicketNonce, run: RenewRun): Promise<void>
 }
 
 export interface CredentialEventPublisher {

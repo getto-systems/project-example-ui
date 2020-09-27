@@ -9,7 +9,7 @@ import { initSimulatePasswordResetClient } from "../../../password_reset/impl/cl
 
 import { PasswordResetSessionClient, PasswordResetClient } from "../../../password_reset/infra"
 
-import { packTicketNonce, packApiRoles } from "../../../credential/adapter"
+import { packTicketNonce, packApiRoles, packAuthAt } from "../../../credential/adapter"
 
 import { packLoginID } from "../../../login_id/adapter"
 
@@ -39,6 +39,7 @@ function newPasswordResetClient(): PasswordResetClient {
             apiCredential: {
                 apiRoles: packApiRoles(["admin", "dev"]),
             },
+            authAt: packAuthAt(new Date()),
         },
     )
 }

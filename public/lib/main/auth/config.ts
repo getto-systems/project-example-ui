@@ -1,5 +1,8 @@
 export function newTimeConfig(): TimeConfig {
     return {
+        instantLoadExpireTime: expireMinute(3),
+        renewRunDelayTime: delayMinute(1),
+
         renewDelayTime: delaySecond(0.5),
         renewIntervalTime: intervalMinute(2),
 
@@ -13,7 +16,10 @@ export function newTimeConfig(): TimeConfig {
     }
 }
 
-type TimeConfig = Readonly<{
+export type TimeConfig = Readonly<{
+    instantLoadExpireTime: ExpireTime
+    renewRunDelayTime: DelayTime
+
     renewDelayTime: DelayTime,
     renewIntervalTime: IntervalTime,
 
@@ -26,9 +32,20 @@ type TimeConfig = Readonly<{
     passwordResetDelayTime: DelayTime,
 }>
 
+type ExpireTime = { expire_milli_second: number }
+function expireSecond(second: number): ExpireTime {
+    return { expire_milli_second: second * 1000 }
+}
+function expireMinute(minute: number): ExpireTime {
+    return expireSecond(minute * 60)
+}
+
 type DelayTime = { delay_milli_second: number }
 function delaySecond(second: number): DelayTime {
     return { delay_milli_second: second * 1000 }
+}
+function delayMinute(minute: number): DelayTime {
+    return delaySecond(minute * 60)
 }
 
 type IntervalTime = { interval_milli_second: number }

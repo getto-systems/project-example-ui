@@ -66,7 +66,7 @@ class Component implements RenewCredentialComponent {
                 return this.renew()
 
             case "set-renew-interval":
-                return this.action.credential.setRenewInterval(operation.ticketNonce)
+                return this.action.credential.setRenewInterval(operation.ticketNonce, operation.run)
         }
     }
 

@@ -1,4 +1,4 @@
-import { ApiCredential, TicketNonce, ApiRoles, ApiRole } from "./data"
+import { ApiCredential, TicketNonce, ApiRoles, ApiRole, AuthAt } from "./data"
 
 export function packTicketNonce(ticketNonce: string): TicketNonce {
     return ticketNonce as TicketNonce & string
@@ -23,3 +23,11 @@ export function unpackApiCredential(apiCredential: ApiCredential): ApiCredential
 export type ApiCredentialUnpack = Readonly<{
     apiRoles: string[]
 }>
+
+export function packAuthAt(authAt: Date): AuthAt {
+    return authAt as AuthAt & Date
+}
+
+export function unpackAuthAt(authAt: AuthAt): Date {
+    return authAt as unknown as Date
+}

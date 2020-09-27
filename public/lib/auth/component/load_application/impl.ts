@@ -4,6 +4,7 @@ import {
     LoadApplicationParam,
     LoadApplicationState,
     LoadApplicationComponentOperation,
+    LoadError,
 } from "../load_application/component"
 
 import { PagePathname, ScriptEvent } from "../../../script/data"
@@ -11,12 +12,9 @@ import { PagePathname, ScriptEvent } from "../../../script/data"
 export function initLoadApplicationComponent(action: LoadApplicationComponentAction): LoadApplicationComponent {
     return new Component(action)
 }
-export function initLoadApplicationWorkerComponent(init: WorkerInit): LoadApplicationComponent {
-    return new WorkerComponent(init)
-}
 
-export function packLoadApplicationParam(pagePathname: PagePathname): LoadApplicationParam {
-    return { pagePathname } as LoadApplicationParam & Param
+export function packLoadApplicationParam(param: { pagePathname: PagePathname, instantly: boolean }): LoadApplicationParam {
+    return param as LoadApplicationParam & Param
 }
 
 function unpackLoadApplicationParam(param: LoadApplicationParam): Param {
@@ -25,6 +23,7 @@ function unpackLoadApplicationParam(param: LoadApplicationParam): Param {
 
 type Param = {
     pagePathname: PagePathname
+    instantly: boolean
 }
 
 class Component implements LoadApplicationComponent {
@@ -66,6 +65,12 @@ class Component implements LoadApplicationComponent {
 
             case "load":
                 return this.load()
+
+            case "failed-to-load":
+                return this.failedToLoad(operation.err)
+
+            case "succeed-to-load":
+                return this.succeedToLoad()
         }
     }
 
@@ -77,52 +82,24 @@ class Component implements LoadApplicationComponent {
         if (this.holder.set) {
             this.action.script.load(this.holder.param.pagePathname)
         } else {
-            this.post({ type: "error", err: "param is not initialized" })
-        }
-    }
-}
-
-class WorkerComponent implements LoadApplicationComponent {
-    worker: WorkerHolder
-
-    listener: Post<LoadApplicationState>[]
-
-    constructor(init: WorkerInit) {
-        this.worker = { set: false, init }
-        this.listener = []
-    }
-
-    onStateChange(stateChanged: Post<LoadApplicationState>): void {
-        this.listener.push(stateChanged)
-    }
-
-    init(): Terminate {
-        this.initComponent()
-        return () => this.terminate()
-    }
-
-    initComponent(): void {
-        if (!this.worker.set) {
-            const instance = this.worker.init()
-
-            instance.addEventListener("message", (event) => {
-                const state = event.data as LoadApplicationState
-                this.listener.forEach(post => post(state))
-            })
-
-            this.worker = { set: true, instance }
-        }
-    }
-    terminate(): void {
-        if (this.worker.set) {
-            this.worker.instance.terminate()
+            this.paramIsNotInitialized()
         }
     }
 
-    async trigger(operation: LoadApplicationComponentOperation): Promise<void> {
-        if (this.worker.set) {
-            this.worker.instance.postMessage(operation)
+    async failedToLoad(err: LoadError): Promise<void> {
+        this.post({ type: "failed-to-load", err })
+    }
+
+    async succeedToLoad(): Promise<void> {
+        if (this.holder.set) {
+            this.post({ type: "succeed-to-load", instantly: this.holder.param.instantly })
+        } else {
+            this.paramIsNotInitialized()
         }
+    }
+
+    paramIsNotInitialized(): void {
+        this.post({ type: "error", err: "param is not initialized" })
     }
 }
 
@@ -132,14 +109,6 @@ function mapEvent(event: ScriptEvent): LoadApplicationState {
 
 interface Post<T> {
     (state: T): void
-}
-
-type WorkerHolder =
-    Readonly<{ set: false, init: WorkerInit }> |
-    Readonly<{ set: true, instance: Worker }>
-
-interface WorkerInit {
-    (): Worker
 }
 
 type ParamHolder<T> =

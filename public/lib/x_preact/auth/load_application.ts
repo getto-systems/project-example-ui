@@ -12,7 +12,7 @@ import {
     LoadApplicationComponent,
     LoadApplicationParam,
     initialLoadApplicationState,
-    CheckError,
+    LoadError,
 } from "../../auth/component/load_application/component"
 
 type Props = Readonly<{
@@ -42,8 +42,11 @@ export function LoadApplication(props: Props): VNode {
         if (state.type === "try-to-load") {
             const script = document.createElement("script")
             script.src = unpackScriptPath(state.scriptPath)
-            script.onerror = (_err) => {
-                setState({ type: "failed-to-load", err: { type: "not-found" } })
+            script.onload = () => {
+                props.component.trigger({ type: "succeed-to-load" })
+            }
+            script.onerror = (err) => {
+                props.component.trigger({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
             }
             document.body.appendChild(script)
         }
@@ -51,6 +54,7 @@ export function LoadApplication(props: Props): VNode {
 
     switch (state.type) {
         case "initial-load":
+        case "succeed-to-load":
             return EMPTY_CONTENT
 
         case "try-to-load":
@@ -65,11 +69,12 @@ export function LoadApplication(props: Props): VNode {
     }
 }
 
-function failedContent(_err: CheckError): VNode {
+function failedContent(err: LoadError): VNode {
     return loginError(
         html`アプリケーションの初期化に失敗しました`,
         html`
-            <p>スクリプトが見つかりませんでした</p>
+            <p>ロードに失敗しました</p>
+            <p>(詳細: ${err.err})</p>
             <div class="vertical vertical_medium"></div>
             <p>お手数ですが、上記メッセージを管理者に伝えてください</p>
         `,
