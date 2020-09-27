@@ -8,10 +8,10 @@ export function mapInputValue(post: Post<string>): Post<InputValue> {
     }
 }
 
-export function onFieldInput(handleInput: Post<InputValue>): Post<InputEvent> {
+export function mapInputEvent(post: Post<InputValue>): Post<InputEvent> {
     return (e: InputEvent): void => {
         if (e.target instanceof HTMLInputElement) {
-            handleInput(packInputValue(e.target.value))
+            post(packInputValue(e.target.value))
         }
     }
 }
