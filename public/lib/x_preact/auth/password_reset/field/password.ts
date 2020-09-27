@@ -20,15 +20,14 @@ interface FormComponent {
 
 export function PasswordField(props: Props): VNode {
     const [state, setState] = useState(initialPasswordFieldState)
-    const [value, setValue] = useState("")
-    const setPassword = mapInputValue(setValue)
+    const [value, setValue] = mapSetter(useState(""), mapInputValue)
     useEffect(() => {
         props.component.onPasswordFieldStateChange(setState)
     }, [])
 
     const onInput = mapInputEvent((password) => {
         props.component.trigger({ type: "field-password", operation: { type: "set-password", password } })
-        setPassword(password)
+        setValue(password)
     })
 
     const handler = {
@@ -57,4 +56,13 @@ export function PasswordField(props: Props): VNode {
 
 interface Post<T> {
     (state: T): void
+}
+
+function mapSetter<A, B, B_>(tuple: [A, B], f: Transform<B, B_>): [A, B_] {
+    const [first, second] = tuple
+    return [first, f(second)]
+}
+
+interface Transform<A, B> {
+    (data: A): B
 }

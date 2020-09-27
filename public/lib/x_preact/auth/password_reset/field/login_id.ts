@@ -20,15 +20,14 @@ interface FormComponent {
 
 export function LoginIDField(props: Props): VNode {
     const [state, setState] = useState(initialLoginIDFieldState)
-    const [value, setValue] = useState("")
-    const setLoginID = mapInputValue(setValue)
+    const [value, setValue] = mapSetter(useState(""), mapInputValue)
     useEffect(() => {
         props.component.onLoginIDFieldStateChange(setState)
     }, [])
 
     const onInput = mapInputEvent((loginID) => {
         props.component.trigger({ type: "field-login_id", operation: { type: "set-login_id", loginID } })
-        setLoginID(loginID)
+        setValue(loginID)
     })
 
     return html`
@@ -47,4 +46,13 @@ export function LoginIDField(props: Props): VNode {
 
 interface Post<T> {
     (state: T): void
+}
+
+function mapSetter<A, B, B_>(tuple: [A, B], f: Transform<B, B_>): [A, B_] {
+    const [first, second] = tuple
+    return [first, f(second)]
+}
+
+interface Transform<A, B> {
+    (data: A): B
 }
