@@ -2,7 +2,7 @@ import { AppHref } from "../../href"
 import { AuthUsecase, AuthComponent, AuthState } from "../usecase"
 import { Infra } from "../infra"
 
-import { AuthCredential, AuthAt } from "../../credential/data"
+import { AuthCredential } from "../../credential/data"
 
 export function initAuthUsecase(href: AppHref, component: AuthComponent, infra: Infra): AuthUsecase {
     return new Usecase(href, component, infra)
@@ -26,7 +26,7 @@ class Usecase implements AuthUsecase {
             switch (state.type) {
                 case "succeed-to-load":
                     if (state.instantly) {
-                        this.tryToRenew()
+                        this.setRenewInterval()
                     }
                     return
             }
@@ -110,7 +110,7 @@ class Usecase implements AuthUsecase {
         this.listener.forEach(post => post(state))
     }
 
-    tryToRenew(): void {
+    setRenewInterval(): void {
         const ticketNonce = this.infra.authCredentials.findTicketNonce()
         if (!ticketNonce.success) {
             this.post({ type: "failed-to-fetch", err: ticketNonce.err })
