@@ -4,7 +4,7 @@ export interface CredentialAction {
     sub: CredentialEventSubscriber
 
     fetch(): FetchResponse
-    renew(response: FetchResponse): void
+    renew(authResource: AuthResource): void
     storeCredential(authCredential: AuthCredential): void
     setContinuousRenew(authResource: AuthResource): void
 }

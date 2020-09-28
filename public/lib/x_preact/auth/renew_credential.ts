@@ -13,6 +13,7 @@ import {
     RenewCredentialParam,
     initialRenewCredentialState,
     initialRenewCredentialTrigger,
+    Done,
 } from "../../auth/component/renew_credential/component"
 
 import { RenewError } from "../../credential/data"
@@ -40,7 +41,7 @@ export function RenewCredential(props: Props): VNode {
             case "try-to-instant-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onload = () => {
-                        trigger({ type: "succeed-to-load" })
+                        trigger({ type: "succeed-to-instant-load" })
                     }
                     script.onerror = (err) => {
                         trigger({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
@@ -86,8 +87,8 @@ export function RenewCredential(props: Props): VNode {
         case "failed-to-renew":
             return renewFailedContent(state.err)
 
-        case "failed-to-fetch":
         case "failed-to-store":
+        case "failed-to-load":
             return h(ApplicationError, { err: state.err.err })
 
         case "error":
@@ -155,16 +156,16 @@ function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
 }
 
 interface Init<T> {
-    (trigger: Post<T>): void
+    (trigger: Trigger<T>): void
 }
-interface Post<T> {
-    (state: T): void
+interface Trigger<T> {
+    (operation: T): Done
 }
 interface Terminate {
     (): void
 }
 
 type Resource<T> = Readonly<{
-    trigger: Post<T>
+    trigger: Trigger<T>
     terminate: Terminate
 }>

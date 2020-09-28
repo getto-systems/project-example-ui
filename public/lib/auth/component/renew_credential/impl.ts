@@ -4,12 +4,14 @@ import {
     RenewCredentialResource,
     RenewCredentialState,
     RenewCredentialOperation,
+    Done,
+    done,
 } from "../renew_credential/component"
 
 import { CredentialAction } from "../../../credential/action"
 import { ScriptAction } from "../../../script/action"
 
-import { FetchResponse, RenewEvent } from "../../../credential/data"
+import { AuthResource, RenewEvent } from "../../../credential/data"
 import { PagePathname } from "../../../script/data"
 
 interface Action {
@@ -31,7 +33,7 @@ function unpackParam(param: RenewCredentialParam): Param {
 
 type Param = Readonly<{
     pagePathname: PagePathname
-    fetchResponse: FetchResponse
+    authResource: AuthResource
 }>
 
 class Component implements RenewCredentialComponent {
@@ -77,19 +79,31 @@ class Component implements RenewCredentialComponent {
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
         }
     }
-    trigger(operation: RenewCredentialOperation): void {
+    trigger(operation: RenewCredentialOperation): Done {
         switch (operation.type) {
             case "set-param":
                 this.holder = { set: true, param: unpackParam(operation.param) }
-                return
+                return done
 
             case "renew":
                 if (this.holder.set) {
-                    this.action.credential.renew(this.holder.param.fetchResponse)
+                    this.action.credential.renew(this.holder.param.authResource)
                 } else {
                     this.post(this.paramIsNotSet())
                 }
-                return
+                return done
+
+            case "succeed-to-instant-load":
+                if (this.holder.set) {
+                    this.action.credential.setContinuousRenew(this.holder.param.authResource)
+                } else {
+                    this.post(this.paramIsNotSet())
+                }
+                return done
+
+            case "failed-to-load":
+                this.post({ type: "failed-to-load", err: operation.err })
+                return done
         }
     }
 

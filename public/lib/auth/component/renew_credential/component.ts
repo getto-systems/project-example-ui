@@ -1,4 +1,4 @@
-import { FetchResponse, FetchError, StoreError, RenewError } from "../../../credential/data"
+import { AuthResource, StoreError, RenewError } from "../../../credential/data"
 import { PagePathname, ScriptPath } from "../../../script/data"
 
 export type RenewCredentialParam = { RenewCredentialParam: never }
@@ -8,7 +8,7 @@ export interface RenewCredentialParamPacker {
 }
 type Param = Readonly<{
     pagePathname: PagePathname
-    fetchResponse: FetchResponse
+    authResource: AuthResource
 }>
 
 export interface RenewCredentialComponent {
@@ -22,7 +22,6 @@ export type RenewCredentialResource = Readonly<{
 
 export type RenewCredentialState =
     Readonly<{ type: "initial" }> |
-    Readonly<{ type: "failed-to-fetch", err: FetchError }> |
     Readonly<{ type: "try-to-instant-load", scriptPath: ScriptPath }> |
     Readonly<{ type: "required-to-login" }> |
     Readonly<{ type: "try-to-renew" }> |
@@ -30,6 +29,7 @@ export type RenewCredentialState =
     Readonly<{ type: "failed-to-renew", err: RenewError }> |
     Readonly<{ type: "failed-to-store", err: StoreError }> |
     Readonly<{ type: "succeed-to-renew", scriptPath: ScriptPath }> |
+    Readonly<{ type: "failed-to-load", err: LoadError }> |
     Readonly<{ type: "error", err: string }>
 
 export const initialRenewCredentialState: RenewCredentialState = { type: "initial" }
@@ -38,16 +38,19 @@ export type RenewCredentialOperation =
     Readonly<{ type: "set-param", param: RenewCredentialParam }> |
     Readonly<{ type: "renew" }> |
     Readonly<{ type: "failed-to-load", err: LoadError }> |
-    Readonly<{ type: "succeed-to-load" }>
+    Readonly<{ type: "succeed-to-instant-load" }>
 
 export type LoadError =
     Readonly<{ type: "infra-error", err: string }>
 
 export interface RenewCredentialTrigger {
-    (operation: RenewCredentialOperation): void
+    (operation: RenewCredentialOperation): Done
 }
 
-export const initialRenewCredentialTrigger: RenewCredentialTrigger = (_operation: RenewCredentialOperation): void => {
+export type Done = { Done: never }
+export const done: Done = true as true & Done
+
+export const initialRenewCredentialTrigger: RenewCredentialTrigger = (_operation: RenewCredentialOperation): Done => {
     throw new Error("Component is not initialized. use: `init()`")
 }
 

@@ -55,19 +55,10 @@ class Action implements CredentialAction {
         }
     }
 
-    async renew(fetchResponse: FetchResponse): Promise<void> {
+    async renew(authResource: AuthResource): Promise<void> {
         const post = (event: RenewEvent) => this.pub.postRenewEvent(event)
 
-        if (!fetchResponse.success) {
-            post({ type: "failed-to-fetch", err: fetchResponse.err })
-            return
-        }
-        if (!fetchResponse.found) {
-            post({ type: "required-to-login" })
-            return
-        }
-
-        if (!this.infra.expires.hasExceeded(fetchResponse.content.lastAuthAt, this.infra.timeConfig.instantLoadExpireTime)) {
+        if (!this.infra.expires.hasExceeded(authResource.lastAuthAt, this.infra.timeConfig.instantLoadExpireTime)) {
             post({ type: "try-to-instant-load" })
             return
         }
@@ -76,7 +67,7 @@ class Action implements CredentialAction {
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const renewResponse = await this.infra.delayed(
-            this.infra.renewClient.renew(fetchResponse.content.ticketNonce),
+            this.infra.renewClient.renew(authResource.ticketNonce),
             this.infra.timeConfig.renewDelayTime,
             () => post({ type: "delayed-to-renew" }),
         )

@@ -81,17 +81,27 @@ class Usecase implements AuthUsecase {
     }
 
     init(): Terminate {
+        this.initUsecase()
+        return () => { /* component とインターフェイスを合わせるために必要 */ }
+    }
+    initUsecase(): void {
+        const fetchResponse = this.background.storeCredential.fetch()
+        if (!fetchResponse.success) {
+            this.post({ type: "error", err: fetchResponse.err.err })
+            return
+        }
+        if (!fetchResponse.found) {
+            this.post(this.infra.authLocation.detect(this.infra.param))
+            return
+        }
+
         this.post({
             type: "renew-credential",
             param: this.infra.param.renewCredential({
                 pagePathname: this.infra.authLocation.currentPagePathname(),
-                fetchResponse: this.background.storeCredential.fetch(),
+                authResource: fetchResponse.content
             }),
         })
-        return () => this.terminate()
-    }
-    terminate(): void {
-        // component とインターフェイスを合わせるために必要
     }
 }
 
