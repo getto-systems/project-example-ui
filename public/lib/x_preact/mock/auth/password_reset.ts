@@ -3,7 +3,7 @@ import { packInputValue } from "../../../field/adapter"
 import {
     PasswordResetComponent,
     PasswordResetState,
-    PasswordResetComponentOperation,
+    PasswordResetOperation,
 } from "../../../auth/component/password_reset/component"
 
 import { LoginIDFieldState } from "../../../auth/component/field/login_id/component"
@@ -129,26 +129,24 @@ class Component implements PasswordResetComponent {
         stateChanged(this.password)
     }
 
-    init(): Terminate {
-        return () => this.terminate()
-    }
-    terminate(): void {
-        // mock では特に何もしない
-    }
+    init(): ComponentResource<PasswordResetOperation> {
+        return {
+            send: operation => {
+                switch (operation.type) {
+                    case "reset":
+                        alert("ここでリセット！")
+                        return
 
-    async trigger(operation: PasswordResetComponentOperation): Promise<void> {
-        switch (operation.type) {
-            case "reset":
-                alert("ここでリセット！")
-                return
+                    case "field-login_id":
+                        // field のイベントは特にフィードバックしない
+                        return
 
-            case "field-login_id":
-                // field のイベントは特にフィードバックしない
-                return
-
-            case "field-password":
-                // field のイベントは特にフィードバックしない
-                return
+                    case "field-password":
+                        // field のイベントは特にフィードバックしない
+                        return
+                }
+            },
+            terminate: () => { /* mock では特に何もしない */ },
         }
     }
 }
@@ -156,7 +154,11 @@ class Component implements PasswordResetComponent {
 interface Post<T> {
     (state: T): void
 }
-
 interface Terminate {
     (): void
 }
+
+type ComponentResource<T> = Readonly<{
+    send: Post<T>
+    terminate: Terminate
+}>

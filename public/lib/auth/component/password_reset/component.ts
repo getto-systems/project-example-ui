@@ -1,10 +1,6 @@
 import { LoginIDFieldState } from "../field/login_id/component"
 import { PasswordFieldState } from "../field/password/component"
 
-import { PasswordResetAction } from "../../../password_reset/action"
-import { LoginIDFieldAction } from "../../../field/login_id/action"
-import { PasswordFieldAction } from "../../../field/password/action"
-
 import { AuthCredential } from "../../../credential/data"
 import { ResetToken, ResetError } from "../../../password_reset/data"
 import { LoginIDFieldOperation } from "../../../field/login_id/data"
@@ -14,8 +10,7 @@ export interface PasswordResetComponent {
     onStateChange(stateChanged: Post<PasswordResetState>): void
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
     onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void
-    init(): Terminate
-    trigger(operation: PasswordResetComponentOperation): Promise<void>
+    init(): ComponentResource<PasswordResetOperation>
 }
 
 export type PasswordResetParam = { PasswordResetParam: never }
@@ -34,11 +29,15 @@ export type PasswordResetState =
 
 export const initialPasswordResetState: PasswordResetState = { type: "initial-reset" }
 
-export type PasswordResetComponentOperation =
+export type PasswordResetOperation =
     Readonly<{ type: "set-param", param: PasswordResetParam }> |
     Readonly<{ type: "reset" }> |
     Readonly<{ type: "field-login_id", operation: LoginIDFieldOperation }> |
     Readonly<{ type: "field-password", operation: PasswordFieldOperation }>
+
+export const initialPasswordResetSend: Post<PasswordResetOperation> = () => {
+    throw new Error("Component is not initialized. use: `init()`")
+}
 
 export interface PasswordResetWorkerComponentHelper {
     mapPasswordResetState(state: PasswordResetState): PasswordResetWorkerState
@@ -51,27 +50,14 @@ export type PasswordResetWorkerState =
     Readonly<{ type: "field-login_id", state: LoginIDFieldState }> |
     Readonly<{ type: "field-password", state: PasswordFieldState }>
 
-export interface PasswordResetComponentAction {
-    passwordReset: PasswordResetAction
-    loginIDField: LoginIDFieldAction
-    passwordField: PasswordFieldAction
-}
-
-export type PasswordResetParamEvent =
-    Readonly<{ type: "succeed-to-load", resetToken: ResetToken }>
-
-export interface PasswordResetParamEventPublisher {
-    postPasswordResetParamEvent(event: PasswordResetParamEvent): void
-}
-
-export interface PasswordResetParamEventSubscriber {
-    onPasswordResetParamEvent(stateChanged: Post<PasswordResetParamEvent>): void
-}
-
 interface Post<T> {
     (state: T): void
 }
-
 interface Terminate {
     (): void
 }
+
+type ComponentResource<T> = Readonly<{
+    send: Post<T>
+    terminate: Terminate
+}>
