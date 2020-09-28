@@ -1,5 +1,5 @@
 import { h, VNode } from "preact"
-import { useState, useRef, useEffect } from "preact/hooks"
+import { useState, useEffect, useRef } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { loginHeader, loginError } from "../layout"
@@ -13,6 +13,7 @@ import { AppHref } from "../../href"
 import {
     PasswordResetSessionComponent,
     initialPasswordResetSessionState,
+    initialPasswordResetSessionSend,
 } from "../../auth/component/password_reset_session/component"
 
 import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../password_reset/data"
@@ -24,13 +25,15 @@ type Props = Readonly<{
 
 export function PasswordResetSession(props: Props): VNode {
     const [state, setState] = useState(initialPasswordResetSessionState)
-    const submit = useRef<HTMLButtonElement>()
+    const [send, setSend] = useState(() => initialPasswordResetSessionSend)
     useEffect(() => {
         props.component.onStateChange(setState)
-        return props.component.init()
+        return mapResource(props.component.init(), (send) => {
+            setSend(() => send)
+        })
     }, [])
 
-    function startSessionView(onSubmit: Handler<Event>, button: VNode, footer: VNode): VNode {
+    function startSessionView(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
         return html`
             <aside class="login">
                 <form class="login__box" onSubmit="${onSubmit}">
@@ -38,7 +41,7 @@ export function PasswordResetSession(props: Props): VNode {
                     <section>
                         <big>
                             <section class="login__body">
-                                ${h(LoginIDField, props)}
+                                ${h(LoginIDField, { component: props.component, send })}
                             </section>
                         </big>
                     </section>
@@ -141,6 +144,9 @@ export function PasswordResetSession(props: Props): VNode {
             return h(ApplicationError, { err: state.err })
     }
 
+    // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
+    const submit = useRef<HTMLButtonElement>()
+
     function startSessionButton() {
         return html`<button ref="${submit}" class="button button_save">トークン送信</button>`
     }
@@ -161,7 +167,7 @@ export function PasswordResetSession(props: Props): VNode {
             submit.current.blur()
         }
 
-        props.component.trigger({ type: "start-session" })
+        send({ type: "start-session" })
     }
     function onSubmit_noop(e: Event) {
         e.preventDefault()
@@ -271,6 +277,22 @@ function sendTokenError(err: SendTokenError): VNode {
     }
 }
 
-interface Handler<T> {
-    (event: T): void
+function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
+    init(resource.send)
+    return resource.terminate
 }
+
+interface Init<T> {
+    (send: Post<T>): void
+}
+interface Post<T> {
+    (state: T): void
+}
+interface Terminate {
+    (): void
+}
+
+type Resource<T> = Readonly<{
+    send: Post<T>
+    terminate: Terminate
+}>

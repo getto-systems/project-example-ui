@@ -9,8 +9,7 @@ import { LoginIDFieldOperation } from "../../../field/login_id/data"
 export interface PasswordResetSessionComponent {
     onStateChange(stateChanged: Post<PasswordResetSessionState>): void
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
-    init(): Terminate
-    trigger(operation: PasswordResetSessionComponentOperation): Promise<void>
+    init(): ComponentResource<PasswordResetSessionOperation>
 }
 
 export type PasswordResetSessionState =
@@ -27,9 +26,13 @@ export type PasswordResetSessionState =
 
 export const initialPasswordResetSessionState: PasswordResetSessionState = { type: "initial-reset-session" }
 
-export type PasswordResetSessionComponentOperation =
+export type PasswordResetSessionOperation =
     Readonly<{ type: "start-session" }> |
     Readonly<{ type: "field-login_id", operation: LoginIDFieldOperation }>
+
+export const initialPasswordResetSessionSend: Post<PasswordResetSessionOperation> = () => {
+    throw new Error("Component is not initialized. use: `init()`")
+}
 
 export interface PasswordResetSessionWorkerComponentHelper {
     mapPasswordResetSessionState(state: PasswordResetSessionState): PasswordResetSessionWorkerState
@@ -48,7 +51,11 @@ export interface PasswordResetSessionComponentAction {
 interface Post<T> {
     (state: T): void
 }
-
 interface Terminate {
     (): void
 }
+
+type ComponentResource<T> = Readonly<{
+    send: Post<T>
+    terminate: Terminate
+}>

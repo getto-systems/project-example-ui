@@ -34,10 +34,10 @@ export const initialPasswordLoginSend: Post<PasswordLoginOperation> = (): void =
 }
 
 export interface PasswordLoginWorkerComponentHelper {
+    mapStoreCredentialOperation(operation: StoreCredentialOperation): PasswordLoginWorkerState
     mapPasswordLoginState(state: PasswordLoginState): PasswordLoginWorkerState
     mapLoginIDFieldState(state: LoginIDFieldState): PasswordLoginWorkerState
     mapPasswordFieldState(state: PasswordFieldState): PasswordLoginWorkerState
-    mapStoreCredentialOperation(operation: StoreCredentialOperation): PasswordLoginWorkerState
 }
 
 export type PasswordLoginWorkerState =
