@@ -32,7 +32,7 @@ import { initScriptAction } from "../script/impl/core"
 import { RenewClient } from "../credential/infra"
 
 import { AuthUsecase } from "../auth/usecase"
-import { StoreCredentialResource } from "../background/store_credential/component"
+import { StoreCredentialComponentResource } from "../background/store_credential/component"
 import { RenewCredentialComponent } from "../auth/component/renew_credential/component"
 
 import { CredentialAction } from "../credential/action"
@@ -74,7 +74,7 @@ export function newAuthUsecase(currentLocation: Location, credentialStorage: Sto
     )
 }
 
-function newStoreCredentialComponent(credential: CredentialAction): StoreCredentialResource {
+function newStoreCredentialComponent(credential: CredentialAction): StoreCredentialComponentResource {
     return initStoreCredentialComponent({
         credential,
     })
