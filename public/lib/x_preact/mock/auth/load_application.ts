@@ -27,7 +27,7 @@ class Component implements LoadApplicationComponent {
 
     init(): ComponentResource<LoadApplicationOperation> {
         return {
-            trigger: (_operation: LoadApplicationOperation) => { /* mock では特に何もしない */ },
+            send: () => { /* mock では特に何もしない */ },
             terminate: () => { /* mock では特に何もしない */ },
         }
     }
@@ -42,6 +42,6 @@ interface Terminate {
 }
 
 type ComponentResource<T> = Readonly<{
-    trigger: Post<T>
+    send: Post<T>
     terminate: Terminate
 }>
