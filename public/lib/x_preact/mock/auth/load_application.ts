@@ -1,7 +1,7 @@
 import {
     LoadApplicationComponent,
     LoadApplicationState,
-    LoadApplicationComponentOperation,
+    LoadApplicationOperation,
 } from "../../../auth/component/load_application/component"
 
 export function newLoadApplicationComponent(): LoadApplicationComponent {
@@ -25,15 +25,11 @@ class Component implements LoadApplicationComponent {
         stateChanged(this.state)
     }
 
-    init(): Terminate {
-        return () => this.terminate()
-    }
-    terminate(): void {
-        // mock では特に何もしない
-    }
-
-    async trigger(_operation: LoadApplicationComponentOperation): Promise<void> {
-        // mock では特に何もしない
+    init(): ComponentResource<LoadApplicationOperation> {
+        return {
+            trigger: (_operation: LoadApplicationOperation) => { /* mock では特に何もしない */ },
+            terminate: () => { /* mock では特に何もしない */ },
+        }
     }
 }
 
@@ -44,3 +40,8 @@ interface Post<T> {
 interface Terminate {
     (): void
 }
+
+type ComponentResource<T> = Readonly<{
+    trigger: Post<T>
+    terminate: Terminate
+}>

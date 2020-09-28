@@ -13,12 +13,8 @@ type Param = Readonly<{
 
 export interface RenewCredentialComponent {
     onStateChange(stateChanged: Post<RenewCredentialState>): void
-    init(): RenewCredentialResource
+    init(): ComponentResource<RenewCredentialOperation>
 }
-export type RenewCredentialResource = Readonly<{
-    trigger: RenewCredentialTrigger
-    terminate: Terminate
-}>
 
 export type RenewCredentialState =
     Readonly<{ type: "initial" }> |
@@ -40,16 +36,12 @@ export type RenewCredentialOperation =
     Readonly<{ type: "failed-to-load", err: LoadError }> |
     Readonly<{ type: "succeed-to-instant-load" }>
 
-export type LoadError =
-    Readonly<{ type: "infra-error", err: string }>
-
-export interface RenewCredentialTrigger {
-    (operation: RenewCredentialOperation): void
-}
-
-export const initialRenewCredentialTrigger: RenewCredentialTrigger = (_operation: RenewCredentialOperation): void => {
+export const initialRenewCredentialTrigger: Post<RenewCredentialOperation> = (_operation: RenewCredentialOperation): void => {
     throw new Error("Component is not initialized. use: `init()`")
 }
+
+export type LoadError =
+    Readonly<{ type: "infra-error", err: string }>
 
 interface Post<T> {
     (state: T): void
@@ -57,3 +49,8 @@ interface Post<T> {
 interface Terminate {
     (): void
 }
+
+type ComponentResource<T> = Readonly<{
+    trigger: Post<T>
+    terminate: Terminate
+}>

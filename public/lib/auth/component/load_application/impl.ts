@@ -1,15 +1,19 @@
 import {
     LoadApplicationComponent,
-    LoadApplicationComponentAction,
     LoadApplicationParam,
     LoadApplicationState,
-    LoadApplicationComponentOperation,
-    LoadError,
+    LoadApplicationOperation,
 } from "../load_application/component"
 
-import { PagePathname, ScriptEvent } from "../../../script/data"
+import { ScriptAction } from "../../../script/action"
 
-export function initLoadApplicationComponent(action: LoadApplicationComponentAction): LoadApplicationComponent {
+import { PagePathname } from "../../../script/data"
+
+interface Action {
+    script: ScriptAction,
+}
+
+export function initLoadApplicationComponent(action: Action): LoadApplicationComponent {
     return new Component(action)
 }
 
@@ -17,7 +21,7 @@ export function packLoadApplicationParam(param: Param): LoadApplicationParam {
     return param as LoadApplicationParam & Param
 }
 
-function unpackLoadApplicationParam(param: LoadApplicationParam): Param {
+function unpackParam(param: LoadApplicationParam): Param {
     return param as unknown as Param
 }
 
@@ -26,94 +30,74 @@ type Param = Readonly<{
 }>
 
 class Component implements LoadApplicationComponent {
-    action: LoadApplicationComponentAction
-    listener: Post<LoadApplicationState>[]
+    action: Action
 
-    holder: ParamHolder<Param>
+    listener: Post<LoadApplicationState>[] = []
+    holder: ParamHolder = { set: false }
 
-    constructor(action: LoadApplicationComponentAction) {
+    constructor(action: Action) {
         this.action = action
-        this.action.script.sub.onScriptEvent((event) => {
-            const state = mapEvent(event)
-            this.listener.forEach(post => post(state))
-        })
-
-        this.listener = []
-        this.holder = { set: false }
+    }
+    post(state: LoadApplicationState): void {
+        this.listener.forEach(post => post(state))
     }
 
     onStateChange(stateChanged: Post<LoadApplicationState>): void {
         this.listener.push(stateChanged)
     }
 
-    post(state: LoadApplicationState): void {
-        this.listener.forEach(post => post(state))
+    init(): ComponentResource<LoadApplicationOperation> {
+        return {
+            trigger: operation => this.trigger(operation),
+            terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
+        }
     }
-
-    init(): Terminate {
-        return () => this.terminate()
-    }
-    terminate(): void {
-        // WorkerComponent とインターフェイスを合わせるために必要
-    }
-
-    trigger(operation: LoadApplicationComponentOperation): Promise<void> {
+    trigger(operation: LoadApplicationOperation): void {
         switch (operation.type) {
             case "set-param":
-                return this.setParam(operation.param)
+                this.holder = { set: true, param: unpackParam(operation.param) }
+                return
 
             case "load":
-                return this.load()
+                if (this.holder.set) {
+                    this.post({
+                        type: "try-to-load",
+                        scriptPath: this.action.script.secureScriptPath(this.holder.param.pagePathname),
+                    })
+                } else {
+                    this.post(errorParamIsNotSet)
+                }
+                return
 
             case "failed-to-load":
-                return this.failedToLoad(operation.err)
+                this.post({ type: "failed-to-load", err: operation.err })
+                return
 
-            case "succeed-to-load":
-                return this.succeedToLoad()
+            default:
+                assertNever(operation)
         }
-    }
-
-    async setParam(param: LoadApplicationParam): Promise<void> {
-        this.holder = { set: true, param: unpackLoadApplicationParam(param) }
-    }
-
-    async load(): Promise<void> {
-        if (this.holder.set) {
-            this.action.script.load(this.holder.param.pagePathname)
-        } else {
-            this.paramIsNotInitialized()
-        }
-    }
-
-    async failedToLoad(err: LoadError): Promise<void> {
-        this.post({ type: "failed-to-load", err })
-    }
-
-    async succeedToLoad(): Promise<void> {
-        if (this.holder.set) {
-            this.post({ type: "succeed-to-load" })
-        } else {
-            this.paramIsNotInitialized()
-        }
-    }
-
-    paramIsNotInitialized(): void {
-        this.post({ type: "error", err: "param is not initialized" })
     }
 }
 
-function mapEvent(event: ScriptEvent): LoadApplicationState {
-    return event
-}
+const errorParamIsNotSet: LoadApplicationState = { type: "error", err: "param is not set: do `set-param` first" }
 
 interface Post<T> {
     (state: T): void
 }
 
-type ParamHolder<T> =
+type ParamHolder =
     Readonly<{ set: false }> |
-    Readonly<{ set: true, param: Readonly<T> }>
+    Readonly<{ set: true, param: Param }>
 
 interface Terminate {
     (): void
+}
+
+type ComponentResource<T> = Readonly<{
+    trigger: Post<T>
+    terminate: Terminate
+}>
+
+function assertNever(_: never): never {
+    throw new Error("NEVER")
 }

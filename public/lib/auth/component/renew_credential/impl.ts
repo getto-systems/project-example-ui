@@ -1,7 +1,6 @@
 import {
     RenewCredentialParam,
     RenewCredentialComponent,
-    RenewCredentialResource,
     RenewCredentialState,
     RenewCredentialOperation,
 } from "../renew_credential/component"
@@ -59,7 +58,7 @@ class Component implements RenewCredentialComponent {
                         scriptPath: this.action.script.secureScriptPath(this.holder.param.pagePathname),
                     }
                 } else {
-                    return this.paramIsNotSet()
+                    return errorParamIsNotSet
                 }
 
             default:
@@ -71,7 +70,7 @@ class Component implements RenewCredentialComponent {
         this.listener.push(stateChanged)
     }
 
-    init(): RenewCredentialResource {
+    init(): ComponentResource<RenewCredentialOperation> {
         return {
             trigger: operation => this.trigger(operation),
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
@@ -87,7 +86,7 @@ class Component implements RenewCredentialComponent {
                 if (this.holder.set) {
                     this.action.credential.renew(this.holder.param.authResource)
                 } else {
-                    this.post(this.paramIsNotSet())
+                    this.post(errorParamIsNotSet)
                 }
                 return
 
@@ -95,7 +94,7 @@ class Component implements RenewCredentialComponent {
                 if (this.holder.set) {
                     this.action.credential.setContinuousRenew(this.holder.param.authResource)
                 } else {
-                    this.post(this.paramIsNotSet())
+                    this.post(errorParamIsNotSet)
                 }
                 return
 
@@ -107,11 +106,9 @@ class Component implements RenewCredentialComponent {
                 assertNever(operation)
         }
     }
-
-    paramIsNotSet(): RenewCredentialState {
-        return { type: "error", err: "param is not set: do `set-param` first" }
-    }
 }
+
+const errorParamIsNotSet: RenewCredentialState = { type: "error", err: "param is not set: do `set-param` first" }
 
 type ParamHolder =
     Readonly<{ set: false }> |
@@ -124,6 +121,11 @@ interface Post<T> {
 interface Terminate {
     (): void
 }
+
+type ComponentResource<T> = Readonly<{
+    trigger: Post<T>
+    terminate: Terminate
+}>
 
 function assertNever(_: never): never {
     throw new Error("NEVER")
