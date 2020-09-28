@@ -7,12 +7,23 @@ import { PasswordLoginComponent } from "./component/password_login/component"
 import { PasswordResetSessionComponent } from "./component/password_reset_session/component"
 import { PasswordResetComponent, PasswordResetParam } from "./component/password_reset/component"
 
+import { RenewCredentialParamPacker } from "./component/renew_credential/component"
+import { LoadApplicationParamPacker } from "./component/load_application/component"
+import { PasswordResetParamPacker } from "./component/password_reset/component"
+
 export interface AuthUsecase {
     href: AppHref
     component: AuthComponent
     onStateChange(stateChanged: Post<AuthState>): void
     init(): Terminate
 }
+
+export type AuthParam = Readonly<{
+    renewCredential: RenewCredentialParamPacker
+    loadApplication: LoadApplicationParamPacker
+
+    passwordReset: PasswordResetParamPacker
+}>
 
 export type AuthComponent = Readonly<{
     renewCredential: RenewCredentialComponent
