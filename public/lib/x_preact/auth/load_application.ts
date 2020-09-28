@@ -12,6 +12,7 @@ import {
     LoadApplicationComponent,
     LoadApplicationParam,
     initialLoadApplicationState,
+    initialLoadApplicationTrigger,
     LoadError,
 } from "../../auth/component/load_application/component"
 
@@ -22,31 +23,23 @@ type Props = Readonly<{
 
 export function LoadApplication(props: Props): VNode {
     const [state, setState] = useState(initialLoadApplicationState)
+    const [trigger, setTrigger] = useState(() => initialLoadApplicationTrigger)
     useEffect(() => {
         props.component.onStateChange(setState)
-        return props.component.init()
+        return mapResource(props.component.init(), (trigger) => {
+            setTrigger(trigger)
+            trigger({ type: "set-param", param: props.param })
+            trigger({ type: "load" })
+        })
     }, [])
-
-    useEffect(() => {
-        props.component.trigger({ type: "set-param", param: props.param })
-    }, [props.param])
-
-    useEffect(() => {
-        if (state.type === "initial-load") {
-            props.component.trigger({ type: "load" })
-        }
-    }, [state])
 
     useEffect(() => {
         // script タグは body.appendChild しないとスクリプトがロードされないので useEffect で追加する
         if (state.type === "try-to-load") {
             const script = document.createElement("script")
             script.src = unpackScriptPath(state.scriptPath)
-            script.onload = () => {
-                props.component.trigger({ type: "succeed-to-load" })
-            }
             script.onerror = (err) => {
-                props.component.trigger({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
+                trigger({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
             }
             document.body.appendChild(script)
         }
@@ -54,7 +47,6 @@ export function LoadApplication(props: Props): VNode {
 
     switch (state.type) {
         case "initial-load":
-        case "succeed-to-load":
             return EMPTY_CONTENT
 
         case "try-to-load":
@@ -83,3 +75,23 @@ function failedContent(err: LoadError): VNode {
 }
 
 const EMPTY_CONTENT = html``
+
+function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
+    init(resource.trigger)
+    return resource.terminate
+}
+
+interface Init<T> {
+    (trigger: Post<T>): void
+}
+interface Post<T> {
+    (state: T): void
+}
+interface Terminate {
+    (): void
+}
+
+type Resource<T> = Readonly<{
+    trigger: Post<T>
+    terminate: Terminate
+}>
