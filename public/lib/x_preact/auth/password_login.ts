@@ -11,7 +11,11 @@ import { PasswordField } from "./password_login/field/password"
 
 import { AppHref } from "../../href"
 
-import { PasswordLoginComponent, initialPasswordLoginState } from "../../auth/component/password_login/component"
+import {
+    PasswordLoginComponent,
+    initialPasswordLoginState,
+    initialPasswordLoginSend,
+} from "../../auth/component/password_login/component"
 
 import { LoginError } from "../../password_login/data"
 
@@ -22,13 +26,14 @@ type Props = Readonly<{
 
 export function PasswordLogin(props: Props): VNode {
     const [state, setState] = useState(initialPasswordLoginState)
+    const [send, setSend] = useState(() => initialPasswordLoginSend)
     const submit = useRef<HTMLButtonElement>()
     useEffect(() => {
         props.component.onStateChange(setState)
-        return props.component.init()
+        return mapResource(props.component.init(), setSend)
     }, [])
 
-    function view(onSubmit: Handler<Event>, button: VNode, footer: VNode): VNode {
+    function view(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
         return html`
             <aside class="login">
                 <form class="login__box" onSubmit="${onSubmit}">
@@ -36,8 +41,8 @@ export function PasswordLogin(props: Props): VNode {
                     <section>
                         <big>
                             <section class="login__body">
-                                ${h(LoginIDField, props)}
-                                ${h(PasswordField, props)}
+                                ${h(LoginIDField, { component: props.component, send })}
+                                ${h(PasswordField, { component: props.component, send })}
                             </section>
                         </big>
                     </section>
@@ -112,7 +117,7 @@ export function PasswordLogin(props: Props): VNode {
             submit.current.blur()
         }
 
-        props.component.trigger({ type: "login" })
+        send({ type: "login" })
     }
     function onSubmit_noop(e: Event) {
         e.preventDefault()
@@ -156,8 +161,24 @@ function loginError(err: LoginError): VNode {
     }
 }
 
-interface Handler<T> {
-    (event: T): void
+const EMPTY_CONTENT = html``
+
+function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
+    init(resource.send)
+    return resource.terminate
 }
 
-const EMPTY_CONTENT = html``
+interface Init<T> {
+    (trigger: Post<T>): void
+}
+interface Post<T> {
+    (state: T): void
+}
+interface Terminate {
+    (): void
+}
+
+type Resource<T> = Readonly<{
+    send: Post<T>
+    terminate: Terminate
+}>
