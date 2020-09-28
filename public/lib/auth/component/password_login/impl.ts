@@ -143,16 +143,15 @@ class WorkerComponent implements PasswordLoginComponent {
         passwordLogin: Post<PasswordLoginState>[]
         loginID: Post<LoginIDFieldState>[]
         password: Post<PasswordFieldState>[]
-    }
-
-    constructor(background: AuthBackground, init: WorkerInit) {
-        this.background = background
-        this.worker = { set: false, init }
-        this.listener = {
+    } = {
             passwordLogin: [],
             loginID: [],
             password: [],
         }
+
+    constructor(background: AuthBackground, init: WorkerInit) {
+        this.background = background
+        this.worker = { set: false, init }
     }
 
     onStateChange(stateChanged: Post<PasswordLoginState>): void {

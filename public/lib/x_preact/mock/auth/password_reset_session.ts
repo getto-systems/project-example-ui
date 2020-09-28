@@ -1,7 +1,7 @@
 import {
     PasswordResetSessionComponent,
     PasswordResetSessionState,
-    PasswordResetSessionComponentOperation,
+    PasswordResetSessionOperation,
 } from "../../../auth/component/password_reset_session/component"
 
 import { LoginIDFieldState } from "../../../auth/component/field/login_id/component"
@@ -100,22 +100,20 @@ class Component implements PasswordResetSessionComponent {
         stateChanged(this.loginID)
     }
 
-    init(): Terminate {
-        return () => this.terminate()
-    }
-    terminate(): void {
-        // mock では特に何もしない
-    }
+    init(): ComponentResource<PasswordResetSessionOperation> {
+        return {
+            send: operation => {
+                switch (operation.type) {
+                    case "start-session":
+                        alert("ここでセッションを作成！")
+                        return
 
-    async trigger(operation: PasswordResetSessionComponentOperation): Promise<void> {
-        switch (operation.type) {
-            case "start-session":
-                alert("ここでセッションを作成！")
-                return
-
-            case "field-login_id":
-                // field のイベントは特にフィードバックしない
-                return
+                    case "field-login_id":
+                        // field のイベントは特にフィードバックしない
+                        return
+                }
+            },
+            terminate: () => { /* mock では特に何もしない */ },
         }
     }
 }
@@ -123,7 +121,11 @@ class Component implements PasswordResetSessionComponent {
 interface Post<T> {
     (state: T): void
 }
-
 interface Terminate {
     (): void
 }
+
+type ComponentResource<T> = Readonly<{
+    send: Post<T>
+    terminate: Terminate
+}>
