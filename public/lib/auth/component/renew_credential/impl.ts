@@ -72,11 +72,11 @@ class Component implements RenewCredentialComponent {
 
     init(): ComponentResource<RenewCredentialOperation> {
         return {
-            trigger: operation => this.trigger(operation),
+            send: operation => this.send(operation),
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
         }
     }
-    trigger(operation: RenewCredentialOperation): void {
+    send(operation: RenewCredentialOperation): void {
         switch (operation.type) {
             case "set-param":
                 this.holder = { set: true, param: unpackParam(operation.param) }
@@ -123,7 +123,7 @@ interface Terminate {
 }
 
 type ComponentResource<T> = Readonly<{
-    trigger: Post<T>
+    send: Post<T>
     terminate: Terminate
 }>
 

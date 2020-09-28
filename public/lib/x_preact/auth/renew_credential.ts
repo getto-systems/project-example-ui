@@ -12,7 +12,7 @@ import {
     RenewCredentialComponent,
     RenewCredentialParam,
     initialRenewCredentialState,
-    initialRenewCredentialTrigger,
+    initialRenewCredentialSend,
 } from "../../auth/component/renew_credential/component"
 
 import { RenewError } from "../../credential/data"
@@ -25,13 +25,13 @@ type Props = {
 
 export function RenewCredential(props: Props): VNode {
     const [state, setState] = useState(initialRenewCredentialState)
-    const [trigger, setTrigger] = useState(() => initialRenewCredentialTrigger)
+    const [send, setSend] = useState(() => initialRenewCredentialSend)
     useEffect(() => {
         props.component.onStateChange(setState)
-        return mapResource(props.component.init(), (trigger) => {
-            setTrigger(trigger)
-            trigger({ type: "set-param", param: props.param })
-            trigger({ type: "renew" })
+        return mapResource(props.component.init(), (send) => {
+            setSend(send)
+            send({ type: "set-param", param: props.param })
+            send({ type: "renew" })
         })
     }, [])
 
@@ -40,10 +40,10 @@ export function RenewCredential(props: Props): VNode {
             case "try-to-instant-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onload = () => {
-                        trigger({ type: "succeed-to-instant-load" })
+                        send({ type: "succeed-to-instant-load" })
                     }
                     script.onerror = (err) => {
-                        trigger({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
+                        send({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
                     }
                 })
                 break
@@ -51,7 +51,7 @@ export function RenewCredential(props: Props): VNode {
             case "succeed-to-renew":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = (err) => {
-                        trigger({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
+                        send({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
                     }
                 })
                 break
@@ -150,7 +150,7 @@ function errorMessage(content: VNode): VNode {
 const EMPTY_CONTENT: VNode = html``
 
 function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
-    init(resource.trigger)
+    init(resource.send)
     return resource.terminate
 }
 
@@ -165,6 +165,6 @@ interface Terminate {
 }
 
 type Resource<T> = Readonly<{
-    trigger: Post<T>
+    send: Post<T>
     terminate: Terminate
 }>
