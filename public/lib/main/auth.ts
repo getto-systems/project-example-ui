@@ -13,7 +13,6 @@ import { newPasswordResetSessionComponent } from "./auth/worker/password_reset_s
 import { newPasswordResetComponent } from "./auth/worker/password_reset"
 
 import { initAuthUsecase } from "../auth/impl/core"
-import { initAuthLocation } from "../auth/impl/location"
 
 import { initStoreCredentialComponent } from "../background/store_credential/impl"
 
@@ -44,15 +43,15 @@ export function newAuthUsecase(currentLocation: Location, credentialStorage: Sto
     const store = newStoreCredentialComponent(credential)
     const renew = newRenewCredentialComponent(credential)
 
-    /*
-    const trigger = {
-        storeCredential: store.trigger,
-    }
-     */
-
-    return initAuthUsecase(
-        newAppHref(),
-        {
+    return initAuthUsecase({
+        currentLocation,
+        href: newAppHref(),
+        param: {
+            renewCredential: packRenewCredentialParam,
+            loadApplication: packLoadApplicationParam,
+            passwordReset: packPasswordResetParam,
+        },
+        component: {
             renewCredential: renew,
             loadApplication: newLoadApplicationComponent(),
 
@@ -60,18 +59,15 @@ export function newAuthUsecase(currentLocation: Location, credentialStorage: Sto
             passwordResetSession: newPasswordResetSessionComponent(),
             passwordReset: newPasswordResetComponent(),
         },
-        {
+        background: {
             storeCredential: store.component,
         },
-        {
-            param: {
-                renewCredential: packRenewCredentialParam,
-                loadApplication: packLoadApplicationParam,
-                passwordReset: packPasswordResetParam,
-            },
-            authLocation: initAuthLocation(currentLocation),
+        /*
+        send: {
+            storeCredential: store.send,
         },
-    )
+         */
+    })
 }
 
 function newStoreCredentialComponent(credential: CredentialAction): StoreCredentialComponentResource {
