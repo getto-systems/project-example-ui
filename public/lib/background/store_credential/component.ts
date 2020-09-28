@@ -2,13 +2,12 @@ import { AuthCredential, StoreEvent, FetchResponse } from "../../credential/data
 
 export interface StoreCredentialComponent {
     sub: StoreEventSubscriber
-
     fetch(): FetchResponse
 }
 
-export type StoreCredentialResource = Readonly<{
+export type StoreCredentialComponentResource = Readonly<{
     component: StoreCredentialComponent
-    trigger: StoreCredentialTrigger
+    trigger: Post<StoreCredentialOperation>
 }>
 
 export interface StoreEventSubscriber {
@@ -18,11 +17,12 @@ export interface StoreEventSubscriber {
 export type StoreCredentialOperation =
     Readonly<{ type: "store", authCredential: AuthCredential }>
 
-export interface StoreCredentialTrigger {
-    trigger(operation: StoreCredentialOperation): void
-}
-export interface StoreCredentialOperator {
-    onTrigger(post: Post<StoreCredentialOperation>): void
+export type StoreCredentialOperationPubSub = Readonly<{
+    trigger: Post<StoreCredentialOperation>
+    sub: StoreCredentialOperationSubscriber
+}>
+export interface StoreCredentialOperationSubscriber {
+    handleOperation(post: Post<StoreCredentialOperation>): void
 }
 
 interface Post<T> {
