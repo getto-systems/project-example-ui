@@ -1,8 +1,10 @@
-import { PagePathname, ScriptEvent } from "./data"
+import { PagePathname, ScriptPath, ScriptEvent } from "./data"
 
 export interface ScriptAction {
     sub: ScriptEventSubscriber
     load(pagePathname: PagePathname): Promise<void>
+
+    secureScriptPath(pagePathname: PagePathname): ScriptPath
 }
 
 export interface ScriptEventPublisher {

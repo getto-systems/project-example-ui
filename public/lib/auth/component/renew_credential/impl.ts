@@ -1,99 +1,110 @@
 import {
-    RenewCredentialComponentAction,
-    RenewCredentialComponent,
     RenewCredentialParam,
+    RenewCredentialComponent,
+    RenewCredentialResource,
     RenewCredentialState,
     RenewCredentialOperation,
 } from "../renew_credential/component"
 
-import { TicketNonce, RenewEvent } from "../../../credential/data"
+import { CredentialAction } from "../../../credential/action"
+import { ScriptAction } from "../../../script/action"
+
+import { FetchResponse, RenewEvent } from "../../../credential/data"
+import { PagePathname } from "../../../script/data"
+
+interface Action {
+    credential: CredentialAction
+    script: ScriptAction
+}
 
 // Renew は unmount した後も interval を維持したいので worker にはしない
-export function initRenewCredentialComponent(action: RenewCredentialComponentAction): RenewCredentialComponent {
+export function initRenewCredentialComponent(action: Action): RenewCredentialComponent {
     return new Component(action)
 }
 
-export function packRenewCredentialParam(ticketNonce: TicketNonce): RenewCredentialParam {
-    return { ticketNonce } as RenewCredentialParam & Param
+export function packRenewCredentialParam(param: Param): RenewCredentialParam {
+    return param as Param & RenewCredentialParam
 }
-
-function unpackRenewCredentialParam(param: RenewCredentialParam): Param {
+function unpackParam(param: RenewCredentialParam): Param {
     return param as unknown as Param
 }
 
-type Param = {
-    ticketNonce: TicketNonce
-}
+type Param = Readonly<{
+    pagePathname: PagePathname
+    fetchResponse: FetchResponse
+}>
 
 class Component implements RenewCredentialComponent {
-    action: RenewCredentialComponentAction
-    listener: Post<RenewCredentialState>[]
+    action: Action
 
-    holder: ParamHolder<Param>
+    listener: Post<RenewCredentialState>[] = []
+    holder: ParamHolder = { set: false }
 
-    constructor(action: RenewCredentialComponentAction) {
+    constructor(action: Action) {
         this.action = action
-        this.action.credential.sub.onRenew((event) => {
-            const state = mapEvent(event)
-            this.listener.forEach(post => post(state))
+        this.action.credential.sub.onRenewEvent((event) => {
+            this.post(this.mapRenewEvent(event))
         })
+    }
+    post(state: RenewCredentialState): void {
+        this.listener.forEach(post => post(state))
+    }
+    mapRenewEvent(event: RenewEvent): RenewCredentialState {
+        switch (event.type) {
+            case "try-to-instant-load":
+            case "succeed-to-renew":
+                if (this.holder.set) {
+                    return {
+                        type: event.type,
+                        scriptPath: this.action.script.secureScriptPath(this.holder.param.pagePathname),
+                    }
+                } else {
+                    return this.paramIsNotSet()
+                }
 
-        this.listener = []
-        this.holder = { set: false }
+            default:
+                return event
+        }
     }
 
     onStateChange(stateChanged: Post<RenewCredentialState>): void {
         this.listener.push(stateChanged)
     }
 
-    post(state: RenewCredentialState): void {
-        this.listener.forEach(post => post(state))
+    init(): RenewCredentialResource {
+        return {
+            trigger: operation => this.trigger(operation),
+            terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
+        }
     }
-
-    init(): Terminate {
-        return () => this.terminate()
-    }
-    terminate(): void {
-        // WorkerComponent とインターフェイスを合わせるために必要
-    }
-
-    trigger(operation: RenewCredentialOperation): Promise<void> {
+    trigger(operation: RenewCredentialOperation): void {
         switch (operation.type) {
             case "set-param":
-                return this.setParam(operation.param)
+                this.holder = { set: true, param: unpackParam(operation.param) }
+                return
 
             case "renew":
-                return this.renew()
-
-            case "set-renew-interval":
-                return this.action.credential.setRenewInterval(operation.ticketNonce, operation.run)
+                if (this.holder.set) {
+                    this.action.credential.renew(this.holder.param.fetchResponse)
+                } else {
+                    this.post(this.paramIsNotSet())
+                }
+                return
         }
     }
 
-    async setParam(param: RenewCredentialParam): Promise<void> {
-        this.holder = { set: true, param: unpackRenewCredentialParam(param) }
-    }
-
-    async renew(): Promise<void> {
-        if (this.holder.set) {
-            this.action.credential.renew(this.holder.param.ticketNonce)
-        } else {
-            this.post({ type: "error", err: "param is not initialized" })
-        }
+    paramIsNotSet(): RenewCredentialState {
+        return { type: "error", err: "param is not set: do `set-param` first" }
     }
 }
 
-function mapEvent(event: RenewEvent): RenewCredentialState {
-    return event
-}
+type ParamHolder =
+    Readonly<{ set: false }> |
+    Readonly<{ set: true, param: Param }>
 
 interface Post<T> {
     (state: T): void
 }
-
-type ParamHolder<T> =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, param: Readonly<T> }>
 
 interface Terminate {
     (): void

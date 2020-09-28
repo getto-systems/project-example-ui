@@ -14,32 +14,25 @@ export interface AuthUsecase {
     init(): Terminate
 }
 
-export interface AuthComponent {
+export type AuthComponent = Readonly<{
     renewCredential: RenewCredentialComponent
     loadApplication: LoadApplicationComponent
 
     passwordLogin: PasswordLoginComponent
     passwordResetSession: PasswordResetSessionComponent
     passwordReset: PasswordResetComponent
-}
+}>
 
 export type AuthState =
-    Readonly<{ type: "initial-auth" }> |
-    Readonly<{ type: "failed-to-fetch", err: FetchError }> |
-    Readonly<{ type: "failed-to-store", err: StoreError }> |
+    Readonly<{ type: "initial" }> |
     Readonly<{ type: "renew-credential", param: RenewCredentialParam }> |
     Readonly<{ type: "load-application", param: LoadApplicationParam }> |
     Readonly<{ type: "password-login" }> |
     Readonly<{ type: "password-reset-session" }> |
-    Readonly<{ type: "password-reset", param: PasswordResetParam }>
+    Readonly<{ type: "password-reset", param: PasswordResetParam }> |
+    Readonly<{ type: "error", err: string }>
 
-export const initialAuthState: AuthState = { type: "initial-auth" }
-
-export type FetchError =
-    Readonly<{ type: "infra-error", err: string }>
-
-export type StoreError =
-    Readonly<{ type: "infra-error", err: string }>
+export const initialAuthState: AuthState = { type: "initial" }
 
 interface Post<T> {
     (state: T): void

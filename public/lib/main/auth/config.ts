@@ -1,3 +1,5 @@
+import { env } from "../../y_static/env"
+
 export function newTimeConfig(): TimeConfig {
     return {
         instantLoadExpireTime: expireMinute(3),
@@ -31,6 +33,16 @@ export type TimeConfig = Readonly<{
 
     passwordResetDelayTime: DelayTime,
 }>
+
+export function newHostConfig(): HostConfig {
+    return {
+        secureServerHost: env.secureServerHost,
+    }
+}
+
+export type HostConfig = {
+    secureServerHost: string,
+}
 
 type ExpireTime = { expire_milli_second: number }
 function expireSecond(second: number): ExpireTime {

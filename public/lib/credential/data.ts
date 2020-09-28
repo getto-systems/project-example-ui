@@ -1,7 +1,12 @@
+export type AuthResource = Readonly<{
+    ticketNonce: TicketNonce
+    lastAuthAt: AuthAt
+}>
+
 export type AuthCredential = Readonly<{
-    authAt: AuthAt
     ticketNonce: TicketNonce,
     apiCredential: ApiCredential,
+    authAt: AuthAt
 }>
 
 export type ApiCredential = Readonly<{
@@ -19,19 +24,29 @@ export type ApiRole = { ApiRole: never }
 
 export type AuthAt = { AuthAt: never }
 
-export type RenewRun =
-    Readonly<{ immediately: false }> |
-    Readonly<{ immediately: true, delay: DelayTime }>
-
-type DelayTime = Readonly<{ delay_milli_second: number }>
-
 export type RenewEvent =
+    Readonly<{ type: "failed-to-fetch", err: FetchError }> |
+    Readonly<{ type: "try-to-instant-load" }> |
     Readonly<{ type: "required-to-login" }> |
     Readonly<{ type: "try-to-renew" }> |
     Readonly<{ type: "delayed-to-renew" }> |
     Readonly<{ type: "failed-to-renew", err: RenewError }> |
-    Readonly<{ type: "succeed-to-renew", authCredential: AuthCredential }> |
-    Readonly<{ type: "succeed-to-renew-interval", authCredential: AuthCredential }>
+    Readonly<{ type: "failed-to-store", err: StoreError }> |
+    Readonly<{ type: "succeed-to-renew" }>
+
+export type StoreEvent =
+    Readonly<{ type: "failed-to-store", err: StoreError }>
+
+export type FetchResponse =
+    Readonly<{ success: false, err: FetchError }> |
+    Readonly<{ success: true, found: false }> |
+    Readonly<{ success: true, found: true, content: AuthResource }>
+
+export type FetchError =
+    Readonly<{ type: "infra-error", err: string }>
+
+export type StoreError =
+    Readonly<{ type: "infra-error", err: string }>
 
 export type RenewError =
     Readonly<{ type: "bad-request" }> |

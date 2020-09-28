@@ -1,5 +1,6 @@
 import {
     RenewCredentialComponent,
+    RenewCredentialResource,
     RenewCredentialState,
     RenewCredentialOperation,
 } from "../../../auth/component/renew_credential/component"
@@ -37,15 +38,11 @@ class Component implements RenewCredentialComponent {
         stateChanged(this.state)
     }
 
-    init(): Terminate {
-        return () => this.terminate()
-    }
-    terminate(): void {
-        // mock では特に何もしない
-    }
-    trigger(_operation: RenewCredentialOperation): Promise<void> {
-        // mock では特に何もしない
-        return Promise.resolve()
+    init(): RenewCredentialResource {
+        return {
+            trigger: (_operation: RenewCredentialOperation) => { /* mock では特に何もしない */ },
+            terminate: () => { /* mock では特に何もしない */ },
+        }
     }
 }
 

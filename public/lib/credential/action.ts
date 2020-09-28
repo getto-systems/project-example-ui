@@ -1,18 +1,22 @@
-import { TicketNonce, RenewEvent, RenewRun } from "./data"
+import { AuthResource, AuthCredential, RenewEvent, StoreEvent, FetchResponse } from "./data"
 
 export interface CredentialAction {
     sub: CredentialEventSubscriber
 
-    renew(ticketNonce: TicketNonce): Promise<void>
-    setRenewInterval(ticketNonce: TicketNonce, run: RenewRun): Promise<void>
+    fetch(): FetchResponse
+    renew(response: FetchResponse): void
+    storeCredential(authCredential: AuthCredential): void
+    setContinuousRenew(authResource: AuthResource): void
 }
 
 export interface CredentialEventPublisher {
     postRenewEvent(event: RenewEvent): void
+    postStoreEvent(event: StoreEvent): void
 }
 
 export interface CredentialEventSubscriber {
-    onRenew(stateChanged: Post<RenewEvent>): void
+    onRenewEvent(stateChanged: Post<RenewEvent>): void
+    onStoreEvent(stateChanged: Post<StoreEvent>): void
 }
 
 interface Post<T> {

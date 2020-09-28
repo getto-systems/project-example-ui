@@ -13,7 +13,7 @@ export function initLoadApplicationComponent(action: LoadApplicationComponentAct
     return new Component(action)
 }
 
-export function packLoadApplicationParam(param: { pagePathname: PagePathname, instantly: boolean }): LoadApplicationParam {
+export function packLoadApplicationParam(param: Param): LoadApplicationParam {
     return param as LoadApplicationParam & Param
 }
 
@@ -21,10 +21,9 @@ function unpackLoadApplicationParam(param: LoadApplicationParam): Param {
     return param as unknown as Param
 }
 
-type Param = {
+type Param = Readonly<{
     pagePathname: PagePathname
-    instantly: boolean
-}
+}>
 
 class Component implements LoadApplicationComponent {
     action: LoadApplicationComponentAction
@@ -92,7 +91,7 @@ class Component implements LoadApplicationComponent {
 
     async succeedToLoad(): Promise<void> {
         if (this.holder.set) {
-            this.post({ type: "succeed-to-load", instantly: this.holder.param.instantly })
+            this.post({ type: "succeed-to-load" })
         } else {
             this.paramIsNotInitialized()
         }

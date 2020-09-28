@@ -11,14 +11,17 @@ export interface LoadApplicationComponent {
 export type LoadApplicationParam = { LoadApplicationParam: never }
 
 export interface LoadApplicationParamPacker {
-    (param: { pagePathname: PagePathname, instantly: boolean }): LoadApplicationParam
+    (param: Param): LoadApplicationParam
 }
+type Param = Readonly<{
+    pagePathname: PagePathname
+}>
 
 export type LoadApplicationState =
     Readonly<{ type: "initial-load" }> |
     Readonly<{ type: "try-to-load", scriptPath: ScriptPath }> |
     Readonly<{ type: "failed-to-load", err: LoadError }> |
-    Readonly<{ type: "succeed-to-load", instantly: boolean }> |
+    Readonly<{ type: "succeed-to-load" }> |
     Readonly<{ type: "error", err: string }>
 
 export const initialLoadApplicationState: LoadApplicationState = { type: "initial-load" }
