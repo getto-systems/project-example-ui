@@ -44,13 +44,10 @@ export type LoadError =
     Readonly<{ type: "infra-error", err: string }>
 
 export interface RenewCredentialTrigger {
-    (operation: RenewCredentialOperation): Done
+    (operation: RenewCredentialOperation): void
 }
 
-export type Done = { Done: never }
-export const done: Done = true as true & Done
-
-export const initialRenewCredentialTrigger: RenewCredentialTrigger = (_operation: RenewCredentialOperation): Done => {
+export const initialRenewCredentialTrigger: RenewCredentialTrigger = (_operation: RenewCredentialOperation): void => {
     throw new Error("Component is not initialized. use: `init()`")
 }
 

@@ -3,7 +3,6 @@ import {
     RenewCredentialResource,
     RenewCredentialState,
     RenewCredentialOperation,
-    done,
 } from "../../../auth/component/renew_credential/component"
 
 export function newRenewCredentialComponent(): RenewCredentialComponent {
@@ -41,7 +40,7 @@ class Component implements RenewCredentialComponent {
 
     init(): RenewCredentialResource {
         return {
-            trigger: (_operation: RenewCredentialOperation) => done,
+            trigger: (_operation: RenewCredentialOperation) => { /* mock では特に何もしない */ },
             terminate: () => { /* mock では特に何もしない */ },
         }
     }
