@@ -1,3 +1,5 @@
+import { StoreCredentialOperation } from "../../../background/store_credential/component"
+
 import { LoginIDFieldState } from "../field/login_id/component"
 import { PasswordFieldState } from "../field/password/component"
 
@@ -40,6 +42,7 @@ export const initialPasswordResetSend: Post<PasswordResetOperation> = () => {
 }
 
 export interface PasswordResetWorkerComponentHelper {
+    mapStoreCredentialOperation(operation: StoreCredentialOperation): PasswordResetWorkerState
     mapPasswordResetState(state: PasswordResetState): PasswordResetWorkerState
     mapLoginIDFieldState(state: LoginIDFieldState): PasswordResetWorkerState
     mapPasswordFieldState(state: PasswordFieldState): PasswordResetWorkerState
@@ -48,7 +51,8 @@ export interface PasswordResetWorkerComponentHelper {
 export type PasswordResetWorkerState =
     Readonly<{ type: "password_reset", state: PasswordResetState }> |
     Readonly<{ type: "field-login_id", state: LoginIDFieldState }> |
-    Readonly<{ type: "field-password", state: PasswordFieldState }>
+    Readonly<{ type: "field-password", state: PasswordFieldState }> |
+    Readonly<{ type: "background-store_credential", operation: StoreCredentialOperation }>
 
 interface Post<T> {
     (state: T): void

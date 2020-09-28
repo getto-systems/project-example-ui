@@ -16,6 +16,7 @@ import { initFetchPasswordLoginClient } from "../../password_login/impl/client/p
 import { PasswordLoginClient } from "../../password_login/infra"
 
 import { AuthBackground } from "../../auth/usecase"
+
 import { PasswordLoginComponent, PasswordLoginWorkerComponentHelper } from "../../auth/component/password_login/component"
 
 export function newPasswordLoginComponent(background: AuthBackground): PasswordLoginComponent {
