@@ -155,7 +155,7 @@ function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
 }
 
 interface Init<T> {
-    (trigger: Post<T>): void
+    (send: Post<T>): void
 }
 interface Post<T> {
     (state: T): void
