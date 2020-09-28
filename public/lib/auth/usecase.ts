@@ -1,5 +1,7 @@
 import { AppHref } from "../href"
 
+import { StoreCredentialOperation, StoreCredentialOperationSubscriber } from "../background/store_credential/component"
+
 import { RenewCredentialComponent, RenewCredentialParam } from "./component/renew_credential/component"
 import { LoadApplicationComponent, LoadApplicationParam } from "./component/load_application/component"
 
@@ -23,6 +25,13 @@ export type AuthParam = Readonly<{
     loadApplication: LoadApplicationParamPacker
 
     passwordReset: PasswordResetParamPacker
+}>
+
+export type AuthBackground = Readonly<{
+    storeCredential: Post<StoreCredentialOperation>
+}>
+export type AuthBackgroundSubscriber = Readonly<{
+    storeCredential: StoreCredentialOperationSubscriber
 }>
 
 export type AuthComponent = Readonly<{

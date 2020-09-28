@@ -1,3 +1,7 @@
+import { AuthBackground } from "../../usecase"
+
+import { StoreCredentialOperation } from "../../../background/store_credential/component"
+
 import {
     PasswordLoginComponent,
     PasswordLoginState,
@@ -29,21 +33,23 @@ type Action = Readonly<{
     passwordField: PasswordFieldAction
 }>
 
-export function initPasswordLoginComponent(action: Action): PasswordLoginComponent {
-    return new Component(action)
+export function initPasswordLoginComponent(background: AuthBackground, action: Action): PasswordLoginComponent {
+    return new Component(background, action)
 }
-export function initPasswordLoginWorkerComponent(init: WorkerInit): PasswordLoginComponent {
-    return new WorkerComponent(init)
+export function initPasswordLoginWorkerComponent(background: AuthBackground, init: WorkerInit): PasswordLoginComponent {
+    return new WorkerComponent(background, init)
 }
 export function initPasswordLoginWorkerComponentHelper(): PasswordLoginWorkerComponentHelper {
     return {
         mapPasswordLoginState,
         mapLoginIDFieldState,
         mapPasswordFieldState,
+        mapStoreCredentialOperation,
     }
 }
 
 class Component implements PasswordLoginComponent {
+    background: AuthBackground
     action: Action
 
     listener: Post<PasswordLoginState>[] = []
@@ -61,7 +67,9 @@ class Component implements PasswordLoginComponent {
             password: { valid: false },
         }
 
-    constructor(action: Action) {
+    constructor(background: AuthBackground, action: Action) {
+        this.background = background
+
         this.action = action
         this.action.passwordLogin.sub.onLoginEvent((event) => {
             this.post(this.mapEvent(event))
@@ -83,6 +91,9 @@ class Component implements PasswordLoginComponent {
         this.listener.forEach(post => post(state))
     }
     mapEvent(event: LoginEvent): PasswordLoginState {
+        if (event.type === "succeed-to-login") {
+            this.background.storeCredential({ type: "store", authCredential: event.authCredential })
+        }
         return event
     }
 
@@ -125,6 +136,7 @@ class Component implements PasswordLoginComponent {
 }
 
 class WorkerComponent implements PasswordLoginComponent {
+    background: AuthBackground
     worker: WorkerHolder
 
     listener: {
@@ -133,7 +145,8 @@ class WorkerComponent implements PasswordLoginComponent {
         password: Post<PasswordFieldState>[]
     }
 
-    constructor(init: WorkerInit) {
+    constructor(background: AuthBackground, init: WorkerInit) {
+        this.background = background
         this.worker = { set: false, init }
         this.listener = {
             passwordLogin: [],
@@ -178,6 +191,10 @@ class WorkerComponent implements PasswordLoginComponent {
                         this.listener.password.forEach(post => post(state.state))
                         return
 
+                    case "background-store_credential":
+                        this.background.storeCredential(state.operation)
+                        return
+
                     default:
                         assertNever(state)
                 }
@@ -207,6 +224,9 @@ function mapLoginIDFieldState(state: LoginIDFieldState): PasswordLoginWorkerStat
 }
 function mapPasswordFieldState(state: PasswordFieldState): PasswordLoginWorkerState {
     return { type: "field-password", state }
+}
+function mapStoreCredentialOperation(operation: StoreCredentialOperation): PasswordLoginWorkerState {
+    return { type: "background-store_credential", operation }
 }
 
 type WorkerHolder =

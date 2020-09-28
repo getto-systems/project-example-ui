@@ -1,11 +1,16 @@
+import { newWorkerAuthBackground } from "../../main/auth/background"
 import { newPasswordLoginComponent, newWorkerHelper } from "../../main/auth/password_login"
 
 const ctx: Worker = self as any // eslint-disable-line @typescript-eslint/no-explicit-any
 
-const component = newPasswordLoginComponent()
+const auth = newWorkerAuthBackground()
+const component = newPasswordLoginComponent(auth.background)
 
 const helper = newWorkerHelper()
 
+auth.subscriber.storeCredential.handleOperation((operation) => {
+    ctx.postMessage(helper.mapStoreCredentialOperation(operation))
+})
 component.onStateChange((state) => {
     ctx.postMessage(helper.mapPasswordLoginState(state))
 })

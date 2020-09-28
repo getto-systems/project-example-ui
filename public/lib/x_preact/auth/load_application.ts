@@ -27,7 +27,7 @@ export function LoadApplication(props: Props): VNode {
     useEffect(() => {
         props.component.onStateChange(setState)
         return mapResource(props.component.init(), (send) => {
-            setSend(send)
+            setSend(() => send)
             send({ type: "set-param", param: props.param })
             send({ type: "load" })
         })
