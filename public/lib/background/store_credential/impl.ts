@@ -19,13 +19,13 @@ export function initStoreCredentialComponent(action: Action): StoreCredentialCom
     const pubsub = initStoreCredentialOperationPubSub()
     return {
         component: new Component(action, pubsub.sub),
-        trigger: pubsub.trigger,
+        send: pubsub.send,
     }
 }
 export function initStoreCredentialOperationPubSub(): StoreCredentialOperationPubSub {
     const pubsub = new OperationPubSub()
     return {
-        trigger: operation => pubsub.trigger(operation),
+        send: operation => pubsub.send(operation),
         sub: pubsub,
     }
 }
@@ -38,9 +38,9 @@ class Component implements StoreCredentialComponent {
         this.action = action
         this.sub = this.action.credential.sub
 
-        operationSubscriber.handleOperation(operation => this.trigger(operation))
+        operationSubscriber.handleOperation(operation => this.send(operation))
     }
-    trigger(operation: StoreCredentialOperation): void {
+    send(operation: StoreCredentialOperation): void {
         this.action.credential.storeCredential(operation.authCredential)
     }
 
@@ -52,7 +52,7 @@ class Component implements StoreCredentialComponent {
 class OperationPubSub implements StoreCredentialOperationSubscriber {
     listener: Post<StoreCredentialOperation>[] = []
 
-    trigger(operation: StoreCredentialOperation): void {
+    send(operation: StoreCredentialOperation): void {
         this.listener.forEach(post => post(operation))
     }
 
