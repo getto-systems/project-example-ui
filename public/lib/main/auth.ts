@@ -43,6 +43,10 @@ export function newAuthUsecase(currentLocation: Location, credentialStorage: Sto
     const store = newStoreCredentialComponent(credential)
     const renew = newRenewCredentialComponent(credential)
 
+    const send = {
+        storeCredential: store.send,
+    }
+
     return initAuthUsecase({
         currentLocation,
         href: newAppHref(),
@@ -55,18 +59,13 @@ export function newAuthUsecase(currentLocation: Location, credentialStorage: Sto
             renewCredential: renew,
             loadApplication: newLoadApplicationComponent(),
 
-            passwordLogin: newPasswordLoginComponent(/* trigger */),
+            passwordLogin: newPasswordLoginComponent(send),
             passwordResetSession: newPasswordResetSessionComponent(),
             passwordReset: newPasswordResetComponent(),
         },
         background: {
             storeCredential: store.component,
         },
-        /*
-        send: {
-            storeCredential: store.send,
-        },
-         */
     })
 }
 

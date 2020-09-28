@@ -30,7 +30,9 @@ export function PasswordLogin(props: Props): VNode {
     const submit = useRef<HTMLButtonElement>()
     useEffect(() => {
         props.component.onStateChange(setState)
-        return mapResource(props.component.init(), setSend)
+        return mapResource(props.component.init(), (send) => {
+            setSend(() => send)
+        })
     }, [])
 
     function view(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
