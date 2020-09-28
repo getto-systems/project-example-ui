@@ -13,7 +13,6 @@ import {
     RenewCredentialParam,
     initialRenewCredentialState,
     initialRenewCredentialTrigger,
-    Done,
 } from "../../auth/component/renew_credential/component"
 
 import { RenewError } from "../../credential/data"
@@ -156,16 +155,16 @@ function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
 }
 
 interface Init<T> {
-    (trigger: Trigger<T>): void
+    (trigger: Post<T>): void
 }
-interface Trigger<T> {
-    (operation: T): Done
+interface Post<T> {
+    (state: T): void
 }
 interface Terminate {
     (): void
 }
 
 type Resource<T> = Readonly<{
-    trigger: Trigger<T>
+    trigger: Post<T>
     terminate: Terminate
 }>

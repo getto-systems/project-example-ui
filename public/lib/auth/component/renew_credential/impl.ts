@@ -4,8 +4,6 @@ import {
     RenewCredentialResource,
     RenewCredentialState,
     RenewCredentialOperation,
-    Done,
-    done,
 } from "../renew_credential/component"
 
 import { CredentialAction } from "../../../credential/action"
@@ -79,11 +77,11 @@ class Component implements RenewCredentialComponent {
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
         }
     }
-    trigger(operation: RenewCredentialOperation): Done {
+    trigger(operation: RenewCredentialOperation): void {
         switch (operation.type) {
             case "set-param":
                 this.holder = { set: true, param: unpackParam(operation.param) }
-                return done
+                return
 
             case "renew":
                 if (this.holder.set) {
@@ -91,7 +89,7 @@ class Component implements RenewCredentialComponent {
                 } else {
                     this.post(this.paramIsNotSet())
                 }
-                return done
+                return
 
             case "succeed-to-instant-load":
                 if (this.holder.set) {
@@ -99,11 +97,14 @@ class Component implements RenewCredentialComponent {
                 } else {
                     this.post(this.paramIsNotSet())
                 }
-                return done
+                return
 
             case "failed-to-load":
                 this.post({ type: "failed-to-load", err: operation.err })
-                return done
+                return
+
+            default:
+                assertNever(operation)
         }
     }
 
@@ -122,4 +123,8 @@ interface Post<T> {
 
 interface Terminate {
     (): void
+}
+
+function assertNever(_: never): never {
+    throw new Error("NEVER")
 }
