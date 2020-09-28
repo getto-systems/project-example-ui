@@ -169,7 +169,7 @@ class StatusPoller {
                 status: response.status,
             })
 
-            await this.infra.wait(this.infra.timeConfig.passwordResetPollingWaitTime, () => null)
+            await this.infra.wait(this.infra.timeConfig.passwordResetPollingWaitTime, () => true)
         }
 
         this.post({
