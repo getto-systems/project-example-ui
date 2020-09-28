@@ -1,8 +1,6 @@
 import { h, VNode } from "preact"
-import { html } from "htm/preact"
 import { useState, useEffect, useErrorBoundary } from "preact/hooks"
-
-import { loginError } from "../layout"
+import { html } from "htm/preact"
 
 import { ApplicationError } from "../application_error"
 
@@ -13,7 +11,7 @@ import { PasswordLogin } from "./password_login"
 import { PasswordResetSession } from "./password_reset_session"
 import { PasswordReset } from "./password_reset"
 
-import { AuthUsecase, initialAuthState, FetchError, StoreError } from "../../auth/usecase"
+import { AuthUsecase, initialAuthState } from "../../auth/usecase"
 
 type Props = Readonly<{
     usecase: AuthUsecase
@@ -37,7 +35,7 @@ export function Main(props: Props): VNode {
     }, [])
 
     switch (state.type) {
-        case "initial-auth":
+        case "initial":
             return EMPTY_CONTENT
 
         case "renew-credential":
@@ -71,23 +69,9 @@ export function Main(props: Props): VNode {
                 param: state.param,
             })
 
-        case "failed-to-fetch":
-        case "failed-to-store":
-            return StorageError(state.err)
+        case "error":
+            return h(ApplicationError, { err: state.err })
     }
 }
 
-function StorageError(err: FetchError | StoreError): VNode {
-    return loginError(
-        html`アプリケーションの初期化に失敗しました`,
-        html`
-            <p>ブラウザが LocalStorage にアクセスできませんでした</p>
-            <p>(詳細: ${err.err})</p>
-            <div class="vertical vertical_medium"></div>
-            <p>お手数ですが、上記メッセージを管理者に伝えてください</p>
-        `,
-        html``,
-    )
-}
-
-const EMPTY_CONTENT: VNode = html``
+const EMPTY_CONTENT = html``

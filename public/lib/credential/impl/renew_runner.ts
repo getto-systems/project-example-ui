@@ -9,12 +9,8 @@ export function initRenewRunner(): RenewRunner {
 }
 
 class Runner implements RenewRunner {
-    nextRun(lastAuthAt: Found<AuthAt>, delay: DelayTime): DelayTime {
-        if (!lastAuthAt.found) {
-            return { delay_milli_second: 0 }
-        }
-
-        const delay_milli_second = unpackAuthAt(lastAuthAt.content).getTime() + delay.delay_milli_second - new Date().getTime()
+    nextRun(lastAuthAt: AuthAt, delay: DelayTime): DelayTime {
+        const delay_milli_second = unpackAuthAt(lastAuthAt).getTime() + delay.delay_milli_second - new Date().getTime()
         if (delay_milli_second < 0) {
             return { delay_milli_second: 0 }
         }
@@ -23,7 +19,3 @@ class Runner implements RenewRunner {
 }
 
 type DelayTime = Readonly<{ delay_milli_second: number }>
-
-type Found<T> =
-    Readonly<{ found: false }> |
-    Readonly<{ found: true, content: T }>

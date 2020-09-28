@@ -11,7 +11,7 @@ import { packRenewCredentialParam } from "../../../auth/component/renew_credenti
 import { packLoadApplicationParam } from "../../../auth/component/load_application/impl"
 import { packPasswordResetParam } from "../../../auth/component/password_reset/impl"
 
-import { packTicketNonce } from "../../../credential/adapter"
+import { packTicketNonce, packAuthAt } from "../../../credential/adapter"
 import { packResetToken } from "../../../password_reset/adapter"
 import { packPagePathname } from "../../../script/adapter"
 
@@ -19,17 +19,24 @@ import { AppHref } from "../../../href"
 import { AuthUsecase, AuthComponent, AuthState } from "../../../auth/usecase"
 
 export function newAuthUsecase(): AuthUsecase {
-    return new Usecase(new Init().initialAuth())
+    return new Usecase(new Init().renewCredential())
 }
 
 class Init {
-    initialAuth(): AuthState {
-        return { type: "initial-auth" }
-    }
     renewCredential(): AuthState {
         return {
             type: "renew-credential",
-            param: packRenewCredentialParam(packTicketNonce("ticket-nonce")),
+            param: packRenewCredentialParam({
+                pagePathname: packPagePathname(new URL("https://example.com/index.html")),
+                fetchResponse: {
+                    success: true,
+                    found: true,
+                    content: {
+                        ticketNonce: packTicketNonce("ticket-nonce"),
+                        lastAuthAt: packAuthAt(new Date()),
+                    }
+                },
+            }),
         }
     }
     loadApplication(): AuthState {
@@ -37,7 +44,6 @@ class Init {
             type: "load-application",
             param: packLoadApplicationParam({
                 pagePathname: packPagePathname(new URL("https://example.com/index.html")),
-                instantly: false,
             }),
         }
     }

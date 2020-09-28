@@ -3,7 +3,7 @@ import { delayed } from "../z_external/delayed"
 
 import { initAuthClient } from "../z_external/auth_client/auth_client"
 
-import { newTimeConfig, TimeConfig } from "./auth/config"
+import { newTimeConfig, newHostConfig } from "./auth/config"
 
 import { newAppHref } from "./href"
 
@@ -14,43 +14,82 @@ import { newPasswordResetComponent } from "./auth/worker/password_reset"
 
 import { initAuthUsecase } from "../auth/impl/core"
 import { initAuthLocation } from "../auth/impl/location"
-import { initAuthExpires } from "../auth/impl/expires"
-import { initRenewRunner } from "../auth/impl/renew_runner"
-import { initStorageAuthCredentialRepository } from "../auth/impl/repository/auth_credential/storage"
+
+import { initStoreCredentialComponent } from "../background/store_credential/impl"
 
 import { initRenewCredentialComponent, packRenewCredentialParam } from "../auth/component/renew_credential/impl"
 import { packLoadApplicationParam } from "../auth/component/load_application/impl"
 import { packPasswordResetParam } from "../auth/component/password_reset/impl"
 
 import { initFetchRenewClient } from "../credential/impl/client/renew/fetch"
+import { initAuthExpires } from "../credential/impl/expires"
+import { initRenewRunner } from "../credential/impl/renew_runner"
+import { initStorageAuthCredentialRepository } from "../credential/impl/repository/auth_credential/storage"
 
 import { initCredentialAction } from "../credential/impl/core"
+import { initScriptAction } from "../script/impl/core"
 
 import { RenewClient } from "../credential/infra"
 
 import { AuthUsecase } from "../auth/usecase"
+import { StoreCredentialResource } from "../background/store_credential/component"
 import { RenewCredentialComponent } from "../auth/component/renew_credential/component"
 
 import { CredentialAction } from "../credential/action"
+import { ScriptAction } from "../script/action"
 
 export function newAuthUsecase(currentLocation: Location, credentialStorage: Storage): AuthUsecase {
-    const timeConfig = newTimeConfig()
+    const credential = newCredentialAction(credentialStorage)
 
-    return initAuthUsecase(newAppHref(), {
-        renewCredential: newRenewCredentialComponent(timeConfig),
-        loadApplication: newLoadApplicationComponent(),
+    const store = newStoreCredentialComponent(credential)
+    const renew = newRenewCredentialComponent(credential)
 
-        passwordLogin: newPasswordLoginComponent(),
-        passwordResetSession: newPasswordResetSessionComponent(),
-        passwordReset: newPasswordResetComponent(),
-    }, {
-        timeConfig,
-        param: {
-            renewCredential: packRenewCredentialParam,
-            loadApplication: packLoadApplicationParam,
-            passwordReset: packPasswordResetParam,
+    /*
+    const trigger = {
+        storeCredential: store.trigger,
+    }
+     */
+
+    return initAuthUsecase(
+        newAppHref(),
+        {
+            renewCredential: renew,
+            loadApplication: newLoadApplicationComponent(),
+
+            passwordLogin: newPasswordLoginComponent(/* trigger */),
+            passwordResetSession: newPasswordResetSessionComponent(),
+            passwordReset: newPasswordResetComponent(),
         },
-        authLocation: initAuthLocation(currentLocation),
+        {
+            storeCredential: store.component,
+        },
+        {
+            param: {
+                renewCredential: packRenewCredentialParam,
+                loadApplication: packLoadApplicationParam,
+                passwordReset: packPasswordResetParam,
+            },
+            authLocation: initAuthLocation(currentLocation),
+        },
+    )
+}
+
+function newStoreCredentialComponent(credential: CredentialAction): StoreCredentialResource {
+    return initStoreCredentialComponent({
+        credential,
+    })
+}
+function newRenewCredentialComponent(credential: CredentialAction): RenewCredentialComponent {
+    return initRenewCredentialComponent({
+        credential,
+        script: newScriptAction(),
+    })
+}
+
+function newCredentialAction(credentialStorage: Storage): CredentialAction {
+    return initCredentialAction({
+        timeConfig: newTimeConfig(),
+
         authCredentials: initStorageAuthCredentialRepository(credentialStorage, {
             ticketNonce: "GETTO-EXAMPLE-TICKET-NONCE",
             apiCredential: "GETTO-EXAMPLE-API-CREDENTIAL",
@@ -58,18 +97,15 @@ export function newAuthUsecase(currentLocation: Location, credentialStorage: Sto
         }),
         expires: initAuthExpires(),
         runner: initRenewRunner(),
+
+        renewClient: newRenewClient(),
+        delayed,
     })
 }
 
-function newRenewCredentialComponent(timeConfig: TimeConfig): RenewCredentialComponent {
-    return initRenewCredentialComponent({ credential: newCredentialAction(timeConfig) })
-}
-
-function newCredentialAction(timeConfig: TimeConfig): CredentialAction {
-    return initCredentialAction({
-        timeConfig,
-        renewClient: newRenewClient(),
-        delayed,
+function newScriptAction(): ScriptAction {
+    return initScriptAction({
+        hostConfig: newHostConfig(),
     })
 }
 

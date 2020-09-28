@@ -24,11 +24,16 @@ class Action implements ScriptAction {
         this.sub = pubsub
     }
 
+    // TODO deprecated: 同期的に操作が完了するなら async + event にする必要はない
     async load(pagePathname: PagePathname): Promise<void> {
         const post = (event: ScriptEvent) => this.pub.postScriptEvent(event)
 
         const scriptPath = secureScriptPath(this.infra.hostConfig.secureServerHost, pagePathname)
         post({ type: "try-to-load", scriptPath })
+    }
+
+    secureScriptPath(pagePathname: PagePathname): ScriptPath {
+        return secureScriptPath(this.infra.hostConfig.secureServerHost, pagePathname)
     }
 }
 
