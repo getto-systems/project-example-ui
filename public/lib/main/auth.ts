@@ -61,7 +61,7 @@ export function newAuthUsecase(currentLocation: Location, credentialStorage: Sto
 
             passwordLogin: newPasswordLoginComponent(send),
             passwordResetSession: newPasswordResetSessionComponent(),
-            passwordReset: newPasswordResetComponent(),
+            passwordReset: newPasswordResetComponent(send),
         },
         background: {
             storeCredential: store.component,

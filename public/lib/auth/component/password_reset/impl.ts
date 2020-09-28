@@ -1,3 +1,7 @@
+import { AuthBackground } from "../../usecase"
+
+import { StoreCredentialOperation } from "../../../background/store_credential/component"
+
 import {
     PasswordResetComponent,
     PasswordResetParam,
@@ -30,14 +34,15 @@ export interface Action {
     passwordField: PasswordFieldAction
 }
 
-export function initPasswordResetComponent(action: Action): PasswordResetComponent {
-    return new Component(action)
+export function initPasswordResetComponent(background: AuthBackground, action: Action): PasswordResetComponent {
+    return new Component(background, action)
 }
-export function initPasswordResetWorkerComponent(init: WorkerInit): PasswordResetComponent {
-    return new WorkerComponent(init)
+export function initPasswordResetWorkerComponent(background: AuthBackground, init: WorkerInit): PasswordResetComponent {
+    return new WorkerComponent(background, init)
 }
 export function initPasswordResetWorkerComponentHelper(): PasswordResetWorkerComponentHelper {
     return {
+        mapStoreCredentialOperation,
         mapPasswordResetState,
         mapLoginIDFieldState,
         mapPasswordFieldState,
@@ -57,6 +62,7 @@ type Param = {
 }
 
 class Component implements PasswordResetComponent {
+    background: AuthBackground
     action: Action
 
     field: {
@@ -76,7 +82,8 @@ class Component implements PasswordResetComponent {
             password: { valid: false },
         }
 
-    constructor(action: Action) {
+    constructor(background: AuthBackground, action: Action) {
+        this.background = background
         this.action = action
         this.action.passwordReset.sub.onResetEvent((event) => {
             this.post(this.mapResetEvent(event))
@@ -98,6 +105,9 @@ class Component implements PasswordResetComponent {
         this.listener.forEach(post => post(state))
     }
     mapResetEvent(event: ResetEvent): PasswordResetState {
+        if (event.type === "succeed-to-reset") {
+            this.background.storeCredential({ type: "store", authCredential: event.authCredential })
+        }
         return event
     }
 
@@ -152,6 +162,7 @@ class Component implements PasswordResetComponent {
 }
 
 class WorkerComponent implements PasswordResetComponent {
+    background: AuthBackground
     worker: WorkerHolder
 
     listener: {
@@ -164,7 +175,8 @@ class WorkerComponent implements PasswordResetComponent {
             password: [],
         }
 
-    constructor(init: WorkerInit) {
+    constructor(background: AuthBackground, init: WorkerInit) {
+        this.background = background
         this.worker = { set: false, init }
     }
 
@@ -204,6 +216,10 @@ class WorkerComponent implements PasswordResetComponent {
                         this.listener.password.forEach(post => post(state.state))
                         return
 
+                    case "background-store_credential":
+                        this.background.storeCredential(state.operation)
+                        return
+
                     default:
                         assertNever(state)
                 }
@@ -224,6 +240,9 @@ class WorkerComponent implements PasswordResetComponent {
     }
 }
 
+function mapStoreCredentialOperation(operation: StoreCredentialOperation): PasswordResetWorkerState {
+    return { type: "background-store_credential", operation }
+}
 function mapPasswordResetState(state: PasswordResetState): PasswordResetWorkerState {
     return { type: "password_reset", state }
 }
