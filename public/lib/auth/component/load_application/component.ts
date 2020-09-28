@@ -27,7 +27,7 @@ export type LoadApplicationOperation =
     Readonly<{ type: "load" }> |
     Readonly<{ type: "failed-to-load", err: LoadError }>
 
-export const initialLoadApplicationTrigger: Post<LoadApplicationOperation> = (_operation: LoadApplicationOperation): void => {
+export const initialLoadApplicationSend: Post<LoadApplicationOperation> = (_operation: LoadApplicationOperation): void => {
     throw new Error("Component is not initialized. use: `init()`")
 }
 
@@ -43,6 +43,6 @@ interface Terminate {
 }
 
 type ComponentResource<T> = Readonly<{
-    trigger: Post<T>
+    send: Post<T>
     terminate: Terminate
 }>

@@ -48,11 +48,11 @@ class Component implements LoadApplicationComponent {
 
     init(): ComponentResource<LoadApplicationOperation> {
         return {
-            trigger: operation => this.trigger(operation),
+            send: operation => this.send(operation),
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
         }
     }
-    trigger(operation: LoadApplicationOperation): void {
+    send(operation: LoadApplicationOperation): void {
         switch (operation.type) {
             case "set-param":
                 this.holder = { set: true, param: unpackParam(operation.param) }
@@ -94,7 +94,7 @@ interface Terminate {
 }
 
 type ComponentResource<T> = Readonly<{
-    trigger: Post<T>
+    send: Post<T>
     terminate: Terminate
 }>
 
