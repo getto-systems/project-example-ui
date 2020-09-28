@@ -9,9 +9,9 @@ import { ScriptAction } from "../../../script/action"
 
 import { PagePathname } from "../../../script/data"
 
-interface Action {
-    script: ScriptAction,
-}
+type Action = Readonly<{
+    script: ScriptAction
+}>
 
 export function initLoadApplicationComponent(action: Action): LoadApplicationComponent {
     return new Component(action)
@@ -81,14 +81,13 @@ class Component implements LoadApplicationComponent {
 
 const errorParamIsNotSet: LoadApplicationState = { type: "error", err: "param is not set: do `set-param` first" }
 
-interface Post<T> {
-    (state: T): void
-}
-
 type ParamHolder =
     Readonly<{ set: false }> |
     Readonly<{ set: true, param: Param }>
 
+interface Post<T> {
+    (state: T): void
+}
 interface Terminate {
     (): void
 }

@@ -1,14 +1,17 @@
 import {
-    PasswordLoginComponentAction,
     PasswordLoginComponent,
     PasswordLoginState,
-    PasswordLoginComponentOperation,
+    PasswordLoginOperation,
     PasswordLoginWorkerState,
     PasswordLoginWorkerComponentHelper,
 } from "../password_login/component"
 
 import { LoginIDFieldState } from "../field/login_id/component"
 import { PasswordFieldState } from "../field/password/component"
+
+import { PasswordLoginAction } from "../../../password_login/action"
+import { LoginIDFieldAction } from "../../../field/login_id/action"
+import { PasswordFieldAction } from "../../../field/password/action"
 
 import { LoginIDField } from "../../../field/login_id/action"
 import { PasswordField } from "../../../field/password/action"
@@ -20,7 +23,13 @@ import { LoginIDFieldEvent } from "../../../field/login_id/data"
 import { PasswordFieldEvent } from "../../../field/password/data"
 import { Content } from "../../../field/data"
 
-export function initPasswordLoginComponent(action: PasswordLoginComponentAction): PasswordLoginComponent {
+type Action = Readonly<{
+    passwordLogin: PasswordLoginAction
+    loginIDField: LoginIDFieldAction
+    passwordField: PasswordFieldAction
+}>
+
+export function initPasswordLoginComponent(action: Action): PasswordLoginComponent {
     return new Component(action)
 }
 export function initPasswordLoginWorkerComponent(init: WorkerInit): PasswordLoginComponent {
@@ -35,9 +44,9 @@ export function initPasswordLoginWorkerComponentHelper(): PasswordLoginWorkerCom
 }
 
 class Component implements PasswordLoginComponent {
-    action: PasswordLoginComponentAction
+    action: Action
 
-    listener: Post<PasswordLoginState>[]
+    listener: Post<PasswordLoginState>[] = []
 
     field: {
         loginID: LoginIDField
@@ -47,25 +56,20 @@ class Component implements PasswordLoginComponent {
     content: {
         loginID: Content<LoginID>
         password: Content<Password>
-    }
+    } = {
+            loginID: { valid: false },
+            password: { valid: false },
+        }
 
-    constructor(action: PasswordLoginComponentAction) {
+    constructor(action: Action) {
         this.action = action
         this.action.passwordLogin.sub.onLoginEvent((event) => {
-            const state = mapEvent(event)
-            this.listener.forEach(post => post(state))
+            this.post(this.mapEvent(event))
         })
-
-        this.listener = []
 
         this.field = {
             loginID: this.action.loginIDField.initLoginIDField(),
             password: this.action.passwordField.initPasswordField(),
-        }
-
-        this.content = {
-            loginID: { valid: false },
-            password: { valid: false },
         }
 
         this.field.loginID.sub.onLoginIDFieldEvent((event: LoginIDFieldEvent) => {
@@ -74,6 +78,12 @@ class Component implements PasswordLoginComponent {
         this.field.password.sub.onPasswordFieldEvent((event: PasswordFieldEvent) => {
             this.content.password = event.content
         })
+    }
+    post(state: PasswordLoginState): void {
+        this.listener.forEach(post => post(state))
+    }
+    mapEvent(event: LoginEvent): PasswordLoginState {
+        return event
     }
 
     onStateChange(stateChanged: Post<PasswordLoginState>): void {
@@ -86,31 +96,31 @@ class Component implements PasswordLoginComponent {
         this.field.password.sub.onPasswordFieldEvent(stateChanged)
     }
 
-    init(): Terminate {
-        return () => this.terminate()
-    }
-    terminate(): void {
-        // WorkerComponent とインターフェイスを合わせるために必要
-    }
-
-    trigger(operation: PasswordLoginComponentOperation): Promise<void> {
-        switch (operation.type) {
-            case "login":
-                return this.login()
-
-            case "field-login_id":
-                return Promise.resolve(this.field.loginID.trigger(operation.operation))
-
-            case "field-password":
-                return Promise.resolve(this.field.password.trigger(operation.operation))
+    init(): ComponentResource<PasswordLoginOperation> {
+        return {
+            send: operation => this.send(operation),
+            terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
         }
     }
+    send(operation: PasswordLoginOperation): void {
+        switch (operation.type) {
+            case "login":
+                this.field.loginID.validate()
+                this.field.password.validate()
+                this.action.passwordLogin.login(this.content)
+                return
 
-    login(): Promise<void> {
-        this.field.loginID.validate()
-        this.field.password.validate()
+            case "field-login_id":
+                this.field.loginID.trigger(operation.operation)
+                return
 
-        return this.action.passwordLogin.login(this.content)
+            case "field-password":
+                this.field.password.trigger(operation.operation)
+                return
+
+            default:
+                assertNever(operation)
+        }
     }
 }
 
@@ -142,9 +152,12 @@ class WorkerComponent implements PasswordLoginComponent {
         this.listener.password.push(stateChanged)
     }
 
-    init(): Terminate {
+    init(): ComponentResource<PasswordLoginOperation> {
         this.initComponent()
-        return () => this.terminate()
+        return {
+            send: operation => this.send(operation),
+            terminate: () => this.terminate(),
+        }
     }
     initComponent(): void {
         if (!this.worker.set) {
@@ -179,15 +192,11 @@ class WorkerComponent implements PasswordLoginComponent {
         }
     }
 
-    async trigger(operation: PasswordLoginComponentOperation): Promise<void> {
+    send(operation: PasswordLoginOperation): void {
         if (this.worker.set) {
             this.worker.instance.postMessage(operation)
         }
     }
-}
-
-function mapEvent(event: LoginEvent): PasswordLoginState {
-    return event
 }
 
 function mapPasswordLoginState(state: PasswordLoginState): PasswordLoginWorkerState {
@@ -200,10 +209,6 @@ function mapPasswordFieldState(state: PasswordFieldState): PasswordLoginWorkerSt
     return { type: "field-password", state }
 }
 
-interface Post<T> {
-    (state: T): void
-}
-
 type WorkerHolder =
     Readonly<{ set: false, init: WorkerInit }> |
     Readonly<{ set: true, instance: Worker }>
@@ -212,9 +217,17 @@ interface WorkerInit {
     (): Worker
 }
 
+interface Post<T> {
+    (state: T): void
+}
 interface Terminate {
     (): void
 }
+
+type ComponentResource<T> = Readonly<{
+    send: Post<T>
+    terminate: Terminate
+}>
 
 function assertNever(_: never): never {
     throw new Error("NEVER")

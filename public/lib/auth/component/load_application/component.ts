@@ -27,7 +27,7 @@ export type LoadApplicationOperation =
     Readonly<{ type: "load" }> |
     Readonly<{ type: "failed-to-load", err: LoadError }>
 
-export const initialLoadApplicationSend: Post<LoadApplicationOperation> = (_operation: LoadApplicationOperation): void => {
+export const initialLoadApplicationSend: Post<LoadApplicationOperation> = (): void => {
     throw new Error("Component is not initialized. use: `init()`")
 }
 
@@ -37,7 +37,6 @@ export type LoadError =
 interface Post<T> {
     (state: T): void
 }
-
 interface Terminate {
     (): void
 }

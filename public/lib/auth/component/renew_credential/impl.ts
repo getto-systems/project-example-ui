@@ -11,10 +11,10 @@ import { ScriptAction } from "../../../script/action"
 import { AuthResource, RenewEvent } from "../../../credential/data"
 import { PagePathname } from "../../../script/data"
 
-interface Action {
+type Action = Readonly<{
     credential: CredentialAction
     script: ScriptAction
-}
+}>
 
 // Renew は unmount した後も interval を維持したいので worker にはしない
 export function initRenewCredentialComponent(action: Action): RenewCredentialComponent {
@@ -117,7 +117,6 @@ type ParamHolder =
 interface Post<T> {
     (state: T): void
 }
-
 interface Terminate {
     (): void
 }

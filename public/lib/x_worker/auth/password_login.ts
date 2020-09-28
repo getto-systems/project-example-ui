@@ -16,12 +16,12 @@ component.onPasswordFieldStateChange((state) => {
     ctx.postMessage(helper.mapPasswordFieldState(state))
 })
 
+const resource = component.init()
+
 ctx.addEventListener("message", (event) => {
     try {
-        component.trigger(event.data)
+        resource.send(event.data)
     } catch (err) {
         ctx.postMessage({ type: "error", err: `${err}` })
     }
 })
-
-component.init()
