@@ -25,7 +25,6 @@ export type ApiRole = { ApiRole: never }
 export type AuthAt = { AuthAt: never }
 
 export type RenewEvent =
-    Readonly<{ type: "failed-to-fetch", err: FetchError }> |
     Readonly<{ type: "try-to-instant-load" }> |
     Readonly<{ type: "required-to-login" }> |
     Readonly<{ type: "try-to-renew" }> |
