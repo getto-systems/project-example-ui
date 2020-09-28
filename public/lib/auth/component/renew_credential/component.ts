@@ -36,7 +36,7 @@ export type RenewCredentialOperation =
     Readonly<{ type: "failed-to-load", err: LoadError }> |
     Readonly<{ type: "succeed-to-instant-load" }>
 
-export const initialRenewCredentialTrigger: Post<RenewCredentialOperation> = (_operation: RenewCredentialOperation): void => {
+export const initialRenewCredentialSend: Post<RenewCredentialOperation> = (_operation: RenewCredentialOperation): void => {
     throw new Error("Component is not initialized. use: `init()`")
 }
 
@@ -51,6 +51,6 @@ interface Terminate {
 }
 
 type ComponentResource<T> = Readonly<{
-    trigger: Post<T>
+    send: Post<T>
     terminate: Terminate
 }>
