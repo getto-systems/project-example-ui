@@ -3,7 +3,6 @@ import { StoreCredentialOperation } from "../../../background/store_credential/c
 import { LoginIDFieldState } from "../field/login_id/component"
 import { PasswordFieldState } from "../field/password/component"
 
-import { AuthCredential } from "../../../credential/data"
 import { LoginError } from "../../../password_login/data"
 import { LoginIDFieldOperation } from "../../../field/login_id/data"
 import { PasswordFieldOperation } from "../../../field/password/data"
@@ -20,7 +19,7 @@ export type PasswordLoginState =
     Readonly<{ type: "try-to-login" }> |
     Readonly<{ type: "delayed-to-login" }> |
     Readonly<{ type: "failed-to-login", err: LoginError }> |
-    Readonly<{ type: "succeed-to-login", authCredential: AuthCredential }> |
+    Readonly<{ type: "succeed-to-login" }> |
     Readonly<{ type: "error", err: string }>
 
 export const initialPasswordLoginState: PasswordLoginState = { type: "initial-login" }
