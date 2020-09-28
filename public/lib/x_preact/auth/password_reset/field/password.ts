@@ -11,11 +11,11 @@ import { PasswordFieldOperation } from "../../../../field/password/data"
 
 type Props = Readonly<{
     component: FormComponent
+    send: { (operation: { type: "field-password", operation: PasswordFieldOperation }): void }
 }>
 
 interface FormComponent {
     onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void
-    trigger(operation: { type: "field-password", operation: PasswordFieldOperation }): Promise<void>
 }
 
 export function PasswordField(props: Props): VNode {
@@ -26,16 +26,16 @@ export function PasswordField(props: Props): VNode {
     }, [])
 
     const onInput = mapInputEvent((password) => {
-        props.component.trigger({ type: "field-password", operation: { type: "set-password", password } })
+        props.send({ type: "field-password", operation: { type: "set-password", password } })
         setValue(password)
     })
 
     const handler = {
         show() {
-            props.component.trigger({ type: "field-password", operation: { type: "show-password" } })
+            props.send({ type: "field-password", operation: { type: "show-password" } })
         },
         hide() {
-            props.component.trigger({ type: "field-password", operation: { type: "hide-password" } })
+            props.send({ type: "field-password", operation: { type: "hide-password" } })
         },
     }
 

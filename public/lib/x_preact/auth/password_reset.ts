@@ -15,6 +15,7 @@ import {
     PasswordResetComponent,
     PasswordResetParam,
     initialPasswordResetState,
+    initialPasswordResetSend,
 } from "../../auth/component/password_reset/component"
 
 import { ResetError } from "../../password_reset/data"
@@ -27,17 +28,16 @@ type Props = Readonly<{
 
 export function PasswordReset(props: Props): VNode {
     const [state, setState] = useState(initialPasswordResetState)
-    const submit = useRef<HTMLButtonElement>()
+    const [send, setSend] = useState(() => initialPasswordResetSend)
     useEffect(() => {
         props.component.onStateChange(setState)
-        return props.component.init()
+        return mapResource(props.component.init(), (send) => {
+            setSend(() => send)
+            send({ type: "set-param", param: props.param })
+        })
     }, [])
 
-    useEffect(() => {
-        props.component.trigger({ type: "set-param", param: props.param })
-    }, [props.param])
-
-    function view(onSubmit: Handler<Event>, button: VNode, footer: VNode): VNode {
+    function view(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
         return html`
             <aside class="login">
                 <form class="login__box" onSubmit="${onSubmit}">
@@ -45,8 +45,8 @@ export function PasswordReset(props: Props): VNode {
                     <section>
                         <big>
                             <section class="login__body">
-                                ${h(LoginIDField, props)}
-                                ${h(PasswordField, props)}
+                                ${h(LoginIDField, { component: props.component, send })}
+                                ${h(PasswordField, { component: props.component, send })}
                             </section>
                         </big>
                     </section>
@@ -101,6 +101,9 @@ export function PasswordReset(props: Props): VNode {
             return h(ApplicationError, { err: state.err })
     }
 
+    // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
+    const submit = useRef<HTMLButtonElement>()
+
     function resetButton() {
         return html`<button ref="${submit}" class="button button_save">パスワードリセット</button>`
     }
@@ -121,7 +124,7 @@ export function PasswordReset(props: Props): VNode {
             submit.current.blur()
         }
 
-        props.component.trigger({ type: "reset" })
+        send({ type: "reset" })
     }
     function onSubmit_noop(e: Event) {
         e.preventDefault()
@@ -165,8 +168,24 @@ function resetError(err: ResetError): VNode {
     }
 }
 
-interface Handler<T> {
-    (event: T): void
+const EMPTY_CONTENT = html``
+
+function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
+    init(resource.send)
+    return resource.terminate
 }
 
-const EMPTY_CONTENT = html``
+interface Init<T> {
+    (send: Post<T>): void
+}
+interface Post<T> {
+    (state: T): void
+}
+interface Terminate {
+    (): void
+}
+
+type Resource<T> = Readonly<{
+    send: Post<T>
+    terminate: Terminate
+}>

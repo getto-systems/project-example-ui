@@ -11,11 +11,11 @@ import { LoginIDFieldOperation } from "../../../../field/login_id/data"
 
 type Props = Readonly<{
     component: FormComponent
+    send: { (operation: { type: "field-login_id", operation: LoginIDFieldOperation }): void }
 }>
 
 interface FormComponent {
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
-    trigger(operation: { type: "field-login_id", operation: LoginIDFieldOperation }): Promise<void>
 }
 
 export function LoginIDField(props: Props): VNode {
@@ -26,7 +26,7 @@ export function LoginIDField(props: Props): VNode {
     }, [])
 
     const onInput = mapInputEvent((loginID) => {
-        props.component.trigger({ type: "field-login_id", operation: { type: "set-login_id", loginID } })
+        props.send({ type: "field-login_id", operation: { type: "set-login_id", loginID } })
         setValue(loginID)
     })
 
