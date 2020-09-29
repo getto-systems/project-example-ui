@@ -8,8 +8,8 @@ const component = newPasswordLoginComponent(auth.background)
 
 const helper = newWorkerHelper()
 
-auth.subscriber.storeCredential.handleOperation((operation) => {
-    ctx.postMessage(helper.mapStoreCredentialOperation(operation))
+auth.subscriber.credential.handleOperation((operation) => {
+    ctx.postMessage(helper.mapBackgroundCredentialOperation(operation))
 })
 component.onStateChange((state) => {
     ctx.postMessage(helper.mapPasswordLoginState(state))

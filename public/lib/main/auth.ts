@@ -14,7 +14,7 @@ import { newPasswordResetComponent } from "./auth/worker/password_reset"
 
 import { initAuthUsecase } from "../auth/impl/core"
 
-import { initStoreCredentialComponent } from "../background/store_credential/impl"
+import { initBackgroundCredentialComponent } from "../background/credential/impl"
 
 import { initRenewCredentialComponent, packRenewCredentialParam } from "../auth/component/renew_credential/impl"
 import { packApplicationParam } from "../auth/component/application/impl"
@@ -31,21 +31,18 @@ import { initApplicationAction } from "../application/impl/core"
 import { RenewClient } from "../credential/infra"
 
 import { AuthUsecase } from "../auth/usecase"
-import { StoreCredentialComponentResource } from "../background/store_credential/component"
+import { BackgroundCredentialComponentResource } from "../background/credential/component"
 import { RenewCredentialComponent } from "../auth/component/renew_credential/component"
 
 import { CredentialAction } from "../credential/action"
 import { ApplicationAction } from "../application/action"
 
 export function newAuthUsecase(currentLocation: Location, credentialStorage: Storage): AuthUsecase {
-    const credential = newCredentialAction(credentialStorage)
+    const credentialAction = newCredentialAction(credentialStorage)
 
-    const store = newStoreCredentialComponent(credential)
-    const renew = newRenewCredentialComponent(credential)
+    const renew = newRenewCredentialComponent(credentialAction)
 
-    const request = {
-        storeCredential: store.request,
-    }
+    const background = newBackground()
 
     return initAuthUsecase({
         currentLocation,
@@ -59,18 +56,29 @@ export function newAuthUsecase(currentLocation: Location, credentialStorage: Sto
             renewCredential: renew,
             application: newApplicationComponent(),
 
-            passwordLogin: newPasswordLoginComponent(request),
+            passwordLogin: newPasswordLoginComponent(background.request),
             passwordResetSession: newPasswordResetSessionComponent(),
-            passwordReset: newPasswordResetComponent(request),
+            passwordReset: newPasswordResetComponent(background.request),
         },
-        background: {
-            storeCredential: store.component,
-        },
+        background: background.component,
     })
+
+    function newBackground() {
+        const credential = newBackgroundCredentialComponent(credentialAction)
+
+        return {
+            component: {
+                credential: credential.component,
+            },
+            request: {
+                credential: credential.request,
+            },
+        }
+    }
 }
 
-function newStoreCredentialComponent(credential: CredentialAction): StoreCredentialComponentResource {
-    return initStoreCredentialComponent({
+function newBackgroundCredentialComponent(credential: CredentialAction): BackgroundCredentialComponentResource {
+    return initBackgroundCredentialComponent({
         credential,
     })
 }

@@ -1,6 +1,6 @@
 import { AuthBackground } from "../../usecase"
 
-import { StoreCredentialOperation } from "../../../background/store_credential/component"
+import { BackgroundCredentialOperation } from "../../../background/credential/component"
 
 import {
     PasswordLoginComponent,
@@ -42,10 +42,10 @@ export function initPasswordLoginWorkerComponent(background: AuthBackground, ini
 }
 export function initPasswordLoginWorkerComponentHelper(): PasswordLoginWorkerComponentHelper {
     return {
+        mapBackgroundCredentialOperation,
         mapPasswordLoginState,
         mapLoginIDFieldState,
         mapPasswordFieldState,
-        mapStoreCredentialOperation,
     }
 }
 
@@ -93,7 +93,7 @@ class Component implements PasswordLoginComponent {
     }
     mapEvent(event: LoginEvent): PasswordLoginState {
         if (event.type === "succeed-to-login") {
-            this.background.storeCredential({ type: "store", authCredential: event.authCredential })
+            this.background.credential({ type: "store", authCredential: event.authCredential })
         }
         return event
     }
@@ -191,8 +191,8 @@ class WorkerComponent implements PasswordLoginComponent {
                         this.listener.password.forEach(post => post(state.state))
                         return
 
-                    case "background-store_credential":
-                        this.background.storeCredential(state.operation)
+                    case "background-credential":
+                        this.background.credential(state.operation)
                         return
 
                     default:
@@ -216,6 +216,9 @@ class WorkerComponent implements PasswordLoginComponent {
     }
 }
 
+function mapBackgroundCredentialOperation(operation: BackgroundCredentialOperation): PasswordLoginWorkerState {
+    return { type: "background-credential", operation }
+}
 function mapPasswordLoginState(state: PasswordLoginState): PasswordLoginWorkerState {
     return { type: "password_login", state }
 }
@@ -224,9 +227,6 @@ function mapLoginIDFieldState(state: LoginIDFieldState): PasswordLoginWorkerStat
 }
 function mapPasswordFieldState(state: PasswordFieldState): PasswordLoginWorkerState {
     return { type: "field-password", state }
-}
-function mapStoreCredentialOperation(operation: StoreCredentialOperation): PasswordLoginWorkerState {
-    return { type: "background-store_credential", operation }
 }
 
 type WorkerHolder =

@@ -1,16 +1,16 @@
-import { initStoreCredentialOperationPubSub } from "../../background/store_credential/impl"
+import { initBackgroundCredentialOperationPubSub } from "../../background/credential/impl"
 
 import { AuthBackground, AuthBackgroundSubscriber } from "../../auth/usecase"
 
 export function newWorkerAuthBackground(): { background: AuthBackground, subscriber: AuthBackgroundSubscriber } {
-    const store = initStoreCredentialOperationPubSub()
+    const credential = initBackgroundCredentialOperationPubSub()
 
     return {
         background: {
-            storeCredential: store.request,
+            credential: credential.request,
         },
         subscriber: {
-            storeCredential: store.sub,
+            credential: credential.sub,
         },
     }
 }

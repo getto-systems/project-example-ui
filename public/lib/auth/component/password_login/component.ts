@@ -1,4 +1,4 @@
-import { StoreCredentialOperation } from "../../../background/store_credential/component"
+import { BackgroundCredentialOperation } from "../../../background/credential/component"
 
 import { LoginIDFieldState } from "../field/login_id/component"
 import { PasswordFieldState } from "../field/password/component"
@@ -35,7 +35,7 @@ export const initialPasswordLoginRequest: Post<PasswordLoginOperation> = (): voi
 }
 
 export interface PasswordLoginWorkerComponentHelper {
-    mapStoreCredentialOperation(operation: StoreCredentialOperation): PasswordLoginWorkerState
+    mapBackgroundCredentialOperation(operation: BackgroundCredentialOperation): PasswordLoginWorkerState
     mapPasswordLoginState(state: PasswordLoginState): PasswordLoginWorkerState
     mapLoginIDFieldState(state: LoginIDFieldState): PasswordLoginWorkerState
     mapPasswordFieldState(state: PasswordFieldState): PasswordLoginWorkerState
@@ -45,7 +45,7 @@ export type PasswordLoginWorkerState =
     Readonly<{ type: "password_login", state: PasswordLoginState }> |
     Readonly<{ type: "field-login_id", state: LoginIDFieldState }> |
     Readonly<{ type: "field-password", state: PasswordFieldState }> |
-    Readonly<{ type: "background-store_credential", operation: StoreCredentialOperation }>
+    Readonly<{ type: "background-credential", operation: BackgroundCredentialOperation }>
 
 interface Post<T> {
     (state: T): void

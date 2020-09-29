@@ -1,6 +1,6 @@
 import { AuthBackground } from "../../usecase"
 
-import { StoreCredentialOperation } from "../../../background/store_credential/component"
+import { BackgroundCredentialOperation } from "../../../background/credential/component"
 
 import {
     PasswordResetComponent,
@@ -43,7 +43,7 @@ export function initPasswordResetWorkerComponent(background: AuthBackground, ini
 }
 export function initPasswordResetWorkerComponentHelper(): PasswordResetWorkerComponentHelper {
     return {
-        mapStoreCredentialOperation,
+        mapBackgroundCredentialOperation,
         mapPasswordResetState,
         mapLoginIDFieldState,
         mapPasswordFieldState,
@@ -107,7 +107,7 @@ class Component implements PasswordResetComponent {
     }
     mapResetEvent(event: ResetEvent): PasswordResetState {
         if (event.type === "succeed-to-reset") {
-            this.background.storeCredential({ type: "store", authCredential: event.authCredential })
+            this.background.credential({ type: "store", authCredential: event.authCredential })
         }
         return event
     }
@@ -217,8 +217,8 @@ class WorkerComponent implements PasswordResetComponent {
                         this.listener.password.forEach(post => post(state.state))
                         return
 
-                    case "background-store_credential":
-                        this.background.storeCredential(state.operation)
+                    case "background-credential":
+                        this.background.credential(state.operation)
                         return
 
                     default:
@@ -241,8 +241,8 @@ class WorkerComponent implements PasswordResetComponent {
     }
 }
 
-function mapStoreCredentialOperation(operation: StoreCredentialOperation): PasswordResetWorkerState {
-    return { type: "background-store_credential", operation }
+function mapBackgroundCredentialOperation(operation: BackgroundCredentialOperation): PasswordResetWorkerState {
+    return { type: "background-credential", operation }
 }
 function mapPasswordResetState(state: PasswordResetState): PasswordResetWorkerState {
     return { type: "password_reset", state }

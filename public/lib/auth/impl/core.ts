@@ -4,7 +4,7 @@ import { packPagePathname } from "../../application/adapter"
 import { AppHref } from "../../href"
 import { AuthUsecase, AuthParam, AuthComponent, AuthState } from "../usecase"
 
-import { StoreCredentialComponent } from "../../background/store_credential/component"
+import { BackgroundCredentialComponent } from "../../background/credential/component"
 
 import { PagePathname } from "../../application/data"
 
@@ -21,7 +21,7 @@ export function initAuthUsecase(init: Init): AuthUsecase {
 }
 
 type Background = Readonly<{
-    storeCredential: StoreCredentialComponent
+    credential: BackgroundCredentialComponent
 }>
 
 class Usecase implements AuthUsecase {
@@ -75,7 +75,7 @@ class Usecase implements AuthUsecase {
             }
         })
 
-        this.background.storeCredential.sub.onStoreEvent((event) => {
+        this.background.credential.sub.onStoreEvent((event) => {
             switch (event.type) {
                 case "failed-to-store":
                     this.post({ type: "error", err: event.err.err })
@@ -97,7 +97,7 @@ class Usecase implements AuthUsecase {
         return () => { /* component とインターフェイスを合わせるために必要 */ }
     }
     initUsecase(): void {
-        const fetchResponse = this.background.storeCredential.fetch()
+        const fetchResponse = this.background.credential.fetch()
         if (!fetchResponse.success) {
             this.post({ type: "error", err: fetchResponse.err.err })
             return
