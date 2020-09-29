@@ -9,23 +9,23 @@ import { ApplicationError } from "../application_error"
 import { unpackScriptPath } from "../../application/adapter"
 
 import {
-    RenewCredentialComponent,
-    RenewCredentialParam,
-    initialRenewCredentialState,
-    initialRenewCredentialRequest,
-} from "../../auth/component/renew_credential/component"
+    CredentialComponent,
+    CredentialParam,
+    initialCredentialState,
+    initialCredentialRequest,
+} from "../../auth/component/credential/component"
 
 import { RenewError } from "../../credential/data"
 import { ScriptPath } from "../../application/data"
 
 type Props = {
-    component: RenewCredentialComponent
-    param: RenewCredentialParam
+    component: CredentialComponent
+    param: CredentialParam
 }
 
-export function RenewCredential(props: Props): VNode {
-    const [state, setState] = useState(initialRenewCredentialState)
-    const [request, setRequest] = useState(() => initialRenewCredentialRequest)
+export function Credential(props: Props): VNode {
+    const [state, setState] = useState(initialCredentialState)
+    const [request, setRequest] = useState(() => initialCredentialRequest)
     useEffect(() => {
         props.component.onStateChange(setState)
 

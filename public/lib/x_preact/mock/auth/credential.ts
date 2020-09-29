@@ -1,43 +1,43 @@
 import {
-    RenewCredentialComponent,
-    RenewCredentialComponentResource,
-    RenewCredentialState,
-} from "../../../auth/component/renew_credential/component"
+    CredentialComponent,
+    CredentialComponentResource,
+    CredentialState,
+} from "../../../auth/component/credential/component"
 
-export function newRenewCredentialComponent(): RenewCredentialComponent {
+export function newCredentialComponent(): CredentialComponent {
     return new Component(new Init().delayedToRenew())
 }
 
 class Init {
-    delayedToRenew(): RenewCredentialState {
+    delayedToRenew(): CredentialState {
         return { type: "delayed-to-renew" }
     }
-    failedToRenew_bad_request(): RenewCredentialState {
+    failedToRenew_bad_request(): CredentialState {
         return { type: "failed-to-renew", err: { type: "bad-request" } }
     }
-    failedToRenew_server_error(): RenewCredentialState {
+    failedToRenew_server_error(): CredentialState {
         return { type: "failed-to-renew", err: { type: "server-error" } }
     }
-    failedToRenew_bad_response(): RenewCredentialState {
+    failedToRenew_bad_response(): CredentialState {
         return { type: "failed-to-renew", err: { type: "bad-response", err: "error" } }
     }
-    failedToRenew_infra_error(): RenewCredentialState {
+    failedToRenew_infra_error(): CredentialState {
         return { type: "failed-to-renew", err: { type: "infra-error", err: "error" } }
     }
 }
 
-class Component implements RenewCredentialComponent {
-    state: RenewCredentialState
+class Component implements CredentialComponent {
+    state: CredentialState
 
-    constructor(state: RenewCredentialState) {
+    constructor(state: CredentialState) {
         this.state = state
     }
 
-    onStateChange(stateChanged: Post<RenewCredentialState>): void {
+    onStateChange(stateChanged: Post<CredentialState>): void {
         stateChanged(this.state)
     }
 
-    init(): RenewCredentialComponentResource {
+    init(): CredentialComponentResource {
         return {
             request: () => { /* mock では特に何もしない */ },
             terminate: () => { /* mock では特に何もしない */ },

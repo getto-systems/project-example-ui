@@ -1,10 +1,10 @@
 import {
-    RenewCredentialParam,
-    RenewCredentialComponent,
-    RenewCredentialComponentResource,
-    RenewCredentialState,
-    RenewCredentialOperation,
-} from "../renew_credential/component"
+    CredentialParam,
+    CredentialComponent,
+    CredentialComponentResource,
+    CredentialState,
+    CredentialOperation,
+} from "./component"
 
 import { CredentialAction } from "../../../credential/action"
 import { ApplicationAction } from "../../../application/action"
@@ -18,14 +18,14 @@ type Action = Readonly<{
 }>
 
 // Renew は unmount した後も interval を維持したいので worker にはしない
-export function initRenewCredentialComponent(action: Action): RenewCredentialComponent {
+export function initCredentialComponent(action: Action): CredentialComponent {
     return new Component(action)
 }
 
-export function packRenewCredentialParam(param: Param): RenewCredentialParam {
-    return param as Param & RenewCredentialParam
+export function packCredentialParam(param: Param): CredentialParam {
+    return param as Param & CredentialParam
 }
-function unpackParam(param: RenewCredentialParam): Param {
+function unpackParam(param: CredentialParam): Param {
     return param as unknown as Param
 }
 
@@ -34,10 +34,10 @@ type Param = Readonly<{
     lastAuth: LastAuth
 }>
 
-class Component implements RenewCredentialComponent {
+class Component implements CredentialComponent {
     action: Action
 
-    listener: Post<RenewCredentialState>[] = []
+    listener: Post<CredentialState>[] = []
     holder: ParamHolder = { set: false }
 
     constructor(action: Action) {
@@ -46,10 +46,10 @@ class Component implements RenewCredentialComponent {
             this.post(this.mapRenewEvent(event))
         })
     }
-    post(state: RenewCredentialState): void {
+    post(state: CredentialState): void {
         this.listener.forEach(post => post(state))
     }
-    mapRenewEvent(event: RenewEvent): RenewCredentialState {
+    mapRenewEvent(event: RenewEvent): CredentialState {
         switch (event.type) {
             case "try-to-instant-load":
             case "succeed-to-renew":
@@ -67,17 +67,17 @@ class Component implements RenewCredentialComponent {
         }
     }
 
-    onStateChange(stateChanged: Post<RenewCredentialState>): void {
+    onStateChange(stateChanged: Post<CredentialState>): void {
         this.listener.push(stateChanged)
     }
 
-    init(): RenewCredentialComponentResource {
+    init(): CredentialComponentResource {
         return {
             request: operation => this.request(operation),
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
         }
     }
-    request(operation: RenewCredentialOperation): void {
+    request(operation: CredentialOperation): void {
         switch (operation.type) {
             case "set-param":
                 this.holder = { set: true, param: unpackParam(operation.param) }
@@ -109,7 +109,7 @@ class Component implements RenewCredentialComponent {
     }
 }
 
-const errorParamIsNotSet: RenewCredentialState = { type: "error", err: "param is not set: do `set-param` first" }
+const errorParamIsNotSet: CredentialState = { type: "error", err: "param is not set: do `set-param` first" }
 
 type ParamHolder =
     Readonly<{ set: false }> |

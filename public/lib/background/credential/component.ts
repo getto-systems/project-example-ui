@@ -6,7 +6,7 @@ export interface BackgroundCredentialComponent {
 }
 
 export type BackgroundCredentialComponentResource = Readonly<{
-    component: BackgroundCredentialComponent
+    background: BackgroundCredentialComponent
     request: Post<BackgroundCredentialOperation>
 }>
 
