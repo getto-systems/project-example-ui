@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { mapInputEvent, mapInputValue } from "../../field/common"
+import { mapInputEvent } from "../../field/common"
 import { loginIDFieldError } from "../../field/login_id"
 
 import { LoginIDFieldState, initialLoginIDFieldState } from "../../../../auth/component/field/login_id/component"
@@ -20,14 +20,12 @@ interface FormComponent {
 
 export function LoginIDField(props: Props): VNode {
     const [state, setState] = useState(initialLoginIDFieldState)
-    const [value, setValue] = mapSetter(useState(""), mapInputValue)
     useEffect(() => {
         props.component.onLoginIDFieldStateChange(setState)
     }, [])
 
     const onInput = mapInputEvent((loginID) => {
         props.request({ type: "field-login_id", operation: { type: "set-login_id", loginID } })
-        setValue(loginID)
     })
 
     return html`
@@ -35,7 +33,7 @@ export function LoginIDField(props: Props): VNode {
             <dl class="form ${state.result.valid ? "" : "form_error"}">
                 <dt class="form__header">ログインID</dt>
                 <dd class="form__field">
-                    <input type="text" class="input_fill" value=${value} onInput=${onInput}/>
+                    <input type="text" class="input_fill" onInput=${onInput}/>
                     ${loginIDFieldError(state.result)}
                     <p class="form__help">このログインIDに設定された送信先にリセットトークンを送信します</p>
                 </dd>
@@ -46,13 +44,4 @@ export function LoginIDField(props: Props): VNode {
 
 interface Post<T> {
     (state: T): void
-}
-
-function mapSetter<A, B, B_>(tuple: [A, B], f: Transform<B, B_>): [A, B_] {
-    const [first, second] = tuple
-    return [first, f(second)]
-}
-
-interface Transform<A, B> {
-    (data: A): B
 }
