@@ -7,7 +7,7 @@ import { newTimeConfig, newHostConfig } from "./auth/config"
 
 import { newAppHref } from "./href"
 
-import { newLoadApplicationComponent } from "./auth/load_application"
+import { newApplicationComponent } from "./auth/application"
 import { newPasswordLoginComponent } from "./auth/worker/password_login"
 import { newPasswordResetSessionComponent } from "./auth/worker/password_reset_session"
 import { newPasswordResetComponent } from "./auth/worker/password_reset"
@@ -17,7 +17,7 @@ import { initAuthUsecase } from "../auth/impl/core"
 import { initStoreCredentialComponent } from "../background/store_credential/impl"
 
 import { initRenewCredentialComponent, packRenewCredentialParam } from "../auth/component/renew_credential/impl"
-import { packLoadApplicationParam } from "../auth/component/load_application/impl"
+import { packApplicationParam } from "../auth/component/application/impl"
 import { packPasswordResetParam } from "../auth/component/password_reset/impl"
 
 import { initFetchRenewClient } from "../credential/impl/client/renew/fetch"
@@ -52,12 +52,12 @@ export function newAuthUsecase(currentLocation: Location, credentialStorage: Sto
         href: newAppHref(),
         param: {
             renewCredential: packRenewCredentialParam,
-            loadApplication: packLoadApplicationParam,
+            application: packApplicationParam,
             passwordReset: packPasswordResetParam,
         },
         component: {
             renewCredential: renew,
-            loadApplication: newLoadApplicationComponent(),
+            application: newApplicationComponent(),
 
             passwordLogin: newPasswordLoginComponent(request),
             passwordResetSession: newPasswordResetSessionComponent(),

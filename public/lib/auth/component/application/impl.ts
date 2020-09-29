@@ -1,10 +1,10 @@
 import {
-    LoadApplicationComponent,
-    LoadApplicationComponentResource,
-    LoadApplicationParam,
-    LoadApplicationState,
-    LoadApplicationOperation,
-} from "../load_application/component"
+    ApplicationComponent,
+    ApplicationComponentResource,
+    ApplicationParam,
+    ApplicationState,
+    ApplicationOperation,
+} from "../application/component"
 
 import { ApplicationAction } from "../../../application/action"
 
@@ -14,15 +14,15 @@ type Action = Readonly<{
     application: ApplicationAction
 }>
 
-export function initLoadApplicationComponent(action: Action): LoadApplicationComponent {
+export function initApplicationComponent(action: Action): ApplicationComponent {
     return new Component(action)
 }
 
-export function packLoadApplicationParam(param: Param): LoadApplicationParam {
-    return param as LoadApplicationParam & Param
+export function packApplicationParam(param: Param): ApplicationParam {
+    return param as ApplicationParam & Param
 }
 
-function unpackParam(param: LoadApplicationParam): Param {
+function unpackParam(param: ApplicationParam): Param {
     return param as unknown as Param
 }
 
@@ -30,30 +30,30 @@ type Param = Readonly<{
     pagePathname: PagePathname
 }>
 
-class Component implements LoadApplicationComponent {
+class Component implements ApplicationComponent {
     action: Action
 
-    listener: Post<LoadApplicationState>[] = []
+    listener: Post<ApplicationState>[] = []
     holder: ParamHolder = { set: false }
 
     constructor(action: Action) {
         this.action = action
     }
-    post(state: LoadApplicationState): void {
+    post(state: ApplicationState): void {
         this.listener.forEach(post => post(state))
     }
 
-    onStateChange(stateChanged: Post<LoadApplicationState>): void {
+    onStateChange(stateChanged: Post<ApplicationState>): void {
         this.listener.push(stateChanged)
     }
 
-    init(): LoadApplicationComponentResource {
+    init(): ApplicationComponentResource {
         return {
             request: operation => this.request(operation),
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
         }
     }
-    request(operation: LoadApplicationOperation): void {
+    request(operation: ApplicationOperation): void {
         switch (operation.type) {
             case "set-param":
                 this.holder = { set: true, param: unpackParam(operation.param) }
@@ -80,7 +80,7 @@ class Component implements LoadApplicationComponent {
     }
 }
 
-const errorParamIsNotSet: LoadApplicationState = { type: "error", err: "param is not set: do `set-param` first" }
+const errorParamIsNotSet: ApplicationState = { type: "error", err: "param is not set: do `set-param` first" }
 
 type ParamHolder =
     Readonly<{ set: false }> |

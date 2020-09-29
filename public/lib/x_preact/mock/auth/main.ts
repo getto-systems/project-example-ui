@@ -1,14 +1,14 @@
 import { newAppHref } from "../../../main/href"
 
 import { newRenewCredentialComponent } from "./renew_credential"
-import { newLoadApplicationComponent } from "./load_application"
+import { newApplicationComponent } from "./application"
 
 import { newPasswordLoginComponent } from "./password_login"
 import { newPasswordResetSessionComponent } from "./password_reset_session"
 import { newPasswordResetComponent } from "./password_reset"
 
 import { packRenewCredentialParam } from "../../../auth/component/renew_credential/impl"
-import { packLoadApplicationParam } from "../../../auth/component/load_application/impl"
+import { packApplicationParam } from "../../../auth/component/application/impl"
 import { packPasswordResetParam } from "../../../auth/component/password_reset/impl"
 
 import { packTicketNonce, packAuthAt } from "../../../credential/adapter"
@@ -35,10 +35,10 @@ class Init {
             }),
         }
     }
-    loadApplication(): AuthState {
+    application(): AuthState {
         return {
-            type: "load-application",
-            param: packLoadApplicationParam({
+            type: "application",
+            param: packApplicationParam({
                 pagePathname: packPagePathname(new URL("https://example.com/index.html")),
             }),
         }
@@ -68,7 +68,7 @@ class Usecase implements AuthUsecase {
         this.href = newAppHref()
         this.component = {
             renewCredential: newRenewCredentialComponent(),
-            loadApplication: newLoadApplicationComponent(),
+            application: newApplicationComponent(),
 
             passwordLogin: newPasswordLoginComponent(),
             passwordResetSession: newPasswordResetSessionComponent(),

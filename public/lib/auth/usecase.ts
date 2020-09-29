@@ -3,14 +3,14 @@ import { AppHref } from "../href"
 import { StoreCredentialOperation, StoreCredentialOperationSubscriber } from "../background/store_credential/component"
 
 import { RenewCredentialComponent, RenewCredentialParam } from "./component/renew_credential/component"
-import { LoadApplicationComponent, LoadApplicationParam } from "./component/load_application/component"
+import { ApplicationComponent, ApplicationParam } from "./component/application/component"
 
 import { PasswordLoginComponent } from "./component/password_login/component"
 import { PasswordResetSessionComponent } from "./component/password_reset_session/component"
 import { PasswordResetComponent, PasswordResetParam } from "./component/password_reset/component"
 
 import { RenewCredentialParamPacker } from "./component/renew_credential/component"
-import { LoadApplicationParamPacker } from "./component/load_application/component"
+import { ApplicationParamPacker } from "./component/application/component"
 import { PasswordResetParamPacker } from "./component/password_reset/component"
 
 export interface AuthUsecase {
@@ -22,7 +22,7 @@ export interface AuthUsecase {
 
 export type AuthParam = Readonly<{
     renewCredential: RenewCredentialParamPacker
-    loadApplication: LoadApplicationParamPacker
+    application: ApplicationParamPacker
 
     passwordReset: PasswordResetParamPacker
 }>
@@ -36,7 +36,7 @@ export type AuthBackgroundSubscriber = Readonly<{
 
 export type AuthComponent = Readonly<{
     renewCredential: RenewCredentialComponent
-    loadApplication: LoadApplicationComponent
+    application: ApplicationComponent
 
     passwordLogin: PasswordLoginComponent
     passwordResetSession: PasswordResetSessionComponent
@@ -46,7 +46,7 @@ export type AuthComponent = Readonly<{
 export type AuthState =
     Readonly<{ type: "initial" }> |
     Readonly<{ type: "renew-credential", param: RenewCredentialParam }> |
-    Readonly<{ type: "load-application", param: LoadApplicationParam }> |
+    Readonly<{ type: "application", param: ApplicationParam }> |
     Readonly<{ type: "password-login" }> |
     Readonly<{ type: "password-reset-session" }> |
     Readonly<{ type: "password-reset", param: PasswordResetParam }> |
