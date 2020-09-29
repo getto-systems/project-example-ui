@@ -9,21 +9,21 @@ import { ApplicationError } from "../application_error"
 import { unpackScriptPath } from "../../application/adapter"
 
 import {
-    LoadApplicationComponent,
-    LoadApplicationParam,
-    initialLoadApplicationState,
-    initialLoadApplicationRequest,
+    ApplicationComponent,
+    ApplicationParam,
+    initialApplicationState,
+    initialApplicationRequest,
     LoadError,
-} from "../../auth/component/load_application/component"
+} from "../../auth/component/application/component"
 
 type Props = Readonly<{
-    component: LoadApplicationComponent
-    param: LoadApplicationParam
+    component: ApplicationComponent
+    param: ApplicationParam
 }>
 
-export function LoadApplication(props: Props): VNode {
-    const [state, setState] = useState(initialLoadApplicationState)
-    const [request, setRequest] = useState(() => initialLoadApplicationRequest)
+export function Application(props: Props): VNode {
+    const [state, setState] = useState(initialApplicationState)
+    const [request, setRequest] = useState(() => initialApplicationRequest)
     useEffect(() => {
         props.component.onStateChange(setState)
 

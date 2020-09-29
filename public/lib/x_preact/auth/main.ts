@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { ApplicationError } from "../application_error"
 
 import { RenewCredential } from "./renew_credential"
-import { LoadApplication } from "./load_application"
+import { Application } from "./application"
 
 import { PasswordLogin } from "./password_login"
 import { PasswordResetSession } from "./password_reset_session"
@@ -44,9 +44,9 @@ export function Main(props: Props): VNode {
                 param: state.param,
             })
 
-        case "load-application":
-            return h(LoadApplication, {
-                component: props.usecase.component.loadApplication,
+        case "application":
+            return h(Application, {
+                component: props.usecase.component.application,
                 param: state.param,
             })
 

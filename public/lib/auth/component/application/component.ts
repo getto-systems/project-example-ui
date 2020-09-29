@@ -1,34 +1,34 @@
 import { PagePathname, ScriptPath } from "../../../application/data"
 
-export type LoadApplicationParam = { LoadApplicationParam: never }
+export type ApplicationParam = { ApplicationParam: never }
 
-export interface LoadApplicationParamPacker {
-    (param: Param): LoadApplicationParam
+export interface ApplicationParamPacker {
+    (param: Param): ApplicationParam
 }
 type Param = Readonly<{
     pagePathname: PagePathname
 }>
 
-export interface LoadApplicationComponent {
-    onStateChange(stateChanged: Post<LoadApplicationState>): void
-    init(): LoadApplicationComponentResource
+export interface ApplicationComponent {
+    onStateChange(stateChanged: Post<ApplicationState>): void
+    init(): ApplicationComponentResource
 }
-export type LoadApplicationComponentResource = ComponentResource<LoadApplicationOperation>
+export type ApplicationComponentResource = ComponentResource<ApplicationOperation>
 
-export type LoadApplicationState =
+export type ApplicationState =
     Readonly<{ type: "initial-load" }> |
     Readonly<{ type: "try-to-load", scriptPath: ScriptPath }> |
     Readonly<{ type: "failed-to-load", err: LoadError }> |
     Readonly<{ type: "error", err: string }>
 
-export const initialLoadApplicationState: LoadApplicationState = { type: "initial-load" }
+export const initialApplicationState: ApplicationState = { type: "initial-load" }
 
-export type LoadApplicationOperation =
-    Readonly<{ type: "set-param", param: LoadApplicationParam }> |
+export type ApplicationOperation =
+    Readonly<{ type: "set-param", param: ApplicationParam }> |
     Readonly<{ type: "load" }> |
     Readonly<{ type: "failed-to-load", err: LoadError }>
 
-export const initialLoadApplicationRequest: Post<LoadApplicationOperation> = (): void => {
+export const initialApplicationRequest: Post<ApplicationOperation> = (): void => {
     throw new Error("Component is not initialized. use: `init()`")
 }
 

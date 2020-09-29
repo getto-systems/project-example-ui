@@ -1,13 +1,13 @@
 import { env } from "../../y_static/env"
 
-import { initLoadApplicationComponent } from "../../auth/component/load_application/impl"
+import { initApplicationComponent } from "../../auth/component/application/impl"
 
 import { initApplicationAction } from "../../application/impl/core"
 
-import { LoadApplicationComponent } from "../../auth/component/load_application/component"
+import { ApplicationComponent } from "../../auth/component/application/component"
 
-export function newLoadApplicationComponent(): LoadApplicationComponent {
-    return initLoadApplicationComponent({
+export function newApplicationComponent(): ApplicationComponent {
+    return initApplicationComponent({
         application: initApplicationAction({
             hostConfig: newHostConfig(),
         }),

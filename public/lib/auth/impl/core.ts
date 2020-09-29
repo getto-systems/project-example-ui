@@ -53,8 +53,8 @@ class Usecase implements AuthUsecase {
             switch (state.type) {
                 case "succeed-to-login":
                     this.post({
-                        type: "load-application",
-                        param: this.param.loadApplication({
+                        type: "application",
+                        param: this.param.application({
                             pagePathname: this.currentPagePathname(),
                         }),
                     })
@@ -66,8 +66,8 @@ class Usecase implements AuthUsecase {
             switch (state.type) {
                 case "succeed-to-reset":
                     this.post({
-                        type: "load-application",
-                        param: this.param.loadApplication({
+                        type: "application",
+                        param: this.param.application({
                             pagePathname: this.currentPagePathname(),
                         }),
                     })
