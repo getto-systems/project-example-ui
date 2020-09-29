@@ -6,9 +6,9 @@ import {
 
 export interface PasswordResetAction {
     sub: PasswordResetEventSubscriber
-    startSession(content: StartSessionContent): Promise<void>
-    startPollingStatus(sessionID: SessionID): Promise<void>
-    reset(resetToken: ResetToken, content: ResetContent): Promise<void>
+    startSession(content: StartSessionContent): void
+    startPollingStatus(sessionID: SessionID): void
+    reset(resetToken: ResetToken, content: ResetContent): void
 }
 
 export interface PasswordResetEventPublisher {

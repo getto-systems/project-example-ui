@@ -2,7 +2,7 @@ import { LoginContent, LoginEvent } from "./data"
 
 export interface PasswordLoginAction {
     sub: PasswordLoginEventSubscriber
-    login(content: LoginContent): Promise<void>
+    login(content: LoginContent): void
 }
 
 export interface PasswordLoginEventPublisher {
