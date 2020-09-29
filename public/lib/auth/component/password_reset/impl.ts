@@ -123,11 +123,11 @@ class Component implements PasswordResetComponent {
 
     init(): ComponentResource<PasswordResetOperation> {
         return {
-            send: operation => this.send(operation),
+            request: operation => this.request(operation),
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
         }
     }
-    send(operation: PasswordResetOperation): void {
+    request(operation: PasswordResetOperation): void {
         switch (operation.type) {
             case "set-param":
                 this.holder = { set: true, param: unpackPasswordResetParam(operation.param) }
@@ -193,7 +193,7 @@ class WorkerComponent implements PasswordResetComponent {
     init(): ComponentResource<PasswordResetOperation> {
         this.initComponent()
         return {
-            send: operation => this.send(operation),
+            request: operation => this.request(operation),
             terminate: () => this.terminate(),
         }
     }
@@ -233,7 +233,7 @@ class WorkerComponent implements PasswordResetComponent {
             this.worker.instance.terminate()
         }
     }
-    send(operation: PasswordResetOperation): void {
+    request(operation: PasswordResetOperation): void {
         if (this.worker.set) {
             this.worker.instance.postMessage(operation)
         }
@@ -273,7 +273,7 @@ interface Terminate {
 }
 
 type ComponentResource<T> = Readonly<{
-    send: Post<T>
+    request: Post<T>
     terminate: Terminate
 }>
 

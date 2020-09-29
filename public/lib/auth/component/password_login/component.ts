@@ -29,7 +29,7 @@ export type PasswordLoginOperation =
     Readonly<{ type: "field-login_id", operation: LoginIDFieldOperation }> |
     Readonly<{ type: "field-password", operation: PasswordFieldOperation }>
 
-export const initialPasswordLoginSend: Post<PasswordLoginOperation> = (): void => {
+export const initialPasswordLoginRequest: Post<PasswordLoginOperation> = (): void => {
     throw new Error("Component is not initialized. use: `init()`")
 }
 
@@ -54,6 +54,6 @@ interface Terminate {
 }
 
 type ComponentResource<T> = Readonly<{
-    send: Post<T>
+    request: Post<T>
     terminate: Terminate
 }>

@@ -89,11 +89,11 @@ class Component implements PasswordResetSessionComponent {
 
     init(): ComponentResource<PasswordResetSessionOperation> {
         return {
-            send: operation => this.send(operation),
+            request: operation => this.request(operation),
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
         }
     }
-    send(operation: PasswordResetSessionOperation): void {
+    request(operation: PasswordResetSessionOperation): void {
         switch (operation.type) {
             case "start-session":
                 this.field.loginID.validate()
@@ -135,7 +135,7 @@ class WorkerComponent implements PasswordResetSessionComponent {
     init(): ComponentResource<PasswordResetSessionOperation> {
         this.initComponent()
         return {
-            send: operation => this.send(operation),
+            request: operation => this.request(operation),
             terminate: () => this.terminate(),
         }
     }
@@ -168,7 +168,7 @@ class WorkerComponent implements PasswordResetSessionComponent {
         }
     }
 
-    send(operation: PasswordResetSessionOperation): void {
+    request(operation: PasswordResetSessionOperation): void {
         if (this.worker.set) {
             this.worker.instance.postMessage(operation)
         }
@@ -198,7 +198,7 @@ interface Terminate {
 }
 
 type ComponentResource<T> = Readonly<{
-    send: Post<T>
+    request: Post<T>
     terminate: Terminate
 }>
 

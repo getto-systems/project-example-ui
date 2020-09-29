@@ -14,7 +14,7 @@ import { AppHref } from "../../href"
 import {
     PasswordLoginComponent,
     initialPasswordLoginState,
-    initialPasswordLoginSend,
+    initialPasswordLoginRequest,
 } from "../../auth/component/password_login/component"
 
 import { LoginError } from "../../password_login/data"
@@ -26,11 +26,11 @@ type Props = Readonly<{
 
 export function PasswordLogin(props: Props): VNode {
     const [state, setState] = useState(initialPasswordLoginState)
-    const [send, setSend] = useState(() => initialPasswordLoginSend)
+    const [request, setRequest] = useState(() => initialPasswordLoginRequest)
     useEffect(() => {
         props.component.onStateChange(setState)
-        return mapResource(props.component.init(), (send) => {
-            setSend(() => send)
+        return mapResource(props.component.init(), (request) => {
+            setRequest(() => request)
         })
     }, [])
 
@@ -42,8 +42,8 @@ export function PasswordLogin(props: Props): VNode {
                     <section>
                         <big>
                             <section class="login__body">
-                                ${h(LoginIDField, { component: props.component, send })}
-                                ${h(PasswordField, { component: props.component, send })}
+                                ${h(LoginIDField, { component: props.component, request })}
+                                ${h(PasswordField, { component: props.component, request })}
                             </section>
                         </big>
                     </section>
@@ -121,7 +121,7 @@ export function PasswordLogin(props: Props): VNode {
             submit.current.blur()
         }
 
-        send({ type: "login" })
+        request({ type: "login" })
     }
     function onSubmit_noop(e: Event) {
         e.preventDefault()
@@ -168,12 +168,12 @@ function loginError(err: LoginError): VNode {
 const EMPTY_CONTENT = html``
 
 function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
-    init(resource.send)
+    init(resource.request)
     return resource.terminate
 }
 
 interface Init<T> {
-    (send: Post<T>): void
+    (request: Post<T>): void
 }
 interface Post<T> {
     (state: T): void
@@ -183,6 +183,6 @@ interface Terminate {
 }
 
 type Resource<T> = Readonly<{
-    send: Post<T>
+    request: Post<T>
     terminate: Terminate
 }>

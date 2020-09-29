@@ -30,7 +30,7 @@ export type PasswordResetSessionOperation =
     Readonly<{ type: "start-session" }> |
     Readonly<{ type: "field-login_id", operation: LoginIDFieldOperation }>
 
-export const initialPasswordResetSessionSend: Post<PasswordResetSessionOperation> = () => {
+export const initialPasswordResetSessionRequest: Post<PasswordResetSessionOperation> = () => {
     throw new Error("Component is not initialized. use: `init()`")
 }
 
@@ -56,6 +56,6 @@ interface Terminate {
 }
 
 type ComponentResource<T> = Readonly<{
-    send: Post<T>
+    request: Post<T>
     terminate: Terminate
 }>

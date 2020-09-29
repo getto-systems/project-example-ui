@@ -11,7 +11,7 @@ import { PasswordFieldOperation } from "../../../../field/password/data"
 
 type Props = Readonly<{
     component: FormComponent
-    send: { (operation: { type: "field-password", operation: PasswordFieldOperation }): void }
+    request: { (operation: { type: "field-password", operation: PasswordFieldOperation }): void }
 }>
 
 interface FormComponent {
@@ -26,16 +26,16 @@ export function PasswordField(props: Props): VNode {
     }, [])
 
     const onInput = mapInputEvent((password) => {
-        props.send({ type: "field-password", operation: { type: "set-password", password } })
+        props.request({ type: "field-password", operation: { type: "set-password", password } })
         setValue(password)
     })
 
     const handler = {
         show() {
-            props.send({ type: "field-password", operation: { type: "show-password" } })
+            props.request({ type: "field-password", operation: { type: "show-password" } })
         },
         hide() {
-            props.send({ type: "field-password", operation: { type: "hide-password" } })
+            props.request({ type: "field-password", operation: { type: "hide-password" } })
         },
     }
 

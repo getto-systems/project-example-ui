@@ -7,7 +7,7 @@ export interface StoreCredentialComponent {
 
 export type StoreCredentialComponentResource = Readonly<{
     component: StoreCredentialComponent
-    send: Post<StoreCredentialOperation>
+    request: Post<StoreCredentialOperation>
 }>
 
 export interface StoreEventSubscriber {
@@ -18,7 +18,7 @@ export type StoreCredentialOperation =
     Readonly<{ type: "store", authCredential: AuthCredential }>
 
 export type StoreCredentialOperationPubSub = Readonly<{
-    send: Post<StoreCredentialOperation>
+    request: Post<StoreCredentialOperation>
     sub: StoreCredentialOperationSubscriber
 }>
 export interface StoreCredentialOperationSubscriber {

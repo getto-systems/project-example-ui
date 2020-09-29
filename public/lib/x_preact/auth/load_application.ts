@@ -12,7 +12,7 @@ import {
     LoadApplicationComponent,
     LoadApplicationParam,
     initialLoadApplicationState,
-    initialLoadApplicationSend,
+    initialLoadApplicationRequest,
     LoadError,
 } from "../../auth/component/load_application/component"
 
@@ -23,13 +23,13 @@ type Props = Readonly<{
 
 export function LoadApplication(props: Props): VNode {
     const [state, setState] = useState(initialLoadApplicationState)
-    const [send, setSend] = useState(() => initialLoadApplicationSend)
+    const [request, setRequest] = useState(() => initialLoadApplicationRequest)
     useEffect(() => {
         props.component.onStateChange(setState)
-        return mapResource(props.component.init(), (send) => {
-            setSend(() => send)
-            send({ type: "set-param", param: props.param })
-            send({ type: "load" })
+        return mapResource(props.component.init(), (request) => {
+            setRequest(() => request)
+            request({ type: "set-param", param: props.param })
+            request({ type: "load" })
         })
     }, [])
 
@@ -39,7 +39,7 @@ export function LoadApplication(props: Props): VNode {
             const script = document.createElement("script")
             script.src = unpackScriptPath(state.scriptPath)
             script.onerror = (err) => {
-                send({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
+                request({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
             }
             document.body.appendChild(script)
         }
@@ -77,12 +77,12 @@ function failedContent(err: LoadError): VNode {
 const EMPTY_CONTENT = html``
 
 function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
-    init(resource.send)
+    init(resource.request)
     return resource.terminate
 }
 
 interface Init<T> {
-    (send: Post<T>): void
+    (request: Post<T>): void
 }
 interface Post<T> {
     (state: T): void
@@ -92,6 +92,6 @@ interface Terminate {
 }
 
 type Resource<T> = Readonly<{
-    send: Post<T>
+    request: Post<T>
     terminate: Terminate
 }>

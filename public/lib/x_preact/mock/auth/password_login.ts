@@ -131,7 +131,7 @@ class Component implements PasswordLoginComponent {
 
     init(): ComponentResource<PasswordLoginOperation> {
         return {
-            send: operation => {
+            request: operation => {
                 switch (operation.type) {
                     case "login":
                         alert("ここでログイン！")
@@ -159,6 +159,6 @@ interface Terminate {
 }
 
 type ComponentResource<T> = Readonly<{
-    send: Post<T>
+    request: Post<T>
     terminate: Terminate
 }>

@@ -131,7 +131,7 @@ class Component implements PasswordResetComponent {
 
     init(): ComponentResource<PasswordResetOperation> {
         return {
-            send: operation => {
+            request: operation => {
                 switch (operation.type) {
                     case "reset":
                         alert("ここでリセット！")
@@ -159,6 +159,6 @@ interface Terminate {
 }
 
 type ComponentResource<T> = Readonly<{
-    send: Post<T>
+    request: Post<T>
     terminate: Terminate
 }>

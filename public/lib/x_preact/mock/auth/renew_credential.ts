@@ -39,7 +39,7 @@ class Component implements RenewCredentialComponent {
 
     init(): ComponentResource<RenewCredentialOperation> {
         return {
-            send: () => { /* mock では特に何もしない */ },
+            request: () => { /* mock では特に何もしない */ },
             terminate: () => { /* mock では特に何もしない */ },
         }
     }
@@ -54,6 +54,6 @@ interface Terminate {
 }
 
 type ComponentResource<T> = Readonly<{
-    send: Post<T>
+    request: Post<T>
     terminate: Terminate
 }>
