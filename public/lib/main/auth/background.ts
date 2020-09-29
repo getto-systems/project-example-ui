@@ -7,7 +7,7 @@ export function newWorkerAuthBackground(): { background: AuthBackground, subscri
 
     return {
         background: {
-            storeCredential: store.send,
+            storeCredential: store.request,
         },
         subscriber: {
             storeCredential: store.sub,

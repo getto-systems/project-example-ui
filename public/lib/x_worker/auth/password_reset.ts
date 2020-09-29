@@ -24,7 +24,7 @@ const resource = component.init()
 
 ctx.addEventListener("message", (event) => {
     try {
-        resource.send(event.data)
+        resource.request(event.data)
     } catch (err) {
         ctx.postMessage({ type: "error", err: `${err}` })
     }

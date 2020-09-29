@@ -12,7 +12,7 @@ import {
     RenewCredentialComponent,
     RenewCredentialParam,
     initialRenewCredentialState,
-    initialRenewCredentialSend,
+    initialRenewCredentialRequest,
 } from "../../auth/component/renew_credential/component"
 
 import { RenewError } from "../../credential/data"
@@ -25,14 +25,16 @@ type Props = {
 
 export function RenewCredential(props: Props): VNode {
     const [state, setState] = useState(initialRenewCredentialState)
-    const [send, setSend] = useState(() => initialRenewCredentialSend)
+    const [request, setRequest] = useState(() => initialRenewCredentialRequest)
     useEffect(() => {
         props.component.onStateChange(setState)
-        return mapResource(props.component.init(), (send) => {
-            setSend(() => send)
-            send({ type: "set-param", param: props.param })
-            send({ type: "renew" })
-        })
+
+        const resource = props.component.init()
+        setRequest(() => resource.request)
+        resource.request({ type: "set-param", param: props.param })
+        resource.request({ type: "renew" })
+
+        return resource.terminate
     }, [])
 
     useEffect(() => {
@@ -40,10 +42,10 @@ export function RenewCredential(props: Props): VNode {
             case "try-to-instant-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onload = () => {
-                        send({ type: "succeed-to-instant-load" })
+                        request({ type: "succeed-to-instant-load" })
                     }
                     script.onerror = (err) => {
-                        send({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
+                        request({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
                     }
                 })
                 break
@@ -51,7 +53,7 @@ export function RenewCredential(props: Props): VNode {
             case "succeed-to-renew":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = (err) => {
-                        send({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
+                        request({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
                     }
                 })
                 break
@@ -148,23 +150,3 @@ function errorMessage(content: VNode): VNode {
 }
 
 const EMPTY_CONTENT: VNode = html``
-
-function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
-    init(resource.send)
-    return resource.terminate
-}
-
-interface Init<T> {
-    (send: Post<T>): void
-}
-interface Post<T> {
-    (state: T): void
-}
-interface Terminate {
-    (): void
-}
-
-type Resource<T> = Readonly<{
-    send: Post<T>
-    terminate: Terminate
-}>

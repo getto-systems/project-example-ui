@@ -1,5 +1,6 @@
 import {
     LoadApplicationComponent,
+    LoadApplicationComponentResource,
     LoadApplicationParam,
     LoadApplicationState,
     LoadApplicationOperation,
@@ -46,13 +47,13 @@ class Component implements LoadApplicationComponent {
         this.listener.push(stateChanged)
     }
 
-    init(): ComponentResource<LoadApplicationOperation> {
+    init(): LoadApplicationComponentResource {
         return {
-            send: operation => this.send(operation),
+            request: operation => this.request(operation),
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
         }
     }
-    send(operation: LoadApplicationOperation): void {
+    request(operation: LoadApplicationOperation): void {
         switch (operation.type) {
             case "set-param":
                 this.holder = { set: true, param: unpackParam(operation.param) }
@@ -88,14 +89,6 @@ type ParamHolder =
 interface Post<T> {
     (state: T): void
 }
-interface Terminate {
-    (): void
-}
-
-type ComponentResource<T> = Readonly<{
-    send: Post<T>
-    terminate: Terminate
-}>
 
 function assertNever(_: never): never {
     throw new Error("NEVER")

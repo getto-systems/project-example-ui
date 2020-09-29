@@ -4,6 +4,7 @@ import { StoreCredentialOperation } from "../../../background/store_credential/c
 
 import {
     PasswordLoginComponent,
+    PasswordLoginComponentResource,
     PasswordLoginState,
     PasswordLoginOperation,
     PasswordLoginWorkerState,
@@ -107,13 +108,13 @@ class Component implements PasswordLoginComponent {
         this.field.password.sub.onPasswordFieldEvent(stateChanged)
     }
 
-    init(): ComponentResource<PasswordLoginOperation> {
+    init(): PasswordLoginComponentResource {
         return {
-            send: operation => this.send(operation),
+            request: operation => this.request(operation),
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
         }
     }
-    send(operation: PasswordLoginOperation): void {
+    request(operation: PasswordLoginOperation): void {
         switch (operation.type) {
             case "login":
                 this.field.loginID.validate()
@@ -164,10 +165,10 @@ class WorkerComponent implements PasswordLoginComponent {
         this.listener.password.push(stateChanged)
     }
 
-    init(): ComponentResource<PasswordLoginOperation> {
+    init(): PasswordLoginComponentResource {
         this.initComponent()
         return {
-            send: operation => this.send(operation),
+            request: operation => this.request(operation),
             terminate: () => this.terminate(),
         }
     }
@@ -208,7 +209,7 @@ class WorkerComponent implements PasswordLoginComponent {
         }
     }
 
-    send(operation: PasswordLoginOperation): void {
+    request(operation: PasswordLoginOperation): void {
         if (this.worker.set) {
             this.worker.instance.postMessage(operation)
         }
@@ -239,14 +240,6 @@ interface WorkerInit {
 interface Post<T> {
     (state: T): void
 }
-interface Terminate {
-    (): void
-}
-
-type ComponentResource<T> = Readonly<{
-    send: Post<T>
-    terminate: Terminate
-}>
 
 function assertNever(_: never): never {
     throw new Error("NEVER")

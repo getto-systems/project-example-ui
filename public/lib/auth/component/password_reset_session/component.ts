@@ -1,16 +1,14 @@
 import { LoginIDFieldState } from "../field/login_id/component"
 
-import { PasswordResetAction } from "../../../password_reset/action"
-import { LoginIDFieldAction } from "../../../field/login_id/action"
-
 import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../../password_reset/data"
 import { LoginIDFieldOperation } from "../../../field/login_id/data"
 
 export interface PasswordResetSessionComponent {
     onStateChange(stateChanged: Post<PasswordResetSessionState>): void
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
-    init(): ComponentResource<PasswordResetSessionOperation>
+    init(): PasswordResetSessionComponentResource
 }
+export type PasswordResetSessionComponentResource = ComponentResource<PasswordResetSessionOperation>
 
 export type PasswordResetSessionState =
     Readonly<{ type: "initial-reset-session" }> |
@@ -30,7 +28,7 @@ export type PasswordResetSessionOperation =
     Readonly<{ type: "start-session" }> |
     Readonly<{ type: "field-login_id", operation: LoginIDFieldOperation }>
 
-export const initialPasswordResetSessionSend: Post<PasswordResetSessionOperation> = () => {
+export const initialPasswordResetSessionRequest: Post<PasswordResetSessionOperation> = () => {
     throw new Error("Component is not initialized. use: `init()`")
 }
 
@@ -43,11 +41,6 @@ export type PasswordResetSessionWorkerState =
     Readonly<{ type: "password_reset_session", state: PasswordResetSessionState }> |
     Readonly<{ type: "field-login_id", state: LoginIDFieldState }>
 
-export interface PasswordResetSessionComponentAction {
-    passwordReset: PasswordResetAction
-    loginIDField: LoginIDFieldAction
-}
-
 interface Post<T> {
     (state: T): void
 }
@@ -56,6 +49,6 @@ interface Terminate {
 }
 
 type ComponentResource<T> = Readonly<{
-    send: Post<T>
+    request: Post<T>
     terminate: Terminate
 }>

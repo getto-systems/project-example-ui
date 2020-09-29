@@ -1,6 +1,6 @@
 import {
-    PasswordResetSessionComponentAction,
     PasswordResetSessionComponent,
+    PasswordResetSessionComponentResource,
     PasswordResetSessionState,
     PasswordResetSessionOperation,
     PasswordResetSessionWorkerState,
@@ -9,6 +9,9 @@ import {
 
 import { LoginIDFieldState } from "../field/login_id/component"
 
+import { PasswordResetAction } from "../../../password_reset/action"
+import { LoginIDFieldAction } from "../../../field/login_id/action"
+
 import { LoginIDField } from "../../../field/login_id/action"
 
 import { LoginID } from "../../../login_id/data"
@@ -16,7 +19,12 @@ import { StartSessionEvent, PollingStatusEvent } from "../../../password_reset/d
 import { LoginIDFieldEvent } from "../../../field/login_id/data"
 import { Content } from "../../../field/data"
 
-export function initPasswordResetSessionComponent(action: PasswordResetSessionComponentAction): PasswordResetSessionComponent {
+type Action = Readonly<{
+    passwordReset: PasswordResetAction
+    loginIDField: LoginIDFieldAction
+}>
+
+export function initPasswordResetSessionComponent(action: Action): PasswordResetSessionComponent {
     return new Component(action)
 }
 export function initPasswordResetSessionWorkerComponent(init: WorkerInit): PasswordResetSessionComponent {
@@ -30,7 +38,7 @@ export function initPasswordResetSessionWorkerComponentHelper(): PasswordResetSe
 }
 
 class Component implements PasswordResetSessionComponent {
-    action: PasswordResetSessionComponentAction
+    action: Action
 
     listener: Post<PasswordResetSessionState>[] = []
 
@@ -44,7 +52,7 @@ class Component implements PasswordResetSessionComponent {
             loginID: { valid: false },
         }
 
-    constructor(action: PasswordResetSessionComponentAction) {
+    constructor(action: Action) {
         this.action = action
         this.action.passwordReset.sub.onStartSessionEvent((event) => {
             this.post(this.mapStartSessionEvent(event))
@@ -87,13 +95,13 @@ class Component implements PasswordResetSessionComponent {
         this.field.loginID.sub.onLoginIDFieldEvent(stateChanged)
     }
 
-    init(): ComponentResource<PasswordResetSessionOperation> {
+    init(): PasswordResetSessionComponentResource {
         return {
-            send: operation => this.send(operation),
+            request: operation => this.request(operation),
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
         }
     }
-    send(operation: PasswordResetSessionOperation): void {
+    request(operation: PasswordResetSessionOperation): void {
         switch (operation.type) {
             case "start-session":
                 this.field.loginID.validate()
@@ -132,10 +140,10 @@ class WorkerComponent implements PasswordResetSessionComponent {
         this.listener.loginID.push(stateChanged)
     }
 
-    init(): ComponentResource<PasswordResetSessionOperation> {
+    init(): PasswordResetSessionComponentResource {
         this.initComponent()
         return {
-            send: operation => this.send(operation),
+            request: operation => this.request(operation),
             terminate: () => this.terminate(),
         }
     }
@@ -168,7 +176,7 @@ class WorkerComponent implements PasswordResetSessionComponent {
         }
     }
 
-    send(operation: PasswordResetSessionOperation): void {
+    request(operation: PasswordResetSessionOperation): void {
         if (this.worker.set) {
             this.worker.instance.postMessage(operation)
         }
@@ -193,14 +201,6 @@ interface WorkerInit {
 interface Post<T> {
     (state: T): void
 }
-interface Terminate {
-    (): void
-}
-
-type ComponentResource<T> = Readonly<{
-    send: Post<T>
-    terminate: Terminate
-}>
 
 function assertNever(_: never): never {
     throw new Error("NEVER")

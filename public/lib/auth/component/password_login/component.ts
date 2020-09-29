@@ -11,8 +11,9 @@ export interface PasswordLoginComponent {
     onStateChange(stateChanged: Post<PasswordLoginState>): void
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
     onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void
-    init(): ComponentResource<PasswordLoginOperation>
+    init(): PasswordLoginComponentResource
 }
+export type PasswordLoginComponentResource = ComponentResource<PasswordLoginOperation>
 
 export type PasswordLoginState =
     Readonly<{ type: "initial-login" }> |
@@ -29,7 +30,7 @@ export type PasswordLoginOperation =
     Readonly<{ type: "field-login_id", operation: LoginIDFieldOperation }> |
     Readonly<{ type: "field-password", operation: PasswordFieldOperation }>
 
-export const initialPasswordLoginSend: Post<PasswordLoginOperation> = (): void => {
+export const initialPasswordLoginRequest: Post<PasswordLoginOperation> = (): void => {
     throw new Error("Component is not initialized. use: `init()`")
 }
 
@@ -54,6 +55,6 @@ interface Terminate {
 }
 
 type ComponentResource<T> = Readonly<{
-    send: Post<T>
+    request: Post<T>
     terminate: Terminate
 }>

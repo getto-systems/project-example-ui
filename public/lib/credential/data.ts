@@ -1,3 +1,4 @@
+// TODO Resource は component に使ってしまったので他の名前にしたい
 export type AuthResource = Readonly<{
     ticketNonce: TicketNonce
     lastAuthAt: AuthAt

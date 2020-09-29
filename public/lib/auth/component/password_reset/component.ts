@@ -12,8 +12,9 @@ export interface PasswordResetComponent {
     onStateChange(stateChanged: Post<PasswordResetState>): void
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
     onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void
-    init(): ComponentResource<PasswordResetOperation>
+    init(): PasswordResetComponentResource
 }
+export type PasswordResetComponentResource = ComponentResource<PasswordResetOperation>
 
 export type PasswordResetParam = { PasswordResetParam: never }
 
@@ -37,7 +38,7 @@ export type PasswordResetOperation =
     Readonly<{ type: "field-login_id", operation: LoginIDFieldOperation }> |
     Readonly<{ type: "field-password", operation: PasswordFieldOperation }>
 
-export const initialPasswordResetSend: Post<PasswordResetOperation> = () => {
+export const initialPasswordResetRequest: Post<PasswordResetOperation> = () => {
     throw new Error("Component is not initialized. use: `init()`")
 }
 
@@ -62,6 +63,6 @@ interface Terminate {
 }
 
 type ComponentResource<T> = Readonly<{
-    send: Post<T>
+    request: Post<T>
     terminate: Terminate
 }>

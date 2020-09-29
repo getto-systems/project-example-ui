@@ -4,6 +4,7 @@ import { StoreCredentialOperation } from "../../../background/store_credential/c
 
 import {
     PasswordResetComponent,
+    PasswordResetComponentResource,
     PasswordResetParam,
     PasswordResetState,
     PasswordResetOperation,
@@ -121,13 +122,13 @@ class Component implements PasswordResetComponent {
         this.field.password.sub.onPasswordFieldEvent(stateChanged)
     }
 
-    init(): ComponentResource<PasswordResetOperation> {
+    init(): PasswordResetComponentResource {
         return {
-            send: operation => this.send(operation),
+            request: operation => this.request(operation),
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
         }
     }
-    send(operation: PasswordResetOperation): void {
+    request(operation: PasswordResetOperation): void {
         switch (operation.type) {
             case "set-param":
                 this.holder = { set: true, param: unpackPasswordResetParam(operation.param) }
@@ -190,10 +191,10 @@ class WorkerComponent implements PasswordResetComponent {
         this.listener.password.push(stateChanged)
     }
 
-    init(): ComponentResource<PasswordResetOperation> {
+    init(): PasswordResetComponentResource {
         this.initComponent()
         return {
-            send: operation => this.send(operation),
+            request: operation => this.request(operation),
             terminate: () => this.terminate(),
         }
     }
@@ -233,7 +234,7 @@ class WorkerComponent implements PasswordResetComponent {
             this.worker.instance.terminate()
         }
     }
-    send(operation: PasswordResetOperation): void {
+    request(operation: PasswordResetOperation): void {
         if (this.worker.set) {
             this.worker.instance.postMessage(operation)
         }
@@ -268,14 +269,6 @@ type ParamHolder<T> =
 interface Post<T> {
     (state: T): void
 }
-interface Terminate {
-    (): void
-}
-
-type ComponentResource<T> = Readonly<{
-    send: Post<T>
-    terminate: Terminate
-}>
 
 function assertNever(_: never): never {
     throw new Error("NEVER")

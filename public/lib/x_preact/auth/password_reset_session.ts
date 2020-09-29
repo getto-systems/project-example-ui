@@ -13,7 +13,7 @@ import { AppHref } from "../../href"
 import {
     PasswordResetSessionComponent,
     initialPasswordResetSessionState,
-    initialPasswordResetSessionSend,
+    initialPasswordResetSessionRequest,
 } from "../../auth/component/password_reset_session/component"
 
 import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../password_reset/data"
@@ -25,12 +25,14 @@ type Props = Readonly<{
 
 export function PasswordResetSession(props: Props): VNode {
     const [state, setState] = useState(initialPasswordResetSessionState)
-    const [send, setSend] = useState(() => initialPasswordResetSessionSend)
+    const [request, setRequest] = useState(() => initialPasswordResetSessionRequest)
     useEffect(() => {
         props.component.onStateChange(setState)
-        return mapResource(props.component.init(), (send) => {
-            setSend(() => send)
-        })
+
+        const resource = props.component.init()
+        setRequest(() => resource.request)
+
+        return resource.terminate
     }, [])
 
     function startSessionView(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
@@ -41,7 +43,7 @@ export function PasswordResetSession(props: Props): VNode {
                     <section>
                         <big>
                             <section class="login__body">
-                                ${h(LoginIDField, { component: props.component, send })}
+                                ${h(LoginIDField, { component: props.component, request })}
                             </section>
                         </big>
                     </section>
@@ -167,7 +169,7 @@ export function PasswordResetSession(props: Props): VNode {
             submit.current.blur()
         }
 
-        send({ type: "start-session" })
+        request({ type: "start-session" })
     }
     function onSubmit_noop(e: Event) {
         e.preventDefault()
@@ -277,22 +279,6 @@ function sendTokenError(err: SendTokenError): VNode {
     }
 }
 
-function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
-    init(resource.send)
-    return resource.terminate
-}
-
-interface Init<T> {
-    (send: Post<T>): void
-}
 interface Post<T> {
     (state: T): void
 }
-interface Terminate {
-    (): void
-}
-
-type Resource<T> = Readonly<{
-    send: Post<T>
-    terminate: Terminate
-}>

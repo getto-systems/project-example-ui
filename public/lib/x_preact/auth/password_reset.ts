@@ -15,7 +15,7 @@ import {
     PasswordResetComponent,
     PasswordResetParam,
     initialPasswordResetState,
-    initialPasswordResetSend,
+    initialPasswordResetRequest,
 } from "../../auth/component/password_reset/component"
 
 import { ResetError } from "../../password_reset/data"
@@ -28,13 +28,15 @@ type Props = Readonly<{
 
 export function PasswordReset(props: Props): VNode {
     const [state, setState] = useState(initialPasswordResetState)
-    const [send, setSend] = useState(() => initialPasswordResetSend)
+    const [request, setRequest] = useState(() => initialPasswordResetRequest)
     useEffect(() => {
         props.component.onStateChange(setState)
-        return mapResource(props.component.init(), (send) => {
-            setSend(() => send)
-            send({ type: "set-param", param: props.param })
-        })
+
+        const resource = props.component.init()
+        setRequest(() => resource.request)
+        resource.request({ type: "set-param", param: props.param })
+
+        return resource.terminate
     }, [])
 
     function view(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
@@ -45,8 +47,8 @@ export function PasswordReset(props: Props): VNode {
                     <section>
                         <big>
                             <section class="login__body">
-                                ${h(LoginIDField, { component: props.component, send })}
-                                ${h(PasswordField, { component: props.component, send })}
+                                ${h(LoginIDField, { component: props.component, request })}
+                                ${h(PasswordField, { component: props.component, request })}
                             </section>
                         </big>
                     </section>
@@ -124,7 +126,7 @@ export function PasswordReset(props: Props): VNode {
             submit.current.blur()
         }
 
-        send({ type: "reset" })
+        request({ type: "reset" })
     }
     function onSubmit_noop(e: Event) {
         e.preventDefault()
@@ -170,22 +172,6 @@ function resetError(err: ResetError): VNode {
 
 const EMPTY_CONTENT = html``
 
-function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
-    init(resource.send)
-    return resource.terminate
-}
-
-interface Init<T> {
-    (send: Post<T>): void
-}
 interface Post<T> {
     (state: T): void
 }
-interface Terminate {
-    (): void
-}
-
-type Resource<T> = Readonly<{
-    send: Post<T>
-    terminate: Terminate
-}>

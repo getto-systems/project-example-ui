@@ -11,8 +11,9 @@ type Param = Readonly<{
 
 export interface LoadApplicationComponent {
     onStateChange(stateChanged: Post<LoadApplicationState>): void
-    init(): ComponentResource<LoadApplicationOperation>
+    init(): LoadApplicationComponentResource
 }
+export type LoadApplicationComponentResource = ComponentResource<LoadApplicationOperation>
 
 export type LoadApplicationState =
     Readonly<{ type: "initial-load" }> |
@@ -27,7 +28,7 @@ export type LoadApplicationOperation =
     Readonly<{ type: "load" }> |
     Readonly<{ type: "failed-to-load", err: LoadError }>
 
-export const initialLoadApplicationSend: Post<LoadApplicationOperation> = (): void => {
+export const initialLoadApplicationRequest: Post<LoadApplicationOperation> = (): void => {
     throw new Error("Component is not initialized. use: `init()`")
 }
 
@@ -42,6 +43,6 @@ interface Terminate {
 }
 
 type ComponentResource<T> = Readonly<{
-    send: Post<T>
+    request: Post<T>
     terminate: Terminate
 }>

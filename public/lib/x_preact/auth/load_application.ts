@@ -12,7 +12,7 @@ import {
     LoadApplicationComponent,
     LoadApplicationParam,
     initialLoadApplicationState,
-    initialLoadApplicationSend,
+    initialLoadApplicationRequest,
     LoadError,
 } from "../../auth/component/load_application/component"
 
@@ -23,14 +23,16 @@ type Props = Readonly<{
 
 export function LoadApplication(props: Props): VNode {
     const [state, setState] = useState(initialLoadApplicationState)
-    const [send, setSend] = useState(() => initialLoadApplicationSend)
+    const [request, setRequest] = useState(() => initialLoadApplicationRequest)
     useEffect(() => {
         props.component.onStateChange(setState)
-        return mapResource(props.component.init(), (send) => {
-            setSend(() => send)
-            send({ type: "set-param", param: props.param })
-            send({ type: "load" })
-        })
+
+        const resource = props.component.init()
+        setRequest(() => resource.request)
+        resource.request({ type: "set-param", param: props.param })
+        resource.request({ type: "load" })
+
+        return resource.terminate
     }, [])
 
     useEffect(() => {
@@ -39,7 +41,7 @@ export function LoadApplication(props: Props): VNode {
             const script = document.createElement("script")
             script.src = unpackScriptPath(state.scriptPath)
             script.onerror = (err) => {
-                send({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
+                request({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
             }
             document.body.appendChild(script)
         }
@@ -75,23 +77,3 @@ function failedContent(err: LoadError): VNode {
 }
 
 const EMPTY_CONTENT = html``
-
-function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
-    init(resource.send)
-    return resource.terminate
-}
-
-interface Init<T> {
-    (send: Post<T>): void
-}
-interface Post<T> {
-    (state: T): void
-}
-interface Terminate {
-    (): void
-}
-
-type Resource<T> = Readonly<{
-    send: Post<T>
-    terminate: Terminate
-}>

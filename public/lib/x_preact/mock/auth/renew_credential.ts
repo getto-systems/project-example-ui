@@ -1,7 +1,7 @@
 import {
     RenewCredentialComponent,
+    RenewCredentialComponentResource,
     RenewCredentialState,
-    RenewCredentialOperation,
 } from "../../../auth/component/renew_credential/component"
 
 export function newRenewCredentialComponent(): RenewCredentialComponent {
@@ -37,9 +37,9 @@ class Component implements RenewCredentialComponent {
         stateChanged(this.state)
     }
 
-    init(): ComponentResource<RenewCredentialOperation> {
+    init(): RenewCredentialComponentResource {
         return {
-            send: () => { /* mock では特に何もしない */ },
+            request: () => { /* mock では特に何もしない */ },
             terminate: () => { /* mock では特に何もしない */ },
         }
     }
@@ -48,12 +48,3 @@ class Component implements RenewCredentialComponent {
 interface Post<T> {
     (state: T): void
 }
-
-interface Terminate {
-    (): void
-}
-
-type ComponentResource<T> = Readonly<{
-    send: Post<T>
-    terminate: Terminate
-}>
