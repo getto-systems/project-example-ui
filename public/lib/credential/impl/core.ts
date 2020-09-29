@@ -6,7 +6,7 @@ import {
     CredentialEventSubscriber,
 } from "../action"
 
-import { AuthResource, AuthCredential, TicketNonce, RenewEvent, StoreEvent, FetchResponse } from "../data"
+import { LastAuth, AuthCredential, TicketNonce, RenewEvent, StoreEvent, FetchResponse } from "../data"
 
 export function initCredentialAction(infra: Infra): CredentialAction {
     return new Action(infra)
@@ -55,10 +55,10 @@ class Action implements CredentialAction {
         }
     }
 
-    async renew(authResource: AuthResource): Promise<void> {
+    async renew(lastAuth: LastAuth): Promise<void> {
         const post = (event: RenewEvent) => this.pub.postRenewEvent(event)
 
-        if (!this.infra.expires.hasExceeded(authResource.lastAuthAt, this.infra.timeConfig.instantLoadExpireTime)) {
+        if (!this.infra.expires.hasExceeded(lastAuth.lastAuthAt, this.infra.timeConfig.instantLoadExpireTime)) {
             post({ type: "try-to-instant-load" })
             return
         }
@@ -67,7 +67,7 @@ class Action implements CredentialAction {
 
         // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
         const renewResponse = await this.infra.delayed(
-            this.infra.renewClient.renew(authResource.ticketNonce),
+            this.infra.renewClient.renew(lastAuth.ticketNonce),
             this.infra.timeConfig.renewDelayTime,
             () => post({ type: "delayed-to-renew" }),
         )
@@ -99,18 +99,18 @@ class Action implements CredentialAction {
         }
     }
 
-    setContinuousRenew(authResource: AuthResource): void {
+    setContinuousRenew(lastAuth: LastAuth): void {
         setTimeout(async () => {
-            if (await this.continuousRenew(authResource.ticketNonce)) {
+            if (await this.continuousRenew(lastAuth.ticketNonce)) {
                 let lastState = true
                 setInterval(async () => {
                     // 失敗しないはずなので clearInterval しない
                     if (lastState) {
-                        lastState = await this.continuousRenew(authResource.ticketNonce)
+                        lastState = await this.continuousRenew(lastAuth.ticketNonce)
                     }
                 }, this.infra.timeConfig.renewIntervalTime.interval_milli_second)
             }
-        }, this.infra.runner.nextRun(authResource.lastAuthAt, this.infra.timeConfig.renewRunDelayTime).delay_milli_second)
+        }, this.infra.runner.nextRun(lastAuth.lastAuthAt, this.infra.timeConfig.renewRunDelayTime).delay_milli_second)
     }
     async continuousRenew(ticketNonce: TicketNonce): Promise<boolean> {
         // 画面へのフィードバックはしないので、イベントは発行しない
