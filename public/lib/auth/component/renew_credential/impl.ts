@@ -7,14 +7,14 @@ import {
 } from "../renew_credential/component"
 
 import { CredentialAction } from "../../../credential/action"
-import { ScriptAction } from "../../../script/action"
+import { ApplicationAction } from "../../../application/action"
 
 import { LastAuth, RenewEvent } from "../../../credential/data"
-import { PagePathname } from "../../../script/data"
+import { PagePathname } from "../../../application/data"
 
 type Action = Readonly<{
     credential: CredentialAction
-    script: ScriptAction
+    application: ApplicationAction
 }>
 
 // Renew は unmount した後も interval を維持したいので worker にはしない
@@ -56,7 +56,7 @@ class Component implements RenewCredentialComponent {
                 if (this.holder.set) {
                     return {
                         type: event.type,
-                        scriptPath: this.action.script.secureScriptPath(this.holder.param.pagePathname),
+                        scriptPath: this.action.application.secureScriptPath(this.holder.param.pagePathname),
                     }
                 } else {
                     return errorParamIsNotSet

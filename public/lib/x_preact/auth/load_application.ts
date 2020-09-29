@@ -6,7 +6,7 @@ import { loginError } from "../layout"
 
 import { ApplicationError } from "../application_error"
 
-import { unpackScriptPath } from "../../script/adapter"
+import { unpackScriptPath } from "../../application/adapter"
 
 import {
     LoadApplicationComponent,
