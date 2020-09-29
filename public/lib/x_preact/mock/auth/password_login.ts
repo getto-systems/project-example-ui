@@ -2,8 +2,8 @@ import { packInputValue } from "../../../field/adapter"
 
 import {
     PasswordLoginComponent,
+    PasswordLoginComponentResource,
     PasswordLoginState,
-    PasswordLoginOperation,
 } from "../../../auth/component/password_login/component"
 
 import { LoginIDFieldState } from "../../../auth/component/field/login_id/component"
@@ -129,7 +129,7 @@ class Component implements PasswordLoginComponent {
         stateChanged(this.password)
     }
 
-    init(): ComponentResource<PasswordLoginOperation> {
+    init(): PasswordLoginComponentResource {
         return {
             request: operation => {
                 switch (operation.type) {
@@ -154,11 +154,3 @@ class Component implements PasswordLoginComponent {
 interface Post<T> {
     (state: T): void
 }
-interface Terminate {
-    (): void
-}
-
-type ComponentResource<T> = Readonly<{
-    request: Post<T>
-    terminate: Terminate
-}>

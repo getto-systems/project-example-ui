@@ -28,9 +28,11 @@ export function PasswordResetSession(props: Props): VNode {
     const [request, setRequest] = useState(() => initialPasswordResetSessionRequest)
     useEffect(() => {
         props.component.onStateChange(setState)
-        return mapResource(props.component.init(), (request) => {
-            setRequest(() => request)
-        })
+
+        const resource = props.component.init()
+        setRequest(() => resource.request)
+
+        return resource.terminate
     }, [])
 
     function startSessionView(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
@@ -277,22 +279,6 @@ function sendTokenError(err: SendTokenError): VNode {
     }
 }
 
-function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
-    init(resource.request)
-    return resource.terminate
-}
-
-interface Init<T> {
-    (request: Post<T>): void
-}
 interface Post<T> {
     (state: T): void
 }
-interface Terminate {
-    (): void
-}
-
-type Resource<T> = Readonly<{
-    request: Post<T>
-    terminate: Terminate
-}>

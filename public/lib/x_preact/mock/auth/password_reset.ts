@@ -2,8 +2,8 @@ import { packInputValue } from "../../../field/adapter"
 
 import {
     PasswordResetComponent,
+    PasswordResetComponentResource,
     PasswordResetState,
-    PasswordResetOperation,
 } from "../../../auth/component/password_reset/component"
 
 import { LoginIDFieldState } from "../../../auth/component/field/login_id/component"
@@ -129,7 +129,7 @@ class Component implements PasswordResetComponent {
         stateChanged(this.password)
     }
 
-    init(): ComponentResource<PasswordResetOperation> {
+    init(): PasswordResetComponentResource {
         return {
             request: operation => {
                 switch (operation.type) {
@@ -154,11 +154,3 @@ class Component implements PasswordResetComponent {
 interface Post<T> {
     (state: T): void
 }
-interface Terminate {
-    (): void
-}
-
-type ComponentResource<T> = Readonly<{
-    request: Post<T>
-    terminate: Terminate
-}>

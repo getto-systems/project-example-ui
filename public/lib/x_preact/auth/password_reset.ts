@@ -31,10 +31,12 @@ export function PasswordReset(props: Props): VNode {
     const [request, setRequest] = useState(() => initialPasswordResetRequest)
     useEffect(() => {
         props.component.onStateChange(setState)
-        return mapResource(props.component.init(), (request) => {
-            setRequest(() => request)
-            request({ type: "set-param", param: props.param })
-        })
+
+        const resource = props.component.init()
+        setRequest(() => resource.request)
+        resource.request({ type: "set-param", param: props.param })
+
+        return resource.terminate
     }, [])
 
     function view(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
@@ -170,22 +172,6 @@ function resetError(err: ResetError): VNode {
 
 const EMPTY_CONTENT = html``
 
-function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
-    init(resource.request)
-    return resource.terminate
-}
-
-interface Init<T> {
-    (request: Post<T>): void
-}
 interface Post<T> {
     (state: T): void
 }
-interface Terminate {
-    (): void
-}
-
-type Resource<T> = Readonly<{
-    request: Post<T>
-    terminate: Terminate
-}>

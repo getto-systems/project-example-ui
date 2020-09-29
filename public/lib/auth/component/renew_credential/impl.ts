@@ -1,6 +1,7 @@
 import {
     RenewCredentialParam,
     RenewCredentialComponent,
+    RenewCredentialComponentResource,
     RenewCredentialState,
     RenewCredentialOperation,
 } from "../renew_credential/component"
@@ -70,7 +71,7 @@ class Component implements RenewCredentialComponent {
         this.listener.push(stateChanged)
     }
 
-    init(): ComponentResource<RenewCredentialOperation> {
+    init(): RenewCredentialComponentResource {
         return {
             request: operation => this.request(operation),
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
@@ -117,14 +118,6 @@ type ParamHolder =
 interface Post<T> {
     (state: T): void
 }
-interface Terminate {
-    (): void
-}
-
-type ComponentResource<T> = Readonly<{
-    request: Post<T>
-    terminate: Terminate
-}>
 
 function assertNever(_: never): never {
     throw new Error("NEVER")

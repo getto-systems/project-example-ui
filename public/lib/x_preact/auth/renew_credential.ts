@@ -28,11 +28,13 @@ export function RenewCredential(props: Props): VNode {
     const [request, setRequest] = useState(() => initialRenewCredentialRequest)
     useEffect(() => {
         props.component.onStateChange(setState)
-        return mapResource(props.component.init(), (request) => {
-            setRequest(() => request)
-            request({ type: "set-param", param: props.param })
-            request({ type: "renew" })
-        })
+
+        const resource = props.component.init()
+        setRequest(() => resource.request)
+        resource.request({ type: "set-param", param: props.param })
+        resource.request({ type: "renew" })
+
+        return resource.terminate
     }, [])
 
     useEffect(() => {
@@ -148,23 +150,3 @@ function errorMessage(content: VNode): VNode {
 }
 
 const EMPTY_CONTENT: VNode = html``
-
-function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
-    init(resource.request)
-    return resource.terminate
-}
-
-interface Init<T> {
-    (request: Post<T>): void
-}
-interface Post<T> {
-    (state: T): void
-}
-interface Terminate {
-    (): void
-}
-
-type Resource<T> = Readonly<{
-    request: Post<T>
-    terminate: Terminate
-}>

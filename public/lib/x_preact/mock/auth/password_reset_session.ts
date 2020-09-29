@@ -1,7 +1,7 @@
 import {
     PasswordResetSessionComponent,
+    PasswordResetSessionComponentResource,
     PasswordResetSessionState,
-    PasswordResetSessionOperation,
 } from "../../../auth/component/password_reset_session/component"
 
 import { LoginIDFieldState } from "../../../auth/component/field/login_id/component"
@@ -100,7 +100,7 @@ class Component implements PasswordResetSessionComponent {
         stateChanged(this.loginID)
     }
 
-    init(): ComponentResource<PasswordResetSessionOperation> {
+    init(): PasswordResetSessionComponentResource {
         return {
             request: operation => {
                 switch (operation.type) {
@@ -121,11 +121,3 @@ class Component implements PasswordResetSessionComponent {
 interface Post<T> {
     (state: T): void
 }
-interface Terminate {
-    (): void
-}
-
-type ComponentResource<T> = Readonly<{
-    request: Post<T>
-    terminate: Terminate
-}>

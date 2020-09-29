@@ -4,6 +4,7 @@ import { StoreCredentialOperation } from "../../../background/store_credential/c
 
 import {
     PasswordResetComponent,
+    PasswordResetComponentResource,
     PasswordResetParam,
     PasswordResetState,
     PasswordResetOperation,
@@ -121,7 +122,7 @@ class Component implements PasswordResetComponent {
         this.field.password.sub.onPasswordFieldEvent(stateChanged)
     }
 
-    init(): ComponentResource<PasswordResetOperation> {
+    init(): PasswordResetComponentResource {
         return {
             request: operation => this.request(operation),
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
@@ -190,7 +191,7 @@ class WorkerComponent implements PasswordResetComponent {
         this.listener.password.push(stateChanged)
     }
 
-    init(): ComponentResource<PasswordResetOperation> {
+    init(): PasswordResetComponentResource {
         this.initComponent()
         return {
             request: operation => this.request(operation),
@@ -268,14 +269,6 @@ type ParamHolder<T> =
 interface Post<T> {
     (state: T): void
 }
-interface Terminate {
-    (): void
-}
-
-type ComponentResource<T> = Readonly<{
-    request: Post<T>
-    terminate: Terminate
-}>
 
 function assertNever(_: never): never {
     throw new Error("NEVER")

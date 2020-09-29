@@ -13,8 +13,9 @@ type Param = Readonly<{
 
 export interface RenewCredentialComponent {
     onStateChange(stateChanged: Post<RenewCredentialState>): void
-    init(): ComponentResource<RenewCredentialOperation>
+    init(): RenewCredentialComponentResource
 }
+export type RenewCredentialComponentResource = ComponentResource<RenewCredentialOperation>
 
 export type RenewCredentialState =
     Readonly<{ type: "initial" }> |

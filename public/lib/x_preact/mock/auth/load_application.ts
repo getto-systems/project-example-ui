@@ -1,7 +1,7 @@
 import {
     LoadApplicationComponent,
+    LoadApplicationComponentResource,
     LoadApplicationState,
-    LoadApplicationOperation,
 } from "../../../auth/component/load_application/component"
 
 export function newLoadApplicationComponent(): LoadApplicationComponent {
@@ -25,7 +25,7 @@ class Component implements LoadApplicationComponent {
         stateChanged(this.state)
     }
 
-    init(): ComponentResource<LoadApplicationOperation> {
+    init(): LoadApplicationComponentResource {
         return {
             request: () => { /* mock では特に何もしない */ },
             terminate: () => { /* mock では特に何もしない */ },
@@ -36,12 +36,3 @@ class Component implements LoadApplicationComponent {
 interface Post<T> {
     (state: T): void
 }
-
-interface Terminate {
-    (): void
-}
-
-type ComponentResource<T> = Readonly<{
-    request: Post<T>
-    terminate: Terminate
-}>

@@ -11,8 +11,9 @@ export interface PasswordLoginComponent {
     onStateChange(stateChanged: Post<PasswordLoginState>): void
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
     onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void
-    init(): ComponentResource<PasswordLoginOperation>
+    init(): PasswordLoginComponentResource
 }
+export type PasswordLoginComponentResource = ComponentResource<PasswordLoginOperation>
 
 export type PasswordLoginState =
     Readonly<{ type: "initial-login" }> |

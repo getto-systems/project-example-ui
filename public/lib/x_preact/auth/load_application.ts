@@ -26,11 +26,13 @@ export function LoadApplication(props: Props): VNode {
     const [request, setRequest] = useState(() => initialLoadApplicationRequest)
     useEffect(() => {
         props.component.onStateChange(setState)
-        return mapResource(props.component.init(), (request) => {
-            setRequest(() => request)
-            request({ type: "set-param", param: props.param })
-            request({ type: "load" })
-        })
+
+        const resource = props.component.init()
+        setRequest(() => resource.request)
+        resource.request({ type: "set-param", param: props.param })
+        resource.request({ type: "load" })
+
+        return resource.terminate
     }, [])
 
     useEffect(() => {
@@ -75,23 +77,3 @@ function failedContent(err: LoadError): VNode {
 }
 
 const EMPTY_CONTENT = html``
-
-function mapResource<T>(resource: Resource<T>, init: Init<T>): Terminate {
-    init(resource.request)
-    return resource.terminate
-}
-
-interface Init<T> {
-    (request: Post<T>): void
-}
-interface Post<T> {
-    (state: T): void
-}
-interface Terminate {
-    (): void
-}
-
-type Resource<T> = Readonly<{
-    request: Post<T>
-    terminate: Terminate
-}>

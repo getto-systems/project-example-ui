@@ -11,8 +11,9 @@ type Param = Readonly<{
 
 export interface LoadApplicationComponent {
     onStateChange(stateChanged: Post<LoadApplicationState>): void
-    init(): ComponentResource<LoadApplicationOperation>
+    init(): LoadApplicationComponentResource
 }
+export type LoadApplicationComponentResource = ComponentResource<LoadApplicationOperation>
 
 export type LoadApplicationState =
     Readonly<{ type: "initial-load" }> |

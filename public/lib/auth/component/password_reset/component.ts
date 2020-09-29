@@ -12,8 +12,9 @@ export interface PasswordResetComponent {
     onStateChange(stateChanged: Post<PasswordResetState>): void
     onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
     onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void
-    init(): ComponentResource<PasswordResetOperation>
+    init(): PasswordResetComponentResource
 }
+export type PasswordResetComponentResource = ComponentResource<PasswordResetOperation>
 
 export type PasswordResetParam = { PasswordResetParam: never }
 

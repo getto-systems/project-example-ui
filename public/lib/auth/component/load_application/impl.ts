@@ -1,5 +1,6 @@
 import {
     LoadApplicationComponent,
+    LoadApplicationComponentResource,
     LoadApplicationParam,
     LoadApplicationState,
     LoadApplicationOperation,
@@ -46,7 +47,7 @@ class Component implements LoadApplicationComponent {
         this.listener.push(stateChanged)
     }
 
-    init(): ComponentResource<LoadApplicationOperation> {
+    init(): LoadApplicationComponentResource {
         return {
             request: operation => this.request(operation),
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
@@ -88,14 +89,6 @@ type ParamHolder =
 interface Post<T> {
     (state: T): void
 }
-interface Terminate {
-    (): void
-}
-
-type ComponentResource<T> = Readonly<{
-    request: Post<T>
-    terminate: Terminate
-}>
 
 function assertNever(_: never): never {
     throw new Error("NEVER")
