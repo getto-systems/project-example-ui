@@ -1,5 +1,5 @@
 import { PagePathname, ScriptPath } from "./data"
 
-export interface ScriptAction {
+export interface ApplicationAction {
     secureScriptPath(pagePathname: PagePathname): ScriptPath
 }

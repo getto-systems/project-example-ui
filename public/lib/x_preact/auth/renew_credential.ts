@@ -6,7 +6,7 @@ import { loginError } from "../layout"
 
 import { ApplicationError } from "../application_error"
 
-import { unpackScriptPath } from "../../script/adapter"
+import { unpackScriptPath } from "../../application/adapter"
 
 import {
     RenewCredentialComponent,
@@ -16,7 +16,7 @@ import {
 } from "../../auth/component/renew_credential/component"
 
 import { RenewError } from "../../credential/data"
-import { ScriptPath } from "../../script/data"
+import { ScriptPath } from "../../application/data"
 
 type Props = {
     component: RenewCredentialComponent

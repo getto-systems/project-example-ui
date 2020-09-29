@@ -26,7 +26,7 @@ import { initRenewRunner } from "../credential/impl/renew_runner"
 import { initStorageAuthCredentialRepository } from "../credential/impl/repository/auth_credential/storage"
 
 import { initCredentialAction } from "../credential/impl/core"
-import { initScriptAction } from "../script/impl/core"
+import { initApplicationAction } from "../application/impl/core"
 
 import { RenewClient } from "../credential/infra"
 
@@ -35,7 +35,7 @@ import { StoreCredentialComponentResource } from "../background/store_credential
 import { RenewCredentialComponent } from "../auth/component/renew_credential/component"
 
 import { CredentialAction } from "../credential/action"
-import { ScriptAction } from "../script/action"
+import { ApplicationAction } from "../application/action"
 
 export function newAuthUsecase(currentLocation: Location, credentialStorage: Storage): AuthUsecase {
     const credential = newCredentialAction(credentialStorage)
@@ -77,7 +77,7 @@ function newStoreCredentialComponent(credential: CredentialAction): StoreCredent
 function newRenewCredentialComponent(credential: CredentialAction): RenewCredentialComponent {
     return initRenewCredentialComponent({
         credential,
-        script: newScriptAction(),
+        application: newApplicationAction(),
     })
 }
 
@@ -98,8 +98,8 @@ function newCredentialAction(credentialStorage: Storage): CredentialAction {
     })
 }
 
-function newScriptAction(): ScriptAction {
-    return initScriptAction({
+function newApplicationAction(): ApplicationAction {
+    return initApplicationAction({
         hostConfig: newHostConfig(),
     })
 }

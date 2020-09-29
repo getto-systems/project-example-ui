@@ -1,5 +1,5 @@
 import { LastAuth, StoreError, RenewError } from "../../../credential/data"
-import { PagePathname, ScriptPath } from "../../../script/data"
+import { PagePathname, ScriptPath } from "../../../application/data"
 
 export type RenewCredentialParam = { RenewCredentialParam: never }
 

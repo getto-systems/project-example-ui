@@ -1,4 +1,4 @@
-import { PagePathname, ScriptPath } from "../../../script/data"
+import { PagePathname, ScriptPath } from "../../../application/data"
 
 export type LoadApplicationParam = { LoadApplicationParam: never }
 

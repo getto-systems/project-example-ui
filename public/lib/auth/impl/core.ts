@@ -1,12 +1,12 @@
 import { packResetToken } from "../../password_reset/adapter"
-import { packPagePathname } from "../../script/adapter"
+import { packPagePathname } from "../../application/adapter"
 
 import { AppHref } from "../../href"
 import { AuthUsecase, AuthParam, AuthComponent, AuthState } from "../usecase"
 
 import { StoreCredentialComponent } from "../../background/store_credential/component"
 
-import { PagePathname } from "../../script/data"
+import { PagePathname } from "../../application/data"
 
 type Init = Readonly<{
     currentLocation: Location

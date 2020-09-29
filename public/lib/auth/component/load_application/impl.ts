@@ -6,12 +6,12 @@ import {
     LoadApplicationOperation,
 } from "../load_application/component"
 
-import { ScriptAction } from "../../../script/action"
+import { ApplicationAction } from "../../../application/action"
 
-import { PagePathname } from "../../../script/data"
+import { PagePathname } from "../../../application/data"
 
 type Action = Readonly<{
-    script: ScriptAction
+    application: ApplicationAction
 }>
 
 export function initLoadApplicationComponent(action: Action): LoadApplicationComponent {
@@ -63,7 +63,7 @@ class Component implements LoadApplicationComponent {
                 if (this.holder.set) {
                     this.post({
                         type: "try-to-load",
-                        scriptPath: this.action.script.secureScriptPath(this.holder.param.pagePathname),
+                        scriptPath: this.action.application.secureScriptPath(this.holder.param.pagePathname),
                     })
                 } else {
                     this.post(errorParamIsNotSet)

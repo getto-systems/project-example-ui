@@ -2,15 +2,15 @@ import { Infra } from "../infra"
 
 import { packScriptPath, unpackPagePathname } from "../adapter"
 
-import { ScriptAction } from "../action"
+import { ApplicationAction } from "../action"
 
 import { PagePathname, ScriptPath } from "../data"
 
-export function initScriptAction(infra: Infra): ScriptAction {
+export function initApplicationAction(infra: Infra): ApplicationAction {
     return new Action(infra)
 }
 
-class Action implements ScriptAction {
+class Action implements ApplicationAction {
     infra: Infra
 
     constructor(infra: Infra) {

@@ -13,7 +13,7 @@ import { packPasswordResetParam } from "../../../auth/component/password_reset/i
 
 import { packTicketNonce, packAuthAt } from "../../../credential/adapter"
 import { packResetToken } from "../../../password_reset/adapter"
-import { packPagePathname } from "../../../script/adapter"
+import { packPagePathname } from "../../../application/adapter"
 
 import { AppHref } from "../../../href"
 import { AuthUsecase, AuthComponent, AuthState } from "../../../auth/usecase"
