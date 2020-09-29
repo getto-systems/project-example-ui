@@ -18,7 +18,7 @@ interface Action {
 export function initBackgroundCredentialComponent(action: Action): BackgroundCredentialComponentResource {
     const pubsub = initBackgroundCredentialOperationPubSub()
     return {
-        component: new Component(action, pubsub.sub),
+        background: new Component(action, pubsub.sub),
         request: pubsub.request,
     }
 }

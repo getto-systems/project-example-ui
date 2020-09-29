@@ -41,7 +41,7 @@ class Usecase implements AuthUsecase {
         this.component = init.component
         this.background = init.background
 
-        this.component.renewCredential.onStateChange((state) => {
+        this.component.credential.onStateChange((state) => {
             switch (state.type) {
                 case "required-to-login":
                     this.post(this.detectLoginState())
@@ -108,8 +108,8 @@ class Usecase implements AuthUsecase {
         }
 
         this.post({
-            type: "renew-credential",
-            param: this.param.renewCredential({
+            type: "credential",
+            param: this.param.credential({
                 pagePathname: this.currentPagePathname(),
                 lastAuth: fetchResponse.content
             }),

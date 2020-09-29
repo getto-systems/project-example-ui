@@ -16,7 +16,7 @@ import { initAuthUsecase } from "../auth/impl/core"
 
 import { initBackgroundCredentialComponent } from "../background/credential/impl"
 
-import { initRenewCredentialComponent, packRenewCredentialParam } from "../auth/component/renew_credential/impl"
+import { initCredentialComponent, packCredentialParam } from "../auth/component/credential/impl"
 import { packApplicationParam } from "../auth/component/application/impl"
 import { packPasswordResetParam } from "../auth/component/password_reset/impl"
 
@@ -32,58 +32,57 @@ import { RenewClient } from "../credential/infra"
 
 import { AuthUsecase } from "../auth/usecase"
 import { BackgroundCredentialComponentResource } from "../background/credential/component"
-import { RenewCredentialComponent } from "../auth/component/renew_credential/component"
+import { CredentialComponent } from "../auth/component/credential/component"
 
 import { CredentialAction } from "../credential/action"
 import { ApplicationAction } from "../application/action"
 
 export function newAuthUsecase(currentLocation: Location, credentialStorage: Storage): AuthUsecase {
-    const credentialAction = newCredentialAction(credentialStorage)
+    const credential = newCredentialResources(credentialStorage)
 
-    const renew = newRenewCredentialComponent(credentialAction)
-
-    const background = newBackground()
+    const request = {
+        credential: credential.request,
+    }
 
     return initAuthUsecase({
         currentLocation,
         href: newAppHref(),
         param: {
-            renewCredential: packRenewCredentialParam,
+            credential: packCredentialParam,
             application: packApplicationParam,
             passwordReset: packPasswordResetParam,
         },
         component: {
-            renewCredential: renew,
+            credential: credential.component,
             application: newApplicationComponent(),
 
-            passwordLogin: newPasswordLoginComponent(background.request),
+            passwordLogin: newPasswordLoginComponent(request),
             passwordResetSession: newPasswordResetSessionComponent(),
-            passwordReset: newPasswordResetComponent(background.request),
+            passwordReset: newPasswordResetComponent(request),
         },
-        background: background.component,
+        background: {
+            credential: credential.background,
+        },
     })
+}
 
-    function newBackground() {
-        const credential = newBackgroundCredentialComponent(credentialAction)
+function newCredentialResources(credentialStorage: Storage) {
+    const credentialAction = newCredentialAction(credentialStorage)
 
-        return {
-            component: {
-                credential: credential.component,
-            },
-            request: {
-                credential: credential.request,
-            },
-        }
+    return {
+        component: newCredentialComponent(credentialAction),
+        ...newBackgroundCredentialComponent(credentialAction),
     }
 }
+
 
 function newBackgroundCredentialComponent(credential: CredentialAction): BackgroundCredentialComponentResource {
     return initBackgroundCredentialComponent({
         credential,
     })
 }
-function newRenewCredentialComponent(credential: CredentialAction): RenewCredentialComponent {
-    return initRenewCredentialComponent({
+function newCredentialComponent(credential: CredentialAction): CredentialComponent {
+    return initCredentialComponent({
         credential,
         application: newApplicationAction(),
     })

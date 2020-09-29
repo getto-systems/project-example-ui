@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { ApplicationError } from "../application_error"
 
-import { RenewCredential } from "./renew_credential"
+import { Credential } from "./credential"
 import { Application } from "./application"
 
 import { PasswordLogin } from "./password_login"
@@ -38,9 +38,9 @@ export function Main(props: Props): VNode {
         case "initial":
             return EMPTY_CONTENT
 
-        case "renew-credential":
-            return h(RenewCredential, {
-                component: props.usecase.component.renewCredential,
+        case "credential":
+            return h(Credential, {
+                component: props.usecase.component.credential,
                 param: state.param,
             })
 

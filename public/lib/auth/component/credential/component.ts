@@ -1,23 +1,23 @@
 import { LastAuth, StoreError, RenewError } from "../../../credential/data"
 import { PagePathname, ScriptPath } from "../../../application/data"
 
-export type RenewCredentialParam = { RenewCredentialParam: never }
+export type CredentialParam = { CredentialParam: never }
 
-export interface RenewCredentialParamPacker {
-    (param: Param): RenewCredentialParam
+export interface CredentialParamPacker {
+    (param: Param): CredentialParam
 }
 type Param = Readonly<{
     pagePathname: PagePathname
     lastAuth: LastAuth
 }>
 
-export interface RenewCredentialComponent {
-    onStateChange(stateChanged: Post<RenewCredentialState>): void
-    init(): RenewCredentialComponentResource
+export interface CredentialComponent {
+    onStateChange(stateChanged: Post<CredentialState>): void
+    init(): CredentialComponentResource
 }
-export type RenewCredentialComponentResource = ComponentResource<RenewCredentialOperation>
+export type CredentialComponentResource = ComponentResource<CredentialOperation>
 
-export type RenewCredentialState =
+export type CredentialState =
     Readonly<{ type: "initial" }> |
     Readonly<{ type: "try-to-instant-load", scriptPath: ScriptPath }> |
     Readonly<{ type: "required-to-login" }> |
@@ -29,15 +29,15 @@ export type RenewCredentialState =
     Readonly<{ type: "failed-to-load", err: LoadError }> |
     Readonly<{ type: "error", err: string }>
 
-export const initialRenewCredentialState: RenewCredentialState = { type: "initial" }
+export const initialCredentialState: CredentialState = { type: "initial" }
 
-export type RenewCredentialOperation =
-    Readonly<{ type: "set-param", param: RenewCredentialParam }> |
+export type CredentialOperation =
+    Readonly<{ type: "set-param", param: CredentialParam }> |
     Readonly<{ type: "renew" }> |
     Readonly<{ type: "failed-to-load", err: LoadError }> |
     Readonly<{ type: "succeed-to-instant-load" }>
 
-export const initialRenewCredentialRequest: Post<RenewCredentialOperation> = (): void => {
+export const initialCredentialRequest: Post<CredentialOperation> = (): void => {
     throw new Error("Component is not initialized. use: `init()`")
 }
 

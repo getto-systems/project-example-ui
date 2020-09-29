@@ -2,14 +2,14 @@ import { AppHref } from "../href"
 
 import { BackgroundCredentialOperation, BackgroundCredentialOperationSubscriber } from "../background/credential/component"
 
-import { RenewCredentialComponent, RenewCredentialParam } from "./component/renew_credential/component"
+import { CredentialComponent, CredentialParam } from "./component/credential/component"
 import { ApplicationComponent, ApplicationParam } from "./component/application/component"
 
 import { PasswordLoginComponent } from "./component/password_login/component"
 import { PasswordResetSessionComponent } from "./component/password_reset_session/component"
 import { PasswordResetComponent, PasswordResetParam } from "./component/password_reset/component"
 
-import { RenewCredentialParamPacker } from "./component/renew_credential/component"
+import { CredentialParamPacker } from "./component/credential/component"
 import { ApplicationParamPacker } from "./component/application/component"
 import { PasswordResetParamPacker } from "./component/password_reset/component"
 
@@ -21,7 +21,7 @@ export interface AuthUsecase {
 }
 
 export type AuthParam = Readonly<{
-    renewCredential: RenewCredentialParamPacker
+    credential: CredentialParamPacker
     application: ApplicationParamPacker
 
     passwordReset: PasswordResetParamPacker
@@ -35,7 +35,7 @@ export type AuthBackgroundSubscriber = Readonly<{
 }>
 
 export type AuthComponent = Readonly<{
-    renewCredential: RenewCredentialComponent
+    credential: CredentialComponent
     application: ApplicationComponent
 
     passwordLogin: PasswordLoginComponent
@@ -45,7 +45,7 @@ export type AuthComponent = Readonly<{
 
 export type AuthState =
     Readonly<{ type: "initial" }> |
-    Readonly<{ type: "renew-credential", param: RenewCredentialParam }> |
+    Readonly<{ type: "credential", param: CredentialParam }> |
     Readonly<{ type: "application", param: ApplicationParam }> |
     Readonly<{ type: "password-login" }> |
     Readonly<{ type: "password-reset-session" }> |

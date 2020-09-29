@@ -1,13 +1,13 @@
 import { newAppHref } from "../../../main/href"
 
-import { newRenewCredentialComponent } from "./renew_credential"
+import { newCredentialComponent } from "./credential"
 import { newApplicationComponent } from "./application"
 
 import { newPasswordLoginComponent } from "./password_login"
 import { newPasswordResetSessionComponent } from "./password_reset_session"
 import { newPasswordResetComponent } from "./password_reset"
 
-import { packRenewCredentialParam } from "../../../auth/component/renew_credential/impl"
+import { packCredentialParam } from "../../../auth/component/credential/impl"
 import { packApplicationParam } from "../../../auth/component/application/impl"
 import { packPasswordResetParam } from "../../../auth/component/password_reset/impl"
 
@@ -19,14 +19,14 @@ import { AppHref } from "../../../href"
 import { AuthUsecase, AuthComponent, AuthState } from "../../../auth/usecase"
 
 export function newAuthUsecase(): AuthUsecase {
-    return new Usecase(new Init().renewCredential())
+    return new Usecase(new Init().credential())
 }
 
 class Init {
-    renewCredential(): AuthState {
+    credential(): AuthState {
         return {
-            type: "renew-credential",
-            param: packRenewCredentialParam({
+            type: "credential",
+            param: packCredentialParam({
                 pagePathname: packPagePathname(new URL("https://example.com/index.html")),
                 lastAuth: {
                     ticketNonce: packTicketNonce("ticket-nonce"),
@@ -67,7 +67,7 @@ class Usecase implements AuthUsecase {
     constructor(state: AuthState) {
         this.href = newAppHref()
         this.component = {
-            renewCredential: newRenewCredentialComponent(),
+            credential: newCredentialComponent(),
             application: newApplicationComponent(),
 
             passwordLogin: newPasswordLoginComponent(),
