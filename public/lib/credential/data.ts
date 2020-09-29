@@ -1,5 +1,4 @@
-// TODO Resource は component に使ってしまったので他の名前にしたい
-export type AuthResource = Readonly<{
+export type LastAuth = Readonly<{
     ticketNonce: TicketNonce
     lastAuthAt: AuthAt
 }>
@@ -40,7 +39,7 @@ export type StoreEvent =
 export type FetchResponse =
     Readonly<{ success: false, err: FetchError }> |
     Readonly<{ success: true, found: false }> |
-    Readonly<{ success: true, found: true, content: AuthResource }>
+    Readonly<{ success: true, found: true, content: LastAuth }>
 
 export type FetchError =
     Readonly<{ type: "infra-error", err: string }>

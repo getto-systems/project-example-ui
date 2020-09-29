@@ -111,7 +111,7 @@ class Usecase implements AuthUsecase {
             type: "renew-credential",
             param: this.param.renewCredential({
                 pagePathname: this.currentPagePathname(),
-                authResource: fetchResponse.content
+                lastAuth: fetchResponse.content
             }),
         })
     }

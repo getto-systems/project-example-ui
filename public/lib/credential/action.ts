@@ -1,12 +1,12 @@
-import { AuthResource, AuthCredential, RenewEvent, StoreEvent, FetchResponse } from "./data"
+import { LastAuth, AuthCredential, RenewEvent, StoreEvent, FetchResponse } from "./data"
 
 export interface CredentialAction {
     sub: CredentialEventSubscriber
 
     fetch(): FetchResponse
-    renew(authResource: AuthResource): void
+    renew(lastAuth: LastAuth): void
     storeCredential(authCredential: AuthCredential): void
-    setContinuousRenew(authResource: AuthResource): void
+    setContinuousRenew(lastAuth: LastAuth): void
 }
 
 export interface CredentialEventPublisher {

@@ -1,4 +1,4 @@
-import { AuthResource, StoreError, RenewError } from "../../../credential/data"
+import { LastAuth, StoreError, RenewError } from "../../../credential/data"
 import { PagePathname, ScriptPath } from "../../../script/data"
 
 export type RenewCredentialParam = { RenewCredentialParam: never }
@@ -8,7 +8,7 @@ export interface RenewCredentialParamPacker {
 }
 type Param = Readonly<{
     pagePathname: PagePathname
-    authResource: AuthResource
+    lastAuth: LastAuth
 }>
 
 export interface RenewCredentialComponent {

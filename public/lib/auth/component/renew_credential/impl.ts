@@ -9,7 +9,7 @@ import {
 import { CredentialAction } from "../../../credential/action"
 import { ScriptAction } from "../../../script/action"
 
-import { AuthResource, RenewEvent } from "../../../credential/data"
+import { LastAuth, RenewEvent } from "../../../credential/data"
 import { PagePathname } from "../../../script/data"
 
 type Action = Readonly<{
@@ -31,7 +31,7 @@ function unpackParam(param: RenewCredentialParam): Param {
 
 type Param = Readonly<{
     pagePathname: PagePathname
-    authResource: AuthResource
+    lastAuth: LastAuth
 }>
 
 class Component implements RenewCredentialComponent {
@@ -85,7 +85,7 @@ class Component implements RenewCredentialComponent {
 
             case "renew":
                 if (this.holder.set) {
-                    this.action.credential.renew(this.holder.param.authResource)
+                    this.action.credential.renew(this.holder.param.lastAuth)
                 } else {
                     this.post(errorParamIsNotSet)
                 }
@@ -93,7 +93,7 @@ class Component implements RenewCredentialComponent {
 
             case "succeed-to-instant-load":
                 if (this.holder.set) {
-                    this.action.credential.setContinuousRenew(this.holder.param.authResource)
+                    this.action.credential.setContinuousRenew(this.holder.param.lastAuth)
                 } else {
                     this.post(errorParamIsNotSet)
                 }

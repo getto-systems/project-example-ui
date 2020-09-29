@@ -28,7 +28,7 @@ class Init {
             type: "renew-credential",
             param: packRenewCredentialParam({
                 pagePathname: packPagePathname(new URL("https://example.com/index.html")),
-                authResource: {
+                lastAuth: {
                     ticketNonce: packTicketNonce("ticket-nonce"),
                     lastAuthAt: packAuthAt(new Date()),
                 },
