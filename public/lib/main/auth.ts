@@ -31,8 +31,6 @@ import { initApplicationAction } from "../application/impl/core"
 import { RenewClient } from "../credential/infra"
 
 import { AuthUsecase } from "../auth/usecase"
-import { BackgroundCredentialComponentResource } from "../background/credential/component"
-import { CredentialComponent } from "../auth/component/credential/component"
 
 import { CredentialAction } from "../credential/action"
 import { ApplicationAction } from "../application/action"
@@ -67,25 +65,17 @@ export function newAuthUsecase(currentLocation: Location, credentialStorage: Sto
 }
 
 function newCredentialResources(credentialStorage: Storage) {
-    const credentialAction = newCredentialAction(credentialStorage)
+    const credential = newCredentialAction(credentialStorage)
 
     return {
-        component: newCredentialComponent(credentialAction),
-        ...newBackgroundCredentialComponent(credentialAction),
+        component: initCredentialComponent({
+            credential,
+            application: newApplicationAction(),
+        }),
+        ...initBackgroundCredentialComponent({
+            credential,
+        }),
     }
-}
-
-
-function newBackgroundCredentialComponent(credential: CredentialAction): BackgroundCredentialComponentResource {
-    return initBackgroundCredentialComponent({
-        credential,
-    })
-}
-function newCredentialComponent(credential: CredentialAction): CredentialComponent {
-    return initCredentialComponent({
-        credential,
-        application: newApplicationAction(),
-    })
 }
 
 function newCredentialAction(credentialStorage: Storage): CredentialAction {
