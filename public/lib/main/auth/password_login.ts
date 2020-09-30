@@ -8,8 +8,8 @@ import { newTimeConfig } from "./config"
 import { initPasswordLoginComponent, initPasswordLoginWorkerComponentHelper } from "../../auth/component/password_login/impl"
 
 import { initPasswordLoginAction } from "../../password_login/impl/core"
-import { initLoginIDFieldAction } from "../../field/login_id/impl/core"
-import { initPasswordFieldAction } from "../../field/password/impl/core"
+import { initLoginIDFieldAction } from "../../login_id/field/impl/core"
+import { initPasswordFieldAction } from "../../password/field/impl/core"
 
 import { initFetchPasswordLoginClient } from "../../password_login/impl/client/password_login/fetch"
 

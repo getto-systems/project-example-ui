@@ -5,7 +5,7 @@ import {
     initPasswordResetSessionWorkerComponentHelper,
 } from "../../auth/component/password_reset_session/impl"
 
-import { initLoginIDFieldAction } from "../../field/login_id/impl/core"
+import { initLoginIDFieldAction } from "../../login_id/field/impl/core"
 
 import {
     PasswordResetSessionComponent,
