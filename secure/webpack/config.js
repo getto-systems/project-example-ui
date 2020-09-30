@@ -1,38 +1,19 @@
 /* eslint-disable */
 const path = require("path");
+const TerserPlugin = require('terser-webpack-plugin');
 const WorkerPlugin = require('worker-plugin');
 
 module.exports = {
-  entry: () => {
-    const entry = {};
-
-    entry["index"]  = path.join(__dirname, "../lib/x_preact/home.ts");
-
-    /*
-    entry["docs/index"]  = path.join(__dirname, "../lib/docs/index.ts");
-    entry["docs/server"] = path.join(__dirname, "../lib/docs/server.ts");
-    entry["docs/id"]     = path.join(__dirname, "../lib/docs/id.ts");
-
-    entry["docs/detail/server"] = path.join(__dirname, "../lib/docs/detail/server.ts");
-    entry["docs/detail/id"]     = path.join(__dirname, "../lib/docs/detail/id.ts");
-    */
-
-    return entry;
+  entry: {
+    "index": path.join(__dirname, "../../rollup/dist/secure/index.js"),
   },
   output: {
     path: path.join(__dirname, "../dist"),
     filename: "[name].js",
   },
-  module: {
-    rules: [
-      {
-        test: /\.ts$/,
-        loader: "ts-loader",
-        resolve: {
-          extensions: [".ts"],
-        },
-      },
-    ],
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin()],
   },
   plugins: [
     new WorkerPlugin(),

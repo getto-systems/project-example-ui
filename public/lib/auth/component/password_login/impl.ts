@@ -37,8 +37,8 @@ type Action = Readonly<{
 export function initPasswordLoginComponent(background: AuthBackground, action: Action): PasswordLoginComponent {
     return new Component(background, action)
 }
-export function initPasswordLoginWorkerComponent(background: AuthBackground, init: WorkerInit): PasswordLoginComponent {
-    return new WorkerComponent(background, init)
+export function initPasswordLoginWorkerComponent(background: AuthBackground, initializer: WorkerInitializer): PasswordLoginComponent {
+    return new WorkerComponent(background, initializer)
 }
 export function initPasswordLoginWorkerComponentHelper(): PasswordLoginWorkerComponentHelper {
     return {
@@ -138,7 +138,7 @@ class Component implements PasswordLoginComponent {
 
 class WorkerComponent implements PasswordLoginComponent {
     background: AuthBackground
-    worker: WorkerHolder
+    initializer: WorkerInitializer
 
     listener: {
         passwordLogin: Post<PasswordLoginState>[]
@@ -150,9 +150,9 @@ class WorkerComponent implements PasswordLoginComponent {
             password: [],
         }
 
-    constructor(background: AuthBackground, init: WorkerInit) {
+    constructor(background: AuthBackground, initializer: WorkerInitializer) {
         this.background = background
-        this.worker = { set: false, init }
+        this.initializer = initializer
     }
 
     onStateChange(stateChanged: Post<PasswordLoginState>): void {
@@ -166,53 +166,40 @@ class WorkerComponent implements PasswordLoginComponent {
     }
 
     init(): PasswordLoginComponentResource {
-        this.initComponent()
+        const worker = this.initWorker()
         return {
-            request: operation => this.request(operation),
-            terminate: () => this.terminate(),
+            request: operation => worker.postMessage(operation),
+            terminate: () => worker.terminate(),
         }
     }
-    initComponent(): void {
-        if (!this.worker.set) {
-            const instance = this.worker.init()
+    initWorker(): Worker {
+        const worker = this.initializer()
 
-            instance.addEventListener("message", (event) => {
-                const state = event.data as PasswordLoginWorkerState
-                switch (state.type) {
-                    case "password_login":
-                        this.listener.passwordLogin.forEach(post => post(state.state))
-                        return
+        worker.addEventListener("message", (event) => {
+            const state = event.data as PasswordLoginWorkerState
+            switch (state.type) {
+                case "password_login":
+                    this.listener.passwordLogin.forEach(post => post(state.state))
+                    return
 
-                    case "field-login_id":
-                        this.listener.loginID.forEach(post => post(state.state))
-                        return
+                case "field-login_id":
+                    this.listener.loginID.forEach(post => post(state.state))
+                    return
 
-                    case "field-password":
-                        this.listener.password.forEach(post => post(state.state))
-                        return
+                case "field-password":
+                    this.listener.password.forEach(post => post(state.state))
+                    return
 
-                    case "background-credential":
-                        this.background.credential(state.operation)
-                        return
+                case "background-credential":
+                    this.background.credential(state.operation)
+                    return
 
-                    default:
-                        assertNever(state)
-                }
-            })
+                default:
+                    assertNever(state)
+            }
+        })
 
-            this.worker = { set: true, instance }
-        }
-    }
-    terminate(): void {
-        if (this.worker.set) {
-            this.worker.instance.terminate()
-        }
-    }
-
-    request(operation: PasswordLoginOperation): void {
-        if (this.worker.set) {
-            this.worker.instance.postMessage(operation)
-        }
+        return worker
     }
 }
 
@@ -229,11 +216,7 @@ function mapPasswordFieldState(state: PasswordFieldState): PasswordLoginWorkerSt
     return { type: "field-password", state }
 }
 
-type WorkerHolder =
-    Readonly<{ set: false, init: WorkerInit }> |
-    Readonly<{ set: true, instance: Worker }>
-
-interface WorkerInit {
+interface WorkerInitializer {
     (): Worker
 }
 
