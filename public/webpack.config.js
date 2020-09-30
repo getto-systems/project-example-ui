@@ -21,7 +21,7 @@ module.exports = {
     }, {})
   },
   output: {
-    path: path.join(__dirname, "../dist"),
+    path: path.join(__dirname, "./dist"),
     filename: "[name].js",
     globalObject: "self",
   },
@@ -33,7 +33,7 @@ module.exports = {
     new WorkerPlugin(),
   ],
   devServer: {
-    contentBase: path.join(__dirname, ".."),
+    contentBase: path.join(__dirname, "."),
     publicPath: "/dist/",
 
     host: "0.0.0.0",
