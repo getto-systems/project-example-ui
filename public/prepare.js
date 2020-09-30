@@ -3,19 +3,15 @@ const fs = require("fs");
 const path = require("path");
 
 const env = {
-  isProduction: false,
-  version: "dist",
-
   secureServerHost: process.env.SECURE_SERVER_HOST,
   authServerURL: process.env.AUTH_SERVER_URL,
-};
 
-if (process.env.BUILD_ENV) {
-  env.isProduction = (process.env.BUILD_ENV == "PRODUCTION");
-}
-if (env.isProduction) {
-  env.version = fs.readFileSync(path.join(__dirname, "../.release-version"), "utf8").trim();
-}
+  storageKey: {
+    ticketNonce: process.env.STORAGE_KEY_TICKET_NONCE,
+    apiCredential: process.env.STORAGE_KEY_API_CREDENTIAL,
+    lastAuthAt: process.env.STORAGE_KEY_LAST_AUTH_AT,
+  },
+};
 
 const data = "export const env = " + JSON.stringify(env, null, "    ");
 

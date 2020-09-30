@@ -3,16 +3,10 @@ const fs = require("fs");
 const path = require("path");
 
 const env = {
-  isProduction: false,
-  version: "dist",
+  storageKey: {
+    apiCredential: process.env.STORAGE_KEY_API_CREDENTIAL,
+  },
 };
-
-if (process.env.BUILD_ENV) {
-  env.isProduction = (process.env.BUILD_ENV == "PRODUCTION");
-}
-if (env.isProduction) {
-  env.version = fs.readFileSync(path.join(__dirname, "../.release-version"), "utf8").trim();
-}
 
 const data = "export const env = " + JSON.stringify(env, null, "    ");
 
