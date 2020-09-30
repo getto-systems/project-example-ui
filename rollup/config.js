@@ -1,5 +1,6 @@
 /* eslint-disable */
 import typescript from "@rollup/plugin-typescript"
+import { nodeResolve } from "@rollup/plugin-node-resolve"
 import { terser } from "rollup-plugin-terser"
 
 const path = require("path");
@@ -27,9 +28,6 @@ const entrypoint = [
 
 const options = {
   external: [
-    "preact",
-    "preact/hooks",
-    "htm/preact",
     "protobufjs/minimal",
   ],
   output: {
@@ -38,6 +36,7 @@ const options = {
   },
   plugins: [
     typescript(),
+    nodeResolve(),
     terser(),
   ],
   watch: {
