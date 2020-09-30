@@ -23,6 +23,7 @@ export interface AuthCredentialRepository {
     findTicketNonce(): FindResponse<TicketNonce>
     findLastAuthAt(): FindResponse<AuthAt>
     storeAuthCredential(authCredential: AuthCredential): StoreResponse
+    removeAuthCredential(): StoreResponse
 }
 
 export interface AuthExpires {
