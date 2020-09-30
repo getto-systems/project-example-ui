@@ -76,6 +76,7 @@ class Action implements CredentialAction {
             return
         }
         if (!renewResponse.hasCredential) {
+            this.removeCredential()
             post({ type: "required-to-login" })
             return
         }
@@ -93,6 +94,15 @@ class Action implements CredentialAction {
         const post = (event: StoreEvent) => this.pub.postStoreEvent(event)
 
         const storeResponse = this.infra.authCredentials.storeAuthCredential(authCredential)
+        if (!storeResponse.success) {
+            post({ type: "failed-to-store", err: storeResponse.err })
+            return
+        }
+    }
+    async removeCredential(): Promise<void> {
+        const post = (event: StoreEvent) => this.pub.postStoreEvent(event)
+
+        const storeResponse = this.infra.authCredentials.removeAuthCredential()
         if (!storeResponse.success) {
             post({ type: "failed-to-store", err: storeResponse.err })
             return
@@ -119,6 +129,7 @@ class Action implements CredentialAction {
             return false
         }
         if (!renewResponse.hasCredential) {
+            this.removeCredential()
             return false
         }
 

@@ -41,7 +41,11 @@ class Component implements BackgroundCredentialComponent {
         operationSubscriber.handleOperation(operation => this.request(operation))
     }
     request(operation: BackgroundCredentialOperation): void {
-        this.action.credential.storeCredential(operation.authCredential)
+        switch (operation.type) {
+            case "store":
+                this.action.credential.storeCredential(operation.authCredential)
+                return
+        }
     }
 
     fetch(): FetchResponse {

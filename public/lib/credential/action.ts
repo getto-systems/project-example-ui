@@ -6,6 +6,7 @@ export interface CredentialAction {
     fetch(): FetchResponse
     renew(lastAuth: LastAuth): void
     storeCredential(authCredential: AuthCredential): void
+    removeCredential(): void
     setContinuousRenew(lastAuth: LastAuth): void
 }
 

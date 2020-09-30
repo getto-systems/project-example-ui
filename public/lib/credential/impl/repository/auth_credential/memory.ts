@@ -8,31 +8,44 @@ export function initMemoryAuthCredentialRepository(initialTicketNonce: TicketNon
 
 class MemoryAuthCredentialRepository implements AuthCredentialRepository {
     data: {
-        ticketNonce: TicketNonce
-        apiCredential: ApiCredential
-        lastAuthAt: AuthAt
+        ticketNonce: Found<TicketNonce>
+        apiCredential: Found<ApiCredential>
+        lastAuthAt: Found<AuthAt>
     }
 
     constructor(initialTicketNonce: TicketNonce, lastAuthAt: AuthAt) {
         this.data = {
-            ticketNonce: initialTicketNonce,
+            ticketNonce: { found: true, content: initialTicketNonce },
             apiCredential: {
-                apiRoles: [],
+                found: true,
+                content: {
+                    apiRoles: [],
+                },
             },
-            lastAuthAt,
+            lastAuthAt: { found: true, content: lastAuthAt },
         }
     }
 
     findTicketNonce(): FindResponse<TicketNonce> {
-        return { success: true, found: true, content: this.data.ticketNonce }
+        return { success: true, ...this.data.ticketNonce }
     }
     findLastAuthAt(): FindResponse<AuthAt> {
-        return { success: true, found: true, content: this.data.lastAuthAt }
+        return { success: true, ...this.data.lastAuthAt }
     }
     storeAuthCredential(authCredential: AuthCredential): StoreResponse {
-        this.data.ticketNonce = authCredential.ticketNonce
-        this.data.apiCredential = authCredential.apiCredential
-        this.data.lastAuthAt = authCredential.authAt
+        this.data.ticketNonce = { found: true, content: authCredential.ticketNonce }
+        this.data.apiCredential = { found: true, content: authCredential.apiCredential }
+        this.data.lastAuthAt = { found: true, content: authCredential.authAt }
+        return { success: true }
+    }
+    removeAuthCredential(): StoreResponse {
+        this.data.ticketNonce = { found: false }
+        this.data.apiCredential = { found: false }
+        this.data.lastAuthAt = { found: false }
         return { success: true }
     }
 }
+
+type Found<T> =
+    Readonly<{ found: false }> |
+    Readonly<{ found: true, content: T }>

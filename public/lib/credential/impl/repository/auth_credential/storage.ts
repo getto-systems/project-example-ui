@@ -62,17 +62,30 @@ class Repository implements AuthCredentialRepository {
             return { success: false, err: { type: "infra-error", err: `${err}` } }
         }
     }
+    removeAuthCredential(): StoreResponse {
+        try {
+            this.storage.removeTicketNonce()
+            this.storage.removeApiCredential()
+            this.storage.removeLastAuthAt()
+            return { success: true }
+        } catch (err) {
+            return { success: false, err: { type: "infra-error", err: `${err}` } }
+        }
+    }
 }
 
 interface AuthCredentialStorage {
-    setTicketNonce(ticketNonce: TicketNonce): void
     getTicketNonce(): Found<TicketNonce>
+    setTicketNonce(ticketNonce: TicketNonce): void
+    removeTicketNonce(): void
 
-    setApiCredential(apiCredential: ApiCredential): void
     getApiCredential(): Found<ApiCredential>
+    setApiCredential(apiCredential: ApiCredential): void
+    removeApiCredential(): void
 
-    setLastAuthAt(authAt: AuthAt): void
     getLastAuthAt(): Found<AuthAt>
+    setLastAuthAt(authAt: AuthAt): void
+    removeLastAuthAt(): void
 }
 
 type Found<T> =
@@ -96,9 +109,11 @@ class AuthCredentialStorageImpl implements AuthCredentialStorage {
 
         return { found: false }
     }
-
     setTicketNonce(ticketNonce: TicketNonce): void {
         this.storage.setItem(this.key.ticketNonce, unpackTicketNonce(ticketNonce))
+    }
+    removeTicketNonce(): void {
+        this.storage.removeItem(this.key.ticketNonce)
     }
 
     getApiCredential(): Found<ApiCredential> {
@@ -121,7 +136,6 @@ class AuthCredentialStorageImpl implements AuthCredentialStorage {
 
         return { found: false }
     }
-
     setApiCredential(apiCredential: ApiCredential): void {
         const f = ApiCredentialMessage
         const message = new f()
@@ -135,6 +149,9 @@ class AuthCredentialStorageImpl implements AuthCredentialStorage {
         const arr = f.encode(message).finish()
         this.storage.setItem(this.key.apiCredential, encodeUint8ArrayToBase64String(arr))
     }
+    removeApiCredential(): void {
+        this.storage.removeItem(this.key.apiCredential)
+    }
 
     getLastAuthAt(): Found<AuthAt> {
         const raw = this.storage.getItem(this.key.lastAuthAt)
@@ -143,9 +160,11 @@ class AuthCredentialStorageImpl implements AuthCredentialStorage {
         }
         return { found: false }
     }
-
     setLastAuthAt(authAt: AuthAt): void {
         const date = unpackAuthAt(authAt)
         this.storage.setItem(this.key.lastAuthAt, date.toISOString())
+    }
+    removeLastAuthAt(): void {
+        this.storage.removeItem(this.key.lastAuthAt)
     }
 }
