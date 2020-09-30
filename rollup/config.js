@@ -11,7 +11,7 @@ const entrypoint = [
   { "public/auth/password_reset_session": path.join(__dirname, "../public/lib/x_worker/auth/password_reset_session.ts") },
   { "public/auth/password_reset": path.join(__dirname, "../public/lib/x_worker/auth/password_reset.ts") },
 
-  { "secure/index": path.join(__dirname, "../secure/lib/x_preact/home.ts") },
+  { "secure/home": path.join(__dirname, "../secure/lib/x_preact/home.ts") },
 ]
 
 export default entrypoint.map((input) => {
