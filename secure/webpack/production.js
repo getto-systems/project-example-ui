@@ -28,4 +28,20 @@ module.exports = {
   plugins: [
     new WorkerPlugin(),
   ],
+  watchOptions: {
+    ignored: /node_modules/,
+  },
+  devServer: {
+    contentBase: path.join(__dirname, ".."),
+    publicPath: "/dist/",
+
+    host: "0.0.0.0",
+    port: process.env.SECURE_APP_PORT,
+
+    hot: true,
+    sockPort: "443",
+    sockHost: process.env.SECURE_SERVER_HOST,
+
+    disableHostCheck: true,
+  },
 };
