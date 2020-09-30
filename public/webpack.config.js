@@ -4,13 +4,22 @@ const TerserPlugin = require('terser-webpack-plugin');
 const WorkerPlugin = require('worker-plugin');
 
 module.exports = {
-  entry: {
-    "update": path.join(__dirname, "../../rollup/dist/public/update.js"),
+  entry: () => {
+    const root = path.join(__dirname, "../rollup/dist/public");
 
-    "auth": path.join(__dirname, "../../rollup/dist/public/auth.js"),
-    "auth/password_login": path.join(__dirname, "../../rollup/dist/public/auth/password_login.js"),
-    "auth/password_reset_session": path.join(__dirname, "../../rollup/dist/public/auth/password_reset_session.js"),
-    "auth/password_reset": path.join(__dirname, "../../rollup/dist/public/auth/password_reset.js"),
+    return [
+      [ "update" ],
+
+      [ "auth" ],
+
+      [ "auth/password_login" ],
+      [ "auth/password_reset_session" ],
+      [ "auth/password_reset" ],
+    ].reduce((acc,info) => {
+      const [name] = info;
+      acc[name] = path.join(root, `${name}.js`);
+      return acc;
+    }, {})
   },
   output: {
     path: path.join(__dirname, "../dist"),

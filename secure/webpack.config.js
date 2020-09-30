@@ -5,7 +5,20 @@ const WorkerPlugin = require('worker-plugin');
 
 module.exports = {
   entry: {
-    "index": path.join(__dirname, "../../rollup/dist/secure/index.js"),
+    "index": path.join(__dirname, "../rollup/dist/secure/home.js"),
+  },
+  entry: () => {
+    const root = path.join(__dirname, "../rollup/dist/secure");
+
+    return [
+      [ "home", ["index"] ],
+    ].reduce((acc,info) => {
+      const [js, names] = info;
+      names.forEach((name) => {
+        acc[name] = path.join(root, `${js}.js`);
+      })
+      return acc;
+    }, {})
   },
   output: {
     path: path.join(__dirname, "../dist"),
