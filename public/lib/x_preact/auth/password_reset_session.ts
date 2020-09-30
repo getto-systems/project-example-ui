@@ -26,6 +26,8 @@ type Props = Readonly<{
 export function PasswordResetSession(props: Props): VNode {
     const [state, setState] = useState(initialPasswordResetSessionState)
     const [request, setRequest] = useState(() => initialPasswordResetSessionRequest)
+    // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
+    const submit = useRef<HTMLButtonElement>()
     useEffect(() => {
         props.component.onStateChange(setState)
 
@@ -145,9 +147,6 @@ export function PasswordResetSession(props: Props): VNode {
         case "error":
             return h(ApplicationError, { err: state.err })
     }
-
-    // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
-    const submit = useRef<HTMLButtonElement>()
 
     function startSessionButton() {
         return html`<button ref="${submit}" class="button button_save">トークン送信</button>`
