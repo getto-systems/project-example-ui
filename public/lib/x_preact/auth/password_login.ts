@@ -27,6 +27,8 @@ type Props = Readonly<{
 export function PasswordLogin(props: Props): VNode {
     const [state, setState] = useState(initialPasswordLoginState)
     const [request, setRequest] = useState(() => initialPasswordLoginRequest)
+    // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
+    const submit = useRef<HTMLButtonElement>()
     useEffect(() => {
         props.component.onStateChange(setState)
 
@@ -99,9 +101,6 @@ export function PasswordLogin(props: Props): VNode {
         case "error":
             return h(ApplicationError, { err: state.err })
     }
-
-    // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
-    const submit = useRef<HTMLButtonElement>()
 
     function loginButton() {
         return html`<button ref="${submit}" class="button button_save">ログイン</button>`
