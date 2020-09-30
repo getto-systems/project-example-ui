@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { LoginIDFieldError } from "../../../field/login_id/data"
+import { LoginIDFieldError } from "../../../login_id/field/data"
 import { Valid } from "../../../field/data"
 
 export function loginIDFieldError(result: Valid<LoginIDFieldError>): VNode[] {

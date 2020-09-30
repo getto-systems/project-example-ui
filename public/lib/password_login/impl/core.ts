@@ -4,7 +4,7 @@ import { PasswordLoginAction, PasswordLoginEventPublisher, PasswordLoginEventSub
 import { LoginContent, LoginFields } from "../data"
 
 import { LoginEvent } from "../data"
-import { Content } from "../../field/data"
+import { Content, validContent, invalidContent } from "../../field/data"
 
 export function initPasswordLoginAction(infra: Infra): PasswordLoginAction {
     return new Action(infra)
@@ -55,15 +55,12 @@ function mapContent(content: LoginContent): Content<LoginFields> {
         !content.loginID.valid ||
         !content.password.valid
     ) {
-        return { valid: false }
+        return invalidContent()
     }
-    return {
-        valid: true,
-        content: {
-            loginID: content.loginID.content,
-            password: content.password.content,
-        },
-    }
+    return validContent({
+        loginID: content.loginID.content,
+        password: content.password.content,
+    })
 }
 
 class EventPubSub implements PasswordLoginEventPublisher, PasswordLoginEventSubscriber {

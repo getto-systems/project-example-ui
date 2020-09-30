@@ -1,4 +1,4 @@
-import { AuthHref } from "../../auth/href"
+import { AuthHref } from "../href"
 
 export function initAuthHref(): AuthHref {
     return {

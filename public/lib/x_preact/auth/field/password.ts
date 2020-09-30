@@ -3,7 +3,7 @@ import { html } from "htm/preact"
 
 import { unpackInputValue } from "../../../field/adapter"
 
-import { PasswordFieldError, PasswordCharacter, PasswordView } from "../../../field/password/data"
+import { PasswordFieldError, PasswordCharacter, PasswordView } from "../../../password/field/data"
 import { InputValue, Valid } from "../../../field/data"
 
 export function passwordFieldError(result: Valid<PasswordFieldError>, character: PasswordCharacter): VNode[] {

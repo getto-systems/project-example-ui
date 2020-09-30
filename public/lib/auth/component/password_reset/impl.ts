@@ -16,18 +16,18 @@ import { LoginIDFieldState } from "../field/login_id/component"
 import { PasswordFieldState } from "../field/password/component"
 
 import { PasswordResetAction } from "../../../password_reset/action"
-import { LoginIDFieldAction } from "../../../field/login_id/action"
-import { PasswordFieldAction } from "../../../field/password/action"
+import { LoginIDFieldAction } from "../../../login_id/field/action"
+import { PasswordFieldAction } from "../../../password/field/action"
 
-import { LoginIDField } from "../../../field/login_id/action"
-import { PasswordField } from "../../../field/password/action"
+import { LoginIDField } from "../../../login_id/field/action"
+import { PasswordField } from "../../../password/field/action"
 
 import { LoginID } from "../../../login_id/data"
 import { Password } from "../../../password/data"
 import { ResetToken, ResetEvent } from "../../../password_reset/data"
-import { LoginIDFieldEvent } from "../../../field/login_id/data"
-import { PasswordFieldEvent } from "../../../field/password/data"
-import { Content } from "../../../field/data"
+import { LoginIDFieldEvent } from "../../../login_id/field/data"
+import { PasswordFieldEvent } from "../../../password/field/data"
+import { Content, invalidContent } from "../../../field/data"
 
 export interface Action {
     passwordReset: PasswordResetAction
@@ -79,8 +79,8 @@ class Component implements PasswordResetComponent {
         loginID: Content<LoginID>
         password: Content<Password>
     } = {
-            loginID: { valid: false },
-            password: { valid: false },
+            loginID: invalidContent(),
+            password: invalidContent(),
         }
 
     constructor(background: AuthBackground, action: Action) {

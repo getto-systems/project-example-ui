@@ -10,7 +10,7 @@ import {
     ResetToken, ResetEvent,
 } from "../data"
 
-import { Content } from "../../field/data"
+import { Content, validContent, invalidContent } from "../../field/data"
 
 export function initPasswordResetAction(infra: Infra): PasswordResetAction {
     return new PasswordResetActionImpl(infra)
@@ -88,14 +88,11 @@ class PasswordResetActionImpl implements PasswordResetAction {
 
 function mapStartSessionContent(content: StartSessionContent): Content<StartSessionFields> {
     if (!content.loginID.valid) {
-        return { valid: false }
+        return invalidContent()
     }
-    return {
-        valid: true,
-        content: {
-            loginID: content.loginID.content,
-        },
-    }
+    return validContent({
+        loginID: content.loginID.content,
+    })
 }
 
 function mapResetContent(content: ResetContent): Content<ResetFields> {
@@ -103,15 +100,12 @@ function mapResetContent(content: ResetContent): Content<ResetFields> {
         !content.loginID.valid ||
         !content.password.valid
     ) {
-        return { valid: false }
+        return invalidContent()
     }
-    return {
-        valid: true,
-        content: {
-            loginID: content.loginID.content,
-            password: content.password.content,
-        },
-    }
+    return validContent({
+        loginID: content.loginID.content,
+        password: content.password.content,
+    })
 }
 
 type SendTokenState =

@@ -7,7 +7,7 @@ import { passwordView, passwordFieldError } from "../../field/password"
 
 import { PasswordFieldState, initialPasswordFieldState } from "../../../../auth/component/field/password/component"
 
-import { PasswordFieldOperation } from "../../../../field/password/data"
+import { PasswordFieldOperation } from "../../../../password/field/data"
 
 type Props = Readonly<{
     component: FormComponent

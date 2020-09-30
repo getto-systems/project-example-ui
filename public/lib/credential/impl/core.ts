@@ -18,8 +18,6 @@ class Action implements CredentialAction {
     pub: CredentialEventPublisher
     sub: CredentialEventSubscriber
 
-    isLoaded = false
-
     constructor(infra: Infra) {
         this.infra = infra
 
