@@ -8,15 +8,14 @@ module.exports = {
     const root = path.join(__dirname, "../rollup/dist/public");
 
     return [
-      [ "update" ],
+      "update",
 
-      [ "auth" ],
+      "auth",
 
-      [ "auth/password_login" ],
-      [ "auth/password_reset_session" ],
-      [ "auth/password_reset" ],
-    ].reduce((acc,info) => {
-      const [name] = info;
+      "auth/password_login",
+      "auth/password_reset_session",
+      "auth/password_reset",
+    ].reduce((acc,name) => {
       acc[name] = path.join(root, `${name}.js`);
       return acc;
     }, {})
