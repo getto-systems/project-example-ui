@@ -92,11 +92,7 @@ function newCredentialAction(credentialStorage: Storage): CredentialAction {
     return initCredentialAction({
         timeConfig: newTimeConfig(),
 
-        authCredentials: initStorageAuthCredentialRepository(credentialStorage, {
-            ticketNonce: "GETTO-EXAMPLE-TICKET-NONCE",
-            apiCredential: "GETTO-EXAMPLE-API-CREDENTIAL",
-            lastAuthAt: "GETTO-EXAMPLE-LAST-AUTH-AT",
-        }),
+        authCredentials: initStorageAuthCredentialRepository(credentialStorage, env.storageKey),
         expires: initAuthExpires(),
         runner: initRenewRunner(),
 
