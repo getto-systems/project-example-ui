@@ -1,5 +1,6 @@
 /* eslint-disable */
-import { options } from "./options"
+import typescript from "@rollup/plugin-typescript"
+import { terser } from "rollup-plugin-terser"
 
 const path = require("path");
 
@@ -23,6 +24,30 @@ const entrypoint = [
     ],
   },
 ]
+
+const options = {
+  external: [
+    "preact",
+    "preact/hooks",
+    "htm/preact",
+    "protobufjs/minimal",
+  ],
+  output: {
+    dir: path.join(__dirname, "./dist"),
+    format: "es",
+  },
+  plugins: [
+    typescript(),
+    terser(),
+  ],
+  watch: {
+    clearScreen: false,
+    include: [
+      "public/lib/**",
+      "secure/lib/**",
+    ],
+  },
+}
 
 export default entrypoint.flatMap((info) => {
   return info.entries.flatMap((entry) => {
