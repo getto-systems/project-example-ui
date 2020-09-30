@@ -6,7 +6,7 @@ import { Content } from "../field/data"
 export type SessionID = { SessionID: never }
 export type ResetToken = { ResetToken: never }
 
-// TODO log 以外にも対応
+// TODO log 以外にも対応 : というより、never にするべきかな
 export type Destination =
     Readonly<{ type: "log" }>
 
