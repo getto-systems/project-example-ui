@@ -2,6 +2,7 @@
 
 update_proto_main(){
   local target
+  local base
   local proto
   local file
   local name
@@ -9,9 +10,10 @@ update_proto_main(){
   local d_path
 
   target=$1
+  base=./proto/$target/
 
-  for proto in $(find ./proto/$target -name '*.proto'); do
-    file=${proto#proto/}
+  for proto in $(find $base -name '*.proto'); do
+    file=${proto#$base}
     file=${file%.proto}
     name=$(echo $file | sed 's|/|_|g')
 
