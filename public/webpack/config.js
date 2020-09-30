@@ -1,5 +1,6 @@
 /* eslint-disable */
 const path = require("path");
+const TerserPlugin = require('terser-webpack-plugin');
 const WorkerPlugin = require('worker-plugin');
 
 module.exports = {
@@ -15,6 +16,10 @@ module.exports = {
     path: path.join(__dirname, "../dist"),
     filename: "[name].js",
     globalObject: "self",
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin()],
   },
   module: {
     rules: [
