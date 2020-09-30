@@ -1,6 +1,8 @@
 /tmp/
 /node_modules/
 
+/rollup/dist/
+
 /public/dist/**/*.js
 /secure/dist/**/*.js
 

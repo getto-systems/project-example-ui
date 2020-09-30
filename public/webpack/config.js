@@ -5,12 +5,12 @@ const WorkerPlugin = require('worker-plugin');
 
 module.exports = {
   entry: {
-    "update": path.join(__dirname, "../lib/x_update/update.ts"),
+    "update": path.join(__dirname, "../../rollup/dist/public/update.js"),
 
-    "auth": path.join(__dirname, "../lib/x_preact/auth.ts"),
-    "auth/password_login": path.join(__dirname, "../lib/x_worker/auth/password_login.ts"),
-    "auth/password_reset_session": path.join(__dirname, "../lib/x_worker/auth/password_reset_session.ts"),
-    "auth/password_reset": path.join(__dirname, "../lib/x_worker/auth/password_reset.ts"),
+    "auth": path.join(__dirname, "../../rollup/dist/public/auth.js"),
+    "auth/password_login": path.join(__dirname, "../../rollup/dist/public/auth/password_login.js"),
+    "auth/password_reset_session": path.join(__dirname, "../../rollup/dist/public/auth/password_reset_session.js"),
+    "auth/password_reset": path.join(__dirname, "../../rollup/dist/public/auth/password_reset.js"),
   },
   output: {
     path: path.join(__dirname, "../dist"),
@@ -20,17 +20,6 @@ module.exports = {
   optimization: {
     minimize: true,
     minimizer: [new TerserPlugin()],
-  },
-  module: {
-    rules: [
-      {
-        test: /\.ts$/,
-        loader: "ts-loader",
-        resolve: {
-          extensions: [".ts"],
-        },
-      },
-    ],
   },
   plugins: [
     new WorkerPlugin(),
