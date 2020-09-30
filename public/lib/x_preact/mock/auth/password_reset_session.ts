@@ -6,6 +6,8 @@ import {
 
 import { LoginIDFieldState } from "../../../auth/component/field/login_id/component"
 
+import { noError, hasError } from "../../../field/data"
+
 export function newPasswordResetSessionComponent(): PasswordResetSessionComponent {
     const init = new Init()
     return new Component(
@@ -74,10 +76,10 @@ class Init {
     }
 
     loginIDValid(): LoginIDFieldState {
-        return { type: "succeed-to-update-login_id", result: { valid: true } }
+        return { type: "succeed-to-update-login_id", result: noError() }
     }
     loginIDInvalid_empty(): LoginIDFieldState {
-        return { type: "succeed-to-update-login_id", result: { valid: false, err: ["empty"] } }
+        return { type: "succeed-to-update-login_id", result: hasError(["empty"]) }
     }
 }
 

@@ -5,8 +5,8 @@ import { PasswordFieldState } from "../field/password/component"
 
 import { AuthCredential } from "../../../credential/data"
 import { ResetToken, ResetError } from "../../../password_reset/data"
-import { LoginIDFieldOperation } from "../../../field/login_id/data"
-import { PasswordFieldOperation } from "../../../field/password/data"
+import { LoginIDFieldOperation } from "../../../login_id/field/data"
+import { PasswordFieldOperation } from "../../../password/field/data"
 
 export interface PasswordResetComponent {
     onStateChange(stateChanged: Post<PasswordResetState>): void

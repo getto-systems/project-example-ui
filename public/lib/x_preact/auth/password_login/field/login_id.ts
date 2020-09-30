@@ -7,7 +7,7 @@ import { loginIDFieldError } from "../../field/login_id"
 
 import { LoginIDFieldState, initialLoginIDFieldState } from "../../../../auth/component/field/login_id/component"
 
-import { LoginIDFieldOperation } from "../../../../field/login_id/data"
+import { LoginIDFieldOperation } from "../../../../login_id/field/data"
 
 type Props = Readonly<{
     component: FormComponent

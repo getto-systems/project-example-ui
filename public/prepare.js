@@ -2,7 +2,19 @@
 const fs = require("fs");
 const path = require("path");
 
+const isProduction = (process.env.BUILD_ENV == "PRODUCTION");
+let version = (() => {
+  if (isProduction) {
+    return fs.readFileSync(path.join(__dirname, "../.release-version"), "utf8").trim();
+  } else {
+    return "dist";
+  }
+})();
+
 const env = {
+  isProduction,
+  version,
+
   secureServerHost: process.env.SECURE_SERVER_HOST,
   authServerURL: process.env.AUTH_SERVER_URL,
 

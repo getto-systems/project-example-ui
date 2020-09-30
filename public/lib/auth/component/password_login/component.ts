@@ -4,8 +4,8 @@ import { LoginIDFieldState } from "../field/login_id/component"
 import { PasswordFieldState } from "../field/password/component"
 
 import { LoginError } from "../../../password_login/data"
-import { LoginIDFieldOperation } from "../../../field/login_id/data"
-import { PasswordFieldOperation } from "../../../field/password/data"
+import { LoginIDFieldOperation } from "../../../login_id/field/data"
+import { PasswordFieldOperation } from "../../../password/field/data"
 
 export interface PasswordLoginComponent {
     onStateChange(stateChanged: Post<PasswordLoginState>): void

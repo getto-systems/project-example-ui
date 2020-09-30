@@ -16,7 +16,7 @@ import { packResetToken } from "../../../password_reset/adapter"
 import { packPagePathname } from "../../../application/adapter"
 
 import { AppHref } from "../../../href"
-import { AuthUsecase, AuthComponent, AuthState } from "../../../auth/usecase"
+import { AuthUsecase, AuthUsecaseResource, AuthComponent, AuthState } from "../../../auth/usecase"
 
 export function newAuthUsecase(): AuthUsecase {
     return new Usecase(new Init().credential())
@@ -82,18 +82,14 @@ class Usecase implements AuthUsecase {
         stateChanged(this.state)
     }
 
-    init(): Terminate {
-        return () => this.terminate()
-    }
-    terminate(): void {
-        // mock では特に何もしない
+    init(): AuthUsecaseResource {
+        return {
+            request: () => { /* mock では特に何もしない */ },
+            terminate: () => { /* mock では特に何もしない */ },
+        }
     }
 }
 
 interface Post<T> {
     (state: T): void
-}
-
-interface Terminate {
-    (): void
 }

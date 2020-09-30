@@ -2,7 +2,14 @@ import { packResetToken } from "../../password_reset/adapter"
 import { packPagePathname } from "../../application/adapter"
 
 import { AppHref } from "../../href"
-import { AuthUsecase, AuthParam, AuthComponent, AuthState } from "../usecase"
+import {
+    AuthUsecase,
+    AuthUsecaseResource,
+    AuthParam,
+    AuthState,
+    AuthOperation,
+    AuthComponent,
+} from "../usecase"
 
 import { BackgroundCredentialComponent } from "../../background/credential/component"
 
@@ -92,11 +99,13 @@ class Usecase implements AuthUsecase {
         this.listener.forEach(post => post(state))
     }
 
-    init(): Terminate {
-        this.initUsecase()
-        return () => { /* component とインターフェイスを合わせるために必要 */ }
+    init(): AuthUsecaseResource {
+        return {
+            request: operation => this.request(operation),
+            terminate: () => { /* component とインターフェイスを合わせるために必要 */ },
+        }
     }
-    initUsecase(): void {
+    request(_operation: AuthOperation) {
         const fetchResponse = this.background.credential.fetch()
         if (!fetchResponse.success) {
             this.post({ type: "error", err: fetchResponse.err.err })
@@ -140,8 +149,4 @@ class Usecase implements AuthUsecase {
 
 interface Post<T> {
     (state: T): void
-}
-
-interface Terminate {
-    (): void
 }

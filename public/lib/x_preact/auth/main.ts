@@ -31,7 +31,11 @@ export function Main(props: Props): VNode {
     const [state, setState] = useState(initialAuthState)
     useEffect(() => {
         props.usecase.onStateChange(setState)
-        return props.usecase.init()
+
+        const resource = props.usecase.init()
+        resource.request({ type: "renew" })
+
+        return resource.terminate
     }, [])
 
     switch (state.type) {

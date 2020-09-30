@@ -10,14 +10,14 @@ import {
 import { LoginIDFieldState } from "../field/login_id/component"
 
 import { PasswordResetAction } from "../../../password_reset/action"
-import { LoginIDFieldAction } from "../../../field/login_id/action"
+import { LoginIDFieldAction } from "../../../login_id/field/action"
 
-import { LoginIDField } from "../../../field/login_id/action"
+import { LoginIDField } from "../../../login_id/field/action"
 
 import { LoginID } from "../../../login_id/data"
 import { StartSessionEvent, PollingStatusEvent } from "../../../password_reset/data"
-import { LoginIDFieldEvent } from "../../../field/login_id/data"
-import { Content } from "../../../field/data"
+import { LoginIDFieldEvent } from "../../../login_id/field/data"
+import { Content, invalidContent } from "../../../field/data"
 
 type Action = Readonly<{
     passwordReset: PasswordResetAction
@@ -49,7 +49,7 @@ class Component implements PasswordResetSessionComponent {
     content: {
         loginID: Content<LoginID>
     } = {
-            loginID: { valid: false },
+            loginID: invalidContent(),
         }
 
     constructor(action: Action) {

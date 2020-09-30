@@ -9,6 +9,9 @@ import {
 import { LoginIDFieldState } from "../../../auth/component/field/login_id/component"
 import { PasswordFieldState } from "../../../auth/component/field/password/component"
 
+import { noError, hasError } from "../../../field/data"
+import { simplePassword, complexPassword, hidePassword, showPassword } from "../../../password/field/data"
+
 export function newPasswordResetComponent(): PasswordResetComponent {
     const init = new Init()
     return new Component(
@@ -48,58 +51,58 @@ class Init {
     }
 
     loginIDValid(): LoginIDFieldState {
-        return { type: "succeed-to-update-login_id", result: { valid: true } }
+        return { type: "succeed-to-update-login_id", result: noError() }
     }
     loginIDInvalid_empty(): LoginIDFieldState {
-        return { type: "succeed-to-update-login_id", result: { valid: false, err: ["empty"] } }
+        return { type: "succeed-to-update-login_id", result: hasError(["empty"]) }
     }
 
     passwordValid(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
-            result: { valid: true },
-            character: { complex: false },
-            view: { show: false },
+            result: noError(),
+            character: simplePassword,
+            view: hidePassword,
         }
     }
     passwordInvalid_empty(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
-            result: { valid: false, err: ["empty"] },
-            character: { complex: false },
-            view: { show: false },
+            result: hasError(["empty"]),
+            character: simplePassword,
+            view: hidePassword,
         }
     }
     passwordInvalid_too_long(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
-            result: { valid: false, err: ["too-long"] },
-            character: { complex: false },
-            view: { show: false },
+            result: hasError(["too-long"]),
+            character: simplePassword,
+            view: hidePassword,
         }
     }
     passwordComplexInvalid_too_long(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
-            result: { valid: false, err: ["too-long"] },
-            character: { complex: true },
-            view: { show: false },
+            result: hasError(["too-long"]),
+            character: complexPassword,
+            view: hidePassword,
         }
     }
     passwordComplex(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
-            result: { valid: true },
-            character: { complex: true },
-            view: { show: false },
+            result: noError(),
+            character: complexPassword,
+            view: hidePassword,
         }
     }
     passwordView(): PasswordFieldState {
         return {
             type: "succeed-to-update-password",
-            result: { valid: true },
-            character: { complex: false },
-            view: { show: true, password: packInputValue("password") },
+            result: noError(),
+            character: simplePassword,
+            view: showPassword(packInputValue("password")),
         }
     }
 }
