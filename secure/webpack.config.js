@@ -4,9 +4,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 const WorkerPlugin = require('worker-plugin');
 
 module.exports = {
-  entry: {
-    "index": path.join(__dirname, "../rollup/dist/secure/home.js"),
-  },
   entry: () => {
     const root = path.join(__dirname, "../rollup/dist/secure");
 
