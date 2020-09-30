@@ -27,6 +27,7 @@ export function initAuthClient(authServerURL: string): AuthClient {
     return new Client(authServerURL)
 }
 
+// TODO tree shake できるように function として公開したい
 class Client implements AuthClient {
     authServerURL: string
 
