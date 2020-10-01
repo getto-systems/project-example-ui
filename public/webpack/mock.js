@@ -1,15 +1,14 @@
 /* eslint-disable */
 const path = require("path");
-const WorkerPlugin = require('worker-plugin');
 
 module.exports = {
   entry: () => {
     return [
-      { type: "x_update", names: [ "update.ts" ] },
-      { type: "x_preact/mock", names: [ "auth.ts" ] },
+      { type: "x_update", names: [ "update" ] },
+      { type: "x_preact/mock", names: [ "auth" ] },
     ].reduce((acc,info) => {
       info.names.forEach((name) => {
-        acc[name] = path.join(__dirname, `../lib/${info.type}/${name}`);
+        acc[name] = path.join(__dirname, `../lib/${info.type}/${name}.ts`);
       });
       return acc;
     }, {})
@@ -30,9 +29,6 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new WorkerPlugin(),
-  ],
   devServer: {
     contentBase: path.join(__dirname, ".."),
     publicPath: "/dist/",
