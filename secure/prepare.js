@@ -12,7 +12,6 @@ let version = (() => {
 })();
 
 const env = {
-  isProduction,
   version,
 
   storageKey: {

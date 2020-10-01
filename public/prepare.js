@@ -12,7 +12,6 @@ let version = (() => {
 })();
 
 const env = {
-  isProduction,
   version,
 
   secureServerHost: process.env.SECURE_SERVER_HOST,

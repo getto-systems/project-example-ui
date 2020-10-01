@@ -12,7 +12,7 @@
     "prepare": "npm run prepare:public && npm run prepare:secure",
     "prepare:public": "node public/prepare.js",
     "prepare:secure": "node secure/prepare.js",
-    "serve": "npm run serve:public & npm run serve:secure",
+    "serve": "npm run serve:public & npm run serve:secure:mock",
     "serve:public": "webpack-dev-server --config public/webpack/development.js",
     "serve:public:mock": "webpack-dev-server --config public/webpack/mock.js",
     "serve:secure": "webpack-dev-server --config secure/webpack/development.js",
