@@ -27,8 +27,8 @@ type Action = Readonly<{
 export function initPasswordResetSessionComponent(action: Action): PasswordResetSessionComponent {
     return new Component(action)
 }
-export function initPasswordResetSessionWorkerComponent(init: WorkerInit): PasswordResetSessionComponent {
-    return new WorkerComponent(init)
+export function initPasswordResetSessionWorkerComponent(initializer: WorkerInitializer): PasswordResetSessionComponent {
+    return new WorkerComponent(initializer)
 }
 export function initPasswordResetSessionWorkerComponentHelper(): PasswordResetSessionWorkerComponentHelper {
     return {
@@ -119,7 +119,7 @@ class Component implements PasswordResetSessionComponent {
 }
 
 class WorkerComponent implements PasswordResetSessionComponent {
-    worker: WorkerHolder
+    initializer: WorkerInitializer
 
     listener: {
         passwordResetSession: Post<PasswordResetSessionState>[]
@@ -129,8 +129,8 @@ class WorkerComponent implements PasswordResetSessionComponent {
             loginID: [],
         }
 
-    constructor(init: WorkerInit) {
-        this.worker = { set: false, init }
+    constructor(initializer: WorkerInitializer) {
+        this.initializer = initializer
     }
 
     onStateChange(stateChanged: Post<PasswordResetSessionState>): void {
@@ -141,45 +141,32 @@ class WorkerComponent implements PasswordResetSessionComponent {
     }
 
     init(): PasswordResetSessionComponentResource {
-        this.initComponent()
+        const worker = this.initWorker()
         return {
-            request: operation => this.request(operation),
-            terminate: () => this.terminate(),
+            request: operation => worker.postMessage(operation),
+            terminate: () => worker.terminate(),
         }
     }
-    initComponent(): void {
-        if (!this.worker.set) {
-            const instance = this.worker.init()
+    initWorker(): Worker {
+        const worker = this.initializer()
 
-            instance.addEventListener("message", (event) => {
-                const state = event.data as PasswordResetSessionWorkerState
-                switch (state.type) {
-                    case "password_reset_session":
-                        this.listener.passwordResetSession.forEach(post => post(state.state))
-                        return
+        worker.addEventListener("message", (event) => {
+            const state = event.data as PasswordResetSessionWorkerState
+            switch (state.type) {
+                case "password_reset_session":
+                    this.listener.passwordResetSession.forEach(post => post(state.state))
+                    return
 
-                    case "field-login_id":
-                        this.listener.loginID.forEach(post => post(state.state))
-                        return
+                case "field-login_id":
+                    this.listener.loginID.forEach(post => post(state.state))
+                    return
 
-                    default:
-                        assertNever(state)
-                }
-            })
+                default:
+                    assertNever(state)
+            }
+        })
 
-            this.worker = { set: true, instance }
-        }
-    }
-    terminate(): void {
-        if (this.worker.set) {
-            this.worker.instance.terminate()
-        }
-    }
-
-    request(operation: PasswordResetSessionOperation): void {
-        if (this.worker.set) {
-            this.worker.instance.postMessage(operation)
-        }
+        return worker
     }
 }
 
@@ -190,11 +177,7 @@ function mapLoginIDFieldState(state: LoginIDFieldState): PasswordResetSessionWor
     return { type: "field-login_id", state }
 }
 
-type WorkerHolder =
-    Readonly<{ set: false, init: WorkerInit }> |
-    Readonly<{ set: true, instance: Worker }>
-
-interface WorkerInit {
+interface WorkerInitializer {
     (): Worker
 }
 
