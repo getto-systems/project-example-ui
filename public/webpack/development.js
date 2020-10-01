@@ -5,16 +5,16 @@ const WorkerPlugin = require('worker-plugin');
 module.exports = {
   entry: () => {
     return [
-      { type: "x_update", names: [ "update.ts" ] },
-      { type: "x_preact", names: [ "auth.ts" ] },
+      { type: "x_update", names: [ "update" ] },
+      { type: "x_preact", names: [ "auth" ] },
       { type: "x_worker", names: [
-        "auth/password_login.ts",
-        "auth/password_reset_session.ts",
-        "auth/password_reset.ts",
+        "auth/password_login",
+        "auth/password_reset_session",
+        "auth/password_reset",
       ] },
     ].reduce((acc,info) => {
       info.names.forEach((name) => {
-        acc[name] = path.join(__dirname, `../lib/${info.type}/${name}`);
+        acc[name] = path.join(__dirname, `../lib/${info.type}/${name}.ts`);
       });
       return acc;
     }, {})
