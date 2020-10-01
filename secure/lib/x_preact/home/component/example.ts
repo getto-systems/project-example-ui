@@ -32,8 +32,7 @@ export function Example(props: Props): VNode {
             return content()
 
         case "error":
-            // TODO スタイルをつける
-            return html`えらーだ！`
+            return error(state.err)
     }
 }
 
@@ -58,6 +57,26 @@ function content(): VNode {
                     <a class="#">リンク</a>
                 </section>
             </footer>
+        </section>
+    `
+}
+
+function error(err: string): VNode {
+    return html`
+        <section class="box box_double">
+            <div>
+                <header class="box__header">
+                    <h2 class="box__title">GETTO Example</h2>
+                </header>
+                <section class="box__body">
+                    <div class="notice notice_alert">
+                        <p>エラーが発生しました</p>
+                        <p>(詳細: ${err})</p>
+                    </div>
+                    <div class="vertical vertical_small"></div>
+                    <small><p>お手数ですが、上記メッセージを管理者にお伝えください</p></small>
+                </section>
+            </div>
         </section>
     `
 }
