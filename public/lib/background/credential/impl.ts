@@ -4,7 +4,7 @@ import {
     BackgroundCredentialOperation,
     BackgroundCredentialOperationPubSub,
     BackgroundCredentialOperationSubscriber,
-    BackgroundEventSubscriber,
+    BackgroundCredentialEventSubscriber,
 } from "./component"
 
 import { CredentialAction } from "../../credential/action"
@@ -32,7 +32,7 @@ export function initBackgroundCredentialOperationPubSub(): BackgroundCredentialO
 
 class Component implements BackgroundCredentialComponent {
     action: Action
-    sub: BackgroundEventSubscriber
+    sub: BackgroundCredentialEventSubscriber
 
     constructor(action: Action, operationSubscriber: BackgroundCredentialOperationSubscriber) {
         this.action = action
