@@ -27,7 +27,7 @@ export function Breadcrumb(props: Props): VNode {
         const resource = props.component.init()
         setRequest(() => resource.request)
         resource.request({ type: "set-param", param: props.param })
-        resource.request({ type: "detect" })
+        resource.request({ type: "load" })
 
         return resource.terminate
     }, [])
@@ -36,7 +36,7 @@ export function Breadcrumb(props: Props): VNode {
         case "initial-breadcrumb":
             return EMPTY_CONTENT
 
-        case "loaded":
+        case "succeed-to-load":
             return content(state.breadcrumbs)
 
         case "error":

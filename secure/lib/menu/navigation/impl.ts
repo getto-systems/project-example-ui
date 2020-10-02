@@ -1,62 +1,64 @@
 import {
-    BreadcrumbComponent,
-    BreadcrumbComponentResource,
-    BreadcrumbParam,
-    BreadcrumbState,
-    BreadcrumbOperation,
+    NavigationComponent,
+    NavigationComponentResource,
+    NavigationParam,
+    NavigationState,
+    NavigationOperation,
 } from "./component"
 
 import { NavigationAction } from "../../navigation/action"
 
+import { Expansion } from "../../navigation/data"
 import { PagePathname } from "../../location/data"
 
 type Action = Readonly<{
     navigation: NavigationAction
 }>
 
-export function initBreadcrumbComponent(action: Action): BreadcrumbComponent {
+export function initNavigationComponent(action: Action): NavigationComponent {
     return new Component(action)
 }
-export function initBreadcrumbWorkerComponent(initializer: WorkerInitializer): BreadcrumbComponent {
+export function initNavigationWorkerComponent(initializer: WorkerInitializer): NavigationComponent {
     return new WorkerComponent(initializer)
 }
 
-export function packBreadcrumbParam(param: Param): BreadcrumbParam {
-    return param as BreadcrumbParam & Param
+export function packNavigationParam(param: Param): NavigationParam {
+    return param as NavigationParam & Param
 }
 
-function unpackParam(param: BreadcrumbParam): Param {
+function unpackParam(param: NavigationParam): Param {
     return param as unknown as Param
 }
 
 type Param = Readonly<{
     pagePathname: PagePathname
+    expansion: Expansion
 }>
 
-class Component implements BreadcrumbComponent {
+class Component implements NavigationComponent {
     action: Action
 
-    listener: Post<BreadcrumbState>[] = []
+    listener: Post<NavigationState>[] = []
     holder: ParamHolder = { set: false }
 
     constructor(action: Action) {
         this.action = action
     }
-    post(state: BreadcrumbState): void {
+    post(state: NavigationState): void {
         this.listener.forEach(post => post(state))
     }
 
-    onStateChange(stateChanged: Post<BreadcrumbState>): void {
+    onStateChange(stateChanged: Post<NavigationState>): void {
         this.listener.push(stateChanged)
     }
 
-    init(): BreadcrumbComponentResource {
+    init(): NavigationComponentResource {
         return {
             request: operation => this.request(operation),
             terminate: () => { /* WorkerComponent とインターフェイスを合わせるために必要 */ },
         }
     }
-    request(operation: BreadcrumbOperation): void {
+    request(operation: NavigationOperation): void {
         switch (operation.type) {
             case "set-param":
                 this.holder = { set: true, param: unpackParam(operation.param) }
@@ -64,10 +66,10 @@ class Component implements BreadcrumbComponent {
 
             case "load":
                 if (this.holder.set) {
-                    this.post({
-                        type: "succeed-to-load",
-                        breadcrumbs: this.action.navigation.detectBreadcrumbList(this.holder.param.pagePathname),
-                    })
+                    this.action.navigation.loadNavigationList(
+                        this.holder.param.pagePathname,
+                        this.holder.param.expansion,
+                    )
                 } else {
                     this.post(paramIsNotSet)
                 }
@@ -79,22 +81,22 @@ class Component implements BreadcrumbComponent {
     }
 }
 
-const paramIsNotSet: BreadcrumbState = { type: "error", err: "param is not set: do `set-param` first" }
+const paramIsNotSet: NavigationState = { type: "error", err: "param is not set: do `set-param` first" }
 
-class WorkerComponent implements BreadcrumbComponent {
+class WorkerComponent implements NavigationComponent {
     initializer: WorkerInitializer
 
-    listener: Post<BreadcrumbState>[] = []
+    listener: Post<NavigationState>[] = []
 
     constructor(initializer: WorkerInitializer) {
         this.initializer = initializer
     }
 
-    onStateChange(stateChanged: Post<BreadcrumbState>): void {
+    onStateChange(stateChanged: Post<NavigationState>): void {
         this.listener.push(stateChanged)
     }
 
-    init(): BreadcrumbComponentResource {
+    init(): NavigationComponentResource {
         const worker = this.initWorker()
         return {
             request: operation => worker.postMessage(operation),
@@ -105,7 +107,7 @@ class WorkerComponent implements BreadcrumbComponent {
         const worker = this.initializer()
 
         worker.addEventListener("message", (event) => {
-            const state = event.data as BreadcrumbState
+            const state = event.data as NavigationState
             this.listener.forEach(post => post(state))
         })
 

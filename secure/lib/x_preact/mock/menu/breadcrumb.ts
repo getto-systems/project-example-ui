@@ -16,7 +16,7 @@ class Init {
     }
     loaded(): BreadcrumbState {
         return {
-            type: "loaded",
+            type: "succeed-to-load",
             breadcrumbs: [
                 {
                     category: packBreadcrumbCategory("MAIN"),
