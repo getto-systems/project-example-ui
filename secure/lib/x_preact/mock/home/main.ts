@@ -1,9 +1,14 @@
 import { newAppHref } from "../../../main/href"
 
+import { newBreadcrumbComponent } from "../menu/breadcrumb"
+
 import { newExampleComponent } from "./example"
+
+import { packBreadcrumbParam } from "../../../menu/breadcrumb/impl"
 
 import { packExampleParam } from "../../../home/component/example/impl"
 
+import { packPagePathname } from "../../../location/adapter"
 import { packApiRoles } from "../../../credential/adapter"
 
 import { AppHref } from "../../../href"
@@ -19,9 +24,12 @@ class Init {
             apiRoles: packApiRoles(["admin", "dev"]),
         }
 
+        const pagePathname = packPagePathname(new URL(location.toString()))
+
         return {
             type: "dashboard",
-            example: packExampleParam({ apiCredential })
+            breadcrumb: packBreadcrumbParam({ pagePathname }),
+            example: packExampleParam({ apiCredential }),
         }
     }
 }
@@ -35,6 +43,8 @@ class Usecase implements HomeUsecase {
     constructor(state: HomeState) {
         this.href = newAppHref()
         this.component = {
+            breadcrumb: newBreadcrumbComponent(),
+
             example: newExampleComponent(),
         }
 

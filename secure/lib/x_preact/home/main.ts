@@ -39,6 +39,10 @@ export function Main(props: Props): VNode {
 
         case "dashboard":
             return h(Dashboard, {
+                breadcrumb: {
+                    component: props.usecase.component.breadcrumb,
+                    param: state.breadcrumb,
+                },
                 example: {
                     component: props.usecase.component.example,
                     param: state.example,

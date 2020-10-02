@@ -5,13 +5,20 @@ import { html } from "htm/preact"
 import { Example } from "./component/example"
 
 import { SystemInfo } from "../system"
-import { Nav, Breadcrumb } from "../menu"
+import { Breadcrumb } from "../menu/breadcrumb"
+import { Nav } from "../menu"
 
 import { mainFooter, menuHeader, menuFooter } from "../layout"
+
+import { BreadcrumbComponent, BreadcrumbParam } from "../../menu/breadcrumb/component"
 
 import { ExampleComponent, ExampleParam } from "../../home/component/example/component"
 
 type Props = Readonly<{
+    breadcrumb: {
+        component: BreadcrumbComponent
+        param: BreadcrumbParam
+    },
     example: {
         component: ExampleComponent
         param: ExampleParam
@@ -30,7 +37,7 @@ export function Dashboard(props: Props): VNode {
             <article class="layout__main">
                 <header class="main__header">
                     <h1 class="main__title">${mainTitle}</h1>
-                    ${h(Breadcrumb, {})}
+                    ${h(Breadcrumb, props.breadcrumb)}
                 </header>
                 <section class="main__body container">
                     ${h(Example, props.example)}

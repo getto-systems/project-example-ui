@@ -1,3 +1,5 @@
+import { packPagePathname } from "../../location/adapter"
+
 import { AppHref } from "../../href"
 import {
     HomeUsecase,
@@ -9,6 +11,8 @@ import {
 } from "../usecase"
 
 import { BackgroundCredentialComponent } from "../../background/credential/component"
+
+import { PagePathname } from "../../location/data"
 
 type Init = Readonly<{
     currentLocation: Location
@@ -62,10 +66,17 @@ class Usecase implements HomeUsecase {
         // TODO location から適切な選択をする
         this.post({
             type: "dashboard",
+            breadcrumb: this.param.breadcrumb({
+                pagePathname: this.currentPagePathname(),
+            }),
             example: this.param.example({
                 fetchResponse: this.background.credential.fetch(),
             }),
         })
+    }
+
+    currentPagePathname(): PagePathname {
+        return packPagePathname(new URL(this.currentLocation.toString()))
     }
 }
 
