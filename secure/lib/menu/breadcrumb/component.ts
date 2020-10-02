@@ -18,14 +18,14 @@ export type BreadcrumbComponentResource = ComponentResource<BreadcrumbOperation>
 
 export type BreadcrumbState =
     Readonly<{ type: "initial-breadcrumb" }> |
-    Readonly<{ type: "loaded", breadcrumbs: BreadcrumbList }> |
+    Readonly<{ type: "succeed-to-load", breadcrumbs: BreadcrumbList }> |
     Readonly<{ type: "error", err: string }>
 
 export const initialBreadcrumbState: BreadcrumbState = { type: "initial-breadcrumb" }
 
 export type BreadcrumbOperation =
     Readonly<{ type: "set-param", param: BreadcrumbParam }> |
-    Readonly<{ type: "detect" }>
+    Readonly<{ type: "load" }>
 
 export const initialBreadcrumbRequest: Post<BreadcrumbOperation> = (): void => {
     throw new Error("Component is not initialized. use: `init()`")

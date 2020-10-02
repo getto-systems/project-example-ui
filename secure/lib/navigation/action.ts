@@ -1,6 +1,7 @@
-import { BreadcrumbList } from "./data"
+import { BreadcrumbList, Expansion } from "./data"
 import { PagePathname } from "../location/data"
 
 export interface NavigationAction {
-    detect(pagePathname: PagePathname): BreadcrumbList
+    detectBreadcrumbList(pagePathname: PagePathname): BreadcrumbList
+    loadNavigationList(pagePathname: PagePathname, expansion: Expansion): void
 }
