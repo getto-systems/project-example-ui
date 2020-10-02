@@ -1,7 +1,7 @@
 import { AuthCredential, StoreEvent, FetchResponse } from "../../credential/data"
 
 export interface BackgroundCredentialComponent {
-    sub: BackgroundEventSubscriber
+    sub: BackgroundCredentialEventSubscriber
     fetch(): FetchResponse
 }
 
@@ -10,7 +10,7 @@ export type BackgroundCredentialComponentResource = Readonly<{
     request: Post<BackgroundCredentialOperation>
 }>
 
-export interface BackgroundEventSubscriber {
+export interface BackgroundCredentialEventSubscriber {
     onStoreEvent(post: Post<StoreEvent>): void
 }
 

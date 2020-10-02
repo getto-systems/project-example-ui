@@ -1,5 +1,7 @@
 import { AppHref } from "../href"
 
+import { BreadcrumbComponent, BreadcrumbParam, BreadcrumbParamPacker } from "../menu/breadcrumb/component"
+
 import { ExampleComponent, ExampleParam, ExampleParamPacker } from "./component/example/component"
 
 export interface HomeUsecase {
@@ -11,6 +13,8 @@ export interface HomeUsecase {
 export type HomeUsecaseResource = UsecaseResource<HomeOperation>
 
 export type HomeParam = Readonly<{
+    breadcrumb: BreadcrumbParamPacker
+
     example: ExampleParamPacker
 }>
 
@@ -22,12 +26,14 @@ export type HomeBackgroundSubscriber = Readonly<{
 }>
 
 export type HomeComponent = Readonly<{
+    breadcrumb: BreadcrumbComponent
+
     example: ExampleComponent
 }>
 
 export type HomeState =
     Readonly<{ type: "initial" }> |
-    Readonly<{ type: "dashboard", example: ExampleParam }> |
+    Readonly<{ type: "dashboard", breadcrumb: BreadcrumbParam, example: ExampleParam }> |
     Readonly<{ type: "error", err: string }>
 
 export const initialHomeState: HomeState = { type: "initial" }
