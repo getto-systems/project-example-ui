@@ -1,19 +1,21 @@
-import { BackgroundCredentialOperation } from "../../../background/credential/component"
-
-import { LoginIDFieldState } from "../field/login_id/component"
-import { PasswordFieldState } from "../field/password/component"
+import {
+    PasswordLoginRequest,
+    PasswordLoginEventSubscriber,
+} from "../../../password_login/action"
 
 import { LoginError } from "../../../password_login/data"
-import { LoginIDFieldOperation } from "../../../login_id/field/data"
-import { PasswordFieldOperation } from "../../../password/field/data"
+
+export type PasswordLoginComponentRequest = Readonly<{
+    passwordLogin: PasswordLoginRequest
+}>
 
 export interface PasswordLoginComponent {
-    onStateChange(stateChanged: Post<PasswordLoginState>): void
-    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
-    onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void
-    init(): PasswordLoginComponentResource
+    subscribePasswordLogin(subscriber: PasswordLoginEventSubscriber): void
+    setRequest(request: PasswordLoginComponentRequest): void
+
+    onStateChange(post: Post<PasswordLoginState>): void
+    login(): void
 }
-export type PasswordLoginComponentResource = ComponentResource<PasswordLoginOperation>
 
 export type PasswordLoginState =
     Readonly<{ type: "initial-login" }> |
@@ -25,36 +27,6 @@ export type PasswordLoginState =
 
 export const initialPasswordLoginState: PasswordLoginState = { type: "initial-login" }
 
-export type PasswordLoginOperation =
-    Readonly<{ type: "login" }> |
-    Readonly<{ type: "field-login_id", operation: LoginIDFieldOperation }> |
-    Readonly<{ type: "field-password", operation: PasswordFieldOperation }>
-
-export const initialPasswordLoginRequest: Post<PasswordLoginOperation> = (): void => {
-    throw new Error("Component is not initialized. use: `init()`")
-}
-
-export interface PasswordLoginWorkerComponentHelper {
-    mapBackgroundCredentialOperation(operation: BackgroundCredentialOperation): PasswordLoginWorkerState
-    mapPasswordLoginState(state: PasswordLoginState): PasswordLoginWorkerState
-    mapLoginIDFieldState(state: LoginIDFieldState): PasswordLoginWorkerState
-    mapPasswordFieldState(state: PasswordFieldState): PasswordLoginWorkerState
-}
-
-export type PasswordLoginWorkerState =
-    Readonly<{ type: "password_login", state: PasswordLoginState }> |
-    Readonly<{ type: "field-login_id", state: LoginIDFieldState }> |
-    Readonly<{ type: "field-password", state: PasswordFieldState }> |
-    Readonly<{ type: "background-credential", operation: BackgroundCredentialOperation }>
-
 interface Post<T> {
     (state: T): void
 }
-interface Terminate {
-    (): void
-}
-
-type ComponentResource<T> = Readonly<{
-    request: Post<T>
-    terminate: Terminate
-}>

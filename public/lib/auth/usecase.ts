@@ -9,13 +9,20 @@ import { PasswordLoginComponent } from "./component/password_login/component"
 import { PasswordResetSessionComponent } from "./component/password_reset_session/component"
 import { PasswordResetComponent, PasswordResetParam, PasswordResetParamPacker } from "./component/password_reset/component"
 
+import { PasswordLoginInit } from "../password_login/action"
+
 export interface AuthUsecase {
     href: AppHref
     component: AuthComponent
     onStateChange(stateChanged: Post<AuthState>): void
     init(): AuthUsecaseResource
+    initPasswordLogin(view: PasswordLoginView): Terminate
 }
 export type AuthUsecaseResource = ComponentResource<AuthOperation>
+
+export type PasswordLoginView = Readonly<{
+    passwordLogin: PasswordLoginComponent
+}>
 
 export type AuthParam = Readonly<{
     credential: CredentialParamPacker
@@ -40,6 +47,10 @@ export type AuthComponent = Readonly<{
     passwordReset: PasswordResetComponent
 }>
 
+export type AuthAction = Readonly<{
+    passwordLogin: Init<PasswordLoginInit>
+}>
+
 export type AuthState =
     Readonly<{ type: "initial" }> |
     Readonly<{ type: "credential", param: CredentialParam }> |
@@ -60,6 +71,9 @@ export const initialAuthRequest: Post<AuthOperation> = (): void => {
 
 interface Post<T> {
     (state: T): void
+}
+interface Init<T> {
+    (): T
 }
 interface Terminate {
     (): void
