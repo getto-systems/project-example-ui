@@ -76,7 +76,7 @@ class Usecase implements AuthUsecase {
             credential: newCredentialComponent(),
             application: newApplicationComponent(),
 
-            passwordLogin: newPasswordLoginComponent(),
+            passwordLogin: () => newPasswordLoginComponent(),
             passwordResetSession: newPasswordResetSessionComponent(),
             passwordReset: newPasswordResetComponent(),
         }
@@ -95,8 +95,13 @@ class Usecase implements AuthUsecase {
         }
     }
 
-    initPasswordLogin(_view: PasswordLoginView): Terminate {
-        return () => { /* mock では特に何もしない */ }
+    initPasswordLogin(): ViewResource<PasswordLoginView> {
+        return {
+            view: {
+                passwordLogin: this.component.passwordLogin(),
+            },
+            terminate: () => { /* mock では特に何もしない */ },
+        }
     }
 }
 
@@ -106,3 +111,8 @@ interface Post<T> {
 interface Terminate {
     (): void
 }
+
+type ViewResource<T> = Readonly<{
+    view: T
+    terminate: Terminate
+}>

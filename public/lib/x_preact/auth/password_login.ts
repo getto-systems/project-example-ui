@@ -18,24 +18,36 @@ import { LoginError } from "../../password_login/data"
 
 type Props = Readonly<{
     usecase: Usecase
-    view: PasswordLoginView
 }>
 interface Usecase {
     href: AppHref
-    initPasswordLogin(view: PasswordLoginView): Terminate
+    initPasswordLogin(): { terminate: Terminate, view: PasswordLoginView }
 }
 interface Terminate {
     (): void
 }
 
-export function PasswordLogin(props: Props): VNode {
-    useEffect(() => props.usecase.initPasswordLogin(props.view), [])
+type Container =
+    Readonly<{ set: false }> |
+    Readonly<{ set: true, view: PasswordLoginView }>
 
-    return h(Login, { component: props.view.passwordLogin, href: props.usecase.href })
+export function PasswordLogin(props: Props): VNode {
+    const [container, setView] = useState<Container>({ set: false })
+    useEffect(() => {
+        const resource = props.usecase.initPasswordLogin()
+        setView({ set: true, view: resource.view })
+        return resource.terminate
+    }, [])
+
+    if (!container.set) {
+        return EMPTY_CONTENT
+    }
+
+    return h(Login, { ...container.view, href: props.usecase.href })
 }
 
 type LoginProps = Readonly<{
-    component: PasswordLoginComponent
+    passwordLogin: PasswordLoginComponent
     href: AppHref
 }>
 function Login(props: LoginProps): VNode {
@@ -43,7 +55,7 @@ function Login(props: LoginProps): VNode {
     // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
     const submit = useRef<HTMLButtonElement>()
     useEffect(() => {
-        props.component.onStateChange(setState)
+        props.passwordLogin.onStateChange(setState)
     }, [])
 
     function view(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
@@ -130,7 +142,7 @@ function Login(props: LoginProps): VNode {
             submit.current.blur()
         }
 
-        props.component.login()
+        props.passwordLogin.login()
     }
     function onSubmit_noop(e: Event) {
         e.preventDefault()
