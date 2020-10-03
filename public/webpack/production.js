@@ -12,7 +12,6 @@ module.exports = {
 
       "auth",
 
-      "auth/password_login",
       "auth/password_reset_session",
       "auth/password_reset",
     ].reduce((acc,name) => {

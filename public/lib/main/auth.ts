@@ -8,7 +8,6 @@ import { newTimeConfig, newHostConfig } from "./auth/config"
 import { newAppHref } from "./href"
 
 import { newApplicationComponent } from "./auth/application"
-import { newPasswordLoginComponent } from "./auth/worker/password_login"
 import { newPasswordResetSessionComponent } from "./auth/worker/password_reset_session"
 import { newPasswordResetComponent } from "./auth/worker/password_reset"
 
@@ -20,6 +19,8 @@ import { initCredentialComponent, packCredentialParam } from "../auth/component/
 import { packApplicationParam } from "../auth/component/application/impl"
 import { packPasswordResetParam } from "../auth/component/password_reset/impl"
 
+import { initPasswordLoginComponent } from "../auth/component/password_login/impl"
+
 import { initFetchRenewClient } from "../credential/impl/client/renew/fetch"
 import { initAuthExpires } from "../credential/impl/expires"
 import { initRenewRunner } from "../credential/impl/renew_runner"
@@ -28,12 +29,19 @@ import { initStorageAuthCredentialRepository } from "../credential/impl/reposito
 import { initCredentialAction } from "../credential/impl/core"
 import { initApplicationAction } from "../application/impl/core"
 
+import { initFetchPasswordLoginClient } from "../password_login/impl/client/password_login/fetch"
+
+import { initPasswordLoginInit } from "../password_login/impl/core"
+
 import { RenewClient } from "../credential/infra"
+import { PasswordLoginClient } from "../password_login/infra"
 
 import { AuthUsecase } from "../auth/usecase"
 
 import { CredentialAction } from "../credential/action"
 import { ApplicationAction } from "../application/action"
+
+import { PasswordLoginInit } from "../password_login/action"
 
 export function newAuthUsecase(currentLocation: Location, credentialStorage: Storage): AuthUsecase {
     const credential = newCredentialResources(credentialStorage)
@@ -54,13 +62,24 @@ export function newAuthUsecase(currentLocation: Location, credentialStorage: Sto
             credential: credential.component,
             application: newApplicationComponent(),
 
-            passwordLogin: newPasswordLoginComponent(request),
+            passwordLogin: initPasswordLoginComponent(request),
             passwordResetSession: newPasswordResetSessionComponent(),
             passwordReset: newPasswordResetComponent(request),
         },
         background: {
             credential: credential.background,
         },
+        action: {
+            passwordLogin: newPasswordLoginInit,
+        },
+    })
+}
+
+function newPasswordLoginInit(): PasswordLoginInit {
+    return initPasswordLoginInit({
+        timeConfig: newTimeConfig(),
+        passwordLoginClient: newPasswordLoginClient(),
+        delayed,
     })
 }
 
@@ -99,4 +118,7 @@ function newApplicationAction(): ApplicationAction {
 
 function newRenewClient(): RenewClient {
     return initFetchRenewClient(initAuthClient(env.authServerURL))
+}
+function newPasswordLoginClient(): PasswordLoginClient {
+    return initFetchPasswordLoginClient(initAuthClient(env.authServerURL))
 }

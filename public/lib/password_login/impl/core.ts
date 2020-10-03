@@ -1,53 +1,34 @@
 import { Infra } from "../infra"
 
-import { PasswordLoginAction, PasswordLoginEventPublisher, PasswordLoginEventSubscriber } from "../action"
-import { LoginContent, LoginFields } from "../data"
+import { PasswordLoginInit, PasswordLoginEventMapper } from "../action"
 
-import { LoginEvent } from "../data"
+import { LoginContent, LoginFields, PasswordLoginEvent, LoginEvent } from "../data"
 import { Content, validContent, invalidContent } from "../../field/data"
 
-export function initPasswordLoginAction(infra: Infra): PasswordLoginAction {
-    return new Action(infra)
-}
-
-class Action implements PasswordLoginAction {
-    infra: Infra
-
-    pub: PasswordLoginEventPublisher
-    sub: PasswordLoginEventSubscriber
-
-    constructor(infra: Infra) {
-        this.infra = infra
-
-        const pubsub = new EventPubSub()
-        this.pub = pubsub
-        this.sub = pubsub
+type LoginOperation = Readonly<{
+    content: LoginContent
+}>
+async function login({ content }: LoginOperation, infra: Infra, post: Post<LoginEvent>): Promise<void> {
+    const fields = mapContent(content)
+    if (!fields.valid) {
+        post({ type: "failed-to-login", err: { type: "validation-error" } })
+        return
     }
 
-    async login(content: LoginContent): Promise<void> {
-        const post = (event: LoginEvent) => this.pub.postLoginEvent(event)
+    post({ type: "try-to-login" })
 
-        const fields = mapContent(content)
-        if (!fields.valid) {
-            post({ type: "failed-to-login", err: { type: "validation-error" } })
-            return
-        }
-
-        post({ type: "try-to-login" })
-
-        // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const response = await this.infra.delayed(
-            this.infra.passwordLoginClient.login(fields.content.loginID, fields.content.password),
-            this.infra.timeConfig.passwordLoginDelayTime,
-            () => post({ type: "delayed-to-login" }),
-        )
-        if (!response.success) {
-            post({ type: "failed-to-login", err: response.err })
-            return
-        }
-
-        post({ type: "succeed-to-login", authCredential: response.authCredential })
+    // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
+    const response = await infra.delayed(
+        infra.passwordLoginClient.login(fields.content.loginID, fields.content.password),
+        infra.timeConfig.passwordLoginDelayTime,
+        () => post({ type: "delayed-to-login" }),
+    )
+    if (!response.success) {
+        post({ type: "failed-to-login", err: response.err })
+        return
     }
+
+    post({ type: "succeed-to-login", authCredential: response.authCredential })
 }
 
 function mapContent(content: LoginContent): Content<LoginFields> {
@@ -63,10 +44,60 @@ function mapContent(content: LoginContent): Content<LoginFields> {
     })
 }
 
-class EventPubSub implements PasswordLoginEventPublisher, PasswordLoginEventSubscriber {
-    listener: {
-        login: Post<LoginEvent>[]
+export function initPasswordLoginInit(infra: Infra): PasswordLoginInit {
+    return (setup) => {
+        const pubsub = new EventPubSub()
+        setup(pubsub)
+
+        return {
+            request: (operation) => {
+                switch (operation.type) {
+                    case "login":
+                        login(operation, infra, event => pubsub.postLoginEvent(event))
+                        return
+                }
+            },
+            terminate: () => { /* worker とインターフェイスを合わせるため */ },
+        }
     }
+}
+
+export function initWorkerPasswordLoginInit(initWorker: Init<Worker>): PasswordLoginInit {
+    return (setup) => {
+        const pubsub = new EventPubSub()
+        setup(pubsub)
+
+        const worker = initWorker()
+
+        worker.addEventListener("message", (event) => {
+            const state = event.data as PasswordLoginEvent
+            switch (state.type) {
+                case "login":
+                    pubsub.postLoginEvent(state.event)
+                    return
+            }
+        })
+
+        return {
+            request: operation => worker.postMessage(operation),
+            terminate: () => worker.terminate(),
+        }
+    }
+}
+
+export function initPasswordLoginEventMapper(): PasswordLoginEventMapper {
+    return {
+        mapLoginEvent,
+    }
+}
+function mapLoginEvent(event: LoginEvent): PasswordLoginEvent {
+    return { type: "login", event }
+}
+
+class EventPubSub {
+    listener: Readonly<{
+        login: Post<LoginEvent>[]
+    }>
 
     constructor() {
         this.listener = {
@@ -74,15 +105,18 @@ class EventPubSub implements PasswordLoginEventPublisher, PasswordLoginEventSubs
         }
     }
 
-    onLoginEvent(post: Post<LoginEvent>): void {
-        this.listener.login.push(post)
-    }
-
     postLoginEvent(event: LoginEvent): void {
         this.listener.login.forEach(post => post(event))
+    }
+
+    onLoginEvent(post: Post<LoginEvent>): void {
+        this.listener.login.push(post)
     }
 }
 
 interface Post<T> {
-    (state: T): void
+    (event: T): void
+}
+interface Init<T> {
+    (): T
 }

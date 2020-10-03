@@ -8,7 +8,6 @@ module.exports = {
       { type: "x_update", names: [ "update" ] },
       { type: "x_preact", names: [ "auth" ] },
       { type: "x_worker", names: [
-        "auth/password_login",
         "auth/password_reset_session",
         "auth/password_reset",
       ] },

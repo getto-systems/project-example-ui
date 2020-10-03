@@ -6,36 +6,44 @@ import { loginHeader } from "../layout"
 
 import { ApplicationError } from "../application_error"
 
-import { LoginIDField } from "./password_login/field/login_id"
-import { PasswordField } from "./password_login/field/password"
+//import { LoginIDField } from "./password_login/field/login_id"
+//import { PasswordField } from "./password_login/field/password"
 
 import { AppHref } from "../../href"
 
-import {
-    PasswordLoginComponent,
-    initialPasswordLoginState,
-    initialPasswordLoginRequest,
-} from "../../auth/component/password_login/component"
+import { PasswordLoginView } from "../../auth/usecase"
+import { PasswordLoginComponent, initialPasswordLoginState } from "../../auth/component/password_login/component"
 
 import { LoginError } from "../../password_login/data"
 
 type Props = Readonly<{
+    usecase: Usecase
+    view: PasswordLoginView
+}>
+interface Usecase {
+    href: AppHref
+    initPasswordLogin(view: PasswordLoginView): Terminate
+}
+interface Terminate {
+    (): void
+}
+
+export function PasswordLogin(props: Props): VNode {
+    useEffect(() => props.usecase.initPasswordLogin(props.view), [])
+
+    return h(Login, { component: props.view.passwordLogin, href: props.usecase.href })
+}
+
+type LoginProps = Readonly<{
     component: PasswordLoginComponent
     href: AppHref
 }>
-
-export function PasswordLogin(props: Props): VNode {
+function Login(props: LoginProps): VNode {
     const [state, setState] = useState(initialPasswordLoginState)
-    const [request, setRequest] = useState(() => initialPasswordLoginRequest)
     // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
     const submit = useRef<HTMLButtonElement>()
     useEffect(() => {
         props.component.onStateChange(setState)
-
-        const resource = props.component.init()
-        setRequest(() => resource.request)
-
-        return resource.terminate
     }, [])
 
     function view(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
@@ -46,8 +54,8 @@ export function PasswordLogin(props: Props): VNode {
                     <section>
                         <big>
                             <section class="login__body">
-                                ${h(LoginIDField, { component: props.component, request })}
-                                ${h(PasswordField, { component: props.component, request })}
+                                ${html`` /* h(LoginIDField, { component: props.component, request }) */}
+                                ${html`` /* h(PasswordField, { component: props.component, request }) */}
                             </section>
                         </big>
                     </section>
@@ -122,7 +130,7 @@ export function PasswordLogin(props: Props): VNode {
             submit.current.blur()
         }
 
-        request({ type: "login" })
+        props.component.login()
     }
     function onSubmit_noop(e: Event) {
         e.preventDefault()

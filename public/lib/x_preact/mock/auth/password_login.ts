@@ -2,12 +2,14 @@ import { packInputValue } from "../../../field/adapter"
 
 import {
     PasswordLoginComponent,
-    PasswordLoginComponentResource,
+    PasswordLoginComponentRequest,
     PasswordLoginState,
 } from "../../../auth/component/password_login/component"
 
 import { LoginIDFieldState } from "../../../auth/component/field/login_id/component"
 import { PasswordFieldState } from "../../../auth/component/field/password/component"
+
+import { PasswordLoginEventSubscriber } from "../../../password_login/action"
 
 import { noError, hasError } from "../../../field/data"
 import { simplePassword, complexPassword, hidePassword, showPassword } from "../../../password/field/data"
@@ -16,8 +18,6 @@ export function newPasswordLoginComponent(): PasswordLoginComponent {
     const init = new Init()
     return new Component(
         init.initialLogin(),
-        init.loginIDValid(),
-        init.passwordValid(),
     )
 }
 
@@ -109,48 +109,26 @@ class Init {
 
 class Component implements PasswordLoginComponent {
     state: PasswordLoginState
-    loginID: LoginIDFieldState
-    password: PasswordFieldState
 
     constructor(
         state: PasswordLoginState,
-        loginID: LoginIDFieldState,
-        password: PasswordFieldState,
     ) {
         this.state = state
-        this.loginID = loginID
-        this.password = password
+    }
+
+    subscribePasswordLogin(_subscriber: PasswordLoginEventSubscriber): void {
+        // mock では特に何もしない
+    }
+    setRequest(_request: PasswordLoginComponentRequest): void {
+        // mock では特に何もしない
     }
 
     onStateChange(stateChanged: Post<PasswordLoginState>): void {
         stateChanged(this.state)
     }
-    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
-        stateChanged(this.loginID)
-    }
-    onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void {
-        stateChanged(this.password)
-    }
 
-    init(): PasswordLoginComponentResource {
-        return {
-            request: operation => {
-                switch (operation.type) {
-                    case "login":
-                        alert("ここでログイン！")
-                        return
-
-                    case "field-login_id":
-                        // field のイベントは特にフィードバックしない
-                        return
-
-                    case "field-password":
-                        // field のイベントは特にフィードバックしない
-                        return
-                }
-            },
-            terminate: () => { /* mock では特に何もしない */ },
-        }
+    login(): void {
+        alert("ここでログイン！")
     }
 }
 

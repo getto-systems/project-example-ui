@@ -9,6 +9,8 @@ import {
     AuthState,
     AuthOperation,
     AuthComponent,
+    AuthAction,
+    PasswordLoginView,
 } from "../usecase"
 
 import { BackgroundCredentialComponent } from "../../background/credential/component"
@@ -21,6 +23,7 @@ type Init = Readonly<{
     param: AuthParam
     component: AuthComponent
     background: Background
+    action: AuthAction
 }>
 
 export function initAuthUsecase(init: Init): AuthUsecase {
@@ -38,6 +41,7 @@ class Usecase implements AuthUsecase {
     param: AuthParam
     component: AuthComponent
     background: Background
+    action: AuthAction
 
     listener: Post<AuthState>[] = []
 
@@ -47,6 +51,7 @@ class Usecase implements AuthUsecase {
         this.param = init.param
         this.component = init.component
         this.background = init.background
+        this.action = init.action
 
         this.component.credential.onStateChange((state) => {
             switch (state.type) {
@@ -125,6 +130,23 @@ class Usecase implements AuthUsecase {
         })
     }
 
+    initPasswordLogin(view: PasswordLoginView): Terminate {
+        // TODO terminator でまとめたい
+        const passwordLogin = this.action.passwordLogin()
+
+        const action = passwordLogin((subscriber) => {
+            view.passwordLogin.subscribePasswordLogin(subscriber)
+        })
+
+        view.passwordLogin.setRequest({
+            passwordLogin: action.request,
+        })
+
+        return () => {
+            action.terminate()
+        }
+    }
+
     detectLoginState(): AuthState {
         // ログイン前画面ではアンダースコアから始まるクエリを使用する
         const url = new URL(this.currentLocation.toString())
@@ -149,4 +171,7 @@ class Usecase implements AuthUsecase {
 
 interface Post<T> {
     (state: T): void
+}
+interface Terminate {
+    (): void
 }
