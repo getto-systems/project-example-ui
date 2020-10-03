@@ -2,7 +2,7 @@ import { packInputValue } from "../../../field/adapter"
 
 import {
     PasswordLoginComponent,
-    PasswordLoginComponentRequest,
+    PasswordLoginComponentAction,
     PasswordLoginState,
 } from "../../../auth/component/password_login/component"
 
@@ -119,7 +119,7 @@ class Component implements PasswordLoginComponent {
     subscribePasswordLogin(_subscriber: PasswordLoginEventSubscriber): void {
         // mock では特に何もしない
     }
-    setRequest(_request: PasswordLoginComponentRequest): void {
+    setAction(_action: PasswordLoginComponentAction): void {
         // mock では特に何もしない
     }
 

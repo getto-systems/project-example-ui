@@ -1,17 +1,17 @@
 import {
-    PasswordLoginRequest,
+    PasswordLoginAction,
     PasswordLoginEventSubscriber,
 } from "../../../password_login/action"
 
 import { LoginError } from "../../../password_login/data"
 
-export type PasswordLoginComponentRequest = Readonly<{
-    passwordLogin: PasswordLoginRequest
+export type PasswordLoginComponentAction = Readonly<{
+    passwordLogin: PasswordLoginAction
 }>
 
 export interface PasswordLoginComponent {
     subscribePasswordLogin(subscriber: PasswordLoginEventSubscriber): void
-    setRequest(request: PasswordLoginComponentRequest): void
+    setAction(action: PasswordLoginComponentAction): void
 
     onStateChange(post: Post<PasswordLoginState>): void
     login(): void

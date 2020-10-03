@@ -13,7 +13,7 @@ export type LoginFields = Readonly<{
     password: Password
 }>
 
-export type PasswordLoginOperation =
+export type PasswordLoginRequest =
     Readonly<{ type: "login", content: LoginContent }>
 
 export type PasswordLoginEvent =
