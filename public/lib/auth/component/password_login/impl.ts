@@ -2,11 +2,11 @@ import { AuthBackground } from "../../usecase"
 
 import {
     PasswordLoginComponent,
-    PasswordLoginComponentRequest,
+    PasswordLoginComponentAction,
     PasswordLoginState,
 } from "../password_login/component"
 
-import { initialPasswordLoginRequest, PasswordLoginEventSubscriber } from "../../../password_login/action"
+import { initialPasswordLoginAction, PasswordLoginEventSubscriber } from "../../../password_login/action"
 
 //import { LoginIDFieldAction } from "../../../login_id/field/action"
 //import { PasswordFieldAction } from "../../../password/field/action"
@@ -22,13 +22,13 @@ class Component implements PasswordLoginComponent {
 
     listener: Post<PasswordLoginState>[] = []
 
-    request: PasswordLoginComponentRequest = {
-        passwordLogin: initialPasswordLoginRequest,
+    action: PasswordLoginComponentAction = {
+        passwordLogin: initialPasswordLoginAction,
 
         /*
         field: {
-            loginID: initialLoginIDFieldRequest,
-            password: initialPasswordFieldRequest,
+            loginID: initialLoginIDFieldAction,
+            password: initialPasswordFieldAction,
         },
          */
     }
@@ -54,8 +54,8 @@ class Component implements PasswordLoginComponent {
         return event
     }
 
-    setRequest(request: PasswordLoginComponentRequest): void {
-        this.request = request
+    setAction(action: PasswordLoginComponentAction): void {
+        this.action = action
     }
 
     login(): void {

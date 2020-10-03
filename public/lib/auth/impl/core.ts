@@ -129,8 +129,8 @@ class Usecase implements AuthUsecase {
             view.passwordLogin.subscribePasswordLogin(subscriber)
         })
 
-        view.passwordLogin.setRequest({
-            passwordLogin: action.request,
+        view.passwordLogin.setAction({
+            passwordLogin: action.action,
         })
 
         view.passwordLogin.onStateChange((state) => {

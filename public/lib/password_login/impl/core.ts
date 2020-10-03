@@ -50,7 +50,7 @@ export function initPasswordLoginInit(infra: Infra): PasswordLoginInit {
         setup(pubsub)
 
         return {
-            request: (operation) => {
+            action: (operation) => {
                 switch (operation.type) {
                     case "login":
                         login(operation, infra, event => pubsub.postLoginEvent(event))
@@ -79,7 +79,7 @@ export function initWorkerPasswordLoginInit(initWorker: Init<Worker>): PasswordL
         })
 
         return {
-            request: operation => worker.postMessage(operation),
+            action: operation => worker.postMessage(operation),
             terminate: () => worker.terminate(),
         }
     }
