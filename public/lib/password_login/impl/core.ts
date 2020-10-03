@@ -2,13 +2,13 @@ import { Infra } from "../infra"
 
 import { PasswordLoginInit, PasswordLoginEventMapper } from "../action"
 
-import { LoginContent, LoginFields, PasswordLoginEvent, LoginEvent } from "../data"
+import { PasswordLoginEvent, LoginContent, LoginFields, LoginEvent } from "../data"
 import { Content, validContent, invalidContent } from "../../field/data"
 
-type LoginOperation = Readonly<{
+type LoginRequest = Readonly<{
     content: LoginContent
 }>
-async function login({ content }: LoginOperation, infra: Infra, post: Post<LoginEvent>): Promise<void> {
+async function login({ content }: LoginRequest, infra: Infra, post: Post<LoginEvent>): Promise<void> {
     const fields = mapContent(content)
     if (!fields.valid) {
         post({ type: "failed-to-login", err: { type: "validation-error" } })
@@ -50,14 +50,14 @@ export function initPasswordLoginInit(infra: Infra): PasswordLoginInit {
         setup(pubsub)
 
         return {
-            action: (operation) => {
-                switch (operation.type) {
+            terminate: () => { /* worker とインターフェイスを合わせるため */ },
+            action: (request) => {
+                switch (request.type) {
                     case "login":
-                        login(operation, infra, event => pubsub.postLoginEvent(event))
+                        login(request, infra, event => pubsub.postLoginEvent(event))
                         return
                 }
             },
-            terminate: () => { /* worker とインターフェイスを合わせるため */ },
         }
     }
 }
@@ -79,8 +79,12 @@ export function initWorkerPasswordLoginInit(initWorker: Init<Worker>): PasswordL
         })
 
         return {
-            action: operation => worker.postMessage(operation),
-            terminate: () => worker.terminate(),
+            terminate: () => {
+                worker.terminate()
+            },
+            action: (request) => {
+                worker.postMessage(request)
+            },
         }
     }
 }

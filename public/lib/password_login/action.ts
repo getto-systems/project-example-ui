@@ -1,7 +1,7 @@
 import { PasswordLoginRequest, PasswordLoginEvent, LoginEvent } from "./data"
 
 export interface PasswordLoginAction {
-    (operation: PasswordLoginRequest): void
+    (request: PasswordLoginRequest): void
 }
 export const initialPasswordLoginAction: PasswordLoginAction = () => {
     throw new Error("Action is not initialized")
