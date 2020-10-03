@@ -16,7 +16,8 @@ export interface AuthUsecase {
     component: AuthComponent
     onStateChange(stateChanged: Post<AuthState>): void
     init(): AuthUsecaseResource
-    initPasswordLogin(view: PasswordLoginView): Terminate
+
+    initPasswordLogin(): ViewResource<PasswordLoginView>
 }
 export type AuthUsecaseResource = ComponentResource<AuthOperation>
 
@@ -42,7 +43,7 @@ export type AuthComponent = Readonly<{
     credential: CredentialComponent
     application: ApplicationComponent
 
-    passwordLogin: PasswordLoginComponent
+    passwordLogin: Init<PasswordLoginComponent>
     passwordResetSession: PasswordResetSessionComponent
     passwordReset: PasswordResetComponent
 }>
@@ -81,5 +82,10 @@ interface Terminate {
 
 type ComponentResource<T> = Readonly<{
     request: Post<T>
+    terminate: Terminate
+}>
+
+type ViewResource<T> = Readonly<{
+    view: T
     terminate: Terminate
 }>

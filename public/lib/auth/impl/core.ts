@@ -61,19 +61,6 @@ class Usecase implements AuthUsecase {
             }
         })
 
-        this.component.passwordLogin.onStateChange((state) => {
-            switch (state.type) {
-                case "succeed-to-login":
-                    this.post({
-                        type: "application",
-                        param: this.param.application({
-                            pagePathname: this.currentPagePathname(),
-                        }),
-                    })
-                    return
-            }
-        })
-
         this.component.passwordReset.onStateChange((state) => {
             switch (state.type) {
                 case "succeed-to-reset":
@@ -130,7 +117,11 @@ class Usecase implements AuthUsecase {
         })
     }
 
-    initPasswordLogin(view: PasswordLoginView): Terminate {
+    initPasswordLogin(): ViewResource<PasswordLoginView> {
+        const view = {
+            passwordLogin: this.component.passwordLogin(),
+        }
+
         // TODO terminator でまとめたい
         const passwordLogin = this.action.passwordLogin()
 
@@ -142,8 +133,24 @@ class Usecase implements AuthUsecase {
             passwordLogin: action.request,
         })
 
-        return () => {
-            action.terminate()
+        view.passwordLogin.onStateChange((state) => {
+            switch (state.type) {
+                case "succeed-to-login":
+                    this.post({
+                        type: "application",
+                        param: this.param.application({
+                            pagePathname: this.currentPagePathname(),
+                        }),
+                    })
+                    return
+            }
+        })
+
+        return {
+            view,
+            terminate: () => {
+                action.terminate()
+            },
         }
     }
 
@@ -175,3 +182,8 @@ interface Post<T> {
 interface Terminate {
     (): void
 }
+
+type ViewResource<T> = Readonly<{
+    view: T
+    terminate: Terminate
+}>

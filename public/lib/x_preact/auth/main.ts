@@ -55,12 +55,7 @@ export function Main(props: Props): VNode {
             })
 
         case "password-login":
-            return h(PasswordLogin, {
-                usecase: props.usecase,
-                view: {
-                    passwordLogin: props.usecase.component.passwordLogin,
-                },
-            })
+            return h(PasswordLogin, { usecase: props.usecase })
 
         case "password-reset-session":
             return h(PasswordResetSession, {

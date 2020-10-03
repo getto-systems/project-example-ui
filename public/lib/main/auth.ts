@@ -62,7 +62,7 @@ export function newAuthUsecase(currentLocation: Location, credentialStorage: Sto
             credential: credential.component,
             application: newApplicationComponent(),
 
-            passwordLogin: initPasswordLoginComponent(request),
+            passwordLogin: () => initPasswordLoginComponent(request),
             passwordResetSession: newPasswordResetSessionComponent(),
             passwordReset: newPasswordResetComponent(request),
         },
