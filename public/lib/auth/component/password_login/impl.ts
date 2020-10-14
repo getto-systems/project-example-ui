@@ -1,76 +1,106 @@
-import { AuthBackground } from "../../usecase"
-
 import {
+    PasswordLoginInit,
+    PasswordLoginActionSet,
+    PasswordLoginParam,
     PasswordLoginComponent,
-    PasswordLoginComponentAction,
     PasswordLoginState,
-} from "../password_login/component"
+    PasswordLoginRequest,
+    PasswordLoginFieldComponentSet,
+} from "./component"
 
-import { initialPasswordLoginAction, PasswordLoginEventSubscriber } from "../../../password_login/action"
-
-//import { LoginIDFieldAction } from "../../../login_id/field/action"
-//import { PasswordFieldAction } from "../../../password/field/action"
+import { LoginAction } from "../../../password_login/action"
+import { LoginIDFieldAction } from "../../../login_id/field/action"
+import { PasswordFieldAction } from "../../../password/field/action"
+import { StoreAction } from "../../../credential/action"
+import { PathAction } from "../../../application/action"
 
 import { LoginEvent } from "../../../password_login/data"
+import { StoreEvent } from "../../../credential/data"
 
-export function initPasswordLoginComponent(background: AuthBackground): PasswordLoginComponent {
-    return new Component(background)
+type Background = Readonly<{
+    login: LoginAction
+    field: {
+        loginID: LoginIDFieldAction
+        password: PasswordFieldAction
+    }
+    store: StoreAction
+    path: PathAction
+}>
+
+export function initPasswordLoginInit(): PasswordLoginInit {
+    return (actions, components, param) => new Component(actions, components, param)
 }
 
 class Component implements PasswordLoginComponent {
-    background: AuthBackground
+    background: Background
+    components: PasswordLoginFieldComponentSet
+    param: PasswordLoginParam
 
     listener: Post<PasswordLoginState>[] = []
 
-    action: PasswordLoginComponentAction = {
-        passwordLogin: initialPasswordLoginAction,
+    constructor(actions: PasswordLoginActionSet, components: PasswordLoginFieldComponentSet, param: PasswordLoginParam) {
+        this.background = {
+            login: actions.login.action,
+            field: actions.field,
+            store: actions.store.action,
+            path: actions.path,
+        }
+        this.setup(actions)
 
-        /*
-        field: {
-            loginID: initialLoginIDFieldAction,
-            password: initialPasswordFieldAction,
-        },
-         */
+        this.components = components
+        this.param = param
+    }
+    setup(actions: PasswordLoginActionSet): void {
+        actions.login.subscriber.onLoginEvent(event => this.post(this.mapLoginEvent(event)))
+        actions.store.subscriber.onStoreEvent(event => this.post(this.mapStoreEvent(event)))
+    }
+    mapLoginEvent(event: LoginEvent): PasswordLoginState {
+        switch (event.type) {
+            case "succeed-to-login":
+                this.background.store(event.authCredential)
+                return {
+                    type: event.type,
+                    scriptPath: this.background.path.secureScriptPath(this.param.pagePathname),
+                }
+
+            default:
+                return event
+        }
+    }
+    mapStoreEvent(event: StoreEvent): PasswordLoginState {
+        return event
     }
 
-    constructor(background: AuthBackground) {
-        this.background = background
-    }
-
-    onStateChange(stateChanged: Post<PasswordLoginState>): void {
-        this.listener.push(stateChanged)
+    onStateChange(post: Post<PasswordLoginState>): void {
+        this.listener.push(post)
     }
     post(state: PasswordLoginState): void {
         this.listener.forEach(post => post(state))
     }
 
-    subscribePasswordLogin(subscriber: PasswordLoginEventSubscriber): void {
-        subscriber.onLoginEvent(event => this.post(this.mapLoginEvent(event)))
-    }
-    mapLoginEvent(event: LoginEvent): PasswordLoginState {
-        if (event.type === "succeed-to-login") {
-            this.background.credential({ type: "store", authCredential: event.authCredential })
+    action(request: PasswordLoginRequest): void {
+        switch (request.type) {
+            case "login":
+                this.background.login({
+                    loginID: this.background.field.loginID.validate(),
+                    password: this.background.field.password.validate(),
+                })
+                return
+
+            case "failed-to-load":
+                this.post({ type: "failed-to-load", err: request.err })
+                return
+
+            default:
+                assertNever(request)
         }
-        return event
-    }
-
-    setAction(action: PasswordLoginComponentAction): void {
-        this.action = action
-    }
-
-    login(): void {
-        /*
-        this.action.passwordLogin({
-            type: "login",
-            content: {
-                loginID: this.action.field.loginID.validate(),
-                password: this.action.field.password.validate(),
-            }
-        })
-         */
     }
 }
 
 interface Post<T> {
     (state: T): void
+}
+
+function assertNever(_: never): never {
+    throw new Error("NEVER")
 }

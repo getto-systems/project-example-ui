@@ -1,33 +1,112 @@
-import { Infra } from "../infra"
+import { RenewInfra, StoreInfra } from "../infra"
 
 import {
-    CredentialAction,
-    CredentialEventPublisher,
-    CredentialEventSubscriber,
+    RenewFactory, RenewAction,
+    StoreFactory, StoreAction,
 } from "../action"
 
-import { LastAuth, AuthCredential, TicketNonce, RenewEvent, StoreEvent, FetchResponse } from "../data"
+import { TicketNonce, RenewEvent, StoreEvent, FetchResponse } from "../data"
 
-export function initCredentialAction(infra: Infra): CredentialAction {
-    return new Action(infra)
-}
-
-class Action implements CredentialAction {
-    infra: Infra
-
-    pub: CredentialEventPublisher
-    sub: CredentialEventSubscriber
-
-    constructor(infra: Infra) {
-        this.infra = infra
-
-        const pubsub = new EventPubSub()
-        this.pub = pubsub
-        this.sub = pubsub
+const renewAction = (infra: RenewInfra, post: Post<RenewEvent>): RenewAction => {
+    return {
+        renew,
+        setContinuousRenew,
     }
 
-    fetch(): FetchResponse {
-        const ticketNonce = this.infra.authCredentials.findTicketNonce()
+    async function renew() {
+        const lastAuth = fetchLastAuth()
+        if (!lastAuth.success) {
+            post({ type: "failed-to-fetch", err: lastAuth.err })
+            return
+        }
+        if (!lastAuth.found) {
+            post({ type: "required-to-login" })
+            return
+        }
+
+        if (!infra.expires.hasExceeded(lastAuth.content.lastAuthAt, infra.time.instantLoadExpireTime)) {
+            post({ type: "try-to-instant-load" })
+            return
+        }
+
+        post({ type: "try-to-renew" })
+
+        // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
+        const renewResponse = await infra.delayed(
+            infra.renewClient.renew(lastAuth.content.ticketNonce),
+            infra.time.renewDelayTime,
+            () => post({ type: "delayed-to-renew" }),
+        )
+        if (!renewResponse.success) {
+            post({ type: "failed-to-renew", err: renewResponse.err })
+            return
+        }
+        if (!renewResponse.hasCredential) {
+            const storeResponse = infra.authCredentials.removeAuthCredential()
+            if (!storeResponse.success) {
+                post({ type: "failed-to-store", err: storeResponse.err })
+                return
+            }
+
+            post({ type: "required-to-login" })
+            return
+        }
+
+        const storeResponse = infra.authCredentials.storeAuthCredential(renewResponse.authCredential)
+        if (!storeResponse.success) {
+            post({ type: "failed-to-store", err: storeResponse.err })
+            return
+        }
+
+        post({ type: "succeed-to-renew" })
+    }
+
+    function setContinuousRenew(): void {
+        const lastAuth = fetchLastAuth()
+        if (!lastAuth.success) {
+            post({ type: "failed-to-fetch", err: lastAuth.err })
+            return
+        }
+        if (!lastAuth.found) {
+            post({ type: "required-to-login" })
+            return
+        }
+
+        const { ticketNonce, lastAuthAt } = lastAuth.content
+
+        setTimeout(async () => {
+            if (await continuousRenew(ticketNonce)) {
+                let lastState = true
+                setInterval(async () => {
+                    // 失敗しないはずなので clearInterval しない
+                    if (lastState) {
+                        lastState = await continuousRenew(ticketNonce)
+                    }
+                }, infra.time.renewIntervalTime.interval_milli_second)
+            }
+        }, infra.runner.nextRun(lastAuthAt, infra.time.renewRunDelayTime).delay_milli_second)
+    }
+    async function continuousRenew(ticketNonce: TicketNonce): Promise<boolean> {
+        // 画面へのフィードバックはしないので、イベントは発行しない
+        const renewResponse = await infra.renewClient.renew(ticketNonce)
+        if (!renewResponse.success) {
+            return false
+        }
+        if (!renewResponse.hasCredential) {
+            infra.authCredentials.removeAuthCredential()
+            return false
+        }
+
+        const storeResponse = infra.authCredentials.storeAuthCredential(renewResponse.authCredential)
+        if (!storeResponse.success) {
+            return false
+        }
+
+        return true
+    }
+
+    function fetchLastAuth(): FetchResponse {
+        const ticketNonce = infra.authCredentials.findTicketNonce()
         if (!ticketNonce.success) {
             return { success: false, err: ticketNonce.err }
         }
@@ -35,7 +114,7 @@ class Action implements CredentialAction {
             return { success: true, found: false }
         }
 
-        const lastAuthAt = this.infra.authCredentials.findLastAuthAt()
+        const lastAuthAt = infra.authCredentials.findLastAuthAt()
         if (!lastAuthAt.success) {
             return { success: false, err: lastAuthAt.err }
         }
@@ -52,119 +131,55 @@ class Action implements CredentialAction {
             },
         }
     }
+}
 
-    async renew(lastAuth: LastAuth): Promise<void> {
-        const post = (event: RenewEvent) => this.pub.postRenewEvent(event)
-
-        if (!this.infra.expires.hasExceeded(lastAuth.lastAuthAt, this.infra.timeConfig.instantLoadExpireTime)) {
-            post({ type: "try-to-instant-load" })
-            return
+export function initRenewFactory(infra: RenewInfra): RenewFactory {
+    return () => {
+        const pubsub = new RenewEventPubSub()
+        return {
+            action: renewAction(infra, event => pubsub.postRenewEvent(event)),
+            subscriber: pubsub,
         }
-
-        post({ type: "try-to-renew" })
-
-        // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const renewResponse = await this.infra.delayed(
-            this.infra.renewClient.renew(lastAuth.ticketNonce),
-            this.infra.timeConfig.renewDelayTime,
-            () => post({ type: "delayed-to-renew" }),
-        )
-        if (!renewResponse.success) {
-            post({ type: "failed-to-renew", err: renewResponse.err })
-            return
-        }
-        if (!renewResponse.hasCredential) {
-            this.removeCredential()
-            post({ type: "required-to-login" })
-            return
-        }
-
-        const storeResponse = this.infra.authCredentials.storeAuthCredential(renewResponse.authCredential)
-        if (!storeResponse.success) {
-            post({ type: "failed-to-store", err: storeResponse.err })
-            return
-        }
-
-        post({ type: "succeed-to-renew" })
-    }
-
-    async storeCredential(authCredential: AuthCredential): Promise<void> {
-        const post = (event: StoreEvent) => this.pub.postStoreEvent(event)
-
-        const storeResponse = this.infra.authCredentials.storeAuthCredential(authCredential)
-        if (!storeResponse.success) {
-            post({ type: "failed-to-store", err: storeResponse.err })
-            return
-        }
-    }
-    async removeCredential(): Promise<void> {
-        const post = (event: StoreEvent) => this.pub.postStoreEvent(event)
-
-        const storeResponse = this.infra.authCredentials.removeAuthCredential()
-        if (!storeResponse.success) {
-            post({ type: "failed-to-store", err: storeResponse.err })
-            return
-        }
-    }
-
-    setContinuousRenew(lastAuth: LastAuth): void {
-        setTimeout(async () => {
-            if (await this.continuousRenew(lastAuth.ticketNonce)) {
-                let lastState = true
-                setInterval(async () => {
-                    // 失敗しないはずなので clearInterval しない
-                    if (lastState) {
-                        lastState = await this.continuousRenew(lastAuth.ticketNonce)
-                    }
-                }, this.infra.timeConfig.renewIntervalTime.interval_milli_second)
-            }
-        }, this.infra.runner.nextRun(lastAuth.lastAuthAt, this.infra.timeConfig.renewRunDelayTime).delay_milli_second)
-    }
-    async continuousRenew(ticketNonce: TicketNonce): Promise<boolean> {
-        // 画面へのフィードバックはしないので、イベントは発行しない
-        const renewResponse = await this.infra.renewClient.renew(ticketNonce)
-        if (!renewResponse.success) {
-            return false
-        }
-        if (!renewResponse.hasCredential) {
-            this.removeCredential()
-            return false
-        }
-
-        const storeResponse = this.infra.authCredentials.storeAuthCredential(renewResponse.authCredential)
-        if (!storeResponse.success) {
-            return false
-        }
-
-        return true
     }
 }
 
-class EventPubSub implements CredentialEventPublisher, CredentialEventSubscriber {
-    listener: {
-        renew: Post<RenewEvent>[]
-        store: Post<StoreEvent>[]
+const storeAction = (infra: StoreInfra, post: Post<StoreEvent>): StoreAction => async (authCredential) => {
+    const storeResponse = infra.authCredentials.storeAuthCredential(authCredential)
+    if (!storeResponse.success) {
+        post({ type: "failed-to-store", err: storeResponse.err })
+        return
     }
+}
 
-    constructor() {
-        this.listener = {
-            renew: [],
-            store: [],
+export function initStoreFactory(infra: StoreInfra): StoreFactory {
+    return () => {
+        const pubsub = new StoreEventPubSub()
+        return {
+            action: storeAction(infra, event => pubsub.postStoreEvent(event)),
+            subscriber: pubsub,
         }
     }
+}
+
+class RenewEventPubSub {
+    renew: Post<RenewEvent>[] = []
 
     onRenewEvent(post: Post<RenewEvent>): void {
-        this.listener.renew.push(post)
+        this.renew.push(post)
     }
-    onStoreEvent(post: Post<StoreEvent>): void {
-        this.listener.store.push(post)
-    }
-
     postRenewEvent(event: RenewEvent): void {
-        this.listener.renew.forEach(post => post(event))
+        this.renew.forEach(post => post(event))
+    }
+}
+
+class StoreEventPubSub {
+    store: Post<StoreEvent>[] = []
+
+    onStoreEvent(post: Post<StoreEvent>): void {
+        this.store.push(post)
     }
     postStoreEvent(event: StoreEvent): void {
-        this.listener.store.forEach(post => post(event))
+        this.store.forEach(post => post(event))
     }
 }
 

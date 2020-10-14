@@ -13,28 +13,40 @@ import { AppHref } from "../../href"
 import {
     PasswordResetSessionComponent,
     initialPasswordResetSessionState,
-    initialPasswordResetSessionRequest,
 } from "../../auth/component/password_reset_session/component"
 
 import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../password_reset/data"
 
-type Props = Readonly<{
-    component: PasswordResetSessionComponent
+type ComponentSet = Readonly<{
     href: AppHref
+    passwordResetSession: PasswordResetSessionComponent
 }>
 
-export function PasswordResetSession(props: Props): VNode {
+type Props = {
+    init: Init<ComponentSet>
+}
+export function PasswordResetSession({ init }: Props): VNode {
+    const [container, setComponents] = useState<Container>({ set: false })
+    useEffect(() => {
+        setComponents({ set: true, components: init() })
+    }, [])
+
+    if (!container.set) {
+        return EMPTY_CONTENT
+    }
+
+    return h(View, { components: container.components })
+}
+
+type ViewProps = {
+    components: ComponentSet
+}
+function View({ components: { href, passwordResetSession } }: ViewProps): VNode {
     const [state, setState] = useState(initialPasswordResetSessionState)
-    const [request, setRequest] = useState(() => initialPasswordResetSessionRequest)
     // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
     const submit = useRef<HTMLButtonElement>()
     useEffect(() => {
-        props.component.onStateChange(setState)
-
-        const resource = props.component.init()
-        setRequest(() => resource.request)
-
-        return resource.terminate
+        passwordResetSession.onStateChange(setState)
     }, [])
 
     function startSessionView(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
@@ -45,7 +57,7 @@ export function PasswordResetSession(props: Props): VNode {
                     <section>
                         <big>
                             <section class="login__body">
-                                ${h(LoginIDField, { component: props.component, request })}
+                                ${h(LoginIDField, { components: passwordResetSession.components.loginID })}
                             </section>
                         </big>
                     </section>
@@ -54,7 +66,7 @@ export function PasswordResetSession(props: Props): VNode {
                             <div>
                                 <big>${button}</big>
                             </div>
-                            ${loginLink(props.href)}
+                            ${loginLink(href)}
                         </div>
                         ${footer}
                     </footer>
@@ -88,7 +100,7 @@ export function PasswordResetSession(props: Props): VNode {
         `, html`
             <section class="button__container">
                 <div></div>
-                ${loginLink(props.href)}
+                ${loginLink(href)}
             </section>
         `)
     }
@@ -140,7 +152,7 @@ export function PasswordResetSession(props: Props): VNode {
             return loginError(html`リセットトークンを送信しました`, sendTokenMessage(state.dest), html`
                 <section class="button__container">
                     <div></div>
-                    ${loginLink(props.href)}
+                    ${loginLink(href)}
                 </section>
             `)
 
@@ -168,7 +180,7 @@ export function PasswordResetSession(props: Props): VNode {
             submit.current.blur()
         }
 
-        request({ type: "start-session" })
+        passwordResetSession.action({ type: "start-session" })
     }
     function onSubmit_noop(e: Event) {
         e.preventDefault()
@@ -278,6 +290,15 @@ function sendTokenError(err: SendTokenError): VNode {
     }
 }
 
+const EMPTY_CONTENT = html``
+
+interface Init<T> {
+    (): T
+}
 interface Post<T> {
     (state: T): void
 }
+
+type Container =
+    Readonly<{ set: false }> |
+    Readonly<{ set: true, components: ComponentSet }>

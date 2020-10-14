@@ -1,21 +1,25 @@
-import { LastAuth, StoreError, RenewError } from "../../../credential/data"
+import { RenewResource } from "../../../credential/action"
+import { PathAction } from "../../../application/action"
+
+import { FetchError, StoreError, RenewError } from "../../../credential/data"
 import { PagePathname, ScriptPath } from "../../../application/data"
 
-export type CredentialParam = { CredentialParam: never }
-
-export interface CredentialParamPacker {
-    (param: Param): CredentialParam
+export interface CredentialInit {
+    (actions: CredentialActionSet, param: CredentialParam): CredentialComponent
 }
-type Param = Readonly<{
+
+export type CredentialActionSet = Readonly<{
+    renew: RenewResource
+    path: PathAction
+}>
+export type CredentialParam = Readonly<{
     pagePathname: PagePathname
-    lastAuth: LastAuth
 }>
 
 export interface CredentialComponent {
-    onStateChange(stateChanged: Post<CredentialState>): void
-    init(): CredentialComponentResource
+    onStateChange(post: Post<CredentialState>): void
+    action(request: CredentialRequest): void
 }
-export type CredentialComponentResource = ComponentResource<CredentialOperation>
 
 export type CredentialState =
     Readonly<{ type: "initial" }> |
@@ -23,6 +27,7 @@ export type CredentialState =
     Readonly<{ type: "required-to-login" }> |
     Readonly<{ type: "try-to-renew" }> |
     Readonly<{ type: "delayed-to-renew" }> |
+    Readonly<{ type: "failed-to-fetch", err: FetchError }> |
     Readonly<{ type: "failed-to-renew", err: RenewError }> |
     Readonly<{ type: "failed-to-store", err: StoreError }> |
     Readonly<{ type: "succeed-to-renew", scriptPath: ScriptPath }> |
@@ -31,15 +36,10 @@ export type CredentialState =
 
 export const initialCredentialState: CredentialState = { type: "initial" }
 
-export type CredentialOperation =
-    Readonly<{ type: "set-param", param: CredentialParam }> |
+export type CredentialRequest =
     Readonly<{ type: "renew" }> |
     Readonly<{ type: "failed-to-load", err: LoadError }> |
     Readonly<{ type: "succeed-to-instant-load" }>
-
-export const initialCredentialRequest: Post<CredentialOperation> = (): void => {
-    throw new Error("Component is not initialized. use: `init()`")
-}
 
 export type LoadError =
     Readonly<{ type: "infra-error", err: string }>
@@ -47,11 +47,3 @@ export type LoadError =
 interface Post<T> {
     (state: T): void
 }
-interface Terminate {
-    (): void
-}
-
-type ComponentResource<T> = Readonly<{
-    request: Post<T>
-    terminate: Terminate
-}>

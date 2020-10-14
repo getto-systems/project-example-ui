@@ -2,8 +2,8 @@ import { AuthCredential } from "../credential/data"
 import { LoginID } from "../login_id/data"
 import { Password } from "../password/data"
 
-export type Infra = Readonly<{
-    timeConfig: TimeConfig,
+export type LoginInfra = Readonly<{
+    time: TimeConfig,
     passwordLoginClient: PasswordLoginClient,
     delayed: Delayed
 }>

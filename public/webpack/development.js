@@ -7,10 +7,6 @@ module.exports = {
     return [
       { type: "x_update", names: [ "update" ] },
       { type: "x_preact", names: [ "auth" ] },
-      { type: "x_worker", names: [
-        "auth/password_reset_session",
-        "auth/password_reset",
-      ] },
     ].reduce((acc,info) => {
       info.names.forEach((name) => {
         acc[name] = path.join(__dirname, `../lib/${info.type}/${name}.ts`);

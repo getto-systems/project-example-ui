@@ -1,23 +1,19 @@
-import { packInputValue } from "../../../field/adapter"
+import { newLoginIDFieldComponent, LoginIDFieldInit } from "./field/login_id"
+import { newPasswordFieldComponent, PasswordFieldInit } from "./field/password"
 
 import {
     PasswordResetComponent,
-    PasswordResetComponentResource,
     PasswordResetState,
+    PasswordResetFieldComponentSet,
 } from "../../../auth/component/password_reset/component"
 
-import { LoginIDFieldState } from "../../../auth/component/field/login_id/component"
-import { PasswordFieldState } from "../../../auth/component/field/password/component"
-
-import { noError, hasError } from "../../../field/data"
-import { simplePassword, complexPassword, hidePassword, showPassword } from "../../../password/field/data"
-
 export function newPasswordResetComponent(): PasswordResetComponent {
-    const init = new Init()
     return new Component(
-        init.initialReset(),
-        init.loginIDValid(),
-        init.passwordValid(),
+        new Init().initialReset(),
+        {
+            loginID: { loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().noError()) },
+            password: { passwordField: newPasswordFieldComponent(new PasswordFieldInit().noError()) },
+        },
     )
 }
 
@@ -49,108 +45,22 @@ class Init {
     failedToReset_infra_error(): PasswordResetState {
         return { type: "failed-to-reset", err: { type: "infra-error", err: "error" } }
     }
-
-    loginIDValid(): LoginIDFieldState {
-        return { type: "succeed-to-update-login_id", result: noError() }
-    }
-    loginIDInvalid_empty(): LoginIDFieldState {
-        return { type: "succeed-to-update-login_id", result: hasError(["empty"]) }
-    }
-
-    passwordValid(): PasswordFieldState {
-        return {
-            type: "succeed-to-update-password",
-            result: noError(),
-            character: simplePassword,
-            view: hidePassword,
-        }
-    }
-    passwordInvalid_empty(): PasswordFieldState {
-        return {
-            type: "succeed-to-update-password",
-            result: hasError(["empty"]),
-            character: simplePassword,
-            view: hidePassword,
-        }
-    }
-    passwordInvalid_too_long(): PasswordFieldState {
-        return {
-            type: "succeed-to-update-password",
-            result: hasError(["too-long"]),
-            character: simplePassword,
-            view: hidePassword,
-        }
-    }
-    passwordComplexInvalid_too_long(): PasswordFieldState {
-        return {
-            type: "succeed-to-update-password",
-            result: hasError(["too-long"]),
-            character: complexPassword,
-            view: hidePassword,
-        }
-    }
-    passwordComplex(): PasswordFieldState {
-        return {
-            type: "succeed-to-update-password",
-            result: noError(),
-            character: complexPassword,
-            view: hidePassword,
-        }
-    }
-    passwordView(): PasswordFieldState {
-        return {
-            type: "succeed-to-update-password",
-            result: noError(),
-            character: simplePassword,
-            view: showPassword(packInputValue("password")),
-        }
-    }
 }
 
 class Component implements PasswordResetComponent {
     state: PasswordResetState
-    loginID: LoginIDFieldState
-    password: PasswordFieldState
+    readonly components: PasswordResetFieldComponentSet
 
-    constructor(
-        state: PasswordResetState,
-        loginID: LoginIDFieldState,
-        password: PasswordFieldState,
-    ) {
+    constructor(state: PasswordResetState, components: PasswordResetFieldComponentSet) {
         this.state = state
-        this.loginID = loginID
-        this.password = password
+        this.components = components
     }
 
-    onStateChange(stateChanged: Post<PasswordResetState>): void {
-        stateChanged(this.state)
+    onStateChange(post: Post<PasswordResetState>): void {
+        post(this.state)
     }
-    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
-        stateChanged(this.loginID)
-    }
-    onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void {
-        stateChanged(this.password)
-    }
-
-    init(): PasswordResetComponentResource {
-        return {
-            request: operation => {
-                switch (operation.type) {
-                    case "reset":
-                        alert("ここでリセット！")
-                        return
-
-                    case "field-login_id":
-                        // field のイベントは特にフィードバックしない
-                        return
-
-                    case "field-password":
-                        // field のイベントは特にフィードバックしない
-                        return
-                }
-            },
-            terminate: () => { /* mock では特に何もしない */ },
-        }
+    action(): void {
+        // mock では特に何もしない
     }
 }
 

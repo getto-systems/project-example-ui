@@ -1,38 +1,21 @@
-import { PasswordLoginRequest, PasswordLoginEvent, LoginEvent } from "./data"
+import { LoginContent, LoginEvent } from "./data"
 
-export interface PasswordLoginAction {
-    (request: PasswordLoginRequest): void
-}
-export const initialPasswordLoginAction: PasswordLoginAction = () => {
-    throw new Error("Action is not initialized")
+export interface LoginAction {
+    (content: LoginContent): void
 }
 
-export interface PasswordLoginInit {
-    (setup: Setup<PasswordLoginEventSubscriber>): PasswordLoginResource
+export interface LoginFactory {
+    (): LoginResource
 }
-
-export type PasswordLoginResource = Readonly<{
-    action: PasswordLoginAction
-    terminate: Terminate
+export type LoginResource = Readonly<{
+    action: LoginAction
+    subscriber: LoginSubscriber
 }>
 
-export interface PasswordLoginEventPublisher {
-    postLoginEvent(event: LoginEvent): void
-}
-export interface PasswordLoginEventSubscriber {
+export interface LoginSubscriber {
     onLoginEvent(post: Post<LoginEvent>): void
 }
 
-export interface PasswordLoginEventMapper {
-    mapLoginEvent(event: LoginEvent): PasswordLoginEvent
-}
-
-interface Setup<T> {
-    (subscriber: T): void
-}
 interface Post<T> {
     (event: T): void
-}
-interface Terminate {
-    (): void
 }
