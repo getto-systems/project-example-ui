@@ -1,10 +1,10 @@
 import {
-    CredentialInit,
-    CredentialActionSet,
-    CredentialParam,
-    CredentialComponent,
-    CredentialState,
-    CredentialRequest,
+    RenewCredentialInit,
+    RenewCredentialActionSet,
+    RenewCredentialParam,
+    RenewCredentialComponent,
+    RenewCredentialState,
+    RenewCredentialRequest,
 } from "./component"
 
 import { RenewAction } from "../../../credential/action"
@@ -17,17 +17,17 @@ type Background = Readonly<{
     path: PathAction
 }>
 
-export function initCredentialInit(): CredentialInit {
+export function initRenewCredentialInit(): RenewCredentialInit {
     return (actions, param) => new Component(actions, param)
 }
 
-class Component implements CredentialComponent {
+class Component implements RenewCredentialComponent {
     background: Background
-    param: CredentialParam
+    param: RenewCredentialParam
 
-    listener: Post<CredentialState>[] = []
+    listener: Post<RenewCredentialState>[] = []
 
-    constructor(actions: CredentialActionSet, param: CredentialParam) {
+    constructor(actions: RenewCredentialActionSet, param: RenewCredentialParam) {
         this.background = {
             renew: actions.renew.action,
             path: actions.path,
@@ -36,10 +36,10 @@ class Component implements CredentialComponent {
 
         this.param = param
     }
-    setup(actions: CredentialActionSet): void {
+    setup(actions: RenewCredentialActionSet): void {
         actions.renew.subscriber.onRenewEvent(event => this.post(this.mapRenewEvent(event)))
     }
-    mapRenewEvent(event: RenewEvent): CredentialState {
+    mapRenewEvent(event: RenewEvent): RenewCredentialState {
         switch (event.type) {
             case "try-to-instant-load":
             case "succeed-to-renew":
@@ -53,14 +53,14 @@ class Component implements CredentialComponent {
         }
     }
 
-    onStateChange(stateChanged: Post<CredentialState>): void {
+    onStateChange(stateChanged: Post<RenewCredentialState>): void {
         this.listener.push(stateChanged)
     }
-    post(state: CredentialState): void {
+    post(state: RenewCredentialState): void {
         this.listener.forEach(post => post(state))
     }
 
-    action(request: CredentialRequest): void {
+    action(request: RenewCredentialRequest): void {
         switch (request.type) {
             case "renew":
                 this.background.renew.renew()

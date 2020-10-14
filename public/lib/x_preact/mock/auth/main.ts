@@ -1,6 +1,6 @@
 import { newAppHref } from "../../../main/href"
 
-import { newCredentialComponent } from "./credential"
+import { newRenewCredentialComponent } from "./renew_credential"
 
 import { newPasswordLoginComponent } from "./password_login"
 import { newPasswordResetSessionComponent } from "./password_reset_session"
@@ -16,7 +16,7 @@ import {
 export function newAuthInit(): AuthInit {
     return () => {
         return {
-            view: new View(new Init().credential()),
+            view: new View(new Init().renewCredential()),
             terminate: () => {
                 // mock では特に何もしない
             },
@@ -25,8 +25,8 @@ export function newAuthInit(): AuthInit {
 }
 
 class Init {
-    credential(): AuthState {
-        return { type: "credential" }
+    renewCredential(): AuthState {
+        return { type: "renew-credential" }
     }
 
     passwordLogin(): AuthState {
@@ -53,8 +53,8 @@ class View implements AuthView {
         this.state = state
 
         this.components = {
-            credential: () => components({
-                credential: newCredentialComponent(),
+            renewCredential: () => components({
+                renewCredential: newRenewCredentialComponent(),
             }),
 
             passwordLogin: () => components({

@@ -1,38 +1,38 @@
 import {
-    CredentialComponent,
-    CredentialState,
-} from "../../../auth/component/credential/component"
+    RenewCredentialComponent,
+    RenewCredentialState,
+} from "../../../auth/component/renew_credential/component"
 
-export function newCredentialComponent(): CredentialComponent {
+export function newRenewCredentialComponent(): RenewCredentialComponent {
     return new Component(new Init().delayedToRenew())
 }
 
 class Init {
-    delayedToRenew(): CredentialState {
+    delayedToRenew(): RenewCredentialState {
         return { type: "delayed-to-renew" }
     }
-    failedToRenew_bad_request(): CredentialState {
+    failedToRenew_bad_request(): RenewCredentialState {
         return { type: "failed-to-renew", err: { type: "bad-request" } }
     }
-    failedToRenew_server_error(): CredentialState {
+    failedToRenew_server_error(): RenewCredentialState {
         return { type: "failed-to-renew", err: { type: "server-error" } }
     }
-    failedToRenew_bad_response(): CredentialState {
+    failedToRenew_bad_response(): RenewCredentialState {
         return { type: "failed-to-renew", err: { type: "bad-response", err: "error" } }
     }
-    failedToRenew_infra_error(): CredentialState {
+    failedToRenew_infra_error(): RenewCredentialState {
         return { type: "failed-to-renew", err: { type: "infra-error", err: "error" } }
     }
 }
 
-class Component implements CredentialComponent {
-    state: CredentialState
+class Component implements RenewCredentialComponent {
+    state: RenewCredentialState
 
-    constructor(state: CredentialState) {
+    constructor(state: RenewCredentialState) {
         this.state = state
     }
 
-    onStateChange(post: Post<CredentialState>): void {
+    onStateChange(post: Post<RenewCredentialState>): void {
         post(this.state)
     }
     action(): void {

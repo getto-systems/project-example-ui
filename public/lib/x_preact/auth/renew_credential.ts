@@ -8,13 +8,13 @@ import { ApplicationError } from "../application_error"
 
 import { unpackScriptPath } from "../../application/adapter"
 
-import { CredentialComponent, initialCredentialState } from "../../auth/component/credential/component"
+import { RenewCredentialComponent, initialRenewCredentialState } from "../../auth/component/renew_credential/component"
 
 import { RenewError } from "../../credential/data"
 import { ScriptPath } from "../../application/data"
 
 type ComponentSet = Readonly<{
-    credential: CredentialComponent
+    renewCredential: RenewCredentialComponent
 }>
 
 type Container =
@@ -25,7 +25,7 @@ type Container =
 type Props = {
     init: Init<ComponentSet>
 }
-export function Credential({ init }: Props): VNode {
+export function RenewCredential({ init }: Props): VNode {
     const [container, setComponents] = useState<Container>({ set: false })
     useEffect(() => {
         setComponents({ set: true, components: init() })
@@ -41,11 +41,11 @@ export function Credential({ init }: Props): VNode {
 type ViewProps = {
     components: ComponentSet
 }
-function View({ components: { credential } }: ViewProps): VNode {
-    const [state, setState] = useState(initialCredentialState)
+function View({ components: { renewCredential } }: ViewProps): VNode {
+    const [state, setState] = useState(initialRenewCredentialState)
     useEffect(() => {
-        credential.onStateChange(setState)
-        credential.action({ type: "renew" })
+        renewCredential.onStateChange(setState)
+        renewCredential.action({ type: "renew" })
     }, [])
 
     useEffect(() => {
@@ -54,10 +54,10 @@ function View({ components: { credential } }: ViewProps): VNode {
             case "try-to-instant-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onload = () => {
-                        credential.action({ type: "succeed-to-instant-load" })
+                        renewCredential.action({ type: "succeed-to-instant-load" })
                     }
                     script.onerror = (err) => {
-                        credential.action({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
+                        renewCredential.action({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
                     }
                 })
                 break
@@ -65,7 +65,7 @@ function View({ components: { credential } }: ViewProps): VNode {
             case "succeed-to-renew":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = (err) => {
-                        credential.action({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
+                        renewCredential.action({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
                     }
                 })
                 break

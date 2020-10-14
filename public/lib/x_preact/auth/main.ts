@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { ApplicationError } from "../application_error"
 
-import { Credential } from "./credential"
+import { RenewCredential } from "./renew_credential"
 
 import { PasswordLogin } from "./password_login"
 import { PasswordResetSession } from "./password_reset_session"
@@ -60,8 +60,8 @@ function View({ view }: ViewProps): VNode {
         case "initial":
             return EMPTY_CONTENT
 
-        case "credential":
-            return h(Credential, { init: view.components.credential })
+        case "renew-credential":
+            return h(RenewCredential, { init: view.components.renewCredential })
 
         case "password-login":
             return h(PasswordLogin, { init: view.components.passwordLogin })
