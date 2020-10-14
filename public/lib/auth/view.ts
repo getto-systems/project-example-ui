@@ -1,6 +1,6 @@
 import { AppHref } from "../href"
 
-import { CredentialComponent } from "./component/credential/component"
+import { RenewCredentialComponent } from "./component/renew_credential/component"
 
 import { PasswordLoginComponent } from "./component/password_login/component"
 import { PasswordResetSessionComponent } from "./component/password_reset_session/component"
@@ -20,8 +20,8 @@ export interface AuthView {
     readonly components: AuthComponentSet
 }
 export type AuthComponentSet = Readonly<{
-    credential: Init<Readonly<{
-        credential: CredentialComponent
+    renewCredential: Init<Readonly<{
+        renewCredential: RenewCredentialComponent
     }>>
 
     passwordLogin: Init<Readonly<{
@@ -40,7 +40,7 @@ export type AuthComponentSet = Readonly<{
 
 export type AuthState =
     Readonly<{ type: "initial" }> |
-    Readonly<{ type: "credential" }> |
+    Readonly<{ type: "renew-credential" }> |
     Readonly<{ type: "password-login" }> |
     Readonly<{ type: "password-reset-session" }> |
     Readonly<{ type: "password-reset" }> |

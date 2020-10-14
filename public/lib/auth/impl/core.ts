@@ -9,7 +9,7 @@ import {
     AuthComponentSet,
 } from "../view"
 
-import { CredentialInit, CredentialComponent } from "../component/credential/component"
+import { RenewCredentialInit, RenewCredentialComponent } from "../component/renew_credential/component"
 import { PasswordLoginInit } from "../component/password_login/component"
 import { PasswordResetSessionInit } from "../component/password_reset_session/component"
 import { PasswordResetInit } from "../component/password_reset/component"
@@ -79,7 +79,7 @@ type Factory = Readonly<{
 type Init = Readonly<{
     href: AppHrefInit
 
-    credential: CredentialInit
+    renewCredential: RenewCredentialInit
 
     passwordLogin: PasswordLoginInit
     passwordResetSession: PasswordResetSessionInit
@@ -108,8 +108,8 @@ class View implements AuthView {
 
     constructor(factory: Factory, init: Init, currentLocation: Location) {
         this.components = {
-            credential: () => initCredential(factory, init, currentLocation, (credential) => {
-                this.hookCredentialStateChange(currentLocation, credential)
+            renewCredential: () => initRenewCredential(factory, init, currentLocation, (renewCredential) => {
+                this.hookCredentialStateChange(currentLocation, renewCredential)
             }),
 
             passwordLogin: () => initPasswordLogin(factory, init, currentLocation),
@@ -118,8 +118,8 @@ class View implements AuthView {
         }
     }
 
-    hookCredentialStateChange(currentLocation: Location, credential: CredentialComponent): void {
-        credential.onStateChange((state) => {
+    hookCredentialStateChange(currentLocation: Location, renewCredential: RenewCredentialComponent): void {
+        renewCredential.onStateChange((state) => {
             switch (state.type) {
                 case "required-to-login":
                     this.post(detectLoginState(currentLocation))
@@ -139,11 +139,11 @@ class View implements AuthView {
         return () => { /* worker とインターフェイスを合わせるために必要 */ }
     }
     load() {
-        this.post({ type: "credential" })
+        this.post({ type: "renew-credential" })
     }
 }
 
-function initCredential(factory: Factory, init: Init, currentLocation: Location, hook: Hook<CredentialComponent>) {
+function initRenewCredential(factory: Factory, init: Init, currentLocation: Location, hook: Hook<RenewCredentialComponent>) {
     const actions = {
         renew: factory.credential.renew(),
         path: factory.application.path(),
@@ -153,11 +153,11 @@ function initCredential(factory: Factory, init: Init, currentLocation: Location,
         pagePathname: currentPagePathname(currentLocation),
     }
 
-    const credential = init.credential(actions, param)
-    hook(credential)
+    const renewCredential = init.renewCredential(actions, param)
+    hook(renewCredential)
 
     return {
-        credential,
+        renewCredential,
     }
 }
 function initPasswordLogin(factory: Factory, init: Init, currentLocation: Location) {

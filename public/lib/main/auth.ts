@@ -9,7 +9,7 @@ import { newAppHref } from "./href"
 
 import { initAuthInit } from "../auth/impl/core"
 
-import { initCredentialInit } from "../auth/component/credential/impl"
+import { initRenewCredentialInit } from "../auth/component/renew_credential/impl"
 import { initPasswordLoginInit } from "../auth/component/password_login/impl"
 import { initPasswordResetSessionInit } from "../auth/component/password_reset_session/impl"
 import { initPasswordResetInit } from "../auth/component/password_reset/impl"
@@ -59,7 +59,7 @@ export function newAuthInit(credentialStorage: Storage): AuthInit {
     const init = {
         href: () => newAppHref(),
 
-        credential: initCredentialInit(),
+        renewCredential: initRenewCredentialInit(),
 
         passwordLogin: initPasswordLoginInit(),
         passwordResetSession: initPasswordResetSessionInit(),
