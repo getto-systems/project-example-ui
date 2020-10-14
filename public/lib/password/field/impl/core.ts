@@ -3,66 +3,72 @@ import { packPassword } from "../../../password/adapter"
 
 import {
     PasswordFieldAction,
-    PasswordField,
-    PasswordFieldEventPublisher,
-    PasswordFieldEventSubscriber,
+    PasswordFieldFactory,
+    PasswordFieldSubscriber,
 } from "../action"
 
 import {
-    PasswordFieldOperation,
     PasswordFieldEvent,
     PasswordFieldError,
     PasswordCharacter, simplePassword, complexPassword,
     PasswordView, showPassword, hidePassword,
 } from "../data"
 import { Password } from "../../../password/data"
-import { InputValue, Content, validContent, invalidContent, Valid, hasError } from "../../../field/data"
+import { InputValue, Content, validContent, invalidContent, hasError } from "../../../field/data"
 
 // bcrypt を想定しているので、72 バイト以上のパスワードは無効
 const PASSWORD_MAX_BYTES = 72
 
-export function initPasswordFieldAction(): PasswordFieldAction {
-    return new Action()
-}
-
-class Action implements PasswordFieldAction {
-    initPasswordField(): PasswordField {
-        return new Field()
+function validatePassword(password: string): PasswordFieldError[] {
+    if (password.length === 0) {
+        return ERROR.empty
     }
+
+    if (Buffer.byteLength(password, 'utf8') > PASSWORD_MAX_BYTES) {
+        return ERROR.tooLong
+    }
+
+    return ERROR.ok
 }
 
-class Field implements PasswordField {
-    pub: PasswordFieldEventPublisher
-    sub: PasswordFieldEventSubscriber
+const ERROR: {
+    ok: PasswordFieldError[]
+    empty: PasswordFieldError[]
+    tooLong: PasswordFieldError[]
+} = {
+    ok: [],
+    empty: ["empty"],
+    tooLong: ["too-long"],
+}
+
+function checkCharacter(password: string): PasswordCharacter {
+    for (let i = 0; i < password.length; i++) {
+        // 1文字でも 128バイト以上の文字があれば complex
+        if (password.charCodeAt(i) >= 128) {
+            return complexPassword
+        }
+    }
+    return simplePassword
+}
+
+class Field implements PasswordFieldAction {
+    post: Post<PasswordFieldEvent>
 
     password: InputValue
     visible: boolean
 
-    constructor() {
-        const pubsub = new EventPubSub()
-        this.pub = pubsub
-        this.sub = pubsub
+    constructor(post: Post<PasswordFieldEvent>) {
+        this.post = post
 
         this.password = packInputValue("")
         this.visible = false
     }
 
-    trigger(operation: PasswordFieldOperation): void {
-        switch (operation.type) {
-            case "set-password":
-                this.set(operation.password)
-                return
-
-            case "show-password":
-                this.show()
-                return
-
-            case "hide-password":
-                this.hide()
-                return
-
-            default:
-                assertNever(operation)
+    view(): PasswordView {
+        if (this.visible) {
+            return showPassword(this.password)
+        } else {
+            return hidePassword
         }
     }
 
@@ -78,80 +84,42 @@ class Field implements PasswordField {
         this.visible = false
         this.validate()
     }
-    validate(): void {
-        const [content, result, character, view] = this.content()
-        this.pub.postPasswordFieldEvent({ type: "succeed-to-update-password", result, content, character, view })
-    }
-
-    content(): [Content<Password>, Valid<PasswordFieldError>, PasswordCharacter, PasswordView] {
+    validate(): Content<Password> {
         const password = unpackInputValue(this.password)
         const result = hasError(validatePassword(password))
         const character = checkCharacter(password)
         const view = this.view()
+
+        this.post({ type: "succeed-to-update-password", result, character, view })
+
         if (!result.valid) {
-            return [invalidContent(), result, character, view]
+            return invalidContent()
         }
-        return [validContent(packPassword(password)), result, character, view]
+        return validContent(packPassword(password))
     }
-    view(): PasswordView {
-        if (this.visible) {
-            return showPassword(this.password)
-        } else {
-            return hidePassword
+}
+
+export function initPasswordFieldFactory(): PasswordFieldFactory {
+    return () => {
+        const pubsub = new FieldEventPubSub()
+        return {
+            action: new Field((event) => pubsub.postPasswordFieldEvent(event)),
+            subscriber: pubsub,
         }
     }
 }
 
-class EventPubSub implements PasswordFieldEventPublisher, PasswordFieldEventSubscriber {
-    listener: Post<PasswordFieldEvent>[]
-
-    constructor() {
-        this.listener = []
-    }
+class FieldEventPubSub implements PasswordFieldSubscriber {
+    listener: Post<PasswordFieldEvent>[] = []
 
     onPasswordFieldEvent(post: Post<PasswordFieldEvent>): void {
         this.listener.push(post)
     }
-
     postPasswordFieldEvent(event: PasswordFieldEvent): void {
         this.listener.forEach(post => post(event))
     }
 }
 
 interface Post<T> {
-    (state: T): void
-}
-
-const ERROR: {
-    ok: PasswordFieldError[]
-    empty: PasswordFieldError[]
-    tooLong: PasswordFieldError[]
-} = {
-    ok: [],
-    empty: ["empty"],
-    tooLong: ["too-long"],
-}
-
-function validatePassword(password: string): PasswordFieldError[] {
-    if (password.length === 0) {
-        return ERROR.empty
-    }
-
-    if (Buffer.byteLength(password, 'utf8') > PASSWORD_MAX_BYTES) {
-        return ERROR.tooLong
-    }
-
-    return []
-}
-function checkCharacter(password: string): PasswordCharacter {
-    for (let i = 0; i < password.length; i++) {
-        if (password.charCodeAt(i) >= 128) {
-            return complexPassword
-        }
-    }
-    return simplePassword
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER")
+    (event: T): void
 }

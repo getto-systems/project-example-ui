@@ -1,6 +1,5 @@
 import {
     CredentialComponent,
-    CredentialComponentResource,
     CredentialState,
 } from "../../../auth/component/credential/component"
 
@@ -33,15 +32,11 @@ class Component implements CredentialComponent {
         this.state = state
     }
 
-    onStateChange(stateChanged: Post<CredentialState>): void {
-        stateChanged(this.state)
+    onStateChange(post: Post<CredentialState>): void {
+        post(this.state)
     }
-
-    init(): CredentialComponentResource {
-        return {
-            request: () => { /* mock では特に何もしない */ },
-            terminate: () => { /* mock では特に何もしない */ },
-        }
+    action(): void {
+        // mock では特に何もしない
     }
 }
 

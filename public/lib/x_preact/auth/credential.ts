@@ -8,44 +8,56 @@ import { ApplicationError } from "../application_error"
 
 import { unpackScriptPath } from "../../application/adapter"
 
-import {
-    CredentialComponent,
-    CredentialParam,
-    initialCredentialState,
-    initialCredentialRequest,
-} from "../../auth/component/credential/component"
+import { CredentialComponent, initialCredentialState } from "../../auth/component/credential/component"
 
 import { RenewError } from "../../credential/data"
 import { ScriptPath } from "../../application/data"
 
+type ComponentSet = Readonly<{
+    credential: CredentialComponent
+}>
+
+type Container =
+    Readonly<{ set: false }> |
+    Readonly<{ set: true, components: ComponentSet }>
+
+// TODO component は RenewCredential にしたい
 type Props = {
-    component: CredentialComponent
-    param: CredentialParam
+    init: Init<ComponentSet>
+}
+export function Credential({ init }: Props): VNode {
+    const [container, setComponents] = useState<Container>({ set: false })
+    useEffect(() => {
+        setComponents({ set: true, components: init() })
+    }, [])
+
+    if (!container.set) {
+        return EMPTY_CONTENT
+    }
+
+    return h(View, { components: container.components })
 }
 
-export function Credential(props: Props): VNode {
+type ViewProps = {
+    components: ComponentSet
+}
+function View({ components: { credential } }: ViewProps): VNode {
     const [state, setState] = useState(initialCredentialState)
-    const [request, setRequest] = useState(() => initialCredentialRequest)
     useEffect(() => {
-        props.component.onStateChange(setState)
-
-        const resource = props.component.init()
-        setRequest(() => resource.request)
-        resource.request({ type: "set-param", param: props.param })
-        resource.request({ type: "renew" })
-
-        return resource.terminate
+        credential.onStateChange(setState)
+        credential.action({ type: "renew" })
     }, [])
 
     useEffect(() => {
+        // スクリプトのロードは appendChild する必要があるため useEffect で行う
         switch (state.type) {
             case "try-to-instant-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onload = () => {
-                        request({ type: "succeed-to-instant-load" })
+                        credential.action({ type: "succeed-to-instant-load" })
                     }
                     script.onerror = (err) => {
-                        request({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
+                        credential.action({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
                     }
                 })
                 break
@@ -53,7 +65,7 @@ export function Credential(props: Props): VNode {
             case "succeed-to-renew":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = (err) => {
-                        request({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
+                        credential.action({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
                     }
                 })
                 break
@@ -88,6 +100,7 @@ export function Credential(props: Props): VNode {
         case "failed-to-renew":
             return renewFailedContent(state.err)
 
+        case "failed-to-fetch":
         case "failed-to-store":
         case "failed-to-load":
             return h(ApplicationError, { err: state.err.err })
@@ -95,28 +108,28 @@ export function Credential(props: Props): VNode {
         case "error":
             return h(ApplicationError, { err: state.err })
     }
+}
 
-    function delayedContent(): VNode {
-        return loginError(
-            html`認証に時間がかかっています`,
-            html`
-                <p>
-                    30秒以上かかるようなら何かがおかしいので、
-                    <br/>
-                    お手数ですが管理者に連絡をお願いします。
-                </p>
-            `,
-            html``,
-        )
-    }
+function delayedContent(): VNode {
+    return loginError(
+        html`認証に時間がかかっています`,
+        html`
+            <p>
+                30秒以上かかるようなら何かがおかしいので、
+                <br/>
+                お手数ですが管理者に連絡をお願いします。
+            </p>
+        `,
+        html``,
+    )
+}
 
-    function renewFailedContent(err: RenewError): VNode {
-        return loginError(
-            html`認証に失敗しました`,
-            errorMessage(renewError(err)),
-            html``,
-        )
-    }
+function renewFailedContent(err: RenewError): VNode {
+    return loginError(
+        html`認証に失敗しました`,
+        errorMessage(renewError(err)),
+        html``,
+    )
 }
 
 function renewError(err: RenewError): VNode {
@@ -150,3 +163,7 @@ function errorMessage(content: VNode): VNode {
 }
 
 const EMPTY_CONTENT: VNode = html``
+
+interface Init<T> {
+    (): T
+}

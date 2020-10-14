@@ -13,12 +13,6 @@ export type LoginFields = Readonly<{
     password: Password
 }>
 
-export type PasswordLoginRequest =
-    Readonly<{ type: "login", content: LoginContent }>
-
-export type PasswordLoginEvent =
-    Readonly<{ type: "login", event: LoginEvent }>
-
 export type LoginEvent =
     Readonly<{ type: "try-to-login" }> |
     Readonly<{ type: "delayed-to-login" }> |

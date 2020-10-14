@@ -5,22 +5,21 @@ import { html } from "htm/preact"
 import { ApplicationError } from "../application_error"
 
 import { Credential } from "./credential"
-import { Application } from "./application"
 
 import { PasswordLogin } from "./password_login"
 import { PasswordResetSession } from "./password_reset_session"
 import { PasswordReset } from "./password_reset"
 
-import { AuthUsecase, initialAuthState } from "../../auth/usecase"
+import { AuthInit, AuthView, initialAuthState } from "../../auth/view"
 
 type Props = Readonly<{
-    usecase: AuthUsecase
+    init: AuthInit
 }>
 
-export function Main(props: Props): VNode {
+export function Main({ init }: Props): VNode {
     const [err, _resetError] = useErrorBoundary((err) => {
         // ここでエラーをどこかに投げたい、けど認証前なのでこれでお茶を濁す
-        // worker の catch でもエラー通知を入れたい
+        // TODO worker の catch でもエラー通知を入れたい
         console.log(err)
     })
 
@@ -28,14 +27,33 @@ export function Main(props: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
+    const [container, setView] = useState<Container>({ set: false })
+    useEffect(() => {
+        const resource = init(location)
+        setView({ set: true, view: resource.view })
+        return resource.terminate
+    }, [])
+
+    if (!container.set) {
+        return EMPTY_CONTENT
+    }
+
+    return h(View, { view: container.view })
+}
+
+type Container =
+    Readonly<{ set: false }> |
+    Readonly<{ set: true, view: AuthView }>
+
+type ViewProps = Readonly<{
+    view: AuthView
+}>
+
+function View({ view }: ViewProps): VNode {
     const [state, setState] = useState(initialAuthState)
     useEffect(() => {
-        props.usecase.onStateChange(setState)
-
-        const resource = props.usecase.init()
-        resource.request({ type: "renew" })
-
-        return resource.terminate
+        view.onStateChange(setState)
+        view.load()
     }, [])
 
     switch (state.type) {
@@ -43,32 +61,16 @@ export function Main(props: Props): VNode {
             return EMPTY_CONTENT
 
         case "credential":
-            return h(Credential, {
-                component: props.usecase.component.credential,
-                param: state.param,
-            })
-
-        case "application":
-            return h(Application, {
-                component: props.usecase.component.application,
-                param: state.param,
-            })
+            return h(Credential, { init: view.components.credential })
 
         case "password-login":
-            return h(PasswordLogin, { usecase: props.usecase })
+            return h(PasswordLogin, { init: view.components.passwordLogin })
 
         case "password-reset-session":
-            return h(PasswordResetSession, {
-                component: props.usecase.component.passwordResetSession,
-                href: props.usecase.href,
-            })
+            return h(PasswordResetSession, { init: view.components.passwordResetSession })
 
         case "password-reset":
-            return h(PasswordReset, {
-                component: props.usecase.component.passwordReset,
-                href: props.usecase.href,
-                param: state.param,
-            })
+            return h(PasswordReset, { init: view.components.passwordReset })
 
         case "error":
             return h(ApplicationError, { err: state.err })

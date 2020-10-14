@@ -1,23 +1,19 @@
-import { packInputValue } from "../../../field/adapter"
+import { newLoginIDFieldComponent, LoginIDFieldInit } from "./field/login_id"
+import { newPasswordFieldComponent, PasswordFieldInit } from "./field/password"
 
 import {
     PasswordLoginComponent,
-    PasswordLoginComponentAction,
     PasswordLoginState,
+    PasswordLoginFieldComponentSet,
 } from "../../../auth/component/password_login/component"
 
-import { LoginIDFieldState } from "../../../auth/component/field/login_id/component"
-import { PasswordFieldState } from "../../../auth/component/field/password/component"
-
-import { PasswordLoginEventSubscriber } from "../../../password_login/action"
-
-import { noError, hasError } from "../../../field/data"
-import { simplePassword, complexPassword, hidePassword, showPassword } from "../../../password/field/data"
-
 export function newPasswordLoginComponent(): PasswordLoginComponent {
-    const init = new Init()
     return new Component(
-        init.initialLogin(),
+        new Init().initialLogin(),
+        {
+            loginID: { loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().noError()) },
+            password: { passwordField: newPasswordFieldComponent(new PasswordFieldInit().noError()) },
+        },
     )
 }
 
@@ -49,86 +45,22 @@ class Init {
     failedToLogin_infra_error(): PasswordLoginState {
         return { type: "failed-to-login", err: { type: "infra-error", err: "error" } }
     }
-
-    loginIDValid(): LoginIDFieldState {
-        return { type: "succeed-to-update-login_id", result: noError() }
-    }
-    loginIDInvalid_empty(): LoginIDFieldState {
-        return { type: "succeed-to-update-login_id", result: hasError(["empty"]) }
-    }
-
-    passwordValid(): PasswordFieldState {
-        return {
-            type: "succeed-to-update-password",
-            result: noError(),
-            character: simplePassword,
-            view: hidePassword,
-        }
-    }
-    passwordInvalid_empty(): PasswordFieldState {
-        return {
-            type: "succeed-to-update-password",
-            result: hasError(["empty"]),
-            character: simplePassword,
-            view: hidePassword,
-        }
-    }
-    passwordInvalid_too_long(): PasswordFieldState {
-        return {
-            type: "succeed-to-update-password",
-            result: hasError(["too-long"]),
-            character: simplePassword,
-            view: hidePassword,
-        }
-    }
-    passwordComplexInvalid_too_long(): PasswordFieldState {
-        return {
-            type: "succeed-to-update-password",
-            result: hasError(["too-long"]),
-            character: complexPassword,
-            view: hidePassword,
-        }
-    }
-    passwordComplex(): PasswordFieldState {
-        return {
-            type: "succeed-to-update-password",
-            result: noError(),
-            character: complexPassword,
-            view: hidePassword,
-        }
-    }
-    passwordView(): PasswordFieldState {
-        return {
-            type: "succeed-to-update-password",
-            result: noError(),
-            character: simplePassword,
-            view: showPassword(packInputValue("password")),
-        }
-    }
 }
 
 class Component implements PasswordLoginComponent {
     state: PasswordLoginState
+    readonly components: PasswordLoginFieldComponentSet
 
-    constructor(
-        state: PasswordLoginState,
-    ) {
+    constructor(state: PasswordLoginState, components: PasswordLoginFieldComponentSet) {
         this.state = state
+        this.components = components
     }
 
-    subscribePasswordLogin(_subscriber: PasswordLoginEventSubscriber): void {
+    onStateChange(post: Post<PasswordLoginState>): void {
+        post(this.state)
+    }
+    action(): void {
         // mock では特に何もしない
-    }
-    setAction(_action: PasswordLoginComponentAction): void {
-        // mock では特に何もしない
-    }
-
-    onStateChange(stateChanged: Post<PasswordLoginState>): void {
-        stateChanged(this.state)
-    }
-
-    login(): void {
-        alert("ここでログイン！")
     }
 }
 

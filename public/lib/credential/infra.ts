@@ -1,22 +1,26 @@
 import { AuthCredential, TicketNonce, AuthAt, FetchError, StoreError, RenewError } from "./data"
 
-export type Infra = Readonly<{
-    timeConfig: TimeConfig
+export type RenewInfra = Readonly<{
+    time: RenewTimeConfig
 
     authCredentials: AuthCredentialRepository
-    expires: AuthExpires
-    runner: RenewRunner
-
     renewClient: RenewClient
     delayed: Delayed
+
+    expires: AuthExpires
+    runner: RenewRunner
 }>
 
-export type TimeConfig = Readonly<{
-    instantLoadExpireTime: ExpireTime
-    renewRunDelayTime: DelayTime
-
+export type RenewTimeConfig = Readonly<{
     renewDelayTime: DelayTime,
     renewIntervalTime: IntervalTime,
+
+    instantLoadExpireTime: ExpireTime
+    renewRunDelayTime: DelayTime
+}>
+
+export type StoreInfra = Readonly<{
+    authCredentials: AuthCredentialRepository
 }>
 
 export interface AuthCredentialRepository {

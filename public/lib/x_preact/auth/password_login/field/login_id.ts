@@ -5,27 +5,26 @@ import { html } from "htm/preact"
 import { mapInputEvent } from "../../field/common"
 import { loginIDFieldError } from "../../field/login_id"
 
-import { LoginIDFieldState, initialLoginIDFieldState } from "../../../../auth/component/field/login_id/component"
+import {
+    LoginIDFieldComponent,
+    initialLoginIDFieldState,
+} from "../../../../auth/component/field/login_id/component"
 
-import { LoginIDFieldOperation } from "../../../../login_id/field/data"
-
-type Props = Readonly<{
-    component: FormComponent
-    request: { (operation: { type: "field-login_id", operation: LoginIDFieldOperation }): void }
+type ComponentSet = Readonly<{
+    loginIDField: LoginIDFieldComponent
 }>
 
-interface FormComponent {
-    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void
-}
-
-export function LoginIDField(props: Props): VNode {
+type Props = Readonly<{
+    components: ComponentSet
+}>
+export function LoginIDField({ components: { loginIDField } }: Props): VNode {
     const [state, setState] = useState(initialLoginIDFieldState)
     useEffect(() => {
-        props.component.onLoginIDFieldStateChange(setState)
+        loginIDField.onStateChange(setState)
     }, [])
 
     const onInput = mapInputEvent((loginID) => {
-        props.request({ type: "field-login_id", operation: { type: "set-login_id", loginID } })
+        loginIDField.action({ type: "set", inputValue: loginID })
     })
 
     return html`

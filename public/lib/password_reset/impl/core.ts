@@ -1,6 +1,6 @@
-import { Infra } from "../infra"
+import { SessionInfra, ResetInfra } from "../infra"
 
-import { PasswordResetAction, PasswordResetEventPublisher, PasswordResetEventSubscriber } from "../action"
+import { SessionFactory, ResetFactory, SessionSubscriber, ResetSubscriber } from "../action"
 
 import {
     SessionID,
@@ -12,78 +12,27 @@ import {
 
 import { Content, validContent, invalidContent } from "../../field/data"
 
-export function initPasswordResetAction(infra: Infra): PasswordResetAction {
-    return new PasswordResetActionImpl(infra)
-}
-
-class PasswordResetActionImpl implements PasswordResetAction {
-    infra: Infra
-
-    pub: PasswordResetEventPublisher
-    sub: PasswordResetEventSubscriber
-
-    constructor(infra: Infra) {
-        this.infra = infra
-
-        const pubsub = new EventPubSub()
-        this.pub = pubsub
-        this.sub = pubsub
+const startSession = (infra: SessionInfra, post: Post<StartSessionEvent>) => async (content: StartSessionContent): Promise<void> => {
+    const fields = mapStartSessionContent(content)
+    if (!fields.valid) {
+        post({ type: "failed-to-start-session", err: { type: "validation-error" } })
+        return
     }
 
-    async startSession(content: StartSessionContent): Promise<void> {
-        const post = (event: StartSessionEvent) => this.pub.postStartSessionEvent(event)
+    post({ type: "try-to-start-session" })
 
-        const fields = mapStartSessionContent(content)
-        if (!fields.valid) {
-            post({ type: "failed-to-start-session", err: { type: "validation-error" } })
-            return
-        }
-
-        post({ type: "try-to-start-session" })
-
-        // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const response = await this.infra.delayed(
-            this.infra.passwordResetSessionClient.startSession(fields.content.loginID),
-            this.infra.timeConfig.passwordResetStartSessionDelayTime,
-            () => post({ type: "delayed-to-start-session" }),
-        )
-        if (!response.success) {
-            post({ type: "failed-to-start-session", err: response.err })
-            return
-        }
-
-        post({ type: "succeed-to-start-session", sessionID: response.sessionID })
+    // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
+    const response = await infra.delayed(
+        infra.passwordResetSessionClient.startSession(fields.content.loginID),
+        infra.time.passwordResetStartSessionDelayTime,
+        () => post({ type: "delayed-to-start-session" }),
+    )
+    if (!response.success) {
+        post({ type: "failed-to-start-session", err: response.err })
+        return
     }
 
-    async startPollingStatus(sessionID: SessionID): Promise<void> {
-        const post = (event: PollingStatusEvent) => this.pub.postPollingStatusEvent(event)
-        new StatusPoller(this.infra, post).startPolling(sessionID)
-    }
-
-    async reset(resetToken: ResetToken, content: ResetContent): Promise<void> {
-        const post = (event: ResetEvent) => this.pub.postResetEvent(event)
-
-        const fields = mapResetContent(content)
-        if (!fields.valid) {
-            post({ type: "failed-to-reset", err: { type: "validation-error" } })
-            return
-        }
-
-        post({ type: "try-to-reset" })
-
-        // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-        const response = await this.infra.delayed(
-            this.infra.passwordResetClient.reset(resetToken, fields.content.loginID, fields.content.password),
-            this.infra.timeConfig.passwordResetDelayTime,
-            () => post({ type: "delayed-to-reset" }),
-        )
-        if (!response.success) {
-            post({ type: "failed-to-reset", err: response.err })
-            return
-        }
-
-        post({ type: "succeed-to-reset", authCredential: response.authCredential })
-    }
+    post({ type: "succeed-to-start-session", sessionID: response.sessionID })
 }
 
 function mapStartSessionContent(content: StartSessionContent): Content<StartSessionFields> {
@@ -95,17 +44,8 @@ function mapStartSessionContent(content: StartSessionContent): Content<StartSess
     })
 }
 
-function mapResetContent(content: ResetContent): Content<ResetFields> {
-    if (
-        !content.loginID.valid ||
-        !content.password.valid
-    ) {
-        return invalidContent()
-    }
-    return validContent({
-        loginID: content.loginID.content,
-        password: content.password.content,
-    })
+const startPollingStatus = (infra: SessionInfra, post: Post<PollingStatusEvent>) => (sessionID: SessionID): void => {
+    new StatusPoller(infra, post).startPolling(sessionID)
 }
 
 type SendTokenState =
@@ -114,12 +54,12 @@ type SendTokenState =
     Readonly<{ type: "success" }>
 
 class StatusPoller {
-    infra: Infra
+    infra: SessionInfra
     post: Post<PollingStatusEvent>
 
     sendTokenState: SendTokenState
 
-    constructor(infra: Infra, post: Post<PollingStatusEvent>) {
+    constructor(infra: SessionInfra, post: Post<PollingStatusEvent>) {
         this.infra = infra
         this.post = post
 
@@ -131,8 +71,7 @@ class StatusPoller {
 
         this.sendToken()
 
-        for (let i_ = 0; i_ < this.infra.timeConfig.passwordResetPollingLimit.limit; i_++) {
-
+        for (let i_ = 0; i_ < this.infra.time.passwordResetPollingLimit.limit; i_++) {
             if (this.sendTokenState.type === "failed") {
                 this.post({ type: "failed-to-polling-status", err: this.sendTokenState.err })
                 return
@@ -163,7 +102,7 @@ class StatusPoller {
                 status: response.status,
             })
 
-            await this.infra.wait(this.infra.timeConfig.passwordResetPollingWaitTime, () => true)
+            await this.infra.wait(this.infra.time.passwordResetPollingWaitTime, () => true)
         }
 
         this.post({
@@ -182,39 +121,91 @@ class StatusPoller {
     }
 }
 
-class EventPubSub implements PasswordResetEventPublisher, PasswordResetEventSubscriber {
-    listener: {
-        startSession: Post<StartSessionEvent>[]
-        pollingStatus: Post<PollingStatusEvent>[]
-        reset: Post<ResetEvent>[]
+const reset = (infra: ResetInfra, post: Post<ResetEvent>) => async (resetToken: ResetToken, content: ResetContent): Promise<void> => {
+    const fields = mapResetContent(content)
+    if (!fields.valid) {
+        post({ type: "failed-to-reset", err: { type: "validation-error" } })
+        return
     }
 
-    constructor() {
-        this.listener = {
-            startSession: [],
-            pollingStatus: [],
-            reset: [],
+    post({ type: "try-to-reset" })
+
+    // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
+    const response = await infra.delayed(
+        infra.passwordResetClient.reset(resetToken, fields.content.loginID, fields.content.password),
+        infra.time.passwordResetDelayTime,
+        () => post({ type: "delayed-to-reset" }),
+    )
+    if (!response.success) {
+        post({ type: "failed-to-reset", err: response.err })
+        return
+    }
+
+    post({ type: "succeed-to-reset", authCredential: response.authCredential })
+}
+
+function mapResetContent(content: ResetContent): Content<ResetFields> {
+    if (
+        !content.loginID.valid ||
+        !content.password.valid
+    ) {
+        return invalidContent()
+    }
+    return validContent({
+        loginID: content.loginID.content,
+        password: content.password.content,
+    })
+}
+
+export function initSessionFactory(infra: SessionInfra): SessionFactory {
+    return () => {
+        const pubsub = new SessionEventPubSub()
+        return {
+            action: {
+                startSession: startSession(infra, event => pubsub.postStartSessionEvent(event)),
+                startPollingStatus: startPollingStatus(infra, event => pubsub.postPollingStatusEvent(event)),
+            },
+            subscriber: pubsub,
         }
     }
+}
+export function initResetFactory(infra: ResetInfra): ResetFactory {
+    return () => {
+        const pubsub = new ResetEventPubSub()
+        return {
+            action: reset(infra, event => pubsub.postResetEvent(event)),
+            subscriber: pubsub,
+        }
+    }
+}
+
+class SessionEventPubSub implements SessionSubscriber {
+    startSession: Post<StartSessionEvent>[] = []
+    pollingStatus: Post<PollingStatusEvent>[] = []
 
     onStartSessionEvent(post: Post<StartSessionEvent>): void {
-        this.listener.startSession.push(post)
+        this.startSession.push(post)
     }
-    onPollingStatusEvent(post: Post<PollingStatusEvent>): void {
-        this.listener.pollingStatus.push(post)
-    }
-    onResetEvent(post: Post<ResetEvent>): void {
-        this.listener.reset.push(post)
+    postStartSessionEvent(event: StartSessionEvent): void {
+        this.startSession.forEach(post => post(event))
     }
 
-    postStartSessionEvent(event: StartSessionEvent): void {
-        this.listener.startSession.forEach(post => post(event))
+    onPollingStatusEvent(post: Post<PollingStatusEvent>): void {
+        this.pollingStatus.push(post)
     }
     postPollingStatusEvent(event: PollingStatusEvent): void {
-        this.listener.pollingStatus.forEach(post => post(event))
+        this.pollingStatus.forEach(post => post(event))
+    }
+}
+
+class ResetEventPubSub implements ResetSubscriber {
+    reset: Post<ResetEvent>[] = []
+
+    onResetEvent(post: Post<ResetEvent>): void {
+        this.reset.push(post)
     }
     postResetEvent(event: ResetEvent): void {
-        this.listener.reset.forEach(post => post(event))
+        this.reset.forEach(post => post(event))
     }
 }
 

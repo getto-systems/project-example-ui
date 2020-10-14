@@ -5,35 +5,32 @@ import { html } from "htm/preact"
 import { mapInputEvent } from "../../field/common"
 import { passwordView, passwordFieldError } from "../../field/password"
 
-import { PasswordFieldState, initialPasswordFieldState } from "../../../../auth/component/field/password/component"
+import { PasswordFieldComponent, initialPasswordFieldState } from "../../../../auth/component/field/password/component"
 
-import { PasswordFieldOperation } from "../../../../password/field/data"
-
-type Props = Readonly<{
-    component: FormComponent
-    request: { (operation: { type: "field-password", operation: PasswordFieldOperation }): void }
+type ComponentSet = Readonly<{
+    passwordField: PasswordFieldComponent
 }>
 
-interface FormComponent {
-    onPasswordFieldStateChange(stateChanged: Post<PasswordFieldState>): void
-}
-
-export function PasswordField(props: Props): VNode {
+type Props = Readonly<{
+    components: ComponentSet
+}>
+export function PasswordField({ components: { passwordField } }: Props): VNode {
     const [state, setState] = useState(initialPasswordFieldState)
     useEffect(() => {
-        props.component.onPasswordFieldStateChange(setState)
+        passwordField.onStateChange(setState)
     }, [])
 
+    // TODO handler にまとめて取得できるようにしてしまってもよいのだろう？（だめかも）
     const onInput = mapInputEvent((password) => {
-        props.request({ type: "field-password", operation: { type: "set-password", password } })
+        passwordField.action({ type: "set", inputValue: password })
     })
 
     const handler = {
         show() {
-            props.request({ type: "field-password", operation: { type: "show-password" } })
+            passwordField.action({ type: "show" })
         },
         hide() {
-            props.request({ type: "field-password", operation: { type: "hide-password" } })
+            passwordField.action({ type: "hide" })
         },
     }
 

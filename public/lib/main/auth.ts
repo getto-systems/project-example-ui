@@ -1,124 +1,148 @@
-import { env } from "../y_static/env"
-import { delayed } from "../z_external/delayed"
-
+import { delayed, wait } from "../z_external/delayed"
 import { initAuthClient } from "../z_external/auth_client/auth_client"
 
-import { newTimeConfig, newHostConfig } from "./auth/config"
+import { env } from "../y_static/env"
+
+import { TimeConfig, newTimeConfig, newHostConfig } from "./auth/config"
 
 import { newAppHref } from "./href"
 
-import { newApplicationComponent } from "./auth/application"
-import { newPasswordResetSessionComponent } from "./auth/worker/password_reset_session"
-import { newPasswordResetComponent } from "./auth/worker/password_reset"
+import { initAuthInit } from "../auth/impl/core"
 
-import { initAuthUsecase } from "../auth/impl/core"
+import { initCredentialInit } from "../auth/component/credential/impl"
+import { initPasswordLoginInit } from "../auth/component/password_login/impl"
+import { initPasswordResetSessionInit } from "../auth/component/password_reset_session/impl"
+import { initPasswordResetInit } from "../auth/component/password_reset/impl"
 
-import { initBackgroundCredentialComponent } from "../background/credential/impl"
+import { initLoginIDFieldInit } from "../auth/component/field/login_id/impl"
+import { initPasswordFieldInit } from "../auth/component/field/password/impl"
 
-import { initCredentialComponent, packCredentialParam } from "../auth/component/credential/impl"
-import { packApplicationParam } from "../auth/component/application/impl"
-import { packPasswordResetParam } from "../auth/component/password_reset/impl"
+import { initPathFactory } from "../application/impl/core"
+import { initRenewFactory, initStoreFactory } from "../credential/impl/core"
+import { initLoginFactory } from "../password_login/impl/core"
+import { initSessionFactory, initResetFactory } from "../password_reset/impl/core"
 
-import { initPasswordLoginComponent } from "../auth/component/password_login/impl"
+import { initLoginIDFieldFactory } from "../login_id/field/impl/core"
+import { initPasswordFieldFactory } from "../password/field/impl/core"
 
 import { initFetchRenewClient } from "../credential/impl/client/renew/fetch"
 import { initAuthExpires } from "../credential/impl/expires"
 import { initRenewRunner } from "../credential/impl/renew_runner"
 import { initStorageAuthCredentialRepository } from "../credential/impl/repository/auth_credential/storage"
+import { initFetchPasswordLoginClient } from "../password_login/impl/client/login/fetch"
+import { initSimulatePasswordResetClient } from "../password_reset/impl/client/reset/simulate"
+import { initSimulatePasswordResetSessionClient } from "../password_reset/impl/client/session/simulate"
 
-import { initCredentialAction } from "../credential/impl/core"
-import { initApplicationAction } from "../application/impl/core"
+import { packTicketNonce, packApiRoles, packAuthAt } from "../credential/adapter"
+import { packLoginID } from "../login_id/adapter"
 
-import { initFetchPasswordLoginClient } from "../password_login/impl/client/password_login/fetch"
+import { AuthInit } from "../auth/view"
 
-import { initPasswordLoginInit } from "../password_login/impl/core"
-
-import { RenewClient } from "../credential/infra"
-import { PasswordLoginClient } from "../password_login/infra"
-
-import { AuthUsecase } from "../auth/usecase"
-
-import { CredentialAction } from "../credential/action"
-import { ApplicationAction } from "../application/action"
-
-import { PasswordLoginInit } from "../password_login/action"
-
-export function newAuthUsecase(currentLocation: Location, credentialStorage: Storage): AuthUsecase {
-    const credential = newCredentialResources(credentialStorage)
-
-    const request = {
-        credential: credential.request,
+export function newAuthInit(credentialStorage: Storage): AuthInit {
+    const config = {
+        time: newTimeConfig(),
     }
 
-    return initAuthUsecase({
-        currentLocation,
-        href: newAppHref(),
-        param: {
-            credential: packCredentialParam,
-            application: packApplicationParam,
-            passwordReset: packPasswordResetParam,
-        },
-        component: {
-            credential: credential.component,
-            application: newApplicationComponent(),
+    const factory = {
+        application: newApplicationFactory(),
+        credential: newCredentialFactory(config.time, credentialStorage),
 
-            passwordLogin: () => initPasswordLoginComponent(request),
-            passwordResetSession: newPasswordResetSessionComponent(),
-            passwordReset: newPasswordResetComponent(request),
+        passwordLogin: newPasswordLoginFactory(config.time),
+        passwordReset: newPasswordResetFactory(config.time),
+
+        field: {
+            loginID: initLoginIDFieldFactory(),
+            password: initPasswordFieldFactory(),
         },
-        background: {
-            credential: credential.background,
-        },
-        action: {
-            passwordLogin: newPasswordLoginInit,
-        },
-    })
+    }
+
+    const init = {
+        href: () => newAppHref(),
+
+        credential: initCredentialInit(),
+
+        passwordLogin: initPasswordLoginInit(),
+        passwordResetSession: initPasswordResetSessionInit(),
+        passwordReset: initPasswordResetInit(),
+
+        field: {
+            loginID: initLoginIDFieldInit(),
+            password: initPasswordFieldInit(),
+        }
+    }
+
+    return initAuthInit(factory, init)
 }
 
-function newPasswordLoginInit(): PasswordLoginInit {
-    return initPasswordLoginInit({
-        timeConfig: newTimeConfig(),
-        passwordLoginClient: newPasswordLoginClient(),
-        delayed,
-    })
+function newApplicationFactory() {
+    return {
+        path: initPathFactory({ host: newHostConfig() }),
+    }
 }
-
-function newCredentialResources(credentialStorage: Storage) {
-    const credential = newCredentialAction(credentialStorage)
+function newCredentialFactory(time: TimeConfig, credentialStorage: Storage) {
+    const authCredentials = initStorageAuthCredentialRepository(credentialStorage, env.storageKey)
 
     return {
-        component: initCredentialComponent({
-            credential,
-            application: newApplicationAction(),
+        renew: initRenewFactory({
+            time,
+
+            authCredentials,
+            renewClient: newRenewClient(),
+            delayed,
+
+            expires: initAuthExpires(),
+            runner: initRenewRunner(),
         }),
-        ...initBackgroundCredentialComponent({
-            credential,
+        store: initStoreFactory({
+            authCredentials,
+        }),
+    }
+}
+function newPasswordLoginFactory(time: TimeConfig) {
+    return {
+        login: initLoginFactory({
+            time,
+            passwordLoginClient: newPasswordLoginClient(),
+            delayed,
+        }),
+    }
+}
+function newPasswordResetFactory(time: TimeConfig) {
+    return {
+        session: initSessionFactory({
+            time,
+            passwordResetSessionClient: newPasswordResetSessionClient(),
+            delayed,
+            wait,
+        }),
+        reset: initResetFactory({
+            time,
+            passwordResetClient: newPasswordResetClient(),
+            delayed,
         }),
     }
 }
 
-function newCredentialAction(credentialStorage: Storage): CredentialAction {
-    return initCredentialAction({
-        timeConfig: newTimeConfig(),
-
-        authCredentials: initStorageAuthCredentialRepository(credentialStorage, env.storageKey),
-        expires: initAuthExpires(),
-        runner: initRenewRunner(),
-
-        renewClient: newRenewClient(),
-        delayed,
-    })
-}
-
-function newApplicationAction(): ApplicationAction {
-    return initApplicationAction({
-        hostConfig: newHostConfig(),
-    })
-}
-
-function newRenewClient(): RenewClient {
+function newRenewClient() {
     return initFetchRenewClient(initAuthClient(env.authServerURL))
 }
-function newPasswordLoginClient(): PasswordLoginClient {
+function newPasswordLoginClient() {
     return initFetchPasswordLoginClient(initAuthClient(env.authServerURL))
+}
+function newPasswordResetSessionClient() {
+    //return initFetchPasswordResetSessionClient(initAuthClient(env.authServerURL))
+    return initSimulatePasswordResetSessionClient(packLoginID("loginID"))
+}
+function newPasswordResetClient() {
+    //return initFetchPasswordResetClient(initAuthClient(env.authServerURL))
+    return initSimulatePasswordResetClient(
+        packLoginID("loginID"),
+        {
+            ticketNonce: packTicketNonce("ticket-nonce"),
+            apiCredential: {
+                apiRoles: packApiRoles(["admin", "dev"]),
+            },
+            authAt: packAuthAt(new Date()),
+        },
+    )
 }

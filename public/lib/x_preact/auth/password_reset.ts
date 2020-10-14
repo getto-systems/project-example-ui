@@ -9,37 +9,69 @@ import { ApplicationError } from "../application_error"
 import { LoginIDField } from "./password_reset/field/login_id"
 import { PasswordField } from "./password_reset/field/password"
 
+import { unpackScriptPath } from "../../application/adapter"
+
 import { AppHref } from "../../href"
 
 import {
     PasswordResetComponent,
-    PasswordResetParam,
     initialPasswordResetState,
-    initialPasswordResetRequest,
 } from "../../auth/component/password_reset/component"
 
 import { ResetError } from "../../password_reset/data"
+import { ScriptPath } from "../../application/data"
 
-type Props = Readonly<{
-    component: PasswordResetComponent
+type ComponentSet = Readonly<{
     href: AppHref
-    param: PasswordResetParam
+    passwordReset: PasswordResetComponent
 }>
 
-export function PasswordReset(props: Props): VNode {
+type Props = {
+    init: Init<ComponentSet>
+}
+export function PasswordReset({ init }: Props): VNode {
+    const [container, setComponents] = useState<Container>({ set: false })
+    useEffect(() => {
+        setComponents({ set: true, components: init() })
+    }, [])
+
+    if (!container.set) {
+        return EMPTY_CONTENT
+    }
+
+    return h(View, { components: container.components })
+}
+
+type ViewProps = {
+    components: ComponentSet
+}
+function View({ components: { href, passwordReset } }: ViewProps): VNode {
     const [state, setState] = useState(initialPasswordResetState)
-    const [request, setRequest] = useState(() => initialPasswordResetRequest)
     // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
     const submit = useRef<HTMLButtonElement>()
     useEffect(() => {
-        props.component.onStateChange(setState)
-
-        const resource = props.component.init()
-        setRequest(() => resource.request)
-        resource.request({ type: "set-param", param: props.param })
-
-        return resource.terminate
+        passwordReset.onStateChange(setState)
     }, [])
+
+    useEffect(() => {
+        // スクリプトのロードは appendChild する必要があるため useEffect で行う
+        switch (state.type) {
+            case "succeed-to-reset":
+                appendScript(state.scriptPath, (script) => {
+                    script.onerror = (err) => {
+                        passwordReset.action({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
+                    }
+                })
+                break
+        }
+
+        function appendScript(scriptPath: ScriptPath, setup: { (script: HTMLScriptElement): void }): void {
+            const script = document.createElement("script")
+            script.src = unpackScriptPath(scriptPath)
+            setup(script)
+            document.body.appendChild(script)
+        }
+    }, [state])
 
     function view(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
         return html`
@@ -49,8 +81,8 @@ export function PasswordReset(props: Props): VNode {
                     <section>
                         <big>
                             <section class="login__body">
-                                ${h(LoginIDField, { component: props.component, request })}
-                                ${h(PasswordField, { component: props.component, request })}
+                                ${h(LoginIDField, { components: passwordReset.components.loginID })}
+                                ${h(PasswordField, { components: passwordReset.components.password })}
                             </section>
                         </big>
                     </section>
@@ -60,7 +92,7 @@ export function PasswordReset(props: Props): VNode {
                                 <big>${button}</big>
                             </div>
                             <div class="login__link">
-                                <a href="${props.href.auth.passwordResetSessionHref()}">
+                                <a href="${href.auth.passwordResetSessionHref()}">
                                     <i class="lnir lnir-direction"></i> トークンを再送信する
                                 </a>
                             </div>
@@ -99,7 +131,12 @@ export function PasswordReset(props: Props): VNode {
             `)
 
         case "succeed-to-reset":
+            // スクリプトのロードは appendChild する必要があるため useEffect で行う
             return EMPTY_CONTENT
+
+        case "failed-to-store":
+        case "failed-to-load":
+            return h(ApplicationError, { err: state.err.err })
 
         case "error":
             return h(ApplicationError, { err: state.err })
@@ -125,7 +162,7 @@ export function PasswordReset(props: Props): VNode {
             submit.current.blur()
         }
 
-        request({ type: "reset" })
+        passwordReset.action({ type: "reset" })
     }
     function onSubmit_noop(e: Event) {
         e.preventDefault()
@@ -171,6 +208,13 @@ function resetError(err: ResetError): VNode {
 
 const EMPTY_CONTENT = html``
 
+interface Init<T> {
+    (): T
+}
 interface Post<T> {
     (state: T): void
 }
+
+type Container =
+    Readonly<{ set: false }> |
+    Readonly<{ set: true, components: ComponentSet }>

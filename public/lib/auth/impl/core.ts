@@ -1,189 +1,272 @@
 import { packResetToken } from "../../password_reset/adapter"
 import { packPagePathname } from "../../application/adapter"
 
-import { AppHref } from "../../href"
+import { AppHrefInit } from "../../href"
 import {
-    AuthUsecase,
-    AuthUsecaseResource,
-    AuthParam,
+    AuthInit,
+    AuthView,
     AuthState,
-    AuthOperation,
-    AuthComponent,
-    AuthAction,
-    PasswordLoginView,
-} from "../usecase"
+    AuthComponentSet,
+} from "../view"
 
-import { BackgroundCredentialComponent } from "../../background/credential/component"
+import { CredentialInit, CredentialComponent } from "../component/credential/component"
+import { PasswordLoginInit } from "../component/password_login/component"
+import { PasswordResetSessionInit } from "../component/password_reset_session/component"
+import { PasswordResetInit } from "../component/password_reset/component"
 
-import { PagePathname } from "../../application/data"
+import { LoginIDFieldInit } from "../component/field/login_id/component"
+import { PasswordFieldInit } from "../component/field/password/component"
 
-type Init = Readonly<{
-    currentLocation: Location
-    href: AppHref
-    param: AuthParam
-    component: AuthComponent
-    background: Background
-    action: AuthAction
-}>
+import { PathFactory } from "../../application/action"
+import { RenewFactory, StoreFactory } from "../../credential/action"
 
-export function initAuthUsecase(init: Init): AuthUsecase {
-    return new Usecase(init)
+import { LoginFactory } from "../../password_login/action"
+import { SessionFactory, ResetFactory } from "../../password_reset/action"
+
+import { LoginIDFieldFactory } from "../../login_id/field/action"
+import { PasswordFieldFactory } from "../../password/field/action"
+
+import { ResetToken } from "../../password_reset/data"
+
+// ログイン前画面ではアンダースコアから始まるクエリを使用する
+const SEARCH = {
+    passwordReset: "_password_reset",
+    passwordResetToken: "_password_reset_token",
 }
 
-type Background = Readonly<{
-    credential: BackgroundCredentialComponent
+function detectLoginState(currentLocation: Location): AuthState {
+    const url = new URL(currentLocation.toString())
+
+    // パスワードリセット
+    switch (url.searchParams.get(SEARCH.passwordReset)) {
+        case "start":
+            return { type: "password-reset-session" }
+        case "reset":
+            return { type: "password-reset" }
+    }
+
+    // 特に指定が無ければパスワードログイン
+    return { type: "password-login" }
+}
+function detectPasswordResetToken(currentLocation: Location): ResetToken {
+    const url = new URL(currentLocation.toString())
+    return packResetToken(url.searchParams.get(SEARCH.passwordResetToken) || "")
+}
+
+type Factory = Readonly<{
+    application: {
+        path: PathFactory
+    }
+    credential: {
+        renew: RenewFactory
+        store: StoreFactory
+    }
+
+    passwordLogin: {
+        login: LoginFactory
+    }
+    passwordReset: {
+        session: SessionFactory
+        reset: ResetFactory
+    }
+
+    field: {
+        loginID: LoginIDFieldFactory
+        password: PasswordFieldFactory
+    }
 }>
 
-class Usecase implements AuthUsecase {
-    currentLocation: Location
+type Init = Readonly<{
+    href: AppHrefInit
 
-    href: AppHref
-    param: AuthParam
-    component: AuthComponent
-    background: Background
-    action: AuthAction
+    credential: CredentialInit
 
+    passwordLogin: PasswordLoginInit
+    passwordResetSession: PasswordResetSessionInit
+    passwordReset: PasswordResetInit
+
+    field: {
+        loginID: LoginIDFieldInit
+        password: PasswordFieldInit
+    }
+}>
+
+export function initAuthInit(factory: Factory, init: Init): AuthInit {
+    return (currentLocation) => {
+        const view = new View(factory, init, currentLocation)
+        return {
+            view,
+            terminate: view.init(),
+        }
+    }
+}
+
+class View implements AuthView {
     listener: Post<AuthState>[] = []
 
-    constructor(init: Init) {
-        this.currentLocation = init.currentLocation
-        this.href = init.href
-        this.param = init.param
-        this.component = init.component
-        this.background = init.background
-        this.action = init.action
+    components: AuthComponentSet
 
-        this.component.credential.onStateChange((state) => {
+    constructor(factory: Factory, init: Init, currentLocation: Location) {
+        this.components = {
+            credential: () => initCredential(factory, init, currentLocation, (credential) => {
+                this.hookCredentialStateChange(currentLocation, credential)
+            }),
+
+            passwordLogin: () => initPasswordLogin(factory, init, currentLocation),
+            passwordResetSession: () => initPasswordResetSession(factory, init),
+            passwordReset: () => initPasswordReset(factory, init, currentLocation),
+        }
+    }
+
+    hookCredentialStateChange(currentLocation: Location, credential: CredentialComponent): void {
+        credential.onStateChange((state) => {
             switch (state.type) {
                 case "required-to-login":
-                    this.post(this.detectLoginState())
-                    return
-            }
-        })
-
-        this.component.passwordReset.onStateChange((state) => {
-            switch (state.type) {
-                case "succeed-to-reset":
-                    this.post({
-                        type: "application",
-                        param: this.param.application({
-                            pagePathname: this.currentPagePathname(),
-                        }),
-                    })
-                    return
-            }
-        })
-
-        this.background.credential.sub.onStoreEvent((event) => {
-            switch (event.type) {
-                case "failed-to-store":
-                    this.post({ type: "error", err: event.err.err })
+                    this.post(detectLoginState(currentLocation))
                     return
             }
         })
     }
 
-    onStateChange(stateChanged: Post<AuthState>): void {
-        this.listener.push(stateChanged)
+    onStateChange(post: Post<AuthState>): void {
+        this.listener.push(post)
     }
-
     post(state: AuthState): void {
         this.listener.forEach(post => post(state))
     }
 
-    init(): AuthUsecaseResource {
-        return {
-            request: operation => this.request(operation),
-            terminate: () => { /* component とインターフェイスを合わせるために必要 */ },
-        }
+    init(): Terminate {
+        return () => { /* worker とインターフェイスを合わせるために必要 */ }
     }
-    request(_operation: AuthOperation) {
-        const fetchResponse = this.background.credential.fetch()
-        if (!fetchResponse.success) {
-            this.post({ type: "error", err: fetchResponse.err.err })
-            return
-        }
-        if (!fetchResponse.found) {
-            this.post(this.detectLoginState())
-            return
-        }
-
-        this.post({
-            type: "credential",
-            param: this.param.credential({
-                pagePathname: this.currentPagePathname(),
-                lastAuth: fetchResponse.content
-            }),
-        })
-    }
-
-    initPasswordLogin(): ViewResource<PasswordLoginView> {
-        const view = {
-            passwordLogin: this.component.passwordLogin(),
-        }
-
-        // TODO terminator でまとめたい
-        const passwordLogin = this.action.passwordLogin()
-
-        const action = passwordLogin((subscriber) => {
-            view.passwordLogin.subscribePasswordLogin(subscriber)
-        })
-
-        view.passwordLogin.setAction({
-            passwordLogin: action.action,
-        })
-
-        view.passwordLogin.onStateChange((state) => {
-            switch (state.type) {
-                case "succeed-to-login":
-                    this.post({
-                        type: "application",
-                        param: this.param.application({
-                            pagePathname: this.currentPagePathname(),
-                        }),
-                    })
-                    return
-            }
-        })
-
-        return {
-            view,
-            terminate: () => {
-                action.terminate()
-            },
-        }
-    }
-
-    detectLoginState(): AuthState {
-        // ログイン前画面ではアンダースコアから始まるクエリを使用する
-        const url = new URL(this.currentLocation.toString())
-
-        if (url.searchParams.get("_password_reset") === "start") {
-            return { type: "password-reset-session" }
-        }
-
-        const resetToken = url.searchParams.get("_password_reset_token")
-        if (resetToken) {
-            return { type: "password-reset", param: this.param.passwordReset(packResetToken(resetToken)) }
-        }
-
-        // 特に指定が無ければパスワードログイン
-        return { type: "password-login" }
-    }
-
-    currentPagePathname(): PagePathname {
-        return packPagePathname(new URL(this.currentLocation.toString()))
+    load() {
+        this.post({ type: "credential" })
     }
 }
 
+function initCredential(factory: Factory, init: Init, currentLocation: Location, hook: Hook<CredentialComponent>) {
+    const actions = {
+        renew: factory.credential.renew(),
+        path: factory.application.path(),
+    }
+
+    const param = {
+        pagePathname: currentPagePathname(currentLocation),
+    }
+
+    const credential = init.credential(actions, param)
+    hook(credential)
+
+    return {
+        credential,
+    }
+}
+function initPasswordLogin(factory: Factory, init: Init, currentLocation: Location) {
+    const loginID = factory.field.loginID()
+    const password = factory.field.password()
+
+    const actions = {
+        login: factory.passwordLogin.login(),
+        field: {
+            loginID: loginID.action,
+            password: password.action,
+        },
+        store: factory.credential.store(),
+        path: factory.application.path(),
+    }
+
+    const fields = {
+        loginID: {
+            loginIDField: init.field.loginID({
+                loginID,
+            }),
+        },
+        password: {
+            passwordField: init.field.password({
+                password,
+            }),
+        },
+    }
+
+    const param = {
+        pagePathname: currentPagePathname(currentLocation),
+    }
+
+    return {
+        href: init.href(),
+        passwordLogin: init.passwordLogin(actions, fields, param),
+    }
+}
+function initPasswordResetSession(factory: Factory, init: Init) {
+    const loginID = factory.field.loginID()
+
+    const actions = {
+        session: factory.passwordReset.session(),
+        field: {
+            loginID: loginID.action,
+        },
+    }
+
+    const fields = {
+        loginID: {
+            loginIDField: init.field.loginID({
+                loginID,
+            }),
+        },
+    }
+
+    return {
+        href: init.href(),
+        passwordResetSession: init.passwordResetSession(actions, fields),
+    }
+}
+function initPasswordReset(factory: Factory, init: Init, currentLocation: Location) {
+    const loginID = factory.field.loginID()
+    const password = factory.field.password()
+
+    const actions = {
+        reset: factory.passwordReset.reset(),
+        field: {
+            loginID: loginID.action,
+            password: password.action,
+        },
+        store: factory.credential.store(),
+        path: factory.application.path(),
+    }
+
+    const fields = {
+        loginID: {
+            loginIDField: init.field.loginID({
+                loginID,
+            }),
+        },
+        password: {
+            passwordField: init.field.password({
+                password,
+            }),
+        },
+    }
+
+    const param = {
+        pagePathname: currentPagePathname(currentLocation),
+        resetToken: detectPasswordResetToken(currentLocation),
+    }
+
+    return {
+        href: init.href(),
+        passwordReset: init.passwordReset(actions, fields, param),
+    }
+}
+
+function currentPagePathname(currentLocation: Location) {
+    return packPagePathname(new URL(currentLocation.toString()))
+}
+
+interface Hook<T> {
+    (component: T): void
+}
 interface Post<T> {
     (state: T): void
 }
 interface Terminate {
     (): void
 }
-
-type ViewResource<T> = Readonly<{
-    view: T
-    terminate: Terminate
-}>

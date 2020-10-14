@@ -6,57 +6,69 @@ import { loginHeader } from "../layout"
 
 import { ApplicationError } from "../application_error"
 
-//import { LoginIDField } from "./password_login/field/login_id"
-//import { PasswordField } from "./password_login/field/password"
+import { LoginIDField } from "./password_login/field/login_id"
+import { PasswordField } from "./password_login/field/password"
+
+import { unpackScriptPath } from "../../application/adapter"
 
 import { AppHref } from "../../href"
 
-import { PasswordLoginView } from "../../auth/usecase"
 import { PasswordLoginComponent, initialPasswordLoginState } from "../../auth/component/password_login/component"
 
 import { LoginError } from "../../password_login/data"
+import { ScriptPath } from "../../application/data"
 
-type Props = Readonly<{
-    usecase: Usecase
-}>
-interface Usecase {
+type ComponentSet = Readonly<{
     href: AppHref
-    initPasswordLogin(): { terminate: Terminate, view: PasswordLoginView }
-}
-interface Terminate {
-    (): void
-}
+    passwordLogin: PasswordLoginComponent
+}>
 
-type Container =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, view: PasswordLoginView }>
-
-export function PasswordLogin(props: Props): VNode {
-    const [container, setView] = useState<Container>({ set: false })
+type Props = {
+    init: Init<ComponentSet>
+}
+export function PasswordLogin({ init }: Props): VNode {
+    const [container, setComponents] = useState<Container>({ set: false })
     useEffect(() => {
-        const resource = props.usecase.initPasswordLogin()
-        setView({ set: true, view: resource.view })
-        return resource.terminate
+        setComponents({ set: true, components: init() })
     }, [])
 
     if (!container.set) {
         return EMPTY_CONTENT
     }
 
-    return h(Login, { ...container.view, href: props.usecase.href })
+    return h(View, { components: container.components })
 }
 
-type LoginProps = Readonly<{
-    passwordLogin: PasswordLoginComponent
-    href: AppHref
-}>
-function Login(props: LoginProps): VNode {
+type ViewProps = {
+    components: ComponentSet
+}
+function View({ components: { href, passwordLogin } }: ViewProps): VNode {
     const [state, setState] = useState(initialPasswordLoginState)
     // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
     const submit = useRef<HTMLButtonElement>()
     useEffect(() => {
-        props.passwordLogin.onStateChange(setState)
+        passwordLogin.onStateChange(setState)
     }, [])
+
+    useEffect(() => {
+        // スクリプトのロードは appendChild する必要があるため useEffect で行う
+        switch (state.type) {
+            case "succeed-to-login":
+                appendScript(state.scriptPath, (script) => {
+                    script.onerror = (err) => {
+                        passwordLogin.action({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
+                    }
+                })
+                break
+        }
+
+        function appendScript(scriptPath: ScriptPath, setup: { (script: HTMLScriptElement): void }): void {
+            const script = document.createElement("script")
+            script.src = unpackScriptPath(scriptPath)
+            setup(script)
+            document.body.appendChild(script)
+        }
+    }, [state])
 
     function view(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
         return html`
@@ -66,8 +78,8 @@ function Login(props: LoginProps): VNode {
                     <section>
                         <big>
                             <section class="login__body">
-                                ${html`` /* h(LoginIDField, { component: props.component, request }) */}
-                                ${html`` /* h(PasswordField, { component: props.component, request }) */}
+                                ${h(LoginIDField, { components: passwordLogin.components.loginID })}
+                                ${h(PasswordField, { components: passwordLogin.components.password })}
                             </section>
                         </big>
                     </section>
@@ -77,7 +89,7 @@ function Login(props: LoginProps): VNode {
                                 <big>${button}</big>
                             </div>
                             <div class="login__link">
-                                <a href="${props.href.auth.passwordResetSessionHref()}">
+                                <a href="${href.auth.passwordResetSessionHref()}">
                                     <i class="lnir lnir-question-circle"></i> パスワードがわからない方
                                 </a>
                             </div>
@@ -116,7 +128,12 @@ function Login(props: LoginProps): VNode {
             `)
 
         case "succeed-to-login":
+            // スクリプトのロードは appendChild する必要があるため useEffect で行う
             return EMPTY_CONTENT
+
+        case "failed-to-store":
+        case "failed-to-load":
+            return h(ApplicationError, { err: state.err.err })
 
         case "error":
             return h(ApplicationError, { err: state.err })
@@ -142,7 +159,7 @@ function Login(props: LoginProps): VNode {
             submit.current.blur()
         }
 
-        props.passwordLogin.login()
+        passwordLogin.action({ type: "login" })
     }
     function onSubmit_noop(e: Event) {
         e.preventDefault()
@@ -188,6 +205,13 @@ function loginError(err: LoginError): VNode {
 
 const EMPTY_CONTENT = html``
 
+interface Init<T> {
+    (): T
+}
 interface Post<T> {
     (state: T): void
 }
+
+type Container =
+    Readonly<{ set: false }> |
+    Readonly<{ set: true, components: ComponentSet }>

@@ -10,19 +10,26 @@ import { AuthCredential } from "../credential/data"
 import { LoginID } from "../login_id/data"
 import { Password } from "../password/data"
 
-export type Infra = Readonly<{
-    timeConfig: TimeConfig,
+export type SessionInfra = Readonly<{
+    time: SessionTimeConfig,
     passwordResetSessionClient: PasswordResetSessionClient,
-    passwordResetClient: PasswordResetClient,
     delayed: Delayed
     wait: Wait
 }>
 
-export type TimeConfig = Readonly<{
+export type ResetInfra = Readonly<{
+    time: ResetTimeConfig,
+    passwordResetClient: PasswordResetClient,
+    delayed: Delayed
+}>
+
+export type SessionTimeConfig = Readonly<{
     passwordResetStartSessionDelayTime: DelayTime,
     passwordResetPollingWaitTime: WaitTime,
     passwordResetPollingLimit: Limit,
+}>
 
+export type ResetTimeConfig = Readonly<{
     passwordResetDelayTime: DelayTime,
 }>
 

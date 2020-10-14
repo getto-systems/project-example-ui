@@ -1,18 +1,17 @@
+import { newLoginIDFieldComponent, LoginIDFieldInit } from "./field/login_id"
+
 import {
     PasswordResetSessionComponent,
-    PasswordResetSessionComponentResource,
     PasswordResetSessionState,
+    PasswordResetSessionFieldComponentSet,
 } from "../../../auth/component/password_reset_session/component"
 
-import { LoginIDFieldState } from "../../../auth/component/field/login_id/component"
-
-import { noError, hasError } from "../../../field/data"
-
 export function newPasswordResetSessionComponent(): PasswordResetSessionComponent {
-    const init = new Init()
     return new Component(
-        init.succeedToSendToken(),
-        init.loginIDValid(),
+        new Init().succeedToSendToken(),
+        {
+            loginID: { loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().noError()) },
+        },
     )
 }
 
@@ -74,49 +73,22 @@ class Init {
     succeedToSendToken(): PasswordResetSessionState {
         return { type: "succeed-to-send-token", dest: { type: "log" } }
     }
-
-    loginIDValid(): LoginIDFieldState {
-        return { type: "succeed-to-update-login_id", result: noError() }
-    }
-    loginIDInvalid_empty(): LoginIDFieldState {
-        return { type: "succeed-to-update-login_id", result: hasError(["empty"]) }
-    }
 }
 
 class Component implements PasswordResetSessionComponent {
     state: PasswordResetSessionState
-    loginID: LoginIDFieldState
+    readonly components: PasswordResetSessionFieldComponentSet
 
-    constructor(
-        state: PasswordResetSessionState,
-        loginID: LoginIDFieldState,
-    ) {
+    constructor(state: PasswordResetSessionState, components: PasswordResetSessionFieldComponentSet) {
         this.state = state
-        this.loginID = loginID
+        this.components = components
     }
 
-    onStateChange(stateChanged: Post<PasswordResetSessionState>): void {
-        stateChanged(this.state)
+    onStateChange(post: Post<PasswordResetSessionState>): void {
+        post(this.state)
     }
-    onLoginIDFieldStateChange(stateChanged: Post<LoginIDFieldState>): void {
-        stateChanged(this.loginID)
-    }
-
-    init(): PasswordResetSessionComponentResource {
-        return {
-            request: operation => {
-                switch (operation.type) {
-                    case "start-session":
-                        alert("ここでセッションを作成！")
-                        return
-
-                    case "field-login_id":
-                        // field のイベントは特にフィードバックしない
-                        return
-                }
-            },
-            terminate: () => { /* mock では特に何もしない */ },
-        }
+    action(): void {
+        // mock では特に何もしない
     }
 }
 

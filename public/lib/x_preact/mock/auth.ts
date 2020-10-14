@@ -1,7 +1,7 @@
 import { render, h } from "preact"
 
-import { newAuthUsecase } from "./auth/main"
+import { newAuthInit } from "./auth/main"
 
 import { Main } from "../auth/main"
 
-render(h(Main, { usecase: newAuthUsecase() }), document.body)
+render(h(Main, { init: newAuthInit() }), document.body)
