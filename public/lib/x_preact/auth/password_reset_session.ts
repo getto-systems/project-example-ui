@@ -54,7 +54,7 @@ function View({ href, passwordResetSession }: ComponentSet): VNode {
                     <section>
                         <big>
                             <section class="login__body">
-                                ${h(LoginIDField, { components: passwordResetSession.components.loginID })}
+                                ${h(LoginIDField, passwordResetSession.components)}
                             </section>
                         </big>
                     </section>

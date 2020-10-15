@@ -175,16 +175,8 @@ function initPasswordLogin(factory: Factory, init: Init, currentLocation: Locati
     }
 
     const fields = {
-        loginID: {
-            loginIDField: init.field.loginID({
-                loginID,
-            }),
-        },
-        password: {
-            passwordField: init.field.password({
-                password,
-            }),
-        },
+        loginIDField: init.field.loginID({ loginID }),
+        passwordField: init.field.password({ password }),
     }
 
     const param = {
@@ -207,11 +199,7 @@ function initPasswordResetSession(factory: Factory, init: Init) {
     }
 
     const fields = {
-        loginID: {
-            loginIDField: init.field.loginID({
-                loginID,
-            }),
-        },
+        loginIDField: init.field.loginID({ loginID }),
     }
 
     return {
@@ -234,16 +222,8 @@ function initPasswordReset(factory: Factory, init: Init, currentLocation: Locati
     }
 
     const fields = {
-        loginID: {
-            loginIDField: init.field.loginID({
-                loginID,
-            }),
-        },
-        password: {
-            passwordField: init.field.password({
-                password,
-            }),
-        },
+        loginIDField: init.field.loginID({ loginID }),
+        passwordField: init.field.password({ password }),
     }
 
     const param = {

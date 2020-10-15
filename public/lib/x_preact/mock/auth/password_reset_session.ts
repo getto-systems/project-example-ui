@@ -10,7 +10,7 @@ export function newPasswordResetSessionComponent(): PasswordResetSessionComponen
     return new Component(
         new Init().succeedToSendToken(),
         {
-            loginID: { loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().noError()) },
+            loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().noError()),
         },
     )
 }

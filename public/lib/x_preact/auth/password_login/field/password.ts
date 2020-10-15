@@ -9,11 +9,7 @@ import { PasswordFieldComponent, initialPasswordFieldState } from "../../../../a
 type ComponentSet = Readonly<{
     passwordField: PasswordFieldComponent
 }>
-
-type Props = Readonly<{
-    components: ComponentSet
-}>
-export function PasswordField({ components: { passwordField } }: Props): VNode {
+export function PasswordField({ passwordField }: ComponentSet): VNode {
     const [state, setState] = useState(initialPasswordFieldState)
     useEffect(() => {
         passwordField.onStateChange(setState)

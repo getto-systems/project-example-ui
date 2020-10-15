@@ -11,8 +11,8 @@ export function newPasswordResetComponent(): PasswordResetComponent {
     return new Component(
         new Init().initialReset(),
         {
-            loginID: { loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().noError()) },
-            password: { passwordField: newPasswordFieldComponent(new PasswordFieldInit().noError()) },
+            loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().noError()),
+            passwordField: newPasswordFieldComponent(new PasswordFieldInit().noError()),
         },
     )
 }
