@@ -38,13 +38,9 @@ export function PasswordReset({ init }: Props): VNode {
         return EMPTY_CONTENT
     }
 
-    return h(View, container)
+    return h(View, container.components)
 }
-
-type ViewProps = {
-    components: ComponentSet
-}
-function View({ components: { href, passwordReset } }: ViewProps): VNode {
+function View({ href, passwordReset }: ComponentSet): VNode {
     const [state, setState] = useState(initialPasswordResetState)
     // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
     const submit = useRef<HTMLButtonElement>()
