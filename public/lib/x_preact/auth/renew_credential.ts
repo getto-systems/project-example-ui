@@ -29,13 +29,9 @@ export function RenewCredential({ init }: Props): VNode {
         return EMPTY_CONTENT
     }
 
-    return h(View, container)
+    return h(View, container.components)
 }
-
-type ViewProps = {
-    components: ComponentSet
-}
-function View({ components: { renewCredential } }: ViewProps): VNode {
+function View({ renewCredential }: ComponentSet): VNode {
     const [state, setState] = useState(initialRenewCredentialState)
     useEffect(() => {
         renewCredential.onStateChange(setState)

@@ -45,7 +45,6 @@ export function Main({ init }: Props): VNode {
 type ViewProps = Readonly<{
     view: AuthView
 }>
-
 function View({ view }: ViewProps): VNode {
     const [state, setState] = useState(initialAuthState)
     useEffect(() => {
