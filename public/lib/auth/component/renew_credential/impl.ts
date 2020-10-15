@@ -16,7 +16,7 @@ type Background = Readonly<{
     path: PathAction
 }>
 
-export function initRenewCredentialInit(actions: RenewCredentialActionSet, param: RenewCredentialParam): RenewCredentialComponent {
+export function initRenewCredential(actions: RenewCredentialActionSet, param: RenewCredentialParam): RenewCredentialComponent {
     return new Component(actions, param)
 }
 

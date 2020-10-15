@@ -26,7 +26,7 @@ type Background = Readonly<{
     path: PathAction
 }>
 
-export function initPasswordResetInit(actions: PasswordResetActionSet, components: PasswordResetFieldComponentSet, param: PasswordResetParam): PasswordResetComponent {
+export function initPasswordReset(actions: PasswordResetActionSet, components: PasswordResetFieldComponentSet, param: PasswordResetParam): PasswordResetComponent {
     return new Component(actions, components, param)
 }
 

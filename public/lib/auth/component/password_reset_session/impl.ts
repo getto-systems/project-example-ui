@@ -18,7 +18,7 @@ type Background = Readonly<{
     }
 }>
 
-export function initPasswordResetSessionInit(actions: PasswordResetSessionActionSet, components: PasswordResetSessionFieldComponentSet): PasswordResetSessionComponent {
+export function initPasswordResetSession(actions: PasswordResetSessionActionSet, components: PasswordResetSessionFieldComponentSet): PasswordResetSessionComponent {
     return new Component(actions, components)
 }
 

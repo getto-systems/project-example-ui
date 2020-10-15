@@ -9,13 +9,13 @@ import { newAppHref } from "./href"
 
 import { initAuthInit } from "../auth/impl/core"
 
-import { initRenewCredentialInit } from "../auth/component/renew_credential/impl"
-import { initPasswordLoginInit } from "../auth/component/password_login/impl"
-import { initPasswordResetSessionInit } from "../auth/component/password_reset_session/impl"
-import { initPasswordResetInit } from "../auth/component/password_reset/impl"
+import { initRenewCredential } from "../auth/component/renew_credential/impl"
+import { initPasswordLogin } from "../auth/component/password_login/impl"
+import { initPasswordResetSession } from "../auth/component/password_reset_session/impl"
+import { initPasswordReset } from "../auth/component/password_reset/impl"
 
-import { initLoginIDFieldInit } from "../auth/component/field/login_id/impl"
-import { initPasswordFieldInit } from "../auth/component/field/password/impl"
+import { initLoginIDField } from "../auth/component/field/login_id/impl"
+import { initPasswordField } from "../auth/component/field/password/impl"
 
 import { initPathFactory } from "../application/impl/core"
 import { initRenewFactory, initStoreFactory } from "../credential/impl/core"
@@ -59,15 +59,15 @@ export function newAuthInit(credentialStorage: Storage): AuthInit {
     const init = {
         href: () => newAppHref(),
 
-        renewCredential: initRenewCredentialInit,
+        renewCredential: initRenewCredential,
 
-        passwordLogin: initPasswordLoginInit,
-        passwordResetSession: initPasswordResetSessionInit,
-        passwordReset: initPasswordResetInit,
+        passwordLogin: initPasswordLogin,
+        passwordResetSession: initPasswordResetSession,
+        passwordReset: initPasswordReset,
 
         field: {
-            loginID: initLoginIDFieldInit,
-            password: initPasswordFieldInit,
+            loginID: initLoginIDField,
+            password: initPasswordField,
         }
     }
 

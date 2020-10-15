@@ -13,7 +13,7 @@ type Background = Readonly<{
     loginID: LoginIDFieldAction
 }>
 
-export function initLoginIDFieldInit(actions: LoginIDFieldActionSet): LoginIDFieldComponent {
+export function initLoginIDField(actions: LoginIDFieldActionSet): LoginIDFieldComponent {
     return new Component(actions)
 }
 

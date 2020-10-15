@@ -13,7 +13,7 @@ type Background = Readonly<{
     password: PasswordFieldAction
 }>
 
-export function initPasswordFieldInit(actions: PasswordFieldActionSet): PasswordFieldComponent {
+export function initPasswordField(actions: PasswordFieldActionSet): PasswordFieldComponent {
     return new Component(actions)
 }
 

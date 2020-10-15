@@ -26,7 +26,7 @@ type Background = Readonly<{
     path: PathAction
 }>
 
-export function initPasswordLoginInit(actions: PasswordLoginActionSet, components: PasswordLoginFieldComponentSet, param: PasswordLoginParam): PasswordLoginComponent {
+export function initPasswordLogin(actions: PasswordLoginActionSet, components: PasswordLoginFieldComponentSet, param: PasswordLoginParam): PasswordLoginComponent {
     return new Component(actions, components, param)
 }
 
