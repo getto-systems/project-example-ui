@@ -9,7 +9,7 @@ import { PathAction } from "../../../application/action"
 
 import { ResetToken, ResetError } from "../../../password_reset/data"
 import { StorageError } from "../../../credential/data"
-import { PagePathname, ScriptPath } from "../../../application/data"
+import { PagePathname, ScriptPath, LoadError } from "../../../application/data"
 
 export interface PasswordResetInit {
     (actions: PasswordResetActionSet, components: PasswordResetFieldComponentSet, param: PasswordResetParam): PasswordResetComponent
@@ -47,17 +47,14 @@ export type PasswordResetState =
     Readonly<{ type: "failed-to-reset", err: ResetError }> |
     Readonly<{ type: "succeed-to-reset", scriptPath: ScriptPath }> |
     Readonly<{ type: "storage-error", err: StorageError }> |
-    Readonly<{ type: "failed-to-load", err: LoadError }> |
+    Readonly<{ type: "load-error", err: LoadError }> |
     Readonly<{ type: "error", err: string }>
 
 export const initialPasswordResetState: PasswordResetState = { type: "initial-reset" }
 
 export type PasswordResetRequest =
     Readonly<{ type: "reset" }> |
-    Readonly<{ type: "failed-to-load", err: LoadError }>
-
-export type LoadError =
-    Readonly<{ type: "infra-error", err: string }>
+    Readonly<{ type: "load-error", err: LoadError }>
 
 interface Post<T> {
     (state: T): void
