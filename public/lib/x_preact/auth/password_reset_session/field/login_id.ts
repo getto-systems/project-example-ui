@@ -34,7 +34,3 @@ export function LoginIDField({ components: { loginIDField } }: Props): VNode {
         </label>
     `
 }
-
-interface Post<T> {
-    (state: T): void
-}
