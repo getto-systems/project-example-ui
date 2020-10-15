@@ -100,8 +100,7 @@ function View({ components: { renewCredential } }: ViewProps): VNode {
         case "failed-to-renew":
             return renewFailedContent(state.err)
 
-        case "failed-to-fetch":
-        case "failed-to-store":
+        case "storage-error":
         case "failed-to-load":
             return h(ApplicationError, { err: state.err.err })
 

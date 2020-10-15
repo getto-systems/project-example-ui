@@ -30,22 +30,18 @@ export type RenewEvent =
     Readonly<{ type: "try-to-renew" }> |
     Readonly<{ type: "delayed-to-renew" }> |
     Readonly<{ type: "failed-to-renew", err: RenewError }> |
-    Readonly<{ type: "failed-to-fetch", err: FetchError }> |
-    Readonly<{ type: "failed-to-store", err: StoreError }> |
+    Readonly<{ type: "storage-error", err: StorageError }> |
     Readonly<{ type: "succeed-to-renew" }>
 
 export type StoreEvent =
-    Readonly<{ type: "failed-to-store", err: StoreError }>
+    Readonly<{ type: "storage-error", err: StorageError }>
 
-export type FetchResponse =
-    Readonly<{ success: false, err: FetchError }> |
+export type FoundLastAuth =
+    Readonly<{ success: false, err: StorageError }> |
     Readonly<{ success: true, found: false }> |
     Readonly<{ success: true, found: true, content: LastAuth }>
 
-export type FetchError =
-    Readonly<{ type: "infra-error", err: string }>
-
-export type StoreError =
+export type StorageError =
     Readonly<{ type: "infra-error", err: string }>
 
 export type RenewError =

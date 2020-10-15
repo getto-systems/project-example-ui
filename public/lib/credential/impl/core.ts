@@ -5,7 +5,7 @@ import {
     StoreFactory, StoreAction,
 } from "../action"
 
-import { TicketNonce, RenewEvent, StoreEvent, FetchResponse } from "../data"
+import { TicketNonce, RenewEvent, StoreEvent, FoundLastAuth } from "../data"
 
 const renewAction = (infra: RenewInfra, post: Post<RenewEvent>): RenewAction => {
     return {
@@ -14,9 +14,9 @@ const renewAction = (infra: RenewInfra, post: Post<RenewEvent>): RenewAction => 
     }
 
     async function renew() {
-        const lastAuth = fetchLastAuth()
+        const lastAuth = findLastAuth()
         if (!lastAuth.success) {
-            post({ type: "failed-to-fetch", err: lastAuth.err })
+            post({ type: "storage-error", err: lastAuth.err })
             return
         }
         if (!lastAuth.found) {
@@ -44,7 +44,7 @@ const renewAction = (infra: RenewInfra, post: Post<RenewEvent>): RenewAction => 
         if (!renewResponse.hasCredential) {
             const storeResponse = infra.authCredentials.removeAuthCredential()
             if (!storeResponse.success) {
-                post({ type: "failed-to-store", err: storeResponse.err })
+                post({ type: "storage-error", err: storeResponse.err })
                 return
             }
 
@@ -54,7 +54,7 @@ const renewAction = (infra: RenewInfra, post: Post<RenewEvent>): RenewAction => 
 
         const storeResponse = infra.authCredentials.storeAuthCredential(renewResponse.authCredential)
         if (!storeResponse.success) {
-            post({ type: "failed-to-store", err: storeResponse.err })
+            post({ type: "storage-error", err: storeResponse.err })
             return
         }
 
@@ -62,9 +62,9 @@ const renewAction = (infra: RenewInfra, post: Post<RenewEvent>): RenewAction => 
     }
 
     function setContinuousRenew(): void {
-        const lastAuth = fetchLastAuth()
+        const lastAuth = findLastAuth()
         if (!lastAuth.success) {
-            post({ type: "failed-to-fetch", err: lastAuth.err })
+            post({ type: "storage-error", err: lastAuth.err })
             return
         }
         if (!lastAuth.found) {
@@ -105,7 +105,7 @@ const renewAction = (infra: RenewInfra, post: Post<RenewEvent>): RenewAction => 
         return true
     }
 
-    function fetchLastAuth(): FetchResponse {
+    function findLastAuth(): FoundLastAuth {
         const ticketNonce = infra.authCredentials.findTicketNonce()
         if (!ticketNonce.success) {
             return { success: false, err: ticketNonce.err }
@@ -146,7 +146,7 @@ export function initRenewFactory(infra: RenewInfra): RenewFactory {
 const storeAction = (infra: StoreInfra, post: Post<StoreEvent>): StoreAction => async (authCredential) => {
     const storeResponse = infra.authCredentials.storeAuthCredential(authCredential)
     if (!storeResponse.success) {
-        post({ type: "failed-to-store", err: storeResponse.err })
+        post({ type: "storage-error", err: storeResponse.err })
         return
     }
 }

@@ -8,7 +8,7 @@ import { StoreResource } from "../../../credential/action"
 import { PathAction } from "../../../application/action"
 
 import { LoginError } from "../../../password_login/data"
-import { StoreError } from "../../../credential/data"
+import { StorageError } from "../../../credential/data"
 import { PagePathname, ScriptPath } from "../../../application/data"
 
 export interface PasswordLoginInit {
@@ -44,7 +44,7 @@ export type PasswordLoginState =
     Readonly<{ type: "delayed-to-login" }> |
     Readonly<{ type: "failed-to-login", err: LoginError }> |
     Readonly<{ type: "succeed-to-login", scriptPath: ScriptPath }> |
-    Readonly<{ type: "failed-to-store", err: StoreError }> |
+    Readonly<{ type: "storage-error", err: StorageError }> |
     Readonly<{ type: "failed-to-load", err: LoadError }> |
     Readonly<{ type: "error", err: string }>
 
