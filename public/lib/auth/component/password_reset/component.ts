@@ -8,7 +8,7 @@ import { StoreResource } from "../../../credential/action"
 import { PathAction } from "../../../application/action"
 
 import { ResetToken, ResetError } from "../../../password_reset/data"
-import { StoreError } from "../../../credential/data"
+import { StorageError } from "../../../credential/data"
 import { PagePathname, ScriptPath } from "../../../application/data"
 
 export interface PasswordResetInit {
@@ -46,7 +46,7 @@ export type PasswordResetState =
     Readonly<{ type: "delayed-to-reset" }> |
     Readonly<{ type: "failed-to-reset", err: ResetError }> |
     Readonly<{ type: "succeed-to-reset", scriptPath: ScriptPath }> |
-    Readonly<{ type: "failed-to-store", err: StoreError }> |
+    Readonly<{ type: "storage-error", err: StorageError }> |
     Readonly<{ type: "failed-to-load", err: LoadError }> |
     Readonly<{ type: "error", err: string }>
 

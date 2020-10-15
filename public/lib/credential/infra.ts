@@ -1,4 +1,4 @@
-import { AuthCredential, TicketNonce, AuthAt, FetchError, StoreError, RenewError } from "./data"
+import { AuthCredential, TicketNonce, AuthAt, StorageError, RenewError } from "./data"
 
 export type RenewInfra = Readonly<{
     time: RenewTimeConfig
@@ -57,13 +57,13 @@ export type StorageKey = Readonly<{
 }>
 
 export type FindResponse<T> =
-    Readonly<{ success: false, err: FetchError }> |
+    Readonly<{ success: false, err: StorageError }> |
     Readonly<{ success: true, found: false }> |
     Readonly<{ success: true, found: true, content: T }>
 
 export type StoreResponse =
     Readonly<{ success: true }> |
-    Readonly<{ success: false, err: StoreError }>
+    Readonly<{ success: false, err: StorageError }>
 
 export type RenewResponse =
     Readonly<{ success: false, err: RenewError }> |

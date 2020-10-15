@@ -134,7 +134,7 @@ function View({ components: { href, passwordReset } }: ViewProps): VNode {
             // スクリプトのロードは appendChild する必要があるため useEffect で行う
             return EMPTY_CONTENT
 
-        case "failed-to-store":
+        case "storage-error":
         case "failed-to-load":
             return h(ApplicationError, { err: state.err.err })
 
