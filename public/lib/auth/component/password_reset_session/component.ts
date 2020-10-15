@@ -21,7 +21,7 @@ export interface PasswordResetSessionComponent {
     readonly components: PasswordResetSessionFieldComponentSet
 }
 export type PasswordResetSessionFieldComponentSet = Readonly<{
-    loginID: Readonly<{ loginIDField: LoginIDFieldComponent }>
+    loginIDField: LoginIDFieldComponent
 }>
 
 export type PasswordResetSessionState =

@@ -34,8 +34,8 @@ export interface PasswordLoginComponent {
     readonly components: PasswordLoginFieldComponentSet
 }
 export type PasswordLoginFieldComponentSet = Readonly<{
-    loginID: Readonly<{ loginIDField: LoginIDFieldComponent }>
-    password: Readonly<{ passwordField: PasswordFieldComponent }>
+    loginIDField: LoginIDFieldComponent
+    passwordField: PasswordFieldComponent
 }>
 
 export type PasswordLoginState =
