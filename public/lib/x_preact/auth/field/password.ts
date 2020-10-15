@@ -1,10 +1,34 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
+import { mapInputEvent } from "./common"
+
 import { unpackInputValue } from "../../../field/adapter"
+
+import { PasswordFieldComponent } from "../../../auth/component/field/password/component"
 
 import { PasswordFieldError, PasswordCharacter, PasswordView } from "../../../password/field/data"
 import { InputValue, Valid } from "../../../field/data"
+
+export interface PasswordFieldHandler {
+    onInput(event: InputEvent): void
+    show(): void
+    hide(): void
+}
+
+export function passwordFieldHandler(passwordField: PasswordFieldComponent): PasswordFieldHandler {
+    return {
+        onInput: mapInputEvent((password) => {
+            passwordField.action({ type: "set", inputValue: password })
+        }),
+        show() {
+            passwordField.action({ type: "show" })
+        },
+        hide() {
+            passwordField.action({ type: "hide" })
+        },
+    }
+}
 
 export function passwordFieldError(result: Valid<PasswordFieldError>, character: PasswordCharacter): VNode[] {
     if (result.valid) {

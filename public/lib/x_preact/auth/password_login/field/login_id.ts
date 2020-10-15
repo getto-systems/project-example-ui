@@ -2,8 +2,7 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { mapInputEvent } from "../../field/common"
-import { loginIDFieldError } from "../../field/login_id"
+import { loginIDFieldError, loginIDFieldHandler } from "../../field/login_id"
 
 import {
     LoginIDFieldComponent,
@@ -23,16 +22,14 @@ export function LoginIDField({ components: { loginIDField } }: Props): VNode {
         loginIDField.onStateChange(setState)
     }, [])
 
-    const onInput = mapInputEvent((loginID) => {
-        loginIDField.action({ type: "set", inputValue: loginID })
-    })
+    const handler = loginIDFieldHandler(loginIDField)
 
     return html`
         <label>
             <dl class="form ${state.result.valid ? "" : "form_error"}">
                 <dt class="form__header">ログインID</dt>
                 <dd class="form__field">
-                    <input type="text" class="input_fill" onInput=${onInput}/>
+                    <input type="text" class="input_fill" onInput=${handler.onInput}/>
                     ${loginIDFieldError(state.result)}
                 </dd>
             </dl>

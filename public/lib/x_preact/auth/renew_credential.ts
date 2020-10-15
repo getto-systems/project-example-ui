@@ -19,7 +19,6 @@ type Container =
     Readonly<{ set: false }> |
     Readonly<{ set: true, components: ComponentSet }>
 
-// TODO component は RenewCredential にしたい
 type Props = {
     init: Init<ComponentSet>
 }
