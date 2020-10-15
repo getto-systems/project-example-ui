@@ -57,7 +57,7 @@ function View({ components: { renewCredential } }: ViewProps): VNode {
                         renewCredential.action({ type: "succeed-to-instant-load" })
                     }
                     script.onerror = (err) => {
-                        renewCredential.action({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
+                        renewCredential.action({ type: "load-error", err: { type: "infra-error", err: `${err}` } })
                     }
                 })
                 break
@@ -65,7 +65,7 @@ function View({ components: { renewCredential } }: ViewProps): VNode {
             case "succeed-to-renew":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = (err) => {
-                        renewCredential.action({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
+                        renewCredential.action({ type: "load-error", err: { type: "infra-error", err: `${err}` } })
                     }
                 })
                 break
@@ -101,7 +101,7 @@ function View({ components: { renewCredential } }: ViewProps): VNode {
             return renewFailedContent(state.err)
 
         case "storage-error":
-        case "failed-to-load":
+        case "load-error":
             return h(ApplicationError, { err: state.err.err })
 
         case "error":

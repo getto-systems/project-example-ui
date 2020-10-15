@@ -2,7 +2,7 @@ import { RenewResource } from "../../../credential/action"
 import { PathAction } from "../../../application/action"
 
 import { StorageError, RenewError } from "../../../credential/data"
-import { PagePathname, ScriptPath } from "../../../application/data"
+import { PagePathname, ScriptPath, LoadError } from "../../../application/data"
 
 export interface RenewCredentialInit {
     (actions: RenewCredentialActionSet, param: RenewCredentialParam): RenewCredentialComponent
@@ -29,7 +29,7 @@ export type RenewCredentialState =
     Readonly<{ type: "delayed-to-renew" }> |
     Readonly<{ type: "failed-to-renew", err: RenewError }> |
     Readonly<{ type: "succeed-to-renew", scriptPath: ScriptPath }> |
-    Readonly<{ type: "failed-to-load", err: LoadError }> |
+    Readonly<{ type: "load-error", err: LoadError }> |
     Readonly<{ type: "storage-error", err: StorageError }> |
     Readonly<{ type: "error", err: string }>
 
@@ -37,11 +37,8 @@ export const initialRenewCredentialState: RenewCredentialState = { type: "initia
 
 export type RenewCredentialRequest =
     Readonly<{ type: "renew" }> |
-    Readonly<{ type: "failed-to-load", err: LoadError }> |
+    Readonly<{ type: "load-error", err: LoadError }> |
     Readonly<{ type: "succeed-to-instant-load" }>
-
-export type LoadError =
-    Readonly<{ type: "infra-error", err: string }>
 
 interface Post<T> {
     (state: T): void

@@ -87,8 +87,8 @@ class Component implements PasswordLoginComponent {
                 })
                 return
 
-            case "failed-to-load":
-                this.post({ type: "failed-to-load", err: request.err })
+            case "load-error":
+                this.post({ type: "load-error", err: request.err })
                 return
 
             default:

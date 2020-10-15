@@ -56,7 +56,7 @@ function View({ components: { href, passwordLogin } }: ViewProps): VNode {
             case "succeed-to-login":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = (err) => {
-                        passwordLogin.action({ type: "failed-to-load", err: { type: "infra-error", err: `${err}` } })
+                        passwordLogin.action({ type: "load-error", err: { type: "infra-error", err: `${err}` } })
                     }
                 })
                 break
@@ -132,7 +132,7 @@ function View({ components: { href, passwordLogin } }: ViewProps): VNode {
             return EMPTY_CONTENT
 
         case "storage-error":
-        case "failed-to-load":
+        case "load-error":
             return h(ApplicationError, { err: state.err.err })
 
         case "error":
