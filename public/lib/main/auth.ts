@@ -59,15 +59,15 @@ export function newAuthInit(credentialStorage: Storage): AuthInit {
     const init = {
         href: () => newAppHref(),
 
-        renewCredential: initRenewCredentialInit(),
+        renewCredential: initRenewCredentialInit,
 
-        passwordLogin: initPasswordLoginInit(),
-        passwordResetSession: initPasswordResetSessionInit(),
-        passwordReset: initPasswordResetInit(),
+        passwordLogin: initPasswordLoginInit,
+        passwordResetSession: initPasswordResetSessionInit,
+        passwordReset: initPasswordResetInit,
 
         field: {
-            loginID: initLoginIDFieldInit(),
-            password: initPasswordFieldInit(),
+            loginID: initLoginIDFieldInit,
+            password: initPasswordFieldInit,
         }
     }
 

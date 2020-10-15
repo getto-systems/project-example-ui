@@ -1,5 +1,4 @@
 import {
-    PasswordLoginInit,
     PasswordLoginActionSet,
     PasswordLoginParam,
     PasswordLoginComponent,
@@ -27,8 +26,8 @@ type Background = Readonly<{
     path: PathAction
 }>
 
-export function initPasswordLoginInit(): PasswordLoginInit {
-    return (actions, components, param) => new Component(actions, components, param)
+export function initPasswordLoginInit(actions: PasswordLoginActionSet, components: PasswordLoginFieldComponentSet, param: PasswordLoginParam): PasswordLoginComponent {
+    return new Component(actions, components, param)
 }
 
 class Component implements PasswordLoginComponent {

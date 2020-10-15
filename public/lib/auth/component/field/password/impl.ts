@@ -1,5 +1,4 @@
 import {
-    PasswordFieldInit,
     PasswordFieldActionSet,
     PasswordFieldComponent,
     PasswordFieldState,
@@ -14,8 +13,8 @@ type Background = Readonly<{
     password: PasswordFieldAction
 }>
 
-export function initPasswordFieldInit(): PasswordFieldInit {
-    return (actions) => new Component(actions)
+export function initPasswordFieldInit(actions: PasswordFieldActionSet): PasswordFieldComponent {
+    return new Component(actions)
 }
 
 class Component implements PasswordFieldComponent {

@@ -1,5 +1,4 @@
 import {
-    LoginIDFieldInit,
     LoginIDFieldActionSet,
     LoginIDFieldComponent,
     LoginIDFieldState,
@@ -14,8 +13,8 @@ type Background = Readonly<{
     loginID: LoginIDFieldAction
 }>
 
-export function initLoginIDFieldInit(): LoginIDFieldInit {
-    return (actions) => new Component(actions)
+export function initLoginIDFieldInit(actions: LoginIDFieldActionSet): LoginIDFieldComponent {
+    return new Component(actions)
 }
 
 class Component implements LoginIDFieldComponent {
