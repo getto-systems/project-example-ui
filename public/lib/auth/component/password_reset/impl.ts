@@ -1,5 +1,4 @@
 import {
-    PasswordResetInit,
     PasswordResetActionSet,
     PasswordResetParam,
     PasswordResetComponent,
@@ -27,8 +26,8 @@ type Background = Readonly<{
     path: PathAction
 }>
 
-export function initPasswordResetInit(): PasswordResetInit {
-    return (actions, components, param) => new Component(actions, components, param)
+export function initPasswordReset(actions: PasswordResetActionSet, components: PasswordResetFieldComponentSet, param: PasswordResetParam): PasswordResetComponent {
+    return new Component(actions, components, param)
 }
 
 class Component implements PasswordResetComponent {

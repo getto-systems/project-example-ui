@@ -1,5 +1,4 @@
 import {
-    RenewCredentialInit,
     RenewCredentialActionSet,
     RenewCredentialParam,
     RenewCredentialComponent,
@@ -17,8 +16,8 @@ type Background = Readonly<{
     path: PathAction
 }>
 
-export function initRenewCredentialInit(): RenewCredentialInit {
-    return (actions, param) => new Component(actions, param)
+export function initRenewCredential(actions: RenewCredentialActionSet, param: RenewCredentialParam): RenewCredentialComponent {
+    return new Component(actions, param)
 }
 
 class Component implements RenewCredentialComponent {

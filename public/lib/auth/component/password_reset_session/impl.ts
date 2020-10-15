@@ -1,5 +1,4 @@
 import {
-    PasswordResetSessionInit,
     PasswordResetSessionActionSet,
     PasswordResetSessionComponent,
     PasswordResetSessionState,
@@ -19,8 +18,8 @@ type Background = Readonly<{
     }
 }>
 
-export function initPasswordResetSessionInit(): PasswordResetSessionInit {
-    return (actions, components) => new Component(actions, components)
+export function initPasswordResetSession(actions: PasswordResetSessionActionSet, components: PasswordResetSessionFieldComponentSet): PasswordResetSessionComponent {
+    return new Component(actions, components)
 }
 
 class Component implements PasswordResetSessionComponent {
