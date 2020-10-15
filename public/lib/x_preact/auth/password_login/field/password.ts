@@ -34,7 +34,3 @@ export function PasswordField({ components: { passwordField } }: Props): VNode {
         </label>
     `
 }
-
-interface Post<T> {
-    (state: T): void
-}
