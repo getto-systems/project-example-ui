@@ -3,15 +3,13 @@ import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { loginError } from "../layout"
+import { appendScript } from "./application"
 
 import { ApplicationError } from "../application_error"
-
-import { unpackScriptPath } from "../../application/adapter"
 
 import { RenewCredentialComponent, initialRenewCredentialState } from "../../auth/component/renew_credential/component"
 
 import { RenewError } from "../../credential/data"
-import { ScriptPath } from "../../application/data"
 
 type ComponentSet = Readonly<{
     renewCredential: RenewCredentialComponent
@@ -70,13 +68,6 @@ function View({ components: { renewCredential } }: ViewProps): VNode {
                 })
                 break
 
-        }
-
-        function appendScript(scriptPath: ScriptPath, setup: { (script: HTMLScriptElement): void }): void {
-            const script = document.createElement("script")
-            script.src = unpackScriptPath(scriptPath)
-            setup(script)
-            document.body.appendChild(script)
         }
     }, [state])
 
