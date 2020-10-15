@@ -2,6 +2,7 @@ import { h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { useComponentSet } from "../container"
 import { loginError } from "../layout"
 import { appendScript } from "./application"
 
@@ -15,24 +16,20 @@ type ComponentSet = Readonly<{
     renewCredential: RenewCredentialComponent
 }>
 
-type Container =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, components: ComponentSet }>
-
 type Props = {
     init: Init<ComponentSet>
 }
 export function RenewCredential({ init }: Props): VNode {
-    const [container, setComponents] = useState<Container>({ set: false })
+    const [container, setComponents] = useComponentSet<ComponentSet>()
     useEffect(() => {
-        setComponents({ set: true, components: init() })
+        setComponents(init())
     }, [])
 
     if (!container.set) {
         return EMPTY_CONTENT
     }
 
-    return h(View, { components: container.components })
+    return h(View, container)
 }
 
 type ViewProps = {

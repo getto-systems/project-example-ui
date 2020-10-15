@@ -2,6 +2,7 @@ import { h, VNode } from "preact"
 import { useState, useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { useView } from "../container"
 import { ApplicationError } from "../application_error"
 
 import { RenewCredential } from "./renew_credential"
@@ -27,23 +28,19 @@ export function Main({ init }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    const [container, setView] = useState<Container>({ set: false })
+    const [container, setView] = useView<AuthView>()
     useEffect(() => {
-        const resource = init(location)
-        setView({ set: true, view: resource.view })
-        return resource.terminate
+        const { view, terminate } = init(location)
+        setView(view)
+        return terminate
     }, [])
 
     if (!container.set) {
         return EMPTY_CONTENT
     }
 
-    return h(View, { view: container.view })
+    return h(View, container)
 }
-
-type Container =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, view: AuthView }>
 
 type ViewProps = Readonly<{
     view: AuthView

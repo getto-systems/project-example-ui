@@ -2,6 +2,7 @@ import { h, VNode } from "preact"
 import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { useComponentSet } from "../container"
 import { loginHeader } from "../layout"
 import { appendScript } from "./application"
 
@@ -28,16 +29,16 @@ type Props = {
     init: Init<ComponentSet>
 }
 export function PasswordReset({ init }: Props): VNode {
-    const [container, setComponents] = useState<Container>({ set: false })
+    const [container, setComponents] = useComponentSet<ComponentSet>()
     useEffect(() => {
-        setComponents({ set: true, components: init() })
+        setComponents(init())
     }, [])
 
     if (!container.set) {
         return EMPTY_CONTENT
     }
 
-    return h(View, { components: container.components })
+    return h(View, container)
 }
 
 type ViewProps = {
@@ -205,7 +206,3 @@ interface Init<T> {
 interface Post<T> {
     (state: T): void
 }
-
-type Container =
-    Readonly<{ set: false }> |
-    Readonly<{ set: true, components: ComponentSet }>

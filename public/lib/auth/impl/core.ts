@@ -96,7 +96,7 @@ export function initAuthInit(factory: Factory, init: Init): AuthInit {
         const view = new View(factory, init, currentLocation)
         return {
             view,
-            terminate: view.init(),
+            terminate: () => view.terminate(),
         }
     }
 }
@@ -135,8 +135,8 @@ class View implements AuthView {
         this.listener.forEach(post => post(state))
     }
 
-    init(): Terminate {
-        return () => { /* worker とインターフェイスを合わせるために必要 */ }
+    terminate(): void {
+        // worker とインターフェイスを合わせるために必要
     }
     load() {
         this.post({ type: "renew-credential" })
