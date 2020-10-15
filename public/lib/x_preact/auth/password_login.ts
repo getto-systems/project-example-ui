@@ -3,20 +3,18 @@ import { useState, useEffect, useRef } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { loginHeader } from "../layout"
+import { appendScript } from "./application"
 
 import { ApplicationError } from "../application_error"
 
 import { LoginIDField } from "./password_login/field/login_id"
 import { PasswordField } from "./password_login/field/password"
 
-import { unpackScriptPath } from "../../application/adapter"
-
 import { AppHref } from "../../href"
 
 import { PasswordLoginComponent, initialPasswordLoginState } from "../../auth/component/password_login/component"
 
 import { LoginError } from "../../password_login/data"
-import { ScriptPath } from "../../application/data"
 
 type ComponentSet = Readonly<{
     href: AppHref
@@ -60,13 +58,6 @@ function View({ components: { href, passwordLogin } }: ViewProps): VNode {
                     }
                 })
                 break
-        }
-
-        function appendScript(scriptPath: ScriptPath, setup: { (script: HTMLScriptElement): void }): void {
-            const script = document.createElement("script")
-            script.src = unpackScriptPath(scriptPath)
-            setup(script)
-            document.body.appendChild(script)
         }
     }, [state])
 
