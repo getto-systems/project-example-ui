@@ -12,8 +12,7 @@ module.exports = {
 
       "auth",
 
-      "auth/password_reset_session",
-      "auth/password_reset",
+      "worker/auth",
     ].reduce((acc,name) => {
       acc[name] = path.join(root, `${name}.js`);
       return acc;

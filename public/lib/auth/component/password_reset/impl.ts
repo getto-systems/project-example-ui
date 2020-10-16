@@ -70,8 +70,8 @@ class Component implements PasswordResetComponent {
         return event
     }
 
-    onStateChange(stateChanged: Post<PasswordResetState>): void {
-        this.listener.push(stateChanged)
+    onStateChange(post: Post<PasswordResetState>): void {
+        this.listener.push(post)
     }
     post(state: PasswordResetState): void {
         this.listener.forEach(post => post(state))
