@@ -236,8 +236,7 @@ type WorkerRequest =
     Readonly<{ type: "passwordLogin-action", componentID: number, request: PasswordLoginRequest }> |
     Readonly<{ type: "passwordLogin-loginIDField-action", componentID: number, request: LoginIDFieldRequest }> |
     Readonly<{ type: "passwordLogin-passwordField-action", componentID: number, request: PasswordFieldRequest }> |
-    Readonly<{ type: "credential-store-post", actionID: number, event: StoreEvent }> |
-    Readonly<{ type: "error", err: string }>
+    Readonly<{ type: "credential-store-post", actionID: number, event: StoreEvent }>
 
 type WorkerEvent =
     Readonly<{ type: "credential-store-init", actionID: number }> |
@@ -337,7 +336,7 @@ class View implements AuthView {
                     if (map.credential.store[data.actionID]) {
                         map.credential.store[data.actionID](data.authCredential)
                     } else {
-                        post({ type: "error", err: "action has not been initialized" })
+                        this.post({ type: "error", err: "action has not been initialized" })
                     }
                     break
             }
