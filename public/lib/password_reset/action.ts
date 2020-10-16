@@ -30,12 +30,12 @@ export type ResetResource = Readonly<{
 }>
 
 export interface SessionSubscriber {
-    onStartSessionEvent(stateChanged: Post<StartSessionEvent>): void
-    onPollingStatusEvent(stateChanged: Post<PollingStatusEvent>): void
+    onStartSessionEvent(post: Post<StartSessionEvent>): void
+    onPollingStatusEvent(post: Post<PollingStatusEvent>): void
 }
 
 export interface ResetSubscriber {
-    onResetEvent(stateChanged: Post<ResetEvent>): void
+    onResetEvent(post: Post<ResetEvent>): void
 }
 
 interface Post<T> {

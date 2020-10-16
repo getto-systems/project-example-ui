@@ -7,7 +7,7 @@ import { TimeConfig, newTimeConfig, newHostConfig } from "./auth/config"
 
 import { newAppHref } from "./href"
 
-import { initAuthInit } from "../auth/impl/core"
+import { initAuthInit, initAuthWorker } from "../auth/impl/core"
 
 import { initRenewCredential } from "../auth/component/renew_credential/impl"
 import { initPasswordLogin } from "../auth/component/password_login/impl"
@@ -36,7 +36,7 @@ import { initSimulatePasswordResetSessionClient } from "../password_reset/impl/c
 import { packTicketNonce, packApiRoles, packAuthAt } from "../credential/adapter"
 import { packLoginID } from "../login_id/adapter"
 
-import { AuthInit } from "../auth/view"
+import { AuthInit, AuthInitWorker } from "../auth/view"
 
 export function newAuthInit(credentialStorage: Storage): AuthInit {
     const config = {
@@ -72,6 +72,38 @@ export function newAuthInit(credentialStorage: Storage): AuthInit {
     }
 
     return initAuthInit(factory, init)
+}
+export function newAuthInitWorker(): AuthInitWorker {
+    const config = {
+        time: newTimeConfig(),
+    }
+
+    const factory = {
+        application: newApplicationFactory(),
+
+        passwordLogin: newPasswordLoginFactory(config.time),
+        passwordReset: newPasswordResetFactory(config.time),
+
+        field: {
+            loginID: initLoginIDFieldFactory(),
+            password: initPasswordFieldFactory(),
+        },
+    }
+
+    const init = {
+        passwordLogin: initPasswordLogin,
+        passwordResetSession: initPasswordResetSession,
+        passwordReset: initPasswordReset,
+
+        field: {
+            loginID: initLoginIDField,
+            password: initPasswordField,
+        }
+    }
+
+    return (worker) => {
+        initAuthWorker(factory, init, worker)
+    }
 }
 
 function newApplicationFactory() {

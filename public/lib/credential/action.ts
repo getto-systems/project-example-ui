@@ -30,7 +30,7 @@ export type StoreResource = Readonly<{
 }>
 
 export interface StoreSubscriber {
-    onStoreEvent(stateChanged: Post<StoreEvent>): void
+    onStoreEvent(post: Post<StoreEvent>): void
 }
 
 interface Post<T> {

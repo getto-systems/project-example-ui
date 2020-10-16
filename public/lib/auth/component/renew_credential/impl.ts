@@ -52,8 +52,8 @@ class Component implements RenewCredentialComponent {
         }
     }
 
-    onStateChange(stateChanged: Post<RenewCredentialState>): void {
-        this.listener.push(stateChanged)
+    onStateChange(post: Post<RenewCredentialState>): void {
+        this.listener.push(post)
     }
     post(state: RenewCredentialState): void {
         this.listener.forEach(post => post(state))
