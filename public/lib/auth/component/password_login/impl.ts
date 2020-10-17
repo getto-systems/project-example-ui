@@ -39,7 +39,7 @@ class Component implements PasswordLoginComponent {
 
     constructor(actions: PasswordLoginActionSet, components: PasswordLoginFieldComponentSet, param: PasswordLoginParam) {
         this.background = {
-            login: actions.login.action,
+            login: actions.login,
             field: actions.field,
             store: actions.store.action,
             path: actions.path,
@@ -50,7 +50,6 @@ class Component implements PasswordLoginComponent {
         this.param = param
     }
     setup(actions: PasswordLoginActionSet): void {
-        actions.login.subscriber.onLoginEvent(event => this.post(this.mapLoginEvent(event)))
         actions.store.subscriber.onStoreEvent(event => this.post(this.mapStoreEvent(event)))
     }
     mapLoginEvent(event: LoginEvent): PasswordLoginState {
@@ -83,6 +82,8 @@ class Component implements PasswordLoginComponent {
                 this.background.login({
                     loginID: this.background.field.loginID.validate(),
                     password: this.background.field.password.validate(),
+                }, (event) => {
+                    this.post(this.mapLoginEvent(event))
                 })
                 return
 
