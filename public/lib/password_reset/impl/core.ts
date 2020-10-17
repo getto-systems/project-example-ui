@@ -1,6 +1,6 @@
 import { SessionInfra, ResetInfra } from "../infra"
 
-import { SessionFactory, ResetFactory, SessionSubscriber, ResetSubscriber } from "../action"
+import { SessionAction, ResetAction } from "../action"
 
 import {
     SessionID,
@@ -12,7 +12,7 @@ import {
 
 import { Content, validContent, invalidContent } from "../../field/data"
 
-const startSession = (infra: SessionInfra, post: Post<StartSessionEvent>) => async (content: StartSessionContent): Promise<void> => {
+const startSession = (infra: SessionInfra) => async (content: StartSessionContent, post: Post<StartSessionEvent>) => {
     const fields = mapStartSessionContent(content)
     if (!fields.valid) {
         post({ type: "failed-to-start-session", err: { type: "validation-error" } })
@@ -32,6 +32,7 @@ const startSession = (infra: SessionInfra, post: Post<StartSessionEvent>) => asy
         return
     }
 
+    // TODO ここで polling を始めてしまったほうがいい気がする
     post({ type: "succeed-to-start-session", sessionID: response.sessionID })
 }
 
@@ -44,8 +45,8 @@ function mapStartSessionContent(content: StartSessionContent): Content<StartSess
     })
 }
 
-const startPollingStatus = (infra: SessionInfra, post: Post<PollingStatusEvent>) => (sessionID: SessionID): void => {
-    new StatusPoller(infra, post).startPolling(sessionID)
+const startPollingStatus = (infra: SessionInfra) => (sessionID: SessionID, post: Post<PollingStatusEvent>): void => {
+    new StatusPoller(infra).startPolling(sessionID, post)
 }
 
 type SendTokenState =
@@ -55,39 +56,37 @@ type SendTokenState =
 
 class StatusPoller {
     infra: SessionInfra
-    post: Post<PollingStatusEvent>
 
     sendTokenState: SendTokenState
 
-    constructor(infra: SessionInfra, post: Post<PollingStatusEvent>) {
+    constructor(infra: SessionInfra) {
         this.infra = infra
-        this.post = post
 
         this.sendTokenState = { type: "initial" }
     }
 
-    async startPolling(sessionID: SessionID): Promise<void> {
-        this.post({ type: "try-to-polling-status" })
+    async startPolling(sessionID: SessionID, post: Post<PollingStatusEvent>): Promise<void> {
+        post({ type: "try-to-polling-status" })
 
         this.sendToken()
 
         for (let i_ = 0; i_ < this.infra.time.passwordResetPollingLimit.limit; i_++) {
             if (this.sendTokenState.type === "failed") {
-                this.post({ type: "failed-to-polling-status", err: this.sendTokenState.err })
+                post({ type: "failed-to-polling-status", err: this.sendTokenState.err })
                 return
             }
 
             const response = await this.infra.passwordResetSessionClient.getStatus(sessionID)
             if (!response.success) {
-                this.post({ type: "failed-to-polling-status", err: response.err })
+                post({ type: "failed-to-polling-status", err: response.err })
                 return
             }
 
             if (response.done) {
                 if (response.send) {
-                    this.post({ type: "succeed-to-send-token", dest: response.dest })
+                    post({ type: "succeed-to-send-token", dest: response.dest })
                 } else {
-                    this.post({
+                    post({
                         type: "failed-to-send-token",
                         dest: response.dest,
                         err: { type: "infra-error", err: response.err },
@@ -96,7 +95,7 @@ class StatusPoller {
                 return
             }
 
-            this.post({
+            post({
                 type: "retry-to-polling-status",
                 dest: response.dest,
                 status: response.status,
@@ -105,7 +104,7 @@ class StatusPoller {
             await this.infra.wait(this.infra.time.passwordResetPollingWaitTime, () => true)
         }
 
-        this.post({
+        post({
             type: "failed-to-polling-status",
             err: { type: "infra-error", err: "overflow polling limit" },
         })
@@ -121,7 +120,7 @@ class StatusPoller {
     }
 }
 
-const reset = (infra: ResetInfra, post: Post<ResetEvent>) => async (resetToken: ResetToken, content: ResetContent): Promise<void> => {
+const reset = (infra: ResetInfra) => async (resetToken: ResetToken, content: ResetContent, post: Post<ResetEvent>) => {
     const fields = mapResetContent(content)
     if (!fields.valid) {
         post({ type: "failed-to-reset", err: { type: "validation-error" } })
@@ -157,58 +156,21 @@ function mapResetContent(content: ResetContent): Content<ResetFields> {
     })
 }
 
-export function initSessionFactory(infra: SessionInfra): SessionFactory {
+export function initSessionFactory(infra: SessionInfra): Factory<SessionAction> {
     return () => {
-        const pubsub = new SessionEventPubSub()
         return {
-            action: {
-                startSession: startSession(infra, event => pubsub.postStartSessionEvent(event)),
-                startPollingStatus: startPollingStatus(infra, event => pubsub.postPollingStatusEvent(event)),
-            },
-            subscriber: pubsub,
+            startSession: startSession(infra),
+            startPollingStatus: startPollingStatus(infra),
         }
     }
 }
-export function initResetFactory(infra: ResetInfra): ResetFactory {
-    return () => {
-        const pubsub = new ResetEventPubSub()
-        return {
-            action: reset(infra, event => pubsub.postResetEvent(event)),
-            subscriber: pubsub,
-        }
-    }
-}
-
-class SessionEventPubSub implements SessionSubscriber {
-    startSession: Post<StartSessionEvent>[] = []
-    pollingStatus: Post<PollingStatusEvent>[] = []
-
-    onStartSessionEvent(post: Post<StartSessionEvent>): void {
-        this.startSession.push(post)
-    }
-    postStartSessionEvent(event: StartSessionEvent): void {
-        this.startSession.forEach(post => post(event))
-    }
-
-    onPollingStatusEvent(post: Post<PollingStatusEvent>): void {
-        this.pollingStatus.push(post)
-    }
-    postPollingStatusEvent(event: PollingStatusEvent): void {
-        this.pollingStatus.forEach(post => post(event))
-    }
-}
-
-class ResetEventPubSub implements ResetSubscriber {
-    reset: Post<ResetEvent>[] = []
-
-    onResetEvent(post: Post<ResetEvent>): void {
-        this.reset.push(post)
-    }
-    postResetEvent(event: ResetEvent): void {
-        this.reset.forEach(post => post(event))
-    }
+export function initResetFactory(infra: ResetInfra): Factory<ResetAction> {
+    return () => reset(infra)
 }
 
 interface Post<T> {
     (status: T): void
+}
+interface Factory<T> {
+    (): T
 }

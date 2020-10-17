@@ -30,21 +30,18 @@ class Component implements PasswordResetSessionComponent {
 
     constructor(actions: PasswordResetSessionActionSet, components: PasswordResetSessionFieldComponentSet) {
         this.background = {
-            session: actions.session.action,
+            session: actions.session,
             field: actions.field,
         }
-        this.setup(actions)
 
         this.components = components
-    }
-    setup(actions: PasswordResetSessionActionSet): void {
-        actions.session.subscriber.onStartSessionEvent(event => this.post(this.mapStartSessionEvent(event)))
-        actions.session.subscriber.onPollingStatusEvent(event => this.post(this.mapPollingStatusEvent(event)))
     }
     mapStartSessionEvent(event: StartSessionEvent): PasswordResetSessionState {
         switch (event.type) {
             case "succeed-to-start-session":
-                this.background.session.startPollingStatus(event.sessionID)
+                this.background.session.startPollingStatus(event.sessionID, (event) => {
+                    this.post(this.mapPollingStatusEvent(event))
+                })
                 return { type: "try-to-polling-status" }
 
             default:
@@ -67,6 +64,8 @@ class Component implements PasswordResetSessionComponent {
             case "start-session":
                 this.background.session.startSession({
                     loginID: this.background.field.loginID.validate(),
+                }, (event) => {
+                    this.post(this.mapStartSessionEvent(event))
                 })
                 return
         }

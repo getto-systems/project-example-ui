@@ -1,7 +1,7 @@
 import { LoginIDFieldComponent } from "../field/login_id/component"
 import { PasswordFieldComponent } from "../field/password/component"
 
-import { ResetResource } from "../../../password_reset/action"
+import { ResetAction } from "../../../password_reset/action"
 import { LoginIDFieldAction } from "../../../login_id/field/action"
 import { PasswordFieldAction } from "../../../password/field/action"
 import { StoreResource } from "../../../credential/action"
@@ -16,7 +16,7 @@ export interface PasswordResetInit {
 }
 
 export type PasswordResetActionSet = Readonly<{
-    reset: ResetResource
+    reset: ResetAction
     field: {
         loginID: LoginIDFieldAction
         password: PasswordFieldAction
