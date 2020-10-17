@@ -1,7 +1,7 @@
 import { LoginIDFieldComponent } from "../field/login_id/component"
 import { PasswordFieldComponent } from "../field/password/component"
 
-import { LoginResource } from "../../../password_login/action"
+import { LoginAction } from "../../../password_login/action"
 import { LoginIDFieldAction } from "../../../login_id/field/action"
 import { PasswordFieldAction } from "../../../password/field/action"
 import { StoreResource } from "../../../credential/action"
@@ -15,7 +15,7 @@ export interface PasswordLoginInit {
     (actions: PasswordLoginActionSet, components: PasswordLoginFieldComponentSet, param: PasswordLoginParam): PasswordLoginComponent
 }
 export type PasswordLoginActionSet = Readonly<{
-    login: LoginResource
+    login: LoginAction
     field: {
         loginID: LoginIDFieldAction
         password: PasswordFieldAction

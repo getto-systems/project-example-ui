@@ -1,19 +1,11 @@
 import { LoginContent, LoginEvent } from "./data"
 
 export interface LoginAction {
-    (content: LoginContent): void
+    (content: LoginContent, post: Post<LoginEvent>): void
 }
 
 export interface LoginFactory {
-    (): LoginResource
-}
-export type LoginResource = Readonly<{
-    action: LoginAction
-    subscriber: LoginSubscriber
-}>
-
-export interface LoginSubscriber {
-    onLoginEvent(post: Post<LoginEvent>): void
+    (): LoginAction
 }
 
 interface Post<T> {

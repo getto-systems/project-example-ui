@@ -2,10 +2,10 @@ import { LoginInfra } from "../infra"
 
 import { LoginFactory, LoginAction } from "../action"
 
-import { LoginContent, LoginFields, LoginEvent } from "../data"
+import { LoginContent, LoginFields } from "../data"
 import { Content, validContent, invalidContent } from "../../field/data"
 
-const loginAction = (infra: LoginInfra, post: Post<LoginEvent>): LoginAction => async (content) => {
+const loginAction = (infra: LoginInfra): LoginAction => async (content, post) => {
     const fields = mapContent(content)
     if (!fields.valid) {
         post({ type: "failed-to-login", err: { type: "validation-error" } })
@@ -42,24 +42,7 @@ function mapContent(content: LoginContent): Content<LoginFields> {
 }
 
 export function initLoginFactory(infra: LoginInfra): LoginFactory {
-    return () => {
-        const pubsub = new LoginEventPubSub()
-        return {
-            action: loginAction(infra, event => pubsub.postLoginEvent(event)),
-            subscriber: pubsub,
-        }
-    }
-}
-
-class LoginEventPubSub {
-    login: Post<LoginEvent>[] = []
-
-    postLoginEvent(event: LoginEvent): void {
-        this.login.forEach(post => post(event))
-    }
-    onLoginEvent(post: Post<LoginEvent>): void {
-        this.login.push(post)
-    }
+    return () => loginAction(infra)
 }
 
 interface Post<T> {
