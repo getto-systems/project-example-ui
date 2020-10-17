@@ -1,6 +1,6 @@
 import { LoginIDFieldComponent } from "../field/login_id/component"
 
-import { SessionResource } from "../../../password_reset/action"
+import { SessionAction } from "../../../password_reset/action"
 import { LoginIDFieldAction } from "../../../login_id/field/action"
 
 import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../../password_reset/data"
@@ -9,7 +9,7 @@ export interface PasswordResetSessionInit {
     (actions: PasswordResetSessionActionSet, components: PasswordResetSessionFieldComponentSet): PasswordResetSessionComponent
 }
 export type PasswordResetSessionActionSet = Readonly<{
-    session: SessionResource
+    session: SessionAction
     field: {
         loginID: LoginIDFieldAction
     }

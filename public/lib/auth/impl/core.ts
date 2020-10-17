@@ -20,8 +20,8 @@ import { PasswordFieldInit, PasswordFieldState, PasswordFieldRequest } from "../
 import { PathFactory } from "../../application/action"
 import { RenewFactory, StoreFactory, StoreAction } from "../../credential/action"
 
-import { LoginFactory } from "../../password_login/action"
-import { SessionFactory, ResetFactory } from "../../password_reset/action"
+import { LoginAction } from "../../password_login/action"
+import { SessionAction, ResetAction } from "../../password_reset/action"
 
 import { LoginIDFieldFactory } from "../../login_id/field/action"
 import { PasswordFieldFactory } from "../../password/field/action"
@@ -54,7 +54,7 @@ function detectPasswordResetToken(currentLocation: Location): ResetToken {
     return packResetToken(url.searchParams.get(SEARCH.passwordResetToken) || "")
 }
 
-type Factory = Readonly<{
+type FactorySet = Readonly<{
     application: {
         path: PathFactory
     }
@@ -64,11 +64,11 @@ type Factory = Readonly<{
     }
 
     passwordLogin: {
-        login: LoginFactory
+        login: Factory<LoginAction>
     }
     passwordReset: {
-        session: SessionFactory
-        reset: ResetFactory
+        session: Factory<SessionAction>
+        reset: Factory<ResetAction>
     }
 
     field: {
@@ -77,7 +77,7 @@ type Factory = Readonly<{
     }
 }>
 
-type Init = Readonly<{
+type InitSet = Readonly<{
     href: AppHrefInit
 
     renewCredential: RenewCredentialInit
@@ -98,11 +98,11 @@ type WorkerFactory = Readonly<{
     }
 
     passwordLogin: {
-        login: LoginFactory
+        login: Factory<LoginAction>
     }
     passwordReset: {
-        session: SessionFactory
-        reset: ResetFactory
+        session: Factory<SessionAction>
+        reset: Factory<ResetAction>
     }
 
     field: {
@@ -122,7 +122,7 @@ type WorkerInit = Readonly<{
     }
 }>
 
-export function initAuthInit(factory: Factory, init: Init): AuthInit {
+export function initAuthInit(factory: FactorySet, init: InitSet): AuthInit {
     return (currentLocation) => {
         const view = new View(factory, init, currentLocation)
         return {
@@ -251,7 +251,7 @@ class View implements AuthView {
 
     components: AuthComponentSet
 
-    constructor(factory: Factory, init: Init, currentLocation: Location) {
+    constructor(factory: FactorySet, init: InitSet, currentLocation: Location) {
         const componentID = new IDGenerator()
         const map: ActionMap = {
             credential: {
@@ -384,7 +384,7 @@ class View implements AuthView {
     }
 }
 
-function initRenewCredential(factory: Factory, init: Init, currentLocation: Location, hook: Hook<RenewCredentialComponent>) {
+function initRenewCredential(factory: FactorySet, init: InitSet, currentLocation: Location, hook: Hook<RenewCredentialComponent>) {
     const actions = {
         renew: factory.credential.renew(),
         path: factory.application.path(),
@@ -434,7 +434,7 @@ function initPasswordLogin(factory: Factory, init: Init, currentLocation: Locati
 interface StoreActionListener {
     onStoreEvent(event: StoreEvent): void
 }
-function initStoreAction(factory: Factory, listener: StoreActionListener) {
+function initStoreAction(factory: FactorySet, listener: StoreActionListener) {
     const { action, subscriber } = factory.credential.store()
     subscriber.onStoreEvent(event => listener.onStoreEvent(event))
     return action
@@ -471,7 +471,7 @@ function initPasswordLoginComponent(storeFactory: StoreFactory, factory: WorkerF
 
     return component
 }
-function initPasswordResetSession(factory: Factory, init: Init) {
+function initPasswordResetSession(factory: FactorySet, init: InitSet) {
     const loginID = factory.field.loginID()
 
     const actions = {
@@ -490,7 +490,7 @@ function initPasswordResetSession(factory: Factory, init: Init) {
         passwordResetSession: init.passwordResetSession(actions, fields),
     }
 }
-function initPasswordReset(factory: Factory, init: Init, currentLocation: Location) {
+function initPasswordReset(factory: FactorySet, init: InitSet, currentLocation: Location) {
     const loginID = factory.field.loginID()
     const password = factory.field.password()
 
@@ -529,6 +529,9 @@ interface Hook<T> {
 }
 interface Post<T> {
     (state: T): void
+}
+interface Factory<T> {
+    (): T
 }
 interface Terminate {
     (): void

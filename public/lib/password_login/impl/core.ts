@@ -1,6 +1,6 @@
 import { LoginInfra } from "../infra"
 
-import { LoginFactory, LoginAction } from "../action"
+import { LoginAction } from "../action"
 
 import { LoginContent, LoginFields } from "../data"
 import { Content, validContent, invalidContent } from "../../field/data"
@@ -41,10 +41,13 @@ function mapContent(content: LoginContent): Content<LoginFields> {
     })
 }
 
-export function initLoginFactory(infra: LoginInfra): LoginFactory {
+export function initLoginFactory(infra: LoginInfra): Factory<LoginAction> {
     return () => loginAction(infra)
 }
 
 interface Post<T> {
     (event: T): void
+}
+interface Factory<T> {
+    (): T
 }

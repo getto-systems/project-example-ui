@@ -39,7 +39,7 @@ class Component implements PasswordResetComponent {
 
     constructor(actions: PasswordResetActionSet, components: PasswordResetFieldComponentSet, param: PasswordResetParam) {
         this.background = {
-            reset: actions.reset.action,
+            reset: actions.reset,
             field: actions.field,
             store: actions.store.action,
             path: actions.path,
@@ -50,7 +50,6 @@ class Component implements PasswordResetComponent {
         this.components = components
     }
     setup(actions: PasswordResetActionSet): void {
-        actions.reset.subscriber.onResetEvent(event => this.post(this.mapResetEvent(event)))
         actions.store.subscriber.onStoreEvent(event => this.post(this.mapStoreEvent(event)))
     }
     mapResetEvent(event: ResetEvent): PasswordResetState {
@@ -83,6 +82,8 @@ class Component implements PasswordResetComponent {
                 this.background.reset(this.param.resetToken, {
                     loginID: this.background.field.loginID.validate(),
                     password: this.background.field.password.validate(),
+                }, (event) => {
+                    this.post(this.mapResetEvent(event))
                 })
                 return
 
