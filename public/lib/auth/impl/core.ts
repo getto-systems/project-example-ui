@@ -172,6 +172,7 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
         resolve({ actionID, requestID, event }: { actionID: number, requestID: number, event: StoreEvent }) {
             if (this.request[actionID] && this.request[actionID][requestID]) {
                 this.request[actionID][requestID](event)
+                delete this.request[actionID][requestID]
             }
         }
     }
@@ -209,6 +210,7 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
         resolve({ componentID, requestID, content }: { componentID: number, requestID: number, content: Content<LoginID> }) {
             if (this.request[componentID] && this.request[componentID][requestID]) {
                 this.request[componentID][requestID](content)
+                delete this.request[componentID][requestID]
             }
         }
     }
@@ -234,6 +236,7 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
         resolve({ componentID, requestID, content }: { componentID: number, requestID: number, content: Content<Password> }) {
             if (this.request[componentID] && this.request[componentID][requestID]) {
                 this.request[componentID][requestID](content)
+                delete this.request[componentID][requestID]
             }
         }
     }
