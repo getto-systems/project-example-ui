@@ -22,8 +22,8 @@ import { initRenewAction, initSetContinousRenewAction, initStoreAction } from ".
 import { initLoginAction } from "../password_login/impl/core"
 import { initStartSessionAction, initPollingStatusAction, initResetAction } from "../password_reset/impl/core"
 
-import { initLoginIDFieldFactory } from "../login_id/field/impl/core"
-import { initPasswordFieldFactory } from "../password/field/impl/core"
+import { initLoginIDFieldAction } from "../login_id/field/impl/core"
+import { initPasswordFieldAction } from "../password/field/impl/core"
 
 import { initFetchRenewClient } from "../credential/impl/client/renew/fetch"
 import { initAuthExpires } from "../credential/impl/expires"
@@ -54,8 +54,8 @@ export function newAuthInit(credentialStorage: Storage): AuthInit {
         passwordReset: newPasswordResetFactory(config.time),
 
         field: {
-            loginID: initLoginIDFieldFactory(),
-            password: initPasswordFieldFactory(),
+            loginID: () => initLoginIDFieldAction(),
+            password: () => initPasswordFieldAction(),
         },
     }
 
@@ -88,8 +88,8 @@ export function newAuthInitWorker(): AuthInitWorker {
         passwordReset: newPasswordResetFactory(config.time),
 
         field: {
-            loginID: initLoginIDFieldFactory(),
-            password: initPasswordFieldFactory(),
+            loginID: () => initLoginIDFieldAction(),
+            password: () => initPasswordFieldAction(),
         },
     }
 
