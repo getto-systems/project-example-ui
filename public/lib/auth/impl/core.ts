@@ -18,7 +18,7 @@ import { LoginIDFieldInit, LoginIDFieldComponent } from "../component/field/logi
 import { PasswordFieldInit, PasswordFieldComponent } from "../component/field/password/component"
 
 import { PathFactory } from "../../application/action"
-import { RenewFactory, StoreFactory, StoreAction } from "../../credential/action"
+import { RenewAction, SetContinuousRenewAction, StoreAction } from "../../credential/action"
 
 import { LoginAction } from "../../password_login/action"
 import { StartSessionAction, PollingStatusAction, ResetAction } from "../../password_reset/action"
@@ -66,8 +66,9 @@ type FactorySet = Readonly<{
         path: PathFactory
     }
     credential: {
-        renew: RenewFactory
-        store: StoreFactory
+        renew: Factory<RenewAction>
+        setContinuousRenew: Factory<SetContinuousRenewAction>
+        store: Factory<StoreAction>
     }
 
     passwordLogin: {
@@ -149,27 +150,40 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
 
     const post: Post<WorkerEvent> = (event) => worker.postMessage(event)
 
-    const storeFactory: StoreFactory = () => {
+    class StoreActionWorker {
+        requestID: IDGenerator
+
+        request: Record<number, Record<number, Post<StoreEvent>>> = []
+
+        constructor() {
+            this.requestID = new IDGenerator()
+        }
+
+        store(actionID: number, authCredential: AuthCredential, postStoreEvent: Post<StoreEvent>): void {
+            if (!this.request[actionID]) {
+                this.request[actionID] = []
+            }
+
+            const requestID = this.requestID.generate()
+            this.request[actionID][requestID] = postStoreEvent
+
+            post({ type: "credential-store-action", actionID, requestID, authCredential })
+        }
+        resolve({ actionID, requestID, event }: { actionID: number, requestID: number, event: StoreEvent }) {
+            if (this.request[actionID] && this.request[actionID][requestID]) {
+                this.request[actionID][requestID](event)
+            }
+        }
+    }
+
+    const storeAction = new StoreActionWorker()
+
+    const storeFactory: Factory<StoreAction> = () => {
         const id = actionID.generate()
         post({ type: "credential-store-init", actionID: id })
 
-        return {
-            action: (authCredential: AuthCredential) => {
-                post({ type: "credential-store-action", actionID: id, authCredential })
-            },
-            subscriber: {
-                onStoreEvent(post: Post<StoreEvent>) {
-                    worker.addEventListener("message", (event: MessageEvent<WorkerRequest>) => {
-                        switch (event.data.type) {
-                            case "credential-store-post":
-                                if (event.data.actionID === id) {
-                                    post(event.data.event)
-                                }
-                                break
-                        }
-                    })
-                },
-            },
+        return (authCredential: AuthCredential, postStoreEvent: Post<StoreEvent>) => {
+            storeAction.store(id, authCredential, postStoreEvent)
         }
     }
 
@@ -182,15 +196,15 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
             this.requestID = new IDGenerator()
         }
 
-        validate(componentID: number, post: Post<Content<LoginID>>): void {
+        validate(componentID: number, postContent: Post<Content<LoginID>>): void {
             if (!this.request[componentID]) {
                 this.request[componentID] = []
             }
 
             const requestID = this.requestID.generate()
-            this.request[componentID][requestID] = post
+            this.request[componentID][requestID] = postContent
 
-            worker.postMessage({ type: "loginIDField-validate", componentID, requestID })
+            post({ type: "loginIDField-validate", componentID, requestID })
         }
         resolve({ componentID, requestID, content }: { componentID: number, requestID: number, content: Content<LoginID> }) {
             if (this.request[componentID] && this.request[componentID][requestID]) {
@@ -207,15 +221,15 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
             this.requestID = new IDGenerator()
         }
 
-        validate(componentID: number, post: Post<Content<Password>>): void {
+        validate(componentID: number, postContent: Post<Content<Password>>): void {
             if (!this.request[componentID]) {
                 this.request[componentID] = []
             }
 
             const requestID = this.requestID.generate()
-            this.request[componentID][requestID] = post
+            this.request[componentID][requestID] = postContent
 
-            worker.postMessage({ type: "passwordField-validate", componentID, requestID })
+            post({ type: "passwordField-validate", componentID, requestID })
         }
         resolve({ componentID, requestID, content }: { componentID: number, requestID: number, content: Content<Password> }) {
             if (this.request[componentID] && this.request[componentID][requestID]) {
@@ -268,6 +282,10 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
             case "passwordField-content":
                 passwordField.resolve(data)
                 break
+
+            case "credential-store-post":
+                storeAction.resolve(data)
+                break
         }
     })
 }
@@ -300,11 +318,11 @@ type WorkerRequest =
     Readonly<{ type: "passwordLogin-action", componentID: number, request: PasswordLoginRequest }> |
     Readonly<{ type: "loginIDField-content", componentID: number, requestID: number, content: Content<LoginID> }> |
     Readonly<{ type: "passwordField-content", componentID: number, requestID: number, content: Content<Password> }> |
-    Readonly<{ type: "credential-store-post", actionID: number, event: StoreEvent }>
+    Readonly<{ type: "credential-store-post", actionID: number, requestID: number, event: StoreEvent }>
 
 type WorkerEvent =
     Readonly<{ type: "credential-store-init", actionID: number }> |
-    Readonly<{ type: "credential-store-action", actionID: number, authCredential: AuthCredential }> |
+    Readonly<{ type: "credential-store-action", actionID: number, requestID: number, authCredential: AuthCredential }> |
     Readonly<{ type: "passwordLogin-post", componentID: number, state: PasswordLoginState }> |
     Readonly<{ type: "loginIDField-validate", componentID: number, requestID: number }> |
     Readonly<{ type: "passwordField-validate", componentID: number, requestID: number }> |
@@ -390,16 +408,14 @@ class View implements AuthView {
             const data = event.data
             switch (data.type) {
                 case "credential-store-init":
-                    map.credential.store[data.actionID] = initStoreAction(factory, {
-                        onStoreEvent(event) {
-                            post({ type: "credential-store-post", actionID: data.actionID, event })
-                        },
-                    })
+                    map.credential.store[data.actionID] = factory.credential.store()
                     break
 
                 case "credential-store-action":
                     if (map.credential.store[data.actionID]) {
-                        map.credential.store[data.actionID](data.authCredential)
+                        map.credential.store[data.actionID](data.authCredential, (event) => {
+                            post({ type: "credential-store-post", actionID: data.actionID, requestID: data.requestID, event })
+                        })
                     } else {
                         this.post({ type: "error", err: "action has not been initialized" })
                     }
@@ -480,6 +496,7 @@ class View implements AuthView {
 function initRenewCredential(factory: FactorySet, init: InitSet, currentLocation: Location, hook: Hook<RenewCredentialComponent>) {
     const actions = {
         renew: factory.credential.renew(),
+        setContinuousRenew: factory.credential.setContinuousRenew(),
         path: factory.application.path(),
     }
 
@@ -524,18 +541,10 @@ function initPasswordLogin(factory: Factory, init: Init, currentLocation: Locati
     }
 }
  */
-interface StoreActionListener {
-    onStoreEvent(event: StoreEvent): void
-}
-function initStoreAction(factory: FactorySet, listener: StoreActionListener) {
-    const { action, subscriber } = factory.credential.store()
-    subscriber.onStoreEvent(event => listener.onStoreEvent(event))
-    return action
-}
 interface PasswordLoginComponentListener {
     onStateChange(state: PasswordLoginState): void
 }
-function initPasswordLoginComponent(storeFactory: StoreFactory, factory: WorkerFactory, init: WorkerInit, param: PasswordLoginParam, listener: PasswordLoginComponentListener, fields: LoginFieldCollector) {
+function initPasswordLoginComponent(storeFactory: Factory<StoreAction>, factory: WorkerFactory, init: WorkerInit, param: PasswordLoginParam, listener: PasswordLoginComponentListener, fields: LoginFieldCollector) {
     const actions = {
         login: factory.passwordLogin.login(fields),
         store: storeFactory(),

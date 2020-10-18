@@ -33,6 +33,10 @@ export type RenewEvent =
     Readonly<{ type: "storage-error", err: StorageError }> |
     Readonly<{ type: "succeed-to-renew" }>
 
+export type SetContinuousRenewEvent =
+    Readonly<{ type: "required-to-login" }> |
+    Readonly<{ type: "storage-error", err: StorageError }>
+
 export type StoreEvent =
     Readonly<{ type: "storage-error", err: StorageError }>
 

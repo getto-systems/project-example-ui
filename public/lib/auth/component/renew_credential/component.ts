@@ -1,4 +1,4 @@
-import { RenewResource } from "../../../credential/action"
+import { RenewAction, SetContinuousRenewAction } from "../../../credential/action"
 import { PathAction } from "../../../application/action"
 
 import { StorageError, RenewError } from "../../../credential/data"
@@ -9,7 +9,8 @@ export interface RenewCredentialInit {
 }
 
 export type RenewCredentialActionSet = Readonly<{
-    renew: RenewResource
+    renew: RenewAction
+    setContinuousRenew: SetContinuousRenewAction
     path: PathAction
 }>
 export type RenewCredentialParam = Readonly<{

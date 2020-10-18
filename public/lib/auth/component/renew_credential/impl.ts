@@ -6,38 +6,53 @@ import {
     RenewCredentialRequest,
 } from "./component"
 
-import { RenewAction } from "../../../credential/action"
-import { PathAction } from "../../../application/action"
+import { RenewEvent, SetContinuousRenewEvent } from "../../../credential/data"
 
-import { RenewEvent } from "../../../credential/data"
-
-type Background = Readonly<{
-    renew: RenewAction
-    path: PathAction
-}>
-
-export function initRenewCredential(actions: RenewCredentialActionSet, param: RenewCredentialParam): RenewCredentialComponent {
-    return new Component(actions, param)
+export function initRenewCredential(background: RenewCredentialActionSet, param: RenewCredentialParam): RenewCredentialComponent {
+    return new Component(background, param)
 }
 
 class Component implements RenewCredentialComponent {
-    background: Background
+    background: RenewCredentialActionSet
     param: RenewCredentialParam
 
     listener: Post<RenewCredentialState>[] = []
 
-    constructor(actions: RenewCredentialActionSet, param: RenewCredentialParam) {
-        this.background = {
-            renew: actions.renew.action,
-            path: actions.path,
-        }
-        this.setup(actions)
-
+    constructor(background: RenewCredentialActionSet, param: RenewCredentialParam) {
+        this.background = background
         this.param = param
     }
-    setup(actions: RenewCredentialActionSet): void {
-        actions.renew.subscriber.onRenewEvent(event => this.post(this.mapRenewEvent(event)))
+
+    onStateChange(post: Post<RenewCredentialState>): void {
+        this.listener.push(post)
     }
+    post(state: RenewCredentialState): void {
+        this.listener.forEach(post => post(state))
+    }
+
+    action(request: RenewCredentialRequest): void {
+        switch (request.type) {
+            case "renew":
+                this.background.renew((event) => {
+                    this.post(this.mapRenewEvent(event))
+                })
+                return
+
+            case "succeed-to-instant-load":
+                this.background.setContinuousRenew((event) => {
+                    this.post(this.mapSetContinuousRenewEvent(event))
+                })
+                return
+
+            case "load-error":
+                this.post({ type: "load-error", err: request.err })
+                return
+
+            default:
+                assertNever(request)
+        }
+    }
+
     mapRenewEvent(event: RenewEvent): RenewCredentialState {
         switch (event.type) {
             case "try-to-instant-load":
@@ -51,31 +66,8 @@ class Component implements RenewCredentialComponent {
                 return event
         }
     }
-
-    onStateChange(post: Post<RenewCredentialState>): void {
-        this.listener.push(post)
-    }
-    post(state: RenewCredentialState): void {
-        this.listener.forEach(post => post(state))
-    }
-
-    action(request: RenewCredentialRequest): void {
-        switch (request.type) {
-            case "renew":
-                this.background.renew.renew()
-                return
-
-            case "succeed-to-instant-load":
-                this.background.renew.setContinuousRenew()
-                return
-
-            case "load-error":
-                this.post({ type: "load-error", err: request.err })
-                return
-
-            default:
-                assertNever(request)
-        }
+    mapSetContinuousRenewEvent(event: SetContinuousRenewEvent): RenewCredentialState {
+        return event
     }
 }
 
