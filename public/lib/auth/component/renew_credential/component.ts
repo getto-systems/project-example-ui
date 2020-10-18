@@ -1,5 +1,5 @@
 import { RenewAction, SetContinuousRenewAction } from "../../../credential/action"
-import { PathAction } from "../../../application/action"
+import { SecureScriptPathAction } from "../../../application/action"
 
 import { StorageError, RenewError } from "../../../credential/data"
 import { PagePathname, ScriptPath, LoadError } from "../../../application/data"
@@ -11,7 +11,7 @@ export interface RenewCredentialInit {
 export type RenewCredentialActionSet = Readonly<{
     renew: RenewAction
     setContinuousRenew: SetContinuousRenewAction
-    path: PathAction
+    secureScriptPath: SecureScriptPathAction
 }>
 export type RenewCredentialParam = Readonly<{
     pagePathname: PagePathname

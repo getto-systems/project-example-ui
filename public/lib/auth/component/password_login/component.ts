@@ -1,6 +1,6 @@
 import { LoginAction } from "../../../password_login/action"
 import { StoreAction } from "../../../credential/action"
-import { PathAction } from "../../../application/action"
+import { SecureScriptPathAction } from "../../../application/action"
 
 import { LoginError } from "../../../password_login/data"
 import { StorageError } from "../../../credential/data"
@@ -12,7 +12,7 @@ export interface PasswordLoginInit {
 export type PasswordLoginActionSet = Readonly<{
     login: LoginAction
     store: StoreAction
-    path: PathAction
+    secureScriptPath: SecureScriptPathAction
 }>
 
 export type PasswordLoginParam = Readonly<{

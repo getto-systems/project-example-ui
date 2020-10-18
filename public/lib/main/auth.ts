@@ -17,7 +17,7 @@ import { initPasswordReset } from "../auth/component/password_reset/impl"
 import { initLoginIDField } from "../auth/component/field/login_id/impl"
 import { initPasswordField } from "../auth/component/field/password/impl"
 
-import { initPathFactory } from "../application/impl/core"
+import { initSecureScriptPathAction } from "../application/impl/core"
 import { initRenewAction, initSetContinousRenewAction, initStoreAction } from "../credential/impl/core"
 import { initLoginAction } from "../password_login/impl/core"
 import { initStartSessionAction, initPollingStatusAction, initResetAction } from "../password_reset/impl/core"
@@ -111,7 +111,7 @@ export function newAuthInitWorker(): AuthInitWorker {
 
 function newApplicationFactory() {
     return {
-        path: initPathFactory({ host: newHostConfig() }),
+        secureScriptPath: () => initSecureScriptPathAction({ host: newHostConfig() }),
     }
 }
 function newCredentialFactory(time: TimeConfig, credentialStorage: Storage) {

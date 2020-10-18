@@ -17,7 +17,7 @@ import { PasswordResetInit, /* PasswordResetComponent, PasswordResetParam, Passw
 import { LoginIDFieldInit, LoginIDFieldComponent } from "../component/field/login_id/component"
 import { PasswordFieldInit, PasswordFieldComponent } from "../component/field/password/component"
 
-import { PathFactory } from "../../application/action"
+import { SecureScriptPathAction } from "../../application/action"
 import { RenewAction, SetContinuousRenewAction, StoreAction } from "../../credential/action"
 
 import { LoginAction } from "../../password_login/action"
@@ -63,7 +63,7 @@ function detectPasswordResetToken(currentLocation: Location): ResetToken {
 
 type FactorySet = Readonly<{
     application: {
-        path: PathFactory
+        secureScriptPath: Factory<SecureScriptPathAction>
     }
     credential: {
         renew: Factory<RenewAction>
@@ -103,7 +103,7 @@ type InitSet = Readonly<{
 
 type WorkerFactory = Readonly<{
     application: {
-        path: PathFactory
+        secureScriptPath: Factory<SecureScriptPathAction>
     }
 
     passwordLogin: {
@@ -497,7 +497,7 @@ function initRenewCredential(factory: FactorySet, init: InitSet, currentLocation
     const actions = {
         renew: factory.credential.renew(),
         setContinuousRenew: factory.credential.setContinuousRenew(),
-        path: factory.application.path(),
+        secureScriptPath: factory.application.secureScriptPath(),
     }
 
     const param = {
@@ -548,7 +548,7 @@ function initPasswordLoginComponent(storeFactory: Factory<StoreAction>, factory:
     const actions = {
         login: factory.passwordLogin.login(fields),
         store: storeFactory(),
-        path: factory.application.path(),
+        secureScriptPath: factory.application.secureScriptPath(),
     }
 
     const component = init.passwordLogin(actions, param)
@@ -598,7 +598,7 @@ function initPasswordReset(factory: FactorySet, init: InitSet, currentLocation: 
     const actions = {
         reset: factory.passwordReset.reset(fields),
         store: factory.credential.store(),
-        path: factory.application.path(),
+        secureScriptPath: factory.application.secureScriptPath(),
     }
 
     const param = {
