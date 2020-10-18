@@ -313,6 +313,7 @@ type WorkerEvent =
 class View implements AuthView {
     listener: Post<AuthState>[] = []
 
+    worker: Worker
     components: AuthComponentSet
 
     constructor(factory: FactorySet, init: InitSet, currentLocation: Location) {
@@ -322,8 +323,8 @@ class View implements AuthView {
             },
         }
 
-        const worker = new Worker("./auth.worker.js")
-        const post: Post<WorkerRequest> = (request) => worker.postMessage(request)
+        this.worker = new Worker("./auth.worker.js")
+        const post: Post<WorkerRequest> = (request) => this.worker.postMessage(request)
 
         type PasswordLoginFieldComponentSet = Readonly<{
             loginIDField: LoginIDFieldComponent
@@ -385,7 +386,7 @@ class View implements AuthView {
 
         const passwordLoginWorker = new PasswordLoginWorker()
 
-        worker.addEventListener("message", (event: MessageEvent<WorkerEvent>) => {
+        this.worker.addEventListener("message", (event: MessageEvent<WorkerEvent>) => {
             const data = event.data
             switch (data.type) {
                 case "credential-store-init":
@@ -469,7 +470,7 @@ class View implements AuthView {
     }
 
     terminate(): void {
-        // worker とインターフェイスを合わせるために必要
+        this.worker.terminate()
     }
     load() {
         this.post({ type: "renew-credential" })
