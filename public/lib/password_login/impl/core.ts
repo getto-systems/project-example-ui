@@ -1,11 +1,11 @@
-import { LoginInfra, LoginFieldCollector } from "../infra"
+import { LoginInfra } from "../infra"
 
-import { LoginAction } from "../action"
+import { LoginAction, LoginFieldCollector } from "../action"
 
 import { LoginFields } from "../data"
 import { Content, validContent, invalidContent } from "../../field/data"
 
-const login = ({ fields, client, time, delayed }: LoginInfra): LoginAction => async (post) => {
+const login = (fields: LoginFieldCollector, { client, time, delayed }: LoginInfra): LoginAction => async (post) => {
     const content = await collect(fields)
     if (!content.valid) {
         post({ type: "failed-to-login", err: { type: "validation-error" } })
@@ -43,8 +43,8 @@ async function collect(fields: LoginFieldCollector): Promise<Content<LoginFields
     })
 }
 
-export function initLoginAction(infra: LoginInfra): LoginAction {
-    return login(infra)
+export function initLoginAction(fields: LoginFieldCollector, infra: LoginInfra): LoginAction {
+    return login(fields, infra)
 }
 
 interface Post<T> {

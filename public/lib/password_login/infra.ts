@@ -1,21 +1,12 @@
 import { LoginFields } from "./data"
 
 import { AuthCredential } from "../credential/data"
-import { LoginID } from "../login_id/data"
-import { Password } from "../password/data"
-import { Content } from "../field/data"
 
 export type LoginInfra = Readonly<{
-    fields: LoginFieldCollector
     client: PasswordLoginClient
     time: TimeConfig
     delayed: Delayed
 }>
-
-export interface LoginFieldCollector {
-    loginID(): Promise<Content<LoginID>>
-    password(): Promise<Content<Password>>
-}
 
 export type TimeConfig = Readonly<{
     passwordLoginDelayTime: DelayTime,

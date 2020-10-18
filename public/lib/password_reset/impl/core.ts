@@ -1,18 +1,17 @@
-import { StartSessionInfra, StartSessionFieldCollector, PollingStatusInfra, ResetInfra, ResetFieldCollector } from "../infra"
+import { StartSessionInfra, PollingStatusInfra, ResetInfra } from "../infra"
 
-import { StartSessionAction, PollingStatusAction, ResetAction } from "../action"
+import { StartSessionAction, StartSessionFieldCollector, PollingStatusAction, ResetAction, ResetFieldCollector } from "../action"
 
 import {
     SessionID,
     StartSessionFields,
     PollingStatusEvent, PollingStatusError,
     ResetFields,
-    ResetToken, ResetEvent,
 } from "../data"
 
 import { Content, validContent, invalidContent } from "../../field/data"
 
-const startSession = ({ fields, client, time, delayed }: StartSessionInfra): StartSessionAction => async (post) => {
+const startSession = (fields: StartSessionFieldCollector, { client, time, delayed }: StartSessionInfra): StartSessionAction => async (post) => {
     const content = await collectStartSessionFields(fields)
     if (!content.valid) {
         post({ type: "failed-to-start-session", err: { type: "validation-error" } })
@@ -122,7 +121,7 @@ class StatusPoller {
     }
 }
 
-const reset = ({ fields, client, time, delayed }: ResetInfra) => async (resetToken: ResetToken, post: Post<ResetEvent>) => {
+const reset = (fields: ResetFieldCollector, { client, time, delayed }: ResetInfra): ResetAction => async (resetToken, post) => {
     const content = await collectResetFields(fields)
     if (!content.valid) {
         post({ type: "failed-to-reset", err: { type: "validation-error" } })
@@ -161,14 +160,14 @@ async function collectResetFields(collector: ResetFieldCollector): Promise<Conte
     })
 }
 
-export function initStartSessionAction(infra: StartSessionInfra): StartSessionAction {
-    return startSession(infra)
+export function initStartSessionAction(fields: StartSessionFieldCollector, infra: StartSessionInfra): StartSessionAction {
+    return startSession(fields, infra)
 }
 export function initPollingStatusAction(infra: PollingStatusInfra): PollingStatusAction {
     return startPollingStatus(infra)
 }
-export function initResetAction(infra: ResetInfra): ResetAction {
-    return reset(infra)
+export function initResetAction(fields: ResetFieldCollector, infra: ResetInfra): ResetAction {
+    return reset(fields, infra)
 }
 
 interface Post<T> {

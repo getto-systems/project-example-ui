@@ -36,10 +36,10 @@ import { initSimulatePasswordResetSessionClient } from "../password_reset/impl/c
 import { packTicketNonce, packApiRoles, packAuthAt } from "../credential/adapter"
 import { packLoginID } from "../login_id/adapter"
 
-import { LoginFieldCollector } from "../password_login/infra"
-import { StartSessionFieldCollector, ResetFieldCollector } from "../password_reset/infra"
-
 import { AuthInit, AuthInitWorker } from "../auth/view"
+
+import { LoginFieldCollector } from "../password_login/action"
+import { StartSessionFieldCollector, ResetFieldCollector } from "../password_reset/action"
 
 export function newAuthInit(credentialStorage: Storage): AuthInit {
     const config = {
@@ -142,8 +142,7 @@ function newCredentialFactory(time: TimeConfig, credentialStorage: Storage) {
 }
 function newPasswordLoginFactory(time: TimeConfig) {
     return {
-        login: (fields: LoginFieldCollector) => initLoginAction({
-            fields,
+        login: (fields: LoginFieldCollector) => initLoginAction(fields, {
             client: newPasswordLoginClient(),
             time,
             delayed,
@@ -154,8 +153,7 @@ function newPasswordResetFactory(time: TimeConfig) {
     const sessionClient = newPasswordResetSessionClient()
 
     return {
-        startSession: (fields: StartSessionFieldCollector) => initStartSessionAction({
-            fields,
+        startSession: (fields: StartSessionFieldCollector) => initStartSessionAction(fields, {
             client: sessionClient,
             time,
             delayed,
@@ -166,8 +164,7 @@ function newPasswordResetFactory(time: TimeConfig) {
             delayed,
             wait,
         }),
-        reset: (fields: ResetFieldCollector) => initResetAction({
-            fields,
+        reset: (fields: ResetFieldCollector) => initResetAction(fields, {
             client: newPasswordResetClient(),
             time,
             delayed,

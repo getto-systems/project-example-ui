@@ -9,12 +9,8 @@ import {
 } from "./data"
 
 import { AuthCredential } from "../credential/data"
-import { LoginID } from "../login_id/data"
-import { Password } from "../password/data"
-import { Content } from "../field/data"
 
 export type StartSessionInfra = Readonly<{
-    fields: StartSessionFieldCollector
     client: PasswordResetSessionClient
     time: StartSessionTimeConfig
     delayed: Delayed
@@ -26,10 +22,6 @@ export type PollingStatusInfra = Readonly<{
     wait: Wait
 }>
 
-export interface StartSessionFieldCollector {
-    loginID(): Promise<Content<LoginID>>
-}
-
 export type StartSessionTimeConfig = Readonly<{
     passwordResetStartSessionDelayTime: DelayTime,
 }>
@@ -40,16 +32,10 @@ export type PollingStatusTimeConfig = Readonly<{
 }>
 
 export type ResetInfra = Readonly<{
-    fields: ResetFieldCollector
     client: PasswordResetClient,
     time: ResetTimeConfig,
     delayed: Delayed
 }>
-
-export interface ResetFieldCollector {
-    loginID(): Promise<Content<LoginID>>
-    password(): Promise<Content<Password>>
-}
 
 export type ResetTimeConfig = Readonly<{
     passwordResetDelayTime: DelayTime,
