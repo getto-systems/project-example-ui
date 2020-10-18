@@ -18,7 +18,7 @@ import { initLoginIDField } from "../auth/component/field/login_id/impl"
 import { initPasswordField } from "../auth/component/field/password/impl"
 
 import { initPathFactory } from "../application/impl/core"
-import { initRenewFactory, initStoreFactory } from "../credential/impl/core"
+import { initRenewAction, initSetContinousRenewAction, initStoreAction } from "../credential/impl/core"
 import { initLoginAction } from "../password_login/impl/core"
 import { initStartSessionAction, initPollingStatusAction, initResetAction } from "../password_reset/impl/core"
 
@@ -118,17 +118,24 @@ function newCredentialFactory(time: TimeConfig, credentialStorage: Storage) {
     const authCredentials = initStorageAuthCredentialRepository(credentialStorage, env.storageKey)
 
     return {
-        renew: initRenewFactory({
+        renew: () => initRenewAction({
             time,
 
             authCredentials,
-            renewClient: newRenewClient(),
+            client: newRenewClient(),
             delayed,
 
             expires: initAuthExpires(),
+        }),
+        setContinuousRenew: () => initSetContinousRenewAction({
+            time,
+
+            authCredentials,
+            client: newRenewClient(),
+
             runner: initRenewRunner(),
         }),
-        store: initStoreFactory({
+        store: () => initStoreAction({
             authCredentials,
         }),
     }

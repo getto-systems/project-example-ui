@@ -4,18 +4,26 @@ export type RenewInfra = Readonly<{
     time: RenewTimeConfig
 
     authCredentials: AuthCredentialRepository
-    renewClient: RenewClient
+    client: RenewClient
     delayed: Delayed
 
     expires: AuthExpires
+}>
+export type SetContinuousRenewInfra = Readonly<{
+    time: SetContinuousRenewTimeConfig
+
+    authCredentials: AuthCredentialRepository
+    client: RenewClient
+
     runner: RenewRunner
 }>
 
 export type RenewTimeConfig = Readonly<{
-    renewDelayTime: DelayTime,
-    renewIntervalTime: IntervalTime,
-
     instantLoadExpireTime: ExpireTime
+    renewDelayTime: DelayTime,
+}>
+export type SetContinuousRenewTimeConfig = Readonly<{
+    renewIntervalTime: IntervalTime,
     renewRunDelayTime: DelayTime
 }>
 

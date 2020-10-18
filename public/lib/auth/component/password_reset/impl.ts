@@ -6,41 +6,22 @@ import {
     PasswordResetRequest,
 } from "./component"
 
-import { ResetAction } from "../../../password_reset/action"
-import { StoreAction } from "../../../credential/action"
-import { PathAction } from "../../../application/action"
-
 import { ResetEvent } from "../../../password_reset/data"
 import { StoreEvent } from "../../../credential/data"
 
-type Background = Readonly<{
-    reset: ResetAction
-    store: StoreAction
-    path: PathAction
-}>
-
-export function initPasswordReset(actions: PasswordResetActionSet, param: PasswordResetParam): PasswordResetComponent {
-    return new Component(actions, param)
+export function initPasswordReset(background: PasswordResetActionSet, param: PasswordResetParam): PasswordResetComponent {
+    return new Component(background, param)
 }
 
 class Component implements PasswordResetComponent {
-    background: Background
+    background: PasswordResetActionSet
     param: PasswordResetParam
 
     listener: Post<PasswordResetState>[] = []
 
-    constructor(actions: PasswordResetActionSet, param: PasswordResetParam) {
-        this.background = {
-            reset: actions.reset,
-            store: actions.store.action,
-            path: actions.path,
-        }
-        this.setup(actions)
-
+    constructor(background: PasswordResetActionSet, param: PasswordResetParam) {
+        this.background = background
         this.param = param
-    }
-    setup(actions: PasswordResetActionSet): void {
-        actions.store.subscriber.onStoreEvent(event => this.post(this.mapStoreEvent(event)))
     }
 
     onStateChange(post: Post<PasswordResetState>): void {
@@ -70,7 +51,9 @@ class Component implements PasswordResetComponent {
     mapResetEvent(event: ResetEvent): PasswordResetState {
         switch (event.type) {
             case "succeed-to-reset":
-                this.background.store(event.authCredential)
+                this.background.store(event.authCredential, (event) => {
+                    this.post(this.mapStoreEvent(event))
+                })
                 return {
                     type: event.type,
                     scriptPath: this.background.path.secureScriptPath(this.param.pagePathname),

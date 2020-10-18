@@ -1,5 +1,5 @@
 import { ResetAction } from "../../../password_reset/action"
-import { StoreResource } from "../../../credential/action"
+import { StoreAction } from "../../../credential/action"
 import { PathAction } from "../../../application/action"
 
 import { ResetToken, ResetError } from "../../../password_reset/data"
@@ -12,7 +12,7 @@ export interface PasswordResetInit {
 
 export type PasswordResetActionSet = Readonly<{
     reset: ResetAction
-    store: StoreResource
+    store: StoreAction
     path: PathAction
 }>
 
