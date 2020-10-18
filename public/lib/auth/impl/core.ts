@@ -20,8 +20,12 @@ import { PasswordFieldInit, PasswordFieldComponent } from "../component/field/pa
 import { SecureScriptPathAction } from "../../application/action"
 import { RenewAction, SetContinuousRenewAction, StoreAction } from "../../credential/action"
 
-import { LoginAction } from "../../password_login/action"
-import { StartSessionAction, PollingStatusAction, ResetAction } from "../../password_reset/action"
+import { LoginAction, LoginFieldCollector } from "../../password_login/action"
+import {
+    StartSessionAction, StartSessionFieldCollector,
+    PollingStatusAction,
+    ResetAction, ResetFieldCollector
+} from "../../password_reset/action"
 
 import { LoginIDFieldAction } from "../../login_id/field/action"
 import { PasswordFieldAction } from "../../password/field/action"
@@ -31,10 +35,6 @@ import { LoginID } from "../../login_id/data"
 import { Password } from "../../password/data"
 import { ResetToken } from "../../password_reset/data"
 import { Content } from "../../field/data"
-
-// TODO infra を参照しないで済むようになんとかする
-import { LoginFieldCollector } from "../../password_login/infra"
-import { StartSessionFieldCollector, ResetFieldCollector } from "../../password_reset/infra"
 
 // ログイン前画面ではアンダースコアから始まるクエリを使用する
 const SEARCH = {
