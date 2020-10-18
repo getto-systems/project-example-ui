@@ -1,6 +1,6 @@
 import { ResetAction } from "../../../password_reset/action"
 import { StoreAction } from "../../../credential/action"
-import { PathAction } from "../../../application/action"
+import { SecureScriptPathAction } from "../../../application/action"
 
 import { ResetToken, ResetError } from "../../../password_reset/data"
 import { StorageError } from "../../../credential/data"
@@ -13,7 +13,7 @@ export interface PasswordResetInit {
 export type PasswordResetActionSet = Readonly<{
     reset: ResetAction
     store: StoreAction
-    path: PathAction
+    secureScriptPath: SecureScriptPathAction
 }>
 
 export type PasswordResetParam = Readonly<{

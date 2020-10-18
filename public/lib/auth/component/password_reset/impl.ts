@@ -56,7 +56,7 @@ class Component implements PasswordResetComponent {
                 })
                 return {
                     type: event.type,
-                    scriptPath: this.background.path.secureScriptPath(this.param.pagePathname),
+                    scriptPath: this.background.secureScriptPath(this.param.pagePathname),
                 }
 
             default:
