@@ -89,13 +89,10 @@ class Field implements PasswordFieldAction {
     }
 }
 
-export function initPasswordFieldFactory(): Factory<PasswordFieldAction> {
-    return () => new Field()
+export function initPasswordFieldAction(): PasswordFieldAction {
+    return new Field()
 }
 
 interface Post<T> {
     (event: T): void
-}
-interface Factory<T> {
-    (): T
 }

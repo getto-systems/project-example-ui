@@ -43,13 +43,10 @@ class Field implements LoginIDFieldAction {
     }
 }
 
-export function initLoginIDFieldFactory(): Factory<LoginIDFieldAction> {
-    return () => new Field()
+export function initLoginIDFieldAction(): LoginIDFieldAction {
+    return new Field()
 }
 
 interface Post<T> {
     (state: T): void
-}
-interface Factory<T> {
-    (): T
 }
