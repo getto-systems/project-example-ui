@@ -1,12 +1,11 @@
 import { PasswordFieldAction } from "../../../../password/field/action"
 
-import { Password } from "../../../../password/data"
 import {
-    PasswordFieldError,
+    PasswordFieldError, PasswordFieldEvent,
     PasswordCharacter, simplePassword,
     PasswordView, hidePassword,
 } from "../../../../password/field/data"
-import { InputValue, Content, Valid, noError } from "../../../../field/data"
+import { InputValue, Valid, noError } from "../../../../field/data"
 
 export interface PasswordFieldInit {
     (actions: PasswordFieldActionSet): PasswordFieldComponent
@@ -18,7 +17,7 @@ export type PasswordFieldActionSet = Readonly<{
 export interface PasswordFieldComponent {
     onStateChange(post: Post<PasswordFieldState>): void
     action(request: PasswordFieldRequest): void
-    validate(post: Post<PasswordFieldValidateEvent>): void
+    validate(post: Post<PasswordFieldEvent>): void
 }
 
 export type PasswordFieldState = Readonly<{
@@ -39,9 +38,6 @@ export type PasswordFieldRequest =
     Readonly<{ type: "set", inputValue: InputValue }> |
     Readonly<{ type: "show" }> |
     Readonly<{ type: "hide" }>
-
-export type PasswordFieldValidateEvent =
-    Readonly<{ type: "succeed-to-validate", content: Content<Password> }>
 
 interface Post<T> {
     (state: T): void

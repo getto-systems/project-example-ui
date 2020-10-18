@@ -3,7 +3,6 @@ import {
     LoginIDFieldComponent,
     LoginIDFieldState,
     LoginIDFieldRequest,
-    LoginIDFieldValidateEvent,
 } from "./component"
 
 import { LoginIDFieldEvent } from "../../../../login_id/field/data"
@@ -37,9 +36,10 @@ class Component implements LoginIDFieldComponent {
                 return
         }
     }
-    validate(post: Post<LoginIDFieldValidateEvent>): void {
+    validate(post: Post<LoginIDFieldEvent>): void {
         this.background.loginID.validate((event) => {
-            post({ type: "succeed-to-validate", content: event.content })
+            this.post(this.mapLoginIDFieldEvent(event))
+            post(event)
         })
     }
 

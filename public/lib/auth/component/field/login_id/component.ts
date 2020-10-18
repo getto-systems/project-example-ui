@@ -1,8 +1,7 @@
 import { LoginIDFieldAction } from "../../../../login_id/field/action"
 
-import { LoginID } from "../../../../login_id/data"
-import { LoginIDFieldError } from "../../../../login_id/field/data"
-import { InputValue, Content, Valid, noError } from "../../../../field/data"
+import { LoginIDFieldError, LoginIDFieldEvent } from "../../../../login_id/field/data"
+import { InputValue, Valid, noError } from "../../../../field/data"
 
 export interface LoginIDFieldInit {
     (actions: LoginIDFieldActionSet): LoginIDFieldComponent
@@ -14,7 +13,7 @@ export type LoginIDFieldActionSet = Readonly<{
 export interface LoginIDFieldComponent {
     onStateChange(post: Post<LoginIDFieldState>): void
     action(request: LoginIDFieldRequest): void
-    validate(post: Post<LoginIDFieldValidateEvent>): void
+    validate(post: Post<LoginIDFieldEvent>): void
 }
 
 export type LoginIDFieldState =
@@ -24,9 +23,6 @@ export const initialLoginIDFieldState: LoginIDFieldState = { type: "succeed-to-u
 
 export type LoginIDFieldRequest =
     Readonly<{ type: "set", inputValue: InputValue }>
-
-export type LoginIDFieldValidateEvent =
-    Readonly<{ type: "succeed-to-validate", content: Content<LoginID> }>
 
 interface Post<T> {
     (state: T): void

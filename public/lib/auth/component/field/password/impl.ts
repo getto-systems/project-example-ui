@@ -3,7 +3,6 @@ import {
     PasswordFieldComponent,
     PasswordFieldState,
     PasswordFieldRequest,
-    PasswordFieldValidateEvent,
 } from "./component"
 
 import { PasswordFieldEvent } from "../../../../password/field/data"
@@ -52,9 +51,10 @@ class Component implements PasswordFieldComponent {
                 assertNever(request)
         }
     }
-    validate(post: Post<PasswordFieldValidateEvent>): void {
+    validate(post: Post<PasswordFieldEvent>): void {
         this.background.password.validate((event) => {
-            post({ type: "succeed-to-validate", content: event.content })
+            this.post(this.mapPasswordFieldEvent(event))
+            post(event)
         })
     }
 
