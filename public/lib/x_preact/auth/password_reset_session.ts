@@ -15,12 +15,14 @@ import {
     PasswordResetSessionComponent,
     initialPasswordResetSessionState,
 } from "../../auth/component/password_reset_session/component"
+import { LoginIDFieldComponent } from "../../auth/component/field/login_id/component"
 
 import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../password_reset/data"
 
 type ComponentSet = Readonly<{
     href: AppHref
     passwordResetSession: PasswordResetSessionComponent
+    loginIDField: LoginIDFieldComponent
 }>
 
 type Props = {
@@ -38,7 +40,7 @@ export function PasswordResetSession({ init }: Props): VNode {
 
     return h(View, container.components)
 }
-function View({ href, passwordResetSession }: ComponentSet): VNode {
+function View({ href, passwordResetSession, loginIDField }: ComponentSet): VNode {
     const [state, setState] = useState(initialPasswordResetSessionState)
     // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
     const submit = useRef<HTMLButtonElement>()
@@ -54,7 +56,7 @@ function View({ href, passwordResetSession }: ComponentSet): VNode {
                     <section>
                         <big>
                             <section class="login__body">
-                                ${h(LoginIDField, passwordResetSession.components)}
+                                ${h(LoginIDField, { loginIDField })}
                             </section>
                         </big>
                     </section>

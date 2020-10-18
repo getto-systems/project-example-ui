@@ -6,6 +6,9 @@ import { newPasswordLoginComponent } from "./password_login"
 import { newPasswordResetSessionComponent } from "./password_reset_session"
 import { newPasswordResetComponent } from "./password_reset"
 
+import { newLoginIDFieldComponent, LoginIDFieldInit } from "./field/login_id"
+import { newPasswordFieldComponent, PasswordFieldInit } from "./field/password"
+
 import {
     AuthInit,
     AuthView,
@@ -60,14 +63,19 @@ class View implements AuthView {
             passwordLogin: () => components({
                 href: newAppHref(),
                 passwordLogin: newPasswordLoginComponent(),
+                loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().empty()),
+                passwordField: newPasswordFieldComponent(new PasswordFieldInit().empty()),
             }),
             passwordResetSession: () => components({
                 href: newAppHref(),
                 passwordResetSession: newPasswordResetSessionComponent(),
+                loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().empty()),
             }),
             passwordReset: () => components({
                 href: newAppHref(),
                 passwordReset: newPasswordResetComponent(),
+                loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().empty()),
+                passwordField: newPasswordFieldComponent(new PasswordFieldInit().empty()),
             }),
         }
 

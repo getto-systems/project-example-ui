@@ -14,12 +14,16 @@ import { PasswordField } from "./password_login/field/password"
 import { AppHref } from "../../href"
 
 import { PasswordLoginComponent, initialPasswordLoginState } from "../../auth/component/password_login/component"
+import { LoginIDFieldComponent } from "../../auth/component/field/login_id/component"
+import { PasswordFieldComponent } from "../../auth/component/field/password/component"
 
 import { LoginError } from "../../password_login/data"
 
 type ComponentSet = Readonly<{
     href: AppHref
     passwordLogin: PasswordLoginComponent
+    loginIDField: LoginIDFieldComponent
+    passwordField: PasswordFieldComponent
 }>
 
 type Props = {
@@ -37,7 +41,7 @@ export function PasswordLogin({ init }: Props): VNode {
 
     return h(View, container.components)
 }
-function View({ href, passwordLogin }: ComponentSet): VNode {
+function View({ href, passwordLogin, loginIDField, passwordField }: ComponentSet): VNode {
     const [state, setState] = useState(initialPasswordLoginState)
     // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
     const submit = useRef<HTMLButtonElement>()
@@ -66,8 +70,8 @@ function View({ href, passwordLogin }: ComponentSet): VNode {
                     <section>
                         <big>
                             <section class="login__body">
-                                ${h(LoginIDField, passwordLogin.components)}
-                                ${h(PasswordField, passwordLogin.components)}
+                                ${h(LoginIDField, { loginIDField })}
+                                ${h(PasswordField, { passwordField })}
                             </section>
                         </big>
                     </section>

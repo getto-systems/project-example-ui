@@ -14,20 +14,27 @@ import { PasswordLoginInit, PasswordLoginComponent, PasswordLoginState, Password
 import { PasswordResetSessionInit, /* PasswordResetSessionComponent, PasswordResetSessionRequest */ } from "../component/password_reset_session/component"
 import { PasswordResetInit, /* PasswordResetComponent, PasswordResetParam, PasswordResetRequest */ } from "../component/password_reset/component"
 
-import { LoginIDFieldInit, LoginIDFieldState, LoginIDFieldRequest } from "../component/field/login_id/component"
-import { PasswordFieldInit, PasswordFieldState, PasswordFieldRequest } from "../component/field/password/component"
+import { LoginIDFieldInit, LoginIDFieldComponent } from "../component/field/login_id/component"
+import { PasswordFieldInit, PasswordFieldComponent } from "../component/field/password/component"
 
 import { PathFactory } from "../../application/action"
 import { RenewFactory, StoreFactory, StoreAction } from "../../credential/action"
 
 import { LoginAction } from "../../password_login/action"
-import { SessionAction, ResetAction } from "../../password_reset/action"
+import { StartSessionAction, PollingStatusAction, ResetAction } from "../../password_reset/action"
 
-import { LoginIDFieldFactory } from "../../login_id/field/action"
-import { PasswordFieldFactory } from "../../password/field/action"
+import { LoginIDFieldAction } from "../../login_id/field/action"
+import { PasswordFieldAction } from "../../password/field/action"
 
 import { AuthCredential, StoreEvent } from "../../credential/data"
+import { LoginID } from "../../login_id/data"
+import { Password } from "../../password/data"
 import { ResetToken } from "../../password_reset/data"
+import { Content } from "../../field/data"
+
+// TODO infra を参照しないで済むようになんとかする
+import { LoginFieldCollector } from "../../password_login/infra"
+import { StartSessionFieldCollector, ResetFieldCollector } from "../../password_reset/infra"
 
 // ログイン前画面ではアンダースコアから始まるクエリを使用する
 const SEARCH = {
@@ -64,16 +71,17 @@ type FactorySet = Readonly<{
     }
 
     passwordLogin: {
-        login: Factory<LoginAction>
+        login: ParameterFactory<LoginFieldCollector, LoginAction>
     }
     passwordReset: {
-        session: Factory<SessionAction>
-        reset: Factory<ResetAction>
+        startSession: ParameterFactory<StartSessionFieldCollector, StartSessionAction>
+        pollingStatus: Factory<PollingStatusAction>
+        reset: ParameterFactory<ResetFieldCollector, ResetAction>
     }
 
     field: {
-        loginID: LoginIDFieldFactory
-        password: PasswordFieldFactory
+        loginID: Factory<LoginIDFieldAction>
+        password: Factory<PasswordFieldAction>
     }
 }>
 
@@ -98,16 +106,17 @@ type WorkerFactory = Readonly<{
     }
 
     passwordLogin: {
-        login: Factory<LoginAction>
+        login: ParameterFactory<LoginFieldCollector, LoginAction>
     }
     passwordReset: {
-        session: Factory<SessionAction>
-        reset: Factory<ResetAction>
+        startSession: ParameterFactory<StartSessionFieldCollector, StartSessionAction>
+        pollingStatus: Factory<PollingStatusAction>
+        reset: ParameterFactory<ResetFieldCollector, ResetAction>
     }
 
     field: {
-        loginID: LoginIDFieldFactory
-        password: PasswordFieldFactory
+        loginID: Factory<LoginIDFieldAction>
+        password: Factory<PasswordFieldAction>
     }
 }>
 
@@ -164,6 +173,60 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
         }
     }
 
+    class LoginIDFieldWorker {
+        requestID: IDGenerator
+
+        request: Record<number, Record<number, Post<Content<LoginID>>>> = []
+
+        constructor() {
+            this.requestID = new IDGenerator()
+        }
+
+        validate(componentID: number, post: Post<Content<LoginID>>): void {
+            if (!this.request[componentID]) {
+                this.request[componentID] = []
+            }
+
+            const requestID = this.requestID.generate()
+            this.request[componentID][requestID] = post
+
+            worker.postMessage({ type: "loginIDField-validate", componentID, requestID })
+        }
+        resolve({ componentID, requestID, content }: { componentID: number, requestID: number, content: Content<LoginID> }) {
+            if (this.request[componentID] && this.request[componentID][requestID]) {
+                this.request[componentID][requestID](content)
+            }
+        }
+    }
+    class PasswordFieldWorker {
+        requestID: IDGenerator
+
+        request: Record<number, Record<number, Post<Content<Password>>>> = []
+
+        constructor() {
+            this.requestID = new IDGenerator()
+        }
+
+        validate(componentID: number, post: Post<Content<Password>>): void {
+            if (!this.request[componentID]) {
+                this.request[componentID] = []
+            }
+
+            const requestID = this.requestID.generate()
+            this.request[componentID][requestID] = post
+
+            worker.postMessage({ type: "passwordField-validate", componentID, requestID })
+        }
+        resolve({ componentID, requestID, content }: { componentID: number, requestID: number, content: Content<Password> }) {
+            if (this.request[componentID] && this.request[componentID][requestID]) {
+                this.request[componentID][requestID](content)
+            }
+        }
+    }
+
+    const loginIDField = new LoginIDFieldWorker()
+    const passwordField = new PasswordFieldWorker()
+
     worker.addEventListener("message", (event: MessageEvent<WorkerRequest>) => {
         const data = event.data
         switch (data.type) {
@@ -172,12 +235,21 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
                     onStateChange(state) {
                         post({ type: "passwordLogin-post", componentID: data.componentID, state })
                     },
-                    onLoginIDFieldStateChange(state) {
-                        post({ type: "passwordLogin-loginIDField-post", componentID: data.componentID, state })
+                }, {
+                    loginID(): Promise<Content<LoginID>> {
+                        return new Promise((resolve) => {
+                            loginIDField.validate(data.componentID, (content) => {
+                                resolve(content)
+                            })
+                        })
                     },
-                    onPasswordFieldStateChange(state) {
-                        post({ type: "passwordLogin-passwordField-post", componentID: data.componentID, state })
-                    },
+                    password(): Promise<Content<Password>> {
+                        return new Promise((resolve) => {
+                            passwordField.validate(data.componentID, (content) => {
+                                resolve(content)
+                            })
+                        })
+                    }
                 })
                 break
 
@@ -189,20 +261,12 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
                 }
                 break
 
-            case "passwordLogin-loginIDField-action":
-                if (map.passwordLogin[data.componentID]) {
-                    map.passwordLogin[data.componentID].components.loginIDField.action(data.request)
-                } else {
-                    post({ type: "error", err: "component has not been initialized" })
-                }
+            case "loginIDField-content":
+                loginIDField.resolve(data)
                 break
 
-            case "passwordLogin-passwordField-action":
-                if (map.passwordLogin[data.componentID]) {
-                    map.passwordLogin[data.componentID].components.passwordField.action(data.request)
-                } else {
-                    post({ type: "error", err: "component has not been initialized" })
-                }
+            case "passwordField-content":
+                passwordField.resolve(data)
                 break
         }
     })
@@ -234,16 +298,16 @@ type ActionMap = {
 type WorkerRequest =
     Readonly<{ type: "passwordLogin-init", componentID: number, param: PasswordLoginParam }> |
     Readonly<{ type: "passwordLogin-action", componentID: number, request: PasswordLoginRequest }> |
-    Readonly<{ type: "passwordLogin-loginIDField-action", componentID: number, request: LoginIDFieldRequest }> |
-    Readonly<{ type: "passwordLogin-passwordField-action", componentID: number, request: PasswordFieldRequest }> |
+    Readonly<{ type: "loginIDField-content", componentID: number, requestID: number, content: Content<LoginID> }> |
+    Readonly<{ type: "passwordField-content", componentID: number, requestID: number, content: Content<Password> }> |
     Readonly<{ type: "credential-store-post", actionID: number, event: StoreEvent }>
 
 type WorkerEvent =
     Readonly<{ type: "credential-store-init", actionID: number }> |
     Readonly<{ type: "credential-store-action", actionID: number, authCredential: AuthCredential }> |
     Readonly<{ type: "passwordLogin-post", componentID: number, state: PasswordLoginState }> |
-    Readonly<{ type: "passwordLogin-loginIDField-post", componentID: number, state: LoginIDFieldState }> |
-    Readonly<{ type: "passwordLogin-passwordField-post", componentID: number, state: PasswordFieldState }> |
+    Readonly<{ type: "loginIDField-validate", componentID: number, requestID: number }> |
+    Readonly<{ type: "passwordField-validate", componentID: number, requestID: number }> |
     Readonly<{ type: "error", err: string }>
 
 class View implements AuthView {
@@ -252,7 +316,6 @@ class View implements AuthView {
     components: AuthComponentSet
 
     constructor(factory: FactorySet, init: InitSet, currentLocation: Location) {
-        const componentID = new IDGenerator()
         const map: ActionMap = {
             credential: {
                 store: [],
@@ -262,64 +325,65 @@ class View implements AuthView {
         const worker = new Worker("./auth.worker.js")
         const post: Post<WorkerRequest> = (request) => worker.postMessage(request)
 
-        const passwordLoginInit = (): PasswordLoginComponent => {
-            const id = componentID.generate()
-            const param = {
-                pagePathname: currentPagePathname(currentLocation),
-            }
-            post({ type: "passwordLogin-init", componentID: id, param })
+        type PasswordLoginFieldComponentSet = Readonly<{
+            loginIDField: LoginIDFieldComponent
+            passwordField: PasswordFieldComponent
+        }>
 
-            return {
-                action: (request: PasswordLoginRequest) => {
-                    post({ type: "passwordLogin-action", componentID: id, request })
-                },
-                onStateChange(post: Post<PasswordLoginState>) {
-                    worker.addEventListener("message", (event: MessageEvent<WorkerEvent>) => {
-                        switch (event.data.type) {
-                            case "passwordLogin-post":
-                                if (event.data.componentID === id) {
-                                    post(event.data.state)
-                                }
-                                break
-                        }
+        class PasswordLoginWorker {
+            componentID: IDGenerator
+
+            fields: Record<number, PasswordLoginFieldComponentSet> = []
+            post: Record<number, Post<PasswordLoginState>[]> = []
+
+            constructor() {
+                this.componentID = new IDGenerator()
+            }
+
+            init(fields: PasswordLoginFieldComponentSet): PasswordLoginComponent {
+                const componentID = this.componentID.generate()
+
+                const listener: Post<PasswordLoginState>[] = []
+
+                this.fields[componentID] = fields
+                this.post[componentID] = listener
+
+                const param = {
+                    pagePathname: currentPagePathname(currentLocation),
+                }
+                post({ type: "passwordLogin-init", componentID, param })
+
+                return {
+                    action: (request: PasswordLoginRequest) => {
+                        post({ type: "passwordLogin-action", componentID, request })
+                    },
+                    onStateChange(post: Post<PasswordLoginState>) {
+                        listener.push(post)
+                    },
+                }
+            }
+            resolve({ componentID, state }: { componentID: number, state: PasswordLoginState }): void {
+                if (this.post[componentID]) {
+                    this.post[componentID].forEach(post => post(state))
+                }
+            }
+            validateLoginID({ componentID, requestID }: { componentID: number, requestID: number }): void {
+                if (this.fields[componentID]) {
+                    this.fields[componentID].loginIDField.validate((event) => {
+                        post({ type: "loginIDField-content", componentID, requestID, content: event.content })
                     })
-                },
-                components: {
-                    loginIDField: {
-                        action: (request: LoginIDFieldRequest) => {
-                            post({ type: "passwordLogin-loginIDField-action", componentID: id, request })
-                        },
-                        onStateChange(post: Post<LoginIDFieldState>) {
-                            worker.addEventListener("message", (event: MessageEvent<WorkerEvent>) => {
-                                switch (event.data.type) {
-                                    case "passwordLogin-loginIDField-post":
-                                        if (event.data.componentID === id) {
-                                            post(event.data.state)
-                                        }
-                                        break
-                                }
-                            })
-                        },
-                    },
-                    passwordField: {
-                        action: (request: PasswordFieldRequest) => {
-                            post({ type: "passwordLogin-passwordField-action", componentID: id, request })
-                        },
-                        onStateChange(post: Post<PasswordFieldState>) {
-                            worker.addEventListener("message", (event: MessageEvent<WorkerEvent>) => {
-                                switch (event.data.type) {
-                                    case "passwordLogin-passwordField-post":
-                                        if (event.data.componentID === id) {
-                                            post(event.data.state)
-                                        }
-                                        break
-                                }
-                            })
-                        },
-                    },
-                },
+                }
+            }
+            validatePassword({ componentID, requestID }: { componentID: number, requestID: number }): void {
+                if (this.fields[componentID]) {
+                    this.fields[componentID].passwordField.validate((event) => {
+                        post({ type: "passwordField-content", componentID, requestID, content: event.content })
+                    })
+                }
             }
         }
+
+        const passwordLoginWorker = new PasswordLoginWorker()
 
         worker.addEventListener("message", (event: MessageEvent<WorkerEvent>) => {
             const data = event.data
@@ -339,6 +403,18 @@ class View implements AuthView {
                         this.post({ type: "error", err: "action has not been initialized" })
                     }
                     break
+
+                case "passwordLogin-post":
+                    passwordLoginWorker.resolve(data)
+                    break
+
+                case "loginIDField-validate":
+                    passwordLoginWorker.validateLoginID(data)
+                    break
+
+                case "passwordField-validate":
+                    passwordLoginWorker.validatePassword(data)
+                    break
             }
         })
 
@@ -349,13 +425,29 @@ class View implements AuthView {
             }),
 
             passwordLogin: () => {
+                const fields = {
+                    loginIDField: init.field.loginID({ loginID: factory.field.loginID() }),
+                    passwordField: init.field.password({ password: factory.field.password() }),
+                }
                 return {
                     href: init.href(),
-                    passwordLogin: passwordLoginInit(),
+                    passwordLogin: passwordLoginWorker.init(fields),
+                    ...fields,
                 }
             },
-            passwordResetSession: () => initPasswordResetSession(factory, init),
-            passwordReset: () => initPasswordReset(factory, init, currentLocation),
+            passwordResetSession: () => {
+                const fields = {
+                    loginIDField: init.field.loginID({ loginID: factory.field.loginID() }),
+                }
+                return initPasswordResetSession(factory, init, fields)
+            },
+            passwordReset: () => {
+                const fields = {
+                    loginIDField: init.field.loginID({ loginID: factory.field.loginID() }),
+                    passwordField: init.field.password({ password: factory.field.password() }),
+                }
+                return initPasswordReset(factory, init, currentLocation, fields)
+            },
         }
     }
 
@@ -441,72 +533,62 @@ function initStoreAction(factory: FactorySet, listener: StoreActionListener) {
 }
 interface PasswordLoginComponentListener {
     onStateChange(state: PasswordLoginState): void
-    onLoginIDFieldStateChange(state: LoginIDFieldState): void
-    onPasswordFieldStateChange(state: PasswordFieldState): void
 }
-function initPasswordLoginComponent(storeFactory: StoreFactory, factory: WorkerFactory, init: WorkerInit, param: PasswordLoginParam, listener: PasswordLoginComponentListener) {
-    const loginID = factory.field.loginID()
-    const password = factory.field.password()
-
+function initPasswordLoginComponent(storeFactory: StoreFactory, factory: WorkerFactory, init: WorkerInit, param: PasswordLoginParam, listener: PasswordLoginComponentListener, fields: LoginFieldCollector) {
     const actions = {
-        login: factory.passwordLogin.login(),
-        field: {
-            loginID: loginID.action,
-            password: password.action,
-        },
+        login: factory.passwordLogin.login(fields),
         store: storeFactory(),
         path: factory.application.path(),
     }
 
-    const fields = {
-        loginIDField: init.field.loginID({ loginID }),
-        passwordField: init.field.password({ password }),
-    }
-
-    const component = init.passwordLogin(actions, fields, param)
+    const component = init.passwordLogin(actions, param)
 
     component.onStateChange(state => listener.onStateChange(state))
-    component.components.loginIDField.onStateChange(state => listener.onLoginIDFieldStateChange(state))
-    component.components.passwordField.onStateChange(state => listener.onPasswordFieldStateChange(state))
 
     return component
 }
-function initPasswordResetSession(factory: FactorySet, init: InitSet) {
-    const loginID = factory.field.loginID()
-
-    const actions = {
-        session: factory.passwordReset.session(),
-        field: {
-            loginID: loginID.action,
+function initPasswordResetSession(factory: FactorySet, init: InitSet, components: { loginIDField: LoginIDFieldComponent }) {
+    const fields = {
+        loginID(): Promise<Content<LoginID>> {
+            return new Promise((resolve) => {
+                components.loginIDField.validate((event) => {
+                    resolve(event.content)
+                })
+            })
         },
     }
-
-    const fields = {
-        loginIDField: init.field.loginID({ loginID }),
+    const actions = {
+        startSession: factory.passwordReset.startSession(fields),
+        pollingStatus: factory.passwordReset.pollingStatus(),
     }
 
     return {
         href: init.href(),
-        passwordResetSession: init.passwordResetSession(actions, fields),
+        passwordResetSession: init.passwordResetSession(actions),
+        loginIDField: init.field.loginID({ loginID: factory.field.loginID() }),
     }
 }
-function initPasswordReset(factory: FactorySet, init: InitSet, currentLocation: Location) {
-    const loginID = factory.field.loginID()
-    const password = factory.field.password()
-
-    const actions = {
-        reset: factory.passwordReset.reset(),
-        field: {
-            loginID: loginID.action,
-            password: password.action,
+function initPasswordReset(factory: FactorySet, init: InitSet, currentLocation: Location, components: { loginIDField: LoginIDFieldComponent, passwordField: PasswordFieldComponent }) {
+    const fields = {
+        loginID(): Promise<Content<LoginID>> {
+            return new Promise((resolve) => {
+                components.loginIDField.validate((event) => {
+                    resolve(event.content)
+                })
+            })
         },
+        password(): Promise<Content<Password>> {
+            return new Promise((resolve) => {
+                components.passwordField.validate((event) => {
+                    resolve(event.content)
+                })
+            })
+        }
+    }
+    const actions = {
+        reset: factory.passwordReset.reset(fields),
         store: factory.credential.store(),
         path: factory.application.path(),
-    }
-
-    const fields = {
-        loginIDField: init.field.loginID({ loginID }),
-        passwordField: init.field.password({ password }),
     }
 
     const param = {
@@ -516,7 +598,9 @@ function initPasswordReset(factory: FactorySet, init: InitSet, currentLocation: 
 
     return {
         href: init.href(),
-        passwordReset: init.passwordReset(actions, fields, param),
+        passwordReset: init.passwordReset(actions, param),
+        loginIDField: init.field.loginID({ loginID: factory.field.loginID() }),
+        passwordField: init.field.password({ password: factory.field.password() }),
     }
 }
 
@@ -532,6 +616,9 @@ interface Post<T> {
 }
 interface Factory<T> {
     (): T
+}
+interface ParameterFactory<P, T> {
+    (param: P): T
 }
 interface Terminate {
     (): void

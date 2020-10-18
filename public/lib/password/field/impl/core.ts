@@ -1,11 +1,7 @@
 import { packInputValue, unpackInputValue } from "../../../field/adapter"
 import { packPassword } from "../../../password/adapter"
 
-import {
-    PasswordFieldAction,
-    PasswordFieldFactory,
-    PasswordFieldSubscriber,
-} from "../action"
+import { PasswordFieldAction } from "../action"
 
 import {
     PasswordFieldEvent,
@@ -13,8 +9,7 @@ import {
     PasswordCharacter, simplePassword, complexPassword,
     PasswordView, showPassword, hidePassword,
 } from "../data"
-import { Password } from "../../../password/data"
-import { InputValue, Content, validContent, invalidContent, hasError } from "../../../field/data"
+import { InputValue, buildContent, hasError } from "../../../field/data"
 
 // bcrypt を想定しているので、72 バイト以上のパスワードは無効
 const PASSWORD_MAX_BYTES = 72
@@ -52,14 +47,10 @@ function checkCharacter(password: string): PasswordCharacter {
 }
 
 class Field implements PasswordFieldAction {
-    post: Post<PasswordFieldEvent>
-
     password: InputValue
     visible: boolean
 
-    constructor(post: Post<PasswordFieldEvent>) {
-        this.post = post
-
+    constructor() {
         this.password = packInputValue("")
         this.visible = false
     }
@@ -72,54 +63,39 @@ class Field implements PasswordFieldAction {
         }
     }
 
-    set(input: InputValue): void {
+    set(input: InputValue, post: Post<PasswordFieldEvent>): void {
         this.password = input
-        this.validate()
+        this.validate(post)
     }
-    show(): void {
+    show(post: Post<PasswordFieldEvent>): void {
         this.visible = true
-        this.validate()
+        this.validate(post)
     }
-    hide(): void {
+    hide(post: Post<PasswordFieldEvent>): void {
         this.visible = false
-        this.validate()
+        this.validate(post)
     }
-    validate(): Content<Password> {
+    validate(post: Post<PasswordFieldEvent>): void {
         const password = unpackInputValue(this.password)
         const result = hasError(validatePassword(password))
-        const character = checkCharacter(password)
-        const view = this.view()
 
-        this.post({ type: "succeed-to-update-password", result, character, view })
-
-        if (!result.valid) {
-            return invalidContent()
-        }
-        return validContent(packPassword(password))
+        post({
+            type: "succeed-to-update",
+            result,
+            content: buildContent(result.valid, () => packPassword(password)),
+            character: checkCharacter(password),
+            view: this.view(),
+        })
     }
 }
 
-export function initPasswordFieldFactory(): PasswordFieldFactory {
-    return () => {
-        const pubsub = new FieldEventPubSub()
-        return {
-            action: new Field((event) => pubsub.postPasswordFieldEvent(event)),
-            subscriber: pubsub,
-        }
-    }
-}
-
-class FieldEventPubSub implements PasswordFieldSubscriber {
-    listener: Post<PasswordFieldEvent>[] = []
-
-    onPasswordFieldEvent(post: Post<PasswordFieldEvent>): void {
-        this.listener.push(post)
-    }
-    postPasswordFieldEvent(event: PasswordFieldEvent): void {
-        this.listener.forEach(post => post(event))
-    }
+export function initPasswordFieldFactory(): Factory<PasswordFieldAction> {
+    return () => new Field()
 }
 
 interface Post<T> {
     (event: T): void
+}
+interface Factory<T> {
+    (): T
 }

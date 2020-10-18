@@ -7,6 +7,8 @@ import {
 
 import { packSessionID } from "../../../adapter"
 
+import { StartSessionFields } from "../../../data"
+
 import { SessionID, PollingStatusError } from "../../../data"
 import { LoginID } from "../../../../login_id/data"
 
@@ -32,7 +34,7 @@ class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
         this.targetLoginID = targetLoginID
     }
 
-    startSession(loginID: LoginID): Promise<SessionResponse> {
+    startSession({ loginID }: StartSessionFields): Promise<SessionResponse> {
         return new Promise((resolve) => {
             setTimeout(() => {
                 if (loginID === this.targetLoginID) {

@@ -1,28 +1,19 @@
-import { LoginIDFieldComponent } from "../field/login_id/component"
-
-import { SessionAction } from "../../../password_reset/action"
-import { LoginIDFieldAction } from "../../../login_id/field/action"
+import { StartSessionAction, PollingStatusAction } from "../../../password_reset/action"
 
 import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../../password_reset/data"
 
 export interface PasswordResetSessionInit {
-    (actions: PasswordResetSessionActionSet, components: PasswordResetSessionFieldComponentSet): PasswordResetSessionComponent
+    (actions: PasswordResetSessionActionSet): PasswordResetSessionComponent
 }
 export type PasswordResetSessionActionSet = Readonly<{
-    session: SessionAction
-    field: {
-        loginID: LoginIDFieldAction
-    }
+    startSession: StartSessionAction
+    pollingStatus: PollingStatusAction
 }>
 
 export interface PasswordResetSessionComponent {
     onStateChange(post: Post<PasswordResetSessionState>): void
     action(request: PasswordResetSessionRequest): void
-    readonly components: PasswordResetSessionFieldComponentSet
 }
-export type PasswordResetSessionFieldComponentSet = Readonly<{
-    loginIDField: LoginIDFieldComponent
-}>
 
 export type PasswordResetSessionState =
     Readonly<{ type: "initial-reset-session" }> |

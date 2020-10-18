@@ -1,5 +1,7 @@
 import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
 
+import { LoginFields } from "../../../data"
+
 import { AuthCredential } from "../../../../credential/data"
 import { LoginID } from "../../../../login_id/data"
 import { Password } from "../../../../password/data"
@@ -24,7 +26,7 @@ class SimulatePasswordLoginClient implements PasswordLoginClient {
         this.returnAuthCredential = returnAuthCredential
     }
 
-    login(loginID: LoginID, password: Password): Promise<LoginResponse> {
+    login({ loginID, password }: LoginFields): Promise<LoginResponse> {
         return new Promise((resolve) => {
             setTimeout(() => {
                 if (loginID !== this.targetLoginID || password !== this.targetPassword) {

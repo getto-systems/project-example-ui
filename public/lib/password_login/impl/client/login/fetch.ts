@@ -4,8 +4,7 @@ import { packTicketNonce, packApiRoles, packAuthAt } from "../../../../credentia
 import { unpackLoginID } from "../../../../login_id/adapter"
 import { unpackPassword } from "../../../../password/adapter"
 
-import { LoginID } from "../../../../login_id/data"
-import { Password } from "../../../../password/data"
+import { LoginFields } from "../../../data"
 
 interface AuthClient {
     passwordLogin(param: { loginID: string, password: string }): Promise<AuthLoginResponse>
@@ -26,7 +25,7 @@ class FetchPasswordLoginClient implements PasswordLoginClient {
         this.client = client
     }
 
-    async login(loginID: LoginID, password: Password): Promise<LoginResponse> {
+    async login({ loginID, password }: LoginFields): Promise<LoginResponse> {
         try {
             const response = await this.client.passwordLogin({
                 loginID: unpackLoginID(loginID),

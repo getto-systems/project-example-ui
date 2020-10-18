@@ -1,7 +1,7 @@
-import { LoginContent, LoginEvent } from "./data"
+import { LoginEvent } from "./data"
 
 export interface LoginAction {
-    (content: LoginContent, post: Post<LoginEvent>): void
+    (post: Post<LoginEvent>): void
 }
 
 interface Post<T> {

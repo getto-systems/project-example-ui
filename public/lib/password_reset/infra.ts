@@ -1,4 +1,6 @@
 import {
+    StartSessionFields,
+    ResetFields,
     SessionID, StartSessionError,
     Destination,
     ResetToken,
@@ -9,36 +11,52 @@ import {
 import { AuthCredential } from "../credential/data"
 import { LoginID } from "../login_id/data"
 import { Password } from "../password/data"
+import { Content } from "../field/data"
 
-export type SessionInfra = Readonly<{
-    time: SessionTimeConfig,
-    passwordResetSessionClient: PasswordResetSessionClient,
+export type StartSessionInfra = Readonly<{
+    fields: StartSessionFieldCollector
+    client: PasswordResetSessionClient
+    time: StartSessionTimeConfig
+    delayed: Delayed
+}>
+export type PollingStatusInfra = Readonly<{
+    client: PasswordResetSessionClient
+    time: PollingStatusTimeConfig
     delayed: Delayed
     wait: Wait
 }>
 
-export type ResetInfra = Readonly<{
-    time: ResetTimeConfig,
-    passwordResetClient: PasswordResetClient,
-    delayed: Delayed
+export interface StartSessionFieldCollector {
+    loginID(): Promise<Content<LoginID>>
+}
+
+export type StartSessionTimeConfig = Readonly<{
+    passwordResetStartSessionDelayTime: DelayTime,
 }>
 
-export type SessionTimeConfig = Readonly<{
-    passwordResetStartSessionDelayTime: DelayTime,
+export type PollingStatusTimeConfig = Readonly<{
     passwordResetPollingWaitTime: WaitTime,
     passwordResetPollingLimit: Limit,
 }>
+
+export type ResetInfra = Readonly<{
+    fields: ResetFieldCollector
+    client: PasswordResetClient,
+    time: ResetTimeConfig,
+    delayed: Delayed
+}>
+
+export interface ResetFieldCollector {
+    loginID(): Promise<Content<LoginID>>
+    password(): Promise<Content<Password>>
+}
 
 export type ResetTimeConfig = Readonly<{
     passwordResetDelayTime: DelayTime,
 }>
 
-export type DelayTime = Readonly<{ delay_milli_second: number }>
-export type WaitTime = Readonly<{ wait_milli_second: number }>
-export type Limit = Readonly<{ limit: number }>
-
 export interface PasswordResetSessionClient {
-    startSession(loginID: LoginID): Promise<SessionResponse>
+    startSession(fields: StartSessionFields): Promise<SessionResponse>
     sendToken(): Promise<SendTokenResponse>
     getStatus(sessionID: SessionID): Promise<GetStatusResponse>
 }
@@ -80,7 +98,7 @@ export function getStatusSend(dest: Destination): GetStatusResponse {
 }
 
 export interface PasswordResetClient {
-    reset(token: ResetToken, loginID: LoginID, password: Password): Promise<ResetResponse>
+    reset(token: ResetToken, fields: ResetFields): Promise<ResetResponse>
 }
 
 export type ResetResponse =
@@ -106,6 +124,10 @@ export interface Delayed {
 export interface Wait {
     <T>(time: WaitTime, content: WaitContent<T>): Promise<T>
 }
+
+type DelayTime = Readonly<{ delay_milli_second: number }>
+type WaitTime = Readonly<{ wait_milli_second: number }>
+type Limit = Readonly<{ limit: number }>
 
 interface DelayedHandler {
     (): void

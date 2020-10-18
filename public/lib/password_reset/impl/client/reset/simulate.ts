@@ -1,6 +1,7 @@
 import { PasswordResetClient, ResetResponse, resetSuccess, resetFailed } from "../../../infra"
 
-import { ResetToken } from "../../../data"
+import { ResetToken, ResetFields } from "../../../data"
+
 import { AuthCredential } from "../../../../credential/data"
 import { LoginID } from "../../../../login_id/data"
 import { Password } from "../../../../password/data"
@@ -20,7 +21,7 @@ class SimulatePasswordResetClient implements PasswordResetClient {
         this.returnAuthCredential = returnAuthCredential
     }
 
-    reset(token: ResetToken, loginID: LoginID, password: Password): Promise<ResetResponse> {
+    reset(token: ResetToken, { loginID, password }: ResetFields): Promise<ResetResponse> {
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve(this.resetSimulate(token, loginID, password))

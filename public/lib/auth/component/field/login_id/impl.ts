@@ -3,36 +3,22 @@ import {
     LoginIDFieldComponent,
     LoginIDFieldState,
     LoginIDFieldRequest,
+    LoginIDFieldValidateEvent,
 } from "./component"
-
-import { LoginIDFieldAction } from "../../../../login_id/field/action"
 
 import { LoginIDFieldEvent } from "../../../../login_id/field/data"
 
-type Background = Readonly<{
-    loginID: LoginIDFieldAction
-}>
-
-export function initLoginIDField(actions: LoginIDFieldActionSet): LoginIDFieldComponent {
-    return new Component(actions)
+export function initLoginIDField(background: LoginIDFieldActionSet): LoginIDFieldComponent {
+    return new Component(background)
 }
 
 class Component implements LoginIDFieldComponent {
-    background: Background
+    background: LoginIDFieldActionSet
 
     listener: Post<LoginIDFieldState>[] = []
 
-    constructor(actions: LoginIDFieldActionSet) {
-        this.background = {
-            loginID: actions.loginID.action,
-        }
-        this.setup(actions)
-    }
-    setup(actions: LoginIDFieldActionSet): void {
-        actions.loginID.subscriber.onLoginIDFieldEvent(event => this.post(this.mapLoginIDFieldEvent(event)))
-    }
-    mapLoginIDFieldEvent(event: LoginIDFieldEvent): LoginIDFieldState {
-        return event
+    constructor(background: LoginIDFieldActionSet) {
+        this.background = background
     }
 
     onStateChange(post: Post<LoginIDFieldState>): void {
@@ -45,9 +31,20 @@ class Component implements LoginIDFieldComponent {
     action(request: LoginIDFieldRequest): void {
         switch (request.type) {
             case "set":
-                this.background.loginID.set(request.inputValue)
+                this.background.loginID.set(request.inputValue, (event) => {
+                    this.post(this.mapLoginIDFieldEvent(event))
+                })
                 return
         }
+    }
+    validate(post: Post<LoginIDFieldValidateEvent>): void {
+        this.background.loginID.validate((event) => {
+            post({ type: "succeed-to-validate", content: event.content })
+        })
+    }
+
+    mapLoginIDFieldEvent(event: LoginIDFieldEvent): LoginIDFieldState {
+        return event
     }
 }
 

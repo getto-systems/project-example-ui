@@ -1,13 +1,13 @@
-import { LoginInfra } from "../infra"
+import { LoginInfra, LoginFieldCollector } from "../infra"
 
 import { LoginAction } from "../action"
 
-import { LoginContent, LoginFields } from "../data"
+import { LoginFields } from "../data"
 import { Content, validContent, invalidContent } from "../../field/data"
 
-const loginAction = (infra: LoginInfra): LoginAction => async (content, post) => {
-    const fields = mapContent(content)
-    if (!fields.valid) {
+const login = ({ fields, client, time, delayed }: LoginInfra): LoginAction => async (post) => {
+    const content = await collect(fields)
+    if (!content.valid) {
         post({ type: "failed-to-login", err: { type: "validation-error" } })
         return
     }
@@ -15,9 +15,9 @@ const loginAction = (infra: LoginInfra): LoginAction => async (content, post) =>
     post({ type: "try-to-login" })
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await infra.delayed(
-        infra.passwordLoginClient.login(fields.content.loginID, fields.content.password),
-        infra.time.passwordLoginDelayTime,
+    const response = await delayed(
+        client.login(content.content),
+        time.passwordLoginDelayTime,
         () => post({ type: "delayed-to-login" }),
     )
     if (!response.success) {
@@ -27,27 +27,26 @@ const loginAction = (infra: LoginInfra): LoginAction => async (content, post) =>
 
     post({ type: "succeed-to-login", authCredential: response.authCredential })
 }
+async function collect(fields: LoginFieldCollector): Promise<Content<LoginFields>> {
+    const loginID = await fields.loginID()
+    const password = await fields.password()
 
-function mapContent(content: LoginContent): Content<LoginFields> {
     if (
-        !content.loginID.valid ||
-        !content.password.valid
+        !loginID.valid ||
+        !password.valid
     ) {
         return invalidContent()
     }
     return validContent({
-        loginID: content.loginID.content,
-        password: content.password.content,
+        loginID: loginID.content,
+        password: password.content,
     })
 }
 
-export function initLoginFactory(infra: LoginInfra): Factory<LoginAction> {
-    return () => loginAction(infra)
+export function initLoginAction(infra: LoginInfra): LoginAction {
+    return login(infra)
 }
 
 interface Post<T> {
     (event: T): void
-}
-interface Factory<T> {
-    (): T
 }
