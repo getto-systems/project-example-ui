@@ -6,6 +6,9 @@ import { PasswordLoginComponent } from "./component/password_login/component"
 import { PasswordResetSessionComponent } from "./component/password_reset_session/component"
 import { PasswordResetComponent } from "./component/password_reset/component"
 
+import { LoginIDFieldComponent } from "./component/field/login_id/component"
+import { PasswordFieldComponent } from "./component/field/password/component"
+
 export interface AuthInit {
     (currentLocation: Location): AuthResource
 }
@@ -31,14 +34,19 @@ export type AuthComponentSet = Readonly<{
     passwordLogin: Init<Readonly<{
         href: AppHref
         passwordLogin: PasswordLoginComponent
+        loginIDField: LoginIDFieldComponent
+        passwordField: PasswordFieldComponent
     }>>
     passwordResetSession: Init<Readonly<{
         href: AppHref
         passwordResetSession: PasswordResetSessionComponent
+        loginIDField: LoginIDFieldComponent
     }>>
     passwordReset: Init<Readonly<{
         href: AppHref
         passwordReset: PasswordResetComponent
+        loginIDField: LoginIDFieldComponent
+        passwordField: PasswordFieldComponent
     }>>
 }>
 

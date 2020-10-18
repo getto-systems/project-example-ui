@@ -3,36 +3,22 @@ import {
     PasswordFieldComponent,
     PasswordFieldState,
     PasswordFieldRequest,
+    PasswordFieldValidateEvent,
 } from "./component"
-
-import { PasswordFieldAction } from "../../../../password/field/action"
 
 import { PasswordFieldEvent } from "../../../../password/field/data"
 
-type Background = Readonly<{
-    password: PasswordFieldAction
-}>
-
-export function initPasswordField(actions: PasswordFieldActionSet): PasswordFieldComponent {
-    return new Component(actions)
+export function initPasswordField(background: PasswordFieldActionSet): PasswordFieldComponent {
+    return new Component(background)
 }
 
 class Component implements PasswordFieldComponent {
-    background: Background
+    background: PasswordFieldActionSet
 
     listener: Post<PasswordFieldState>[] = []
 
-    constructor(actions: PasswordFieldActionSet) {
-        this.background = {
-            password: actions.password.action,
-        }
-        this.setup(actions)
-    }
-    setup(actions: PasswordFieldActionSet): void {
-        actions.password.subscriber.onPasswordFieldEvent(event => this.post(this.mapPasswordFieldEvent(event)))
-    }
-    mapPasswordFieldEvent(event: PasswordFieldEvent): PasswordFieldState {
-        return event
+    constructor(background: PasswordFieldActionSet) {
+        this.background = background
     }
 
     onStateChange(post: Post<PasswordFieldState>): void {
@@ -45,20 +31,35 @@ class Component implements PasswordFieldComponent {
     action(request: PasswordFieldRequest): void {
         switch (request.type) {
             case "set":
-                this.background.password.set(request.inputValue)
+                this.background.password.set(request.inputValue, (event) => {
+                    this.post(this.mapPasswordFieldEvent(event))
+                })
                 return
 
             case "show":
-                this.background.password.show()
+                this.background.password.show((event) => {
+                    this.post(this.mapPasswordFieldEvent(event))
+                })
                 return
 
             case "hide":
-                this.background.password.hide()
+                this.background.password.hide((event) => {
+                    this.post(this.mapPasswordFieldEvent(event))
+                })
                 return
 
             default:
                 assertNever(request)
         }
+    }
+    validate(post: Post<PasswordFieldValidateEvent>): void {
+        this.background.password.validate((event) => {
+            post({ type: "succeed-to-validate", content: event.content })
+        })
+    }
+
+    mapPasswordFieldEvent(event: PasswordFieldEvent): PasswordFieldState {
+        return event
     }
 }
 

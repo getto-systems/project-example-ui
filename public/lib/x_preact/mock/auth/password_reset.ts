@@ -1,20 +1,10 @@
-import { newLoginIDFieldComponent, LoginIDFieldInit } from "./field/login_id"
-import { newPasswordFieldComponent, PasswordFieldInit } from "./field/password"
-
 import {
     PasswordResetComponent,
     PasswordResetState,
-    PasswordResetFieldComponentSet,
 } from "../../../auth/component/password_reset/component"
 
 export function newPasswordResetComponent(): PasswordResetComponent {
-    return new Component(
-        new Init().initialReset(),
-        {
-            loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().noError()),
-            passwordField: newPasswordFieldComponent(new PasswordFieldInit().noError()),
-        },
-    )
+    return new Component(new Init().initialReset())
 }
 
 class Init {
@@ -49,11 +39,9 @@ class Init {
 
 class Component implements PasswordResetComponent {
     state: PasswordResetState
-    readonly components: PasswordResetFieldComponentSet
 
-    constructor(state: PasswordResetState, components: PasswordResetFieldComponentSet) {
+    constructor(state: PasswordResetState) {
         this.state = state
-        this.components = components
     }
 
     onStateChange(post: Post<PasswordResetState>): void {

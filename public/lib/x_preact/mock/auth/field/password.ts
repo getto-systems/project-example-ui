@@ -16,7 +16,7 @@ export function newPasswordFieldComponent(state: PasswordFieldState): PasswordFi
 export class PasswordFieldInit {
     noError(): PasswordFieldState {
         return {
-            type: "succeed-to-update-password",
+            type: "succeed-to-update",
             result: noError(),
             character: simplePassword,
             view: hidePassword,
@@ -24,7 +24,7 @@ export class PasswordFieldInit {
     }
     empty(): PasswordFieldState {
         return {
-            type: "succeed-to-update-password",
+            type: "succeed-to-update",
             result: hasError(["empty"]),
             character: simplePassword,
             view: hidePassword,
@@ -32,7 +32,7 @@ export class PasswordFieldInit {
     }
     tooLong(): PasswordFieldState {
         return {
-            type: "succeed-to-update-password",
+            type: "succeed-to-update",
             result: hasError(["too-long"]),
             character: simplePassword,
             view: hidePassword,
@@ -40,7 +40,7 @@ export class PasswordFieldInit {
     }
     complex_tooLong(): PasswordFieldState {
         return {
-            type: "succeed-to-update-password",
+            type: "succeed-to-update",
             result: hasError(["too-long"]),
             character: complexPassword,
             view: hidePassword,
@@ -48,7 +48,7 @@ export class PasswordFieldInit {
     }
     complex(): PasswordFieldState {
         return {
-            type: "succeed-to-update-password",
+            type: "succeed-to-update",
             result: noError(),
             character: complexPassword,
             view: hidePassword,
@@ -56,7 +56,7 @@ export class PasswordFieldInit {
     }
     show(): PasswordFieldState {
         return {
-            type: "succeed-to-update-password",
+            type: "succeed-to-update",
             result: noError(),
             character: simplePassword,
             view: showPassword(packInputValue("password")),
@@ -75,6 +75,9 @@ class Component implements PasswordFieldComponent {
         post(this.state)
     }
     action(): void {
+        // mock では特に何もしない
+    }
+    validate(): void {
         // mock では特に何もしない
     }
 }

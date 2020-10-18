@@ -1,9 +1,4 @@
-import { LoginIDFieldComponent } from "../field/login_id/component"
-import { PasswordFieldComponent } from "../field/password/component"
-
 import { ResetAction } from "../../../password_reset/action"
-import { LoginIDFieldAction } from "../../../login_id/field/action"
-import { PasswordFieldAction } from "../../../password/field/action"
 import { StoreResource } from "../../../credential/action"
 import { PathAction } from "../../../application/action"
 
@@ -12,15 +7,11 @@ import { StorageError } from "../../../credential/data"
 import { PagePathname, ScriptPath, LoadError } from "../../../application/data"
 
 export interface PasswordResetInit {
-    (actions: PasswordResetActionSet, components: PasswordResetFieldComponentSet, param: PasswordResetParam): PasswordResetComponent
+    (actions: PasswordResetActionSet, param: PasswordResetParam): PasswordResetComponent
 }
 
 export type PasswordResetActionSet = Readonly<{
     reset: ResetAction
-    field: {
-        loginID: LoginIDFieldAction
-        password: PasswordFieldAction
-    }
     store: StoreResource
     path: PathAction
 }>
@@ -33,12 +24,7 @@ export type PasswordResetParam = Readonly<{
 export interface PasswordResetComponent {
     onStateChange(post: Post<PasswordResetState>): void
     action(request: PasswordResetRequest): void
-    readonly components: PasswordResetFieldComponentSet
 }
-export type PasswordResetFieldComponentSet = Readonly<{
-    loginIDField: LoginIDFieldComponent
-    passwordField: PasswordFieldComponent
-}>
 
 export type PasswordResetState =
     Readonly<{ type: "initial-reset" }> |

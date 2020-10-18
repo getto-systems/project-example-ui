@@ -1,7 +1,6 @@
 import { AuthCredential } from "../credential/data"
 import { LoginID } from "../login_id/data"
 import { Password } from "../password/data"
-import { Content } from "../field/data"
 
 export type SessionID = { SessionID: never }
 export type ResetToken = { ResetToken: never }
@@ -14,17 +13,8 @@ export type PollingStatus =
     Readonly<{ sending: false }> |
     Readonly<{ sending: true }>
 
-export type StartSessionContent = Readonly<{
-    loginID: Content<LoginID>
-}>
-
 export type StartSessionFields = Readonly<{
     loginID: LoginID
-}>
-
-export type ResetContent = Readonly<{
-    loginID: Content<LoginID>
-    password: Content<Password>
 }>
 
 export type ResetFields = Readonly<{

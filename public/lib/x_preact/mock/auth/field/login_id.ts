@@ -11,11 +11,11 @@ export function newLoginIDFieldComponent(state: LoginIDFieldState): LoginIDField
 
 export class LoginIDFieldInit {
     noError(): LoginIDFieldState {
-        return { type: "succeed-to-update-login_id", result: noError() }
+        return { type: "succeed-to-update", result: noError() }
     }
 
     empty(): LoginIDFieldState {
-        return { type: "succeed-to-update-login_id", result: hasError(["empty"]) }
+        return { type: "succeed-to-update", result: hasError(["empty"]) }
     }
 }
 
@@ -30,6 +30,9 @@ class Component implements LoginIDFieldComponent {
         post(this.state)
     }
     action(): void {
+        // mock では特に何もしない
+    }
+    validate(): void {
         // mock では特に何もしない
     }
 }

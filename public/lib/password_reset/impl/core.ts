@@ -1,20 +1,20 @@
-import { SessionInfra, ResetInfra } from "../infra"
+import { StartSessionInfra, StartSessionFieldCollector, PollingStatusInfra, ResetInfra, ResetFieldCollector } from "../infra"
 
-import { SessionAction, ResetAction } from "../action"
+import { StartSessionAction, PollingStatusAction, ResetAction } from "../action"
 
 import {
     SessionID,
-    StartSessionContent, StartSessionFields,
-    StartSessionEvent, PollingStatusEvent, PollingStatusError,
-    ResetContent, ResetFields,
+    StartSessionFields,
+    PollingStatusEvent, PollingStatusError,
+    ResetFields,
     ResetToken, ResetEvent,
 } from "../data"
 
 import { Content, validContent, invalidContent } from "../../field/data"
 
-const startSession = (infra: SessionInfra) => async (content: StartSessionContent, post: Post<StartSessionEvent>) => {
-    const fields = mapStartSessionContent(content)
-    if (!fields.valid) {
+const startSession = ({ fields, client, time, delayed }: StartSessionInfra): StartSessionAction => async (post) => {
+    const content = await collectStartSessionFields(fields)
+    if (!content.valid) {
         post({ type: "failed-to-start-session", err: { type: "validation-error" } })
         return
     }
@@ -22,9 +22,9 @@ const startSession = (infra: SessionInfra) => async (content: StartSessionConten
     post({ type: "try-to-start-session" })
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await infra.delayed(
-        infra.passwordResetSessionClient.startSession(fields.content.loginID),
-        infra.time.passwordResetStartSessionDelayTime,
+    const response = await delayed(
+        client.startSession(content.content),
+        time.passwordResetStartSessionDelayTime,
         () => post({ type: "delayed-to-start-session" }),
     )
     if (!response.success) {
@@ -36,16 +36,18 @@ const startSession = (infra: SessionInfra) => async (content: StartSessionConten
     post({ type: "succeed-to-start-session", sessionID: response.sessionID })
 }
 
-function mapStartSessionContent(content: StartSessionContent): Content<StartSessionFields> {
-    if (!content.loginID.valid) {
+async function collectStartSessionFields(collector: StartSessionFieldCollector): Promise<Content<StartSessionFields>> {
+    const loginID = await collector.loginID()
+
+    if (!loginID.valid) {
         return invalidContent()
     }
     return validContent({
-        loginID: content.loginID.content,
+        loginID: loginID.content,
     })
 }
 
-const startPollingStatus = (infra: SessionInfra) => (sessionID: SessionID, post: Post<PollingStatusEvent>): void => {
+const startPollingStatus = (infra: PollingStatusInfra) => (sessionID: SessionID, post: Post<PollingStatusEvent>): void => {
     new StatusPoller(infra).startPolling(sessionID, post)
 }
 
@@ -55,11 +57,11 @@ type SendTokenState =
     Readonly<{ type: "success" }>
 
 class StatusPoller {
-    infra: SessionInfra
+    infra: PollingStatusInfra
 
     sendTokenState: SendTokenState
 
-    constructor(infra: SessionInfra) {
+    constructor(infra: PollingStatusInfra) {
         this.infra = infra
 
         this.sendTokenState = { type: "initial" }
@@ -76,7 +78,7 @@ class StatusPoller {
                 return
             }
 
-            const response = await this.infra.passwordResetSessionClient.getStatus(sessionID)
+            const response = await this.infra.client.getStatus(sessionID)
             if (!response.success) {
                 post({ type: "failed-to-polling-status", err: response.err })
                 return
@@ -111,7 +113,7 @@ class StatusPoller {
     }
 
     async sendToken(): Promise<void> {
-        const response = await this.infra.passwordResetSessionClient.sendToken()
+        const response = await this.infra.client.sendToken()
         if (!response.success) {
             this.sendTokenState = { type: "failed", err: response.err }
             return
@@ -120,9 +122,9 @@ class StatusPoller {
     }
 }
 
-const reset = (infra: ResetInfra) => async (resetToken: ResetToken, content: ResetContent, post: Post<ResetEvent>) => {
-    const fields = mapResetContent(content)
-    if (!fields.valid) {
+const reset = ({ fields, client, time, delayed }: ResetInfra) => async (resetToken: ResetToken, post: Post<ResetEvent>) => {
+    const content = await collectResetFields(fields)
+    if (!content.valid) {
         post({ type: "failed-to-reset", err: { type: "validation-error" } })
         return
     }
@@ -130,9 +132,9 @@ const reset = (infra: ResetInfra) => async (resetToken: ResetToken, content: Res
     post({ type: "try-to-reset" })
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await infra.delayed(
-        infra.passwordResetClient.reset(resetToken, fields.content.loginID, fields.content.password),
-        infra.time.passwordResetDelayTime,
+    const response = await delayed(
+        client.reset(resetToken, content.content),
+        time.passwordResetDelayTime,
         () => post({ type: "delayed-to-reset" }),
     )
     if (!response.success) {
@@ -143,34 +145,32 @@ const reset = (infra: ResetInfra) => async (resetToken: ResetToken, content: Res
     post({ type: "succeed-to-reset", authCredential: response.authCredential })
 }
 
-function mapResetContent(content: ResetContent): Content<ResetFields> {
+async function collectResetFields(collector: ResetFieldCollector): Promise<Content<ResetFields>> {
+    const loginID = await collector.loginID()
+    const password = await collector.password()
+
     if (
-        !content.loginID.valid ||
-        !content.password.valid
+        !loginID.valid ||
+        !password.valid
     ) {
         return invalidContent()
     }
     return validContent({
-        loginID: content.loginID.content,
-        password: content.password.content,
+        loginID: loginID.content,
+        password: password.content,
     })
 }
 
-export function initSessionFactory(infra: SessionInfra): Factory<SessionAction> {
-    return () => {
-        return {
-            startSession: startSession(infra),
-            startPollingStatus: startPollingStatus(infra),
-        }
-    }
+export function initStartSessionAction(infra: StartSessionInfra): StartSessionAction {
+    return startSession(infra)
 }
-export function initResetFactory(infra: ResetInfra): Factory<ResetAction> {
-    return () => reset(infra)
+export function initPollingStatusAction(infra: PollingStatusInfra): PollingStatusAction {
+    return startPollingStatus(infra)
+}
+export function initResetAction(infra: ResetInfra): ResetAction {
+    return reset(infra)
 }
 
 interface Post<T> {
     (status: T): void
-}
-interface Factory<T> {
-    (): T
 }

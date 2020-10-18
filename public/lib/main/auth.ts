@@ -19,8 +19,8 @@ import { initPasswordField } from "../auth/component/field/password/impl"
 
 import { initPathFactory } from "../application/impl/core"
 import { initRenewFactory, initStoreFactory } from "../credential/impl/core"
-import { initLoginFactory } from "../password_login/impl/core"
-import { initSessionFactory, initResetFactory } from "../password_reset/impl/core"
+import { initLoginAction } from "../password_login/impl/core"
+import { initStartSessionAction, initPollingStatusAction, initResetAction } from "../password_reset/impl/core"
 
 import { initLoginIDFieldFactory } from "../login_id/field/impl/core"
 import { initPasswordFieldFactory } from "../password/field/impl/core"
@@ -35,6 +35,9 @@ import { initSimulatePasswordResetSessionClient } from "../password_reset/impl/c
 
 import { packTicketNonce, packApiRoles, packAuthAt } from "../credential/adapter"
 import { packLoginID } from "../login_id/adapter"
+
+import { LoginFieldCollector } from "../password_login/infra"
+import { StartSessionFieldCollector, ResetFieldCollector } from "../password_reset/infra"
 
 import { AuthInit, AuthInitWorker } from "../auth/view"
 
@@ -132,24 +135,34 @@ function newCredentialFactory(time: TimeConfig, credentialStorage: Storage) {
 }
 function newPasswordLoginFactory(time: TimeConfig) {
     return {
-        login: initLoginFactory({
+        login: (fields: LoginFieldCollector) => initLoginAction({
+            fields,
+            client: newPasswordLoginClient(),
             time,
-            passwordLoginClient: newPasswordLoginClient(),
             delayed,
         }),
     }
 }
 function newPasswordResetFactory(time: TimeConfig) {
+    const sessionClient = newPasswordResetSessionClient()
+
     return {
-        session: initSessionFactory({
+        startSession: (fields: StartSessionFieldCollector) => initStartSessionAction({
+            fields,
+            client: sessionClient,
             time,
-            passwordResetSessionClient: newPasswordResetSessionClient(),
+            delayed,
+        }),
+        pollingStatus: () => initPollingStatusAction({
+            client: sessionClient,
+            time,
             delayed,
             wait,
         }),
-        reset: initResetFactory({
+        reset: (fields: ResetFieldCollector) => initResetAction({
+            fields,
+            client: newPasswordResetClient(),
             time,
-            passwordResetClient: newPasswordResetClient(),
             delayed,
         }),
     }
