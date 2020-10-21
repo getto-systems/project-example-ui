@@ -7,7 +7,7 @@ import { TimeConfig, newTimeConfig, newHostConfig } from "./auth/config"
 
 import { newAppHref } from "./href"
 
-import { initAuthInit, initAuthWorker } from "../auth/impl/core"
+import { initAuthInit } from "../auth/impl/core"
 
 import { initRenewCredential } from "../auth/component/renew_credential/impl"
 import { initPasswordLogin } from "../auth/component/password_login/impl"
@@ -77,6 +77,7 @@ export function newAuthInit(credentialStorage: Storage): AuthInit {
     return initAuthInit(factory, init)
 }
 export function newAuthInitWorker(): AuthInitWorker {
+    /*
     const config = {
         time: newTimeConfig(),
     }
@@ -103,9 +104,10 @@ export function newAuthInitWorker(): AuthInitWorker {
             password: initPasswordField,
         }
     }
+     */
 
-    return (worker) => {
-        initAuthWorker(factory, init, worker)
+    return (_worker) => {
+        //initAuthWorker(factory, init, worker)
     }
 }
 

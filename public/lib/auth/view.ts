@@ -27,27 +27,31 @@ export interface AuthView {
     readonly components: AuthComponentSet
 }
 export type AuthComponentSet = Readonly<{
-    renewCredential: Init<Readonly<{
-        renewCredential: RenewCredentialComponent
-    }>>
+    renewCredential: Init<RenewCredentialComponentSet>
 
-    passwordLogin: Init<Readonly<{
-        href: AppHref
-        passwordLogin: PasswordLoginComponent
-        loginIDField: LoginIDFieldComponent
-        passwordField: PasswordFieldComponent
-    }>>
-    passwordResetSession: Init<Readonly<{
-        href: AppHref
-        passwordResetSession: PasswordResetSessionComponent
-        loginIDField: LoginIDFieldComponent
-    }>>
-    passwordReset: Init<Readonly<{
-        href: AppHref
-        passwordReset: PasswordResetComponent
-        loginIDField: LoginIDFieldComponent
-        passwordField: PasswordFieldComponent
-    }>>
+    passwordLogin: Init<PasswordLoginComponentSet>
+    passwordResetSession: Init<PasswordResetSessionComponentSet>
+    passwordReset: Init<PasswordResetComponentSet>
+}>
+export type RenewCredentialComponentSet = Readonly<{
+    renewCredential: RenewCredentialComponent
+}>
+export type PasswordLoginComponentSet = Readonly<{
+    href: AppHref
+    passwordLogin: PasswordLoginComponent
+    loginIDField: LoginIDFieldComponent
+    passwordField: PasswordFieldComponent
+}>
+export type PasswordResetSessionComponentSet = Readonly<{
+    href: AppHref
+    passwordResetSession: PasswordResetSessionComponent
+    loginIDField: LoginIDFieldComponent
+}>
+export type PasswordResetComponentSet = Readonly<{
+    href: AppHref
+    passwordReset: PasswordResetComponent
+    loginIDField: LoginIDFieldComponent
+    passwordField: PasswordFieldComponent
 }>
 
 export type AuthState =
