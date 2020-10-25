@@ -28,12 +28,7 @@ export function Main({ init }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    const [container, setView] = useView<AuthView>()
-    useEffect(() => {
-        const { view, terminate } = init(location)
-        setView(view)
-        return terminate
-    }, [])
+    const container = useView(() => init(location))
 
     if (!container.set) {
         return EMPTY_CONTENT

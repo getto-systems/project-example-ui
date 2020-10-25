@@ -3,6 +3,8 @@
 
 /rollup/dist/
 
+/public/dist/vs-ext/
+
 /public/dist/**/*.js
 /secure/dist/**/*.js
 
