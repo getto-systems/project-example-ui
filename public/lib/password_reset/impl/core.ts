@@ -36,7 +36,7 @@ const startSession = (
         time.passwordResetStartSessionDelayTime,
         () => post({ type: "delayed-to-start-session" })
     )
-    if (!response.success) {
+    if (response.success === false) {
         post({ type: "failed-to-start-session", err: response.err })
         return
     }
@@ -93,13 +93,13 @@ class StatusPoller {
             }
 
             const response = await this.infra.client.getStatus(sessionID)
-            if (!response.success) {
+            if (response.success === false) {
                 post({ type: "failed-to-polling-status", err: response.err })
                 return
             }
 
-            if (response.done) {
-                if (response.send) {
+            if (response.done === true) {
+                if (response.send === true) {
                     post({ type: "succeed-to-send-token", dest: response.dest })
                 } else {
                     post({
@@ -128,7 +128,7 @@ class StatusPoller {
 
     async sendToken(): Promise<void> {
         const response = await this.infra.client.sendToken()
-        if (!response.success) {
+        if (response.success === false) {
             this.sendTokenState = { type: "failed", err: response.err }
             return
         }
@@ -154,7 +154,7 @@ const reset = (
         time.passwordResetDelayTime,
         () => post({ type: "delayed-to-reset" })
     )
-    if (!response.success) {
+    if (response.success === false) {
         post({ type: "failed-to-reset", err: response.err })
         return
     }

@@ -33,10 +33,7 @@ type Props = {
     init: Init<ComponentSet>
 }
 export function PasswordLogin({ init }: Props): VNode {
-    const [container, setComponents] = useComponentSet<ComponentSet>()
-    useEffect(() => {
-        setComponents(init())
-    }, [])
+    const container = useComponentSet(init)
 
     if (!container.set) {
         return EMPTY_CONTENT

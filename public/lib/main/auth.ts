@@ -18,7 +18,7 @@ import { initLoginIDField } from "../auth/component/field/login_id/impl"
 import { initPasswordField } from "../auth/component/field/password/impl"
 
 import { initSecureScriptPathAction } from "../application/impl/core"
-import { initRenewAction, initSetContinousRenewAction, initStoreAction } from "../credential/impl/core"
+import { initRenewAction, initSetContinuousRenewAction, initStoreAction } from "../credential/impl/core"
 import { initLoginAction } from "../password_login/impl/core"
 import {
     initStartSessionAction,
@@ -135,7 +135,7 @@ function newCredentialFactory(time: TimeConfig, credentialStorage: Storage) {
                 expires: initAuthExpires(),
             }),
         setContinuousRenew: () =>
-            initSetContinousRenewAction({
+            initSetContinuousRenewAction({
                 time,
 
                 authCredentials,

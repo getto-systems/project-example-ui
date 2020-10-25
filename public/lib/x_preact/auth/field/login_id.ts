@@ -21,7 +21,7 @@ export function loginIDFieldHandler(loginIDField: LoginIDFieldComponent): LoginI
 }
 
 export function loginIDFieldError(result: Valid<LoginIDFieldError>): VNode[] {
-    if (result.valid) {
+    if (result.valid === true) {
         return []
     }
 

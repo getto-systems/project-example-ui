@@ -21,7 +21,7 @@ const login = (
     const response = await delayed(client.login(content.content), time.passwordLoginDelayTime, () =>
         post({ type: "delayed-to-login" })
     )
-    if (!response.success) {
+    if (response.success === false) {
         post({ type: "failed-to-login", err: response.err })
         return
     }

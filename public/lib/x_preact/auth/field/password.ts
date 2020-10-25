@@ -34,7 +34,7 @@ export function passwordFieldError(
     result: Valid<PasswordFieldError>,
     character: PasswordCharacter
 ): VNode[] {
-    if (result.valid) {
+    if (result.valid === true) {
         return []
     }
 
