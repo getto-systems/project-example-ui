@@ -10,7 +10,8 @@ export function initRenewRunner(): RenewRunner {
 
 class Runner implements RenewRunner {
     nextRun(lastAuthAt: AuthAt, delay: DelayTime): DelayTime {
-        const delay_milli_second = unpackAuthAt(lastAuthAt).getTime() + delay.delay_milli_second - new Date().getTime()
+        const delay_milli_second =
+            unpackAuthAt(lastAuthAt).getTime() + delay.delay_milli_second - new Date().getTime()
         if (delay_milli_second < 0) {
             return { delay_milli_second: 0 }
         }

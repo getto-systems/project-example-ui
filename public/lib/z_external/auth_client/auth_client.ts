@@ -1,7 +1,10 @@
 import { ApiCredentialMessage } from "./y_static/auth/credential_pb.js"
 import { PasswordLoginMessage } from "./y_static/auth/password_login_pb.js"
 
-import { decodeBase64StringToUint8Array, encodeUint8ArrayToBase64String } from "../../z_external/protocol_buffers_util"
+import {
+    decodeBase64StringToUint8Array,
+    encodeUint8ArrayToBase64String,
+} from "../../z_external/protocol_buffers_util"
 
 export interface AuthClient {
     renew(param: RenewParam): Promise<AuthResponse>
@@ -9,11 +12,14 @@ export interface AuthClient {
 }
 
 export type RenewParam = Readonly<{ nonce: string }>
-export type PasswordLoginParam = Readonly<{ loginID: string, password: string }>
+export type PasswordLoginParam = Readonly<{ loginID: string; password: string }>
 
 type AuthResponse =
-    Readonly<{ success: true, authCredential: { ticketNonce: string, apiCredential: { apiRoles: string[] } } }> |
-    Readonly<{ success: false, err: AuthError }>
+    | Readonly<{
+          success: true
+          authCredential: { ticketNonce: string; apiCredential: { apiRoles: string[] } }
+      }>
+    | Readonly<{ success: false; err: AuthError }>
 function authSuccess(ticketNonce: string, apiRoles: string[]): AuthResponse {
     return { success: true, authCredential: { ticketNonce, apiCredential: { apiRoles } } }
 }
@@ -21,7 +27,7 @@ function authFailed(err: AuthError): AuthResponse {
     return { success: false, err }
 }
 
-type AuthError = Readonly<{ type: string, err: string }>
+type AuthError = Readonly<{ type: string; err: string }>
 
 export function initAuthClient(authServerURL: string): AuthClient {
     return new Client(authServerURL)
@@ -37,9 +43,7 @@ class Client implements AuthClient {
 
     renew(params: RenewParam): Promise<AuthResponse> {
         return this.authRequest("Renew", {
-            header: [
-                ["X-GETTO-EXAMPLE-ID-TICKET-NONCE", params.nonce],
-            ],
+            header: [["X-GETTO-EXAMPLE-ID-TICKET-NONCE", params.nonce]],
             body: noBody,
             response: parseAuthResponse,
         })
@@ -79,9 +83,11 @@ class Client implements AuthClient {
 
                 request.open("POST", this.authServerURL)
 
-                authRequest.header.concat([["X-GETTO-EXAMPLE-ID-HANDLER", handler]]).forEach((header) => {
-                    request.setRequestHeader(...header)
-                })
+                authRequest.header
+                    .concat([["X-GETTO-EXAMPLE-ID-HANDLER", handler]])
+                    .forEach((header) => {
+                        request.setRequestHeader(...header)
+                    })
 
                 request.send(bodyString(authRequest.body))
             } catch (err) {
@@ -97,9 +103,7 @@ type AuthRequest = Readonly<{
     response: AuthResponseHandler
 }>
 
-type AuthRequestBody =
-    Readonly<{ hasBody: false }> |
-    Readonly<{ hasBody: true, body: string }>
+type AuthRequestBody = Readonly<{ hasBody: false }> | Readonly<{ hasBody: true; body: string }>
 const noBody: AuthRequestBody = { hasBody: false }
 function hasBody(producer: AuthRequestBodyProducer): AuthRequestBody {
     return { hasBody: true, body: producer() }

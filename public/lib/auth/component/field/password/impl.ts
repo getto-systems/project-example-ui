@@ -24,7 +24,7 @@ class Component implements PasswordFieldComponent {
         this.listener.push(post)
     }
     post(state: PasswordFieldState): void {
-        this.listener.forEach(post => post(state))
+        this.listener.forEach((post) => post(state))
     }
 
     action(request: PasswordFieldRequest): void {

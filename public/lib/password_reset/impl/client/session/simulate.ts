@@ -1,8 +1,13 @@
 import {
     PasswordResetSessionClient,
-    SessionResponse, startSessionSuccess, startSessionFailed,
+    SessionResponse,
+    startSessionSuccess,
+    startSessionFailed,
     SendTokenResponse,
-    GetStatusResponse, getStatusSend, getStatusPolling, getStatusFailed,
+    GetStatusResponse,
+    getStatusSend,
+    getStatusPolling,
+    getStatusFailed,
 } from "../../../infra"
 
 import { packSessionID } from "../../../adapter"
@@ -12,16 +17,18 @@ import { StartSessionFields } from "../../../data"
 import { SessionID, PollingStatusError } from "../../../data"
 import { LoginID } from "../../../../login_id/data"
 
-export function initSimulatePasswordResetSessionClient(targetLoginID: LoginID): PasswordResetSessionClient {
+export function initSimulatePasswordResetSessionClient(
+    targetLoginID: LoginID
+): PasswordResetSessionClient {
     return new SimulatePasswordResetSessionClient(targetLoginID)
 }
 
 type TokenState =
-    Readonly<{ state: "initial" }> |
-    Readonly<{ state: "waiting" }> |
-    Readonly<{ state: "sending" }> |
-    Readonly<{ state: "success" }> |
-    Readonly<{ state: "failed", err: PollingStatusError }>
+    | Readonly<{ state: "initial" }>
+    | Readonly<{ state: "waiting" }>
+    | Readonly<{ state: "sending" }>
+    | Readonly<{ state: "success" }>
+    | Readonly<{ state: "failed"; err: PollingStatusError }>
 
 class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
     tokenState: TokenState = { state: "initial" }

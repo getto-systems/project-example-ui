@@ -10,7 +10,7 @@ export function initAuthExpires(): AuthExpires {
 
 class Expires implements AuthExpires {
     hasExceeded(lastAuthAt: AuthAt, expire: ExpireTime): boolean {
-        return new Date().getTime() > (unpackAuthAt(lastAuthAt).getTime() + expire.expire_milli_second)
+        return new Date().getTime() > unpackAuthAt(lastAuthAt).getTime() + expire.expire_milli_second
     }
 }
 

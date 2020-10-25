@@ -17,7 +17,13 @@ import {
 } from "../../auth/component/password_reset_session/component"
 import { LoginIDFieldComponent } from "../../auth/component/field/login_id/component"
 
-import { Destination, PollingStatus, StartSessionError, PollingStatusError, SendTokenError } from "../../password_reset/data"
+import {
+    Destination,
+    PollingStatus,
+    StartSessionError,
+    PollingStatusError,
+    SendTokenError,
+} from "../../password_reset/data"
 
 type ComponentSet = Readonly<{
     href: AppHref
@@ -55,9 +61,7 @@ function View({ href, passwordResetSession, loginIDField }: ComponentSet): VNode
                     ${loginHeader()}
                     <section>
                         <big>
-                            <section class="login__body">
-                                ${h(LoginIDField, { loginIDField })}
-                            </section>
+                            <section class="login__body">${h(LoginIDField, { loginIDField })}</section>
                         </big>
                     </section>
                     <footer class="login__footer">
@@ -92,16 +96,20 @@ function View({ href, passwordResetSession, loginIDField }: ComponentSet): VNode
         `
     }
     function errorView(title: VNode, content: VNode): VNode {
-        return loginError(title, html`
-            ${content}
-            <div class="vertical vertical_medium"></div>
-            <p>お手数ですが、上記メッセージを管理者にお伝えください</p>
-        `, html`
-            <section class="button__container">
-                <div></div>
-                ${loginLink(href)}
-            </section>
-        `)
+        return loginError(
+            title,
+            html`
+                ${content}
+                <div class="vertical vertical_medium"></div>
+                <p>お手数ですが、上記メッセージを管理者にお伝えください</p>
+            `,
+            html`
+                <section class="button__container">
+                    <div></div>
+                    ${loginLink(href)}
+                </section>
+            `
+        )
     }
 
     switch (state.type) {
@@ -109,26 +117,33 @@ function View({ href, passwordResetSession, loginIDField }: ComponentSet): VNode
             return startSessionView(onSubmit_startSession, startSessionButton(), html``)
 
         case "failed-to-start-session":
-            return startSessionView(onSubmit_startSession, startSessionButton(), html`
-                <aside>
-                    ${formMessage("form_error", startSessionError(state.err))}
-                </aside>
-            `)
+            return startSessionView(
+                onSubmit_startSession,
+                startSessionButton(),
+                html` <aside>${formMessage("form_error", startSessionError(state.err))}</aside> `
+            )
 
         case "try-to-start-session":
             return startSessionView(onSubmit_noop, startSessionButton_connecting(), html``)
 
         case "delayed-to-start-session":
-            return startSessionView(onSubmit_noop, startSessionButton_connecting(), html`
-                <aside>
-                    ${formMessage("form_warning", html`
-                        <p class="form__message">トークンの送信に時間がかかっています</p>
-                        <p class="form__message">
-                            30秒以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
-                        </p>
-                    `)}
-                </aside>
-            `)
+            return startSessionView(
+                onSubmit_noop,
+                startSessionButton_connecting(),
+                html`
+                    <aside>
+                        ${formMessage(
+                            "form_warning",
+                            html`
+                                <p class="form__message">トークンの送信に時間がかかっています</p>
+                                <p class="form__message">
+                                    30秒以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
+                                </p>
+                            `
+                        )}
+                    </aside>
+                `
+            )
 
         case "try-to-polling-status":
             return pollingStatusView(html`
@@ -148,12 +163,16 @@ function View({ href, passwordResetSession, loginIDField }: ComponentSet): VNode
             return errorView(html`リセットトークンの送信に失敗しました`, sendTokenError(state.err))
 
         case "succeed-to-send-token":
-            return loginError(html`リセットトークンを送信しました`, sendTokenMessage(state.dest), html`
-                <section class="button__container">
-                    <div></div>
-                    ${loginLink(href)}
-                </section>
-            `)
+            return loginError(
+                html`リセットトークンを送信しました`,
+                sendTokenMessage(state.dest),
+                html`
+                    <section class="button__container">
+                        <div></div>
+                        ${loginLink(href)}
+                    </section>
+                `
+            )
 
         case "error":
             return h(ApplicationError, { err: state.err })
@@ -165,8 +184,7 @@ function View({ href, passwordResetSession, loginIDField }: ComponentSet): VNode
     function startSessionButton_connecting(): VNode {
         return html`
             <button type="button" class="button button_saving">
-                トークンを送信しています
-                ${" "}
+                トークンを送信しています ${" "}
                 <i class="lnir lnir-spinner lnir-is-spinning"></i>
             </button>
         `
@@ -207,24 +225,18 @@ function loginLink(href: AppHref): VNode {
 
 function pollingStatus(dest: Destination, status: PollingStatus): VNode {
     if (!status.sending) {
-        return html`
-            <p class="loading__message">送信準備中</p>
-        `
+        return html` <p class="loading__message">送信準備中</p> `
     }
 
     switch (dest.type) {
         case "log":
-            return html`
-                <p class="loading__message">送信処理中</p>
-            `
+            return html` <p class="loading__message">送信処理中</p> `
     }
 }
 function sendTokenMessage(dest: Destination): VNode {
     switch (dest.type) {
         case "log":
-            return html`
-                <p>サーバーのログに記載されたリセットトークンを確認してください</p>
-            `
+            return html` <p>サーバーのログに記載されたリセットトークンを確認してください</p> `
     }
 }
 
@@ -234,10 +246,14 @@ function startSessionError(err: StartSessionError): VNode {
             return html`<p class="form__message">正しく入力してください</p>`
 
         case "bad-request":
-            return html`<p class="form__message">アプリケーションエラーによりトークンの送信に失敗しました</p>`
+            return html`<p class="form__message">
+                アプリケーションエラーによりトークンの送信に失敗しました
+            </p>`
 
         case "invalid-password-reset":
-            return html`<p class="form__message">ログインIDが登録されていないか、トークンの送信先が登録されていません</p>`
+            return html`<p class="form__message">
+                ログインIDが登録されていないか、トークンの送信先が登録されていません
+            </p>`
 
         case "server-error":
             return html`<p class="form__message">サーバーエラーによりトークンの送信に失敗しました</p>`

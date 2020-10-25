@@ -9,7 +9,10 @@ import {
 import { ResetEvent } from "../../../password_reset/data"
 import { StoreEvent } from "../../../credential/data"
 
-export function initPasswordReset(background: PasswordResetActionSet, param: PasswordResetParam): PasswordResetComponent {
+export function initPasswordReset(
+    background: PasswordResetActionSet,
+    param: PasswordResetParam
+): PasswordResetComponent {
     return new Component(background, param)
 }
 
@@ -28,7 +31,7 @@ class Component implements PasswordResetComponent {
         this.listener.push(post)
     }
     post(state: PasswordResetState): void {
-        this.listener.forEach(post => post(state))
+        this.listener.forEach((post) => post(state))
     }
 
     action(request: PasswordResetRequest): void {

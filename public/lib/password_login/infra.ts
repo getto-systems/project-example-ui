@@ -9,7 +9,7 @@ export type LoginInfra = Readonly<{
 }>
 
 export type TimeConfig = Readonly<{
-    passwordLoginDelayTime: DelayTime,
+    passwordLoginDelayTime: DelayTime
 }>
 
 export type DelayTime = Readonly<{ delay_milli_second: number }>
@@ -19,8 +19,8 @@ export interface PasswordLoginClient {
 }
 
 export type LoginResponse =
-    Readonly<{ success: false, err: LoginError }> |
-    Readonly<{ success: true, authCredential: AuthCredential }>
+    | Readonly<{ success: false; err: LoginError }>
+    | Readonly<{ success: true; authCredential: AuthCredential }>
 export function loginFailed(err: LoginError): LoginResponse {
     return { success: false, err }
 }
@@ -29,11 +29,11 @@ export function loginSuccess(authCredential: AuthCredential): LoginResponse {
 }
 
 export type LoginError =
-    Readonly<{ type: "bad-request" }> |
-    Readonly<{ type: "invalid-password-login" }> |
-    Readonly<{ type: "server-error" }> |
-    Readonly<{ type: "bad-response", err: string }> |
-    Readonly<{ type: "infra-error", err: string }>
+    | Readonly<{ type: "bad-request" }>
+    | Readonly<{ type: "invalid-password-login" }>
+    | Readonly<{ type: "server-error" }>
+    | Readonly<{ type: "bad-response"; err: string }>
+    | Readonly<{ type: "infra-error"; err: string }>
 
 export interface Delayed {
     <T>(promise: Promise<T>, time: DelayTime, handler: DelayedHandler): Promise<T>

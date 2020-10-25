@@ -55,12 +55,12 @@ export type PasswordResetComponentSet = Readonly<{
 }>
 
 export type AuthState =
-    Readonly<{ type: "initial" }> |
-    Readonly<{ type: "renew-credential" }> |
-    Readonly<{ type: "password-login" }> |
-    Readonly<{ type: "password-reset-session" }> |
-    Readonly<{ type: "password-reset" }> |
-    Readonly<{ type: "error", err: string }>
+    | Readonly<{ type: "initial" }>
+    | Readonly<{ type: "renew-credential" }>
+    | Readonly<{ type: "password-login" }>
+    | Readonly<{ type: "password-reset-session" }>
+    | Readonly<{ type: "password-reset" }>
+    | Readonly<{ type: "error"; err: string }>
 
 export const initialAuthState: AuthState = { type: "initial" }
 

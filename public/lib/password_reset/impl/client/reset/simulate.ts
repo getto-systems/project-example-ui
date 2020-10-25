@@ -6,7 +6,10 @@ import { AuthCredential } from "../../../../credential/data"
 import { LoginID } from "../../../../login_id/data"
 import { Password } from "../../../../password/data"
 
-export function initSimulatePasswordResetClient(targetLoginID: LoginID, returnAuthCredential: AuthCredential): PasswordResetClient {
+export function initSimulatePasswordResetClient(
+    targetLoginID: LoginID,
+    returnAuthCredential: AuthCredential
+): PasswordResetClient {
     return new SimulatePasswordResetClient(targetLoginID, returnAuthCredential)
 }
 

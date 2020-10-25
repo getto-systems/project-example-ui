@@ -5,5 +5,5 @@ export function packLoginID(loginID: string): LoginID {
 }
 
 export function unpackLoginID(loginID: LoginID): string {
-    return loginID as unknown as string
+    return (loginID as unknown) as string
 }

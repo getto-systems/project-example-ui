@@ -30,7 +30,10 @@ export function passwordFieldHandler(passwordField: PasswordFieldComponent): Pas
     }
 }
 
-export function passwordFieldError(result: Valid<PasswordFieldError>, character: PasswordCharacter): VNode[] {
+export function passwordFieldError(
+    result: Valid<PasswordFieldError>,
+    character: PasswordCharacter
+): VNode[] {
     if (result.valid) {
         return []
     }
@@ -55,7 +58,11 @@ export interface PasswordViewHandler {
     hide(): void
 }
 
-export function passwordView(handler: PasswordViewHandler, view: PasswordView, character: PasswordCharacter): VNode {
+export function passwordView(
+    handler: PasswordViewHandler,
+    view: PasswordView,
+    character: PasswordCharacter
+): VNode {
     if (view.show) {
         return html`
             <a href="#" onClick=${hide}>

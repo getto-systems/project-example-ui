@@ -7,7 +7,9 @@ import {
 
 import { StartSessionEvent, PollingStatusEvent } from "../../../password_reset/data"
 
-export function initPasswordResetSession(background: PasswordResetSessionActionSet): PasswordResetSessionComponent {
+export function initPasswordResetSession(
+    background: PasswordResetSessionActionSet
+): PasswordResetSessionComponent {
     return new Component(background)
 }
 
@@ -24,7 +26,7 @@ class Component implements PasswordResetSessionComponent {
         this.listener.push(post)
     }
     post(state: PasswordResetSessionState): void {
-        this.listener.forEach(post => post(state))
+        this.listener.forEach((post) => post(state))
     }
 
     action(request: PasswordResetSessionRequest): void {

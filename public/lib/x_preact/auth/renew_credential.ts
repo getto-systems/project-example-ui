@@ -8,7 +8,10 @@ import { appendScript } from "./application"
 
 import { ApplicationError } from "../application_error"
 
-import { RenewCredentialComponent, initialRenewCredentialState } from "../../auth/component/renew_credential/component"
+import {
+    RenewCredentialComponent,
+    initialRenewCredentialState,
+} from "../../auth/component/renew_credential/component"
 
 import { RenewError } from "../../credential/data"
 
@@ -47,7 +50,10 @@ function View({ renewCredential }: ComponentSet): VNode {
                         renewCredential.action({ type: "succeed-to-instant-load" })
                     }
                     script.onerror = (err) => {
-                        renewCredential.action({ type: "load-error", err: { type: "infra-error", err: `${err}` } })
+                        renewCredential.action({
+                            type: "load-error",
+                            err: { type: "infra-error", err: `${err}` },
+                        })
                     }
                 })
                 break
@@ -55,11 +61,13 @@ function View({ renewCredential }: ComponentSet): VNode {
             case "succeed-to-renew":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = (err) => {
-                        renewCredential.action({ type: "load-error", err: { type: "infra-error", err: `${err}` } })
+                        renewCredential.action({
+                            type: "load-error",
+                            err: { type: "infra-error", err: `${err}` },
+                        })
                     }
                 })
                 break
-
         }
     }, [state])
 
@@ -98,20 +106,16 @@ function delayedContent(): VNode {
         html`
             <p>
                 30秒以上かかるようなら何かがおかしいので、
-                <br/>
+                <br />
                 お手数ですが管理者に連絡をお願いします。
             </p>
         `,
-        html``,
+        html``
     )
 }
 
 function renewFailedContent(err: RenewError): VNode {
-    return loginError(
-        html`認証に失敗しました`,
-        errorMessage(renewError(err)),
-        html``,
-    )
+    return loginError(html`認証に失敗しました`, errorMessage(renewError(err)), html``)
 }
 
 function renewError(err: RenewError): VNode {

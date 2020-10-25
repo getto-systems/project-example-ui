@@ -9,12 +9,7 @@ import { newPasswordResetComponent } from "./password_reset"
 import { newLoginIDFieldComponent, LoginIDFieldInit } from "./field/login_id"
 import { newPasswordFieldComponent, PasswordFieldInit } from "./field/password"
 
-import {
-    AuthInit,
-    AuthView,
-    AuthComponentSet,
-    AuthState,
-} from "../../../auth/view"
+import { AuthInit, AuthView, AuthComponentSet, AuthState } from "../../../auth/view"
 
 export function newAuthInit(): AuthInit {
     return () => {
@@ -56,27 +51,31 @@ class View implements AuthView {
         this.state = state
 
         this.components = {
-            renewCredential: () => components({
-                renewCredential: newRenewCredentialComponent(),
-            }),
+            renewCredential: () =>
+                components({
+                    renewCredential: newRenewCredentialComponent(),
+                }),
 
-            passwordLogin: () => components({
-                href: newAppHref(),
-                passwordLogin: newPasswordLoginComponent(),
-                loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().empty()),
-                passwordField: newPasswordFieldComponent(new PasswordFieldInit().empty()),
-            }),
-            passwordResetSession: () => components({
-                href: newAppHref(),
-                passwordResetSession: newPasswordResetSessionComponent(),
-                loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().empty()),
-            }),
-            passwordReset: () => components({
-                href: newAppHref(),
-                passwordReset: newPasswordResetComponent(),
-                loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().empty()),
-                passwordField: newPasswordFieldComponent(new PasswordFieldInit().empty()),
-            }),
+            passwordLogin: () =>
+                components({
+                    href: newAppHref(),
+                    passwordLogin: newPasswordLoginComponent(),
+                    loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().empty()),
+                    passwordField: newPasswordFieldComponent(new PasswordFieldInit().empty()),
+                }),
+            passwordResetSession: () =>
+                components({
+                    href: newAppHref(),
+                    passwordResetSession: newPasswordResetSessionComponent(),
+                    loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().empty()),
+                }),
+            passwordReset: () =>
+                components({
+                    href: newAppHref(),
+                    passwordReset: newPasswordResetComponent(),
+                    loginIDField: newLoginIDFieldComponent(new LoginIDFieldInit().empty()),
+                    passwordField: newPasswordFieldComponent(new PasswordFieldInit().empty()),
+                }),
         }
 
         function components<T>(components: T) {

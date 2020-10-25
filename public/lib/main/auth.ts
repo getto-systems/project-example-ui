@@ -20,7 +20,11 @@ import { initPasswordField } from "../auth/component/field/password/impl"
 import { initSecureScriptPathAction } from "../application/impl/core"
 import { initRenewAction, initSetContinousRenewAction, initStoreAction } from "../credential/impl/core"
 import { initLoginAction } from "../password_login/impl/core"
-import { initStartSessionAction, initPollingStatusAction, initResetAction } from "../password_reset/impl/core"
+import {
+    initStartSessionAction,
+    initPollingStatusAction,
+    initResetAction,
+} from "../password_reset/impl/core"
 
 import { initLoginIDFieldAction } from "../login_id/field/impl/core"
 import { initPasswordFieldAction } from "../password/field/impl/core"
@@ -71,7 +75,7 @@ export function newAuthInit(credentialStorage: Storage): AuthInit {
         field: {
             loginID: initLoginIDField,
             password: initPasswordField,
-        }
+        },
     }
 
     return initAuthInit(factory, init)
@@ -120,57 +124,64 @@ function newCredentialFactory(time: TimeConfig, credentialStorage: Storage) {
     const authCredentials = initStorageAuthCredentialRepository(credentialStorage, env.storageKey)
 
     return {
-        renew: () => initRenewAction({
-            time,
+        renew: () =>
+            initRenewAction({
+                time,
 
-            authCredentials,
-            client: newRenewClient(),
-            delayed,
+                authCredentials,
+                client: newRenewClient(),
+                delayed,
 
-            expires: initAuthExpires(),
-        }),
-        setContinuousRenew: () => initSetContinousRenewAction({
-            time,
+                expires: initAuthExpires(),
+            }),
+        setContinuousRenew: () =>
+            initSetContinousRenewAction({
+                time,
 
-            authCredentials,
-            client: newRenewClient(),
+                authCredentials,
+                client: newRenewClient(),
 
-            runner: initRenewRunner(),
-        }),
-        store: () => initStoreAction({
-            authCredentials,
-        }),
+                runner: initRenewRunner(),
+            }),
+        store: () =>
+            initStoreAction({
+                authCredentials,
+            }),
     }
 }
 function newPasswordLoginFactory(time: TimeConfig) {
     return {
-        login: (fields: LoginFieldCollector) => initLoginAction(fields, {
-            client: newPasswordLoginClient(),
-            time,
-            delayed,
-        }),
+        login: (fields: LoginFieldCollector) =>
+            initLoginAction(fields, {
+                client: newPasswordLoginClient(),
+                time,
+                delayed,
+            }),
     }
 }
 function newPasswordResetFactory(time: TimeConfig) {
     const sessionClient = newPasswordResetSessionClient()
 
     return {
-        startSession: (fields: StartSessionFieldCollector) => initStartSessionAction(fields, {
-            client: sessionClient,
-            time,
-            delayed,
-        }),
-        pollingStatus: () => initPollingStatusAction({
-            client: sessionClient,
-            time,
-            delayed,
-            wait,
-        }),
-        reset: (fields: ResetFieldCollector) => initResetAction(fields, {
-            client: newPasswordResetClient(),
-            time,
-            delayed,
-        }),
+        startSession: (fields: StartSessionFieldCollector) =>
+            initStartSessionAction(fields, {
+                client: sessionClient,
+                time,
+                delayed,
+            }),
+        pollingStatus: () =>
+            initPollingStatusAction({
+                client: sessionClient,
+                time,
+                delayed,
+                wait,
+            }),
+        reset: (fields: ResetFieldCollector) =>
+            initResetAction(fields, {
+                client: newPasswordResetClient(),
+                time,
+                delayed,
+            }),
     }
 }
 
@@ -186,14 +197,11 @@ function newPasswordResetSessionClient() {
 }
 function newPasswordResetClient() {
     //return initFetchPasswordResetClient(initAuthClient(env.authServerURL))
-    return initSimulatePasswordResetClient(
-        packLoginID("loginID"),
-        {
-            ticketNonce: packTicketNonce("ticket-nonce"),
-            apiCredential: {
-                apiRoles: packApiRoles(["admin", "dev"]),
-            },
-            authAt: packAuthAt(new Date()),
+    return initSimulatePasswordResetClient(packLoginID("loginID"), {
+        ticketNonce: packTicketNonce("ticket-nonce"),
+        apiCredential: {
+            apiRoles: packApiRoles(["admin", "dev"]),
         },
-    )
+        authAt: packAuthAt(new Date()),
+    })
 }

@@ -6,7 +6,11 @@ import {
     PasswordResetComponentSet,
 } from "../view"
 
-import { RenewCredentialInit, RenewCredentialComponent, RenewCredentialParam } from "../component/renew_credential/component"
+import {
+    RenewCredentialInit,
+    RenewCredentialComponent,
+    RenewCredentialParam,
+} from "../component/renew_credential/component"
 import { PasswordLoginInit, PasswordLoginParam } from "../component/password_login/component"
 import { PasswordResetSessionInit } from "../component/password_reset_session/component"
 import { PasswordResetInit, PasswordResetParam } from "../component/password_reset/component"
@@ -19,9 +23,11 @@ import { RenewAction, SetContinuousRenewAction, StoreAction } from "../../creden
 
 import { LoginAction, LoginFieldCollector } from "../../password_login/action"
 import {
-    StartSessionAction, StartSessionFieldCollector,
+    StartSessionAction,
+    StartSessionFieldCollector,
     PollingStatusAction,
-    ResetAction, ResetFieldCollector
+    ResetAction,
+    ResetFieldCollector,
 } from "../../password_reset/action"
 
 import { LoginIDFieldAction } from "../../login_id/field/action"
@@ -38,12 +44,12 @@ export type FactorySet = Readonly<{
     }
 
     passwordLogin: {
-        login: ParameterFactory<LoginFieldCollector, LoginAction>
+        login: ParameterizedFactory<LoginFieldCollector, LoginAction>
     }
     passwordReset: {
-        startSession: ParameterFactory<StartSessionFieldCollector, StartSessionAction>
+        startSession: ParameterizedFactory<StartSessionFieldCollector, StartSessionAction>
         pollingStatus: Factory<PollingStatusAction>
-        reset: ParameterFactory<ResetFieldCollector, ResetAction>
+        reset: ParameterizedFactory<ResetFieldCollector, ResetAction>
     }
 
     field: {
@@ -68,7 +74,10 @@ export type InitSet = Readonly<{
 }>
 
 export interface AuthComponentSetInit {
-    renewCredential(param: RenewCredentialParam, setup: Setup<RenewCredentialComponent>): RenewCredentialComponentSet
+    renewCredential(
+        param: RenewCredentialParam,
+        setup: Setup<RenewCredentialComponent>
+    ): RenewCredentialComponentSet
 
     passwordLogin(param: PasswordLoginParam): PasswordLoginComponentSet
     passwordResetSession(): PasswordResetSessionComponentSet
@@ -85,7 +94,12 @@ export function initAuthComponentSetInit(factory: FactorySet, init: InitSet): Au
     }
 }
 
-function initRenewCredential(factory: FactorySet, init: InitSet, param: RenewCredentialParam, setup: Setup<RenewCredentialComponent>) {
+function initRenewCredential(
+    factory: FactorySet,
+    init: InitSet,
+    param: RenewCredentialParam,
+    setup: Setup<RenewCredentialComponent>
+) {
     const actions = {
         renew: factory.credential.renew(),
         setContinuousRenew: factory.credential.setContinuousRenew(),
@@ -118,7 +132,7 @@ function initPasswordLogin(factory: FactorySet, init: InitSet, param: PasswordLo
                     resolve(event.content)
                 })
             })
-        }
+        },
     }
     const actions = {
         login: factory.passwordLogin.login(fields),
@@ -175,7 +189,7 @@ function initPasswordReset(factory: FactorySet, init: InitSet, param: PasswordRe
                     resolve(event.content)
                 })
             })
-        }
+        },
     }
     const actions = {
         reset: factory.passwordReset.reset(fields),
@@ -196,6 +210,6 @@ interface Setup<T> {
 interface Factory<T> {
     (): T
 }
-interface ParameterFactory<P, T> {
+interface ParameterizedFactory<P, T> {
     (param: P): T
 }

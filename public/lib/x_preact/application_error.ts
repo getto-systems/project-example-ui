@@ -16,6 +16,6 @@ export function ApplicationError(props: Props): VNode {
             <div class="vertical vertical_medium"></div>
             <p>お手数ですが、管理者にご連絡お願いします</p>
         `,
-        html``,
+        html``
     )
 }

@@ -2,7 +2,10 @@ import { AuthCredentialRepository, FindResponse, StoreResponse } from "../../../
 
 import { AuthCredential, TicketNonce, ApiCredential, AuthAt } from "../../../../credential/data"
 
-export function initMemoryAuthCredentialRepository(initialTicketNonce: TicketNonce, lastAuthAt: AuthAt): AuthCredentialRepository {
+export function initMemoryAuthCredentialRepository(
+    initialTicketNonce: TicketNonce,
+    lastAuthAt: AuthAt
+): AuthCredentialRepository {
     return new MemoryAuthCredentialRepository(initialTicketNonce, lastAuthAt)
 }
 
@@ -46,6 +49,4 @@ class MemoryAuthCredentialRepository implements AuthCredentialRepository {
     }
 }
 
-type Found<T> =
-    Readonly<{ found: false }> |
-    Readonly<{ found: true, content: T }>
+type Found<T> = Readonly<{ found: false }> | Readonly<{ found: true; content: T }>

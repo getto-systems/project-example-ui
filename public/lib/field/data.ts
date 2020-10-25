@@ -1,8 +1,8 @@
 export type InputValue = { InputValue: never }
 
 export type Content<T> =
-    Readonly<{ Content: never, valid: true, content: T }> |
-    Readonly<{ Content: never, valid: false }>
+    | Readonly<{ Content: never; valid: true; content: T }>
+    | Readonly<{ Content: never; valid: false }>
 export function validContent<T>(content: T): Content<T> {
     return { valid: true, content } as Content<T>
 }
@@ -17,8 +17,8 @@ export function buildContent<T>(valid: boolean, builder: Builder<T>): Content<T>
 }
 
 export type Valid<T> =
-    Readonly<{ Valid: never, valid: true }> |
-    Readonly<{ Valid: never, valid: false, err: T[] }>
+    | Readonly<{ Valid: never; valid: true }>
+    | Readonly<{ Valid: never; valid: false; err: T[] }>
 export function noError<T>(): Valid<T> {
     return { valid: true } as Valid<T>
 }

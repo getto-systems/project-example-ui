@@ -1,4 +1,8 @@
-export async function delayed<T>(promise: Promise<T>, time: DelayTime, delayTimeExceeded: DelayedHandler): Promise<T> {
+export async function delayed<T>(
+    promise: Promise<T>,
+    time: DelayTime,
+    delayTimeExceeded: DelayedHandler
+): Promise<T> {
     const DELAYED_MARKER = { DELAYED: true }
 
     const winner = await Promise.race([

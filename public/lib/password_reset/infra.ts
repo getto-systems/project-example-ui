@@ -1,7 +1,8 @@
 import {
     StartSessionFields,
     ResetFields,
-    SessionID, StartSessionError,
+    SessionID,
+    StartSessionError,
     Destination,
     ResetToken,
     PollingStatus,
@@ -23,22 +24,22 @@ export type PollingStatusInfra = Readonly<{
 }>
 
 export type StartSessionTimeConfig = Readonly<{
-    passwordResetStartSessionDelayTime: DelayTime,
+    passwordResetStartSessionDelayTime: DelayTime
 }>
 
 export type PollingStatusTimeConfig = Readonly<{
-    passwordResetPollingWaitTime: WaitTime,
-    passwordResetPollingLimit: Limit,
+    passwordResetPollingWaitTime: WaitTime
+    passwordResetPollingLimit: Limit
 }>
 
 export type ResetInfra = Readonly<{
-    client: PasswordResetClient,
-    time: ResetTimeConfig,
+    client: PasswordResetClient
+    time: ResetTimeConfig
     delayed: Delayed
 }>
 
 export type ResetTimeConfig = Readonly<{
-    passwordResetDelayTime: DelayTime,
+    passwordResetDelayTime: DelayTime
 }>
 
 export interface PasswordResetSessionClient {
@@ -48,8 +49,8 @@ export interface PasswordResetSessionClient {
 }
 
 export type SessionResponse =
-    Readonly<{ success: false, err: StartSessionError }> |
-    Readonly<{ success: true, sessionID: SessionID }>
+    | Readonly<{ success: false; err: StartSessionError }>
+    | Readonly<{ success: true; sessionID: SessionID }>
 export function startSessionFailed(err: StartSessionError): SessionResponse {
     return { success: false, err }
 }
@@ -58,18 +59,18 @@ export function startSessionSuccess(sessionID: SessionID): SessionResponse {
 }
 
 export type SendTokenResponse =
-    Readonly<{ success: false, err: PollingStatusError }> |
-    Readonly<{ success: true }>
+    | Readonly<{ success: false; err: PollingStatusError }>
+    | Readonly<{ success: true }>
 export function sendTokenFailed(err: PollingStatusError): SendTokenResponse {
     return { success: false, err }
 }
 export const sendTokenSuccess: SendTokenResponse = { success: true }
 
 export type GetStatusResponse =
-    Readonly<{ success: false, err: PollingStatusError }> |
-    Readonly<{ success: true, done: false, dest: Destination, status: PollingStatus }> |
-    Readonly<{ success: true, done: true, send: false, dest: Destination, err: string }> |
-    Readonly<{ success: true, done: true, send: true, dest: Destination }>
+    | Readonly<{ success: false; err: PollingStatusError }>
+    | Readonly<{ success: true; done: false; dest: Destination; status: PollingStatus }>
+    | Readonly<{ success: true; done: true; send: false; dest: Destination; err: string }>
+    | Readonly<{ success: true; done: true; send: true; dest: Destination }>
 export function getStatusFailed(err: PollingStatusError): GetStatusResponse {
     return { success: false, err }
 }
@@ -88,8 +89,8 @@ export interface PasswordResetClient {
 }
 
 export type ResetResponse =
-    Readonly<{ success: false, err: ResetError }> |
-    Readonly<{ success: true, authCredential: AuthCredential }>
+    | Readonly<{ success: false; err: ResetError }>
+    | Readonly<{ success: true; authCredential: AuthCredential }>
 export function resetFailed(err: ResetError): ResetResponse {
     return { success: false, err }
 }
@@ -98,11 +99,11 @@ export function resetSuccess(authCredential: AuthCredential): ResetResponse {
 }
 
 export type ResetError =
-    Readonly<{ type: "bad-request" }> |
-    Readonly<{ type: "invalid-password-reset" }> |
-    Readonly<{ type: "server-error" }> |
-    Readonly<{ type: "bad-response", err: string }> |
-    Readonly<{ type: "infra-error", err: string }>
+    | Readonly<{ type: "bad-request" }>
+    | Readonly<{ type: "invalid-password-reset" }>
+    | Readonly<{ type: "server-error" }>
+    | Readonly<{ type: "bad-response"; err: string }>
+    | Readonly<{ type: "infra-error"; err: string }>
 
 export interface Delayed {
     <T>(promise: Promise<T>, time: DelayTime, delayTimeExceeded: DelayedHandler): Promise<T>

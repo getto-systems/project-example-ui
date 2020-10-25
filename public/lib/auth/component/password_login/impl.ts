@@ -9,7 +9,10 @@ import {
 import { LoginEvent } from "../../../password_login/data"
 import { StoreEvent } from "../../../credential/data"
 
-export function initPasswordLogin(background: PasswordLoginActionSet, param: PasswordLoginParam): PasswordLoginComponent {
+export function initPasswordLogin(
+    background: PasswordLoginActionSet,
+    param: PasswordLoginParam
+): PasswordLoginComponent {
     return new Component(background, param)
 }
 
@@ -28,7 +31,7 @@ class Component implements PasswordLoginComponent {
         this.listener.push(post)
     }
     post(state: PasswordLoginState): void {
-        this.listener.forEach(post => post(state))
+        this.listener.forEach((post) => post(state))
     }
 
     action(request: PasswordLoginRequest): void {

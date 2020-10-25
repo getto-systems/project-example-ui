@@ -20,10 +20,10 @@ export type SetContinuousRenewInfra = Readonly<{
 
 export type RenewTimeConfig = Readonly<{
     instantLoadExpireTime: ExpireTime
-    renewDelayTime: DelayTime,
+    renewDelayTime: DelayTime
 }>
 export type SetContinuousRenewTimeConfig = Readonly<{
-    renewIntervalTime: IntervalTime,
+    renewIntervalTime: IntervalTime
     renewRunDelayTime: DelayTime
 }>
 
@@ -65,18 +65,16 @@ export type StorageKey = Readonly<{
 }>
 
 export type FindResponse<T> =
-    Readonly<{ success: false, err: StorageError }> |
-    Readonly<{ success: true, found: false }> |
-    Readonly<{ success: true, found: true, content: T }>
+    | Readonly<{ success: false; err: StorageError }>
+    | Readonly<{ success: true; found: false }>
+    | Readonly<{ success: true; found: true; content: T }>
 
-export type StoreResponse =
-    Readonly<{ success: true }> |
-    Readonly<{ success: false, err: StorageError }>
+export type StoreResponse = Readonly<{ success: true }> | Readonly<{ success: false; err: StorageError }>
 
 export type RenewResponse =
-    Readonly<{ success: false, err: RenewError }> |
-    Readonly<{ success: true, hasCredential: false }> |
-    Readonly<{ success: true, hasCredential: true, authCredential: AuthCredential }>
+    | Readonly<{ success: false; err: RenewError }>
+    | Readonly<{ success: true; hasCredential: false }>
+    | Readonly<{ success: true; hasCredential: true; authCredential: AuthCredential }>
 
 interface DelayedHandler {
     (): void

@@ -1,14 +1,16 @@
 import { RenewInfra, SetContinuousRenewInfra, StoreInfra, AuthCredentialRepository } from "../infra"
 
-import {
-    RenewAction,
-    SetContinuousRenewAction,
-    StoreAction,
-} from "../action"
+import { RenewAction, SetContinuousRenewAction, StoreAction } from "../action"
 
 import { TicketNonce, FoundLastAuth } from "../data"
 
-const renewAction = ({ authCredentials, client, expires, time, delayed }: RenewInfra): RenewAction => async (post) => {
+const renewAction = ({
+    authCredentials,
+    client,
+    expires,
+    time,
+    delayed,
+}: RenewInfra): RenewAction => async (post) => {
     const lastAuth = findLastAuth(authCredentials)
     if (!lastAuth.success) {
         post({ type: "storage-error", err: lastAuth.err })
@@ -30,7 +32,7 @@ const renewAction = ({ authCredentials, client, expires, time, delayed }: RenewI
     const renewResponse = await delayed(
         client.renew(lastAuth.content.ticketNonce),
         time.renewDelayTime,
-        () => post({ type: "delayed-to-renew" }),
+        () => post({ type: "delayed-to-renew" })
     )
     if (!renewResponse.success) {
         post({ type: "failed-to-renew", err: renewResponse.err })
@@ -55,7 +57,12 @@ const renewAction = ({ authCredentials, client, expires, time, delayed }: RenewI
 
     post({ type: "succeed-to-renew" })
 }
-const setContinuousRenewAction = ({ authCredentials, client, time, runner }: SetContinuousRenewInfra): SetContinuousRenewAction => (post) => {
+const setContinuousRenewAction = ({
+    authCredentials,
+    client,
+    time,
+    runner,
+}: SetContinuousRenewInfra): SetContinuousRenewAction => (post) => {
     const lastAuth = findLastAuth(authCredentials)
     if (!lastAuth.success) {
         post({ type: "storage-error", err: lastAuth.err })

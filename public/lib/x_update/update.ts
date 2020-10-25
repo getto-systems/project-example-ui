@@ -1,6 +1,6 @@
 import { env } from "../y_static/env"
 
-(async () => {
+;(async () => {
     const nextVersion = await find(env.version)
     const path = parsePathname(env.version, location.pathname)
     if (path.isApplication) {
@@ -20,13 +20,11 @@ import { env } from "../y_static/env"
     }
 })()
 
-type NextVersion =
-    Readonly<{ found: false }> |
-    Readonly<{ found: true, version: string }>
+type NextVersion = Readonly<{ found: false }> | Readonly<{ found: true; version: string }>
 
 type AppPathname =
-    Readonly<{ isApplication: false }> |
-    Readonly<{ isApplication: true, pathname: string }>
+    | Readonly<{ isApplication: false }>
+    | Readonly<{ isApplication: true; pathname: string }>
 
 function parsePathname(current: string, pathname: string): AppPathname {
     const regexp = new RegExp(`^/${current}/`)
@@ -40,15 +38,11 @@ function parsePathname(current: string, pathname: string): AppPathname {
     }
 }
 
-type ParsedVersion =
-    Readonly<{ valid: false }> |
-    Readonly<{ valid: true, version: Version }>
+type ParsedVersion = Readonly<{ valid: false }> | Readonly<{ valid: true; version: Version }>
 
-type Version = Readonly<{ major: number, minor: number, patch: number }>
+type Version = Readonly<{ major: number; minor: number; patch: number }>
 
-type Deploy =
-    Readonly<{ found: false }> |
-    Readonly<{ found: true, version: Version }>
+type Deploy = Readonly<{ found: false }> | Readonly<{ found: true; version: Version }>
 
 async function find(current: string): Promise<NextVersion> {
     const result = parse(current)

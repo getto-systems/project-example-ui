@@ -1,9 +1,7 @@
 import { packInputValue, unpackInputValue } from "../../../field/adapter"
 import { packLoginID } from "../../../login_id/adapter"
 
-import {
-    LoginIDFieldAction,
-} from "../action"
+import { LoginIDFieldAction } from "../action"
 
 import { LoginIDFieldEvent, LoginIDFieldError } from "../data"
 import { InputValue, buildContent, hasError } from "../../../field/data"
@@ -39,7 +37,11 @@ class Field implements LoginIDFieldAction {
         const loginID = unpackInputValue(this.loginID)
         const result = hasError(validateLoginID(loginID))
 
-        post({ type: "succeed-to-update", result, content: buildContent(result.valid, () => packLoginID(loginID)) })
+        post({
+            type: "succeed-to-update",
+            result,
+            content: buildContent(result.valid, () => packLoginID(loginID)),
+        })
     }
 }
 

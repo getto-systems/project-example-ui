@@ -5,7 +5,7 @@ export function packPagePathname(url: URL): PagePathname {
 }
 
 export function unpackPagePathname(pagePathname: PagePathname): string {
-    return pagePathname as unknown as string
+    return (pagePathname as unknown) as string
 }
 
 export function packScriptPath(scriptPath: string): ScriptPath {
@@ -13,5 +13,5 @@ export function packScriptPath(scriptPath: string): ScriptPath {
 }
 
 export function unpackScriptPath(scriptPath: ScriptPath): string {
-    return scriptPath as unknown as string
+    return (scriptPath as unknown) as string
 }

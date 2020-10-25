@@ -1,7 +1,7 @@
 export type Infra = Readonly<{
-    host: HostConfig,
+    host: HostConfig
 }>
 
 export type HostConfig = Readonly<{
-    secureServerHost: string,
+    secureServerHost: string
 }>

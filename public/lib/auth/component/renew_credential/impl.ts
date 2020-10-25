@@ -8,7 +8,10 @@ import {
 
 import { RenewEvent, SetContinuousRenewEvent } from "../../../credential/data"
 
-export function initRenewCredential(background: RenewCredentialActionSet, param: RenewCredentialParam): RenewCredentialComponent {
+export function initRenewCredential(
+    background: RenewCredentialActionSet,
+    param: RenewCredentialParam
+): RenewCredentialComponent {
     return new Component(background, param)
 }
 
@@ -27,7 +30,7 @@ class Component implements RenewCredentialComponent {
         this.listener.push(post)
     }
     post(state: RenewCredentialState): void {
-        this.listener.forEach(post => post(state))
+        this.listener.forEach((post) => post(state))
     }
 
     action(request: RenewCredentialRequest): void {
