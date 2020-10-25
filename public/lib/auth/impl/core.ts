@@ -3,12 +3,7 @@ import { initAuthComponentSetInit, FactorySet, InitSet, AuthComponentSetInit } f
 import { packResetToken } from "../../password_reset/adapter"
 import { packPagePathname } from "../../application/adapter"
 
-import {
-    AuthInit,
-    AuthView,
-    AuthState,
-    AuthComponentSet,
-} from "../view"
+import { AuthInit, AuthView, AuthState, AuthComponentSet } from "../view"
 
 import { RenewCredentialComponent } from "../component/renew_credential/component"
 
@@ -45,7 +40,9 @@ export function initAuthInit(factory: FactorySet, init: InitSet): AuthInit {
         const view = new View(components, currentLocation)
         return {
             view,
-            terminate: () => { /* worker とインターフェイスを合わせるために必要 */ },
+            terminate: () => {
+                /* worker とインターフェイスを合わせるために必要 */
+            },
         }
     }
 }
@@ -57,24 +54,33 @@ class View implements AuthView {
 
     constructor(components: AuthComponentSetInit, currentLocation: Location) {
         this.components = {
-            renewCredential: () => components.renewCredential({
-                pagePathname: currentPagePathname(currentLocation),
-            }, (component) => {
-                this.hookCredentialStateChange(currentLocation, component)
-            }),
+            renewCredential: () =>
+                components.renewCredential(
+                    {
+                        pagePathname: currentPagePathname(currentLocation),
+                    },
+                    (component) => {
+                        this.hookCredentialStateChange(currentLocation, component)
+                    }
+                ),
 
-            passwordLogin: () => components.passwordLogin({
-                pagePathname: currentPagePathname(currentLocation),
-            }),
+            passwordLogin: () =>
+                components.passwordLogin({
+                    pagePathname: currentPagePathname(currentLocation),
+                }),
             passwordResetSession: () => components.passwordResetSession(),
-            passwordReset: () => components.passwordReset({
-                pagePathname: currentPagePathname(currentLocation),
-                resetToken: detectPasswordResetToken(currentLocation),
-            }),
+            passwordReset: () =>
+                components.passwordReset({
+                    pagePathname: currentPagePathname(currentLocation),
+                    resetToken: detectPasswordResetToken(currentLocation),
+                }),
         }
     }
 
-    hookCredentialStateChange(currentLocation: Location, renewCredential: RenewCredentialComponent): void {
+    hookCredentialStateChange(
+        currentLocation: Location,
+        renewCredential: RenewCredentialComponent
+    ): void {
         renewCredential.onStateChange((state) => {
             switch (state.type) {
                 case "required-to-login":
@@ -88,7 +94,7 @@ class View implements AuthView {
         this.listener.push(post)
     }
     post(state: AuthState): void {
-        this.listener.forEach(post => post(state))
+        this.listener.forEach((post) => post(state))
     }
 
     load() {

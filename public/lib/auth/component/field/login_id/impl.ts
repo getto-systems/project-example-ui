@@ -24,7 +24,7 @@ class Component implements LoginIDFieldComponent {
         this.listener.push(post)
     }
     post(state: LoginIDFieldState): void {
-        this.listener.forEach(post => post(state))
+        this.listener.forEach((post) => post(state))
     }
 
     action(request: LoginIDFieldRequest): void {

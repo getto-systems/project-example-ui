@@ -1,17 +1,27 @@
 import { StartSessionInfra, PollingStatusInfra, ResetInfra } from "../infra"
 
-import { StartSessionAction, StartSessionFieldCollector, PollingStatusAction, ResetAction, ResetFieldCollector } from "../action"
+import {
+    StartSessionAction,
+    StartSessionFieldCollector,
+    PollingStatusAction,
+    ResetAction,
+    ResetFieldCollector,
+} from "../action"
 
 import {
     SessionID,
     StartSessionFields,
-    PollingStatusEvent, PollingStatusError,
+    PollingStatusEvent,
+    PollingStatusError,
     ResetFields,
 } from "../data"
 
 import { Content, validContent, invalidContent } from "../../field/data"
 
-const startSession = (fields: StartSessionFieldCollector, { client, time, delayed }: StartSessionInfra): StartSessionAction => async (post) => {
+const startSession = (
+    fields: StartSessionFieldCollector,
+    { client, time, delayed }: StartSessionInfra
+): StartSessionAction => async (post) => {
     const content = await collectStartSessionFields(fields)
     if (!content.valid) {
         post({ type: "failed-to-start-session", err: { type: "validation-error" } })
@@ -24,7 +34,7 @@ const startSession = (fields: StartSessionFieldCollector, { client, time, delaye
     const response = await delayed(
         client.startSession(content.content),
         time.passwordResetStartSessionDelayTime,
-        () => post({ type: "delayed-to-start-session" }),
+        () => post({ type: "delayed-to-start-session" })
     )
     if (!response.success) {
         post({ type: "failed-to-start-session", err: response.err })
@@ -35,7 +45,9 @@ const startSession = (fields: StartSessionFieldCollector, { client, time, delaye
     post({ type: "succeed-to-start-session", sessionID: response.sessionID })
 }
 
-async function collectStartSessionFields(collector: StartSessionFieldCollector): Promise<Content<StartSessionFields>> {
+async function collectStartSessionFields(
+    collector: StartSessionFieldCollector
+): Promise<Content<StartSessionFields>> {
     const loginID = await collector.loginID()
 
     if (!loginID.valid) {
@@ -46,14 +58,17 @@ async function collectStartSessionFields(collector: StartSessionFieldCollector):
     })
 }
 
-const startPollingStatus = (infra: PollingStatusInfra) => (sessionID: SessionID, post: Post<PollingStatusEvent>): void => {
+const startPollingStatus = (infra: PollingStatusInfra) => (
+    sessionID: SessionID,
+    post: Post<PollingStatusEvent>
+): void => {
     new StatusPoller(infra).startPolling(sessionID, post)
 }
 
 type SendTokenState =
-    Readonly<{ type: "initial" }> |
-    Readonly<{ type: "failed", err: PollingStatusError }> |
-    Readonly<{ type: "success" }>
+    | Readonly<{ type: "initial" }>
+    | Readonly<{ type: "failed"; err: PollingStatusError }>
+    | Readonly<{ type: "success" }>
 
 class StatusPoller {
     infra: PollingStatusInfra
@@ -121,7 +136,10 @@ class StatusPoller {
     }
 }
 
-const reset = (fields: ResetFieldCollector, { client, time, delayed }: ResetInfra): ResetAction => async (resetToken, post) => {
+const reset = (
+    fields: ResetFieldCollector,
+    { client, time, delayed }: ResetInfra
+): ResetAction => async (resetToken, post) => {
     const content = await collectResetFields(fields)
     if (!content.valid) {
         post({ type: "failed-to-reset", err: { type: "validation-error" } })
@@ -134,7 +152,7 @@ const reset = (fields: ResetFieldCollector, { client, time, delayed }: ResetInfr
     const response = await delayed(
         client.reset(resetToken, content.content),
         time.passwordResetDelayTime,
-        () => post({ type: "delayed-to-reset" }),
+        () => post({ type: "delayed-to-reset" })
     )
     if (!response.success) {
         post({ type: "failed-to-reset", err: response.err })
@@ -148,10 +166,7 @@ async function collectResetFields(collector: ResetFieldCollector): Promise<Conte
     const loginID = await collector.loginID()
     const password = await collector.password()
 
-    if (
-        !loginID.valid ||
-        !password.valid
-    ) {
+    if (!loginID.valid || !password.valid) {
         return invalidContent()
     }
     return validContent({
@@ -160,7 +175,10 @@ async function collectResetFields(collector: ResetFieldCollector): Promise<Conte
     })
 }
 
-export function initStartSessionAction(fields: StartSessionFieldCollector, infra: StartSessionInfra): StartSessionAction {
+export function initStartSessionAction(
+    fields: StartSessionFieldCollector,
+    infra: StartSessionInfra
+): StartSessionAction {
     return startSession(fields, infra)
 }
 export function initPollingStatusAction(infra: PollingStatusInfra): PollingStatusAction {

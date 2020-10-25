@@ -5,7 +5,7 @@ export function packTicketNonce(ticketNonce: string): TicketNonce {
 }
 
 export function unpackTicketNonce(ticketNonce: TicketNonce): string {
-    return ticketNonce as unknown as string
+    return (ticketNonce as unknown) as string
 }
 
 // TODO ApiNonce を追加
@@ -17,7 +17,7 @@ export function packApiRoles(apiRoles: string[]): ApiRoles {
 
 export function unpackApiCredential(apiCredential: ApiCredential): ApiCredentialUnpack {
     return {
-        apiRoles: apiCredential.apiRoles.map((apiRole) => apiRole as unknown as string),
+        apiRoles: apiCredential.apiRoles.map((apiRole) => (apiRole as unknown) as string),
     }
 }
 export type ApiCredentialUnpack = Readonly<{
@@ -29,5 +29,5 @@ export function packAuthAt(authAt: Date): AuthAt {
 }
 
 export function unpackAuthAt(authAt: AuthAt): Date {
-    return authAt as unknown as Date
+    return (authAt as unknown) as Date
 }

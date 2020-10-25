@@ -5,5 +5,5 @@ export function packInputValue(inputValue: string): InputValue {
 }
 
 export function unpackInputValue(inputValue: InputValue): string {
-    return inputValue as unknown as string
+    return (inputValue as unknown) as string
 }

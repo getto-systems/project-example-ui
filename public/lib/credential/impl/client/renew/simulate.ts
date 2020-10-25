@@ -2,7 +2,10 @@ import { RenewClient, RenewResponse } from "../../../infra"
 
 import { AuthCredential, TicketNonce } from "../../../../credential/data"
 
-export function initSimulateRenewClient(targetTicketNonce: TicketNonce, returnAuthCredential: AuthCredential): RenewClient {
+export function initSimulateRenewClient(
+    targetTicketNonce: TicketNonce,
+    returnAuthCredential: AuthCredential
+): RenewClient {
     return new SimulateRenewClient(targetTicketNonce, returnAuthCredential)
 }
 

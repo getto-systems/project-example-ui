@@ -5,14 +5,13 @@ export function packSessionID(sessionID: string): SessionID {
 }
 
 export function unpackSessionID(sessionID: SessionID): string {
-    return sessionID as unknown as string
+    return (sessionID as unknown) as string
 }
-
 
 export function packResetToken(resetToken: string): ResetToken {
     return resetToken as ResetToken & string
 }
 
 export function unpackResetToken(resetToken: ResetToken): string {
-    return resetToken as unknown as string
+    return (resetToken as unknown) as string
 }

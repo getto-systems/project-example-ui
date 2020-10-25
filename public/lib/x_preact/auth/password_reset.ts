@@ -13,7 +13,10 @@ import { PasswordField } from "./password_reset/field/password"
 
 import { AppHref } from "../../href"
 
-import { PasswordResetComponent, initialPasswordResetState } from "../../auth/component/password_reset/component"
+import {
+    PasswordResetComponent,
+    initialPasswordResetState,
+} from "../../auth/component/password_reset/component"
 import { LoginIDFieldComponent } from "../../auth/component/field/login_id/component"
 import { PasswordFieldComponent } from "../../auth/component/field/password/component"
 
@@ -55,7 +58,10 @@ function View({ href, passwordReset, loginIDField, passwordField }: ComponentSet
             case "succeed-to-reset":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = (err) => {
-                        passwordReset.action({ type: "load-error", err: { type: "infra-error", err: `${err}` } })
+                        passwordReset.action({
+                            type: "load-error",
+                            err: { type: "infra-error", err: `${err}` },
+                        })
                     }
                 })
                 break
@@ -98,26 +104,33 @@ function View({ href, passwordReset, loginIDField, passwordField }: ComponentSet
             return view(onSubmit_login, resetButton(), html``)
 
         case "failed-to-reset":
-            return view(onSubmit_login, resetButton(), html`
-                <aside>
-                    ${formMessage("form_error", resetError(state.err))}
-                </aside>
-            `)
+            return view(
+                onSubmit_login,
+                resetButton(),
+                html` <aside>${formMessage("form_error", resetError(state.err))}</aside> `
+            )
 
         case "try-to-reset":
             return view(onSubmit_noop, resetButton_connecting(), html``)
 
         case "delayed-to-reset":
-            return view(onSubmit_noop, resetButton_connecting(), html`
-                <aside>
-                    ${formMessage("form_warning", html`
-                        <p class="form__message">リセットに時間がかかっています</p>
-                        <p class="form__message">
-                            30秒以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
-                        </p>
-                    `)}
-                </aside>
-            `)
+            return view(
+                onSubmit_noop,
+                resetButton_connecting(),
+                html`
+                    <aside>
+                        ${formMessage(
+                            "form_warning",
+                            html`
+                                <p class="form__message">リセットに時間がかかっています</p>
+                                <p class="form__message">
+                                    30秒以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
+                                </p>
+                            `
+                        )}
+                    </aside>
+                `
+            )
 
         case "succeed-to-reset":
             // スクリプトのロードは appendChild する必要があるため useEffect で行う
@@ -137,8 +150,7 @@ function View({ href, passwordReset, loginIDField, passwordField }: ComponentSet
     function resetButton_connecting(): VNode {
         return html`
             <button type="button" class="button button_saving">
-                パスワードをリセットしています
-                ${" "}
+                パスワードをリセットしています ${" "}
                 <i class="lnir lnir-spinner lnir-is-spinning"></i>
             </button>
         `

@@ -9,7 +9,7 @@ import { Password } from "../../../../password/data"
 export function initSimulatePasswordLoginClient(
     targetLoginID: LoginID,
     targetPassword: Password,
-    returnAuthCredential: AuthCredential,
+    returnAuthCredential: AuthCredential
 ): PasswordLoginClient {
     return new SimulatePasswordLoginClient(targetLoginID, targetPassword, returnAuthCredential)
 }

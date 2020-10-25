@@ -1,21 +1,27 @@
 import { ApiCredentialMessage } from "../../../../y_static/local_storage_pb.js"
 
-import { decodeBase64StringToUint8Array, encodeUint8ArrayToBase64String } from "../../../../z_external/protocol_buffers_util"
+import {
+    decodeBase64StringToUint8Array,
+    encodeUint8ArrayToBase64String,
+} from "../../../../z_external/protocol_buffers_util"
+
+import { StorageKey, AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra"
 
 import {
-    StorageKey,
-    AuthCredentialRepository, FindResponse, StoreResponse,
-} from "../../../infra"
-
-import {
-    packTicketNonce, unpackTicketNonce,
-    packApiRoles, unpackApiCredential,
-    packAuthAt, unpackAuthAt,
+    packTicketNonce,
+    unpackTicketNonce,
+    packApiRoles,
+    unpackApiCredential,
+    packAuthAt,
+    unpackAuthAt,
 } from "../../../../credential/adapter"
 
 import { AuthCredential, TicketNonce, ApiCredential, AuthAt } from "../../../../credential/data"
 
-export function initStorageAuthCredentialRepository(storage: Storage, key: StorageKey): AuthCredentialRepository {
+export function initStorageAuthCredentialRepository(
+    storage: Storage,
+    key: StorageKey
+): AuthCredentialRepository {
     return new Repository(storage, key)
 }
 
@@ -88,9 +94,7 @@ interface AuthCredentialStorage {
     removeLastAuthAt(): void
 }
 
-type Found<T> =
-    Readonly<{ found: false }> |
-    Readonly<{ found: true, content: T }>
+type Found<T> = Readonly<{ found: false }> | Readonly<{ found: true; content: T }>
 
 class AuthCredentialStorageImpl implements AuthCredentialStorage {
     storage: Storage

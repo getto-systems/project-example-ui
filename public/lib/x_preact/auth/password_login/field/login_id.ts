@@ -25,7 +25,7 @@ export function LoginIDField({ loginIDField }: ComponentSet): VNode {
             <dl class="form ${state.result.valid ? "" : "form_error"}">
                 <dt class="form__header">ログインID</dt>
                 <dd class="form__field">
-                    <input type="text" class="input_fill" onInput=${handler.onInput}/>
+                    <input type="text" class="input_fill" onInput=${handler.onInput} />
                     ${loginIDFieldError(state.result)}
                 </dd>
             </dl>

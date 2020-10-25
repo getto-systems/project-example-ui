@@ -6,10 +6,31 @@ import {
     PasswordResetComponentSet,
 } from "../view"
 
-import { RenewCredentialInit, RenewCredentialComponent, RenewCredentialParam } from "../component/renew_credential/component"
-import { PasswordLoginInit, PasswordLoginComponent, PasswordLoginState, PasswordLoginParam, PasswordLoginRequest } from "../component/password_login/component"
-import { PasswordResetSessionInit, PasswordResetSessionComponent, PasswordResetSessionState, PasswordResetSessionRequest } from "../component/password_reset_session/component"
-import { PasswordResetInit, PasswordResetParam, PasswordResetComponent, PasswordResetState, PasswordResetRequest } from "../component/password_reset/component"
+import {
+    RenewCredentialInit,
+    RenewCredentialComponent,
+    RenewCredentialParam,
+} from "../component/renew_credential/component"
+import {
+    PasswordLoginInit,
+    PasswordLoginComponent,
+    PasswordLoginState,
+    PasswordLoginParam,
+    PasswordLoginRequest,
+} from "../component/password_login/component"
+import {
+    PasswordResetSessionInit,
+    PasswordResetSessionComponent,
+    PasswordResetSessionState,
+    PasswordResetSessionRequest,
+} from "../component/password_reset_session/component"
+import {
+    PasswordResetInit,
+    PasswordResetParam,
+    PasswordResetComponent,
+    PasswordResetState,
+    PasswordResetRequest,
+} from "../component/password_reset/component"
 
 import { LoginIDFieldInit, LoginIDFieldComponent } from "../component/field/login_id/component"
 import { PasswordFieldInit, PasswordFieldComponent } from "../component/field/password/component"
@@ -19,9 +40,11 @@ import { RenewAction, SetContinuousRenewAction, StoreAction } from "../../creden
 
 import { LoginAction, LoginFieldCollector } from "../../password_login/action"
 import {
-    StartSessionAction, StartSessionFieldCollector,
+    StartSessionAction,
+    StartSessionFieldCollector,
     PollingStatusAction,
-    ResetAction, ResetFieldCollector
+    ResetAction,
+    ResetFieldCollector,
 } from "../../password_reset/action"
 
 import { LoginIDFieldAction } from "../../login_id/field/action"
@@ -35,7 +58,10 @@ import { PasswordFieldEvent } from "../../password/field/data"
 import { Content } from "../../field/data"
 
 export interface AuthComponentSetInit {
-    renewCredential(param: RenewCredentialParam, setup: Setup<RenewCredentialComponent>): RenewCredentialComponentSet
+    renewCredential(
+        param: RenewCredentialParam,
+        setup: Setup<RenewCredentialComponent>
+    ): RenewCredentialComponentSet
 
     passwordLogin(param: PasswordLoginParam): PasswordLoginComponentSet
     passwordResetSession(): PasswordResetSessionComponentSet
@@ -90,10 +116,14 @@ class PasswordLoginProxy {
         passwordField: PasswordFieldComponentMap
     }
 
-    constructor(componentID: IDGenerator, handler: HandlerSet, fields: {
-        loginIDField: LoginIDFieldComponentMap
-        passwordField: PasswordFieldComponentMap
-    }) {
+    constructor(
+        componentID: IDGenerator,
+        handler: HandlerSet,
+        fields: {
+            loginIDField: LoginIDFieldComponentMap
+            passwordField: PasswordFieldComponentMap
+        }
+    ) {
         this.componentID = componentID
         this.handler = handler
         this.fields = fields
@@ -135,9 +165,13 @@ class PasswordResetSessionProxy {
         loginIDField: LoginIDFieldComponentMap
     }
 
-    constructor(componentID: IDGenerator, handler: HandlerSet, fields: {
-        loginIDField: LoginIDFieldComponentMap
-    }) {
+    constructor(
+        componentID: IDGenerator,
+        handler: HandlerSet,
+        fields: {
+            loginIDField: LoginIDFieldComponentMap
+        }
+    ) {
         this.componentID = componentID
         this.handler = handler
         this.fields = fields
@@ -179,10 +213,14 @@ class PasswordResetProxy {
         passwordField: PasswordFieldComponentMap
     }
 
-    constructor(componentID: IDGenerator, handler: HandlerSet, fields: {
-        loginIDField: LoginIDFieldComponentMap
-        passwordField: PasswordFieldComponentMap
-    }) {
+    constructor(
+        componentID: IDGenerator,
+        handler: HandlerSet,
+        fields: {
+            loginIDField: LoginIDFieldComponentMap
+            passwordField: PasswordFieldComponentMap
+        }
+    ) {
         this.componentID = componentID
         this.handler = handler
         this.fields = fields
@@ -281,9 +319,9 @@ class Handler<T> {
         }
         this.listener[componentID].push(handler)
     }
-    resolve({ componentID, state }: { componentID: number, state: T }): void {
+    resolve({ componentID, state }: { componentID: number; state: T }): void {
         if (this.listener[componentID]) {
-            this.listener[componentID].forEach(post => post(state))
+            this.listener[componentID].forEach((post) => post(state))
         }
     }
 }
@@ -302,7 +340,12 @@ function initHandlerSet(): HandlerSet {
     }
 }
 
-export function initAuthComponentSetInit(initWorker: Factory<Worker>, factory: FactorySet, init: InitSet, error: Post<string>): AuthResource {
+export function initAuthComponentSetInit(
+    initWorker: Factory<Worker>,
+    factory: FactorySet,
+    init: InitSet,
+    error: Post<string>
+): AuthResource {
     // TODO const worker = new Worker("./auth.worker.js")
     const worker = initWorker()
 
@@ -310,12 +353,16 @@ export function initAuthComponentSetInit(initWorker: Factory<Worker>, factory: F
 
     const handler = initHandlerSet()
 
-    const loginIDField = new LoginIDFieldComponentMap(() => init.field.loginID({
-        loginID: factory.field.loginID(),
-    }))
-    const passwordField = new PasswordFieldComponentMap(() => init.field.password({
-        password: factory.field.password(),
-    }))
+    const loginIDField = new LoginIDFieldComponentMap(() =>
+        init.field.loginID({
+            loginID: factory.field.loginID(),
+        })
+    )
+    const passwordField = new PasswordFieldComponentMap(() =>
+        init.field.password({
+            password: factory.field.password(),
+        })
+    )
 
     const passwordLogin = new PasswordLoginProxy(componentID, handler, {
         loginIDField,
@@ -450,12 +497,12 @@ export type WorkerFactory = Readonly<{
     }
 
     passwordLogin: {
-        login: ParameterFactory<LoginFieldCollector, LoginAction>
+        login: ParameterizedFactory<LoginFieldCollector, LoginAction>
     }
     passwordReset: {
-        startSession: ParameterFactory<StartSessionFieldCollector, StartSessionAction>
+        startSession: ParameterizedFactory<StartSessionFieldCollector, StartSessionAction>
         pollingStatus: Factory<PollingStatusAction>
-        reset: ParameterFactory<ResetFieldCollector, ResetAction>
+        reset: ParameterizedFactory<ResetFieldCollector, ResetAction>
     }
 }>
 type ProxyFactory = Readonly<{
@@ -499,7 +546,12 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
                     break
 
                 case "passwordResetSession-init":
-                    passwordResetSession.init(factory, proxy, init.passwordResetSession, data.componentID)
+                    passwordResetSession.init(
+                        factory,
+                        proxy,
+                        init.passwordResetSession,
+                        data.componentID
+                    )
                     break
 
                 case "passwordResetSession-action":
@@ -595,23 +647,33 @@ function initResolverSet(): ResolverSet {
     }
 }
 
-function collectLoginID(componentID: number, resolver: Resolver<Content<LoginID>>, post: Post<WorkerEvent>): { (): Promise<Content<LoginID>> } {
-    return () => new Promise((resolve) => {
-        post({
-            type: "loginIDField-validate",
-            componentID,
-            handlerID: resolver.register(resolve),
+function collectLoginID(
+    componentID: number,
+    resolver: Resolver<Content<LoginID>>,
+    post: Post<WorkerEvent>
+): { (): Promise<Content<LoginID>> } {
+    return () =>
+        new Promise((resolve) => {
+            post({
+                type: "loginIDField-validate",
+                componentID,
+                handlerID: resolver.register(resolve),
+            })
         })
-    })
 }
-function collectPassword(componentID: number, resolver: Resolver<Content<Password>>, post: Post<WorkerEvent>): { (): Promise<Content<Password>> } {
-    return () => new Promise((resolve) => {
-        post({
-            type: "passwordField-validate",
-            componentID,
-            handlerID: resolver.register(resolve),
+function collectPassword(
+    componentID: number,
+    resolver: Resolver<Content<Password>>,
+    post: Post<WorkerEvent>
+): { (): Promise<Content<Password>> } {
+    return () =>
+        new Promise((resolve) => {
+            post({
+                type: "passwordField-validate",
+                componentID,
+                handlerID: resolver.register(resolve),
+            })
         })
-    })
 }
 
 class PasswordLoginComponentMap {
@@ -625,7 +687,13 @@ class PasswordLoginComponentMap {
         this.post = post
     }
 
-    init(factory: WorkerFactory, proxy: ProxyFactory, init: PasswordLoginInit, componentID: number, param: PasswordLoginParam): void {
+    init(
+        factory: WorkerFactory,
+        proxy: ProxyFactory,
+        init: PasswordLoginInit,
+        componentID: number,
+        param: PasswordLoginParam
+    ): void {
         const actions = {
             login: factory.passwordLogin.login({
                 loginID: collectLoginID(componentID, this.resolver.field.loginID, this.post),
@@ -637,7 +705,7 @@ class PasswordLoginComponentMap {
 
         const component = init(actions, param)
 
-        component.onStateChange(state => {
+        component.onStateChange((state) => {
             this.post({ type: "passwordLogin-post", componentID, state })
         })
 
@@ -663,7 +731,12 @@ class PasswordResetSessionComponentMap {
         this.post = post
     }
 
-    init(factory: WorkerFactory, proxy: ProxyFactory, init: PasswordResetSessionInit, componentID: number): void {
+    init(
+        factory: WorkerFactory,
+        proxy: ProxyFactory,
+        init: PasswordResetSessionInit,
+        componentID: number
+    ): void {
         const actions = {
             startSession: factory.passwordReset.startSession({
                 loginID: collectLoginID(componentID, this.resolver.field.loginID, this.post),
@@ -673,7 +746,7 @@ class PasswordResetSessionComponentMap {
 
         const component = init(actions)
 
-        component.onStateChange(state => {
+        component.onStateChange((state) => {
             this.post({ type: "passwordResetSession-post", componentID, state })
         })
 
@@ -699,7 +772,13 @@ class PasswordResetComponentMap {
         this.post = post
     }
 
-    init(factory: WorkerFactory, proxy: ProxyFactory, init: PasswordResetInit, componentID: number, param: PasswordResetParam): void {
+    init(
+        factory: WorkerFactory,
+        proxy: ProxyFactory,
+        init: PasswordResetInit,
+        componentID: number,
+        param: PasswordResetParam
+    ): void {
         const actions = {
             reset: factory.passwordReset.reset({
                 loginID: collectLoginID(componentID, this.resolver.field.loginID, this.post),
@@ -711,7 +790,7 @@ class PasswordResetComponentMap {
 
         const component = init(actions, param)
 
-        component.onStateChange(state => {
+        component.onStateChange((state) => {
             this.post({ type: "passwordReset-post", componentID, state })
         })
 
@@ -753,27 +832,55 @@ class StoreActionProxy {
 }
 
 type WorkerRequest =
-    Readonly<{ type: "passwordLogin-init", componentID: number, param: PasswordLoginParam }> |
-    Readonly<{ type: "passwordLogin-action", componentID: number, request: PasswordLoginRequest }> |
-    Readonly<{ type: "passwordResetSession-init", componentID: number }> |
-    Readonly<{ type: "passwordResetSession-action", componentID: number, request: PasswordResetSessionRequest }> |
-    Readonly<{ type: "passwordReset-init", componentID: number, param: PasswordResetParam }> |
-    Readonly<{ type: "passwordReset-action", componentID: number, request: PasswordResetRequest }> |
-    Readonly<{ type: "loginIDField-content", componentID: number, handlerID: number, content: Content<LoginID> }> |
-    Readonly<{ type: "passwordField-content", componentID: number, handlerID: number, content: Content<Password> }> |
-    Readonly<{ type: "credential-store-post", actionID: number, handlerID: number, event: StoreEvent }>
+    | Readonly<{ type: "passwordLogin-init"; componentID: number; param: PasswordLoginParam }>
+    | Readonly<{ type: "passwordLogin-action"; componentID: number; request: PasswordLoginRequest }>
+    | Readonly<{ type: "passwordResetSession-init"; componentID: number }>
+    | Readonly<{
+          type: "passwordResetSession-action"
+          componentID: number
+          request: PasswordResetSessionRequest
+      }>
+    | Readonly<{ type: "passwordReset-init"; componentID: number; param: PasswordResetParam }>
+    | Readonly<{ type: "passwordReset-action"; componentID: number; request: PasswordResetRequest }>
+    | Readonly<{
+          type: "loginIDField-content"
+          componentID: number
+          handlerID: number
+          content: Content<LoginID>
+      }>
+    | Readonly<{
+          type: "passwordField-content"
+          componentID: number
+          handlerID: number
+          content: Content<Password>
+      }>
+    | Readonly<{ type: "credential-store-post"; actionID: number; handlerID: number; event: StoreEvent }>
 
 type WorkerEvent =
-    Readonly<{ type: "credential-store-init", actionID: number }> |
-    Readonly<{ type: "credential-store-action", actionID: number, handlerID: number, authCredential: AuthCredential }> |
-    Readonly<{ type: "passwordLogin-post", componentID: number, state: PasswordLoginState }> |
-    Readonly<{ type: "passwordResetSession-post", componentID: number, state: PasswordResetSessionState }> |
-    Readonly<{ type: "passwordReset-post", componentID: number, state: PasswordResetState }> |
-    Readonly<{ type: "loginIDField-validate", componentID: number, handlerID: number }> |
-    Readonly<{ type: "passwordField-validate", componentID: number, handlerID: number }> |
-    Readonly<{ type: "error", err: string }>
+    | Readonly<{ type: "credential-store-init"; actionID: number }>
+    | Readonly<{
+          type: "credential-store-action"
+          actionID: number
+          handlerID: number
+          authCredential: AuthCredential
+      }>
+    | Readonly<{ type: "passwordLogin-post"; componentID: number; state: PasswordLoginState }>
+    | Readonly<{
+          type: "passwordResetSession-post"
+          componentID: number
+          state: PasswordResetSessionState
+      }>
+    | Readonly<{ type: "passwordReset-post"; componentID: number; state: PasswordResetState }>
+    | Readonly<{ type: "loginIDField-validate"; componentID: number; handlerID: number }>
+    | Readonly<{ type: "passwordField-validate"; componentID: number; handlerID: number }>
+    | Readonly<{ type: "error"; err: string }>
 
-function initRenewCredential(factory: FactorySet, init: InitSet, param: RenewCredentialParam, setup: Setup<RenewCredentialComponent>) {
+function initRenewCredential(
+    factory: FactorySet,
+    init: InitSet,
+    param: RenewCredentialParam,
+    setup: Setup<RenewCredentialComponent>
+) {
     const actions = {
         renew: factory.credential.renew(),
         setContinuousRenew: factory.credential.setContinuousRenew(),
@@ -797,7 +904,7 @@ interface Post<T> {
 interface Factory<T> {
     (): T
 }
-interface ParameterFactory<P, T> {
+interface ParameterizedFactory<P, T> {
     (param: P): T
 }
 interface Terminate {

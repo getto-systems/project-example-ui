@@ -7,12 +7,15 @@ import { unpackPassword } from "../../../../password/adapter"
 import { LoginFields } from "../../../data"
 
 interface AuthClient {
-    passwordLogin(param: { loginID: string, password: string }): Promise<AuthLoginResponse>
+    passwordLogin(param: { loginID: string; password: string }): Promise<AuthLoginResponse>
 }
 
 type AuthLoginResponse =
-    Readonly<{ success: true, authCredential: { ticketNonce: string, apiCredential: { apiRoles: string[] } } }> |
-    Readonly<{ success: false, err: { type: string, err: string } }>
+    | Readonly<{
+          success: true
+          authCredential: { ticketNonce: string; apiCredential: { apiRoles: string[] } }
+      }>
+    | Readonly<{ success: false; err: { type: string; err: string } }>
 
 export function initFetchPasswordLoginClient(client: AuthClient): PasswordLoginClient {
     return new FetchPasswordLoginClient(client)

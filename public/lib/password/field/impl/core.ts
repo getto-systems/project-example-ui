@@ -6,8 +6,12 @@ import { PasswordFieldAction } from "../action"
 import {
     PasswordFieldEvent,
     PasswordFieldError,
-    PasswordCharacter, simplePassword, complexPassword,
-    PasswordView, showPassword, hidePassword,
+    PasswordCharacter,
+    simplePassword,
+    complexPassword,
+    PasswordView,
+    showPassword,
+    hidePassword,
 } from "../data"
 import { InputValue, buildContent, hasError } from "../../../field/data"
 
@@ -19,7 +23,7 @@ function validatePassword(password: string): PasswordFieldError[] {
         return ERROR.empty
     }
 
-    if (Buffer.byteLength(password, 'utf8') > PASSWORD_MAX_BYTES) {
+    if (Buffer.byteLength(password, "utf8") > PASSWORD_MAX_BYTES) {
         return ERROR.tooLong
     }
 

@@ -13,7 +13,10 @@ import { PasswordField } from "./password_login/field/password"
 
 import { AppHref } from "../../href"
 
-import { PasswordLoginComponent, initialPasswordLoginState } from "../../auth/component/password_login/component"
+import {
+    PasswordLoginComponent,
+    initialPasswordLoginState,
+} from "../../auth/component/password_login/component"
 import { LoginIDFieldComponent } from "../../auth/component/field/login_id/component"
 import { PasswordFieldComponent } from "../../auth/component/field/password/component"
 
@@ -55,7 +58,10 @@ function View({ href, passwordLogin, loginIDField, passwordField }: ComponentSet
             case "succeed-to-login":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = (err) => {
-                        passwordLogin.action({ type: "load-error", err: { type: "infra-error", err: `${err}` } })
+                        passwordLogin.action({
+                            type: "load-error",
+                            err: { type: "infra-error", err: `${err}` },
+                        })
                     }
                 })
                 break
@@ -98,26 +104,33 @@ function View({ href, passwordLogin, loginIDField, passwordField }: ComponentSet
             return view(onSubmit_login, loginButton(), html``)
 
         case "failed-to-login":
-            return view(onSubmit_login, loginButton(), html`
-                <aside>
-                    ${formMessage("form_error", loginError(state.err))}
-                </aside>
-            `)
+            return view(
+                onSubmit_login,
+                loginButton(),
+                html` <aside>${formMessage("form_error", loginError(state.err))}</aside> `
+            )
 
         case "try-to-login":
             return view(onSubmit_noop, loginButton_connecting(), html``)
 
         case "delayed-to-login":
-            return view(onSubmit_noop, loginButton_connecting(), html`
-                <aside>
-                    ${formMessage("form_warning", html`
-                        <p class="form__message">認証に時間がかかっています</p>
-                        <p class="form__message">
-                            30秒以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
-                        </p>
-                    `)}
-                </aside>
-            `)
+            return view(
+                onSubmit_noop,
+                loginButton_connecting(),
+                html`
+                    <aside>
+                        ${formMessage(
+                            "form_warning",
+                            html`
+                                <p class="form__message">認証に時間がかかっています</p>
+                                <p class="form__message">
+                                    30秒以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
+                                </p>
+                            `
+                        )}
+                    </aside>
+                `
+            )
 
         case "succeed-to-login":
             // スクリプトのロードは appendChild する必要があるため useEffect で行う
@@ -137,8 +150,7 @@ function View({ href, passwordLogin, loginIDField, passwordField }: ComponentSet
     function loginButton_connecting(): VNode {
         return html`
             <button type="button" class="button button_saving">
-                ログインしています
-                ${" "}
+                ログインしています ${" "}
                 <i class="lnir lnir-spinner lnir-is-spinning"></i>
             </button>
         `

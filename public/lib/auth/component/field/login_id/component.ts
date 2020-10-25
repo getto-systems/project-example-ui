@@ -16,13 +16,14 @@ export interface LoginIDFieldComponent {
     validate(post: Post<LoginIDFieldEvent>): void
 }
 
-export type LoginIDFieldState =
-    Readonly<{ type: "succeed-to-update", result: Valid<LoginIDFieldError> }>
+export type LoginIDFieldState = Readonly<{ type: "succeed-to-update"; result: Valid<LoginIDFieldError> }>
 
-export const initialLoginIDFieldState: LoginIDFieldState = { type: "succeed-to-update", result: noError() }
+export const initialLoginIDFieldState: LoginIDFieldState = {
+    type: "succeed-to-update",
+    result: noError(),
+}
 
-export type LoginIDFieldRequest =
-    Readonly<{ type: "set", inputValue: InputValue }>
+export type LoginIDFieldRequest = Readonly<{ type: "set"; inputValue: InputValue }>
 
 interface Post<T> {
     (state: T): void

@@ -22,16 +22,16 @@ export type TimeConfig = Readonly<{
     instantLoadExpireTime: ExpireTime
     renewRunDelayTime: DelayTime
 
-    renewDelayTime: DelayTime,
-    renewIntervalTime: IntervalTime,
+    renewDelayTime: DelayTime
+    renewIntervalTime: IntervalTime
 
-    passwordLoginDelayTime: DelayTime,
+    passwordLoginDelayTime: DelayTime
 
-    passwordResetStartSessionDelayTime: DelayTime,
-    passwordResetPollingWaitTime: WaitTime,
-    passwordResetPollingLimit: Limit,
+    passwordResetStartSessionDelayTime: DelayTime
+    passwordResetPollingWaitTime: WaitTime
+    passwordResetPollingLimit: Limit
 
-    passwordResetDelayTime: DelayTime,
+    passwordResetDelayTime: DelayTime
 }>
 
 export function newHostConfig(): HostConfig {
@@ -41,7 +41,7 @@ export function newHostConfig(): HostConfig {
 }
 
 export type HostConfig = {
-    secureServerHost: string,
+    secureServerHost: string
 }
 
 type ExpireTime = { expire_milli_second: number }

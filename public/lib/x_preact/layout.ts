@@ -20,9 +20,7 @@ export function loginError(title: VNode, content: VNode, footer: VNode): VNode {
                     <h3 class="login__message__title">${title}</h3>
                     <section class="login__message__body paragraph">${content}</section>
                 </section>
-                <footer class="login__footer">
-                    ${footer}
-                </footer>
+                <footer class="login__footer">${footer}</footer>
             </section>
         </aside>
     `

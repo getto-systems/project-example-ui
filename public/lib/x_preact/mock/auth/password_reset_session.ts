@@ -60,7 +60,11 @@ class Init {
         return { type: "failed-to-polling-status", err: { type: "infra-error", err: "error" } }
     }
     failedToSendToken(): PasswordResetSessionState {
-        return { type: "failed-to-send-token", dest: { type: "log" }, err: { type: "infra-error", err: "error" } }
+        return {
+            type: "failed-to-send-token",
+            dest: { type: "log" },
+            err: { type: "infra-error", err: "error" },
+        }
     }
     succeedToSendToken(): PasswordResetSessionState {
         return { type: "succeed-to-send-token", dest: { type: "log" } }

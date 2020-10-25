@@ -23,23 +23,23 @@ export interface RenewCredentialComponent {
 }
 
 export type RenewCredentialState =
-    Readonly<{ type: "initial" }> |
-    Readonly<{ type: "try-to-instant-load", scriptPath: ScriptPath }> |
-    Readonly<{ type: "required-to-login" }> |
-    Readonly<{ type: "try-to-renew" }> |
-    Readonly<{ type: "delayed-to-renew" }> |
-    Readonly<{ type: "failed-to-renew", err: RenewError }> |
-    Readonly<{ type: "succeed-to-renew", scriptPath: ScriptPath }> |
-    Readonly<{ type: "load-error", err: LoadError }> |
-    Readonly<{ type: "storage-error", err: StorageError }> |
-    Readonly<{ type: "error", err: string }>
+    | Readonly<{ type: "initial" }>
+    | Readonly<{ type: "try-to-instant-load"; scriptPath: ScriptPath }>
+    | Readonly<{ type: "required-to-login" }>
+    | Readonly<{ type: "try-to-renew" }>
+    | Readonly<{ type: "delayed-to-renew" }>
+    | Readonly<{ type: "failed-to-renew"; err: RenewError }>
+    | Readonly<{ type: "succeed-to-renew"; scriptPath: ScriptPath }>
+    | Readonly<{ type: "load-error"; err: LoadError }>
+    | Readonly<{ type: "storage-error"; err: StorageError }>
+    | Readonly<{ type: "error"; err: string }>
 
 export const initialRenewCredentialState: RenewCredentialState = { type: "initial" }
 
 export type RenewCredentialRequest =
-    Readonly<{ type: "renew" }> |
-    Readonly<{ type: "load-error", err: LoadError }> |
-    Readonly<{ type: "succeed-to-instant-load" }>
+    | Readonly<{ type: "renew" }>
+    | Readonly<{ type: "load-error"; err: LoadError }>
+    | Readonly<{ type: "succeed-to-instant-load" }>
 
 interface Post<T> {
     (state: T): void

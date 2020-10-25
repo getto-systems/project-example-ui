@@ -5,7 +5,12 @@ import {
     PasswordFieldState,
 } from "../../../../auth/component/field/password/component"
 
-import { simplePassword, complexPassword, hidePassword, showPassword } from "../../../../password/field/data"
+import {
+    simplePassword,
+    complexPassword,
+    hidePassword,
+    showPassword,
+} from "../../../../password/field/data"
 
 import { noError, hasError } from "../../../../field/data"
 

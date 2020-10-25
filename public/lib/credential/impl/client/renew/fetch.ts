@@ -1,6 +1,11 @@
 import { RenewClient, RenewResponse } from "../../../infra"
 
-import { packTicketNonce, unpackTicketNonce, packApiRoles, packAuthAt } from "../../../../credential/adapter"
+import {
+    packTicketNonce,
+    unpackTicketNonce,
+    packApiRoles,
+    packAuthAt,
+} from "../../../../credential/adapter"
 
 import { TicketNonce } from "../../../../credential/data"
 
@@ -9,8 +14,11 @@ interface AuthClient {
 }
 
 type AuthRenewResponse =
-    Readonly<{ success: true, authCredential: { ticketNonce: string, apiCredential: { apiRoles: string[] } } }> |
-    Readonly<{ success: false, err: { type: string, err: string } }>
+    | Readonly<{
+          success: true
+          authCredential: { ticketNonce: string; apiCredential: { apiRoles: string[] } }
+      }>
+    | Readonly<{ success: false; err: { type: string; err: string } }>
 
 export function initFetchRenewClient(client: AuthClient): RenewClient {
     return new FetchRenewClient(client)
