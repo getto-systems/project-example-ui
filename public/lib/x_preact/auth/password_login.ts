@@ -69,31 +69,39 @@ function View({ href, passwordLogin, loginIDField, passwordField }: ComponentSet
     }, [state])
 
     function view(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
+        const loginFields = html`
+            <section>
+                <big>
+                    <section class="login__body">
+                        ${h(LoginIDField, { loginIDField })}
+                        ${h(PasswordField, { passwordField })}
+                    </section>
+                </big>
+            </section>
+        `
+
+        const loginFooter = html`
+            <footer class="login__footer">
+                <div class="button__container">
+                    <div>
+                        <big>${button}</big>
+                    </div>
+                    <div class="login__link">
+                        <a href="${href.auth.passwordResetSessionHref()}">
+                            <i class="lnir lnir-question-circle"></i> パスワードがわからない方
+                        </a>
+                    </div>
+                </div>
+                ${footer}
+            </footer>
+        `
+
         return html`
             <aside class="login">
                 <form class="login__box" onSubmit="${onSubmit}">
                     ${loginHeader()}
-                    <section>
-                        <big>
-                            <section class="login__body">
-                                ${h(LoginIDField, { loginIDField })}
-                                ${h(PasswordField, { passwordField })}
-                            </section>
-                        </big>
-                    </section>
-                    <footer class="login__footer">
-                        <div class="button__container">
-                            <div>
-                                <big>${button}</big>
-                            </div>
-                            <div class="login__link">
-                                <a href="${href.auth.passwordResetSessionHref()}">
-                                    <i class="lnir lnir-question-circle"></i> パスワードがわからない方
-                                </a>
-                            </div>
-                        </div>
-                        ${footer}
-                    </footer>
+                    ${loginFields}
+                    ${loginFooter}
                 </form>
             </aside>
         `
