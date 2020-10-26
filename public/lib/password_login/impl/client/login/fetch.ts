@@ -35,7 +35,7 @@ class FetchPasswordLoginClient implements PasswordLoginClient {
                 password: unpackPassword(password),
             })
 
-            if (response.success === true) {
+            if (response.success) {
                 return loginSuccess({
                     ticketNonce: packTicketNonce(response.authCredential.ticketNonce),
                     apiCredential: {

@@ -21,7 +21,7 @@ const login = (
     const response = await delayed(client.login(content.content), time.passwordLoginDelayTime, () =>
         post({ type: "delayed-to-login" })
     )
-    if (response.success === false) {
+    if (!response.success) {
         post({ type: "failed-to-login", err: response.err })
         return
     }
@@ -43,8 +43,4 @@ async function collect(fields: LoginFieldCollector): Promise<Content<LoginFields
 
 export function initLoginAction(fields: LoginFieldCollector, infra: LoginInfra): LoginAction {
     return login(fields, infra)
-}
-
-interface Post<T> {
-    (event: T): void
 }
