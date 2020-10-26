@@ -112,8 +112,8 @@ export interface Wait {
     <T>(time: WaitTime, content: WaitContent<T>): Promise<T>
 }
 
-type DelayTime = Readonly<{ delay_milli_second: number }>
-type WaitTime = Readonly<{ wait_milli_second: number }>
+type DelayTime = Readonly<{ delay_millisecond: number }>
+type WaitTime = Readonly<{ wait_millisecond: number }>
 type Limit = Readonly<{ limit: number }>
 
 interface DelayedHandler {

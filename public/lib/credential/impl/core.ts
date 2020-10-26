@@ -83,9 +83,9 @@ const setContinuousRenewAction = ({
                 if (lastState) {
                     lastState = await continuousRenew(ticketNonce)
                 }
-            }, time.renewIntervalTime.interval_milli_second)
+            }, time.renewIntervalTime.interval_millisecond)
         }
-    }, runner.nextRun(lastAuthAt, time.renewRunDelayTime).delay_milli_second)
+    }, runner.nextRun(lastAuthAt, time.renewRunDelayTime).delay_millisecond)
 
     async function continuousRenew(ticketNonce: TicketNonce): Promise<boolean> {
         // 画面へのフィードバックはしないので、イベントは発行しない
