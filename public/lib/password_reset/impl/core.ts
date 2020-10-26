@@ -41,7 +41,6 @@ const startSession = (
         return
     }
 
-    // TODO ここで polling を始めてしまったほうがいい気がする
     post({ type: "succeed-to-start-session", sessionID: response.sessionID })
 }
 
