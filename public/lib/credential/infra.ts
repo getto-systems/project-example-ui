@@ -54,9 +54,9 @@ export interface Delayed {
     <T>(promise: Promise<T>, time: DelayTime, handler: DelayedHandler): Promise<T>
 }
 
-export type ExpireTime = Readonly<{ expire_milli_second: number }>
-export type DelayTime = Readonly<{ delay_milli_second: number }>
-export type IntervalTime = Readonly<{ interval_milli_second: number }>
+export type ExpireTime = Readonly<{ expire_millisecond: number }>
+export type DelayTime = Readonly<{ delay_millisecond: number }>
+export type IntervalTime = Readonly<{ interval_millisecond: number }>
 
 export type StorageKey = Readonly<{
     ticketNonce: string

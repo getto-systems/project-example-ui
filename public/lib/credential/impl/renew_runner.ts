@@ -10,13 +10,13 @@ export function initRenewRunner(): RenewRunner {
 
 class Runner implements RenewRunner {
     nextRun(lastAuthAt: AuthAt, delay: DelayTime): DelayTime {
-        const delay_milli_second =
-            unpackAuthAt(lastAuthAt).getTime() + delay.delay_milli_second - new Date().getTime()
-        if (delay_milli_second < 0) {
-            return { delay_milli_second: 0 }
+        const delay_millisecond =
+            unpackAuthAt(lastAuthAt).getTime() + delay.delay_millisecond - new Date().getTime()
+        if (delay_millisecond < 0) {
+            return { delay_millisecond: 0 }
         }
-        return { delay_milli_second }
+        return { delay_millisecond }
     }
 }
 
-type DelayTime = Readonly<{ delay_milli_second: number }>
+type DelayTime = Readonly<{ delay_millisecond: number }>

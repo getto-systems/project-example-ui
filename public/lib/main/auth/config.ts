@@ -44,33 +44,33 @@ export type HostConfig = {
     secureServerHost: string
 }
 
-type ExpireTime = { expire_milli_second: number }
+type ExpireTime = { expire_millisecond: number }
 function expireSecond(second: number): ExpireTime {
-    return { expire_milli_second: second * 1000 }
+    return { expire_millisecond: second * 1000 }
 }
 function expireMinute(minute: number): ExpireTime {
     return expireSecond(minute * 60)
 }
 
-type DelayTime = { delay_milli_second: number }
+type DelayTime = { delay_millisecond: number }
 function delaySecond(second: number): DelayTime {
-    return { delay_milli_second: second * 1000 }
+    return { delay_millisecond: second * 1000 }
 }
 function delayMinute(minute: number): DelayTime {
     return delaySecond(minute * 60)
 }
 
-type IntervalTime = { interval_milli_second: number }
+type IntervalTime = { interval_millisecond: number }
 function intervalSecond(second: number): IntervalTime {
-    return { interval_milli_second: second * 1000 }
+    return { interval_millisecond: second * 1000 }
 }
 function intervalMinute(minute: number): IntervalTime {
     return intervalSecond(minute * 60)
 }
 
-type WaitTime = { wait_milli_second: number }
+type WaitTime = { wait_millisecond: number }
 function waitSecond(second: number): WaitTime {
-    return { wait_milli_second: second * 1000 }
+    return { wait_millisecond: second * 1000 }
 }
 
 type Limit = { limit: number }

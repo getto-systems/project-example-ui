@@ -12,7 +12,7 @@ export type TimeConfig = Readonly<{
     passwordLoginDelayTime: DelayTime
 }>
 
-export type DelayTime = Readonly<{ delay_milli_second: number }>
+export type DelayTime = Readonly<{ delay_millisecond: number }>
 
 export interface PasswordLoginClient {
     login(fields: LoginFields): Promise<LoginResponse>

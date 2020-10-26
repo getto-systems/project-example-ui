@@ -7,7 +7,7 @@ export async function delayed<T>(
 
     const winner = await Promise.race([
         promise,
-        wait({ wait_milli_second: time.delay_milli_second }, () => DELAYED_MARKER),
+        wait({ wait_millisecond: time.delay_millisecond }, () => DELAYED_MARKER),
     ])
 
     if (winner === DELAYED_MARKER) {
@@ -17,7 +17,7 @@ export async function delayed<T>(
     return await promise
 }
 
-type DelayTime = Readonly<{ delay_milli_second: number }>
+type DelayTime = Readonly<{ delay_millisecond: number }>
 
 interface DelayedHandler {
     (): void
@@ -27,11 +27,11 @@ export function wait<T>(time: WaitTime, content: WaitContent<T>): Promise<T> {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(content())
-        }, time.wait_milli_second)
+        }, time.wait_millisecond)
     })
 }
 
-type WaitTime = Readonly<{ wait_milli_second: number }>
+type WaitTime = Readonly<{ wait_millisecond: number }>
 
 interface WaitContent<T> {
     (): T
