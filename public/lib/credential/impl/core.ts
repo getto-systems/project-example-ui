@@ -12,11 +12,11 @@ const renewAction = ({
     delayed,
 }: RenewInfra): RenewAction => async (post) => {
     const lastAuth = findLastAuth(authCredentials)
-    if (lastAuth.success === false) {
+    if (!lastAuth.success) {
         post({ type: "storage-error", err: lastAuth.err })
         return
     }
-    if (lastAuth.found === false) {
+    if (!lastAuth.found) {
         post({ type: "required-to-login" })
         return
     }
@@ -34,13 +34,13 @@ const renewAction = ({
         time.renewDelayTime,
         () => post({ type: "delayed-to-renew" })
     )
-    if (renewResponse.success === false) {
+    if (!renewResponse.success) {
         post({ type: "failed-to-renew", err: renewResponse.err })
         return
     }
-    if (renewResponse.hasCredential === false) {
+    if (!renewResponse.hasCredential) {
         const storeResponse = authCredentials.removeAuthCredential()
-        if (storeResponse.success === false) {
+        if (!storeResponse.success) {
             post({ type: "storage-error", err: storeResponse.err })
             return
         }
@@ -50,7 +50,7 @@ const renewAction = ({
     }
 
     const storeResponse = authCredentials.storeAuthCredential(renewResponse.authCredential)
-    if (storeResponse.success === false) {
+    if (!storeResponse.success) {
         post({ type: "storage-error", err: storeResponse.err })
         return
     }
@@ -64,11 +64,11 @@ const setContinuousRenewAction = ({
     runner,
 }: SetContinuousRenewInfra): SetContinuousRenewAction => (post) => {
     const lastAuth = findLastAuth(authCredentials)
-    if (lastAuth.success === false) {
+    if (!lastAuth.success) {
         post({ type: "storage-error", err: lastAuth.err })
         return
     }
-    if (lastAuth.found === false) {
+    if (!lastAuth.found) {
         post({ type: "required-to-login" })
         return
     }
@@ -108,18 +108,18 @@ const setContinuousRenewAction = ({
 }
 function findLastAuth(authCredentials: AuthCredentialRepository): FoundLastAuth {
     const ticketNonce = authCredentials.findTicketNonce()
-    if (ticketNonce.success === false) {
+    if (!ticketNonce.success) {
         return { success: false, err: ticketNonce.err }
     }
-    if (ticketNonce.found === false) {
+    if (!ticketNonce.found) {
         return { success: true, found: false }
     }
 
     const lastAuthAt = authCredentials.findLastAuthAt()
-    if (lastAuthAt.success === false) {
+    if (!lastAuthAt.success) {
         return { success: false, err: lastAuthAt.err }
     }
-    if (lastAuthAt.found === false) {
+    if (!lastAuthAt.found) {
         return { success: true, found: false }
     }
 
@@ -135,7 +135,7 @@ function findLastAuth(authCredentials: AuthCredentialRepository): FoundLastAuth 
 
 const storeAction = (infra: StoreInfra): StoreAction => async (authCredential, post) => {
     const storeResponse = infra.authCredentials.storeAuthCredential(authCredential)
-    if (storeResponse.success === false) {
+    if (!storeResponse.success) {
         post({ type: "storage-error", err: storeResponse.err })
         return
     }

@@ -34,7 +34,7 @@ class FetchRenewClient implements RenewClient {
     async renew(ticketNonce: TicketNonce): Promise<RenewResponse> {
         try {
             const response = await this.client.renew({ nonce: unpackTicketNonce(ticketNonce) })
-            if (response.success === true) {
+            if (response.success) {
                 return {
                     success: true,
                     hasCredential: true,
