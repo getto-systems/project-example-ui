@@ -1,11 +1,19 @@
-import { AuthComponentSetInit } from "./background"
-
 import { packResetToken } from "../../password_reset/adapter"
 import { packPagePathname } from "../../application/adapter"
 
-import { AuthView, AuthState, AuthComponentSet } from "../view"
+import {
+    AuthView,
+    AuthState,
+    AuthComponentSet,
+    RenewCredentialComponentSet,
+    PasswordLoginComponentSet,
+    PasswordResetSessionComponentSet,
+    PasswordResetComponentSet,
+} from "../view"
 
-import { RenewCredentialComponent } from "../component/renew_credential/component"
+import { RenewCredentialComponent, RenewCredentialParam } from "../component/renew_credential/component"
+import { PasswordLoginParam } from "../component/password_login/component"
+import { PasswordResetParam } from "../component/password_reset/component"
 
 import { ResetToken } from "../../password_reset/data"
 
@@ -92,10 +100,24 @@ export class View implements AuthView {
     }
 }
 
+export interface AuthComponentSetInit {
+    renewCredential(
+        param: RenewCredentialParam,
+        setup: Setup<RenewCredentialComponent>
+    ): RenewCredentialComponentSet
+
+    passwordLogin(param: PasswordLoginParam): PasswordLoginComponentSet
+    passwordResetSession(): PasswordResetSessionComponentSet
+    passwordReset(param: PasswordResetParam): PasswordResetComponentSet
+}
+
 function currentPagePathname(currentLocation: Location) {
     return packPagePathname(new URL(currentLocation.toString()))
 }
 
 interface Post<T> {
     (state: T): void
+}
+interface Setup<T> {
+    (component: T): void
 }

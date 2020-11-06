@@ -1,19 +1,14 @@
 import { View } from "./view"
+import {
+    initRenewCredentialComponentSet,
+    initLoginIDFieldComponent,
+    initPasswordFieldComponent,
+} from "./core"
 
 import { AppHrefInit } from "../../href"
-import {
-    AuthInit,
-    RenewCredentialComponentSet,
-    PasswordLoginComponentSet,
-    PasswordResetSessionComponentSet,
-    PasswordResetComponentSet,
-} from "../view"
+import { AuthInit } from "../view"
 
-import {
-    RenewCredentialInit,
-    RenewCredentialComponent,
-    RenewCredentialParam,
-} from "../component/renew_credential/component"
+import { RenewCredentialInit } from "../component/renew_credential/component"
 import {
     PasswordLoginInit,
     PasswordLoginComponent,
@@ -59,22 +54,6 @@ import { LoginIDFieldEvent } from "../../login_id/field/data"
 import { Password } from "../../password/data"
 import { PasswordFieldEvent } from "../../password/field/data"
 import { Content } from "../../field/data"
-
-export type AuthResource = Readonly<{
-    components: AuthComponentSetInit
-    terminate: Terminate
-}>
-
-export interface AuthComponentSetInit {
-    renewCredential(
-        param: RenewCredentialParam,
-        setup: Setup<RenewCredentialComponent>
-    ): RenewCredentialComponentSet
-
-    passwordLogin(param: PasswordLoginParam): PasswordLoginComponentSet
-    passwordResetSession(): PasswordResetSessionComponentSet
-    passwordReset(param: PasswordResetParam): PasswordResetComponentSet
-}
 
 export type FactorySet = Readonly<{
     application: {
@@ -349,15 +328,9 @@ export function initAuthInitAsWorker(worker: Worker, factory: FactorySet, init: 
 
         const handler = initHandlerSet()
 
-        const loginIDField = new LoginIDFieldComponentMap(() =>
-            init.field.loginID({
-                loginID: factory.field.loginID(),
-            })
-        )
+        const loginIDField = new LoginIDFieldComponentMap(() => initLoginIDFieldComponent(factory, init))
         const passwordField = new PasswordFieldComponentMap(() =>
-            init.field.password({
-                password: factory.field.password(),
-            })
+            initPasswordFieldComponent(factory, init)
         )
 
         const passwordLogin = new PasswordLoginProxy(componentID, handler, {
@@ -376,7 +349,7 @@ export function initAuthInitAsWorker(worker: Worker, factory: FactorySet, init: 
 
         const view = new View(currentLocation, {
             renewCredential(param, setup) {
-                return initRenewCredential(factory, init, param, setup)
+                return initRenewCredentialComponentSet(factory, init, param, setup)
             },
 
             passwordLogin(param) {
@@ -860,29 +833,6 @@ type WorkerEvent =
     | Readonly<{ type: "passwordField-validate"; componentID: number; handlerID: number }>
     | Readonly<{ type: "error"; err: string }>
 
-function initRenewCredential(
-    factory: FactorySet,
-    init: InitSet,
-    param: RenewCredentialParam,
-    setup: Setup<RenewCredentialComponent>
-) {
-    const actions = {
-        renew: factory.credential.renew(),
-        setContinuousRenew: factory.credential.setContinuousRenew(),
-        secureScriptPath: factory.application.secureScriptPath(),
-    }
-
-    const renewCredential = init.renewCredential(actions, param)
-    setup(renewCredential)
-
-    return {
-        renewCredential,
-    }
-}
-
-interface Setup<T> {
-    (component: T): void
-}
 interface Post<T> {
     (state: T): void
 }
@@ -891,9 +841,6 @@ interface Factory<T> {
 }
 interface ParameterizedFactory<P, T> {
     (param: P): T
-}
-interface Terminate {
-    (): void
 }
 
 function assertNever(_: never): never {
