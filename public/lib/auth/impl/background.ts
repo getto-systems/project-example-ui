@@ -1,5 +1,8 @@
+import { View } from "./view"
+
 import { AppHrefInit } from "../../href"
 import {
+    AuthInit,
     RenewCredentialComponentSet,
     PasswordLoginComponentSet,
     PasswordResetSessionComponentSet,
@@ -84,13 +87,20 @@ export interface AuthComponentSetInit {
     passwordReset(param: PasswordResetParam): PasswordResetComponentSet
 }
 
-export function initAuthComponentSetInit(factory: FactorySet, init: InitSet): AuthComponentSetInit {
-    return {
-        renewCredential: (param, setup) => initRenewCredential(factory, init, param, setup),
+export function initAuthInitAsBackground(factory: FactorySet, init: InitSet): AuthInit {
+    return (currentLocation) => {
+        return {
+            view: new View(currentLocation, {
+                renewCredential: (param, setup) => initRenewCredential(factory, init, param, setup),
 
-        passwordLogin: (param) => initPasswordLogin(factory, init, param),
-        passwordResetSession: () => initPasswordResetSession(factory, init),
-        passwordReset: (param) => initPasswordReset(factory, init, param),
+                passwordLogin: (param) => initPasswordLogin(factory, init, param),
+                passwordResetSession: () => initPasswordResetSession(factory, init),
+                passwordReset: (param) => initPasswordReset(factory, init, param),
+            }),
+            terminate: () => {
+                // worker とインターフェイスを合わせるために必要
+            },
+        }
     }
 }
 

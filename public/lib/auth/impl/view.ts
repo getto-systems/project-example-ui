@@ -1,9 +1,9 @@
-import { initAuthComponentSetInit, FactorySet, InitSet, AuthComponentSetInit } from "./background"
+import { AuthComponentSetInit } from "./background"
 
 import { packResetToken } from "../../password_reset/adapter"
 import { packPagePathname } from "../../application/adapter"
 
-import { AuthInit, AuthView, AuthState, AuthComponentSet } from "../view"
+import { AuthView, AuthState, AuthComponentSet } from "../view"
 
 import { RenewCredentialComponent } from "../component/renew_credential/component"
 
@@ -34,25 +34,12 @@ function detectPasswordResetToken(currentLocation: Location): ResetToken {
     return packResetToken(url.searchParams.get(SEARCH.passwordResetToken) || "")
 }
 
-export function initAuthInit(factory: FactorySet, init: InitSet): AuthInit {
-    return (currentLocation) => {
-        const components = initAuthComponentSetInit(factory, init)
-        const view = new View(components, currentLocation)
-        return {
-            view,
-            terminate: () => {
-                /* worker とインターフェイスを合わせるために必要 */
-            },
-        }
-    }
-}
-
-class View implements AuthView {
+export class View implements AuthView {
     listener: Post<AuthState>[] = []
 
     components: AuthComponentSet
 
-    constructor(components: AuthComponentSetInit, currentLocation: Location) {
+    constructor(currentLocation: Location, components: AuthComponentSetInit) {
         this.components = {
             renewCredential: () =>
                 components.renewCredential(
@@ -97,8 +84,11 @@ class View implements AuthView {
         this.listener.forEach((post) => post(state))
     }
 
-    load() {
+    load(): void {
         this.post({ type: "renew-credential" })
+    }
+    error(err: string): void {
+        this.post({ type: "error", err })
     }
 }
 

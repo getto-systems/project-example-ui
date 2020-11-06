@@ -1,5 +1,8 @@
+import { View } from "./view"
+
 import { AppHrefInit } from "../../href"
 import {
+    AuthInit,
     RenewCredentialComponentSet,
     PasswordLoginComponentSet,
     PasswordResetSessionComponentSet,
@@ -57,6 +60,11 @@ import { Password } from "../../password/data"
 import { PasswordFieldEvent } from "../../password/field/data"
 import { Content } from "../../field/data"
 
+export type AuthResource = Readonly<{
+    components: AuthComponentSetInit
+    terminate: Terminate
+}>
+
 export interface AuthComponentSetInit {
     renewCredential(
         param: RenewCredentialParam,
@@ -67,11 +75,6 @@ export interface AuthComponentSetInit {
     passwordResetSession(): PasswordResetSessionComponentSet
     passwordReset(param: PasswordResetParam): PasswordResetComponentSet
 }
-
-export type AuthResource = Readonly<{
-    components: AuthComponentSetInit
-    terminate: Terminate
-}>
 
 export type FactorySet = Readonly<{
     application: {
@@ -129,7 +132,7 @@ class PasswordLoginProxy {
         this.fields = fields
     }
 
-    init(param: PasswordLoginParam, action: Post<PasswordLoginRequest>): PasswordLoginProxyComponentSet {
+    init(action: Post<PasswordLoginRequest>): PasswordLoginProxyComponentSet {
         const componentID = this.componentID.generate()
 
         const loginIDField = this.fields.loginIDField.init(componentID)
@@ -226,7 +229,7 @@ class PasswordResetProxy {
         this.fields = fields
     }
 
-    init(param: PasswordResetParam, action: Post<PasswordResetRequest>): PasswordResetProxyComponentSet {
+    init(action: Post<PasswordResetRequest>): PasswordResetProxyComponentSet {
         const componentID = this.componentID.generate()
 
         const loginIDField = this.fields.loginIDField.init(componentID)
@@ -340,154 +343,147 @@ function initHandlerSet(): HandlerSet {
     }
 }
 
-export function initAuthComponentSetInit(
-    initWorker: Factory<Worker>,
-    factory: FactorySet,
-    init: InitSet,
-    error: Post<string>
-): AuthResource {
-    // TODO const worker = new Worker("./auth.worker.js")
-    const worker = initWorker()
+export function initAuthInitAsWorker(worker: Worker, factory: FactorySet, init: InitSet): AuthInit {
+    return (currentLocation) => {
+        const componentID = new IDGenerator()
 
-    const componentID = new IDGenerator()
+        const handler = initHandlerSet()
 
-    const handler = initHandlerSet()
+        const loginIDField = new LoginIDFieldComponentMap(() =>
+            init.field.loginID({
+                loginID: factory.field.loginID(),
+            })
+        )
+        const passwordField = new PasswordFieldComponentMap(() =>
+            init.field.password({
+                password: factory.field.password(),
+            })
+        )
 
-    const loginIDField = new LoginIDFieldComponentMap(() =>
-        init.field.loginID({
-            loginID: factory.field.loginID(),
+        const passwordLogin = new PasswordLoginProxy(componentID, handler, {
+            loginIDField,
+            passwordField,
         })
-    )
-    const passwordField = new PasswordFieldComponentMap(() =>
-        init.field.password({
-            password: factory.field.password(),
+        const passwordResetSession = new PasswordResetSessionProxy(componentID, handler, {
+            loginIDField,
         })
-    )
+        const passwordReset = new PasswordResetProxy(componentID, handler, {
+            loginIDField,
+            passwordField,
+        })
 
-    const passwordLogin = new PasswordLoginProxy(componentID, handler, {
-        loginIDField,
-        passwordField,
-    })
-    const passwordResetSession = new PasswordResetSessionProxy(componentID, handler, {
-        loginIDField,
-    })
-    const passwordReset = new PasswordResetProxy(componentID, handler, {
-        loginIDField,
-        passwordField,
-    })
+        const store = new StoreActionMap(() => factory.credential.store())
 
-    const store = new StoreActionMap(() => factory.credential.store())
+        const view = new View(currentLocation, {
+            renewCredential(param, setup) {
+                return initRenewCredential(factory, init, param, setup)
+            },
 
-    worker.addEventListener("message", (event: MessageEvent<WorkerEvent>) => {
-        try {
-            const data = event.data
-            switch (data.type) {
-                case "credential-store-init":
-                    store.init(data.actionID)
-                    break
+            passwordLogin(param) {
+                const { componentID, components } = passwordLogin.init((request) => {
+                    postWorkerRequest({ type: "passwordLogin-action", componentID, request })
+                })
+                postWorkerRequest({ type: "passwordLogin-init", componentID, param })
+                return {
+                    href: init.href(),
+                    ...components,
+                }
+            },
+            passwordResetSession: () => {
+                const { componentID, components } = passwordResetSession.init((request) => {
+                    postWorkerRequest({ type: "passwordResetSession-action", componentID, request })
+                })
+                postWorkerRequest({ type: "passwordResetSession-init", componentID })
+                return {
+                    href: init.href(),
+                    ...components,
+                }
+            },
+            passwordReset: (param) => {
+                const { componentID, components } = passwordReset.init((request) => {
+                    postWorkerRequest({ type: "passwordReset-action", componentID, request })
+                })
+                postWorkerRequest({ type: "passwordReset-init", componentID, param })
+                return {
+                    href: init.href(),
+                    ...components,
+                }
+            },
+        })
 
-                case "credential-store-action":
-                    store.action(data.actionID, data.authCredential, (event) => {
-                        postWorkerRequest({
-                            type: "credential-store-post",
-                            actionID: data.actionID,
-                            handlerID: data.handlerID,
-                            event,
+        worker.addEventListener("message", (event: MessageEvent<WorkerEvent>) => {
+            try {
+                const data = event.data
+                switch (data.type) {
+                    case "credential-store-init":
+                        store.init(data.actionID)
+                        break
+
+                    case "credential-store-action":
+                        store.action(data.actionID, data.authCredential, (event) => {
+                            postWorkerRequest({
+                                type: "credential-store-post",
+                                actionID: data.actionID,
+                                handlerID: data.handlerID,
+                                event,
+                            })
                         })
-                    })
-                    break
+                        break
 
-                case "passwordLogin-post":
-                    handler.passwordLogin.resolve(data)
-                    break
+                    case "passwordLogin-post":
+                        handler.passwordLogin.resolve(data)
+                        break
 
-                case "passwordResetSession-post":
-                    handler.passwordResetSession.resolve(data)
-                    break
+                    case "passwordResetSession-post":
+                        handler.passwordResetSession.resolve(data)
+                        break
 
-                case "passwordReset-post":
-                    handler.passwordReset.resolve(data)
-                    break
+                    case "passwordReset-post":
+                        handler.passwordReset.resolve(data)
+                        break
 
-                case "loginIDField-validate":
-                    loginIDField.validate(data.componentID, (event) => {
-                        postWorkerRequest({
-                            type: "loginIDField-content",
-                            componentID: data.componentID,
-                            handlerID: data.handlerID,
-                            content: event.content,
+                    case "loginIDField-validate":
+                        loginIDField.validate(data.componentID, (event) => {
+                            postWorkerRequest({
+                                type: "loginIDField-content",
+                                componentID: data.componentID,
+                                handlerID: data.handlerID,
+                                content: event.content,
+                            })
                         })
-                    })
-                    break
+                        break
 
-                case "passwordField-validate":
-                    passwordField.validate(data.componentID, (event) => {
-                        postWorkerRequest({
-                            type: "passwordField-content",
-                            componentID: data.componentID,
-                            handlerID: data.handlerID,
-                            content: event.content,
+                    case "passwordField-validate":
+                        passwordField.validate(data.componentID, (event) => {
+                            postWorkerRequest({
+                                type: "passwordField-content",
+                                componentID: data.componentID,
+                                handlerID: data.handlerID,
+                                content: event.content,
+                            })
                         })
-                    })
-                    break
+                        break
 
-                case "error":
-                    error(data.err)
-                    break
+                    case "error":
+                        view.error(data.err)
+                        break
 
-                default:
-                    assertNever(data)
-                    break
+                    default:
+                        assertNever(data)
+                }
+            } catch (err) {
+                view.error(`${err}`)
             }
-        } catch (err) {
-            error(`${err}`)
+        })
+
+        return {
+            view,
+            terminate: () => worker.terminate(),
         }
-    })
 
-    const components: AuthComponentSetInit = {
-        renewCredential(param, setup) {
-            return initRenewCredential(factory, init, param, setup)
-        },
-
-        passwordLogin(param) {
-            const { componentID, components } = passwordLogin.init(param, (request) => {
-                postWorkerRequest({ type: "passwordLogin-action", componentID, request })
-            })
-            postWorkerRequest({ type: "passwordLogin-init", componentID, param })
-            return {
-                href: init.href(),
-                ...components,
-            }
-        },
-        passwordResetSession: () => {
-            const { componentID, components } = passwordResetSession.init((request) => {
-                postWorkerRequest({ type: "passwordResetSession-action", componentID, request })
-            })
-            postWorkerRequest({ type: "passwordResetSession-init", componentID })
-            return {
-                href: init.href(),
-                ...components,
-            }
-        },
-        passwordReset: (param) => {
-            const { componentID, components } = passwordReset.init(param, (request) => {
-                postWorkerRequest({ type: "passwordReset-action", componentID, request })
-            })
-            postWorkerRequest({ type: "passwordReset-init", componentID, param })
-            return {
-                href: init.href(),
-                ...components,
-            }
-        },
-    }
-
-    return {
-        components,
-        terminate: () => worker.terminate(),
-    }
-
-    function postWorkerRequest(request: WorkerRequest) {
-        worker.postMessage(request)
+        function postWorkerRequest(request: WorkerRequest) {
+            worker.postMessage(request)
+        }
     }
 }
 
@@ -525,7 +521,7 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
     const passwordReset = new PasswordResetComponentMap(resolver, postWorkerEvent)
 
     const actionID = new IDGenerator()
-    const storeAction = new StoreActionProxy(actionID, resolver, postWorkerEvent)
+    const storeAction = new StoreActionProxy(actionID, resolver.credential.store, postWorkerEvent)
 
     const proxy = {
         credential: {
@@ -546,12 +542,7 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
                     break
 
                 case "passwordResetSession-init":
-                    passwordResetSession.init(
-                        factory,
-                        proxy,
-                        init.passwordResetSession,
-                        data.componentID
-                    )
+                    passwordResetSession.init(factory, init.passwordResetSession, data.componentID)
                     break
 
                 case "passwordResetSession-action":
@@ -580,7 +571,6 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
 
                 default:
                     assertNever(data)
-                    break
             }
         } catch (err) {
             postWorkerEvent({ type: "error", err: `${err}` })
@@ -731,12 +721,7 @@ class PasswordResetSessionComponentMap {
         this.post = post
     }
 
-    init(
-        factory: WorkerFactory,
-        proxy: ProxyFactory,
-        init: PasswordResetSessionInit,
-        componentID: number
-    ): void {
+    init(factory: WorkerFactory, init: PasswordResetSessionInit, componentID: number): void {
         const actions = {
             startSession: factory.passwordReset.startSession({
                 loginID: collectLoginID(componentID, this.resolver.field.loginID, this.post),
@@ -807,10 +792,10 @@ class PasswordResetComponentMap {
 
 class StoreActionProxy {
     actionID: IDGenerator
-    resolver: ResolverSet
+    resolver: Resolver<StoreEvent>
     post: Post<WorkerEvent>
 
-    constructor(actionID: IDGenerator, resolver: ResolverSet, post: Post<WorkerEvent>) {
+    constructor(actionID: IDGenerator, resolver: Resolver<StoreEvent>, post: Post<WorkerEvent>) {
         this.actionID = actionID
         this.resolver = resolver
         this.post = post
@@ -824,7 +809,7 @@ class StoreActionProxy {
             this.post({
                 type: "credential-store-action",
                 actionID: id,
-                handlerID: this.resolver.credential.store.register(postStoreEvent),
+                handlerID: this.resolver.register(postStoreEvent),
                 authCredential,
             })
         }
