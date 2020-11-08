@@ -3,11 +3,11 @@ import { initAuthClient } from "../z_external/auth_client/auth_client"
 
 import { env } from "../y_static/env"
 
+import { newAppHref } from "./href"
 import { TimeConfig, newTimeConfig, newHostConfig } from "./auth/config"
 
-import { newAppHref } from "./href"
-
-import { initAuthInit } from "../auth/impl/core"
+import { initAuthInitAsBackground } from "../auth/impl/background"
+import { initAuthInitAsWorker, initAuthWorker } from "../auth/impl/worker"
 
 import { initRenewCredential } from "../auth/component/renew_credential/impl"
 import { initPasswordLogin } from "../auth/component/password_login/impl"
@@ -45,7 +45,7 @@ import { AuthInit, AuthInitWorker } from "../auth/view"
 import { LoginFieldCollector } from "../password_login/action"
 import { StartSessionFieldCollector, ResetFieldCollector } from "../password_reset/action"
 
-export function newAuthInit(credentialStorage: Storage): AuthInit {
+export function newAuthInitAsBackground(credentialStorage: Storage): AuthInit {
     const config = {
         time: newTimeConfig(),
     }
@@ -78,19 +78,16 @@ export function newAuthInit(credentialStorage: Storage): AuthInit {
         },
     }
 
-    return initAuthInit(factory, init)
+    return initAuthInitAsBackground(factory, init)
 }
-export function newAuthInitWorker(): AuthInitWorker {
-    /*
+export function newAuthInitAsWorker(credentialStorage: Storage): AuthInit {
     const config = {
         time: newTimeConfig(),
     }
 
     const factory = {
         application: newApplicationFactory(),
-
-        passwordLogin: newPasswordLoginFactory(config.time),
-        passwordReset: newPasswordResetFactory(config.time),
+        credential: newCredentialFactory(config.time, credentialStorage),
 
         field: {
             loginID: () => initLoginIDFieldAction(),
@@ -99,19 +96,40 @@ export function newAuthInitWorker(): AuthInitWorker {
     }
 
     const init = {
-        passwordLogin: initPasswordLogin,
-        passwordResetSession: initPasswordResetSession,
-        passwordReset: initPasswordReset,
+        href: newAppHref,
+
+        renewCredential: initRenewCredential,
 
         field: {
             loginID: initLoginIDField,
             password: initPasswordField,
-        }
+        },
     }
-     */
 
-    return (_worker) => {
-        //initAuthWorker(factory, init, worker)
+    const worker = new Worker("./auth.worker.js")
+
+    return initAuthInitAsWorker(worker, factory, init)
+}
+export function newAuthInitWorker(): AuthInitWorker {
+    return (worker) => {
+        const config = {
+            time: newTimeConfig(),
+        }
+
+        const factory = {
+            application: newApplicationFactory(),
+
+            passwordLogin: newPasswordLoginFactory(config.time),
+            passwordReset: newPasswordResetFactory(config.time),
+        }
+
+        const init = {
+            passwordLogin: initPasswordLogin,
+            passwordResetSession: initPasswordResetSession,
+            passwordReset: initPasswordReset,
+        }
+
+        return initAuthWorker(factory, init, worker)
     }
 }
 
