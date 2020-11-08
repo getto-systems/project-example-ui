@@ -96,7 +96,7 @@ class ComponentProxyMap<F, M, R> {
     initFactory(componentID: number): F {
         const proxy = this.factory()
         this.components[componentID] = proxy
-        return proxy.init(this.post(componentID))
+        return proxy.initFactory(this.post(componentID))
     }
     handleResponse(componentID: number, response: R): void {
         if (this.components[componentID]) {
@@ -106,12 +106,12 @@ class ComponentProxyMap<F, M, R> {
         }
     }
 }
-interface ComponentProxy<F, M, R> {
-    init(post: Post<M>): F
-    handleResponse(response: R): void
-}
 interface PostProxyMessage<M> {
-    (componentID: number): { (message: M): void }
+    (componentID: number): Post<M>
+}
+interface ComponentProxy<F, M, R> {
+    initFactory(post: Post<M>): F
+    handleResponse(response: R): void
 }
 
 interface PasswordLoginComponentFactory {
@@ -136,7 +136,7 @@ class PasswordLoginComponentProxyMap extends ComponentProxyMap<
 class PasswordLoginComponentProxy {
     listener: Post<PasswordLoginState>[] = []
 
-    init(post: Post<PasswordLoginComponentProxyMessage>): PasswordLoginComponentFactory {
+    initFactory(post: Post<PasswordLoginComponentProxyMessage>): PasswordLoginComponentFactory {
         return (param) => {
             post({ type: "init", param })
             return {
@@ -179,7 +179,9 @@ class PasswordResetSessionComponentProxyMap extends ComponentProxyMap<
 class PasswordResetSessionComponentProxy {
     listener: Post<PasswordResetSessionState>[] = []
 
-    init(post: Post<PasswordResetSessionComponentProxyMessage>): PasswordResetSessionComponentFactory {
+    initFactory(
+        post: Post<PasswordResetSessionComponentProxyMessage>
+    ): PasswordResetSessionComponentFactory {
         return () => {
             post({ type: "init" })
             return {
@@ -219,7 +221,7 @@ class PasswordResetComponentProxyMap extends ComponentProxyMap<
 class PasswordResetComponentProxy {
     listener: Post<PasswordResetState>[] = []
 
-    init(post: Post<PasswordResetComponentProxyMessage>): PasswordResetComponentFactory {
+    initFactory(post: Post<PasswordResetComponentProxyMessage>): PasswordResetComponentFactory {
         return (param) => {
             post({ type: "init", param })
             return {
