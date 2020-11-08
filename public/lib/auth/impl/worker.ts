@@ -1,4 +1,4 @@
-import { View } from "./view"
+import { View, AuthComponentSetInit } from "./view"
 import {
     initRenewCredentialComponentSet,
     initLoginIDFieldComponent,
@@ -85,10 +85,10 @@ export type InitSet = Readonly<{
 class ComponentProxyMap<F, M, R> {
     components: Record<number, ComponentProxy<F, M, R>> = []
 
-    post: Post<M>
+    post: PostProxyMessage<M>
     factory: Factory<ComponentProxy<F, M, R>>
 
-    constructor(post: Post<M>, factory: Factory<ComponentProxy<F, M, R>>) {
+    constructor(post: PostProxyMessage<M>, factory: Factory<ComponentProxy<F, M, R>>) {
         this.post = post
         this.factory = factory
     }
@@ -96,7 +96,7 @@ class ComponentProxyMap<F, M, R> {
     initFactory(componentID: number): F {
         const proxy = this.factory()
         this.components[componentID] = proxy
-        return proxy.init(this.post, componentID)
+        return proxy.init(this.post(componentID))
     }
     handleResponse(componentID: number, response: R): void {
         if (this.components[componentID]) {
@@ -107,8 +107,11 @@ class ComponentProxyMap<F, M, R> {
     }
 }
 interface ComponentProxy<F, M, R> {
-    init(post: Post<M>, componentID: number): F
+    init(post: Post<M>): F
     handleResponse(response: R): void
+}
+interface PostProxyMessage<M> {
+    (componentID: number): { (message: M): void }
 }
 
 interface PasswordLoginComponentFactory {
@@ -116,8 +119,8 @@ interface PasswordLoginComponentFactory {
 }
 
 type PasswordLoginComponentProxyMessage =
-    | Readonly<{ componentID: number; type: "init"; param: PasswordLoginParam }>
-    | Readonly<{ componentID: number; type: "action"; request: PasswordLoginRequest }>
+    | Readonly<{ type: "init"; param: PasswordLoginParam }>
+    | Readonly<{ type: "action"; request: PasswordLoginRequest }>
 
 type PasswordLoginComponentProxyResponse = Readonly<{ type: "post"; state: PasswordLoginState }>
 
@@ -126,22 +129,19 @@ class PasswordLoginComponentProxyMap extends ComponentProxyMap<
     PasswordLoginComponentProxyMessage,
     PasswordLoginComponentProxyResponse
 > {
-    constructor(post: Post<PasswordLoginComponentProxyMessage>) {
+    constructor(post: PostProxyMessage<PasswordLoginComponentProxyMessage>) {
         super(post, () => new PasswordLoginComponentProxy())
     }
 }
 class PasswordLoginComponentProxy {
     listener: Post<PasswordLoginState>[] = []
 
-    init(
-        post: Post<PasswordLoginComponentProxyMessage>,
-        componentID: number
-    ): PasswordLoginComponentFactory {
+    init(post: Post<PasswordLoginComponentProxyMessage>): PasswordLoginComponentFactory {
         return (param) => {
-            post({ componentID, type: "init", param })
+            post({ type: "init", param })
             return {
                 action: (request) => {
-                    post({ componentID, type: "action", request })
+                    post({ type: "action", request })
                 },
                 onStateChange: (post) => {
                     this.listener.push(post)
@@ -159,8 +159,8 @@ interface PasswordResetSessionComponentFactory {
 }
 
 type PasswordResetSessionComponentProxyMessage =
-    | Readonly<{ componentID: number; type: "init" }>
-    | Readonly<{ componentID: number; type: "action"; request: PasswordResetSessionRequest }>
+    | Readonly<{ type: "init" }>
+    | Readonly<{ type: "action"; request: PasswordResetSessionRequest }>
 
 type PasswordResetSessionComponentProxyResponse = Readonly<{
     type: "post"
@@ -172,22 +172,19 @@ class PasswordResetSessionComponentProxyMap extends ComponentProxyMap<
     PasswordResetSessionComponentProxyMessage,
     PasswordResetSessionComponentProxyResponse
 > {
-    constructor(post: Post<PasswordResetSessionComponentProxyMessage>) {
+    constructor(post: PostProxyMessage<PasswordResetSessionComponentProxyMessage>) {
         super(post, () => new PasswordResetSessionComponentProxy())
     }
 }
 class PasswordResetSessionComponentProxy {
     listener: Post<PasswordResetSessionState>[] = []
 
-    init(
-        post: Post<PasswordResetSessionComponentProxyMessage>,
-        componentID: number
-    ): PasswordResetSessionComponentFactory {
+    init(post: Post<PasswordResetSessionComponentProxyMessage>): PasswordResetSessionComponentFactory {
         return () => {
-            post({ componentID, type: "init" })
+            post({ type: "init" })
             return {
                 action: (request) => {
-                    post({ componentID, type: "action", request })
+                    post({ type: "action", request })
                 },
                 onStateChange: (post) => {
                     this.listener.push(post)
@@ -205,8 +202,8 @@ interface PasswordResetComponentFactory {
 }
 
 type PasswordResetComponentProxyMessage =
-    | Readonly<{ componentID: number; type: "init"; param: PasswordResetParam }>
-    | Readonly<{ componentID: number; type: "action"; request: PasswordResetRequest }>
+    | Readonly<{ type: "init"; param: PasswordResetParam }>
+    | Readonly<{ type: "action"; request: PasswordResetRequest }>
 
 type PasswordResetComponentProxyResponse = Readonly<{ type: "post"; state: PasswordResetState }>
 
@@ -215,22 +212,19 @@ class PasswordResetComponentProxyMap extends ComponentProxyMap<
     PasswordResetComponentProxyMessage,
     PasswordResetComponentProxyResponse
 > {
-    constructor(post: Post<PasswordResetComponentProxyMessage>) {
+    constructor(post: PostProxyMessage<PasswordResetComponentProxyMessage>) {
         super(post, () => new PasswordResetComponentProxy())
     }
 }
 class PasswordResetComponentProxy {
     listener: Post<PasswordResetState>[] = []
 
-    init(
-        post: Post<PasswordResetComponentProxyMessage>,
-        componentID: number
-    ): PasswordResetComponentFactory {
+    init(post: Post<PasswordResetComponentProxyMessage>): PasswordResetComponentFactory {
         return (param) => {
-            post({ componentID, type: "init", param })
+            post({ type: "init", param })
             return {
                 action: (request) => {
-                    post({ componentID, type: "action", request })
+                    post({ type: "action", request })
                 },
                 onStateChange: (post) => {
                     this.listener.push(post)
@@ -278,20 +272,7 @@ class PasswordFieldComponentMap extends ComponentMap<PasswordFieldComponent> {
     }
 }
 
-class StoreActionMap {
-    map: Record<number, StoreAction> = []
-
-    factory: Factory<StoreAction>
-
-    constructor(factory: Factory<StoreAction>) {
-        this.factory = factory
-    }
-
-    init(actionID: number): StoreAction {
-        const action = this.factory()
-        this.map[actionID] = action
-        return action
-    }
+class StoreActionMap extends ComponentMap<StoreAction> {
     action(actionID: number, authCredential: AuthCredential, post: Post<StoreEvent>): void {
         if (this.map[actionID]) {
             this.map[actionID](authCredential, post)
@@ -301,144 +282,186 @@ class StoreActionMap {
 
 export function initAuthInitAsWorker(worker: Worker, factory: FactorySet, init: InitSet): AuthInit {
     return (currentLocation) => {
-        const componentIDGenerator = new IDGenerator()
+        const map = initAuthComponentMap(factory, init, postWorkerRequest)
+        const view = new View(currentLocation, initAuthComponentSetInit(factory, init, map))
+        const handleError = (err: string) => {
+            view.error(err)
+        }
 
-        const passwordLoginMap = new PasswordLoginComponentProxyMap((message) => {
-            postWorkerRequest({
-                type: "passwordLogin",
-                componentID: message.componentID,
-                message,
-            })
-        })
-        const passwordResetSessionMap = new PasswordResetSessionComponentProxyMap((message) => {
-            postWorkerRequest({
-                type: "passwordResetSession",
-                componentID: message.componentID,
-                message,
-            })
-        })
-        const passwordResetMap = new PasswordResetComponentProxyMap((message) => {
-            postWorkerRequest({
-                type: "passwordReset",
-                componentID: message.componentID,
-                message,
-            })
-        })
-
-        const loginIDFieldMap = new LoginIDFieldComponentMap(() =>
-            initLoginIDFieldComponent(factory, init)
-        )
-        const passwordFieldMap = new PasswordFieldComponentMap(() =>
-            initPasswordFieldComponent(factory, init)
-        )
-
-        const store = new StoreActionMap(() => factory.credential.store())
-
-        const view = new View(currentLocation, {
-            renewCredential(param, setup) {
-                return initRenewCredentialComponentSet(factory, init, param, setup)
-            },
-
-            passwordLogin(param) {
-                const componentID = componentIDGenerator.generate()
-                return {
-                    href: init.href(),
-                    passwordLogin: passwordLoginMap.initFactory(componentID)(param),
-                    loginIDField: loginIDFieldMap.init(componentID),
-                    passwordField: passwordFieldMap.init(componentID),
-                }
-            },
-            passwordResetSession() {
-                const componentID = componentIDGenerator.generate()
-                return {
-                    href: init.href(),
-                    passwordResetSession: passwordResetSessionMap.initFactory(componentID)(),
-                    loginIDField: loginIDFieldMap.init(componentID),
-                }
-            },
-            passwordReset: (param) => {
-                const componentID = componentIDGenerator.generate()
-                return {
-                    href: init.href(),
-                    passwordReset: passwordResetMap.initFactory(componentID)(param),
-                    loginIDField: loginIDFieldMap.init(componentID),
-                    passwordField: passwordFieldMap.init(componentID),
-                }
-            },
-        })
-
-        worker.addEventListener("message", (event: MessageEvent<WorkerEvent>) => {
-            try {
-                const data = event.data
-                switch (data.type) {
-                    case "credential-store-init":
-                        store.init(data.actionID)
-                        break
-
-                    case "credential-store-action":
-                        store.action(data.actionID, data.authCredential, (event) => {
-                            postWorkerRequest({
-                                type: "credential-store-post",
-                                actionID: data.actionID,
-                                handlerID: data.handlerID,
-                                event,
-                            })
-                        })
-                        break
-
-                    case "passwordLogin":
-                        passwordLoginMap.handleResponse(data.componentID, data.response)
-                        break
-
-                    case "passwordResetSession":
-                        passwordResetSessionMap.handleResponse(data.componentID, data.response)
-                        break
-
-                    case "passwordReset":
-                        passwordResetMap.handleResponse(data.componentID, data.response)
-                        break
-
-                    case "loginIDField-validate":
-                        loginIDFieldMap.validate(data.componentID, (event) => {
-                            postWorkerRequest({
-                                type: "loginIDField-content",
-                                componentID: data.componentID,
-                                handlerID: data.handlerID,
-                                content: event.content,
-                            })
-                        })
-                        break
-
-                    case "passwordField-validate":
-                        passwordFieldMap.validate(data.componentID, (event) => {
-                            postWorkerRequest({
-                                type: "passwordField-content",
-                                componentID: data.componentID,
-                                handlerID: data.handlerID,
-                                content: event.content,
-                            })
-                        })
-                        break
-
-                    case "error":
-                        view.error(data.err)
-                        break
-
-                    default:
-                        assertNever(data)
-                }
-            } catch (err) {
-                view.error(`${err}`)
-            }
-        })
+        worker.addEventListener("message", initHandleWorkerEvent(map, postWorkerRequest, handleError))
 
         return {
             view,
-            terminate: () => worker.terminate(),
+            terminate,
         }
 
         function postWorkerRequest(request: WorkerRequest) {
             worker.postMessage(request)
+        }
+        function terminate() {
+            worker.terminate()
+        }
+    }
+}
+type AuthComponentMap = Readonly<{
+    components: Readonly<{
+        passwordLogin: PasswordLoginComponentProxyMap
+        passwordResetSession: PasswordResetSessionComponentProxyMap
+        passwordReset: PasswordResetComponentProxyMap
+
+        fields: Readonly<{
+            loginIDField: LoginIDFieldComponentMap
+            passwordField: PasswordFieldComponentMap
+        }>
+    }>
+    actions: Readonly<{
+        credential: Readonly<{
+            store: StoreActionMap
+        }>
+    }>
+}>
+function initAuthComponentMap(
+    factory: FactorySet,
+    init: InitSet,
+    postWorkerRequest: Post<WorkerRequest>
+): AuthComponentMap {
+    return {
+        components: {
+            passwordLogin: new PasswordLoginComponentProxyMap((componentID) => (message) => {
+                postWorkerRequest({ type: "passwordLogin", componentID, message })
+            }),
+            passwordResetSession: new PasswordResetSessionComponentProxyMap(
+                (componentID) => (message) => {
+                    postWorkerRequest({ type: "passwordResetSession", componentID, message })
+                }
+            ),
+            passwordReset: new PasswordResetComponentProxyMap((componentID) => (message) => {
+                postWorkerRequest({ type: "passwordReset", componentID, message })
+            }),
+
+            fields: {
+                loginIDField: new LoginIDFieldComponentMap(() =>
+                    initLoginIDFieldComponent(factory, init)
+                ),
+                passwordField: new PasswordFieldComponentMap(() =>
+                    initPasswordFieldComponent(factory, init)
+                ),
+            },
+        },
+        actions: {
+            credential: {
+                store: new StoreActionMap(() => factory.credential.store()),
+            },
+        },
+    }
+}
+function initAuthComponentSetInit(
+    factory: FactorySet,
+    init: InitSet,
+    map: AuthComponentMap
+): AuthComponentSetInit {
+    const componentIDGenerator = new IDGenerator()
+
+    return {
+        renewCredential(param, setup) {
+            return initRenewCredentialComponentSet(factory, init, param, setup)
+        },
+
+        passwordLogin(param) {
+            const componentID = componentIDGenerator.generate()
+            return {
+                href: init.href(),
+                passwordLogin: map.components.passwordLogin.initFactory(componentID)(param),
+                loginIDField: map.components.fields.loginIDField.init(componentID),
+                passwordField: map.components.fields.passwordField.init(componentID),
+            }
+        },
+        passwordResetSession() {
+            const componentID = componentIDGenerator.generate()
+            return {
+                href: init.href(),
+                passwordResetSession: map.components.passwordResetSession.initFactory(componentID)(),
+                loginIDField: map.components.fields.loginIDField.init(componentID),
+            }
+        },
+        passwordReset: (param) => {
+            const componentID = componentIDGenerator.generate()
+            return {
+                href: init.href(),
+                passwordReset: map.components.passwordReset.initFactory(componentID)(param),
+                loginIDField: map.components.fields.loginIDField.init(componentID),
+                passwordField: map.components.fields.passwordField.init(componentID),
+            }
+        },
+    }
+}
+function initHandleWorkerEvent(
+    map: AuthComponentMap,
+    postWorkerRequest: Post<WorkerRequest>,
+    handleError: Post<string>
+): { (event: MessageEvent<WorkerEvent>): void } {
+    return (event) => {
+        try {
+            const data = event.data
+            switch (data.type) {
+                case "passwordLogin":
+                    map.components.passwordLogin.handleResponse(data.componentID, data.response)
+                    break
+
+                case "passwordResetSession":
+                    map.components.passwordResetSession.handleResponse(data.componentID, data.response)
+                    break
+
+                case "passwordReset":
+                    map.components.passwordReset.handleResponse(data.componentID, data.response)
+                    break
+
+                case "credential-store-init":
+                    map.actions.credential.store.init(data.actionID)
+                    break
+
+                case "credential-store-action":
+                    map.actions.credential.store.action(data.actionID, data.authCredential, (event) => {
+                        postWorkerRequest({
+                            type: "credential-store-post",
+                            actionID: data.actionID,
+                            handlerID: data.handlerID,
+                            event,
+                        })
+                    })
+                    break
+
+                case "loginIDField-validate":
+                    map.components.fields.loginIDField.validate(data.componentID, (event) => {
+                        postWorkerRequest({
+                            type: "loginIDField-content",
+                            componentID: data.componentID,
+                            handlerID: data.handlerID,
+                            content: event.content,
+                        })
+                    })
+                    break
+
+                case "passwordField-validate":
+                    map.components.fields.passwordField.validate(data.componentID, (event) => {
+                        postWorkerRequest({
+                            type: "passwordField-content",
+                            componentID: data.componentID,
+                            handlerID: data.handlerID,
+                            content: event.content,
+                        })
+                    })
+                    break
+
+                case "error":
+                    handleError(data.err)
+                    break
+
+                default:
+                    assertNever(data)
+            }
+        } catch (err) {
+            handleError(`${err}`)
         }
     }
 }
