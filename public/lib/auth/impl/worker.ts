@@ -409,10 +409,10 @@ function initAuthComponentMap(
                 loginIDField: new LoginIDFieldComponentMap(
                     (componentID, handlerID) => (response) => {
                         postWorkerRequest({
-                            type: "loginIDField-content",
+                            type: "loginIDField",
                             componentID,
                             handlerID,
-                            content: response.content,
+                            response,
                         })
                     },
                     () => initLoginIDFieldComponent(factory, init)
@@ -420,10 +420,10 @@ function initAuthComponentMap(
                 passwordField: new PasswordFieldComponentMap(
                     (componentID, handlerID) => (response) => {
                         postWorkerRequest({
-                            type: "passwordField-content",
+                            type: "passwordField",
                             componentID,
                             handlerID,
-                            content: response.content,
+                            response,
                         })
                     },
                     () => initPasswordFieldComponent(factory, init)
@@ -513,16 +513,20 @@ function initHandleWorkerEvent(
                     })
                     break
 
-                case "loginIDField-validate":
-                    map.components.fields.loginIDField.handleRequest(data.componentID, data.handlerID, {
-                        type: "validate",
-                    })
+                case "loginIDField":
+                    map.components.fields.loginIDField.handleRequest(
+                        data.componentID,
+                        data.handlerID,
+                        data.request
+                    )
                     break
 
-                case "passwordField-validate":
-                    map.components.fields.passwordField.handleRequest(data.componentID, data.handlerID, {
-                        type: "validate",
-                    })
+                case "passwordField":
+                    map.components.fields.passwordField.handleRequest(
+                        data.componentID,
+                        data.handlerID,
+                        data.request
+                    )
                     break
 
                 case "error":
@@ -639,12 +643,20 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
                     }
                     break
 
-                case "loginIDField-content":
-                    resolver.field.loginID.resolve(data.handlerID, data.content)
+                case "loginIDField":
+                    switch (data.response.type) {
+                        case "content":
+                            resolver.field.loginID.resolve(data.handlerID, data.response.content)
+                            break
+                    }
                     break
 
-                case "passwordField-content":
-                    resolver.field.password.resolve(data.handlerID, data.content)
+                case "passwordField":
+                    switch (data.response.type) {
+                        case "content":
+                            resolver.field.password.resolve(data.handlerID, data.response.content)
+                            break
+                    }
                     break
 
                 case "credential-store-post":
@@ -727,9 +739,10 @@ function collectLoginID(
     return () =>
         new Promise((resolve) => {
             post({
-                type: "loginIDField-validate",
+                type: "loginIDField",
                 componentID,
                 handlerID: resolver.register(resolve),
+                request: { type: "validate" },
             })
         })
 }
@@ -741,9 +754,10 @@ function collectPassword(
     return () =>
         new Promise((resolve) => {
             post({
-                type: "passwordField-validate",
+                type: "passwordField",
                 componentID,
                 handlerID: resolver.register(resolve),
+                request: { type: "validate" },
             })
         })
 }
@@ -915,16 +929,16 @@ type WorkerRequest =
           message: PasswordResetComponentProxyMessage
       }>
     | Readonly<{
-          type: "loginIDField-content"
+          type: "loginIDField"
           componentID: number
           handlerID: number
-          content: Content<LoginID>
+          response: LoginIDFieldComponentResponse
       }>
     | Readonly<{
-          type: "passwordField-content"
+          type: "passwordField"
           componentID: number
           handlerID: number
-          content: Content<Password>
+          response: PasswordFieldComponentResponse
       }>
     | Readonly<{ type: "credential-store-post"; actionID: number; handlerID: number; event: StoreEvent }>
 
@@ -951,8 +965,18 @@ type WorkerEvent =
           componentID: number
           response: PasswordResetComponentProxyResponse
       }>
-    | Readonly<{ type: "loginIDField-validate"; componentID: number; handlerID: number }>
-    | Readonly<{ type: "passwordField-validate"; componentID: number; handlerID: number }>
+    | Readonly<{
+          type: "loginIDField"
+          componentID: number
+          handlerID: number
+          request: LoginIDFieldComponentRequest
+      }>
+    | Readonly<{
+          type: "passwordField"
+          componentID: number
+          handlerID: number
+          request: PasswordFieldComponentRequest
+      }>
     | Readonly<{ type: "error"; err: string }>
 
 interface Post<T> {
