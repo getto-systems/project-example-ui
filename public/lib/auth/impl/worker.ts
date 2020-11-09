@@ -237,17 +237,17 @@ class PasswordResetComponentProxy {
     }
 }
 
-class FieldComponentMap<C, R, M> {
+class ComponentMap<C, R, M> {
     map: Record<number, C> = []
 
-    post: PostFieldResponse<M>
+    post: PostComponentResponse<M>
     factory: Factory<C>
-    handler: FieldComponentResponseHandler<C, R, M>
+    handler: ComponentRequestHandler<C, R, M>
 
     constructor(
-        post: PostFieldResponse<M>,
+        post: PostComponentResponse<M>,
         factory: Factory<C>,
-        handler: FieldComponentResponseHandler<C, R, M>
+        handler: ComponentRequestHandler<C, R, M>
     ) {
         this.post = post
         this.factory = factory
@@ -267,23 +267,23 @@ class FieldComponentMap<C, R, M> {
         }
     }
 }
-interface PostFieldResponse<M> {
+interface PostComponentResponse<M> {
     (componentID: number, handlerID: number): Post<M>
 }
-interface FieldComponentResponseHandler<C, R, M> {
+interface ComponentRequestHandler<C, R, M> {
     (component: C, post: Post<M>, request: R): void
 }
 
 type LoginIDFieldComponentRequest = Readonly<{ type: "validate" }>
 type LoginIDFieldComponentResponse = Readonly<{ type: "content"; content: Content<LoginID> }>
 
-class LoginIDFieldComponentMap extends FieldComponentMap<
+class LoginIDFieldComponentMap extends ComponentMap<
     LoginIDFieldComponent,
     LoginIDFieldComponentRequest,
     LoginIDFieldComponentResponse
 > {
     constructor(
-        post: PostFieldResponse<LoginIDFieldComponentResponse>,
+        post: PostComponentResponse<LoginIDFieldComponentResponse>,
         factory: Factory<LoginIDFieldComponent>
     ) {
         super(post, factory, (component, post, request) => {
@@ -301,13 +301,13 @@ class LoginIDFieldComponentMap extends FieldComponentMap<
 type PasswordFieldComponentRequest = Readonly<{ type: "validate" }>
 type PasswordFieldComponentResponse = Readonly<{ type: "content"; content: Content<Password> }>
 
-class PasswordFieldComponentMap extends FieldComponentMap<
+class PasswordFieldComponentMap extends ComponentMap<
     PasswordFieldComponent,
     PasswordFieldComponentRequest,
     PasswordFieldComponentResponse
 > {
     constructor(
-        post: PostFieldResponse<PasswordFieldComponentResponse>,
+        post: PostComponentResponse<PasswordFieldComponentResponse>,
         factory: Factory<PasswordFieldComponent>
     ) {
         super(post, factory, (component, post, request) => {
@@ -322,39 +322,26 @@ class PasswordFieldComponentMap extends FieldComponentMap<
     }
 }
 
-class ComponentMap<C> {
-    map: Record<number, C> = []
+type StoreActionRequest = AuthCredential
+type StoreActionResponse = StoreEvent
 
-    factory: Factory<C>
-
-    constructor(factory: Factory<C>) {
-        this.factory = factory
-    }
-
-    init(componentID: number): C {
-        const component = this.factory()
-        this.map[componentID] = component
-        return component
-    }
-}
-
-class StoreActionMap extends ComponentMap<StoreAction> {
-    action(actionID: number, authCredential: AuthCredential, post: Post<StoreEvent>): void {
-        if (this.map[actionID]) {
-            this.map[actionID](authCredential, post)
-        }
+class StoreActionMap extends ComponentMap<StoreAction, StoreActionRequest, StoreActionResponse> {
+    constructor(post: PostComponentResponse<StoreActionResponse>, factory: Factory<StoreAction>) {
+        super(post, factory, (component, post, authCredential) => {
+            component(authCredential, post)
+        })
     }
 }
 
 export function initAuthInitAsWorker(worker: Worker, factory: FactorySet, init: InitSet): AuthInit {
     return (currentLocation) => {
-        const map = initAuthComponentMap(factory, init, postWorkerRequest)
+        const map = initAuthComponentMapSet(factory, init, postWorkerRequest)
         const view = new View(currentLocation, initAuthComponentSetInit(factory, init, map))
         const handleError = (err: string) => {
             view.error(err)
         }
 
-        worker.addEventListener("message", initHandleWorkerEvent(map, postWorkerRequest, handleError))
+        worker.addEventListener("message", initHandleWorkerEvent(map, handleError))
 
         return {
             view,
@@ -369,7 +356,7 @@ export function initAuthInitAsWorker(worker: Worker, factory: FactorySet, init: 
         }
     }
 }
-type AuthComponentMap = Readonly<{
+type AuthComponentMapSet = Readonly<{
     components: Readonly<{
         passwordLogin: PasswordLoginComponentProxyMap
         passwordResetSession: PasswordResetSessionComponentProxyMap
@@ -386,11 +373,11 @@ type AuthComponentMap = Readonly<{
         }>
     }>
 }>
-function initAuthComponentMap(
+function initAuthComponentMapSet(
     factory: FactorySet,
     init: InitSet,
     postWorkerRequest: Post<WorkerRequest>
-): AuthComponentMap {
+): AuthComponentMapSet {
     return {
         components: {
             passwordLogin: new PasswordLoginComponentProxyMap((componentID) => (message) => {
@@ -432,7 +419,17 @@ function initAuthComponentMap(
         },
         actions: {
             credential: {
-                store: new StoreActionMap(() => factory.credential.store()),
+                store: new StoreActionMap(
+                    (actionID, handlerID) => (response) => {
+                        postWorkerRequest({
+                            type: "credential-store",
+                            actionID,
+                            handlerID,
+                            response,
+                        })
+                    },
+                    () => factory.credential.store()
+                ),
             },
         },
     }
@@ -440,7 +437,7 @@ function initAuthComponentMap(
 function initAuthComponentSetInit(
     factory: FactorySet,
     init: InitSet,
-    map: AuthComponentMap
+    map: AuthComponentMapSet
 ): AuthComponentSetInit {
     const componentIDGenerator = new IDGenerator()
 
@@ -478,8 +475,7 @@ function initAuthComponentSetInit(
     }
 }
 function initHandleWorkerEvent(
-    map: AuthComponentMap,
-    postWorkerRequest: Post<WorkerRequest>,
+    map: AuthComponentMapSet,
     handleError: Post<string>
 ): Post<MessageEvent<WorkerEvent>> {
     return (event) => {
@@ -502,15 +498,12 @@ function initHandleWorkerEvent(
                     map.actions.credential.store.init(data.actionID)
                     break
 
-                case "credential-store-action":
-                    map.actions.credential.store.action(data.actionID, data.authCredential, (event) => {
-                        postWorkerRequest({
-                            type: "credential-store-post",
-                            actionID: data.actionID,
-                            handlerID: data.handlerID,
-                            event,
-                        })
-                    })
+                case "credential-store":
+                    map.actions.credential.store.handleRequest(
+                        data.actionID,
+                        data.handlerID,
+                        data.request
+                    )
                     break
 
                 case "loginIDField":
@@ -659,8 +652,8 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
                     }
                     break
 
-                case "credential-store-post":
-                    resolver.credential.store.resolve(data.handlerID, data.event)
+                case "credential-store":
+                    resolver.credential.store.resolve(data.handlerID, data.response)
                     break
 
                 default:
@@ -903,10 +896,10 @@ class StoreActionProxy {
 
         return (authCredential: AuthCredential, postStoreEvent: Post<StoreEvent>) => {
             this.post({
-                type: "credential-store-action",
+                type: "credential-store",
                 actionID: id,
                 handlerID: this.resolver.register(postStoreEvent),
-                authCredential,
+                request: authCredential,
             })
         }
     }
@@ -940,15 +933,20 @@ type WorkerRequest =
           handlerID: number
           response: PasswordFieldComponentResponse
       }>
-    | Readonly<{ type: "credential-store-post"; actionID: number; handlerID: number; event: StoreEvent }>
+    | Readonly<{
+          type: "credential-store"
+          actionID: number
+          handlerID: number
+          response: StoreActionResponse
+      }>
 
 type WorkerEvent =
     | Readonly<{ type: "credential-store-init"; actionID: number }>
     | Readonly<{
-          type: "credential-store-action"
+          type: "credential-store"
           actionID: number
           handlerID: number
-          authCredential: AuthCredential
+          request: StoreActionRequest
       }>
     | Readonly<{
           type: "passwordLogin"
