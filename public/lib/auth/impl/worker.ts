@@ -50,9 +50,7 @@ import { PasswordFieldAction } from "../../password/field/action"
 
 import { AuthCredential, StoreEvent } from "../../credential/data"
 import { LoginID } from "../../login_id/data"
-import { LoginIDFieldEvent } from "../../login_id/field/data"
 import { Password } from "../../password/data"
-import { PasswordFieldEvent } from "../../password/field/data"
 import { Content } from "../../field/data"
 
 export type FactorySet = Readonly<{
@@ -239,6 +237,91 @@ class PasswordResetComponentProxy {
     }
 }
 
+class FieldComponentMap<C, R, M> {
+    map: Record<number, C> = []
+
+    post: PostFieldResponse<M>
+    factory: Factory<C>
+    handler: FieldComponentResponseHandler<C, R, M>
+
+    constructor(
+        post: PostFieldResponse<M>,
+        factory: Factory<C>,
+        handler: FieldComponentResponseHandler<C, R, M>
+    ) {
+        this.post = post
+        this.factory = factory
+        this.handler = handler
+    }
+
+    init(componentID: number): C {
+        const component = this.factory()
+        this.map[componentID] = component
+        return component
+    }
+    handleRequest(componentID: number, handlerID: number, request: R) {
+        if (this.map[componentID]) {
+            this.handler(this.map[componentID], this.post(componentID, handlerID), request)
+        } else {
+            throw new Error("component is not initialized")
+        }
+    }
+}
+interface PostFieldResponse<M> {
+    (componentID: number, handlerID: number): Post<M>
+}
+interface FieldComponentResponseHandler<C, R, M> {
+    (component: C, post: Post<M>, request: R): void
+}
+
+type LoginIDFieldComponentRequest = Readonly<{ type: "validate" }>
+type LoginIDFieldComponentResponse = Readonly<{ type: "content"; content: Content<LoginID> }>
+
+class LoginIDFieldComponentMap extends FieldComponentMap<
+    LoginIDFieldComponent,
+    LoginIDFieldComponentRequest,
+    LoginIDFieldComponentResponse
+> {
+    constructor(
+        post: PostFieldResponse<LoginIDFieldComponentResponse>,
+        factory: Factory<LoginIDFieldComponent>
+    ) {
+        super(post, factory, (component, post, request) => {
+            switch (request.type) {
+                case "validate":
+                    component.validate((event) => {
+                        post({ type: "content", content: event.content })
+                    })
+                    break
+            }
+        })
+    }
+}
+
+type PasswordFieldComponentRequest = Readonly<{ type: "validate" }>
+type PasswordFieldComponentResponse = Readonly<{ type: "content"; content: Content<Password> }>
+
+class PasswordFieldComponentMap extends FieldComponentMap<
+    PasswordFieldComponent,
+    PasswordFieldComponentRequest,
+    PasswordFieldComponentResponse
+> {
+    constructor(
+        post: PostFieldResponse<PasswordFieldComponentResponse>,
+        factory: Factory<PasswordFieldComponent>
+    ) {
+        super(post, factory, (component, post, request) => {
+            switch (request.type) {
+                case "validate":
+                    component.validate((event) => {
+                        post({ type: "content", content: event.content })
+                    })
+                    break
+            }
+        })
+    }
+}
+
 class ComponentMap<C> {
     map: Record<number, C> = []
 
@@ -252,25 +335,6 @@ class ComponentMap<C> {
         const component = this.factory()
         this.map[componentID] = component
         return component
-    }
-}
-
-class LoginIDFieldComponentMap extends ComponentMap<LoginIDFieldComponent> {
-    validate(componentID: number, post: Post<LoginIDFieldEvent>): void {
-        if (this.map[componentID]) {
-            this.map[componentID].validate(post)
-        } else {
-            throw new Error("component is not initialized")
-        }
-    }
-}
-class PasswordFieldComponentMap extends ComponentMap<PasswordFieldComponent> {
-    validate(componentID: number, post: Post<PasswordFieldEvent>): void {
-        if (this.map[componentID]) {
-            this.map[componentID].validate(post)
-        } else {
-            throw new Error("component is not initialized")
-        }
     }
 }
 
@@ -342,11 +406,27 @@ function initAuthComponentMap(
             }),
 
             fields: {
-                loginIDField: new LoginIDFieldComponentMap(() =>
-                    initLoginIDFieldComponent(factory, init)
+                loginIDField: new LoginIDFieldComponentMap(
+                    (componentID, handlerID) => (response) => {
+                        postWorkerRequest({
+                            type: "loginIDField-content",
+                            componentID,
+                            handlerID,
+                            content: response.content,
+                        })
+                    },
+                    () => initLoginIDFieldComponent(factory, init)
                 ),
-                passwordField: new PasswordFieldComponentMap(() =>
-                    initPasswordFieldComponent(factory, init)
+                passwordField: new PasswordFieldComponentMap(
+                    (componentID, handlerID) => (response) => {
+                        postWorkerRequest({
+                            type: "passwordField-content",
+                            componentID,
+                            handlerID,
+                            content: response.content,
+                        })
+                    },
+                    () => initPasswordFieldComponent(factory, init)
                 ),
             },
         },
@@ -401,7 +481,7 @@ function initHandleWorkerEvent(
     map: AuthComponentMap,
     postWorkerRequest: Post<WorkerRequest>,
     handleError: Post<string>
-): { (event: MessageEvent<WorkerEvent>): void } {
+): Post<MessageEvent<WorkerEvent>> {
     return (event) => {
         try {
             const data = event.data
@@ -434,24 +514,14 @@ function initHandleWorkerEvent(
                     break
 
                 case "loginIDField-validate":
-                    map.components.fields.loginIDField.validate(data.componentID, (event) => {
-                        postWorkerRequest({
-                            type: "loginIDField-content",
-                            componentID: data.componentID,
-                            handlerID: data.handlerID,
-                            content: event.content,
-                        })
+                    map.components.fields.loginIDField.handleRequest(data.componentID, data.handlerID, {
+                        type: "validate",
                     })
                     break
 
                 case "passwordField-validate":
-                    map.components.fields.passwordField.validate(data.componentID, (event) => {
-                        postWorkerRequest({
-                            type: "passwordField-content",
-                            componentID: data.componentID,
-                            handlerID: data.handlerID,
-                            content: event.content,
-                        })
+                    map.components.fields.passwordField.handleRequest(data.componentID, data.handlerID, {
+                        type: "validate",
                     })
                     break
 
