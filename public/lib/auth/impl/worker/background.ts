@@ -1,42 +1,42 @@
 import {
     ForegroundMessage,
     BackgroundMessage,
-} from "./worker/data"
+} from "./data"
 
 import {
     PasswordLoginInit,
     PasswordLoginComponent,
     PasswordLoginParam,
     PasswordLoginRequest,
-} from "../component/password_login/component"
+} from "../../component/password_login/component"
 import {
     PasswordResetSessionInit,
     PasswordResetSessionComponent,
     PasswordResetSessionRequest,
-} from "../component/password_reset_session/component"
+} from "../../component/password_reset_session/component"
 import {
     PasswordResetInit,
     PasswordResetParam,
     PasswordResetComponent,
     PasswordResetRequest,
-} from "../component/password_reset/component"
+} from "../../component/password_reset/component"
 
-import { SecureScriptPathAction } from "../../application/action"
-import { StoreAction } from "../../credential/action"
+import { SecureScriptPathAction } from "../../../application/action"
+import { StoreAction } from "../../../credential/action"
 
-import { LoginAction, LoginFieldCollector } from "../../password_login/action"
+import { LoginAction, LoginFieldCollector } from "../../../password_login/action"
 import {
     StartSessionAction,
     StartSessionFieldCollector,
     PollingStatusAction,
     ResetAction,
     ResetFieldCollector,
-} from "../../password_reset/action"
+} from "../../../password_reset/action"
 
-import { AuthCredential, StoreEvent } from "../../credential/data"
-import { LoginID } from "../../login_id/data"
-import { Password } from "../../password/data"
-import { Content } from "../../field/data"
+import { AuthCredential, StoreEvent } from "../../../credential/data"
+import { LoginID } from "../../../login_id/data"
+import { Password } from "../../../password/data"
+import { Content } from "../../../field/data"
 
 export type WorkerFactory = Readonly<{
     application: {

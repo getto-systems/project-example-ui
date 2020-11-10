@@ -50,6 +50,7 @@ import { RenewAction, SetContinuousRenewAction, StoreAction } from "../../../cre
 import { LoginIDFieldAction } from "../../../login_id/field/action"
 import { PasswordFieldAction } from "../../../password/field/action"
 
+// TODO factory と init をなんとかする
 export type FactorySet = Readonly<{
     application: {
         secureScriptPath: Factory<SecureScriptPathAction>
