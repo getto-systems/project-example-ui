@@ -5,6 +5,23 @@ import {
     initPasswordFieldComponent,
 } from "./core"
 
+import {
+    ForegroundMessage,
+    BackgroundMessage,
+    PasswordLoginComponentProxyMessage,
+    PasswordLoginComponentProxyResponse,
+    PasswordResetSessionComponentProxyMessage,
+    PasswordResetSessionComponentProxyResponse,
+    PasswordResetComponentProxyMessage,
+    PasswordResetComponentProxyResponse,
+    LoginIDFieldComponentRequest,
+    LoginIDFieldComponentResponse,
+    PasswordFieldComponentRequest,
+    PasswordFieldComponentResponse,
+    StoreActionRequest,
+    StoreActionResponse,
+} from "./worker/data"
+
 import { AppHrefInit } from "../../href"
 import { AuthInit } from "../view"
 
@@ -116,12 +133,6 @@ interface PasswordLoginComponentFactory {
     (param: PasswordLoginParam): PasswordLoginComponent
 }
 
-type PasswordLoginComponentProxyMessage =
-    | Readonly<{ type: "init"; param: PasswordLoginParam }>
-    | Readonly<{ type: "action"; request: PasswordLoginRequest }>
-
-type PasswordLoginComponentProxyResponse = Readonly<{ type: "post"; state: PasswordLoginState }>
-
 class PasswordLoginComponentProxyMap extends ComponentProxyMap<
     PasswordLoginComponentFactory,
     PasswordLoginComponentProxyMessage,
@@ -155,15 +166,6 @@ class PasswordLoginComponentProxy {
 interface PasswordResetSessionComponentFactory {
     (): PasswordResetSessionComponent
 }
-
-type PasswordResetSessionComponentProxyMessage =
-    | Readonly<{ type: "init" }>
-    | Readonly<{ type: "action"; request: PasswordResetSessionRequest }>
-
-type PasswordResetSessionComponentProxyResponse = Readonly<{
-    type: "post"
-    state: PasswordResetSessionState
-}>
 
 class PasswordResetSessionComponentProxyMap extends ComponentProxyMap<
     PasswordResetSessionComponentFactory,
@@ -200,12 +202,6 @@ class PasswordResetSessionComponentProxy {
 interface PasswordResetComponentFactory {
     (param: PasswordResetParam): PasswordResetComponent
 }
-
-type PasswordResetComponentProxyMessage =
-    | Readonly<{ type: "init"; param: PasswordResetParam }>
-    | Readonly<{ type: "action"; request: PasswordResetRequest }>
-
-type PasswordResetComponentProxyResponse = Readonly<{ type: "post"; state: PasswordResetState }>
 
 class PasswordResetComponentProxyMap extends ComponentProxyMap<
     PasswordResetComponentFactory,
@@ -274,9 +270,6 @@ interface ComponentRequestHandler<C, R, M> {
     (component: C, post: Post<M>, request: R): void
 }
 
-type LoginIDFieldComponentRequest = Readonly<{ type: "validate" }>
-type LoginIDFieldComponentResponse = Readonly<{ type: "content"; content: Content<LoginID> }>
-
 class LoginIDFieldComponentMap extends ComponentMap<
     LoginIDFieldComponent,
     LoginIDFieldComponentRequest,
@@ -297,9 +290,6 @@ class LoginIDFieldComponentMap extends ComponentMap<
         })
     }
 }
-
-type PasswordFieldComponentRequest = Readonly<{ type: "validate" }>
-type PasswordFieldComponentResponse = Readonly<{ type: "content"; content: Content<Password> }>
 
 class PasswordFieldComponentMap extends ComponentMap<
     PasswordFieldComponent,
@@ -322,9 +312,6 @@ class PasswordFieldComponentMap extends ComponentMap<
     }
 }
 
-type StoreActionRequest = AuthCredential
-type StoreActionResponse = StoreEvent
-
 class StoreActionMap extends ComponentMap<StoreAction, StoreActionRequest, StoreActionResponse> {
     constructor(factory: Factory<StoreAction>, post: PostComponentResponse<StoreActionResponse>) {
         super(factory, post, (component, post, authCredential) => {
@@ -335,21 +322,21 @@ class StoreActionMap extends ComponentMap<StoreAction, StoreActionRequest, Store
 
 export function initAuthInitAsWorker(worker: Worker, factory: FactorySet, init: InitSet): AuthInit {
     return (currentLocation) => {
-        const map = initAuthComponentMapSet(factory, init, postWorkerRequest)
+        const map = initAuthComponentMapSet(factory, init, postForegroundMessage)
         const view = new View(currentLocation, initAuthComponentSetInit(factory, init, map))
         const handleError = (err: string) => {
             view.error(err)
         }
 
-        worker.addEventListener("message", initWorkerEventHandler(map, handleError))
+        worker.addEventListener("message", initBackgroundMessageHandler(map, handleError))
 
         return {
             view,
             terminate,
         }
 
-        function postWorkerRequest(request: WorkerRequest) {
-            worker.postMessage(request)
+        function postForegroundMessage(message: ForegroundMessage) {
+            worker.postMessage(message)
         }
         function terminate() {
             worker.terminate()
@@ -376,7 +363,7 @@ type AuthComponentMapSet = Readonly<{
 function initAuthComponentMapSet(
     factory: FactorySet,
     init: InitSet,
-    post: Post<WorkerRequest>
+    post: Post<ForegroundMessage>
 ): AuthComponentMapSet {
     return {
         components: {
@@ -474,10 +461,10 @@ function initAuthComponentSetInit(
         },
     }
 }
-function initWorkerEventHandler(
+function initBackgroundMessageHandler(
     map: AuthComponentMapSet,
     handleError: Post<string>
-): Post<MessageEvent<WorkerEvent>> {
+): Post<MessageEvent<BackgroundMessage>> {
     return (event) => {
         try {
             const data = event.data
@@ -564,12 +551,12 @@ export type WorkerInit = Readonly<{
 export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker: Worker): void {
     const resolver = initResolverSet()
 
-    const passwordLogin = new PasswordLoginComponentMap(resolver, postWorkerEvent)
-    const passwordResetSession = new PasswordResetSessionComponentMap(resolver, postWorkerEvent)
-    const passwordReset = new PasswordResetComponentMap(resolver, postWorkerEvent)
+    const passwordLogin = new PasswordLoginComponentMap(resolver, postBackgroundMessage)
+    const passwordResetSession = new PasswordResetSessionComponentMap(resolver, postBackgroundMessage)
+    const passwordReset = new PasswordResetComponentMap(resolver, postBackgroundMessage)
 
     const actionID = new IDGenerator()
-    const storeAction = new StoreActionProxy(actionID, resolver.credential.store, postWorkerEvent)
+    const storeAction = new StoreActionProxy(actionID, resolver.credential.store, postBackgroundMessage)
 
     const proxy = {
         credential: {
@@ -577,7 +564,7 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
         },
     }
 
-    worker.addEventListener("message", (event: MessageEvent<WorkerRequest>) => {
+    worker.addEventListener("message", (event: MessageEvent<ForegroundMessage>) => {
         try {
             const data = event.data
             switch (data.type) {
@@ -660,12 +647,12 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
                     assertNever(data)
             }
         } catch (err) {
-            postWorkerEvent({ type: "error", err: `${err}` })
+            postBackgroundMessage({ type: "error", err: `${err}` })
         }
     })
 
-    function postWorkerEvent(event: WorkerEvent) {
-        worker.postMessage(event)
+    function postBackgroundMessage(message: BackgroundMessage) {
+        worker.postMessage(message)
     }
 }
 
@@ -727,7 +714,7 @@ function initResolverSet(): ResolverSet {
 function collectLoginID(
     componentID: number,
     resolver: Resolver<Content<LoginID>>,
-    post: Post<WorkerEvent>
+    post: Post<BackgroundMessage>
 ): { (): Promise<Content<LoginID>> } {
     return () =>
         new Promise((resolve) => {
@@ -742,7 +729,7 @@ function collectLoginID(
 function collectPassword(
     componentID: number,
     resolver: Resolver<Content<Password>>,
-    post: Post<WorkerEvent>
+    post: Post<BackgroundMessage>
 ): { (): Promise<Content<Password>> } {
     return () =>
         new Promise((resolve) => {
@@ -759,9 +746,9 @@ class PasswordLoginComponentMap {
     map: Record<number, PasswordLoginComponent> = []
 
     resolver: ResolverSet
-    post: Post<WorkerEvent>
+    post: Post<BackgroundMessage>
 
-    constructor(resolver: ResolverSet, post: Post<WorkerEvent>) {
+    constructor(resolver: ResolverSet, post: Post<BackgroundMessage>) {
         this.resolver = resolver
         this.post = post
     }
@@ -803,9 +790,9 @@ class PasswordResetSessionComponentMap {
     map: Record<number, PasswordResetSessionComponent> = []
 
     resolver: ResolverSet
-    post: Post<WorkerEvent>
+    post: Post<BackgroundMessage>
 
-    constructor(resolver: ResolverSet, post: Post<WorkerEvent>) {
+    constructor(resolver: ResolverSet, post: Post<BackgroundMessage>) {
         this.resolver = resolver
         this.post = post
     }
@@ -839,9 +826,9 @@ class PasswordResetComponentMap {
     map: Record<number, PasswordResetComponent> = []
 
     resolver: ResolverSet
-    post: Post<WorkerEvent>
+    post: Post<BackgroundMessage>
 
-    constructor(resolver: ResolverSet, post: Post<WorkerEvent>) {
+    constructor(resolver: ResolverSet, post: Post<BackgroundMessage>) {
         this.resolver = resolver
         this.post = post
     }
@@ -882,9 +869,9 @@ class PasswordResetComponentMap {
 class StoreActionProxy {
     actionID: IDGenerator
     resolver: Resolver<StoreEvent>
-    post: Post<WorkerEvent>
+    post: Post<BackgroundMessage>
 
-    constructor(actionID: IDGenerator, resolver: Resolver<StoreEvent>, post: Post<WorkerEvent>) {
+    constructor(actionID: IDGenerator, resolver: Resolver<StoreEvent>, post: Post<BackgroundMessage>) {
         this.actionID = actionID
         this.resolver = resolver
         this.post = post
@@ -904,78 +891,6 @@ class StoreActionProxy {
         }
     }
 }
-
-type WorkerRequest =
-    | Readonly<{
-          type: "passwordLogin"
-          componentID: number
-          message: PasswordLoginComponentProxyMessage
-      }>
-    | Readonly<{
-          type: "passwordResetSession"
-          componentID: number
-          message: PasswordResetSessionComponentProxyMessage
-      }>
-    | Readonly<{
-          type: "passwordReset"
-          componentID: number
-          message: PasswordResetComponentProxyMessage
-      }>
-    | Readonly<{
-          type: "loginIDField"
-          componentID: number
-          handlerID: number
-          response: LoginIDFieldComponentResponse
-      }>
-    | Readonly<{
-          type: "passwordField"
-          componentID: number
-          handlerID: number
-          response: PasswordFieldComponentResponse
-      }>
-    | Readonly<{
-          type: "credential-store"
-          actionID: number
-          handlerID: number
-          response: StoreActionResponse
-      }>
-
-type WorkerEvent =
-    | Readonly<{ type: "credential-store-init"; actionID: number }>
-    | Readonly<{
-          type: "credential-store"
-          actionID: number
-          handlerID: number
-          request: StoreActionRequest
-      }>
-    | Readonly<{
-          type: "passwordLogin"
-          componentID: number
-          response: PasswordLoginComponentProxyResponse
-      }>
-    | Readonly<{
-          type: "passwordResetSession"
-          componentID: number
-          response: PasswordResetSessionComponentProxyResponse
-      }>
-    | Readonly<{
-          type: "passwordReset"
-          componentID: number
-          response: PasswordResetComponentProxyResponse
-      }>
-    | Readonly<{
-          type: "loginIDField"
-          componentID: number
-          handlerID: number
-          request: LoginIDFieldComponentRequest
-      }>
-    | Readonly<{
-          type: "passwordField"
-          componentID: number
-          handlerID: number
-          request: PasswordFieldComponentRequest
-      }>
-    | Readonly<{ type: "error"; err: string }>
 
 interface Post<T> {
     (state: T): void
