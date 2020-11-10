@@ -6,7 +6,7 @@ import { env } from "../y_static/env"
 import { newAppHref } from "./href"
 import { TimeConfig, newTimeConfig, newHostConfig } from "./auth/config"
 
-import { initAuthInitAsBackground } from "../auth/impl/background"
+import { initAuthInitAsBackground } from "../auth/impl/foreground"
 import { initAuthInitAsWorker } from "../auth/impl/worker/foreground"
 import { initAuthWorker } from "../auth/impl/worker/background"
 
