@@ -8,7 +8,7 @@ import { TimeConfig, newTimeConfig, newHostConfig } from "./auth/config"
 
 import { initAuthInitAsBackground } from "../auth/impl/background"
 import { initAuthInitAsWorker } from "../auth/impl/worker/foreground"
-import { initAuthWorker } from "../auth/impl/worker"
+import { initAuthWorker } from "../auth/impl/worker/background"
 
 import { initRenewCredential } from "../auth/component/renew_credential/impl"
 import { initPasswordLogin } from "../auth/component/password_login/impl"
