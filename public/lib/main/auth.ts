@@ -7,7 +7,8 @@ import { newAppHref } from "./href"
 import { TimeConfig, newTimeConfig, newHostConfig } from "./auth/config"
 
 import { initAuthInitAsBackground } from "../auth/impl/background"
-import { initAuthInitAsWorker, initAuthWorker } from "../auth/impl/worker"
+import { initAuthInitAsWorker } from "../auth/impl/worker/foreground"
+import { initAuthWorker } from "../auth/impl/worker"
 
 import { initRenewCredential } from "../auth/component/renew_credential/impl"
 import { initPasswordLogin } from "../auth/component/password_login/impl"
