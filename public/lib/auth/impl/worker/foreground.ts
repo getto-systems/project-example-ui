@@ -50,34 +50,6 @@ import { RenewAction, SetContinuousRenewAction, StoreAction } from "../../../cre
 import { LoginIDFieldAction } from "../../../login_id/field/action"
 import { PasswordFieldAction } from "../../../password/field/action"
 
-// TODO factory と init をなんとかする
-export type FactorySet = Readonly<{
-    application: {
-        secureScriptPath: Factory<SecureScriptPathAction>
-    }
-    credential: {
-        renew: Factory<RenewAction>
-        setContinuousRenew: Factory<SetContinuousRenewAction>
-        store: Factory<StoreAction>
-    }
-
-    field: {
-        loginID: Factory<LoginIDFieldAction>
-        password: Factory<PasswordFieldAction>
-    }
-}>
-
-export type InitSet = Readonly<{
-    href: AppHrefInit
-
-    renewCredential: RenewCredentialInit
-
-    field: {
-        loginID: LoginIDFieldInit
-        password: PasswordFieldInit
-    }
-}>
-
 class ComponentProxyMap<F, M, R> {
     components: Record<number, ComponentProxy<F, M, R>> = []
 
@@ -300,6 +272,34 @@ class StoreActionMap extends ComponentMap<StoreAction, StoreActionRequest, Store
         })
     }
 }
+
+// TODO factory と init をなんとかする
+export type FactorySet = Readonly<{
+    application: {
+        secureScriptPath: Factory<SecureScriptPathAction>
+    }
+    credential: {
+        renew: Factory<RenewAction>
+        setContinuousRenew: Factory<SetContinuousRenewAction>
+        store: Factory<StoreAction>
+    }
+
+    field: {
+        loginID: Factory<LoginIDFieldAction>
+        password: Factory<PasswordFieldAction>
+    }
+}>
+
+export type InitSet = Readonly<{
+    href: AppHrefInit
+
+    renewCredential: RenewCredentialInit
+
+    field: {
+        loginID: LoginIDFieldInit
+        password: PasswordFieldInit
+    }
+}>
 
 export function initAuthInitAsWorker(worker: Worker, factory: FactorySet, init: InitSet): AuthInit {
     return (currentLocation) => {
