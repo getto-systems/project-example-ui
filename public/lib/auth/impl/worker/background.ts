@@ -231,7 +231,7 @@ function collectLoginID(
     componentID: number,
     resolver: Resolver<Content<LoginID>>,
     post: Post<BackgroundMessage>
-): { (): Promise<Content<LoginID>> } {
+): ContentCollector<LoginID> {
     return () =>
         new Promise((resolve) => {
             post({
@@ -246,7 +246,7 @@ function collectPassword(
     componentID: number,
     resolver: Resolver<Content<Password>>,
     post: Post<BackgroundMessage>
-): { (): Promise<Content<Password>> } {
+): ContentCollector<Password> {
     return () =>
         new Promise((resolve) => {
             post({
@@ -256,6 +256,10 @@ function collectPassword(
                 request: { type: "validate" },
             })
         })
+}
+
+interface ContentCollector<T> {
+    (): Promise<Content<T>>
 }
 
 class PasswordLoginComponentMap {
