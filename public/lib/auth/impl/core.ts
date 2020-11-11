@@ -39,30 +39,31 @@ import { Password } from "../../password/data"
 import { Content } from "../../field/data"
 
 export type RenewCredentialFactorySet = Readonly<{
-    application: {
-        secureScriptPath: Factory<SecureScriptPathAction>
-    }
-    credential: {
-        renew: Factory<RenewAction>
-        setContinuousRenew: Factory<SetContinuousRenewAction>
-    }
-}>
-export type RenewCredentialInitSet = Readonly<{
-    renewCredential: RenewCredentialInit
+    actions: Readonly<{
+        application: Readonly<{
+            secureScriptPath: Factory<SecureScriptPathAction>
+        }>
+        credential: Readonly<{
+            renew: Factory<RenewAction>
+            setContinuousRenew: Factory<SetContinuousRenewAction>
+        }>
+    }>
+    components: Readonly<{
+        renewCredential: RenewCredentialInit
+    }>
 }>
 export function initRenewCredentialComponentSet(
     factory: RenewCredentialFactorySet,
-    init: RenewCredentialInitSet,
     param: RenewCredentialParam,
     setup: Setup<RenewCredentialComponent>
 ): RenewCredentialComponentSet {
     const actions = {
-        renew: factory.credential.renew(),
-        setContinuousRenew: factory.credential.setContinuousRenew(),
-        secureScriptPath: factory.application.secureScriptPath(),
+        renew: factory.actions.credential.renew(),
+        setContinuousRenew: factory.actions.credential.setContinuousRenew(),
+        secureScriptPath: factory.actions.application.secureScriptPath(),
     }
 
-    const renewCredential = init.renewCredential(actions, param)
+    const renewCredential = factory.components.renewCredential(actions, param)
     setup(renewCredential)
 
     return {
@@ -71,181 +72,182 @@ export function initRenewCredentialComponentSet(
 }
 
 export type PasswordLoginFactorySet = Readonly<{
-    application: {
-        secureScriptPath: Factory<SecureScriptPathAction>
-    }
-    credential: {
-        store: Factory<StoreAction>
-    }
-    passwordLogin: {
-        login: ParameterizedFactory<LoginFieldCollector, LoginAction>
-    }
-    field: {
-        loginID: Factory<LoginIDFieldAction>
-        password: Factory<PasswordFieldAction>
-    }
-}>
-export type PasswordLoginInitSet = Readonly<{
-    href: AppHrefInit
+    actions: Readonly<{
+        application: Readonly<{
+            secureScriptPath: Factory<SecureScriptPathAction>
+        }>
+        credential: Readonly<{
+            store: Factory<StoreAction>
+        }>
+        passwordLogin: Readonly<{
+            login: ParameterizedFactory<LoginFieldCollector, LoginAction>
+        }>
+        field: Readonly<{
+            loginID: Factory<LoginIDFieldAction>
+            password: Factory<PasswordFieldAction>
+        }>
+    }>
+    components: Readonly<{
+        href: AppHrefInit
 
-    passwordLogin: PasswordLoginInit
+        passwordLogin: PasswordLoginInit
 
-    field: {
-        loginID: LoginIDFieldInit
-        password: PasswordFieldInit
-    }
+        field: Readonly<{
+            loginID: LoginIDFieldInit
+            password: PasswordFieldInit
+        }>
+    }>
 }>
 export function initPasswordLoginComponentSet(
     factory: PasswordLoginFactorySet,
-    init: PasswordLoginInitSet,
     param: PasswordLoginParam
 ): PasswordLoginComponentSet {
-    const loginIDField = initLoginIDFieldComponent(factory, init)
-    const passwordField = initPasswordFieldComponent(factory, init)
+    const loginIDField = initLoginIDFieldComponent(factory)
+    const passwordField = initPasswordFieldComponent(factory)
 
     const actions = {
-        login: factory.passwordLogin.login({
+        login: factory.actions.passwordLogin.login({
             loginID: () => collectLoginID(loginIDField),
             password: () => collectPassword(passwordField),
         }),
-        store: factory.credential.store(),
-        secureScriptPath: factory.application.secureScriptPath(),
+        store: factory.actions.credential.store(),
+        secureScriptPath: factory.actions.application.secureScriptPath(),
     }
 
     return {
-        href: init.href(),
-        passwordLogin: init.passwordLogin(actions, param),
+        href: factory.components.href(),
+        passwordLogin: factory.components.passwordLogin(actions, param),
         loginIDField,
         passwordField,
     }
 }
 
 export type PasswordResetSessionFactorySet = Readonly<{
-    application: {
-        secureScriptPath: Factory<SecureScriptPathAction>
-    }
-    credential: {
-        store: Factory<StoreAction>
-    }
-    passwordReset: {
-        startSession: ParameterizedFactory<StartSessionFieldCollector, StartSessionAction>
-        pollingStatus: Factory<PollingStatusAction>
-    }
-    field: {
-        loginID: Factory<LoginIDFieldAction>
-    }
-}>
-export type PasswordResetSessionInitSet = Readonly<{
-    href: AppHrefInit
+    actions: Readonly<{
+        application: Readonly<{
+            secureScriptPath: Factory<SecureScriptPathAction>
+        }>
+        credential: Readonly<{
+            store: Factory<StoreAction>
+        }>
+        passwordReset: Readonly<{
+            startSession: ParameterizedFactory<StartSessionFieldCollector, StartSessionAction>
+            pollingStatus: Factory<PollingStatusAction>
+        }>
+        field: Readonly<{
+            loginID: Factory<LoginIDFieldAction>
+        }>
+    }>
+    components: Readonly<{
+        href: AppHrefInit
 
-    passwordResetSession: PasswordResetSessionInit
+        passwordResetSession: PasswordResetSessionInit
 
-    field: {
-        loginID: LoginIDFieldInit
-    }
+        field: Readonly<{
+            loginID: LoginIDFieldInit
+        }>
+    }>
 }>
 export function initPasswordResetSessionComponentSet(
-    factory: PasswordResetSessionFactorySet,
-    init: PasswordResetSessionInitSet
+    factory: PasswordResetSessionFactorySet
 ): PasswordResetSessionComponentSet {
-    const loginIDField = initLoginIDFieldComponent(factory, init)
+    const loginIDField = initLoginIDFieldComponent(factory)
 
     const actions = {
-        startSession: factory.passwordReset.startSession({
+        startSession: factory.actions.passwordReset.startSession({
             loginID: () => collectLoginID(loginIDField),
         }),
-        pollingStatus: factory.passwordReset.pollingStatus(),
+        pollingStatus: factory.actions.passwordReset.pollingStatus(),
     }
 
     return {
-        href: init.href(),
-        passwordResetSession: init.passwordResetSession(actions),
+        href: factory.components.href(),
+        passwordResetSession: factory.components.passwordResetSession(actions),
         loginIDField,
     }
 }
 
 export type PasswordResetFactorySet = Readonly<{
-    application: {
-        secureScriptPath: Factory<SecureScriptPathAction>
-    }
-    credential: {
-        store: Factory<StoreAction>
-    }
-    passwordReset: {
-        reset: ParameterizedFactory<ResetFieldCollector, ResetAction>
-    }
-    field: {
-        loginID: Factory<LoginIDFieldAction>
-        password: Factory<PasswordFieldAction>
-    }
-}>
-export type PasswordResetInitSet = Readonly<{
-    href: AppHrefInit
+    actions: Readonly<{
+        application: Readonly<{
+            secureScriptPath: Factory<SecureScriptPathAction>
+        }>
+        credential: Readonly<{
+            store: Factory<StoreAction>
+        }>
+        passwordReset: Readonly<{
+            reset: ParameterizedFactory<ResetFieldCollector, ResetAction>
+        }>
+        field: Readonly<{
+            loginID: Factory<LoginIDFieldAction>
+            password: Factory<PasswordFieldAction>
+        }>
+    }>
+    components: Readonly<{
+        href: AppHrefInit
 
-    passwordReset: PasswordResetInit
+        passwordReset: PasswordResetInit
 
-    field: {
-        loginID: LoginIDFieldInit
-        password: PasswordFieldInit
-    }
+        field: Readonly<{
+            loginID: LoginIDFieldInit
+            password: PasswordFieldInit
+        }>
+    }>
 }>
 export function initPasswordResetComponentSet(
     factory: PasswordResetFactorySet,
-    init: PasswordResetInitSet,
     param: PasswordResetParam
 ): PasswordResetComponentSet {
-    const loginIDField = initLoginIDFieldComponent(factory, init)
-    const passwordField = initPasswordFieldComponent(factory, init)
+    const loginIDField = initLoginIDFieldComponent(factory)
+    const passwordField = initPasswordFieldComponent(factory)
 
     const actions = {
-        reset: factory.passwordReset.reset({
+        reset: factory.actions.passwordReset.reset({
             loginID: () => collectLoginID(loginIDField),
             password: () => collectPassword(passwordField),
         }),
-        store: factory.credential.store(),
-        secureScriptPath: factory.application.secureScriptPath(),
+        store: factory.actions.credential.store(),
+        secureScriptPath: factory.actions.application.secureScriptPath(),
     }
 
     return {
-        href: init.href(),
-        passwordReset: init.passwordReset(actions, param),
+        href: factory.components.href(),
+        passwordReset: factory.components.passwordReset(actions, param),
         loginIDField,
         passwordField,
     }
 }
 
 export type LoginIDFieldFactorySet = Readonly<{
-    field: {
-        loginID: Factory<LoginIDFieldAction>
-    }
+    actions: Readonly<{
+        field: Readonly<{
+            loginID: Factory<LoginIDFieldAction>
+        }>
+    }>
+    components: Readonly<{
+        field: Readonly<{
+            loginID: LoginIDFieldInit
+        }>
+    }>
 }>
-export type LoginIDFieldInitSet = Readonly<{
-    field: {
-        loginID: LoginIDFieldInit
-    }
-}>
-export function initLoginIDFieldComponent(
-    factory: LoginIDFieldFactorySet,
-    init: LoginIDFieldInitSet
-): LoginIDFieldComponent {
-    return init.field.loginID({ loginID: factory.field.loginID() })
+export function initLoginIDFieldComponent(factory: LoginIDFieldFactorySet): LoginIDFieldComponent {
+    return factory.components.field.loginID({ loginID: factory.actions.field.loginID() })
 }
 
 export type PasswordFieldFactorySet = Readonly<{
-    field: {
-        password: Factory<PasswordFieldAction>
-    }
+    actions: Readonly<{
+        field: Readonly<{
+            password: Factory<PasswordFieldAction>
+        }>
+    }>
+    components: Readonly<{
+        field: Readonly<{
+            password: PasswordFieldInit
+        }>
+    }>
 }>
-export type PasswordFieldInitSet = Readonly<{
-    field: {
-        password: PasswordFieldInit
-    }
-}>
-export function initPasswordFieldComponent(
-    factory: PasswordFieldFactorySet,
-    init: PasswordFieldInitSet
-): PasswordFieldComponent {
-    return init.field.password({ password: factory.field.password() })
+export function initPasswordFieldComponent(factory: PasswordFieldFactorySet): PasswordFieldComponent {
+    return factory.components.field.password({ password: factory.actions.field.password() })
 }
 
 function collectLoginID(loginIDField: LoginIDFieldComponent): Promise<Content<LoginID>> {
