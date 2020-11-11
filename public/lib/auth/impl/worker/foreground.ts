@@ -305,11 +305,14 @@ export function initAuthInitAsWorker(worker: Worker, factory: FactorySet, init: 
     return (currentLocation) => {
         const map = initAuthComponentMapSet(factory, init, postForegroundMessage)
         const view = new View(currentLocation, initAuthComponentSetInit(factory, init, map))
-        const handleError = (err: string) => {
+        const errorHandler = (err: string) => {
             view.error(err)
         }
+        const messageHandler = initBackgroundMessageHandler(map, errorHandler)
 
-        worker.addEventListener("message", initBackgroundMessageHandler(map, handleError))
+        worker.addEventListener("message", (event) => {
+            messageHandler(event.data)
+        })
 
         return {
             view,
@@ -444,61 +447,60 @@ function initAuthComponentSetInit(
 }
 function initBackgroundMessageHandler(
     map: AuthComponentMapSet,
-    handleError: Post<string>
-): Post<MessageEvent<BackgroundMessage>> {
-    return (event) => {
+    errorHandler: Post<string>
+): Post<BackgroundMessage> {
+    return (message) => {
         try {
-            const data = event.data
-            switch (data.type) {
+            switch (message.type) {
                 case "passwordLogin":
-                    map.components.passwordLogin.handleResponse(data.componentID, data.response)
+                    map.components.passwordLogin.handleResponse(message.componentID, message.response)
                     break
 
                 case "passwordResetSession":
-                    map.components.passwordResetSession.handleResponse(data.componentID, data.response)
+                    map.components.passwordResetSession.handleResponse(message.componentID, message.response)
                     break
 
                 case "passwordReset":
-                    map.components.passwordReset.handleResponse(data.componentID, data.response)
+                    map.components.passwordReset.handleResponse(message.componentID, message.response)
                     break
 
                 case "credential-store-init":
-                    map.actions.credential.store.init(data.actionID)
+                    map.actions.credential.store.init(message.actionID)
                     break
 
                 case "credential-store":
                     map.actions.credential.store.handleRequest(
-                        data.actionID,
-                        data.handlerID,
-                        data.request
+                        message.actionID,
+                        message.handlerID,
+                        message.request
                     )
                     break
 
                 case "loginIDField":
                     map.components.fields.loginIDField.handleRequest(
-                        data.componentID,
-                        data.handlerID,
-                        data.request
+                        message.componentID,
+                        message.handlerID,
+                        message.request
                     )
                     break
 
                 case "passwordField":
                     map.components.fields.passwordField.handleRequest(
-                        data.componentID,
-                        data.handlerID,
-                        data.request
+                        message.componentID,
+                        message.handlerID,
+                        message.request
                     )
                     break
 
                 case "error":
-                    handleError(data.err)
+                    errorHandler(message.err)
                     break
 
                 default:
-                    assertNever(data)
+                    assertNever(message)
             }
         } catch (err) {
-            handleError(`${err}`)
+            errorHandler(`${err}`)
         }
     }
 }
