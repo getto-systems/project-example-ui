@@ -54,13 +54,7 @@ export type ForegroundMessage =
       }>
 
 export type BackgroundMessage =
-    | Readonly<{ type: "credential-store-init"; actionID: number }>
-    | Readonly<{
-          type: "credential-store"
-          actionID: number
-          handlerID: number
-          request: StoreActionRequest
-      }>
+    | Readonly<{ type: "credential-store"; actionID: number, message: StoreActionProxyMessage }>
     | Readonly<{
           type: "passwordLogin"
           componentID: number
@@ -119,3 +113,7 @@ export type PasswordFieldComponentResponse = Readonly<{ type: "content"; content
 
 export type StoreActionRequest = AuthCredential
 export type StoreActionResponse = StoreEvent
+
+export type StoreActionProxyMessage =
+    | Readonly<{ type: "init" }>
+    | Readonly<{ type: "action"; handlerID: number; authCredential: AuthCredential }>

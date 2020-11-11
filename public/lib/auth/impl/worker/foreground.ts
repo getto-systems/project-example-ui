@@ -457,23 +457,31 @@ function initBackgroundMessageHandler(
                     break
 
                 case "passwordResetSession":
-                    map.components.passwordResetSession.handleResponse(message.componentID, message.response)
+                    map.components.passwordResetSession.handleResponse(
+                        message.componentID,
+                        message.response
+                    )
                     break
 
                 case "passwordReset":
                     map.components.passwordReset.handleResponse(message.componentID, message.response)
                     break
 
-                case "credential-store-init":
-                    map.actions.credential.store.init(message.actionID)
-                    break
-
                 case "credential-store":
-                    map.actions.credential.store.handleRequest(
-                        message.actionID,
-                        message.handlerID,
-                        message.request
-                    )
+                    switch (message.message.type) {
+                        case "init":
+                            map.actions.credential.store.init(message.actionID)
+                            break
+                        case "action":
+                            map.actions.credential.store.handleRequest(
+                                message.actionID,
+                                message.message.handlerID,
+                                message.message.authCredential
+                            )
+                            break
+                        default:
+                            assertNever(message.message)
+                    }
                     break
 
                 case "loginIDField":
