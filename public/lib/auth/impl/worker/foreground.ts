@@ -51,12 +51,12 @@ import { LoginIDFieldAction } from "../../../login_id/field/action"
 import { PasswordFieldAction } from "../../../password/field/action"
 
 class ComponentProxyMap<F, M, R> {
-    components: Record<number, ComponentProxy<F, M, R>> = []
+    components: Record<number, ComponentProxy<F, M, R>> = {}
 
-    post: PostProxyMessage<M>
+    post: ProxyMessagePost<M>
     factory: Factory<ComponentProxy<F, M, R>>
 
-    constructor(post: PostProxyMessage<M>, factory: Factory<ComponentProxy<F, M, R>>) {
+    constructor(post: ProxyMessagePost<M>, factory: Factory<ComponentProxy<F, M, R>>) {
         this.post = post
         this.factory = factory
     }
@@ -74,7 +74,7 @@ class ComponentProxyMap<F, M, R> {
         }
     }
 }
-interface PostProxyMessage<M> {
+interface ProxyMessagePost<M> {
     (componentID: number): Post<M>
 }
 interface ComponentProxy<F, M, R> {
@@ -91,7 +91,7 @@ class PasswordLoginComponentProxyMap extends ComponentProxyMap<
     PasswordLoginComponentProxyMessage,
     PasswordLoginComponentProxyResponse
 > {
-    constructor(post: PostProxyMessage<PasswordLoginComponentProxyMessage>) {
+    constructor(post: ProxyMessagePost<PasswordLoginComponentProxyMessage>) {
         super(post, () => new PasswordLoginComponentProxy())
     }
 }
@@ -125,7 +125,7 @@ class PasswordResetSessionComponentProxyMap extends ComponentProxyMap<
     PasswordResetSessionComponentProxyMessage,
     PasswordResetSessionComponentProxyResponse
 > {
-    constructor(post: PostProxyMessage<PasswordResetSessionComponentProxyMessage>) {
+    constructor(post: ProxyMessagePost<PasswordResetSessionComponentProxyMessage>) {
         super(post, () => new PasswordResetSessionComponentProxy())
     }
 }
@@ -161,7 +161,7 @@ class PasswordResetComponentProxyMap extends ComponentProxyMap<
     PasswordResetComponentProxyMessage,
     PasswordResetComponentProxyResponse
 > {
-    constructor(post: PostProxyMessage<PasswordResetComponentProxyMessage>) {
+    constructor(post: ProxyMessagePost<PasswordResetComponentProxyMessage>) {
         super(post, () => new PasswordResetComponentProxy())
     }
 }
@@ -187,15 +187,15 @@ class PasswordResetComponentProxy {
 }
 
 class ComponentMap<C, R, M> {
-    map: Record<number, C> = []
+    map: Record<number, C> = {}
 
     factory: Factory<C>
-    post: PostComponentResponse<M>
+    post: ComponentResponsePost<M>
     handler: ComponentRequestHandler<C, R, M>
 
     constructor(
         factory: Factory<C>,
-        post: PostComponentResponse<M>,
+        post: ComponentResponsePost<M>,
         handler: ComponentRequestHandler<C, R, M>
     ) {
         this.factory = factory
@@ -216,7 +216,7 @@ class ComponentMap<C, R, M> {
         }
     }
 }
-interface PostComponentResponse<M> {
+interface ComponentResponsePost<M> {
     (componentID: number, handlerID: number): Post<M>
 }
 interface ComponentRequestHandler<C, R, M> {
@@ -230,7 +230,7 @@ class LoginIDFieldComponentMap extends ComponentMap<
 > {
     constructor(
         factory: Factory<LoginIDFieldComponent>,
-        post: PostComponentResponse<LoginIDFieldComponentResponse>
+        post: ComponentResponsePost<LoginIDFieldComponentResponse>
     ) {
         super(factory, post, (component, post, request) => {
             switch (request.type) {
@@ -251,7 +251,7 @@ class PasswordFieldComponentMap extends ComponentMap<
 > {
     constructor(
         factory: Factory<PasswordFieldComponent>,
-        post: PostComponentResponse<PasswordFieldComponentResponse>
+        post: ComponentResponsePost<PasswordFieldComponentResponse>
     ) {
         super(factory, post, (component, post, request) => {
             switch (request.type) {
@@ -266,7 +266,7 @@ class PasswordFieldComponentMap extends ComponentMap<
 }
 
 class StoreActionMap extends ComponentMap<StoreAction, StoreActionRequest, StoreActionResponse> {
-    constructor(factory: Factory<StoreAction>, post: PostComponentResponse<StoreActionResponse>) {
+    constructor(factory: Factory<StoreAction>, post: ComponentResponsePost<StoreActionResponse>) {
         super(factory, post, (component, post, authCredential) => {
             component(authCredential, post)
         })
