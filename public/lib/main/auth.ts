@@ -52,64 +52,62 @@ export function newAuthInitAsBackground(credentialStorage: Storage): AuthInit {
     }
 
     const factory = {
-        application: newApplicationFactory(),
-        credential: newCredentialFactory(config.time, credentialStorage),
+        actions: {
+            application: newApplicationFactory(),
+            credential: newCredentialFactory(config.time, credentialStorage),
 
-        passwordLogin: newPasswordLoginFactory(config.time),
-        passwordReset: newPasswordResetFactory(config.time),
+            passwordLogin: newPasswordLoginFactory(config.time),
+            passwordReset: newPasswordResetFactory(config.time),
 
-        field: {
-            loginID: () => initLoginIDFieldAction(),
-            password: () => initPasswordFieldAction(),
+            field: {
+                loginID: () => initLoginIDFieldAction(),
+                password: () => initPasswordFieldAction(),
+            },
+        },
+        components: {
+            href: newAppHref,
+
+            renewCredential: initRenewCredential,
+
+            passwordLogin: initPasswordLogin,
+            passwordResetSession: initPasswordResetSession,
+            passwordReset: initPasswordReset,
+
+            field: {
+                loginID: initLoginIDField,
+                password: initPasswordField,
+            },
         },
     }
 
-    const init = {
-        href: newAppHref,
-
-        renewCredential: initRenewCredential,
-
-        passwordLogin: initPasswordLogin,
-        passwordResetSession: initPasswordResetSession,
-        passwordReset: initPasswordReset,
-
-        field: {
-            loginID: initLoginIDField,
-            password: initPasswordField,
-        },
-    }
-
-    return initAuthInitAsBackground(factory, init)
+    return initAuthInitAsBackground(factory)
 }
 export function newAuthInitAsWorker(credentialStorage: Storage): AuthInit {
     const config = {
         time: newTimeConfig(),
     }
 
-    const factory = {
-        application: newApplicationFactory(),
-        credential: newCredentialFactory(config.time, credentialStorage),
+    return initAuthInitAsWorker(new Worker("./auth.worker.js"), {
+        actions: {
+            application: newApplicationFactory(),
+            credential: newCredentialFactory(config.time, credentialStorage),
 
-        field: {
-            loginID: () => initLoginIDFieldAction(),
-            password: () => initPasswordFieldAction(),
+            field: {
+                loginID: () => initLoginIDFieldAction(),
+                password: () => initPasswordFieldAction(),
+            },
         },
-    }
+        components: {
+            href: newAppHref,
 
-    const init = {
-        href: newAppHref,
+            renewCredential: initRenewCredential,
 
-        renewCredential: initRenewCredential,
-
-        field: {
-            loginID: initLoginIDField,
-            password: initPasswordField,
+            field: {
+                loginID: initLoginIDField,
+                password: initPasswordField,
+            },
         },
-    }
-
-    const worker = new Worker("./auth.worker.js")
-
-    return initAuthInitAsWorker(worker, factory, init)
+    })
 }
 export function newAuthInitWorker(): AuthInitWorker {
     return (worker) => {

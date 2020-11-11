@@ -273,38 +273,38 @@ class StoreActionMap extends ComponentMap<StoreAction, StoreActionRequest, Store
     }
 }
 
-// TODO factory と init をなんとかする
 export type FactorySet = Readonly<{
-    application: {
-        secureScriptPath: Factory<SecureScriptPathAction>
-    }
-    credential: {
-        renew: Factory<RenewAction>
-        setContinuousRenew: Factory<SetContinuousRenewAction>
-        store: Factory<StoreAction>
-    }
+    actions: Readonly<{
+        application: Readonly<{
+            secureScriptPath: Factory<SecureScriptPathAction>
+        }>
+        credential: Readonly<{
+            renew: Factory<RenewAction>
+            setContinuousRenew: Factory<SetContinuousRenewAction>
+            store: Factory<StoreAction>
+        }>
 
-    field: {
-        loginID: Factory<LoginIDFieldAction>
-        password: Factory<PasswordFieldAction>
-    }
+        field: Readonly<{
+            loginID: Factory<LoginIDFieldAction>
+            password: Factory<PasswordFieldAction>
+        }>
+    }>
+    components: Readonly<{
+        href: AppHrefInit
+
+        renewCredential: RenewCredentialInit
+
+        field: Readonly<{
+            loginID: LoginIDFieldInit
+            password: PasswordFieldInit
+        }>
+    }>
 }>
 
-export type InitSet = Readonly<{
-    href: AppHrefInit
-
-    renewCredential: RenewCredentialInit
-
-    field: {
-        loginID: LoginIDFieldInit
-        password: PasswordFieldInit
-    }
-}>
-
-export function initAuthInitAsWorker(worker: Worker, factory: FactorySet, init: InitSet): AuthInit {
+export function initAuthInitAsWorker(worker: Worker, factory: FactorySet): AuthInit {
     return (currentLocation) => {
-        const map = initAuthComponentMapSet(factory, init, postForegroundMessage)
-        const view = new View(currentLocation, initAuthComponentSetInit(factory, init, map))
+        const map = initAuthComponentMapSet(factory, postForegroundMessage)
+        const view = new View(currentLocation, initAuthComponentSetInit(factory, map))
         const errorHandler = (err: string) => {
             view.error(err)
         }
@@ -346,7 +346,6 @@ type AuthComponentMapSet = Readonly<{
 }>
 function initAuthComponentMapSet(
     factory: FactorySet,
-    init: InitSet,
     post: Post<ForegroundMessage>
 ): AuthComponentMapSet {
     return {
@@ -365,7 +364,7 @@ function initAuthComponentMapSet(
 
             fields: {
                 loginIDField: new LoginIDFieldComponentMap(
-                    () => initLoginIDFieldComponent(factory, init),
+                    () => initLoginIDFieldComponent(factory),
                     (componentID, handlerID) => (response) => {
                         post({
                             type: "loginIDField",
@@ -376,7 +375,7 @@ function initAuthComponentMapSet(
                     }
                 ),
                 passwordField: new PasswordFieldComponentMap(
-                    () => initPasswordFieldComponent(factory, init),
+                    () => initPasswordFieldComponent(factory),
                     (componentID, handlerID) => (response) => {
                         post({
                             type: "passwordField",
@@ -391,7 +390,7 @@ function initAuthComponentMapSet(
         actions: {
             credential: {
                 store: new StoreActionMap(
-                    () => factory.credential.store(),
+                    () => factory.actions.credential.store(),
                     (actionID, handlerID) => (response) => {
                         post({
                             type: "credential-store",
@@ -407,20 +406,19 @@ function initAuthComponentMapSet(
 }
 function initAuthComponentSetInit(
     factory: FactorySet,
-    init: InitSet,
     map: AuthComponentMapSet
 ): AuthComponentSetInit {
     const componentIDGenerator = new IDGenerator()
 
     return {
         renewCredential(param, setup) {
-            return initRenewCredentialComponentSet(factory, init, param, setup)
+            return initRenewCredentialComponentSet(factory, param, setup)
         },
 
         passwordLogin(param) {
             const componentID = componentIDGenerator.generate()
             return {
-                href: init.href(),
+                href: factory.components.href(),
                 passwordLogin: map.components.passwordLogin.initFactory(componentID)(param),
                 loginIDField: map.components.fields.loginIDField.init(componentID),
                 passwordField: map.components.fields.passwordField.init(componentID),
@@ -429,7 +427,7 @@ function initAuthComponentSetInit(
         passwordResetSession() {
             const componentID = componentIDGenerator.generate()
             return {
-                href: init.href(),
+                href: factory.components.href(),
                 passwordResetSession: map.components.passwordResetSession.initFactory(componentID)(),
                 loginIDField: map.components.fields.loginIDField.init(componentID),
             }
@@ -437,7 +435,7 @@ function initAuthComponentSetInit(
         passwordReset: (param) => {
             const componentID = componentIDGenerator.generate()
             return {
-                href: init.href(),
+                href: factory.components.href(),
                 passwordReset: map.components.passwordReset.initFactory(componentID)(param),
                 loginIDField: map.components.fields.loginIDField.init(componentID),
                 passwordField: map.components.fields.passwordField.init(componentID),
