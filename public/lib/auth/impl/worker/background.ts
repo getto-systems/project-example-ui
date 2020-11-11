@@ -207,6 +207,51 @@ interface CollectHandler<R> {
 class LoginIDCollectorMap extends CollectorMap<LoginID, LoginIDFieldComponentRequest> {}
 class PasswordCollectorMap extends CollectorMap<Password, PasswordFieldComponentRequest> {}
 
+class ActionProxyMap<M, R> {
+    handler: Record<number, Post<R>> = {}
+
+    idGenerator: IDGenerator
+
+    post: ActionPost<M>
+
+    constructor(post: ActionPost<M>) {
+        this.idGenerator = new IDGenerator()
+        this.post = post
+    }
+
+    register(handlerID: number, post: Post<R>): void {
+        this.handler[handlerID] = post
+    }
+    resolve(handlerID: number, response: R): void {
+        if (this.handler[handlerID]) {
+            this.handler[handlerID](response)
+            delete this.handler[handlerID]
+        } else {
+            throw new Error("handler is not found")
+        }
+    }
+}
+interface ActionPost<M> {
+    (actionID: number): Post<M>
+}
+
+class StoreActionProxyMap extends ActionProxyMap<StoreActionProxyMessage, StoreEvent> {
+    initFactory(actionID: number): Factory<StoreAction> {
+        const postActionMessage = this.post(actionID)
+        postActionMessage({ type: "init" })
+
+        return () => (authCredential: AuthCredential, post: Post<StoreEvent>) => {
+            const handlerID = this.idGenerator.generate()
+            this.register(handlerID, post)
+            postActionMessage({ type: "action", handlerID, authCredential })
+        }
+    }
+}
+
+type StoreActionProxyMessage =
+    | Readonly<{ type: "init" }>
+    | Readonly<{ type: "action"; handlerID: number; authCredential: AuthCredential }>
+
 export type WorkerFactory = Readonly<{
     application: {
         secureScriptPath: Factory<SecureScriptPathAction>
@@ -229,9 +274,30 @@ export type WorkerInit = Readonly<{
 }>
 
 export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker: Worker): void {
-    const resolver = initResolverSet()
+    const storeAction = new StoreActionProxyMap((actionID) => (message) => {
+        switch (message.type) {
+            case "init":
+                postBackgroundMessage({ type: "credential-store-init", actionID })
+                break
+            case "action":
+                postBackgroundMessage({
+                    type: "credential-store",
+                    actionID,
+                    handlerID: message.handlerID,
+                    request: message.authCredential,
+                })
+                break
+        }
+    })
+    
+    const actionID = new IDGenerator()
+    const proxy = {
+        credential: {
+            store: storeAction.initFactory(actionID.generate()),
+        },
+    }
 
-    const loginID = new LoginIDCollectorMap((componentID, handlerID) => (request) => {
+    const loginIDCollector = new LoginIDCollectorMap((componentID, handlerID) => (request) => {
         postBackgroundMessage({
             type: "loginIDField",
             componentID,
@@ -239,7 +305,7 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
             request,
         })
     })
-    const password = new PasswordCollectorMap((componentID, handlerID) => (request) => {
+    const passwordCollector = new PasswordCollectorMap((componentID, handlerID) => (request) => {
         postBackgroundMessage({
             type: "passwordField",
             componentID,
@@ -252,10 +318,10 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
         (componentID, param) => {
             const actions = {
                 login: factory.passwordLogin.login({
-                    loginID: loginID.init(componentID, (post) => {
+                    loginID: loginIDCollector.init(componentID, (post) => {
                         post({ type: "validate" })
                     }),
-                    password: password.init(componentID, (post) => {
+                    password: passwordCollector.init(componentID, (post) => {
                         post({ type: "validate" })
                     }),
                 }),
@@ -273,7 +339,7 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
         (componentID) => {
             const actions = {
                 startSession: factory.passwordReset.startSession({
-                    loginID: loginID.init(componentID, (post) => {
+                    loginID: loginIDCollector.init(componentID, (post) => {
                         post({ type: "validate" })
                     }),
                 }),
@@ -290,10 +356,10 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
         (componentID, param) => {
             const actions = {
                 reset: factory.passwordReset.reset({
-                    loginID: loginID.init(componentID, (post) => {
+                    loginID: loginIDCollector.init(componentID, (post) => {
                         post({ type: "validate" })
                     }),
-                    password: password.init(componentID, (post) => {
+                    password: passwordCollector.init(componentID, (post) => {
                         post({ type: "validate" })
                     }),
                 }),
@@ -307,15 +373,6 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
             postBackgroundMessage({ type: "passwordReset", componentID, response })
         }
     )
-
-    const actionID = new IDGenerator()
-    const storeAction = new StoreActionProxy(actionID, resolver.credential.store, postBackgroundMessage)
-
-    const proxy = {
-        credential: {
-            store: () => storeAction.init(),
-        },
-    }
 
     worker.addEventListener("message", (event: MessageEvent<ForegroundMessage>) => {
         try {
@@ -363,7 +420,7 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
                 case "loginIDField":
                     switch (data.response.type) {
                         case "content":
-                            loginID.resolve(data.handlerID, data.response.content)
+                            loginIDCollector.resolve(data.handlerID, data.response.content)
                             break
                     }
                     break
@@ -371,13 +428,13 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
                 case "passwordField":
                     switch (data.response.type) {
                         case "content":
-                            password.resolve(data.handlerID, data.response.content)
+                            passwordCollector.resolve(data.handlerID, data.response.content)
                             break
                     }
                     break
 
                 case "credential-store":
-                    resolver.credential.store.resolve(data.handlerID, data.response)
+                    storeAction.resolve(data.handlerID, data.response)
                     break
 
                 default:
@@ -399,70 +456,6 @@ class IDGenerator {
     generate(): number {
         this.id += 1
         return this.id
-    }
-}
-
-class Resolver<T> {
-    handlerID: IDGenerator
-
-    handler: Record<number, Post<T>> = {}
-
-    constructor(handlerID: IDGenerator) {
-        this.handlerID = handlerID
-    }
-
-    register(post: Post<T>): number {
-        const id = this.handlerID.generate()
-        this.handler[id] = post
-        return id
-    }
-    resolve(id: number, event: T): void {
-        if (this.handler[id]) {
-            this.handler[id](event)
-            delete this.handler[id]
-        }
-    }
-}
-
-type ResolverSet = Readonly<{
-    credential: {
-        store: Resolver<StoreEvent>
-    }
-}>
-
-function initResolverSet(): ResolverSet {
-    const handlerID = new IDGenerator()
-
-    return {
-        credential: {
-            store: new Resolver(handlerID),
-        },
-    }
-}
-
-class StoreActionProxy {
-    actionID: IDGenerator
-    resolver: Resolver<StoreEvent>
-    post: Post<BackgroundMessage>
-
-    constructor(actionID: IDGenerator, resolver: Resolver<StoreEvent>, post: Post<BackgroundMessage>) {
-        this.actionID = actionID
-        this.resolver = resolver
-        this.post = post
-    }
-
-    init(): StoreAction {
-        const id = this.actionID.generate()
-        this.post({ type: "credential-store-init", actionID: id })
-
-        return (authCredential: AuthCredential, postStoreEvent: Post<StoreEvent>) => {
-            this.post({
-                type: "credential-store",
-                actionID: id,
-                handlerID: this.resolver.register(postStoreEvent),
-                request: authCredential,
-            })
-        }
     }
 }
 
