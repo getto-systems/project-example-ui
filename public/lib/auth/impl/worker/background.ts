@@ -6,6 +6,7 @@ import {
     PasswordResetComponentProxyResponse,
     LoginIDFieldComponentRequest,
     PasswordFieldComponentRequest,
+    StoreActionProxyMessage,
 } from "./data"
 
 import {
@@ -248,10 +249,6 @@ class StoreActionProxyMap extends ActionProxyMap<StoreActionProxyMessage, StoreE
     }
 }
 
-type StoreActionProxyMessage =
-    | Readonly<{ type: "init" }>
-    | Readonly<{ type: "action"; handlerID: number; authCredential: AuthCredential }>
-
 export type WorkerFactory = Readonly<{
     application: {
         secureScriptPath: Factory<SecureScriptPathAction>
@@ -314,19 +311,7 @@ function initAuthComponentMapSet(
     const actions = {
         credential: {
             store: new StoreActionProxyMap((actionID) => (message) => {
-                switch (message.type) {
-                    case "init":
-                        postBackgroundMessage({ type: "credential-store-init", actionID })
-                        break
-                    case "action":
-                        postBackgroundMessage({
-                            type: "credential-store",
-                            actionID,
-                            handlerID: message.handlerID,
-                            request: message.authCredential,
-                        })
-                        break
-                }
+                postBackgroundMessage({ type: "credential-store", actionID, message })
             }),
         },
     }
@@ -421,9 +406,12 @@ function initAuthComponentMapSet(
             passwordResetSession,
             passwordReset,
         },
-    }    
+    }
 }
-function initForegroundMessageHandler(map: AuthComponentMapSet, errorHandler: Post<string>): Post<ForegroundMessage> {
+function initForegroundMessageHandler(
+    map: AuthComponentMapSet,
+    errorHandler: Post<string>
+): Post<ForegroundMessage> {
     return (message) => {
         try {
             switch (message.type) {
