@@ -2,6 +2,8 @@ import {
     ForegroundMessage,
     BackgroundMessage,
     PasswordLoginComponentProxyResponse,
+    PasswordResetSessionComponentProxyResponse,
+    PasswordResetComponentProxyResponse,
     LoginIDFieldComponentRequest,
     PasswordFieldComponentRequest,
 } from "./data"
@@ -104,6 +106,66 @@ interface PasswordLoginComponentFactory {
     (componentID: number, param: PasswordLoginParam): PasswordLoginComponent
 }
 
+class PasswordResetSessionComponentMap extends ComponentMap<
+    PasswordResetSessionComponent,
+    PasswordResetSessionRequest,
+    PasswordResetSessionComponentProxyResponse
+> {
+    factory: PasswordResetSessionComponentFactory
+
+    constructor(
+        factory: PasswordResetSessionComponentFactory,
+        post: ComponentResponsePost<PasswordResetSessionComponentProxyResponse>
+    ) {
+        super(post, (component, request) => {
+            component.action(request)
+        })
+
+        this.factory = factory
+    }
+
+    init(componentID: number): void {
+        this.register(componentID, this.factory(componentID), (component, post) => {
+            component.onStateChange((state) => {
+                post({ type: "post", state })
+            })
+        })
+    }
+}
+interface PasswordResetSessionComponentFactory {
+    (componentID: number): PasswordResetSessionComponent
+}
+
+class PasswordResetComponentMap extends ComponentMap<
+    PasswordResetComponent,
+    PasswordResetRequest,
+    PasswordResetComponentProxyResponse
+> {
+    factory: PasswordResetComponentFactory
+
+    constructor(
+        factory: PasswordResetComponentFactory,
+        post: ComponentResponsePost<PasswordResetComponentProxyResponse>
+    ) {
+        super(post, (component, request) => {
+            component.action(request)
+        })
+
+        this.factory = factory
+    }
+
+    init(componentID: number, param: PasswordResetParam): void {
+        this.register(componentID, this.factory(componentID, param), (component, post) => {
+            component.onStateChange((state) => {
+                post({ type: "post", state })
+            })
+        })
+    }
+}
+interface PasswordResetComponentFactory {
+    (componentID: number, param: PasswordResetParam): PasswordResetComponent
+}
+
 class CollectorMap<C, R> {
     handler: Record<number, Post<Content<C>>> = {}
 
@@ -159,11 +221,6 @@ export type WorkerFactory = Readonly<{
         reset: ParameterizedFactory<ResetFieldCollector, ResetAction>
     }
 }>
-type ProxyFactory = Readonly<{
-    credential: {
-        store: Factory<StoreAction>
-    }
-}>
 
 export type WorkerInit = Readonly<{
     passwordLogin: PasswordLoginInit
@@ -212,8 +269,44 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
             postBackgroundMessage({ type: "passwordLogin", componentID, response })
         }
     )
-    const passwordResetSession = new PasswordResetSessionComponentMap(resolver, postBackgroundMessage)
-    const passwordReset = new PasswordResetComponentMap(resolver, postBackgroundMessage)
+    const passwordResetSession = new PasswordResetSessionComponentMap(
+        (componentID) => {
+            const actions = {
+                startSession: factory.passwordReset.startSession({
+                    loginID: loginID.init(componentID, (post) => {
+                        post({ type: "validate" })
+                    }),
+                }),
+                pollingStatus: factory.passwordReset.pollingStatus(),
+            }
+
+            return init.passwordResetSession(actions)
+        },
+        (componentID) => (response) => {
+            postBackgroundMessage({ type: "passwordResetSession", componentID, response })
+        }
+    )
+    const passwordReset = new PasswordResetComponentMap(
+        (componentID, param) => {
+            const actions = {
+                reset: factory.passwordReset.reset({
+                    loginID: loginID.init(componentID, (post) => {
+                        post({ type: "validate" })
+                    }),
+                    password: password.init(componentID, (post) => {
+                        post({ type: "validate" })
+                    }),
+                }),
+                store: proxy.credential.store(),
+                secureScriptPath: factory.application.secureScriptPath(),
+            }
+
+            return init.passwordReset(actions, param)
+        },
+        (componentID) => (response) => {
+            postBackgroundMessage({ type: "passwordReset", componentID, response })
+        }
+    )
 
     const actionID = new IDGenerator()
     const storeAction = new StoreActionProxy(actionID, resolver.credential.store, postBackgroundMessage)
@@ -244,14 +337,10 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
                 case "passwordResetSession":
                     switch (data.message.type) {
                         case "init":
-                            passwordResetSession.init(
-                                factory,
-                                init.passwordResetSession,
-                                data.componentID
-                            )
+                            passwordResetSession.init(data.componentID)
                             break
                         case "action":
-                            passwordResetSession.action(data.componentID, data.message.request)
+                            passwordResetSession.handleRequest(data.componentID, data.message.request)
                             break
                         default:
                             assertNever(data.message)
@@ -261,16 +350,10 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
                 case "passwordReset":
                     switch (data.message.type) {
                         case "init":
-                            passwordReset.init(
-                                factory,
-                                proxy,
-                                init.passwordReset,
-                                data.componentID,
-                                data.message.param
-                            )
+                            passwordReset.init(data.componentID, data.message.param)
                             break
                         case "action":
-                            passwordReset.action(data.componentID, data.message.request)
+                            passwordReset.handleRequest(data.componentID, data.message.request)
                             break
                         default:
                             assertNever(data.message)
@@ -345,10 +428,6 @@ type ResolverSet = Readonly<{
     credential: {
         store: Resolver<StoreEvent>
     }
-    field: {
-        loginID: Resolver<Content<LoginID>>
-        password: Resolver<Content<Password>>
-    }
 }>
 
 function initResolverSet(): ResolverSet {
@@ -358,125 +437,6 @@ function initResolverSet(): ResolverSet {
         credential: {
             store: new Resolver(handlerID),
         },
-        field: {
-            loginID: new Resolver(handlerID),
-            password: new Resolver(handlerID),
-        },
-    }
-}
-
-function collectLoginID(
-    componentID: number,
-    resolver: Resolver<Content<LoginID>>,
-    post: Post<BackgroundMessage>
-): ContentCollector<LoginID> {
-    return () =>
-        new Promise((resolve) => {
-            post({
-                type: "loginIDField",
-                componentID,
-                handlerID: resolver.register(resolve),
-                request: { type: "validate" },
-            })
-        })
-}
-function collectPassword(
-    componentID: number,
-    resolver: Resolver<Content<Password>>,
-    post: Post<BackgroundMessage>
-): ContentCollector<Password> {
-    return () =>
-        new Promise((resolve) => {
-            post({
-                type: "passwordField",
-                componentID,
-                handlerID: resolver.register(resolve),
-                request: { type: "validate" },
-            })
-        })
-}
-
-interface ContentCollector<T> {
-    (): Promise<Content<T>>
-}
-
-class PasswordResetSessionComponentMap {
-    map: Record<number, PasswordResetSessionComponent> = {}
-
-    resolver: ResolverSet
-    post: Post<BackgroundMessage>
-
-    constructor(resolver: ResolverSet, post: Post<BackgroundMessage>) {
-        this.resolver = resolver
-        this.post = post
-    }
-
-    init(factory: WorkerFactory, init: PasswordResetSessionInit, componentID: number): void {
-        const actions = {
-            startSession: factory.passwordReset.startSession({
-                loginID: collectLoginID(componentID, this.resolver.field.loginID, this.post),
-            }),
-            pollingStatus: factory.passwordReset.pollingStatus(),
-        }
-
-        const component = init(actions)
-
-        component.onStateChange((state) => {
-            this.post({ type: "passwordResetSession", componentID, response: { type: "post", state } })
-        })
-
-        this.map[componentID] = component
-    }
-    action(componentID: number, request: PasswordResetSessionRequest): void {
-        if (this.map[componentID]) {
-            this.map[componentID].action(request)
-        } else {
-            this.post({ type: "error", err: "component is not initialized" })
-        }
-    }
-}
-
-class PasswordResetComponentMap {
-    map: Record<number, PasswordResetComponent> = {}
-
-    resolver: ResolverSet
-    post: Post<BackgroundMessage>
-
-    constructor(resolver: ResolverSet, post: Post<BackgroundMessage>) {
-        this.resolver = resolver
-        this.post = post
-    }
-
-    init(
-        factory: WorkerFactory,
-        proxy: ProxyFactory,
-        init: PasswordResetInit,
-        componentID: number,
-        param: PasswordResetParam
-    ): void {
-        const actions = {
-            reset: factory.passwordReset.reset({
-                loginID: collectLoginID(componentID, this.resolver.field.loginID, this.post),
-                password: collectPassword(componentID, this.resolver.field.password, this.post),
-            }),
-            store: proxy.credential.store(),
-            secureScriptPath: factory.application.secureScriptPath(),
-        }
-
-        const component = init(actions, param)
-
-        component.onStateChange((state) => {
-            this.post({ type: "passwordReset", componentID, response: { type: "post", state } })
-        })
-
-        this.map[componentID] = component
-    }
-    action(componentID: number, request: PasswordResetRequest): void {
-        if (this.map[componentID]) {
-            this.map[componentID].action(request)
-        } else {
-            this.post({ type: "error", err: "component is not initialized" })
-        }
     }
 }
 
