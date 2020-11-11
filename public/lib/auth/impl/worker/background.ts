@@ -274,62 +274,101 @@ export type WorkerInit = Readonly<{
 }>
 
 export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker: Worker): void {
-    const storeAction = new StoreActionProxyMap((actionID) => (message) => {
-        switch (message.type) {
-            case "init":
-                postBackgroundMessage({ type: "credential-store-init", actionID })
-                break
-            case "action":
-                postBackgroundMessage({
-                    type: "credential-store",
-                    actionID,
-                    handlerID: message.handlerID,
-                    request: message.authCredential,
-                })
-                break
-        }
+    const map = initAuthComponentMapSet(factory, init, postBackgroundMessage)
+    const errorHandler = (err: string) => {
+        postBackgroundMessage({ type: "error", err })
+    }
+    const messageHandler = initForegroundMessageHandler(map, errorHandler)
+
+    worker.addEventListener("message", (event) => {
+        messageHandler(event.data)
     })
-    
-    const actionID = new IDGenerator()
-    const proxy = {
+
+    function postBackgroundMessage(message: BackgroundMessage) {
+        worker.postMessage(message)
+    }
+}
+type AuthComponentMapSet = Readonly<{
+    actions: Readonly<{
+        credential: Readonly<{
+            store: StoreActionProxyMap
+        }>
+    }>
+
+    collectors: Readonly<{
+        loginID: LoginIDCollectorMap
+        password: PasswordCollectorMap
+    }>
+
+    components: Readonly<{
+        passwordLogin: PasswordLoginComponentMap
+        passwordResetSession: PasswordResetSessionComponentMap
+        passwordReset: PasswordResetComponentMap
+    }>
+}>
+function initAuthComponentMapSet(
+    factory: WorkerFactory,
+    init: WorkerInit,
+    postBackgroundMessage: Post<BackgroundMessage>
+): AuthComponentMapSet {
+    const actions = {
         credential: {
-            store: storeAction.initFactory(actionID.generate()),
+            store: new StoreActionProxyMap((actionID) => (message) => {
+                switch (message.type) {
+                    case "init":
+                        postBackgroundMessage({ type: "credential-store-init", actionID })
+                        break
+                    case "action":
+                        postBackgroundMessage({
+                            type: "credential-store",
+                            actionID,
+                            handlerID: message.handlerID,
+                            request: message.authCredential,
+                        })
+                        break
+                }
+            }),
         },
     }
 
-    const loginIDCollector = new LoginIDCollectorMap((componentID, handlerID) => (request) => {
-        postBackgroundMessage({
-            type: "loginIDField",
-            componentID,
-            handlerID,
-            request,
-        })
-    })
-    const passwordCollector = new PasswordCollectorMap((componentID, handlerID) => (request) => {
-        postBackgroundMessage({
-            type: "passwordField",
-            componentID,
-            handlerID,
-            request,
-        })
-    })
+    const collectors = {
+        loginID: new LoginIDCollectorMap((componentID, handlerID) => (request) => {
+            postBackgroundMessage({
+                type: "loginIDField",
+                componentID,
+                handlerID,
+                request,
+            })
+        }),
+        password: new PasswordCollectorMap((componentID, handlerID) => (request) => {
+            postBackgroundMessage({
+                type: "passwordField",
+                componentID,
+                handlerID,
+                request,
+            })
+        }),
+    }
+
+    const actionID = new IDGenerator()
 
     const passwordLogin = new PasswordLoginComponentMap(
         (componentID, param) => {
-            const actions = {
-                login: factory.passwordLogin.login({
-                    loginID: loginIDCollector.init(componentID, (post) => {
-                        post({ type: "validate" })
+            return init.passwordLogin(
+                {
+                    login: factory.passwordLogin.login({
+                        loginID: collectors.loginID.init(componentID, (post) => {
+                            post({ type: "validate" })
+                        }),
+                        password: collectors.password.init(componentID, (post) => {
+                            post({ type: "validate" })
+                        }),
                     }),
-                    password: passwordCollector.init(componentID, (post) => {
-                        post({ type: "validate" })
-                    }),
-                }),
-                store: proxy.credential.store(),
-                secureScriptPath: factory.application.secureScriptPath(),
-            }
-
-            return init.passwordLogin(actions, param)
+                    store: actions.credential.store.initFactory(actionID.generate()),
+                    secureScriptPath: factory.application.secureScriptPath(),
+                },
+                param
+            )
         },
         (componentID) => (response) => {
             postBackgroundMessage({ type: "passwordLogin", componentID, response })
@@ -337,16 +376,14 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
     )
     const passwordResetSession = new PasswordResetSessionComponentMap(
         (componentID) => {
-            const actions = {
+            return init.passwordResetSession({
                 startSession: factory.passwordReset.startSession({
-                    loginID: loginIDCollector.init(componentID, (post) => {
+                    loginID: collectors.loginID.init(componentID, (post) => {
                         post({ type: "validate" })
                     }),
                 }),
                 pollingStatus: factory.passwordReset.pollingStatus(),
-            }
-
-            return init.passwordResetSession(actions)
+            })
         },
         (componentID) => (response) => {
             postBackgroundMessage({ type: "passwordResetSession", componentID, response })
@@ -354,99 +391,116 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
     )
     const passwordReset = new PasswordResetComponentMap(
         (componentID, param) => {
-            const actions = {
-                reset: factory.passwordReset.reset({
-                    loginID: loginIDCollector.init(componentID, (post) => {
-                        post({ type: "validate" })
+            return init.passwordReset(
+                {
+                    reset: factory.passwordReset.reset({
+                        loginID: collectors.loginID.init(componentID, (post) => {
+                            post({ type: "validate" })
+                        }),
+                        password: collectors.password.init(componentID, (post) => {
+                            post({ type: "validate" })
+                        }),
                     }),
-                    password: passwordCollector.init(componentID, (post) => {
-                        post({ type: "validate" })
-                    }),
-                }),
-                store: proxy.credential.store(),
-                secureScriptPath: factory.application.secureScriptPath(),
-            }
-
-            return init.passwordReset(actions, param)
+                    store: actions.credential.store.initFactory(actionID.generate()),
+                    secureScriptPath: factory.application.secureScriptPath(),
+                },
+                param
+            )
         },
         (componentID) => (response) => {
             postBackgroundMessage({ type: "passwordReset", componentID, response })
         }
     )
 
-    worker.addEventListener("message", (event: MessageEvent<ForegroundMessage>) => {
+    return {
+        actions,
+        collectors,
+
+        components: {
+            passwordLogin,
+            passwordResetSession,
+            passwordReset,
+        },
+    }    
+}
+function initForegroundMessageHandler(map: AuthComponentMapSet, errorHandler: Post<string>): Post<ForegroundMessage> {
+    return (message) => {
         try {
-            const data = event.data
-            switch (data.type) {
+            switch (message.type) {
                 case "passwordLogin":
-                    switch (data.message.type) {
+                    switch (message.message.type) {
                         case "init":
-                            passwordLogin.init(data.componentID, data.message.param)
+                            map.components.passwordLogin.init(message.componentID, message.message.param)
                             break
                         case "action":
-                            passwordLogin.handleRequest(data.componentID, data.message.request)
+                            map.components.passwordLogin.handleRequest(
+                                message.componentID,
+                                message.message.request
+                            )
                             break
                         default:
-                            assertNever(data.message)
+                            assertNever(message.message)
                     }
                     break
 
                 case "passwordResetSession":
-                    switch (data.message.type) {
+                    switch (message.message.type) {
                         case "init":
-                            passwordResetSession.init(data.componentID)
+                            map.components.passwordResetSession.init(message.componentID)
                             break
                         case "action":
-                            passwordResetSession.handleRequest(data.componentID, data.message.request)
+                            map.components.passwordResetSession.handleRequest(
+                                message.componentID,
+                                message.message.request
+                            )
                             break
                         default:
-                            assertNever(data.message)
+                            assertNever(message.message)
                     }
                     break
 
                 case "passwordReset":
-                    switch (data.message.type) {
+                    switch (message.message.type) {
                         case "init":
-                            passwordReset.init(data.componentID, data.message.param)
+                            map.components.passwordReset.init(message.componentID, message.message.param)
                             break
                         case "action":
-                            passwordReset.handleRequest(data.componentID, data.message.request)
+                            map.components.passwordReset.handleRequest(
+                                message.componentID,
+                                message.message.request
+                            )
                             break
                         default:
-                            assertNever(data.message)
+                            assertNever(message.message)
                     }
                     break
 
                 case "loginIDField":
-                    switch (data.response.type) {
+                    switch (message.response.type) {
                         case "content":
-                            loginIDCollector.resolve(data.handlerID, data.response.content)
+                            map.collectors.loginID.resolve(message.handlerID, message.response.content)
                             break
                     }
                     break
 
                 case "passwordField":
-                    switch (data.response.type) {
+                    switch (message.response.type) {
                         case "content":
-                            passwordCollector.resolve(data.handlerID, data.response.content)
+                            map.collectors.password.resolve(message.handlerID, message.response.content)
                             break
                     }
                     break
 
                 case "credential-store":
-                    storeAction.resolve(data.handlerID, data.response)
+                    map.actions.credential.store.resolve(message.handlerID, message.response)
                     break
 
                 default:
-                    assertNever(data)
+                    assertNever(message)
             }
         } catch (err) {
-            postBackgroundMessage({ type: "error", err: `${err}` })
+            errorHandler(`${err}`)
         }
-    })
-
-    function postBackgroundMessage(message: BackgroundMessage) {
-        worker.postMessage(message)
     }
 }
 
