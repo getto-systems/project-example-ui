@@ -1,6 +1,9 @@
 import {
     ForegroundMessage,
     BackgroundMessage,
+    PasswordLoginComponentProxyResponse,
+    LoginIDFieldComponentRequest,
+    PasswordFieldComponentRequest,
 } from "./data"
 
 import {
@@ -38,6 +41,110 @@ import { LoginID } from "../../../login_id/data"
 import { Password } from "../../../password/data"
 import { Content } from "../../../field/data"
 
+class ComponentMap<C, R, M> {
+    map: Record<number, C> = {}
+
+    post: ComponentResponsePost<M>
+    handler: ComponentRequestHandler<C, R>
+
+    constructor(post: ComponentResponsePost<M>, handler: ComponentRequestHandler<C, R>) {
+        this.post = post
+        this.handler = handler
+    }
+
+    register(componentID: number, component: C, init: ComponentInitializer<C, M>): void {
+        init(component, this.post(componentID))
+        this.map[componentID] = component
+    }
+    handleRequest(componentID: number, request: R): void {
+        if (this.map[componentID]) {
+            this.handler(this.map[componentID], request)
+        } else {
+            throw new Error("component is not initialized")
+        }
+    }
+}
+interface ComponentResponsePost<M> {
+    (componentID: number): Post<M>
+}
+interface ComponentRequestHandler<C, R> {
+    (component: C, request: R): void
+}
+interface ComponentInitializer<C, M> {
+    (component: C, post: Post<M>): void
+}
+
+class PasswordLoginComponentMap extends ComponentMap<
+    PasswordLoginComponent,
+    PasswordLoginRequest,
+    PasswordLoginComponentProxyResponse
+> {
+    factory: PasswordLoginComponentFactory
+
+    constructor(
+        factory: PasswordLoginComponentFactory,
+        post: ComponentResponsePost<PasswordLoginComponentProxyResponse>
+    ) {
+        super(post, (component, request) => {
+            component.action(request)
+        })
+
+        this.factory = factory
+    }
+
+    init(componentID: number, param: PasswordLoginParam): void {
+        this.register(componentID, this.factory(componentID, param), (component, post) => {
+            component.onStateChange((state) => {
+                post({ type: "post", state })
+            })
+        })
+    }
+}
+interface PasswordLoginComponentFactory {
+    (componentID: number, param: PasswordLoginParam): PasswordLoginComponent
+}
+
+class CollectorMap<C, R> {
+    handler: Record<number, Post<Content<C>>> = {}
+
+    idGenerator: IDGenerator
+    post: CollectPost<R>
+
+    constructor(post: CollectPost<R>) {
+        this.idGenerator = new IDGenerator()
+        this.post = post
+    }
+
+    init(componentID: number, handler: CollectHandler<R>): Collector<C> {
+        return () =>
+            new Promise((resolve) => {
+                const handlerID = this.idGenerator.generate()
+                this.handler[handlerID] = resolve
+                handler(this.post(componentID, handlerID))
+            })
+    }
+    resolve(handlerID: number, content: Content<C>): void {
+        if (this.handler[handlerID]) {
+            this.handler[handlerID](content)
+            delete this.handler[handlerID]
+        } else {
+            throw new Error("handler not found")
+        }
+    }
+}
+interface Collector<C> {
+    (): Promise<Content<C>>
+}
+interface CollectPost<R> {
+    (componentID: number, handlerID: number): Post<R>
+}
+interface CollectHandler<R> {
+    (post: Post<R>): void
+}
+
+class LoginIDCollectorMap extends CollectorMap<LoginID, LoginIDFieldComponentRequest> {}
+class PasswordCollectorMap extends CollectorMap<Password, PasswordFieldComponentRequest> {}
+
 export type WorkerFactory = Readonly<{
     application: {
         secureScriptPath: Factory<SecureScriptPathAction>
@@ -67,7 +174,44 @@ export type WorkerInit = Readonly<{
 export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker: Worker): void {
     const resolver = initResolverSet()
 
-    const passwordLogin = new PasswordLoginComponentMap(resolver, postBackgroundMessage)
+    const loginID = new LoginIDCollectorMap((componentID, handlerID) => (request) => {
+        postBackgroundMessage({
+            type: "loginIDField",
+            componentID,
+            handlerID,
+            request,
+        })
+    })
+    const password = new PasswordCollectorMap((componentID, handlerID) => (request) => {
+        postBackgroundMessage({
+            type: "passwordField",
+            componentID,
+            handlerID,
+            request,
+        })
+    })
+
+    const passwordLogin = new PasswordLoginComponentMap(
+        (componentID, param) => {
+            const actions = {
+                login: factory.passwordLogin.login({
+                    loginID: loginID.init(componentID, (post) => {
+                        post({ type: "validate" })
+                    }),
+                    password: password.init(componentID, (post) => {
+                        post({ type: "validate" })
+                    }),
+                }),
+                store: proxy.credential.store(),
+                secureScriptPath: factory.application.secureScriptPath(),
+            }
+
+            return init.passwordLogin(actions, param)
+        },
+        (componentID) => (response) => {
+            postBackgroundMessage({ type: "passwordLogin", componentID, response })
+        }
+    )
     const passwordResetSession = new PasswordResetSessionComponentMap(resolver, postBackgroundMessage)
     const passwordReset = new PasswordResetComponentMap(resolver, postBackgroundMessage)
 
@@ -87,16 +231,10 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
                 case "passwordLogin":
                     switch (data.message.type) {
                         case "init":
-                            passwordLogin.init(
-                                factory,
-                                proxy,
-                                init.passwordLogin,
-                                data.componentID,
-                                data.message.param
-                            )
+                            passwordLogin.init(data.componentID, data.message.param)
                             break
                         case "action":
-                            passwordLogin.action(data.componentID, data.message.request)
+                            passwordLogin.handleRequest(data.componentID, data.message.request)
                             break
                         default:
                             assertNever(data.message)
@@ -142,7 +280,7 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
                 case "loginIDField":
                     switch (data.response.type) {
                         case "content":
-                            resolver.field.loginID.resolve(data.handlerID, data.response.content)
+                            loginID.resolve(data.handlerID, data.response.content)
                             break
                     }
                     break
@@ -150,7 +288,7 @@ export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker:
                 case "passwordField":
                     switch (data.response.type) {
                         case "content":
-                            resolver.field.password.resolve(data.handlerID, data.response.content)
+                            password.resolve(data.handlerID, data.response.content)
                             break
                     }
                     break
@@ -184,7 +322,7 @@ class IDGenerator {
 class Resolver<T> {
     handlerID: IDGenerator
 
-    handler: Record<number, Post<T>> = []
+    handler: Record<number, Post<T>> = {}
 
     constructor(handlerID: IDGenerator) {
         this.handlerID = handlerID
@@ -262,52 +400,8 @@ interface ContentCollector<T> {
     (): Promise<Content<T>>
 }
 
-class PasswordLoginComponentMap {
-    map: Record<number, PasswordLoginComponent> = []
-
-    resolver: ResolverSet
-    post: Post<BackgroundMessage>
-
-    constructor(resolver: ResolverSet, post: Post<BackgroundMessage>) {
-        this.resolver = resolver
-        this.post = post
-    }
-
-    init(
-        factory: WorkerFactory,
-        proxy: ProxyFactory,
-        init: PasswordLoginInit,
-        componentID: number,
-        param: PasswordLoginParam
-    ): void {
-        const actions = {
-            login: factory.passwordLogin.login({
-                loginID: collectLoginID(componentID, this.resolver.field.loginID, this.post),
-                password: collectPassword(componentID, this.resolver.field.password, this.post),
-            }),
-            store: proxy.credential.store(),
-            secureScriptPath: factory.application.secureScriptPath(),
-        }
-
-        const component = init(actions, param)
-
-        component.onStateChange((state) => {
-            this.post({ type: "passwordLogin", componentID, response: { type: "post", state } })
-        })
-
-        this.map[componentID] = component
-    }
-    action(componentID: number, request: PasswordLoginRequest): void {
-        if (this.map[componentID]) {
-            this.map[componentID].action(request)
-        } else {
-            this.post({ type: "error", err: "component is not initialized" })
-        }
-    }
-}
-
 class PasswordResetSessionComponentMap {
-    map: Record<number, PasswordResetSessionComponent> = []
+    map: Record<number, PasswordResetSessionComponent> = {}
 
     resolver: ResolverSet
     post: Post<BackgroundMessage>
@@ -343,7 +437,7 @@ class PasswordResetSessionComponentMap {
 }
 
 class PasswordResetComponentMap {
-    map: Record<number, PasswordResetComponent> = []
+    map: Record<number, PasswordResetComponent> = {}
 
     resolver: ResolverSet
     post: Post<BackgroundMessage>
