@@ -6,7 +6,7 @@ import { LoginError } from "../../../password_login/data"
 import { StorageError } from "../../../credential/data"
 import { PagePathname, ScriptPath, LoadError } from "../../../application/data"
 
-export interface PasswordLoginInit {
+export interface PasswordLoginComponentFactory {
     (actions: PasswordLoginActionSet, param: PasswordLoginParam): PasswordLoginComponent
 }
 export type PasswordLoginActionSet = Readonly<{

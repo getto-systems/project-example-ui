@@ -1,7 +1,7 @@
 import { render, h } from "preact"
 
-import { newAuthInitAsWorker } from "../main/auth"
+import { newAuthViewFactoryAsWorker } from "../main/auth"
 
 import { Main } from "./auth/main"
 
-render(h(Main, { init: newAuthInitAsWorker(localStorage) }), document.body)
+render(h(Main, { factory: newAuthViewFactoryAsWorker(localStorage) }), document.body)

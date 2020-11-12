@@ -6,7 +6,7 @@ import { ResetToken, ResetError } from "../../../password_reset/data"
 import { StorageError } from "../../../credential/data"
 import { PagePathname, ScriptPath, LoadError } from "../../../application/data"
 
-export interface PasswordResetInit {
+export interface PasswordResetComponentFactory {
     (actions: PasswordResetActionSet, param: PasswordResetParam): PasswordResetComponent
 }
 

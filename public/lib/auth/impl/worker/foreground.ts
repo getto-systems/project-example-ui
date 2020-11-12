@@ -1,4 +1,4 @@
-import { View, AuthComponentSetInit } from "../view"
+import { View, AuthComponentFactorySet } from "../view"
 import {
     initRenewCredentialComponentSet,
     initLoginIDFieldComponent,
@@ -22,10 +22,10 @@ import {
     StoreActionResponse,
 } from "./data"
 
-import { AppHrefInit } from "../../../href"
-import { AuthInit } from "../../view"
+import { AppHrefFactory } from "../../../href"
+import { AuthViewFactory } from "../../view"
 
-import { RenewCredentialInit } from "../../component/renew_credential/component"
+import { RenewCredentialComponentFactory } from "../../component/renew_credential/component"
 import {
     PasswordLoginComponent,
     PasswordLoginState,
@@ -41,8 +41,8 @@ import {
     PasswordResetState,
 } from "../../component/password_reset/component"
 
-import { LoginIDFieldInit, LoginIDFieldComponent } from "../../component/field/login_id/component"
-import { PasswordFieldInit, PasswordFieldComponent } from "../../component/field/password/component"
+import { LoginIDFieldComponentFactory, LoginIDFieldComponent } from "../../component/field/login_id/component"
+import { PasswordFieldComponentFactory, PasswordFieldComponent } from "../../component/field/password/component"
 
 import { SecureScriptPathAction } from "../../../application/action"
 import { RenewAction, SetContinuousRenewAction, StoreAction } from "../../../credential/action"
@@ -290,21 +290,21 @@ export type FactorySet = Readonly<{
         }>
     }>
     components: Readonly<{
-        href: AppHrefInit
+        href: AppHrefFactory
 
-        renewCredential: RenewCredentialInit
+        renewCredential: RenewCredentialComponentFactory
 
         field: Readonly<{
-            loginID: LoginIDFieldInit
-            password: PasswordFieldInit
+            loginID: LoginIDFieldComponentFactory
+            password: PasswordFieldComponentFactory
         }>
     }>
 }>
 
-export function initAuthInitAsWorker(worker: Worker, factory: FactorySet): AuthInit {
+export function initAuthViewFactoryAsWorker(worker: Worker, factory: FactorySet): AuthViewFactory {
     return (currentLocation) => {
         const map = initAuthComponentMapSet(factory, postForegroundMessage)
-        const view = new View(currentLocation, initAuthComponentSetInit(factory, map))
+        const view = new View(currentLocation, initAuthComponentSet(factory, map))
         const errorHandler = (err: string) => {
             view.error(err)
         }
@@ -404,10 +404,10 @@ function initAuthComponentMapSet(
         },
     }
 }
-function initAuthComponentSetInit(
+function initAuthComponentSet(
     factory: FactorySet,
     map: AuthComponentMapSet
-): AuthComponentSetInit {
+): AuthComponentFactorySet {
     const componentIDGenerator = new IDGenerator()
 
     return {

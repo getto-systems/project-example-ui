@@ -6,16 +6,16 @@ import {
     initPasswordResetComponentSet,
 } from "./core"
 
-import { AppHrefInit } from "../../href"
-import { AuthInit } from "../view"
+import { AppHrefFactory } from "../../href"
+import { AuthViewFactory } from "../view"
 
-import { RenewCredentialInit } from "../component/renew_credential/component"
-import { PasswordLoginInit } from "../component/password_login/component"
-import { PasswordResetSessionInit } from "../component/password_reset_session/component"
-import { PasswordResetInit } from "../component/password_reset/component"
+import { RenewCredentialComponentFactory } from "../component/renew_credential/component"
+import { PasswordLoginComponentFactory } from "../component/password_login/component"
+import { PasswordResetSessionComponentFactory } from "../component/password_reset_session/component"
+import { PasswordResetComponentFactory } from "../component/password_reset/component"
 
-import { LoginIDFieldInit } from "../component/field/login_id/component"
-import { PasswordFieldInit } from "../component/field/password/component"
+import { LoginIDFieldComponentFactory } from "../component/field/login_id/component"
+import { PasswordFieldComponentFactory } from "../component/field/password/component"
 
 import { SecureScriptPathAction } from "../../application/action"
 import { RenewAction, SetContinuousRenewAction, StoreAction } from "../../credential/action"
@@ -58,22 +58,22 @@ export type FactorySet = Readonly<{
         }>
     }>
     components: Readonly<{
-        href: AppHrefInit
+        href: AppHrefFactory
 
-        renewCredential: RenewCredentialInit
+        renewCredential: RenewCredentialComponentFactory
 
-        passwordLogin: PasswordLoginInit
-        passwordResetSession: PasswordResetSessionInit
-        passwordReset: PasswordResetInit
+        passwordLogin: PasswordLoginComponentFactory
+        passwordResetSession: PasswordResetSessionComponentFactory
+        passwordReset: PasswordResetComponentFactory
 
         field: Readonly<{
-            loginID: LoginIDFieldInit
-            password: PasswordFieldInit
+            loginID: LoginIDFieldComponentFactory
+            password: PasswordFieldComponentFactory
         }>
     }>
 }>
 
-export function initAuthInitAsBackground(factory: FactorySet): AuthInit {
+export function initAuthViewFactoryAsBackground(factory: FactorySet): AuthViewFactory {
     return (currentLocation) => {
         return {
             view: new View(currentLocation, {

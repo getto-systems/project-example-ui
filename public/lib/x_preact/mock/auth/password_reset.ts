@@ -4,10 +4,10 @@ import {
 } from "../../../auth/component/password_reset/component"
 
 export function newPasswordResetComponent(): PasswordResetComponent {
-    return new Component(new Init().initialReset())
+    return new Component(new PasswordResetStateFactory().initialReset())
 }
 
-class Init {
+class PasswordResetStateFactory {
     initialReset(): PasswordResetState {
         return { type: "initial-reset" }
     }

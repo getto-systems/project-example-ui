@@ -20,10 +20,10 @@ type ComponentSet = Readonly<{
 }>
 
 type Props = {
-    init: Init<ComponentSet>
+    factory: Factory<ComponentSet>
 }
-export function RenewCredential({ init }: Props): VNode {
-    const container = useComponentSet(init)
+export function RenewCredential({ factory }: Props): VNode {
+    const container = useComponentSet(factory)
 
     if (!container.set) {
         return EMPTY_CONTENT
@@ -147,6 +147,6 @@ function errorMessage(content: VNode): VNode {
 
 const EMPTY_CONTENT: VNode = html``
 
-interface Init<T> {
+interface Factory<T> {
     (): T
 }

@@ -4,10 +4,10 @@ import {
 } from "../../../auth/component/password_reset_session/component"
 
 export function newPasswordResetSessionComponent(): PasswordResetSessionComponent {
-    return new Component(new Init().succeedToSendToken())
+    return new Component(new PasswordResetSessionStateFactory().succeedToSendToken())
 }
 
-class Init {
+class PasswordResetSessionStateFactory {
     initialResetSession(): PasswordResetSessionState {
         return { type: "initial-reset-session" }
     }

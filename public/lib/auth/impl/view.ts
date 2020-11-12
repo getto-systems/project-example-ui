@@ -47,7 +47,7 @@ export class View implements AuthView {
 
     components: AuthComponentSet
 
-    constructor(currentLocation: Location, components: AuthComponentSetInit) {
+    constructor(currentLocation: Location, components: AuthComponentFactorySet) {
         this.components = {
             renewCredential: () =>
                 components.renewCredential(
@@ -100,7 +100,7 @@ export class View implements AuthView {
     }
 }
 
-export interface AuthComponentSetInit {
+export interface AuthComponentFactorySet {
     renewCredential(
         param: RenewCredentialParam,
         setup: Setup<RenewCredentialComponent>

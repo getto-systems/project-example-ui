@@ -9,7 +9,7 @@ export function newLoginIDFieldComponent(state: LoginIDFieldState): LoginIDField
     return new Component(state)
 }
 
-export class LoginIDFieldInit {
+export class LoginIDFieldStateFactory {
     noError(): LoginIDFieldState {
         return { type: "succeed-to-update", result: noError() }
     }

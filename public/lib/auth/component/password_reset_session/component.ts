@@ -8,7 +8,7 @@ import {
     SendTokenError,
 } from "../../../password_reset/data"
 
-export interface PasswordResetSessionInit {
+export interface PasswordResetSessionComponentFactory {
     (actions: PasswordResetSessionActionSet): PasswordResetSessionComponent
 }
 export type PasswordResetSessionActionSet = Readonly<{

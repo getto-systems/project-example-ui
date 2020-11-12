@@ -150,7 +150,3 @@ export function initSetContinuousRenewAction(infra: SetContinuousRenewInfra): Se
 export function initStoreAction(infra: StoreInfra): StoreAction {
     return storeAction(infra)
 }
-
-interface Post<T> {
-    (state: T): void
-}
