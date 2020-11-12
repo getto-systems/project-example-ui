@@ -9,7 +9,7 @@ import { ApplicationError } from "../application_error"
 
 import { LoginIDField } from "./password_reset_session/field/login_id"
 
-import { AppHref } from "../../href"
+import { AppHref } from "../../href/data"
 
 import {
     PasswordResetSessionComponent,

@@ -1,4 +1,4 @@
-import { AppHref } from "../href"
+import { AppHref } from "../href/data"
 
 import { RenewCredentialComponent } from "./component/renew_credential/component"
 
