@@ -41,8 +41,14 @@ import {
     PasswordResetState,
 } from "../../component/password_reset/component"
 
-import { LoginIDFieldComponentFactory, LoginIDFieldComponent } from "../../component/field/login_id/component"
-import { PasswordFieldComponentFactory, PasswordFieldComponent } from "../../component/field/password/component"
+import {
+    LoginIDFieldComponentFactory,
+    LoginIDFieldComponent,
+} from "../../component/field/login_id/component"
+import {
+    PasswordFieldComponentFactory,
+    PasswordFieldComponent,
+} from "../../component/field/password/component"
 
 import { SecureScriptPathAction } from "../../../application/action"
 import { RenewAction, SetContinuousRenewAction, StoreAction } from "../../../credential/action"
@@ -301,7 +307,10 @@ export type FactorySet = Readonly<{
     }>
 }>
 
-export function initAuthViewFactoryAsWorker(worker: Worker, factory: FactorySet): AuthViewFactory {
+export function initAuthViewFactoryAsForeground(
+    worker: Worker,
+    factory: FactorySet
+): AuthViewFactory {
     return (currentLocation) => {
         const map = initAuthComponentMapSet(factory, postForegroundMessage)
         const view = new View(currentLocation, initAuthComponentSet(factory, map))
@@ -404,10 +413,7 @@ function initAuthComponentMapSet(
         },
     }
 }
-function initAuthComponentSet(
-    factory: FactorySet,
-    map: AuthComponentMapSet
-): AuthComponentFactorySet {
+function initAuthComponentSet(factory: FactorySet, map: AuthComponentMapSet): AuthComponentFactorySet {
     const componentIDGenerator = new IDGenerator()
 
     return {

@@ -73,7 +73,7 @@ export type FactorySet = Readonly<{
     }>
 }>
 
-export function initAuthViewFactoryAsBackground(factory: FactorySet): AuthViewFactory {
+export function initAuthViewFactoryAsSingle(factory: FactorySet): AuthViewFactory {
     return (currentLocation) => {
         return {
             view: new View(currentLocation, {
