@@ -8,7 +8,7 @@ import { TimeConfig, newTimeConfig, newHostConfig } from "./auth/config"
 
 import { initAuthViewFactoryAsSingle } from "../auth/impl/single"
 import { initAuthViewFactoryAsForeground } from "../auth/impl/worker/foreground"
-import { initAuthBackground } from "../auth/impl/worker/background"
+import { initAuthWorker } from "../auth/impl/worker/background"
 
 import { initRenewCredential } from "../auth/component/renew_credential/impl"
 import { initPasswordLogin } from "../auth/component/password_login/impl"
@@ -129,7 +129,7 @@ export function newAuthWorkerBackgroundInitializer(): AuthWorkerInitializer {
             },
         }
 
-        return initAuthBackground(factory, worker)
+        return initAuthWorker(factory, worker)
     }
 }
 

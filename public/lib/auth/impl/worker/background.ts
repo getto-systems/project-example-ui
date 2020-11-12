@@ -249,7 +249,7 @@ class StoreActionProxyMap extends ActionProxyMap<StoreActionProxyMessage, StoreE
     }
 }
 
-export type WorkerFactory = Readonly<{
+export type FactorySet = Readonly<{
     actions: Readonly<{
         application: Readonly<{
             secureScriptPath: Factory<SecureScriptPathAction>
@@ -271,7 +271,7 @@ export type WorkerFactory = Readonly<{
     }>
 }>
 
-export function initAuthBackground(factory: WorkerFactory, worker: Worker): void {
+export function initAuthWorker(factory: FactorySet, worker: Worker): void {
     const map = initAuthComponentMapSet(factory, postBackgroundMessage)
     const errorHandler = (err: string) => {
         postBackgroundMessage({ type: "error", err })
@@ -305,7 +305,7 @@ type AuthComponentMapSet = Readonly<{
     }>
 }>
 function initAuthComponentMapSet(
-    factory: WorkerFactory,
+    factory: FactorySet,
     postBackgroundMessage: Post<BackgroundMessage>
 ): AuthComponentMapSet {
     const actions = {
