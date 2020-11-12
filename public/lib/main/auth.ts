@@ -86,7 +86,7 @@ export function newAuthViewFactoryAsSingle(credentialStorage: Storage): AuthView
 
     return initAuthViewFactoryAsSingle(factory)
 }
-export function newAuthViewFactoryAsForeground(credentialStorage: Storage): AuthViewFactory {
+export function newAuthViewFactoryAsWorkerForeground(credentialStorage: Storage): AuthViewFactory {
     const config = {
         time: newTimeConfig(),
     }
