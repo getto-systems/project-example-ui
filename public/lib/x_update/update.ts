@@ -1,24 +1,23 @@
 import { env } from "../y_static/env"
 
-;(async () => {
-    const nextVersion = await find(env.version)
+moveToNextVersion()
+
+async function moveToNextVersion() {
     const path = parsePathname(env.version, location.pathname)
-    if (path.isApplication) {
-        // ロケーション情報を引き継いで遷移
-        if (nextVersion.found) {
-            location.href = `/${nextVersion.version}/${path.pathname}${location.search}${location.hash}`
-        } else {
-            // 次のパージョンが見つからない場合は何もしない
-        }
-    } else {
-        // トップに遷移
-        if (nextVersion.found) {
-            location.href = `/${nextVersion.version}/index.html`
-        } else {
-            location.href = `/${env.version}/index.html`
-        }
+    if (!path.isApplication) {
+        // アプリケーションのパスでない場合は何もしない
+        return
     }
-})()
+
+    const nextVersion = await find(env.version)
+    if (!nextVersion.found) {
+        // 次のパージョンが見つからない場合は何もしない
+        return
+    }
+
+    // ロケーション情報を引き継いで遷移
+    location.href = `/${nextVersion.version}/${path.pathname}${location.search}${location.hash}`
+}
 
 type NextVersion = Readonly<{ found: false }> | Readonly<{ found: true; version: string }>
 
