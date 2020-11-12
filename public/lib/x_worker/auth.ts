@@ -1,3 +1,3 @@
-import { newAuthWorkerInitializer } from "../main/auth"
+import { newAuthWorkerBackgroundInitializer } from "../main/auth"
 
-newAuthWorkerInitializer()((self as unknown) as Worker)
+newAuthWorkerBackgroundInitializer()((self as unknown) as Worker)

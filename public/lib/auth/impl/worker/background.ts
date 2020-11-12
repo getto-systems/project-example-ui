@@ -237,11 +237,11 @@ interface ActionPost<M> {
 }
 
 class StoreActionProxyMap extends ActionProxyMap<StoreActionProxyMessage, StoreEvent> {
-    initFactory(actionID: number): Factory<StoreAction> {
+    init(actionID: number): StoreAction {
         const postActionMessage = this.post(actionID)
         postActionMessage({ type: "init" })
 
-        return () => (authCredential: AuthCredential, post: Post<StoreEvent>) => {
+        return (authCredential: AuthCredential, post: Post<StoreEvent>) => {
             const handlerID = this.idGenerator.generate()
             this.register(handlerID, post)
             postActionMessage({ type: "action", handlerID, authCredential })
@@ -271,7 +271,7 @@ export type WorkerFactory = Readonly<{
     }>
 }>
 
-export function initAuthWorker(factory: WorkerFactory, worker: Worker): void {
+export function initAuthWorkerBackground(factory: WorkerFactory, worker: Worker): void {
     const map = initAuthComponentMapSet(factory, postBackgroundMessage)
     const errorHandler = (err: string) => {
         postBackgroundMessage({ type: "error", err })
@@ -349,7 +349,7 @@ function initAuthComponentMapSet(
                             post({ type: "validate" })
                         }),
                     }),
-                    store: actions.credential.store.initFactory(actionID.generate()),
+                    store: actions.credential.store.init(actionID.generate()),
                     secureScriptPath: factory.actions.application.secureScriptPath(),
                 },
                 param
@@ -386,7 +386,7 @@ function initAuthComponentMapSet(
                             post({ type: "validate" })
                         }),
                     }),
-                    store: actions.credential.store.initFactory(actionID.generate()),
+                    store: actions.credential.store.init(actionID.generate()),
                     secureScriptPath: factory.actions.application.secureScriptPath(),
                 },
                 param

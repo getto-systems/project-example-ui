@@ -6,9 +6,9 @@ import { env } from "../y_static/env"
 import { newAppHref } from "./href"
 import { TimeConfig, newTimeConfig, newHostConfig } from "./auth/config"
 
-import { initAuthViewFactoryAsBackground } from "../auth/impl/foreground"
-import { initAuthViewFactoryAsWorker } from "../auth/impl/worker/foreground"
-import { initAuthWorker } from "../auth/impl/worker/background"
+import { initAuthViewFactoryAsSingle } from "../auth/impl/single"
+import { initAuthViewFactoryAsWorkerForeground } from "../auth/impl/worker/foreground"
+import { initAuthWorkerBackground } from "../auth/impl/worker/background"
 
 import { initRenewCredential } from "../auth/component/renew_credential/impl"
 import { initPasswordLogin } from "../auth/component/password_login/impl"
@@ -46,7 +46,7 @@ import { AuthViewFactory, AuthWorkerInitializer } from "../auth/view"
 import { LoginFieldCollector } from "../password_login/action"
 import { StartSessionFieldCollector, ResetFieldCollector } from "../password_reset/action"
 
-export function newAuthViewFactoryAsBackground(credentialStorage: Storage): AuthViewFactory {
+export function newAuthViewFactoryAsSingle(credentialStorage: Storage): AuthViewFactory {
     const config = {
         time: newTimeConfig(),
     }
@@ -80,14 +80,14 @@ export function newAuthViewFactoryAsBackground(credentialStorage: Storage): Auth
         },
     }
 
-    return initAuthViewFactoryAsBackground(factory)
+    return initAuthViewFactoryAsSingle(factory)
 }
-export function newAuthViewFactoryAsWorker(credentialStorage: Storage): AuthViewFactory {
+export function newAuthViewFactoryAsWorkerForeground(credentialStorage: Storage): AuthViewFactory {
     const config = {
         time: newTimeConfig(),
     }
 
-    return initAuthViewFactoryAsWorker(new Worker("./auth.worker.js"), {
+    return initAuthViewFactoryAsWorkerForeground(new Worker("./auth.worker.js"), {
         actions: {
             application: newApplicationFactory(),
             credential: newCredentialFactory(config.time, credentialStorage),
@@ -109,7 +109,7 @@ export function newAuthViewFactoryAsWorker(credentialStorage: Storage): AuthView
         },
     })
 }
-export function newAuthWorkerInitializer(): AuthWorkerInitializer {
+export function newAuthWorkerBackgroundInitializer(): AuthWorkerInitializer {
     return (worker) => {
         const config = {
             time: newTimeConfig(),
@@ -129,7 +129,7 @@ export function newAuthWorkerInitializer(): AuthWorkerInitializer {
             },
         }
 
-        return initAuthWorker(factory, worker)
+        return initAuthWorkerBackground(factory, worker)
     }
 }
 
