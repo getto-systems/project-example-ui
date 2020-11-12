@@ -7,8 +7,8 @@ import { newAppHref } from "./href"
 import { TimeConfig, newTimeConfig, newHostConfig } from "./auth/config"
 
 import { initAuthViewFactoryAsSingle } from "../auth/impl/single"
-import { initAuthViewFactoryAsWorkerForeground } from "../auth/impl/worker/foreground"
-import { initAuthWorkerBackground } from "../auth/impl/worker/background"
+import { initAuthViewFactoryAsForeground } from "../auth/impl/worker/foreground"
+import { initAuthBackground } from "../auth/impl/worker/background"
 
 import { initRenewCredential } from "../auth/component/renew_credential/impl"
 import { initPasswordLogin } from "../auth/component/password_login/impl"
@@ -87,7 +87,7 @@ export function newAuthViewFactoryAsWorkerForeground(credentialStorage: Storage)
         time: newTimeConfig(),
     }
 
-    return initAuthViewFactoryAsWorkerForeground(new Worker("./auth.worker.js"), {
+    return initAuthViewFactoryAsForeground(new Worker("./auth.worker.js"), {
         actions: {
             application: newApplicationFactory(),
             credential: newCredentialFactory(config.time, credentialStorage),
@@ -129,7 +129,7 @@ export function newAuthWorkerBackgroundInitializer(): AuthWorkerInitializer {
             },
         }
 
-        return initAuthWorkerBackground(factory, worker)
+        return initAuthBackground(factory, worker)
     }
 }
 

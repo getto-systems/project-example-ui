@@ -307,7 +307,7 @@ export type FactorySet = Readonly<{
     }>
 }>
 
-export function initAuthViewFactoryAsWorkerForeground(
+export function initAuthViewFactoryAsForeground(
     worker: Worker,
     factory: FactorySet
 ): AuthViewFactory {
