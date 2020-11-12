@@ -82,7 +82,7 @@ export function newAuthViewFactoryAsSingle(credentialStorage: Storage): AuthView
 
     return initAuthViewFactoryAsSingle(factory)
 }
-export function newAuthViewFactoryAsWorkerForeground(credentialStorage: Storage): AuthViewFactory {
+export function newAuthViewFactoryAsForeground(credentialStorage: Storage): AuthViewFactory {
     const config = {
         time: newTimeConfig(),
     }
@@ -109,7 +109,7 @@ export function newAuthViewFactoryAsWorkerForeground(credentialStorage: Storage)
         },
     })
 }
-export function newAuthWorkerBackgroundInitializer(): AuthWorkerInitializer {
+export function newAuthWorkerInitializer(): AuthWorkerInitializer {
     return (worker) => {
         const config = {
             time: newTimeConfig(),
