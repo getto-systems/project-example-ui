@@ -7,17 +7,17 @@ import {
 
 import { LoginIDFieldEvent } from "../../../../login_id/field/data"
 
-export function initLoginIDField(background: LoginIDFieldActionSet): LoginIDFieldComponent {
-    return new Component(background)
+export function initLoginIDField(actions: LoginIDFieldActionSet): LoginIDFieldComponent {
+    return new Component(actions)
 }
 
 class Component implements LoginIDFieldComponent {
-    background: LoginIDFieldActionSet
+    actions: LoginIDFieldActionSet
 
     listener: Post<LoginIDFieldState>[] = []
 
-    constructor(background: LoginIDFieldActionSet) {
-        this.background = background
+    constructor(actions: LoginIDFieldActionSet) {
+        this.actions = actions
     }
 
     onStateChange(post: Post<LoginIDFieldState>): void {
@@ -30,14 +30,14 @@ class Component implements LoginIDFieldComponent {
     action(request: LoginIDFieldRequest): void {
         switch (request.type) {
             case "set":
-                this.background.loginID.set(request.inputValue, (event) => {
+                this.actions.loginID.set(request.inputValue, (event) => {
                     this.post(this.mapLoginIDFieldEvent(event))
                 })
                 return
         }
     }
     validate(post: Post<LoginIDFieldEvent>): void {
-        this.background.loginID.validate((event) => {
+        this.actions.loginID.validate((event) => {
             this.post(this.mapLoginIDFieldEvent(event))
             post(event)
         })

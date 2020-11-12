@@ -8,18 +8,18 @@ import {
 import { StartSessionEvent, PollingStatusEvent } from "../../../password_reset/data"
 
 export function initPasswordResetSession(
-    background: PasswordResetSessionActionSet
+    actions: PasswordResetSessionActionSet
 ): PasswordResetSessionComponent {
-    return new Component(background)
+    return new Component(actions)
 }
 
 class Component implements PasswordResetSessionComponent {
-    background: PasswordResetSessionActionSet
+    actions: PasswordResetSessionActionSet
 
     listener: Post<PasswordResetSessionState>[] = []
 
-    constructor(background: PasswordResetSessionActionSet) {
-        this.background = background
+    constructor(actions: PasswordResetSessionActionSet) {
+        this.actions = actions
     }
 
     onStateChange(post: Post<PasswordResetSessionState>): void {
@@ -32,7 +32,7 @@ class Component implements PasswordResetSessionComponent {
     action(request: PasswordResetSessionRequest): void {
         switch (request.type) {
             case "start-session":
-                this.background.startSession((event) => {
+                this.actions.startSession((event) => {
                     this.post(this.mapStartSessionEvent(event))
                 })
                 return
@@ -42,7 +42,7 @@ class Component implements PasswordResetSessionComponent {
     mapStartSessionEvent(event: StartSessionEvent): PasswordResetSessionState {
         switch (event.type) {
             case "succeed-to-start-session":
-                this.background.pollingStatus(event.sessionID, (event) => {
+                this.actions.pollingStatus(event.sessionID, (event) => {
                     this.post(this.mapPollingStatusEvent(event))
                 })
                 return { type: "try-to-polling-status" }

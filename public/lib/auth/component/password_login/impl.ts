@@ -10,20 +10,20 @@ import { LoginEvent } from "../../../password_login/data"
 import { StoreEvent } from "../../../credential/data"
 
 export function initPasswordLogin(
-    background: PasswordLoginActionSet,
+    actions: PasswordLoginActionSet,
     param: PasswordLoginParam
 ): PasswordLoginComponent {
-    return new Component(background, param)
+    return new Component(actions, param)
 }
 
 class Component implements PasswordLoginComponent {
-    background: PasswordLoginActionSet
+    actions: PasswordLoginActionSet
     param: PasswordLoginParam
 
     listener: Post<PasswordLoginState>[] = []
 
-    constructor(background: PasswordLoginActionSet, param: PasswordLoginParam) {
-        this.background = background
+    constructor(actions: PasswordLoginActionSet, param: PasswordLoginParam) {
+        this.actions = actions
         this.param = param
     }
 
@@ -37,7 +37,7 @@ class Component implements PasswordLoginComponent {
     action(request: PasswordLoginRequest): void {
         switch (request.type) {
             case "login":
-                this.background.login((event) => {
+                this.actions.login((event) => {
                     this.post(this.mapLoginEvent(event))
                 })
                 return
@@ -54,12 +54,12 @@ class Component implements PasswordLoginComponent {
     mapLoginEvent(event: LoginEvent): PasswordLoginState {
         switch (event.type) {
             case "succeed-to-login":
-                this.background.store(event.authCredential, (event) => {
+                this.actions.store(event.authCredential, (event) => {
                     this.post(this.mapStoreEvent(event))
                 })
                 return {
                     type: event.type,
-                    scriptPath: this.background.secureScriptPath(this.param.pagePathname),
+                    scriptPath: this.actions.secureScriptPath(this.param.pagePathname),
                 }
 
             default:
