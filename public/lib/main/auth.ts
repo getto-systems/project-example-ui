@@ -1,5 +1,5 @@
 import { delayed, wait } from "../z_external/delayed"
-import { initAuthClient } from "../z_external/auth_client/auth_client"
+import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_client"
 
 import { env } from "../y_static/env"
 
@@ -51,12 +51,16 @@ export function newAuthViewFactoryAsSingle(credentialStorage: Storage): AuthView
         time: newTimeConfig(),
     }
 
+    const client = {
+        auth: initAuthClient(env.authServerURL),
+    }
+
     const factory = {
         actions: {
             application: newApplicationFactory(),
-            credential: newCredentialFactory(config.time, credentialStorage),
+            credential: newCredentialFactory(config.time, credentialStorage, client.auth),
 
-            passwordLogin: newPasswordLoginFactory(config.time),
+            passwordLogin: newPasswordLoginFactory(config.time, client.auth),
             passwordReset: newPasswordResetFactory(config.time),
 
             field: {
@@ -87,10 +91,14 @@ export function newAuthViewFactoryAsForeground(credentialStorage: Storage): Auth
         time: newTimeConfig(),
     }
 
+    const client = {
+        auth: initAuthClient(env.authServerURL),
+    }
+
     return initAuthViewFactoryAsForeground(new Worker("./auth.worker.js"), {
         actions: {
             application: newApplicationFactory(),
-            credential: newCredentialFactory(config.time, credentialStorage),
+            credential: newCredentialFactory(config.time, credentialStorage, client.auth),
 
             field: {
                 loginID: () => initLoginIDFieldAction(),
@@ -115,11 +123,15 @@ export function newAuthWorkerInitializer(): AuthWorkerInitializer {
             time: newTimeConfig(),
         }
 
+        const client = {
+            auth: initAuthClient(env.authServerURL),
+        }
+
         const factory = {
             actions: {
                 application: newApplicationFactory(),
 
-                passwordLogin: newPasswordLoginFactory(config.time),
+                passwordLogin: newPasswordLoginFactory(config.time, client.auth),
                 passwordReset: newPasswordResetFactory(config.time),
             },
             components: {
@@ -138,7 +150,7 @@ function newApplicationFactory() {
         secureScriptPath: () => initSecureScriptPathAction({ host: newHostConfig() }),
     }
 }
-function newCredentialFactory(time: TimeConfig, credentialStorage: Storage) {
+function newCredentialFactory(time: TimeConfig, credentialStorage: Storage, authClient: AuthClient) {
     const authCredentials = initStorageAuthCredentialRepository(credentialStorage, env.storageKey)
 
     return {
@@ -147,7 +159,7 @@ function newCredentialFactory(time: TimeConfig, credentialStorage: Storage) {
                 time,
 
                 authCredentials,
-                client: newRenewClient(),
+                client: newRenewClient(authClient),
                 delayed,
 
                 expires: initAuthExpires(),
@@ -157,7 +169,7 @@ function newCredentialFactory(time: TimeConfig, credentialStorage: Storage) {
                 time,
 
                 authCredentials,
-                client: newRenewClient(),
+                client: newRenewClient(authClient),
 
                 runner: initRenewRunner(),
             }),
@@ -167,11 +179,11 @@ function newCredentialFactory(time: TimeConfig, credentialStorage: Storage) {
             }),
     }
 }
-function newPasswordLoginFactory(time: TimeConfig) {
+function newPasswordLoginFactory(time: TimeConfig, authClient: AuthClient) {
     return {
         login: (fields: LoginFieldCollector) =>
             initLoginAction(fields, {
-                client: newPasswordLoginClient(),
+                client: newPasswordLoginClient(authClient),
                 time,
                 delayed,
             }),
@@ -203,18 +215,18 @@ function newPasswordResetFactory(time: TimeConfig) {
     }
 }
 
-function newRenewClient() {
-    return initFetchRenewClient(initAuthClient(env.authServerURL))
+function newRenewClient(authClient: AuthClient) {
+    return initFetchRenewClient(authClient)
 }
-function newPasswordLoginClient() {
-    return initFetchPasswordLoginClient(initAuthClient(env.authServerURL))
+function newPasswordLoginClient(authClient: AuthClient) {
+    return initFetchPasswordLoginClient(authClient)
 }
 function newPasswordResetSessionClient() {
-    //return initFetchPasswordResetSessionClient(initAuthClient(env.authServerURL))
+    //return initFetchPasswordResetSessionClient(authClient)
     return initSimulatePasswordResetSessionClient(packLoginID("loginID"))
 }
 function newPasswordResetClient() {
-    //return initFetchPasswordResetClient(initAuthClient(env.authServerURL))
+    //return initFetchPasswordResetClient(authClient)
     return initSimulatePasswordResetClient(packLoginID("loginID"), {
         ticketNonce: packTicketNonce("ticket-nonce"),
         apiCredential: {

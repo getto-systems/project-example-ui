@@ -88,12 +88,12 @@ interface ComponentProxy<F, M, R> {
     handleResponse(response: R): void
 }
 
-interface PasswordLoginComponentFactory {
+interface PasswordLoginComponentProxyFactory {
     (param: PasswordLoginParam): PasswordLoginComponent
 }
 
 class PasswordLoginComponentProxyMap extends ComponentProxyMap<
-    PasswordLoginComponentFactory,
+    PasswordLoginComponentProxyFactory,
     PasswordLoginComponentProxyMessage,
     PasswordLoginComponentProxyResponse
 > {
@@ -104,7 +104,7 @@ class PasswordLoginComponentProxyMap extends ComponentProxyMap<
 class PasswordLoginComponentProxy {
     listener: Post<PasswordLoginState>[] = []
 
-    initFactory(post: Post<PasswordLoginComponentProxyMessage>): PasswordLoginComponentFactory {
+    initFactory(post: Post<PasswordLoginComponentProxyMessage>): PasswordLoginComponentProxyFactory {
         return (param) => {
             post({ type: "init", param })
             return {
@@ -122,12 +122,12 @@ class PasswordLoginComponentProxy {
     }
 }
 
-interface PasswordResetSessionComponentFactory {
+interface PasswordResetSessionComponentProxyFactory {
     (): PasswordResetSessionComponent
 }
 
 class PasswordResetSessionComponentProxyMap extends ComponentProxyMap<
-    PasswordResetSessionComponentFactory,
+    PasswordResetSessionComponentProxyFactory,
     PasswordResetSessionComponentProxyMessage,
     PasswordResetSessionComponentProxyResponse
 > {
@@ -140,7 +140,7 @@ class PasswordResetSessionComponentProxy {
 
     initFactory(
         post: Post<PasswordResetSessionComponentProxyMessage>
-    ): PasswordResetSessionComponentFactory {
+    ): PasswordResetSessionComponentProxyFactory {
         return () => {
             post({ type: "init" })
             return {
@@ -158,12 +158,12 @@ class PasswordResetSessionComponentProxy {
     }
 }
 
-interface PasswordResetComponentFactory {
+interface PasswordResetComponentProxyFactory {
     (param: PasswordResetParam): PasswordResetComponent
 }
 
 class PasswordResetComponentProxyMap extends ComponentProxyMap<
-    PasswordResetComponentFactory,
+    PasswordResetComponentProxyFactory,
     PasswordResetComponentProxyMessage,
     PasswordResetComponentProxyResponse
 > {
@@ -174,7 +174,7 @@ class PasswordResetComponentProxyMap extends ComponentProxyMap<
 class PasswordResetComponentProxy {
     listener: Post<PasswordResetState>[] = []
 
-    initFactory(post: Post<PasswordResetComponentProxyMessage>): PasswordResetComponentFactory {
+    initFactory(post: Post<PasswordResetComponentProxyMessage>): PasswordResetComponentProxyFactory {
         return (param) => {
             post({ type: "init", param })
             return {
@@ -307,13 +307,10 @@ export type FactorySet = Readonly<{
     }>
 }>
 
-export function initAuthViewFactoryAsForeground(
-    worker: Worker,
-    factory: FactorySet
-): AuthViewFactory {
+export function initAuthViewFactoryAsForeground(worker: Worker, factory: FactorySet): AuthViewFactory {
     return (currentLocation) => {
         const map = initAuthComponentMapSet(factory, postForegroundMessage)
-        const view = new View(currentLocation, initAuthComponentSet(factory, map))
+        const view = new View(currentLocation, initAuthComponentFactorySet(factory, map))
         const errorHandler = (err: string) => {
             view.error(err)
         }
@@ -413,7 +410,10 @@ function initAuthComponentMapSet(
         },
     }
 }
-function initAuthComponentSet(factory: FactorySet, map: AuthComponentMapSet): AuthComponentFactorySet {
+function initAuthComponentFactorySet(
+    factory: FactorySet,
+    map: AuthComponentMapSet
+): AuthComponentFactorySet {
     const componentIDGenerator = new IDGenerator()
 
     return {
