@@ -5,6 +5,6 @@ export type AppHref = Readonly<{
     auth: AuthHref
 }>
 
-export interface AppHrefInit {
+export interface AppHrefFactory {
     (): AppHref
 }

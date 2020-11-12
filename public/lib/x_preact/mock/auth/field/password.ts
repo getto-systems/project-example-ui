@@ -18,7 +18,7 @@ export function newPasswordFieldComponent(state: PasswordFieldState): PasswordFi
     return new Component(state)
 }
 
-export class PasswordFieldInit {
+export class PasswordFieldStateFactory {
     noError(): PasswordFieldState {
         return {
             type: "succeed-to-update",

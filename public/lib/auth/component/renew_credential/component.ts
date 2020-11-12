@@ -4,7 +4,7 @@ import { SecureScriptPathAction } from "../../../application/action"
 import { StorageError, RenewError } from "../../../credential/data"
 import { PagePathname, ScriptPath, LoadError } from "../../../application/data"
 
-export interface RenewCredentialInit {
+export interface RenewCredentialComponentFactory {
     (actions: RenewCredentialActionSet, param: RenewCredentialParam): RenewCredentialComponent
 }
 

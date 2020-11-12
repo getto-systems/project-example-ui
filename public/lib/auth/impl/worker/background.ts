@@ -10,18 +10,18 @@ import {
 } from "./data"
 
 import {
-    PasswordLoginInit,
+    PasswordLoginComponentFactory,
     PasswordLoginComponent,
     PasswordLoginParam,
     PasswordLoginRequest,
 } from "../../component/password_login/component"
 import {
-    PasswordResetSessionInit,
+    PasswordResetSessionComponentFactory,
     PasswordResetSessionComponent,
     PasswordResetSessionRequest,
 } from "../../component/password_reset_session/component"
 import {
-    PasswordResetInit,
+    PasswordResetComponentFactory,
     PasswordResetParam,
     PasswordResetComponent,
     PasswordResetRequest,
@@ -82,10 +82,10 @@ class PasswordLoginComponentMap extends ComponentMap<
     PasswordLoginRequest,
     PasswordLoginComponentProxyResponse
 > {
-    factory: PasswordLoginComponentFactory
+    factory: PasswordLoginBackgroundComponentFactory
 
     constructor(
-        factory: PasswordLoginComponentFactory,
+        factory: PasswordLoginBackgroundComponentFactory,
         post: ComponentResponsePost<PasswordLoginComponentProxyResponse>
     ) {
         super(post, (component, request) => {
@@ -103,7 +103,7 @@ class PasswordLoginComponentMap extends ComponentMap<
         })
     }
 }
-interface PasswordLoginComponentFactory {
+interface PasswordLoginBackgroundComponentFactory {
     (componentID: number, param: PasswordLoginParam): PasswordLoginComponent
 }
 
@@ -112,10 +112,10 @@ class PasswordResetSessionComponentMap extends ComponentMap<
     PasswordResetSessionRequest,
     PasswordResetSessionComponentProxyResponse
 > {
-    factory: PasswordResetSessionComponentFactory
+    factory: PasswordResetSessionBackgroundComponentFactory
 
     constructor(
-        factory: PasswordResetSessionComponentFactory,
+        factory: PasswordResetSessionBackgroundComponentFactory,
         post: ComponentResponsePost<PasswordResetSessionComponentProxyResponse>
     ) {
         super(post, (component, request) => {
@@ -133,7 +133,7 @@ class PasswordResetSessionComponentMap extends ComponentMap<
         })
     }
 }
-interface PasswordResetSessionComponentFactory {
+interface PasswordResetSessionBackgroundComponentFactory {
     (componentID: number): PasswordResetSessionComponent
 }
 
@@ -142,10 +142,10 @@ class PasswordResetComponentMap extends ComponentMap<
     PasswordResetRequest,
     PasswordResetComponentProxyResponse
 > {
-    factory: PasswordResetComponentFactory
+    factory: PasswordResetBackgroundComponentFactory
 
     constructor(
-        factory: PasswordResetComponentFactory,
+        factory: PasswordResetBackgroundComponentFactory,
         post: ComponentResponsePost<PasswordResetComponentProxyResponse>
     ) {
         super(post, (component, request) => {
@@ -163,7 +163,7 @@ class PasswordResetComponentMap extends ComponentMap<
         })
     }
 }
-interface PasswordResetComponentFactory {
+interface PasswordResetBackgroundComponentFactory {
     (componentID: number, param: PasswordResetParam): PasswordResetComponent
 }
 
@@ -250,28 +250,29 @@ class StoreActionProxyMap extends ActionProxyMap<StoreActionProxyMessage, StoreE
 }
 
 export type WorkerFactory = Readonly<{
-    application: {
-        secureScriptPath: Factory<SecureScriptPathAction>
-    }
+    actions: Readonly<{
+        application: Readonly<{
+            secureScriptPath: Factory<SecureScriptPathAction>
+        }>
 
-    passwordLogin: {
-        login: ParameterizedFactory<LoginFieldCollector, LoginAction>
-    }
-    passwordReset: {
-        startSession: ParameterizedFactory<StartSessionFieldCollector, StartSessionAction>
-        pollingStatus: Factory<PollingStatusAction>
-        reset: ParameterizedFactory<ResetFieldCollector, ResetAction>
-    }
+        passwordLogin: Readonly<{
+            login: ParameterizedFactory<LoginFieldCollector, LoginAction>
+        }>
+        passwordReset: Readonly<{
+            startSession: ParameterizedFactory<StartSessionFieldCollector, StartSessionAction>
+            pollingStatus: Factory<PollingStatusAction>
+            reset: ParameterizedFactory<ResetFieldCollector, ResetAction>
+        }>
+    }>
+    components: Readonly<{
+        passwordLogin: PasswordLoginComponentFactory
+        passwordResetSession: PasswordResetSessionComponentFactory
+        passwordReset: PasswordResetComponentFactory
+    }>
 }>
 
-export type WorkerInit = Readonly<{
-    passwordLogin: PasswordLoginInit
-    passwordResetSession: PasswordResetSessionInit
-    passwordReset: PasswordResetInit
-}>
-
-export function initAuthWorker(factory: WorkerFactory, init: WorkerInit, worker: Worker): void {
-    const map = initAuthComponentMapSet(factory, init, postBackgroundMessage)
+export function initAuthWorker(factory: WorkerFactory, worker: Worker): void {
+    const map = initAuthComponentMapSet(factory, postBackgroundMessage)
     const errorHandler = (err: string) => {
         postBackgroundMessage({ type: "error", err })
     }
@@ -305,7 +306,6 @@ type AuthComponentMapSet = Readonly<{
 }>
 function initAuthComponentMapSet(
     factory: WorkerFactory,
-    init: WorkerInit,
     postBackgroundMessage: Post<BackgroundMessage>
 ): AuthComponentMapSet {
     const actions = {
@@ -339,9 +339,9 @@ function initAuthComponentMapSet(
 
     const passwordLogin = new PasswordLoginComponentMap(
         (componentID, param) => {
-            return init.passwordLogin(
+            return factory.components.passwordLogin(
                 {
-                    login: factory.passwordLogin.login({
+                    login: factory.actions.passwordLogin.login({
                         loginID: collectors.loginID.init(componentID, (post) => {
                             post({ type: "validate" })
                         }),
@@ -350,7 +350,7 @@ function initAuthComponentMapSet(
                         }),
                     }),
                     store: actions.credential.store.initFactory(actionID.generate()),
-                    secureScriptPath: factory.application.secureScriptPath(),
+                    secureScriptPath: factory.actions.application.secureScriptPath(),
                 },
                 param
             )
@@ -361,13 +361,13 @@ function initAuthComponentMapSet(
     )
     const passwordResetSession = new PasswordResetSessionComponentMap(
         (componentID) => {
-            return init.passwordResetSession({
-                startSession: factory.passwordReset.startSession({
+            return factory.components.passwordResetSession({
+                startSession: factory.actions.passwordReset.startSession({
                     loginID: collectors.loginID.init(componentID, (post) => {
                         post({ type: "validate" })
                     }),
                 }),
-                pollingStatus: factory.passwordReset.pollingStatus(),
+                pollingStatus: factory.actions.passwordReset.pollingStatus(),
             })
         },
         (componentID) => (response) => {
@@ -376,9 +376,9 @@ function initAuthComponentMapSet(
     )
     const passwordReset = new PasswordResetComponentMap(
         (componentID, param) => {
-            return init.passwordReset(
+            return factory.components.passwordReset(
                 {
-                    reset: factory.passwordReset.reset({
+                    reset: factory.actions.passwordReset.reset({
                         loginID: collectors.loginID.init(componentID, (post) => {
                             post({ type: "validate" })
                         }),
@@ -387,7 +387,7 @@ function initAuthComponentMapSet(
                         }),
                     }),
                     store: actions.credential.store.initFactory(actionID.generate()),
-                    secureScriptPath: factory.application.secureScriptPath(),
+                    secureScriptPath: factory.actions.application.secureScriptPath(),
                 },
                 param
             )

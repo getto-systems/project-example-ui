@@ -1,4 +1,4 @@
-import { AppHrefInit } from "../../href"
+import { AppHrefFactory } from "../../href"
 
 import {
     RenewCredentialComponentSet,
@@ -8,16 +8,16 @@ import {
 } from "../view"
 
 import {
-    RenewCredentialInit,
+    RenewCredentialComponentFactory,
     RenewCredentialComponent,
     RenewCredentialParam,
 } from "../component/renew_credential/component"
-import { PasswordLoginInit, PasswordLoginParam } from "../component/password_login/component"
-import { PasswordResetSessionInit } from "../component/password_reset_session/component"
-import { PasswordResetInit, PasswordResetParam } from "../component/password_reset/component"
+import { PasswordLoginComponentFactory, PasswordLoginParam } from "../component/password_login/component"
+import { PasswordResetSessionComponentFactory } from "../component/password_reset_session/component"
+import { PasswordResetComponentFactory, PasswordResetParam } from "../component/password_reset/component"
 
-import { LoginIDFieldComponent, LoginIDFieldInit } from "../component/field/login_id/component"
-import { PasswordFieldComponent, PasswordFieldInit } from "../component/field/password/component"
+import { LoginIDFieldComponent, LoginIDFieldComponentFactory } from "../component/field/login_id/component"
+import { PasswordFieldComponent, PasswordFieldComponentFactory } from "../component/field/password/component"
 
 import { SecureScriptPathAction } from "../../application/action"
 import { RenewAction, SetContinuousRenewAction, StoreAction } from "../../credential/action"
@@ -49,7 +49,7 @@ export type RenewCredentialFactorySet = Readonly<{
         }>
     }>
     components: Readonly<{
-        renewCredential: RenewCredentialInit
+        renewCredential: RenewCredentialComponentFactory
     }>
 }>
 export function initRenewCredentialComponentSet(
@@ -88,13 +88,13 @@ export type PasswordLoginFactorySet = Readonly<{
         }>
     }>
     components: Readonly<{
-        href: AppHrefInit
+        href: AppHrefFactory
 
-        passwordLogin: PasswordLoginInit
+        passwordLogin: PasswordLoginComponentFactory
 
         field: Readonly<{
-            loginID: LoginIDFieldInit
-            password: PasswordFieldInit
+            loginID: LoginIDFieldComponentFactory
+            password: PasswordFieldComponentFactory
         }>
     }>
 }>
@@ -139,12 +139,12 @@ export type PasswordResetSessionFactorySet = Readonly<{
         }>
     }>
     components: Readonly<{
-        href: AppHrefInit
+        href: AppHrefFactory
 
-        passwordResetSession: PasswordResetSessionInit
+        passwordResetSession: PasswordResetSessionComponentFactory
 
         field: Readonly<{
-            loginID: LoginIDFieldInit
+            loginID: LoginIDFieldComponentFactory
         }>
     }>
 }>
@@ -184,13 +184,13 @@ export type PasswordResetFactorySet = Readonly<{
         }>
     }>
     components: Readonly<{
-        href: AppHrefInit
+        href: AppHrefFactory
 
-        passwordReset: PasswordResetInit
+        passwordReset: PasswordResetComponentFactory
 
         field: Readonly<{
-            loginID: LoginIDFieldInit
-            password: PasswordFieldInit
+            loginID: LoginIDFieldComponentFactory
+            password: PasswordFieldComponentFactory
         }>
     }>
 }>
@@ -226,7 +226,7 @@ export type LoginIDFieldFactorySet = Readonly<{
     }>
     components: Readonly<{
         field: Readonly<{
-            loginID: LoginIDFieldInit
+            loginID: LoginIDFieldComponentFactory
         }>
     }>
 }>
@@ -242,7 +242,7 @@ export type PasswordFieldFactorySet = Readonly<{
     }>
     components: Readonly<{
         field: Readonly<{
-            password: PasswordFieldInit
+            password: PasswordFieldComponentFactory
         }>
     }>
 }>

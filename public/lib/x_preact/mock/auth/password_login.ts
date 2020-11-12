@@ -4,10 +4,10 @@ import {
 } from "../../../auth/component/password_login/component"
 
 export function newPasswordLoginComponent(): PasswordLoginComponent {
-    return new Component(new Init().initialLogin())
+    return new Component(new PasswordLoginStateFactory().initialLogin())
 }
 
-class Init {
+class PasswordLoginStateFactory {
     initialLogin(): PasswordLoginState {
         return { type: "initial-login" }
     }

@@ -4,10 +4,10 @@ import {
 } from "../../../auth/component/renew_credential/component"
 
 export function newRenewCredentialComponent(): RenewCredentialComponent {
-    return new Component(new Init().delayedToRenew())
+    return new Component(new RenewCredentialStateFactory().delayedToRenew())
 }
 
-class Init {
+class RenewCredentialStateFactory {
     delayedToRenew(): RenewCredentialState {
         return { type: "delayed-to-renew" }
     }

@@ -32,10 +32,10 @@ type ComponentSet = Readonly<{
 }>
 
 type Props = {
-    init: Init<ComponentSet>
+    factory: Factory<ComponentSet>
 }
-export function PasswordResetSession({ init }: Props): VNode {
-    const container = useComponentSet(init)
+export function PasswordResetSession({ factory }: Props): VNode {
+    const container = useComponentSet(factory)
 
     if (!container.set) {
         return EMPTY_CONTENT
@@ -304,7 +304,7 @@ function sendTokenError(err: SendTokenError): VNode {
 
 const EMPTY_CONTENT = html``
 
-interface Init<T> {
+interface Factory<T> {
     (): T
 }
 interface Post<T> {

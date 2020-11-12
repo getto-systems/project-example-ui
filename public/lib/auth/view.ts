@@ -9,7 +9,7 @@ import { PasswordResetComponent } from "./component/password_reset/component"
 import { LoginIDFieldComponent } from "./component/field/login_id/component"
 import { PasswordFieldComponent } from "./component/field/password/component"
 
-export interface AuthInit {
+export interface AuthViewFactory {
     (currentLocation: Location): AuthResource
 }
 export type AuthResource = Readonly<{
@@ -17,7 +17,7 @@ export type AuthResource = Readonly<{
     terminate: Terminate
 }>
 
-export interface AuthInitWorker {
+export interface AuthWorkerInitializer {
     (worker: Worker): void
 }
 
@@ -27,11 +27,11 @@ export interface AuthView {
     readonly components: AuthComponentSet
 }
 export type AuthComponentSet = Readonly<{
-    renewCredential: Init<RenewCredentialComponentSet>
+    renewCredential: Factory<RenewCredentialComponentSet>
 
-    passwordLogin: Init<PasswordLoginComponentSet>
-    passwordResetSession: Init<PasswordResetSessionComponentSet>
-    passwordReset: Init<PasswordResetComponentSet>
+    passwordLogin: Factory<PasswordLoginComponentSet>
+    passwordResetSession: Factory<PasswordResetSessionComponentSet>
+    passwordReset: Factory<PasswordResetComponentSet>
 }>
 export type RenewCredentialComponentSet = Readonly<{
     renewCredential: RenewCredentialComponent
@@ -67,7 +67,7 @@ export const initialAuthState: AuthState = { type: "initial" }
 interface Post<T> {
     (state: T): void
 }
-interface Init<T> {
+interface Factory<T> {
     (): T
 }
 interface Terminate {

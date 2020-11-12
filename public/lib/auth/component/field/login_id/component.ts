@@ -3,7 +3,7 @@ import { LoginIDFieldAction } from "../../../../login_id/field/action"
 import { LoginIDFieldError, LoginIDFieldEvent } from "../../../../login_id/field/data"
 import { InputValue, Valid, noError } from "../../../../field/data"
 
-export interface LoginIDFieldInit {
+export interface LoginIDFieldComponentFactory {
     (actions: LoginIDFieldActionSet): LoginIDFieldComponent
 }
 export type LoginIDFieldActionSet = Readonly<{

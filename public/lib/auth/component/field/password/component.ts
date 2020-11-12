@@ -10,7 +10,7 @@ import {
 } from "../../../../password/field/data"
 import { InputValue, Valid, noError } from "../../../../field/data"
 
-export interface PasswordFieldInit {
+export interface PasswordFieldComponentFactory {
     (actions: PasswordFieldActionSet): PasswordFieldComponent
 }
 export type PasswordFieldActionSet = Readonly<{
