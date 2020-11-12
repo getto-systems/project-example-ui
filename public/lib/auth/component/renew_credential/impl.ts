@@ -9,20 +9,20 @@ import {
 import { RenewEvent, SetContinuousRenewEvent } from "../../../credential/data"
 
 export function initRenewCredential(
-    background: RenewCredentialActionSet,
+    actions: RenewCredentialActionSet,
     param: RenewCredentialParam
 ): RenewCredentialComponent {
-    return new Component(background, param)
+    return new Component(actions, param)
 }
 
 class Component implements RenewCredentialComponent {
-    background: RenewCredentialActionSet
+    actions: RenewCredentialActionSet
     param: RenewCredentialParam
 
     listener: Post<RenewCredentialState>[] = []
 
-    constructor(background: RenewCredentialActionSet, param: RenewCredentialParam) {
-        this.background = background
+    constructor(actions: RenewCredentialActionSet, param: RenewCredentialParam) {
+        this.actions = actions
         this.param = param
     }
 
@@ -36,13 +36,13 @@ class Component implements RenewCredentialComponent {
     action(request: RenewCredentialRequest): void {
         switch (request.type) {
             case "renew":
-                this.background.renew((event) => {
+                this.actions.renew((event) => {
                     this.post(this.mapRenewEvent(event))
                 })
                 return
 
             case "succeed-to-instant-load":
-                this.background.setContinuousRenew((event) => {
+                this.actions.setContinuousRenew((event) => {
                     this.post(this.mapSetContinuousRenewEvent(event))
                 })
                 return
@@ -62,7 +62,7 @@ class Component implements RenewCredentialComponent {
             case "succeed-to-renew":
                 return {
                     type: event.type,
-                    scriptPath: this.background.secureScriptPath(this.param.pagePathname),
+                    scriptPath: this.actions.secureScriptPath(this.param.pagePathname),
                 }
 
             default:
