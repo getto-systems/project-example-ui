@@ -1,4 +1,3 @@
-// TODO これを href ディレクトリにまとめたほうがいいかもしれない
 import { AuthHref } from "../auth/href"
 
 export type AppHref = Readonly<{
