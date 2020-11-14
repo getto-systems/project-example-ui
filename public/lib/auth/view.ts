@@ -17,10 +17,6 @@ export type AuthResource = Readonly<{
     terminate: Terminate
 }>
 
-export interface AuthWorkerInitializer {
-    (worker: Worker): void
-}
-
 export interface AuthView {
     onStateChange(post: Post<AuthState>): void
     load(): void
