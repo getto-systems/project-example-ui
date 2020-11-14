@@ -1,6 +1,8 @@
 import { packResetToken } from "../../password_reset/adapter"
 import { packPagePathname } from "../../application/adapter"
 
+import { AuthSearch } from "./href"
+
 import {
     AuthView,
     AuthState,
@@ -17,17 +19,11 @@ import { PasswordResetParam } from "../component/password_reset/component"
 
 import { ResetToken } from "../../password_reset/data"
 
-// ログイン前画面ではアンダースコアから始まるクエリを使用する
-const SEARCH = {
-    passwordReset: "_password_reset",
-    passwordResetToken: "_password_reset_token",
-}
-
 function detectLoginState(currentLocation: Location): AuthState {
     const url = new URL(currentLocation.toString())
 
     // パスワードリセット
-    switch (url.searchParams.get(SEARCH.passwordReset)) {
+    switch (url.searchParams.get(AuthSearch.passwordReset)) {
         case "start":
             return { type: "password-reset-session" }
         case "reset":
@@ -39,7 +35,7 @@ function detectLoginState(currentLocation: Location): AuthState {
 }
 function detectPasswordResetToken(currentLocation: Location): ResetToken {
     const url = new URL(currentLocation.toString())
-    return packResetToken(url.searchParams.get(SEARCH.passwordResetToken) || "")
+    return packResetToken(url.searchParams.get(AuthSearch.passwordResetToken) || "")
 }
 
 export class View implements AuthView {
