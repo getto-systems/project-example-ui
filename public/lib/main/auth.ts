@@ -8,7 +8,7 @@ import { TimeConfig, newTimeConfig, newHostConfig } from "./auth/config"
 
 import { initAuthViewFactoryAsSingle } from "../auth/impl/single"
 import { initAuthViewFactoryAsForeground } from "../auth/impl/worker/foreground"
-import { initAuthWorker } from "../auth/impl/worker/background"
+import { initAuthWorkerAsBackground } from "../auth/impl/worker/background"
 
 import { initRenewCredential } from "../auth/component/renew_credential/impl"
 import { initPasswordLogin } from "../auth/component/password_login/impl"
@@ -41,7 +41,7 @@ import { initSimulatePasswordResetSessionClient } from "../password_reset/impl/c
 import { packTicketNonce, packApiRoles, packAuthAt } from "../credential/adapter"
 import { packLoginID } from "../login_id/adapter"
 
-import { AuthViewFactory, AuthWorkerInitializer } from "../auth/view"
+import { AuthViewFactory } from "../auth/view"
 
 import { LoginFieldCollector } from "../password_login/action"
 import { StartSessionFieldCollector, ResetFieldCollector } from "../password_reset/action"
@@ -117,32 +117,30 @@ export function newAuthViewFactoryAsWorkerForeground(credentialStorage: Storage)
         },
     })
 }
-export function newAuthWorkerInitializer(): AuthWorkerInitializer {
-    return (worker) => {
-        const config = {
-            time: newTimeConfig(),
-        }
-
-        const client = {
-            auth: initAuthClient(env.authServerURL),
-        }
-
-        const factory = {
-            actions: {
-                application: newApplicationFactory(),
-
-                passwordLogin: newPasswordLoginFactory(config.time, client.auth),
-                passwordReset: newPasswordResetFactory(config.time),
-            },
-            components: {
-                passwordLogin: initPasswordLogin,
-                passwordResetSession: initPasswordResetSession,
-                passwordReset: initPasswordReset,
-            },
-        }
-
-        return initAuthWorker(factory, worker)
+export function initAuthWorker(worker: Worker): void {
+    const config = {
+        time: newTimeConfig(),
     }
+
+    const client = {
+        auth: initAuthClient(env.authServerURL),
+    }
+
+    const factory = {
+        actions: {
+            application: newApplicationFactory(),
+
+            passwordLogin: newPasswordLoginFactory(config.time, client.auth),
+            passwordReset: newPasswordResetFactory(config.time),
+        },
+        components: {
+            passwordLogin: initPasswordLogin,
+            passwordResetSession: initPasswordResetSession,
+            passwordReset: initPasswordReset,
+        },
+    }
+
+    return initAuthWorkerAsBackground(factory, worker)
 }
 
 function newApplicationFactory() {

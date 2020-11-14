@@ -271,7 +271,7 @@ export type FactorySet = Readonly<{
     }>
 }>
 
-export function initAuthWorker(factory: FactorySet, worker: Worker): void {
+export function initAuthWorkerAsBackground(factory: FactorySet, worker: Worker): void {
     const map = initAuthComponentMapSet(factory, postBackgroundMessage)
     const errorHandler = (err: string) => {
         postBackgroundMessage({ type: "error", err })
