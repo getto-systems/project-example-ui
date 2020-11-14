@@ -7,9 +7,16 @@ export function initAuthHref(): AuthHref {
     }
 }
 
+// ログイン前画面ではアンダースコアから始まるクエリを使用する
+export const AuthSearch = {
+    passwordLogin: "_password_login",
+    passwordReset: "_password_reset",
+    passwordResetToken: "_password_reset_token",
+}
+
 function passwordLoginHref(): string {
-    return "?_password_login"
+    return `?${AuthSearch.passwordLogin}`
 }
 function passwordResetSessionHref(): string {
-    return "?_password_reset=start"
+    return `?${AuthSearch.passwordReset}=start`
 }
