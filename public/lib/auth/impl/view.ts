@@ -24,9 +24,9 @@ function detectLoginState(currentLocation: Location): AuthState {
 
     // パスワードリセット
     switch (url.searchParams.get(AuthSearch.passwordReset)) {
-        case "start":
+        case AuthSearch.passwordReset_start:
             return { type: "password-reset-session" }
-        case "reset":
+        case AuthSearch.passwordReset_reset:
             return { type: "password-reset" }
     }
 
