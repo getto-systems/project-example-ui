@@ -1,15 +1,11 @@
-import { env } from "../y_static/env"
-
-moveToNextVersion()
-
-async function moveToNextVersion() {
-    const path = parsePathname(env.version, location.pathname)
+export async function moveToNextVersion(currentVersion: string): Promise<void> {
+    const path = parsePathname(currentVersion, location.pathname)
     if (!path.isApplication) {
         // アプリケーションのパスでない場合は何もしない
         return
     }
 
-    const nextVersion = await find(env.version)
+    const nextVersion = await find(currentVersion)
     if (!nextVersion.found) {
         // 次のパージョンが見つからない場合は何もしない
         return
