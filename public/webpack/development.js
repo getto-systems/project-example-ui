@@ -5,9 +5,9 @@ const WorkerPlugin = require("worker-plugin")
 module.exports = {
     entry: () => {
         return [
-            { type: "x_update/main", names: ["update"], suffix: "" },
-            { type: "x_preact/main", names: ["auth"], suffix: "" },
-            { type: "x_worker", names: ["auth"], suffix: ".worker" },
+            { type: "x_update/y_main", names: ["update"], suffix: "" },
+            { type: "x_preact/y_main", names: ["auth"], suffix: "" },
+            { type: "x_worker/y_main", names: ["auth"], suffix: ".worker" },
         ].reduce((acc, info) => {
             info.names.forEach((name) => {
                 acc[`${name}${info.suffix}`] = path.join(__dirname, `../lib/${info.type}/${name}.ts`)
