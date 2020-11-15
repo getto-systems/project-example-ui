@@ -4,8 +4,8 @@ const path = require("path")
 module.exports = {
     entry: () => {
         return [
-            { type: "x_update/y_main", names: ["update"] },
-            { type: "x_preact/y_mock", names: ["auth"] },
+            { type: "x_update/x_main", names: ["update"] },
+            { type: "x_preact/x_mock", names: ["auth"] },
         ].reduce((acc, info) => {
             info.names.forEach((name) => {
                 acc[name] = path.join(__dirname, `../lib/${info.type}/${name}.ts`)
