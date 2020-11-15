@@ -11,26 +11,13 @@ import { ApplicationError } from "../application_error"
 import { LoginIDField } from "./password_login/field/login_id"
 import { PasswordField } from "./password_login/field/password"
 
-import { AppHref } from "../../href/data"
-
-import {
-    PasswordLoginComponent,
-    initialPasswordLoginState,
-} from "../../auth/component/password_login/component"
-import { LoginIDFieldComponent } from "../../auth/component/field/login_id/component"
-import { PasswordFieldComponent } from "../../auth/component/field/password/component"
+import { PasswordLoginComponentSet } from "../../auth/view"
+import { initialPasswordLoginState } from "../../auth/component/password_login/component"
 
 import { LoginError } from "../../password_login/data"
 
-type ComponentSet = Readonly<{
-    href: AppHref
-    passwordLogin: PasswordLoginComponent
-    loginIDField: LoginIDFieldComponent
-    passwordField: PasswordFieldComponent
-}>
-
 type Props = {
-    factory: Factory<ComponentSet>
+    factory: Factory<PasswordLoginComponentSet>
 }
 export function PasswordLogin({ factory }: Props): VNode {
     const container = useComponentSet(factory)
@@ -41,7 +28,7 @@ export function PasswordLogin({ factory }: Props): VNode {
 
     return h(View, container.components)
 }
-function View({ href, passwordLogin, loginIDField, passwordField }: ComponentSet): VNode {
+function View({ href, passwordLogin, loginIDField, passwordField }: PasswordLoginComponentSet): VNode {
     const [state, setState] = useState(initialPasswordLoginState)
     // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
     const submit = useRef<HTMLButtonElement>()
@@ -70,8 +57,7 @@ function View({ href, passwordLogin, loginIDField, passwordField }: ComponentSet
             <section>
                 <big>
                     <section class="login__body">
-                        ${h(LoginIDField, { loginIDField })}
-                        ${h(PasswordField, { passwordField })}
+                        ${h(LoginIDField, { loginIDField })} ${h(PasswordField, { passwordField })}
                     </section>
                 </big>
             </section>
@@ -96,9 +82,7 @@ function View({ href, passwordLogin, loginIDField, passwordField }: ComponentSet
         return html`
             <aside class="login">
                 <form class="login__box" onSubmit="${onSubmit}">
-                    ${loginHeader()}
-                    ${loginFields}
-                    ${loginFooter}
+                    ${loginHeader()} ${loginFields} ${loginFooter}
                 </form>
             </aside>
         `

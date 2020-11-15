@@ -8,19 +8,13 @@ import { appendScript } from "./application"
 
 import { ApplicationError } from "../application_error"
 
-import {
-    RenewCredentialComponent,
-    initialRenewCredentialState,
-} from "../../auth/component/renew_credential/component"
+import { RenewCredentialComponentSet } from "../../auth/view"
+import { initialRenewCredentialState } from "../../auth/component/renew_credential/component"
 
 import { RenewError } from "../../credential/data"
 
-type ComponentSet = Readonly<{
-    renewCredential: RenewCredentialComponent
-}>
-
 type Props = {
-    factory: Factory<ComponentSet>
+    factory: Factory<RenewCredentialComponentSet>
 }
 export function RenewCredential({ factory }: Props): VNode {
     const container = useComponentSet(factory)
@@ -31,7 +25,7 @@ export function RenewCredential({ factory }: Props): VNode {
 
     return h(View, container.components)
 }
-function View({ renewCredential }: ComponentSet): VNode {
+function View({ renewCredential }: RenewCredentialComponentSet): VNode {
     const [state, setState] = useState(initialRenewCredentialState)
     useEffect(() => {
         renewCredential.onStateChange(setState)
