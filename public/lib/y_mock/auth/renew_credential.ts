@@ -1,7 +1,7 @@
 import {
     RenewCredentialComponent,
     RenewCredentialState,
-} from "../../../auth/component/renew_credential/component"
+} from "../../auth/component/renew_credential/component"
 
 export function newRenewCredentialComponent(): RenewCredentialComponent {
     return new Component(new RenewCredentialStateFactory().delayedToRenew())
