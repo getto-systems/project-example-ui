@@ -1,18 +1,18 @@
-import { packInputValue } from "../../../../field/adapter"
+import { packInputValue } from "../../../field/adapter"
 
 import {
     PasswordFieldComponent,
     PasswordFieldState,
-} from "../../../../auth/component/field/password/component"
+} from "../../../auth/component/field/password/component"
 
 import {
     simplePassword,
     complexPassword,
     hidePassword,
     showPassword,
-} from "../../../../password/field/data"
+} from "../../../password/field/data"
 
-import { noError, hasError } from "../../../../field/data"
+import { noError, hasError } from "../../../field/data"
 
 export function newPasswordFieldComponent(state: PasswordFieldState): PasswordFieldComponent {
     return new Component(state)

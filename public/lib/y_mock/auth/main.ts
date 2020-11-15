@@ -1,4 +1,4 @@
-import { newAppHref } from "../../../main/href"
+import { newAppHref } from "../../main/href"
 
 import { newRenewCredentialComponent } from "./renew_credential"
 
@@ -9,7 +9,7 @@ import { newPasswordResetComponent } from "./password_reset"
 import { newLoginIDFieldComponent, LoginIDFieldStateFactory } from "./field/login_id"
 import { newPasswordFieldComponent, PasswordFieldStateFactory } from "./field/password"
 
-import { AuthViewFactory, AuthView, AuthComponentSet, AuthState } from "../../../auth/view"
+import { AuthViewFactory, AuthView, AuthComponentSet, AuthState } from "../../auth/view"
 
 export function newAuthViewFactory(): AuthViewFactory {
     return () => {
