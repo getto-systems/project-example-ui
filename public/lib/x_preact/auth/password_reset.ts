@@ -11,26 +11,13 @@ import { ApplicationError } from "../application_error"
 import { LoginIDField } from "./password_reset/field/login_id"
 import { PasswordField } from "./password_reset/field/password"
 
-import { AppHref } from "../../href/data"
-
-import {
-    PasswordResetComponent,
-    initialPasswordResetState,
-} from "../../auth/component/password_reset/component"
-import { LoginIDFieldComponent } from "../../auth/component/field/login_id/component"
-import { PasswordFieldComponent } from "../../auth/component/field/password/component"
+import { PasswordResetComponentSet } from "../../auth/view"
+import { initialPasswordResetState } from "../../auth/component/password_reset/component"
 
 import { ResetError } from "../../password_reset/data"
 
-type ComponentSet = Readonly<{
-    href: AppHref
-    passwordReset: PasswordResetComponent
-    loginIDField: LoginIDFieldComponent
-    passwordField: PasswordFieldComponent
-}>
-
 type Props = {
-    factory: Factory<ComponentSet>
+    factory: Factory<PasswordResetComponentSet>
 }
 export function PasswordReset({ factory }: Props): VNode {
     const container = useComponentSet(factory)
@@ -41,7 +28,7 @@ export function PasswordReset({ factory }: Props): VNode {
 
     return h(View, container.components)
 }
-function View({ href, passwordReset, loginIDField, passwordField }: ComponentSet): VNode {
+function View({ href, passwordReset, loginIDField, passwordField }: PasswordResetComponentSet): VNode {
     const [state, setState] = useState(initialPasswordResetState)
     // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
     const submit = useRef<HTMLButtonElement>()
