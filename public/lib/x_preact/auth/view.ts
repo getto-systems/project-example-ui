@@ -17,7 +17,7 @@ type Props = Readonly<{
     factory: AuthViewFactory
 }>
 
-export function View({ factory }: Props): VNode {
+export function Main({ factory }: Props): VNode {
     const [err, _resetError] = useErrorBoundary((err) => {
         // ここでエラーをどこかに投げたい、けど認証前なのでこれでお茶を濁す
         console.log(err)
@@ -33,13 +33,13 @@ export function View({ factory }: Props): VNode {
         return EMPTY_CONTENT
     }
 
-    return h(Components, container)
+    return h(View, container)
 }
 
-type ComponentsProps = Readonly<{
+type ViewProps = Readonly<{
     view: AuthView
 }>
-function Components({ view }: ComponentsProps): VNode {
+function View({ view }: ViewProps): VNode {
     const [state, setState] = useState(initialAuthState)
     useEffect(() => {
         view.onStateChange(setState)

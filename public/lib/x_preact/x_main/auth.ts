@@ -2,6 +2,6 @@ import { render, h } from "preact"
 
 import { newAuthViewFactoryAsWorkerForeground } from "../../y_main/auth"
 
-import { View } from "../auth/view"
+import { Main } from "../auth/view"
 
-render(h(View, { factory: newAuthViewFactoryAsWorkerForeground(localStorage) }), document.body)
+render(h(Main, { factory: newAuthViewFactoryAsWorkerForeground(localStorage) }), document.body)
