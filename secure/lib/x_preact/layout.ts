@@ -1,7 +1,6 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-// TODO public と secure で共有したい : env を使うとするとコンポーネントから送ってもらわないといけなくて大ごとだから・・・
 const brand = "GETTO"
 const title = "Example"
 const subTitle = "code templates"
@@ -16,26 +15,23 @@ export function menuHeader(): VNode {
     `
 }
 
-export function menuFooter(version: string): VNode {
+export function menuFooter(): VNode {
     return html`
         <footer class="menu__footer">
             <p class="menu__footer__message">copyright GETTO.systems</p>
-            <p class="menu__footer__message">version: ${version}</p>
         </footer>
     `
 }
 
-export function mainFooter(): VNode {
+export function footer(): VNode {
     return html`
         <footer class="main__footer">
-            <p class="main__footer__message">
-                powered by : LineIcons / みんなの文字
-            </p>
+            <p class="main__footer__message">powered by : LineIcons / みんなの文字</p>
         </footer>
     `
 }
 
-export function applicationError(title: VNode, content: VNode, footer: VNode): VNode {
+export function fullScreenError(title: VNode, content: VNode, footer: VNode): VNode {
     return html`
         <aside class="login">
             <section class="login__box">
@@ -48,9 +44,7 @@ export function applicationError(title: VNode, content: VNode, footer: VNode): V
                     <h3 class="login__message__title">${title}</h3>
                     <section class="login__message__body paragraph">${content}</section>
                 </section>
-                <footer class="login__footer">
-                    ${footer}
-                </footer>
+                <footer class="login__footer">${footer}</footer>
             </section>
         </aside>
     `
