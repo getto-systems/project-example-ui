@@ -3,7 +3,7 @@ import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { useComponentSet } from "../container"
-import { loginError } from "../layout"
+import { fullScreenError } from "../layout"
 import { appendScript } from "./application"
 
 import { ApplicationError } from "../system/application_error"
@@ -92,7 +92,7 @@ function Content({ renewCredential }: RenewCredentialComponentSet): VNode {
 }
 
 function delayedContent(): VNode {
-    return loginError(
+    return fullScreenError(
         html`認証に時間がかかっています`,
         html`
             <p>
@@ -106,7 +106,7 @@ function delayedContent(): VNode {
 }
 
 function renewFailedContent(err: RenewError): VNode {
-    return loginError(html`認証に失敗しました`, errorMessage(renewError(err)), html``)
+    return fullScreenError(html`認証に失敗しました`, errorMessage(renewError(err)), html``)
 }
 
 function renewError(err: RenewError): VNode {

@@ -1,14 +1,14 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { loginError } from "../layout"
+import { fullScreenError } from "../layout"
 
 type Props = Readonly<{
     err: string
 }>
 
 export function ApplicationError({ err }: Props): VNode {
-    return loginError(
+    return fullScreenError(
         html`アプリケーション実行中にエラーが発生しました`,
         html`
             <p>エラーが発生したため、アプリケーションは動作を停止しました</p>

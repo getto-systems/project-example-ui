@@ -1,17 +1,21 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
+const brand = "GETTO"
+const title = "Example"
+const subTitle = "code templates"
+
 export function loginHeader(): VNode {
     return html`
         <header class="login__header">
-            <cite class="login__brand">GETTO</cite>
-            <strong class="login__title">Example</strong>
-            <cite class="login__subTitle">code templates</cite>
+            <cite class="login__brand">${brand}</cite>
+            <strong class="login__title">${title}</strong>
+            <cite class="login__subTitle">${subTitle}</cite>
         </header>
     `
 }
 
-export function loginError(title: VNode, content: VNode, footer: VNode): VNode {
+export function fullScreenError(title: VNode, content: VNode, footer: VNode): VNode {
     return html`
         <aside class="login">
             <section class="login__box">
