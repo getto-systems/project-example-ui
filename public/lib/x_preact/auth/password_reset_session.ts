@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { useComponentSet } from "../container"
 import { loginHeader, loginError } from "../layout"
 
-import { ApplicationError } from "../application_error"
+import { ApplicationError } from "../system/application_error"
 
 import { LoginIDField } from "./password_reset_session/field/login_id"
 
