@@ -62,19 +62,19 @@ class MenuStateFactory {
             {
                 type: "category",
                 category: packMenuCategory({
-                    isExpand: false,
+                    isExpand: true,
                     label: "MAIN",
-                    badgeCount: 0,
+                    badgeCount: 10,
                 }),
                 children: [
                     {
                         type: "item",
                         item: packMenuItem({
-                            isActive: false,
+                            isActive: true,
                             href: "/dist/index.html",
                             label: "ホーム",
                             icon: "home",
-                            badgeCount: 0,
+                            badgeCount: 10,
                         }),
                     },
                 ],
