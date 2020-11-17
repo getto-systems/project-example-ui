@@ -13,9 +13,9 @@ import { initialRenewCredentialState } from "../../auth/component/renew_credenti
 
 import { RenewError } from "../../credential/data"
 
-type Props = {
+type Props = Readonly<{
     factory: Factory<RenewCredentialComponentSet>
-}
+}>
 export function RenewCredential({ factory }: Props): VNode {
     const container = useComponentSet(factory)
 

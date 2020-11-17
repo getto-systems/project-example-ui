@@ -16,9 +16,9 @@ import { initialPasswordLoginState } from "../../auth/component/password_login/c
 
 import { LoginError } from "../../password_login/data"
 
-type Props = {
+type Props = Readonly<{
     factory: Factory<PasswordLoginComponentSet>
-}
+}>
 export function PasswordLogin({ factory }: Props): VNode {
     const container = useComponentSet(factory)
 

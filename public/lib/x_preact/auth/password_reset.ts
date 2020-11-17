@@ -16,9 +16,9 @@ import { initialPasswordResetState } from "../../auth/component/password_reset/c
 
 import { ResetError } from "../../password_reset/data"
 
-type Props = {
+type Props = Readonly<{
     factory: Factory<PasswordResetComponentSet>
-}
+}>
 export function PasswordReset({ factory }: Props): VNode {
     const container = useComponentSet(factory)
 
