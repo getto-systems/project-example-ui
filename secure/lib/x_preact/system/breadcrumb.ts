@@ -6,7 +6,7 @@ import { unpackBreadcrumbCategory, unpackBreadcrumbItem } from "../../menu/adapt
 
 import { BreadcrumbComponent, initialBreadcrumbState } from "../../system/component/breadcrumb/component"
 
-import { Breadcrumb, BreadcrumbCategory, BreadcrumbItem } from "../../menu/data"
+import { Breadcrumb, BreadcrumbNode, BreadcrumbCategory, BreadcrumbItem } from "../../menu/data"
 
 type Props = Readonly<{
     breadcrumb: BreadcrumbComponent
@@ -32,18 +32,15 @@ function content(breadcrumb: Breadcrumb): VNode {
     return html`<p class="main__breadcrumb">${breadcrumbNodes(breadcrumb)}</p>`
 }
 function breadcrumbNodes(breadcrumb: Breadcrumb): VNode[] {
-    return insertSeparator(concatNodes([], breadcrumb))
+    return insertSeparator(breadcrumb.map(toNode))
 
-    function concatNodes(nodes: VNode[], target: Breadcrumb): VNode[] {
-        switch (target.type) {
+    function toNode(node: BreadcrumbNode): VNode {
+        switch (node.type) {
             case "category":
-                return concatNodes(nodes.concat([breadcrumbCategory(target.category)]), target.child)
+                return breadcrumbCategory(node.category)
 
-            case "parent":
-                return concatNodes(nodes.concat([breadcrumbItem(target.item)]), target.child)
-
-            case "leaf":
-                return nodes.concat([breadcrumbItem(target.item)])
+            case "item":
+                return breadcrumbItem(node.item)
         }
     }
     function insertSeparator(nodes: VNode[]): VNode[] {

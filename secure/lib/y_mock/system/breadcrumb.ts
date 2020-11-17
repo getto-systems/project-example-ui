@@ -13,26 +13,20 @@ class BreadcrumbStateFactory {
     succeedToLoad(): BreadcrumbState {
         return {
             type: "succeed-to-load",
-            breadcrumb: {
-                type: "category",
-                category: packBreadcrumbCategory("MAIN"),
-                child: {
-                    type: "parent",
+            breadcrumb: [
+                {
+                    type: "category",
+                    category: packBreadcrumbCategory("MAIN"),
+                },
+                {
+                    type: "item",
                     item: packBreadcrumbItem({
                         label: "ホーム",
                         icon: "home",
                         href: "/dist/index.html",
                     }),
-                    child: {
-                        type: "leaf",
-                        item: packBreadcrumbItem({
-                            label: "ダッシュボード",
-                            icon: "home",
-                            href: "/dist/index.html",
-                        }),
-                    },
                 },
-            },
+            ],
         }
     }
 }

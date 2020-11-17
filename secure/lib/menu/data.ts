@@ -1,7 +1,8 @@
-export type Breadcrumb =
-    | Readonly<{ type: "category"; category: BreadcrumbCategory; child: Breadcrumb }>
-    | Readonly<{ type: "parent"; item: BreadcrumbItem; child: Breadcrumb }>
-    | Readonly<{ type: "leaf"; item: BreadcrumbItem }>
+export type Breadcrumb = BreadcrumbNode[]
+
+export type BreadcrumbNode =
+    | Readonly<{ type: "category"; category: BreadcrumbCategory }>
+    | Readonly<{ type: "item"; item: BreadcrumbItem }>
 
 export type BreadcrumbCategory = { BreadcrumbCategory: never }
 export type BreadcrumbItem = { BreadcrumbItem: never }
