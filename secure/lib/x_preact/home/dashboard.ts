@@ -1,57 +1,73 @@
 import { h, VNode } from "preact"
-import { useEffect } from "preact/hooks"
+import { useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { Example } from "./component/example"
+import { useComponentSet } from "../container"
 
-import { SystemInfo } from "../system"
-import { Breadcrumb } from "../menu/breadcrumb"
-import { Nav } from "../menu"
+import { ApplicationError } from "../system/application_error"
+import { footer, menuHeader, menuFooter } from "../layout"
 
-import { mainFooter, menuHeader, menuFooter } from "../layout"
+import { SeasonInfo } from "../system/season"
+import { MenuList } from "../system/menu"
+import { BreadcrumbList } from "../system/breadcrumb"
 
-import { BreadcrumbComponent, BreadcrumbParam } from "../../menu/breadcrumb/component"
+import { Example } from "./dashboard/example"
 
-import { ExampleComponent, ExampleParam } from "../../home/component/example/component"
+import { DashboardComponentSet, DashboardResource } from "../../home/dashboard"
 
-type Props = Readonly<{
-    breadcrumb: {
-        component: BreadcrumbComponent
-        param: BreadcrumbParam
-    },
-    example: {
-        component: ExampleComponent
-        param: ExampleParam
+type Props = {
+    factory: Factory<DashboardResource>
+}
+export function Dashboard({ factory }: Props): VNode {
+    const [err, _resetError] = useErrorBoundary((err) => {
+        // TODO ここでエラーをどこかに投げたい。apiCredential が有効なはずなので、api にエラーを投げられるはず
+        console.log(err)
+    })
+
+    if (err) {
+        return h(ApplicationError, { err: `${err}` })
     }
-}>
 
-export function Dashboard(props: Props): VNode {
+    const container = useComponentSet(factory)
+
+    if (!container.set) {
+        return EMPTY_CONTENT
+    }
+
+    return h(Content, container.components)
+}
+function Content(components: DashboardComponentSet): VNode {
     useEffect(() => {
         document.title = `ホーム | ${document.title}`
     }, [])
 
-    const mainTitle = html`ホーム`
+    const title = html`ホーム`
 
     return html`
         <main class="layout">
             <article class="layout__main">
                 <header class="main__header">
-                    <h1 class="main__title">${mainTitle}</h1>
-                    ${h(Breadcrumb, props.breadcrumb)}
+                    <h1 class="main__title">${title}</h1>
+                    ${h(BreadcrumbList, components)}
                 </header>
-                <section class="main__body container">
-                    ${h(Example, props.example)}
-                </section>
-                ${mainFooter()}
+                <section class="main__body container">${h(Example, components)}</section>
+                ${footer()}
             </article>
-            <aside class="layout__menu menu">
-                ${menuHeader()}
-                <nav id="menu" class="menu__body">
-                    ${h(SystemInfo, {})}
-                    ${h(Nav, {})}
-                </nav>
-                ${menuFooter("DEVELOPMENT" /* TODO これはコンポーネントになる、のかな？ */)}
-            </aside>
+            ${menu()}
         </main>
     `
+
+    function menu() {
+        return html`
+            <aside class="layout__menu menu">
+                ${menuHeader()} ${h(SeasonInfo, components)} ${h(MenuList, components)} ${menuFooter()}
+            </aside>
+        `
+    }
+}
+
+const EMPTY_CONTENT = html``
+
+interface Factory<T> {
+    (): T
 }
