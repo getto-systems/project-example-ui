@@ -1,11 +1,11 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { loginError } from "./layout"
+import { loginError } from "../layout"
 
-type Props = {
+type Props = Readonly<{
     err: string
-}
+}>
 
 export function ApplicationError({ err }: Props): VNode {
     return loginError(

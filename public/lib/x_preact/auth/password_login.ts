@@ -6,7 +6,7 @@ import { useComponentSet } from "../container"
 import { loginHeader } from "../layout"
 import { appendScript } from "./application"
 
-import { ApplicationError } from "../application_error"
+import { ApplicationError } from "../system/application_error"
 
 import { LoginIDField } from "./password_login/field/login_id"
 import { PasswordField } from "./password_login/field/password"

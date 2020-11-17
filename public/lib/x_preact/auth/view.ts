@@ -3,7 +3,7 @@ import { useState, useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { useView } from "../container"
-import { ApplicationError } from "../application_error"
+import { ApplicationError } from "../system/application_error"
 
 import { RenewCredential } from "./renew_credential"
 

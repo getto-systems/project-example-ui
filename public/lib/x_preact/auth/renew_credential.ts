@@ -6,7 +6,7 @@ import { useComponentSet } from "../container"
 import { loginError } from "../layout"
 import { appendScript } from "./application"
 
-import { ApplicationError } from "../application_error"
+import { ApplicationError } from "../system/application_error"
 
 import { RenewCredentialComponentSet } from "../../auth/view"
 import { initialRenewCredentialState } from "../../auth/component/renew_credential/component"
