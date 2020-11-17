@@ -18,6 +18,44 @@ class MenuStateFactory {
             menu: this.menu(),
         }
     }
+    failedToLoad_badRequest(): MenuState {
+        return {
+            type: "failed-to-load",
+            menu: this.menu(),
+            err: {
+                type: "bad-request",
+            },
+        }
+    }
+    failedToLoad_serverError(): MenuState {
+        return {
+            type: "failed-to-load",
+            menu: this.menu(),
+            err: {
+                type: "server-error",
+            },
+        }
+    }
+    failedToLoad_badResponse(): MenuState {
+        return {
+            type: "failed-to-load",
+            menu: this.menu(),
+            err: {
+                type: "bad-response",
+                err: "failed to parse response",
+            },
+        }
+    }
+    failedToLoad_infraError(): MenuState {
+        return {
+            type: "failed-to-load",
+            menu: this.menu(),
+            err: {
+                type: "infra-error",
+                err: "failed to access server",
+            },
+        }
+    }
 
     menu(): Menu {
         return [
@@ -37,12 +75,12 @@ class MenuStateFactory {
                             label: "ホーム",
                             icon: "home",
                             badgeCount: 0,
-                        })
-                    }
-                ]
-            }
+                        }),
+                    },
+                ],
+            },
         ]
-    }    
+    }
 }
 
 class Component implements MenuComponent {
