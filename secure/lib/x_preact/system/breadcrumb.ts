@@ -63,7 +63,7 @@ function breadcrumbCategory(category: BreadcrumbCategory): VNode {
 }
 function breadcrumbItem(item: BreadcrumbItem): VNode {
     const { label, icon, href } = unpackBreadcrumbItem(item)
-    const inner = html`<i class="${icon}"></i> ${label}`
+    const inner = html`<i class="lnir lnir-${icon}"></i> ${label}`
     return html` <a class="main__breadcrumb__item" href="${href}">${inner}</a> `
 }
 const SEPARATOR: VNode = html`
