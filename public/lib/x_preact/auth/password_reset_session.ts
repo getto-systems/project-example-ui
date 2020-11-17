@@ -22,9 +22,9 @@ import {
     SendTokenError,
 } from "../../password_reset/data"
 
-type Props = {
+type Props = Readonly<{
     factory: Factory<PasswordResetSessionComponentSet>
-}
+}>
 export function PasswordResetSession({ factory }: Props): VNode {
     const container = useComponentSet(factory)
 
