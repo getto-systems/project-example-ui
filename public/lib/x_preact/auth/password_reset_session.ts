@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { useComponentSet } from "../container"
-import { loginHeader, loginError } from "../layout"
+import { loginHeader, fullScreenError } from "../layout"
 
 import { ApplicationError } from "../system/application_error"
 
@@ -84,7 +84,7 @@ function Content({ href, passwordResetSession, loginIDField }: PasswordResetSess
         `
     }
     function errorView(title: VNode, content: VNode): VNode {
-        return loginError(
+        return fullScreenError(
             title,
             html`
                 ${content}
@@ -151,7 +151,7 @@ function Content({ href, passwordResetSession, loginIDField }: PasswordResetSess
             return errorView(html`リセットトークンの送信に失敗しました`, sendTokenError(state.err))
 
         case "succeed-to-send-token":
-            return loginError(
+            return fullScreenError(
                 html`リセットトークンを送信しました`,
                 sendTokenMessage(state.dest),
                 html`
