@@ -1,7 +1,7 @@
-import { LoadEvent } from "./data"
+import { LoadSeasonEvent } from "./data"
 
-export interface LoadAction {
-    (post: Post<LoadEvent>): void
+export interface LoadSeasonAction {
+    (post: Post<LoadSeasonEvent>): void
 }
 
 interface Post<T> {
