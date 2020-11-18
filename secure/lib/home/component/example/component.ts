@@ -1,4 +1,4 @@
-import { LoadAction } from "../../../season/action"
+import { LoadSeasonAction } from "../../../season/action"
 
 import { Season } from "../../../season/data"
 
@@ -6,7 +6,7 @@ export interface ExampleComponentFactory {
     (actions: ExampleActionSet): ExampleComponent
 }
 export type ExampleActionSet = Readonly<{
-    load: LoadAction
+    loadSeason: LoadSeasonAction
 }>
 
 export interface ExampleComponent {
