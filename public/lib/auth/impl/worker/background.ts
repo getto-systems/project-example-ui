@@ -1,282 +1,112 @@
 import {
     ForegroundMessage,
     BackgroundMessage,
-    PasswordLoginComponentProxyResponse,
-    PasswordResetSessionComponentProxyResponse,
-    PasswordResetComponentProxyResponse,
-    LoginIDFieldComponentRequest,
-    PasswordFieldComponentRequest,
-    StoreActionProxyMessage,
+    ProxyMessage,
+    ProxyResponse,
+    LoginProxyMessage,
+    StartSessionProxyMessage,
+    PollingStatusProxyMessage,
+    ResetProxyMessage,
 } from "./data"
 
-import {
-    PasswordLoginComponentFactory,
-    PasswordLoginComponent,
-    PasswordLoginParam,
-    PasswordLoginRequest,
-} from "../../component/password_login/component"
-import {
-    PasswordResetSessionComponentFactory,
-    PasswordResetSessionComponent,
-    PasswordResetSessionRequest,
-} from "../../component/password_reset_session/component"
-import {
-    PasswordResetComponentFactory,
-    PasswordResetParam,
-    PasswordResetComponent,
-    PasswordResetRequest,
-} from "../../component/password_reset/component"
+import { Login } from "../../../password_login/action"
+import { StartSession, PollingStatusAction, Reset } from "../../../password_reset/action"
 
-import { SecureScriptPathAction } from "../../../application/action"
-import { StoreAction } from "../../../credential/action"
+import { LoginEvent } from "../../../password_login/data"
+import { PollingStatusEvent, ResetEvent, StartSessionEvent } from "../../../password_reset/data"
 
-import { LoginAction, LoginFieldCollector } from "../../../password_login/action"
-import {
-    StartSessionAction,
-    StartSessionFieldCollector,
-    PollingStatusAction,
-    ResetAction,
-    ResetFieldCollector,
-} from "../../../password_reset/action"
+class LoginHandler {
+    login: Login
+    post: Post<ProxyResponse<LoginEvent>>
 
-import { AuthCredential, StoreEvent } from "../../../credential/data"
-import { LoginID } from "../../../login_id/data"
-import { Password } from "../../../password/data"
-import { Content } from "../../../field/data"
-
-class ComponentMap<C, R, M> {
-    map: Record<number, C> = {}
-
-    post: ComponentResponsePost<M>
-    handler: ComponentRequestHandler<C, R>
-
-    constructor(post: ComponentResponsePost<M>, handler: ComponentRequestHandler<C, R>) {
-        this.post = post
-        this.handler = handler
-    }
-
-    register(componentID: number, component: C, init: ComponentInitializer<C, M>): void {
-        init(component, this.post(componentID))
-        this.map[componentID] = component
-    }
-    handleRequest(componentID: number, request: R): void {
-        if (this.map[componentID]) {
-            this.handler(this.map[componentID], request)
-        } else {
-            throw new Error("component is not initialized")
-        }
-    }
-}
-interface ComponentResponsePost<M> {
-    (componentID: number): Post<M>
-}
-interface ComponentRequestHandler<C, R> {
-    (component: C, request: R): void
-}
-interface ComponentInitializer<C, M> {
-    (component: C, post: Post<M>): void
-}
-
-class PasswordLoginComponentMap extends ComponentMap<
-    PasswordLoginComponent,
-    PasswordLoginRequest,
-    PasswordLoginComponentProxyResponse
-> {
-    factory: PasswordLoginBackgroundComponentFactory
-
-    constructor(
-        factory: PasswordLoginBackgroundComponentFactory,
-        post: ComponentResponsePost<PasswordLoginComponentProxyResponse>
-    ) {
-        super(post, (component, request) => {
-            component.action(request)
-        })
-
-        this.factory = factory
-    }
-
-    init(componentID: number, param: PasswordLoginParam): void {
-        this.register(componentID, this.factory(componentID, param), (component, post) => {
-            component.onStateChange((state) => {
-                post({ type: "post", state })
-            })
-        })
-    }
-}
-interface PasswordLoginBackgroundComponentFactory {
-    (componentID: number, param: PasswordLoginParam): PasswordLoginComponent
-}
-
-class PasswordResetSessionComponentMap extends ComponentMap<
-    PasswordResetSessionComponent,
-    PasswordResetSessionRequest,
-    PasswordResetSessionComponentProxyResponse
-> {
-    factory: PasswordResetSessionBackgroundComponentFactory
-
-    constructor(
-        factory: PasswordResetSessionBackgroundComponentFactory,
-        post: ComponentResponsePost<PasswordResetSessionComponentProxyResponse>
-    ) {
-        super(post, (component, request) => {
-            component.action(request)
-        })
-
-        this.factory = factory
-    }
-
-    init(componentID: number): void {
-        this.register(componentID, this.factory(componentID), (component, post) => {
-            component.onStateChange((state) => {
-                post({ type: "post", state })
-            })
-        })
-    }
-}
-interface PasswordResetSessionBackgroundComponentFactory {
-    (componentID: number): PasswordResetSessionComponent
-}
-
-class PasswordResetComponentMap extends ComponentMap<
-    PasswordResetComponent,
-    PasswordResetRequest,
-    PasswordResetComponentProxyResponse
-> {
-    factory: PasswordResetBackgroundComponentFactory
-
-    constructor(
-        factory: PasswordResetBackgroundComponentFactory,
-        post: ComponentResponsePost<PasswordResetComponentProxyResponse>
-    ) {
-        super(post, (component, request) => {
-            component.action(request)
-        })
-
-        this.factory = factory
-    }
-
-    init(componentID: number, param: PasswordResetParam): void {
-        this.register(componentID, this.factory(componentID, param), (component, post) => {
-            component.onStateChange((state) => {
-                post({ type: "post", state })
-            })
-        })
-    }
-}
-interface PasswordResetBackgroundComponentFactory {
-    (componentID: number, param: PasswordResetParam): PasswordResetComponent
-}
-
-class CollectorMap<C, R> {
-    handler: Record<number, Post<Content<C>>> = {}
-
-    idGenerator: IDGenerator
-    post: CollectPost<R>
-
-    constructor(post: CollectPost<R>) {
-        this.idGenerator = new IDGenerator()
+    constructor(login: Login, post: Post<ProxyResponse<LoginEvent>>) {
+        this.login = login
         this.post = post
     }
 
-    init(componentID: number, handler: CollectHandler<R>): Collector<C> {
-        return () =>
-            new Promise((resolve) => {
-                const handlerID = this.idGenerator.generate()
-                this.handler[handlerID] = resolve
-                handler(this.post(componentID, handlerID))
-            })
-    }
-    resolve(handlerID: number, content: Content<C>): void {
-        if (this.handler[handlerID]) {
-            this.handler[handlerID](content)
-            delete this.handler[handlerID]
-        } else {
-            throw new Error("handler not found")
-        }
+    handleMessage({ handlerID, message: { content } }: ProxyMessage<LoginProxyMessage>): void {
+        this.login(() => Promise.resolve(content))((event) => {
+            this.post({ handlerID, done: true, response: event })
+        })
     }
 }
-interface Collector<C> {
-    (): Promise<Content<C>>
-}
-interface CollectPost<R> {
-    (componentID: number, handlerID: number): Post<R>
-}
-interface CollectHandler<R> {
-    (post: Post<R>): void
-}
+class StartSessionHandler {
+    startSession: StartSession
+    post: Post<ProxyResponse<StartSessionEvent>>
 
-class LoginIDCollectorMap extends CollectorMap<LoginID, LoginIDFieldComponentRequest> {}
-class PasswordCollectorMap extends CollectorMap<Password, PasswordFieldComponentRequest> {}
-
-class ActionProxyMap<M, R> {
-    handler: Record<number, Post<R>> = {}
-
-    idGenerator: IDGenerator
-
-    post: ActionPost<M>
-
-    constructor(post: ActionPost<M>) {
-        this.idGenerator = new IDGenerator()
+    constructor(startSession: StartSession, post: Post<ProxyResponse<StartSessionEvent>>) {
+        this.startSession = startSession
         this.post = post
     }
 
-    register(handlerID: number, post: Post<R>): void {
-        this.handler[handlerID] = post
-    }
-    resolve(handlerID: number, response: R): void {
-        if (this.handler[handlerID]) {
-            this.handler[handlerID](response)
-            delete this.handler[handlerID]
-        } else {
-            throw new Error("handler is not found")
-        }
+    handleMessage({ handlerID, message: { content } }: ProxyMessage<StartSessionProxyMessage>): void {
+        this.startSession(() => Promise.resolve(content))((event) => {
+            this.post({ handlerID, done: true, response: event })
+        })
     }
 }
-interface ActionPost<M> {
-    (actionID: number): Post<M>
+class PollingStatusHandler {
+    pollingStatus: PollingStatusAction
+    post: Post<ProxyResponse<PollingStatusEvent>>
+
+    constructor(pollingStatus: PollingStatusAction, post: Post<ProxyResponse<PollingStatusEvent>>) {
+        this.pollingStatus = pollingStatus
+        this.post = post
+    }
+
+    handleMessage({ handlerID, message: { sessionID } }: ProxyMessage<PollingStatusProxyMessage>): void {
+        this.pollingStatus(sessionID, (event) => {
+            this.post({ handlerID, done: hasDone(), response: event })
+
+            function hasDone() {
+                switch (event.type) {
+                    case "retry-to-polling-status":
+                    case "try-to-polling-status":
+                        return false
+
+                    default:
+                        return true
+                }
+            }
+        })
+    }
 }
+class ResetHandler {
+    reset: Reset
+    post: Post<ProxyResponse<ResetEvent>>
 
-class StoreActionProxyMap extends ActionProxyMap<StoreActionProxyMessage, StoreEvent> {
-    init(actionID: number): StoreAction {
-        const postActionMessage = this.post(actionID)
-        postActionMessage({ type: "init" })
+    constructor(reset: Reset, post: Post<ProxyResponse<ResetEvent>>) {
+        this.reset = reset
+        this.post = post
+    }
 
-        return (authCredential: AuthCredential, post: Post<StoreEvent>) => {
-            const handlerID = this.idGenerator.generate()
-            this.register(handlerID, post)
-            postActionMessage({ type: "action", handlerID, authCredential })
-        }
+    handleMessage({
+        handlerID,
+        message: { resetToken, content },
+    }: ProxyMessage<ResetProxyMessage>): void {
+        this.reset(() => Promise.resolve(content))(resetToken, (event) => {
+            this.post({ handlerID, done: true, response: event })
+        })
     }
 }
 
-export type FactorySet = Readonly<{
-    actions: Readonly<{
-        application: Readonly<{
-            secureScriptPath: Factory<SecureScriptPathAction>
-        }>
-
-        passwordLogin: Readonly<{
-            login: ParameterizedFactory<LoginFieldCollector, LoginAction>
-        }>
-        passwordReset: Readonly<{
-            startSession: ParameterizedFactory<StartSessionFieldCollector, StartSessionAction>
-            pollingStatus: Factory<PollingStatusAction>
-            reset: ParameterizedFactory<ResetFieldCollector, ResetAction>
-        }>
+export type ActionSet = Readonly<{
+    passwordLogin: Readonly<{
+        login: Login
     }>
-    components: Readonly<{
-        passwordLogin: PasswordLoginComponentFactory
-        passwordResetSession: PasswordResetSessionComponentFactory
-        passwordReset: PasswordResetComponentFactory
+    passwordReset: Readonly<{
+        startSession: StartSession
+        pollingStatus: PollingStatusAction
+        reset: Reset
     }>
 }>
 
-export function initAuthWorkerAsBackground(factory: FactorySet, worker: Worker): void {
-    const map = initAuthComponentMapSet(factory, postBackgroundMessage)
+export function initAuthWorkerAsBackground(actions: ActionSet, worker: Worker): void {
+    const handlers = initAuthHandlerSet(actions, postBackgroundMessage)
     const errorHandler = (err: string) => {
         postBackgroundMessage({ type: "error", err })
     }
-    const messageHandler = initForegroundMessageHandler(map, errorHandler)
+    const messageHandler = initForegroundMessageHandler(handlers, errorHandler)
 
     worker.addEventListener("message", (event) => {
         messageHandler(event.data)
@@ -286,201 +116,60 @@ export function initAuthWorkerAsBackground(factory: FactorySet, worker: Worker):
         worker.postMessage(message)
     }
 }
-type AuthComponentMapSet = Readonly<{
-    actions: Readonly<{
-        credential: Readonly<{
-            store: StoreActionProxyMap
-        }>
+type AuthHandlerSet = Readonly<{
+    passwordLogin: Readonly<{
+        login: LoginHandler
     }>
-
-    collectors: Readonly<{
-        loginID: LoginIDCollectorMap
-        password: PasswordCollectorMap
-    }>
-
-    components: Readonly<{
-        passwordLogin: PasswordLoginComponentMap
-        passwordResetSession: PasswordResetSessionComponentMap
-        passwordReset: PasswordResetComponentMap
+    passwordReset: Readonly<{
+        startSession: StartSessionHandler
+        pollingStatus: PollingStatusHandler
+        reset: ResetHandler
     }>
 }>
-function initAuthComponentMapSet(
-    factory: FactorySet,
+function initAuthHandlerSet(
+    actions: ActionSet,
     postBackgroundMessage: Post<BackgroundMessage>
-): AuthComponentMapSet {
-    const actions = {
-        credential: {
-            store: new StoreActionProxyMap((actionID) => (message) => {
-                postBackgroundMessage({ type: "credential-store", actionID, message })
+): AuthHandlerSet {
+    return {
+        passwordLogin: {
+            login: new LoginHandler(actions.passwordLogin.login, (response) => {
+                postBackgroundMessage({ type: "login", response })
             }),
         },
-    }
-
-    const collectors = {
-        loginID: new LoginIDCollectorMap((componentID, handlerID) => (request) => {
-            postBackgroundMessage({
-                type: "loginIDField",
-                componentID,
-                handlerID,
-                request,
-            })
-        }),
-        password: new PasswordCollectorMap((componentID, handlerID) => (request) => {
-            postBackgroundMessage({
-                type: "passwordField",
-                componentID,
-                handlerID,
-                request,
-            })
-        }),
-    }
-
-    const actionID = new IDGenerator()
-
-    const passwordLogin = new PasswordLoginComponentMap(
-        (componentID, param) => {
-            return factory.components.passwordLogin(
-                {
-                    login: factory.actions.passwordLogin.login({
-                        loginID: collectors.loginID.init(componentID, (post) => {
-                            post({ type: "validate" })
-                        }),
-                        password: collectors.password.init(componentID, (post) => {
-                            post({ type: "validate" })
-                        }),
-                    }),
-                    store: actions.credential.store.init(actionID.generate()),
-                    secureScriptPath: factory.actions.application.secureScriptPath(),
-                },
-                param
-            )
-        },
-        (componentID) => (response) => {
-            postBackgroundMessage({ type: "passwordLogin", componentID, response })
-        }
-    )
-    const passwordResetSession = new PasswordResetSessionComponentMap(
-        (componentID) => {
-            return factory.components.passwordResetSession({
-                startSession: factory.actions.passwordReset.startSession({
-                    loginID: collectors.loginID.init(componentID, (post) => {
-                        post({ type: "validate" })
-                    }),
-                }),
-                pollingStatus: factory.actions.passwordReset.pollingStatus(),
-            })
-        },
-        (componentID) => (response) => {
-            postBackgroundMessage({ type: "passwordResetSession", componentID, response })
-        }
-    )
-    const passwordReset = new PasswordResetComponentMap(
-        (componentID, param) => {
-            return factory.components.passwordReset(
-                {
-                    reset: factory.actions.passwordReset.reset({
-                        loginID: collectors.loginID.init(componentID, (post) => {
-                            post({ type: "validate" })
-                        }),
-                        password: collectors.password.init(componentID, (post) => {
-                            post({ type: "validate" })
-                        }),
-                    }),
-                    store: actions.credential.store.init(actionID.generate()),
-                    secureScriptPath: factory.actions.application.secureScriptPath(),
-                },
-                param
-            )
-        },
-        (componentID) => (response) => {
-            postBackgroundMessage({ type: "passwordReset", componentID, response })
-        }
-    )
-
-    return {
-        actions,
-        collectors,
-
-        components: {
-            passwordLogin,
-            passwordResetSession,
-            passwordReset,
+        passwordReset: {
+            startSession: new StartSessionHandler(actions.passwordReset.startSession, (response) => {
+                postBackgroundMessage({ type: "startSession", response })
+            }),
+            pollingStatus: new PollingStatusHandler(actions.passwordReset.pollingStatus, (response) => {
+                postBackgroundMessage({ type: "pollingStatus", response })
+            }),
+            reset: new ResetHandler(actions.passwordReset.reset, (response) => {
+                postBackgroundMessage({ type: "reset", response })
+            }),
         },
     }
 }
 function initForegroundMessageHandler(
-    map: AuthComponentMapSet,
+    handlers: AuthHandlerSet,
     errorHandler: Post<string>
 ): Post<ForegroundMessage> {
     return (message) => {
         try {
             switch (message.type) {
-                case "passwordLogin":
-                    switch (message.message.type) {
-                        case "init":
-                            map.components.passwordLogin.init(message.componentID, message.message.param)
-                            break
-                        case "action":
-                            map.components.passwordLogin.handleRequest(
-                                message.componentID,
-                                message.message.request
-                            )
-                            break
-                        default:
-                            assertNever(message.message)
-                    }
+                case "login":
+                    handlers.passwordLogin.login.handleMessage(message.message)
                     break
 
-                case "passwordResetSession":
-                    switch (message.message.type) {
-                        case "init":
-                            map.components.passwordResetSession.init(message.componentID)
-                            break
-                        case "action":
-                            map.components.passwordResetSession.handleRequest(
-                                message.componentID,
-                                message.message.request
-                            )
-                            break
-                        default:
-                            assertNever(message.message)
-                    }
+                case "startSession":
+                    handlers.passwordReset.startSession.handleMessage(message.message)
                     break
 
-                case "passwordReset":
-                    switch (message.message.type) {
-                        case "init":
-                            map.components.passwordReset.init(message.componentID, message.message.param)
-                            break
-                        case "action":
-                            map.components.passwordReset.handleRequest(
-                                message.componentID,
-                                message.message.request
-                            )
-                            break
-                        default:
-                            assertNever(message.message)
-                    }
+                case "pollingStatus":
+                    handlers.passwordReset.pollingStatus.handleMessage(message.message)
                     break
 
-                case "loginIDField":
-                    switch (message.response.type) {
-                        case "content":
-                            map.collectors.loginID.resolve(message.handlerID, message.response.content)
-                            break
-                    }
-                    break
-
-                case "passwordField":
-                    switch (message.response.type) {
-                        case "content":
-                            map.collectors.password.resolve(message.handlerID, message.response.content)
-                            break
-                    }
-                    break
-
-                case "credential-store":
-                    map.actions.credential.store.resolve(message.handlerID, message.response)
+                case "reset":
+                    handlers.passwordReset.reset.handleMessage(message.message)
                     break
 
                 default:
@@ -492,23 +181,8 @@ function initForegroundMessageHandler(
     }
 }
 
-class IDGenerator {
-    id = 0
-
-    generate(): number {
-        this.id += 1
-        return this.id
-    }
-}
-
 interface Post<T> {
     (state: T): void
-}
-interface Factory<T> {
-    (): T
-}
-interface ParameterizedFactory<P, T> {
-    (param: P): T
 }
 
 function assertNever(_: never): never {

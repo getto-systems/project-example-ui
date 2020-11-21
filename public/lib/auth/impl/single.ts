@@ -20,14 +20,8 @@ import { PasswordFieldComponentFactory } from "../component/field/password/compo
 import { SecureScriptPathAction } from "../../application/action"
 import { RenewAction, SetContinuousRenewAction, StoreAction } from "../../credential/action"
 
-import { LoginAction, LoginFieldCollector } from "../../password_login/action"
-import {
-    StartSessionAction,
-    StartSessionFieldCollector,
-    PollingStatusAction,
-    ResetAction,
-    ResetFieldCollector,
-} from "../../password_reset/action"
+import { Login } from "../../password_login/action"
+import { StartSession, PollingStatusAction, Reset } from "../../password_reset/action"
 
 import { LoginIDFieldAction } from "../../login_id/field/action"
 import { PasswordFieldAction } from "../../password/field/action"
@@ -44,12 +38,12 @@ export type FactorySet = Readonly<{
         }>
 
         passwordLogin: Readonly<{
-            login: ParameterizedFactory<LoginFieldCollector, LoginAction>
+            login: Login
         }>
         passwordReset: Readonly<{
-            startSession: ParameterizedFactory<StartSessionFieldCollector, StartSessionAction>
+            startSession: StartSession
             pollingStatus: Factory<PollingStatusAction>
-            reset: ParameterizedFactory<ResetFieldCollector, ResetAction>
+            reset: Reset
         }>
 
         field: Readonly<{
@@ -93,7 +87,4 @@ export function initAuthViewFactoryAsSingle(factory: FactorySet): AuthViewFactor
 
 interface Factory<T> {
     (): T
-}
-interface ParameterizedFactory<P, T> {
-    (param: P): T
 }

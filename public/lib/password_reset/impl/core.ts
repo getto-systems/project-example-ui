@@ -1,34 +1,19 @@
 import { StartSessionInfra, PollingStatusInfra, ResetInfra } from "../infra"
 
-import {
-    StartSessionAction,
-    StartSessionFieldCollector,
-    PollingStatusAction,
-    ResetAction,
-    ResetFieldCollector,
-} from "../action"
+import { StartSession, PollingStatusAction, Reset } from "../action"
 
-import {
-    SessionID,
-    StartSessionFields,
-    PollingStatusEvent,
-    PollingStatusError,
-    ResetFields,
-} from "../data"
+import { SessionID, PollingStatusEvent, PollingStatusError } from "../data"
 
-import { Content, validContent, invalidContent } from "../../field/data"
-
-const startSession = (
-    fields: StartSessionFieldCollector,
-    { client, time, delayed }: StartSessionInfra
-): StartSessionAction => async (post) => {
-    const content = await collectStartSessionFields(fields)
+export const startSession = (infra: StartSessionInfra): StartSession => (collector) => async (post) => {
+    const content = await collector()
     if (!content.valid) {
         post({ type: "failed-to-start-session", err: { type: "validation-error" } })
         return
     }
 
     post({ type: "try-to-start-session" })
+
+    const { client, time, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const response = await delayed(
@@ -44,23 +29,10 @@ const startSession = (
     post({ type: "succeed-to-start-session", sessionID: response.sessionID })
 }
 
-async function collectStartSessionFields(
-    collector: StartSessionFieldCollector
-): Promise<Content<StartSessionFields>> {
-    const loginID = await collector.loginID()
-
-    if (!loginID.valid) {
-        return invalidContent()
-    }
-    return validContent({
-        loginID: loginID.content,
-    })
-}
-
-const startPollingStatus = (infra: PollingStatusInfra) => (
-    sessionID: SessionID,
-    post: Post<PollingStatusEvent>
-): void => {
+export const pollingStatus = (infra: PollingStatusInfra): PollingStatusAction => (
+    sessionID,
+    post
+) => {
     new StatusPoller(infra).startPolling(sessionID, post)
 }
 
@@ -135,17 +107,16 @@ class StatusPoller {
     }
 }
 
-const reset = (
-    fields: ResetFieldCollector,
-    { client, time, delayed }: ResetInfra
-): ResetAction => async (resetToken, post) => {
-    const content = await collectResetFields(fields)
+export const reset = (infra: ResetInfra): Reset => (collectFields) => async (resetToken, post) => {
+    const content = await collectFields()
     if (!content.valid) {
         post({ type: "failed-to-reset", err: { type: "validation-error" } })
         return
     }
 
     post({ type: "try-to-reset" })
+
+    const { client, time, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const response = await delayed(
@@ -159,32 +130,6 @@ const reset = (
     }
 
     post({ type: "succeed-to-reset", authCredential: response.authCredential })
-}
-
-async function collectResetFields(collector: ResetFieldCollector): Promise<Content<ResetFields>> {
-    const loginID = await collector.loginID()
-    const password = await collector.password()
-
-    if (!loginID.valid || !password.valid) {
-        return invalidContent()
-    }
-    return validContent({
-        loginID: loginID.content,
-        password: password.content,
-    })
-}
-
-export function initStartSessionAction(
-    fields: StartSessionFieldCollector,
-    infra: StartSessionInfra
-): StartSessionAction {
-    return startSession(fields, infra)
-}
-export function initPollingStatusAction(infra: PollingStatusInfra): PollingStatusAction {
-    return startPollingStatus(infra)
-}
-export function initResetAction(fields: ResetFieldCollector, infra: ResetInfra): ResetAction {
-    return reset(fields, infra)
 }
 
 interface Post<T> {

@@ -18,14 +18,6 @@ import { PasswordResetParam } from "../component/password_reset/component"
 
 import { ResetToken } from "../../password_reset/data"
 
-type ComponentFactorySet = Readonly<{
-    renewCredential: Factory<RenewCredentialComponentSet>
-
-    passwordLogin: Factory<PasswordLoginComponentSet>
-    passwordResetSession: Factory<PasswordResetSessionComponentSet>
-    passwordReset: Factory<PasswordResetComponentSet>
-}>
-
 type LoginView = "password-login" | "password-reset-session" | "password-reset"
 
 function detectLoginState(currentLocation: Location): LoginView {
@@ -126,6 +118,14 @@ export interface AuthComponentFactorySet {
     passwordResetSession(): PasswordResetSessionComponentSet
     passwordReset(param: PasswordResetParam): PasswordResetComponentSet
 }
+
+type ComponentFactorySet = Readonly<{
+    renewCredential: Factory<RenewCredentialComponentSet>
+
+    passwordLogin: Factory<PasswordLoginComponentSet>
+    passwordResetSession: Factory<PasswordResetSessionComponentSet>
+    passwordReset: Factory<PasswordResetComponentSet>
+}>
 
 function currentPagePathname(currentLocation: Location) {
     return packPagePathname(new URL(currentLocation.toString()))
