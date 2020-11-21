@@ -18,14 +18,10 @@ import { initPasswordReset } from "../auth/component/password_reset/impl"
 import { initLoginIDField } from "../auth/component/field/login_id/impl"
 import { initPasswordField } from "../auth/component/field/password/impl"
 
-import { initSecureScriptPathAction } from "../application/impl/core"
-import { initRenewAction, initSetContinuousRenewAction, initStoreAction } from "../credential/impl/core"
-import { initLoginAction } from "../password_login/impl/core"
-import {
-    initStartSessionAction,
-    initPollingStatusAction,
-    initResetAction,
-} from "../password_reset/impl/core"
+import { secureScriptPath } from "../application/impl/core"
+import { renew, setContinuousRenew, store } from "../credential/impl/core"
+import { login } from "../password_login/impl/core"
+import { startSession, pollingStatus, reset } from "../password_reset/impl/core"
 
 import { initLoginIDFieldAction } from "../login_id/field/impl/core"
 import { initPasswordFieldAction } from "../password/field/impl/core"
@@ -42,9 +38,6 @@ import { packTicketNonce, packApiRoles, packAuthAt } from "../credential/adapter
 import { packLoginID } from "../login_id/adapter"
 
 import { AuthViewFactory } from "../auth/view"
-
-import { LoginFieldCollector } from "../password_login/action"
-import { StartSessionFieldCollector, ResetFieldCollector } from "../password_reset/action"
 
 export function newAuthViewFactoryAsSingle(credentialStorage: Storage): AuthViewFactory {
     const config = {
@@ -110,6 +103,10 @@ export function newAuthViewFactoryAsWorkerForeground(credentialStorage: Storage)
 
             renewCredential: initRenewCredential,
 
+            passwordLogin: initPasswordLogin,
+            passwordResetSession: initPasswordResetSession,
+            passwordReset: initPasswordReset,
+
             field: {
                 loginID: initLoginIDField,
                 password: initPasswordField,
@@ -126,26 +123,17 @@ export function initAuthWorker(worker: Worker): void {
         auth: initAuthClient(env.authServerURL),
     }
 
-    const factory = {
-        actions: {
-            application: newApplicationFactory(),
-
-            passwordLogin: newPasswordLoginFactory(config.time, client.auth),
-            passwordReset: newPasswordResetFactory(config.time),
-        },
-        components: {
-            passwordLogin: initPasswordLogin,
-            passwordResetSession: initPasswordResetSession,
-            passwordReset: initPasswordReset,
-        },
+    const actions = {
+        passwordLogin: newPasswordLoginFactory(config.time, client.auth),
+        passwordReset: newPasswordResetFactory(config.time),
     }
 
-    return initAuthWorkerAsBackground(factory, worker)
+    return initAuthWorkerAsBackground(actions, worker)
 }
 
 function newApplicationFactory() {
     return {
-        secureScriptPath: () => initSecureScriptPathAction({ host: newHostConfig() }),
+        secureScriptPath: () => secureScriptPath({ host: newHostConfig() }),
     }
 }
 function newCredentialFactory(time: TimeConfig, credentialStorage: Storage, authClient: AuthClient) {
@@ -153,7 +141,7 @@ function newCredentialFactory(time: TimeConfig, credentialStorage: Storage, auth
 
     return {
         renew: () =>
-            initRenewAction({
+            renew({
                 time,
 
                 authCredentials,
@@ -163,7 +151,7 @@ function newCredentialFactory(time: TimeConfig, credentialStorage: Storage, auth
                 expires: initAuthExpires(),
             }),
         setContinuousRenew: () =>
-            initSetContinuousRenewAction({
+            setContinuousRenew({
                 time,
 
                 authCredentials,
@@ -171,45 +159,39 @@ function newCredentialFactory(time: TimeConfig, credentialStorage: Storage, auth
 
                 runner: initRenewRunner(),
             }),
-        store: () =>
-            initStoreAction({
-                authCredentials,
-            }),
+        store: () => store({ authCredentials }),
     }
 }
 function newPasswordLoginFactory(time: TimeConfig, authClient: AuthClient) {
     return {
-        login: (fields: LoginFieldCollector) =>
-            initLoginAction(fields, {
-                client: newPasswordLoginClient(authClient),
-                time,
-                delayed,
-            }),
+        login: login({
+            client: newPasswordLoginClient(authClient),
+            time,
+            delayed,
+        }),
     }
 }
 function newPasswordResetFactory(time: TimeConfig) {
     const sessionClient = newPasswordResetSessionClient()
 
     return {
-        startSession: (fields: StartSessionFieldCollector) =>
-            initStartSessionAction(fields, {
-                client: sessionClient,
-                time,
-                delayed,
-            }),
+        startSession: startSession({
+            client: sessionClient,
+            time,
+            delayed,
+        }),
         pollingStatus: () =>
-            initPollingStatusAction({
+            pollingStatus({
                 client: sessionClient,
                 time,
                 delayed,
                 wait,
             }),
-        reset: (fields: ResetFieldCollector) =>
-            initResetAction(fields, {
-                client: newPasswordResetClient(),
-                time,
-                delayed,
-            }),
+        reset: reset({
+            client: newPasswordResetClient(),
+            time,
+            delayed,
+        }),
     }
 }
 

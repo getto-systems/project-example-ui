@@ -16,19 +16,25 @@ import { PasswordLoginComponentFactory, PasswordLoginParam } from "../component/
 import { PasswordResetSessionComponentFactory } from "../component/password_reset_session/component"
 import { PasswordResetComponentFactory, PasswordResetParam } from "../component/password_reset/component"
 
-import { LoginIDFieldComponent, LoginIDFieldComponentFactory } from "../component/field/login_id/component"
-import { PasswordFieldComponent, PasswordFieldComponentFactory } from "../component/field/password/component"
+import {
+    LoginIDFieldComponent,
+    LoginIDFieldComponentFactory,
+} from "../component/field/login_id/component"
+import {
+    PasswordFieldComponent,
+    PasswordFieldComponentFactory,
+} from "../component/field/password/component"
 
 import { SecureScriptPathAction } from "../../application/action"
 import { RenewAction, SetContinuousRenewAction, StoreAction } from "../../credential/action"
 
-import { LoginAction, LoginFieldCollector } from "../../password_login/action"
+import { LoginAction, LoginCollector } from "../../password_login/action"
 import {
     StartSessionAction,
-    StartSessionFieldCollector,
+    StartSessionCollector,
     PollingStatusAction,
     ResetAction,
-    ResetFieldCollector,
+    ResetCollector,
 } from "../../password_reset/action"
 
 import { LoginIDFieldAction } from "../../login_id/field/action"
@@ -36,7 +42,9 @@ import { PasswordFieldAction } from "../../password/field/action"
 
 import { LoginID } from "../../login_id/data"
 import { Password } from "../../password/data"
-import { Content } from "../../field/data"
+import { LoginFields } from "../../password_login/data"
+import { StartSessionFields, ResetFields } from "../../password_reset/data"
+import { Content, invalidContent, validContent } from "../../field/data"
 
 export type RenewCredentialFactorySet = Readonly<{
     actions: Readonly<{
@@ -80,7 +88,7 @@ export type PasswordLoginFactorySet = Readonly<{
             store: Factory<StoreAction>
         }>
         passwordLogin: Readonly<{
-            login: ParameterizedFactory<LoginFieldCollector, LoginAction>
+            login: ParameterizedFactory<LoginCollector, LoginAction>
         }>
         field: Readonly<{
             loginID: Factory<LoginIDFieldAction>
@@ -102,14 +110,13 @@ export function initPasswordLoginComponentSet(
     factory: PasswordLoginFactorySet,
     param: PasswordLoginParam
 ): PasswordLoginComponentSet {
-    const loginIDField = initLoginIDFieldComponent(factory)
-    const passwordField = initPasswordFieldComponent(factory)
+    const fields = {
+        loginIDField: initLoginIDFieldComponent(factory),
+        passwordField: initPasswordFieldComponent(factory),
+    }
 
     const actions = {
-        login: factory.actions.passwordLogin.login({
-            loginID: () => collectLoginID(loginIDField),
-            password: () => collectPassword(passwordField),
-        }),
+        login: factory.actions.passwordLogin.login(() => collectLoginFields(fields)),
         store: factory.actions.credential.store(),
         secureScriptPath: factory.actions.application.secureScriptPath(),
     }
@@ -117,8 +124,7 @@ export function initPasswordLoginComponentSet(
     return {
         href: factory.components.href(),
         passwordLogin: factory.components.passwordLogin(actions, param),
-        loginIDField,
-        passwordField,
+        ...fields,
     }
 }
 
@@ -131,7 +137,7 @@ export type PasswordResetSessionFactorySet = Readonly<{
             store: Factory<StoreAction>
         }>
         passwordReset: Readonly<{
-            startSession: ParameterizedFactory<StartSessionFieldCollector, StartSessionAction>
+            startSession: ParameterizedFactory<StartSessionCollector, StartSessionAction>
             pollingStatus: Factory<PollingStatusAction>
         }>
         field: Readonly<{
@@ -151,19 +157,19 @@ export type PasswordResetSessionFactorySet = Readonly<{
 export function initPasswordResetSessionComponentSet(
     factory: PasswordResetSessionFactorySet
 ): PasswordResetSessionComponentSet {
-    const loginIDField = initLoginIDFieldComponent(factory)
+    const fields = { loginIDField: initLoginIDFieldComponent(factory) }
 
     const actions = {
-        startSession: factory.actions.passwordReset.startSession({
-            loginID: () => collectLoginID(loginIDField),
-        }),
+        startSession: factory.actions.passwordReset.startSession(() =>
+            collectStartSessionFields(fields)
+        ),
         pollingStatus: factory.actions.passwordReset.pollingStatus(),
     }
 
     return {
         href: factory.components.href(),
         passwordResetSession: factory.components.passwordResetSession(actions),
-        loginIDField,
+        ...fields,
     }
 }
 
@@ -176,7 +182,7 @@ export type PasswordResetFactorySet = Readonly<{
             store: Factory<StoreAction>
         }>
         passwordReset: Readonly<{
-            reset: ParameterizedFactory<ResetFieldCollector, ResetAction>
+            reset: ParameterizedFactory<ResetCollector, ResetAction>
         }>
         field: Readonly<{
             loginID: Factory<LoginIDFieldAction>
@@ -198,14 +204,13 @@ export function initPasswordResetComponentSet(
     factory: PasswordResetFactorySet,
     param: PasswordResetParam
 ): PasswordResetComponentSet {
-    const loginIDField = initLoginIDFieldComponent(factory)
-    const passwordField = initPasswordFieldComponent(factory)
+    const fields = {
+        loginIDField: initLoginIDFieldComponent(factory),
+        passwordField: initPasswordFieldComponent(factory),
+    }
 
     const actions = {
-        reset: factory.actions.passwordReset.reset({
-            loginID: () => collectLoginID(loginIDField),
-            password: () => collectPassword(passwordField),
-        }),
+        reset: factory.actions.passwordReset.reset(() => collectResetFields(fields)),
         store: factory.actions.credential.store(),
         secureScriptPath: factory.actions.application.secureScriptPath(),
     }
@@ -213,8 +218,7 @@ export function initPasswordResetComponentSet(
     return {
         href: factory.components.href(),
         passwordReset: factory.components.passwordReset(actions, param),
-        loginIDField,
-        passwordField,
+        ...fields,
     }
 }
 
@@ -250,6 +254,64 @@ export function initPasswordFieldComponent(factory: PasswordFieldFactorySet): Pa
     return factory.components.field.password({ password: factory.actions.field.password() })
 }
 
+interface LoginFieldComponents {
+    loginIDField: LoginIDFieldComponent
+    passwordField: PasswordFieldComponent
+}
+
+async function collectLoginFields({
+    loginIDField,
+    passwordField,
+}: LoginFieldComponents): Promise<Content<LoginFields>> {
+    const loginID = await collectLoginID(loginIDField)
+    const password = await collectPassword(passwordField)
+
+    if (!loginID.valid || !password.valid) {
+        return invalidContent()
+    }
+    return validContent({
+        loginID: loginID.content,
+        password: password.content,
+    })
+}
+
+interface StartSessionFieldComponents {
+    loginIDField: LoginIDFieldComponent
+}
+
+async function collectStartSessionFields({
+    loginIDField,
+}: StartSessionFieldComponents): Promise<Content<StartSessionFields>> {
+    const loginID = await collectLoginID(loginIDField)
+
+    if (!loginID.valid) {
+        return invalidContent()
+    }
+    return validContent({
+        loginID: loginID.content,
+    })
+}
+
+interface ResetFieldComponents {
+    loginIDField: LoginIDFieldComponent
+    passwordField: PasswordFieldComponent
+}
+
+async function collectResetFields({
+    loginIDField,
+    passwordField,
+}: ResetFieldComponents): Promise<Content<ResetFields>> {
+    const loginID = await collectLoginID(loginIDField)
+    const password = await collectPassword(passwordField)
+
+    if (!loginID.valid || !password.valid) {
+        return invalidContent()
+    }
+    return validContent({
+        loginID: loginID.content,
+        password: password.content,
+    })
+}
 function collectLoginID(loginIDField: LoginIDFieldComponent): Promise<Content<LoginID>> {
     return new Promise((resolve) => {
         loginIDField.validate((event) => {

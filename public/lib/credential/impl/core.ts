@@ -4,9 +4,9 @@ import { RenewAction, SetContinuousRenewAction, StoreAction } from "../action"
 
 import { TicketNonce, FoundLastAuth } from "../data"
 
-const renew = ({ authCredentials, client, expires, time, delayed }: RenewInfra): RenewAction => async (
-    post
-) => {
+export const renew = (infra: RenewInfra): RenewAction => async (post) => {
+    const { authCredentials, client, expires, time, delayed } = infra
+
     const lastAuth = findLastAuth(authCredentials)
     if (!lastAuth.success) {
         post({ type: "storage-error", err: lastAuth.err })
@@ -53,12 +53,11 @@ const renew = ({ authCredentials, client, expires, time, delayed }: RenewInfra):
 
     post({ type: "succeed-to-renew" })
 }
-const setContinuousRenew = ({
-    authCredentials,
-    client,
-    time,
-    runner,
-}: SetContinuousRenewInfra): SetContinuousRenewAction => (post) => {
+export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuousRenewAction => (
+    post
+) => {
+    const { authCredentials, client, time, runner } = infra
+
     const lastAuth = findLastAuth(authCredentials)
     if (!lastAuth.success) {
         post({ type: "storage-error", err: lastAuth.err })
@@ -129,20 +128,11 @@ function findLastAuth(authCredentials: AuthCredentialRepository): FoundLastAuth 
     }
 }
 
-const store = ({ authCredentials }: StoreInfra): StoreAction => async (authCredential, post) => {
+export const store = (infra: StoreInfra): StoreAction => async (authCredential, post) => {
+    const { authCredentials } = infra
     const storeResponse = authCredentials.storeAuthCredential(authCredential)
     if (!storeResponse.success) {
         post({ type: "storage-error", err: storeResponse.err })
         return
     }
-}
-
-export function initRenewAction(infra: RenewInfra): RenewAction {
-    return renew(infra)
-}
-export function initSetContinuousRenewAction(infra: SetContinuousRenewInfra): SetContinuousRenewAction {
-    return setContinuousRenew(infra)
-}
-export function initStoreAction(infra: StoreInfra): StoreAction {
-    return store(infra)
 }
