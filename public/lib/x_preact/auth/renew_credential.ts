@@ -2,7 +2,6 @@ import { h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useComponentSet } from "../container"
 import { fullScreenError } from "../layout"
 import { appendScript } from "./application"
 
@@ -14,18 +13,9 @@ import { initialRenewCredentialState } from "../../auth/component/renew_credenti
 import { RenewError } from "../../credential/data"
 
 type Props = Readonly<{
-    factory: Factory<RenewCredentialComponentSet>
+    components: RenewCredentialComponentSet
 }>
-export function RenewCredential({ factory }: Props): VNode {
-    const container = useComponentSet(factory)
-
-    if (!container.set) {
-        return EMPTY_CONTENT
-    }
-
-    return h(Content, container.components)
-}
-function Content({ renewCredential }: RenewCredentialComponentSet): VNode {
+export function RenewCredential({ components: { renewCredential } }: Props): VNode {
     const [state, setState] = useState(initialRenewCredentialState)
     useEffect(() => {
         renewCredential.onStateChange(setState)
@@ -140,7 +130,3 @@ function errorMessage(content: VNode): VNode {
 }
 
 const EMPTY_CONTENT: VNode = html``
-
-interface Factory<T> {
-    (): T
-}
