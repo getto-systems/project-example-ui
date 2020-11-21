@@ -2,7 +2,6 @@ import { h, VNode } from "preact"
 import { useState, useEffect, useRef } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useComponentSet } from "../container"
 import { loginHeader } from "../layout"
 import { appendScript } from "./application"
 
@@ -17,23 +16,11 @@ import { initialPasswordLoginState } from "../../auth/component/password_login/c
 import { LoginError } from "../../password_login/data"
 
 type Props = Readonly<{
-    factory: Factory<PasswordLoginComponentSet>
+    components: PasswordLoginComponentSet
 }>
-export function PasswordLogin({ factory }: Props): VNode {
-    const container = useComponentSet(factory)
-
-    if (!container.set) {
-        return EMPTY_CONTENT
-    }
-
-    return h(Content, container.components)
-}
-function Content({
-    href,
-    passwordLogin,
-    loginIDField,
-    passwordField,
-}: PasswordLoginComponentSet): VNode {
+export function PasswordLogin({
+    components: { href, passwordLogin, loginIDField, passwordField },
+}: Props): VNode {
     const [state, setState] = useState(initialPasswordLoginState)
     // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
     const submit = useRef<HTMLButtonElement>()
@@ -203,9 +190,6 @@ function loginError(err: LoginError): VNode {
 
 const EMPTY_CONTENT = html``
 
-interface Factory<T> {
-    (): T
-}
 interface Post<T> {
     (state: T): void
 }

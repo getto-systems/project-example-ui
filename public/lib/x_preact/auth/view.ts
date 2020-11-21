@@ -51,16 +51,16 @@ function View({ view }: ViewProps): VNode {
             return EMPTY_CONTENT
 
         case "renew-credential":
-            return h(RenewCredential, { factory: view.components.renewCredential })
+            return h(RenewCredential, state)
 
         case "password-login":
-            return h(PasswordLogin, { factory: view.components.passwordLogin })
+            return h(PasswordLogin, state)
 
         case "password-reset-session":
-            return h(PasswordResetSession, { factory: view.components.passwordResetSession })
+            return h(PasswordResetSession, state)
 
         case "password-reset":
-            return h(PasswordReset, { factory: view.components.passwordReset })
+            return h(PasswordReset, state)
 
         case "error":
             return h(ApplicationError, { err: state.err })

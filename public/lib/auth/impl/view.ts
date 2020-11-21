@@ -6,7 +6,6 @@ import { AuthSearch } from "./href"
 import {
     AuthView,
     AuthState,
-    AuthComponentSet,
     RenewCredentialComponentSet,
     PasswordLoginComponentSet,
     PasswordResetSessionComponentSet,
@@ -19,19 +18,29 @@ import { PasswordResetParam } from "../component/password_reset/component"
 
 import { ResetToken } from "../../password_reset/data"
 
-function detectLoginState(currentLocation: Location): AuthState {
+type ComponentFactorySet = Readonly<{
+    renewCredential: Factory<RenewCredentialComponentSet>
+
+    passwordLogin: Factory<PasswordLoginComponentSet>
+    passwordResetSession: Factory<PasswordResetSessionComponentSet>
+    passwordReset: Factory<PasswordResetComponentSet>
+}>
+
+type LoginView = "password-login" | "password-reset-session" | "password-reset"
+
+function detectLoginState(currentLocation: Location): LoginView {
     const url = new URL(currentLocation.toString())
 
     // パスワードリセット
     switch (url.searchParams.get(AuthSearch.passwordReset)) {
         case AuthSearch.passwordReset_start:
-            return { type: "password-reset-session" }
+            return "password-reset-session"
         case AuthSearch.passwordReset_reset:
-            return { type: "password-reset" }
+            return "password-reset"
     }
 
     // 特に指定が無ければパスワードログイン
-    return { type: "password-login" }
+    return "password-login"
 }
 function detectPasswordResetToken(currentLocation: Location): ResetToken {
     const url = new URL(currentLocation.toString())
@@ -41,10 +50,10 @@ function detectPasswordResetToken(currentLocation: Location): ResetToken {
 export class View implements AuthView {
     listener: Post<AuthState>[] = []
 
-    components: AuthComponentSet
+    factory: ComponentFactorySet
 
     constructor(currentLocation: Location, components: AuthComponentFactorySet) {
-        this.components = {
+        this.factory = {
             renewCredential: () =>
                 components.renewCredential(
                     {
@@ -75,8 +84,19 @@ export class View implements AuthView {
         renewCredential.onStateChange((state) => {
             switch (state.type) {
                 case "required-to-login":
-                    this.post(detectLoginState(currentLocation))
+                    this.post(map(detectLoginState(currentLocation), this.factory))
                     return
+            }
+
+            function map(loginView: LoginView, factory: ComponentFactorySet): AuthState {
+                switch (loginView) {
+                    case "password-login":
+                        return { type: loginView, components: factory.passwordLogin() }
+                    case "password-reset-session":
+                        return { type: loginView, components: factory.passwordResetSession() }
+                    case "password-reset":
+                        return { type: loginView, components: factory.passwordReset() }
+                }
             }
         })
     }
@@ -89,7 +109,7 @@ export class View implements AuthView {
     }
 
     load(): void {
-        this.post({ type: "renew-credential" })
+        this.post({ type: "renew-credential", components: this.factory.renewCredential() })
     }
     error(err: string): void {
         this.post({ type: "error", err })
@@ -116,4 +136,7 @@ interface Post<T> {
 }
 interface Setup<T> {
     (component: T): void
+}
+interface Factory<T> {
+    (): T
 }

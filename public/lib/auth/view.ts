@@ -20,15 +20,18 @@ export type AuthResource = Readonly<{
 export interface AuthView {
     onStateChange(post: Post<AuthState>): void
     load(): void
-    readonly components: AuthComponentSet
 }
-export type AuthComponentSet = Readonly<{
-    renewCredential: Factory<RenewCredentialComponentSet>
 
-    passwordLogin: Factory<PasswordLoginComponentSet>
-    passwordResetSession: Factory<PasswordResetSessionComponentSet>
-    passwordReset: Factory<PasswordResetComponentSet>
-}>
+export type AuthState =
+    | Readonly<{ type: "initial" }>
+    | Readonly<{ type: "renew-credential", components: RenewCredentialComponentSet }>
+    | Readonly<{ type: "password-login", components: PasswordLoginComponentSet }>
+    | Readonly<{ type: "password-reset-session", components: PasswordResetSessionComponentSet }>
+    | Readonly<{ type: "password-reset", components: PasswordResetComponentSet }>
+    | Readonly<{ type: "error"; err: string }>
+
+export const initialAuthState: AuthState = { type: "initial" }
+
 export type RenewCredentialComponentSet = Readonly<{
     renewCredential: RenewCredentialComponent
 }>
@@ -49,16 +52,6 @@ export type PasswordResetComponentSet = Readonly<{
     loginIDField: LoginIDFieldComponent
     passwordField: PasswordFieldComponent
 }>
-
-export type AuthState =
-    | Readonly<{ type: "initial" }>
-    | Readonly<{ type: "renew-credential" }>
-    | Readonly<{ type: "password-login" }>
-    | Readonly<{ type: "password-reset-session" }>
-    | Readonly<{ type: "password-reset" }>
-    | Readonly<{ type: "error"; err: string }>
-
-export const initialAuthState: AuthState = { type: "initial" }
 
 interface Post<T> {
     (state: T): void
