@@ -1,7 +1,7 @@
 import { packInputValue, unpackInputValue } from "../../../field/adapter"
 import { packPassword } from "../../../password/adapter"
 
-import { PasswordFieldAction } from "../action"
+import { PasswordField, PasswordFieldAction } from "../action"
 
 import {
     PasswordFieldEvent,
@@ -93,9 +93,7 @@ class Field implements PasswordFieldAction {
     }
 }
 
-export function initPasswordFieldAction(): PasswordFieldAction {
-    return new Field()
-}
+export const passwordField: PasswordField = () => new Field()
 
 interface Post<T> {
     (event: T): void

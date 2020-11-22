@@ -1,6 +1,5 @@
 import {
     PasswordResetActionSet,
-    PasswordResetParam,
     PasswordResetComponent,
     PasswordResetState,
     PasswordResetRequest,
@@ -9,22 +8,17 @@ import {
 import { ResetEvent } from "../../../password_reset/data"
 import { StoreEvent } from "../../../credential/data"
 
-export function initPasswordReset(
-    actions: PasswordResetActionSet,
-    param: PasswordResetParam
-): PasswordResetComponent {
-    return new Component(actions, param)
+export function initPasswordReset(actions: PasswordResetActionSet): PasswordResetComponent {
+    return new Component(actions)
 }
 
 class Component implements PasswordResetComponent {
     actions: PasswordResetActionSet
-    param: PasswordResetParam
 
     listener: Post<PasswordResetState>[] = []
 
-    constructor(actions: PasswordResetActionSet, param: PasswordResetParam) {
+    constructor(actions: PasswordResetActionSet) {
         this.actions = actions
-        this.param = param
     }
 
     onStateChange(post: Post<PasswordResetState>): void {
@@ -37,7 +31,7 @@ class Component implements PasswordResetComponent {
     action(request: PasswordResetRequest): void {
         switch (request.type) {
             case "reset":
-                this.actions.reset(this.param.resetToken, (event) => {
+                this.actions.reset((event) => {
                     this.post(this.mapResetEvent(event))
                 })
                 return
@@ -59,7 +53,7 @@ class Component implements PasswordResetComponent {
                 })
                 return {
                     type: event.type,
-                    scriptPath: this.actions.secureScriptPath(this.param.pagePathname),
+                    scriptPath: this.actions.secureScriptPath(),
                 }
 
             default:

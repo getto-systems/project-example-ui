@@ -1,4 +1,4 @@
-import { View } from "./view"
+import { LoginView, View } from "./view"
 import {
     initRenewCredentialComponentSet,
     initPasswordLoginComponentSet,
@@ -17,24 +17,27 @@ import { PasswordResetComponentFactory } from "../component/password_reset/compo
 import { LoginIDFieldComponentFactory } from "../component/field/login_id/component"
 import { PasswordFieldComponentFactory } from "../component/field/password/component"
 
-import { SecureScriptPathAction } from "../../application/action"
-import { RenewAction, SetContinuousRenewAction, StoreAction } from "../../credential/action"
+import { SecureScriptPath } from "../../application/action"
+import { Renew, SetContinuousRenew, Store } from "../../credential/action"
 
 import { Login } from "../../password_login/action"
-import { StartSession, PollingStatusAction, Reset } from "../../password_reset/action"
+import { StartSession, PollingStatus, Reset } from "../../password_reset/action"
 
-import { LoginIDFieldAction } from "../../login_id/field/action"
-import { PasswordFieldAction } from "../../password/field/action"
+import { LoginIDField } from "../../login_id/field/action"
+import { PasswordField } from "../../password/field/action"
+
+import { PagePathname } from "../../application/data"
+import { ResetToken } from "../../password_reset/data"
 
 export type FactorySet = Readonly<{
     actions: Readonly<{
         application: Readonly<{
-            secureScriptPath: Factory<SecureScriptPathAction>
+            secureScriptPath: SecureScriptPath
         }>
         credential: Readonly<{
-            renew: Factory<RenewAction>
-            setContinuousRenew: Factory<SetContinuousRenewAction>
-            store: Factory<StoreAction>
+            renew: Renew
+            setContinuousRenew: SetContinuousRenew
+            store: Store
         }>
 
         passwordLogin: Readonly<{
@@ -42,13 +45,13 @@ export type FactorySet = Readonly<{
         }>
         passwordReset: Readonly<{
             startSession: StartSession
-            pollingStatus: Factory<PollingStatusAction>
+            pollingStatus: PollingStatus
             reset: Reset
         }>
 
         field: Readonly<{
-            loginID: Factory<LoginIDFieldAction>
-            password: Factory<PasswordFieldAction>
+            loginID: LoginIDField
+            password: PasswordField
         }>
     }>
     components: Readonly<{
@@ -66,25 +69,34 @@ export type FactorySet = Readonly<{
         }>
     }>
 }>
+export type CollectorSet = Readonly<{
+    auth: Readonly<{
+        getLoginView(): LoginView        
+    }>
+    application: Readonly<{
+        getPagePathname(): PagePathname
+    }>
+    passwordReset: Readonly<{
+        getResetToken(): ResetToken
+    }>
+}>
 
-export function initAuthViewFactoryAsSingle(factory: FactorySet): AuthViewFactory {
-    return (currentLocation) => {
+export function initAuthViewFactoryAsSingle(
+    factory: FactorySet,
+    collector: CollectorSet
+): AuthViewFactory {
+    return () => {
         return {
-            view: new View(currentLocation, {
-                renewCredential: (param, setup) =>
-                    initRenewCredentialComponentSet(factory, param, setup),
+            view: new View(collector, {
+                renewCredential: (setup) => initRenewCredentialComponentSet(factory, collector, setup),
 
-                passwordLogin: (param) => initPasswordLoginComponentSet(factory, param),
+                passwordLogin: () => initPasswordLoginComponentSet(factory, collector),
                 passwordResetSession: () => initPasswordResetSessionComponentSet(factory),
-                passwordReset: (param) => initPasswordResetComponentSet(factory, param),
+                passwordReset: () => initPasswordResetComponentSet(factory, collector),
             }),
             terminate: () => {
                 // worker とインターフェイスを合わせるために必要
             },
         }
     }
-}
-
-interface Factory<T> {
-    (): T
 }

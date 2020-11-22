@@ -2,10 +2,8 @@ import { LoginInfra } from "../infra"
 
 import { Login } from "../action"
 
-import { Content } from "../../field/data"
-
-export const login = (infra: LoginInfra): Login => (collectFields) => async (post) => {
-    const content = await collectFields()
+export const login = (infra: LoginInfra): Login => (collector) => async (post) => {
+    const content = await collector.getFields()
     if (!content.valid) {
         post({ type: "failed-to-login", err: { type: "validation-error" } })
         return
@@ -25,8 +23,4 @@ export const login = (infra: LoginInfra): Login => (collectFields) => async (pos
     }
 
     post({ type: "succeed-to-login", authCredential: response.authCredential })
-}
-
-interface Collector<T> {
-    (): Promise<Content<T>>
 }

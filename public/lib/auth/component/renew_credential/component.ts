@@ -2,19 +2,16 @@ import { RenewAction, SetContinuousRenewAction } from "../../../credential/actio
 import { SecureScriptPathAction } from "../../../application/action"
 
 import { StorageError, RenewError } from "../../../credential/data"
-import { PagePathname, ScriptPath, LoadError } from "../../../application/data"
+import { ScriptPath, LoadError } from "../../../application/data"
 
 export interface RenewCredentialComponentFactory {
-    (actions: RenewCredentialActionSet, param: RenewCredentialParam): RenewCredentialComponent
+    (actions: RenewCredentialActionSet): RenewCredentialComponent
 }
 
 export type RenewCredentialActionSet = Readonly<{
     renew: RenewAction
     setContinuousRenew: SetContinuousRenewAction
     secureScriptPath: SecureScriptPathAction
-}>
-export type RenewCredentialParam = Readonly<{
-    pagePathname: PagePathname
 }>
 
 export interface RenewCredentialComponent {

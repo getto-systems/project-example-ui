@@ -1,4 +1,4 @@
-import { View, AuthComponentFactorySet } from "../view"
+import { View, AuthComponentFactorySet, LoginView } from "../view"
 import {
     initRenewCredentialComponentSet,
     initPasswordLoginComponentSet,
@@ -28,24 +28,31 @@ import { PasswordResetComponentFactory } from "../../component/password_reset/co
 import { LoginIDFieldComponentFactory } from "../../component/field/login_id/component"
 import { PasswordFieldComponentFactory } from "../../component/field/password/component"
 
-import { SecureScriptPathAction } from "../../../application/action"
-import { RenewAction, SetContinuousRenewAction, StoreAction } from "../../../credential/action"
+import { SecureScriptPath } from "../../../application/action"
+import { Renew, SetContinuousRenew, Store } from "../../../credential/action"
 
 import { Login, LoginAction, LoginCollector } from "../../../password_login/action"
 import {
+    StartSession,
+    StartSessionAction,
+    StartSessionCollector,
+    PollingStatus,
     PollingStatusAction,
     Reset,
     ResetAction,
     ResetCollector,
-    StartSession,
-    StartSessionAction,
-    StartSessionCollector,
 } from "../../../password_reset/action"
 
-import { LoginIDFieldAction } from "../../../login_id/field/action"
-import { PasswordFieldAction } from "../../../password/field/action"
+import { PagePathname } from "../../../application/data"
+import { LoginIDField } from "../../../login_id/field/action"
+import { PasswordField } from "../../../password/field/action"
 import { LoginEvent } from "../../../password_login/data"
-import { PollingStatusEvent, ResetEvent, StartSessionEvent } from "../../../password_reset/data"
+import {
+    ResetToken,
+    PollingStatusEvent,
+    ResetEvent,
+    StartSessionEvent,
+} from "../../../password_reset/data"
 
 class ProxyMap<M, E> {
     idGenerator: IDGenerator
@@ -80,7 +87,7 @@ class LoginProxyMap extends ProxyMap<LoginProxyMessage, LoginEvent> {
         return async (post) => {
             this.post({
                 handlerID: this.register(post),
-                message: { content: await collector() },
+                message: { content: await collector.getFields() },
             })
         }
     }
@@ -90,7 +97,7 @@ class StartSessionProxyMap extends ProxyMap<StartSessionProxyMessage, StartSessi
         return async (post) => {
             this.post({
                 handlerID: this.register(post),
-                message: { content: await collector() },
+                message: { content: await collector.getFields() },
             })
         }
     }
@@ -107,10 +114,13 @@ class PollingStatusProxyMap extends ProxyMap<PollingStatusProxyMessage, PollingS
 }
 class ResetProxyMap extends ProxyMap<ResetProxyMessage, ResetEvent> {
     init(collector: ResetCollector): ResetAction {
-        return async (resetToken, post) => {
+        return async (post) => {
             this.post({
                 handlerID: this.register(post),
-                message: { resetToken, content: await collector() },
+                message: {
+                    resetToken: collector.getResetToken(),
+                    content: await collector.getFields(),
+                },
             })
         }
     }
@@ -119,17 +129,17 @@ class ResetProxyMap extends ProxyMap<ResetProxyMessage, ResetEvent> {
 export type ForegroundFactorySet = Readonly<{
     actions: Readonly<{
         application: Readonly<{
-            secureScriptPath: Factory<SecureScriptPathAction>
+            secureScriptPath: SecureScriptPath
         }>
         credential: Readonly<{
-            renew: Factory<RenewAction>
-            setContinuousRenew: Factory<SetContinuousRenewAction>
-            store: Factory<StoreAction>
+            renew: Renew
+            setContinuousRenew: SetContinuousRenew
+            store: Store
         }>
 
         field: Readonly<{
-            loginID: Factory<LoginIDFieldAction>
-            password: Factory<PasswordFieldAction>
+            loginID: LoginIDField
+            password: PasswordField
         }>
     }>
     components: Readonly<{
@@ -147,14 +157,26 @@ export type ForegroundFactorySet = Readonly<{
         }>
     }>
 }>
+export type CollectorSet = Readonly<{
+    auth: Readonly<{
+        getLoginView(): LoginView
+    }>
+    application: Readonly<{
+        getPagePathname(): PagePathname
+    }>
+    passwordReset: Readonly<{
+        getResetToken(): ResetToken
+    }>
+}>
 
 export function initAuthViewFactoryAsForeground(
     worker: Worker,
-    factory: ForegroundFactorySet
+    factory: ForegroundFactorySet,
+    collector: CollectorSet
 ): AuthViewFactory {
-    return (currentLocation) => {
+    return () => {
         const map = initAuthProxyMapSet(postForegroundMessage)
-        const view = new View(currentLocation, initAuthComponentFactorySet(factory, map))
+        const view = new View(collector, initAuthComponentFactorySet(factory, collector, map))
         const errorHandler = (err: string) => {
             view.error(err)
         }
@@ -209,6 +231,7 @@ function initAuthProxyMapSet(post: Post<ForegroundMessage>): AuthProxyMapSet {
 }
 function initAuthComponentFactorySet(
     foregroundFactory: ForegroundFactorySet,
+    collector: CollectorSet,
     map: AuthProxyMapSet
 ): AuthComponentFactorySet {
     const factory = {
@@ -217,11 +240,11 @@ function initAuthComponentFactorySet(
     }
 
     return {
-        renewCredential: (param, setup) => initRenewCredentialComponentSet(factory, param, setup),
+        renewCredential: (setup) => initRenewCredentialComponentSet(factory, collector, setup),
 
-        passwordLogin: (param) => initPasswordLoginComponentSet(factory, param),
+        passwordLogin: () => initPasswordLoginComponentSet(factory, collector),
         passwordResetSession: () => initPasswordResetSessionComponentSet(factory),
-        passwordReset: (param) => initPasswordResetComponentSet(factory, param),
+        passwordReset: () => initPasswordResetComponentSet(factory, collector),
     }
 
     type ActionProxyFactorySet = Readonly<{
@@ -230,7 +253,7 @@ function initAuthComponentFactorySet(
         }>
         passwordReset: Readonly<{
             startSession: StartSession
-            pollingStatus: Factory<PollingStatusAction>
+            pollingStatus: PollingStatus
             reset: Reset
         }>
     }>
@@ -295,9 +318,6 @@ class IDGenerator {
 
 interface Post<T> {
     (state: T): void
-}
-interface Factory<T> {
-    (): T
 }
 
 function assertNever(_: never): never {

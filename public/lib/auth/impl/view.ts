@@ -12,15 +12,14 @@ import {
     PasswordResetComponentSet,
 } from "../view"
 
-import { RenewCredentialComponent, RenewCredentialParam } from "../component/renew_credential/component"
-import { PasswordLoginParam } from "../component/password_login/component"
-import { PasswordResetParam } from "../component/password_reset/component"
+import { RenewCredentialComponent } from "../component/renew_credential/component"
 
+import { PagePathname } from "../../application/data"
 import { ResetToken } from "../../password_reset/data"
 
-type LoginView = "password-login" | "password-reset-session" | "password-reset"
+export type LoginView = "password-login" | "password-reset-session" | "password-reset"
 
-function detectLoginState(currentLocation: Location): LoginView {
+export function detectLoginView(currentLocation: Location): LoginView {
     const url = new URL(currentLocation.toString())
 
     // パスワードリセット
@@ -34,63 +33,44 @@ function detectLoginState(currentLocation: Location): LoginView {
     // 特に指定が無ければパスワードログイン
     return "password-login"
 }
-function detectPasswordResetToken(currentLocation: Location): ResetToken {
+export function detectResetToken(currentLocation: Location): ResetToken {
     const url = new URL(currentLocation.toString())
     return packResetToken(url.searchParams.get(AuthSearch.passwordResetToken) || "")
+}
+export function currentPagePathname(currentLocation: Location): PagePathname {
+    return packPagePathname(new URL(currentLocation.toString()))
 }
 
 export class View implements AuthView {
     listener: Post<AuthState>[] = []
 
-    factory: ComponentFactorySet
+    collector: AuthCollector
+    components: AuthComponentFactorySet
 
-    constructor(currentLocation: Location, components: AuthComponentFactorySet) {
-        this.factory = {
-            renewCredential: () =>
-                components.renewCredential(
-                    {
-                        pagePathname: currentPagePathname(currentLocation),
-                    },
-                    (component) => {
-                        this.hookCredentialStateChange(currentLocation, component)
-                    }
-                ),
-
-            passwordLogin: () =>
-                components.passwordLogin({
-                    pagePathname: currentPagePathname(currentLocation),
-                }),
-            passwordResetSession: () => components.passwordResetSession(),
-            passwordReset: () =>
-                components.passwordReset({
-                    pagePathname: currentPagePathname(currentLocation),
-                    resetToken: detectPasswordResetToken(currentLocation),
-                }),
-        }
+    constructor(collector: AuthCollector, components: AuthComponentFactorySet) {
+        this.collector = collector
+        this.components = components
     }
 
-    hookCredentialStateChange(
-        currentLocation: Location,
-        renewCredential: RenewCredentialComponent
-    ): void {
+    hookCredentialStateChange(renewCredential: RenewCredentialComponent): void {
         renewCredential.onStateChange((state) => {
             switch (state.type) {
                 case "required-to-login":
-                    this.post(map(detectLoginState(currentLocation), this.factory))
+                    this.post(this.mapLoginView(this.collector.auth.getLoginView()))
                     return
             }
-
-            function map(loginView: LoginView, factory: ComponentFactorySet): AuthState {
-                switch (loginView) {
-                    case "password-login":
-                        return { type: loginView, components: factory.passwordLogin() }
-                    case "password-reset-session":
-                        return { type: loginView, components: factory.passwordResetSession() }
-                    case "password-reset":
-                        return { type: loginView, components: factory.passwordReset() }
-                }
-            }
         })
+    }
+
+    mapLoginView(loginView: LoginView): AuthState {
+        switch (loginView) {
+            case "password-login":
+                return { type: loginView, components: this.components.passwordLogin() }
+            case "password-reset-session":
+                return { type: loginView, components: this.components.passwordResetSession() }
+            case "password-reset":
+                return { type: loginView, components: this.components.passwordReset() }
+        }
     }
 
     onStateChange(post: Post<AuthState>): void {
@@ -101,7 +81,12 @@ export class View implements AuthView {
     }
 
     load(): void {
-        this.post({ type: "renew-credential", components: this.factory.renewCredential() })
+        this.post({
+            type: "renew-credential",
+            components: this.components.renewCredential((renewCredential) => {
+                this.hookCredentialStateChange(renewCredential)
+            }),
+        })
     }
     error(err: string): void {
         this.post({ type: "error", err })
@@ -109,26 +94,16 @@ export class View implements AuthView {
 }
 
 export interface AuthComponentFactorySet {
-    renewCredential(
-        param: RenewCredentialParam,
-        setup: Setup<RenewCredentialComponent>
-    ): RenewCredentialComponentSet
+    renewCredential(setup: Setup<RenewCredentialComponent>): RenewCredentialComponentSet
 
-    passwordLogin(param: PasswordLoginParam): PasswordLoginComponentSet
+    passwordLogin(): PasswordLoginComponentSet
     passwordResetSession(): PasswordResetSessionComponentSet
-    passwordReset(param: PasswordResetParam): PasswordResetComponentSet
+    passwordReset(): PasswordResetComponentSet
 }
-
-type ComponentFactorySet = Readonly<{
-    renewCredential: Factory<RenewCredentialComponentSet>
-
-    passwordLogin: Factory<PasswordLoginComponentSet>
-    passwordResetSession: Factory<PasswordResetSessionComponentSet>
-    passwordReset: Factory<PasswordResetComponentSet>
-}>
-
-function currentPagePathname(currentLocation: Location) {
-    return packPagePathname(new URL(currentLocation.toString()))
+export interface AuthCollector {
+    auth: Readonly<{
+        getLoginView(): LoginView
+    }>
 }
 
 interface Post<T> {
@@ -136,7 +111,4 @@ interface Post<T> {
 }
 interface Setup<T> {
     (component: T): void
-}
-interface Factory<T> {
-    (): T
 }

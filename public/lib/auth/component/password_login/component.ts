@@ -4,19 +4,15 @@ import { SecureScriptPathAction } from "../../../application/action"
 
 import { LoginError } from "../../../password_login/data"
 import { StorageError } from "../../../credential/data"
-import { PagePathname, ScriptPath, LoadError } from "../../../application/data"
+import { ScriptPath, LoadError } from "../../../application/data"
 
 export interface PasswordLoginComponentFactory {
-    (actions: PasswordLoginActionSet, param: PasswordLoginParam): PasswordLoginComponent
+    (actions: PasswordLoginActionSet): PasswordLoginComponent
 }
 export type PasswordLoginActionSet = Readonly<{
     login: LoginAction
     store: StoreAction
     secureScriptPath: SecureScriptPathAction
-}>
-
-export type PasswordLoginParam = Readonly<{
-    pagePathname: PagePathname
 }>
 
 export interface PasswordLoginComponent {
