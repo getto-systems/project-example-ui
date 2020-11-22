@@ -1,4 +1,6 @@
-import { packBreadcrumbCategory, packBreadcrumbItem } from "../../menu/adapter"
+import { lnir } from "../../z_external/icon"
+
+import { packMenuLabel, packMenuIcon, packMenuHref } from "../../menu/adapter"
 
 import { BreadcrumbComponent, BreadcrumbState } from "../../system/component/breadcrumb/component"
 
@@ -16,15 +18,15 @@ class BreadcrumbStateFactory {
             breadcrumb: [
                 {
                     type: "category",
-                    category: packBreadcrumbCategory("MAIN"),
+                    category: { label: packMenuLabel("MAIN") },
                 },
                 {
                     type: "item",
-                    item: packBreadcrumbItem({
-                        label: "ホーム",
-                        icon: "home",
-                        href: "/dist/index.html",
-                    }),
+                    item: {
+                        label: packMenuLabel("ホーム"),
+                        icon: packMenuIcon(lnir("home")),
+                        href: packMenuHref("/dist/index.html"),
+                    },
                 },
             ],
         }

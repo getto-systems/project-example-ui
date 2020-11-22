@@ -18,7 +18,7 @@ export function menuHeader(): VNode {
 export function menuFooter(): VNode {
     return html`
         <footer class="menu__footer">
-            <p class="menu__footer__message">copyright GETTO.systems</p>
+            <p class="menu__footer__message">copyright : GETTO.systems</p>
         </footer>
     `
 }

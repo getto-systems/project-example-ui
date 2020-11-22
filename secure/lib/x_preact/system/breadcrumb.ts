@@ -2,7 +2,9 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { unpackBreadcrumbCategory, unpackBreadcrumbItem } from "../../menu/adapter"
+import { iconClass } from "../../z_external/icon"
+
+import { unpackMenuLabel, unpackMenuIcon, unpackMenuHref } from "../../menu/adapter"
 
 import { BreadcrumbComponent, initialBreadcrumbState } from "../../system/component/breadcrumb/component"
 
@@ -54,14 +56,17 @@ function breadcrumbNodes(breadcrumb: Breadcrumb): VNode[] {
     }
 }
 function breadcrumbCategory(category: BreadcrumbCategory): VNode {
+    const label = unpackMenuLabel(category.label)
     // href="#menu" は menu の id="menu" と対応
     // mobile レイアウトで menu に移動
-    return html`<a class="main__breadcrumb__item" href="#menu">${unpackBreadcrumbCategory(category)}</a>`
+    return html`<a class="main__breadcrumb__item" href="#menu">${label}</a>`
 }
 function breadcrumbItem(item: BreadcrumbItem): VNode {
-    const { label, icon, href } = unpackBreadcrumbItem(item)
-    const inner = html`<i class="lnir lnir-${icon}"></i> ${label}`
-    return html` <a class="main__breadcrumb__item" href="${href}">${inner}</a> `
+    const label = unpackMenuLabel(item.label)
+    const icon = unpackMenuIcon(item.icon)
+    const href = unpackMenuHref(item.href)
+    const inner = html`<i class="${iconClass(icon)}"></i> ${label}`
+    return html`<a class="main__breadcrumb__item" href="${href}">${inner}</a>`
 }
 const SEPARATOR: VNode = html`
     <span class="main__breadcrumb__separator"><i class="lnir lnir-chevron-right"></i></span>
