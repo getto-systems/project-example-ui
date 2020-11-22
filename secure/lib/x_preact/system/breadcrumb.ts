@@ -13,7 +13,6 @@ import { Breadcrumb, BreadcrumbNode, BreadcrumbCategory, BreadcrumbItem } from "
 type Props = Readonly<{
     breadcrumb: BreadcrumbComponent
 }>
-
 export function BreadcrumbList({ breadcrumb }: Props): VNode {
     const [state, setState] = useState(initialBreadcrumbState)
     useEffect(() => {

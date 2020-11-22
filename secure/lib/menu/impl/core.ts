@@ -7,9 +7,6 @@ import {
 } from "../adapter"
 
 import {
-    ApiCredentialCollector,
-    SearchParamCollector,
-    SearchParam,
     MenuInfra,
     MenuInfo,
     MenuBadge,
@@ -20,16 +17,13 @@ import {
     MenuExpand,
 } from "../infra"
 
-import { LoadMenuAction } from "../action"
+import { LoadMenu, SearchParam } from "../action"
 
-import { Menu, MenuNode, LoadMenuEvent } from "../data"
+import { Menu, MenuNode } from "../data"
 
-const loadMenu = (
-    apiCredential: ApiCredentialCollector,
-    searchParam: SearchParamCollector,
-    { info, client }: MenuInfra
-): LoadMenuAction => async (post: Post<LoadMenuEvent>) => {
-    const param = await searchParam()
+export const loadMenu = (infra: MenuInfra): LoadMenu => (collector) => async (post) => {
+    const { info, client } = infra
+    const param = await collector.getSearchParam()
     const menu = toMenu(info, param, EMPTY_EXPAND, EMPTY_BADGE)
 
     post({ type: "succeed-to-load", menu })
@@ -40,7 +34,7 @@ const loadMenu = (
         return
     }
 
-    const badgeResponse = await client.badge.getBadge(await apiCredential())
+    const badgeResponse = await client.badge.getBadge(await collector.getApiCredential())
     if (!badgeResponse.success) {
         post({ type: "failed-to-load", menu, err: badgeResponse.err })
         return
@@ -116,17 +110,5 @@ function toMenu(
     }
 }
 
-export function initLoadMenuAction(
-    apiCredential: ApiCredentialCollector,
-    search: SearchParamCollector,
-    infra: MenuInfra
-): LoadMenuAction {
-    return loadMenu(apiCredential, search, infra)
-}
-
 const EMPTY_EXPAND: MenuExpand = {}
 const EMPTY_BADGE: MenuBadge = {}
-
-interface Post<T> {
-    (event: T): void
-}

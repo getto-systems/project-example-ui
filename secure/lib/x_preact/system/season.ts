@@ -11,7 +11,6 @@ import { Season } from "../../season/data"
 type Props = Readonly<{
     season: SeasonComponent
 }>
-
 export function SeasonInfo({ season }: Props): VNode {
     const [state, setState] = useState(initialSeasonState)
     useEffect(() => {

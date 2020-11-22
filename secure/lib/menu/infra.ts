@@ -1,18 +1,6 @@
 import { Icon } from "../z_external/icon"
 
-// TODO api credential の取得部分に移動
-type ApiCredential = { ApiCredential: never }
-
-export interface ApiCredentialCollector {
-    (): Promise<ApiCredential>
-}
-
-// TODO どう実装するのがいいのか考えないと
-export type SearchParam = { SearchParam: never }
-
-export interface SearchParamCollector {
-    (): Promise<SearchParam>
-}
+import { ApiCredential } from "./action"
 
 export type MenuInfra = Readonly<{
     info: MenuInfo
