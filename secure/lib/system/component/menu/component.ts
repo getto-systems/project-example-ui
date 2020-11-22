@@ -11,7 +11,7 @@ export type MenuActionSet = Readonly<{
 
 export interface MenuComponent {
     onStateChange(post: Post<MenuState>): void
-    action(request: MenuRequest): void
+    load(): void
 }
 
 export type MenuState =
@@ -20,8 +20,6 @@ export type MenuState =
     | Readonly<{ type: "failed-to-load"; menu: Menu; err: LoadMenuError }>
 
 export const initialMenuState: MenuState = { type: "initial-menu" }
-
-export type MenuRequest = Readonly<{ type: "load-menu" }>
 
 interface Post<T> {
     (state: T): void

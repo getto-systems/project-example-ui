@@ -96,7 +96,7 @@ class Component implements MenuComponent {
         post(this.state)
     }
 
-    action() {
+    load() {
         // mock では特に何もしない
     }
 }

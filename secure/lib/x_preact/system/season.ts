@@ -16,7 +16,7 @@ export function SeasonInfo({ season }: Props): VNode {
     const [state, setState] = useState(initialSeasonState)
     useEffect(() => {
         season.onStateChange(setState)
-        season.action({ type: "load-season" })
+        season.load()
     }, [])
 
     switch (state.type) {

@@ -11,7 +11,7 @@ export type SeasonActionSet = Readonly<{
 
 export interface SeasonComponent {
     onStateChange(post: Post<SeasonState>): void
-    action(request: SeasonRequest): void
+    load(): void
 }
 
 export type SeasonState =
@@ -19,8 +19,6 @@ export type SeasonState =
     | Readonly<{ type: "succeed-to-load"; season: Season }>
 
 export const initialSeasonState: SeasonState = { type: "initial-season" }
-
-export type SeasonRequest = Readonly<{ type: "load-season" }>
 
 interface Post<T> {
     (state: T): void
