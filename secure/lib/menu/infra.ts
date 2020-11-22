@@ -2,6 +2,10 @@ import { Icon } from "../z_external/icon"
 
 import { ApiNonce } from "../credential/data"
 
+export type BreadcrumbInfra = Readonly<{
+    tree: MenuTree
+}>
+
 export type MenuInfra = Readonly<{
     tree: MenuTree
     client: Readonly<{

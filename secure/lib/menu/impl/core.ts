@@ -10,6 +10,7 @@ import {
 import { unpackApiRoles } from "../../credential/adapter"
 
 import {
+    BreadcrumbInfra,
     MenuInfra,
     MenuBadge,
     MenuExpand,
@@ -19,10 +20,77 @@ import {
     MenuTreeItem,
 } from "../infra"
 
-import { LoadMenu } from "../action"
+import { LoadBreadcrumb, LoadMenu } from "../action"
 
 import { ApiRoles } from "../../credential/data"
-import { Menu, MenuNode, MenuPathInfo } from "../data"
+import { Breadcrumb, BreadcrumbNode, Menu, MenuNode, MenuPathInfo } from "../data"
+
+export const loadBreadcrumb = (infra: BreadcrumbInfra): LoadBreadcrumb => (collector) => async (
+    post
+) => {
+    const { tree } = infra
+
+    post({
+        type: "succeed-to-load",
+        breadcrumb: toBreadcrumb({
+            tree,
+            menuPathInfo: collector.getMenuPathInfo(),
+        }),
+    })
+}
+
+type BreadcrumbInfo = Readonly<{
+    tree: MenuTree
+    menuPathInfo: MenuPathInfo
+}>
+
+function toBreadcrumb({ tree, menuPathInfo }: BreadcrumbInfo): Breadcrumb {
+    const version = unpackMenuVersion(menuPathInfo.version)
+    const currentPath = unpackMenuPath(menuPathInfo.currentPath)
+
+    return treeToBreadcrumb(tree)
+
+    function treeToBreadcrumb(tree: MenuTree): Breadcrumb {
+        for (let i = 0; i < tree.length; i++) {
+            const node = tree[i]
+            const breadcrumb = toBreadcrumbNode(node)
+            if (breadcrumb.length > 0) {
+                return breadcrumb
+            }
+        }
+        return EMPTY_BREADCRUMB
+    }
+    function toBreadcrumbNode(node: MenuTreeNode): BreadcrumbNode[] {
+        switch (node.type) {
+            case "category":
+                return toBreadcrumbCategory(node.category, node.children)
+            case "item":
+                return toBreadcrumbItem(node.item)
+        }
+    }
+    function toBreadcrumbCategory(category: MenuTreeCategory, tree: MenuTree): BreadcrumbNode[] {
+        const breadcrumb = treeToBreadcrumb(tree)
+        if (breadcrumb.length === 0) {
+            return EMPTY_BREADCRUMB
+        }
+        return [{ type: "category", category: { label: packMenuLabel(category.label) } }, ...breadcrumb]
+    }
+    function toBreadcrumbItem(item: MenuTreeItem): BreadcrumbNode[] {
+        if (item.path !== currentPath) {
+            return EMPTY_BREADCRUMB
+        }
+        return [
+            {
+                type: "item",
+                item: {
+                    label: packMenuLabel(item.label),
+                    icon: packMenuIcon(item.icon),
+                    href: packMenuHref(`/${version}/${item.path}`),
+                },
+            },
+        ]
+    }
+}
 
 export const loadMenu = (infra: MenuInfra): LoadMenu => (collector) => async (post) => {
     const { tree, client } = infra
@@ -76,8 +144,11 @@ function toMenu({ tree, menuPathInfo, apiRoles }: MenuInfo, expand: MenuExpand, 
     const roles = unpackApiRoles(apiRoles)
 
     // TODO role によってカテゴリを非表示にするんだった
-    return tree.flatMap(toMenuNode)
+    return treeToMenu(tree)
 
+    function treeToMenu(tree: MenuTree): Menu {
+        return tree.flatMap(toMenuNode)
+    }
     function toMenuNode(node: MenuTreeNode): MenuNode[] {
         switch (node.type) {
             case "category":
@@ -88,12 +159,12 @@ function toMenu({ tree, menuPathInfo, apiRoles }: MenuInfo, expand: MenuExpand, 
     }
     function menuCategory(category: MenuTreeCategory, tree: MenuTree): MenuNode[] {
         if (!isAllow()) {
-            return []
+            return EMPTY_MENU
         }
 
-        const children = tree.flatMap(toMenuNode)
+        const children = treeToMenu(tree)
         if (children.length === 0) {
-            return []
+            return EMPTY_MENU
         }
 
         const sumBadgeCount = children.reduce((acc, node) => acc + badgeCount(node), 0)
@@ -139,7 +210,7 @@ function toMenu({ tree, menuPathInfo, apiRoles }: MenuInfo, expand: MenuExpand, 
         return {
             type: "item",
             item: {
-                isActive: currentPath === item.path,
+                isActive: item.path === currentPath,
                 label: packMenuLabel(item.label),
                 icon: packMenuIcon(item.icon),
                 href: packMenuHref(`/${version}/${item.path}`),
@@ -151,3 +222,6 @@ function toMenu({ tree, menuPathInfo, apiRoles }: MenuInfo, expand: MenuExpand, 
 
 const EMPTY_EXPAND: MenuExpand = {}
 const EMPTY_BADGE: MenuBadge = {}
+
+const EMPTY_BREADCRUMB: Breadcrumb = []
+const EMPTY_MENU: MenuNode[] = []
