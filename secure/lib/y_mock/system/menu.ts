@@ -60,13 +60,14 @@ class MenuStateFactory {
     }
 
     menu(): Menu {
+        const sec = new Date().getSeconds()
         return [
             {
                 type: "category",
                 category: {
                     isExpand: true,
                     label: packMenuLabel("MAIN"),
-                    badgeCount: packMenuBadgeCount(10),
+                    badgeCount: packMenuBadgeCount(sec),
                 },
                 children: [
                     {
@@ -76,7 +77,7 @@ class MenuStateFactory {
                             href: packMenuHref("/dist/index.html"),
                             label: packMenuLabel("ホーム"),
                             icon: packMenuIcon(lnir("home")),
-                            badgeCount: packMenuBadgeCount(10),
+                            badgeCount: packMenuBadgeCount(sec),
                         },
                     },
                 ],

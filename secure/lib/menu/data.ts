@@ -3,6 +3,14 @@ export type MenuIcon = { MenuIcon: never }
 export type MenuHref = { MenuHref: never }
 export type MenuBadgeCount = { MenuBadgeCount: never }
 
+export type MenuVersion = { MenuVersion: never }
+export type MenuPath = { MenuPath: never }
+
+export type MenuPathInfo = Readonly<{
+    version: MenuVersion
+    currentPath: MenuPath
+}>
+
 export type Breadcrumb = BreadcrumbNode[]
 
 export type BreadcrumbNode =

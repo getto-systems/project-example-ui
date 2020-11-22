@@ -1,4 +1,5 @@
-import { LoadBreadcrumbEvent, LoadMenuEvent } from "./data"
+import { LoadBreadcrumbEvent, LoadMenuEvent, MenuPathInfo } from "./data"
+import { ApiNonce, ApiRoles } from "../credential/data"
 
 export interface LoadBreadcrumb {
     (): LoadBreadcrumbAction
@@ -13,17 +14,11 @@ export interface LoadMenu {
 export interface LoadMenuAction {
     (post: Post<LoadMenuEvent>): void
 }
-
 export interface LoadMenuCollector {
-    getApiCredential(): Promise<ApiCredential>
-    getSearchParam(): Promise<SearchParam>
+    getApiNonce(): Promise<ApiNonce>
+    getApiRoles(): Promise<ApiRoles>
+    getMenuPathInfo(): MenuPathInfo
 }
-
-// TODO api credential の取得部分に移動
-export type ApiCredential = { ApiCredential: never }
-
-// TODO どう実装するのがいいのか考えないと
-export type SearchParam = { SearchParam: never }
 
 interface Post<T> {
     (event: T): void
