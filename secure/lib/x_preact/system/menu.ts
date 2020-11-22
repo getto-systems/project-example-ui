@@ -18,7 +18,6 @@ import { Menu, MenuNode, MenuCategory, MenuItem, LoadMenuError } from "../../men
 type Props = Readonly<{
     menu: MenuComponent
 }>
-
 export function MenuList({ menu }: Props): VNode {
     const [state, setState] = useState(initialMenuState)
     useEffect(() => {

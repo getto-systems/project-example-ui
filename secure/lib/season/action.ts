@@ -1,5 +1,8 @@
 import { LoadSeasonEvent } from "./data"
 
+export interface LoadSeason {
+    (): LoadSeasonAction
+}
 export interface LoadSeasonAction {
     (post: Post<LoadSeasonEvent>): void
 }
