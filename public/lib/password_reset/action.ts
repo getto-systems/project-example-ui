@@ -16,9 +16,10 @@ export interface StartSessionAction {
     (post: Post<StartSessionEvent>): void
 }
 export interface StartSessionCollector {
-    (): Promise<Content<StartSessionFields>>
+    getFields(): Promise<Content<StartSessionFields>>
 }
 
+// TODO PollStatus に変更
 export interface PollingStatus {
     (): PollingStatusAction
 }
@@ -27,13 +28,14 @@ export interface PollingStatusAction {
 }
 
 export interface Reset {
-    (collectFields: ResetCollector): ResetAction
+    (collector: ResetCollector): ResetAction
 }
 export interface ResetAction {
-    (resetToken: ResetToken, post: Post<ResetEvent>): void
+    (post: Post<ResetEvent>): void
 }
 export interface ResetCollector {
-    (): Promise<Content<ResetFields>>
+    getFields(): Promise<Content<ResetFields>>
+    getResetToken(): ResetToken
 }
 
 interface Post<T> {

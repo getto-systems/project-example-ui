@@ -1,6 +1,5 @@
 import {
     RenewCredentialActionSet,
-    RenewCredentialParam,
     RenewCredentialComponent,
     RenewCredentialState,
     RenewCredentialRequest,
@@ -8,22 +7,17 @@ import {
 
 import { RenewEvent, SetContinuousRenewEvent } from "../../../credential/data"
 
-export function initRenewCredential(
-    actions: RenewCredentialActionSet,
-    param: RenewCredentialParam
-): RenewCredentialComponent {
-    return new Component(actions, param)
+export function initRenewCredential(actions: RenewCredentialActionSet): RenewCredentialComponent {
+    return new Component(actions)
 }
 
 class Component implements RenewCredentialComponent {
     actions: RenewCredentialActionSet
-    param: RenewCredentialParam
 
     listener: Post<RenewCredentialState>[] = []
 
-    constructor(actions: RenewCredentialActionSet, param: RenewCredentialParam) {
+    constructor(actions: RenewCredentialActionSet) {
         this.actions = actions
-        this.param = param
     }
 
     onStateChange(post: Post<RenewCredentialState>): void {
@@ -62,7 +56,7 @@ class Component implements RenewCredentialComponent {
             case "succeed-to-renew":
                 return {
                     type: event.type,
-                    scriptPath: this.actions.secureScriptPath(this.param.pagePathname),
+                    scriptPath: this.actions.secureScriptPath(),
                 }
 
             default:

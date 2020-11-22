@@ -5,7 +5,7 @@ import { StartSession, PollingStatus, Reset } from "../action"
 import { SessionID, PollingStatusEvent, PollingStatusError } from "../data"
 
 export const startSession = (infra: StartSessionInfra): StartSession => (collector) => async (post) => {
-    const content = await collector()
+    const content = await collector.getFields()
     if (!content.valid) {
         post({ type: "failed-to-start-session", err: { type: "validation-error" } })
         return
@@ -107,8 +107,8 @@ class StatusPoller {
     }
 }
 
-export const reset = (infra: ResetInfra): Reset => (collectFields) => async (resetToken, post) => {
-    const content = await collectFields()
+export const reset = (infra: ResetInfra): Reset => (collector) => async (post) => {
+    const content = await collector.getFields()
     if (!content.valid) {
         post({ type: "failed-to-reset", err: { type: "validation-error" } })
         return
@@ -120,7 +120,7 @@ export const reset = (infra: ResetInfra): Reset => (collectFields) => async (res
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const response = await delayed(
-        client.reset(resetToken, content.content),
+        client.reset(collector.getResetToken(), content.content),
         time.passwordResetDelayTime,
         () => post({ type: "delayed-to-reset" })
     )

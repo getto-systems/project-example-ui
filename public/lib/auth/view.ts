@@ -10,7 +10,7 @@ import { LoginIDFieldComponent } from "./component/field/login_id/component"
 import { PasswordFieldComponent } from "./component/field/password/component"
 
 export interface AuthViewFactory {
-    (currentLocation: Location): AuthResource
+    (): AuthResource
 }
 export type AuthResource = Readonly<{
     view: AuthView

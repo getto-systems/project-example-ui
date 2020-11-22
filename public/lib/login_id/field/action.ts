@@ -1,6 +1,9 @@
 import { LoginIDFieldEvent } from "./data"
 import { InputValue } from "../../field/data"
 
+export interface LoginIDField {
+    (): LoginIDFieldAction
+}
 export interface LoginIDFieldAction {
     set(input: InputValue, post: Post<LoginIDFieldEvent>): void
     validate(post: Post<LoginIDFieldEvent>): void

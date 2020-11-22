@@ -1,7 +1,7 @@
 import { packInputValue, unpackInputValue } from "../../../field/adapter"
 import { packLoginID } from "../../../login_id/adapter"
 
-import { LoginIDFieldAction } from "../action"
+import { LoginIDField, LoginIDFieldAction } from "../action"
 
 import { LoginIDFieldEvent, LoginIDFieldError } from "../data"
 import { InputValue, buildContent, hasError } from "../../../field/data"
@@ -45,9 +45,7 @@ class Field implements LoginIDFieldAction {
     }
 }
 
-export function initLoginIDFieldAction(): LoginIDFieldAction {
-    return new Field()
-}
+export const loginIDField: LoginIDField = () => new Field()
 
 interface Post<T> {
     (state: T): void

@@ -1,6 +1,5 @@
 import {
     PasswordLoginActionSet,
-    PasswordLoginParam,
     PasswordLoginComponent,
     PasswordLoginState,
     PasswordLoginRequest,
@@ -9,22 +8,17 @@ import {
 import { LoginEvent } from "../../../password_login/data"
 import { StoreEvent } from "../../../credential/data"
 
-export function initPasswordLogin(
-    actions: PasswordLoginActionSet,
-    param: PasswordLoginParam
-): PasswordLoginComponent {
-    return new Component(actions, param)
+export function initPasswordLogin(actions: PasswordLoginActionSet): PasswordLoginComponent {
+    return new Component(actions)
 }
 
 class Component implements PasswordLoginComponent {
     actions: PasswordLoginActionSet
-    param: PasswordLoginParam
 
     listener: Post<PasswordLoginState>[] = []
 
-    constructor(actions: PasswordLoginActionSet, param: PasswordLoginParam) {
+    constructor(actions: PasswordLoginActionSet) {
         this.actions = actions
-        this.param = param
     }
 
     onStateChange(post: Post<PasswordLoginState>): void {
@@ -59,7 +53,7 @@ class Component implements PasswordLoginComponent {
                 })
                 return {
                     type: event.type,
-                    scriptPath: this.actions.secureScriptPath(this.param.pagePathname),
+                    scriptPath: this.actions.secureScriptPath(),
                 }
 
             default:

@@ -1,8 +1,11 @@
 import { PagePathname, ScriptPath } from "./data"
 
 export interface SecureScriptPath {
-    (): SecureScriptPathAction
+    (collector: SecureScriptPathCollector): SecureScriptPathAction
 }
 export interface SecureScriptPathAction {
-    (pagePathname: PagePathname): ScriptPath
+    (): ScriptPath
+}
+export interface SecureScriptPathCollector {
+    getPagePathname(): PagePathname
 }

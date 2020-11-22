@@ -23,8 +23,8 @@ import { renew, setContinuousRenew, store } from "../credential/impl/core"
 import { login } from "../password_login/impl/core"
 import { startSession, pollingStatus, reset } from "../password_reset/impl/core"
 
-import { initLoginIDFieldAction } from "../login_id/field/impl/core"
-import { initPasswordFieldAction } from "../password/field/impl/core"
+import { loginIDField } from "../login_id/field/impl/core"
+import { passwordField } from "../password/field/impl/core"
 
 import { initFetchRenewClient } from "../credential/impl/client/renew/fetch"
 import { initAuthExpires } from "../credential/impl/expires"
@@ -38,8 +38,16 @@ import { packTicketNonce, packApiRoles, packAuthAt } from "../credential/adapter
 import { packLoginID } from "../login_id/adapter"
 
 import { AuthViewFactory } from "../auth/view"
+import { currentPagePathname, detectLoginView, detectResetToken } from "../auth/impl/view"
 
-export function newAuthViewFactoryAsSingle(credentialStorage: Storage): AuthViewFactory {
+export type AuthViewProps = Readonly<{
+    credentialStorage: Storage
+    currentLocation: Location
+}>
+
+export function newAuthViewFactoryAsSingle(props: AuthViewProps): AuthViewFactory {
+    const { credentialStorage, currentLocation } = props
+
     const config = {
         time: newTimeConfig(),
     }
@@ -57,8 +65,8 @@ export function newAuthViewFactoryAsSingle(credentialStorage: Storage): AuthView
             passwordReset: newPasswordResetFactory(config.time),
 
             field: {
-                loginID: () => initLoginIDFieldAction(),
-                password: () => initPasswordFieldAction(),
+                loginID: loginIDField,
+                password: passwordField,
             },
         },
         components: {
@@ -76,10 +84,23 @@ export function newAuthViewFactoryAsSingle(credentialStorage: Storage): AuthView
             },
         },
     }
+    const collector = {
+        auth: {
+            getLoginView: () => detectLoginView(currentLocation)
+        },
+        application: {
+            getPagePathname: () => currentPagePathname(currentLocation),
+        },
+        passwordReset: {
+            getResetToken: () => detectResetToken(currentLocation),
+        },        
+    }
 
-    return initAuthViewFactoryAsSingle(factory)
+    return initAuthViewFactoryAsSingle(factory, collector)
 }
-export function newAuthViewFactoryAsWorkerForeground(credentialStorage: Storage): AuthViewFactory {
+export function newAuthViewFactoryAsWorkerForeground(props: AuthViewProps): AuthViewFactory {
+    const { credentialStorage, currentLocation } = props
+
     const config = {
         time: newTimeConfig(),
     }
@@ -88,14 +109,16 @@ export function newAuthViewFactoryAsWorkerForeground(credentialStorage: Storage)
         auth: initAuthClient(env.authServerURL),
     }
 
-    return initAuthViewFactoryAsForeground(new Worker("./auth.worker.js"), {
+    const worker = new Worker("./auth.worker.js")
+
+    const factory = {
         actions: {
             application: newApplicationFactory(),
             credential: newCredentialFactory(config.time, credentialStorage, client.auth),
 
             field: {
-                loginID: () => initLoginIDFieldAction(),
-                password: () => initPasswordFieldAction(),
+                loginID: () => loginIDField(),
+                password: () => passwordField(),
             },
         },
         components: {
@@ -112,7 +135,21 @@ export function newAuthViewFactoryAsWorkerForeground(credentialStorage: Storage)
                 password: initPasswordField,
             },
         },
-    })
+    }
+
+    const collector = {
+        auth: {
+            getLoginView: () => detectLoginView(currentLocation)
+        },
+        application: {
+            getPagePathname: () => currentPagePathname(currentLocation),
+        },
+        passwordReset: {
+            getResetToken: () => detectResetToken(currentLocation),
+        },
+    }
+
+    return initAuthViewFactoryAsForeground(worker, factory, collector)
 }
 export function initAuthWorker(worker: Worker): void {
     const config = {

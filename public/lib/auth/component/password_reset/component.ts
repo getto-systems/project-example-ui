@@ -2,23 +2,18 @@ import { ResetAction } from "../../../password_reset/action"
 import { StoreAction } from "../../../credential/action"
 import { SecureScriptPathAction } from "../../../application/action"
 
-import { ResetToken, ResetError } from "../../../password_reset/data"
+import { ResetError } from "../../../password_reset/data"
 import { StorageError } from "../../../credential/data"
-import { PagePathname, ScriptPath, LoadError } from "../../../application/data"
+import { ScriptPath, LoadError } from "../../../application/data"
 
 export interface PasswordResetComponentFactory {
-    (actions: PasswordResetActionSet, param: PasswordResetParam): PasswordResetComponent
+    (actions: PasswordResetActionSet): PasswordResetComponent
 }
 
 export type PasswordResetActionSet = Readonly<{
     reset: ResetAction
     store: StoreAction
     secureScriptPath: SecureScriptPathAction
-}>
-
-export type PasswordResetParam = Readonly<{
-    pagePathname: PagePathname
-    resetToken: ResetToken
 }>
 
 export interface PasswordResetComponent {

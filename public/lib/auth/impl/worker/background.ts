@@ -25,7 +25,10 @@ class LoginHandler {
     }
 
     handleMessage({ handlerID, message: { content } }: ProxyMessage<LoginProxyMessage>): void {
-        this.login(() => Promise.resolve(content))((event) => {
+        const collector = {
+            getFields: () => Promise.resolve(content),
+        }
+        this.login(collector)((event) => {
             this.post({ handlerID, done: true, response: event })
         })
     }
@@ -40,7 +43,10 @@ class StartSessionHandler {
     }
 
     handleMessage({ handlerID, message: { content } }: ProxyMessage<StartSessionProxyMessage>): void {
-        this.startSession(() => Promise.resolve(content))((event) => {
+        const collector = {
+            getFields: () => Promise.resolve(content),
+        }
+        this.startSession(collector)((event) => {
             this.post({ handlerID, done: true, response: event })
         })
     }
@@ -84,7 +90,11 @@ class ResetHandler {
         handlerID,
         message: { resetToken, content },
     }: ProxyMessage<ResetProxyMessage>): void {
-        this.reset(() => Promise.resolve(content))(resetToken, (event) => {
+        const collector = {
+            getFields: () => Promise.resolve(content),
+            getResetToken: () => resetToken,
+        }
+        this.reset(collector)((event) => {
             this.post({ handlerID, done: true, response: event })
         })
     }
