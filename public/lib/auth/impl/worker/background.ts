@@ -5,15 +5,15 @@ import {
     ProxyResponse,
     LoginProxyMessage,
     StartSessionProxyMessage,
-    PollingStatusProxyMessage,
+    CheckStatusProxyMessage,
     ResetProxyMessage,
 } from "./data"
 
 import { Login } from "../../../password_login/action"
-import { StartSession, PollingStatusAction, Reset } from "../../../password_reset/action"
+import { StartSession, CheckStatusAction, Reset } from "../../../password_reset/action"
 
 import { LoginEvent } from "../../../password_login/data"
-import { PollingStatusEvent, ResetEvent, StartSessionEvent } from "../../../password_reset/data"
+import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../password_reset/data"
 
 class LoginHandler {
     login: Login
@@ -73,23 +73,23 @@ class StartSessionHandler {
         })
     }
 }
-class PollingStatusHandler {
-    pollingStatus: PollingStatusAction
-    post: Post<ProxyResponse<PollingStatusEvent>>
+class CheckStatusHandler {
+    checkStatus: CheckStatusAction
+    post: Post<ProxyResponse<CheckStatusEvent>>
 
-    constructor(pollingStatus: PollingStatusAction, post: Post<ProxyResponse<PollingStatusEvent>>) {
-        this.pollingStatus = pollingStatus
+    constructor(checkStatus: CheckStatusAction, post: Post<ProxyResponse<CheckStatusEvent>>) {
+        this.checkStatus = checkStatus
         this.post = post
     }
 
-    handleMessage({ handlerID, message: { sessionID } }: ProxyMessage<PollingStatusProxyMessage>): void {
-        this.pollingStatus(sessionID, (event) => {
+    handleMessage({ handlerID, message: { sessionID } }: ProxyMessage<CheckStatusProxyMessage>): void {
+        this.checkStatus(sessionID, (event) => {
             this.post({ handlerID, done: hasDone(), response: event })
 
             function hasDone() {
                 switch (event.type) {
-                    case "retry-to-polling-status":
-                    case "try-to-polling-status":
+                    case "retry-to-check-status":
+                    case "try-to-check-status":
                         return false
 
                     default:
@@ -139,7 +139,7 @@ export type ActionSet = Readonly<{
     }>
     passwordReset: Readonly<{
         startSession: StartSession
-        pollingStatus: PollingStatusAction
+        checkStatus: CheckStatusAction
         reset: Reset
     }>
 }>
@@ -165,7 +165,7 @@ type AuthHandlerSet = Readonly<{
     }>
     passwordReset: Readonly<{
         startSession: StartSessionHandler
-        pollingStatus: PollingStatusHandler
+        checkStatus: CheckStatusHandler
         reset: ResetHandler
     }>
 }>
@@ -183,8 +183,8 @@ function initAuthHandlerSet(
             startSession: new StartSessionHandler(actions.passwordReset.startSession, (response) => {
                 postBackgroundMessage({ type: "startSession", response })
             }),
-            pollingStatus: new PollingStatusHandler(actions.passwordReset.pollingStatus, (response) => {
-                postBackgroundMessage({ type: "pollingStatus", response })
+            checkStatus: new CheckStatusHandler(actions.passwordReset.checkStatus, (response) => {
+                postBackgroundMessage({ type: "checkStatus", response })
             }),
             reset: new ResetHandler(actions.passwordReset.reset, (response) => {
                 postBackgroundMessage({ type: "reset", response })
@@ -207,8 +207,8 @@ function initForegroundMessageHandler(
                     handlers.passwordReset.startSession.handleMessage(message.message)
                     break
 
-                case "pollingStatus":
-                    handlers.passwordReset.pollingStatus.handleMessage(message.message)
+                case "checkStatus":
+                    handlers.passwordReset.checkStatus.handleMessage(message.message)
                     break
 
                 case "reset":

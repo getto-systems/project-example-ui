@@ -13,7 +13,7 @@ import {
     ProxyResponse,
     LoginProxyMessage,
     StartSessionProxyMessage,
-    PollingStatusProxyMessage,
+    CheckStatusProxyMessage,
     ResetProxyMessage,
 } from "./data"
 
@@ -36,8 +36,8 @@ import {
     StartSession,
     StartSessionAction,
     StartSessionCollector,
-    PollingStatus,
-    PollingStatusAction,
+    CheckStatus,
+    CheckStatusAction,
     Reset,
     ResetAction,
     ResetCollector,
@@ -49,9 +49,9 @@ import { PasswordField } from "../../../password/field/action"
 import { LoginEvent } from "../../../password_login/data"
 import {
     ResetToken,
-    PollingStatusEvent,
-    ResetEvent,
     StartSessionEvent,
+    CheckStatusEvent,
+    ResetEvent,
 } from "../../../password_reset/data"
 
 class ProxyMap<M, E> {
@@ -102,8 +102,8 @@ class StartSessionProxyMap extends ProxyMap<StartSessionProxyMessage, StartSessi
         }
     }
 }
-class PollingStatusProxyMap extends ProxyMap<PollingStatusProxyMessage, PollingStatusEvent> {
-    init(): PollingStatusAction {
+class CheckStatusProxyMap extends ProxyMap<CheckStatusProxyMessage, CheckStatusEvent> {
+    init(): CheckStatusAction {
         return async (sessionID, post) => {
             this.post({
                 handlerID: this.register(post),
@@ -205,7 +205,7 @@ type AuthProxyMapSet = Readonly<{
     }>
     passwordReset: Readonly<{
         startSession: StartSessionProxyMap
-        pollingStatus: PollingStatusProxyMap
+        checkStatus: CheckStatusProxyMap
         reset: ResetProxyMap
     }>
 }>
@@ -220,8 +220,8 @@ function initAuthProxyMapSet(post: Post<ForegroundMessage>): AuthProxyMapSet {
             startSession: new StartSessionProxyMap((message) => {
                 post({ type: "startSession", message })
             }),
-            pollingStatus: new PollingStatusProxyMap((message) => {
-                post({ type: "pollingStatus", message })
+            checkStatus: new CheckStatusProxyMap((message) => {
+                post({ type: "checkStatus", message })
             }),
             reset: new ResetProxyMap((message) => {
                 post({ type: "reset", message })
@@ -253,7 +253,7 @@ function initAuthComponentFactorySet(
         }>
         passwordReset: Readonly<{
             startSession: StartSession
-            pollingStatus: PollingStatus
+            checkStatus: CheckStatus
             reset: Reset
         }>
     }>
@@ -265,7 +265,7 @@ function initAuthComponentFactorySet(
             },
             passwordReset: {
                 startSession: (collector) => map.passwordReset.startSession.init(collector),
-                pollingStatus: () => map.passwordReset.pollingStatus.init(),
+                checkStatus: () => map.passwordReset.checkStatus.init(),
                 reset: (collector) => map.passwordReset.reset.init(collector),
             },
         }
@@ -286,8 +286,8 @@ function initBackgroundMessageHandler(
                     map.passwordReset.startSession.resolve(message.response)
                     break
 
-                case "pollingStatus":
-                    map.passwordReset.pollingStatus.resolve(message.response)
+                case "checkStatus":
+                    map.passwordReset.checkStatus.resolve(message.response)
                     break
 
                 case "reset":

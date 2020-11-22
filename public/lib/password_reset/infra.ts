@@ -5,8 +5,8 @@ import {
     StartSessionError,
     Destination,
     ResetToken,
-    PollingStatus,
-    PollingStatusError,
+    SendingStatus,
+    CheckStatusError,
 } from "./data"
 
 import { AuthCredential } from "../credential/data"
@@ -16,9 +16,9 @@ export type StartSessionInfra = Readonly<{
     time: StartSessionTimeConfig
     delayed: Delayed
 }>
-export type PollingStatusInfra = Readonly<{
+export type CheckStatusInfra = Readonly<{
     client: PasswordResetSessionClient
-    time: PollingStatusTimeConfig
+    time: CheckStatusTimeConfig
     delayed: Delayed
     wait: Wait
 }>
@@ -27,9 +27,9 @@ export type StartSessionTimeConfig = Readonly<{
     passwordResetStartSessionDelayTime: DelayTime
 }>
 
-export type PollingStatusTimeConfig = Readonly<{
-    passwordResetPollingWaitTime: WaitTime
-    passwordResetPollingLimit: Limit
+export type CheckStatusTimeConfig = Readonly<{
+    passwordResetCheckWaitTime: WaitTime
+    passwordResetCheckLimit: Limit
 }>
 
 export type ResetInfra = Readonly<{
@@ -59,22 +59,22 @@ export function startSessionSuccess(sessionID: SessionID): SessionResponse {
 }
 
 export type SendTokenResponse =
-    | Readonly<{ success: false; err: PollingStatusError }>
+    | Readonly<{ success: false; err: CheckStatusError }>
     | Readonly<{ success: true }>
-export function sendTokenFailed(err: PollingStatusError): SendTokenResponse {
+export function sendTokenFailed(err: CheckStatusError): SendTokenResponse {
     return { success: false, err }
 }
 export const sendTokenSuccess: SendTokenResponse = { success: true }
 
 export type GetStatusResponse =
-    | Readonly<{ success: false; err: PollingStatusError }>
-    | Readonly<{ success: true; done: false; dest: Destination; status: PollingStatus }>
+    | Readonly<{ success: false; err: CheckStatusError }>
+    | Readonly<{ success: true; done: false; dest: Destination; status: SendingStatus }>
     | Readonly<{ success: true; done: true; send: false; dest: Destination; err: string }>
     | Readonly<{ success: true; done: true; send: true; dest: Destination }>
-export function getStatusFailed(err: PollingStatusError): GetStatusResponse {
+export function getStatusFailed(err: CheckStatusError): GetStatusResponse {
     return { success: false, err }
 }
-export function getStatusPolling(dest: Destination, status: PollingStatus): GetStatusResponse {
+export function getStatusInProgress(dest: Destination, status: SendingStatus): GetStatusResponse {
     return { success: true, done: false, dest, status }
 }
 export function getStatusSendFailed(dest: Destination, err: string): GetStatusResponse {

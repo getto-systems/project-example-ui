@@ -11,8 +11,8 @@ export function newTimeConfig(): TimeConfig {
         passwordLoginDelayTime: delaySecond(1),
 
         passwordResetStartSessionDelayTime: delaySecond(1),
-        passwordResetPollingWaitTime: waitSecond(0.25),
-        passwordResetPollingLimit: { limit: 40 },
+        passwordResetCheckWaitTime: waitSecond(0.25),
+        passwordResetCheckLimit: { limit: 40 },
 
         passwordResetDelayTime: delaySecond(1),
     }
@@ -28,8 +28,8 @@ export type TimeConfig = Readonly<{
     passwordLoginDelayTime: DelayTime
 
     passwordResetStartSessionDelayTime: DelayTime
-    passwordResetPollingWaitTime: WaitTime
-    passwordResetPollingLimit: Limit
+    passwordResetCheckWaitTime: WaitTime
+    passwordResetCheckLimit: Limit
 
     passwordResetDelayTime: DelayTime
 }>

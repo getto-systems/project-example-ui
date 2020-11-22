@@ -2,7 +2,7 @@ import {
     SessionID,
     ResetToken,
     StartSessionEvent,
-    PollingStatusEvent,
+    CheckStatusEvent,
     ResetEvent,
     StartSessionFields,
     ResetFields,
@@ -19,12 +19,11 @@ export interface StartSessionCollector {
     getFields(): Promise<Content<StartSessionFields>>
 }
 
-// TODO PollStatus に変更
-export interface PollingStatus {
-    (): PollingStatusAction
+export interface CheckStatus {
+    (): CheckStatusAction
 }
-export interface PollingStatusAction {
-    (sessionID: SessionID, post: Post<PollingStatusEvent>): void
+export interface CheckStatusAction {
+    (sessionID: SessionID, post: Post<CheckStatusEvent>): void
 }
 
 export interface Reset {

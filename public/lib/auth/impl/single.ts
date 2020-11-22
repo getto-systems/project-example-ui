@@ -21,7 +21,7 @@ import { SecureScriptPath } from "../../application/action"
 import { Renew, SetContinuousRenew, Store } from "../../credential/action"
 
 import { Login } from "../../password_login/action"
-import { StartSession, PollingStatus, Reset } from "../../password_reset/action"
+import { StartSession, CheckStatus, Reset } from "../../password_reset/action"
 
 import { LoginIDField } from "../../login_id/field/action"
 import { PasswordField } from "../../password/field/action"
@@ -45,7 +45,7 @@ export type FactorySet = Readonly<{
         }>
         passwordReset: Readonly<{
             startSession: StartSession
-            pollingStatus: PollingStatus
+            checkStatus: CheckStatus
             reset: Reset
         }>
 

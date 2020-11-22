@@ -28,7 +28,7 @@ import { SecureScriptPath } from "../../application/action"
 import { Renew, SetContinuousRenew, Store } from "../../credential/action"
 
 import { Login } from "../../password_login/action"
-import { StartSession, PollingStatus, Reset } from "../../password_reset/action"
+import { StartSession, CheckStatus, Reset } from "../../password_reset/action"
 
 import { LoginIDField } from "../../login_id/field/action"
 import { PasswordField } from "../../password/field/action"
@@ -148,7 +148,7 @@ export type PasswordResetSessionFactorySet = Readonly<{
         }>
         passwordReset: Readonly<{
             startSession: StartSession
-            pollingStatus: PollingStatus
+            checkStatus: CheckStatus
         }>
         field: Readonly<{
             loginID: LoginIDField
@@ -173,7 +173,7 @@ export function initPasswordResetSessionComponentSet(
         startSession: factory.actions.passwordReset.startSession({
             getFields: () => collectStartSessionFields(fields),
         }),
-        pollingStatus: factory.actions.passwordReset.pollingStatus(),
+        checkStatus: factory.actions.passwordReset.checkStatus(),
     }
 
     return {
