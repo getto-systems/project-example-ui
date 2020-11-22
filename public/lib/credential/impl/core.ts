@@ -1,10 +1,10 @@
 import { RenewInfra, SetContinuousRenewInfra, StoreInfra, AuthCredentialRepository } from "../infra"
 
-import { RenewAction, SetContinuousRenewAction, StoreAction } from "../action"
+import { Renew, SetContinuousRenew, Store } from "../action"
 
 import { TicketNonce, FoundLastAuth } from "../data"
 
-export const renew = (infra: RenewInfra): RenewAction => async (post) => {
+export const renew = (infra: RenewInfra): Renew => () => async (post) => {
     const { authCredentials, client, expires, time, delayed } = infra
 
     const lastAuth = findLastAuth(authCredentials)
@@ -53,7 +53,7 @@ export const renew = (infra: RenewInfra): RenewAction => async (post) => {
 
     post({ type: "succeed-to-renew" })
 }
-export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuousRenewAction => (
+export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuousRenew => () => (
     post
 ) => {
     const { authCredentials, client, time, runner } = infra
@@ -128,7 +128,7 @@ function findLastAuth(authCredentials: AuthCredentialRepository): FoundLastAuth 
     }
 }
 
-export const store = (infra: StoreInfra): StoreAction => async (authCredential, post) => {
+export const store = (infra: StoreInfra): Store => () => async (authCredential, post) => {
     const { authCredentials } = infra
     const storeResponse = authCredentials.storeAuthCredential(authCredential)
     if (!storeResponse.success) {

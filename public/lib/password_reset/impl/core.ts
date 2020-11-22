@@ -1,6 +1,6 @@
 import { StartSessionInfra, PollingStatusInfra, ResetInfra } from "../infra"
 
-import { StartSession, PollingStatusAction, Reset } from "../action"
+import { StartSession, PollingStatus, Reset } from "../action"
 
 import { SessionID, PollingStatusEvent, PollingStatusError } from "../data"
 
@@ -29,7 +29,7 @@ export const startSession = (infra: StartSessionInfra): StartSession => (collect
     post({ type: "succeed-to-start-session", sessionID: response.sessionID })
 }
 
-export const pollingStatus = (infra: PollingStatusInfra): PollingStatusAction => (
+export const pollingStatus = (infra: PollingStatusInfra): PollingStatus => () => (
     sessionID,
     post
 ) => {
