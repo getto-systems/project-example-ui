@@ -1,19 +1,13 @@
 import { Icon } from "../z_external/icon"
 
-import { ApiCredential } from "./action"
+import { ApiNonce } from "../credential/data"
 
 export type MenuInfra = Readonly<{
-    info: MenuInfo
+    tree: MenuTree
     client: Readonly<{
         expand: MenuExpandClient
         badge: MenuBadgeClient
     }>
-}>
-
-export type MenuInfo = Readonly<{
-    version: string
-    currentPath: MenuPath
-    tree: MenuTree
 }>
 
 export type MenuCategoryLabel = string
@@ -24,12 +18,17 @@ export type MenuTreeNode =
     | Readonly<{ type: "category"; category: MenuTreeCategory; children: MenuTree }>
     | Readonly<{ type: "item"; item: MenuTreeItem }>
 
-export type MenuTreeCategory = Readonly<{ label: MenuCategoryLabel }>
+export type MenuTreeCategory = Readonly<{
+    label: MenuCategoryLabel
+    permission: MenuPermission
+}>
 export type MenuTreeItem = Readonly<{
     path: MenuPath
     label: string
     icon: Icon
 }>
+
+export type MenuPermission = Readonly<{ type: "any" }> | Readonly<{ type: "role"; role: string }>
 
 export type MenuBadge = Record<MenuPath, number>
 export type MenuExpand = Record<MenuCategoryLabel, boolean>
@@ -38,7 +37,7 @@ export interface MenuExpandClient {
     getExpand(): Promise<MenuExpandResponse>
 }
 export interface MenuBadgeClient {
-    getBadge(apiCredential: ApiCredential): Promise<MenuBadgeResponse>
+    getBadge(apiNonce: ApiNonce): Promise<MenuBadgeResponse>
 }
 
 export type MenuExpandResponse =
