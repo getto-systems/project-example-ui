@@ -133,33 +133,31 @@ export function initAuthWorker(worker: Worker): void {
 
 function newApplicationFactory() {
     return {
-        secureScriptPath: () => secureScriptPath({ host: newHostConfig() }),
+        secureScriptPath: secureScriptPath({ host: newHostConfig() }),
     }
 }
 function newCredentialFactory(time: TimeConfig, credentialStorage: Storage, authClient: AuthClient) {
     const authCredentials = initStorageAuthCredentialRepository(credentialStorage, env.storageKey)
 
     return {
-        renew: () =>
-            renew({
-                time,
+        renew: renew({
+            time,
 
-                authCredentials,
-                client: newRenewClient(authClient),
-                delayed,
+            authCredentials,
+            client: newRenewClient(authClient),
+            delayed,
 
-                expires: initAuthExpires(),
-            }),
-        setContinuousRenew: () =>
-            setContinuousRenew({
-                time,
+            expires: initAuthExpires(),
+        }),
+        setContinuousRenew: setContinuousRenew({
+            time,
 
-                authCredentials,
-                client: newRenewClient(authClient),
+            authCredentials,
+            client: newRenewClient(authClient),
 
-                runner: initRenewRunner(),
-            }),
-        store: () => store({ authCredentials }),
+            runner: initRenewRunner(),
+        }),
+        store: store({ authCredentials }),
     }
 }
 function newPasswordLoginFactory(time: TimeConfig, authClient: AuthClient) {
@@ -180,13 +178,12 @@ function newPasswordResetFactory(time: TimeConfig) {
             time,
             delayed,
         }),
-        pollingStatus: () =>
-            pollingStatus({
-                client: sessionClient,
-                time,
-                delayed,
-                wait,
-            }),
+        pollingStatus: pollingStatus({
+            client: sessionClient,
+            time,
+            delayed,
+            wait,
+        }),
         reset: reset({
             client: newPasswordResetClient(),
             time,

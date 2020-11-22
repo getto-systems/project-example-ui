@@ -2,9 +2,9 @@ import { Infra } from "../infra"
 
 import { packScriptPath, unpackPagePathname } from "../adapter"
 
-import { SecureScriptPathAction } from "../action"
+import { SecureScriptPath } from "../action"
 
-export const secureScriptPath = (infra: Infra): SecureScriptPathAction => (pagePathname) => {
+export const secureScriptPath = (infra: Infra): SecureScriptPath => () => (pagePathname) => {
     const {
         host: { secureServerHost },
     } = infra

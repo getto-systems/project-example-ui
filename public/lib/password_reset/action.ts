@@ -19,6 +19,9 @@ export interface StartSessionCollector {
     (): Promise<Content<StartSessionFields>>
 }
 
+export interface PollingStatus {
+    (): PollingStatusAction
+}
 export interface PollingStatusAction {
     (sessionID: SessionID, post: Post<PollingStatusEvent>): void
 }
