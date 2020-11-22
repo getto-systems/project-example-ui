@@ -19,7 +19,9 @@ export type PasswordFieldActionSet = Readonly<{
 
 export interface PasswordFieldComponent {
     onStateChange(post: Post<PasswordFieldState>): void
-    action(request: PasswordFieldRequest): void
+    set(inputValue: InputValue): void
+    show(): void
+    hide(): void
     validate(post: Post<PasswordFieldEvent>): void
 }
 
@@ -36,11 +38,6 @@ export const initialPasswordFieldState: PasswordFieldState = {
     character: simplePassword,
     view: hidePassword,
 }
-
-export type PasswordFieldRequest =
-    | Readonly<{ type: "set"; inputValue: InputValue }>
-    | Readonly<{ type: "show" }>
-    | Readonly<{ type: "hide" }>
 
 interface Post<T> {
     (state: T): void

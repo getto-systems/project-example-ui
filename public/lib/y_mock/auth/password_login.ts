@@ -47,7 +47,10 @@ class Component implements PasswordLoginComponent {
     onStateChange(post: Post<PasswordLoginState>): void {
         post(this.state)
     }
-    action(): void {
+    login(): void {
+        // mock では特に何もしない
+    }
+    loadError(): void {
         // mock では特に何もしない
     }
 }

@@ -18,7 +18,7 @@ export type PasswordResetSessionActionSet = Readonly<{
 
 export interface PasswordResetSessionComponent {
     onStateChange(post: Post<PasswordResetSessionState>): void
-    action(request: PasswordResetSessionRequest): void
+    startSession(): void
 }
 
 export type PasswordResetSessionState =
@@ -36,8 +36,6 @@ export type PasswordResetSessionState =
 export const initialPasswordResetSessionState: PasswordResetSessionState = {
     type: "initial-reset-session",
 }
-
-export type PasswordResetSessionRequest = Readonly<{ type: "start-session" }>
 
 interface Post<T> {
     (state: T): void

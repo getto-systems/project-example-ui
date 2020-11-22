@@ -81,7 +81,7 @@ class Component implements PasswordResetSessionComponent {
     onStateChange(post: Post<PasswordResetSessionState>): void {
         post(this.state)
     }
-    action(): void {
+    startSession(): void {
         // mock では特に何もしない
     }
 }

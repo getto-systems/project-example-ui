@@ -1,12 +1,8 @@
-import {
-    PasswordLoginActionSet,
-    PasswordLoginComponent,
-    PasswordLoginState,
-    PasswordLoginRequest,
-} from "./component"
+import { PasswordLoginActionSet, PasswordLoginComponent, PasswordLoginState } from "./component"
 
 import { LoginEvent } from "../../../password_login/data"
 import { StoreEvent } from "../../../credential/data"
+import { LoadError } from "../../../application/data"
 
 export function initPasswordLogin(actions: PasswordLoginActionSet): PasswordLoginComponent {
     return new Component(actions)
@@ -28,21 +24,13 @@ class Component implements PasswordLoginComponent {
         this.listener.forEach((post) => post(state))
     }
 
-    action(request: PasswordLoginRequest): void {
-        switch (request.type) {
-            case "login":
-                this.actions.login((event) => {
-                    this.post(this.mapLoginEvent(event))
-                })
-                return
-
-            case "load-error":
-                this.post({ type: "load-error", err: request.err })
-                return
-
-            default:
-                assertNever(request)
-        }
+    login(): void {
+        this.actions.login((event) => {
+            this.post(this.mapLoginEvent(event))
+        })
+    }
+    loadError(err: LoadError): void {
+        this.post({ type: "load-error", err })        
     }
 
     mapLoginEvent(event: LoginEvent): PasswordLoginState {
@@ -67,8 +55,4 @@ class Component implements PasswordLoginComponent {
 
 interface Post<T> {
     (state: T): void
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER")
 }

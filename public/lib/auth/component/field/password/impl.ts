@@ -1,11 +1,7 @@
-import {
-    PasswordFieldActionSet,
-    PasswordFieldComponent,
-    PasswordFieldState,
-    PasswordFieldRequest,
-} from "./component"
+import { PasswordFieldActionSet, PasswordFieldComponent, PasswordFieldState } from "./component"
 
 import { PasswordFieldEvent } from "../../../../password/field/data"
+import { InputValue } from "../../../../field/data"
 
 export function initPasswordField(actions: PasswordFieldActionSet): PasswordFieldComponent {
     return new Component(actions)
@@ -27,29 +23,20 @@ class Component implements PasswordFieldComponent {
         this.listener.forEach((post) => post(state))
     }
 
-    action(request: PasswordFieldRequest): void {
-        switch (request.type) {
-            case "set":
-                this.actions.password.set(request.inputValue, (event) => {
-                    this.post(this.mapPasswordFieldEvent(event))
-                })
-                return
-
-            case "show":
-                this.actions.password.show((event) => {
-                    this.post(this.mapPasswordFieldEvent(event))
-                })
-                return
-
-            case "hide":
-                this.actions.password.hide((event) => {
-                    this.post(this.mapPasswordFieldEvent(event))
-                })
-                return
-
-            default:
-                assertNever(request)
-        }
+    set(inputValue: InputValue): void {
+        this.actions.password.set(inputValue, (event) => {
+            this.post(this.mapPasswordFieldEvent(event))
+        })
+    }
+    show(): void {
+        this.actions.password.show((event) => {
+            this.post(this.mapPasswordFieldEvent(event))
+        })
+    }
+    hide(): void {
+        this.actions.password.hide((event) => {
+            this.post(this.mapPasswordFieldEvent(event))
+        })
     }
     validate(post: Post<PasswordFieldEvent>): void {
         this.actions.password.validate((event) => {
@@ -65,8 +52,4 @@ class Component implements PasswordFieldComponent {
 
 interface Post<T> {
     (state: T): void
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER")
 }

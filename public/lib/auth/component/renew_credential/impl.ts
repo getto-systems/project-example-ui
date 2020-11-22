@@ -1,11 +1,7 @@
-import {
-    RenewCredentialActionSet,
-    RenewCredentialComponent,
-    RenewCredentialState,
-    RenewCredentialRequest,
-} from "./component"
+import { RenewCredentialActionSet, RenewCredentialComponent, RenewCredentialState } from "./component"
 
 import { RenewEvent, SetContinuousRenewEvent } from "../../../credential/data"
+import { LoadError } from "../../../application/data"
 
 export function initRenewCredential(actions: RenewCredentialActionSet): RenewCredentialComponent {
     return new Component(actions)
@@ -27,27 +23,18 @@ class Component implements RenewCredentialComponent {
         this.listener.forEach((post) => post(state))
     }
 
-    action(request: RenewCredentialRequest): void {
-        switch (request.type) {
-            case "renew":
-                this.actions.renew((event) => {
-                    this.post(this.mapRenewEvent(event))
-                })
-                return
-
-            case "succeed-to-instant-load":
-                this.actions.setContinuousRenew((event) => {
-                    this.post(this.mapSetContinuousRenewEvent(event))
-                })
-                return
-
-            case "load-error":
-                this.post({ type: "load-error", err: request.err })
-                return
-
-            default:
-                assertNever(request)
-        }
+    renew(): void {
+        this.actions.renew((event) => {
+            this.post(this.mapRenewEvent(event))
+        })
+    }
+    succeedToInstantLoad(): void {
+        this.actions.setContinuousRenew((event) => {
+            this.post(this.mapSetContinuousRenewEvent(event))
+        })
+    }
+    loadError(err: LoadError): void {
+        this.post({ type: "load-error", err })
     }
 
     mapRenewEvent(event: RenewEvent): RenewCredentialState {
@@ -70,8 +57,4 @@ class Component implements RenewCredentialComponent {
 
 interface Post<T> {
     (state: T): void
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER")
 }

@@ -15,7 +15,7 @@ export interface LoginIDFieldHandler {
 export function loginIDFieldHandler(loginIDField: LoginIDFieldComponent): LoginIDFieldHandler {
     return {
         onInput: mapInputEvent((loginID) => {
-            loginIDField.action({ type: "set", inputValue: loginID })
+            loginIDField.set(loginID)
         }),
     }
 }

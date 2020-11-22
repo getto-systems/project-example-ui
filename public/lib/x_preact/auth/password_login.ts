@@ -34,10 +34,7 @@ export function PasswordLogin({
             case "succeed-to-login":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = (err) => {
-                        passwordLogin.action({
-                            type: "load-error",
-                            err: { type: "infra-error", err: `${err}` },
-                        })
+                        passwordLogin.loadError({ type: "infra-error", err: `${err}` })
                     }
                 })
                 break
@@ -144,7 +141,7 @@ export function PasswordLogin({
             submit.current.blur()
         }
 
-        passwordLogin.action({ type: "login" })
+        passwordLogin.login()
     }
     function onSubmit_noop(e: Event) {
         e.preventDefault()

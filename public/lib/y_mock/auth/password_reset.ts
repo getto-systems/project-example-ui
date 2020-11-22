@@ -47,7 +47,10 @@ class Component implements PasswordResetComponent {
     onStateChange(post: Post<PasswordResetState>): void {
         post(this.state)
     }
-    action(): void {
+    reset(): void {
+        // mock では特に何もしない
+    }
+    loadError(): void {
         // mock では特に何もしない
     }
 }

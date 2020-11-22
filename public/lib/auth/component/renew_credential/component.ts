@@ -16,7 +16,9 @@ export type RenewCredentialActionSet = Readonly<{
 
 export interface RenewCredentialComponent {
     onStateChange(post: Post<RenewCredentialState>): void
-    action(request: RenewCredentialRequest): void
+    renew(): void
+    succeedToInstantLoad(): void
+    loadError(err: LoadError): void
 }
 
 export type RenewCredentialState =
@@ -32,11 +34,6 @@ export type RenewCredentialState =
     | Readonly<{ type: "error"; err: string }>
 
 export const initialRenewCredentialState: RenewCredentialState = { type: "initial" }
-
-export type RenewCredentialRequest =
-    | Readonly<{ type: "renew" }>
-    | Readonly<{ type: "load-error"; err: LoadError }>
-    | Readonly<{ type: "succeed-to-instant-load" }>
 
 interface Post<T> {
     (state: T): void

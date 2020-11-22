@@ -17,7 +17,8 @@ export type PasswordLoginActionSet = Readonly<{
 
 export interface PasswordLoginComponent {
     onStateChange(post: Post<PasswordLoginState>): void
-    action(request: PasswordLoginRequest): void
+    login(): void
+    loadError(err: LoadError): void
 }
 
 export type PasswordLoginState =
@@ -31,10 +32,6 @@ export type PasswordLoginState =
     | Readonly<{ type: "error"; err: string }>
 
 export const initialPasswordLoginState: PasswordLoginState = { type: "initial-login" }
-
-export type PasswordLoginRequest =
-    | Readonly<{ type: "login" }>
-    | Readonly<{ type: "load-error"; err: LoadError }>
 
 interface Post<T> {
     (state: T): void

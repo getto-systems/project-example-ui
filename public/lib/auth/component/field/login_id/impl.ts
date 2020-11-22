@@ -1,11 +1,7 @@
-import {
-    LoginIDFieldActionSet,
-    LoginIDFieldComponent,
-    LoginIDFieldState,
-    LoginIDFieldRequest,
-} from "./component"
+import { LoginIDFieldActionSet, LoginIDFieldComponent, LoginIDFieldState } from "./component"
 
 import { LoginIDFieldEvent } from "../../../../login_id/field/data"
+import { InputValue } from "../../../../field/data"
 
 export function initLoginIDField(actions: LoginIDFieldActionSet): LoginIDFieldComponent {
     return new Component(actions)
@@ -27,14 +23,10 @@ class Component implements LoginIDFieldComponent {
         this.listener.forEach((post) => post(state))
     }
 
-    action(request: LoginIDFieldRequest): void {
-        switch (request.type) {
-            case "set":
-                this.actions.loginID.set(request.inputValue, (event) => {
-                    this.post(this.mapLoginIDFieldEvent(event))
-                })
-                return
-        }
+    set(inputValue: InputValue): void {
+        this.actions.loginID.set(inputValue, (event) => {
+            this.post(this.mapLoginIDFieldEvent(event))
+        })
     }
     validate(post: Post<LoginIDFieldEvent>): void {
         this.actions.loginID.validate((event) => {

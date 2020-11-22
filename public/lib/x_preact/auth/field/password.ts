@@ -19,13 +19,13 @@ export interface PasswordFieldHandler {
 export function passwordFieldHandler(passwordField: PasswordFieldComponent): PasswordFieldHandler {
     return {
         onInput: mapInputEvent((password) => {
-            passwordField.action({ type: "set", inputValue: password })
+            passwordField.set(password)
         }),
         show() {
-            passwordField.action({ type: "show" })
+            passwordField.show()
         },
         hide() {
-            passwordField.action({ type: "hide" })
+            passwordField.hide()
         },
     }
 }
