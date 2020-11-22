@@ -12,7 +12,7 @@ export type LoginIDFieldActionSet = Readonly<{
 
 export interface LoginIDFieldComponent {
     onStateChange(post: Post<LoginIDFieldState>): void
-    action(request: LoginIDFieldRequest): void
+    set(inputValue: InputValue): void
     validate(post: Post<LoginIDFieldEvent>): void
 }
 
@@ -22,8 +22,6 @@ export const initialLoginIDFieldState: LoginIDFieldState = {
     type: "succeed-to-update",
     result: noError(),
 }
-
-export type LoginIDFieldRequest = Readonly<{ type: "set"; inputValue: InputValue }>
 
 interface Post<T> {
     (state: T): void

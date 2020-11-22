@@ -35,7 +35,13 @@ class Component implements RenewCredentialComponent {
     onStateChange(post: Post<RenewCredentialState>): void {
         post(this.state)
     }
-    action(): void {
+    renew(): void {
+        // mock では特に何もしない
+    }
+    succeedToInstantLoad(): void {
+        // mock では特に何もしない
+    }
+    loadError(): void {
         // mock では特に何もしない
     }
 }

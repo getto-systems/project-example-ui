@@ -18,7 +18,8 @@ export type PasswordResetActionSet = Readonly<{
 
 export interface PasswordResetComponent {
     onStateChange(post: Post<PasswordResetState>): void
-    action(request: PasswordResetRequest): void
+    reset(): void
+    loadError(err: LoadError): void
 }
 
 export type PasswordResetState =
@@ -32,10 +33,6 @@ export type PasswordResetState =
     | Readonly<{ type: "error"; err: string }>
 
 export const initialPasswordResetState: PasswordResetState = { type: "initial-reset" }
-
-export type PasswordResetRequest =
-    | Readonly<{ type: "reset" }>
-    | Readonly<{ type: "load-error"; err: LoadError }>
 
 interface Post<T> {
     (state: T): void

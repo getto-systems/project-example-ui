@@ -79,7 +79,13 @@ class Component implements PasswordFieldComponent {
     onStateChange(post: Post<PasswordFieldState>): void {
         post(this.state)
     }
-    action(): void {
+    set(): void {
+        // mock では特に何もしない
+    }
+    show(): void {
+        // mock では特に何もしない
+    }
+    hide(): void {
         // mock では特に何もしない
     }
     validate(): void {

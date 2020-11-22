@@ -29,7 +29,7 @@ class Component implements LoginIDFieldComponent {
     onStateChange(post: Post<LoginIDFieldState>): void {
         post(this.state)
     }
-    action(): void {
+    set(): void {
         // mock では特に何もしない
     }
     validate(): void {

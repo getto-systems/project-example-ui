@@ -2,7 +2,6 @@ import {
     PasswordResetSessionActionSet,
     PasswordResetSessionComponent,
     PasswordResetSessionState,
-    PasswordResetSessionRequest,
 } from "./component"
 
 import { StartSessionEvent, PollingStatusEvent } from "../../../password_reset/data"
@@ -29,14 +28,10 @@ class Component implements PasswordResetSessionComponent {
         this.listener.forEach((post) => post(state))
     }
 
-    action(request: PasswordResetSessionRequest): void {
-        switch (request.type) {
-            case "start-session":
-                this.actions.startSession((event) => {
-                    this.post(this.mapStartSessionEvent(event))
-                })
-                return
-        }
+    startSession(): void {
+        this.actions.startSession((event) => {
+            this.post(this.mapStartSessionEvent(event))
+        })
     }
 
     mapStartSessionEvent(event: StartSessionEvent): PasswordResetSessionState {

@@ -1,12 +1,8 @@
-import {
-    PasswordResetActionSet,
-    PasswordResetComponent,
-    PasswordResetState,
-    PasswordResetRequest,
-} from "./component"
+import { PasswordResetActionSet, PasswordResetComponent, PasswordResetState } from "./component"
 
 import { ResetEvent } from "../../../password_reset/data"
 import { StoreEvent } from "../../../credential/data"
+import { LoadError } from "../../../application/data"
 
 export function initPasswordReset(actions: PasswordResetActionSet): PasswordResetComponent {
     return new Component(actions)
@@ -28,21 +24,13 @@ class Component implements PasswordResetComponent {
         this.listener.forEach((post) => post(state))
     }
 
-    action(request: PasswordResetRequest): void {
-        switch (request.type) {
-            case "reset":
-                this.actions.reset((event) => {
-                    this.post(this.mapResetEvent(event))
-                })
-                return
-
-            case "load-error":
-                this.post({ type: "load-error", err: request.err })
-                return
-
-            default:
-                assertNever(request)
-        }
+    reset(): void {
+        this.actions.reset((event) => {
+            this.post(this.mapResetEvent(event))
+        })
+    }
+    loadError(err: LoadError): void {
+        this.post({ type: "load-error", err })
     }
 
     mapResetEvent(event: ResetEvent): PasswordResetState {
@@ -67,8 +55,4 @@ class Component implements PasswordResetComponent {
 
 interface Post<T> {
     (state: T): void
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER")
 }

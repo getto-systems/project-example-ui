@@ -29,7 +29,18 @@ class LoginHandler {
             getFields: () => Promise.resolve(content),
         }
         this.login(collector)((event) => {
-            this.post({ handlerID, done: true, response: event })
+            this.post({ handlerID, done: hasDone(), response: event })
+
+            function hasDone() {
+                switch (event.type) {
+                    case "try-to-login":
+                    case "delayed-to-login":
+                        return false
+
+                    default:
+                        return true
+                }
+            }
         })
     }
 }
@@ -47,7 +58,18 @@ class StartSessionHandler {
             getFields: () => Promise.resolve(content),
         }
         this.startSession(collector)((event) => {
-            this.post({ handlerID, done: true, response: event })
+            this.post({ handlerID, done: hasDone(), response: event })
+
+            function hasDone() {
+                switch (event.type) {
+                    case "try-to-start-session":
+                    case "delayed-to-start-session":
+                        return false
+
+                    default:
+                        return true
+                }
+            }
         })
     }
 }
@@ -95,7 +117,18 @@ class ResetHandler {
             getResetToken: () => resetToken,
         }
         this.reset(collector)((event) => {
-            this.post({ handlerID, done: true, response: event })
+            this.post({ handlerID, done: hasDone(), response: event })
+
+            function hasDone() {
+                switch (event.type) {
+                    case "try-to-reset":
+                    case "delayed-to-reset":
+                        return false
+
+                    default:
+                        return true
+                }
+            }
         })
     }
 }

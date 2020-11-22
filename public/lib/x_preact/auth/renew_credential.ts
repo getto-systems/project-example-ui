@@ -19,7 +19,7 @@ export function RenewCredential({ components: { renewCredential } }: Props): VNo
     const [state, setState] = useState(initialRenewCredentialState)
     useEffect(() => {
         renewCredential.onStateChange(setState)
-        renewCredential.action({ type: "renew" })
+        renewCredential.renew()
     }, [])
 
     useEffect(() => {
@@ -28,13 +28,10 @@ export function RenewCredential({ components: { renewCredential } }: Props): VNo
             case "try-to-instant-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onload = () => {
-                        renewCredential.action({ type: "succeed-to-instant-load" })
+                        renewCredential.succeedToInstantLoad()
                     }
                     script.onerror = (err) => {
-                        renewCredential.action({
-                            type: "load-error",
-                            err: { type: "infra-error", err: `${err}` },
-                        })
+                        renewCredential.loadError({ type: "infra-error", err: `${err}` })
                     }
                 })
                 break
@@ -42,10 +39,7 @@ export function RenewCredential({ components: { renewCredential } }: Props): VNo
             case "succeed-to-renew":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = (err) => {
-                        renewCredential.action({
-                            type: "load-error",
-                            err: { type: "infra-error", err: `${err}` },
-                        })
+                        renewCredential.loadError({ type: "infra-error", err: `${err}` })
                     }
                 })
                 break

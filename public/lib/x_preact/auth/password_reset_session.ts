@@ -177,7 +177,7 @@ export function PasswordResetSession({
             submit.current.blur()
         }
 
-        passwordResetSession.action({ type: "start-session" })
+        passwordResetSession.startSession()
     }
     function onSubmit_noop(e: Event) {
         e.preventDefault()

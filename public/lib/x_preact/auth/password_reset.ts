@@ -34,10 +34,7 @@ export function PasswordReset({
             case "succeed-to-reset":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = (err) => {
-                        passwordReset.action({
-                            type: "load-error",
-                            err: { type: "infra-error", err: `${err}` },
-                        })
+                        passwordReset.loadError({ type: "infra-error", err: `${err}` })
                     }
                 })
                 break
@@ -139,7 +136,7 @@ export function PasswordReset({
             submit.current.blur()
         }
 
-        passwordReset.action({ type: "reset" })
+        passwordReset.reset()
     }
     function onSubmit_noop(e: Event) {
         e.preventDefault()

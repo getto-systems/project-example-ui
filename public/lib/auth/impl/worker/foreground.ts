@@ -70,14 +70,14 @@ class ProxyMap<M, E> {
         this.map[handlerID] = post
         return handlerID
     }
-    resolve({ handlerID, done: release, response }: ProxyResponse<E>): void {
+    resolve({ handlerID, done, response }: ProxyResponse<E>): void {
         if (!this.map[handlerID]) {
             throw new Error("handler is not set")
         }
 
         this.map[handlerID](response)
 
-        if (release) {
+        if (done) {
             delete this.map[handlerID]
         }
     }
