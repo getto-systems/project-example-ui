@@ -1,53 +1,35 @@
-import { BreadcrumbCategory, BreadcrumbItem, MenuCategory, MenuItem } from "./data"
+import { Icon } from "../z_external/icon"
 
-export function packBreadcrumbCategory(category: string): BreadcrumbCategory {
-    return category as BreadcrumbCategory & string
+import { MenuLabel, MenuIcon, MenuHref, MenuBadgeCount } from "./data"
+
+export function packMenuLabel(label: string): MenuLabel {
+    return label as MenuLabel & string
 }
 
-export function unpackBreadcrumbCategory(category: BreadcrumbCategory): string {
-    return (category as unknown) as string
+export function unpackMenuLabel(label: MenuLabel): string {
+    return (label as unknown) as string
 }
 
-export function packBreadcrumbItem(item: BreadcrumbItem_data): BreadcrumbItem {
-    return item as BreadcrumbItem & BreadcrumbItem_data
+export function packMenuIcon(icon: Icon): MenuIcon {
+    return icon as MenuIcon & Icon
 }
 
-export function unpackBreadcrumbItem(item: BreadcrumbItem): BreadcrumbItem_data {
-    return (item as unknown) as BreadcrumbItem_data
+export function unpackMenuIcon(icon: MenuIcon): Icon {
+    return (icon as unknown) as Icon
 }
 
-type BreadcrumbItem_data = Readonly<{
-    label: string
-    icon: string
-    href: string
-}>
-
-export function packMenuCategory(category: MenuCategory_data): MenuCategory {
-    return category as MenuCategory & MenuCategory_data
+export function packMenuHref(href: string): MenuHref {
+    return href as MenuHref & string
 }
 
-export function unpackMenuCategory(category: MenuCategory): MenuCategory_data {
-    return (category as unknown) as MenuCategory_data
+export function unpackMenuHref(icon: MenuHref): string {
+    return (icon as unknown) as string
 }
 
-export function packMenuItem(item: MenuItem_data): MenuItem {
-    return item as MenuItem & MenuItem_data
+export function packMenuBadgeCount(badgeCount: number): MenuBadgeCount {
+    return badgeCount as MenuBadgeCount & number
 }
 
-export function unpackMenuItem(item: MenuItem): MenuItem_data {
-    return (item as unknown) as MenuItem_data
+export function unpackMenuBadgeCount(badgeCount: MenuBadgeCount): number {
+    return (badgeCount as unknown) as number
 }
-
-type MenuCategory_data = Readonly<{
-    isExpand: boolean
-    label: string
-    badgeCount: number
-}>
-
-type MenuItem_data = Readonly<{
-    isActive: boolean
-    href: string
-    label: string
-    icon: string
-    badgeCount: number
-}>

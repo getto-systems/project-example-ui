@@ -1,11 +1,20 @@
+export type MenuLabel = { MenuLabel: never }
+export type MenuIcon = { MenuIcon: never }
+export type MenuHref = { MenuHref: never }
+export type MenuBadgeCount = { MenuBadgeCount: never }
+
 export type Breadcrumb = BreadcrumbNode[]
 
 export type BreadcrumbNode =
     | Readonly<{ type: "category"; category: BreadcrumbCategory }>
     | Readonly<{ type: "item"; item: BreadcrumbItem }>
 
-export type BreadcrumbCategory = { BreadcrumbCategory: never }
-export type BreadcrumbItem = { BreadcrumbItem: never }
+export type BreadcrumbCategory = Readonly<{ label: MenuLabel }>
+export type BreadcrumbItem = Readonly<{
+    label: MenuLabel
+    icon: MenuIcon
+    href: MenuHref
+}>
 
 export type LoadBreadcrumbEvent = Readonly<{ type: "succeed-to-load"; breadcrumb: Breadcrumb }>
 
@@ -14,8 +23,19 @@ export type MenuNode =
     | Readonly<{ type: "category"; category: MenuCategory; children: Menu }>
     | Readonly<{ type: "item"; item: MenuItem }>
 
-export type MenuCategory = { MenuCategory: never }
-export type MenuItem = { MenuItem: never }
+export type MenuCategory = Readonly<{
+    isExpand: boolean
+    label: MenuLabel
+    badgeCount: MenuBadgeCount
+}>
+
+export type MenuItem = Readonly<{
+    isActive: boolean
+    href: MenuHref
+    label: MenuLabel
+    icon: MenuIcon
+    badgeCount: MenuBadgeCount
+}>
 
 export type LoadMenuEvent =
     | Readonly<{ type: "succeed-to-load"; menu: Menu }>

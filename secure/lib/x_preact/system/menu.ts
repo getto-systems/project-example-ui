@@ -2,7 +2,14 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { unpackMenuCategory, unpackMenuItem } from "../../menu/adapter"
+import { iconClass } from "../../z_external/icon"
+
+import {
+    unpackMenuLabel,
+    unpackMenuIcon,
+    unpackMenuBadgeCount,
+    unpackMenuHref,
+} from "../../menu/adapter"
 
 import { MenuComponent, initialMenuState } from "../../system/component/menu/component"
 
@@ -48,10 +55,11 @@ function toNode(node: MenuNode): VNode {
 }
 
 function menuCategory(category: MenuCategory, children: Menu) {
-    const { label, badgeCount, isExpand } = unpackMenuCategory(category)
+    const label = unpackMenuLabel(category.label)
+    const badgeCount = unpackMenuBadgeCount(category.badgeCount)
 
     return html`
-        <details class="menu__nav" open="${isExpand}">
+        <details class="menu__nav" open="${category.isExpand}">
             <summary class="menu__nav__summary">
                 <span class="menu__nav__summary__label">${label}</span>
                 <span class="menu__nav__summary__badge">${badge(badgeCount)}</span>
@@ -64,8 +72,11 @@ function menuCategory(category: MenuCategory, children: Menu) {
 }
 
 function menuItem(item: MenuItem) {
-    const { href, icon, label, badgeCount, isActive } = unpackMenuItem(item)
-    const activeClass = isActive ? "menu__nav__item_active" : ""
+    const href = unpackMenuHref(item.href)
+    const icon = unpackMenuIcon(item.icon)
+    const label = unpackMenuLabel(item.label)
+    const badgeCount = unpackMenuBadgeCount(item.badgeCount)
+    const activeClass = item.isActive ? "menu__nav__item_active" : ""
 
     return html`
         <li class="menu__nav__item">
@@ -77,7 +88,7 @@ function menuItem(item: MenuItem) {
     `
 
     function labelWithIcon() {
-        return html`<i class="lnir lnir-${icon}"></i> ${label}`
+        return html`<i class="${iconClass(icon)}"></i> ${label}`
     }
 }
 
