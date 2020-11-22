@@ -1,8 +1,8 @@
-import { StartSessionInfra, PollingStatusInfra, ResetInfra } from "../infra"
+import { StartSessionInfra, CheckStatusInfra, ResetInfra } from "../infra"
 
-import { StartSession, PollingStatus, Reset } from "../action"
+import { StartSession, CheckStatus, Reset } from "../action"
 
-import { SessionID, PollingStatusEvent, PollingStatusError } from "../data"
+import { SessionID, CheckStatusEvent, CheckStatusError } from "../data"
 
 export const startSession = (infra: StartSessionInfra): StartSession => (collector) => async (post) => {
     const content = await collector.getFields()
@@ -29,43 +29,43 @@ export const startSession = (infra: StartSessionInfra): StartSession => (collect
     post({ type: "succeed-to-start-session", sessionID: response.sessionID })
 }
 
-export const pollingStatus = (infra: PollingStatusInfra): PollingStatus => () => (
+export const checkStatus = (infra: CheckStatusInfra): CheckStatus => () => (
     sessionID,
     post
 ) => {
-    new StatusPoller(infra).startPolling(sessionID, post)
+    new StatusChecker(infra).start(sessionID, post)
 }
 
 type SendTokenState =
     | Readonly<{ type: "initial" }>
-    | Readonly<{ type: "failed"; err: PollingStatusError }>
+    | Readonly<{ type: "failed"; err: CheckStatusError }>
     | Readonly<{ type: "success" }>
 
-class StatusPoller {
-    infra: PollingStatusInfra
+class StatusChecker {
+    infra: CheckStatusInfra
 
     sendTokenState: SendTokenState
 
-    constructor(infra: PollingStatusInfra) {
+    constructor(infra: CheckStatusInfra) {
         this.infra = infra
 
         this.sendTokenState = { type: "initial" }
     }
 
-    async startPolling(sessionID: SessionID, post: Post<PollingStatusEvent>): Promise<void> {
-        post({ type: "try-to-polling-status" })
+    async start(sessionID: SessionID, post: Post<CheckStatusEvent>): Promise<void> {
+        post({ type: "try-to-check-status" })
 
         this.sendToken()
 
-        for (let i_ = 0; i_ < this.infra.time.passwordResetPollingLimit.limit; i_++) {
+        for (let i_ = 0; i_ < this.infra.time.passwordResetCheckLimit.limit; i_++) {
             if (this.sendTokenState.type === "failed") {
-                post({ type: "failed-to-polling-status", err: this.sendTokenState.err })
+                post({ type: "failed-to-check-status", err: this.sendTokenState.err })
                 return
             }
 
             const response = await this.infra.client.getStatus(sessionID)
             if (!response.success) {
-                post({ type: "failed-to-polling-status", err: response.err })
+                post({ type: "failed-to-check-status", err: response.err })
                 return
             }
 
@@ -83,17 +83,17 @@ class StatusPoller {
             }
 
             post({
-                type: "retry-to-polling-status",
+                type: "retry-to-check-status",
                 dest: response.dest,
                 status: response.status,
             })
 
-            await this.infra.wait(this.infra.time.passwordResetPollingWaitTime, () => true)
+            await this.infra.wait(this.infra.time.passwordResetCheckWaitTime, () => true)
         }
 
         post({
-            type: "failed-to-polling-status",
-            err: { type: "infra-error", err: "overflow polling limit" },
+            type: "failed-to-check-status",
+            err: { type: "infra-error", err: "overflow check limit" },
         })
     }
 

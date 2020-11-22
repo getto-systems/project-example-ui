@@ -4,7 +4,7 @@ import {
     PasswordResetSessionState,
 } from "./component"
 
-import { StartSessionEvent, PollingStatusEvent } from "../../../password_reset/data"
+import { StartSessionEvent, CheckStatusEvent } from "../../../password_reset/data"
 
 export function initPasswordResetSession(
     actions: PasswordResetSessionActionSet
@@ -37,16 +37,16 @@ class Component implements PasswordResetSessionComponent {
     mapStartSessionEvent(event: StartSessionEvent): PasswordResetSessionState {
         switch (event.type) {
             case "succeed-to-start-session":
-                this.actions.pollingStatus(event.sessionID, (event) => {
-                    this.post(this.mapPollingStatusEvent(event))
+                this.actions.checkStatus(event.sessionID, (event) => {
+                    this.post(this.mapCheckStatusEvent(event))
                 })
-                return { type: "try-to-polling-status" }
+                return { type: "try-to-check-status" }
 
             default:
                 return event
         }
     }
-    mapPollingStatusEvent(event: PollingStatusEvent): PasswordResetSessionState {
+    mapCheckStatusEvent(event: CheckStatusEvent): PasswordResetSessionState {
         return event
     }
 }

@@ -6,7 +6,7 @@ import {
     SendTokenResponse,
     GetStatusResponse,
     getStatusSend,
-    getStatusPolling,
+    getStatusInProgress,
     getStatusFailed,
 } from "../../../infra"
 
@@ -14,7 +14,7 @@ import { packSessionID } from "../../../adapter"
 
 import { StartSessionFields } from "../../../data"
 
-import { SessionID, PollingStatusError } from "../../../data"
+import { SessionID, CheckStatusError } from "../../../data"
 import { LoginID } from "../../../../login_id/data"
 
 export function initSimulatePasswordResetSessionClient(
@@ -28,7 +28,7 @@ type TokenState =
     | Readonly<{ state: "waiting" }>
     | Readonly<{ state: "sending" }>
     | Readonly<{ state: "success" }>
-    | Readonly<{ state: "failed"; err: PollingStatusError }>
+    | Readonly<{ state: "failed"; err: CheckStatusError }>
 
 class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
     tokenState: TokenState = { state: "initial" }
@@ -90,10 +90,10 @@ class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
         switch (this.tokenState.state) {
             case "initial":
             case "waiting":
-                return getStatusPolling({ type: "log" }, { sending: false })
+                return getStatusInProgress({ type: "log" }, { sending: false })
 
             case "sending":
-                return getStatusPolling({ type: "log" }, { sending: true })
+                return getStatusInProgress({ type: "log" }, { sending: true })
 
             case "success":
                 return getStatusSend({ type: "log" })

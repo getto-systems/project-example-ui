@@ -15,9 +15,9 @@ import { initialPasswordResetSessionState } from "../../auth/component/password_
 
 import {
     Destination,
-    PollingStatus,
+    SendingStatus,
     StartSessionError,
-    PollingStatusError,
+    CheckStatusError,
     SendTokenError,
 } from "../../password_reset/data"
 
@@ -57,7 +57,7 @@ export function PasswordResetSession({
             </aside>
         `
     }
-    function pollingStatusView(content: VNode): VNode {
+    function checkStatusView(content: VNode): VNode {
         return html`
             <aside class="login">
                 <section class="login__box">
@@ -125,19 +125,19 @@ export function PasswordResetSession({
                 `
             )
 
-        case "try-to-polling-status":
-            return pollingStatusView(html`
+        case "try-to-check-status":
+            return checkStatusView(html`
                 <p class="loading__message">リセットトークンを送信しています</p>
             `)
 
-        case "retry-to-polling-status":
-            return pollingStatusView(html`
+        case "retry-to-check-status":
+            return checkStatusView(html`
                 <p class="loading__message">リセットトークンを送信しています</p>
-                ${pollingStatus(state.dest, state.status)}
+                ${status(state.dest, state.status)}
             `)
 
-        case "failed-to-polling-status":
-            return errorView(html`ステータスの取得に失敗しました`, pollingStatusError(state.err))
+        case "failed-to-check-status":
+            return errorView(html`ステータスの取得に失敗しました`, checkStatusError(state.err))
 
         case "failed-to-send-token":
             return errorView(html`リセットトークンの送信に失敗しました`, sendTokenError(state.err))
@@ -203,7 +203,7 @@ function loginLink(href: AppHref): VNode {
     `
 }
 
-function pollingStatus(dest: Destination, status: PollingStatus): VNode {
+function status(dest: Destination, status: SendingStatus): VNode {
     if (!status.sending) {
         return html` <p class="loading__message">送信準備中</p> `
     }
@@ -251,7 +251,7 @@ function startSessionError(err: StartSessionError): VNode {
             `
     }
 }
-function pollingStatusError(err: PollingStatusError): VNode {
+function checkStatusError(err: CheckStatusError): VNode {
     switch (err.type) {
         case "bad-request":
             return html`<p>アプリケーションエラーによりステータスの取得に失敗しました</p>`

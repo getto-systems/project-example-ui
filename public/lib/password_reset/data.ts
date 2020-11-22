@@ -8,7 +8,7 @@ export type ResetToken = { ResetToken: never }
 // TODO log 以外にも対応 : というより、never にするべきかな
 export type Destination = Readonly<{ type: "log" }>
 
-export type PollingStatus = Readonly<{ sending: false }> | Readonly<{ sending: true }>
+export type SendingStatus = Readonly<{ sending: boolean }>
 
 export type StartSessionFields = Readonly<{
     loginID: LoginID
@@ -33,14 +33,14 @@ export type StartSessionError =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export type PollingStatusEvent =
-    | Readonly<{ type: "try-to-polling-status" }>
-    | Readonly<{ type: "retry-to-polling-status"; dest: Destination; status: PollingStatus }>
-    | Readonly<{ type: "failed-to-polling-status"; err: PollingStatusError }>
+export type CheckStatusEvent =
+    | Readonly<{ type: "try-to-check-status" }>
+    | Readonly<{ type: "retry-to-check-status"; dest: Destination; status: SendingStatus }>
+    | Readonly<{ type: "failed-to-check-status"; err: CheckStatusError }>
     | Readonly<{ type: "failed-to-send-token"; dest: Destination; err: SendTokenError }>
     | Readonly<{ type: "succeed-to-send-token"; dest: Destination }>
 
-export type PollingStatusError =
+export type CheckStatusError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "invalid-password-reset" }>
     | Readonly<{ type: "server-error" }>

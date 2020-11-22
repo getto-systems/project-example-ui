@@ -21,7 +21,7 @@ import { initPasswordField } from "../auth/component/field/password/impl"
 import { secureScriptPath } from "../application/impl/core"
 import { renew, setContinuousRenew, store } from "../credential/impl/core"
 import { login } from "../password_login/impl/core"
-import { startSession, pollingStatus, reset } from "../password_reset/impl/core"
+import { startSession, checkStatus, reset } from "../password_reset/impl/core"
 
 import { loginIDField } from "../login_id/field/impl/core"
 import { passwordField } from "../password/field/impl/core"
@@ -215,7 +215,7 @@ function newPasswordResetFactory(time: TimeConfig) {
             time,
             delayed,
         }),
-        pollingStatus: pollingStatus({
+        checkStatus: checkStatus({
             client: sessionClient,
             time,
             delayed,
