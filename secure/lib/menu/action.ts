@@ -2,10 +2,13 @@ import { LoadBreadcrumbEvent, LoadMenuEvent, MenuPathInfo } from "./data"
 import { ApiNonce, ApiRoles } from "../credential/data"
 
 export interface LoadBreadcrumb {
-    (): LoadBreadcrumbAction
+    (collector: LoadBreadcrumbCollector): LoadBreadcrumbAction
 }
 export interface LoadBreadcrumbAction {
     (post: Post<LoadBreadcrumbEvent>): void
+}
+export interface LoadBreadcrumbCollector {
+    getMenuPathInfo(): MenuPathInfo
 }
 
 export interface LoadMenu {
