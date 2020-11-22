@@ -18,7 +18,7 @@ export function BreadcrumbList({ breadcrumb }: Props): VNode {
     const [state, setState] = useState(initialBreadcrumbState)
     useEffect(() => {
         breadcrumb.onStateChange(setState)
-        breadcrumb.action({ type: "load-breadcrumb" })
+        breadcrumb.load()
     }, [])
 
     switch (state.type) {

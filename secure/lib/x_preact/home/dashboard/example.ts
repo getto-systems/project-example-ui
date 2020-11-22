@@ -16,7 +16,7 @@ export function Example({ example }: Props): VNode {
     const [state, setState] = useState(initialExampleState)
     useEffect(() => {
         example.onStateChange(setState)
-        example.action({ type: "load" })
+        example.load()
     }, [])
 
     switch (state.type) {

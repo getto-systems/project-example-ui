@@ -26,7 +26,7 @@ class Component implements ExampleComponent {
         post(this.state)
     }
 
-    action() {
+    load() {
         // mock では特に何もしない
     }
 }

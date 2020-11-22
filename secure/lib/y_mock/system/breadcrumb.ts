@@ -44,7 +44,7 @@ class Component implements BreadcrumbComponent {
         post(this.state)
     }
 
-    action() {
+    load() {
         // mock では特に何もしない
     }
 }

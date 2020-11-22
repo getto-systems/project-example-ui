@@ -23,7 +23,7 @@ export function MenuList({ menu }: Props): VNode {
     const [state, setState] = useState(initialMenuState)
     useEffect(() => {
         menu.onStateChange(setState)
-        menu.action({ type: "load-menu" })
+        menu.load()
     }, [])
 
     switch (state.type) {

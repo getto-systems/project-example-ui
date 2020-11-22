@@ -11,7 +11,7 @@ export type ExampleActionSet = Readonly<{
 
 export interface ExampleComponent {
     onStateChange(post: Post<ExampleState>): void
-    action(request: ExampleRequest): void
+    load(): void
 }
 
 export type ExampleState =
@@ -19,8 +19,6 @@ export type ExampleState =
     | Readonly<{ type: "succeed-to-load"; season: Season }>
 
 export const initialExampleState: ExampleState = { type: "initial-example" }
-
-export type ExampleRequest = Readonly<{ type: "load" }>
 
 interface Post<T> {
     (state: T): void
