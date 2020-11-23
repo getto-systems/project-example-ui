@@ -1,4 +1,4 @@
-import { LoadBreadcrumbEvent, LoadMenuEvent, MenuPathInfo } from "./data"
+import { LoadBreadcrumbEvent, LoadMenuEvent, MenuPath } from "./data"
 import { ApiNonce, ApiRoles } from "../credential/data"
 
 export interface LoadBreadcrumb {
@@ -8,7 +8,7 @@ export interface LoadBreadcrumbAction {
     (post: Post<LoadBreadcrumbEvent>): void
 }
 export interface LoadBreadcrumbCollector {
-    getMenuPathInfo(): MenuPathInfo
+    getMenuPath(): MenuPath
 }
 
 export interface LoadMenu {
@@ -20,7 +20,7 @@ export interface LoadMenuAction {
 export interface LoadMenuCollector {
     getApiNonce(): Promise<ApiNonce>
     getApiRoles(): Promise<ApiRoles>
-    getMenuPathInfo(): MenuPathInfo
+    getMenuPath(): MenuPath
 }
 
 interface Post<T> {

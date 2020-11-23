@@ -4,12 +4,7 @@ import { html } from "htm/preact"
 
 import { iconClass } from "../../z_external/icon"
 
-import {
-    unpackMenuLabel,
-    unpackMenuIcon,
-    unpackMenuBadgeCount,
-    unpackMenuHref,
-} from "../../menu/adapter"
+import { unpackMenuCategory, unpackMenuItem } from "../../menu/adapter"
 
 import { MenuComponent, initialMenuState } from "../../system/component/menu/component"
 
@@ -46,19 +41,18 @@ function content(menu: Menu): VNode {
 function toNode(node: MenuNode): VNode {
     switch (node.type) {
         case "category":
-            return menuCategory(node.category, node.children)
+            return menuCategory(node.category, node.children, node.badgeCount, node.isExpand)
 
         case "item":
-            return menuItem(node.item)
+            return menuItem(node.item, node.badgeCount, node.isActive)
     }
 }
 
-function menuCategory(category: MenuCategory, children: Menu) {
-    const label = unpackMenuLabel(category.label)
-    const badgeCount = unpackMenuBadgeCount(category.badgeCount)
+function menuCategory(category: MenuCategory, children: Menu, badgeCount: number, isExpand: boolean) {
+    const {label} = unpackMenuCategory(category)
 
     return html`
-        <details class="menu__nav" open="${category.isExpand}">
+        <details class="menu__nav" open="${isExpand}">
             <summary class="menu__nav__summary">
                 <span class="menu__nav__summary__label">${label}</span>
                 <span class="menu__nav__summary__badge">${badge(badgeCount)}</span>
@@ -70,12 +64,9 @@ function menuCategory(category: MenuCategory, children: Menu) {
     `
 }
 
-function menuItem(item: MenuItem) {
-    const href = unpackMenuHref(item.href)
-    const icon = unpackMenuIcon(item.icon)
-    const label = unpackMenuLabel(item.label)
-    const badgeCount = unpackMenuBadgeCount(item.badgeCount)
-    const activeClass = item.isActive ? "menu__nav__item_active" : ""
+function menuItem(item: MenuItem, badgeCount: number, isActive: boolean) {
+    const { label, icon, href } = unpackMenuItem(item)
+    const activeClass = isActive ? "menu__nav__item_active" : ""
 
     return html`
         <li class="menu__nav__item">

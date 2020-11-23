@@ -4,11 +4,11 @@ import { html } from "htm/preact"
 
 import { iconClass } from "../../z_external/icon"
 
-import { unpackMenuLabel, unpackMenuIcon, unpackMenuHref } from "../../menu/adapter"
+import { unpackMenuCategory, unpackMenuItem } from "../../menu/adapter"
 
 import { BreadcrumbComponent, initialBreadcrumbState } from "../../system/component/breadcrumb/component"
 
-import { Breadcrumb, BreadcrumbNode, BreadcrumbCategory, BreadcrumbItem } from "../../menu/data"
+import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../menu/data"
 
 type Props = Readonly<{
     breadcrumb: BreadcrumbComponent
@@ -54,16 +54,14 @@ function breadcrumbNodes(breadcrumb: Breadcrumb): VNode[] {
         }, [] as VNode[])
     }
 }
-function breadcrumbCategory(category: BreadcrumbCategory): VNode {
-    const label = unpackMenuLabel(category.label)
+function breadcrumbCategory(category: MenuCategory): VNode {
+    const { label } = unpackMenuCategory(category)
     // href="#menu" は menu の id="menu" と対応
     // mobile レイアウトで menu に移動
     return html`<a class="main__breadcrumb__item" href="#menu">${label}</a>`
 }
-function breadcrumbItem(item: BreadcrumbItem): VNode {
-    const label = unpackMenuLabel(item.label)
-    const icon = unpackMenuIcon(item.icon)
-    const href = unpackMenuHref(item.href)
+function breadcrumbItem(item: MenuItem): VNode {
+    const { label, icon, href } = unpackMenuItem(item)
     const inner = html`<i class="${iconClass(icon)}"></i> ${label}`
     return html`<a class="main__breadcrumb__item" href="${href}">${inner}</a>`
 }
