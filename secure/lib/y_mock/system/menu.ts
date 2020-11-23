@@ -1,6 +1,6 @@
 import { lnir } from "../../z_external/icon"
 
-import { packMenuLabel, packMenuIcon, packMenuHref, packMenuBadgeCount } from "../../menu/adapter"
+import { packMenuCategory, packMenuItem } from "../../menu/adapter"
 
 import { MenuComponent, MenuState } from "../../system/component/menu/component"
 
@@ -64,21 +64,19 @@ class MenuStateFactory {
         return [
             {
                 type: "category",
-                category: {
-                    isExpand: true,
-                    label: packMenuLabel("MAIN"),
-                    badgeCount: packMenuBadgeCount(sec),
-                },
+                isExpand: true,
+                badgeCount: sec,
+                category: packMenuCategory({ label: "MAIN" }),
                 children: [
                     {
                         type: "item",
-                        item: {
-                            isActive: true,
-                            href: packMenuHref("/dist/index.html"),
-                            label: packMenuLabel("ホーム"),
-                            icon: packMenuIcon(lnir("home")),
-                            badgeCount: packMenuBadgeCount(sec),
-                        },
+                        isActive: true,
+                        badgeCount: sec,
+                        item: packMenuItem({
+                            label: "ホーム",
+                            icon: lnir("home"),
+                            href: "/dist/index.html",
+                        }),
                     },
                 ],
             },

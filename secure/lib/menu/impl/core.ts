@@ -1,12 +1,4 @@
-import {
-    packMenuBadgeCount,
-    packMenuHref,
-    packMenuIcon,
-    packMenuLabel,
-    unpackMenuBadgeCount,
-    unpackMenuPath,
-    unpackMenuVersion,
-} from "../adapter"
+import { packMenuCategory, packMenuItem, unpackMenuPath } from "../adapter"
 import { unpackApiRoles } from "../../credential/adapter"
 
 import {
@@ -23,7 +15,7 @@ import {
 import { LoadBreadcrumb, LoadMenu } from "../action"
 
 import { ApiRoles } from "../../credential/data"
-import { Breadcrumb, BreadcrumbNode, Menu, MenuNode, MenuPathInfo } from "../data"
+import { Breadcrumb, BreadcrumbNode, Menu, MenuCategory, MenuItem, MenuNode, MenuPath } from "../data"
 
 export const loadBreadcrumb = (infra: BreadcrumbInfra): LoadBreadcrumb => (collector) => async (
     post
@@ -34,61 +26,50 @@ export const loadBreadcrumb = (infra: BreadcrumbInfra): LoadBreadcrumb => (colle
         type: "succeed-to-load",
         breadcrumb: toBreadcrumb({
             tree,
-            menuPathInfo: collector.getMenuPathInfo(),
+            menuPath: collector.getMenuPath(),
         }),
     })
 }
 
 type BreadcrumbInfo = Readonly<{
     tree: MenuTree
-    menuPathInfo: MenuPathInfo
+    menuPath: MenuPath
 }>
 
-function toBreadcrumb({ tree, menuPathInfo }: BreadcrumbInfo): Breadcrumb {
-    const version = unpackMenuVersion(menuPathInfo.version)
-    const currentPath = unpackMenuPath(menuPathInfo.currentPath)
+function toBreadcrumb({ tree, menuPath }: BreadcrumbInfo): Breadcrumb {
+    const { version, currentPath } = unpackMenuPath(menuPath)
 
     return treeToBreadcrumb(tree)
 
     function treeToBreadcrumb(tree: MenuTree): Breadcrumb {
         for (let i = 0; i < tree.length; i++) {
-            const node = tree[i]
-            const breadcrumb = toBreadcrumbNode(node)
+            const breadcrumb = breadcrumbNodes(tree[i])
             if (breadcrumb.length > 0) {
                 return breadcrumb
             }
         }
         return EMPTY_BREADCRUMB
     }
-    function toBreadcrumbNode(node: MenuTreeNode): BreadcrumbNode[] {
+    function breadcrumbNodes(node: MenuTreeNode): BreadcrumbNode[] {
         switch (node.type) {
             case "category":
-                return toBreadcrumbCategory(node.category, node.children)
+                return breadcrumbCategory(node.category, node.children)
             case "item":
-                return toBreadcrumbItem(node.item)
+                return breadcrumbItem(node.item)
         }
     }
-    function toBreadcrumbCategory(category: MenuTreeCategory, tree: MenuTree): BreadcrumbNode[] {
+    function breadcrumbCategory(category: MenuTreeCategory, tree: MenuTree): BreadcrumbNode[] {
         const breadcrumb = treeToBreadcrumb(tree)
         if (breadcrumb.length === 0) {
             return EMPTY_BREADCRUMB
         }
-        return [{ type: "category", category: { label: packMenuLabel(category.label) } }, ...breadcrumb]
+        return [{ type: "category", category: toMenuCategory(category), ...breadcrumb }]
     }
-    function toBreadcrumbItem(item: MenuTreeItem): BreadcrumbNode[] {
+    function breadcrumbItem(item: MenuTreeItem): BreadcrumbNode[] {
         if (item.path !== currentPath) {
             return EMPTY_BREADCRUMB
         }
-        return [
-            {
-                type: "item",
-                item: {
-                    label: packMenuLabel(item.label),
-                    icon: packMenuIcon(item.icon),
-                    href: packMenuHref(`/${version}/${item.path}`),
-                },
-            },
-        ]
+        return [{ type: "item", item: toMenuItem(item, version) }]
     }
 }
 
@@ -97,7 +78,7 @@ export const loadMenu = (infra: MenuInfra): LoadMenu => (collector) => async (po
 
     const info: MenuInfo = {
         tree,
-        menuPathInfo: collector.getMenuPathInfo(),
+        menuPath: collector.getMenuPath(),
         apiRoles: await collector.getApiRoles(),
     }
 
@@ -111,45 +92,40 @@ export const loadMenu = (infra: MenuInfra): LoadMenu => (collector) => async (po
         return
     }
 
-    const expand = expandResponse.expand
-
     // badge の取得には時間がかかる可能性があるのでまず空 badge で返す
     // expand の取得には時間がかからないはずなので expand の取得前には返さない
-    post({ type: "succeed-to-load", menu: toMenu(info, expand, EMPTY_BADGE) })
+    post({ type: "succeed-to-load", menu: toMenu(info, expandResponse.expand, EMPTY_BADGE) })
 
     const badgeResponse = await client.badge.getBadge(await collector.getApiNonce())
     if (!badgeResponse.success) {
         post({
             type: "failed-to-load",
-            menu: toMenu(info, expand, EMPTY_BADGE),
+            menu: toMenu(info, expandResponse.expand, EMPTY_BADGE),
             err: badgeResponse.err,
         })
         return
     }
 
-    const badge = badgeResponse.badge
-
-    post({ type: "succeed-to-load", menu: toMenu(info, expand, badge) })
+    post({ type: "succeed-to-load", menu: toMenu(info, expandResponse.expand, badgeResponse.badge) })
 }
 
 type MenuInfo = Readonly<{
     tree: MenuTree
-    menuPathInfo: MenuPathInfo
+    menuPath: MenuPath
     apiRoles: ApiRoles
 }>
 
-function toMenu({ tree, menuPathInfo, apiRoles }: MenuInfo, expand: MenuExpand, badge: MenuBadge): Menu {
-    const version = unpackMenuVersion(menuPathInfo.version)
-    const currentPath = unpackMenuPath(menuPathInfo.currentPath)
+function toMenu({ tree, menuPath, apiRoles }: MenuInfo, expand: MenuExpand, badge: MenuBadge): Menu {
+    const { version, currentPath } = unpackMenuPath(menuPath)
     const roles = unpackApiRoles(apiRoles)
 
     // TODO role によってカテゴリを非表示にするんだった
     return treeToMenu(tree)
 
     function treeToMenu(tree: MenuTree): Menu {
-        return tree.flatMap(toMenuNode)
+        return tree.flatMap(menuNodes)
     }
-    function toMenuNode(node: MenuTreeNode): MenuNode[] {
+    function menuNodes(node: MenuTreeNode): MenuNode[] {
         switch (node.type) {
             case "category":
                 return menuCategory(node.category, node.children)
@@ -167,16 +143,14 @@ function toMenu({ tree, menuPathInfo, apiRoles }: MenuInfo, expand: MenuExpand, 
             return EMPTY_MENU
         }
 
-        const sumBadgeCount = children.reduce((acc, node) => acc + badgeCount(node), 0)
+        const sumBadgeCount = children.reduce((acc, node) => acc + node.badgeCount, 0)
 
         return [
             {
                 type: "category",
-                category: {
-                    isExpand: expand[category.label] || children.some(isActive),
-                    label: packMenuLabel(category.label),
-                    badgeCount: packMenuBadgeCount(sumBadgeCount),
-                },
+                isExpand: expand[category.label] || children.some(hasActive),
+                badgeCount: sumBadgeCount,
+                category: toMenuCategory(category),
                 children,
             },
         ]
@@ -189,35 +163,30 @@ function toMenu({ tree, menuPathInfo, apiRoles }: MenuInfo, expand: MenuExpand, 
                     return roles.includes(category.permission.role)
             }
         }
-        function badgeCount(node: MenuNode): number {
+        function hasActive(node: MenuNode): boolean {
             switch (node.type) {
                 case "category":
-                    return unpackMenuBadgeCount(node.category.badgeCount)
+                    return node.children.some(hasActive)
                 case "item":
-                    return unpackMenuBadgeCount(node.item.badgeCount)
-            }
-        }
-        function isActive(node: MenuNode): boolean {
-            switch (node.type) {
-                case "category":
-                    return node.children.some(isActive)
-                case "item":
-                    return node.item.isActive
+                    return node.isActive
             }
         }
     }
     function menuItem(item: MenuTreeItem): MenuNode {
         return {
             type: "item",
-            item: {
-                isActive: item.path === currentPath,
-                label: packMenuLabel(item.label),
-                icon: packMenuIcon(item.icon),
-                href: packMenuHref(`/${version}/${item.path}`),
-                badgeCount: packMenuBadgeCount(badge[item.path] || 0),
-            },
+            isActive: item.path === currentPath,
+            badgeCount: badge[item.path] || 0,
+            item: toMenuItem(item, version),
         }
     }
+}
+
+function toMenuCategory(category: MenuTreeCategory): MenuCategory {
+    return packMenuCategory(category)
+}
+function toMenuItem({ label, icon, path }: MenuTreeItem, version: string): MenuItem {
+    return packMenuItem({ label, icon, href: `/${version}/${path}` })
 }
 
 const EMPTY_EXPAND: MenuExpand = {}

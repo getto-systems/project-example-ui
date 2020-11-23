@@ -1,51 +1,38 @@
 import { Icon } from "../z_external/icon"
 
-import { MenuLabel, MenuIcon, MenuHref, MenuBadgeCount, MenuPath, MenuVersion } from "./data"
+import { MenuPath, MenuCategory, MenuItem } from "./data"
 
-export function packMenuLabel(label: string): MenuLabel {
-    return label as MenuLabel & string
+export function packMenuPath(path: MenuPathData): MenuPath {
+    return path as MenuPath & MenuPathData
+}
+export function unpackMenuPath(path: MenuPath): MenuPathData {
+    return (path as unknown) as MenuPathData
 }
 
-export function unpackMenuLabel(label: MenuLabel): string {
-    return (label as unknown) as string
+export function packMenuCategory(category: MenuCategoryData): MenuCategory {
+    return category as MenuCategory & MenuCategoryData
+}
+export function unpackMenuCategory(category: MenuCategory): MenuCategoryData {
+    return (category as unknown) as MenuCategoryData
 }
 
-export function packMenuIcon(icon: Icon): MenuIcon {
-    return icon as MenuIcon & Icon
+export function packMenuItem(item: MenuItemData): MenuItem {
+    return item as MenuItem & MenuItemData
+}
+export function unpackMenuItem(item: MenuItem): MenuItemData {
+    return (item as unknown) as MenuItemData
 }
 
-export function unpackMenuIcon(icon: MenuIcon): Icon {
-    return (icon as unknown) as Icon
-}
+export type MenuPathData = Readonly<{
+    version: string
+    currentPath: string
+}>
 
-export function packMenuHref(href: string): MenuHref {
-    return href as MenuHref & string
-}
-
-export function unpackMenuHref(href: MenuHref): string {
-    return (href as unknown) as string
-}
-
-export function packMenuBadgeCount(badgeCount: number): MenuBadgeCount {
-    return badgeCount as MenuBadgeCount & number
-}
-
-export function unpackMenuBadgeCount(badgeCount: MenuBadgeCount): number {
-    return (badgeCount as unknown) as number
-}
-
-export function packMenuVersion(version: string): MenuVersion {
-    return version as MenuVersion & string
-}
-
-export function unpackMenuVersion(version: MenuVersion): string {
-    return (version as unknown) as string
-}
-
-export function packMenuPath(path: string): MenuPath {
-    return path as MenuPath & string
-}
-
-export function unpackMenuPath(path: MenuPath): string {
-    return (path as unknown) as string
-}
+export type MenuCategoryData = Readonly<{
+    label: string
+}>
+export type MenuItemData = Readonly<{
+    label: string
+    icon: Icon
+    href: string
+}>
