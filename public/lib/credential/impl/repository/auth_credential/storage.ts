@@ -7,15 +7,14 @@ import {
 
 import { StorageKey, AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra"
 
-import { packApiRoles, unpackApiCredential } from "../../../../credential/adapter"
-
 import {
-    AuthCredential,
-    TicketNonce,
-    markTicketNonce,
-    ApiCredential,
     AuthAt,
     markAuthAt,
+    TicketNonce,
+    markTicketNonce,
+    AuthCredential,
+    ApiCredential,
+    markApiCredential,
 } from "../../../../credential/data"
 
 export function initStorageAuthCredentialRepository(
@@ -128,9 +127,9 @@ class AuthCredentialStorageImpl implements AuthCredentialStorage {
 
                 return {
                     found: true,
-                    content: {
-                        apiRoles: packApiRoles(message.roles ? message.roles : []),
-                    },
+                    content: markApiCredential({
+                        apiRoles: message.roles ? message.roles : [],
+                    }),
                 }
             } catch (err) {
                 // パースできないデータの場合はキーを削除する
@@ -144,11 +143,9 @@ class AuthCredentialStorageImpl implements AuthCredentialStorage {
         const f = ApiCredentialMessage
         const message = new f()
 
-        const data = unpackApiCredential(apiCredential)
-
         // TODO api nonce を追加
         //message.nonce = data.apiNonce
-        message.roles = data.apiRoles
+        message.roles = apiCredential.apiRoles
 
         const arr = f.encode(message).finish()
         this.storage.setItem(this.key.apiCredential, encodeUint8ArrayToBase64String(arr))

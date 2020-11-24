@@ -34,12 +34,10 @@ import { initFetchPasswordLoginClient } from "../password_login/impl/client/logi
 import { initSimulatePasswordResetClient } from "../password_reset/impl/client/reset/simulate"
 import { initSimulatePasswordResetSessionClient } from "../password_reset/impl/client/session/simulate"
 
-import { packApiRoles } from "../credential/adapter"
-
 import { AuthViewFactory } from "../auth/view"
 import { currentPagePathname, detectLoginView, detectResetToken } from "../auth/impl/view"
 
-import { markTicketNonce, markAuthAt } from "../credential/data"
+import { markTicketNonce, markAuthAt, markApiCredential } from "../credential/data"
 import { markLoginID } from "../login_id/data"
 
 export type AuthViewProps = Readonly<{
@@ -245,9 +243,9 @@ function newPasswordResetClient() {
     //return initFetchPasswordResetClient(authClient)
     return initSimulatePasswordResetClient(markLoginID("loginID"), {
         ticketNonce: markTicketNonce("ticket-nonce"),
-        apiCredential: {
-            apiRoles: packApiRoles(["admin", "dev"]),
-        },
+        apiCredential: markApiCredential({
+            apiRoles: ["admin", "dev"],
+        }),
         authAt: markAuthAt(new Date()),
     })
 }
