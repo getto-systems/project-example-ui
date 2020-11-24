@@ -2,7 +2,7 @@ import { LoginIDField, LoginIDFieldAction } from "../action"
 
 import { markLoginID } from "../../data"
 import { LoginIDFieldEvent, LoginIDFieldError } from "../data"
-import { InputValue, markInputValue, buildContent, hasError } from "../../../field/data"
+import { InputValue, markInputValue, validContent, invalidContent, hasError } from "../../../field/data"
 
 function validateLoginID(loginID: string): LoginIDFieldError[] {
     if (loginID.length === 0) {
@@ -37,8 +37,7 @@ class Field implements LoginIDFieldAction {
         post({
             type: "succeed-to-update",
             result,
-            // TODO buildContent きもちわるい
-            content: buildContent(result.valid, () => markLoginID(this.loginID)),
+            content: result.valid ? validContent(markLoginID(this.loginID)) : invalidContent(),
         })
     }
 }

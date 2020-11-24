@@ -12,12 +12,6 @@ export function validContent<T>(content: T): Content<T> {
 export function invalidContent<T>(): Content<T> {
     return { valid: false } as Content<T>
 }
-export function buildContent<T>(valid: boolean, builder: Builder<T>): Content<T> {
-    if (!valid) {
-        return invalidContent()
-    }
-    return validContent(builder())
-}
 
 export type Valid<T> =
     | Readonly<{ Valid: never; valid: true }>
