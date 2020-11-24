@@ -34,11 +34,13 @@ import { initFetchPasswordLoginClient } from "../password_login/impl/client/logi
 import { initSimulatePasswordResetClient } from "../password_reset/impl/client/reset/simulate"
 import { initSimulatePasswordResetSessionClient } from "../password_reset/impl/client/session/simulate"
 
-import { packTicketNonce, packApiRoles, packAuthAt } from "../credential/adapter"
+import { packApiRoles } from "../credential/adapter"
 import { packLoginID } from "../login_id/adapter"
 
 import { AuthViewFactory } from "../auth/view"
 import { currentPagePathname, detectLoginView, detectResetToken } from "../auth/impl/view"
+
+import { markTicketNonce, markAuthAt } from "../credential/data"
 
 export type AuthViewProps = Readonly<{
     credentialStorage: Storage
@@ -86,14 +88,14 @@ export function newAuthViewFactoryAsSingle(props: AuthViewProps): AuthViewFactor
     }
     const collector = {
         auth: {
-            getLoginView: () => detectLoginView(currentLocation)
+            getLoginView: () => detectLoginView(currentLocation),
         },
         application: {
             getPagePathname: () => currentPagePathname(currentLocation),
         },
         passwordReset: {
             getResetToken: () => detectResetToken(currentLocation),
-        },        
+        },
     }
 
     return initAuthViewFactoryAsSingle(factory, collector)
@@ -139,7 +141,7 @@ export function newAuthViewFactoryAsWorkerForeground(props: AuthViewProps): Auth
 
     const collector = {
         auth: {
-            getLoginView: () => detectLoginView(currentLocation)
+            getLoginView: () => detectLoginView(currentLocation),
         },
         application: {
             getPagePathname: () => currentPagePathname(currentLocation),
@@ -242,10 +244,10 @@ function newPasswordResetSessionClient() {
 function newPasswordResetClient() {
     //return initFetchPasswordResetClient(authClient)
     return initSimulatePasswordResetClient(packLoginID("loginID"), {
-        ticketNonce: packTicketNonce("ticket-nonce"),
+        ticketNonce: markTicketNonce("ticket-nonce"),
         apiCredential: {
             apiRoles: packApiRoles(["admin", "dev"]),
         },
-        authAt: packAuthAt(new Date()),
+        authAt: markAuthAt(new Date()),
     })
 }
