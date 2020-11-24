@@ -1,7 +1,5 @@
 import { AuthExpires } from "../infra"
 
-import { unpackAuthAt } from "../../credential/adapter"
-
 import { AuthAt } from "../../credential/data"
 
 export function initAuthExpires(): AuthExpires {
@@ -10,7 +8,7 @@ export function initAuthExpires(): AuthExpires {
 
 class Expires implements AuthExpires {
     hasExceeded(lastAuthAt: AuthAt, expire: ExpireTime): boolean {
-        return new Date().getTime() > unpackAuthAt(lastAuthAt).getTime() + expire.expire_millisecond
+        return new Date().getTime() > lastAuthAt.getTime() + expire.expire_millisecond
     }
 }
 

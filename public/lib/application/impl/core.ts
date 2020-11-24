@@ -1,8 +1,8 @@
 import { Infra } from "../infra"
 
-import { packScriptPath, unpackPagePathname } from "../adapter"
-
 import { SecureScriptPath } from "../action"
+
+import { markScriptPath } from "../data"
 
 export const secureScriptPath = (infra: Infra): SecureScriptPath => (collector) => () => {
     const {
@@ -12,7 +12,7 @@ export const secureScriptPath = (infra: Infra): SecureScriptPath => (collector) 
     const pagePathname = collector.getPagePathname()
 
     // secure host にアクセス中の html と同じパスで js がホストされている
-    return packScriptPath(
-        `//${secureServerHost}${unpackPagePathname(pagePathname).replace(/\.html$/, "")}.js`
+    return markScriptPath(
+        `//${secureServerHost}${pagePathname.replace(/\.html$/, "")}.js`
     )
 }

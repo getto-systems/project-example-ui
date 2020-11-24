@@ -1,10 +1,11 @@
 import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
 
-import { packTicketNonce, packApiRoles, packAuthAt } from "../../../../credential/adapter"
+import { packApiRoles } from "../../../../credential/adapter"
 import { unpackLoginID } from "../../../../login_id/adapter"
 import { unpackPassword } from "../../../../password/adapter"
 
 import { LoginFields } from "../../../data"
+import { markTicketNonce, markAuthAt } from "../../../../credential/data"
 
 interface AuthClient {
     passwordLogin(param: { loginID: string; password: string }): Promise<AuthLoginResponse>
@@ -37,11 +38,11 @@ class FetchPasswordLoginClient implements PasswordLoginClient {
 
             if (response.success) {
                 return loginSuccess({
-                    ticketNonce: packTicketNonce(response.authCredential.ticketNonce),
+                    ticketNonce: markTicketNonce(response.authCredential.ticketNonce),
                     apiCredential: {
                         apiRoles: packApiRoles(response.authCredential.apiCredential.apiRoles),
                     },
-                    authAt: packAuthAt(new Date()),
+                    authAt: markAuthAt(new Date()),
                 })
             }
 

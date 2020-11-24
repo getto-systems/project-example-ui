@@ -7,16 +7,16 @@ import {
 
 import { StorageKey, AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra"
 
-import {
-    packTicketNonce,
-    unpackTicketNonce,
-    packApiRoles,
-    unpackApiCredential,
-    packAuthAt,
-    unpackAuthAt,
-} from "../../../../credential/adapter"
+import { packApiRoles, unpackApiCredential } from "../../../../credential/adapter"
 
-import { AuthCredential, TicketNonce, ApiCredential, AuthAt } from "../../../../credential/data"
+import {
+    AuthCredential,
+    TicketNonce,
+    markTicketNonce,
+    ApiCredential,
+    AuthAt,
+    markAuthAt,
+} from "../../../../credential/data"
 
 export function initStorageAuthCredentialRepository(
     storage: Storage,
@@ -108,13 +108,13 @@ class AuthCredentialStorageImpl implements AuthCredentialStorage {
     getTicketNonce(): Found<TicketNonce> {
         const raw = this.storage.getItem(this.key.ticketNonce)
         if (raw) {
-            return { found: true, content: packTicketNonce(raw) }
+            return { found: true, content: markTicketNonce(raw) }
         }
 
         return { found: false }
     }
     setTicketNonce(ticketNonce: TicketNonce): void {
-        this.storage.setItem(this.key.ticketNonce, unpackTicketNonce(ticketNonce))
+        this.storage.setItem(this.key.ticketNonce, ticketNonce)
     }
     removeTicketNonce(): void {
         this.storage.removeItem(this.key.ticketNonce)
@@ -160,13 +160,12 @@ class AuthCredentialStorageImpl implements AuthCredentialStorage {
     getLastAuthAt(): Found<AuthAt> {
         const raw = this.storage.getItem(this.key.lastAuthAt)
         if (raw) {
-            return { found: true, content: packAuthAt(new Date(raw)) }
+            return { found: true, content: markAuthAt(new Date(raw)) }
         }
         return { found: false }
     }
     setLastAuthAt(authAt: AuthAt): void {
-        const date = unpackAuthAt(authAt)
-        this.storage.setItem(this.key.lastAuthAt, date.toISOString())
+        this.storage.setItem(this.key.lastAuthAt, authAt.toISOString())
     }
     removeLastAuthAt(): void {
         this.storage.removeItem(this.key.lastAuthAt)

@@ -1,5 +1,4 @@
 import { packResetToken } from "../../password_reset/adapter"
-import { packPagePathname } from "../../application/adapter"
 
 import { AuthSearch } from "./href"
 
@@ -14,7 +13,7 @@ import {
 
 import { RenewCredentialComponent } from "../component/renew_credential/component"
 
-import { PagePathname } from "../../application/data"
+import { PagePathname, markPagePathname } from "../../application/data"
 import { ResetToken } from "../../password_reset/data"
 
 export type LoginView = "password-login" | "password-reset-session" | "password-reset"
@@ -38,7 +37,7 @@ export function detectResetToken(currentLocation: Location): ResetToken {
     return packResetToken(url.searchParams.get(AuthSearch.passwordResetToken) || "")
 }
 export function currentPagePathname(currentLocation: Location): PagePathname {
-    return packPagePathname(new URL(currentLocation.toString()))
+    return markPagePathname(new URL(currentLocation.toString()).pathname)
 }
 
 export class View implements AuthView {
