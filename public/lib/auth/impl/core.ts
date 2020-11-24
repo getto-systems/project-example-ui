@@ -67,9 +67,7 @@ export function initRenewCredentialComponentSet(
     const actions = {
         renew: factory.actions.credential.renew(),
         setContinuousRenew: factory.actions.credential.setContinuousRenew(),
-        secureScriptPath: factory.actions.application.secureScriptPath({
-            getPagePathname: collector.application.getPagePathname,
-        }),
+        secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
     }
 
     const renewCredential = factory.components.renewCredential(actions)
@@ -126,9 +124,7 @@ export function initPasswordLoginComponentSet(
             getFields: () => collectLoginFields(fields),
         }),
         store: factory.actions.credential.store(),
-        secureScriptPath: factory.actions.application.secureScriptPath({
-            getPagePathname: collector.application.getPagePathname,
-        }),
+        secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
     }
 
     return {
@@ -230,12 +226,10 @@ export function initPasswordResetComponentSet(
     const actions = {
         reset: factory.actions.passwordReset.reset({
             getFields: () => collectResetFields(fields),
-            getResetToken: collector.passwordReset.getResetToken,
+            ...collector.passwordReset,
         }),
         store: factory.actions.credential.store(),
-        secureScriptPath: factory.actions.application.secureScriptPath({
-            getPagePathname: collector.application.getPagePathname,
-        }),
+        secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
     }
 
     return {
@@ -277,17 +271,14 @@ export function initPasswordFieldComponent(factory: PasswordFieldFactorySet): Pa
     return factory.components.field.password({ password: factory.actions.field.password() })
 }
 
-interface LoginFieldComponents {
+type LoginFieldComponents = Readonly<{
     loginIDField: LoginIDFieldComponent
     passwordField: PasswordFieldComponent
-}
+}>
 
-async function collectLoginFields({
-    loginIDField,
-    passwordField,
-}: LoginFieldComponents): Promise<Content<LoginFields>> {
-    const loginID = await collectLoginID(loginIDField)
-    const password = await collectPassword(passwordField)
+async function collectLoginFields(fields: LoginFieldComponents): Promise<Content<LoginFields>> {
+    const loginID = await collectLoginID(fields.loginIDField)
+    const password = await collectPassword(fields.passwordField)
 
     if (!loginID.valid || !password.valid) {
         return invalidContent()
@@ -298,14 +289,14 @@ async function collectLoginFields({
     })
 }
 
-interface StartSessionFieldComponents {
+type StartSessionFieldComponents = Readonly<{
     loginIDField: LoginIDFieldComponent
-}
+}>
 
-async function collectStartSessionFields({
-    loginIDField,
-}: StartSessionFieldComponents): Promise<Content<StartSessionFields>> {
-    const loginID = await collectLoginID(loginIDField)
+async function collectStartSessionFields(
+    fields: StartSessionFieldComponents
+): Promise<Content<StartSessionFields>> {
+    const loginID = await collectLoginID(fields.loginIDField)
 
     if (!loginID.valid) {
         return invalidContent()
@@ -315,17 +306,14 @@ async function collectStartSessionFields({
     })
 }
 
-interface ResetFieldComponents {
+type ResetFieldComponents = Readonly<{
     loginIDField: LoginIDFieldComponent
     passwordField: PasswordFieldComponent
-}
+}>
 
-async function collectResetFields({
-    loginIDField,
-    passwordField,
-}: ResetFieldComponents): Promise<Content<ResetFields>> {
-    const loginID = await collectLoginID(loginIDField)
-    const password = await collectPassword(passwordField)
+async function collectResetFields(fields: ResetFieldComponents): Promise<Content<ResetFields>> {
+    const loginID = await collectLoginID(fields.loginIDField)
+    const password = await collectPassword(fields.passwordField)
 
     if (!loginID.valid || !password.valid) {
         return invalidContent()
@@ -352,10 +340,4 @@ function collectPassword(passwordField: PasswordFieldComponent): Promise<Content
 
 interface Setup<T> {
     (component: T): void
-}
-interface Factory<T> {
-    (): T
-}
-interface ParameterizedFactory<P, T> {
-    (param: P): T
 }
