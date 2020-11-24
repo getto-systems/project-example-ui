@@ -1,7 +1,6 @@
-import { packLoginID } from "../../../login_id/adapter"
-
 import { LoginIDField, LoginIDFieldAction } from "../action"
 
+import { markLoginID } from "../../data"
 import { LoginIDFieldEvent, LoginIDFieldError } from "../data"
 import { InputValue, markInputValue, buildContent, hasError } from "../../../field/data"
 
@@ -39,7 +38,7 @@ class Field implements LoginIDFieldAction {
             type: "succeed-to-update",
             result,
             // TODO buildContent きもちわるい
-            content: buildContent(result.valid, () => packLoginID(this.loginID)),
+            content: buildContent(result.valid, () => markLoginID(this.loginID)),
         })
     }
 }

@@ -1,7 +1,6 @@
 import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
 
 import { packApiRoles } from "../../../../credential/adapter"
-import { unpackLoginID } from "../../../../login_id/adapter"
 import { unpackPassword } from "../../../../password/adapter"
 
 import { LoginFields } from "../../../data"
@@ -32,7 +31,7 @@ class FetchPasswordLoginClient implements PasswordLoginClient {
     async login({ loginID, password }: LoginFields): Promise<LoginResponse> {
         try {
             const response = await this.client.passwordLogin({
-                loginID: unpackLoginID(loginID),
+                loginID,
                 password: unpackPassword(password),
             })
 

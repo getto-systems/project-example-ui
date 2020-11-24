@@ -35,12 +35,12 @@ import { initSimulatePasswordResetClient } from "../password_reset/impl/client/r
 import { initSimulatePasswordResetSessionClient } from "../password_reset/impl/client/session/simulate"
 
 import { packApiRoles } from "../credential/adapter"
-import { packLoginID } from "../login_id/adapter"
 
 import { AuthViewFactory } from "../auth/view"
 import { currentPagePathname, detectLoginView, detectResetToken } from "../auth/impl/view"
 
 import { markTicketNonce, markAuthAt } from "../credential/data"
+import { markLoginID } from "../login_id/data"
 
 export type AuthViewProps = Readonly<{
     credentialStorage: Storage
@@ -239,11 +239,11 @@ function newPasswordLoginClient(authClient: AuthClient) {
 }
 function newPasswordResetSessionClient() {
     //return initFetchPasswordResetSessionClient(authClient)
-    return initSimulatePasswordResetSessionClient(packLoginID("loginID"))
+    return initSimulatePasswordResetSessionClient(markLoginID("loginID"))
 }
 function newPasswordResetClient() {
     //return initFetchPasswordResetClient(authClient)
-    return initSimulatePasswordResetClient(packLoginID("loginID"), {
+    return initSimulatePasswordResetClient(markLoginID("loginID"), {
         ticketNonce: markTicketNonce("ticket-nonce"),
         apiCredential: {
             apiRoles: packApiRoles(["admin", "dev"]),
