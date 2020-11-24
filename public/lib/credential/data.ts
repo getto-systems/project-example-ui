@@ -1,11 +1,11 @@
 export type TicketNonce = string & { TicketNonce: never }
 export function markTicketNonce(nonce: string): TicketNonce {
-    return nonce as string & { TicketNonce: never }
+    return nonce as TicketNonce
 }
 
 export type AuthAt = Date & { AuthAt: never }
 export function markAuthAt(date: Date): AuthAt {
-    return date as Date & { AuthAt: never }
+    return date as AuthAt
 }
 
 export type LastAuth = Readonly<{
