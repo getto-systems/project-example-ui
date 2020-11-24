@@ -1,5 +1,3 @@
-import { unpackApiRoles } from "../../credential/adapter"
-
 import {
     BreadcrumbInfra,
     MenuInfra,
@@ -126,7 +124,6 @@ type MenuInfo = Readonly<{
 
 function toMenu({ tree, menuPath, apiRoles }: MenuInfo, expand: MenuExpand, badge: MenuBadge): Menu {
     const { version, currentPath } = menuPath
-    const roles = unpackApiRoles(apiRoles)
 
     // TODO role によってカテゴリを非表示にするんだった
     return treeToMenu(tree)
@@ -169,7 +166,7 @@ function toMenu({ tree, menuPath, apiRoles }: MenuInfo, expand: MenuExpand, badg
                 case "any":
                     return true
                 case "role":
-                    return roles.includes(category.permission.role)
+                    return apiRoles.includes(category.permission.role)
             }
         }
         function hasActive(node: MenuNode): boolean {
