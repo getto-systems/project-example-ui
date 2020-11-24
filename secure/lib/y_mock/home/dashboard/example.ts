@@ -1,6 +1,6 @@
-import { packSeason } from "../../../season/adapter"
-
 import { ExampleComponent, ExampleState } from "../../../home/component/example/component"
+
+import { markSeason } from "../../../season/data"
 
 export function newExampleComponent(): ExampleComponent {
     return new Component(new ExampleStateFactory().succeedToLoad())
@@ -11,7 +11,7 @@ class ExampleStateFactory {
         return { type: "initial-example" }
     }
     succeedToLoad(): ExampleState {
-        return { type: "succeed-to-load", season: packSeason({ year: new Date().getFullYear() }) }
+        return { type: "succeed-to-load", season: markSeason({ year: new Date().getFullYear() }) }
     }
 }
 

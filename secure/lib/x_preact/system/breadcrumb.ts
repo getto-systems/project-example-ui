@@ -2,10 +2,6 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { iconClass } from "../../z_external/icon"
-
-import { unpackMenuCategory, unpackMenuItem } from "../../menu/adapter"
-
 import { BreadcrumbComponent, initialBreadcrumbState } from "../../system/component/breadcrumb/component"
 
 import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../menu/data"
@@ -55,14 +51,14 @@ function breadcrumbNodes(breadcrumb: Breadcrumb): VNode[] {
     }
 }
 function breadcrumbCategory(category: MenuCategory): VNode {
-    const { label } = unpackMenuCategory(category)
+    const { label } = (category)
     // href="#menu" は menu の id="menu" と対応
     // mobile レイアウトで menu に移動
     return html`<a class="main__breadcrumb__item" href="#menu">${label}</a>`
 }
 function breadcrumbItem(item: MenuItem): VNode {
-    const { label, icon, href } = unpackMenuItem(item)
-    const inner = html`<i class="${iconClass(icon)}"></i> ${label}`
+    const { label, icon, href } = (item)
+    const inner = html`<i class="${icon}"></i> ${label}`
     return html`<a class="main__breadcrumb__item" href="${href}">${inner}</a>`
 }
 const SEPARATOR: VNode = html`

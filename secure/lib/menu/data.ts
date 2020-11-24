@@ -1,7 +1,29 @@
-export type MenuPath = { MenuPath: never }
+export type MenuPath = MenuPath_data & { MenuPath: never }
+type MenuPath_data = Readonly<{
+    version: string
+    currentPath: string
+}>
+export function markMenuPath(path: MenuPath_data): MenuPath {
+    return path as MenuPath
+}
 
-export type MenuCategory = { MenuCategory: never }
-export type MenuItem = { MenuItem: never }
+export type MenuCategory = MenuCategory_data & { MenuCategory: never }
+type MenuCategory_data = Readonly<{
+    label: string
+}>
+export function markMenuCategory(category: MenuCategory_data): MenuCategory {
+    return category as MenuCategory
+}
+
+export type MenuItem = MenuItem_data & { MenuItem: never }
+type MenuItem_data = Readonly<{
+    label: string
+    icon: string
+    href: string
+}>
+export function markMenuItem(item: MenuItem_data): MenuItem {
+    return item as MenuItem
+}
 
 export type Breadcrumb = BreadcrumbNode[]
 

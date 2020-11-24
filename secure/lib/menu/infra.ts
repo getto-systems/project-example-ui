@@ -1,5 +1,3 @@
-import { Icon } from "../z_external/icon"
-
 import { ApiNonce } from "../credential/data"
 
 export type BreadcrumbInfra = Readonly<{
@@ -29,7 +27,7 @@ export type MenuTreeCategory = Readonly<{
 export type MenuTreeItem = Readonly<{
     path: MenuPath
     label: string
-    icon: Icon
+    icon: string
 }>
 
 export type MenuPermission = Readonly<{ type: "any" }> | Readonly<{ type: "role"; role: string }>

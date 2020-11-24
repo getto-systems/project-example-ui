@@ -1,6 +1,6 @@
-import { packSeason } from "../../season/adapter"
-
 import { SeasonComponent, SeasonState } from "../../system/component/season/component"
+
+import { markSeason } from "../../season/data"
 
 export function newSeasonComponent(): SeasonComponent {
     return new Component(new SeasonStateFactory().succeedToLoad())
@@ -13,7 +13,7 @@ class SeasonStateFactory {
     succeedToLoad(): SeasonState {
         return {
             type: "succeed-to-load",
-            season: packSeason({
+            season: markSeason({
                 year: new Date().getFullYear(),
             }),
         }
