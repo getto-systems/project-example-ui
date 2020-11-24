@@ -1,10 +1,9 @@
-import { packInputValue, unpackInputValue } from "../../../field/adapter"
 import { packLoginID } from "../../../login_id/adapter"
 
 import { LoginIDField, LoginIDFieldAction } from "../action"
 
 import { LoginIDFieldEvent, LoginIDFieldError } from "../data"
-import { InputValue, buildContent, hasError } from "../../../field/data"
+import { InputValue, markInputValue, buildContent, hasError } from "../../../field/data"
 
 function validateLoginID(loginID: string): LoginIDFieldError[] {
     if (loginID.length === 0) {
@@ -26,7 +25,7 @@ class Field implements LoginIDFieldAction {
     loginID: InputValue
 
     constructor() {
-        this.loginID = packInputValue("")
+        this.loginID = markInputValue("")
     }
 
     set(input: InputValue, post: Post<LoginIDFieldEvent>): void {
@@ -34,13 +33,13 @@ class Field implements LoginIDFieldAction {
         this.validate(post)
     }
     validate(post: Post<LoginIDFieldEvent>): void {
-        const loginID = unpackInputValue(this.loginID)
-        const result = hasError(validateLoginID(loginID))
+        const result = hasError(validateLoginID(this.loginID))
 
         post({
             type: "succeed-to-update",
             result,
-            content: buildContent(result.valid, () => packLoginID(loginID)),
+            // TODO buildContent きもちわるい
+            content: buildContent(result.valid, () => packLoginID(this.loginID)),
         })
     }
 }

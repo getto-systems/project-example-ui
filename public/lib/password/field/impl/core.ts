@@ -1,4 +1,3 @@
-import { packInputValue, unpackInputValue } from "../../../field/adapter"
 import { packPassword } from "../../../password/adapter"
 
 import { PasswordField, PasswordFieldAction } from "../action"
@@ -13,7 +12,7 @@ import {
     showPassword,
     hidePassword,
 } from "../data"
-import { InputValue, buildContent, hasError } from "../../../field/data"
+import { InputValue, markInputValue, buildContent, hasError } from "../../../field/data"
 
 // bcrypt を想定しているので、72 バイト以上のパスワードは無効
 const PASSWORD_MAX_BYTES = 72
@@ -55,7 +54,7 @@ class Field implements PasswordFieldAction {
     visible: boolean
 
     constructor() {
-        this.password = packInputValue("")
+        this.password = markInputValue("")
         this.visible = false
     }
 
@@ -80,14 +79,14 @@ class Field implements PasswordFieldAction {
         this.validate(post)
     }
     validate(post: Post<PasswordFieldEvent>): void {
-        const password = unpackInputValue(this.password)
-        const result = hasError(validatePassword(password))
+        const result = hasError(validatePassword(this.password))
 
         post({
             type: "succeed-to-update",
             result,
-            content: buildContent(result.valid, () => packPassword(password)),
-            character: checkCharacter(password),
+            // TODO buildContent きもちわるい
+            content: buildContent(result.valid, () => packPassword(this.password)),
+            character: checkCharacter(this.password),
             view: this.view(),
         })
     }

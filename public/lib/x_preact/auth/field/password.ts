@@ -3,8 +3,6 @@ import { html } from "htm/preact"
 
 import { mapInputEvent } from "./common"
 
-import { unpackInputValue } from "../../../field/adapter"
-
 import { PasswordFieldComponent } from "../../../auth/component/field/password/component"
 
 import { PasswordFieldError, PasswordCharacter, PasswordView } from "../../../password/field/data"
@@ -78,8 +76,7 @@ export function passwordView(
         `
     }
 
-    function extractPassword(inputValue: InputValue): string {
-        const password = unpackInputValue(inputValue)
+    function extractPassword(password: InputValue): string {
         if (password.length === 0) {
             return "(入力されていません)"
         } else {

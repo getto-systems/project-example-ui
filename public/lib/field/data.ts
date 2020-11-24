@@ -1,4 +1,7 @@
-export type InputValue = { InputValue: never }
+export type InputValue = string & { InputValue: never }
+export function markInputValue(value: string): InputValue {
+    return value as string & { InputValue: never }
+}
 
 export type Content<T> =
     | Readonly<{ Content: never; valid: true; content: T }>
