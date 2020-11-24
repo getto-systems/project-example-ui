@@ -1,6 +1,6 @@
 export type InputValue = string & { InputValue: never }
 export function markInputValue(value: string): InputValue {
-    return value as string & { InputValue: never }
+    return value as InputValue
 }
 
 export type Content<T> =
