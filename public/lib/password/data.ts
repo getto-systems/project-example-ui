@@ -1,1 +1,4 @@
-export type Password = { Password: never }
+export type Password = string & { Password: never }
+export function markPassword(password: string): Password {
+    return password as string & { Password: never }
+}

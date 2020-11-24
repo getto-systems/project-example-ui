@@ -1,7 +1,6 @@
-import { packPassword } from "../../../password/adapter"
-
 import { PasswordField, PasswordFieldAction } from "../action"
 
+import { markPassword } from "../../data"
 import {
     PasswordFieldEvent,
     PasswordFieldError,
@@ -85,7 +84,7 @@ class Field implements PasswordFieldAction {
             type: "succeed-to-update",
             result,
             // TODO buildContent きもちわるい
-            content: buildContent(result.valid, () => packPassword(this.password)),
+            content: buildContent(result.valid, () => markPassword(this.password)),
             character: checkCharacter(this.password),
             view: this.view(),
         })
