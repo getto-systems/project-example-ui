@@ -1,3 +1,13 @@
+export type TicketNonce = string & { TicketNonce: never }
+export function markTicketNonce(nonce: string): TicketNonce {
+    return nonce as string & { TicketNonce: never }
+}
+
+export type AuthAt = Date & { AuthAt: never }
+export function markAuthAt(date: Date): AuthAt {
+    return date as Date & { AuthAt: never }
+}
+
 export type LastAuth = Readonly<{
     ticketNonce: TicketNonce
     lastAuthAt: AuthAt
@@ -9,25 +19,14 @@ export type AuthCredential = Readonly<{
     authAt: AuthAt
 }>
 
-// TODO nonce と roles をまとめて pack するようにするべきかな
-export type ApiCredential = Readonly<{
-    //apiNonce: ApiNonce,
-    apiRoles: ApiRoles
+export type ApiCredential = ApiCredential_data & { ApiCredential: never }
+export type ApiCredential_data = Readonly<{
+    // TODO ApiNonce を追加
+    // apiNonce: string
+    apiRoles: string[]
 }>
-
-export type TicketNonce = string & { TicketNonce: never }
-export function markTicketNonce(nonce: string): TicketNonce {
-    return nonce as string & { TicketNonce: never }
-}
-
-//export type ApiNonce = { ApiNonce: never }
-
-export type ApiRoles = ApiRole[]
-export type ApiRole = { ApiRole: never }
-
-export type AuthAt = Date & { AuthAt: never }
-export function markAuthAt(date: Date): AuthAt {
-    return date as Date & { AuthAt: never }
+export function markApiCredential(apiCredential: ApiCredential_data): ApiCredential {
+    return apiCredential as ApiCredential
 }
 
 export type RenewEvent =

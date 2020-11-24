@@ -1,6 +1,6 @@
 import { AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra"
 
-import { AuthCredential, TicketNonce, ApiCredential, AuthAt } from "../../../../credential/data"
+import { AuthCredential, TicketNonce, AuthAt, ApiCredential, markApiCredential } from "../../../../credential/data"
 
 export function initMemoryAuthCredentialRepository(
     initialTicketNonce: TicketNonce,
@@ -21,9 +21,9 @@ class MemoryAuthCredentialRepository implements AuthCredentialRepository {
             ticketNonce: { found: true, content: initialTicketNonce },
             apiCredential: {
                 found: true,
-                content: {
+                content: markApiCredential({
                     apiRoles: [],
-                },
+                }),
             },
             lastAuthAt: { found: true, content: lastAuthAt },
         }
