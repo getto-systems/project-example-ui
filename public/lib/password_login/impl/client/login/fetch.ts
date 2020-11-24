@@ -1,7 +1,6 @@
 import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
 
 import { packApiRoles } from "../../../../credential/adapter"
-import { unpackPassword } from "../../../../password/adapter"
 
 import { LoginFields } from "../../../data"
 import { markTicketNonce, markAuthAt } from "../../../../credential/data"
@@ -30,10 +29,7 @@ class FetchPasswordLoginClient implements PasswordLoginClient {
 
     async login({ loginID, password }: LoginFields): Promise<LoginResponse> {
         try {
-            const response = await this.client.passwordLogin({
-                loginID,
-                password: unpackPassword(password),
-            })
+            const response = await this.client.passwordLogin({ loginID, password })
 
             if (response.success) {
                 return loginSuccess({
