@@ -2,8 +2,15 @@ import { AuthCredential } from "../credential/data"
 import { LoginID } from "../login_id/data"
 import { Password } from "../password/data"
 
-export type SessionID = { SessionID: never }
-export type ResetToken = { ResetToken: never }
+export type SessionID = string & { SessionID: never }
+export function markSessionID(sessionID: string): SessionID {
+    return sessionID as string & { SessionID: never }
+}
+
+export type ResetToken = string & { ResetToken: never }
+export function markResetToken(resetToken: string): ResetToken {
+    return resetToken as string & { ResetToken: never }
+}
 
 // TODO log 以外にも対応 : というより、never にするべきかな
 export type Destination = Readonly<{ type: "log" }>
