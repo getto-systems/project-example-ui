@@ -11,7 +11,7 @@ import {
     showPassword,
     hidePassword,
 } from "../data"
-import { InputValue, markInputValue, buildContent, hasError } from "../../../field/data"
+import { InputValue, markInputValue, validContent, invalidContent, hasError } from "../../../field/data"
 
 // bcrypt を想定しているので、72 バイト以上のパスワードは無効
 const PASSWORD_MAX_BYTES = 72
@@ -83,8 +83,7 @@ class Field implements PasswordFieldAction {
         post({
             type: "succeed-to-update",
             result,
-            // TODO buildContent きもちわるい
-            content: buildContent(result.valid, () => markPassword(this.password)),
+            content: result.valid ? validContent(markPassword(this.password)) : invalidContent(),
             character: checkCharacter(this.password),
             view: this.view(),
         })
