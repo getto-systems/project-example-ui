@@ -1,5 +1,3 @@
-import { packResetToken } from "../../password_reset/adapter"
-
 import { AuthSearch } from "./href"
 
 import {
@@ -14,7 +12,7 @@ import {
 import { RenewCredentialComponent } from "../component/renew_credential/component"
 
 import { PagePathname, markPagePathname } from "../../application/data"
-import { ResetToken } from "../../password_reset/data"
+import { ResetToken, markResetToken } from "../../password_reset/data"
 
 export type LoginView = "password-login" | "password-reset-session" | "password-reset"
 
@@ -34,7 +32,7 @@ export function detectLoginView(currentLocation: Location): LoginView {
 }
 export function detectResetToken(currentLocation: Location): ResetToken {
     const url = new URL(currentLocation.toString())
-    return packResetToken(url.searchParams.get(AuthSearch.passwordResetToken) || "")
+    return markResetToken(url.searchParams.get(AuthSearch.passwordResetToken) || "")
 }
 export function currentPagePathname(currentLocation: Location): PagePathname {
     return markPagePathname(new URL(currentLocation.toString()).pathname)

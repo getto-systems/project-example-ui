@@ -10,11 +10,9 @@ import {
     getStatusFailed,
 } from "../../../infra"
 
-import { packSessionID } from "../../../adapter"
-
 import { StartSessionFields } from "../../../data"
 
-import { SessionID, CheckStatusError } from "../../../data"
+import { SessionID, markSessionID, CheckStatusError } from "../../../data"
 import { LoginID } from "../../../../login_id/data"
 
 export function initSimulatePasswordResetSessionClient(
@@ -33,7 +31,7 @@ type TokenState =
 class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
     tokenState: TokenState = { state: "initial" }
 
-    targetSessionID = packSessionID("session-id")
+    targetSessionID = markSessionID("session-id")
 
     targetLoginID: LoginID
 
