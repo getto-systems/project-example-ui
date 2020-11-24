@@ -1,1 +1,4 @@
-export type LoginID = { LoginID: never }
+export type LoginID = string & { LoginID: never }
+export function markLoginID(loginID: string): LoginID {
+    return loginID as string & { LoginID: never }
+}
