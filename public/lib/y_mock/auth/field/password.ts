@@ -1,5 +1,3 @@
-import { packInputValue } from "../../../field/adapter"
-
 import {
     PasswordFieldComponent,
     PasswordFieldState,
@@ -12,7 +10,7 @@ import {
     showPassword,
 } from "../../../password/field/data"
 
-import { noError, hasError } from "../../../field/data"
+import { markInputValue, noError, hasError } from "../../../field/data"
 
 export function newPasswordFieldComponent(state: PasswordFieldState): PasswordFieldComponent {
     return new Component(state)
@@ -64,7 +62,7 @@ export class PasswordFieldStateFactory {
             type: "succeed-to-update",
             result: noError(),
             character: simplePassword,
-            view: showPassword(packInputValue("password")),
+            view: showPassword(markInputValue("password")),
         }
     }
 }

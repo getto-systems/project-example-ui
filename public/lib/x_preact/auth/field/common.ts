@@ -1,11 +1,9 @@
-import { packInputValue } from "../../../field/adapter"
-
-import { InputValue } from "../../../field/data"
+import { InputValue, markInputValue } from "../../../field/data"
 
 export function mapInputEvent(post: Post<InputValue>): Post<InputEvent> {
     return (e: InputEvent): void => {
         if (e.target instanceof HTMLInputElement) {
-            post(packInputValue(e.target.value))
+            post(markInputValue(e.target.value))
         }
     }
 }
