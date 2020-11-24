@@ -2,8 +2,6 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { unpackSeason } from "../../../season/adapter"
-
 import { ExampleComponent, initialExampleState } from "../../../home/component/example/component"
 
 import { Season } from "../../../season/data"
@@ -29,7 +27,7 @@ export function Example({ example }: Props): VNode {
 }
 
 function content(season: Season): VNode {
-    const { year } = unpackSeason(season)
+    const { year } = season
 
     return html`
         <section class="box box_double">

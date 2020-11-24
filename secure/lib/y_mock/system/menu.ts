@@ -1,10 +1,8 @@
-import { lnir } from "../../z_external/icon"
-
-import { packMenuCategory, packMenuItem } from "../../menu/adapter"
+import { lnir, iconClass } from "../../z_external/icon"
 
 import { MenuComponent, MenuState } from "../../system/component/menu/component"
 
-import { Menu } from "../../menu/data"
+import { markMenuCategory, markMenuItem, Menu } from "../../menu/data"
 
 export function newMenuComponent(): MenuComponent {
     return new Component(new MenuStateFactory().succeedToLoad())
@@ -66,15 +64,15 @@ class MenuStateFactory {
                 type: "category",
                 isExpand: true,
                 badgeCount: sec,
-                category: packMenuCategory({ label: "MAIN" }),
+                category: markMenuCategory({ label: "MAIN" }),
                 children: [
                     {
                         type: "item",
                         isActive: true,
                         badgeCount: sec,
-                        item: packMenuItem({
+                        item: markMenuItem({
                             label: "ホーム",
-                            icon: lnir("home"),
+                            icon: iconClass(lnir("home")),
                             href: "/dist/index.html",
                         }),
                     },

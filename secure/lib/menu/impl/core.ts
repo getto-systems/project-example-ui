@@ -1,4 +1,3 @@
-import { packMenuCategory, packMenuItem, unpackMenuPath } from "../adapter"
 import { unpackApiRoles } from "../../credential/adapter"
 
 import {
@@ -15,7 +14,17 @@ import {
 import { LoadBreadcrumb, LoadMenu } from "../action"
 
 import { ApiRoles } from "../../credential/data"
-import { Breadcrumb, BreadcrumbNode, Menu, MenuCategory, MenuItem, MenuNode, MenuPath } from "../data"
+import {
+    Breadcrumb,
+    BreadcrumbNode,
+    Menu,
+    MenuCategory,
+    markMenuCategory,
+    MenuItem,
+    markMenuItem,
+    MenuNode,
+    MenuPath,
+} from "../data"
 
 export const loadBreadcrumb = (infra: BreadcrumbInfra): LoadBreadcrumb => (collector) => async (
     post
@@ -37,7 +46,7 @@ type BreadcrumbInfo = Readonly<{
 }>
 
 function toBreadcrumb({ tree, menuPath }: BreadcrumbInfo): Breadcrumb {
-    const { version, currentPath } = unpackMenuPath(menuPath)
+    const { version, currentPath } = menuPath
 
     return treeToBreadcrumb(tree)
 
@@ -116,7 +125,7 @@ type MenuInfo = Readonly<{
 }>
 
 function toMenu({ tree, menuPath, apiRoles }: MenuInfo, expand: MenuExpand, badge: MenuBadge): Menu {
-    const { version, currentPath } = unpackMenuPath(menuPath)
+    const { version, currentPath } = menuPath
     const roles = unpackApiRoles(apiRoles)
 
     // TODO role によってカテゴリを非表示にするんだった
@@ -183,10 +192,10 @@ function toMenu({ tree, menuPath, apiRoles }: MenuInfo, expand: MenuExpand, badg
 }
 
 function toMenuCategory(category: MenuTreeCategory): MenuCategory {
-    return packMenuCategory(category)
+    return markMenuCategory(category)
 }
 function toMenuItem({ label, icon, path }: MenuTreeItem, version: string): MenuItem {
-    return packMenuItem({ label, icon, href: `/${version}/${path}` })
+    return markMenuItem({ label, icon, href: `/${version}/${path}` })
 }
 
 const EMPTY_EXPAND: MenuExpand = {}
