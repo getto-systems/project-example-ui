@@ -1,4 +1,4 @@
-import { AppHrefFactory } from "../../href/data"
+import { AppHrefFactory } from "../../Href/data"
 
 import {
     RenewCredentialComponentSet,

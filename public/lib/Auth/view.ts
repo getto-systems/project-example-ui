@@ -1,4 +1,4 @@
-import { AppHref } from "../href/data"
+import { AppHref } from "../Href/data"
 
 import { RenewCredentialComponent } from "./component/renew_credential/component"
 
@@ -24,10 +24,10 @@ export interface AuthView {
 
 export type AuthState =
     | Readonly<{ type: "initial" }>
-    | Readonly<{ type: "renew-credential", components: RenewCredentialComponentSet }>
-    | Readonly<{ type: "password-login", components: PasswordLoginComponentSet }>
-    | Readonly<{ type: "password-reset-session", components: PasswordResetSessionComponentSet }>
-    | Readonly<{ type: "password-reset", components: PasswordResetComponentSet }>
+    | Readonly<{ type: "renew-credential"; components: RenewCredentialComponentSet }>
+    | Readonly<{ type: "password-login"; components: PasswordLoginComponentSet }>
+    | Readonly<{ type: "password-reset-session"; components: PasswordResetSessionComponentSet }>
+    | Readonly<{ type: "password-reset"; components: PasswordResetComponentSet }>
     | Readonly<{ type: "error"; err: string }>
 
 export const initialAuthState: AuthState = { type: "initial" }
@@ -55,9 +55,6 @@ export type PasswordResetComponentSet = Readonly<{
 
 interface Post<T> {
     (state: T): void
-}
-interface Factory<T> {
-    (): T
 }
 interface Terminate {
     (): void

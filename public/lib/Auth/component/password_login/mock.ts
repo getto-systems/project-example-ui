@@ -1,7 +1,4 @@
-import {
-    PasswordLoginComponent,
-    PasswordLoginState,
-} from "./component"
+import { PasswordLoginComponent, PasswordLoginState } from "./component"
 
 export function newPasswordLoginComponent(): PasswordLoginComponent {
     return new Component(new PasswordLoginStateFactory().initialLogin())

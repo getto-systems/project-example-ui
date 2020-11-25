@@ -1,7 +1,4 @@
-import {
-    PasswordResetSessionComponent,
-    PasswordResetSessionState,
-} from "./component"
+import { PasswordResetSessionComponent, PasswordResetSessionState } from "./component"
 
 export function newPasswordResetSessionComponent(): PasswordResetSessionComponent {
     return new Component(new PasswordResetSessionStateFactory().succeedToSendToken())

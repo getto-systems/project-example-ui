@@ -1,4 +1,4 @@
-import { newAppHref } from "../y_main/href"
+import { newAppHref } from "../Href/main"
 
 import { newRenewCredentialComponent } from "./component/renew_credential/mock"
 

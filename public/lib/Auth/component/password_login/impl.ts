@@ -30,7 +30,7 @@ class Component implements PasswordLoginComponent {
         })
     }
     loadError(err: LoadError): void {
-        this.post({ type: "load-error", err })        
+        this.post({ type: "load-error", err })
     }
 
     mapLoginEvent(event: LoginEvent): PasswordLoginState {

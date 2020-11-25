@@ -1,7 +1,4 @@
-import {
-    PasswordFieldComponent,
-    PasswordFieldState,
-} from "./component"
+import { PasswordFieldComponent, PasswordFieldState } from "./component"
 
 import {
     simplePassword,

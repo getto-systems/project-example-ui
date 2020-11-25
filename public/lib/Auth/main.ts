@@ -3,20 +3,20 @@ import { initAuthClient, AuthClient } from "../z_external/auth_client/auth_clien
 
 import { env } from "../y_static/env"
 
-import { newAppHref } from "./href"
-import { TimeConfig, newTimeConfig, newHostConfig } from "./auth/config"
+import { newAppHref } from "../Href/main"
+import { TimeConfig, newTimeConfig, newHostConfig } from "./config"
 
-import { initAuthViewFactoryAsSingle } from "../auth/impl/single"
-import { initAuthViewFactoryAsForeground } from "../auth/impl/worker/foreground"
-import { initAuthWorkerAsBackground } from "../auth/impl/worker/background"
+import { initAuthViewFactoryAsSingle } from "./impl/single"
+import { initAuthViewFactoryAsForeground } from "./impl/worker/foreground"
+import { initAuthWorkerAsBackground } from "./impl/worker/background"
 
-import { initRenewCredential } from "../auth/component/renew_credential/impl"
-import { initPasswordLogin } from "../auth/component/password_login/impl"
-import { initPasswordResetSession } from "../auth/component/password_reset_session/impl"
-import { initPasswordReset } from "../auth/component/password_reset/impl"
+import { initRenewCredential } from "./component/renew_credential/impl"
+import { initPasswordLogin } from "./component/password_login/impl"
+import { initPasswordResetSession } from "./component/password_reset_session/impl"
+import { initPasswordReset } from "./component/password_reset/impl"
 
-import { initLoginIDField } from "../auth/component/field/login_id/impl"
-import { initPasswordField } from "../auth/component/field/password/impl"
+import { initLoginIDField } from "./component/field/login_id/impl"
+import { initPasswordField } from "./component/field/password/impl"
 
 import { secureScriptPath } from "../application/impl/core"
 import { renew, setContinuousRenew, store } from "../credential/impl/core"
@@ -34,8 +34,8 @@ import { initFetchPasswordLoginClient } from "../password_login/impl/client/logi
 import { initSimulatePasswordResetClient } from "../password_reset/impl/client/reset/simulate"
 import { initSimulatePasswordResetSessionClient } from "../password_reset/impl/client/session/simulate"
 
-import { AuthViewFactory } from "../auth/view"
-import { currentPagePathname, detectLoginView, detectResetToken } from "../auth/impl/view"
+import { AuthViewFactory } from "./view"
+import { currentPagePathname, detectLoginView, detectResetToken } from "./impl/view"
 
 import { markTicketNonce, markAuthAt, markApiCredential } from "../credential/data"
 import { markLoginID } from "../login_id/data"

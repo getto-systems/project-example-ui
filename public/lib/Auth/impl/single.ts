@@ -6,7 +6,7 @@ import {
     initPasswordResetComponentSet,
 } from "./core"
 
-import { AppHrefFactory } from "../../href/data"
+import { AppHrefFactory } from "../../Href/data"
 import { AuthViewFactory } from "../view"
 
 import { RenewCredentialComponentFactory } from "../component/renew_credential/component"

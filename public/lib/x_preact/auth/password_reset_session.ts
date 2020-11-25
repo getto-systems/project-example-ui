@@ -8,10 +8,10 @@ import { ApplicationError } from "../system/application_error"
 
 import { LoginIDField } from "./password_reset_session/field/login_id"
 
-import { AppHref } from "../../href/data"
+import { AppHref } from "../../Href/data"
 
-import { PasswordResetSessionComponentSet } from "../../auth/view"
-import { initialPasswordResetSessionState } from "../../auth/component/password_reset_session/component"
+import { PasswordResetSessionComponentSet } from "../../Auth/view"
+import { initialPasswordResetSessionState } from "../../Auth/component/password_reset_session/component"
 
 import {
     Destination,

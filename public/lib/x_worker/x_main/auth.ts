@@ -1,3 +1,3 @@
-import { initAuthWorker } from "../../y_main/auth"
+import { initAuthWorker } from "../../Auth/main"
 
 initAuthWorker((self as unknown) as Worker)

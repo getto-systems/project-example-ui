@@ -1,7 +1,4 @@
-import {
-    LoginIDFieldComponent,
-    LoginIDFieldState,
-} from "./component"
+import { LoginIDFieldComponent, LoginIDFieldState } from "./component"
 
 import { noError, hasError } from "../../../../field/data"
 

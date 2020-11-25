@@ -1,6 +1,6 @@
 import { render, h } from "preact"
 
-import { newAuthViewFactoryAsWorkerForeground } from "../../y_main/auth"
+import { newAuthViewFactoryAsWorkerForeground } from "../../Auth/main"
 
 import { Main } from "../auth/view"
 
