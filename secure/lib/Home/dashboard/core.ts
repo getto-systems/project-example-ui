@@ -1,4 +1,4 @@
-import { DashboardResource } from "../../dashboard"
+import { DashboardResource } from "../dashboard"
 
 // TODO 実装する
 import { newDashboardComponentSetFactory } from "./mock"
