@@ -1,4 +1,4 @@
-import { HomeHref } from "../home/href"
+import { HomeHref } from "../Home/href"
 
 export type AppHref = Readonly<{
     home: HomeHref

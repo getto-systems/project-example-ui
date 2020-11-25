@@ -1,6 +1,6 @@
-import { newBreadcrumbComponent } from "../system/component/breadcrumb/mock"
-import { newMenuComponent } from "../system/component/menu/mock"
-import { newSeasonComponent } from "../system/component/season/mock"
+import { newBreadcrumbComponent } from "../System/component/breadcrumb/mock"
+import { newMenuComponent } from "../System/component/menu/mock"
+import { newSeasonComponent } from "../System/component/season/mock"
 
 import { newExampleComponent } from "./component/example/mock"
 

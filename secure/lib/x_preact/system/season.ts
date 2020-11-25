@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { SeasonComponent, initialSeasonState } from "../../system/component/season/component"
+import { SeasonComponent, initialSeasonState } from "../../System/component/season/component"
 
 import { Season } from "../../season/data"
 

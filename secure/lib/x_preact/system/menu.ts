@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { MenuComponent, initialMenuState } from "../../system/component/menu/component"
+import { MenuComponent, initialMenuState } from "../../System/component/menu/component"
 
 import { Menu, MenuNode, MenuCategory, MenuItem, LoadMenuError } from "../../menu/data"
 

@@ -13,7 +13,7 @@ import { BreadcrumbList } from "../system/breadcrumb"
 
 import { Example } from "./dashboard/example"
 
-import { DashboardComponentSet, DashboardResource } from "../../home/dashboard"
+import { DashboardComponentSet, DashboardResource } from "../../Home/dashboard"
 
 type Props = {
     factory: Factory<DashboardResource>

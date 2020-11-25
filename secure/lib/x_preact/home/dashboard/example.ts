@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { ExampleComponent, initialExampleState } from "../../../home/component/example/component"
+import { ExampleComponent, initialExampleState } from "../../../Home/component/example/component"
 
 import { Season } from "../../../season/data"
 

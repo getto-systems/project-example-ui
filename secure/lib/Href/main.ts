@@ -1,6 +1,6 @@
-import { initHomeHref } from "../home/impl/href"
+import { initHomeHref } from "../Home/impl/href"
 
-import { AppHref } from "../href/data"
+import { AppHref } from "./data"
 
 export function newAppHref(): AppHref {
     return {
