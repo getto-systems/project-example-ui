@@ -1,6 +1,6 @@
 import { MenuTarget, markMenuTarget } from "../../menu/data"
 
-export function detectMenuPath(version: string, currentLocation: Location): MenuTarget {
+export function detectMenuTarget(version: string, currentLocation: Location): MenuTarget {
     const pathname = new URL(currentLocation.toString()).pathname
     const versionPrefix = `/${version}/`
     if (!pathname.startsWith(versionPrefix)) {
