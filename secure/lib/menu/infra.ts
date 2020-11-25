@@ -36,7 +36,7 @@ export type MenuBadge = Record<MenuPath, number>
 export type MenuExpand = Record<MenuCategoryLabel, boolean>
 
 export interface MenuExpandClient {
-    getExpand(): Promise<MenuExpandResponse>
+    getExpand(): MenuExpandResponse
 }
 export interface MenuBadgeClient {
     getBadge(apiNonce: ApiNonce): Promise<MenuBadgeResponse>

@@ -92,7 +92,7 @@ export const loadMenu = (infra: MenuInfra): LoadMenu => (collector) => async (no
         menuTarget: collector.getMenuPath(),
     }
 
-    const expandResponse = await client.expand.getExpand()
+    const expandResponse = client.expand.getExpand()
     if (!expandResponse.success) {
         post({
             type: "failed-to-load",

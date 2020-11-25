@@ -4,10 +4,10 @@ import { LoadSeason } from "../action"
 
 import { Season, markSeason } from "../data"
 
-export const loadSeason = (infra: SeasonInfra): LoadSeason => () => async (post) => {
+export const loadSeason = (infra: SeasonInfra): LoadSeason => () => (post) => {
     const { seasons, years } = infra
 
-    const response = await seasons.findSeason()
+    const response = seasons.findSeason()
     if (!response.success) {
         post({ type: "failed-to-load", err: response.err })
         return
