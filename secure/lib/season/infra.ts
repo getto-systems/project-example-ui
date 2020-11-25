@@ -6,7 +6,7 @@ export type SeasonInfra = Readonly<{
 }>
 
 export interface SeasonRepository {
-    findSeason(): Promise<SeasonResponse>
+    findSeason(): SeasonResponse
 }
 export interface YearRepository {
     currentYear(): number
