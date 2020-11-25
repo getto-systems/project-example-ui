@@ -1,6 +1,6 @@
 import { render, h } from "preact"
 
-import { newDashboardComponentSetFactory } from "../../y_mock/home/dashboard"
+import { newDashboardComponentSetFactory } from "../../home/mock"
 
 import { Dashboard } from "../home/dashboard"
 

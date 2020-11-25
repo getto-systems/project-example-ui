@@ -3,7 +3,7 @@ import { html } from "htm/preact"
 
 import { mapInputEvent } from "./common"
 
-import { LoginIDFieldComponent } from "../../../auth/component/field/login_id/component"
+import { LoginIDFieldComponent } from "../../../Auth/component/field/login_id/component"
 
 import { LoginIDFieldError } from "../../../login_id/field/data"
 import { Valid } from "../../../field/data"
