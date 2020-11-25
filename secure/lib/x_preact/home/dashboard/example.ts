@@ -4,12 +4,11 @@ import { html } from "htm/preact"
 
 import { ExampleComponent, initialExampleState } from "../../../Home/component/example/component"
 
-import { Season } from "../../../season/data"
+import { Season, SeasonError } from "../../../season/data"
 
 type Props = Readonly<{
     example: ExampleComponent
 }>
-
 export function Example({ example }: Props): VNode {
     const [state, setState] = useState(initialExampleState)
     useEffect(() => {
@@ -23,35 +22,46 @@ export function Example({ example }: Props): VNode {
 
         case "succeed-to-load":
             return content(state.season)
+
+        case "failed-to-load":
+            return error(state.err)
     }
 }
 
 function content(season: Season): VNode {
-    const { year } = season
-
     return html`
         <section class="box box_double">
             <div>
-                <header class="box__header">
-                    <h2 class="box__title">GETTO Example</h2>
-                </header>
+                <header class="box__header">${header}</header>
+                <section class="box__body">${seasonForm(html`${season.year}`)}</section>
+            </div>
+        </section>
+    `
+}
+function error(err: SeasonError): VNode {
+    return html`
+        <section class="box box_double">
+            <div>
+                <header class="box__header">${header}</header>
                 <section class="box__body">
-                    <dl class="form">
-                        <dt class="form__header">シーズン</dt>
-                        <dd class="form__field">${year}</dd>
-                    </dl>
-                    <dl class="form">
-                        <dt class="form__header">バージョン</dt>
-                        <dd class="form__field">さいしん！</dd>
-                    </dl>
+                    ${seasonForm(html`
+                        <p class="notice notice_alert notice_stack">ロードエラー</p>
+                        <small><p>詳細: ${err.err}</p></small>
+                    `)}
                 </section>
             </div>
-            <footer class="box__footer">
-                <section class="button__container">
-                    <a class="#">リンク</a>
-                </section>
-            </footer>
         </section>
+    `
+}
+
+const header = html`<h2 class="box__title">GETTO Example</h2>`
+
+function seasonForm(content: VNode): VNode {
+    return html`
+        <dl class="form">
+            <dt class="form__header">シーズン</dt>
+            <dd class="form__field">${content}</dd>
+        </dl>
     `
 }
 
