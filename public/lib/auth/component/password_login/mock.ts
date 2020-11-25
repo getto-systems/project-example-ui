@@ -1,7 +1,7 @@
 import {
     PasswordLoginComponent,
     PasswordLoginState,
-} from "../../auth/component/password_login/component"
+} from "./component"
 
 export function newPasswordLoginComponent(): PasswordLoginComponent {
     return new Component(new PasswordLoginStateFactory().initialLogin())

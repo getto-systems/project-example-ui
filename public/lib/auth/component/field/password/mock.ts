@@ -1,16 +1,16 @@
 import {
     PasswordFieldComponent,
     PasswordFieldState,
-} from "../../../auth/component/field/password/component"
+} from "./component"
 
 import {
     simplePassword,
     complexPassword,
     hidePassword,
     showPassword,
-} from "../../../password/field/data"
+} from "../../../../password/field/data"
 
-import { markInputValue, noError, hasError } from "../../../field/data"
+import { markInputValue, noError, hasError } from "../../../../field/data"
 
 export function newPasswordFieldComponent(state: PasswordFieldState): PasswordFieldComponent {
     return new Component(state)
