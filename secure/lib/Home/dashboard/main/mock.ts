@@ -4,7 +4,7 @@ import { newSeasonComponent } from "../../../System/component/season/mock"
 
 import { newExampleComponent } from "../../component/example/mock"
 
-import { DashboardResource } from "../../dashboard"
+import { DashboardResource } from "../view"
 
 export function newDashboardComponentSetFactory(): Factory<DashboardResource> {
     return () => {
