@@ -51,15 +51,15 @@ function breadcrumbNodes(breadcrumb: Breadcrumb): VNode[] {
     }
 }
 function breadcrumbCategory(category: MenuCategory): VNode {
-    const { label } = (category)
+    const { label } = category
     // href="#menu" は menu の id="menu" と対応
     // mobile レイアウトで menu に移動
-    return html`<a class="main__breadcrumb__item" href="#menu">${label}</a>`
+    return html`<a class="main__breadcrumb__item" href="#menu" key="${label}">${label}</a>`
 }
 function breadcrumbItem(item: MenuItem): VNode {
-    const { label, icon, href } = (item)
+    const { label, icon, href } = item
     const inner = html`<i class="${icon}"></i> ${label}`
-    return html`<a class="main__breadcrumb__item" href="${href}">${inner}</a>`
+    return html`<a class="main__breadcrumb__item" href="${href}" key="${href}">${inner}</a>`
 }
 const SEPARATOR: VNode = html`
     <span class="main__breadcrumb__separator"><i class="lnir lnir-chevron-right"></i></span>

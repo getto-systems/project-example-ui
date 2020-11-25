@@ -48,7 +48,7 @@ function menuCategory(category: MenuCategory, children: Menu, badgeCount: number
     const { label } = category
 
     return html`
-        <details class="menu__nav" open="${isExpand}">
+        <details class="menu__nav" open="${isExpand}" key="${label}">
             <summary class="menu__nav__summary">
                 <span class="menu__nav__summary__label">${label}</span>
                 <span class="menu__nav__summary__badge">${badge(badgeCount)}</span>
@@ -65,7 +65,7 @@ function menuItem(item: MenuItem, badgeCount: number, isActive: boolean) {
     const activeClass = isActive ? "menu__nav__item_active" : ""
 
     return html`
-        <li class="menu__nav__item">
+        <li class="menu__nav__item" key="${href}">
             <a class="menu__nav__link ${activeClass}" href="${href}">
                 <span class="menu__nav__item__label">${labelWithIcon()}</span>
                 <span class="menu__nav__item__badge">${badge(badgeCount)}</span>

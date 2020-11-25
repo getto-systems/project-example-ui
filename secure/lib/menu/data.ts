@@ -53,3 +53,10 @@ export type LoadMenuError =
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
+
+export type ToggleMenuExpandEvent =
+    | Readonly<{ type: "succeed-to-toggle"; menu: Menu }>
+    | Readonly<{ type: "failed-to-toggle"; menu: Menu; err: ToggleMenuExpandError }>
+
+export type ToggleMenuExpandError =
+    | Readonly<{ type: "infra-error"; err: string }>

@@ -1,15 +1,17 @@
 import { ApiNonce } from "../credential/data"
 
-export type BreadcrumbInfra = Readonly<{
+export type LoadBreadcrumbInfra = Readonly<{
     tree: MenuTree
 }>
 
-export type MenuInfra = Readonly<{
+export type LoadMenuInfra = Readonly<{
     tree: MenuTree
-    client: Readonly<{
-        expand: MenuExpandClient
-        badge: MenuBadgeClient
-    }>
+    expands: MenuExpandRepository
+    badge: MenuBadgeClient
+}>
+
+export type ToggleMenuExpandInfra = Readonly<{
+    expands: MenuExpandRepository
 }>
 
 export type MenuCategoryLabel = string
@@ -33,20 +35,69 @@ export type MenuTreeItem = Readonly<{
 export type MenuPermission = Readonly<{ type: "any" }> | Readonly<{ type: "role"; roles: string[] }>
 
 export type MenuBadge = Record<MenuPath, number>
-export type MenuExpand = Record<MenuCategoryLabel, boolean>
+export type MenuExpand = CategoryLabelsArraySet
 
-export interface MenuExpandClient {
-    getExpand(): MenuExpandResponse
+class ArraySet<T> {
+    set: T[] = []
+    equals: ArraySetEntryEquals<T>
+
+    constructor(equals: ArraySetEntryEquals<T>) {
+        this.equals = equals
+    }
+
+    register(entry: T): void {
+        if (this.hasEntry(entry)) {
+            return
+        }
+        this.set.push(entry)
+    }
+    hasEntry(entry: T): boolean {
+        return this.set.some((value) => this.equals(entry, value))
+    }
+    remove(entry: T): void {
+        this.set = this.set.filter((value) => !this.equals(entry, value))
+    }
 }
-export interface MenuBadgeClient {
-    getBadge(apiNonce: ApiNonce): Promise<MenuBadgeResponse>
+interface ArraySetEntryEquals<T> {
+    (a: T, b: T): boolean
+}
+
+export class CategoryLabelsArraySet extends ArraySet<string[]> {
+    constructor() {
+        super((a: string[], b: string[]): boolean => {
+            if (a.length !== b.length) {
+                return false
+            }
+            for (let i = 0; i < a.length; i++) {
+                if (a[i] !== b[i]) {
+                    return false
+                }
+            }
+            return true
+        })
+    }
+}
+
+export interface MenuExpandRepository {
+    findExpand(): MenuExpandResponse
+    clearExpand(category: string[]): ToggleExpandResponse
+    setExpand(category: string[]): ToggleExpandResponse
 }
 
 export type MenuExpandResponse =
     | Readonly<{ success: true; expand: MenuExpand }>
     | Readonly<{ success: false; err: MenuExpandError }>
 
+export type ToggleExpandResponse =
+    | Readonly<{ success: true }>
+    | Readonly<{ success: false; err: ToggleExpandError }>
+
 export type MenuExpandError = Readonly<{ type: "infra-error"; err: string }>
+export type ToggleExpandError = Readonly<{ type: "infra-error"; err: string }>
+
+export interface MenuBadgeClient {
+    getBadge(apiNonce: ApiNonce): Promise<MenuBadgeResponse>
+}
 
 export type MenuBadgeResponse =
     | Readonly<{ success: true; badge: MenuBadge }>
