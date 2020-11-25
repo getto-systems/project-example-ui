@@ -1,6 +1,6 @@
-import { SeasonComponent } from "../system/component/season/component"
-import { MenuComponent } from "../system/component/menu/component"
-import { BreadcrumbComponent } from "../system/component/breadcrumb/component"
+import { SeasonComponent } from "../System/component/season/component"
+import { MenuComponent } from "../System/component/menu/component"
+import { BreadcrumbComponent } from "../System/component/breadcrumb/component"
 
 import { ExampleComponent } from "./component/example/component"
 

@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { BreadcrumbComponent, initialBreadcrumbState } from "../../system/component/breadcrumb/component"
+import { BreadcrumbComponent, initialBreadcrumbState } from "../../System/component/breadcrumb/component"
 
 import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../menu/data"
 

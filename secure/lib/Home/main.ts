@@ -1,7 +1,7 @@
-import { DashboardResource } from "../../home/dashboard"
+import { DashboardResource } from "./dashboard"
 
 // TODO 実装する
-import { newDashboardComponentSetFactory } from "../../home/mock"
+import { newDashboardComponentSetFactory } from "./mock"
 
 export function newDashboardComponentSetFactoryAsSingle(): Factory<DashboardResource> {
     return newDashboardComponentSetFactory()

@@ -1,6 +1,6 @@
 import { render, h } from "preact"
 
-import { newDashboardComponentSetFactoryAsSingle } from "../../y_main/home/dashboard"
+import { newDashboardComponentSetFactoryAsSingle } from "../../Home/main"
 
 import { Dashboard } from "../home/dashboard"
 
