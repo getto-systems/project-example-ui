@@ -6,7 +6,7 @@ export interface BreadcrumbComponentFactory {
     (actions: BreadcrumbActionSet): BreadcrumbComponent
 }
 export type BreadcrumbActionSet = Readonly<{
-    load: LoadBreadcrumbAction
+    loadBreadcrumb: LoadBreadcrumbAction
 }>
 
 export interface BreadcrumbComponent {
