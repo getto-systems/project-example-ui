@@ -32,8 +32,10 @@ export interface Reset {
 export interface ResetAction {
     (post: Post<ResetEvent>): void
 }
-export interface ResetCollector {
+export interface ResetCollector extends ResetTokenCollector {
     getFields(): Promise<Content<ResetFields>>
+}
+export interface ResetTokenCollector {
     getResetToken(): ResetToken
 }
 

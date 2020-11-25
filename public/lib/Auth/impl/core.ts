@@ -24,20 +24,19 @@ import {
     PasswordFieldComponentFactory,
 } from "../component/field/password/component"
 
-import { SecureScriptPath } from "../../application/action"
+import { SecureScriptPath, SecureScriptPathCollector } from "../../application/action"
 import { Renew, SetContinuousRenew, Store } from "../../credential/action"
 
 import { Login } from "../../password_login/action"
-import { StartSession, CheckStatus, Reset } from "../../password_reset/action"
+import { StartSession, CheckStatus, Reset, ResetTokenCollector } from "../../password_reset/action"
 
 import { LoginIDField } from "../../login_id/field/action"
 import { PasswordField } from "../../password/field/action"
 
 import { LoginID } from "../../login_id/data"
 import { Password } from "../../password/data"
-import { PagePathname } from "../../application/data"
 import { LoginFields } from "../../password_login/data"
-import { StartSessionFields, ResetFields, ResetToken } from "../../password_reset/data"
+import { StartSessionFields, ResetFields } from "../../password_reset/data"
 import { Content, invalidContent, validContent } from "../../field/data"
 
 export type RenewCredentialFactorySet = Readonly<{
@@ -55,9 +54,7 @@ export type RenewCredentialFactorySet = Readonly<{
     }>
 }>
 export type RenewCredentialCollectorSet = Readonly<{
-    application: Readonly<{
-        getPagePathname(): PagePathname
-    }>
+    application: SecureScriptPathCollector
 }>
 export function initRenewCredentialComponentSet(
     factory: RenewCredentialFactorySet,
@@ -106,9 +103,7 @@ export type PasswordLoginFactorySet = Readonly<{
     }>
 }>
 export type PasswordLoginCollectorSet = Readonly<{
-    application: Readonly<{
-        getPagePathname(): PagePathname
-    }>
+    application: SecureScriptPathCollector
 }>
 export function initPasswordLoginComponentSet(
     factory: PasswordLoginFactorySet,
@@ -207,12 +202,8 @@ export type PasswordResetFactorySet = Readonly<{
     }>
 }>
 export type PasswordResetCollectorSet = Readonly<{
-    application: Readonly<{
-        getPagePathname(): PagePathname
-    }>
-    passwordReset: Readonly<{
-        getResetToken(): ResetToken
-    }>
+    application: SecureScriptPathCollector
+    passwordReset: ResetTokenCollector
 }>
 export function initPasswordResetComponentSet(
     factory: PasswordResetFactorySet,
