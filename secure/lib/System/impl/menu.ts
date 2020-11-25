@@ -1,4 +1,4 @@
-import { MenuTarget, markMenuTarget } from "../menu/data"
+import { MenuTarget, markMenuTarget } from "../../menu/data"
 
 export function detectMenuPath(version: string, currentLocation: Location): MenuTarget {
     const pathname = new URL(currentLocation.toString()).pathname
