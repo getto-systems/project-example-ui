@@ -1,12 +1,12 @@
 import { LoadSeasonAction } from "../../../season/action"
 
-import { Season } from "../../../season/data"
+import { Season, SeasonError } from "../../../season/data"
 
 export interface SeasonComponentFactory {
     (actions: SeasonActionSet): SeasonComponent
 }
 export type SeasonActionSet = Readonly<{
-    load: LoadSeasonAction
+    loadSeason: LoadSeasonAction
 }>
 
 export interface SeasonComponent {
@@ -17,6 +17,7 @@ export interface SeasonComponent {
 export type SeasonState =
     | Readonly<{ type: "initial-season" }>
     | Readonly<{ type: "succeed-to-load"; season: Season }>
+    | Readonly<{ type: "failed-to-load"; err: SeasonError }>
 
 export const initialSeasonState: SeasonState = { type: "initial-season" }
 

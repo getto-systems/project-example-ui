@@ -18,6 +18,15 @@ class MenuStateFactory {
             menu: this.menu(),
         }
     }
+    failedToLoad_emptyNonce(): MenuState {
+        return {
+            type: "failed-to-load",
+            menu: this.menu(),
+            err: {
+                type: "empty-nonce",
+            },
+        }
+    }
     failedToLoad_badRequest(): MenuState {
         return {
             type: "failed-to-load",

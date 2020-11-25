@@ -89,26 +89,29 @@ function badge(badgeCount: number) {
 function error(err: LoadMenuError): VNode {
     return html`<section class="menu__box">${loadMenuError(err)}</section>`
 }
-function loadMenuError(err: LoadMenuError): VNode {
+function loadMenuError(err: LoadMenuError): VNode[] {
     switch (err.type) {
+        case "empty-nonce":
+            return [notice("認証エラー", { isStacked: true }), detail("もう一度ログインしてください")]
+
         case "bad-request":
-            return notice("アプリケーションエラー", { isStacked: false })
+            return [notice("アプリケーションエラー", { isStacked: false })]
 
         case "server-error":
-            return notice("サーバーエラー", { isStacked: false })
+            return [notice("サーバーエラー", { isStacked: false })]
 
         case "bad-response":
-            return html`${notice("レスポンスエラー", { isStacked: true })} ${detail(err)}`
+            return [notice("レスポンスエラー", { isStacked: true }), detail(err.err)]
 
         case "infra-error":
-            return html`${notice("ネットワークエラー", { isStacked: true })} ${detail(err)}`
+            return [notice("ネットワークエラー", { isStacked: true }), detail(err.err)]
     }
 
     function notice(message: string, { isStacked }: { isStacked: boolean }) {
         const stackClass = isStacked ? "notice_stack" : ""
         return html`<p class="notice notice_alert ${stackClass}">${message}</p>`
     }
-    function detail({ err }: { err: string }) {
+    function detail(err: string) {
         return html`<small><p>詳細: ${err}</p></small>`
     }
 }
