@@ -1,5 +1,5 @@
 import { LoadBreadcrumbEvent, LoadMenuEvent, MenuTarget } from "./data"
-import { ApiNonce, ApiRoles } from "../credential/data"
+import { ApiNonce, ApiRoles, LoadResult } from "../credential/data"
 
 export interface LoadBreadcrumb {
     (collector: LoadBreadcrumbCollector): LoadBreadcrumbAction
@@ -15,7 +15,7 @@ export interface LoadMenu {
     (collector: LoadMenuCollector): LoadMenuAction
 }
 export interface LoadMenuAction {
-    (nonce: ApiNonce, roles: ApiRoles, post: Post<LoadMenuEvent>): void
+    (nonce: LoadResult<ApiNonce>, roles: LoadResult<ApiRoles>, post: Post<LoadMenuEvent>): void
 }
 export interface LoadMenuCollector {
     getMenuPath(): MenuTarget

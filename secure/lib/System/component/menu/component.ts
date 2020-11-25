@@ -1,3 +1,4 @@
+import { LoadApiNonceAction, LoadApiRolesAction } from "../../../credential/action"
 import { LoadMenuAction } from "../../../menu/action"
 
 import { Menu, LoadMenuError } from "../../../menu/data"
@@ -6,7 +7,9 @@ export interface MenuComponentFactory {
     (actions: MenuActionSet): MenuComponent
 }
 export type MenuActionSet = Readonly<{
-    load: LoadMenuAction
+    loadApiNonce: LoadApiNonceAction
+    loadApiRoles: LoadApiRolesAction
+    loadMenu: LoadMenuAction
 }>
 
 export interface MenuComponent {

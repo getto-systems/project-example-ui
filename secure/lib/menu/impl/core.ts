@@ -11,7 +11,7 @@ import {
 
 import { LoadBreadcrumb, LoadMenu } from "../action"
 
-import { ApiRoles } from "../../credential/data"
+import { ApiRoles, LoadResult } from "../../credential/data"
 import {
     Breadcrumb,
     BreadcrumbNode,
@@ -106,7 +106,16 @@ export const loadMenu = (infra: MenuInfra): LoadMenu => (collector) => async (no
     // expand の取得には時間がかからないはずなので expand の取得前には返さない
     post({ type: "succeed-to-load", menu: toMenu(info, expandResponse.expand, EMPTY_BADGE) })
 
-    const badgeResponse = await client.badge.getBadge(nonce)
+    if (!nonce.success) {
+        post({
+            type: "failed-to-load",
+            menu: toMenu(info, expandResponse.expand, EMPTY_BADGE),
+            err: { type: "empty-nonce" },
+        })
+        return
+    }
+
+    const badgeResponse = await client.badge.getBadge(nonce.content)
     if (!badgeResponse.success) {
         post({
             type: "failed-to-load",
@@ -121,7 +130,7 @@ export const loadMenu = (infra: MenuInfra): LoadMenu => (collector) => async (no
 
 type MenuInfo = Readonly<{
     tree: MenuTree
-    roles: ApiRoles
+    roles: LoadResult<ApiRoles>
     menuTarget: MenuTarget
 }>
 
@@ -166,8 +175,11 @@ function toMenu({ tree, menuTarget, roles }: MenuInfo, expand: MenuExpand, badge
                 case "any":
                     return true
                 case "role":
+                    if (!roles.success) {
+                        return false
+                    }
                     return category.permission.roles.some((role) => {
-                        return roles.includes(role)
+                        return roles.content.includes(role)
                     })
             }
         }

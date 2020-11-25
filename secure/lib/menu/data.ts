@@ -48,6 +48,7 @@ export type LoadMenuEvent =
     | Readonly<{ type: "failed-to-load"; menu: Menu; err: LoadMenuError }>
 
 export type LoadMenuError =
+    | Readonly<{ type: "empty-nonce" }>
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>
