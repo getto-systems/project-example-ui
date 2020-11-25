@@ -166,7 +166,9 @@ function toMenu({ tree, menuTarget, roles }: MenuInfo, expand: MenuExpand, badge
                 case "any":
                     return true
                 case "role":
-                    return roles.includes(category.permission.role)
+                    return category.permission.roles.some((role) => {
+                        return roles.includes(role)
+                    })
             }
         }
         function hasActive(node: MenuNode): boolean {

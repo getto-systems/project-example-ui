@@ -5,10 +5,8 @@ import { MenuPermission, MenuTree, MenuTreeNode } from "../infra"
 function category(label: string, permission: MenuPermission, children: MenuTree): MenuTreeNode {
     return { type: "category", category: { label, permission }, children }
 }
-// function allow(role: string): MenuPermission {
-//     return { type: "role", role }
-// }
 const any: MenuPermission = { type: "any" }
+//const order: MenuPermission = { type: "role", roles: ["admin", "order"] }
 
 function item(label: string, icon: Icon, path: string): MenuTreeNode {
     return { type: "item", item: { label, icon: iconClass(icon), path } }

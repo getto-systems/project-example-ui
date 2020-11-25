@@ -30,7 +30,7 @@ export type MenuTreeItem = Readonly<{
     icon: string
 }>
 
-export type MenuPermission = Readonly<{ type: "any" }> | Readonly<{ type: "role"; role: string }>
+export type MenuPermission = Readonly<{ type: "any" }> | Readonly<{ type: "role"; roles: string[] }>
 
 export type MenuBadge = Record<MenuPath, number>
 export type MenuExpand = Record<MenuCategoryLabel, boolean>
