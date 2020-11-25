@@ -1,8 +1,8 @@
-import { SeasonComponent } from "../System/component/season/component"
-import { MenuComponent } from "../System/component/menu/component"
-import { BreadcrumbComponent } from "../System/component/breadcrumb/component"
+import { SeasonComponent } from "../../System/component/season/component"
+import { MenuComponent } from "../../System/component/menu/component"
+import { BreadcrumbComponent } from "../../System/component/breadcrumb/component"
 
-import { ExampleComponent } from "./component/example/component"
+import { ExampleComponent } from "../component/example/component"
 
 export interface DashboardFactory {
     (): DashboardResource
