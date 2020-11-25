@@ -1,9 +1,9 @@
 import {
     LoginIDFieldComponent,
     LoginIDFieldState,
-} from "../../../auth/component/field/login_id/component"
+} from "./component"
 
-import { noError, hasError } from "../../../field/data"
+import { noError, hasError } from "../../../../field/data"
 
 export function newLoginIDFieldComponent(state: LoginIDFieldState): LoginIDFieldComponent {
     return new Component(state)

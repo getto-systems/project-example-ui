@@ -1,15 +1,15 @@
-import { newAppHref } from "../../y_main/href"
+import { newAppHref } from "../y_main/href"
 
-import { newRenewCredentialComponent } from "./renew_credential"
+import { newRenewCredentialComponent } from "./component/renew_credential/mock"
 
-import { newPasswordLoginComponent } from "./password_login"
-import { newPasswordResetSessionComponent } from "./password_reset_session"
-import { newPasswordResetComponent } from "./password_reset"
+import { newPasswordLoginComponent } from "./component/password_login/mock"
+import { newPasswordResetSessionComponent } from "./component/password_reset_session/mock"
+import { newPasswordResetComponent } from "./component/password_reset/mock"
 
-import { newLoginIDFieldComponent, LoginIDFieldStateFactory } from "./field/login_id"
-import { newPasswordFieldComponent, PasswordFieldStateFactory } from "./field/password"
+import { newLoginIDFieldComponent, LoginIDFieldStateFactory } from "./component/field/login_id/mock"
+import { newPasswordFieldComponent, PasswordFieldStateFactory } from "./component/field/password/mock"
 
-import { AuthViewFactory, AuthView, AuthState } from "../../auth/view"
+import { AuthViewFactory, AuthView, AuthState } from "./view"
 
 export function newAuthViewFactory(): AuthViewFactory {
     return () => {
