@@ -18,6 +18,12 @@ class SeasonStateFactory {
             }),
         }
     }
+    failedToLoad(): SeasonState {
+        return {
+            type: "failed-to-load",
+            err: { type: "infra-error", err: "load error" },
+        }
+    }
 }
 
 class Component implements SeasonComponent {
