@@ -1,10 +1,9 @@
-export type MenuPath = MenuPath_data & { MenuPath: never }
-type MenuPath_data = Readonly<{
-    version: string
-    currentPath: string
-}>
-export function markMenuPath(path: MenuPath_data): MenuPath {
-    return path as MenuPath
+export type MenuTarget = MenuTarget_data & { MenuTarget: never }
+type MenuTarget_data =
+    | Readonly<{ versioned: false; version: string }>
+    | Readonly<{ versioned: true; version: string; currentPath: string }>
+export function markMenuTarget(path: MenuTarget_data): MenuTarget {
+    return path as MenuTarget
 }
 
 export type MenuCategory = MenuCategory_data & { MenuCategory: never }

@@ -21,7 +21,7 @@ import {
     MenuItem,
     markMenuItem,
     MenuNode,
-    MenuPath,
+    MenuTarget,
 } from "../data"
 
 export const loadBreadcrumb = (infra: BreadcrumbInfra): LoadBreadcrumb => (collector) => async (
@@ -33,18 +33,21 @@ export const loadBreadcrumb = (infra: BreadcrumbInfra): LoadBreadcrumb => (colle
         type: "succeed-to-load",
         breadcrumb: toBreadcrumb({
             tree,
-            menuPath: collector.getMenuPath(),
+            menuTarget: collector.getMenuPath(),
         }),
     })
 }
 
 type BreadcrumbInfo = Readonly<{
     tree: MenuTree
-    menuPath: MenuPath
+    menuTarget: MenuTarget
 }>
 
-function toBreadcrumb({ tree, menuPath }: BreadcrumbInfo): Breadcrumb {
-    const { version, currentPath } = menuPath
+function toBreadcrumb({ tree, menuTarget }: BreadcrumbInfo): Breadcrumb {
+    if (!menuTarget.versioned) {
+        return []
+    }
+    const { version, currentPath } = menuTarget
 
     return treeToBreadcrumb(tree)
 
@@ -80,13 +83,13 @@ function toBreadcrumb({ tree, menuPath }: BreadcrumbInfo): Breadcrumb {
     }
 }
 
-export const loadMenu = (infra: MenuInfra): LoadMenu => (collector) => async (post) => {
+export const loadMenu = (infra: MenuInfra): LoadMenu => (collector) => async (nonce, roles, post) => {
     const { tree, client } = infra
 
     const info: MenuInfo = {
         tree,
-        menuPath: collector.getMenuPath(),
-        apiRoles: await collector.getApiRoles(),
+        roles,
+        menuTarget: collector.getMenuPath(),
     }
 
     const expandResponse = await client.expand.getExpand()
@@ -103,7 +106,7 @@ export const loadMenu = (infra: MenuInfra): LoadMenu => (collector) => async (po
     // expand の取得には時間がかからないはずなので expand の取得前には返さない
     post({ type: "succeed-to-load", menu: toMenu(info, expandResponse.expand, EMPTY_BADGE) })
 
-    const badgeResponse = await client.badge.getBadge(await collector.getApiNonce())
+    const badgeResponse = await client.badge.getBadge(nonce)
     if (!badgeResponse.success) {
         post({
             type: "failed-to-load",
@@ -118,14 +121,11 @@ export const loadMenu = (infra: MenuInfra): LoadMenu => (collector) => async (po
 
 type MenuInfo = Readonly<{
     tree: MenuTree
-    menuPath: MenuPath
-    apiRoles: ApiRoles
+    roles: ApiRoles
+    menuTarget: MenuTarget
 }>
 
-function toMenu({ tree, menuPath, apiRoles }: MenuInfo, expand: MenuExpand, badge: MenuBadge): Menu {
-    const { version, currentPath } = menuPath
-
-    // TODO role によってカテゴリを非表示にするんだった
+function toMenu({ tree, menuTarget, roles }: MenuInfo, expand: MenuExpand, badge: MenuBadge): Menu {
     return treeToMenu(tree)
 
     function treeToMenu(tree: MenuTree): Menu {
@@ -166,7 +166,7 @@ function toMenu({ tree, menuPath, apiRoles }: MenuInfo, expand: MenuExpand, badg
                 case "any":
                     return true
                 case "role":
-                    return apiRoles.includes(category.permission.role)
+                    return roles.includes(category.permission.role)
             }
         }
         function hasActive(node: MenuNode): boolean {
@@ -181,9 +181,9 @@ function toMenu({ tree, menuPath, apiRoles }: MenuInfo, expand: MenuExpand, badg
     function menuItem(item: MenuTreeItem): MenuNode {
         return {
             type: "item",
-            isActive: item.path === currentPath,
+            isActive: menuTarget.versioned ? item.path === menuTarget.currentPath : false,
             badgeCount: badge[item.path] || 0,
-            item: toMenuItem(item, version),
+            item: toMenuItem(item, menuTarget.version),
         }
     }
 }
