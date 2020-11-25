@@ -1,4 +1,4 @@
-import { ExampleComponent, ExampleState } from "../../../home/component/example/component"
+import { ExampleComponent, ExampleState } from "./component"
 
 import { markSeason } from "../../../season/data"
 

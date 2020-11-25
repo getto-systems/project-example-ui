@@ -1,6 +1,6 @@
-import { SeasonComponent, SeasonState } from "../../system/component/season/component"
+import { SeasonComponent, SeasonState } from "./component"
 
-import { markSeason } from "../../season/data"
+import { markSeason } from "../../../season/data"
 
 export function newSeasonComponent(): SeasonComponent {
     return new Component(new SeasonStateFactory().succeedToLoad())

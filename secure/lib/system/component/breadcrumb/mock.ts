@@ -1,8 +1,8 @@
-import { iconClass, lnir } from "../../z_external/icon"
+import { iconClass, lnir } from "../../../z_external/icon"
 
-import { BreadcrumbComponent, BreadcrumbState } from "../../system/component/breadcrumb/component"
+import { BreadcrumbComponent, BreadcrumbState } from "./component"
 
-import { markMenuCategory, markMenuItem } from "../../menu/data"
+import { markMenuCategory, markMenuItem } from "../../../menu/data"
 
 export function newBreadcrumbComponent(): BreadcrumbComponent {
     return new Component(new BreadcrumbStateFactory().succeedToLoad())

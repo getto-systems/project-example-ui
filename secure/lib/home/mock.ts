@@ -1,10 +1,10 @@
-import { newBreadcrumbComponent } from "../system/breadcrumb"
-import { newMenuComponent } from "../system/menu"
-import { newSeasonComponent } from "../system/season"
+import { newBreadcrumbComponent } from "../system/component/breadcrumb/mock"
+import { newMenuComponent } from "../system/component/menu/mock"
+import { newSeasonComponent } from "../system/component/season/mock"
 
-import { newExampleComponent } from "./dashboard/example"
+import { newExampleComponent } from "./component/example/mock"
 
-import { DashboardResource } from "../../home/dashboard"
+import { DashboardResource } from "./dashboard"
 
 export function newDashboardComponentSetFactory(): Factory<DashboardResource> {
     return () => {

@@ -1,8 +1,8 @@
-import { lnir, iconClass } from "../../z_external/icon"
+import { lnir, iconClass } from "../../../z_external/icon"
 
-import { MenuComponent, MenuState } from "../../system/component/menu/component"
+import { MenuComponent, MenuState } from "./component"
 
-import { markMenuCategory, markMenuItem, Menu } from "../../menu/data"
+import { markMenuCategory, markMenuItem, Menu } from "../../../menu/data"
 
 export function newMenuComponent(): MenuComponent {
     return new Component(new MenuStateFactory().succeedToLoad())
