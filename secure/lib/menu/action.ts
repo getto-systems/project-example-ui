@@ -1,4 +1,4 @@
-import { LoadBreadcrumbEvent, LoadMenuEvent, MenuTarget } from "./data"
+import { LoadBreadcrumbEvent, LoadMenuEvent, Menu, MenuTarget, ToggleMenuExpandEvent } from "./data"
 import { ApiNonce, ApiRoles, LoadResult } from "../credential/data"
 
 export interface LoadBreadcrumb {
@@ -19,6 +19,13 @@ export interface LoadMenuAction {
 }
 export interface LoadMenuCollector {
     getMenuPath(): MenuTarget
+}
+
+export interface ToggleMenuExpand {
+    (): ToggleMenuExpandAction
+}
+export interface ToggleMenuExpandAction {
+    (category: string[], menu: Menu, post: Post<ToggleMenuExpandEvent>): void
 }
 
 interface Post<T> {

@@ -1,15 +1,17 @@
 import {
-    BreadcrumbInfra,
-    MenuInfra,
+    LoadBreadcrumbInfra,
+    LoadMenuInfra,
     MenuBadge,
     MenuExpand,
     MenuTree,
     MenuTreeNode,
     MenuTreeCategory,
     MenuTreeItem,
+    ToggleMenuExpandInfra,
+    CategoryLabelsArraySet,
 } from "../infra"
 
-import { LoadBreadcrumb, LoadMenu } from "../action"
+import { LoadBreadcrumb, LoadMenu, ToggleMenuExpand } from "../action"
 
 import { ApiRoles, LoadResult } from "../../credential/data"
 import {
@@ -24,7 +26,7 @@ import {
     MenuTarget,
 } from "../data"
 
-export const loadBreadcrumb = (infra: BreadcrumbInfra): LoadBreadcrumb => (collector) => async (
+export const loadBreadcrumb = (infra: LoadBreadcrumbInfra): LoadBreadcrumb => (collector) => async (
     post
 ) => {
     const { tree } = infra
@@ -83,8 +85,12 @@ function toBreadcrumb({ tree, menuTarget }: BreadcrumbInfo): Breadcrumb {
     }
 }
 
-export const loadMenu = (infra: MenuInfra): LoadMenu => (collector) => async (nonce, roles, post) => {
-    const { tree, client } = infra
+export const loadMenu = (infra: LoadMenuInfra): LoadMenu => (collector) => async (
+    nonce,
+    roles,
+    post
+) => {
+    const { tree, expands, badge } = infra
 
     const info: MenuInfo = {
         tree,
@@ -92,7 +98,7 @@ export const loadMenu = (infra: MenuInfra): LoadMenu => (collector) => async (no
         menuTarget: collector.getMenuPath(),
     }
 
-    const expandResponse = client.expand.getExpand()
+    const expandResponse = expands.findExpand()
     if (!expandResponse.success) {
         post({
             type: "failed-to-load",
@@ -115,7 +121,7 @@ export const loadMenu = (infra: MenuInfra): LoadMenu => (collector) => async (no
         return
     }
 
-    const badgeResponse = await client.badge.getBadge(nonce.content)
+    const badgeResponse = await badge.getBadge(nonce.content)
     if (!badgeResponse.success) {
         post({
             type: "failed-to-load",
@@ -135,25 +141,32 @@ type MenuInfo = Readonly<{
 }>
 
 function toMenu({ tree, menuTarget, roles }: MenuInfo, expand: MenuExpand, badge: MenuBadge): Menu {
-    return treeToMenu(tree)
+    return treeToMenu(tree, [])
 
-    function treeToMenu(tree: MenuTree): Menu {
-        return tree.flatMap(menuNodes)
+    function treeToMenu(tree: MenuTree, categoryLabels: string[]): Menu {
+        return tree.flatMap((node) => menuNodes(node, categoryLabels))
     }
-    function menuNodes(node: MenuTreeNode): MenuNode[] {
+    function menuNodes(node: MenuTreeNode, categoryLabels: string[]): MenuNode[] {
         switch (node.type) {
             case "category":
-                return menuCategory(node.category, node.children)
+                return menuCategory(node.category, node.children, [
+                    ...categoryLabels,
+                    node.category.label,
+                ])
             case "item":
                 return [menuItem(node.item)]
         }
     }
-    function menuCategory(category: MenuTreeCategory, tree: MenuTree): MenuNode[] {
+    function menuCategory(
+        category: MenuTreeCategory,
+        tree: MenuTree,
+        categoryLabels: string[]
+    ): MenuNode[] {
         if (!isAllow()) {
             return EMPTY_MENU
         }
 
-        const children = treeToMenu(tree)
+        const children = treeToMenu(tree, categoryLabels)
         if (children.length === 0) {
             return EMPTY_MENU
         }
@@ -163,7 +176,7 @@ function toMenu({ tree, menuTarget, roles }: MenuInfo, expand: MenuExpand, badge
         return [
             {
                 type: "category",
-                isExpand: expand[category.label] || children.some(hasActive),
+                isExpand: expand.hasEntry(categoryLabels) || children.some(hasActive),
                 badgeCount: sumBadgeCount,
                 category: toMenuCategory(category),
                 children,
@@ -209,7 +222,65 @@ function toMenuItem({ label, icon, path }: MenuTreeItem, version: string): MenuI
     return markMenuItem({ label, icon, href: `/${version}/${path}` })
 }
 
-const EMPTY_EXPAND: MenuExpand = {}
+export const toggleMenuExpand = (infra: ToggleMenuExpandInfra): ToggleMenuExpand => () => (
+    category,
+    menu,
+    post
+) => {
+    const { expands } = infra
+
+    const response = updateExpand()
+    if (!response.success) {
+        post({ type: "failed-to-toggle", menu: toggleMenu(category, menu), err: response.err })
+        return
+    }
+
+    post({ type: "succeed-to-toggle", menu: toggleMenu(category, menu) })
+
+    function updateExpand() {
+        if (isExpand(category, menu)) {
+            return expands.clearExpand(category)
+        } else {
+            return expands.setExpand(category)
+        }
+    }
+
+    function isExpand(category: string[], menu: Menu): boolean {
+        if (category.length === 0) {
+            return false
+        }
+        for (let i = 0; i < menu.length; i++) {
+            const node = menu[i]
+            if (node.type === "category" && node.category.label === category[0]) {
+                if (category.length === 1) {
+                    return true
+                } else {
+                    return isExpand(category, node.children)
+                }
+            }
+        }
+        return false
+    }
+    function toggleMenu(category: string[], menu: Menu): Menu {
+        if (category.length === 0) {
+            return menu
+        }
+        return menu.map((node) => {
+            if (node.type !== "category" || node.category.label !== category[0]) {
+                return node
+            }
+            if (category.length === 0) {
+                return { ...node, isExpand: !node.isExpand }
+            }
+            return {
+                ...node,
+                children: toggleMenu(category.slice(1), node.children),
+            }
+        })
+    }
+}
+
+const EMPTY_EXPAND: MenuExpand = new CategoryLabelsArraySet()
 const EMPTY_BADGE: MenuBadge = {}
 
 const EMPTY_BREADCRUMB: Breadcrumb = []
