@@ -7,18 +7,17 @@ import { useComponentSet } from "../container"
 import { ApplicationError } from "../system/application_error"
 import { footer, menuHeader, menuFooter } from "../layout"
 
-import { SeasonInfo } from "../system/season"
 import { MenuList } from "../system/menu"
 import { BreadcrumbList } from "../system/breadcrumb"
 
-import { Example } from "./dashboard/example"
+import { Content } from "./document/content"
 
-import { DashboardComponentSet, DashboardFactory } from "../../Home/dashboard/view"
+import { DocumentComponentSet, DocumentFactory } from "../../Document/document/view"
 
 type Props = {
-    factory: DashboardFactory
+    factory: DocumentFactory
 }
-export function Dashboard({ factory }: Props): VNode {
+export function Document({ factory }: Props): VNode {
     const [err, _resetError] = useErrorBoundary((err) => {
         // TODO ここでエラーをどこかに投げたい。apiCredential が有効なはずなので、api にエラーを投げられるはず
         console.log(err)
@@ -36,12 +35,12 @@ export function Dashboard({ factory }: Props): VNode {
 
     return h(View, container.components)
 }
-function View(components: DashboardComponentSet): VNode {
+function View(components: DocumentComponentSet): VNode {
     useEffect(() => {
-        document.title = `ホーム | ${document.title}`
+        document.title = `ドキュメント | ${document.title}`
     }, [])
 
-    const title = html`ホーム`
+    const title = html`ドキュメント`
 
     return html`
         <main class="layout">
@@ -50,7 +49,7 @@ function View(components: DashboardComponentSet): VNode {
                     <h1 class="main__title">${title}</h1>
                     ${h(BreadcrumbList, components)}
                 </header>
-                <section class="main__body container">${h(Example, components)}</section>
+                <section class="main__body container">${h(Content, components)}</section>
                 ${footer()}
             </article>
             ${menu()}
@@ -60,7 +59,7 @@ function View(components: DashboardComponentSet): VNode {
     function menu() {
         return html`
             <aside class="layout__menu menu">
-                ${menuHeader()} ${h(SeasonInfo, components)} ${h(MenuList, components)} ${menuFooter()}
+                ${menuHeader()} ${h(MenuList, components)} ${menuFooter()}
             </aside>
         `
     }

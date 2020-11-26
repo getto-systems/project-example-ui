@@ -6,7 +6,7 @@ module.exports = {
         return [
             {
                 type: "x_preact/x_mock",
-                names: ["index"],
+                names: ["index", "docs/index"],
             },
         ].reduce((acc, info) => {
             info.names.forEach((name) => {

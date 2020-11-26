@@ -35,7 +35,7 @@ export type MenuTreeItem = Readonly<{
 export type MenuPermission = Readonly<{ type: "any" }> | Readonly<{ type: "role"; roles: string[] }>
 
 export type MenuBadge = Record<MenuPath, number>
-export type MenuExpand = CategoryLabelsArraySet
+export type MenuExpand = CategoryLabelsSet
 
 class ArraySet<T> {
     set: T[] = []
@@ -62,7 +62,7 @@ interface ArraySetEntryEquals<T> {
     (a: T, b: T): boolean
 }
 
-export class CategoryLabelsArraySet extends ArraySet<string[]> {
+export class CategoryLabelsSet extends ArraySet<string[]> {
     constructor() {
         super((a: string[], b: string[]): boolean => {
             if (a.length !== b.length) {

@@ -1,44 +1,37 @@
 import { env } from "../../../y_static/env"
 
-import { initSeason } from "../../../System/component/season/impl"
 import { initMenu } from "../../../System/component/menu/impl"
 import { initBreadcrumb } from "../../../System/component/breadcrumb/impl"
-import { initExample } from "../../component/example/impl"
+import { initContent } from "../../component/content/impl"
 
 import { detectMenuTarget } from "../../../System/impl/menu"
 
 import { loadApiNonce, loadApiRoles } from "../../../credential/impl/core"
-import { mainMenuTree } from "../../../menu/impl/tree"
+import { documentMenuTree } from "../../../menu/impl/tree"
 
-import { initDashboardFactoryAsSingle } from "../impl/single"
+import { initDocumentFactoryAsSingle } from "../impl/single"
 
-import { DashboardFactory } from "../view"
-import { loadSeason } from "../../../season/impl/core"
+import { DocumentFactory } from "../view"
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../menu/impl/core"
 
 import { initMemoryApiCredentialRepository } from "../../../credential/impl/repository/api_credential/memory"
-import { initMemorySeasonRepository } from "../../../season/impl/repository/season/memory"
-import { initDateYearRepository } from "../../../season/impl/repository/year/date"
-import { initSimulateBadgeClient } from "../../../menu/impl/client/badge/simulate"
+import { initNoopBadgeClient } from "../../../menu/impl/client/badge/noop"
 import { initMemoryMenuExpandRepository } from "../../../menu/impl/repository/expand/memory"
 import { CategoryLabelsSet } from "../../../menu/infra"
 
-import { markSeason } from "../../../season/data"
 import { markApiNonce, markApiRoles } from "../../../credential/data"
 
-export function newDashboardComponentSetFactoryAsSingle(currentLocation: Location): DashboardFactory {
+export function newDocumentComponentSetFactoryAsSingle(currentLocation: Location): DocumentFactory {
     const factory = {
         actions: {
             credential: initCredentialAction(),
             menu: initMenuAction(),
-            season: initSeasonAction(),
         },
         components: {
-            season: initSeason,
             menu: initMenu,
             breadcrumb: initBreadcrumb,
 
-            example: initExample,
+            content: initContent,
         },
     }
     const collector = {
@@ -46,7 +39,7 @@ export function newDashboardComponentSetFactoryAsSingle(currentLocation: Locatio
             getMenuTarget: () => detectMenuTarget(env.version, currentLocation),
         },
     }
-    return initDashboardFactoryAsSingle(factory, collector)
+    return initDocumentFactoryAsSingle(factory, collector)
 }
 
 function initCredentialAction() {
@@ -61,21 +54,13 @@ function initCredentialAction() {
     }
 }
 function initMenuAction() {
-    const tree = mainMenuTree
-    const badge = initSimulateBadgeClient({})
+    const tree = documentMenuTree
+    const badge = initNoopBadgeClient()
     const expands = initMemoryMenuExpandRepository(new CategoryLabelsSet())
 
     return {
         loadBreadcrumb: loadBreadcrumb({ tree }),
         loadMenu: loadMenu({ tree, badge, expands }),
         toggleMenuExpand: toggleMenuExpand({ expands }),
-    }
-}
-function initSeasonAction() {
-    return {
-        loadSeason: loadSeason({
-            seasons: initMemorySeasonRepository(markSeason({ year: new Date().getFullYear() })),
-            years: initDateYearRepository(new Date()),
-        }),
     }
 }
