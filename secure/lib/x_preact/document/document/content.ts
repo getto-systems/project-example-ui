@@ -41,7 +41,7 @@ export function Content(components: DocumentComponentSet): VNode {
                     <h1 class="main__title">${documentTitle(state.path)}</h1>
                     ${h(BreadcrumbList, components)}
                 </header>
-                <section class="main__body container">${contentBody(state.path)}</section>
+                <section class="main__body">${contentBody(state.path)}</section>
             `
     }
 }
