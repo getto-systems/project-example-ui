@@ -105,6 +105,9 @@ class Component implements MenuComponent {
     load() {
         // mock では特に何もしない
     }
+    toggle() {
+        // mock では特に何もしない
+    }
 }
 
 interface Post<T> {

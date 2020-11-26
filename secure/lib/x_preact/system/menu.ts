@@ -21,60 +21,81 @@ export function MenuList({ menu }: Props): VNode {
             return EMPTY_CONTENT
 
         case "succeed-to-load":
+        case "succeed-to-toggle":
             return html`${content(state.menu)}`
 
         case "failed-to-load":
+        case "failed-to-toggle":
             return html`${error(state.err)} ${content(state.menu)}`
     }
-}
 
-function content(menu: Menu): VNode {
-    // id="menu" は breadcrumb の href="#menu" と対応
-    // mobile レイアウトで menu に移動
-    return html`<nav id="menu" class="menu__body">${menu.map(toNode)}</nav>`
-}
+    function content(menuNodes: Menu): VNode {
+        // id="menu" は breadcrumb の href="#menu" と対応
+        // mobile レイアウトで menu に移動
+        return html`<nav id="menu" class="menu__body">${menuToHtml(menuNodes, [])}</nav>`
 
-function toNode(node: MenuNode): VNode {
-    switch (node.type) {
-        case "category":
-            return menuCategory(node.category, node.children, node.badgeCount, node.isExpand)
+        function menuToHtml(menu: Menu, categoryLabels: string[]): VNode[] {
+            return menu.map((node) => toNode(node, categoryLabels))
+        }
+        function toNode(node: MenuNode, categoryLabels: string[]): VNode {
+            switch (node.type) {
+                case "category":
+                    return menuCategory(
+                        node.category,
+                        node.children,
+                        node.badgeCount,
+                        node.isExpand,
+                        [...categoryLabels, node.category.label]
+                    )
 
-        case "item":
-            return menuItem(node.item, node.badgeCount, node.isActive)
-    }
-}
+                case "item":
+                    return menuItem(node.item, node.badgeCount, node.isActive)
+            }
+        }
 
-function menuCategory(category: MenuCategory, children: Menu, badgeCount: number, isExpand: boolean) {
-    const { label } = category
+        function menuCategory(
+            category: MenuCategory,
+            children: Menu,
+            badgeCount: number,
+            isExpand: boolean,
+            categoryLabels: string[]
+        ) {
+            const { label } = category
 
-    return html`
-        <details class="menu__nav" open="${isExpand}" key="${label}">
-            <summary class="menu__nav__summary">
-                <span class="menu__nav__summary__label">${label}</span>
-                <span class="menu__nav__summary__badge">${badge(badgeCount)}</span>
-            </summary>
-            <ul class="menu__nav__items">
-                ${children.map(toNode)}
-            </ul>
-        </details>
-    `
-}
+            return html`
+                <details class="menu__nav" open="${isExpand}" key="${label}" onClick="${toggle}">
+                    <summary class="menu__nav__summary">
+                        <span class="menu__nav__summary__label">${label}</span>
+                        <span class="menu__nav__summary__badge">${badge(badgeCount)}</span>
+                    </summary>
+                    <ul class="menu__nav__items">
+                        ${menuToHtml(children, categoryLabels)}
+                    </ul>
+                </details>
+            `
 
-function menuItem(item: MenuItem, badgeCount: number, isActive: boolean) {
-    const { label, icon, href } = item
-    const activeClass = isActive ? "menu__nav__item_active" : ""
+            function toggle() {
+                menu.toggle(categoryLabels, menuNodes)
+            }
+        }
 
-    return html`
-        <li class="menu__nav__item" key="${href}">
-            <a class="menu__nav__link ${activeClass}" href="${href}">
-                <span class="menu__nav__item__label">${labelWithIcon()}</span>
-                <span class="menu__nav__item__badge">${badge(badgeCount)}</span>
-            </a>
-        </li>
-    `
+        function menuItem(item: MenuItem, badgeCount: number, isActive: boolean) {
+            const { label, icon, href } = item
+            const activeClass = isActive ? "menu__nav__item_active" : ""
 
-    function labelWithIcon() {
-        return html`<i class="${icon}"></i> ${label}`
+            return html`
+                <li class="menu__nav__item" key="${href}">
+                    <a class="menu__nav__link ${activeClass}" href="${href}">
+                        <span class="menu__nav__item__label">${labelWithIcon()}</span>
+                        <span class="menu__nav__item__badge">${badge(badgeCount)}</span>
+                    </a>
+                </li>
+            `
+
+            function labelWithIcon() {
+                return html`<i class="${icon}"></i> ${label}`
+            }
+        }
     }
 }
 

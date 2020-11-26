@@ -1,6 +1,6 @@
 import { MenuActionSet, MenuComponent, MenuState } from "./component"
 
-import { LoadMenuEvent } from "../../../menu/data"
+import { LoadMenuEvent, Menu, ToggleMenuExpandEvent } from "../../../menu/data"
 
 export function initMenu(actions: MenuActionSet): MenuComponent {
     return new Component(actions)
@@ -29,8 +29,16 @@ class Component implements MenuComponent {
             this.post(this.mapLoadMenuEvent(event))
         })
     }
+    toggle(category: string[], menu: Menu): void {
+        this.actions.toggleMenuExpand(category, menu, (event) => {
+            this.post(this.mapToggleMenuExpandEvent(event))
+        })
+    }
 
     mapLoadMenuEvent(event: LoadMenuEvent): MenuState {
+        return event
+    }
+    mapToggleMenuExpandEvent(event: ToggleMenuExpandEvent): MenuState {
         return event
     }
 }

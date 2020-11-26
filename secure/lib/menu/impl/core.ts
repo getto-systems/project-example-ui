@@ -253,9 +253,9 @@ export const toggleMenuExpand = (infra: ToggleMenuExpandInfra): ToggleMenuExpand
             const node = menu[i]
             if (node.type === "category" && node.category.label === category[0]) {
                 if (category.length === 1) {
-                    return true
+                    return node.isExpand
                 } else {
-                    return isExpand(category, node.children)
+                    return isExpand(category.slice(1), node.children)
                 }
             }
         }
