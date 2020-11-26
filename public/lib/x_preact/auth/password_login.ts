@@ -33,8 +33,11 @@ export function PasswordLogin({
         switch (state.type) {
             case "succeed-to-login":
                 appendScript(state.scriptPath, (script) => {
-                    script.onerror = (err) => {
-                        passwordLogin.loadError({ type: "infra-error", err: `${err}` })
+                    script.onerror = () => {
+                        passwordLogin.loadError({
+                            type: "infra-error",
+                            err: `スクリプトのロードに失敗しました: ${state.type}`,
+                        })
                     }
                 })
                 break
