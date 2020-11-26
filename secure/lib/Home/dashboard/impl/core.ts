@@ -7,10 +7,8 @@ import { BreadcrumbComponentFactory } from "../../../System/component/breadcrumb
 import { ExampleComponentFactory } from "../../component/example/component"
 
 import { LoadApiNonce, LoadApiRoles } from "../../../credential/action"
-import { LoadBreadcrumb, LoadMenu, ToggleMenuExpand } from "../../../menu/action"
+import { LoadBreadcrumb, LoadMenu, MenuTargetCollector, ToggleMenuExpand } from "../../../menu/action"
 import { LoadSeason } from "../../../season/action"
-
-import { MenuTarget } from "../../../menu/data"
 
 export type DashboardFactorySet = Readonly<{
     actions: Readonly<{
@@ -36,9 +34,7 @@ export type DashboardFactorySet = Readonly<{
     }>
 }>
 export type DashboardCollectorSet = Readonly<{
-    menu: {
-        getMenuTarget(): MenuTarget
-    }
+    menu: MenuTargetCollector
 }>
 export function initDashboardComponentSet(
     factory: DashboardFactorySet,

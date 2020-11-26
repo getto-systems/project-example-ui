@@ -1,5 +1,5 @@
 import { h, VNode } from "preact"
-import { useEffect, useErrorBoundary } from "preact/hooks"
+import { useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { useComponentSet } from "../container"
@@ -8,7 +8,6 @@ import { ApplicationError } from "../system/application_error"
 import { footer, menuHeader, menuFooter } from "../layout"
 
 import { MenuList } from "../system/menu"
-import { BreadcrumbList } from "../system/breadcrumb"
 
 import { Content } from "./document/content"
 
@@ -36,20 +35,10 @@ export function Document({ factory }: Props): VNode {
     return h(View, container.components)
 }
 function View(components: DocumentComponentSet): VNode {
-    useEffect(() => {
-        document.title = `ドキュメント | ${document.title}`
-    }, [])
-
-    const title = html`ドキュメント`
-
     return html`
         <main class="layout">
             <article class="layout__main">
-                <header class="main__header">
-                    <h1 class="main__title">${title}</h1>
-                    ${h(BreadcrumbList, components)}
-                </header>
-                <section class="main__body container">${h(Content, components)}</section>
+                ${h(Content, components)}
                 ${footer()}
             </article>
             ${menu()}

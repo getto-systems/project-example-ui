@@ -20,12 +20,15 @@ import { initMemoryMenuExpandRepository } from "../../../menu/impl/repository/ex
 import { CategoryLabelsSet } from "../../../menu/infra"
 
 import { markApiNonce, markApiRoles } from "../../../credential/data"
+import { loadDocument } from "../../../content/impl/core"
+import { detectDocumentTarget } from "../../impl/document"
 
 export function newDocumentComponentSetFactoryAsSingle(currentLocation: Location): DocumentFactory {
     const factory = {
         actions: {
             credential: initCredentialAction(),
             menu: initMenuAction(),
+            content: initContentAction(),
         },
         components: {
             menu: initMenu,
@@ -37,6 +40,9 @@ export function newDocumentComponentSetFactoryAsSingle(currentLocation: Location
     const collector = {
         menu: {
             getMenuTarget: () => detectMenuTarget(env.version, currentLocation),
+        },
+        content: {
+            getDocumentTarget: () => detectDocumentTarget(env.version, currentLocation)
         },
     }
     return initDocumentFactoryAsSingle(factory, collector)
@@ -62,5 +68,10 @@ function initMenuAction() {
         loadBreadcrumb: loadBreadcrumb({ tree }),
         loadMenu: loadMenu({ tree, badge, expands }),
         toggleMenuExpand: toggleMenuExpand({ expands }),
+    }
+}
+function initContentAction() {
+    return {
+        loadDocument: loadDocument(),
     }
 }
