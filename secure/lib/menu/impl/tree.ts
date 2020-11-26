@@ -12,4 +12,6 @@ function item(label: string, icon: Icon, path: string): MenuTreeNode {
     return { type: "item", item: { label, icon: iconClass(icon), path } }
 }
 
-export const main: MenuTree = [category("MAIN", any, [item("ホーム", lnir("home"), "/index.html")])]
+export const mainMenuTree: MenuTree = [
+    category("MAIN", any, [item("ホーム", lnir("home"), "/index.html")]),
+]

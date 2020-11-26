@@ -4,4 +4,4 @@ import { newDashboardComponentSetFactoryAsSingle } from "../../Home/dashboard/ma
 
 import { Dashboard } from "../home/dashboard"
 
-render(h(Dashboard, { factory: newDashboardComponentSetFactoryAsSingle() }), document.body)
+render(h(Dashboard, { factory: newDashboardComponentSetFactoryAsSingle(location) }), document.body)

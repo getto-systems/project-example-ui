@@ -7,9 +7,7 @@ export interface LoadBreadcrumb {
 export interface LoadBreadcrumbAction {
     (post: Post<LoadBreadcrumbEvent>): void
 }
-export interface LoadBreadcrumbCollector {
-    getMenuPath(): MenuTarget
-}
+export type LoadBreadcrumbCollector = MenuTargetCollector
 
 export interface LoadMenu {
     (collector: LoadMenuCollector): LoadMenuAction
@@ -17,8 +15,10 @@ export interface LoadMenu {
 export interface LoadMenuAction {
     (nonce: LoadResult<ApiNonce>, roles: LoadResult<ApiRoles>, post: Post<LoadMenuEvent>): void
 }
-export interface LoadMenuCollector {
-    getMenuPath(): MenuTarget
+export type LoadMenuCollector = MenuTargetCollector
+
+export interface MenuTargetCollector {
+    getMenuTarget(): MenuTarget
 }
 
 export interface ToggleMenuExpand {
