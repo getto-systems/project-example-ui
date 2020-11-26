@@ -9,6 +9,6 @@ export function detectMenuTarget(version: string, currentLocation: Location): Me
     return markMenuTarget({
         versioned: true,
         version,
-        currentPath: pathname.replace(versionPrefix, ""),
+        currentPath: pathname.replace(versionPrefix, "/"),
     })
 }

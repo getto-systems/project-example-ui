@@ -219,7 +219,7 @@ function toMenuCategory(category: MenuTreeCategory): MenuCategory {
     return markMenuCategory(category)
 }
 function toMenuItem({ label, icon, path }: MenuTreeItem, version: string): MenuItem {
-    return markMenuItem({ label, icon, href: `/${version}/${path}` })
+    return markMenuItem({ label, icon, href: `/${version}${path}` })
 }
 
 export const toggleMenuExpand = (infra: ToggleMenuExpandInfra): ToggleMenuExpand => () => (
