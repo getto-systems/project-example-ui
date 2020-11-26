@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { DocumentComponentSet } from "../../../Document/document/view"
 import { initialContentState } from "../../../Document/component/content/component"
-import { DocumentPath, DocumentTarget } from "../../../content/data"
+import { DocumentPath } from "../../../content/data"
 
 import { Content_index } from "./content/index"
 import { BreadcrumbList } from "../../system/breadcrumb"
@@ -17,10 +17,11 @@ export function Content(components: DocumentComponentSet): VNode {
         content.onStateChange(setState)
         content.load()
     }, [])
+
     useEffect(() => {
         switch (state.type) {
             case "succeed-to-load":
-                document.title = `${documentTitle(map(state.target))} | ${document.title}`
+                document.title = `${documentTitle(state.path)} | ${document.title}`
                 break
         }
     }, [state])
@@ -32,15 +33,11 @@ export function Content(components: DocumentComponentSet): VNode {
         case "succeed-to-load":
             return html`
                 <header class="main__header">
-                    <h1 class="main__title">${documentTitle(map(state.target))}</h1>
+                    <h1 class="main__title">${documentTitle(state.path)}</h1>
                     ${h(BreadcrumbList, components)}
                 </header>
-                <section class="main__body container">${contentBody(map(state.target))}</section>
+                <section class="main__body container">${contentBody(state.path)}</section>
             `
-    }
-
-    function map(target: DocumentTarget): DocumentPath {
-        return target
     }
 }
 

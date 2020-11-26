@@ -1,4 +1,4 @@
-import { DocumentTarget, LoadDocumentEvent } from "./data";
+import { DocumentPath, LoadDocumentEvent } from "./data";
 
 export interface LoadDocument {
     (collector: LoadDocumentCollector): LoadDocumentAction
@@ -6,10 +6,10 @@ export interface LoadDocument {
 export interface LoadDocumentAction {
     (post: Post<LoadDocumentEvent>): void
 }
-export type LoadDocumentCollector = DocumentTargetCollector
+export type LoadDocumentCollector = DocumentPathCollector
 
-export interface DocumentTargetCollector {
-    getDocumentTarget(): DocumentTarget
+export interface DocumentPathCollector {
+    getDocumentPath(): DocumentPath
 }
 
 interface Post<T> {

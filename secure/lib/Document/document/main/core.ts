@@ -21,7 +21,7 @@ import { CategoryLabelsSet } from "../../../menu/infra"
 
 import { markApiNonce, markApiRoles } from "../../../credential/data"
 import { loadDocument } from "../../../content/impl/core"
-import { detectDocumentTarget } from "../../impl/document"
+import { detectDocumentPath } from "../../impl/document"
 
 export function newDocumentComponentSetFactoryAsSingle(currentLocation: Location): DocumentFactory {
     const factory = {
@@ -42,7 +42,7 @@ export function newDocumentComponentSetFactoryAsSingle(currentLocation: Location
             getMenuTarget: () => detectMenuTarget(env.version, currentLocation),
         },
         content: {
-            getDocumentTarget: () => detectDocumentTarget(env.version, currentLocation)
+            getDocumentPath: () => detectDocumentPath(env.version, currentLocation)
         },
     }
     return initDocumentFactoryAsSingle(factory, collector)

@@ -1,6 +1,6 @@
-import { DocumentTarget, markDocumentTarget } from "../../content/data"
+import { DocumentPath } from "../../content/data"
 
-export function detectDocumentTarget(version: string, currentLocation: Location): DocumentTarget {
+export function detectDocumentPath(version: string, currentLocation: Location): DocumentPath {
     const pathname = new URL(currentLocation.toString()).pathname
     const versionPrefix = `/${version}/`
     if (!pathname.startsWith(versionPrefix)) {
@@ -10,10 +10,10 @@ export function detectDocumentTarget(version: string, currentLocation: Location)
     const path = pathname.replace(versionPrefix, "/")
     switch (path) {
         case "/docs/index.html":
-            return markDocumentTarget(path)
+            return path
         default:
             return defaultDocumentTarget
     }
 }
 
-const defaultDocumentTarget = markDocumentTarget("/docs/index.html")
+const defaultDocumentTarget = "/docs/index.html"
