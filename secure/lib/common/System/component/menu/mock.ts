@@ -1,4 +1,4 @@
-import { lnir, iconClass } from "../../../z_external/icon"
+import { lnir, iconClass } from "../../../../z_external/icon"
 
 import { MenuComponent, MenuState } from "./component"
 

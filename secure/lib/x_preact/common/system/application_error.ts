@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { fullScreenError } from "../layout"
+import { fullScreenError } from "../../layout"
 
 type Props = {
     err: string

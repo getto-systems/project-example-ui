@@ -1,4 +1,4 @@
-import { env } from "../../../y_static/env"
+import { env } from "../../../../y_static/env"
 
 import { initSeason } from "../../../System/component/season/impl"
 import { initMenu } from "../../../System/component/menu/impl"

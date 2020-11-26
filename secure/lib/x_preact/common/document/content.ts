@@ -2,11 +2,11 @@ import { h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { BreadcrumbList } from "../../system/breadcrumb"
+import { BreadcrumbList } from "../system/breadcrumb"
 
-import { DocumentComponentSet } from "../../../Document/document/view"
-import { initialContentState } from "../../../Document/component/content/component"
-import { DocumentPath } from "../../../content/data"
+import { DocumentComponentSet } from "../../../common/Document/document/view"
+import { initialContentState } from "../../../common/Document/component/content/component"
+import { DocumentPath } from "../../../common/content/data"
 
 import { content_index } from "./content/index"
 import { content_server } from "./content/server"

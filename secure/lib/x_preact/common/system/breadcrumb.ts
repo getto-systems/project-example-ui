@@ -2,9 +2,12 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { BreadcrumbComponent, initialBreadcrumbState } from "../../System/component/breadcrumb/component"
+import {
+    BreadcrumbComponent,
+    initialBreadcrumbState,
+} from "../../../common/System/component/breadcrumb/component"
 
-import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../menu/data"
+import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../../common/menu/data"
 
 type Props = Readonly<{
     breadcrumb: BreadcrumbComponent
