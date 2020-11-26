@@ -70,12 +70,12 @@ function toBreadcrumb({ tree, menuTarget }: BreadcrumbInfo): Breadcrumb {
                 return breadcrumbItem(node.item)
         }
     }
-    function breadcrumbCategory(category: MenuTreeCategory, tree: MenuTree): BreadcrumbNode[] {
-        const breadcrumb = treeToBreadcrumb(tree)
+    function breadcrumbCategory(category: MenuTreeCategory, children: MenuTree): BreadcrumbNode[] {
+        const breadcrumb = treeToBreadcrumb(children)
         if (breadcrumb.length === 0) {
             return EMPTY_BREADCRUMB
         }
-        return [{ type: "category", category: toMenuCategory(category), ...breadcrumb }]
+        return [{ type: "category", category: toMenuCategory(category) }, ...breadcrumb]
     }
     function breadcrumbItem(item: MenuTreeItem): BreadcrumbNode[] {
         if (item.path !== currentPath) {
