@@ -7,7 +7,7 @@ export function box(title: string, content: VNode): VNode {
 export function box_double(title: string, content: VNode): VNode {
     return box_content("box_double", title, content)
 }
-export function box_content(boxClass: string, title: string, content: VNode): VNode {
+function box_content(boxClass: string, title: string, content: VNode): VNode {
     return html`<section class="box ${boxClass}">
         <div>
             <header class="box__header">
@@ -19,5 +19,11 @@ export function box_content(boxClass: string, title: string, content: VNode): VN
 }
 
 export function v_small(): VNode {
-    return html`<div class="vertical vertical_small"></div>`
+    return vertical("vertical_small")
+}
+export function v_medium(): VNode {
+    return vertical("vertical_medium")
+}
+function vertical(verticalClass: string): VNode {
+    return html`<div class="vertical ${verticalClass}"></div>`
 }

@@ -9,6 +9,10 @@ import { initialContentState } from "../../../Document/component/content/compone
 import { DocumentPath } from "../../../content/data"
 
 import { content_index } from "./content/index"
+import { content_server } from "./content/server"
+import { content_detail_server } from "./content/detail/server"
+import { content_auth } from "./content/auth"
+import { content_detail_auth } from "./content/detail/auth"
 
 export function Content(components: DocumentComponentSet): VNode {
     const content = components.content
@@ -46,12 +50,28 @@ function documentTitle(path: DocumentPath): string {
     switch (path) {
         case "/docs/index.html":
             return "ドキュメント"
+        case "/docs/server.html":
+            return "サーバー構成"
+        case "/docs/detail/server.html":
+            return "サーバー構成詳細"
+        case "/docs/auth.html":
+            return "認証・認可"
+        case "/docs/detail/auth.html":
+            return "認証・認可詳細"
     }
 }
 function contentBody(path: DocumentPath): VNode {
     switch (path) {
         case "/docs/index.html":
             return content_index()
+        case "/docs/server.html":
+            return content_server()
+        case "/docs/detail/server.html":
+            return content_detail_server()
+        case "/docs/auth.html":
+            return content_auth()
+        case "/docs/detail/auth.html":
+            return content_detail_auth()
     }
 }
 

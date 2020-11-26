@@ -8,16 +8,37 @@ module.exports = {
             {
                 type: "x_preact/x_main",
                 suffix: "",
-                names: ["index", "docs/index"],
+                names: ["index"],
+                aliases: [
+                    {
+                        path: "docs",
+                        names: [
+                            "docs/index",
+                            "docs/server",
+                            "docs/detail/server",
+                            "docs/auth",
+                            "docs/detail/auth",
+                        ],
+                    },
+                ],
             },
             {
                 type: "x_worker/x_main",
                 suffix: ".worker",
                 names: [],
+                aliases: [],
             },
         ].reduce((acc, info) => {
             info.names.forEach((name) => {
                 acc[`${name}${info.suffix}`] = path.join(__dirname, `../lib/${info.type}/${name}.ts`)
+            })
+            info.aliases.forEach((entry) => {
+                entry.names.forEach((name) => {
+                    acc[`${name}${info.suffix}`] = path.join(
+                        __dirname,
+                        `../lib/${info.type}/${entry.path}.ts`
+                    )
+                })
             })
             return acc
         }, {})
