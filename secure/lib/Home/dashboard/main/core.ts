@@ -20,17 +20,19 @@ import { initMemoryApiCredentialRepository } from "../../../credential/impl/repo
 import { initMemorySeasonRepository } from "../../../season/impl/repository/season/memory"
 import { initDateYearRepository } from "../../../season/impl/repository/year/date"
 import { initSimulateBadgeClient } from "../../../menu/impl/client/badge/simulate"
-import { initMemoryMenuExpandRepository } from "../../../menu/impl/repository/expand/memory"
-import { CategoryLabelsSet } from "../../../menu/infra"
+import { initStorageMenuExpandRepository } from "../../../menu/impl/repository/expand/storage"
 
 import { markSeason } from "../../../season/data"
 import { markApiNonce, markApiRoles } from "../../../credential/data"
 
-export function newDashboardComponentSetFactoryAsSingle(currentLocation: Location): DashboardFactory {
+export function newDashboardAsSingle(
+    menuExpandStorage: Storage,
+    currentLocation: Location
+): DashboardFactory {
     const factory = {
         actions: {
             credential: initCredentialAction(),
-            menu: initMenuAction(),
+            menu: initMenuAction(menuExpandStorage),
             season: initSeasonAction(),
         },
         components: {
@@ -60,10 +62,10 @@ function initCredentialAction() {
         loadApiRoles: loadApiRoles({ apiCredentials }),
     }
 }
-function initMenuAction() {
+function initMenuAction(menuExpandStorage: Storage) {
     const tree = mainMenuTree
     const badge = initSimulateBadgeClient({})
-    const expands = initMemoryMenuExpandRepository(new CategoryLabelsSet())
+    const expands = initStorageMenuExpandRepository(menuExpandStorage, env.storageKey.menuExpand.main)
 
     return {
         loadBreadcrumb: loadBreadcrumb({ tree }),

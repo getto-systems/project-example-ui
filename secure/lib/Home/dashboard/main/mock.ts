@@ -6,7 +6,7 @@ import { newExampleComponent } from "../../component/example/mock"
 
 import { DashboardFactory } from "../view"
 
-export function newDashboardComponentSetFactory(): DashboardFactory {
+export function newDashboard(): DashboardFactory {
     return () => {
         return {
             components: {
