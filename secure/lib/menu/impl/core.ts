@@ -8,7 +8,7 @@ import {
     MenuTreeCategory,
     MenuTreeItem,
     ToggleMenuExpandInfra,
-    CategoryLabelsArraySet,
+    CategoryLabelsSet,
 } from "../infra"
 
 import { LoadBreadcrumb, LoadMenu, ToggleMenuExpand } from "../action"
@@ -280,7 +280,7 @@ export const toggleMenuExpand = (infra: ToggleMenuExpandInfra): ToggleMenuExpand
     }
 }
 
-const EMPTY_EXPAND: MenuExpand = new CategoryLabelsArraySet()
+const EMPTY_EXPAND: MenuExpand = new CategoryLabelsSet()
 const EMPTY_BADGE: MenuBadge = {}
 
 const EMPTY_BREADCRUMB: Breadcrumb = []

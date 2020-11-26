@@ -13,5 +13,15 @@ function item(label: string, icon: Icon, path: string): MenuTreeNode {
 }
 
 export const mainMenuTree: MenuTree = [
-    category("MAIN", any, [item("ホーム", lnir("home"), "/index.html")]),
+    category("MAIN", any, [
+        item("ホーム", lnir("home"), "/index.html"),
+        item("ドキュメント", lnir("files-alt"), "/docs/index.html"),
+    ]),
+]
+
+export const documentMenuTree: MenuTree = [
+    category("MAIN", any, [
+        item("ホーム", lnir("home"), "/index.html"),
+        item("ドキュメント", lnir("files-alt"), "/docs/index.html"),
+    ]),
 ]

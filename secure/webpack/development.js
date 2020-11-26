@@ -8,7 +8,7 @@ module.exports = {
             {
                 type: "x_preact/x_main",
                 suffix: "",
-                names: ["index"],
+                names: ["index", "docs/index"],
             },
             {
                 type: "x_worker/x_main",
