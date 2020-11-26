@@ -2,7 +2,7 @@ import { ExampleActionSet, ExampleComponent, ExampleState } from "./component"
 
 import { LoadSeasonEvent } from "../../../season/data"
 
-export function initSeason(actions: ExampleActionSet): ExampleComponent {
+export function initExample(actions: ExampleActionSet): ExampleComponent {
     return new Component(actions)
 }
 

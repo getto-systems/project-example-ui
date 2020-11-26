@@ -35,7 +35,7 @@ export const loadBreadcrumb = (infra: LoadBreadcrumbInfra): LoadBreadcrumb => (c
         type: "succeed-to-load",
         breadcrumb: toBreadcrumb({
             tree,
-            menuTarget: collector.getMenuPath(),
+            menuTarget: collector.getMenuTarget(),
         }),
     })
 }
@@ -95,7 +95,7 @@ export const loadMenu = (infra: LoadMenuInfra): LoadMenu => (collector) => async
     const info: MenuInfo = {
         tree,
         roles,
-        menuTarget: collector.getMenuPath(),
+        menuTarget: collector.getMenuTarget(),
     }
 
     const expandResponse = expands.findExpand()

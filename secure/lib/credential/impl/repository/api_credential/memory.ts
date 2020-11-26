@@ -2,7 +2,7 @@ import { ApiCredentialRepository } from "../../../infra"
 
 import { ApiNonce, ApiRoles, LoadResult } from "../../../data"
 
-export function initMemoryAuthCredentialRepository(
+export function initMemoryApiCredentialRepository(
     apiNonce: ApiNonce,
     apiRoles: ApiRoles
 ): ApiCredentialRepository {

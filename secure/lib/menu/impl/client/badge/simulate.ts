@@ -2,7 +2,7 @@ import { MenuBadgeClient, MenuBadgeResponse, MenuBadge } from "../../../infra"
 
 import { ApiNonce } from "../../../../credential/data"
 
-export function initSimulateRenewClient(badge: MenuBadge): MenuBadgeClient {
+export function initSimulateBadgeClient(badge: MenuBadge): MenuBadgeClient {
     return new SimulateMenuBadgeClient(badge)
 }
 

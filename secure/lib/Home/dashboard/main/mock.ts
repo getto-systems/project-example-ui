@@ -4,9 +4,9 @@ import { newSeasonComponent } from "../../../System/component/season/mock"
 
 import { newExampleComponent } from "../../component/example/mock"
 
-import { DashboardResource } from "../view"
+import { DashboardFactory } from "../view"
 
-export function newDashboardComponentSetFactory(): Factory<DashboardResource> {
+export function newDashboardComponentSetFactory(): DashboardFactory {
     return () => {
         return {
             components: {
@@ -20,8 +20,4 @@ export function newDashboardComponentSetFactory(): Factory<DashboardResource> {
             }
         }
     }
-}
-
-interface Factory<T> {
-    (): T
 }

@@ -1,12 +1,81 @@
-import { DashboardResource } from "../view"
+import { env } from "../../../y_static/env"
 
-// TODO 実装する
-import { newDashboardComponentSetFactory } from "./mock"
+import { initSeason } from "../../../System/component/season/impl"
+import { initMenu } from "../../../System/component/menu/impl"
+import { initBreadcrumb } from "../../../System/component/breadcrumb/impl"
+import { initExample } from "../../component/example/impl"
 
-export function newDashboardComponentSetFactoryAsSingle(): Factory<DashboardResource> {
-    return newDashboardComponentSetFactory()
+import { detectMenuTarget } from "../../../System/impl/menu"
+
+import { loadApiNonce, loadApiRoles } from "../../../credential/impl/core"
+import { mainMenuTree } from "../../../menu/impl/tree"
+
+import { initDashboardFactoryAsSingle } from "../impl/single"
+
+import { DashboardFactory } from "../view"
+import { loadSeason } from "../../../season/impl/core"
+import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../menu/impl/core"
+
+import { initMemoryApiCredentialRepository } from "../../../credential/impl/repository/api_credential/memory"
+import { initMemorySeasonRepository } from "../../../season/impl/repository/season/memory"
+import { initDateYearRepository } from "../../../season/impl/repository/year/date"
+import { initSimulateBadgeClient } from "../../../menu/impl/client/badge/simulate"
+import { initMemoryMenuExpandRepository } from "../../../menu/impl/repository/expand/memory"
+import { CategoryLabelsArraySet } from "../../../menu/infra"
+
+import { markSeason } from "../../../season/data"
+import { markApiNonce, markApiRoles } from "../../../credential/data"
+
+export function newDashboardComponentSetFactoryAsSingle(currentLocation: Location): DashboardFactory {
+    const factory = {
+        actions: {
+            credential: initCredentialAction(),
+            menu: initMenuAction(),
+            season: initSeasonAction(),
+        },
+        components: {
+            season: initSeason,
+            menu: initMenu,
+            breadcrumb: initBreadcrumb,
+
+            example: initExample,
+        },
+    }
+    const collector = {
+        menu: {
+            getMenuTarget: () => detectMenuTarget(env.version, currentLocation),
+        },
+    }
+    return initDashboardFactoryAsSingle(factory, collector)
 }
 
-interface Factory<T> {
-    (): T
+function initCredentialAction() {
+    const apiCredentials = initMemoryApiCredentialRepository(
+        markApiNonce("api-nonce"),
+        markApiRoles(["admin"])
+    )
+
+    return {
+        loadApiNonce: loadApiNonce({ apiCredentials }),
+        loadApiRoles: loadApiRoles({ apiCredentials }),
+    }
+}
+function initMenuAction() {
+    const tree = mainMenuTree
+    const badge = initSimulateBadgeClient({})
+    const expands = initMemoryMenuExpandRepository(new CategoryLabelsArraySet())
+
+    return {
+        loadBreadcrumb: loadBreadcrumb({ tree }),
+        loadMenu: loadMenu({ tree, badge, expands }),
+        toggleMenuExpand: toggleMenuExpand({ expands }),
+    }
+}
+function initSeasonAction() {
+    return {
+        loadSeason: loadSeason({
+            seasons: initMemorySeasonRepository(markSeason({ year: new Date().getFullYear() })),
+            years: initDateYearRepository(new Date()),
+        }),
+    }
 }
