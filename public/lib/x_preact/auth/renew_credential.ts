@@ -30,16 +30,22 @@ export function RenewCredential({ components: { renewCredential } }: Props): VNo
                     script.onload = () => {
                         renewCredential.succeedToInstantLoad()
                     }
-                    script.onerror = (err) => {
-                        renewCredential.loadError({ type: "infra-error", err: `${err}` })
+                    script.onerror = () => {
+                        renewCredential.loadError({
+                            type: "infra-error",
+                            err: `スクリプトのロードに失敗しました: ${state.type}`,
+                        })
                     }
                 })
                 break
 
             case "succeed-to-renew":
                 appendScript(state.scriptPath, (script) => {
-                    script.onerror = (err) => {
-                        renewCredential.loadError({ type: "infra-error", err: `${err}` })
+                    script.onerror = () => {
+                        renewCredential.loadError({
+                            type: "infra-error",
+                            err: `スクリプトのロードに失敗しました: ${state.type}`,
+                        })
                     }
                 })
                 break

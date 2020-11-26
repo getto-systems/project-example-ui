@@ -33,8 +33,11 @@ export function PasswordReset({
         switch (state.type) {
             case "succeed-to-reset":
                 appendScript(state.scriptPath, (script) => {
-                    script.onerror = (err) => {
-                        passwordReset.loadError({ type: "infra-error", err: `${err}` })
+                    script.onerror = () => {
+                        passwordReset.loadError({
+                            type: "infra-error",
+                            err: `スクリプトのロードに失敗しました: ${state.type}`,
+                        })
                     }
                 })
                 break
