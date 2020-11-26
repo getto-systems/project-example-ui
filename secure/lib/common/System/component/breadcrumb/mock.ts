@@ -1,4 +1,4 @@
-import { iconClass, lnir } from "../../../z_external/icon"
+import { iconClass, lnir } from "../../../../z_external/icon"
 
 import { BreadcrumbComponent, BreadcrumbState } from "./component"
 

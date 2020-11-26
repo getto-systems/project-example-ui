@@ -1,4 +1,4 @@
-import { env } from "../../../y_static/env"
+import { env } from "../../../../y_static/env"
 
 import { initMenu } from "../../../System/component/menu/impl"
 import { initBreadcrumb } from "../../../System/component/breadcrumb/impl"

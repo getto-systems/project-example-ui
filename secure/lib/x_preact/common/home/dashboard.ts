@@ -2,10 +2,10 @@ import { h, VNode } from "preact"
 import { useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useComponentSet } from "../container"
+import { useComponentSet } from "../../container"
+import { footer, menuHeader, menuFooter } from "../../layout"
 
 import { ApplicationError } from "../system/application_error"
-import { footer, menuHeader, menuFooter } from "../layout"
 
 import { SeasonInfo } from "../system/season"
 import { MenuList } from "../system/menu"
@@ -13,7 +13,7 @@ import { BreadcrumbList } from "../system/breadcrumb"
 
 import { Example } from "./dashboard/example"
 
-import { DashboardComponentSet, DashboardFactory } from "../../Home/dashboard/view"
+import { DashboardComponentSet, DashboardFactory } from "../../../common/Home/dashboard/view"
 
 type Props = {
     factory: DashboardFactory

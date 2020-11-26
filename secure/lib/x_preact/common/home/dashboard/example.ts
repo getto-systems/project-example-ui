@@ -2,9 +2,12 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { ExampleComponent, initialExampleState } from "../../../Home/component/example/component"
+import {
+    ExampleComponent,
+    initialExampleState,
+} from "../../../../common/Home/component/example/component"
 
-import { Season, SeasonError } from "../../../season/data"
+import { Season, SeasonError } from "../../../../common/season/data"
 
 type Props = Readonly<{
     example: ExampleComponent

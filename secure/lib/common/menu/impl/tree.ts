@@ -1,4 +1,4 @@
-import { Icon, iconClass, lnir } from "../../z_external/icon"
+import { Icon, iconClass, lnir } from "../../../z_external/icon"
 
 import { MenuPermission, MenuTree, MenuTreeNode } from "../infra"
 

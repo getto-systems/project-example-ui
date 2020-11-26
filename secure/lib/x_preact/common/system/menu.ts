@@ -2,9 +2,9 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { MenuComponent, initialMenuState } from "../../System/component/menu/component"
+import { MenuComponent, initialMenuState } from "../../../common/System/component/menu/component"
 
-import { Menu, MenuNode, MenuCategory, MenuItem, LoadMenuError } from "../../menu/data"
+import { Menu, MenuNode, MenuCategory, MenuItem, LoadMenuError } from "../../../common/menu/data"
 
 type Props = Readonly<{
     menu: MenuComponent
@@ -40,13 +40,10 @@ export function MenuList({ menu }: Props): VNode {
         function toNode(node: MenuNode, categoryLabels: string[]): VNode {
             switch (node.type) {
                 case "category":
-                    return menuCategory(
-                        node.category,
-                        node.children,
-                        node.badgeCount,
-                        node.isExpand,
-                        [...categoryLabels, node.category.label]
-                    )
+                    return menuCategory(node.category, node.children, node.badgeCount, node.isExpand, [
+                        ...categoryLabels,
+                        node.category.label,
+                    ])
 
                 case "item":
                     return menuItem(node.item, node.badgeCount, node.isActive)

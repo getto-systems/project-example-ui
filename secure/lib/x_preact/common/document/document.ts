@@ -2,16 +2,16 @@ import { h, VNode } from "preact"
 import { useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useComponentSet } from "../container"
+import { useComponentSet } from "../../container"
+import { footer, menuHeader, menuFooter } from "../../layout"
 
 import { ApplicationError } from "../system/application_error"
-import { footer, menuHeader, menuFooter } from "../layout"
 
 import { MenuList } from "../system/menu"
 
-import { Content } from "./document/content"
+import { Content } from "./content"
 
-import { DocumentComponentSet, DocumentFactory } from "../../Document/document/view"
+import { DocumentComponentSet, DocumentFactory } from "../../../common/Document/document/view"
 
 type Props = {
     factory: DocumentFactory
