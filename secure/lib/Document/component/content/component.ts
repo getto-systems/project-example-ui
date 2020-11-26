@@ -1,5 +1,5 @@
 import { LoadDocumentAction } from "../../../content/action"
-import { DocumentTarget } from "../../../content/data"
+import { DocumentPath } from "../../../content/data"
 
 export interface ContentComponentFactory {
     (actions: ContentActionSet): ContentComponent
@@ -15,7 +15,7 @@ export interface ContentComponent {
 
 export type ContentState =
     | Readonly<{ type: "initial-content" }>
-    | Readonly<{ type: "succeed-to-load"; target: DocumentTarget }>
+    | Readonly<{ type: "succeed-to-load"; path: DocumentPath }>
 
 export const initialContentState: ContentState = { type: "initial-content" }
 
