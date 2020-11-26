@@ -20,6 +20,10 @@ class Component implements ContentComponent {
     onStateChange(post: Post<ContentState>): void {
         post(this.state)
     }
+
+    load(): void {
+        // mock ではなにもしない
+    }
 }
 
 interface Post<T> {

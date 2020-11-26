@@ -6,9 +6,9 @@ import { BreadcrumbComponentFactory } from "../../../System/component/breadcrumb
 import { ContentComponentFactory } from "../../component/content/component"
 
 import { LoadApiNonce, LoadApiRoles } from "../../../credential/action"
-import { LoadBreadcrumb, LoadMenu, ToggleMenuExpand } from "../../../menu/action"
+import { LoadBreadcrumb, LoadMenu, MenuTargetCollector, ToggleMenuExpand } from "../../../menu/action"
 
-import { MenuTarget } from "../../../menu/data"
+import { DocumentTargetCollector, LoadDocument } from "../../../content/action"
 
 export type DocumentFactorySet = Readonly<{
     actions: Readonly<{
@@ -21,6 +21,9 @@ export type DocumentFactorySet = Readonly<{
             loadMenu: LoadMenu
             toggleMenuExpand: ToggleMenuExpand
         }>
+        content: Readonly<{
+            loadDocument: LoadDocument
+        }>
     }>
     components: Readonly<{
         menu: MenuComponentFactory
@@ -30,9 +33,8 @@ export type DocumentFactorySet = Readonly<{
     }>
 }>
 export type DocumentCollectorSet = Readonly<{
-    menu: {
-        getMenuTarget(): MenuTarget
-    }
+    menu: MenuTargetCollector
+    content: DocumentTargetCollector
 }>
 export function initDocumentComponentSet(
     factory: DocumentFactorySet,
@@ -45,11 +47,13 @@ export function initDocumentComponentSet(
         loadBreadcrumb: factory.actions.menu.loadBreadcrumb(collector.menu),
         loadMenu: factory.actions.menu.loadMenu(collector.menu),
         toggleMenuExpand: factory.actions.menu.toggleMenuExpand(),
+
+        loadDocument: factory.actions.content.loadDocument(collector.content),
     }
     return {
         menu: factory.components.menu(actions),
         breadcrumb: factory.components.breadcrumb(actions),
 
-        content: factory.components.content(),
+        content: factory.components.content(actions),
     }
 }
