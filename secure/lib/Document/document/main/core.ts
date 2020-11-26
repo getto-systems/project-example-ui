@@ -16,18 +16,20 @@ import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../menu/impl/c
 
 import { initMemoryApiCredentialRepository } from "../../../credential/impl/repository/api_credential/memory"
 import { initNoopBadgeClient } from "../../../menu/impl/client/badge/noop"
-import { initMemoryMenuExpandRepository } from "../../../menu/impl/repository/expand/memory"
-import { CategoryLabelsSet } from "../../../menu/infra"
+import { initStorageMenuExpandRepository } from "../../../menu/impl/repository/expand/storage"
 
 import { markApiNonce, markApiRoles } from "../../../credential/data"
 import { loadDocument } from "../../../content/impl/core"
 import { detectDocumentPath } from "../../impl/document"
 
-export function newDocumentComponentSetFactoryAsSingle(currentLocation: Location): DocumentFactory {
+export function newDocumentComponentSetFactoryAsSingle(
+    menuExpandStorage: Storage,
+    currentLocation: Location
+): DocumentFactory {
     const factory = {
         actions: {
             credential: initCredentialAction(),
-            menu: initMenuAction(),
+            menu: initMenuAction(menuExpandStorage),
             content: initContentAction(),
         },
         components: {
@@ -59,10 +61,13 @@ function initCredentialAction() {
         loadApiRoles: loadApiRoles({ apiCredentials }),
     }
 }
-function initMenuAction() {
+function initMenuAction(menuExpandStorage: Storage) {
     const tree = documentMenuTree
     const badge = initNoopBadgeClient()
-    const expands = initMemoryMenuExpandRepository(new CategoryLabelsSet())
+    const expands = initStorageMenuExpandRepository(
+        menuExpandStorage,
+        env.storageKey.menuExpand.document
+    )
 
     return {
         loadBreadcrumb: loadBreadcrumb({ tree }),

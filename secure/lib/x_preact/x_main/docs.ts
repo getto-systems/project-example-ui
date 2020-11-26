@@ -4,4 +4,7 @@ import { newDocumentComponentSetFactoryAsSingle } from "../../Document/document/
 
 import { Document } from "../document/document"
 
-render(h(Document, { factory: newDocumentComponentSetFactoryAsSingle(location) }), document.body)
+render(
+    h(Document, { factory: newDocumentComponentSetFactoryAsSingle(localStorage, location) }),
+    document.body
+)

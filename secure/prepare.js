@@ -16,6 +16,10 @@ const env = {
 
   storageKey: {
     apiCredential: process.env.STORAGE_KEY_API_CREDENTIAL,
+    menuExpand: {
+        main: process.env.STORAGE_KEY_MENU_EXPAND_MAIN,
+        document: process.env.STORAGE_KEY_MENU_EXPAND_DOCUMENT,
+    },
   },
 };
 

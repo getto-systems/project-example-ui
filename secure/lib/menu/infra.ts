@@ -45,6 +45,9 @@ class ArraySet<T> {
         this.equals = equals
     }
 
+    restore(set: T[]): void {
+        this.set = set
+    }
     register(entry: T): void {
         if (this.hasEntry(entry)) {
             return
