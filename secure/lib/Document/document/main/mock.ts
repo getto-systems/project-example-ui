@@ -5,7 +5,7 @@ import { newContentComponent } from "../../component/content/mock"
 
 import { DocumentFactory } from "../view"
 
-export function newDocumentComponentSetFactory(): DocumentFactory {
+export function newDocument(): DocumentFactory {
     return () => {
         return {
             components: {

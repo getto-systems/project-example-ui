@@ -22,7 +22,7 @@ import { markApiNonce, markApiRoles } from "../../../credential/data"
 import { loadDocument } from "../../../content/impl/core"
 import { detectDocumentPath } from "../../impl/document"
 
-export function newDocumentComponentSetFactoryAsSingle(
+export function newDocumentAsSingle(
     menuExpandStorage: Storage,
     currentLocation: Location
 ): DocumentFactory {

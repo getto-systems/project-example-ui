@@ -1,10 +1,10 @@
 import { render, h } from "preact"
 
-import { newDocumentComponentSetFactoryAsSingle } from "../../Document/document/main/core"
+import { newDocumentAsSingle } from "../../Document/document/main/core"
 
 import { Document } from "../document/document"
 
 render(
-    h(Document, { factory: newDocumentComponentSetFactoryAsSingle(localStorage, location) }),
+    h(Document, { factory: newDocumentAsSingle(localStorage, location) }),
     document.body
 )
