@@ -42,7 +42,7 @@ export function newDocumentComponentSetFactoryAsSingle(currentLocation: Location
             getMenuTarget: () => detectMenuTarget(env.version, currentLocation),
         },
         content: {
-            getDocumentPath: () => detectDocumentPath(env.version, currentLocation)
+            getDocumentPath: () => detectDocumentPath(env.version, currentLocation),
         },
     }
     return initDocumentFactoryAsSingle(factory, collector)
@@ -51,7 +51,7 @@ export function newDocumentComponentSetFactoryAsSingle(currentLocation: Location
 function initCredentialAction() {
     const apiCredentials = initMemoryApiCredentialRepository(
         markApiNonce("api-nonce"),
-        markApiRoles(["admin"])
+        markApiRoles(["development-docs"])
     )
 
     return {

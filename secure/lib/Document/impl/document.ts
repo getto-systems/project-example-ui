@@ -10,6 +10,10 @@ export function detectDocumentPath(version: string, currentLocation: Location): 
     const path = pathname.replace(versionPrefix, "/")
     switch (path) {
         case "/docs/index.html":
+        case "/docs/server.html":
+            case "/docs/detail/server.html":
+        case "/docs/auth.html":
+        case "/docs/detail/auth.html":
             return path
         default:
             return defaultDocumentTarget
