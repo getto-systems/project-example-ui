@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { html } from "htm/preact"
 import { box, box_double, v_small } from "../box"
 
-export function Content_index(): VNode {
+export function content_index(): VNode {
     return html`
         ${box_double(
             "GETTO Example のゴール",
@@ -14,7 +14,7 @@ export function Content_index(): VNode {
         )}
         ${box_double(
             "Web アプリケーションのゴール",
-            html`<p>ストレスなく使用できて、ドメインのゴールの達成を支援する</p>`
+            html`<p>ストレスなく使用できて、ドメインのゴール達成を支援する</p>`
         )}
         ${box("認証・認可のゴール", html`<p>ストレスなく使用できて、セキュア</p>`)}
     `

@@ -2,12 +2,13 @@ import { h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { BreadcrumbList } from "../../system/breadcrumb"
+
 import { DocumentComponentSet } from "../../../Document/document/view"
 import { initialContentState } from "../../../Document/component/content/component"
 import { DocumentPath } from "../../../content/data"
 
-import { Content_index } from "./content/index"
-import { BreadcrumbList } from "../../system/breadcrumb"
+import { content_index } from "./content/index"
 
 export function Content(components: DocumentComponentSet): VNode {
     const content = components.content
@@ -50,7 +51,7 @@ function documentTitle(path: DocumentPath): string {
 function contentBody(path: DocumentPath): VNode {
     switch (path) {
         case "/docs/index.html":
-            return Content_index()
+            return content_index()
     }
 }
 
