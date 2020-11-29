@@ -5,19 +5,19 @@ import { html } from "htm/preact"
 import { useComponentSet } from "../../container"
 import { footer, menuHeader, menuFooter } from "../../layout"
 
-import { ApplicationError } from "../system/application_error"
+import { ApplicationError } from "../System/application_error"
 
-import { SeasonInfo } from "../system/season"
-import { MenuList } from "../system/menu"
-import { BreadcrumbList } from "../system/breadcrumb"
+import { SeasonInfo } from "../System/season"
+import { MenuList } from "../System/menu"
+import { BreadcrumbList } from "../System/breadcrumb"
 
-import { Example } from "./dashboard/example"
+import { Example } from "./example"
 
 import { DashboardComponentSet, DashboardFactory } from "../../../common/Home/Dashboard/view"
 
-type Props = {
+type Props = Readonly<{
     factory: DashboardFactory
-}
+}>
 export function Dashboard({ factory }: Props): VNode {
     const [err, _resetError] = useErrorBoundary((err) => {
         // TODO ここでエラーをどこかに投げたい。apiCredential が有効なはずなので、api にエラーを投げられるはず

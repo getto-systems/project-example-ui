@@ -5,9 +5,9 @@ import { html } from "htm/preact"
 import { useComponentSet } from "../../container"
 import { footer, menuHeader, menuFooter } from "../../layout"
 
-import { ApplicationError } from "../system/application_error"
+import { ApplicationError } from "../System/application_error"
 
-import { MenuList } from "../system/menu"
+import { MenuList } from "../System/menu"
 
 import { Content } from "./content"
 
