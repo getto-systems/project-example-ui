@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import {
     BreadcrumbComponent,
     initialBreadcrumbState,
-} from "../../../common/System/component/breadcrumb/component"
+} from "../../../common/Outline/breadcrumb/component"
 
 import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../../common/menu/data"
 

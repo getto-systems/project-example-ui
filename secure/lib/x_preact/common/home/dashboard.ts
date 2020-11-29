@@ -13,7 +13,7 @@ import { BreadcrumbList } from "../system/breadcrumb"
 
 import { Example } from "./dashboard/example"
 
-import { DashboardComponentSet, DashboardFactory } from "../../../common/Home/dashboard/view"
+import { DashboardComponentSet, DashboardFactory } from "../../../common/Home/Dashboard/view"
 
 type Props = {
     factory: DashboardFactory

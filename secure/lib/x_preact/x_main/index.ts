@@ -1,6 +1,6 @@
 import { render, h } from "preact"
 
-import { newDashboardAsSingle } from "../../common/Home/dashboard/main/core"
+import { newDashboardAsSingle } from "../../common/Home/Dashboard/main"
 
 import { Dashboard } from "../common/home/dashboard"
 

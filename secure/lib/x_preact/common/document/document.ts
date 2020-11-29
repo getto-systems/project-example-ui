@@ -11,7 +11,7 @@ import { MenuList } from "../system/menu"
 
 import { Content } from "./content"
 
-import { DocumentComponentSet, DocumentFactory } from "../../../common/Document/document/view"
+import { DocumentComponentSet, DocumentFactory } from "../../../common/Document/Document/view"
 
 type Props = {
     factory: DocumentFactory

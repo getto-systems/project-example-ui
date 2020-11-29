@@ -5,8 +5,8 @@ import { html } from "htm/preact"
 import { VNodeContent } from "../../layout"
 import { BreadcrumbList } from "../system/breadcrumb"
 
-import { DocumentComponentSet } from "../../../common/Document/document/view"
-import { initialContentState } from "../../../common/Document/component/content/component"
+import { DocumentComponentSet } from "../../../common/Document/Document/view"
+import { initialContentState } from "../../../common/Document/content/component"
 import { DocumentPath } from "../../../common/content/data"
 
 import { content_index } from "./content/index"

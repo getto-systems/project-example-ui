@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { notice_alert, v_small } from "../../layout"
 
-import { MenuComponent, initialMenuState } from "../../../common/System/component/menu/component"
+import { MenuComponent, initialMenuState } from "../../../common/Outline/menu/component"
 
 import { Menu, MenuNode, MenuCategory, MenuItem, LoadMenuError } from "../../../common/menu/data"
 
