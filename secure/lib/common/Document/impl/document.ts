@@ -11,7 +11,7 @@ export function detectDocumentPath(version: string, currentLocation: Location): 
     switch (path) {
         case "/docs/index.html":
         case "/docs/server.html":
-            case "/docs/detail/server.html":
+        case "/docs/detail/server.html":
         case "/docs/auth.html":
         case "/docs/detail/auth.html":
             return path
