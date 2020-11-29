@@ -1,16 +1,21 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-const brand = "GETTO"
-const title = "Example"
-const subTitle = "code templates"
+export type VNodeContent = VNodeEntry | VNodeEntry[]
+type VNodeEntry = string | VNode
+
+const application = {
+    brand: "GETTO",
+    title: "Example",
+    subTitle: "code templates",
+}
 
 export function menuHeader(): VNode {
     return html`
         <header class="layout__menu__header menu__header">
-            <cite class="menu__brand">${brand}</cite>
-            <strong class="menu__title">${title}</strong>
-            <cite class="menu__subTitle">${subTitle}</cite>
+            <cite class="menu__brand">${application.brand}</cite>
+            <strong class="menu__title">${application.title}</strong>
+            <cite class="menu__subTitle">${application.subTitle}</cite>
         </header>
     `
 }
@@ -31,14 +36,18 @@ export function footer(): VNode {
     `
 }
 
-export function fullScreenError(title: VNode, content: VNode, footer: VNode): VNode {
+export function fullScreenError(
+    title: VNodeContent,
+    content: VNodeContent,
+    footer: VNodeContent
+): VNode {
     return html`
         <aside class="login">
             <section class="login__box">
                 <header class="login__header">
-                    <cite class="login__brand">${brand}</cite>
-                    <strong class="login__title">${title}</strong>
-                    <cite class="login__subTitle">${subTitle}</cite>
+                    <cite class="login__brand">${application.brand}</cite>
+                    <strong class="login__title">${application.title}</strong>
+                    <cite class="login__subTitle">${application.subTitle}</cite>
                 </header>
                 <section class="login__message">
                     <h3 class="login__message__title">${title}</h3>
