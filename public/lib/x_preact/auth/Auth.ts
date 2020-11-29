@@ -2,21 +2,21 @@ import { h, VNode } from "preact"
 import { useState, useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useView } from "../container"
-import { ApplicationError } from "../system/application_error"
+import { useView } from "../hooks"
+import { ApplicationError } from "../System/ApplicationError"
 
-import { RenewCredential } from "./renew_credential"
+import { RenewCredential } from "./RenewCredential"
 
-import { PasswordLogin } from "./password_login"
-import { PasswordResetSession } from "./password_reset_session"
-import { PasswordReset } from "./password_reset"
+import { PasswordLogin } from "./PasswordLogin"
+import { PasswordResetSession } from "./PasswordResetSession"
+import { PasswordReset } from "./PasswordReset"
 
 import { AuthFactory, AuthView, initialAuthState } from "../../auth/Auth/View/view"
 
 type Props = Readonly<{
     factory: AuthFactory
 }>
-export function Main({ factory }: Props): VNode {
+export function Auth({ factory }: Props): VNode {
     const [err, _resetError] = useErrorBoundary((err) => {
         // ここでエラーをどこかに投げたい、けど認証前なのでこれでお茶を濁す
         console.log(err)

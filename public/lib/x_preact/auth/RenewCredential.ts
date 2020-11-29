@@ -3,9 +3,9 @@ import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { fullScreenError } from "../layout"
-import { appendScript } from "./application"
+import { appendScript } from "./script"
 
-import { ApplicationError } from "../system/application_error"
+import { ApplicationError } from "../System/ApplicationError"
 
 import { RenewCredentialComponentSet } from "../../auth/Auth/View/view"
 import { initialRenewCredentialState } from "../../auth/Auth/renew_credential/component"

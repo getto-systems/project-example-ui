@@ -41,13 +41,9 @@ import { AuthFactory } from "./view"
 import { markTicketNonce, markAuthAt, markApiCredential } from "../../credential/data"
 import { markLoginID } from "../../login_id/data"
 
-export type AuthViewProps = Readonly<{
-    credentialStorage: Storage
-    currentLocation: Location
-}>
-
-export function newAuthViewFactoryAsSingle(props: AuthViewProps): AuthFactory {
-    const { credentialStorage, currentLocation } = props
+export function newAuthAsSingle(): AuthFactory {
+    const credentialStorage = localStorage
+    const currentLocation = location
 
     const config = {
         time: newTimeConfig(),
@@ -99,8 +95,9 @@ export function newAuthViewFactoryAsSingle(props: AuthViewProps): AuthFactory {
 
     return () => initAuthAsSingle(factory, collector)
 }
-export function newAuthViewFactoryAsWorkerForeground(props: AuthViewProps): AuthFactory {
-    const { credentialStorage, currentLocation } = props
+export function newAuthAsWorkerForeground(): AuthFactory {
+    const credentialStorage = localStorage
+    const currentLocation = location
 
     const config = {
         time: newTimeConfig(),

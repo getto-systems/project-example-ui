@@ -11,7 +11,7 @@ import { newPasswordFieldComponent, PasswordFieldStateFactory } from "../field/p
 
 import { AuthFactory, AuthView, AuthState } from "./view"
 
-export function newAuthViewFactory(): AuthFactory {
+export function newAuthAsMock(): AuthFactory {
     return () => {
         return {
             view: new View(new AuthStateFactory().renewCredential()),
