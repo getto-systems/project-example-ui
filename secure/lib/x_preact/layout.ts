@@ -59,6 +59,10 @@ export function fullScreenError(
     `
 }
 
+export function container(contents: VNodeContent): VNode {
+    return html`<section class="container">${contents}</section>`
+}
+
 export function v_small(): VNode {
     return vertical("vertical_small")
 }
