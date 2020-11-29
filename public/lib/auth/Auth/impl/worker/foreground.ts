@@ -1,4 +1,4 @@
-import { View, AuthComponentFactorySet, LoginView } from "../view"
+import { View, AuthComponentFactorySet } from "../view"
 import {
     initRenewCredentialComponentSet,
     initPasswordLoginComponentSet,
@@ -18,7 +18,7 @@ import {
 } from "./data"
 
 import { AppHrefFactory } from "../../../Href/data"
-import { AuthViewFactory } from "../../view"
+import { LoginState, AuthViewFactory } from "../../view"
 
 import { RenewCredentialComponentFactory } from "../../component/renew_credential/component"
 import { PasswordLoginComponentFactory } from "../../component/password_login/component"
@@ -159,7 +159,7 @@ export type ForegroundFactorySet = Readonly<{
 }>
 export type CollectorSet = Readonly<{
     auth: Readonly<{
-        getLoginView(): LoginView
+        getLoginView(): LoginState
     }>
     application: Readonly<{
         getPagePathname(): PagePathname
