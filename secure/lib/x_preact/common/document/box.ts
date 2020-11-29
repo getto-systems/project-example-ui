@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../layout"
+import { VNodeContent, v_small } from "../../layout"
 
 export function container(contents: VNodeContent): VNode {
     return html`<section class="container">${contents}</section>`
@@ -48,14 +48,4 @@ export function items(list: VNodeContent[]): VNode {
             ${" "} ${content}
         </li>`
     }
-}
-
-export function v_small(): VNode {
-    return vertical("vertical_small")
-}
-export function v_medium(): VNode {
-    return vertical("vertical_medium")
-}
-function vertical(verticalClass: string): VNode {
-    return html`<div class="vertical ${verticalClass}"></div>`
 }

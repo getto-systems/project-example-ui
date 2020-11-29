@@ -8,6 +8,7 @@ import {
 } from "../../../../common/Home/component/example/component"
 
 import { Season, SeasonError } from "../../../../common/season/data"
+import { notice_alert, v_small } from "../../../layout"
 
 type Props = Readonly<{
     example: ExampleComponent
@@ -48,7 +49,7 @@ function error(err: SeasonError): VNode {
                 <header class="box__header">${header}</header>
                 <section class="box__body">
                     ${seasonForm(html`
-                        <p class="notice notice_alert notice_stack">ロードエラー</p>
+                        ${notice_alert("ロードエラー")} ${v_small()}
                         <small><p>詳細: ${err.err}</p></small>
                     `)}
                 </section>

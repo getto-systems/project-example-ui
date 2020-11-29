@@ -21,12 +21,18 @@ export function BreadcrumbList({ breadcrumb }: Props): VNode {
 
     switch (state.type) {
         case "initial-breadcrumb":
-            return EMPTY_CONTENT
+            return HIDDEN_CONTENT
 
         case "succeed-to-load":
             return content(state.breadcrumb)
     }
 }
+
+// ロード時にカクつかないように透明なコンテンツを表示
+// 高さをそろえるためにアイコンを選択（たぶん一番高いのがアイコン）
+const HIDDEN_CONTENT = html`<p class="main__breadcrumb">
+    <a class="main__breadcrumb__item visibility_hidden"><i class="lnir lnir-home"></i></a>
+</p>`
 
 function content(breadcrumb: Breadcrumb): VNode {
     return html`<p class="main__breadcrumb">${breadcrumbNodes(breadcrumb)}</p>`
@@ -67,5 +73,3 @@ function breadcrumbItem(item: MenuItem): VNode {
 const SEPARATOR: VNode = html`
     <span class="main__breadcrumb__separator"><i class="lnir lnir-chevron-right"></i></span>
 `
-
-const EMPTY_CONTENT = html``

@@ -58,3 +58,23 @@ export function fullScreenError(
         </aside>
     `
 }
+
+export function v_small(): VNode {
+    return vertical("vertical_small")
+}
+export function v_medium(): VNode {
+    return vertical("vertical_medium")
+}
+function vertical(verticalClass: string): VNode {
+    return html`<div class="vertical ${verticalClass}"></div>`
+}
+
+export function notice_alert(content: VNodeContent): VNode {
+    return notice("notice_alert", content)
+}
+export function notice_info(content: VNodeContent): VNode {
+    return notice("notice_warning", content)
+}
+function notice(noticeClass: string, content: VNodeContent): VNode {
+    return html`<p class="notice ${noticeClass}">${content}</p>`
+}
