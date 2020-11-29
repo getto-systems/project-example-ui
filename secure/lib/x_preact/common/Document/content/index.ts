@@ -1,8 +1,8 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { v_small, v_medium } from "../../../layout"
-import { container, box, items, notice_info } from "../box"
+import { container, v_small, v_medium, notice_info } from "../../../layout"
+import { box, items } from "../box"
 
 export function content_index(): VNode[] {
     return [

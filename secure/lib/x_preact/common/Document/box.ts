@@ -3,10 +3,6 @@ import { html } from "htm/preact"
 
 import { VNodeContent, v_small } from "../../layout"
 
-export function container(contents: VNodeContent): VNode {
-    return html`<section class="container">${contents}</section>`
-}
-
 export function box(title: VNodeContent, content: VNodeContent): VNode {
     return box_content("", title, content)
 }
@@ -22,13 +18,6 @@ function box_content(boxClass: string, title: VNodeContent, content: VNodeConten
             <section class="box__body paragraph">${content}</section>
         </div>
     </section>`
-}
-
-export function notice_info(content: VNodeContent): VNode {
-    return notice("notice_info", content)
-}
-function notice(noticeClass: string, content: VNodeContent): VNode {
-    return html`<p class="notice ${noticeClass}">${content}</p>`
 }
 
 export function itemsSection(title: VNodeContent, list: VNodeContent[]): VNode {
