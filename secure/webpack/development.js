@@ -6,7 +6,7 @@ module.exports = {
     entry: () => {
         return [
             {
-                type: "x_preact/x_main",
+                type: "z_main",
                 suffix: "",
                 names: ["index"],
                 aliases: [
@@ -23,24 +23,28 @@ module.exports = {
                 ],
             },
             {
-                type: "x_worker/x_main",
+                type: "z_worker",
                 suffix: ".worker",
                 names: [],
                 aliases: [],
             },
         ].reduce((acc, info) => {
             info.names.forEach((name) => {
-                acc[`${name}${info.suffix}`] = path.join(__dirname, `../lib/${info.type}/${name}.ts`)
+                acc[toEntry(name)] = toPath(name)
             })
             info.aliases.forEach((entry) => {
                 entry.names.forEach((name) => {
-                    acc[`${name}${info.suffix}`] = path.join(
-                        __dirname,
-                        `../lib/${info.type}/${entry.path}.ts`
-                    )
+                    acc[toEntry(name)] = toPath(entry.path)
                 })
             })
             return acc
+
+            function toEntry(name) {
+                return `${name}${info.suffix}`
+            }
+            function toPath(name) {
+                return path.join(__dirname, `../lib/${info.type}/${name}/main.ts`)
+            }
         }, {})
     },
     output: {

@@ -1,11 +1,12 @@
 /* eslint-disable */
+const { toNamespacedPath } = require("path")
 const path = require("path")
 
 module.exports = {
     entry: () => {
         return [
             {
-                type: "x_preact/x_mock",
+                type: "z_main",
                 names: ["index"],
                 aliases: [
                     {
@@ -22,17 +23,21 @@ module.exports = {
             },
         ].reduce((acc, info) => {
             info.names.forEach((name) => {
-                acc[name] = path.join(__dirname, `../lib/${info.type}/${name}.ts`)
+                acc[toEntry(name)] = toPath(name)
             })
             info.aliases.forEach((entry) => {
                 entry.names.forEach((name) => {
-                    acc[`${name}${info.suffix}`] = path.join(
-                        __dirname,
-                        `../lib/${info.type}/${entry.path}.ts`
-                    )
+                    acc[toEntry(name)] = toPath(entry.path)
                 })
             })
             return acc
+
+            function toEntry(name) {
+                return `${name}${info.suffix}`
+            }
+            function toPath(name) {
+                return path.join(__dirname, `../lib/${info.type}/${name}/mock.ts`)
+            }
         }, {})
     },
     output: {
