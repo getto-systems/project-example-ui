@@ -1,4 +1,4 @@
-import { initAuthHref } from "../Auth/impl/href"
+import { initAuthHref } from "../Auth/View/impl/href"
 
 import { AppHref } from "./data"
 

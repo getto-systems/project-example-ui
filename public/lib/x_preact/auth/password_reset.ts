@@ -10,8 +10,8 @@ import { ApplicationError } from "../system/application_error"
 import { LoginIDField } from "./password_reset/field/login_id"
 import { PasswordField } from "./password_reset/field/password"
 
-import { PasswordResetComponentSet } from "../../auth/Auth/view"
-import { initialPasswordResetState } from "../../auth/Auth/component/password_reset/component"
+import { PasswordResetComponentSet } from "../../auth/Auth/View/view"
+import { initialPasswordResetState } from "../../auth/Auth/password_reset/component"
 
 import { ResetError } from "../../auth/password_reset/data"
 

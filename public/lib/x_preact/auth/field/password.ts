@@ -3,7 +3,7 @@ import { html } from "htm/preact"
 
 import { mapInputEvent } from "./common"
 
-import { PasswordFieldComponent } from "../../../auth/Auth/component/field/password/component"
+import { PasswordFieldComponent } from "../../../auth/Auth/field/password/component"
 
 import { PasswordFieldError, PasswordCharacter, PasswordView } from "../../../auth/password/field/data"
 import { InputValue, Valid } from "../../../auth/field/data"
