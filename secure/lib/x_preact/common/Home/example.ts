@@ -5,10 +5,10 @@ import { html } from "htm/preact"
 import {
     ExampleComponent,
     initialExampleState,
-} from "../../../../common/Home/example/component"
+} from "../../../common/Home/example/component"
 
-import { Season, SeasonError } from "../../../../common/season/data"
-import { notice_alert, v_small } from "../../../layout"
+import { Season, SeasonError } from "../../../common/season/data"
+import { notice_alert, v_small } from "../../layout"
 
 type Props = Readonly<{
     example: ExampleComponent
