@@ -9,7 +9,7 @@ import { PasswordResetComponent } from "../password_reset/component"
 import { LoginIDFieldComponent } from "../field/login_id/component"
 import { PasswordFieldComponent } from "../field/password/component"
 
-export interface AuthViewFactory {
+export interface AuthFactory {
     (): AuthResource
 }
 export type AuthResource = Readonly<{

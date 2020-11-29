@@ -6,8 +6,8 @@ import { env } from "../../../y_static/env"
 import { newAppHref } from "../../Href/main"
 import { TimeConfig, newTimeConfig, newHostConfig } from "./impl/config"
 
-import { initAuthViewFactoryAsSingle } from "./impl/single"
-import { initAuthViewFactoryAsForeground } from "./impl/worker/foreground"
+import { initAuthAsSingle } from "./impl/single"
+import { initAuthAsForeground } from "./impl/worker/foreground"
 import { initAuthWorkerAsBackground } from "./impl/worker/background"
 
 import { initRenewCredential } from "../renew_credential/impl"
@@ -36,7 +36,7 @@ import { initSimulatePasswordResetSessionClient } from "../../password_reset/imp
 
 import { currentPagePathname, detectLoginView, detectResetToken } from "./impl/location"
 
-import { AuthViewFactory } from "./view"
+import { AuthFactory } from "./view"
 
 import { markTicketNonce, markAuthAt, markApiCredential } from "../../credential/data"
 import { markLoginID } from "../../login_id/data"
@@ -46,7 +46,7 @@ export type AuthViewProps = Readonly<{
     currentLocation: Location
 }>
 
-export function newAuthViewFactoryAsSingle(props: AuthViewProps): AuthViewFactory {
+export function newAuthViewFactoryAsSingle(props: AuthViewProps): AuthFactory {
     const { credentialStorage, currentLocation } = props
 
     const config = {
@@ -97,9 +97,9 @@ export function newAuthViewFactoryAsSingle(props: AuthViewProps): AuthViewFactor
         },
     }
 
-    return initAuthViewFactoryAsSingle(factory, collector)
+    return () => initAuthAsSingle(factory, collector)
 }
-export function newAuthViewFactoryAsWorkerForeground(props: AuthViewProps): AuthViewFactory {
+export function newAuthViewFactoryAsWorkerForeground(props: AuthViewProps): AuthFactory {
     const { credentialStorage, currentLocation } = props
 
     const config = {
@@ -150,7 +150,7 @@ export function newAuthViewFactoryAsWorkerForeground(props: AuthViewProps): Auth
         },
     }
 
-    return initAuthViewFactoryAsForeground(worker, factory, collector)
+    return () => initAuthAsForeground(worker, factory, collector)
 }
 export function initAuthWorker(worker: Worker): void {
     const config = {

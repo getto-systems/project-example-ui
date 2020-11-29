@@ -9,9 +9,9 @@ import { newPasswordResetComponent } from "../password_reset/mock"
 import { newLoginIDFieldComponent, LoginIDFieldStateFactory } from "../field/login_id/mock"
 import { newPasswordFieldComponent, PasswordFieldStateFactory } from "../field/password/mock"
 
-import { AuthViewFactory, AuthView, AuthState } from "./view"
+import { AuthFactory, AuthView, AuthState } from "./view"
 
-export function newAuthViewFactory(): AuthViewFactory {
+export function newAuthViewFactory(): AuthFactory {
     return () => {
         return {
             view: new View(new AuthStateFactory().renewCredential()),
