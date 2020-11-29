@@ -1,6 +1,8 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
-import { box, v_medium } from "../../box"
+
+import { v_medium } from "../../../../layout"
+import { box } from "../../box"
 
 export function content_detail_auth(): VNode {
     return html`

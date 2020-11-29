@@ -2,6 +2,8 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { notice_alert, v_small } from "../../layout"
+
 import { MenuComponent, initialMenuState } from "../../../common/System/component/menu/component"
 
 import { Menu, MenuNode, MenuCategory, MenuItem, LoadMenuError } from "../../../common/menu/data"
@@ -110,25 +112,21 @@ function error(err: LoadMenuError): VNode {
 function loadMenuError(err: LoadMenuError): VNode[] {
     switch (err.type) {
         case "empty-nonce":
-            return [notice("認証エラー", { isStacked: true }), detail("もう一度ログインしてください")]
+            return [notice_alert("認証エラー"), v_small(), detail("もう一度ログインしてください")]
 
         case "bad-request":
-            return [notice("アプリケーションエラー", { isStacked: false })]
+            return [notice_alert("アプリケーションエラー")]
 
         case "server-error":
-            return [notice("サーバーエラー", { isStacked: false })]
+            return [notice_alert("サーバーエラー")]
 
         case "bad-response":
-            return [notice("レスポンスエラー", { isStacked: true }), detail(err.err)]
+            return [notice_alert("レスポンスエラー"), v_small(), detail(err.err)]
 
         case "infra-error":
-            return [notice("ネットワークエラー", { isStacked: true }), detail(err.err)]
+            return [notice_alert("ネットワークエラー"), v_small(), detail(err.err)]
     }
 
-    function notice(message: string, { isStacked }: { isStacked: boolean }) {
-        const stackClass = isStacked ? "notice_stack" : ""
-        return html`<p class="notice notice_alert ${stackClass}">${message}</p>`
-    }
     function detail(err: string) {
         return html`<small><p>詳細: ${err}</p></small>`
     }

@@ -2,6 +2,8 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { v_small } from "../../layout"
+
 import { SeasonComponent, initialSeasonState } from "../../../common/System/component/season/component"
 
 import { Season, SeasonError } from "../../../common/season/data"
@@ -45,7 +47,8 @@ function error(err: SeasonError): VNode {
             <dl class="form">
                 <dt class="form__header">シーズン</dt>
                 <dd class="form__field">
-                    <p class="notice notice_alert notice_stack">ロードエラー</p>
+                    <p class="notice notice_alert">ロードエラー</p>
+                    ${v_small()}
                     <small><p>詳細: ${err.err}</p></small>
                 </dd>
             </dl>
