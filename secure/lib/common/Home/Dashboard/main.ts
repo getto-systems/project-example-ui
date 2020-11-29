@@ -25,10 +25,15 @@ import { initStorageMenuExpandRepository } from "../../menu/impl/repository/expa
 import { markSeason } from "../../season/data"
 import { markApiNonce, markApiRoles } from "../../credential/data"
 
-export function newDashboardAsSingle(
-    menuExpandStorage: Storage,
+export type DashboardProps = Readonly<{
+    menuExpandStorage: Storage
     currentLocation: Location
-): DashboardFactory {
+}>
+
+export function newDashboardAsSingle({
+    menuExpandStorage,
+    currentLocation,
+}: DashboardProps): DashboardFactory {
     const factory = {
         actions: {
             credential: initCredentialAction(),
