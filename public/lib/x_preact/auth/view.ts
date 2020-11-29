@@ -11,7 +11,7 @@ import { PasswordLogin } from "./password_login"
 import { PasswordResetSession } from "./password_reset_session"
 import { PasswordReset } from "./password_reset"
 
-import { AuthViewFactory, AuthView, initialAuthState } from "../../auth/Auth/view"
+import { AuthViewFactory, AuthView, initialAuthState } from "../../auth/Auth/View/view"
 
 type Props = Readonly<{
     factory: AuthViewFactory

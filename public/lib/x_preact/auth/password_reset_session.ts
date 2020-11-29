@@ -10,8 +10,8 @@ import { LoginIDField } from "./password_reset_session/field/login_id"
 
 import { AppHref } from "../../auth/Href/data"
 
-import { PasswordResetSessionComponentSet } from "../../auth/Auth/view"
-import { initialPasswordResetSessionState } from "../../auth/Auth/component/password_reset_session/component"
+import { PasswordResetSessionComponentSet } from "../../auth/Auth/View/view"
+import { initialPasswordResetSessionState } from "../../auth/Auth/password_reset_session/component"
 
 import {
     Destination,

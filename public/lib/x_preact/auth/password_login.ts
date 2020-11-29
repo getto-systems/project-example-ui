@@ -10,8 +10,8 @@ import { ApplicationError } from "../system/application_error"
 import { LoginIDField } from "./password_login/field/login_id"
 import { PasswordField } from "./password_login/field/password"
 
-import { PasswordLoginComponentSet } from "../../auth/Auth/view"
-import { initialPasswordLoginState } from "../../auth/Auth/component/password_login/component"
+import { PasswordLoginComponentSet } from "../../auth/Auth/View/view"
+import { initialPasswordLoginState } from "../../auth/Auth/password_login/component"
 
 import { LoginError } from "../../auth/password_login/data"
 
