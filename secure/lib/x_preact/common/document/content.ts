@@ -2,6 +2,7 @@ import { h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { VNodeContent } from "../../layout"
 import { BreadcrumbList } from "../system/breadcrumb"
 
 import { DocumentComponentSet } from "../../../common/Document/document/view"
@@ -47,32 +48,35 @@ export function Content(components: DocumentComponentSet): VNode {
 }
 
 function documentTitle(path: DocumentPath): string {
-    switch (path) {
-        case "/docs/index.html":
-            return "ドキュメント"
-        case "/docs/server.html":
-            return "サーバー構成"
-        case "/docs/detail/server.html":
-            return "サーバー構成詳細"
-        case "/docs/auth.html":
-            return "認証・認可"
-        case "/docs/detail/auth.html":
-            return "認証・認可詳細"
-    }
+    return findEntry(path).title
 }
-function contentBody(path: DocumentPath): VNode {
-    switch (path) {
-        case "/docs/index.html":
-            return content_index()
-        case "/docs/server.html":
-            return content_server()
-        case "/docs/detail/server.html":
-            return content_detail_server()
-        case "/docs/auth.html":
-            return content_auth()
-        case "/docs/detail/auth.html":
-            return content_detail_auth()
+function contentBody(path: DocumentPath): VNodeContent {
+    return findEntry(path).content()
+}
+function findEntry(path: DocumentPath): ContentEntry {
+    const entry = contentMap[path]
+    if (!entry) {
+        return indexEntry
     }
+    return entry
+}
+
+type ContentEntry = Readonly<{ title: string; content: Factory<VNodeContent> }>
+function entry(title: string, content: Factory<VNodeContent>): ContentEntry {
+    return { title, content }
+}
+
+const indexEntry: ContentEntry = entry("ドキュメント", content_index)
+const contentMap: Record<DocumentPath, ContentEntry> = {
+    "/docs/index.html": indexEntry,
+    "/docs/server.html": entry("サーバー構成", content_server),
+    "/docs/detail/server.html": entry("サーバー構成詳細", content_detail_server),
+    "/docs/auth.html": entry("認証・認可", content_auth),
+    "/docs/detail/auth.html": entry("認証・認可詳細", content_detail_auth),
 }
 
 const EMPTY_CONTENT = html``
+
+interface Factory<T> {
+    (): T
+}
