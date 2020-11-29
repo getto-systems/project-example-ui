@@ -5,13 +5,13 @@ import { html } from "htm/preact"
 import { useComponentSet } from "../../container"
 import { footer, menuHeader, menuFooter } from "../../layout"
 
-import { ApplicationError } from "../Outline/application_error"
+import { ApplicationError } from "../System/ApplicationError"
 
-import { SeasonInfo } from "../Outline/season"
-import { MenuList } from "../Outline/menu"
-import { BreadcrumbList } from "../Outline/breadcrumb"
+import { SeasonInfo } from "../Outline/SeasonInfo"
+import { MenuList } from "../Outline/MenuList"
+import { BreadcrumbList } from "../Outline/BreadcrumbList"
 
-import { Example } from "./example"
+import { Example } from "./Example"
 
 import { DashboardComponentSet, DashboardFactory } from "../../../common/Home/Dashboard/view"
 
