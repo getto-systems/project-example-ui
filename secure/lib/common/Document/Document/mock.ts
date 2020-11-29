@@ -5,7 +5,7 @@ import { newContentComponent } from "../content/mock"
 
 import { DocumentFactory } from "./view"
 
-export function newDocument(): DocumentFactory {
+export function newDocumentAsMock(): DocumentFactory {
     return () => {
         return {
             components: {

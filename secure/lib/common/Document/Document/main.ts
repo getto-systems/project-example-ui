@@ -9,7 +9,7 @@ import { detectMenuTarget } from "../../Outline/menu/location"
 import { loadApiNonce, loadApiRoles } from "../../credential/impl/core"
 import { documentMenuTree } from "../../menu/impl/tree"
 
-import { initDocumentFactoryAsSingle } from "./impl/single"
+import { initDocumentAsSingle } from "./impl/single"
 
 import { DocumentFactory } from "./view"
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../menu/impl/core"
@@ -47,7 +47,7 @@ export function newDocumentAsSingle(
             getDocumentPath: () => detectDocumentPath(env.version, currentLocation),
         },
     }
-    return () => initDocumentFactoryAsSingle(factory, collector)
+    return () => initDocumentAsSingle(factory, collector)
 }
 
 function initCredentialAction() {

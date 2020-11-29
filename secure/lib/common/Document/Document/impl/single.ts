@@ -2,7 +2,7 @@ import { DocumentResource } from "../view"
 
 import { DocumentCollectorSet, DocumentFactorySet, initDocumentComponentSet } from "./core"
 
-export function initDocumentFactoryAsSingle(
+export function initDocumentAsSingle(
     factory: DocumentFactorySet,
     collector: DocumentCollectorSet
 ): DocumentResource {
