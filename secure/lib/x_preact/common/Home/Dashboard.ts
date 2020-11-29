@@ -5,11 +5,11 @@ import { html } from "htm/preact"
 import { useComponentSet } from "../../container"
 import { footer, menuHeader, menuFooter } from "../../layout"
 
-import { ApplicationError } from "../System/application_error"
+import { ApplicationError } from "../Outline/application_error"
 
-import { SeasonInfo } from "../System/season"
-import { MenuList } from "../System/menu"
-import { BreadcrumbList } from "../System/breadcrumb"
+import { SeasonInfo } from "../Outline/season"
+import { MenuList } from "../Outline/menu"
+import { BreadcrumbList } from "../Outline/breadcrumb"
 
 import { Example } from "./example"
 
