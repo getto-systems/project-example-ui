@@ -19,7 +19,7 @@ module.exports = {
         ].reduce((acc, info) => {
             toNames().forEach((name) => {
                 acc[name] = toMainPath()
-                if (info.worker) {
+                if (info.withWorker) {
                     acc[`${name}.worker`] = toWorkerPath()
                 }
             })
