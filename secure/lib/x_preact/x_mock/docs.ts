@@ -1,6 +1,6 @@
 import { render, h } from "preact"
 
-import { newDocument } from "../../common/Document/document/main/mock"
+import { newDocument } from "../../common/Document/Document/mock"
 
 import { Document } from "../common/document/document"
 
