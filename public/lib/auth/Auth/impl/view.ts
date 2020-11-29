@@ -1,8 +1,7 @@
-import { AuthSearch } from "./href"
-
 import {
     AuthView,
     AuthState,
+    LoginState,
     RenewCredentialComponentSet,
     PasswordLoginComponentSet,
     PasswordResetSessionComponentSet,
@@ -10,33 +9,6 @@ import {
 } from "../view"
 
 import { RenewCredentialComponent } from "../component/renew_credential/component"
-
-import { PagePathname, markPagePathname } from "../../application/data"
-import { ResetToken, markResetToken } from "../../password_reset/data"
-
-export type LoginView = "password-login" | "password-reset-session" | "password-reset"
-
-export function detectLoginView(currentLocation: Location): LoginView {
-    const url = new URL(currentLocation.toString())
-
-    // パスワードリセット
-    switch (url.searchParams.get(AuthSearch.passwordReset)) {
-        case AuthSearch.passwordReset_start:
-            return "password-reset-session"
-        case AuthSearch.passwordReset_reset:
-            return "password-reset"
-    }
-
-    // 特に指定が無ければパスワードログイン
-    return "password-login"
-}
-export function detectResetToken(currentLocation: Location): ResetToken {
-    const url = new URL(currentLocation.toString())
-    return markResetToken(url.searchParams.get(AuthSearch.passwordResetToken) || "")
-}
-export function currentPagePathname(currentLocation: Location): PagePathname {
-    return markPagePathname(new URL(currentLocation.toString()).pathname)
-}
 
 export class View implements AuthView {
     listener: Post<AuthState>[] = []
@@ -59,7 +31,7 @@ export class View implements AuthView {
         })
     }
 
-    mapLoginView(loginView: LoginView): AuthState {
+    mapLoginView(loginView: LoginState): AuthState {
         switch (loginView) {
             case "password-login":
                 return { type: loginView, components: this.components.passwordLogin() }
@@ -99,7 +71,7 @@ export interface AuthComponentFactorySet {
 }
 export interface AuthCollector {
     auth: Readonly<{
-        getLoginView(): LoginView
+        getLoginView(): LoginState
     }>
 }
 

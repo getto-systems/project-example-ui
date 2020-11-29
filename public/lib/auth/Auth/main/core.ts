@@ -34,8 +34,9 @@ import { initFetchPasswordLoginClient } from "../../password_login/impl/client/l
 import { initSimulatePasswordResetClient } from "../../password_reset/impl/client/reset/simulate"
 import { initSimulatePasswordResetSessionClient } from "../../password_reset/impl/client/session/simulate"
 
+import { currentPagePathname, detectLoginView, detectResetToken } from "../impl/location"
+
 import { AuthViewFactory } from "../view"
-import { currentPagePathname, detectLoginView, detectResetToken } from "../impl/view"
 
 import { markTicketNonce, markAuthAt, markApiCredential } from "../../credential/data"
 import { markLoginID } from "../../login_id/data"
