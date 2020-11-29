@@ -22,15 +22,10 @@ import { markApiNonce, markApiRoles } from "../../credential/data"
 import { loadDocument } from "../../content/impl/core"
 import { detectDocumentPath } from "./impl/location"
 
-export type DocumentProps = Readonly<{
-    menuExpandStorage: Storage
-    currentLocation: Location
-}>
+export function newDocumentAsSingle(): DocumentFactory {
+    const menuExpandStorage = localStorage
+    const currentLocation = location
 
-export function newDocumentAsSingle({
-    menuExpandStorage,
-    currentLocation,
-}: DocumentProps): DocumentFactory {
     const factory = {
         actions: {
             credential: initCredentialAction(),
