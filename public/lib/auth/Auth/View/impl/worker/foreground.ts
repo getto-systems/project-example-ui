@@ -18,7 +18,7 @@ import {
 } from "./data"
 
 import { AppHrefFactory } from "../../../../Href/data"
-import { LoginState, AuthViewFactory } from "../../view"
+import { LoginState, AuthResource } from "../../view"
 
 import { RenewCredentialComponentFactory } from "../../../renew_credential/component"
 import { PasswordLoginComponentFactory } from "../../../password_login/component"
@@ -169,34 +169,32 @@ export type CollectorSet = Readonly<{
     }>
 }>
 
-export function initAuthViewFactoryAsForeground(
+export function initAuthAsForeground(
     worker: Worker,
     factory: ForegroundFactorySet,
     collector: CollectorSet
-): AuthViewFactory {
-    return () => {
-        const map = initAuthProxyMapSet(postForegroundMessage)
-        const view = new View(collector, initAuthComponentFactorySet(factory, collector, map))
-        const errorHandler = (err: string) => {
-            view.error(err)
-        }
-        const messageHandler = initBackgroundMessageHandler(map, errorHandler)
+): AuthResource {
+    const map = initAuthProxyMapSet(postForegroundMessage)
+    const view = new View(collector, initAuthComponentFactorySet(factory, collector, map))
+    const errorHandler = (err: string) => {
+        view.error(err)
+    }
+    const messageHandler = initBackgroundMessageHandler(map, errorHandler)
 
-        worker.addEventListener("message", (event) => {
-            messageHandler(event.data)
-        })
+    worker.addEventListener("message", (event) => {
+        messageHandler(event.data)
+    })
 
-        return {
-            view,
-            terminate,
-        }
+    return {
+        view,
+        terminate,
+    }
 
-        function postForegroundMessage(message: ForegroundMessage) {
-            worker.postMessage(message)
-        }
-        function terminate() {
-            worker.terminate()
-        }
+    function postForegroundMessage(message: ForegroundMessage) {
+        worker.postMessage(message)
+    }
+    function terminate() {
+        worker.terminate()
     }
 }
 type AuthProxyMapSet = Readonly<{
