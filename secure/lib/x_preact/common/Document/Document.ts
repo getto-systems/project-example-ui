@@ -2,7 +2,7 @@ import { h, VNode } from "preact"
 import { useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useComponentSet } from "../../container"
+import { useComponentSet } from "../../hooks"
 import { footer, menuHeader, menuFooter } from "../../layout"
 
 import { ApplicationError } from "../System/ApplicationError"
