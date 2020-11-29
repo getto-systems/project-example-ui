@@ -1,6 +1,6 @@
 import { AuthExpires } from "../infra"
 
-import { AuthAt } from "../../credential/data"
+import { AuthAt } from "../data"
 
 export function initAuthExpires(): AuthExpires {
     return new Expires()

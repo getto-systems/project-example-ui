@@ -1,4 +1,4 @@
-import { InputValue, markInputValue } from "../../../field/data"
+import { InputValue, markInputValue } from "../../../auth/field/data"
 
 export function mapInputEvent(post: Post<InputValue>): Post<InputEvent> {
     return (e: InputEvent): void => {

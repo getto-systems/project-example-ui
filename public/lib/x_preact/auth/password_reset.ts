@@ -10,10 +10,10 @@ import { ApplicationError } from "../system/application_error"
 import { LoginIDField } from "./password_reset/field/login_id"
 import { PasswordField } from "./password_reset/field/password"
 
-import { PasswordResetComponentSet } from "../../Auth/view"
-import { initialPasswordResetState } from "../../Auth/component/password_reset/component"
+import { PasswordResetComponentSet } from "../../auth/Auth/view"
+import { initialPasswordResetState } from "../../auth/Auth/component/password_reset/component"
 
-import { ResetError } from "../../password_reset/data"
+import { ResetError } from "../../auth/password_reset/data"
 
 type Props = Readonly<{
     components: PasswordResetComponentSet

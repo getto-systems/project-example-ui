@@ -1,4 +1,4 @@
-import { ScriptPath } from "../../application/data"
+import { ScriptPath } from "../../auth/application/data"
 
 export function appendScript(scriptPath: ScriptPath, setup: Setup<HTMLScriptElement>): void {
     const script = document.createElement("script")
