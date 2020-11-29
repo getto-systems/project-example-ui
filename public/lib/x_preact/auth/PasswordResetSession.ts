@@ -4,9 +4,9 @@ import { html } from "htm/preact"
 
 import { loginHeader, fullScreenError } from "../layout"
 
-import { ApplicationError } from "../system/application_error"
+import { ApplicationError } from "../System/ApplicationError"
 
-import { LoginIDField } from "./password_reset_session/field/login_id"
+import { LoginIDField } from "./PasswordResetSession/LoginIDField"
 
 import { AppHref } from "../../auth/Href/data"
 

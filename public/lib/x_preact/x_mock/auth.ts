@@ -1,7 +1,7 @@
 import { render, h } from "preact"
 
-import { newAuthViewFactory } from "../../auth/Auth/View/mock"
+import { newAuthAsMock } from "../../auth/Auth/View/mock"
 
-import { Main } from "../auth/view"
+import { Auth } from "../auth/Auth"
 
-render(h(Main, { factory: newAuthViewFactory() }), document.body)
+render(h(Auth, { factory: newAuthAsMock() }), document.body)
