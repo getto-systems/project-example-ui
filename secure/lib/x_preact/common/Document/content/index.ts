@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { container, v_small, v_medium, notice_info } from "../../../layout"
+import { container, v_small, v_medium, notice_warning } from "../../../layout"
 import { box, items } from "../box"
 
 export function content_index(): VNode[] {
@@ -35,7 +35,7 @@ function details(): VNode[] {
         box(
             "ドキュメント",
             html`
-                ${notice_info("業務の目標を達成する")} ${v_medium()}
+                ${notice_warning("業務の目標を達成する")} ${v_medium()}
                 <p>重要な点を明文化する</p>
                 <p>重要な指標を見える化する</p>
                 ${v_medium()}
@@ -50,8 +50,8 @@ function details(): VNode[] {
         box(
             "アプリケーションの配備",
             html`
-                ${notice_info("業務で必要な時に使用できる")}
-                ${notice_info("業務に合ったコストで運用できる")} ${v_medium()}
+                ${notice_warning("業務で必要な時に使用できる")}
+                ${notice_warning("業務に合ったコストで運用できる")} ${v_medium()}
                 <p>業務時間内は常にアクセス可能</p>
                 <p>コストがかかりすぎない構成</p>
             `
@@ -59,8 +59,8 @@ function details(): VNode[] {
         box(
             "認証・認可",
             html`
-                ${notice_info("業務で必要な時に使用できる")}
-                ${notice_info("業務の内容をプライベートに保つ")} ${v_medium()}
+                ${notice_warning("業務で必要な時に使用できる")}
+                ${notice_warning("業務の内容をプライベートに保つ")} ${v_medium()}
                 <p>適切なアクセス制限</p>
                 <p>適切なユーザー管理</p>
             `
