@@ -1,6 +1,6 @@
 import { RenewRunner } from "../infra"
 
-import { AuthAt } from "../../credential/data"
+import { AuthAt } from "../data"
 
 export function initRenewRunner(): RenewRunner {
     return new Runner()

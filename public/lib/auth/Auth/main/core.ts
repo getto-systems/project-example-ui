@@ -1,7 +1,7 @@
-import { delayed, wait } from "../../z_external/delayed"
-import { initAuthClient, AuthClient } from "../../z_external/auth_client/auth_client"
+import { delayed, wait } from "../../../z_external/delayed"
+import { initAuthClient, AuthClient } from "../../../z_external/auth_client/auth_client"
 
-import { env } from "../../y_static/env"
+import { env } from "../../../y_static/env"
 
 import { newAppHref } from "../../Href/main"
 import { TimeConfig, newTimeConfig, newHostConfig } from "./config"

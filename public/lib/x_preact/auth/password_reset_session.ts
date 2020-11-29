@@ -8,10 +8,10 @@ import { ApplicationError } from "../system/application_error"
 
 import { LoginIDField } from "./password_reset_session/field/login_id"
 
-import { AppHref } from "../../Href/data"
+import { AppHref } from "../../auth/Href/data"
 
-import { PasswordResetSessionComponentSet } from "../../Auth/view"
-import { initialPasswordResetSessionState } from "../../Auth/component/password_reset_session/component"
+import { PasswordResetSessionComponentSet } from "../../auth/Auth/view"
+import { initialPasswordResetSessionState } from "../../auth/Auth/component/password_reset_session/component"
 
 import {
     Destination,
@@ -19,7 +19,7 @@ import {
     StartSessionError,
     CheckStatusError,
     SendTokenError,
-} from "../../password_reset/data"
+} from "../../auth/password_reset/data"
 
 type Props = Readonly<{
     components: PasswordResetSessionComponentSet

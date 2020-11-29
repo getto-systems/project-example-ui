@@ -1,6 +1,6 @@
 import { render, h } from "preact"
 
-import { newAuthViewFactory } from "../../Auth/main/mock"
+import { newAuthViewFactory } from "../../auth/Auth/main/mock"
 
 import { Main } from "../auth/view"
 

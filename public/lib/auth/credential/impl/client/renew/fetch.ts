@@ -1,6 +1,6 @@
 import { RenewClient, RenewResponse } from "../../../infra"
 
-import { TicketNonce, markTicketNonce, markAuthAt, markApiCredential } from "../../../../credential/data"
+import { TicketNonce, markTicketNonce, markAuthAt, markApiCredential } from "../../../data"
 
 interface AuthClient {
     renew(param: { nonce: string }): Promise<AuthRenewResponse>
