@@ -5,45 +5,40 @@ const WorkerPlugin = require("worker-plugin")
 module.exports = {
     entry: () => {
         return [
+            { path: "index" },
             {
-                type: "z_main",
-                suffix: "",
-                names: ["index"],
-                aliases: [
-                    {
-                        path: "docs",
-                        names: [
-                            "docs/index",
-                            "docs/server",
-                            "docs/detail/server",
-                            "docs/auth",
-                            "docs/detail/auth",
-                        ],
-                    },
+                path: "docs",
+                names: [
+                    "docs/index",
+                    "docs/server",
+                    "docs/detail/server",
+                    "docs/auth",
+                    "docs/detail/auth",
                 ],
             },
-            {
-                type: "z_worker",
-                suffix: ".worker",
-                names: [],
-                aliases: [],
-            },
         ].reduce((acc, info) => {
-            info.names.forEach((name) => {
-                acc[toEntry(name)] = toPath(name)
-            })
-            info.aliases.forEach((entry) => {
-                entry.names.forEach((name) => {
-                    acc[toEntry(name)] = toPath(entry.path)
-                })
+            toNames().forEach((name) => {
+                acc[name] = toMainPath()
+                if (info.worker) {
+                    acc[`${name}.worker`] = toWorkerPath()
+                }
             })
             return acc
 
-            function toEntry(name) {
-                return `${name}${info.suffix}`
+            function toNames() {
+                if (!info.names) {
+                    return [info.path]
+                }
+                return info.names
             }
-            function toPath(name) {
-                return path.join(__dirname, `../lib/${info.type}/${name}/main.ts`)
+            function toMainPath() {
+                return toPath("main")
+            }
+            function toWorkerPath() {
+                return toPath("worker")
+            }
+            function toPath(type) {
+                return path.join(__dirname, `../lib/z_main/${info.path}/${type}.ts`)
             }
         }, {})
     },
