@@ -13,7 +13,7 @@ export type CheckError =
 
 export type AppTarget =
     | Readonly<{ versioned: false; version: Version }>
-    | Readonly<{ versioned: true; version: Version; pagePathname: PagePathname }>
+    | Readonly<{ versioned: true; version: Version; pageLocation: PageLocation }>
 
 export function appTargetToPath(app: AppTarget): string {
     return `/${versionToString(app.version)}${pathname()}`
@@ -22,7 +22,7 @@ export function appTargetToPath(app: AppTarget): string {
         if (!app.versioned) {
             return "/index.html"
         }
-        return app.pagePathname
+        return pageLocationToPath(app.pageLocation)
     }
 }
 
@@ -40,7 +40,15 @@ export function versionToString(version: Version): string {
     return `${version.major}.${version.minor}.${version.patch}${version.suffix}`
 }
 
-export type PagePathname = string & { PagePathname: never }
-export function markPagePathname(path: string): PagePathname {
-    return path as PagePathname
+export type PageLocation = PageLocation_data & { PagePathname: never }
+type PageLocation_data = Readonly<{
+    pathname: string
+    search: string
+    hash: string
+}>
+export function markPageLocation(page: PageLocation_data): PageLocation {
+    return page as PageLocation
+}
+export function pageLocationToPath(page: PageLocation): string {
+    return `${page.pathname}${page.search}${page.hash}`
 }

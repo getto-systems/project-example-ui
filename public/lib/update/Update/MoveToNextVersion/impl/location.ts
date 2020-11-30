@@ -1,8 +1,9 @@
-import { AppTarget, markPagePathname, markVersion, Version } from "../../../next_version/data"
+import { AppTarget, markPageLocation, markVersion, Version } from "../../../next_version/data"
 
 export function detectAppTarget(version: string, currentLocation: Location): AppTarget {
     const prefix = `/${version}/`
-    const pathname = new URL(currentLocation.toString()).pathname
+    const currentURL = new URL(currentLocation.toString())
+    const pathname = currentURL.pathname
     if (!pathname.startsWith(prefix)) {
         return { versioned: false, version: parseVersion(version) }
     }
@@ -10,7 +11,11 @@ export function detectAppTarget(version: string, currentLocation: Location): App
     return {
         versioned: true,
         version: parseVersion(version),
-        pagePathname: markPagePathname(pathname.replace(prefix, "/")),
+        pageLocation: markPageLocation({
+            pathname: pathname.replace(prefix, "/"),
+            search: currentURL.search,
+            hash: currentURL.hash,
+        }),
     }
 }
 
