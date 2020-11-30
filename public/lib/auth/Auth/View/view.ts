@@ -1,5 +1,3 @@
-import { AppHref } from "../../Href/data"
-
 import { RenewCredentialComponent } from "../renew_credential/component"
 
 import { PasswordLoginComponent } from "../password_login/component"
@@ -38,18 +36,15 @@ export type RenewCredentialComponentSet = Readonly<{
     renewCredential: RenewCredentialComponent
 }>
 export type PasswordLoginComponentSet = Readonly<{
-    href: AppHref
     passwordLogin: PasswordLoginComponent
     loginIDField: LoginIDFieldComponent
     passwordField: PasswordFieldComponent
 }>
 export type PasswordResetSessionComponentSet = Readonly<{
-    href: AppHref
     passwordResetSession: PasswordResetSessionComponent
     loginIDField: LoginIDFieldComponent
 }>
 export type PasswordResetComponentSet = Readonly<{
-    href: AppHref
     passwordReset: PasswordResetComponent
     loginIDField: LoginIDFieldComponent
     passwordField: PasswordFieldComponent

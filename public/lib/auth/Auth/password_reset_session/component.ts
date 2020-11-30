@@ -1,3 +1,5 @@
+import { AuthLink } from "../link"
+
 import { StartSessionAction, CheckStatusAction } from "../../password_reset/action"
 
 import {
@@ -12,11 +14,13 @@ export interface PasswordResetSessionComponentFactory {
     (actions: PasswordResetSessionActionSet): PasswordResetSessionComponent
 }
 export type PasswordResetSessionActionSet = Readonly<{
+    link: AuthLink
     startSession: StartSessionAction
     checkStatus: CheckStatusAction
 }>
 
 export interface PasswordResetSessionComponent {
+    readonly link: AuthLink
     onStateChange(post: Post<PasswordResetSessionState>): void
     startSession(): void
 }

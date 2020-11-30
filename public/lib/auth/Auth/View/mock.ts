@@ -1,5 +1,3 @@
-import { newAppHref } from "../../Href/main"
-
 import { initRenewCredential } from "../renew_credential/mock"
 
 import { initPasswordLogin } from "../password_login/mock"
@@ -36,7 +34,6 @@ class AuthStateFactory {
         return {
             type: "password-login",
             components: {
-                href: newAppHref(),
                 passwordLogin: initPasswordLogin(),
                 loginIDField: initLoginIDField(new LoginIDFieldStateFactory().empty()),
                 passwordField: initPasswordField(new PasswordFieldStateFactory().empty()),
@@ -47,7 +44,6 @@ class AuthStateFactory {
         return {
             type: "password-reset-session",
             components: {
-                href: newAppHref(),
                 passwordResetSession: initPasswordResetSession(),
                 loginIDField: initLoginIDField(new LoginIDFieldStateFactory().empty()),
             },
@@ -57,7 +53,6 @@ class AuthStateFactory {
         return {
             type: "password-reset",
             components: {
-                href: newAppHref(),
                 passwordReset: initPasswordReset(),
                 loginIDField: initLoginIDField(new LoginIDFieldStateFactory().empty()),
                 passwordField: initPasswordField(new PasswordFieldStateFactory().empty()),

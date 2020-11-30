@@ -8,8 +8,6 @@ import { ApplicationError } from "../System/ApplicationError"
 
 import { LoginIDField } from "./PasswordResetSession/LoginIDField"
 
-import { AppHref } from "../../auth/Href/data"
-
 import { PasswordResetSessionComponentSet } from "../../auth/Auth/View/view"
 import { initialPasswordResetSessionState } from "../../auth/Auth/password_reset_session/component"
 
@@ -25,7 +23,7 @@ type Props = Readonly<{
     components: PasswordResetSessionComponentSet
 }>
 export function PasswordResetSession({
-    components: { href, passwordResetSession, loginIDField },
+    components: { passwordResetSession, loginIDField },
 }: Props): VNode {
     const [state, setState] = useState(initialPasswordResetSessionState)
     // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
@@ -49,7 +47,7 @@ export function PasswordResetSession({
                             <div>
                                 <big>${button}</big>
                             </div>
-                            ${loginLink(href)}
+                            ${loginLink()}
                         </div>
                         ${footer}
                     </footer>
@@ -86,7 +84,7 @@ export function PasswordResetSession({
             html`
                 <section class="button__container">
                     <div></div>
-                    ${loginLink(href)}
+                    ${loginLink()}
                 </section>
             `
         )
@@ -149,7 +147,7 @@ export function PasswordResetSession({
                 html`
                     <section class="button__container">
                         <div></div>
-                        ${loginLink(href)}
+                        ${loginLink()}
                     </section>
                 `
             )
@@ -182,6 +180,16 @@ export function PasswordResetSession({
     function onSubmit_noop(e: Event) {
         e.preventDefault()
     }
+
+    function loginLink(): VNode {
+        return html`
+            <div class="login__link">
+                <a href="${passwordResetSession.link.passwordLogin()}">
+                    <i class="lnir lnir-user"></i> ログインIDとパスワードでログインする
+                </a>
+            </div>
+        `
+    }
 }
 
 function formMessage(messageClass: string, content: VNode): VNode {
@@ -190,16 +198,6 @@ function formMessage(messageClass: string, content: VNode): VNode {
         <dl class="${messageClass}">
             <dd>${content}</dd>
         </dl>
-    `
-}
-
-function loginLink(href: AppHref): VNode {
-    return html`
-        <div class="login__link">
-            <a href="${href.auth.passwordLoginHref()}">
-                <i class="lnir lnir-user"></i> ログインIDとパスワードでログインする
-            </a>
-        </div>
     `
 }
 

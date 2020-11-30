@@ -1,3 +1,5 @@
+import { AuthLink } from "../link"
+
 import { ResetAction } from "../../password_reset/action"
 import { StoreAction } from "../../credential/action"
 import { SecureScriptPathAction } from "../../application/action"
@@ -11,12 +13,14 @@ export interface PasswordResetComponentFactory {
 }
 
 export type PasswordResetActionSet = Readonly<{
+    link: AuthLink
     reset: ResetAction
     store: StoreAction
     secureScriptPath: SecureScriptPathAction
 }>
 
 export interface PasswordResetComponent {
+    readonly link: AuthLink
     onStateChange(post: Post<PasswordResetState>): void
     reset(): void
     loadError(err: LoadError): void

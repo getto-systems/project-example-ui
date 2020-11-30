@@ -1,9 +1,9 @@
-import { AuthHref } from "../../href"
+import { AuthLink } from "../../link"
 
-export function initAuthHref(): AuthHref {
+export function initAuthLink(): AuthLink {
     return {
-        passwordLoginHref,
-        passwordResetSessionHref,
+        passwordLogin,
+        passwordResetSession,
     }
 }
 
@@ -16,9 +16,9 @@ export const AuthSearch = {
     passwordResetToken: "_password_reset_token",
 }
 
-function passwordLoginHref(): string {
+function passwordLogin(): string {
     return `?${AuthSearch.passwordLogin}`
 }
-function passwordResetSessionHref(): string {
+function passwordResetSession(): string {
     return `?${AuthSearch.passwordReset}=${AuthSearch.passwordReset_start}`
 }
