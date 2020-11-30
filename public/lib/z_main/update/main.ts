@@ -33,11 +33,11 @@ function failed(err: FindError) {
     switch (err.type) {
         case "failed-to-check":
             console.log(err.err)
-            break
+            return
 
         case "out-of-versioned":
         case "up-to-date":
-            break
+            return
 
         default:
             assertNever(err)
