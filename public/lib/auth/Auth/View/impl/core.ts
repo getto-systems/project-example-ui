@@ -1,4 +1,4 @@
-import { AppHrefFactory } from "../../../Href/data"
+import { AuthLinkFactory } from "../../link"
 
 import {
     RenewCredentialComponentSet,
@@ -15,14 +15,8 @@ import { PasswordLoginComponentFactory } from "../../password_login/component"
 import { PasswordResetSessionComponentFactory } from "../../password_reset_session/component"
 import { PasswordResetComponentFactory } from "../../password_reset/component"
 
-import {
-    LoginIDFieldComponent,
-    LoginIDFieldComponentFactory,
-} from "../../field/login_id/component"
-import {
-    PasswordFieldComponent,
-    PasswordFieldComponentFactory,
-} from "../../field/password/component"
+import { LoginIDFieldComponent, LoginIDFieldComponentFactory } from "../../field/login_id/component"
+import { PasswordFieldComponent, PasswordFieldComponentFactory } from "../../field/password/component"
 
 import { SecureScriptPath, SecureScriptPathCollector } from "../../../application/action"
 import { Renew, SetContinuousRenew, Store } from "../../../credential/action"
@@ -76,6 +70,7 @@ export function initRenewCredentialComponentSet(
 }
 
 export type PasswordLoginFactorySet = Readonly<{
+    link: AuthLinkFactory
     actions: Readonly<{
         application: Readonly<{
             secureScriptPath: SecureScriptPath
@@ -92,8 +87,6 @@ export type PasswordLoginFactorySet = Readonly<{
         }>
     }>
     components: Readonly<{
-        href: AppHrefFactory
-
         passwordLogin: PasswordLoginComponentFactory
 
         field: Readonly<{
@@ -115,6 +108,7 @@ export function initPasswordLoginComponentSet(
     }
 
     const actions = {
+        link: factory.link(),
         login: factory.actions.passwordLogin.login({
             getFields: () => collectLoginFields(fields),
         }),
@@ -123,13 +117,13 @@ export function initPasswordLoginComponentSet(
     }
 
     return {
-        href: factory.components.href(),
         passwordLogin: factory.components.passwordLogin(actions),
         ...fields,
     }
 }
 
 export type PasswordResetSessionFactorySet = Readonly<{
+    link: AuthLinkFactory
     actions: Readonly<{
         application: Readonly<{
             secureScriptPath: SecureScriptPath
@@ -146,8 +140,6 @@ export type PasswordResetSessionFactorySet = Readonly<{
         }>
     }>
     components: Readonly<{
-        href: AppHrefFactory
-
         passwordResetSession: PasswordResetSessionComponentFactory
 
         field: Readonly<{
@@ -161,6 +153,7 @@ export function initPasswordResetSessionComponentSet(
     const fields = { loginIDField: initLoginIDFieldComponent(factory) }
 
     const actions = {
+        link: factory.link(),
         startSession: factory.actions.passwordReset.startSession({
             getFields: () => collectStartSessionFields(fields),
         }),
@@ -168,13 +161,13 @@ export function initPasswordResetSessionComponentSet(
     }
 
     return {
-        href: factory.components.href(),
         passwordResetSession: factory.components.passwordResetSession(actions),
         ...fields,
     }
 }
 
 export type PasswordResetFactorySet = Readonly<{
+    link: AuthLinkFactory
     actions: Readonly<{
         application: Readonly<{
             secureScriptPath: SecureScriptPath
@@ -191,8 +184,6 @@ export type PasswordResetFactorySet = Readonly<{
         }>
     }>
     components: Readonly<{
-        href: AppHrefFactory
-
         passwordReset: PasswordResetComponentFactory
 
         field: Readonly<{
@@ -215,6 +206,7 @@ export function initPasswordResetComponentSet(
     }
 
     const actions = {
+        link: factory.link(),
         reset: factory.actions.passwordReset.reset({
             getFields: () => collectResetFields(fields),
             ...collector.passwordReset,
@@ -224,7 +216,6 @@ export function initPasswordResetComponentSet(
     }
 
     return {
-        href: factory.components.href(),
         passwordReset: factory.components.passwordReset(actions),
         ...fields,
     }

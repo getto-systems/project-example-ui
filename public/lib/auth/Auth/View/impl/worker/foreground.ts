@@ -17,8 +17,9 @@ import {
     ResetProxyMessage,
 } from "./data"
 
-import { AppHrefFactory } from "../../../../Href/data"
 import { LoginState, AuthResource } from "../../view"
+
+import { AuthLinkFactory } from "../../../link"
 
 import { RenewCredentialComponentFactory } from "../../../renew_credential/component"
 import { PasswordLoginComponentFactory } from "../../../password_login/component"
@@ -127,6 +128,7 @@ class ResetProxyMap extends ProxyMap<ResetProxyMessage, ResetEvent> {
 }
 
 export type ForegroundFactorySet = Readonly<{
+    link: AuthLinkFactory
     actions: Readonly<{
         application: Readonly<{
             secureScriptPath: SecureScriptPath
@@ -143,8 +145,6 @@ export type ForegroundFactorySet = Readonly<{
         }>
     }>
     components: Readonly<{
-        href: AppHrefFactory
-
         renewCredential: RenewCredentialComponentFactory
 
         passwordLogin: PasswordLoginComponentFactory
@@ -233,8 +233,8 @@ function initAuthComponentFactorySet(
     map: AuthProxyMapSet
 ): AuthComponentFactorySet {
     const factory = {
+        ...foregroundFactory,
         actions: { ...foregroundFactory.actions, ...initActionProxyFactory() },
-        components: foregroundFactory.components,
     }
 
     return {

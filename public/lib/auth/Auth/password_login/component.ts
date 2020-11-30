@@ -5,17 +5,20 @@ import { SecureScriptPathAction } from "../../application/action"
 import { LoginError } from "../../password_login/data"
 import { StorageError } from "../../credential/data"
 import { ScriptPath, LoadError } from "../../application/data"
+import { AuthLink } from "../link"
 
 export interface PasswordLoginComponentFactory {
     (actions: PasswordLoginActionSet): PasswordLoginComponent
 }
 export type PasswordLoginActionSet = Readonly<{
+    link: AuthLink
     login: LoginAction
     store: StoreAction
     secureScriptPath: SecureScriptPathAction
 }>
 
 export interface PasswordLoginComponent {
+    readonly link: AuthLink
     onStateChange(post: Post<PasswordLoginState>): void
     login(): void
     loadError(err: LoadError): void

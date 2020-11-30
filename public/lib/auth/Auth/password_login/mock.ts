@@ -1,3 +1,7 @@
+import { initAuthLink } from "../View/impl/link"
+
+import { AuthLink } from "../link"
+
 import { PasswordLoginComponent, PasswordLoginState } from "./component"
 
 export function initPasswordLogin(): PasswordLoginComponent {
@@ -37,8 +41,11 @@ class PasswordLoginStateFactory {
 class Component implements PasswordLoginComponent {
     state: PasswordLoginState
 
+    link: AuthLink
+
     constructor(state: PasswordLoginState) {
         this.state = state
+        this.link = initAuthLink()
     }
 
     onStateChange(post: Post<PasswordLoginState>): void {

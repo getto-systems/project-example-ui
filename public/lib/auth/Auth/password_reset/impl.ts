@@ -3,6 +3,7 @@ import { PasswordResetActionSet, PasswordResetComponent, PasswordResetState } fr
 import { ResetEvent } from "../../password_reset/data"
 import { StoreEvent } from "../../credential/data"
 import { LoadError } from "../../application/data"
+import { AuthLink } from "../link"
 
 export function initPasswordReset(actions: PasswordResetActionSet): PasswordResetComponent {
     return new Component(actions)
@@ -13,8 +14,11 @@ class Component implements PasswordResetComponent {
 
     listener: Post<PasswordResetState>[] = []
 
+    link: AuthLink
+
     constructor(actions: PasswordResetActionSet) {
         this.actions = actions
+        this.link = actions.link
     }
 
     onStateChange(post: Post<PasswordResetState>): void {

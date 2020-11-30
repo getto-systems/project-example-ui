@@ -19,7 +19,7 @@ type Props = Readonly<{
     components: PasswordLoginComponentSet
 }>
 export function PasswordLogin({
-    components: { href, passwordLogin, loginIDField, passwordField },
+    components: { passwordLogin, loginIDField, passwordField },
 }: Props): VNode {
     const [state, setState] = useState(initialPasswordLoginState)
     // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
@@ -62,7 +62,7 @@ export function PasswordLogin({
                         <big>${button}</big>
                     </div>
                     <div class="login__link">
-                        <a href="${href.auth.passwordResetSessionHref()}">
+                        <a href="${passwordLogin.link.passwordResetSession()}">
                             <i class="lnir lnir-question-circle"></i> パスワードがわからない方
                         </a>
                     </div>

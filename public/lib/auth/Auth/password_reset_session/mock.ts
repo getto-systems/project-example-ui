@@ -1,3 +1,7 @@
+import { initAuthLink } from "../View/impl/link"
+
+import { AuthLink } from "../link"
+
 import { PasswordResetSessionComponent, PasswordResetSessionState } from "./component"
 
 export function initPasswordResetSession(): PasswordResetSessionComponent {
@@ -70,9 +74,11 @@ class PasswordResetSessionStateFactory {
 
 class Component implements PasswordResetSessionComponent {
     state: PasswordResetSessionState
+    link: AuthLink
 
     constructor(state: PasswordResetSessionState) {
         this.state = state
+        this.link = initAuthLink()
     }
 
     onStateChange(post: Post<PasswordResetSessionState>): void {

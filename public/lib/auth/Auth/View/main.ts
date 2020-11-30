@@ -3,12 +3,13 @@ import { initAuthClient, AuthClient } from "../../../z_external/auth_client/auth
 
 import { env } from "../../../y_static/env"
 
-import { newAppHref } from "../../Href/main"
 import { TimeConfig, newTimeConfig, newHostConfig } from "./impl/config"
 
 import { initAuthAsSingle } from "./impl/single"
 import { initAuthAsForeground } from "./impl/worker/foreground"
 import { initAuthWorkerAsBackground } from "./impl/worker/background"
+
+import { initAuthLink } from "./impl/link"
 
 import { initRenewCredential } from "../renew_credential/impl"
 import { initPasswordLogin } from "../password_login/impl"
@@ -54,6 +55,7 @@ export function newAuthAsSingle(): AuthFactory {
     }
 
     const factory = {
+        link: initAuthLink,
         actions: {
             application: initApplicationAction(),
             credential: initCredentialAction(config.time, credentialStorage, client.auth),
@@ -67,8 +69,6 @@ export function newAuthAsSingle(): AuthFactory {
             },
         },
         components: {
-            href: newAppHref,
-
             renewCredential: initRenewCredential,
 
             passwordLogin: initPasswordLogin,
@@ -110,6 +110,7 @@ export function newAuthAsWorkerForeground(): AuthFactory {
     const worker = new Worker("./auth.worker.js")
 
     const factory = {
+        link: initAuthLink,
         actions: {
             application: initApplicationAction(),
             credential: initCredentialAction(config.time, credentialStorage, client.auth),
@@ -120,8 +121,6 @@ export function newAuthAsWorkerForeground(): AuthFactory {
             },
         },
         components: {
-            href: newAppHref,
-
             renewCredential: initRenewCredential,
 
             passwordLogin: initPasswordLogin,

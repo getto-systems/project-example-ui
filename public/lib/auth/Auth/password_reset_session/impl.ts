@@ -5,6 +5,7 @@ import {
 } from "./component"
 
 import { StartSessionEvent, CheckStatusEvent } from "../../password_reset/data"
+import { AuthLink } from "../link"
 
 export function initPasswordResetSession(
     actions: PasswordResetSessionActionSet
@@ -17,8 +18,11 @@ class Component implements PasswordResetSessionComponent {
 
     listener: Post<PasswordResetSessionState>[] = []
 
+    link: AuthLink
+
     constructor(actions: PasswordResetSessionActionSet) {
         this.actions = actions
+        this.link = actions.link
     }
 
     onStateChange(post: Post<PasswordResetSessionState>): void {

@@ -1,3 +1,5 @@
+import { AuthLink } from "../link"
+
 import { PasswordLoginActionSet, PasswordLoginComponent, PasswordLoginState } from "./component"
 
 import { LoginEvent } from "../../password_login/data"
@@ -13,8 +15,11 @@ class Component implements PasswordLoginComponent {
 
     listener: Post<PasswordLoginState>[] = []
 
+    link: AuthLink
+
     constructor(actions: PasswordLoginActionSet) {
         this.actions = actions
+        this.link = actions.link
     }
 
     onStateChange(post: Post<PasswordLoginState>): void {
