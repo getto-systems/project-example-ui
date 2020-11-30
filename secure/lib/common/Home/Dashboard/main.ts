@@ -5,12 +5,12 @@ import { initMenu } from "../../Outline/menu/impl"
 import { initBreadcrumb } from "../../Outline/breadcrumb/impl"
 import { initExample } from "../example/impl"
 
-import { detectMenuTarget } from "../../Outline/menu/location"
+import { detectMenuTarget } from "../../Outline/MenuTarget/impl/location"
 
 import { loadApiNonce, loadApiRoles } from "../../credential/impl/core"
 import { mainMenuTree } from "../../menu/impl/tree"
 
-import { initDashboardFactoryAsSingle } from "./impl/single"
+import { initDashboardAsSingle } from "./impl/single"
 
 import { DashboardFactory } from "./view"
 import { loadSeason } from "../../season/impl/core"
@@ -48,7 +48,7 @@ export function newDashboardAsSingle(): DashboardFactory {
             getMenuTarget: () => detectMenuTarget(env.version, currentLocation),
         },
     }
-    return initDashboardFactoryAsSingle(factory, collector)
+    return () => initDashboardAsSingle(factory, collector)
 }
 
 function initCredentialAction() {

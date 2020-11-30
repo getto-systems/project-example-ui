@@ -55,11 +55,11 @@ export function newAuthAsSingle(): AuthFactory {
 
     const factory = {
         actions: {
-            application: newApplicationFactory(),
-            credential: newCredentialFactory(config.time, credentialStorage, client.auth),
+            application: initApplicationAction(),
+            credential: initCredentialAction(config.time, credentialStorage, client.auth),
 
-            passwordLogin: newPasswordLoginFactory(config.time, client.auth),
-            passwordReset: newPasswordResetFactory(config.time),
+            passwordLogin: initPasswordLoginAction(config.time, client.auth),
+            passwordReset: initPasswordResetAction(config.time),
 
             field: {
                 loginID: loginIDField,
@@ -111,8 +111,8 @@ export function newAuthAsWorkerForeground(): AuthFactory {
 
     const factory = {
         actions: {
-            application: newApplicationFactory(),
-            credential: newCredentialFactory(config.time, credentialStorage, client.auth),
+            application: initApplicationAction(),
+            credential: initCredentialAction(config.time, credentialStorage, client.auth),
 
             field: {
                 loginID: () => loginIDField(),
@@ -159,27 +159,28 @@ export function initAuthWorker(worker: Worker): void {
     }
 
     const actions = {
-        passwordLogin: newPasswordLoginFactory(config.time, client.auth),
-        passwordReset: newPasswordResetFactory(config.time),
+        passwordLogin: initPasswordLoginAction(config.time, client.auth),
+        passwordReset: initPasswordResetAction(config.time),
     }
 
     return initAuthWorkerAsBackground(actions, worker)
 }
 
-function newApplicationFactory() {
+function initApplicationAction() {
     return {
         secureScriptPath: secureScriptPath({ host: newHostConfig() }),
     }
 }
-function newCredentialFactory(time: TimeConfig, credentialStorage: Storage, authClient: AuthClient) {
+function initCredentialAction(time: TimeConfig, credentialStorage: Storage, authClient: AuthClient) {
     const authCredentials = initStorageAuthCredentialRepository(credentialStorage, env.storageKey)
+    const client = initFetchRenewClient(authClient)
 
     return {
         renew: renew({
             time,
 
             authCredentials,
-            client: newRenewClient(authClient),
+            client,
             delayed,
 
             expires: initAuthExpires(),
@@ -188,24 +189,31 @@ function newCredentialFactory(time: TimeConfig, credentialStorage: Storage, auth
             time,
 
             authCredentials,
-            client: newRenewClient(authClient),
+            client,
 
             runner: initRenewRunner(),
         }),
         store: store({ authCredentials }),
     }
 }
-function newPasswordLoginFactory(time: TimeConfig, authClient: AuthClient) {
+function initPasswordLoginAction(time: TimeConfig, authClient: AuthClient) {
     return {
         login: login({
-            client: newPasswordLoginClient(authClient),
+            client: initFetchPasswordLoginClient(authClient),
             time,
             delayed,
         }),
     }
 }
-function newPasswordResetFactory(time: TimeConfig) {
-    const sessionClient = newPasswordResetSessionClient()
+function initPasswordResetAction(time: TimeConfig) {
+    const sessionClient = initSimulatePasswordResetSessionClient(markLoginID("loginID"))
+    const resetClient = initSimulatePasswordResetClient(markLoginID("loginID"), {
+        ticketNonce: markTicketNonce("ticket-nonce"),
+        apiCredential: markApiCredential({
+            apiRoles: ["admin", "dev"],
+        }),
+        authAt: markAuthAt(new Date()),
+    })
 
     return {
         startSession: startSession({
@@ -220,30 +228,9 @@ function newPasswordResetFactory(time: TimeConfig) {
             wait,
         }),
         reset: reset({
-            client: newPasswordResetClient(),
+            client: resetClient,
             time,
             delayed,
         }),
     }
-}
-
-function newRenewClient(authClient: AuthClient) {
-    return initFetchRenewClient(authClient)
-}
-function newPasswordLoginClient(authClient: AuthClient) {
-    return initFetchPasswordLoginClient(authClient)
-}
-function newPasswordResetSessionClient() {
-    //return initFetchPasswordResetSessionClient(authClient)
-    return initSimulatePasswordResetSessionClient(markLoginID("loginID"))
-}
-function newPasswordResetClient() {
-    //return initFetchPasswordResetClient(authClient)
-    return initSimulatePasswordResetClient(markLoginID("loginID"), {
-        ticketNonce: markTicketNonce("ticket-nonce"),
-        apiCredential: markApiCredential({
-            apiRoles: ["admin", "dev"],
-        }),
-        authAt: markAuthAt(new Date()),
-    })
 }

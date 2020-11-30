@@ -1,8 +1,8 @@
-import { newBreadcrumbComponent } from "../../Outline/breadcrumb/mock"
-import { newMenuComponent } from "../../Outline/menu/mock"
-import { newSeasonComponent } from "../../Outline/season/mock"
+import { initBreadcrumb } from "../../Outline/breadcrumb/mock"
+import { initMenu } from "../../Outline/menu/mock"
+import { initSeason } from "../../Outline/season/mock"
 
-import { newExampleComponent } from "../example/mock"
+import { initExample } from "../example/mock"
 
 import { DashboardFactory } from "./view"
 
@@ -10,10 +10,10 @@ export function newDashboard(): DashboardFactory {
     return () => {
         return {
             components: {
-                season: newSeasonComponent(),
-                menu: newMenuComponent(),
-                breadcrumb: newBreadcrumbComponent(),
-                example: newExampleComponent(),
+                season: initSeason(),
+                menu: initMenu(),
+                breadcrumb: initBreadcrumb(),
+                example: initExample(),
             },
             terminate: () => {
                 // mock では何もしない

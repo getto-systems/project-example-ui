@@ -4,7 +4,7 @@ import { BreadcrumbComponent, BreadcrumbState } from "./component"
 
 import { markMenuCategory, markMenuItem } from "../../menu/data"
 
-export function newBreadcrumbComponent(): BreadcrumbComponent {
+export function initBreadcrumb(): BreadcrumbComponent {
     return new Component(new BreadcrumbStateFactory().succeedToLoad())
 }
 

@@ -1,6 +1,6 @@
 import { RenewCredentialComponent, RenewCredentialState } from "./component"
 
-export function newRenewCredentialComponent(): RenewCredentialComponent {
+export function initRenewCredential(): RenewCredentialComponent {
     return new Component(new RenewCredentialStateFactory().delayedToRenew())
 }
 

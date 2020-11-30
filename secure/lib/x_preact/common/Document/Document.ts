@@ -14,9 +14,9 @@ import { Content } from "./Content"
 import { DocumentComponentSet, DocumentFactory } from "../../../common/Document/Document/view"
 
 type Props = {
-    factory: DocumentFactory
+    document: DocumentFactory
 }
-export function Document({ factory }: Props): VNode {
+export function Document({ document }: Props): VNode {
     const [err, _resetError] = useErrorBoundary((err) => {
         // TODO ここでエラーをどこかに投げたい。apiCredential が有効なはずなので、api にエラーを投げられるはず
         console.log(err)
@@ -26,7 +26,7 @@ export function Document({ factory }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    const container = useComponentSet(factory)
+    const container = useComponentSet(document)
 
     if (!container.set) {
         return EMPTY_CONTENT
@@ -37,10 +37,7 @@ export function Document({ factory }: Props): VNode {
 function View(components: DocumentComponentSet): VNode {
     return html`
         <main class="layout">
-            <article class="layout__main">
-                ${h(Content, components)}
-                ${footer()}
-            </article>
+            <article class="layout__main">${h(Content, components)} ${footer()}</article>
             ${menu()}
         </main>
     `

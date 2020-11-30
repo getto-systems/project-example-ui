@@ -1,6 +1,6 @@
 import { ContentComponent, ContentState } from "./component"
 
-export function newContentComponent(): ContentComponent {
+export function initContent(): ContentComponent {
     return new Component(new ContentStateFactory().initialContent())
 }
 

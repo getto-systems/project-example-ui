@@ -4,7 +4,7 @@ import { MenuComponent, MenuState } from "./component"
 
 import { markMenuCategory, markMenuItem, Menu } from "../../menu/data"
 
-export function newMenuComponent(): MenuComponent {
+export function initMenu(): MenuComponent {
     return new Component(new MenuStateFactory().succeedToLoad())
 }
 

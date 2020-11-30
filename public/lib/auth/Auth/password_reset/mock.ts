@@ -1,6 +1,6 @@
 import { PasswordResetComponent, PasswordResetState } from "./component"
 
-export function newPasswordResetComponent(): PasswordResetComponent {
+export function initPasswordReset(): PasswordResetComponent {
     return new Component(new PasswordResetStateFactory().initialReset())
 }
 
