@@ -3,17 +3,15 @@ const path = require("path")
 
 module.exports = {
     entry: () => {
-        return [{ type: "z_main", names: ["auth", "update"] }].reduce((acc, info) => {
-            info.names.forEach((name) => {
-                acc[toEntry(name)] = toPath(name)
-            })
+        return [{ path: "update" }, { path: "auth" }].reduce((acc, info) => {
+            acc[info.path] = toMockPath()
             return acc
 
-            function toEntry(name) {
-                return `${name}${info.suffix}`
+            function toMockPath() {
+                return toPath("main")
             }
-            function toPath(name) {
-                return path.join(__dirname, `../lib/${info.type}/${name}/main.ts`)
+            function toPath(type) {
+                return path.join(__dirname, `../lib/z_main/${info.path}/${type}.ts`)
             }
         }, {})
     },

@@ -4,20 +4,21 @@ const WorkerPlugin = require("worker-plugin")
 
 module.exports = {
     entry: () => {
-        return [
-            { type: "z_main", names: ["auth", "update"], suffix: "" },
-            { type: "z_worker", names: ["auth"], suffix: ".worker" },
-        ].reduce((acc, info) => {
-            info.names.forEach((name) => {
-                acc[toEntry(name)] = toPath(name)
-            })
+        return [{ path: "update" }, { path: "auth", withWorker: true }].reduce((acc, info) => {
+            acc[info.path] = toMainPath()
+            if (info.withWorker) {
+                acc[`${info.path}.worker`] = toWorkerPath()
+            }
             return acc
 
-            function toEntry(name) {
-                return `${name}${info.suffix}`
+            function toMainPath() {
+                return toPath("main")
             }
-            function toPath(name) {
-                return path.join(__dirname, `../lib/${info.type}/${name}/main.ts`)
+            function toWorkerPath() {
+                return toPath("worker")
+            }
+            function toPath(type) {
+                return path.join(__dirname, `../lib/z_main/${info.path}/${type}.ts`)
             }
         }, {})
     },
