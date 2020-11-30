@@ -4,4 +4,4 @@ import { newAuthAsWorkerForeground } from "../../auth/Auth/View/main"
 
 import { Auth } from "../../x_preact/auth/Auth"
 
-render(h(Auth, { factory: newAuthAsWorkerForeground() }), document.body)
+render(h(Auth, { auth: newAuthAsWorkerForeground() }), document.body)

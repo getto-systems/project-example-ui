@@ -14,9 +14,9 @@ import { PasswordReset } from "./PasswordReset"
 import { AuthFactory, AuthView, initialAuthState } from "../../auth/Auth/View/view"
 
 type Props = Readonly<{
-    factory: AuthFactory
+    auth: AuthFactory
 }>
-export function Auth({ factory }: Props): VNode {
+export function Auth({ auth }: Props): VNode {
     const [err, _resetError] = useErrorBoundary((err) => {
         // ここでエラーをどこかに投げたい、けど認証前なのでこれでお茶を濁す
         console.log(err)
@@ -26,7 +26,7 @@ export function Auth({ factory }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    const container = useView(() => factory())
+    const container = useView(() => auth())
 
     if (!container.set) {
         return EMPTY_CONTENT

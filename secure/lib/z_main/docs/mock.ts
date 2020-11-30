@@ -4,4 +4,4 @@ import { newDocumentAsMock } from "../../common/Document/Document/mock"
 
 import { Document } from "../../x_preact/common/Document/Document"
 
-render(h(Document, { factory: newDocumentAsMock() }), document.body)
+render(h(Document, { document: newDocumentAsMock() }), document.body)

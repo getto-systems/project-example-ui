@@ -1,6 +1,6 @@
 import { PasswordResetSessionComponent, PasswordResetSessionState } from "./component"
 
-export function newPasswordResetSessionComponent(): PasswordResetSessionComponent {
+export function initPasswordResetSession(): PasswordResetSessionComponent {
     return new Component(new PasswordResetSessionStateFactory().succeedToSendToken())
 }
 

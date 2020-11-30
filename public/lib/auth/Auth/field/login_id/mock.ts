@@ -2,7 +2,7 @@ import { LoginIDFieldComponent, LoginIDFieldState } from "./component"
 
 import { noError, hasError } from "../../../field/data"
 
-export function newLoginIDFieldComponent(state: LoginIDFieldState): LoginIDFieldComponent {
+export function initLoginIDField(state: LoginIDFieldState): LoginIDFieldComponent {
     return new Component(state)
 }
 

@@ -4,4 +4,4 @@ import { newAuthAsMock } from "../../auth/Auth/View/mock"
 
 import { Auth } from "../../x_preact/auth/Auth"
 
-render(h(Auth, { factory: newAuthAsMock() }), document.body)
+render(h(Auth, { auth: newAuthAsMock() }), document.body)

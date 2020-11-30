@@ -4,7 +4,7 @@ import { initMenu } from "../../Outline/menu/impl"
 import { initBreadcrumb } from "../../Outline/breadcrumb/impl"
 import { initContent } from "../content/impl"
 
-import { detectMenuTarget } from "../../Outline/menu/location"
+import { detectMenuTarget } from "../../Outline/MenuTarget/impl/location"
 
 import { loadApiNonce, loadApiRoles } from "../../credential/impl/core"
 import { documentMenuTree } from "../../menu/impl/tree"

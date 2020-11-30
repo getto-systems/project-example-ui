@@ -16,9 +16,9 @@ import { Example } from "./Example"
 import { DashboardComponentSet, DashboardFactory } from "../../../common/Home/Dashboard/view"
 
 type Props = Readonly<{
-    factory: DashboardFactory
+    dashboard: DashboardFactory
 }>
-export function Dashboard({ factory }: Props): VNode {
+export function Dashboard({ dashboard }: Props): VNode {
     const [err, _resetError] = useErrorBoundary((err) => {
         // TODO ここでエラーをどこかに投げたい。apiCredential が有効なはずなので、api にエラーを投げられるはず
         console.log(err)
@@ -28,7 +28,7 @@ export function Dashboard({ factory }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    const container = useComponentSet(factory)
+    const container = useComponentSet(dashboard)
 
     if (!container.set) {
         return EMPTY_CONTENT

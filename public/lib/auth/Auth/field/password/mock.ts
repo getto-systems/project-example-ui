@@ -9,7 +9,7 @@ import {
 
 import { markInputValue, noError, hasError } from "../../../field/data"
 
-export function newPasswordFieldComponent(state: PasswordFieldState): PasswordFieldComponent {
+export function initPasswordField(state: PasswordFieldState): PasswordFieldComponent {
     return new Component(state)
 }
 

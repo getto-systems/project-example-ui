@@ -2,7 +2,7 @@ import { ExampleComponent, ExampleState } from "./component"
 
 import { markSeason } from "../../season/data"
 
-export function newExampleComponent(): ExampleComponent {
+export function initExample(): ExampleComponent {
     return new Component(new ExampleStateFactory().succeedToLoad())
 }
 
