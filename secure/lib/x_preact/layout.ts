@@ -82,3 +82,10 @@ export function notice_warning(content: VNodeContent): VNode {
 function notice(noticeClass: string, content: VNodeContent): VNode {
     return html`<p class="notice ${noticeClass}">${content}</p>`
 }
+
+export function label_pending(content: VNodeContent): VNode {
+    return label("label_pending", content)
+}
+function label(noticeClass: string, content: VNodeContent): VNode {
+    return html`<span class="label ${noticeClass}">${content}</span>`
+}
