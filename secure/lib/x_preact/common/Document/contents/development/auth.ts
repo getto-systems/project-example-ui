@@ -1,141 +1,86 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { v_medium } from "../../../layout"
-import { box, box_double } from "../box"
+import { container, label_pending, v_medium, v_small } from "../../../../layout"
+import { box, box_double, itemsSection, negativeNote } from "../../box"
+import { detail_auth } from "../index"
 
-export function content_auth(): VNode {
-    return html`
-        <section class="container">${general()}</section>
-
-        ${v_medium()}
-
-        <section class="container">${renew()}</section>
-        <section class="container">${passwordLogin()}</section>
-        <section class="container">${webAuthn()}</section>
-        <section class="container">${manageUser()}</section>
-
-        ${v_medium()}
-
-        <section class="container">${detail()}</section>
-    `
-}
-
-function general() {
-    return html`
-        ${box(
-            "セキュアな認証のために",
+export const content_development_auth = (): VNode[] => [
+    container([
+        detail_auth(),
+        box(
+            "業務で必要な時に使用するために",
             html`
-                <p>認証情報を署名して送信</p>
-                <p>認証情報はセキュアな方法で送信</p>
-                <div class="vertical vertical_small"></div>
-                <p>認証情報 :</p>
-                <ul>
-                    <li>
-                        <small><i class="lnir lnir-chevron-right"></i></small>
-                        有効期限延長用チケットトークン
-                    </li>
-                    <li>
-                        <small><i class="lnir lnir-chevron-right"></i></small> API 認証用トークン
-                    </li>
-                    <li>
-                        <small><i class="lnir lnir-chevron-right"></i></small> コンテンツ認証用トークン
-                    </li>
-                </ul>
-                <div class="vertical vertical_small"></div>
-                <p>管理者は以下を管理できる</p>
-                <ul>
-                    <li>
-                        <small><i class="lnir lnir-chevron-right"></i></small> ユーザーのログイン可否
-                        <span class="label label_pending">あとで</span>
-                    </li>
-                </ul>
+                <p>有効期限付きのトークンを発行する</p>
+                <p>有効期限が切れるまでは使用できる</p>
+                <p>有効期限を延長できる</p>
+                ${v_small()}
+                ${itemsSection(html`ユーザー情報を管理できる ${label_pending("あとで")}`, [
+                    "ログインID 変更",
+                    "パスワード変更",
+                    "web 証明書変更",
+                ])}
             `
-        )}
-        ${box(
-            "ストレスなく使用するために",
-            html` <p>有効期限を延長できる</p>
-                <p>API トークン、コンテンツトークンの検証は署名の検証のみ</p>
-                <small><p>（認証サーバーへの通信を発生させない）</p></small>
-                <p>パスワードを再設定できる</p>
-                <small><p>（パスワードを忘れた場合）</p></small>
-                <div class="vertical vertical_small"></div>
-                <p>管理者なら以下を管理できる</p>
-                <ul>
-                    <li>
-                        <small><i class="lnir lnir-chevron-right"></i></small> 他のユーザーのログインID
-                        <span class="label label_pending">あとで</span>
-                    </li>
-                    <li>
-                        <small><i class="lnir lnir-chevron-right"></i></small> 他のユーザーのパスワード
-                        <span class="label label_pending">あとで</span>
-                    </li>
-                    <li>
-                        <small><i class="lnir lnir-chevron-right"></i></small> 他のユーザーの web 証明書
-                        <span class="label label_pending">あとで</span>
-                    </li>
-                </ul>`
-        )}
-        ${box_double(
+        ),
+        box(
+            "業務内容をプライベートに保つために",
+            html`
+                <p>トークンは署名して送信</p>
+                <p>トークンはセキュアな方法で送信</p>
+                ${v_small()}
+                ${itemsSection(html`ユーザーの状態を管理できる ${label_pending("あとで")}`, [
+                    "ログイン可否の変更",
+                ])}
+            `
+        ),
+    ]),
+    container(detail_general()),
+    v_medium(),
+    container(renew()),
+    container(passwordLogin()),
+    container(webAuthn()),
+    container(manageUser()),
+    v_medium(),
+    container(detail()),
+    v_medium(),
+    container(detail_renew()),
+    v_medium(),
+    container(detail_password()),
+]
+
+function detail_general(): VNode[] {
+    return [
+        box_double(
             "判明しているダメな点",
-            html`<p>
-                    <i class="lnir lnir-close"></i> チケットの有効期限切れの前にチケットを無効化できない
-                </p>
-                <small><p>（最大延長期間を操作することで再認証を促すことは可能）</p></small>
-                <p>
-                    <i class="lnir lnir-close"></i>
-                    チケットが漏れた場合、有効期限延長を続けることで最大期間アクセス可能
-                </p>
-                <small
-                    ><p>
-                        （これをするためには cookie
-                        の奪取とメモリの解析を行う必要があるので、事実上不可能としていいかな）
-                    </p></small
-                >
-                <p><i class="lnir lnir-close"></i> http を使用することを想定</p>
-                <small><p>（http 以外の方式で通信する必要が出たときに考える）</p></small>
-                <p>
-                    <i class="lnir lnir-close"></i> cookie
-                    を使用するため別なタブで別ユーザーとしてログインできない
-                </p>
-                <small
-                    ><p>
-                        （アプリケーションを別ユーザーでログインする必要がある設計にしないことで対応）
-                    </p></small
-                >`
-        )}
-        ${box(
+            html`
+                ${negativeNote(
+                    "チケットの有効期限切れの前にチケットを無効化できない",
+                    "（最大延長期間を操作することで再認証を促すことは可能）"
+                )}
+                ${negativeNote(
+                    "チケットが漏れた場合、有効期限延長を続けることで最大期間アクセス可能",
+                    "（これをするためには cookie の奪取とメモリの解析を行う必要があるので、事実上不可能としていいかな）"
+                )}
+                ${negativeNote(
+                    "http を使用することを想定",
+                    "（http 以外の方式で通信する必要が出たときに考える）"
+                )}
+                ${negativeNote(
+                    "cookie を使用するため別なタブで別ユーザーとしてログインできない",
+                    "（アプリケーションを別ユーザーでログインする必要がある設計にしないことで対応）"
+                )}
+            `
+        ),
+        box(
             "前提とするクライアント",
             html`<p><i class="lnir lnir-display"></i> http クライアント</p>
                 <small><p>（ブラウザ、スマホアプリ）</p></small>
                 <p><i class="lnir lnir-envelope"></i> テキストメッセージクライアント</p>
                 <small><p>（メール、slack）</p></small>`
-        )}
-        ${box(
-            "詳細",
-            html` <p>API トークン、コンテンツトークンの有効期限を短く設定</p>
-                <small><p>（漏れた場合でもすぐ使用できなくなるように）</p></small>
-                <p>有効期限延長リクエストを検証</p>
-                <small><p>（リクエストが発行時と一致しなければ延長しない）</p></small>
-                <p>チケットの最大延長期間を設定</p>
-                <small><p>（永遠に延長することはできないように）</p></small>
-                <p>チケットの最大延長期限を管理</p>
-                <small><p>（必要なくなったユーザーを認証できなくする）</p></small>`
-        )}
-        ${box(
-            "認証イベント",
-            html`<p>認証イベントを記録</p>
-                <small><p>（問題のある認証を検出できるように）</p></small>
-                <p>認証イベントの通知</p>
-                <small><p>（パスワード再設定の案内）</p></small>`
-        )}
-        ${box(
-            "エラー",
-            html`<p>ユーザーの操作で復帰できるエラーの場合、エラー内容をフィードバック</p>
-                <p>そうでないエラーの場合、内容のフィードバックはせずにログに記録</p>`
-        )}
-    `
+        ),
+    ]
 }
+
 function renew() {
     return html`
         ${box(
@@ -965,6 +910,94 @@ function detail() {
                     <p>http クライアントを想定しているのでこのデータになっている</p>
                 </dd>
             </dl>`
+        )}
+    `
+}
+
+function detail_renew() {
+    return html`
+        ${box(
+            "継続認証",
+            html` <p>ApiRoles 登録なしで「権限なし」</p>
+                <p>最大延長期間まで延長可能</p>
+                <p>有効期限切れで認証エラー</p>
+                <p>ログアウト済みで認証エラー</p>
+                <p>チケット登録なしで認証エラー</p>
+                <p>Nonce 不一致で認証エラー</p>
+                <p>ユーザー不一致で認証エラー</p>`
+        )}
+        ${box("ログアウト", html` <p>有効期限切れで認証エラー</p>`)}
+    `
+}
+function detail_password() {
+    return html`
+        ${box(
+            "パスワードログイン",
+            html` <p>パスワード登録なしで認証エラー</p>
+                <p>パスワード不一致で認証エラー</p>
+                <p>空のパスワードで認証エラー</p>
+                <p>長いパスワードで認証エラー</p>
+                <p>ぎりぎりの長さで認証成功</p>`
+        )}
+        ${box(
+            "パスワード変更",
+            html` <p>変更後は古いパスワードは無効</p>
+
+                <div class="vertical vertical_small"></div>
+
+                <dl class="form">
+                    <dt class="form__header">GetLogin</dt>
+                    <dd class="form__field">
+                        <p>有効期限切れで認証エラー</p>
+                    </dd>
+                </dl>
+
+                <dl class="form">
+                    <dt class="form__header">Change</dt>
+                    <dd class="form__field">
+                        <p>有効期限切れで認証エラー</p>
+                        <p>旧パスワード不一致で変更エラー</p>
+                        <p>空のパスワードで変更エラー</p>
+                        <p>長いパスワードで変更エラー</p>
+                        <p>ぎりぎりの長さで変更成功</p>
+                    </dd>
+                </dl>`
+        )}
+        ${box(
+            "パスワードリセット",
+            html` <p>変更後は古いパスワードは無効</p>
+                <p>変更後はセッションは無効</p>
+
+                <div class="vertical vertical_small"></div>
+
+                <dl class="form">
+                    <dt class="form__header">CreateSession</dt>
+                    <dd class="form__field">
+                        <p>不明なログインIDで生成エラー</p>
+                        <p>宛先未登録で生成エラー</p>
+                    </dd>
+                </dl>
+
+                <dl class="form">
+                    <dt class="form__header">GetStatus</dt>
+                    <dd class="form__field">
+                        <p>不明なセッションIDで取得エラー</p>
+                        <p>不明なログインIDで取得エラー</p>
+                        <p>ログインID不一致で取得エラー</p>
+                    </dd>
+                </dl>
+
+                <dl class="form">
+                    <dt class="form__header">Reset</dt>
+                    <dd class="form__field">
+                        <p>不明なセッションIDでリセットエラー</p>
+                        <p>有効期限切れでリセットエラー</p>
+                        <p>有効期限ぎりぎりでリセット成功</p>
+                        <p>不明なログインIDでリセットエラー</p>
+                        <p>ログインID不一致でリセットエラー</p>
+                        <p>不正なパスワードでリセットエラー</p>
+                    </dd>
+                </dl>`
         )}
     `
 }

@@ -62,7 +62,7 @@ function initCredentialAction() {
     }
 }
 function initMenuAction(menuExpandStorage: Storage) {
-    const tree = documentMenuTree
+    const tree = documentMenuTree()
     const badge = initNoopBadgeClient()
     const expands = initStorageMenuExpandRepository(
         menuExpandStorage,

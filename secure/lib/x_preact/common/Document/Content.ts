@@ -6,10 +6,8 @@ import { VNodeContent } from "../../layout"
 import { BreadcrumbList } from "../Outline/BreadcrumbList"
 
 import { content_index } from "./contents/index"
-import { content_server } from "./contents/server"
-import { content_detail_server } from "./contents/detail/server"
-import { content_auth } from "./contents/auth"
-import { content_detail_auth } from "./contents/detail/auth"
+import { content_development_deployment } from "./contents/development/deployment"
+import { content_development_auth } from "./contents/development/auth"
 
 import { DocumentComponentSet } from "../../../common/Document/Document/view"
 import { initialContentState } from "../../../common/Document/content/component"
@@ -69,10 +67,8 @@ function entry(title: string, content: Factory<VNodeContent>): ContentEntry {
 const indexEntry: ContentEntry = entry("ドキュメント", content_index)
 const contentMap: Record<DocumentPath, ContentEntry> = {
     "/docs/index.html": indexEntry,
-    "/docs/server.html": entry("サーバー構成", content_server),
-    "/docs/detail/server.html": entry("サーバー構成詳細", content_detail_server),
-    "/docs/auth.html": entry("認証・認可", content_auth),
-    "/docs/detail/auth.html": entry("認証・認可詳細", content_detail_auth),
+    "/docs/development/deployment.html": entry("配備構成", content_development_deployment),
+    "/docs/development/auth.html": entry("認証・認可", content_development_auth),
 }
 
 const EMPTY_CONTENT = html``

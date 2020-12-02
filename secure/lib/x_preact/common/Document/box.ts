@@ -38,3 +38,22 @@ export function items(list: VNodeContent[]): VNode {
         </li>`
     }
 }
+
+export function negativeNote(content: VNodeContent, resolve: VNodeContent): VNode {
+    return html`
+        <p><i class="lnir lnir-close"></i> ${content}</p>
+        <small><p>${resolve}</p></small>
+        ${v_small()}
+    `
+}
+
+export function form(title: VNodeContent, content: VNodeContent, help: VNodeContent[]): VNode {
+    return html`
+        <dl class="form">
+            <dt class="form__header">${title}</dt>
+            <dd class="form__field">
+                ${content} ${help.map((message) => html`<p class="form__help">${message}</p>`)}
+            </dd>
+        </dl>
+    `
+}

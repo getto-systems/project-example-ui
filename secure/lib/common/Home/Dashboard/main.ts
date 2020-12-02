@@ -63,7 +63,7 @@ function initCredentialAction() {
     }
 }
 function initMenuAction(menuExpandStorage: Storage) {
-    const tree = mainMenuTree
+    const tree = mainMenuTree()
     const badge = initSimulateBadgeClient({})
     const expands = initStorageMenuExpandRepository(menuExpandStorage, env.storageKey.menuExpand.main)
 
