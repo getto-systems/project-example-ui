@@ -7,7 +7,7 @@ import { loginIDFieldError, loginIDFieldHandler } from "../field/login_id"
 import {
     LoginIDFieldComponent,
     initialLoginIDFieldState,
-} from "../../../login/Login/field/login_id/component"
+} from "../../../../auth/login/Login/field/login_id/component"
 
 type ComponentSet = Readonly<{
     loginIDField: LoginIDFieldComponent

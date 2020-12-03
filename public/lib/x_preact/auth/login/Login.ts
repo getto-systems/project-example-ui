@@ -2,8 +2,8 @@ import { h, VNode } from "preact"
 import { useState, useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useView } from "../hooks"
-import { ApplicationError } from "../System/ApplicationError"
+import { useView } from "../../hooks"
+import { ApplicationError } from "../../System/ApplicationError"
 
 import { RenewCredential } from "./RenewCredential"
 
@@ -11,7 +11,7 @@ import { PasswordLogin } from "./PasswordLogin"
 import { PasswordResetSession } from "./PasswordResetSession"
 import { PasswordReset } from "./PasswordReset"
 
-import { LoginFactory, LoginView, initialLoginState } from "../../login/Login/View/view"
+import { LoginFactory, LoginView, initialLoginState } from "../../../auth/login/Login/View/view"
 
 type Props = Readonly<{
     login: LoginFactory

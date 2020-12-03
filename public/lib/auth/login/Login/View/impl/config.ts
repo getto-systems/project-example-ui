@@ -1,4 +1,4 @@
-import { env } from "../../../../y_static/env"
+import { env } from "../../../../../y_static/env"
 
 export function newTimeConfig(): TimeConfig {
     return {

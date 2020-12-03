@@ -1,9 +1,9 @@
-import { ApiCredentialMessage } from "../../../../../y_static/local_storage_pb.js"
+import { ApiCredentialMessage } from "../../../../../../y_static/local_storage_pb.js"
 
 import {
     decodeBase64StringToUint8Array,
     encodeUint8ArrayToBase64String,
-} from "../../../../../z_external/protocol_buffers_util"
+} from "../../../../../../z_external/protocol_buffers_util"
 
 import { StorageKey, AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra"
 

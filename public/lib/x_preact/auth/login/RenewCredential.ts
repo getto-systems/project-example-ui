@@ -2,15 +2,15 @@ import { h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { fullScreenError } from "../layout"
+import { fullScreenError } from "../../layout"
 import { appendScript } from "./script"
 
-import { ApplicationError } from "../System/ApplicationError"
+import { ApplicationError } from "../../System/ApplicationError"
 
-import { RenewCredentialComponentSet } from "../../login/Login/View/view"
-import { initialRenewCredentialState } from "../../login/Login/renew_credential/component"
+import { RenewCredentialComponentSet } from "../../../auth/login/Login/View/view"
+import { initialRenewCredentialState } from "../../../auth/login/Login/renew_credential/component"
 
-import { RenewError } from "../../login/credential/data"
+import { RenewError } from "../../../auth/login/credential/data"
 
 type Props = Readonly<{
     components: RenewCredentialComponentSet
