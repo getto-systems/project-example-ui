@@ -47,9 +47,6 @@ export const content_development_auth_login = (): VNode[] => [
     v_medium(),
     container(renewCredential()),
     v_medium(),
-    // TODO ログアウトは認証情報管理に移動
-    container(logout()),
-    v_medium(),
     container(passwordLogin()),
     v_medium(),
     container(passwordReset()),
@@ -117,23 +114,6 @@ const renewCredential = () => [
     ]),
     box("継続更新", [html`<p>処理は認証トークン更新と同様</p>`, html`<p>一定期間ごとに更新を行う</p>`]),
 ]
-const logout = () => [
-    box("ログアウト", [
-        toApiServer("チケットトークン", ["cookie + nonce"]),
-        inApiServer(
-            items([
-                validate("チケットトークン検証"),
-                validate("チケット有効期限検証"),
-                "チケット有効期限無効化",
-            ]),
-            []
-        ),
-        hr,
-        html`<p>ログアウトで認証情報は失効</p>`,
-        v_medium(),
-        itemsSection("認証トークンを失効させる検証", ["チケットトークン検証", "チケット有効期限検証"]),
-    ]),
-]
 const passwordLogin = () => [
     box("パスワードログイン", [
         itemsSection("ログインID・パスワード入力", ["入力形式を検証"]),
@@ -167,7 +147,7 @@ const passwordLogin = () => [
         itemsSection("パスワード検証", [
             "空でないこと",
             "長すぎないこと",
-            "登録されたユーザーのパスワードと一致すること",
+            "保存されているハッシュ化パスワードとの同一性検証が通ること",
         ]),
     ]),
 ]
