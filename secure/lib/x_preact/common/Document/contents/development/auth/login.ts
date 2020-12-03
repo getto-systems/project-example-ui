@@ -48,11 +48,11 @@ export const content_development_auth_login = (): VNode[] => [
     v_medium(),
     container(renewCredential()),
     v_medium(),
+    // TODO ログアウトは認証情報管理に移動
     container(logout()),
     v_medium(),
     container(passwordLogin()),
     v_small(),
-    // TODO リセットはパスワード変更のほうに移動
     container(passwordReset()),
     v_medium(),
     container(webAuthn()),
@@ -276,7 +276,7 @@ const passwordReset = () => [
 function passwordLogin_old() {
     return html`
         ${box(
-            // TODO パスワード変更の項目に移動
+            // TODO 認証情報管理の項目に移動
             "パスワード変更",
             html` <dl class="form">
                     <dt class="form__header">

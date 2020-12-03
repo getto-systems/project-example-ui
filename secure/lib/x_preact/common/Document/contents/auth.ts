@@ -22,8 +22,8 @@ export function content_auth_login(): VNode {
         v_medium(),
         html`
             <p>認証トークンの更新</p>
-            <p>ログアウト</p>
             <p>パスワードログイン</p>
+            <p>パスワードリセット</p>
             <p>web 証明書ログイン</p>
         `,
     ])
@@ -57,11 +57,11 @@ export function content_auth_user(): VNode {
     ])
 }
 export function content_auth_credential(): VNode {
-    return box("パスワード・web 証明書更新", [
+    return box("認証情報管理", [
         notice_info("業務で必要な時に使用できる"),
         v_medium(),
         html`
-            <p>パスワードリセット</p>
+            <p>ログアウト</p>
             <p>自分のパスワードを変更</p>
             <p>新しい web 証明書を登録</p>
         `,
