@@ -34,22 +34,28 @@ function dumpEnv() {
 
 function dumpEntryPoint() {
     const files = entryPoint.find()
-    const padding = "\n    | "
+    const docs = files.filter(isDocs)
     dump(
         path.join(__dirname, "./lib/y_static/path.ts"),
         [
             "export type StaticMenuPath =" + toTypeVariant(files),
-            "export type StaticDocumentPath =" + toTypeVariant(files.filter(docs)),
+            "export type StaticDocumentPath =" + toTypeVariant(docs),
+            "export const staticDocumentPaths: StaticDocumentPath[] = " + toConstValue(docs),
         ].join("\n")
     )
 
-    function docs(file) {
+    function isDocs(file) {
         return file.startsWith("/docs/")
     }
 
     function toTypeVariant(files) {
+        const padding = "\n    | "
         return padding + files.map(toStringLiteral).join(padding)
     }
+    function toConstValue(files) {
+        return JSON.stringify(files, null, "    ")
+    }
+
     function toStringLiteral(file) {
         return `"${file}"`
     }

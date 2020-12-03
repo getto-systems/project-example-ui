@@ -1,4 +1,4 @@
-import { DocumentPath } from "../../../content/data"
+import { DocumentPath, documentPaths } from "../../../content/data"
 
 export function detectDocumentPath(version: string, currentLocation: Location): DocumentPath {
     const pathname = new URL(currentLocation.toString()).pathname
@@ -8,15 +8,11 @@ export function detectDocumentPath(version: string, currentLocation: Location): 
     }
 
     const path = pathname.replace(versionPrefix, "/")
-    switch (path) {
-        case "/docs/index.html":
-        case "/docs/auth.html":
-        case "/docs/development/deployment.html":
-        case "/docs/development/auth/login.html":
-            return path
-        default:
-            return defaultDocumentTarget
+    if (documentPaths.find((documentPath) => documentPath === path)) {
+        // documentPaths は DocumentPath[] なので、これに一致するなら DocumentPath
+        return path as DocumentPath
     }
+    return defaultDocumentTarget
 }
 
 const defaultDocumentTarget = "/docs/index.html"
