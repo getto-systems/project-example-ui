@@ -16,6 +16,8 @@ import { DashboardFactory } from "./view"
 import { loadSeason } from "../../season/impl/core"
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../menu/impl/core"
 
+import { MenuBadgeMap } from "../../menu/infra"
+
 import { initMemoryApiCredentialRepository } from "../../credential/impl/repository/api_credential/memory"
 import { initMemorySeasonRepository } from "../../season/impl/repository/season/memory"
 import { initDateYearRepository } from "../../season/impl/repository/year/date"
@@ -64,7 +66,7 @@ function initCredentialAction() {
 }
 function initMenuAction(menuExpandStorage: Storage) {
     const tree = mainMenuTree()
-    const badge = initSimulateBadgeClient({})
+    const badge = initSimulateBadgeClient(new MenuBadgeMap())
     const expands = initStorageMenuExpandRepository(menuExpandStorage, env.storageKey.menuExpand.main)
 
     return {

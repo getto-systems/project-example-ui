@@ -1,6 +1,6 @@
 import { Icon, iconClass, lnir } from "../../../z_external/icon"
 
-import { MenuPermission, MenuTree, MenuTreeNode } from "../infra"
+import { MenuPath, MenuPermission, MenuTree, MenuTreeNode } from "../infra"
 
 function category(label: string, permission: MenuPermission, children: MenuTree): MenuTreeNode {
     return { type: "category", category: { label, permission }, children }
@@ -8,7 +8,7 @@ function category(label: string, permission: MenuPermission, children: MenuTree)
 const any: MenuPermission = { type: "any" }
 const dev: MenuPermission = { type: "role", roles: ["development-docs"] }
 
-function item(label: string, icon: Icon, path: string): MenuTreeNode {
+function item(label: string, icon: Icon, path: MenuPath): MenuTreeNode {
     return { type: "item", item: { label, icon: iconClass(icon), path } }
 }
 
