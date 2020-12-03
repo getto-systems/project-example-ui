@@ -1,13 +1,13 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { container, v_medium, v_small } from "../../../../layout"
-import { box, box_double, itemsSection, negativeNote, pending } from "../../box"
-import { detail_auth } from "../index"
+import { container, v_medium, v_small } from "../../../../../layout"
+import { box, box_double, itemsSection, negativeNote, pending } from "../../../box"
+import { content_auth_login } from "../../auth"
 
-export const content_development_auth = (): VNode[] => [
+export const content_development_auth_login = (): VNode[] => [
     container([
-        detail_auth(),
+        content_auth_login(),
         box("業務で必要な時に使用するために", [
             html`
                 <p>有効期限付きのトークンを発行する</p>

@@ -4,11 +4,11 @@ import { html } from "htm/preact"
 import { container, v_medium, v_small } from "../../../../layout"
 import { box, form } from "../../box"
 
-import { detail_deployment } from "../index"
+import { content_index_deployment } from "../index"
 
 export const content_development_deployment = (): VNode[] => [
     container([
-        detail_deployment(),
+        content_index_deployment(),
         box(
             "業務で必要な時に使用するために",
             html`
