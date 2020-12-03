@@ -3,7 +3,7 @@ const path = require("path")
 
 module.exports = {
     entry: () => {
-        return [{ path: "update" }, { path: "auth" }].reduce((acc, info) => {
+        return [{ path: "update" }, { path: "login" }].reduce((acc, info) => {
             acc[info.path] = toMockPath()
             return acc
 

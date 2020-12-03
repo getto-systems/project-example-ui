@@ -4,7 +4,7 @@ const WorkerPlugin = require("worker-plugin")
 
 module.exports = {
     entry: () => {
-        return [{ path: "update" }, { path: "auth", withWorker: true }].reduce((acc, info) => {
+        return [{ path: "update" }, { path: "login", withWorker: true }].reduce((acc, info) => {
             acc[info.path] = toMainPath()
             if (info.withWorker) {
                 acc[`${info.path}.worker`] = toWorkerPath()
