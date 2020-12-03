@@ -7,7 +7,7 @@ import { loginIDFieldError, loginIDFieldHandler } from "../field/login_id"
 import {
     LoginIDFieldComponent,
     initialLoginIDFieldState,
-} from "../../../auth/login/Login/field/login_id/component"
+} from "../../../../auth/login/Login/field/login_id/component"
 
 type ComponentSet = Readonly<{
     loginIDField: LoginIDFieldComponent
@@ -27,9 +27,7 @@ export function LoginIDField({ loginIDField }: ComponentSet): VNode {
                 <dd class="form__field">
                     <input type="text" class="input_fill" onInput=${handler.onInput} />
                     ${loginIDFieldError(state.result)}
-                    <p class="form__help">
-                        このログインIDに設定された送信先にリセットトークンを送信します
-                    </p>
+                    <p class="form__help">最初に入力したログインIDを入力してください</p>
                 </dd>
             </dl>
         </label>

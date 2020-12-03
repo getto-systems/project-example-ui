@@ -2,18 +2,18 @@ import { h, VNode } from "preact"
 import { useState, useEffect, useRef } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { loginHeader } from "../layout"
+import { loginHeader } from "../../layout"
 import { appendScript } from "./script"
 
-import { ApplicationError } from "../System/ApplicationError"
+import { ApplicationError } from "../../System/ApplicationError"
 
 import { LoginIDField } from "./PasswordLogin/LoginIDField"
 import { PasswordField } from "./PasswordLogin/PasswordField"
 
-import { PasswordLoginComponentSet } from "../../auth/login/Login/View/view"
-import { initialPasswordLoginState } from "../../auth/login/Login/password_login/component"
+import { PasswordLoginComponentSet } from "../../../auth/login/Login/View/view"
+import { initialPasswordLoginState } from "../../../auth/login/Login/password_login/component"
 
-import { LoginError } from "../../auth/login/password_login/data"
+import { LoginError } from "../../../auth/login/password_login/data"
 
 type Props = Readonly<{
     components: PasswordLoginComponentSet

@@ -2,18 +2,18 @@ import { h, VNode } from "preact"
 import { useState, useRef, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { loginHeader } from "../layout"
+import { loginHeader } from "../../layout"
 import { appendScript } from "./script"
 
-import { ApplicationError } from "../System/ApplicationError"
+import { ApplicationError } from "../../System/ApplicationError"
 
 import { LoginIDField } from "./PasswordReset/LoginIDField"
 import { PasswordField } from "./PasswordReset/PasswordField"
 
-import { PasswordResetComponentSet } from "../../auth/login/Login/View/view"
-import { initialPasswordResetState } from "../../auth/login/Login/password_reset/component"
+import { PasswordResetComponentSet } from "../../../auth/login/Login/View/view"
+import { initialPasswordResetState } from "../../../auth/login/Login/password_reset/component"
 
-import { ResetError } from "../../auth/login/password_reset/data"
+import { ResetError } from "../../../auth/login/password_reset/data"
 
 type Props = Readonly<{
     components: PasswordResetComponentSet
