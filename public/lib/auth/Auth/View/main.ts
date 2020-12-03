@@ -35,7 +35,7 @@ import { initFetchPasswordLoginClient } from "../../password_login/impl/client/l
 import { initSimulatePasswordResetClient } from "../../password_reset/impl/client/reset/simulate"
 import { initSimulatePasswordResetSessionClient } from "../../password_reset/impl/client/session/simulate"
 
-import { currentPagePathname, detectLoginView, detectResetToken } from "./impl/location"
+import { currentPagePathname, detectViewState, detectResetToken } from "./impl/location"
 
 import { AuthFactory } from "./view"
 
@@ -83,7 +83,7 @@ export function newAuthAsSingle(): AuthFactory {
     }
     const collector = {
         auth: {
-            getLoginView: () => detectLoginView(currentLocation),
+            getLoginView: () => detectViewState(currentLocation),
         },
         application: {
             getPagePathname: () => currentPagePathname(currentLocation),
@@ -136,7 +136,7 @@ export function newAuthAsWorkerForeground(): AuthFactory {
 
     const collector = {
         auth: {
-            getLoginView: () => detectLoginView(currentLocation),
+            getLoginView: () => detectViewState(currentLocation),
         },
         application: {
             getPagePathname: () => currentPagePathname(currentLocation),

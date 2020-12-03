@@ -28,7 +28,7 @@ export type AuthState =
     | Readonly<{ type: "password-reset"; components: PasswordResetComponentSet }>
     | Readonly<{ type: "error"; err: string }>
 
-export type LoginState = "password-login" | "password-reset-session" | "password-reset"
+export type ViewState = "password-login" | "password-reset-session" | "password-reset"
 
 export const initialAuthState: AuthState = { type: "initial" }
 

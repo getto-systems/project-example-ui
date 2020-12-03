@@ -1,38 +1,38 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { container, label_pending, v_medium, v_small } from "../../../../layout"
-import { box, box_double, itemsSection, negativeNote } from "../../box"
+import { container, v_medium, v_small } from "../../../../layout"
+import { box, box_double, itemsSection, negativeNote, pending } from "../../box"
 import { detail_auth } from "../index"
 
 export const content_development_auth = (): VNode[] => [
     container([
         detail_auth(),
-        box(
-            "業務で必要な時に使用するために",
+        box("業務で必要な時に使用するために", [
             html`
                 <p>有効期限付きのトークンを発行する</p>
                 <p>有効期限が切れるまでは使用できる</p>
                 <p>有効期限を延長できる</p>
-                ${v_small()}
-                ${itemsSection(html`ユーザー情報を管理できる ${label_pending("あとで")}`, [
-                    "ログインID 変更",
-                    "パスワード変更",
-                    "web 証明書変更",
-                ])}
-            `
-        ),
-        box(
-            "業務内容をプライベートに保つために",
+            `,
+            v_small(),
+            itemsSection(pending("ユーザー情報を管理できる"), [
+                "ログインID 変更",
+                "パスワード変更",
+                "web 証明書変更",
+            ]),
+        ]),
+        box("業務内容をプライベートに保つために", [
             html`
                 <p>トークンは署名して送信</p>
                 <p>トークンはセキュアな方法で送信</p>
-                ${v_small()}
-                ${itemsSection(html`ユーザーの状態を管理できる ${label_pending("あとで")}`, [
-                    "ログイン可否の変更",
-                ])}
-            `
-        ),
+                <p>コンテンツのアクセス制限</p>
+            `,
+            v_small(),
+            itemsSection(pending("ユーザーの状態を管理できる"), [
+                "ログイン可否の変更",
+                "アクセスを許可するコンテンツ",
+            ]),
+        ]),
     ]),
     container(detail_general()),
     v_medium(),

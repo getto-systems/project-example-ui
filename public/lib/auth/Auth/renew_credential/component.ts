@@ -27,8 +27,8 @@ export type RenewCredentialState =
     | Readonly<{ type: "required-to-login" }>
     | Readonly<{ type: "try-to-renew" }>
     | Readonly<{ type: "delayed-to-renew" }>
-    | Readonly<{ type: "failed-to-renew"; err: RenewError }>
     | Readonly<{ type: "succeed-to-renew"; scriptPath: ScriptPath }>
+    | Readonly<{ type: "failed-to-renew"; err: RenewError }>
     | Readonly<{ type: "load-error"; err: LoadError }>
     | Readonly<{ type: "storage-error"; err: StorageError }>
     | Readonly<{ type: "error"; err: string }>
