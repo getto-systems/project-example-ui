@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 import { container, notice_info, v_medium, v_small } from "../../../layout"
 import { box, items } from "../box"
 
-import { content_index_auth } from "./index"
+import { content_index_auth } from "./home"
 
 export const content_auth = (): VNode[] => [
     container(content_index_auth()),
@@ -22,8 +22,8 @@ export function content_auth_login(): VNode {
         v_medium(),
         html`
             <p>認証トークンの更新</p>
+            <p>ログアウト</p>
             <p>パスワードログイン</p>
-            <p>パスワードリセット</p>
             <p>web 証明書ログイン</p>
         `,
     ])
@@ -57,10 +57,11 @@ export function content_auth_user(): VNode {
     ])
 }
 export function content_auth_credential(): VNode {
-    return box("パスワード・web 証明書管理", [
+    return box("パスワード・web 証明書更新", [
         notice_info("業務で必要な時に使用できる"),
         v_medium(),
         html`
+            <p>パスワードリセット</p>
             <p>自分のパスワードを変更</p>
             <p>新しい web 証明書を登録</p>
         `,

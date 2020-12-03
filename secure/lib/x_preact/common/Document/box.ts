@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { label_pending, VNodeContent, v_small } from "../../layout"
+import { label_alert, label_pending, VNodeContent, v_medium, v_small } from "../../layout"
 
 export function box(title: VNodeContent, content: VNodeContent): VNode {
     return box_content("", title, content)
@@ -23,7 +23,7 @@ function box_content(boxClass: string, title: VNodeContent, content: VNodeConten
 export function itemsSection(title: VNodeContent, list: VNodeContent[]): VNode {
     return html`
         <p>${title}</p>
-        ${v_small()} ${items(list)}
+        ${v_small()} ${items(list)} ${v_medium()}
     `
 }
 export function items(list: VNodeContent[]): VNode {
@@ -40,9 +40,12 @@ export function items(list: VNodeContent[]): VNode {
 }
 
 export function negativeNote(content: VNodeContent, resolve: VNodeContent): VNode {
+    return iconSection("lnir lnir-close", content, resolve)
+}
+export function iconSection(icon: string, content: VNodeContent, note: VNodeContent): VNode {
     return html`
-        <p><i class="lnir lnir-close"></i> ${content}</p>
-        <small><p>${resolve}</p></small>
+        <p><i class="${icon}"></i> ${content}</p>
+        <small><p>${note}</p></small>
         ${v_small()}
     `
 }
@@ -51,9 +54,7 @@ export function form(title: VNodeContent, content: VNodeContent, help: VNodeCont
     return html`
         <dl class="form">
             <dt class="form__header">${title}</dt>
-            <dd class="form__field">
-                ${content} ${help.map(toFormHelp)}
-            </dd>
+            <dd class="form__field">${content} ${help.map(toFormHelp)}</dd>
         </dl>
     `
 
@@ -64,4 +65,7 @@ export function form(title: VNodeContent, content: VNodeContent, help: VNodeCont
 
 export function pending(content: VNodeContent): VNode {
     return html`${content} ${label_pending("あとで")}`
+}
+export function validate(content: VNodeContent): VNode {
+    return html`${label_alert("検証")} ${content}`
 }
