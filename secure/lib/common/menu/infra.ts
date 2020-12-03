@@ -1,3 +1,5 @@
+import { StaticMenuPath } from "../../y_static/path"
+
 import { ApiNonce } from "../credential/data"
 
 export type LoadBreadcrumbInfra = Readonly<{
@@ -15,7 +17,7 @@ export type ToggleMenuExpandInfra = Readonly<{
 }>
 
 export type MenuCategoryLabel = string
-export type MenuPath = string
+export type MenuPath = StaticMenuPath
 
 export type MenuTree = MenuTreeNode[]
 export type MenuTreeNode =
@@ -34,8 +36,27 @@ export type MenuTreeItem = Readonly<{
 
 export type MenuPermission = Readonly<{ type: "any" }> | Readonly<{ type: "role"; roles: string[] }>
 
-export type MenuBadge = Record<MenuPath, number>
+export type MenuBadge = MenuBadgeMap
 export type MenuExpand = CategoryLabelsSet
+
+class ArrayMap<K, V> {
+    map: ArrayMapEntry<K, V>[] = []
+
+    init(map: ArrayMapEntry<K, V>[]) {
+        this.map = map
+    }
+
+    fetch(key: K, defaultValue: V): V {
+        const entry = this.map.find((entry) => entry.key === key)
+        if (!entry) {
+            return defaultValue
+        }
+        return entry.value
+    }
+}
+type ArrayMapEntry<K, V> = { key: K; value: V }
+
+export class MenuBadgeMap extends ArrayMap<MenuPath, number> {}
 
 class ArraySet<T> {
     set: T[] = []

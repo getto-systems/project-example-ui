@@ -9,6 +9,7 @@ import {
     MenuTreeItem,
     ToggleMenuExpandInfra,
     CategoryLabelsSet,
+    MenuBadgeMap,
 } from "../infra"
 
 import { LoadBreadcrumb, LoadMenu, ToggleMenuExpand } from "../action"
@@ -209,7 +210,7 @@ function toMenu({ tree, menuTarget, roles }: MenuInfo, expand: MenuExpand, badge
         return {
             type: "item",
             isActive: menuTarget.versioned ? item.path === menuTarget.currentPath : false,
-            badgeCount: badge[item.path] || 0,
+            badgeCount: badge.fetch(item.path, 0),
             item: toMenuItem(item, menuTarget.version),
         }
     }
@@ -280,8 +281,8 @@ export const toggleMenuExpand = (infra: ToggleMenuExpandInfra): ToggleMenuExpand
     }
 }
 
+const EMPTY_BADGE: MenuBadge = new MenuBadgeMap()
 const EMPTY_EXPAND: MenuExpand = new CategoryLabelsSet()
-const EMPTY_BADGE: MenuBadge = {}
 
 const EMPTY_BREADCRUMB: Breadcrumb = []
 const EMPTY_MENU: MenuNode[] = []
