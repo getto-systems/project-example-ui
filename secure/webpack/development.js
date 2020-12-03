@@ -1,45 +1,42 @@
 /* eslint-disable */
 const path = require("path")
+const fs = require("fs")
 const WorkerPlugin = require("worker-plugin")
+
+const entryPoint = require("../entryPoint")
 
 module.exports = {
     entry: () => {
-        return [
-            { path: "index" },
-            {
-                path: "docs",
-                names: [
-                    "docs/index",
-                    "docs/auth",
-                    "docs/development/deployment",
-                    "docs/development/auth/login",
-                ],
-            },
-        ].reduce((acc, info) => {
-            toNames().forEach((name) => {
-                acc[name] = toMainPath()
-                if (info.withWorker) {
-                    acc[`${name}.worker`] = toWorkerPath()
-                }
-            })
-            return acc
+        return entryPoint.find().reduce((acc, file) => {
+            const name = entryPoint.toEntryName(file)
+            acc[name] = toMainPath(file)
 
-            function toNames() {
-                if (!info.names) {
-                    return [info.path]
-                }
-                return info.names
+            const worker = toWorkerPath(file)
+            if (exists(worker)) {
+                acc[`${name}.worker`] = worker
             }
-            function toMainPath() {
-                return toPath("main")
-            }
-            function toWorkerPath() {
-                return toPath("worker")
-            }
-            function toPath(type) {
-                return path.join(__dirname, `../lib/z_main/${info.path}/${type}.ts`)
-            }
+
+            return acc
         }, {})
+
+        function toMainPath(file) {
+            return toPath("main", file)
+        }
+        function toWorkerPath(file) {
+            return toPath("worker", file)
+        }
+        function toPath(type, file) {
+            return path.join(__dirname, `../lib/z_main${entryPoint.toEntryPath(file)}/${type}.ts`)
+        }
+
+        function exists(file) {
+            try {
+                fs.accessSync(file)
+                return true
+            } catch (err) {
+                return false
+            }
+        }
     },
     output: {
         path: path.join(__dirname, "../dist"),

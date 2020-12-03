@@ -4,6 +4,8 @@ const path = require("path")
 
 module.exports = {
     find,
+    toEntryName,
+    toEntryPath,
 }
 
 function find() {
@@ -26,4 +28,14 @@ function find() {
         })
         return files
     }
+}
+
+function toEntryName(file) {
+    return file.replace("/", "").replace(/\.html$/, "")
+}
+function toEntryPath(file) {
+    if (file.startsWith("/docs/")) {
+        return "/docs"
+    }
+    return file.replace(/\.html$/, "")
 }

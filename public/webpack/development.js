@@ -1,26 +1,41 @@
 /* eslint-disable */
 const path = require("path")
+const fs = require("fs")
 const WorkerPlugin = require("worker-plugin")
+
+const entryPoint = require("../entryPoint")
 
 module.exports = {
     entry: () => {
-        return [{ path: "update" }, { path: "login", withWorker: true }].reduce((acc, info) => {
-            acc[info.path] = toMainPath()
-            if (info.withWorker) {
-                acc[`${info.path}.worker`] = toWorkerPath()
-            }
-            return acc
+        return entryPoint.find().reduce((acc, name) => {
+            acc[name] = toMainPath(name)
 
-            function toMainPath() {
-                return toPath("main")
+            const worker = toWorkerPath(name)
+            if (exists(worker)) {
+                acc[`${name}.worker`] = worker
             }
-            function toWorkerPath() {
-                return toPath("worker")
-            }
-            function toPath(type) {
-                return path.join(__dirname, `../lib/z_main/${info.path}/${type}.ts`)
-            }
+
+            return acc
         }, {})
+
+        function toMainPath(name) {
+            return toPath("main", name)
+        }
+        function toWorkerPath(name) {
+            return toPath("worker", name)
+        }
+        function toPath(type, name) {
+            return path.join(__dirname, `../lib/z_main/${name}/${type}.ts`)
+        }
+
+        function exists(file) {
+            try {
+                fs.accessSync(file)
+                return true
+            } catch (err) {
+                return false
+            }
+        }
     },
     output: {
         path: path.join(__dirname, "../dist"),

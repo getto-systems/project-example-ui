@@ -1,38 +1,21 @@
 /* eslint-disable */
-const { toNamespacedPath } = require("path")
 const path = require("path")
+
+const entryPoint = require("../entryPoint")
 
 module.exports = {
     entry: () => {
-        return [
-            { path: "index" },
-            {
-                path: "docs",
-                names: [
-                    "docs/index",
-                    "docs/development/deployment",
-                    "docs/development/auth",
-                ],
-            },
-        ].reduce((acc, info) => {
-            toNames().forEach((name) => {
-                acc[name] = toMockPath()
-            })
+        return entryPoint.find().reduce((acc, file) => {
+            acc[entryPoint.toEntryName(file)] = toMockPath(file)
             return acc
-
-            function toNames() {
-                if (!info.names) {
-                    return [info.path]
-                }
-                return info.names
-            }
-            function toMockPath() {
-                return toPath("mock")
-            }
-            function toPath(type) {
-                return path.join(__dirname, `../lib/z_main/${info.path}/${type}.ts`)
-            }
         }, {})
+
+        function toMockPath(file) {
+            return toPath("mock", file)
+        }
+        function toPath(type, file) {
+            return path.join(__dirname, `../lib/z_main${entryPoint.toEntryPath(file)}/${type}.ts`)
+        }
     },
     output: {
         path: path.join(__dirname, "../dist"),
