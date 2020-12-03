@@ -10,10 +10,10 @@ import { ApplicationError } from "../System/ApplicationError"
 import { LoginIDField } from "./PasswordLogin/LoginIDField"
 import { PasswordField } from "./PasswordLogin/PasswordField"
 
-import { PasswordLoginComponentSet } from "../../login/Login/View/view"
-import { initialPasswordLoginState } from "../../login/Login/password_login/component"
+import { PasswordLoginComponentSet } from "../../auth/login/Login/View/view"
+import { initialPasswordLoginState } from "../../auth/login/Login/password_login/component"
 
-import { LoginError } from "../../login/password_login/data"
+import { LoginError } from "../../auth/login/password_login/data"
 
 type Props = Readonly<{
     components: PasswordLoginComponentSet

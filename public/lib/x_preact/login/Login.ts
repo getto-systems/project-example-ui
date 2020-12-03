@@ -11,7 +11,7 @@ import { PasswordLogin } from "./PasswordLogin"
 import { PasswordResetSession } from "./PasswordResetSession"
 import { PasswordReset } from "./PasswordReset"
 
-import { LoginFactory, LoginView, initialLoginState } from "../../login/Login/View/view"
+import { LoginFactory, LoginView, initialLoginState } from "../../auth/login/Login/View/view"
 
 type Props = Readonly<{
     login: LoginFactory

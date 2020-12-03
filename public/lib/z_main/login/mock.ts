@@ -1,6 +1,6 @@
 import { render, h } from "preact"
 
-import { newLoginAsMock } from "../../login/Login/View/mock"
+import { newLoginAsMock } from "../../auth/login/Login/View/mock"
 
 import { Login } from "../../x_preact/login/Login"
 
