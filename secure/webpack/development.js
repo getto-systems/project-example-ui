@@ -10,8 +10,9 @@ module.exports = {
                 path: "docs",
                 names: [
                     "docs/index",
+                    "docs/auth",
                     "docs/development/deployment",
-                    "docs/development/auth",
+                    "docs/development/auth/login",
                 ],
             },
         ].reduce((acc, info) => {
