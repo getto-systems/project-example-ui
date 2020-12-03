@@ -1,8 +1,18 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { container, v_medium, v_small } from "../../../../../layout"
-import { box, box_double, itemsSection, negativeNote, pending } from "../../../box"
+import { container, VNodeContent, v_medium, v_small } from "../../../../../layout"
+import {
+    box,
+    box_double,
+    form,
+    iconSection,
+    items,
+    itemsSection,
+    negativeNote,
+    pending,
+    validate,
+} from "../../../box"
 import { content_auth_login } from "../../auth"
 
 export const content_development_auth_login = (): VNode[] => [
@@ -34,12 +44,19 @@ export const content_development_auth_login = (): VNode[] => [
             ]),
         ]),
     ]),
-    container(detail_general()),
+    container(general()),
     v_medium(),
-    container(renew()),
+    container(renewCredential()),
+    v_medium(),
+    container(logout()),
+    v_medium(),
     container(passwordLogin()),
+    v_small(),
+    // TODO リセットはパスワード変更のほうに移動
+    container(passwordReset()),
+    v_medium(),
     container(webAuthn()),
-    container(manageUser()),
+    // TODO ここから下を auth/detail に移動
     v_medium(),
     container(detail()),
     v_medium(),
@@ -48,179 +65,218 @@ export const content_development_auth_login = (): VNode[] => [
     container(detail_password()),
 ]
 
-function detail_general(): VNode[] {
+function general(): VNode[] {
     return [
-        box_double(
-            "判明しているダメな点",
-            html`
-                ${negativeNote(
-                    "チケットの有効期限切れの前にチケットを無効化できない",
-                    "（最大延長期間を操作することで再認証を促すことは可能）"
-                )}
-                ${negativeNote(
-                    "チケットが漏れた場合、有効期限延長を続けることで最大期間アクセス可能",
-                    "（これをするためには cookie の奪取とメモリの解析を行う必要があるので、事実上不可能としていいかな）"
-                )}
-                ${negativeNote(
-                    "http を使用することを想定",
-                    "（http 以外の方式で通信する必要が出たときに考える）"
-                )}
-                ${negativeNote(
-                    "cookie を使用するため別なタブで別ユーザーとしてログインできない",
-                    "（アプリケーションを別ユーザーでログインする必要がある設計にしないことで対応）"
-                )}
-            `
-        ),
-        box(
-            "前提とするクライアント",
-            html`<p><i class="lnir lnir-display"></i> http クライアント</p>
-                <small><p>（ブラウザ、スマホアプリ）</p></small>
-                <p><i class="lnir lnir-envelope"></i> テキストメッセージクライアント</p>
-                <small><p>（メール、slack）</p></small>`
-        ),
+        box_double("判明しているダメな点", [
+            negativeNote(
+                "チケットの有効期限切れの前にチケットを無効化できない",
+                "（最大延長期間を操作することで再認証を促すことは可能）"
+            ),
+            negativeNote(
+                "チケットが漏れた場合、有効期限延長を続けることで最大期間アクセス可能",
+                "（これをするためには cookie の奪取とメモリの解析を行う必要があるので、事実上不可能としていいかな）"
+            ),
+            negativeNote(
+                "http を使用することを想定",
+                "（http 以外の方式で通信する必要が出たときに考える）"
+            ),
+            negativeNote(
+                "cookie を使用するため別なタブで別ユーザーとしてログインできない",
+                "（アプリケーションを別ユーザーでログインする必要がある設計にしないことで対応）"
+            ),
+        ]),
+        box("前提とするサーバー・クライアント", [
+            iconSection("lnir lnir-database", "コンテンツサーバー", "（CDN : CloudFront など）"),
+            iconSection("lnir lnir-cogs", "API サーバー", "（アプリケーションサーバー）"),
+            iconSection("lnir lnir-display", "http クライアント", "（ブラウザ、スマホアプリ）"),
+            iconSection("lnir lnir-envelope", "テキストメッセージクライアント", "（メール、slack）"),
+        ]),
     ]
 }
 
-function renew() {
+const renewCredential = () => [
+    box("認証トークンの更新", [
+        itemsSection("インスタントロード", ["有効期限内ならすぐにロード"]),
+        itemsSection("認証トークン更新", ["認証トークンの有効期限を延長"]),
+        itemsSection("継続更新", ["一定期間ごとに認証トークン更新"]),
+    ]),
+    box("インスタントロード", [
+        toContentServer("認証トークン", ["cookie"]),
+        inContentServer("スクリプトをロード", ["認証トークンが有効な場合"]),
+        hr,
+        html`<p>認証トークンが有効期限切れの場合は認証トークン更新の後ロードを試みる</p>`,
+    ]),
+    box("認証トークン更新", [
+        toApiServer("チケットトークン", ["cookie + nonce"]),
+        inApiServer(
+            items([
+                validate("チケットトークン検証"),
+                validate("チケット有効期限検証"),
+                "チケット有効期限延長",
+                "チケットトークン発行",
+                "API トークン発行",
+                "コンテンツトークン発行",
+            ]),
+            []
+        ),
+        fromApiServer("認証トークン", ["チケットトークン", "API トークン / 権限", "コンテンツトークン"]),
+        hr,
+        itemsSection("認証トークンを失効させる検証", ["チケットトークン検証", "チケット有効期限検証"]),
+    ]),
+    box("継続更新", [html`<p>処理は認証トークン更新と同様</p>`, html`<p>一定期間ごとに更新を行う</p>`]),
+]
+const logout = () => [
+    box("ログアウト", [
+        toApiServer("チケットトークン", ["cookie + nonce"]),
+        inApiServer(
+            items([
+                validate("チケットトークン検証"),
+                validate("チケット有効期限検証"),
+                "チケット有効期限無効化",
+            ]),
+            []
+        ),
+        hr,
+        html`<p>ログアウトで認証情報は失効</p>`,
+        v_medium(),
+        itemsSection("認証トークンを失効させる検証", ["チケットトークン検証", "チケット有効期限検証"]),
+    ]),
+]
+const passwordLogin = () => [
+    box("パスワードログイン", [
+        itemsSection("ログインID・パスワード入力", ["入力形式を検証"]),
+        itemsSection("認証リクエスト", ["認証トークンを要求"]),
+    ]),
+    box("ログインID・パスワード入力", [
+        inBrowser(items([validate("ログインID 検証"), validate("パスワード検証")]), []),
+        hr,
+        html`<p>検証失敗なら認証リクエストできない</p>`,
+        v_medium(),
+        itemsSection("ログインID 検証", [
+            "空でないこと",
+            // TODO 長すぎないことをチェックしたほうがいい
+        ]),
+        itemsSection("パスワード検証", ["空でないこと", "長すぎないこと"]),
+    ]),
+    box("認証リクエスト", [
+        toApiServer(items(["ログインiD", "パスワード"]), []),
+        inApiServer(
+            items([
+                validate("パスワード検証"),
+                "チケットトークン発行",
+                "API トークン発行",
+                "コンテンツトークン発行",
+            ]),
+            []
+        ),
+        fromApiServer("認証トークン", ["チケットトークン", "API トークン / 権限", "コンテンツトークン"]),
+        hr,
+        // TODO ログインID が長すぎないことをチェックしたほうがいい
+        itemsSection("パスワード検証", [
+            "空でないこと",
+            "長すぎないこと",
+            "登録されたユーザーのパスワードと一致すること",
+        ]),
+    ]),
+]
+const passwordReset = () => [
+    box("パスワードリセット", [
+        itemsSection("ログインID 入力", ["入力形式を検証"]),
+        itemsSection("リセットセッションの開始", ["リセットトークンの要求"]),
+        itemsSection("リセットトークン送信状態の確認", ["送信待ち", "送信完了", "送信エラー", "宛先"]),
+        itemsSection("ログインID・パスワード入力", ["リセットトークン取得", "入力形式を検証"]),
+        itemsSection("パスワードリセット", ["パスワードリセットの要求", "認証トークンの要求"]),
+    ]),
+    box("ログインID 入力", [
+        inBrowser(items([validate("ログインID 検証")]), []),
+        hr,
+        html`<p>検証失敗ならリセットセッションを開始できない</p>`,
+        v_medium(),
+        itemsSection("ログインID 検証", [
+            "空でないこと",
+            // TODO 長すぎないことをチェックしたほうがいい
+        ]),
+    ]),
+    box("リセットセッションの開始", [
+        toApiServer(items(["ログインiD"]), []),
+        inApiServer(
+            items([
+                validate("ログインID 検証"),
+                "チケットトークン発行",
+                "API トークン発行",
+                "コンテンツトークン発行",
+            ]),
+            []
+        ),
+        fromApiServer("リセットセッションID", []),
+        toTextMessage("リセットトークン", []),
+        hr,
+        itemsSection("ログインID 検証", [
+            // TODO 長すぎないことをチェックしたほうがいい
+            "リセットトークンの宛先が登録されていること",
+        ]),
+    ]),
+    box("リセットトークン送信状態の確認", [
+        toApiServer(items(["リセットセッションID"]), []),
+        inApiServer(items([validate("リセットセッションID 検証"), "リセットステータス取得"]), []),
+        fromApiServer("リセットステータス", ["リセットトークン送信状態"]),
+        hr,
+        itemsSection("リセットセッションID 検証", [
+            "セッションが開始されていること",
+            "セッションが完了していないこと",
+        ]),
+    ]),
+    box("ログインID・パスワード入力", [
+        inBrowser(items([validate("ログインID 検証"), validate("パスワード検証")]), []),
+        hr,
+        html`<p>テキストメッセージクライアントからリセットトークンを取得</p>`,
+        html`<p>検証失敗ならパスワードリセットできない</p>`,
+        v_medium(),
+        itemsSection("ログインID 検証", [
+            "空でないこと",
+            // TODO 長すぎないことをチェックしたほうがいい
+        ]),
+        itemsSection("パスワード検証", ["空でないこと", "長すぎないこと"]),
+    ]),
+    box("パスワードリセット", [
+        toApiServer(items(["リセットトークン", "ログインID", "パスワード"]), []),
+        inApiServer(
+            items([
+                validate("リセットトークン検証"),
+                validate("ログインID 検証"),
+                validate("パスワード検証"),
+                "パスワードリセット",
+                "チケットトークン発行",
+                "API トークン発行",
+                "コンテンツトークン発行",
+            ]),
+            []
+        ),
+        fromApiServer("認証トークン", ["チケットトークン", "API トークン / 権限", "コンテンツトークン"]),
+        hr,
+        html`
+            <p>旧パスワードは使用できなくなる</p>
+            <p>リセット完了でセッションは失効</p>
+        `,
+        v_medium(),
+        itemsSection("リセットトークン検証", [
+            "セッションが開始されていること",
+            "セッションが完了していないこと",
+        ]),
+        itemsSection("ログインID 検証", [
+            // TODO 長すぎないことをチェックしたほうがいい
+            "セッションを開始したときに入力したものと同じであること",
+        ]),
+        itemsSection("パスワード検証", [
+            "空でないこと",
+            "長すぎないこと",
+        ]),
+    ]),
+]
+function passwordLogin_old() {
     return html`
         ${box(
-            "継続認証",
-            html`<dl class="form">
-                    <dt class="form__header">
-                        <i class="lnir lnir-display"></i> ブラウザ
-                        <i class="lnir lnir-arrow-right"></i>
-                        <i class="lnir lnir-cog"></i> システム
-                    </dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li>チケットトークン</li>
-                        </ul>
-                    </dd>
-                </dl>
-                <dl class="form">
-                    <dt class="form__header"><i class="lnir lnir-cog"></i> システム</dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li>
-                                チケットトークン検証
-                                <span class="label label_alert">検証失敗</span>
-                            </li>
-                            <li>
-                                チケット有効期限検証
-                                <span class="label label_alert">検証失敗</span>
-                            </li>
-                            <li>チケット有効期限延長</li>
-                            <li>チケットトークン発行</li>
-                            <li>API トークン発行</li>
-                            <li>コンテンツトークン発行</li>
-                        </ul>
-                    </dd>
-                </dl>
-                <dl class="form">
-                    <dt class="form__header">
-                        <i class="lnir lnir-display"></i> ブラウザ
-                        <i class="lnir lnir-arrow-left"></i>
-                        <i class="lnir lnir-cog"></i> システム
-                    </dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li><span class="label label_success">認証情報</span>新チケットトークン</li>
-                            <li><span class="label label_success">認証情報</span>API トークン / 権限</li>
-                            <li><span class="label label_success">認証情報</span>コンテンツトークン</li>
-                        </ul>
-                    </dd>
-                </dl>
-
-                <hr />
-
-                <p>チケットトークン・有効期限の検証失敗で認証情報は失効</p>`
-        )}
-        ${box(
-            "ログアウト",
-            html` <dl class="form">
-                    <dt class="form__header">
-                        <i class="lnir lnir-display"></i> ブラウザ
-                        <i class="lnir lnir-arrow-right"></i>
-                        <i class="lnir lnir-cog"></i> システム
-                    </dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li>チケットトークン</li>
-                        </ul>
-                    </dd>
-                </dl>
-                <dl class="form">
-                    <dt class="form__header"><i class="lnir lnir-cog"></i> システム</dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li>
-                                チケットトークン検証
-                                <span class="label label_alert">検証失敗</span>
-                            </li>
-                            <li>
-                                チケット有効期限検証
-                                <span class="label label_alert">検証失敗</span>
-                            </li>
-                            <li>チケット有効期限無効化</li>
-                        </ul>
-                    </dd>
-                </dl>
-
-                <hr />
-
-                <p>ログアウトで認証情報は失効</p>`
-        )}
-    `
-}
-function passwordLogin() {
-    return html`
-        ${box(
-            "パスワードログイン",
-            html` <dl class="form">
-                    <dt class="form__header">
-                        <i class="lnir lnir-display"></i> ブラウザ
-                        <i class="lnir lnir-arrow-right"></i>
-                        <i class="lnir lnir-cog"></i> システム
-                    </dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li>ログインID</li>
-                            <li>パスワード</li>
-                        </ul>
-                    </dd>
-                </dl>
-                <dl class="form">
-                    <dt class="form__header"><i class="lnir lnir-cog"></i> システム</dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li>パスワード検証 <span class="label label_alert">検証失敗</span></li>
-                            <li>チケットトークン発行</li>
-                            <li>API トークン発行</li>
-                            <li>コンテンツトークン発行</li>
-                        </ul>
-                    </dd>
-                </dl>
-                <dl class="form">
-                    <dt class="form__header">
-                        <i class="lnir lnir-display"></i> ブラウザ
-                        <i class="lnir lnir-arrow-left"></i>
-                        <i class="lnir lnir-cog"></i> システム
-                    </dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li><span class="label label_success">認証情報</span>チケットトークン</li>
-                            <li><span class="label label_success">認証情報</span>API トークン / 権限</li>
-                            <li><span class="label label_success">認証情報</span>コンテンツトークン</li>
-                        </ul>
-                    </dd>
-                </dl>
-
-                <hr />
-
-                <p>空のパスワードでは認証できない</p>
-                <p>長すぎるパスワードでは認証できない</p>`
-        )}
-        ${box(
+            // TODO パスワード変更の項目に移動
             "パスワード変更",
             html` <dl class="form">
                     <dt class="form__header">
@@ -305,176 +361,19 @@ function passwordLogin() {
                 <p>空のパスワードには変更できない</p>
                 <p>長すぎるパスワードには変更できない</p>`
         )}
-        ${box(
-            "パスワード再設定",
-            html` <dl class="form">
-                    <dt class="form__header">
-                        <i class="lnir lnir-display"></i> ブラウザ
-                        <i class="lnir lnir-arrow-right"></i>
-                        <i class="lnir lnir-cog"></i> システム
-                    </dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li>ログインID</li>
-                        </ul>
-                    </dd>
-                </dl>
-                <dl class="form">
-                    <dt class="form__header"><i class="lnir lnir-cog"></i> システム</dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li>
-                                メッセージの宛先取得
-                                <span class="label label_alert">宛先不明</span>
-                            </li>
-                            <small><li>（ログインID にメッセージの宛先が登録されているか）</li></small>
-                            <li>リセットセッション開始</li>
-                        </ul>
-                    </dd>
-                </dl>
-                <dl class="form">
-                    <dt class="form__header">
-                        <i class="lnir lnir-display"></i> ブラウザ
-                        <i class="lnir lnir-arrow-left"></i>
-                        <i class="lnir lnir-cog"></i> システム
-                    </dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li>リセットセッションID</li>
-                        </ul>
-                    </dd>
-                </dl>
-                <dl class="form">
-                    <dt class="form__header">
-                        <i class="lnir lnir-envelope"></i> メール
-                        <i class="lnir lnir-arrow-left"></i>
-                        <i class="lnir lnir-cog"></i> システム
-                    </dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li>リセットトークン</li>
-                        </ul>
-                    </dd>
-                </dl>
-
-                <hr />
-
-                <dl class="form">
-                    <dt class="form__header">
-                        <i class="lnir lnir-display"></i> ブラウザ
-                        <i class="lnir lnir-arrow-right"></i>
-                        <i class="lnir lnir-cog"></i> システム
-                    </dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li>リセットセッションID</li>
-                        </ul>
-                    </dd>
-                </dl>
-                <dl class="form">
-                    <dt class="form__header"><i class="lnir lnir-cog"></i> システム</dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li>
-                                リセットステータスを取得
-                                <span class="label label_alert">登録なし</span>
-                            </li>
-                        </ul>
-                    </dd>
-                </dl>
-                <dl class="form">
-                    <dt class="form__header">
-                        <i class="lnir lnir-display"></i> ブラウザ
-                        <i class="lnir lnir-arrow-left"></i>
-                        <i class="lnir lnir-cog"></i> システム
-                    </dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li>リセットステータス</li>
-                            <small><li>（メールの送信状態をフィードバック）</li></small>
-                        </ul>
-                    </dd>
-                </dl>
-
-                <hr />
-
-                <dl class="form">
-                    <dt class="form__header">
-                        <i class="lnir lnir-envelope"></i> メール
-                        <i class="lnir lnir-arrow-right"></i>
-                        <i class="lnir lnir-display"></i> ブラウザ
-                    </dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li>リセットトークン</li>
-                        </ul>
-                    </dd>
-                </dl>
-                <dl class="form">
-                    <dt class="form__header">
-                        <i class="lnir lnir-display"></i> ブラウザ
-                        <i class="lnir lnir-arrow-right"></i>
-                        <i class="lnir lnir-cog"></i> システム
-                    </dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li>リセットトークン</li>
-                            <li>ログインID</li>
-                            <small><li>（セッション開始した時点のログインID を使用）</li></small>
-                            <li>パスワード</li>
-                        </ul>
-                    </dd>
-                </dl>
-                <dl class="form">
-                    <dt class="form__header"><i class="lnir lnir-cog"></i> システム</dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li>
-                                リセットトークン検証
-                                <span class="label label_alert">検証失敗</span>
-                            </li>
-                            <li>ログインID 検証 <span class="label label_alert">検証失敗</span></li>
-                            <small><li>（セッション開始した時点のログインID と一致するか）</li></small>
-                            <li>パスワード登録 <span class="label label_alert">登録失敗</span></li>
-                            <li>チケット発行</li>
-                            <li>API トークン発行</li>
-                            <li>コンテンツトークン発行</li>
-                        </ul>
-                    </dd>
-                </dl>
-                <dl class="form">
-                    <dt class="form__header">
-                        <i class="lnir lnir-display"></i> ブラウザ
-                        <i class="lnir lnir-arrow-left"></i>
-                        <i class="lnir lnir-cog"></i> システム
-                    </dt>
-                    <dd class="form__field">
-                        <ul>
-                            <li><span class="label label_success">認証情報</span>チケットトークン</li>
-                            <li><span class="label label_success">認証情報</span>API トークン / 権限</li>
-                            <li><span class="label label_success">認証情報</span>コンテンツトークン</li>
-                        </ul>
-                    </dd>
-                </dl>
-
-                <hr />
-
-                <p>旧パスワードは使用できなくなる</p>
-                <p>リセット完了でセッションは失効</p>`
-        )}
     `
 }
 function webAuthn() {
     return html`
         ${box(
-            "web 証明書認証(あとで)",
+            pending("web 証明書認証"),
             html` <p>web 証明書の検証</p>
                 <p>チケットを新規発行</p>
                 <p>API トークンを発行</p>
                 <p>コンテンツトークンを発行</p>`
         )}
         ${box(
-            "web 証明書登録(あとで)",
+            pending("web 証明書登録"),
             html` <p>チケットの検証</p>
                 <p>パスワードの検証</p>
                 <p>新 web 証明書の登録</p>
@@ -483,6 +382,7 @@ function webAuthn() {
     `
 }
 function manageUser() {
+    // TODO ユーザー管理に移動
     return html`
         ${box(
             "ユーザー登録(あとで)",
@@ -1000,4 +900,67 @@ function detail_password() {
                 </dl>`
         )}
     `
+}
+
+const hr = html`<hr />`
+
+const contentServer = html`<i class="lnir lnir-database"></i> コンテンツサーバー`
+const apiServer = html`<i class="lnir lnir-cogs"></i> API サーバー`
+const browser = html`<i class="lnir lnir-display"></i> ブラウザ`
+const textMessage = html`<i class="lnir lnir-envelope"></i> テキストメッセージクライアント`
+
+function inBrowser(content: VNodeContent, help: VNodeContent[]) {
+    return form(browser, content, help)
+}
+
+function toContentServer(content: VNodeContent, help: VNodeContent[]) {
+    return toServer(contentServer, content, help)
+}
+function inContentServer(content: VNodeContent, help: VNodeContent[]) {
+    return form(contentServer, content, help)
+}
+
+function toApiServer(content: VNodeContent, help: VNodeContent[]) {
+    return toServer(apiServer, content, help)
+}
+function inApiServer(content: VNodeContent, help: VNodeContent[]) {
+    return form(apiServer, content, help)
+}
+function fromApiServer(content: VNodeContent, help: VNodeContent[]) {
+    return fromServer(apiServer, content, help)
+}
+
+function toTextMessage(content: VNodeContent, help: VNodeContent[]) {
+    return form(
+        html`
+            ${apiServer} ${" "}
+            <i class="lnir lnir-arrow-right"></i>
+            ${" "} ${textMessage}
+        `,
+        content,
+        help
+    )
+}
+
+function toServer(server: VNodeContent, content: VNodeContent, help: VNodeContent[]) {
+    return form(
+        html`
+            ${browser} ${" "}
+            <i class="lnir lnir-arrow-right"></i>
+            ${" "} ${server}
+        `,
+        content,
+        help
+    )
+}
+function fromServer(server: VNodeContent, content: VNodeContent, help: VNodeContent[]) {
+    return form(
+        html`
+            ${server} ${" "}
+            <i class="lnir lnir-arrow-right"></i>
+            ${" "} ${browser}
+        `,
+        content,
+        help
+    )
 }

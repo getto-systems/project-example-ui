@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { VNodeContent } from "../../layout"
 import { BreadcrumbList } from "../Outline/BreadcrumbList"
 
-import { content_index } from "./contents/index"
+import { content_index } from "./contents/home"
 import { content_auth } from "./contents/auth"
 import { content_development_deployment } from "./contents/development/deployment"
 import { content_development_auth_login } from "./contents/development/auth/login"
