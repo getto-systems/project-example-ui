@@ -1,7 +1,7 @@
 import {
     AuthView,
     AuthState,
-    LoginState,
+    ViewState,
     RenewCredentialComponentSet,
     PasswordLoginComponentSet,
     PasswordResetSessionComponentSet,
@@ -31,7 +31,7 @@ export class View implements AuthView {
         })
     }
 
-    mapLoginView(loginView: LoginState): AuthState {
+    mapLoginView(loginView: ViewState): AuthState {
         switch (loginView) {
             case "password-login":
                 return { type: loginView, components: this.components.passwordLogin() }
@@ -71,7 +71,7 @@ export interface AuthComponentFactorySet {
 }
 export interface AuthCollector {
     auth: Readonly<{
-        getLoginView(): LoginState
+        getLoginView(): ViewState
     }>
 }
 

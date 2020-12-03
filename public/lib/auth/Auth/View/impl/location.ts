@@ -1,11 +1,11 @@
-import { LoginState } from "../view"
+import { ViewState } from "../view"
 
 import { AuthSearch } from "./link"
 
 import { markPagePathname, PagePathname } from "../../../application/data"
 import { markResetToken, ResetToken } from "../../../password_reset/data"
 
-export function detectLoginView(currentLocation: Location): LoginState {
+export function detectViewState(currentLocation: Location): ViewState {
     const url = new URL(currentLocation.toString())
 
     // パスワードリセット

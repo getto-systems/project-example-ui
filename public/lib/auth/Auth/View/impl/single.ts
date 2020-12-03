@@ -13,7 +13,7 @@ import {
     initPasswordResetComponentSet,
 } from "./core"
 
-import { LoginState, AuthResource } from "../view"
+import { ViewState, AuthResource } from "../view"
 
 export type FactorySet = RenewCredentialFactorySet &
     PasswordLoginFactorySet &
@@ -22,7 +22,7 @@ export type FactorySet = RenewCredentialFactorySet &
 
 export type CollectorSet = Readonly<{
     auth: {
-        getLoginView(): LoginState
+        getLoginView(): ViewState
     }
 }> &
     RenewCredentialCollectorSet &

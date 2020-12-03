@@ -17,7 +17,7 @@ import {
     ResetProxyMessage,
 } from "./data"
 
-import { LoginState, AuthResource } from "../../view"
+import { ViewState, AuthResource } from "../../view"
 
 import { AuthLinkFactory } from "../../../link"
 
@@ -159,7 +159,7 @@ export type ForegroundFactorySet = Readonly<{
 }>
 export type CollectorSet = Readonly<{
     auth: Readonly<{
-        getLoginView(): LoginState
+        getLoginView(): ViewState
     }>
     application: Readonly<{
         getPagePathname(): PagePathname

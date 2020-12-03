@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { VNodeContent, v_small } from "../../layout"
+import { label_pending, VNodeContent, v_small } from "../../layout"
 
 export function box(title: VNodeContent, content: VNodeContent): VNode {
     return box_content("", title, content)
@@ -52,8 +52,16 @@ export function form(title: VNodeContent, content: VNodeContent, help: VNodeCont
         <dl class="form">
             <dt class="form__header">${title}</dt>
             <dd class="form__field">
-                ${content} ${help.map((message) => html`<p class="form__help">${message}</p>`)}
+                ${content} ${help.map(toFormHelp)}
             </dd>
         </dl>
     `
+
+    function toFormHelp(message: VNodeContent) {
+        return html`<p class="form__help">${message}</p>`
+    }
+}
+
+export function pending(content: VNodeContent): VNode {
+    return html`${content} ${label_pending("あとで")}`
 }

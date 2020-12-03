@@ -76,8 +76,8 @@ function vertical(verticalClass: string): VNode {
 export function notice_alert(content: VNodeContent): VNode {
     return notice("notice_alert", content)
 }
-export function notice_warning(content: VNodeContent): VNode {
-    return notice("notice_warning", content)
+export function notice_info(content: VNodeContent): VNode {
+    return notice("notice_info", content)
 }
 function notice(noticeClass: string, content: VNodeContent): VNode {
     return html`<p class="notice ${noticeClass}">${content}</p>`
