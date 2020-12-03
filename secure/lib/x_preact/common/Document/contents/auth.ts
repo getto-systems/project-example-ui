@@ -8,12 +8,7 @@ import { content_index_auth } from "./home"
 
 export const content_auth = (): VNode[] => [
     container(content_index_auth()),
-    container([
-        content_auth_login(),
-        content_auth_role(),
-        content_auth_user(),
-        content_auth_credential(),
-    ]),
+    container([content_auth_login(), content_auth_role(), content_auth_user(), content_auth_profile()]),
 ]
 export function content_auth_login(): VNode {
     return box("ログイン", [
@@ -41,6 +36,7 @@ export function content_auth_role(): VNode {
 }
 export function content_auth_user(): VNode {
     return box("ユーザー管理", [
+        notice_info("業務で必要な時に使用できる"),
         notice_info("業務内容をプライベートに保つ"),
         v_medium(),
         html`<p>管理ユーザーによってユーザーを管理</p>`,
@@ -56,14 +52,15 @@ export function content_auth_user(): VNode {
         ]),
     ])
 }
-export function content_auth_credential(): VNode {
+export function content_auth_profile(): VNode {
     return box("認証情報管理", [
         notice_info("業務で必要な時に使用できる"),
+        notice_info("業務内容をプライベートに保つ"),
         v_medium(),
         html`
-            <p>ログアウト</p>
             <p>自分のパスワードを変更</p>
             <p>新しい web 証明書を登録</p>
+            <p>ログアウト</p>
         `,
     ])
 }

@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { html } from "htm/preact"
 
 import { container, v_medium, v_small } from "../../../../layout"
-import { box, form } from "../../box"
+import { box, form, formWithHelp } from "../../box"
 
 import { content_index_deployment } from "../home"
 
@@ -15,13 +15,16 @@ export const content_development_deployment = (): VNode[] => [
                 <p>使用中に操作が中断されない</p>
             `,
             v_medium(),
-            form("停止許容時間", html`<p>5分/10h</p>`, ["業務時間内", "業務時間外の停止は連絡後に可能"]),
-            form("レスポンスの最大待ち時間", html`<p>1秒</p>`, [
+            formWithHelp("停止許容時間", html`<p>5分/10h</p>`, [
+                "業務時間内",
+                "業務時間外の停止は連絡後に可能",
+            ]),
+            formWithHelp("レスポンスの最大待ち時間", html`<p>1秒</p>`, [
                 "処理自体に時間がかかる場合は完了時に通知を行う",
             ]),
         ]),
         box("業務に合ったコストで運用するために", [
-            form("ランニングコスト", html`<p>6,000円/月</p>`, []),
+            formWithHelp("ランニングコスト", html`<p>6,000円/月</p>`, []),
         ]),
     ]),
     v_small(),
@@ -30,33 +33,32 @@ export const content_development_deployment = (): VNode[] => [
 
 function applicationServer(): VNode {
     return box("アプリケーションサーバー", [
-        form("サービス", html`<p>Google Cloud Run</p>`, [
+        formWithHelp("サービス", html`<p>Google Cloud Run</p>`, [
             "アップグレードコストが抑えられる",
             "特に OS のアップグレードが簡単",
             "デプロイコストが抑えられる",
             "ランニングコストが抑えられる",
         ]),
-        form("よくない点", html`<p>運用開始してないのでわからない</p>`, []),
-        form("制約", html`<p>ステートレスなアプリケーションを構築する必要がある</p>`, []),
+        form("よくない点", html`<p>運用開始してないのでわからない</p>`),
+        form("制約", html`<p>ステートレスなアプリケーションを構築する必要がある</p>`),
         form(
             "代替案",
             html`
                 <p>K8s クラスタ</p>
                 <p>普通のサーバーインスタンス</p>
                 <p>Lambda とか Functions</p>
-            `,
-            []
+            `
         ),
     ])
 }
 function databaseServer(): VNode {
     return box("データベースサーバー", [
-        form("サービス", html`<p>Google SQL</p>`, [
+        formWithHelp("サービス", html`<p>Google SQL</p>`, [
             "冗長構成で構築",
             "引き継ぐシステムがリレーショナルデータベースを使用したものであるため SQL サービスを採用",
         ]),
-        form("よくない点", html`<p>コストがかかる</p>`, []),
-        form(
+        form("よくない点", html`<p>コストがかかる</p>`),
+        formWithHelp(
             "代替案",
             html`
                 <p>Key-Value ストア</p>

@@ -50,13 +50,17 @@ export function iconSection(icon: string, content: VNodeContent, note: VNodeCont
     `
 }
 
-export function form(title: VNodeContent, content: VNodeContent, help: VNodeContent[]): VNode {
+export function form(title: VNodeContent, content: VNodeContent): VNode {
     return html`
         <dl class="form">
             <dt class="form__header">${title}</dt>
-            <dd class="form__field">${content} ${help.map(toFormHelp)}</dd>
+            <dd class="form__field">${content}</dd>
         </dl>
     `
+}
+
+export function formWithHelp(title: VNodeContent, content: VNodeContent, help: VNodeContent[]): VNode {
+    return form(title, html`${content} ${help.map(toFormHelp)}`)
 
     function toFormHelp(message: VNodeContent) {
         return html`<p class="form__help">${message}</p>`

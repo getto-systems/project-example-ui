@@ -9,6 +9,9 @@ import { content_index } from "./contents/home"
 import { content_auth } from "./contents/auth"
 import { content_development_deployment } from "./contents/development/deployment"
 import { content_development_auth_login } from "./contents/development/auth/login"
+import { content_development_auth_user } from "./contents/development/auth/user"
+import { content_development_auth_profile } from "./contents/development/auth/profile"
+import { content_development_auth_api } from "./contents/development/auth/api"
 
 import { DocumentComponentSet } from "../../../common/Document/Document/view"
 import { initialContentState } from "../../../common/Document/content/component"
@@ -69,8 +72,12 @@ const indexEntry: ContentEntry = entry("ドキュメント", content_index)
 const contentMap: Record<DocumentPath, ContentEntry> = {
     "/docs/index.html": indexEntry,
     "/docs/auth.html": entry("認証・認可", content_auth),
+
     "/docs/development/deployment.html": entry("配備構成", content_development_deployment),
     "/docs/development/auth/login.html": entry("ログイン", content_development_auth_login),
+    "/docs/development/auth/user.html": entry("ユーザー管理", content_development_auth_user),
+    "/docs/development/auth/profile.html": entry("認証情報管理", content_development_auth_profile),
+    "/docs/development/auth/api.html": entry("API 詳細設計", content_development_auth_api),
 }
 
 const EMPTY_CONTENT = html``
