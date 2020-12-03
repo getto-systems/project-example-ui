@@ -67,8 +67,9 @@ function entry(title: string, content: Factory<VNodeContent>): ContentEntry {
 const indexEntry: ContentEntry = entry("ドキュメント", content_index)
 const contentMap: Record<DocumentPath, ContentEntry> = {
     "/docs/index.html": indexEntry,
+    "/docs/auth.html": indexEntry,
     "/docs/development/deployment.html": entry("配備構成", content_development_deployment),
-    "/docs/development/auth.html": entry("認証・認可", content_development_auth),
+    "/docs/development/auth/login.html": entry("認証・認可", content_development_auth),
 }
 
 const EMPTY_CONTENT = html``
