@@ -65,7 +65,7 @@ export function content_index_auth(): VNode {
             <p>適切なログイン</p>
             <p>適切なアクセス制限</p>
             <p>適切なユーザー管理</p>
-            <p>適切なパスワード・web 証明書更新</p>
+            <p>適切な認証情報管理</p>
         `,
     ])
 }
