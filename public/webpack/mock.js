@@ -1,19 +1,21 @@
 /* eslint-disable */
 const path = require("path")
 
+const entryPoint = require("../entryPoint")
+
 module.exports = {
     entry: () => {
-        return [{ path: "update" }, { path: "login" }].reduce((acc, info) => {
-            acc[info.path] = toMockPath()
+        return entryPoint.find().reduce((acc, name) => {
+            acc[name] = toMockPath(name)
             return acc
-
-            function toMockPath() {
-                return toPath("main")
-            }
-            function toPath(type) {
-                return path.join(__dirname, `../lib/z_main/${info.path}/${type}.ts`)
-            }
         }, {})
+
+        function toMockPath(name) {
+            return toPath("mock", name)
+        }
+        function toPath(type, name) {
+            return path.join(__dirname, `../lib/z_main/${name}/${type}.ts`)
+        }
     },
     output: {
         path: path.join(__dirname, "../dist"),
