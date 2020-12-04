@@ -5,15 +5,15 @@ import { html } from "htm/preact"
 import { useComponentSet } from "../../hooks"
 import { footer, menuHeader, menuFooter } from "../../layout"
 
-import { ApplicationError } from "../System/ApplicationError"
+import { ApplicationError } from "../../System/ApplicationError"
 
-import { SeasonInfo } from "../Outline/SeasonInfo"
-import { MenuList } from "../Outline/MenuList"
-import { BreadcrumbList } from "../Outline/BreadcrumbList"
+import { SeasonInfo } from "../../common/Outline/SeasonInfo"
+import { MenuList } from "../../common/Outline/MenuList"
+import { BreadcrumbList } from "../../common/Outline/BreadcrumbList"
 
 import { Example } from "./Example"
 
-import { DashboardComponentSet, DashboardFactory } from "../../../common/Home/Dashboard/view"
+import { DashboardComponentSet, DashboardFactory } from "../../../document/Dashboard/Dashboard/view"
 
 type Props = Readonly<{
     dashboard: DashboardFactory

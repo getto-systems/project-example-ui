@@ -3,7 +3,7 @@ import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { VNodeContent } from "../../layout"
-import { BreadcrumbList } from "../Outline/BreadcrumbList"
+import { BreadcrumbList } from "../../common/Outline/BreadcrumbList"
 
 import { content_index } from "./contents/home"
 import { content_auth } from "./contents/auth"
@@ -13,9 +13,9 @@ import { content_development_auth_user } from "./contents/development/auth/user"
 import { content_development_auth_profile } from "./contents/development/auth/profile"
 import { content_development_auth_api } from "./contents/development/auth/api"
 
-import { DocumentComponentSet } from "../../../common/Document/Document/view"
-import { initialContentState } from "../../../common/Document/content/component"
-import { DocumentPath } from "../../../common/content/data"
+import { DocumentComponentSet } from "../../../document/Document/Document/view"
+import { initialContentState } from "../../../document/Document/content/component"
+import { DocumentPath } from "../../../document/content/data"
 
 export function Content(components: DocumentComponentSet): VNode {
     const content = components.content

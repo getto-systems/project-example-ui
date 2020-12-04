@@ -1,12 +1,12 @@
 import { DocumentComponentSet } from "../view"
 
-import { MenuComponentFactory } from "../../../Outline/menu/component"
-import { BreadcrumbComponentFactory } from "../../../Outline/breadcrumb/component"
+import { MenuComponentFactory } from "../../../../common/Outline/menu/component"
+import { BreadcrumbComponentFactory } from "../../../../common/Outline/breadcrumb/component"
 
 import { ContentComponentFactory } from "../../content/component"
 
-import { LoadApiNonce, LoadApiRoles } from "../../../credential/action"
-import { LoadBreadcrumb, LoadMenu, MenuTargetCollector, ToggleMenuExpand } from "../../../menu/action"
+import { LoadApiNonce, LoadApiRoles } from "../../../../common/credential/action"
+import { LoadBreadcrumb, LoadMenu, MenuTargetCollector, ToggleMenuExpand } from "../../../../common/menu/action"
 
 import { DocumentPathCollector, LoadDocument } from "../../../content/action"
 
