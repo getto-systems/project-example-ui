@@ -3,6 +3,7 @@ export type StaticMenuPath =
     | "/docs/development/auth/api.html"
     | "/docs/development/auth/login.html"
     | "/docs/development/auth/profile.html"
+    | "/docs/development/auth/role.html"
     | "/docs/development/auth/user.html"
     | "/docs/development/deployment.html"
     | "/docs/index.html"
@@ -12,6 +13,7 @@ export type StaticDocumentPath =
     | "/docs/development/auth/api.html"
     | "/docs/development/auth/login.html"
     | "/docs/development/auth/profile.html"
+    | "/docs/development/auth/role.html"
     | "/docs/development/auth/user.html"
     | "/docs/development/deployment.html"
     | "/docs/index.html"
@@ -20,6 +22,7 @@ export const staticDocumentPaths: StaticDocumentPath[] = [
     "/docs/development/auth/api.html",
     "/docs/development/auth/login.html",
     "/docs/development/auth/profile.html",
+    "/docs/development/auth/role.html",
     "/docs/development/auth/user.html",
     "/docs/development/deployment.html",
     "/docs/index.html"
