@@ -1,5 +1,5 @@
-import { initBreadcrumb } from "../../Outline/breadcrumb/mock"
-import { initMenu } from "../../Outline/menu/mock"
+import { initBreadcrumb } from "../../../common/Outline/breadcrumb/mock"
+import { initMenu } from "../../../common/Outline/menu/mock"
 
 import { initContent } from "../content/mock"
 

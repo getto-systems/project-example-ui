@@ -1,6 +1,6 @@
-import { LoadSeasonAction } from "../../season/action"
+import { LoadSeasonAction } from "../../../common/season/action"
 
-import { Season, SeasonError } from "../../season/data"
+import { Season, SeasonError } from "../../../common/season/data"
 
 export interface ExampleComponentFactory {
     (actions: ExampleActionSet): ExampleComponent

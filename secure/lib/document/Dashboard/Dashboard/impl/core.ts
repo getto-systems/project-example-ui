@@ -1,14 +1,14 @@
 import { DashboardComponentSet } from "../view"
 
-import { SeasonComponentFactory } from "../../../Outline/season/component"
-import { MenuComponentFactory } from "../../../Outline/menu/component"
-import { BreadcrumbComponentFactory } from "../../../Outline/breadcrumb/component"
+import { SeasonComponentFactory } from "../../../../common/Outline/season/component"
+import { MenuComponentFactory } from "../../../../common/Outline/menu/component"
+import { BreadcrumbComponentFactory } from "../../../../common/Outline/breadcrumb/component"
 
 import { ExampleComponentFactory } from "../../example/component"
 
-import { LoadApiNonce, LoadApiRoles } from "../../../credential/action"
-import { LoadBreadcrumb, LoadMenu, MenuTargetCollector, ToggleMenuExpand } from "../../../menu/action"
-import { LoadSeason } from "../../../season/action"
+import { LoadApiNonce, LoadApiRoles } from "../../../../common/credential/action"
+import { LoadBreadcrumb, LoadMenu, MenuTargetCollector, ToggleMenuExpand } from "../../../../common/menu/action"
+import { LoadSeason } from "../../../../common/season/action"
 
 export type DashboardFactorySet = Readonly<{
     actions: Readonly<{

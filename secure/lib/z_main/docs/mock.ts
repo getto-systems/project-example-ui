@@ -1,7 +1,7 @@
 import { render, h } from "preact"
 
-import { newDocumentAsMock } from "../../common/Document/Document/mock"
+import { newDocumentAsMock } from "../../document/Document/Document/mock"
 
-import { Document } from "../../x_preact/common/Document/Document"
+import { Document } from "../../x_preact/document/Document/Document"
 
 render(h(Document, { document: newDocumentAsMock() }), document.body)

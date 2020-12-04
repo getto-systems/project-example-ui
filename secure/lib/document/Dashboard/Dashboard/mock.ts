@@ -1,6 +1,6 @@
-import { initBreadcrumb } from "../../Outline/breadcrumb/mock"
-import { initMenu } from "../../Outline/menu/mock"
-import { initSeason } from "../../Outline/season/mock"
+import { initBreadcrumb } from "../../../common/Outline/breadcrumb/mock"
+import { initMenu } from "../../../common/Outline/menu/mock"
+import { initSeason } from "../../../common/Outline/season/mock"
 
 import { initExample } from "../example/mock"
 

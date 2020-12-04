@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import {
     ExampleComponent,
     initialExampleState,
-} from "../../../common/Home/example/component"
+} from "../../../document/Dashboard/example/component"
 
 import { Season, SeasonError } from "../../../common/season/data"
 import { notice_alert, v_small } from "../../layout"

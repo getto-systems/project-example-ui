@@ -1,7 +1,7 @@
 import { render, h } from "preact"
 
-import { newDashboard } from "../../common/Home/Dashboard/mock"
+import { newDashboard } from "../../document/Dashboard/Dashboard/mock"
 
-import { Dashboard } from "../../x_preact/common/Home/Dashboard"
+import { Dashboard } from "../../x_preact/document/Dashboard/Dashboard"
 
 render(h(Dashboard, { dashboard: newDashboard() }), document.body)

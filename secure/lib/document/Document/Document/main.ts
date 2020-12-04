@@ -1,24 +1,24 @@
 import { env } from "../../../y_static/env"
 
-import { initMenu } from "../../Outline/menu/impl"
-import { initBreadcrumb } from "../../Outline/breadcrumb/impl"
+import { initMenu } from "../../../common/Outline/menu/impl"
+import { initBreadcrumb } from "../../../common/Outline/breadcrumb/impl"
 import { initContent } from "../content/impl"
 
-import { detectMenuTarget } from "../../Outline/MenuTarget/impl/location"
+import { detectMenuTarget } from "../../../common/Outline/MenuTarget/impl/location"
 
-import { loadApiNonce, loadApiRoles } from "../../credential/impl/core"
-import { documentMenuTree } from "../../menu/impl/tree"
+import { loadApiNonce, loadApiRoles } from "../../../common/credential/impl/core"
+import { documentMenuTree } from "../../../common/menu/impl/tree"
 
 import { initDocumentAsSingle } from "./impl/single"
 
 import { DocumentFactory } from "./view"
-import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../menu/impl/core"
+import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../common/menu/impl/core"
 
-import { initMemoryApiCredentialRepository } from "../../credential/impl/repository/api_credential/memory"
-import { initNoopBadgeClient } from "../../menu/impl/client/badge/noop"
-import { initStorageMenuExpandRepository } from "../../menu/impl/repository/expand/storage"
+import { initMemoryApiCredentialRepository } from "../../../common/credential/impl/repository/api_credential/memory"
+import { initNoopBadgeClient } from "../../../common/menu/impl/client/badge/noop"
+import { initStorageMenuExpandRepository } from "../../../common/menu/impl/repository/expand/storage"
 
-import { markApiNonce, markApiRoles } from "../../credential/data"
+import { markApiNonce, markApiRoles } from "../../../common/credential/data"
 import { loadDocument } from "../../content/impl/core"
 import { detectDocumentPath } from "./impl/location"
 

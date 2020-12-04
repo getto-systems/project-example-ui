@@ -5,13 +5,13 @@ import { html } from "htm/preact"
 import { useComponentSet } from "../../hooks"
 import { footer, menuHeader, menuFooter } from "../../layout"
 
-import { ApplicationError } from "../System/ApplicationError"
+import { ApplicationError } from "../../System/ApplicationError"
 
-import { MenuList } from "../Outline/MenuList"
+import { MenuList } from "../../common/Outline/MenuList"
 
 import { Content } from "./Content"
 
-import { DocumentComponentSet, DocumentFactory } from "../../../common/Document/Document/view"
+import { DocumentComponentSet, DocumentFactory } from "../../../document/Document/Document/view"
 
 type Props = {
     document: DocumentFactory
