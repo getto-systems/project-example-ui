@@ -3,6 +3,7 @@
 
 /rollup/dist/
 
+/public/dist/coverage/
 /public/dist/vs-ext/
 
 /public/dist/**/*.js
