@@ -40,28 +40,23 @@ import { currentPagePathname, detectViewState, detectResetToken } from "./impl/l
 import { LoginFactory } from "./view"
 
 import { markTicketNonce, markLoginAt, markApiCredential } from "../../common/credential/data"
-import { markLoginID } from "../../common/login_id/data"
+import { markSessionID } from "../../profile/password_reset/data"
 
 export function newLoginAsSingle(): LoginFactory {
     const credentialStorage = localStorage
-    const currentLocation = location
+    const currentURL = new URL(location.toString())
 
-    const config = {
-        time: newTimeConfig(),
-    }
-
-    const client = {
-        auth: initAuthClient(env.authServerURL),
-    }
+    const time = newTimeConfig()
+    const authClient = initAuthClient(env.authServerURL)
 
     const factory = {
         link: initLoginLink,
         actions: {
             application: initApplicationAction(),
-            credential: initCredentialAction(config.time, credentialStorage, client.auth),
+            credential: initCredentialAction(time, credentialStorage, authClient),
 
-            passwordLogin: initPasswordLoginAction(config.time, client.auth),
-            passwordReset: initPasswordResetAction(config.time),
+            passwordLogin: initPasswordLoginAction(time, authClient),
+            passwordReset: initPasswordResetAction(time),
 
             field: {
                 loginID: loginIDField,
@@ -83,13 +78,13 @@ export function newLoginAsSingle(): LoginFactory {
     }
     const collector = {
         login: {
-            getLoginView: () => detectViewState(currentLocation),
+            getLoginView: () => detectViewState(currentURL),
         },
         application: {
-            getPagePathname: () => currentPagePathname(currentLocation),
+            getPagePathname: () => currentPagePathname(currentURL),
         },
         passwordReset: {
-            getResetToken: () => detectResetToken(currentLocation),
+            getResetToken: () => detectResetToken(currentURL),
         },
     }
 
@@ -97,15 +92,10 @@ export function newLoginAsSingle(): LoginFactory {
 }
 export function newLoginAsWorkerForeground(): LoginFactory {
     const credentialStorage = localStorage
-    const currentLocation = location
+    const currentURL = new URL(location.toString())
 
-    const config = {
-        time: newTimeConfig(),
-    }
-
-    const client = {
-        auth: initAuthClient(env.authServerURL),
-    }
+    const time = newTimeConfig()
+    const authClient = initAuthClient(env.authServerURL)
 
     const worker = new Worker(`/${env.version}/login.worker.js`)
 
@@ -113,7 +103,7 @@ export function newLoginAsWorkerForeground(): LoginFactory {
         link: initLoginLink,
         actions: {
             application: initApplicationAction(),
-            credential: initCredentialAction(config.time, credentialStorage, client.auth),
+            credential: initCredentialAction(time, credentialStorage, authClient),
 
             field: {
                 loginID: () => loginIDField(),
@@ -136,30 +126,25 @@ export function newLoginAsWorkerForeground(): LoginFactory {
 
     const collector = {
         login: {
-            getLoginView: () => detectViewState(currentLocation),
+            getLoginView: () => detectViewState(currentURL),
         },
         application: {
-            getPagePathname: () => currentPagePathname(currentLocation),
+            getPagePathname: () => currentPagePathname(currentURL),
         },
         passwordReset: {
-            getResetToken: () => detectResetToken(currentLocation),
+            getResetToken: () => detectResetToken(currentURL),
         },
     }
 
     return () => initLoginAsForeground(worker, factory, collector)
 }
 export function initLoginWorker(worker: Worker): void {
-    const config = {
-        time: newTimeConfig(),
-    }
-
-    const client = {
-        auth: initAuthClient(env.authServerURL),
-    }
+    const time = newTimeConfig()
+    const authClient = initAuthClient(env.authServerURL)
 
     const actions = {
-        passwordLogin: initPasswordLoginAction(config.time, client.auth),
-        passwordReset: initPasswordResetAction(config.time),
+        passwordLogin: initPasswordLoginAction(time, authClient),
+        passwordReset: initPasswordResetAction(time),
     }
 
     return initLoginWorkerAsBackground(actions, worker)
@@ -205,13 +190,50 @@ function initPasswordLoginAction(time: TimeConfig, authClient: AuthClient) {
     }
 }
 function initPasswordResetAction(time: TimeConfig) {
-    const sessionClient = initSimulatePasswordResetSessionClient(markLoginID("loginID"))
-    const resetClient = initSimulatePasswordResetClient(markLoginID("loginID"), {
-        ticketNonce: markTicketNonce("ticket-nonce"),
-        apiCredential: markApiCredential({
-            apiRoles: ["admin", "dev"],
-        }),
-        loginAt: markLoginAt(new Date()),
+    const targetLoginID = "loginID"
+    const targetSessionID = markSessionID("session-id")
+    const targetResetToken = "reset-token"
+
+    const sessionClient = initSimulatePasswordResetSessionClient({
+        // エラーにする場合は StartSessionError を throw (それ以外を throw するとこわれる)
+        async startSession({ loginID }) {
+            if (loginID !== targetLoginID) {
+                throw { type: "invalid-password-reset" }
+            }
+            return targetSessionID
+        },
+        // エラーにする場合は CheckStatusError を throw (それ以外を throw するとこわれる)
+        async sendToken(post) {
+            setTimeout(() => post({ state: "waiting" }), 0.3 * 1000)
+            setTimeout(() => post({ state: "sending" }), 0.6 * 1000)
+            setTimeout(() => post({ state: "success" }), 0.9 * 1000)
+            return true
+        },
+        // エラーにする場合は CheckStatusError を throw (それ以外を throw するとこわれる)
+        async getDestination(sessionID) {
+            if (sessionID != targetSessionID) {
+                throw { type: "invalid-password-reset" }
+            }
+            return { type: "log" }
+        },
+    })
+    const resetClient = initSimulatePasswordResetClient({
+        // エラーにする場合は ResetError を throw (それ以外を throw するとこわれる)
+        async reset(resetToken, { loginID }) {
+            if (resetToken !== targetResetToken) {
+                throw { type: "invalid-password-reset" }
+            }
+            if (loginID !== targetLoginID) {
+                throw { type: "invalid-password-reset" }
+            }
+            return {
+                ticketNonce: markTicketNonce("ticket-nonce"),
+                apiCredential: markApiCredential({
+                    apiRoles: ["admin", "dev"],
+                }),
+                loginAt: markLoginAt(new Date()),
+            }
+        },
     })
 
     return {

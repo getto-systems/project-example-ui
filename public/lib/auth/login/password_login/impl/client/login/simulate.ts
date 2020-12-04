@@ -1,40 +1,29 @@
 import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
 
 import { LoginFields } from "../../../data"
-
 import { AuthCredential } from "../../../../../common/credential/data"
-import { LoginID } from "../../../../../common/login_id/data"
-import { Password } from "../../../../../common/password/data"
 
-export function initSimulatePasswordLoginClient(
-    targetLoginID: LoginID,
-    targetPassword: Password,
-    returnAuthCredential: AuthCredential
-): PasswordLoginClient {
-    return new SimulatePasswordLoginClient(targetLoginID, targetPassword, returnAuthCredential)
+export function initSimulatePasswordLoginClient(simulator: LoginSimulator): PasswordLoginClient {
+    return new SimulatePasswordLoginClient(simulator)
+}
+
+export interface LoginSimulator {
+    // エラーにする場合は LoginError を throw (それ以外を throw するとこわれる)
+    login(fields: LoginFields): Promise<AuthCredential>
 }
 
 class SimulatePasswordLoginClient implements PasswordLoginClient {
-    targetLoginID: LoginID
-    targetPassword: Password
+    simulator: LoginSimulator
 
-    returnAuthCredential: AuthCredential
-
-    constructor(targetLoginID: LoginID, targetPassword: Password, returnAuthCredential: AuthCredential) {
-        this.targetLoginID = targetLoginID
-        this.targetPassword = targetPassword
-        this.returnAuthCredential = returnAuthCredential
+    constructor(simulator: LoginSimulator) {
+        this.simulator = simulator
     }
 
-    login({ loginID, password }: LoginFields): Promise<LoginResponse> {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                if (loginID !== this.targetLoginID || password !== this.targetPassword) {
-                    resolve(loginFailed({ type: "invalid-password-login" }))
-                } else {
-                    resolve(loginSuccess(this.returnAuthCredential))
-                }
-            }, 5 * 1000)
-        })
+    async login(fields: LoginFields): Promise<LoginResponse> {
+        try {
+            return loginSuccess(await this.simulator.login(fields))
+        } catch (err) {
+            return loginFailed(err)
+        }
     }
 }

@@ -1,58 +1,48 @@
 import { AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra"
 
-import {
-    AuthCredential,
-    TicketNonce,
-    LoginAt,
-    ApiCredential,
-    markApiCredential,
-} from "../../../../../common/credential/data"
+import { AuthCredential, TicketNonce, LoginAt } from "../../../../../common/credential/data"
 
-export function initMemoryAuthCredentialRepository(
-    initialTicketNonce: TicketNonce,
-    lastLoginAt: LoginAt
+export function initMemoryAuthCredentialRepository(): AuthCredentialRepository {
+    return new MemoryAuthCredentialRepository()
+}
+export function initMemoryAuthCredentialRepositoryWithInitial(
+    authCredential: AuthCredential
 ): AuthCredentialRepository {
-    return new MemoryAuthCredentialRepository(initialTicketNonce, lastLoginAt)
+    const repository = new MemoryAuthCredentialRepository()
+    repository.storeAuthCredential(authCredential)
+    return repository
 }
 
 class MemoryAuthCredentialRepository implements AuthCredentialRepository {
-    data: {
-        ticketNonce: Found<TicketNonce>
-        apiCredential: Found<ApiCredential>
-        lastLoginAt: Found<LoginAt>
-    }
-
-    constructor(initialTicketNonce: TicketNonce, lastLoginAt: LoginAt) {
-        this.data = {
-            ticketNonce: { found: true, content: initialTicketNonce },
-            apiCredential: {
-                found: true,
-                content: markApiCredential({
-                    apiRoles: [],
-                }),
-            },
-            lastLoginAt: { found: true, content: lastLoginAt },
-        }
-    }
+    store: Store<AuthCredential> = { stored: false }
 
     findTicketNonce(): FindResponse<TicketNonce> {
-        return { success: true, ...this.data.ticketNonce }
+        return this.find(toTicketNonce)
     }
     findLastLoginAt(): FindResponse<LoginAt> {
-        return { success: true, ...this.data.lastLoginAt }
+        return this.find(toLoginAt)
+    }
+    find<T>(getter: { (authCredential: AuthCredential): T }): FindResponse<T> {
+        if (!this.store.stored) {
+            return { success: true, found: false }
+        }
+        return { success: true, found: true, content: getter(this.store.data) }
     }
     storeAuthCredential(authCredential: AuthCredential): StoreResponse {
-        this.data.ticketNonce = { found: true, content: authCredential.ticketNonce }
-        this.data.apiCredential = { found: true, content: authCredential.apiCredential }
-        this.data.lastLoginAt = { found: true, content: authCredential.loginAt }
+        this.store = { stored: true, data: authCredential }
         return { success: true }
     }
     removeAuthCredential(): StoreResponse {
-        this.data.ticketNonce = { found: false }
-        this.data.apiCredential = { found: false }
-        this.data.lastLoginAt = { found: false }
+        this.store = { stored: false }
         return { success: true }
     }
 }
 
-type Found<T> = Readonly<{ found: false }> | Readonly<{ found: true; content: T }>
+type Store<T> = Readonly<{ stored: false }> | Readonly<{ stored: true; data: T }>
+
+function toTicketNonce(authCredential: AuthCredential): TicketNonce {
+    return authCredential.ticketNonce
+}
+function toLoginAt(authCredential: AuthCredential): LoginAt {
+    return authCredential.loginAt
+}
