@@ -5,7 +5,7 @@ import { mapInputEvent } from "./common"
 
 import { LoginIDFieldComponent } from "../../../../auth/Auth/field/login_id/component"
 
-import { LoginIDFieldError } from "../../../../auth/common/login_id/field/data"
+import { LoginIDFieldError } from "../../../../auth/common/field/login_id/data"
 import { Valid } from "../../../../auth/common/field/data"
 
 export interface LoginIDFieldHandler {

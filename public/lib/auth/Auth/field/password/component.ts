@@ -1,4 +1,4 @@
-import { PasswordFieldAction } from "../../../common/password/field/action"
+import { PasswordFieldAction } from "../../../common/field/password/action"
 
 import {
     PasswordFieldError,
@@ -7,7 +7,7 @@ import {
     simplePassword,
     PasswordView,
     hidePassword,
-} from "../../../common/password/field/data"
+} from "../../../common/field/password/data"
 import { InputValue, Valid, noError } from "../../../common/field/data"
 
 export interface PasswordFieldComponentFactory {

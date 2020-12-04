@@ -1,5 +1,5 @@
 import { LoginIDFieldEvent } from "./data"
-import { InputValue } from "../../field/data"
+import { InputValue } from "../data"
 
 export interface LoginIDField {
     (): LoginIDFieldAction

@@ -1,5 +1,5 @@
-import { LoginID } from "../data"
-import { Content, Valid } from "../../field/data"
+import { LoginID } from "../../login_id/data"
+import { Content, Valid } from "../data"
 
 export type LoginIDFieldError = "empty"
 

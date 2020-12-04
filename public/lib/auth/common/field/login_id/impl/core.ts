@@ -1,8 +1,8 @@
 import { LoginIDField, LoginIDFieldAction } from "../action"
 
-import { markLoginID } from "../../data"
+import { markLoginID } from "../../../login_id/data"
 import { LoginIDFieldEvent, LoginIDFieldError } from "../data"
-import { InputValue, markInputValue, validContent, invalidContent, hasError } from "../../../field/data"
+import { InputValue, markInputValue, validContent, invalidContent, hasError } from "../../data"
 
 function validateLoginID(loginID: string): LoginIDFieldError[] {
     if (loginID.length === 0) {

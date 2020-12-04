@@ -45,8 +45,8 @@ import {
 } from "../../../../profile/password_reset/action"
 
 import { PagePathname } from "../../../../common/application/data"
-import { LoginIDField } from "../../../../common/login_id/field/action"
-import { PasswordField } from "../../../../common/password/field/action"
+import { LoginIDField } from "../../../../common/field/login_id/action"
+import { PasswordField } from "../../../../common/field/password/action"
 import { LoginEvent } from "../../../../login/password_login/data"
 import {
     ResetToken,
