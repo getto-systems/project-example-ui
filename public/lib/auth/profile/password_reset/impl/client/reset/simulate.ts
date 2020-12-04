@@ -1,41 +1,29 @@
 import { PasswordResetClient, ResetResponse, resetSuccess, resetFailed } from "../../../infra"
 
 import { ResetToken, ResetFields } from "../../../data"
-
-import { LoginID } from "../../../../../common/login_id/data"
-import { Password } from "../../../../../common/password/data"
 import { AuthCredential } from "../../../../../common/credential/data"
 
-export function initSimulatePasswordResetClient(
-    targetLoginID: LoginID,
-    returnAuthCredential: AuthCredential
-): PasswordResetClient {
-    return new SimulatePasswordResetClient(targetLoginID, returnAuthCredential)
+export function initSimulatePasswordResetClient(simulator: ResetSimulator): PasswordResetClient {
+    return new SimulatePasswordResetClient(simulator)
+}
+
+export interface ResetSimulator {
+    // エラーにする場合は ResetError を throw (それ以外を throw するとこわれる)
+    reset(resetToken: ResetToken, fields: ResetFields): Promise<AuthCredential>
 }
 
 class SimulatePasswordResetClient implements PasswordResetClient {
-    targetLoginID: LoginID
+    simulator: ResetSimulator
 
-    returnAuthCredential: AuthCredential
-
-    constructor(targetLoginID: LoginID, returnAuthCredential: AuthCredential) {
-        this.targetLoginID = targetLoginID
-
-        this.returnAuthCredential = returnAuthCredential
+    constructor(simulator: ResetSimulator) {
+        this.simulator = simulator
     }
 
-    reset(token: ResetToken, { loginID, password }: ResetFields): Promise<ResetResponse> {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(this.resetSimulate(token, loginID, password))
-            }, 0.3 * 1000)
-        })
-    }
-    resetSimulate(_token: ResetToken, loginID: LoginID, _password: Password): ResetResponse {
-        if (loginID !== this.targetLoginID) {
-            return resetFailed({ type: "invalid-password-reset" })
-        } else {
-            return resetSuccess(this.returnAuthCredential)
+    async reset(resetToken: ResetToken, fields: ResetFields): Promise<ResetResponse> {
+        try {
+            return resetSuccess(await this.simulator.reset(resetToken, fields))
+        } catch(err) {
+            return resetFailed(err)
         }
     }
 }

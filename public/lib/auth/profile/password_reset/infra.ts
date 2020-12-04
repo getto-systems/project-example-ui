@@ -67,9 +67,9 @@ export const sendTokenSuccess: SendTokenResponse = { success: true }
 
 export type GetStatusResponse =
     | Readonly<{ success: false; err: CheckStatusError }>
-    | Readonly<{ success: true; done: false; dest: Destination; status: SendingStatus }>
-    | Readonly<{ success: true; done: true; send: false; dest: Destination; err: string }>
-    | Readonly<{ success: true; done: true; send: true; dest: Destination }>
+    | Readonly<{ success: true; dest: Destination; done: false; status: SendingStatus }>
+    | Readonly<{ success: true; dest: Destination; done: true; send: false; err: string }>
+    | Readonly<{ success: true; dest: Destination; done: true; send: true }>
 export function getStatusFailed(err: CheckStatusError): GetStatusResponse {
     return { success: false, err }
 }

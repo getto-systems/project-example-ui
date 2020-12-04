@@ -2,31 +2,35 @@ import { RenewClient, RenewResponse } from "../../../infra"
 
 import { AuthCredential, TicketNonce } from "../../../../../common/credential/data"
 
-export function initSimulateRenewClient(
-    targetTicketNonce: TicketNonce,
-    returnAuthCredential: AuthCredential
-): RenewClient {
-    return new SimulateRenewClient(targetTicketNonce, returnAuthCredential)
+export function initSimulateRenewClient(simulator: RenewSimulator): RenewClient {
+    return new SimulateRenewClient(simulator)
+}
+
+export interface RenewSimulator {
+    // エラーにする場合は RenewError を throw (それ以外を throw するとこわれる)
+    renew(ticketNonce: TicketNonce): Promise<AuthCredential | null>
 }
 
 class SimulateRenewClient implements RenewClient {
-    targetTicketNonce: TicketNonce
+    simulator: RenewSimulator
 
-    returnAuthCredential: AuthCredential
-
-    constructor(targetTicketNonce: TicketNonce, returnAuthCredential: AuthCredential) {
-        this.targetTicketNonce = targetTicketNonce
-        this.returnAuthCredential = returnAuthCredential
+    constructor(simulator: RenewSimulator) {
+        this.simulator = simulator
     }
 
     async renew(ticketNonce: TicketNonce): Promise<RenewResponse> {
-        if (ticketNonce !== this.targetTicketNonce) {
-            return { success: true, hasCredential: false }
-        }
-        return {
-            success: true,
-            hasCredential: true,
-            authCredential: this.returnAuthCredential,
+        try {
+            const response = await this.simulator.renew(ticketNonce)
+            if (!response) {
+                return { success: true, hasCredential: false }
+            }
+            return {
+                success: true,
+                hasCredential: true,
+                authCredential: response,
+            }
+        } catch (err) {
+            return { success: false, err }
         }
     }
 }

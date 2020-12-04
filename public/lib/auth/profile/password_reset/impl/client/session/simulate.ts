@@ -8,18 +8,33 @@ import {
     getStatusSend,
     getStatusInProgress,
     getStatusFailed,
+    sendTokenSuccess,
+    sendTokenFailed,
 } from "../../../infra"
 
-import { StartSessionFields } from "../../../data"
+import { Destination, StartSessionFields } from "../../../data"
 
-import { SessionID, markSessionID, CheckStatusError } from "../../../data"
-import { LoginID } from "../../../../../common/login_id/data"
+import { SessionID, CheckStatusError } from "../../../data"
 
 export function initSimulatePasswordResetSessionClient(
-    targetLoginID: LoginID
+    simulator: SessionSimulator
 ): PasswordResetSessionClient {
-    return new SimulatePasswordResetSessionClient(targetLoginID)
+    return new SimulatePasswordResetSessionClient(simulator)
 }
+
+export interface SessionSimulator {
+    // エラーにする場合は StartSessionError を throw (それ以外を throw するとこわれる)
+    startSession(fields: StartSessionFields): Promise<SessionID>
+    // エラーにする場合は CheckStatusError を throw (それ以外を throw するとこわれる)
+    sendToken(post: Post<SendTokenState>): Promise<true>
+    // エラーにする場合は CheckStatusError を throw (それ以外を throw するとこわれる)
+    getDestination(sessionID: SessionID): Promise<Destination>
+}
+
+export type SendTokenState =
+    | Readonly<{ state: "waiting" }>
+    | Readonly<{ state: "sending" }>
+    | Readonly<{ state: "success" }>
 
 type TokenState =
     | Readonly<{ state: "initial" }>
@@ -29,75 +44,61 @@ type TokenState =
     | Readonly<{ state: "failed"; err: CheckStatusError }>
 
 class SimulatePasswordResetSessionClient implements PasswordResetSessionClient {
+    simulator: SessionSimulator
+
     tokenState: TokenState = { state: "initial" }
 
-    targetSessionID = markSessionID("session-id")
-
-    targetLoginID: LoginID
-
-    constructor(targetLoginID: LoginID) {
-        this.targetLoginID = targetLoginID
+    constructor(simulator: SessionSimulator) {
+        this.simulator = simulator
     }
 
-    startSession({ loginID }: StartSessionFields): Promise<SessionResponse> {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                if (loginID === this.targetLoginID) {
-                    resolve(startSessionSuccess(this.targetSessionID))
-                } else {
-                    resolve(startSessionFailed({ type: "invalid-password-reset" }))
-                }
-            }, 0.3 * 1000)
-        })
-    }
-
-    toWaiting(): void {
-        this.tokenState = { state: "waiting" }
-    }
-    toSending(): void {
-        this.tokenState = { state: "sending" }
-    }
-    toSuccess(): void {
-        this.tokenState = { state: "success" }
-    }
-
-    sendToken(): Promise<SendTokenResponse> {
-        setTimeout(() => this.toWaiting(), 1 * 1000)
-        setTimeout(() => this.toSending(), 2 * 1000)
-        setTimeout(() => this.toSuccess(), 3 * 1000)
-
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({ success: true })
-            }, 0.3 * 1000)
-        })
-    }
-
-    getStatus(sessionID: SessionID): Promise<GetStatusResponse> {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(this.getStatusSimulate(sessionID))
-            }, 0.3 * 1000)
-        })
-    }
-    getStatusSimulate(sessionID: SessionID): GetStatusResponse {
-        if (sessionID !== this.targetSessionID) {
-            return getStatusFailed({ type: "invalid-password-reset" })
-        }
-
-        switch (this.tokenState.state) {
-            case "initial":
-            case "waiting":
-                return getStatusInProgress({ type: "log" }, { sending: false })
-
-            case "sending":
-                return getStatusInProgress({ type: "log" }, { sending: true })
-
-            case "success":
-                return getStatusSend({ type: "log" })
-
-            case "failed":
-                return getStatusFailed(this.tokenState.err)
+    async startSession(fields: StartSessionFields): Promise<SessionResponse> {
+        try {
+            return startSessionSuccess(await this.simulator.startSession(fields))
+        } catch (err) {
+            return startSessionFailed(err)
         }
     }
+
+    sendTokenStateTo(state: SendTokenState): void {
+        this.tokenState = state
+    }
+
+    async sendToken(): Promise<SendTokenResponse> {
+        try {
+            if (await this.simulator.sendToken((state) => this.sendTokenStateTo(state))) {
+                return sendTokenSuccess
+            }
+            throw { type: "infra-error", err: "never" }
+        } catch (err) {
+            return sendTokenFailed(err)
+        }
+    }
+
+    async getStatus(sessionID: SessionID): Promise<GetStatusResponse> {
+        try {
+            const dest = await this.simulator.getDestination(sessionID)
+
+            switch (this.tokenState.state) {
+                case "initial":
+                case "waiting":
+                    return getStatusInProgress(dest, { sending: false })
+
+                case "sending":
+                    return getStatusInProgress(dest, { sending: true })
+
+                case "success":
+                    return getStatusSend(dest)
+
+                case "failed":
+                    return getStatusFailed(this.tokenState.err)
+            }
+        } catch (err) {
+            return getStatusFailed(err)
+        }
+    }
+}
+
+interface Post<T> {
+    (state: T): void
 }
