@@ -1,6 +1,6 @@
-import { AuthCredential } from "../credential/data"
-import { LoginID } from "../login_id/data"
-import { Password } from "../password/data"
+import { AuthCredential } from "../../common/credential/data"
+import { LoginID } from "../../common/login_id/data"
+import { Password } from "../../common/password/data"
 
 export type LoginFields = Readonly<{
     loginID: LoginID

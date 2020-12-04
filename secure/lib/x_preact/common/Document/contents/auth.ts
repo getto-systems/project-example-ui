@@ -18,7 +18,6 @@ export function content_auth_login(): VNode {
         html`
             <p>認証トークンの更新</p>
             <p>パスワードログイン</p>
-            <p>パスワードリセット</p>
             <p>web 証明書ログイン</p>
         `,
     ])
@@ -59,6 +58,7 @@ export function content_auth_profile(): VNode {
         v_medium(),
         html`
             <p>自分のパスワードを変更</p>
+            <p>パスワードリセット</p>
             <p>新しい web 証明書を登録</p>
             <p>ログアウト</p>
         `,

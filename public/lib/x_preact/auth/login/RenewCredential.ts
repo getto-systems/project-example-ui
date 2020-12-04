@@ -7,10 +7,10 @@ import { appendScript } from "./script"
 
 import { ApplicationError } from "../../System/ApplicationError"
 
-import { RenewCredentialComponentSet } from "../../../auth/login/Login/View/view"
-import { initialRenewCredentialState } from "../../../auth/login/Login/renew_credential/component"
+import { RenewCredentialComponentSet } from "../../../auth/Auth/Login/view"
+import { initialRenewCredentialState } from "../../../auth/Auth/renew_credential/component"
 
-import { RenewError } from "../../../auth/login/credential/data"
+import { RenewError } from "../../../auth/login/renew/data"
 
 type Props = Readonly<{
     components: RenewCredentialComponentSet

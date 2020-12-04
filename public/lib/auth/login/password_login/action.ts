@@ -1,5 +1,5 @@
 import { LoginEvent, LoginFields } from "./data"
-import { Content } from "../field/data"
+import { Content } from "../../common/field/data"
 
 export interface Login {
     (collector: LoginCollector): LoginAction

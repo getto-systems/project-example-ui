@@ -3,10 +3,10 @@ import { html } from "htm/preact"
 
 import { mapInputEvent } from "./common"
 
-import { LoginIDFieldComponent } from "../../../../auth/login/Login/field/login_id/component"
+import { LoginIDFieldComponent } from "../../../../auth/Auth/field/login_id/component"
 
-import { LoginIDFieldError } from "../../../../auth/login/login_id/field/data"
-import { Valid } from "../../../../auth/login/field/data"
+import { LoginIDFieldError } from "../../../../auth/common/login_id/field/data"
+import { Valid } from "../../../../auth/common/field/data"
 
 export interface LoginIDFieldHandler {
     onInput(event: InputEvent): void

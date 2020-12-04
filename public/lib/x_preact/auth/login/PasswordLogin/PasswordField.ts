@@ -7,7 +7,7 @@ import { passwordView, passwordFieldError, passwordFieldHandler } from "../field
 import {
     PasswordFieldComponent,
     initialPasswordFieldState,
-} from "../../../../auth/login/Login/field/password/component"
+} from "../../../../auth/Auth/field/password/component"
 
 type ComponentSet = Readonly<{
     passwordField: PasswordFieldComponent

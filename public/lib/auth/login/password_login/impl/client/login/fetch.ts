@@ -1,7 +1,7 @@
 import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
 
 import { LoginFields } from "../../../data"
-import { markTicketNonce, markLoginAt, markApiCredential } from "../../../../credential/data"
+import { markTicketNonce, markLoginAt, markApiCredential } from "../../../../../common/credential/data"
 
 interface AuthClient {
     passwordLogin(param: { loginID: string; password: string }): Promise<AuthLoginResponse>

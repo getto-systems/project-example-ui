@@ -2,7 +2,7 @@ import { html } from "htm/preact"
 import { VNode } from "preact"
 
 import { VNodeContent } from "../../../../layout"
-import { formWithHelp } from "../../box"
+import { box, formWithHelp, iconSection } from "../../box"
 
 export const hr: VNode = html`<hr />`
 
@@ -10,6 +10,15 @@ const contentServer = html`<i class="lnir lnir-database"></i> コンテンツサ
 const apiServer = html`<i class="lnir lnir-cogs"></i> API サーバー`
 const browser = html`<i class="lnir lnir-display"></i> ブラウザ`
 const textMessage = html`<i class="lnir lnir-envelope"></i> テキストメッセージクライアント`
+
+export function serverClients(): VNode {
+    return box("前提とするサーバー・クライアント", [
+        iconSection("lnir lnir-database", "コンテンツサーバー", "（CDN : CloudFront など）"),
+        iconSection("lnir lnir-cogs", "API サーバー", "（アプリケーションサーバー）"),
+        iconSection("lnir lnir-display", "http クライアント", "（ブラウザ、スマホアプリ）"),
+        iconSection("lnir lnir-envelope", "テキストメッセージクライアント", "（メール、slack）"),
+    ])    
+}
 
 export function inBrowser(content: VNodeContent, help: VNodeContent[]): VNode {
     return formWithHelp(browser, content, help)
