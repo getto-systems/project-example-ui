@@ -73,7 +73,11 @@ export function MenuList({ menu }: Props): VNode {
                 </details>
             `
 
-            function toggle() {
+            function toggle(event: Event) {
+                const target = event.target
+                if (target instanceof HTMLElement) {
+                    target.blur()
+                }
                 menu.toggle(categoryLabels, menuNodes)
             }
         }
