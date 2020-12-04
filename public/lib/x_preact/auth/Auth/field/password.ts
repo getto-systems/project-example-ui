@@ -5,7 +5,7 @@ import { mapInputEvent } from "./common"
 
 import { PasswordFieldComponent } from "../../../../auth/Auth/field/password/component"
 
-import { PasswordFieldError, PasswordCharacter, PasswordView } from "../../../../auth/common/password/field/data"
+import { PasswordFieldError, PasswordCharacter, PasswordView } from "../../../../auth/common/field/password/data"
 import { InputValue, Valid } from "../../../../auth/common/field/data"
 
 export interface PasswordFieldHandler {

@@ -11,7 +11,7 @@ export const secureScriptPath = (infra: Infra): SecureScriptPath => (collector) 
 
     const pagePathname = collector.getPagePathname()
 
-    // secure host にアクセス中の html と同じパスで js がホストされている
+    // アクセス中の html と同じパスで secure host に js がホストされている
     return markScriptPath(
         `//${secureServerHost}${pagePathname.replace(/\.html$/, "")}.js`
     )

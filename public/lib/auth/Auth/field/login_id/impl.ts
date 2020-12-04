@@ -1,6 +1,6 @@
 import { LoginIDFieldActionSet, LoginIDFieldComponent, LoginIDFieldState } from "./component"
 
-import { LoginIDFieldEvent } from "../../../common/login_id/field/data"
+import { LoginIDFieldEvent } from "../../../common/field/login_id/data"
 import { InputValue } from "../../../common/field/data"
 
 export function initLoginIDField(actions: LoginIDFieldActionSet): LoginIDFieldComponent {

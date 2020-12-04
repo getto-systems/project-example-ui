@@ -24,8 +24,8 @@ import { Renew, SetContinuousRenew, Store } from "../../../login/renew/action"
 import { Login } from "../../../login/password_login/action"
 import { StartSession, CheckStatus, Reset, ResetTokenCollector } from "../../../profile/password_reset/action"
 
-import { LoginIDField } from "../../../common/login_id/field/action"
-import { PasswordField } from "../../../common/password/field/action"
+import { LoginIDField } from "../../../common/field/login_id/action"
+import { PasswordField } from "../../../common/field/password/action"
 
 import { LoginID } from "../../../common/login_id/data"
 import { Password } from "../../../common/password/data"

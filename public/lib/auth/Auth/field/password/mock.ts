@@ -5,7 +5,7 @@ import {
     complexPassword,
     hidePassword,
     showPassword,
-} from "../../../common/password/field/data"
+} from "../../../common/field/password/data"
 
 import { markInputValue, noError, hasError } from "../../../common/field/data"
 

@@ -1,6 +1,6 @@
 import { PasswordField, PasswordFieldAction } from "../action"
 
-import { markPassword } from "../../data"
+import { markPassword } from "../../../password/data"
 import {
     PasswordFieldEvent,
     PasswordFieldError,
@@ -11,7 +11,7 @@ import {
     showPassword,
     hidePassword,
 } from "../data"
-import { InputValue, markInputValue, validContent, invalidContent, hasError } from "../../../field/data"
+import { InputValue, markInputValue, validContent, invalidContent, hasError } from "../../data"
 
 // bcrypt を想定しているので、72 バイト以上のパスワードは無効
 const PASSWORD_MAX_BYTES = 72

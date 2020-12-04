@@ -1,5 +1,5 @@
-import { Password } from "../data"
-import { InputValue, Content, Valid } from "../../field/data"
+import { Password } from "../../password/data"
+import { InputValue, Content, Valid } from "../data"
 
 // complex : 2バイト以上の文字を含むか？
 export type PasswordCharacter =

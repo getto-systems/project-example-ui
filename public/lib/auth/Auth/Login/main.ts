@@ -24,8 +24,8 @@ import { renew, setContinuousRenew, store } from "../../login/renew/impl/core"
 import { login } from "../../login/password_login/impl/core"
 import { startSession, checkStatus, reset } from "../../profile/password_reset/impl/core"
 
-import { loginIDField } from "../../common/login_id/field/impl/core"
-import { passwordField } from "../../common/password/field/impl/core"
+import { loginIDField } from "../../common/field/login_id/impl/core"
+import { passwordField } from "../../common/field/password/impl/core"
 
 import { initFetchRenewClient } from "../../login/renew/impl/client/renew/fetch"
 import { initAuthExpires } from "../../login/renew/impl/expires"

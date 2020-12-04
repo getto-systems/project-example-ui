@@ -1,6 +1,6 @@
 import { PasswordFieldActionSet, PasswordFieldComponent, PasswordFieldState } from "./component"
 
-import { PasswordFieldEvent } from "../../../common/password/field/data"
+import { PasswordFieldEvent } from "../../../common/field/password/data"
 import { InputValue } from "../../../common/field/data"
 
 export function initPasswordField(actions: PasswordFieldActionSet): PasswordFieldComponent {
