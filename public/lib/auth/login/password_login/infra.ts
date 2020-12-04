@@ -1,6 +1,5 @@
+import { AuthCredential } from "../../common/credential/data"
 import { LoginFields } from "./data"
-
-import { AuthCredential } from "../credential/data"
 
 export type LoginInfra = Readonly<{
     client: PasswordLoginClient
