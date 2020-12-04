@@ -1,8 +1,8 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { container, notice_info, v_medium, v_small } from "../../../layout"
-import { box, items } from "../box"
+import { container, notice_info, v_medium } from "../../../layout"
+import { box, itemsSection } from "../box"
 
 import { content_index_auth } from "./home"
 
@@ -38,9 +38,7 @@ export function content_auth_user(): VNode {
         notice_info("業務で必要な時に使用できる"),
         notice_info("業務内容をプライベートに保つ"),
         v_medium(),
-        html`<p>管理ユーザーによってユーザーを管理</p>`,
-        v_small(),
-        items([
+        itemsSection("管理ユーザーでユーザー情報を変更", [
             "ユーザーの登録",
             "ユーザーの無効化",
             "ユーザーの削除",
