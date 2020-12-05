@@ -21,7 +21,6 @@ export function newTimeConfig(): TimeConfig {
         login: {
             delay: delaySecond(1),
         },
-
         startSession: {
             delay: delaySecond(1),
         },
