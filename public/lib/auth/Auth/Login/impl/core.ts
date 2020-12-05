@@ -47,12 +47,12 @@ export type RenewCredentialFactory = Readonly<{
         renewCredential: RenewCredentialComponentFactory
     }>
 }>
-export type RenewCredentialCollectorSet = Readonly<{
+export type RenewCredentialCollector = Readonly<{
     application: SecureScriptPathCollector
 }>
 export function initRenewCredentialResource(
     factory: RenewCredentialFactory,
-    collector: RenewCredentialCollectorSet,
+    collector: RenewCredentialCollector,
     setup: Setup<RenewCredentialComponent>
 ): RenewCredentialResource {
     const actions = {
@@ -95,12 +95,12 @@ export type PasswordLoginFactory = Readonly<{
         }>
     }>
 }>
-export type PasswordLoginCollectorSet = Readonly<{
+export type PasswordLoginCollector = Readonly<{
     application: SecureScriptPathCollector
 }>
 export function initPasswordLoginResource(
     factory: PasswordLoginFactory,
-    collector: PasswordLoginCollectorSet
+    collector: PasswordLoginCollector
 ): PasswordLoginResource {
     const fields = {
         loginIDField: initLoginIDFieldComponent(factory),
@@ -192,13 +192,13 @@ export type PasswordResetFactory = Readonly<{
         }>
     }>
 }>
-export type PasswordResetCollectorSet = Readonly<{
+export type PasswordResetCollector = Readonly<{
     application: SecureScriptPathCollector
     passwordReset: ResetTokenCollector
 }>
 export function initPasswordResetResource(
     factory: PasswordResetFactory,
-    collector: PasswordResetCollectorSet
+    collector: PasswordResetCollector
 ): PasswordResetResource {
     const fields = {
         loginIDField: initLoginIDFieldComponent(factory),

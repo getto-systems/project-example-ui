@@ -157,7 +157,7 @@ export type ForegroundFactory = Readonly<{
         }>
     }>
 }>
-export type CollectorSet = Readonly<{
+export type Collector = Readonly<{
     login: Readonly<{
         getLoginView(): ViewState
     }>
@@ -172,7 +172,7 @@ export type CollectorSet = Readonly<{
 export function initLoginAsForeground(
     worker: Worker,
     factory: ForegroundFactory,
-    collector: CollectorSet
+    collector: Collector
 ): LoginEntryPoint {
     const map = initProxyMapSet(postForegroundMessage)
     const view = new View(collector, initLoginComponentFactory(factory, collector, map))
@@ -229,7 +229,7 @@ function initProxyMapSet(post: Post<ForegroundMessage>): ProxyMapSet {
 }
 function initLoginComponentFactory(
     foregroundFactory: ForegroundFactory,
-    collector: CollectorSet,
+    collector: Collector,
     map: ProxyMapSet
 ): LoginComponentFactory {
     const factory = {
