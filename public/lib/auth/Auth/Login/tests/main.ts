@@ -1,6 +1,6 @@
 import { delayed, wait } from "../../../../z_external/delayed"
 
-import { TimeConfig, newHostConfig } from "../impl/config"
+import { TimeConfig, HostConfig } from "../impl/config"
 
 import { initLoginAsSingle } from "../impl/single"
 
@@ -26,10 +26,6 @@ import { initSimulateRenewClient, RenewSimulator } from "../../../login/renew/im
 import { initAuthExpires } from "../../../login/renew/impl/expires"
 import { initRenewRunner } from "../../../login/renew/impl/renew_runner"
 import {
-    initMemoryAuthCredentialRepository,
-    AuthCredentialStorageSet,
-} from "../../../login/renew/impl/repository/auth_credential/memory"
-import {
     initSimulatePasswordLoginClient,
     LoginSimulator,
 } from "../../../login/password_login/impl/client/login/simulate"
@@ -45,26 +41,31 @@ import {
 import { currentPagePathname, detectViewState, detectResetToken } from "../impl/location"
 
 import { LoginFactory } from "../view"
+import { AuthCredentialRepository } from "../../../login/renew/infra"
 
-type Storage = Readonly<{
-    credential: AuthCredentialStorageSet
+type Config = {
+    time: TimeConfig
+    host: HostConfig
+}
+type Repository = Readonly<{
+    authCredentials: AuthCredentialRepository
 }>
 type Simulator = LoginSimulator & RenewSimulator & SessionSimulator & ResetSimulator
 
 export function newLogin(
     currentURL: URL,
-    time: TimeConfig,
-    storage: Storage,
+    config: Config,
+    repository: Repository,
     simulator: Simulator
 ): LoginFactory {
     const factory = {
         link: initLoginLink,
         actions: {
-            application: initApplicationAction(),
-            credential: initCredentialAction(time, storage.credential, simulator),
+            application: initApplicationAction(config.host),
+            credential: initCredentialAction(config.time, repository.authCredentials, simulator),
 
-            passwordLogin: initPasswordLoginAction(time, simulator),
-            passwordReset: initPasswordResetAction(time, simulator),
+            passwordLogin: initPasswordLoginAction(config.time, simulator),
+            passwordReset: initPasswordResetAction(config.time, simulator),
 
             field: {
                 loginID: loginIDField,
@@ -99,35 +100,30 @@ export function newLogin(
     return () => initLoginAsSingle(factory, collector)
 }
 
-function initApplicationAction() {
+function initApplicationAction(host: HostConfig) {
     return {
-        secureScriptPath: secureScriptPath({ host: newHostConfig() }),
+        secureScriptPath: secureScriptPath({ host }),
     }
 }
 function initCredentialAction(
     time: TimeConfig,
-    storage: AuthCredentialStorageSet,
+    authCredentials: AuthCredentialRepository,
     simulator: RenewSimulator
 ) {
-    const authCredentials = initMemoryAuthCredentialRepository(storage)
     const client = initSimulateRenewClient(simulator)
 
     return {
         renew: renew({
-            time,
-
-            authCredentials,
             client,
+            time,
             delayed,
-
+            authCredentials,
             expires: initAuthExpires(),
         }),
         setContinuousRenew: setContinuousRenew({
-            time,
-
-            authCredentials,
             client,
-
+            time,
+            authCredentials,
             runner: initRenewRunner(),
         }),
         store: store({ authCredentials }),

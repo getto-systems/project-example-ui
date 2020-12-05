@@ -1,14 +1,14 @@
 import { NextVersionComponent } from "../next_version/component"
 
 export interface MoveToNextVersionFactory {
-    (): MoveToNextVersionResource
+    (): MoveToNextVersionEntryPoint
 }
-export type MoveToNextVersionResource = Readonly<{
-    components: MoveToNextVersionComponentSet
+export type MoveToNextVersionEntryPoint = Readonly<{
+    components: MoveToNextVersionResource
     terminate: Terminate
 }>
 
-export type MoveToNextVersionComponentSet = Readonly<{
+export type MoveToNextVersionResource = Readonly<{
     nextVersion: NextVersionComponent
 }>
 

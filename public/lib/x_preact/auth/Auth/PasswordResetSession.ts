@@ -8,7 +8,7 @@ import { ApplicationError } from "../../System/ApplicationError"
 
 import { LoginIDField } from "./PasswordResetSession/LoginIDField"
 
-import { PasswordResetSessionComponentSet } from "../../../auth/Auth/Login/view"
+import { PasswordResetSessionResource } from "../../../auth/Auth/Login/view"
 import { initialPasswordResetSessionState } from "../../../auth/Auth/password_reset_session/component"
 
 import {
@@ -20,7 +20,7 @@ import {
 } from "../../../auth/profile/password_reset/data"
 
 type Props = Readonly<{
-    components: PasswordResetSessionComponentSet
+    components: PasswordResetSessionResource
 }>
 export function PasswordResetSession({
     components: { passwordResetSession, loginIDField },

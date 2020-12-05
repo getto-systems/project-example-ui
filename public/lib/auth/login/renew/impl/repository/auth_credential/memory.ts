@@ -3,14 +3,11 @@ import { AuthCredentialRepository, FindResponse, StoreResponse } from "../../../
 import { AuthCredential, TicketNonce, LoginAt } from "../../../../../common/credential/data"
 
 export function initMemoryAuthCredentialRepository(
-    storage: AuthCredentialStorageSet
+    storage: AuthCredentialStorage
 ): AuthCredentialRepository {
     return new MemoryAuthCredentialRepository(storage)
 }
 
-export type AuthCredentialStorageSet = Readonly<{
-    authCredential: AuthCredentialStorage
-}>
 export type AuthCredentialStorage =
     | Readonly<{ stored: false }>
     | Readonly<{ stored: true; authCredential: AuthCredential }>
@@ -18,8 +15,8 @@ export type AuthCredentialStorage =
 class MemoryAuthCredentialRepository implements AuthCredentialRepository {
     storage: AuthCredentialStorage
 
-    constructor(storage: AuthCredentialStorageSet) {
-        this.storage = storage.authCredential
+    constructor(storage: AuthCredentialStorage) {
+        this.storage = storage
     }
 
     findTicketNonce(): FindResponse<TicketNonce> {
