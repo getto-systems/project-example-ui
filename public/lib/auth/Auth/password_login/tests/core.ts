@@ -5,7 +5,6 @@ import {
     initPasswordLoginCollector,
 } from "../../Login/tests/core"
 
-import { TimeConfig, HostConfig } from "../../Login/impl/config"
 import { initLoginLink } from "../../Login/impl/link"
 import { initPasswordLoginResource } from "../../Login/impl/core"
 
@@ -22,11 +21,22 @@ import { LoginSimulator } from "../../../login/password_login/impl/client/login/
 
 import { PasswordLoginResource } from "../../Login/view"
 
-import { AuthCredentialRepository } from "../../../login/renew/infra"
+import { SecureScriptPathHostConfig } from "../../../common/application/infra"
+import { LoginTimeConfig } from "../../../login/password_login/infra"
+import {
+    AuthCredentialRepository,
+    RenewTimeConfig,
+    SetContinuousRenewTimeConfig,
+} from "../../../login/renew/infra"
 
 type Config = {
-    time: TimeConfig
-    host: HostConfig
+    host: { secureScriptPath: SecureScriptPathHostConfig }
+    time: {
+        renew: RenewTimeConfig
+        setContinuousRenew: SetContinuousRenewTimeConfig
+
+        login: LoginTimeConfig
+    }
 }
 type Repository = Readonly<{
     authCredentials: AuthCredentialRepository
@@ -43,7 +53,7 @@ export function newPasswordLoginResource(
         link: initLoginLink,
         actions: {
             application: initApplicationAction(config.host),
-            credential: initCredentialAction(config.time, repository.authCredentials, simulator),
+            credential: initCredentialAction(config.time, repository, simulator),
 
             passwordLogin: initPasswordLoginAction(config.time, simulator),
 

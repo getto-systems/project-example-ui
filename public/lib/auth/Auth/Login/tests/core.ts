@@ -1,6 +1,5 @@
 import { delayed, wait } from "../../../../z_external/delayed"
 
-import { TimeConfig, HostConfig } from "../impl/config"
 import { LoginViewCollector } from "../impl/view"
 import { currentPagePathname, detectResetToken, detectViewState } from "../impl/location"
 import { PasswordLoginCollector, PasswordResetCollector, RenewCredentialCollector } from "../impl/core"
@@ -31,19 +30,33 @@ import { Renew, SetContinuousRenew, Store } from "../../../login/renew/action"
 import { Login } from "../../../login/password_login/action"
 import { CheckStatus, Reset, StartSession } from "../../../profile/password_reset/action"
 
-import { AuthCredentialRepository } from "../../../login/renew/infra"
+import { SecureScriptPathHostConfig } from "../../../common/application/infra"
+import {
+    AuthCredentialRepository,
+    RenewTimeConfig,
+    SetContinuousRenewTimeConfig,
+} from "../../../login/renew/infra"
+import { LoginTimeConfig } from "../../../login/password_login/infra"
+import {
+    CheckStatusTimeConfig,
+    ResetTimeConfig,
+    StartSessionTimeConfig,
+} from "../../../profile/password_reset/infra"
 
-export function initApplicationAction(host: HostConfig): { secureScriptPath: SecureScriptPath } {
+export function initApplicationAction(host: {
+    secureScriptPath: SecureScriptPathHostConfig
+}): { secureScriptPath: SecureScriptPath } {
     return {
         secureScriptPath: secureScriptPath({ host: host.secureScriptPath }),
     }
 }
 export function initCredentialAction(
-    time: TimeConfig,
-    authCredentials: AuthCredentialRepository,
+    time: { renew: RenewTimeConfig; setContinuousRenew: SetContinuousRenewTimeConfig },
+    repository: { authCredentials: AuthCredentialRepository },
     simulator: RenewSimulator
 ): { renew: Renew; setContinuousRenew: SetContinuousRenew; store: Store } {
     const client = initSimulateRenewClient(simulator)
+    const { authCredentials } = repository
 
     return {
         renew: renew({
@@ -62,7 +75,10 @@ export function initCredentialAction(
         store: store({ authCredentials }),
     }
 }
-export function initPasswordLoginAction(time: TimeConfig, simulator: LoginSimulator): { login: Login } {
+export function initPasswordLoginAction(
+    time: { login: LoginTimeConfig },
+    simulator: LoginSimulator
+): { login: Login } {
     return {
         login: login({
             client: initSimulatePasswordLoginClient(simulator),
@@ -72,7 +88,11 @@ export function initPasswordLoginAction(time: TimeConfig, simulator: LoginSimula
     }
 }
 export function initPasswordResetAction(
-    time: TimeConfig,
+    time: {
+        startSession: StartSessionTimeConfig
+        checkStatus: CheckStatusTimeConfig
+        reset: ResetTimeConfig
+    },
     simulator: SessionSimulator & ResetSimulator
 ): { startSession: StartSession; checkStatus: CheckStatus; reset: Reset } {
     const sessionClient = initSimulatePasswordResetSessionClient(simulator)
