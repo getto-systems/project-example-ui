@@ -10,13 +10,13 @@ import { ApplicationError } from "../../System/ApplicationError"
 import { LoginIDField } from "./PasswordReset/LoginIDField"
 import { PasswordField } from "./PasswordReset/PasswordField"
 
-import { PasswordResetComponentSet } from "../../../auth/Auth/Login/view"
+import { PasswordResetResource } from "../../../auth/Auth/Login/view"
 import { initialPasswordResetState } from "../../../auth/Auth/password_reset/component"
 
 import { ResetError } from "../../../auth/profile/password_reset/data"
 
 type Props = Readonly<{
-    components: PasswordResetComponentSet
+    components: PasswordResetResource
 }>
 export function PasswordReset({
     components: { passwordReset, loginIDField, passwordField },

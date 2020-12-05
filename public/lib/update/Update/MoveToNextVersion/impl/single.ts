@@ -1,17 +1,17 @@
 import {
-    initMoveToNextVersionComponentSet,
+    initMoveToNextVersionResource,
     MoveToNextVersionCollectorSet,
-    MoveToNextVersionFactorySet,
+    MoveToNextVersionFactory,
 } from "./core"
 
-import { MoveToNextVersionResource } from "../view"
+import { MoveToNextVersionEntryPoint } from "../view"
 
 export function initMoveToNextVersionAsSingle(
-    factory: MoveToNextVersionFactorySet,
+    factory: MoveToNextVersionFactory,
     collector: MoveToNextVersionCollectorSet
-): MoveToNextVersionResource {
+): MoveToNextVersionEntryPoint {
     return {
-        components: initMoveToNextVersionComponentSet(factory, collector),
+        components: initMoveToNextVersionResource(factory, collector),
         terminate: () => {
             // worker とインターフェイスを合わせるために必要
         },

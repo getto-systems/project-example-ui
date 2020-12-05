@@ -9,5 +9,5 @@
 /public/dist/**/*.js
 /secure/dist/**/*.js
 
-/public/lib/y_static/env.ts
-/secure/lib/y_static/env.ts
+/public/lib/y_static/*
+/secure/lib/y_static/*

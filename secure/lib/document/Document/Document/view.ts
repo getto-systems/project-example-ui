@@ -4,14 +4,14 @@ import { BreadcrumbComponent } from "../../../common/Outline/breadcrumb/componen
 import { ContentComponent } from "../content/component"
 
 export interface DocumentFactory {
-    (): DocumentResource
+    (): DocumentEntryPoint
 }
-export type DocumentResource = Readonly<{
-    components: DocumentComponentSet
+export type DocumentEntryPoint = Readonly<{
+    components: DocumentComponent
     terminate: Terminate
 }>
 
-export type DocumentComponentSet = Readonly<{
+export type DocumentComponent = Readonly<{
     menu: MenuComponent
     breadcrumb: BreadcrumbComponent
 

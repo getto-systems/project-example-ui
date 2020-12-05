@@ -8,9 +8,9 @@ import { LoginIDFieldComponent } from "../field/login_id/component"
 import { PasswordFieldComponent } from "../field/password/component"
 
 export interface LoginFactory {
-    (): LoginResource
+    (): LoginEntryPoint
 }
-export type LoginResource = Readonly<{
+export type LoginEntryPoint = Readonly<{
     view: LoginView
     terminate: Terminate
 }>
@@ -22,29 +22,29 @@ export interface LoginView {
 
 export type LoginState =
     | Readonly<{ type: "initial" }>
-    | Readonly<{ type: "renew-credential"; components: RenewCredentialComponentSet }>
-    | Readonly<{ type: "password-login"; components: PasswordLoginComponentSet }>
-    | Readonly<{ type: "password-reset-session"; components: PasswordResetSessionComponentSet }>
-    | Readonly<{ type: "password-reset"; components: PasswordResetComponentSet }>
+    | Readonly<{ type: "renew-credential"; components: RenewCredentialResource }>
+    | Readonly<{ type: "password-login"; components: PasswordLoginResource }>
+    | Readonly<{ type: "password-reset-session"; components: PasswordResetSessionResource }>
+    | Readonly<{ type: "password-reset"; components: PasswordResetResource }>
     | Readonly<{ type: "error"; err: string }>
 
 export type ViewState = "password-login" | "password-reset-session" | "password-reset"
 
 export const initialLoginState: LoginState = { type: "initial" }
 
-export type RenewCredentialComponentSet = Readonly<{
+export type RenewCredentialResource = Readonly<{
     renewCredential: RenewCredentialComponent
 }>
-export type PasswordLoginComponentSet = Readonly<{
+export type PasswordLoginResource = Readonly<{
     passwordLogin: PasswordLoginComponent
     loginIDField: LoginIDFieldComponent
     passwordField: PasswordFieldComponent
 }>
-export type PasswordResetSessionComponentSet = Readonly<{
+export type PasswordResetSessionResource = Readonly<{
     passwordResetSession: PasswordResetSessionComponent
     loginIDField: LoginIDFieldComponent
 }>
-export type PasswordResetComponentSet = Readonly<{
+export type PasswordResetResource = Readonly<{
     passwordReset: PasswordResetComponent
     loginIDField: LoginIDFieldComponent
     passwordField: PasswordFieldComponent

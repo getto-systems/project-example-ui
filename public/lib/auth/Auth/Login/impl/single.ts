@@ -1,24 +1,24 @@
 import { View } from "./view"
 import {
-    RenewCredentialFactorySet,
+    RenewCredentialFactory,
     RenewCredentialCollectorSet,
-    PasswordLoginFactorySet,
+    PasswordLoginFactory,
     PasswordLoginCollectorSet,
-    PasswordResetSessionFactorySet,
-    PasswordResetFactorySet,
+    PasswordResetSessionFactory,
+    PasswordResetFactory,
     PasswordResetCollectorSet,
-    initRenewCredentialComponentSet,
-    initPasswordLoginComponentSet,
-    initPasswordResetSessionComponentSet,
-    initPasswordResetComponentSet,
+    initRenewCredentialResource,
+    initPasswordLoginResource,
+    initPasswordResetSessionResource,
+    initPasswordResetResource,
 } from "./core"
 
-import { ViewState, LoginResource } from "../view"
+import { ViewState, LoginEntryPoint } from "../view"
 
-export type FactorySet = RenewCredentialFactorySet &
-    PasswordLoginFactorySet &
-    PasswordResetSessionFactorySet &
-    PasswordResetFactorySet
+export type Factory = RenewCredentialFactory &
+    PasswordLoginFactory &
+    PasswordResetSessionFactory &
+    PasswordResetFactory
 
 export type CollectorSet = Readonly<{
     login: {
@@ -29,14 +29,14 @@ export type CollectorSet = Readonly<{
     PasswordLoginCollectorSet &
     PasswordResetCollectorSet
 
-export function initLoginAsSingle(factory: FactorySet, collector: CollectorSet): LoginResource {
+export function initLoginAsSingle(factory: Factory, collector: CollectorSet): LoginEntryPoint {
     return {
         view: new View(collector, {
-            renewCredential: (setup) => initRenewCredentialComponentSet(factory, collector, setup),
+            renewCredential: (setup) => initRenewCredentialResource(factory, collector, setup),
 
-            passwordLogin: () => initPasswordLoginComponentSet(factory, collector),
-            passwordResetSession: () => initPasswordResetSessionComponentSet(factory),
-            passwordReset: () => initPasswordResetComponentSet(factory, collector),
+            passwordLogin: () => initPasswordLoginResource(factory, collector),
+            passwordResetSession: () => initPasswordResetSessionResource(factory),
+            passwordReset: () => initPasswordResetResource(factory, collector),
         }),
         terminate: () => {
             // worker とインターフェイスを合わせるために必要

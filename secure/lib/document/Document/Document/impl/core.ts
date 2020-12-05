@@ -1,4 +1,4 @@
-import { DocumentComponentSet } from "../view"
+import { DocumentComponent } from "../view"
 
 import { MenuComponentFactory } from "../../../../common/Outline/menu/component"
 import { BreadcrumbComponentFactory } from "../../../../common/Outline/breadcrumb/component"
@@ -10,7 +10,7 @@ import { LoadBreadcrumb, LoadMenu, MenuTargetCollector, ToggleMenuExpand } from 
 
 import { DocumentPathCollector, LoadDocument } from "../../../content/action"
 
-export type DocumentFactorySet = Readonly<{
+export type DocumentFactory = Readonly<{
     actions: Readonly<{
         credential: Readonly<{
             loadApiNonce: LoadApiNonce
@@ -36,10 +36,10 @@ export type DocumentCollectorSet = Readonly<{
     menu: MenuTargetCollector
     content: DocumentPathCollector
 }>
-export function initDocumentComponentSet(
-    factory: DocumentFactorySet,
+export function initDocumentComponent(
+    factory: DocumentFactory,
     collector: DocumentCollectorSet
-): DocumentComponentSet {
+): DocumentComponent {
     const actions = {
         loadApiNonce: factory.actions.credential.loadApiNonce(),
         loadApiRoles: factory.actions.credential.loadApiRoles(),

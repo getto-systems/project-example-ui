@@ -16,9 +16,11 @@ function find() {
         const files = []
         fs.readdirSync(dir, { withFileTypes: true }).forEach((file) => {
             if (file.isDirectory()) {
-                gatherFiles(path.join(dir, file.name)).forEach((file) => {
-                    files.push(file)
-                })
+                if (isGatherDirectory(file.name)) {
+                    gatherFiles(path.join(dir, file.name)).forEach((file) => {
+                        files.push(file)
+                    })
+                }
             }
             if (file.isFile()) {
                 if (file.name.endsWith(".html")) {
@@ -27,6 +29,20 @@ function find() {
             }
         })
         return files
+
+        function isGatherDirectory(name) {
+            const target = path.join(dir, name).replace(root, "")
+            switch (target) {
+                case "/coverage":
+                case "/css":
+                case "/fonts":
+                case "/vs-ext":
+                    return false
+
+                default:
+                    return true
+            }
+        }
     }
 }
 

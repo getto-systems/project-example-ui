@@ -1,8 +1,8 @@
 import { Find, FindCollector } from "../../../next_version/action"
 import { NextVersionComponentFactory } from "../../next_version/component"
-import { MoveToNextVersionComponentSet } from "../view"
+import { MoveToNextVersionResource } from "../view"
 
-export type MoveToNextVersionFactorySet = Readonly<{
+export type MoveToNextVersionFactory = Readonly<{
     actions: Readonly<{
         nextVersion: Readonly<{
             find: Find
@@ -15,10 +15,10 @@ export type MoveToNextVersionFactorySet = Readonly<{
 export type MoveToNextVersionCollectorSet = Readonly<{
     nextVersion: FindCollector
 }>
-export function initMoveToNextVersionComponentSet(
-    factory: MoveToNextVersionFactorySet,
+export function initMoveToNextVersionResource(
+    factory: MoveToNextVersionFactory,
     collector: MoveToNextVersionCollectorSet
-): MoveToNextVersionComponentSet {
+): MoveToNextVersionResource {
     const actions = {
         find: factory.actions.nextVersion.find(collector.nextVersion),
     }

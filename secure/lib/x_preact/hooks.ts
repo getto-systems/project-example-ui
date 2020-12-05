@@ -2,7 +2,7 @@ import { useState, useEffect } from "preact/hooks"
 
 type Container<T> = Readonly<{ set: false }> | Readonly<{ set: true; components: T }>
 
-export function useComponentSet<T>(factory: ComponentsFactory<T>): Container<T> {
+export function useEntryPoint<T>(factory: EntryPointFactory<T>): Container<T> {
     const [container, setContainer] = useState<Container<T>>({ set: false })
     useEffect(() => {
         const { components, terminate } = factory()
@@ -12,7 +12,7 @@ export function useComponentSet<T>(factory: ComponentsFactory<T>): Container<T> 
     return container
 }
 
-interface ComponentsFactory<T> {
+interface EntryPointFactory<T> {
     (): { components: T; terminate: Terminate }
 }
 interface Terminate {

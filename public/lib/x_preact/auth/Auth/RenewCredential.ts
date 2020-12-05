@@ -7,13 +7,13 @@ import { appendScript } from "./script"
 
 import { ApplicationError } from "../../System/ApplicationError"
 
-import { RenewCredentialComponentSet } from "../../../auth/Auth/Login/view"
+import { RenewCredentialResource } from "../../../auth/Auth/Login/view"
 import { initialRenewCredentialState } from "../../../auth/Auth/renew_credential/component"
 
 import { RenewError } from "../../../auth/login/renew/data"
 
 type Props = Readonly<{
-    components: RenewCredentialComponentSet
+    components: RenewCredentialResource
 }>
 export function RenewCredential({ components: { renewCredential } }: Props): VNode {
     const [state, setState] = useState(initialRenewCredentialState)

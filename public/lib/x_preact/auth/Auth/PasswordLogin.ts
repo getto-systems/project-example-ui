@@ -10,13 +10,13 @@ import { ApplicationError } from "../../System/ApplicationError"
 import { LoginIDField } from "./PasswordLogin/LoginIDField"
 import { PasswordField } from "./PasswordLogin/PasswordField"
 
-import { PasswordLoginComponentSet } from "../../../auth/Auth/Login/view"
+import { PasswordLoginResource } from "../../../auth/Auth/Login/view"
 import { initialPasswordLoginState } from "../../../auth/Auth/password_login/component"
 
 import { LoginError } from "../../../auth/login/password_login/data"
 
 type Props = Readonly<{
-    components: PasswordLoginComponentSet
+    components: PasswordLoginResource
 }>
 export function PasswordLogin({
     components: { passwordLogin, loginIDField, passwordField },

@@ -9,10 +9,10 @@ import {
     initialLoginIDFieldState,
 } from "../../../../auth/Auth/field/login_id/component"
 
-type ComponentSet = Readonly<{
+type Props = Readonly<{
     loginIDField: LoginIDFieldComponent
 }>
-export function LoginIDField({ loginIDField }: ComponentSet): VNode {
+export function LoginIDField({ loginIDField }: Props): VNode {
     const [state, setState] = useState(initialLoginIDFieldState)
     useEffect(() => {
         loginIDField.onStateChange(setState)

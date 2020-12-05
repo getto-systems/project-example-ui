@@ -1,10 +1,10 @@
 import { LoginLinkFactory } from "../../link"
 
 import {
-    RenewCredentialComponentSet,
-    PasswordLoginComponentSet,
-    PasswordResetSessionComponentSet,
-    PasswordResetComponentSet,
+    RenewCredentialResource,
+    PasswordLoginResource,
+    PasswordResetSessionResource,
+    PasswordResetResource,
 } from "../view"
 
 import {
@@ -33,7 +33,7 @@ import { LoginFields } from "../../../login/password_login/data"
 import { StartSessionFields, ResetFields } from "../../../profile/password_reset/data"
 import { Content, invalidContent, validContent } from "../../../common/field/data"
 
-export type RenewCredentialFactorySet = Readonly<{
+export type RenewCredentialFactory = Readonly<{
     actions: Readonly<{
         application: Readonly<{
             secureScriptPath: SecureScriptPath
@@ -50,11 +50,11 @@ export type RenewCredentialFactorySet = Readonly<{
 export type RenewCredentialCollectorSet = Readonly<{
     application: SecureScriptPathCollector
 }>
-export function initRenewCredentialComponentSet(
-    factory: RenewCredentialFactorySet,
+export function initRenewCredentialResource(
+    factory: RenewCredentialFactory,
     collector: RenewCredentialCollectorSet,
     setup: Setup<RenewCredentialComponent>
-): RenewCredentialComponentSet {
+): RenewCredentialResource {
     const actions = {
         renew: factory.actions.credential.renew(),
         setContinuousRenew: factory.actions.credential.setContinuousRenew(),
@@ -69,7 +69,7 @@ export function initRenewCredentialComponentSet(
     }
 }
 
-export type PasswordLoginFactorySet = Readonly<{
+export type PasswordLoginFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
         application: Readonly<{
@@ -98,10 +98,10 @@ export type PasswordLoginFactorySet = Readonly<{
 export type PasswordLoginCollectorSet = Readonly<{
     application: SecureScriptPathCollector
 }>
-export function initPasswordLoginComponentSet(
-    factory: PasswordLoginFactorySet,
+export function initPasswordLoginResource(
+    factory: PasswordLoginFactory,
     collector: PasswordLoginCollectorSet
-): PasswordLoginComponentSet {
+): PasswordLoginResource {
     const fields = {
         loginIDField: initLoginIDFieldComponent(factory),
         passwordField: initPasswordFieldComponent(factory),
@@ -122,7 +122,7 @@ export function initPasswordLoginComponentSet(
     }
 }
 
-export type PasswordResetSessionFactorySet = Readonly<{
+export type PasswordResetSessionFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
         application: Readonly<{
@@ -147,9 +147,9 @@ export type PasswordResetSessionFactorySet = Readonly<{
         }>
     }>
 }>
-export function initPasswordResetSessionComponentSet(
-    factory: PasswordResetSessionFactorySet
-): PasswordResetSessionComponentSet {
+export function initPasswordResetSessionResource(
+    factory: PasswordResetSessionFactory
+): PasswordResetSessionResource {
     const fields = { loginIDField: initLoginIDFieldComponent(factory) }
 
     const actions = {
@@ -166,7 +166,7 @@ export function initPasswordResetSessionComponentSet(
     }
 }
 
-export type PasswordResetFactorySet = Readonly<{
+export type PasswordResetFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
         application: Readonly<{
@@ -196,10 +196,10 @@ export type PasswordResetCollectorSet = Readonly<{
     application: SecureScriptPathCollector
     passwordReset: ResetTokenCollector
 }>
-export function initPasswordResetComponentSet(
-    factory: PasswordResetFactorySet,
+export function initPasswordResetResource(
+    factory: PasswordResetFactory,
     collector: PasswordResetCollectorSet
-): PasswordResetComponentSet {
+): PasswordResetResource {
     const fields = {
         loginIDField: initLoginIDFieldComponent(factory),
         passwordField: initPasswordFieldComponent(factory),
@@ -221,7 +221,7 @@ export function initPasswordResetComponentSet(
     }
 }
 
-export type LoginIDFieldFactorySet = Readonly<{
+export type LoginIDFieldFactory = Readonly<{
     actions: Readonly<{
         field: Readonly<{
             loginID: LoginIDField
@@ -233,11 +233,11 @@ export type LoginIDFieldFactorySet = Readonly<{
         }>
     }>
 }>
-export function initLoginIDFieldComponent(factory: LoginIDFieldFactorySet): LoginIDFieldComponent {
+export function initLoginIDFieldComponent(factory: LoginIDFieldFactory): LoginIDFieldComponent {
     return factory.components.field.loginID({ loginID: factory.actions.field.loginID() })
 }
 
-export type PasswordFieldFactorySet = Readonly<{
+export type PasswordFieldFactory = Readonly<{
     actions: Readonly<{
         field: Readonly<{
             password: PasswordField
@@ -249,7 +249,7 @@ export type PasswordFieldFactorySet = Readonly<{
         }>
     }>
 }>
-export function initPasswordFieldComponent(factory: PasswordFieldFactorySet): PasswordFieldComponent {
+export function initPasswordFieldComponent(factory: PasswordFieldFactory): PasswordFieldComponent {
     return factory.components.field.password({ password: factory.actions.field.password() })
 }
 

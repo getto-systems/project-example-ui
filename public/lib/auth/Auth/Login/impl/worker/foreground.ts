@@ -1,9 +1,9 @@
-import { View, LoginComponentFactorySet } from "../view"
+import { View, LoginComponentFactory } from "../view"
 import {
-    initRenewCredentialComponentSet,
-    initPasswordLoginComponentSet,
-    initPasswordResetSessionComponentSet,
-    initPasswordResetComponentSet,
+    initRenewCredentialResource,
+    initPasswordLoginResource,
+    initPasswordResetSessionResource,
+    initPasswordResetResource,
 } from "../core"
 
 import {
@@ -17,7 +17,7 @@ import {
     ResetProxyMessage,
 } from "./data"
 
-import { ViewState, LoginResource } from "../../view"
+import { ViewState, LoginEntryPoint } from "../../view"
 
 import { LoginLinkFactory } from "../../../link"
 
@@ -127,7 +127,7 @@ class ResetProxyMap extends ProxyMap<ResetProxyMessage, ResetEvent> {
     }
 }
 
-export type ForegroundFactorySet = Readonly<{
+export type ForegroundFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
         application: Readonly<{
@@ -171,11 +171,11 @@ export type CollectorSet = Readonly<{
 
 export function initLoginAsForeground(
     worker: Worker,
-    factory: ForegroundFactorySet,
+    factory: ForegroundFactory,
     collector: CollectorSet
-): LoginResource {
+): LoginEntryPoint {
     const map = initProxyMapSet(postForegroundMessage)
-    const view = new View(collector, initLoginComponentFactorySet(factory, collector, map))
+    const view = new View(collector, initLoginComponentFactory(factory, collector, map))
     const errorHandler = (err: string) => {
         view.error(err)
     }
@@ -227,25 +227,25 @@ function initProxyMapSet(post: Post<ForegroundMessage>): ProxyMapSet {
         },
     }
 }
-function initLoginComponentFactorySet(
-    foregroundFactory: ForegroundFactorySet,
+function initLoginComponentFactory(
+    foregroundFactory: ForegroundFactory,
     collector: CollectorSet,
     map: ProxyMapSet
-): LoginComponentFactorySet {
+): LoginComponentFactory {
     const factory = {
         ...foregroundFactory,
         actions: { ...foregroundFactory.actions, ...initActionProxyFactory() },
     }
 
     return {
-        renewCredential: (setup) => initRenewCredentialComponentSet(factory, collector, setup),
+        renewCredential: (setup) => initRenewCredentialResource(factory, collector, setup),
 
-        passwordLogin: () => initPasswordLoginComponentSet(factory, collector),
-        passwordResetSession: () => initPasswordResetSessionComponentSet(factory),
-        passwordReset: () => initPasswordResetComponentSet(factory, collector),
+        passwordLogin: () => initPasswordLoginResource(factory, collector),
+        passwordResetSession: () => initPasswordResetSessionResource(factory),
+        passwordReset: () => initPasswordResetResource(factory, collector),
     }
 
-    type ActionProxyFactorySet = Readonly<{
+    type ActionProxyFactory = Readonly<{
         passwordLogin: Readonly<{
             login: Login
         }>
@@ -256,7 +256,7 @@ function initLoginComponentFactorySet(
         }>
     }>
 
-    function initActionProxyFactory(): ActionProxyFactorySet {
+    function initActionProxyFactory(): ActionProxyFactory {
         return {
             passwordLogin: {
                 login: (collector) => map.passwordLogin.login.init(collector),

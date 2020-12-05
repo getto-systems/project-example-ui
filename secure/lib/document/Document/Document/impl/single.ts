@@ -1,13 +1,13 @@
-import { DocumentCollectorSet, DocumentFactorySet, initDocumentComponentSet } from "./core"
+import { DocumentCollectorSet, DocumentFactory, initDocumentComponent } from "./core"
 
-import { DocumentResource } from "../view"
+import { DocumentEntryPoint } from "../view"
 
 export function initDocumentAsSingle(
-    factory: DocumentFactorySet,
+    factory: DocumentFactory,
     collector: DocumentCollectorSet
-): DocumentResource {
+): DocumentEntryPoint {
     return {
-        components: initDocumentComponentSet(factory, collector),
+        components: initDocumentComponent(factory, collector),
         terminate: () => {
             // worker とインターフェイスを合わせるために必要
         },
