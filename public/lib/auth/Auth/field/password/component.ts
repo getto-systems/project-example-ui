@@ -11,9 +11,9 @@ import {
 import { InputValue, Valid, noError } from "../../../common/field/data"
 
 export interface PasswordFieldComponentFactory {
-    (actions: PasswordFieldActionSet): PasswordFieldComponent
+    (material: PasswordFieldMaterial): PasswordFieldComponent
 }
-export type PasswordFieldActionSet = Readonly<{
+export type PasswordFieldMaterial = Readonly<{
     password: PasswordFieldAction
 }>
 

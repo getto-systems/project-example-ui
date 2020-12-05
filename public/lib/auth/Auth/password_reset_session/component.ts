@@ -11,9 +11,9 @@ import {
 } from "../../profile/password_reset/data"
 
 export interface PasswordResetSessionComponentFactory {
-    (actions: PasswordResetSessionActionSet): PasswordResetSessionComponent
+    (material: PasswordResetSessionMaterial): PasswordResetSessionComponent
 }
-export type PasswordResetSessionActionSet = Readonly<{
+export type PasswordResetSessionMaterial = Readonly<{
     link: LoginLink
     startSession: StartSessionAction
     checkStatus: CheckStatusAction

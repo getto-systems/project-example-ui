@@ -55,13 +55,13 @@ export function initRenewCredentialResource(
     collector: RenewCredentialCollector,
     setup: Setup<RenewCredentialComponent>
 ): RenewCredentialResource {
-    const actions = {
+    const material = {
         renew: factory.actions.credential.renew(),
         setContinuousRenew: factory.actions.credential.setContinuousRenew(),
         secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
     }
 
-    const renewCredential = factory.components.renewCredential(actions)
+    const renewCredential = factory.components.renewCredential(material)
     setup(renewCredential)
 
     return {
@@ -107,7 +107,7 @@ export function initPasswordLoginResource(
         passwordField: initPasswordFieldComponent(factory),
     }
 
-    const actions = {
+    const material = {
         link: factory.link(),
         login: factory.actions.passwordLogin.login({
             getFields: () => collectLoginFields(fields),
@@ -117,7 +117,7 @@ export function initPasswordLoginResource(
     }
 
     return {
-        passwordLogin: factory.components.passwordLogin(actions),
+        passwordLogin: factory.components.passwordLogin(material),
         ...fields,
     }
 }
@@ -152,7 +152,7 @@ export function initPasswordResetSessionResource(
 ): PasswordResetSessionResource {
     const fields = { loginIDField: initLoginIDFieldComponent(factory) }
 
-    const actions = {
+    const material = {
         link: factory.link(),
         startSession: factory.actions.passwordReset.startSession({
             getFields: () => collectStartSessionFields(fields),
@@ -161,7 +161,7 @@ export function initPasswordResetSessionResource(
     }
 
     return {
-        passwordResetSession: factory.components.passwordResetSession(actions),
+        passwordResetSession: factory.components.passwordResetSession(material),
         ...fields,
     }
 }
@@ -205,7 +205,7 @@ export function initPasswordResetResource(
         passwordField: initPasswordFieldComponent(factory),
     }
 
-    const actions = {
+    const material = {
         link: factory.link(),
         reset: factory.actions.passwordReset.reset({
             getFields: () => collectResetFields(fields),
@@ -216,7 +216,7 @@ export function initPasswordResetResource(
     }
 
     return {
-        passwordReset: factory.components.passwordReset(actions),
+        passwordReset: factory.components.passwordReset(material),
         ...fields,
     }
 }

@@ -5,10 +5,10 @@ import { StorageError, RenewError } from "../../login/renew/data"
 import { ScriptPath, LoadError } from "../../common/application/data"
 
 export interface RenewCredentialComponentFactory {
-    (actions: RenewCredentialActionSet): RenewCredentialComponent
+    (material: RenewCredentialMaterial): RenewCredentialComponent
 }
 
-export type RenewCredentialActionSet = Readonly<{
+export type RenewCredentialMaterial = Readonly<{
     renew: RenewAction
     setContinuousRenew: SetContinuousRenewAction
     secureScriptPath: SecureScriptPathAction

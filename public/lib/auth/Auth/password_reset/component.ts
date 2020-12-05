@@ -9,10 +9,10 @@ import { StorageError } from "../../login/renew/data"
 import { ScriptPath, LoadError } from "../../common/application/data"
 
 export interface PasswordResetComponentFactory {
-    (actions: PasswordResetActionSet): PasswordResetComponent
+    (material: PasswordResetMaterial): PasswordResetComponent
 }
 
-export type PasswordResetActionSet = Readonly<{
+export type PasswordResetMaterial = Readonly<{
     link: LoginLink
     reset: ResetAction
     store: StoreAction

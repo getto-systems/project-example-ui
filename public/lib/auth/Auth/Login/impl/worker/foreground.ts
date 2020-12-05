@@ -174,7 +174,7 @@ export function initLoginAsForeground(
     factory: ForegroundFactory,
     collector: Collector
 ): LoginEntryPoint {
-    const map = initProxyMapSet(postForegroundMessage)
+    const map = initProxy(postForegroundMessage)
     const view = new View(collector, initLoginComponentFactory(factory, collector, map))
     const errorHandler = (err: string) => {
         view.error(err)
@@ -197,7 +197,7 @@ export function initLoginAsForeground(
         worker.terminate()
     }
 }
-type ProxyMapSet = Readonly<{
+type Proxy = Readonly<{
     passwordLogin: Readonly<{
         login: LoginProxyMap
     }>
@@ -207,7 +207,7 @@ type ProxyMapSet = Readonly<{
         reset: ResetProxyMap
     }>
 }>
-function initProxyMapSet(post: Post<ForegroundMessage>): ProxyMapSet {
+function initProxy(post: Post<ForegroundMessage>): Proxy {
     return {
         passwordLogin: {
             login: new LoginProxyMap((message) => {
@@ -230,7 +230,7 @@ function initProxyMapSet(post: Post<ForegroundMessage>): ProxyMapSet {
 function initLoginComponentFactory(
     foregroundFactory: ForegroundFactory,
     collector: Collector,
-    map: ProxyMapSet
+    proxy: Proxy
 ): LoginComponentFactory {
     const factory = {
         ...foregroundFactory,
@@ -259,37 +259,37 @@ function initLoginComponentFactory(
     function initActionProxyFactory(): ActionProxyFactory {
         return {
             passwordLogin: {
-                login: (collector) => map.passwordLogin.login.init(collector),
+                login: (collector) => proxy.passwordLogin.login.init(collector),
             },
             passwordReset: {
-                startSession: (collector) => map.passwordReset.startSession.init(collector),
-                checkStatus: () => map.passwordReset.checkStatus.init(),
-                reset: (collector) => map.passwordReset.reset.init(collector),
+                startSession: (collector) => proxy.passwordReset.startSession.init(collector),
+                checkStatus: () => proxy.passwordReset.checkStatus.init(),
+                reset: (collector) => proxy.passwordReset.reset.init(collector),
             },
         }
     }
 }
 function initBackgroundMessageHandler(
-    map: ProxyMapSet,
+    proxy: Proxy,
     errorHandler: Post<string>
 ): Post<BackgroundMessage> {
     return (message) => {
         try {
             switch (message.type) {
                 case "login":
-                    map.passwordLogin.login.resolve(message.response)
+                    proxy.passwordLogin.login.resolve(message.response)
                     break
 
                 case "startSession":
-                    map.passwordReset.startSession.resolve(message.response)
+                    proxy.passwordReset.startSession.resolve(message.response)
                     break
 
                 case "checkStatus":
-                    map.passwordReset.checkStatus.resolve(message.response)
+                    proxy.passwordReset.checkStatus.resolve(message.response)
                     break
 
                 case "reset":
-                    map.passwordReset.reset.resolve(message.response)
+                    proxy.passwordReset.reset.resolve(message.response)
                     break
 
                 case "error":

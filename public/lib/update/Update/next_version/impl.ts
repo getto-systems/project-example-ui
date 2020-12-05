@@ -1,18 +1,18 @@
-import { NextVersionActionSet, NextVersionComponent, NextVersionState } from "./component"
+import { NextVersionMaterial, NextVersionComponent, NextVersionState } from "./component"
 
 import { FindEvent } from "../../next_version/data"
 
-export function initNextVersion(actions: NextVersionActionSet): NextVersionComponent {
-    return new Component(actions)
+export function initNextVersion(material: NextVersionMaterial): NextVersionComponent {
+    return new Component(material)
 }
 
 class Component implements NextVersionComponent {
-    actions: NextVersionActionSet
+    material: NextVersionMaterial
 
     listener: Post<NextVersionState>[] = []
 
-    constructor(actions: NextVersionActionSet) {
-        this.actions = actions
+    constructor(material: NextVersionMaterial) {
+        this.material = material
     }
 
     onStateChange(post: Post<NextVersionState>): void {
@@ -23,7 +23,7 @@ class Component implements NextVersionComponent {
     }
 
     find(): void {
-        this.actions.find((event) => {
+        this.material.find((event) => {
             this.post(this.mapFindEvent(event))
         })
     }

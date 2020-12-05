@@ -1,19 +1,19 @@
-import { PasswordFieldActionSet, PasswordFieldComponent, PasswordFieldState } from "./component"
+import { PasswordFieldMaterial, PasswordFieldComponent, PasswordFieldState } from "./component"
 
 import { PasswordFieldEvent } from "../../../common/field/password/data"
 import { InputValue } from "../../../common/field/data"
 
-export function initPasswordField(actions: PasswordFieldActionSet): PasswordFieldComponent {
-    return new Component(actions)
+export function initPasswordField(material: PasswordFieldMaterial): PasswordFieldComponent {
+    return new Component(material)
 }
 
 class Component implements PasswordFieldComponent {
-    actions: PasswordFieldActionSet
+    material: PasswordFieldMaterial
 
     listener: Post<PasswordFieldState>[] = []
 
-    constructor(actions: PasswordFieldActionSet) {
-        this.actions = actions
+    constructor(material: PasswordFieldMaterial) {
+        this.material = material
     }
 
     onStateChange(post: Post<PasswordFieldState>): void {
@@ -24,22 +24,22 @@ class Component implements PasswordFieldComponent {
     }
 
     set(inputValue: InputValue): void {
-        this.actions.password.set(inputValue, (event) => {
+        this.material.password.set(inputValue, (event) => {
             this.post(this.mapPasswordFieldEvent(event))
         })
     }
     show(): void {
-        this.actions.password.show((event) => {
+        this.material.password.show((event) => {
             this.post(this.mapPasswordFieldEvent(event))
         })
     }
     hide(): void {
-        this.actions.password.hide((event) => {
+        this.material.password.hide((event) => {
             this.post(this.mapPasswordFieldEvent(event))
         })
     }
     validate(post: Post<PasswordFieldEvent>): void {
-        this.actions.password.validate((event) => {
+        this.material.password.validate((event) => {
             this.post(this.mapPasswordFieldEvent(event))
             post(event)
         })
