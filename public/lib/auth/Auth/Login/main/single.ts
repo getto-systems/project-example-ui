@@ -1,46 +1,44 @@
-import { delayed, wait } from "../../../z_external/delayed"
-import { initAuthClient, AuthClient } from "../../../z_external/auth_client/auth_client"
+import { delayed, wait } from "../../../../z_external/delayed"
+import { initAuthClient, AuthClient } from "../../../../z_external/auth_client/auth_client"
 
-import { env } from "../../../y_static/env"
+import { env } from "../../../../y_static/env"
 
-import { TimeConfig, newTimeConfig, newHostConfig } from "./impl/config"
+import { TimeConfig, newTimeConfig, newHostConfig } from "../impl/config"
 
-import { initLoginAsSingle } from "./impl/single"
-import { initLoginAsForeground } from "./impl/worker/foreground"
-import { initLoginWorkerAsBackground } from "./impl/worker/background"
+import { initLoginAsSingle } from "../impl/single"
 
-import { initLoginLink } from "./impl/link"
+import { initLoginLink } from "../impl/link"
 
-import { initRenewCredential } from "../renew_credential/impl"
-import { initPasswordLogin } from "../password_login/impl"
-import { initPasswordResetSession } from "../password_reset_session/impl"
-import { initPasswordReset } from "../password_reset/impl"
+import { initRenewCredential } from "../../renew_credential/impl"
+import { initPasswordLogin } from "../../password_login/impl"
+import { initPasswordResetSession } from "../../password_reset_session/impl"
+import { initPasswordReset } from "../../password_reset/impl"
 
-import { initLoginIDField } from "../field/login_id/impl"
-import { initPasswordField } from "../field/password/impl"
+import { initLoginIDField } from "../../field/login_id/impl"
+import { initPasswordField } from "../../field/password/impl"
 
-import { secureScriptPath } from "../../common/application/impl/core"
-import { renew, setContinuousRenew, store } from "../../login/renew/impl/core"
-import { login } from "../../login/password_login/impl/core"
-import { startSession, checkStatus, reset } from "../../profile/password_reset/impl/core"
+import { secureScriptPath } from "../../../common/application/impl/core"
+import { renew, setContinuousRenew, store } from "../../../login/renew/impl/core"
+import { login } from "../../../login/password_login/impl/core"
+import { startSession, checkStatus, reset } from "../../../profile/password_reset/impl/core"
 
-import { loginIDField } from "../../common/field/login_id/impl/core"
-import { passwordField } from "../../common/field/password/impl/core"
+import { loginIDField } from "../../../common/field/login_id/impl/core"
+import { passwordField } from "../../../common/field/password/impl/core"
 
-import { initFetchRenewClient } from "../../login/renew/impl/client/renew/fetch"
-import { initAuthExpires } from "../../login/renew/impl/expires"
-import { initRenewRunner } from "../../login/renew/impl/renew_runner"
-import { initStorageAuthCredentialRepository } from "../../login/renew/impl/repository/auth_credential/storage"
-import { initFetchPasswordLoginClient } from "../../login/password_login/impl/client/login/fetch"
-import { initSimulatePasswordResetClient } from "../../profile/password_reset/impl/client/reset/simulate"
-import { initSimulatePasswordResetSessionClient } from "../../profile/password_reset/impl/client/session/simulate"
+import { initFetchRenewClient } from "../../../login/renew/impl/client/renew/fetch"
+import { initAuthExpires } from "../../../login/renew/impl/expires"
+import { initRenewRunner } from "../../../login/renew/impl/renew_runner"
+import { initStorageAuthCredentialRepository } from "../../../login/renew/impl/repository/auth_credential/storage"
+import { initFetchPasswordLoginClient } from "../../../login/password_login/impl/client/login/fetch"
+import { initSimulatePasswordResetClient } from "../../../profile/password_reset/impl/client/reset/simulate"
+import { initSimulatePasswordResetSessionClient } from "../../../profile/password_reset/impl/client/session/simulate"
 
-import { currentPagePathname, detectViewState, detectResetToken } from "./impl/location"
+import { currentPagePathname, detectViewState, detectResetToken } from "../impl/location"
 
-import { LoginFactory } from "./view"
+import { LoginFactory } from "../view"
 
-import { markTicketNonce, markLoginAt, markApiCredential } from "../../common/credential/data"
-import { markSessionID } from "../../profile/password_reset/data"
+import { markTicketNonce, markLoginAt, markApiCredential } from "../../../common/credential/data"
+import { markSessionID } from "../../../profile/password_reset/data"
 
 export function newLoginAsSingle(): LoginFactory {
     const credentialStorage = localStorage
@@ -90,65 +88,6 @@ export function newLoginAsSingle(): LoginFactory {
 
     return () => initLoginAsSingle(factory, collector)
 }
-export function newLoginAsWorkerForeground(): LoginFactory {
-    const credentialStorage = localStorage
-    const currentURL = new URL(location.toString())
-
-    const time = newTimeConfig()
-    const authClient = initAuthClient(env.authServerURL)
-
-    const worker = new Worker(`/${env.version}/login.worker.js`)
-
-    const factory = {
-        link: initLoginLink,
-        actions: {
-            application: initApplicationAction(),
-            credential: initCredentialAction(time, credentialStorage, authClient),
-
-            field: {
-                loginID: () => loginIDField(),
-                password: () => passwordField(),
-            },
-        },
-        components: {
-            renewCredential: initRenewCredential,
-
-            passwordLogin: initPasswordLogin,
-            passwordResetSession: initPasswordResetSession,
-            passwordReset: initPasswordReset,
-
-            field: {
-                loginID: initLoginIDField,
-                password: initPasswordField,
-            },
-        },
-    }
-
-    const collector = {
-        login: {
-            getLoginView: () => detectViewState(currentURL),
-        },
-        application: {
-            getPagePathname: () => currentPagePathname(currentURL),
-        },
-        passwordReset: {
-            getResetToken: () => detectResetToken(currentURL),
-        },
-    }
-
-    return () => initLoginAsForeground(worker, factory, collector)
-}
-export function initLoginWorker(worker: Worker): void {
-    const time = newTimeConfig()
-    const authClient = initAuthClient(env.authServerURL)
-
-    const actions = {
-        passwordLogin: initPasswordLoginAction(time, authClient),
-        passwordReset: initPasswordResetAction(time),
-    }
-
-    return initLoginWorkerAsBackground(actions, worker)
-}
 
 function initApplicationAction() {
     return {
@@ -161,20 +100,16 @@ function initCredentialAction(time: TimeConfig, credentialStorage: Storage, auth
 
     return {
         renew: renew({
-            time,
-
             authCredentials,
             client,
+            time,
             delayed,
-
             expires: initAuthExpires(),
         }),
         setContinuousRenew: setContinuousRenew({
-            time,
-
             authCredentials,
             client,
-
+            time,
             runner: initRenewRunner(),
         }),
         store: store({ authCredentials }),

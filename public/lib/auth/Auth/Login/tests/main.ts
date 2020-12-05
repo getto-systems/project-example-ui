@@ -114,16 +114,16 @@ function initCredentialAction(
 
     return {
         renew: renew({
+            authCredentials,
             client,
             time,
             delayed,
-            authCredentials,
             expires: initAuthExpires(),
         }),
         setContinuousRenew: setContinuousRenew({
+            authCredentials,
             client,
             time,
-            authCredentials,
             runner: initRenewRunner(),
         }),
         store: store({ authCredentials }),
