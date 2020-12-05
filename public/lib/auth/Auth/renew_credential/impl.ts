@@ -1,19 +1,19 @@
-import { RenewCredentialActionSet, RenewCredentialComponent, RenewCredentialState } from "./component"
+import { RenewCredentialMaterial, RenewCredentialComponent, RenewCredentialState } from "./component"
 
 import { RenewEvent, SetContinuousRenewEvent } from "../../login/renew/data"
 import { LoadError } from "../../common/application/data"
 
-export function initRenewCredential(actions: RenewCredentialActionSet): RenewCredentialComponent {
-    return new Component(actions)
+export function initRenewCredential(material: RenewCredentialMaterial): RenewCredentialComponent {
+    return new Component(material)
 }
 
 class Component implements RenewCredentialComponent {
-    actions: RenewCredentialActionSet
+    material: RenewCredentialMaterial
 
     listener: Post<RenewCredentialState>[] = []
 
-    constructor(actions: RenewCredentialActionSet) {
-        this.actions = actions
+    constructor(material: RenewCredentialMaterial) {
+        this.material = material
     }
 
     onStateChange(post: Post<RenewCredentialState>): void {
@@ -24,12 +24,12 @@ class Component implements RenewCredentialComponent {
     }
 
     renew(): void {
-        this.actions.renew((event) => {
+        this.material.renew((event) => {
             this.post(this.mapRenewEvent(event))
         })
     }
     succeedToInstantLoad(): void {
-        this.actions.setContinuousRenew((event) => {
+        this.material.setContinuousRenew((event) => {
             this.post(this.mapSetContinuousRenewEvent(event))
         })
     }
@@ -43,7 +43,7 @@ class Component implements RenewCredentialComponent {
             case "succeed-to-renew":
                 return {
                     type: event.type,
-                    scriptPath: this.actions.secureScriptPath(),
+                    scriptPath: this.material.secureScriptPath(),
                 }
 
             default:

@@ -1,5 +1,5 @@
 import {
-    PasswordResetSessionActionSet,
+    PasswordResetSessionMaterial,
     PasswordResetSessionComponent,
     PasswordResetSessionState,
 } from "./component"
@@ -8,21 +8,21 @@ import { StartSessionEvent, CheckStatusEvent } from "../../profile/password_rese
 import { LoginLink } from "../link"
 
 export function initPasswordResetSession(
-    actions: PasswordResetSessionActionSet
+    material: PasswordResetSessionMaterial
 ): PasswordResetSessionComponent {
-    return new Component(actions)
+    return new Component(material)
 }
 
 class Component implements PasswordResetSessionComponent {
-    actions: PasswordResetSessionActionSet
+    material: PasswordResetSessionMaterial
 
     listener: Post<PasswordResetSessionState>[] = []
 
     link: LoginLink
 
-    constructor(actions: PasswordResetSessionActionSet) {
-        this.actions = actions
-        this.link = actions.link
+    constructor(material: PasswordResetSessionMaterial) {
+        this.material = material
+        this.link = material.link
     }
 
     onStateChange(post: Post<PasswordResetSessionState>): void {
@@ -33,7 +33,7 @@ class Component implements PasswordResetSessionComponent {
     }
 
     startSession(): void {
-        this.actions.startSession((event) => {
+        this.material.startSession((event) => {
             this.post(this.mapStartSessionEvent(event))
         })
     }
@@ -41,7 +41,7 @@ class Component implements PasswordResetSessionComponent {
     mapStartSessionEvent(event: StartSessionEvent): PasswordResetSessionState {
         switch (event.type) {
             case "succeed-to-start-session":
-                this.actions.checkStatus(event.sessionID, (event) => {
+                this.material.checkStatus(event.sessionID, (event) => {
                     this.post(this.mapCheckStatusEvent(event))
                 })
                 return { type: "try-to-check-status" }

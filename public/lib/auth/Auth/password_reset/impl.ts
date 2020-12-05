@@ -1,24 +1,24 @@
-import { PasswordResetActionSet, PasswordResetComponent, PasswordResetState } from "./component"
+import { PasswordResetMaterial, PasswordResetComponent, PasswordResetState } from "./component"
 
 import { ResetEvent } from "../../profile/password_reset/data"
 import { StoreEvent } from "../../login/renew/data"
 import { LoadError } from "../../common/application/data"
 import { LoginLink } from "../link"
 
-export function initPasswordReset(actions: PasswordResetActionSet): PasswordResetComponent {
-    return new Component(actions)
+export function initPasswordReset(material: PasswordResetMaterial): PasswordResetComponent {
+    return new Component(material)
 }
 
 class Component implements PasswordResetComponent {
-    actions: PasswordResetActionSet
+    material: PasswordResetMaterial
 
     listener: Post<PasswordResetState>[] = []
 
     link: LoginLink
 
-    constructor(actions: PasswordResetActionSet) {
-        this.actions = actions
-        this.link = actions.link
+    constructor(material: PasswordResetMaterial) {
+        this.material = material
+        this.link = material.link
     }
 
     onStateChange(post: Post<PasswordResetState>): void {
@@ -29,7 +29,7 @@ class Component implements PasswordResetComponent {
     }
 
     reset(): void {
-        this.actions.reset((event) => {
+        this.material.reset((event) => {
             this.post(this.mapResetEvent(event))
         })
     }
@@ -40,12 +40,12 @@ class Component implements PasswordResetComponent {
     mapResetEvent(event: ResetEvent): PasswordResetState {
         switch (event.type) {
             case "succeed-to-reset":
-                this.actions.store(event.authCredential, (event) => {
+                this.material.store(event.authCredential, (event) => {
                     this.post(this.mapStoreEvent(event))
                 })
                 return {
                     type: event.type,
-                    scriptPath: this.actions.secureScriptPath(),
+                    scriptPath: this.material.secureScriptPath(),
                 }
 
             default:

@@ -1,19 +1,19 @@
-import { LoginIDFieldActionSet, LoginIDFieldComponent, LoginIDFieldState } from "./component"
+import { LoginIDFieldMaterial, LoginIDFieldComponent, LoginIDFieldState } from "./component"
 
 import { LoginIDFieldEvent } from "../../../common/field/login_id/data"
 import { InputValue } from "../../../common/field/data"
 
-export function initLoginIDField(actions: LoginIDFieldActionSet): LoginIDFieldComponent {
-    return new Component(actions)
+export function initLoginIDField(material: LoginIDFieldMaterial): LoginIDFieldComponent {
+    return new Component(material)
 }
 
 class Component implements LoginIDFieldComponent {
-    actions: LoginIDFieldActionSet
+    material: LoginIDFieldMaterial
 
     listener: Post<LoginIDFieldState>[] = []
 
-    constructor(actions: LoginIDFieldActionSet) {
-        this.actions = actions
+    constructor(material: LoginIDFieldMaterial) {
+        this.material = material
     }
 
     onStateChange(post: Post<LoginIDFieldState>): void {
@@ -24,12 +24,12 @@ class Component implements LoginIDFieldComponent {
     }
 
     set(inputValue: InputValue): void {
-        this.actions.loginID.set(inputValue, (event) => {
+        this.material.loginID.set(inputValue, (event) => {
             this.post(this.mapLoginIDFieldEvent(event))
         })
     }
     validate(post: Post<LoginIDFieldEvent>): void {
-        this.actions.loginID.validate((event) => {
+        this.material.loginID.validate((event) => {
             this.post(this.mapLoginIDFieldEvent(event))
             post(event)
         })

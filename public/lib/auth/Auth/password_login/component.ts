@@ -8,9 +8,9 @@ import { ScriptPath, LoadError } from "../../common/application/data"
 import { LoginLink } from "../link"
 
 export interface PasswordLoginComponentFactory {
-    (actions: PasswordLoginActionSet): PasswordLoginComponent
+    (material: PasswordLoginMaterial): PasswordLoginComponent
 }
-export type PasswordLoginActionSet = Readonly<{
+export type PasswordLoginMaterial = Readonly<{
     link: LoginLink
     login: LoginAction
     store: StoreAction

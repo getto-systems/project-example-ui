@@ -133,7 +133,7 @@ class ResetHandler {
     }
 }
 
-export type ActionSet = Readonly<{
+export type Material = Readonly<{
     passwordLogin: Readonly<{
         login: Login
     }>
@@ -144,8 +144,8 @@ export type ActionSet = Readonly<{
     }>
 }>
 
-export function initLoginWorkerAsBackground(actions: ActionSet, worker: Worker): void {
-    const handlers = initLoginHandlerSet(actions, postBackgroundMessage)
+export function initLoginWorkerAsBackground(material: Material, worker: Worker): void {
+    const handlers = initHandler(material, postBackgroundMessage)
     const errorHandler = (err: string) => {
         postBackgroundMessage({ type: "error", err })
     }
@@ -159,7 +159,7 @@ export function initLoginWorkerAsBackground(actions: ActionSet, worker: Worker):
         worker.postMessage(message)
     }
 }
-type LoginHandlerSet = Readonly<{
+type Handler = Readonly<{
     passwordLogin: Readonly<{
         login: LoginHandler
     }>
@@ -169,50 +169,47 @@ type LoginHandlerSet = Readonly<{
         reset: ResetHandler
     }>
 }>
-function initLoginHandlerSet(
-    actions: ActionSet,
-    postBackgroundMessage: Post<BackgroundMessage>
-): LoginHandlerSet {
+function initHandler(material: Material, postBackgroundMessage: Post<BackgroundMessage>): Handler {
     return {
         passwordLogin: {
-            login: new LoginHandler(actions.passwordLogin.login, (response) => {
+            login: new LoginHandler(material.passwordLogin.login, (response) => {
                 postBackgroundMessage({ type: "login", response })
             }),
         },
         passwordReset: {
-            startSession: new StartSessionHandler(actions.passwordReset.startSession, (response) => {
+            startSession: new StartSessionHandler(material.passwordReset.startSession, (response) => {
                 postBackgroundMessage({ type: "startSession", response })
             }),
-            checkStatus: new CheckStatusHandler(actions.passwordReset.checkStatus, (response) => {
+            checkStatus: new CheckStatusHandler(material.passwordReset.checkStatus, (response) => {
                 postBackgroundMessage({ type: "checkStatus", response })
             }),
-            reset: new ResetHandler(actions.passwordReset.reset, (response) => {
+            reset: new ResetHandler(material.passwordReset.reset, (response) => {
                 postBackgroundMessage({ type: "reset", response })
             }),
         },
     }
 }
 function initForegroundMessageHandler(
-    handlers: LoginHandlerSet,
+    handler: Handler,
     errorHandler: Post<string>
 ): Post<ForegroundMessage> {
     return (message) => {
         try {
             switch (message.type) {
                 case "login":
-                    handlers.passwordLogin.login.handleMessage(message.message)
+                    handler.passwordLogin.login.handleMessage(message.message)
                     break
 
                 case "startSession":
-                    handlers.passwordReset.startSession.handleMessage(message.message)
+                    handler.passwordReset.startSession.handleMessage(message.message)
                     break
 
                 case "checkStatus":
-                    handlers.passwordReset.checkStatus.handleMessage(message.message)
+                    handler.passwordReset.checkStatus.handleMessage(message.message)
                     break
 
                 case "reset":
-                    handlers.passwordReset.reset.handleMessage(message.message)
+                    handler.passwordReset.reset.handleMessage(message.message)
                     break
 
                 default:

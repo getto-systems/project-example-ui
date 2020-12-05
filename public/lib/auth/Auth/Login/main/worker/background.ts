@@ -21,12 +21,12 @@ export function initLoginWorker(worker: Worker): void {
     const time = newTimeConfig()
     const authClient = initAuthClient(env.authServerURL)
 
-    const actions = {
+    const material = {
         passwordLogin: initPasswordLoginAction(time, authClient),
         passwordReset: initPasswordResetAction(time),
     }
 
-    return initLoginWorkerAsBackground(actions, worker)
+    return initLoginWorkerAsBackground(material, worker)
 }
 
 function initPasswordLoginAction(time: TimeConfig, authClient: AuthClient) {
