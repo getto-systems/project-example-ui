@@ -2,30 +2,26 @@ import { AuthCredential, LoginAt, TicketNonce } from "../../common/credential/da
 import { StorageError, RenewError } from "./data"
 
 export type RenewInfra = Readonly<{
-    time: RenewTimeConfig
-
     authCredentials: AuthCredentialRepository
     client: RenewClient
+    time: RenewTimeConfig
     delayed: Delayed
-
     expires: AuthExpires
 }>
 export type SetContinuousRenewInfra = Readonly<{
-    time: SetContinuousRenewTimeConfig
-
     authCredentials: AuthCredentialRepository
     client: RenewClient
-
+    time: SetContinuousRenewTimeConfig
     runner: RenewRunner
 }>
 
 export type RenewTimeConfig = Readonly<{
-    instantLoadExpireTime: ExpireTime
-    renewDelayTime: DelayTime
+    instantLoadExpire: ExpireTime
+    delay: DelayTime
 }>
 export type SetContinuousRenewTimeConfig = Readonly<{
-    renewIntervalTime: IntervalTime
-    renewRunDelayTime: DelayTime
+    interval: IntervalTime
+    delay: DelayTime
 }>
 
 export type StoreInfra = Readonly<{
@@ -55,10 +51,6 @@ export interface Delayed {
     <T>(promise: Promise<T>, time: DelayTime, handler: DelayedHandler): Promise<T>
 }
 
-export type ExpireTime = Readonly<{ expire_millisecond: number }>
-export type DelayTime = Readonly<{ delay_millisecond: number }>
-export type IntervalTime = Readonly<{ interval_millisecond: number }>
-
 export type StorageKey = Readonly<{
     ticketNonce: string
     apiCredential: string
@@ -76,6 +68,10 @@ export type RenewResponse =
     | Readonly<{ success: false; err: RenewError }>
     | Readonly<{ success: true; hasCredential: false }>
     | Readonly<{ success: true; hasCredential: true; authCredential: AuthCredential }>
+
+type ExpireTime = Readonly<{ expire_millisecond: number }>
+type DelayTime = Readonly<{ delay_millisecond: number }>
+type IntervalTime = Readonly<{ interval_millisecond: number }>
 
 interface DelayedHandler {
     (): void

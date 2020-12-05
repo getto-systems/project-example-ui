@@ -13,10 +13,10 @@ import { RenewCredentialComponent } from "../../renew_credential/component"
 export class View implements LoginView {
     listener: Post<LoginState>[] = []
 
-    collector: LoginCollector
+    collector: LoginViewCollector
     components: LoginComponentFactory
 
-    constructor(collector: LoginCollector, components: LoginComponentFactory) {
+    constructor(collector: LoginViewCollector, components: LoginComponentFactory) {
         this.collector = collector
         this.components = components
     }
@@ -69,7 +69,7 @@ export interface LoginComponentFactory {
     passwordResetSession(): PasswordResetSessionResource
     passwordReset(): PasswordResetResource
 }
-export interface LoginCollector {
+export interface LoginViewCollector {
     login: Readonly<{
         getLoginView(): ViewState
     }>

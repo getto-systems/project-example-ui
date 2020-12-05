@@ -1,9 +1,12 @@
-import { View, LoginComponentFactory } from "../view"
+import { View, LoginComponentFactory, LoginViewCollector } from "../view"
 import {
     initRenewCredentialResource,
     initPasswordLoginResource,
     initPasswordResetSessionResource,
     initPasswordResetResource,
+    RenewCredentialCollector,
+    PasswordLoginCollector,
+    PasswordResetCollector,
 } from "../core"
 
 import {
@@ -17,7 +20,7 @@ import {
     ResetProxyMessage,
 } from "./data"
 
-import { ViewState, LoginEntryPoint } from "../../view"
+import { LoginEntryPoint } from "../../view"
 
 import { LoginLinkFactory } from "../../../link"
 
@@ -44,16 +47,10 @@ import {
     ResetCollector,
 } from "../../../../profile/password_reset/action"
 
-import { PagePathname } from "../../../../common/application/data"
 import { LoginIDField } from "../../../../common/field/login_id/action"
 import { PasswordField } from "../../../../common/field/password/action"
 import { LoginEvent } from "../../../../login/password_login/data"
-import {
-    ResetToken,
-    StartSessionEvent,
-    CheckStatusEvent,
-    ResetEvent,
-} from "../../../../profile/password_reset/data"
+import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../profile/password_reset/data"
 
 class ProxyMap<M, E> {
     idGenerator: IDGenerator
@@ -157,17 +154,10 @@ export type ForegroundFactory = Readonly<{
         }>
     }>
 }>
-export type Collector = Readonly<{
-    login: Readonly<{
-        getLoginView(): ViewState
-    }>
-    application: Readonly<{
-        getPagePathname(): PagePathname
-    }>
-    passwordReset: Readonly<{
-        getResetToken(): ResetToken
-    }>
-}>
+export type Collector = LoginViewCollector &
+    RenewCredentialCollector &
+    PasswordLoginCollector &
+    PasswordResetCollector
 
 export function initLoginAsForeground(
     worker: Worker,

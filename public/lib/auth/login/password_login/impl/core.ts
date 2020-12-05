@@ -14,7 +14,7 @@ export const login = (infra: LoginInfra): Login => (collector) => async (post) =
     const { client, time, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(client.login(content.content), time.passwordLoginDelayTime, () =>
+    const response = await delayed(client.login(content.content), time.delay, () =>
         post({ type: "delayed-to-login" })
     )
     if (!response.success) {

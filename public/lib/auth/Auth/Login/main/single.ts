@@ -3,7 +3,7 @@ import { initAuthClient, AuthClient } from "../../../../z_external/auth_client/a
 
 import { env } from "../../../../y_static/env"
 
-import { TimeConfig, newTimeConfig, newHostConfig } from "../impl/config"
+import { TimeConfig, newTimeConfig, newHostConfig, HostConfig } from "../impl/config"
 
 import { initLoginAsSingle } from "../impl/single"
 
@@ -44,13 +44,14 @@ export function newLoginAsSingle(): LoginFactory {
     const credentialStorage = localStorage
     const currentURL = new URL(location.toString())
 
+    const host = newHostConfig()
     const time = newTimeConfig()
     const authClient = initAuthClient(env.authServerURL)
 
     const factory = {
         link: initLoginLink,
         actions: {
-            application: initApplicationAction(),
+            application: initApplicationAction(host),
             credential: initCredentialAction(time, credentialStorage, authClient),
 
             passwordLogin: initPasswordLoginAction(time, authClient),
@@ -89,9 +90,9 @@ export function newLoginAsSingle(): LoginFactory {
     return () => initLoginAsSingle(factory, collector)
 }
 
-function initApplicationAction() {
+function initApplicationAction(host: HostConfig) {
     return {
-        secureScriptPath: secureScriptPath({ host: newHostConfig() }),
+        secureScriptPath: secureScriptPath({ host: host.secureScriptPath }),
     }
 }
 function initCredentialAction(time: TimeConfig, credentialStorage: Storage, authClient: AuthClient) {
@@ -102,14 +103,14 @@ function initCredentialAction(time: TimeConfig, credentialStorage: Storage, auth
         renew: renew({
             authCredentials,
             client,
-            time,
+            time: time.renew,
             delayed,
             expires: initAuthExpires(),
         }),
         setContinuousRenew: setContinuousRenew({
             authCredentials,
             client,
-            time,
+            time: time.setContinuousRenew,
             runner: initRenewRunner(),
         }),
         store: store({ authCredentials }),
@@ -119,7 +120,7 @@ function initPasswordLoginAction(time: TimeConfig, authClient: AuthClient) {
     return {
         login: login({
             client: initFetchPasswordLoginClient(authClient),
-            time,
+            time: time.login,
             delayed,
         }),
     }
@@ -174,18 +175,18 @@ function initPasswordResetAction(time: TimeConfig) {
     return {
         startSession: startSession({
             client: sessionClient,
-            time,
+            time: time.startSession,
             delayed,
         }),
         checkStatus: checkStatus({
             client: sessionClient,
-            time,
+            time: time.checkStatus,
             delayed,
             wait,
         }),
         reset: reset({
             client: resetClient,
-            time,
+            time: time.reset,
             delayed,
         }),
     }

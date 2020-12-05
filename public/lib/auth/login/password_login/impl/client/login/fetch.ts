@@ -1,4 +1,4 @@
-import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
+import { LoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
 
 import { LoginFields } from "../../../data"
 import { markTicketNonce, markLoginAt, markApiCredential } from "../../../../../common/credential/data"
@@ -14,11 +14,11 @@ type AuthLoginResponse =
       }>
     | Readonly<{ success: false; err: { type: string; err: string } }>
 
-export function initFetchPasswordLoginClient(client: AuthClient): PasswordLoginClient {
+export function initFetchPasswordLoginClient(client: AuthClient): LoginClient {
     return new FetchPasswordLoginClient(client)
 }
 
-class FetchPasswordLoginClient implements PasswordLoginClient {
+class FetchPasswordLoginClient implements LoginClient {
     client: AuthClient
 
     constructor(client: AuthClient) {

@@ -1,4 +1,4 @@
-import { View } from "./view"
+import { LoginViewCollector, View } from "./view"
 import {
     RenewCredentialFactory,
     RenewCredentialCollector,
@@ -13,18 +13,14 @@ import {
     initPasswordResetResource,
 } from "./core"
 
-import { ViewState, LoginEntryPoint } from "../view"
+import { LoginEntryPoint } from "../view"
 
 export type Factory = RenewCredentialFactory &
     PasswordLoginFactory &
     PasswordResetSessionFactory &
     PasswordResetFactory
 
-export type Collector = Readonly<{
-    login: {
-        getLoginView(): ViewState
-    }
-}> &
+export type Collector = LoginViewCollector &
     RenewCredentialCollector &
     PasswordLoginCollector &
     PasswordResetCollector

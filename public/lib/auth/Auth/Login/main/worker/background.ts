@@ -33,7 +33,7 @@ function initPasswordLoginAction(time: TimeConfig, authClient: AuthClient) {
     return {
         login: login({
             client: initFetchPasswordLoginClient(authClient),
-            time,
+            time: time.login,
             delayed,
         }),
     }
@@ -88,18 +88,18 @@ function initPasswordResetAction(time: TimeConfig) {
     return {
         startSession: startSession({
             client: sessionClient,
-            time,
+            time: time.startSession,
             delayed,
         }),
         checkStatus: checkStatus({
             client: sessionClient,
-            time,
+            time: time.checkStatus,
             delayed,
             wait,
         }),
         reset: reset({
             client: resetClient,
-            time,
+            time: time.reset,
             delayed,
         }),
     }

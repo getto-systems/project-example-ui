@@ -1,47 +1,61 @@
 import { env } from "../../../../y_static/env"
+import { SecureScriptPathHostConfig } from "../../../common/application/infra"
+import { LoginTimeConfig } from "../../../login/password_login/infra"
+import { RenewTimeConfig, SetContinuousRenewTimeConfig } from "../../../login/renew/infra"
+import {
+    CheckStatusTimeConfig,
+    ResetTimeConfig,
+    StartSessionTimeConfig,
+} from "../../../profile/password_reset/infra"
 
 export function newTimeConfig(): TimeConfig {
     return {
-        instantLoadExpireTime: expireMinute(3),
-        renewRunDelayTime: delayMinute(1),
+        renew: {
+            instantLoadExpire: expireMinute(3),
+            delay: delaySecond(0.5),
+        },
+        setContinuousRenew: {
+            delay: delayMinute(1),
+            interval: intervalMinute(2),
+        },
+        login: {
+            delay: delaySecond(1),
+        },
 
-        renewDelayTime: delaySecond(0.5),
-        renewIntervalTime: intervalMinute(2),
-
-        passwordLoginDelayTime: delaySecond(1),
-
-        passwordResetStartSessionDelayTime: delaySecond(1),
-        passwordResetCheckWaitTime: waitSecond(0.25),
-        passwordResetCheckLimit: { limit: 40 },
-
-        passwordResetDelayTime: delaySecond(1),
+        startSession: {
+            delay: delaySecond(1),
+        },
+        checkStatus: {
+            wait: waitSecond(0.25),
+            limit: limit(40),
+        },
+        reset: {
+            delay: delaySecond(1),
+        },
     }
 }
 
 export type TimeConfig = Readonly<{
-    instantLoadExpireTime: ExpireTime
-    renewRunDelayTime: DelayTime
+    renew: RenewTimeConfig
+    setContinuousRenew: SetContinuousRenewTimeConfig
 
-    renewDelayTime: DelayTime
-    renewIntervalTime: IntervalTime
+    login: LoginTimeConfig
 
-    passwordLoginDelayTime: DelayTime
-
-    passwordResetStartSessionDelayTime: DelayTime
-    passwordResetCheckWaitTime: WaitTime
-    passwordResetCheckLimit: Limit
-
-    passwordResetDelayTime: DelayTime
+    startSession: StartSessionTimeConfig
+    checkStatus: CheckStatusTimeConfig
+    reset: ResetTimeConfig
 }>
 
 export function newHostConfig(): HostConfig {
     return {
-        secureServerHost: env.secureServerHost,
+        secureScriptPath: {
+            secureServerHost: env.secureServerHost,
+        },
     }
 }
 
 export type HostConfig = {
-    secureServerHost: string
+    secureScriptPath: SecureScriptPathHostConfig
 }
 
 type ExpireTime = { expire_millisecond: number }
@@ -74,3 +88,6 @@ function waitSecond(second: number): WaitTime {
 }
 
 type Limit = { limit: number }
+function limit(count: number): Limit {
+    return { limit: count }
+}
