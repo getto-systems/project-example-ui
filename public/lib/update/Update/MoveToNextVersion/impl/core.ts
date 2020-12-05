@@ -12,12 +12,12 @@ export type MoveToNextVersionFactory = Readonly<{
         nextVersion: NextVersionComponentFactory
     }>
 }>
-export type MoveToNextVersionCollectorSet = Readonly<{
+export type MoveToNextVersionCollector = Readonly<{
     nextVersion: FindCollector
 }>
 export function initMoveToNextVersionResource(
     factory: MoveToNextVersionFactory,
-    collector: MoveToNextVersionCollectorSet
+    collector: MoveToNextVersionCollector
 ): MoveToNextVersionResource {
     const actions = {
         find: factory.actions.nextVersion.find(collector.nextVersion),

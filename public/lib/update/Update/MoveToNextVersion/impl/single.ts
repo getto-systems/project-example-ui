@@ -1,6 +1,6 @@
 import {
     initMoveToNextVersionResource,
-    MoveToNextVersionCollectorSet,
+    MoveToNextVersionCollector,
     MoveToNextVersionFactory,
 } from "./core"
 
@@ -8,7 +8,7 @@ import { MoveToNextVersionEntryPoint } from "../view"
 
 export function initMoveToNextVersionAsSingle(
     factory: MoveToNextVersionFactory,
-    collector: MoveToNextVersionCollectorSet
+    collector: MoveToNextVersionCollector
 ): MoveToNextVersionEntryPoint {
     return {
         components: initMoveToNextVersionResource(factory, collector),

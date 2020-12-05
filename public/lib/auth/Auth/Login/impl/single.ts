@@ -1,12 +1,12 @@
 import { View } from "./view"
 import {
     RenewCredentialFactory,
-    RenewCredentialCollectorSet,
+    RenewCredentialCollector,
     PasswordLoginFactory,
-    PasswordLoginCollectorSet,
+    PasswordLoginCollector,
     PasswordResetSessionFactory,
     PasswordResetFactory,
-    PasswordResetCollectorSet,
+    PasswordResetCollector,
     initRenewCredentialResource,
     initPasswordLoginResource,
     initPasswordResetSessionResource,
@@ -20,16 +20,16 @@ export type Factory = RenewCredentialFactory &
     PasswordResetSessionFactory &
     PasswordResetFactory
 
-export type CollectorSet = Readonly<{
+export type Collector = Readonly<{
     login: {
         getLoginView(): ViewState
     }
 }> &
-    RenewCredentialCollectorSet &
-    PasswordLoginCollectorSet &
-    PasswordResetCollectorSet
+    RenewCredentialCollector &
+    PasswordLoginCollector &
+    PasswordResetCollector
 
-export function initLoginAsSingle(factory: Factory, collector: CollectorSet): LoginEntryPoint {
+export function initLoginAsSingle(factory: Factory, collector: Collector): LoginEntryPoint {
     return {
         view: new View(collector, {
             renewCredential: (setup) => initRenewCredentialResource(factory, collector, setup),
