@@ -2,19 +2,25 @@ import { AuthCredentialRepository, FindResponse, StoreResponse } from "../../../
 
 import { AuthCredential, TicketNonce, LoginAt } from "../../../../../common/credential/data"
 
-export function initMemoryAuthCredentialRepository(): AuthCredentialRepository {
-    return new MemoryAuthCredentialRepository()
-}
-export function initMemoryAuthCredentialRepositoryWithInitial(
-    authCredential: AuthCredential
+export function initMemoryAuthCredentialRepository(
+    storage: AuthCredentialStorageSet
 ): AuthCredentialRepository {
-    const repository = new MemoryAuthCredentialRepository()
-    repository.storeAuthCredential(authCredential)
-    return repository
+    return new MemoryAuthCredentialRepository(storage)
 }
 
+export type AuthCredentialStorageSet = Readonly<{
+    authCredential: AuthCredentialStorage
+}>
+export type AuthCredentialStorage =
+    | Readonly<{ stored: false }>
+    | Readonly<{ stored: true; authCredential: AuthCredential }>
+
 class MemoryAuthCredentialRepository implements AuthCredentialRepository {
-    store: Store<AuthCredential> = { stored: false }
+    storage: AuthCredentialStorage
+
+    constructor(storage: AuthCredentialStorageSet) {
+        this.storage = storage.authCredential
+    }
 
     findTicketNonce(): FindResponse<TicketNonce> {
         return this.find(toTicketNonce)
@@ -23,22 +29,20 @@ class MemoryAuthCredentialRepository implements AuthCredentialRepository {
         return this.find(toLoginAt)
     }
     find<T>(getter: { (authCredential: AuthCredential): T }): FindResponse<T> {
-        if (!this.store.stored) {
+        if (!this.storage.stored) {
             return { success: true, found: false }
         }
-        return { success: true, found: true, content: getter(this.store.data) }
+        return { success: true, found: true, content: getter(this.storage.authCredential) }
     }
     storeAuthCredential(authCredential: AuthCredential): StoreResponse {
-        this.store = { stored: true, data: authCredential }
+        this.storage = { stored: true, authCredential }
         return { success: true }
     }
     removeAuthCredential(): StoreResponse {
-        this.store = { stored: false }
+        this.storage = { stored: false }
         return { success: true }
     }
 }
-
-type Store<T> = Readonly<{ stored: false }> | Readonly<{ stored: true; data: T }>
 
 function toTicketNonce(authCredential: AuthCredential): TicketNonce {
     return authCredential.ticketNonce
