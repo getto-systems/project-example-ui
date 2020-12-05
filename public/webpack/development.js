@@ -1,6 +1,7 @@
 /* eslint-disable */
 const path = require("path")
 const fs = require("fs")
+
 const WorkerPlugin = require("worker-plugin")
 
 const entryPoint = require("../entryPoint")

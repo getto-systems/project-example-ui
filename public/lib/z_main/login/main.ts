@@ -1,6 +1,6 @@
 import { render, h } from "preact"
 
-import { newLoginAsWorkerForeground } from "../../auth/Auth/Login/main"
+import { newLoginAsWorkerForeground } from "../../auth/Auth/Login/main/worker/foreground"
 
 import { Login } from "../../x_preact/auth/Auth/Login"
 
