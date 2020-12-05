@@ -3,7 +3,7 @@ import { initAuthClient, AuthClient } from "../../../../../z_external/auth_clien
 
 import { env } from "../../../../../y_static/env"
 
-import { TimeConfig, newTimeConfig, newHostConfig } from "../../impl/config"
+import { TimeConfig, newTimeConfig, newHostConfig, HostConfig } from "../../impl/config"
 
 import { initLoginAsForeground } from "../../impl/worker/foreground"
 
@@ -36,6 +36,7 @@ export function newLoginAsWorkerForeground(): LoginFactory {
     const credentialStorage = localStorage
     const currentURL = new URL(location.toString())
 
+    const host = newHostConfig()
     const time = newTimeConfig()
     const authClient = initAuthClient(env.authServerURL)
 
@@ -44,7 +45,7 @@ export function newLoginAsWorkerForeground(): LoginFactory {
     const factory = {
         link: initLoginLink,
         actions: {
-            application: initApplicationAction(),
+            application: initApplicationAction(host),
             credential: initCredentialAction(time, credentialStorage, authClient),
 
             field: {
@@ -81,9 +82,9 @@ export function newLoginAsWorkerForeground(): LoginFactory {
     return () => initLoginAsForeground(worker, factory, collector)
 }
 
-function initApplicationAction() {
+function initApplicationAction(host: HostConfig) {
     return {
-        secureScriptPath: secureScriptPath({ host: newHostConfig() }),
+        secureScriptPath: secureScriptPath({ host: host.secureScriptPath }),
     }
 }
 function initCredentialAction(time: TimeConfig, credentialStorage: Storage, authClient: AuthClient) {
@@ -94,14 +95,14 @@ function initCredentialAction(time: TimeConfig, credentialStorage: Storage, auth
         renew: renew({
             authCredentials,
             client,
-            time,
+            time: time.renew,
             delayed,
             expires: initAuthExpires(),
         }),
         setContinuousRenew: setContinuousRenew({
             authCredentials,
             client,
-            time,
+            time: time.setContinuousRenew,
             runner: initRenewRunner(),
         }),
         store: store({ authCredentials }),

@@ -18,7 +18,7 @@ export const renew = (infra: RenewInfra): Renew => () => async (post) => {
         return
     }
 
-    if (!expires.hasExceeded(lastLogin.content.lastLoginAt, time.instantLoadExpireTime)) {
+    if (!expires.hasExceeded(lastLogin.content.lastLoginAt, time.instantLoadExpire)) {
         post({ type: "try-to-instant-load" })
         return
     }
@@ -28,7 +28,7 @@ export const renew = (infra: RenewInfra): Renew => () => async (post) => {
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const renewResponse = await delayed(
         client.renew(lastLogin.content.ticketNonce),
-        time.renewDelayTime,
+        time.delay,
         () => post({ type: "delayed-to-renew" })
     )
     if (!renewResponse.success) {
@@ -79,9 +79,9 @@ export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuou
                 if (lastState) {
                     lastState = await continuousRenew(ticketNonce)
                 }
-            }, time.renewIntervalTime.interval_millisecond)
+            }, time.interval.interval_millisecond)
         }
-    }, runner.nextRun(lastAuthAt, time.renewRunDelayTime).delay_millisecond)
+    }, runner.nextRun(lastAuthAt, time.delay).delay_millisecond)
 
     async function continuousRenew(ticketNonce: TicketNonce): Promise<boolean> {
         // 画面へのフィードバックはしないので、イベントは発行しない

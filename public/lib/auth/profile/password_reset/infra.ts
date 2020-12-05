@@ -23,12 +23,12 @@ export type CheckStatusInfra = Readonly<{
 }>
 
 export type StartSessionTimeConfig = Readonly<{
-    passwordResetStartSessionDelayTime: DelayTime
+    delay: DelayTime
 }>
 
 export type CheckStatusTimeConfig = Readonly<{
-    passwordResetCheckWaitTime: WaitTime
-    passwordResetCheckLimit: Limit
+    wait: WaitTime
+    limit: Limit
 }>
 
 export type ResetInfra = Readonly<{
@@ -38,7 +38,7 @@ export type ResetInfra = Readonly<{
 }>
 
 export type ResetTimeConfig = Readonly<{
-    passwordResetDelayTime: DelayTime
+    delay: DelayTime
 }>
 
 export interface PasswordResetSessionClient {

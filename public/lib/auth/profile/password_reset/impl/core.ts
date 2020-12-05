@@ -18,7 +18,7 @@ export const startSession = (infra: StartSessionInfra): StartSession => (collect
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const response = await delayed(
         client.startSession(content.content),
-        time.passwordResetStartSessionDelayTime,
+        time.delay,
         () => post({ type: "delayed-to-start-session" })
     )
     if (!response.success) {
@@ -57,7 +57,7 @@ class StatusChecker {
 
         this.sendToken()
 
-        for (let i_ = 0; i_ < this.infra.time.passwordResetCheckLimit.limit; i_++) {
+        for (let i_ = 0; i_ < this.infra.time.limit.limit; i_++) {
             if (this.sendTokenState.type === "failed") {
                 post({ type: "failed-to-check-status", err: this.sendTokenState.err })
                 return
@@ -88,7 +88,7 @@ class StatusChecker {
                 status: response.status,
             })
 
-            await this.infra.wait(this.infra.time.passwordResetCheckWaitTime, () => true)
+            await this.infra.wait(this.infra.time.wait, () => true)
         }
 
         post({
@@ -121,7 +121,7 @@ export const reset = (infra: ResetInfra): Reset => (collector) => async (post) =
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const response = await delayed(
         client.reset(collector.getResetToken(), content.content),
-        time.passwordResetDelayTime,
+        time.delay,
         () => post({ type: "delayed-to-reset" })
     )
     if (!response.success) {

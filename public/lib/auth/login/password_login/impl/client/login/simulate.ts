@@ -1,9 +1,9 @@
-import { PasswordLoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
+import { LoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
 
 import { LoginFields } from "../../../data"
 import { AuthCredential } from "../../../../../common/credential/data"
 
-export function initSimulatePasswordLoginClient(simulator: LoginSimulator): PasswordLoginClient {
+export function initSimulatePasswordLoginClient(simulator: LoginSimulator): LoginClient {
     return new SimulatePasswordLoginClient(simulator)
 }
 
@@ -12,7 +12,7 @@ export interface LoginSimulator {
     login(fields: LoginFields): Promise<AuthCredential>
 }
 
-class SimulatePasswordLoginClient implements PasswordLoginClient {
+class SimulatePasswordLoginClient implements LoginClient {
     simulator: LoginSimulator
 
     constructor(simulator: LoginSimulator) {

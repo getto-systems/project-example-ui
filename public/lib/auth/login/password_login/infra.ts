@@ -2,18 +2,16 @@ import { AuthCredential } from "../../common/credential/data"
 import { LoginFields } from "./data"
 
 export type LoginInfra = Readonly<{
-    client: PasswordLoginClient
-    time: TimeConfig
+    client: LoginClient
+    time: LoginTimeConfig
     delayed: Delayed
 }>
 
-export type TimeConfig = Readonly<{
-    passwordLoginDelayTime: DelayTime
+export type LoginTimeConfig = Readonly<{
+    delay: DelayTime
 }>
 
-export type DelayTime = Readonly<{ delay_millisecond: number }>
-
-export interface PasswordLoginClient {
+export interface LoginClient {
     login(fields: LoginFields): Promise<LoginResponse>
 }
 
@@ -37,6 +35,8 @@ export type LoginError =
 export interface Delayed {
     <T>(promise: Promise<T>, time: DelayTime, handler: DelayedHandler): Promise<T>
 }
+
+type DelayTime = Readonly<{ delay_millisecond: number }>
 
 interface DelayedHandler {
     (): void

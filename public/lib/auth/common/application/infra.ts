@@ -1,7 +1,7 @@
-export type Infra = Readonly<{
-    host: HostConfig
+export type SecureScriptPathInfra = Readonly<{
+    host: SecureScriptPathHostConfig
 }>
 
-export type HostConfig = Readonly<{
+export type SecureScriptPathHostConfig = Readonly<{
     secureServerHost: string
 }>
