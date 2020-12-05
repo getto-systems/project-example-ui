@@ -5,14 +5,14 @@ import { BreadcrumbComponent } from "../../../common/Outline/breadcrumb/componen
 import { ExampleComponent } from "../example/component"
 
 export interface DashboardFactory {
-    (): DashboardResource
+    (): DashboardEntryPoint
 }
-export type DashboardResource = Readonly<{
-    components: DashboardComponentSet
+export type DashboardEntryPoint = Readonly<{
+    components: DashboardComponent
     terminate: Terminate
 }>
 
-export type DashboardComponentSet = Readonly<{
+export type DashboardComponent = Readonly<{
     season: SeasonComponent
     menu: MenuComponent
     breadcrumb: BreadcrumbComponent

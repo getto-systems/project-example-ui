@@ -2,7 +2,7 @@ import { h, VNode } from "preact"
 import { useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useComponentSet } from "../../hooks"
+import { useEntryPoint } from "../../hooks"
 import { footer, menuHeader, menuFooter } from "../../layout"
 
 import { ApplicationError } from "../../System/ApplicationError"
@@ -11,7 +11,7 @@ import { MenuList } from "../../common/Outline/MenuList"
 
 import { Content } from "./Content"
 
-import { DocumentComponentSet, DocumentFactory } from "../../../document/Document/Document/view"
+import { DocumentComponent, DocumentFactory } from "../../../document/Document/Document/view"
 
 type Props = {
     document: DocumentFactory
@@ -26,7 +26,7 @@ export function Document({ document }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    const container = useComponentSet(document)
+    const container = useEntryPoint(document)
 
     if (!container.set) {
         return EMPTY_CONTENT
@@ -34,7 +34,7 @@ export function Document({ document }: Props): VNode {
 
     return h(View, container.components)
 }
-function View(components: DocumentComponentSet): VNode {
+function View(components: DocumentComponent): VNode {
     return html`
         <main class="layout">
             <article class="layout__main">${h(Content, components)} ${footer()}</article>

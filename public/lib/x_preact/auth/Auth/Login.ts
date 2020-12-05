@@ -2,7 +2,7 @@ import { h, VNode } from "preact"
 import { useState, useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useView } from "../../hooks"
+import { useEntryPoint } from "../../hooks"
 import { ApplicationError } from "../../System/ApplicationError"
 
 import { RenewCredential } from "./RenewCredential"
@@ -26,7 +26,7 @@ export function Login({ login }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    const container = useView(() => login())
+    const container = useEntryPoint(() => login())
 
     if (!container.set) {
         return EMPTY_CONTENT

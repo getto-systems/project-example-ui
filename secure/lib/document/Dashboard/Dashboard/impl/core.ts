@@ -1,4 +1,4 @@
-import { DashboardComponentSet } from "../view"
+import { DashboardComponent } from "../view"
 
 import { SeasonComponentFactory } from "../../../../common/Outline/season/component"
 import { MenuComponentFactory } from "../../../../common/Outline/menu/component"
@@ -10,7 +10,7 @@ import { LoadApiNonce, LoadApiRoles } from "../../../../common/credential/action
 import { LoadBreadcrumb, LoadMenu, MenuTargetCollector, ToggleMenuExpand } from "../../../../common/menu/action"
 import { LoadSeason } from "../../../../common/season/action"
 
-export type DashboardFactorySet = Readonly<{
+export type DashboardFactory = Readonly<{
     actions: Readonly<{
         credential: Readonly<{
             loadApiNonce: LoadApiNonce
@@ -36,10 +36,10 @@ export type DashboardFactorySet = Readonly<{
 export type DashboardCollectorSet = Readonly<{
     menu: MenuTargetCollector
 }>
-export function initDashboardComponentSet(
-    factory: DashboardFactorySet,
+export function initDashboardComponent(
+    factory: DashboardFactory,
     collector: DashboardCollectorSet
-): DashboardComponentSet {
+): DashboardComponent {
     const actions = {
         loadApiNonce: factory.actions.credential.loadApiNonce(),
         loadApiRoles: factory.actions.credential.loadApiRoles(),

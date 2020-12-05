@@ -1,13 +1,13 @@
-import { DashboardCollectorSet, DashboardFactorySet, initDashboardComponentSet } from "./core"
+import { DashboardCollectorSet, DashboardFactory, initDashboardComponent } from "./core"
 
-import { DashboardResource } from "../view"
+import { DashboardEntryPoint } from "../view"
 
 export function initDashboardAsSingle(
-    factory: DashboardFactorySet,
+    factory: DashboardFactory,
     collector: DashboardCollectorSet
-): DashboardResource {
+): DashboardEntryPoint {
     return {
-        components: initDashboardComponentSet(factory, collector),
+        components: initDashboardComponent(factory, collector),
         terminate: () => {
             // worker とインターフェイスを合わせるために必要
         },

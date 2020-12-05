@@ -2,7 +2,7 @@ import { h, VNode } from "preact"
 import { useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useComponentSet } from "../../hooks"
+import { useEntryPoint } from "../../hooks"
 import { footer, menuHeader, menuFooter } from "../../layout"
 
 import { ApplicationError } from "../../System/ApplicationError"
@@ -13,7 +13,7 @@ import { BreadcrumbList } from "../../common/Outline/BreadcrumbList"
 
 import { Example } from "./Example"
 
-import { DashboardComponentSet, DashboardFactory } from "../../../document/Dashboard/Dashboard/view"
+import { DashboardComponent, DashboardFactory } from "../../../document/Dashboard/Dashboard/view"
 
 type Props = Readonly<{
     dashboard: DashboardFactory
@@ -28,7 +28,7 @@ export function Dashboard({ dashboard }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    const container = useComponentSet(dashboard)
+    const container = useEntryPoint(dashboard)
 
     if (!container.set) {
         return EMPTY_CONTENT
@@ -36,7 +36,7 @@ export function Dashboard({ dashboard }: Props): VNode {
 
     return h(View, container.components)
 }
-function View(components: DashboardComponentSet): VNode {
+function View(components: DashboardComponent): VNode {
     useEffect(() => {
         document.title = `ホーム | ${document.title}`
     }, [])
