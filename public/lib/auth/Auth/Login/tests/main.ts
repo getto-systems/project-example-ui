@@ -25,26 +25,43 @@ import { passwordField } from "../../../common/field/password/impl/core"
 import { initSimulateRenewClient, RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
 import { initAuthExpires } from "../../../login/renew/impl/expires"
 import { initRenewRunner } from "../../../login/renew/impl/renew_runner"
-import { initMemoryAuthCredentialRepository } from "../../../login/renew/impl/repository/auth_credential/memory"
+import {
+    initMemoryAuthCredentialRepository,
+    AuthCredentialStorageSet,
+} from "../../../login/renew/impl/repository/auth_credential/memory"
 import {
     initSimulatePasswordLoginClient,
     LoginSimulator,
 } from "../../../login/password_login/impl/client/login/simulate"
-import { initSimulatePasswordResetClient, ResetSimulator } from "../../../profile/password_reset/impl/client/reset/simulate"
-import { initSimulatePasswordResetSessionClient, SessionSimulator } from "../../../profile/password_reset/impl/client/session/simulate"
+import {
+    initSimulatePasswordResetClient,
+    ResetSimulator,
+} from "../../../profile/password_reset/impl/client/reset/simulate"
+import {
+    initSimulatePasswordResetSessionClient,
+    SessionSimulator,
+} from "../../../profile/password_reset/impl/client/session/simulate"
 
 import { currentPagePathname, detectViewState, detectResetToken } from "../impl/location"
 
 import { LoginFactory } from "../view"
 
+type Storage = Readonly<{
+    credential: AuthCredentialStorageSet
+}>
 type Simulator = LoginSimulator & RenewSimulator & SessionSimulator & ResetSimulator
 
-export function newLogin(currentURL: URL, time: TimeConfig, simulator: Simulator): LoginFactory {
+export function newLogin(
+    currentURL: URL,
+    time: TimeConfig,
+    storage: Storage,
+    simulator: Simulator
+): LoginFactory {
     const factory = {
         link: initLoginLink,
         actions: {
             application: initApplicationAction(),
-            credential: initCredentialAction(time, simulator),
+            credential: initCredentialAction(time, storage.credential, simulator),
 
             passwordLogin: initPasswordLoginAction(time, simulator),
             passwordReset: initPasswordResetAction(time, simulator),
@@ -87,8 +104,12 @@ function initApplicationAction() {
         secureScriptPath: secureScriptPath({ host: newHostConfig() }),
     }
 }
-function initCredentialAction(time: TimeConfig, simulator: RenewSimulator) {
-    const authCredentials = initMemoryAuthCredentialRepository()
+function initCredentialAction(
+    time: TimeConfig,
+    storage: AuthCredentialStorageSet,
+    simulator: RenewSimulator
+) {
+    const authCredentials = initMemoryAuthCredentialRepository(storage)
     const client = initSimulateRenewClient(simulator)
 
     return {
