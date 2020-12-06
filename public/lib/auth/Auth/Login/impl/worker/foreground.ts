@@ -33,7 +33,7 @@ import { LoginIDFieldComponentFactory } from "../../../field/login_id/component"
 import { PasswordFieldComponentFactory } from "../../../field/password/component"
 
 import { SecureScriptPath } from "../../../../common/application/action"
-import { Renew, SetContinuousRenew, Store } from "../../../../login/renew/action"
+import { Find, Remove, Renew, SetContinuousRenew, Store } from "../../../../login/renew/action"
 
 import { Login, LoginAction, LoginCollector } from "../../../../login/password_login/action"
 import {
@@ -134,6 +134,8 @@ export type ForegroundFactory = Readonly<{
             renew: Renew
             setContinuousRenew: SetContinuousRenew
             store: Store
+            remove: Remove
+            find: Find
         }>
 
         field: Readonly<{

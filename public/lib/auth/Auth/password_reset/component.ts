@@ -32,7 +32,7 @@ export type PasswordResetState =
     | Readonly<{ type: "delayed-to-reset" }>
     | Readonly<{ type: "failed-to-reset"; err: ResetError }>
     | Readonly<{ type: "succeed-to-reset"; scriptPath: ScriptPath }>
-    | Readonly<{ type: "storage-error"; err: StorageError }>
+    | Readonly<{ type: "failed-to-store"; err: StorageError }>
     | Readonly<{ type: "load-error"; err: LoadError }>
     | Readonly<{ type: "error"; err: string }>
 
