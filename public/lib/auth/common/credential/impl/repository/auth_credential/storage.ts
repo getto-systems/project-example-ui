@@ -5,7 +5,7 @@ import {
     encodeUint8ArrayToBase64String,
 } from "../../../../../../z_external/protocol_buffers_util"
 
-import { StorageKey, AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra"
+import { StorageKey, AuthCredentialRepository } from "../../../infra"
 
 import {
     LoginAt,
@@ -15,6 +15,8 @@ import {
     AuthCredential,
     ApiCredential,
     markApiCredential,
+    StoreResult,
+    LoadLastLoginResult,
 } from "../../../data"
 
 export function initStorageAuthCredentialRepository(
@@ -25,53 +27,56 @@ export function initStorageAuthCredentialRepository(
 }
 
 class Repository implements AuthCredentialRepository {
-    storage: AuthCredentialStorage
+    ticketNonce: TicketNonceStorage
+    apiCredential: ApiCredentialStorage
+    loginAt: LoginAtStorage
 
     constructor(storage: Storage, key: StorageKey) {
-        this.storage = new AuthCredentialStorageImpl(storage, key)
+        this.ticketNonce = new TicketNonceStorage(storage, key.ticketNonce)
+        this.apiCredential = new ApiCredentialStorage(storage, key.apiCredential)
+        this.loginAt = new LoginAtStorage(storage, key.lastLoginAt)
     }
 
-    findTicketNonce(): FindResponse<TicketNonce> {
+    findLastLogin(): LoadLastLoginResult {
         try {
-            const found = this.storage.getTicketNonce()
-            if (!found.found) {
+            const ticketNonce = this.ticketNonce.get()
+            if (!ticketNonce.found) {
                 return { success: true, found: false }
             }
 
-            return { success: true, found: true, content: found.content }
+            const loginAt = this.loginAt.get()
+            if (!loginAt.found) {
+                return { success: true, found: false }
+            }
+
+            return {
+                success: true,
+                found: true,
+                lastLogin: {
+                    ticketNonce: ticketNonce.content,
+                    lastLoginAt: loginAt.content,
+                },
+            }
         } catch (err) {
             return { success: false, err: { type: "infra-error", err: `${err}` } }
         }
     }
 
-    findLastLoginAt(): FindResponse<LoginAt> {
+    storeAuthCredential(authCredential: AuthCredential): StoreResult {
         try {
-            const found = this.storage.getLastLoginAt()
-            if (!found.found) {
-                return { success: true, found: false }
-            }
-
-            return { success: true, found: true, content: found.content }
-        } catch (err) {
-            return { success: false, err: { type: "infra-error", err: `${err}` } }
-        }
-    }
-
-    storeAuthCredential(authCredential: AuthCredential): StoreResponse {
-        try {
-            this.storage.setTicketNonce(authCredential.ticketNonce)
-            this.storage.setApiCredential(authCredential.apiCredential)
-            this.storage.setLastLoginAt(authCredential.loginAt)
+            this.ticketNonce.set(authCredential.ticketNonce)
+            this.apiCredential.set(authCredential.apiCredential)
+            this.loginAt.set(authCredential.loginAt)
             return { success: true }
         } catch (err) {
             return { success: false, err: { type: "infra-error", err: `${err}` } }
         }
     }
-    removeAuthCredential(): StoreResponse {
+    removeAuthCredential(): StoreResult {
         try {
-            this.storage.removeTicketNonce()
-            this.storage.removeApiCredential()
-            this.storage.removeLastLoginAt()
+            this.ticketNonce.remove()
+            this.apiCredential.remove()
+            this.loginAt.remove()
             return { success: true }
         } catch (err) {
             return { success: false, err: { type: "infra-error", err: `${err}` } }
@@ -79,92 +84,90 @@ class Repository implements AuthCredentialRepository {
     }
 }
 
-interface AuthCredentialStorage {
-    getTicketNonce(): Found<TicketNonce>
-    setTicketNonce(ticketNonce: TicketNonce): void
-    removeTicketNonce(): void
+class CredentialStorage<T> {
+    storage: Storage
+    key: string
+    encoder: Encoder<T>
 
-    getApiCredential(): Found<ApiCredential>
-    setApiCredential(apiCredential: ApiCredential): void
-    removeApiCredential(): void
+    constructor(storage: Storage, key: string, encoder: Encoder<T>) {
+        this.storage = storage
+        this.key = key
+        this.encoder = encoder
+    }
 
-    getLastLoginAt(): Found<LoginAt>
-    setLastLoginAt(loginAt: LoginAt): void
-    removeLastLoginAt(): void
+    get(): Found<T> {
+        const raw = this.storage.getItem(this.key)
+        if (!raw) {
+            return { found: false }
+        }
+        try {
+            return { found: true, content: this.encoder.decode(raw) }
+        } catch (err) {
+            // デコードに失敗したらストレージから削除
+            console.error(err)
+            this.remove()
+            return { found: false }
+        }
+    }
+    set(value: T): void {
+        this.storage.setItem(this.key, this.encoder.encode(value))
+    }
+    remove(): void {
+        this.storage.removeItem(this.key)
+    }
+}
+
+interface Encoder<T> {
+    encode(value: T): string
+    decode(raw: string): T
+}
+
+class TicketNonceStorage extends CredentialStorage<TicketNonce> {
+    constructor(storage: Storage, key: string) {
+        super(storage, key, {
+            encode(value: TicketNonce): string {
+                return value
+            },
+            decode(raw: string): TicketNonce {
+                return markTicketNonce(raw)
+            },
+        })
+    }
+}
+class ApiCredentialStorage extends CredentialStorage<ApiCredential> {
+    constructor(storage: Storage, key: string) {
+        super(storage, key, {
+            encode(value: ApiCredential): string {
+                const f = ApiCredentialMessage
+                const message = new f()
+
+                // TODO api nonce を追加
+                //message.nonce = value.apiNonce
+                message.roles = value.apiRoles
+
+                const arr = f.encode(message).finish()
+                return encodeUint8ArrayToBase64String(arr)
+            },
+            decode(raw: string): ApiCredential {
+                const message = ApiCredentialMessage.decode(decodeBase64StringToUint8Array(raw))
+                return markApiCredential({
+                    apiRoles: message.roles ? message.roles : [],
+                })
+            },
+        })
+    }
+}
+class LoginAtStorage extends CredentialStorage<LoginAt> {
+    constructor(storage: Storage, key: string) {
+        super(storage, key, {
+            encode(value: LoginAt): string {
+                return value.toISOString()
+            },
+            decode(raw: string): LoginAt {
+                return markLoginAt(new Date(raw))
+            },
+        })
+    }
 }
 
 type Found<T> = Readonly<{ found: false }> | Readonly<{ found: true; content: T }>
-
-class AuthCredentialStorageImpl implements AuthCredentialStorage {
-    storage: Storage
-    key: StorageKey
-
-    constructor(storage: Storage, key: StorageKey) {
-        this.storage = storage
-        this.key = key
-    }
-
-    getTicketNonce(): Found<TicketNonce> {
-        const raw = this.storage.getItem(this.key.ticketNonce)
-        if (raw) {
-            return { found: true, content: markTicketNonce(raw) }
-        }
-
-        return { found: false }
-    }
-    setTicketNonce(ticketNonce: TicketNonce): void {
-        this.storage.setItem(this.key.ticketNonce, ticketNonce)
-    }
-    removeTicketNonce(): void {
-        this.storage.removeItem(this.key.ticketNonce)
-    }
-
-    getApiCredential(): Found<ApiCredential> {
-        const raw = this.storage.getItem(this.key.apiCredential)
-        if (raw) {
-            try {
-                const message = ApiCredentialMessage.decode(decodeBase64StringToUint8Array(raw))
-
-                return {
-                    found: true,
-                    content: markApiCredential({
-                        apiRoles: message.roles ? message.roles : [],
-                    }),
-                }
-            } catch (err) {
-                // パースできないデータの場合はキーを削除する
-                this.storage.removeItem(this.key.apiCredential)
-            }
-        }
-
-        return { found: false }
-    }
-    setApiCredential(apiCredential: ApiCredential): void {
-        const f = ApiCredentialMessage
-        const message = new f()
-
-        // TODO api nonce を追加
-        //message.nonce = data.apiNonce
-        message.roles = apiCredential.apiRoles
-
-        const arr = f.encode(message).finish()
-        this.storage.setItem(this.key.apiCredential, encodeUint8ArrayToBase64String(arr))
-    }
-    removeApiCredential(): void {
-        this.storage.removeItem(this.key.apiCredential)
-    }
-
-    getLastLoginAt(): Found<LoginAt> {
-        const raw = this.storage.getItem(this.key.lastLoginAt)
-        if (raw) {
-            return { found: true, content: markLoginAt(new Date(raw)) }
-        }
-        return { found: false }
-    }
-    setLastLoginAt(loginAt: LoginAt): void {
-        this.storage.setItem(this.key.lastLoginAt, loginAt.toISOString())
-    }
-    removeLastLoginAt(): void {
-        this.storage.removeItem(this.key.lastLoginAt)
-    }
-}

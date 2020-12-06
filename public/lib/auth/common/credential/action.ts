@@ -1,27 +1,22 @@
-import { AuthCredential } from "../../common/credential/data"
-import { FindEvent, RemoveEvent, StoreEvent } from "./data"
+import { AuthCredential, LoadLastLoginResult, StoreResult } from "./data"
 
-export interface Find {
-    (): FindAction
+export interface LoadLastLogin {
+    (): LoadLastLoginAction
 }
-export interface FindAction {
-    (post: Post<FindEvent>): void
-}
-
-export interface Store {
-    (): StoreAction
-}
-export interface StoreAction {
-    (authCredential: AuthCredential, post: Post<StoreEvent>): void
+export interface LoadLastLoginAction {
+    (): LoadLastLoginResult
 }
 
-export interface Remove {
-    (): RemoveAction
+export interface StoreAuthCredential {
+    (): StoreAuthCredentialAction
 }
-export interface RemoveAction {
-    (post: Post<RemoveEvent>): void
+export interface StoreAuthCredentialAction {
+    (authCredential: AuthCredential): StoreResult
 }
 
-interface Post<T> {
-    (state: T): void
+export interface RemoveAuthCredential {
+    (): RemoveAuthCredentialAction
+}
+export interface RemoveAuthCredentialAction {
+    (): StoreResult
 }

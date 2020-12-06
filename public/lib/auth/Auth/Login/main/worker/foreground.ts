@@ -18,7 +18,7 @@ import { initLoginIDField } from "../../../field/login_id/impl"
 import { initPasswordField } from "../../../field/password/impl"
 
 import { secureScriptPath } from "../../../../common/application/impl/core"
-import { find, remove, store } from "../../../../common/credential/impl/core"
+import { loadLastLogin, removeAuthCredential, storeAuthCredential } from "../../../../common/credential/impl/core"
 import { renew, setContinuousRenew} from "../../../../login/renew/impl/core"
 
 import { loginIDField } from "../../../../common/field/login_id/impl/core"
@@ -104,8 +104,8 @@ function initCredentialAction(time: TimeConfig, credentialStorage: Storage, auth
             time: time.setContinuousRenew,
             runner: initRenewRunner(),
         }),
-        store: store({ authCredentials }),
-        remove: remove({ authCredentials }),
-        find: find({ authCredentials }),
+        storeAuthCredential: storeAuthCredential({ authCredentials }),
+        removeAuthCredential: removeAuthCredential({ authCredentials }),
+        loadLastLogin: loadLastLogin({ authCredentials }),
     }
 }

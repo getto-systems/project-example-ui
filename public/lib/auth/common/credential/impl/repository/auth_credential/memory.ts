@@ -1,6 +1,6 @@
-import { AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra"
+import { AuthCredentialRepository } from "../../../infra"
 
-import { AuthCredential, TicketNonce, LoginAt } from "../../../data"
+import { AuthCredential, StoreResult, LoadLastLoginResult } from "../../../data"
 
 export function initMemoryAuthCredentialRepository(
     storage: AuthCredentialStorage
@@ -19,31 +19,25 @@ class MemoryAuthCredentialRepository implements AuthCredentialRepository {
         this.storage = storage
     }
 
-    findTicketNonce(): FindResponse<TicketNonce> {
-        return this.find(toTicketNonce)
-    }
-    findLastLoginAt(): FindResponse<LoginAt> {
-        return this.find(toLoginAt)
-    }
-    find<T>(getter: { (authCredential: AuthCredential): T }): FindResponse<T> {
+    findLastLogin(): LoadLastLoginResult {
         if (!this.storage.stored) {
             return { success: true, found: false }
         }
-        return { success: true, found: true, content: getter(this.storage.authCredential) }
+        return {
+            success: true,
+            found: true,
+            lastLogin: {
+                ticketNonce: this.storage.authCredential.ticketNonce,
+                lastLoginAt: this.storage.authCredential.loginAt,
+            },
+        }
     }
-    storeAuthCredential(authCredential: AuthCredential): StoreResponse {
+    storeAuthCredential(authCredential: AuthCredential): StoreResult {
         this.storage = { stored: true, authCredential }
         return { success: true }
     }
-    removeAuthCredential(): StoreResponse {
+    removeAuthCredential(): StoreResult {
         this.storage = { stored: false }
         return { success: true }
     }
-}
-
-function toTicketNonce(authCredential: AuthCredential): TicketNonce {
-    return authCredential.ticketNonce
-}
-function toLoginAt(authCredential: AuthCredential): LoginAt {
-    return authCredential.loginAt
 }

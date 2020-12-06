@@ -1,5 +1,5 @@
 import { LoginAction } from "../../login/password_login/action"
-import { StoreAction } from "../../common/credential/action"
+import { StoreAuthCredentialAction } from "../../common/credential/action"
 import { SecureScriptPathAction } from "../../common/application/action"
 
 import { LoginError } from "../../login/password_login/data"
@@ -13,7 +13,7 @@ export interface PasswordLoginComponentFactory {
 export type PasswordLoginMaterial = Readonly<{
     link: LoginLink
     login: LoginAction
-    store: StoreAction
+    storeAuthCredential: StoreAuthCredentialAction
     secureScriptPath: SecureScriptPathAction
 }>
 
@@ -30,7 +30,7 @@ export type PasswordLoginState =
     | Readonly<{ type: "delayed-to-login" }>
     | Readonly<{ type: "failed-to-login"; err: LoginError }>
     | Readonly<{ type: "succeed-to-login"; scriptPath: ScriptPath }>
-    | Readonly<{ type: "failed-to-store"; err: StorageError }>
+    | Readonly<{ type: "storage-error"; err: StorageError }>
     | Readonly<{ type: "load-error"; err: LoadError }>
     | Readonly<{ type: "error"; err: string }>
 

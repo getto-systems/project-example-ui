@@ -1,14 +1,13 @@
-import { AuthCredential, LoginAt, StorageError, TicketNonce } from "./data"
+import { AuthCredential, LoadLastLoginResult, StoreResult } from "./data"
 
 export type StoreInfra = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
 
 export interface AuthCredentialRepository {
-    findTicketNonce(): FindResponse<TicketNonce>
-    findLastLoginAt(): FindResponse<LoginAt>
-    storeAuthCredential(authCredential: AuthCredential): StoreResponse
-    removeAuthCredential(): StoreResponse
+    findLastLogin(): LoadLastLoginResult
+    storeAuthCredential(authCredential: AuthCredential): StoreResult
+    removeAuthCredential(): StoreResult
 }
 
 export type StorageKey = Readonly<{
@@ -16,10 +15,3 @@ export type StorageKey = Readonly<{
     apiCredential: string
     lastLoginAt: string
 }>
-
-export type FindResponse<T> =
-    | Readonly<{ success: false; err: StorageError }>
-    | Readonly<{ success: true; found: false }>
-    | Readonly<{ success: true; found: true; content: T }>
-
-export type StoreResponse = Readonly<{ success: true }> | Readonly<{ success: false; err: StorageError }>

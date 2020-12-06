@@ -1,7 +1,7 @@
 import { RenewCredentialMaterial, RenewCredentialComponent, RenewCredentialState } from "./component"
 
 import { LoadError } from "../../common/application/data"
-import { AuthCredential, LastLogin, RemoveEvent } from "../../common/credential/data"
+import { AuthCredential, LastLogin, StorageError } from "../../common/credential/data"
 
 export function initRenewCredential(material: RenewCredentialMaterial): RenewCredentialComponent {
     return new Component(material)
@@ -81,48 +81,36 @@ class Component implements RenewCredentialComponent {
     }
 
     findLastLogin(hook: { (lastLogin: LastLogin): void }): void {
-        this.material.find((event) => {
-            switch (event.type) {
-                case "not-found":
-                    this.post({ type: "required-to-login" })
-                    return
-
-                case "succeed-to-find":
-                    hook(event.lastLogin)
-                    return
-
-                default:
-                    this.post(event)
-                    return
-            }
-        })
+        const result = this.material.loadLastLogin()
+        if (!result.success) {
+            this.post({ type: "storage-error", err: result.err })
+            return
+        }
+        if (!result.found) {
+            this.post({ type: "required-to-login" })
+            return
+        }
+        hook(result.lastLogin)
     }
     removeAuthCredential(): void {
-        this.material.remove((event) => {
-            this.post(map(event))
-        })
-
-        function map(event: RemoveEvent): RenewCredentialState {
-            switch (event.type) {
-                case "succeed-to-remove":
-                    return { type: "required-to-login" }
-                default:
-                    return event
-            }
+        const result = this.material.removeAuthCredential()
+        if (!result.success) {
+            this.storageError(result.err)
+            return
         }
+        this.post({ type: "required-to-login" })
     }
     storeAuthCredential(authCredential: AuthCredential, hook: { (): void }): void {
-        this.material.store(authCredential, (event) => {
-            switch (event.type) {
-                case "succeed-to-store":
-                    hook()
-                    return
+        const result = this.material.storeAuthCredential(authCredential)
+        if (!result.success) {
+            this.storageError(result.err)
+            return
+        }
+        hook()
+    }
 
-                default:
-                    this.post(event)
-                    return
-            }
-        })
+    storageError(err: StorageError): void {
+        this.post({ type: "storage-error", err })
     }
 }
 

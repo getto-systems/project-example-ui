@@ -29,17 +29,11 @@ export function markApiCredential(apiCredential: ApiCredential_data): ApiCredent
     return apiCredential as ApiCredential
 }
 
-export type FindEvent =
-    | Readonly<{ type: "failed-to-find"; err: StorageError }>
-    | Readonly<{ type: "not-found" }>
-    | Readonly<{ type: "succeed-to-find"; lastLogin: LastLogin }>
+export type LoadLastLoginResult =
+    | Readonly<{ success: false; err: StorageError }>
+    | Readonly<{ success: true; found: false }>
+    | Readonly<{ success: true; found: true; lastLogin: LastLogin }>
 
-export type StoreEvent =
-    | Readonly<{ type: "failed-to-store"; err: StorageError }>
-    | Readonly<{ type: "succeed-to-store" }>
-
-export type RemoveEvent =
-    | Readonly<{ type: "failed-to-remove"; err: StorageError }>
-    | Readonly<{ type: "succeed-to-remove" }>
+export type StoreResult = Readonly<{ success: true }> | Readonly<{ success: false; err: StorageError }>
 
 export type StorageError = Readonly<{ type: "infra-error"; err: string }>

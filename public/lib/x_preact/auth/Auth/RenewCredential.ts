@@ -72,9 +72,7 @@ export function RenewCredential({ components: { renewCredential } }: Props): VNo
         case "failed-to-renew":
             return renewFailedContent(state.err)
 
-        case "failed-to-find":
-        case "failed-to-store":
-        case "failed-to-remove":
+        case "storage-error":
         case "load-error":
             return h(ApplicationError, { err: state.err.err })
 
