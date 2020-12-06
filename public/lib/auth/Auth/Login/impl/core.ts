@@ -24,7 +24,7 @@ import { PasswordFieldComponent, PasswordFieldComponentFactory } from "../../fie
 
 import { ApplicationAction, SecureScriptPathCollector } from "../../../common/application/action"
 import { CredentialAction, StoreCredentialAction } from "../../../common/credential/action"
-import { Renew, SetContinuousRenew } from "../../../login/renew/action"
+import { RenewAction } from "../../../login/renew/action"
 
 import { PasswordLoginAction } from "../../../login/password_login/action"
 import {
@@ -47,11 +47,7 @@ export type RenewCredentialFactory = Readonly<{
     actions: Readonly<{
         application: ApplicationAction
         // TODO renew に分ける
-        credential: Readonly<{
-            renew: Renew
-            setContinuousRenew: SetContinuousRenew
-        }> &
-            CredentialAction
+        credential: RenewAction & CredentialAction
     }>
     components: Readonly<{
         renewCredential: RenewCredentialComponentFactory

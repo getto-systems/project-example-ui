@@ -28,7 +28,7 @@ import {
 
 import { ApplicationAction } from "../../../common/application/action"
 import { CredentialAction } from "../../../common/credential/action"
-import { Renew, SetContinuousRenew } from "../../../login/renew/action"
+import { RenewAction } from "../../../login/renew/action"
 import { PasswordLoginAction } from "../../../login/password_login/action"
 import { CheckStatus, Reset, StartSession } from "../../../profile/password_reset/action"
 
@@ -53,7 +53,7 @@ export function initCredentialAction(
     time: { renew: RenewTimeConfig; setContinuousRenew: SetContinuousRenewTimeConfig },
     repository: { authCredentials: AuthCredentialRepository },
     simulator: RenewSimulator
-): { renew: Renew; setContinuousRenew: SetContinuousRenew;  } & CredentialAction {
+): RenewAction & CredentialAction {
     const client = initSimulateRenewClient(simulator)
     const { authCredentials } = repository
 

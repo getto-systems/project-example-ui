@@ -1,8 +1,8 @@
 import { RenewInfra, SetContinuousRenewInfra,  } from "../infra"
 
-import { Renew, SetContinuousRenew,  } from "../action"
+import { RenewPod, SetContinuousRenewPod,  } from "../action"
 
-export const renew = (infra: RenewInfra): Renew => () => async (lastLogin, post) => {
+export const renew = (infra: RenewInfra): RenewPod => () => async (lastLogin, post) => {
     const { client, expires, time, delayed } = infra
 
     if (!expires.hasExceeded(lastLogin.lastLoginAt, time.instantLoadExpire)) {
@@ -27,7 +27,7 @@ export const renew = (infra: RenewInfra): Renew => () => async (lastLogin, post)
 
     post({ type: "succeed-to-renew", authCredential: response.authCredential })
 }
-export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuousRenew => () => (
+export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuousRenewPod => () => (
     lastLogin,
     post
 ) => {

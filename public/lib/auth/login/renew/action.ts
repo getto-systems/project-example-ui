@@ -1,17 +1,22 @@
 import { LastLogin } from "../../common/credential/data"
 import { RenewEvent, SetContinuousRenewEvent } from "./data"
 
-export interface Renew {
-    (): RenewAction
+export type RenewAction = Readonly<{
+    renew: RenewPod
+    setContinuousRenew: SetContinuousRenewPod
+}>
+
+export interface RenewPod {
+    (): Renew
 }
-export interface RenewAction {
+export interface Renew {
     (lastLogin: LastLogin, post: Post<RenewEvent>): void
 }
 
-export interface SetContinuousRenew {
-    (): SetContinuousRenewAction
+export interface SetContinuousRenewPod {
+    (): SetContinuousRenew
 }
-export interface SetContinuousRenewAction {
+export interface SetContinuousRenew {
     (lastLogin: LastLogin, post: Post<SetContinuousRenewEvent>): void
 }
 

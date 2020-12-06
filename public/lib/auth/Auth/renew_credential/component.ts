@@ -1,4 +1,4 @@
-import { RenewAction, SetContinuousRenewAction } from "../../login/renew/action"
+import { Renew, SetContinuousRenew } from "../../login/renew/action"
 import { LoadLastLogin, RemoveAuthCredential, StoreAuthCredential } from "../../common/credential/action"
 import { SecureScriptPath } from "../../common/application/action"
 
@@ -11,8 +11,8 @@ export interface RenewCredentialComponentFactory {
 }
 
 export type RenewCredentialMaterial = Readonly<{
-    renew: RenewAction
-    setContinuousRenew: SetContinuousRenewAction
+    renew: Renew
+    setContinuousRenew: SetContinuousRenew
     loadLastLogin: LoadLastLogin
     storeAuthCredential: StoreAuthCredential
     removeAuthCredential: RemoveAuthCredential
