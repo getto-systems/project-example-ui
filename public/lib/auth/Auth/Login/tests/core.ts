@@ -5,7 +5,11 @@ import { currentPagePathname, detectResetToken, detectViewState } from "../impl/
 import { PasswordLoginCollector, PasswordResetCollector, RenewCredentialCollector } from "../impl/core"
 
 import { secureScriptPath } from "../../../common/application/impl/core"
-import { loadLastLogin, removeAuthCredential, storeAuthCredential } from "../../../common/credential/impl/core"
+import {
+    loadLastLogin,
+    removeAuthCredential,
+    storeAuthCredential,
+} from "../../../common/credential/impl/core"
 import { renew, setContinuousRenew } from "../../../login/renew/impl/core"
 import { login } from "../../../login/password_login/impl/core"
 import { startSession, checkStatus, reset } from "../../../profile/password_reset/impl/core"
@@ -30,7 +34,7 @@ import { ApplicationAction } from "../../../common/application/action"
 import { CredentialAction } from "../../../common/credential/action"
 import { RenewAction } from "../../../login/renew/action"
 import { PasswordLoginAction } from "../../../login/password_login/action"
-import { CheckStatus, Reset, StartSession } from "../../../profile/password_reset/action"
+import { PasswordResetAction, PasswordResetSessionAction } from "../../../profile/password_reset/action"
 
 import { SecureScriptPathHostConfig } from "../../../common/application/infra"
 import { RenewTimeConfig, SetContinuousRenewTimeConfig } from "../../../login/renew/infra"
@@ -93,7 +97,7 @@ export function initPasswordResetAction(
         reset: ResetTimeConfig
     },
     simulator: SessionSimulator & ResetSimulator
-): { startSession: StartSession; checkStatus: CheckStatus; reset: Reset } {
+): PasswordResetAction & PasswordResetSessionAction {
     const sessionClient = initSimulatePasswordResetSessionClient(simulator)
     const resetClient = initSimulatePasswordResetClient(simulator)
 

@@ -9,27 +9,35 @@ import {
 } from "./data"
 import { Content } from "../../common/field/data"
 
-export interface StartSession {
-    (collector: StartSessionCollector): StartSessionAction
+export type PasswordResetSessionAction = Readonly<{
+    startSession: StartSessionPod
+    checkStatus: CheckStatusPod
+}>
+export type PasswordResetAction = Readonly<{
+    reset: ResetPod
+}>
+
+export interface StartSessionPod {
+    (collector: StartSessionCollector): StartSession
 }
-export interface StartSessionAction {
+export interface StartSession {
     (post: Post<StartSessionEvent>): void
 }
 export interface StartSessionCollector {
     getFields(): Promise<Content<StartSessionFields>>
 }
 
-export interface CheckStatus {
-    (): CheckStatusAction
+export interface CheckStatusPod {
+    (): CheckStatus
 }
-export interface CheckStatusAction {
+export interface CheckStatus {
     (sessionID: SessionID, post: Post<CheckStatusEvent>): void
 }
 
-export interface Reset {
-    (collector: ResetCollector): ResetAction
+export interface ResetPod {
+    (collector: ResetCollector): Reset
 }
-export interface ResetAction {
+export interface Reset {
     (post: Post<ResetEvent>): void
 }
 export interface ResetCollector extends ResetTokenCollector {

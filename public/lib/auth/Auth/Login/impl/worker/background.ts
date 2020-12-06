@@ -10,7 +10,13 @@ import {
 } from "./data"
 
 import { LoginPod, PasswordLoginAction } from "../../../../login/password_login/action"
-import { StartSession, CheckStatusAction, Reset } from "../../../../profile/password_reset/action"
+import {
+    PasswordResetAction,
+    PasswordResetSessionAction,
+    StartSessionPod,
+    CheckStatusPod,
+    ResetPod,
+} from "../../../../profile/password_reset/action"
 
 import { LoginEvent } from "../../../../login/password_login/data"
 import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../../profile/password_reset/data"
@@ -45,10 +51,10 @@ class LoginHandler {
     }
 }
 class StartSessionHandler {
-    startSession: StartSession
+    startSession: StartSessionPod
     post: Post<ProxyResponse<StartSessionEvent>>
 
-    constructor(startSession: StartSession, post: Post<ProxyResponse<StartSessionEvent>>) {
+    constructor(startSession: StartSessionPod, post: Post<ProxyResponse<StartSessionEvent>>) {
         this.startSession = startSession
         this.post = post
     }
@@ -74,16 +80,16 @@ class StartSessionHandler {
     }
 }
 class CheckStatusHandler {
-    checkStatus: CheckStatusAction
+    checkStatus: CheckStatusPod
     post: Post<ProxyResponse<CheckStatusEvent>>
 
-    constructor(checkStatus: CheckStatusAction, post: Post<ProxyResponse<CheckStatusEvent>>) {
+    constructor(checkStatus: CheckStatusPod, post: Post<ProxyResponse<CheckStatusEvent>>) {
         this.checkStatus = checkStatus
         this.post = post
     }
 
     handleMessage({ handlerID, message: { sessionID } }: ProxyMessage<CheckStatusProxyMessage>): void {
-        this.checkStatus(sessionID, (event) => {
+        this.checkStatus()(sessionID, (event) => {
             this.post({ handlerID, done: hasDone(), response: event })
 
             function hasDone() {
@@ -100,10 +106,10 @@ class CheckStatusHandler {
     }
 }
 class ResetHandler {
-    reset: Reset
+    reset: ResetPod
     post: Post<ProxyResponse<ResetEvent>>
 
-    constructor(reset: Reset, post: Post<ProxyResponse<ResetEvent>>) {
+    constructor(reset: ResetPod, post: Post<ProxyResponse<ResetEvent>>) {
         this.reset = reset
         this.post = post
     }
@@ -135,11 +141,8 @@ class ResetHandler {
 
 export type Material = Readonly<{
     passwordLogin: PasswordLoginAction
-    passwordReset: Readonly<{
-        startSession: StartSession
-        checkStatus: CheckStatusAction
-        reset: Reset
-    }>
+    //  TODO passwordResetSession にわける
+    passwordReset: PasswordResetSessionAction & PasswordResetAction
 }>
 
 export function initLoginWorkerAsBackground(material: Material, worker: Worker): void {
