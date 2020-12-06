@@ -5,7 +5,7 @@ import { env } from "../../../../../y_static/env"
 
 import { TimeConfig, newTimeConfig, newHostConfig, HostConfig } from "../../impl/config"
 
-import { initLoginAsForeground } from "../../impl/worker/foreground"
+import { ForegroundFactory, initLoginAsForeground } from "../../impl/worker/foreground"
 
 import { initLoginLink } from "../../impl/link"
 
@@ -18,8 +18,12 @@ import { initLoginIDField } from "../../../field/login_id/impl"
 import { initPasswordField } from "../../../field/password/impl"
 
 import { secureScriptPath } from "../../../../common/application/impl/core"
-import { loadLastLogin, removeAuthCredential, storeAuthCredential } from "../../../../common/credential/impl/core"
-import { renew, setContinuousRenew} from "../../../../login/renew/impl/core"
+import {
+    loadLastLogin,
+    removeAuthCredential,
+    storeAuthCredential,
+} from "../../../../common/credential/impl/core"
+import { renew, setContinuousRenew } from "../../../../login/renew/impl/core"
 
 import { loginIDField } from "../../../../common/field/login_id/impl/core"
 import { passwordField } from "../../../../common/field/password/impl/core"
@@ -32,6 +36,9 @@ import { initStorageAuthCredentialRepository } from "../../../../common/credenti
 import { currentPagePathname, detectViewState, detectResetToken } from "../../impl/location"
 
 import { LoginFactory } from "../../view"
+import { ApplicationAction } from "../../../../common/application/action"
+import { CredentialAction } from "../../../../common/credential/action"
+import { RenewAction } from "../../../../login/renew/action"
 
 export function newLoginAsWorkerForeground(): LoginFactory {
     const credentialStorage = localStorage
@@ -43,11 +50,12 @@ export function newLoginAsWorkerForeground(): LoginFactory {
 
     const worker = new Worker(`/${env.version}/login.worker.js`)
 
-    const factory = {
+    const factory: ForegroundFactory = {
         link: initLoginLink,
         actions: {
             application: initApplicationAction(host),
-            credential: initCredentialAction(time, credentialStorage, authClient),
+            credential: initCredentialAction(credentialStorage),
+            renew: initRenewAction(time, authClient),
 
             field: {
                 loginID: () => loginIDField(),
@@ -83,13 +91,21 @@ export function newLoginAsWorkerForeground(): LoginFactory {
     return () => initLoginAsForeground(worker, factory, collector)
 }
 
-function initApplicationAction(host: HostConfig) {
+function initApplicationAction(host: HostConfig): ApplicationAction {
     return {
         secureScriptPath: secureScriptPath({ host: host.secureScriptPath }),
     }
 }
-function initCredentialAction(time: TimeConfig, credentialStorage: Storage, authClient: AuthClient) {
+function initCredentialAction(credentialStorage: Storage): CredentialAction {
     const authCredentials = initStorageAuthCredentialRepository(credentialStorage, env.storageKey)
+
+    return {
+        storeAuthCredential: storeAuthCredential({ authCredentials }),
+        removeAuthCredential: removeAuthCredential({ authCredentials }),
+        loadLastLogin: loadLastLogin({ authCredentials }),
+    }
+}
+function initRenewAction(time: TimeConfig, authClient: AuthClient): RenewAction {
     const client = initFetchRenewClient(authClient)
 
     return {
@@ -104,8 +120,5 @@ function initCredentialAction(time: TimeConfig, credentialStorage: Storage, auth
             time: time.setContinuousRenew,
             runner: initRenewRunner(),
         }),
-        storeAuthCredential: storeAuthCredential({ authCredentials }),
-        removeAuthCredential: removeAuthCredential({ authCredentials }),
-        loadLastLogin: loadLastLogin({ authCredentials }),
     }
 }

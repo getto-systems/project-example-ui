@@ -45,8 +45,8 @@ import { Content, invalidContent, validContent } from "../../../common/field/dat
 export type RenewCredentialFactory = Readonly<{
     actions: Readonly<{
         application: ApplicationAction
-        // TODO renew に分ける
-        credential: RenewAction & CredentialAction
+        credential: CredentialAction
+        renew: RenewAction
     }>
     components: Readonly<{
         renewCredential: RenewCredentialComponentFactory
@@ -61,8 +61,8 @@ export function initRenewCredentialResource(
     setup: Setup<RenewCredentialComponent>
 ): RenewCredentialResource {
     const material: RenewCredentialMaterial = {
-        renew: factory.actions.credential.renew(),
-        setContinuousRenew: factory.actions.credential.setContinuousRenew(),
+        renew: factory.actions.renew.renew(),
+        setContinuousRenew: factory.actions.renew.setContinuousRenew(),
         loadLastLogin: factory.actions.credential.loadLastLogin(),
         storeAuthCredential: factory.actions.credential.storeAuthCredential(),
         removeAuthCredential: factory.actions.credential.removeAuthCredential(),

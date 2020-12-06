@@ -5,7 +5,7 @@ import { env } from "../../../../y_static/env"
 
 import { TimeConfig, newTimeConfig, newHostConfig, HostConfig } from "../impl/config"
 
-import { initLoginAsSingle } from "../impl/single"
+import { Factory, initLoginAsSingle } from "../impl/single"
 
 import { initLoginLink } from "../impl/link"
 
@@ -18,7 +18,11 @@ import { initLoginIDField } from "../../field/login_id/impl"
 import { initPasswordField } from "../../field/password/impl"
 
 import { secureScriptPath } from "../../../common/application/impl/core"
-import { loadLastLogin, removeAuthCredential, storeAuthCredential } from "../../../common/credential/impl/core"
+import {
+    loadLastLogin,
+    removeAuthCredential,
+    storeAuthCredential,
+} from "../../../common/credential/impl/core"
 import { renew, setContinuousRenew } from "../../../login/renew/impl/core"
 import { login } from "../../../login/password_login/impl/core"
 import { startSession, checkStatus, reset } from "../../../profile/password_reset/impl/core"
@@ -40,6 +44,11 @@ import { LoginFactory } from "../view"
 
 import { markTicketNonce, markLoginAt, markApiCredential } from "../../../common/credential/data"
 import { markSessionID } from "../../../profile/password_reset/data"
+import { RenewAction } from "../../../login/renew/action"
+import { CredentialAction } from "../../../common/credential/action"
+import { ApplicationAction } from "../../../common/application/action"
+import { PasswordLoginAction } from "../../../login/password_login/action"
+import { PasswordResetAction, PasswordResetSessionAction } from "../../../profile/password_reset/action"
 
 export function newLoginAsSingle(): LoginFactory {
     const credentialStorage = localStorage
@@ -49,11 +58,12 @@ export function newLoginAsSingle(): LoginFactory {
     const time = newTimeConfig()
     const authClient = initAuthClient(env.authServerURL)
 
-    const factory = {
+    const factory: Factory = {
         link: initLoginLink,
         actions: {
             application: initApplicationAction(host),
-            credential: initCredentialAction(time, credentialStorage, authClient),
+            credential: initCredentialAction(credentialStorage),
+            renew: initRenewAction(time, authClient),
 
             passwordLogin: initPasswordLoginAction(time, authClient),
             passwordReset: initPasswordResetAction(time),
@@ -91,13 +101,12 @@ export function newLoginAsSingle(): LoginFactory {
     return () => initLoginAsSingle(factory, collector)
 }
 
-function initApplicationAction(host: HostConfig) {
+function initApplicationAction(host: HostConfig): ApplicationAction {
     return {
         secureScriptPath: secureScriptPath({ host: host.secureScriptPath }),
     }
 }
-function initCredentialAction(time: TimeConfig, credentialStorage: Storage, authClient: AuthClient) {
-    const authCredentials = initStorageAuthCredentialRepository(credentialStorage, env.storageKey)
+function initRenewAction(time: TimeConfig, authClient: AuthClient): RenewAction {
     const client = initFetchRenewClient(authClient)
 
     return {
@@ -112,12 +121,18 @@ function initCredentialAction(time: TimeConfig, credentialStorage: Storage, auth
             time: time.setContinuousRenew,
             runner: initRenewRunner(),
         }),
+    }
+}
+function initCredentialAction(credentialStorage: Storage): CredentialAction {
+    const authCredentials = initStorageAuthCredentialRepository(credentialStorage, env.storageKey)
+
+    return {
         loadLastLogin: loadLastLogin({ authCredentials }),
         storeAuthCredential: storeAuthCredential({ authCredentials }),
         removeAuthCredential: removeAuthCredential({ authCredentials }),
     }
 }
-function initPasswordLoginAction(time: TimeConfig, authClient: AuthClient) {
+function initPasswordLoginAction(time: TimeConfig, authClient: AuthClient): PasswordLoginAction {
     return {
         login: login({
             client: initFetchPasswordLoginClient(authClient),
@@ -126,7 +141,7 @@ function initPasswordLoginAction(time: TimeConfig, authClient: AuthClient) {
         }),
     }
 }
-function initPasswordResetAction(time: TimeConfig) {
+function initPasswordResetAction(time: TimeConfig): PasswordResetAction & PasswordResetSessionAction {
     const targetLoginID = "loginID"
     const targetSessionID = markSessionID("session-id")
     const targetResetToken = "reset-token"

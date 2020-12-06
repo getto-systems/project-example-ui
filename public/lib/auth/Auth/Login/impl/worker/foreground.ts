@@ -128,8 +128,8 @@ export type ForegroundFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
         application: ApplicationAction
-        // TODO renew に分ける
-        credential: RenewAction & CredentialAction
+        credential: CredentialAction
+        renew: RenewAction
 
         field: LoginIDFieldAction & PasswordFieldAction
     }>
