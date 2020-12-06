@@ -46,9 +46,9 @@ import {
     Reset,
     ResetCollector,
 } from "../../../../profile/password_reset/action"
-
 import { LoginIDFieldAction } from "../../../../common/field/login_id/action"
 import { PasswordFieldAction } from "../../../../common/field/password/action"
+
 import { LoginEvent } from "../../../../login/password_login/data"
 import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../profile/password_reset/data"
 
