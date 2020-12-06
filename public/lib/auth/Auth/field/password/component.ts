@@ -1,4 +1,4 @@
-import { PasswordFieldAction } from "../../../common/field/password/action"
+import { PasswordField } from "../../../common/field/password/action"
 
 import {
     PasswordFieldError,
@@ -14,7 +14,7 @@ export interface PasswordFieldComponentFactory {
     (material: PasswordFieldMaterial): PasswordFieldComponent
 }
 export type PasswordFieldMaterial = Readonly<{
-    password: PasswordFieldAction
+    password: PasswordField
 }>
 
 export interface PasswordFieldComponent {
