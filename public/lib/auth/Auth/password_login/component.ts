@@ -1,6 +1,6 @@
 import { LoginAction } from "../../login/password_login/action"
 import { StoreAuthCredentialAction } from "../../common/credential/action"
-import { SecureScriptPathAction } from "../../common/application/action"
+import { SecureScriptPath } from "../../common/application/action"
 
 import { LoginError } from "../../login/password_login/data"
 import { ScriptPath, LoadError } from "../../common/application/data"
@@ -14,7 +14,7 @@ export type PasswordLoginMaterial = Readonly<{
     link: LoginLink
     login: LoginAction
     storeAuthCredential: StoreAuthCredentialAction
-    secureScriptPath: SecureScriptPathAction
+    secureScriptPath: SecureScriptPath
 }>
 
 export interface PasswordLoginComponent {

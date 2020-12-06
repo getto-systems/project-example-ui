@@ -26,7 +26,7 @@ import {
     SessionSimulator,
 } from "../../../profile/password_reset/impl/client/session/simulate"
 
-import { SecureScriptPath } from "../../../common/application/action"
+import { ApplicationAction } from "../../../common/application/action"
 import { StoreAuthCredential } from "../../../common/credential/action"
 import { Renew, SetContinuousRenew } from "../../../login/renew/action"
 import { Login } from "../../../login/password_login/action"
@@ -44,7 +44,7 @@ import { AuthCredentialRepository } from "../../../common/credential/infra"
 
 export function initApplicationAction(host: {
     secureScriptPath: SecureScriptPathHostConfig
-}): { secureScriptPath: SecureScriptPath } {
+}): ApplicationAction {
     return {
         secureScriptPath: secureScriptPath({ host: host.secureScriptPath }),
     }

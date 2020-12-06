@@ -13,14 +13,21 @@ import {
     RenewCredentialMaterial,
 } from "../../renew_credential/component"
 import { PasswordLoginComponentFactory, PasswordLoginMaterial } from "../../password_login/component"
-import { PasswordResetSessionComponentFactory, PasswordResetSessionMaterial } from "../../password_reset_session/component"
+import {
+    PasswordResetSessionComponentFactory,
+    PasswordResetSessionMaterial,
+} from "../../password_reset_session/component"
 import { PasswordResetComponentFactory, PasswordResetMaterial } from "../../password_reset/component"
 
 import { LoginIDFieldComponent, LoginIDFieldComponentFactory } from "../../field/login_id/component"
 import { PasswordFieldComponent, PasswordFieldComponentFactory } from "../../field/password/component"
 
-import { SecureScriptPath, SecureScriptPathCollector } from "../../../common/application/action"
-import { LoadLastLogin, RemoveAuthCredential, StoreAuthCredential } from "../../../common/credential/action"
+import { ApplicationAction, ApplicationCollector } from "../../../common/application/action"
+import {
+    LoadLastLogin,
+    RemoveAuthCredential,
+    StoreAuthCredential,
+} from "../../../common/credential/action"
 import { Renew, SetContinuousRenew } from "../../../login/renew/action"
 
 import { Login } from "../../../login/password_login/action"
@@ -42,9 +49,7 @@ import { Content, invalidContent, validContent } from "../../../common/field/dat
 
 export type RenewCredentialFactory = Readonly<{
     actions: Readonly<{
-        application: Readonly<{
-            secureScriptPath: SecureScriptPath
-        }>
+        application: ApplicationAction
         credential: Readonly<{
             renew: Renew
             setContinuousRenew: SetContinuousRenew
@@ -58,7 +63,7 @@ export type RenewCredentialFactory = Readonly<{
     }>
 }>
 export type RenewCredentialCollector = Readonly<{
-    application: SecureScriptPathCollector
+    application: ApplicationCollector
 }>
 export function initRenewCredentialResource(
     factory: RenewCredentialFactory,
@@ -85,9 +90,7 @@ export function initRenewCredentialResource(
 export type PasswordLoginFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
-        application: Readonly<{
-            secureScriptPath: SecureScriptPath
-        }>
+        application: ApplicationAction
         credential: Readonly<{
             storeAuthCredential: StoreAuthCredential
         }>
@@ -109,7 +112,7 @@ export type PasswordLoginFactory = Readonly<{
     }>
 }>
 export type PasswordLoginCollector = Readonly<{
-    application: SecureScriptPathCollector
+    application: ApplicationCollector
 }>
 export function initPasswordLoginResource(
     factory: PasswordLoginFactory,
@@ -138,9 +141,7 @@ export function initPasswordLoginResource(
 export type PasswordResetSessionFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
-        application: Readonly<{
-            secureScriptPath: SecureScriptPath
-        }>
+        application: ApplicationAction
         passwordReset: Readonly<{
             startSession: StartSession
             checkStatus: CheckStatus
@@ -179,9 +180,7 @@ export function initPasswordResetSessionResource(
 export type PasswordResetFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
-        application: Readonly<{
-            secureScriptPath: SecureScriptPath
-        }>
+        application: ApplicationAction
         credential: Readonly<{
             storeAuthCredential: StoreAuthCredential
         }>
@@ -203,7 +202,7 @@ export type PasswordResetFactory = Readonly<{
     }>
 }>
 export type PasswordResetCollector = Readonly<{
-    application: SecureScriptPathCollector
+    application: ApplicationCollector
     passwordReset: ResetTokenCollector
 }>
 export function initPasswordResetResource(
