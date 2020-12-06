@@ -1,4 +1,4 @@
-import { LoginIDField, LoginIDFieldAction } from "../action"
+import { LoginIDFieldPod, LoginIDField } from "../action"
 
 import { markLoginID } from "../../../login_id/data"
 import { LoginIDFieldEvent, LoginIDFieldError } from "../data"
@@ -20,7 +20,7 @@ const ERROR: {
     empty: ["empty"],
 }
 
-class Field implements LoginIDFieldAction {
+class Field implements LoginIDField {
     loginID: InputValue
 
     constructor() {
@@ -42,7 +42,7 @@ class Field implements LoginIDFieldAction {
     }
 }
 
-export const loginIDField: LoginIDField = () => new Field()
+export const loginIDField: LoginIDFieldPod = () => new Field()
 
 interface Post<T> {
     (state: T): void
