@@ -6,7 +6,11 @@ import {
 } from "../../Login/tests/core"
 
 import { initLoginLink } from "../../Login/impl/link"
-import { initPasswordLoginResource } from "../../Login/impl/core"
+import {
+    initPasswordLoginResource,
+    PasswordLoginCollector,
+    PasswordLoginFactory,
+} from "../../Login/impl/core"
 
 import { initPasswordLogin } from "../../password_login/impl"
 
@@ -46,7 +50,7 @@ export function newPasswordLoginResource(
     repository: Repository,
     simulator: Simulator
 ): PasswordLoginResource {
-    const factory = {
+    const factory: PasswordLoginFactory = {
         link: initLoginLink,
         actions: {
             application: initApplicationAction(config.host),
@@ -68,7 +72,7 @@ export function newPasswordLoginResource(
             },
         },
     }
-    const collector = initPasswordLoginCollector(currentURL)
+    const collector: PasswordLoginCollector = initPasswordLoginCollector(currentURL)
 
     return initPasswordLoginResource(factory, collector)
 }
