@@ -14,9 +14,9 @@ export class View implements LoginView {
     listener: Post<LoginState>[] = []
 
     collector: LoginViewCollector
-    components: LoginComponentFactory
+    components: LoginResourceFactory
 
-    constructor(collector: LoginViewCollector, components: LoginComponentFactory) {
+    constructor(collector: LoginViewCollector, components: LoginResourceFactory) {
         this.collector = collector
         this.components = components
     }
@@ -62,7 +62,7 @@ export class View implements LoginView {
     }
 }
 
-export interface LoginComponentFactory {
+export interface LoginResourceFactory {
     renewCredential(setup: Setup<RenewCredentialComponent>): RenewCredentialResource
 
     passwordLogin(): PasswordLoginResource
