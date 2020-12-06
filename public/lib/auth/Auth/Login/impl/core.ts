@@ -35,7 +35,7 @@ import {
 } from "../../../profile/password_reset/action"
 
 import { LoginIDFieldAction } from "../../../common/field/login_id/action"
-import { PasswordField } from "../../../common/field/password/action"
+import { PasswordFieldAction } from "../../../common/field/password/action"
 
 import { LoginID } from "../../../common/login_id/data"
 import { Password } from "../../../common/password/data"
@@ -50,7 +50,8 @@ export type RenewCredentialFactory = Readonly<{
         credential: Readonly<{
             renew: Renew
             setContinuousRenew: SetContinuousRenew
-        }> & CredentialAction
+        }> &
+            CredentialAction
     }>
     components: Readonly<{
         renewCredential: RenewCredentialComponentFactory
@@ -89,9 +90,7 @@ export type PasswordLoginFactory = Readonly<{
         passwordLogin: Readonly<{
             login: Login
         }>
-        field: LoginIDFieldAction & Readonly<{
-            password: PasswordField
-        }>
+        field: LoginIDFieldAction & PasswordFieldAction
     }>
     components: Readonly<{
         passwordLogin: PasswordLoginComponentFactory
@@ -174,9 +173,7 @@ export type PasswordResetFactory = Readonly<{
         passwordReset: Readonly<{
             reset: Reset
         }>
-        field: LoginIDFieldAction & Readonly<{
-            password: PasswordField
-        }>
+        field: LoginIDFieldAction & PasswordFieldAction
     }>
     components: Readonly<{
         passwordReset: PasswordResetComponentFactory
@@ -232,9 +229,7 @@ export function initLoginIDFieldComponent(factory: LoginIDFieldFactory): LoginID
 
 export type PasswordFieldFactory = Readonly<{
     actions: Readonly<{
-        field: Readonly<{
-            password: PasswordField
-        }>
+        field: PasswordFieldAction
     }>
     components: Readonly<{
         field: Readonly<{

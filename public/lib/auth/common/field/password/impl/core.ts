@@ -1,4 +1,4 @@
-import { PasswordField, PasswordFieldAction } from "../action"
+import { PasswordFieldPod, PasswordField } from "../action"
 
 import { markPassword } from "../../../password/data"
 import {
@@ -48,7 +48,7 @@ function checkCharacter(password: string): PasswordCharacter {
     return simplePassword
 }
 
-class Field implements PasswordFieldAction {
+class Field implements PasswordField {
     password: InputValue
     visible: boolean
 
@@ -90,7 +90,7 @@ class Field implements PasswordFieldAction {
     }
 }
 
-export const passwordField: PasswordField = () => new Field()
+export const passwordField: PasswordFieldPod = () => new Field()
 
 interface Post<T> {
     (event: T): void

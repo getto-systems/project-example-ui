@@ -1,10 +1,14 @@
 import { PasswordFieldEvent } from "./data"
 import { InputValue } from "../data"
 
-export interface PasswordField {
-    (): PasswordFieldAction
+export type PasswordFieldAction = Readonly<{
+    password: PasswordFieldPod
+}>
+
+export interface PasswordFieldPod {
+    (): PasswordField
 }
-export interface PasswordFieldAction {
+export interface PasswordField {
     set(input: InputValue, post: Post<PasswordFieldEvent>): void
     show(post: Post<PasswordFieldEvent>): void
     hide(post: Post<PasswordFieldEvent>): void
