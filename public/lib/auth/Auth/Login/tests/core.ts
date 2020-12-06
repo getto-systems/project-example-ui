@@ -5,7 +5,8 @@ import { currentPagePathname, detectResetToken, detectViewState } from "../impl/
 import { PasswordLoginCollector, PasswordResetCollector, RenewCredentialCollector } from "../impl/core"
 
 import { secureScriptPath } from "../../../common/application/impl/core"
-import { renew, setContinuousRenew, store } from "../../../login/renew/impl/core"
+import { store } from "../../../common/credential/impl/core"
+import { renew, setContinuousRenew } from "../../../login/renew/impl/core"
 import { login } from "../../../login/password_login/impl/core"
 import { startSession, checkStatus, reset } from "../../../profile/password_reset/impl/core"
 
@@ -26,22 +27,20 @@ import {
 } from "../../../profile/password_reset/impl/client/session/simulate"
 
 import { SecureScriptPath } from "../../../common/application/action"
-import { Renew, SetContinuousRenew, Store } from "../../../login/renew/action"
+import { Store } from "../../../common/credential/action"
+import { Renew, SetContinuousRenew } from "../../../login/renew/action"
 import { Login } from "../../../login/password_login/action"
 import { CheckStatus, Reset, StartSession } from "../../../profile/password_reset/action"
 
 import { SecureScriptPathHostConfig } from "../../../common/application/infra"
-import {
-    AuthCredentialRepository,
-    RenewTimeConfig,
-    SetContinuousRenewTimeConfig,
-} from "../../../login/renew/infra"
+import { RenewTimeConfig, SetContinuousRenewTimeConfig } from "../../../login/renew/infra"
 import { LoginTimeConfig } from "../../../login/password_login/infra"
 import {
     CheckStatusTimeConfig,
     ResetTimeConfig,
     StartSessionTimeConfig,
 } from "../../../profile/password_reset/infra"
+import { AuthCredentialRepository } from "../../../common/credential/infra"
 
 export function initApplicationAction(host: {
     secureScriptPath: SecureScriptPathHostConfig

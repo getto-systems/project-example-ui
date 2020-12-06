@@ -1,11 +1,11 @@
 import { LoginAction } from "../../login/password_login/action"
-import { StoreAction } from "../../login/renew/action"
+import { StoreAction } from "../../common/credential/action"
 import { SecureScriptPathAction } from "../../common/application/action"
 
 import { LoginError } from "../../login/password_login/data"
-import { StorageError } from "../../login/renew/data"
 import { ScriptPath, LoadError } from "../../common/application/data"
 import { LoginLink } from "../link"
+import { StorageError } from "../../common/credential/data"
 
 export interface PasswordLoginComponentFactory {
     (material: PasswordLoginMaterial): PasswordLoginComponent

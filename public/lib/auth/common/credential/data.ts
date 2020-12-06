@@ -28,3 +28,18 @@ type ApiCredential_data = Readonly<{
 export function markApiCredential(apiCredential: ApiCredential_data): ApiCredential {
     return apiCredential as ApiCredential
 }
+
+export type FindEvent =
+    | Readonly<{ type: "failed-to-find"; err: StorageError }>
+    | Readonly<{ type: "not-found" }>
+    | Readonly<{ type: "succeed-to-find"; lastLogin: LastLogin }>
+
+export type StoreEvent =
+    | Readonly<{ type: "failed-to-store"; err: StorageError }>
+    | Readonly<{ type: "succeed-to-store" }>
+
+export type RemoveEvent =
+    | Readonly<{ type: "failed-to-remove"; err: StorageError }>
+    | Readonly<{ type: "succeed-to-remove" }>
+
+export type StorageError = Readonly<{ type: "infra-error"; err: string }>

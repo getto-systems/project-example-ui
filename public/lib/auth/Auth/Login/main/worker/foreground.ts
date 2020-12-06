@@ -18,7 +18,8 @@ import { initLoginIDField } from "../../../field/login_id/impl"
 import { initPasswordField } from "../../../field/password/impl"
 
 import { secureScriptPath } from "../../../../common/application/impl/core"
-import { find, remove, renew, setContinuousRenew, store } from "../../../../login/renew/impl/core"
+import { find, remove, store } from "../../../../common/credential/impl/core"
+import { renew, setContinuousRenew} from "../../../../login/renew/impl/core"
 
 import { loginIDField } from "../../../../common/field/login_id/impl/core"
 import { passwordField } from "../../../../common/field/password/impl/core"
@@ -26,7 +27,7 @@ import { passwordField } from "../../../../common/field/password/impl/core"
 import { initFetchRenewClient } from "../../../../login/renew/impl/client/renew/fetch"
 import { initAuthExpires } from "../../../../login/renew/impl/expires"
 import { initRenewRunner } from "../../../../login/renew/impl/renew_runner"
-import { initStorageAuthCredentialRepository } from "../../../../login/renew/impl/repository/auth_credential/storage"
+import { initStorageAuthCredentialRepository } from "../../../../common/credential/impl/repository/auth_credential/storage"
 
 import { currentPagePathname, detectViewState, detectResetToken } from "../../impl/location"
 

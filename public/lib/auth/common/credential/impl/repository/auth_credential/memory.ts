@@ -1,6 +1,6 @@
 import { AuthCredentialRepository, FindResponse, StoreResponse } from "../../../infra"
 
-import { AuthCredential, TicketNonce, LoginAt } from "../../../../../common/credential/data"
+import { AuthCredential, TicketNonce, LoginAt } from "../../../data"
 
 export function initMemoryAuthCredentialRepository(
     storage: AuthCredentialStorage

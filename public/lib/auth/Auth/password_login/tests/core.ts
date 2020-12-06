@@ -23,11 +23,8 @@ import { PasswordLoginResource } from "../../Login/view"
 
 import { SecureScriptPathHostConfig } from "../../../common/application/infra"
 import { LoginTimeConfig } from "../../../login/password_login/infra"
-import {
-    AuthCredentialRepository,
-    RenewTimeConfig,
-    SetContinuousRenewTimeConfig,
-} from "../../../login/renew/infra"
+import { RenewTimeConfig, SetContinuousRenewTimeConfig } from "../../../login/renew/infra"
+import { AuthCredentialRepository } from "../../../common/credential/infra"
 
 type Config = {
     host: { secureScriptPath: SecureScriptPathHostConfig }
