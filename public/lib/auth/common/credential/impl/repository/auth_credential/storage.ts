@@ -15,7 +15,7 @@ import {
     AuthCredential,
     ApiCredential,
     markApiCredential,
-} from "../../../../../common/credential/data"
+} from "../../../data"
 
 export function initStorageAuthCredentialRepository(
     storage: Storage,

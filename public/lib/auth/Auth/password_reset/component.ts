@@ -1,12 +1,12 @@
 import { LoginLink } from "../link"
 
 import { ResetAction } from "../../profile/password_reset/action"
-import { StoreAction } from "../../login/renew/action"
+import { StoreAction } from "../../common/credential/action"
 import { SecureScriptPathAction } from "../../common/application/action"
 
 import { ResetError } from "../../profile/password_reset/data"
-import { StorageError } from "../../login/renew/data"
 import { ScriptPath, LoadError } from "../../common/application/data"
+import { StorageError } from "../../common/credential/data"
 
 export interface PasswordResetComponentFactory {
     (material: PasswordResetMaterial): PasswordResetComponent

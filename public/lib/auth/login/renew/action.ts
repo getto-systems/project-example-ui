@@ -1,5 +1,5 @@
-import { AuthCredential, LastLogin } from "../../common/credential/data"
-import { FindEvent, RemoveEvent, RenewEvent, SetContinuousRenewEvent, StoreEvent } from "./data"
+import { LastLogin } from "../../common/credential/data"
+import { RenewEvent, SetContinuousRenewEvent } from "./data"
 
 export interface Renew {
     (): RenewAction
@@ -13,27 +13,6 @@ export interface SetContinuousRenew {
 }
 export interface SetContinuousRenewAction {
     (lastLogin: LastLogin, post: Post<SetContinuousRenewEvent>): void
-}
-
-export interface Find {
-    (): FindAction
-}
-export interface FindAction {
-    (post: Post<FindEvent>): void
-}
-
-export interface Store {
-    (): StoreAction
-}
-export interface StoreAction {
-    (authCredential: AuthCredential, post: Post<StoreEvent>): void
-}
-
-export interface Remove {
-    (): RemoveAction
-}
-export interface RemoveAction {
-    (post: Post<RemoveEvent>): void
 }
 
 interface Post<T> {

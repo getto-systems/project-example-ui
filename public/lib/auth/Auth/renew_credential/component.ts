@@ -1,25 +1,21 @@
-import {
-    FindAction,
-    RemoveAction,
-    RenewAction,
-    SetContinuousRenewAction,
-    StoreAction,
-} from "../../login/renew/action"
+import { RenewAction, SetContinuousRenewAction } from "../../login/renew/action"
+import { FindAction, RemoveAction, StoreAction } from "../../common/credential/action"
 import { SecureScriptPathAction } from "../../common/application/action"
 
-import { StorageError, RenewError } from "../../login/renew/data"
+import { RenewError } from "../../login/renew/data"
 import { ScriptPath, LoadError } from "../../common/application/data"
+import { StorageError } from "../../common/credential/data"
 
 export interface RenewCredentialComponentFactory {
     (material: RenewCredentialMaterial): RenewCredentialComponent
 }
 
 export type RenewCredentialMaterial = Readonly<{
-    find: FindAction
-    store: StoreAction
-    remove: RemoveAction    
     renew: RenewAction
     setContinuousRenew: SetContinuousRenewAction
+    find: FindAction
+    store: StoreAction
+    remove: RemoveAction
     secureScriptPath: SecureScriptPathAction
 }>
 

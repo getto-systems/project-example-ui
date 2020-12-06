@@ -1,8 +1,7 @@
 import { RenewCredentialMaterial, RenewCredentialComponent, RenewCredentialState } from "./component"
 
-import { RemoveEvent } from "../../login/renew/data"
 import { LoadError } from "../../common/application/data"
-import { AuthCredential, LastLogin } from "../../common/credential/data"
+import { AuthCredential, LastLogin, RemoveEvent } from "../../common/credential/data"
 
 export function initRenewCredential(material: RenewCredentialMaterial): RenewCredentialComponent {
     return new Component(material)
