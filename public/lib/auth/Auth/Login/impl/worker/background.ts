@@ -141,8 +141,8 @@ class ResetHandler {
 
 export type Material = Readonly<{
     passwordLogin: PasswordLoginAction
-    //  TODO passwordResetSession にわける
-    passwordReset: PasswordResetSessionAction & PasswordResetAction
+    passwordResetSession: PasswordResetSessionAction
+    passwordReset: PasswordResetAction
 }>
 
 export function initLoginWorkerAsBackground(material: Material, worker: Worker): void {
@@ -178,12 +178,18 @@ function initHandler(material: Material, postBackgroundMessage: Post<BackgroundM
             }),
         },
         passwordReset: {
-            startSession: new StartSessionHandler(material.passwordReset.startSession, (response) => {
-                postBackgroundMessage({ type: "startSession", response })
-            }),
-            checkStatus: new CheckStatusHandler(material.passwordReset.checkStatus, (response) => {
-                postBackgroundMessage({ type: "checkStatus", response })
-            }),
+            startSession: new StartSessionHandler(
+                material.passwordResetSession.startSession,
+                (response) => {
+                    postBackgroundMessage({ type: "startSession", response })
+                }
+            ),
+            checkStatus: new CheckStatusHandler(
+                material.passwordResetSession.checkStatus,
+                (response) => {
+                    postBackgroundMessage({ type: "checkStatus", response })
+                }
+            ),
             reset: new ResetHandler(material.passwordReset.reset, (response) => {
                 postBackgroundMessage({ type: "reset", response })
             }),

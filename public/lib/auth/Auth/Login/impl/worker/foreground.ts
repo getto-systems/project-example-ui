@@ -183,9 +183,11 @@ type Proxy = Readonly<{
     passwordLogin: Readonly<{
         login: LoginProxyMap
     }>
-    passwordReset: Readonly<{
+    passwordResetSession: Readonly<{
         startSession: StartSessionProxyMap
         checkStatus: CheckStatusProxyMap
+    }>
+    passwordReset: Readonly<{
         reset: ResetProxyMap
     }>
 }>
@@ -196,13 +198,15 @@ function initProxy(post: Post<ForegroundMessage>): Proxy {
                 post({ type: "login", message })
             }),
         },
-        passwordReset: {
+        passwordResetSession: {
             startSession: new StartSessionProxyMap((message) => {
                 post({ type: "startSession", message })
             }),
             checkStatus: new CheckStatusProxyMap((message) => {
                 post({ type: "checkStatus", message })
             }),
+        },
+        passwordReset: {
             reset: new ResetProxyMap((message) => {
                 post({ type: "reset", message })
             }),
@@ -229,8 +233,8 @@ function initLoginComponentFactory(
 
     type ActionProxyFactory = Readonly<{
         passwordLogin: PasswordLoginAction
-        // TODO passwordResetSession にわける
-        passwordReset: PasswordResetSessionAction & PasswordResetAction
+        passwordResetSession: PasswordResetSessionAction
+        passwordReset: PasswordResetAction
     }>
 
     function initActionProxyFactory(): ActionProxyFactory {
@@ -238,9 +242,11 @@ function initLoginComponentFactory(
             passwordLogin: {
                 login: (collector) => proxy.passwordLogin.login.init(collector),
             },
+            passwordResetSession: {
+                startSession: (collector) => proxy.passwordResetSession.startSession.init(collector),
+                checkStatus: () => proxy.passwordResetSession.checkStatus.init(),
+            },
             passwordReset: {
-                startSession: (collector) => proxy.passwordReset.startSession.init(collector),
-                checkStatus: () => proxy.passwordReset.checkStatus.init(),
                 reset: (collector) => proxy.passwordReset.reset.init(collector),
             },
         }
@@ -258,11 +264,11 @@ function initBackgroundMessageHandler(
                     break
 
                 case "startSession":
-                    proxy.passwordReset.startSession.resolve(message.response)
+                    proxy.passwordResetSession.startSession.resolve(message.response)
                     break
 
                 case "checkStatus":
-                    proxy.passwordReset.checkStatus.resolve(message.response)
+                    proxy.passwordResetSession.checkStatus.resolve(message.response)
                     break
 
                 case "reset":

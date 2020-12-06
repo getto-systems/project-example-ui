@@ -125,8 +125,7 @@ export type PasswordResetSessionFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
         application: ApplicationAction
-        // TODO passwordResetSession にする
-        passwordReset: PasswordResetSessionAction
+        passwordResetSession: PasswordResetSessionAction
         field: LoginIDFieldAction
     }>
     components: Readonly<{
@@ -144,10 +143,10 @@ export function initPasswordResetSessionResource(
 
     const material: PasswordResetSessionMaterial = {
         link: factory.link(),
-        startSession: factory.actions.passwordReset.startSession({
+        startSession: factory.actions.passwordResetSession.startSession({
             getFields: () => collectStartSessionFields(fields),
         }),
-        checkStatus: factory.actions.passwordReset.checkStatus(),
+        checkStatus: factory.actions.passwordResetSession.checkStatus(),
     }
 
     return {
