@@ -5,7 +5,7 @@ import { env } from "../../../../../y_static/env"
 
 import { TimeConfig, newTimeConfig } from "../../impl/config"
 
-import { initLoginWorkerAsBackground } from "../../impl/worker/background"
+import { initLoginWorkerAsBackground, Material } from "../../impl/worker/background"
 
 import { login } from "../../../../login/password_login/impl/core"
 import { startSession, checkStatus, reset } from "../../../../profile/password_reset/impl/core"
@@ -14,6 +14,12 @@ import { initFetchPasswordLoginClient } from "../../../../login/password_login/i
 import { initSimulatePasswordResetClient } from "../../../../profile/password_reset/impl/client/reset/simulate"
 import { initSimulatePasswordResetSessionClient } from "../../../../profile/password_reset/impl/client/session/simulate"
 
+import { PasswordLoginAction } from "../../../../login/password_login/action"
+import {
+    PasswordResetAction,
+    PasswordResetSessionAction,
+} from "../../../../profile/password_reset/action"
+
 import { markTicketNonce, markLoginAt, markApiCredential } from "../../../../common/credential/data"
 import { markSessionID } from "../../../../profile/password_reset/data"
 
@@ -21,15 +27,16 @@ export function initLoginWorker(worker: Worker): void {
     const time = newTimeConfig()
     const authClient = initAuthClient(env.authServerURL)
 
-    const material = {
+    const material: Material = {
         passwordLogin: initPasswordLoginAction(time, authClient),
+        passwordResetSession: initPasswordResetSessionAction(time),
         passwordReset: initPasswordResetAction(time),
     }
 
     return initLoginWorkerAsBackground(material, worker)
 }
 
-function initPasswordLoginAction(time: TimeConfig, authClient: AuthClient) {
+export function initPasswordLoginAction(time: TimeConfig, authClient: AuthClient): PasswordLoginAction {
     return {
         login: login({
             client: initFetchPasswordLoginClient(authClient),
@@ -38,10 +45,9 @@ function initPasswordLoginAction(time: TimeConfig, authClient: AuthClient) {
         }),
     }
 }
-function initPasswordResetAction(time: TimeConfig) {
+export function initPasswordResetSessionAction(time: TimeConfig): PasswordResetSessionAction {
     const targetLoginID = "loginID"
     const targetSessionID = markSessionID("session-id")
-    const targetResetToken = "reset-token"
 
     const sessionClient = initSimulatePasswordResetSessionClient({
         // エラーにする場合は StartSessionError を throw (それ以外を throw するとこわれる)
@@ -66,6 +72,25 @@ function initPasswordResetAction(time: TimeConfig) {
             return { type: "log" }
         },
     })
+
+    return {
+        startSession: startSession({
+            client: sessionClient,
+            time: time.startSession,
+            delayed,
+        }),
+        checkStatus: checkStatus({
+            client: sessionClient,
+            time: time.checkStatus,
+            delayed,
+            wait,
+        }),
+    }
+}
+export function initPasswordResetAction(time: TimeConfig): PasswordResetAction {
+    const targetLoginID = "loginID"
+    const targetResetToken = "reset-token"
+
     const resetClient = initSimulatePasswordResetClient({
         // エラーにする場合は ResetError を throw (それ以外を throw するとこわれる)
         async reset(resetToken, { loginID }) {
@@ -86,17 +111,6 @@ function initPasswordResetAction(time: TimeConfig) {
     })
 
     return {
-        startSession: startSession({
-            client: sessionClient,
-            time: time.startSession,
-            delayed,
-        }),
-        checkStatus: checkStatus({
-            client: sessionClient,
-            time: time.checkStatus,
-            delayed,
-            wait,
-        }),
         reset: reset({
             client: resetClient,
             time: time.reset,

@@ -5,7 +5,7 @@ import { env } from "../../../../../y_static/env"
 
 import { TimeConfig, newTimeConfig, newHostConfig, HostConfig } from "../../impl/config"
 
-import { ForegroundFactory, initLoginAsForeground } from "../../impl/worker/foreground"
+import { Collector, ForegroundFactory, initLoginAsForeground } from "../../impl/worker/foreground"
 
 import { initLoginLink } from "../../impl/link"
 
@@ -76,7 +76,7 @@ export function newLoginAsWorkerForeground(): LoginFactory {
         },
     }
 
-    const collector = {
+    const collector: Collector = {
         login: {
             getLoginView: () => detectViewState(currentURL),
         },
@@ -91,12 +91,12 @@ export function newLoginAsWorkerForeground(): LoginFactory {
     return () => initLoginAsForeground(worker, factory, collector)
 }
 
-function initApplicationAction(host: HostConfig): ApplicationAction {
+export function initApplicationAction(host: HostConfig): ApplicationAction {
     return {
         secureScriptPath: secureScriptPath({ host: host.secureScriptPath }),
     }
 }
-function initCredentialAction(credentialStorage: Storage): CredentialAction {
+export function initCredentialAction(credentialStorage: Storage): CredentialAction {
     const authCredentials = initStorageAuthCredentialRepository(credentialStorage, env.storageKey)
 
     return {
@@ -105,7 +105,7 @@ function initCredentialAction(credentialStorage: Storage): CredentialAction {
         loadLastLogin: loadLastLogin({ authCredentials }),
     }
 }
-function initRenewAction(time: TimeConfig, authClient: AuthClient): RenewAction {
+export function initRenewAction(time: TimeConfig, authClient: AuthClient): RenewAction {
     const client = initFetchRenewClient(authClient)
 
     return {
