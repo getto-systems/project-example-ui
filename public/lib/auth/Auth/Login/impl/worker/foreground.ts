@@ -1,4 +1,4 @@
-import { View, LoginComponentFactory, LoginViewCollector } from "../view"
+import { View, LoginResourceFactory, LoginViewCollector } from "../view"
 import {
     initRenewCredentialResource,
     initPasswordLoginResource,
@@ -217,7 +217,7 @@ function initLoginComponentFactory(
     foregroundFactory: ForegroundFactory,
     collector: Collector,
     proxy: Proxy
-): LoginComponentFactory {
+): LoginResourceFactory {
     const factory = {
         ...foregroundFactory,
         actions: { ...foregroundFactory.actions, ...initActionProxyFactory() },
