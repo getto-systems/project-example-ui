@@ -1,9 +1,14 @@
 import { PagePathname, ScriptPath } from "./data"
 
-export interface SecureScriptPath {
-    (collector: SecureScriptPathCollector): SecureScriptPathAction
+export type ApplicationAction = Readonly<{
+    secureScriptPath: SecureScriptPathPod
+}>
+export type ApplicationCollector = SecureScriptPathCollector
+
+export interface SecureScriptPathPod {
+    (collector: SecureScriptPathCollector): SecureScriptPath
 }
-export interface SecureScriptPathAction {
+export interface SecureScriptPath {
     (): ScriptPath
 }
 export interface SecureScriptPathCollector {

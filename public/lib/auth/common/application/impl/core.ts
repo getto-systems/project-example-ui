@@ -1,10 +1,10 @@
 import { SecureScriptPathInfra } from "../infra"
 
-import { SecureScriptPath } from "../action"
+import { SecureScriptPathPod } from "../action"
 
 import { markScriptPath } from "../data"
 
-export const secureScriptPath = (infra: SecureScriptPathInfra): SecureScriptPath => (collector) => () => {
+export const secureScriptPath = (infra: SecureScriptPathInfra): SecureScriptPathPod => (collector) => () => {
     const {
         host: { secureServerHost },
     } = infra

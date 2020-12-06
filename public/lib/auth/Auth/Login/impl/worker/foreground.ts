@@ -32,7 +32,7 @@ import { PasswordResetComponentFactory } from "../../../password_reset/component
 import { LoginIDFieldComponentFactory } from "../../../field/login_id/component"
 import { PasswordFieldComponentFactory } from "../../../field/password/component"
 
-import { SecureScriptPath } from "../../../../common/application/action"
+import { ApplicationAction } from "../../../../common/application/action"
 import { LoadLastLogin, RemoveAuthCredential, StoreAuthCredential } from "../../../../common/credential/action"
 import { Renew, SetContinuousRenew } from "../../../../login/renew/action"
 
@@ -128,9 +128,7 @@ class ResetProxyMap extends ProxyMap<ResetProxyMessage, ResetEvent> {
 export type ForegroundFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
-        application: Readonly<{
-            secureScriptPath: SecureScriptPath
-        }>
+        application: ApplicationAction
         credential: Readonly<{
             renew: Renew
             setContinuousRenew: SetContinuousRenew
