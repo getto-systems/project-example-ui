@@ -29,7 +29,7 @@ import {
 import { ApplicationAction } from "../../../common/application/action"
 import { CredentialAction } from "../../../common/credential/action"
 import { Renew, SetContinuousRenew } from "../../../login/renew/action"
-import { Login } from "../../../login/password_login/action"
+import { PasswordLoginAction } from "../../../login/password_login/action"
 import { CheckStatus, Reset, StartSession } from "../../../profile/password_reset/action"
 
 import { SecureScriptPathHostConfig } from "../../../common/application/infra"
@@ -77,7 +77,7 @@ export function initCredentialAction(
 export function initPasswordLoginAction(
     time: { login: LoginTimeConfig },
     simulator: LoginSimulator
-): { login: Login } {
+): PasswordLoginAction {
     return {
         login: login({
             client: initSimulatePasswordLoginClient(simulator),

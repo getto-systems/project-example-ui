@@ -1,8 +1,8 @@
 import { LoginInfra } from "../infra"
 
-import { Login } from "../action"
+import { LoginPod } from "../action"
 
-export const login = (infra: LoginInfra): Login => (collector) => async (post) => {
+export const login = (infra: LoginInfra): LoginPod => (collector) => async (post) => {
     const content = await collector.getFields()
     if (!content.valid) {
         post({ type: "failed-to-login", err: { type: "validation-error" } })

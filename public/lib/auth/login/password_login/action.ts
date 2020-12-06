@@ -1,10 +1,14 @@
 import { LoginEvent, LoginFields } from "./data"
 import { Content } from "../../common/field/data"
 
-export interface Login {
-    (collector: LoginCollector): LoginAction
+export type PasswordLoginAction = Readonly<{
+    login: LoginPod
+}>
+
+export interface LoginPod {
+    (collector: LoginCollector): Login
 }
-export interface LoginAction {
+export interface Login {
     (post: Post<LoginEvent>): void
 }
 export interface LoginCollector {

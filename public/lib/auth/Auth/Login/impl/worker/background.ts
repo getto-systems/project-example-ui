@@ -9,17 +9,17 @@ import {
     ResetProxyMessage,
 } from "./data"
 
-import { Login } from "../../../../login/password_login/action"
+import { LoginPod, PasswordLoginAction } from "../../../../login/password_login/action"
 import { StartSession, CheckStatusAction, Reset } from "../../../../profile/password_reset/action"
 
 import { LoginEvent } from "../../../../login/password_login/data"
 import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../../profile/password_reset/data"
 
 class LoginHandler {
-    login: Login
+    login: LoginPod
     post: Post<ProxyResponse<LoginEvent>>
 
-    constructor(login: Login, post: Post<ProxyResponse<LoginEvent>>) {
+    constructor(login: LoginPod, post: Post<ProxyResponse<LoginEvent>>) {
         this.login = login
         this.post = post
     }
@@ -134,9 +134,7 @@ class ResetHandler {
 }
 
 export type Material = Readonly<{
-    passwordLogin: Readonly<{
-        login: Login
-    }>
+    passwordLogin: PasswordLoginAction
     passwordReset: Readonly<{
         startSession: StartSession
         checkStatus: CheckStatusAction
