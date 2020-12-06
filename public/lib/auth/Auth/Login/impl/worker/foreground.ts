@@ -38,13 +38,12 @@ import { RenewAction } from "../../../../login/renew/action"
 
 import { Login, LoginCollector, PasswordLoginAction } from "../../../../login/password_login/action"
 import {
+    PasswordResetAction,
+    PasswordResetSessionAction,
     StartSession,
-    StartSessionAction,
     StartSessionCollector,
     CheckStatus,
-    CheckStatusAction,
     Reset,
-    ResetAction,
     ResetCollector,
 } from "../../../../profile/password_reset/action"
 
@@ -92,7 +91,7 @@ class LoginProxyMap extends ProxyMap<LoginProxyMessage, LoginEvent> {
     }
 }
 class StartSessionProxyMap extends ProxyMap<StartSessionProxyMessage, StartSessionEvent> {
-    init(collector: StartSessionCollector): StartSessionAction {
+    init(collector: StartSessionCollector): StartSession {
         return async (post) => {
             this.post({
                 handlerID: this.register(post),
@@ -102,7 +101,7 @@ class StartSessionProxyMap extends ProxyMap<StartSessionProxyMessage, StartSessi
     }
 }
 class CheckStatusProxyMap extends ProxyMap<CheckStatusProxyMessage, CheckStatusEvent> {
-    init(): CheckStatusAction {
+    init(): CheckStatus {
         return async (sessionID, post) => {
             this.post({
                 handlerID: this.register(post),
@@ -112,7 +111,7 @@ class CheckStatusProxyMap extends ProxyMap<CheckStatusProxyMessage, CheckStatusE
     }
 }
 class ResetProxyMap extends ProxyMap<ResetProxyMessage, ResetEvent> {
-    init(collector: ResetCollector): ResetAction {
+    init(collector: ResetCollector): Reset {
         return async (post) => {
             this.post({
                 handlerID: this.register(post),
@@ -230,11 +229,8 @@ function initLoginComponentFactory(
 
     type ActionProxyFactory = Readonly<{
         passwordLogin: PasswordLoginAction
-        passwordReset: Readonly<{
-            startSession: StartSession
-            checkStatus: CheckStatus
-            reset: Reset
-        }>
+        // TODO passwordResetSession にわける
+        passwordReset: PasswordResetSessionAction & PasswordResetAction
     }>
 
     function initActionProxyFactory(): ActionProxyFactory {

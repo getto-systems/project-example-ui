@@ -1,10 +1,10 @@
 import { StartSessionInfra, CheckStatusInfra, ResetInfra } from "../infra"
 
-import { StartSession, CheckStatus, Reset } from "../action"
+import { StartSessionPod, CheckStatusPod, ResetPod } from "../action"
 
 import { SessionID, CheckStatusEvent, CheckStatusError } from "../data"
 
-export const startSession = (infra: StartSessionInfra): StartSession => (collector) => async (post) => {
+export const startSession = (infra: StartSessionInfra): StartSessionPod => (collector) => async (post) => {
     const content = await collector.getFields()
     if (!content.valid) {
         post({ type: "failed-to-start-session", err: { type: "validation-error" } })
@@ -29,7 +29,7 @@ export const startSession = (infra: StartSessionInfra): StartSession => (collect
     post({ type: "succeed-to-start-session", sessionID: response.sessionID })
 }
 
-export const checkStatus = (infra: CheckStatusInfra): CheckStatus => () => (
+export const checkStatus = (infra: CheckStatusInfra): CheckStatusPod => () => (
     sessionID,
     post
 ) => {
@@ -107,7 +107,7 @@ class StatusChecker {
     }
 }
 
-export const reset = (infra: ResetInfra): Reset => (collector) => async (post) => {
+export const reset = (infra: ResetInfra): ResetPod => (collector) => async (post) => {
     const content = await collector.getFields()
     if (!content.valid) {
         post({ type: "failed-to-reset", err: { type: "validation-error" } })

@@ -28,9 +28,8 @@ import { RenewAction } from "../../../login/renew/action"
 
 import { PasswordLoginAction } from "../../../login/password_login/action"
 import {
-    StartSession,
-    CheckStatus,
-    Reset,
+    PasswordResetSessionAction,
+    PasswordResetAction,
     ResetTokenCollector,
 } from "../../../profile/password_reset/action"
 
@@ -126,10 +125,8 @@ export type PasswordResetSessionFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
         application: ApplicationAction
-        passwordReset: Readonly<{
-            startSession: StartSession
-            checkStatus: CheckStatus
-        }>
+        // TODO passwordResetSession にする
+        passwordReset: PasswordResetSessionAction
         field: LoginIDFieldAction
     }>
     components: Readonly<{
@@ -164,9 +161,7 @@ export type PasswordResetFactory = Readonly<{
     actions: Readonly<{
         application: ApplicationAction
         credential: StoreCredentialAction
-        passwordReset: Readonly<{
-            reset: Reset
-        }>
+        passwordReset: PasswordResetAction
         field: LoginIDFieldAction & PasswordFieldAction
     }>
     components: Readonly<{

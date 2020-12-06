@@ -1,6 +1,6 @@
 import { LoginLink } from "../link"
 
-import { ResetAction } from "../../profile/password_reset/action"
+import { Reset } from "../../profile/password_reset/action"
 import { StoreAuthCredential } from "../../common/credential/action"
 import { SecureScriptPath } from "../../common/application/action"
 
@@ -14,7 +14,7 @@ export interface PasswordResetComponentFactory {
 
 export type PasswordResetMaterial = Readonly<{
     link: LoginLink
-    reset: ResetAction
+    reset: Reset
     storeAuthCredential: StoreAuthCredential
     secureScriptPath: SecureScriptPath
 }>

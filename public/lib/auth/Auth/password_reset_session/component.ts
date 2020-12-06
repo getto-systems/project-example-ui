@@ -1,6 +1,6 @@
 import { LoginLink } from "../link"
 
-import { StartSessionAction, CheckStatusAction } from "../../profile/password_reset/action"
+import { StartSession, CheckStatus } from "../../profile/password_reset/action"
 
 import {
     Destination,
@@ -15,8 +15,8 @@ export interface PasswordResetSessionComponentFactory {
 }
 export type PasswordResetSessionMaterial = Readonly<{
     link: LoginLink
-    startSession: StartSessionAction
-    checkStatus: CheckStatusAction
+    startSession: StartSession
+    checkStatus: CheckStatus
 }>
 
 export interface PasswordResetSessionComponent {
