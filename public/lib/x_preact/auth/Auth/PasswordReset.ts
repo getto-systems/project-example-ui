@@ -112,7 +112,7 @@ export function PasswordReset({
             // スクリプトのロードは appendChild する必要があるため useEffect で行う
             return EMPTY_CONTENT
 
-        case "failed-to-store":
+        case "storage-error":
         case "load-error":
             return h(ApplicationError, { err: state.err.err })
 

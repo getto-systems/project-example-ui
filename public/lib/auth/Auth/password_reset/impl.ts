@@ -54,17 +54,12 @@ class Component implements PasswordResetComponent {
     }
 
     storeAuthCredential(authCredential: AuthCredential, hook: { (): void }): void {
-        this.material.store(authCredential, (event) => {
-            switch (event.type) {
-                case "succeed-to-store":
-                    hook()
-                    return
-
-                default:
-                    this.post(event)
-                    return
-            }
-        })
+        const result = this.material.storeAuthCredential(authCredential)
+        if (!result.success) {
+            this.post({ type: "storage-error", err: result.err})
+            return
+        }
+        hook()
     }
 }
 

@@ -5,7 +5,7 @@ import { currentPagePathname, detectResetToken, detectViewState } from "../impl/
 import { PasswordLoginCollector, PasswordResetCollector, RenewCredentialCollector } from "../impl/core"
 
 import { secureScriptPath } from "../../../common/application/impl/core"
-import { store } from "../../../common/credential/impl/core"
+import { storeAuthCredential } from "../../../common/credential/impl/core"
 import { renew, setContinuousRenew } from "../../../login/renew/impl/core"
 import { login } from "../../../login/password_login/impl/core"
 import { startSession, checkStatus, reset } from "../../../profile/password_reset/impl/core"
@@ -27,7 +27,7 @@ import {
 } from "../../../profile/password_reset/impl/client/session/simulate"
 
 import { SecureScriptPath } from "../../../common/application/action"
-import { Store } from "../../../common/credential/action"
+import { StoreAuthCredential } from "../../../common/credential/action"
 import { Renew, SetContinuousRenew } from "../../../login/renew/action"
 import { Login } from "../../../login/password_login/action"
 import { CheckStatus, Reset, StartSession } from "../../../profile/password_reset/action"
@@ -53,7 +53,7 @@ export function initCredentialAction(
     time: { renew: RenewTimeConfig; setContinuousRenew: SetContinuousRenewTimeConfig },
     repository: { authCredentials: AuthCredentialRepository },
     simulator: RenewSimulator
-): { renew: Renew; setContinuousRenew: SetContinuousRenew; store: Store } {
+): { renew: Renew; setContinuousRenew: SetContinuousRenew; storeAuthCredential: StoreAuthCredential } {
     const client = initSimulateRenewClient(simulator)
     const { authCredentials } = repository
 
@@ -69,7 +69,7 @@ export function initCredentialAction(
             time: time.setContinuousRenew,
             runner: initRenewRunner(),
         }),
-        store: store({ authCredentials }),
+        storeAuthCredential: storeAuthCredential({ authCredentials }),
     }
 }
 export function initPasswordLoginAction(

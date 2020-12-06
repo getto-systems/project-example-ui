@@ -1,7 +1,7 @@
 import { LoginLink } from "../link"
 
 import { ResetAction } from "../../profile/password_reset/action"
-import { StoreAction } from "../../common/credential/action"
+import { StoreAuthCredentialAction } from "../../common/credential/action"
 import { SecureScriptPathAction } from "../../common/application/action"
 
 import { ResetError } from "../../profile/password_reset/data"
@@ -15,7 +15,7 @@ export interface PasswordResetComponentFactory {
 export type PasswordResetMaterial = Readonly<{
     link: LoginLink
     reset: ResetAction
-    store: StoreAction
+    storeAuthCredential: StoreAuthCredentialAction
     secureScriptPath: SecureScriptPathAction
 }>
 
@@ -32,7 +32,7 @@ export type PasswordResetState =
     | Readonly<{ type: "delayed-to-reset" }>
     | Readonly<{ type: "failed-to-reset"; err: ResetError }>
     | Readonly<{ type: "succeed-to-reset"; scriptPath: ScriptPath }>
-    | Readonly<{ type: "failed-to-store"; err: StorageError }>
+    | Readonly<{ type: "storage-error"; err: StorageError }>
     | Readonly<{ type: "load-error"; err: LoadError }>
     | Readonly<{ type: "error"; err: string }>
 

@@ -10,16 +10,17 @@ import {
 import {
     RenewCredentialComponentFactory,
     RenewCredentialComponent,
+    RenewCredentialMaterial,
 } from "../../renew_credential/component"
-import { PasswordLoginComponentFactory } from "../../password_login/component"
-import { PasswordResetSessionComponentFactory } from "../../password_reset_session/component"
-import { PasswordResetComponentFactory } from "../../password_reset/component"
+import { PasswordLoginComponentFactory, PasswordLoginMaterial } from "../../password_login/component"
+import { PasswordResetSessionComponentFactory, PasswordResetSessionMaterial } from "../../password_reset_session/component"
+import { PasswordResetComponentFactory, PasswordResetMaterial } from "../../password_reset/component"
 
 import { LoginIDFieldComponent, LoginIDFieldComponentFactory } from "../../field/login_id/component"
 import { PasswordFieldComponent, PasswordFieldComponentFactory } from "../../field/password/component"
 
 import { SecureScriptPath, SecureScriptPathCollector } from "../../../common/application/action"
-import { Find, Remove, Store } from "../../../common/credential/action"
+import { LoadLastLogin, RemoveAuthCredential, StoreAuthCredential } from "../../../common/credential/action"
 import { Renew, SetContinuousRenew } from "../../../login/renew/action"
 
 import { Login } from "../../../login/password_login/action"
@@ -47,9 +48,9 @@ export type RenewCredentialFactory = Readonly<{
         credential: Readonly<{
             renew: Renew
             setContinuousRenew: SetContinuousRenew
-            find: Find
-            store: Store
-            remove: Remove
+            loadLastLogin: LoadLastLogin
+            storeAuthCredential: StoreAuthCredential
+            removeAuthCredential: RemoveAuthCredential
         }>
     }>
     components: Readonly<{
@@ -64,12 +65,12 @@ export function initRenewCredentialResource(
     collector: RenewCredentialCollector,
     setup: Setup<RenewCredentialComponent>
 ): RenewCredentialResource {
-    const material = {
+    const material: RenewCredentialMaterial = {
         renew: factory.actions.credential.renew(),
         setContinuousRenew: factory.actions.credential.setContinuousRenew(),
-        find: factory.actions.credential.find(),
-        store: factory.actions.credential.store(),
-        remove: factory.actions.credential.remove(),
+        loadLastLogin: factory.actions.credential.loadLastLogin(),
+        storeAuthCredential: factory.actions.credential.storeAuthCredential(),
+        removeAuthCredential: factory.actions.credential.removeAuthCredential(),
         secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
     }
 
@@ -88,7 +89,7 @@ export type PasswordLoginFactory = Readonly<{
             secureScriptPath: SecureScriptPath
         }>
         credential: Readonly<{
-            store: Store
+            storeAuthCredential: StoreAuthCredential
         }>
         passwordLogin: Readonly<{
             login: Login
@@ -119,12 +120,12 @@ export function initPasswordLoginResource(
         passwordField: initPasswordFieldComponent(factory),
     }
 
-    const material = {
+    const material: PasswordLoginMaterial = {
         link: factory.link(),
         login: factory.actions.passwordLogin.login({
             getFields: () => collectLoginFields(fields),
         }),
-        store: factory.actions.credential.store(),
+        storeAuthCredential: factory.actions.credential.storeAuthCredential(),
         secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
     }
 
@@ -139,9 +140,6 @@ export type PasswordResetSessionFactory = Readonly<{
     actions: Readonly<{
         application: Readonly<{
             secureScriptPath: SecureScriptPath
-        }>
-        credential: Readonly<{
-            store: Store
         }>
         passwordReset: Readonly<{
             startSession: StartSession
@@ -164,7 +162,7 @@ export function initPasswordResetSessionResource(
 ): PasswordResetSessionResource {
     const fields = { loginIDField: initLoginIDFieldComponent(factory) }
 
-    const material = {
+    const material: PasswordResetSessionMaterial = {
         link: factory.link(),
         startSession: factory.actions.passwordReset.startSession({
             getFields: () => collectStartSessionFields(fields),
@@ -185,7 +183,7 @@ export type PasswordResetFactory = Readonly<{
             secureScriptPath: SecureScriptPath
         }>
         credential: Readonly<{
-            store: Store
+            storeAuthCredential: StoreAuthCredential
         }>
         passwordReset: Readonly<{
             reset: Reset
@@ -217,13 +215,13 @@ export function initPasswordResetResource(
         passwordField: initPasswordFieldComponent(factory),
     }
 
-    const material = {
+    const material: PasswordResetMaterial = {
         link: factory.link(),
         reset: factory.actions.passwordReset.reset({
             getFields: () => collectResetFields(fields),
             ...collector.passwordReset,
         }),
-        store: factory.actions.credential.store(),
+        storeAuthCredential: factory.actions.credential.storeAuthCredential(),
         secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
     }
 
