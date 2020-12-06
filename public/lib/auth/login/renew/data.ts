@@ -1,24 +1,30 @@
-import { LastLogin } from "../../common/credential/data"
+import { AuthCredential, LastLogin } from "../../common/credential/data"
 
 export type RenewEvent =
     | Readonly<{ type: "try-to-instant-load" }>
-    | Readonly<{ type: "required-to-login" }>
+    | Readonly<{ type: "unauthorized" }>
     | Readonly<{ type: "try-to-renew" }>
     | Readonly<{ type: "delayed-to-renew" }>
     | Readonly<{ type: "failed-to-renew"; err: RenewError }>
-    | Readonly<{ type: "storage-error"; err: StorageError }>
-    | Readonly<{ type: "succeed-to-renew" }>
+    | Readonly<{ type: "succeed-to-renew"; authCredential: AuthCredential }>
 
 export type SetContinuousRenewEvent =
-    | Readonly<{ type: "required-to-login" }>
-    | Readonly<{ type: "storage-error"; err: StorageError }>
+    | Readonly<{ type: "unauthorized" }>
+    | Readonly<{ type: "failed-to-renew"; err: RenewError }>
+    | Readonly<{ type: "succeed-to-renew"; authCredential: AuthCredential }>
 
-export type StoreEvent = Readonly<{ type: "storage-error"; err: StorageError }>
+export type FindEvent =
+    | Readonly<{ type: "failed-to-find"; err: StorageError }>
+    | Readonly<{ type: "not-found" }>
+    | Readonly<{ type: "succeed-to-find"; lastLogin: LastLogin }>
 
-export type LastLoginResponse =
-    | Readonly<{ success: false; err: StorageError }>
-    | Readonly<{ success: true; found: false }>
-    | Readonly<{ success: true; found: true; content: LastLogin }>
+export type StoreEvent =
+    | Readonly<{ type: "failed-to-store"; err: StorageError }>
+    | Readonly<{ type: "succeed-to-store" }>
+
+export type RemoveEvent =
+    | Readonly<{ type: "failed-to-remove"; err: StorageError }>
+    | Readonly<{ type: "succeed-to-remove" }>
 
 export type StorageError = Readonly<{ type: "infra-error"; err: string }>
 

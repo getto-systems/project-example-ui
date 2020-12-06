@@ -117,7 +117,7 @@ export function PasswordLogin({
             // スクリプトのロードは appendChild する必要があるため useEffect で行う
             return EMPTY_CONTENT
 
-        case "storage-error":
+        case "failed-to-store":
         case "load-error":
             return h(ApplicationError, { err: state.err.err })
 

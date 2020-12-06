@@ -60,14 +60,12 @@ export function initCredentialAction(
 
     return {
         renew: renew({
-            authCredentials,
             client,
             time: time.renew,
             delayed,
             expires: initAuthExpires(),
         }),
         setContinuousRenew: setContinuousRenew({
-            authCredentials,
             client,
             time: time.setContinuousRenew,
             runner: initRenewRunner(),

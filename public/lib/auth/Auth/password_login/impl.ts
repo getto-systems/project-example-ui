@@ -2,9 +2,8 @@ import { LoginLink } from "../link"
 
 import { PasswordLoginMaterial, PasswordLoginComponent, PasswordLoginState } from "./component"
 
-import { LoginEvent } from "../../login/password_login/data"
-import { StoreEvent } from "../../login/renew/data"
 import { LoadError } from "../../common/application/data"
+import { AuthCredential } from "../../common/credential/data"
 
 export function initPasswordLogin(material: PasswordLoginMaterial): PasswordLoginComponent {
     return new Component(material)
@@ -31,30 +30,42 @@ class Component implements PasswordLoginComponent {
 
     login(): void {
         this.material.login((event) => {
-            this.post(this.mapLoginEvent(event))
+            switch (event.type) {
+                case "succeed-to-login":
+                    this.storeAuthCredential(event.authCredential, () => {
+                        this.tryToLoad(event)
+                    })
+                    return
+
+                default:
+                    this.post(event)
+                    return
+            }
         })
     }
     loadError(err: LoadError): void {
         this.post({ type: "load-error", err })
     }
 
-    mapLoginEvent(event: LoginEvent): PasswordLoginState {
-        switch (event.type) {
-            case "succeed-to-login":
-                this.material.store(event.authCredential, (event) => {
-                    this.post(this.mapStoreEvent(event))
-                })
-                return {
-                    type: event.type,
-                    scriptPath: this.material.secureScriptPath(),
-                }
-
-            default:
-                return event
-        }
+    tryToLoad(event: { type: "succeed-to-login" }): void {
+        this.post({
+            type: event.type,
+            scriptPath: this.material.secureScriptPath(),
+        })
     }
-    mapStoreEvent(event: StoreEvent): PasswordLoginState {
-        return event
+
+    storeAuthCredential(authCredential: AuthCredential, hook: { (): void }): void {
+        this.material.store(authCredential, (event) => {
+            switch (event.type) {
+                case "succeed-to-store":
+                    hook()
+                    return
+
+                default:
+                    this.post(event)
+                    return
+            }
+        })
     }
 }
 

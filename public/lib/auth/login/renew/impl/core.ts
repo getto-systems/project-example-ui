@@ -1,24 +1,11 @@
-import { RenewInfra, SetContinuousRenewInfra, StoreInfra, AuthCredentialRepository } from "../infra"
+import { RenewInfra, SetContinuousRenewInfra, StoreInfra } from "../infra"
 
-import { Renew, SetContinuousRenew, Store } from "../action"
+import { Find, Remove, Renew, SetContinuousRenew, Store } from "../action"
 
-import { TicketNonce } from "../../../common/credential/data"
-import { LastLoginResponse } from "../data"
+export const renew = (infra: RenewInfra): Renew => () => async (lastLogin, post) => {
+    const { client, expires, time, delayed } = infra
 
-export const renew = (infra: RenewInfra): Renew => () => async (post) => {
-    const { authCredentials, client, expires, time, delayed } = infra
-
-    const lastLogin = findLastLogin(authCredentials)
-    if (!lastLogin.success) {
-        post({ type: "storage-error", err: lastLogin.err })
-        return
-    }
-    if (!lastLogin.found) {
-        post({ type: "required-to-login" })
-        return
-    }
-
-    if (!expires.hasExceeded(lastLogin.content.lastLoginAt, time.instantLoadExpire)) {
+    if (!expires.hasExceeded(lastLogin.lastLoginAt, time.instantLoadExpire)) {
         post({ type: "try-to-instant-load" })
         return
     }
@@ -26,114 +13,99 @@ export const renew = (infra: RenewInfra): Renew => () => async (post) => {
     post({ type: "try-to-renew" })
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const renewResponse = await delayed(
-        client.renew(lastLogin.content.ticketNonce),
-        time.delay,
-        () => post({ type: "delayed-to-renew" })
+    const response = await delayed(client.renew(lastLogin.ticketNonce), time.delay, () =>
+        post({ type: "delayed-to-renew" })
     )
-    if (!renewResponse.success) {
-        post({ type: "failed-to-renew", err: renewResponse.err })
+    if (!response.success) {
+        post({ type: "failed-to-renew", err: response.err })
         return
     }
-    if (!renewResponse.hasCredential) {
-        const storeResponse = authCredentials.removeAuthCredential()
-        if (!storeResponse.success) {
-            post({ type: "storage-error", err: storeResponse.err })
-            return
-        }
-
-        post({ type: "required-to-login" })
+    if (!response.hasCredential) {
+        post({ type: "unauthorized" })
         return
     }
 
-    const storeResponse = authCredentials.storeAuthCredential(renewResponse.authCredential)
-    if (!storeResponse.success) {
-        post({ type: "storage-error", err: storeResponse.err })
-        return
-    }
-
-    post({ type: "succeed-to-renew" })
+    post({ type: "succeed-to-renew", authCredential: response.authCredential })
 }
 export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuousRenew => () => (
+    lastLogin,
     post
 ) => {
-    const { authCredentials, client, time, runner } = infra
-
-    const lastLogin = findLastLogin(authCredentials)
-    if (!lastLogin.success) {
-        post({ type: "storage-error", err: lastLogin.err })
-        return
-    }
-    if (!lastLogin.found) {
-        post({ type: "required-to-login" })
-        return
-    }
-
-    const { ticketNonce, lastLoginAt: lastAuthAt } = lastLogin.content
+    const { client, time, runner } = infra
 
     setTimeout(async () => {
-        if (await continuousRenew(ticketNonce)) {
-            let lastState = true
-            setInterval(async () => {
-                // 失敗しないはずなので clearInterval しない
-                if (lastState) {
-                    lastState = await continuousRenew(ticketNonce)
+        if (await continuousRenew()) {
+            const timer = setInterval(async () => {
+                if (!(await continuousRenew())) {
+                    clearInterval(timer)
                 }
             }, time.interval.interval_millisecond)
         }
-    }, runner.nextRun(lastAuthAt, time.delay).delay_millisecond)
+    }, runner.nextRun(lastLogin.lastLoginAt, time.delay).delay_millisecond)
 
-    async function continuousRenew(ticketNonce: TicketNonce): Promise<boolean> {
-        // 画面へのフィードバックはしないので、イベントは発行しない
-        const renewResponse = await client.renew(ticketNonce)
-        if (!renewResponse.success) {
+    async function continuousRenew(): Promise<boolean> {
+        const response = await client.renew(lastLogin.ticketNonce)
+        if (!response.success) {
+            post({ type: "failed-to-renew", err: response.err })
             return false
         }
-        if (!renewResponse.hasCredential) {
-            authCredentials.removeAuthCredential()
-            return false
-        }
-
-        const storeResponse = authCredentials.storeAuthCredential(renewResponse.authCredential)
-        if (!storeResponse.success) {
+        if (!response.hasCredential) {
+            post({ type: "unauthorized" })
             return false
         }
 
+        post({ type: "succeed-to-renew", authCredential: response.authCredential })
         return true
     }
 }
-function findLastLogin(authCredentials: AuthCredentialRepository): LastLoginResponse {
+
+export const find = (infra: StoreInfra): Find => () => (post) => {
+    const { authCredentials } = infra
     const ticketNonce = authCredentials.findTicketNonce()
     if (!ticketNonce.success) {
-        return { success: false, err: ticketNonce.err }
+        post({ type: "failed-to-find", err: ticketNonce.err })
+        return
     }
     if (!ticketNonce.found) {
-        return { success: true, found: false }
+        post({ type: "not-found" })
+        return
     }
 
     const lastLoginAt = authCredentials.findLastLoginAt()
     if (!lastLoginAt.success) {
-        return { success: false, err: lastLoginAt.err }
+        post({ type: "failed-to-find", err: lastLoginAt.err })
+        return
     }
     if (!lastLoginAt.found) {
-        return { success: true, found: false }
+        post({ type: "not-found" })
+        return
     }
 
-    return {
-        success: true,
-        found: true,
-        content: {
+    post({
+        type: "succeed-to-find",
+        lastLogin: {
             ticketNonce: ticketNonce.content,
             lastLoginAt: lastLoginAt.content,
         },
-    }
+    })
 }
 
 export const store = (infra: StoreInfra): Store => () => async (authCredential, post) => {
     const { authCredentials } = infra
     const storeResponse = authCredentials.storeAuthCredential(authCredential)
     if (!storeResponse.success) {
-        post({ type: "storage-error", err: storeResponse.err })
+        post({ type: "failed-to-store", err: storeResponse.err })
         return
     }
+    post({ type: "succeed-to-store" })
+}
+
+export const remove = (infra: StoreInfra): Remove => () => async (post) => {
+    const { authCredentials } = infra
+    const storeResponse = authCredentials.removeAuthCredential()
+    if (!storeResponse.success) {
+        post({ type: "failed-to-remove", err: storeResponse.err })
+        return
+    }
+    post({ type: "succeed-to-remove" })
 }

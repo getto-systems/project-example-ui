@@ -30,7 +30,7 @@ export type PasswordLoginState =
     | Readonly<{ type: "delayed-to-login" }>
     | Readonly<{ type: "failed-to-login"; err: LoginError }>
     | Readonly<{ type: "succeed-to-login"; scriptPath: ScriptPath }>
-    | Readonly<{ type: "storage-error"; err: StorageError }>
+    | Readonly<{ type: "failed-to-store"; err: StorageError }>
     | Readonly<{ type: "load-error"; err: LoadError }>
     | Readonly<{ type: "error"; err: string }>
 

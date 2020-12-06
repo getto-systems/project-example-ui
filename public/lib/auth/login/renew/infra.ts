@@ -2,14 +2,12 @@ import { AuthCredential, LoginAt, TicketNonce } from "../../common/credential/da
 import { StorageError, RenewError } from "./data"
 
 export type RenewInfra = Readonly<{
-    authCredentials: AuthCredentialRepository
     client: RenewClient
     time: RenewTimeConfig
     delayed: Delayed
     expires: AuthExpires
 }>
 export type SetContinuousRenewInfra = Readonly<{
-    authCredentials: AuthCredentialRepository
     client: RenewClient
     time: SetContinuousRenewTimeConfig
     runner: RenewRunner

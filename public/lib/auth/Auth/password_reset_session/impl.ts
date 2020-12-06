@@ -4,7 +4,7 @@ import {
     PasswordResetSessionState,
 } from "./component"
 
-import { StartSessionEvent, CheckStatusEvent } from "../../profile/password_reset/data"
+import { SessionID } from "../../profile/password_reset/data"
 import { LoginLink } from "../link"
 
 export function initPasswordResetSession(
@@ -34,24 +34,22 @@ class Component implements PasswordResetSessionComponent {
 
     startSession(): void {
         this.material.startSession((event) => {
-            this.post(this.mapStartSessionEvent(event))
+            switch (event.type) {
+                case "succeed-to-start-session":
+                    this.checkStatus(event.sessionID)
+                    return
+
+                default:
+                    this.post(event)
+                    return
+            }
         })
     }
 
-    mapStartSessionEvent(event: StartSessionEvent): PasswordResetSessionState {
-        switch (event.type) {
-            case "succeed-to-start-session":
-                this.material.checkStatus(event.sessionID, (event) => {
-                    this.post(this.mapCheckStatusEvent(event))
-                })
-                return { type: "try-to-check-status" }
-
-            default:
-                return event
-        }
-    }
-    mapCheckStatusEvent(event: CheckStatusEvent): PasswordResetSessionState {
-        return event
+    checkStatus(sessionID: SessionID): void {
+        this.material.checkStatus(sessionID, (event) => {
+            this.post(event)
+        })
     }
 }
 

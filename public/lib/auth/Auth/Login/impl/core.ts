@@ -19,10 +19,15 @@ import { LoginIDFieldComponent, LoginIDFieldComponentFactory } from "../../field
 import { PasswordFieldComponent, PasswordFieldComponentFactory } from "../../field/password/component"
 
 import { SecureScriptPath, SecureScriptPathCollector } from "../../../common/application/action"
-import { Renew, SetContinuousRenew, Store } from "../../../login/renew/action"
+import { Find, Remove, Renew, SetContinuousRenew, Store } from "../../../login/renew/action"
 
 import { Login } from "../../../login/password_login/action"
-import { StartSession, CheckStatus, Reset, ResetTokenCollector } from "../../../profile/password_reset/action"
+import {
+    StartSession,
+    CheckStatus,
+    Reset,
+    ResetTokenCollector,
+} from "../../../profile/password_reset/action"
 
 import { LoginIDField } from "../../../common/field/login_id/action"
 import { PasswordField } from "../../../common/field/password/action"
@@ -41,6 +46,9 @@ export type RenewCredentialFactory = Readonly<{
         credential: Readonly<{
             renew: Renew
             setContinuousRenew: SetContinuousRenew
+            find: Find
+            store: Store
+            remove: Remove
         }>
     }>
     components: Readonly<{
@@ -58,6 +66,9 @@ export function initRenewCredentialResource(
     const material = {
         renew: factory.actions.credential.renew(),
         setContinuousRenew: factory.actions.credential.setContinuousRenew(),
+        find: factory.actions.credential.find(),
+        store: factory.actions.credential.store(),
+        remove: factory.actions.credential.remove(),
         secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
     }
 
