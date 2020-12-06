@@ -48,7 +48,7 @@ import {
     ResetCollector,
 } from "../../../../profile/password_reset/action"
 
-import { LoginIDField } from "../../../../common/field/login_id/action"
+import { LoginIDFieldAction } from "../../../../common/field/login_id/action"
 import { PasswordField } from "../../../../common/field/password/action"
 import { LoginEvent } from "../../../../login/password_login/data"
 import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../profile/password_reset/data"
@@ -135,8 +135,7 @@ export type ForegroundFactory = Readonly<{
             setContinuousRenew: SetContinuousRenew
         }> & CredentialAction
 
-        field: Readonly<{
-            loginID: LoginIDField
+        field: LoginIDFieldAction & Readonly<{
             password: PasswordField
         }>
     }>

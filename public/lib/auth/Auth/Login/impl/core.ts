@@ -34,7 +34,7 @@ import {
     ResetTokenCollector,
 } from "../../../profile/password_reset/action"
 
-import { LoginIDField } from "../../../common/field/login_id/action"
+import { LoginIDFieldAction } from "../../../common/field/login_id/action"
 import { PasswordField } from "../../../common/field/password/action"
 
 import { LoginID } from "../../../common/login_id/data"
@@ -89,8 +89,7 @@ export type PasswordLoginFactory = Readonly<{
         passwordLogin: Readonly<{
             login: Login
         }>
-        field: Readonly<{
-            loginID: LoginIDField
+        field: LoginIDFieldAction & Readonly<{
             password: PasswordField
         }>
     }>
@@ -138,9 +137,7 @@ export type PasswordResetSessionFactory = Readonly<{
             startSession: StartSession
             checkStatus: CheckStatus
         }>
-        field: Readonly<{
-            loginID: LoginIDField
-        }>
+        field: LoginIDFieldAction
     }>
     components: Readonly<{
         passwordResetSession: PasswordResetSessionComponentFactory
@@ -177,8 +174,7 @@ export type PasswordResetFactory = Readonly<{
         passwordReset: Readonly<{
             reset: Reset
         }>
-        field: Readonly<{
-            loginID: LoginIDField
+        field: LoginIDFieldAction & Readonly<{
             password: PasswordField
         }>
     }>
@@ -222,9 +218,7 @@ export function initPasswordResetResource(
 
 export type LoginIDFieldFactory = Readonly<{
     actions: Readonly<{
-        field: Readonly<{
-            loginID: LoginIDField
-        }>
+        field: LoginIDFieldAction
     }>
     components: Readonly<{
         field: Readonly<{

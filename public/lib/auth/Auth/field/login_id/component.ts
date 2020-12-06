@@ -1,4 +1,4 @@
-import { LoginIDFieldAction } from "../../../common/field/login_id/action"
+import { LoginIDField } from "../../../common/field/login_id/action"
 
 import { LoginIDFieldError, LoginIDFieldEvent } from "../../../common/field/login_id/data"
 import { InputValue, Valid, noError } from "../../../common/field/data"
@@ -7,7 +7,7 @@ export interface LoginIDFieldComponentFactory {
     (material: LoginIDFieldMaterial): LoginIDFieldComponent
 }
 export type LoginIDFieldMaterial = Readonly<{
-    loginID: LoginIDFieldAction
+    loginID: LoginIDField
 }>
 
 export interface LoginIDFieldComponent {
