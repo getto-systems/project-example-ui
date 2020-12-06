@@ -1,4 +1,4 @@
-import { LoginAction } from "../../login/password_login/action"
+import { Login } from "../../login/password_login/action"
 import { StoreAuthCredential } from "../../common/credential/action"
 import { SecureScriptPath } from "../../common/application/action"
 
@@ -12,7 +12,7 @@ export interface PasswordLoginComponentFactory {
 }
 export type PasswordLoginMaterial = Readonly<{
     link: LoginLink
-    login: LoginAction
+    login: Login
     storeAuthCredential: StoreAuthCredential
     secureScriptPath: SecureScriptPath
 }>

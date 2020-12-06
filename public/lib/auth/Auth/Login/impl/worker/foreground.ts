@@ -36,7 +36,7 @@ import { ApplicationAction } from "../../../../common/application/action"
 import { CredentialAction } from "../../../../common/credential/action"
 import { Renew, SetContinuousRenew } from "../../../../login/renew/action"
 
-import { Login, LoginAction, LoginCollector } from "../../../../login/password_login/action"
+import { Login, LoginCollector, PasswordLoginAction } from "../../../../login/password_login/action"
 import {
     StartSession,
     StartSessionAction,
@@ -82,7 +82,7 @@ class ProxyMap<M, E> {
     }
 }
 class LoginProxyMap extends ProxyMap<LoginProxyMessage, LoginEvent> {
-    init(collector: LoginCollector): LoginAction {
+    init(collector: LoginCollector): Login {
         return async (post) => {
             this.post({
                 handlerID: this.register(post),
@@ -232,9 +232,7 @@ function initLoginComponentFactory(
     }
 
     type ActionProxyFactory = Readonly<{
-        passwordLogin: Readonly<{
-            login: Login
-        }>
+        passwordLogin: PasswordLoginAction
         passwordReset: Readonly<{
             startSession: StartSession
             checkStatus: CheckStatus

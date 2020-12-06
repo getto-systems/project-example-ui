@@ -22,11 +22,11 @@ import { PasswordResetComponentFactory, PasswordResetMaterial } from "../../pass
 import { LoginIDFieldComponent, LoginIDFieldComponentFactory } from "../../field/login_id/component"
 import { PasswordFieldComponent, PasswordFieldComponentFactory } from "../../field/password/component"
 
-import { ApplicationAction, ApplicationCollector } from "../../../common/application/action"
+import { ApplicationAction, SecureScriptPathCollector } from "../../../common/application/action"
 import { CredentialAction, StoreCredentialAction } from "../../../common/credential/action"
 import { Renew, SetContinuousRenew } from "../../../login/renew/action"
 
-import { Login } from "../../../login/password_login/action"
+import { PasswordLoginAction } from "../../../login/password_login/action"
 import {
     StartSession,
     CheckStatus,
@@ -58,7 +58,7 @@ export type RenewCredentialFactory = Readonly<{
     }>
 }>
 export type RenewCredentialCollector = Readonly<{
-    application: ApplicationCollector
+    application: SecureScriptPathCollector
 }>
 export function initRenewCredentialResource(
     factory: RenewCredentialFactory,
@@ -87,9 +87,7 @@ export type PasswordLoginFactory = Readonly<{
     actions: Readonly<{
         application: ApplicationAction
         credential: StoreCredentialAction
-        passwordLogin: Readonly<{
-            login: Login
-        }>
+        passwordLogin: PasswordLoginAction
         field: LoginIDFieldAction & PasswordFieldAction
     }>
     components: Readonly<{
@@ -102,7 +100,7 @@ export type PasswordLoginFactory = Readonly<{
     }>
 }>
 export type PasswordLoginCollector = Readonly<{
-    application: ApplicationCollector
+    application: SecureScriptPathCollector
 }>
 export function initPasswordLoginResource(
     factory: PasswordLoginFactory,
@@ -185,7 +183,7 @@ export type PasswordResetFactory = Readonly<{
     }>
 }>
 export type PasswordResetCollector = Readonly<{
-    application: ApplicationCollector
+    application: SecureScriptPathCollector
     passwordReset: ResetTokenCollector
 }>
 export function initPasswordResetResource(
