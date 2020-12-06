@@ -23,11 +23,7 @@ import { LoginIDFieldComponent, LoginIDFieldComponentFactory } from "../../field
 import { PasswordFieldComponent, PasswordFieldComponentFactory } from "../../field/password/component"
 
 import { ApplicationAction, ApplicationCollector } from "../../../common/application/action"
-import {
-    LoadLastLogin,
-    RemoveAuthCredential,
-    StoreAuthCredential,
-} from "../../../common/credential/action"
+import { CredentialAction, StoreCredentialAction } from "../../../common/credential/action"
 import { Renew, SetContinuousRenew } from "../../../login/renew/action"
 
 import { Login } from "../../../login/password_login/action"
@@ -50,13 +46,11 @@ import { Content, invalidContent, validContent } from "../../../common/field/dat
 export type RenewCredentialFactory = Readonly<{
     actions: Readonly<{
         application: ApplicationAction
+        // TODO renew に分ける
         credential: Readonly<{
             renew: Renew
             setContinuousRenew: SetContinuousRenew
-            loadLastLogin: LoadLastLogin
-            storeAuthCredential: StoreAuthCredential
-            removeAuthCredential: RemoveAuthCredential
-        }>
+        }> & CredentialAction
     }>
     components: Readonly<{
         renewCredential: RenewCredentialComponentFactory
@@ -91,9 +85,7 @@ export type PasswordLoginFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
         application: ApplicationAction
-        credential: Readonly<{
-            storeAuthCredential: StoreAuthCredential
-        }>
+        credential: StoreCredentialAction
         passwordLogin: Readonly<{
             login: Login
         }>
@@ -181,9 +173,7 @@ export type PasswordResetFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
         application: ApplicationAction
-        credential: Readonly<{
-            storeAuthCredential: StoreAuthCredential
-        }>
+        credential: StoreCredentialAction
         passwordReset: Readonly<{
             reset: Reset
         }>

@@ -33,7 +33,7 @@ import { LoginIDFieldComponentFactory } from "../../../field/login_id/component"
 import { PasswordFieldComponentFactory } from "../../../field/password/component"
 
 import { ApplicationAction } from "../../../../common/application/action"
-import { LoadLastLogin, RemoveAuthCredential, StoreAuthCredential } from "../../../../common/credential/action"
+import { CredentialAction } from "../../../../common/credential/action"
 import { Renew, SetContinuousRenew } from "../../../../login/renew/action"
 
 import { Login, LoginAction, LoginCollector } from "../../../../login/password_login/action"
@@ -129,13 +129,11 @@ export type ForegroundFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
         application: ApplicationAction
+        // TODO renew に分ける
         credential: Readonly<{
             renew: Renew
             setContinuousRenew: SetContinuousRenew
-            storeAuthCredential: StoreAuthCredential
-            removeAuthCredential: RemoveAuthCredential
-            loadLastLogin: LoadLastLogin
-        }>
+        }> & CredentialAction
 
         field: Readonly<{
             loginID: LoginIDField

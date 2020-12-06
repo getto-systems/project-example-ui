@@ -5,7 +5,7 @@ import { currentPagePathname, detectResetToken, detectViewState } from "../impl/
 import { PasswordLoginCollector, PasswordResetCollector, RenewCredentialCollector } from "../impl/core"
 
 import { secureScriptPath } from "../../../common/application/impl/core"
-import { storeAuthCredential } from "../../../common/credential/impl/core"
+import { loadLastLogin, removeAuthCredential, storeAuthCredential } from "../../../common/credential/impl/core"
 import { renew, setContinuousRenew } from "../../../login/renew/impl/core"
 import { login } from "../../../login/password_login/impl/core"
 import { startSession, checkStatus, reset } from "../../../profile/password_reset/impl/core"
@@ -27,7 +27,7 @@ import {
 } from "../../../profile/password_reset/impl/client/session/simulate"
 
 import { ApplicationAction } from "../../../common/application/action"
-import { StoreAuthCredential } from "../../../common/credential/action"
+import { CredentialAction } from "../../../common/credential/action"
 import { Renew, SetContinuousRenew } from "../../../login/renew/action"
 import { Login } from "../../../login/password_login/action"
 import { CheckStatus, Reset, StartSession } from "../../../profile/password_reset/action"
@@ -53,7 +53,7 @@ export function initCredentialAction(
     time: { renew: RenewTimeConfig; setContinuousRenew: SetContinuousRenewTimeConfig },
     repository: { authCredentials: AuthCredentialRepository },
     simulator: RenewSimulator
-): { renew: Renew; setContinuousRenew: SetContinuousRenew; storeAuthCredential: StoreAuthCredential } {
+): { renew: Renew; setContinuousRenew: SetContinuousRenew;  } & CredentialAction {
     const client = initSimulateRenewClient(simulator)
     const { authCredentials } = repository
 
@@ -70,6 +70,8 @@ export function initCredentialAction(
             runner: initRenewRunner(),
         }),
         storeAuthCredential: storeAuthCredential({ authCredentials }),
+        removeAuthCredential: removeAuthCredential({ authCredentials }),
+        loadLastLogin: loadLastLogin({ authCredentials }),
     }
 }
 export function initPasswordLoginAction(

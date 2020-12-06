@@ -1,22 +1,31 @@
 import { AuthCredential, LoadLastLoginResult, StoreResult } from "./data"
 
-export interface LoadLastLogin {
-    (): LoadLastLoginAction
+export type StoreCredentialAction = Readonly<{
+    storeAuthCredential: StoreAuthCredentialPod
+}>
+export type CredentialAction = StoreCredentialAction &
+    Readonly<{
+        loadLastLogin: LoadLastLoginPod
+        removeAuthCredential: RemoveAuthCredentialPod
+    }>
+
+export interface LoadLastLoginPod {
+    (): LoadLastLogin
 }
-export interface LoadLastLoginAction {
+export interface LoadLastLogin {
     (): LoadLastLoginResult
 }
 
-export interface StoreAuthCredential {
-    (): StoreAuthCredentialAction
+export interface StoreAuthCredentialPod {
+    (): StoreAuthCredential
 }
-export interface StoreAuthCredentialAction {
+export interface StoreAuthCredential {
     (authCredential: AuthCredential): StoreResult
 }
 
-export interface RemoveAuthCredential {
-    (): RemoveAuthCredentialAction
+export interface RemoveAuthCredentialPod {
+    (): RemoveAuthCredential
 }
-export interface RemoveAuthCredentialAction {
+export interface RemoveAuthCredential {
     (): StoreResult
 }
