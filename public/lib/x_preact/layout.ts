@@ -22,7 +22,7 @@ export function fullScreenError(title: VNode, content: VNode, footer: VNode): VN
                 ${loginHeader()}
                 <section class="login__message">
                     <h3 class="login__message__title">${title}</h3>
-                    <section class="login__message__body paragraph">${content}</section>
+                    <section class="login__message__body">${content}</section>
                 </section>
                 <footer class="login__footer">${footer}</footer>
             </section>
