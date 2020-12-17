@@ -6,7 +6,7 @@ import { markScriptPath } from "../data"
 
 export const secureScriptPath = (infra: SecureScriptPathInfra): SecureScriptPathPod => (collector) => () => {
     const {
-        host: { secureServerHost },
+        config: { secureServerHost },
     } = infra
 
     const pagePathname = collector.getPagePathname()

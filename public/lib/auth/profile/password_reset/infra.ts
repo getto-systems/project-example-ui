@@ -10,34 +10,43 @@ import {
     CheckStatusError,
 } from "./data"
 
+export type PasswordResetSessionActionConfig = Readonly<{
+    startSession: StartSessionConfig
+    checkStatus: CheckStatusConfig
+}>
+
 export type StartSessionInfra = Readonly<{
     client: PasswordResetSessionClient
-    time: StartSessionTimeConfig
+    config: StartSessionConfig
     delayed: Delayed
 }>
 export type CheckStatusInfra = Readonly<{
     client: PasswordResetSessionClient
-    time: CheckStatusTimeConfig
+    config: CheckStatusConfig
     delayed: Delayed
     wait: Wait
 }>
 
-export type StartSessionTimeConfig = Readonly<{
+export type StartSessionConfig = Readonly<{
     delay: DelayTime
 }>
 
-export type CheckStatusTimeConfig = Readonly<{
+export type CheckStatusConfig = Readonly<{
     wait: WaitTime
     limit: Limit
 }>
 
+export type PasswordResetActionConfig = Readonly<{
+    reset: ResetConfig
+}>
+
 export type ResetInfra = Readonly<{
     client: PasswordResetClient
-    time: ResetTimeConfig
+    config: ResetConfig
     delayed: Delayed
 }>
 
-export type ResetTimeConfig = Readonly<{
+export type ResetConfig = Readonly<{
     delay: DelayTime
 }>
 

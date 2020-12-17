@@ -1,51 +1,13 @@
 import { env } from "../../../../y_static/env"
-import { SecureScriptPathHostConfig } from "../../../common/application/infra"
-import { LoginTimeConfig } from "../../../login/password_login/infra"
-import { RenewTimeConfig, SetContinuousRenewTimeConfig } from "../../../login/renew/infra"
+import { ApplicationActionConfig } from "../../../common/application/infra"
+import { PasswordLoginActionConfig } from "../../../login/password_login/infra"
+import { RenewActionConfig } from "../../../login/renew/infra"
 import {
-    CheckStatusTimeConfig,
-    ResetTimeConfig,
-    StartSessionTimeConfig,
+    PasswordResetActionConfig,
+    PasswordResetSessionActionConfig,
 } from "../../../profile/password_reset/infra"
 
-export function newTimeConfig(): TimeConfig {
-    return {
-        renew: {
-            instantLoadExpire: expireMinute(3),
-            delay: delaySecond(0.5),
-        },
-        setContinuousRenew: {
-            delay: delayMinute(1),
-            interval: intervalMinute(2),
-        },
-        login: {
-            delay: delaySecond(1),
-        },
-        startSession: {
-            delay: delaySecond(1),
-        },
-        checkStatus: {
-            wait: waitSecond(0.25),
-            limit: limit(40),
-        },
-        reset: {
-            delay: delaySecond(1),
-        },
-    }
-}
-
-export type TimeConfig = Readonly<{
-    renew: RenewTimeConfig
-    setContinuousRenew: SetContinuousRenewTimeConfig
-
-    login: LoginTimeConfig
-
-    startSession: StartSessionTimeConfig
-    checkStatus: CheckStatusTimeConfig
-    reset: ResetTimeConfig
-}>
-
-export function newHostConfig(): HostConfig {
+export function newApplicationActionConfig(): ApplicationActionConfig {
     return {
         secureScriptPath: {
             secureServerHost: env.secureServerHost,
@@ -53,8 +15,42 @@ export function newHostConfig(): HostConfig {
     }
 }
 
-export type HostConfig = {
-    secureScriptPath: SecureScriptPathHostConfig
+export function newRenewActionConfig(): RenewActionConfig {
+    return {
+        renew: {
+            instantLoadExpire: expireMinute(3),
+            delay: delaySecond(0.5),
+        },
+        setContinuousRenew: { delay: delayMinute(1), interval: intervalMinute(2) },
+    }
+}
+
+export function newPasswordLoginActionConfig(): PasswordLoginActionConfig {
+    return {
+        login: {
+            delay: delaySecond(1),
+        },
+    }
+}
+
+export function newPasswordResetSessionActionConfig(): PasswordResetSessionActionConfig {
+    return {
+        startSession: {
+            delay: delaySecond(1),
+        },
+        checkStatus: {
+            wait: waitSecond(0.25),
+            limit: limit(40),
+        },
+    }
+}
+
+export function newPasswordResetActionConfig(): PasswordResetActionConfig {
+    return {
+        reset: {
+            delay: delaySecond(1),
+        },
+    }
 }
 
 type ExpireTime = { expire_millisecond: number }

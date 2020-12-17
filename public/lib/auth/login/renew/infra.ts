@@ -1,23 +1,28 @@
 import { AuthCredential, LoginAt, TicketNonce } from "../../common/credential/data"
 import { RenewError } from "./data"
 
+export type RenewActionConfig = Readonly<{
+    renew: RenewConfig
+    setContinuousRenew: SetContinuousRenewConfig
+}>
+
 export type RenewInfra = Readonly<{
     client: RenewClient
-    time: RenewTimeConfig
+    config: RenewConfig
     delayed: Delayed
     expires: AuthExpires
 }>
 export type SetContinuousRenewInfra = Readonly<{
     client: RenewClient
-    time: SetContinuousRenewTimeConfig
+    config: SetContinuousRenewConfig
     runner: RenewRunner
 }>
 
-export type RenewTimeConfig = Readonly<{
+export type RenewConfig = Readonly<{
     instantLoadExpire: ExpireTime
     delay: DelayTime
 }>
-export type SetContinuousRenewTimeConfig = Readonly<{
+export type SetContinuousRenewConfig = Readonly<{
     interval: IntervalTime
     delay: DelayTime
 }>
