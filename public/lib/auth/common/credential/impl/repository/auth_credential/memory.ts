@@ -3,41 +3,41 @@ import { AuthCredentialRepository } from "../../../infra"
 import { AuthCredential, StoreResult, LoadLastLoginResult } from "../../../data"
 
 export function initMemoryAuthCredentialRepository(
-    storage: AuthCredentialStorage
+    storage: AuthCredentialStore
 ): AuthCredentialRepository {
     return new MemoryAuthCredentialRepository(storage)
 }
 
-export type AuthCredentialStorage =
+export type AuthCredentialStore =
     | Readonly<{ stored: false }>
     | Readonly<{ stored: true; authCredential: AuthCredential }>
 
 class MemoryAuthCredentialRepository implements AuthCredentialRepository {
-    storage: AuthCredentialStorage
+    store: AuthCredentialStore
 
-    constructor(storage: AuthCredentialStorage) {
-        this.storage = storage
+    constructor(store: AuthCredentialStore) {
+        this.store = store
     }
 
     findLastLogin(): LoadLastLoginResult {
-        if (!this.storage.stored) {
+        if (!this.store.stored) {
             return { success: true, found: false }
         }
         return {
             success: true,
             found: true,
             lastLogin: {
-                ticketNonce: this.storage.authCredential.ticketNonce,
-                lastLoginAt: this.storage.authCredential.loginAt,
+                ticketNonce: this.store.authCredential.ticketNonce,
+                lastLoginAt: this.store.authCredential.loginAt,
             },
         }
     }
     storeAuthCredential(authCredential: AuthCredential): StoreResult {
-        this.storage = { stored: true, authCredential }
+        this.store = { stored: true, authCredential }
         return { success: true }
     }
     removeAuthCredential(): StoreResult {
-        this.storage = { stored: false }
+        this.store = { stored: false }
         return { success: true }
     }
 }

@@ -27,14 +27,14 @@ import { ApplicationActionConfig } from "../../../common/application/infra"
 import { PasswordLoginActionConfig } from "../../../login/password_login/infra"
 import { AuthCredentialRepository } from "../../../common/credential/infra"
 
-type Config = {
+export type Config = {
     application: ApplicationActionConfig
     passwordLogin: PasswordLoginActionConfig
 }
-type Repository = Readonly<{
+export type Repository = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
-type Simulator = Readonly<{
+export type Simulator = Readonly<{
     login: LoginSimulator
 }>
 
