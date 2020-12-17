@@ -33,7 +33,7 @@ import { LoginIDFieldComponentFactory } from "../../../field/login_id/component"
 import { PasswordFieldComponentFactory } from "../../../field/password/component"
 
 import { ApplicationAction } from "../../../../common/application/action"
-import { CredentialAction } from "../../../../common/credential/action"
+import { CredentialAction, StoreCredentialAction } from "../../../../common/credential/action"
 import { RenewAction } from "../../../../login/renew/action"
 
 import { Login, LoginCollector, PasswordLoginAction } from "../../../../login/password_login/action"
@@ -128,6 +128,7 @@ export type ForegroundFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
         application: ApplicationAction
+        storeCredential: StoreCredentialAction
         credential: CredentialAction
         renew: RenewAction
 

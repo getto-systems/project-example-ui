@@ -1,6 +1,6 @@
 import {
     initApplicationAction,
-    initCredentialAction,
+    initStoreCredentialAction,
     initPasswordLoginAction,
     initPasswordLoginCollector,
 } from "../../Login/tests/core"
@@ -13,36 +13,32 @@ import {
 } from "../../Login/impl/core"
 
 import { initPasswordLogin } from "../../password_login/impl"
-
 import { initLoginIDField } from "../../field/login_id/impl"
 import { initPasswordField } from "../../field/password/impl"
 
 import { loginIDField } from "../../../common/field/login_id/impl/core"
 import { passwordField } from "../../../common/field/password/impl/core"
 
-import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
 import { LoginSimulator } from "../../../login/password_login/impl/client/login/simulate"
 
 import { PasswordLoginResource } from "../../Login/view"
 
 import { SecureScriptPathHostConfig } from "../../../common/application/infra"
 import { LoginTimeConfig } from "../../../login/password_login/infra"
-import { RenewTimeConfig, SetContinuousRenewTimeConfig } from "../../../login/renew/infra"
 import { AuthCredentialRepository } from "../../../common/credential/infra"
 
 type Config = {
     host: { secureScriptPath: SecureScriptPathHostConfig }
     time: {
-        renew: RenewTimeConfig
-        setContinuousRenew: SetContinuousRenewTimeConfig
-
         login: LoginTimeConfig
     }
 }
 type Repository = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
-type Simulator = LoginSimulator & RenewSimulator
+type Simulator = Readonly<{
+    login: LoginSimulator
+}>
 
 export function newPasswordLoginResource(
     currentURL: URL,
@@ -54,9 +50,9 @@ export function newPasswordLoginResource(
         link: initLoginLink,
         actions: {
             application: initApplicationAction(config.host),
-            credential: initCredentialAction(config.time, repository, simulator),
+            storeCredential: initStoreCredentialAction(repository.authCredentials),
 
-            passwordLogin: initPasswordLoginAction(config.time, simulator),
+            passwordLogin: initPasswordLoginAction(config.time, simulator.login),
 
             field: {
                 loginID: loginIDField,
