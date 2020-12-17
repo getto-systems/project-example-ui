@@ -11,7 +11,7 @@ export const login = (infra: LoginInfra): LoginPod => (collector) => async (post
 
     post({ type: "try-to-login" })
 
-    const { client, time, delayed } = infra
+    const { client, config: time, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const response = await delayed(client.login(content.content), time.delay, () =>

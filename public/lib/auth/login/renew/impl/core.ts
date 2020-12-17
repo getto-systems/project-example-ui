@@ -3,7 +3,7 @@ import { RenewInfra, SetContinuousRenewInfra,  } from "../infra"
 import { RenewPod, SetContinuousRenewPod,  } from "../action"
 
 export const renew = (infra: RenewInfra): RenewPod => () => async (lastLogin, post) => {
-    const { client, expires, time, delayed } = infra
+    const { client, expires, config: time, delayed } = infra
 
     if (!expires.hasExceeded(lastLogin.lastLoginAt, time.instantLoadExpire)) {
         post({ type: "try-to-instant-load" })
@@ -31,7 +31,7 @@ export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuou
     lastLogin,
     post
 ) => {
-    const { client, time, runner } = infra
+    const { client, config: time, runner } = infra
 
     setTimeout(async () => {
         if (await continuousRenew()) {

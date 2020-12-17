@@ -1,13 +1,17 @@
 import { AuthCredential } from "../../common/credential/data"
 import { LoginFields } from "./data"
 
+export type PasswordLoginActionConfig = Readonly<{
+    login: LoginConfig
+}>
+
 export type LoginInfra = Readonly<{
     client: LoginClient
-    time: LoginTimeConfig
+    config: LoginConfig
     delayed: Delayed
 }>
 
-export type LoginTimeConfig = Readonly<{
+export type LoginConfig = Readonly<{
     delay: DelayTime
 }>
 

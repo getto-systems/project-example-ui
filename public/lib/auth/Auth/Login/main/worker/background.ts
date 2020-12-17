@@ -3,7 +3,11 @@ import { initAuthClient, AuthClient } from "../../../../../z_external/auth_clien
 
 import { env } from "../../../../../y_static/env"
 
-import { TimeConfig, newTimeConfig } from "../../impl/config"
+import {
+    newPasswordLoginActionConfig,
+    newPasswordResetActionConfig,
+    newPasswordResetSessionActionConfig,
+} from "../../impl/config"
 
 import { initLoginWorkerAsBackground, Material } from "../../impl/worker/background"
 
@@ -13,6 +17,12 @@ import { startSession, checkStatus, reset } from "../../../../profile/password_r
 import { initFetchPasswordLoginClient } from "../../../../login/password_login/impl/client/login/fetch"
 import { initSimulatePasswordResetClient } from "../../../../profile/password_reset/impl/client/reset/simulate"
 import { initSimulatePasswordResetSessionClient } from "../../../../profile/password_reset/impl/client/session/simulate"
+
+import { PasswordLoginActionConfig } from "../../../../login/password_login/infra"
+import {
+    PasswordResetActionConfig,
+    PasswordResetSessionActionConfig,
+} from "../../../../profile/password_reset/infra"
 
 import { PasswordLoginAction } from "../../../../login/password_login/action"
 import {
@@ -24,28 +34,32 @@ import { markTicketNonce, markLoginAt, markApiCredential } from "../../../../com
 import { markSessionID } from "../../../../profile/password_reset/data"
 
 export function initLoginWorker(worker: Worker): void {
-    const time = newTimeConfig()
     const authClient = initAuthClient(env.authServerURL)
 
     const material: Material = {
-        passwordLogin: initPasswordLoginAction(time, authClient),
-        passwordResetSession: initPasswordResetSessionAction(time),
-        passwordReset: initPasswordResetAction(time),
+        passwordLogin: initPasswordLoginAction(newPasswordLoginActionConfig(), authClient),
+        passwordResetSession: initPasswordResetSessionAction(newPasswordResetSessionActionConfig()),
+        passwordReset: initPasswordResetAction(newPasswordResetActionConfig()),
     }
 
     return initLoginWorkerAsBackground(material, worker)
 }
 
-export function initPasswordLoginAction(time: TimeConfig, authClient: AuthClient): PasswordLoginAction {
+export function initPasswordLoginAction(
+    config: PasswordLoginActionConfig,
+    authClient: AuthClient
+): PasswordLoginAction {
     return {
         login: login({
             client: initFetchPasswordLoginClient(authClient),
-            time: time.login,
+            config: config.login,
             delayed,
         }),
     }
 }
-export function initPasswordResetSessionAction(time: TimeConfig): PasswordResetSessionAction {
+export function initPasswordResetSessionAction(
+    config: PasswordResetSessionActionConfig
+): PasswordResetSessionAction {
     const targetLoginID = "loginID"
     const targetSessionID = markSessionID("session-id")
 
@@ -76,18 +90,18 @@ export function initPasswordResetSessionAction(time: TimeConfig): PasswordResetS
     return {
         startSession: startSession({
             client: sessionClient,
-            time: time.startSession,
+            config: config.startSession,
             delayed,
         }),
         checkStatus: checkStatus({
             client: sessionClient,
-            time: time.checkStatus,
+            config: config.checkStatus,
             delayed,
             wait,
         }),
     }
 }
-export function initPasswordResetAction(time: TimeConfig): PasswordResetAction {
+export function initPasswordResetAction(config: PasswordResetActionConfig): PasswordResetAction {
     const targetLoginID = "loginID"
     const targetResetToken = "reset-token"
 
@@ -113,7 +127,7 @@ export function initPasswordResetAction(time: TimeConfig): PasswordResetAction {
     return {
         reset: reset({
             client: resetClient,
-            time: time.reset,
+            config: config.reset,
             delayed,
         }),
     }

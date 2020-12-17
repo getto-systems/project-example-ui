@@ -36,21 +36,18 @@ import { RenewAction } from "../../../login/renew/action"
 import { PasswordLoginAction } from "../../../login/password_login/action"
 import { PasswordResetAction, PasswordResetSessionAction } from "../../../profile/password_reset/action"
 
-import { SecureScriptPathHostConfig } from "../../../common/application/infra"
-import { RenewTimeConfig, SetContinuousRenewTimeConfig } from "../../../login/renew/infra"
-import { LoginTimeConfig } from "../../../login/password_login/infra"
+import { ApplicationActionConfig } from "../../../common/application/infra"
+import { RenewActionConfig } from "../../../login/renew/infra"
+import { PasswordLoginActionConfig } from "../../../login/password_login/infra"
 import {
-    CheckStatusTimeConfig,
-    ResetTimeConfig,
-    StartSessionTimeConfig,
+    PasswordResetActionConfig,
+    PasswordResetSessionActionConfig,
 } from "../../../profile/password_reset/infra"
 import { AuthCredentialRepository } from "../../../common/credential/infra"
 
-export function initApplicationAction(host: {
-    secureScriptPath: SecureScriptPathHostConfig
-}): ApplicationAction {
+export function initApplicationAction(config: ApplicationActionConfig): ApplicationAction {
     return {
-        secureScriptPath: secureScriptPath({ host: host.secureScriptPath }),
+        secureScriptPath: secureScriptPath({ config: config.secureScriptPath }),
     }
 }
 export function initStoreCredentialAction(
@@ -66,64 +63,65 @@ export function initCredentialAction(authCredentials: AuthCredentialRepository):
         loadLastLogin: loadLastLogin({ authCredentials }),
     }
 }
-export function initRenewAction(
-    time: { renew: RenewTimeConfig; setContinuousRenew: SetContinuousRenewTimeConfig },
-    simulator: RenewSimulator
-): RenewAction {
+export function initRenewAction(config: RenewActionConfig, simulator: RenewSimulator): RenewAction {
     const client = initSimulateRenewClient(simulator)
 
     return {
         renew: renew({
             client,
-            time: time.renew,
+            config: config.renew,
             delayed,
             expires: initAuthExpires(),
         }),
         setContinuousRenew: setContinuousRenew({
             client,
-            time: time.setContinuousRenew,
+            config: config.setContinuousRenew,
             runner: initRenewRunner(),
         }),
     }
 }
 export function initPasswordLoginAction(
-    time: { login: LoginTimeConfig },
+    config: PasswordLoginActionConfig,
     simulator: LoginSimulator
 ): PasswordLoginAction {
     return {
         login: login({
             client: initSimulatePasswordLoginClient(simulator),
-            time: time.login,
+            config: config.login,
             delayed,
         }),
     }
 }
-export function initPasswordResetAction(
-    time: {
-        startSession: StartSessionTimeConfig
-        checkStatus: CheckStatusTimeConfig
-        reset: ResetTimeConfig
-    },
-    simulator: SessionSimulator & ResetSimulator
-): PasswordResetAction & PasswordResetSessionAction {
+export function initPasswordResetSessionAction(
+    config: PasswordResetSessionActionConfig,
+    simulator: SessionSimulator
+): PasswordResetSessionAction {
     const sessionClient = initSimulatePasswordResetSessionClient(simulator)
-    const resetClient = initSimulatePasswordResetClient(simulator)
 
     return {
         startSession: startSession({
             client: sessionClient,
-            time: time.startSession,
+            config: config.startSession,
             delayed,
         }),
         checkStatus: checkStatus({
             client: sessionClient,
-            time: time.checkStatus,
+            config: config.checkStatus,
             delayed,
             wait,
         }),
+    }
+}
+export function initPasswordResetAction(
+    config: PasswordResetActionConfig,
+    simulator: ResetSimulator
+): PasswordResetAction {
+    const resetClient = initSimulatePasswordResetClient(simulator)
+
+    return {
         reset: reset({
             client: resetClient,
-            time: time.reset,
+            config: config.reset,
             delayed,
         }),
     }

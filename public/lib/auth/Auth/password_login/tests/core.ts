@@ -23,15 +23,13 @@ import { LoginSimulator } from "../../../login/password_login/impl/client/login/
 
 import { PasswordLoginResource } from "../../Login/view"
 
-import { SecureScriptPathHostConfig } from "../../../common/application/infra"
-import { LoginTimeConfig } from "../../../login/password_login/infra"
+import { ApplicationActionConfig } from "../../../common/application/infra"
+import { PasswordLoginActionConfig } from "../../../login/password_login/infra"
 import { AuthCredentialRepository } from "../../../common/credential/infra"
 
 type Config = {
-    host: { secureScriptPath: SecureScriptPathHostConfig }
-    time: {
-        login: LoginTimeConfig
-    }
+    application: ApplicationActionConfig
+    passwordLogin: PasswordLoginActionConfig
 }
 type Repository = Readonly<{
     authCredentials: AuthCredentialRepository
@@ -49,10 +47,10 @@ export function newPasswordLoginResource(
     const factory: PasswordLoginFactory = {
         link: initLoginLink,
         actions: {
-            application: initApplicationAction(config.host),
+            application: initApplicationAction(config.application),
             storeCredential: initStoreCredentialAction(repository.authCredentials),
 
-            passwordLogin: initPasswordLoginAction(config.time, simulator.login),
+            passwordLogin: initPasswordLoginAction(config.passwordLogin, simulator.login),
 
             field: {
                 loginID: loginIDField,

@@ -2,14 +2,26 @@ import { initAuthClient } from "../../../../z_external/auth_client/auth_client"
 
 import { env } from "../../../../y_static/env"
 
-import { initApplicationAction, initAuthCredentialRepository, initCredentialAction, initRenewAction, initStoreCredentialAction } from "./worker/foreground"
+import {
+    initApplicationAction,
+    initAuthCredentialRepository,
+    initCredentialAction,
+    initRenewAction,
+    initStoreCredentialAction,
+} from "./worker/foreground"
 import {
     initPasswordLoginAction,
     initPasswordResetAction,
     initPasswordResetSessionAction,
 } from "./worker/background"
 
-import { newTimeConfig, newHostConfig } from "../impl/config"
+import {
+    newApplicationActionConfig,
+    newPasswordLoginActionConfig,
+    newPasswordResetActionConfig,
+    newPasswordResetSessionActionConfig,
+    newRenewActionConfig,
+} from "../impl/config"
 import { Collector, Factory, initLoginAsSingle } from "../impl/single"
 import { initLoginLink } from "../impl/link"
 
@@ -32,23 +44,20 @@ export function newLoginAsSingle(): LoginFactory {
     const credentialStorage = localStorage
     const currentURL = new URL(location.toString())
 
-    const host = newHostConfig()
-    const time = newTimeConfig()
     const authClient = initAuthClient(env.authServerURL)
-
     const authCredentials = initAuthCredentialRepository(credentialStorage)
 
     const factory: Factory = {
         link: initLoginLink,
         actions: {
-            application: initApplicationAction(host),
+            application: initApplicationAction(newApplicationActionConfig()),
             storeCredential: initStoreCredentialAction(authCredentials),
             credential: initCredentialAction(authCredentials),
-            renew: initRenewAction(time, authClient),
+            renew: initRenewAction(newRenewActionConfig(), authClient),
 
-            passwordLogin: initPasswordLoginAction(time, authClient),
-            passwordResetSession: initPasswordResetSessionAction(time),
-            passwordReset: initPasswordResetAction(time),
+            passwordLogin: initPasswordLoginAction(newPasswordLoginActionConfig(), authClient),
+            passwordResetSession: initPasswordResetSessionAction(newPasswordResetSessionActionConfig()),
+            passwordReset: initPasswordResetAction(newPasswordResetActionConfig()),
 
             field: {
                 loginID: loginIDField,
