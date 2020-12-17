@@ -45,6 +45,7 @@ import { Content, invalidContent, validContent } from "../../../common/field/dat
 export type RenewCredentialFactory = Readonly<{
     actions: Readonly<{
         application: ApplicationAction
+        storeCredential: StoreCredentialAction
         credential: CredentialAction
         renew: RenewAction
     }>
@@ -64,7 +65,7 @@ export function initRenewCredentialResource(
         renew: factory.actions.renew.renew(),
         setContinuousRenew: factory.actions.renew.setContinuousRenew(),
         loadLastLogin: factory.actions.credential.loadLastLogin(),
-        storeAuthCredential: factory.actions.credential.storeAuthCredential(),
+        storeAuthCredential: factory.actions.storeCredential.storeAuthCredential(),
         removeAuthCredential: factory.actions.credential.removeAuthCredential(),
         secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
     }
@@ -81,7 +82,7 @@ export type PasswordLoginFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
         application: ApplicationAction
-        credential: StoreCredentialAction
+        storeCredential: StoreCredentialAction
         passwordLogin: PasswordLoginAction
         field: LoginIDFieldAction & PasswordFieldAction
     }>
@@ -111,7 +112,7 @@ export function initPasswordLoginResource(
         login: factory.actions.passwordLogin.login({
             getFields: () => collectLoginFields(fields),
         }),
-        storeAuthCredential: factory.actions.credential.storeAuthCredential(),
+        storeAuthCredential: factory.actions.storeCredential.storeAuthCredential(),
         secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
     }
 
@@ -159,7 +160,7 @@ export type PasswordResetFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
         application: ApplicationAction
-        credential: StoreCredentialAction
+        storeCredential: StoreCredentialAction
         passwordReset: PasswordResetAction
         field: LoginIDFieldAction & PasswordFieldAction
     }>
@@ -191,7 +192,7 @@ export function initPasswordResetResource(
             getFields: () => collectResetFields(fields),
             ...collector.passwordReset,
         }),
-        storeAuthCredential: factory.actions.credential.storeAuthCredential(),
+        storeAuthCredential: factory.actions.storeCredential.storeAuthCredential(),
         secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
     }
 

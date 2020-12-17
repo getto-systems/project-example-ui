@@ -2,7 +2,7 @@ import { initAuthClient } from "../../../../z_external/auth_client/auth_client"
 
 import { env } from "../../../../y_static/env"
 
-import { initApplicationAction, initCredentialAction, initRenewAction } from "./worker/foreground"
+import { initApplicationAction, initAuthCredentialRepository, initCredentialAction, initRenewAction, initStoreCredentialAction } from "./worker/foreground"
 import {
     initPasswordLoginAction,
     initPasswordResetAction,
@@ -36,11 +36,14 @@ export function newLoginAsSingle(): LoginFactory {
     const time = newTimeConfig()
     const authClient = initAuthClient(env.authServerURL)
 
+    const authCredentials = initAuthCredentialRepository(credentialStorage)
+
     const factory: Factory = {
         link: initLoginLink,
         actions: {
             application: initApplicationAction(host),
-            credential: initCredentialAction(credentialStorage),
+            storeCredential: initStoreCredentialAction(authCredentials),
+            credential: initCredentialAction(authCredentials),
             renew: initRenewAction(time, authClient),
 
             passwordLogin: initPasswordLoginAction(time, authClient),

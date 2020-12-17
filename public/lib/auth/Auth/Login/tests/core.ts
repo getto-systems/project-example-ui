@@ -31,7 +31,7 @@ import {
 } from "../../../profile/password_reset/impl/client/session/simulate"
 
 import { ApplicationAction } from "../../../common/application/action"
-import { CredentialAction } from "../../../common/credential/action"
+import { CredentialAction, StoreCredentialAction } from "../../../common/credential/action"
 import { RenewAction } from "../../../login/renew/action"
 import { PasswordLoginAction } from "../../../login/password_login/action"
 import { PasswordResetAction, PasswordResetSessionAction } from "../../../profile/password_reset/action"
@@ -53,13 +53,24 @@ export function initApplicationAction(host: {
         secureScriptPath: secureScriptPath({ host: host.secureScriptPath }),
     }
 }
-export function initCredentialAction(
+export function initStoreCredentialAction(
+    authCredentials: AuthCredentialRepository
+): StoreCredentialAction {
+    return {
+        storeAuthCredential: storeAuthCredential({ authCredentials }),
+    }
+}
+export function initCredentialAction(authCredentials: AuthCredentialRepository): CredentialAction {
+    return {
+        removeAuthCredential: removeAuthCredential({ authCredentials }),
+        loadLastLogin: loadLastLogin({ authCredentials }),
+    }
+}
+export function initRenewAction(
     time: { renew: RenewTimeConfig; setContinuousRenew: SetContinuousRenewTimeConfig },
-    repository: { authCredentials: AuthCredentialRepository },
     simulator: RenewSimulator
-): RenewAction & CredentialAction {
+): RenewAction {
     const client = initSimulateRenewClient(simulator)
-    const { authCredentials } = repository
 
     return {
         renew: renew({
@@ -73,9 +84,6 @@ export function initCredentialAction(
             time: time.setContinuousRenew,
             runner: initRenewRunner(),
         }),
-        storeAuthCredential: storeAuthCredential({ authCredentials }),
-        removeAuthCredential: removeAuthCredential({ authCredentials }),
-        loadLastLogin: loadLastLogin({ authCredentials }),
     }
 }
 export function initPasswordLoginAction(

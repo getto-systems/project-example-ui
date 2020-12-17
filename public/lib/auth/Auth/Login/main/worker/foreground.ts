@@ -38,8 +38,9 @@ import { currentPagePathname, detectViewState, detectResetToken } from "../../im
 import { LoginFactory } from "../../view"
 
 import { ApplicationAction } from "../../../../common/application/action"
-import { CredentialAction } from "../../../../common/credential/action"
+import { CredentialAction, StoreCredentialAction } from "../../../../common/credential/action"
 import { RenewAction } from "../../../../login/renew/action"
+import { AuthCredentialRepository } from "../../../../common/credential/infra"
 
 export function newLoginAsWorkerForeground(): LoginFactory {
     const credentialStorage = localStorage
@@ -51,11 +52,14 @@ export function newLoginAsWorkerForeground(): LoginFactory {
 
     const worker = new Worker(`/${env.version}/login.worker.js`)
 
+    const authCredentials = initAuthCredentialRepository(credentialStorage)
+
     const factory: ForegroundFactory = {
         link: initLoginLink,
         actions: {
             application: initApplicationAction(host),
-            credential: initCredentialAction(credentialStorage),
+            storeCredential: initStoreCredentialAction(authCredentials),
+            credential: initCredentialAction(authCredentials),
             renew: initRenewAction(time, authClient),
 
             field: {
@@ -97,11 +101,18 @@ export function initApplicationAction(host: HostConfig): ApplicationAction {
         secureScriptPath: secureScriptPath({ host: host.secureScriptPath }),
     }
 }
-export function initCredentialAction(credentialStorage: Storage): CredentialAction {
-    const authCredentials = initStorageAuthCredentialRepository(credentialStorage, env.storageKey)
-
+export function initAuthCredentialRepository(credentialStorage: Storage): AuthCredentialRepository {
+    return initStorageAuthCredentialRepository(credentialStorage, env.storageKey)
+}
+export function initStoreCredentialAction(
+    authCredentials: AuthCredentialRepository
+): StoreCredentialAction {
     return {
         storeAuthCredential: storeAuthCredential({ authCredentials }),
+    }
+}
+export function initCredentialAction(authCredentials: AuthCredentialRepository): CredentialAction {
+    return {
         removeAuthCredential: removeAuthCredential({ authCredentials }),
         loadLastLogin: loadLastLogin({ authCredentials }),
     }
