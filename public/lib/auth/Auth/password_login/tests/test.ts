@@ -66,7 +66,7 @@ describe("PasswordLogin", () => {
                     case "storage-error":
                     case "load-error":
                     case "error":
-                        done(new Error(`${state.type}: ${state.err}`))
+                        done(new Error(state.type))
                         break
                 }
             }
@@ -77,7 +77,7 @@ describe("PasswordLogin", () => {
         const currentURL: URL = new URL("https://example.com/index.html")
         const config = standardConfig()
         const repository = standardRepository()
-        const simulator = waitSimulator({ wait_millisecond: 20 })
+        const simulator = waitSimulator({ wait_millisecond: 2 }) // wait for delayed timeout
         const resource = newPasswordLoginResource(currentURL, config, repository, simulator)
 
         resource.passwordLogin.onStateChange(stateHandler())
@@ -102,7 +102,7 @@ describe("PasswordLogin", () => {
                     case "succeed-to-login":
                         expect(stack).toEqual([
                             { type: "try-to-login" },
-                            { type: "delayed-to-login" },
+                            { type: "delayed-to-login" }, // delayed event
                             {
                                 type: "succeed-to-login",
                                 scriptPath: markScriptPath("//secure.example.com/index.js"),
@@ -116,7 +116,7 @@ describe("PasswordLogin", () => {
                     case "storage-error":
                     case "load-error":
                     case "error":
-                        done(new Error(`${state.type}: ${state.err}`))
+                        done(new Error(state.type))
                         break
                 }
             }
@@ -133,7 +133,7 @@ function standardConfig(): Config {
         },
         passwordLogin: {
             login: {
-                delay: { delay_millisecond: 10 },
+                delay: { delay_millisecond: 1 },
             },
         },
     }
