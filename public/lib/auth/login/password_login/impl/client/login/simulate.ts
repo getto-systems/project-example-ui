@@ -9,7 +9,7 @@ export function initSimulatePasswordLoginClient(simulator: LoginSimulator): Logi
 
 export interface LoginSimulator {
     // エラーにする場合は LoginError を throw (それ以外を throw するとこわれる)
-    login(fields: LoginFields): Promise<AuthCredential>
+    login(fields: LoginFields): Promise<AuthCredential | null>
 }
 
 class SimulatePasswordLoginClient implements LoginClient {
@@ -21,7 +21,11 @@ class SimulatePasswordLoginClient implements LoginClient {
 
     async login(fields: LoginFields): Promise<LoginResponse> {
         try {
-            return loginSuccess(await this.simulator.login(fields))
+            const authCredential = await this.simulator.login(fields)
+            if (!authCredential) {
+                return loginFailed({ type: "invalid-password-login" })
+            }
+            return loginSuccess(authCredential)
         } catch (err) {
             return loginFailed(err)
         }
