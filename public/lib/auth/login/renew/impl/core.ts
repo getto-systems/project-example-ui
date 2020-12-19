@@ -3,9 +3,9 @@ import { RenewInfra, SetContinuousRenewInfra,  } from "../infra"
 import { RenewPod, SetContinuousRenewPod,  } from "../action"
 
 export const renew = (infra: RenewInfra): RenewPod => () => async (lastLogin, post) => {
-    const { client, expires, config: time, delayed } = infra
+    const { client, expires, config, delayed } = infra
 
-    if (!expires.hasExceeded(lastLogin.lastLoginAt, time.instantLoadExpire)) {
+    if (!expires.hasExceeded(lastLogin.lastLoginAt, config.instantLoadExpire)) {
         post({ type: "try-to-instant-load" })
         return
     }
@@ -13,7 +13,7 @@ export const renew = (infra: RenewInfra): RenewPod => () => async (lastLogin, po
     post({ type: "try-to-renew" })
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(client.renew(lastLogin.ticketNonce), time.delay, () =>
+    const response = await delayed(client.renew(lastLogin.ticketNonce), config.delay, () =>
         post({ type: "delayed-to-renew" })
     )
     if (!response.success) {
@@ -31,7 +31,7 @@ export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuou
     lastLogin,
     post
 ) => {
-    const { client, config: time, runner } = infra
+    const { client, config, runner } = infra
 
     setTimeout(async () => {
         if (await continuousRenew()) {
@@ -39,9 +39,9 @@ export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuou
                 if (!(await continuousRenew())) {
                     clearInterval(timer)
                 }
-            }, time.interval.interval_millisecond)
+            }, config.interval.interval_millisecond)
         }
-    }, runner.nextRun(lastLogin.lastLoginAt, time.delay).delay_millisecond)
+    }, runner.nextRun(lastLogin.lastLoginAt, config.delay).delay_millisecond)
 
     async function continuousRenew(): Promise<boolean> {
         const response = await client.renew(lastLogin.ticketNonce)

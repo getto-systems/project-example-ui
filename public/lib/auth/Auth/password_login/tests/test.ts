@@ -56,6 +56,7 @@ describe("PasswordLogin", () => {
                             },
                         ])
                         expectToSaveLastLogin(repository.authCredentials)
+                        // TODO このあとに setContinuousRenew してるか確認しないといけないんだけど・・・
                         done()
                         break
 
