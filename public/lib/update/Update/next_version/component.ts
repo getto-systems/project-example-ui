@@ -18,7 +18,7 @@ export type NextVersionState =
     | Readonly<{ type: "failed-to-find"; err: FindError }>
     | Readonly<{ type: "succeed-to-find"; target: AppTarget }>
 
-export const initialPasswordLoginState: NextVersionState = { type: "initial-next-version" }
+export const initialNextVersionState: NextVersionState = { type: "initial-next-version" }
 
 interface Post<T> {
     (state: T): void

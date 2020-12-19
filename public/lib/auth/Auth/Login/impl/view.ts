@@ -21,27 +21,6 @@ export class View implements LoginView {
         this.components = components
     }
 
-    hookCredentialStateChange(renewCredential: RenewCredentialComponent): void {
-        renewCredential.onStateChange((state) => {
-            switch (state.type) {
-                case "required-to-login":
-                    this.post(this.mapLoginView(this.collector.login.getLoginView()))
-                    return
-            }
-        })
-    }
-
-    mapLoginView(loginView: ViewState): LoginState {
-        switch (loginView) {
-            case "password-login":
-                return { type: loginView, components: this.components.passwordLogin() }
-            case "password-reset-session":
-                return { type: loginView, components: this.components.passwordResetSession() }
-            case "password-reset":
-                return { type: loginView, components: this.components.passwordReset() }
-        }
-    }
-
     onStateChange(post: Post<LoginState>): void {
         this.listener.push(post)
     }
@@ -59,6 +38,26 @@ export class View implements LoginView {
     }
     error(err: string): void {
         this.post({ type: "error", err })
+    }
+
+    hookCredentialStateChange(renewCredential: RenewCredentialComponent): void {
+        renewCredential.onStateChange((state) => {
+            switch (state.type) {
+                case "required-to-login":
+                    this.post(this.mapLoginView(this.collector.login.getLoginView()))
+                    return
+            }
+        })
+    }
+    mapLoginView(loginView: ViewState): LoginState {
+        switch (loginView) {
+            case "password-login":
+                return { type: loginView, components: this.components.passwordLogin() }
+            case "password-reset-session":
+                return { type: loginView, components: this.components.passwordResetSession() }
+            case "password-reset":
+                return { type: loginView, components: this.components.passwordReset() }
+        }
     }
 }
 

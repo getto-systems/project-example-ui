@@ -1,3 +1,5 @@
+import { MockComponent } from "../../../z_external/mock/component"
+
 import { initLoginLink } from "../Login/impl/link"
 
 import { LoginLink } from "../link"
@@ -5,7 +7,52 @@ import { LoginLink } from "../link"
 import { PasswordLoginComponent, PasswordLoginState } from "./component"
 
 export function initPasswordLogin(): PasswordLoginComponent {
-    return new Component(new PasswordLoginStateFactory().initialLogin())
+    return new PasswordLoginMockComponent(new PasswordLoginStateFactory().initialLogin())
+}
+export function initPasswordLoginWithState(state: PasswordLoginState): PasswordLoginMockComponent {
+    return new PasswordLoginMockComponent(state)
+}
+
+export type PasswordLoginMockProps =
+    | Readonly<{ type: "initial" }>
+    | Readonly<{ type: "try" }>
+    | Readonly<{ type: "delayed" }>
+    | Readonly<{ type: "validation-error" }>
+    | Readonly<{ type: "bad-request" }>
+    | Readonly<{ type: "invalid" }>
+    | Readonly<{ type: "server-error" }>
+    | Readonly<{ type: "bad-response"; err: string }>
+    | Readonly<{ type: "infra-error"; err: string }>
+
+export function mapPasswordLoginMockProps(props: PasswordLoginMockProps): PasswordLoginState {
+    switch (props.type) {
+        case "initial":
+            return { type: "initial-login" }
+
+        case "try":
+            return { type: "try-to-login" }
+
+        case "delayed":
+            return { type: "delayed-to-login" }
+
+        case "validation-error":
+            return { type: "failed-to-login", err: { type: "validation-error" } }
+
+        case "bad-request":
+            return { type: "failed-to-login", err: { type: "bad-request" } }
+
+        case "invalid":
+            return { type: "failed-to-login", err: { type: "invalid-password-login" } }
+
+        case "server-error":
+            return { type: "failed-to-login", err: { type: "server-error" } }
+
+        case "bad-response":
+            return { type: "failed-to-login", err: { type: "bad-response", err: props.err } }
+
+        case "infra-error":
+            return { type: "failed-to-login", err: { type: "infra-error", err: props.err } }
+    }
 }
 
 class PasswordLoginStateFactory {
@@ -38,27 +85,19 @@ class PasswordLoginStateFactory {
     }
 }
 
-class Component implements PasswordLoginComponent {
-    state: PasswordLoginState
-
+export class PasswordLoginMockComponent extends MockComponent<PasswordLoginState>
+    implements PasswordLoginComponent {
     link: LoginLink
 
     constructor(state: PasswordLoginState) {
-        this.state = state
+        super(state)
         this.link = initLoginLink()
     }
 
-    onStateChange(post: Post<PasswordLoginState>): void {
-        post(this.state)
-    }
     login(): void {
         // mock では特に何もしない
     }
     loadError(): void {
         // mock では特に何もしない
     }
-}
-
-interface Post<T> {
-    (state: T): void
 }
