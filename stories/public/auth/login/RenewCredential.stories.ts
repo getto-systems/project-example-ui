@@ -22,7 +22,7 @@ const Template: Story<MockProps> = (args) => {
     const { login, update } = newLoginAsRenewCredential()
     return h(Preview, { args })
 
-    function Preview(props: { args: RenewCredentialMockProps }): VNode {
+    function Preview(props: { args: MockProps }): VNode {
         update.renewCredential(mapRenewCredentialMockProps(props.args))
         return h(Login, { login })
     }

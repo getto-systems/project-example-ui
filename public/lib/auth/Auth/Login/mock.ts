@@ -156,12 +156,11 @@ export function newLoginAsPasswordReset(): {
 }
 
 export function newLoginAsError(
-    err: string
 ): {
     login: LoginFactory
     update: { error: Post<string> }
 } {
-    const mock = new MockResource(map(err), (state) => new View(state))
+    const mock = new MockResource(map("error"), (state) => new View(state))
     return {
         login: () => {
             return {
