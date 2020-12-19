@@ -32,6 +32,7 @@ class Component implements PasswordResetComponent {
             switch (event.type) {
                 case "succeed-to-reset":
                     this.storeAuthCredential(event.authCredential, () => {
+                        // TODO load の前に setContinuousRenew しないといけない
                         this.tryToLoad(event)
                     })
                     return

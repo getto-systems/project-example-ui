@@ -33,6 +33,7 @@ class Component implements PasswordLoginComponent {
             switch (event.type) {
                 case "succeed-to-login":
                     this.storeAuthCredential(event.authCredential, () => {
+                        // TODO load の前に setContinuousRenew しないといけない
                         this.tryToLoad(event)
                     })
                     return

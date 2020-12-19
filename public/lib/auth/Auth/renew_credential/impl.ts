@@ -37,6 +37,7 @@ class Component implements RenewCredentialComponent {
 
                     case "succeed-to-renew":
                         this.storeAuthCredential(event.authCredential, () => {
+                            // TODO load の前に setContinuousRenew しないといけない
                             this.tryToLoad(event)
                         })
                         return
