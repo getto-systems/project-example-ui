@@ -155,8 +155,7 @@ export function newLoginAsPasswordReset(): {
     }
 }
 
-export function newLoginAsError(
-): {
+export function newLoginAsError(): {
     login: LoginFactory
     update: { error: Post<string> }
 } {
