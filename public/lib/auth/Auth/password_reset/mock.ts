@@ -6,10 +6,7 @@ import { LoginLink } from "../link"
 
 import { PasswordResetComponent, PasswordResetState } from "./component"
 
-export function initPasswordReset(): PasswordResetComponent {
-    return new PasswordResetMockComponent(new PasswordResetStateFactory().initialReset())
-}
-export function initPasswordResetWithState(state: PasswordResetState): PasswordResetMockComponent {
+export function initPasswordReset(state: PasswordResetState): PasswordResetMockComponent {
     return new PasswordResetMockComponent(state)
 }
 
@@ -52,36 +49,6 @@ export function mapPasswordResetMockProps(props: PasswordResetMockProps): Passwo
 
         case "infra-error":
             return { type: "failed-to-reset", err: { type: "infra-error", err: props.err } }
-    }
-}
-
-class PasswordResetStateFactory {
-    initialReset(): PasswordResetState {
-        return { type: "initial-reset" }
-    }
-    tryToReset(): PasswordResetState {
-        return { type: "try-to-reset" }
-    }
-    delayedToReset(): PasswordResetState {
-        return { type: "delayed-to-reset" }
-    }
-    failedToReset_validation_error(): PasswordResetState {
-        return { type: "failed-to-reset", err: { type: "validation-error" } }
-    }
-    failedToReset_bad_request(): PasswordResetState {
-        return { type: "failed-to-reset", err: { type: "bad-request" } }
-    }
-    failedToReset_invalid_password_reset(): PasswordResetState {
-        return { type: "failed-to-reset", err: { type: "invalid-password-reset" } }
-    }
-    failedToReset_server_error(): PasswordResetState {
-        return { type: "failed-to-reset", err: { type: "server-error" } }
-    }
-    failedToReset_bad_response(): PasswordResetState {
-        return { type: "failed-to-reset", err: { type: "bad-response", err: "error" } }
-    }
-    failedToReset_infra_error(): PasswordResetState {
-        return { type: "failed-to-reset", err: { type: "infra-error", err: "error" } }
     }
 }
 
