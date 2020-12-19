@@ -1,9 +1,30 @@
+import { MockComponent } from "../../../../z_external/mock/component"
+
 import { LoginIDFieldComponent, LoginIDFieldState } from "./component"
 
 import { noError, hasError } from "../../../common/field/data"
 
-export function initLoginIDField(state: LoginIDFieldState): LoginIDFieldComponent {
-    return new Component(state)
+export function initLoginIDField(state: LoginIDFieldState): LoginIDFieldMockComponent {
+    return new LoginIDFieldMockComponent(state)
+}
+
+export type LoginIDFieldMockProps =
+    | Readonly<{ loginIDField: "initial" }>
+    | Readonly<{ loginIDField: "empty" }>
+
+export const loginIDFieldMockTypes: ReturnType<typeof loginIDFieldMockPropsType>[] = ["initial", "empty"]
+function loginIDFieldMockPropsType(props: LoginIDFieldMockProps) {
+    return props.loginIDField
+}
+
+export function mapLoginIDFieldMockProps(props: LoginIDFieldMockProps): LoginIDFieldState {
+    switch (props.loginIDField) {
+        case "initial":
+            return { type: "succeed-to-update", result: noError() }
+
+        case "empty":
+            return { type: "succeed-to-update", result: hasError(["empty"]) }
+    }
 }
 
 export class LoginIDFieldStateFactory {
@@ -16,24 +37,12 @@ export class LoginIDFieldStateFactory {
     }
 }
 
-class Component implements LoginIDFieldComponent {
-    state: LoginIDFieldState
-
-    constructor(state: LoginIDFieldState) {
-        this.state = state
-    }
-
-    onStateChange(post: Post<LoginIDFieldState>): void {
-        post(this.state)
-    }
+export class LoginIDFieldMockComponent extends MockComponent<LoginIDFieldState>
+    implements LoginIDFieldComponent {
     set(): void {
         // mock では特に何もしない
     }
     validate(): void {
         // mock では特に何もしない
     }
-}
-
-interface Post<T> {
-    (state: T): void
 }
