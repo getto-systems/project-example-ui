@@ -71,11 +71,8 @@ describe("PasswordLogin", () => {
     })
 
     test("submit valid login-id and password; with delayed", (done) => {
-        const currentURL: URL = new URL("https://example.com/index.html")
-        const config = standardConfig()
-        const repository = standardRepository()
-        const simulator = waitSimulator({ wait_millisecond: 2 }) // wait for delayed timeout
-        const resource = newPasswordLoginResource(currentURL, config, repository, simulator)
+        // wait for delayed timeout
+        const { repository, resource } = waitPasswordLoginResource({ wait_millisecond: 2 })
 
         resource.passwordLogin.onStateChange(stateHandler())
 
@@ -287,6 +284,15 @@ function standardPasswordLoginResource() {
     const config = standardConfig()
     const repository = standardRepository()
     const simulator = standardSimulator()
+    const resource = newPasswordLoginResource(currentURL, config, repository, simulator)
+
+    return { repository, resource }
+}
+function waitPasswordLoginResource(waitTime: WaitTime) {
+    const currentURL: URL = new URL("https://example.com/index.html")
+    const config = standardConfig()
+    const repository = standardRepository()
+    const simulator = waitSimulator(waitTime)
     const resource = newPasswordLoginResource(currentURL, config, repository, simulator)
 
     return { repository, resource }
