@@ -28,9 +28,9 @@ export const content_development_auth_profile = (): VNode[] => [
     ]),
     container(general()),
     v_medium(),
-    container(passwordChange()),
-    v_medium(),
     container(passwordReset()),
+    v_medium(),
+    container(passwordChange()),
     v_medium(),
     container(logout()),
 ]
@@ -38,56 +38,6 @@ function general(): VNode[] {
     return [serverClients()]
 }
 
-const passwordChange = () => [
-    box("パスワード変更", [
-        itemsSection("ログインID 取得", ["現在の認証トークンを取得したログインID を取得"]),
-        itemsSection("旧パスワード・新パスワード入力", ["入力形式を検証"]),
-        itemsSection("パスワード更新", ["ログインID のパスワードを変更"]),
-    ]),
-    box("ログインID 取得", [
-        toApiServer("チケットトークン", ["cookie + nonce"]),
-        inApiServer(items([validate("チケットトークン検証"), validate("チケット有効期限検証")]), []),
-        fromApiServer("ログインID", ["パスワードを変更しようとしているログインID を表示"]),
-        hr,
-        itemsSection("認証トークンを失効させる検証", ["チケットトークン検証", "チケット有効期限検証"]),
-    ]),
-    box("旧パスワード・新パスワード入力", [
-        inBrowser(items([validate("旧パスワード検証"), validate("新パスワード検証")]), []),
-        hr,
-        html`<p>検証失敗なら認証リクエストできない</p>`,
-        v_medium(),
-        itemsSection("旧パスワード検証", ["空でないこと", "長すぎないこと"]),
-        itemsSection("新パスワード検証", ["空でないこと", "長すぎないこと"]),
-    ]),
-    box("パスワード変更", [
-        toApiServer(items(["チケット", "ログインID", "旧パスワード", "新パスワード"]), []),
-        inApiServer(
-            items([
-                validate("チケットトークン検証"),
-                validate("チケット有効期限検証"),
-                validate("ログインID 検証"),
-                validate("旧パスワード検証"),
-                validate("新パスワード検証"),
-                "パスワード変更",
-            ]),
-            []
-        ),
-        hr,
-        itemsSection("認証トークンを失効させる検証", ["チケットトークン検証", "チケット有効期限検証"]),
-        html`<p>旧パスワードは使用できなくなる</p>`,
-        v_medium(),
-        itemsSection("ログインID 検証", [
-            // TODO 長すぎないことをチェックしたほうがいい
-            "ユーザーのログインID と一致すること",
-        ]),
-        itemsSection("旧パスワード検証", [
-            "空でないこと",
-            "長すぎないこと",
-            "保存されているハッシュ化パスワードとの同一性検証が通ること",
-        ]),
-        itemsSection("新パスワード検証", ["空でないこと", "長すぎないこと"]),
-    ]),
-]
 const passwordReset = () => [
     box("パスワードリセット", [
         itemsSection("ログインID 入力", ["入力形式を検証"]),
@@ -177,6 +127,56 @@ const passwordReset = () => [
             "セッションを開始したときに入力したものと同じであること",
         ]),
         itemsSection("パスワード検証", ["空でないこと", "長すぎないこと"]),
+    ]),
+]
+const passwordChange = () => [
+    box("パスワード変更", [
+        itemsSection("ログインID 取得", ["現在の認証トークンを取得したログインID を取得"]),
+        itemsSection("旧パスワード・新パスワード入力", ["入力形式を検証"]),
+        itemsSection("パスワード更新", ["ログインID のパスワードを変更"]),
+    ]),
+    box("ログインID 取得", [
+        toApiServer("チケットトークン", ["cookie + nonce"]),
+        inApiServer(items([validate("チケットトークン検証"), validate("チケット有効期限検証")]), []),
+        fromApiServer("ログインID", ["パスワードを変更しようとしているログインID を表示"]),
+        hr,
+        itemsSection("認証トークンを失効させる検証", ["チケットトークン検証", "チケット有効期限検証"]),
+    ]),
+    box("旧パスワード・新パスワード入力", [
+        inBrowser(items([validate("旧パスワード検証"), validate("新パスワード検証")]), []),
+        hr,
+        html`<p>検証失敗なら認証リクエストできない</p>`,
+        v_medium(),
+        itemsSection("旧パスワード検証", ["空でないこと", "長すぎないこと"]),
+        itemsSection("新パスワード検証", ["空でないこと", "長すぎないこと"]),
+    ]),
+    box("パスワード変更", [
+        toApiServer(items(["チケット", "ログインID", "旧パスワード", "新パスワード"]), []),
+        inApiServer(
+            items([
+                validate("チケットトークン検証"),
+                validate("チケット有効期限検証"),
+                validate("ログインID 検証"),
+                validate("旧パスワード検証"),
+                validate("新パスワード検証"),
+                "パスワード変更",
+            ]),
+            []
+        ),
+        hr,
+        itemsSection("認証トークンを失効させる検証", ["チケットトークン検証", "チケット有効期限検証"]),
+        html`<p>旧パスワードは使用できなくなる</p>`,
+        v_medium(),
+        itemsSection("ログインID 検証", [
+            // TODO 長すぎないことをチェックしたほうがいい
+            "ユーザーのログインID と一致すること",
+        ]),
+        itemsSection("旧パスワード検証", [
+            "空でないこと",
+            "長すぎないこと",
+            "保存されているハッシュ化パスワードとの同一性検証が通ること",
+        ]),
+        itemsSection("新パスワード検証", ["空でないこと", "長すぎないこと"]),
     ]),
 ]
 const logout = () => [
