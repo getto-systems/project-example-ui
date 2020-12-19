@@ -5,6 +5,7 @@ import { Config, newPasswordLoginResource, Repository, Simulator } from "./core"
 import { initMemoryAuthCredentialRepository } from "../../../common/credential/impl/repository/auth_credential/memory"
 
 import { PasswordLoginState } from "../component"
+import { LoginIDFieldState } from "../../field/login_id/component"
 
 import { markScriptPath } from "../../../common/application/data"
 import {
@@ -13,23 +14,19 @@ import {
     markLoginAt,
     markTicketNonce,
 } from "../../../common/credential/data"
-import { markInputValue } from "../../../common/field/data"
+import { hasError, markInputValue, noError } from "../../../common/field/data"
 import { LoginFields } from "../../../login/password_login/data"
 import { AuthCredentialRepository } from "../../../common/credential/infra"
+import { PasswordFieldState } from "../../field/password/component"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
-//const INVALID_LOGIN = { loginID: "invalid-login-id", password: "invalid-password" } as const
 
 const AUTHORIZED_TICKET_NONCE = "ticket-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
 
 describe("PasswordLogin", () => {
     test("submit valid login-id and password", (done) => {
-        const currentURL: URL = new URL("https://example.com/index.html")
-        const config = standardConfig()
-        const repository = standardRepository()
-        const simulator = standardSimulator()
-        const resource = newPasswordLoginResource(currentURL, config, repository, simulator)
+        const { repository, resource } = standardPasswordLoginResource()
 
         resource.passwordLogin.onStateChange(stateHandler())
 
@@ -122,7 +119,178 @@ describe("PasswordLogin", () => {
             }
         }
     })
+
+    test("submit without fields", (done) => {
+        const { repository, resource } = standardPasswordLoginResource()
+
+        resource.passwordLogin.onStateChange(stateHandler())
+
+        // try to login without fields
+        //resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
+        //resource.passwordField.set(markInputValue(VALID_LOGIN.password))
+
+        resource.passwordLogin.login()
+
+        function stateHandler(): Post<PasswordLoginState> {
+            const stack: PasswordLoginState[] = []
+            return (state) => {
+                stack.push(state)
+
+                switch (state.type) {
+                    case "initial-login":
+                    case "try-to-login":
+                    case "delayed-to-login":
+                        // work in progress...
+                        break
+
+                    case "succeed-to-login":
+                        done(new Error(state.type))
+                        break
+
+                    case "failed-to-login":
+                        expect(stack).toEqual([
+                            { type: "failed-to-login", err: { type: "validation-error" } },
+                        ])
+                        expectToEmptyLastLogin(repository.authCredentials)
+                        done()
+                        break
+
+                    case "storage-error":
+                    case "load-error":
+                    case "error":
+                        done(new Error(state.type))
+                        break
+                }
+            }
+        }
+    })
+
+    describe("fields", () => {
+        describe("loginID", () => {
+            test("invalid with empty string", (done) => {
+                const { resource } = standardPasswordLoginResource()
+
+                resource.loginIDField.onStateChange(stateHandler())
+
+                resource.loginIDField.set(markInputValue(""))
+
+                function stateHandler(): Post<LoginIDFieldState> {
+                    return (state) => {
+                        expect(state).toMatchObject({
+                            type: "succeed-to-update",
+                            result: hasError(["empty"]),
+                        })
+                        done()
+                    }
+                }
+            })
+        })
+
+        describe("password", () => {
+            test("invalid with empty string", (done) => {
+                const { resource } = standardPasswordLoginResource()
+
+                resource.passwordField.onStateChange(stateHandler())
+
+                resource.passwordField.set(markInputValue(""))
+
+                function stateHandler(): Post<PasswordFieldState> {
+                    return (state) => {
+                        expect(state).toMatchObject({
+                            type: "succeed-to-update",
+                            result: hasError(["empty"]),
+                        })
+                        done()
+                    }
+                }
+            })
+
+            test("invalid with too long string", (done) => {
+                const { resource } = standardPasswordLoginResource()
+
+                resource.passwordField.onStateChange(stateHandler())
+
+                resource.passwordField.set(markInputValue("a".repeat(73)))
+
+                function stateHandler(): Post<PasswordFieldState> {
+                    return (state) => {
+                        expect(state).toMatchObject({
+                            type: "succeed-to-update",
+                            result: hasError(["too-long"]),
+                        })
+                        done()
+                    }
+                }
+            })
+
+            test("invalid with too long string including multi-byte character", (done) => {
+                const { resource } = standardPasswordLoginResource()
+
+                resource.passwordField.onStateChange(stateHandler())
+
+                // "あ"(UTF8) is 3 bytes character
+                resource.passwordField.set(markInputValue("あ".repeat(24) + "a"))
+
+                function stateHandler(): Post<PasswordFieldState> {
+                    return (state) => {
+                        expect(state).toMatchObject({
+                            type: "succeed-to-update",
+                            result: hasError(["too-long"]),
+                        })
+                        done()
+                    }
+                }
+            })
+
+            test("valid with just 72 byte string", (done) => {
+                const { resource } = standardPasswordLoginResource()
+
+                resource.passwordField.onStateChange(stateHandler())
+
+                resource.passwordField.set(markInputValue("a".repeat(72)))
+
+                function stateHandler(): Post<PasswordFieldState> {
+                    return (state) => {
+                        expect(state).toMatchObject({
+                            type: "succeed-to-update",
+                            result: noError(),
+                        })
+                        done()
+                    }
+                }
+            })
+
+            test("valid with just 72 byte string including multi-byte character", (done) => {
+                const { resource } = standardPasswordLoginResource()
+
+                resource.passwordField.onStateChange(stateHandler())
+
+                // "あ"(UTF8) is 3 bytes character
+                resource.passwordField.set(markInputValue("あ".repeat(24)))
+
+                function stateHandler(): Post<PasswordFieldState> {
+                    return (state) => {
+                        expect(state).toMatchObject({
+                            type: "succeed-to-update",
+                            result: noError(),
+                        })
+                        done()
+                    }
+                }
+            })
+        })
+    })
 })
+
+function standardPasswordLoginResource() {
+    const currentURL: URL = new URL("https://example.com/index.html")
+    const config = standardConfig()
+    const repository = standardRepository()
+    const simulator = standardSimulator()
+    const resource = newPasswordLoginResource(currentURL, config, repository, simulator)
+
+    return { repository, resource }
+}
 
 function standardConfig(): Config {
     return {
@@ -163,10 +331,7 @@ function waitSimulator(waitTime: WaitTime): Simulator {
     }
 }
 
-async function simulateLogin(fields: LoginFields): Promise<AuthCredential | null> {
-    if (fields.loginID !== VALID_LOGIN.loginID || fields.password !== VALID_LOGIN.password) {
-        return null
-    }
+async function simulateLogin(_fields: LoginFields): Promise<AuthCredential> {
     return {
         ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
         apiCredential: markApiCredential({ apiRoles: ["role"] }),
@@ -182,6 +347,12 @@ function expectToSaveLastLogin(authCredentials: AuthCredentialRepository) {
             ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
             lastLoginAt: markLoginAt(SUCCEED_TO_LOGIN_AT),
         },
+    })
+}
+function expectToEmptyLastLogin(authCredentials: AuthCredentialRepository) {
+    expect(authCredentials.findLastLogin()).toEqual({
+        success: true,
+        found: false,
     })
 }
 
