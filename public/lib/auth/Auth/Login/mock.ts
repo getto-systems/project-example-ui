@@ -1,16 +1,11 @@
 import { MockComponent } from "../../../z_external/mock/component"
 
-import { initRenewCredential, initRenewCredentialWithState } from "../renew_credential/mock"
-
-import { initPasswordLogin, initPasswordLoginWithState } from "../password_login/mock"
-import {
-    initPasswordResetSession,
-    initPasswordResetSessionWithState,
-} from "../password_reset_session/mock"
-import { initPasswordReset, initPasswordResetWithState } from "../password_reset/mock"
-
-import { initLoginIDField, LoginIDFieldStateFactory } from "../field/login_id/mock"
-import { initPasswordField, PasswordFieldStateFactory } from "../field/password/mock"
+import { initRenewCredential } from "../renew_credential/mock"
+import { initPasswordLogin } from "../password_login/mock"
+import { initPasswordResetSession } from "../password_reset_session/mock"
+import { initPasswordReset } from "../password_reset/mock"
+import { initLoginIDField } from "../field/login_id/mock"
+import { initPasswordField } from "../field/password/mock"
 
 import { LoginFactory, LoginView, LoginState } from "./view"
 import { initialRenewCredentialState, RenewCredentialState } from "../renew_credential/component"
@@ -23,26 +18,12 @@ import {
 } from "../password_reset_session/component"
 import { initialPasswordResetState, PasswordResetState } from "../password_reset/component"
 
-export function newLoginAsMock(): LoginFactory {
-    return newLoginWithState(new LoginStateFactory().renewCredential())
-}
-export function newLoginWithState(state: LoginState): LoginFactory {
-    return () => {
-        return {
-            view: new View(state),
-            terminate: () => {
-                // mock では特に何もしない
-            },
-        }
-    }
-}
-
 export function newLoginAsRenewCredential(): {
     login: LoginFactory
     update: { renewCredential: Post<RenewCredentialState> }
 } {
     const mock = {
-        renewCredential: new MockResource(initialRenewCredentialState, initRenewCredentialWithState),
+        renewCredential: new MockResource(initialRenewCredentialState, initRenewCredential),
     }
     return {
         login: () => {
@@ -73,7 +54,7 @@ export function newLoginAsPasswordLogin(): {
     }
 } {
     const mock = {
-        passwordLogin: new MockResource(initialPasswordLoginState, initPasswordLoginWithState),
+        passwordLogin: new MockResource(initialPasswordLoginState, initPasswordLogin),
         loginIDField: new MockResource(initialLoginIDFieldState, initLoginIDField),
         passwordField: new MockResource(initialPasswordFieldState, initPasswordField),
     }
@@ -111,7 +92,7 @@ export function newLoginAsPasswordResetSession(): {
     const mock = {
         passwordResetSession: new MockResource(
             initialPasswordResetSessionState,
-            initPasswordResetSessionWithState
+            initPasswordResetSession
         ),
         loginIDField: new MockResource(initialLoginIDFieldState, initLoginIDField),
     }
@@ -146,7 +127,7 @@ export function newLoginAsPasswordReset(): {
     }
 } {
     const mock = {
-        passwordReset: new MockResource(initialPasswordResetState, initPasswordResetWithState),
+        passwordReset: new MockResource(initialPasswordResetState, initPasswordReset),
         loginIDField: new MockResource(initialLoginIDFieldState, initLoginIDField),
         passwordField: new MockResource(initialPasswordFieldState, initPasswordField),
     }
@@ -231,51 +212,6 @@ class MockResource<S, C extends MockComponent<S>> {
 }
 interface MockFactory<S, C extends MockComponent<S>> {
     (state: S): C
-}
-
-class LoginStateFactory {
-    renewCredential(): LoginState {
-        return {
-            type: "renew-credential",
-            components: {
-                renewCredential: initRenewCredential(),
-            },
-        }
-    }
-
-    passwordLogin(): LoginState {
-        return {
-            type: "password-login",
-            components: {
-                passwordLogin: initPasswordLogin(),
-                loginIDField: initLoginIDField(new LoginIDFieldStateFactory().empty()),
-                passwordField: initPasswordField(new PasswordFieldStateFactory().empty()),
-            },
-        }
-    }
-    passwordResetSession(): LoginState {
-        return {
-            type: "password-reset-session",
-            components: {
-                passwordResetSession: initPasswordResetSession(),
-                loginIDField: initLoginIDField(new LoginIDFieldStateFactory().empty()),
-            },
-        }
-    }
-    passwordReset(): LoginState {
-        return {
-            type: "password-reset",
-            components: {
-                passwordReset: initPasswordReset(),
-                loginIDField: initLoginIDField(new LoginIDFieldStateFactory().empty()),
-                passwordField: initPasswordField(new PasswordFieldStateFactory().empty()),
-            },
-        }
-    }
-
-    error(err: string): LoginState {
-        return { type: "error", err }
-    }
 }
 
 class View extends MockComponent<LoginState> implements LoginView {

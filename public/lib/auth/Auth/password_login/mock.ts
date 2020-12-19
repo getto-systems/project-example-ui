@@ -6,10 +6,7 @@ import { LoginLink } from "../link"
 
 import { PasswordLoginComponent, PasswordLoginState } from "./component"
 
-export function initPasswordLogin(): PasswordLoginComponent {
-    return new PasswordLoginMockComponent(new PasswordLoginStateFactory().initialLogin())
-}
-export function initPasswordLoginWithState(state: PasswordLoginState): PasswordLoginMockComponent {
+export function initPasswordLogin(state: PasswordLoginState): PasswordLoginMockComponent {
     return new PasswordLoginMockComponent(state)
 }
 
@@ -52,36 +49,6 @@ export function mapPasswordLoginMockProps(props: PasswordLoginMockProps): Passwo
 
         case "infra-error":
             return { type: "failed-to-login", err: { type: "infra-error", err: props.err } }
-    }
-}
-
-class PasswordLoginStateFactory {
-    initialLogin(): PasswordLoginState {
-        return { type: "initial-login" }
-    }
-    tryToLogin(): PasswordLoginState {
-        return { type: "try-to-login" }
-    }
-    delayedToLogin(): PasswordLoginState {
-        return { type: "delayed-to-login" }
-    }
-    failedToLogin_validation_error(): PasswordLoginState {
-        return { type: "failed-to-login", err: { type: "validation-error" } }
-    }
-    failedToLogin_bad_request(): PasswordLoginState {
-        return { type: "failed-to-login", err: { type: "bad-request" } }
-    }
-    failedToLogin_invalid_password_login(): PasswordLoginState {
-        return { type: "failed-to-login", err: { type: "invalid-password-login" } }
-    }
-    failedToLogin_server_error(): PasswordLoginState {
-        return { type: "failed-to-login", err: { type: "server-error" } }
-    }
-    failedToLogin_bad_response(): PasswordLoginState {
-        return { type: "failed-to-login", err: { type: "bad-response", err: "error" } }
-    }
-    failedToLogin_infra_error(): PasswordLoginState {
-        return { type: "failed-to-login", err: { type: "infra-error", err: "error" } }
     }
 }
 

@@ -2,10 +2,7 @@ import { MockComponent } from "../../../z_external/mock/component"
 
 import { RenewCredentialComponent, RenewCredentialState } from "./component"
 
-export function initRenewCredential(): RenewCredentialComponent {
-    return initRenewCredentialWithState(new RenewCredentialStateFactory().delayedToRenew())
-}
-export function initRenewCredentialWithState(state: RenewCredentialState): RenewCredentialMockComponent {
+export function initRenewCredential(state: RenewCredentialState): RenewCredentialMockComponent {
     return new RenewCredentialMockComponent(state)
 }
 
@@ -32,24 +29,6 @@ export function mapRenewCredentialMockProps(props: RenewCredentialMockProps): Re
 
         case "infra-error":
             return { type: "failed-to-renew", err: { type: "infra-error", err: props.err } }
-    }
-}
-
-class RenewCredentialStateFactory {
-    delayedToRenew(): RenewCredentialState {
-        return { type: "delayed-to-renew" }
-    }
-    failedToRenew_bad_request(): RenewCredentialState {
-        return { type: "failed-to-renew", err: { type: "bad-request" } }
-    }
-    failedToRenew_server_error(): RenewCredentialState {
-        return { type: "failed-to-renew", err: { type: "server-error" } }
-    }
-    failedToRenew_bad_response(): RenewCredentialState {
-        return { type: "failed-to-renew", err: { type: "bad-response", err: "error" } }
-    }
-    failedToRenew_infra_error(): RenewCredentialState {
-        return { type: "failed-to-renew", err: { type: "infra-error", err: "error" } }
     }
 }
 
