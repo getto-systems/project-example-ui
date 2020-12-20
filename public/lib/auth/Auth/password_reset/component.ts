@@ -1,7 +1,7 @@
 import { LoginLink } from "../link"
 
 import { Reset } from "../../profile/password_reset/action"
-import { StoreAuthCredential } from "../../common/credential/action"
+import { SetContinuousRenew } from "../../login/renew/action"
 import { SecureScriptPath } from "../../common/application/action"
 
 import { ResetError } from "../../profile/password_reset/data"
@@ -15,7 +15,7 @@ export interface PasswordResetComponentFactory {
 export type PasswordResetMaterial = Readonly<{
     link: LoginLink
     reset: Reset
-    storeAuthCredential: StoreAuthCredential
+    setContinuousRenew: SetContinuousRenew
     secureScriptPath: SecureScriptPath
 }>
 
@@ -31,7 +31,7 @@ export type PasswordResetState =
     | Readonly<{ type: "try-to-reset" }>
     | Readonly<{ type: "delayed-to-reset" }>
     | Readonly<{ type: "failed-to-reset"; err: ResetError }>
-    | Readonly<{ type: "succeed-to-reset"; scriptPath: ScriptPath }>
+    | Readonly<{ type: "try-to-load"; scriptPath: ScriptPath }>
     | Readonly<{ type: "storage-error"; err: StorageError }>
     | Readonly<{ type: "load-error"; err: LoadError }>
     | Readonly<{ type: "error"; err: string }>

@@ -60,6 +60,7 @@ class Component implements PasswordLoginComponent {
 
                 default:
                     this.post(event)
+                    return
             }
         })
     }
