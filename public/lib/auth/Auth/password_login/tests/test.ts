@@ -292,7 +292,7 @@ describe("PasswordLogin", () => {
 })
 
 function standardPasswordLoginResource() {
-    const currentURL: URL = new URL("https://example.com/index.html")
+    const currentURL = standardURL()
     const config = standardConfig()
     const repository = standardRepository()
     const simulator = standardSimulator()
@@ -301,7 +301,7 @@ function standardPasswordLoginResource() {
     return { repository, resource }
 }
 function waitPasswordLoginResource(waitTime: WaitTime) {
-    const currentURL: URL = new URL("https://example.com/index.html")
+    const currentURL = standardURL()
     const config = standardConfig()
     const repository = standardRepository()
     const simulator = waitSimulator(waitTime)
@@ -310,6 +310,9 @@ function waitPasswordLoginResource(waitTime: WaitTime) {
     return { repository, resource }
 }
 
+function standardURL(): URL {
+    return new URL("https://example.com/index.html")
+}
 function standardConfig(): Config {
     return {
         application: {
