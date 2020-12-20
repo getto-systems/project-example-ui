@@ -1,5 +1,4 @@
 import { Renew, SetContinuousRenew } from "../../login/renew/action"
-import { LoadLastLogin, RemoveAuthCredential, StoreAuthCredential } from "../../common/credential/action"
 import { SecureScriptPath } from "../../common/application/action"
 
 import { RenewError } from "../../login/renew/data"
@@ -13,9 +12,6 @@ export interface RenewCredentialComponentFactory {
 export type RenewCredentialMaterial = Readonly<{
     renew: Renew
     setContinuousRenew: SetContinuousRenew
-    loadLastLogin: LoadLastLogin
-    storeAuthCredential: StoreAuthCredential
-    removeAuthCredential: RemoveAuthCredential
     secureScriptPath: SecureScriptPath
 }>
 
@@ -32,7 +28,8 @@ export type RenewCredentialState =
     | Readonly<{ type: "required-to-login" }>
     | Readonly<{ type: "try-to-renew" }>
     | Readonly<{ type: "delayed-to-renew" }>
-    | Readonly<{ type: "succeed-to-renew"; scriptPath: ScriptPath }>
+    | Readonly<{ type: "try-to-load"; scriptPath: ScriptPath }>
+    | Readonly<{ type: "succeed-to-set-continuous-renew" }>
     | Readonly<{ type: "failed-to-renew"; err: RenewError }>
     | Readonly<{ type: "storage-error"; err: StorageError }>
     | Readonly<{ type: "load-error"; err: LoadError }>

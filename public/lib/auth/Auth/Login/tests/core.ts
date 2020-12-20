@@ -63,11 +63,16 @@ export function initCredentialAction(authCredentials: AuthCredentialRepository):
         loadLastLogin: loadLastLogin({ authCredentials }),
     }
 }
-export function initRenewAction(config: RenewActionConfig, simulator: RenewSimulator): RenewAction {
+export function initRenewAction(
+    config: RenewActionConfig,
+    authCredentials: AuthCredentialRepository,
+    simulator: RenewSimulator
+): RenewAction {
     const client = initSimulateRenewClient(simulator)
 
     return {
         renew: renew({
+            authCredentials,
             client,
             config: config.renew,
             delayed,
@@ -77,12 +82,14 @@ export function initRenewAction(config: RenewActionConfig, simulator: RenewSimul
 }
 export function initSetContinuousRenewAction(
     config: SetContinuousRenewActionConfig,
+    authCredentials: AuthCredentialRepository,
     simulator: RenewSimulator
 ): SetContinuousRenewAction {
     const client = initSimulateRenewClient(simulator)
 
     return {
         setContinuousRenew: setContinuousRenew({
+            authCredentials,
             client,
             config: config.setContinuousRenew,
             runner: initRenewRunner(),
