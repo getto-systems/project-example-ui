@@ -4,15 +4,14 @@ const fs = require("fs")
 
 const WorkerPlugin = require("worker-plugin")
 
-const entryPoint = require("../entryPoint")
+const entryPoint = require("./entryPoint")
 
 module.exports = {
     entry: () => {
-        return entryPoint.find().reduce((acc, file) => {
-            const name = entryPoint.toEntryName(file)
-            acc[name] = toMainPath(file)
+        return entryPoint.find().reduce((acc, name) => {
+            acc[name] = toMainPath(name)
 
-            const worker = toWorkerPath(file)
+            const worker = toWorkerPath(name)
             if (exists(worker)) {
                 acc[`${name}.worker`] = worker
             }
@@ -20,14 +19,14 @@ module.exports = {
             return acc
         }, {})
 
-        function toMainPath(file) {
-            return toPath("main", file)
+        function toMainPath(name) {
+            return toPath("main", name)
         }
-        function toWorkerPath(file) {
-            return toPath("worker", file)
+        function toWorkerPath(name) {
+            return toPath("worker", name)
         }
-        function toPath(type, file) {
-            return path.join(__dirname, `../lib/z_main${entryPoint.toEntryPath(file)}/${type}.ts`)
+        function toPath(type, name) {
+            return path.join(__dirname, `./lib/z_main/${name}/${type}.ts`)
         }
 
         function exists(file) {
@@ -42,6 +41,7 @@ module.exports = {
     output: {
         path: path.join(__dirname, "../dist"),
         filename: "[name].js",
+        globalObject: "self",
     },
     module: {
         rules: [
@@ -63,11 +63,10 @@ module.exports = {
         publicPath: "/dist/",
 
         host: "0.0.0.0",
-        port: process.env.SECURE_APP_PORT,
+        port: process.env.PUBLIC_APP_PORT,
 
         hot: true,
         sockPort: "443",
-        sockHost: process.env.SECURE_SERVER_HOST,
 
         disableHostCheck: true,
     },
