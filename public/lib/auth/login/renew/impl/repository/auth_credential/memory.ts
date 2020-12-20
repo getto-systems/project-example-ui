@@ -1,6 +1,6 @@
-import { AuthCredentialRepository } from "../../../infra"
+import { AuthCredentialRepository, StoreResult, LoadLastLoginResult } from "../../../infra"
 
-import { AuthCredential, StoreResult, LoadLastLoginResult } from "../../../../../common/credential/data"
+import { AuthCredential } from "../../../../../common/credential/data"
 
 export function initMemoryAuthCredentialRepository(
     storage: AuthCredentialStore

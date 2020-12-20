@@ -5,7 +5,7 @@ import {
     encodeUint8ArrayToBase64String,
 } from "../../../../../../z_external/protocol_buffers_util"
 
-import { StorageKey, AuthCredentialRepository } from "../../../infra"
+import { StorageKey, AuthCredentialRepository, StoreResult, LoadLastLoginResult } from "../../../infra"
 
 import {
     LoginAt,
@@ -15,8 +15,6 @@ import {
     AuthCredential,
     ApiCredential,
     markApiCredential,
-    StoreResult,
-    LoadLastLoginResult,
 } from "../../../../../common/credential/data"
 
 export function initStorageAuthCredentialRepository(
