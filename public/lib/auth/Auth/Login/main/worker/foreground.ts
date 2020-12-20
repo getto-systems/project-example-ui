@@ -3,7 +3,11 @@ import { initAuthClient, AuthClient } from "../../../../../z_external/auth_clien
 
 import { env } from "../../../../../y_static/env"
 
-import { newApplicationActionConfig, newRenewActionConfig } from "../../impl/config"
+import {
+    newApplicationActionConfig,
+    newRenewActionConfig,
+    newSetContinuousRenewActionConfig,
+} from "../../impl/config"
 
 import { Collector, ForegroundFactory, initLoginAsForeground } from "../../impl/worker/foreground"
 
@@ -37,13 +41,13 @@ import { currentPagePathname, detectViewState, detectResetToken } from "../../im
 
 import { AuthCredentialRepository } from "../../../../common/credential/infra"
 import { ApplicationActionConfig } from "../../../../common/application/infra"
-import { RenewConfig, SetContinuousRenewConfig } from "../../../../login/renew/infra"
+import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../../login/renew/infra"
 
 import { LoginFactory } from "../../view"
 
 import { ApplicationAction } from "../../../../common/application/action"
 import { CredentialAction, StoreCredentialAction } from "../../../../common/credential/action"
-import { RenewAction } from "../../../../login/renew/action"
+import { RenewAction, SetContinuousRenewAction } from "../../../../login/renew/action"
 
 export function newLoginAsWorkerForeground(): LoginFactory {
     const credentialStorage = localStorage
@@ -62,6 +66,10 @@ export function newLoginAsWorkerForeground(): LoginFactory {
             storeCredential: initStoreCredentialAction(authCredentials),
             credential: initCredentialAction(authCredentials),
             renew: initRenewAction(newRenewActionConfig(), authClient),
+            setContinuousRenew: initSetContinuousRenewAction(
+                newSetContinuousRenewActionConfig(),
+                authClient
+            ),
 
             field: {
                 loginID: () => loginIDField(),
@@ -118,10 +126,7 @@ export function initCredentialAction(authCredentials: AuthCredentialRepository):
         loadLastLogin: loadLastLogin({ authCredentials }),
     }
 }
-export function initRenewAction(
-    config: { renew: RenewConfig; setContinuousRenew: SetContinuousRenewConfig },
-    authClient: AuthClient
-): RenewAction {
+export function initRenewAction(config: RenewActionConfig, authClient: AuthClient): RenewAction {
     const client = initFetchRenewClient(authClient)
 
     return {
@@ -131,6 +136,15 @@ export function initRenewAction(
             delayed,
             expires: initAuthExpires(),
         }),
+    }
+}
+export function initSetContinuousRenewAction(
+    config: SetContinuousRenewActionConfig,
+    authClient: AuthClient
+): SetContinuousRenewAction {
+    const client = initFetchRenewClient(authClient)
+
+    return {
         setContinuousRenew: setContinuousRenew({
             client,
             config: config.setContinuousRenew,

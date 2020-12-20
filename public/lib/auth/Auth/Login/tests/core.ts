@@ -32,12 +32,12 @@ import {
 
 import { ApplicationAction } from "../../../common/application/action"
 import { CredentialAction, StoreCredentialAction } from "../../../common/credential/action"
-import { RenewAction } from "../../../login/renew/action"
+import { RenewAction, SetContinuousRenewAction } from "../../../login/renew/action"
 import { PasswordLoginAction } from "../../../login/password_login/action"
 import { PasswordResetAction, PasswordResetSessionAction } from "../../../profile/password_reset/action"
 
 import { ApplicationActionConfig } from "../../../common/application/infra"
-import { RenewActionConfig } from "../../../login/renew/infra"
+import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../login/renew/infra"
 import { PasswordLoginActionConfig } from "../../../login/password_login/infra"
 import {
     PasswordResetActionConfig,
@@ -73,6 +73,15 @@ export function initRenewAction(config: RenewActionConfig, simulator: RenewSimul
             delayed,
             expires: initAuthExpires(),
         }),
+    }
+}
+export function initSetContinuousRenewAction(
+    config: SetContinuousRenewActionConfig,
+    simulator: RenewSimulator
+): SetContinuousRenewAction {
+    const client = initSimulateRenewClient(simulator)
+
+    return {
         setContinuousRenew: setContinuousRenew({
             client,
             config: config.setContinuousRenew,
