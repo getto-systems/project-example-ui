@@ -65,7 +65,7 @@ describe("PasswordLogin", () => {
                         setTimeout(() => {
                             expectToSaveRenewed(repository.authCredentials)
                             done()
-                        }, 2)
+                        }, 2) // after setContinuousRenew interval and delay
                         break
 
                     case "failed-to-login":
@@ -112,7 +112,10 @@ describe("PasswordLogin", () => {
                             },
                         ])
                         expectToSaveLastLogin(repository.authCredentials)
-                        done()
+                        setTimeout(() => {
+                            expectToSaveRenewed(repository.authCredentials)
+                            done()
+                        }, 2) // after setContinuousRenew interval and delay
                         break
 
                     case "failed-to-login":
