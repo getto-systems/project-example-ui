@@ -5,11 +5,6 @@ import { currentPagePathname, detectResetToken, detectViewState } from "../impl/
 import { PasswordLoginCollector, PasswordResetCollector, RenewCredentialCollector } from "../impl/core"
 
 import { secureScriptPath } from "../../../common/application/impl/core"
-import {
-    loadLastLogin,
-    removeAuthCredential,
-    storeAuthCredential,
-} from "../../../common/credential/impl/core"
 import { renew, setContinuousRenew } from "../../../login/renew/impl/core"
 import { login } from "../../../login/password_login/impl/core"
 import { startSession, checkStatus, reset } from "../../../profile/password_reset/impl/core"
@@ -31,7 +26,6 @@ import {
 } from "../../../profile/password_reset/impl/client/session/simulate"
 
 import { ApplicationAction } from "../../../common/application/action"
-import { CredentialAction, StoreCredentialAction } from "../../../common/credential/action"
 import { RenewAction, SetContinuousRenewAction } from "../../../login/renew/action"
 import { PasswordLoginAction } from "../../../login/password_login/action"
 import { PasswordResetAction, PasswordResetSessionAction } from "../../../profile/password_reset/action"
@@ -43,24 +37,11 @@ import {
     PasswordResetActionConfig,
     PasswordResetSessionActionConfig,
 } from "../../../profile/password_reset/infra"
-import { AuthCredentialRepository } from "../../../common/credential/infra"
+import { AuthCredentialRepository } from "../../../login/renew/infra"
 
 export function initApplicationAction(config: ApplicationActionConfig): ApplicationAction {
     return {
         secureScriptPath: secureScriptPath({ config: config.secureScriptPath }),
-    }
-}
-export function initStoreCredentialAction(
-    authCredentials: AuthCredentialRepository
-): StoreCredentialAction {
-    return {
-        storeAuthCredential: storeAuthCredential({ authCredentials }),
-    }
-}
-export function initCredentialAction(authCredentials: AuthCredentialRepository): CredentialAction {
-    return {
-        removeAuthCredential: removeAuthCredential({ authCredentials }),
-        loadLastLogin: loadLastLogin({ authCredentials }),
     }
 }
 export function initRenewAction(
