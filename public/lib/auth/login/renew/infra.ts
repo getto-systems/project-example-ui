@@ -1,8 +1,8 @@
 import {
     AuthCredential,
-    LoadLastLoginResult,
+    LastLogin,
     LoginAt,
-    StoreResult,
+    StorageError,
     TicketNonce,
 } from "../../common/credential/data"
 import { RenewError } from "./data"
@@ -42,11 +42,17 @@ export type StoreInfra = Readonly<{
 }>
 
 export interface AuthCredentialRepository {
-    // TODO この戻り型は infra で定義したい
     findLastLogin(): LoadLastLoginResult
     storeAuthCredential(authCredential: AuthCredential): StoreResult
     removeAuthCredential(): StoreResult
 }
+
+export type LoadLastLoginResult =
+    | Readonly<{ success: false; err: StorageError }>
+    | Readonly<{ success: true; found: false }>
+    | Readonly<{ success: true; found: true; lastLogin: LastLogin }>
+
+export type StoreResult = Readonly<{ success: true }> | Readonly<{ success: false; err: StorageError }>
 
 export type StorageKey = Readonly<{
     ticketNonce: string

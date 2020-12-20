@@ -29,11 +29,4 @@ export function markApiCredential(apiCredential: ApiCredential_data): ApiCredent
     return apiCredential as ApiCredential
 }
 
-export type LoadLastLoginResult =
-    | Readonly<{ success: false; err: StorageError }>
-    | Readonly<{ success: true; found: false }>
-    | Readonly<{ success: true; found: true; lastLogin: LastLogin }>
-
-export type StoreResult = Readonly<{ success: true }> | Readonly<{ success: false; err: StorageError }>
-
 export type StorageError = Readonly<{ type: "infra-error"; err: string }>
