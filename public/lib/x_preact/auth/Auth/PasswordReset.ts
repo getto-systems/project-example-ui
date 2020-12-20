@@ -31,7 +31,7 @@ export function PasswordReset({
     useEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useEffect で行う
         switch (state.type) {
-            case "succeed-to-reset":
+            case "try-to-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = () => {
                         passwordReset.loadError({
@@ -108,7 +108,7 @@ export function PasswordReset({
                 `
             )
 
-        case "succeed-to-reset":
+        case "try-to-load":
             // スクリプトのロードは appendChild する必要があるため useEffect で行う
             return EMPTY_CONTENT
 

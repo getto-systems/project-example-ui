@@ -23,7 +23,6 @@ import { LoginIDFieldComponent, LoginIDFieldComponentFactory } from "../../field
 import { PasswordFieldComponent, PasswordFieldComponentFactory } from "../../field/password/component"
 
 import { ApplicationAction, SecureScriptPathCollector } from "../../../common/application/action"
-import { StoreCredentialAction } from "../../../common/credential/action"
 import { RenewAction, SetContinuousRenewAction } from "../../../login/renew/action"
 
 import { PasswordLoginAction } from "../../../login/password_login/action"
@@ -156,7 +155,7 @@ export type PasswordResetFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
         application: ApplicationAction
-        storeCredential: StoreCredentialAction
+        setContinuousRenew: SetContinuousRenewAction
         passwordReset: PasswordResetAction
         field: LoginIDFieldAction & PasswordFieldAction
     }>
@@ -188,7 +187,7 @@ export function initPasswordResetResource(
             getFields: () => collectResetFields(fields),
             ...collector.passwordReset,
         }),
-        storeAuthCredential: factory.actions.storeCredential.storeAuthCredential(),
+        setContinuousRenew: factory.actions.setContinuousRenew.setContinuousRenew(),
         secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
     }
 

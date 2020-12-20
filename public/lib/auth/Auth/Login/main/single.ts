@@ -7,7 +7,6 @@ import {
     initAuthCredentialRepository,
     initRenewAction,
     initSetContinuousRenewAction,
-    initStoreCredentialAction,
 } from "./worker/foreground"
 import {
     initPasswordLoginAction,
@@ -52,7 +51,6 @@ export function newLoginAsSingle(): LoginFactory {
         link: initLoginLink,
         actions: {
             application: initApplicationAction(newApplicationActionConfig()),
-            storeCredential: initStoreCredentialAction(authCredentials),
             renew: initRenewAction(newRenewActionConfig(), authCredentials, authClient),
             setContinuousRenew: initSetContinuousRenewAction(
                 newSetContinuousRenewActionConfig(),
