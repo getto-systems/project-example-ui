@@ -31,7 +31,7 @@ export function PasswordLogin({
     useEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useEffect で行う
         switch (state.type) {
-            case "succeed-to-login":
+            case "try-to-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = () => {
                         passwordLogin.loadError({
@@ -113,7 +113,7 @@ export function PasswordLogin({
                 `
             )
 
-        case "succeed-to-login":
+        case "try-to-load":
             // スクリプトのロードは appendChild する必要があるため useEffect で行う
             return EMPTY_CONTENT
 
