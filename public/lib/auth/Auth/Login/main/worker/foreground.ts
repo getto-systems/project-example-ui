@@ -65,9 +65,10 @@ export function newLoginAsWorkerForeground(): LoginFactory {
             application: initApplicationAction(newApplicationActionConfig()),
             storeCredential: initStoreCredentialAction(authCredentials),
             credential: initCredentialAction(authCredentials),
-            renew: initRenewAction(newRenewActionConfig(), authClient),
+            renew: initRenewAction(newRenewActionConfig(), authCredentials, authClient),
             setContinuousRenew: initSetContinuousRenewAction(
                 newSetContinuousRenewActionConfig(),
+                authCredentials,
                 authClient
             ),
 
@@ -126,11 +127,16 @@ export function initCredentialAction(authCredentials: AuthCredentialRepository):
         loadLastLogin: loadLastLogin({ authCredentials }),
     }
 }
-export function initRenewAction(config: RenewActionConfig, authClient: AuthClient): RenewAction {
+export function initRenewAction(
+    config: RenewActionConfig,
+    authCredentials: AuthCredentialRepository,
+    authClient: AuthClient
+): RenewAction {
     const client = initFetchRenewClient(authClient)
 
     return {
         renew: renew({
+            authCredentials,
             client,
             config: config.renew,
             delayed,
@@ -140,12 +146,14 @@ export function initRenewAction(config: RenewActionConfig, authClient: AuthClien
 }
 export function initSetContinuousRenewAction(
     config: SetContinuousRenewActionConfig,
+    authCredentials: AuthCredentialRepository,
     authClient: AuthClient
 ): SetContinuousRenewAction {
     const client = initFetchRenewClient(authClient)
 
     return {
         setContinuousRenew: setContinuousRenew({
+            authCredentials,
             client,
             config: config.setContinuousRenew,
             runner: initRenewRunner(),

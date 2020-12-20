@@ -7,12 +7,8 @@ export function initRenewRunner(): RenewRunner {
 }
 
 class Runner implements RenewRunner {
-    nextRun(lastLoginAt: LoginAt, delay: DelayTime): DelayTime {
-        const delay_millisecond = lastLoginAt.getTime() + delay.delay_millisecond - new Date().getTime()
-        if (delay_millisecond < 0) {
-            return { delay_millisecond: 0 }
-        }
-        return { delay_millisecond }
+    nextRun(lastLoginAt: LoginAt, delay: DelayTime): boolean {
+        return new Date().getTime() > lastLoginAt.getTime() + delay.delay_millisecond
     }
 }
 

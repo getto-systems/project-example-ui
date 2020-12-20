@@ -39,7 +39,7 @@ export function RenewCredential({ components: { renewCredential } }: Props): VNo
                 })
                 break
 
-            case "succeed-to-renew":
+            case "try-to-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = () => {
                         renewCredential.loadError({
@@ -58,8 +58,12 @@ export function RenewCredential({ components: { renewCredential } }: Props): VNo
             return EMPTY_CONTENT
 
         case "try-to-instant-load":
-        case "succeed-to-renew":
+        case "try-to-load":
             // スクリプトのロードは appendChild する必要があるため useEffect で行う
+            return EMPTY_CONTENT
+
+        case "succeed-to-set-continuous-renew":
+            // このイベントは instant load 後に設定が完了したことを通知するものなので特に何もしない
             return EMPTY_CONTENT
 
         case "try-to-renew":

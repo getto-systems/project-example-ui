@@ -1,4 +1,10 @@
-import { AuthCredential, LoginAt, TicketNonce } from "../../common/credential/data"
+import {
+    AuthCredential,
+    LoadLastLoginResult,
+    LoginAt,
+    StoreResult,
+    TicketNonce,
+} from "../../common/credential/data"
 import { RenewError } from "./data"
 
 export type RenewActionConfig = Readonly<{
@@ -9,14 +15,16 @@ export type SetContinuousRenewActionConfig = Readonly<{
 }>
 
 export type RenewInfra = Readonly<{
-    client: RenewClient
+    authCredentials: AuthCredentialRepository
     config: RenewConfig
-    delayed: Delayed
+    client: RenewClient
     expires: AuthExpires
+    delayed: Delayed
 }>
 export type SetContinuousRenewInfra = Readonly<{
-    client: RenewClient
+    authCredentials: AuthCredentialRepository
     config: SetContinuousRenewConfig
+    client: RenewClient
     runner: RenewRunner
 }>
 
@@ -29,12 +37,29 @@ export type SetContinuousRenewConfig = Readonly<{
     delay: DelayTime
 }>
 
+export type StoreInfra = Readonly<{
+    authCredentials: AuthCredentialRepository
+}>
+
+export interface AuthCredentialRepository {
+    // TODO この戻り型は infra で定義したい
+    findLastLogin(): LoadLastLoginResult
+    storeAuthCredential(authCredential: AuthCredential): StoreResult
+    removeAuthCredential(): StoreResult
+}
+
+export type StorageKey = Readonly<{
+    ticketNonce: string
+    apiCredential: string
+    lastLoginAt: string
+}>
+
 export interface AuthExpires {
     hasExceeded(lastAuthAt: LoginAt, expire: ExpireTime): boolean
 }
 
 export interface RenewRunner {
-    nextRun(lastAuthAt: LoginAt, delay: DelayTime): DelayTime
+    nextRun(lastAuthAt: LoginAt, delay: DelayTime): boolean
 }
 
 export interface RenewClient {

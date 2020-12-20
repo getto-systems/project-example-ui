@@ -5,7 +5,6 @@ import { env } from "../../../../y_static/env"
 import {
     initApplicationAction,
     initAuthCredentialRepository,
-    initCredentialAction,
     initRenewAction,
     initSetContinuousRenewAction,
     initStoreCredentialAction,
@@ -54,10 +53,10 @@ export function newLoginAsSingle(): LoginFactory {
         actions: {
             application: initApplicationAction(newApplicationActionConfig()),
             storeCredential: initStoreCredentialAction(authCredentials),
-            credential: initCredentialAction(authCredentials),
-            renew: initRenewAction(newRenewActionConfig(), authClient),
+            renew: initRenewAction(newRenewActionConfig(), authCredentials, authClient),
             setContinuousRenew: initSetContinuousRenewAction(
                 newSetContinuousRenewActionConfig(),
+                authCredentials,
                 authClient
             ),
 
