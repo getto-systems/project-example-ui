@@ -34,7 +34,7 @@ import { PasswordFieldComponentFactory } from "../../../field/password/component
 
 import { ApplicationAction } from "../../../../common/application/action"
 import { CredentialAction, StoreCredentialAction } from "../../../../common/credential/action"
-import { RenewAction } from "../../../../login/renew/action"
+import { RenewAction, SetContinuousRenewAction } from "../../../../login/renew/action"
 
 import { Login, LoginCollector, PasswordLoginAction } from "../../../../login/password_login/action"
 import {
@@ -131,6 +131,7 @@ export type ForegroundFactory = Readonly<{
         storeCredential: StoreCredentialAction
         credential: CredentialAction
         renew: RenewAction
+        setContinuousRenew: SetContinuousRenewAction
 
         field: LoginIDFieldAction & PasswordFieldAction
     }>

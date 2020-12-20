@@ -3,6 +3,8 @@ import { RenewError } from "./data"
 
 export type RenewActionConfig = Readonly<{
     renew: RenewConfig
+}>
+export type SetContinuousRenewActionConfig = Readonly<{
     setContinuousRenew: SetContinuousRenewConfig
 }>
 

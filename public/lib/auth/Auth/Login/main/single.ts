@@ -7,6 +7,7 @@ import {
     initAuthCredentialRepository,
     initCredentialAction,
     initRenewAction,
+    initSetContinuousRenewAction,
     initStoreCredentialAction,
 } from "./worker/foreground"
 import {
@@ -21,6 +22,7 @@ import {
     newPasswordResetActionConfig,
     newPasswordResetSessionActionConfig,
     newRenewActionConfig,
+    newSetContinuousRenewActionConfig,
 } from "../impl/config"
 import { Collector, Factory, initLoginAsSingle } from "../impl/single"
 import { initLoginLink } from "../impl/link"
@@ -54,6 +56,10 @@ export function newLoginAsSingle(): LoginFactory {
             storeCredential: initStoreCredentialAction(authCredentials),
             credential: initCredentialAction(authCredentials),
             renew: initRenewAction(newRenewActionConfig(), authClient),
+            setContinuousRenew: initSetContinuousRenewAction(
+                newSetContinuousRenewActionConfig(),
+                authClient
+            ),
 
             passwordLogin: initPasswordLoginAction(newPasswordLoginActionConfig(), authClient),
             passwordResetSession: initPasswordResetSessionAction(newPasswordResetSessionActionConfig()),

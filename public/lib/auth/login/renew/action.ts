@@ -3,6 +3,9 @@ import { RenewEvent, SetContinuousRenewEvent } from "./data"
 
 export type RenewAction = Readonly<{
     renew: RenewPod
+}>
+
+export type SetContinuousRenewAction = Readonly<{
     setContinuousRenew: SetContinuousRenewPod
 }>
 

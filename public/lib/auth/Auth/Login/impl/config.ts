@@ -1,7 +1,7 @@
 import { env } from "../../../../y_static/env"
 import { ApplicationActionConfig } from "../../../common/application/infra"
 import { PasswordLoginActionConfig } from "../../../login/password_login/infra"
-import { RenewActionConfig } from "../../../login/renew/infra"
+import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../login/renew/infra"
 import {
     PasswordResetActionConfig,
     PasswordResetSessionActionConfig,
@@ -21,6 +21,10 @@ export function newRenewActionConfig(): RenewActionConfig {
             instantLoadExpire: expireMinute(3),
             delay: delaySecond(0.5),
         },
+    }
+}
+export function newSetContinuousRenewActionConfig(): SetContinuousRenewActionConfig {
+    return {
         setContinuousRenew: { delay: delayMinute(1), interval: intervalMinute(2) },
     }
 }
