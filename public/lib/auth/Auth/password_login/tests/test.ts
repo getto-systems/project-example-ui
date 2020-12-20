@@ -2,10 +2,10 @@ import { wait } from "../../../../z_external/delayed"
 
 import { Config, newPasswordLoginResource, Repository, Simulator } from "./core"
 
-import { initMemoryAuthCredentialRepository } from "../../../common/credential/impl/repository/auth_credential/memory"
+import { initMemoryAuthCredentialRepository } from "../../../login/renew/impl/repository/auth_credential/memory"
 import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
 
-import { AuthCredentialRepository } from "../../../common/credential/infra"
+import { AuthCredentialRepository } from "../../../login/renew/infra"
 
 import { PasswordLoginState } from "../component"
 import { LoginIDFieldState } from "../../field/login_id/component"
@@ -65,7 +65,7 @@ describe("PasswordLogin", () => {
                         setTimeout(() => {
                             expectToSaveRenewed(repository.authCredentials)
                             done()
-                        }, 2) // after setContinuousRenew interval and delay
+                        }, 1) // after setContinuousRenew interval and delay
                         break
 
                     case "failed-to-login":
@@ -115,7 +115,7 @@ describe("PasswordLogin", () => {
                         setTimeout(() => {
                             expectToSaveRenewed(repository.authCredentials)
                             done()
-                        }, 2) // after setContinuousRenew interval and delay
+                        }, 1) // after setContinuousRenew interval and delay
                         break
 
                     case "failed-to-login":

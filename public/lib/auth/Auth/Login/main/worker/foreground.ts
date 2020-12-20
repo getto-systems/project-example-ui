@@ -22,11 +22,6 @@ import { initLoginIDField } from "../../../field/login_id/impl"
 import { initPasswordField } from "../../../field/password/impl"
 
 import { secureScriptPath } from "../../../../common/application/impl/core"
-import {
-    loadLastLogin,
-    removeAuthCredential,
-    storeAuthCredential,
-} from "../../../../common/credential/impl/core"
 import { renew, setContinuousRenew } from "../../../../login/renew/impl/core"
 
 import { loginIDField } from "../../../../common/field/login_id/impl/core"
@@ -35,18 +30,17 @@ import { passwordField } from "../../../../common/field/password/impl/core"
 import { initFetchRenewClient } from "../../../../login/renew/impl/client/renew/fetch"
 import { initAuthExpires } from "../../../../login/renew/impl/expires"
 import { initRenewRunner } from "../../../../login/renew/impl/renew_runner"
-import { initStorageAuthCredentialRepository } from "../../../../common/credential/impl/repository/auth_credential/storage"
+import { initStorageAuthCredentialRepository } from "../../../../login/renew/impl/repository/auth_credential/storage"
 
 import { currentPagePathname, detectViewState, detectResetToken } from "../../impl/location"
 
-import { AuthCredentialRepository } from "../../../../common/credential/infra"
+import { AuthCredentialRepository } from "../../../../login/renew/infra"
 import { ApplicationActionConfig } from "../../../../common/application/infra"
 import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../../login/renew/infra"
 
 import { LoginFactory } from "../../view"
 
 import { ApplicationAction } from "../../../../common/application/action"
-import { CredentialAction, StoreCredentialAction } from "../../../../common/credential/action"
 import { RenewAction, SetContinuousRenewAction } from "../../../../login/renew/action"
 
 export function newLoginAsWorkerForeground(): LoginFactory {
@@ -63,8 +57,6 @@ export function newLoginAsWorkerForeground(): LoginFactory {
         link: initLoginLink,
         actions: {
             application: initApplicationAction(newApplicationActionConfig()),
-            storeCredential: initStoreCredentialAction(authCredentials),
-            credential: initCredentialAction(authCredentials),
             renew: initRenewAction(newRenewActionConfig(), authCredentials, authClient),
             setContinuousRenew: initSetContinuousRenewAction(
                 newSetContinuousRenewActionConfig(),
@@ -113,19 +105,6 @@ export function initApplicationAction(config: ApplicationActionConfig): Applicat
 }
 export function initAuthCredentialRepository(credentialStorage: Storage): AuthCredentialRepository {
     return initStorageAuthCredentialRepository(credentialStorage, env.storageKey)
-}
-export function initStoreCredentialAction(
-    authCredentials: AuthCredentialRepository
-): StoreCredentialAction {
-    return {
-        storeAuthCredential: storeAuthCredential({ authCredentials }),
-    }
-}
-export function initCredentialAction(authCredentials: AuthCredentialRepository): CredentialAction {
-    return {
-        removeAuthCredential: removeAuthCredential({ authCredentials }),
-        loadLastLogin: loadLastLogin({ authCredentials }),
-    }
 }
 export function initRenewAction(
     config: RenewActionConfig,
