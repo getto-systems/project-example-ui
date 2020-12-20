@@ -4,6 +4,7 @@ import { PasswordLoginMaterial, PasswordLoginComponent, PasswordLoginState } fro
 
 import { LoadError } from "../../common/application/data"
 import { AuthCredential } from "../../common/credential/data"
+import { storeAuthCredential } from "../../login/renew/data"
 
 export function initPasswordLogin(material: PasswordLoginMaterial): PasswordLoginComponent {
     return new Component(material)
@@ -32,9 +33,8 @@ class Component implements PasswordLoginComponent {
         this.material.login((event) => {
             switch (event.type) {
                 case "succeed-to-login":
-                    this.storeAuthCredential(event.authCredential, () => {
-                        // TODO load の前に setContinuousRenew しないといけない
-                        this.tryToLoad(event)
+                    this.setContinuousRenew(event.authCredential, () => {
+                        this.post({ type: "try-to-load", scriptPath: this.secureScriptPath() })
                     })
                     return
 
@@ -48,20 +48,20 @@ class Component implements PasswordLoginComponent {
         this.post({ type: "load-error", err })
     }
 
-    tryToLoad(event: { type: "succeed-to-login" }): void {
-        this.post({
-            type: event.type,
-            scriptPath: this.material.secureScriptPath(),
-        })
+    secureScriptPath() {
+        return this.material.secureScriptPath()
     }
+    setContinuousRenew(authCredential: AuthCredential, hook: { (): void }): void {
+        this.material.setContinuousRenew(storeAuthCredential(authCredential), (event) => {
+            switch (event.type) {
+                case "succeed-to-set-continuous-renew":
+                    hook()
+                    return
 
-    storeAuthCredential(authCredential: AuthCredential, hook: { (): void }): void {
-        const result = this.material.storeAuthCredential(authCredential)
-        if (!result.success) {
-            this.post({ type: "storage-error", err: result.err })
-            return
-        }
-        hook()
+                default:
+                    this.post(event)
+            }
+        })
     }
 }
 

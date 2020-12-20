@@ -1,6 +1,6 @@
 import {
     initApplicationAction,
-    initStoreCredentialAction,
+    initSetContinuousRenewAction,
     initPasswordLoginAction,
     initPasswordLoginCollector,
 } from "../../Login/tests/core"
@@ -20,22 +20,26 @@ import { loginIDField } from "../../../common/field/login_id/impl/core"
 import { passwordField } from "../../../common/field/password/impl/core"
 
 import { LoginSimulator } from "../../../login/password_login/impl/client/login/simulate"
+import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
 
 import { PasswordLoginResource } from "../../Login/view"
 
 import { ApplicationActionConfig } from "../../../common/application/infra"
 import { PasswordLoginActionConfig } from "../../../login/password_login/infra"
 import { AuthCredentialRepository } from "../../../common/credential/infra"
+import { SetContinuousRenewActionConfig } from "../../../login/renew/infra"
 
 export type Config = {
     application: ApplicationActionConfig
     passwordLogin: PasswordLoginActionConfig
+    setContinuousRenew: SetContinuousRenewActionConfig
 }
 export type Repository = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
 export type Simulator = Readonly<{
     login: LoginSimulator
+    renew: RenewSimulator
 }>
 
 export function newPasswordLoginResource(
@@ -48,7 +52,11 @@ export function newPasswordLoginResource(
         link: initLoginLink,
         actions: {
             application: initApplicationAction(config.application),
-            storeCredential: initStoreCredentialAction(repository.authCredentials),
+            setContinuousRenew: initSetContinuousRenewAction(
+                config.setContinuousRenew,
+                repository.authCredentials,
+                simulator.renew
+            ),
 
             passwordLogin: initPasswordLoginAction(config.passwordLogin, simulator.login),
 

@@ -3,6 +3,9 @@ import { wait } from "../../../../z_external/delayed"
 import { Config, newPasswordLoginResource, Repository, Simulator } from "./core"
 
 import { initMemoryAuthCredentialRepository } from "../../../common/credential/impl/repository/auth_credential/memory"
+import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
+
+import { AuthCredentialRepository } from "../../../common/credential/infra"
 
 import { PasswordLoginState } from "../component"
 import { LoginIDFieldState } from "../../field/login_id/component"
@@ -16,13 +19,16 @@ import {
 } from "../../../common/credential/data"
 import { hasError, markInputValue, noError } from "../../../common/field/data"
 import { LoginFields } from "../../../login/password_login/data"
-import { AuthCredentialRepository } from "../../../common/credential/infra"
+
 import { PasswordFieldState } from "../../field/password/component"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
 const AUTHORIZED_TICKET_NONCE = "ticket-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
+
+const RENEWED_TICKET_NONCE = "renewed-ticket-nonce" as const
+const SUCCEED_TO_RENEW_AT = new Date("2020-01-01 10:01:00")
 
 describe("PasswordLogin", () => {
     test("submit valid login-id and password", (done) => {
@@ -47,17 +53,19 @@ describe("PasswordLogin", () => {
                         // work in progress...
                         break
 
-                    case "succeed-to-login":
+                    case "try-to-load":
                         expect(stack).toEqual([
                             { type: "try-to-login" },
                             {
-                                type: "succeed-to-login",
+                                type: "try-to-load",
                                 scriptPath: markScriptPath("//secure.example.com/index.js"),
                             },
                         ])
                         expectToSaveLastLogin(repository.authCredentials)
-                        // TODO このあとに setContinuousRenew してるか確認しないといけないんだけど・・・
-                        done()
+                        setTimeout(() => {
+                            expectToSaveRenewed(repository.authCredentials)
+                            done()
+                        }, 2)
                         break
 
                     case "failed-to-login":
@@ -94,12 +102,12 @@ describe("PasswordLogin", () => {
                         // work in progress...
                         break
 
-                    case "succeed-to-login":
+                    case "try-to-load":
                         expect(stack).toEqual([
                             { type: "try-to-login" },
                             { type: "delayed-to-login" }, // delayed event
                             {
-                                type: "succeed-to-login",
+                                type: "try-to-load",
                                 scriptPath: markScriptPath("//secure.example.com/index.js"),
                             },
                         ])
@@ -141,7 +149,7 @@ describe("PasswordLogin", () => {
                         // work in progress...
                         break
 
-                    case "succeed-to-login":
+                    case "try-to-load":
                         done(new Error(state.type))
                         break
 
@@ -311,6 +319,12 @@ function standardConfig(): Config {
                 delay: { delay_millisecond: 1 },
             },
         },
+        setContinuousRenew: {
+            setContinuousRenew: {
+                interval: { interval_millisecond: 1 },
+                delay: { delay_millisecond: 1 },
+            },
+        },
     }
 }
 function standardRepository(): Repository {
@@ -325,6 +339,7 @@ function standardSimulator(): Simulator {
                 return simulateLogin(fields)
             },
         },
+        renew: renewSimulator(),
     }
 }
 function waitSimulator(waitTime: WaitTime): Simulator {
@@ -335,6 +350,7 @@ function waitSimulator(waitTime: WaitTime): Simulator {
                 return simulateLogin(fields)
             },
         },
+        renew: renewSimulator(),
     }
 }
 
@@ -345,6 +361,23 @@ async function simulateLogin(_fields: LoginFields): Promise<AuthCredential> {
         loginAt: markLoginAt(SUCCEED_TO_LOGIN_AT),
     }
 }
+function renewSimulator(): RenewSimulator {
+    let renewed = false
+    return {
+        renew: async () => {
+            if (renewed) {
+                // 最初の一回だけ renew して、あとは renew を cancel するために null を返す
+                return null
+            }
+            renewed = true
+            return {
+                ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
+                apiCredential: markApiCredential({ apiRoles: ["role"] }),
+                loginAt: markLoginAt(SUCCEED_TO_RENEW_AT),
+            }
+        },
+    }
+}
 
 function expectToSaveLastLogin(authCredentials: AuthCredentialRepository) {
     expect(authCredentials.findLastLogin()).toEqual({
@@ -353,6 +386,16 @@ function expectToSaveLastLogin(authCredentials: AuthCredentialRepository) {
         lastLogin: {
             ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
             lastLoginAt: markLoginAt(SUCCEED_TO_LOGIN_AT),
+        },
+    })
+}
+function expectToSaveRenewed(authCredentials: AuthCredentialRepository) {
+    expect(authCredentials.findLastLogin()).toEqual({
+        success: true,
+        found: true,
+        lastLogin: {
+            ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
+            lastLoginAt: markLoginAt(SUCCEED_TO_RENEW_AT),
         },
     })
 }

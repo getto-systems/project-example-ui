@@ -78,7 +78,7 @@ export type PasswordLoginFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
         application: ApplicationAction
-        storeCredential: StoreCredentialAction
+        setContinuousRenew: SetContinuousRenewAction
         passwordLogin: PasswordLoginAction
         field: LoginIDFieldAction & PasswordFieldAction
     }>
@@ -108,7 +108,7 @@ export function initPasswordLoginResource(
         login: factory.actions.passwordLogin.login({
             getFields: () => collectLoginFields(fields),
         }),
-        storeAuthCredential: factory.actions.storeCredential.storeAuthCredential(),
+        setContinuousRenew: factory.actions.setContinuousRenew.setContinuousRenew(),
         secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
     }
 

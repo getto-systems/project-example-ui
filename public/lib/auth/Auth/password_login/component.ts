@@ -1,5 +1,5 @@
 import { Login } from "../../login/password_login/action"
-import { StoreAuthCredential } from "../../common/credential/action"
+import { SetContinuousRenew } from "../../login/renew/action"
 import { SecureScriptPath } from "../../common/application/action"
 
 import { LoginError } from "../../login/password_login/data"
@@ -13,7 +13,7 @@ export interface PasswordLoginComponentFactory {
 export type PasswordLoginMaterial = Readonly<{
     link: LoginLink
     login: Login
-    storeAuthCredential: StoreAuthCredential
+    setContinuousRenew: SetContinuousRenew
     secureScriptPath: SecureScriptPath
 }>
 
@@ -28,7 +28,7 @@ export type PasswordLoginState =
     | Readonly<{ type: "initial-login" }>
     | Readonly<{ type: "try-to-login" }>
     | Readonly<{ type: "delayed-to-login" }>
-    | Readonly<{ type: "succeed-to-login"; scriptPath: ScriptPath }>
+    | Readonly<{ type: "try-to-load"; scriptPath: ScriptPath }>
     | Readonly<{ type: "failed-to-login"; err: LoginError }>
     | Readonly<{ type: "storage-error"; err: StorageError }>
     | Readonly<{ type: "load-error"; err: LoadError }>
