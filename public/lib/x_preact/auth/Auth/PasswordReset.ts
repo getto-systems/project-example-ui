@@ -160,6 +160,9 @@ function resetError(err: ResetError): VNode {
         case "validation-error":
             return html`<p class="form__message">正しく入力してください</p>`
 
+        case "empty-reset-token":
+            return html`<p class="form__message">リセットトークンが見つかりませんでした</p>`
+
         case "bad-request":
             return html`<p class="form__message">アプリケーションエラーにより認証に失敗しました</p>`
 
