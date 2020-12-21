@@ -187,6 +187,49 @@ describe("PasswordLogin", () => {
         }
     })
 
+    test("load error", (done) => {
+        const { resource } = standardPasswordLoginResource()
+
+        resource.passwordLogin.onStateChange(stateHandler())
+
+        resource.passwordLogin.loadError({ type: "infra-error", err: "load error" })
+
+        function stateHandler(): Post<PasswordLoginState> {
+            const stack: PasswordLoginState[] = []
+            return (state) => {
+                stack.push(state)
+
+                switch (state.type) {
+                    case "initial-login":
+                    case "try-to-login":
+                    case "delayed-to-login":
+                        // work in progress...
+                        break
+
+                    case "try-to-load":
+                        done(new Error(state.type))
+                        break
+
+                    case "failed-to-login":
+                    case "storage-error":
+                    case "error":
+                        done(new Error(state.type))
+                        break
+
+                    case "load-error":
+                        expect(stack).toEqual([
+                            { type: "load-error", err: { type: "infra-error", err: "load error" } },
+                        ])
+                        done()
+                        break
+
+                    default:
+                        assertNever(state)
+                }
+            }
+        }
+    })
+
     describe("fields", () => {
         describe("loginID", () => {
             test("invalid with empty string", (done) => {
@@ -297,6 +340,35 @@ describe("PasswordLogin", () => {
                             result: noError(),
                         })
                         done()
+                    }
+                }
+            })
+
+            test("show/hide password", (done) => {
+                const { resource } = standardPasswordLoginResource()
+
+                resource.passwordField.onStateChange(stateHandler())
+
+                resource.passwordField.set(markInputValue("password"))
+                resource.passwordField.show()
+                resource.passwordField.hide()
+
+                function stateHandler(): Post<PasswordFieldState> {
+                    const stack: PasswordFieldState[] = []
+                    return (state) => {
+                        stack.push(state)
+
+                        if (stack.length === 3) {
+                            expect(stack[1]).toMatchObject({
+                                type: "succeed-to-update",
+                                view: { show: true, password: "password" },
+                            })
+                            expect(stack[2]).toMatchObject({
+                                type: "succeed-to-update",
+                                view: { show: false },
+                            })
+                            done()
+                        }
                     }
                 }
             })

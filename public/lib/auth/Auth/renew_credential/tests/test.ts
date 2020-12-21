@@ -294,6 +294,52 @@ describe("RenewCredential", () => {
             }
         }
     })
+
+    test("load error", (done) => {
+        const { resource } = standardRenewCredentialResource()
+
+        resource.renewCredential.onStateChange(stateHandler())
+
+        resource.renewCredential.loadError({ type: "infra-error", err: "load error" })
+
+        function stateHandler(): Post<RenewCredentialState> {
+            const stack: RenewCredentialState[] = []
+            return (state) => {
+                stack.push(state)
+
+                switch (state.type) {
+                    case "initial-renew":
+                    case "try-to-renew":
+                    case "delayed-to-renew":
+                        // work in progress...
+                        break
+
+                    case "try-to-instant-load":
+                    case "succeed-to-set-continuous-renew":
+                    case "required-to-login":
+                    case "try-to-load":
+                        done(new Error(state.type))
+                        break
+
+                    case "failed-to-renew":
+                    case "storage-error":
+                    case "error":
+                        done(new Error(state.type))
+                        break
+
+                    case "load-error":
+                        expect(stack).toEqual([
+                            { type: "load-error", err: { type: "infra-error", err: "load error" } },
+                        ])
+                        done()
+                        break
+
+                    default:
+                        assertNever(state)
+                }
+            }
+        }
+    })
 })
 
 function standardRenewCredentialResource() {
