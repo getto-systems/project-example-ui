@@ -47,6 +47,21 @@ class Component implements RenewCredentialComponent {
             this.post({ type: "succeed-to-set-continuous-renew" })
         })
     }
+    failedToInstantLoad(): void {
+        this.material.forceRenew((event) => {
+            switch (event.type) {
+                case "succeed-to-renew":
+                    this.setContinuousRenew(storeAuthCredential(event.authCredential), () => {
+                        this.post({ type: "try-to-load", scriptPath: this.secureScriptPath() })
+                    })
+                    return
+
+                default:
+                    this.post(event)
+                    return
+            }
+        })
+    }
     loadError(err: LoadError): void {
         this.post({ type: "load-error", err })
     }

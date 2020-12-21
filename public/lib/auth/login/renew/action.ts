@@ -1,7 +1,8 @@
-import { RenewEvent, SetContinuousRenewEvent, StoreAuthCredential } from "./data"
+import { ForceRenewEvent, RenewEvent, SetContinuousRenewEvent, StoreAuthCredential } from "./data"
 
 export type RenewAction = Readonly<{
     renew: RenewPod
+    forceRenew: ForceRenewPod
 }>
 
 export type SetContinuousRenewAction = Readonly<{
@@ -13,6 +14,13 @@ export interface RenewPod {
 }
 export interface Renew {
     (post: Post<RenewEvent>): void
+}
+
+export interface ForceRenewPod {
+    (): ForceRenew
+}
+export interface ForceRenew {
+    (post: Post<ForceRenewEvent>): void
 }
 
 export interface SetContinuousRenewPod {

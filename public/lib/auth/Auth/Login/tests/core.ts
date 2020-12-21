@@ -5,13 +5,11 @@ import { currentPagePathname, detectResetToken, detectViewState } from "../impl/
 import { PasswordLoginCollector, PasswordResetCollector, RenewCredentialCollector } from "../impl/core"
 
 import { secureScriptPath } from "../../../common/application/impl/core"
-import { renew, setContinuousRenew } from "../../../login/renew/impl/core"
+import { forceRenew, renew, setContinuousRenew } from "../../../login/renew/impl/core"
 import { login } from "../../../login/password_login/impl/core"
 import { startSession, checkStatus, reset } from "../../../profile/password_reset/impl/core"
 
 import { initSimulateRenewClient, RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
-import { initAuthExpires } from "../../../login/renew/impl/expires"
-import { initRenewRunner } from "../../../login/renew/impl/renew_runner"
 import {
     initSimulatePasswordLoginClient,
     LoginSimulator,
@@ -31,7 +29,7 @@ import { PasswordLoginAction } from "../../../login/password_login/action"
 import { PasswordResetAction, PasswordResetSessionAction } from "../../../profile/password_reset/action"
 
 import { ApplicationActionConfig } from "../../../common/application/infra"
-import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../login/renew/infra"
+import { Clock, RenewActionConfig, SetContinuousRenewActionConfig } from "../../../login/renew/infra"
 import { PasswordLoginActionConfig } from "../../../login/password_login/infra"
 import {
     PasswordResetActionConfig,
@@ -47,24 +45,28 @@ export function initApplicationAction(config: ApplicationActionConfig): Applicat
 export function initRenewAction(
     config: RenewActionConfig,
     authCredentials: AuthCredentialRepository,
-    simulator: RenewSimulator
+    simulator: RenewSimulator,
+    clock: Clock
 ): RenewAction {
     const client = initSimulateRenewClient(simulator)
+    const infra = {
+        authCredentials,
+        client,
+        config: config.renew,
+        delayed,
+        clock,
+    }
 
     return {
-        renew: renew({
-            authCredentials,
-            client,
-            config: config.renew,
-            delayed,
-            expires: initAuthExpires(),
-        }),
+        renew: renew(infra),
+        forceRenew: forceRenew(infra),
     }
 }
 export function initSetContinuousRenewAction(
     config: SetContinuousRenewActionConfig,
     authCredentials: AuthCredentialRepository,
-    simulator: RenewSimulator
+    simulator: RenewSimulator,
+    clock: Clock
 ): SetContinuousRenewAction {
     const client = initSimulateRenewClient(simulator)
 
@@ -73,7 +75,7 @@ export function initSetContinuousRenewAction(
             authCredentials,
             client,
             config: config.setContinuousRenew,
-            runner: initRenewRunner(),
+            clock,
         }),
     }
 }

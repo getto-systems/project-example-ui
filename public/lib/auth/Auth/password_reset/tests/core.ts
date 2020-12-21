@@ -22,11 +22,15 @@ import { passwordField } from "../../../common/field/password/impl/core"
 import { ResetSimulator } from "../../../profile/password_reset/impl/client/reset/simulate"
 import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
 
-import { PasswordResetResource } from "../../Login/view"
-
 import { ApplicationActionConfig } from "../../../common/application/infra"
 import { PasswordResetActionConfig } from "../../../profile/password_reset/infra"
-import { SetContinuousRenewActionConfig, AuthCredentialRepository } from "../../../login/renew/infra"
+import {
+    SetContinuousRenewActionConfig,
+    AuthCredentialRepository,
+    Clock,
+} from "../../../login/renew/infra"
+
+import { PasswordResetResource } from "../../Login/view"
 
 export type Config = {
     application: ApplicationActionConfig
@@ -45,7 +49,8 @@ export function newPasswordResetResource(
     currentURL: URL,
     config: Config,
     repository: Repository,
-    simulator: Simulator
+    simulator: Simulator,
+    clock: Clock
 ): PasswordResetResource {
     const factory: PasswordResetFactory = {
         link: initLoginLink,
@@ -54,7 +59,8 @@ export function newPasswordResetResource(
             setContinuousRenew: initSetContinuousRenewAction(
                 config.setContinuousRenew,
                 repository.authCredentials,
-                simulator.renew
+                simulator.renew,
+                clock
             ),
 
             passwordReset: initPasswordResetAction(config.passwordReset, simulator.reset),

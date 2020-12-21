@@ -1,7 +1,6 @@
 import {
     AuthCredential,
     LastLogin,
-    LoginAt,
     StorageError,
     TicketNonce,
 } from "../../common/credential/data"
@@ -18,14 +17,14 @@ export type RenewInfra = Readonly<{
     authCredentials: AuthCredentialRepository
     config: RenewConfig
     client: RenewClient
-    expires: AuthExpires
+    clock: Clock
     delayed: Delayed
 }>
 export type SetContinuousRenewInfra = Readonly<{
     authCredentials: AuthCredentialRepository
     config: SetContinuousRenewConfig
     client: RenewClient
-    runner: RenewRunner
+    clock: Clock
 }>
 
 export type RenewConfig = Readonly<{
@@ -60,16 +59,12 @@ export type StorageKey = Readonly<{
     lastLoginAt: string
 }>
 
-export interface AuthExpires {
-    hasExceeded(lastAuthAt: LoginAt, expire: ExpireTime): boolean
-}
-
-export interface RenewRunner {
-    nextRun(lastAuthAt: LoginAt, delay: DelayTime): boolean
-}
-
 export interface RenewClient {
     renew(ticketNonce: TicketNonce): Promise<RenewResponse>
+}
+
+export interface Clock {
+    now(): Date
 }
 
 export interface Delayed {

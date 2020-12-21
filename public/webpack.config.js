@@ -59,7 +59,7 @@ module.exports = {
         ignored: /node_modules/,
     },
     devServer: {
-        contentBase: path.join(__dirname, ".."),
+        contentBase: path.join(__dirname, "."),
         publicPath: "/dist/",
 
         host: "0.0.0.0",

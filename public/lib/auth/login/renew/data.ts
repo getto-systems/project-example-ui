@@ -17,6 +17,14 @@ export type RenewEvent =
     | Readonly<{ type: "storage-error"; err: StorageError }>
     | Readonly<{ type: "succeed-to-renew"; authCredential: AuthCredential }>
 
+export type ForceRenewEvent =
+    | Readonly<{ type: "required-to-login" }>
+    | Readonly<{ type: "try-to-renew" }>
+    | Readonly<{ type: "delayed-to-renew" }>
+    | Readonly<{ type: "failed-to-renew"; err: RenewError }>
+    | Readonly<{ type: "storage-error"; err: StorageError }>
+    | Readonly<{ type: "succeed-to-renew"; authCredential: AuthCredential }>
+
 export type SetContinuousRenewEvent =
     | Readonly<{ type: "storage-error"; err: StorageError }>
     | Readonly<{ type: "succeed-to-set-continuous-renew" }>
