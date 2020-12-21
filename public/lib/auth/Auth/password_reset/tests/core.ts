@@ -1,53 +1,53 @@
 import {
     initApplicationAction,
     initSetContinuousRenewAction,
-    initPasswordLoginAction,
-    initPasswordLoginCollector,
+    initPasswordResetAction,
+    initPasswordResetCollector,
 } from "../../Login/tests/core"
 
 import { initLoginLink } from "../../Login/impl/link"
 import {
-    initPasswordLoginResource,
-    PasswordLoginCollector,
-    PasswordLoginFactory,
+    initPasswordResetResource,
+    PasswordResetCollector,
+    PasswordResetFactory,
 } from "../../Login/impl/core"
 
-import { initPasswordLogin } from "../impl"
+import { initPasswordReset } from "../impl"
 import { initLoginIDField } from "../../field/login_id/impl"
 import { initPasswordField } from "../../field/password/impl"
 
 import { loginIDField } from "../../../common/field/login_id/impl/core"
 import { passwordField } from "../../../common/field/password/impl/core"
 
-import { LoginSimulator } from "../../../login/password_login/impl/client/login/simulate"
+import { ResetSimulator } from "../../../profile/password_reset/impl/client/reset/simulate"
 import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
 
-import { PasswordLoginResource } from "../../Login/view"
+import { PasswordResetResource } from "../../Login/view"
 
 import { ApplicationActionConfig } from "../../../common/application/infra"
-import { PasswordLoginActionConfig } from "../../../login/password_login/infra"
+import { PasswordResetActionConfig } from "../../../profile/password_reset/infra"
 import { SetContinuousRenewActionConfig, AuthCredentialRepository } from "../../../login/renew/infra"
 
 export type Config = {
     application: ApplicationActionConfig
-    passwordLogin: PasswordLoginActionConfig
+    passwordReset: PasswordResetActionConfig
     setContinuousRenew: SetContinuousRenewActionConfig
 }
 export type Repository = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
 export type Simulator = Readonly<{
-    login: LoginSimulator
+    reset: ResetSimulator
     renew: RenewSimulator
 }>
 
-export function newPasswordLoginResource(
+export function newPasswordResetResource(
     currentURL: URL,
     config: Config,
     repository: Repository,
     simulator: Simulator
-): PasswordLoginResource {
-    const factory: PasswordLoginFactory = {
+): PasswordResetResource {
+    const factory: PasswordResetFactory = {
         link: initLoginLink,
         actions: {
             application: initApplicationAction(config.application),
@@ -57,7 +57,7 @@ export function newPasswordLoginResource(
                 simulator.renew
             ),
 
-            passwordLogin: initPasswordLoginAction(config.passwordLogin, simulator.login),
+            passwordReset: initPasswordResetAction(config.passwordReset, simulator.reset),
 
             field: {
                 loginID: loginIDField,
@@ -65,7 +65,7 @@ export function newPasswordLoginResource(
             },
         },
         components: {
-            passwordLogin: initPasswordLogin,
+            passwordReset: initPasswordReset,
 
             field: {
                 loginID: initLoginIDField,
@@ -73,7 +73,7 @@ export function newPasswordLoginResource(
             },
         },
     }
-    const collector: PasswordLoginCollector = initPasswordLoginCollector(currentURL)
+    const collector: PasswordResetCollector = initPasswordResetCollector(currentURL)
 
-    return initPasswordLoginResource(factory, collector)
+    return initPasswordResetResource(factory, collector)
 }

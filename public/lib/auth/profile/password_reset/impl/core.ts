@@ -4,7 +4,9 @@ import { StartSessionPod, CheckStatusPod, ResetPod } from "../action"
 
 import { SessionID, CheckStatusEvent, CheckStatusError } from "../data"
 
-export const startSession = (infra: StartSessionInfra): StartSessionPod => (collector) => async (post) => {
+export const startSession = (infra: StartSessionInfra): StartSessionPod => (collector) => async (
+    post
+) => {
     const content = await collector.getFields()
     if (!content.valid) {
         post({ type: "failed-to-start-session", err: { type: "validation-error" } })
@@ -16,10 +18,8 @@ export const startSession = (infra: StartSessionInfra): StartSessionPod => (coll
     const { client, config: time, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(
-        client.startSession(content.content),
-        time.delay,
-        () => post({ type: "delayed-to-start-session" })
+    const response = await delayed(client.startSession(content.content), time.delay, () =>
+        post({ type: "delayed-to-start-session" })
     )
     if (!response.success) {
         post({ type: "failed-to-start-session", err: response.err })
@@ -29,10 +29,7 @@ export const startSession = (infra: StartSessionInfra): StartSessionPod => (coll
     post({ type: "succeed-to-start-session", sessionID: response.sessionID })
 }
 
-export const checkStatus = (infra: CheckStatusInfra): CheckStatusPod => () => (
-    sessionID,
-    post
-) => {
+export const checkStatus = (infra: CheckStatusInfra): CheckStatusPod => () => (sessionID, post) => {
     new StatusChecker(infra).start(sessionID, post)
 }
 
@@ -114,15 +111,19 @@ export const reset = (infra: ResetInfra): ResetPod => (collector) => async (post
         return
     }
 
+    const resetToken = collector.getResetToken()
+    if (!resetToken) {
+        post({ type: "failed-to-reset", err: { type: "empty-reset-token" } })
+        return
+    }
+
     post({ type: "try-to-reset" })
 
     const { client, config: time, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(
-        client.reset(collector.getResetToken(), content.content),
-        time.delay,
-        () => post({ type: "delayed-to-reset" })
+    const response = await delayed(client.reset(resetToken, content.content), time.delay, () =>
+        post({ type: "delayed-to-reset" })
     )
     if (!response.success) {
         post({ type: "failed-to-reset", err: response.err })

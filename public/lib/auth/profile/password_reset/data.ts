@@ -64,6 +64,7 @@ export type ResetEvent =
 
 export type ResetError =
     | Readonly<{ type: "validation-error" }>
+    | Readonly<{ type: "empty-reset-token" }>
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "invalid-password-reset" }>
     | Readonly<{ type: "server-error" }>

@@ -1,13 +1,13 @@
 import { wait } from "../../../../z_external/delayed"
 
-import { Config, newPasswordLoginResource, Repository, Simulator } from "./core"
+import { Config, newPasswordResetResource, Repository, Simulator } from "./core"
 
 import { initMemoryAuthCredentialRepository } from "../../../login/renew/impl/repository/auth_credential/memory"
 import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
 
 import { AuthCredentialRepository } from "../../../login/renew/infra"
 
-import { PasswordLoginState } from "../component"
+import { PasswordResetState } from "../component"
 import { LoginIDFieldState } from "../../field/login_id/component"
 import { PasswordFieldState } from "../../field/password/component"
 
@@ -19,7 +19,7 @@ import {
     markTicketNonce,
 } from "../../../common/credential/data"
 import { hasError, markInputValue, noError } from "../../../common/field/data"
-import { LoginFields } from "../../../login/password_login/data"
+import { ResetFields, ResetToken } from "../../../profile/password_reset/data"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -29,32 +29,32 @@ const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
 const RENEWED_TICKET_NONCE = "renewed-ticket-nonce" as const
 const SUCCEED_TO_RENEW_AT = new Date("2020-01-01 10:01:00")
 
-describe("PasswordLogin", () => {
+describe("PasswordReset", () => {
     test("submit valid login-id and password", (done) => {
-        const { repository, resource } = standardPasswordLoginResource()
+        const { repository, resource } = standardPasswordResetResource()
 
-        resource.passwordLogin.onStateChange(stateHandler())
+        resource.passwordReset.onStateChange(stateHandler())
 
         resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
         resource.passwordField.set(markInputValue(VALID_LOGIN.password))
 
-        resource.passwordLogin.login()
+        resource.passwordReset.reset()
 
-        function stateHandler(): Post<PasswordLoginState> {
-            const stack: PasswordLoginState[] = []
+        function stateHandler(): Post<PasswordResetState> {
+            const stack: PasswordResetState[] = []
             return (state) => {
                 stack.push(state)
 
                 switch (state.type) {
-                    case "initial-login":
-                    case "try-to-login":
-                    case "delayed-to-login":
+                    case "initial-reset":
+                    case "try-to-reset":
+                    case "delayed-to-reset":
                         // work in progress...
                         break
 
                     case "try-to-load":
                         expect(stack).toEqual([
-                            { type: "try-to-login" },
+                            { type: "try-to-reset" },
                             {
                                 type: "try-to-load",
                                 scriptPath: markScriptPath("//secure.example.com/index.js"),
@@ -67,7 +67,7 @@ describe("PasswordLogin", () => {
                         }, 1) // after setContinuousRenew interval and delay
                         break
 
-                    case "failed-to-login":
+                    case "failed-to-reset":
                     case "storage-error":
                     case "load-error":
                     case "error":
@@ -80,31 +80,31 @@ describe("PasswordLogin", () => {
 
     test("submit valid login-id and password; with delayed", (done) => {
         // wait for delayed timeout
-        const { repository, resource } = waitPasswordLoginResource({ wait_millisecond: 2 })
+        const { repository, resource } = waitPasswordResetResource({ wait_millisecond: 2 })
 
-        resource.passwordLogin.onStateChange(stateHandler())
+        resource.passwordReset.onStateChange(stateHandler())
 
         resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
         resource.passwordField.set(markInputValue(VALID_LOGIN.password))
 
-        resource.passwordLogin.login()
+        resource.passwordReset.reset()
 
-        function stateHandler(): Post<PasswordLoginState> {
-            const stack: PasswordLoginState[] = []
+        function stateHandler(): Post<PasswordResetState> {
+            const stack: PasswordResetState[] = []
             return (state) => {
                 stack.push(state)
 
                 switch (state.type) {
-                    case "initial-login":
-                    case "try-to-login":
-                    case "delayed-to-login":
+                    case "initial-reset":
+                    case "try-to-reset":
+                    case "delayed-to-reset":
                         // work in progress...
                         break
 
                     case "try-to-load":
                         expect(stack).toEqual([
-                            { type: "try-to-login" },
-                            { type: "delayed-to-login" }, // delayed event
+                            { type: "try-to-reset" },
+                            { type: "delayed-to-reset" }, // delayed event
                             {
                                 type: "try-to-load",
                                 scriptPath: markScriptPath("//secure.example.com/index.js"),
@@ -117,7 +117,7 @@ describe("PasswordLogin", () => {
                         }, 1) // after setContinuousRenew interval and delay
                         break
 
-                    case "failed-to-login":
+                    case "failed-to-reset":
                     case "storage-error":
                     case "load-error":
                     case "error":
@@ -129,25 +129,25 @@ describe("PasswordLogin", () => {
     })
 
     test("submit without fields", (done) => {
-        const { repository, resource } = standardPasswordLoginResource()
+        const { repository, resource } = standardPasswordResetResource()
 
-        resource.passwordLogin.onStateChange(stateHandler())
+        resource.passwordReset.onStateChange(stateHandler())
 
         // try to login without fields
         //resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
         //resource.passwordField.set(markInputValue(VALID_LOGIN.password))
 
-        resource.passwordLogin.login()
+        resource.passwordReset.reset()
 
-        function stateHandler(): Post<PasswordLoginState> {
-            const stack: PasswordLoginState[] = []
+        function stateHandler(): Post<PasswordResetState> {
+            const stack: PasswordResetState[] = []
             return (state) => {
                 stack.push(state)
 
                 switch (state.type) {
-                    case "initial-login":
-                    case "try-to-login":
-                    case "delayed-to-login":
+                    case "initial-reset":
+                    case "try-to-reset":
+                    case "delayed-to-reset":
                         // work in progress...
                         break
 
@@ -155,9 +155,53 @@ describe("PasswordLogin", () => {
                         done(new Error(state.type))
                         break
 
-                    case "failed-to-login":
+                    case "failed-to-reset":
                         expect(stack).toEqual([
-                            { type: "failed-to-login", err: { type: "validation-error" } },
+                            { type: "failed-to-reset", err: { type: "validation-error" } },
+                        ])
+                        expectToEmptyLastLogin(repository.authCredentials)
+                        done()
+                        break
+
+                    case "storage-error":
+                    case "load-error":
+                    case "error":
+                        done(new Error(state.type))
+                        break
+                }
+            }
+        }
+    })
+
+    test("submit without resetToken", (done) => {
+        const { repository, resource } = emptyResetTokenPasswordResetResource()
+
+        resource.passwordReset.onStateChange(stateHandler())
+
+        resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
+        resource.passwordField.set(markInputValue(VALID_LOGIN.password))
+
+        resource.passwordReset.reset()
+
+        function stateHandler(): Post<PasswordResetState> {
+            const stack: PasswordResetState[] = []
+            return (state) => {
+                stack.push(state)
+
+                switch (state.type) {
+                    case "initial-reset":
+                    case "try-to-reset":
+                    case "delayed-to-reset":
+                        // work in progress...
+                        break
+
+                    case "try-to-load":
+                        done(new Error(state.type))
+                        break
+
+                    case "failed-to-reset":
+                        expect(stack).toEqual([
+                            { type: "failed-to-reset", err: { type: "empty-reset-token" } },
                         ])
                         expectToEmptyLastLogin(repository.authCredentials)
                         done()
@@ -176,7 +220,7 @@ describe("PasswordLogin", () => {
     describe("fields", () => {
         describe("loginID", () => {
             test("invalid with empty string", (done) => {
-                const { resource } = standardPasswordLoginResource()
+                const { resource } = standardPasswordResetResource()
 
                 resource.loginIDField.onStateChange(stateHandler())
 
@@ -196,7 +240,7 @@ describe("PasswordLogin", () => {
 
         describe("password", () => {
             test("invalid with empty string", (done) => {
-                const { resource } = standardPasswordLoginResource()
+                const { resource } = standardPasswordResetResource()
 
                 resource.passwordField.onStateChange(stateHandler())
 
@@ -214,7 +258,7 @@ describe("PasswordLogin", () => {
             })
 
             test("invalid with too long string", (done) => {
-                const { resource } = standardPasswordLoginResource()
+                const { resource } = standardPasswordResetResource()
 
                 resource.passwordField.onStateChange(stateHandler())
 
@@ -232,7 +276,7 @@ describe("PasswordLogin", () => {
             })
 
             test("invalid with too long string including multi-byte character", (done) => {
-                const { resource } = standardPasswordLoginResource()
+                const { resource } = standardPasswordResetResource()
 
                 resource.passwordField.onStateChange(stateHandler())
 
@@ -251,7 +295,7 @@ describe("PasswordLogin", () => {
             })
 
             test("valid with just 72 byte string", (done) => {
-                const { resource } = standardPasswordLoginResource()
+                const { resource } = standardPasswordResetResource()
 
                 resource.passwordField.onStateChange(stateHandler())
 
@@ -269,7 +313,7 @@ describe("PasswordLogin", () => {
             })
 
             test("valid with just 72 byte string including multi-byte character", (done) => {
-                const { resource } = standardPasswordLoginResource()
+                const { resource } = standardPasswordResetResource()
 
                 resource.passwordField.onStateChange(stateHandler())
 
@@ -290,26 +334,38 @@ describe("PasswordLogin", () => {
     })
 })
 
-function standardPasswordLoginResource() {
+function standardPasswordResetResource() {
     const currentURL = standardURL()
     const config = standardConfig()
     const repository = standardRepository()
     const simulator = standardSimulator()
-    const resource = newPasswordLoginResource(currentURL, config, repository, simulator)
+    const resource = newPasswordResetResource(currentURL, config, repository, simulator)
 
     return { repository, resource }
 }
-function waitPasswordLoginResource(waitTime: WaitTime) {
+function waitPasswordResetResource(waitTime: WaitTime) {
     const currentURL = standardURL()
     const config = standardConfig()
     const repository = standardRepository()
     const simulator = waitSimulator(waitTime)
-    const resource = newPasswordLoginResource(currentURL, config, repository, simulator)
+    const resource = newPasswordResetResource(currentURL, config, repository, simulator)
+
+    return { repository, resource }
+}
+function emptyResetTokenPasswordResetResource() {
+    const currentURL = emptyResetTokenURL()
+    const config = standardConfig()
+    const repository = standardRepository()
+    const simulator = standardSimulator()
+    const resource = newPasswordResetResource(currentURL, config, repository, simulator)
 
     return { repository, resource }
 }
 
 function standardURL(): URL {
+    return new URL("https://example.com/index.html?_password_reset_token=reset-token")
+}
+function emptyResetTokenURL(): URL {
     return new URL("https://example.com/index.html")
 }
 function standardConfig(): Config {
@@ -319,8 +375,8 @@ function standardConfig(): Config {
                 secureServerHost: "secure.example.com",
             },
         },
-        passwordLogin: {
-            login: {
+        passwordReset: {
+            reset: {
                 delay: { delay_millisecond: 1 },
             },
         },
@@ -339,9 +395,9 @@ function standardRepository(): Repository {
 }
 function standardSimulator(): Simulator {
     return {
-        login: {
-            login: async (fields) => {
-                return simulateLogin(fields)
+        reset: {
+            reset: async (resetToken, fields) => {
+                return simulateReset(resetToken, fields)
             },
         },
         renew: renewSimulator(),
@@ -349,17 +405,17 @@ function standardSimulator(): Simulator {
 }
 function waitSimulator(waitTime: WaitTime): Simulator {
     return {
-        login: {
-            login: async (fields) => {
+        reset: {
+            reset: async (resetToken, fields) => {
                 await wait(waitTime, () => null)
-                return simulateLogin(fields)
+                return simulateReset(resetToken, fields)
             },
         },
         renew: renewSimulator(),
     }
 }
 
-function simulateLogin(_fields: LoginFields): AuthCredential {
+function simulateReset(_resetToken: ResetToken, _fields: ResetFields): AuthCredential {
     return {
         ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
         apiCredential: markApiCredential({ apiRoles: ["role"] }),
