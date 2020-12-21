@@ -40,6 +40,9 @@ export class RenewCredentialMockComponent extends MockComponent<RenewCredentialS
     succeedToInstantLoad(): void {
         // mock では特に何もしない
     }
+    failedToInstantLoad(): void {
+        // mock では特に何もしない
+    }
     loadError(): void {
         // mock では特に何もしない
     }

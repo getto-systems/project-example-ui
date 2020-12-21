@@ -1,4 +1,4 @@
-import { Renew, SetContinuousRenew } from "../../login/renew/action"
+import { ForceRenew, Renew, SetContinuousRenew } from "../../login/renew/action"
 import { SecureScriptPath } from "../../common/application/action"
 
 import { RenewError } from "../../login/renew/data"
@@ -11,6 +11,7 @@ export interface RenewCredentialComponentFactory {
 
 export type RenewCredentialMaterial = Readonly<{
     renew: Renew
+    forceRenew: ForceRenew
     setContinuousRenew: SetContinuousRenew
     secureScriptPath: SecureScriptPath
 }>
@@ -19,11 +20,12 @@ export interface RenewCredentialComponent {
     onStateChange(post: Post<RenewCredentialState>): void
     renew(): void
     succeedToInstantLoad(): void
+    failedToInstantLoad(): void
     loadError(err: LoadError): void
 }
 
 export type RenewCredentialState =
-    | Readonly<{ type: "initial" }>
+    | Readonly<{ type: "initial-renew" }>
     | Readonly<{ type: "try-to-instant-load"; scriptPath: ScriptPath }>
     | Readonly<{ type: "required-to-login" }>
     | Readonly<{ type: "try-to-renew" }>
@@ -35,7 +37,7 @@ export type RenewCredentialState =
     | Readonly<{ type: "load-error"; err: LoadError }>
     | Readonly<{ type: "error"; err: string }>
 
-export const initialRenewCredentialState: RenewCredentialState = { type: "initial" }
+export const initialRenewCredentialState: RenewCredentialState = { type: "initial-renew" }
 
 interface Post<T> {
     (state: T): void

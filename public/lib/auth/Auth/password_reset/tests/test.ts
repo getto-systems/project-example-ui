@@ -4,8 +4,9 @@ import { Config, newPasswordResetResource, Repository, Simulator } from "./core"
 
 import { initMemoryAuthCredentialRepository } from "../../../login/renew/impl/repository/auth_credential/memory"
 import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
+import { initStaticClock } from "../../../login/renew/impl/clock/simulate"
 
-import { AuthCredentialRepository } from "../../../login/renew/infra"
+import { AuthCredentialRepository, Clock } from "../../../login/renew/infra"
 
 import { PasswordResetState } from "../component"
 import { LoginIDFieldState } from "../../field/login_id/component"
@@ -28,6 +29,10 @@ const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
 
 const RENEWED_TICKET_NONCE = "renewed-ticket-nonce" as const
 const SUCCEED_TO_RENEW_AT = new Date("2020-01-01 10:01:00")
+
+// renew リクエストを投げるべきかの判定に使用する
+// SUCCEED_TO_LOGIN_AT と setContinuousRenew の delay との間でうまく調整する
+const NOW = new Date("2020-01-01 10:00:30")
 
 describe("PasswordReset", () => {
     test("submit valid login-id and password", (done) => {
@@ -73,6 +78,9 @@ describe("PasswordReset", () => {
                     case "error":
                         done(new Error(state.type))
                         break
+
+                    default:
+                        assertNever(state)
                 }
             }
         }
@@ -123,6 +131,9 @@ describe("PasswordReset", () => {
                     case "error":
                         done(new Error(state.type))
                         break
+
+                    default:
+                        assertNever(state)
                 }
             }
         }
@@ -168,6 +179,9 @@ describe("PasswordReset", () => {
                     case "error":
                         done(new Error(state.type))
                         break
+
+                    default:
+                        assertNever(state)
                 }
             }
         }
@@ -212,6 +226,9 @@ describe("PasswordReset", () => {
                     case "error":
                         done(new Error(state.type))
                         break
+
+                    default:
+                        assertNever(state)
                 }
             }
         }
@@ -339,7 +356,8 @@ function standardPasswordResetResource() {
     const config = standardConfig()
     const repository = standardRepository()
     const simulator = standardSimulator()
-    const resource = newPasswordResetResource(currentURL, config, repository, simulator)
+    const clock = standardClock()
+    const resource = newPasswordResetResource(currentURL, config, repository, simulator, clock)
 
     return { repository, resource }
 }
@@ -347,8 +365,9 @@ function waitPasswordResetResource() {
     const currentURL = standardURL()
     const config = standardConfig()
     const repository = standardRepository()
-    const simulator = waitSimulator({ wait_millisecond: 2 })
-    const resource = newPasswordResetResource(currentURL, config, repository, simulator)
+    const simulator = waitSimulator()
+    const clock = standardClock()
+    const resource = newPasswordResetResource(currentURL, config, repository, simulator, clock)
 
     return { repository, resource }
 }
@@ -357,7 +376,8 @@ function emptyResetTokenPasswordResetResource() {
     const config = standardConfig()
     const repository = standardRepository()
     const simulator = standardSimulator()
-    const resource = newPasswordResetResource(currentURL, config, repository, simulator)
+    const clock = standardClock()
+    const resource = newPasswordResetResource(currentURL, config, repository, simulator, clock)
 
     return { repository, resource }
 }
@@ -403,11 +423,12 @@ function standardSimulator(): Simulator {
         renew: renewSimulator(),
     }
 }
-function waitSimulator(waitTime: WaitTime): Simulator {
+function waitSimulator(): Simulator {
     return {
         reset: {
             reset: async (resetToken, fields) => {
-                await wait(waitTime, () => null)
+                // wait for delayed timeout
+                await wait({ wait_millisecond: 3 }, () => null)
                 return simulateReset(resetToken, fields)
             },
         },
@@ -438,6 +459,10 @@ function renewSimulator(): RenewSimulator {
             }
         },
     }
+}
+
+function standardClock(): Clock {
+    return initStaticClock(NOW)
 }
 
 function expectToSaveLastLogin(authCredentials: AuthCredentialRepository) {
@@ -471,4 +496,6 @@ interface Post<T> {
     (state: T): void
 }
 
-type WaitTime = { wait_millisecond: number }
+function assertNever(_: never): never {
+    throw new Error("NEVER")
+}

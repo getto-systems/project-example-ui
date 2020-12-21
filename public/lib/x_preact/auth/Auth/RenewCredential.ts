@@ -31,10 +31,7 @@ export function RenewCredential({ components: { renewCredential } }: Props): VNo
                         renewCredential.succeedToInstantLoad()
                     }
                     script.onerror = () => {
-                        renewCredential.loadError({
-                            type: "infra-error",
-                            err: `スクリプトのロードに失敗しました: ${state.type}`,
-                        })
+                        renewCredential.failedToInstantLoad()
                     }
                 })
                 break
@@ -53,7 +50,7 @@ export function RenewCredential({ components: { renewCredential } }: Props): VNo
     }, [state])
 
     switch (state.type) {
-        case "initial":
+        case "initial-renew":
         case "required-to-login":
             return EMPTY_CONTENT
 

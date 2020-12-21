@@ -61,6 +61,7 @@ export function initRenewCredentialResource(
 ): RenewCredentialResource {
     const material: RenewCredentialMaterial = {
         renew: factory.actions.renew.renew(),
+        forceRenew: factory.actions.renew.forceRenew(),
         setContinuousRenew: factory.actions.setContinuousRenew.setContinuousRenew(),
         secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
     }

@@ -10,10 +10,10 @@ import { loginIDField } from "../../../common/field/login_id/impl/core"
 
 import { SessionSimulator } from "../../../profile/password_reset/impl/client/session/simulate"
 
-import { PasswordResetSessionResource } from "../../Login/view"
-
 import { ApplicationActionConfig } from "../../../common/application/infra"
 import { PasswordResetSessionActionConfig } from "../../../profile/password_reset/infra"
+
+import { PasswordResetSessionResource } from "../../Login/view"
 
 export type Config = {
     application: ApplicationActionConfig

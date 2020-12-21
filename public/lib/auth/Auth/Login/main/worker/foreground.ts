@@ -22,14 +22,13 @@ import { initLoginIDField } from "../../../field/login_id/impl"
 import { initPasswordField } from "../../../field/password/impl"
 
 import { secureScriptPath } from "../../../../common/application/impl/core"
-import { renew, setContinuousRenew } from "../../../../login/renew/impl/core"
+import { forceRenew, renew, setContinuousRenew } from "../../../../login/renew/impl/core"
 
 import { loginIDField } from "../../../../common/field/login_id/impl/core"
 import { passwordField } from "../../../../common/field/password/impl/core"
 
 import { initFetchRenewClient } from "../../../../login/renew/impl/client/renew/fetch"
-import { initAuthExpires } from "../../../../login/renew/impl/expires"
-import { initRenewRunner } from "../../../../login/renew/impl/renew_runner"
+import { initDateClock } from "../../../../login/renew/impl/clock/date"
 import { initStorageAuthCredentialRepository } from "../../../../login/renew/impl/repository/auth_credential/storage"
 
 import { currentPagePathname, detectViewState, detectResetToken } from "../../impl/location"
@@ -112,15 +111,17 @@ export function initRenewAction(
     authClient: AuthClient
 ): RenewAction {
     const client = initFetchRenewClient(authClient)
+    const infra = {
+        authCredentials,
+        client,
+        config: config.renew,
+        delayed,
+        clock: initDateClock(),
+    }
 
     return {
-        renew: renew({
-            authCredentials,
-            client,
-            config: config.renew,
-            delayed,
-            expires: initAuthExpires(),
-        }),
+        renew: renew(infra),
+        forceRenew: forceRenew(infra),
     }
 }
 export function initSetContinuousRenewAction(
@@ -135,7 +136,7 @@ export function initSetContinuousRenewAction(
             authCredentials,
             client,
             config: config.setContinuousRenew,
-            runner: initRenewRunner(),
+            clock: initDateClock(),
         }),
     }
 }

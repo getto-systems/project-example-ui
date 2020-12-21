@@ -18,7 +18,7 @@ import {
 const VALID_LOGIN = { loginID: "login-id" } as const
 const SESSION_ID = "session-id" as const
 
-describe("PasswordReset", () => {
+describe("PasswordResetSession", () => {
     test("submit valid login-id", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
@@ -67,6 +67,9 @@ describe("PasswordReset", () => {
                     case "error":
                         done(new Error(state.type))
                         break
+
+                    default:
+                        assertNever(state)
                 }
             }
         }
@@ -122,6 +125,9 @@ describe("PasswordReset", () => {
                     case "error":
                         done(new Error(state.type))
                         break
+
+                    default:
+                        assertNever(state)
                 }
             }
         }
@@ -197,6 +203,9 @@ describe("PasswordReset", () => {
                     case "error":
                         done(new Error(state.type))
                         break
+
+                    default:
+                        assertNever(state)
                 }
             }
         }
@@ -242,6 +251,9 @@ describe("PasswordReset", () => {
                     case "error":
                         done(new Error(state.type))
                         break
+
+                    default:
+                        assertNever(state)
                 }
             }
         }
@@ -279,7 +291,7 @@ function standardPasswordResetSessionResource() {
 }
 function waitPasswordResetSessionResource() {
     const config = standardConfig()
-    const simulator = waitSimulator({ wait_millisecond: 2 })
+    const simulator = waitSimulator()
     const resource = newPasswordResetSessionResource(config, simulator)
 
     return { resource }
@@ -325,11 +337,12 @@ function standardSimulator(): Simulator {
         },
     }
 }
-function waitSimulator(waitTime: WaitTime): Simulator {
+function waitSimulator(): Simulator {
     return {
         session: {
             startSession: async (fields) => {
-                await wait(waitTime, () => null)
+                // wait for delayed timeout
+                await wait({ wait_millisecond: 3 }, () => null)
                 return simulateStartSession(fields)
             },
             sendToken: async (post) => {
@@ -371,7 +384,7 @@ function longSendTokenTime(): SendTokenTime {
     return {
         waiting_millisecond: 0,
         sending_millisecond: 2,
-        success_millisecond: 11, // 2msec 間隔で 5回 check するのでそのあと success する
+        success_millisecond: 30, // 2msec 間隔で 5回 check するのでそのあと success する
     }
 }
 function simulateSendToken(post: Post<SendTokenState>, sendTokenTime: SendTokenTime): true {
@@ -399,4 +412,7 @@ type SendTokenTime = {
     sending_millisecond: number
     success_millisecond: number
 }
-type WaitTime = { wait_millisecond: number }
+
+function assertNever(_: never): never {
+    throw new Error("NEVER")
+}
