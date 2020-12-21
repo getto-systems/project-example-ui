@@ -80,7 +80,7 @@ describe("PasswordReset", () => {
 
     test("submit valid login-id and password; with delayed", (done) => {
         // wait for delayed timeout
-        const { repository, resource } = waitPasswordResetResource({ wait_millisecond: 2 })
+        const { repository, resource } = waitPasswordResetResource()
 
         resource.passwordReset.onStateChange(stateHandler())
 
@@ -133,7 +133,7 @@ describe("PasswordReset", () => {
 
         resource.passwordReset.onStateChange(stateHandler())
 
-        // try to login without fields
+        // try to reset without fields
         //resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
         //resource.passwordField.set(markInputValue(VALID_LOGIN.password))
 
@@ -343,11 +343,11 @@ function standardPasswordResetResource() {
 
     return { repository, resource }
 }
-function waitPasswordResetResource(waitTime: WaitTime) {
+function waitPasswordResetResource() {
     const currentURL = standardURL()
     const config = standardConfig()
     const repository = standardRepository()
-    const simulator = waitSimulator(waitTime)
+    const simulator = waitSimulator({ wait_millisecond: 2 })
     const resource = newPasswordResetResource(currentURL, config, repository, simulator)
 
     return { repository, resource }
