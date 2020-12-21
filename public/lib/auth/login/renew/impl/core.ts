@@ -2,7 +2,7 @@ import { RenewInfra, SetContinuousRenewInfra } from "../infra"
 
 import { ForceRenewPod, RenewPod, SetContinuousRenewPod } from "../action"
 
-import { LastLogin, LoginAt, StorageError } from "../../../common/credential/data"
+import { LastLogin, LoginAt } from "../../../common/credential/data"
 import { ForceRenewEvent } from "../data"
 
 export const renew = (infra: RenewInfra): RenewPod => () => async (post) => {
@@ -35,7 +35,7 @@ function findLastLogin(
 
     const findResult = authCredentials.findLastLogin()
     if (!findResult.success) {
-        post(storageError(findResult))
+        post({ type: "storage-error", err: findResult.err })
         return
     }
     if (!findResult.found) {
@@ -61,7 +61,7 @@ async function renewCredential(infra: RenewInfra, lastLogin: LastLogin, post: Po
     if (!response.hasCredential) {
         const removeResult = authCredentials.removeAuthCredential()
         if (!removeResult.success) {
-            post(storageError(removeResult))
+            post({ type: "storage-error", err: removeResult.err })
             return
         }
         post({ type: "required-to-login" })
@@ -70,7 +70,7 @@ async function renewCredential(infra: RenewInfra, lastLogin: LastLogin, post: Po
 
     const storeResult = authCredentials.storeAuthCredential(response.authCredential)
     if (!storeResult.success) {
-        post(storageError(storeResult))
+        post({ type: "storage-error", err: storeResult.err })
         return
     }
 
@@ -86,7 +86,7 @@ export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuou
     if (authCredential.store) {
         const storeResult = authCredentials.storeAuthCredential(authCredential.authCredential)
         if (!storeResult.success) {
-            post(storageError(storeResult))
+            post({ type: "storage-error", err: storeResult.err })
             return
         }
     }
@@ -103,48 +103,39 @@ export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuou
 
     // 継続更新は本体が置き換わってから実行されるので、イベント通知しない
     async function continuousRenew(): Promise<{ next: boolean }> {
+        const CANCEL = { next: false }
+        const NEXT = { next: true }
+
         const findResult = authCredentials.findLastLogin()
         if (!findResult.success || !findResult.found) {
-            return cancel()
+            return CANCEL
         }
 
         // 保存された credential の更新時刻が新しければ今回は通信しない
         if (!hasExceeded(findResult.lastLogin.lastLoginAt, config.delay)) {
-            return next()
+            return NEXT
         }
 
         const response = await client.renew(findResult.lastLogin.ticketNonce)
         if (!response.success) {
-            return cancel()
+            return CANCEL
         }
         if (!response.hasCredential) {
             authCredentials.removeAuthCredential()
-            return cancel()
+            return CANCEL
         }
 
         const storeResult = authCredentials.storeAuthCredential(response.authCredential)
         if (!storeResult.success) {
-            return cancel()
+            return CANCEL
         }
 
-        return next()
-
-        function cancel() {
-            return { next: false }
-        }
-        function next() {
-            return { next: true }
-        }
+        return NEXT
     }
 
     function hasExceeded(lastLoginAt: LoginAt, delay: DelayTime): boolean {
         return clock.now().getTime() > lastLoginAt.getTime() + delay.delay_millisecond
     }
-}
-
-type StorageErrorEvent = { type: "storage-error"; err: StorageError }
-function storageError(result: { err: StorageError }): StorageErrorEvent {
-    return { type: "storage-error", err: result.err }
 }
 
 type ExpireTime = Readonly<{ expire_millisecond: number }>

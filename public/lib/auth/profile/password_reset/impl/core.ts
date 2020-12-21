@@ -67,15 +67,16 @@ class StatusChecker {
             }
 
             if (response.done) {
-                if (response.send) {
-                    post({ type: "succeed-to-send-token", dest: response.dest })
-                } else {
+                if (!response.send) {
                     post({
                         type: "failed-to-send-token",
                         dest: response.dest,
                         err: { type: "infra-error", err: response.err },
                     })
+                    return
                 }
+
+                post({ type: "succeed-to-send-token", dest: response.dest })
                 return
             }
 
