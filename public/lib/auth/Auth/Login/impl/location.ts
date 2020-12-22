@@ -1,6 +1,6 @@
 import { ViewState } from "../view"
 
-import { LoginSearch } from "./link"
+import { LoginSearch } from "../main/link"
 
 import { markPagePathname, PagePathname } from "../../../common/application/data"
 import { markResetToken, ResetToken } from "../../../profile/password_reset/data"

@@ -24,25 +24,27 @@ import {
 } from "../../../login/renew/infra"
 
 import { RenewCredentialResource } from "../../Login/view"
+import { RenewCredentialComponent } from "../component"
 
-export type Config = {
+export type RenewCredentialConfig = {
     application: ApplicationActionConfig
     renew: RenewActionConfig
     setContinuousRenew: SetContinuousRenewActionConfig
 }
-export type Repository = Readonly<{
+export type RenewCredentialRepository = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
-export type Simulator = Readonly<{
+export type RenewCredentialSimulator = Readonly<{
     renew: RenewSimulator
 }>
 
 export function newRenewCredentialResource(
     currentURL: URL,
-    config: Config,
-    repository: Repository,
-    simulator: Simulator,
-    clock: Clock
+    config: RenewCredentialConfig,
+    repository: RenewCredentialRepository,
+    simulator: RenewCredentialSimulator,
+    clock: Clock,
+    hook: Setup<RenewCredentialComponent>
 ): RenewCredentialResource {
     const factory: RenewCredentialFactory = {
         actions: {
@@ -62,7 +64,9 @@ export function newRenewCredentialResource(
     }
     const collector: RenewCredentialCollector = initRenewCredentialCollector(currentURL)
 
-    return initRenewCredentialResource(factory, collector, (_component) => {
-        // test では特になにもしない
-    })
+    return initRenewCredentialResource(factory, collector, hook)
+}
+
+interface Setup<T> {
+    (component: T): void
 }

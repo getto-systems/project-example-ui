@@ -1,6 +1,6 @@
 import { initApplicationAction, initPasswordResetSessionAction } from "../../Login/tests/core"
 
-import { initLoginLink } from "../../Login/impl/link"
+import { initLoginLink } from "../../Login/main/link"
 import { initPasswordResetSessionResource, PasswordResetSessionFactory } from "../../Login/impl/core"
 
 import { initPasswordResetSession } from "../impl"
@@ -15,17 +15,17 @@ import { PasswordResetSessionActionConfig } from "../../../profile/password_rese
 
 import { PasswordResetSessionResource } from "../../Login/view"
 
-export type Config = {
+export type PasswordResetSessionConfig = {
     application: ApplicationActionConfig
     passwordResetSession: PasswordResetSessionActionConfig
 }
-export type Simulator = Readonly<{
+export type PasswordResetSessionSimulator = Readonly<{
     session: SessionSimulator
 }>
 
 export function newPasswordResetSessionResource(
-    config: Config,
-    simulator: Simulator
+    config: PasswordResetSessionConfig,
+    simulator: PasswordResetSessionSimulator
 ): PasswordResetSessionResource {
     const factory: PasswordResetSessionFactory = {
         link: initLoginLink,

@@ -46,7 +46,7 @@ function View({ view }: ViewProps): VNode {
     }, [])
 
     switch (state.type) {
-        case "initial":
+        case "initial-view":
             return EMPTY_CONTENT
 
         case "renew-credential":

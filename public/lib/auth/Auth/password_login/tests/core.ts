@@ -5,7 +5,7 @@ import {
     initPasswordLoginCollector,
 } from "../../Login/tests/core"
 
-import { initLoginLink } from "../../Login/impl/link"
+import { initLoginLink } from "../../Login/main/link"
 import {
     initPasswordLoginResource,
     PasswordLoginCollector,
@@ -32,24 +32,24 @@ import {
 
 import { PasswordLoginResource } from "../../Login/view"
 
-export type Config = {
+export type PasswordLoginConfig = {
     application: ApplicationActionConfig
     passwordLogin: PasswordLoginActionConfig
     setContinuousRenew: SetContinuousRenewActionConfig
 }
-export type Repository = Readonly<{
+export type PasswordLoginRepository = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
-export type Simulator = Readonly<{
+export type PasswordLoginSimulator = Readonly<{
     login: LoginSimulator
     renew: RenewSimulator
 }>
 
 export function newPasswordLoginResource(
     currentURL: URL,
-    config: Config,
-    repository: Repository,
-    simulator: Simulator,
+    config: PasswordLoginConfig,
+    repository: PasswordLoginRepository,
+    simulator: PasswordLoginSimulator,
     clock: Clock
 ): PasswordLoginResource {
     const factory: PasswordLoginFactory = {
