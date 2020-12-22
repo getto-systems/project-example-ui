@@ -34,7 +34,7 @@ import { Clock } from "../../../login/renew/infra"
 import {
     AuthCredential,
     markApiCredential,
-    markLoginAt,
+    markAuthAt,
     markTicketNonce,
 } from "../../../common/credential/data"
 import { LoginFields } from "../../../login/password_login/data"
@@ -436,7 +436,7 @@ function simulateLogin(_fields: LoginFields): AuthCredential {
     return {
         ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
         apiCredential: markApiCredential({ apiRoles: ["role"] }),
-        loginAt: markLoginAt(SUCCEED_TO_LOGIN_AT),
+        authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
     }
 }
 function renewSimulator(): RenewSimulator {
@@ -450,7 +450,7 @@ function simulateReset(_resetToken: ResetToken, _fields: ResetFields): AuthCrede
     return {
         ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
         apiCredential: markApiCredential({ apiRoles: ["role"] }),
-        loginAt: markLoginAt(SUCCEED_TO_LOGIN_AT),
+        authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
     }
 }
 

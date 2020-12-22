@@ -3,26 +3,26 @@ export function markTicketNonce(nonce: string): TicketNonce {
     return nonce as TicketNonce
 }
 
-export type LoginAt = Date & { LoginAt: never }
-export function markLoginAt(date: Date): LoginAt {
-    return date as LoginAt
+export type AuthAt = Date & { AuthAt: never }
+export function markAuthAt(date: Date): AuthAt {
+    return date as AuthAt
 }
 export function hasExpired(
-    loginAt: LoginAt,
+    authAt: AuthAt,
     target: { now: Date; expire_millisecond: number }
 ): boolean {
-    return target.now.getTime() > loginAt.getTime() + target.expire_millisecond
+    return target.now.getTime() > authAt.getTime() + target.expire_millisecond
 }
 
 export type LastLogin = Readonly<{
     ticketNonce: TicketNonce
-    lastLoginAt: LoginAt
+    lastAuthAt: AuthAt
 }>
 
 export type AuthCredential = Readonly<{
     ticketNonce: TicketNonce
     apiCredential: ApiCredential
-    loginAt: LoginAt
+    authAt: AuthAt
 }>
 
 export type ApiCredential = ApiCredential_data & { ApiCredential: never }

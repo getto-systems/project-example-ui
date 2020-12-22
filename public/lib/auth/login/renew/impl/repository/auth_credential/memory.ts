@@ -28,7 +28,7 @@ class MemoryAuthCredentialRepository implements AuthCredentialRepository {
             found: true,
             lastLogin: {
                 ticketNonce: this.store.authCredential.ticketNonce,
-                lastLoginAt: this.store.authCredential.loginAt,
+                lastAuthAt: this.store.authCredential.authAt,
             },
         }
     }

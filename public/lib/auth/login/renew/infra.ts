@@ -56,7 +56,7 @@ export type StoreResult = Readonly<{ success: true }> | Readonly<{ success: fals
 export type StorageKey = Readonly<{
     ticketNonce: string
     apiCredential: string
-    lastLoginAt: string
+    lastAuthAt: string
 }>
 
 export interface RenewClient {

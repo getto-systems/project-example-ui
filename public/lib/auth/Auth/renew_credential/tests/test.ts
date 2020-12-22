@@ -15,7 +15,7 @@ import { AuthCredentialRepository, Clock } from "../../../login/renew/infra"
 
 import { RenewCredentialState } from "../component"
 
-import { markApiCredential, markLoginAt, markTicketNonce } from "../../../common/credential/data"
+import { markApiCredential, markAuthAt, markTicketNonce } from "../../../common/credential/data"
 import { markScriptPath } from "../../../common/application/data"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
@@ -427,7 +427,7 @@ function standardRepository(): RenewCredentialRepository {
             authCredential: {
                 ticketNonce: markTicketNonce(STORED_TICKET_NONCE),
                 apiCredential: markApiCredential({ apiRoles: ["role"] }),
-                loginAt: markLoginAt(STORED_LOGIN_AT),
+                authAt: markAuthAt(STORED_LOGIN_AT),
             },
         }),
     }
@@ -466,7 +466,7 @@ function renewSimulator(waitTime: WaitTime): RenewSimulator {
             return {
                 ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
                 apiCredential: markApiCredential({ apiRoles: ["role"] }),
-                loginAt: markLoginAt(SUCCEED_TO_RENEW_AT),
+                authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
             }
         },
     }
@@ -485,7 +485,7 @@ function expectToSaveRenewed(authCredentials: AuthCredentialRepository) {
         found: true,
         lastLogin: {
             ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
-            lastLoginAt: markLoginAt(SUCCEED_TO_RENEW_AT),
+            lastAuthAt: markAuthAt(SUCCEED_TO_RENEW_AT),
         },
     })
 }

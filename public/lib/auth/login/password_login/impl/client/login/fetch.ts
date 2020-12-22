@@ -1,7 +1,7 @@
 import { LoginClient, LoginResponse, loginSuccess, loginFailed } from "../../../infra"
 
 import { LoginFields } from "../../../data"
-import { markTicketNonce, markLoginAt, markApiCredential } from "../../../../../common/credential/data"
+import { markTicketNonce, markAuthAt, markApiCredential } from "../../../../../common/credential/data"
 
 interface AuthClient {
     passwordLogin(param: { loginID: string; password: string }): Promise<AuthLoginResponse>
@@ -35,7 +35,7 @@ class FetchPasswordLoginClient implements LoginClient {
                     apiCredential: markApiCredential({
                         apiRoles: response.authCredential.apiCredential.apiRoles,
                     }),
-                    loginAt: markLoginAt(new Date()),
+                    authAt: markAuthAt(new Date()),
                 })
             }
 

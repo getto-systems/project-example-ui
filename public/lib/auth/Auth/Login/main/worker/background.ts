@@ -31,7 +31,7 @@ import {
     PasswordResetSessionAction,
 } from "../../../../profile/password_reset/action"
 
-import { markTicketNonce, markLoginAt, markApiCredential } from "../../../../common/credential/data"
+import { markTicketNonce, markAuthAt, markApiCredential } from "../../../../common/credential/data"
 import { markSessionID } from "../../../../profile/password_reset/data"
 
 import { LoginEvent } from "../../../../login/password_login/data"
@@ -134,7 +134,7 @@ export function initPasswordResetAction(config: PasswordResetActionConfig): Pass
                 apiCredential: markApiCredential({
                     apiRoles: ["admin", "dev"],
                 }),
-                loginAt: markLoginAt(new Date()),
+                authAt: markAuthAt(new Date()),
             }
         },
     })

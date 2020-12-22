@@ -21,7 +21,7 @@ import { markScriptPath } from "../../../common/application/data"
 import {
     AuthCredential,
     markApiCredential,
-    markLoginAt,
+    markAuthAt,
     markTicketNonce,
 } from "../../../common/credential/data"
 import { hasError, markInputValue, noError } from "../../../common/field/data"
@@ -517,7 +517,7 @@ function simulateReset(_resetToken: ResetToken, _fields: ResetFields): AuthCrede
     return {
         ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
         apiCredential: markApiCredential({ apiRoles: ["role"] }),
-        loginAt: markLoginAt(SUCCEED_TO_LOGIN_AT),
+        authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
     }
 }
 function renewSimulator(): RenewSimulator {
@@ -532,7 +532,7 @@ function renewSimulator(): RenewSimulator {
             return {
                 ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
                 apiCredential: markApiCredential({ apiRoles: ["role"] }),
-                loginAt: markLoginAt(SUCCEED_TO_RENEW_AT),
+                authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
             }
         },
     }
@@ -548,7 +548,7 @@ function expectToSaveLastLogin(authCredentials: AuthCredentialRepository) {
         found: true,
         lastLogin: {
             ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
-            lastLoginAt: markLoginAt(SUCCEED_TO_LOGIN_AT),
+            lastAuthAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
         },
     })
 }
@@ -558,7 +558,7 @@ function expectToSaveRenewed(authCredentials: AuthCredentialRepository) {
         found: true,
         lastLogin: {
             ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
-            lastLoginAt: markLoginAt(SUCCEED_TO_RENEW_AT),
+            lastAuthAt: markAuthAt(SUCCEED_TO_RENEW_AT),
         },
     })
 }
