@@ -4,11 +4,11 @@ export interface MoveToNextVersionFactory {
     (): MoveToNextVersionEntryPoint
 }
 export type MoveToNextVersionEntryPoint = Readonly<{
-    components: MoveToNextVersionResource
+    components: NextVersionResource
     terminate: Terminate
 }>
 
-export type MoveToNextVersionResource = Readonly<{
+export type NextVersionResource = Readonly<{
     nextVersion: NextVersionComponent
 }>
 

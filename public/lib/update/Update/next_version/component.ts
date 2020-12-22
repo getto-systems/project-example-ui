@@ -1,11 +1,11 @@
-import { FindAction } from "../../next_version/action"
+import { Find } from "../../next_version/action"
 import { AppTarget, FindError } from "../../next_version/data"
 
 export interface NextVersionComponentFactory {
     (material: NextVersionMaterial): NextVersionComponent
 }
 export type NextVersionMaterial = Readonly<{
-    find: FindAction
+    find: Find
 }>
 
 export interface NextVersionComponent {

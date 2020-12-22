@@ -1,18 +1,18 @@
 import { env } from "../../../../y_static/env"
 
-import { initCheckClient } from "../../../next_version/impl/client/check/fetch"
+import { initFetchCheckClient } from "../../../next_version/impl/client/check/fetch"
+
 import { find } from "../../../next_version/impl/core"
+
+import { detectAppTarget } from "../impl/location"
+import { initNextVersionResource } from "../impl/core"
 
 import { initNextVersion } from "../../next_version/impl"
 
-import { detectAppTarget } from "../impl/location"
-
 import { MoveToNextVersionFactory } from "../view"
 
-import { initMoveToNextVersionResource } from "../impl/core"
-
 export function newMoveToNextVersionAsSingle(): MoveToNextVersionFactory {
-    const currentLocation = location
+    const currentURL = new URL(location.toString())
 
     const factory = {
         actions: {
@@ -24,12 +24,12 @@ export function newMoveToNextVersionAsSingle(): MoveToNextVersionFactory {
     }
     const collector = {
         nextVersion: {
-            getAppTarget: () => detectAppTarget(env.version, currentLocation),
+            getAppTarget: () => detectAppTarget(env.version, currentURL),
         },
     }
     return () => {
         return {
-            components: initMoveToNextVersionResource(factory, collector),
+            components: initNextVersionResource(factory, collector),
             terminate: () => {
                 // worker とインターフェイスを合わせるために必要
             },
@@ -40,7 +40,7 @@ export function newMoveToNextVersionAsSingle(): MoveToNextVersionFactory {
 function initNextVersionAction() {
     return {
         find: find({
-            client: initCheckClient(),
+            client: initFetchCheckClient(),
         }),
     }
 }

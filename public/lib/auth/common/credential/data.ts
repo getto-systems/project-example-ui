@@ -7,6 +7,12 @@ export type LoginAt = Date & { LoginAt: never }
 export function markLoginAt(date: Date): LoginAt {
     return date as LoginAt
 }
+export function hasExpired(
+    loginAt: LoginAt,
+    target: { now: Date; expire_millisecond: number }
+): boolean {
+    return target.now.getTime() > loginAt.getTime() + target.expire_millisecond
+}
 
 export type LastLogin = Readonly<{
     ticketNonce: TicketNonce

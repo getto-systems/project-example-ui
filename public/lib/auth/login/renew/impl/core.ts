@@ -2,24 +2,25 @@ import { RenewInfra, SetContinuousRenewInfra } from "../infra"
 
 import { ForceRenewPod, RenewPod, SetContinuousRenewPod } from "../action"
 
-import { LastLogin, LoginAt } from "../../../common/credential/data"
+import { hasExpired, LastLogin } from "../../../common/credential/data"
 import { ForceRenewEvent } from "../data"
 
 export const renew = (infra: RenewInfra): RenewPod => () => async (post) => {
     const { clock, config } = infra
 
     findLastLogin(infra, post, (lastLogin) => {
-        if (!hasExceeded(lastLogin.lastLoginAt, config.instantLoadExpire)) {
+        if (
+            !hasExpired(lastLogin.lastLoginAt, {
+                now: clock.now(),
+                expire_millisecond: config.instantLoadExpire.expire_millisecond,
+            })
+        ) {
             post({ type: "try-to-instant-load" })
             return
         }
 
         renewCredential(infra, lastLogin, post)
     })
-
-    function hasExceeded(lastLoginAt: LoginAt, expire: ExpireTime): boolean {
-        return clock.now().getTime() > lastLoginAt.getTime() + expire.expire_millisecond
-    }
 }
 export const forceRenew = (infra: RenewInfra): ForceRenewPod => () => async (post) => {
     findLastLogin(infra, post, (lastLogin) => {
@@ -112,7 +113,12 @@ export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuou
         }
 
         // 保存された credential の更新時刻が新しければ今回は通信しない
-        if (!hasExceeded(findResult.lastLogin.lastLoginAt, config.delay)) {
+        if (
+            !hasExpired(findResult.lastLogin.lastLoginAt, {
+                now: clock.now(),
+                expire_millisecond: config.delay.delay_millisecond,
+            })
+        ) {
             return NEXT
         }
 
@@ -131,10 +137,6 @@ export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuou
         }
 
         return NEXT
-    }
-
-    function hasExceeded(lastLoginAt: LoginAt, delay: DelayTime): boolean {
-        return clock.now().getTime() > lastLoginAt.getTime() + delay.delay_millisecond
     }
 }
 

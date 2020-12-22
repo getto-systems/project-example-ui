@@ -1,9 +1,13 @@
 import { AppTarget, FindEvent } from "./data"
 
-export interface Find {
-    (collector: FindCollector): FindAction
+export type NextVersionAction = Readonly<{
+    find: FindPod
+}>
+
+export interface FindPod {
+    (collector: FindCollector): Find
 }
-export interface FindAction {
+export interface Find {
     (post: Post<FindEvent>): void
 }
 export interface FindCollector {

@@ -1,11 +1,11 @@
-import { Find, FindCollector } from "../../../next_version/action"
+import { FindPod, FindCollector } from "../../../next_version/action"
 import { NextVersionComponentFactory } from "../../next_version/component"
-import { MoveToNextVersionResource } from "../view"
+import { NextVersionResource } from "../view"
 
 export type NextVersionFactory = Readonly<{
     actions: Readonly<{
         nextVersion: Readonly<{
-            find: Find
+            find: FindPod
         }>
     }>
     components: Readonly<{
@@ -15,10 +15,10 @@ export type NextVersionFactory = Readonly<{
 export type NextVersionCollector = Readonly<{
     nextVersion: FindCollector
 }>
-export function initMoveToNextVersionResource(
+export function initNextVersionResource(
     factory: NextVersionFactory,
     collector: NextVersionCollector
-): MoveToNextVersionResource {
+): NextVersionResource {
     const actions = {
         find: factory.actions.nextVersion.find(collector.nextVersion),
     }
