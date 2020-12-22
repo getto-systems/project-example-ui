@@ -1,3 +1,5 @@
+import { LoginSearch } from "../impl/location"
+
 import { LoginLink } from "../../link"
 
 export function initLoginLink(): LoginLink {
@@ -5,15 +7,6 @@ export function initLoginLink(): LoginLink {
         passwordLogin,
         passwordResetSession,
     }
-}
-
-// ログイン前画面ではアンダースコアから始まるクエリを使用する
-export const LoginSearch = {
-    passwordLogin: "_password_login",
-    passwordReset: "_password_reset",
-    passwordReset_start: "start",
-    passwordReset_reset: "reset",
-    passwordResetToken: "_password_reset_token",
 }
 
 function passwordLogin(): string {
