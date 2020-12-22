@@ -10,7 +10,7 @@ export const renew = (infra: RenewInfra): RenewPod => () => async (post) => {
 
     findLastLogin(infra, post, (lastLogin) => {
         if (
-            !hasExpired(lastLogin.lastLoginAt, {
+            !hasExpired(lastLogin.lastAuthAt, {
                 now: clock.now(),
                 expire_millisecond: config.instantLoadExpire.expire_millisecond,
             })
@@ -114,7 +114,7 @@ export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuou
 
         // 保存された credential の更新時刻が新しければ今回は通信しない
         if (
-            !hasExpired(findResult.lastLogin.lastLoginAt, {
+            !hasExpired(findResult.lastLogin.lastAuthAt, {
                 now: clock.now(),
                 expire_millisecond: config.delay.delay_millisecond,
             })

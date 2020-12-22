@@ -8,8 +8,8 @@ import {
 import { StorageKey, AuthCredentialRepository, StoreResult, LoadLastLoginResult } from "../../../infra"
 
 import {
-    LoginAt,
-    markLoginAt,
+    AuthAt,
+    markAuthAt,
     TicketNonce,
     markTicketNonce,
     AuthCredential,
@@ -27,12 +27,12 @@ export function initStorageAuthCredentialRepository(
 class Repository implements AuthCredentialRepository {
     ticketNonce: TicketNonceStorage
     apiCredential: ApiCredentialStorage
-    loginAt: LoginAtStorage
+    authAt: AuthAtStorage
 
     constructor(storage: Storage, key: StorageKey) {
         this.ticketNonce = new TicketNonceStorage(storage, key.ticketNonce)
         this.apiCredential = new ApiCredentialStorage(storage, key.apiCredential)
-        this.loginAt = new LoginAtStorage(storage, key.lastLoginAt)
+        this.authAt = new AuthAtStorage(storage, key.lastAuthAt)
     }
 
     findLastLogin(): LoadLastLoginResult {
@@ -42,8 +42,8 @@ class Repository implements AuthCredentialRepository {
                 return { success: true, found: false }
             }
 
-            const loginAt = this.loginAt.get()
-            if (!loginAt.found) {
+            const authAt = this.authAt.get()
+            if (!authAt.found) {
                 return { success: true, found: false }
             }
 
@@ -52,7 +52,7 @@ class Repository implements AuthCredentialRepository {
                 found: true,
                 lastLogin: {
                     ticketNonce: ticketNonce.content,
-                    lastLoginAt: loginAt.content,
+                    lastAuthAt: authAt.content,
                 },
             }
         } catch (err) {
@@ -64,7 +64,7 @@ class Repository implements AuthCredentialRepository {
         try {
             this.ticketNonce.set(authCredential.ticketNonce)
             this.apiCredential.set(authCredential.apiCredential)
-            this.loginAt.set(authCredential.loginAt)
+            this.authAt.set(authCredential.authAt)
             return { success: true }
         } catch (err) {
             return { success: false, err: { type: "infra-error", err: `${err}` } }
@@ -74,7 +74,7 @@ class Repository implements AuthCredentialRepository {
         try {
             this.ticketNonce.remove()
             this.apiCredential.remove()
-            this.loginAt.remove()
+            this.authAt.remove()
             return { success: true }
         } catch (err) {
             return { success: false, err: { type: "infra-error", err: `${err}` } }
@@ -155,14 +155,14 @@ class ApiCredentialStorage extends CredentialStorage<ApiCredential> {
         })
     }
 }
-class LoginAtStorage extends CredentialStorage<LoginAt> {
+class AuthAtStorage extends CredentialStorage<AuthAt> {
     constructor(storage: Storage, key: string) {
         super(storage, key, {
-            encode(value: LoginAt): string {
+            encode(value: AuthAt): string {
                 return value.toISOString()
             },
-            decode(raw: string): LoginAt {
-                return markLoginAt(new Date(raw))
+            decode(raw: string): AuthAt {
+                return markAuthAt(new Date(raw))
             },
         })
     }

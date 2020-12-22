@@ -20,7 +20,7 @@ const env = {
   storageKey: {
     ticketNonce: process.env.STORAGE_KEY_TICKET_NONCE,
     apiCredential: process.env.STORAGE_KEY_API_CREDENTIAL,
-    lastLoginAt: process.env.STORAGE_KEY_LAST_LOGIN_AT,
+    lastAuthAt: process.env.STORAGE_KEY_LAST_AUTH_AT,
   },
 };
 

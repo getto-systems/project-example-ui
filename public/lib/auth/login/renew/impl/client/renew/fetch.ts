@@ -3,7 +3,7 @@ import { RenewClient, RenewResponse } from "../../../infra"
 import {
     TicketNonce,
     markTicketNonce,
-    markLoginAt,
+    markAuthAt,
     markApiCredential,
 } from "../../../../../common/credential/data"
 
@@ -41,7 +41,7 @@ class FetchRenewClient implements RenewClient {
                         apiCredential: markApiCredential({
                             apiRoles: response.authCredential.apiCredential.apiRoles,
                         }),
-                        loginAt: markLoginAt(new Date()),
+                        authAt: markAuthAt(new Date()),
                     },
                 }
             } else {
