@@ -5,5 +5,5 @@ module.exports = {
 }
 
 function find() {
-    return ["update", "auth/login"]
+    return ["update/moveToNextVersion", "auth/login"]
 }
