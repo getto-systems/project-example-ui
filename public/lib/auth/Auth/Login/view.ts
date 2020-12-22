@@ -21,7 +21,7 @@ export interface LoginView {
 }
 
 export type LoginState =
-    | Readonly<{ type: "initial" }>
+    | Readonly<{ type: "initial-view" }>
     | Readonly<{ type: "renew-credential"; components: RenewCredentialResource }>
     | Readonly<{ type: "password-login"; components: PasswordLoginResource }>
     | Readonly<{ type: "password-reset-session"; components: PasswordResetSessionResource }>
@@ -30,7 +30,7 @@ export type LoginState =
 
 export type ViewState = "password-login" | "password-reset-session" | "password-reset"
 
-export const initialLoginState: LoginState = { type: "initial" }
+export const initialLoginState: LoginState = { type: "initial-view" }
 
 export type RenewCredentialResource = Readonly<{
     renewCredential: RenewCredentialComponent

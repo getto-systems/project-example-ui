@@ -1,6 +1,6 @@
 import { delayed, wait } from "../../../../z_external/delayed"
 
-import { LoginViewCollector } from "../impl/view"
+import { LoginViewCollector } from "../impl/core"
 import { currentPagePathname, detectResetToken, detectViewState } from "../impl/location"
 import { PasswordLoginCollector, PasswordResetCollector, RenewCredentialCollector } from "../impl/core"
 

@@ -1,6 +1,11 @@
 import { wait } from "../../../../z_external/delayed"
 
-import { Config, newPasswordLoginResource, Repository, Simulator } from "./core"
+import {
+    PasswordLoginConfig,
+    newPasswordLoginResource,
+    PasswordLoginRepository,
+    PasswordLoginSimulator,
+} from "./core"
 
 import { initMemoryAuthCredentialRepository } from "../../../login/renew/impl/repository/auth_credential/memory"
 import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
@@ -400,7 +405,7 @@ function waitPasswordLoginResource() {
 function standardURL(): URL {
     return new URL("https://example.com/index.html")
 }
-function standardConfig(): Config {
+function standardConfig(): PasswordLoginConfig {
     return {
         application: {
             secureScriptPath: {
@@ -420,12 +425,12 @@ function standardConfig(): Config {
         },
     }
 }
-function standardRepository(): Repository {
+function standardRepository(): PasswordLoginRepository {
     return {
         authCredentials: initMemoryAuthCredentialRepository({ stored: false }),
     }
 }
-function standardSimulator(): Simulator {
+function standardSimulator(): PasswordLoginSimulator {
     return {
         login: {
             login: async (fields) => {
@@ -435,7 +440,7 @@ function standardSimulator(): Simulator {
         renew: renewSimulator(),
     }
 }
-function waitSimulator(): Simulator {
+function waitSimulator(): PasswordLoginSimulator {
     return {
         login: {
             login: async (fields) => {

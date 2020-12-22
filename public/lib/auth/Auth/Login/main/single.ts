@@ -15,15 +15,30 @@ import {
 } from "./worker/background"
 
 import {
+    LoginViewCollector,
+    View,
+    RenewCredentialFactory,
+    RenewCredentialCollector,
+    PasswordLoginFactory,
+    PasswordLoginCollector,
+    PasswordResetSessionFactory,
+    PasswordResetFactory,
+    PasswordResetCollector,
+    initRenewCredentialResource,
+    initPasswordLoginResource,
+    initPasswordResetSessionResource,
+    initPasswordResetResource,
+} from "../impl/core"
+
+import {
     newApplicationActionConfig,
     newPasswordLoginActionConfig,
     newPasswordResetActionConfig,
     newPasswordResetSessionActionConfig,
     newRenewActionConfig,
     newSetContinuousRenewActionConfig,
-} from "../impl/config"
-import { Collector, Factory, initLoginAsSingle } from "../impl/single"
-import { initLoginLink } from "../impl/link"
+} from "./config"
+import { initLoginLink } from "./link"
 
 import { initRenewCredential } from "../../renew_credential/impl"
 import { initPasswordLogin } from "../../password_login/impl"
@@ -92,5 +107,28 @@ export function newLoginAsSingle(): LoginFactory {
         },
     }
 
-    return () => initLoginAsSingle(factory, collector)
+    return () => {
+        return {
+            view: new View(collector, {
+                renewCredential: (setup) => initRenewCredentialResource(factory, collector, setup),
+
+                passwordLogin: () => initPasswordLoginResource(factory, collector),
+                passwordResetSession: () => initPasswordResetSessionResource(factory),
+                passwordReset: () => initPasswordResetResource(factory, collector),
+            }),
+            terminate: () => {
+                // worker とインターフェイスを合わせるために必要
+            },
+        }
+    }
 }
+
+type Factory = RenewCredentialFactory &
+    PasswordLoginFactory &
+    PasswordResetSessionFactory &
+    PasswordResetFactory
+
+type Collector = LoginViewCollector &
+    RenewCredentialCollector &
+    PasswordLoginCollector &
+    PasswordResetCollector

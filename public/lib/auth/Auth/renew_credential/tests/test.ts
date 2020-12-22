@@ -1,6 +1,11 @@
 import { wait } from "../../../../z_external/delayed"
 
-import { Config, newRenewCredentialResource, Repository, Simulator } from "./core"
+import {
+    RenewCredentialConfig,
+    newRenewCredentialResource,
+    RenewCredentialRepository,
+    RenewCredentialSimulator,
+} from "./core"
 
 import { initMemoryAuthCredentialRepository } from "../../../login/renew/impl/repository/auth_credential/memory"
 import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
@@ -348,7 +353,9 @@ function standardRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newRenewCredentialResource(currentURL, config, repository, simulator, clock)
+    const resource = newRenewCredentialResource(currentURL, config, repository, simulator, clock, () => {
+        // ここでは特に何もしない
+    })
 
     return { repository, resource }
 }
@@ -358,7 +365,9 @@ function instantRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = instantAvailableClock()
-    const resource = newRenewCredentialResource(currentURL, config, repository, simulator, clock)
+    const resource = newRenewCredentialResource(currentURL, config, repository, simulator, clock, () => {
+        // ここでは特に何もしない
+    })
 
     return { repository, resource }
 }
@@ -368,7 +377,9 @@ function waitRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = waitSimulator()
     const clock = standardClock()
-    const resource = newRenewCredentialResource(currentURL, config, repository, simulator, clock)
+    const resource = newRenewCredentialResource(currentURL, config, repository, simulator, clock, () => {
+        // ここでは特に何もしない
+    })
 
     return { repository, resource }
 }
@@ -378,7 +389,9 @@ function emptyRenewCredentialResource() {
     const repository = emptyRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newRenewCredentialResource(currentURL, config, repository, simulator, clock)
+    const resource = newRenewCredentialResource(currentURL, config, repository, simulator, clock, () => {
+        // ここでは特に何もしない
+    })
 
     return { repository, resource }
 }
@@ -386,7 +399,7 @@ function emptyRenewCredentialResource() {
 function standardURL(): URL {
     return new URL("https://example.com/index.html")
 }
-function standardConfig(): Config {
+function standardConfig(): RenewCredentialConfig {
     return {
         application: {
             secureScriptPath: {
@@ -407,7 +420,7 @@ function standardConfig(): Config {
         },
     }
 }
-function standardRepository(): Repository {
+function standardRepository(): RenewCredentialRepository {
     return {
         authCredentials: initMemoryAuthCredentialRepository({
             stored: true,
@@ -419,17 +432,17 @@ function standardRepository(): Repository {
         }),
     }
 }
-function emptyRepository(): Repository {
+function emptyRepository(): RenewCredentialRepository {
     return {
         authCredentials: initMemoryAuthCredentialRepository({ stored: false }),
     }
 }
-function standardSimulator(): Simulator {
+function standardSimulator(): RenewCredentialSimulator {
     return {
         renew: renewSimulator({ wait_millisecond: 0 }),
     }
 }
-function waitSimulator(): Simulator {
+function waitSimulator(): RenewCredentialSimulator {
     return {
         // wait for delayed timeout
         renew: renewSimulator({ wait_millisecond: 3 }),

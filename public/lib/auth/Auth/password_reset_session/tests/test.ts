@@ -1,6 +1,10 @@
 import { wait } from "../../../../z_external/delayed"
 
-import { Config, newPasswordResetSessionResource, Simulator } from "./core"
+import {
+    PasswordResetSessionConfig,
+    newPasswordResetSessionResource,
+    PasswordResetSessionSimulator,
+} from "./core"
 
 import { SendTokenState } from "../../../profile/password_reset/impl/client/session/simulate"
 
@@ -304,7 +308,7 @@ function longSendingPasswordResetSessionResource() {
     return { resource }
 }
 
-function standardConfig(): Config {
+function standardConfig(): PasswordResetSessionConfig {
     return {
         application: {
             secureScriptPath: {
@@ -322,7 +326,7 @@ function standardConfig(): Config {
         },
     }
 }
-function standardSimulator(): Simulator {
+function standardSimulator(): PasswordResetSessionSimulator {
     return {
         session: {
             startSession: async (fields) => {
@@ -337,7 +341,7 @@ function standardSimulator(): Simulator {
         },
     }
 }
-function waitSimulator(): Simulator {
+function waitSimulator(): PasswordResetSessionSimulator {
     return {
         session: {
             startSession: async (fields) => {
@@ -354,7 +358,7 @@ function waitSimulator(): Simulator {
         },
     }
 }
-function longSendingSimulator(): Simulator {
+function longSendingSimulator(): PasswordResetSessionSimulator {
     return {
         session: {
             startSession: async (fields) => {

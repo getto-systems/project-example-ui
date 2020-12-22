@@ -5,7 +5,7 @@ import {
     initPasswordResetCollector,
 } from "../../Login/tests/core"
 
-import { initLoginLink } from "../../Login/impl/link"
+import { initLoginLink } from "../../Login/main/link"
 import {
     initPasswordResetResource,
     PasswordResetCollector,
@@ -32,24 +32,24 @@ import {
 
 import { PasswordResetResource } from "../../Login/view"
 
-export type Config = {
+export type PasswordResetConfig = {
     application: ApplicationActionConfig
     passwordReset: PasswordResetActionConfig
     setContinuousRenew: SetContinuousRenewActionConfig
 }
-export type Repository = Readonly<{
+export type PasswordResetRepository = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
-export type Simulator = Readonly<{
+export type PasswordResetSimulator = Readonly<{
     reset: ResetSimulator
     renew: RenewSimulator
 }>
 
 export function newPasswordResetResource(
     currentURL: URL,
-    config: Config,
-    repository: Repository,
-    simulator: Simulator,
+    config: PasswordResetConfig,
+    repository: PasswordResetRepository,
+    simulator: PasswordResetSimulator,
     clock: Clock
 ): PasswordResetResource {
     const factory: PasswordResetFactory = {

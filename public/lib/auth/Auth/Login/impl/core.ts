@@ -1,6 +1,9 @@
 import { LoginLinkFactory } from "../../link"
 
 import {
+    LoginView,
+    LoginState,
+    ViewState,
     RenewCredentialResource,
     PasswordLoginResource,
     PasswordResetSessionResource,
@@ -18,7 +21,6 @@ import {
     PasswordResetSessionMaterial,
 } from "../../password_reset_session/component"
 import { PasswordResetComponentFactory, PasswordResetMaterial } from "../../password_reset/component"
-
 import { LoginIDFieldComponent, LoginIDFieldComponentFactory } from "../../field/login_id/component"
 import { PasswordFieldComponent, PasswordFieldComponentFactory } from "../../field/password/component"
 
@@ -40,6 +42,70 @@ import { Password } from "../../../common/password/data"
 import { LoginFields } from "../../../login/password_login/data"
 import { StartSessionFields, ResetFields } from "../../../profile/password_reset/data"
 import { Content, invalidContent, validContent } from "../../../common/field/data"
+
+export class View implements LoginView {
+    listener: Post<LoginState>[] = []
+
+    collector: LoginViewCollector
+    components: LoginResourceFactory
+
+    constructor(collector: LoginViewCollector, components: LoginResourceFactory) {
+        this.collector = collector
+        this.components = components
+    }
+
+    onStateChange(post: Post<LoginState>): void {
+        this.listener.push(post)
+    }
+    post(state: LoginState): void {
+        this.listener.forEach((post) => post(state))
+    }
+
+    load(): void {
+        this.post({
+            type: "renew-credential",
+            components: this.components.renewCredential((renewCredential) => {
+                this.hookCredentialStateChange(renewCredential)
+            }),
+        })
+    }
+    error(err: string): void {
+        this.post({ type: "error", err })
+    }
+
+    hookCredentialStateChange(renewCredential: RenewCredentialComponent): void {
+        renewCredential.onStateChange((state) => {
+            switch (state.type) {
+                case "required-to-login":
+                    this.post(this.mapLoginView(this.collector.login.getLoginView()))
+                    return
+            }
+        })
+    }
+    mapLoginView(loginView: ViewState): LoginState {
+        switch (loginView) {
+            case "password-login":
+                return { type: loginView, components: this.components.passwordLogin() }
+            case "password-reset-session":
+                return { type: loginView, components: this.components.passwordResetSession() }
+            case "password-reset":
+                return { type: loginView, components: this.components.passwordReset() }
+        }
+    }
+}
+
+export interface LoginResourceFactory {
+    renewCredential(setup: Setup<RenewCredentialComponent>): RenewCredentialResource
+
+    passwordLogin(): PasswordLoginResource
+    passwordResetSession(): PasswordResetSessionResource
+    passwordReset(): PasswordResetResource
+}
+export interface LoginViewCollector {
+    login: Readonly<{
+        getLoginView(): ViewState
+    }>
+}
 
 export type RenewCredentialFactory = Readonly<{
     actions: Readonly<{
@@ -293,6 +359,9 @@ function collectPassword(passwordField: PasswordFieldComponent): Promise<Content
     })
 }
 
+interface Post<T> {
+    (state: T): void
+}
 interface Setup<T> {
     (component: T): void
 }

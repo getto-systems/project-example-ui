@@ -10,9 +10,10 @@ module.exports = {
     "!public/lib/z_*/**",
     "!public/lib/**/main/**",
     "!public/lib/**/impl/*/**",
-    "!public/lib/**/mock.ts",
+    "!public/lib/**/view.ts",
     "!public/lib/**/component.ts",
     "!public/lib/**/infra.ts",
+    "!public/lib/**/mock.ts",
   ],
   "coverageThreshold": {
     "global": {

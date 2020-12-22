@@ -1,6 +1,6 @@
 import { MockComponent } from "../../../z_external/mock/component"
 
-import { initLoginLink } from "../Login/impl/link"
+import { initLoginLink } from "../Login/main/link"
 
 import { LoginLink } from "../link"
 
