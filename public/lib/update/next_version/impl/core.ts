@@ -1,10 +1,10 @@
 import { CheckResponse, CheckClient, FindInfra } from "../infra"
 
-import { Find } from "../action"
+import { FindPod } from "../action"
 
 import { markVersion, Version } from "../data"
 
-export const find = (infra: FindInfra): Find => (collector) => async (post) => {
+export const find = (infra: FindInfra): FindPod => (collector) => async (post) => {
     const { client } = infra
 
     const current = collector.getAppTarget()
