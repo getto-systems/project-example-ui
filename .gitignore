@@ -1,13 +1,10 @@
 /tmp/
 /node_modules/
 
-/rollup/dist/
+/example/public/dist/coverage/
+/example/public/dist/vs-ext/
 
-/public/dist/coverage/
-/public/dist/vs-ext/
+/example/public/dist/**/*.js
+/example/secure/dist/**/*.js
 
-/public/dist/**/*.js
-/secure/dist/**/*.js
-
-/public/lib/y_static/*
-/secure/lib/y_static/*
+/example/lib/y_static/*

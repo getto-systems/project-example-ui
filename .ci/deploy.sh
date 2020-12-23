@@ -22,7 +22,7 @@ deploy_rewrite_version(){
 deploy_cp_public(){
   local metadata
   local file
-  metadata=$(node metadata/public.js)
+  metadata=$(node example/public/metadata.js)
 
   aws s3 cp \
     --acl private \
@@ -44,7 +44,7 @@ deploy_cp_public(){
 deploy_cp_secure(){
   local metadata
   local file
-  metadata=$(node metadata/secure.js)
+  metadata=$(node example/secure/metadata.js)
 
   aws s3 cp \
     --acl private \
