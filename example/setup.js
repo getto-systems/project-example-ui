@@ -33,7 +33,7 @@ function dumpEnv() {
 
     dump(
         path.join(__dirname, "./lib/y_static/env.ts"),
-        "export const env = " + JSON.stringify(env, null, "    ") + "\n"
+        "export const env = " + JSON.stringify(env, null, "    ")
     )
 }
 
@@ -46,7 +46,7 @@ function dumpEntryPoint() {
             "export type StaticMenuPath =" + toTypeVariant(files),
             "export type StaticDocumentPath =" + toTypeVariant(docs),
             "export const staticDocumentPaths: StaticDocumentPath[] = " + toConstValue(docs),
-        ].join("\n") + "\n"
+        ].join("\n")
     )
 
     function isDocs(file) {
