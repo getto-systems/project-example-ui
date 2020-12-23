@@ -91,7 +91,7 @@ export function newLoginAsWorkerForeground(): LoginFactory {
 
     const authClient = initAuthClient(env.authServerURL)
 
-    const worker = new Worker(`/${env.version}/login.worker.js`)
+    const worker = new Worker(`/${env.version}/auth/login.worker.js`)
 
     const authCredentials = initAuthCredentialRepository(credentialStorage)
 
