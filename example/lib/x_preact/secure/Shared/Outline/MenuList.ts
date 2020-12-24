@@ -6,7 +6,13 @@ import { notice_alert, v_small } from "../../../common/layout"
 
 import { MenuComponent, initialMenuState } from "../../../../example/shared/Outline/menu/component"
 
-import { Menu, MenuNode, MenuCategory, MenuItem, LoadMenuError } from "../../../../example/shared/menu/data"
+import {
+    Menu,
+    MenuNode,
+    MenuCategory,
+    MenuItem,
+    LoadMenuError,
+} from "../../../../example/shared/menu/data"
 
 type Props = Readonly<{
     menu: MenuComponent
