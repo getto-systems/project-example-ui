@@ -1,8 +1,8 @@
 import { h, VNode } from "preact"
 
-import { newLoginAsError } from "../../../../auth/Auth/Login/mock"
-
 import { Login } from "../../../../x_preact/public/Auth/Login"
+
+import { newLoginAsError } from "../../../../auth/Auth/Login/mock"
 
 export default {
     title: "public/Auth/Login/Error",

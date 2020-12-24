@@ -1,7 +1,20 @@
+import { MockComponent } from "../../../z_external/mock/component"
 import { ContentComponent, ContentState } from "./component"
 
-export function initContent(): ContentComponent {
-    return new Component(new ContentStateFactory().initialContent())
+export function initContentComponent(): ContentComponent {
+    return new ContentMockComponent(new ContentStateFactory().initialContent())
+}
+export function initContent(state: ContentState): ContentMockComponent {
+    return new ContentMockComponent(state)
+}
+
+export type ContentMockProps = Readonly<{ type: "success" }>
+
+export function mapContentMockProps(props: ContentMockProps): ContentState {
+    switch (props.type) {
+        case "success":
+            return { type: "succeed-to-load", path: "/docs/index.html" }
+    }
 }
 
 class ContentStateFactory {
@@ -10,22 +23,8 @@ class ContentStateFactory {
     }
 }
 
-class Component implements ContentComponent {
-    state: ContentState
-
-    constructor(state: ContentState) {
-        this.state = state
-    }
-
-    onStateChange(post: Post<ContentState>): void {
-        post(this.state)
-    }
-
+class ContentMockComponent extends MockComponent<ContentState> implements ContentComponent {
     load(): void {
         // mock ではなにもしない
     }
-}
-
-interface Post<T> {
-    (state: T): void
 }

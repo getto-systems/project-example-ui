@@ -1,6 +1,9 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
+import { SeasonInfo } from "../../../x_preact/secure/Outline/SeasonInfo"
+import { menuHeader } from "../../../x_preact/secure/layout"
+
 import {
     mapSeasonMockProps,
     SeasonMockProps,
@@ -8,9 +11,6 @@ import {
 } from "../../../example/shared/Outline/season/mock"
 
 import { initialSeasonState } from "../../../example/shared/Outline/season/component"
-
-import { SeasonInfo } from "../../../x_preact/secure/Outline/SeasonInfo"
-import { menuHeader } from "../../../x_preact/secure/layout"
 
 export default {
     title: "secure/Outline/SeasonInfo",

@@ -1,5 +1,7 @@
 import { h, VNode } from "preact"
 
+import { Example } from "../../../../x_preact/secure/Example/Home/Example"
+
 import {
     mapExampleMockProps,
     ExampleMockProps,
@@ -7,8 +9,6 @@ import {
 } from "../../../../example/Home/example/mock"
 
 import { initialExampleState } from "../../../../example/Home/example/component"
-
-import { Example } from "../../../../x_preact/secure/Example/Home/Example"
 
 export default {
     title: "secure/Example/Home/Example",

@@ -1,12 +1,12 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
+import { MenuList } from "../../../x_preact/secure/Outline/MenuList"
+import { menuHeader } from "../../../x_preact/secure/layout"
+
 import { mapMenuMockProps, MenuMockProps, initMenu } from "../../../example/shared/Outline/menu/mock"
 
 import { initialMenuState } from "../../../example/shared/Outline/menu/component"
-
-import { MenuList } from "../../../x_preact/secure/Outline/MenuList"
-import { menuHeader } from "../../../x_preact/secure/layout"
 
 export default {
     title: "secure/Outline/MenuList",

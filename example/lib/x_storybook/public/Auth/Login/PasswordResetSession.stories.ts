@@ -1,5 +1,7 @@
 import { h, VNode } from "preact"
 
+import { Login } from "../../../../x_preact/public/Auth/Login"
+
 import { newLoginAsPasswordResetSession } from "../../../../auth/Auth/Login/mock"
 import {
     mapPasswordResetSessionMockProps,
@@ -10,8 +12,6 @@ import {
     loginIDFieldMockTypes,
     LoginIDFieldMockProps,
 } from "../../../../auth/Auth/field/login_id/mock"
-
-import { Login } from "../../../../x_preact/public/Auth/Login"
 
 export default {
     title: "public/Auth/Login/PasswordResetSession",
