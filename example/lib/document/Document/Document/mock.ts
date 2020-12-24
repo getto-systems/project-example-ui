@@ -3,9 +3,9 @@ import { initMenu } from "../../../example/shared/Outline/menu/mock"
 
 import { initContent } from "../content/mock"
 
-import { DocumentFactory } from "./view"
+import { DocumentEntryPointFactory } from "./view"
 
-export function newDocumentAsMock(): DocumentFactory {
+export function newDocumentAsMock(): DocumentEntryPointFactory {
     return () => {
         return {
             resource: {

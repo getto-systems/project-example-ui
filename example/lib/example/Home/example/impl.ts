@@ -1,18 +1,16 @@
-import { ExampleActionSet, ExampleComponent, ExampleState } from "./component"
+import { ExampleMaterial, ExampleComponent, ExampleState } from "./component"
 
-import { LoadSeasonEvent } from "../../shared/season/data"
-
-export function initExample(actions: ExampleActionSet): ExampleComponent {
-    return new Component(actions)
+export function initExample(material: ExampleMaterial): ExampleComponent {
+    return new Component(material)
 }
 
 class Component implements ExampleComponent {
-    actions: ExampleActionSet
+    material: ExampleMaterial
 
     listener: Post<ExampleState>[] = []
 
-    constructor(actions: ExampleActionSet) {
-        this.actions = actions
+    constructor(material: ExampleMaterial) {
+        this.material = material
     }
 
     onStateChange(post: Post<ExampleState>): void {
@@ -23,13 +21,9 @@ class Component implements ExampleComponent {
     }
 
     load(): void {
-        this.actions.loadSeason((event) => {
-            this.post(this.mapLoadSeasonEvent(event))
+        this.material.loadSeason((event) => {
+            this.post(event)
         })
-    }
-
-    mapLoadSeasonEvent(event: LoadSeasonEvent): ExampleState {
-        return event
     }
 }
 

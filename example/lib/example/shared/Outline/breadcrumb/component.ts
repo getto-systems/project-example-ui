@@ -1,12 +1,12 @@
-import { LoadBreadcrumbAction } from "../../menu/action"
+import { LoadBreadcrumb } from "../../menu/action"
 
 import { Breadcrumb } from "../../menu/data"
 
 export interface BreadcrumbComponentFactory {
-    (actions: BreadcrumbActionSet): BreadcrumbComponent
+    (material: BreadcrumbMaterial): BreadcrumbComponent
 }
-export type BreadcrumbActionSet = Readonly<{
-    loadBreadcrumb: LoadBreadcrumbAction
+export type BreadcrumbMaterial = Readonly<{
+    loadBreadcrumb: LoadBreadcrumb
 }>
 
 export interface BreadcrumbComponent {

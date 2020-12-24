@@ -10,10 +10,10 @@ import { SeasonInfo } from "../../Shared/Outline/SeasonInfo"
 import { MenuList } from "../../Shared/Outline/MenuList"
 import { BreadcrumbList } from "../../Shared/Outline/BreadcrumbList"
 import { Example } from "./Example"
-import { DashboardResource, DashboardFactory } from "../../../../example/Home/Dashboard/view"
+import { DashboardResource, DashboardEntryPointFactory } from "../../../../example/Home/Dashboard/view"
 
 type Props = Readonly<{
-    dashboard: DashboardFactory
+    dashboard: DashboardEntryPointFactory
 }>
 export function Dashboard({ dashboard }: Props): VNode {
     const [err, _resetError] = useErrorBoundary((err) => {

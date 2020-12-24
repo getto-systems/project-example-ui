@@ -1,12 +1,12 @@
-import { LoadSeasonAction } from "../../season/action"
+import { LoadSeason } from "../../season/action"
 
 import { Season, SeasonError } from "../../season/data"
 
 export interface SeasonComponentFactory {
-    (actions: SeasonActionSet): SeasonComponent
+    (material: SeasonMaterial): SeasonComponent
 }
-export type SeasonActionSet = Readonly<{
-    loadSeason: LoadSeasonAction
+export type SeasonMaterial = Readonly<{
+    loadSeason: LoadSeason
 }>
 
 export interface SeasonComponent {

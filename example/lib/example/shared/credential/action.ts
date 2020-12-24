@@ -1,15 +1,20 @@
 import { ApiNonce, ApiRoles, LoadResult } from "./data"
 
-export interface LoadApiNonce {
-    (): LoadApiNonceAction
+export type CredentialAction = Readonly<{
+    loadApiNonce: LoadApiNoncePod
+    loadApiRoles: LoadApiRolesPod
+}>
+
+export interface LoadApiNoncePod {
+    (): LoadApiNonce
 }
-export interface LoadApiNonceAction {
+export interface LoadApiNonce {
     (): LoadResult<ApiNonce>
 }
 
-export interface LoadApiRoles {
-    (): LoadApiRolesAction
+export interface LoadApiRolesPod {
+    (): LoadApiRoles
 }
-export interface LoadApiRolesAction {
+export interface LoadApiRoles {
     (): LoadResult<ApiRoles>
 }

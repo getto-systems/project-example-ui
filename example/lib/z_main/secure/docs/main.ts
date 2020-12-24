@@ -1,6 +1,6 @@
 import { render, h } from "preact"
 
-import { newDocumentAsSingle } from "../../../document/Document/Document/main"
+import { newDocumentAsSingle } from "../../../document/Document/Document/main/single"
 
 import { Document } from "../../../x_preact/secure/Document/Document/Document"
 

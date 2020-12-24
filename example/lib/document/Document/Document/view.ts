@@ -3,7 +3,7 @@ import { BreadcrumbComponent } from "../../../example/shared/Outline/breadcrumb/
 
 import { ContentComponent } from "../content/component"
 
-export interface DocumentFactory {
+export interface DocumentEntryPointFactory {
     (): DocumentEntryPoint
 }
 export type DocumentEntryPoint = Readonly<{

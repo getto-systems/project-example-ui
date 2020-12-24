@@ -4,7 +4,7 @@ import { BreadcrumbComponent } from "../../shared/Outline/breadcrumb/component"
 
 import { ExampleComponent } from "../example/component"
 
-export interface DashboardFactory {
+export interface DashboardEntryPointFactory {
     (): DashboardEntryPoint
 }
 export type DashboardEntryPoint = Readonly<{

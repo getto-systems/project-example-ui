@@ -1,18 +1,16 @@
-import { SeasonActionSet, SeasonComponent, SeasonState } from "./component"
+import { SeasonMaterial, SeasonComponent, SeasonState } from "./component"
 
-import { LoadSeasonEvent } from "../../season/data"
-
-export function initSeason(actions: SeasonActionSet): SeasonComponent {
-    return new Component(actions)
+export function initSeason(material: SeasonMaterial): SeasonComponent {
+    return new Component(material)
 }
 
 class Component implements SeasonComponent {
-    actions: SeasonActionSet
+    material: SeasonMaterial
 
     listener: Post<SeasonState>[] = []
 
-    constructor(actions: SeasonActionSet) {
-        this.actions = actions
+    constructor(material: SeasonMaterial) {
+        this.material = material
     }
 
     onStateChange(post: Post<SeasonState>): void {
@@ -23,13 +21,9 @@ class Component implements SeasonComponent {
     }
 
     load(): void {
-        this.actions.loadSeason((event) => {
-            this.post(this.mapLoadSeasonEvent(event))
+        this.material.loadSeason((event) => {
+            this.post(event)
         })
-    }
-
-    mapLoadSeasonEvent(event: LoadSeasonEvent): SeasonState {
-        return event
     }
 }
 

@@ -11,10 +11,10 @@ import { PasswordLogin } from "./PasswordLogin"
 import { PasswordResetSession } from "./PasswordResetSession"
 import { PasswordReset } from "./PasswordReset"
 
-import { LoginFactory, LoginView, initialLoginState } from "../../../auth/Auth/Login/view"
+import { LoginEntryPointFactory, LoginView, initialLoginState } from "../../../auth/Auth/Login/view"
 
 type Props = Readonly<{
-    login: LoginFactory
+    login: LoginEntryPointFactory
 }>
 export function Login({ login }: Props): VNode {
     const [err, _resetError] = useErrorBoundary((err) => {

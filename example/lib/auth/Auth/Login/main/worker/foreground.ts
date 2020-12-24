@@ -48,7 +48,7 @@ import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../../l
 
 import { LoginLinkFactory } from "../../../link"
 
-import { LoginFactory, LoginEntryPoint } from "../../view"
+import { LoginEntryPointFactory, LoginEntryPoint } from "../../view"
 import { RenewCredentialComponentFactory } from "../../../renew_credential/component"
 import { PasswordLoginComponentFactory } from "../../../password_login/component"
 import { PasswordResetSessionComponentFactory } from "../../../password_reset_session/component"
@@ -85,7 +85,7 @@ import {
     ResetProxyMessage,
 } from "./data"
 
-export function newLoginAsWorkerForeground(): LoginFactory {
+export function newLoginAsWorkerForeground(): LoginEntryPointFactory {
     const credentialStorage = localStorage
     const currentURL = new URL(location.toString())
 

@@ -53,9 +53,9 @@ import { passwordField } from "../../../common/field/password/impl/core"
 
 import { currentPagePathname, detectViewState, detectResetToken } from "../impl/location"
 
-import { LoginFactory } from "../view"
+import { LoginEntryPointFactory } from "../view"
 
-export function newLoginAsSingle(): LoginFactory {
+export function newLoginAsSingle(): LoginEntryPointFactory {
     const credentialStorage = localStorage
     const currentURL = new URL(location.toString())
 

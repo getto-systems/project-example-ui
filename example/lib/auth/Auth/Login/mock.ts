@@ -7,7 +7,7 @@ import { initPasswordReset } from "../password_reset/mock"
 import { initLoginIDField } from "../field/login_id/mock"
 import { initPasswordField } from "../field/password/mock"
 
-import { LoginFactory, LoginView, LoginState } from "./view"
+import { LoginEntryPointFactory, LoginView, LoginState } from "./view"
 import { initialRenewCredentialState, RenewCredentialState } from "../renew_credential/component"
 import { initialPasswordLoginState, PasswordLoginState } from "../password_login/component"
 import { initialLoginIDFieldState, LoginIDFieldState } from "../field/login_id/component"
@@ -19,7 +19,7 @@ import {
 import { initialPasswordResetState, PasswordResetState } from "../password_reset/component"
 
 export function newLoginAsRenewCredential(): {
-    login: LoginFactory
+    login: LoginEntryPointFactory
     update: { renewCredential: Post<RenewCredentialState> }
 } {
     const mock = {
@@ -46,7 +46,7 @@ export function newLoginAsRenewCredential(): {
 }
 
 export function newLoginAsPasswordLogin(): {
-    login: LoginFactory
+    login: LoginEntryPointFactory
     update: {
         passwordLogin: Post<PasswordLoginState>
         loginIDField: Post<LoginIDFieldState>
@@ -83,7 +83,7 @@ export function newLoginAsPasswordLogin(): {
 }
 
 export function newLoginAsPasswordResetSession(): {
-    login: LoginFactory
+    login: LoginEntryPointFactory
     update: {
         passwordResetSession: Post<PasswordResetSessionState>
         loginIDField: Post<LoginIDFieldState>
@@ -119,7 +119,7 @@ export function newLoginAsPasswordResetSession(): {
 }
 
 export function newLoginAsPasswordReset(): {
-    login: LoginFactory
+    login: LoginEntryPointFactory
     update: {
         passwordReset: Post<PasswordResetState>
         loginIDField: Post<LoginIDFieldState>
@@ -156,7 +156,7 @@ export function newLoginAsPasswordReset(): {
 }
 
 export function newLoginAsError(): {
-    login: LoginFactory
+    login: LoginEntryPointFactory
     update: { error: Post<string> }
 } {
     const mock = new MockResource(map("error"), (state) => new View(state))
