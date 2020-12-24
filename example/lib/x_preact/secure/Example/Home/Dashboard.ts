@@ -9,6 +9,7 @@ import { SeasonInfo } from "../../Outline/SeasonInfo"
 import { MenuList } from "../../Outline/MenuList"
 import { BreadcrumbList } from "../../Outline/BreadcrumbList"
 import { Example } from "./Example"
+
 import { DashboardEntryPoint } from "../../../../example/Home/Dashboard/view"
 
 type Props = Readonly<{
