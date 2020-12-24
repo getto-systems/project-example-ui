@@ -16,7 +16,7 @@ import { content_development_auth_api } from "./contents/development/auth/api"
 
 import { DocumentComponent } from "../../../../document/Document/Document/view"
 import { initialContentState } from "../../../../document/Document/content/component"
-import { DocumentPath } from "../../../../document/content/data"
+import { ContentPath } from "../../../../document/content/data"
 
 export function Content(components: DocumentComponent): VNode {
     const content = components.content
@@ -50,13 +50,13 @@ export function Content(components: DocumentComponent): VNode {
     }
 }
 
-function documentTitle(path: DocumentPath): string {
+function documentTitle(path: ContentPath): string {
     return findEntry(path).title
 }
-function contentBody(path: DocumentPath): VNodeContent {
+function contentBody(path: ContentPath): VNodeContent {
     return findEntry(path).content()
 }
-function findEntry(path: DocumentPath): ContentEntry {
+function findEntry(path: ContentPath): ContentEntry {
     const entry = contentMap[path]
     if (!entry) {
         return indexEntry
@@ -70,7 +70,7 @@ function entry(title: string, content: Factory<VNodeContent>): ContentEntry {
 }
 
 const indexEntry: ContentEntry = entry("ドキュメント", content_index)
-const contentMap: Record<DocumentPath, ContentEntry> = {
+const contentMap: Record<ContentPath, ContentEntry> = {
     "/docs/index.html": indexEntry,
     "/docs/auth.html": entry("認証・認可", content_auth),
 

@@ -1,4 +1,4 @@
-import { LoadDocumentEvent } from "../../content/data"
+import { LoadContentEvent } from "../../content/data"
 import { ContentActionSet, ContentComponent, ContentState } from "./component"
 
 export function initContent(actions: ContentActionSet): ContentComponent {
@@ -27,7 +27,7 @@ class Component implements ContentComponent {
         })
     }
 
-    mapLoadDocumentEvent(event: LoadDocumentEvent): ContentState {
+    mapLoadDocumentEvent(event: LoadContentEvent): ContentState {
         return event
     }
 }

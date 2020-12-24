@@ -1,5 +1,5 @@
-import { LoadDocument } from "../action"
+import { LoadContentPod } from "../action"
 
-export const loadDocument = (): LoadDocument => (collector) => (post) => {
-    post({ type: "succeed-to-load", path: collector.getDocumentPath() })
+export const loadDocument = (): LoadContentPod => (collector) => (post) => {
+    post({ type: "succeed-to-load", path: collector.getContentPath() })
 }

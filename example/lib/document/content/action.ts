@@ -1,15 +1,17 @@
-import { DocumentPath, LoadDocumentEvent } from "./data";
+import { ContentPath, LoadContentEvent } from "./data"
 
-export interface LoadDocument {
-    (collector: LoadDocumentCollector): LoadDocumentAction
-}
-export interface LoadDocumentAction {
-    (post: Post<LoadDocumentEvent>): void
-}
-export type LoadDocumentCollector = DocumentPathCollector
+export type ContentAction = Readonly<{
+    loadContent: LoadContentPod
+}>
 
-export interface DocumentPathCollector {
-    getDocumentPath(): DocumentPath
+export interface LoadContentPod {
+    (collector: LoadContentCollector): LoadContent
+}
+export interface LoadContent {
+    (post: Post<LoadContentEvent>): void
+}
+export interface LoadContentCollector {
+    getContentPath(): ContentPath
 }
 
 interface Post<T> {

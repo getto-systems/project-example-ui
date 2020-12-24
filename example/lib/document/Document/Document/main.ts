@@ -20,7 +20,7 @@ import { initStorageMenuExpandRepository } from "../../../example/shared/menu/im
 
 import { markApiNonce, markApiRoles } from "../../../example/shared/credential/data"
 import { loadDocument } from "../../content/impl/core"
-import { detectDocumentPath } from "./impl/location"
+import { detectContentPath } from "./impl/location"
 
 export function newDocumentAsSingle(): DocumentFactory {
     const menuExpandStorage = localStorage
@@ -44,7 +44,7 @@ export function newDocumentAsSingle(): DocumentFactory {
             getMenuTarget: () => detectMenuTarget(env.version, currentLocation),
         },
         content: {
-            getDocumentPath: () => detectDocumentPath(env.version, currentLocation),
+            getContentPath: () => detectContentPath(env.version, currentLocation),
         },
     }
     return () => initDocumentAsSingle(factory, collector)

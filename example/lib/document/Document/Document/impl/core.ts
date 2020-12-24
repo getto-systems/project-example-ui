@@ -8,7 +8,7 @@ import { ContentComponentFactory } from "../../content/component"
 import { LoadApiNonce, LoadApiRoles } from "../../../../example/shared/credential/action"
 import { LoadBreadcrumb, LoadMenu, MenuTargetCollector, ToggleMenuExpand } from "../../../../example/shared/menu/action"
 
-import { DocumentPathCollector, LoadDocument } from "../../../content/action"
+import { LoadContentCollector, LoadContentPod } from "../../../content/action"
 
 export type DocumentFactory = Readonly<{
     actions: Readonly<{
@@ -22,7 +22,7 @@ export type DocumentFactory = Readonly<{
             toggleMenuExpand: ToggleMenuExpand
         }>
         content: Readonly<{
-            loadDocument: LoadDocument
+            loadDocument: LoadContentPod
         }>
     }>
     components: Readonly<{
@@ -34,7 +34,7 @@ export type DocumentFactory = Readonly<{
 }>
 export type DocumentCollectorSet = Readonly<{
     menu: MenuTargetCollector
-    content: DocumentPathCollector
+    content: LoadContentCollector
 }>
 export function initDocumentComponent(
     factory: DocumentFactory,

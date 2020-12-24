@@ -1,6 +1,6 @@
-import { DocumentPath, documentPaths } from "../../../content/data"
+import { ContentPath, contentPaths } from "../../../content/data"
 
-export function detectDocumentPath(version: string, currentLocation: Location): DocumentPath {
+export function detectContentPath(version: string, currentLocation: Location): ContentPath {
     const pathname = new URL(currentLocation.toString()).pathname
     const versionPrefix = `/${version}/`
     if (!pathname.startsWith(versionPrefix)) {
@@ -8,9 +8,9 @@ export function detectDocumentPath(version: string, currentLocation: Location): 
     }
 
     const path = pathname.replace(versionPrefix, "/")
-    if (documentPaths.find((documentPath) => documentPath === path)) {
-        // documentPaths は DocumentPath[] なので、これに一致するなら DocumentPath
-        return path as DocumentPath
+    if (contentPaths.find((contentPath) => contentPath === path)) {
+        // contentPaths は ContentPath[] なので、これに一致するなら ContentPath
+        return path as ContentPath
     }
     return defaultDocumentTarget
 }
