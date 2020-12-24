@@ -1,31 +1,31 @@
 import { env } from "../../../y_static/env"
 
-import { initSeason } from "../../../example/shared/Outline/season/impl"
-import { initMenu } from "../../../example/shared/Outline/menu/impl"
-import { initBreadcrumb } from "../../../example/shared/Outline/breadcrumb/impl"
+import { initSeason } from "../../shared/Outline/season/impl"
+import { initMenu } from "../../shared/Outline/menu/impl"
+import { initBreadcrumb } from "../../shared/Outline/breadcrumb/impl"
 import { initExample } from "../example/impl"
 
-import { detectMenuTarget } from "../../../example/shared/Outline/MenuTarget/impl/location"
+import { detectMenuTarget } from "../../shared/Outline/MenuTarget/impl/location"
 
-import { loadApiNonce, loadApiRoles } from "../../../example/shared/credential/impl/core"
-import { mainMenuTree } from "../../../example/shared/menu/impl/tree"
+import { loadApiNonce, loadApiRoles } from "../../shared/credential/impl/core"
+import { mainMenuTree } from "../../shared/menu/impl/tree"
 
 import { initDashboardAsSingle } from "./impl/single"
 
 import { DashboardFactory } from "./view"
-import { loadSeason } from "../../../example/shared/season/impl/core"
-import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../example/shared/menu/impl/core"
+import { loadSeason } from "../../shared/season/impl/core"
+import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../shared/menu/impl/core"
 
-import { MenuBadgeMap } from "../../../example/shared/menu/infra"
+import { MenuBadgeMap } from "../../shared/menu/infra"
 
-import { initMemoryApiCredentialRepository } from "../../../example/shared/credential/impl/repository/api_credential/memory"
-import { initMemorySeasonRepository } from "../../../example/shared/season/impl/repository/season/memory"
-import { initDateYearRepository } from "../../../example/shared/season/impl/repository/year/date"
-import { initSimulateBadgeClient } from "../../../example/shared/menu/impl/client/badge/simulate"
-import { initStorageMenuExpandRepository } from "../../../example/shared/menu/impl/repository/expand/storage"
+import { initMemoryApiCredentialRepository } from "../../shared/credential/impl/repository/api_credential/memory"
+import { initMemorySeasonRepository } from "../../shared/season/impl/repository/season/memory"
+import { initDateYearRepository } from "../../shared/season/impl/repository/year/date"
+import { initSimulateBadgeClient } from "../../shared/menu/impl/client/badge/simulate"
+import { initStorageMenuExpandRepository } from "../../shared/menu/impl/repository/expand/storage"
 
-import { markSeason } from "../../../example/shared/season/data"
-import { markApiNonce, markApiRoles } from "../../../example/shared/credential/data"
+import { markSeason } from "../../shared/season/data"
+import { markApiNonce, markApiRoles } from "../../shared/credential/data"
 
 export function newDashboardAsSingle(): DashboardFactory {
     const menuExpandStorage = localStorage
