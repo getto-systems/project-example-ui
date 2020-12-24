@@ -1,5 +1,5 @@
 import { initBreadcrumbComponent } from "../../shared/Outline/breadcrumb/mock"
-import { initMenu } from "../../shared/Outline/menu/mock"
+import { initMenuComponent } from "../../shared/Outline/menu/mock"
 import { initSeasonComponent } from "../../shared/Outline/season/mock"
 
 import { initExample } from "../example/mock"
@@ -10,7 +10,7 @@ export function newDashboard(): DashboardEntryPoint {
     return {
         resource: {
             season: initSeasonComponent(),
-            menu: initMenu(),
+            menu: initMenuComponent(),
             breadcrumb: initBreadcrumbComponent(),
             example: initExample(),
         },
