@@ -1,15 +1,15 @@
-import { LoadApiNonceAction, LoadApiRolesAction } from "../../credential/action"
-import { LoadMenuAction, ToggleMenuExpandAction } from "../../menu/action"
+import { LoadApiNonce, LoadApiRoles } from "../../credential/action"
+import { LoadMenu, ToggleMenuExpandAction } from "../../menu/action"
 
 import { Menu, LoadMenuError } from "../../menu/data"
 
 export interface MenuComponentFactory {
-    (actions: MenuActionSet): MenuComponent
+    (material: MenuMaterial): MenuComponent
 }
-export type MenuActionSet = Readonly<{
-    loadApiNonce: LoadApiNonceAction
-    loadApiRoles: LoadApiRolesAction
-    loadMenu: LoadMenuAction
+export type MenuMaterial = Readonly<{
+    loadApiNonce: LoadApiNonce
+    loadApiRoles: LoadApiRoles
+    loadMenu: LoadMenu
 
     toggleMenuExpand: ToggleMenuExpandAction
 }>

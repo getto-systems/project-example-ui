@@ -9,9 +9,9 @@ import { initNextVersionResource } from "../impl/core"
 
 import { initNextVersion } from "../../next_version/impl"
 
-import { MoveToNextVersionFactory } from "../view"
+import { MoveToNextVersionEntryPointFactory } from "../view"
 
-export function newMoveToNextVersionAsSingle(): MoveToNextVersionFactory {
+export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPointFactory {
     const currentURL = new URL(location.toString())
 
     const factory = {

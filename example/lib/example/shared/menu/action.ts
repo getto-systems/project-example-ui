@@ -1,18 +1,23 @@
 import { LoadBreadcrumbEvent, LoadMenuEvent, Menu, MenuTarget, ToggleMenuExpandEvent } from "./data"
 import { ApiNonce, ApiRoles, LoadResult } from "../credential/data"
 
-export interface LoadBreadcrumb {
-    (collector: LoadBreadcrumbCollector): LoadBreadcrumbAction
+export type MenuAction = Readonly<{
+    loadBreadcrumb: LoadBreadcrumbPod
+    loadMenu: LoadMenuPod
+}>
+
+export interface LoadBreadcrumbPod {
+    (collector: LoadBreadcrumbCollector): LoadBreadcrumb
 }
-export interface LoadBreadcrumbAction {
+export interface LoadBreadcrumb {
     (post: Post<LoadBreadcrumbEvent>): void
 }
 export type LoadBreadcrumbCollector = MenuTargetCollector
 
-export interface LoadMenu {
-    (collector: LoadMenuCollector): LoadMenuAction
+export interface LoadMenuPod {
+    (collector: LoadMenuCollector): LoadMenu
 }
-export interface LoadMenuAction {
+export interface LoadMenu {
     (nonce: LoadResult<ApiNonce>, roles: LoadResult<ApiRoles>, post: Post<LoadMenuEvent>): void
 }
 export type LoadMenuCollector = MenuTargetCollector

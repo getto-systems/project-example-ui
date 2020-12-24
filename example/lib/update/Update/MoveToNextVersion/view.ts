@@ -1,6 +1,6 @@
 import { NextVersionComponent } from "../next_version/component"
 
-export interface MoveToNextVersionFactory {
+export interface MoveToNextVersionEntryPointFactory {
     (): MoveToNextVersionEntryPoint
 }
 export type MoveToNextVersionEntryPoint = Readonly<{

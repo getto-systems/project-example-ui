@@ -1,10 +1,10 @@
 import { SeasonInfra, YearRepository } from "../infra"
 
-import { LoadSeason } from "../action"
+import { LoadSeasonPod } from "../action"
 
 import { Season, markSeason } from "../data"
 
-export const loadSeason = (infra: SeasonInfra): LoadSeason => () => (post) => {
+export const loadSeason = (infra: SeasonInfra): LoadSeasonPod => () => (post) => {
     const { seasons, years } = infra
 
     const response = seasons.findSeason()

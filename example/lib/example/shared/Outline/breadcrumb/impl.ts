@@ -1,18 +1,16 @@
-import { BreadcrumbActionSet, BreadcrumbComponent, BreadcrumbState } from "./component"
+import { BreadcrumbMaterial, BreadcrumbComponent, BreadcrumbState } from "./component"
 
-import { LoadBreadcrumbEvent } from "../../menu/data"
-
-export function initBreadcrumb(actions: BreadcrumbActionSet): BreadcrumbComponent {
-    return new Component(actions)
+export function initBreadcrumb(material: BreadcrumbMaterial): BreadcrumbComponent {
+    return new Component(material)
 }
 
 class Component implements BreadcrumbComponent {
-    actions: BreadcrumbActionSet
+    material: BreadcrumbMaterial
 
     listener: Post<BreadcrumbState>[] = []
 
-    constructor(actions: BreadcrumbActionSet) {
-        this.actions = actions
+    constructor(material: BreadcrumbMaterial) {
+        this.material = material
     }
 
     onStateChange(post: Post<BreadcrumbState>): void {
@@ -23,13 +21,9 @@ class Component implements BreadcrumbComponent {
     }
 
     load(): void {
-        this.actions.loadBreadcrumb((event) => {
-            this.post(this.mapLoadBreadcrumbEvent(event))
+        this.material.loadBreadcrumb((event) => {
+            this.post(event)
         })
-    }
-
-    mapLoadBreadcrumbEvent(event: LoadBreadcrumbEvent): BreadcrumbState {
-        return event
     }
 }
 

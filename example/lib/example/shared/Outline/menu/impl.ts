@@ -1,18 +1,18 @@
-import { MenuActionSet, MenuComponent, MenuState } from "./component"
+import { MenuMaterial, MenuComponent, MenuState } from "./component"
 
-import { LoadMenuEvent, Menu, ToggleMenuExpandEvent } from "../../menu/data"
+import { Menu } from "../../menu/data"
 
-export function initMenu(actions: MenuActionSet): MenuComponent {
-    return new Component(actions)
+export function initMenu(material: MenuMaterial): MenuComponent {
+    return new Component(material)
 }
 
 class Component implements MenuComponent {
-    actions: MenuActionSet
+    material: MenuMaterial
 
     listener: Post<MenuState>[] = []
 
-    constructor(actions: MenuActionSet) {
-        this.actions = actions
+    constructor(material: MenuMaterial) {
+        this.material = material
     }
 
     onStateChange(post: Post<MenuState>): void {
@@ -23,23 +23,16 @@ class Component implements MenuComponent {
     }
 
     load(): void {
-        const nonce = this.actions.loadApiNonce()
-        const roles = this.actions.loadApiRoles()
-        this.actions.loadMenu(nonce, roles, (event) => {
-            this.post(this.mapLoadMenuEvent(event))
+        const nonce = this.material.loadApiNonce()
+        const roles = this.material.loadApiRoles()
+        this.material.loadMenu(nonce, roles, (event) => {
+            this.post(event)
         })
     }
     toggle(category: string[], menu: Menu): void {
-        this.actions.toggleMenuExpand(category, menu, (event) => {
-            this.post(this.mapToggleMenuExpandEvent(event))
+        this.material.toggleMenuExpand(category, menu, (event) => {
+            this.post(event)
         })
-    }
-
-    mapLoadMenuEvent(event: LoadMenuEvent): MenuState {
-        return event
-    }
-    mapToggleMenuExpandEvent(event: ToggleMenuExpandEvent): MenuState {
-        return event
     }
 }
 

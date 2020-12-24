@@ -9,10 +9,10 @@ import { ApplicationError } from "../../../common/System/ApplicationError"
 import { MenuList } from "../../Shared/Outline/MenuList"
 import { Content } from "./Content"
 
-import { DocumentResource, DocumentFactory } from "../../../../document/Document/Document/view"
+import { DocumentResource, DocumentEntryPointFactory } from "../../../../document/Document/Document/view"
 
 type Props = {
-    document: DocumentFactory
+    document: DocumentEntryPointFactory
 }
 export function Document({ document }: Props): VNode {
     const [err, _resetError] = useErrorBoundary((err) => {

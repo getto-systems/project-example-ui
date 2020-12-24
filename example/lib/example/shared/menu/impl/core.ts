@@ -12,7 +12,7 @@ import {
     MenuBadgeMap,
 } from "../infra"
 
-import { LoadBreadcrumb, LoadMenu, ToggleMenuExpand } from "../action"
+import { LoadBreadcrumbPod, LoadMenuPod, ToggleMenuExpand } from "../action"
 
 import { ApiRoles, LoadResult } from "../../credential/data"
 import {
@@ -27,7 +27,7 @@ import {
     MenuTarget,
 } from "../data"
 
-export const loadBreadcrumb = (infra: LoadBreadcrumbInfra): LoadBreadcrumb => (collector) => async (
+export const loadBreadcrumb = (infra: LoadBreadcrumbInfra): LoadBreadcrumbPod => (collector) => async (
     post
 ) => {
     const { tree } = infra
@@ -86,7 +86,7 @@ function toBreadcrumb({ tree, menuTarget }: BreadcrumbInfo): Breadcrumb {
     }
 }
 
-export const loadMenu = (infra: LoadMenuInfra): LoadMenu => (collector) => async (
+export const loadMenu = (infra: LoadMenuInfra): LoadMenuPod => (collector) => async (
     nonce,
     roles,
     post

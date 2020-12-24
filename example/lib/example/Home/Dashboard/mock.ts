@@ -4,9 +4,9 @@ import { initSeason } from "../../shared/Outline/season/mock"
 
 import { initExample } from "../example/mock"
 
-import { DashboardFactory } from "./view"
+import { DashboardEntryPointFactory } from "./view"
 
-export function newDashboard(): DashboardFactory {
+export function newDashboard(): DashboardEntryPointFactory {
     return () => {
         return {
             resource: {

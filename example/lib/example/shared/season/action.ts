@@ -1,9 +1,13 @@
 import { LoadSeasonEvent } from "./data"
 
-export interface LoadSeason {
-    (): LoadSeasonAction
+export type SeasonAction = Readonly<{
+    loadSeason: LoadSeasonPod
+}>
+
+export interface LoadSeasonPod {
+    (): LoadSeason
 }
-export interface LoadSeasonAction {
+export interface LoadSeason {
     (post: Post<LoadSeasonEvent>): void
 }
 
