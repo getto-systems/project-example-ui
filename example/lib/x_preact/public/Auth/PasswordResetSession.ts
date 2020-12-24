@@ -2,9 +2,9 @@ import { h, VNode } from "preact"
 import { useState, useEffect, useRef } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { loginHeader, fullScreenError } from "../layout"
+import { loginHeader, fullScreenError } from "../../common/layout"
 
-import { ApplicationError } from "../System/ApplicationError"
+import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { LoginIDField } from "./PasswordResetSession/LoginIDField"
 

@@ -3,7 +3,7 @@ import { useState, useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { useEntryPoint } from "../hooks"
-import { ApplicationError } from "../System/ApplicationError"
+import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { RenewCredential } from "./RenewCredential"
 

@@ -2,10 +2,10 @@ import { h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { fullScreenError } from "../layout"
+import { fullScreenError } from "../../common/layout"
 import { appendScript } from "./script"
 
-import { ApplicationError } from "../System/ApplicationError"
+import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { RenewCredentialResource } from "../../../auth/Auth/Login/view"
 import { initialRenewCredentialState } from "../../../auth/Auth/renew_credential/component"
