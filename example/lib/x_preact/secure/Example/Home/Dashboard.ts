@@ -5,9 +5,9 @@ import { html } from "htm/preact"
 import { footer, menuHeader, menuFooter } from "../../layout"
 
 import { ApplicationError } from "../../../common/System/ApplicationError"
-import { SeasonInfo } from "../../Shared/Outline/SeasonInfo"
-import { MenuList } from "../../Shared/Outline/MenuList"
-import { BreadcrumbList } from "../../Shared/Outline/BreadcrumbList"
+import { SeasonInfo } from "../../Outline/SeasonInfo"
+import { MenuList } from "../../Outline/MenuList"
+import { BreadcrumbList } from "../../Outline/BreadcrumbList"
 import { Example } from "./Example"
 import { DashboardEntryPoint } from "../../../../example/Home/Dashboard/view"
 

@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { footer, menuHeader, menuFooter } from "../layout"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
-import { MenuList } from "../Shared/Outline/MenuList"
+import { MenuList } from "../Outline/MenuList"
 import { Content } from "./Content"
 
 import { DocumentEntryPoint } from "../../../document/Document/Document/view"

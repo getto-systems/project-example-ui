@@ -2,9 +2,9 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { notice_alert, v_small } from "../../../common/layout"
+import { notice_alert, v_small } from "../../common/layout"
 
-import { MenuComponent, initialMenuState } from "../../../../example/shared/Outline/menu/component"
+import { MenuComponent, initialMenuState } from "../../../example/shared/Outline/menu/component"
 
 import {
     Menu,
@@ -12,7 +12,7 @@ import {
     MenuCategory,
     MenuItem,
     LoadMenuError,
-} from "../../../../example/shared/menu/data"
+} from "../../../example/shared/menu/data"
 
 type Props = Readonly<{
     menu: MenuComponent
