@@ -14,12 +14,17 @@ import { content_development_auth_user } from "./contents/development/auth/user"
 import { content_development_auth_profile } from "./contents/development/auth/profile"
 import { content_development_auth_api } from "./contents/development/auth/api"
 
-import { DocumentResource } from "../../../document/Document/Document/view"
-import { initialContentState } from "../../../document/Document/content/component"
+import { ContentComponent, initialContentState } from "../../../document/Document/content/component"
+import { BreadcrumbComponent } from "../../../example/shared/Outline/breadcrumb/component"
+
 import { ContentPath } from "../../../document/content/data"
 
-export function Content(components: DocumentResource): VNode {
-    const content = components.content
+type Props = Readonly<{
+    content: ContentComponent
+    breadcrumb: BreadcrumbComponent
+}>
+export function Content(resource: Props): VNode {
+    const content = resource.content
 
     const [state, setState] = useState(initialContentState)
     useEffect(() => {
@@ -43,7 +48,7 @@ export function Content(components: DocumentResource): VNode {
             return html`
                 <header class="main__header">
                     <h1 class="main__title">${documentTitle(state.path)}</h1>
-                    ${h(BreadcrumbList, components)}
+                    ${h(BreadcrumbList, resource)}
                 </header>
                 <section class="main__body">${contentBody(state.path)}</section>
             `

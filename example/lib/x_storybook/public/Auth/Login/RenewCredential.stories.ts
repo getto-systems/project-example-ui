@@ -1,12 +1,12 @@
 import { h, VNode } from "preact"
 
+import { Login } from "../../../../x_preact/public/Auth/Login"
+
 import { newLoginAsRenewCredential } from "../../../../auth/Auth/Login/mock"
 import {
     mapRenewCredentialMockProps,
     RenewCredentialMockProps,
 } from "../../../../auth/Auth/renew_credential/mock"
-
-import { Login } from "../../../../x_preact/public/Auth/Login"
 
 export default {
     title: "public/Auth/Login/RenewCredential",

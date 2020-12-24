@@ -1,16 +1,15 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
-import { Dashboard } from "../../../../x_preact/secure/Example/Home/Dashboard"
+import { Document } from "../../../x_preact/secure/Document/Document"
 
-import { newDashboard } from "../../../../example/Home/Dashboard/mock"
-import { mapExampleMockProps } from "../../../../example/Home/example/mock"
-import { mapBreadcrumbMockProps } from "../../../../example/shared/Outline/breadcrumb/mock"
-import { mapMenuMockProps } from "../../../../example/shared/Outline/menu/mock"
-import { mapSeasonMockProps } from "../../../../example/shared/Outline/season/mock"
+import { newDocument } from "../../../document/Document/Document/mock"
+import { mapContentMockProps } from "../../../document/Document/content/mock"
+import { mapBreadcrumbMockProps } from "../../../example/shared/Outline/breadcrumb/mock"
+import { mapMenuMockProps } from "../../../example/shared/Outline/menu/mock"
 
 export default {
-    title: "secure/Example/Home/Dashboard",
+    title: "secure/Document/Document",
     argTypes: {
         type: {
             table: { disable: true },
@@ -19,17 +18,15 @@ export default {
 }
 
 type MockProps = Readonly<{
-    seasonYear: number
     menuBadgeCount: number
     breadcrumbLabel: string
     breadcrumbIcon: string
 }>
 const Template: Story<MockProps> = (args) => {
-    const { dashboard, update } = newDashboard()
+    const { document, update } = newDocument()
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
-        update.season(mapSeasonMockProps({ type: "success", year: props.args.seasonYear }))
         update.menu(mapMenuMockProps({ type: "success", badgeCount: props.args.menuBadgeCount }))
         update.breadcrumb(
             mapBreadcrumbMockProps({
@@ -38,14 +35,14 @@ const Template: Story<MockProps> = (args) => {
                 icon: props.args.breadcrumbIcon,
             })
         )
-        update.example(mapExampleMockProps({ type: "success", year: props.args.seasonYear }))
+        update.content(mapContentMockProps({ type: "success" }))
         return html`
             <style>
                 .sb-main-padded {
                     padding: 0 !important;
                 }
             </style>
-            ${h(Dashboard, { dashboard })}
+            ${h(Document, { document })}
         `
     }
 }
@@ -57,7 +54,6 @@ interface Story<T> {
 
 export const Initial = Template.bind({})
 Initial.args = {
-    seasonYear: new Date().getFullYear(),
     menuBadgeCount: 99,
     breadcrumbLabel: "ホーム",
     breadcrumbIcon: "home",

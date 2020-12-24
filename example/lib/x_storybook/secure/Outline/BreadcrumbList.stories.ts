@@ -1,6 +1,8 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
+import { BreadcrumbList } from "../../../x_preact/secure/Outline/BreadcrumbList"
+
 import {
     mapBreadcrumbMockProps,
     BreadcrumbMockProps,
@@ -8,8 +10,6 @@ import {
 } from "../../../example/shared/Outline/breadcrumb/mock"
 
 import { initialBreadcrumbState } from "../../../example/shared/Outline/breadcrumb/component"
-
-import { BreadcrumbList } from "../../../x_preact/secure/Outline/BreadcrumbList"
 
 export default {
     title: "secure/Outline/BreadcrumbList",
