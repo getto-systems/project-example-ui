@@ -1,9 +1,9 @@
 import { MockComponent } from "../../../z_external/mock/component"
 
-import { initBreadcrumb, initBreadcrumbComponent } from "../../shared/Outline/breadcrumb/mock"
-import { initMenu, initMenuComponent } from "../../shared/Outline/menu/mock"
-import { initSeason, initSeasonComponent } from "../../shared/Outline/season/mock"
-import { initExample, initExampleComponent } from "../example/mock"
+import { initBreadcrumb } from "../../shared/Outline/breadcrumb/mock"
+import { initMenu } from "../../shared/Outline/menu/mock"
+import { initSeason } from "../../shared/Outline/season/mock"
+import { initExample } from "../example/mock"
 
 import { DashboardEntryPoint } from "./view"
 
@@ -12,19 +12,6 @@ import { initialMenuState, MenuState } from "../../shared/Outline/menu/component
 import { initialSeasonState, SeasonState } from "../../shared/Outline/season/component"
 import { ExampleState, initialExampleState } from "../example/component"
 
-export function newDashboardAsMock(): DashboardEntryPoint {
-    return {
-        resource: {
-            season: initSeasonComponent(),
-            menu: initMenuComponent(),
-            breadcrumb: initBreadcrumbComponent(),
-            example: initExampleComponent(),
-        },
-        terminate: () => {
-            // mock では何もしない
-        },
-    }
-}
 export function newDashboard(): DashboardMockEntryPoint {
     const resource = {
         season: initSeason(initialSeasonState),

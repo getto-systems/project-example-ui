@@ -5,9 +5,6 @@ import { BreadcrumbComponent, BreadcrumbState } from "./component"
 
 import { markMenuCategory, markMenuItem } from "../../menu/data"
 
-export function initBreadcrumbComponent(): BreadcrumbComponent {
-    return new BreadcrumbMockComponent(new BreadcrumbStateFactory().succeedToLoad())
-}
 export function initBreadcrumb(state: BreadcrumbState): BreadcrumbMockComponent {
     return new BreadcrumbMockComponent(state)
 }
@@ -34,31 +31,6 @@ export function mapBreadcrumbMockProps(props: BreadcrumbMockProps): BreadcrumbSt
                     },
                 ],
             }
-    }
-}
-
-class BreadcrumbStateFactory {
-    initialBreadcrumb(): BreadcrumbState {
-        return { type: "initial-breadcrumb" }
-    }
-    succeedToLoad(): BreadcrumbState {
-        return {
-            type: "succeed-to-load",
-            breadcrumb: [
-                {
-                    type: "category",
-                    category: markMenuCategory({ label: "MAIN" }),
-                },
-                {
-                    type: "item",
-                    item: markMenuItem({
-                        label: "ホーム",
-                        icon: iconClass(lnir("home")),
-                        href: "/dist/index.html",
-                    }),
-                },
-            ],
-        }
     }
 }
 
