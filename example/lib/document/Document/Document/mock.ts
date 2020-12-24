@@ -1,8 +1,8 @@
 import { MockComponent } from "../../../z_external/mock/component"
 
-import { initBreadcrumb, initBreadcrumbComponent } from "../../../example/shared/Outline/breadcrumb/mock"
-import { initMenu, initMenuComponent } from "../../../example/shared/Outline/menu/mock"
-import { initContent, initContentComponent } from "../content/mock"
+import { initBreadcrumb } from "../../../example/shared/Outline/breadcrumb/mock"
+import { initMenu } from "../../../example/shared/Outline/menu/mock"
+import { initContent } from "../content/mock"
 
 import { DocumentEntryPoint } from "./view"
 
@@ -13,18 +13,6 @@ import {
 import { initialMenuState, MenuState } from "../../../example/shared/Outline/menu/component"
 import { ContentState, initialContentState } from "../content/component"
 
-export function newDocumentAsMock(): DocumentEntryPoint {
-    return {
-        resource: {
-            menu: initMenuComponent(),
-            breadcrumb: initBreadcrumbComponent(),
-            content: initContentComponent(),
-        },
-        terminate: () => {
-            // mock では何もしない
-        },
-    }
-}
 export function newDocument(): DocumentMockEntryPoint {
     const resource = {
         menu: initMenu(initialMenuState),

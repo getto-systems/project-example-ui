@@ -4,9 +4,6 @@ import { SeasonComponent, SeasonState } from "./component"
 
 import { markSeason } from "../../season/data"
 
-export function initSeasonComponent(): SeasonComponent {
-    return new SeasonMockComponent(new SeasonStateFactory().succeedToLoad())
-}
 export function initSeason(state: SeasonState): SeasonMockComponent {
     return new SeasonMockComponent(state)
 }
@@ -22,26 +19,6 @@ export function mapSeasonMockProps(props: SeasonMockProps): SeasonState {
 
         case "failed":
             return { type: "failed-to-load", err: { type: "infra-error", err: props.err } }
-    }
-}
-
-class SeasonStateFactory {
-    initialSeason(): SeasonState {
-        return { type: "initial-season" }
-    }
-    succeedToLoad(): SeasonState {
-        return {
-            type: "succeed-to-load",
-            season: markSeason({
-                year: new Date().getFullYear(),
-            }),
-        }
-    }
-    failedToLoad(): SeasonState {
-        return {
-            type: "failed-to-load",
-            err: { type: "infra-error", err: "load error" },
-        }
     }
 }
 
