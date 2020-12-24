@@ -10,6 +10,7 @@ import {
 import { initialSeasonState } from "../../../example/shared/Outline/season/component"
 
 import { SeasonInfo } from "../../../x_preact/secure/Outline/SeasonInfo"
+import { menuHeader } from "../../../x_preact/secure/layout"
 
 export default {
     title: "secure/Outline/SeasonInfo",
@@ -29,6 +30,7 @@ const Template: Story<MockProps> = (args) => {
         season.update(mapSeasonMockProps(props.args))
         return html`<main class="layout">
             <aside class="layout__menu menu">
+                ${menuHeader()}
                 ${h(SeasonInfo, { season })}
             </aside>
         </main>`
