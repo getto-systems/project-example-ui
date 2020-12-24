@@ -10,7 +10,7 @@ import { SeasonInfo } from "../../Shared/Outline/SeasonInfo"
 import { MenuList } from "../../Shared/Outline/MenuList"
 import { BreadcrumbList } from "../../Shared/Outline/BreadcrumbList"
 import { Example } from "./Example"
-import { DashboardComponent, DashboardFactory } from "../../../../example/Dashboard/Dashboard/view"
+import { DashboardComponent, DashboardFactory } from "../../../../example/Home/Dashboard/view"
 
 type Props = Readonly<{
     dashboard: DashboardFactory
