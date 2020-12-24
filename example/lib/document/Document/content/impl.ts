@@ -1,17 +1,16 @@
-import { LoadContentEvent } from "../../content/data"
-import { ContentActionSet, ContentComponent, ContentState } from "./component"
+import { ContentMaterial, ContentComponent, ContentState } from "./component"
 
-export function initContent(actions: ContentActionSet): ContentComponent {
-    return new Component(actions)
+export function initContent(material: ContentMaterial): ContentComponent {
+    return new Component(material)
 }
 
 class Component implements ContentComponent {
-    actions: ContentActionSet
+    material: ContentMaterial
 
     listener: Post<ContentState>[] = []
 
-    constructor(actions: ContentActionSet) {
-        this.actions = actions
+    constructor(material: ContentMaterial) {
+        this.material = material
     }
 
     onStateChange(post: Post<ContentState>): void {
@@ -22,13 +21,9 @@ class Component implements ContentComponent {
     }
 
     load(): void {
-        this.actions.loadDocument((event) => {
-            this.post(this.mapLoadDocumentEvent(event))
+        this.material.loadDocument((event) => {
+            this.post(event)
         })
-    }
-
-    mapLoadDocumentEvent(event: LoadContentEvent): ContentState {
-        return event
     }
 }
 

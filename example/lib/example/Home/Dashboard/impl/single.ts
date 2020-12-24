@@ -7,7 +7,7 @@ export function initDashboardAsSingle(
     collector: DashboardCollectorSet
 ): DashboardEntryPoint {
     return {
-        components: initDashboardComponent(factory, collector),
+        resource: initDashboardComponent(factory, collector),
         terminate: () => {
             // worker とインターフェイスを合わせるために必要
         },

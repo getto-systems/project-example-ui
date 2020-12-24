@@ -14,11 +14,11 @@ import { content_development_auth_user } from "./contents/development/auth/user"
 import { content_development_auth_profile } from "./contents/development/auth/profile"
 import { content_development_auth_api } from "./contents/development/auth/api"
 
-import { DocumentComponent } from "../../../../document/Document/Document/view"
+import { DocumentResource } from "../../../../document/Document/Document/view"
 import { initialContentState } from "../../../../document/Document/content/component"
 import { ContentPath } from "../../../../document/content/data"
 
-export function Content(components: DocumentComponent): VNode {
+export function Content(components: DocumentResource): VNode {
     const content = components.content
 
     const [state, setState] = useState(initialContentState)

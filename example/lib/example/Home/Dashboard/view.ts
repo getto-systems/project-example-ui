@@ -8,11 +8,11 @@ export interface DashboardFactory {
     (): DashboardEntryPoint
 }
 export type DashboardEntryPoint = Readonly<{
-    components: DashboardComponent
+    resource: DashboardResource
     terminate: Terminate
 }>
 
-export type DashboardComponent = Readonly<{
+export type DashboardResource = Readonly<{
     season: SeasonComponent
     menu: MenuComponent
     breadcrumb: BreadcrumbComponent

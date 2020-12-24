@@ -1,4 +1,4 @@
-import { DocumentComponent } from "../view"
+import { DocumentResource } from "../view"
 
 import { MenuComponentFactory } from "../../../../example/shared/Outline/menu/component"
 import { BreadcrumbComponentFactory } from "../../../../example/shared/Outline/breadcrumb/component"
@@ -39,7 +39,7 @@ export type DocumentCollectorSet = Readonly<{
 export function initDocumentComponent(
     factory: DocumentFactory,
     collector: DocumentCollectorSet
-): DocumentComponent {
+): DocumentResource {
     const actions = {
         loadApiNonce: factory.actions.credential.loadApiNonce(),
         loadApiRoles: factory.actions.credential.loadApiRoles(),

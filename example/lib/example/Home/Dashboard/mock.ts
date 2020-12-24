@@ -9,7 +9,7 @@ import { DashboardFactory } from "./view"
 export function newDashboard(): DashboardFactory {
     return () => {
         return {
-            components: {
+            resource: {
                 season: initSeason(),
                 menu: initMenu(),
                 breadcrumb: initBreadcrumb(),

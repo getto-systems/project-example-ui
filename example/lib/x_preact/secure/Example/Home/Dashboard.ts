@@ -10,7 +10,7 @@ import { SeasonInfo } from "../../Shared/Outline/SeasonInfo"
 import { MenuList } from "../../Shared/Outline/MenuList"
 import { BreadcrumbList } from "../../Shared/Outline/BreadcrumbList"
 import { Example } from "./Example"
-import { DashboardComponent, DashboardFactory } from "../../../../example/Home/Dashboard/view"
+import { DashboardResource, DashboardFactory } from "../../../../example/Home/Dashboard/view"
 
 type Props = Readonly<{
     dashboard: DashboardFactory
@@ -31,9 +31,9 @@ export function Dashboard({ dashboard }: Props): VNode {
         return EMPTY_CONTENT
     }
 
-    return h(View, container.components)
+    return h(View, container.resource)
 }
-function View(components: DashboardComponent): VNode {
+function View(components: DashboardResource): VNode {
     useEffect(() => {
         document.title = `ホーム | ${document.title}`
     }, [])
