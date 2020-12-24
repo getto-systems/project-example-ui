@@ -1,4 +1,5 @@
 import { h, VNode } from "preact"
+import { html } from "htm/preact"
 
 import { newDashboard } from "../../../../example/Home/Dashboard/mock"
 import { mapExampleMockProps } from "../../../../example/Home/example/mock"
@@ -38,7 +39,14 @@ const Template: Story<MockProps> = (args) => {
             })
         )
         update.example(mapExampleMockProps({ type: "success", year: props.args.seasonYear }))
-        return h(Dashboard, { dashboard })
+        return html`
+            <style>
+                .sb-main-padded {
+                    padding: 0 !important;
+                }
+            </style>
+            ${h(Dashboard, { dashboard })}
+        `
     }
 }
 
