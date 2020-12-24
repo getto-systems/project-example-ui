@@ -2,13 +2,13 @@ import { h, VNode } from "preact"
 import { useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { footer, menuHeader, menuFooter } from "../../layout"
+import { footer, menuHeader, menuFooter } from "../layout"
 
-import { ApplicationError } from "../../../common/System/ApplicationError"
-import { MenuList } from "../../Shared/Outline/MenuList"
+import { ApplicationError } from "../../common/System/ApplicationError"
+import { MenuList } from "../Shared/Outline/MenuList"
 import { Content } from "./Content"
 
-import { DocumentEntryPoint } from "../../../../document/Document/Document/view"
+import { DocumentEntryPoint } from "../../../document/Document/Document/view"
 
 type Props = {
     document: DocumentEntryPoint

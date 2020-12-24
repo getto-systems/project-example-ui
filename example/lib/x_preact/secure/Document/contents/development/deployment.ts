@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { container, v_medium, v_small } from "../../../../../common/layout"
+import { container, v_medium, v_small } from "../../../../common/layout"
 import { box, form, formWithHelp } from "../../box"
 
 import { content_index_deployment } from "../home"
