@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { container, v_small } from "../../../../../layout"
+import { container, v_small } from "../../../../../../common/layout"
 import { box, box_double, form, items, itemsSection } from "../../../box"
 
 export const content_development_auth_api = (): VNode[] => [

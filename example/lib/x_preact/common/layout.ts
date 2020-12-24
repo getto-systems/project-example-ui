@@ -47,3 +47,37 @@ export function fullScreenError(
         </aside>
     `
 }
+
+export function container(contents: VNodeContent): VNode {
+    return html`<section class="container">${contents}</section>`
+}
+
+export function v_small(): VNode {
+    return vertical("vertical_small")
+}
+export function v_medium(): VNode {
+    return vertical("vertical_medium")
+}
+function vertical(verticalClass: string): VNode {
+    return html`<div class="vertical ${verticalClass}"></div>`
+}
+
+export function notice_alert(content: VNodeContent): VNode {
+    return notice("notice_alert", content)
+}
+export function notice_info(content: VNodeContent): VNode {
+    return notice("notice_info", content)
+}
+function notice(noticeClass: string, content: VNodeContent): VNode {
+    return html`<p class="notice ${noticeClass}">${content}</p>`
+}
+
+export function label_alert(content: VNodeContent): VNode {
+    return label("label_alert", content)
+}
+export function label_pending(content: VNodeContent): VNode {
+    return label("label_pending", content)
+}
+function label(noticeClass: string, content: VNodeContent): VNode {
+    return html`<span class="label ${noticeClass}">${content}</span>`
+}
