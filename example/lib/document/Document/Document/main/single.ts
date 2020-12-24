@@ -1,6 +1,6 @@
 import { env } from "../../../../y_static/env"
 
-import { detectMenuTarget } from "../../../../example/shared/Outline/MenuTarget/impl/location"
+import { detectMenuTarget } from "../../../../example/shared/Outline/impl/location"
 import { detectContentPath } from "../impl/location"
 
 import { initMenu } from "../../../../example/shared/Outline/menu/impl"

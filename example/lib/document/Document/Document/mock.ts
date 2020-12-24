@@ -1,4 +1,4 @@
-import { initBreadcrumb } from "../../../example/shared/Outline/breadcrumb/mock"
+import { initBreadcrumbComponent } from "../../../example/shared/Outline/breadcrumb/mock"
 import { initMenu } from "../../../example/shared/Outline/menu/mock"
 
 import { initContent } from "../content/mock"
@@ -9,7 +9,7 @@ export function newDocumentAsMock(): DocumentEntryPoint {
     return {
         resource: {
             menu: initMenu(),
-            breadcrumb: initBreadcrumb(),
+            breadcrumb: initBreadcrumbComponent(),
             content: initContent(),
         },
         terminate: () => {
