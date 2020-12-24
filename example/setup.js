@@ -44,8 +44,8 @@ function dumpEntryPoint() {
         path.join(__dirname, "./lib/y_static/path.ts"),
         [
             "export type StaticMenuPath =" + toTypeVariant(files),
-            "export type StaticDocumentPath =" + toTypeVariant(docs),
-            "export const staticDocumentPaths: StaticDocumentPath[] = " + toConstValue(docs),
+            "export type StaticContentPath =" + toTypeVariant(docs),
+            "export const staticContentPaths: StaticContentPath[] = " + toConstValue(docs),
         ].join("\n")
     )
 
