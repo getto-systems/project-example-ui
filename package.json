@@ -18,7 +18,7 @@
     "postcss:font": "postcss --config example/postcss.config.js --output example/public/dist/css/font.min.css example/css/font.css",
     "postcss:line-icons": "postcss --config example/postcss.config.js --output example/public/dist/css/line-icons.min.css example/css/line-icons.css",
     "test": "jest -c example/jest.config.js",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -p 6006 -s ./example/public/",
     "build-storybook": "build-storybook"
   },
   "author": "",

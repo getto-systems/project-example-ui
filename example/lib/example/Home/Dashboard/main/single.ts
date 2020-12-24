@@ -4,7 +4,7 @@ import { initSeason } from "../../../shared/Outline/season/impl"
 import { initMenu } from "../../../shared/Outline/menu/impl"
 import { initBreadcrumb } from "../../../shared/Outline/breadcrumb/impl"
 import { initExample } from "../../example/impl"
-import { detectMenuTarget } from "../../../shared/Outline/MenuTarget/impl/location"
+import { detectMenuTarget } from "../../../shared/Outline/impl/location"
 
 import { loadApiNonce, loadApiRoles } from "../../../shared/credential/impl/core"
 import { loadSeason } from "../../../shared/season/impl/core"
