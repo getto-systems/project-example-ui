@@ -1,6 +1,6 @@
-import { StaticDocumentPath, staticDocumentPaths } from "../../y_static/path";
+import { StaticContentPath, staticContentPaths } from "../../y_static/path";
 
-export type DocumentPath = StaticDocumentPath
+export type DocumentPath = StaticContentPath
 export type LoadDocumentEvent = Readonly<{ type: "succeed-to-load"; path: DocumentPath }>
 
-export const documentPaths = staticDocumentPaths
+export const documentPaths = staticContentPaths
