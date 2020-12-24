@@ -2,13 +2,14 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { notice_alert, v_small } from "../../../common/layout"
+
 import {
     ExampleComponent,
     initialExampleState,
 } from "../../../../document/Dashboard/example/component"
 
 import { Season, SeasonError } from "../../../../example/shared/season/data"
-import { notice_alert, v_small } from "../../layout"
 
 type Props = Readonly<{
     example: ExampleComponent

@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { container, v_medium } from "../../../../../layout"
+import { container, v_medium } from "../../../../../../common/layout"
 import { box, itemsSection } from "../../../box"
 
 import { content_auth_role } from "../../auth"

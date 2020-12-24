@@ -2,7 +2,7 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { v_small } from "../../layout"
+import { v_small } from "../../../common/layout"
 
 import { SeasonComponent, initialSeasonState } from "../../../../example/shared/Outline/season/component"
 
