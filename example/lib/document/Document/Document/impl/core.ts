@@ -32,13 +32,13 @@ export type DocumentFactory = Readonly<{
         content: ContentComponentFactory
     }>
 }>
-export type DocumentCollectorSet = Readonly<{
+export type DocumentCollector = Readonly<{
     menu: MenuTargetCollector
     content: LoadContentCollector
 }>
 export function initDocumentComponent(
     factory: DocumentFactory,
-    collector: DocumentCollectorSet
+    collector: DocumentCollector
 ): DocumentResource {
     const actions = {
         loadApiNonce: factory.actions.credential.loadApiNonce(),

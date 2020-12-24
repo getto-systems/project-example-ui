@@ -33,12 +33,12 @@ export type DashboardFactory = Readonly<{
         example: ExampleComponentFactory
     }>
 }>
-export type DashboardCollectorSet = Readonly<{
+export type DashboardCollector = Readonly<{
     menu: MenuTargetCollector
 }>
 export function initDashboardComponent(
     factory: DashboardFactory,
-    collector: DashboardCollectorSet
+    collector: DashboardCollector
 ): DashboardResource {
     const actions = {
         loadApiNonce: factory.actions.credential.loadApiNonce(),
