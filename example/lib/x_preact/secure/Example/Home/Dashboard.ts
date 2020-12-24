@@ -2,7 +2,6 @@ import { h, VNode } from "preact"
 import { useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useEntryPoint } from "../../hooks"
 import { footer, menuHeader, menuFooter } from "../../layout"
 
 import { ApplicationError } from "../../../common/System/ApplicationError"
@@ -10,12 +9,12 @@ import { SeasonInfo } from "../../Shared/Outline/SeasonInfo"
 import { MenuList } from "../../Shared/Outline/MenuList"
 import { BreadcrumbList } from "../../Shared/Outline/BreadcrumbList"
 import { Example } from "./Example"
-import { DashboardResource, DashboardEntryPointFactory } from "../../../../example/Home/Dashboard/view"
+import { DashboardEntryPoint } from "../../../../example/Home/Dashboard/view"
 
 type Props = Readonly<{
-    dashboard: DashboardEntryPointFactory
+    dashboard: DashboardEntryPoint
 }>
-export function Dashboard({ dashboard }: Props): VNode {
+export function Dashboard({ dashboard: { resource, terminate } }: Props): VNode {
     const [err, _resetError] = useErrorBoundary((err) => {
         // TODO ここでエラーをどこかに投げたい。apiCredential が有効なはずなので、api にエラーを投げられるはず
         console.log(err)
@@ -25,15 +24,8 @@ export function Dashboard({ dashboard }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    const container = useEntryPoint(dashboard)
+    useEffect(() => terminate)
 
-    if (!container.set) {
-        return EMPTY_CONTENT
-    }
-
-    return h(View, container.resource)
-}
-function View(components: DashboardResource): VNode {
     useEffect(() => {
         document.title = `ホーム | ${document.title}`
     }, [])
@@ -45,22 +37,14 @@ function View(components: DashboardResource): VNode {
             <article class="layout__main">
                 <header class="main__header">
                     <h1 class="main__title">${title}</h1>
-                    ${h(BreadcrumbList, components)}
+                    ${h(BreadcrumbList, resource)}
                 </header>
-                <section class="main__body container">${h(Example, components)}</section>
+                <section class="main__body container">${h(Example, resource)}</section>
                 ${footer()}
             </article>
-            ${menu()}
+            <aside class="layout__menu menu">
+                ${menuHeader()} ${h(SeasonInfo, resource)} ${h(MenuList, resource)} ${menuFooter()}
+            </aside>
         </main>
     `
-
-    function menu() {
-        return html`
-            <aside class="layout__menu menu">
-                ${menuHeader()} ${h(SeasonInfo, components)} ${h(MenuList, components)} ${menuFooter()}
-            </aside>
-        `
-    }
 }
-
-const EMPTY_CONTENT = html``

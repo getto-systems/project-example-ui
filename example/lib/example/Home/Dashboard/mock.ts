@@ -4,20 +4,18 @@ import { initSeason } from "../../shared/Outline/season/mock"
 
 import { initExample } from "../example/mock"
 
-import { DashboardEntryPointFactory } from "./view"
+import { DashboardEntryPoint } from "./view"
 
-export function newDashboard(): DashboardEntryPointFactory {
-    return () => {
-        return {
-            resource: {
-                season: initSeason(),
-                menu: initMenu(),
-                breadcrumb: initBreadcrumb(),
-                example: initExample(),
-            },
-            terminate: () => {
-                // mock では何もしない
-            }
-        }
+export function newDashboard(): DashboardEntryPoint {
+    return {
+        resource: {
+            season: initSeason(),
+            menu: initMenu(),
+            breadcrumb: initBreadcrumb(),
+            example: initExample(),
+        },
+        terminate: () => {
+            // mock では何もしない
+        },
     }
 }

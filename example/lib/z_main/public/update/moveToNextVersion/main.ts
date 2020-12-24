@@ -3,8 +3,7 @@ import { newMoveToNextVersionAsSingle } from "../../../../update/Update/MoveToNe
 import { appTargetToPath, FindError } from "../../../../update/next_version/data"
 
 try {
-    const moveToNextVersion = newMoveToNextVersionAsSingle()
-    const nextVersion = moveToNextVersion().components.nextVersion
+    const nextVersion = newMoveToNextVersionAsSingle().resource.nextVersion
 
     nextVersion.onStateChange((state) => {
         switch (state.type) {

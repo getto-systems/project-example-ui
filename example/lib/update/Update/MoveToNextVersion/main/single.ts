@@ -9,9 +9,9 @@ import { initNextVersionResource } from "../impl/core"
 
 import { initNextVersion } from "../../next_version/impl"
 
-import { MoveToNextVersionEntryPointFactory } from "../view"
+import { MoveToNextVersionEntryPoint } from "../view"
 
-export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPointFactory {
+export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPoint {
     const currentURL = new URL(location.toString())
 
     const factory = {
@@ -27,13 +27,11 @@ export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPointFacto
             getAppTarget: () => detectAppTarget(env.version, currentURL),
         },
     }
-    return () => {
-        return {
-            components: initNextVersionResource(factory, collector),
-            terminate: () => {
-                // worker とインターフェイスを合わせるために必要
-            },
-        }
+    return {
+        resource: initNextVersionResource(factory, collector),
+        terminate: () => {
+            // worker とインターフェイスを合わせるために必要
+        },
     }
 }
 

@@ -12,7 +12,9 @@ import {
 import { initLoginLink } from "../link"
 
 import {
-    View, LoginResourceFactory, LoginViewCollector,
+    View,
+    LoginResourceFactory,
+    LoginViewCollector,
     initRenewCredentialResource,
     initPasswordLoginResource,
     initPasswordResetSessionResource,
@@ -48,7 +50,7 @@ import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../../l
 
 import { LoginLinkFactory } from "../../../link"
 
-import { LoginEntryPointFactory, LoginEntryPoint } from "../../view"
+import { LoginEntryPoint } from "../../view"
 import { RenewCredentialComponentFactory } from "../../../renew_credential/component"
 import { PasswordLoginComponentFactory } from "../../../password_login/component"
 import { PasswordResetSessionComponentFactory } from "../../../password_reset_session/component"
@@ -85,7 +87,7 @@ import {
     ResetProxyMessage,
 } from "./data"
 
-export function newLoginAsWorkerForeground(): LoginEntryPointFactory {
+export function newLoginAsWorkerForeground(): LoginEntryPoint {
     const credentialStorage = localStorage
     const currentURL = new URL(location.toString())
 
@@ -137,7 +139,7 @@ export function newLoginAsWorkerForeground(): LoginEntryPointFactory {
         },
     }
 
-    return () => initLoginAsForeground(worker, factory, collector)
+    return initLoginAsForeground(worker, factory, collector)
 }
 
 export function initApplicationAction(config: ApplicationActionConfig): ApplicationAction {
