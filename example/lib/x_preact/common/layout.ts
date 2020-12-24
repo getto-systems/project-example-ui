@@ -1,11 +1,25 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-const brand = "GETTO"
-const title = "Example"
-const subTitle = "code templates"
+export type VNodeContent = VNodeEntry | VNodeEntry[]
+type VNodeEntry = string | VNode
+
+export type SiteInfo = Readonly<{
+    brand: string
+    title: string
+    subTitle: string
+}>
+
+export function siteInfo(): SiteInfo {
+    return {
+        brand: "GETTO",
+        title: "Example",
+        subTitle: "code templates",
+    }
+}
 
 export function loginHeader(): VNode {
+    const { brand, title, subTitle } = siteInfo()
     return html`
         <header class="login__header">
             <cite class="login__brand">${brand}</cite>
@@ -15,7 +29,11 @@ export function loginHeader(): VNode {
     `
 }
 
-export function fullScreenError(title: VNode, content: VNode, footer: VNode): VNode {
+export function fullScreenError(
+    title: VNodeContent,
+    content: VNodeContent,
+    footer: VNodeContent
+): VNode {
     return html`
         <aside class="login">
             <section class="login__box">

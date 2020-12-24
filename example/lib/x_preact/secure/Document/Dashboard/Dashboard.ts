@@ -5,14 +5,11 @@ import { html } from "htm/preact"
 import { useEntryPoint } from "../../hooks"
 import { footer, menuHeader, menuFooter } from "../../layout"
 
-import { ApplicationError } from "../../System/ApplicationError"
-
+import { ApplicationError } from "../../../common/System/ApplicationError"
 import { SeasonInfo } from "../../Shared/Outline/SeasonInfo"
 import { MenuList } from "../../Shared/Outline/MenuList"
 import { BreadcrumbList } from "../../Shared/Outline/BreadcrumbList"
-
 import { Example } from "./Example"
-
 import { DashboardComponent, DashboardFactory } from "../../../../document/Dashboard/Dashboard/view"
 
 type Props = Readonly<{

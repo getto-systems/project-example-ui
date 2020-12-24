@@ -1,9 +1,9 @@
 import { h, VNode } from "preact"
 
-import { ApplicationError } from "../../../x_preact/public/System/ApplicationError"
+import { ApplicationError } from "../../../x_preact/common/System/ApplicationError"
 
 export default {
-    title: "public/System/ApplicationError",
+    title: "common/System/ApplicationError",
 }
 
 type MockProps = Readonly<{

@@ -1,7 +1,8 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { label_alert, label_pending, VNodeContent, v_medium, v_small } from "../../layout"
+import { VNodeContent } from "../../../common/layout"
+import { label_alert, label_pending, v_medium, v_small } from "../../layout"
 
 export function box(title: VNodeContent, content: VNodeContent): VNode {
     return box_content("", title, content)

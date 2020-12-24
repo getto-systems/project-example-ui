@@ -2,10 +2,10 @@ import { h, VNode } from "preact"
 import { useState, useEffect, useRef } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { loginHeader } from "../layout"
+import { loginHeader } from "../../common/layout"
 import { appendScript } from "./script"
 
-import { ApplicationError } from "../System/ApplicationError"
+import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { LoginIDField } from "./PasswordLogin/LoginIDField"
 import { PasswordField } from "./PasswordLogin/PasswordField"
