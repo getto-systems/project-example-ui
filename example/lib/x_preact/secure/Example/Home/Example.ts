@@ -7,7 +7,7 @@ import { notice_alert, v_small } from "../../../common/layout"
 import {
     ExampleComponent,
     initialExampleState,
-} from "../../../../example/Dashboard/example/component"
+} from "../../../../example/Home/example/component"
 
 import { Season, SeasonError } from "../../../../example/shared/season/data"
 
