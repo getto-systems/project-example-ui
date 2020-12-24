@@ -5,14 +5,14 @@ import {
     mapSeasonMockProps,
     SeasonMockProps,
     initSeason,
-} from "../../../../example/shared/Outline/season/mock"
+} from "../../../example/shared/Outline/season/mock"
 
-import { initialSeasonState } from "../../../../example/shared/Outline/season/component"
+import { initialSeasonState } from "../../../example/shared/Outline/season/component"
 
-import { SeasonInfo } from "../../../../x_preact/secure/Shared/Outline/SeasonInfo"
+import { SeasonInfo } from "../../../x_preact/secure/Outline/SeasonInfo"
 
 export default {
-    title: "secure/Shared/Outline/SeasonInfo",
+    title: "secure/Outline/SeasonInfo",
     argTypes: {
         type: {
             table: { disable: true },
@@ -40,14 +40,14 @@ interface Story<T> {
     (args: T): VNode
 }
 
+export const Success = Template.bind({})
+Success.args = {
+    type: "success",
+    year: new Date().getFullYear(),
+}
+
 export const Failed = Template.bind({})
 Failed.args = {
     type: "failed",
     err: "load error",
-}
-
-export const Success = Template.bind({})
-Success.args = {
-    type: "success",
-    year: new Date().getFullYear().toString(),
 }

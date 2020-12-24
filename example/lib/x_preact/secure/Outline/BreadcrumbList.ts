@@ -5,9 +5,9 @@ import { html } from "htm/preact"
 import {
     BreadcrumbComponent,
     initialBreadcrumbState,
-} from "../../../../example/shared/Outline/breadcrumb/component"
+} from "../../../example/shared/Outline/breadcrumb/component"
 
-import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../../../example/shared/menu/data"
+import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../../example/shared/menu/data"
 
 type Props = Readonly<{
     breadcrumb: BreadcrumbComponent
