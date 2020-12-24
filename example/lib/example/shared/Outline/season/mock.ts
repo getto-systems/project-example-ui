@@ -1,9 +1,28 @@
+import { MockComponent } from "../../../../z_external/mock/component"
+
 import { SeasonComponent, SeasonState } from "./component"
 
 import { markSeason } from "../../season/data"
 
-export function initSeason(): SeasonComponent {
-    return new Component(new SeasonStateFactory().succeedToLoad())
+export function initSeasonComponent(): SeasonComponent {
+    return new SeasonMockComponent(new SeasonStateFactory().succeedToLoad())
+}
+export function initSeason(state: SeasonState): SeasonMockComponent {
+    return new SeasonMockComponent(state)
+}
+
+export type SeasonMockProps =
+    | Readonly<{ type: "failed"; err: string }>
+    | Readonly<{ type: "success"; year: string }>
+
+export function mapSeasonMockProps(props: SeasonMockProps): SeasonState {
+    switch (props.type) {
+        case "failed":
+            return { type: "failed-to-load", err: { type: "infra-error", err: props.err } }
+
+        case "success":
+            return { type: "succeed-to-load", season: markSeason({ year: parseInt(props.year) }) }
+    }
 }
 
 class SeasonStateFactory {
@@ -26,22 +45,8 @@ class SeasonStateFactory {
     }
 }
 
-class Component implements SeasonComponent {
-    state: SeasonState
-
-    constructor(state: SeasonState) {
-        this.state = state
-    }
-
-    onStateChange(post: Post<SeasonState>): void {
-        post(this.state)
-    }
-
+class SeasonMockComponent extends MockComponent<SeasonState> implements SeasonComponent {
     load() {
         // mock では特に何もしない
     }
-}
-
-interface Post<T> {
-    (state: T): void
 }

@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { container, v_small, v_medium, notice_info } from "../../../../common/layout"
+import { container, v_small, v_medium, notice_info } from "../../../common/layout"
 import { box, items } from "../box"
 
 export const content_index = (): VNode[] => [

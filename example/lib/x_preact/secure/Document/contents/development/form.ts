@@ -1,7 +1,7 @@
 import { html } from "htm/preact"
 import { VNode } from "preact"
 
-import { VNodeContent } from "../../../../../common/layout"
+import { VNodeContent } from "../../../../common/layout"
 import { box, formWithHelp, iconSection } from "../../box"
 
 export const hr: VNode = html`<hr />`
