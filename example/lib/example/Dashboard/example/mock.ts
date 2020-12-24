@@ -1,6 +1,6 @@
 import { ExampleComponent, ExampleState } from "./component"
 
-import { markSeason } from "../../../example/shared/season/data"
+import { markSeason } from "../../shared/season/data"
 
 export function initExample(): ExampleComponent {
     return new Component(new ExampleStateFactory().succeedToLoad())

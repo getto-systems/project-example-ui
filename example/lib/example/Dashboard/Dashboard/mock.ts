@@ -1,6 +1,6 @@
-import { initBreadcrumb } from "../../../example/shared/Outline/breadcrumb/mock"
-import { initMenu } from "../../../example/shared/Outline/menu/mock"
-import { initSeason } from "../../../example/shared/Outline/season/mock"
+import { initBreadcrumb } from "../../shared/Outline/breadcrumb/mock"
+import { initMenu } from "../../shared/Outline/menu/mock"
+import { initSeason } from "../../shared/Outline/season/mock"
 
 import { initExample } from "../example/mock"
 

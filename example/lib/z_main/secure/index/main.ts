@@ -1,7 +1,7 @@
 import { render, h } from "preact"
 
-import { newDashboardAsSingle } from "../../../document/Dashboard/Dashboard/main"
+import { newDashboardAsSingle } from "../../../example/Dashboard/Dashboard/main"
 
-import { Dashboard } from "../../../x_preact/secure/Document/Dashboard/Dashboard"
+import { Dashboard } from "../../../x_preact/secure/Example/Dashboard/Dashboard"
 
 render(h(Dashboard, { dashboard: newDashboardAsSingle() }), document.body)

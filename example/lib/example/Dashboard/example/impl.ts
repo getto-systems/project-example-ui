@@ -1,6 +1,6 @@
 import { ExampleActionSet, ExampleComponent, ExampleState } from "./component"
 
-import { LoadSeasonEvent } from "../../../example/shared/season/data"
+import { LoadSeasonEvent } from "../../shared/season/data"
 
 export function initExample(actions: ExampleActionSet): ExampleComponent {
     return new Component(actions)

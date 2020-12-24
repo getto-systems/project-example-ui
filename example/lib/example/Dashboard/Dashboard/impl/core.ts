@@ -1,14 +1,14 @@
 import { DashboardComponent } from "../view"
 
-import { SeasonComponentFactory } from "../../../../example/shared/Outline/season/component"
-import { MenuComponentFactory } from "../../../../example/shared/Outline/menu/component"
-import { BreadcrumbComponentFactory } from "../../../../example/shared/Outline/breadcrumb/component"
+import { SeasonComponentFactory } from "../../../shared/Outline/season/component"
+import { MenuComponentFactory } from "../../../shared/Outline/menu/component"
+import { BreadcrumbComponentFactory } from "../../../shared/Outline/breadcrumb/component"
 
 import { ExampleComponentFactory } from "../../example/component"
 
-import { LoadApiNonce, LoadApiRoles } from "../../../../example/shared/credential/action"
-import { LoadBreadcrumb, LoadMenu, MenuTargetCollector, ToggleMenuExpand } from "../../../../example/shared/menu/action"
-import { LoadSeason } from "../../../../example/shared/season/action"
+import { LoadApiNonce, LoadApiRoles } from "../../../shared/credential/action"
+import { LoadBreadcrumb, LoadMenu, MenuTargetCollector, ToggleMenuExpand } from "../../../shared/menu/action"
+import { LoadSeason } from "../../../shared/season/action"
 
 export type DashboardFactory = Readonly<{
     actions: Readonly<{
