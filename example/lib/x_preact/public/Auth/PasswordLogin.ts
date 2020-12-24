@@ -16,10 +16,10 @@ import { initialPasswordLoginState } from "../../../auth/Auth/password_login/com
 import { LoginError } from "../../../auth/login/password_login/data"
 
 type Props = Readonly<{
-    components: PasswordLoginResource
+    resource: PasswordLoginResource
 }>
 export function PasswordLogin({
-    components: { passwordLogin, loginIDField, passwordField },
+    resource: { passwordLogin, loginIDField, passwordField },
 }: Props): VNode {
     const [state, setState] = useState(initialPasswordLoginState)
     // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない

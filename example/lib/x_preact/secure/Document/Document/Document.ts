@@ -9,7 +9,7 @@ import { ApplicationError } from "../../../common/System/ApplicationError"
 import { MenuList } from "../../Shared/Outline/MenuList"
 import { Content } from "./Content"
 
-import { DocumentComponent, DocumentFactory } from "../../../../document/Document/Document/view"
+import { DocumentResource, DocumentFactory } from "../../../../document/Document/Document/view"
 
 type Props = {
     document: DocumentFactory
@@ -30,9 +30,9 @@ export function Document({ document }: Props): VNode {
         return EMPTY_CONTENT
     }
 
-    return h(View, container.components)
+    return h(View, container.resource)
 }
-function View(components: DocumentComponent): VNode {
+function View(components: DocumentResource): VNode {
     return html`
         <main class="layout">
             <article class="layout__main">${h(Content, components)} ${footer()}</article>

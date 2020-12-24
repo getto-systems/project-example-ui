@@ -7,11 +7,11 @@ export interface DocumentFactory {
     (): DocumentEntryPoint
 }
 export type DocumentEntryPoint = Readonly<{
-    components: DocumentComponent
+    resource: DocumentResource
     terminate: Terminate
 }>
 
-export type DocumentComponent = Readonly<{
+export type DocumentResource = Readonly<{
     menu: MenuComponent
     breadcrumb: BreadcrumbComponent
 

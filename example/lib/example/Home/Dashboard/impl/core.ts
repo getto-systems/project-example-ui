@@ -1,4 +1,4 @@
-import { DashboardComponent } from "../view"
+import { DashboardResource } from "../view"
 
 import { SeasonComponentFactory } from "../../../shared/Outline/season/component"
 import { MenuComponentFactory } from "../../../shared/Outline/menu/component"
@@ -39,7 +39,7 @@ export type DashboardCollectorSet = Readonly<{
 export function initDashboardComponent(
     factory: DashboardFactory,
     collector: DashboardCollectorSet
-): DashboardComponent {
+): DashboardResource {
     const actions = {
         loadApiNonce: factory.actions.credential.loadApiNonce(),
         loadApiRoles: factory.actions.credential.loadApiRoles(),

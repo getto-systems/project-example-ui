@@ -2,9 +2,9 @@ import { LoadContent } from "../../content/action"
 import { ContentPath } from "../../content/data"
 
 export interface ContentComponentFactory {
-    (actions: ContentActionSet): ContentComponent
+    (actions: ContentMaterial): ContentComponent
 }
-export type ContentActionSet = Readonly<{
+export type ContentMaterial = Readonly<{
     loadDocument: LoadContent
 }>
 

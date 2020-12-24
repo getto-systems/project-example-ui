@@ -30,7 +30,7 @@ export function newLoginAsRenewCredential(): {
             return {
                 view: new View({
                     type: "renew-credential",
-                    components: {
+                    resource: {
                         renewCredential: mock.renewCredential.init(),
                     },
                 }),
@@ -63,7 +63,7 @@ export function newLoginAsPasswordLogin(): {
             return {
                 view: new View({
                     type: "password-login",
-                    components: {
+                    resource: {
                         passwordLogin: mock.passwordLogin.init(),
                         loginIDField: mock.loginIDField.init(),
                         passwordField: mock.passwordField.init(),
@@ -101,7 +101,7 @@ export function newLoginAsPasswordResetSession(): {
             return {
                 view: new View({
                     type: "password-reset-session",
-                    components: {
+                    resource: {
                         passwordResetSession: mock.passwordResetSession.init(),
                         loginIDField: mock.loginIDField.init(),
                     },
@@ -136,7 +136,7 @@ export function newLoginAsPasswordReset(): {
             return {
                 view: new View({
                     type: "password-reset",
-                    components: {
+                    resource: {
                         passwordReset: mock.passwordReset.init(),
                         loginIDField: mock.loginIDField.init(),
                         passwordField: mock.passwordField.init(),

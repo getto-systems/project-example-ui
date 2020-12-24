@@ -64,7 +64,7 @@ export class View implements LoginView {
     load(): void {
         this.post({
             type: "renew-credential",
-            components: this.components.renewCredential((renewCredential) => {
+            resource: this.components.renewCredential((renewCredential) => {
                 this.hookCredentialStateChange(renewCredential)
             }),
         })
@@ -85,11 +85,11 @@ export class View implements LoginView {
     mapLoginView(loginView: ViewState): LoginState {
         switch (loginView) {
             case "password-login":
-                return { type: loginView, components: this.components.passwordLogin() }
+                return { type: loginView, resource: this.components.passwordLogin() }
             case "password-reset-session":
-                return { type: loginView, components: this.components.passwordResetSession() }
+                return { type: loginView, resource: this.components.passwordResetSession() }
             case "password-reset":
-                return { type: loginView, components: this.components.passwordReset() }
+                return { type: loginView, resource: this.components.passwordReset() }
         }
     }
 }

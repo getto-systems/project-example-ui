@@ -7,7 +7,7 @@ export function initDocumentAsSingle(
     collector: DocumentCollectorSet
 ): DocumentEntryPoint {
     return {
-        components: initDocumentComponent(factory, collector),
+        resource: initDocumentComponent(factory, collector),
         terminate: () => {
             // worker とインターフェイスを合わせるために必要
         },

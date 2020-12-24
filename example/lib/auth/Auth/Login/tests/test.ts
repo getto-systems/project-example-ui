@@ -79,7 +79,7 @@ describe("LoginView", () => {
                         break
 
                     case "renew-credential":
-                        state.components.renewCredential.renew()
+                        state.resource.renewCredential.renew()
                         break
 
                     case "password-login":
@@ -122,7 +122,7 @@ describe("LoginView", () => {
                         break
 
                     case "renew-credential":
-                        state.components.renewCredential.renew()
+                        state.resource.renewCredential.renew()
                         break
 
                     case "password-reset-session":
@@ -165,7 +165,7 @@ describe("LoginView", () => {
                         break
 
                     case "renew-credential":
-                        state.components.renewCredential.renew()
+                        state.resource.renewCredential.renew()
                         break
 
                     case "password-reset":

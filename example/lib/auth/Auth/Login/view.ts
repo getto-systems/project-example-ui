@@ -22,10 +22,10 @@ export interface LoginView {
 
 export type LoginState =
     | Readonly<{ type: "initial-view" }>
-    | Readonly<{ type: "renew-credential"; components: RenewCredentialResource }>
-    | Readonly<{ type: "password-login"; components: PasswordLoginResource }>
-    | Readonly<{ type: "password-reset-session"; components: PasswordResetSessionResource }>
-    | Readonly<{ type: "password-reset"; components: PasswordResetResource }>
+    | Readonly<{ type: "renew-credential"; resource: RenewCredentialResource }>
+    | Readonly<{ type: "password-login"; resource: PasswordLoginResource }>
+    | Readonly<{ type: "password-reset-session"; resource: PasswordResetSessionResource }>
+    | Readonly<{ type: "password-reset"; resource: PasswordResetResource }>
     | Readonly<{ type: "error"; err: string }>
 
 export type ViewState = "password-login" | "password-reset-session" | "password-reset"

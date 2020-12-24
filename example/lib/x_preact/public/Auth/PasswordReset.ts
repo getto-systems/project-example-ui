@@ -16,10 +16,10 @@ import { initialPasswordResetState } from "../../../auth/Auth/password_reset/com
 import { ResetError } from "../../../auth/profile/password_reset/data"
 
 type Props = Readonly<{
-    components: PasswordResetResource
+    resource: PasswordResetResource
 }>
 export function PasswordReset({
-    components: { passwordReset, loginIDField, passwordField },
+    resource: { passwordReset, loginIDField, passwordField },
 }: Props): VNode {
     const [state, setState] = useState(initialPasswordResetState)
     // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
