@@ -17,11 +17,11 @@ import { initMemoryApiCredentialRepository } from "../../../../example/shared/cr
 import { initNoopBadgeClient } from "../../../../example/shared/menu/impl/client/badge/noop"
 import { initStorageMenuExpandRepository } from "../../../../example/shared/menu/impl/repository/expand/storage"
 
-import { DocumentEntryPointFactory } from "../view"
+import { DocumentEntryPoint } from "../view"
 
 import { markApiNonce, markApiRoles } from "../../../../example/shared/credential/data"
 
-export function newDocumentAsSingle(): DocumentEntryPointFactory {
+export function newDocumentAsSingle(): DocumentEntryPoint {
     const menuExpandStorage = localStorage
     const currentLocation = location
 
@@ -46,13 +46,11 @@ export function newDocumentAsSingle(): DocumentEntryPointFactory {
             getContentPath: () => detectContentPath(env.version, currentLocation),
         },
     }
-    return () => {
-        return {
-            resource: initDocumentComponent(factory, collector),
-            terminate: () => {
-                // worker とインターフェイスを合わせるために必要
-            },
-        }
+    return {
+        resource: initDocumentComponent(factory, collector),
+        terminate: () => {
+            // worker とインターフェイスを合わせるために必要
+        },
     }
 }
 

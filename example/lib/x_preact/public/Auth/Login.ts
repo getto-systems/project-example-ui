@@ -2,7 +2,6 @@ import { h, VNode } from "preact"
 import { useState, useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useEntryPoint } from "../hooks"
 import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { RenewCredential } from "./RenewCredential"
@@ -11,12 +10,12 @@ import { PasswordLogin } from "./PasswordLogin"
 import { PasswordResetSession } from "./PasswordResetSession"
 import { PasswordReset } from "./PasswordReset"
 
-import { LoginEntryPointFactory, LoginView, initialLoginState } from "../../../auth/Auth/Login/view"
+import { LoginEntryPoint, initialLoginState } from "../../../auth/Auth/Login/view"
 
 type Props = Readonly<{
-    login: LoginEntryPointFactory
+    login: LoginEntryPoint
 }>
-export function Login({ login }: Props): VNode {
+export function Login({ login: { view, terminate } }: Props): VNode {
     const [err, _resetError] = useErrorBoundary((err) => {
         // ここでエラーをどこかに投げたい、けど認証前なのでこれでお茶を濁す
         console.log(err)
@@ -26,19 +25,8 @@ export function Login({ login }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    const container = useEntryPoint(() => login())
+    useEffect(() => terminate)
 
-    if (!container.set) {
-        return EMPTY_CONTENT
-    }
-
-    return h(View, container)
-}
-
-type ViewProps = Readonly<{
-    view: LoginView
-}>
-function View({ view }: ViewProps): VNode {
     const [state, setState] = useState(initialLoginState)
     useEffect(() => {
         view.onStateChange(setState)

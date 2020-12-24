@@ -1,20 +1,19 @@
 import { h, VNode } from "preact"
-import { useErrorBoundary } from "preact/hooks"
+import { useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useEntryPoint } from "../../hooks"
 import { footer, menuHeader, menuFooter } from "../../layout"
 
 import { ApplicationError } from "../../../common/System/ApplicationError"
 import { MenuList } from "../../Shared/Outline/MenuList"
 import { Content } from "./Content"
 
-import { DocumentResource, DocumentEntryPointFactory } from "../../../../document/Document/Document/view"
+import { DocumentEntryPoint } from "../../../../document/Document/Document/view"
 
 type Props = {
-    document: DocumentEntryPointFactory
+    document: DocumentEntryPoint
 }
-export function Document({ document }: Props): VNode {
+export function Document({ document: { resource, terminate } }: Props): VNode {
     const [err, _resetError] = useErrorBoundary((err) => {
         // TODO ここでエラーをどこかに投げたい。apiCredential が有効なはずなので、api にエラーを投げられるはず
         console.log(err)
@@ -24,29 +23,14 @@ export function Document({ document }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    const container = useEntryPoint(document)
+    useEffect(() => terminate)
 
-    if (!container.set) {
-        return EMPTY_CONTENT
-    }
-
-    return h(View, container.resource)
-}
-function View(components: DocumentResource): VNode {
     return html`
         <main class="layout">
-            <article class="layout__main">${h(Content, components)} ${footer()}</article>
-            ${menu()}
+            <article class="layout__main">${h(Content, resource)} ${footer()}</article>
+            <aside class="layout__menu menu">
+                ${menuHeader()} ${h(MenuList, resource)} ${menuFooter()}
+            </aside>
         </main>
     `
-
-    function menu() {
-        return html`
-            <aside class="layout__menu menu">
-                ${menuHeader()} ${h(MenuList, components)} ${menuFooter()}
-            </aside>
-        `
-    }
 }
-
-const EMPTY_CONTENT = html``

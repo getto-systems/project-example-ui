@@ -20,12 +20,12 @@ import { initDateYearRepository } from "../../../shared/season/impl/repository/y
 import { initSimulateBadgeClient } from "../../../shared/menu/impl/client/badge/simulate"
 import { initStorageMenuExpandRepository } from "../../../shared/menu/impl/repository/expand/storage"
 
-import { DashboardEntryPointFactory } from "../view"
+import { DashboardEntryPoint } from "../view"
 
 import { markSeason } from "../../../shared/season/data"
 import { markApiNonce, markApiRoles } from "../../../shared/credential/data"
 
-export function newDashboardAsSingle(): DashboardEntryPointFactory {
+export function newDashboardAsSingle(): DashboardEntryPoint {
     const menuExpandStorage = localStorage
     const currentLocation = location
 
@@ -48,13 +48,11 @@ export function newDashboardAsSingle(): DashboardEntryPointFactory {
             getMenuTarget: () => detectMenuTarget(env.version, currentLocation),
         },
     }
-    return () => {
-        return {
-            resource: initDashboardComponent(factory, collector),
-            terminate: () => {
-                // worker とインターフェイスを合わせるために必要
-            },
-        }
+    return {
+        resource: initDashboardComponent(factory, collector),
+        terminate: () => {
+            // worker とインターフェイスを合わせるために必要
+        },
     }
 }
 
