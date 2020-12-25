@@ -3,17 +3,17 @@ import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import {
-    BreadcrumbComponent,
-    initialBreadcrumbState,
-} from "../../../example/shared/Outline/breadcrumb/component"
+    BreadcrumbListComponent,
+    initialBreadcrumbListState,
+} from "../../../example/shared/Outline/breadcrumbList/component"
 
 import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../../example/shared/menu/data"
 
 type Props = Readonly<{
-    breadcrumb: BreadcrumbComponent
+    breadcrumb: BreadcrumbListComponent
 }>
 export function BreadcrumbList({ breadcrumb }: Props): VNode {
-    const [state, setState] = useState(initialBreadcrumbState)
+    const [state, setState] = useState(initialBreadcrumbListState)
     useEffect(() => {
         breadcrumb.onStateChange(setState)
         breadcrumb.load()

@@ -4,15 +4,15 @@ import { html } from "htm/preact"
 
 import { v_small } from "../../common/layout"
 
-import { SeasonComponent, initialSeasonState } from "../../../example/shared/Outline/season/component"
+import { SeasonInfoComponent, initialSeasonInfoState } from "../../../example/shared/Outline/seasonInfo/component"
 
 import { Season, SeasonError } from "../../../example/shared/season/data"
 
 type Props = Readonly<{
-    season: SeasonComponent
+    season: SeasonInfoComponent
 }>
 export function SeasonInfo({ season }: Props): VNode {
-    const [state, setState] = useState(initialSeasonState)
+    const [state, setState] = useState(initialSeasonInfoState)
     useEffect(() => {
         season.onStateChange(setState)
         season.load()

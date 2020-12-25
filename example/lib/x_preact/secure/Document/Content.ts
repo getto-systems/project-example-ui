@@ -15,13 +15,13 @@ import { content_development_auth_profile } from "./contents/development/auth/pr
 import { content_development_auth_api } from "./contents/development/auth/api"
 
 import { ContentComponent, initialContentState } from "../../../document/Document/content/component"
-import { BreadcrumbComponent } from "../../../example/shared/Outline/breadcrumb/component"
+import { BreadcrumbListComponent } from "../../../example/shared/Outline/breadcrumbList/component"
 
 import { ContentPath } from "../../../document/content/data"
 
 type Props = Readonly<{
     content: ContentComponent
-    breadcrumb: BreadcrumbComponent
+    breadcrumb: BreadcrumbListComponent
 }>
 export function Content(resource: Props): VNode {
     const content = resource.content

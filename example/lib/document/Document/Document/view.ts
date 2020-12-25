@@ -1,5 +1,5 @@
-import { MenuComponent } from "../../../example/shared/Outline/menu/component"
-import { BreadcrumbComponent } from "../../../example/shared/Outline/breadcrumb/component"
+import { MenuListComponent } from "../../../example/shared/Outline/menuList/component"
+import { BreadcrumbListComponent } from "../../../example/shared/Outline/breadcrumbList/component"
 
 import { ContentComponent } from "../content/component"
 
@@ -9,8 +9,8 @@ export type DocumentEntryPoint = Readonly<{
 }>
 
 export type DocumentResource = Readonly<{
-    menu: MenuComponent
-    breadcrumb: BreadcrumbComponent
+    menu: MenuListComponent
+    breadcrumb: BreadcrumbListComponent
 
     content: ContentComponent
 }>

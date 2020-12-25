@@ -1,10 +1,10 @@
 import { env } from "../../../../y_static/env"
 
-import { initSeason } from "../../../shared/Outline/season/impl"
-import { initMenu } from "../../../shared/Outline/menu/impl"
-import { initBreadcrumb } from "../../../shared/Outline/breadcrumb/impl"
+import { initSeason } from "../../../shared/Outline/seasonInfo/impl"
+import { initMenu } from "../../../shared/Outline/menuList/impl"
+import { initBreadcrumb } from "../../../shared/Outline/breadcrumbList/impl"
 import { initExample } from "../../example/impl"
-import { detectMenuTarget } from "../../../shared/Outline/impl/location"
+import { detectMenuTarget } from "../../../shared/Outline/Menu/impl/location"
 
 import { loadApiNonce, loadApiRoles } from "../../../shared/credential/impl/core"
 import { loadSeason } from "../../../shared/season/impl/core"

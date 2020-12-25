@@ -1,22 +1,22 @@
 import { MockComponent } from "../../../z_external/mock/component"
 
-import { initBreadcrumb } from "../../../example/shared/Outline/breadcrumb/mock"
-import { initMenu } from "../../../example/shared/Outline/menu/mock"
+import { initBreadcrumb } from "../../../example/shared/Outline/breadcrumbList/mock"
+import { initMenu } from "../../../example/shared/Outline/menuList/mock"
 import { initContent } from "../content/mock"
 
 import { DocumentEntryPoint } from "./view"
 
 import {
-    BreadcrumbState,
-    initialBreadcrumbState,
-} from "../../../example/shared/Outline/breadcrumb/component"
-import { initialMenuState, MenuState } from "../../../example/shared/Outline/menu/component"
+    BreadcrumbListState,
+    initialBreadcrumbListState,
+} from "../../../example/shared/Outline/breadcrumbList/component"
+import { initialMenuListState, MenuListState } from "../../../example/shared/Outline/menuList/component"
 import { ContentState, initialContentState } from "../content/component"
 
 export function newDocument(): DocumentMockEntryPoint {
     const resource = {
-        menu: initMenu(initialMenuState),
-        breadcrumb: initBreadcrumb(initialBreadcrumbState),
+        menu: initMenu(initialMenuListState),
+        breadcrumb: initBreadcrumb(initialBreadcrumbListState),
         content: initContent(initialContentState),
     }
     return {
@@ -37,8 +37,8 @@ export function newDocument(): DocumentMockEntryPoint {
 export type DocumentMockEntryPoint = Readonly<{
     document: DocumentEntryPoint
     update: Readonly<{
-        menu: Post<MenuState>
-        breadcrumb: Post<BreadcrumbState>
+        menu: Post<MenuListState>
+        breadcrumb: Post<BreadcrumbListState>
         content: Post<ContentState>
     }>
 }>

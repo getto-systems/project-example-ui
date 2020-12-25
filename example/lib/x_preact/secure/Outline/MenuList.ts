@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { notice_alert, v_small } from "../../common/layout"
 
-import { MenuComponent, initialMenuState } from "../../../example/shared/Outline/menu/component"
+import { MenuListComponent, initialMenuListState } from "../../../example/shared/Outline/menuList/component"
 
 import {
     Menu,
@@ -15,10 +15,10 @@ import {
 } from "../../../example/shared/menu/data"
 
 type Props = Readonly<{
-    menu: MenuComponent
+    menu: MenuListComponent
 }>
 export function MenuList({ menu }: Props): VNode {
-    const [state, setState] = useState(initialMenuState)
+    const [state, setState] = useState(initialMenuListState)
     useEffect(() => {
         menu.onStateChange(setState)
         menu.load()

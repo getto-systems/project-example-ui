@@ -1,17 +1,17 @@
 import { iconClass, lnir } from "../../../../z_external/icon"
 import { MockComponent } from "../../../../z_external/mock/component"
 
-import { BreadcrumbComponent, BreadcrumbState } from "./component"
+import { BreadcrumbListComponent, BreadcrumbListState } from "./component"
 
 import { markMenuCategory, markMenuItem } from "../../menu/data"
 
-export function initBreadcrumb(state: BreadcrumbState): BreadcrumbMockComponent {
+export function initBreadcrumb(state: BreadcrumbListState): BreadcrumbMockComponent {
     return new BreadcrumbMockComponent(state)
 }
 
 export type BreadcrumbMockProps = Readonly<{ type: "success"; label: string; icon: string }>
 
-export function mapBreadcrumbMockProps(props: BreadcrumbMockProps): BreadcrumbState {
+export function mapBreadcrumbMockProps(props: BreadcrumbMockProps): BreadcrumbListState {
     switch (props.type) {
         case "success":
             return {
@@ -34,7 +34,7 @@ export function mapBreadcrumbMockProps(props: BreadcrumbMockProps): BreadcrumbSt
     }
 }
 
-class BreadcrumbMockComponent extends MockComponent<BreadcrumbState> implements BreadcrumbComponent {
+class BreadcrumbMockComponent extends MockComponent<BreadcrumbListState> implements BreadcrumbListComponent {
     load() {
         // mock では特に何もしない
     }

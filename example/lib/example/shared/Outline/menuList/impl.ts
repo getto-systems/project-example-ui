@@ -1,24 +1,24 @@
-import { MenuMaterial, MenuComponent, MenuState } from "./component"
+import { MenuListMaterial, MenuListComponent, MenuListState } from "./component"
 
 import { Menu } from "../../menu/data"
 
-export function initMenu(material: MenuMaterial): MenuComponent {
+export function initMenu(material: MenuListMaterial): MenuListComponent {
     return new Component(material)
 }
 
-class Component implements MenuComponent {
-    material: MenuMaterial
+class Component implements MenuListComponent {
+    material: MenuListMaterial
 
-    listener: Post<MenuState>[] = []
+    listener: Post<MenuListState>[] = []
 
-    constructor(material: MenuMaterial) {
+    constructor(material: MenuListMaterial) {
         this.material = material
     }
 
-    onStateChange(post: Post<MenuState>): void {
+    onStateChange(post: Post<MenuListState>): void {
         this.listener.push(post)
     }
-    post(state: MenuState): void {
+    post(state: MenuListState): void {
         this.listener.forEach((post) => post(state))
     }
 
