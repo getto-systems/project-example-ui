@@ -2,18 +2,25 @@ import { SeasonRepository, SeasonResponse } from "../../../infra"
 
 import { Season } from "../../../data"
 
-export function initMemorySeasonRepository(initialSeason: Season): SeasonRepository {
+export function initMemorySeasonRepository(initialSeason: StoreSeason): SeasonRepository {
     return new MemorySeasonRepository(initialSeason)
 }
 
-class MemorySeasonRepository implements SeasonRepository {
-    season: Season
+export type StoreSeason =
+| Readonly<{ store: false }>
+| Readonly<{ store: true, season: Season }>
 
-    constructor(initialSeason: Season) {
+class MemorySeasonRepository implements SeasonRepository {
+    season: StoreSeason
+
+    constructor(initialSeason: StoreSeason) {
         this.season = initialSeason
     }
 
     findSeason(): SeasonResponse {
-        return { success: true, found: true, season: this.season }
+        if (!this.season.store) {
+            return { success: true, found: false }
+        }
+        return { success: true, found: true, season: this.season.season }
     }
 }
