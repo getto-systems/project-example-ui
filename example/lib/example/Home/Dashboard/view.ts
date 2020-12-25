@@ -1,6 +1,6 @@
-import { SeasonInfoComponent } from "../../shared/Outline/seasonInfo/component"
-import { MenuListComponent } from "../../shared/Outline/menuList/component"
-import { BreadcrumbListComponent } from "../../shared/Outline/breadcrumbList/component"
+import { SeasonInfoComponent } from "../../Outline/seasonInfo/component"
+import { MenuListComponent } from "../../Outline/menuList/component"
+import { BreadcrumbListComponent } from "../../Outline/breadcrumbList/component"
 
 import { ExampleComponent } from "../example/component"
 

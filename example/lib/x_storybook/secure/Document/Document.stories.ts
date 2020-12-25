@@ -5,8 +5,8 @@ import { Document } from "../../../x_preact/secure/Document/Document"
 
 import { newDocument } from "../../../document/Document/Document/mock"
 import { mapContentMockProps } from "../../../document/Document/content/mock"
-import { mapBreadcrumbMockProps } from "../../../example/shared/Outline/breadcrumbList/mock"
-import { mapMenuMockProps } from "../../../example/shared/Outline/menuList/mock"
+import { mapBreadcrumbMockProps } from "../../../example/Outline/breadcrumbList/mock"
+import { mapMenuMockProps } from "../../../example/Outline/menuList/mock"
 
 export default {
     title: "secure/Document/Document",

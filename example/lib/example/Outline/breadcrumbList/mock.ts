@@ -1,9 +1,9 @@
-import { iconClass, lnir } from "../../../../z_external/icon"
-import { MockComponent } from "../../../../z_external/mock/component"
+import { iconClass, lnir } from "../../../z_external/icon"
+import { MockComponent } from "../../../z_external/mock/component"
 
 import { BreadcrumbListComponent, BreadcrumbListState } from "./component"
 
-import { markMenuCategory, markMenuItem } from "../../menu/data"
+import { markMenuCategory, markMenuItem } from "../../shared/menu/data"
 
 export function initBreadcrumb(state: BreadcrumbListState): BreadcrumbMockComponent {
     return new BreadcrumbMockComponent(state)

@@ -4,9 +4,9 @@ import { html } from "htm/preact"
 import { MenuList } from "../../../x_preact/secure/Outline/MenuList"
 import { menuHeader } from "../../../x_preact/secure/layout"
 
-import { mapMenuMockProps, MenuMockProps, initMenu } from "../../../example/shared/Outline/menuList/mock"
+import { mapMenuMockProps, MenuMockProps, initMenu } from "../../../example/Outline/menuList/mock"
 
-import { initialMenuListState } from "../../../example/shared/Outline/menuList/component"
+import { initialMenuListState } from "../../../example/Outline/menuList/component"
 
 export default {
     title: "secure/Outline/MenuList",

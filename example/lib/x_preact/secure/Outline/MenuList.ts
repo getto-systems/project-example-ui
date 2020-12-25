@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { notice_alert, v_small } from "../../common/layout"
 
-import { MenuListComponent, initialMenuListState } from "../../../example/shared/Outline/menuList/component"
+import { MenuListComponent, initialMenuListState } from "../../../example/Outline/menuList/component"
 
 import {
     Menu,

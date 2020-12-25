@@ -8,9 +8,9 @@ import {
     mapSeasonMockProps,
     SeasonMockProps,
     initSeason,
-} from "../../../example/shared/Outline/seasonInfo/mock"
+} from "../../../example/Outline/seasonInfo/mock"
 
-import { initialSeasonInfoState } from "../../../example/shared/Outline/seasonInfo/component"
+import { initialSeasonInfoState } from "../../../example/Outline/seasonInfo/component"
 
 export default {
     title: "secure/Outline/SeasonInfo",

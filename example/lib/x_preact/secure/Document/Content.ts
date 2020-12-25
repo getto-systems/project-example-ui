@@ -15,7 +15,7 @@ import { content_development_auth_profile } from "./contents/development/auth/pr
 import { content_development_auth_api } from "./contents/development/auth/api"
 
 import { ContentComponent, initialContentState } from "../../../document/Document/content/component"
-import { BreadcrumbListComponent } from "../../../example/shared/Outline/breadcrumbList/component"
+import { BreadcrumbListComponent } from "../../../example/Outline/breadcrumbList/component"
 
 import { ContentPath } from "../../../document/content/data"
 

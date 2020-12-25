@@ -1,8 +1,8 @@
 import { DashboardResource } from "../view"
 
-import { SeasonInfoComponentFactory } from "../../../shared/Outline/seasonInfo/component"
-import { MenuListComponentFactory } from "../../../shared/Outline/menuList/component"
-import { BreadcrumbListComponentFactory } from "../../../shared/Outline/breadcrumbList/component"
+import { SeasonInfoComponentFactory } from "../../../Outline/seasonInfo/component"
+import { MenuListComponentFactory } from "../../../Outline/menuList/component"
+import { BreadcrumbListComponentFactory } from "../../../Outline/breadcrumbList/component"
 
 import { ExampleComponentFactory } from "../../example/component"
 

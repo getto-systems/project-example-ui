@@ -7,7 +7,7 @@ import {
     ContentMockProps,
     initContent,
 } from "../../../document/Document/content/mock"
-import { initBreadcrumb, mapBreadcrumbMockProps } from "../../../example/shared/Outline/breadcrumbList/mock"
+import { initBreadcrumb, mapBreadcrumbMockProps } from "../../../example/Outline/breadcrumbList/mock"
 
 import { initialContentState } from "../../../document/Document/content/component"
 

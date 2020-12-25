@@ -1,10 +1,10 @@
 import { env } from "../../../../y_static/env"
 
-import { detectMenuTarget } from "../../../../example/shared/Outline/Menu/impl/location"
+import { detectMenuTarget } from "../../../../example/Outline/Menu/impl/location"
 import { detectContentPath } from "../impl/location"
 
-import { initMenu } from "../../../../example/shared/Outline/menuList/impl"
-import { initBreadcrumb } from "../../../../example/shared/Outline/breadcrumbList/impl"
+import { initMenu } from "../../../../example/Outline/menuList/impl"
+import { initBreadcrumb } from "../../../../example/Outline/breadcrumbList/impl"
 import { initContent } from "../../content/impl"
 
 import { loadApiNonce, loadApiRoles } from "../../../../example/shared/credential/impl/core"
