@@ -40,13 +40,13 @@ import {
 } from "./config"
 import { initLoginLink } from "./link"
 
-import { initRenewCredential } from "../../renewCredential/impl"
-import { initPasswordLogin } from "../../passwordLogin/impl"
-import { initPasswordResetSession } from "../../passwordResetSession/impl"
-import { initPasswordReset } from "../../passwordReset/impl"
+import { initRenewCredentialComponent } from "../../renewCredential/impl"
+import { initPasswordLoginComponent } from "../../passwordLogin/impl"
+import { initPasswordResetSessionComponent } from "../../passwordResetSession/impl"
+import { initPasswordResetComponent } from "../../passwordReset/impl"
 
-import { initLoginIDField } from "../../field/loginID/impl"
-import { initPasswordField } from "../../field/password/impl"
+import { initLoginIDFieldComponent } from "../../field/loginID/impl"
+import { initPasswordFieldComponent } from "../../field/password/impl"
 
 import { loginIDField } from "../../../common/field/loginID/impl/core"
 import { passwordField } from "../../../common/field/password/impl/core"
@@ -83,15 +83,15 @@ export function newLoginAsSingle(): LoginEntryPoint {
             },
         },
         components: {
-            renewCredential: initRenewCredential,
+            renewCredential: initRenewCredentialComponent,
 
-            passwordLogin: initPasswordLogin,
-            passwordResetSession: initPasswordResetSession,
-            passwordReset: initPasswordReset,
+            passwordLogin: initPasswordLoginComponent,
+            passwordResetSession: initPasswordResetSessionComponent,
+            passwordReset: initPasswordResetComponent,
 
             field: {
-                loginID: initLoginIDField,
-                password: initPasswordField,
+                loginID: initLoginIDFieldComponent,
+                password: initPasswordFieldComponent,
             },
         },
     }

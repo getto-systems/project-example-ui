@@ -3,9 +3,9 @@ import { env } from "../../../../y_static/env"
 import { detectMenuTarget } from "../../../../example/Outline/Menu/impl/location"
 import { detectContentPath } from "../impl/location"
 
-import { initMenu } from "../../../../example/Outline/menuList/impl"
-import { initBreadcrumb } from "../../../../example/Outline/breadcrumbList/impl"
-import { initContent } from "../../content/impl"
+import { initMenuListComponent } from "../../../../example/Outline/menuList/impl"
+import { initBreadcrumbListComponent } from "../../../../example/Outline/breadcrumbList/impl"
+import { initContentComponent } from "../../content/impl"
 
 import { loadApiNonce, loadApiRoles } from "../../../../example/shared/credential/impl/core"
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../../example/shared/menu/impl/core"
@@ -32,10 +32,10 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
             content: initContentAction(),
         },
         components: {
-            menu: initMenu,
-            breadcrumb: initBreadcrumb,
+            menu: initMenuListComponent,
+            breadcrumb: initBreadcrumbListComponent,
 
-            content: initContent,
+            content: initContentComponent,
         },
     }
     const collector = {

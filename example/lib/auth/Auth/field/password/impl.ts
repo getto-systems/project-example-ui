@@ -1,11 +1,15 @@
-import { PasswordFieldMaterial, PasswordFieldComponent, PasswordFieldState } from "./component"
+import {
+    PasswordFieldComponentFactory,
+    PasswordFieldMaterial,
+    PasswordFieldComponent,
+    PasswordFieldState,
+} from "./component"
 
 import { PasswordFieldEvent } from "../../../common/field/password/data"
 import { InputValue } from "../../../common/field/data"
 
-export function initPasswordField(material: PasswordFieldMaterial): PasswordFieldComponent {
-    return new Component(material)
-}
+export const initPasswordFieldComponent: PasswordFieldComponentFactory = (material) =>
+    new Component(material)
 
 class Component implements PasswordFieldComponent {
     material: PasswordFieldMaterial

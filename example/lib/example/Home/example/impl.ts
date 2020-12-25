@@ -1,8 +1,6 @@
-import { ExampleMaterial, ExampleComponent, ExampleState } from "./component"
+import { ExampleMaterial, ExampleComponent, ExampleState, ExampleComponentFactory } from "./component"
 
-export function initExample(material: ExampleMaterial): ExampleComponent {
-    return new Component(material)
-}
+export const initExample: ExampleComponentFactory = (material) => new Component(material)
 
 class Component implements ExampleComponent {
     material: ExampleMaterial

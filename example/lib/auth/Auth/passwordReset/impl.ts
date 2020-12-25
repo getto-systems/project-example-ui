@@ -1,13 +1,17 @@
-import { PasswordResetMaterial, PasswordResetComponent, PasswordResetState } from "./component"
+import {
+    PasswordResetComponentFactory,
+    PasswordResetMaterial,
+    PasswordResetComponent,
+    PasswordResetState,
+} from "./component"
 
 import { LoadError } from "../../common/application/data"
 import { LoginLink } from "../link"
 import { AuthCredential } from "../../common/credential/data"
 import { storeAuthCredential } from "../../login/renew/data"
 
-export function initPasswordReset(material: PasswordResetMaterial): PasswordResetComponent {
-    return new Component(material)
-}
+export const initPasswordResetComponent: PasswordResetComponentFactory = (material) =>
+    new Component(material)
 
 class Component implements PasswordResetComponent {
     material: PasswordResetMaterial

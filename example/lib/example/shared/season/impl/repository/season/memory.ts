@@ -6,9 +6,7 @@ export function initMemorySeasonRepository(initialSeason: StoreSeason): SeasonRe
     return new MemorySeasonRepository(initialSeason)
 }
 
-export type StoreSeason =
-| Readonly<{ store: false }>
-| Readonly<{ store: true, season: Season }>
+export type StoreSeason = Readonly<{ stored: false }> | Readonly<{ stored: true; season: Season }>
 
 class MemorySeasonRepository implements SeasonRepository {
     season: StoreSeason
@@ -18,7 +16,7 @@ class MemorySeasonRepository implements SeasonRepository {
     }
 
     findSeason(): SeasonResponse {
-        if (!this.season.store) {
+        if (!this.season.stored) {
             return { success: true, found: false }
         }
         return { success: true, found: true, season: this.season.season }

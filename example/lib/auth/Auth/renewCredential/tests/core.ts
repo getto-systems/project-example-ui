@@ -11,7 +11,7 @@ import {
     RenewCredentialFactory,
 } from "../../Login/impl/core"
 
-import { initRenewCredential } from "../impl"
+import { initRenewCredentialComponent } from "../impl"
 
 import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
 
@@ -59,7 +59,7 @@ export function newRenewCredentialResource(
             renew: initRenewAction(config.renew, repository.authCredentials, simulator.renew, clock),
         },
         components: {
-            renewCredential: initRenewCredential,
+            renewCredential: initRenewCredentialComponent,
         },
     }
     const collector: RenewCredentialCollector = initRenewCredentialCollector(currentURL)

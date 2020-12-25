@@ -1,8 +1,12 @@
-import { NextVersionMaterial, NextVersionComponent, NextVersionState } from "./component"
+import {
+    NextVersionComponentFactory,
+    NextVersionMaterial,
+    NextVersionComponent,
+    NextVersionState,
+} from "./component"
 
-export function initNextVersion(material: NextVersionMaterial): NextVersionComponent {
-    return new Component(material)
-}
+export const initNextVersionComponent: NextVersionComponentFactory = (material) =>
+    new Component(material)
 
 class Component implements NextVersionComponent {
     material: NextVersionMaterial

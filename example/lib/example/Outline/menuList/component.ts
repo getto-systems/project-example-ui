@@ -1,5 +1,5 @@
 import { LoadApiNonce, LoadApiRoles } from "../../shared/credential/action"
-import { LoadMenu, ToggleMenuExpandAction } from "../../shared/menu/action"
+import { LoadMenu, ToggleMenuExpand } from "../../shared/menu/action"
 
 import { Menu, LoadMenuError } from "../../shared/menu/data"
 
@@ -11,7 +11,7 @@ export type MenuListMaterial = Readonly<{
     loadApiRoles: LoadApiRoles
     loadMenu: LoadMenu
 
-    toggleMenuExpand: ToggleMenuExpandAction
+    toggleMenuExpand: ToggleMenuExpand
 }>
 
 export interface MenuListComponent {

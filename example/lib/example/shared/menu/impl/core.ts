@@ -12,7 +12,7 @@ import {
     MenuBadgeMap,
 } from "../infra"
 
-import { LoadBreadcrumbPod, LoadMenuPod, ToggleMenuExpand } from "../action"
+import { LoadBreadcrumbPod, LoadMenuPod, ToggleMenuExpandPod } from "../action"
 
 import { ApiRoles, LoadResult } from "../../credential/data"
 import {
@@ -223,7 +223,7 @@ function toMenuItem({ label, icon, path }: MenuTreeItem, version: string): MenuI
     return markMenuItem({ label, icon, href: `/${version}${path}` })
 }
 
-export const toggleMenuExpand = (infra: ToggleMenuExpandInfra): ToggleMenuExpand => () => (
+export const toggleMenuExpand = (infra: ToggleMenuExpandInfra): ToggleMenuExpandPod => () => (
     category,
     menu,
     post
