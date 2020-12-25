@@ -1,4 +1,4 @@
-import { LoginEvent, LoginFields } from "../../../../login/password_login/data"
+import { LoginEvent, LoginFields } from "../../../../login/passwordLogin/data"
 import {
     StartSessionFields,
     ResetFields,
@@ -7,7 +7,7 @@ import {
     ResetEvent,
     SessionID,
     ResetToken,
-} from "../../../../profile/password_reset/data"
+} from "../../../../profile/passwordReset/data"
 import { Content } from "../../../../common/field/data"
 
 export type ForegroundMessage =

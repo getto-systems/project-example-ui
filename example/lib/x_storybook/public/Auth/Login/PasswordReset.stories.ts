@@ -3,12 +3,12 @@ import { h, VNode } from "preact"
 import { Login } from "../../../../x_preact/public/Auth/Login"
 
 import { newLoginAsPasswordReset } from "../../../../auth/Auth/Login/mock"
-import { mapPasswordResetMockProps, PasswordResetMockProps } from "../../../../auth/Auth/password_reset/mock"
+import { mapPasswordResetMockProps, PasswordResetMockProps } from "../../../../auth/Auth/passwordReset/mock"
 import {
     mapLoginIDFieldMockProps,
     loginIDFieldMockTypes,
     LoginIDFieldMockProps,
-} from "../../../../auth/Auth/field/login_id/mock"
+} from "../../../../auth/Auth/field/loginID/mock"
 import {
     mapPasswordFieldMockProps,
     PasswordFieldMockProps,

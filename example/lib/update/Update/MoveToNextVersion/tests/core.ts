@@ -1,11 +1,11 @@
 import {
     initSimulateCheckClient,
     CheckSimulator,
-} from "../../../next_version/impl/client/check/simulate"
+} from "../../../nextVersion/impl/client/check/simulate"
 
-import { find } from "../../../next_version/impl/core"
+import { find } from "../../../nextVersion/impl/core"
 
-import { NextVersionAction } from "../../../next_version/action"
+import { NextVersionAction } from "../../../nextVersion/action"
 
 export function initNextVersionAction(simulator: CheckSimulator): NextVersionAction {
     return {

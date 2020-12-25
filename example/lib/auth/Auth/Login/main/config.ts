@@ -1,11 +1,11 @@
 import { env } from "../../../../y_static/env"
 import { ApplicationActionConfig } from "../../../common/application/infra"
-import { PasswordLoginActionConfig } from "../../../login/password_login/infra"
+import { PasswordLoginActionConfig } from "../../../login/passwordLogin/infra"
 import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../login/renew/infra"
 import {
     PasswordResetActionConfig,
     PasswordResetSessionActionConfig,
-} from "../../../profile/password_reset/infra"
+} from "../../../profile/passwordReset/infra"
 
 export function newApplicationActionConfig(): ApplicationActionConfig {
     return {

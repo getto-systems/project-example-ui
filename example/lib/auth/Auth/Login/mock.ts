@@ -1,22 +1,22 @@
 import { MockComponent } from "../../../z_external/mock/component"
 
-import { initRenewCredential } from "../renew_credential/mock"
-import { initPasswordLogin } from "../password_login/mock"
-import { initPasswordResetSession } from "../password_reset_session/mock"
-import { initPasswordReset } from "../password_reset/mock"
-import { initLoginIDField } from "../field/login_id/mock"
+import { initRenewCredential } from "../renewCredential/mock"
+import { initPasswordLogin } from "../passwordLogin/mock"
+import { initPasswordResetSession } from "../passwordResetSession/mock"
+import { initPasswordReset } from "../passwordReset/mock"
+import { initLoginIDField } from "../field/loginID/mock"
 import { initPasswordField } from "../field/password/mock"
 
 import { LoginEntryPoint, LoginView, LoginState } from "./view"
-import { initialRenewCredentialState, RenewCredentialState } from "../renew_credential/component"
-import { initialPasswordLoginState, PasswordLoginState } from "../password_login/component"
-import { initialLoginIDFieldState, LoginIDFieldState } from "../field/login_id/component"
+import { initialRenewCredentialState, RenewCredentialState } from "../renewCredential/component"
+import { initialPasswordLoginState, PasswordLoginState } from "../passwordLogin/component"
+import { initialLoginIDFieldState, LoginIDFieldState } from "../field/loginID/component"
 import { initialPasswordFieldState, PasswordFieldState } from "../field/password/component"
 import {
     initialPasswordResetSessionState,
     PasswordResetSessionState,
-} from "../password_reset_session/component"
-import { initialPasswordResetState, PasswordResetState } from "../password_reset/component"
+} from "../passwordResetSession/component"
+import { initialPasswordResetState, PasswordResetState } from "../passwordReset/component"
 
 export function newLoginAsRenewCredential(): {
     login: LoginEntryPoint

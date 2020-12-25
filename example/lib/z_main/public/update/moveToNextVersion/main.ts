@@ -1,6 +1,6 @@
 import { newMoveToNextVersionAsSingle } from "../../../../update/Update/MoveToNextVersion/main/single"
 
-import { appTargetToPath, FindError } from "../../../../update/next_version/data"
+import { appTargetToPath, FindError } from "../../../../update/nextVersion/data"
 
 try {
     const nextVersion = newMoveToNextVersionAsSingle().resource.nextVersion

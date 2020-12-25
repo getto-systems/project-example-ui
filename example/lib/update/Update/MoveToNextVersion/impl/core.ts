@@ -1,5 +1,5 @@
-import { FindPod, FindCollector } from "../../../next_version/action"
-import { NextVersionComponentFactory } from "../../next_version/component"
+import { FindPod, FindCollector } from "../../../nextVersion/action"
+import { NextVersionComponentFactory } from "../../nextVersion/component"
 import { NextVersionResource } from "../view"
 
 export type NextVersionFactory = Readonly<{

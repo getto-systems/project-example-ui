@@ -1,4 +1,4 @@
-import { initAuthClient } from "../../../../z_external/auth_client/auth_client"
+import { initAuthClient } from "../../../../z_external/authClient/authClient"
 
 import { env } from "../../../../y_static/env"
 
@@ -40,15 +40,15 @@ import {
 } from "./config"
 import { initLoginLink } from "./link"
 
-import { initRenewCredential } from "../../renew_credential/impl"
-import { initPasswordLogin } from "../../password_login/impl"
-import { initPasswordResetSession } from "../../password_reset_session/impl"
-import { initPasswordReset } from "../../password_reset/impl"
+import { initRenewCredential } from "../../renewCredential/impl"
+import { initPasswordLogin } from "../../passwordLogin/impl"
+import { initPasswordResetSession } from "../../passwordResetSession/impl"
+import { initPasswordReset } from "../../passwordReset/impl"
 
-import { initLoginIDField } from "../../field/login_id/impl"
+import { initLoginIDField } from "../../field/loginID/impl"
 import { initPasswordField } from "../../field/password/impl"
 
-import { loginIDField } from "../../../common/field/login_id/impl/core"
+import { loginIDField } from "../../../common/field/loginID/impl/core"
 import { passwordField } from "../../../common/field/password/impl/core"
 
 import { currentPagePathname, detectViewState, detectResetToken } from "../impl/location"

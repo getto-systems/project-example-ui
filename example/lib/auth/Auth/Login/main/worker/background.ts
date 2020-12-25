@@ -1,5 +1,5 @@
 import { delayed, wait } from "../../../../../z_external/delayed"
-import { initAuthClient, AuthClient } from "../../../../../z_external/auth_client/auth_client"
+import { initAuthClient, AuthClient } from "../../../../../z_external/authClient/authClient"
 
 import { env } from "../../../../../y_static/env"
 
@@ -9,33 +9,33 @@ import {
     newPasswordResetSessionActionConfig,
 } from "../config"
 
-import { login } from "../../../../login/password_login/impl/core"
-import { startSession, checkStatus, reset } from "../../../../profile/password_reset/impl/core"
+import { login } from "../../../../login/passwordLogin/impl/core"
+import { startSession, checkStatus, reset } from "../../../../profile/passwordReset/impl/core"
 
-import { initFetchPasswordLoginClient } from "../../../../login/password_login/impl/client/login/fetch"
-import { initSimulatePasswordResetClient } from "../../../../profile/password_reset/impl/client/reset/simulate"
-import { initSimulatePasswordResetSessionClient } from "../../../../profile/password_reset/impl/client/session/simulate"
+import { initFetchPasswordLoginClient } from "../../../../login/passwordLogin/impl/client/login/fetch"
+import { initSimulatePasswordResetClient } from "../../../../profile/passwordReset/impl/client/reset/simulate"
+import { initSimulatePasswordResetSessionClient } from "../../../../profile/passwordReset/impl/client/session/simulate"
 
-import { PasswordLoginActionConfig } from "../../../../login/password_login/infra"
+import { PasswordLoginActionConfig } from "../../../../login/passwordLogin/infra"
 import {
     PasswordResetActionConfig,
     PasswordResetSessionActionConfig,
-} from "../../../../profile/password_reset/infra"
+} from "../../../../profile/passwordReset/infra"
 
-import { LoginPod, PasswordLoginAction } from "../../../../login/password_login/action"
+import { LoginPod, PasswordLoginAction } from "../../../../login/passwordLogin/action"
 import {
     StartSessionPod,
     CheckStatusPod,
     ResetPod,
     PasswordResetAction,
     PasswordResetSessionAction,
-} from "../../../../profile/password_reset/action"
+} from "../../../../profile/passwordReset/action"
 
 import { markTicketNonce, markAuthAt, markApiCredential } from "../../../../common/credential/data"
-import { markSessionID } from "../../../../profile/password_reset/data"
+import { markSessionID } from "../../../../profile/passwordReset/data"
 
-import { LoginEvent } from "../../../../login/password_login/data"
-import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../../profile/password_reset/data"
+import { LoginEvent } from "../../../../login/passwordLogin/data"
+import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../../profile/passwordReset/data"
 
 import {
     ForegroundMessage,

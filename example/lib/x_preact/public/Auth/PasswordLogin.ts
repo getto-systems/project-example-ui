@@ -11,9 +11,9 @@ import { LoginIDField } from "./PasswordLogin/LoginIDField"
 import { PasswordField } from "./PasswordLogin/PasswordField"
 
 import { PasswordLoginResource } from "../../../auth/Auth/Login/view"
-import { initialPasswordLoginState } from "../../../auth/Auth/password_login/component"
+import { initialPasswordLoginState } from "../../../auth/Auth/passwordLogin/component"
 
-import { LoginError } from "../../../auth/login/password_login/data"
+import { LoginError } from "../../../auth/login/passwordLogin/data"
 
 type Props = Readonly<{
     resource: PasswordLoginResource

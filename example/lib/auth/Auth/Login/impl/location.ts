@@ -1,7 +1,7 @@
 import { ViewState } from "../view"
 
 import { markPagePathname, PagePathname } from "../../../common/application/data"
-import { markResetToken, ResetToken } from "../../../profile/password_reset/data"
+import { markResetToken, ResetToken } from "../../../profile/passwordReset/data"
 
 // ログイン前画面ではアンダースコアから始まるクエリを使用する
 export const LoginSearch = {

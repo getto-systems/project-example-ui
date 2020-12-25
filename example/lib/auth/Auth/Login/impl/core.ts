@@ -14,33 +14,33 @@ import {
     RenewCredentialComponentFactory,
     RenewCredentialComponent,
     RenewCredentialMaterial,
-} from "../../renew_credential/component"
-import { PasswordLoginComponentFactory, PasswordLoginMaterial } from "../../password_login/component"
+} from "../../renewCredential/component"
+import { PasswordLoginComponentFactory, PasswordLoginMaterial } from "../../passwordLogin/component"
 import {
     PasswordResetSessionComponentFactory,
     PasswordResetSessionMaterial,
-} from "../../password_reset_session/component"
-import { PasswordResetComponentFactory, PasswordResetMaterial } from "../../password_reset/component"
-import { LoginIDFieldComponent, LoginIDFieldComponentFactory } from "../../field/login_id/component"
+} from "../../passwordResetSession/component"
+import { PasswordResetComponentFactory, PasswordResetMaterial } from "../../passwordReset/component"
+import { LoginIDFieldComponent, LoginIDFieldComponentFactory } from "../../field/loginID/component"
 import { PasswordFieldComponent, PasswordFieldComponentFactory } from "../../field/password/component"
 
 import { ApplicationAction, SecureScriptPathCollector } from "../../../common/application/action"
 import { RenewAction, SetContinuousRenewAction } from "../../../login/renew/action"
 
-import { PasswordLoginAction } from "../../../login/password_login/action"
+import { PasswordLoginAction } from "../../../login/passwordLogin/action"
 import {
     PasswordResetSessionAction,
     PasswordResetAction,
     ResetTokenCollector,
-} from "../../../profile/password_reset/action"
+} from "../../../profile/passwordReset/action"
 
-import { LoginIDFieldAction } from "../../../common/field/login_id/action"
+import { LoginIDFieldAction } from "../../../common/field/loginID/action"
 import { PasswordFieldAction } from "../../../common/field/password/action"
 
-import { LoginID } from "../../../common/login_id/data"
+import { LoginID } from "../../../common/loginID/data"
 import { Password } from "../../../common/password/data"
-import { LoginFields } from "../../../login/password_login/data"
-import { StartSessionFields, ResetFields } from "../../../profile/password_reset/data"
+import { LoginFields } from "../../../login/passwordLogin/data"
+import { StartSessionFields, ResetFields } from "../../../profile/passwordReset/data"
 import { Content, invalidContent, validContent } from "../../../common/field/data"
 
 export class View implements LoginView {
