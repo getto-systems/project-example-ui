@@ -7,4 +7,5 @@
 /example/public/dist/**/*.js
 /example/secure/dist/**/*.js
 
-/example/lib/y_static/*
+**/y_static/*
+!**/y_static/.keep
