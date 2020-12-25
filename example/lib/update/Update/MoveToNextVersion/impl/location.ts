@@ -1,4 +1,4 @@
-import { AppTarget, markPageLocation, markVersion, Version } from "../../../next_version/data"
+import { AppTarget, markPageLocation, markVersion, Version } from "../../../nextVersion/data"
 
 export function detectAppTarget(version: string, currentURL: URL): AppTarget {
     const prefix = `/${version}/`

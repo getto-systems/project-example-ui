@@ -5,29 +5,29 @@ import {
     newPasswordLoginResource,
     PasswordLoginRepository,
     PasswordLoginSimulator,
-} from "../../password_login/tests/core"
+} from "../../passwordLogin/tests/core"
 import {
     PasswordResetConfig,
     newPasswordResetResource,
     PasswordResetRepository,
     PasswordResetSimulator,
-} from "../../password_reset/tests/core"
+} from "../../passwordReset/tests/core"
 import {
     PasswordResetSessionConfig,
     newPasswordResetSessionResource,
     PasswordResetSessionSimulator,
-} from "../../password_reset_session/tests/core"
+} from "../../passwordResetSession/tests/core"
 import {
     RenewCredentialConfig,
     newRenewCredentialResource,
     RenewCredentialRepository,
     RenewCredentialSimulator,
-} from "../../renew_credential/tests/core"
+} from "../../renewCredential/tests/core"
 
-import { initMemoryAuthCredentialRepository } from "../../../login/renew/impl/repository/auth_credential/memory"
+import { initMemoryAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential/memory"
 import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
 import { initStaticClock } from "../../../login/renew/impl/clock/simulate"
-import { SendTokenState } from "../../../profile/password_reset/impl/client/session/simulate"
+import { SendTokenState } from "../../../profile/passwordReset/impl/client/session/simulate"
 
 import { Clock } from "../../../login/renew/infra"
 
@@ -37,7 +37,7 @@ import {
     markAuthAt,
     markTicketNonce,
 } from "../../../common/credential/data"
-import { LoginFields } from "../../../login/password_login/data"
+import { LoginFields } from "../../../login/passwordLogin/data"
 import {
     Destination,
     markSessionID,
@@ -45,10 +45,10 @@ import {
     ResetToken,
     SessionID,
     StartSessionFields,
-} from "../../../profile/password_reset/data"
+} from "../../../profile/passwordReset/data"
 
 import { View } from "../impl/core"
-import { RenewCredentialComponent } from "../../renew_credential/component"
+import { RenewCredentialComponent } from "../../renewCredential/component"
 import { LoginState } from "../view"
 
 const AUTHORIZED_TICKET_NONCE = "ticket-nonce" as const

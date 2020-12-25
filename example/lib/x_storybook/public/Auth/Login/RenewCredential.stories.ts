@@ -6,7 +6,7 @@ import { newLoginAsRenewCredential } from "../../../../auth/Auth/Login/mock"
 import {
     mapRenewCredentialMockProps,
     RenewCredentialMockProps,
-} from "../../../../auth/Auth/renew_credential/mock"
+} from "../../../../auth/Auth/renewCredential/mock"
 
 export default {
     title: "public/Auth/Login/RenewCredential",

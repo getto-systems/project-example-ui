@@ -2,12 +2,12 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { loginIDFieldError, loginIDFieldHandler } from "../field/login_id"
+import { loginIDFieldError, loginIDFieldHandler } from "../field/loginID"
 
 import {
     LoginIDFieldComponent,
     initialLoginIDFieldState,
-} from "../../../../auth/Auth/field/login_id/component"
+} from "../../../../auth/Auth/field/loginID/component"
 
 type Props = Readonly<{
     loginIDField: LoginIDFieldComponent

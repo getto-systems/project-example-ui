@@ -1,4 +1,4 @@
-import { NextVersionComponent } from "../next_version/component"
+import { NextVersionComponent } from "../nextVersion/component"
 
 export type MoveToNextVersionEntryPoint = Readonly<{
     resource: NextVersionResource

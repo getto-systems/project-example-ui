@@ -1,10 +1,10 @@
-import { RenewCredentialComponent } from "../renew_credential/component"
+import { RenewCredentialComponent } from "../renewCredential/component"
 
-import { PasswordLoginComponent } from "../password_login/component"
-import { PasswordResetSessionComponent } from "../password_reset_session/component"
-import { PasswordResetComponent } from "../password_reset/component"
+import { PasswordLoginComponent } from "../passwordLogin/component"
+import { PasswordResetSessionComponent } from "../passwordResetSession/component"
+import { PasswordResetComponent } from "../passwordReset/component"
 
-import { LoginIDFieldComponent } from "../field/login_id/component"
+import { LoginIDFieldComponent } from "../field/loginID/component"
 import { PasswordFieldComponent } from "../field/password/component"
 
 export type LoginEntryPoint = Readonly<{

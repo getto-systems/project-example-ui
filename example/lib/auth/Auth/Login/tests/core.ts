@@ -6,35 +6,35 @@ import { PasswordLoginCollector, PasswordResetCollector, RenewCredentialCollecto
 
 import { secureScriptPath } from "../../../common/application/impl/core"
 import { forceRenew, renew, setContinuousRenew } from "../../../login/renew/impl/core"
-import { login } from "../../../login/password_login/impl/core"
-import { startSession, checkStatus, reset } from "../../../profile/password_reset/impl/core"
+import { login } from "../../../login/passwordLogin/impl/core"
+import { startSession, checkStatus, reset } from "../../../profile/passwordReset/impl/core"
 
 import { initSimulateRenewClient, RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
 import {
     initSimulatePasswordLoginClient,
     LoginSimulator,
-} from "../../../login/password_login/impl/client/login/simulate"
+} from "../../../login/passwordLogin/impl/client/login/simulate"
 import {
     initSimulatePasswordResetClient,
     ResetSimulator,
-} from "../../../profile/password_reset/impl/client/reset/simulate"
+} from "../../../profile/passwordReset/impl/client/reset/simulate"
 import {
     initSimulatePasswordResetSessionClient,
     SessionSimulator,
-} from "../../../profile/password_reset/impl/client/session/simulate"
+} from "../../../profile/passwordReset/impl/client/session/simulate"
 
 import { ApplicationAction } from "../../../common/application/action"
 import { RenewAction, SetContinuousRenewAction } from "../../../login/renew/action"
-import { PasswordLoginAction } from "../../../login/password_login/action"
-import { PasswordResetAction, PasswordResetSessionAction } from "../../../profile/password_reset/action"
+import { PasswordLoginAction } from "../../../login/passwordLogin/action"
+import { PasswordResetAction, PasswordResetSessionAction } from "../../../profile/passwordReset/action"
 
 import { ApplicationActionConfig } from "../../../common/application/infra"
 import { Clock, RenewActionConfig, SetContinuousRenewActionConfig } from "../../../login/renew/infra"
-import { PasswordLoginActionConfig } from "../../../login/password_login/infra"
+import { PasswordLoginActionConfig } from "../../../login/passwordLogin/infra"
 import {
     PasswordResetActionConfig,
     PasswordResetSessionActionConfig,
-} from "../../../profile/password_reset/infra"
+} from "../../../profile/passwordReset/infra"
 import { AuthCredentialRepository } from "../../../login/renew/infra"
 
 export function initApplicationAction(config: ApplicationActionConfig): ApplicationAction {

@@ -1,5 +1,5 @@
 import { delayed } from "../../../../../z_external/delayed"
-import { initAuthClient, AuthClient } from "../../../../../z_external/auth_client/auth_client"
+import { initAuthClient, AuthClient } from "../../../../../z_external/authClient/authClient"
 
 import { env } from "../../../../../y_static/env"
 
@@ -24,23 +24,23 @@ import {
     PasswordResetCollector,
 } from "../../impl/core"
 
-import { initRenewCredential } from "../../../renew_credential/impl"
-import { initPasswordLogin } from "../../../password_login/impl"
-import { initPasswordResetSession } from "../../../password_reset_session/impl"
-import { initPasswordReset } from "../../../password_reset/impl"
+import { initRenewCredential } from "../../../renewCredential/impl"
+import { initPasswordLogin } from "../../../passwordLogin/impl"
+import { initPasswordResetSession } from "../../../passwordResetSession/impl"
+import { initPasswordReset } from "../../../passwordReset/impl"
 
-import { initLoginIDField } from "../../../field/login_id/impl"
+import { initLoginIDField } from "../../../field/loginID/impl"
 import { initPasswordField } from "../../../field/password/impl"
 
 import { secureScriptPath } from "../../../../common/application/impl/core"
 import { forceRenew, renew, setContinuousRenew } from "../../../../login/renew/impl/core"
 
-import { loginIDField } from "../../../../common/field/login_id/impl/core"
+import { loginIDField } from "../../../../common/field/loginID/impl/core"
 import { passwordField } from "../../../../common/field/password/impl/core"
 
 import { initFetchRenewClient } from "../../../../login/renew/impl/client/renew/fetch"
 import { initDateClock } from "../../../../login/renew/impl/clock/date"
-import { initStorageAuthCredentialRepository } from "../../../../login/renew/impl/repository/auth_credential/storage"
+import { initStorageAuthCredentialRepository } from "../../../../login/renew/impl/repository/authCredential/storage"
 
 import { currentPagePathname, detectViewState, detectResetToken } from "../../impl/location"
 
@@ -51,16 +51,16 @@ import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../../l
 import { LoginLinkFactory } from "../../../link"
 
 import { LoginEntryPoint } from "../../view"
-import { RenewCredentialComponentFactory } from "../../../renew_credential/component"
-import { PasswordLoginComponentFactory } from "../../../password_login/component"
-import { PasswordResetSessionComponentFactory } from "../../../password_reset_session/component"
-import { PasswordResetComponentFactory } from "../../../password_reset/component"
-import { LoginIDFieldComponentFactory } from "../../../field/login_id/component"
+import { RenewCredentialComponentFactory } from "../../../renewCredential/component"
+import { PasswordLoginComponentFactory } from "../../../passwordLogin/component"
+import { PasswordResetSessionComponentFactory } from "../../../passwordResetSession/component"
+import { PasswordResetComponentFactory } from "../../../passwordReset/component"
+import { LoginIDFieldComponentFactory } from "../../../field/loginID/component"
 import { PasswordFieldComponentFactory } from "../../../field/password/component"
 
 import { ApplicationAction } from "../../../../common/application/action"
 import { RenewAction, SetContinuousRenewAction } from "../../../../login/renew/action"
-import { Login, LoginCollector, PasswordLoginAction } from "../../../../login/password_login/action"
+import { Login, LoginCollector, PasswordLoginAction } from "../../../../login/passwordLogin/action"
 import {
     PasswordResetAction,
     PasswordResetSessionAction,
@@ -69,12 +69,12 @@ import {
     CheckStatus,
     Reset,
     ResetCollector,
-} from "../../../../profile/password_reset/action"
-import { LoginIDFieldAction } from "../../../../common/field/login_id/action"
+} from "../../../../profile/passwordReset/action"
+import { LoginIDFieldAction } from "../../../../common/field/loginID/action"
 import { PasswordFieldAction } from "../../../../common/field/password/action"
 
-import { LoginEvent } from "../../../../login/password_login/data"
-import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../profile/password_reset/data"
+import { LoginEvent } from "../../../../login/passwordLogin/data"
+import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../profile/passwordReset/data"
 
 import {
     ForegroundMessage,

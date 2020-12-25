@@ -1,13 +1,13 @@
 import { env } from "../../../../y_static/env"
 
-import { initFetchCheckClient } from "../../../next_version/impl/client/check/fetch"
+import { initFetchCheckClient } from "../../../nextVersion/impl/client/check/fetch"
 
-import { find } from "../../../next_version/impl/core"
+import { find } from "../../../nextVersion/impl/core"
 
 import { detectAppTarget } from "../impl/location"
 import { initNextVersionResource } from "../impl/core"
 
-import { initNextVersion } from "../../next_version/impl"
+import { initNextVersion } from "../../nextVersion/impl"
 
 import { MoveToNextVersionEntryPoint } from "../view"
 

@@ -11,9 +11,9 @@ import { LoginIDField } from "./PasswordReset/LoginIDField"
 import { PasswordField } from "./PasswordReset/PasswordField"
 
 import { PasswordResetResource } from "../../../auth/Auth/Login/view"
-import { initialPasswordResetState } from "../../../auth/Auth/password_reset/component"
+import { initialPasswordResetState } from "../../../auth/Auth/passwordReset/component"
 
-import { ResetError } from "../../../auth/profile/password_reset/data"
+import { ResetError } from "../../../auth/profile/passwordReset/data"
 
 type Props = Readonly<{
     resource: PasswordResetResource

@@ -13,7 +13,7 @@ import { documentMenuTree } from "../../../../example/shared/menu/impl/tree"
 import { loadDocument } from "../../../content/impl/core"
 import { initDocumentComponent } from "../impl/core"
 
-import { initMemoryApiCredentialRepository } from "../../../../example/shared/credential/impl/repository/api_credential/memory"
+import { initMemoryApiCredentialRepository } from "../../../../example/shared/credential/impl/repository/apiCredential/memory"
 import { initNoopBadgeClient } from "../../../../example/shared/menu/impl/client/badge/noop"
 import { initStorageMenuExpandRepository } from "../../../../example/shared/menu/impl/repository/expand/storage"
 

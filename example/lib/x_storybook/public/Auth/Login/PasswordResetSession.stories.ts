@@ -6,12 +6,12 @@ import { newLoginAsPasswordResetSession } from "../../../../auth/Auth/Login/mock
 import {
     mapPasswordResetSessionMockProps,
     PasswordResetSessionMockProps,
-} from "../../../../auth/Auth/password_reset_session/mock"
+} from "../../../../auth/Auth/passwordResetSession/mock"
 import {
     mapLoginIDFieldMockProps,
     loginIDFieldMockTypes,
     LoginIDFieldMockProps,
-} from "../../../../auth/Auth/field/login_id/mock"
+} from "../../../../auth/Auth/field/loginID/mock"
 
 export default {
     title: "public/Auth/Login/PasswordResetSession",

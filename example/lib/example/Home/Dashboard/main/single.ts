@@ -14,7 +14,7 @@ import { initDashboardComponent } from "../impl/core"
 
 import { MenuBadgeMap } from "../../../shared/menu/infra"
 
-import { initMemoryApiCredentialRepository } from "../../../shared/credential/impl/repository/api_credential/memory"
+import { initMemoryApiCredentialRepository } from "../../../shared/credential/impl/repository/apiCredential/memory"
 import { initMemorySeasonRepository } from "../../../shared/season/impl/repository/season/memory"
 import { initDateYearRepository } from "../../../shared/season/impl/repository/year/date"
 import { initSimulateBadgeClient } from "../../../shared/menu/impl/client/badge/simulate"
