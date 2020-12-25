@@ -1,14 +1,18 @@
 import { LoginLink } from "../link"
 
-import { PasswordLoginMaterial, PasswordLoginComponent, PasswordLoginState } from "./component"
+import {
+    PasswordLoginComponentFactory,
+    PasswordLoginMaterial,
+    PasswordLoginComponent,
+    PasswordLoginState,
+} from "./component"
 
 import { LoadError } from "../../common/application/data"
 import { AuthCredential } from "../../common/credential/data"
 import { storeAuthCredential } from "../../login/renew/data"
 
-export function initPasswordLogin(material: PasswordLoginMaterial): PasswordLoginComponent {
-    return new Component(material)
-}
+export const initPasswordLoginComponent: PasswordLoginComponentFactory = (material) =>
+    new Component(material)
 
 class Component implements PasswordLoginComponent {
     material: PasswordLoginMaterial

@@ -1,11 +1,15 @@
-import { RenewCredentialMaterial, RenewCredentialComponent, RenewCredentialState } from "./component"
+import {
+    RenewCredentialComponentFactory,
+    RenewCredentialMaterial,
+    RenewCredentialComponent,
+    RenewCredentialState,
+} from "./component"
 
 import { LoadError } from "../../common/application/data"
 import { emptyAuthCredential, storeAuthCredential, StoreAuthCredential } from "../../login/renew/data"
 
-export function initRenewCredential(material: RenewCredentialMaterial): RenewCredentialComponent {
-    return new Component(material)
-}
+export const initRenewCredentialComponent: RenewCredentialComponentFactory = (material) =>
+    new Component(material)
 
 class Component implements RenewCredentialComponent {
     material: RenewCredentialMaterial

@@ -1,8 +1,12 @@
-import { BreadcrumbListMaterial, BreadcrumbListComponent, BreadcrumbListState } from "./component"
+import {
+    BreadcrumbListComponentFactory,
+    BreadcrumbListMaterial,
+    BreadcrumbListComponent,
+    BreadcrumbListState,
+} from "./component"
 
-export function initBreadcrumb(material: BreadcrumbListMaterial): BreadcrumbListComponent {
-    return new Component(material)
-}
+export const initBreadcrumbListComponent: BreadcrumbListComponentFactory = (material) =>
+    new Component(material)
 
 class Component implements BreadcrumbListComponent {
     material: BreadcrumbListMaterial

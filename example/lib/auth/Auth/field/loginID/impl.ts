@@ -1,11 +1,15 @@
-import { LoginIDFieldMaterial, LoginIDFieldComponent, LoginIDFieldState } from "./component"
+import {
+    LoginIDFieldComponentFactory,
+    LoginIDFieldMaterial,
+    LoginIDFieldComponent,
+    LoginIDFieldState,
+} from "./component"
 
 import { LoginIDFieldEvent } from "../../../common/field/loginID/data"
 import { InputValue } from "../../../common/field/data"
 
-export function initLoginIDField(material: LoginIDFieldMaterial): LoginIDFieldComponent {
-    return new Component(material)
-}
+export const initLoginIDFieldComponent: LoginIDFieldComponentFactory = (material) =>
+    new Component(material)
 
 class Component implements LoginIDFieldComponent {
     material: LoginIDFieldMaterial

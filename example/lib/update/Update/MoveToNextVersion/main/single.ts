@@ -7,7 +7,7 @@ import { find } from "../../../nextVersion/impl/core"
 import { detectAppTarget } from "../impl/location"
 import { initNextVersionResource } from "../impl/core"
 
-import { initNextVersion } from "../../nextVersion/impl"
+import { initNextVersionComponent } from "../../nextVersion/impl"
 
 import { MoveToNextVersionEntryPoint } from "../view"
 
@@ -19,7 +19,7 @@ export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPoint {
             nextVersion: initNextVersionAction(),
         },
         components: {
-            nextVersion: initNextVersion,
+            nextVersion: initNextVersionComponent,
         },
     }
     const collector = {

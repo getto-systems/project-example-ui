@@ -3,8 +3,8 @@ import { initApplicationAction, initPasswordResetSessionAction } from "../../Log
 import { initLoginLink } from "../../Login/main/link"
 import { initPasswordResetSessionResource, PasswordResetSessionFactory } from "../../Login/impl/core"
 
-import { initPasswordResetSession } from "../impl"
-import { initLoginIDField } from "../../field/loginID/impl"
+import { initPasswordResetSessionComponent } from "../impl"
+import { initLoginIDFieldComponent } from "../../field/loginID/impl"
 
 import { loginIDField } from "../../../common/field/loginID/impl/core"
 
@@ -42,10 +42,10 @@ export function newPasswordResetSessionResource(
             },
         },
         components: {
-            passwordResetSession: initPasswordResetSession,
+            passwordResetSession: initPasswordResetSessionComponent,
 
             field: {
-                loginID: initLoginIDField,
+                loginID: initLoginIDFieldComponent,
             },
         },
     }

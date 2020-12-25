@@ -1,7 +1,7 @@
 import { detectAppTarget } from "../../MoveToNextVersion/impl/location"
 import { initNextVersionResource } from "../../MoveToNextVersion/impl/core"
 
-import { initNextVersion } from "../impl"
+import { initNextVersionComponent } from "../impl"
 
 import { CheckSimulator } from "../../../nextVersion/impl/client/check/simulate"
 
@@ -23,7 +23,7 @@ export function newNextVersionResource(
             nextVersion: initNextVersionAction(simulator.check),
         },
         components: {
-            nextVersion: initNextVersion,
+            nextVersion: initNextVersionComponent,
         },
     }
     const collector = {

@@ -6,24 +6,15 @@ import { BreadcrumbListComponentFactory } from "../../../Outline/breadcrumbList/
 
 import { ExampleComponentFactory } from "../../example/component"
 
-import { LoadApiNoncePod, LoadApiRolesPod } from "../../../shared/credential/action"
-import { LoadBreadcrumbPod, LoadMenuPod, MenuTargetCollector, ToggleMenuExpand } from "../../../shared/menu/action"
-import { LoadSeasonPod } from "../../../shared/season/action"
+import { CredentialAction } from "../../../shared/credential/action"
+import { MenuAction, MenuTargetCollector } from "../../../shared/menu/action"
+import { SeasonAction } from "../../../shared/season/action"
 
 export type DashboardFactory = Readonly<{
     actions: Readonly<{
-        credential: Readonly<{
-            loadApiNonce: LoadApiNoncePod
-            loadApiRoles: LoadApiRolesPod
-        }>
-        menu: Readonly<{
-            loadBreadcrumb: LoadBreadcrumbPod
-            loadMenu: LoadMenuPod
-            toggleMenuExpand: ToggleMenuExpand
-        }>
-        season: Readonly<{
-            loadSeason: LoadSeasonPod
-        }>
+        credential: CredentialAction
+        menu: MenuAction
+        season: SeasonAction
     }>
     components: Readonly<{
         season: SeasonInfoComponentFactory

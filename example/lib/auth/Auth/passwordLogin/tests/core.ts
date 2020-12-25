@@ -12,9 +12,9 @@ import {
     PasswordLoginFactory,
 } from "../../Login/impl/core"
 
-import { initPasswordLogin } from "../impl"
-import { initLoginIDField } from "../../field/loginID/impl"
-import { initPasswordField } from "../../field/password/impl"
+import { initPasswordLoginComponent } from "../impl"
+import { initLoginIDFieldComponent } from "../../field/loginID/impl"
+import { initPasswordFieldComponent } from "../../field/password/impl"
 
 import { loginIDField } from "../../../common/field/loginID/impl/core"
 import { passwordField } from "../../../common/field/password/impl/core"
@@ -71,11 +71,11 @@ export function newPasswordLoginResource(
             },
         },
         components: {
-            passwordLogin: initPasswordLogin,
+            passwordLogin: initPasswordLoginComponent,
 
             field: {
-                loginID: initLoginIDField,
-                password: initPasswordField,
+                loginID: initLoginIDFieldComponent,
+                password: initPasswordFieldComponent,
             },
         },
     }

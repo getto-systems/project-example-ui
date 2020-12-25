@@ -6,7 +6,7 @@ import { BreadcrumbListComponentFactory } from "../../../../example/Outline/brea
 import { ContentComponentFactory } from "../../content/component"
 
 import { LoadApiNoncePod, LoadApiRolesPod } from "../../../../example/shared/credential/action"
-import { LoadBreadcrumbPod, LoadMenuPod, MenuTargetCollector, ToggleMenuExpand } from "../../../../example/shared/menu/action"
+import { LoadBreadcrumbPod, LoadMenuPod, MenuTargetCollector, ToggleMenuExpandPod } from "../../../../example/shared/menu/action"
 
 import { LoadContentCollector, LoadContentPod } from "../../../content/action"
 
@@ -19,7 +19,7 @@ export type DocumentFactory = Readonly<{
         menu: Readonly<{
             loadBreadcrumb: LoadBreadcrumbPod
             loadMenu: LoadMenuPod
-            toggleMenuExpand: ToggleMenuExpand
+            toggleMenuExpand: ToggleMenuExpandPod
         }>
         content: Readonly<{
             loadDocument: LoadContentPod

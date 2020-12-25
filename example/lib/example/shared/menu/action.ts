@@ -4,6 +4,7 @@ import { ApiNonce, ApiRoles, LoadResult } from "../credential/data"
 export type MenuAction = Readonly<{
     loadBreadcrumb: LoadBreadcrumbPod
     loadMenu: LoadMenuPod
+    toggleMenuExpand: ToggleMenuExpandPod
 }>
 
 export interface LoadBreadcrumbPod {
@@ -26,10 +27,10 @@ export interface MenuTargetCollector {
     getMenuTarget(): MenuTarget
 }
 
-export interface ToggleMenuExpand {
-    (): ToggleMenuExpandAction
+export interface ToggleMenuExpandPod {
+    (): ToggleMenuExpand
 }
-export interface ToggleMenuExpandAction {
+export interface ToggleMenuExpand {
     (category: string[], menu: Menu, post: Post<ToggleMenuExpandEvent>): void
 }
 

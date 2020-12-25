@@ -1,10 +1,13 @@
-import { MenuListMaterial, MenuListComponent, MenuListState } from "./component"
+import {
+    MenuListComponentFactory,
+    MenuListMaterial,
+    MenuListComponent,
+    MenuListState,
+} from "./component"
 
 import { Menu } from "../../shared/menu/data"
 
-export function initMenu(material: MenuListMaterial): MenuListComponent {
-    return new Component(material)
-}
+export const initMenuListComponent: MenuListComponentFactory = (material) => new Component(material)
 
 class Component implements MenuListComponent {
     material: MenuListMaterial

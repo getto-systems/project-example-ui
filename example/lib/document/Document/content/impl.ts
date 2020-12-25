@@ -1,8 +1,6 @@
-import { ContentMaterial, ContentComponent, ContentState } from "./component"
+import { ContentComponentFactory, ContentMaterial, ContentComponent, ContentState } from "./component"
 
-export function initContent(material: ContentMaterial): ContentComponent {
-    return new Component(material)
-}
+export const initContentComponent: ContentComponentFactory = (material) => new Component(material)
 
 class Component implements ContentComponent {
     material: ContentMaterial

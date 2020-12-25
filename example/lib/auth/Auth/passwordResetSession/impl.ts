@@ -1,4 +1,5 @@
 import {
+    PasswordResetSessionComponentFactory,
     PasswordResetSessionMaterial,
     PasswordResetSessionComponent,
     PasswordResetSessionState,
@@ -7,11 +8,8 @@ import {
 import { SessionID } from "../../profile/passwordReset/data"
 import { LoginLink } from "../link"
 
-export function initPasswordResetSession(
-    material: PasswordResetSessionMaterial
-): PasswordResetSessionComponent {
-    return new Component(material)
-}
+export const initPasswordResetSessionComponent: PasswordResetSessionComponentFactory = (material) =>
+    new Component(material)
 
 class Component implements PasswordResetSessionComponent {
     material: PasswordResetSessionMaterial

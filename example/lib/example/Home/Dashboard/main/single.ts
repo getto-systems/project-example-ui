@@ -1,8 +1,8 @@
 import { env } from "../../../../y_static/env"
 
-import { initSeason } from "../../../Outline/seasonInfo/impl"
-import { initMenu } from "../../../Outline/menuList/impl"
-import { initBreadcrumb } from "../../../Outline/breadcrumbList/impl"
+import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
+import { initMenuListComponent } from "../../../Outline/menuList/impl"
+import { initBreadcrumbListComponent } from "../../../Outline/breadcrumbList/impl"
 import { initExample } from "../../example/impl"
 import { detectMenuTarget } from "../../../Outline/Menu/impl/location"
 
@@ -36,9 +36,9 @@ export function newDashboardAsSingle(): DashboardEntryPoint {
             season: initSeasonAction(),
         },
         components: {
-            season: initSeason,
-            menu: initMenu,
-            breadcrumb: initBreadcrumb,
+            season: initSeasonInfoComponent,
+            menu: initMenuListComponent,
+            breadcrumb: initBreadcrumbListComponent,
 
             example: initExample,
         },

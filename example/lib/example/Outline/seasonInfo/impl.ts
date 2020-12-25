@@ -1,8 +1,11 @@
-import { SeasonInfoMaterial, SeasonInfoComponent, SeasonInfoState } from "./component"
+import {
+    SeasonInfoComponentFactory,
+    SeasonInfoMaterial,
+    SeasonInfoComponent,
+    SeasonInfoState,
+} from "./component"
 
-export function initSeason(material: SeasonInfoMaterial): SeasonInfoComponent {
-    return new Component(material)
-}
+export const initSeasonInfoComponent: SeasonInfoComponentFactory = (material) => new Component(material)
 
 class Component implements SeasonInfoComponent {
     material: SeasonInfoMaterial
