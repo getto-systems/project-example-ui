@@ -26,7 +26,7 @@ import {
 
 import { initMemoryAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential/memory"
 import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
-import { initStaticClock } from "../../../login/renew/impl/clock/simulate"
+import { initStaticClock } from "../../../../z_infra/clock/simulate"
 import { SendTokenState } from "../../../profile/passwordReset/impl/client/session/simulate"
 
 import { Clock } from "../../../login/renew/infra"

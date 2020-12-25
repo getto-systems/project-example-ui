@@ -5,6 +5,9 @@ type Season_data = Readonly<{
 export function markSeason(season: Season_data): Season {
     return season as Season
 }
+export function defaultSeason(now: Date): Season {
+    return markSeason({ year: now.getFullYear() })
+}
 
 export type LoadSeasonEvent =
     | Readonly<{ type: "succeed-to-load"; season: Season }>

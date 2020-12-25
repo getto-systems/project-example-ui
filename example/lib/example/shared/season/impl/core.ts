@@ -1,11 +1,11 @@
-import { SeasonInfra, YearRepository } from "../infra"
+import { SeasonInfra } from "../infra"
 
 import { LoadSeasonPod } from "../action"
 
-import { Season, markSeason } from "../data"
+import { defaultSeason } from "../data"
 
 export const loadSeason = (infra: SeasonInfra): LoadSeasonPod => () => (post) => {
-    const { seasons, years } = infra
+    const { seasons, clock } = infra
 
     const response = seasons.findSeason()
     if (!response.success) {
@@ -14,12 +14,9 @@ export const loadSeason = (infra: SeasonInfra): LoadSeasonPod => () => (post) =>
     }
 
     if (!response.found) {
-        post({ type: "succeed-to-load", season: defaultSeason(years) })
+        post({ type: "succeed-to-load", season: defaultSeason(clock.now()) })
         return
     }
 
     post({ type: "succeed-to-load", season: response.season })
-}
-function defaultSeason(years: YearRepository): Season {
-    return markSeason({ year: years.currentYear() })
 }

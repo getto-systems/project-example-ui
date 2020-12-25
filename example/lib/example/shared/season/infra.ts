@@ -2,14 +2,14 @@ import { Season, SeasonError } from "./data"
 
 export type SeasonInfra = Readonly<{
     seasons: SeasonRepository
-    years: YearRepository
+    clock: Clock
 }>
 
 export interface SeasonRepository {
     findSeason(): SeasonResponse
 }
-export interface YearRepository {
-    currentYear(): number
+export interface Clock {
+    now(): Date
 }
 
 export type SeasonResponse =

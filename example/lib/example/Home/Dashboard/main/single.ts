@@ -14,9 +14,9 @@ import { initDashboardComponent } from "../impl/core"
 
 import { MenuBadgeMap } from "../../../shared/menu/infra"
 
+import { initDateClock } from "../../../../z_infra/clock/date"
 import { initMemoryApiCredentialRepository } from "../../../shared/credential/impl/repository/apiCredential/memory"
 import { initMemorySeasonRepository } from "../../../shared/season/impl/repository/season/memory"
-import { initDateYearRepository } from "../../../shared/season/impl/repository/year/date"
 import { initSimulateBadgeClient } from "../../../shared/menu/impl/client/badge/simulate"
 import { initStorageMenuExpandRepository } from "../../../shared/menu/impl/repository/expand/storage"
 
@@ -81,8 +81,11 @@ function initMenuAction(menuExpandStorage: Storage) {
 function initSeasonAction() {
     return {
         loadSeason: loadSeason({
-            seasons: initMemorySeasonRepository(markSeason({ year: new Date().getFullYear() })),
-            years: initDateYearRepository(new Date()),
+            seasons: initMemorySeasonRepository({
+                store: true,
+                season: markSeason({ year: new Date().getFullYear() }),
+            }),
+            clock: initDateClock(),
         }),
     }
 }
