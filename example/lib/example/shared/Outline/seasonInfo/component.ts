@@ -2,24 +2,24 @@ import { LoadSeason } from "../../season/action"
 
 import { Season, SeasonError } from "../../season/data"
 
-export interface SeasonComponentFactory {
-    (material: SeasonMaterial): SeasonComponent
+export interface SeasonInfoComponentFactory {
+    (material: SeasonInfoMaterial): SeasonInfoComponent
 }
-export type SeasonMaterial = Readonly<{
+export type SeasonInfoMaterial = Readonly<{
     loadSeason: LoadSeason
 }>
 
-export interface SeasonComponent {
-    onStateChange(post: Post<SeasonState>): void
+export interface SeasonInfoComponent {
+    onStateChange(post: Post<SeasonInfoState>): void
     load(): void
 }
 
-export type SeasonState =
+export type SeasonInfoState =
     | Readonly<{ type: "initial-season" }>
     | Readonly<{ type: "succeed-to-load"; season: Season }>
     | Readonly<{ type: "failed-to-load"; err: SeasonError }>
 
-export const initialSeasonState: SeasonState = { type: "initial-season" }
+export const initialSeasonInfoState: SeasonInfoState = { type: "initial-season" }
 
 interface Post<T> {
     (state: T): void

@@ -55,7 +55,7 @@ module.exports = {
     },
     plugins: [new WorkerPlugin()],
     watchOptions: {
-        ignored: /node_modules/,
+        ignored: /(node_modules|.git)/,
     },
     devServer: {
         contentBase: path.join(__dirname, "."),

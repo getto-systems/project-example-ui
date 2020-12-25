@@ -1,22 +1,22 @@
 import { MockComponent } from "../../../z_external/mock/component"
 
-import { initBreadcrumb } from "../../shared/Outline/breadcrumb/mock"
-import { initMenu } from "../../shared/Outline/menu/mock"
-import { initSeason } from "../../shared/Outline/season/mock"
+import { initBreadcrumb } from "../../shared/Outline/breadcrumbList/mock"
+import { initMenu } from "../../shared/Outline/menuList/mock"
+import { initSeason } from "../../shared/Outline/seasonInfo/mock"
 import { initExample } from "../example/mock"
 
 import { DashboardEntryPoint } from "./view"
 
-import { BreadcrumbState, initialBreadcrumbState } from "../../shared/Outline/breadcrumb/component"
-import { initialMenuState, MenuState } from "../../shared/Outline/menu/component"
-import { initialSeasonState, SeasonState } from "../../shared/Outline/season/component"
+import { BreadcrumbListState, initialBreadcrumbListState } from "../../shared/Outline/breadcrumbList/component"
+import { initialMenuListState, MenuListState } from "../../shared/Outline/menuList/component"
+import { initialSeasonInfoState, SeasonInfoState } from "../../shared/Outline/seasonInfo/component"
 import { ExampleState, initialExampleState } from "../example/component"
 
 export function newDashboard(): DashboardMockEntryPoint {
     const resource = {
-        season: initSeason(initialSeasonState),
-        menu: initMenu(initialMenuState),
-        breadcrumb: initBreadcrumb(initialBreadcrumbState),
+        season: initSeason(initialSeasonInfoState),
+        menu: initMenu(initialMenuListState),
+        breadcrumb: initBreadcrumb(initialBreadcrumbListState),
         example: initExample(initialExampleState),
     }
     return {
@@ -38,9 +38,9 @@ export function newDashboard(): DashboardMockEntryPoint {
 export type DashboardMockEntryPoint = Readonly<{
     dashboard: DashboardEntryPoint
     update: Readonly<{
-        season: Post<SeasonState>
-        menu: Post<MenuState>
-        breadcrumb: Post<BreadcrumbState>
+        season: Post<SeasonInfoState>
+        menu: Post<MenuListState>
+        breadcrumb: Post<BreadcrumbListState>
         example: Post<ExampleState>
     }>
 }>

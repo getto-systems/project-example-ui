@@ -8,9 +8,9 @@ import {
     mapSeasonMockProps,
     SeasonMockProps,
     initSeason,
-} from "../../../example/shared/Outline/season/mock"
+} from "../../../example/shared/Outline/seasonInfo/mock"
 
-import { initialSeasonState } from "../../../example/shared/Outline/season/component"
+import { initialSeasonInfoState } from "../../../example/shared/Outline/seasonInfo/component"
 
 export default {
     title: "secure/Outline/SeasonInfo",
@@ -23,7 +23,7 @@ export default {
 
 type MockProps = SeasonMockProps
 const Template: Story<MockProps> = (args) => {
-    const season = initSeason(initialSeasonState)
+    const season = initSeason(initialSeasonInfoState)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {

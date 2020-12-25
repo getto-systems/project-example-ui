@@ -1,6 +1,6 @@
-import { SeasonComponent } from "../../shared/Outline/season/component"
-import { MenuComponent } from "../../shared/Outline/menu/component"
-import { BreadcrumbComponent } from "../../shared/Outline/breadcrumb/component"
+import { SeasonInfoComponent } from "../../shared/Outline/seasonInfo/component"
+import { MenuListComponent } from "../../shared/Outline/menuList/component"
+import { BreadcrumbListComponent } from "../../shared/Outline/breadcrumbList/component"
 
 import { ExampleComponent } from "../example/component"
 
@@ -10,9 +10,9 @@ export type DashboardEntryPoint = Readonly<{
 }>
 
 export type DashboardResource = Readonly<{
-    season: SeasonComponent
-    menu: MenuComponent
-    breadcrumb: BreadcrumbComponent
+    season: SeasonInfoComponent
+    menu: MenuListComponent
+    breadcrumb: BreadcrumbListComponent
 
     example: ExampleComponent
 }>

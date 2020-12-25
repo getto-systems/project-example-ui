@@ -1,8 +1,8 @@
 import { DashboardResource } from "../view"
 
-import { SeasonComponentFactory } from "../../../shared/Outline/season/component"
-import { MenuComponentFactory } from "../../../shared/Outline/menu/component"
-import { BreadcrumbComponentFactory } from "../../../shared/Outline/breadcrumb/component"
+import { SeasonInfoComponentFactory } from "../../../shared/Outline/seasonInfo/component"
+import { MenuListComponentFactory } from "../../../shared/Outline/menuList/component"
+import { BreadcrumbListComponentFactory } from "../../../shared/Outline/breadcrumbList/component"
 
 import { ExampleComponentFactory } from "../../example/component"
 
@@ -26,9 +26,9 @@ export type DashboardFactory = Readonly<{
         }>
     }>
     components: Readonly<{
-        season: SeasonComponentFactory
-        menu: MenuComponentFactory
-        breadcrumb: BreadcrumbComponentFactory
+        season: SeasonInfoComponentFactory
+        menu: MenuListComponentFactory
+        breadcrumb: BreadcrumbListComponentFactory
 
         example: ExampleComponentFactory
     }>

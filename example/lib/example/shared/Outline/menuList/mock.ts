@@ -1,11 +1,11 @@
 import { lnir, iconClass } from "../../../../z_external/icon"
 import { MockComponent } from "../../../../z_external/mock/component"
 
-import { MenuComponent, MenuState } from "./component"
+import { MenuListComponent, MenuListState } from "./component"
 
 import { markMenuCategory, markMenuItem, Menu } from "../../menu/data"
 
-export function initMenu(state: MenuState): MenuMockComponent {
+export function initMenu(state: MenuListState): MenuMockComponent {
     return new MenuMockComponent(state)
 }
 
@@ -17,7 +17,7 @@ export type MenuMockProps =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function mapMenuMockProps(props: MenuMockProps): MenuState {
+export function mapMenuMockProps(props: MenuMockProps): MenuListState {
     switch (props.type) {
         case "success":
             return { type: "succeed-to-load", menu: menu(props.badgeCount) }
@@ -50,7 +50,7 @@ export function mapMenuMockProps(props: MenuMockProps): MenuState {
     }
 }
 
-class MenuMockComponent extends MockComponent<MenuState> implements MenuComponent {
+class MenuMockComponent extends MockComponent<MenuListState> implements MenuListComponent {
     load() {
         // mock では特に何もしない
     }

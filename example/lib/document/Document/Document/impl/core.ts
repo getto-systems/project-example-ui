@@ -1,7 +1,7 @@
 import { DocumentResource } from "../view"
 
-import { MenuComponentFactory } from "../../../../example/shared/Outline/menu/component"
-import { BreadcrumbComponentFactory } from "../../../../example/shared/Outline/breadcrumb/component"
+import { MenuListComponentFactory } from "../../../../example/shared/Outline/menuList/component"
+import { BreadcrumbListComponentFactory } from "../../../../example/shared/Outline/breadcrumbList/component"
 
 import { ContentComponentFactory } from "../../content/component"
 
@@ -26,8 +26,8 @@ export type DocumentFactory = Readonly<{
         }>
     }>
     components: Readonly<{
-        menu: MenuComponentFactory
-        breadcrumb: BreadcrumbComponentFactory
+        menu: MenuListComponentFactory
+        breadcrumb: BreadcrumbListComponentFactory
 
         content: ContentComponentFactory
     }>

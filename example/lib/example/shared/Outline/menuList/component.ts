@@ -3,10 +3,10 @@ import { LoadMenu, ToggleMenuExpandAction } from "../../menu/action"
 
 import { Menu, LoadMenuError } from "../../menu/data"
 
-export interface MenuComponentFactory {
-    (material: MenuMaterial): MenuComponent
+export interface MenuListComponentFactory {
+    (material: MenuListMaterial): MenuListComponent
 }
-export type MenuMaterial = Readonly<{
+export type MenuListMaterial = Readonly<{
     loadApiNonce: LoadApiNonce
     loadApiRoles: LoadApiRoles
     loadMenu: LoadMenu
@@ -14,20 +14,20 @@ export type MenuMaterial = Readonly<{
     toggleMenuExpand: ToggleMenuExpandAction
 }>
 
-export interface MenuComponent {
-    onStateChange(post: Post<MenuState>): void
+export interface MenuListComponent {
+    onStateChange(post: Post<MenuListState>): void
     load(): void
     toggle(category: string[], menu: Menu): void
 }
 
-export type MenuState =
+export type MenuListState =
     | Readonly<{ type: "initial-menu" }>
     | Readonly<{ type: "succeed-to-load"; menu: Menu }>
     | Readonly<{ type: "failed-to-load"; menu: Menu; err: LoadMenuError }>
     | Readonly<{ type: "succeed-to-toggle"; menu: Menu }>
     | Readonly<{ type: "failed-to-toggle"; menu: Menu; err: LoadMenuError }>
 
-export const initialMenuState: MenuState = { type: "initial-menu" }
+export const initialMenuListState: MenuListState = { type: "initial-menu" }
 
 interface Post<T> {
     (state: T): void

@@ -4,9 +4,9 @@ import { html } from "htm/preact"
 import { MenuList } from "../../../x_preact/secure/Outline/MenuList"
 import { menuHeader } from "../../../x_preact/secure/layout"
 
-import { mapMenuMockProps, MenuMockProps, initMenu } from "../../../example/shared/Outline/menu/mock"
+import { mapMenuMockProps, MenuMockProps, initMenu } from "../../../example/shared/Outline/menuList/mock"
 
-import { initialMenuState } from "../../../example/shared/Outline/menu/component"
+import { initialMenuListState } from "../../../example/shared/Outline/menuList/component"
 
 export default {
     title: "secure/Outline/MenuList",
@@ -19,7 +19,7 @@ export default {
 
 type MockProps = MenuMockProps
 const Template: Story<MockProps> = (args) => {
-    const menu = initMenu(initialMenuState)
+    const menu = initMenu(initialMenuListState)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
