@@ -1,5 +1,5 @@
-import { MenuListComponent } from "../../../example/shared/Outline/menuList/component"
-import { BreadcrumbListComponent } from "../../../example/shared/Outline/breadcrumbList/component"
+import { MenuListComponent } from "../../../example/Outline/menuList/component"
+import { BreadcrumbListComponent } from "../../../example/Outline/breadcrumbList/component"
 
 import { ContentComponent } from "../content/component"
 

@@ -1,6 +1,6 @@
-import { LoadSeason } from "../../season/action"
+import { LoadSeason } from "../../shared/season/action"
 
-import { Season, SeasonError } from "../../season/data"
+import { Season, SeasonError } from "../../shared/season/data"
 
 export interface SeasonInfoComponentFactory {
     (material: SeasonInfoMaterial): SeasonInfoComponent

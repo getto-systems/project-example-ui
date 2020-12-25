@@ -1,9 +1,9 @@
-import { lnir, iconClass } from "../../../../z_external/icon"
-import { MockComponent } from "../../../../z_external/mock/component"
+import { lnir, iconClass } from "../../../z_external/icon"
+import { MockComponent } from "../../../z_external/mock/component"
 
 import { MenuListComponent, MenuListState } from "./component"
 
-import { markMenuCategory, markMenuItem, Menu } from "../../menu/data"
+import { markMenuCategory, markMenuItem, Menu } from "../../shared/menu/data"
 
 export function initMenu(state: MenuListState): MenuMockComponent {
     return new MenuMockComponent(state)

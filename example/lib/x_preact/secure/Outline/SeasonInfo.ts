@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { v_small } from "../../common/layout"
 
-import { SeasonInfoComponent, initialSeasonInfoState } from "../../../example/shared/Outline/seasonInfo/component"
+import { SeasonInfoComponent, initialSeasonInfoState } from "../../../example/Outline/seasonInfo/component"
 
 import { Season, SeasonError } from "../../../example/shared/season/data"
 

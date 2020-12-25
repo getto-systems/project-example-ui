@@ -1,8 +1,8 @@
-import { MockComponent } from "../../../../z_external/mock/component"
+import { MockComponent } from "../../../z_external/mock/component"
 
 import { SeasonInfoComponent, SeasonInfoState } from "./component"
 
-import { markSeason } from "../../season/data"
+import { markSeason } from "../../shared/season/data"
 
 export function initSeason(state: SeasonInfoState): SeasonMockComponent {
     return new SeasonMockComponent(state)

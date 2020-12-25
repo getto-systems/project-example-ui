@@ -1,7 +1,7 @@
 import { DocumentResource } from "../view"
 
-import { MenuListComponentFactory } from "../../../../example/shared/Outline/menuList/component"
-import { BreadcrumbListComponentFactory } from "../../../../example/shared/Outline/breadcrumbList/component"
+import { MenuListComponentFactory } from "../../../../example/Outline/menuList/component"
+import { BreadcrumbListComponentFactory } from "../../../../example/Outline/breadcrumbList/component"
 
 import { ContentComponentFactory } from "../../content/component"
 

@@ -1,4 +1,4 @@
-import { MenuTarget, markMenuTarget } from "../../../menu/data"
+import { MenuTarget, markMenuTarget } from "../../../shared/menu/data"
 
 export function detectMenuTarget(version: string, currentLocation: Location): MenuTarget {
     const pathname = new URL(currentLocation.toString()).pathname
