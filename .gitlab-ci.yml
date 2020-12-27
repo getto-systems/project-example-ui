@@ -23,6 +23,9 @@ test:
 
   before_script:
     - npm ci
+    - npm proto
+    - npm proto
+    - npm setup
   script:
     - npm test
 
