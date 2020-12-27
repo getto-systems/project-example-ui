@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version : 0.7.5
+
+- fix: deploy : See merge request getto-systems-base/projects/example/ui!691
+
+
 ## Version : 0.7.4
 
 - fix: deploy : See merge request getto-systems-base/projects/example/ui!689
