@@ -2,7 +2,8 @@ import { initSeasonAction } from "../../Menu/tests/core"
 
 import { initSeasonInfoComponent } from "../impl"
 
-import { Clock, SeasonRepository } from "../../../shared/season/infra"
+import { Clock } from "../../../../z_infra/clock/infra"
+import { SeasonRepository } from "../../../shared/season/infra"
 
 import { SeasonInfoComponent } from "../component"
 

@@ -1,3 +1,5 @@
+import { Clock } from "../../../z_infra/clock/infra"
+
 import { Season, SeasonError } from "./data"
 
 export type SeasonInfra = Readonly<{
@@ -7,9 +9,6 @@ export type SeasonInfra = Readonly<{
 
 export interface SeasonRepository {
     findSeason(): SeasonResponse
-}
-export interface Clock {
-    now(): Date
 }
 
 export type SeasonResponse =

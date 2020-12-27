@@ -15,7 +15,7 @@ export const startSession = (infra: StartSessionInfra): StartSessionPod => (coll
 
     post({ type: "try-to-start-session" })
 
-    const { client, config: time, delayed } = infra
+    const { resetSession: client, config: time, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const response = await delayed(client.startSession(content.content), time.delay, () =>
@@ -60,7 +60,7 @@ class StatusChecker {
                 return
             }
 
-            const response = await this.infra.client.getStatus(sessionID)
+            const response = await this.infra.reset.getStatus(sessionID)
             if (!response.success) {
                 post({ type: "failed-to-check-status", err: response.err })
                 return
@@ -96,7 +96,7 @@ class StatusChecker {
     }
 
     async sendToken(): Promise<void> {
-        const response = await this.infra.client.sendToken()
+        const response = await this.infra.reset.sendToken()
         if (!response.success) {
             this.sendTokenState = { type: "failed", err: response.err }
             return

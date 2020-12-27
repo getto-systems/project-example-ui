@@ -3,13 +3,13 @@ import { newSeasonInfoComponent, SeasonInfoRepository } from "./core"
 import { initStaticClock } from "../../../../z_infra/clock/simulate"
 import { initMemorySeasonRepository } from "../../../shared/season/impl/repository/season/memory"
 
-import { Clock } from "../../../shared/season/infra"
+import { Clock } from "../../../../z_infra/clock/infra"
 
 import { SeasonInfoState } from "../component"
 
 import { markSeason } from "../../../shared/season/data"
 
-// season のデフォルトを取得する
+// デフォルトの season を取得する
 const NOW = new Date("2021-01-01 10:00:00")
 
 describe("SeasonInfo", () => {

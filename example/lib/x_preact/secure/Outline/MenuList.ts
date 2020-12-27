@@ -25,10 +25,11 @@ export function MenuList({ menu }: Props): VNode {
     }, [])
 
     switch (state.type) {
-        case "initial-menu":
+        case "initial-menu-list":
             return EMPTY_CONTENT
 
         case "succeed-to-load":
+        case "succeed-to-instant-load":
         case "succeed-to-toggle":
             return html`${content(state.menu)}`
 

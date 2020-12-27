@@ -47,7 +47,7 @@ function findLastLogin(
     hook(findResult.lastLogin)
 }
 async function renewCredential(infra: RenewInfra, lastLogin: LastLogin, post: Post<ForceRenewEvent>) {
-    const { authCredentials, client, config, delayed } = infra
+    const { authCredentials, renew: client, config, delayed } = infra
 
     post({ type: "try-to-renew" })
 
@@ -82,7 +82,7 @@ export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuou
     authCredential,
     post
 ) => {
-    const { authCredentials, client, clock, config } = infra
+    const { authCredentials, renew: client, clock, config } = infra
 
     if (authCredential.store) {
         const storeResult = authCredentials.storeAuthCredential(authCredential.authCredential)

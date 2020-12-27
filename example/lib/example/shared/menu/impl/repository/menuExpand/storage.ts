@@ -1,5 +1,4 @@
 import {
-    CategoryLabelsSet,
     MenuExpandRepository,
     MenuExpandResponse,
     ToggleExpandResponse,
@@ -11,46 +10,24 @@ export function initStorageMenuExpandRepository(storage: Storage, key: string): 
 
 class Repository implements MenuExpandRepository {
     storage: MenuExpandStorage
-    set: CategoryLabelsSet
 
     restored = false
 
     constructor(storage: Storage, key: string) {
         this.storage = new MenuExpandStorage(storage, key)
-        this.set = new CategoryLabelsSet()
     }
 
-    restore(): void {
-        if (!this.restored) {
-            this.set.restore(this.storage.restore())
-            this.restored = true
-        }
-    }
-
-    findExpand(): MenuExpandResponse {
+    findMenuExpand(): MenuExpandResponse {
         try {
-            this.restore()
-            return { success: true, expand: this.set }
+            return { success: true, menuExpand: this.storage.restore() }
         } catch (err) {
             return { success: false, err: { type: "infra-error", err: `${err}` } }
         }
     }
 
-    setExpand(category: string[]): ToggleExpandResponse {
+    saveMenuExpand(menuExpand: string[][]): ToggleExpandResponse {
         try {
-            this.restore()
-            this.set.register(category)
-            this.storage.store(this.set.set)
-            return { success: true }
-        } catch (err) {
-            return { success: false, err: { type: "infra-error", err: `${err}` } }
-        }
-    }
-    clearExpand(category: string[]): ToggleExpandResponse {
-        try {
-            this.restore()
-            this.set.remove(category)
-            this.storage.store(this.set.set)
+            this.storage.store(menuExpand)
             return { success: true }
         } catch (err) {
             return { success: false, err: { type: "infra-error", err: `${err}` } }

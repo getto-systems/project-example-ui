@@ -15,10 +15,10 @@ export interface BreadcrumbListComponent {
 }
 
 export type BreadcrumbListState =
-    | Readonly<{ type: "initial-breadcrumb" }>
+    | Readonly<{ type: "initial-breadcrumb-list" }>
     | Readonly<{ type: "succeed-to-load"; breadcrumb: Breadcrumb }>
 
-export const initialBreadcrumbListState: BreadcrumbListState = { type: "initial-breadcrumb" }
+export const initialBreadcrumbListState: BreadcrumbListState = { type: "initial-breadcrumb-list" }
 
 interface Post<T> {
     (state: T): void

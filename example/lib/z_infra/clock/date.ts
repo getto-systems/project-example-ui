@@ -1,4 +1,4 @@
-import { Clock } from "../../auth/login/renew/infra"
+import { Clock } from "./infra"
 
 export function initDateClock(): Clock {
     return new DateClock()

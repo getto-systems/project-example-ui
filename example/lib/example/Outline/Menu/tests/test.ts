@@ -1,0 +1,1231 @@
+import { MenuRepository, MenuSimulator, newMenuResource } from "./core"
+
+import { initMemoryApiCredentialRepository } from "../../../shared/credential/impl/repository/apiCredential/memory"
+import { initMemoryMenuExpandRepository } from "../../../shared/menu/impl/repository/menuExpand/memory"
+
+import { MenuBadge, MenuBadgeMap, MenuTree } from "../../../shared/menu/infra"
+
+import { BreadcrumbListState } from "../../breadcrumbList/component"
+import { MenuListState } from "../../menuList/component"
+
+import { markMenuTarget, Menu, MenuTarget } from "../../../shared/menu/data"
+import { ApiNonce, markApiNonce, markApiRoles } from "../../../shared/credential/data"
+
+describe("BreadcrumbList", () => {
+    test("load breadcrumb", (done) => {
+        const { resource } = standardMenuResource()
+
+        resource.breadcrumbList.onStateChange(stateHandler())
+
+        resource.breadcrumbList.load()
+
+        function stateHandler(): Post<BreadcrumbListState> {
+            const stack: BreadcrumbListState[] = []
+            return (state) => {
+                stack.push(state)
+
+                switch (state.type) {
+                    case "initial-breadcrumb-list":
+                        // work in progress...
+                        break
+
+                    case "succeed-to-load":
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-load",
+                                breadcrumb: [
+                                    {
+                                        type: "category",
+                                        category: { permission: { type: "any" }, label: "MAIN" },
+                                    },
+                                    {
+                                        type: "item",
+                                        item: {
+                                            label: "ホーム",
+                                            icon: "home",
+                                            href: "/1.0.0/index.html",
+                                        },
+                                    },
+                                ],
+                            },
+                        ])
+                        done()
+                        break
+
+                    default:
+                        assertNever(state)
+                }
+            }
+        }
+    })
+
+    test("load empty breadcrumb; unknown menu target", (done) => {
+        const { resource } = unknownMenuResource()
+
+        resource.breadcrumbList.onStateChange(stateHandler())
+
+        resource.breadcrumbList.load()
+
+        function stateHandler(): Post<BreadcrumbListState> {
+            const stack: BreadcrumbListState[] = []
+            return (state) => {
+                stack.push(state)
+
+                switch (state.type) {
+                    case "initial-breadcrumb-list":
+                        // work in progress...
+                        break
+
+                    case "succeed-to-load":
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-load",
+                                breadcrumb: [],
+                            },
+                        ])
+                        done()
+                        break
+
+                    default:
+                        assertNever(state)
+                }
+            }
+        }
+    })
+})
+
+describe("MenuList", () => {
+    test("load menu", (done) => {
+        const { resource } = standardMenuResource()
+
+        resource.menuList.onStateChange(stateHandler())
+
+        resource.menuList.load()
+
+        function stateHandler(): Post<MenuListState> {
+            const stack: MenuListState[] = []
+            return (state) => {
+                stack.push(state)
+
+                switch (state.type) {
+                    case "initial-menu-list":
+                    case "succeed-to-instant-load":
+                        // work in progress...
+                        break
+
+                    case "succeed-to-load":
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-instant-load",
+                                menu: [
+                                    {
+                                        type: "category",
+                                        category: {
+                                            permission: { type: "any" },
+                                            label: "MAIN",
+                                        },
+                                        children: [
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "ホーム",
+                                                    icon: "home",
+                                                    href: "/1.0.0/index.html",
+                                                },
+                                                isActive: true,
+                                                badgeCount: 0,
+                                            },
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "ドキュメント",
+                                                    icon: "docs",
+                                                    href: "/1.0.0/docs/index.html",
+                                                },
+                                                isActive: false,
+                                                badgeCount: 0,
+                                            },
+                                        ],
+                                        isExpand: true,
+                                        badgeCount: 0,
+                                    },
+                                    {
+                                        type: "category",
+                                        category: {
+                                            permission: { type: "any" },
+                                            label: "DOCUMENT",
+                                        },
+                                        children: [
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "認証・認可",
+                                                    icon: "auth",
+                                                    href: "/1.0.0/docs/auth.html",
+                                                },
+                                                isActive: false,
+                                                badgeCount: 0,
+                                            },
+                                            {
+                                                type: "category",
+                                                category: {
+                                                    permission: { type: "any" },
+                                                    label: "DETAIL",
+                                                },
+                                                children: [
+                                                    {
+                                                        type: "item",
+                                                        item: {
+                                                            label: "詳細",
+                                                            icon: "detail",
+                                                            href: "/1.0.0/docs/auth.html",
+                                                        },
+                                                        isActive: false,
+                                                        badgeCount: 0,
+                                                    },
+                                                ],
+                                                isExpand: false,
+                                                badgeCount: 0,
+                                            },
+                                        ],
+                                        isExpand: false,
+                                        badgeCount: 0,
+                                    },
+                                ],
+                            },
+                            {
+                                type: "succeed-to-load",
+                                menu: [
+                                    {
+                                        type: "category",
+                                        category: {
+                                            permission: { type: "any" },
+                                            label: "MAIN",
+                                        },
+                                        children: [
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "ホーム",
+                                                    icon: "home",
+                                                    href: "/1.0.0/index.html",
+                                                },
+                                                isActive: true,
+                                                badgeCount: 10,
+                                            },
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "ドキュメント",
+                                                    icon: "docs",
+                                                    href: "/1.0.0/docs/index.html",
+                                                },
+                                                isActive: false,
+                                                badgeCount: 20,
+                                            },
+                                        ],
+                                        isExpand: true,
+                                        badgeCount: 30,
+                                    },
+                                    {
+                                        type: "category",
+                                        category: {
+                                            permission: { type: "any" },
+                                            label: "DOCUMENT",
+                                        },
+                                        children: [
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "認証・認可",
+                                                    icon: "auth",
+                                                    href: "/1.0.0/docs/auth.html",
+                                                },
+                                                isActive: false,
+                                                badgeCount: 0,
+                                            },
+                                            {
+                                                type: "category",
+                                                category: {
+                                                    permission: { type: "any" },
+                                                    label: "DETAIL",
+                                                },
+                                                children: [
+                                                    {
+                                                        type: "item",
+                                                        item: {
+                                                            label: "詳細",
+                                                            icon: "detail",
+                                                            href: "/1.0.0/docs/auth.html",
+                                                        },
+                                                        isActive: false,
+                                                        badgeCount: 0,
+                                                    },
+                                                ],
+                                                isExpand: false,
+                                                badgeCount: 0,
+                                            },
+                                        ],
+                                        isExpand: false,
+                                        badgeCount: 0,
+                                    },
+                                ],
+                            },
+                        ])
+                        done()
+                        break
+
+                    case "failed-to-load":
+                    case "succeed-to-toggle":
+                    case "failed-to-toggle":
+                        done(new Error(`${state.type}`))
+                        break
+
+                    default:
+                        assertNever(state)
+                }
+            }
+        }
+    })
+
+    test("load menu; saved expands", (done) => {
+        const { resource } = expandMenuResource()
+
+        resource.menuList.onStateChange(stateHandler())
+
+        resource.menuList.load()
+
+        function stateHandler(): Post<MenuListState> {
+            const stack: MenuListState[] = []
+            return (state) => {
+                stack.push(state)
+
+                switch (state.type) {
+                    case "initial-menu-list":
+                    case "succeed-to-instant-load":
+                        // work in progress...
+                        break
+
+                    case "succeed-to-load":
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-instant-load",
+                                menu: [
+                                    {
+                                        type: "category",
+                                        category: {
+                                            permission: { type: "any" },
+                                            label: "MAIN",
+                                        },
+                                        children: [
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "ホーム",
+                                                    icon: "home",
+                                                    href: "/1.0.0/index.html",
+                                                },
+                                                isActive: true,
+                                                badgeCount: 0,
+                                            },
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "ドキュメント",
+                                                    icon: "docs",
+                                                    href: "/1.0.0/docs/index.html",
+                                                },
+                                                isActive: false,
+                                                badgeCount: 0,
+                                            },
+                                        ],
+                                        isExpand: true,
+                                        badgeCount: 0,
+                                    },
+                                    {
+                                        type: "category",
+                                        category: {
+                                            permission: { type: "any" },
+                                            label: "DOCUMENT",
+                                        },
+                                        children: [
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "認証・認可",
+                                                    icon: "auth",
+                                                    href: "/1.0.0/docs/auth.html",
+                                                },
+                                                isActive: false,
+                                                badgeCount: 0,
+                                            },
+                                            {
+                                                type: "category",
+                                                category: {
+                                                    permission: { type: "any" },
+                                                    label: "DETAIL",
+                                                },
+                                                children: [
+                                                    {
+                                                        type: "item",
+                                                        item: {
+                                                            label: "詳細",
+                                                            icon: "detail",
+                                                            href: "/1.0.0/docs/auth.html",
+                                                        },
+                                                        isActive: false,
+                                                        badgeCount: 0,
+                                                    },
+                                                ],
+                                                isExpand: false,
+                                                badgeCount: 0,
+                                            },
+                                        ],
+                                        isExpand: true,
+                                        badgeCount: 0,
+                                    },
+                                ],
+                            },
+                            {
+                                type: "succeed-to-load",
+                                menu: [
+                                    {
+                                        type: "category",
+                                        category: {
+                                            permission: { type: "any" },
+                                            label: "MAIN",
+                                        },
+                                        children: [
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "ホーム",
+                                                    icon: "home",
+                                                    href: "/1.0.0/index.html",
+                                                },
+                                                isActive: true,
+                                                badgeCount: 10,
+                                            },
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "ドキュメント",
+                                                    icon: "docs",
+                                                    href: "/1.0.0/docs/index.html",
+                                                },
+                                                isActive: false,
+                                                badgeCount: 20,
+                                            },
+                                        ],
+                                        isExpand: true,
+                                        badgeCount: 30,
+                                    },
+                                    {
+                                        type: "category",
+                                        category: {
+                                            permission: { type: "any" },
+                                            label: "DOCUMENT",
+                                        },
+                                        children: [
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "認証・認可",
+                                                    icon: "auth",
+                                                    href: "/1.0.0/docs/auth.html",
+                                                },
+                                                isActive: false,
+                                                badgeCount: 0,
+                                            },
+                                            {
+                                                type: "category",
+                                                category: {
+                                                    permission: { type: "any" },
+                                                    label: "DETAIL",
+                                                },
+                                                children: [
+                                                    {
+                                                        type: "item",
+                                                        item: {
+                                                            label: "詳細",
+                                                            icon: "detail",
+                                                            href: "/1.0.0/docs/auth.html",
+                                                        },
+                                                        isActive: false,
+                                                        badgeCount: 0,
+                                                    },
+                                                ],
+                                                isExpand: false,
+                                                badgeCount: 0,
+                                            },
+                                        ],
+                                        isExpand: true,
+                                        badgeCount: 0,
+                                    },
+                                ],
+                            },
+                        ])
+                        done()
+                        break
+
+                    case "failed-to-load":
+                    case "succeed-to-toggle":
+                    case "failed-to-toggle":
+                        done(new Error(`${state.type}`))
+                        break
+
+                    default:
+                        assertNever(state)
+                }
+            }
+        }
+    })
+
+    test("load menu; toggle expands", (done) => {
+        const { repository, resource } = standardMenuResource()
+
+        resource.menuList.onStateChange(stateHandler())
+
+        resource.menuList.load()
+
+        const toggles = [["DOCUMENT"], ["DOCUMENT", "DETAIL"]]
+
+        function stateHandler(): Post<MenuListState> {
+            const stack: MenuListState[] = []
+            return (state) => {
+                stack.push(state)
+
+                switch (state.type) {
+                    case "initial-menu-list":
+                    case "succeed-to-instant-load":
+                        // work in progress...
+                        break
+
+                    case "succeed-to-load":
+                    case "succeed-to-toggle":
+                        toggleOrCheckExpects(state.menu)
+                        break
+
+                    case "failed-to-load":
+                    case "failed-to-toggle":
+                        done(new Error(`${state.type}`))
+                        break
+
+                    default:
+                        assertNever(state)
+                }
+
+                function toggleOrCheckExpects(menu: Menu) {
+                    const target = toggles.shift()
+                    if (target) {
+                        resource.menuList.toggle(target, menu)
+                    } else {
+                        checkExpects()
+                    }
+                }
+                function checkExpects() {
+                    expect(stack).toEqual([
+                        {
+                            type: "succeed-to-instant-load",
+                            menu: [
+                                {
+                                    type: "category",
+                                    category: {
+                                        permission: { type: "any" },
+                                        label: "MAIN",
+                                    },
+                                    children: [
+                                        {
+                                            type: "item",
+                                            item: {
+                                                label: "ホーム",
+                                                icon: "home",
+                                                href: "/1.0.0/index.html",
+                                            },
+                                            isActive: true,
+                                            badgeCount: 0,
+                                        },
+                                        {
+                                            type: "item",
+                                            item: {
+                                                label: "ドキュメント",
+                                                icon: "docs",
+                                                href: "/1.0.0/docs/index.html",
+                                            },
+                                            isActive: false,
+                                            badgeCount: 0,
+                                        },
+                                    ],
+                                    isExpand: true,
+                                    badgeCount: 0,
+                                },
+                                {
+                                    type: "category",
+                                    category: {
+                                        permission: { type: "any" },
+                                        label: "DOCUMENT",
+                                    },
+                                    children: [
+                                        {
+                                            type: "item",
+                                            item: {
+                                                label: "認証・認可",
+                                                icon: "auth",
+                                                href: "/1.0.0/docs/auth.html",
+                                            },
+                                            isActive: false,
+                                            badgeCount: 0,
+                                        },
+                                        {
+                                            type: "category",
+                                            category: {
+                                                permission: { type: "any" },
+                                                label: "DETAIL",
+                                            },
+                                            children: [
+                                                {
+                                                    type: "item",
+                                                    item: {
+                                                        label: "詳細",
+                                                        icon: "detail",
+                                                        href: "/1.0.0/docs/auth.html",
+                                                    },
+                                                    isActive: false,
+                                                    badgeCount: 0,
+                                                },
+                                            ],
+                                            isExpand: false,
+                                            badgeCount: 0,
+                                        },
+                                    ],
+                                    isExpand: false,
+                                    badgeCount: 0,
+                                },
+                            ],
+                        },
+                        {
+                            type: "succeed-to-load",
+                            menu: [
+                                {
+                                    type: "category",
+                                    category: {
+                                        permission: { type: "any" },
+                                        label: "MAIN",
+                                    },
+                                    children: [
+                                        {
+                                            type: "item",
+                                            item: {
+                                                label: "ホーム",
+                                                icon: "home",
+                                                href: "/1.0.0/index.html",
+                                            },
+                                            isActive: true,
+                                            badgeCount: 10,
+                                        },
+                                        {
+                                            type: "item",
+                                            item: {
+                                                label: "ドキュメント",
+                                                icon: "docs",
+                                                href: "/1.0.0/docs/index.html",
+                                            },
+                                            isActive: false,
+                                            badgeCount: 20,
+                                        },
+                                    ],
+                                    isExpand: true,
+                                    badgeCount: 30,
+                                },
+                                {
+                                    type: "category",
+                                    category: {
+                                        permission: { type: "any" },
+                                        label: "DOCUMENT",
+                                    },
+                                    children: [
+                                        {
+                                            type: "item",
+                                            item: {
+                                                label: "認証・認可",
+                                                icon: "auth",
+                                                href: "/1.0.0/docs/auth.html",
+                                            },
+                                            isActive: false,
+                                            badgeCount: 0,
+                                        },
+                                        {
+                                            type: "category",
+                                            category: {
+                                                permission: { type: "any" },
+                                                label: "DETAIL",
+                                            },
+                                            children: [
+                                                {
+                                                    type: "item",
+                                                    item: {
+                                                        label: "詳細",
+                                                        icon: "detail",
+                                                        href: "/1.0.0/docs/auth.html",
+                                                    },
+                                                    isActive: false,
+                                                    badgeCount: 0,
+                                                },
+                                            ],
+                                            isExpand: false,
+                                            badgeCount: 0,
+                                        },
+                                    ],
+                                    isExpand: false,
+                                    badgeCount: 0,
+                                },
+                            ],
+                        },
+                        {
+                            type: "succeed-to-toggle",
+                            menu: [
+                                {
+                                    type: "category",
+                                    category: {
+                                        permission: { type: "any" },
+                                        label: "MAIN",
+                                    },
+                                    children: [
+                                        {
+                                            type: "item",
+                                            item: {
+                                                label: "ホーム",
+                                                icon: "home",
+                                                href: "/1.0.0/index.html",
+                                            },
+                                            isActive: true,
+                                            badgeCount: 10,
+                                        },
+                                        {
+                                            type: "item",
+                                            item: {
+                                                label: "ドキュメント",
+                                                icon: "docs",
+                                                href: "/1.0.0/docs/index.html",
+                                            },
+                                            isActive: false,
+                                            badgeCount: 20,
+                                        },
+                                    ],
+                                    isExpand: true,
+                                    badgeCount: 30,
+                                },
+                                {
+                                    type: "category",
+                                    category: {
+                                        permission: { type: "any" },
+                                        label: "DOCUMENT",
+                                    },
+                                    children: [
+                                        {
+                                            type: "item",
+                                            item: {
+                                                label: "認証・認可",
+                                                icon: "auth",
+                                                href: "/1.0.0/docs/auth.html",
+                                            },
+                                            isActive: false,
+                                            badgeCount: 0,
+                                        },
+                                        {
+                                            type: "category",
+                                            category: {
+                                                permission: { type: "any" },
+                                                label: "DETAIL",
+                                            },
+                                            children: [
+                                                {
+                                                    type: "item",
+                                                    item: {
+                                                        label: "詳細",
+                                                        icon: "detail",
+                                                        href: "/1.0.0/docs/auth.html",
+                                                    },
+                                                    isActive: false,
+                                                    badgeCount: 0,
+                                                },
+                                            ],
+                                            isExpand: false,
+                                            badgeCount: 0,
+                                        },
+                                    ],
+                                    isExpand: true,
+                                    badgeCount: 0,
+                                },
+                            ],
+                        },
+                        {
+                            type: "succeed-to-toggle",
+                            menu: [
+                                {
+                                    type: "category",
+                                    category: {
+                                        permission: { type: "any" },
+                                        label: "MAIN",
+                                    },
+                                    children: [
+                                        {
+                                            type: "item",
+                                            item: {
+                                                label: "ホーム",
+                                                icon: "home",
+                                                href: "/1.0.0/index.html",
+                                            },
+                                            isActive: true,
+                                            badgeCount: 10,
+                                        },
+                                        {
+                                            type: "item",
+                                            item: {
+                                                label: "ドキュメント",
+                                                icon: "docs",
+                                                href: "/1.0.0/docs/index.html",
+                                            },
+                                            isActive: false,
+                                            badgeCount: 20,
+                                        },
+                                    ],
+                                    isExpand: true,
+                                    badgeCount: 30,
+                                },
+                                {
+                                    type: "category",
+                                    category: {
+                                        permission: { type: "any" },
+                                        label: "DOCUMENT",
+                                    },
+                                    children: [
+                                        {
+                                            type: "item",
+                                            item: {
+                                                label: "認証・認可",
+                                                icon: "auth",
+                                                href: "/1.0.0/docs/auth.html",
+                                            },
+                                            isActive: false,
+                                            badgeCount: 0,
+                                        },
+                                        {
+                                            type: "category",
+                                            category: {
+                                                permission: { type: "any" },
+                                                label: "DETAIL",
+                                            },
+                                            children: [
+                                                {
+                                                    type: "item",
+                                                    item: {
+                                                        label: "詳細",
+                                                        icon: "detail",
+                                                        href: "/1.0.0/docs/auth.html",
+                                                    },
+                                                    isActive: false,
+                                                    badgeCount: 0,
+                                                },
+                                            ],
+                                            isExpand: true,
+                                            badgeCount: 0,
+                                        },
+                                    ],
+                                    isExpand: true,
+                                    badgeCount: 0,
+                                },
+                            ],
+                        },
+                    ])
+                    expectToSaveExpand(repository, [["MAIN"], ["DOCUMENT"], ["DOCUMENT", "DETAIL"]])
+                    done()
+                }
+            }
+        }
+    })
+
+    test("load menu; development docs", (done) => {
+        const { resource } = developmentDocsMenuResource()
+
+        resource.menuList.onStateChange(stateHandler())
+
+        resource.menuList.load()
+
+        function stateHandler(): Post<MenuListState> {
+            const stack: MenuListState[] = []
+            return (state) => {
+                stack.push(state)
+
+                switch (state.type) {
+                    case "initial-menu-list":
+                    case "succeed-to-instant-load":
+                        // work in progress...
+                        break
+
+                    case "succeed-to-load":
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-instant-load",
+                                menu: [
+                                    {
+                                        type: "category",
+                                        category: {
+                                            permission: { type: "any" },
+                                            label: "MAIN",
+                                        },
+                                        children: [
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "ホーム",
+                                                    icon: "home",
+                                                    href: "/1.0.0/index.html",
+                                                },
+                                                isActive: true,
+                                                badgeCount: 0,
+                                            },
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "ドキュメント",
+                                                    icon: "docs",
+                                                    href: "/1.0.0/docs/index.html",
+                                                },
+                                                isActive: false,
+                                                badgeCount: 0,
+                                            },
+                                        ],
+                                        isExpand: true,
+                                        badgeCount: 0,
+                                    },
+                                    {
+                                        type: "category",
+                                        category: {
+                                            permission: { type: "any" },
+                                            label: "DOCUMENT",
+                                        },
+                                        children: [
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "認証・認可",
+                                                    icon: "auth",
+                                                    href: "/1.0.0/docs/auth.html",
+                                                },
+                                                isActive: false,
+                                                badgeCount: 0,
+                                            },
+                                            {
+                                                type: "category",
+                                                category: {
+                                                    permission: { type: "any" },
+                                                    label: "DETAIL",
+                                                },
+                                                children: [
+                                                    {
+                                                        type: "item",
+                                                        item: {
+                                                            label: "詳細",
+                                                            icon: "detail",
+                                                            href: "/1.0.0/docs/auth.html",
+                                                        },
+                                                        isActive: false,
+                                                        badgeCount: 0,
+                                                    },
+                                                ],
+                                                isExpand: false,
+                                                badgeCount: 0,
+                                            },
+                                        ],
+                                        isExpand: false,
+                                        badgeCount: 0,
+                                    },
+                                    {
+                                        type: "category",
+                                        category: {
+                                            permission: { type: "role", roles: ["development-docs"] },
+                                            label: "DEVELOPMENT",
+                                        },
+                                        children: [
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "配備構成",
+                                                    icon: "deployment",
+                                                    href: "/1.0.0/docs/development/deployment.html",
+                                                },
+                                                isActive: false,
+                                                badgeCount: 0,
+                                            },
+                                        ],
+                                        isExpand: false,
+                                        badgeCount: 0,
+                                    },
+                                ],
+                            },
+                            {
+                                type: "succeed-to-load",
+                                menu: [
+                                    {
+                                        type: "category",
+                                        category: {
+                                            permission: { type: "any" },
+                                            label: "MAIN",
+                                        },
+                                        children: [
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "ホーム",
+                                                    icon: "home",
+                                                    href: "/1.0.0/index.html",
+                                                },
+                                                isActive: true,
+                                                badgeCount: 10,
+                                            },
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "ドキュメント",
+                                                    icon: "docs",
+                                                    href: "/1.0.0/docs/index.html",
+                                                },
+                                                isActive: false,
+                                                badgeCount: 20,
+                                            },
+                                        ],
+                                        isExpand: true,
+                                        badgeCount: 30,
+                                    },
+                                    {
+                                        type: "category",
+                                        category: {
+                                            permission: { type: "any" },
+                                            label: "DOCUMENT",
+                                        },
+                                        children: [
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "認証・認可",
+                                                    icon: "auth",
+                                                    href: "/1.0.0/docs/auth.html",
+                                                },
+                                                isActive: false,
+                                                badgeCount: 0,
+                                            },
+                                            {
+                                                type: "category",
+                                                category: {
+                                                    permission: { type: "any" },
+                                                    label: "DETAIL",
+                                                },
+                                                children: [
+                                                    {
+                                                        type: "item",
+                                                        item: {
+                                                            label: "詳細",
+                                                            icon: "detail",
+                                                            href: "/1.0.0/docs/auth.html",
+                                                        },
+                                                        isActive: false,
+                                                        badgeCount: 0,
+                                                    },
+                                                ],
+                                                isExpand: false,
+                                                badgeCount: 0,
+                                            },
+                                        ],
+                                        isExpand: false,
+                                        badgeCount: 0,
+                                    },
+                                    {
+                                        type: "category",
+                                        category: {
+                                            permission: { type: "role", roles: ["development-docs"] },
+                                            label: "DEVELOPMENT",
+                                        },
+                                        children: [
+                                            {
+                                                type: "item",
+                                                item: {
+                                                    label: "配備構成",
+                                                    icon: "deployment",
+                                                    href: "/1.0.0/docs/development/deployment.html",
+                                                },
+                                                isActive: false,
+                                                badgeCount: 0,
+                                            },
+                                        ],
+                                        isExpand: false,
+                                        badgeCount: 0,
+                                    },
+                                ],
+                            },
+                        ])
+                        done()
+                        break
+
+                    case "failed-to-load":
+                    case "succeed-to-toggle":
+                    case "failed-to-toggle":
+                        done(new Error(`${state.type}`))
+                        break
+
+                    default:
+                        assertNever(state)
+                }
+            }
+        }
+    })
+})
+
+function standardMenuResource() {
+    const menuTarget = standardMenuTarget()
+    const menuTree = standardMenuTree()
+    const repository = standardRepository()
+    const simulator = standardSimulator()
+    const resource = newMenuResource(menuTarget, menuTree, repository, simulator)
+
+    return { repository, resource }
+}
+function unknownMenuResource() {
+    const menuTarget = unknownMenuTarget()
+    const menuTree = standardMenuTree()
+    const repository = standardRepository()
+    const simulator = standardSimulator()
+    const resource = newMenuResource(menuTarget, menuTree, repository, simulator)
+
+    return { resource }
+}
+function developmentDocsMenuResource() {
+    const menuTarget = standardMenuTarget()
+    const menuTree = standardMenuTree()
+    const repository = developmentDocsRepository()
+    const simulator = standardSimulator()
+    const resource = newMenuResource(menuTarget, menuTree, repository, simulator)
+
+    return { resource }
+}
+function expandMenuResource() {
+    const menuTarget = standardMenuTarget()
+    const menuTree = standardMenuTree()
+    const repository = expandRepository()
+    const simulator = standardSimulator()
+    const resource = newMenuResource(menuTarget, menuTree, repository, simulator)
+
+    return { resource }
+}
+
+function standardMenuTarget(): MenuTarget {
+    return markMenuTarget({ versioned: true, version: "1.0.0", currentPath: "/index.html" })
+}
+function unknownMenuTarget(): MenuTarget {
+    return markMenuTarget({ versioned: true, version: "1.0.0", currentPath: "/unknown.html" })
+}
+
+function standardMenuTree(): MenuTree {
+    return [
+        {
+            type: "category",
+            category: { label: "MAIN", permission: { type: "any" } },
+            children: [
+                { type: "item", item: { label: "ホーム", icon: "home", path: "/index.html" } },
+                {
+                    type: "item",
+                    item: { label: "ドキュメント", icon: "docs", path: "/docs/index.html" },
+                },
+            ],
+        },
+        {
+            type: "category",
+            category: { label: "DOCUMENT", permission: { type: "any" } },
+            children: [
+                { type: "item", item: { label: "認証・認可", icon: "auth", path: "/docs/auth.html" } },
+                {
+                    type: "category",
+                    category: { label: "DETAIL", permission: { type: "any" } },
+                    children: [
+                        {
+                            type: "item",
+                            item: { label: "詳細", icon: "detail", path: "/docs/auth.html" },
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            type: "category",
+            category: {
+                label: "DEVELOPMENT",
+                permission: { type: "role", roles: ["development-docs"] },
+            },
+            children: [
+                {
+                    type: "item",
+                    item: {
+                        label: "配備構成",
+                        icon: "deployment",
+                        path: "/docs/development/deployment.html",
+                    },
+                },
+            ],
+        },
+    ]
+}
+
+function standardRepository(): MenuRepository {
+    return {
+        apiCredentials: initMemoryApiCredentialRepository(
+            markApiNonce("api-nonce"),
+            markApiRoles(["admin"])
+        ),
+        menuExpands: initMemoryMenuExpandRepository([]),
+    }
+}
+function developmentDocsRepository(): MenuRepository {
+    return {
+        apiCredentials: initMemoryApiCredentialRepository(
+            markApiNonce("api-nonce"),
+            markApiRoles(["admin", "development-docs"])
+        ),
+        menuExpands: initMemoryMenuExpandRepository([]),
+    }
+}
+function expandRepository(): MenuRepository {
+    return {
+        apiCredentials: initMemoryApiCredentialRepository(
+            markApiNonce("api-nonce"),
+            markApiRoles(["admin"])
+        ),
+        menuExpands: initMemoryMenuExpandRepository([["DOCUMENT"]]),
+    }
+}
+
+function standardSimulator(): MenuSimulator {
+    return {
+        menuBadge: {
+            getMenuBadge: async (_apiNonce: ApiNonce): Promise<MenuBadge> => {
+                const map = new MenuBadgeMap()
+                map.init([
+                    { key: "/index.html", value: 10 },
+                    { key: "/docs/index.html", value: 20 },
+                ])
+                return map
+            },
+        },
+    }
+}
+
+function expectToSaveExpand(repository: MenuRepository, menuExpand: string[][]) {
+    expect(repository.menuExpands.findMenuExpand()).toEqual({ success: true, menuExpand })
+}
+
+interface Post<T> {
+    (state: T): void
+}
+
+function assertNever(_: never): never {
+    throw new Error("NEVER")
+}

@@ -15,15 +15,16 @@ import { initRenewCredentialComponent } from "../impl"
 
 import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
 
+import { Clock } from "../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../common/application/infra"
 import {
     RenewActionConfig,
     SetContinuousRenewActionConfig,
     AuthCredentialRepository,
-    Clock,
 } from "../../../login/renew/infra"
 
 import { RenewCredentialResource } from "../../Login/view"
+
 import { RenewCredentialComponent } from "../component"
 
 export type RenewCredentialConfig = {

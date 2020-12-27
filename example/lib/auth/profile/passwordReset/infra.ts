@@ -16,12 +16,12 @@ export type PasswordResetSessionActionConfig = Readonly<{
 }>
 
 export type StartSessionInfra = Readonly<{
-    client: PasswordResetSessionClient
+    resetSession: PasswordResetSessionClient
     config: StartSessionConfig
     delayed: Delayed
 }>
 export type CheckStatusInfra = Readonly<{
-    client: PasswordResetSessionClient
+    reset: PasswordResetSessionClient
     config: CheckStatusConfig
     delayed: Delayed
     wait: Wait

@@ -20,7 +20,7 @@ export function BreadcrumbList({ breadcrumb }: Props): VNode {
     }, [])
 
     switch (state.type) {
-        case "initial-breadcrumb":
+        case "initial-breadcrumb-list":
             return HIDDEN_CONTENT
 
         case "succeed-to-load":
