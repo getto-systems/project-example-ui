@@ -13,7 +13,7 @@ deploy_build_ui(){
   npm run build
 }
 deploy_rewrite_version(){
-  for file in $(find public/dist public/root -name '*.html'); do
+  for file in $(find example/public/dist example/public/root -name '*.html'); do
     if [ -f "$file" ]; then
       sed -i -e "s|/dist/|/$version/|g" "$file"
     fi
@@ -29,11 +29,11 @@ deploy_cp_public(){
     --cache-control "public, max-age=31536000" \
     --metadata "$metadata" \
     --recursive \
-    public/dist s3://$AWS_S3_PUBLIC_BUCKET/$version
+    example/public/dist s3://$AWS_S3_PUBLIC_BUCKET/$version
 
-  cp public/dist/update.js public/root/
+  cp example/public/dist/update/moveToNextVersion.js example/public/root/
 
-  for file in public/root/*; do
+  for file in example/public/root/*; do
     aws s3 cp \
       --acl private \
       --cache-control "public, max-age=86400" \
@@ -51,7 +51,7 @@ deploy_cp_secure(){
     --cache-control "public, max-age=31536000" \
     --metadata "$metadata" \
     --recursive \
-    secure/dist s3://$AWS_S3_SECURE_BUCKET/$version
+    example/secure/dist s3://$AWS_S3_SECURE_BUCKET/$version
 }
 
 deploy_main
