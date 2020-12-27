@@ -3,6 +3,7 @@ const path = require("path")
 const fs = require("fs")
 
 const WorkerPlugin = require("worker-plugin")
+const TerserPlugin = require("terser-webpack-plugin")
 
 const entryPoint = require("../entryPoint")
 
@@ -58,6 +59,10 @@ module.exports = {
                 },
             },
         ],
+    },
+    optimization: {
+        minimize: process.env.BUILD_ENV == "production",
+        minimizer: [new TerserPlugin()],
     },
     plugins: [new WorkerPlugin()],
     watchOptions: {

@@ -5,7 +5,7 @@ const path = require("path")
 const entryPoint = require("./entryPoint")
 
 function dumpEnv() {
-    const isProduction = process.env.BUILD_ENV == "PRODUCTION"
+    const isProduction = process.env.BUILD_ENV == "production"
     let version = (() => {
         if (isProduction) {
             return fs.readFileSync(path.join(__dirname, "../.release-version"), "utf8").trim()
