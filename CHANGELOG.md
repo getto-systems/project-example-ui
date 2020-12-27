@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version : 0.7.1
+
+- fix: storybook : See merge request getto-systems-base/projects/example/ui!684
+- fix: release : See merge request getto-systems-base/projects/example/ui!683
+
+
+
 ## Version : 0.7.0
 
 - fix: story : See merge request getto-systems-base/projects/example/ui!681
