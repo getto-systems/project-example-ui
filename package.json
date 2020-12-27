@@ -17,7 +17,7 @@
     "postcss": "npm run postcss:line-icons && npm run postcss:font",
     "postcss:font": "postcss --config example/postcss.config.js --output example/public/dist/css/font.min.css example/css/font.css",
     "postcss:line-icons": "postcss --config example/postcss.config.js --output example/public/dist/css/line-icons.min.css example/css/line-icons.css",
-    "test": "npm run test:eslint && npm run test:jest",
+    "test": "npm run proto && npm run setup && npm run test:eslint && npm run test:jest",
     "test:eslint": "eslint --ext .ts example/lib/",
     "test:jest": "jest -c example/jest.config.js",
     "storybook": "cd storybook && npm run storybook",

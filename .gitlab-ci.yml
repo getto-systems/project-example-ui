@@ -23,9 +23,6 @@ test:
 
   before_script:
     - npm clean-install
-    - npm run proto
-    - npm run proto
-    - npm run setup
   script:
     - npm test
 
@@ -84,9 +81,6 @@ release_deploy:
     - apt-get update && apt-get install -y python3-pip
     - pip3 install awscli
     - npm clean-install
-    - npm run proto
-    - npm run proto
-    - npm run setup
   script:
     - ./.ci/deploy.sh
 
