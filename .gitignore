@@ -1,6 +1,9 @@
 /tmp/
 /node_modules/
 
+/storybook/node_modules/
+/storybook/lib/
+
 /example/public/dist/coverage/
 /example/public/dist/vs-ext/
 
