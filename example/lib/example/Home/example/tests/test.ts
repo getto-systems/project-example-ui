@@ -19,9 +19,9 @@ import { ApiNonce, markApiNonce, markApiRoles } from "../../../shared/credential
 // デフォルトの season を取得する
 const NOW = new Date("2021-01-01 10:00:00")
 
-describe("BreadcrumbList", () => {
-    test("load breadcrumb", (done) => {
-        const { resource } = standardMenuResource()
+describe("Example", () => {
+    test("load season", (done) => {
+        const { resource } = standardResource()
 
         resource.example.onStateChange(stateHandler())
 
@@ -54,7 +54,7 @@ describe("BreadcrumbList", () => {
     })
 })
 
-function standardMenuResource() {
+function standardResource() {
     const version = standardVersion()
     const url = standardURL()
     const menuTree = standardMenuTree()

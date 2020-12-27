@@ -9,8 +9,8 @@ import { detectMenuTarget } from "../../../Outline/Menu/impl/location"
 import { loadApiNonce, loadApiRoles } from "../../../shared/credential/impl/core"
 import { loadSeason } from "../../../shared/season/impl/core"
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../shared/menu/impl/core"
-import { mainMenuTree } from "../../../shared/menu/impl/menuTree"
-import { initDashboardResource } from "../impl/core"
+import { mainMenuTree } from "../../../Outline/Menu/main/menuTree"
+import { DashboardCollector, DashboardFactory, initDashboardResource } from "../impl/core"
 
 import { MenuBadgeMap } from "../../../shared/menu/infra"
 
@@ -27,25 +27,25 @@ import { markApiNonce, markApiRoles } from "../../../shared/credential/data"
 
 export function newDashboardAsSingle(): DashboardEntryPoint {
     const menuExpandStorage = localStorage
-    const currentLocation = location
+    const currentURL = new URL(location.toString())
 
-    const factory = {
+    const factory: DashboardFactory = {
         actions: {
             credential: initCredentialAction(),
             menu: initMenuAction(menuExpandStorage),
             season: initSeasonAction(),
         },
         components: {
-            season: initSeasonInfoComponent,
-            menu: initMenuListComponent,
-            breadcrumb: initBreadcrumbListComponent,
+            seasonInfo: initSeasonInfoComponent,
+            menuList: initMenuListComponent,
+            breadcrumbList: initBreadcrumbListComponent,
 
             example: initExampleComponent,
         },
     }
-    const collector = {
+    const collector: DashboardCollector = {
         menu: {
-            getMenuTarget: () => detectMenuTarget(env.version, currentLocation),
+            getMenuTarget: () => detectMenuTarget(env.version, currentURL),
         },
     }
     return {

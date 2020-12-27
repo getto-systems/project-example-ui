@@ -3,7 +3,7 @@ import { initCredentialAction, initMenuAction, initSeasonAction } from "../../..
 import { detectMenuTarget } from "../../../Outline/Menu/impl/location"
 import { MenuBadgeSimulator } from "../../../shared/menu/impl/client/menuBadge/simulate"
 
-import { DashboardFactory, initDashboardResource } from "../impl/core"
+import { DashboardCollector, DashboardFactory, initDashboardResource } from "../impl/core"
 
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initBreadcrumbListComponent } from "../../../Outline/breadcrumbList/impl"
@@ -48,7 +48,7 @@ export function newDashboardResource(
             example: initExampleComponent,
         },
     }
-    const collector = {
+    const collector: DashboardCollector = {
         menu: {
             getMenuTarget: () => detectMenuTarget(version, currentURL),
         },

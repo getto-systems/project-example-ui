@@ -1,7 +1,7 @@
 import { ContentPath, contentPaths } from "../../../content/data"
 
-export function detectContentPath(version: string, currentLocation: Location): ContentPath {
-    const pathname = new URL(currentLocation.toString()).pathname
+export function detectContentPath(version: string, currentURL: URL): ContentPath {
+    const pathname = currentURL.pathname
     const versionPrefix = `/${version}/`
     if (!pathname.startsWith(versionPrefix)) {
         return defaultDocumentTarget

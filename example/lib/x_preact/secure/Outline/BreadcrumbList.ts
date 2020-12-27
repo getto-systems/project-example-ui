@@ -10,13 +10,13 @@ import {
 import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../../example/shared/menu/data"
 
 type Props = Readonly<{
-    breadcrumb: BreadcrumbListComponent
+    breadcrumbList: BreadcrumbListComponent
 }>
-export function BreadcrumbList({ breadcrumb }: Props): VNode {
+export function BreadcrumbList({ breadcrumbList }: Props): VNode {
     const [state, setState] = useState(initialBreadcrumbListState)
     useEffect(() => {
-        breadcrumb.onStateChange(setState)
-        breadcrumb.load()
+        breadcrumbList.onStateChange(setState)
+        breadcrumbList.load()
     }, [])
 
     switch (state.type) {

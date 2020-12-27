@@ -5,29 +5,20 @@ import { BreadcrumbListComponentFactory } from "../../../../example/Outline/brea
 
 import { ContentComponentFactory } from "../../content/component"
 
-import { LoadApiNoncePod, LoadApiRolesPod } from "../../../../example/shared/credential/action"
-import { LoadBreadcrumbPod, LoadMenuPod, MenuTargetCollector, ToggleMenuExpandPod } from "../../../../example/shared/menu/action"
+import { CredentialAction } from "../../../../example/shared/credential/action"
+import { MenuAction, MenuTargetCollector } from "../../../../example/shared/menu/action"
 
-import { LoadContentCollector, LoadContentPod } from "../../../content/action"
+import { ContentAction, LoadContentCollector } from "../../../content/action"
 
 export type DocumentFactory = Readonly<{
     actions: Readonly<{
-        credential: Readonly<{
-            loadApiNonce: LoadApiNoncePod
-            loadApiRoles: LoadApiRolesPod
-        }>
-        menu: Readonly<{
-            loadBreadcrumb: LoadBreadcrumbPod
-            loadMenu: LoadMenuPod
-            toggleMenuExpand: ToggleMenuExpandPod
-        }>
-        content: Readonly<{
-            loadDocument: LoadContentPod
-        }>
+        credential: CredentialAction
+        menu: MenuAction
+        content: ContentAction
     }>
     components: Readonly<{
-        menu: MenuListComponentFactory
-        breadcrumb: BreadcrumbListComponentFactory
+        menuList: MenuListComponentFactory
+        breadcrumbList: BreadcrumbListComponentFactory
 
         content: ContentComponentFactory
     }>
@@ -48,11 +39,11 @@ export function initDocumentResource(
         loadMenu: factory.actions.menu.loadMenu(collector.menu),
         toggleMenuExpand: factory.actions.menu.toggleMenuExpand(),
 
-        loadDocument: factory.actions.content.loadDocument(collector.content),
+        loadDocument: factory.actions.content.loadContent(collector.content),
     }
     return {
-        menuList: factory.components.menu(actions),
-        breadcrumbList: factory.components.breadcrumb(actions),
+        menuList: factory.components.menuList(actions),
+        breadcrumbList: factory.components.breadcrumbList(actions),
 
         content: factory.components.content(actions),
     }
