@@ -5,8 +5,8 @@ import { MenuListComponent, MenuListState } from "./component"
 
 import { markMenuCategory, markMenuItem, Menu } from "../../shared/menu/data"
 
-export function initMenu(state: MenuListState): MenuMockComponent {
-    return new MenuMockComponent(state)
+export function initMenuListComponent(state: MenuListState): MenuListMockComponent {
+    return new MenuListMockComponent(state)
 }
 
 export type MenuMockProps =
@@ -50,7 +50,7 @@ export function mapMenuMockProps(props: MenuMockProps): MenuListState {
     }
 }
 
-class MenuMockComponent extends MockComponent<MenuListState> implements MenuListComponent {
+class MenuListMockComponent extends MockComponent<MenuListState> implements MenuListComponent {
     load() {
         // mock では特に何もしない
     }

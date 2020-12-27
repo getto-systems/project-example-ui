@@ -4,7 +4,11 @@ import { html } from "htm/preact"
 import { MenuList } from "../../../x_preact/secure/Outline/MenuList"
 import { menuHeader } from "../../../x_preact/secure/layout"
 
-import { mapMenuMockProps, MenuMockProps, initMenu } from "../../../example/Outline/menuList/mock"
+import {
+    mapMenuMockProps,
+    MenuMockProps,
+    initMenuListComponent,
+} from "../../../example/Outline/menuList/mock"
 
 import { initialMenuListState } from "../../../example/Outline/menuList/component"
 
@@ -19,14 +23,14 @@ export default {
 
 type MockProps = MenuMockProps
 const Template: Story<MockProps> = (args) => {
-    const menu = initMenu(initialMenuListState)
+    const menuList = initMenuListComponent(initialMenuListState)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
-        menu.update(mapMenuMockProps(props.args))
+        menuList.update(mapMenuMockProps(props.args))
         return html`<main class="layout">
             <aside class="layout__menu menu">
-                ${menuHeader()} ${h(MenuList, { menu })}
+                ${menuHeader()} ${h(MenuList, { menuList })}
             </aside>
         </main>`
     }

@@ -7,7 +7,10 @@ import {
     ContentMockProps,
     initContent,
 } from "../../../document/Document/content/mock"
-import { initBreadcrumb, mapBreadcrumbMockProps } from "../../../example/Outline/breadcrumbList/mock"
+import {
+    initBreadcrumbListComponent,
+    mapBreadcrumbMockProps,
+} from "../../../example/Outline/breadcrumbList/mock"
 
 import { initialContentState } from "../../../document/Document/content/component"
 
@@ -23,14 +26,14 @@ export default {
 type MockProps = ContentMockProps
 const Template: Story<MockProps> = (args) => {
     const content = initContent(initialContentState)
-    const breadcrumb = initBreadcrumb(
+    const breadcrumbList = initBreadcrumbListComponent(
         mapBreadcrumbMockProps({ type: "success", label: "ホーム", icon: "home" })
     )
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
         content.update(mapContentMockProps(props.args))
-        return h(Content, { content, breadcrumb })
+        return h(Content, { content, breadcrumbList })
     }
 }
 
