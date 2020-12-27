@@ -69,7 +69,7 @@ deploy_cp_public_index(){
     --acl private \
     --cache-control "public, max-age=31536000" \
     --metadata "$metadata" \
-    example/public/dist/index.html s3://$AWS_S3_PUBLIC_BUCKET/$version/index.html
+    example/public/dist/index.html s3://$AWS_S3_PUBLIC_BUCKET/$1/index.html
 }
 
 deploy_main
