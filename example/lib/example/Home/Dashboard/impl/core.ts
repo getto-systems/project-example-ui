@@ -17,9 +17,9 @@ export type DashboardFactory = Readonly<{
         season: SeasonAction
     }>
     components: Readonly<{
-        season: SeasonInfoComponentFactory
-        menu: MenuListComponentFactory
-        breadcrumb: BreadcrumbListComponentFactory
+        seasonInfo: SeasonInfoComponentFactory
+        menuList: MenuListComponentFactory
+        breadcrumbList: BreadcrumbListComponentFactory
 
         example: ExampleComponentFactory
     }>
@@ -27,7 +27,7 @@ export type DashboardFactory = Readonly<{
 export type DashboardCollector = Readonly<{
     menu: MenuTargetCollector
 }>
-export function initDashboardComponent(
+export function initDashboardResource(
     factory: DashboardFactory,
     collector: DashboardCollector
 ): DashboardResource {
@@ -42,9 +42,9 @@ export function initDashboardComponent(
         toggleMenuExpand: factory.actions.menu.toggleMenuExpand(),
     }
     return {
-        season: factory.components.season(actions),
-        menu: factory.components.menu(actions),
-        breadcrumb: factory.components.breadcrumb(actions),
+        seasonInfo: factory.components.seasonInfo(actions),
+        menuList: factory.components.menuList(actions),
+        breadcrumbList: factory.components.breadcrumbList(actions),
 
         example: factory.components.example(actions),
     }

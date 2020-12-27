@@ -9,8 +9,8 @@ export type DocumentEntryPoint = Readonly<{
 }>
 
 export type DocumentResource = Readonly<{
-    menu: MenuListComponent
-    breadcrumb: BreadcrumbListComponent
+    menuList: MenuListComponent
+    breadcrumbList: BreadcrumbListComponent
 
     content: ContentComponent
 }>

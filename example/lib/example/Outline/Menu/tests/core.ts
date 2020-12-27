@@ -3,6 +3,8 @@ import {
     MenuBadgeSimulator,
 } from "../../../shared/menu/impl/client/menuBadge/simulate"
 
+import { detectMenuTarget } from "../impl/location"
+
 import { initBreadcrumbListComponent } from "../../breadcrumbList/impl"
 import { initMenuListComponent } from "../../menuList/impl"
 
@@ -22,8 +24,6 @@ import { CredentialAction } from "../../../shared/credential/action"
 import { MenuAction } from "../../../shared/menu/action"
 import { SeasonAction } from "../../../shared/season/action"
 
-import { MenuTarget } from "../../../shared/menu/data"
-
 export type MenuResource = Readonly<{
     breadcrumbList: BreadcrumbListComponent
     menuList: MenuListComponent
@@ -36,7 +36,8 @@ export type MenuSimulator = Readonly<{
     menuBadge: MenuBadgeSimulator
 }>
 export function newMenuResource(
-    menuTarget: MenuTarget,
+    version: string,
+    currentURL: URL,
     menuTree: MenuTree,
     repository: MenuRepository,
     simulator: MenuSimulator
@@ -47,7 +48,7 @@ export function newMenuResource(
     }
     const collector = {
         menu: {
-            getMenuTarget: (): MenuTarget => menuTarget,
+            getMenuTarget: () => detectMenuTarget(version, currentURL),
         },
     }
 

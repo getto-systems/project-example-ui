@@ -36,7 +36,7 @@ export type DocumentCollector = Readonly<{
     menu: MenuTargetCollector
     content: LoadContentCollector
 }>
-export function initDocumentComponent(
+export function initDocumentResource(
     factory: DocumentFactory,
     collector: DocumentCollector
 ): DocumentResource {
@@ -51,8 +51,8 @@ export function initDocumentComponent(
         loadDocument: factory.actions.content.loadDocument(collector.content),
     }
     return {
-        menu: factory.components.menu(actions),
-        breadcrumb: factory.components.breadcrumb(actions),
+        menuList: factory.components.menu(actions),
+        breadcrumbList: factory.components.breadcrumb(actions),
 
         content: factory.components.content(actions),
     }
