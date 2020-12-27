@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version : 0.7.2
+
+- fix: gitlab-ci : See merge request getto-systems-base/projects/example/ui!686
+
+
 ## Version : 0.7.1
 
 - fix: storybook : See merge request getto-systems-base/projects/example/ui!684
