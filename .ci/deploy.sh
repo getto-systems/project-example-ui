@@ -8,6 +8,11 @@ deploy_main(){
   deploy_rewrite_version
   deploy_cp_public
   deploy_cp_secure
+
+  deploy_cp_public_index "0.7.0"
+  deploy_cp_public_index "0.7.1"
+  deploy_cp_public_index "0.7.2"
+  deploy_cp_public_index "0.7.3"
 }
 deploy_build_ui(){
   npm run build
@@ -52,6 +57,19 @@ deploy_cp_secure(){
     --metadata "$metadata" \
     --recursive \
     example/secure/dist s3://$AWS_S3_SECURE_BUCKET/$version
+}
+
+deploy_cp_public_index(){
+  # 歯抜けになってしまったパージョンのために index.html を埋める
+  local metadata
+  local file
+  metadata=$(node example/public/metadata.js)
+
+  aws s3 cp \
+    --acl private \
+    --cache-control "public, max-age=31536000" \
+    --metadata "$metadata" \
+    example/public/dist/index.html s3://$AWS_S3_PUBLIC_BUCKET/$version/index.html
 }
 
 deploy_main
