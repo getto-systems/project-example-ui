@@ -11,7 +11,7 @@ protobuf_main(){
   local pb_path
   local d_path
 
-  root=public
+  root=example
   base=$root/protobuf/
   lib=$root/lib
   types=$root/types
