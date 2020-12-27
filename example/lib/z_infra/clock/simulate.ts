@@ -1,10 +1,10 @@
 import { Clock } from "./infra"
 
-export function initStaticClock(staticNow: Date): Clock {
+export function initStaticClock(staticNow: Date): StaticClock {
     return new StaticClock(staticNow)
 }
 
-class StaticClock {
+export class StaticClock implements Clock {
     staticNow: Date
 
     constructor(staticNow: Date) {
@@ -13,5 +13,8 @@ class StaticClock {
 
     now(): Date {
         return this.staticNow
+    }
+    update(updatedNow: Date): void {
+        this.staticNow = updatedNow
     }
 }

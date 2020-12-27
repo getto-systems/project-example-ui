@@ -47,12 +47,12 @@ function findLastLogin(
     hook(findResult.lastLogin)
 }
 async function renewCredential(infra: RenewInfra, lastLogin: LastLogin, post: Post<ForceRenewEvent>) {
-    const { authCredentials, renew: client, config, delayed } = infra
+    const { authCredentials, renew, config, delayed } = infra
 
     post({ type: "try-to-renew" })
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(client.renew(lastLogin.ticketNonce), config.delay, () =>
+    const response = await delayed(renew.renew(lastLogin.ticketNonce), config.delay, () =>
         post({ type: "delayed-to-renew" })
     )
     if (!response.success) {
@@ -82,7 +82,7 @@ export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuou
     authCredential,
     post
 ) => {
-    const { authCredentials, renew: client, clock, config } = infra
+    const { authCredentials, renew, clock, config } = infra
 
     if (authCredential.store) {
         const storeResult = authCredentials.storeAuthCredential(authCredential.authCredential)
@@ -122,7 +122,7 @@ export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuou
             return NEXT
         }
 
-        const response = await client.renew(findResult.lastLogin.ticketNonce)
+        const response = await renew.renew(findResult.lastLogin.ticketNonce)
         if (!response.success) {
             return CANCEL
         }
@@ -139,9 +139,6 @@ export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuou
         return NEXT
     }
 }
-
-type ExpireTime = Readonly<{ expire_millisecond: number }>
-type DelayTime = Readonly<{ delay_millisecond: number }>
 
 interface Post<T> {
     (event: T): void

@@ -9,9 +9,8 @@ import {
 
 import { initMemoryAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential/memory"
 import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
-import { initStaticClock } from "../../../../z_infra/clock/simulate"
+import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
 
-import { Clock } from "../../../../z_infra/clock/infra"
 import { AuthCredentialRepository } from "../../../login/renew/infra"
 
 import { RenewCredentialState } from "../component"
@@ -30,9 +29,13 @@ const SUCCEED_TO_RENEW_AT = new Date("2020-01-01 10:00:00")
 const NOW_INSTANT_LOAD_AVAILABLE = new Date("2020-01-01 09:00:10")
 const NOW_INSTANT_LOAD_DISABLED = new Date("2020-01-01 09:00:30")
 
+// continuous renew リクエストを投げるべきかの判定に使用する
+// テストが完了したら clock が返す値をこっちにする
+const COMPLETED_NOW = new Date("2020-01-01 11:00:00")
+
 describe("RenewCredential", () => {
     test("instant load", (done) => {
-        const { repository, resource } = instantRenewCredentialResource()
+        const { repository, clock, resource } = instantRenewCredentialResource()
 
         resource.renewCredential.onStateChange(stateHandler())
 
@@ -55,6 +58,7 @@ describe("RenewCredential", () => {
                         break
 
                     case "succeed-to-set-continuous-renew":
+                        clock.update(COMPLETED_NOW)
                         expect(stack).toEqual([
                             {
                                 type: "try-to-instant-load",
@@ -88,7 +92,7 @@ describe("RenewCredential", () => {
     })
 
     test("instant load failed", (done) => {
-        const { repository, resource } = instantRenewCredentialResource()
+        const { repository, clock, resource } = instantRenewCredentialResource()
 
         resource.renewCredential.onStateChange(stateHandler())
 
@@ -116,6 +120,7 @@ describe("RenewCredential", () => {
                         break
 
                     case "try-to-load":
+                        clock.update(COMPLETED_NOW)
                         expect(stack).toEqual([
                             {
                                 type: "try-to-instant-load",
@@ -148,7 +153,7 @@ describe("RenewCredential", () => {
     })
 
     test("renew stored credential", (done) => {
-        const { repository, resource } = standardRenewCredentialResource()
+        const { repository, clock, resource } = standardRenewCredentialResource()
 
         resource.renewCredential.onStateChange(stateHandler())
 
@@ -173,6 +178,7 @@ describe("RenewCredential", () => {
                         break
 
                     case "try-to-load":
+                        clock.update(COMPLETED_NOW)
                         expect(stack).toEqual([
                             { type: "try-to-renew" },
                             {
@@ -202,7 +208,7 @@ describe("RenewCredential", () => {
 
     test("renew stored credential; with delayed", (done) => {
         // wait for delayed timeout
-        const { repository, resource } = waitRenewCredentialResource()
+        const { repository, clock, resource } = waitRenewCredentialResource()
 
         resource.renewCredential.onStateChange(stateHandler())
 
@@ -227,6 +233,7 @@ describe("RenewCredential", () => {
                         break
 
                     case "try-to-load":
+                        clock.update(COMPLETED_NOW)
                         expect(stack).toEqual([
                             { type: "try-to-renew" },
                             { type: "delayed-to-renew" }, // delayed event
@@ -358,7 +365,7 @@ function standardRenewCredentialResource() {
         // ここでは特に何もしない
     })
 
-    return { repository, resource }
+    return { repository, clock, resource }
 }
 function instantRenewCredentialResource() {
     const currentURL = standardURL()
@@ -370,7 +377,7 @@ function instantRenewCredentialResource() {
         // ここでは特に何もしない
     })
 
-    return { repository, resource }
+    return { repository, clock, resource }
 }
 function waitRenewCredentialResource() {
     const currentURL = standardURL()
@@ -382,7 +389,7 @@ function waitRenewCredentialResource() {
         // ここでは特に何もしない
     })
 
-    return { repository, resource }
+    return { repository, clock, resource }
 }
 function emptyRenewCredentialResource() {
     const currentURL = standardURL()
@@ -451,14 +458,15 @@ function waitSimulator(): RenewCredentialSimulator {
 }
 
 function renewSimulator(waitTime: WaitTime): RenewSimulator {
-    let renewed = false
+    let renewedCount = 0
     return {
         renew: async () => {
-            if (renewed) {
-                // 最初の一回だけ renew して、あとは renew を cancel するために null を返す
+            if (renewedCount > 1) {
+                // 初回 renew と continuous renew 一回目の 2回だけ
+                // renew して、あとは renew を cancel するために null を返す
                 return null
             }
-            renewed = true
+            renewedCount++
 
             if (waitTime.wait_millisecond > 0) {
                 await wait(waitTime, () => null)
@@ -473,10 +481,10 @@ function renewSimulator(waitTime: WaitTime): RenewSimulator {
     }
 }
 
-function standardClock(): Clock {
+function standardClock(): StaticClock {
     return initStaticClock(NOW_INSTANT_LOAD_DISABLED)
 }
-function instantAvailableClock(): Clock {
+function instantAvailableClock(): StaticClock {
     return initStaticClock(NOW_INSTANT_LOAD_AVAILABLE)
 }
 
