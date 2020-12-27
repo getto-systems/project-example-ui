@@ -9,7 +9,7 @@ import { detectMenuTarget } from "../../../Outline/Menu/impl/location"
 import { loadApiNonce, loadApiRoles } from "../../../shared/credential/impl/core"
 import { loadSeason } from "../../../shared/season/impl/core"
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../shared/menu/impl/core"
-import { mainMenuTree } from "../../../shared/menu/impl/tree"
+import { mainMenuTree } from "../../../shared/menu/impl/menuTree"
 import { initDashboardComponent } from "../impl/core"
 
 import { MenuBadgeMap } from "../../../shared/menu/infra"
@@ -17,8 +17,8 @@ import { MenuBadgeMap } from "../../../shared/menu/infra"
 import { initDateClock } from "../../../../z_infra/clock/date"
 import { initMemoryApiCredentialRepository } from "../../../shared/credential/impl/repository/apiCredential/memory"
 import { initMemorySeasonRepository } from "../../../shared/season/impl/repository/season/memory"
-import { initSimulateBadgeClient } from "../../../shared/menu/impl/client/badge/simulate"
-import { initStorageMenuExpandRepository } from "../../../shared/menu/impl/repository/expand/storage"
+import { initSimulateMenuBadgeClient } from "../../../shared/menu/impl/client/menuBadge/simulate"
+import { initStorageMenuExpandRepository } from "../../../shared/menu/impl/repository/menuExpand/storage"
 
 import { DashboardEntryPoint } from "../view"
 
@@ -68,21 +68,26 @@ function initCredentialAction() {
     }
 }
 function initMenuAction(menuExpandStorage: Storage) {
-    const tree = mainMenuTree()
-    const badge = initSimulateBadgeClient(new MenuBadgeMap())
-    const expands = initStorageMenuExpandRepository(menuExpandStorage, env.storageKey.menuExpand.main)
+    const menuTree = mainMenuTree()
+    const menuBadge = initSimulateMenuBadgeClient({
+        getMenuBadge: async () => new MenuBadgeMap(),
+    })
+    const menuExpands = initStorageMenuExpandRepository(
+        menuExpandStorage,
+        env.storageKey.menuExpand.main
+    )
 
     return {
-        loadBreadcrumb: loadBreadcrumb({ tree }),
-        loadMenu: loadMenu({ tree, badge, expands }),
-        toggleMenuExpand: toggleMenuExpand({ expands }),
+        loadBreadcrumb: loadBreadcrumb({ menuTree }),
+        loadMenu: loadMenu({ menuTree, menuBadge, menuExpands }),
+        toggleMenuExpand: toggleMenuExpand({ menuExpands }),
     }
 }
 function initSeasonAction() {
     return {
         loadSeason: loadSeason({
             seasons: initMemorySeasonRepository({
-                store: true,
+                stored: true,
                 season: markSeason({ year: new Date().getFullYear() }),
             }),
             clock: initDateClock(),

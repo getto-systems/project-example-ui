@@ -155,10 +155,9 @@ export function initRenewAction(
     authCredentials: AuthCredentialRepository,
     authClient: AuthClient
 ): RenewAction {
-    const client = initFetchRenewClient(authClient)
     const infra = {
         authCredentials,
-        client,
+        renew: initFetchRenewClient(authClient),
         config: config.renew,
         delayed,
         clock: initDateClock(),
@@ -179,7 +178,7 @@ export function initSetContinuousRenewAction(
     return {
         setContinuousRenew: setContinuousRenew({
             authCredentials,
-            client,
+            renew: client,
             config: config.setContinuousRenew,
             clock: initDateClock(),
         }),

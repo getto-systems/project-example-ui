@@ -6,7 +6,7 @@ export type PasswordLoginActionConfig = Readonly<{
 }>
 
 export type LoginInfra = Readonly<{
-    client: LoginClient
+    login: LoginClient
     config: LoginConfig
     delayed: Delayed
 }>

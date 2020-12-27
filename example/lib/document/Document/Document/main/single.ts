@@ -9,13 +9,13 @@ import { initContentComponent } from "../../content/impl"
 
 import { loadApiNonce, loadApiRoles } from "../../../../example/shared/credential/impl/core"
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../../example/shared/menu/impl/core"
-import { documentMenuTree } from "../../../../example/shared/menu/impl/tree"
+import { documentMenuTree } from "../../../../example/shared/menu/impl/menuTree"
 import { loadDocument } from "../../../content/impl/core"
 import { initDocumentComponent } from "../impl/core"
 
 import { initMemoryApiCredentialRepository } from "../../../../example/shared/credential/impl/repository/apiCredential/memory"
-import { initNoopBadgeClient } from "../../../../example/shared/menu/impl/client/badge/noop"
-import { initStorageMenuExpandRepository } from "../../../../example/shared/menu/impl/repository/expand/storage"
+import { initNoopBadgeClient } from "../../../../example/shared/menu/impl/client/menuBadge/noop"
+import { initStorageMenuExpandRepository } from "../../../../example/shared/menu/impl/repository/menuExpand/storage"
 
 import { DocumentEntryPoint } from "../view"
 
@@ -66,17 +66,17 @@ function initCredentialAction() {
     }
 }
 function initMenuAction(menuExpandStorage: Storage) {
-    const tree = documentMenuTree()
-    const badge = initNoopBadgeClient()
-    const expands = initStorageMenuExpandRepository(
+    const menuTree = documentMenuTree()
+    const menuBadge = initNoopBadgeClient()
+    const menuExpands = initStorageMenuExpandRepository(
         menuExpandStorage,
         env.storageKey.menuExpand.document
     )
 
     return {
-        loadBreadcrumb: loadBreadcrumb({ tree }),
-        loadMenu: loadMenu({ tree, badge, expands }),
-        toggleMenuExpand: toggleMenuExpand({ expands }),
+        loadBreadcrumb: loadBreadcrumb({ menuTree: menuTree }),
+        loadMenu: loadMenu({ menuTree: menuTree, menuBadge, menuExpands: menuExpands }),
+        toggleMenuExpand: toggleMenuExpand({ menuExpands: menuExpands }),
     }
 }
 function initContentAction() {

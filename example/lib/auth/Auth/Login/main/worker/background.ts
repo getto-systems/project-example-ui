@@ -66,7 +66,7 @@ export function initPasswordLoginAction(
 ): PasswordLoginAction {
     return {
         login: login({
-            client: initFetchPasswordLoginClient(authClient),
+            login: initFetchPasswordLoginClient(authClient),
             config: config.login,
             delayed,
         }),
@@ -104,12 +104,12 @@ export function initPasswordResetSessionAction(
 
     return {
         startSession: startSession({
-            client: sessionClient,
+            resetSession: sessionClient,
             config: config.startSession,
             delayed,
         }),
         checkStatus: checkStatus({
-            client: sessionClient,
+            reset: sessionClient,
             config: config.checkStatus,
             delayed,
             wait,

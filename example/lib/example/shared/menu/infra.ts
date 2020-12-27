@@ -3,17 +3,17 @@ import { StaticMenuPath } from "../../../y_static/path"
 import { ApiNonce } from "../credential/data"
 
 export type LoadBreadcrumbInfra = Readonly<{
-    tree: MenuTree
+    menuTree: MenuTree
 }>
 
 export type LoadMenuInfra = Readonly<{
-    tree: MenuTree
-    expands: MenuExpandRepository
-    badge: MenuBadgeClient
+    menuTree: MenuTree
+    menuExpands: MenuExpandRepository
+    menuBadge: MenuBadgeClient
 }>
 
 export type ToggleMenuExpandInfra = Readonly<{
-    expands: MenuExpandRepository
+    menuExpands: MenuExpandRepository
 }>
 
 export type MenuCategoryLabel = string
@@ -66,8 +66,10 @@ class ArraySet<T> {
         this.equals = equals
     }
 
-    restore(set: T[]): void {
-        this.set = set
+    init(set: T[]): void {
+        set.forEach((entry) => {
+            this.register(entry)
+        })
     }
     register(entry: T): void {
         if (this.hasEntry(entry)) {
@@ -77,9 +79,6 @@ class ArraySet<T> {
     }
     hasEntry(entry: T): boolean {
         return this.set.some((value) => this.equals(entry, value))
-    }
-    remove(entry: T): void {
-        this.set = this.set.filter((value) => !this.equals(entry, value))
     }
 }
 interface ArraySetEntryEquals<T> {
@@ -103,13 +102,12 @@ export class CategoryLabelsSet extends ArraySet<string[]> {
 }
 
 export interface MenuExpandRepository {
-    findExpand(): MenuExpandResponse
-    clearExpand(category: string[]): ToggleExpandResponse
-    setExpand(category: string[]): ToggleExpandResponse
+    findMenuExpand(): MenuExpandResponse
+    saveMenuExpand(menuExpand: string[][]): ToggleExpandResponse
 }
 
 export type MenuExpandResponse =
-    | Readonly<{ success: true; expand: MenuExpand }>
+    | Readonly<{ success: true; menuExpand: string[][] }>
     | Readonly<{ success: false; err: MenuExpandError }>
 
 export type ToggleExpandResponse =
@@ -124,7 +122,7 @@ export interface MenuBadgeClient {
 }
 
 export type MenuBadgeResponse =
-    | Readonly<{ success: true; badge: MenuBadge }>
+    | Readonly<{ success: true; menuBadge: MenuBadge }>
     | Readonly<{ success: false; err: MenuBadgeError }>
 
 export type MenuBadgeError =

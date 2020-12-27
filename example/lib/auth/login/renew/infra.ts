@@ -1,3 +1,5 @@
+import { Clock } from "../../../z_infra/clock/infra"
+
 import {
     AuthCredential,
     LastLogin,
@@ -16,14 +18,14 @@ export type SetContinuousRenewActionConfig = Readonly<{
 export type RenewInfra = Readonly<{
     authCredentials: AuthCredentialRepository
     config: RenewConfig
-    client: RenewClient
+    renew: RenewClient
     clock: Clock
     delayed: Delayed
 }>
 export type SetContinuousRenewInfra = Readonly<{
     authCredentials: AuthCredentialRepository
     config: SetContinuousRenewConfig
-    client: RenewClient
+    renew: RenewClient
     clock: Clock
 }>
 
@@ -61,10 +63,6 @@ export type StorageKey = Readonly<{
 
 export interface RenewClient {
     renew(ticketNonce: TicketNonce): Promise<RenewResponse>
-}
-
-export interface Clock {
-    now(): Date
 }
 
 export interface Delayed {

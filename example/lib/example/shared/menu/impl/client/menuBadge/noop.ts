@@ -8,7 +8,7 @@ export function initNoopBadgeClient(): MenuBadgeClient {
 
 class NoopMenuBadgeClient implements MenuBadgeClient {
     async getBadge(_apiNonce: ApiNonce): Promise<MenuBadgeResponse> {
-        return { success: true, badge: EMPTY_BADGE }
+        return { success: true, menuBadge: EMPTY_BADGE }
     }
 }
 

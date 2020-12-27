@@ -2,8 +2,8 @@ export type MenuTarget = MenuTarget_data & { MenuTarget: never }
 type MenuTarget_data =
     | Readonly<{ versioned: false; version: string }>
     | Readonly<{ versioned: true; version: string; currentPath: string }>
-export function markMenuTarget(path: MenuTarget_data): MenuTarget {
-    return path as MenuTarget
+export function markMenuTarget(menuTarget: MenuTarget_data): MenuTarget {
+    return menuTarget as MenuTarget
 }
 
 export type MenuCategory = MenuCategory_data & { MenuCategory: never }
@@ -44,6 +44,7 @@ export type MenuNode =
     | Readonly<{ type: "item"; item: MenuItem; isActive: boolean; badgeCount: number }>
 
 export type LoadMenuEvent =
+    | Readonly<{ type: "succeed-to-instant-load"; menu: Menu }>
     | Readonly<{ type: "succeed-to-load"; menu: Menu }>
     | Readonly<{ type: "failed-to-load"; menu: Menu; err: LoadMenuError }>
 

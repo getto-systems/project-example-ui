@@ -28,8 +28,9 @@ import { RenewAction, SetContinuousRenewAction } from "../../../login/renew/acti
 import { PasswordLoginAction } from "../../../login/passwordLogin/action"
 import { PasswordResetAction, PasswordResetSessionAction } from "../../../profile/passwordReset/action"
 
+import { Clock } from "../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../common/application/infra"
-import { Clock, RenewActionConfig, SetContinuousRenewActionConfig } from "../../../login/renew/infra"
+import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../login/renew/infra"
 import { PasswordLoginActionConfig } from "../../../login/passwordLogin/infra"
 import {
     PasswordResetActionConfig,
@@ -48,10 +49,9 @@ export function initRenewAction(
     simulator: RenewSimulator,
     clock: Clock
 ): RenewAction {
-    const client = initSimulateRenewClient(simulator)
     const infra = {
         authCredentials,
-        client,
+        renew: initSimulateRenewClient(simulator),
         config: config.renew,
         delayed,
         clock,
@@ -73,7 +73,7 @@ export function initSetContinuousRenewAction(
     return {
         setContinuousRenew: setContinuousRenew({
             authCredentials,
-            client,
+            renew: client,
             config: config.setContinuousRenew,
             clock,
         }),
@@ -85,7 +85,7 @@ export function initPasswordLoginAction(
 ): PasswordLoginAction {
     return {
         login: login({
-            client: initSimulatePasswordLoginClient(simulator),
+            login: initSimulatePasswordLoginClient(simulator),
             config: config.login,
             delayed,
         }),
@@ -99,12 +99,12 @@ export function initPasswordResetSessionAction(
 
     return {
         startSession: startSession({
-            client: sessionClient,
+            resetSession: sessionClient,
             config: config.startSession,
             delayed,
         }),
         checkStatus: checkStatus({
-            client: sessionClient,
+            reset: sessionClient,
             config: config.checkStatus,
             delayed,
             wait,

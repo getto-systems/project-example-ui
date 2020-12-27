@@ -11,7 +11,8 @@ import { initMemoryAuthCredentialRepository } from "../../../login/renew/impl/re
 import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
 import { initStaticClock } from "../../../../z_infra/clock/simulate"
 
-import { AuthCredentialRepository, Clock } from "../../../login/renew/infra"
+import { Clock } from "../../../../z_infra/clock/infra"
+import { AuthCredentialRepository } from "../../../login/renew/infra"
 
 import { PasswordLoginState } from "../component"
 import { LoginIDFieldState } from "../../field/loginID/component"

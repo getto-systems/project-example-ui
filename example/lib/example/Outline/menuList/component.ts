@@ -21,13 +21,14 @@ export interface MenuListComponent {
 }
 
 export type MenuListState =
-    | Readonly<{ type: "initial-menu" }>
+    | Readonly<{ type: "initial-menu-list" }>
+    | Readonly<{ type: "succeed-to-instant-load"; menu: Menu }>
     | Readonly<{ type: "succeed-to-load"; menu: Menu }>
     | Readonly<{ type: "failed-to-load"; menu: Menu; err: LoadMenuError }>
     | Readonly<{ type: "succeed-to-toggle"; menu: Menu }>
     | Readonly<{ type: "failed-to-toggle"; menu: Menu; err: LoadMenuError }>
 
-export const initialMenuListState: MenuListState = { type: "initial-menu" }
+export const initialMenuListState: MenuListState = { type: "initial-menu-list" }
 
 interface Post<T> {
     (state: T): void

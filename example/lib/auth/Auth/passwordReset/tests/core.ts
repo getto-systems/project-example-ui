@@ -22,13 +22,10 @@ import { passwordField } from "../../../common/field/password/impl/core"
 import { ResetSimulator } from "../../../profile/passwordReset/impl/client/reset/simulate"
 import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
 
+import { Clock } from "../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../common/application/infra"
 import { PasswordResetActionConfig } from "../../../profile/passwordReset/infra"
-import {
-    SetContinuousRenewActionConfig,
-    AuthCredentialRepository,
-    Clock,
-} from "../../../login/renew/infra"
+import { SetContinuousRenewActionConfig, AuthCredentialRepository } from "../../../login/renew/infra"
 
 import { PasswordResetResource } from "../../Login/view"
 
