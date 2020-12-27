@@ -9,9 +9,8 @@ import {
 
 import { initMemoryAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential/memory"
 import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
-import { initStaticClock } from "../../../../z_infra/clock/simulate"
+import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
 
-import { Clock } from "../../../../z_infra/clock/infra"
 import { AuthCredentialRepository } from "../../../login/renew/infra"
 
 import { PasswordResetState } from "../component"
@@ -40,9 +39,13 @@ const SUCCEED_TO_RENEW_AT = new Date("2020-01-01 10:01:00")
 // SUCCEED_TO_LOGIN_AT と setContinuousRenew の delay との間でうまく調整する
 const NOW = new Date("2020-01-01 10:00:30")
 
+// continuous renew リクエストを投げるべきかの判定に使用する
+// テストが完了したら clock が返す値をこっちにする
+const COMPLETED_NOW = new Date("2020-01-01 11:00:00")
+
 describe("PasswordReset", () => {
     test("submit valid login-id and password", (done) => {
-        const { repository, resource } = standardPasswordResetResource()
+        const { repository, clock, resource } = standardPasswordResetResource()
 
         resource.passwordReset.onStateChange(stateHandler())
 
@@ -64,6 +67,7 @@ describe("PasswordReset", () => {
                         break
 
                     case "try-to-load":
+                        clock.update(COMPLETED_NOW)
                         expect(stack).toEqual([
                             { type: "try-to-reset" },
                             {
@@ -94,7 +98,7 @@ describe("PasswordReset", () => {
 
     test("submit valid login-id and password; with delayed", (done) => {
         // wait for delayed timeout
-        const { repository, resource } = waitPasswordResetResource()
+        const { repository, clock, resource } = waitPasswordResetResource()
 
         resource.passwordReset.onStateChange(stateHandler())
 
@@ -116,6 +120,7 @@ describe("PasswordReset", () => {
                         break
 
                     case "try-to-load":
+                        clock.update(COMPLETED_NOW)
                         expect(stack).toEqual([
                             { type: "try-to-reset" },
                             { type: "delayed-to-reset" }, // delayed event
@@ -437,7 +442,7 @@ function standardPasswordResetResource() {
     const clock = standardClock()
     const resource = newPasswordResetResource(currentURL, config, repository, simulator, clock)
 
-    return { repository, resource }
+    return { repository, clock, resource }
 }
 function waitPasswordResetResource() {
     const currentURL = standardURL()
@@ -447,7 +452,7 @@ function waitPasswordResetResource() {
     const clock = standardClock()
     const resource = newPasswordResetResource(currentURL, config, repository, simulator, clock)
 
-    return { repository, resource }
+    return { repository, clock, resource }
 }
 function emptyResetTokenPasswordResetResource() {
     const currentURL = emptyResetTokenURL()
@@ -539,7 +544,7 @@ function renewSimulator(): RenewSimulator {
     }
 }
 
-function standardClock(): Clock {
+function standardClock(): StaticClock {
     return initStaticClock(NOW)
 }
 

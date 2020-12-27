@@ -19,5 +19,5 @@ interface Story<T> {
 
 export const Error = Template.bind({})
 Error.args = {
-    err: "error",
+    err: "application error",
 }
