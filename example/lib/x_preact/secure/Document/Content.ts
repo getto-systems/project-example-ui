@@ -21,7 +21,7 @@ import { ContentPath } from "../../../document/content/data"
 
 type Props = Readonly<{
     content: ContentComponent
-    breadcrumb: BreadcrumbListComponent
+    breadcrumbList: BreadcrumbListComponent
 }>
 export function Content(resource: Props): VNode {
     const content = resource.content

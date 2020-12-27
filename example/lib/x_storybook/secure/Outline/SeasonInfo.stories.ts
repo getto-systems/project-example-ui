@@ -7,7 +7,7 @@ import { menuHeader } from "../../../x_preact/secure/layout"
 import {
     mapSeasonMockProps,
     SeasonMockProps,
-    initSeason,
+    initSeasonInfoComponent,
 } from "../../../example/Outline/seasonInfo/mock"
 
 import { initialSeasonInfoState } from "../../../example/Outline/seasonInfo/component"
@@ -23,15 +23,14 @@ export default {
 
 type MockProps = SeasonMockProps
 const Template: Story<MockProps> = (args) => {
-    const season = initSeason(initialSeasonInfoState)
+    const seasonInfo = initSeasonInfoComponent(initialSeasonInfoState)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
-        season.update(mapSeasonMockProps(props.args))
+        seasonInfo.update(mapSeasonMockProps(props.args))
         return html`<main class="layout">
             <aside class="layout__menu menu">
-                ${menuHeader()}
-                ${h(SeasonInfo, { season })}
+                ${menuHeader()} ${h(SeasonInfo, { seasonInfo })}
             </aside>
         </main>`
     }

@@ -5,8 +5,8 @@ import { BreadcrumbListComponent, BreadcrumbListState } from "./component"
 
 import { markMenuCategory, markMenuItem } from "../../shared/menu/data"
 
-export function initBreadcrumb(state: BreadcrumbListState): BreadcrumbMockComponent {
-    return new BreadcrumbMockComponent(state)
+export function initBreadcrumbListComponent(state: BreadcrumbListState): BreadcrumbListMockComponent {
+    return new BreadcrumbListMockComponent(state)
 }
 
 export type BreadcrumbMockProps = Readonly<{ type: "success"; label: string; icon: string }>
@@ -34,7 +34,8 @@ export function mapBreadcrumbMockProps(props: BreadcrumbMockProps): BreadcrumbLi
     }
 }
 
-class BreadcrumbMockComponent extends MockComponent<BreadcrumbListState> implements BreadcrumbListComponent {
+class BreadcrumbListMockComponent extends MockComponent<BreadcrumbListState>
+    implements BreadcrumbListComponent {
     load() {
         // mock では特に何もしない
     }

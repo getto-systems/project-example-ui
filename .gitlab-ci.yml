@@ -1,4 +1,4 @@
-image: node:14.8.0-buster
+image: node:15.5.0-buster
 
 stages:
   - bump_version

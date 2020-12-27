@@ -4,8 +4,8 @@ import { SeasonInfoComponent, SeasonInfoState } from "./component"
 
 import { markSeason } from "../../shared/season/data"
 
-export function initSeason(state: SeasonInfoState): SeasonMockComponent {
-    return new SeasonMockComponent(state)
+export function initSeasonInfoComponent(state: SeasonInfoState): SeasonInfoMockComponent {
+    return new SeasonInfoMockComponent(state)
 }
 
 export type SeasonMockProps =
@@ -22,7 +22,7 @@ export function mapSeasonMockProps(props: SeasonMockProps): SeasonInfoState {
     }
 }
 
-class SeasonMockComponent extends MockComponent<SeasonInfoState> implements SeasonInfoComponent {
+class SeasonInfoMockComponent extends MockComponent<SeasonInfoState> implements SeasonInfoComponent {
     load() {
         // mock では特に何もしない
     }
