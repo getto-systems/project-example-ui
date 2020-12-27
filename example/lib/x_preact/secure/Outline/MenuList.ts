@@ -15,13 +15,13 @@ import {
 } from "../../../example/shared/menu/data"
 
 type Props = Readonly<{
-    menu: MenuListComponent
+    menuList: MenuListComponent
 }>
-export function MenuList({ menu }: Props): VNode {
+export function MenuList({ menuList }: Props): VNode {
     const [state, setState] = useState(initialMenuListState)
     useEffect(() => {
-        menu.onStateChange(setState)
-        menu.load()
+        menuList.onStateChange(setState)
+        menuList.load()
     }, [])
 
     switch (state.type) {
@@ -85,7 +85,7 @@ export function MenuList({ menu }: Props): VNode {
                 if (target instanceof HTMLElement) {
                     target.blur()
                 }
-                menu.toggle(categoryLabels, menuNodes)
+                menuList.toggle(categoryLabels, menuNodes)
             }
         }
 

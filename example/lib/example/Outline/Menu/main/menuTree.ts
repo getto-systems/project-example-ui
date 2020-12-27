@@ -1,6 +1,6 @@
 import { Icon, iconClass, lnir } from "../../../../z_external/icon"
 
-import { MenuPath, MenuPermission, MenuTree, MenuTreeNode } from "../infra"
+import { MenuPath, MenuPermission, MenuTree, MenuTreeNode } from "../../../shared/menu/infra"
 
 function category(label: string, permission: MenuPermission, children: MenuTree): MenuTreeNode {
     return { type: "category", category: { label, permission }, children }
