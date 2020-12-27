@@ -11,7 +11,7 @@ import { loadApiNonce, loadApiRoles } from "../../../../example/shared/credentia
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../../example/shared/menu/impl/core"
 import { documentMenuTree } from "../../../../example/shared/menu/impl/menuTree"
 import { loadDocument } from "../../../content/impl/core"
-import { initDocumentComponent } from "../impl/core"
+import { initDocumentResource } from "../impl/core"
 
 import { initMemoryApiCredentialRepository } from "../../../../example/shared/credential/impl/repository/apiCredential/memory"
 import { initNoopBadgeClient } from "../../../../example/shared/menu/impl/client/menuBadge/noop"
@@ -47,7 +47,7 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
         },
     }
     return {
-        resource: initDocumentComponent(factory, collector),
+        resource: initDocumentResource(factory, collector),
         terminate: () => {
             // worker とインターフェイスを合わせるために必要
         },

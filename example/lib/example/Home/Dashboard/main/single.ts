@@ -3,14 +3,14 @@ import { env } from "../../../../y_static/env"
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initMenuListComponent } from "../../../Outline/menuList/impl"
 import { initBreadcrumbListComponent } from "../../../Outline/breadcrumbList/impl"
-import { initExample } from "../../example/impl"
+import { initExampleComponent } from "../../example/impl"
 import { detectMenuTarget } from "../../../Outline/Menu/impl/location"
 
 import { loadApiNonce, loadApiRoles } from "../../../shared/credential/impl/core"
 import { loadSeason } from "../../../shared/season/impl/core"
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../shared/menu/impl/core"
 import { mainMenuTree } from "../../../shared/menu/impl/menuTree"
-import { initDashboardComponent } from "../impl/core"
+import { initDashboardResource } from "../impl/core"
 
 import { MenuBadgeMap } from "../../../shared/menu/infra"
 
@@ -40,7 +40,7 @@ export function newDashboardAsSingle(): DashboardEntryPoint {
             menu: initMenuListComponent,
             breadcrumb: initBreadcrumbListComponent,
 
-            example: initExample,
+            example: initExampleComponent,
         },
     }
     const collector = {
@@ -49,7 +49,7 @@ export function newDashboardAsSingle(): DashboardEntryPoint {
         },
     }
     return {
-        resource: initDashboardComponent(factory, collector),
+        resource: initDashboardResource(factory, collector),
         terminate: () => {
             // worker とインターフェイスを合わせるために必要
         },

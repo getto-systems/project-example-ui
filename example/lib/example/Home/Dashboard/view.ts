@@ -10,9 +10,9 @@ export type DashboardEntryPoint = Readonly<{
 }>
 
 export type DashboardResource = Readonly<{
-    season: SeasonInfoComponent
-    menu: MenuListComponent
-    breadcrumb: BreadcrumbListComponent
+    seasonInfo: SeasonInfoComponent
+    menuList: MenuListComponent
+    breadcrumbList: BreadcrumbListComponent
 
     example: ExampleComponent
 }>

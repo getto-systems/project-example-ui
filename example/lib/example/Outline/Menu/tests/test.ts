@@ -8,7 +8,7 @@ import { MenuBadge, MenuBadgeMap, MenuTree } from "../../../shared/menu/infra"
 import { BreadcrumbListState } from "../../breadcrumbList/component"
 import { MenuListState } from "../../menuList/component"
 
-import { markMenuTarget, Menu, MenuTarget } from "../../../shared/menu/data"
+import { Menu } from "../../../shared/menu/data"
 import { ApiNonce, markApiNonce, markApiRoles } from "../../../shared/credential/data"
 
 describe("BreadcrumbList", () => {
@@ -1082,47 +1082,55 @@ describe("MenuList", () => {
 })
 
 function standardMenuResource() {
-    const menuTarget = standardMenuTarget()
+    const version = standardVersion()
+    const url = standardURL()
     const menuTree = standardMenuTree()
     const repository = standardRepository()
     const simulator = standardSimulator()
-    const resource = newMenuResource(menuTarget, menuTree, repository, simulator)
+    const resource = newMenuResource(version, url, menuTree, repository, simulator)
 
     return { repository, resource }
 }
 function unknownMenuResource() {
-    const menuTarget = unknownMenuTarget()
+    const version = standardVersion()
+    const url = unknownURL()
     const menuTree = standardMenuTree()
     const repository = standardRepository()
     const simulator = standardSimulator()
-    const resource = newMenuResource(menuTarget, menuTree, repository, simulator)
+    const resource = newMenuResource(version, url, menuTree, repository, simulator)
 
     return { resource }
 }
 function developmentDocsMenuResource() {
-    const menuTarget = standardMenuTarget()
+    const version = standardVersion()
+    const url = standardURL()
     const menuTree = standardMenuTree()
     const repository = developmentDocsRepository()
     const simulator = standardSimulator()
-    const resource = newMenuResource(menuTarget, menuTree, repository, simulator)
+    const resource = newMenuResource(version, url, menuTree, repository, simulator)
 
     return { resource }
 }
 function expandMenuResource() {
-    const menuTarget = standardMenuTarget()
+    const version = standardVersion()
+    const url = standardURL()
     const menuTree = standardMenuTree()
     const repository = expandRepository()
     const simulator = standardSimulator()
-    const resource = newMenuResource(menuTarget, menuTree, repository, simulator)
+    const resource = newMenuResource(version, url, menuTree, repository, simulator)
 
     return { resource }
 }
 
-function standardMenuTarget(): MenuTarget {
-    return markMenuTarget({ versioned: true, version: "1.0.0", currentPath: "/index.html" })
+function standardVersion(): string {
+    return "1.0.0"
 }
-function unknownMenuTarget(): MenuTarget {
-    return markMenuTarget({ versioned: true, version: "1.0.0", currentPath: "/unknown.html" })
+
+function standardURL(): URL {
+    return new URL("https://example.com/1.0.0/index.html")
+}
+function unknownURL(): URL {
+    return new URL("https://example.com/1.0.0/unknown.html")
 }
 
 function standardMenuTree(): MenuTree {
