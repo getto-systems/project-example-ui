@@ -1,3 +1,6 @@
+import { Delayed, Wait } from "../../../z_infra/delayed/infra"
+import { DelayTime, Limit, WaitTime } from "../../../z_infra/time/infra"
+
 import { AuthCredential } from "../../common/credential/data"
 import {
     StartSessionFields,
@@ -112,21 +115,3 @@ export type ResetError =
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
-
-export interface Delayed {
-    <T>(promise: Promise<T>, time: DelayTime, delayTimeExceeded: DelayedHandler): Promise<T>
-}
-export interface Wait {
-    <T>(time: WaitTime, content: WaitContent<T>): Promise<T>
-}
-
-type DelayTime = Readonly<{ delay_millisecond: number }>
-type WaitTime = Readonly<{ wait_millisecond: number }>
-type Limit = Readonly<{ limit: number }>
-
-interface DelayedHandler {
-    (): void
-}
-interface WaitContent<T> {
-    (): T
-}

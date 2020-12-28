@@ -8,6 +8,7 @@ import { CheckSimulator } from "../../../nextVersion/impl/client/check/simulate"
 import { initNextVersionAction } from "../../MoveToNextVersion/tests/core"
 
 import { NextVersionResource } from "../../MoveToNextVersion/view"
+import { NextVersionActionConfig } from "../../../nextVersion/infra"
 
 export type NextVersionSimulator = Readonly<{
     check: CheckSimulator
@@ -16,11 +17,12 @@ export type NextVersionSimulator = Readonly<{
 export function newNextVersionResource(
     version: string,
     currentURL: URL,
+    config: NextVersionActionConfig,
     simulator: NextVersionSimulator
 ): NextVersionResource {
     const factory = {
         actions: {
-            nextVersion: initNextVersionAction(simulator.check),
+            nextVersion: initNextVersionAction(config, simulator),
         },
         components: {
             nextVersion: initNextVersionComponent,

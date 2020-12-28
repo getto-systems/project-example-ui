@@ -2,6 +2,8 @@ import { h, VNode } from "preact"
 import { useState, useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { useTerminate } from "../../common/hooks"
+
 import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { RenewCredential } from "./RenewCredential"
@@ -11,13 +13,12 @@ import { PasswordResetSession } from "./PasswordResetSession"
 import { PasswordReset } from "./PasswordReset"
 
 import { LoginEntryPoint, initialLoginState } from "../../../auth/Auth/Login/view"
-import { useTerminate } from "../../common/hooks"
 
 type Props = Readonly<{
     login: LoginEntryPoint
 }>
 export function Login({ login: { view, terminate } }: Props): VNode {
-    const [err, _resetError] = useErrorBoundary((err) => {
+    const [err] = useErrorBoundary((err) => {
         // ここでエラーをどこかに投げたい、けど認証前なのでこれでお茶を濁す
         console.log(err)
     })

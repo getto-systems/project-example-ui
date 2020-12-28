@@ -1,11 +1,8 @@
 import { Clock } from "../../../z_infra/clock/infra"
+import { Delayed } from "../../../z_infra/delayed/infra"
+import { DelayTime, ExpireTime, IntervalTime } from "../../../z_infra/time/infra"
 
-import {
-    AuthCredential,
-    LastLogin,
-    StorageError,
-    TicketNonce,
-} from "../../common/credential/data"
+import { AuthCredential, LastLogin, StorageError, TicketNonce } from "../../common/credential/data"
 import { RenewError } from "./data"
 
 export type RenewActionConfig = Readonly<{
@@ -65,19 +62,7 @@ export interface RenewClient {
     renew(ticketNonce: TicketNonce): Promise<RenewResponse>
 }
 
-export interface Delayed {
-    <T>(promise: Promise<T>, time: DelayTime, handler: DelayedHandler): Promise<T>
-}
-
 export type RenewResponse =
     | Readonly<{ success: false; err: RenewError }>
     | Readonly<{ success: true; hasCredential: false }>
     | Readonly<{ success: true; hasCredential: true; authCredential: AuthCredential }>
-
-type ExpireTime = Readonly<{ expire_millisecond: number }>
-type DelayTime = Readonly<{ delay_millisecond: number }>
-type IntervalTime = Readonly<{ interval_millisecond: number }>
-
-interface DelayedHandler {
-    (): void
-}

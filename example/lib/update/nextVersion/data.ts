@@ -1,11 +1,9 @@
 export type FindEvent =
+    | Readonly<{ type: "delayed-to-find" }>
     | Readonly<{ type: "failed-to-find"; err: FindError }>
-    | Readonly<{ type: "succeed-to-find"; target: AppTarget }>
+    | Readonly<{ type: "succeed-to-find"; upToDate: boolean; target: AppTarget }>
 
-export type FindError =
-    | Readonly<{ type: "out-of-versioned" }>
-    | Readonly<{ type: "up-to-date" }>
-    | Readonly<{ type: "failed-to-check"; err: CheckError }>
+export type FindError = Readonly<{ type: "failed-to-check"; err: CheckError }>
 
 export type CheckError =
     | Readonly<{ type: "server-error" }>

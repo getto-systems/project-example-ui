@@ -5,7 +5,7 @@ import { Content } from "../../../x_preact/secure/Document/Content"
 import {
     mapContentMockProps,
     ContentMockProps,
-    initContent,
+    initContentComponent,
 } from "../../../document/Document/content/mock"
 import {
     initBreadcrumbListComponent,
@@ -25,7 +25,7 @@ export default {
 
 type MockProps = ContentMockProps
 const Template: Story<MockProps> = (args) => {
-    const content = initContent(initialContentState)
+    const content = initContentComponent(initialContentState)
     const breadcrumbList = initBreadcrumbListComponent(
         mapBreadcrumbMockProps({ type: "success", label: "ホーム", icon: "home" })
     )

@@ -1,4 +1,4 @@
-import { wait } from "../../../../z_external/delayed"
+import { wait } from "../../../../z_infra/delayed/core"
 
 import {
     PasswordResetSessionConfig,
@@ -388,7 +388,7 @@ function longSendTokenTime(): SendTokenTime {
     return {
         waiting_millisecond: 0,
         sending_millisecond: 2,
-        success_millisecond: 30, // 2msec 間隔で 5回 check するのでそのあと success する
+        success_millisecond: 100, // 2msec 間隔で 5回 check するのでそのあと success する
     }
 }
 function simulateSendToken(post: Post<SendTokenState>, sendTokenTime: SendTokenTime): true {

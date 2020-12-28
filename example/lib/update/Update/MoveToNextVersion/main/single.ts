@@ -2,6 +2,7 @@ import { env } from "../../../../y_static/env"
 
 import { initFetchCheckClient } from "../../../nextVersion/impl/client/check/fetch"
 
+import { delayed } from "../../../../z_infra/delayed/core"
 import { find } from "../../../nextVersion/impl/core"
 
 import { detectAppTarget } from "../impl/location"
@@ -38,7 +39,11 @@ export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPoint {
 function initNextVersionAction() {
     return {
         find: find({
-            client: initFetchCheckClient(),
+            config: {
+                delay: { delay_millisecond: 300 },
+            },
+            check: initFetchCheckClient(),
+            delayed,
         }),
     }
 }

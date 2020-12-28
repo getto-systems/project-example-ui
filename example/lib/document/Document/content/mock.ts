@@ -1,7 +1,7 @@
 import { MockComponent } from "../../../z_external/mock/component"
 import { ContentComponent, ContentState } from "./component"
 
-export function initContent(state: ContentState): ContentMockComponent {
+export function initContentComponent(state: ContentState): ContentMockComponent {
     return new ContentMockComponent(state)
 }
 

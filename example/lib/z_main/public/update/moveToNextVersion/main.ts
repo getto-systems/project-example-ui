@@ -1,21 +1,26 @@
 import { newMoveToNextVersionAsSingle } from "../../../../update/Update/MoveToNextVersion/main/single"
 
-import { appTargetToPath, FindError } from "../../../../update/nextVersion/data"
+import { appTargetToPath } from "../../../../update/nextVersion/data"
 
 try {
+    // /${version}/index.html とかで呼び出される
+    // 最新バージョンなら何もしない
     const nextVersion = newMoveToNextVersionAsSingle().resource.nextVersion
 
     nextVersion.onStateChange((state) => {
         switch (state.type) {
             case "initial-next-version":
+            case "delayed-to-find":
                 return
 
             case "succeed-to-find":
-                location.href = appTargetToPath(state.target)
+                if (!state.upToDate) {
+                    location.href = appTargetToPath(state.target)
+                }
                 return
 
             case "failed-to-find":
-                failed(state.err)
+                console.log(state.err.err)
                 return
 
             default:
@@ -26,21 +31,6 @@ try {
     nextVersion.find()
 } catch (err) {
     console.log(err)
-}
-
-function failed(err: FindError) {
-    switch (err.type) {
-        case "failed-to-check":
-            console.log(err.err)
-            return
-
-        case "out-of-versioned":
-        case "up-to-date":
-            return
-
-        default:
-            assertNever(err)
-    }
 }
 
 function assertNever(_: never): never {

@@ -1,16 +1,25 @@
-import {
-    initSimulateCheckClient,
-    CheckSimulator,
-} from "../../../nextVersion/impl/client/check/simulate"
+import { delayed } from "../../../../z_infra/delayed/core"
+
+import { initSimulateCheckClient, CheckSimulator } from "../../../nextVersion/impl/client/check/simulate"
 
 import { find } from "../../../nextVersion/impl/core"
 
+import { NextVersionActionConfig } from "../../../nextVersion/infra"
+
 import { NextVersionAction } from "../../../nextVersion/action"
 
-export function initNextVersionAction(simulator: CheckSimulator): NextVersionAction {
+export type NextVersionSimulator = Readonly<{
+    check: CheckSimulator
+}>
+export function initNextVersionAction(
+    config: NextVersionActionConfig,
+    simulator: NextVersionSimulator
+): NextVersionAction {
     return {
         find: find({
-            client: initSimulateCheckClient(simulator),
+            config: config.find,
+            check: initSimulateCheckClient(simulator.check),
+            delayed,
         }),
     }
 }

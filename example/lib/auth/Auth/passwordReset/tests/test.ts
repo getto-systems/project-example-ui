@@ -1,4 +1,4 @@
-import { wait } from "../../../../z_external/delayed"
+import { wait } from "../../../../z_infra/delayed/core"
 
 import {
     PasswordResetConfig,
