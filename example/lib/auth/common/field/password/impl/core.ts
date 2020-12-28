@@ -21,7 +21,7 @@ function validatePassword(password: string): PasswordFieldError[] {
         return ERROR.empty
     }
 
-    if (Buffer.byteLength(password, "utf8") > PASSWORD_MAX_BYTES) {
+    if (new TextEncoder().encode(password).byteLength > PASSWORD_MAX_BYTES) {
         return ERROR.tooLong
     }
 
