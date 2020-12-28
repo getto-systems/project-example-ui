@@ -1,5 +1,5 @@
 import { h, VNode } from "preact"
-import { useEffect, useErrorBoundary } from "preact/hooks"
+import { useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { footer, menuHeader, menuFooter } from "../layout"
