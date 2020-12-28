@@ -11,6 +11,7 @@ import { PasswordResetSession } from "./PasswordResetSession"
 import { PasswordReset } from "./PasswordReset"
 
 import { LoginEntryPoint, initialLoginState } from "../../../auth/Auth/Login/view"
+import { useTerminate } from "../../common/hooks"
 
 type Props = Readonly<{
     login: LoginEntryPoint
@@ -25,7 +26,7 @@ export function Login({ login: { view, terminate } }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    useEffect(() => terminate)
+    useTerminate(terminate)
 
     const [state, setState] = useState(initialLoginState)
     useEffect(() => {
