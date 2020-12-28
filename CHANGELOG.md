@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version : 0.7.7
+
+- fix: menuList event handling : See merge request getto-systems-base/projects/example/ui!700
+- fix: deploy script : See merge request getto-systems-base/projects/example/ui!699
+
+
 ## Version : 0.7.6
 
 - add: bump-version.sh : See merge request getto-systems-base/projects/example/ui!697
