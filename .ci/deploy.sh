@@ -9,10 +9,7 @@ deploy_main(){
   deploy_cp_public
   deploy_cp_secure
 
-  deploy_cp_public_index "0.7.0"
-  deploy_cp_public_index "0.7.1"
-  deploy_cp_public_index "0.7.2"
-  deploy_cp_public_index "0.7.3"
+  #deploy_cp_public_index "0.7.0"
 }
 deploy_build_ui(){
   npm run build
