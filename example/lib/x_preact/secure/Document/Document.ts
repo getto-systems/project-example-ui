@@ -1,5 +1,5 @@
 import { h, VNode } from "preact"
-import { useEffect, useErrorBoundary } from "preact/hooks"
+import { useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { footer, menuHeader, menuFooter } from "../layout"
@@ -9,6 +9,7 @@ import { MenuList } from "../Outline/MenuList"
 import { Content } from "./Content"
 
 import { DocumentEntryPoint } from "../../../document/Document/Document/view"
+import { useTerminate } from "../../common/hooks"
 
 type Props = {
     document: DocumentEntryPoint
@@ -23,7 +24,7 @@ export function Document({ document: { resource, terminate } }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    useEffect(() => terminate)
+    useTerminate(terminate)
 
     return html`
         <main class="layout">

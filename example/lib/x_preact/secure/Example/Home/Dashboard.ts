@@ -11,6 +11,7 @@ import { BreadcrumbList } from "../../Outline/BreadcrumbList"
 import { Example } from "./Example"
 
 import { DashboardEntryPoint } from "../../../../example/Home/Dashboard/view"
+import { useTerminate } from "../../../common/hooks"
 
 type Props = Readonly<{
     dashboard: DashboardEntryPoint
@@ -25,7 +26,7 @@ export function Dashboard({ dashboard: { resource, terminate } }: Props): VNode 
         return h(ApplicationError, { err: `${err}` })
     }
 
-    useEffect(() => terminate)
+    useTerminate(terminate)
 
     useEffect(() => {
         document.title = `ホーム | ${document.title}`
