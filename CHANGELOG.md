@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Version : 0.7.6
+
+- add: bump-version.sh : See merge request getto-systems-base/projects/example/ui!697
+- fix: root index : See merge request getto-systems-base/projects/example/ui!696
+- fix: termiate hook : See merge request getto-systems-base/projects/example/ui!695
+- fix: detect byte length : See merge request getto-systems-base/projects/example/ui!694
+- fix: deploy : See merge request getto-systems-base/projects/example/ui!693
+
+
 ## Version : 0.7.5
 
 - fix: deploy : See merge request getto-systems-base/projects/example/ui!691
