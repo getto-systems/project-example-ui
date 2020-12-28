@@ -1,4 +1,4 @@
-import { useEffect } from "htm/preact"
+import { useEffect } from "preact/hooks";
 
 export function useTerminate(terminate: Terminate): void {
     useEffect(() => terminate, [])

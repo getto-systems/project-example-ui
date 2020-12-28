@@ -1,3 +1,6 @@
+import { Delayed } from "../../../z_infra/delayed/infra"
+import { DelayTime } from "../../../z_infra/time/infra"
+
 import { AuthCredential } from "../../common/credential/data"
 import { LoginFields } from "./data"
 
@@ -35,13 +38,3 @@ export type LoginError =
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
-
-export interface Delayed {
-    <T>(promise: Promise<T>, time: DelayTime, handler: DelayedHandler): Promise<T>
-}
-
-type DelayTime = Readonly<{ delay_millisecond: number }>
-
-interface DelayedHandler {
-    (): void
-}

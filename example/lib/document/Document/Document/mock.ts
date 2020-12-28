@@ -2,7 +2,7 @@ import { MockComponent } from "../../../z_external/mock/component"
 
 import { initBreadcrumbListComponent } from "../../../example/Outline/breadcrumbList/mock"
 import { initMenuListComponent } from "../../../example/Outline/menuList/mock"
-import { initContent } from "../content/mock"
+import { initContentComponent } from "../content/mock"
 
 import { DocumentEntryPoint } from "./view"
 
@@ -17,7 +17,7 @@ export function newDocument(): DocumentMockEntryPoint {
     const resource = {
         menuList: initMenuListComponent(initialMenuListState),
         breadcrumbList: initBreadcrumbListComponent(initialBreadcrumbListState),
-        content: initContent(initialContentState),
+        content: initContentComponent(initialContentState),
     }
     return {
         document: {

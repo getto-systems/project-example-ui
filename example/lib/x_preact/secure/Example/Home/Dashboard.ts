@@ -2,6 +2,7 @@ import { h, VNode } from "preact"
 import { useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { useTerminate } from "../../../common/hooks"
 import { footer, menuHeader, menuFooter } from "../../layout"
 
 import { ApplicationError } from "../../../common/System/ApplicationError"
@@ -11,13 +12,12 @@ import { BreadcrumbList } from "../../Outline/BreadcrumbList"
 import { Example } from "./Example"
 
 import { DashboardEntryPoint } from "../../../../example/Home/Dashboard/view"
-import { useTerminate } from "../../../common/hooks"
 
 type Props = Readonly<{
     dashboard: DashboardEntryPoint
 }>
 export function Dashboard({ dashboard: { resource, terminate } }: Props): VNode {
-    const [err, _resetError] = useErrorBoundary((err) => {
+    const [err] = useErrorBoundary((err) => {
         // TODO ここでエラーをどこかに投げたい。apiCredential が有効なはずなので、api にエラーを投げられるはず
         console.log(err)
     })

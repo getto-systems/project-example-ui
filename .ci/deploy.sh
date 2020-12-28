@@ -36,8 +36,6 @@ deploy_cp_public(){
     --recursive \
     example/public/dist s3://$AWS_S3_PUBLIC_BUCKET/$version
 
-  cp example/public/dist/update/moveToNextVersion.js example/public/root/
-
   for file in example/public/root/*; do
     aws s3 cp \
       --acl private \

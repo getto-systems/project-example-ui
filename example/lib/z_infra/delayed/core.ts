@@ -1,3 +1,6 @@
+import { DelayTime, WaitTime } from "../time/infra"
+import { DelayedHandler, WaitContent } from "./infra"
+
 export async function delayed<T>(
     promise: Promise<T>,
     time: DelayTime,
@@ -17,22 +20,10 @@ export async function delayed<T>(
     return await promise
 }
 
-type DelayTime = Readonly<{ delay_millisecond: number }>
-
-interface DelayedHandler {
-    (): void
-}
-
 export function wait<T>(time: WaitTime, content: WaitContent<T>): Promise<T> {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(content())
         }, time.wait_millisecond)
     })
-}
-
-type WaitTime = Readonly<{ wait_millisecond: number }>
-
-interface WaitContent<T> {
-    (): T
 }
