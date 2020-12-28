@@ -6,13 +6,7 @@ import { notice_alert, v_small } from "../../common/layout"
 
 import { MenuListComponent, initialMenuListState } from "../../../example/Outline/menuList/component"
 
-import {
-    Menu,
-    MenuNode,
-    MenuCategory,
-    MenuItem,
-    LoadMenuError,
-} from "../../../example/shared/menu/data"
+import { Menu, MenuNode, MenuCategory, MenuItem, LoadMenuError } from "../../../example/shared/menu/data"
 
 type Props = Readonly<{
     menuList: MenuListComponent
@@ -69,7 +63,7 @@ export function MenuList({ menuList }: Props): VNode {
             const { label } = category
 
             return html`
-                <details class="menu__nav" open="${isExpand}" key="${label}" onClick="${toggle}">
+                <details class="menu__nav" open=${isExpand} key=${label} onClick=${toggle}>
                     <summary class="menu__nav__summary">
                         <span class="menu__nav__summary__label">${label}</span>
                         <span class="menu__nav__summary__badge">${badge(badgeCount)}</span>
@@ -81,6 +75,8 @@ export function MenuList({ menuList }: Props): VNode {
             `
 
             function toggle(event: Event) {
+                event.preventDefault()
+                event.stopPropagation()
                 const target = event.target
                 if (target instanceof HTMLElement) {
                     target.blur()
