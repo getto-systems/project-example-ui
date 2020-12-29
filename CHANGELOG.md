@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Version : 0.7.8
+
+- fix: dynamic import content : See merge request getto-systems-base/projects/example/ui!706
+- move: menu : See merge request getto-systems-base/projects/example/ui!705
+- move: credential : See merge request getto-systems-base/projects/example/ui!704
+- fix: menu category path : See merge request getto-systems-base/projects/example/ui!703
+- fix: menu click event : See merge request getto-systems-base/projects/example/ui!702
+
+
+
 ## Version : 0.7.7
 
 - fix: menuList event handling : See merge request getto-systems-base/projects/example/ui!700
