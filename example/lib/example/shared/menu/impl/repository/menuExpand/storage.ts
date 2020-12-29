@@ -1,4 +1,5 @@
 import {
+    MenuExpand,
     MenuExpandRepository,
     MenuExpandResponse,
     ToggleExpandResponse,
@@ -25,7 +26,7 @@ class Repository implements MenuExpandRepository {
         }
     }
 
-    saveMenuExpand(menuExpand: string[][]): ToggleExpandResponse {
+    saveMenuExpand(menuExpand: MenuExpand): ToggleExpandResponse {
         try {
             this.storage.store(menuExpand)
             return { success: true }
@@ -44,7 +45,7 @@ class MenuExpandStorage {
         this.key = key
     }
 
-    restore(): string[][] {
+    restore(): MenuExpand {
         const raw = this.storage.getItem(this.key)
         if (!raw) {
             return []
@@ -65,7 +66,7 @@ class MenuExpandStorage {
             )
         }
     }
-    store(category: string[][]): void {
+    store(category: MenuExpand): void {
         this.storage.setItem(this.key, JSON.stringify(category))
     }
 }

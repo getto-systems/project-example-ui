@@ -3,7 +3,7 @@ import { MockComponent } from "../../../z_external/mock/component"
 
 import { BreadcrumbListComponent, BreadcrumbListState } from "./component"
 
-import { markMenuCategory, markMenuItem } from "../../shared/menu/data"
+import { markMenuCategoryLabel, markMenuItem } from "../../shared/menu/data"
 
 export function initBreadcrumbListComponent(state: BreadcrumbListState): BreadcrumbListMockComponent {
     return new BreadcrumbListMockComponent(state)
@@ -19,7 +19,7 @@ export function mapBreadcrumbMockProps(props: BreadcrumbMockProps): BreadcrumbLi
                 breadcrumb: [
                     {
                         type: "category",
-                        category: markMenuCategory({ label: "MAIN" }),
+                        category: { label: markMenuCategoryLabel("MAIN") },
                     },
                     {
                         type: "item",
@@ -34,7 +34,8 @@ export function mapBreadcrumbMockProps(props: BreadcrumbMockProps): BreadcrumbLi
     }
 }
 
-class BreadcrumbListMockComponent extends MockComponent<BreadcrumbListState>
+class BreadcrumbListMockComponent
+    extends MockComponent<BreadcrumbListState>
     implements BreadcrumbListComponent {
     load() {
         // mock では特に何もしない

@@ -1,6 +1,7 @@
 import { StaticMenuPath } from "../../../y_static/path"
 
 import { ApiNonce } from "../credential/data"
+import { MenuCategoryPath } from "./data"
 
 export type LoadBreadcrumbInfra = Readonly<{
     menuTree: MenuTree
@@ -16,7 +17,7 @@ export type ToggleMenuExpandInfra = Readonly<{
     menuExpands: MenuExpandRepository
 }>
 
-export type MenuCategoryLabel = string
+export type MenuTreeLabel = string
 export type MenuPath = StaticMenuPath
 
 export type MenuTree = MenuTreeNode[]
@@ -25,7 +26,7 @@ export type MenuTreeNode =
     | Readonly<{ type: "item"; item: MenuTreeItem }>
 
 export type MenuTreeCategory = Readonly<{
-    label: MenuCategoryLabel
+    label: MenuTreeLabel
     permission: MenuPermission
 }>
 export type MenuTreeItem = Readonly<{
@@ -37,7 +38,7 @@ export type MenuTreeItem = Readonly<{
 export type MenuPermission = Readonly<{ type: "any" }> | Readonly<{ type: "role"; roles: string[] }>
 
 export type MenuBadge = MenuBadgeMap
-export type MenuExpand = CategoryLabelsSet
+export type MenuExpand = MenuCategoryPath[]
 
 class ArrayMap<K, V> {
     map: ArrayMapEntry<K, V>[] = []
@@ -85,9 +86,9 @@ interface ArraySetEntryEquals<T> {
     (a: T, b: T): boolean
 }
 
-export class CategoryLabelsSet extends ArraySet<string[]> {
+export class MenuCategoryPathSet extends ArraySet<MenuCategoryPath> {
     constructor() {
-        super((a: string[], b: string[]): boolean => {
+        super((a, b) => {
             if (a.length !== b.length) {
                 return false
             }
@@ -103,11 +104,11 @@ export class CategoryLabelsSet extends ArraySet<string[]> {
 
 export interface MenuExpandRepository {
     findMenuExpand(): MenuExpandResponse
-    saveMenuExpand(menuExpand: string[][]): ToggleExpandResponse
+    saveMenuExpand(menuExpand: MenuExpand): ToggleExpandResponse
 }
 
 export type MenuExpandResponse =
-    | Readonly<{ success: true; menuExpand: string[][] }>
+    | Readonly<{ success: true; menuExpand: MenuExpand }>
     | Readonly<{ success: false; err: MenuExpandError }>
 
 export type ToggleExpandResponse =

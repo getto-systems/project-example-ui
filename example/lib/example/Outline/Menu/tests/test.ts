@@ -8,7 +8,7 @@ import { MenuBadge, MenuBadgeMap, MenuTree } from "../../../shared/menu/infra"
 import { BreadcrumbListState } from "../../breadcrumbList/component"
 import { MenuListState } from "../../menuList/component"
 
-import { Menu } from "../../../shared/menu/data"
+import { markMenuCategoryLabel, Menu } from "../../../shared/menu/data"
 import { ApiNonce, markApiNonce, markApiRoles } from "../../../shared/credential/data"
 
 describe("BreadcrumbList", () => {
@@ -36,7 +36,7 @@ describe("BreadcrumbList", () => {
                                 breadcrumb: [
                                     {
                                         type: "category",
-                                        category: { permission: { type: "any" }, label: "MAIN" },
+                                        category: { label: "MAIN" },
                                     },
                                     {
                                         type: "item",
@@ -120,10 +120,8 @@ describe("MenuList", () => {
                                 menu: [
                                     {
                                         type: "category",
-                                        category: {
-                                            permission: { type: "any" },
-                                            label: "MAIN",
-                                        },
+                                        category: { label: "MAIN" },
+                                        path: ["MAIN"],
                                         children: [
                                             {
                                                 type: "item",
@@ -151,10 +149,8 @@ describe("MenuList", () => {
                                     },
                                     {
                                         type: "category",
-                                        category: {
-                                            permission: { type: "any" },
-                                            label: "DOCUMENT",
-                                        },
+                                        category: { label: "DOCUMENT" },
+                                        path: ["DOCUMENT"],
                                         children: [
                                             {
                                                 type: "item",
@@ -168,10 +164,8 @@ describe("MenuList", () => {
                                             },
                                             {
                                                 type: "category",
-                                                category: {
-                                                    permission: { type: "any" },
-                                                    label: "DETAIL",
-                                                },
+                                                category: { label: "DETAIL" },
+                                                path: ["DOCUMENT", "DETAIL"],
                                                 children: [
                                                     {
                                                         type: "item",
@@ -198,10 +192,8 @@ describe("MenuList", () => {
                                 menu: [
                                     {
                                         type: "category",
-                                        category: {
-                                            permission: { type: "any" },
-                                            label: "MAIN",
-                                        },
+                                        category: { label: "MAIN" },
+                                        path: ["MAIN"],
                                         children: [
                                             {
                                                 type: "item",
@@ -229,10 +221,8 @@ describe("MenuList", () => {
                                     },
                                     {
                                         type: "category",
-                                        category: {
-                                            permission: { type: "any" },
-                                            label: "DOCUMENT",
-                                        },
+                                        category: { label: "DOCUMENT" },
+                                        path: ["DOCUMENT"],
                                         children: [
                                             {
                                                 type: "item",
@@ -246,10 +236,8 @@ describe("MenuList", () => {
                                             },
                                             {
                                                 type: "category",
-                                                category: {
-                                                    permission: { type: "any" },
-                                                    label: "DETAIL",
-                                                },
+                                                category: { label: "DETAIL" },
+                                                path: ["DOCUMENT", "DETAIL"],
                                                 children: [
                                                     {
                                                         type: "item",
@@ -313,10 +301,8 @@ describe("MenuList", () => {
                                 menu: [
                                     {
                                         type: "category",
-                                        category: {
-                                            permission: { type: "any" },
-                                            label: "MAIN",
-                                        },
+                                        category: { label: "MAIN" },
+                                        path: ["MAIN"],
                                         children: [
                                             {
                                                 type: "item",
@@ -344,10 +330,8 @@ describe("MenuList", () => {
                                     },
                                     {
                                         type: "category",
-                                        category: {
-                                            permission: { type: "any" },
-                                            label: "DOCUMENT",
-                                        },
+                                        category: { label: "DOCUMENT" },
+                                        path: ["DOCUMENT"],
                                         children: [
                                             {
                                                 type: "item",
@@ -361,10 +345,8 @@ describe("MenuList", () => {
                                             },
                                             {
                                                 type: "category",
-                                                category: {
-                                                    permission: { type: "any" },
-                                                    label: "DETAIL",
-                                                },
+                                                category: { label: "DETAIL" },
+                                                path: ["DOCUMENT", "DETAIL"],
                                                 children: [
                                                     {
                                                         type: "item",
@@ -391,10 +373,8 @@ describe("MenuList", () => {
                                 menu: [
                                     {
                                         type: "category",
-                                        category: {
-                                            permission: { type: "any" },
-                                            label: "MAIN",
-                                        },
+                                        category: { label: "MAIN" },
+                                        path: ["MAIN"],
                                         children: [
                                             {
                                                 type: "item",
@@ -422,10 +402,8 @@ describe("MenuList", () => {
                                     },
                                     {
                                         type: "category",
-                                        category: {
-                                            permission: { type: "any" },
-                                            label: "DOCUMENT",
-                                        },
+                                        category: { label: "DOCUMENT" },
+                                        path: ["DOCUMENT"],
                                         children: [
                                             {
                                                 type: "item",
@@ -439,10 +417,8 @@ describe("MenuList", () => {
                                             },
                                             {
                                                 type: "category",
-                                                category: {
-                                                    permission: { type: "any" },
-                                                    label: "DETAIL",
-                                                },
+                                                category: { label: "DETAIL" },
+                                                path: ["DOCUMENT", "DETAIL"],
                                                 children: [
                                                     {
                                                         type: "item",
@@ -530,10 +506,8 @@ describe("MenuList", () => {
                             menu: [
                                 {
                                     type: "category",
-                                    category: {
-                                        permission: { type: "any" },
-                                        label: "MAIN",
-                                    },
+                                    category: { label: "MAIN" },
+                                    path: ["MAIN"],
                                     children: [
                                         {
                                             type: "item",
@@ -561,10 +535,8 @@ describe("MenuList", () => {
                                 },
                                 {
                                     type: "category",
-                                    category: {
-                                        permission: { type: "any" },
-                                        label: "DOCUMENT",
-                                    },
+                                    category: { label: "DOCUMENT" },
+                                    path: ["DOCUMENT"],
                                     children: [
                                         {
                                             type: "item",
@@ -578,10 +550,8 @@ describe("MenuList", () => {
                                         },
                                         {
                                             type: "category",
-                                            category: {
-                                                permission: { type: "any" },
-                                                label: "DETAIL",
-                                            },
+                                            category: { label: "DETAIL" },
+                                            path: ["DOCUMENT", "DETAIL"],
                                             children: [
                                                 {
                                                     type: "item",
@@ -608,10 +578,8 @@ describe("MenuList", () => {
                             menu: [
                                 {
                                     type: "category",
-                                    category: {
-                                        permission: { type: "any" },
-                                        label: "MAIN",
-                                    },
+                                    category: { label: "MAIN" },
+                                    path: ["MAIN"],
                                     children: [
                                         {
                                             type: "item",
@@ -639,10 +607,8 @@ describe("MenuList", () => {
                                 },
                                 {
                                     type: "category",
-                                    category: {
-                                        permission: { type: "any" },
-                                        label: "DOCUMENT",
-                                    },
+                                    category: { label: "DOCUMENT" },
+                                    path: ["DOCUMENT"],
                                     children: [
                                         {
                                             type: "item",
@@ -656,10 +622,8 @@ describe("MenuList", () => {
                                         },
                                         {
                                             type: "category",
-                                            category: {
-                                                permission: { type: "any" },
-                                                label: "DETAIL",
-                                            },
+                                            category: { label: "DETAIL" },
+                                            path: ["DOCUMENT", "DETAIL"],
                                             children: [
                                                 {
                                                     type: "item",
@@ -686,10 +650,8 @@ describe("MenuList", () => {
                             menu: [
                                 {
                                     type: "category",
-                                    category: {
-                                        permission: { type: "any" },
-                                        label: "MAIN",
-                                    },
+                                    category: { label: "MAIN" },
+                                    path: ["MAIN"],
                                     children: [
                                         {
                                             type: "item",
@@ -717,10 +679,8 @@ describe("MenuList", () => {
                                 },
                                 {
                                     type: "category",
-                                    category: {
-                                        permission: { type: "any" },
-                                        label: "DOCUMENT",
-                                    },
+                                    category: { label: "DOCUMENT" },
+                                    path: ["DOCUMENT"],
                                     children: [
                                         {
                                             type: "item",
@@ -734,10 +694,8 @@ describe("MenuList", () => {
                                         },
                                         {
                                             type: "category",
-                                            category: {
-                                                permission: { type: "any" },
-                                                label: "DETAIL",
-                                            },
+                                            category: { label: "DETAIL" },
+                                            path: ["DOCUMENT", "DETAIL"],
                                             children: [
                                                 {
                                                     type: "item",
@@ -764,10 +722,8 @@ describe("MenuList", () => {
                             menu: [
                                 {
                                     type: "category",
-                                    category: {
-                                        permission: { type: "any" },
-                                        label: "MAIN",
-                                    },
+                                    category: { label: "MAIN" },
+                                    path: ["MAIN"],
                                     children: [
                                         {
                                             type: "item",
@@ -795,10 +751,8 @@ describe("MenuList", () => {
                                 },
                                 {
                                     type: "category",
-                                    category: {
-                                        permission: { type: "any" },
-                                        label: "DOCUMENT",
-                                    },
+                                    category: { label: "DOCUMENT" },
+                                    path: ["DOCUMENT"],
                                     children: [
                                         {
                                             type: "item",
@@ -812,10 +766,8 @@ describe("MenuList", () => {
                                         },
                                         {
                                             type: "category",
-                                            category: {
-                                                permission: { type: "any" },
-                                                label: "DETAIL",
-                                            },
+                                            category: { label: "DETAIL" },
+                                            path: ["DOCUMENT", "DETAIL"],
                                             children: [
                                                 {
                                                     type: "item",
@@ -870,10 +822,8 @@ describe("MenuList", () => {
                                 menu: [
                                     {
                                         type: "category",
-                                        category: {
-                                            permission: { type: "any" },
-                                            label: "MAIN",
-                                        },
+                                        category: { label: "MAIN" },
+                                        path: ["MAIN"],
                                         children: [
                                             {
                                                 type: "item",
@@ -901,10 +851,8 @@ describe("MenuList", () => {
                                     },
                                     {
                                         type: "category",
-                                        category: {
-                                            permission: { type: "any" },
-                                            label: "DOCUMENT",
-                                        },
+                                        category: { label: "DOCUMENT" },
+                                        path: ["DOCUMENT"],
                                         children: [
                                             {
                                                 type: "item",
@@ -918,10 +866,8 @@ describe("MenuList", () => {
                                             },
                                             {
                                                 type: "category",
-                                                category: {
-                                                    permission: { type: "any" },
-                                                    label: "DETAIL",
-                                                },
+                                                category: { label: "DETAIL" },
+                                                path: ["DOCUMENT", "DETAIL"],
                                                 children: [
                                                     {
                                                         type: "item",
@@ -943,10 +889,8 @@ describe("MenuList", () => {
                                     },
                                     {
                                         type: "category",
-                                        category: {
-                                            permission: { type: "role", roles: ["development-docs"] },
-                                            label: "DEVELOPMENT",
-                                        },
+                                        category: { label: "DEVELOPMENT" },
+                                        path: ["DEVELOPMENT"],
                                         children: [
                                             {
                                                 type: "item",
@@ -969,10 +913,8 @@ describe("MenuList", () => {
                                 menu: [
                                     {
                                         type: "category",
-                                        category: {
-                                            permission: { type: "any" },
-                                            label: "MAIN",
-                                        },
+                                        category: { label: "MAIN" },
+                                        path: ["MAIN"],
                                         children: [
                                             {
                                                 type: "item",
@@ -1000,10 +942,8 @@ describe("MenuList", () => {
                                     },
                                     {
                                         type: "category",
-                                        category: {
-                                            permission: { type: "any" },
-                                            label: "DOCUMENT",
-                                        },
+                                        category: { label: "DOCUMENT" },
+                                        path: ["DOCUMENT"],
                                         children: [
                                             {
                                                 type: "item",
@@ -1017,10 +957,8 @@ describe("MenuList", () => {
                                             },
                                             {
                                                 type: "category",
-                                                category: {
-                                                    permission: { type: "any" },
-                                                    label: "DETAIL",
-                                                },
+                                                category: { label: "DETAIL" },
+                                                path: ["DOCUMENT", "DETAIL"],
                                                 children: [
                                                     {
                                                         type: "item",
@@ -1042,10 +980,8 @@ describe("MenuList", () => {
                                     },
                                     {
                                         type: "category",
-                                        category: {
-                                            permission: { type: "role", roles: ["development-docs"] },
-                                            label: "DEVELOPMENT",
-                                        },
+                                        category: { label: "DEVELOPMENT" },
+                                        path: ["DEVELOPMENT"],
                                         children: [
                                             {
                                                 type: "item",
@@ -1207,7 +1143,7 @@ function expandRepository(): MenuRepository {
             markApiNonce("api-nonce"),
             markApiRoles(["admin"])
         ),
-        menuExpands: initMemoryMenuExpandRepository([["DOCUMENT"]]),
+        menuExpands: initMemoryMenuExpandRepository([[markMenuCategoryLabel("DOCUMENT")]]),
     }
 }
 

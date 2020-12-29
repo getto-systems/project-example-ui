@@ -3,7 +3,7 @@ import { MockComponent } from "../../../z_external/mock/component"
 
 import { MenuListComponent, MenuListState } from "./component"
 
-import { markMenuCategory, markMenuItem, Menu } from "../../shared/menu/data"
+import { markMenuCategoryLabel, markMenuItem, Menu } from "../../shared/menu/data"
 
 export function initMenuListComponent(state: MenuListState): MenuListMockComponent {
     return new MenuListMockComponent(state)
@@ -32,7 +32,8 @@ export function mapMenuMockProps(props: MenuMockProps): MenuListState {
                 type: "category",
                 isExpand: true,
                 badgeCount,
-                category: markMenuCategory({ label: "MAIN" }),
+                category: { label: markMenuCategoryLabel("MAIN") },
+                path: [markMenuCategoryLabel("MAIN")],                
                 children: [
                     {
                         type: "item",
