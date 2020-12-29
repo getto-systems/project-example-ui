@@ -3,7 +3,7 @@ import { MockComponent } from "../../../z_external/mock/component"
 
 import { MenuListComponent, MenuListState } from "./component"
 
-import { markMenuCategoryLabel, markMenuItem, Menu } from "../../shared/menu/data"
+import { markMenuCategoryLabel, markMenuItem, Menu } from "../../permission/menu/data"
 
 export function initMenuListComponent(state: MenuListState): MenuListMockComponent {
     return new MenuListMockComponent(state)

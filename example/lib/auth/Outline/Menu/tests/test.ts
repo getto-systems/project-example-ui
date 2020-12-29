@@ -1,15 +1,15 @@
 import { MenuRepository, MenuSimulator, newMenuResource } from "./core"
 
-import { initMemoryApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential/memory"
-import { initMemoryMenuExpandRepository } from "../../../shared/menu/impl/repository/menuExpand/memory"
+import { initMemoryApiCredentialRepository } from "../../../common/credential/impl/repository/apiCredential/memory"
+import { initMemoryMenuExpandRepository } from "../../../permission/menu/impl/repository/menuExpand/memory"
 
-import { MenuBadge, MenuBadgeMap, MenuTree } from "../../../shared/menu/infra"
+import { MenuBadge, MenuBadgeMap, MenuTree } from "../../../permission/menu/infra"
 
 import { BreadcrumbListState } from "../../breadcrumbList/component"
 import { MenuListState } from "../../menuList/component"
 
-import { markMenuCategoryLabel, Menu } from "../../../shared/menu/data"
-import { ApiNonce, markApiNonce, markApiRoles } from "../../../../auth/common/credential/data"
+import { markMenuCategoryLabel, Menu } from "../../../permission/menu/data"
+import { ApiNonce, markApiNonce, markApiRoles } from "../../../common/credential/data"
 
 describe("BreadcrumbList", () => {
     test("load breadcrumb", (done) => {

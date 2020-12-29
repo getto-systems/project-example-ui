@@ -7,9 +7,9 @@ import {
     mapBreadcrumbMockProps,
     BreadcrumbMockProps,
     initBreadcrumbListComponent,
-} from "../../../example/Outline/breadcrumbList/mock"
+} from "../../../auth/Outline/breadcrumbList/mock"
 
-import { initialBreadcrumbListState } from "../../../example/Outline/breadcrumbList/component"
+import { initialBreadcrumbListState } from "../../../auth/Outline/breadcrumbList/component"
 
 export default {
     title: "secure/Outline/BreadcrumbList",

@@ -5,7 +5,7 @@ import {
     MenuListState,
 } from "./component"
 
-import { Menu, MenuCategoryPath } from "../../shared/menu/data"
+import { Menu, MenuCategoryPath } from "../../permission/menu/data"
 
 export const initMenuListComponent: MenuListComponentFactory = (material) => new Component(material)
 

@@ -1,24 +1,24 @@
 import {
     initSimulateMenuBadgeClient,
     MenuBadgeSimulator,
-} from "../../../shared/menu/impl/client/menuBadge/simulate"
+} from "../../../permission/menu/impl/client/menuBadge/simulate"
 
 import { detectMenuTarget } from "../impl/location"
 
 import { initBreadcrumbListComponent } from "../../breadcrumbList/impl"
 import { initMenuListComponent } from "../../menuList/impl"
 
-import { loadApiNonce, loadApiRoles } from "../../../../auth/common/credential/impl/core"
-import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../shared/menu/impl/core"
+import { loadApiNonce, loadApiRoles } from "../../../common/credential/impl/core"
+import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../permission/menu/impl/core"
 
-import { ApiCredentialRepository } from "../../../../auth/common/credential/infra"
-import { MenuExpandRepository, MenuTree } from "../../../shared/menu/infra"
+import { ApiCredentialRepository } from "../../../common/credential/infra"
+import { MenuExpandRepository, MenuTree } from "../../../permission/menu/infra"
 
 import { BreadcrumbListComponent } from "../../breadcrumbList/component"
 import { MenuListComponent } from "../../menuList/component"
 
-import { CredentialAction } from "../../../../auth/common/credential/action"
-import { MenuAction } from "../../../shared/menu/action"
+import { CredentialAction } from "../../../common/credential/action"
+import { MenuAction } from "../../../permission/menu/action"
 
 export type MenuResource = Readonly<{
     breadcrumbList: BreadcrumbListComponent

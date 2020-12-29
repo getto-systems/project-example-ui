@@ -1,18 +1,18 @@
-import { initCredentialAction, initMenuAction } from "../../../Outline/Menu/tests/core"
+import { initCredentialAction, initMenuAction } from "../../../../auth/Outline/Menu/tests/core"
 import { initSeasonAction } from "../../../Outline/seasonInfo/tests/core"
 
-import { detectMenuTarget } from "../../../Outline/Menu/impl/location"
-import { MenuBadgeSimulator } from "../../../shared/menu/impl/client/menuBadge/simulate"
+import { detectMenuTarget } from "../../../../auth/Outline/Menu/impl/location"
+import { MenuBadgeSimulator } from "../../../../auth/permission/menu/impl/client/menuBadge/simulate"
 
 import { DashboardCollector, DashboardFactory, initDashboardResource } from "../impl/core"
 
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
-import { initBreadcrumbListComponent } from "../../../Outline/breadcrumbList/impl"
-import { initMenuListComponent } from "../../../Outline/menuList/impl"
+import { initBreadcrumbListComponent } from "../../../../auth/Outline/breadcrumbList/impl"
+import { initMenuListComponent } from "../../../../auth/Outline/menuList/impl"
 import { initExampleComponent } from "../../example/impl"
 
 import { ApiCredentialRepository } from "../../../../auth/common/credential/infra"
-import { MenuExpandRepository, MenuTree } from "../../../shared/menu/infra"
+import { MenuExpandRepository, MenuTree } from "../../../../auth/permission/menu/infra"
 
 import { DashboardResource } from "../view"
 

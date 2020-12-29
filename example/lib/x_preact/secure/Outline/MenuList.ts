@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { notice_alert, v_small } from "../../common/layout"
 
-import { MenuListComponent, initialMenuListState } from "../../../example/Outline/menuList/component"
+import { MenuListComponent, initialMenuListState } from "../../../auth/Outline/menuList/component"
 
 import {
     Menu,
@@ -13,7 +13,7 @@ import {
     MenuItem,
     LoadMenuError,
     MenuCategoryPath,
-} from "../../../example/shared/menu/data"
+} from "../../../auth/permission/menu/data"
 
 type Props = Readonly<{
     menuList: MenuListComponent

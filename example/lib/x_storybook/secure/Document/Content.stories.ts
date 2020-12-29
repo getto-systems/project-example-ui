@@ -10,7 +10,7 @@ import {
 import {
     initBreadcrumbListComponent,
     mapBreadcrumbMockProps,
-} from "../../../example/Outline/breadcrumbList/mock"
+} from "../../../auth/Outline/breadcrumbList/mock"
 
 import { initialContentState } from "../../../document/Document/content/component"
 

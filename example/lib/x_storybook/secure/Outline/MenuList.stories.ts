@@ -8,9 +8,9 @@ import {
     mapMenuMockProps,
     MenuMockProps,
     initMenuListComponent,
-} from "../../../example/Outline/menuList/mock"
+} from "../../../auth/Outline/menuList/mock"
 
-import { initialMenuListState } from "../../../example/Outline/menuList/component"
+import { initialMenuListState } from "../../../auth/Outline/menuList/component"
 
 export default {
     title: "secure/Outline/MenuList",

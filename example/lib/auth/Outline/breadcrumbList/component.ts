@@ -1,6 +1,6 @@
-import { LoadBreadcrumb } from "../../shared/menu/action"
+import { LoadBreadcrumb } from "../../permission/menu/action"
 
-import { Breadcrumb } from "../../shared/menu/data"
+import { Breadcrumb } from "../../permission/menu/data"
 
 export interface BreadcrumbListComponentFactory {
     (material: BreadcrumbListMaterial): BreadcrumbListComponent

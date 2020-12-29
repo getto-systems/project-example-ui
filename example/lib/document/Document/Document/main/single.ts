@@ -1,27 +1,27 @@
 import { env } from "../../../../y_static/env"
 
-import { detectMenuTarget } from "../../../../example/Outline/Menu/impl/location"
+import { detectMenuTarget } from "../../../../auth/Outline/Menu/impl/location"
 import { detectContentPath } from "../impl/location"
 
-import { initMenuListComponent } from "../../../../example/Outline/menuList/impl"
-import { initBreadcrumbListComponent } from "../../../../example/Outline/breadcrumbList/impl"
+import { initMenuListComponent } from "../../../../auth/Outline/menuList/impl"
+import { initBreadcrumbListComponent } from "../../../../auth/Outline/breadcrumbList/impl"
 import { initContentComponent } from "../../content/impl"
 
 import { loadApiNonce, loadApiRoles } from "../../../../auth/common/credential/impl/core"
-import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../../example/shared/menu/impl/core"
-import { documentMenuTree } from "../../../../example/Outline/Menu/main/menuTree"
+import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../../auth/permission/menu/impl/core"
+import { documentMenuTree } from "../../../../auth/Outline/Menu/main/menuTree"
 import { loadContent } from "../../../content/impl/core"
 import { DocumentCollector, DocumentFactory, initDocumentResource } from "../impl/core"
 
 import { initMemoryApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential/memory"
-import { initNoopBadgeClient } from "../../../../example/shared/menu/impl/client/menuBadge/noop"
-import { initStorageMenuExpandRepository } from "../../../../example/shared/menu/impl/repository/menuExpand/storage"
+import { initNoopBadgeClient } from "../../../../auth/permission/menu/impl/client/menuBadge/noop"
+import { initStorageMenuExpandRepository } from "../../../../auth/permission/menu/impl/repository/menuExpand/storage"
 
 import { DocumentEntryPoint } from "../view"
 
 import { markApiNonce, markApiRoles } from "../../../../auth/common/credential/data"
 import { CredentialAction } from "../../../../auth/common/credential/action"
-import { MenuAction } from "../../../../example/shared/menu/action"
+import { MenuAction } from "../../../../auth/permission/menu/action"
 import { ContentAction } from "../../../content/action"
 
 export function newDocumentAsSingle(): DocumentEntryPoint {
