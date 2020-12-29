@@ -5,7 +5,7 @@ import {
 } from "../../Dashboard/tests/core"
 
 import { initStaticClock } from "../../../../z_infra/clock/simulate"
-import { initMemoryApiCredentialRepository } from "../../../shared/credential/impl/repository/apiCredential/memory"
+import { initMemoryApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential/memory"
 import { initMemoryMenuExpandRepository } from "../../../shared/menu/impl/repository/menuExpand/memory"
 import { initMemorySeasonRepository } from "../../../shared/season/impl/repository/season/memory"
 
@@ -14,7 +14,7 @@ import { MenuBadge, MenuBadgeMap, MenuTree } from "../../../shared/menu/infra"
 
 import { ExampleState } from "../component"
 
-import { ApiNonce, markApiNonce, markApiRoles } from "../../../shared/credential/data"
+import { ApiNonce, markApiNonce, markApiRoles } from "../../../../auth/common/credential/data"
 
 // デフォルトの season を取得する
 const NOW = new Date("2021-01-01 10:00:00")

@@ -1,11 +1,11 @@
 import { DocumentRepository, DocumentSimulator, newDocumentResource } from "../../Document/tests/core"
 
-import { initMemoryApiCredentialRepository } from "../../../../example/shared/credential/impl/repository/apiCredential/memory"
+import { initMemoryApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential/memory"
 import { initMemoryMenuExpandRepository } from "../../../../example/shared/menu/impl/repository/menuExpand/memory"
 
 import { MenuBadge, MenuBadgeMap, MenuTree } from "../../../../example/shared/menu/infra"
 
-import { ApiNonce, markApiNonce, markApiRoles } from "../../../../example/shared/credential/data"
+import { ApiNonce, markApiNonce, markApiRoles } from "../../../../auth/common/credential/data"
 import { ContentState } from "../component"
 
 describe("Content", () => {

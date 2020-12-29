@@ -5,7 +5,7 @@ import { BreadcrumbListComponentFactory } from "../../../../example/Outline/brea
 
 import { ContentComponentFactory } from "../../content/component"
 
-import { CredentialAction } from "../../../../example/shared/credential/action"
+import { CredentialAction } from "../../../../auth/common/credential/action"
 import { MenuAction, MenuTargetCollector } from "../../../../example/shared/menu/action"
 
 import { ContentAction, LoadContentCollector } from "../../../content/action"

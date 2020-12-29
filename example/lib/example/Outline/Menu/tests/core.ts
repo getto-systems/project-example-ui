@@ -8,21 +8,17 @@ import { detectMenuTarget } from "../impl/location"
 import { initBreadcrumbListComponent } from "../../breadcrumbList/impl"
 import { initMenuListComponent } from "../../menuList/impl"
 
-import { loadSeason } from "../../../shared/season/impl/core"
-import { loadApiNonce, loadApiRoles } from "../../../shared/credential/impl/core"
+import { loadApiNonce, loadApiRoles } from "../../../../auth/common/credential/impl/core"
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../shared/menu/impl/core"
 
-import { Clock } from "../../../../z_infra/clock/infra"
-import { ApiCredentialRepository } from "../../../shared/credential/infra"
-import { SeasonRepository } from "../../../shared/season/infra"
+import { ApiCredentialRepository } from "../../../../auth/common/credential/infra"
 import { MenuExpandRepository, MenuTree } from "../../../shared/menu/infra"
 
 import { BreadcrumbListComponent } from "../../breadcrumbList/component"
 import { MenuListComponent } from "../../menuList/component"
 
-import { CredentialAction } from "../../../shared/credential/action"
+import { CredentialAction } from "../../../../auth/common/credential/action"
 import { MenuAction } from "../../../shared/menu/action"
-import { SeasonAction } from "../../../shared/season/action"
 
 export type MenuResource = Readonly<{
     breadcrumbList: BreadcrumbListComponent
@@ -91,16 +87,5 @@ export function initMenuAction(
         loadBreadcrumb: loadBreadcrumb(infra),
         loadMenu: loadMenu(infra),
         toggleMenuExpand: toggleMenuExpand(infra),
-    }
-}
-
-export function initSeasonAction(seasons: SeasonRepository, clock: Clock): SeasonAction {
-    const infra = {
-        seasons,
-        clock,
-    }
-
-    return {
-        loadSeason: loadSeason(infra),
     }
 }

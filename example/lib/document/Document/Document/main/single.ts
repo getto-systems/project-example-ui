@@ -7,20 +7,20 @@ import { initMenuListComponent } from "../../../../example/Outline/menuList/impl
 import { initBreadcrumbListComponent } from "../../../../example/Outline/breadcrumbList/impl"
 import { initContentComponent } from "../../content/impl"
 
-import { loadApiNonce, loadApiRoles } from "../../../../example/shared/credential/impl/core"
+import { loadApiNonce, loadApiRoles } from "../../../../auth/common/credential/impl/core"
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../../example/shared/menu/impl/core"
 import { documentMenuTree } from "../../../../example/Outline/Menu/main/menuTree"
 import { loadContent } from "../../../content/impl/core"
 import { DocumentCollector, DocumentFactory, initDocumentResource } from "../impl/core"
 
-import { initMemoryApiCredentialRepository } from "../../../../example/shared/credential/impl/repository/apiCredential/memory"
+import { initMemoryApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential/memory"
 import { initNoopBadgeClient } from "../../../../example/shared/menu/impl/client/menuBadge/noop"
 import { initStorageMenuExpandRepository } from "../../../../example/shared/menu/impl/repository/menuExpand/storage"
 
 import { DocumentEntryPoint } from "../view"
 
-import { markApiNonce, markApiRoles } from "../../../../example/shared/credential/data"
-import { CredentialAction } from "../../../../example/shared/credential/action"
+import { markApiNonce, markApiRoles } from "../../../../auth/common/credential/data"
+import { CredentialAction } from "../../../../auth/common/credential/action"
 import { MenuAction } from "../../../../example/shared/menu/action"
 import { ContentAction } from "../../../content/action"
 

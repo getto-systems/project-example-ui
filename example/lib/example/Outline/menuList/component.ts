@@ -1,4 +1,4 @@
-import { LoadApiNonce, LoadApiRoles } from "../../shared/credential/action"
+import { LoadApiNonce, LoadApiRoles } from "../../../auth/common/credential/action"
 import { LoadMenu, ToggleMenuExpand } from "../../shared/menu/action"
 
 import { Menu, LoadMenuError, MenuCategoryPath } from "../../shared/menu/data"

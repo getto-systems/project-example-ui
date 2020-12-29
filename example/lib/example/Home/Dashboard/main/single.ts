@@ -6,7 +6,7 @@ import { initBreadcrumbListComponent } from "../../../Outline/breadcrumbList/imp
 import { initExampleComponent } from "../../example/impl"
 import { detectMenuTarget } from "../../../Outline/Menu/impl/location"
 
-import { loadApiNonce, loadApiRoles } from "../../../shared/credential/impl/core"
+import { loadApiNonce, loadApiRoles } from "../../../../auth/common/credential/impl/core"
 import { loadSeason } from "../../../shared/season/impl/core"
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../shared/menu/impl/core"
 import { mainMenuTree } from "../../../Outline/Menu/main/menuTree"
@@ -15,7 +15,7 @@ import { DashboardCollector, DashboardFactory, initDashboardResource } from "../
 import { MenuBadgeMap } from "../../../shared/menu/infra"
 
 import { initDateClock } from "../../../../z_infra/clock/date"
-import { initMemoryApiCredentialRepository } from "../../../shared/credential/impl/repository/apiCredential/memory"
+import { initMemoryApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential/memory"
 import { initMemorySeasonRepository } from "../../../shared/season/impl/repository/season/memory"
 import { initSimulateMenuBadgeClient } from "../../../shared/menu/impl/client/menuBadge/simulate"
 import { initStorageMenuExpandRepository } from "../../../shared/menu/impl/repository/menuExpand/storage"
@@ -23,7 +23,7 @@ import { initStorageMenuExpandRepository } from "../../../shared/menu/impl/repos
 import { DashboardEntryPoint } from "../view"
 
 import { markSeason } from "../../../shared/season/data"
-import { markApiNonce, markApiRoles } from "../../../shared/credential/data"
+import { markApiNonce, markApiRoles } from "../../../../auth/common/credential/data"
 
 export function newDashboardAsSingle(): DashboardEntryPoint {
     const menuExpandStorage = localStorage
