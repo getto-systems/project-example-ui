@@ -1,7 +1,7 @@
-import { LoadApiNonce, LoadApiRoles } from "../../../auth/common/credential/action"
-import { LoadMenu, ToggleMenuExpand } from "../../shared/menu/action"
+import { LoadApiNonce, LoadApiRoles } from "../../common/credential/action"
+import { LoadMenu, ToggleMenuExpand } from "../../permission/menu/action"
 
-import { Menu, LoadMenuError, MenuCategoryPath } from "../../shared/menu/data"
+import { Menu, LoadMenuError, MenuCategoryPath } from "../../permission/menu/data"
 
 export interface MenuListComponentFactory {
     (material: MenuListMaterial): MenuListComponent

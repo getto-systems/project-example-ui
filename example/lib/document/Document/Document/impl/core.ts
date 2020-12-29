@@ -1,12 +1,12 @@
 import { DocumentResource } from "../view"
 
-import { MenuListComponentFactory } from "../../../../example/Outline/menuList/component"
-import { BreadcrumbListComponentFactory } from "../../../../example/Outline/breadcrumbList/component"
+import { MenuListComponentFactory } from "../../../../auth/Outline/menuList/component"
+import { BreadcrumbListComponentFactory } from "../../../../auth/Outline/breadcrumbList/component"
 
 import { ContentComponentFactory } from "../../content/component"
 
 import { CredentialAction } from "../../../../auth/common/credential/action"
-import { MenuAction, MenuTargetCollector } from "../../../../example/shared/menu/action"
+import { MenuAction, MenuTargetCollector } from "../../../../auth/permission/menu/action"
 
 import { ContentAction, LoadContentCollector } from "../../../content/action"
 

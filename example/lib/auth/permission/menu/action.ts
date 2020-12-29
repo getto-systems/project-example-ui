@@ -6,7 +6,7 @@ import {
     MenuTarget,
     ToggleMenuExpandEvent,
 } from "./data"
-import { ApiNonce, ApiRoles, LoadResult } from "../../../auth/common/credential/data"
+import { ApiNonce, ApiRoles, LoadResult } from "../../common/credential/data"
 
 export type MenuAction = Readonly<{
     loadBreadcrumb: LoadBreadcrumbPod

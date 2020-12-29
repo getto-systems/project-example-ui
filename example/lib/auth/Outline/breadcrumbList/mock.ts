@@ -3,7 +3,7 @@ import { MockComponent } from "../../../z_external/mock/component"
 
 import { BreadcrumbListComponent, BreadcrumbListState } from "./component"
 
-import { markMenuCategoryLabel, markMenuItem } from "../../shared/menu/data"
+import { markMenuCategoryLabel, markMenuItem } from "../../permission/menu/data"
 
 export function initBreadcrumbListComponent(state: BreadcrumbListState): BreadcrumbListMockComponent {
     return new BreadcrumbListMockComponent(state)

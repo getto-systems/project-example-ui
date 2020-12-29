@@ -1,13 +1,13 @@
 import { DashboardResource } from "../view"
 
 import { SeasonInfoComponentFactory } from "../../../Outline/seasonInfo/component"
-import { MenuListComponentFactory } from "../../../Outline/menuList/component"
-import { BreadcrumbListComponentFactory } from "../../../Outline/breadcrumbList/component"
+import { MenuListComponentFactory } from "../../../../auth/Outline/menuList/component"
+import { BreadcrumbListComponentFactory } from "../../../../auth/Outline/breadcrumbList/component"
 
 import { ExampleComponentFactory } from "../../example/component"
 
 import { CredentialAction } from "../../../../auth/common/credential/action"
-import { MenuAction, MenuTargetCollector } from "../../../shared/menu/action"
+import { MenuAction, MenuTargetCollector } from "../../../../auth/permission/menu/action"
 import { SeasonAction } from "../../../shared/season/action"
 
 export type DashboardFactory = Readonly<{

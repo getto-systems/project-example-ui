@@ -5,8 +5,8 @@ import { Dashboard } from "../../../../x_preact/secure/Example/Home/Dashboard"
 
 import { newDashboard } from "../../../../example/Home/Dashboard/mock"
 import { mapExampleMockProps } from "../../../../example/Home/example/mock"
-import { mapBreadcrumbMockProps } from "../../../../example/Outline/breadcrumbList/mock"
-import { mapMenuMockProps } from "../../../../example/Outline/menuList/mock"
+import { mapBreadcrumbMockProps } from "../../../../auth/Outline/breadcrumbList/mock"
+import { mapMenuMockProps } from "../../../../auth/Outline/menuList/mock"
 import { mapSeasonMockProps } from "../../../../example/Outline/seasonInfo/mock"
 
 export default {

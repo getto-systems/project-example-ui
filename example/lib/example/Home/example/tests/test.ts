@@ -6,11 +6,11 @@ import {
 
 import { initStaticClock } from "../../../../z_infra/clock/simulate"
 import { initMemoryApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential/memory"
-import { initMemoryMenuExpandRepository } from "../../../shared/menu/impl/repository/menuExpand/memory"
+import { initMemoryMenuExpandRepository } from "../../../../auth/permission/menu/impl/repository/menuExpand/memory"
 import { initMemorySeasonRepository } from "../../../shared/season/impl/repository/season/memory"
 
 import { Clock } from "../../../../z_infra/clock/infra"
-import { MenuBadge, MenuBadgeMap, MenuTree } from "../../../shared/menu/infra"
+import { MenuBadge, MenuBadgeMap, MenuTree } from "../../../../auth/permission/menu/infra"
 
 import { ExampleState } from "../component"
 

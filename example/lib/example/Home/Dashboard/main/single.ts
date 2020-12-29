@@ -1,24 +1,24 @@
 import { env } from "../../../../y_static/env"
 
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
-import { initMenuListComponent } from "../../../Outline/menuList/impl"
-import { initBreadcrumbListComponent } from "../../../Outline/breadcrumbList/impl"
+import { initMenuListComponent } from "../../../../auth/Outline/menuList/impl"
+import { initBreadcrumbListComponent } from "../../../../auth/Outline/breadcrumbList/impl"
 import { initExampleComponent } from "../../example/impl"
-import { detectMenuTarget } from "../../../Outline/Menu/impl/location"
+import { detectMenuTarget } from "../../../../auth/Outline/Menu/impl/location"
 
 import { loadApiNonce, loadApiRoles } from "../../../../auth/common/credential/impl/core"
 import { loadSeason } from "../../../shared/season/impl/core"
-import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../shared/menu/impl/core"
-import { mainMenuTree } from "../../../Outline/Menu/main/menuTree"
+import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../../auth/permission/menu/impl/core"
+import { mainMenuTree } from "../../../../auth/Outline/Menu/main/menuTree"
 import { DashboardCollector, DashboardFactory, initDashboardResource } from "../impl/core"
 
-import { MenuBadgeMap } from "../../../shared/menu/infra"
+import { MenuBadgeMap } from "../../../../auth/permission/menu/infra"
 
 import { initDateClock } from "../../../../z_infra/clock/date"
 import { initMemoryApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential/memory"
 import { initMemorySeasonRepository } from "../../../shared/season/impl/repository/season/memory"
-import { initSimulateMenuBadgeClient } from "../../../shared/menu/impl/client/menuBadge/simulate"
-import { initStorageMenuExpandRepository } from "../../../shared/menu/impl/repository/menuExpand/storage"
+import { initSimulateMenuBadgeClient } from "../../../../auth/permission/menu/impl/client/menuBadge/simulate"
+import { initStorageMenuExpandRepository } from "../../../../auth/permission/menu/impl/repository/menuExpand/storage"
 
 import { DashboardEntryPoint } from "../view"
 

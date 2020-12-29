@@ -1,14 +1,14 @@
 import { MockComponent } from "../../../z_external/mock/component"
 
-import { initBreadcrumbListComponent } from "../../Outline/breadcrumbList/mock"
-import { initMenuListComponent } from "../../Outline/menuList/mock"
+import { initBreadcrumbListComponent } from "../../../auth/Outline/breadcrumbList/mock"
+import { initMenuListComponent } from "../../../auth/Outline/menuList/mock"
 import { initSeasonInfoComponent } from "../../Outline/seasonInfo/mock"
 import { initExample } from "../example/mock"
 
 import { DashboardEntryPoint } from "./view"
 
-import { BreadcrumbListState, initialBreadcrumbListState } from "../../Outline/breadcrumbList/component"
-import { initialMenuListState, MenuListState } from "../../Outline/menuList/component"
+import { BreadcrumbListState, initialBreadcrumbListState } from "../../../auth/Outline/breadcrumbList/component"
+import { initialMenuListState, MenuListState } from "../../../auth/Outline/menuList/component"
 import { initialSeasonInfoState, SeasonInfoState } from "../../Outline/seasonInfo/component"
 import { ExampleState, initialExampleState } from "../example/component"
 

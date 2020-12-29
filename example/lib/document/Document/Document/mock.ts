@@ -1,7 +1,7 @@
 import { MockComponent } from "../../../z_external/mock/component"
 
-import { initBreadcrumbListComponent } from "../../../example/Outline/breadcrumbList/mock"
-import { initMenuListComponent } from "../../../example/Outline/menuList/mock"
+import { initBreadcrumbListComponent } from "../../../auth/Outline/breadcrumbList/mock"
+import { initMenuListComponent } from "../../../auth/Outline/menuList/mock"
 import { initContentComponent } from "../content/mock"
 
 import { DocumentEntryPoint } from "./view"
@@ -9,8 +9,8 @@ import { DocumentEntryPoint } from "./view"
 import {
     BreadcrumbListState,
     initialBreadcrumbListState,
-} from "../../../example/Outline/breadcrumbList/component"
-import { initialMenuListState, MenuListState } from "../../../example/Outline/menuList/component"
+} from "../../../auth/Outline/breadcrumbList/component"
+import { initialMenuListState, MenuListState } from "../../../auth/Outline/menuList/component"
 import { ContentState, initialContentState } from "../content/component"
 
 export function newDocument(): DocumentMockEntryPoint {

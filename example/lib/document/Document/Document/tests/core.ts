@@ -1,16 +1,16 @@
-import { initCredentialAction, initMenuAction,  } from "../../../../example/Outline/Menu/tests/core"
+import { initCredentialAction, initMenuAction,  } from "../../../../auth/Outline/Menu/tests/core"
 
-import { detectMenuTarget } from "../../../../example/Outline/Menu/impl/location"
-import { MenuBadgeSimulator } from "../../../../example/shared/menu/impl/client/menuBadge/simulate"
+import { detectMenuTarget } from "../../../../auth/Outline/Menu/impl/location"
+import { MenuBadgeSimulator } from "../../../../auth/permission/menu/impl/client/menuBadge/simulate"
 
 import { DocumentCollector, DocumentFactory, initDocumentResource } from "../impl/core"
 
-import { initBreadcrumbListComponent } from "../../../../example/Outline/breadcrumbList/impl"
-import { initMenuListComponent } from "../../../../example/Outline/menuList/impl"
+import { initBreadcrumbListComponent } from "../../../../auth/Outline/breadcrumbList/impl"
+import { initMenuListComponent } from "../../../../auth/Outline/menuList/impl"
 import { initContentComponent } from "../../content/impl"
 
 import { ApiCredentialRepository } from "../../../../auth/common/credential/infra"
-import { MenuExpandRepository, MenuTree } from "../../../../example/shared/menu/infra"
+import { MenuExpandRepository, MenuTree } from "../../../../auth/permission/menu/infra"
 
 import { DocumentResource } from "../view"
 import { ContentAction } from "../../../content/action"
