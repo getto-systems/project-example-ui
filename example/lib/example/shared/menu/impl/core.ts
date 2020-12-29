@@ -242,13 +242,13 @@ function toMenuItem({ label, icon, path }: MenuTreeItem, version: string): MenuI
 }
 
 export const toggleMenuExpand = (infra: ToggleMenuExpandInfra): ToggleMenuExpandPod => () => (
-    category,
     menu,
+    path,
     post
 ) => {
     const { menuExpands } = infra
 
-    const updatedMenu = toggleMenu(category, menu)
+    const updatedMenu = toggleMenu(menu, path)
 
     const response = menuExpands.saveMenuExpand(gatherMenuExpand(updatedMenu, []))
     if (!response.success) {
@@ -282,7 +282,7 @@ export const toggleMenuExpand = (infra: ToggleMenuExpandInfra): ToggleMenuExpand
             })
         }
     }
-    function toggleMenu(path: MenuCategoryPath, menu: Menu): Menu {
+    function toggleMenu(menu: Menu, path: MenuCategoryPath): Menu {
         if (path.length === 0) {
             return menu
         }
@@ -295,7 +295,7 @@ export const toggleMenuExpand = (infra: ToggleMenuExpandInfra): ToggleMenuExpand
             }
             return {
                 ...node,
-                children: toggleMenu(path.slice(1), node.children),
+                children: toggleMenu(node.children, path.slice(1)),
             }
         })
     }

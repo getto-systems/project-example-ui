@@ -32,8 +32,8 @@ class Component implements MenuListComponent {
             this.post(event)
         })
     }
-    toggle(path: MenuCategoryPath, menu: Menu): void {
-        this.material.toggleMenuExpand(path, menu, (event) => {
+    toggle(menu: Menu, path: MenuCategoryPath): void {
+        this.material.toggleMenuExpand(menu, path, (event) => {
             this.post(event)
         })
     }

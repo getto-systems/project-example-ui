@@ -38,7 +38,7 @@ export interface ToggleMenuExpandPod {
     (): ToggleMenuExpand
 }
 export interface ToggleMenuExpand {
-    (path: MenuCategoryPath, menu: Menu, post: Post<ToggleMenuExpandEvent>): void
+    (menu: Menu, path: MenuCategoryPath, post: Post<ToggleMenuExpandEvent>): void
 }
 
 interface Post<T> {

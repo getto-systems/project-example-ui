@@ -464,7 +464,10 @@ describe("MenuList", () => {
 
         resource.menuList.load()
 
-        const toggles = [["DOCUMENT"], ["DOCUMENT", "DETAIL"]]
+        const toggles = [
+            [markMenuCategoryLabel("DOCUMENT")],
+            [markMenuCategoryLabel("DOCUMENT"), markMenuCategoryLabel("DETAIL")],
+        ]
 
         function stateHandler(): Post<MenuListState> {
             const stack: MenuListState[] = []
@@ -492,9 +495,9 @@ describe("MenuList", () => {
                 }
 
                 function toggleOrCheckExpects(menu: Menu) {
-                    const target = toggles.shift()
-                    if (target) {
-                        resource.menuList.toggle(target, menu)
+                    const path = toggles.shift()
+                    if (path) {
+                        resource.menuList.toggle(menu, path)
                     } else {
                         checkExpects()
                     }

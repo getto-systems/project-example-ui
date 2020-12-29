@@ -6,7 +6,14 @@ import { notice_alert, v_small } from "../../common/layout"
 
 import { MenuListComponent, initialMenuListState } from "../../../example/Outline/menuList/component"
 
-import { Menu, MenuNode, MenuCategory, MenuItem, LoadMenuError } from "../../../example/shared/menu/data"
+import {
+    Menu,
+    MenuNode,
+    MenuCategory,
+    MenuItem,
+    LoadMenuError,
+    MenuCategoryPath,
+} from "../../../example/shared/menu/data"
 
 type Props = Readonly<{
     menuList: MenuListComponent
@@ -32,21 +39,24 @@ export function MenuList({ menuList }: Props): VNode {
             return html`${error(state.err)} ${content(state.menu)}`
     }
 
-    function content(menuNodes: Menu): VNode {
+    function content(wholeMenu: Menu): VNode {
         // id="menu" は breadcrumb の href="#menu" と対応
         // mobile レイアウトで menu に移動
-        return html`<nav id="menu" class="menu__body">${menuToHtml(menuNodes, [])}</nav>`
+        return html`<nav id="menu" class="menu__body">${menuToHtml(wholeMenu)}</nav>`
 
-        function menuToHtml(menu: Menu, categoryLabels: string[]): VNode[] {
-            return menu.map((node) => toNode(node, categoryLabels))
+        function menuToHtml(menu: Menu): VNode[] {
+            return menu.map((node) => toNode(node))
         }
-        function toNode(node: MenuNode, categoryLabels: string[]): VNode {
+        function toNode(node: MenuNode): VNode {
             switch (node.type) {
                 case "category":
-                    return menuCategory(node.category, node.children, node.badgeCount, node.isExpand, [
-                        ...categoryLabels,
-                        node.category.label,
-                    ])
+                    return menuCategory(
+                        node.category,
+                        node.path,
+                        node.children,
+                        node.badgeCount,
+                        node.isExpand
+                    )
 
                 case "item":
                     return menuItem(node.item, node.badgeCount, node.isActive)
@@ -55,10 +65,10 @@ export function MenuList({ menuList }: Props): VNode {
 
         function menuCategory(
             category: MenuCategory,
+            path: MenuCategoryPath,
             children: Menu,
             badgeCount: number,
-            isExpand: boolean,
-            categoryLabels: string[]
+            isExpand: boolean
         ) {
             const { label } = category
 
@@ -69,14 +79,14 @@ export function MenuList({ menuList }: Props): VNode {
                         <span class="menu__nav__summary__badge">${badge(badgeCount)}</span>
                     </summary>
                     <ul class="menu__nav__items">
-                        ${menuToHtml(children, categoryLabels)}
+                        ${menuToHtml(children)}
                     </ul>
                 </details>
             `
 
             function toggle(event: Event) {
                 event.preventDefault()
-                menuList.toggle(categoryLabels, menuNodes)
+                menuList.toggle(wholeMenu, path)
             }
         }
 
