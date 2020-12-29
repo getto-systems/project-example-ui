@@ -6,14 +6,7 @@ import { notice_alert, v_small } from "../../common/layout"
 
 import { MenuListComponent, initialMenuListState } from "../../../auth/Outline/menuList/component"
 
-import {
-    Menu,
-    MenuNode,
-    MenuCategory,
-    MenuItem,
-    LoadMenuError,
-    MenuCategoryPath,
-} from "../../../auth/permission/menu/data"
+import { Menu, MenuCategoryNode, MenuItemNode, LoadMenuError } from "../../../auth/permission/menu/data"
 
 type Props = Readonly<{
     menuList: MenuListComponent
@@ -42,63 +35,50 @@ export function MenuList({ menuList }: Props): VNode {
     function content(wholeMenu: Menu): VNode {
         // id="menu" は breadcrumb の href="#menu" と対応
         // mobile レイアウトで menu に移動
-        return html`<nav id="menu" class="menu__body">${menuToHtml(wholeMenu)}</nav>`
+        return html`<nav id="menu" class="menu__body">${menuContent(wholeMenu)}</nav>`
 
-        function menuToHtml(menu: Menu): VNode[] {
-            return menu.map((node) => toNode(node))
-        }
-        function toNode(node: MenuNode): VNode {
-            switch (node.type) {
-                case "category":
-                    return menuCategory(
-                        node.category,
-                        node.path,
-                        node.children,
-                        node.badgeCount,
-                        node.isExpand
-                    )
+        function menuContent(menu: Menu): VNode[] {
+            return menu.map((node) => {
+                switch (node.type) {
+                    case "category":
+                        return menuCategory(node)
 
-                case "item":
-                    return menuItem(node.item, node.badgeCount, node.isActive)
-            }
+                    case "item":
+                        return menuItem(node)
+                }
+            })
         }
 
-        function menuCategory(
-            category: MenuCategory,
-            path: MenuCategoryPath,
-            children: Menu,
-            badgeCount: number,
-            isExpand: boolean
-        ) {
-            const { label } = category
+        function menuCategory(node: MenuCategoryNode) {
+            const { label } = node.category
 
             return html`
-                <details class="menu__nav" open=${isExpand} key=${label}>
+                <details class="menu__nav" open=${node.isExpand} key=${label}>
                     <summary class="menu__nav__summary" onClick=${toggle}>
                         <span class="menu__nav__summary__label">${label}</span>
-                        <span class="menu__nav__summary__badge">${badge(badgeCount)}</span>
+                        <span class="menu__nav__summary__badge">${badge(node.badgeCount)}</span>
                     </summary>
                     <ul class="menu__nav__items">
-                        ${menuToHtml(children)}
+                        ${menuContent(node.children)}
                     </ul>
                 </details>
             `
 
             function toggle(event: Event) {
                 event.preventDefault()
-                menuList.toggle(wholeMenu, path)
+                menuList.toggle(wholeMenu, node.path)
             }
         }
 
-        function menuItem(item: MenuItem, badgeCount: number, isActive: boolean) {
-            const { label, icon, href } = item
-            const activeClass = isActive ? "menu__nav__item_active" : ""
+        function menuItem(node: MenuItemNode) {
+            const { label, icon, href } = node.item
+            const activeClass = node.isActive ? "menu__nav__item_active" : ""
 
             return html`
                 <li class="menu__nav__item" key="${href}">
                     <a class="menu__nav__link ${activeClass}" href="${href}">
                         <span class="menu__nav__item__label">${labelWithIcon()}</span>
-                        <span class="menu__nav__item__badge">${badge(badgeCount)}</span>
+                        <span class="menu__nav__item__badge">${badge(node.badgeCount)}</span>
                     </a>
                 </li>
             `
