@@ -63,8 +63,8 @@ export function MenuList({ menuList }: Props): VNode {
             const { label } = category
 
             return html`
-                <details class="menu__nav" open=${isExpand} key=${label} onClick=${toggle}>
-                    <summary class="menu__nav__summary">
+                <details class="menu__nav" open=${isExpand} key=${label}>
+                    <summary class="menu__nav__summary" onClick=${toggle}>
                         <span class="menu__nav__summary__label">${label}</span>
                         <span class="menu__nav__summary__badge">${badge(badgeCount)}</span>
                     </summary>
@@ -76,11 +76,6 @@ export function MenuList({ menuList }: Props): VNode {
 
             function toggle(event: Event) {
                 event.preventDefault()
-                event.stopPropagation()
-                const target = event.target
-                if (target instanceof HTMLElement) {
-                    target.blur()
-                }
                 menuList.toggle(categoryLabels, menuNodes)
             }
         }
