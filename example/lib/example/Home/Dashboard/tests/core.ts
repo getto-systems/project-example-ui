@@ -1,4 +1,5 @@
-import { initCredentialAction, initMenuAction, initSeasonAction } from "../../../Outline/Menu/tests/core"
+import { initCredentialAction, initMenuAction } from "../../../Outline/Menu/tests/core"
+import { initSeasonAction } from "../../../Outline/seasonInfo/tests/core"
 
 import { detectMenuTarget } from "../../../Outline/Menu/impl/location"
 import { MenuBadgeSimulator } from "../../../shared/menu/impl/client/menuBadge/simulate"
@@ -10,7 +11,7 @@ import { initBreadcrumbListComponent } from "../../../Outline/breadcrumbList/imp
 import { initMenuListComponent } from "../../../Outline/menuList/impl"
 import { initExampleComponent } from "../../example/impl"
 
-import { ApiCredentialRepository } from "../../../shared/credential/infra"
+import { ApiCredentialRepository } from "../../../../auth/common/credential/infra"
 import { MenuExpandRepository, MenuTree } from "../../../shared/menu/infra"
 
 import { DashboardResource } from "../view"

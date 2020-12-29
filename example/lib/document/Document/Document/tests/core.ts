@@ -9,7 +9,7 @@ import { initBreadcrumbListComponent } from "../../../../example/Outline/breadcr
 import { initMenuListComponent } from "../../../../example/Outline/menuList/impl"
 import { initContentComponent } from "../../content/impl"
 
-import { ApiCredentialRepository } from "../../../../example/shared/credential/infra"
+import { ApiCredentialRepository } from "../../../../auth/common/credential/infra"
 import { MenuExpandRepository, MenuTree } from "../../../../example/shared/menu/infra"
 
 import { DocumentResource } from "../view"

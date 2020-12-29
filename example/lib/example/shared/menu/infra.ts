@@ -1,6 +1,6 @@
 import { StaticMenuPath } from "../../../y_static/path"
 
-import { ApiNonce } from "../credential/data"
+import { ApiNonce } from "../../../auth/common/credential/data"
 import { MenuCategoryPath } from "./data"
 
 export type LoadBreadcrumbInfra = Readonly<{

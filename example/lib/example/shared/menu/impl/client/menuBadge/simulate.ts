@@ -1,6 +1,6 @@
 import { MenuBadgeClient, MenuBadgeResponse, MenuBadge } from "../../../infra"
 
-import { ApiNonce } from "../../../../credential/data"
+import { ApiNonce } from "../../../../../../auth/common/credential/data"
 
 export function initSimulateMenuBadgeClient(simulator: MenuBadgeSimulator): MenuBadgeClient {
     return new SimulateMenuBadgeClient(simulator)

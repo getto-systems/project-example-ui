@@ -6,7 +6,7 @@ import { BreadcrumbListComponentFactory } from "../../../Outline/breadcrumbList/
 
 import { ExampleComponentFactory } from "../../example/component"
 
-import { CredentialAction } from "../../../shared/credential/action"
+import { CredentialAction } from "../../../../auth/common/credential/action"
 import { MenuAction, MenuTargetCollector } from "../../../shared/menu/action"
 import { SeasonAction } from "../../../shared/season/action"
 
