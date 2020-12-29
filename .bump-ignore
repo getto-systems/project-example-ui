@@ -1,12 +1,5 @@
 /*
 
-!/public/
-/public/*
-!/public/lib/
-!/public/dist/
-/public/dist/css/
-/public/dist/fonts/
-
-!/secure/
-/secure/*
-!/secure/lib/
+!/example/
+/example/*
+!/example/lib/
