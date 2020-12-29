@@ -35,16 +35,21 @@ export type BreadcrumbNode =
 export type LoadBreadcrumbEvent = Readonly<{ type: "succeed-to-load"; breadcrumb: Breadcrumb }>
 
 export type Menu = MenuNode[]
-export type MenuNode =
-    | Readonly<{
-          type: "category"
-          category: MenuCategory
-          path: MenuCategoryPath
-          children: Menu
-          isExpand: boolean
-          badgeCount: number
-      }>
-    | Readonly<{ type: "item"; item: MenuItem; isActive: boolean; badgeCount: number }>
+export type MenuNode = MenuCategoryNode | MenuItemNode
+export type MenuCategoryNode = Readonly<{
+    type: "category"
+    category: MenuCategory
+    path: MenuCategoryPath
+    children: Menu
+    isExpand: boolean
+    badgeCount: number
+}>
+export type MenuItemNode = Readonly<{
+    type: "item"
+    item: MenuItem
+    isActive: boolean
+    badgeCount: number
+}>
 
 export type LoadMenuEvent =
     | Readonly<{ type: "succeed-to-instant-load"; menu: Menu }>
