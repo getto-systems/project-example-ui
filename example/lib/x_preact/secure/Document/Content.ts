@@ -5,15 +5,6 @@ import { html } from "htm/preact"
 import { VNodeContent } from "../../common/layout"
 import { BreadcrumbList } from "../Outline/BreadcrumbList"
 
-import { content_index } from "./contents/home"
-import { content_auth } from "./contents/auth"
-import { content_development_deployment } from "./contents/development/deployment"
-import { content_development_auth_login } from "./contents/development/auth/login"
-import { content_development_auth_permission } from "./contents/development/auth/permission"
-import { content_development_auth_user } from "./contents/development/auth/user"
-import { content_development_auth_profile } from "./contents/development/auth/profile"
-import { content_development_auth_api } from "./contents/development/auth/api"
-
 import { ContentComponent, initialContentState } from "../../../document/Document/content/component"
 import { BreadcrumbListComponent } from "../../../auth/Outline/breadcrumbList/component"
 
@@ -27,6 +18,7 @@ export function Content(resource: Props): VNode {
     const content = resource.content
 
     const [state, setState] = useState(initialContentState)
+    const [loadContentState, setLoadContentState] = useState(initialLoadContentState)
     useEffect(() => {
         content.onStateChange(setState)
         content.load()
@@ -36,6 +28,9 @@ export function Content(resource: Props): VNode {
         switch (state.type) {
             case "succeed-to-load":
                 document.title = `${documentTitle(state.path)} | ${document.title}`
+                loadContent(state.path, (content) => {
+                    setLoadContentState({ loaded: true, content })
+                })
                 break
         }
     }, [state])
@@ -45,21 +40,27 @@ export function Content(resource: Props): VNode {
             return EMPTY_CONTENT
 
         case "succeed-to-load":
+            if (!loadContentState.loaded) {
+                return EMPTY_CONTENT
+            }
             return html`
                 <header class="main__header">
                     <h1 class="main__title">${documentTitle(state.path)}</h1>
                     ${h(BreadcrumbList, resource)}
                 </header>
-                <section class="main__body">${contentBody(state.path)}</section>
+                <section class="main__body">${loadContentState.content}</section>
             `
     }
 }
 
+type LoadContentState = Readonly<{ loaded: false }> | Readonly<{ loaded: true; content: VNodeContent }>
+const initialLoadContentState: LoadContentState = { loaded: false }
+
 function documentTitle(path: ContentPath): string {
     return findEntry(path).title
 }
-function contentBody(path: ContentPath): VNodeContent {
-    return findEntry(path).content()
+async function loadContent(path: ContentPath, hook: Post<VNodeContent>) {
+    hook(await findEntry(path).content())
 }
 function findEntry(path: ContentPath): ContentEntry {
     const entry = contentMap[path]
@@ -69,26 +70,43 @@ function findEntry(path: ContentPath): ContentEntry {
     return entry
 }
 
-type ContentEntry = Readonly<{ title: string; content: Factory<VNodeContent> }>
-function entry(title: string, content: Factory<VNodeContent>): ContentEntry {
+type ContentEntry = Readonly<{ title: string; content: ContentFactory<VNodeContent> }>
+function entry(title: string, content: ContentFactory<VNodeContent>): ContentEntry {
     return { title, content }
 }
 
-const indexEntry: ContentEntry = entry("ドキュメント", content_index)
+const indexEntry: ContentEntry = entry("ドキュメント", async () =>
+    (await import("./contents/home")).content_index()
+)
 const contentMap: Record<ContentPath, ContentEntry> = {
     "/docs/index.html": indexEntry,
-    "/docs/auth.html": entry("認証・認可", content_auth),
+    "/docs/auth.html": entry("認証・認可", async () => (await import("./contents/auth")).content_auth()),
 
-    "/docs/development/deployment.html": entry("配備構成", content_development_deployment),
-    "/docs/development/auth/login.html": entry("ログイン", content_development_auth_login),
-    "/docs/development/auth/permission.html": entry("アクセス制限", content_development_auth_permission),
-    "/docs/development/auth/user.html": entry("ユーザー管理", content_development_auth_user),
-    "/docs/development/auth/profile.html": entry("認証情報管理", content_development_auth_profile),
-    "/docs/development/auth/api.html": entry("API 詳細設計", content_development_auth_api),
+    "/docs/development/deployment.html": entry("配備構成", async () =>
+        (await import("./contents/development/deployment")).content_development_deployment()
+    ),
+    "/docs/development/auth/login.html": entry("ログイン", async () =>
+        (await import("./contents/development/auth/login")).content_development_auth_login()
+    ),
+    "/docs/development/auth/permission.html": entry("アクセス制限", async () =>
+        (await import("./contents/development/auth/permission")).content_development_auth_permission()
+    ),
+    "/docs/development/auth/user.html": entry("ユーザー管理", async () =>
+        (await import("./contents/development/auth/user")).content_development_auth_user()
+    ),
+    "/docs/development/auth/profile.html": entry("認証情報管理", async () =>
+        (await import("./contents/development/auth/profile")).content_development_auth_profile()
+    ),
+    "/docs/development/auth/api.html": entry("API 詳細設計", async () =>
+        (await import("./contents/development/auth/api")).content_development_auth_api()
+    ),
 }
 
 const EMPTY_CONTENT = html``
 
-interface Factory<T> {
-    (): T
+interface Post<T> {
+    (state: T): void
+}
+interface ContentFactory<T> {
+    (): Promise<T>
 }
