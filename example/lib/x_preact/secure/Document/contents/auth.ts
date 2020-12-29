@@ -8,7 +8,7 @@ import { content_index_auth } from "./home"
 
 export const content_auth = (): VNode[] => [
     container(content_index_auth()),
-    container([content_auth_login(), content_auth_role(), content_auth_user(), content_auth_profile()]),
+    container([content_auth_login(), content_auth_permission(), content_auth_user(), content_auth_profile()]),
 ]
 export function content_auth_login(): VNode {
     return box("ログイン", [
@@ -22,7 +22,7 @@ export function content_auth_login(): VNode {
         `,
     ])
 }
-export function content_auth_role(): VNode {
+export function content_auth_permission(): VNode {
     return box("アクセス制限", [
         notice_info("業務で必要な時に使用できる"),
         notice_info("業務内容をプライベートに保つ"),

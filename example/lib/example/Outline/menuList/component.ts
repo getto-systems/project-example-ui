@@ -1,7 +1,7 @@
 import { LoadApiNonce, LoadApiRoles } from "../../shared/credential/action"
 import { LoadMenu, ToggleMenuExpand } from "../../shared/menu/action"
 
-import { Menu, LoadMenuError } from "../../shared/menu/data"
+import { Menu, LoadMenuError, MenuCategoryPath } from "../../shared/menu/data"
 
 export interface MenuListComponentFactory {
     (material: MenuListMaterial): MenuListComponent
@@ -17,7 +17,7 @@ export type MenuListMaterial = Readonly<{
 export interface MenuListComponent {
     onStateChange(post: Post<MenuListState>): void
     load(): void
-    toggle(category: string[], menu: Menu): void
+    toggle(menu: Menu, path: MenuCategoryPath): void
 }
 
 export type MenuListState =

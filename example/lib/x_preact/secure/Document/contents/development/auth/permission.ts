@@ -4,11 +4,11 @@ import { html } from "htm/preact"
 import { container, v_medium } from "../../../../../common/layout"
 import { box, itemsSection } from "../../../box"
 
-import { content_auth_role } from "../../auth"
+import { content_auth_permission } from "../../auth"
 
-export const content_development_auth_role = (): VNode[] => [
+export const content_development_auth_permission = (): VNode[] => [
     container([
-        content_auth_role(),
+        content_auth_permission(),
         box("業務で必要な時に使用するために", [html`<p>role によるメニューの表示可否</p>`]),
         box("業務内容をプライベートに保つために", [html`<p>role による API のアクセス制限</p>`]),
     ]),

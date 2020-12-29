@@ -5,7 +5,7 @@ import {
     MenuListState,
 } from "./component"
 
-import { Menu } from "../../shared/menu/data"
+import { Menu, MenuCategoryPath } from "../../shared/menu/data"
 
 export const initMenuListComponent: MenuListComponentFactory = (material) => new Component(material)
 
@@ -32,8 +32,8 @@ class Component implements MenuListComponent {
             this.post(event)
         })
     }
-    toggle(category: string[], menu: Menu): void {
-        this.material.toggleMenuExpand(category, menu, (event) => {
+    toggle(menu: Menu, path: MenuCategoryPath): void {
+        this.material.toggleMenuExpand(menu, path, (event) => {
             this.post(event)
         })
     }

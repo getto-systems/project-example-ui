@@ -6,13 +6,15 @@ export function markMenuTarget(menuTarget: MenuTarget_data): MenuTarget {
     return menuTarget as MenuTarget
 }
 
-export type MenuCategory = MenuCategory_data & { MenuCategory: never }
-type MenuCategory_data = Readonly<{
-    label: string
+export type MenuCategory = Readonly<{
+    label: MenuCategoryLabel
 }>
-export function markMenuCategory(category: MenuCategory_data): MenuCategory {
-    return category as MenuCategory
+
+export type MenuCategoryLabel = string & { MenuCategoryLabel: never }
+export function markMenuCategoryLabel(label: string): MenuCategoryLabel {
+    return label as MenuCategoryLabel
 }
+export type MenuCategoryPath = MenuCategoryLabel[]
 
 export type MenuItem = MenuItem_data & { MenuItem: never }
 type MenuItem_data = Readonly<{
@@ -37,6 +39,7 @@ export type MenuNode =
     | Readonly<{
           type: "category"
           category: MenuCategory
+          path: MenuCategoryPath
           children: Menu
           isExpand: boolean
           badgeCount: number
@@ -59,5 +62,4 @@ export type ToggleMenuExpandEvent =
     | Readonly<{ type: "succeed-to-toggle"; menu: Menu }>
     | Readonly<{ type: "failed-to-toggle"; menu: Menu; err: ToggleMenuExpandError }>
 
-export type ToggleMenuExpandError =
-    | Readonly<{ type: "infra-error"; err: string }>
+export type ToggleMenuExpandError = Readonly<{ type: "infra-error"; err: string }>

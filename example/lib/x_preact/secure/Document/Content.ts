@@ -9,7 +9,7 @@ import { content_index } from "./contents/home"
 import { content_auth } from "./contents/auth"
 import { content_development_deployment } from "./contents/development/deployment"
 import { content_development_auth_login } from "./contents/development/auth/login"
-import { content_development_auth_role } from "./contents/development/auth/role"
+import { content_development_auth_permission } from "./contents/development/auth/permission"
 import { content_development_auth_user } from "./contents/development/auth/user"
 import { content_development_auth_profile } from "./contents/development/auth/profile"
 import { content_development_auth_api } from "./contents/development/auth/api"
@@ -81,7 +81,7 @@ const contentMap: Record<ContentPath, ContentEntry> = {
 
     "/docs/development/deployment.html": entry("配備構成", content_development_deployment),
     "/docs/development/auth/login.html": entry("ログイン", content_development_auth_login),
-    "/docs/development/auth/role.html": entry("アクセス制限", content_development_auth_role),
+    "/docs/development/auth/permission.html": entry("アクセス制限", content_development_auth_permission),
     "/docs/development/auth/user.html": entry("ユーザー管理", content_development_auth_user),
     "/docs/development/auth/profile.html": entry("認証情報管理", content_development_auth_profile),
     "/docs/development/auth/api.html": entry("API 詳細設計", content_development_auth_api),

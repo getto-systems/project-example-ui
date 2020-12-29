@@ -1,4 +1,11 @@
-import { LoadBreadcrumbEvent, LoadMenuEvent, Menu, MenuTarget, ToggleMenuExpandEvent } from "./data"
+import {
+    LoadBreadcrumbEvent,
+    LoadMenuEvent,
+    Menu,
+    MenuCategoryPath,
+    MenuTarget,
+    ToggleMenuExpandEvent,
+} from "./data"
 import { ApiNonce, ApiRoles, LoadResult } from "../credential/data"
 
 export type MenuAction = Readonly<{
@@ -31,7 +38,7 @@ export interface ToggleMenuExpandPod {
     (): ToggleMenuExpand
 }
 export interface ToggleMenuExpand {
-    (category: string[], menu: Menu, post: Post<ToggleMenuExpandEvent>): void
+    (menu: Menu, path: MenuCategoryPath, post: Post<ToggleMenuExpandEvent>): void
 }
 
 interface Post<T> {

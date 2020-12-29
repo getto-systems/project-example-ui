@@ -1,17 +1,18 @@
 import {
+    MenuExpand,
     MenuExpandRepository,
     MenuExpandResponse,
     ToggleExpandResponse,
 } from "../../../infra"
 
-export function initMemoryMenuExpandRepository(menuExpand: string[][]): MenuExpandRepository {
+export function initMemoryMenuExpandRepository(menuExpand: MenuExpand): MenuExpandRepository {
     return new MemoryMenuExpandRepository(menuExpand)
 }
 
 class MemoryMenuExpandRepository implements MenuExpandRepository {
-    menuExpand: string[][]
+    menuExpand: MenuExpand
 
-    constructor(initialExpand: string[][]) {
+    constructor(initialExpand: MenuExpand) {
         this.menuExpand = initialExpand
     }
 
@@ -19,7 +20,7 @@ class MemoryMenuExpandRepository implements MenuExpandRepository {
         return { success: true, menuExpand: this.menuExpand }
     }
 
-    saveMenuExpand(menuExpand: string[][]): ToggleExpandResponse {
+    saveMenuExpand(menuExpand: MenuExpand): ToggleExpandResponse {
         this.menuExpand = menuExpand
         return { success: true }
     }
