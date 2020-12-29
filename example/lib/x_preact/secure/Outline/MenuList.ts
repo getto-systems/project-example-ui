@@ -76,7 +76,6 @@ export function MenuList({ menuList }: Props): VNode {
 
             function toggle(event: Event) {
                 event.preventDefault()
-                event.stopPropagation()
                 menuList.toggle(categoryLabels, menuNodes)
             }
         }
