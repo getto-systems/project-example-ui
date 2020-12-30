@@ -1,5 +1,5 @@
 DOCKER_WRAPPER_IMAGE_node(){ head -1 $APP_ROOT/.gitlab-ci.yml | sed "s/.*node:\(.*\)/\1/"; }
-DOCKER_WRAPPER_IMAGE_theia(){ echo "getto/example-ui-theia:1.9.0-docker-minimal"; }
+DOCKER_WRAPPER_IMAGE_debian(){ echo "buster"; }
 
 DOCKER_WRAPPER_APP(){
   npm-server http $1 npm start
@@ -7,12 +7,8 @@ DOCKER_WRAPPER_APP(){
 DOCKER_WRAPPER_STORYBOOK(){
   npm-server storybook $1 npm run storybook
 }
-DOCKER_WRAPPER_IDE(){
-  theia-server $1 yarn start $APP_ROOT --hostname 0.0.0.0 --port 8080 --ssl --cert $TLS_CERT --certkey $TLS_KEY
-}
 DOCKER_WRAPPER_LOGS(){
   npm-server http logs
 }
 DOCKER_WRAPPER_SERVER_OPTS_http(){ echo "-p ${LABO_PORT_PREFIX}${PUBLIC_PORT}:${PUBLIC_APP_PORT} -p ${LABO_PORT_PREFIX}${SECURE_PORT}:${SECURE_APP_PORT}"; }
 DOCKER_WRAPPER_SERVER_OPTS_storybook(){ echo "-p ${LABO_PORT_PREFIX}${STORYBOOK_PORT}:6006"; }
-DOCKER_WRAPPER_SERVER_OPTS_theia(){ echo "-p ${LABO_PORT_PREFIX}90:8080"; }
