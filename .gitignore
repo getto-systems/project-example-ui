@@ -5,7 +5,6 @@
 /storybook/lib/
 
 /example/public/dist/coverage/
-/example/public/dist/vs-ext/
 
 /example/public/dist/**/*.js
 /example/secure/dist/**/*.js
