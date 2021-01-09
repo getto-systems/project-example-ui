@@ -1,35 +1,49 @@
 import { newMoveToNextVersionAsSingle } from "../../../../update/Update/MoveToNextVersion/main/single"
 
-import { appTargetToPath } from "../../../../update/nextVersion/data"
+import { NextVersionState } from "../../../../update/Update/nextVersion/component"
+
+import { AppTarget, appTargetToPath } from "../../../../update/nextVersion/data"
 
 try {
-    // /${version}/index.html とかで呼び出される
-    // 最新バージョンなら何もしない
-    const nextVersion = newMoveToNextVersionAsSingle().resource.nextVersion
-
-    nextVersion.onStateChange((state) => {
-        switch (state.type) {
-            case "initial-next-version":
-            case "delayed-to-find":
-                return
-
-            case "succeed-to-find":
-                if (!state.upToDate) {
-                    location.href = appTargetToPath(state.target)
-                }
-                return
-
-            case "failed-to-find":
-                console.log(state.err.err)
-                return
-
-            default:
-                assertNever(state)
-        }
-    })
+    // /${version}/index.html とかで実行する
+    const { nextVersion } = newMoveToNextVersionAsSingle().resource
+    nextVersion.onStateChange(handleState)
 
     nextVersion.find()
 } catch (err) {
+    handleError(err)
+}
+
+function handleState(state: NextVersionState) {
+    switch (state.type) {
+        case "initial-next-version":
+        case "delayed-to-find":
+            // work in progress...
+            return
+
+        case "succeed-to-find":
+            redirectToAppTarget(state.upToDate, state.target)
+            return
+
+        case "failed-to-find":
+            handleError(state.err)
+            return
+
+        default:
+            assertNever(state)
+    }
+}
+function redirectToAppTarget(upToDate: boolean, target: AppTarget) {
+    // 今のバージョンが最新なら何もしない
+    if (upToDate) {
+        return
+    }
+
+    location.href = appTargetToPath(target)
+}
+
+function handleError(err: unknown) {
+    // エラーはどうしようもないので console.log でお茶を濁す
     console.log(err)
 }
 
