@@ -42,7 +42,6 @@ function findSecureEntries() {
                 case "/coverage":
                 case "/css":
                 case "/fonts":
-                case "/vs-ext":
                     return false
 
                 default:
