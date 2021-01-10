@@ -1,6 +1,8 @@
+import { StaticMenuPath } from "../../../../y_static/path"
+
 import { Icon, iconClass, lnir } from "../../../../z_external/icon"
 
-import { MenuPath, MenuPermission, MenuTree, MenuTreeNode } from "../../../permission/menu/infra"
+import { MenuPermission, MenuTree, MenuTreeNode } from "../../../permission/menu/infra"
 
 function category(label: string, permission: MenuPermission, children: MenuTree): MenuTreeNode {
     return { type: "category", category: { label, permission }, children }
@@ -8,7 +10,7 @@ function category(label: string, permission: MenuPermission, children: MenuTree)
 const any: MenuPermission = { type: "any" }
 const dev: MenuPermission = { type: "role", roles: ["development-docs"] }
 
-function item(label: string, icon: Icon, path: MenuPath): MenuTreeNode {
+function item(label: string, icon: Icon, path: StaticMenuPath): MenuTreeNode {
     return { type: "item", item: { label, icon: iconClass(icon), path } }
 }
 

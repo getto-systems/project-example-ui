@@ -1,5 +1,3 @@
-import { StaticMenuPath } from "../../../y_static/path"
-
 import { ApiNonce } from "../../common/credential/data"
 import { MenuCategoryPath } from "./data"
 
@@ -18,7 +16,7 @@ export type ToggleMenuExpandInfra = Readonly<{
 }>
 
 export type MenuTreeLabel = string
-export type MenuPath = StaticMenuPath
+export type MenuPath = string
 
 export type MenuTree = MenuTreeNode[]
 export type MenuTreeNode =
