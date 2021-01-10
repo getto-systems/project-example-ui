@@ -1,4 +1,4 @@
-import { MenuBadgeClient, MenuBadgeResponse, MenuBadge, MenuBadgeMap } from "../../../infra"
+import { MenuBadgeClient, MenuBadgeResponse, MenuBadge } from "../../../infra"
 
 import { ApiNonce } from "../../../../../common/credential/data"
 
@@ -12,4 +12,4 @@ class NoopMenuBadgeClient implements MenuBadgeClient {
     }
 }
 
-const EMPTY_BADGE: MenuBadge = new MenuBadgeMap()
+const EMPTY_BADGE: MenuBadge = {}

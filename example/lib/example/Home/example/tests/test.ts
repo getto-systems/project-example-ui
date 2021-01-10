@@ -10,7 +10,7 @@ import { initMemoryMenuExpandRepository } from "../../../../auth/permission/menu
 import { initMemorySeasonRepository } from "../../../shared/season/impl/repository/season/memory"
 
 import { Clock } from "../../../../z_infra/clock/infra"
-import { MenuBadge, MenuBadgeMap, MenuTree } from "../../../../auth/permission/menu/infra"
+import { MenuBadge, MenuTree } from "../../../../auth/permission/menu/infra"
 
 import { ExampleState } from "../component"
 
@@ -93,7 +93,7 @@ function standardSimulator(): DashboardSimulator {
     return {
         menuBadge: {
             getMenuBadge: async (_apiNonce: ApiNonce): Promise<MenuBadge> => {
-                return new MenuBadgeMap()
+                return {}
             },
         },
     }

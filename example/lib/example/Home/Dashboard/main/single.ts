@@ -12,8 +12,6 @@ import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../../auth/per
 import { mainMenuTree } from "../../../../auth/Outline/Menu/main/menuTree"
 import { DashboardCollector, DashboardFactory, initDashboardResource } from "../impl/core"
 
-import { MenuBadgeMap } from "../../../../auth/permission/menu/infra"
-
 import { initDateClock } from "../../../../z_infra/clock/date"
 import { initMemoryApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential/memory"
 import { initMemorySeasonRepository } from "../../../shared/season/impl/repository/season/memory"
@@ -70,7 +68,9 @@ function initCredentialAction() {
 function initMenuAction(menuExpandStorage: Storage) {
     const menuTree = mainMenuTree()
     const menuBadge = initSimulateMenuBadgeClient({
-        getMenuBadge: async () => new MenuBadgeMap(),
+        getMenuBadge: async () => {
+            return {}
+        },
     })
     const menuExpands = initStorageMenuExpandRepository(
         menuExpandStorage,

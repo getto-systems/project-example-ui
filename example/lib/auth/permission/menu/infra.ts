@@ -37,27 +37,8 @@ export type MenuTreeItem = Readonly<{
 
 export type MenuPermission = Readonly<{ type: "any" }> | Readonly<{ type: "role"; roles: string[] }>
 
-export type MenuBadge = MenuBadgeMap
+export type MenuBadge = Record<string, number>
 export type MenuExpand = MenuCategoryPath[]
-
-class ArrayMap<K, V> {
-    map: ArrayMapEntry<K, V>[] = []
-
-    init(map: ArrayMapEntry<K, V>[]) {
-        this.map = map
-    }
-
-    fetch(key: K, defaultValue: V): V {
-        const entry = this.map.find((entry) => entry.key === key)
-        if (!entry) {
-            return defaultValue
-        }
-        return entry.value
-    }
-}
-type ArrayMapEntry<K, V> = { key: K; value: V }
-
-export class MenuBadgeMap extends ArrayMap<MenuPath, number> {}
 
 class ArraySet<T> {
     set: T[] = []
