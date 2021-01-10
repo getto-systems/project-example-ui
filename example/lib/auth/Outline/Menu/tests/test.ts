@@ -3,7 +3,7 @@ import { MenuRepository, MenuSimulator, newMenuResource } from "./core"
 import { initMemoryApiCredentialRepository } from "../../../common/credential/impl/repository/apiCredential/memory"
 import { initMemoryMenuExpandRepository } from "../../../permission/menu/impl/repository/menuExpand/memory"
 
-import { MenuBadge, MenuBadgeMap, MenuTree } from "../../../permission/menu/infra"
+import { MenuBadge, MenuTree } from "../../../permission/menu/infra"
 
 import { BreadcrumbListState } from "../../breadcrumbList/component"
 import { MenuListState } from "../../menuList/component"
@@ -1154,12 +1154,10 @@ function standardSimulator(): MenuSimulator {
     return {
         menuBadge: {
             getMenuBadge: async (_apiNonce: ApiNonce): Promise<MenuBadge> => {
-                const map = new MenuBadgeMap()
-                map.init([
-                    { key: "/index.html", value: 10 },
-                    { key: "/docs/index.html", value: 20 },
-                ])
-                return map
+                return {
+                    "/index.html": 10,
+                    "/docs/index.html": 20,
+                }
             },
         },
     }
