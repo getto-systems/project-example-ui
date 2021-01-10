@@ -3,7 +3,7 @@ import { h, VNode } from "preact"
 import { newMoveToNextVersion } from "../../../update/Update/MoveToNextVersion/mock"
 import { mapNextVersionMockProps, NextVersionMockProps } from "../../../update/Update/nextVersion/mock"
 
-import { MoveToNextVersion } from "../../../x_preact/public/Update/MoveToNextVersion"
+import { MoveToLatestVersion } from "../../../x_preact/public/Update/MoveToLatestVersion"
 
 export default {
     title: "public/Update/MoveToNextVersion",
@@ -21,7 +21,7 @@ const Template: Story<MockProps> = (args) => {
 
     function Preview(props: { args: MockProps }) {
         update.nextVersion(mapNextVersionMockProps(props.args))
-        return h(MoveToNextVersion, { moveToNextVersion })
+        return h(MoveToLatestVersion, { moveToNextVersion })
     }
 }
 
