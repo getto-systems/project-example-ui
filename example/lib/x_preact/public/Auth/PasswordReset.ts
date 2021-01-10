@@ -188,9 +188,6 @@ function resetError(err: ResetError): VNode {
 
 const EMPTY_CONTENT = html``
 
-interface Factory<T> {
-    (): T
-}
 interface Post<T> {
     (state: T): void
 }

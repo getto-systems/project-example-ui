@@ -2,6 +2,6 @@ import { h, render } from "preact"
 
 import { newMoveToNextVersionAsSingle } from "../../../../update/Update/MoveToNextVersion/main/single"
 
-import { MoveToNextVersion } from "../../../../x_preact/public/Update/MoveToNextVersion"
+import { MoveToLatestVersion } from "../../../../x_preact/public/Update/MoveToLatestVersion"
 
-render(h(MoveToNextVersion, { moveToNextVersion: newMoveToNextVersionAsSingle() }), document.body)
+render(h(MoveToLatestVersion, { moveToNextVersion: newMoveToNextVersionAsSingle() }), document.body)

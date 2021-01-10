@@ -11,7 +11,7 @@ import { NextVersion } from "./NextVersion"
 type Props = Readonly<{
     moveToNextVersion: MoveToNextVersionEntryPoint
 }>
-export function MoveToNextVersion({ moveToNextVersion: { resource, terminate } }: Props): VNode {
+export function MoveToLatestVersion({ moveToNextVersion: { resource, terminate } }: Props): VNode {
     const [err] = useErrorBoundary((err) => {
         // ここでエラーをどこかに投げたい、けど認証前なのでこれでお茶を濁す
         console.log(err)
