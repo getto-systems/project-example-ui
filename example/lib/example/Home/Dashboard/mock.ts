@@ -3,7 +3,7 @@ import { MockComponent } from "../../../z_external/mock/component"
 import { initBreadcrumbListComponent } from "../../../auth/Outline/breadcrumbList/mock"
 import { initMenuListComponent } from "../../../auth/Outline/menuList/mock"
 import { initSeasonInfoComponent } from "../../Outline/seasonInfo/mock"
-import { initExample } from "../example/mock"
+import { initExampleComponent } from "../example/mock"
 
 import { DashboardEntryPoint } from "./view"
 
@@ -17,7 +17,7 @@ export function newDashboard(): DashboardMockEntryPoint {
         seasonInfo: initSeasonInfoComponent(initialSeasonInfoState),
         menuList: initMenuListComponent(initialMenuListState),
         breadcrumbList: initBreadcrumbListComponent(initialBreadcrumbListState),
-        example: initExample(initialExampleState),
+        example: initExampleComponent(initialExampleState),
     }
     return {
         dashboard: {
