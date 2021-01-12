@@ -4,18 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "storybook": "rm -rf lib && cp -a ../example/lib . && start-storybook -p 6006 -s ../example/public/",
-    "build-storybook": "build-storybook"
+    "build": "npm run setup && npm run build-storybook",
+    "setup": "npm run setup:lib",
+    "setup:lib": "rm -rf lib && cp -a ../example/lib .",
+    "build-storybook": "build-storybook -o ../example/public/dist/storybook/"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@rollup/plugin-typescript": "^8.1.0",
-    "@storybook/addon-actions": "^6.1.11",
-    "@storybook/addon-essentials": "^6.1.11",
-    "@storybook/addon-links": "^6.1.11",
-    "@storybook/preact": "^6.1.11",
+    "@storybook/addon-actions": "^6.1.12",
+    "@storybook/addon-essentials": "^6.1.12",
+    "@storybook/addon-links": "^6.1.12",
+    "@storybook/preact": "^6.1.12",
     "babel-loader": "^8.2.2",
     "htm": "^3.0.4",
     "preact": "^10.5.7",
