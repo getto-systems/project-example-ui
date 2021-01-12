@@ -2,7 +2,7 @@
 
 module.exports = {
     findPublicEntries,
-    findSecureEntries,
+    findSecureFiles,
     toSecureEntryName,
     toSecureEntryPath,
 }
@@ -11,7 +11,7 @@ function findPublicEntries() {
     return ["update/moveToLatestVersion", "update/moveToNextVersion", "auth/login"]
 }
 
-function findSecureEntries() {
+function findSecureFiles() {
     const fs = require("fs")
     const path = require("path")
 
@@ -40,6 +40,7 @@ function findSecureEntries() {
             const target = path.join(dir, name).replace(root, "")
             switch (target) {
                 case "/coverage":
+                case "/storybook":
                 case "/css":
                 case "/fonts":
                     return false

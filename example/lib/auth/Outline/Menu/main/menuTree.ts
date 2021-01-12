@@ -28,6 +28,7 @@ export const documentMenuTree = (): MenuTree => [
     ]),
     category("ドキュメント", any, [item("認証・認可", lnir("files-alt"), "/docs/auth.html")]),
     category("開発向け", dev, [
+        item("Storybook", lnir("files-alt"), "/storybook/index.html"),
         item("配備構成", lnir("files-alt"), "/docs/development/deployment.html"),
         category("認証・認可", dev, [
             item("ログイン", lnir("files-alt"), "/docs/development/auth/login.html"),
