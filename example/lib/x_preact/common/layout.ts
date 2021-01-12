@@ -52,32 +52,85 @@ export function container(contents: VNodeContent): VNode {
     return html`<section class="container">${contents}</section>`
 }
 
+type Size = "small" | "medium" | "large"
+
 export function v_small(): VNode {
-    return vertical("vertical_small")
+    return vertical("small")
 }
 export function v_medium(): VNode {
-    return vertical("vertical_medium")
+    return vertical("medium")
 }
-function vertical(verticalClass: string): VNode {
-    return html`<div class="vertical ${verticalClass}"></div>`
+export function v_large(): VNode {
+    return vertical("large")
+}
+function vertical(size: Size): VNode {
+    return html`<div class="vertical vertical_${size}"></div>`
 }
 
+type Color = "gray" | "alert" | "success" | "warning" | "pending" | "info"
+
+export function notice_gray(content: VNodeContent): VNode {
+    return notice("gray", content)
+}
 export function notice_alert(content: VNodeContent): VNode {
-    return notice("notice_alert", content)
+    return notice("alert", content)
+}
+export function notice_success(content: VNodeContent): VNode {
+    return notice("success", content)
+}
+export function notice_warning(content: VNodeContent): VNode {
+    return notice("warning", content)
+}
+export function notice_pending(content: VNodeContent): VNode {
+    return notice("pending", content)
 }
 export function notice_info(content: VNodeContent): VNode {
-    return notice("notice_info", content)
+    return notice("info", content)
 }
-function notice(noticeClass: string, content: VNodeContent): VNode {
-    return html`<p class="notice ${noticeClass}">${content}</p>`
+function notice(color: Color, content: VNodeContent): VNode {
+    return html`<p class="notice notice_${color}">${content}</p>`
 }
 
+export function label_gray(content: VNodeContent): VNode {
+    return label("gray", content)
+}
 export function label_alert(content: VNodeContent): VNode {
-    return label("label_alert", content)
+    return label("alert", content)
+}
+export function label_success(content: VNodeContent): VNode {
+    return label("success", content)
+}
+export function label_warning(content: VNodeContent): VNode {
+    return label("warning", content)
 }
 export function label_pending(content: VNodeContent): VNode {
-    return label("label_pending", content)
+    return label("pending", content)
 }
-function label(noticeClass: string, content: VNodeContent): VNode {
-    return html`<span class="label ${noticeClass}">${content}</span>`
+export function label_info(content: VNodeContent): VNode {
+    return label("info", content)
+}
+function label(color: Color, content: VNodeContent): VNode {
+    return html`<span class="label label_${color}">${content}</span>`
+}
+
+export function badge_gray(content: VNodeContent): VNode {
+    return badge("gray", content)
+}
+export function badge_alert(content: VNodeContent): VNode {
+    return badge("alert", content)
+}
+export function badge_success(content: VNodeContent): VNode {
+    return badge("success", content)
+}
+export function badge_warning(content: VNodeContent): VNode {
+    return badge("warning", content)
+}
+export function badge_pending(content: VNodeContent): VNode {
+    return badge("pending", content)
+}
+export function badge_info(content: VNodeContent): VNode {
+    return badge("info", content)
+}
+function badge(color: Color, content: VNodeContent): VNode {
+    return html`<span class="badge badge_${color}">${content}</span>`
 }
