@@ -38,7 +38,7 @@ function dumpEnv() {
 }
 
 function dumpEntryPoint() {
-    const files = entryPoint.findSecureEntries()
+    const files = ["/storybook/index.html"].concat(entryPoint.findSecureFiles())
     const docs = files.filter(isDocs)
     dump(
         path.join(__dirname, "./lib/y_static/path.ts"),

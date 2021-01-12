@@ -9,7 +9,7 @@ const entryPoint = require("../entryPoint")
 
 module.exports = {
     entry: () => {
-        return entryPoint.findSecureEntries().reduce((acc, file) => {
+        return entryPoint.findSecureFiles().reduce((acc, file) => {
             const name = entryPoint.toSecureEntryName(file)
             acc[name] = toMainPath(file)
 
@@ -80,5 +80,10 @@ module.exports = {
         sockHost: process.env.SECURE_SERVER_HOST,
 
         disableHostCheck: true,
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+            "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
+        },
     },
 }
