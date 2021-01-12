@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "storybook": "cd storybook && npm run build",
     "start": "npm run proto && npm run setup && npm run serve",
     "build": "npm run proto && npm run setup && npm run webpack",
     "proto": "sh example/protobuf.sh",
@@ -19,9 +20,7 @@
     "postcss:line-icons": "postcss --config example/postcss.config.js --output example/public/dist/css/line-icons.min.css example/css/line-icons.css",
     "test": "npm run proto && npm run setup && npm run test:eslint && npm run test:jest",
     "test:eslint": "eslint --ext .ts example/lib/",
-    "test:jest": "jest -c example/jest.config.js",
-    "storybook": "cd storybook && npm run storybook",
-    "build-storybook": "build-storybook"
+    "test:jest": "jest -c example/jest.config.js"
   },
   "author": "",
   "license": "MIT",
@@ -34,7 +33,7 @@
     "jest": "^26.6.3",
     "postcss": "^7.0.32",
     "postcss-cli": "^7.1.1",
-    "preact": "^10.5.7",
+    "preact": "^10.5.9",
     "protobufjs": "^6.10.1",
     "terser-webpack-plugin": "^4.2.2",
     "ts-jest": "^26.4.4",
