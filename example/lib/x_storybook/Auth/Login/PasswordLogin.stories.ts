@@ -16,7 +16,7 @@ import {
 } from "../../../auth/Auth/field/password/mock"
 
 export default {
-    title: "public/Auth/Login/PasswordLogin",
+    title: "Auth/Login/PasswordLogin",
     argTypes: {
         type: {
             table: { disable: true },

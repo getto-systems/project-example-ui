@@ -5,7 +5,7 @@ import { Login } from "../../../x_preact/Auth/Login"
 import { newLoginAsError } from "../../../auth/Auth/Login/mock"
 
 export default {
-    title: "public/Auth/Login/Error",
+    title: "Auth/Login/Error",
 }
 
 type MockProps = Readonly<{

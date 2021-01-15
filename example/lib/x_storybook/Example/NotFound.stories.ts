@@ -7,7 +7,7 @@ import { newNotFound } from "../../example/NotFound/NotFound/mock"
 import { mapCurrentVersionMockProps } from "../../example/NotFound/currentVersion/mock"
 
 export default {
-    title: "public/Example/NotFound",
+    title: "Example/NotFound",
     argTypes: {
         type: {
             table: { disable: true },

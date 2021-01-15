@@ -6,9 +6,9 @@ import { useTerminate } from "../../common/hooks"
 import { mainFooter, menuHeader, menuFooter } from "../../common/layout"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
-import { SeasonInfo } from "../../common/Outline/SeasonInfo"
-import { MenuList } from "../../common/Outline/MenuList"
-import { BreadcrumbList } from "../../common/Outline/BreadcrumbList"
+import { SeasonInfo } from "../../Outline/SeasonInfo"
+import { MenuList } from "../../Outline/MenuList"
+import { BreadcrumbList } from "../../Outline/BreadcrumbList"
 import { Example } from "./Example"
 
 import { DashboardEntryPoint } from "../../../example/Home/Dashboard/view"

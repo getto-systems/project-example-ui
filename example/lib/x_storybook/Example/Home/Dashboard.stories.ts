@@ -10,7 +10,7 @@ import { mapMenuMockProps } from "../../../auth/Outline/menuList/mock"
 import { mapSeasonMockProps } from "../../../example/Outline/seasonInfo/mock"
 
 export default {
-    title: "secure/Example/Home/Dashboard",
+    title: "Example/Home/Dashboard",
     argTypes: {
         type: {
             table: { disable: true },

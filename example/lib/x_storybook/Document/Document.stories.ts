@@ -9,7 +9,7 @@ import { mapBreadcrumbMockProps } from "../../auth/Outline/breadcrumbList/mock"
 import { mapMenuMockProps } from "../../auth/Outline/menuList/mock"
 
 export default {
-    title: "secure/Document/Document",
+    title: "Document/Document",
     argTypes: {
         type: {
             table: { disable: true },

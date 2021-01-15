@@ -11,7 +11,7 @@ import {
 import { initialExampleState } from "../../../example/Home/example/component"
 
 export default {
-    title: "secure/Example/Home/Example",
+    title: "Example/Home/Example",
     argTypes: {
         type: {
             table: { disable: true },

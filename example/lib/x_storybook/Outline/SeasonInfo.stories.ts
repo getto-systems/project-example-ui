@@ -1,19 +1,19 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
-import { SeasonInfo } from "../../../x_preact/common/Outline/SeasonInfo"
-import { menuHeader } from "../../../x_preact/common/layout"
+import { SeasonInfo } from "../../x_preact/Outline/SeasonInfo"
+import { menuHeader } from "../../x_preact/common/layout"
 
 import {
     mapSeasonMockProps,
     SeasonMockProps,
     initSeasonInfoComponent,
-} from "../../../example/Outline/seasonInfo/mock"
+} from "../../example/Outline/seasonInfo/mock"
 
-import { initialSeasonInfoState } from "../../../example/Outline/seasonInfo/component"
+import { initialSeasonInfoState } from "../../example/Outline/seasonInfo/component"
 
 export default {
-    title: "secure/Outline/SeasonInfo",
+    title: "Outline/SeasonInfo",
     argTypes: {
         type: {
             table: { disable: true },

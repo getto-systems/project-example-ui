@@ -3,7 +3,7 @@ import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { VNodeContent } from "../common/layout"
-import { BreadcrumbList } from "../common/Outline/BreadcrumbList"
+import { BreadcrumbList } from "../Outline/BreadcrumbList"
 
 import { ContentComponent, initialContentState } from "../../document/Document/content/component"
 import { BreadcrumbListComponent } from "../../auth/Outline/breadcrumbList/component"

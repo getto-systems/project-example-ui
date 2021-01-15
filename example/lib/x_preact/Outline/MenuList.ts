@@ -2,11 +2,11 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { notice_alert, v_small } from "../layout"
+import { notice_alert, v_small } from "../common/layout"
 
-import { MenuListComponent, initialMenuListState } from "../../../auth/Outline/menuList/component"
+import { MenuListComponent, initialMenuListState } from "../../auth/Outline/menuList/component"
 
-import { Menu, MenuCategoryNode, MenuItemNode, LoadMenuError } from "../../../auth/permission/menu/data"
+import { Menu, MenuCategoryNode, MenuItemNode, LoadMenuError } from "../../auth/permission/menu/data"
 
 type Props = Readonly<{
     menuList: MenuListComponent
