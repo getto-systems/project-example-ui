@@ -7,7 +7,10 @@ import { initExampleComponent } from "../example/mock"
 
 import { DashboardEntryPoint } from "./view"
 
-import { BreadcrumbListState, initialBreadcrumbListState } from "../../../auth/Outline/breadcrumbList/component"
+import {
+    BreadcrumbListState,
+    initialBreadcrumbListState,
+} from "../../../auth/Outline/breadcrumbList/component"
 import { initialMenuListState, MenuListState } from "../../../auth/Outline/menuList/component"
 import { initialSeasonInfoState, SeasonInfoState } from "../../Outline/seasonInfo/component"
 import { ExampleState, initialExampleState } from "../example/component"

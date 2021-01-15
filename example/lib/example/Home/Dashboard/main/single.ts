@@ -1,5 +1,7 @@
 import { env } from "../../../../y_static/env"
 
+import { DashboardCollector, DashboardFactory, initDashboardResource } from "../impl/core"
+
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initMenuListComponent } from "../../../../auth/Outline/menuList/impl"
 import { initBreadcrumbListComponent } from "../../../../auth/Outline/breadcrumbList/impl"
@@ -10,7 +12,6 @@ import { loadApiNonce, loadApiRoles } from "../../../../auth/common/credential/i
 import { loadSeason } from "../../../shared/season/impl/core"
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../../auth/permission/menu/impl/core"
 import { mainMenuTree } from "../../../../auth/Outline/Menu/main/menuTree"
-import { DashboardCollector, DashboardFactory, initDashboardResource } from "../impl/core"
 
 import { initDateClock } from "../../../../z_infra/clock/date"
 import { initMemoryApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential/memory"
@@ -19,6 +20,10 @@ import { initSimulateMenuBadgeClient } from "../../../../auth/permission/menu/im
 import { initStorageMenuExpandRepository } from "../../../../auth/permission/menu/impl/repository/menuExpand/storage"
 
 import { DashboardEntryPoint } from "../view"
+
+import { CredentialAction } from "../../../../auth/common/credential/action"
+import { MenuAction } from "../../../../auth/permission/menu/action"
+import { SeasonAction } from "../../../shared/season/action"
 
 import { markSeason } from "../../../shared/season/data"
 import { markApiNonce, markApiRoles } from "../../../../auth/common/credential/data"
@@ -54,7 +59,7 @@ export function newDashboardAsSingle(): DashboardEntryPoint {
     }
 }
 
-function initCredentialAction() {
+function initCredentialAction(): CredentialAction {
     const apiCredentials = initMemoryApiCredentialRepository(
         markApiNonce("api-nonce"),
         markApiRoles(["admin"])
@@ -65,7 +70,7 @@ function initCredentialAction() {
         loadApiRoles: loadApiRoles({ apiCredentials }),
     }
 }
-function initMenuAction(menuExpandStorage: Storage) {
+function initMenuAction(menuExpandStorage: Storage): MenuAction {
     const menuTree = mainMenuTree()
     const menuBadge = initSimulateMenuBadgeClient({
         getMenuBadge: async () => {
@@ -83,7 +88,7 @@ function initMenuAction(menuExpandStorage: Storage) {
         toggleMenuExpand: toggleMenuExpand({ menuExpands }),
     }
 }
-function initSeasonAction() {
+function initSeasonAction(): SeasonAction {
     return {
         loadSeason: loadSeason({
             seasons: initMemorySeasonRepository({
