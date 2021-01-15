@@ -14,7 +14,7 @@ import {
 } from "../../../auth/Auth/field/loginID/mock"
 
 export default {
-    title: "public/Auth/Login/PasswordResetSession",
+    title: "Auth/Login/PasswordResetSession",
     argTypes: {
         type: {
             table: { disable: true },

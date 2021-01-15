@@ -1,18 +1,18 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
-import { BreadcrumbList } from "../../../x_preact/common/Outline/BreadcrumbList"
+import { BreadcrumbList } from "../../x_preact/Outline/BreadcrumbList"
 
 import {
     mapBreadcrumbMockProps,
     BreadcrumbMockProps,
     initBreadcrumbListComponent,
-} from "../../../auth/Outline/breadcrumbList/mock"
+} from "../../auth/Outline/breadcrumbList/mock"
 
-import { initialBreadcrumbListState } from "../../../auth/Outline/breadcrumbList/component"
+import { initialBreadcrumbListState } from "../../auth/Outline/breadcrumbList/component"
 
 export default {
-    title: "secure/Outline/BreadcrumbList",
+    title: "Outline/BreadcrumbList",
     argTypes: {
         type: {
             table: { disable: true },

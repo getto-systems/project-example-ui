@@ -9,7 +9,7 @@ import {
 } from "../../../auth/Auth/renewCredential/mock"
 
 export default {
-    title: "public/Auth/Login/RenewCredential",
+    title: "Auth/Login/RenewCredential",
     argTypes: {
         type: {
             table: { disable: true },

@@ -6,7 +6,7 @@ import { mapNextVersionMockProps, NextVersionMockProps } from "../../update/Upda
 import { MoveToLatestVersion } from "../../x_preact/Update/MoveToLatestVersion"
 
 export default {
-    title: "public/Update/MoveToNextVersion",
+    title: "Update/MoveToNextVersion",
     argTypes: {
         type: {
             table: { disable: true },

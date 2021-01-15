@@ -15,7 +15,7 @@ import {
 import { initialContentState } from "../../document/Document/content/component"
 
 export default {
-    title: "secure/Document/Content",
+    title: "Document/Content",
     argTypes: {
         type: {
             table: { disable: true },

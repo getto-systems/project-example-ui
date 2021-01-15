@@ -2,11 +2,11 @@ import { VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { v_small } from "../layout"
+import { v_small } from "../common/layout"
 
-import { SeasonInfoComponent, initialSeasonInfoState } from "../../../example/Outline/seasonInfo/component"
+import { SeasonInfoComponent, initialSeasonInfoState } from "../../example/Outline/seasonInfo/component"
 
-import { Season, SeasonError } from "../../../example/shared/season/data"
+import { Season, SeasonError } from "../../example/shared/season/data"
 
 type Props = Readonly<{
     seasonInfo: SeasonInfoComponent

@@ -1,19 +1,19 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
-import { MenuList } from "../../../x_preact/common/Outline/MenuList"
-import { menuHeader } from "../../../x_preact/common/layout"
+import { MenuList } from "../../x_preact/Outline/MenuList"
+import { menuHeader } from "../../x_preact/common/layout"
 
 import {
     mapMenuMockProps,
     MenuMockProps,
     initMenuListComponent,
-} from "../../../auth/Outline/menuList/mock"
+} from "../../auth/Outline/menuList/mock"
 
-import { initialMenuListState } from "../../../auth/Outline/menuList/component"
+import { initialMenuListState } from "../../auth/Outline/menuList/component"
 
 export default {
-    title: "secure/Outline/MenuList",
+    title: "Outline/MenuList",
     argTypes: {
         type: {
             table: { disable: true },

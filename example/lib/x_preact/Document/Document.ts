@@ -6,7 +6,7 @@ import { useTerminate } from "../common/hooks"
 import { mainFooter, menuHeader, menuFooter } from "../common/layout"
 
 import { ApplicationError } from "../common/System/ApplicationError"
-import { MenuList } from "../common/Outline/MenuList"
+import { MenuList } from "../Outline/MenuList"
 import { Content } from "./Content"
 
 import { DocumentEntryPoint } from "../../document/Document/Document/view"
