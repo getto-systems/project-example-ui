@@ -7,10 +7,7 @@ export type AuthAt = Date & { AuthAt: never }
 export function markAuthAt(date: Date): AuthAt {
     return date as AuthAt
 }
-export function hasExpired(
-    authAt: AuthAt,
-    target: { now: Date; expire_millisecond: number }
-): boolean {
+export function hasExpired(authAt: AuthAt, target: { now: Date; expire_millisecond: number }): boolean {
     return target.now.getTime() > authAt.getTime() + target.expire_millisecond
 }
 
@@ -47,11 +44,9 @@ export function markApiRoles(roles: string[]): ApiRoles {
     return roles as ApiRoles
 }
 
-// TODO found: boolean にしたほうがよくない？
 export type LoadResult<T> =
     | Readonly<{ success: false; err: LoadApiCredentialError }>
-    | Readonly<{ success: true; content: T }>
+    | Readonly<{ success: true; found: false }>
+    | Readonly<{ success: true; found: true; content: T }>
 
-export type LoadApiCredentialError =
-    | Readonly<{ type: "not-found" }>
-    | Readonly<{ type: "infra-error"; err: string }>
+export type LoadApiCredentialError = Readonly<{ type: "infra-error"; err: string }>
