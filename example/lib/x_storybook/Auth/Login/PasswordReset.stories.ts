@@ -1,6 +1,6 @@
 import { h, VNode } from "preact"
 
-import { Login } from "../../../x_preact/Auth/Login"
+import { Login } from "../../../x_preact/Auth/Login/Login"
 
 import { newLoginAsPasswordReset } from "../../../auth/Auth/Login/mock"
 import { mapPasswordResetMockProps, PasswordResetMockProps } from "../../../auth/Auth/passwordReset/mock"
