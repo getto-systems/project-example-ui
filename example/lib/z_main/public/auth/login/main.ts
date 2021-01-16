@@ -2,6 +2,6 @@ import { render, h } from "preact"
 
 import { newLoginAsWorkerForeground } from "../../../../auth/Auth/Login/main/worker/foreground"
 
-import { Login } from "../../../../x_preact/Auth/Login"
+import { Login } from "../../../../x_preact/Auth/Login/Login"
 
 render(h(Login, { login: newLoginAsWorkerForeground() }), document.body)
