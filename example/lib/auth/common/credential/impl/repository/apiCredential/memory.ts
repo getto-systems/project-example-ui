@@ -14,8 +14,8 @@ class MemoryApiCredentialRepository implements ApiCredentialRepository {
     apiRoles: LoadResult<ApiRoles>
 
     constructor(initialApiNonce: ApiNonce, initialApiRoles: ApiRoles) {
-        this.apiNonce = { success: true, content: initialApiNonce }
-        this.apiRoles = { success: true, content: initialApiRoles }
+        this.apiNonce = { success: true, found: true, content: initialApiNonce }
+        this.apiRoles = { success: true, found: true, content: initialApiRoles }
     }
 
     findApiNonce(): LoadResult<ApiNonce> {

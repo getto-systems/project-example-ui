@@ -121,6 +121,14 @@ export const loadMenu = (infra: LoadMenuInfra): LoadMenuPod => (collector) => as
         post({
             type: "failed-to-load",
             menu: toMenu(info, menuExpandResponse.menuExpand, EMPTY_BADGE),
+            err: nonce.err,
+        })
+        return
+    }
+    if (!nonce.found) {
+        post({
+            type: "failed-to-load",
+            menu: toMenu(info, menuExpandResponse.menuExpand, EMPTY_BADGE),
             err: { type: "empty-nonce" },
         })
         return
@@ -204,7 +212,7 @@ function toMenu(
                 case "any":
                     return true
                 case "role":
-                    if (!roles.success) {
+                    if (!roles.success || !roles.found) {
                         return false
                     }
                     return category.permission.roles.some((role) => {
