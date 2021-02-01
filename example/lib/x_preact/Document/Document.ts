@@ -1,15 +1,14 @@
 import { h, VNode } from "preact"
 import { useErrorBoundary } from "preact/hooks"
-import { html } from "htm/preact"
 
 import { useTerminate } from "../common/hooks"
-import { mainFooter, menuHeader, menuFooter } from "../common/layout"
 
 import { ApplicationError } from "../common/System/ApplicationError"
-import { MenuList } from "../Outline/MenuList"
+import { DocumentMenu } from "../Outline/Menu/DocumentMenu"
 import { Content } from "./Content"
 
 import { DocumentEntryPoint } from "../../document/Document/Document/view"
+import { appLayout } from "../../z_external/getto-css/preact/layout/app"
 
 type Props = {
     document: DocumentEntryPoint
@@ -26,12 +25,8 @@ export function Document({ document: { resource, terminate } }: Props): VNode {
 
     useTerminate(terminate)
 
-    return html`
-        <main class="layout">
-            <article class="layout__main">${h(Content, resource)} ${mainFooter()}</article>
-            <aside class="layout__menu menu">
-                ${menuHeader()} ${h(MenuList, resource)} ${menuFooter()}
-            </aside>
-        </main>
-    `
+    return appLayout({
+        main: h(Content, resource),
+        menu: DocumentMenu(resource),
+    })
 }

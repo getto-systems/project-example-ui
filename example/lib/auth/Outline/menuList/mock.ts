@@ -1,5 +1,5 @@
 import { lnir, iconClass } from "../../../z_external/icon"
-import { MockComponent } from "../../../z_external/mock/component"
+import { MockComponent } from "../../../sub/getto-example/component/mock"
 
 import { MenuListComponent, MenuListState } from "./component"
 
@@ -10,7 +10,7 @@ export function initMenuListComponent(state: MenuListState): MenuListMockCompone
 }
 
 export type MenuMockProps =
-    | Readonly<{ type: "success"; badgeCount: number }>
+    | Readonly<{ type: "success"; label: string; badgeCount: number }>
     | Readonly<{ type: "empty-nonce" }>
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "server-error" }>
@@ -20,13 +20,13 @@ export type MenuMockProps =
 export function mapMenuMockProps(props: MenuMockProps): MenuListState {
     switch (props.type) {
         case "success":
-            return { type: "succeed-to-load", menu: menu(props.badgeCount) }
+            return { type: "succeed-to-load", menu: menu(props.label, props.badgeCount) }
 
         default:
-            return { type: "failed-to-load", menu: menu(0), err: props }
+            return { type: "failed-to-load", menu: menu("ホーム", 0), err: props }
     }
 
-    function menu(badgeCount: number): Menu {
+    function menu(label: string, badgeCount: number): Menu {
         return [
             {
                 type: "category",
@@ -40,7 +40,7 @@ export function mapMenuMockProps(props: MenuMockProps): MenuListState {
                         isActive: true,
                         badgeCount,
                         item: markMenuItem({
-                            label: "ホーム",
+                            label,
                             icon: iconClass(lnir("home")),
                             href: "/dist/index.html",
                         }),

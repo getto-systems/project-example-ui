@@ -16,6 +16,7 @@ export interface LoginIDFieldComponent {
     validate(post: Post<LoginIDFieldEvent>): void
 }
 
+// TODO variant が 1つなら type いらない
 export type LoginIDFieldState = Readonly<{ type: "succeed-to-update"; result: Valid<LoginIDFieldError> }>
 
 export const initialLoginIDFieldState: LoginIDFieldState = {

@@ -1,4 +1,4 @@
-import { MockComponent } from "../../../z_external/mock/component"
+import { MockComponent } from "../../../sub/getto-example/component/mock"
 
 import { SeasonInfoComponent, SeasonInfoState } from "./component"
 

@@ -1,20 +1,24 @@
 import { VNode } from "preact"
-import { useState, useEffect } from "preact/hooks"
+import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { notice_alert, v_small } from "../common/layout"
+import { menuBody, menuBox, menuCategory, menuItem } from "../../z_external/getto-css/preact/layout/app"
+import { badge_alert, notice_alert } from "../../z_external/getto-css/preact/design/highlight"
+
+import { useComponent } from "../common/hooks"
 
 import { MenuListComponent, initialMenuListState } from "../../auth/Outline/menuList/component"
 
 import { Menu, MenuCategoryNode, MenuItemNode, LoadMenuError } from "../../auth/permission/menu/data"
 
+export const MENU_ID = "menu"
+
 type Props = Readonly<{
     menuList: MenuListComponent
 }>
 export function MenuList({ menuList }: Props): VNode {
-    const [state, setState] = useState(initialMenuListState)
+    const state = useComponent(menuList, initialMenuListState)
     useEffect(() => {
-        menuList.onStateChange(setState)
         menuList.load()
     }, [])
 
@@ -35,34 +39,30 @@ export function MenuList({ menuList }: Props): VNode {
     function content(wholeMenu: Menu): VNode {
         // id="menu" は breadcrumb の href="#menu" と対応
         // mobile レイアウトで menu に移動
-        return html`<nav id="menu" class="menu__body">${menuContent(wholeMenu)}</nav>`
+        return menuBody(MENU_ID, menuContent(wholeMenu))
 
         function menuContent(menu: Menu): VNode[] {
             return menu.map((node) => {
                 switch (node.type) {
                     case "category":
-                        return menuCategory(node)
+                        return menuCategoryContent(node)
 
                     case "item":
-                        return menuItem(node)
+                        return menuItemContent(node)
                 }
             })
         }
 
-        function menuCategory(node: MenuCategoryNode) {
+        function menuCategoryContent(node: MenuCategoryNode) {
             const { label } = node.category
 
-            return html`
-                <details class="menu__nav" open=${node.isExpand} key=${label}>
-                    <summary class="menu__nav__summary" onClick=${toggle}>
-                        <span class="menu__nav__summary__label">${label}</span>
-                        <span class="menu__nav__summary__badge">${badge(node.badgeCount)}</span>
-                    </summary>
-                    <ul class="menu__nav__items">
-                        ${menuContent(node.children)}
-                    </ul>
-                </details>
-            `
+            return menuCategory({
+                isExpand: node.isExpand,
+                label,
+                toggle,
+                badge: badge(node.badgeCount),
+                children: menuContent(node.children),
+            })
 
             function toggle(event: Event) {
                 event.preventDefault()
@@ -70,22 +70,15 @@ export function MenuList({ menuList }: Props): VNode {
             }
         }
 
-        function menuItem(node: MenuItemNode) {
+        function menuItemContent(node: MenuItemNode) {
             const { label, icon, href } = node.item
-            const activeClass = node.isActive ? "menu__nav__item_active" : ""
 
-            return html`
-                <li class="menu__nav__item" key="${href}">
-                    <a class="menu__nav__link ${activeClass}" href="${href}">
-                        <span class="menu__nav__item__label">${labelWithIcon()}</span>
-                        <span class="menu__nav__item__badge">${badge(node.badgeCount)}</span>
-                    </a>
-                </li>
-            `
-
-            function labelWithIcon() {
-                return html`<i class="${icon}"></i> ${label}`
-            }
+            return menuItem({
+                isActive: node.isActive,
+                href,
+                content: html`<i class="${icon}"></i> ${label}`,
+                badge: badge(node.badgeCount),
+            })
         }
     }
 }
@@ -95,16 +88,16 @@ function badge(badgeCount: number) {
         return EMPTY_CONTENT
     }
 
-    return html`<span class="badge badge_alert">${badgeCount}</span>`
+    return badge_alert(html`${badgeCount}`)
 }
 
 function error(err: LoadMenuError): VNode {
-    return html`<section class="menu__box">${loadMenuError(err)}</section>`
+    return menuBox(loadMenuError(err))
 }
 function loadMenuError(err: LoadMenuError): VNode[] {
     switch (err.type) {
         case "empty-nonce":
-            return [notice_alert("認証エラー"), v_small(), detail("もう一度ログインしてください")]
+            return [notice_alert("認証エラー"), detail("もう一度ログインしてください")]
 
         case "bad-request":
             return [notice_alert("アプリケーションエラー")]
@@ -113,10 +106,10 @@ function loadMenuError(err: LoadMenuError): VNode[] {
             return [notice_alert("サーバーエラー")]
 
         case "bad-response":
-            return [notice_alert("レスポンスエラー"), v_small(), detail(err.err)]
+            return [notice_alert("レスポンスエラー"), detail(err.err)]
 
         case "infra-error":
-            return [notice_alert("ネットワークエラー"), v_small(), detail(err.err)]
+            return [notice_alert("ネットワークエラー"), detail(err.err)]
     }
 
     function detail(err: string) {

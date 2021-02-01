@@ -1,14 +1,23 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
-import { MenuList } from "../../x_preact/Outline/MenuList"
-import { menuHeader } from "../../x_preact/common/layout"
-
 import {
-    mapMenuMockProps,
-    MenuMockProps,
-    initMenuListComponent,
-} from "../../auth/Outline/menuList/mock"
+    menuHeader,
+    menuFooter,
+    appLayout,
+    appMain,
+    mainHeader,
+    mainTitle,
+    mainBody,
+    appMenu,
+    menuBox,
+} from "../../z_external/getto-css/preact/layout/app"
+
+import { siteInfo } from "../../x_preact/common/site"
+
+import { MenuList } from "../../x_preact/Outline/MenuList"
+
+import { mapMenuMockProps, MenuMockProps, initMenuListComponent } from "../../auth/Outline/menuList/mock"
 
 import { initialMenuListState } from "../../auth/Outline/menuList/component"
 
@@ -28,11 +37,30 @@ const Template: Story<MockProps> = (args) => {
 
     function Preview(props: { args: MockProps }) {
         menuList.update(mapMenuMockProps(props.args))
-        return html`<main class="layout">
-            <aside class="layout__menu menu">
-                ${menuHeader()} ${h(MenuList, { menuList })}
-            </aside>
-        </main>`
+        const menuProps = { menuList }
+        return html`
+            <style>
+                .sb-main-padded {
+                    padding: 0 !important;
+                }
+            </style>
+            ${app()}
+        `
+
+        function app() {
+            return appLayout({
+                main: appMain({
+                    header: mainHeader([mainTitle("タイトル")]),
+                    body: mainBody("コンテンツ"),
+                }),
+                menu: appMenu([
+                    menuHeader(siteInfo()),
+                    menuBox("global information"),
+                    h(MenuList, menuProps),
+                    menuFooter(),
+                ]),
+            })
+        }
     }
 }
 
@@ -44,6 +72,7 @@ interface Story<T> {
 export const Success = Template.bind({})
 Success.args = {
     type: "success",
+    label: "ホーム",
     badgeCount: 99,
 }
 

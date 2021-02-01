@@ -1,15 +1,18 @@
 export class MockComponent<T> {
     state: T
 
-    listener: Post<T> | null = null
+    listener: Listener<T> | null = null
 
     constructor(state: T) {
         this.state = state
     }
 
-    onStateChange(post: Post<T>): void {
+    onStateChange(post: Listener<T>): void {
         post(this.state)
         this.listener = post
+    }
+    terminate(): void {
+        this.listener = null
     }
     update(state: T): void {
         if (this.listener) {
@@ -20,6 +23,6 @@ export class MockComponent<T> {
     }
 }
 
-interface Post<T> {
+interface Listener<T> {
     (state: T): void
 }

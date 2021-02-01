@@ -1,21 +1,24 @@
 import { h, VNode } from "preact"
-import { useState, useEffect } from "preact/hooks"
+import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { fullScreenError, v_medium } from "../common/layout"
+import { loginBox } from "../../../z_external/getto-css/preact/layout/login"
 
-import { ApplicationError } from "../common/System/ApplicationError"
+import { useComponent } from "../../common/hooks"
+import { siteInfo } from "../../common/site"
+import { spinner } from "../../common/icon"
 
-import { NextVersionResource } from "../../update/Update/MoveToNextVersion/view"
-import { initialNextVersionState } from "../../update/Update/nextVersion/component"
+import { ApplicationError } from "../../common/System/ApplicationError"
 
-import { appTargetToPath, FindError } from "../../update/nextVersion/data"
+import { NextVersionResource } from "../../../update/Update/MoveToNextVersion/view"
+import { initialNextVersionState } from "../../../update/Update/nextVersion/component"
+
+import { appTargetToPath, FindError } from "../../../update/nextVersion/data"
 
 type Props = NextVersionResource
 export function NextVersion({ nextVersion }: Props): VNode {
-    const [state, setState] = useState(initialNextVersionState)
+    const state = useComponent(nextVersion, initialNextVersionState)
     useEffect(() => {
-        nextVersion.onStateChange(setState)
         nextVersion.find()
     }, [])
 
@@ -34,32 +37,31 @@ export function NextVersion({ nextVersion }: Props): VNode {
             return EMPTY_CONTENT
 
         case "delayed-to-find":
-            return delayedContent()
+            return delayedMessage()
 
         case "succeed-to-find":
             // location の変更は useEffect で行うので中身は空
             return EMPTY_CONTENT
 
         case "failed-to-find":
-            return failedContent(state.err)
+            return failedMessage(state.err)
     }
 
-    function delayedContent() {
-        return fullScreenError(
-            "アプリケーションの読み込みに時間がかかっています",
-            html`
-                <p><i class="lnir lnir-spinner lnir-is-spinning"></i> 読み込み中です</p>
-                ${v_medium()}
-                <p>
+    function delayedMessage() {
+        return loginBox(siteInfo(), {
+            title: "アプリケーション読み込み中",
+            body: [
+                html`<p>${spinner} アプリケーションの読み込みに時間がかかっています</p>`,
+                html`<p>
                     30秒以上かかるようであれば何かがおかしいので、<br />
-                    お手数ですが管理者に連絡してください
-                </p>
-            `,
-            ""
-        )
+                    お手数ですが、管理者にお伝えください
+                </p>`,
+            ],
+            footer: "",
+        })
     }
 
-    function failedContent(err: FindError) {
+    function failedMessage(err: FindError) {
         return h(ApplicationError, { err: errorMessage() })
 
         function errorMessage() {

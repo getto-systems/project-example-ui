@@ -1,7 +1,7 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
-import { NotFound } from "../../x_preact/Auth/NotFound/NotFound"
+import { NotFound } from "../../x_preact/Auth/NotFound"
 
 import { newNotFound } from "../../auth/NotFound/NotFound/mock"
 import { mapCurrentVersionMockProps } from "../../auth/NotFound/currentVersion/mock"

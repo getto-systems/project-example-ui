@@ -30,7 +30,9 @@ const Template: Story<MockProps> = (args) => {
 
     function Preview(props: { args: MockProps }) {
         update.seasonInfo(mapSeasonMockProps({ type: "success", year: props.args.seasonYear }))
-        update.menuList(mapMenuMockProps({ type: "success", badgeCount: props.args.menuBadgeCount }))
+        update.menuList(
+            mapMenuMockProps({ type: "success", label: "ホーム", badgeCount: props.args.menuBadgeCount })
+        )
         update.breadcrumbList(
             mapBreadcrumbMockProps({
                 type: "success",

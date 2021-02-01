@@ -1,11 +1,11 @@
 import { h, VNode } from "preact"
 import { useErrorBoundary } from "preact/hooks"
 
-import { useTerminate } from "../common/hooks"
+import { useTerminate } from "../../common/hooks"
 
-import { ApplicationError } from "../common/System/ApplicationError"
+import { ApplicationError } from "../../common/System/ApplicationError"
 
-import { MoveToNextVersionEntryPoint } from "../../update/Update/MoveToNextVersion/view"
+import { MoveToNextVersionEntryPoint } from "../../../update/Update/MoveToNextVersion/view"
 import { NextVersion } from "./NextVersion"
 
 type Props = Readonly<{
@@ -13,7 +13,7 @@ type Props = Readonly<{
 }>
 export function MoveToLatestVersion({ moveToNextVersion: { resource, terminate } }: Props): VNode {
     const [err] = useErrorBoundary((err) => {
-        // ここでエラーをどこかに投げたい、けど認証前なのでこれでお茶を濁す
+        // 認証前なのでエラーはどうしようもない
         console.log(err)
     })
 

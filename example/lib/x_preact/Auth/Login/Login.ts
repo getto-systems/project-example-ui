@@ -1,8 +1,8 @@
 import { h, VNode } from "preact"
-import { useState, useEffect, useErrorBoundary } from "preact/hooks"
+import { useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useTerminate } from "../../common/hooks"
+import { useComponent, useTerminate } from "../../common/hooks"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
@@ -19,7 +19,7 @@ type Props = Readonly<{
 }>
 export function Login({ login: { view, terminate } }: Props): VNode {
     const [err] = useErrorBoundary((err) => {
-        // ここでエラーをどこかに投げたい、けど認証前なのでこれでお茶を濁す
+        // 認証前なのでエラーはどうしようもない
         console.log(err)
     })
 
@@ -29,9 +29,8 @@ export function Login({ login: { view, terminate } }: Props): VNode {
 
     useTerminate(terminate)
 
-    const [state, setState] = useState(initialLoginState)
+    const state = useComponent(view, initialLoginState)
     useEffect(() => {
-        view.onStateChange(setState)
         view.load()
     }, [])
 

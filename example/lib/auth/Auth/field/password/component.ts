@@ -25,6 +25,7 @@ export interface PasswordFieldComponent {
     validate(post: Post<PasswordFieldEvent>): void
 }
 
+// TODO variant が 1つなら type いらない
 export type PasswordFieldState = Readonly<{
     type: "succeed-to-update"
     result: Valid<PasswordFieldError>
