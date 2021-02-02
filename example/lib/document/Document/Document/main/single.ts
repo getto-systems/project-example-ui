@@ -1,5 +1,7 @@
 import { env } from "../../../../y_static/env"
 
+import { DocumentCollector, DocumentFactory, initDocumentResource } from "../impl/core"
+
 import { detectMenuTarget } from "../../../../auth/Outline/Menu/impl/location"
 import { detectContentPath } from "../impl/location"
 
@@ -7,21 +9,12 @@ import { initMenuListComponent } from "../../../../auth/Outline/menuList/impl"
 import { initBreadcrumbListComponent } from "../../../../auth/Outline/breadcrumbList/impl"
 import { initContentComponent } from "../../content/impl"
 
-import { loadApiNonce, loadApiRoles } from "../../../../auth/common/credential/impl/core"
-import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../../auth/permission/menu/impl/core"
-import { documentMenuTree } from "../../../../auth/Outline/Menu/impl/menu/menuTree"
-import { loadContent } from "../../../content/impl/core"
-import { DocumentCollector, DocumentFactory, initDocumentResource } from "../impl/core"
+import { initCredentialAction, initDocumentMenuAction } from "../../../../auth/Outline/Menu/main/core"
 
-import { initMemoryApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential/memory"
-import { initNoopBadgeClient } from "../../../../auth/permission/menu/impl/client/menuBadge/noop"
-import { initStorageMenuExpandRepository } from "../../../../auth/permission/menu/impl/repository/menuExpand/storage"
+import { loadContent } from "../../../content/impl/core"
 
 import { DocumentEntryPoint } from "../entryPoint"
 
-import { markApiNonce, markApiRoles } from "../../../../auth/common/credential/data"
-import { CredentialAction } from "../../../../auth/common/credential/action"
-import { MenuAction } from "../../../../auth/permission/menu/action"
 import { ContentAction } from "../../../content/action"
 
 export function newDocumentAsSingle(): DocumentEntryPoint {
@@ -31,7 +24,7 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
     const factory: DocumentFactory = {
         actions: {
             credential: initCredentialAction(),
-            menu: initMenuAction(menuExpandStorage),
+            menu: initDocumentMenuAction(menuExpandStorage),
             content: initContentAction(),
         },
         components: {
@@ -51,7 +44,7 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
     }
     const resource = initDocumentResource(factory, collector)
     return {
-        resource ,
+        resource,
         terminate: () => {
             resource.menuList.terminate()
             resource.breadcrumbList.terminate()
@@ -60,31 +53,6 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
     }
 }
 
-function initCredentialAction(): CredentialAction {
-    const apiCredentials = initMemoryApiCredentialRepository(
-        markApiNonce("api-nonce"),
-        markApiRoles(["development-docs"])
-    )
-
-    return {
-        loadApiNonce: loadApiNonce({ apiCredentials }),
-        loadApiRoles: loadApiRoles({ apiCredentials }),
-    }
-}
-function initMenuAction(menuExpandStorage: Storage): MenuAction {
-    const menuTree = documentMenuTree()
-    const menuBadge = initNoopBadgeClient()
-    const menuExpands = initStorageMenuExpandRepository(
-        menuExpandStorage,
-        env.storageKey.menuExpand.document
-    )
-
-    return {
-        loadBreadcrumb: loadBreadcrumb({ menuTree: menuTree }),
-        loadMenu: loadMenu({ menuTree: menuTree, menuBadge, menuExpands: menuExpands }),
-        toggleMenuExpand: toggleMenuExpand({ menuExpands: menuExpands }),
-    }
-}
 function initContentAction(): ContentAction {
     return {
         loadContent: loadContent(),

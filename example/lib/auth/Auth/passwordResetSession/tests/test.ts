@@ -6,7 +6,7 @@ import {
     PasswordResetSessionSimulator,
 } from "./core"
 
-import { SendTokenState } from "../../../profile/passwordReset/impl/client/session/simulate"
+import { SendTokenState } from "../../../profile/passwordReset/impl/remote/session/simulate"
 
 import { PasswordResetSessionState } from "../component"
 import { LoginIDFieldState } from "../../field/loginID/component"

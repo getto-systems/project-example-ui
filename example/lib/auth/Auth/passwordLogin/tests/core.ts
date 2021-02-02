@@ -19,8 +19,8 @@ import { initPasswordFieldComponent } from "../../field/password/impl"
 import { loginIDField } from "../../../common/field/loginID/impl/core"
 import { passwordField } from "../../../common/field/password/impl/core"
 
-import { LoginSimulator } from "../../../login/passwordLogin/impl/client/login/simulate"
-import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
+import { LoginSimulator } from "../../../login/passwordLogin/impl/remote/login/simulate"
+import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 
 import { Clock } from "../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../common/application/infra"

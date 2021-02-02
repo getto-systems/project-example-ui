@@ -3,7 +3,7 @@ import { initNextVersionResource } from "../../MoveToNextVersion/impl/core"
 
 import { initNextVersionComponent } from "../impl"
 
-import { CheckSimulator } from "../../../nextVersion/impl/client/check/simulate"
+import { CheckSimulator } from "../../../nextVersion/impl/remote/check/simulate"
 
 import { initNextVersionAction } from "../../MoveToNextVersion/tests/core"
 

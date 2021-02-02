@@ -9,19 +9,19 @@ import { forceRenew, renew, setContinuousRenew } from "../../../login/renew/impl
 import { login } from "../../../login/passwordLogin/impl/core"
 import { startSession, checkStatus, reset } from "../../../profile/passwordReset/impl/core"
 
-import { initSimulateRenewClient, RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
+import { initSimulateRenewClient, RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 import {
     initSimulatePasswordLoginClient,
     LoginSimulator,
-} from "../../../login/passwordLogin/impl/client/login/simulate"
+} from "../../../login/passwordLogin/impl/remote/login/simulate"
 import {
     initSimulatePasswordResetClient,
     ResetSimulator,
-} from "../../../profile/passwordReset/impl/client/reset/simulate"
+} from "../../../profile/passwordReset/impl/remote/reset/simulate"
 import {
     initSimulatePasswordResetSessionClient,
     SessionSimulator,
-} from "../../../profile/passwordReset/impl/client/session/simulate"
+} from "../../../profile/passwordReset/impl/remote/session/simulate"
 
 import { ApplicationAction } from "../../../common/application/action"
 import { RenewAction, SetContinuousRenewAction } from "../../../login/renew/action"

@@ -2,7 +2,7 @@ import { initCredentialAction, initMenuAction } from "../../../../auth/Outline/M
 import { initSeasonAction } from "../../../Outline/seasonInfo/tests/core"
 
 import { detectMenuTarget } from "../../../../auth/Outline/Menu/impl/location"
-import { MenuBadgeSimulator } from "../../../../auth/permission/menu/impl/client/menuBadge/simulate"
+import { MenuBadgeSimulator } from "../../../../auth/permission/menu/impl/remote/menuBadge/simulate"
 
 import { DashboardCollector, DashboardFactory, initDashboardResource } from "../impl/core"
 

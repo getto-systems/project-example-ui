@@ -2,7 +2,7 @@ import { MenuBadgeClient, MenuBadgeResponse, MenuBadge } from "../../../infra"
 
 import { ApiNonce } from "../../../../../common/credential/data"
 
-export function initNoopBadgeClient(): MenuBadgeClient {
+export function initNoopMenuBadgeClient(): MenuBadgeClient {
     return new NoopMenuBadgeClient()
 }
 

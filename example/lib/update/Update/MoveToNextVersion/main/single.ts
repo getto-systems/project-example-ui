@@ -1,6 +1,6 @@
 import { env } from "../../../../y_static/env"
 
-import { initFetchCheckClient } from "../../../nextVersion/impl/client/check/fetch"
+import { initFetchCheckClient } from "../../../nextVersion/impl/remote/check/fetch"
 
 import { delayed } from "../../../../z_infra/delayed/core"
 import { find } from "../../../nextVersion/impl/core"

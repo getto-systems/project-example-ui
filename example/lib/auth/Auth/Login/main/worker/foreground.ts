@@ -38,7 +38,7 @@ import { forceRenew, renew, setContinuousRenew } from "../../../../login/renew/i
 import { loginIDField } from "../../../../common/field/loginID/impl/core"
 import { passwordField } from "../../../../common/field/password/impl/core"
 
-import { initFetchRenewClient } from "../../../../login/renew/impl/client/renew/fetch"
+import { initFetchRenewClient } from "../../../../login/renew/impl/remote/renew/fetch"
 import { initDateClock } from "../../../../../z_infra/clock/date"
 import { initStorageAuthCredentialRepository } from "../../../../login/renew/impl/repository/authCredential/storage"
 
