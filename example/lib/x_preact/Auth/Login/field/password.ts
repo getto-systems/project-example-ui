@@ -109,7 +109,3 @@ export function passwordView(
         }
     }
 }
-
-interface Post<T> {
-    (state: T): void
-}

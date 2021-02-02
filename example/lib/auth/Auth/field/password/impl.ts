@@ -37,14 +37,14 @@ class Component extends ApplicationBaseComponent<PasswordFieldState> implements 
             this.post(event)
         })
     }
-    validate(post: Post<PasswordFieldEvent>): void {
+    validate(handler: Handler<PasswordFieldEvent>): void {
         this.material.password.validate((event) => {
             this.post(event)
-            post(event)
+            handler(event)
         })
     }
 }
 
-interface Post<T> {
-    (state: T): void
+interface Handler<S> {
+    (state: S): void
 }

@@ -29,14 +29,14 @@ class Field implements LoginIDField {
         this.loginID = markInputValue("")
     }
 
-    set(input: InputValue, post: Post<LoginIDFieldEvent>): void {
+    set(input: InputValue, post: Handler<LoginIDFieldEvent>): void {
         this.loginID = input
         this.validate(post)
     }
-    validate(post: Post<LoginIDFieldEvent>): void {
+    validate(handler: Handler<LoginIDFieldEvent>): void {
         const result = hasError(validateLoginID(this.loginID))
 
-        post({
+        handler({
             type: "succeed-to-update",
             result,
             content: result.valid ? validContent(markLoginID(this.loginID)) : invalidContent(),
@@ -46,6 +46,6 @@ class Field implements LoginIDField {
 
 export const loginIDField: LoginIDFieldPod = () => new Field()
 
-interface Post<T> {
-    (state: T): void
+interface Handler<E> {
+    (event: E): void
 }

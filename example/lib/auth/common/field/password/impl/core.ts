@@ -66,22 +66,22 @@ class Field implements PasswordField {
         }
     }
 
-    set(input: InputValue, post: Post<PasswordFieldEvent>): void {
+    set(input: InputValue, post: Handler<PasswordFieldEvent>): void {
         this.password = input
         this.validate(post)
     }
-    show(post: Post<PasswordFieldEvent>): void {
+    show(post: Handler<PasswordFieldEvent>): void {
         this.visible = true
         this.validate(post)
     }
-    hide(post: Post<PasswordFieldEvent>): void {
+    hide(post: Handler<PasswordFieldEvent>): void {
         this.visible = false
         this.validate(post)
     }
-    validate(post: Post<PasswordFieldEvent>): void {
+    validate(handler: Handler<PasswordFieldEvent>): void {
         const result = hasError(validatePassword(this.password))
 
-        post({
+        handler({
             type: "succeed-to-update",
             result,
             content: result.valid ? validContent(markPassword(this.password)) : invalidContent(),
@@ -93,6 +93,6 @@ class Field implements PasswordField {
 
 export const passwordField: PasswordFieldPod = () => new Field()
 
-interface Post<T> {
-    (event: T): void
+interface Handler<E> {
+    (event: E): void
 }
