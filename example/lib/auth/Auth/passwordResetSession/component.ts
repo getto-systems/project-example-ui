@@ -1,3 +1,5 @@
+import { ApplicationComponent } from "../../../sub/getto-example/application/component"
+
 import { LoginLink } from "../link"
 
 import { StartSession, CheckStatus } from "../../profile/passwordReset/action"
@@ -19,9 +21,8 @@ export type PasswordResetSessionMaterial = Readonly<{
     checkStatus: CheckStatus
 }>
 
-export interface PasswordResetSessionComponent {
+export interface PasswordResetSessionComponent extends ApplicationComponent<PasswordResetSessionState> {
     readonly link: LoginLink
-    onStateChange(post: Post<PasswordResetSessionState>): void
     startSession(): void
 }
 
@@ -39,8 +40,4 @@ export type PasswordResetSessionState =
 
 export const initialPasswordResetSessionState: PasswordResetSessionState = {
     type: "initial-reset-session",
-}
-
-interface Post<T> {
-    (state: T): void
 }

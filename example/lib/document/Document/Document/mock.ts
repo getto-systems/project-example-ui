@@ -1,10 +1,10 @@
-import { MockComponent } from "../../../sub/getto-example/component/mock"
+import { MockComponent } from "../../../sub/getto-example/application/mock"
 
 import { initBreadcrumbListComponent } from "../../../auth/Outline/breadcrumbList/mock"
 import { initMenuListComponent } from "../../../auth/Outline/menuList/mock"
 import { initContentComponent } from "../content/mock"
 
-import { DocumentEntryPoint } from "./view"
+import { DocumentEntryPoint } from "./entryPoint"
 
 import {
     BreadcrumbListState,

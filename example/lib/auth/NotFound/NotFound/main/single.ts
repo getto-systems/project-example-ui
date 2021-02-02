@@ -19,10 +19,11 @@ export function newNotFoundAsSingle(): NotFoundEntryPoint {
             currentVersion: initCurrentVersionComponent,
         },
     }
+    const resource = initNotFoundResource(factory)
     return {
-        resource: initNotFoundResource(factory),
+        resource,
         terminate: () => {
-            // worker とインターフェイスを合わせるために必要
+            resource.currentVersion.terminate()
         },
     }
 }

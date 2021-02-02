@@ -12,7 +12,7 @@ describe("Content", () => {
     test("load content", (done) => {
         const { resource } = standardResource()
 
-        resource.content.onStateChange(stateHandler())
+        resource.content.addStateHandler(stateHandler())
 
         resource.content.load()
 

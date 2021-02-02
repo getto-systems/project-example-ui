@@ -28,10 +28,11 @@ export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPoint {
             getAppTarget: () => detectAppTarget(env.version, currentURL),
         },
     }
+    const resource = initNextVersionResource(factory, collector)
     return {
-        resource: initNextVersionResource(factory, collector),
+        resource,
         terminate: () => {
-            // worker とインターフェイスを合わせるために必要
+            resource.nextVersion.terminate()
         },
     }
 }

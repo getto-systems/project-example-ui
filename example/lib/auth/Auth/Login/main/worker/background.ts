@@ -57,7 +57,7 @@ export function initLoginWorker(worker: Worker): void {
         passwordReset: initPasswordResetAction(newPasswordResetActionConfig()),
     }
 
-    return initLoginWorkerAsBackground(material, worker)
+    initLoginWorkerAsBackground(material, worker)
 }
 
 export function initPasswordLoginAction(

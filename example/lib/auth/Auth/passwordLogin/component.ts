@@ -1,3 +1,5 @@
+import { ApplicationComponent } from "../../../sub/getto-example/application/component"
+
 import { Login } from "../../login/passwordLogin/action"
 import { SetContinuousRenew } from "../../login/renew/action"
 import { SecureScriptPath } from "../../common/application/action"
@@ -17,9 +19,8 @@ export type PasswordLoginMaterial = Readonly<{
     secureScriptPath: SecureScriptPath
 }>
 
-export interface PasswordLoginComponent {
+export interface PasswordLoginComponent extends ApplicationComponent<PasswordLoginState> {
     readonly link: LoginLink
-    onStateChange(post: Post<PasswordLoginState>): void
     login(): void
     loadError(err: LoadError): void
 }
@@ -35,7 +36,3 @@ export type PasswordLoginState =
     | Readonly<{ type: "error"; err: string }>
 
 export const initialPasswordLoginState: PasswordLoginState = { type: "initial-login" }
-
-interface Post<T> {
-    (state: T): void
-}

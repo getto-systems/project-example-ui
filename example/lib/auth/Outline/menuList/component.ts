@@ -1,3 +1,5 @@
+import { ApplicationComponent } from "../../../sub/getto-example/application/component"
+
 import { LoadApiNonce, LoadApiRoles } from "../../common/credential/action"
 import { LoadMenu, ToggleMenuExpand } from "../../permission/menu/action"
 
@@ -14,8 +16,7 @@ export type MenuListMaterial = Readonly<{
     toggleMenuExpand: ToggleMenuExpand
 }>
 
-export interface MenuListComponent {
-    onStateChange(post: Post<MenuListState>): void
+export interface MenuListComponent extends ApplicationComponent<MenuListState> {
     load(): void
     toggle(menu: Menu, path: MenuCategoryPath): void
 }
@@ -29,7 +30,3 @@ export type MenuListState =
     | Readonly<{ type: "failed-to-toggle"; menu: Menu; err: LoadMenuError }>
 
 export const initialMenuListState: MenuListState = { type: "initial-menu-list" }
-
-interface Post<T> {
-    (state: T): void
-}

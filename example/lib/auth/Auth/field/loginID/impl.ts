@@ -1,3 +1,5 @@
+import { ApplicationBaseComponent } from "../../../../sub/getto-example/application/impl"
+
 import {
     LoginIDFieldComponentFactory,
     LoginIDFieldMaterial,
@@ -12,20 +14,12 @@ import { InputValue } from "../../../common/field/data"
 export const initLoginIDFieldComponent: LoginIDFieldComponentFactory = (material) =>
     new Component(material)
 
-class Component implements LoginIDFieldComponent {
+class Component extends ApplicationBaseComponent<LoginIDFieldState> implements LoginIDFieldComponent {
     material: LoginIDFieldMaterial
 
-    listener: Post<LoginIDFieldState>[] = []
-
     constructor(material: LoginIDFieldMaterial) {
+        super()
         this.material = material
-    }
-
-    onStateChange(post: Post<LoginIDFieldState>): void {
-        this.listener.push(post)
-    }
-    post(state: LoginIDFieldState): void {
-        this.listener.forEach((post) => post(state))
     }
 
     set(inputValue: InputValue): void {

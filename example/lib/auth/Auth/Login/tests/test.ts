@@ -49,7 +49,7 @@ import {
 
 import { View } from "../impl/core"
 import { RenewCredentialComponent } from "../../renewCredential/component"
-import { LoginState } from "../view"
+import { LoginState } from "../entryPoint"
 
 const AUTHORIZED_TICKET_NONCE = "ticket-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
@@ -64,11 +64,11 @@ describe("LoginView", () => {
     test("redirect login view", (done) => {
         const { view } = standardLoginView()
 
-        view.onStateChange(stateHandler())
+        view.addStateHandler(stateHandler())
 
         view.load()
 
-        function stateHandler(): Post<LoginState> {
+        function stateHandler(): Handler<LoginState> {
             const stack: LoginState[] = []
             return (state) => {
                 stack.push(state)
@@ -107,11 +107,11 @@ describe("LoginView", () => {
     test("password reset session", (done) => {
         const { view } = passwordResetSessionLoginView()
 
-        view.onStateChange(stateHandler())
+        view.addStateHandler(stateHandler())
 
         view.load()
 
-        function stateHandler(): Post<LoginState> {
+        function stateHandler(): Handler<LoginState> {
             const stack: LoginState[] = []
             return (state) => {
                 stack.push(state)
@@ -150,11 +150,11 @@ describe("LoginView", () => {
     test("password reset", (done) => {
         const { view } = passwordResetLoginView()
 
-        view.onStateChange(stateHandler())
+        view.addStateHandler(stateHandler())
 
         view.load()
 
-        function stateHandler(): Post<LoginState> {
+        function stateHandler(): Handler<LoginState> {
             const stack: LoginState[] = []
             return (state) => {
                 stack.push(state)
@@ -193,11 +193,11 @@ describe("LoginView", () => {
     test("error", (done) => {
         const { view } = standardLoginView()
 
-        view.onStateChange(stateHandler())
+        view.addStateHandler(stateHandler())
 
         view.error("view error")
 
-        function stateHandler(): Post<LoginState> {
+        function stateHandler(): Handler<LoginState> {
             const stack: LoginState[] = []
             return (state) => {
                 stack.push(state)
@@ -457,7 +457,7 @@ function simulateReset(_resetToken: ResetToken, _fields: ResetFields): AuthCrede
 function simulateStartSession(_fields: StartSessionFields): SessionID {
     return markSessionID(SESSION_ID)
 }
-function simulateSendToken(post: Post<SendTokenState>): true {
+function simulateSendToken(post: Handler<SendTokenState>): true {
     setTimeout(() => {
         post({ state: "waiting" })
     }, 0)
@@ -483,7 +483,7 @@ function standardClock(): Clock {
     return initStaticClock(NOW)
 }
 
-interface Post<T> {
+interface Handler<T> {
     (state: T): void
 }
 interface Setup<T> {

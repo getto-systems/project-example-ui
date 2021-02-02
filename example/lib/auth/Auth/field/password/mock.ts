@@ -1,4 +1,4 @@
-import { MockComponent } from "../../../../sub/getto-example/component/mock"
+import { MockComponent } from "../../../../sub/getto-example/application/mock"
 
 import { PasswordFieldComponent, PasswordFieldState } from "./component"
 

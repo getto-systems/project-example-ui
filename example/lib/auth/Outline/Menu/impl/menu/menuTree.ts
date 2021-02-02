@@ -1,8 +1,8 @@
-import { StaticMenuPath } from "../../../../y_static/path"
+import { StaticMenuPath } from "../../../../../y_static/path"
 
-import { Icon, iconClass, lnir } from "../../../../z_external/icon"
+import { Icon, iconClass, lnir } from "../../../../../z_external/icon"
 
-import { MenuPermission, MenuTree, MenuTreeNode } from "../../../permission/menu/infra"
+import { MenuPermission, MenuTree, MenuTreeNode } from "../../../../permission/menu/infra"
 
 function category(label: string, permission: MenuPermission, children: MenuTree): MenuTreeNode {
     return { type: "category", category: { label, permission }, children }

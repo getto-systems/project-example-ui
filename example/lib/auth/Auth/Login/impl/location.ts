@@ -1,4 +1,4 @@
-import { ViewState } from "../view"
+import { ViewState } from "../entryPoint"
 
 import { markPagePathname, PagePathname } from "../../../common/application/data"
 import { markResetToken, ResetToken } from "../../../profile/passwordReset/data"

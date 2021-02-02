@@ -12,7 +12,7 @@ import { PasswordLogin } from "./PasswordLogin"
 import { PasswordResetSession } from "./PasswordResetSession"
 import { PasswordReset } from "./PasswordReset"
 
-import { LoginEntryPoint, initialLoginState } from "../../../auth/Auth/Login/view"
+import { LoginEntryPoint, initialLoginState } from "../../../auth/Auth/Login/entryPoint"
 
 type Props = Readonly<{
     login: LoginEntryPoint

@@ -17,7 +17,7 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 import { LoginIDField } from "./PasswordReset/LoginIDField"
 import { PasswordField } from "./PasswordReset/PasswordField"
 
-import { PasswordResetResource } from "../../../auth/Auth/Login/view"
+import { PasswordResetResource } from "../../../auth/Auth/Login/entryPoint"
 import { initialPasswordResetState } from "../../../auth/Auth/passwordReset/component"
 
 import { ResetError } from "../../../auth/profile/passwordReset/data"

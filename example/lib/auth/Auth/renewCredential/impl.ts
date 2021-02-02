@@ -1,3 +1,5 @@
+import { ApplicationBaseComponent } from "../../../sub/getto-example/application/impl"
+
 import {
     RenewCredentialComponentFactory,
     RenewCredentialMaterial,
@@ -11,20 +13,12 @@ import { emptyAuthCredential, storeAuthCredential, StoreAuthCredential } from ".
 export const initRenewCredentialComponent: RenewCredentialComponentFactory = (material) =>
     new Component(material)
 
-class Component implements RenewCredentialComponent {
+class Component extends ApplicationBaseComponent<RenewCredentialState> implements RenewCredentialComponent {
     material: RenewCredentialMaterial
 
-    listener: Post<RenewCredentialState>[] = []
-
     constructor(material: RenewCredentialMaterial) {
+        super()
         this.material = material
-    }
-
-    onStateChange(post: Post<RenewCredentialState>): void {
-        this.listener.push(post)
-    }
-    post(state: RenewCredentialState): void {
-        this.listener.forEach((post) => post(state))
     }
 
     renew(): void {
@@ -86,8 +80,4 @@ class Component implements RenewCredentialComponent {
             }
         })
     }
-}
-
-interface Post<T> {
-    (state: T): void
 }

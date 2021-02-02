@@ -17,7 +17,7 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 import { LoginIDField } from "./PasswordLogin/LoginIDField"
 import { PasswordField } from "./PasswordLogin/PasswordField"
 
-import { PasswordLoginResource } from "../../../auth/Auth/Login/view"
+import { PasswordLoginResource } from "../../../auth/Auth/Login/entryPoint"
 import { initialPasswordLoginState } from "../../../auth/Auth/passwordLogin/component"
 
 import { LoginError } from "../../../auth/login/passwordLogin/data"

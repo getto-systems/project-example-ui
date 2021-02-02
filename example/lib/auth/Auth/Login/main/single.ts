@@ -53,7 +53,7 @@ import { passwordField } from "../../../common/field/password/impl/core"
 
 import { currentPagePathname, detectViewState, detectResetToken } from "../impl/location"
 
-import { LoginEntryPoint } from "../view"
+import { LoginEntryPoint } from "../entryPoint"
 
 export function newLoginAsSingle(): LoginEntryPoint {
     const credentialStorage = localStorage
@@ -107,16 +107,17 @@ export function newLoginAsSingle(): LoginEntryPoint {
         },
     }
 
-    return {
-        view: new View(collector, {
-            renewCredential: (setup) => initRenewCredentialResource(factory, collector, setup),
+    const view = new View(collector, {
+        renewCredential: (setup) => initRenewCredentialResource(factory, collector, setup),
 
-            passwordLogin: () => initPasswordLoginResource(factory, collector),
-            passwordResetSession: () => initPasswordResetSessionResource(factory),
-            passwordReset: () => initPasswordResetResource(factory, collector),
-        }),
+        passwordLogin: () => initPasswordLoginResource(factory, collector),
+        passwordResetSession: () => initPasswordResetSessionResource(factory),
+        passwordReset: () => initPasswordResetResource(factory, collector),
+    })
+    return {
+        view,
         terminate: () => {
-            // worker とインターフェイスを合わせるために必要
+            view.terminate()
         },
     }
 }

@@ -1,3 +1,5 @@
+import { ApplicationBaseComponent } from "../../../sub/getto-example/application/impl"
+
 import {
     BreadcrumbListComponentFactory,
     BreadcrumbListMaterial,
@@ -8,20 +10,12 @@ import {
 export const initBreadcrumbListComponent: BreadcrumbListComponentFactory = (material) =>
     new Component(material)
 
-class Component implements BreadcrumbListComponent {
+class Component extends ApplicationBaseComponent<BreadcrumbListState> implements BreadcrumbListComponent {
     material: BreadcrumbListMaterial
 
-    listener: Post<BreadcrumbListState>[] = []
-
     constructor(material: BreadcrumbListMaterial) {
+        super()
         this.material = material
-    }
-
-    onStateChange(post: Post<BreadcrumbListState>): void {
-        this.listener.push(post)
-    }
-    post(state: BreadcrumbListState): void {
-        this.listener.forEach((post) => post(state))
     }
 
     load(): void {
@@ -29,8 +23,4 @@ class Component implements BreadcrumbListComponent {
             this.post(event)
         })
     }
-}
-
-interface Post<T> {
-    (state: T): void
 }

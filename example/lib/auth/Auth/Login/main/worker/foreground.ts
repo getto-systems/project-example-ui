@@ -50,7 +50,7 @@ import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../../l
 
 import { LoginLinkFactory } from "../../../link"
 
-import { LoginEntryPoint } from "../../view"
+import { LoginEntryPoint } from "../../entryPoint"
 import { RenewCredentialComponentFactory } from "../../../renewCredential/component"
 import { PasswordLoginComponentFactory } from "../../../passwordLogin/component"
 import { PasswordResetSessionComponentFactory } from "../../../passwordResetSession/component"
@@ -310,6 +310,7 @@ function initLoginAsForeground(
     }
     function terminate() {
         worker.terminate()
+        view.terminate()
     }
 }
 

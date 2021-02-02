@@ -1,3 +1,5 @@
+import { ApplicationComponent } from "../../../sub/getto-example/application/component"
+
 import { ForceRenew, Renew, SetContinuousRenew } from "../../login/renew/action"
 import { SecureScriptPath } from "../../common/application/action"
 
@@ -16,8 +18,7 @@ export type RenewCredentialMaterial = Readonly<{
     secureScriptPath: SecureScriptPath
 }>
 
-export interface RenewCredentialComponent {
-    onStateChange(post: Post<RenewCredentialState>): void
+export interface RenewCredentialComponent extends ApplicationComponent<RenewCredentialState> {
     renew(): void
     succeedToInstantLoad(): void
     failedToInstantLoad(): void
@@ -39,6 +40,6 @@ export type RenewCredentialState =
 
 export const initialRenewCredentialState: RenewCredentialState = { type: "initial-renew" }
 
-interface Post<T> {
+interface Handler<T> {
     (state: T): void
 }

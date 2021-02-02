@@ -27,7 +27,7 @@ import { ApplicationActionConfig } from "../../../common/application/infra"
 import { PasswordResetActionConfig } from "../../../profile/passwordReset/infra"
 import { SetContinuousRenewActionConfig, AuthCredentialRepository } from "../../../login/renew/infra"
 
-import { PasswordResetResource } from "../../Login/view"
+import { PasswordResetResource } from "../../Login/entryPoint"
 
 export type PasswordResetConfig = {
     application: ApplicationActionConfig

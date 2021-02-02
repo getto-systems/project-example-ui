@@ -16,7 +16,7 @@ describe("SeasonInfo", () => {
     test("load from repository", (done) => {
         const { seasonInfo } = standardSeasonInfoComponent()
 
-        seasonInfo.onStateChange(stateHandler())
+        seasonInfo.addStateHandler(stateHandler())
 
         seasonInfo.load()
 
@@ -49,7 +49,7 @@ describe("SeasonInfo", () => {
     test("not found; use default", (done) => {
         const { seasonInfo } = emptySeasonInfoComponent()
 
-        seasonInfo.onStateChange(stateHandler())
+        seasonInfo.addStateHandler(stateHandler())
 
         seasonInfo.load()
 

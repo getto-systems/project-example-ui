@@ -1,3 +1,5 @@
+import { ApplicationBaseComponent } from "../../../sub/getto-example/application/impl"
+
 import {
     SeasonInfoComponentFactory,
     SeasonInfoMaterial,
@@ -7,20 +9,12 @@ import {
 
 export const initSeasonInfoComponent: SeasonInfoComponentFactory = (material) => new Component(material)
 
-class Component implements SeasonInfoComponent {
+class Component extends ApplicationBaseComponent<SeasonInfoState> implements SeasonInfoComponent {
     material: SeasonInfoMaterial
 
-    listener: Post<SeasonInfoState>[] = []
-
     constructor(material: SeasonInfoMaterial) {
+        super()
         this.material = material
-    }
-
-    onStateChange(post: Post<SeasonInfoState>): void {
-        this.listener.push(post)
-    }
-    post(state: SeasonInfoState): void {
-        this.listener.forEach((post) => post(state))
     }
 
     load(): void {
@@ -28,8 +22,4 @@ class Component implements SeasonInfoComponent {
             this.post(event)
         })
     }
-}
-
-interface Post<T> {
-    (state: T): void
 }

@@ -1,3 +1,5 @@
+import { ApplicationComponent } from "../../../sub/getto-example/application/component"
+
 import { LoadSeason } from "../../shared/season/action"
 
 import { Season, SeasonError } from "../../shared/season/data"
@@ -9,8 +11,7 @@ export type ExampleMaterial = Readonly<{
     loadSeason: LoadSeason
 }>
 
-export interface ExampleComponent {
-    onStateChange(post: Post<ExampleState>): void
+export interface ExampleComponent extends ApplicationComponent<ExampleState> {
     load(): void
 }
 

@@ -22,7 +22,7 @@ export function Content(resource: Props): VNode {
     const [state, setState] = useState(initialContentState)
     const [loadContentState, setLoadContentState] = useState(initialLoadContentState)
     useEffect(() => {
-        content.onStateChange(setState)
+        content.addStateHandler(setState)
         content.load()
     }, [])
 

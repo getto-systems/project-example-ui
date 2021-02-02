@@ -1,4 +1,4 @@
-import { DashboardResource } from "../view"
+import { DashboardResource } from "../entryPoint"
 
 import { SeasonInfoComponentFactory } from "../../../Outline/seasonInfo/component"
 import { MenuListComponentFactory } from "../../../../auth/Outline/menuList/component"
