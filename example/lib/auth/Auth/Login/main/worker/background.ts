@@ -46,7 +46,7 @@ import {
     StartSessionProxyMessage,
     CheckStatusProxyMessage,
     ResetProxyMessage,
-} from "./data"
+} from "./message"
 
 export function initLoginWorker(worker: Worker): void {
     const authClient = initAuthClient(env.authServerURL)

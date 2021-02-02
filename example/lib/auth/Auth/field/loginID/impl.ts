@@ -6,6 +6,7 @@ import {
 } from "./component"
 
 import { LoginIDFieldEvent } from "../../../common/field/loginID/event"
+
 import { InputValue } from "../../../common/field/data"
 
 export const initLoginIDFieldComponent: LoginIDFieldComponentFactory = (material) =>
@@ -29,18 +30,14 @@ class Component implements LoginIDFieldComponent {
 
     set(inputValue: InputValue): void {
         this.material.loginID.set(inputValue, (event) => {
-            this.post(this.mapLoginIDFieldEvent(event))
+            this.post(event)
         })
     }
     validate(post: Post<LoginIDFieldEvent>): void {
         this.material.loginID.validate((event) => {
-            this.post(this.mapLoginIDFieldEvent(event))
+            this.post(event)
             post(event)
         })
-    }
-
-    mapLoginIDFieldEvent(event: LoginIDFieldEvent): LoginIDFieldState {
-        return event
     }
 }
 

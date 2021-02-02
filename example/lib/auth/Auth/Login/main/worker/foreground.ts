@@ -85,7 +85,7 @@ import {
     StartSessionProxyMessage,
     CheckStatusProxyMessage,
     ResetProxyMessage,
-} from "./data"
+} from "./message"
 
 export function newLoginAsWorkerForeground(): LoginEntryPoint {
     const credentialStorage = localStorage
