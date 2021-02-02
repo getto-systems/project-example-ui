@@ -10,7 +10,7 @@ import { initNextVersionResource } from "../impl/core"
 
 import { initNextVersionComponent } from "../../nextVersion/impl"
 
-import { MoveToNextVersionEntryPoint } from "../view"
+import { MoveToNextVersionEntryPoint } from "../entryPoint"
 
 export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPoint {
     const currentURL = new URL(location.toString())

@@ -6,7 +6,7 @@ import { initCurrentVersionComponent } from "../../currentVersion/impl"
 
 import { findCurrentVersion } from "../../../permission/currentVersion/impl/core"
 
-import { NotFoundEntryPoint } from "../view"
+import { NotFoundEntryPoint } from "../entryPoint"
 
 import { CurrentVersionAction } from "../../../permission/currentVersion/action"
 

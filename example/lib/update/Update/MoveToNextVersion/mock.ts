@@ -2,7 +2,7 @@ import { MockComponent } from "../../../sub/getto-example/application/mock"
 
 import { initNextVersionComponent } from "../nextVersion/mock"
 
-import { MoveToNextVersionEntryPoint } from "./view"
+import { MoveToNextVersionEntryPoint } from "./entryPoint"
 import { initialNextVersionState, NextVersionState } from "../nextVersion/component"
 
 export function newMoveToNextVersion(): MoveToNextVersionMockEntryPoint {

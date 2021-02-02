@@ -11,7 +11,7 @@ import { icon } from "../common/icon"
 
 import { ApplicationError } from "../common/System/ApplicationError"
 
-import { NotFoundEntryPoint } from "../../auth/NotFound/NotFound/view"
+import { NotFoundEntryPoint } from "../../auth/NotFound/NotFound/entryPoint"
 
 import {
     CurrentVersionComponent,

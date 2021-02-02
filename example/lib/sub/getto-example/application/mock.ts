@@ -1,17 +1,19 @@
-export class MockComponent<S> {
+import { ApplicationComponent, ApplicationStateHandler } from "./component"
+
+export class MockComponent<S> implements ApplicationComponent<S> {
     state: S
 
-    handler: Handler<S> | null = null
+    handler: ApplicationStateHandler<S> | null = null
 
     constructor(state: S) {
         this.state = state
     }
 
-    addStateHandler(handler: Handler<S>): void {
+    addStateHandler(handler: ApplicationStateHandler<S>): void {
         handler(this.state)
         this.handler = handler
     }
-    removeStateHandler(_handler: Handler<S>): void {
+    removeStateHandler(_handler: ApplicationStateHandler<S>): void {
         this.handler = null
     }
     terminate(): void {
@@ -25,8 +27,4 @@ export class MockComponent<S> {
             this.state = state
         }
     }
-}
-
-interface Handler<T> {
-    (state: T): void
 }
