@@ -1,6 +1,8 @@
 import { ApiCredentialRepository } from "../../../infra"
 
-import { ApiNonce, ApiRoles, LoadResult } from "../../../data"
+import { LoadResult } from "../../../event"
+
+import { ApiNonce, ApiRoles } from "../../../data"
 
 export function initMemoryApiCredentialRepository(
     apiNonce: ApiNonce,
