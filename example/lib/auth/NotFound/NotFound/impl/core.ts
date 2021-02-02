@@ -1,4 +1,4 @@
-import { NotFoundResource } from "../view"
+import { NotFoundResource } from "../entryPoint"
 
 import { CurrentVersionComponentFactory } from "../../currentVersion/component"
 

@@ -4,7 +4,7 @@ import { initCurrentVersionComponent } from "../../currentVersion/impl"
 
 import { findCurrentVersion } from "../../../permission/currentVersion/impl/core"
 
-import { NotFoundResource } from "../view"
+import { NotFoundResource } from "../entryPoint"
 
 import { CurrentVersionAction } from "../../../permission/currentVersion/action"
 

@@ -1,4 +1,4 @@
-import { MoveToNextVersionEntryPoint } from "../../../update/Update/MoveToNextVersion/view"
+import { MoveToNextVersionEntryPoint } from "../../../update/Update/MoveToNextVersion/entryPoint"
 import { NextVersionState } from "../../../update/Update/nextVersion/component"
 
 import { AppTarget, appTargetToPath } from "../../../update/nextVersion/data"

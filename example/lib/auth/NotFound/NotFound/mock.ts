@@ -2,7 +2,7 @@ import { MockComponent } from "../../../sub/getto-example/application/mock"
 
 import { initCurrentVersionComponent } from "../currentVersion/mock"
 
-import { NotFoundEntryPoint } from "./view"
+import { NotFoundEntryPoint } from "./entryPoint"
 
 import { CurrentVersionState, initialCurrentVersionState } from "../currentVersion/component"
 

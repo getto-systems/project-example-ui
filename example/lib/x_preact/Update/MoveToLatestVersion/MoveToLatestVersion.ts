@@ -5,7 +5,7 @@ import { useTerminate } from "../../common/hooks"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
-import { MoveToNextVersionEntryPoint } from "../../../update/Update/MoveToNextVersion/view"
+import { MoveToNextVersionEntryPoint } from "../../../update/Update/MoveToNextVersion/entryPoint"
 import { NextVersion } from "./NextVersion"
 
 type Props = Readonly<{
