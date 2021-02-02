@@ -2,8 +2,9 @@ import { RenewInfra, SetContinuousRenewInfra } from "../infra"
 
 import { ForceRenewPod, RenewPod, SetContinuousRenewPod } from "../action"
 
+import { ForceRenewEvent } from "../event"
+
 import { hasExpired, LastLogin } from "../../../common/credential/data"
-import { ForceRenewEvent } from "../data"
 
 export const renew = (infra: RenewInfra): RenewPod => () => async (post) => {
     const { clock, config } = infra

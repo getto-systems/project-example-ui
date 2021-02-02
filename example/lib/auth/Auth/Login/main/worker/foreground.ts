@@ -73,7 +73,7 @@ import {
 import { LoginIDFieldAction } from "../../../../common/field/loginID/action"
 import { PasswordFieldAction } from "../../../../common/field/password/action"
 
-import { LoginEvent } from "../../../../login/passwordLogin/data"
+import { LoginEvent } from "../../../../login/passwordLogin/event"
 import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../profile/passwordReset/data"
 
 import {

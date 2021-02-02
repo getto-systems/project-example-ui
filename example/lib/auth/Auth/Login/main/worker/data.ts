@@ -1,4 +1,6 @@
-import { LoginEvent, LoginFields } from "../../../../login/passwordLogin/data"
+import { LoginEvent } from "../../../../login/passwordLogin/event"
+
+import { LoginFields } from "../../../../login/passwordLogin/data"
 import {
     StartSessionFields,
     ResetFields,

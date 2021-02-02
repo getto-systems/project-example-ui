@@ -1,4 +1,6 @@
-import { LoginEvent, LoginFields } from "./data"
+import { LoginEvent } from "./event"
+
+import { LoginFields } from "./data"
 import { Content } from "../../common/field/data"
 
 export type PasswordLoginAction = Readonly<{
