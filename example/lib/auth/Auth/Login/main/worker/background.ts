@@ -12,9 +12,9 @@ import {
 import { login } from "../../../../login/passwordLogin/impl/core"
 import { startSession, checkStatus, reset } from "../../../../profile/passwordReset/impl/core"
 
-import { initFetchPasswordLoginClient } from "../../../../login/passwordLogin/impl/client/login/fetch"
-import { initSimulatePasswordResetClient } from "../../../../profile/passwordReset/impl/client/reset/simulate"
-import { initSimulatePasswordResetSessionClient } from "../../../../profile/passwordReset/impl/client/session/simulate"
+import { initFetchPasswordLoginClient } from "../../../../login/passwordLogin/impl/remote/login/fetch"
+import { initSimulatePasswordResetClient } from "../../../../profile/passwordReset/impl/remote/reset/simulate"
+import { initSimulatePasswordResetSessionClient } from "../../../../profile/passwordReset/impl/remote/session/simulate"
 
 import { PasswordLoginActionConfig } from "../../../../login/passwordLogin/infra"
 import {

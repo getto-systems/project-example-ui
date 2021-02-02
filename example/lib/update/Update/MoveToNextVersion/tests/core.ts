@@ -1,6 +1,6 @@
 import { delayed } from "../../../../z_infra/delayed/core"
 
-import { initSimulateCheckClient, CheckSimulator } from "../../../nextVersion/impl/client/check/simulate"
+import { initSimulateCheckClient, CheckSimulator } from "../../../nextVersion/impl/remote/check/simulate"
 
 import { find } from "../../../nextVersion/impl/core"
 

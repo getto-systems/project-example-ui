@@ -1,7 +1,7 @@
 import {
     initSimulateMenuBadgeClient,
     MenuBadgeSimulator,
-} from "../../../permission/menu/impl/client/menuBadge/simulate"
+} from "../../../permission/menu/impl/remote/menuBadge/simulate"
 
 import { detectMenuTarget } from "../impl/location"
 

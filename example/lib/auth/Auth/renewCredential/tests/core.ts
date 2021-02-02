@@ -13,7 +13,7 @@ import {
 
 import { initRenewCredentialComponent } from "../impl"
 
-import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
+import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 
 import { Clock } from "../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../common/application/infra"

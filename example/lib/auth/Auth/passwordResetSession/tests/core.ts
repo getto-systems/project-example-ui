@@ -8,7 +8,7 @@ import { initLoginIDFieldComponent } from "../../field/loginID/impl"
 
 import { loginIDField } from "../../../common/field/loginID/impl/core"
 
-import { SessionSimulator } from "../../../profile/passwordReset/impl/client/session/simulate"
+import { SessionSimulator } from "../../../profile/passwordReset/impl/remote/session/simulate"
 
 import { ApplicationActionConfig } from "../../../common/application/infra"
 import { PasswordResetSessionActionConfig } from "../../../profile/passwordReset/infra"

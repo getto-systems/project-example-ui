@@ -9,7 +9,7 @@ import {
 
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
 import { initMemoryAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential/memory"
-import { RenewSimulator } from "../../../login/renew/impl/client/renew/simulate"
+import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 
 import { AuthCredentialRepository } from "../../../login/renew/infra"
 
