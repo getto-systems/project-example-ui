@@ -353,9 +353,6 @@ function collectPassword(passwordField: PasswordFieldComponent): Promise<Content
     })
 }
 
-interface Post<T> {
-    (state: T): void
-}
 interface Setup<T> {
     (component: T): void
 }

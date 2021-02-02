@@ -27,14 +27,14 @@ class Component extends ApplicationBaseComponent<LoginIDFieldState> implements L
             this.post(event)
         })
     }
-    validate(post: Post<LoginIDFieldEvent>): void {
+    validate(handler: Handler<LoginIDFieldEvent>): void {
         this.material.loginID.validate((event) => {
             this.post(event)
-            post(event)
+            handler(event)
         })
     }
 }
 
-interface Post<T> {
-    (state: T): void
+interface Handler<S> {
+    (state: S): void
 }
