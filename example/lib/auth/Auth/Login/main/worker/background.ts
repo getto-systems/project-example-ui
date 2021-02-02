@@ -32,11 +32,10 @@ import {
 } from "../../../../profile/passwordReset/action"
 
 import { LoginEvent } from "../../../../login/passwordLogin/event"
+import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../../profile/passwordReset/event"
 
 import { markTicketNonce, markAuthAt, markApiCredential } from "../../../../common/credential/data"
 import { markSessionID } from "../../../../profile/passwordReset/data"
-
-import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../../profile/passwordReset/data"
 
 import {
     ForegroundMessage,

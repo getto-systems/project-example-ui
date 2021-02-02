@@ -1,12 +1,10 @@
 import { LoginEvent } from "../../../../login/passwordLogin/event"
+import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../../profile/passwordReset/event"
 
 import { LoginFields } from "../../../../login/passwordLogin/data"
 import {
     StartSessionFields,
     ResetFields,
-    StartSessionEvent,
-    CheckStatusEvent,
-    ResetEvent,
     SessionID,
     ResetToken,
 } from "../../../../profile/passwordReset/data"

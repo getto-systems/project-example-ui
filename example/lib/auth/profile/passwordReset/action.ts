@@ -1,12 +1,6 @@
-import {
-    SessionID,
-    ResetToken,
-    StartSessionEvent,
-    CheckStatusEvent,
-    ResetEvent,
-    StartSessionFields,
-    ResetFields,
-} from "./data"
+import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "./event"
+
+import { SessionID, ResetToken, StartSessionFields, ResetFields } from "./data"
 import { Content } from "../../common/field/data"
 
 export type PasswordResetSessionAction = Readonly<{
