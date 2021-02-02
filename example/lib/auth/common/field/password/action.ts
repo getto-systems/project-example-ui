@@ -1,4 +1,4 @@
-import { PasswordFieldEvent } from "./data"
+import { PasswordFieldEvent } from "./event"
 import { InputValue } from "../data"
 
 export type PasswordFieldAction = Readonly<{

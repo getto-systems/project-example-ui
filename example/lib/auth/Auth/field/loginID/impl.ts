@@ -5,7 +5,7 @@ import {
     LoginIDFieldState,
 } from "./component"
 
-import { LoginIDFieldEvent } from "../../../common/field/loginID/data"
+import { LoginIDFieldEvent } from "../../../common/field/loginID/event"
 import { InputValue } from "../../../common/field/data"
 
 export const initLoginIDFieldComponent: LoginIDFieldComponentFactory = (material) =>

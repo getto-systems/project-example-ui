@@ -25,7 +25,3 @@ export function hasError<T>(err: T[]): Valid<T> {
     }
     return { valid: false, err } as Valid<T>
 }
-
-interface Builder<T> {
-    (): T
-}

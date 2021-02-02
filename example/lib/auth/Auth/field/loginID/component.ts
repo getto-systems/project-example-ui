@@ -1,6 +1,8 @@
 import { LoginIDField } from "../../../common/field/loginID/action"
 
-import { LoginIDFieldError, LoginIDFieldEvent } from "../../../common/field/loginID/data"
+import { LoginIDFieldEvent } from "../../../common/field/loginID/event"
+
+import { LoginIDFieldError } from "../../../common/field/loginID/data"
 import { InputValue, Valid, noError } from "../../../common/field/data"
 
 export interface LoginIDFieldComponentFactory {

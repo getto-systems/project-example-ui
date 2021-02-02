@@ -5,7 +5,8 @@ import {
     PasswordFieldState,
 } from "./component"
 
-import { PasswordFieldEvent } from "../../../common/field/password/data"
+import { PasswordFieldEvent } from "../../../common/field/password/event"
+
 import { InputValue } from "../../../common/field/data"
 
 export const initPasswordFieldComponent: PasswordFieldComponentFactory = (material) =>

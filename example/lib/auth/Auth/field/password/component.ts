@@ -1,8 +1,9 @@
 import { PasswordField } from "../../../common/field/password/action"
 
+import { PasswordFieldEvent } from "../../../common/field/password/event"
+
 import {
     PasswordFieldError,
-    PasswordFieldEvent,
     PasswordCharacter,
     simplePassword,
     PasswordView,

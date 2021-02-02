@@ -1,5 +1,4 @@
-import { Password } from "../../password/data"
-import { InputValue, Content, Valid } from "../data"
+import { InputValue } from "../data"
 
 // complex : 2バイト以上の文字を含むか？
 export type PasswordCharacter =
@@ -17,11 +16,3 @@ export function showPassword(password: InputValue): PasswordView {
 }
 
 export type PasswordFieldError = "empty" | "too-long"
-
-export type PasswordFieldEvent = Readonly<{
-    type: "succeed-to-update"
-    result: Valid<PasswordFieldError>
-    content: Content<Password>
-    character: PasswordCharacter
-    view: PasswordView
-}>

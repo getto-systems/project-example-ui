@@ -1,8 +1,9 @@
 import { PasswordFieldPod, PasswordField } from "../action"
 
+import { PasswordFieldEvent } from "../event"
+
 import { markPassword } from "../../../password/data"
 import {
-    PasswordFieldEvent,
     PasswordFieldError,
     PasswordCharacter,
     simplePassword,
