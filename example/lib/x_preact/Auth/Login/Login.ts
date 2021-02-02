@@ -39,16 +39,16 @@ export function Login({ login: { view, terminate } }: Props): VNode {
             return EMPTY_CONTENT
 
         case "renew-credential":
-            return h(RenewCredential, state)
+            return h(RenewCredential, state.resource)
 
         case "password-login":
-            return h(PasswordLogin, state)
+            return h(PasswordLogin, state.resource)
 
         case "password-reset-session":
-            return h(PasswordResetSession, state)
+            return h(PasswordResetSession, state.resource)
 
         case "password-reset":
-            return h(PasswordReset, state)
+            return h(PasswordReset, state.resource)
 
         case "error":
             return h(ApplicationError, { err: state.err })

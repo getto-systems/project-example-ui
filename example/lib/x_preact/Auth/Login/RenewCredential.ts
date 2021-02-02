@@ -19,10 +19,8 @@ import { initialRenewCredentialState } from "../../../auth/Auth/renewCredential/
 
 import { RenewError } from "../../../auth/login/renew/data"
 
-type Props = Readonly<{
-    resource: RenewCredentialResource
-}>
-export function RenewCredential({ resource: { renewCredential } }: Props): VNode {
+type Props = RenewCredentialResource
+export function RenewCredential({ renewCredential }: Props): VNode {
     const state = useComponent(renewCredential, initialRenewCredentialState)
     useEffect(() => {
         renewCredential.renew()

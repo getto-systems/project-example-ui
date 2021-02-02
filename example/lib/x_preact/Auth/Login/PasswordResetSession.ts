@@ -2,7 +2,7 @@ import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
 import { VNodeContent } from "../../../z_external/getto-css/preact/common"
-import { buttons, button_send, fieldError } from "../../../z_external/getto-css/preact/design/form"
+import { buttons, button_send, fieldError, form } from "../../../z_external/getto-css/preact/design/form"
 import { loginBox } from "../../../z_external/getto-css/preact/layout/login"
 import { v_medium } from "../../../z_external/getto-css/preact/design/alignment"
 
@@ -25,26 +25,20 @@ import {
     SendTokenError,
 } from "../../../auth/profile/passwordReset/data"
 
-type Props = Readonly<{
-    resource: PasswordResetSessionResource
-}>
-export function PasswordResetSession({
-    resource: { passwordResetSession, loginIDField },
-}: Props): VNode {
+type Props = PasswordResetSessionResource
+export function PasswordResetSession(resource: Props): VNode {
+    const { passwordResetSession } = resource
     const state = useComponent(passwordResetSession, initialPasswordResetSessionState)
 
     switch (state.type) {
         case "initial-reset-session":
-            return startSessionForm({ button: startSessionButton() })
+            return startSessionForm({ state: "start" })
 
         case "failed-to-start-session":
-            return startSessionForm({
-                button: startSessionButton(),
-                error: startSessionError(state.err),
-            })
+            return startSessionForm({ state: "start", error: startSessionError(state.err) })
 
         case "try-to-start-session":
-            return startSessionForm({ button: startSessionButton_connecting() })
+            return startSessionForm({ state: "connecting" })
 
         case "delayed-to-start-session":
             return delayedMessage()
@@ -59,33 +53,61 @@ export function PasswordResetSession({
             return successMessage(state.dest)
 
         case "failed-to-check-status":
-            return errorMessage(html`ステータスの取得に失敗しました`, checkStatusError(state.err))
+            return errorMessage("ステータスの取得に失敗しました", checkStatusError(state.err))
 
         case "failed-to-send-token":
-            return errorMessage(html`リセットトークンの送信に失敗しました`, sendTokenError(state.err))
+            return errorMessage("リセットトークンの送信に失敗しました", sendTokenError(state.err))
 
         case "error":
             return h(ApplicationError, { err: state.err })
     }
 
+    type StartSessionFormState = "start" | "connecting"
+
     type StartSessionFormContent =
         | StartSessionFormContent_base
         | (StartSessionFormContent_base & StartSessionFormContent_error)
-    type StartSessionFormContent_base = Readonly<{ button: VNode }>
+    type StartSessionFormContent_base = Readonly<{ state: StartSessionFormState }>
     type StartSessionFormContent_error = Readonly<{ error: VNodeContent[] }>
 
+    function startSessionTitle() {
+        return "パスワードリセット"
+    }
+
     function startSessionForm(content: StartSessionFormContent): VNode {
-        return loginBox(siteInfo(), {
-            title: startSessionTitle(),
-            body: form([h(LoginIDField, { loginIDField })]),
-            footer: [
-                buttons({
-                    left: content.button,
-                    right: loginLink(),
-                }),
-                error(),
-            ],
-        })
+        return form(
+            loginBox(siteInfo(), {
+                title: startSessionTitle(),
+                body: [h(LoginIDField, resource)],
+                footer: [buttons({ left: button(), right: loginLink() }), error()],
+            })
+        )
+
+        function button() {
+            switch (content.state) {
+                case "start":
+                    return startSessionButton()
+
+                case "connecting":
+                    return connectingButton()
+            }
+
+            function startSessionButton() {
+                // TODO field に入力されて、すべて OK なら state: confirm にしたい
+                return button_send({ state: "normal", label: "トークン送信", onClick })
+
+                function onClick(e: Event) {
+                    e.preventDefault()
+                    passwordResetSession.startSession()
+                }
+            }
+            function connectingButton(): VNode {
+                return button_send({
+                    state: "connect",
+                    label: html`トークンを送信しています ${spinner}`,
+                })
+            }
+        }
 
         function error() {
             if ("error" in content) {
@@ -147,23 +169,6 @@ export function PasswordResetSession({
             ],
             footer: buttons({ right: loginLink() }),
         })
-    }
-
-    function startSessionTitle() {
-        return "パスワードリセット"
-    }
-
-    function startSessionButton() {
-        // TODO field に入力されて、すべて OK なら state: confirm にしたい
-        return button_send({ state: "normal", label: "トークン送信", onClick })
-
-        function onClick(e: Event) {
-            e.preventDefault()
-            passwordResetSession.startSession()
-        }
-    }
-    function startSessionButton_connecting(): VNode {
-        return button_send({ state: "connect", label: html`トークンを送信しています ${spinner}` })
     }
 
     function loginLink(): VNode {
@@ -233,10 +238,6 @@ function sendTokenError(err: SendTokenError): VNodeContent[] {
         case "infra-error":
             return ["サーバーエラーによりリセットトークンの送信に失敗しました", `(詳細: ${err.err})`]
     }
-}
-
-function form(content: VNodeContent) {
-    return html`<form>${content}</form>`
 }
 
 const EMPTY_CONTENT = html``

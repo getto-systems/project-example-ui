@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { VNodeContent } from "../../../z_external/getto-css/preact/common"
 import { loginBox } from "../../../z_external/getto-css/preact/layout/login"
-import { buttons, button_send, fieldError } from "../../../z_external/getto-css/preact/design/form"
+import { buttons, button_send, fieldError, form } from "../../../z_external/getto-css/preact/design/form"
 
 import { useComponent } from "../../common/hooks"
 import { siteInfo } from "../../common/site"
@@ -22,12 +22,9 @@ import { initialPasswordLoginState } from "../../../auth/Auth/passwordLogin/comp
 
 import { LoginError } from "../../../auth/login/passwordLogin/data"
 
-type Props = Readonly<{
-    resource: PasswordLoginResource
-}>
-export function PasswordLogin({
-    resource: { passwordLogin, loginIDField, passwordField },
-}: Props): VNode {
+type Props = PasswordLoginResource
+export function PasswordLogin(resource: Props): VNode {
+    const { passwordLogin } = resource
     const state = useComponent(passwordLogin, initialPasswordLoginState)
 
     useEffect(() => {
@@ -48,13 +45,13 @@ export function PasswordLogin({
 
     switch (state.type) {
         case "initial-login":
-            return loginForm({ button: loginButton() })
+            return loginForm({ state: "login" })
 
         case "failed-to-login":
-            return loginForm({ button: loginButton(), error: loginError(state.err) })
+            return loginForm({ state: "login", error: loginError(state.err) })
 
         case "try-to-login":
-            return loginForm({ button: loginButton_connecting() })
+            return loginForm({ state: "connecting" })
 
         case "delayed-to-login":
             return delayedMessage()
@@ -71,22 +68,47 @@ export function PasswordLogin({
             return h(ApplicationError, { err: state.err })
     }
 
+    type LoginFormState = "login" | "connecting"
+
     type LoginFormContent = LoginFormContent_base | (LoginFormContent_base & LoginFormContent_error)
-    type LoginFormContent_base = Readonly<{ button: VNode }>
+    type LoginFormContent_base = Readonly<{ state: LoginFormState }>
     type LoginFormContent_error = Readonly<{ error: VNodeContent[] }>
 
+    function loginTitle() {
+        return "ログイン"
+    }
+
     function loginForm(content: LoginFormContent): VNode {
-        return loginBox(siteInfo(), {
-            title: loginTitle(),
-            body: form([h(LoginIDField, { loginIDField }), h(PasswordField, { passwordField })]),
-            footer: [
-                buttons({
-                    left: content.button,
-                    right: resetLink(),
-                }),
-                error(),
-            ],
-        })
+        return form(
+            loginBox(siteInfo(), {
+                title: loginTitle(),
+                body: [h(LoginIDField, resource), h(PasswordField, resource)],
+                footer: [buttons({ left: button(), right: resetLink() }), error()],
+            })
+        )
+
+        function button() {
+            switch (content.state) {
+                case "login":
+                    return loginButton()
+
+                case "connecting":
+                    return connectingButton()
+            }
+
+            function loginButton() {
+                // TODO field に入力されて、すべて OK なら state: confirm にしたい
+                return button_send({ state: "normal", label: "ログイン", onClick })
+
+                function onClick(e: Event) {
+                    e.preventDefault()
+                    passwordLogin.login()
+                }
+            }
+            function connectingButton(): VNode {
+                return button_send({ state: "connect", label: html`ログインしています ${spinner}` })
+            }
+        }
 
         function error() {
             if ("error" in content) {
@@ -110,27 +132,10 @@ export function PasswordLogin({
         })
     }
 
-    function loginTitle() {
-        return "ログイン"
-    }
-
     function resetLink() {
         return html`<a href="${passwordLogin.link.passwordResetSession()}">
             ${icon("question-circle")} パスワードがわからない方
         </a>`
-    }
-
-    function loginButton() {
-        // TODO field に入力されて、すべて OK なら state: confirm にしたい
-        return button_send({ state: "normal", label: "ログイン", onClick })
-
-        function onClick(e: Event) {
-            e.preventDefault()
-            passwordLogin.login()
-        }
-    }
-    function loginButton_connecting(): VNode {
-        return button_send({ state: "connect", label: html`ログインしています ${spinner}` })
     }
 }
 
@@ -154,10 +159,6 @@ function loginError(err: LoginError): VNodeContent[] {
         case "infra-error":
             return ["ネットワークエラーにより認証に失敗しました", `(詳細: ${err.err})`]
     }
-}
-
-function form(content: VNodeContent) {
-    return html`<form>${content}</form>`
 }
 
 const EMPTY_CONTENT = html``

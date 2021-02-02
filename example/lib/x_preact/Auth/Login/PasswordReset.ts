@@ -22,12 +22,9 @@ import { initialPasswordResetState } from "../../../auth/Auth/passwordReset/comp
 
 import { ResetError } from "../../../auth/profile/passwordReset/data"
 
-type Props = Readonly<{
-    resource: PasswordResetResource
-}>
-export function PasswordReset({
-    resource: { passwordReset, loginIDField, passwordField },
-}: Props): VNode {
+type Props = PasswordResetResource
+export function PasswordReset(resource: Props): VNode {
+    const { passwordReset } = resource
     const state = useComponent(passwordReset, initialPasswordResetState)
 
     useEffect(() => {
@@ -48,13 +45,13 @@ export function PasswordReset({
 
     switch (state.type) {
         case "initial-reset":
-            return resetForm({ button: resetButton() })
+            return resetForm({ state: "reset" })
 
         case "failed-to-reset":
-            return resetForm({ button: resetButton(), error: resetError(state.err) })
+            return resetForm({ state: "reset", error: resetError(state.err) })
 
         case "try-to-reset":
-            return resetForm({ button: resetButton_connecting() })
+            return resetForm({ state: "connecting" })
 
         case "delayed-to-reset":
             return delayedMessage()
@@ -71,22 +68,50 @@ export function PasswordReset({
             return h(ApplicationError, { err: state.err })
     }
 
+    type ResetFormState = "reset" | "connecting"
+
     type ResetFormContent = ResetFormContent_base | (ResetFormContent_base & ResetFormContent_error)
-    type ResetFormContent_base = Readonly<{ button: VNode }>
+    type ResetFormContent_base = Readonly<{ state: ResetFormState }>
     type ResetFormContent_error = Readonly<{ error: VNodeContent[] }>
 
+    function resetTitle() {
+        return "パスワードリセット"
+    }
+
     function resetForm(content: ResetFormContent): VNode {
-        return loginBox(siteInfo(), {
-            title: resetTitle(),
-            body: form([h(LoginIDField, { loginIDField }), h(PasswordField, { passwordField })]),
-            footer: [
-                buttons({
-                    left: content.button,
-                    right: sendLink(),
-                }),
-                error(),
-            ],
-        })
+        return form(
+            loginBox(siteInfo(), {
+                title: resetTitle(),
+                body: [h(LoginIDField, resource), h(PasswordField, resource)],
+                footer: [buttons({ left: button(), right: sendLink() }), error()],
+            })
+        )
+
+        function button() {
+            switch (content.state) {
+                case "reset":
+                    return resetButton()
+
+                case "connecting":
+                    return connectingButton()
+            }
+
+            function resetButton() {
+                // TODO field に入力されて、すべて OK なら state: confirm にしたい
+                return button_send({ state: "normal", label: "パスワードリセット", onClick })
+
+                function onClick(e: Event) {
+                    e.preventDefault()
+                    passwordReset.reset()
+                }
+            }
+            function connectingButton(): VNode {
+                return button_send({
+                    state: "connect",
+                    label: html`パスワードをリセットしています ${spinner}`,
+                })
+            }
+        }
 
         function error() {
             if ("error" in content) {
@@ -110,27 +135,10 @@ export function PasswordReset({
         })
     }
 
-    function resetTitle() {
-        return "パスワードリセット"
-    }
-
     function sendLink() {
         return html`<a href="${passwordReset.link.passwordResetSession()}">
             ${icon("question-circle")} パスワードがわからない方
         </a>`
-    }
-
-    function resetButton() {
-        // TODO field に入力されて、すべて OK なら state: confirm にしたい
-        return button_send({ state: "normal", label: "パスワードリセット", onClick })
-
-        function onClick(e: Event) {
-            e.preventDefault()
-            passwordReset.reset()
-        }
-    }
-    function resetButton_connecting(): VNode {
-        return button_send({ state: "connect", label: html`パスワードをリセットしています ${spinner}` })
     }
 }
 
