@@ -1,4 +1,6 @@
-import { ApiNonce, ApiRoles, LoadResult } from "./data"
+import { LoadResult } from "./event"
+
+import { ApiNonce, ApiRoles } from "./data"
 
 export type LoadApiNonceInfra = Readonly<{
     apiCredentials: ApiCredentialRepository

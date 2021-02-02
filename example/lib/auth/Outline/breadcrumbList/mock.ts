@@ -1,5 +1,5 @@
 import { iconClass, lnir } from "../../../z_external/icon"
-import { MockComponent } from "../../../z_external/mock/component"
+import { MockComponent } from "../../../sub/getto-example/application/mock"
 
 import { BreadcrumbListComponent, BreadcrumbListState } from "./component"
 

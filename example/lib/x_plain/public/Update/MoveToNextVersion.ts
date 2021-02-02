@@ -10,7 +10,7 @@ export function MoveToNextVersion({ moveToNextVersion: { resource, terminate } }
     // /${version}/index.html とかで実行する
     const { nextVersion } = resource
     try {
-        nextVersion.onStateChange(handleState)
+        nextVersion.addStateHandler(handleState)
 
         nextVersion.find()
     } catch (err) {

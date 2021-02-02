@@ -1,4 +1,5 @@
-import { LoginIDFieldEvent } from "./data"
+import { LoginIDFieldEvent } from "./event"
+
 import { InputValue } from "../data"
 
 export type LoginIDFieldAction = Readonly<{

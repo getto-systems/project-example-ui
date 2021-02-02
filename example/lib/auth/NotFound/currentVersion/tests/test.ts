@@ -6,7 +6,7 @@ describe("NotFound", () => {
     test("load current version", (done) => {
         const { resource } = standardResource()
 
-        resource.currentVersion.onStateChange(stateHandler())
+        resource.currentVersion.addStateHandler(stateHandler())
 
         resource.currentVersion.load()
 

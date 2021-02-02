@@ -50,7 +50,7 @@ import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../../l
 
 import { LoginLinkFactory } from "../../../link"
 
-import { LoginEntryPoint } from "../../view"
+import { LoginEntryPoint } from "../../entryPoint"
 import { RenewCredentialComponentFactory } from "../../../renewCredential/component"
 import { PasswordLoginComponentFactory } from "../../../passwordLogin/component"
 import { PasswordResetSessionComponentFactory } from "../../../passwordResetSession/component"
@@ -73,8 +73,8 @@ import {
 import { LoginIDFieldAction } from "../../../../common/field/loginID/action"
 import { PasswordFieldAction } from "../../../../common/field/password/action"
 
-import { LoginEvent } from "../../../../login/passwordLogin/data"
-import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../profile/passwordReset/data"
+import { LoginEvent } from "../../../../login/passwordLogin/event"
+import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../profile/passwordReset/event"
 
 import {
     ForegroundMessage,
@@ -85,7 +85,7 @@ import {
     StartSessionProxyMessage,
     CheckStatusProxyMessage,
     ResetProxyMessage,
-} from "./data"
+} from "./message"
 
 export function newLoginAsWorkerForeground(): LoginEntryPoint {
     const credentialStorage = localStorage
@@ -310,6 +310,7 @@ function initLoginAsForeground(
     }
     function terminate() {
         worker.terminate()
+        view.terminate()
     }
 }
 

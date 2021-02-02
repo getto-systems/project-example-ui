@@ -11,7 +11,7 @@ import { detectMenuTarget } from "../../../../auth/Outline/Menu/impl/location"
 import { loadApiNonce, loadApiRoles } from "../../../../auth/common/credential/impl/core"
 import { loadSeason } from "../../../shared/season/impl/core"
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../../auth/permission/menu/impl/core"
-import { mainMenuTree } from "../../../../auth/Outline/Menu/main/menuTree"
+import { mainMenuTree } from "../../../../auth/Outline/Menu/impl/menu/menuTree"
 
 import { initDateClock } from "../../../../z_infra/clock/date"
 import { initMemoryApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential/memory"
@@ -19,7 +19,7 @@ import { initMemorySeasonRepository } from "../../../shared/season/impl/reposito
 import { initSimulateMenuBadgeClient } from "../../../../auth/permission/menu/impl/client/menuBadge/simulate"
 import { initStorageMenuExpandRepository } from "../../../../auth/permission/menu/impl/repository/menuExpand/storage"
 
-import { DashboardEntryPoint } from "../view"
+import { DashboardEntryPoint } from "../entryPoint"
 
 import { CredentialAction } from "../../../../auth/common/credential/action"
 import { MenuAction } from "../../../../auth/permission/menu/action"
@@ -39,9 +39,9 @@ export function newDashboardAsSingle(): DashboardEntryPoint {
             season: initSeasonAction(),
         },
         components: {
-            seasonInfo: initSeasonInfoComponent,
             menuList: initMenuListComponent,
             breadcrumbList: initBreadcrumbListComponent,
+            seasonInfo: initSeasonInfoComponent,
 
             example: initExampleComponent,
         },
@@ -51,10 +51,15 @@ export function newDashboardAsSingle(): DashboardEntryPoint {
             getMenuTarget: () => detectMenuTarget(env.version, currentURL),
         },
     }
+    const resource = initDashboardResource(factory, collector)
     return {
-        resource: initDashboardResource(factory, collector),
+        resource,
         terminate: () => {
-            // worker とインターフェイスを合わせるために必要
+            resource.menuList.terminate()
+            resource.breadcrumbList.terminate()
+            resource.seasonInfo.terminate()
+
+            resource.example.terminate()
         },
     }
 }

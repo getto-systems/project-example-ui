@@ -3,7 +3,7 @@ import { h, VNode } from "preact"
 import { newMoveToNextVersion } from "../../update/Update/MoveToNextVersion/mock"
 import { mapNextVersionMockProps, NextVersionMockProps } from "../../update/Update/nextVersion/mock"
 
-import { MoveToLatestVersion } from "../../x_preact/Update/MoveToLatestVersion"
+import { MoveToLatestVersion } from "../../x_preact/Update/MoveToLatestVersion/MoveToLatestVersion"
 
 export default {
     title: "Update/MoveToNextVersion",

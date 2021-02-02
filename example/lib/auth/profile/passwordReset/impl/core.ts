@@ -2,7 +2,9 @@ import { StartSessionInfra, CheckStatusInfra, ResetInfra } from "../infra"
 
 import { StartSessionPod, CheckStatusPod, ResetPod } from "../action"
 
-import { SessionID, CheckStatusEvent, CheckStatusError } from "../data"
+import { CheckStatusEvent } from "../event"
+
+import { SessionID, CheckStatusError } from "../data"
 
 export const startSession = (infra: StartSessionInfra): StartSessionPod => (collector) => async (
     post

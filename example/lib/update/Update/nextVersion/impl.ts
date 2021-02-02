@@ -1,3 +1,5 @@
+import { ApplicationBaseComponent } from "../../../sub/getto-example/application/impl"
+
 import {
     NextVersionComponentFactory,
     NextVersionMaterial,
@@ -8,20 +10,12 @@ import {
 export const initNextVersionComponent: NextVersionComponentFactory = (material) =>
     new Component(material)
 
-class Component implements NextVersionComponent {
+class Component extends ApplicationBaseComponent<NextVersionState> implements NextVersionComponent {
     material: NextVersionMaterial
 
-    listener: Post<NextVersionState>[] = []
-
     constructor(material: NextVersionMaterial) {
+        super()
         this.material = material
-    }
-
-    onStateChange(post: Post<NextVersionState>): void {
-        this.listener.push(post)
-    }
-    post(state: NextVersionState): void {
-        this.listener.forEach((post) => post(state))
     }
 
     find(): void {
@@ -29,8 +23,4 @@ class Component implements NextVersionComponent {
             this.post(event)
         })
     }
-}
-
-interface Post<T> {
-    (state: T): void
 }

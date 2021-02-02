@@ -28,7 +28,7 @@ export function loginIDFieldError(result: Valid<LoginIDFieldError>): VNode[] {
     return result.err.map((err) => {
         switch (err) {
             case "empty":
-                return html`<p class="form__message">ログインIDを入力してください</p>`
+                return html`<p class="form__notice">ログインIDを入力してください</p>`
         }
     })
 }

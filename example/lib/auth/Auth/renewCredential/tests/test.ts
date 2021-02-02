@@ -37,7 +37,7 @@ describe("RenewCredential", () => {
     test("instant load", (done) => {
         const { repository, clock, resource } = instantRenewCredentialResource()
 
-        resource.renewCredential.onStateChange(stateHandler())
+        resource.renewCredential.addStateHandler(stateHandler())
 
         resource.renewCredential.renew()
 
@@ -94,7 +94,7 @@ describe("RenewCredential", () => {
     test("instant load failed", (done) => {
         const { repository, clock, resource } = instantRenewCredentialResource()
 
-        resource.renewCredential.onStateChange(stateHandler())
+        resource.renewCredential.addStateHandler(stateHandler())
 
         resource.renewCredential.renew()
 
@@ -155,7 +155,7 @@ describe("RenewCredential", () => {
     test("renew stored credential", (done) => {
         const { repository, clock, resource } = standardRenewCredentialResource()
 
-        resource.renewCredential.onStateChange(stateHandler())
+        resource.renewCredential.addStateHandler(stateHandler())
 
         resource.renewCredential.renew()
 
@@ -210,7 +210,7 @@ describe("RenewCredential", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitRenewCredentialResource()
 
-        resource.renewCredential.onStateChange(stateHandler())
+        resource.renewCredential.addStateHandler(stateHandler())
 
         resource.renewCredential.renew()
 
@@ -266,7 +266,7 @@ describe("RenewCredential", () => {
         // empty credential
         const { repository, resource } = emptyRenewCredentialResource()
 
-        resource.renewCredential.onStateChange(stateHandler())
+        resource.renewCredential.addStateHandler(stateHandler())
 
         resource.renewCredential.renew()
 
@@ -311,7 +311,7 @@ describe("RenewCredential", () => {
     test("load error", (done) => {
         const { resource } = standardRenewCredentialResource()
 
-        resource.renewCredential.onStateChange(stateHandler())
+        resource.renewCredential.addStateHandler(stateHandler())
 
         resource.renewCredential.loadError({ type: "infra-error", err: "load error" })
 

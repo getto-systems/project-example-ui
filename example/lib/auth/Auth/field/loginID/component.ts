@@ -1,6 +1,10 @@
 import { LoginIDField } from "../../../common/field/loginID/action"
 
-import { LoginIDFieldError, LoginIDFieldEvent } from "../../../common/field/loginID/data"
+import { LoginIDFieldEvent } from "../../../common/field/loginID/event"
+
+import { LoginIDFieldError } from "../../../common/field/loginID/data"
+import { ApplicationComponent } from "../../../../sub/getto-example/application/component"
+
 import { InputValue, Valid, noError } from "../../../common/field/data"
 
 export interface LoginIDFieldComponentFactory {
@@ -10,12 +14,12 @@ export type LoginIDFieldMaterial = Readonly<{
     loginID: LoginIDField
 }>
 
-export interface LoginIDFieldComponent {
-    onStateChange(post: Post<LoginIDFieldState>): void
+export interface LoginIDFieldComponent extends ApplicationComponent<LoginIDFieldState> {
     set(inputValue: InputValue): void
-    validate(post: Post<LoginIDFieldEvent>): void
+    validate(handler: Handler<LoginIDFieldEvent>): void
 }
 
+// TODO variant が 1つなら type いらない
 export type LoginIDFieldState = Readonly<{ type: "succeed-to-update"; result: Valid<LoginIDFieldError> }>
 
 export const initialLoginIDFieldState: LoginIDFieldState = {
@@ -23,6 +27,6 @@ export const initialLoginIDFieldState: LoginIDFieldState = {
     result: noError(),
 }
 
-interface Post<T> {
+interface Handler<T> {
     (state: T): void
 }

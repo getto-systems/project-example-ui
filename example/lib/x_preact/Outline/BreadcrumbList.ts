@@ -1,6 +1,18 @@
 import { VNode } from "preact"
-import { useState, useEffect } from "preact/hooks"
+import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
+
+import {
+    mainBreadcrumbLink,
+    mainBreadcrumb,
+    mainBreadcrumbSeparator,
+} from "../../z_external/getto-css/preact/layout/app"
+
+import { useComponent } from "../common/hooks"
+import { siteInfo } from "../common/site"
+import { icon } from "../common/icon"
+
+import { MENU_ID } from "./MenuList"
 
 import {
     BreadcrumbListComponent,
@@ -13,63 +25,54 @@ type Props = Readonly<{
     breadcrumbList: BreadcrumbListComponent
 }>
 export function BreadcrumbList({ breadcrumbList }: Props): VNode {
-    const [state, setState] = useState(initialBreadcrumbListState)
+    const state = useComponent(breadcrumbList, initialBreadcrumbListState)
     useEffect(() => {
-        breadcrumbList.onStateChange(setState)
         breadcrumbList.load()
     }, [])
 
     switch (state.type) {
         case "initial-breadcrumb-list":
-            return HIDDEN_CONTENT
+            return mainBreadcrumb(EMPTY_CONTENT)
 
         case "succeed-to-load":
             return content(state.breadcrumb)
     }
 }
 
-// ロード時にカクつかないように透明なコンテンツを表示
-// 高さをそろえるためにアイコンを選択（たぶん一番高いのがアイコン）
-const HIDDEN_CONTENT = html`<p class="main__breadcrumb">
-    <a class="main__breadcrumb__item visibility_hidden"><i class="lnir lnir-home"></i></a>
-</p>`
-
 function content(breadcrumb: Breadcrumb): VNode {
-    return html`<p class="main__breadcrumb">${breadcrumbNodes(breadcrumb)}</p>`
+    return mainBreadcrumb(breadcrumbNodes(breadcrumb))
 }
 function breadcrumbNodes(breadcrumb: Breadcrumb): VNode[] {
-    return insertSeparator(breadcrumb.map(toNode))
+    return [breadcrumbTop()].concat(breadcrumb.map((node) => withSeparator(...map(node))))
 
-    function toNode(node: BreadcrumbNode): VNode {
+    function map(node: BreadcrumbNode): [string, VNode] {
         switch (node.type) {
             case "category":
-                return breadcrumbCategory(node.category)
+                return [node.category.label, breadcrumbCategory(node.category)]
 
             case "item":
-                return breadcrumbItem(node.item)
+                return [node.item.href, breadcrumbItem(node.item)]
         }
     }
-    function insertSeparator(nodes: VNode[]): VNode[] {
-        return nodes.reduce((acc, item) => {
-            if (acc.length > 0) {
-                acc.push(SEPARATOR)
-            }
-            acc.push(item)
-            return acc
-        }, [] as VNode[])
-    }
 }
-function breadcrumbCategory(category: MenuCategory): VNode {
-    const { label } = category
-    // href="#menu" は menu の id="menu" と対応
-    // mobile レイアウトで menu に移動
-    return html`<a class="main__breadcrumb__item" href="#menu" key="${label}">${label}</a>`
+function breadcrumbTop(): VNode {
+    return mainBreadcrumbLink(CATEGORY_HREF, siteInfo().title)
 }
-function breadcrumbItem(item: MenuItem): VNode {
-    const { label, icon, href } = item
-    const inner = html`<i class="${icon}"></i> ${label}`
-    return html`<a class="main__breadcrumb__item" href="${href}" key="${href}">${inner}</a>`
+function breadcrumbCategory({ label }: MenuCategory): VNode {
+    return mainBreadcrumbLink(CATEGORY_HREF, label)
 }
-const SEPARATOR: VNode = html`
-    <span class="main__breadcrumb__separator"><i class="lnir lnir-chevron-right"></i></span>
-`
+function breadcrumbItem({ label, icon, href }: MenuItem): VNode {
+    const content = html`<i class="${icon}"></i> ${label}`
+    return mainBreadcrumbLink(href, content)
+}
+
+function withSeparator(key: string, content: VNode): VNode {
+    return html`<span class="noWrap" key=${key}>${SEPARATOR}${content}</span>`
+}
+
+// カテゴリーのリンク href="#menu" は menu の id="menu" と対応
+// mobile レイアウトで menu の位置に移動
+const CATEGORY_HREF = `#${MENU_ID}`
+const SEPARATOR = mainBreadcrumbSeparator(icon("chevron-right"))
+
+const EMPTY_CONTENT = html``

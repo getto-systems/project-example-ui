@@ -1,4 +1,4 @@
-import { FindCurrentVersionEvent } from "./data"
+import { FindCurrentVersionEvent } from "./event"
 
 export type CurrentVersionAction = Readonly<{
     findCurrentVersion: FindCurrentVersionPod

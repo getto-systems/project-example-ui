@@ -2,7 +2,9 @@ import { h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../common/layout"
+import { VNodeContent } from "../../z_external/getto-css/preact/common"
+import { appMain, mainBody, mainHeader, mainTitle } from "../../z_external/getto-css/preact/layout/app"
+
 import { BreadcrumbList } from "../Outline/BreadcrumbList"
 
 import { ContentComponent, initialContentState } from "../../document/Document/content/component"
@@ -20,7 +22,7 @@ export function Content(resource: Props): VNode {
     const [state, setState] = useState(initialContentState)
     const [loadContentState, setLoadContentState] = useState(initialLoadContentState)
     useEffect(() => {
-        content.onStateChange(setState)
+        content.addStateHandler(setState)
         content.load()
     }, [])
 
@@ -43,13 +45,10 @@ export function Content(resource: Props): VNode {
             if (!loadContentState.loaded) {
                 return EMPTY_CONTENT
             }
-            return html`
-                <header class="main__header">
-                    <h1 class="main__title">${documentTitle(state.path)}</h1>
-                    ${h(BreadcrumbList, resource)}
-                </header>
-                <section class="main__body">${loadContentState.content}</section>
-            `
+            return appMain({
+                header: mainHeader([mainTitle(documentTitle(state.path)), h(BreadcrumbList, resource)]),
+                body: mainBody(loadContentState.content),
+            })
     }
 }
 
@@ -59,8 +58,8 @@ const initialLoadContentState: LoadContentState = { loaded: false }
 function documentTitle(path: ContentPath): string {
     return findEntry(path).title
 }
-async function loadContent(path: ContentPath, hook: Post<VNodeContent>) {
-    hook(await findEntry(path).content())
+async function loadContent(path: ContentPath, post: Post<VNodeContent>) {
+    post(await findEntry(path).content())
 }
 function findEntry(path: ContentPath): ContentEntry {
     const entry = contentMap[path]

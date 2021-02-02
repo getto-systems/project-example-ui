@@ -1,3 +1,5 @@
+import { ApplicationComponent } from "../../../sub/getto-example/application/component"
+
 import { RenewCredentialComponent } from "../renewCredential/component"
 
 import { PasswordLoginComponent } from "../passwordLogin/component"
@@ -12,8 +14,7 @@ export type LoginEntryPoint = Readonly<{
     terminate: Terminate
 }>
 
-export interface LoginView {
-    onStateChange(post: Post<LoginState>): void
+export interface LoginView extends ApplicationComponent<LoginState> {
     load(): void
 }
 
@@ -47,9 +48,6 @@ export type PasswordResetResource = Readonly<{
     passwordField: PasswordFieldComponent
 }>
 
-interface Post<T> {
-    (state: T): void
-}
 interface Terminate {
     (): void
 }

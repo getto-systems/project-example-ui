@@ -12,7 +12,7 @@ import { initContentComponent } from "../../content/impl"
 import { ApiCredentialRepository } from "../../../../auth/common/credential/infra"
 import { MenuExpandRepository, MenuTree } from "../../../../auth/permission/menu/infra"
 
-import { DocumentResource } from "../view"
+import { DocumentResource } from "../entryPoint"
 import { ContentAction } from "../../../content/action"
 import { loadContent } from "../../../content/impl/core"
 import { detectContentPath } from "../impl/location"

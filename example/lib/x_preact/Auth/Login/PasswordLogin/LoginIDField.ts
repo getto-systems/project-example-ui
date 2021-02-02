@@ -1,6 +1,9 @@
 import { VNode } from "preact"
-import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
+
+import { field, field_error, label_text_fill } from "../../../../z_external/getto-css/preact/design/form"
+
+import { useComponent } from "../../../common/hooks"
 
 import { loginIDFieldError, loginIDFieldHandler } from "../field/loginID"
 
@@ -13,22 +16,22 @@ type Props = Readonly<{
     loginIDField: LoginIDFieldComponent
 }>
 export function LoginIDField({ loginIDField }: Props): VNode {
-    const [state, setState] = useState(initialLoginIDFieldState)
-    useEffect(() => {
-        loginIDField.onStateChange(setState)
-    }, [])
+    const state = useComponent(loginIDField, initialLoginIDFieldState)
 
-    const handler = loginIDFieldHandler(loginIDField)
+    return label_text_fill(content())
 
-    return html`
-        <label>
-            <dl class="form ${state.result.valid ? "" : "form_error"}">
-                <dt class="form__header">ログインID</dt>
-                <dd class="form__field">
-                    <input type="text" class="input_fill" onInput=${handler.onInput} />
-                    ${loginIDFieldError(state.result)}
-                </dd>
-            </dl>
-        </label>
-    `
+    function content() {
+        const { onInput } = loginIDFieldHandler(loginIDField)
+
+        const content = {
+            title: "ログインID",
+            body: html`<input type="text" onInput=${onInput} />`,
+        }
+
+        if (state.result.valid) {
+            return field(content)
+        } else {
+            return field_error({ ...content, notice: loginIDFieldError(state.result) })
+        }
+    }
 }

@@ -11,10 +11,11 @@ module.exports = {
     "!lib/**/tests/**",
     "!lib/**/main/**",
     "!lib/**/impl/*/**",
-    "!lib/**/view.ts",
+    "!lib/**/entryPoint.ts",
     "!lib/**/component.ts",
     "!lib/**/infra.ts",
     "!lib/**/mock.ts",
+    "!lib/sub/getto-example/application/impl.ts",
   ],
   "coverageThreshold": {
     "global": {

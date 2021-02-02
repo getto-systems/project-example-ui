@@ -13,7 +13,7 @@ import { SessionSimulator } from "../../../profile/passwordReset/impl/client/ses
 import { ApplicationActionConfig } from "../../../common/application/infra"
 import { PasswordResetSessionActionConfig } from "../../../profile/passwordReset/infra"
 
-import { PasswordResetSessionResource } from "../../Login/view"
+import { PasswordResetSessionResource } from "../../Login/entryPoint"
 
 export type PasswordResetSessionConfig = {
     application: ApplicationActionConfig

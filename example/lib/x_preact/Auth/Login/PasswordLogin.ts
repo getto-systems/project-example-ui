@@ -1,8 +1,15 @@
 import { h, VNode } from "preact"
-import { useState, useEffect, useRef } from "preact/hooks"
+import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { loginHeader } from "../../common/layout"
+import { VNodeContent } from "../../../z_external/getto-css/preact/common"
+import { loginBox } from "../../../z_external/getto-css/preact/layout/login"
+import { buttons, button_send, fieldError, form } from "../../../z_external/getto-css/preact/design/form"
+
+import { useComponent } from "../../common/hooks"
+import { siteInfo } from "../../common/site"
+import { icon, spinner } from "../../common/icon"
+
 import { appendScript } from "./script"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
@@ -10,23 +17,15 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 import { LoginIDField } from "./PasswordLogin/LoginIDField"
 import { PasswordField } from "./PasswordLogin/PasswordField"
 
-import { PasswordLoginResource } from "../../../auth/Auth/Login/view"
+import { PasswordLoginResource } from "../../../auth/Auth/Login/entryPoint"
 import { initialPasswordLoginState } from "../../../auth/Auth/passwordLogin/component"
 
 import { LoginError } from "../../../auth/login/passwordLogin/data"
 
-type Props = Readonly<{
-    resource: PasswordLoginResource
-}>
-export function PasswordLogin({
-    resource: { passwordLogin, loginIDField, passwordField },
-}: Props): VNode {
-    const [state, setState] = useState(initialPasswordLoginState)
-    // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
-    const submit = useRef<HTMLButtonElement>()
-    useEffect(() => {
-        passwordLogin.onStateChange(setState)
-    }, [])
+type Props = PasswordLoginResource
+export function PasswordLogin(resource: Props): VNode {
+    const { passwordLogin } = resource
+    const state = useComponent(passwordLogin, initialPasswordLoginState)
 
     useEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useEffect で行う
@@ -44,74 +43,18 @@ export function PasswordLogin({
         }
     }, [state])
 
-    function view(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
-        const loginFields = html`
-            <section>
-                <big>
-                    <section class="login__body">
-                        ${h(LoginIDField, { loginIDField })} ${h(PasswordField, { passwordField })}
-                    </section>
-                </big>
-            </section>
-        `
-
-        const loginFooter = html`
-            <footer class="login__footer">
-                <div class="button__container">
-                    <div>
-                        <big>${button}</big>
-                    </div>
-                    <div class="login__link">
-                        <a href="${passwordLogin.link.passwordResetSession()}">
-                            <i class="lnir lnir-question-circle"></i> パスワードがわからない方
-                        </a>
-                    </div>
-                </div>
-                ${footer}
-            </footer>
-        `
-
-        return html`
-            <aside class="login">
-                <form class="login__box" onSubmit="${onSubmit}">
-                    ${loginHeader()} ${loginFields} ${loginFooter}
-                </form>
-            </aside>
-        `
-    }
-
     switch (state.type) {
         case "initial-login":
-            return view(onSubmit_login, loginButton(), html``)
+            return loginForm({ state: "login" })
 
         case "failed-to-login":
-            return view(
-                onSubmit_login,
-                loginButton(),
-                html` <aside>${formMessage("form_error", loginError(state.err))}</aside> `
-            )
+            return loginForm({ state: "login", error: loginError(state.err) })
 
         case "try-to-login":
-            return view(onSubmit_noop, loginButton_connecting(), html``)
+            return loginForm({ state: "connecting" })
 
         case "delayed-to-login":
-            return view(
-                onSubmit_noop,
-                loginButton_connecting(),
-                html`
-                    <aside>
-                        ${formMessage(
-                            "form_warning",
-                            html`
-                                <p class="form__message">認証に時間がかかっています</p>
-                                <p class="form__message">
-                                    30秒以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
-                                </p>
-                            `
-                        )}
-                    </aside>
-                `
-            )
+            return delayedMessage()
 
         case "try-to-load":
             // スクリプトのロードは appendChild する必要があるため useEffect で行う
@@ -125,71 +68,97 @@ export function PasswordLogin({
             return h(ApplicationError, { err: state.err })
     }
 
-    function loginButton() {
-        return html`<button ref="${submit}" class="button button_save">ログイン</button>`
-    }
-    function loginButton_connecting(): VNode {
-        return html`
-            <button type="button" class="button button_saving">
-                ログインしています ${" "}
-                <i class="lnir lnir-spinner lnir-is-spinning"></i>
-            </button>
-        `
+    type LoginFormState = "login" | "connecting"
+
+    type LoginFormContent = LoginFormContent_base | (LoginFormContent_base & LoginFormContent_error)
+    type LoginFormContent_base = Readonly<{ state: LoginFormState }>
+    type LoginFormContent_error = Readonly<{ error: VNodeContent[] }>
+
+    function loginTitle() {
+        return "ログイン"
     }
 
-    function onSubmit_login(e: Event) {
-        e.preventDefault()
+    function loginForm(content: LoginFormContent): VNode {
+        return form(
+            loginBox(siteInfo(), {
+                title: loginTitle(),
+                body: [h(LoginIDField, resource), h(PasswordField, resource)],
+                footer: [buttons({ left: button(), right: resetLink() }), error()],
+            })
+        )
 
-        if (submit.current) {
-            submit.current.blur()
+        function button() {
+            switch (content.state) {
+                case "login":
+                    return loginButton()
+
+                case "connecting":
+                    return connectingButton()
+            }
+
+            function loginButton() {
+                // TODO field に入力されて、すべて OK なら state: confirm にしたい
+                return button_send({ state: "normal", label: "ログイン", onClick })
+
+                function onClick(e: Event) {
+                    e.preventDefault()
+                    passwordLogin.login()
+                }
+            }
+            function connectingButton(): VNode {
+                return button_send({ state: "connect", label: html`ログインしています ${spinner}` })
+            }
         }
 
-        passwordLogin.login()
+        function error() {
+            if ("error" in content) {
+                return fieldError(content.error)
+            }
+            return ""
+        }
     }
-    function onSubmit_noop(e: Event) {
-        e.preventDefault()
+    function delayedMessage() {
+        return loginBox(siteInfo(), {
+            title: loginTitle(),
+            body: [
+                html`<p>${spinner} 認証中です</p>`,
+                html`<p>
+                    30秒以上かかる場合は何かがおかしいので、
+                    <br />
+                    お手数ですが管理者に連絡お願いします
+                </p>`,
+            ],
+            footer: buttons({ right: resetLink() }),
+        })
+    }
+
+    function resetLink() {
+        return html`<a href="${passwordLogin.link.passwordResetSession()}">
+            ${icon("question-circle")} パスワードがわからない方
+        </a>`
     }
 }
 
-function formMessage(messageClass: string, content: VNode): VNode {
-    return html`
-        <div class="vertical vertical_small"></div>
-        <dl class="${messageClass}">
-            <dd>${content}</dd>
-        </dl>
-    `
-}
-
-function loginError(err: LoginError): VNode {
+function loginError(err: LoginError): VNodeContent[] {
     switch (err.type) {
         case "validation-error":
-            return html`<p class="form__message">正しく入力してください</p>`
+            return ["正しく入力してください"]
 
         case "bad-request":
-            return html`<p class="form__message">アプリケーションエラーにより認証に失敗しました</p>`
+            return ["アプリケーションエラーにより認証に失敗しました"]
 
         case "invalid-password-login":
-            return html`<p class="form__message">ログインIDかパスワードが違います</p>`
+            return ["ログインIDかパスワードが違います"]
 
         case "server-error":
-            return html`<p class="form__message">サーバーエラーにより認証に失敗しました</p>`
+            return ["サーバーエラーにより認証に失敗しました"]
 
         case "bad-response":
-            return html`
-                <p class="form__message">レスポンスエラーにより認証に失敗しました</p>
-                <p class="form__message">(詳細: ${err.err})</p>
-            `
+            return ["レスポンスエラーにより認証に失敗しました", `(詳細: ${err.err})`]
 
         case "infra-error":
-            return html`
-                <p class="form__message">ネットワークエラーにより認証に失敗しました</p>
-                <p class="form__message">(詳細: ${err.err})</p>
-            `
+            return ["ネットワークエラーにより認証に失敗しました", `(詳細: ${err.err})`]
     }
 }
 
 const EMPTY_CONTENT = html``
-
-interface Post<T> {
-    (state: T): void
-}

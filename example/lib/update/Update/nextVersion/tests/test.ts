@@ -12,7 +12,7 @@ describe("NextVersion", () => {
     test("up to date", (done) => {
         const { resource } = standardNextVersionResource()
 
-        resource.nextVersion.onStateChange(stateHandler())
+        resource.nextVersion.addStateHandler(stateHandler())
 
         resource.nextVersion.find()
 
@@ -69,7 +69,7 @@ describe("NextVersion", () => {
     test("up to date; delayed", (done) => {
         const { resource } = waitNextVersionResource()
 
-        resource.nextVersion.onStateChange(stateHandler())
+        resource.nextVersion.addStateHandler(stateHandler())
 
         resource.nextVersion.find()
 
@@ -127,7 +127,7 @@ describe("NextVersion", () => {
     test("found next minor version", (done) => {
         const { resource } = foundNextVersionResource(["1.1.0"])
 
-        resource.nextVersion.onStateChange(stateHandler())
+        resource.nextVersion.addStateHandler(stateHandler())
 
         resource.nextVersion.find()
 
@@ -184,7 +184,7 @@ describe("NextVersion", () => {
     test("found next patch version", (done) => {
         const { resource } = foundNextVersionResource(["1.0.1"])
 
-        resource.nextVersion.onStateChange(stateHandler())
+        resource.nextVersion.addStateHandler(stateHandler())
 
         resource.nextVersion.find()
 
@@ -241,7 +241,7 @@ describe("NextVersion", () => {
     test("found next minor version; recursive", (done) => {
         const { resource } = foundNextVersionResource(["1.1.0", "1.2.0"])
 
-        resource.nextVersion.onStateChange(stateHandler())
+        resource.nextVersion.addStateHandler(stateHandler())
 
         resource.nextVersion.find()
 
@@ -298,7 +298,7 @@ describe("NextVersion", () => {
     test("found next patch version; recursive", (done) => {
         const { resource } = foundNextVersionResource(["1.0.1", "1.0.2"])
 
-        resource.nextVersion.onStateChange(stateHandler())
+        resource.nextVersion.addStateHandler(stateHandler())
 
         resource.nextVersion.find()
 
@@ -355,7 +355,7 @@ describe("NextVersion", () => {
     test("found next patch version; complex", (done) => {
         const { resource } = foundNextVersionResource(["1.1.0", "1.1.1"])
 
-        resource.nextVersion.onStateChange(stateHandler())
+        resource.nextVersion.addStateHandler(stateHandler())
 
         resource.nextVersion.find()
 
@@ -412,7 +412,7 @@ describe("NextVersion", () => {
     test("found next patch version; complex skipped", (done) => {
         const { resource } = foundNextVersionResource(["1.1.0", "1.1.1", "1.1.3"])
 
-        resource.nextVersion.onStateChange(stateHandler())
+        resource.nextVersion.addStateHandler(stateHandler())
 
         resource.nextVersion.find()
 
@@ -469,7 +469,7 @@ describe("NextVersion", () => {
     test("found next minor version; complex current version", (done) => {
         const { resource } = foundComplexNextVersionResource(["1.1.0"])
 
-        resource.nextVersion.onStateChange(stateHandler())
+        resource.nextVersion.addStateHandler(stateHandler())
 
         resource.nextVersion.find()
 
@@ -526,7 +526,7 @@ describe("NextVersion", () => {
     test("invalid version url", (done) => {
         const { resource } = invalidVersionNextVersionResource()
 
-        resource.nextVersion.onStateChange(stateHandler())
+        resource.nextVersion.addStateHandler(stateHandler())
 
         resource.nextVersion.find()
 

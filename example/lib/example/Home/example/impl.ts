@@ -1,21 +1,15 @@
+import { ApplicationBaseComponent } from "../../../sub/getto-example/application/impl"
+
 import { ExampleMaterial, ExampleComponent, ExampleState, ExampleComponentFactory } from "./component"
 
 export const initExampleComponent: ExampleComponentFactory = (material) => new Component(material)
 
-class Component implements ExampleComponent {
+class Component extends ApplicationBaseComponent<ExampleState> implements ExampleComponent {
     material: ExampleMaterial
 
-    listener: Post<ExampleState>[] = []
-
     constructor(material: ExampleMaterial) {
+        super()
         this.material = material
-    }
-
-    onStateChange(post: Post<ExampleState>): void {
-        this.listener.push(post)
-    }
-    post(state: ExampleState): void {
-        this.listener.forEach((post) => post(state))
     }
 
     load(): void {
@@ -23,8 +17,4 @@ class Component implements ExampleComponent {
             this.post(event)
         })
     }
-}
-
-interface Post<T> {
-    (state: T): void
 }

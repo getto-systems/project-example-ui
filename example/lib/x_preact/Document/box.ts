@@ -1,24 +1,13 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { VNodeContent, label_alert, label_pending, v_medium, v_small } from "../common/layout"
+import { VNodeContent } from "../../z_external/getto-css/preact/common"
+import { v_medium, v_small } from "../../z_external/getto-css/preact/design/alignment"
+import { label_alert, label_pending } from "../../z_external/getto-css/preact/design/highlight"
+import { box } from "../../z_external/getto-css/preact/design/box"
+import { field } from "../../z_external/getto-css/preact/design/form"
 
-export function box(title: VNodeContent, content: VNodeContent): VNode {
-    return box_content("", title, content)
-}
-export function box_double(title: VNodeContent, content: VNodeContent): VNode {
-    return box_content("box_double", title, content)
-}
-function box_content(boxClass: string, title: VNodeContent, content: VNodeContent): VNode {
-    return html`<section class="box ${boxClass}">
-        <div>
-            <header class="box__header">
-                <h2 class="box__title">${title}</h2>
-            </header>
-            <section class="box__body paragraph">${content}</section>
-        </div>
-    </section>`
-}
+import { icon } from "../common/icon"
 
 export function itemsSection(title: VNodeContent, list: VNodeContent[]): VNode {
     return html`
@@ -40,31 +29,14 @@ export function items(list: VNodeContent[]): VNode {
 }
 
 export function negativeNote(content: VNodeContent, resolve: VNodeContent): VNode {
-    return iconSection("lnir lnir-close", content, resolve)
+    return iconSection(icon("close"), content, resolve)
 }
-export function iconSection(icon: string, content: VNodeContent, note: VNodeContent): VNode {
+export function iconSection(icon: VNode, content: VNodeContent, note: VNodeContent): VNode {
     return html`
-        <p><i class="${icon}"></i> ${content}</p>
+        <p>${icon} ${content}</p>
         <small><p>${note}</p></small>
         ${v_small()}
     `
-}
-
-export function form(title: VNodeContent, content: VNodeContent): VNode {
-    return html`
-        <dl class="form">
-            <dt class="form__header">${title}</dt>
-            <dd class="form__field">${content}</dd>
-        </dl>
-    `
-}
-
-export function formWithHelp(title: VNodeContent, content: VNodeContent, help: VNodeContent[]): VNode {
-    return form(title, html`${content} ${help.map(toFormHelp)}`)
-
-    function toFormHelp(message: VNodeContent) {
-        return html`<p class="form__help">${message}</p>`
-    }
 }
 
 export function pending(content: VNodeContent): VNode {
@@ -72,4 +44,67 @@ export function pending(content: VNodeContent): VNode {
 }
 export function validate(content: VNodeContent): VNode {
     return html`${label_alert("検証")} ${content}`
+}
+
+export const hr: VNode = html`<hr />`
+
+const contentServer = html`${icon("database")} コンテンツサーバー`
+const apiServer = html`${icon("cogs")} API サーバー`
+const browser = html`${icon("display")} ブラウザ`
+const textMessage = html`${icon("envelope")} テキストメッセージクライアント`
+
+export function serverClients(): VNode {
+    return box({
+        title: "前提とするサーバー・クライアント",
+        body: [
+            iconSection(icon("database"), "コンテンツサーバー", "（CDN : CloudFront など）"),
+            iconSection(icon("cogs"), "API サーバー", "（アプリケーションサーバー）"),
+            iconSection(icon("display"), "http クライアント", "（ブラウザ、スマホアプリ）"),
+            iconSection(icon("envelope"), "テキストメッセージクライアント", "（メール、slack）"),
+        ],
+    })
+}
+
+export function inBrowser(content: VNodeContent, help: VNodeContent[]): VNode {
+    return field({ title: browser, body: content, help })
+}
+
+export function toContentServer(content: VNodeContent, help: VNodeContent[]): VNode {
+    return toServer(contentServer, content, help)
+}
+export function inContentServer(content: VNodeContent, help: VNodeContent[]): VNode {
+    return field({ title: contentServer, body: content, help })
+}
+
+export function toApiServer(content: VNodeContent, help: VNodeContent[]): VNode {
+    return toServer(apiServer, content, help)
+}
+export function inApiServer(content: VNodeContent, help: VNodeContent[]): VNode {
+    return field({ title: apiServer, body: content, help })
+}
+export function fromApiServer(content: VNodeContent, help: VNodeContent[]): VNode {
+    return fromServer(apiServer, content, help)
+}
+
+export function toTextMessage(content: VNodeContent, help: VNodeContent[]): VNode {
+    return field({
+        title: html`${apiServer} ${icon("arrow-right")} ${textMessage}`,
+        body: content,
+        help,
+    })
+}
+
+function toServer(server: VNodeContent, content: VNodeContent, help: VNodeContent[]) {
+    return field({
+        title: html`${browser} ${icon("arrow-right")} ${server}`,
+        body: content,
+        help,
+    })
+}
+function fromServer(server: VNodeContent, content: VNodeContent, help: VNodeContent[]) {
+    return field({
+        title: html`${server} ${icon("arrow-right")} ${browser}`,
+        body: content,
+        help,
+    })
 }

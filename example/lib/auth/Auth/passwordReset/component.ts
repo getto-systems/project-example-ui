@@ -1,3 +1,5 @@
+import { ApplicationComponent } from "../../../sub/getto-example/application/component"
+
 import { LoginLink } from "../link"
 
 import { Reset } from "../../profile/passwordReset/action"
@@ -19,9 +21,8 @@ export type PasswordResetMaterial = Readonly<{
     secureScriptPath: SecureScriptPath
 }>
 
-export interface PasswordResetComponent {
+export interface PasswordResetComponent extends ApplicationComponent<PasswordResetState> {
     readonly link: LoginLink
-    onStateChange(post: Post<PasswordResetState>): void
     reset(): void
     loadError(err: LoadError): void
 }
@@ -37,7 +38,3 @@ export type PasswordResetState =
     | Readonly<{ type: "error"; err: string }>
 
 export const initialPasswordResetState: PasswordResetState = { type: "initial-reset" }
-
-interface Post<T> {
-    (state: T): void
-}

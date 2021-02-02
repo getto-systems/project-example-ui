@@ -1,8 +1,8 @@
 import { h, VNode } from "preact"
-import { useState, useEffect, useErrorBoundary } from "preact/hooks"
+import { useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useTerminate } from "../../common/hooks"
+import { useComponent, useTerminate } from "../../common/hooks"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
@@ -12,14 +12,14 @@ import { PasswordLogin } from "./PasswordLogin"
 import { PasswordResetSession } from "./PasswordResetSession"
 import { PasswordReset } from "./PasswordReset"
 
-import { LoginEntryPoint, initialLoginState } from "../../../auth/Auth/Login/view"
+import { LoginEntryPoint, initialLoginState } from "../../../auth/Auth/Login/entryPoint"
 
 type Props = Readonly<{
     login: LoginEntryPoint
 }>
 export function Login({ login: { view, terminate } }: Props): VNode {
     const [err] = useErrorBoundary((err) => {
-        // ここでエラーをどこかに投げたい、けど認証前なのでこれでお茶を濁す
+        // 認証前なのでエラーはどうしようもない
         console.log(err)
     })
 
@@ -29,9 +29,8 @@ export function Login({ login: { view, terminate } }: Props): VNode {
 
     useTerminate(terminate)
 
-    const [state, setState] = useState(initialLoginState)
+    const state = useComponent(view, initialLoginState)
     useEffect(() => {
-        view.onStateChange(setState)
         view.load()
     }, [])
 
@@ -40,16 +39,16 @@ export function Login({ login: { view, terminate } }: Props): VNode {
             return EMPTY_CONTENT
 
         case "renew-credential":
-            return h(RenewCredential, state)
+            return h(RenewCredential, state.resource)
 
         case "password-login":
-            return h(PasswordLogin, state)
+            return h(PasswordLogin, state.resource)
 
         case "password-reset-session":
-            return h(PasswordResetSession, state)
+            return h(PasswordResetSession, state.resource)
 
         case "password-reset":
-            return h(PasswordReset, state)
+            return h(PasswordReset, state.resource)
 
         case "error":
             return h(ApplicationError, { err: state.err })

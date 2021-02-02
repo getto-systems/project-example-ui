@@ -47,7 +47,7 @@ describe("PasswordLogin", () => {
     test("submit valid login-id and password", (done) => {
         const { repository, clock, resource } = standardPasswordLoginResource()
 
-        resource.passwordLogin.onStateChange(stateHandler())
+        resource.passwordLogin.addStateHandler(stateHandler())
 
         resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
         resource.passwordField.set(markInputValue(VALID_LOGIN.password))
@@ -100,7 +100,7 @@ describe("PasswordLogin", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitPasswordLoginResource()
 
-        resource.passwordLogin.onStateChange(stateHandler())
+        resource.passwordLogin.addStateHandler(stateHandler())
 
         resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
         resource.passwordField.set(markInputValue(VALID_LOGIN.password))
@@ -153,7 +153,7 @@ describe("PasswordLogin", () => {
     test("submit without fields", (done) => {
         const { repository, resource } = standardPasswordLoginResource()
 
-        resource.passwordLogin.onStateChange(stateHandler())
+        resource.passwordLogin.addStateHandler(stateHandler())
 
         // try to login without fields
         //resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
@@ -201,7 +201,7 @@ describe("PasswordLogin", () => {
     test("load error", (done) => {
         const { resource } = standardPasswordLoginResource()
 
-        resource.passwordLogin.onStateChange(stateHandler())
+        resource.passwordLogin.addStateHandler(stateHandler())
 
         resource.passwordLogin.loadError({ type: "infra-error", err: "load error" })
 
@@ -246,7 +246,7 @@ describe("PasswordLogin", () => {
             test("invalid with empty string", (done) => {
                 const { resource } = standardPasswordLoginResource()
 
-                resource.loginIDField.onStateChange(stateHandler())
+                resource.loginIDField.addStateHandler(stateHandler())
 
                 resource.loginIDField.set(markInputValue(""))
 
@@ -266,7 +266,7 @@ describe("PasswordLogin", () => {
             test("invalid with empty string", (done) => {
                 const { resource } = standardPasswordLoginResource()
 
-                resource.passwordField.onStateChange(stateHandler())
+                resource.passwordField.addStateHandler(stateHandler())
 
                 resource.passwordField.set(markInputValue(""))
 
@@ -284,7 +284,7 @@ describe("PasswordLogin", () => {
             test("invalid with too long string", (done) => {
                 const { resource } = standardPasswordLoginResource()
 
-                resource.passwordField.onStateChange(stateHandler())
+                resource.passwordField.addStateHandler(stateHandler())
 
                 resource.passwordField.set(markInputValue("a".repeat(73)))
 
@@ -302,7 +302,7 @@ describe("PasswordLogin", () => {
             test("invalid with too long string including multi-byte character", (done) => {
                 const { resource } = standardPasswordLoginResource()
 
-                resource.passwordField.onStateChange(stateHandler())
+                resource.passwordField.addStateHandler(stateHandler())
 
                 // "あ"(UTF8) is 3 bytes character
                 resource.passwordField.set(markInputValue("あ".repeat(24) + "a"))
@@ -321,7 +321,7 @@ describe("PasswordLogin", () => {
             test("valid with just 72 byte string", (done) => {
                 const { resource } = standardPasswordLoginResource()
 
-                resource.passwordField.onStateChange(stateHandler())
+                resource.passwordField.addStateHandler(stateHandler())
 
                 resource.passwordField.set(markInputValue("a".repeat(72)))
 
@@ -339,7 +339,7 @@ describe("PasswordLogin", () => {
             test("valid with just 72 byte string including multi-byte character", (done) => {
                 const { resource } = standardPasswordLoginResource()
 
-                resource.passwordField.onStateChange(stateHandler())
+                resource.passwordField.addStateHandler(stateHandler())
 
                 // "あ"(UTF8) is 3 bytes character
                 resource.passwordField.set(markInputValue("あ".repeat(24)))
@@ -358,7 +358,7 @@ describe("PasswordLogin", () => {
             test("show/hide password", (done) => {
                 const { resource } = standardPasswordLoginResource()
 
-                resource.passwordField.onStateChange(stateHandler())
+                resource.passwordField.addStateHandler(stateHandler())
 
                 resource.passwordField.set(markInputValue("password"))
                 resource.passwordField.show()

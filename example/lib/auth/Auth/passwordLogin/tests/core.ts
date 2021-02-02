@@ -27,7 +27,7 @@ import { ApplicationActionConfig } from "../../../common/application/infra"
 import { PasswordLoginActionConfig } from "../../../login/passwordLogin/infra"
 import { SetContinuousRenewActionConfig, AuthCredentialRepository } from "../../../login/renew/infra"
 
-import { PasswordLoginResource } from "../../Login/view"
+import { PasswordLoginResource } from "../../Login/entryPoint"
 
 export type PasswordLoginConfig = {
     application: ApplicationActionConfig

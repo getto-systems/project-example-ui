@@ -9,7 +9,7 @@ import { initContentComponent } from "../../content/impl"
 
 import { loadApiNonce, loadApiRoles } from "../../../../auth/common/credential/impl/core"
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../../auth/permission/menu/impl/core"
-import { documentMenuTree } from "../../../../auth/Outline/Menu/main/menuTree"
+import { documentMenuTree } from "../../../../auth/Outline/Menu/impl/menu/menuTree"
 import { loadContent } from "../../../content/impl/core"
 import { DocumentCollector, DocumentFactory, initDocumentResource } from "../impl/core"
 
@@ -17,7 +17,7 @@ import { initMemoryApiCredentialRepository } from "../../../../auth/common/crede
 import { initNoopBadgeClient } from "../../../../auth/permission/menu/impl/client/menuBadge/noop"
 import { initStorageMenuExpandRepository } from "../../../../auth/permission/menu/impl/repository/menuExpand/storage"
 
-import { DocumentEntryPoint } from "../view"
+import { DocumentEntryPoint } from "../entryPoint"
 
 import { markApiNonce, markApiRoles } from "../../../../auth/common/credential/data"
 import { CredentialAction } from "../../../../auth/common/credential/action"
@@ -49,10 +49,13 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
             getContentPath: () => detectContentPath(env.version, currentURL),
         },
     }
+    const resource = initDocumentResource(factory, collector)
     return {
-        resource: initDocumentResource(factory, collector),
+        resource ,
         terminate: () => {
-            // worker とインターフェイスを合わせるために必要
+            resource.menuList.terminate()
+            resource.breadcrumbList.terminate()
+            resource.content.terminate()
         },
     }
 }

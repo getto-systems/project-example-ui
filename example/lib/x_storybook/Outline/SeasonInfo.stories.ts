@@ -1,8 +1,19 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
+import { siteInfo } from "../../x_preact/common/site"
+import {
+    appLayout,
+    appMain,
+    appMenu,
+    mainBody,
+    mainHeader,
+    mainTitle,
+    menuFooter,
+    menuHeader,
+} from "../../z_external/getto-css/preact/layout/app"
+
 import { SeasonInfo } from "../../x_preact/Outline/SeasonInfo"
-import { menuHeader } from "../../x_preact/common/layout"
 
 import {
     mapSeasonMockProps,
@@ -28,11 +39,24 @@ const Template: Story<MockProps> = (args) => {
 
     function Preview(props: { args: MockProps }) {
         seasonInfo.update(mapSeasonMockProps(props.args))
-        return html`<main class="layout">
-            <aside class="layout__menu menu">
-                ${menuHeader()} ${h(SeasonInfo, { seasonInfo })}
-            </aside>
-        </main>`
+        return html`
+            <style>
+                .sb-main-padded {
+                    padding: 0 !important;
+                }
+            </style>
+            ${app()}
+        `
+
+        function app() {
+            return appLayout({
+                main: appMain({
+                    header: mainHeader([mainTitle("タイトル")]),
+                    body: mainBody("コンテンツ"),
+                }),
+                menu: appMenu([menuHeader(siteInfo()), h(SeasonInfo, { seasonInfo }), menuFooter()]),
+            })
+        }
     }
 }
 

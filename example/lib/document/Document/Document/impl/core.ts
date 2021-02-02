@@ -1,4 +1,4 @@
-import { DocumentResource } from "../view"
+import { DocumentResource } from "../entryPoint"
 
 import { MenuListComponentFactory } from "../../../../auth/Outline/menuList/component"
 import { BreadcrumbListComponentFactory } from "../../../../auth/Outline/breadcrumbList/component"

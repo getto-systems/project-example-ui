@@ -31,11 +31,11 @@ import {
     PasswordResetSessionAction,
 } from "../../../../profile/passwordReset/action"
 
+import { LoginEvent } from "../../../../login/passwordLogin/event"
+import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../../profile/passwordReset/event"
+
 import { markTicketNonce, markAuthAt, markApiCredential } from "../../../../common/credential/data"
 import { markSessionID } from "../../../../profile/passwordReset/data"
-
-import { LoginEvent } from "../../../../login/passwordLogin/data"
-import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../../profile/passwordReset/data"
 
 import {
     ForegroundMessage,
@@ -46,7 +46,7 @@ import {
     StartSessionProxyMessage,
     CheckStatusProxyMessage,
     ResetProxyMessage,
-} from "./data"
+} from "./message"
 
 export function initLoginWorker(worker: Worker): void {
     const authClient = initAuthClient(env.authServerURL)
@@ -57,7 +57,7 @@ export function initLoginWorker(worker: Worker): void {
         passwordReset: initPasswordResetAction(newPasswordResetActionConfig()),
     }
 
-    return initLoginWorkerAsBackground(material, worker)
+    initLoginWorkerAsBackground(material, worker)
 }
 
 export function initPasswordLoginAction(

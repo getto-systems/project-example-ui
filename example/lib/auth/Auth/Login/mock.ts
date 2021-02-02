@@ -1,4 +1,4 @@
-import { MockComponent } from "../../../z_external/mock/component"
+import { MockComponent } from "../../../sub/getto-example/application/mock"
 
 import { initRenewCredential } from "../renewCredential/mock"
 import { initPasswordLogin } from "../passwordLogin/mock"
@@ -7,7 +7,7 @@ import { initPasswordReset } from "../passwordReset/mock"
 import { initLoginIDField } from "../field/loginID/mock"
 import { initPasswordField } from "../field/password/mock"
 
-import { LoginEntryPoint, LoginView, LoginState } from "./view"
+import { LoginEntryPoint, LoginView, LoginState } from "./entryPoint"
 import { initialRenewCredentialState, RenewCredentialState } from "../renewCredential/component"
 import { initialPasswordLoginState, PasswordLoginState } from "../passwordLogin/component"
 import { initialLoginIDFieldState, LoginIDFieldState } from "../field/loginID/component"

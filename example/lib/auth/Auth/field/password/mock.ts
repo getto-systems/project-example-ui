@@ -1,4 +1,4 @@
-import { MockComponent } from "../../../../z_external/mock/component"
+import { MockComponent } from "../../../../sub/getto-example/application/mock"
 
 import { PasswordFieldComponent, PasswordFieldState } from "./component"
 

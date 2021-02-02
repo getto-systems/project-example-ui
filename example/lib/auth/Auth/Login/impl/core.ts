@@ -1,3 +1,5 @@
+import { ApplicationBaseComponent } from "../../../../sub/getto-example/application/impl"
+
 import { LoginLinkFactory } from "../../link"
 
 import {
@@ -8,7 +10,7 @@ import {
     PasswordLoginResource,
     PasswordResetSessionResource,
     PasswordResetResource,
-} from "../view"
+} from "../entryPoint"
 
 import {
     RenewCredentialComponentFactory,
@@ -43,22 +45,14 @@ import { LoginFields } from "../../../login/passwordLogin/data"
 import { StartSessionFields, ResetFields } from "../../../profile/passwordReset/data"
 import { Content, invalidContent, validContent } from "../../../common/field/data"
 
-export class View implements LoginView {
-    listener: Post<LoginState>[] = []
-
+export class View extends ApplicationBaseComponent<LoginState> implements LoginView {
     collector: LoginViewCollector
     components: LoginResourceFactory
 
     constructor(collector: LoginViewCollector, components: LoginResourceFactory) {
+        super()
         this.collector = collector
         this.components = components
-    }
-
-    onStateChange(post: Post<LoginState>): void {
-        this.listener.push(post)
-    }
-    post(state: LoginState): void {
-        this.listener.forEach((post) => post(state))
     }
 
     load(): void {
@@ -74,7 +68,7 @@ export class View implements LoginView {
     }
 
     hookCredentialStateChange(renewCredential: RenewCredentialComponent): void {
-        renewCredential.onStateChange((state) => {
+        renewCredential.addStateHandler((state) => {
             switch (state.type) {
                 case "required-to-login":
                     this.post(this.mapLoginView(this.collector.login.getLoginView()))

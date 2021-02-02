@@ -23,7 +23,7 @@ describe("Example", () => {
     test("load season", (done) => {
         const { resource } = standardResource()
 
-        resource.example.onStateChange(stateHandler())
+        resource.example.addStateHandler(stateHandler())
 
         resource.example.load()
 

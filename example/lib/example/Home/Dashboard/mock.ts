@@ -1,11 +1,11 @@
-import { MockComponent } from "../../../z_external/mock/component"
+import { MockComponent } from "../../../sub/getto-example/application/mock"
 
 import { initBreadcrumbListComponent } from "../../../auth/Outline/breadcrumbList/mock"
 import { initMenuListComponent } from "../../../auth/Outline/menuList/mock"
 import { initSeasonInfoComponent } from "../../Outline/seasonInfo/mock"
 import { initExampleComponent } from "../example/mock"
 
-import { DashboardEntryPoint } from "./view"
+import { DashboardEntryPoint } from "./entryPoint"
 
 import {
     BreadcrumbListState,

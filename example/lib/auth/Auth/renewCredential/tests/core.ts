@@ -23,7 +23,7 @@ import {
     AuthCredentialRepository,
 } from "../../../login/renew/infra"
 
-import { RenewCredentialResource } from "../../Login/view"
+import { RenewCredentialResource } from "../../Login/entryPoint"
 
 import { RenewCredentialComponent } from "../component"
 

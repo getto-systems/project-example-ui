@@ -1,7 +1,9 @@
 import { LoginIDFieldPod, LoginIDField } from "../action"
 
+import { LoginIDFieldEvent } from "../event"
+
 import { markLoginID } from "../../../loginID/data"
-import { LoginIDFieldEvent, LoginIDFieldError } from "../data"
+import { LoginIDFieldError } from "../data"
 import { InputValue, markInputValue, validContent, invalidContent, hasError } from "../../data"
 
 function validateLoginID(loginID: string): LoginIDFieldError[] {

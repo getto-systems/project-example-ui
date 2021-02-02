@@ -1,14 +1,20 @@
 import { h, VNode } from "preact"
-import { useState, useEffect, useRef } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { loginHeader, fullScreenError } from "../../common/layout"
+import { VNodeContent } from "../../../z_external/getto-css/preact/common"
+import { buttons, button_send, fieldError, form } from "../../../z_external/getto-css/preact/design/form"
+import { loginBox } from "../../../z_external/getto-css/preact/layout/login"
+import { v_medium } from "../../../z_external/getto-css/preact/design/alignment"
+
+import { useComponent } from "../../common/hooks"
+import { siteInfo } from "../../common/site"
+import { icon, spinner } from "../../common/icon"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { LoginIDField } from "./PasswordResetSession/LoginIDField"
 
-import { PasswordResetSessionResource } from "../../../auth/Auth/Login/view"
+import { PasswordResetSessionResource } from "../../../auth/Auth/Login/entryPoint"
 import { initialPasswordResetSessionState } from "../../../auth/Auth/passwordResetSession/component"
 
 import {
@@ -19,270 +25,219 @@ import {
     SendTokenError,
 } from "../../../auth/profile/passwordReset/data"
 
-type Props = Readonly<{
-    resource: PasswordResetSessionResource
-}>
-export function PasswordResetSession({
-    resource: { passwordResetSession, loginIDField },
-}: Props): VNode {
-    const [state, setState] = useState(initialPasswordResetSessionState)
-    // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
-    const submit = useRef<HTMLButtonElement>()
-    useEffect(() => {
-        passwordResetSession.onStateChange(setState)
-    }, [])
-
-    function startSessionView(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
-        return html`
-            <aside class="login">
-                <form class="login__box" onSubmit="${onSubmit}">
-                    ${loginHeader()}
-                    <section>
-                        <big>
-                            <section class="login__body">${h(LoginIDField, { loginIDField })}</section>
-                        </big>
-                    </section>
-                    <footer class="login__footer">
-                        <div class="button__container">
-                            <div>
-                                <big>${button}</big>
-                            </div>
-                            ${loginLink()}
-                        </div>
-                        ${footer}
-                    </footer>
-                </form>
-            </aside>
-        `
-    }
-    function checkStatusView(content: VNode): VNode {
-        return html`
-            <aside class="login">
-                <section class="login__box">
-                    ${loginHeader()}
-                    <section>
-                        <big>
-                            <section class="loading loading_login">
-                                <i class="lnir lnir-spinner lnir-is-spinning"></i>
-                                ${content}
-                            </section>
-                        </big>
-                    </section>
-                    <footer class="login__footer button__container"></footer>
-                </section>
-            </aside>
-        `
-    }
-    function errorView(title: VNode, content: VNode): VNode {
-        return fullScreenError(
-            title,
-            html`
-                ${content}
-                <div class="vertical vertical_medium"></div>
-                <p>お手数ですが、上記メッセージを管理者にお伝えください</p>
-            `,
-            html`
-                <section class="button__container">
-                    <div></div>
-                    ${loginLink()}
-                </section>
-            `
-        )
-    }
+type Props = PasswordResetSessionResource
+export function PasswordResetSession(resource: Props): VNode {
+    const { passwordResetSession } = resource
+    const state = useComponent(passwordResetSession, initialPasswordResetSessionState)
 
     switch (state.type) {
         case "initial-reset-session":
-            return startSessionView(onSubmit_startSession, startSessionButton(), html``)
+            return startSessionForm({ state: "start" })
 
         case "failed-to-start-session":
-            return startSessionView(
-                onSubmit_startSession,
-                startSessionButton(),
-                html` <aside>${formMessage("form_error", startSessionError(state.err))}</aside> `
-            )
+            return startSessionForm({ state: "start", error: startSessionError(state.err) })
 
         case "try-to-start-session":
-            return startSessionView(onSubmit_noop, startSessionButton_connecting(), html``)
+            return startSessionForm({ state: "connecting" })
 
         case "delayed-to-start-session":
-            return startSessionView(
-                onSubmit_noop,
-                startSessionButton_connecting(),
-                html`
-                    <aside>
-                        ${formMessage(
-                            "form_warning",
-                            html`
-                                <p class="form__message">トークンの送信に時間がかかっています</p>
-                                <p class="form__message">
-                                    30秒以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
-                                </p>
-                            `
-                        )}
-                    </aside>
-                `
-            )
+            return delayedMessage()
 
         case "try-to-check-status":
-            return checkStatusView(html`
-                <p class="loading__message">リセットトークンを送信しています</p>
-            `)
+            return checkStatusMessage({ type: "initial" })
 
         case "retry-to-check-status":
-            return checkStatusView(html`
-                <p class="loading__message">リセットトークンを送信しています</p>
-                ${status(state.dest, state.status)}
-            `)
-
-        case "failed-to-check-status":
-            return errorView(html`ステータスの取得に失敗しました`, checkStatusError(state.err))
-
-        case "failed-to-send-token":
-            return errorView(html`リセットトークンの送信に失敗しました`, sendTokenError(state.err))
+            return checkStatusMessage({ type: "retry", dest: state.dest, status: state.status })
 
         case "succeed-to-send-token":
-            return fullScreenError(
-                html`リセットトークンを送信しました`,
-                sendTokenMessage(state.dest),
-                html`
-                    <section class="button__container">
-                        <div></div>
-                        ${loginLink()}
-                    </section>
-                `
-            )
+            return successMessage(state.dest)
+
+        case "failed-to-check-status":
+            return errorMessage("ステータスの取得に失敗しました", checkStatusError(state.err))
+
+        case "failed-to-send-token":
+            return errorMessage("リセットトークンの送信に失敗しました", sendTokenError(state.err))
 
         case "error":
             return h(ApplicationError, { err: state.err })
     }
 
-    function startSessionButton() {
-        return html`<button ref="${submit}" class="button button_save">トークン送信</button>`
-    }
-    function startSessionButton_connecting(): VNode {
-        return html`
-            <button type="button" class="button button_saving">
-                トークンを送信しています ${" "}
-                <i class="lnir lnir-spinner lnir-is-spinning"></i>
-            </button>
-        `
+    type StartSessionFormState = "start" | "connecting"
+
+    type StartSessionFormContent =
+        | StartSessionFormContent_base
+        | (StartSessionFormContent_base & StartSessionFormContent_error)
+    type StartSessionFormContent_base = Readonly<{ state: StartSessionFormState }>
+    type StartSessionFormContent_error = Readonly<{ error: VNodeContent[] }>
+
+    function startSessionTitle() {
+        return "パスワードリセット"
     }
 
-    function onSubmit_startSession(e: Event) {
-        e.preventDefault()
+    function startSessionForm(content: StartSessionFormContent): VNode {
+        return form(
+            loginBox(siteInfo(), {
+                title: startSessionTitle(),
+                body: [h(LoginIDField, resource)],
+                footer: [buttons({ left: button(), right: loginLink() }), error()],
+            })
+        )
 
-        if (submit.current) {
-            submit.current.blur()
+        function button() {
+            switch (content.state) {
+                case "start":
+                    return startSessionButton()
+
+                case "connecting":
+                    return connectingButton()
+            }
+
+            function startSessionButton() {
+                // TODO field に入力されて、すべて OK なら state: confirm にしたい
+                return button_send({ state: "normal", label: "トークン送信", onClick })
+
+                function onClick(e: Event) {
+                    e.preventDefault()
+                    passwordResetSession.startSession()
+                }
+            }
+            function connectingButton(): VNode {
+                return button_send({
+                    state: "connect",
+                    label: html`トークンを送信しています ${spinner}`,
+                })
+            }
         }
 
-        passwordResetSession.startSession()
+        function error() {
+            if ("error" in content) {
+                return fieldError(content.error)
+            }
+            return ""
+        }
     }
-    function onSubmit_noop(e: Event) {
-        e.preventDefault()
+    function delayedMessage() {
+        return loginBox(siteInfo(), {
+            title: startSessionTitle(),
+            body: [
+                html`<p>${spinner} トークンの送信に時間がかかっています</p>`,
+                html`<p>
+                    30秒以上かかる場合は何かがおかしいので、
+                    <br />
+                    お手数ですが管理者に連絡お願いします
+                </p>`,
+            ],
+            footer: buttons({ right: loginLink() }),
+        })
+    }
+
+    type CheckStatusContent =
+        | Readonly<{ type: "initial" }>
+        | Readonly<{ type: "retry"; dest: Destination; status: SendingStatus }>
+
+    function checkStatusMessage(content: CheckStatusContent): VNode {
+        return loginBox(siteInfo(), {
+            title: "リセットトークンを送信しています",
+            body: message(),
+            footer: buttons({ right: loginLink() }),
+        })
+
+        function message() {
+            switch (content.type) {
+                case "initial":
+                    return EMPTY_CONTENT
+
+                case "retry":
+                    return status(content.dest, content.status)
+            }
+        }
+    }
+    function successMessage(dest: Destination): VNode {
+        return loginBox(siteInfo(), {
+            title: "リセットトークンを送信しました",
+            body: sendTokenMessage(dest),
+            footer: buttons({ right: loginLink() }),
+        })
+    }
+    function errorMessage(title: VNodeContent, error: VNodeContent[]): VNode {
+        return loginBox(siteInfo(), {
+            title,
+            body: [
+                ...error.map((message) => html`<p>${message}</p>`),
+                v_medium(),
+                html`<p>お手数ですが、上記メッセージを管理者にお伝えください</p>`,
+            ],
+            footer: buttons({ right: loginLink() }),
+        })
     }
 
     function loginLink(): VNode {
-        return html`
-            <div class="login__link">
-                <a href="${passwordResetSession.link.passwordLogin()}">
-                    <i class="lnir lnir-user"></i> ログインIDとパスワードでログインする
-                </a>
-            </div>
-        `
+        return html`<a href="${passwordResetSession.link.passwordLogin()}">
+            ${icon("user")} ログインIDとパスワードでログインする
+        </a>`
     }
 }
 
-function formMessage(messageClass: string, content: VNode): VNode {
-    return html`
-        <div class="vertical vertical_small"></div>
-        <dl class="${messageClass}">
-            <dd>${content}</dd>
-        </dl>
-    `
-}
-
-function status(dest: Destination, status: SendingStatus): VNode {
+function status(dest: Destination, status: SendingStatus): VNodeContent {
     if (!status.sending) {
-        return html` <p class="loading__message">送信準備中</p> `
+        return html`<p>${spinner} トークン送信の準備をしています</p>`
     }
-
     switch (dest.type) {
         case "log":
-            return html` <p class="loading__message">送信処理中</p> `
+            return html`<p>${spinner} トークンを送信しています</p>`
     }
 }
-function sendTokenMessage(dest: Destination): VNode {
+function sendTokenMessage(dest: Destination): VNodeContent {
     switch (dest.type) {
         case "log":
-            return html` <p>サーバーのログに記載されたリセットトークンを確認してください</p> `
+            return html`<p>サーバーのログに記載されたリセットトークンを確認してください</p>`
     }
 }
 
-function startSessionError(err: StartSessionError): VNode {
+function startSessionError(err: StartSessionError): VNodeContent[] {
     switch (err.type) {
         case "validation-error":
-            return html`<p class="form__message">正しく入力してください</p>`
+            return ["正しく入力してください"]
 
         case "bad-request":
-            return html`<p class="form__message">
-                アプリケーションエラーによりトークンの送信に失敗しました
-            </p>`
+            return ["アプリケーションエラーによりトークンの送信に失敗しました"]
 
         case "invalid-password-reset":
-            return html`<p class="form__message">
-                ログインIDが登録されていないか、トークンの送信先が登録されていません
-            </p>`
+            return ["ログインIDが登録されていないか、トークンの送信先が登録されていません"]
 
         case "server-error":
-            return html`<p class="form__message">サーバーエラーによりトークンの送信に失敗しました</p>`
+            return ["サーバーエラーによりトークンの送信に失敗しました"]
 
         case "bad-response":
-            return html`
-                <p class="form__message">レスポンスエラーによりトークンの送信に失敗しました</p>
-                <p class="form__message">(詳細: ${err.err})</p>
-            `
+            return ["レスポンスエラーによりトークンの送信に失敗しました", `(詳細: ${err.err})`]
 
         case "infra-error":
-            return html`
-                <p class="form__message">ネットワークエラーによりトークンの送信に失敗しました</p>
-                <p class="form__message">(詳細: ${err.err})</p>
-            `
+            return ["ネットワークエラーによりトークンの送信に失敗しました", `(詳細: ${err.err})`]
     }
 }
-function checkStatusError(err: CheckStatusError): VNode {
+function checkStatusError(err: CheckStatusError): VNodeContent[] {
     switch (err.type) {
         case "bad-request":
-            return html`<p>アプリケーションエラーによりステータスの取得に失敗しました</p>`
+            return ["アプリケーションエラーによりステータスの取得に失敗しました"]
 
         case "invalid-password-reset":
-            return html`<p>セッションエラーによりステータスの取得に失敗しました</p>`
+            return ["セッションエラーによりステータスの取得に失敗しました"]
 
         case "server-error":
-            return html`<p>サーバーエラーによりステータスの取得に失敗しました</p>`
+            return ["サーバーエラーによりステータスの取得に失敗しました"]
 
         case "bad-response":
-            return html`
-                <p>レスポンスエラーによりステータスの取得に失敗しました</p>
-                <p>(詳細: ${err.err})</p>
-            `
+            return ["レスポンスエラーによりステータスの取得に失敗しました", `(詳細: ${err.err})`]
 
         case "infra-error":
-            return html`
-                <p>ネットワークエラーによりステータスの取得に失敗しました</p>
-                <p>(詳細: ${err.err})</p>
-            `
+            return ["ネットワークエラーによりステータスの取得に失敗しました", `(詳細: ${err.err})`]
     }
 }
-function sendTokenError(err: SendTokenError): VNode {
+function sendTokenError(err: SendTokenError): VNodeContent[] {
     switch (err.type) {
         case "infra-error":
-            return html`
-                <p>サーバーエラーによりリセットトークンの送信に失敗しました</p>
-                <p>(詳細: ${err.err})</p>
-            `
+            return ["サーバーエラーによりリセットトークンの送信に失敗しました", `(詳細: ${err.err})`]
     }
 }
 
-interface Post<T> {
-    (state: T): void
-}
+const EMPTY_CONTENT = html``

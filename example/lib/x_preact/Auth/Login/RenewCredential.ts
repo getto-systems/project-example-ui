@@ -1,24 +1,28 @@
 import { h, VNode } from "preact"
-import { useState, useEffect } from "preact/hooks"
+import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { fullScreenError } from "../../common/layout"
+import { VNodeContent } from "../../../z_external/getto-css/preact/common"
+import { loginBox } from "../../../z_external/getto-css/preact/layout/login"
+import { v_medium } from "../../../z_external/getto-css/preact/design/alignment"
+
+import { useComponent } from "../../common/hooks"
+import { siteInfo } from "../../common/site"
+import { spinner } from "../../common/icon"
+
 import { appendScript } from "./script"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
-import { RenewCredentialResource } from "../../../auth/Auth/Login/view"
+import { RenewCredentialResource } from "../../../auth/Auth/Login/entryPoint"
 import { initialRenewCredentialState } from "../../../auth/Auth/renewCredential/component"
 
 import { RenewError } from "../../../auth/login/renew/data"
 
-type Props = Readonly<{
-    resource: RenewCredentialResource
-}>
-export function RenewCredential({ resource: { renewCredential } }: Props): VNode {
-    const [state, setState] = useState(initialRenewCredentialState)
+type Props = RenewCredentialResource
+export function RenewCredential({ renewCredential }: Props): VNode {
+    const state = useComponent(renewCredential, initialRenewCredentialState)
     useEffect(() => {
-        renewCredential.onStateChange(setState)
         renewCredential.renew()
     }, [])
 
@@ -68,10 +72,10 @@ export function RenewCredential({ resource: { renewCredential } }: Props): VNode
             return EMPTY_CONTENT
 
         case "delayed-to-renew":
-            return delayedContent()
+            return delayedMessage()
 
         case "failed-to-renew":
-            return renewFailedContent(state.err)
+            return errorMessage(state.err)
 
         case "storage-error":
         case "load-error":
@@ -80,54 +84,46 @@ export function RenewCredential({ resource: { renewCredential } }: Props): VNode
         case "error":
             return h(ApplicationError, { err: state.err })
     }
-}
 
-function delayedContent(): VNode {
-    return fullScreenError(
-        html`認証に時間がかかっています`,
-        html`
-            <p>
-                30秒以上かかるようなら何かがおかしいので、
-                <br />
-                お手数ですが管理者に連絡をお願いします。
-            </p>
-        `,
-        html``
-    )
-}
-
-function renewFailedContent(err: RenewError): VNode {
-    return fullScreenError(html`認証に失敗しました`, errorMessage(renewError(err)), html``)
-}
-
-function renewError(err: RenewError): VNode {
-    switch (err.type) {
-        case "bad-request":
-            return html`<p>認証情報の送信処理でエラーが発生しました</p>`
-
-        case "server-error":
-            return html`<p>サーバーの認証処理でエラーが発生しました</p>`
-
-        case "bad-response":
-            return html`
-                <p>サーバーから送信されたデータがエラーでした</p>
-                <p>(詳細: ${err.err})</p>
-            `
-
-        case "infra-error":
-            return html`
-                <p>ネットワーク通信時にエラーが発生しました</p>
-                <p>(詳細: ${err.err})</p>
-            `
+    function delayedMessage() {
+        return loginBox(siteInfo(), {
+            title: "認証に時間がかかっています",
+            body: [
+                html`<p>${spinner} 認証処理中です</p>`,
+                html`<p>
+                    30秒以上かかる場合は何かがおかしいので、
+                    <br />
+                    お手数ですが管理者に連絡お願いします
+                </p>`,
+            ],
+        })
+    }
+    function errorMessage(err: RenewError): VNode {
+        return loginBox(siteInfo(), {
+            title: "認証に失敗しました",
+            body: [
+                ...renewError(err).map((message) => html`<p>${message}</p>`),
+                v_medium(),
+                html`<p>お手数ですが、上記メッセージを管理者にお伝えください</p>`,
+            ],
+        })
     }
 }
 
-function errorMessage(content: VNode): VNode {
-    return html`
-        ${content}
-        <div class="vertical vertical_medium"></div>
-        <p>お手数ですが、上記メッセージを管理者に伝えてください</p>
-    `
+function renewError(err: RenewError): VNodeContent[] {
+    switch (err.type) {
+        case "bad-request":
+            return ["認証情報の送信処理でエラーが発生しました"]
+
+        case "server-error":
+            return ["サーバーの認証処理でエラーが発生しました"]
+
+        case "bad-response":
+            return ["サーバーから送信されたデータがエラーでした", `(詳細: ${err.err})`]
+
+        case "infra-error":
+            return ["ネットワーク通信時にエラーが発生しました", `(詳細: ${err.err})`]
+    }
 }
 
 const EMPTY_CONTENT: VNode = html``

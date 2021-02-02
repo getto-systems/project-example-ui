@@ -13,7 +13,9 @@ import {
 
 import { LoadBreadcrumbPod, LoadMenuPod, ToggleMenuExpandPod } from "../action"
 
-import { ApiRoles, LoadResult } from "../../../common/credential/data"
+import { LoadResult } from "../../../common/credential/event"
+
+import { ApiRoles } from "../../../common/credential/data"
 import {
     Breadcrumb,
     BreadcrumbNode,

@@ -1,8 +1,11 @@
+import { ApplicationComponent } from "../../../../sub/getto-example/application/component"
+
 import { PasswordField } from "../../../common/field/password/action"
+
+import { PasswordFieldEvent } from "../../../common/field/password/event"
 
 import {
     PasswordFieldError,
-    PasswordFieldEvent,
     PasswordCharacter,
     simplePassword,
     PasswordView,
@@ -17,14 +20,14 @@ export type PasswordFieldMaterial = Readonly<{
     password: PasswordField
 }>
 
-export interface PasswordFieldComponent {
-    onStateChange(post: Post<PasswordFieldState>): void
+export interface PasswordFieldComponent extends ApplicationComponent<PasswordFieldState> {
     set(inputValue: InputValue): void
     show(): void
     hide(): void
-    validate(post: Post<PasswordFieldEvent>): void
+    validate(handler: Handler<PasswordFieldEvent>): void
 }
 
+// TODO variant が 1つなら type いらない
 export type PasswordFieldState = Readonly<{
     type: "succeed-to-update"
     result: Valid<PasswordFieldError>
@@ -39,6 +42,6 @@ export const initialPasswordFieldState: PasswordFieldState = {
     view: hidePassword,
 }
 
-interface Post<T> {
+interface Handler<T> {
     (state: T): void
 }

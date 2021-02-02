@@ -14,7 +14,7 @@ import { initExampleComponent } from "../../example/impl"
 import { ApiCredentialRepository } from "../../../../auth/common/credential/infra"
 import { MenuExpandRepository, MenuTree } from "../../../../auth/permission/menu/infra"
 
-import { DashboardResource } from "../view"
+import { DashboardResource } from "../entryPoint"
 
 import { SeasonRepository } from "../../../shared/season/infra"
 import { Clock } from "../../../../z_infra/clock/infra"

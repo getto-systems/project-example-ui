@@ -1,8 +1,15 @@
 import { h, VNode } from "preact"
-import { useState, useRef, useEffect } from "preact/hooks"
+import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { loginHeader } from "../../common/layout"
+import { VNodeContent } from "../../../z_external/getto-css/preact/common"
+import { buttons, button_send, fieldError } from "../../../z_external/getto-css/preact/design/form"
+import { loginBox } from "../../../z_external/getto-css/preact/layout/login"
+
+import { useComponent } from "../../common/hooks"
+import { siteInfo } from "../../common/site"
+import { icon, spinner } from "../../common/icon"
+
 import { appendScript } from "./script"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
@@ -10,23 +17,15 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 import { LoginIDField } from "./PasswordReset/LoginIDField"
 import { PasswordField } from "./PasswordReset/PasswordField"
 
-import { PasswordResetResource } from "../../../auth/Auth/Login/view"
+import { PasswordResetResource } from "../../../auth/Auth/Login/entryPoint"
 import { initialPasswordResetState } from "../../../auth/Auth/passwordReset/component"
 
 import { ResetError } from "../../../auth/profile/passwordReset/data"
 
-type Props = Readonly<{
-    resource: PasswordResetResource
-}>
-export function PasswordReset({
-    resource: { passwordReset, loginIDField, passwordField },
-}: Props): VNode {
-    const [state, setState] = useState(initialPasswordResetState)
-    // submitter の focus を解除するために必要 : イベントから submitter が取得できるようになったら必要ない
-    const submit = useRef<HTMLButtonElement>()
-    useEffect(() => {
-        passwordReset.onStateChange(setState)
-    }, [])
+type Props = PasswordResetResource
+export function PasswordReset(resource: Props): VNode {
+    const { passwordReset } = resource
+    const state = useComponent(passwordReset, initialPasswordResetState)
 
     useEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useEffect で行う
@@ -44,69 +43,18 @@ export function PasswordReset({
         }
     }, [state])
 
-    function view(onSubmit: Post<Event>, button: VNode, footer: VNode): VNode {
-        return html`
-            <aside class="login">
-                <form class="login__box" onSubmit="${onSubmit}">
-                    ${loginHeader()}
-                    <section>
-                        <big>
-                            <section class="login__body">
-                                ${h(LoginIDField, { loginIDField })}
-                                ${h(PasswordField, { passwordField })}
-                            </section>
-                        </big>
-                    </section>
-                    <footer class="login__footer">
-                        <div class="button__container">
-                            <div>
-                                <big>${button}</big>
-                            </div>
-                            <div class="login__link">
-                                <a href="${passwordReset.link.passwordResetSession()}">
-                                    <i class="lnir lnir-direction"></i> トークンを再送信する
-                                </a>
-                            </div>
-                        </div>
-                        ${footer}
-                    </footer>
-                </form>
-            </aside>
-        `
-    }
-
     switch (state.type) {
         case "initial-reset":
-            return view(onSubmit_login, resetButton(), html``)
+            return resetForm({ state: "reset" })
 
         case "failed-to-reset":
-            return view(
-                onSubmit_login,
-                resetButton(),
-                html` <aside>${formMessage("form_error", resetError(state.err))}</aside> `
-            )
+            return resetForm({ state: "reset", error: resetError(state.err) })
 
         case "try-to-reset":
-            return view(onSubmit_noop, resetButton_connecting(), html``)
+            return resetForm({ state: "connecting" })
 
         case "delayed-to-reset":
-            return view(
-                onSubmit_noop,
-                resetButton_connecting(),
-                html`
-                    <aside>
-                        ${formMessage(
-                            "form_warning",
-                            html`
-                                <p class="form__message">リセットに時間がかかっています</p>
-                                <p class="form__message">
-                                    30秒以上かかるようであれば何かがおかしいので、お手数ですが管理者に連絡してください
-                                </p>
-                            `
-                        )}
-                    </aside>
-                `
-            )
+            return delayedMessage()
 
         case "try-to-load":
             // スクリプトのロードは appendChild する必要があるため useEffect で行う
@@ -120,74 +68,107 @@ export function PasswordReset({
             return h(ApplicationError, { err: state.err })
     }
 
-    function resetButton() {
-        return html`<button ref="${submit}" class="button button_save">パスワードリセット</button>`
-    }
-    function resetButton_connecting(): VNode {
-        return html`
-            <button type="button" class="button button_saving">
-                パスワードをリセットしています ${" "}
-                <i class="lnir lnir-spinner lnir-is-spinning"></i>
-            </button>
-        `
+    type ResetFormState = "reset" | "connecting"
+
+    type ResetFormContent = ResetFormContent_base | (ResetFormContent_base & ResetFormContent_error)
+    type ResetFormContent_base = Readonly<{ state: ResetFormState }>
+    type ResetFormContent_error = Readonly<{ error: VNodeContent[] }>
+
+    function resetTitle() {
+        return "パスワードリセット"
     }
 
-    function onSubmit_login(e: Event) {
-        e.preventDefault()
+    function resetForm(content: ResetFormContent): VNode {
+        return form(
+            loginBox(siteInfo(), {
+                title: resetTitle(),
+                body: [h(LoginIDField, resource), h(PasswordField, resource)],
+                footer: [buttons({ left: button(), right: sendLink() }), error()],
+            })
+        )
 
-        if (submit.current) {
-            submit.current.blur()
+        function button() {
+            switch (content.state) {
+                case "reset":
+                    return resetButton()
+
+                case "connecting":
+                    return connectingButton()
+            }
+
+            function resetButton() {
+                // TODO field に入力されて、すべて OK なら state: confirm にしたい
+                return button_send({ state: "normal", label: "パスワードリセット", onClick })
+
+                function onClick(e: Event) {
+                    e.preventDefault()
+                    passwordReset.reset()
+                }
+            }
+            function connectingButton(): VNode {
+                return button_send({
+                    state: "connect",
+                    label: html`パスワードをリセットしています ${spinner}`,
+                })
+            }
         }
 
-        passwordReset.reset()
+        function error() {
+            if ("error" in content) {
+                return fieldError(content.error)
+            }
+            return ""
+        }
     }
-    function onSubmit_noop(e: Event) {
-        e.preventDefault()
+    function delayedMessage() {
+        return loginBox(siteInfo(), {
+            title: resetTitle(),
+            body: [
+                html`<p>${spinner} リセットに時間がかかっています</p>`,
+                html`<p>
+                    30秒以上かかる場合は何かがおかしいので、
+                    <br />
+                    お手数ですが管理者に連絡お願いします
+                </p>`,
+            ],
+            footer: buttons({ right: sendLink() }),
+        })
+    }
+
+    function sendLink() {
+        return html`<a href="${passwordReset.link.passwordResetSession()}">
+            ${icon("question-circle")} パスワードがわからない方
+        </a>`
     }
 }
 
-function formMessage(messageClass: string, content: VNode): VNode {
-    return html`
-        <div class="vertical vertical_small"></div>
-        <dl class="${messageClass}">
-            <dd>${content}</dd>
-        </dl>
-    `
-}
-
-function resetError(err: ResetError): VNode {
+function resetError(err: ResetError): VNodeContent[] {
     switch (err.type) {
         case "validation-error":
-            return html`<p class="form__message">正しく入力してください</p>`
+            return ["正しく入力してください"]
 
         case "empty-reset-token":
-            return html`<p class="form__message">リセットトークンが見つかりませんでした</p>`
+            return ["リセットトークンが見つかりませんでした"]
 
         case "bad-request":
-            return html`<p class="form__message">アプリケーションエラーにより認証に失敗しました</p>`
+            return ["アプリケーションエラーにより認証に失敗しました"]
 
         case "invalid-password-reset":
-            return html`<p class="form__message">ログインIDが最初に入力したものと違います</p>`
+            return ["ログインIDが最初に入力したものと違います"]
 
         case "server-error":
-            return html`<p class="form__message">サーバーエラーにより認証に失敗しました</p>`
+            return ["サーバーエラーにより認証に失敗しました"]
 
         case "bad-response":
-            return html`
-                <p class="form__message">レスポンスエラーにより認証に失敗しました</p>
-                <p class="form__message">(詳細: ${err.err})</p>
-            `
+            return ["レスポンスエラーにより認証に失敗しました", `(詳細: ${err.err})`]
 
         case "infra-error":
-            return html`
-                <p class="form__message">ネットワークエラーにより認証に失敗しました</p>
-                <p class="form__message">(詳細: ${err.err})</p>
-            `
+            return ["ネットワークエラーにより認証に失敗しました", `(詳細: ${err.err})`]
     }
+}
+
+function form(content: VNodeContent) {
+    return html`<form>${content}</form>`
 }
 
 const EMPTY_CONTENT = html``
-
-interface Post<T> {
-    (state: T): void
-}

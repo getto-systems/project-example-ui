@@ -1,4 +1,6 @@
-import { ContentPath, LoadContentEvent } from "./data"
+import { LoadContentEvent } from "./event"
+
+import { ContentPath } from "./data"
 
 export type ContentAction = Readonly<{
     loadContent: LoadContentPod

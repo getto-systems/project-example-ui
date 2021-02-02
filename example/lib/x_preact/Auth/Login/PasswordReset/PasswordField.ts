@@ -1,6 +1,13 @@
 import { VNode } from "preact"
-import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
+
+import {
+    field,
+    field_error,
+    label_password_fill,
+} from "../../../../z_external/getto-css/preact/design/form"
+
+import { useComponent } from "../../../common/hooks"
 
 import { passwordView, passwordFieldError, passwordFieldHandler } from "../field/password"
 
@@ -13,24 +20,26 @@ type Props = Readonly<{
     passwordField: PasswordFieldComponent
 }>
 export function PasswordField({ passwordField }: Props): VNode {
-    const [state, setState] = useState(initialPasswordFieldState)
-    useEffect(() => {
-        passwordField.onStateChange(setState)
-    }, [])
+    const state = useComponent(passwordField, initialPasswordFieldState)
 
-    const handler = passwordFieldHandler(passwordField)
+    return label_password_fill(content())
 
-    return html`
-        <label>
-            <dl class="form ${state.result.valid ? "" : "form_error"}">
-                <dt class="form__header">パスワード</dt>
-                <dd class="form__field">
-                    <input type="password" class="input_fill" onInput=${handler.onInput} />
-                    ${passwordFieldError(state.result, state.character)}
-                    <p class="form__help">新しいパスワードを入力してください</p>
-                    <p class="form__help">${passwordView(handler, state.view, state.character)}</p>
-                </dd>
-            </dl>
-        </label>
-    `
+    function content() {
+        const handler = passwordFieldHandler(passwordField)
+
+        const content = {
+            title: "パスワード",
+            body: html`<input type="password" onInput=${handler.onInput} />`,
+            help: [
+                "新しいパスワードを入力してください",
+                passwordView(handler, state.view, state.character),
+            ],
+        }
+
+        if (state.result.valid) {
+            return field(content)
+        } else {
+            return field_error({ ...content, notice: passwordFieldError(state.result, state.character) })
+        }
+    }
 }

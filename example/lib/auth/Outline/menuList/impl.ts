@@ -1,3 +1,5 @@
+import { ApplicationBaseComponent } from "../../../sub/getto-example/application/impl"
+
 import {
     MenuListComponentFactory,
     MenuListMaterial,
@@ -9,20 +11,12 @@ import { Menu, MenuCategoryPath } from "../../permission/menu/data"
 
 export const initMenuListComponent: MenuListComponentFactory = (material) => new Component(material)
 
-class Component implements MenuListComponent {
+class Component extends ApplicationBaseComponent<MenuListState> implements MenuListComponent {
     material: MenuListMaterial
 
-    listener: Post<MenuListState>[] = []
-
     constructor(material: MenuListMaterial) {
+        super()
         this.material = material
-    }
-
-    onStateChange(post: Post<MenuListState>): void {
-        this.listener.push(post)
-    }
-    post(state: MenuListState): void {
-        this.listener.forEach((post) => post(state))
     }
 
     load(): void {
@@ -37,8 +31,4 @@ class Component implements MenuListComponent {
             this.post(event)
         })
     }
-}
-
-interface Post<T> {
-    (state: T): void
 }

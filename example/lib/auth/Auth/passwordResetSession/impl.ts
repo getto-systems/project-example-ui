@@ -1,3 +1,7 @@
+import { ApplicationBaseComponent } from "../../../sub/getto-example/application/impl"
+
+import { LoginLink } from "../link"
+
 import {
     PasswordResetSessionComponentFactory,
     PasswordResetSessionMaterial,
@@ -6,28 +10,19 @@ import {
 } from "./component"
 
 import { SessionID } from "../../profile/passwordReset/data"
-import { LoginLink } from "../link"
 
 export const initPasswordResetSessionComponent: PasswordResetSessionComponentFactory = (material) =>
     new Component(material)
 
-class Component implements PasswordResetSessionComponent {
+class Component extends ApplicationBaseComponent<PasswordResetSessionState> implements PasswordResetSessionComponent {
     material: PasswordResetSessionMaterial
-
-    listener: Post<PasswordResetSessionState>[] = []
 
     link: LoginLink
 
     constructor(material: PasswordResetSessionMaterial) {
+        super()
         this.material = material
         this.link = material.link
-    }
-
-    onStateChange(post: Post<PasswordResetSessionState>): void {
-        this.listener.push(post)
-    }
-    post(state: PasswordResetSessionState): void {
-        this.listener.forEach((post) => post(state))
     }
 
     startSession(): void {
@@ -49,8 +44,4 @@ class Component implements PasswordResetSessionComponent {
             this.post(event)
         })
     }
-}
-
-interface Post<T> {
-    (state: T): void
 }

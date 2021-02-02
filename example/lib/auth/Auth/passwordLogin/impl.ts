@@ -1,3 +1,5 @@
+import { ApplicationBaseComponent } from "../../../sub/getto-example/application/impl"
+
 import { LoginLink } from "../link"
 
 import {
@@ -14,23 +16,15 @@ import { storeAuthCredential } from "../../login/renew/data"
 export const initPasswordLoginComponent: PasswordLoginComponentFactory = (material) =>
     new Component(material)
 
-class Component implements PasswordLoginComponent {
+class Component extends ApplicationBaseComponent<PasswordLoginState> implements PasswordLoginComponent {
     material: PasswordLoginMaterial
-
-    listener: Post<PasswordLoginState>[] = []
 
     link: LoginLink
 
     constructor(material: PasswordLoginMaterial) {
+        super()
         this.material = material
         this.link = material.link
-    }
-
-    onStateChange(post: Post<PasswordLoginState>): void {
-        this.listener.push(post)
-    }
-    post(state: PasswordLoginState): void {
-        this.listener.forEach((post) => post(state))
     }
 
     login(): void {
@@ -68,8 +62,4 @@ class Component implements PasswordLoginComponent {
             }
         })
     }
-}
-
-interface Post<T> {
-    (state: T): void
 }

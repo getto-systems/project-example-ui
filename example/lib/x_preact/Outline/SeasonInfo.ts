@@ -1,8 +1,13 @@
 import { VNode } from "preact"
-import { useState, useEffect } from "preact/hooks"
+import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { v_small } from "../common/layout"
+import { menuBox } from "../../z_external/getto-css/preact/layout/app"
+import { field } from "../../z_external/getto-css/preact/design/form"
+import { VNodeContent } from "../../z_external/getto-css/preact/common"
+import { notice_alert } from "../../z_external/getto-css/preact/design/highlight"
+
+import { useComponent } from "../common/hooks"
 
 import { SeasonInfoComponent, initialSeasonInfoState } from "../../example/Outline/seasonInfo/component"
 
@@ -12,9 +17,8 @@ type Props = Readonly<{
     seasonInfo: SeasonInfoComponent
 }>
 export function SeasonInfo({ seasonInfo }: Props): VNode {
-    const [state, setState] = useState(initialSeasonInfoState)
+    const state = useComponent(seasonInfo, initialSeasonInfoState)
     useEffect(() => {
-        seasonInfo.onStateChange(setState)
         seasonInfo.load()
     }, [])
 
@@ -23,37 +27,22 @@ export function SeasonInfo({ seasonInfo }: Props): VNode {
             return EMPTY_CONTENT
 
         case "succeed-to-load":
-            return content(state.season)
+            return seasonBox(seasonContent(state.season))
 
         case "failed-to-load":
-            return error(state.err)
+            return seasonBox(errorContent(state.err))
     }
 }
 
-function content(season: Season): VNode {
-    const { year } = season
-    return html`
-        <section class="menu__box">
-            <dl class="form">
-                <dt class="form__header">シーズン</dt>
-                <dd class="form__field">${year}</dd>
-            </dl>
-        </section>
-    `
+function seasonBox(body: VNodeContent) {
+    return menuBox(field({ title: "シーズン", body }))
 }
-function error(err: SeasonError): VNode {
-    return html`
-        <section class="menu__box">
-            <dl class="form">
-                <dt class="form__header">シーズン</dt>
-                <dd class="form__field">
-                    <p class="notice notice_alert">ロードエラー</p>
-                    ${v_small()}
-                    <small><p>詳細: ${err.err}</p></small>
-                </dd>
-            </dl>
-        </section>
-    `
+
+function seasonContent(season: Season) {
+    return season.year
+}
+function errorContent(err: SeasonError) {
+    return [notice_alert("ロードエラー"), html`<small><p>詳細: ${err.err}</p></small>`]
 }
 
 const EMPTY_CONTENT = html``

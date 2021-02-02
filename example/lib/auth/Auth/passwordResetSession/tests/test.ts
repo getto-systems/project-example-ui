@@ -26,7 +26,7 @@ describe("PasswordResetSession", () => {
     test("submit valid login-id", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
-        resource.passwordResetSession.onStateChange(stateHandler())
+        resource.passwordResetSession.addStateHandler(stateHandler())
 
         resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
 
@@ -83,7 +83,7 @@ describe("PasswordResetSession", () => {
         // wait for delayed timeout
         const { resource } = waitPasswordResetSessionResource()
 
-        resource.passwordResetSession.onStateChange(stateHandler())
+        resource.passwordResetSession.addStateHandler(stateHandler())
 
         resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
 
@@ -141,7 +141,7 @@ describe("PasswordResetSession", () => {
         // wait for send token check limit
         const { resource } = longSendingPasswordResetSessionResource()
 
-        resource.passwordResetSession.onStateChange(stateHandler())
+        resource.passwordResetSession.addStateHandler(stateHandler())
 
         resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
 
@@ -218,7 +218,7 @@ describe("PasswordResetSession", () => {
     test("submit without fields", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
-        resource.passwordResetSession.onStateChange(stateHandler())
+        resource.passwordResetSession.addStateHandler(stateHandler())
 
         // try to start session without fields
         //resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
@@ -268,7 +268,7 @@ describe("PasswordResetSession", () => {
             test("invalid with empty string", (done) => {
                 const { resource } = standardPasswordResetSessionResource()
 
-                resource.loginIDField.onStateChange(stateHandler())
+                resource.loginIDField.addStateHandler(stateHandler())
 
                 resource.loginIDField.set(markInputValue(""))
 

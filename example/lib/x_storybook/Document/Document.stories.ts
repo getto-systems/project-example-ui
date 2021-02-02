@@ -27,7 +27,9 @@ const Template: Story<MockProps> = (args) => {
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
-        update.menuList(mapMenuMockProps({ type: "success", badgeCount: props.args.menuBadgeCount }))
+        update.menuList(
+            mapMenuMockProps({ type: "success", label: "ホーム", badgeCount: props.args.menuBadgeCount })
+        )
         update.breadcrumbList(
             mapBreadcrumbMockProps({
                 type: "success",

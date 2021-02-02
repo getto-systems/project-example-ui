@@ -1,4 +1,6 @@
-import { AppTarget, FindEvent } from "./data"
+import { FindEvent } from "./event"
+
+import { AppTarget } from "./data"
 
 export type NextVersionAction = Readonly<{
     find: FindPod
