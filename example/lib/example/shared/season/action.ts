@@ -1,4 +1,4 @@
-import { LoadSeasonEvent } from "./data"
+import { LoadSeasonEvent } from "./event"
 
 export type SeasonAction = Readonly<{
     loadSeason: LoadSeasonPod

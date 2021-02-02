@@ -9,8 +9,4 @@ export function defaultSeason(now: Date): Season {
     return markSeason({ year: now.getFullYear() })
 }
 
-export type LoadSeasonEvent =
-    | Readonly<{ type: "succeed-to-load"; season: Season }>
-    | Readonly<{ type: "failed-to-load"; err: SeasonError }>
-
 export type SeasonError = Readonly<{ type: "infra-error"; err: string }>
