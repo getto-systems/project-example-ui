@@ -1,4 +1,4 @@
-import { initAuthClient } from "../../../../z_external/authClient/authClient"
+import { initAuthClient } from "../../../../z_external/api/authClient"
 
 import { env } from "../../../../y_environment/env"
 

@@ -2,10 +2,10 @@ import { VNode } from "preact"
 import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { menuBox } from "../../z_external/getto-css/preact/layout/app"
-import { field } from "../../z_external/getto-css/preact/design/form"
-import { VNodeContent } from "../../z_external/getto-css/preact/common"
-import { notice_alert } from "../../z_external/getto-css/preact/design/highlight"
+import { menuBox } from "../../z_vendor/getto-css/preact/layout/app"
+import { field } from "../../z_vendor/getto-css/preact/design/form"
+import { VNodeContent } from "../../z_vendor/getto-css/preact/common"
+import { notice_alert } from "../../z_vendor/getto-css/preact/design/highlight"
 
 import { useComponent } from "../common/hooks"
 

@@ -2,11 +2,11 @@ import { VNode } from "preact"
 import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../z_external/getto-css/preact/common"
-import { box_double } from "../../../z_external/getto-css/preact/design/box"
-import { field } from "../../../z_external/getto-css/preact/design/form"
-import { notice_alert } from "../../../z_external/getto-css/preact/design/highlight"
-import { v_small } from "../../../z_external/getto-css/preact/design/alignment"
+import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
+import { box_double } from "../../../z_vendor/getto-css/preact/design/box"
+import { field } from "../../../z_vendor/getto-css/preact/design/form"
+import { notice_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
+import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 
 import { useComponent } from "../../common/hooks"
 

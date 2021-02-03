@@ -1,9 +1,9 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { box, container } from "../../../z_external/getto-css/preact/design/box"
-import { notice_info } from "../../../z_external/getto-css/preact/design/highlight"
-import { v_medium, v_small } from "../../../z_external/getto-css/preact/design/alignment"
+import { box, container } from "../../../z_vendor/getto-css/preact/design/box"
+import { notice_info } from "../../../z_vendor/getto-css/preact/design/highlight"
+import { v_medium, v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 
 import { items } from "../box"
 

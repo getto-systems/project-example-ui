@@ -5,7 +5,7 @@ import {
     field,
     field_error,
     label_password_fill,
-} from "../../../../z_external/getto-css/preact/design/form"
+} from "../../../../z_vendor/getto-css/preact/design/form"
 
 import { useComponent } from "../../../common/hooks"
 

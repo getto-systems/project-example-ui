@@ -11,7 +11,7 @@ import {
     mainTitle,
     menuFooter,
     menuHeader,
-} from "../../z_external/getto-css/preact/layout/app"
+} from "../../z_vendor/getto-css/preact/layout/app"
 
 import { SeasonInfo } from "../../x_preact/Outline/SeasonInfo"
 

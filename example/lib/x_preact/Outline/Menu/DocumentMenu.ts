@@ -1,6 +1,6 @@
 import { h, VNode } from "preact"
 
-import { appMenu, menuFooter, menuHeader } from "../../../z_external/getto-css/preact/layout/app"
+import { appMenu, menuFooter, menuHeader } from "../../../z_vendor/getto-css/preact/layout/app"
 
 import { siteInfo } from "../../common/site"
 

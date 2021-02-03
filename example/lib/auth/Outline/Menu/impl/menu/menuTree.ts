@@ -1,6 +1,6 @@
 import { StaticMenuPath } from "../../../../../y_environment/path"
 
-import { Icon, iconClass, lnir } from "../../../../../z_external/icon"
+import { Icon, iconClass, lnir } from "../../../../../z_vendor/icon"
 
 import { MenuPermission, MenuTree, MenuTreeNode } from "../../../../permission/menu/infra"
 

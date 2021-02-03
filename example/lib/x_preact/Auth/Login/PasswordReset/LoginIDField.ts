@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { field, field_error, label_text_fill } from "../../../../z_external/getto-css/preact/design/form"
+import { field, field_error, label_text_fill } from "../../../../z_vendor/getto-css/preact/design/form"
 
 import { loginIDFieldError, loginIDFieldHandler } from "../field/loginID"
 

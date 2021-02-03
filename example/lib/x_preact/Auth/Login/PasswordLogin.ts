@@ -2,9 +2,9 @@ import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../z_external/getto-css/preact/common"
-import { loginBox } from "../../../z_external/getto-css/preact/layout/login"
-import { buttons, button_send, fieldError, form } from "../../../z_external/getto-css/preact/design/form"
+import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
+import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
+import { buttons, button_send, fieldError, form } from "../../../z_vendor/getto-css/preact/design/form"
 
 import { useComponent } from "../../common/hooks"
 import { siteInfo } from "../../common/site"

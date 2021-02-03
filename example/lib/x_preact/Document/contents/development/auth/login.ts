@@ -1,8 +1,8 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { box, box_double, container } from "../../../../../z_external/getto-css/preact/design/box"
-import { v_medium } from "../../../../../z_external/getto-css/preact/design/alignment"
+import { box, box_double, container } from "../../../../../z_vendor/getto-css/preact/design/box"
+import { v_medium } from "../../../../../z_vendor/getto-css/preact/design/alignment"
 
 import {
     fromApiServer,

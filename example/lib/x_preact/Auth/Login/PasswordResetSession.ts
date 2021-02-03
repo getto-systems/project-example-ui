@@ -1,10 +1,10 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../z_external/getto-css/preact/common"
-import { buttons, button_send, fieldError, form } from "../../../z_external/getto-css/preact/design/form"
-import { loginBox } from "../../../z_external/getto-css/preact/layout/login"
-import { v_medium } from "../../../z_external/getto-css/preact/design/alignment"
+import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
+import { buttons, button_send, fieldError, form } from "../../../z_vendor/getto-css/preact/design/form"
+import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
+import { v_medium } from "../../../z_vendor/getto-css/preact/design/alignment"
 
 import { useComponent } from "../../common/hooks"
 import { siteInfo } from "../../common/site"
