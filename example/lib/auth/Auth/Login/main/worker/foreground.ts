@@ -1,7 +1,7 @@
 import { delayed } from "../../../../../z_infra/delayed/core"
 import { initAuthClient, AuthClient } from "../../../../../z_external/authClient/authClient"
 
-import { env } from "../../../../../y_static/env"
+import { env } from "../../../../../y_environment/env"
 
 import {
     newApplicationActionConfig,
