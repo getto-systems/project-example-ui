@@ -1,5 +1,5 @@
 import { delayed, wait } from "../../../../../z_infra/delayed/core"
-import { initAuthClient, AuthClient } from "../../../../../z_external/authClient/authClient"
+import { initAuthClient, AuthClient } from "../../../../../z_external/api/authClient"
 
 import { env } from "../../../../../y_environment/env"
 

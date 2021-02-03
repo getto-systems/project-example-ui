@@ -1,10 +1,10 @@
-import { ApiCredentialMessage } from "./y_static/auth/credential_pb.js"
-import { PasswordLoginMessage } from "./y_static/auth/password_login_pb.js"
+import { ApiCredentialMessage } from "./y_protobuf/credential_pb.js"
+import { PasswordLoginMessage } from "./y_protobuf/password_login_pb.js"
 
 import {
     decodeBase64StringToUint8Array,
     encodeUint8ArrayToBase64String,
-} from "../protobufUtil"
+} from "../../z_vendor/protobufUtil"
 
 export interface AuthClient {
     renew(param: RenewParam): Promise<AuthResponse>

@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { iconClass, lnir } from "../../z_external/icon"
+import { iconClass, lnir } from "../../z_vendor/icon"
 
 export function icon(name: string): VNode {
     return html`<i class="${iconClass(lnir(name))}"></i>`

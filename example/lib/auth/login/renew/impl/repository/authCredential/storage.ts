@@ -1,9 +1,9 @@
-import { ApiCredentialMessage } from "../../../../../../y_static/local_storage_pb.js"
+import { ApiCredentialMessage } from "../../../../../../z_external/localStorage/y_protobuf/api_pb.js"
 
 import {
     decodeBase64StringToUint8Array,
     encodeUint8ArrayToBase64String,
-} from "../../../../../../z_external/protobufUtil"
+} from "../../../../../../z_vendor/protobufUtil"
 
 import { StorageKey, AuthCredentialRepository, StoreResult, LoadLastLoginResult } from "../../../infra"
 

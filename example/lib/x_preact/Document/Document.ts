@@ -8,7 +8,7 @@ import { DocumentMenu } from "../Outline/Menu/DocumentMenu"
 import { Content } from "./Content"
 
 import { DocumentEntryPoint } from "../../document/Document/Document/entryPoint"
-import { appLayout } from "../../z_external/getto-css/preact/layout/app"
+import { appLayout } from "../../z_vendor/getto-css/preact/layout/app"
 
 type Props = {
     document: DocumentEntryPoint

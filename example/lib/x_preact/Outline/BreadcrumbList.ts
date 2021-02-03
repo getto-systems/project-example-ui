@@ -6,7 +6,7 @@ import {
     mainBreadcrumbLink,
     mainBreadcrumb,
     mainBreadcrumbSeparator,
-} from "../../z_external/getto-css/preact/layout/app"
+} from "../../z_vendor/getto-css/preact/layout/app"
 
 import { useComponent } from "../common/hooks"
 import { siteInfo } from "../common/site"

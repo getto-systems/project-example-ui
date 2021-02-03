@@ -1,6 +1,6 @@
-import { VNodeContent } from "../../z_external/getto-css/preact/common"
+import { VNodeContent } from "../../z_vendor/getto-css/preact/common"
 
-import { PagerOptionsContent, SortSign } from "../../z_external/getto-css/preact/design/data"
+import { PagerOptionsContent, SortSign } from "../../z_vendor/getto-css/preact/design/data"
 
 import { icon } from "./icon"
 

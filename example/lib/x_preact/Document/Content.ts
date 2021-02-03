@@ -2,8 +2,8 @@ import { h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../z_external/getto-css/preact/common"
-import { appMain, mainBody, mainHeader, mainTitle } from "../../z_external/getto-css/preact/layout/app"
+import { VNodeContent } from "../../z_vendor/getto-css/preact/common"
+import { appMain, mainBody, mainHeader, mainTitle } from "../../z_vendor/getto-css/preact/layout/app"
 
 import { BreadcrumbList } from "../Outline/BreadcrumbList"
 

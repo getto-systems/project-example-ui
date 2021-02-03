@@ -2,8 +2,8 @@ import { VNode } from "preact"
 import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { menuBody, menuBox, menuCategory, menuItem } from "../../z_external/getto-css/preact/layout/app"
-import { badge_alert, notice_alert } from "../../z_external/getto-css/preact/design/highlight"
+import { menuBody, menuBox, menuCategory, menuItem } from "../../z_vendor/getto-css/preact/layout/app"
+import { badge_alert, notice_alert } from "../../z_vendor/getto-css/preact/design/highlight"
 
 import { useComponent } from "../common/hooks"
 

@@ -1,36 +1,50 @@
 #!/bin/sh
 
 protobuf_main(){
-  local root
-  local base
-  local lib
-  local types
-  local proto
-  local file
-  local name
-  local pb_path
-  local d_path
+    protobuf_generate_all "example/lib/z_external/localStorage"
+    protobuf_generate_all "example/lib/z_external/api"
+}
 
-  root=example
-  base=$root/protobuf/
-  lib=$root/lib
-  types=$root/types
+protobuf_generate_all(){
+    local root
 
-  for proto in $(find $base -name '*.proto'); do
-    file=${proto#$base}
-    file=${file%.proto}
+    local protobuf
+    local dest
+    local proto
+    local file
 
-    pb_path=$lib/${file}_pb.js
-    d_path=$types/${file}_pb.d.ts
-    echo "$proto -> $pb_path ; $d_path"
+    root=$1
+    protobuf=$root/protobuf/
+    dest=$root/y_protobuf/
 
-    rm -f $pb_path $d_path && \
-    mkdir -p $(dirname $pb_path) && \
-    mkdir -p $(dirname $d_path) && \
-    pbjs -t static-module -w es6 -o $pb_path $proto && \
-    pbts -o $d_path $pb_path && \
+    for proto in $(find $protobuf -name '*.proto'); do
+        file=${proto#$protobuf}
+        file=${file%.proto}
+
+        echo "${root} : ${file}"
+        protobuf_generate $proto $dest $file
+    done
+}
+protobuf_generate(){
+    local source_proto
+    local destination_dir
+    local destination_base_path
+
+    local pb_path
+    local data_path
+
+    source_proto=$1
+    destination_dir=$2
+    destination_base_path=$3
+
+    pb_path="${destination_dir}/${destination_base_path}_pb.js"
+    data_path="${destination_dir}/${destination_base_path}_pb.d.ts"
+
+    mkdir -p $destination_dir && \
+    rm -f $pb_path $data_path && \
+    pbjs -t static-module -w es6 -o $pb_path $source_proto && \
+    pbts -o $data_path $pb_path && \
     :
-  done
 }
 
 protobuf_main "$@"
