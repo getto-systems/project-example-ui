@@ -10,5 +10,5 @@
 /example/public/dist/**/*.js
 /example/secure/dist/**/*.js
 
-**/y_static/*
-!**/y_static/.keep
+**/y_environment/*
+!**/y_environment/.keep

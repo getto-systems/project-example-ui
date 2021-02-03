@@ -1,4 +1,4 @@
-import { env } from "../../../../y_static/env"
+import { env } from "../../../../y_environment/env"
 import { ApplicationActionConfig } from "../../../common/application/infra"
 import { PasswordLoginActionConfig } from "../../../login/passwordLogin/infra"
 import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../login/renew/infra"

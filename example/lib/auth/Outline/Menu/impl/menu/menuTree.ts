@@ -1,4 +1,4 @@
-import { StaticMenuPath } from "../../../../../y_static/path"
+import { StaticMenuPath } from "../../../../../y_environment/path"
 
 import { Icon, iconClass, lnir } from "../../../../../z_external/icon"
 

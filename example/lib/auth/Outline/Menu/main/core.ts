@@ -1,4 +1,4 @@
-import { env } from "../../../../y_static/env"
+import { env } from "../../../../y_environment/env"
 
 import { initMemoryApiCredentialRepository } from "../../../common/credential/impl/repository/apiCredential/memory"
 import { initStaticMenuBadgeClient } from "../../../permission/menu/impl/remote/menuBadge/static"

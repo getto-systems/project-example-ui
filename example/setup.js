@@ -4,7 +4,11 @@ const path = require("path")
 
 const entryPoint = require("./entryPoint")
 
-function dumpEnv() {
+const environmentRoot = path.join(__dirname, "./lib/y_environment")
+dump(path.join(environmentRoot, "env.ts"), envContent())
+dump(path.join(environmentRoot, "path.ts"), pathContent())
+
+function envContent() {
     const isProduction = process.env.BUILD_ENV == "production"
     const version = (() => {
         if (isProduction) {
@@ -31,23 +35,17 @@ function dumpEnv() {
         },
     }
 
-    dump(
-        path.join(__dirname, "./lib/y_static/env.ts"),
-        "export const env = " + JSON.stringify(env, null, "    ")
-    )
+    return "export const env = " + JSON.stringify(env, null, "    ")
 }
 
-function dumpEntryPoint() {
+function pathContent() {
     const files = ["/storybook/index.html"].concat(entryPoint.findSecureFiles())
     const docs = files.filter(isDocs)
-    dump(
-        path.join(__dirname, "./lib/y_static/path.ts"),
-        [
-            "export type StaticMenuPath =" + toTypeVariant(files),
-            "export type StaticContentPath =" + toTypeVariant(docs),
-            "export const staticContentPaths: StaticContentPath[] = " + toConstValue(docs),
-        ].join("\n")
-    )
+    return [
+        "export type StaticMenuPath =" + toTypeVariant(files),
+        "export type StaticContentPath =" + toTypeVariant(docs),
+        "export const staticContentPaths: StaticContentPath[] = " + toConstValue(docs),
+    ].join("\n")
 
     function isDocs(file) {
         return file.startsWith("/docs/")
@@ -71,6 +69,3 @@ function dump(file, content) {
     console.log(content)
     fs.writeFileSync(file, content + "\n")
 }
-
-dumpEnv()
-dumpEntryPoint()

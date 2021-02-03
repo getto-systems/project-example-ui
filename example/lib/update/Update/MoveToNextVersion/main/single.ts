@@ -1,4 +1,4 @@
-import { env } from "../../../../y_static/env"
+import { env } from "../../../../y_environment/env"
 
 import { initFetchCheckClient } from "../../../nextVersion/impl/remote/check/fetch"
 
