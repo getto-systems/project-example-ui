@@ -40,14 +40,16 @@ import { passwordField } from "../../../../common/field/password/impl/core"
 
 import { initDateClock } from "../../../../../z_infra/clock/date"
 import { initWebTypedStorage } from "../../../../../z_infra/storage/webStorage"
-import { initStringConverter } from "../../../../../z_infra/storage/converter/string"
-import { initApiCredentialConverter } from "../../../../../z_external/converter/apiCredential"
-import { initDateConverter } from "../../../../../z_infra/storage/converter/date"
 import { initFetchRenewClient } from "../../../../login/renew/impl/remote/renew/fetch"
 import {
     AuthCredentialStorage,
     initAuthCredentialRepository,
 } from "../../../../login/renew/impl/repository/authCredential"
+import {
+    initApiCredentialConverter,
+    initLastAuthAtConverter,
+    initTicketNonceConverter,
+} from "../../../../login/renew/impl/repository/converter"
 
 import { currentPagePathname, detectViewState, detectResetToken } from "../../impl/location"
 
@@ -159,14 +161,18 @@ export function initAuthCredentialStorage(credentialStorage: Storage): AuthCrede
         ticketNonce: initWebTypedStorage(
             credentialStorage,
             env.storageKey.ticketNonce,
-            initStringConverter()
+            initTicketNonceConverter()
         ),
         apiCredential: initWebTypedStorage(
             credentialStorage,
             env.storageKey.apiCredential,
             initApiCredentialConverter()
         ),
-        lastAuthAt: initWebTypedStorage(credentialStorage, env.storageKey.lastAuthAt, initDateConverter()),
+        lastAuthAt: initWebTypedStorage(
+            credentialStorage,
+            env.storageKey.lastAuthAt,
+            initLastAuthAtConverter()
+        ),
     }
 }
 export function initRenewAction(

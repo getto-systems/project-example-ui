@@ -5,13 +5,15 @@ import {
     markAuthAt,
     markTicketNonce,
     AuthCredential,
-    ApiCredential_data,
+    TicketNonce,
+    ApiCredential,
+    AuthAt,
 } from "../../../../common/credential/data"
 
 export type AuthCredentialStorage = Readonly<{
-    ticketNonce: TypedStorage<string>
-    apiCredential: TypedStorage<ApiCredential_data>
-    lastAuthAt: TypedStorage<Date>
+    ticketNonce: TypedStorage<TicketNonce>
+    apiCredential: TypedStorage<ApiCredential>
+    lastAuthAt: TypedStorage<AuthAt>
 }>
 export function initAuthCredentialRepository(storage: AuthCredentialStorage): AuthCredentialRepository {
     return new Repository(storage)
