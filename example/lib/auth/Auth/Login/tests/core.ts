@@ -9,6 +9,8 @@ import { forceRenew, renew, setContinuousRenew } from "../../../login/renew/impl
 import { login } from "../../../login/passwordLogin/impl/core"
 import { startSession, checkStatus, reset } from "../../../profile/passwordReset/impl/core"
 
+import { initMemoryTypedStorage, MemoryTypedStorageStore } from "../../../../z_infra/storage/memory"
+
 import { initSimulateRenewClient, RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 import {
     initSimulatePasswordLoginClient,
@@ -23,10 +25,7 @@ import {
     SessionSimulator,
 } from "../../../profile/passwordReset/impl/remote/session/simulate"
 
-import { ApplicationAction } from "../../../common/application/action"
-import { RenewAction, SetContinuousRenewAction } from "../../../login/renew/action"
-import { PasswordLoginAction } from "../../../login/passwordLogin/action"
-import { PasswordResetAction, PasswordResetSessionAction } from "../../../profile/passwordReset/action"
+import { AuthCredentialStorage } from "../../../login/renew/impl/repository/authCredential"
 
 import { Clock } from "../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../common/application/infra"
@@ -37,6 +36,13 @@ import {
     PasswordResetSessionActionConfig,
 } from "../../../profile/passwordReset/infra"
 import { AuthCredentialRepository } from "../../../login/renew/infra"
+
+import { ApplicationAction } from "../../../common/application/action"
+import { RenewAction, SetContinuousRenewAction } from "../../../login/renew/action"
+import { PasswordLoginAction } from "../../../login/passwordLogin/action"
+import { PasswordResetAction, PasswordResetSessionAction } from "../../../profile/passwordReset/action"
+
+import { ApiCredential, AuthAt, TicketNonce } from "../../../common/credential/data"
 
 export function initApplicationAction(config: ApplicationActionConfig): ApplicationAction {
     return {
@@ -154,5 +160,20 @@ export function initPasswordResetCollector(currentURL: URL): PasswordResetCollec
 function initApplicationCollector(currentURL: URL) {
     return {
         getPagePathname: () => currentPagePathname(currentURL),
+    }
+}
+
+export type AuthCredentialTestStorageParam = Readonly<{
+    ticketNonce: MemoryTypedStorageStore<TicketNonce>
+    apiCredential: MemoryTypedStorageStore<ApiCredential>
+    lastAuthAt: MemoryTypedStorageStore<AuthAt>
+}>
+export function initAuthCredentialTestStorage(
+    params: AuthCredentialTestStorageParam
+): AuthCredentialStorage {
+    return {
+        ticketNonce: initMemoryTypedStorage(params.ticketNonce),
+        apiCredential: initMemoryTypedStorage(params.apiCredential),
+        lastAuthAt: initMemoryTypedStorage(params.lastAuthAt),
     }
 }

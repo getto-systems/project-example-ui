@@ -1,5 +1,4 @@
-import { wait } from "../../../../z_infra/delayed/core"
-
+import { initAuthCredentialTestStorage } from "../../Login/tests/core"
 import {
     PasswordResetConfig,
     newPasswordResetResource,
@@ -7,9 +6,11 @@ import {
     PasswordResetSimulator,
 } from "./core"
 
-import { initMemoryAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential/memory"
+import { wait } from "../../../../z_infra/delayed/core"
 import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
+
+import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
 
 import { AuthCredentialRepository } from "../../../login/renew/infra"
 
@@ -493,7 +494,13 @@ function standardConfig(): PasswordResetConfig {
 }
 function standardRepository(): PasswordResetRepository {
     return {
-        authCredentials: initMemoryAuthCredentialRepository({ stored: false }),
+        authCredentials: initAuthCredentialRepository(
+            initAuthCredentialTestStorage({
+                ticketNonce: { set: false },
+                apiCredential: { set: false },
+                lastAuthAt: { set: false },
+            })
+        ),
     }
 }
 function standardSimulator(): PasswordResetSimulator {

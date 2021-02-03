@@ -38,9 +38,16 @@ import { forceRenew, renew, setContinuousRenew } from "../../../../login/renew/i
 import { loginIDField } from "../../../../common/field/loginID/impl/core"
 import { passwordField } from "../../../../common/field/password/impl/core"
 
-import { initFetchRenewClient } from "../../../../login/renew/impl/remote/renew/fetch"
 import { initDateClock } from "../../../../../z_infra/clock/date"
-import { initStorageAuthCredentialRepository } from "../../../../login/renew/impl/repository/authCredential/storage"
+import { initWebTypedStorage } from "../../../../../z_infra/storage/webStorage"
+import { initStringConverter } from "../../../../../z_infra/storage/converter/string"
+import { initApiCredentialConverter } from "../../../../../z_external/converter/apiCredential"
+import { initDateConverter } from "../../../../../z_infra/storage/converter/date"
+import { initFetchRenewClient } from "../../../../login/renew/impl/remote/renew/fetch"
+import {
+    AuthCredentialStorage,
+    initAuthCredentialRepository,
+} from "../../../../login/renew/impl/repository/authCredential"
 
 import { currentPagePathname, detectViewState, detectResetToken } from "../../impl/location"
 
@@ -95,7 +102,7 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
 
     const worker = new Worker(`/${env.version}/auth/login.worker.js`)
 
-    const authCredentials = initAuthCredentialRepository(credentialStorage)
+    const authCredentials = initAuthCredentialRepository(initAuthCredentialStorage(credentialStorage))
 
     const factory: ForegroundFactory = {
         link: initLoginLink,
@@ -147,8 +154,20 @@ export function initApplicationAction(config: ApplicationActionConfig): Applicat
         secureScriptPath: secureScriptPath({ config: config.secureScriptPath }),
     }
 }
-export function initAuthCredentialRepository(credentialStorage: Storage): AuthCredentialRepository {
-    return initStorageAuthCredentialRepository(credentialStorage, env.storageKey)
+export function initAuthCredentialStorage(credentialStorage: Storage): AuthCredentialStorage {
+    return {
+        ticketNonce: initWebTypedStorage(
+            credentialStorage,
+            env.storageKey.ticketNonce,
+            initStringConverter()
+        ),
+        apiCredential: initWebTypedStorage(
+            credentialStorage,
+            env.storageKey.apiCredential,
+            initApiCredentialConverter()
+        ),
+        lastAuthAt: initWebTypedStorage(credentialStorage, env.storageKey.lastAuthAt, initDateConverter()),
+    }
 }
 export function initRenewAction(
     config: RenewActionConfig,

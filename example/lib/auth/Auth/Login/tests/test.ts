@@ -1,4 +1,4 @@
-import { initLoginViewCollector } from "./core"
+import { initAuthCredentialTestStorage, initLoginViewCollector } from "./core"
 
 import {
     PasswordLoginConfig,
@@ -24,10 +24,11 @@ import {
     RenewCredentialSimulator,
 } from "../../renewCredential/tests/core"
 
-import { initMemoryAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential/memory"
 import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 import { initStaticClock } from "../../../../z_infra/clock/simulate"
 import { SendTokenState } from "../../../profile/passwordReset/impl/remote/session/simulate"
+
+import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
 
 import { Clock } from "../../../../z_infra/clock/infra"
 
@@ -475,7 +476,13 @@ function simulateGetDestination(_sessionID: SessionID): Destination {
 
 function standardRepository(): Repository {
     return {
-        authCredentials: initMemoryAuthCredentialRepository({ stored: false }),
+        authCredentials: initAuthCredentialRepository(
+            initAuthCredentialTestStorage({
+                ticketNonce: { set: false },
+                apiCredential: { set: false },
+                lastAuthAt: { set: false },
+            })
+        ),
     }
 }
 
