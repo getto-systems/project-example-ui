@@ -61,7 +61,7 @@ export function MenuList({ menuList }: Props): VNode {
                 label,
                 toggle,
                 badge: badge(node.badgeCount),
-                children: menuContent(node.children),
+                children: menuContent(node.children).map((content) => html`<li>${content}</li>`),
             })
 
             function toggle(event: Event) {

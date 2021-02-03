@@ -18,7 +18,7 @@ import { MenuBadgeClient, MenuTree } from "../../../permission/menu/infra"
 export function initCredentialAction(): CredentialAction {
     const apiCredentials = initMemoryApiCredentialRepository(
         markApiNonce("api-nonce"),
-        markApiRoles(["admin"])
+        markApiRoles(["admin", "development-docs"])
     )
 
     return {
