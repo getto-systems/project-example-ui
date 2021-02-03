@@ -23,7 +23,7 @@ export type AuthCredential = Readonly<{
 }>
 
 export type ApiCredential = ApiCredential_data & { ApiCredential: never }
-type ApiCredential_data = Readonly<{
+export type ApiCredential_data = Readonly<{
     // TODO ApiNonce を追加
     // apiNonce: string
     apiRoles: string[]

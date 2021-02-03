@@ -1,11 +1,10 @@
-import { wait } from "../../../../z_infra/delayed/core"
-
 import {
     PasswordResetSessionConfig,
     newPasswordResetSessionResource,
     PasswordResetSessionSimulator,
 } from "./core"
 
+import { wait } from "../../../../z_infra/delayed/core"
 import { SendTokenState } from "../../../profile/passwordReset/impl/remote/session/simulate"
 
 import { PasswordResetSessionState } from "../component"

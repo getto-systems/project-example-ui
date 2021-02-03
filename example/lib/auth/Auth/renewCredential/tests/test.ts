@@ -1,5 +1,3 @@
-import { wait } from "../../../../z_infra/delayed/core"
-
 import {
     RenewCredentialConfig,
     newRenewCredentialResource,
@@ -7,7 +5,7 @@ import {
     RenewCredentialSimulator,
 } from "./core"
 
-import { initMemoryAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential/memory"
+import { wait } from "../../../../z_infra/delayed/core"
 import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
 
@@ -17,6 +15,8 @@ import { RenewCredentialState } from "../component"
 
 import { markApiCredential, markAuthAt, markTicketNonce } from "../../../common/credential/data"
 import { markScriptPath } from "../../../common/application/data"
+import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
+import { initAuthCredentialTestStorage } from "../../Login/tests/core"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -430,19 +430,24 @@ function standardConfig(): RenewCredentialConfig {
 }
 function standardRepository(): RenewCredentialRepository {
     return {
-        authCredentials: initMemoryAuthCredentialRepository({
-            stored: true,
-            authCredential: {
-                ticketNonce: markTicketNonce(STORED_TICKET_NONCE),
-                apiCredential: markApiCredential({ apiRoles: ["role"] }),
-                authAt: markAuthAt(STORED_LOGIN_AT),
-            },
-        }),
+        authCredentials: initAuthCredentialRepository(
+            initAuthCredentialTestStorage({
+                ticketNonce: { set: true, value: markTicketNonce(STORED_TICKET_NONCE) },
+                apiCredential: { set: true, value: markApiCredential({ apiRoles: ["role"] }) },
+                lastAuthAt: { set: true, value: markAuthAt(STORED_LOGIN_AT) },
+            })
+        ),
     }
 }
 function emptyRepository(): RenewCredentialRepository {
     return {
-        authCredentials: initMemoryAuthCredentialRepository({ stored: false }),
+        authCredentials: initAuthCredentialRepository(
+            initAuthCredentialTestStorage({
+                ticketNonce: { set: false },
+                apiCredential: { set: false },
+                lastAuthAt: { set: false },
+            })
+        ),
     }
 }
 function standardSimulator(): RenewCredentialSimulator {

@@ -4,7 +4,7 @@ import { env } from "../../../../y_environment/env"
 
 import {
     initApplicationAction,
-    initAuthCredentialRepository,
+    initAuthCredentialStorage,
     initRenewAction,
     initSetContinuousRenewAction,
 } from "./worker/foreground"
@@ -40,6 +40,8 @@ import {
 } from "./config"
 import { initLoginLink } from "./link"
 
+import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
+
 import { initRenewCredentialComponent } from "../../renewCredential/impl"
 import { initPasswordLoginComponent } from "../../passwordLogin/impl"
 import { initPasswordResetSessionComponent } from "../../passwordResetSession/impl"
@@ -60,7 +62,7 @@ export function newLoginAsSingle(): LoginEntryPoint {
     const currentURL = new URL(location.toString())
 
     const authClient = initAuthClient(env.authServerURL)
-    const authCredentials = initAuthCredentialRepository(credentialStorage)
+    const authCredentials = initAuthCredentialRepository(initAuthCredentialStorage(credentialStorage))
 
     const factory: Factory = {
         link: initLoginLink,
