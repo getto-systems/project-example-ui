@@ -43,11 +43,13 @@ import { initWebTypedStorage } from "../../../../../z_infra/storage/webStorage"
 import { initFetchRenewClient } from "../../../../login/renew/impl/remote/renew/fetch"
 import {
     AuthCredentialStorage,
-    initApiCredentialConverter,
     initAuthCredentialRepository,
+} from "../../../../login/renew/impl/repository/authCredential"
+import {
+    initApiCredentialConverter,
     initLastAuthAtConverter,
     initTicketNonceConverter,
-} from "../../../../login/renew/impl/repository/authCredential"
+} from "../../../../login/renew/impl/repository/converter"
 
 import { currentPagePathname, detectViewState, detectResetToken } from "../../impl/location"
 
