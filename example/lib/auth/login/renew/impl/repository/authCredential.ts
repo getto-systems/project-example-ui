@@ -1,17 +1,23 @@
-import { TypedStorage } from "../../../../../z_infra/storage/infra"
+import { decodeSuccess, TypedStorage, TypedStorageConverter } from "../../../../../z_infra/storage/infra"
 import { AuthCredentialRepository, StoreResult, LoadLastLoginResult } from "../../infra"
 
 import {
     markAuthAt,
     markTicketNonce,
     AuthCredential,
-    ApiCredential_data,
+    TicketNonce,
+    ApiCredential,
+    AuthAt,
+    markApiCredential,
 } from "../../../../common/credential/data"
+import { combineConverter } from "../../../../../z_infra/storage/converter/combine"
+import { initApiCredentialDataConverter } from "../../../../../z_external/converter/apiCredential"
+import { initDateConverter } from "../../../../../z_infra/storage/converter/date"
 
 export type AuthCredentialStorage = Readonly<{
-    ticketNonce: TypedStorage<string>
-    apiCredential: TypedStorage<ApiCredential_data>
-    lastAuthAt: TypedStorage<Date>
+    ticketNonce: TypedStorage<TicketNonce>
+    apiCredential: TypedStorage<ApiCredential>
+    lastAuthAt: TypedStorage<AuthAt>
 }>
 export function initAuthCredentialRepository(storage: AuthCredentialStorage): AuthCredentialRepository {
     return new Repository(storage)
@@ -82,3 +88,22 @@ function findCredential<T>(storage: TypedStorage<T>): Found<T> {
 }
 
 type Found<T> = Readonly<{ found: false }> | Readonly<{ found: true; value: T }>
+
+export function initTicketNonceConverter(): TypedStorageConverter<TicketNonce> {
+    return {
+        encode: (value) => value,
+        decode: (value) => decodeSuccess(markTicketNonce(value)),
+    }
+}
+export function initApiCredentialConverter(): TypedStorageConverter<ApiCredential> {
+    return combineConverter(initApiCredentialDataConverter(), {
+        encode: (value) => value,
+        decode: (value) => decodeSuccess(markApiCredential(value)),
+    })
+}
+export function initLastAuthAtConverter(): TypedStorageConverter<AuthAt> {
+    return combineConverter(initDateConverter(), {
+        encode: (value) => value,
+        decode: (value) => decodeSuccess(markAuthAt(value)),
+    })
+}

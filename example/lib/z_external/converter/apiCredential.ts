@@ -5,13 +5,18 @@ import {
     encodeUint8ArrayToBase64String,
 } from "../../z_vendor/protobufUtil"
 
-import { TypedStorageConverter, TypedStorageDecoded } from "../../z_infra/storage/infra"
+import {
+    decodeError,
+    decodeSuccess,
+    TypedStorageConverter,
+    TypedStorageDecoded,
+} from "../../z_infra/storage/infra"
 
 export type ApiCredentialDecoded = Readonly<{
     apiRoles: string[]
 }>
 
-export function initApiCredentialConverter(): TypedStorageConverter<ApiCredentialDecoded> {
+export function initApiCredentialDataConverter(): TypedStorageConverter<ApiCredentialDecoded> {
     return new Converter()
 }
 
@@ -31,11 +36,11 @@ class Converter implements TypedStorageConverter<ApiCredentialDecoded> {
         try {
             const message = ApiCredentialMessage.decode(decodeBase64StringToUint8Array(raw))
             const value = {
-                apiRoles: message.roles ? message.roles : [],                
+                apiRoles: message.roles ? message.roles : [],
             }
-            return { decodeError: false, value }
+            return decodeSuccess(value)
         } catch (err) {
-            return { decodeError: true, err }
+            return decodeError(err)
         }
     }
 }
