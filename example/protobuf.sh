@@ -1,7 +1,7 @@
 #!/bin/sh
 
 protobuf_main(){
-    protobuf_generate_all "example/lib/z_external/localStorage"
+    protobuf_generate_all "example/lib/z_external/storage"
     protobuf_generate_all "example/lib/z_external/api"
 }
 

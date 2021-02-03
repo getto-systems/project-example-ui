@@ -1,4 +1,4 @@
-import { ApiCredentialMessage } from "../../../../../../z_external/localStorage/y_protobuf/api_pb.js"
+import { ApiCredentialMessage } from "../../../../../../z_external/storage/y_protobuf/api_pb.js"
 
 import {
     decodeBase64StringToUint8Array,
