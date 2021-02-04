@@ -5,7 +5,8 @@ import { initWebTypedStorage } from "../../../../z_infra/storage/webStorage"
 import { initApiCredentialRepository } from "../../../common/credential/impl/repository/apiCredential"
 import { initApiCredentialConverter } from "../../../common/credential/impl/repository/converter"
 import { initStaticMenuBadgeClient } from "../../../permission/menu/impl/remote/menuBadge/static"
-import { initStorageMenuExpandRepository } from "../../../permission/menu/impl/repository/menuExpand/storage"
+import { initMenuExpandRepository } from "../../../permission/menu/impl/repository/menuExpand"
+import { initMenuExpandConverter } from "../../../permission/menu/impl/repository/converter"
 import { documentMenuTree, mainMenuTree } from "../impl/menu/menuTree"
 import { initNoopMenuBadgeClient } from "../../../permission/menu/impl/remote/menuBadge/noop"
 
@@ -48,10 +49,13 @@ function initMenuAction(
     menuExpandStorage: Storage,
     menuBadge: MenuBadgeClient
 ): MenuAction {
-    const menuExpands = initStorageMenuExpandRepository(
-        menuExpandStorage,
-        env.storageKey.menuExpand.main
-    )
+    const menuExpands = initMenuExpandRepository({
+        menuExpand: initWebTypedStorage(
+            menuExpandStorage,
+            env.storageKey.menuExpand.main,
+            initMenuExpandConverter()
+        ),
+    })
 
     return {
         loadBreadcrumb: loadBreadcrumb({ menuTree }),
