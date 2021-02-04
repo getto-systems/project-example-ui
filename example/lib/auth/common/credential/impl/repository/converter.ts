@@ -7,7 +7,7 @@ import { ApiCredential, markApiCredential } from "../../data"
 
 export function initApiCredentialConverter(): TypedStorageConverter<ApiCredential> {
     return combineConverter(initApiCredentialDataConverter(), {
-        encode: (value) => value,
-        decode: (raw) => decodeSuccess(markApiCredential(raw)),
+        toRaw: (value) => value,
+        toValue: (raw) => decodeSuccess(markApiCredential(raw)),
     })
 }

@@ -3,8 +3,8 @@ import { MenuExpand } from "../../infra"
 
 export function initMenuExpandConverter(): TypedStorageConverter<MenuExpand> {
     return {
-        encode: (value) => JSON.stringify(value),
-        decode: (raw) => {
+        toRaw: (value) => JSON.stringify(value),
+        toValue: (raw) => {
             const json = JSON.parse(raw)
             if (!(json instanceof Array)) {
                 return { decodeError: true, err: `decode menu expand error: not array : ${raw}` }

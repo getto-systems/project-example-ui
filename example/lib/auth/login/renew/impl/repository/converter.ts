@@ -12,13 +12,13 @@ import {
 
 export function initTicketNonceConverter(): TypedStorageConverter<TicketNonce> {
     return {
-        encode: (value) => value,
-        decode: (raw) => decodeSuccess(markTicketNonce(raw)),
+        toRaw: (value) => value,
+        toValue: (raw) => decodeSuccess(markTicketNonce(raw)),
     }
 }
 export function initLastAuthAtConverter(): TypedStorageConverter<AuthAt> {
     return combineConverter(initDateConverter(), {
-        encode: (value) => value,
-        decode: (raw) => decodeSuccess(markAuthAt(raw)),
+        toRaw: (value) => value,
+        toValue: (raw) => decodeSuccess(markAuthAt(raw)),
     })
 }

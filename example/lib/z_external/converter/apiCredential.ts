@@ -9,7 +9,7 @@ import {
     decodeError,
     decodeSuccess,
     TypedStorageConverter,
-    TypedStorageDecoded,
+    TypedStorageValue,
 } from "../../z_infra/storage/infra"
 
 export type ApiCredentialDecoded = Readonly<{
@@ -21,7 +21,7 @@ export function initApiCredentialDataConverter(): TypedStorageConverter<ApiCrede
 }
 
 class Converter implements TypedStorageConverter<ApiCredentialDecoded> {
-    encode(value: ApiCredentialDecoded): string {
+    toRaw(value: ApiCredentialDecoded): string {
         const f = ApiCredentialMessage
         const message = new f()
 
@@ -32,7 +32,7 @@ class Converter implements TypedStorageConverter<ApiCredentialDecoded> {
         const arr = f.encode(message).finish()
         return encodeUint8ArrayToBase64String(arr)
     }
-    decode(raw: string): TypedStorageDecoded<ApiCredentialDecoded> {
+    toValue(raw: string): TypedStorageValue<ApiCredentialDecoded> {
         try {
             const message = ApiCredentialMessage.decode(decodeBase64StringToUint8Array(raw))
             const value = {

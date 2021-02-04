@@ -1,14 +1,14 @@
-import { decodeError, decodeSuccess, TypedStorageConverter, TypedStorageDecoded } from "../infra"
+import { decodeError, decodeSuccess, TypedStorageConverter, TypedStorageValue } from "../infra"
 
 export function initDateConverter(): TypedStorageConverter<Date> {
     return new Converter()
 }
 
 class Converter implements TypedStorageConverter<Date> {
-    encode(value: Date): string {
+    toRaw(value: Date): string {
         return value.toISOString()
     }
-    decode(raw: string): TypedStorageDecoded<Date> {
+    toValue(raw: string): TypedStorageValue<Date> {
         const value = new Date(raw)
         if (value instanceof Date) {
             return decodeSuccess(value)
