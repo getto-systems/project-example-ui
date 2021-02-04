@@ -1,4 +1,3 @@
-// storage 実装クラスが throw したエラーは catch されない
 export interface TypedStorage<T> {
     get(): TypedStorageFetchResult<T>
     set(value: T): void

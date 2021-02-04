@@ -132,7 +132,7 @@ export function initPasswordResetAction(config: PasswordResetActionConfig): Pass
             return {
                 ticketNonce: markTicketNonce("ticket-nonce"),
                 apiCredential: markApiCredential({
-                    apiRoles: ["admin", "dev"],
+                    apiRoles: ["admin", "development-docs"],
                 }),
                 authAt: markAuthAt(new Date()),
             }

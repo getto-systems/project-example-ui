@@ -2,10 +2,18 @@ import { VNode } from "preact"
 import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { menuBody, menuBox, menuCategory, menuItem } from "../../z_vendor/getto-css/preact/layout/app"
+import {
+    appMenu,
+    menuBody,
+    menuBox,
+    menuCategory,
+    menuFooter,
+    menuItem,
+} from "../../z_vendor/getto-css/preact/layout/app"
 import { badge_alert, notice_alert } from "../../z_vendor/getto-css/preact/design/highlight"
 
 import { useComponent } from "../common/hooks"
+import { poweredBy } from "../common/site"
 
 import { MenuListComponent, initialMenuListState } from "../../auth/Outline/menuList/component"
 
@@ -29,11 +37,15 @@ export function MenuList({ menuList }: Props): VNode {
         case "succeed-to-load":
         case "succeed-to-instant-load":
         case "succeed-to-toggle":
-            return html`${content(state.menu)}`
+            return menu([content(state.menu)])
 
         case "failed-to-load":
         case "failed-to-toggle":
-            return html`${error(state.err)} ${content(state.menu)}`
+            return menu([error(state.err), content(state.menu)])
+    }
+
+    function menu(content: VNode[]) {
+        return appMenu([...content, menuFooter(poweredBy())])
     }
 
     function content(wholeMenu: Menu): VNode {

@@ -2,18 +2,14 @@ import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
 import {
-    menuHeader,
-    menuFooter,
     appLayout,
     appMain,
     mainHeader,
     mainTitle,
     mainBody,
-    appMenu,
-    menuBox,
 } from "../../z_vendor/getto-css/preact/layout/app"
 
-import { siteInfo } from "../../x_preact/common/site"
+import { copyright, siteInfo } from "../../x_preact/common/site"
 
 import { MenuList } from "../../x_preact/Outline/MenuList"
 
@@ -49,16 +45,14 @@ const Template: Story<MockProps> = (args) => {
 
         function app() {
             return appLayout({
+                siteInfo: siteInfo(),
+                header: [],
                 main: appMain({
                     header: mainHeader([mainTitle("タイトル")]),
                     body: mainBody("コンテンツ"),
+                    copyright: copyright(),
                 }),
-                menu: appMenu([
-                    menuHeader(siteInfo()),
-                    menuBox("global information"),
-                    h(MenuList, menuProps),
-                    menuFooter(),
-                ]),
+                menu: h(MenuList, menuProps),
             })
         }
     }

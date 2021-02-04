@@ -4,53 +4,95 @@ import { html } from "htm/preact"
 import { VNodeContent } from "../common"
 import { SiteInfo } from "../../site"
 
-export type MainLayoutContent = Readonly<{
-    header: VNodeContent
-    body: VNodeContent
+export type AppLayoutContent = Readonly<{
+    siteInfo: SiteInfo
+    header: VNodeContent[]
+    main: VNodeContent
+    menu: VNodeContent
 }>
 
-export function appLayout({ main, menu }: { main: VNodeContent; menu: VNodeContent }): VNode {
-    return html`<main class="layout__app">${appContainer([main])} ${menu}</main>`
+export function appLayout({ siteInfo, header, main, menu }: AppLayoutContent): VNode {
+    return layoutContent("normal", siteInfo, header, [appBodyContainer([main]), menu])
 }
 
+export type AppLayoutSidebarContent = AppLayoutContent &
+    Readonly<{
+        sidebar: VNodeContent
+    }>
+
 export function appLayout_sidebar({
+    siteInfo,
+    header,
     main,
     sidebar,
     menu,
-}: {
-    main: VNodeContent
-    sidebar: VNodeContent
-    menu: VNodeContent
-}): VNode {
-    return html`<main class="layout__app layout__app__sidebar_single">
-        ${appContainer([main, sidebar])} ${menu}
-    </main>`
+}: AppLayoutSidebarContent): VNode {
+    return layoutContent("sidebar_single", siteInfo, header, [appBodyContainer([main, sidebar]), menu])
 }
 
 export function appLayout_sidebar_double({
+    siteInfo,
+    header,
     main,
     sidebar,
     menu,
-}: {
-    main: VNodeContent
-    sidebar: VNodeContent
-    menu: VNodeContent
-}): VNode {
-    return html`<main class="layout__app layout__app__sidebar_double">
-        ${appContainer([main, sidebar])} ${menu}
+}: AppLayoutSidebarContent): VNode {
+    return layoutContent("sidebar_double", siteInfo, header, [appBodyContainer([main, sidebar]), menu])
+}
+
+type AppLayoutType = "normal" | "sidebar_single" | "sidebar_double"
+function toAppLayoutClass(type: AppLayoutType): string {
+    switch (type) {
+        case "normal":
+            return ""
+
+        case "sidebar_single":
+        case "sidebar_double":
+            return `layout__app__${type}`
+    }
+}
+
+function layoutContent(
+    type: AppLayoutType,
+    siteInfo: SiteInfo,
+    header: VNodeContent[],
+    content: VNodeContent[]
+) {
+    return html`<main class="layout__app ${toAppLayoutClass(type)}">
+        ${appHeader(siteInfo, header)}
+        <section class="layout__app__body">${content}</section>
     </main>`
 }
 
-function appContainer(content: VNodeContent[]): VNode {
-    return html`<section class="layout__app__container">${content}</section>`
+function appHeader({ brand, title, subTitle }: SiteInfo, header: VNodeContent[]): VNode {
+    return html`<header class="app__header">${logo()} ${header.map(box)}</header>`
+
+    function logo() {
+        return html`<aside class="app__logo">
+            <cite class="app__logo__brand">${brand}</cite>
+            <strong class="app__logo__title">${title}</strong>
+            <cite class="app__logo__subTitle">${subTitle}</cite>
+        </aside>`
+    }
+    function box(content: VNodeContent) {
+        return html`<section class="app__header__box">${content}</section>`
+    }
+}
+function appBodyContainer(content: VNodeContent[]): VNode {
+    return html`<section class="layout__app__body__container">${content}</section>`
 }
 
-export function appMain({ header, body }: MainLayoutContent): VNode {
-    return html`<article class="layout__app__main">${header} ${body} ${mainFooter()}</article>`
+export type MainLayoutContent = Readonly<{
+    header: VNodeContent
+    body: VNodeContent
+    copyright: VNodeContent
+}>
+export function appMain({ header, body, copyright }: MainLayoutContent): VNode {
+    return html`<article class="layout__app__main">${header} ${body} ${mainFooter(copyright)}</article>`
 }
-export function appSidebar({ header, body }: MainLayoutContent): VNode {
+export function appSidebar({ header, body, copyright }: MainLayoutContent): VNode {
     return html`<aside class="layout__app__sidebar">
-        <section class="sidebar">${header} ${body} ${mainFooter()}</section>
+        <section class="sidebar">${header} ${body} ${mainFooter(copyright)}</section>
     </aside>`
 }
 export function appMenu(content: VNodeContent): VNode {
@@ -78,22 +120,10 @@ export function sidebarBody_grow(content: VNodeContent): VNode {
     return html`<section class="sidebar__body sidebar__body_grow">${content}</section>`
 }
 
-export function sidebarLargeElement(content: VNodeContent): VNode {
-    return html`<section class="layout__app__sidebar__largeElement">${content}</section>`
-}
-
-export function mainFooter(): VNode {
+export function mainFooter(copyright: VNodeContent): VNode {
     return html`<footer class="main__footer">
-        <p class="main__footer__message">GETTO.systems</p>
+        <p class="main__footer__message">${copyright}</p>
     </footer>`
-}
-
-export function menuHeader({ brand, title, subTitle }: SiteInfo): VNode {
-    return html`<header class="menu__header">
-        <cite class="menu__brand">${brand}</cite>
-        <strong class="menu__title">${title}</strong>
-        <cite class="menu__subTitle">${subTitle}</cite>
-    </header>`
 }
 
 export function menuBox(content: VNodeContent): VNode {
@@ -140,10 +170,11 @@ export function menuItem({ isActive, href, content, badge }: MenuItemContent): V
     </li>`
 }
 
-export function menuFooter(): VNode {
+export function menuFooter(poweredBy: string[]): VNode {
     return html`<footer class="menu__footer">
         <p class="menu__footer__message">
-            powered by : LineIcons <span class="noWrap">/ みんなの文字</span>
+            powered by :<br />
+            <span class="noWrap">${poweredBy.join(" / ")}</span>
         </p>
     </footer>`
 }

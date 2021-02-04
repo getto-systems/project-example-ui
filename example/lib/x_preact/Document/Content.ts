@@ -5,6 +5,8 @@ import { html } from "htm/preact"
 import { VNodeContent } from "../../z_vendor/getto-css/preact/common"
 import { appMain, mainBody, mainHeader, mainTitle } from "../../z_vendor/getto-css/preact/layout/app"
 
+import { copyright } from "../common/site"
+
 import { BreadcrumbList } from "../Outline/BreadcrumbList"
 
 import { ContentComponent, initialContentState } from "../../document/Document/content/component"
@@ -48,6 +50,7 @@ export function Content(resource: Props): VNode {
             return appMain({
                 header: mainHeader([mainTitle(documentTitle(state.path)), h(BreadcrumbList, resource)]),
                 body: mainBody(loadContentState.content),
+                copyright: copyright(),
             })
     }
 }
