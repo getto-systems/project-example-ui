@@ -18,13 +18,13 @@ import { DocumentEntryPoint } from "../entryPoint"
 import { ContentAction } from "../../../content/action"
 
 export function newDocumentAsSingle(): DocumentEntryPoint {
-    const menuExpandStorage = localStorage
+    const webStorage = localStorage
     const currentURL = new URL(location.toString())
 
     const factory: DocumentFactory = {
         actions: {
-            credential: initCredentialAction(),
-            menu: initDocumentMenuAction(menuExpandStorage),
+            credential: initCredentialAction(webStorage),
+            menu: initDocumentMenuAction(webStorage),
             content: initContentAction(),
         },
         components: {

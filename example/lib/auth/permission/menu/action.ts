@@ -1,8 +1,7 @@
-import { LoadResult } from "../../common/credential/event"
 import { LoadMenuEvent, ToggleMenuExpandEvent } from "./event"
 
+import { ApiNonce, ApiRoles, LoadApiCredentialResult } from "../../common/credential/data"
 import { LoadBreadcrumbEvent, Menu, MenuCategoryPath, MenuTarget } from "./data"
-import { ApiNonce, ApiRoles } from "../../common/credential/data"
 
 export type MenuAction = Readonly<{
     loadBreadcrumb: LoadBreadcrumbPod
@@ -22,7 +21,7 @@ export interface LoadMenuPod {
     (collector: LoadMenuCollector): LoadMenu
 }
 export interface LoadMenu {
-    (nonce: LoadResult<ApiNonce>, roles: LoadResult<ApiRoles>, post: Post<LoadMenuEvent>): void
+    (nonce: LoadApiCredentialResult<ApiNonce>, roles: LoadApiCredentialResult<ApiRoles>, post: Post<LoadMenuEvent>): void
 }
 export type LoadMenuCollector = MenuTargetCollector
 

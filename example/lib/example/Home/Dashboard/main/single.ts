@@ -14,13 +14,13 @@ import { initSeasonAction } from "../../../Outline/GlobalInfo/main/core"
 import { DashboardEntryPoint } from "../entryPoint"
 
 export function newDashboardAsSingle(): DashboardEntryPoint {
-    const menuExpandStorage = localStorage
+    const webStorage = localStorage
     const currentURL = new URL(location.toString())
 
     const factory: DashboardFactory = {
         actions: {
-            credential: initCredentialAction(),
-            menu: initMainMenuAction(menuExpandStorage),
+            credential: initCredentialAction(webStorage),
+            menu: initMainMenuAction(webStorage),
             season: initSeasonAction(),
         },
         components: {

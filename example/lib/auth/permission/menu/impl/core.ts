@@ -13,9 +13,7 @@ import {
 
 import { LoadBreadcrumbPod, LoadMenuPod, ToggleMenuExpandPod } from "../action"
 
-import { LoadResult } from "../../../common/credential/event"
-
-import { ApiRoles } from "../../../common/credential/data"
+import { ApiRoles, LoadApiCredentialResult } from "../../../common/credential/data"
 import {
     Breadcrumb,
     BreadcrumbNode,
@@ -154,7 +152,7 @@ export const loadMenu = (infra: LoadMenuInfra): LoadMenuPod => (collector) => as
 
 type MenuInfo = Readonly<{
     menuTree: MenuTree
-    roles: LoadResult<ApiRoles>
+    roles: LoadApiCredentialResult<ApiRoles>
     menuTarget: MenuTarget
 }>
 

@@ -4,8 +4,9 @@ import {
     newDashboardResource,
 } from "../../Dashboard/tests/core"
 
+import { initMemoryTypedStorage } from "../../../../z_infra/storage/memory"
 import { initStaticClock } from "../../../../z_infra/clock/simulate"
-import { initMemoryApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential/memory"
+import { initApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential"
 import { initMemoryMenuExpandRepository } from "../../../../auth/permission/menu/impl/repository/menuExpand/memory"
 import { initMemorySeasonRepository } from "../../../shared/season/impl/repository/season/memory"
 
@@ -14,7 +15,7 @@ import { MenuBadge, MenuTree } from "../../../../auth/permission/menu/infra"
 
 import { ExampleState } from "../component"
 
-import { ApiNonce, markApiNonce, markApiRoles } from "../../../../auth/common/credential/data"
+import { ApiNonce, markApiCredential } from "../../../../auth/common/credential/data"
 
 // デフォルトの season を取得する
 const NOW = new Date("2021-01-01 10:00:00")
@@ -80,10 +81,16 @@ function standardMenuTree(): MenuTree {
 
 function standardRepository(): DashboardRepository {
     return {
-        apiCredentials: initMemoryApiCredentialRepository(
-            markApiNonce("api-nonce"),
-            markApiRoles(["admin"])
-        ),
+        apiCredentials: initApiCredentialRepository({
+            apiCredential: initMemoryTypedStorage({
+                set: true,
+                value: markApiCredential({
+                    // TODO apiNonce を追加
+                    //apiNonce: markApiNonce("api-nonce"),
+                    apiRoles: ["admin"],
+                }),
+            }),
+        }),
         menuExpands: initMemoryMenuExpandRepository([]),
         seasons: initMemorySeasonRepository({ stored: false }),
     }

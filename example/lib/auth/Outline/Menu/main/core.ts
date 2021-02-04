@@ -1,25 +1,30 @@
 import { env } from "../../../../y_environment/env"
 
-import { initMemoryApiCredentialRepository } from "../../../common/credential/impl/repository/apiCredential/memory"
+import { initWebTypedStorage } from "../../../../z_infra/storage/webStorage"
+
+import { initApiCredentialRepository } from "../../../common/credential/impl/repository/apiCredential"
+import { initApiCredentialConverter } from "../../../common/credential/impl/repository/converter"
 import { initStaticMenuBadgeClient } from "../../../permission/menu/impl/remote/menuBadge/static"
 import { initStorageMenuExpandRepository } from "../../../permission/menu/impl/repository/menuExpand/storage"
 import { documentMenuTree, mainMenuTree } from "../impl/menu/menuTree"
+import { initNoopMenuBadgeClient } from "../../../permission/menu/impl/remote/menuBadge/noop"
 
 import { loadApiNonce, loadApiRoles } from "../../../common/credential/impl/core"
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../permission/menu/impl/core"
 
+import { MenuBadgeClient, MenuTree } from "../../../permission/menu/infra"
+
 import { CredentialAction } from "../../../common/credential/action"
 import { MenuAction } from "../../../permission/menu/action"
 
-import { markApiNonce, markApiRoles } from "../../../common/credential/data"
-import { initNoopMenuBadgeClient } from "../../../permission/menu/impl/remote/menuBadge/noop"
-import { MenuBadgeClient, MenuTree } from "../../../permission/menu/infra"
-
-export function initCredentialAction(): CredentialAction {
-    const apiCredentials = initMemoryApiCredentialRepository(
-        markApiNonce("api-nonce"),
-        markApiRoles(["admin", "development-docs"])
-    )
+export function initCredentialAction(credentialStorage: Storage): CredentialAction {
+    const apiCredentials = initApiCredentialRepository({
+        apiCredential: initWebTypedStorage(
+            credentialStorage,
+            env.storageKey.apiCredential,
+            initApiCredentialConverter()
+        ),
+    })
 
     return {
         loadApiNonce: loadApiNonce({ apiCredentials }),

@@ -1,13 +1,10 @@
-import { initApiCredentialDataConverter } from "../../../../../z_external/converter/apiCredential"
-
 import { combineConverter } from "../../../../../z_infra/storage/converter/combine"
 import { initDateConverter } from "../../../../../z_infra/storage/converter/date"
+
 import { decodeSuccess, TypedStorageConverter } from "../../../../../z_infra/storage/infra"
 
 import {
-    ApiCredential,
     AuthAt,
-    markApiCredential,
     markAuthAt,
     markTicketNonce,
     TicketNonce,
@@ -18,12 +15,6 @@ export function initTicketNonceConverter(): TypedStorageConverter<TicketNonce> {
         encode: (value) => value,
         decode: (value) => decodeSuccess(markTicketNonce(value)),
     }
-}
-export function initApiCredentialConverter(): TypedStorageConverter<ApiCredential> {
-    return combineConverter(initApiCredentialDataConverter(), {
-        encode: (value) => value,
-        decode: (value) => decodeSuccess(markApiCredential(value)),
-    })
 }
 export function initLastAuthAtConverter(): TypedStorageConverter<AuthAt> {
     return combineConverter(initDateConverter(), {

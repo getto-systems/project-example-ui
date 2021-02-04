@@ -1,12 +1,14 @@
 import { DocumentRepository, DocumentSimulator, newDocumentResource } from "../../Document/tests/core"
 
-import { initMemoryApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential/memory"
+import { initMemoryTypedStorage } from "../../../../z_infra/storage/memory"
+import { initApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential"
 import { initMemoryMenuExpandRepository } from "../../../../auth/permission/menu/impl/repository/menuExpand/memory"
 
 import { MenuBadge, MenuTree } from "../../../../auth/permission/menu/infra"
 
-import { ApiNonce, markApiNonce, markApiRoles } from "../../../../auth/common/credential/data"
 import { ContentState } from "../component"
+
+import { ApiNonce, markApiCredential } from "../../../../auth/common/credential/data"
 
 describe("Content", () => {
     test("load content", (done) => {
@@ -64,10 +66,16 @@ function standardMenuTree(): MenuTree {
 
 function standardRepository(): DocumentRepository {
     return {
-        apiCredentials: initMemoryApiCredentialRepository(
-            markApiNonce("api-nonce"),
-            markApiRoles(["admin"])
-        ),
+        apiCredentials: initApiCredentialRepository({
+            apiCredential: initMemoryTypedStorage({
+                set: true,
+                value: markApiCredential({
+                    // TODO apiNonce を追加
+                    //apiNonce: markApiNonce("api-nonce"),
+                    apiRoles: ["admin"],
+                }),
+            }),
+        }),
         menuExpands: initMemoryMenuExpandRepository([]),
     }
 }

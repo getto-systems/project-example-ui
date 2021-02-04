@@ -45,8 +45,8 @@ import {
     AuthCredentialStorage,
     initAuthCredentialRepository,
 } from "../../../../login/renew/impl/repository/authCredential"
+import { initApiCredentialConverter } from "../../../../common/credential/impl/repository/converter"
 import {
-    initApiCredentialConverter,
     initLastAuthAtConverter,
     initTicketNonceConverter,
 } from "../../../../login/renew/impl/repository/converter"
