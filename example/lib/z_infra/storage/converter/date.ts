@@ -13,6 +13,6 @@ class Converter implements TypedStorageConverter<Date> {
         if (value instanceof Date) {
             return decodeSuccess(value)
         }
-        return decodeError(`date decode error: ${raw} -> null`)
+        return decodeError(`decode date error: ${raw} -> null`)
     }
 }
