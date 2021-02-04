@@ -2,10 +2,10 @@ import { MenuRepository, MenuSimulator, newMenuResource } from "./core"
 
 import { initMemoryTypedStorage } from "../../../../z_infra/storage/memory"
 import { initApiCredentialRepository } from "../../../common/credential/impl/repository/apiCredential"
-import { initMemoryMenuExpandRepository } from "../../../permission/menu/impl/repository/menuExpand/memory"
+import { initMenuExpandRepository } from "../../../permission/menu/impl/repository/menuExpand"
 
 import { ApiCredentialRepository } from "../../../common/credential/infra"
-import { MenuBadge, MenuTree } from "../../../permission/menu/infra"
+import { MenuBadge, MenuExpand, MenuExpandRepository, MenuTree } from "../../../permission/menu/infra"
 
 import { BreadcrumbListState } from "../../breadcrumbList/component"
 import { MenuListState } from "../../menuList/component"
@@ -1127,19 +1127,19 @@ function standardMenuTree(): MenuTree {
 function standardRepository(): MenuRepository {
     return {
         apiCredentials: standardApiCredentialRepository(),
-        menuExpands: initMemoryMenuExpandRepository([]),
+        menuExpands: standardMenuExpandRepository([]),
     }
 }
 function developmentDocsRepository(): MenuRepository {
     return {
         apiCredentials: developmentDocsApiCredentialRepository(),
-        menuExpands: initMemoryMenuExpandRepository([]),
+        menuExpands: standardMenuExpandRepository([]),
     }
 }
 function expandRepository(): MenuRepository {
     return {
         apiCredentials: standardApiCredentialRepository(),
-        menuExpands: initMemoryMenuExpandRepository([[markMenuCategoryLabel("DOCUMENT")]]),
+        menuExpands: standardMenuExpandRepository([[markMenuCategoryLabel("DOCUMENT")]]),
     }
 }
 
@@ -1178,6 +1178,12 @@ function developmentDocsApiCredentialRepository(): ApiCredentialRepository {
                 apiRoles: ["admin", "development-docs"],
             }),
         }),
+    })
+}
+
+function standardMenuExpandRepository(menuExpand: MenuExpand): MenuExpandRepository {
+    return initMenuExpandRepository({
+        menuExpand: initMemoryTypedStorage({ set: true, value: menuExpand }),
     })
 }
 

@@ -7,7 +7,7 @@ import {
 import { initMemoryTypedStorage } from "../../../../z_infra/storage/memory"
 import { initStaticClock } from "../../../../z_infra/clock/simulate"
 import { initApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential"
-import { initMemoryMenuExpandRepository } from "../../../../auth/permission/menu/impl/repository/menuExpand/memory"
+import { initMenuExpandRepository } from "../../../../auth/permission/menu/impl/repository/menuExpand"
 import { initMemorySeasonRepository } from "../../../shared/season/impl/repository/season/memory"
 
 import { Clock } from "../../../../z_infra/clock/infra"
@@ -91,7 +91,9 @@ function standardRepository(): DashboardRepository {
                 }),
             }),
         }),
-        menuExpands: initMemoryMenuExpandRepository([]),
+        menuExpands: initMenuExpandRepository({
+            menuExpand: initMemoryTypedStorage({ set: false }),
+        }),
         seasons: initMemorySeasonRepository({ stored: false }),
     }
 }

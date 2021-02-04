@@ -2,7 +2,7 @@ import { DocumentRepository, DocumentSimulator, newDocumentResource } from "../.
 
 import { initMemoryTypedStorage } from "../../../../z_infra/storage/memory"
 import { initApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential"
-import { initMemoryMenuExpandRepository } from "../../../../auth/permission/menu/impl/repository/menuExpand/memory"
+import { initMenuExpandRepository } from "../../../../auth/permission/menu/impl/repository/menuExpand"
 
 import { MenuBadge, MenuTree } from "../../../../auth/permission/menu/infra"
 
@@ -76,7 +76,9 @@ function standardRepository(): DocumentRepository {
                 }),
             }),
         }),
-        menuExpands: initMemoryMenuExpandRepository([]),
+        menuExpands: initMenuExpandRepository({
+            menuExpand: initMemoryTypedStorage({ set: false }),
+        }),
     }
 }
 
