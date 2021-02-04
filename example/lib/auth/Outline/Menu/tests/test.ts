@@ -1,15 +1,17 @@
 import { MenuRepository, MenuSimulator, newMenuResource } from "./core"
 
-import { initMemoryApiCredentialRepository } from "../../../common/credential/impl/repository/apiCredential/memory"
+import { initMemoryTypedStorage } from "../../../../z_infra/storage/memory"
+import { initApiCredentialRepository } from "../../../common/credential/impl/repository/apiCredential"
 import { initMemoryMenuExpandRepository } from "../../../permission/menu/impl/repository/menuExpand/memory"
 
+import { ApiCredentialRepository } from "../../../common/credential/infra"
 import { MenuBadge, MenuTree } from "../../../permission/menu/infra"
 
 import { BreadcrumbListState } from "../../breadcrumbList/component"
 import { MenuListState } from "../../menuList/component"
 
 import { markMenuCategoryLabel, Menu } from "../../../permission/menu/data"
-import { ApiNonce, markApiNonce, markApiRoles } from "../../../common/credential/data"
+import { ApiNonce, markApiCredential } from "../../../common/credential/data"
 
 describe("BreadcrumbList", () => {
     test("load breadcrumb", (done) => {
@@ -1124,28 +1126,19 @@ function standardMenuTree(): MenuTree {
 
 function standardRepository(): MenuRepository {
     return {
-        apiCredentials: initMemoryApiCredentialRepository(
-            markApiNonce("api-nonce"),
-            markApiRoles(["admin"])
-        ),
+        apiCredentials: standardApiCredentialRepository(),
         menuExpands: initMemoryMenuExpandRepository([]),
     }
 }
 function developmentDocsRepository(): MenuRepository {
     return {
-        apiCredentials: initMemoryApiCredentialRepository(
-            markApiNonce("api-nonce"),
-            markApiRoles(["admin", "development-docs"])
-        ),
+        apiCredentials: developmentDocsApiCredentialRepository(),
         menuExpands: initMemoryMenuExpandRepository([]),
     }
 }
 function expandRepository(): MenuRepository {
     return {
-        apiCredentials: initMemoryApiCredentialRepository(
-            markApiNonce("api-nonce"),
-            markApiRoles(["admin"])
-        ),
+        apiCredentials: standardApiCredentialRepository(),
         menuExpands: initMemoryMenuExpandRepository([[markMenuCategoryLabel("DOCUMENT")]]),
     }
 }
@@ -1161,6 +1154,31 @@ function standardSimulator(): MenuSimulator {
             },
         },
     }
+}
+
+function standardApiCredentialRepository(): ApiCredentialRepository {
+    return initApiCredentialRepository({
+        apiCredential: initMemoryTypedStorage({
+            set: true,
+            value: markApiCredential({
+                // TODO apiNonce を追加
+                //apiNonce: markApiNonce("api-nonce"),
+                apiRoles: ["admin"],
+            }),
+        }),
+    })
+}
+function developmentDocsApiCredentialRepository(): ApiCredentialRepository {
+    return initApiCredentialRepository({
+        apiCredential: initMemoryTypedStorage({
+            set: true,
+            value: markApiCredential({
+                // TODO apiNonce を追加
+                //apiNonce: markApiNonce("api-nonce"),
+                apiRoles: ["admin", "development-docs"],
+            }),
+        }),
+    })
 }
 
 function expectToSaveExpand(repository: MenuRepository, menuExpand: string[][]) {

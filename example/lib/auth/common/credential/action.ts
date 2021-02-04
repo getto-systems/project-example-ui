@@ -1,6 +1,4 @@
-import { LoadResult } from "./event"
-
-import { ApiNonce, ApiRoles } from "./data"
+import { ApiNonce, ApiRoles, LoadApiCredentialResult } from "./data"
 
 export type CredentialAction = Readonly<{
     loadApiNonce: LoadApiNoncePod
@@ -11,12 +9,12 @@ export interface LoadApiNoncePod {
     (): LoadApiNonce
 }
 export interface LoadApiNonce {
-    (): LoadResult<ApiNonce>
+    (): LoadApiCredentialResult<ApiNonce>
 }
 
 export interface LoadApiRolesPod {
     (): LoadApiRoles
 }
 export interface LoadApiRoles {
-    (): LoadResult<ApiRoles>
+    (): LoadApiCredentialResult<ApiRoles>
 }

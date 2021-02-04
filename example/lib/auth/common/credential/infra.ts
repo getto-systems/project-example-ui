@@ -1,6 +1,4 @@
-import { LoadResult } from "./event"
-
-import { ApiNonce, ApiRoles } from "./data"
+import { ApiNonce, ApiRoles, LoadApiCredentialResult } from "./data"
 
 export type LoadApiNonceInfra = Readonly<{
     apiCredentials: ApiCredentialRepository
@@ -10,6 +8,6 @@ export type LoadApiRolesInfra = Readonly<{
 }>
 
 export interface ApiCredentialRepository {
-    findApiNonce(): LoadResult<ApiNonce>
-    findApiRoles(): LoadResult<ApiRoles>
+    findApiNonce(): LoadApiCredentialResult<ApiNonce>
+    findApiRoles(): LoadApiCredentialResult<ApiRoles>
 }
