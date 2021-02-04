@@ -1,4 +1,4 @@
-import { TypedStorageDecoded, TypedStorageValueConverter } from "../infra"
+import { TypedStorageValue, TypedStorageValueConverter } from "../infra"
 
 export function combineConverter<T, M, R>(
     base: TypedStorageValueConverter<M, R>,
@@ -16,14 +16,14 @@ class CombineConverter<T, M, R> implements TypedStorageValueConverter<T, R> {
         this.extend = extend
     }
 
-    encode(value: T): R {
-        return this.base.encode(this.extend.encode(value))
+    toRaw(value: T): R {
+        return this.base.toRaw(this.extend.toRaw(value))
     }
-    decode(raw: R): TypedStorageDecoded<T> {
-        const result = this.base.decode(raw)
+    toValue(raw: R): TypedStorageValue<T> {
+        const result = this.base.toValue(raw)
         if (result.decodeError) {
             return result
         }
-        return this.extend.decode(result.value)
+        return this.extend.toValue(result.value)
     }
 }

@@ -12,17 +12,17 @@ export type TypedStorageFetchResult<T> =
 
 export type TypedStorageConverter<T> = TypedStorageValueConverter<T, string>
 export interface TypedStorageValueConverter<T, R> {
-    encode(value: T): R
-    decode(raw: R): TypedStorageDecoded<T>
+    toRaw(value: T): R
+    toValue(raw: R): TypedStorageValue<T>
 }
 
-export type TypedStorageDecoded<T> =
+export type TypedStorageValue<T> =
     | Readonly<{ decodeError: true; err: unknown }>
     | Readonly<{ decodeError: false; value: T }>
 
-export function decodeSuccess<T>(value: T): TypedStorageDecoded<T> {
+export function decodeSuccess<T>(value: T): TypedStorageValue<T> {
     return { decodeError: false, value }
 }
-export function decodeError<T>(err: unknown): TypedStorageDecoded<T> {
+export function decodeError<T>(err: unknown): TypedStorageValue<T> {
     return { decodeError: true, err }
 }

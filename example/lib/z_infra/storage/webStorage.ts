@@ -24,10 +24,10 @@ class WebStorage<T> {
         if (!raw) {
             return { found: false }
         }
-        return { found: true, ...this.converter.decode(raw) }
+        return { found: true, ...this.converter.toValue(raw) }
     }
     set(value: T): void {
-        this.storage.setItem(this.key, this.converter.encode(value))
+        this.storage.setItem(this.key, this.converter.toRaw(value))
     }
     remove(): void {
         this.storage.removeItem(this.key)
