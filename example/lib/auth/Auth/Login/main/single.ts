@@ -2,19 +2,12 @@ import { initAuthClient } from "../../../../z_external/api/authClient"
 
 import { env } from "../../../../y_environment/env"
 
-import {
-    initApplicationAction,
-    initAuthCredentialStorage,
-    initLoginIDFormFieldAction,
-    initPasswordFormFieldAction,
-    initRenewAction,
-    initSetContinuousRenewAction,
-} from "./worker/foreground"
-import {
-    initPasswordLoginAction,
-    initPasswordResetAction,
-    initPasswordResetSessionAction,
-} from "./worker/background"
+import { initFormAction } from "../../../../sub/getto-form/main/form"
+import { initAuthCredentialStorage, initRenewAction, initSetContinuousRenewAction } from "./action/renew"
+import { initApplicationAction } from "./action/application"
+import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "./action/form"
+import { initPasswordLoginAction } from "./action/login"
+import { initPasswordResetAction, initPasswordResetSessionAction } from "./action/reset"
 
 import {
     LoginViewCollector,
@@ -58,14 +51,15 @@ import { passwordField } from "../../../common/field/password/impl/core"
 import { currentPagePathname, detectViewState, detectResetToken } from "../impl/location"
 
 import { LoginEntryPoint } from "../entryPoint"
-import { initFormAction } from "../../../../sub/getto-form/main/core"
 
 export function newLoginAsSingle(): LoginEntryPoint {
     const credentialStorage = localStorage
     const currentURL = new URL(location.toString())
 
     const authClient = initAuthClient(env.authServerURL)
-    const authCredentials = initAuthCredentialRepository(initAuthCredentialStorage(credentialStorage))
+    const authCredentials = initAuthCredentialRepository(
+        initAuthCredentialStorage(env.storageKey, credentialStorage)
+    )
 
     const factory: Factory = {
         link: initLoginLink,

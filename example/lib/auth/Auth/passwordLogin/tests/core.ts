@@ -16,6 +16,9 @@ import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../i
 import { initLoginIDFieldComponent } from "../../field/loginID/impl"
 import { initPasswordFieldComponent } from "../../field/password/impl"
 
+import { initFormAction } from "../../../../sub/getto-form/main/form"
+import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "../../Login/main/action/form"
+
 import { loginIDField } from "../../../common/field/loginID/impl/core"
 import { passwordField } from "../../../common/field/password/impl/core"
 
@@ -28,11 +31,6 @@ import { PasswordLoginActionConfig } from "../../../login/passwordLogin/infra"
 import { SetContinuousRenewActionConfig, AuthCredentialRepository } from "../../../login/renew/infra"
 
 import { PasswordLoginResource } from "../../Login/entryPoint"
-import { initFormAction } from "../../../../sub/getto-form/main/core"
-import {
-    initLoginIDFormFieldAction,
-    initPasswordFormFieldAction,
-} from "../../Login/main/worker/foreground"
 
 export type PasswordLoginConfig = {
     application: ApplicationActionConfig

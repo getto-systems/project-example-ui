@@ -1,5 +1,4 @@
-import { delayed } from "../../../../../z_infra/delayed/core"
-import { initAuthClient, AuthClient } from "../../../../../z_external/api/authClient"
+import { initAuthClient } from "../../../../../z_external/api/authClient"
 
 import { env } from "../../../../../y_environment/env"
 
@@ -32,30 +31,20 @@ import { initPasswordResetComponent } from "../../../passwordReset/impl"
 import { initLoginIDFieldComponent } from "../../../field/loginID/impl"
 import { initPasswordFieldComponent } from "../../../field/password/impl"
 
-import { secureScriptPath } from "../../../../common/application/impl/core"
-import { forceRenew, renew, setContinuousRenew } from "../../../../login/renew/impl/core"
+import { initApplicationAction } from "../action/application"
+import { initFormAction } from "../../../../../sub/getto-form/main/form"
+import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "../action/form"
+import {
+    initAuthCredentialStorage,
+    initRenewAction,
+    initSetContinuousRenewAction,
+} from "../action/renew"
 
 import { loginIDField } from "../../../../common/field/loginID/impl/core"
 import { passwordField } from "../../../../common/field/password/impl/core"
 
-import { initDateClock } from "../../../../../z_infra/clock/date"
-import { initWebTypedStorage } from "../../../../../z_infra/storage/webStorage"
-import { initFetchRenewClient } from "../../../../login/renew/impl/remote/renew/fetch"
-import {
-    AuthCredentialStorage,
-    initAuthCredentialRepository,
-} from "../../../../login/renew/impl/repository/authCredential"
-import { initApiCredentialConverter } from "../../../../common/credential/impl/repository/converter"
-import {
-    initLastAuthAtConverter,
-    initTicketNonceConverter,
-} from "../../../../login/renew/impl/repository/converter"
-
+import { initAuthCredentialRepository } from "../../../../login/renew/impl/repository/authCredential"
 import { currentPagePathname, detectViewState, detectResetToken } from "../../impl/location"
-
-import { AuthCredentialRepository } from "../../../../login/renew/infra"
-import { ApplicationActionConfig } from "../../../../common/application/infra"
-import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../../login/renew/infra"
 
 import { LoginLinkFactory } from "../../../link"
 
@@ -71,6 +60,7 @@ import { LoginIDFieldComponentFactory } from "../../../field/loginID/component"
 import { PasswordFieldComponentFactory } from "../../../field/password/component"
 
 import { ApplicationAction } from "../../../../common/application/action"
+import { FormAction } from "../../../../../sub/getto-form/action/action"
 import { RenewAction, SetContinuousRenewAction } from "../../../../login/renew/action"
 import { Login, LoginCollector, PasswordLoginAction } from "../../../../login/passwordLogin/action"
 import {
@@ -98,12 +88,6 @@ import {
     CheckStatusProxyMessage,
     ResetProxyMessage,
 } from "./message"
-import { FormAction } from "../../../../../sub/getto-form/action/action"
-import { loginIDFormField } from "../../../../common/field/loginID/impl/field"
-import { passwordFormField } from "../../../../common/field/password/impl/field"
-import { passwordCharacterChecker } from "../../../../common/field/password/impl/character"
-import { passwordViewer } from "../../../../common/field/password/impl/viewer"
-import { initFormAction } from "../../../../../sub/getto-form/main/core"
 
 export function newLoginAsWorkerForeground(): LoginEntryPoint {
     const credentialStorage = localStorage
@@ -113,7 +97,9 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
 
     const worker = new Worker(`/${env.version}/auth/login.worker.js`)
 
-    const authCredentials = initAuthCredentialRepository(initAuthCredentialStorage(credentialStorage))
+    const authCredentials = initAuthCredentialRepository(
+        initAuthCredentialStorage(env.storageKey, credentialStorage)
+    )
 
     const factory: ForegroundFactory = {
         link: initLoginLink,
@@ -164,78 +150,6 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
     }
 
     return initLoginAsForeground(worker, factory, collector)
-}
-
-export function initApplicationAction(config: ApplicationActionConfig): ApplicationAction {
-    return {
-        secureScriptPath: secureScriptPath({ config: config.secureScriptPath }),
-    }
-}
-export function initAuthCredentialStorage(credentialStorage: Storage): AuthCredentialStorage {
-    return {
-        ticketNonce: initWebTypedStorage(
-            credentialStorage,
-            env.storageKey.ticketNonce,
-            initTicketNonceConverter()
-        ),
-        apiCredential: initWebTypedStorage(
-            credentialStorage,
-            env.storageKey.apiCredential,
-            initApiCredentialConverter()
-        ),
-        lastAuthAt: initWebTypedStorage(
-            credentialStorage,
-            env.storageKey.lastAuthAt,
-            initLastAuthAtConverter()
-        ),
-    }
-}
-export function initRenewAction(
-    config: RenewActionConfig,
-    authCredentials: AuthCredentialRepository,
-    authClient: AuthClient
-): RenewAction {
-    const infra = {
-        authCredentials,
-        renew: initFetchRenewClient(authClient),
-        config: config.renew,
-        delayed,
-        clock: initDateClock(),
-    }
-
-    return {
-        renew: renew(infra),
-        forceRenew: forceRenew(infra),
-    }
-}
-export function initSetContinuousRenewAction(
-    config: SetContinuousRenewActionConfig,
-    authCredentials: AuthCredentialRepository,
-    authClient: AuthClient
-): SetContinuousRenewAction {
-    const client = initFetchRenewClient(authClient)
-
-    return {
-        setContinuousRenew: setContinuousRenew({
-            authCredentials,
-            renew: client,
-            config: config.setContinuousRenew,
-            clock: initDateClock(),
-        }),
-    }
-}
-
-export function initLoginIDFormFieldAction(): LoginIDFormFieldAction {
-    return {
-        field: loginIDFormField(),
-    }
-}
-export function initPasswordFormFieldAction(): PasswordFormFieldAction {
-    return {
-        field: passwordFormField(),
-        character: passwordCharacterChecker(),
-        viewer: passwordViewer(),
-    }
 }
 
 class ProxyMap<M, E> {
