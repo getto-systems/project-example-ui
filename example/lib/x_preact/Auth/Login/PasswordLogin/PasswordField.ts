@@ -1,5 +1,4 @@
 import { h, VNode } from "preact"
-import { html } from "htm/preact"
 
 import {
     field,
@@ -8,23 +7,14 @@ import {
 } from "../../../../z_vendor/getto-css/preact/design/form"
 
 import { useComponent } from "../../../common/hooks"
+import { FormInput } from "../../../common/form/FormInput"
 
-import {
-    passwordView,
-    passwordFieldError,
-    passwordFieldHandler,
-    passwordValidationError,
-} from "../field/password"
+import { passwordView, passwordValidationError } from "../field/password"
 
-import {
-    PasswordFieldComponent,
-    initialPasswordFieldState,
-} from "../../../../auth/Auth/field/password/component"
 import {
     initialPasswordFormFieldState,
     PasswordFormFieldComponent,
-} from "../../../../auth/Auth/passwordLogin/component"
-import { FormInput } from "../../../common/form/FormInput"
+} from "../../../../auth/Auth/field/password/component"
 
 type Props = Readonly<{
     password: PasswordFormFieldComponent
@@ -53,32 +43,6 @@ export function PasswordFormField({ password }: Props): VNode {
                 ...content,
                 notice: passwordValidationError(state.result, state.character),
             })
-        }
-    }
-}
-
-// TODO 以下削除
-type FieldProps = Readonly<{
-    passwordField: PasswordFieldComponent
-}>
-export function PasswordField({ passwordField }: FieldProps): VNode {
-    const state = useComponent(passwordField, initialPasswordFieldState)
-
-    return label_password_fill(content())
-
-    function content() {
-        const handler = passwordFieldHandler(passwordField)
-
-        const content = {
-            title: "パスワード",
-            body: html`<input type="password" onInput=${handler.onInput} />`,
-            help: [passwordView(handler, state.view, state.character)],
-        }
-
-        if (state.result.valid) {
-            return field(content)
-        } else {
-            return field_error({ ...content, notice: passwordFieldError(state.result, state.character) })
         }
     }
 }

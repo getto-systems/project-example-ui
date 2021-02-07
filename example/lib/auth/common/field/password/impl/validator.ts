@@ -1,10 +1,10 @@
 import { FormValidationResult, toValidationError } from "../../../../../sub/getto-form/data"
-import { PasswordFieldError, PasswordInput } from "../data"
+import { PasswordValidationError, PasswordInput } from "../data"
 
 // bcrypt を想定しているので、72 バイト以上のパスワードは無効
 const PASSWORD_MAX_BYTES = 72
 
-export function validatePassword(password: PasswordInput): FormValidationResult<PasswordFieldError> {
+export function validatePassword(password: PasswordInput): FormValidationResult<PasswordValidationError> {
     const value = password.get()
     if (value.length === 0) {
         return EMPTY
@@ -18,5 +18,5 @@ export function validatePassword(password: PasswordInput): FormValidationResult<
 }
 
 const OK = { valid: true } as const
-const EMPTY: FormValidationResult<PasswordFieldError> = toValidationError(["empty"])
-const TOO_LONG: FormValidationResult<PasswordFieldError> = toValidationError(["too-long"])
+const EMPTY: FormValidationResult<PasswordValidationError> = toValidationError(["empty"])
+const TOO_LONG: FormValidationResult<PasswordValidationError> = toValidationError(["too-long"])

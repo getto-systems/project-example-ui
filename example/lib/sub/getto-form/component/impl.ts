@@ -1,22 +1,20 @@
 import { ApplicationBaseComponent } from "../../getto-example/application/impl"
-import {
-    FormFieldName,
-    FormHistory,
-    FormInputHistory,
-    FormValidationState,
-    mapValidationResult,
-} from "../action/data"
-import { FormChangeEvent, FormInputEvent } from "../action/event"
-import { FormInputString } from "../data"
+
 import {
     FormComponentState,
     FormFieldComponent,
+    FormFieldHandler,
     FormFieldState,
     FormInputComponent,
     FormInputComponentState,
     FormInputMaterial,
     FormMaterial,
 } from "./component"
+
+import { FormChangeEvent, FormInputEvent } from "../action/event"
+
+import { FormFieldName, FormHistory, mapValidationResult } from "../action/data"
+import { FormInputString } from "../data"
 
 export class FormBaseComponent<M extends FormMaterial> extends ApplicationBaseComponent<
     FormComponentState
@@ -55,11 +53,6 @@ export class FormBaseComponent<M extends FormMaterial> extends ApplicationBaseCo
 
 export type FormFieldFactory<S, E> = Readonly<{
     state: { (): FormFieldState<S, E> }
-}>
-
-export type FormFieldHandler = Readonly<{
-    validate: Handler<FormValidationState>
-    history: Handler<FormInputHistory>
 }>
 
 export class FormFieldBaseComponent<S, E>

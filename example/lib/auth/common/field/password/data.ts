@@ -19,4 +19,4 @@ export function showPassword(password: InputValue): PasswordView {
     return { show: true, password: (password as unknown) as FormInputString } as PasswordView
 }
 
-export type PasswordFieldError = "empty" | "too-long"
+export type PasswordValidationError = "empty" | "too-long"

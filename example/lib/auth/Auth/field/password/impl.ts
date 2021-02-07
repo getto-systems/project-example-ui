@@ -1,15 +1,67 @@
 import { ApplicationBaseComponent } from "../../../../sub/getto-example/application/impl"
+import { FormFieldBaseComponent } from "../../../../sub/getto-form/component/impl"
 
 import {
     PasswordFieldComponentFactory,
     PasswordFieldMaterial,
     PasswordFieldComponent,
     PasswordFieldState,
+    PasswordFormFieldComponentFactory,
+    PasswordState,
+    PasswordFormFieldComponent,
+    PasswordFormFieldMaterial,
 } from "./component"
+import { FormFieldHandler, FormInputComponent } from "../../../../sub/getto-form/component/component"
 
 import { PasswordFieldEvent } from "../../../common/field/password/event"
 
 import { InputValue } from "../../../common/field/data"
+import { PasswordValidationError, PasswordView } from "../../../common/field/password/data"
+
+export const initPasswordFormFieldComponent: PasswordFormFieldComponentFactory = (material) => (
+    handler
+) => new FieldComponent(material, handler)
+
+class FieldComponent
+    extends FormFieldBaseComponent<PasswordState, PasswordValidationError>
+    implements PasswordFormFieldComponent {
+    readonly input: FormInputComponent
+    material: PasswordFormFieldMaterial
+
+    constructor(material: PasswordFormFieldMaterial, handler: FormFieldHandler) {
+        super(handler, {
+            state: () => {
+                const password = material.field.input.get()
+                return {
+                    result: material.field.validate(),
+                    character: material.checker(password),
+                    view: view(),
+                }
+
+                function view(): PasswordView {
+                    if (material.viewer.get().show) {
+                        return { show: true, password }
+                    } else {
+                        return { show: false }
+                    }
+                }
+            },
+        })
+        this.input = this.initInput("input", material.field)
+        this.material = material
+    }
+
+    show(): void {
+        this.material.viewer.show(() => {
+            this.validate()
+        })
+    }
+    hide(): void {
+        this.material.viewer.hide(() => {
+            this.validate()
+        })
+    }
+}
 
 export const initPasswordFieldComponent: PasswordFieldComponentFactory = (material) =>
     new Component(material)

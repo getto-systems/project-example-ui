@@ -1,7 +1,7 @@
 import { FormValidationResult, toValidationError } from "../../../../../sub/getto-form/data"
-import { LoginIDFieldError, LoginIDInput } from "../data"
+import { LoginIDValidationError, LoginIDInput } from "../data"
 
-export function validateLoginID(loginID: LoginIDInput): FormValidationResult<LoginIDFieldError> {
+export function validateLoginID(loginID: LoginIDInput): FormValidationResult<LoginIDValidationError> {
     const value = loginID.get()
     if (value.length === 0) {
         return EMPTY
@@ -11,4 +11,4 @@ export function validateLoginID(loginID: LoginIDInput): FormValidationResult<Log
 }
 
 const OK = { valid: true } as const
-const EMPTY: FormValidationResult<LoginIDFieldError> = toValidationError(["empty"])
+const EMPTY: FormValidationResult<LoginIDValidationError> = toValidationError(["empty"])

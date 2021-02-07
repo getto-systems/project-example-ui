@@ -4,7 +4,7 @@ import { PasswordFieldEvent } from "./event"
 
 import { Password } from "../../password/data"
 import { InputValue } from "../data"
-import { PasswordCharacter, PasswordFieldError, PasswordViewState } from "./data"
+import { PasswordCharacter, PasswordValidationError, PasswordViewState } from "./data"
 import { FormInputString } from "../../../../sub/getto-form/data"
 
 export type PasswordFormFieldAction = Readonly<{
@@ -16,7 +16,7 @@ export type PasswordFormFieldAction = Readonly<{
 export interface PasswordFormFieldPod {
     (): PasswordFormField
 }
-export type PasswordFormField = FormField<Password, PasswordFieldError, FormInput>
+export type PasswordFormField = FormField<Password, PasswordValidationError, FormInput>
 
 export interface PasswordCharacterCheckerPod {
     (): PasswordCharacterChecker

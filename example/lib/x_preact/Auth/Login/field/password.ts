@@ -6,7 +6,7 @@ import { mapInputEvent } from "./common"
 import { PasswordFieldComponent } from "../../../../auth/Auth/field/password/component"
 
 import {
-    PasswordFieldError,
+    PasswordValidationError,
     PasswordCharacter,
     PasswordView,
 } from "../../../../auth/common/field/password/data"
@@ -35,7 +35,7 @@ export function passwordFieldHandler(passwordField: PasswordFieldComponent): Pas
 }
 
 export function passwordValidationError(
-    result: FormValidationResult<PasswordFieldError>,
+    result: FormValidationResult<PasswordValidationError>,
     character: PasswordCharacter
 ): VNodeContent[] {
     if (result.valid) {
@@ -58,7 +58,7 @@ export function passwordValidationError(
 }
 
 export function passwordFieldError(
-    result: Valid<PasswordFieldError>,
+    result: Valid<PasswordValidationError>,
     character: PasswordCharacter
 ): VNode[] {
     if (result.valid) {

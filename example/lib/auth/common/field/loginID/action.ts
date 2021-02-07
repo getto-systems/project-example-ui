@@ -4,7 +4,7 @@ import { LoginIDFieldEvent } from "./event"
 
 import { InputValue } from "../data"
 import { LoginID } from "../../loginID/data"
-import { LoginIDFieldError, LoginIDInput } from "./data"
+import { LoginIDValidationError, LoginIDInput } from "./data"
 
 export type LoginIDFormFieldAction = Readonly<{
     field: LoginIDFormFieldPod
@@ -13,7 +13,7 @@ export type LoginIDFormFieldAction = Readonly<{
 export interface LoginIDFormFieldPod {
     (): LoginIDFormField
 }
-export type LoginIDFormField = FormField<LoginID, LoginIDFieldError, LoginIDInput>
+export type LoginIDFormField = FormField<LoginID, LoginIDValidationError, LoginIDInput>
 
 // TODO 以下、削除
 export type LoginIDFieldAction = Readonly<{

@@ -1,4 +1,7 @@
 import { ApplicationBaseComponent } from "../../../sub/getto-example/application/impl"
+import { FormBaseComponent } from "../../../sub/getto-form/component/impl"
+import { initLoginIDFormFieldComponent } from "../field/loginID/impl"
+import { initPasswordFormFieldComponent } from "../field/password/impl"
 
 import { LoginLink } from "../link"
 
@@ -10,30 +13,15 @@ import {
     PasswordLoginFormComponentFactory,
     PasswordLoginFormComponent,
     PasswordLoginFormMaterial,
-    LoginIDFormFieldComponent,
-    PasswordFormFieldComponent,
-    PasswordState,
 } from "./component"
+import { LoginIDFormFieldComponent } from "../field/loginID/component"
+import { PasswordFormFieldComponent } from "../field/password/component"
 
 import { LoadError } from "../../common/application/data"
 import { AuthCredential } from "../../common/credential/data"
 import { storeAuthCredential } from "../../login/renew/data"
 import { FormConvertResult } from "../../../sub/getto-form/data"
 import { LoginFields } from "../../login/passwordLogin/data"
-import { LoginIDFieldError } from "../../common/field/loginID/data"
-import { LoginIDFormField } from "../../common/field/loginID/action"
-import {
-    FormBaseComponent,
-    FormFieldBaseComponent,
-    FormFieldHandler,
-} from "../../../sub/getto-form/component/impl"
-import { FormFieldEmptyState, FormInputComponent } from "../../../sub/getto-form/component/component"
-import {
-    PasswordCharacterChecker,
-    PasswordFormField,
-    PasswordViewer,
-} from "../../common/field/password/action"
-import { PasswordFieldError, PasswordView } from "../../common/field/password/data"
 
 export const initPasswordLoginComponent: PasswordLoginComponentFactory = (material) =>
     new Component(material)
@@ -98,10 +86,13 @@ class FormComponent
     constructor(material: PasswordLoginFormMaterial) {
         super(material)
 
-        this.loginID = this.initField("loginID", initField_loginID({ field: material.loginID }))
+        this.loginID = this.initField(
+            "loginID",
+            initLoginIDFormFieldComponent({ field: material.loginID })
+        )
         this.password = this.initField(
             "password",
-            initField_password({
+            initPasswordFormFieldComponent({
                 field: material.password,
                 checker: material.checker,
                 viewer: material.viewer,
@@ -127,79 +118,5 @@ class FormComponent
                 password: result.password.value,
             },
         }
-    }
-}
-
-function initField_loginID(
-    material: FieldMaterial_loginID
-): { (handler: FormFieldHandler): LoginIDFormFieldComponent } {
-    return (handler) => new FieldComponent_loginID(material, handler)
-}
-
-type FieldMaterial_loginID = Readonly<{
-    field: LoginIDFormField
-}>
-class FieldComponent_loginID
-    extends FormFieldBaseComponent<FormFieldEmptyState, LoginIDFieldError>
-    implements LoginIDFormFieldComponent {
-    readonly input: FormInputComponent
-
-    constructor(material: FieldMaterial_loginID, handler: FormFieldHandler) {
-        super(handler, {
-            state: () => ({ result: material.field.validate() }),
-        })
-        this.input = this.initInput("input", material.field)
-    }
-}
-
-function initField_password(
-    material: FieldMaterial_password
-): { (handler: FormFieldHandler): PasswordFormFieldComponent } {
-    return (handler) => new FieldComponent_password(material, handler)
-}
-
-type FieldMaterial_password = Readonly<{
-    field: PasswordFormField
-    checker: PasswordCharacterChecker
-    viewer: PasswordViewer
-}>
-class FieldComponent_password
-    extends FormFieldBaseComponent<PasswordState, PasswordFieldError>
-    implements PasswordFormFieldComponent {
-    readonly input: FormInputComponent
-    material: FieldMaterial_password
-
-    constructor(material: FieldMaterial_password, handler: FormFieldHandler) {
-        super(handler, {
-            state: () => {
-                const password = material.field.input.get()
-                return {
-                    result: material.field.validate(),
-                    character: material.checker(password),
-                    view: view(),
-                }
-
-                function view(): PasswordView {
-                    if (material.viewer.get().show) {
-                        return { show: true, password }
-                    } else {
-                        return { show: false }
-                    }
-                }
-            },
-        })
-        this.input = this.initInput("input", material.field)
-        this.material = material
-    }
-
-    show(): void {
-        this.material.viewer.show(() => {
-            this.validate()
-        })
-    }
-    hide(): void {
-        this.material.viewer.hide(() => {
-            this.validate()
-        })
     }
 }

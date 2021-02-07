@@ -15,7 +15,9 @@ import { initAuthCredentialRepository } from "../../../login/renew/impl/reposito
 import { AuthCredentialRepository } from "../../../login/renew/infra"
 
 import { FormComponentState } from "../../../../sub/getto-form/component/component"
-import { LoginIDFormFieldState, PasswordFormFieldState, PasswordLoginState } from "../component"
+import { LoginIDFormFieldState } from "../../field/loginID/component"
+import { PasswordFormFieldState } from "../../field/password/component"
+import { PasswordLoginState } from "../component"
 
 import { markScriptPath } from "../../../common/application/data"
 import {

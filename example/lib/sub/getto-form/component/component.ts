@@ -1,7 +1,7 @@
 import { ApplicationComponent } from "../../getto-example/application/component"
 import { FormHistoryStack, FormInput, FormValidationStateSet } from "../action/action"
 
-import { FormHistory, FormHistoryState, FormValidationState } from "../action/data"
+import { FormHistory, FormHistoryState, FormInputHistory, FormValidationState } from "../action/data"
 import { FormInputString, FormValidationResult, markInputString } from "../data"
 
 export type FormMaterial = Readonly<{
@@ -16,6 +16,11 @@ export const initialFormComponentState: FormComponentState = {
     validation: "initial",
     history: { undo: false, redo: false },
 }
+
+export type FormFieldHandler = Readonly<{
+    validate: Handler<FormValidationState>
+    history: Handler<FormInputHistory>
+}>
 
 export interface FormFieldComponent<S, E> extends ApplicationComponent<FormFieldState<S, E>> {
     validate(): void
@@ -38,3 +43,7 @@ export interface FormInputComponent extends ApplicationComponent<FormInputCompon
 
 export type FormInputComponentState = Readonly<{ value: FormInputString }>
 export const initialFormInputComponentState: FormInputComponentState = { value: markInputString("") }
+
+interface Handler<E> {
+    (event: E): void
+}

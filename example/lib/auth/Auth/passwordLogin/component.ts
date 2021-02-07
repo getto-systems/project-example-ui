@@ -1,14 +1,9 @@
-import { ApplicationComponent } from "../../../sub/getto-example/application/component"
-import {
-    FormComponentState,
-    FormFieldComponent,
-    FormFieldState,
-    FormFieldEmptyState,
-    FormInputComponent,
-    FormMaterial,
-} from "../../../sub/getto-form/component/component"
-
 import { LoginLink } from "../link"
+
+import { ApplicationComponent } from "../../../sub/getto-example/application/component"
+import { FormComponentState, FormMaterial } from "../../../sub/getto-form/component/component"
+import { LoginIDFormFieldComponent } from "../field/loginID/component"
+import { PasswordFormFieldComponent } from "../field/password/component"
 
 import { Login } from "../../login/passwordLogin/action"
 import { SetContinuousRenew } from "../../login/renew/action"
@@ -24,8 +19,6 @@ import { FormConvertResult } from "../../../sub/getto-form/data"
 import { ScriptPath, LoadError } from "../../common/application/data"
 import { StorageError } from "../../common/credential/data"
 import { LoginError, LoginFields } from "../../login/passwordLogin/data"
-import { LoginIDFieldError } from "../../common/field/loginID/data"
-import { PasswordCharacter, PasswordFieldError, PasswordView } from "../../common/field/password/data"
 
 export interface PasswordLoginComponentFactory {
     (material: PasswordLoginMaterial): PasswordLoginComponent
@@ -70,32 +63,4 @@ export interface PasswordLoginFormComponent extends ApplicationComponent<FormCom
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
     getLoginFields(): FormConvertResult<LoginFields>
-}
-
-// TODO field に移動できる
-export interface LoginIDFormFieldComponent
-    extends FormFieldComponent<FormFieldEmptyState, LoginIDFieldError> {
-    readonly input: FormInputComponent
-}
-
-export type LoginIDFormFieldState = FormFieldState<FormFieldEmptyState, LoginIDFieldError>
-
-export interface PasswordFormFieldComponent
-    extends FormFieldComponent<PasswordState, PasswordFieldError> {
-    readonly input: FormInputComponent
-    show(): void
-    hide(): void
-}
-
-export type PasswordFormFieldState = FormFieldState<PasswordState, PasswordFieldError>
-
-export type PasswordState = Readonly<{
-    character: PasswordCharacter
-    view: PasswordView
-}>
-
-export const initialPasswordFormFieldState: PasswordFormFieldState = {
-    result: { valid: true },
-    character: { complex: false },
-    view: { show: false },
 }

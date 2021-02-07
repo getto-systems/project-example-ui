@@ -3,13 +3,13 @@ import { PasswordFieldPod, PasswordField } from "../action"
 import { PasswordFieldEvent } from "../event"
 
 import { markPassword } from "../../../password/data"
-import { PasswordFieldError, PasswordCharacter, PasswordView, showPassword } from "../data"
+import { PasswordValidationError, PasswordCharacter, PasswordView, showPassword } from "../data"
 import { InputValue, markInputValue, validContent, invalidContent, hasError } from "../../data"
 
 // bcrypt を想定しているので、72 バイト以上のパスワードは無効
 const PASSWORD_MAX_BYTES = 72
 
-function validatePassword(password: string): PasswordFieldError[] {
+function validatePassword(password: string): PasswordValidationError[] {
     if (password.length === 0) {
         return ERROR.empty
     }
@@ -22,9 +22,9 @@ function validatePassword(password: string): PasswordFieldError[] {
 }
 
 const ERROR: {
-    ok: PasswordFieldError[]
-    empty: PasswordFieldError[]
-    tooLong: PasswordFieldError[]
+    ok: PasswordValidationError[]
+    empty: PasswordValidationError[]
+    tooLong: PasswordValidationError[]
 } = {
     ok: [],
     empty: ["empty"],

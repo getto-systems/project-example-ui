@@ -5,7 +5,7 @@ import { mapInputEvent } from "./common"
 
 import { LoginIDFieldComponent } from "../../../../auth/Auth/field/loginID/component"
 
-import { LoginIDFieldError } from "../../../../auth/common/field/loginID/data"
+import { LoginIDValidationError } from "../../../../auth/common/field/loginID/data"
 import { Valid } from "../../../../auth/common/field/data"
 import { FormValidationResult } from "../../../../sub/getto-form/data"
 import { VNodeContent } from "../../../../z_vendor/getto-css/preact/common"
@@ -22,7 +22,7 @@ export function loginIDFieldHandler(loginIDField: LoginIDFieldComponent): LoginI
     }
 }
 
-export function loginIDFieldError(result: Valid<LoginIDFieldError>): VNode[] {
+export function loginIDFieldError(result: Valid<LoginIDValidationError>): VNode[] {
     if (result.valid) {
         return []
     }
@@ -35,7 +35,7 @@ export function loginIDFieldError(result: Valid<LoginIDFieldError>): VNode[] {
     })
 }
 
-export function loginIDValidationError(result: FormValidationResult<LoginIDFieldError>): VNodeContent[] {
+export function loginIDValidationError(result: FormValidationResult<LoginIDValidationError>): VNodeContent[] {
     if (result.valid) {
         return []
     }

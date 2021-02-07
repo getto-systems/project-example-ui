@@ -5,23 +5,19 @@ import { initLoginLink } from "../Login/main/link"
 import { LoginLink } from "../link"
 
 import {
-    LoginIDFormFieldComponent,
-    PasswordFormFieldComponent,
-    PasswordState,
-    PasswordLoginComponent,
-    PasswordLoginFormComponent,
-    PasswordLoginState,
-} from "./component"
-import { FormConvertResult, FormInputString, markInputString } from "../../../sub/getto-form/data"
-import { LoginFields } from "../../login/passwordLogin/data"
-import {
     FormComponentState,
     FormFieldState,
     FormFieldEmptyState,
     FormInputComponent,
     FormInputComponentState,
 } from "../../../sub/getto-form/component/component"
-import { LoginIDFieldError } from "../../common/field/loginID/data"
+import { PasswordLoginComponent, PasswordLoginFormComponent, PasswordLoginState } from "./component"
+import { LoginIDFormFieldComponent } from "../field/loginID/component"
+import { PasswordFormFieldComponent, PasswordFormFieldState } from "../field/password/component"
+
+import { FormConvertResult, FormInputString, markInputString } from "../../../sub/getto-form/data"
+import { LoginFields } from "../../login/passwordLogin/data"
+import { LoginIDValidationError } from "../../common/field/loginID/data"
 import { FormHistory } from "../../../sub/getto-form/action/data"
 
 // TODO initMockPasswordLogin にする
@@ -121,7 +117,7 @@ export class PasswordLoginFormMockComponent
 }
 
 export class LoginIDFormFieldMockComponent
-    extends MockComponent<FormFieldState<FormFieldEmptyState, LoginIDFieldError>>
+    extends MockComponent<FormFieldState<FormFieldEmptyState, LoginIDValidationError>>
     implements LoginIDFormFieldComponent {
     input: FormInputComponent
 
@@ -154,7 +150,7 @@ export class LoginIDFormInputMockComponent
 }
 
 export class PasswordFormFieldMockComponent
-    extends MockComponent<FormFieldState<PasswordState, LoginIDFieldError>>
+    extends MockComponent<PasswordFormFieldState>
     implements PasswordFormFieldComponent {
     input: FormInputComponent
 
