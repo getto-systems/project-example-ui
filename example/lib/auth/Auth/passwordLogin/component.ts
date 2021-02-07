@@ -2,7 +2,7 @@ import { ApplicationComponent } from "../../../sub/getto-example/application/com
 import {
     FormComponentState,
     FormFieldComponent,
-    FormFieldComponentState,
+    FormFieldState,
     FormFieldEmptyState,
     FormInputComponent,
     FormMaterial,
@@ -39,7 +39,7 @@ export type PasswordLoginMaterial = Readonly<{
 
 export interface PasswordLoginComponent extends ApplicationComponent<PasswordLoginState> {
     readonly link: LoginLink
-    login(): void
+    login(fields: FormConvertResult<LoginFields>): void
     loadError(err: LoadError): void
 }
 
@@ -78,19 +78,24 @@ export interface LoginIDFormFieldComponent
     readonly input: FormInputComponent
 }
 
+export type LoginIDFormFieldState = FormFieldState<FormFieldEmptyState, LoginIDFieldError>
+
 export interface PasswordFormFieldComponent
-    extends FormFieldComponent<PasswordFormFieldState, PasswordFieldError> {
+    extends FormFieldComponent<PasswordState, PasswordFieldError> {
     readonly input: FormInputComponent
     show(): void
     hide(): void
 }
 
-export type PasswordFormFieldState = Readonly<{
+export type PasswordFormFieldState = FormFieldState<PasswordState, PasswordFieldError>
+
+export type PasswordState = Readonly<{
     character: PasswordCharacter
     view: PasswordView
 }>
 
-export const initialPasswordFormFieldState: FormFieldComponentState<
-    PasswordFormFieldState,
-    PasswordFieldError
-> = { result: { valid: true }, character: { complex: false }, view: { show: false } }
+export const initialPasswordFormFieldState: PasswordFormFieldState = {
+    result: { valid: true },
+    character: { complex: false },
+    view: { show: false },
+}

@@ -10,18 +10,14 @@ import {
 
 import { initLoginLink } from "../link"
 
+import { View, LoginResourceFactory, LoginViewCollector } from "../../impl/core"
+import { initRenewCredentialResource, RenewCredentialCollector } from "../../impl/renew"
+import { initPasswordLoginResource, PasswordLoginCollector } from "../../impl/login"
 import {
-    View,
-    LoginResourceFactory,
-    LoginViewCollector,
-    initRenewCredentialResource,
-    initPasswordLoginResource,
-    initPasswordResetSessionResource,
     initPasswordResetResource,
-    RenewCredentialCollector,
-    PasswordLoginCollector,
+    initPasswordResetSessionResource,
     PasswordResetCollector,
-} from "../../impl/core"
+} from "../../impl/reset"
 
 import { initRenewCredentialComponent } from "../../../renewCredential/impl"
 import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../../../passwordLogin/impl"
@@ -62,7 +58,7 @@ import { PasswordFieldComponentFactory } from "../../../field/password/component
 import { ApplicationAction } from "../../../../common/application/action"
 import { FormAction } from "../../../../../sub/getto-form/action/action"
 import { RenewAction, SetContinuousRenewAction } from "../../../../login/renew/action"
-import { Login, LoginCollector, PasswordLoginAction } from "../../../../login/passwordLogin/action"
+import { Login, PasswordLoginAction } from "../../../../login/passwordLogin/action"
 import {
     PasswordResetAction,
     PasswordResetSessionAction,
@@ -181,11 +177,11 @@ class ProxyMap<M, E> {
     }
 }
 class LoginProxyMap extends ProxyMap<LoginProxyMessage, LoginEvent> {
-    init(collector: LoginCollector): Login {
-        return async (post) => {
+    init(): Login {
+        return async (fields, post) => {
             this.post({
                 handlerID: this.register(post),
-                message: { content: await collector.getFields() },
+                message: { content: fields },
             })
         }
     }
@@ -350,7 +346,7 @@ function initLoginComponentFactory(
     function initActionProxyFactory(): ActionProxyFactory {
         return {
             passwordLogin: {
-                login: (collector) => proxy.passwordLogin.login.init(collector),
+                login: () => proxy.passwordLogin.login.init(),
             },
             passwordResetSession: {
                 startSession: (collector) => proxy.passwordResetSession.startSession.init(collector),

@@ -11,7 +11,7 @@ import { FormInputString } from "../data"
 import {
     FormComponentState,
     FormFieldComponent,
-    FormFieldComponentState,
+    FormFieldState,
     FormInputComponent,
     FormInputComponentState,
     FormInputMaterial,
@@ -40,6 +40,7 @@ export class FormBaseComponent<M extends FormMaterial> extends ApplicationBaseCo
             },
             history: (event) => {
                 this.material.history.push({ field: name, input: event.input }, event.history)
+                this.post(this.currentState())
             },
         })
     }
@@ -53,7 +54,7 @@ export class FormBaseComponent<M extends FormMaterial> extends ApplicationBaseCo
 }
 
 export type FormFieldFactory<S, E> = Readonly<{
-    state: { (): FormFieldComponentState<S, E> }
+    state: { (): FormFieldState<S, E> }
 }>
 
 export type FormFieldHandler = Readonly<{
@@ -62,10 +63,10 @@ export type FormFieldHandler = Readonly<{
 }>
 
 export class FormFieldBaseComponent<S, E>
-    extends ApplicationBaseComponent<FormFieldComponentState<S, E>>
+    extends ApplicationBaseComponent<FormFieldState<S, E>>
     implements FormFieldComponent<S, E> {
-    state: { (): FormFieldComponentState<S, E> }
-    onValidate: Handler<FormFieldComponentState<S, E>>
+    state: { (): FormFieldState<S, E> }
+    onValidate: Handler<FormFieldState<S, E>>
     onHistory: { (name: FormFieldName): Handler<FormHistory> }
 
     constructor(handler: FormFieldHandler, { state }: FormFieldFactory<S, E>) {

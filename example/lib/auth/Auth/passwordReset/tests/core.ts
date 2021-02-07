@@ -10,7 +10,7 @@ import {
     initPasswordResetResource,
     PasswordResetCollector,
     PasswordResetFactory,
-} from "../../Login/impl/core"
+} from "../../Login/impl/reset"
 
 import { initPasswordResetComponent } from "../impl"
 import { initLoginIDFieldComponent } from "../../field/loginID/impl"

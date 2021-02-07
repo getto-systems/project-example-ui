@@ -12,7 +12,7 @@ import {
     PasswordLoginFormMaterial,
     LoginIDFormFieldComponent,
     PasswordFormFieldComponent,
-    PasswordFormFieldState,
+    PasswordState,
 } from "./component"
 
 import { LoadError } from "../../common/application/data"
@@ -49,8 +49,8 @@ class Component extends ApplicationBaseComponent<PasswordLoginState> implements 
         this.link = material.link
     }
 
-    login(): void {
-        this.material.login((event) => {
+    login(fields: FormConvertResult<LoginFields>): void {
+        this.material.login(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-login":
                     this.setContinuousRenew(event.authCredential, () => {
@@ -164,7 +164,7 @@ type FieldMaterial_password = Readonly<{
     viewer: PasswordViewer
 }>
 class FieldComponent_password
-    extends FormFieldBaseComponent<PasswordFormFieldState, PasswordFieldError>
+    extends FormFieldBaseComponent<PasswordState, PasswordFieldError>
     implements PasswordFormFieldComponent {
     readonly input: FormInputComponent
     material: FieldMaterial_password

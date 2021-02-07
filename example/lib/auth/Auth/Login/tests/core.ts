@@ -2,7 +2,10 @@ import { delayed, wait } from "../../../../z_infra/delayed/core"
 
 import { LoginViewCollector } from "../impl/core"
 import { currentPagePathname, detectResetToken, detectViewState } from "../impl/location"
-import { PasswordLoginCollector, PasswordResetCollector, RenewCredentialCollector } from "../impl/core"
+
+import { RenewCredentialCollector } from "../impl/renew"
+import { PasswordLoginCollector } from "../impl/login"
+import { PasswordResetCollector } from "../impl/reset"
 
 import { secureScriptPath } from "../../../common/application/impl/core"
 import { forceRenew, renew, setContinuousRenew } from "../../../login/renew/impl/core"

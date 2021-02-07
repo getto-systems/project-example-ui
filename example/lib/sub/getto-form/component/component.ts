@@ -17,11 +17,11 @@ export const initialFormComponentState: FormComponentState = {
     history: { undo: false, redo: false },
 }
 
-export interface FormFieldComponent<S, E> extends ApplicationComponent<FormFieldComponentState<S, E>> {
+export interface FormFieldComponent<S, E> extends ApplicationComponent<FormFieldState<S, E>> {
     validate(): void
 }
 
-export type FormFieldComponentState<S, E> = S & Readonly<{ result: FormValidationResult<E> }>
+export type FormFieldState<S, E> = S & Readonly<{ result: FormValidationResult<E> }>
 export type FormFieldEmptyState = {
     // no state
 }

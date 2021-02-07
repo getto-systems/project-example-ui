@@ -7,7 +7,7 @@ import { LoginLink } from "../link"
 import {
     LoginIDFormFieldComponent,
     PasswordFormFieldComponent,
-    PasswordFormFieldState,
+    PasswordState,
     PasswordLoginComponent,
     PasswordLoginFormComponent,
     PasswordLoginState,
@@ -16,7 +16,7 @@ import { FormConvertResult, FormInputString, markInputString } from "../../../su
 import { LoginFields } from "../../login/passwordLogin/data"
 import {
     FormComponentState,
-    FormFieldComponentState,
+    FormFieldState,
     FormFieldEmptyState,
     FormInputComponent,
     FormInputComponentState,
@@ -121,7 +121,7 @@ export class PasswordLoginFormMockComponent
 }
 
 export class LoginIDFormFieldMockComponent
-    extends MockComponent<FormFieldComponentState<FormFieldEmptyState, LoginIDFieldError>>
+    extends MockComponent<FormFieldState<FormFieldEmptyState, LoginIDFieldError>>
     implements LoginIDFormFieldComponent {
     input: FormInputComponent
 
@@ -154,7 +154,7 @@ export class LoginIDFormInputMockComponent
 }
 
 export class PasswordFormFieldMockComponent
-    extends MockComponent<FormFieldComponentState<PasswordFormFieldState, LoginIDFieldError>>
+    extends MockComponent<FormFieldState<PasswordState, LoginIDFieldError>>
     implements PasswordFormFieldComponent {
     input: FormInputComponent
 

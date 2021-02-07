@@ -16,15 +16,12 @@ class Set implements FormValidationStateSet {
         ]
     }
     state(): FormValidationState {
-        return this.validationState.reduce((acc, state) => {
-            switch (acc) {
-                case "initial":
-                case "invalid":
-                    return acc
-
-                case "valid":
-                    return state.state
-            }
-        }, <FormValidationState>"valid")
+        if (this.validationState.every((state) => state.state === "valid")) {
+            return "valid"
+        }
+        if (this.validationState.some((state) => state.state === "invalid")) {
+            return "invalid"
+        }
+        return "initial"
     }
 }

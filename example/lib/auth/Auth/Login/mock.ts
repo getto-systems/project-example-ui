@@ -69,8 +69,6 @@ export function newLoginAsPasswordLogin(): {
                 resource: {
                     passwordLogin: mock.passwordLogin.init(),
                     form: mock.form.init(),
-                    loginIDField: mock.loginIDField.init(),
-                    passwordField: mock.passwordField.init(),
                 },
             }),
             terminate: () => {

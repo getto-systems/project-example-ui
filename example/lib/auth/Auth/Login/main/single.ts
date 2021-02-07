@@ -9,21 +9,20 @@ import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "./actio
 import { initPasswordLoginAction } from "./action/login"
 import { initPasswordResetAction, initPasswordResetSessionAction } from "./action/reset"
 
+import { LoginViewCollector, View } from "../impl/core"
 import {
-    LoginViewCollector,
-    View,
-    RenewCredentialFactory,
-    RenewCredentialCollector,
-    PasswordLoginFactory,
-    PasswordLoginCollector,
-    PasswordResetSessionFactory,
-    PasswordResetFactory,
-    PasswordResetCollector,
     initRenewCredentialResource,
-    initPasswordLoginResource,
-    initPasswordResetSessionResource,
+    RenewCredentialCollector,
+    RenewCredentialFactory,
+} from "../impl/renew"
+import { initPasswordLoginResource, PasswordLoginCollector, PasswordLoginFactory } from "../impl/login"
+import {
     initPasswordResetResource,
-} from "../impl/core"
+    initPasswordResetSessionResource,
+    PasswordResetCollector,
+    PasswordResetFactory,
+    PasswordResetSessionFactory,
+} from "../impl/reset"
 
 import {
     newApplicationActionConfig,

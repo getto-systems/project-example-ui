@@ -26,38 +26,29 @@ class Input implements FormInput {
         post({ value })
     }
     change(post: Post<FormChangeEvent>): void {
-        switch (this.previous.type) {
-            case "first":
-                this.pushHistory(post)
-                break
-
-            case "hasPrevious":
-                if (this.previous.history.current !== this.current) {
-                    this.pushHistory(post)
-                }
-                break
-
-            default:
-                assertNever(this.previous)
+        if (this.isChanged()) {
+            const history = {
+                previous: this.previous,
+                current: this.current,
+            }
+            this.previous = { type: "hasPrevious", history }
+            post({ history })
         }
     }
-    pushHistory(post: Post<FormChangeEvent>): void {
-        const history = {
-            previous: this.previous,
-            current: this.current,
+    isChanged(): boolean {
+        switch (this.previous.type) {
+            case "first":
+                return true
+
+            case "hasPrevious":
+                return this.previous.history.current !== this.current
         }
-        post({ history })
-        this.previous = { type: "hasPrevious", history }
     }
     restore(history: FormHistory, post: Post<FormInputEvent>): void {
         this.previous = history.previous
         this.current = history.current
         post({ value: this.current })
     }
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER")
 }
 
 interface Post<E> {

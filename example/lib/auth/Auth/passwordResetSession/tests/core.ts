@@ -1,7 +1,7 @@
 import { initApplicationAction, initPasswordResetSessionAction } from "../../Login/tests/core"
 
 import { initLoginLink } from "../../Login/main/link"
-import { initPasswordResetSessionResource, PasswordResetSessionFactory } from "../../Login/impl/core"
+import { initPasswordResetSessionResource, PasswordResetSessionFactory } from "../../Login/impl/reset"
 
 import { initPasswordResetSessionComponent } from "../impl"
 import { initLoginIDFieldComponent } from "../../field/loginID/impl"

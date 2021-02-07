@@ -36,8 +36,6 @@ export type RenewCredentialResource = Readonly<{
 export type PasswordLoginResource = Readonly<{
     passwordLogin: PasswordLoginComponent
     form: PasswordLoginFormComponent
-    loginIDField: LoginIDFieldComponent
-    passwordField: PasswordFieldComponent
 }>
 export type PasswordResetSessionResource = Readonly<{
     passwordResetSession: PasswordResetSessionComponent

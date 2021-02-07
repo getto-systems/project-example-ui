@@ -56,10 +56,7 @@ class LoginHandler {
     }
 
     handleMessage({ handlerID, message: { content } }: ProxyMessage<LoginProxyMessage>): void {
-        const collector = {
-            getFields: () => Promise.resolve(content),
-        }
-        this.login(collector)((event) => {
+        this.login()(content, (event) => {
             this.post({ handlerID, done: hasDone(), response: event })
 
             function hasDone() {
