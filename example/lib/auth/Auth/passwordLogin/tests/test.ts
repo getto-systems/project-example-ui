@@ -14,7 +14,7 @@ import { initAuthCredentialRepository } from "../../../login/renew/impl/reposito
 
 import { AuthCredentialRepository } from "../../../login/renew/infra"
 
-import { FormComponentState } from "../../../../sub/getto-form/component/component"
+import { FormState } from "../../../../sub/getto-form/component/component"
 import { LoginIDFormFieldState } from "../../field/loginID/component"
 import { PasswordFormFieldState } from "../../field/password/component"
 import { PasswordLoginState } from "../component"
@@ -260,8 +260,8 @@ describe("PasswordLogin", () => {
 
             expect(resource.form.getLoginFields()).toMatchObject({ success: false })
 
-            function stateHandler(): Post<FormComponentState> {
-                const stack: FormComponentState[] = []
+            function stateHandler(): Post<FormState> {
+                const stack: FormState[] = []
                 return (state) => {
                     stack.push(state)
 
@@ -301,8 +301,8 @@ describe("PasswordLogin", () => {
                 },
             })
 
-            function stateHandler(): Post<FormComponentState> {
-                const stack: FormComponentState[] = []
+            function stateHandler(): Post<FormState> {
+                const stack: FormState[] = []
                 return (state) => {
                     stack.push(state)
 
@@ -352,8 +352,8 @@ describe("PasswordLogin", () => {
 
             expect(resource.form.getLoginFields()).toMatchObject({ success: false })
 
-            function stateHandler(): Post<FormComponentState> {
-                const stack: FormComponentState[] = []
+            function stateHandler(): Post<FormState> {
+                const stack: FormState[] = []
                 return (state) => {
                     stack.push(state)
 

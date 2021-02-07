@@ -1,12 +1,12 @@
 import { ApplicationBaseComponent } from "../../getto-example/application/impl"
 
 import {
-    FormComponentState,
+    FormState,
     FormFieldComponent,
     FormFieldHandler,
     FormFieldState,
     FormInputComponent,
-    FormInputComponentState,
+    FormInputState,
     FormInputMaterial,
     FormMaterial,
 } from "./component"
@@ -17,7 +17,7 @@ import { FormFieldName, FormHistory, mapValidationResult } from "../action/data"
 import { FormInputString } from "../data"
 
 export class FormBaseComponent<M extends FormMaterial> extends ApplicationBaseComponent<
-    FormComponentState
+    FormState
 > {
     material: M
 
@@ -43,7 +43,7 @@ export class FormBaseComponent<M extends FormMaterial> extends ApplicationBaseCo
         })
     }
 
-    currentState(): FormComponentState {
+    currentState(): FormState {
         return {
             validation: this.material.validation.state(),
             history: this.material.history.state(),
@@ -104,7 +104,7 @@ export function initFormInputComponent(
     return new Input(material, handler)
 }
 
-class Input extends ApplicationBaseComponent<FormInputComponentState> implements FormInputComponent {
+class Input extends ApplicationBaseComponent<FormInputState> implements FormInputComponent {
     material: FormInputMaterial
     onInput: Handler<FormInputEvent>
     onChange: Handler<FormChangeEvent>

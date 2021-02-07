@@ -5,11 +5,11 @@ import { initLoginLink } from "../Login/main/link"
 import { LoginLink } from "../link"
 
 import {
-    FormComponentState,
+    FormState,
     FormFieldState,
     FormFieldEmptyState,
     FormInputComponent,
-    FormInputComponentState,
+    FormInputState,
 } from "../../../sub/getto-form/component/component"
 import { PasswordLoginComponent, PasswordLoginFormComponent, PasswordLoginState } from "./component"
 import { LoginIDFormFieldComponent } from "../field/loginID/component"
@@ -85,13 +85,13 @@ export class PasswordLoginMockComponent
     }
 }
 
-export function initMockPasswordLoginForm(state: FormComponentState): PasswordLoginFormMockComponent {
+export function initMockPasswordLoginForm(state: FormState): PasswordLoginFormMockComponent {
     return new PasswordLoginFormMockComponent(state)
 }
 
 export type PasswordLoginFormMockProps = Readonly<{ type: "initial" }>
 
-export function mapPasswordLoginFormMockProps(props: PasswordLoginFormMockProps): FormComponentState {
+export function mapPasswordLoginFormMockProps(props: PasswordLoginFormMockProps): FormState {
     // TODO field の状態も update したい・・・
     switch (props.type) {
         case "initial":
@@ -100,12 +100,12 @@ export function mapPasswordLoginFormMockProps(props: PasswordLoginFormMockProps)
 }
 
 export class PasswordLoginFormMockComponent
-    extends MockComponent<FormComponentState>
+    extends MockComponent<FormState>
     implements PasswordLoginFormComponent {
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
 
-    constructor(state: FormComponentState) {
+    constructor(state: FormState) {
         super(state)
         this.loginID = new LoginIDFormFieldMockComponent()
         this.password = new PasswordFormFieldMockComponent()
@@ -132,7 +132,7 @@ export class LoginIDFormFieldMockComponent
 }
 
 export class LoginIDFormInputMockComponent
-    extends MockComponent<FormInputComponentState>
+    extends MockComponent<FormInputState>
     implements FormInputComponent {
     constructor() {
         super({ value: markInputString("") })
@@ -171,7 +171,7 @@ export class PasswordFormFieldMockComponent
 }
 
 export class PasswordFormInputMockComponent
-    extends MockComponent<FormInputComponentState>
+    extends MockComponent<FormInputState>
     implements FormInputComponent {
     constructor() {
         super({ value: markInputString("") })

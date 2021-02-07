@@ -18,8 +18,8 @@ import {
 } from "../passwordResetSession/component"
 import { initialPasswordResetState, PasswordResetState } from "../passwordReset/component"
 import {
-    FormComponentState,
-    initialFormComponentState,
+    FormState,
+    initialFormState,
 } from "../../../sub/getto-form/component/component"
 
 export function newLoginAsRenewCredential(): {
@@ -51,14 +51,14 @@ export function newLoginAsPasswordLogin(): {
     login: LoginEntryPoint
     update: {
         passwordLogin: Post<PasswordLoginState>
-        form: Post<FormComponentState>
+        form: Post<FormState>
         loginIDField: Post<LoginIDFieldState>
         passwordField: Post<PasswordFieldState>
     }
 } {
     const mock = {
         passwordLogin: new MockResource(initialPasswordLoginState, initPasswordLogin),
-        form: new MockResource(initialFormComponentState, initMockPasswordLoginForm),
+        form: new MockResource(initialFormState, initMockPasswordLoginForm),
         loginIDField: new MockResource(initialLoginIDFieldState, initLoginIDField),
         passwordField: new MockResource(initialPasswordFieldState, initPasswordField),
     }

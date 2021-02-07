@@ -27,13 +27,13 @@ import { PasswordLoginResource } from "../../../auth/Auth/Login/entryPoint"
 import { initialPasswordLoginState } from "../../../auth/Auth/passwordLogin/component"
 
 import { LoginError } from "../../../auth/login/passwordLogin/data"
-import { initialFormComponentState } from "../../../sub/getto-form/component/component"
+import { initialFormState } from "../../../sub/getto-form/component/component"
 
 type Props = PasswordLoginResource
 export function PasswordLogin(resource: Props): VNode {
     const { passwordLogin } = resource
     const state = useComponent(passwordLogin, initialPasswordLoginState)
-    const formState = useComponent(resource.form, initialFormComponentState)
+    const formState = useComponent(resource.form, initialFormState)
 
     useEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useEffect で行う

@@ -8,14 +8,14 @@ import { FormInput } from "../../../common/form/FormInput"
 import { loginIDValidationError } from "../field/loginID"
 
 import { LoginIDFormFieldComponent } from "../../../../auth/Auth/field/loginID/component"
-import { initialFormFieldComponentState } from "../../../../sub/getto-form/component/component"
+import { initialFormFieldState } from "../../../../sub/getto-form/component/component"
 
 // TODO LoginIDFormField -> LoginIDField
 type Props = Readonly<{
     loginID: LoginIDFormFieldComponent
 }>
 export function LoginIDFormField({ loginID }: Props): VNode {
-    const state = useComponent(loginID, initialFormFieldComponentState)
+    const state = useComponent(loginID, initialFormFieldState)
 
     return label_text_fill(content())
 

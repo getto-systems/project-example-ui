@@ -1,7 +1,7 @@
 import { LoginLink } from "../link"
 
 import { ApplicationComponent } from "../../../sub/getto-example/application/component"
-import { FormComponentState, FormMaterial } from "../../../sub/getto-form/component/component"
+import { FormState, FormMaterial } from "../../../sub/getto-form/component/component"
 import { LoginIDFormFieldComponent } from "../field/loginID/component"
 import { PasswordFormFieldComponent } from "../field/password/component"
 
@@ -59,7 +59,7 @@ export type PasswordLoginFormMaterial = FormMaterial &
         viewer: PasswordViewer
     }>
 
-export interface PasswordLoginFormComponent extends ApplicationComponent<FormComponentState> {
+export interface PasswordLoginFormComponent extends ApplicationComponent<FormState> {
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
     getLoginFields(): FormConvertResult<LoginFields>
