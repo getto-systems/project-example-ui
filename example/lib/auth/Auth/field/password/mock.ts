@@ -2,12 +2,7 @@ import { MockComponent } from "../../../../sub/getto-example/application/mock"
 
 import { PasswordFieldComponent, PasswordFieldState } from "./component"
 
-import {
-    simplePassword,
-    complexPassword,
-    hidePassword,
-    showPassword,
-} from "../../../common/field/password/data"
+import { showPassword } from "../../../common/field/password/data"
 import { markInputValue, noError, hasError } from "../../../common/field/data"
 
 export function initPasswordField(state: PasswordFieldState): PasswordFieldMockComponent {
@@ -40,104 +35,54 @@ export function mapPasswordFieldMockProps(props: PasswordFieldMockProps): Passwo
             return {
                 type: "succeed-to-update",
                 result: noError(),
-                character: simplePassword,
-                view: hidePassword,
+                character: { complex: false },
+                view: { show: false },
             }
 
         case "complex":
             return {
                 type: "succeed-to-update",
                 result: noError(),
-                character: complexPassword,
-                view: hidePassword,
+                character: { complex: true },
+                view: { show: false },
             }
 
         case "empty":
             return {
                 type: "succeed-to-update",
                 result: hasError(["empty"]),
-                character: simplePassword,
-                view: hidePassword,
+                character: { complex: false },
+                view: { show: false },
             }
 
         case "too-long":
             return {
                 type: "succeed-to-update",
                 result: hasError(["too-long"]),
-                character: simplePassword,
-                view: hidePassword,
+                character: { complex: false },
+                view: { show: false },
             }
 
         case "too-long-complex":
             return {
                 type: "succeed-to-update",
                 result: hasError(["too-long"]),
-                character: complexPassword,
-                view: hidePassword,
+                character: { complex: true },
+                view: { show: false },
             }
 
         case "show":
             return {
                 type: "succeed-to-update",
                 result: noError(),
-                character: simplePassword,
+                character: { complex: false },
                 view: showPassword(markInputValue(props.password)),
             }
     }
 }
 
-export class PasswordFieldStateFactory {
-    noError(): PasswordFieldState {
-        return {
-            type: "succeed-to-update",
-            result: noError(),
-            character: simplePassword,
-            view: hidePassword,
-        }
-    }
-    empty(): PasswordFieldState {
-        return {
-            type: "succeed-to-update",
-            result: hasError(["empty"]),
-            character: simplePassword,
-            view: hidePassword,
-        }
-    }
-    tooLong(): PasswordFieldState {
-        return {
-            type: "succeed-to-update",
-            result: hasError(["too-long"]),
-            character: simplePassword,
-            view: hidePassword,
-        }
-    }
-    complex_tooLong(): PasswordFieldState {
-        return {
-            type: "succeed-to-update",
-            result: hasError(["too-long"]),
-            character: complexPassword,
-            view: hidePassword,
-        }
-    }
-    complex(): PasswordFieldState {
-        return {
-            type: "succeed-to-update",
-            result: noError(),
-            character: complexPassword,
-            view: hidePassword,
-        }
-    }
-    show(): PasswordFieldState {
-        return {
-            type: "succeed-to-update",
-            result: noError(),
-            character: simplePassword,
-            view: showPassword(markInputValue("password")),
-        }
-    }
-}
-
-export class PasswordFieldMockComponent extends MockComponent<PasswordFieldState>
+export class PasswordFieldMockComponent
+    extends MockComponent<PasswordFieldState>
     implements PasswordFieldComponent {
     set(): void {
         // mock では特に何もしない

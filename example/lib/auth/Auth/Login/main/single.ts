@@ -5,6 +5,8 @@ import { env } from "../../../../y_environment/env"
 import {
     initApplicationAction,
     initAuthCredentialStorage,
+    initLoginIDFormFieldAction,
+    initPasswordFormFieldAction,
     initRenewAction,
     initSetContinuousRenewAction,
 } from "./worker/foreground"
@@ -43,7 +45,7 @@ import { initLoginLink } from "./link"
 import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
 
 import { initRenewCredentialComponent } from "../../renewCredential/impl"
-import { initPasswordLoginComponent } from "../../passwordLogin/impl"
+import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../../passwordLogin/impl"
 import { initPasswordResetSessionComponent } from "../../passwordResetSession/impl"
 import { initPasswordResetComponent } from "../../passwordReset/impl"
 
@@ -56,6 +58,7 @@ import { passwordField } from "../../../common/field/password/impl/core"
 import { currentPagePathname, detectViewState, detectResetToken } from "../impl/location"
 
 import { LoginEntryPoint } from "../entryPoint"
+import { initFormAction } from "../../../../sub/getto-form/main/core"
 
 export function newLoginAsSingle(): LoginEntryPoint {
     const credentialStorage = localStorage
@@ -79,6 +82,12 @@ export function newLoginAsSingle(): LoginEntryPoint {
             passwordResetSession: initPasswordResetSessionAction(newPasswordResetSessionActionConfig()),
             passwordReset: initPasswordResetAction(newPasswordResetActionConfig()),
 
+            form: {
+                core: initFormAction(),
+                loginID: initLoginIDFormFieldAction(),
+                password: initPasswordFormFieldAction(),
+            },
+
             field: {
                 loginID: loginIDField,
                 password: passwordField,
@@ -87,7 +96,7 @@ export function newLoginAsSingle(): LoginEntryPoint {
         components: {
             renewCredential: initRenewCredentialComponent,
 
-            passwordLogin: initPasswordLoginComponent,
+            passwordLogin: { core: initPasswordLoginComponent, form: initPasswordLoginFormComponent },
             passwordResetSession: initPasswordResetSessionComponent,
             passwordReset: initPasswordResetComponent,
 

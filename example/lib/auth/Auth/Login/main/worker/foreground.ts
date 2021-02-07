@@ -25,7 +25,7 @@ import {
 } from "../../impl/core"
 
 import { initRenewCredentialComponent } from "../../../renewCredential/impl"
-import { initPasswordLoginComponent } from "../../../passwordLogin/impl"
+import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../../../passwordLogin/impl"
 import { initPasswordResetSessionComponent } from "../../../passwordResetSession/impl"
 import { initPasswordResetComponent } from "../../../passwordReset/impl"
 
@@ -61,7 +61,10 @@ import { LoginLinkFactory } from "../../../link"
 
 import { LoginEntryPoint } from "../../entryPoint"
 import { RenewCredentialComponentFactory } from "../../../renewCredential/component"
-import { PasswordLoginComponentFactory } from "../../../passwordLogin/component"
+import {
+    PasswordLoginComponentFactory,
+    PasswordLoginFormComponentFactory,
+} from "../../../passwordLogin/component"
 import { PasswordResetSessionComponentFactory } from "../../../passwordResetSession/component"
 import { PasswordResetComponentFactory } from "../../../passwordReset/component"
 import { LoginIDFieldComponentFactory } from "../../../field/loginID/component"
@@ -79,8 +82,8 @@ import {
     Reset,
     ResetCollector,
 } from "../../../../profile/passwordReset/action"
-import { LoginIDFieldAction } from "../../../../common/field/loginID/action"
-import { PasswordFieldAction } from "../../../../common/field/password/action"
+import { LoginIDFieldAction, LoginIDFormFieldAction } from "../../../../common/field/loginID/action"
+import { PasswordFieldAction, PasswordFormFieldAction } from "../../../../common/field/password/action"
 
 import { LoginEvent } from "../../../../login/passwordLogin/event"
 import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../profile/passwordReset/event"
@@ -95,6 +98,12 @@ import {
     CheckStatusProxyMessage,
     ResetProxyMessage,
 } from "./message"
+import { FormAction } from "../../../../../sub/getto-form/action/action"
+import { loginIDFormField } from "../../../../common/field/loginID/impl/field"
+import { passwordFormField } from "../../../../common/field/password/impl/field"
+import { passwordCharacterChecker } from "../../../../common/field/password/impl/character"
+import { passwordViewer } from "../../../../common/field/password/impl/viewer"
+import { initFormAction } from "../../../../../sub/getto-form/main/core"
 
 export function newLoginAsWorkerForeground(): LoginEntryPoint {
     const credentialStorage = localStorage
@@ -117,6 +126,12 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
                 authClient
             ),
 
+            form: {
+                core: initFormAction(),
+                loginID: initLoginIDFormFieldAction(),
+                password: initPasswordFormFieldAction(),
+            },
+
             field: {
                 loginID: () => loginIDField(),
                 password: () => passwordField(),
@@ -125,7 +140,7 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
         components: {
             renewCredential: initRenewCredentialComponent,
 
-            passwordLogin: initPasswordLoginComponent,
+            passwordLogin: { core: initPasswordLoginComponent, form: initPasswordLoginFormComponent },
             passwordResetSession: initPasswordResetSessionComponent,
             passwordReset: initPasswordResetComponent,
 
@@ -210,6 +225,19 @@ export function initSetContinuousRenewAction(
     }
 }
 
+export function initLoginIDFormFieldAction(): LoginIDFormFieldAction {
+    return {
+        field: loginIDFormField(),
+    }
+}
+export function initPasswordFormFieldAction(): PasswordFormFieldAction {
+    return {
+        field: passwordFormField(),
+        character: passwordCharacterChecker(),
+        viewer: passwordViewer(),
+    }
+}
+
 class ProxyMap<M, E> {
     idGenerator: IDGenerator
     post: Post<ProxyMessage<M>>
@@ -289,12 +317,20 @@ type ForegroundFactory = Readonly<{
         renew: RenewAction
         setContinuousRenew: SetContinuousRenewAction
 
+        form: Readonly<{
+            core: FormAction
+            loginID: LoginIDFormFieldAction
+            password: PasswordFormFieldAction
+        }>
         field: LoginIDFieldAction & PasswordFieldAction
     }>
     components: Readonly<{
         renewCredential: RenewCredentialComponentFactory
 
-        passwordLogin: PasswordLoginComponentFactory
+        passwordLogin: Readonly<{
+            core: PasswordLoginComponentFactory
+            form: PasswordLoginFormComponentFactory
+        }>
         passwordResetSession: PasswordResetSessionComponentFactory
         passwordReset: PasswordResetComponentFactory
 

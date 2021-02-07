@@ -17,7 +17,12 @@ import {
     RenewCredentialComponent,
     RenewCredentialMaterial,
 } from "../../renewCredential/component"
-import { PasswordLoginComponentFactory, PasswordLoginMaterial } from "../../passwordLogin/component"
+import {
+    PasswordLoginComponentFactory,
+    PasswordLoginFormComponentFactory,
+    PasswordLoginFormMaterial,
+    PasswordLoginMaterial,
+} from "../../passwordLogin/component"
 import {
     PasswordResetSessionComponentFactory,
     PasswordResetSessionMaterial,
@@ -36,8 +41,9 @@ import {
     ResetTokenCollector,
 } from "../../../profile/passwordReset/action"
 
-import { LoginIDFieldAction } from "../../../common/field/loginID/action"
-import { PasswordFieldAction } from "../../../common/field/password/action"
+import { FormAction } from "../../../../sub/getto-form/action/action"
+import { LoginIDFieldAction, LoginIDFormFieldAction } from "../../../common/field/loginID/action"
+import { PasswordFieldAction, PasswordFormFieldAction } from "../../../common/field/password/action"
 
 import { LoginID } from "../../../common/loginID/data"
 import { Password } from "../../../common/password/data"
@@ -140,10 +146,18 @@ export type PasswordLoginFactory = Readonly<{
         application: ApplicationAction
         setContinuousRenew: SetContinuousRenewAction
         passwordLogin: PasswordLoginAction
+        form: Readonly<{
+            core: FormAction
+            loginID: LoginIDFormFieldAction
+            password: PasswordFormFieldAction
+        }>
         field: LoginIDFieldAction & PasswordFieldAction
     }>
     components: Readonly<{
-        passwordLogin: PasswordLoginComponentFactory
+        passwordLogin: Readonly<{
+            core: PasswordLoginComponentFactory
+            form: PasswordLoginFormComponentFactory
+        }>
 
         field: Readonly<{
             loginID: LoginIDFieldComponentFactory
@@ -173,8 +187,20 @@ export function initPasswordLoginResource(
     }
 
     return {
-        passwordLogin: factory.components.passwordLogin(material),
+        passwordLogin: factory.components.passwordLogin.core(material),
+        form: factory.components.passwordLogin.form(formMaterial()),
         ...fields,
+    }
+
+    function formMaterial(): PasswordLoginFormMaterial {
+        return {
+            validation: factory.actions.form.core.validation(),
+            history: factory.actions.form.core.history(),
+            loginID: factory.actions.form.loginID.field(),
+            password: factory.actions.form.password.field(),
+            checker: factory.actions.form.password.character(),
+            viewer: factory.actions.form.password.viewer(),
+        }
     }
 }
 

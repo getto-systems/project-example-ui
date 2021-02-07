@@ -4,13 +4,7 @@ import { PasswordField } from "../../../common/field/password/action"
 
 import { PasswordFieldEvent } from "../../../common/field/password/event"
 
-import {
-    PasswordFieldError,
-    PasswordCharacter,
-    simplePassword,
-    PasswordView,
-    hidePassword,
-} from "../../../common/field/password/data"
+import { PasswordFieldError, PasswordCharacter, PasswordView } from "../../../common/field/password/data"
 import { InputValue, Valid, noError } from "../../../common/field/data"
 
 export interface PasswordFieldComponentFactory {
@@ -37,8 +31,8 @@ export type PasswordFieldState = Readonly<{
 export const initialPasswordFieldState: PasswordFieldState = {
     type: "succeed-to-update",
     result: noError(),
-    character: simplePassword,
-    view: hidePassword,
+    character: { complex: false },
+    view: { show: false },
 }
 
 interface Handler<T> {

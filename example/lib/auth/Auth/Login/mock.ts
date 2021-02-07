@@ -1,7 +1,7 @@
 import { MockComponent } from "../../../sub/getto-example/application/mock"
 
 import { initRenewCredential } from "../renewCredential/mock"
-import { initPasswordLogin } from "../passwordLogin/mock"
+import { initMockPasswordLoginForm, initPasswordLogin } from "../passwordLogin/mock"
 import { initPasswordResetSession } from "../passwordResetSession/mock"
 import { initPasswordReset } from "../passwordReset/mock"
 import { initLoginIDField } from "../field/loginID/mock"
@@ -17,6 +17,10 @@ import {
     PasswordResetSessionState,
 } from "../passwordResetSession/component"
 import { initialPasswordResetState, PasswordResetState } from "../passwordReset/component"
+import {
+    FormComponentState,
+    initialFormComponentState,
+} from "../../../sub/getto-form/component/component"
 
 export function newLoginAsRenewCredential(): {
     login: LoginEntryPoint
@@ -47,12 +51,14 @@ export function newLoginAsPasswordLogin(): {
     login: LoginEntryPoint
     update: {
         passwordLogin: Post<PasswordLoginState>
+        form: Post<FormComponentState>
         loginIDField: Post<LoginIDFieldState>
         passwordField: Post<PasswordFieldState>
     }
 } {
     const mock = {
         passwordLogin: new MockResource(initialPasswordLoginState, initPasswordLogin),
+        form: new MockResource(initialFormComponentState, initMockPasswordLoginForm),
         loginIDField: new MockResource(initialLoginIDFieldState, initLoginIDField),
         passwordField: new MockResource(initialPasswordFieldState, initPasswordField),
     }
@@ -62,6 +68,7 @@ export function newLoginAsPasswordLogin(): {
                 type: "password-login",
                 resource: {
                     passwordLogin: mock.passwordLogin.init(),
+                    form: mock.form.init(),
                     loginIDField: mock.loginIDField.init(),
                     passwordField: mock.passwordField.init(),
                 },
@@ -72,6 +79,7 @@ export function newLoginAsPasswordLogin(): {
         },
         update: {
             passwordLogin: mock.passwordLogin.update(),
+            form: mock.form.update(),
             loginIDField: mock.loginIDField.update(),
             passwordField: mock.passwordField.update(),
         },

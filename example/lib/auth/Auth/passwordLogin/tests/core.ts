@@ -12,7 +12,7 @@ import {
     PasswordLoginFactory,
 } from "../../Login/impl/core"
 
-import { initPasswordLoginComponent } from "../impl"
+import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../impl"
 import { initLoginIDFieldComponent } from "../../field/loginID/impl"
 import { initPasswordFieldComponent } from "../../field/password/impl"
 
@@ -28,6 +28,11 @@ import { PasswordLoginActionConfig } from "../../../login/passwordLogin/infra"
 import { SetContinuousRenewActionConfig, AuthCredentialRepository } from "../../../login/renew/infra"
 
 import { PasswordLoginResource } from "../../Login/entryPoint"
+import { initFormAction } from "../../../../sub/getto-form/main/core"
+import {
+    initLoginIDFormFieldAction,
+    initPasswordFormFieldAction,
+} from "../../Login/main/worker/foreground"
 
 export type PasswordLoginConfig = {
     application: ApplicationActionConfig
@@ -62,13 +67,19 @@ export function newPasswordLoginResource(
 
             passwordLogin: initPasswordLoginAction(config.passwordLogin, simulator.login),
 
+            form: {
+                core: initFormAction(),
+                loginID: initLoginIDFormFieldAction(),
+                password: initPasswordFormFieldAction(),
+            },
+
             field: {
                 loginID: loginIDField,
                 password: passwordField,
             },
         },
         components: {
-            passwordLogin: initPasswordLoginComponent,
+            passwordLogin: { core: initPasswordLoginComponent, form: initPasswordLoginFormComponent },
 
             field: {
                 loginID: initLoginIDFieldComponent,

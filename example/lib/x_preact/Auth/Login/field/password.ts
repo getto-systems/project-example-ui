@@ -5,8 +5,14 @@ import { mapInputEvent } from "./common"
 
 import { PasswordFieldComponent } from "../../../../auth/Auth/field/password/component"
 
-import { PasswordFieldError, PasswordCharacter, PasswordView } from "../../../../auth/common/field/password/data"
-import { InputValue, Valid } from "../../../../auth/common/field/data"
+import {
+    PasswordFieldError,
+    PasswordCharacter,
+    PasswordView,
+} from "../../../../auth/common/field/password/data"
+import { Valid } from "../../../../auth/common/field/data"
+import { FormInputString, FormValidationResult } from "../../../../sub/getto-form/data"
+import { VNodeContent } from "../../../../z_vendor/getto-css/preact/common"
 
 export interface PasswordFieldHandler {
     onInput(event: InputEvent): void
@@ -26,6 +32,29 @@ export function passwordFieldHandler(passwordField: PasswordFieldComponent): Pas
             passwordField.hide()
         },
     }
+}
+
+export function passwordValidationError(
+    result: FormValidationResult<PasswordFieldError>,
+    character: PasswordCharacter
+): VNodeContent[] {
+    if (result.valid) {
+        return []
+    }
+
+    return result.err.map((err) => {
+        switch (err) {
+            case "empty":
+                return ["パスワードを入力してください"]
+
+            case "too-long":
+                if (character.complex) {
+                    return ["パスワードが長すぎます(18文字程度)"]
+                } else {
+                    return ["パスワードが長すぎます(72文字以内)"]
+                }
+        }
+    })
 }
 
 export function passwordFieldError(
@@ -76,7 +105,7 @@ export function passwordView(
         `
     }
 
-    function extractPassword(password: InputValue): string {
+    function extractPassword(password: FormInputString): string {
         if (password.length === 0) {
             return "(入力されていません)"
         } else {

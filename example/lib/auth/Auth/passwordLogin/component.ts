@@ -1,13 +1,31 @@
 import { ApplicationComponent } from "../../../sub/getto-example/application/component"
+import {
+    FormComponentState,
+    FormFieldComponent,
+    FormFieldComponentState,
+    FormFieldEmptyState,
+    FormInputComponent,
+    FormMaterial,
+} from "../../../sub/getto-form/component/component"
+
+import { LoginLink } from "../link"
 
 import { Login } from "../../login/passwordLogin/action"
 import { SetContinuousRenew } from "../../login/renew/action"
 import { SecureScriptPath } from "../../common/application/action"
+import { LoginIDFormField } from "../../common/field/loginID/action"
+import {
+    PasswordCharacterChecker,
+    PasswordFormField,
+    PasswordViewer,
+} from "../../common/field/password/action"
 
-import { LoginError } from "../../login/passwordLogin/data"
+import { FormConvertResult } from "../../../sub/getto-form/data"
 import { ScriptPath, LoadError } from "../../common/application/data"
-import { LoginLink } from "../link"
 import { StorageError } from "../../common/credential/data"
+import { LoginError, LoginFields } from "../../login/passwordLogin/data"
+import { LoginIDFieldError } from "../../common/field/loginID/data"
+import { PasswordCharacter, PasswordFieldError, PasswordView } from "../../common/field/password/data"
 
 export interface PasswordLoginComponentFactory {
     (material: PasswordLoginMaterial): PasswordLoginComponent
@@ -36,3 +54,43 @@ export type PasswordLoginState =
     | Readonly<{ type: "error"; err: string }>
 
 export const initialPasswordLoginState: PasswordLoginState = { type: "initial-login" }
+
+export interface PasswordLoginFormComponentFactory {
+    (material: PasswordLoginFormMaterial): PasswordLoginFormComponent
+}
+export type PasswordLoginFormMaterial = FormMaterial &
+    Readonly<{
+        loginID: LoginIDFormField
+        password: PasswordFormField
+        checker: PasswordCharacterChecker
+        viewer: PasswordViewer
+    }>
+
+export interface PasswordLoginFormComponent extends ApplicationComponent<FormComponentState> {
+    readonly loginID: LoginIDFormFieldComponent
+    readonly password: PasswordFormFieldComponent
+    getLoginFields(): FormConvertResult<LoginFields>
+}
+
+// TODO field に移動できる
+export interface LoginIDFormFieldComponent
+    extends FormFieldComponent<FormFieldEmptyState, LoginIDFieldError> {
+    readonly input: FormInputComponent
+}
+
+export interface PasswordFormFieldComponent
+    extends FormFieldComponent<PasswordFormFieldState, PasswordFieldError> {
+    readonly input: FormInputComponent
+    show(): void
+    hide(): void
+}
+
+export type PasswordFormFieldState = Readonly<{
+    character: PasswordCharacter
+    view: PasswordView
+}>
+
+export const initialPasswordFormFieldState: FormFieldComponentState<
+    PasswordFormFieldState,
+    PasswordFieldError
+> = { result: { valid: true }, character: { complex: false }, view: { show: false } }

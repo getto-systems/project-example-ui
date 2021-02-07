@@ -4,7 +4,13 @@ import { html } from "htm/preact"
 
 import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
-import { buttons, button_send, fieldError, form } from "../../../z_vendor/getto-css/preact/design/form"
+import {
+    buttons,
+    button_disabled,
+    button_send,
+    fieldError,
+    form,
+} from "../../../z_vendor/getto-css/preact/design/form"
 
 import { useComponent } from "../../common/hooks"
 import { siteInfo } from "../../common/site"
@@ -14,18 +20,20 @@ import { appendScript } from "./script"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
-import { LoginIDField } from "./PasswordLogin/LoginIDField"
-import { PasswordField } from "./PasswordLogin/PasswordField"
+import { LoginIDFormField } from "./PasswordLogin/LoginIDField"
+import { PasswordFormField } from "./PasswordLogin/PasswordField"
 
 import { PasswordLoginResource } from "../../../auth/Auth/Login/entryPoint"
 import { initialPasswordLoginState } from "../../../auth/Auth/passwordLogin/component"
 
 import { LoginError } from "../../../auth/login/passwordLogin/data"
+import { initialFormComponentState } from "../../../sub/getto-form/component/component"
 
 type Props = PasswordLoginResource
 export function PasswordLogin(resource: Props): VNode {
     const { passwordLogin } = resource
     const state = useComponent(passwordLogin, initialPasswordLoginState)
+    const formState = useComponent(resource.form, initialFormComponentState)
 
     useEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useEffect で行う
@@ -82,7 +90,7 @@ export function PasswordLogin(resource: Props): VNode {
         return form(
             loginBox(siteInfo(), {
                 title: loginTitle(),
-                body: [h(LoginIDField, resource), h(PasswordField, resource)],
+                body: [h(LoginIDFormField, resource.form), h(PasswordFormField, resource.form)],
                 footer: [buttons({ left: button(), right: resetLink() }), error()],
             })
         )
@@ -97,12 +105,22 @@ export function PasswordLogin(resource: Props): VNode {
             }
 
             function loginButton() {
-                // TODO field に入力されて、すべて OK なら state: confirm にしたい
-                return button_send({ state: "normal", label: "ログイン", onClick })
+                switch (formState.validation) {
+                    case "initial":
+                        return button_send({ state: "normal", label: "ログイン", onClick })
+
+                    case "valid":
+                        return button_send({ state: "confirm", label: "ログイン", onClick })
+
+                    case "invalid":
+                        return button_disabled({ label: "ログイン" })
+                }
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    passwordLogin.login()
+                    console.log(resource.form.getLoginFields())
+                    // TODO passwordLogin.login()
+                    alert("ここでログイン！")
                 }
             }
             function connectingButton(): VNode {
@@ -114,7 +132,15 @@ export function PasswordLogin(resource: Props): VNode {
             if ("error" in content) {
                 return fieldError(content.error)
             }
-            return ""
+
+            switch (formState.validation) {
+                case "initial":
+                case "valid":
+                    return ""
+
+                case "invalid":
+                    return fieldError(["正しく入力されていません"])
+            }
         }
     }
     function delayedMessage() {

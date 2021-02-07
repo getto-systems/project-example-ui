@@ -1,6 +1,40 @@
-import { PasswordFieldEvent } from "./event"
-import { InputValue } from "../data"
+import { FormField, FormInput } from "../../../../sub/getto-form/action/action"
 
+import { PasswordFieldEvent } from "./event"
+
+import { Password } from "../../password/data"
+import { InputValue } from "../data"
+import { PasswordCharacter, PasswordFieldError, PasswordViewState } from "./data"
+import { FormInputString } from "../../../../sub/getto-form/data"
+
+export type PasswordFormFieldAction = Readonly<{
+    field: PasswordFormFieldPod
+    character: PasswordCharacterCheckerPod
+    viewer: PasswordViewerPod
+}>
+
+export interface PasswordFormFieldPod {
+    (): PasswordFormField
+}
+export type PasswordFormField = FormField<Password, PasswordFieldError, FormInput>
+
+export interface PasswordCharacterCheckerPod {
+    (): PasswordCharacterChecker
+}
+export interface PasswordCharacterChecker {
+    (password: FormInputString): PasswordCharacter
+}
+
+export interface PasswordViewerPod {
+    (): PasswordViewer
+}
+export interface PasswordViewer {
+    get(): PasswordViewState
+    show(post: Post<PasswordViewState>): void
+    hide(post: Post<PasswordViewState>): void
+}
+
+// TODO 以下、削除
 export type PasswordFieldAction = Readonly<{
     password: PasswordFieldPod
 }>
