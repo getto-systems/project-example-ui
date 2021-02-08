@@ -1,5 +1,3 @@
-import { MockComponent } from "../../getto-example/application/mock"
-
 import {
     FormComponent,
     FormFieldComponent,
@@ -9,9 +7,12 @@ import {
     FormComponentState,
 } from "./component"
 
-import { FormHistory, FormInputString, markInputString } from "../action/data"
+import { FormHistory, FormInputString, FormValidationState, markInputString } from "../action/data"
+import { MockComponent, MockPropsPasser } from "../../getto-example/application/mock"
 
-export class FormMockComponent extends MockComponent<FormComponentState> implements FormComponent {
+export class FormMockComponent
+    extends MockComponent<FormComponentState>
+    implements FormComponent {
     undo(): void {
         // mock では特に何もしない
     }
@@ -19,6 +20,10 @@ export class FormMockComponent extends MockComponent<FormComponentState> impleme
         // mock では特に何もしない
     }
 }
+
+export type FormMockProps = Readonly<{ validation: FormValidationState }>
+
+export const formValidationStates: FormValidationState[] = ["initial", "valid", "invalid"]
 
 export class FormFieldMockComponent<S, E>
     extends MockComponent<FormFieldComponentState<S, E>>
@@ -28,9 +33,16 @@ export class FormFieldMockComponent<S, E>
     }
 }
 
-export class FormInputMockComponent extends MockComponent<FormInputComponentState> implements FormInputComponent {
-    constructor() {
-        super({ value: markInputString("") })
+export type FormInputMockProps = Readonly<{ input: string }>
+
+export class FormInputMockComponent
+    extends MockComponent<FormInputComponentState>
+    implements FormInputComponent {
+    constructor(passer: MockPropsPasser<FormInputMockProps>) {
+        super()
+        passer.addPropsHandler((props) => {
+            this.post({ value: markInputString(props.input) })
+        })
     }
 
     input(_value: FormInputString): void {

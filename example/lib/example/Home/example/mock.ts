@@ -1,4 +1,4 @@
-import { MockComponent } from "../../../sub/getto-example/application/mock"
+import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
 
 import { ExampleComponent, ExampleComponentState } from "./component"
 
@@ -22,7 +22,7 @@ export function mapExampleMockProps(props: ExampleMockProps): ExampleComponentSt
     }
 }
 
-class ExampleMockComponent extends MockComponent<ExampleComponentState> implements ExampleComponent {
+class ExampleMockComponent extends MockComponent_legacy<ExampleComponentState> implements ExampleComponent {
     load() {
         // mock では特に何もしない
     }

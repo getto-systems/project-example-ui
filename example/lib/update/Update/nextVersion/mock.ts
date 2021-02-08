@@ -1,4 +1,4 @@
-import { MockComponent } from "../../../sub/getto-example/application/mock"
+import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
 
 import { NextVersionComponent, NextVersionComponentState } from "./component"
 
@@ -23,7 +23,7 @@ export function mapNextVersionMockProps(props: NextVersionMockProps): NextVersio
     }
 }
 
-class NextVersionMockComponent extends MockComponent<NextVersionComponentState> implements NextVersionComponent {
+class NextVersionMockComponent extends MockComponent_legacy<NextVersionComponentState> implements NextVersionComponent {
     find(): void {
         // mock ではなにもしない
     }

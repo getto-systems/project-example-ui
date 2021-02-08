@@ -1,26 +1,35 @@
-import { MockComponent } from "../../../sub/getto-example/application/mock"
+import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
 
 import { initMockRenewCredential } from "../renewCredential/mock"
-import { initMockPasswordLoginForm, initMockPasswordLogin } from "../passwordLogin/mock"
+import {
+    initMockPasswordLoginForm,
+    initMockPasswordLogin,
+    PasswordLoginMockPasser,
+} from "../passwordLogin/mock"
 import { initMockPasswordResetSession } from "../passwordResetSession/mock"
 import { initMockPasswordReset } from "../passwordReset/mock"
 import { initMockLoginIDField } from "../field/loginID/mock"
 import { initMockPasswordField } from "../field/password/mock"
 
 import { LoginEntryPoint, LoginView, LoginState } from "./entryPoint"
-import { initialRenewCredentialComponentState, RenewCredentialComponentState } from "../renewCredential/component"
-import { initialPasswordLoginComponentState, PasswordLoginComponentState } from "../passwordLogin/component"
+import {
+    initialRenewCredentialComponentState,
+    RenewCredentialComponentState,
+} from "../renewCredential/component"
+import {
+    initialPasswordLoginComponentState,
+    PasswordLoginComponentState,
+} from "../passwordLogin/component"
 import { initialLoginIDFieldState, LoginIDFieldState } from "../field/loginID/component"
 import { initialPasswordFieldState, PasswordFieldState } from "../field/password/component"
 import {
     initialPasswordResetSessionComponentState,
     PasswordResetSessionComponentState,
 } from "../passwordResetSession/component"
-import { initialPasswordResetComponentState, PasswordResetComponentState } from "../passwordReset/component"
 import {
-    FormComponentState,
-    initialFormComponentState,
-} from "../../../sub/getto-form/component/component"
+    initialPasswordResetComponentState,
+    PasswordResetComponentState,
+} from "../passwordReset/component"
 
 export function newMockLoginAsRenewCredential(): {
     login: LoginEntryPoint
@@ -47,20 +56,17 @@ export function newMockLoginAsRenewCredential(): {
     }
 }
 
-export function newMockLoginAsPasswordLogin(): {
+export type PasswordLoginMockProps = PasswordLoginMockPasser
+export function newMockLoginAsPasswordLogin(
+    props: PasswordLoginMockProps
+): {
     login: LoginEntryPoint
     update: {
         passwordLogin: Post<PasswordLoginComponentState>
-        form: Post<FormComponentState>
-        loginIDField: Post<LoginIDFieldState>
-        passwordField: Post<PasswordFieldState>
     }
 } {
     const mock = {
         passwordLogin: new MockResource(initialPasswordLoginComponentState, initMockPasswordLogin),
-        form: new MockResource(initialFormComponentState, initMockPasswordLoginForm),
-        loginIDField: new MockResource(initialLoginIDFieldState, initMockLoginIDField),
-        passwordField: new MockResource(initialPasswordFieldState, initMockPasswordField),
     }
     return {
         login: {
@@ -68,7 +74,7 @@ export function newMockLoginAsPasswordLogin(): {
                 type: "password-login",
                 resource: {
                     passwordLogin: mock.passwordLogin.init(),
-                    form: mock.form.init(),
+                    form: initMockPasswordLoginForm(props),
                 },
             }),
             terminate: () => {
@@ -77,9 +83,6 @@ export function newMockLoginAsPasswordLogin(): {
         },
         update: {
             passwordLogin: mock.passwordLogin.update(),
-            form: mock.form.update(),
-            loginIDField: mock.loginIDField.update(),
-            passwordField: mock.passwordField.update(),
         },
     }
 }
@@ -177,7 +180,7 @@ export function newMockLoginAsError(): {
     }
 }
 
-class MockResource<S, C extends MockComponent<S>> {
+class MockResource<S, C extends MockComponent_legacy<S>> {
     state: S
     factory: MockFactory<S, C>
 
@@ -204,11 +207,11 @@ class MockResource<S, C extends MockComponent<S>> {
         }
     }
 }
-interface MockFactory<S, C extends MockComponent<S>> {
+interface MockFactory<S, C extends MockComponent_legacy<S>> {
     (state: S): C
 }
 
-class View extends MockComponent<LoginState> implements LoginView {
+class View extends MockComponent_legacy<LoginState> implements LoginView {
     load(): void {
         // mock では特に何もしない
     }

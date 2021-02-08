@@ -1,4 +1,4 @@
-import { MockComponent } from "../../../sub/getto-example/application/mock"
+import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
 
 import { initLoginLink } from "../Login/main/link"
 
@@ -52,7 +52,7 @@ export function mapPasswordResetMockProps(props: PasswordResetMockProps): Passwo
     }
 }
 
-export class PasswordResetMockComponent extends MockComponent<PasswordResetComponentState>
+export class PasswordResetMockComponent extends MockComponent_legacy<PasswordResetComponentState>
     implements PasswordResetComponent {
     link: LoginLink
 

@@ -3,17 +3,20 @@ import { h, VNode } from "preact"
 import { Login } from "../../../x_preact/Auth/Login/Login"
 
 import { newMockLoginAsPasswordLogin } from "../../../auth/Auth/Login/mock"
-import { mapPasswordLoginMockProps, PasswordLoginMockProps } from "../../../auth/Auth/passwordLogin/mock"
 import {
-    mapLoginIDFieldMockProps,
-    loginIDFieldMockTypes,
-    LoginIDFieldMockProps,
-} from "../../../auth/Auth/field/loginID/mock"
+    mapPasswordLoginMockProps,
+    PasswordLoginFormMockProps,
+    PasswordLoginMockProps,
+} from "../../../auth/Auth/passwordLogin/mock"
+import { loginIDFormFieldValidations } from "../../../auth/Auth/field/loginID/mock"
 import {
-    mapPasswordFieldMockProps,
-    PasswordFieldMockProps,
-    passwordFieldMockTypes,
+    passwordFormFieldCharacters,
+    passwordFormFieldValidations,
+    passwordFormFieldViews,
 } from "../../../auth/Auth/field/password/mock"
+import { initMockPropsPasser } from "../../../sub/getto-example/application/mock"
+import { formValidationStates } from "../../../sub/getto-form/component/mock"
+import { useEffect } from "preact/hooks"
 
 export default {
     title: "Auth/Login/PasswordLogin",
@@ -21,34 +24,54 @@ export default {
         type: {
             table: { disable: true },
         },
-        loginIDField: {
+        validation: {
             control: {
                 type: "select",
-                options: loginIDFieldMockTypes,
+                options: formValidationStates,
             },
         },
-        passwordField: {
+        loginIDValidation: {
             control: {
                 type: "select",
-                options: passwordFieldMockTypes,
+                options: loginIDFormFieldValidations,
+            },
+        },
+        passwordValidation: {
+            control: {
+                type: "select",
+                options: passwordFormFieldValidations,
+            },
+        },
+        passwordCharacter: {
+            control: {
+                type: "select",
+                options: passwordFormFieldCharacters,
+            },
+        },
+        passwordView: {
+            control: {
+                type: "select",
+                options: passwordFormFieldViews,
             },
         },
     },
 }
 
-type MockProps = PasswordLoginMockProps & LoginIDFieldMockProps & PasswordFieldMockProps
+type MockProps = PasswordLoginMockProps & PasswordLoginFormMockProps
 const Template: Story<MockProps> = (args) => {
-    const { login, update } = newMockLoginAsPasswordLogin()
+    const passer = initMockPropsPasser<PasswordLoginFormMockProps>()
+    const { login, update } = newMockLoginAsPasswordLogin(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
+        useEffect(() => {
+            passer.update(props.args)
+        })
         updateState(props.args)
         return h(Login, { login })
     }
     function updateState(args: MockProps) {
         update.passwordLogin(mapPasswordLoginMockProps(args))
-        update.loginIDField(mapLoginIDFieldMockProps(args))
-        update.passwordField(mapPasswordFieldMockProps(args))
     }
 }
 
@@ -58,9 +81,13 @@ interface Story<T> {
 }
 
 const defaultArgs = {
-    loginIDField: "initial",
-    passwordField: "initial",
+    validation: "initial",
+    loginID: "",
+    loginIDValidation: "ok",
     password: "",
+    passwordValidation: "ok",
+    passwordCharacter: "simple",
+    passwordView: "hide",
 } as const
 
 export const Initial = Template.bind({})

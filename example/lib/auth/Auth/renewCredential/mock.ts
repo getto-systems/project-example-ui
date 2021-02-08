@@ -1,4 +1,4 @@
-import { MockComponent } from "../../../sub/getto-example/application/mock"
+import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
 
 import { RenewCredentialComponent, RenewCredentialComponentState } from "./component"
 
@@ -32,7 +32,7 @@ export function mapRenewCredentialMockProps(props: RenewCredentialMockProps): Re
     }
 }
 
-export class RenewCredentialMockComponent extends MockComponent<RenewCredentialComponentState>
+export class RenewCredentialMockComponent extends MockComponent_legacy<RenewCredentialComponentState>
     implements RenewCredentialComponent {
     renew(): void {
         // mock では特に何もしない

@@ -1,4 +1,4 @@
-import { MockComponent } from "../../../sub/getto-example/application/mock"
+import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
 import { ContentComponent, ContentComponentState } from "./component"
 
 export function initMockContentComponent(state: ContentComponentState): ContentMockComponent {
@@ -14,7 +14,7 @@ export function mapContentMockProps(props: ContentMockProps): ContentComponentSt
     }
 }
 
-class ContentMockComponent extends MockComponent<ContentComponentState> implements ContentComponent {
+class ContentMockComponent extends MockComponent_legacy<ContentComponentState> implements ContentComponent {
     load(): void {
         // mock ではなにもしない
     }
