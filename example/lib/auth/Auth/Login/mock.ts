@@ -16,10 +16,6 @@ import {
     initialRenewCredentialComponentState,
     RenewCredentialComponentState,
 } from "../renewCredential/component"
-import {
-    initialPasswordLoginComponentState,
-    PasswordLoginComponentState,
-} from "../passwordLogin/component"
 import { initialLoginIDFieldState, LoginIDFieldState } from "../field/loginID/component"
 import { initialPasswordFieldState, PasswordFieldState } from "../field/password/component"
 import {
@@ -46,9 +42,7 @@ export function newMockLoginAsRenewCredential(): {
                     renewCredential: mock.renewCredential.init(),
                 },
             }),
-            terminate: () => {
-                // mock では特に何もしない
-            },
+            terminate,
         },
         update: {
             renewCredential: mock.renewCredential.update(),
@@ -56,34 +50,16 @@ export function newMockLoginAsRenewCredential(): {
     }
 }
 
-export type PasswordLoginMockProps = PasswordLoginMockPasser
-export function newMockLoginAsPasswordLogin(
-    props: PasswordLoginMockProps
-): {
-    login: LoginEntryPoint
-    update: {
-        passwordLogin: Post<PasswordLoginComponentState>
-    }
-} {
-    const mock = {
-        passwordLogin: new MockResource(initialPasswordLoginComponentState, initMockPasswordLogin),
-    }
+export function newMockLoginAsPasswordLogin(passer: PasswordLoginMockPasser): LoginEntryPoint {
     return {
-        login: {
-            view: new View({
-                type: "password-login",
-                resource: {
-                    passwordLogin: mock.passwordLogin.init(),
-                    form: initMockPasswordLoginForm(props),
-                },
-            }),
-            terminate: () => {
-                // mock では特に何もしない
+        view: new View({
+            type: "password-login",
+            resource: {
+                passwordLogin: initMockPasswordLogin(passer),
+                form: initMockPasswordLoginForm(passer),
             },
-        },
-        update: {
-            passwordLogin: mock.passwordLogin.update(),
-        },
+        }),
+        terminate,
     }
 }
 
@@ -110,9 +86,7 @@ export function newMockLoginAsPasswordResetSession(): {
                     loginIDField: mock.loginIDField.init(),
                 },
             }),
-            terminate: () => {
-                // mock では特に何もしない
-            },
+            terminate,
         },
         update: {
             passwordResetSession: mock.passwordResetSession.update(),
@@ -144,9 +118,7 @@ export function newMockLoginAsPasswordReset(): {
                     passwordField: mock.passwordField.init(),
                 },
             }),
-            terminate: () => {
-                // mock では特に何もしない
-            },
+            terminate,
         },
         update: {
             passwordReset: mock.passwordReset.update(),
@@ -164,9 +136,7 @@ export function newMockLoginAsError(): {
     return {
         login: {
             view: mock.init(),
-            terminate: () => {
-                // mock では特に何もしない
-            },
+            terminate,
         },
         update: {
             error: (err) => {
@@ -215,6 +185,10 @@ class View extends MockComponent_legacy<LoginState> implements LoginView {
     load(): void {
         // mock では特に何もしない
     }
+}
+
+function terminate() {
+    // mock では特に何もしない
 }
 
 interface Post<T> {

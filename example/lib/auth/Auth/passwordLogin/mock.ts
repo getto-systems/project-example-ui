@@ -1,4 +1,4 @@
-import { MockComponent_legacy, MockPropsPasser } from "../../../sub/getto-example/application/mock"
+import { MockComponent, MockPropsPasser } from "../../../sub/getto-example/application/mock"
 import { FormMockComponent, FormMockProps } from "../../../sub/getto-form/component/mock"
 import { initMockLoginIDFormField, LoginIDFormFieldMockProps } from "../field/loginID/mock"
 import { initMockPasswordFormField, PasswordFormFieldMockProps } from "../field/password/mock"
@@ -17,12 +17,16 @@ import { PasswordFormFieldComponent } from "../field/password/component"
 
 import { FormConvertResult } from "../../../sub/getto-form/action/data"
 import { LoginFields } from "../../login/passwordLogin/data"
+import { FormComponentState } from "../../../sub/getto-form/component/component"
 
-export function initMockPasswordLogin(state: PasswordLoginComponentState): PasswordLoginMockComponent {
-    return new PasswordLoginMockComponent(state)
-}
+export type PasswordLoginMockPasser = MockPropsPasser<PasswordLoginMockProps>
 
-export type PasswordLoginMockProps =
+export type PasswordLoginMockProps = PasswordLoginMockProps_core &
+    FormMockProps &
+    LoginIDFormFieldMockProps &
+    PasswordFormFieldMockProps
+
+type PasswordLoginMockProps_core =
     | Readonly<{ type: "initial" }>
     | Readonly<{ type: "try" }>
     | Readonly<{ type: "delayed" }>
@@ -33,45 +37,52 @@ export type PasswordLoginMockProps =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function mapPasswordLoginMockProps(props: PasswordLoginMockProps): PasswordLoginComponentState {
-    switch (props.type) {
-        case "initial":
-            return { type: "initial-login" }
-
-        case "try":
-            return { type: "try-to-login" }
-
-        case "delayed":
-            return { type: "delayed-to-login" }
-
-        case "validation-error":
-            return { type: "failed-to-login", err: { type: "validation-error" } }
-
-        case "bad-request":
-            return { type: "failed-to-login", err: { type: "bad-request" } }
-
-        case "invalid":
-            return { type: "failed-to-login", err: { type: "invalid-password-login" } }
-
-        case "server-error":
-            return { type: "failed-to-login", err: { type: "server-error" } }
-
-        case "bad-response":
-            return { type: "failed-to-login", err: { type: "bad-response", err: props.err } }
-
-        case "infra-error":
-            return { type: "failed-to-login", err: { type: "infra-error", err: props.err } }
-    }
+export function initMockPasswordLogin(passer: PasswordLoginMockPasser): PasswordLoginMockComponent {
+    return new PasswordLoginMockComponent(passer)
 }
 
 class PasswordLoginMockComponent
-    extends MockComponent_legacy<PasswordLoginComponentState>
+    extends MockComponent<PasswordLoginComponentState>
     implements PasswordLoginComponent {
     link: LoginLink
 
-    constructor(state: PasswordLoginComponentState) {
-        super(state)
+    constructor(passer: PasswordLoginMockPasser) {
+        super()
+        passer.addPropsHandler((props) => {
+            this.post(mapProps(props))
+        })
         this.link = initLoginLink()
+
+        function mapProps(props: PasswordLoginMockProps): PasswordLoginComponentState {
+            switch (props.type) {
+                case "initial":
+                    return { type: "initial-login" }
+
+                case "try":
+                    return { type: "try-to-login" }
+
+                case "delayed":
+                    return { type: "delayed-to-login" }
+
+                case "validation-error":
+                    return { type: "failed-to-login", err: { type: "validation-error" } }
+
+                case "bad-request":
+                    return { type: "failed-to-login", err: { type: "bad-request" } }
+
+                case "invalid":
+                    return { type: "failed-to-login", err: { type: "invalid-password-login" } }
+
+                case "server-error":
+                    return { type: "failed-to-login", err: { type: "server-error" } }
+
+                case "bad-response":
+                    return { type: "failed-to-login", err: { type: "bad-response", err: props.err } }
+
+                case "infra-error":
+                    return { type: "failed-to-login", err: { type: "infra-error", err: props.err } }
+            }
+        }
     }
 
     login(): void {
@@ -82,15 +93,9 @@ class PasswordLoginMockComponent
     }
 }
 
-export type PasswordLoginMockPasser = MockPropsPasser<PasswordLoginFormMockProps>
-
 export function initMockPasswordLoginForm(passer: PasswordLoginMockPasser): PasswordLoginFormComponent {
     return new PasswordLoginFormMockComponent(passer)
 }
-
-export type PasswordLoginFormMockProps = FormMockProps &
-    LoginIDFormFieldMockProps &
-    PasswordFormFieldMockProps
 
 class PasswordLoginFormMockComponent extends FormMockComponent implements PasswordLoginFormComponent {
     readonly loginID: LoginIDFormFieldComponent
@@ -99,10 +104,14 @@ class PasswordLoginFormMockComponent extends FormMockComponent implements Passwo
     constructor(passer: PasswordLoginMockPasser) {
         super()
         passer.addPropsHandler((props) => {
-            this.post({ validation: props.validation, history: { undo: false, redo: false } })
+            this.post(mapProps(props))
         })
         this.loginID = initMockLoginIDFormField(passer)
         this.password = initMockPasswordFormField(passer)
+
+        function mapProps(props: PasswordLoginMockProps): FormComponentState {
+            return { validation: props.validation, history: { undo: false, redo: false } }
+        }
     }
 
     getLoginFields(): FormConvertResult<LoginFields> {
