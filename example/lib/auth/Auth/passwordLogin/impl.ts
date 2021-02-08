@@ -17,10 +17,10 @@ import {
 import { LoginIDFormFieldComponent } from "../field/loginID/component"
 import { PasswordFormFieldComponent } from "../field/password/component"
 
+import { FormConvertResult } from "../../../sub/getto-form/action/data"
 import { LoadError } from "../../common/application/data"
 import { AuthCredential } from "../../common/credential/data"
 import { storeAuthCredential } from "../../login/renew/data"
-import { FormConvertResult } from "../../../sub/getto-form/data"
 import { LoginFields } from "../../login/passwordLogin/data"
 
 export const initPasswordLoginComponent: PasswordLoginComponentFactory = (material) =>
@@ -96,7 +96,7 @@ class FormComponent
                     default:
                         return { found: false }
                 }
-            }
+            },
         })
 
         this.loginID = this.initField(

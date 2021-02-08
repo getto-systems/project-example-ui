@@ -1,4 +1,4 @@
-import { FormConvertResult } from "../../../../../sub/getto-form/data"
+import { FormConvertResult } from "../../../../../sub/getto-form/action/data"
 import { LoginID, markLoginID } from "../../../loginID/data"
 import { LoginIDInput } from "../data"
 

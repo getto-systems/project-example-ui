@@ -15,7 +15,7 @@ import {
     PasswordViewer,
 } from "../../common/field/password/action"
 
-import { FormConvertResult } from "../../../sub/getto-form/data"
+import { FormConvertResult } from "../../../sub/getto-form/action/data"
 import { ScriptPath, LoadError } from "../../common/application/data"
 import { StorageError } from "../../common/credential/data"
 import { LoginError, LoginFields } from "../../login/passwordLogin/data"

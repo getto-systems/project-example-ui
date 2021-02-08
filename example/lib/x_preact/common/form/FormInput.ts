@@ -1,11 +1,14 @@
 import { html } from "htm/preact"
 import { VNode } from "preact"
+
+import { useComponent } from "../hooks"
+
 import {
     FormInputComponent,
     initialFormInputState,
 } from "../../../sub/getto-form/component/component"
-import { markInputString } from "../../../sub/getto-form/data"
-import { useComponent } from "../hooks"
+
+import { markInputString } from "../../../sub/getto-form/action/data"
 
 export type FormInputProps = Readonly<{
     type: FormInputType

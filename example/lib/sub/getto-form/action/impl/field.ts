@@ -1,6 +1,6 @@
 import { FormField } from "../action"
 
-import { FormConvertResult, FormValidationResult } from "../../data"
+import { FormConvertResult, FormValidationResult } from "../data"
 
 type FormFieldCore<T, E, I> = Readonly<{
     input: I

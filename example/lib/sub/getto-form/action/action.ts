@@ -1,12 +1,14 @@
 import { FormChangeEvent, FormInputEvent } from "./event"
 
-import { FormConvertResult, FormInputString, FormValidationResult } from "../data"
 import {
+    FormConvertResult,
     FormFieldName,
     FormHistory,
     FormHistoryPath,
     FormHistoryRestoreResult,
     FormHistoryState,
+    FormInputString,
+    FormValidationResult,
     FormValidationState,
 } from "./data"
 
