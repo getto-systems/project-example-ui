@@ -1,4 +1,4 @@
-import { MockComponent } from "../../../sub/getto-example/application/mock"
+import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
 
 import { SeasonInfoComponent, SeasonInfoComponentState } from "./component"
 
@@ -22,7 +22,7 @@ export function mapSeasonMockProps(props: SeasonMockProps): SeasonInfoComponentS
     }
 }
 
-class SeasonInfoMockComponent extends MockComponent<SeasonInfoComponentState> implements SeasonInfoComponent {
+class SeasonInfoMockComponent extends MockComponent_legacy<SeasonInfoComponentState> implements SeasonInfoComponent {
     load() {
         // mock では特に何もしない
     }

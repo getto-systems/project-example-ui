@@ -1,5 +1,5 @@
 import { iconClass, lnir } from "../../../z_vendor/icon"
-import { MockComponent } from "../../../sub/getto-example/application/mock"
+import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
 
 import { BreadcrumbListComponent, BreadcrumbListComponentState } from "./component"
 
@@ -35,7 +35,7 @@ export function mapBreadcrumbMockProps(props: BreadcrumbMockProps): BreadcrumbLi
 }
 
 class BreadcrumbListMockComponent
-    extends MockComponent<BreadcrumbListComponentState>
+    extends MockComponent_legacy<BreadcrumbListComponentState>
     implements BreadcrumbListComponent {
     load() {
         // mock では特に何もしない

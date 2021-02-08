@@ -1,4 +1,4 @@
-import { MockComponent } from "../../../sub/getto-example/application/mock"
+import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
 
 import { initMockBreadcrumbListComponent } from "../../../auth/Outline/breadcrumbList/mock"
 import { initMockMenuListComponent } from "../../../auth/Outline/menuList/mock"
@@ -43,7 +43,7 @@ export type DocumentMockEntryPoint = Readonly<{
     }>
 }>
 
-function update<S, C extends MockComponent<S>>(component: C): Post<S> {
+function update<S, C extends MockComponent_legacy<S>>(component: C): Post<S> {
     return (state) => component.update(state)
 }
 

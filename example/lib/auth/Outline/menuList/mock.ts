@@ -1,5 +1,5 @@
 import { lnir, iconClass } from "../../../z_vendor/icon"
-import { MockComponent } from "../../../sub/getto-example/application/mock"
+import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
 
 import { MenuListComponent, MenuListComponentState } from "./component"
 
@@ -51,7 +51,7 @@ export function mapMenuMockProps(props: MenuMockProps): MenuListComponentState {
     }
 }
 
-class MenuListMockComponent extends MockComponent<MenuListComponentState> implements MenuListComponent {
+class MenuListMockComponent extends MockComponent_legacy<MenuListComponentState> implements MenuListComponent {
     load() {
         // mock では特に何もしない
     }

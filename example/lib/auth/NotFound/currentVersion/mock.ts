@@ -1,4 +1,4 @@
-import { MockComponent } from "../../../sub/getto-example/application/mock"
+import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
 
 import { CurrentVersionComponent, CurrentVersionComponentState } from "./component"
 
@@ -20,7 +20,7 @@ export function mapCurrentVersionMockProps(props: CurrentVersionMockProps): Curr
 }
 
 class CurrentVersionMockComponent
-    extends MockComponent<CurrentVersionComponentState>
+    extends MockComponent_legacy<CurrentVersionComponentState>
     implements CurrentVersionComponent {
     load() {
         // mock では特に何もしない
