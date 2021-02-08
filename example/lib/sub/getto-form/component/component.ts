@@ -1,13 +1,31 @@
 import { ApplicationComponent } from "../../getto-example/application/component"
 import { FormHistoryStack, FormInput, FormValidationStateSet } from "../action/action"
 
-import { FormHistory, FormHistoryState, FormInputHistory, FormValidationState } from "../action/data"
+import {
+    FormHistory,
+    FormHistoryPath,
+    FormHistoryState,
+    FormInputHistory,
+    FormValidationState,
+} from "../action/data"
 import { FormInputString, FormValidationResult, markInputString } from "../data"
 
 export type FormMaterial = Readonly<{
     validation: FormValidationStateSet
     history: FormHistoryStack
 }>
+
+export type FormHandler = Readonly<{
+    findFieldInput: { (path: FormHistoryPath): FormFindInputResult }
+}>
+export type FormFindInputResult =
+    | Readonly<{ found: false }>
+    | Readonly<{ found: true; input: FormInputComponent }>
+
+export interface FormComponent extends ApplicationComponent<FormState> {
+    undo(): void
+    redo(): void
+}
 export type FormState = Readonly<{
     validation: FormValidationState
     history: FormHistoryState

@@ -14,7 +14,7 @@ class Stack implements FormHistoryStack {
     position = 0
 
     push(path: FormHistoryPath, history: FormHistory): void {
-        this.history = [...this.history.slice(0, this.position), { history, path }]
+        this.history = [...this.history.slice(0, this.position + 1), { history, path }]
         this.position = this.history.length - 1
     }
 
@@ -26,61 +26,54 @@ class Stack implements FormHistoryStack {
     }
 
     undo(): FormHistoryRestoreResult {
-        if (this.position >= this.history.length) {
+        const result = this.undoItem()
+        if (!result.found) {
             return { type: "disabled" }
+        }
+
+        this.position = this.position - 1
+        return { type: "enabled", item: result.item }
+    }
+    undoEnabled(): boolean {
+        return this.undoItem().found
+    }
+    undoItem(): FindFormHistoryStackResult {
+        if (this.position >= this.history.length || this.position <= 0) {
+            return { found: false }
         }
         const item = this.history[this.position]
         switch (item.history.previous.type) {
             case "first":
-                return { type: "disabled" }
+                return { found: false }
 
             case "hasPrevious":
-                this.position = this.position - 1
                 return {
-                    type: "enabled",
+                    found: true,
                     item: { path: item.path, history: item.history.previous.history },
                 }
         }
     }
-    undoEnabled(): boolean {
-        if (this.position >= this.history.length) {
-            return false
-        }
-        const item = this.history[this.position]
-        switch (item.history.previous.type) {
-            case "first":
-                return false
-
-            case "hasPrevious":
-                return true
-        }
-    }
 
     redo(): FormHistoryRestoreResult {
-        if (this.position + 1 >= this.history.length) {
+        const result = this.redoItem()
+        if (!result.found) {
             return { type: "disabled" }
         }
-        const item = this.history[this.position + 1]
-        switch (item.history.previous.type) {
-            case "first":
-                return { type: "disabled" }
 
-            case "hasPrevious":
-                this.position = this.position + 1
-                return { type: "enabled", item }
-        }
+        this.position = this.position + 1
+        return { type: "enabled", item: result.item }
     }
     redoEnabled(): boolean {
+        return this.redoItem().found
+    }
+    redoItem(): FindFormHistoryStackResult {
         if (this.position + 1 >= this.history.length) {
-            return false
+            return { found: false }
         }
-        const item = this.history[this.position + 1]
-        switch (item.history.previous.type) {
-            case "first":
-                return false
-
-            case "hasPrevious":
-                return true
-        }
+        return { found: true, item: this.history[this.position + 1] }
     }
 }
+
+type FindFormHistoryStackResult =
+    | Readonly<{ found: false }>
+    | Readonly<{ found: true; item: FormHistoryStackItem }>

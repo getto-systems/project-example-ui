@@ -16,6 +16,16 @@ class Input implements FormInput {
     constructor() {
         this.previous = { type: "first" }
         this.current = markInputString("")
+        this.pushHistory()
+    }
+
+    pushHistory(): FormHistory {
+        const history = {
+            previous: this.previous,
+            current: this.current,
+        }
+        this.previous = { type: "hasPrevious", history }
+        return history
     }
 
     get(): FormInputString {
@@ -27,12 +37,7 @@ class Input implements FormInput {
     }
     change(post: Post<FormChangeEvent>): void {
         if (this.isChanged()) {
-            const history = {
-                previous: this.previous,
-                current: this.current,
-            }
-            this.previous = { type: "hasPrevious", history }
-            post({ history })
+            post({ history: this.pushHistory() })
         }
     }
     isChanged(): boolean {
@@ -48,6 +53,10 @@ class Input implements FormInput {
         this.previous = history.previous
         this.current = history.current
         post({ value: this.current })
+
+        if (this.previous.type === "first") {
+            this.pushHistory()
+        }
     }
 }
 

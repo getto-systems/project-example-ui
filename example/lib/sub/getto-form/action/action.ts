@@ -1,7 +1,14 @@
 import { FormChangeEvent, FormInputEvent } from "./event"
 
 import { FormConvertResult, FormInputString, FormValidationResult } from "../data"
-import { FormFieldName, FormHistory, FormHistoryPath, FormHistoryRestoreResult, FormHistoryState, FormValidationState } from "./data"
+import {
+    FormFieldName,
+    FormHistory,
+    FormHistoryPath,
+    FormHistoryRestoreResult,
+    FormHistoryState,
+    FormValidationState,
+} from "./data"
 
 export interface FormAction {
     validation: FormValidationStateSetPod

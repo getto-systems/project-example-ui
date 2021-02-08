@@ -9,21 +9,25 @@ import {
     FormInputState,
     FormInputMaterial,
     FormMaterial,
+    FormComponent,
+    FormHandler,
 } from "./component"
 
 import { FormChangeEvent, FormInputEvent } from "../action/event"
 
-import { FormFieldName, FormHistory, mapValidationResult } from "../action/data"
+import { FormFieldName, FormHistory, FormHistoryStackItem, mapValidationResult } from "../action/data"
 import { FormInputString } from "../data"
 
-export class FormBaseComponent<M extends FormMaterial> extends ApplicationBaseComponent<
-    FormState
-> {
+export class FormBaseComponent<M extends FormMaterial>
+    extends ApplicationBaseComponent<FormState>
+    implements FormComponent {
     material: M
+    handler: FormHandler
 
-    constructor(material: M) {
+    constructor(material: M, handler: FormHandler) {
         super()
         this.material = material
+        this.handler = handler
     }
 
     initField<F extends FormFieldComponent<S, E>, S, E>(
@@ -48,6 +52,36 @@ export class FormBaseComponent<M extends FormMaterial> extends ApplicationBaseCo
             validation: this.material.validation.state(),
             history: this.material.history.state(),
         }
+    }
+
+    undo(): void {
+        const result = this.material.history.undo()
+        switch (result.type) {
+            case "disabled":
+                return
+
+            case "enabled":
+                this.restore(result.item)
+                return
+        }
+    }
+    redo(): void {
+        const result = this.material.history.redo()
+        switch (result.type) {
+            case "disabled":
+                return
+
+            case "enabled":
+                this.restore(result.item)
+                return
+        }
+    }
+    restore(item: FormHistoryStackItem): void {
+        const result = this.handler.findFieldInput(item.path)
+        if (!result.found) {
+            return
+        }
+        result.input.restore(item.history)        
     }
 }
 

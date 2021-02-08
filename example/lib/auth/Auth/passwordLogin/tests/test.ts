@@ -14,7 +14,7 @@ import { initAuthCredentialRepository } from "../../../login/renew/impl/reposito
 
 import { AuthCredentialRepository } from "../../../login/renew/infra"
 
-import { FormState } from "../../../../sub/getto-form/component/component"
+import { FormInputState, FormState } from "../../../../sub/getto-form/component/component"
 import { LoginIDFormFieldState } from "../../field/loginID/component"
 import { PasswordFormFieldState } from "../../field/password/component"
 import { PasswordLoginState } from "../component"
@@ -322,15 +322,15 @@ describe("PasswordLogin", () => {
                             },
                             {
                                 validation: "valid",
-                                history: { undo: false, redo: false },
+                                history: { undo: true, redo: false },
                             },
                             {
                                 validation: "valid",
-                                history: { undo: false, redo: false },
+                                history: { undo: true, redo: false },
                             },
                             {
                                 validation: "valid",
-                                history: { undo: false, redo: false },
+                                history: { undo: true, redo: false },
                             },
                         ])
                         done()
@@ -357,16 +357,8 @@ describe("PasswordLogin", () => {
                 return (state) => {
                     stack.push(state)
 
-                    if (stack.length === 6) {
+                    if (stack.length === 4) {
                         expect(stack).toEqual([
-                            {
-                                validation: "invalid",
-                                history: { undo: false, redo: false },
-                            },
-                            {
-                                validation: "invalid",
-                                history: { undo: false, redo: false },
-                            },
                             {
                                 validation: "invalid",
                                 history: { undo: false, redo: false },
@@ -387,6 +379,72 @@ describe("PasswordLogin", () => {
                         done()
                     }
                 }
+            }
+        })
+
+        test("undo / redo", (done) => {
+            const { resource } = standardPasswordLoginResource()
+
+            const handler = {
+                loginID: stateHandler(examineLoginIDStack),
+                password: stateHandler(examinePasswordStack),
+            }
+            resource.form.loginID.input.addStateHandler(handler.loginID.handler)
+            resource.form.password.input.addStateHandler(handler.password.handler)
+
+            resource.form.loginID.input.input(markInputString("loginID-a"))
+            resource.form.loginID.input.change()
+
+            resource.form.loginID.input.input(markInputString("loginID-b"))
+            resource.form.loginID.input.change()
+
+            resource.form.undo()
+
+            resource.form.password.input.input(markInputString("password-a"))
+            resource.form.password.input.change()
+
+            resource.form.undo()
+            resource.form.redo()
+
+            resource.form.password.input.input(markInputString("password-b"))
+            resource.form.password.input.change()
+
+            resource.form.loginID.input.input(markInputString("loginID-c"))
+            resource.form.loginID.input.change()
+
+            resource.form.redo()
+
+            handler.loginID.test()
+            handler.password.test()
+            done()
+
+            function stateHandler(examine: { (stack: FormInputState[]): void }) {
+                const stack: FormInputState[] = []
+
+                return {
+                    handler: (state: FormInputState) => {
+                        stack.push(state)
+                    },
+                    test: () => {
+                        examine(stack)
+                    },
+                }
+            }
+            function examineLoginIDStack(stack: FormInputState[]): void {
+                expect(stack).toEqual([
+                    { value: "loginID-a" },
+                    { value: "loginID-b" },
+                    { value: "loginID-a" },
+                    { value: "loginID-c" },
+                ])
+            }
+            function examinePasswordStack(stack: FormInputState[]): void {
+                expect(stack).toEqual([
+                    { value: "password-a" },
+                    { value: "" },
+                    { value: "password-a" },
+                    { value: "password-b" },
+                ])
             }
         })
     })

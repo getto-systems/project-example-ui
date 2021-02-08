@@ -63,4 +63,7 @@ export interface PasswordLoginFormComponent extends ApplicationComponent<FormSta
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
     getLoginFields(): FormConvertResult<LoginFields>
+
+    undo(): void
+    redo(): void
 }
