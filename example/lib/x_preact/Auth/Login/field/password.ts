@@ -1,18 +1,19 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
+import { VNodeContent } from "../../../../z_vendor/getto-css/preact/common"
+
 import { mapInputEvent } from "./common"
 
 import { PasswordFieldComponent } from "../../../../auth/Auth/field/password/component"
 
+import { FormInputString, FormValidationResult } from "../../../../sub/getto-form/action/data"
 import {
     PasswordValidationError,
     PasswordCharacter,
     PasswordView,
 } from "../../../../auth/common/field/password/data"
 import { Valid } from "../../../../auth/common/field/data"
-import { FormInputString, FormValidationResult } from "../../../../sub/getto-form/data"
-import { VNodeContent } from "../../../../z_vendor/getto-css/preact/common"
 
 export interface PasswordFieldHandler {
     onInput(event: InputEvent): void

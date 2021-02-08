@@ -1,14 +1,15 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
+import { VNodeContent } from "../../../../z_vendor/getto-css/preact/common"
+
 import { mapInputEvent } from "./common"
 
 import { LoginIDFieldComponent } from "../../../../auth/Auth/field/loginID/component"
 
+import { FormValidationResult } from "../../../../sub/getto-form/action/data"
 import { LoginIDValidationError } from "../../../../auth/common/field/loginID/data"
 import { Valid } from "../../../../auth/common/field/data"
-import { FormValidationResult } from "../../../../sub/getto-form/data"
-import { VNodeContent } from "../../../../z_vendor/getto-css/preact/common"
 
 export interface LoginIDFieldHandler {
     onInput(event: InputEvent): void

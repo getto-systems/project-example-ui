@@ -27,7 +27,7 @@ import {
     markTicketNonce,
 } from "../../../common/credential/data"
 import { LoginFields } from "../../../login/passwordLogin/data"
-import { markInputString, toValidationError } from "../../../../sub/getto-form/data"
+import { markInputString, toValidationError } from "../../../../sub/getto-form/action/data"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 

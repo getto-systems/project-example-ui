@@ -2,10 +2,10 @@ import { FormField, FormInput } from "../../../../sub/getto-form/action/action"
 
 import { PasswordFieldEvent } from "./event"
 
+import { FormInputString } from "../../../../sub/getto-form/action/data"
 import { Password } from "../../password/data"
 import { InputValue } from "../data"
 import { PasswordCharacter, PasswordValidationError, PasswordViewState } from "./data"
-import { FormInputString } from "../../../../sub/getto-form/data"
 
 export type PasswordFormFieldAction = Readonly<{
     field: PasswordFormFieldPod

@@ -1,4 +1,4 @@
-import { FormConvertResult } from "../../../../../sub/getto-form/data"
+import { FormConvertResult } from "../../../../../sub/getto-form/action/data"
 import { markPassword, Password } from "../../../password/data"
 import { PasswordInput } from "../data"
 

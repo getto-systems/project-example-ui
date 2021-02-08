@@ -1,4 +1,5 @@
 import { ApplicationComponent } from "../../getto-example/application/component"
+
 import { FormHistoryStack, FormInput, FormValidationStateSet } from "../action/action"
 
 import {
@@ -6,9 +7,11 @@ import {
     FormHistoryPath,
     FormHistoryState,
     FormInputHistory,
+    FormInputString,
+    FormValidationResult,
     FormValidationState,
+    markInputString,
 } from "../action/data"
-import { FormInputString, FormValidationResult, markInputString } from "../data"
 
 export type FormMaterial = Readonly<{
     validation: FormValidationStateSet

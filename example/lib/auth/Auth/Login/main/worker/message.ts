@@ -9,7 +9,7 @@ import {
     ResetToken,
 } from "../../../../profile/passwordReset/data"
 import { Content } from "../../../../common/field/data"
-import { FormConvertResult } from "../../../../../sub/getto-form/data"
+import { FormConvertResult } from "../../../../../sub/getto-form/action/data"
 
 export type ForegroundMessage =
     | Readonly<{ type: "login"; message: ProxyMessage<LoginProxyMessage> }>

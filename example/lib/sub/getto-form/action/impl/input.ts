@@ -2,8 +2,7 @@ import { FormInput } from "../action"
 
 import { FormChangeEvent, FormInputEvent } from "../event"
 
-import { FormInputString, markInputString } from "../../data"
-import { FormHistory, FormHistoryPrevious } from "../data"
+import { FormHistory, FormHistoryPrevious, FormInputString, markInputString } from "../data"
 
 export function initFormInput(): FormInput {
     return new Input()

@@ -15,8 +15,13 @@ import {
 
 import { FormChangeEvent, FormInputEvent } from "../action/event"
 
-import { FormFieldName, FormHistory, FormHistoryStackItem, mapValidationResult } from "../action/data"
-import { FormInputString } from "../data"
+import {
+    FormFieldName,
+    FormHistory,
+    FormHistoryStackItem,
+    FormInputString,
+    mapValidationResult,
+} from "../action/data"
 
 export class FormBaseComponent<M extends FormMaterial>
     extends ApplicationBaseComponent<FormState>
