@@ -9,7 +9,7 @@ import {
     initMockBreadcrumbListComponent,
 } from "../../auth/Outline/breadcrumbList/mock"
 
-import { initialBreadcrumbListState } from "../../auth/Outline/breadcrumbList/component"
+import { initialBreadcrumbListComponentState } from "../../auth/Outline/breadcrumbList/component"
 
 export default {
     title: "Outline/BreadcrumbList",
@@ -22,7 +22,7 @@ export default {
 
 type MockProps = BreadcrumbMockProps
 const Template: Story<MockProps> = (args) => {
-    const breadcrumbList = initMockBreadcrumbListComponent(initialBreadcrumbListState)
+    const breadcrumbList = initMockBreadcrumbListComponent(initialBreadcrumbListComponentState)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {

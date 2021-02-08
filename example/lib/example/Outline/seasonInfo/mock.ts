@@ -1,10 +1,10 @@
 import { MockComponent } from "../../../sub/getto-example/application/mock"
 
-import { SeasonInfoComponent, SeasonInfoState } from "./component"
+import { SeasonInfoComponent, SeasonInfoComponentState } from "./component"
 
 import { markSeason } from "../../shared/season/data"
 
-export function initMockSeasonInfoComponent(state: SeasonInfoState): SeasonInfoMockComponent {
+export function initMockSeasonInfoComponent(state: SeasonInfoComponentState): SeasonInfoMockComponent {
     return new SeasonInfoMockComponent(state)
 }
 
@@ -12,7 +12,7 @@ export type SeasonMockProps =
     | Readonly<{ type: "success"; year: number }>
     | Readonly<{ type: "failed"; err: string }>
 
-export function mapSeasonMockProps(props: SeasonMockProps): SeasonInfoState {
+export function mapSeasonMockProps(props: SeasonMockProps): SeasonInfoComponentState {
     switch (props.type) {
         case "success":
             return { type: "succeed-to-load", season: markSeason({ year: props.year }) }
@@ -22,7 +22,7 @@ export function mapSeasonMockProps(props: SeasonMockProps): SeasonInfoState {
     }
 }
 
-class SeasonInfoMockComponent extends MockComponent<SeasonInfoState> implements SeasonInfoComponent {
+class SeasonInfoMockComponent extends MockComponent<SeasonInfoComponentState> implements SeasonInfoComponent {
     load() {
         // mock では特に何もしない
     }

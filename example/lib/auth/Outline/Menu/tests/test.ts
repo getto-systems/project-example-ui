@@ -7,8 +7,8 @@ import { initMenuExpandRepository } from "../../../permission/menu/impl/reposito
 import { ApiCredentialRepository } from "../../../common/credential/infra"
 import { MenuBadge, MenuExpand, MenuExpandRepository, MenuTree } from "../../../permission/menu/infra"
 
-import { BreadcrumbListState } from "../../breadcrumbList/component"
-import { MenuListState } from "../../menuList/component"
+import { BreadcrumbListComponentState } from "../../breadcrumbList/component"
+import { MenuListComponentState } from "../../menuList/component"
 
 import { markMenuCategoryLabel, Menu } from "../../../permission/menu/data"
 import { ApiNonce, markApiCredential } from "../../../common/credential/data"
@@ -21,8 +21,8 @@ describe("BreadcrumbList", () => {
 
         resource.breadcrumbList.load()
 
-        function stateHandler(): Post<BreadcrumbListState> {
-            const stack: BreadcrumbListState[] = []
+        function stateHandler(): Post<BreadcrumbListComponentState> {
+            const stack: BreadcrumbListComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -68,8 +68,8 @@ describe("BreadcrumbList", () => {
 
         resource.breadcrumbList.load()
 
-        function stateHandler(): Post<BreadcrumbListState> {
-            const stack: BreadcrumbListState[] = []
+        function stateHandler(): Post<BreadcrumbListComponentState> {
+            const stack: BreadcrumbListComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -104,8 +104,8 @@ describe("MenuList", () => {
 
         resource.menuList.load()
 
-        function stateHandler(): Post<MenuListState> {
-            const stack: MenuListState[] = []
+        function stateHandler(): Post<MenuListComponentState> {
+            const stack: MenuListComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -285,8 +285,8 @@ describe("MenuList", () => {
 
         resource.menuList.load()
 
-        function stateHandler(): Post<MenuListState> {
-            const stack: MenuListState[] = []
+        function stateHandler(): Post<MenuListComponentState> {
+            const stack: MenuListComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -471,8 +471,8 @@ describe("MenuList", () => {
             [markMenuCategoryLabel("DOCUMENT"), markMenuCategoryLabel("DETAIL")],
         ]
 
-        function stateHandler(): Post<MenuListState> {
-            const stack: MenuListState[] = []
+        function stateHandler(): Post<MenuListComponentState> {
+            const stack: MenuListComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -809,8 +809,8 @@ describe("MenuList", () => {
 
         resource.menuList.load()
 
-        function stateHandler(): Post<MenuListState> {
-            const stack: MenuListState[] = []
+        function stateHandler(): Post<MenuListComponentState> {
+            const stack: MenuListComponentState[] = []
             return (state) => {
                 stack.push(state)
 

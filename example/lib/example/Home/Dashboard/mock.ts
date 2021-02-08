@@ -8,19 +8,19 @@ import { initMockExampleComponent } from "../example/mock"
 import { DashboardEntryPoint } from "./entryPoint"
 
 import {
-    BreadcrumbListState,
-    initialBreadcrumbListState,
+    BreadcrumbListComponentState,
+    initialBreadcrumbListComponentState,
 } from "../../../auth/Outline/breadcrumbList/component"
-import { initialMenuListState, MenuListState } from "../../../auth/Outline/menuList/component"
-import { initialSeasonInfoState, SeasonInfoState } from "../../Outline/seasonInfo/component"
-import { ExampleState, initialExampleState } from "../example/component"
+import { initialMenuListComponentState, MenuListComponentState } from "../../../auth/Outline/menuList/component"
+import { initialSeasonInfoComponentState, SeasonInfoComponentState } from "../../Outline/seasonInfo/component"
+import { ExampleComponentState, initialExampleComponentState } from "../example/component"
 
 export function newMockDashboard(): DashboardMockEntryPoint {
     const resource = {
-        seasonInfo: initMockSeasonInfoComponent(initialSeasonInfoState),
-        menuList: initMockMenuListComponent(initialMenuListState),
-        breadcrumbList: initMockBreadcrumbListComponent(initialBreadcrumbListState),
-        example: initMockExampleComponent(initialExampleState),
+        seasonInfo: initMockSeasonInfoComponent(initialSeasonInfoComponentState),
+        menuList: initMockMenuListComponent(initialMenuListComponentState),
+        breadcrumbList: initMockBreadcrumbListComponent(initialBreadcrumbListComponentState),
+        example: initMockExampleComponent(initialExampleComponentState),
     }
     return {
         dashboard: {
@@ -41,10 +41,10 @@ export function newMockDashboard(): DashboardMockEntryPoint {
 export type DashboardMockEntryPoint = Readonly<{
     dashboard: DashboardEntryPoint
     update: Readonly<{
-        seasonInfo: Post<SeasonInfoState>
-        menuList: Post<MenuListState>
-        breadcrumbList: Post<BreadcrumbListState>
-        example: Post<ExampleState>
+        seasonInfo: Post<SeasonInfoComponentState>
+        menuList: Post<MenuListComponentState>
+        breadcrumbList: Post<BreadcrumbListComponentState>
+        example: Post<ExampleComponentState>
     }>
 }>
 

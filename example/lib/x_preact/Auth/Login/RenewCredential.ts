@@ -15,13 +15,13 @@ import { appendScript } from "./script"
 import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { RenewCredentialResource } from "../../../auth/Auth/Login/entryPoint"
-import { initialRenewCredentialState } from "../../../auth/Auth/renewCredential/component"
+import { initialRenewCredentialComponentState } from "../../../auth/Auth/renewCredential/component"
 
 import { RenewError } from "../../../auth/login/renew/data"
 
 type Props = RenewCredentialResource
 export function RenewCredential({ renewCredential }: Props): VNode {
-    const state = useComponent(renewCredential, initialRenewCredentialState)
+    const state = useComponent(renewCredential, initialRenewCredentialComponentState)
     useEffect(() => {
         renewCredential.renew()
     }, [])

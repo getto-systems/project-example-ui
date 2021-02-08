@@ -3,7 +3,7 @@ import { ApplicationComponent } from "../../../../sub/getto-example/application/
 import {
     FormFieldComponent,
     FormFieldHandler,
-    FormFieldState,
+    FormFieldComponentState,
     FormInputComponent,
 } from "../../../../sub/getto-form/component/component"
 
@@ -35,14 +35,14 @@ export interface PasswordFormFieldComponent
     hide(): void
 }
 
-export type PasswordFormFieldState = FormFieldState<PasswordState, PasswordValidationError>
+export type PasswordFormFieldComponentState = FormFieldComponentState<PasswordState, PasswordValidationError>
 
 export type PasswordState = Readonly<{
     character: PasswordCharacter
     view: PasswordView
 }>
 
-export const initialPasswordFormFieldState: PasswordFormFieldState = {
+export const initialPasswordFormFieldComponentState: PasswordFormFieldComponentState = {
     result: { valid: true },
     character: { complex: false },
     view: { show: false },

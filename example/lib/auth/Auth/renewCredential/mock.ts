@@ -1,8 +1,8 @@
 import { MockComponent } from "../../../sub/getto-example/application/mock"
 
-import { RenewCredentialComponent, RenewCredentialState } from "./component"
+import { RenewCredentialComponent, RenewCredentialComponentState } from "./component"
 
-export function initMockRenewCredential(state: RenewCredentialState): RenewCredentialMockComponent {
+export function initMockRenewCredential(state: RenewCredentialComponentState): RenewCredentialMockComponent {
     return new RenewCredentialMockComponent(state)
 }
 
@@ -13,7 +13,7 @@ export type RenewCredentialMockProps =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function mapRenewCredentialMockProps(props: RenewCredentialMockProps): RenewCredentialState {
+export function mapRenewCredentialMockProps(props: RenewCredentialMockProps): RenewCredentialComponentState {
     switch (props.type) {
         case "delayed":
             return { type: "delayed-to-renew" }
@@ -32,7 +32,7 @@ export function mapRenewCredentialMockProps(props: RenewCredentialMockProps): Re
     }
 }
 
-export class RenewCredentialMockComponent extends MockComponent<RenewCredentialState>
+export class RenewCredentialMockComponent extends MockComponent<RenewCredentialComponentState>
     implements RenewCredentialComponent {
     renew(): void {
         // mock では特に何もしない

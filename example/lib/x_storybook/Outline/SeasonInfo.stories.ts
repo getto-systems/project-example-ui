@@ -20,8 +20,8 @@ import {
     initMockSeasonInfoComponent,
 } from "../../example/Outline/seasonInfo/mock"
 
-import { initialMenuListState } from "../../auth/Outline/menuList/component"
-import { initialSeasonInfoState } from "../../example/Outline/seasonInfo/component"
+import { initialMenuListComponentState } from "../../auth/Outline/menuList/component"
+import { initialSeasonInfoComponentState } from "../../example/Outline/seasonInfo/component"
 
 export default {
     title: "Outline/SeasonInfo",
@@ -34,8 +34,8 @@ export default {
 
 type MockProps = SeasonMockProps
 const Template: Story<MockProps> = (args) => {
-    const menuList = initMockMenuListComponent(initialMenuListState)
-    const seasonInfo = initMockSeasonInfoComponent(initialSeasonInfoState)
+    const menuList = initMockMenuListComponent(initialMenuListComponentState)
+    const seasonInfo = initMockSeasonInfoComponent(initialSeasonInfoComponentState)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {

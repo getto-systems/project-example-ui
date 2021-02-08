@@ -15,7 +15,7 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 import { LoginIDField } from "./PasswordResetSession/LoginIDField"
 
 import { PasswordResetSessionResource } from "../../../auth/Auth/Login/entryPoint"
-import { initialPasswordResetSessionState } from "../../../auth/Auth/passwordResetSession/component"
+import { initialPasswordResetSessionComponentState } from "../../../auth/Auth/passwordResetSession/component"
 
 import {
     Destination,
@@ -28,7 +28,7 @@ import {
 type Props = PasswordResetSessionResource
 export function PasswordResetSession(resource: Props): VNode {
     const { passwordResetSession } = resource
-    const state = useComponent(passwordResetSession, initialPasswordResetSessionState)
+    const state = useComponent(passwordResetSession, initialPasswordResetSessionComponentState)
 
     switch (state.type) {
         case "initial-reset-session":

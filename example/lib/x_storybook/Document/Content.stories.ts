@@ -12,7 +12,7 @@ import {
     mapBreadcrumbMockProps,
 } from "../../auth/Outline/breadcrumbList/mock"
 
-import { initialContentState } from "../../document/Document/content/component"
+import { initialContentComponentState } from "../../document/Document/content/component"
 
 export default {
     title: "Document/Content",
@@ -25,7 +25,7 @@ export default {
 
 type MockProps = ContentMockProps
 const Template: Story<MockProps> = (args) => {
-    const content = initMockContentComponent(initialContentState)
+    const content = initMockContentComponent(initialContentComponentState)
     const breadcrumbList = initMockBreadcrumbListComponent(
         mapBreadcrumbMockProps({ type: "success", label: "ホーム", icon: "home" })
     )

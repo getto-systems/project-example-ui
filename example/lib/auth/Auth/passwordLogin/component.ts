@@ -1,7 +1,7 @@
 import { LoginLink } from "../link"
 
 import { ApplicationComponent } from "../../../sub/getto-example/application/component"
-import { FormState, FormMaterial } from "../../../sub/getto-form/component/component"
+import { FormComponentState, FormMaterial } from "../../../sub/getto-form/component/component"
 import { LoginIDFormFieldComponent } from "../field/loginID/component"
 import { PasswordFormFieldComponent } from "../field/password/component"
 
@@ -30,13 +30,13 @@ export type PasswordLoginMaterial = Readonly<{
     secureScriptPath: SecureScriptPath
 }>
 
-export interface PasswordLoginComponent extends ApplicationComponent<PasswordLoginState> {
+export interface PasswordLoginComponent extends ApplicationComponent<PasswordLoginComponentState> {
     readonly link: LoginLink
     login(fields: FormConvertResult<LoginFields>): void
     loadError(err: LoadError): void
 }
 
-export type PasswordLoginState =
+export type PasswordLoginComponentState =
     | Readonly<{ type: "initial-login" }>
     | Readonly<{ type: "try-to-login" }>
     | Readonly<{ type: "delayed-to-login" }>
@@ -46,7 +46,7 @@ export type PasswordLoginState =
     | Readonly<{ type: "load-error"; err: LoadError }>
     | Readonly<{ type: "error"; err: string }>
 
-export const initialPasswordLoginState: PasswordLoginState = { type: "initial-login" }
+export const initialPasswordLoginComponentState: PasswordLoginComponentState = { type: "initial-login" }
 
 export interface PasswordLoginFormComponentFactory {
     (material: PasswordLoginFormMaterial): PasswordLoginFormComponent
@@ -59,7 +59,7 @@ export type PasswordLoginFormMaterial = FormMaterial &
         viewer: PasswordViewer
     }>
 
-export interface PasswordLoginFormComponent extends ApplicationComponent<FormState> {
+export interface PasswordLoginFormComponent extends ApplicationComponent<FormComponentState> {
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
     getLoginFields(): FormConvertResult<LoginFields>

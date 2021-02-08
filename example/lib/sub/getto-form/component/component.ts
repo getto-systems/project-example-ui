@@ -25,15 +25,15 @@ export type FormFindInputResult =
     | Readonly<{ found: false }>
     | Readonly<{ found: true; input: FormInputComponent }>
 
-export interface FormComponent extends ApplicationComponent<FormState> {
+export interface FormComponent extends ApplicationComponent<FormComponentState> {
     undo(): void
     redo(): void
 }
-export type FormState = Readonly<{
+export type FormComponentState = Readonly<{
     validation: FormValidationState
     history: FormHistoryState
 }>
-export const initialFormState: FormState = {
+export const initialFormComponentState: FormComponentState = {
     validation: "initial",
     history: { undo: false, redo: false },
 }
@@ -43,27 +43,27 @@ export type FormFieldHandler = Readonly<{
     history: Handler<FormInputHistory>
 }>
 
-export interface FormFieldComponent<S, E> extends ApplicationComponent<FormFieldState<S, E>> {
+export interface FormFieldComponent<S, E> extends ApplicationComponent<FormFieldComponentState<S, E>> {
     validate(): void
 }
 
-export type FormFieldState<S, E> = S & Readonly<{ result: FormValidationResult<E> }>
+export type FormFieldComponentState<S, E> = S & Readonly<{ result: FormValidationResult<E> }>
 export type FormFieldEmptyState = {
     // no state
 }
-export const initialFormFieldState = { result: { valid: true } } as const
+export const initialFormFieldComponentState = { result: { valid: true } } as const
 
 export type FormInputMaterial = Readonly<{
     input: FormInput
 }>
-export interface FormInputComponent extends ApplicationComponent<FormInputState> {
+export interface FormInputComponent extends ApplicationComponent<FormInputComponentState> {
     input(value: FormInputString): void
     change(): void
     restore(history: FormHistory): void
 }
 
-export type FormInputState = Readonly<{ value: FormInputString }>
-export const initialFormInputState: FormInputState = { value: markInputString("") }
+export type FormInputComponentState = Readonly<{ value: FormInputString }>
+export const initialFormInputComponentState: FormInputComponentState = { value: markInputString("") }
 
 interface Handler<E> {
     (event: E): void

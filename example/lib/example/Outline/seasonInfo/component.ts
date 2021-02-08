@@ -11,13 +11,13 @@ export type SeasonInfoMaterial = Readonly<{
     loadSeason: LoadSeason
 }>
 
-export interface SeasonInfoComponent extends ApplicationComponent<SeasonInfoState> {
+export interface SeasonInfoComponent extends ApplicationComponent<SeasonInfoComponentState> {
     load(): void
 }
 
-export type SeasonInfoState =
+export type SeasonInfoComponentState =
     | Readonly<{ type: "initial-season" }>
     | Readonly<{ type: "succeed-to-load"; season: Season }>
     | Readonly<{ type: "failed-to-load"; err: SeasonError }>
 
-export const initialSeasonInfoState: SeasonInfoState = { type: "initial-season" }
+export const initialSeasonInfoComponentState: SeasonInfoComponentState = { type: "initial-season" }

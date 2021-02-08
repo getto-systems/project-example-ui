@@ -1,5 +1,5 @@
 import { MoveToNextVersionEntryPoint } from "../../../update/Update/MoveToNextVersion/entryPoint"
-import { NextVersionState } from "../../../update/Update/nextVersion/component"
+import { NextVersionComponentState } from "../../../update/Update/nextVersion/component"
 
 import { AppTarget, appTargetToPath } from "../../../update/nextVersion/data"
 
@@ -17,7 +17,7 @@ export function MoveToNextVersion({ moveToNextVersion: { resource, terminate } }
         handleError(err)
     }
 
-    function handleState(state: NextVersionState) {
+    function handleState(state: NextVersionComponentState) {
         switch (state.type) {
             case "initial-next-version":
             case "delayed-to-find":

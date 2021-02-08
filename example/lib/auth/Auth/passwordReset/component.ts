@@ -21,13 +21,13 @@ export type PasswordResetMaterial = Readonly<{
     secureScriptPath: SecureScriptPath
 }>
 
-export interface PasswordResetComponent extends ApplicationComponent<PasswordResetState> {
+export interface PasswordResetComponent extends ApplicationComponent<PasswordResetComponentState> {
     readonly link: LoginLink
     reset(): void
     loadError(err: LoadError): void
 }
 
-export type PasswordResetState =
+export type PasswordResetComponentState =
     | Readonly<{ type: "initial-reset" }>
     | Readonly<{ type: "try-to-reset" }>
     | Readonly<{ type: "delayed-to-reset" }>
@@ -37,4 +37,4 @@ export type PasswordResetState =
     | Readonly<{ type: "load-error"; err: LoadError }>
     | Readonly<{ type: "error"; err: string }>
 
-export const initialPasswordResetState: PasswordResetState = { type: "initial-reset" }
+export const initialPasswordResetComponentState: PasswordResetComponentState = { type: "initial-reset" }

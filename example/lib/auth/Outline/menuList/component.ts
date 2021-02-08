@@ -16,12 +16,12 @@ export type MenuListMaterial = Readonly<{
     toggleMenuExpand: ToggleMenuExpand
 }>
 
-export interface MenuListComponent extends ApplicationComponent<MenuListState> {
+export interface MenuListComponent extends ApplicationComponent<MenuListComponentState> {
     load(): void
     toggle(menu: Menu, path: MenuCategoryPath): void
 }
 
-export type MenuListState =
+export type MenuListComponentState =
     | Readonly<{ type: "initial-menu-list" }>
     | Readonly<{ type: "succeed-to-instant-load"; menu: Menu }>
     | Readonly<{ type: "succeed-to-load"; menu: Menu }>
@@ -29,4 +29,4 @@ export type MenuListState =
     | Readonly<{ type: "succeed-to-toggle"; menu: Menu }>
     | Readonly<{ type: "failed-to-toggle"; menu: Menu; err: LoadMenuError }>
 
-export const initialMenuListState: MenuListState = { type: "initial-menu-list" }
+export const initialMenuListComponentState: MenuListComponentState = { type: "initial-menu-list" }

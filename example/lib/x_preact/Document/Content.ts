@@ -9,7 +9,7 @@ import { copyright } from "../common/site"
 
 import { BreadcrumbList } from "../Outline/BreadcrumbList"
 
-import { ContentComponent, initialContentState } from "../../document/Document/content/component"
+import { ContentComponent, initialContentComponentState } from "../../document/Document/content/component"
 import { BreadcrumbListComponent } from "../../auth/Outline/breadcrumbList/component"
 
 import { ContentPath } from "../../document/content/data"
@@ -21,7 +21,7 @@ type Props = Readonly<{
 export function Content(resource: Props): VNode {
     const content = resource.content
 
-    const [state, setState] = useState(initialContentState)
+    const [state, setState] = useState(initialContentComponentState)
     const [loadContentState, setLoadContentState] = useState(initialLoadContentState)
     useEffect(() => {
         content.addStateHandler(setState)

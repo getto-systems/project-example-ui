@@ -15,7 +15,7 @@ import { badge_alert, notice_alert } from "../../z_vendor/getto-css/preact/desig
 import { useComponent } from "../common/hooks"
 import { poweredBy } from "../common/site"
 
-import { MenuListComponent, initialMenuListState } from "../../auth/Outline/menuList/component"
+import { MenuListComponent, initialMenuListComponentState } from "../../auth/Outline/menuList/component"
 
 import { Menu, MenuCategoryNode, MenuItemNode, LoadMenuError } from "../../auth/permission/menu/data"
 
@@ -25,7 +25,7 @@ type Props = Readonly<{
     menuList: MenuListComponent
 }>
 export function MenuList({ menuList }: Props): VNode {
-    const state = useComponent(menuList, initialMenuListState)
+    const state = useComponent(menuList, initialMenuListComponentState)
     useEffect(() => {
         menuList.load()
     }, [])

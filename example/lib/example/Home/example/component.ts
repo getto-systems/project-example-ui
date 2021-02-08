@@ -11,17 +11,13 @@ export type ExampleMaterial = Readonly<{
     loadSeason: LoadSeason
 }>
 
-export interface ExampleComponent extends ApplicationComponent<ExampleState> {
+export interface ExampleComponent extends ApplicationComponent<ExampleComponentState> {
     load(): void
 }
 
-export type ExampleState =
+export type ExampleComponentState =
     | Readonly<{ type: "initial-example" }>
     | Readonly<{ type: "succeed-to-load"; season: Season }>
     | Readonly<{ type: "failed-to-load"; err: SeasonError }>
 
-export const initialExampleState: ExampleState = { type: "initial-example" }
-
-interface Post<T> {
-    (state: T): void
-}
+export const initialExampleComponentState: ExampleComponentState = { type: "initial-example" }

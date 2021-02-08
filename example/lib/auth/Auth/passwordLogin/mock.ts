@@ -9,17 +9,17 @@ import { initLoginLink } from "../Login/main/link"
 
 import { LoginLink } from "../link"
 
-import { FormState, FormInputComponent } from "../../../sub/getto-form/component/component"
-import { PasswordLoginComponent, PasswordLoginFormComponent, PasswordLoginState } from "./component"
-import { LoginIDFormFieldComponent, LoginIDFormFieldState } from "../field/loginID/component"
-import { PasswordFormFieldComponent, PasswordFormFieldState } from "../field/password/component"
+import { FormComponentState, FormInputComponent } from "../../../sub/getto-form/component/component"
+import { PasswordLoginComponent, PasswordLoginFormComponent, PasswordLoginComponentState } from "./component"
+import { LoginIDFormFieldComponent, LoginIDFormFieldComponentState } from "../field/loginID/component"
+import { PasswordFormFieldComponent, PasswordFormFieldComponentState } from "../field/password/component"
 
 import { FormConvertResult } from "../../../sub/getto-form/action/data"
 import { LoginFields } from "../../login/passwordLogin/data"
 import { LoginIDValidationError } from "../../common/field/loginID/data"
 import { PasswordValidationError } from "../../common/field/password/data"
 
-export function initMockPasswordLogin(state: PasswordLoginState): PasswordLoginMockComponent {
+export function initMockPasswordLogin(state: PasswordLoginComponentState): PasswordLoginMockComponent {
     return new PasswordLoginMockComponent(state)
 }
 
@@ -34,7 +34,7 @@ export type PasswordLoginMockProps =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function mapPasswordLoginMockProps(props: PasswordLoginMockProps): PasswordLoginState {
+export function mapPasswordLoginMockProps(props: PasswordLoginMockProps): PasswordLoginComponentState {
     switch (props.type) {
         case "initial":
             return { type: "initial-login" }
@@ -66,11 +66,11 @@ export function mapPasswordLoginMockProps(props: PasswordLoginMockProps): Passwo
 }
 
 class PasswordLoginMockComponent
-    extends MockComponent<PasswordLoginState>
+    extends MockComponent<PasswordLoginComponentState>
     implements PasswordLoginComponent {
     link: LoginLink
 
-    constructor(state: PasswordLoginState) {
+    constructor(state: PasswordLoginComponentState) {
         super(state)
         this.link = initLoginLink()
     }
@@ -83,13 +83,13 @@ class PasswordLoginMockComponent
     }
 }
 
-export function initMockPasswordLoginForm(state: FormState): PasswordLoginFormMockComponent {
+export function initMockPasswordLoginForm(state: FormComponentState): PasswordLoginFormMockComponent {
     return new PasswordLoginFormMockComponent(state)
 }
 
 export type PasswordLoginFormMockProps = Readonly<{ type: "initial" }>
 
-export function mapPasswordLoginFormMockProps(props: PasswordLoginFormMockProps): FormState {
+export function mapPasswordLoginFormMockProps(props: PasswordLoginFormMockProps): FormComponentState {
     // TODO field の状態も update したい・・・
     switch (props.type) {
         case "initial":
@@ -101,7 +101,7 @@ class PasswordLoginFormMockComponent extends FormMockComponent implements Passwo
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
 
-    constructor(state: FormState) {
+    constructor(state: FormComponentState) {
         super(state)
         this.loginID = new LoginIDFormFieldMockComponent()
         this.password = new PasswordFormFieldMockComponent()
@@ -113,7 +113,7 @@ class PasswordLoginFormMockComponent extends FormMockComponent implements Passwo
 }
 
 class LoginIDFormFieldMockComponent
-    extends FormFieldMockComponent<LoginIDFormFieldState, LoginIDValidationError>
+    extends FormFieldMockComponent<LoginIDFormFieldComponentState, LoginIDValidationError>
     implements LoginIDFormFieldComponent {
     input: FormInputComponent
 
@@ -124,7 +124,7 @@ class LoginIDFormFieldMockComponent
 }
 
 class PasswordFormFieldMockComponent
-    extends FormFieldMockComponent<PasswordFormFieldState, PasswordValidationError>
+    extends FormFieldMockComponent<PasswordFormFieldComponentState, PasswordValidationError>
     implements PasswordFormFieldComponent {
     input: FormInputComponent
 

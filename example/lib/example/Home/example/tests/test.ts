@@ -13,7 +13,7 @@ import { initMemorySeasonRepository } from "../../../shared/season/impl/reposito
 import { Clock } from "../../../../z_infra/clock/infra"
 import { MenuBadge, MenuTree } from "../../../../auth/permission/menu/infra"
 
-import { ExampleState } from "../component"
+import { ExampleComponentState } from "../component"
 
 import { ApiNonce, markApiCredential } from "../../../../auth/common/credential/data"
 
@@ -28,8 +28,8 @@ describe("Example", () => {
 
         resource.example.load()
 
-        function stateHandler(): Post<ExampleState> {
-            const stack: ExampleState[] = []
+        function stateHandler(): Post<ExampleComponentState> {
+            const stack: ExampleComponentState[] = []
             return (state) => {
                 stack.push(state)
 

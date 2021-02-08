@@ -8,7 +8,7 @@ import {
     initMockExampleComponent,
 } from "../../../example/Home/example/mock"
 
-import { initialExampleState } from "../../../example/Home/example/component"
+import { initialExampleComponentState } from "../../../example/Home/example/component"
 
 export default {
     title: "Example/Home/Example",
@@ -21,7 +21,7 @@ export default {
 
 type MockProps = ExampleMockProps
 const Template: Story<MockProps> = (args) => {
-    const example = initMockExampleComponent(initialExampleState)
+    const example = initMockExampleComponent(initialExampleComponentState)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {

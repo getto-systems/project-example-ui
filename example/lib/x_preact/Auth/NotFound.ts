@@ -15,7 +15,7 @@ import { NotFoundEntryPoint } from "../../auth/NotFound/NotFound/entryPoint"
 
 import {
     CurrentVersionComponent,
-    initialCurrentVersionState,
+    initialCurrentVersionComponentState,
 } from "../../auth/NotFound/currentVersion/component"
 
 type Props = Readonly<{
@@ -44,7 +44,7 @@ type ContentProps = Readonly<{
     currentVersion: CurrentVersionComponent
 }>
 function Content({ currentVersion }: ContentProps): VNode {
-    const state = useComponent(currentVersion, initialCurrentVersionState)
+    const state = useComponent(currentVersion, initialCurrentVersionComponentState)
     useEffect(() => {
         currentVersion.load()
     }, [])

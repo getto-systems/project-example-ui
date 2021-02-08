@@ -7,7 +7,7 @@ import { notice_alert } from "../../z_vendor/getto-css/preact/design/highlight"
 
 import { useComponent } from "../common/hooks"
 
-import { SeasonInfoComponent, initialSeasonInfoState } from "../../example/Outline/seasonInfo/component"
+import { SeasonInfoComponent, initialSeasonInfoComponentState } from "../../example/Outline/seasonInfo/component"
 
 import { Season, SeasonError } from "../../example/shared/season/data"
 
@@ -15,7 +15,7 @@ type Props = Readonly<{
     seasonInfo: SeasonInfoComponent
 }>
 export function SeasonInfo({ seasonInfo }: Props): VNode {
-    const state = useComponent(seasonInfo, initialSeasonInfoState)
+    const state = useComponent(seasonInfo, initialSeasonInfoComponentState)
     useEffect(() => {
         seasonInfo.load()
     }, [])

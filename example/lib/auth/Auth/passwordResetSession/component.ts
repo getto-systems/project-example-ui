@@ -21,12 +21,13 @@ export type PasswordResetSessionMaterial = Readonly<{
     checkStatus: CheckStatus
 }>
 
-export interface PasswordResetSessionComponent extends ApplicationComponent<PasswordResetSessionState> {
+export interface PasswordResetSessionComponent
+    extends ApplicationComponent<PasswordResetSessionComponentState> {
     readonly link: LoginLink
     startSession(): void
 }
 
-export type PasswordResetSessionState =
+export type PasswordResetSessionComponentState =
     | Readonly<{ type: "initial-reset-session" }>
     | Readonly<{ type: "try-to-start-session" }>
     | Readonly<{ type: "delayed-to-start-session" }>
@@ -38,6 +39,6 @@ export type PasswordResetSessionState =
     | Readonly<{ type: "succeed-to-send-token"; dest: Destination }>
     | Readonly<{ type: "error"; err: string }>
 
-export const initialPasswordResetSessionState: PasswordResetSessionState = {
+export const initialPasswordResetSessionComponentState: PasswordResetSessionComponentState = {
     type: "initial-reset-session",
 }

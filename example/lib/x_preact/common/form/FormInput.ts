@@ -5,7 +5,7 @@ import { useComponent } from "../hooks"
 
 import {
     FormInputComponent,
-    initialFormInputState,
+    initialFormInputComponentState,
 } from "../../../sub/getto-form/component/component"
 
 import { markInputString } from "../../../sub/getto-form/action/data"
@@ -17,7 +17,7 @@ export type FormInputProps = Readonly<{
 type FormInputType = "text" | "password" | "search" | "number" | "tel" | "email" | "date" | "time"
 
 export function FormInput({ type, input }: FormInputProps): VNode {
-    const state = useComponent(input, initialFormInputState)
+    const state = useComponent(input, initialFormInputComponentState)
 
     return html`<input type=${type} value=${state.value} onInput=${onInput} onChange=${onChange} />`
 

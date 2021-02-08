@@ -14,7 +14,7 @@ import { initAuthCredentialRepository } from "../../../login/renew/impl/reposito
 
 import { AuthCredentialRepository } from "../../../login/renew/infra"
 
-import { PasswordResetState } from "../component"
+import { PasswordResetComponentState } from "../component"
 import { LoginIDFieldState } from "../../field/loginID/component"
 import { PasswordFieldState } from "../../field/password/component"
 
@@ -55,8 +55,8 @@ describe("PasswordReset", () => {
 
         resource.passwordReset.reset()
 
-        function stateHandler(): Post<PasswordResetState> {
-            const stack: PasswordResetState[] = []
+        function stateHandler(): Post<PasswordResetComponentState> {
+            const stack: PasswordResetComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -108,8 +108,8 @@ describe("PasswordReset", () => {
 
         resource.passwordReset.reset()
 
-        function stateHandler(): Post<PasswordResetState> {
-            const stack: PasswordResetState[] = []
+        function stateHandler(): Post<PasswordResetComponentState> {
+            const stack: PasswordResetComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -162,8 +162,8 @@ describe("PasswordReset", () => {
 
         resource.passwordReset.reset()
 
-        function stateHandler(): Post<PasswordResetState> {
-            const stack: PasswordResetState[] = []
+        function stateHandler(): Post<PasswordResetComponentState> {
+            const stack: PasswordResetComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -209,8 +209,8 @@ describe("PasswordReset", () => {
 
         resource.passwordReset.reset()
 
-        function stateHandler(): Post<PasswordResetState> {
-            const stack: PasswordResetState[] = []
+        function stateHandler(): Post<PasswordResetComponentState> {
+            const stack: PasswordResetComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -253,8 +253,8 @@ describe("PasswordReset", () => {
 
         resource.passwordReset.loadError({ type: "infra-error", err: "load error" })
 
-        function stateHandler(): Post<PasswordResetState> {
-            const stack: PasswordResetState[] = []
+        function stateHandler(): Post<PasswordResetComponentState> {
+            const stack: PasswordResetComponentState[] = []
             return (state) => {
                 stack.push(state)
 

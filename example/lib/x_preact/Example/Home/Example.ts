@@ -10,7 +10,7 @@ import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 
 import { useComponent } from "../../common/hooks"
 
-import { ExampleComponent, initialExampleState } from "../../../example/Home/example/component"
+import { ExampleComponent, initialExampleComponentState } from "../../../example/Home/example/component"
 
 import { Season, SeasonError } from "../../../example/shared/season/data"
 
@@ -18,7 +18,7 @@ type Props = Readonly<{
     example: ExampleComponent
 }>
 export function Example({ example }: Props): VNode {
-    const state = useComponent(example, initialExampleState)
+    const state = useComponent(example, initialExampleComponentState)
     useEffect(() => {
         example.load()
     }, [])

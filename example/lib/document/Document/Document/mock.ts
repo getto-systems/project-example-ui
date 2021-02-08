@@ -7,17 +7,17 @@ import { initMockContentComponent } from "../content/mock"
 import { DocumentEntryPoint } from "./entryPoint"
 
 import {
-    BreadcrumbListState,
-    initialBreadcrumbListState,
+    BreadcrumbListComponentState,
+    initialBreadcrumbListComponentState,
 } from "../../../auth/Outline/breadcrumbList/component"
-import { initialMenuListState, MenuListState } from "../../../auth/Outline/menuList/component"
-import { ContentState, initialContentState } from "../content/component"
+import { initialMenuListComponentState, MenuListComponentState } from "../../../auth/Outline/menuList/component"
+import { ContentComponentState, initialContentComponentState } from "../content/component"
 
 export function newMockDocument(): DocumentMockEntryPoint {
     const resource = {
-        menuList: initMockMenuListComponent(initialMenuListState),
-        breadcrumbList: initMockBreadcrumbListComponent(initialBreadcrumbListState),
-        content: initMockContentComponent(initialContentState),
+        menuList: initMockMenuListComponent(initialMenuListComponentState),
+        breadcrumbList: initMockBreadcrumbListComponent(initialBreadcrumbListComponentState),
+        content: initMockContentComponent(initialContentComponentState),
     }
     return {
         document: {
@@ -37,9 +37,9 @@ export function newMockDocument(): DocumentMockEntryPoint {
 export type DocumentMockEntryPoint = Readonly<{
     document: DocumentEntryPoint
     update: Readonly<{
-        menuList: Post<MenuListState>
-        breadcrumbList: Post<BreadcrumbListState>
-        content: Post<ContentState>
+        menuList: Post<MenuListComponentState>
+        breadcrumbList: Post<BreadcrumbListComponentState>
+        content: Post<ContentComponentState>
     }>
 }>
 
