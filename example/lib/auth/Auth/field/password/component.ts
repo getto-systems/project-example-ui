@@ -23,7 +23,7 @@ export interface PasswordFormFieldComponentFactory {
     (material: PasswordFormFieldMaterial): { (handler: FormFieldHandler): PasswordFormFieldComponent }
 }
 export type PasswordFormFieldMaterial = Readonly<{
-    field: PasswordFormField
+    password: PasswordFormField
     checker: PasswordCharacterChecker
     viewer: PasswordViewer
 }>

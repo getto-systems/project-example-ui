@@ -1,19 +1,13 @@
 import { LoginLink } from "../link"
 
 import { ApplicationComponent } from "../../../sub/getto-example/application/component"
-import { FormComponentState, FormMaterial } from "../../../sub/getto-form/component/component"
-import { LoginIDFormFieldComponent } from "../field/loginID/component"
-import { PasswordFormFieldComponent } from "../field/password/component"
+import { FormComponent, FormMaterial } from "../../../sub/getto-form/component/component"
+import { LoginIDFormFieldComponent, LoginIDFormFieldMaterial } from "../field/loginID/component"
+import { PasswordFormFieldComponent, PasswordFormFieldMaterial } from "../field/password/component"
 
 import { Login } from "../../login/passwordLogin/action"
 import { SetContinuousRenew } from "../../login/renew/action"
 import { SecureScriptPath } from "../../common/application/action"
-import { LoginIDFormField } from "../../common/field/loginID/action"
-import {
-    PasswordCharacterChecker,
-    PasswordFormField,
-    PasswordViewer,
-} from "../../common/field/password/action"
 
 import { FormConvertResult } from "../../../sub/getto-form/action/data"
 import { ScriptPath, LoadError } from "../../common/application/data"
@@ -52,18 +46,11 @@ export interface PasswordLoginFormComponentFactory {
     (material: PasswordLoginFormMaterial): PasswordLoginFormComponent
 }
 export type PasswordLoginFormMaterial = FormMaterial &
-    Readonly<{
-        loginID: LoginIDFormField
-        password: PasswordFormField
-        checker: PasswordCharacterChecker
-        viewer: PasswordViewer
-    }>
+    LoginIDFormFieldMaterial &
+    PasswordFormFieldMaterial
 
-export interface PasswordLoginFormComponent extends ApplicationComponent<FormComponentState> {
+export interface PasswordLoginFormComponent extends FormComponent {
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
     getLoginFields(): FormConvertResult<LoginFields>
-
-    undo(): void
-    redo(): void
 }

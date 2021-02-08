@@ -31,9 +31,9 @@ class FieldComponent
 
     constructor(material: LoginIDFormFieldMaterial, handler: FormFieldHandler) {
         super(handler, {
-            state: () => ({ result: material.field.validate() }),
+            state: () => ({ result: material.loginID.validate() }),
         })
-        this.input = this.initInput("input", material.field)
+        this.input = this.initInput("input", material.loginID)
 
         this.terminateHook(() => this.input.terminate())
     }
