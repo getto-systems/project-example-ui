@@ -3,10 +3,10 @@ import { LoginIDFieldPod, LoginIDField } from "../action"
 import { LoginIDFieldEvent } from "../event"
 
 import { markLoginID } from "../../../loginID/data"
-import { LoginIDFieldError } from "../data"
+import { LoginIDValidationError } from "../data"
 import { InputValue, markInputValue, validContent, invalidContent, hasError } from "../../data"
 
-function validateLoginID(loginID: string): LoginIDFieldError[] {
+function validateLoginID(loginID: string): LoginIDValidationError[] {
     if (loginID.length === 0) {
         return ERROR.empty
     }
@@ -15,8 +15,8 @@ function validateLoginID(loginID: string): LoginIDFieldError[] {
 }
 
 const ERROR: {
-    ok: LoginIDFieldError[]
-    empty: LoginIDFieldError[]
+    ok: LoginIDValidationError[]
+    empty: LoginIDValidationError[]
 } = {
     ok: [],
     empty: ["empty"],

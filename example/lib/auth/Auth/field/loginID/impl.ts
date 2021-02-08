@@ -5,11 +5,37 @@ import {
     LoginIDFieldMaterial,
     LoginIDFieldComponent,
     LoginIDFieldState,
+    LoginIDFormFieldComponentFactory,
+    LoginIDFormFieldComponent,
+    LoginIDFormFieldMaterial,
 } from "./component"
 
 import { LoginIDFieldEvent } from "../../../common/field/loginID/event"
 
 import { InputValue } from "../../../common/field/data"
+import {
+    FormFieldEmptyState,
+    FormFieldHandler,
+    FormInputComponent,
+} from "../../../../sub/getto-form/component/component"
+import { FormFieldBaseComponent } from "../../../../sub/getto-form/component/impl"
+import { LoginIDValidationError } from "../../../common/field/loginID/data"
+
+export const initLoginIDFormFieldComponent: LoginIDFormFieldComponentFactory = (material) => (handler) =>
+    new FieldComponent(material, handler)
+
+class FieldComponent
+    extends FormFieldBaseComponent<FormFieldEmptyState, LoginIDValidationError>
+    implements LoginIDFormFieldComponent {
+    readonly input: FormInputComponent
+
+    constructor(material: LoginIDFormFieldMaterial, handler: FormFieldHandler) {
+        super(handler, {
+            state: () => ({ result: material.field.validate() }),
+        })
+        this.input = this.initInput("input", material.field)
+    }
+}
 
 export const initLoginIDFieldComponent: LoginIDFieldComponentFactory = (material) =>
     new Component(material)

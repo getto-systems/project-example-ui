@@ -1,9 +1,9 @@
 import { LoginID } from "../../loginID/data"
 import { Content, Valid } from "../data"
-import { LoginIDFieldError } from "./data"
+import { LoginIDValidationError } from "./data"
 
 export type LoginIDFieldEvent = Readonly<{
     type: "succeed-to-update"
-    result: Valid<LoginIDFieldError>
+    result: Valid<LoginIDValidationError>
     content: Content<LoginID>
 }>

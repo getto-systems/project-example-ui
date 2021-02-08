@@ -1,20 +1,17 @@
 import { LoginEvent } from "./event"
 
+import { FormConvertResult } from "../../../sub/getto-form/data"
 import { LoginFields } from "./data"
-import { Content } from "../../common/field/data"
 
 export type PasswordLoginAction = Readonly<{
     login: LoginPod
 }>
 
 export interface LoginPod {
-    (collector: LoginCollector): Login
+    (): Login
 }
 export interface Login {
-    (post: Post<LoginEvent>): void
-}
-export interface LoginCollector {
-    getFields(): Promise<Content<LoginFields>>
+    (fields: FormConvertResult<LoginFields>, post: Post<LoginEvent>): void
 }
 
 interface Post<T> {

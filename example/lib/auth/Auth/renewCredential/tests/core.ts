@@ -9,7 +9,7 @@ import {
     initRenewCredentialResource,
     RenewCredentialCollector,
     RenewCredentialFactory,
-} from "../../Login/impl/core"
+} from "../../Login/impl/renew"
 
 import { initRenewCredentialComponent } from "../impl"
 

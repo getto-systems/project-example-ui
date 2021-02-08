@@ -3,21 +3,13 @@ import { PasswordFieldPod, PasswordField } from "../action"
 import { PasswordFieldEvent } from "../event"
 
 import { markPassword } from "../../../password/data"
-import {
-    PasswordFieldError,
-    PasswordCharacter,
-    simplePassword,
-    complexPassword,
-    PasswordView,
-    showPassword,
-    hidePassword,
-} from "../data"
+import { PasswordValidationError, PasswordCharacter, PasswordView, showPassword } from "../data"
 import { InputValue, markInputValue, validContent, invalidContent, hasError } from "../../data"
 
 // bcrypt を想定しているので、72 バイト以上のパスワードは無効
 const PASSWORD_MAX_BYTES = 72
 
-function validatePassword(password: string): PasswordFieldError[] {
+function validatePassword(password: string): PasswordValidationError[] {
     if (password.length === 0) {
         return ERROR.empty
     }
@@ -30,9 +22,9 @@ function validatePassword(password: string): PasswordFieldError[] {
 }
 
 const ERROR: {
-    ok: PasswordFieldError[]
-    empty: PasswordFieldError[]
-    tooLong: PasswordFieldError[]
+    ok: PasswordValidationError[]
+    empty: PasswordValidationError[]
+    tooLong: PasswordValidationError[]
 } = {
     ok: [],
     empty: ["empty"],
@@ -43,10 +35,10 @@ function checkCharacter(password: string): PasswordCharacter {
     for (let i = 0; i < password.length; i++) {
         // 1文字でも 128バイト以上の文字があれば complex
         if (password.charCodeAt(i) >= 128) {
-            return complexPassword
+            return { complex: true }
         }
     }
-    return simplePassword
+    return { complex: false }
 }
 
 class Field implements PasswordField {
@@ -62,7 +54,7 @@ class Field implements PasswordField {
         if (this.visible) {
             return showPassword(this.password)
         } else {
-            return hidePassword
+            return { show: false }
         }
     }
 

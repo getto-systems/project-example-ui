@@ -1,4 +1,7 @@
 import { ApplicationBaseComponent } from "../../../sub/getto-example/application/impl"
+import { FormBaseComponent } from "../../../sub/getto-form/component/impl"
+import { initLoginIDFormFieldComponent } from "../field/loginID/impl"
+import { initPasswordFormFieldComponent } from "../field/password/impl"
 
 import { LoginLink } from "../link"
 
@@ -7,11 +10,18 @@ import {
     PasswordLoginMaterial,
     PasswordLoginComponent,
     PasswordLoginState,
+    PasswordLoginFormComponentFactory,
+    PasswordLoginFormComponent,
+    PasswordLoginFormMaterial,
 } from "./component"
+import { LoginIDFormFieldComponent } from "../field/loginID/component"
+import { PasswordFormFieldComponent } from "../field/password/component"
 
 import { LoadError } from "../../common/application/data"
 import { AuthCredential } from "../../common/credential/data"
 import { storeAuthCredential } from "../../login/renew/data"
+import { FormConvertResult } from "../../../sub/getto-form/data"
+import { LoginFields } from "../../login/passwordLogin/data"
 
 export const initPasswordLoginComponent: PasswordLoginComponentFactory = (material) =>
     new Component(material)
@@ -27,8 +37,8 @@ class Component extends ApplicationBaseComponent<PasswordLoginState> implements 
         this.link = material.link
     }
 
-    login(): void {
-        this.material.login((event) => {
+    login(fields: FormConvertResult<LoginFields>): void {
+        this.material.login(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-login":
                     this.setContinuousRenew(event.authCredential, () => {
@@ -61,5 +71,65 @@ class Component extends ApplicationBaseComponent<PasswordLoginState> implements 
                     return
             }
         })
+    }
+}
+
+export const initPasswordLoginFormComponent: PasswordLoginFormComponentFactory = (material) =>
+    new FormComponent(material)
+
+class FormComponent
+    extends FormBaseComponent<PasswordLoginFormMaterial>
+    implements PasswordLoginFormComponent {
+    readonly loginID: LoginIDFormFieldComponent
+    readonly password: PasswordFormFieldComponent
+
+    constructor(material: PasswordLoginFormMaterial) {
+        super(material, {
+            findFieldInput: (path) => {
+                switch (path.field) {
+                    case "loginID":
+                        return { found: true, input: this.loginID.input }
+
+                    case "password":
+                        return { found: true, input: this.password.input }
+
+                    default:
+                        return { found: false }
+                }
+            }
+        })
+
+        this.loginID = this.initField(
+            "loginID",
+            initLoginIDFormFieldComponent({ field: material.loginID })
+        )
+        this.password = this.initField(
+            "password",
+            initPasswordFormFieldComponent({
+                field: material.password,
+                checker: material.checker,
+                viewer: material.viewer,
+            })
+        )
+    }
+
+    getLoginFields(): FormConvertResult<LoginFields> {
+        this.loginID.validate()
+        this.password.validate()
+
+        const result = {
+            loginID: this.material.loginID.convert(),
+            password: this.material.password.convert(),
+        }
+        if (!result.loginID.success || !result.password.success) {
+            return { success: false }
+        }
+        return {
+            success: true,
+            value: {
+                loginID: result.loginID.value,
+                password: result.password.value,
+            },
+        }
     }
 }

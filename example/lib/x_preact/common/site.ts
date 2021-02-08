@@ -11,3 +11,11 @@ export function siteInfo(): SiteInfo {
         subTitle: "code templates",
     }
 }
+
+export function copyright(): string {
+    return "GETTO.systems"
+}
+
+export function poweredBy(): string[] {
+    return ["LineIcons", "みんなの文字"]
+}

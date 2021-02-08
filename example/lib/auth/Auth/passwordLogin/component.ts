@@ -1,13 +1,24 @@
+import { LoginLink } from "../link"
+
 import { ApplicationComponent } from "../../../sub/getto-example/application/component"
+import { FormState, FormMaterial } from "../../../sub/getto-form/component/component"
+import { LoginIDFormFieldComponent } from "../field/loginID/component"
+import { PasswordFormFieldComponent } from "../field/password/component"
 
 import { Login } from "../../login/passwordLogin/action"
 import { SetContinuousRenew } from "../../login/renew/action"
 import { SecureScriptPath } from "../../common/application/action"
+import { LoginIDFormField } from "../../common/field/loginID/action"
+import {
+    PasswordCharacterChecker,
+    PasswordFormField,
+    PasswordViewer,
+} from "../../common/field/password/action"
 
-import { LoginError } from "../../login/passwordLogin/data"
+import { FormConvertResult } from "../../../sub/getto-form/data"
 import { ScriptPath, LoadError } from "../../common/application/data"
-import { LoginLink } from "../link"
 import { StorageError } from "../../common/credential/data"
+import { LoginError, LoginFields } from "../../login/passwordLogin/data"
 
 export interface PasswordLoginComponentFactory {
     (material: PasswordLoginMaterial): PasswordLoginComponent
@@ -21,7 +32,7 @@ export type PasswordLoginMaterial = Readonly<{
 
 export interface PasswordLoginComponent extends ApplicationComponent<PasswordLoginState> {
     readonly link: LoginLink
-    login(): void
+    login(fields: FormConvertResult<LoginFields>): void
     loadError(err: LoadError): void
 }
 
@@ -36,3 +47,23 @@ export type PasswordLoginState =
     | Readonly<{ type: "error"; err: string }>
 
 export const initialPasswordLoginState: PasswordLoginState = { type: "initial-login" }
+
+export interface PasswordLoginFormComponentFactory {
+    (material: PasswordLoginFormMaterial): PasswordLoginFormComponent
+}
+export type PasswordLoginFormMaterial = FormMaterial &
+    Readonly<{
+        loginID: LoginIDFormField
+        password: PasswordFormField
+        checker: PasswordCharacterChecker
+        viewer: PasswordViewer
+    }>
+
+export interface PasswordLoginFormComponent extends ApplicationComponent<FormState> {
+    readonly loginID: LoginIDFormFieldComponent
+    readonly password: PasswordFormFieldComponent
+    getLoginFields(): FormConvertResult<LoginFields>
+
+    undo(): void
+    redo(): void
+}

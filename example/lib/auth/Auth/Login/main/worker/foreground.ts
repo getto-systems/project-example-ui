@@ -1,5 +1,4 @@
-import { delayed } from "../../../../../z_infra/delayed/core"
-import { initAuthClient, AuthClient } from "../../../../../z_external/api/authClient"
+import { initAuthClient } from "../../../../../z_external/api/authClient"
 
 import { env } from "../../../../../y_environment/env"
 
@@ -11,65 +10,55 @@ import {
 
 import { initLoginLink } from "../link"
 
+import { View, LoginResourceFactory, LoginViewCollector } from "../../impl/core"
+import { initRenewCredentialResource, RenewCredentialCollector } from "../../impl/renew"
+import { initPasswordLoginResource, PasswordLoginCollector } from "../../impl/login"
 import {
-    View,
-    LoginResourceFactory,
-    LoginViewCollector,
-    initRenewCredentialResource,
-    initPasswordLoginResource,
-    initPasswordResetSessionResource,
     initPasswordResetResource,
-    RenewCredentialCollector,
-    PasswordLoginCollector,
+    initPasswordResetSessionResource,
     PasswordResetCollector,
-} from "../../impl/core"
+} from "../../impl/reset"
 
 import { initRenewCredentialComponent } from "../../../renewCredential/impl"
-import { initPasswordLoginComponent } from "../../../passwordLogin/impl"
+import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../../../passwordLogin/impl"
 import { initPasswordResetSessionComponent } from "../../../passwordResetSession/impl"
 import { initPasswordResetComponent } from "../../../passwordReset/impl"
 
 import { initLoginIDFieldComponent } from "../../../field/loginID/impl"
 import { initPasswordFieldComponent } from "../../../field/password/impl"
 
-import { secureScriptPath } from "../../../../common/application/impl/core"
-import { forceRenew, renew, setContinuousRenew } from "../../../../login/renew/impl/core"
+import { initApplicationAction } from "../action/application"
+import { initFormAction } from "../../../../../sub/getto-form/main/form"
+import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "../action/form"
+import {
+    initAuthCredentialStorage,
+    initRenewAction,
+    initSetContinuousRenewAction,
+} from "../action/renew"
 
 import { loginIDField } from "../../../../common/field/loginID/impl/core"
 import { passwordField } from "../../../../common/field/password/impl/core"
 
-import { initDateClock } from "../../../../../z_infra/clock/date"
-import { initWebTypedStorage } from "../../../../../z_infra/storage/webStorage"
-import { initFetchRenewClient } from "../../../../login/renew/impl/remote/renew/fetch"
-import {
-    AuthCredentialStorage,
-    initAuthCredentialRepository,
-} from "../../../../login/renew/impl/repository/authCredential"
-import { initApiCredentialConverter } from "../../../../common/credential/impl/repository/converter"
-import {
-    initLastAuthAtConverter,
-    initTicketNonceConverter,
-} from "../../../../login/renew/impl/repository/converter"
-
+import { initAuthCredentialRepository } from "../../../../login/renew/impl/repository/authCredential"
 import { currentPagePathname, detectViewState, detectResetToken } from "../../impl/location"
-
-import { AuthCredentialRepository } from "../../../../login/renew/infra"
-import { ApplicationActionConfig } from "../../../../common/application/infra"
-import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../../login/renew/infra"
 
 import { LoginLinkFactory } from "../../../link"
 
 import { LoginEntryPoint } from "../../entryPoint"
 import { RenewCredentialComponentFactory } from "../../../renewCredential/component"
-import { PasswordLoginComponentFactory } from "../../../passwordLogin/component"
+import {
+    PasswordLoginComponentFactory,
+    PasswordLoginFormComponentFactory,
+} from "../../../passwordLogin/component"
 import { PasswordResetSessionComponentFactory } from "../../../passwordResetSession/component"
 import { PasswordResetComponentFactory } from "../../../passwordReset/component"
 import { LoginIDFieldComponentFactory } from "../../../field/loginID/component"
 import { PasswordFieldComponentFactory } from "../../../field/password/component"
 
 import { ApplicationAction } from "../../../../common/application/action"
+import { FormAction } from "../../../../../sub/getto-form/action/action"
 import { RenewAction, SetContinuousRenewAction } from "../../../../login/renew/action"
-import { Login, LoginCollector, PasswordLoginAction } from "../../../../login/passwordLogin/action"
+import { Login, PasswordLoginAction } from "../../../../login/passwordLogin/action"
 import {
     PasswordResetAction,
     PasswordResetSessionAction,
@@ -79,8 +68,8 @@ import {
     Reset,
     ResetCollector,
 } from "../../../../profile/passwordReset/action"
-import { LoginIDFieldAction } from "../../../../common/field/loginID/action"
-import { PasswordFieldAction } from "../../../../common/field/password/action"
+import { LoginIDFieldAction, LoginIDFormFieldAction } from "../../../../common/field/loginID/action"
+import { PasswordFieldAction, PasswordFormFieldAction } from "../../../../common/field/password/action"
 
 import { LoginEvent } from "../../../../login/passwordLogin/event"
 import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../profile/passwordReset/event"
@@ -104,7 +93,9 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
 
     const worker = new Worker(`/${env.version}/auth/login.worker.js`)
 
-    const authCredentials = initAuthCredentialRepository(initAuthCredentialStorage(credentialStorage))
+    const authCredentials = initAuthCredentialRepository(
+        initAuthCredentialStorage(env.storageKey, credentialStorage)
+    )
 
     const factory: ForegroundFactory = {
         link: initLoginLink,
@@ -117,6 +108,12 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
                 authClient
             ),
 
+            form: {
+                core: initFormAction(),
+                loginID: initLoginIDFormFieldAction(),
+                password: initPasswordFormFieldAction(),
+            },
+
             field: {
                 loginID: () => loginIDField(),
                 password: () => passwordField(),
@@ -125,7 +122,7 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
         components: {
             renewCredential: initRenewCredentialComponent,
 
-            passwordLogin: initPasswordLoginComponent,
+            passwordLogin: { core: initPasswordLoginComponent, form: initPasswordLoginFormComponent },
             passwordResetSession: initPasswordResetSessionComponent,
             passwordReset: initPasswordResetComponent,
 
@@ -149,65 +146,6 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
     }
 
     return initLoginAsForeground(worker, factory, collector)
-}
-
-export function initApplicationAction(config: ApplicationActionConfig): ApplicationAction {
-    return {
-        secureScriptPath: secureScriptPath({ config: config.secureScriptPath }),
-    }
-}
-export function initAuthCredentialStorage(credentialStorage: Storage): AuthCredentialStorage {
-    return {
-        ticketNonce: initWebTypedStorage(
-            credentialStorage,
-            env.storageKey.ticketNonce,
-            initTicketNonceConverter()
-        ),
-        apiCredential: initWebTypedStorage(
-            credentialStorage,
-            env.storageKey.apiCredential,
-            initApiCredentialConverter()
-        ),
-        lastAuthAt: initWebTypedStorage(
-            credentialStorage,
-            env.storageKey.lastAuthAt,
-            initLastAuthAtConverter()
-        ),
-    }
-}
-export function initRenewAction(
-    config: RenewActionConfig,
-    authCredentials: AuthCredentialRepository,
-    authClient: AuthClient
-): RenewAction {
-    const infra = {
-        authCredentials,
-        renew: initFetchRenewClient(authClient),
-        config: config.renew,
-        delayed,
-        clock: initDateClock(),
-    }
-
-    return {
-        renew: renew(infra),
-        forceRenew: forceRenew(infra),
-    }
-}
-export function initSetContinuousRenewAction(
-    config: SetContinuousRenewActionConfig,
-    authCredentials: AuthCredentialRepository,
-    authClient: AuthClient
-): SetContinuousRenewAction {
-    const client = initFetchRenewClient(authClient)
-
-    return {
-        setContinuousRenew: setContinuousRenew({
-            authCredentials,
-            renew: client,
-            config: config.setContinuousRenew,
-            clock: initDateClock(),
-        }),
-    }
 }
 
 class ProxyMap<M, E> {
@@ -239,11 +177,11 @@ class ProxyMap<M, E> {
     }
 }
 class LoginProxyMap extends ProxyMap<LoginProxyMessage, LoginEvent> {
-    init(collector: LoginCollector): Login {
-        return async (post) => {
+    init(): Login {
+        return async (fields, post) => {
             this.post({
                 handlerID: this.register(post),
-                message: { content: await collector.getFields() },
+                message: { content: fields },
             })
         }
     }
@@ -289,12 +227,20 @@ type ForegroundFactory = Readonly<{
         renew: RenewAction
         setContinuousRenew: SetContinuousRenewAction
 
+        form: Readonly<{
+            core: FormAction
+            loginID: LoginIDFormFieldAction
+            password: PasswordFormFieldAction
+        }>
         field: LoginIDFieldAction & PasswordFieldAction
     }>
     components: Readonly<{
         renewCredential: RenewCredentialComponentFactory
 
-        passwordLogin: PasswordLoginComponentFactory
+        passwordLogin: Readonly<{
+            core: PasswordLoginComponentFactory
+            form: PasswordLoginFormComponentFactory
+        }>
         passwordResetSession: PasswordResetSessionComponentFactory
         passwordReset: PasswordResetComponentFactory
 
@@ -400,7 +346,7 @@ function initLoginComponentFactory(
     function initActionProxyFactory(): ActionProxyFactory {
         return {
             passwordLogin: {
-                login: (collector) => proxy.passwordLogin.login.init(collector),
+                login: () => proxy.passwordLogin.login.init(),
             },
             passwordResetSession: {
                 startSession: (collector) => proxy.passwordResetSession.startSession.init(collector),

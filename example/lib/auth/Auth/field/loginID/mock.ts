@@ -27,16 +27,6 @@ export function mapLoginIDFieldMockProps(props: LoginIDFieldMockProps): LoginIDF
     }
 }
 
-export class LoginIDFieldStateFactory {
-    noError(): LoginIDFieldState {
-        return { type: "succeed-to-update", result: noError() }
-    }
-
-    empty(): LoginIDFieldState {
-        return { type: "succeed-to-update", result: hasError(["empty"]) }
-    }
-}
-
 export class LoginIDFieldMockComponent extends MockComponent<LoginIDFieldState>
     implements LoginIDFieldComponent {
     set(): void {

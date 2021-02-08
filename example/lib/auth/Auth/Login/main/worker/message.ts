@@ -9,6 +9,7 @@ import {
     ResetToken,
 } from "../../../../profile/passwordReset/data"
 import { Content } from "../../../../common/field/data"
+import { FormConvertResult } from "../../../../../sub/getto-form/data"
 
 export type ForegroundMessage =
     | Readonly<{ type: "login"; message: ProxyMessage<LoginProxyMessage> }>
@@ -34,7 +35,7 @@ export type ProxyResponse<T> = Readonly<{
 }>
 
 export type LoginProxyMessage = Readonly<{
-    content: Content<LoginFields>
+    content: FormConvertResult<LoginFields>
 }>
 export type StartSessionProxyMessage = Readonly<{
     content: Content<StartSessionFields>

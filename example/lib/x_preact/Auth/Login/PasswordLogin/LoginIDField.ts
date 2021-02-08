@@ -1,37 +1,35 @@
-import { VNode } from "preact"
-import { html } from "htm/preact"
+import { h, VNode } from "preact"
 
 import { field, field_error, label_text_fill } from "../../../../z_vendor/getto-css/preact/design/form"
 
 import { useComponent } from "../../../common/hooks"
+import { FormInput } from "../../../common/form/FormInput"
 
-import { loginIDFieldError, loginIDFieldHandler } from "../field/loginID"
+import { loginIDValidationError } from "../field/loginID"
 
-import {
-    LoginIDFieldComponent,
-    initialLoginIDFieldState,
-} from "../../../../auth/Auth/field/loginID/component"
+import { LoginIDFormFieldComponent } from "../../../../auth/Auth/field/loginID/component"
+import { initialFormFieldState } from "../../../../sub/getto-form/component/component"
 
+// TODO LoginIDFormField -> LoginIDField
 type Props = Readonly<{
-    loginIDField: LoginIDFieldComponent
+    loginID: LoginIDFormFieldComponent
 }>
-export function LoginIDField({ loginIDField }: Props): VNode {
-    const state = useComponent(loginIDField, initialLoginIDFieldState)
+export function LoginIDFormField({ loginID }: Props): VNode {
+    const state = useComponent(loginID, initialFormFieldState)
 
     return label_text_fill(content())
 
+    // TODO Login / Reset / ResetSession はおそらく help の違いのみなので props で help を渡してはどうか
     function content() {
-        const { onInput } = loginIDFieldHandler(loginIDField)
-
         const content = {
             title: "ログインID",
-            body: html`<input type="text" onInput=${onInput} />`,
+            body: h(FormInput, { type: "text", input: loginID.input }),
         }
 
         if (state.result.valid) {
             return field(content)
         } else {
-            return field_error({ ...content, notice: loginIDFieldError(state.result) })
+            return field_error({ ...content, notice: loginIDValidationError(state.result) })
         }
     }
 }

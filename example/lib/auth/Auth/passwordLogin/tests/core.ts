@@ -6,18 +6,17 @@ import {
 } from "../../Login/tests/core"
 
 import { initLoginLink } from "../../Login/main/link"
+
 import {
     initPasswordLoginResource,
     PasswordLoginCollector,
     PasswordLoginFactory,
-} from "../../Login/impl/core"
+} from "../../Login/impl/login"
 
-import { initPasswordLoginComponent } from "../impl"
-import { initLoginIDFieldComponent } from "../../field/loginID/impl"
-import { initPasswordFieldComponent } from "../../field/password/impl"
+import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../impl"
 
-import { loginIDField } from "../../../common/field/loginID/impl/core"
-import { passwordField } from "../../../common/field/password/impl/core"
+import { initFormAction } from "../../../../sub/getto-form/main/form"
+import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "../../Login/main/action/form"
 
 import { LoginSimulator } from "../../../login/passwordLogin/impl/remote/login/simulate"
 import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
@@ -62,18 +61,14 @@ export function newPasswordLoginResource(
 
             passwordLogin: initPasswordLoginAction(config.passwordLogin, simulator.login),
 
-            field: {
-                loginID: loginIDField,
-                password: passwordField,
+            form: {
+                core: initFormAction(),
+                loginID: initLoginIDFormFieldAction(),
+                password: initPasswordFormFieldAction(),
             },
         },
         components: {
-            passwordLogin: initPasswordLoginComponent,
-
-            field: {
-                loginID: initLoginIDFieldComponent,
-                password: initPasswordFieldComponent,
-            },
+            passwordLogin: { core: initPasswordLoginComponent, form: initPasswordLoginFormComponent },
         },
     }
     const collector: PasswordLoginCollector = initPasswordLoginCollector(currentURL)

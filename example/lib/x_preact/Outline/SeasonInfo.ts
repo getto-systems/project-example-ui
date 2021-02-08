@@ -2,8 +2,6 @@ import { VNode } from "preact"
 import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { menuBox } from "../../z_vendor/getto-css/preact/layout/app"
-import { field } from "../../z_vendor/getto-css/preact/design/form"
 import { VNodeContent } from "../../z_vendor/getto-css/preact/common"
 import { notice_alert } from "../../z_vendor/getto-css/preact/design/highlight"
 
@@ -27,15 +25,15 @@ export function SeasonInfo({ seasonInfo }: Props): VNode {
             return EMPTY_CONTENT
 
         case "succeed-to-load":
-            return seasonBox(seasonContent(state.season))
+            return info(seasonContent(state.season))
 
         case "failed-to-load":
-            return seasonBox(errorContent(state.err))
+            return info(errorContent(state.err))
     }
 }
 
-function seasonBox(body: VNodeContent) {
-    return menuBox(field({ title: "シーズン", body }))
+function info(body: VNodeContent) {
+    return html`<small>シーズン:</small> ${body}`
 }
 
 function seasonContent(season: Season) {

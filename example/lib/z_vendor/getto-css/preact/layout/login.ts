@@ -11,7 +11,7 @@ type LoginBoxContent_footer = Readonly<{ footer: VNodeContent }>
 export function loginBox(siteInfo: SiteInfo, content: LoginBoxContent): VNode {
     return html`<aside class="layout__login">
         <section class="loginBox">
-            ${header(siteInfo)}
+            ${logo(siteInfo)}
             <article class="loginBox__main">
                 <header class="loginBox__main__header">
                     <h1 class="loginBox__main__title">${content.title}</h1>
@@ -22,11 +22,11 @@ export function loginBox(siteInfo: SiteInfo, content: LoginBoxContent): VNode {
         </section>
     </aside>`
 
-    function header({ brand, title, subTitle }: SiteInfo): VNode {
-        return html`<header class="loginBox__header">
-            <cite class="loginBox__header__brand">${brand}</cite>
-            <strong class="loginBox__header__title">${title}</strong>
-            <cite class="loginBox__header__subTitle">${subTitle}</cite>
+    function logo({ brand, title, subTitle }: SiteInfo): VNode {
+        return html`<header class="loginBox__logo">
+            <cite class="loginBox__logo__brand">${brand}</cite>
+            <strong class="loginBox__logo__title">${title}</strong>
+            <cite class="loginBox__logo__subTitle">${subTitle}</cite>
         </header>`
     }
     function footer(): VNodeContent {

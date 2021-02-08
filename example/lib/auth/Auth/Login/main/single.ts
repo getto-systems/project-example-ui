@@ -2,33 +2,27 @@ import { initAuthClient } from "../../../../z_external/api/authClient"
 
 import { env } from "../../../../y_environment/env"
 
-import {
-    initApplicationAction,
-    initAuthCredentialStorage,
-    initRenewAction,
-    initSetContinuousRenewAction,
-} from "./worker/foreground"
-import {
-    initPasswordLoginAction,
-    initPasswordResetAction,
-    initPasswordResetSessionAction,
-} from "./worker/background"
+import { initFormAction } from "../../../../sub/getto-form/main/form"
+import { initAuthCredentialStorage, initRenewAction, initSetContinuousRenewAction } from "./action/renew"
+import { initApplicationAction } from "./action/application"
+import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "./action/form"
+import { initPasswordLoginAction } from "./action/login"
+import { initPasswordResetAction, initPasswordResetSessionAction } from "./action/reset"
 
+import { LoginViewCollector, View } from "../impl/core"
 import {
-    LoginViewCollector,
-    View,
-    RenewCredentialFactory,
-    RenewCredentialCollector,
-    PasswordLoginFactory,
-    PasswordLoginCollector,
-    PasswordResetSessionFactory,
-    PasswordResetFactory,
-    PasswordResetCollector,
     initRenewCredentialResource,
-    initPasswordLoginResource,
-    initPasswordResetSessionResource,
+    RenewCredentialCollector,
+    RenewCredentialFactory,
+} from "../impl/renew"
+import { initPasswordLoginResource, PasswordLoginCollector, PasswordLoginFactory } from "../impl/login"
+import {
     initPasswordResetResource,
-} from "../impl/core"
+    initPasswordResetSessionResource,
+    PasswordResetCollector,
+    PasswordResetFactory,
+    PasswordResetSessionFactory,
+} from "../impl/reset"
 
 import {
     newApplicationActionConfig,
@@ -43,7 +37,7 @@ import { initLoginLink } from "./link"
 import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
 
 import { initRenewCredentialComponent } from "../../renewCredential/impl"
-import { initPasswordLoginComponent } from "../../passwordLogin/impl"
+import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../../passwordLogin/impl"
 import { initPasswordResetSessionComponent } from "../../passwordResetSession/impl"
 import { initPasswordResetComponent } from "../../passwordReset/impl"
 
@@ -62,7 +56,9 @@ export function newLoginAsSingle(): LoginEntryPoint {
     const currentURL = new URL(location.toString())
 
     const authClient = initAuthClient(env.authServerURL)
-    const authCredentials = initAuthCredentialRepository(initAuthCredentialStorage(credentialStorage))
+    const authCredentials = initAuthCredentialRepository(
+        initAuthCredentialStorage(env.storageKey, credentialStorage)
+    )
 
     const factory: Factory = {
         link: initLoginLink,
@@ -79,6 +75,12 @@ export function newLoginAsSingle(): LoginEntryPoint {
             passwordResetSession: initPasswordResetSessionAction(newPasswordResetSessionActionConfig()),
             passwordReset: initPasswordResetAction(newPasswordResetActionConfig()),
 
+            form: {
+                core: initFormAction(),
+                loginID: initLoginIDFormFieldAction(),
+                password: initPasswordFormFieldAction(),
+            },
+
             field: {
                 loginID: loginIDField,
                 password: passwordField,
@@ -87,7 +89,7 @@ export function newLoginAsSingle(): LoginEntryPoint {
         components: {
             renewCredential: initRenewCredentialComponent,
 
-            passwordLogin: initPasswordLoginComponent,
+            passwordLogin: { core: initPasswordLoginComponent, form: initPasswordLoginFormComponent },
             passwordResetSession: initPasswordResetSessionComponent,
             passwordReset: initPasswordResetComponent,
 

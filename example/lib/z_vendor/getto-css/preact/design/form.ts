@@ -184,8 +184,8 @@ export function buttons(content: ButtonsContent): VNode {
 
 type ButtonContent =
     | Readonly<{ type: StatefulButtonType; content: StatefulButtonContent }>
-    | Readonly<{ type: StatelessButtonType; content: StatelessButtonContent }>
-    | Readonly<{ type: DisabledButtonType; content: DisabledButtonContent }>
+    | Readonly<{ type: StatelessButtonType; content: StatelessButtonContent & NormalStateButtonContent }>
+    | Readonly<{ type: DisabledButtonType; content: DisabledButtonContent & NormalStateButtonContent }>
 
 export type StatefulButtonContent = ClickableButtonContent | ConnectButtonContent
 type ClickableButtonContent = Readonly<{
@@ -199,14 +199,13 @@ type ConnectButtonContent = Readonly<{
 }>
 
 export type StatelessButtonContent = Readonly<{
-    state: NormalButtonState
     onClick: Handler<Event>
     label: VNodeContent
 }>
 export type DisabledButtonContent = Readonly<{
-    state: NormalButtonState
     label: VNodeContent
 }>
+type NormalStateButtonContent = Readonly<{ state: NormalButtonState }>
 
 type ButtonType = StatefulButtonType | StatelessButtonType | DisabledButtonType
 type StatefulButtonType = "edit" | "search" | "send" | "delete" | "complete" | "warning" | "pending"
@@ -253,19 +252,19 @@ export function button_pending(content: StatefulButtonContent): VNode {
     return buttonContent({ type: "pending", content })
 }
 export function button_cancel(content: StatelessButtonContent): VNode {
-    return buttonContent({ type: "cancel", content })
+    return buttonContent({ type: "cancel", content: { ...content, state: "normal" } })
 }
 export function button_close(content: StatelessButtonContent): VNode {
-    return buttonContent({ type: "close", content })
+    return buttonContent({ type: "close", content: { ...content, state: "normal" } })
 }
 export function button_undo(content: StatelessButtonContent): VNode {
-    return buttonContent({ type: "undo", content })
+    return buttonContent({ type: "undo", content: { ...content, state: "normal" } })
 }
 export function button_redo(content: StatelessButtonContent): VNode {
-    return buttonContent({ type: "redo", content })
+    return buttonContent({ type: "redo", content: { ...content, state: "normal" } })
 }
 export function button_disabled(content: DisabledButtonContent): VNode {
-    return buttonContent({ type: "disabled", content })
+    return buttonContent({ type: "disabled", content: { ...content, state: "normal" } })
 }
 
 function buttonContent(button: ButtonContent): VNode {
