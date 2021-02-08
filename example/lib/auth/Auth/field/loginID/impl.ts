@@ -35,7 +35,7 @@ class FieldComponent
         })
         this.input = this.initInput("input", material.field)
 
-        this.addTerminateHandler(() => this.input.terminate())
+        this.terminateHook(() => this.input.terminate())
     }
 }
 

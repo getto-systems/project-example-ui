@@ -2,7 +2,7 @@ import { ApplicationComponent, ApplicationStateHandler } from "./component"
 
 export class ApplicationBaseComponent<S> implements ApplicationComponent<S> {
     handlers: ApplicationStateHandler<S>[] = []
-    terminates: ApplicationTerminateHandler[] = []
+    terminates: ApplicationTerminateHook[] = []
 
     addStateHandler(handler: ApplicationStateHandler<S>): void {
         this.handlers = [...this.handlers, handler]
@@ -15,8 +15,8 @@ export class ApplicationBaseComponent<S> implements ApplicationComponent<S> {
         this.handlers.forEach((post) => post(state))
     }
 
-    addTerminateHandler(handler: ApplicationTerminateHandler): void {
-        this.handlers = [...this.handlers, handler]
+    terminateHook(hook: ApplicationTerminateHook): void {
+        this.terminates = [...this.terminates, hook]
     }
     terminate(): void {
         this.handlers = []
@@ -24,6 +24,6 @@ export class ApplicationBaseComponent<S> implements ApplicationComponent<S> {
     }
 }
 
-export interface ApplicationTerminateHandler {
+export interface ApplicationTerminateHook {
     (): void
 }

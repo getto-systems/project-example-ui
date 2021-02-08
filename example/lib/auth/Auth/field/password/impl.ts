@@ -50,7 +50,7 @@ class FieldComponent
         this.material = material
         this.input = this.initInput("input", material.field)
 
-        this.addTerminateHandler(() => this.input.terminate())
+        this.terminateHook(() => this.input.terminate())
     }
 
     show(): void {

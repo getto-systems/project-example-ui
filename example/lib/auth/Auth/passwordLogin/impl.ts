@@ -112,7 +112,7 @@ class FormComponent
             })
         )
 
-        this.addTerminateHandler(() => {
+        this.terminateHook(() => {
             this.loginID.terminate()
             this.password.terminate()
         })
