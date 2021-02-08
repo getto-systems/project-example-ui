@@ -24,16 +24,16 @@ import { LoginIDFormField } from "./PasswordLogin/LoginIDField"
 import { PasswordFormField } from "./PasswordLogin/PasswordField"
 
 import { PasswordLoginResource } from "../../../auth/Auth/Login/entryPoint"
-import { initialPasswordLoginState } from "../../../auth/Auth/passwordLogin/component"
+import { initialPasswordLoginComponentState } from "../../../auth/Auth/passwordLogin/component"
 
 import { LoginError } from "../../../auth/login/passwordLogin/data"
-import { initialFormState } from "../../../sub/getto-form/component/component"
+import { initialFormComponentState } from "../../../sub/getto-form/component/component"
 
 type Props = PasswordLoginResource
 export function PasswordLogin(resource: Props): VNode {
     const { passwordLogin } = resource
-    const state = useComponent(passwordLogin, initialPasswordLoginState)
-    const formState = useComponent(resource.form, initialFormState)
+    const state = useComponent(passwordLogin, initialPasswordLoginComponentState)
+    const formState = useComponent(resource.form, initialFormComponentState)
 
     useEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useEffect で行う

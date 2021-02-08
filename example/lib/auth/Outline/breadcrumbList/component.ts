@@ -11,12 +11,14 @@ export type BreadcrumbListMaterial = Readonly<{
     loadBreadcrumb: LoadBreadcrumb
 }>
 
-export interface BreadcrumbListComponent extends ApplicationComponent<BreadcrumbListState> {
+export interface BreadcrumbListComponent extends ApplicationComponent<BreadcrumbListComponentState> {
     load(): void
 }
 
-export type BreadcrumbListState =
+export type BreadcrumbListComponentState =
     | Readonly<{ type: "initial-breadcrumb-list" }>
     | Readonly<{ type: "succeed-to-load"; breadcrumb: Breadcrumb }>
 
-export const initialBreadcrumbListState: BreadcrumbListState = { type: "initial-breadcrumb-list" }
+export const initialBreadcrumbListComponentState: BreadcrumbListComponentState = {
+    type: "initial-breadcrumb-list",
+}

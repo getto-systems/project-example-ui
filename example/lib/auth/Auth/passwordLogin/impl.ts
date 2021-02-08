@@ -9,7 +9,7 @@ import {
     PasswordLoginComponentFactory,
     PasswordLoginMaterial,
     PasswordLoginComponent,
-    PasswordLoginState,
+    PasswordLoginComponentState,
     PasswordLoginFormComponentFactory,
     PasswordLoginFormComponent,
     PasswordLoginFormMaterial,
@@ -26,7 +26,7 @@ import { LoginFields } from "../../login/passwordLogin/data"
 export const initPasswordLoginComponent: PasswordLoginComponentFactory = (material) =>
     new Component(material)
 
-class Component extends ApplicationBaseComponent<PasswordLoginState> implements PasswordLoginComponent {
+class Component extends ApplicationBaseComponent<PasswordLoginComponentState> implements PasswordLoginComponent {
     material: PasswordLoginMaterial
 
     link: LoginLink

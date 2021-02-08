@@ -6,7 +6,7 @@ import { initMenuExpandRepository } from "../../../../auth/permission/menu/impl/
 
 import { MenuBadge, MenuTree } from "../../../../auth/permission/menu/infra"
 
-import { ContentState } from "../component"
+import { ContentComponentState } from "../component"
 
 import { ApiNonce, markApiCredential } from "../../../../auth/common/credential/data"
 
@@ -18,8 +18,8 @@ describe("Content", () => {
 
         resource.content.load()
 
-        function stateHandler(): Post<ContentState> {
-            const stack: ContentState[] = []
+        function stateHandler(): Post<ContentComponentState> {
+            const stack: ContentComponentState[] = []
             return (state) => {
                 stack.push(state)
 

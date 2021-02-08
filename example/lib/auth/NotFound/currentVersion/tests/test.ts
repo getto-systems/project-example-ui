@@ -1,6 +1,6 @@
 import { newNotFoundResource } from "../../NotFound/tests/core"
 
-import { CurrentVersionState } from "../component"
+import { CurrentVersionComponentState } from "../component"
 
 describe("NotFound", () => {
     test("load current version", (done) => {
@@ -10,8 +10,8 @@ describe("NotFound", () => {
 
         resource.currentVersion.load()
 
-        function stateHandler(): Post<CurrentVersionState> {
-            const stack: CurrentVersionState[] = []
+        function stateHandler(): Post<CurrentVersionComponentState> {
+            const stack: CurrentVersionComponentState[] = []
             return (state) => {
                 stack.push(state)
 

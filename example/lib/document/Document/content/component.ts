@@ -11,12 +11,12 @@ export type ContentMaterial = Readonly<{
     loadDocument: LoadContent
 }>
 
-export interface ContentComponent extends ApplicationComponent<ContentState> {
+export interface ContentComponent extends ApplicationComponent<ContentComponentState> {
     load(): void
 }
 
-export type ContentState =
+export type ContentComponentState =
     | Readonly<{ type: "initial-content" }>
     | Readonly<{ type: "succeed-to-load"; path: ContentPath }>
 
-export const initialContentState: ContentState = { type: "initial-content" }
+export const initialContentComponentState: ContentComponentState = { type: "initial-content" }

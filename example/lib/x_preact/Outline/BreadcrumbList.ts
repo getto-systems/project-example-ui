@@ -16,7 +16,7 @@ import { MENU_ID } from "./MenuList"
 
 import {
     BreadcrumbListComponent,
-    initialBreadcrumbListState,
+    initialBreadcrumbListComponentState,
 } from "../../auth/Outline/breadcrumbList/component"
 
 import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../auth/permission/menu/data"
@@ -25,7 +25,7 @@ type Props = Readonly<{
     breadcrumbList: BreadcrumbListComponent
 }>
 export function BreadcrumbList({ breadcrumbList }: Props): VNode {
-    const state = useComponent(breadcrumbList, initialBreadcrumbListState)
+    const state = useComponent(breadcrumbList, initialBreadcrumbListComponentState)
     useEffect(() => {
         breadcrumbList.load()
     }, [])

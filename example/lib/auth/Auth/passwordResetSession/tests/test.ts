@@ -7,7 +7,7 @@ import {
 import { wait } from "../../../../z_infra/delayed/core"
 import { SendTokenState } from "../../../profile/passwordReset/impl/remote/session/simulate"
 
-import { PasswordResetSessionState } from "../component"
+import { PasswordResetSessionComponentState } from "../component"
 import { LoginIDFieldState } from "../../field/loginID/component"
 
 import { hasError, markInputValue } from "../../../common/field/data"
@@ -31,8 +31,8 @@ describe("PasswordResetSession", () => {
 
         resource.passwordResetSession.startSession()
 
-        function stateHandler(): Post<PasswordResetSessionState> {
-            const stack: PasswordResetSessionState[] = []
+        function stateHandler(): Post<PasswordResetSessionComponentState> {
+            const stack: PasswordResetSessionComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -88,8 +88,8 @@ describe("PasswordResetSession", () => {
 
         resource.passwordResetSession.startSession()
 
-        function stateHandler(): Post<PasswordResetSessionState> {
-            const stack: PasswordResetSessionState[] = []
+        function stateHandler(): Post<PasswordResetSessionComponentState> {
+            const stack: PasswordResetSessionComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -146,8 +146,8 @@ describe("PasswordResetSession", () => {
 
         resource.passwordResetSession.startSession()
 
-        function stateHandler(): Post<PasswordResetSessionState> {
-            const stack: PasswordResetSessionState[] = []
+        function stateHandler(): Post<PasswordResetSessionComponentState> {
+            const stack: PasswordResetSessionComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -224,8 +224,8 @@ describe("PasswordResetSession", () => {
 
         resource.passwordResetSession.startSession()
 
-        function stateHandler(): Post<PasswordResetSessionState> {
-            const stack: PasswordResetSessionState[] = []
+        function stateHandler(): Post<PasswordResetSessionComponentState> {
+            const stack: PasswordResetSessionComponentState[] = []
             return (state) => {
                 stack.push(state)
 

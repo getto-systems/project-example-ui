@@ -15,7 +15,7 @@ import { MenuList } from "../../x_preact/Outline/MenuList"
 
 import { mapMenuMockProps, MenuMockProps, initMockMenuListComponent } from "../../auth/Outline/menuList/mock"
 
-import { initialMenuListState } from "../../auth/Outline/menuList/component"
+import { initialMenuListComponentState } from "../../auth/Outline/menuList/component"
 
 export default {
     title: "Outline/MenuList",
@@ -28,7 +28,7 @@ export default {
 
 type MockProps = MenuMockProps
 const Template: Story<MockProps> = (args) => {
-    const menuList = initMockMenuListComponent(initialMenuListState)
+    const menuList = initMockMenuListComponent(initialMenuListComponentState)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {

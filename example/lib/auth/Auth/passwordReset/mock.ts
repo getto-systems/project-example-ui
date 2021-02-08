@@ -4,9 +4,9 @@ import { initLoginLink } from "../Login/main/link"
 
 import { LoginLink } from "../link"
 
-import { PasswordResetComponent, PasswordResetState } from "./component"
+import { PasswordResetComponent, PasswordResetComponentState } from "./component"
 
-export function initMockPasswordReset(state: PasswordResetState): PasswordResetMockComponent {
+export function initMockPasswordReset(state: PasswordResetComponentState): PasswordResetMockComponent {
     return new PasswordResetMockComponent(state)
 }
 
@@ -21,7 +21,7 @@ export type PasswordResetMockProps =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function mapPasswordResetMockProps(props: PasswordResetMockProps): PasswordResetState {
+export function mapPasswordResetMockProps(props: PasswordResetMockProps): PasswordResetComponentState {
     switch (props.type) {
         case "initial":
             return { type: "initial-reset" }
@@ -52,11 +52,11 @@ export function mapPasswordResetMockProps(props: PasswordResetMockProps): Passwo
     }
 }
 
-export class PasswordResetMockComponent extends MockComponent<PasswordResetState>
+export class PasswordResetMockComponent extends MockComponent<PasswordResetComponentState>
     implements PasswordResetComponent {
     link: LoginLink
 
-    constructor(state: PasswordResetState) {
+    constructor(state: PasswordResetComponentState) {
         super(state)
         this.link = initLoginLink()
     }

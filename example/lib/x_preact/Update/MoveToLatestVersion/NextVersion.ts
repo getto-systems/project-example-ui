@@ -11,13 +11,13 @@ import { spinner } from "../../common/icon"
 import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { NextVersionResource } from "../../../update/Update/MoveToNextVersion/entryPoint"
-import { initialNextVersionState } from "../../../update/Update/nextVersion/component"
+import { initialNextVersionComponentState } from "../../../update/Update/nextVersion/component"
 
 import { appTargetToPath, FindError } from "../../../update/nextVersion/data"
 
 type Props = NextVersionResource
 export function NextVersion({ nextVersion }: Props): VNode {
-    const state = useComponent(nextVersion, initialNextVersionState)
+    const state = useComponent(nextVersion, initialNextVersionComponentState)
     useEffect(() => {
         nextVersion.find()
     }, [])

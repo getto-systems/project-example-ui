@@ -3,11 +3,11 @@ import { MockComponent } from "../../../sub/getto-example/application/mock"
 import { initMockNextVersionComponent } from "../nextVersion/mock"
 
 import { MoveToNextVersionEntryPoint } from "./entryPoint"
-import { initialNextVersionState, NextVersionState } from "../nextVersion/component"
+import { initialNextVersionComponentState, NextVersionComponentState } from "../nextVersion/component"
 
 export function newMockMoveToNextVersion(): MoveToNextVersionMockEntryPoint {
     const resource = {
-        nextVersion: initMockNextVersionComponent(initialNextVersionState),
+        nextVersion: initMockNextVersionComponent(initialNextVersionComponentState),
     }
     return {
         moveToNextVersion: {
@@ -25,7 +25,7 @@ export function newMockMoveToNextVersion(): MoveToNextVersionMockEntryPoint {
 export type MoveToNextVersionMockEntryPoint = Readonly<{
     moveToNextVersion: MoveToNextVersionEntryPoint
     update: Readonly<{
-        nextVersion: Post<NextVersionState>
+        nextVersion: Post<NextVersionComponentState>
     }>
 }>
 

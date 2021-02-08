@@ -4,7 +4,7 @@ import { wait } from "../../../../z_infra/delayed/core"
 
 import { NextVersionActionConfig } from "../../../nextVersion/infra"
 
-import { NextVersionState } from "../component"
+import { NextVersionComponentState } from "../component"
 
 import { appTargetToPath, versionToString } from "../../../nextVersion/data"
 
@@ -16,8 +16,8 @@ describe("NextVersion", () => {
 
         resource.nextVersion.find()
 
-        function stateHandler(): Post<NextVersionState> {
-            const stack: NextVersionState[] = []
+        function stateHandler(): Post<NextVersionComponentState> {
+            const stack: NextVersionComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -73,8 +73,8 @@ describe("NextVersion", () => {
 
         resource.nextVersion.find()
 
-        function stateHandler(): Post<NextVersionState> {
-            const stack: NextVersionState[] = []
+        function stateHandler(): Post<NextVersionComponentState> {
+            const stack: NextVersionComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -131,8 +131,8 @@ describe("NextVersion", () => {
 
         resource.nextVersion.find()
 
-        function stateHandler(): Post<NextVersionState> {
-            const stack: NextVersionState[] = []
+        function stateHandler(): Post<NextVersionComponentState> {
+            const stack: NextVersionComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -188,8 +188,8 @@ describe("NextVersion", () => {
 
         resource.nextVersion.find()
 
-        function stateHandler(): Post<NextVersionState> {
-            const stack: NextVersionState[] = []
+        function stateHandler(): Post<NextVersionComponentState> {
+            const stack: NextVersionComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -245,8 +245,8 @@ describe("NextVersion", () => {
 
         resource.nextVersion.find()
 
-        function stateHandler(): Post<NextVersionState> {
-            const stack: NextVersionState[] = []
+        function stateHandler(): Post<NextVersionComponentState> {
+            const stack: NextVersionComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -302,8 +302,8 @@ describe("NextVersion", () => {
 
         resource.nextVersion.find()
 
-        function stateHandler(): Post<NextVersionState> {
-            const stack: NextVersionState[] = []
+        function stateHandler(): Post<NextVersionComponentState> {
+            const stack: NextVersionComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -359,8 +359,8 @@ describe("NextVersion", () => {
 
         resource.nextVersion.find()
 
-        function stateHandler(): Post<NextVersionState> {
-            const stack: NextVersionState[] = []
+        function stateHandler(): Post<NextVersionComponentState> {
+            const stack: NextVersionComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -416,8 +416,8 @@ describe("NextVersion", () => {
 
         resource.nextVersion.find()
 
-        function stateHandler(): Post<NextVersionState> {
-            const stack: NextVersionState[] = []
+        function stateHandler(): Post<NextVersionComponentState> {
+            const stack: NextVersionComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -473,8 +473,8 @@ describe("NextVersion", () => {
 
         resource.nextVersion.find()
 
-        function stateHandler(): Post<NextVersionState> {
-            const stack: NextVersionState[] = []
+        function stateHandler(): Post<NextVersionComponentState> {
+            const stack: NextVersionComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -530,8 +530,8 @@ describe("NextVersion", () => {
 
         resource.nextVersion.find()
 
-        function stateHandler(): Post<NextVersionState> {
-            const stack: NextVersionState[] = []
+        function stateHandler(): Post<NextVersionComponentState> {
+            const stack: NextVersionComponentState[] = []
             return (state) => {
                 stack.push(state)
 

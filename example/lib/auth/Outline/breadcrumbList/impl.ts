@@ -4,13 +4,13 @@ import {
     BreadcrumbListComponentFactory,
     BreadcrumbListMaterial,
     BreadcrumbListComponent,
-    BreadcrumbListState,
+    BreadcrumbListComponentState,
 } from "./component"
 
 export const initBreadcrumbListComponent: BreadcrumbListComponentFactory = (material) =>
     new Component(material)
 
-class Component extends ApplicationBaseComponent<BreadcrumbListState> implements BreadcrumbListComponent {
+class Component extends ApplicationBaseComponent<BreadcrumbListComponentState> implements BreadcrumbListComponent {
     material: BreadcrumbListMaterial
 
     constructor(material: BreadcrumbListMaterial) {

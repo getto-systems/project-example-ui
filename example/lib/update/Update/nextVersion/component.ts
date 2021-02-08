@@ -11,14 +11,16 @@ export type NextVersionMaterial = Readonly<{
     find: Find
 }>
 
-export interface NextVersionComponent extends ApplicationComponent<NextVersionState> {
+export interface NextVersionComponent extends ApplicationComponent<NextVersionComponentState> {
     find(): void
 }
 
-export type NextVersionState =
+export type NextVersionComponentState =
     | Readonly<{ type: "initial-next-version" }>
     | Readonly<{ type: "delayed-to-find" }>
     | Readonly<{ type: "failed-to-find"; err: FindError }>
     | Readonly<{ type: "succeed-to-find"; upToDate: boolean; target: AppTarget }>
 
-export const initialNextVersionState: NextVersionState = { type: "initial-next-version" }
+export const initialNextVersionComponentState: NextVersionComponentState = {
+    type: "initial-next-version",
+}

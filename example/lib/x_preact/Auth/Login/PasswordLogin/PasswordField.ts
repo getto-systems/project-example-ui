@@ -12,7 +12,7 @@ import { FormInput } from "../../../common/form/FormInput"
 import { passwordView, passwordValidationError } from "../field/password"
 
 import {
-    initialPasswordFormFieldState,
+    initialPasswordFormFieldComponentState,
     PasswordFormFieldComponent,
 } from "../../../../auth/Auth/field/password/component"
 
@@ -20,7 +20,7 @@ type Props = Readonly<{
     password: PasswordFormFieldComponent
 }>
 export function PasswordFormField({ password }: Props): VNode {
-    const state = useComponent(password, initialPasswordFormFieldState)
+    const state = useComponent(password, initialPasswordFormFieldComponentState)
 
     return label_password_fill(content())
 

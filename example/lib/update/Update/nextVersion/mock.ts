@@ -1,8 +1,8 @@
 import { MockComponent } from "../../../sub/getto-example/application/mock"
 
-import { NextVersionComponent, NextVersionState } from "./component"
+import { NextVersionComponent, NextVersionComponentState } from "./component"
 
-export function initMockNextVersionComponent(state: NextVersionState): NextVersionMockComponent {
+export function initMockNextVersionComponent(state: NextVersionComponentState): NextVersionMockComponent {
     return new NextVersionMockComponent(state)
 }
 
@@ -10,7 +10,7 @@ export type NextVersionMockProps =
     | Readonly<{ type: "delayed" }>
     | Readonly<{ type: "failed"; err: string }>
 
-export function mapNextVersionMockProps(props: NextVersionMockProps): NextVersionState {
+export function mapNextVersionMockProps(props: NextVersionMockProps): NextVersionComponentState {
     switch (props.type) {
         case "delayed":
             return { type: "delayed-to-find" }
@@ -23,7 +23,7 @@ export function mapNextVersionMockProps(props: NextVersionMockProps): NextVersio
     }
 }
 
-class NextVersionMockComponent extends MockComponent<NextVersionState> implements NextVersionComponent {
+class NextVersionMockComponent extends MockComponent<NextVersionComponentState> implements NextVersionComponent {
     find(): void {
         // mock ではなにもしない
     }

@@ -18,14 +18,14 @@ export type RenewCredentialMaterial = Readonly<{
     secureScriptPath: SecureScriptPath
 }>
 
-export interface RenewCredentialComponent extends ApplicationComponent<RenewCredentialState> {
+export interface RenewCredentialComponent extends ApplicationComponent<RenewCredentialComponentState> {
     renew(): void
     succeedToInstantLoad(): void
     failedToInstantLoad(): void
     loadError(err: LoadError): void
 }
 
-export type RenewCredentialState =
+export type RenewCredentialComponentState =
     | Readonly<{ type: "initial-renew" }>
     | Readonly<{ type: "try-to-instant-load"; scriptPath: ScriptPath }>
     | Readonly<{ type: "required-to-login" }>
@@ -38,7 +38,9 @@ export type RenewCredentialState =
     | Readonly<{ type: "load-error"; err: LoadError }>
     | Readonly<{ type: "error"; err: string }>
 
-export const initialRenewCredentialState: RenewCredentialState = { type: "initial-renew" }
+export const initialRenewCredentialComponentState: RenewCredentialComponentState = {
+    type: "initial-renew",
+}
 
 interface Handler<T> {
     (state: T): void

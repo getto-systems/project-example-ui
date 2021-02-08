@@ -3,14 +3,14 @@ import { ApplicationBaseComponent } from "../../../sub/getto-example/application
 import {
     CurrentVersionMaterial,
     CurrentVersionComponent,
-    CurrentVersionState,
+    CurrentVersionComponentState,
     CurrentVersionComponentFactory,
 } from "./component"
 
 export const initCurrentVersionComponent: CurrentVersionComponentFactory = (material) =>
     new Component(material)
 
-class Component extends ApplicationBaseComponent<CurrentVersionState> implements CurrentVersionComponent {
+class Component extends ApplicationBaseComponent<CurrentVersionComponentState> implements CurrentVersionComponent {
     material: CurrentVersionMaterial
 
     constructor(material: CurrentVersionMaterial) {

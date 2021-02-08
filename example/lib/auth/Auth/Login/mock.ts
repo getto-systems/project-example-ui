@@ -8,26 +8,26 @@ import { initMockLoginIDField } from "../field/loginID/mock"
 import { initMockPasswordField } from "../field/password/mock"
 
 import { LoginEntryPoint, LoginView, LoginState } from "./entryPoint"
-import { initialRenewCredentialState, RenewCredentialState } from "../renewCredential/component"
-import { initialPasswordLoginState, PasswordLoginState } from "../passwordLogin/component"
+import { initialRenewCredentialComponentState, RenewCredentialComponentState } from "../renewCredential/component"
+import { initialPasswordLoginComponentState, PasswordLoginComponentState } from "../passwordLogin/component"
 import { initialLoginIDFieldState, LoginIDFieldState } from "../field/loginID/component"
 import { initialPasswordFieldState, PasswordFieldState } from "../field/password/component"
 import {
-    initialPasswordResetSessionState,
-    PasswordResetSessionState,
+    initialPasswordResetSessionComponentState,
+    PasswordResetSessionComponentState,
 } from "../passwordResetSession/component"
-import { initialPasswordResetState, PasswordResetState } from "../passwordReset/component"
+import { initialPasswordResetComponentState, PasswordResetComponentState } from "../passwordReset/component"
 import {
-    FormState,
-    initialFormState,
+    FormComponentState,
+    initialFormComponentState,
 } from "../../../sub/getto-form/component/component"
 
 export function newMockLoginAsRenewCredential(): {
     login: LoginEntryPoint
-    update: { renewCredential: Post<RenewCredentialState> }
+    update: { renewCredential: Post<RenewCredentialComponentState> }
 } {
     const mock = {
-        renewCredential: new MockResource(initialRenewCredentialState, initMockRenewCredential),
+        renewCredential: new MockResource(initialRenewCredentialComponentState, initMockRenewCredential),
     }
     return {
         login: {
@@ -50,15 +50,15 @@ export function newMockLoginAsRenewCredential(): {
 export function newMockLoginAsPasswordLogin(): {
     login: LoginEntryPoint
     update: {
-        passwordLogin: Post<PasswordLoginState>
-        form: Post<FormState>
+        passwordLogin: Post<PasswordLoginComponentState>
+        form: Post<FormComponentState>
         loginIDField: Post<LoginIDFieldState>
         passwordField: Post<PasswordFieldState>
     }
 } {
     const mock = {
-        passwordLogin: new MockResource(initialPasswordLoginState, initMockPasswordLogin),
-        form: new MockResource(initialFormState, initMockPasswordLoginForm),
+        passwordLogin: new MockResource(initialPasswordLoginComponentState, initMockPasswordLogin),
+        form: new MockResource(initialFormComponentState, initMockPasswordLoginForm),
         loginIDField: new MockResource(initialLoginIDFieldState, initMockLoginIDField),
         passwordField: new MockResource(initialPasswordFieldState, initMockPasswordField),
     }
@@ -87,13 +87,13 @@ export function newMockLoginAsPasswordLogin(): {
 export function newMockLoginAsPasswordResetSession(): {
     login: LoginEntryPoint
     update: {
-        passwordResetSession: Post<PasswordResetSessionState>
+        passwordResetSession: Post<PasswordResetSessionComponentState>
         loginIDField: Post<LoginIDFieldState>
     }
 } {
     const mock = {
         passwordResetSession: new MockResource(
-            initialPasswordResetSessionState,
+            initialPasswordResetSessionComponentState,
             initMockPasswordResetSession
         ),
         loginIDField: new MockResource(initialLoginIDFieldState, initMockLoginIDField),
@@ -121,13 +121,13 @@ export function newMockLoginAsPasswordResetSession(): {
 export function newMockLoginAsPasswordReset(): {
     login: LoginEntryPoint
     update: {
-        passwordReset: Post<PasswordResetState>
+        passwordReset: Post<PasswordResetComponentState>
         loginIDField: Post<LoginIDFieldState>
         passwordField: Post<PasswordFieldState>
     }
 } {
     const mock = {
-        passwordReset: new MockResource(initialPasswordResetState, initMockPasswordReset),
+        passwordReset: new MockResource(initialPasswordResetComponentState, initMockPasswordReset),
         loginIDField: new MockResource(initialLoginIDFieldState, initMockLoginIDField),
         passwordField: new MockResource(initialPasswordFieldState, initMockPasswordField),
     }

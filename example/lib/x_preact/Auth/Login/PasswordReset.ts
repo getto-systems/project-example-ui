@@ -18,14 +18,14 @@ import { LoginIDField } from "./PasswordReset/LoginIDField"
 import { PasswordField } from "./PasswordReset/PasswordField"
 
 import { PasswordResetResource } from "../../../auth/Auth/Login/entryPoint"
-import { initialPasswordResetState } from "../../../auth/Auth/passwordReset/component"
+import { initialPasswordResetComponentState } from "../../../auth/Auth/passwordReset/component"
 
 import { ResetError } from "../../../auth/profile/passwordReset/data"
 
 type Props = PasswordResetResource
 export function PasswordReset(resource: Props): VNode {
     const { passwordReset } = resource
-    const state = useComponent(passwordReset, initialPasswordResetState)
+    const state = useComponent(passwordReset, initialPasswordResetComponentState)
 
     useEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useEffect で行う

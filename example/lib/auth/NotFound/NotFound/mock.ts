@@ -4,11 +4,11 @@ import { initMockCurrentVersionComponent } from "../currentVersion/mock"
 
 import { NotFoundEntryPoint } from "./entryPoint"
 
-import { CurrentVersionState, initialCurrentVersionState } from "../currentVersion/component"
+import { CurrentVersionComponentState, initialCurrentVersionComponentState } from "../currentVersion/component"
 
 export function newMockNotFound(): NotFoundMockEntryPoint {
     const resource = {
-        currentVersion: initMockCurrentVersionComponent(initialCurrentVersionState),
+        currentVersion: initMockCurrentVersionComponent(initialCurrentVersionComponentState),
     }
     return {
         notFound: {
@@ -26,7 +26,7 @@ export function newMockNotFound(): NotFoundMockEntryPoint {
 export type NotFoundMockEntryPoint = Readonly<{
     notFound: NotFoundEntryPoint
     update: Readonly<{
-        currentVersion: Post<CurrentVersionState>
+        currentVersion: Post<CurrentVersionComponentState>
     }>
 }>
 

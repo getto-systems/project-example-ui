@@ -14,10 +14,10 @@ import { initAuthCredentialRepository } from "../../../login/renew/impl/reposito
 
 import { AuthCredentialRepository } from "../../../login/renew/infra"
 
-import { FormInputState, FormState } from "../../../../sub/getto-form/component/component"
-import { LoginIDFormFieldState } from "../../field/loginID/component"
-import { PasswordFormFieldState } from "../../field/password/component"
-import { PasswordLoginState } from "../component"
+import { FormInputComponentState, FormComponentState } from "../../../../sub/getto-form/component/component"
+import { LoginIDFormFieldComponentState } from "../../field/loginID/component"
+import { PasswordFormFieldComponentState } from "../../field/password/component"
+import { PasswordLoginComponentState } from "../component"
 
 import { markScriptPath } from "../../../common/application/data"
 import {
@@ -59,8 +59,8 @@ describe("PasswordLogin", () => {
 
         resource.passwordLogin.login(resource.form.getLoginFields())
 
-        function stateHandler(): Post<PasswordLoginState> {
-            const stack: PasswordLoginState[] = []
+        function stateHandler(): Post<PasswordLoginComponentState> {
+            const stack: PasswordLoginComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -115,8 +115,8 @@ describe("PasswordLogin", () => {
 
         resource.passwordLogin.login(resource.form.getLoginFields())
 
-        function stateHandler(): Post<PasswordLoginState> {
-            const stack: PasswordLoginState[] = []
+        function stateHandler(): Post<PasswordLoginComponentState> {
+            const stack: PasswordLoginComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -172,8 +172,8 @@ describe("PasswordLogin", () => {
 
         resource.passwordLogin.login(resource.form.getLoginFields())
 
-        function stateHandler(): Post<PasswordLoginState> {
-            const stack: PasswordLoginState[] = []
+        function stateHandler(): Post<PasswordLoginComponentState> {
+            const stack: PasswordLoginComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -216,8 +216,8 @@ describe("PasswordLogin", () => {
 
         resource.passwordLogin.loadError({ type: "infra-error", err: "load error" })
 
-        function stateHandler(): Post<PasswordLoginState> {
-            const stack: PasswordLoginState[] = []
+        function stateHandler(): Post<PasswordLoginComponentState> {
+            const stack: PasswordLoginComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -260,8 +260,8 @@ describe("PasswordLogin", () => {
 
             expect(resource.form.getLoginFields()).toMatchObject({ success: false })
 
-            function stateHandler(): Post<FormState> {
-                const stack: FormState[] = []
+            function stateHandler(): Post<FormComponentState> {
+                const stack: FormComponentState[] = []
                 return (state) => {
                     stack.push(state)
 
@@ -301,8 +301,8 @@ describe("PasswordLogin", () => {
                 },
             })
 
-            function stateHandler(): Post<FormState> {
-                const stack: FormState[] = []
+            function stateHandler(): Post<FormComponentState> {
+                const stack: FormComponentState[] = []
                 return (state) => {
                     stack.push(state)
 
@@ -352,8 +352,8 @@ describe("PasswordLogin", () => {
 
             expect(resource.form.getLoginFields()).toMatchObject({ success: false })
 
-            function stateHandler(): Post<FormState> {
-                const stack: FormState[] = []
+            function stateHandler(): Post<FormComponentState> {
+                const stack: FormComponentState[] = []
                 return (state) => {
                     stack.push(state)
 
@@ -418,11 +418,11 @@ describe("PasswordLogin", () => {
             handler.password.test()
             done()
 
-            function stateHandler(examine: { (stack: FormInputState[]): void }) {
-                const stack: FormInputState[] = []
+            function stateHandler(examine: { (stack: FormInputComponentState[]): void }) {
+                const stack: FormInputComponentState[] = []
 
                 return {
-                    handler: (state: FormInputState) => {
+                    handler: (state: FormInputComponentState) => {
                         stack.push(state)
                     },
                     test: () => {
@@ -430,7 +430,7 @@ describe("PasswordLogin", () => {
                     },
                 }
             }
-            function examineLoginIDStack(stack: FormInputState[]): void {
+            function examineLoginIDStack(stack: FormInputComponentState[]): void {
                 expect(stack).toEqual([
                     { value: "loginID-a" },
                     { value: "loginID-b" },
@@ -438,7 +438,7 @@ describe("PasswordLogin", () => {
                     { value: "loginID-c" },
                 ])
             }
-            function examinePasswordStack(stack: FormInputState[]): void {
+            function examinePasswordStack(stack: FormInputComponentState[]): void {
                 expect(stack).toEqual([
                     { value: "password-a" },
                     { value: "" },
@@ -458,7 +458,7 @@ describe("PasswordLogin", () => {
 
                 resource.form.loginID.input.input(markInputString(""))
 
-                function stateHandler(): Post<LoginIDFormFieldState> {
+                function stateHandler(): Post<LoginIDFormFieldComponentState> {
                     return (state) => {
                         expect(state).toMatchObject({
                             result: toValidationError(["empty"]),
@@ -477,7 +477,7 @@ describe("PasswordLogin", () => {
 
                 resource.form.password.input.input(markInputString(""))
 
-                function stateHandler(): Post<PasswordFormFieldState> {
+                function stateHandler(): Post<PasswordFormFieldComponentState> {
                     return (state) => {
                         expect(state).toMatchObject({
                             result: toValidationError(["empty"]),
@@ -496,7 +496,7 @@ describe("PasswordLogin", () => {
 
                 resource.form.password.input.input(markInputString("a".repeat(73)))
 
-                function stateHandler(): Post<PasswordFormFieldState> {
+                function stateHandler(): Post<PasswordFormFieldComponentState> {
                     return (state) => {
                         expect(state).toMatchObject({
                             result: toValidationError(["too-long"]),
@@ -516,7 +516,7 @@ describe("PasswordLogin", () => {
                 // "あ"(UTF8) is 3 bytes character
                 resource.form.password.input.input(markInputString("あ".repeat(24) + "a"))
 
-                function stateHandler(): Post<PasswordFormFieldState> {
+                function stateHandler(): Post<PasswordFormFieldComponentState> {
                     return (state) => {
                         expect(state).toMatchObject({
                             result: toValidationError(["too-long"]),
@@ -535,7 +535,7 @@ describe("PasswordLogin", () => {
 
                 resource.form.password.input.input(markInputString("a".repeat(72)))
 
-                function stateHandler(): Post<PasswordFormFieldState> {
+                function stateHandler(): Post<PasswordFormFieldComponentState> {
                     return (state) => {
                         expect(state).toMatchObject({
                             result: { valid: true },
@@ -555,7 +555,7 @@ describe("PasswordLogin", () => {
                 // "あ"(UTF8) is 3 bytes character
                 resource.form.password.input.input(markInputString("あ".repeat(24)))
 
-                function stateHandler(): Post<PasswordFormFieldState> {
+                function stateHandler(): Post<PasswordFormFieldComponentState> {
                     return (state) => {
                         expect(state).toMatchObject({
                             result: { valid: true },
@@ -576,8 +576,8 @@ describe("PasswordLogin", () => {
                 resource.form.password.show()
                 resource.form.password.hide()
 
-                function stateHandler(): Post<PasswordFormFieldState> {
-                    const stack: PasswordFormFieldState[] = []
+                function stateHandler(): Post<PasswordFormFieldComponentState> {
+                    const stack: PasswordFormFieldComponentState[] = []
                     return (state) => {
                         stack.push(state)
 

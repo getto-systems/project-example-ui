@@ -4,13 +4,13 @@ import {
     NextVersionComponentFactory,
     NextVersionMaterial,
     NextVersionComponent,
-    NextVersionState,
+    NextVersionComponentState,
 } from "./component"
 
 export const initNextVersionComponent: NextVersionComponentFactory = (material) =>
     new Component(material)
 
-class Component extends ApplicationBaseComponent<NextVersionState> implements NextVersionComponent {
+class Component extends ApplicationBaseComponent<NextVersionComponentState> implements NextVersionComponent {
     material: NextVersionMaterial
 
     constructor(material: NextVersionMaterial) {

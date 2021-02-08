@@ -1,12 +1,12 @@
 import { ApplicationBaseComponent } from "../../getto-example/application/impl"
 
 import {
-    FormState,
+    FormComponentState,
     FormFieldComponent,
     FormFieldHandler,
-    FormFieldState,
+    FormFieldComponentState,
     FormInputComponent,
-    FormInputState,
+    FormInputComponentState,
     FormInputMaterial,
     FormMaterial,
     FormComponent,
@@ -24,7 +24,7 @@ import {
 } from "../action/data"
 
 export class FormBaseComponent<M extends FormMaterial>
-    extends ApplicationBaseComponent<FormState>
+    extends ApplicationBaseComponent<FormComponentState>
     implements FormComponent {
     material: M
     handler: FormHandler
@@ -52,7 +52,7 @@ export class FormBaseComponent<M extends FormMaterial>
         })
     }
 
-    currentState(): FormState {
+    currentState(): FormComponentState {
         return {
             validation: this.material.validation.state(),
             history: this.material.history.state(),
@@ -91,14 +91,14 @@ export class FormBaseComponent<M extends FormMaterial>
 }
 
 export type FormFieldFactory<S, E> = Readonly<{
-    state: { (): FormFieldState<S, E> }
+    state: { (): FormFieldComponentState<S, E> }
 }>
 
 export class FormFieldBaseComponent<S, E>
-    extends ApplicationBaseComponent<FormFieldState<S, E>>
+    extends ApplicationBaseComponent<FormFieldComponentState<S, E>>
     implements FormFieldComponent<S, E> {
-    state: { (): FormFieldState<S, E> }
-    onValidate: Handler<FormFieldState<S, E>>
+    state: { (): FormFieldComponentState<S, E> }
+    onValidate: Handler<FormFieldComponentState<S, E>>
     onHistory: { (name: FormFieldName): Handler<FormHistory> }
 
     constructor(handler: FormFieldHandler, { state }: FormFieldFactory<S, E>) {
@@ -143,7 +143,7 @@ export function initFormInputComponent(
     return new Input(material, handler)
 }
 
-class Input extends ApplicationBaseComponent<FormInputState> implements FormInputComponent {
+class Input extends ApplicationBaseComponent<FormInputComponentState> implements FormInputComponent {
     material: FormInputMaterial
     onInput: Handler<FormInputEvent>
     onChange: Handler<FormChangeEvent>

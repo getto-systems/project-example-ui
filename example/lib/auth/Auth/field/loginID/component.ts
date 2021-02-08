@@ -3,7 +3,7 @@ import {
     FormFieldComponent,
     FormFieldEmptyState,
     FormFieldHandler,
-    FormFieldState,
+    FormFieldComponentState,
     FormInputComponent,
 } from "../../../../sub/getto-form/component/component"
 
@@ -26,7 +26,7 @@ export interface LoginIDFormFieldComponent
     readonly input: FormInputComponent
 }
 
-export type LoginIDFormFieldState = FormFieldState<FormFieldEmptyState, LoginIDValidationError>
+export type LoginIDFormFieldComponentState = FormFieldComponentState<FormFieldEmptyState, LoginIDValidationError>
 
 export interface LoginIDFieldComponentFactory {
     (material: LoginIDFieldMaterial): LoginIDFieldComponent

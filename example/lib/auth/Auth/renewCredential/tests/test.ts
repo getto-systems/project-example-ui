@@ -11,7 +11,7 @@ import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate
 
 import { AuthCredentialRepository } from "../../../login/renew/infra"
 
-import { RenewCredentialState } from "../component"
+import { RenewCredentialComponentState } from "../component"
 
 import { markApiCredential, markAuthAt, markTicketNonce } from "../../../common/credential/data"
 import { markScriptPath } from "../../../common/application/data"
@@ -41,8 +41,8 @@ describe("RenewCredential", () => {
 
         resource.renewCredential.renew()
 
-        function stateHandler(): Post<RenewCredentialState> {
-            const stack: RenewCredentialState[] = []
+        function stateHandler(): Post<RenewCredentialComponentState> {
+            const stack: RenewCredentialComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -98,8 +98,8 @@ describe("RenewCredential", () => {
 
         resource.renewCredential.renew()
 
-        function stateHandler(): Post<RenewCredentialState> {
-            const stack: RenewCredentialState[] = []
+        function stateHandler(): Post<RenewCredentialComponentState> {
+            const stack: RenewCredentialComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -159,8 +159,8 @@ describe("RenewCredential", () => {
 
         resource.renewCredential.renew()
 
-        function stateHandler(): Post<RenewCredentialState> {
-            const stack: RenewCredentialState[] = []
+        function stateHandler(): Post<RenewCredentialComponentState> {
+            const stack: RenewCredentialComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -214,8 +214,8 @@ describe("RenewCredential", () => {
 
         resource.renewCredential.renew()
 
-        function stateHandler(): Post<RenewCredentialState> {
-            const stack: RenewCredentialState[] = []
+        function stateHandler(): Post<RenewCredentialComponentState> {
+            const stack: RenewCredentialComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -270,8 +270,8 @@ describe("RenewCredential", () => {
 
         resource.renewCredential.renew()
 
-        function stateHandler(): Post<RenewCredentialState> {
-            const stack: RenewCredentialState[] = []
+        function stateHandler(): Post<RenewCredentialComponentState> {
+            const stack: RenewCredentialComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -315,8 +315,8 @@ describe("RenewCredential", () => {
 
         resource.renewCredential.loadError({ type: "infra-error", err: "load error" })
 
-        function stateHandler(): Post<RenewCredentialState> {
-            const stack: RenewCredentialState[] = []
+        function stateHandler(): Post<RenewCredentialComponentState> {
+            const stack: RenewCredentialComponentState[] = []
             return (state) => {
                 stack.push(state)
 

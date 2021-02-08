@@ -5,7 +5,7 @@ import { initMemorySeasonRepository } from "../../../shared/season/impl/reposito
 
 import { Clock } from "../../../../z_infra/clock/infra"
 
-import { SeasonInfoState } from "../component"
+import { SeasonInfoComponentState } from "../component"
 
 import { markSeason } from "../../../shared/season/data"
 
@@ -20,8 +20,8 @@ describe("SeasonInfo", () => {
 
         seasonInfo.load()
 
-        function stateHandler(): Post<SeasonInfoState> {
-            const stack: SeasonInfoState[] = []
+        function stateHandler(): Post<SeasonInfoComponentState> {
+            const stack: SeasonInfoComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -53,8 +53,8 @@ describe("SeasonInfo", () => {
 
         seasonInfo.load()
 
-        function stateHandler(): Post<SeasonInfoState> {
-            const stack: SeasonInfoState[] = []
+        function stateHandler(): Post<SeasonInfoComponentState> {
+            const stack: SeasonInfoComponentState[] = []
 
             return (state) => {
                 stack.push(state)

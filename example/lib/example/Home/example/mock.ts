@@ -1,10 +1,10 @@
 import { MockComponent } from "../../../sub/getto-example/application/mock"
 
-import { ExampleComponent, ExampleState } from "./component"
+import { ExampleComponent, ExampleComponentState } from "./component"
 
 import { markSeason } from "../../shared/season/data"
 
-export function initMockExampleComponent(state: ExampleState): ExampleMockComponent {
+export function initMockExampleComponent(state: ExampleComponentState): ExampleMockComponent {
     return new ExampleMockComponent(state)
 }
 
@@ -12,7 +12,7 @@ export type ExampleMockProps =
     | Readonly<{ type: "success"; year: number }>
     | Readonly<{ type: "failed"; err: string }>
 
-export function mapExampleMockProps(props: ExampleMockProps): ExampleState {
+export function mapExampleMockProps(props: ExampleMockProps): ExampleComponentState {
     switch (props.type) {
         case "success":
             return { type: "succeed-to-load", season: markSeason({ year: props.year }) }
@@ -22,7 +22,7 @@ export function mapExampleMockProps(props: ExampleMockProps): ExampleState {
     }
 }
 
-class ExampleMockComponent extends MockComponent<ExampleState> implements ExampleComponent {
+class ExampleMockComponent extends MockComponent<ExampleComponentState> implements ExampleComponent {
     load() {
         // mock では特に何もしない
     }

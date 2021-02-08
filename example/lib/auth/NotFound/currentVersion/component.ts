@@ -11,12 +11,14 @@ export type CurrentVersionMaterial = Readonly<{
     findCurrentVersion: FindCurrentVersion
 }>
 
-export interface CurrentVersionComponent extends ApplicationComponent<CurrentVersionState> {
+export interface CurrentVersionComponent extends ApplicationComponent<CurrentVersionComponentState> {
     load(): void
 }
 
-export type CurrentVersionState =
+export type CurrentVersionComponentState =
     | Readonly<{ type: "initial-current-version" }>
     | Readonly<{ type: "succeed-to-find"; version: Version }>
 
-export const initialCurrentVersionState: CurrentVersionState = { type: "initial-current-version" }
+export const initialCurrentVersionComponentState: CurrentVersionComponentState = {
+    type: "initial-current-version",
+}

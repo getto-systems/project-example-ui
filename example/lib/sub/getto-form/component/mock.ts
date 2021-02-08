@@ -3,15 +3,15 @@ import { MockComponent } from "../../getto-example/application/mock"
 import {
     FormComponent,
     FormFieldComponent,
-    FormFieldState,
+    FormFieldComponentState,
     FormInputComponent,
-    FormInputState,
-    FormState,
+    FormInputComponentState,
+    FormComponentState,
 } from "./component"
 
 import { FormHistory, FormInputString, markInputString } from "../action/data"
 
-export class FormMockComponent extends MockComponent<FormState> implements FormComponent {
+export class FormMockComponent extends MockComponent<FormComponentState> implements FormComponent {
     undo(): void {
         // mock では特に何もしない
     }
@@ -21,14 +21,14 @@ export class FormMockComponent extends MockComponent<FormState> implements FormC
 }
 
 export class FormFieldMockComponent<S, E>
-    extends MockComponent<FormFieldState<S, E>>
+    extends MockComponent<FormFieldComponentState<S, E>>
     implements FormFieldComponent<S, E> {
     validate(): void {
         // mock では特に何もしない
     }
 }
 
-export class FormInputMockComponent extends MockComponent<FormInputState> implements FormInputComponent {
+export class FormInputMockComponent extends MockComponent<FormInputComponentState> implements FormInputComponent {
     constructor() {
         super({ value: markInputString("") })
     }

@@ -4,7 +4,7 @@ import {
     RenewCredentialComponentFactory,
     RenewCredentialMaterial,
     RenewCredentialComponent,
-    RenewCredentialState,
+    RenewCredentialComponentState,
 } from "./component"
 
 import { LoadError } from "../../common/application/data"
@@ -13,7 +13,7 @@ import { emptyAuthCredential, storeAuthCredential, StoreAuthCredential } from ".
 export const initRenewCredentialComponent: RenewCredentialComponentFactory = (material) =>
     new Component(material)
 
-class Component extends ApplicationBaseComponent<RenewCredentialState> implements RenewCredentialComponent {
+class Component extends ApplicationBaseComponent<RenewCredentialComponentState> implements RenewCredentialComponent {
     material: RenewCredentialMaterial
 
     constructor(material: RenewCredentialMaterial) {
