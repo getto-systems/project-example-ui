@@ -1,8 +1,8 @@
 import { MockComponent } from "../../../sub/getto-example/application/mock"
 
-import { initBreadcrumbListComponent } from "../../../auth/Outline/breadcrumbList/mock"
-import { initMenuListComponent } from "../../../auth/Outline/menuList/mock"
-import { initContentComponent } from "../content/mock"
+import { initMockBreadcrumbListComponent } from "../../../auth/Outline/breadcrumbList/mock"
+import { initMockMenuListComponent } from "../../../auth/Outline/menuList/mock"
+import { initMockContentComponent } from "../content/mock"
 
 import { DocumentEntryPoint } from "./entryPoint"
 
@@ -13,11 +13,11 @@ import {
 import { initialMenuListState, MenuListState } from "../../../auth/Outline/menuList/component"
 import { ContentState, initialContentState } from "../content/component"
 
-export function newDocument(): DocumentMockEntryPoint {
+export function newMockDocument(): DocumentMockEntryPoint {
     const resource = {
-        menuList: initMenuListComponent(initialMenuListState),
-        breadcrumbList: initBreadcrumbListComponent(initialBreadcrumbListState),
-        content: initContentComponent(initialContentState),
+        menuList: initMockMenuListComponent(initialMenuListState),
+        breadcrumbList: initMockBreadcrumbListComponent(initialBreadcrumbListState),
+        content: initMockContentComponent(initialContentState),
     }
     return {
         document: {

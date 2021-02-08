@@ -2,7 +2,7 @@ import { MockComponent } from "../../../sub/getto-example/application/mock"
 
 import { RenewCredentialComponent, RenewCredentialState } from "./component"
 
-export function initRenewCredential(state: RenewCredentialState): RenewCredentialMockComponent {
+export function initMockRenewCredential(state: RenewCredentialState): RenewCredentialMockComponent {
     return new RenewCredentialMockComponent(state)
 }
 

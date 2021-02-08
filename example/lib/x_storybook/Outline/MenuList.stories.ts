@@ -13,7 +13,7 @@ import { copyright, siteInfo } from "../../x_preact/common/site"
 
 import { MenuList } from "../../x_preact/Outline/MenuList"
 
-import { mapMenuMockProps, MenuMockProps, initMenuListComponent } from "../../auth/Outline/menuList/mock"
+import { mapMenuMockProps, MenuMockProps, initMockMenuListComponent } from "../../auth/Outline/menuList/mock"
 
 import { initialMenuListState } from "../../auth/Outline/menuList/component"
 
@@ -28,7 +28,7 @@ export default {
 
 type MockProps = MenuMockProps
 const Template: Story<MockProps> = (args) => {
-    const menuList = initMenuListComponent(initialMenuListState)
+    const menuList = initMockMenuListComponent(initialMenuListState)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {

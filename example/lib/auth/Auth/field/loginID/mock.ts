@@ -4,7 +4,7 @@ import { LoginIDFieldComponent, LoginIDFieldState } from "./component"
 
 import { noError, hasError } from "../../../common/field/data"
 
-export function initLoginIDField(state: LoginIDFieldState): LoginIDFieldMockComponent {
+export function initMockLoginIDField(state: LoginIDFieldState): LoginIDFieldMockComponent {
     return new LoginIDFieldMockComponent(state)
 }
 

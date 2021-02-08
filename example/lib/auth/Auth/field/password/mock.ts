@@ -5,7 +5,7 @@ import { PasswordFieldComponent, PasswordFieldState } from "./component"
 import { showPassword } from "../../../common/field/password/data"
 import { markInputValue, noError, hasError } from "../../../common/field/data"
 
-export function initPasswordField(state: PasswordFieldState): PasswordFieldMockComponent {
+export function initMockPasswordField(state: PasswordFieldState): PasswordFieldMockComponent {
     return new PasswordFieldMockComponent(state)
 }
 

@@ -1,9 +1,9 @@
 import { MockComponent } from "../../../sub/getto-example/application/mock"
 
-import { initBreadcrumbListComponent } from "../../../auth/Outline/breadcrumbList/mock"
-import { initMenuListComponent } from "../../../auth/Outline/menuList/mock"
-import { initSeasonInfoComponent } from "../../Outline/seasonInfo/mock"
-import { initExampleComponent } from "../example/mock"
+import { initMockBreadcrumbListComponent } from "../../../auth/Outline/breadcrumbList/mock"
+import { initMockMenuListComponent } from "../../../auth/Outline/menuList/mock"
+import { initMockSeasonInfoComponent } from "../../Outline/seasonInfo/mock"
+import { initMockExampleComponent } from "../example/mock"
 
 import { DashboardEntryPoint } from "./entryPoint"
 
@@ -15,12 +15,12 @@ import { initialMenuListState, MenuListState } from "../../../auth/Outline/menuL
 import { initialSeasonInfoState, SeasonInfoState } from "../../Outline/seasonInfo/component"
 import { ExampleState, initialExampleState } from "../example/component"
 
-export function newDashboard(): DashboardMockEntryPoint {
+export function newMockDashboard(): DashboardMockEntryPoint {
     const resource = {
-        seasonInfo: initSeasonInfoComponent(initialSeasonInfoState),
-        menuList: initMenuListComponent(initialMenuListState),
-        breadcrumbList: initBreadcrumbListComponent(initialBreadcrumbListState),
-        example: initExampleComponent(initialExampleState),
+        seasonInfo: initMockSeasonInfoComponent(initialSeasonInfoState),
+        menuList: initMockMenuListComponent(initialMenuListState),
+        breadcrumbList: initMockBreadcrumbListComponent(initialBreadcrumbListState),
+        example: initMockExampleComponent(initialExampleState),
     }
     return {
         dashboard: {

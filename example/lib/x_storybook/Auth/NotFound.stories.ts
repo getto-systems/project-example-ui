@@ -3,7 +3,7 @@ import { html } from "htm/preact"
 
 import { NotFound } from "../../x_preact/Auth/NotFound"
 
-import { newNotFound } from "../../auth/NotFound/NotFound/mock"
+import { newMockNotFound } from "../../auth/NotFound/NotFound/mock"
 import { mapCurrentVersionMockProps } from "../../auth/NotFound/currentVersion/mock"
 
 export default {
@@ -19,7 +19,7 @@ type MockProps = {
     // no props
 }
 const Template: Story<MockProps> = (args) => {
-    const { notFound, update } = newNotFound()
+    const { notFound, update } = newMockNotFound()
     return h(Preview, { args })
 
     function Preview(_: { args: MockProps }) {

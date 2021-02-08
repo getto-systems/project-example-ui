@@ -4,7 +4,9 @@ import { CurrentVersionComponent, CurrentVersionState } from "./component"
 
 import { markVersion } from "../../permission/currentVersion/data"
 
-export function initCurrentVersionComponent(state: CurrentVersionState): CurrentVersionMockComponent {
+export function initMockCurrentVersionComponent(
+    state: CurrentVersionState
+): CurrentVersionMockComponent {
     return new CurrentVersionMockComponent(state)
 }
 

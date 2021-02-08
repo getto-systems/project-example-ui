@@ -4,7 +4,7 @@ import { ExampleComponent, ExampleState } from "./component"
 
 import { markSeason } from "../../shared/season/data"
 
-export function initExampleComponent(state: ExampleState): ExampleMockComponent {
+export function initMockExampleComponent(state: ExampleState): ExampleMockComponent {
     return new ExampleMockComponent(state)
 }
 

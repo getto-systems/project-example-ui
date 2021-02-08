@@ -1,7 +1,7 @@
 import { MockComponent } from "../../../sub/getto-example/application/mock"
 import { ContentComponent, ContentState } from "./component"
 
-export function initContentComponent(state: ContentState): ContentMockComponent {
+export function initMockContentComponent(state: ContentState): ContentMockComponent {
     return new ContentMockComponent(state)
 }
 

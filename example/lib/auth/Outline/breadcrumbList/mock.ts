@@ -5,7 +5,7 @@ import { BreadcrumbListComponent, BreadcrumbListState } from "./component"
 
 import { markMenuCategoryLabel, markMenuItem } from "../../permission/menu/data"
 
-export function initBreadcrumbListComponent(state: BreadcrumbListState): BreadcrumbListMockComponent {
+export function initMockBreadcrumbListComponent(state: BreadcrumbListState): BreadcrumbListMockComponent {
     return new BreadcrumbListMockComponent(state)
 }
 

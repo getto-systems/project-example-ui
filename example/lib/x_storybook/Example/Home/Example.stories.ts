@@ -5,7 +5,7 @@ import { Example } from "../../../x_preact/Example/Home/Example"
 import {
     mapExampleMockProps,
     ExampleMockProps,
-    initExampleComponent,
+    initMockExampleComponent,
 } from "../../../example/Home/example/mock"
 
 import { initialExampleState } from "../../../example/Home/example/component"
@@ -21,7 +21,7 @@ export default {
 
 type MockProps = ExampleMockProps
 const Template: Story<MockProps> = (args) => {
-    const example = initExampleComponent(initialExampleState)
+    const example = initMockExampleComponent(initialExampleState)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {

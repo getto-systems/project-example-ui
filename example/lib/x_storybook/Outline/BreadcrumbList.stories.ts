@@ -6,7 +6,7 @@ import { BreadcrumbList } from "../../x_preact/Outline/BreadcrumbList"
 import {
     mapBreadcrumbMockProps,
     BreadcrumbMockProps,
-    initBreadcrumbListComponent,
+    initMockBreadcrumbListComponent,
 } from "../../auth/Outline/breadcrumbList/mock"
 
 import { initialBreadcrumbListState } from "../../auth/Outline/breadcrumbList/component"
@@ -22,7 +22,7 @@ export default {
 
 type MockProps = BreadcrumbMockProps
 const Template: Story<MockProps> = (args) => {
-    const breadcrumbList = initBreadcrumbListComponent(initialBreadcrumbListState)
+    const breadcrumbList = initMockBreadcrumbListComponent(initialBreadcrumbListState)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {

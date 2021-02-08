@@ -3,7 +3,7 @@ import { html } from "htm/preact"
 
 import { Document } from "../../x_preact/Document/Document"
 
-import { newDocument } from "../../document/Document/Document/mock"
+import { newMockDocument } from "../../document/Document/Document/mock"
 import { mapContentMockProps } from "../../document/Document/content/mock"
 import { mapBreadcrumbMockProps } from "../../auth/Outline/breadcrumbList/mock"
 import { mapMenuMockProps } from "../../auth/Outline/menuList/mock"
@@ -23,7 +23,7 @@ type MockProps = Readonly<{
     breadcrumbIcon: string
 }>
 const Template: Story<MockProps> = (args) => {
-    const { document, update } = newDocument()
+    const { document, update } = newMockDocument()
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
