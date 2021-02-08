@@ -242,7 +242,7 @@ describe("PasswordLogin", () => {
             const checker = initChecker()
             resource.form.addStateHandler(checker.handler)
 
-            expect(resource.form.getLoginFields()).toMatchObject({ success: false })
+            expect(resource.form.getLoginFields()).toEqual({ success: false })
 
             checker.test()
             done()
@@ -275,7 +275,7 @@ describe("PasswordLogin", () => {
             resource.form.password.input.input(markInputString(VALID_LOGIN.password))
             resource.form.password.input.change()
 
-            expect(resource.form.getLoginFields()).toMatchObject({
+            expect(resource.form.getLoginFields()).toEqual({
                 success: true,
                 value: {
                     loginID: VALID_LOGIN.loginID,
@@ -330,7 +330,7 @@ describe("PasswordLogin", () => {
             resource.form.password.input.input(markInputString(""))
             resource.form.password.input.change()
 
-            expect(resource.form.getLoginFields()).toMatchObject({ success: false })
+            expect(resource.form.getLoginFields()).toEqual({ success: false })
 
             checker.test()
             done()
