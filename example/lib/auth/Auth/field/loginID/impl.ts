@@ -34,6 +34,8 @@ class FieldComponent
             state: () => ({ result: material.field.validate() }),
         })
         this.input = this.initInput("input", material.field)
+
+        this.addTerminateHandler(() => this.input.terminate())
     }
 }
 

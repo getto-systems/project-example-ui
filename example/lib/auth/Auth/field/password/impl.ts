@@ -25,8 +25,8 @@ export const initPasswordFormFieldComponent: PasswordFormFieldComponentFactory =
 class FieldComponent
     extends FormFieldBaseComponent<PasswordState, PasswordValidationError>
     implements PasswordFormFieldComponent {
-    readonly input: FormInputComponent
     material: PasswordFormFieldMaterial
+    readonly input: FormInputComponent
 
     constructor(material: PasswordFormFieldMaterial, handler: FormFieldHandler) {
         super(handler, {
@@ -47,8 +47,10 @@ class FieldComponent
                 }
             },
         })
-        this.input = this.initInput("input", material.field)
         this.material = material
+        this.input = this.initInput("input", material.field)
+
+        this.addTerminateHandler(() => this.input.terminate())
     }
 
     show(): void {
