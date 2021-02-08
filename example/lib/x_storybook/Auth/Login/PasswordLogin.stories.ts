@@ -3,11 +3,7 @@ import { h, VNode } from "preact"
 import { Login } from "../../../x_preact/Auth/Login/Login"
 
 import { newMockLoginAsPasswordLogin } from "../../../auth/Auth/Login/mock"
-import {
-    mapPasswordLoginMockProps,
-    PasswordLoginFormMockProps,
-    PasswordLoginMockProps,
-} from "../../../auth/Auth/passwordLogin/mock"
+import { PasswordLoginMockProps } from "../../../auth/Auth/passwordLogin/mock"
 import { loginIDFormFieldValidations } from "../../../auth/Auth/field/loginID/mock"
 import {
     passwordFormFieldCharacters,
@@ -57,21 +53,17 @@ export default {
     },
 }
 
-type MockProps = PasswordLoginMockProps & PasswordLoginFormMockProps
+type MockProps = PasswordLoginMockProps
 const Template: Story<MockProps> = (args) => {
-    const passer = initMockPropsPasser<PasswordLoginFormMockProps>()
-    const { login, update } = newMockLoginAsPasswordLogin(passer)
+    const passer = initMockPropsPasser<PasswordLoginMockProps>()
+    const login = newMockLoginAsPasswordLogin(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
             passer.update(props.args)
         })
-        updateState(props.args)
         return h(Login, { login })
-    }
-    function updateState(args: MockProps) {
-        update.passwordLogin(mapPasswordLoginMockProps(args))
     }
 }
 

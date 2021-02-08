@@ -18,7 +18,7 @@ export interface LoginIDFormFieldComponentFactory {
     (material: LoginIDFormFieldMaterial): { (handler: FormFieldHandler): LoginIDFormFieldComponent }
 }
 export type LoginIDFormFieldMaterial = Readonly<{
-    field: LoginIDFormField
+    loginID: LoginIDFormField
 }>
 
 export interface LoginIDFormFieldComponent

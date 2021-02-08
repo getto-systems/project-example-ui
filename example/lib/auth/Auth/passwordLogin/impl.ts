@@ -101,12 +101,12 @@ class FormComponent
 
         this.loginID = this.initField(
             "loginID",
-            initLoginIDFormFieldComponent({ field: material.loginID })
+            initLoginIDFormFieldComponent({ loginID: material.loginID })
         )
         this.password = this.initField(
             "password",
             initPasswordFormFieldComponent({
-                field: material.password,
+                password: material.password,
                 checker: material.checker,
                 viewer: material.viewer,
             })

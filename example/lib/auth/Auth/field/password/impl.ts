@@ -31,9 +31,9 @@ class FieldComponent
     constructor(material: PasswordFormFieldMaterial, handler: FormFieldHandler) {
         super(handler, {
             state: () => {
-                const password = material.field.input.get()
+                const password = material.password.input.get()
                 return {
-                    result: material.field.validate(),
+                    result: material.password.validate(),
                     character: material.checker(password),
                     view: view(),
                 }
@@ -48,7 +48,7 @@ class FieldComponent
             },
         })
         this.material = material
-        this.input = this.initInput("input", material.field)
+        this.input = this.initInput("input", material.password)
 
         this.terminateHook(() => this.input.terminate())
     }
