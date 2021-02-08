@@ -111,6 +111,11 @@ class FormComponent
                 viewer: material.viewer,
             })
         )
+
+        this.terminateHook(() => {
+            this.loginID.terminate()
+            this.password.terminate()
+        })
     }
 
     getLoginFields(): FormConvertResult<LoginFields> {

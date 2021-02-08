@@ -14,9 +14,6 @@ import { initAuthCredentialRepository } from "../../../login/renew/impl/reposito
 
 import { AuthCredentialRepository } from "../../../login/renew/infra"
 
-import { FormInputComponentState, FormComponentState } from "../../../../sub/getto-form/component/component"
-import { LoginIDFormFieldComponentState } from "../../field/loginID/component"
-import { PasswordFormFieldComponentState } from "../../field/password/component"
 import { PasswordLoginComponentState } from "../component"
 
 import { markScriptPath } from "../../../common/application/data"
@@ -49,7 +46,7 @@ describe("PasswordLogin", () => {
     test("submit valid login-id and password", (done) => {
         const { repository, clock, resource } = standardPasswordLoginResource()
 
-        resource.passwordLogin.addStateHandler(stateHandler())
+        resource.passwordLogin.addStateHandler(initChecker())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -59,45 +56,42 @@ describe("PasswordLogin", () => {
 
         resource.passwordLogin.login(resource.form.getLoginFields())
 
-        function stateHandler(): Post<PasswordLoginComponentState> {
-            const stack: PasswordLoginComponentState[] = []
-            return (state) => {
-                stack.push(state)
+        function initChecker() {
+            return initAsyncStateChecker(
+                (state: PasswordLoginComponentState): boolean => {
+                    switch (state.type) {
+                        case "initial-login":
+                        case "try-to-login":
+                        case "delayed-to-login":
+                            // work in progress...
+                            return false
 
-                switch (state.type) {
-                    case "initial-login":
-                    case "try-to-login":
-                    case "delayed-to-login":
-                        // work in progress...
-                        break
+                        case "try-to-load":
+                            return true
 
-                    case "try-to-load":
-                        clock.update(COMPLETED_NOW)
-                        expect(stack).toEqual([
-                            { type: "try-to-login" },
-                            {
-                                type: "try-to-load",
-                                scriptPath: markScriptPath("//secure.example.com/index.js"),
-                            },
-                        ])
-                        expectToSaveLastLogin(repository.authCredentials)
-                        setTimeout(() => {
-                            expectToSaveRenewed(repository.authCredentials)
-                            done()
-                        }, 1) // after setContinuousRenew interval and delay
-                        break
-
-                    case "failed-to-login":
-                    case "storage-error":
-                    case "load-error":
-                    case "error":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
+                        case "failed-to-login":
+                        case "storage-error":
+                        case "load-error":
+                        case "error":
+                            throw new Error(state.type)
+                    }
+                },
+                (stack) => {
+                    clock.update(COMPLETED_NOW)
+                    expect(stack).toEqual([
+                        { type: "try-to-login" },
+                        {
+                            type: "try-to-load",
+                            scriptPath: markScriptPath("//secure.example.com/index.js"),
+                        },
+                    ])
+                    expectToSaveLastLogin(repository.authCredentials)
+                    setTimeout(() => {
+                        expectToSaveRenewed(repository.authCredentials)
+                        done()
+                    }, 1) // after setContinuousRenew interval and delay
                 }
-            }
+            )
         }
     })
 
@@ -105,7 +99,7 @@ describe("PasswordLogin", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitPasswordLoginResource()
 
-        resource.passwordLogin.addStateHandler(stateHandler())
+        resource.passwordLogin.addStateHandler(initChecker())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -115,53 +109,50 @@ describe("PasswordLogin", () => {
 
         resource.passwordLogin.login(resource.form.getLoginFields())
 
-        function stateHandler(): Post<PasswordLoginComponentState> {
-            const stack: PasswordLoginComponentState[] = []
-            return (state) => {
-                stack.push(state)
+        function initChecker() {
+            return initAsyncStateChecker(
+                (state: PasswordLoginComponentState): boolean => {
+                    switch (state.type) {
+                        case "initial-login":
+                        case "try-to-login":
+                        case "delayed-to-login":
+                            // work in progress...
+                            return false
 
-                switch (state.type) {
-                    case "initial-login":
-                    case "try-to-login":
-                    case "delayed-to-login":
-                        // work in progress...
-                        break
+                        case "try-to-load":
+                            return true
 
-                    case "try-to-load":
-                        clock.update(COMPLETED_NOW)
-                        expect(stack).toEqual([
-                            { type: "try-to-login" },
-                            { type: "delayed-to-login" }, // delayed event
-                            {
-                                type: "try-to-load",
-                                scriptPath: markScriptPath("//secure.example.com/index.js"),
-                            },
-                        ])
-                        expectToSaveLastLogin(repository.authCredentials)
-                        setTimeout(() => {
-                            expectToSaveRenewed(repository.authCredentials)
-                            done()
-                        }, 1) // after setContinuousRenew interval and delay
-                        break
-
-                    case "failed-to-login":
-                    case "storage-error":
-                    case "load-error":
-                    case "error":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
+                        case "failed-to-login":
+                        case "storage-error":
+                        case "load-error":
+                        case "error":
+                            throw new Error(state.type)
+                    }
+                },
+                (stack) => {
+                    clock.update(COMPLETED_NOW)
+                    expect(stack).toEqual([
+                        { type: "try-to-login" },
+                        { type: "delayed-to-login" }, // delayed event
+                        {
+                            type: "try-to-load",
+                            scriptPath: markScriptPath("//secure.example.com/index.js"),
+                        },
+                    ])
+                    expectToSaveLastLogin(repository.authCredentials)
+                    setTimeout(() => {
+                        expectToSaveRenewed(repository.authCredentials)
+                        done()
+                    }, 1) // after setContinuousRenew interval and delay
                 }
-            }
+            )
         }
     })
 
     test("submit without fields", (done) => {
         const { repository, resource } = standardPasswordLoginResource()
 
-        resource.passwordLogin.addStateHandler(stateHandler())
+        resource.passwordLogin.addStateHandler(initChecker())
 
         // try to login without fields
         // resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
@@ -172,83 +163,75 @@ describe("PasswordLogin", () => {
 
         resource.passwordLogin.login(resource.form.getLoginFields())
 
-        function stateHandler(): Post<PasswordLoginComponentState> {
-            const stack: PasswordLoginComponentState[] = []
-            return (state) => {
-                stack.push(state)
+        function initChecker() {
+            return initAsyncStateChecker(
+                (state: PasswordLoginComponentState): boolean => {
+                    switch (state.type) {
+                        case "initial-login":
+                        case "try-to-login":
+                        case "delayed-to-login":
+                            // work in progress...
+                            return false
 
-                switch (state.type) {
-                    case "initial-login":
-                    case "try-to-login":
-                    case "delayed-to-login":
-                        // work in progress...
-                        break
+                        case "try-to-load":
+                            throw new Error(state.type)
 
-                    case "try-to-load":
-                        done(new Error(state.type))
-                        break
+                        case "failed-to-login":
+                            return true
 
-                    case "failed-to-login":
-                        expect(stack).toEqual([
-                            { type: "failed-to-login", err: { type: "validation-error" } },
-                        ])
-                        expectToEmptyLastLogin(repository.authCredentials)
-                        done()
-                        break
-
-                    case "storage-error":
-                    case "load-error":
-                    case "error":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
+                        case "storage-error":
+                        case "load-error":
+                        case "error":
+                            throw new Error(state.type)
+                    }
+                },
+                (stack) => {
+                    expect(stack).toEqual([
+                        { type: "failed-to-login", err: { type: "validation-error" } },
+                    ])
+                    expectToEmptyLastLogin(repository.authCredentials)
+                    done()
                 }
-            }
+            )
         }
     })
 
     test("load error", (done) => {
         const { resource } = standardPasswordLoginResource()
 
-        resource.passwordLogin.addStateHandler(stateHandler())
+        resource.passwordLogin.addStateHandler(initChecker())
 
         resource.passwordLogin.loadError({ type: "infra-error", err: "load error" })
 
-        function stateHandler(): Post<PasswordLoginComponentState> {
-            const stack: PasswordLoginComponentState[] = []
-            return (state) => {
-                stack.push(state)
+        function initChecker() {
+            return initAsyncStateChecker(
+                (state: PasswordLoginComponentState): boolean => {
+                    switch (state.type) {
+                        case "initial-login":
+                        case "try-to-login":
+                        case "delayed-to-login":
+                            // work in progress...
+                            return false
 
-                switch (state.type) {
-                    case "initial-login":
-                    case "try-to-login":
-                    case "delayed-to-login":
-                        // work in progress...
-                        break
+                        case "try-to-load":
+                            throw new Error(state.type)
 
-                    case "try-to-load":
-                        done(new Error(state.type))
-                        break
+                        case "failed-to-login":
+                        case "storage-error":
+                        case "error":
+                            throw new Error(state.type)
 
-                    case "failed-to-login":
-                    case "storage-error":
-                    case "error":
-                        done(new Error(state.type))
-                        break
-
-                    case "load-error":
-                        expect(stack).toEqual([
-                            { type: "load-error", err: { type: "infra-error", err: "load error" } },
-                        ])
-                        done()
-                        break
-
-                    default:
-                        assertNever(state)
+                        case "load-error":
+                            return true
+                    }
+                },
+                (stack) => {
+                    expect(stack).toEqual([
+                        { type: "load-error", err: { type: "infra-error", err: "load error" } },
+                    ])
+                    done()
                 }
-            }
+            )
         }
     })
 
@@ -256,36 +239,35 @@ describe("PasswordLogin", () => {
         test("initial without input field", (done) => {
             const { resource } = standardPasswordLoginResource()
 
-            resource.form.addStateHandler(stateHandler())
+            const checker = initChecker()
+            resource.form.addStateHandler(checker.handler)
 
-            expect(resource.form.getLoginFields()).toMatchObject({ success: false })
+            expect(resource.form.getLoginFields()).toEqual({ success: false })
 
-            function stateHandler(): Post<FormComponentState> {
-                const stack: FormComponentState[] = []
-                return (state) => {
-                    stack.push(state)
+            checker.test()
+            done()
 
-                    if (stack.length === 2) {
-                        expect(stack).toEqual([
-                            {
-                                validation: "invalid",
-                                history: { undo: false, redo: false },
-                            },
-                            {
-                                validation: "invalid",
-                                history: { undo: false, redo: false },
-                            },
-                        ])
-                        done()
-                    }
-                }
+            function initChecker() {
+                return initSyncStateChecker((stack) => {
+                    expect(stack).toEqual([
+                        {
+                            validation: "invalid",
+                            history: { undo: false, redo: false },
+                        },
+                        {
+                            validation: "invalid",
+                            history: { undo: false, redo: false },
+                        },
+                    ])
+                })
             }
         })
 
         test("valid with input valid field", (done) => {
             const { resource } = standardPasswordLoginResource()
 
-            resource.form.addStateHandler(stateHandler())
+            const checker = initChecker()
+            resource.form.addStateHandler(checker.handler)
 
             resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
             resource.form.loginID.input.change()
@@ -293,7 +275,7 @@ describe("PasswordLogin", () => {
             resource.form.password.input.input(markInputString(VALID_LOGIN.password))
             resource.form.password.input.change()
 
-            expect(resource.form.getLoginFields()).toMatchObject({
+            expect(resource.form.getLoginFields()).toEqual({
                 success: true,
                 value: {
                     loginID: VALID_LOGIN.loginID,
@@ -301,48 +283,46 @@ describe("PasswordLogin", () => {
                 },
             })
 
-            function stateHandler(): Post<FormComponentState> {
-                const stack: FormComponentState[] = []
-                return (state) => {
-                    stack.push(state)
+            checker.test()
+            done()
 
-                    if (stack.length === 6) {
-                        expect(stack).toEqual([
-                            {
-                                validation: "initial",
-                                history: { undo: false, redo: false },
-                            },
-                            {
-                                validation: "initial",
-                                history: { undo: false, redo: false },
-                            },
-                            {
-                                validation: "valid",
-                                history: { undo: false, redo: false },
-                            },
-                            {
-                                validation: "valid",
-                                history: { undo: true, redo: false },
-                            },
-                            {
-                                validation: "valid",
-                                history: { undo: true, redo: false },
-                            },
-                            {
-                                validation: "valid",
-                                history: { undo: true, redo: false },
-                            },
-                        ])
-                        done()
-                    }
-                }
+            function initChecker() {
+                return initSyncStateChecker((stack) => {
+                    expect(stack).toEqual([
+                        {
+                            validation: "initial",
+                            history: { undo: false, redo: false },
+                        },
+                        {
+                            validation: "initial",
+                            history: { undo: false, redo: false },
+                        },
+                        {
+                            validation: "valid",
+                            history: { undo: false, redo: false },
+                        },
+                        {
+                            validation: "valid",
+                            history: { undo: true, redo: false },
+                        },
+                        {
+                            validation: "valid",
+                            history: { undo: true, redo: false },
+                        },
+                        {
+                            validation: "valid",
+                            history: { undo: true, redo: false },
+                        },
+                    ])
+                })
             }
         })
 
         test("invalid with input invalid field", (done) => {
             const { resource } = standardPasswordLoginResource()
 
-            resource.form.addStateHandler(stateHandler())
+            const checker = initChecker()
+            resource.form.addStateHandler(checker.handler)
 
             resource.form.loginID.input.input(markInputString(""))
             resource.form.loginID.input.change()
@@ -350,47 +330,41 @@ describe("PasswordLogin", () => {
             resource.form.password.input.input(markInputString(""))
             resource.form.password.input.change()
 
-            expect(resource.form.getLoginFields()).toMatchObject({ success: false })
+            expect(resource.form.getLoginFields()).toEqual({ success: false })
 
-            function stateHandler(): Post<FormComponentState> {
-                const stack: FormComponentState[] = []
-                return (state) => {
-                    stack.push(state)
+            checker.test()
+            done()
 
-                    if (stack.length === 4) {
-                        expect(stack).toEqual([
-                            {
-                                validation: "invalid",
-                                history: { undo: false, redo: false },
-                            },
-                            {
-                                validation: "invalid",
-                                history: { undo: false, redo: false },
-                            },
-                            {
-                                validation: "invalid",
-                                history: { undo: false, redo: false },
-                            },
-                            {
-                                validation: "invalid",
-                                history: { undo: false, redo: false },
-                            },
-                        ])
-                        done()
-                    }
-                }
+            function initChecker() {
+                return initSyncStateChecker((stack) => {
+                    expect(stack).toEqual([
+                        {
+                            validation: "invalid",
+                            history: { undo: false, redo: false },
+                        },
+                        {
+                            validation: "invalid",
+                            history: { undo: false, redo: false },
+                        },
+                        {
+                            validation: "invalid",
+                            history: { undo: false, redo: false },
+                        },
+                        {
+                            validation: "invalid",
+                            history: { undo: false, redo: false },
+                        },
+                    ])
+                })
             }
         })
 
         test("undo / redo", (done) => {
             const { resource } = standardPasswordLoginResource()
 
-            const handler = {
-                loginID: stateHandler(examineLoginIDStack),
-                password: stateHandler(examinePasswordStack),
-            }
-            resource.form.loginID.input.addStateHandler(handler.loginID.handler)
-            resource.form.password.input.addStateHandler(handler.password.handler)
+            const checker = initChecker()
+            resource.form.loginID.input.addStateHandler(checker.loginID.handler)
+            resource.form.password.input.addStateHandler(checker.password.handler)
 
             resource.form.loginID.input.input(markInputString("loginID-a"))
             resource.form.loginID.input.change()
@@ -414,37 +388,68 @@ describe("PasswordLogin", () => {
 
             resource.form.redo()
 
-            handler.loginID.test()
-            handler.password.test()
+            checker.loginID.test()
+            checker.password.test()
             done()
 
-            function stateHandler(examine: { (stack: FormInputComponentState[]): void }) {
-                const stack: FormInputComponentState[] = []
-
+            function initChecker() {
                 return {
-                    handler: (state: FormInputComponentState) => {
-                        stack.push(state)
-                    },
-                    test: () => {
-                        examine(stack)
-                    },
+                    loginID: initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([
+                            { value: "loginID-a" },
+                            { value: "loginID-b" },
+                            { value: "loginID-a" },
+                            { value: "loginID-c" },
+                        ])
+                    }),
+                    password: initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([
+                            { value: "password-a" },
+                            { value: "" },
+                            { value: "password-a" },
+                            { value: "password-b" },
+                        ])
+                    }),
                 }
             }
-            function examineLoginIDStack(stack: FormInputComponentState[]): void {
-                expect(stack).toEqual([
-                    { value: "loginID-a" },
-                    { value: "loginID-b" },
-                    { value: "loginID-a" },
-                    { value: "loginID-c" },
-                ])
+        })
+
+        test("removeStateHandler", (done) => {
+            const { resource } = standardPasswordLoginResource()
+
+            const checker = initChecker()
+            resource.form.loginID.input.addStateHandler(checker.handler)
+            resource.form.loginID.input.removeStateHandler(checker.handler)
+
+            resource.form.loginID.input.input(markInputString("loginID-a"))
+
+            checker.test()
+            done()
+
+            function initChecker() {
+                return initSyncStateChecker((stack) => {
+                    expect(stack).toEqual([])
+                })
             }
-            function examinePasswordStack(stack: FormInputComponentState[]): void {
-                expect(stack).toEqual([
-                    { value: "password-a" },
-                    { value: "" },
-                    { value: "password-a" },
-                    { value: "password-b" },
-                ])
+        })
+
+        test("terminate", (done) => {
+            const { resource } = standardPasswordLoginResource()
+
+            const checker = initChecker()
+            resource.form.loginID.input.addStateHandler(checker.handler)
+
+            resource.form.terminate()
+
+            resource.form.loginID.input.input(markInputString("loginID-a"))
+
+            checker.test()
+            done()
+
+            function initChecker() {
+                return initSyncStateChecker((stack) => {
+                    expect(stack).toEqual([])
+                })
             }
         })
     })
@@ -454,17 +459,18 @@ describe("PasswordLogin", () => {
             test("invalid with empty string", (done) => {
                 const { resource } = standardPasswordLoginResource()
 
-                resource.form.loginID.addStateHandler(stateHandler())
+                const checker = initChecker()
+                resource.form.loginID.addStateHandler(checker.handler)
 
                 resource.form.loginID.input.input(markInputString(""))
 
-                function stateHandler(): Post<LoginIDFormFieldComponentState> {
-                    return (state) => {
-                        expect(state).toMatchObject({
-                            result: toValidationError(["empty"]),
-                        })
-                        done()
-                    }
+                checker.test()
+                done()
+
+                function initChecker() {
+                    return initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([{ result: toValidationError(["empty"]) }])
+                    })
                 }
             })
         })
@@ -473,135 +479,158 @@ describe("PasswordLogin", () => {
             test("invalid with empty string", (done) => {
                 const { resource } = standardPasswordLoginResource()
 
-                resource.form.password.addStateHandler(stateHandler())
+                const checker = initChecker()
+                resource.form.password.addStateHandler(checker.handler)
 
                 resource.form.password.input.input(markInputString(""))
 
-                function stateHandler(): Post<PasswordFormFieldComponentState> {
-                    return (state) => {
-                        expect(state).toMatchObject({
-                            result: toValidationError(["empty"]),
-                            character: { complex: false },
-                            view: { show: false },
-                        })
-                        done()
-                    }
+                checker.test()
+                done()
+
+                function initChecker() {
+                    return initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([
+                            {
+                                result: toValidationError(["empty"]),
+                                character: { complex: false },
+                                view: { show: false },
+                            },
+                        ])
+                    })
                 }
             })
 
             test("invalid with too long string", (done) => {
                 const { resource } = standardPasswordLoginResource()
 
-                resource.form.password.addStateHandler(stateHandler())
+                const checker = initChecker()
+                resource.form.password.addStateHandler(checker.handler)
 
                 resource.form.password.input.input(markInputString("a".repeat(73)))
 
-                function stateHandler(): Post<PasswordFormFieldComponentState> {
-                    return (state) => {
-                        expect(state).toMatchObject({
-                            result: toValidationError(["too-long"]),
-                            character: { complex: false },
-                            view: { show: false },
-                        })
-                        done()
-                    }
+                checker.test()
+                done()
+
+                function initChecker() {
+                    return initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([
+                            {
+                                result: toValidationError(["too-long"]),
+                                character: { complex: false },
+                                view: { show: false },
+                            },
+                        ])
+                    })
                 }
             })
 
             test("invalid with too long string including multi-byte character", (done) => {
                 const { resource } = standardPasswordLoginResource()
 
-                resource.form.password.addStateHandler(stateHandler())
+                const checker = initChecker()
+                resource.form.password.addStateHandler(checker.handler)
 
                 // "あ"(UTF8) is 3 bytes character
                 resource.form.password.input.input(markInputString("あ".repeat(24) + "a"))
 
-                function stateHandler(): Post<PasswordFormFieldComponentState> {
-                    return (state) => {
-                        expect(state).toMatchObject({
-                            result: toValidationError(["too-long"]),
-                            character: { complex: true },
-                            view: { show: false },
-                        })
-                        done()
-                    }
+                checker.test()
+                done()
+
+                function initChecker() {
+                    return initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([
+                            {
+                                result: toValidationError(["too-long"]),
+                                character: { complex: true },
+                                view: { show: false },
+                            },
+                        ])
+                    })
                 }
             })
 
             test("valid with just 72 byte string", (done) => {
                 const { resource } = standardPasswordLoginResource()
 
-                resource.form.password.addStateHandler(stateHandler())
+                const checker = initChecker()
+                resource.form.password.addStateHandler(checker.handler)
 
                 resource.form.password.input.input(markInputString("a".repeat(72)))
 
-                function stateHandler(): Post<PasswordFormFieldComponentState> {
-                    return (state) => {
-                        expect(state).toMatchObject({
-                            result: { valid: true },
-                            character: { complex: false },
-                            view: { show: false },
-                        })
-                        done()
-                    }
+                checker.test()
+                done()
+
+                function initChecker() {
+                    return initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([
+                            {
+                                result: { valid: true },
+                                character: { complex: false },
+                                view: { show: false },
+                            },
+                        ])
+                    })
                 }
             })
 
             test("valid with just 72 byte string including multi-byte character", (done) => {
                 const { resource } = standardPasswordLoginResource()
 
-                resource.form.password.addStateHandler(stateHandler())
+                const checker = initChecker()
+                resource.form.password.addStateHandler(checker.handler)
 
                 // "あ"(UTF8) is 3 bytes character
                 resource.form.password.input.input(markInputString("あ".repeat(24)))
 
-                function stateHandler(): Post<PasswordFormFieldComponentState> {
-                    return (state) => {
-                        expect(state).toMatchObject({
-                            result: { valid: true },
-                            character: { complex: true },
-                            view: { show: false },
-                        })
-                        done()
-                    }
+                checker.test()
+                done()
+
+                function initChecker() {
+                    return initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([
+                            {
+                                result: { valid: true },
+                                character: { complex: true },
+                                view: { show: false },
+                            },
+                        ])
+                    })
                 }
             })
 
             test("show/hide password", (done) => {
                 const { resource } = standardPasswordLoginResource()
 
-                resource.form.password.addStateHandler(stateHandler())
+                const checker = initChecker()
+                resource.form.password.addStateHandler(checker.handler)
 
                 resource.form.password.input.input(markInputString("password"))
                 resource.form.password.show()
                 resource.form.password.hide()
 
-                function stateHandler(): Post<PasswordFormFieldComponentState> {
-                    const stack: PasswordFormFieldComponentState[] = []
-                    return (state) => {
-                        stack.push(state)
+                checker.test()
+                done()
 
-                        if (stack.length === 3) {
-                            expect(stack).toEqual([
-                                {
-                                    result: { valid: true },
-                                    character: { complex: false },
-                                    view: { show: false },
-                                },
-                                {
-                                    result: { valid: true },
-                                    character: { complex: false },
-                                    view: { show: true, password: "password" },
-                                },
-                                {
-                                    result: { valid: true },
-                                    character: { complex: false },
-                                    view: { show: false },
-                                },
-                            ])
-                            done()
-                        }
-                    }
+                function initChecker() {
+                    return initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([
+                            {
+                                result: { valid: true },
+                                character: { complex: false },
+                                view: { show: false },
+                            },
+                            {
+                                result: { valid: true },
+                                character: { complex: false },
+                                view: { show: true, password: "password" },
+                            },
+                            {
+                                result: { valid: true },
+                                character: { complex: false },
+                                view: { show: false },
+                            },
+                        ])
+                    })
                 }
             })
         })
@@ -742,10 +771,27 @@ function expectToEmptyLastLogin(authCredentials: AuthCredentialRepository) {
     })
 }
 
-interface Post<T> {
-    (state: T): void
+function initAsyncStateChecker<S>(isFinish: { (state: S): boolean }, examine: { (stack: S[]): void }) {
+    const stack: S[] = []
+
+    return (state: S) => {
+        stack.push(state)
+
+        if (isFinish(state)) {
+            examine(stack)
+        }
+    }
 }
 
-function assertNever(_: never): never {
-    throw new Error("NEVER")
+function initSyncStateChecker<S>(examine: { (stack: S[]): void }) {
+    const stack: S[] = []
+
+    return {
+        handler: (state: S) => {
+            stack.push(state)
+        },
+        test: () => {
+            examine(stack)
+        },
+    }
 }
