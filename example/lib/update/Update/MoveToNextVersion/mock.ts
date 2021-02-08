@@ -1,13 +1,13 @@
 import { MockComponent } from "../../../sub/getto-example/application/mock"
 
-import { initNextVersionComponent } from "../nextVersion/mock"
+import { initMockNextVersionComponent } from "../nextVersion/mock"
 
 import { MoveToNextVersionEntryPoint } from "./entryPoint"
 import { initialNextVersionState, NextVersionState } from "../nextVersion/component"
 
-export function newMoveToNextVersion(): MoveToNextVersionMockEntryPoint {
+export function newMockMoveToNextVersion(): MoveToNextVersionMockEntryPoint {
     const resource = {
-        nextVersion: initNextVersionComponent(initialNextVersionState),
+        nextVersion: initMockNextVersionComponent(initialNextVersionState),
     }
     return {
         moveToNextVersion: {

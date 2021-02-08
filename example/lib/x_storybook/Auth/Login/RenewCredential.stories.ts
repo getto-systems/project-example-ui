@@ -2,7 +2,7 @@ import { h, VNode } from "preact"
 
 import { Login } from "../../../x_preact/Auth/Login/Login"
 
-import { newLoginAsRenewCredential } from "../../../auth/Auth/Login/mock"
+import { newMockLoginAsRenewCredential } from "../../../auth/Auth/Login/mock"
 import {
     mapRenewCredentialMockProps,
     RenewCredentialMockProps,
@@ -19,7 +19,7 @@ export default {
 
 type MockProps = RenewCredentialMockProps
 const Template: Story<MockProps> = (args) => {
-    const { login, update } = newLoginAsRenewCredential()
+    const { login, update } = newMockLoginAsRenewCredential()
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }): VNode {

@@ -5,10 +5,10 @@ import { Content } from "../../x_preact/Document/Content"
 import {
     mapContentMockProps,
     ContentMockProps,
-    initContentComponent,
+    initMockContentComponent,
 } from "../../document/Document/content/mock"
 import {
-    initBreadcrumbListComponent,
+    initMockBreadcrumbListComponent,
     mapBreadcrumbMockProps,
 } from "../../auth/Outline/breadcrumbList/mock"
 
@@ -25,8 +25,8 @@ export default {
 
 type MockProps = ContentMockProps
 const Template: Story<MockProps> = (args) => {
-    const content = initContentComponent(initialContentState)
-    const breadcrumbList = initBreadcrumbListComponent(
+    const content = initMockContentComponent(initialContentState)
+    const breadcrumbList = initMockBreadcrumbListComponent(
         mapBreadcrumbMockProps({ type: "success", label: "ホーム", icon: "home" })
     )
     return h(Preview, { args })

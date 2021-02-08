@@ -2,7 +2,7 @@ import { h, VNode } from "preact"
 
 import { Login } from "../../../x_preact/Auth/Login/Login"
 
-import { newLoginAsError } from "../../../auth/Auth/Login/mock"
+import { newMockLoginAsError } from "../../../auth/Auth/Login/mock"
 
 export default {
     title: "Auth/Login/Error",
@@ -12,7 +12,7 @@ type MockProps = Readonly<{
     err: string
 }>
 const Template: Story<MockProps> = (args) => {
-    const { login, update } = newLoginAsError()
+    const { login, update } = newMockLoginAsError()
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }): VNode {

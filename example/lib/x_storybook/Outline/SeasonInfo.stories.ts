@@ -13,11 +13,11 @@ import {
 import { MenuList } from "../../x_preact/Outline/MenuList"
 import { SeasonInfo } from "../../x_preact/Outline/SeasonInfo"
 
-import { initMenuListComponent } from "../../auth/Outline/menuList/mock"
+import { initMockMenuListComponent } from "../../auth/Outline/menuList/mock"
 import {
     mapSeasonMockProps,
     SeasonMockProps,
-    initSeasonInfoComponent,
+    initMockSeasonInfoComponent,
 } from "../../example/Outline/seasonInfo/mock"
 
 import { initialMenuListState } from "../../auth/Outline/menuList/component"
@@ -34,8 +34,8 @@ export default {
 
 type MockProps = SeasonMockProps
 const Template: Story<MockProps> = (args) => {
-    const menuList = initMenuListComponent(initialMenuListState)
-    const seasonInfo = initSeasonInfoComponent(initialSeasonInfoState)
+    const menuList = initMockMenuListComponent(initialMenuListState)
+    const seasonInfo = initMockSeasonInfoComponent(initialSeasonInfoState)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {

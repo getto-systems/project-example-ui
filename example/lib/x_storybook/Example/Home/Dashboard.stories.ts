@@ -3,7 +3,7 @@ import { html } from "htm/preact"
 
 import { Dashboard } from "../../../x_preact/Example/Home/Dashboard"
 
-import { newDashboard } from "../../../example/Home/Dashboard/mock"
+import { newMockDashboard } from "../../../example/Home/Dashboard/mock"
 import { mapExampleMockProps } from "../../../example/Home/example/mock"
 import { mapBreadcrumbMockProps } from "../../../auth/Outline/breadcrumbList/mock"
 import { mapMenuMockProps } from "../../../auth/Outline/menuList/mock"
@@ -25,7 +25,7 @@ type MockProps = Readonly<{
     breadcrumbIcon: string
 }>
 const Template: Story<MockProps> = (args) => {
-    const { dashboard, update } = newDashboard()
+    const { dashboard, update } = newMockDashboard()
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {

@@ -1,6 +1,6 @@
 import { h, VNode } from "preact"
 
-import { newMoveToNextVersion } from "../../update/Update/MoveToNextVersion/mock"
+import { newMockMoveToNextVersion } from "../../update/Update/MoveToNextVersion/mock"
 import { mapNextVersionMockProps, NextVersionMockProps } from "../../update/Update/nextVersion/mock"
 
 import { MoveToLatestVersion } from "../../x_preact/Update/MoveToLatestVersion/MoveToLatestVersion"
@@ -16,7 +16,7 @@ export default {
 
 type MockProps = NextVersionMockProps
 const Template: Story<MockProps> = (args) => {
-    const { moveToNextVersion, update } = newMoveToNextVersion()
+    const { moveToNextVersion, update } = newMockMoveToNextVersion()
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {

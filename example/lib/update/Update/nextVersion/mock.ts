@@ -2,7 +2,7 @@ import { MockComponent } from "../../../sub/getto-example/application/mock"
 
 import { NextVersionComponent, NextVersionState } from "./component"
 
-export function initNextVersionComponent(state: NextVersionState): NextVersionMockComponent {
+export function initMockNextVersionComponent(state: NextVersionState): NextVersionMockComponent {
     return new NextVersionMockComponent(state)
 }
 

@@ -1,14 +1,14 @@
 import { MockComponent } from "../../../sub/getto-example/application/mock"
 
-import { initCurrentVersionComponent } from "../currentVersion/mock"
+import { initMockCurrentVersionComponent } from "../currentVersion/mock"
 
 import { NotFoundEntryPoint } from "./entryPoint"
 
 import { CurrentVersionState, initialCurrentVersionState } from "../currentVersion/component"
 
-export function newNotFound(): NotFoundMockEntryPoint {
+export function newMockNotFound(): NotFoundMockEntryPoint {
     const resource = {
-        currentVersion: initCurrentVersionComponent(initialCurrentVersionState),
+        currentVersion: initMockCurrentVersionComponent(initialCurrentVersionState),
     }
     return {
         notFound: {

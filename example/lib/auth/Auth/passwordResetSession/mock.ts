@@ -6,7 +6,7 @@ import { LoginLink } from "../link"
 
 import { PasswordResetSessionComponent, PasswordResetSessionState } from "./component"
 
-export function initPasswordResetSession(
+export function initMockPasswordResetSession(
     state: PasswordResetSessionState
 ): PasswordResetSessionMockComponent {
     return new PasswordResetSessionMockComponent(state)

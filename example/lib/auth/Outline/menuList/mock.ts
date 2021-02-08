@@ -5,7 +5,7 @@ import { MenuListComponent, MenuListState } from "./component"
 
 import { markMenuCategoryLabel, markMenuItem, Menu } from "../../permission/menu/data"
 
-export function initMenuListComponent(state: MenuListState): MenuListMockComponent {
+export function initMockMenuListComponent(state: MenuListState): MenuListMockComponent {
     return new MenuListMockComponent(state)
 }
 

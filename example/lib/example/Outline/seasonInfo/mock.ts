@@ -4,7 +4,7 @@ import { SeasonInfoComponent, SeasonInfoState } from "./component"
 
 import { markSeason } from "../../shared/season/data"
 
-export function initSeasonInfoComponent(state: SeasonInfoState): SeasonInfoMockComponent {
+export function initMockSeasonInfoComponent(state: SeasonInfoState): SeasonInfoMockComponent {
     return new SeasonInfoMockComponent(state)
 }
 

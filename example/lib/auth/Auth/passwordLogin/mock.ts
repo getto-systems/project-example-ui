@@ -19,8 +19,7 @@ import { LoginFields } from "../../login/passwordLogin/data"
 import { LoginIDValidationError } from "../../common/field/loginID/data"
 import { PasswordValidationError } from "../../common/field/password/data"
 
-// TODO initMockPasswordLogin にする
-export function initPasswordLogin(state: PasswordLoginState): PasswordLoginMockComponent {
+export function initMockPasswordLogin(state: PasswordLoginState): PasswordLoginMockComponent {
     return new PasswordLoginMockComponent(state)
 }
 
