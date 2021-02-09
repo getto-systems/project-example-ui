@@ -6,20 +6,22 @@ import {
     initMockPasswordLogin,
     PasswordLoginMockPasser,
 } from "../passwordLogin/mock"
-import { initMockPasswordResetSession } from "../passwordResetSession/mock"
-import { initMockPasswordReset, initMockPasswordResetForm } from "../passwordReset/mock"
-import { initMockLoginIDField } from "../field/loginID/mock"
+import {
+    initMockPasswordResetSession,
+    initMockPasswordResetSessionForm,
+    PasswordResetSessionMockPasser,
+} from "../passwordResetSession/mock"
+import {
+    initMockPasswordReset,
+    initMockPasswordResetForm,
+    PasswordResetMockPasser,
+} from "../passwordReset/mock"
 
 import { LoginEntryPoint, LoginView, LoginState } from "./entryPoint"
 import {
     initialRenewCredentialComponentState,
     RenewCredentialComponentState,
 } from "../renewCredential/component"
-import { initialLoginIDFieldState, LoginIDFieldState } from "../field/loginID/component"
-import {
-    initialPasswordResetSessionComponentState,
-    PasswordResetSessionComponentState,
-} from "../passwordResetSession/component"
 
 export function newMockLoginAsRenewCredential(): {
     login: LoginEntryPoint
@@ -57,39 +59,22 @@ export function newMockLoginAsPasswordLogin(passer: PasswordLoginMockPasser): Lo
     }
 }
 
-export function newMockLoginAsPasswordResetSession(): {
-    login: LoginEntryPoint
-    update: {
-        passwordResetSession: Post<PasswordResetSessionComponentState>
-        loginIDField: Post<LoginIDFieldState>
-    }
-} {
-    const mock = {
-        passwordResetSession: new MockResource(
-            initialPasswordResetSessionComponentState,
-            initMockPasswordResetSession
-        ),
-        loginIDField: new MockResource(initialLoginIDFieldState, initMockLoginIDField),
-    }
+export function newMockLoginAsPasswordResetSession(
+    passer: PasswordResetSessionMockPasser
+): LoginEntryPoint {
     return {
-        login: {
-            view: new View({
-                type: "password-reset-session",
-                resource: {
-                    passwordResetSession: mock.passwordResetSession.init(),
-                    loginIDField: mock.loginIDField.init(),
-                },
-            }),
-            terminate,
-        },
-        update: {
-            passwordResetSession: mock.passwordResetSession.update(),
-            loginIDField: mock.loginIDField.update(),
-        },
+        view: new View({
+            type: "password-reset-session",
+            resource: {
+                passwordResetSession: initMockPasswordResetSession(passer),
+                form: initMockPasswordResetSessionForm(passer),
+            },
+        }),
+        terminate,
     }
 }
 
-export function newMockLoginAsPasswordReset(passer: PasswordLoginMockPasser): LoginEntryPoint {
+export function newMockLoginAsPasswordReset(passer: PasswordResetMockPasser): LoginEntryPoint {
     return {
         view: new View({
             type: "password-reset",

@@ -1,7 +1,6 @@
 import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "./event"
 
 import { SessionID, ResetToken, StartSessionFields, ResetFields } from "./data"
-import { Content } from "../../common/field/data"
 import { FormConvertResult } from "../../../sub/getto-form/action/data"
 
 export type PasswordResetSessionAction = Readonly<{
@@ -13,13 +12,10 @@ export type PasswordResetAction = Readonly<{
 }>
 
 export interface StartSessionPod {
-    (collector: StartSessionCollector): StartSession
+    (): StartSession
 }
 export interface StartSession {
-    (post: Post<StartSessionEvent>): void
-}
-export interface StartSessionCollector {
-    getFields(): Promise<Content<StartSessionFields>>
+    (fields: FormConvertResult<StartSessionFields>, post: Post<StartSessionEvent>): void
 }
 
 export interface CheckStatusPod {

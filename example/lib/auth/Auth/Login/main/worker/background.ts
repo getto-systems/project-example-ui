@@ -55,8 +55,8 @@ class LoginHandler {
         this.post = post
     }
 
-    handleMessage({ handlerID, message: { fields: content } }: ProxyMessage<LoginProxyMessage>): void {
-        this.login()(content, (event) => {
+    handleMessage({ handlerID, message: { fields } }: ProxyMessage<LoginProxyMessage>): void {
+        this.login()(fields, (event) => {
             this.post({ handlerID, done: hasDone(), response: event })
 
             function hasDone() {
@@ -81,11 +81,8 @@ class StartSessionHandler {
         this.post = post
     }
 
-    handleMessage({ handlerID, message: { fields: content } }: ProxyMessage<StartSessionProxyMessage>): void {
-        const collector = {
-            getFields: () => Promise.resolve(content),
-        }
-        this.startSession(collector)((event) => {
+    handleMessage({ handlerID, message: { fields } }: ProxyMessage<StartSessionProxyMessage>): void {
+        this.startSession()(fields, (event) => {
             this.post({ handlerID, done: hasDone(), response: event })
 
             function hasDone() {
@@ -138,12 +135,12 @@ class ResetHandler {
 
     handleMessage({
         handlerID,
-        message: { resetToken, fields: content },
+        message: { resetToken, fields },
     }: ProxyMessage<ResetProxyMessage>): void {
         const collector = {
             getResetToken: () => resetToken,
         }
-        this.reset(collector)(content, (event) => {
+        this.reset(collector)(fields, (event) => {
             this.post({ handlerID, done: hasDone(), response: event })
 
             function hasDone() {

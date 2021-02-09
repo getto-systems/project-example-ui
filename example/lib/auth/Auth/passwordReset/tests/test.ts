@@ -338,11 +338,11 @@ describe("PasswordReset", () => {
                         },
                         {
                             validation: "initial",
-                            history: { undo: false, redo: false },
+                            history: { undo: true, redo: false },
                         },
                         {
                             validation: "valid",
-                            history: { undo: false, redo: false },
+                            history: { undo: true, redo: false },
                         },
                         {
                             validation: "valid",
@@ -408,6 +408,8 @@ describe("PasswordReset", () => {
             const checker = initChecker()
             resource.form.loginID.input.addStateHandler(checker.loginID.handler)
             resource.form.password.input.addStateHandler(checker.password.handler)
+
+            resource.form.undo()
 
             resource.form.loginID.input.input(markInputString("loginID-a"))
             resource.form.loginID.input.change()

@@ -21,10 +21,11 @@ import {
 
 import { initRenewCredentialComponent } from "../../../renewCredential/impl"
 import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../../../passwordLogin/impl"
-import { initPasswordResetSessionComponent } from "../../../passwordResetSession/impl"
+import {
+    initPasswordResetSessionComponent,
+    initPasswordResetSessionFormComponent,
+} from "../../../passwordResetSession/impl"
 import { initPasswordResetComponent, initPasswordResetFormComponent } from "../../../passwordReset/impl"
-
-import { initLoginIDFieldComponent } from "../../../field/loginID/impl"
 
 import { initApplicationAction } from "../action/application"
 import { initFormAction } from "../../../../../sub/getto-form/main/form"
@@ -34,8 +35,6 @@ import {
     initRenewAction,
     initSetContinuousRenewAction,
 } from "../action/renew"
-
-import { loginIDField } from "../../../../common/field/loginID/impl/core"
 
 import { initAuthCredentialRepository } from "../../../../login/renew/impl/repository/authCredential"
 import { currentPagePathname, detectViewState, detectResetToken } from "../../impl/location"
@@ -48,12 +47,14 @@ import {
     PasswordLoginComponentFactory,
     PasswordLoginFormComponentFactory,
 } from "../../../passwordLogin/component"
-import { PasswordResetSessionComponentFactory } from "../../../passwordResetSession/component"
+import {
+    PasswordResetSessionComponentFactory,
+    PasswordResetSessionFormComponentFactory,
+} from "../../../passwordResetSession/component"
 import {
     PasswordResetComponentFactory,
     PasswordResetFormComponentFactory,
 } from "../../../passwordReset/component"
-import { LoginIDFieldComponentFactory } from "../../../field/loginID/component"
 
 import { ApplicationAction } from "../../../../common/application/action"
 import { FormAction } from "../../../../../sub/getto-form/action/action"
@@ -63,12 +64,11 @@ import {
     PasswordResetAction,
     PasswordResetSessionAction,
     StartSession,
-    StartSessionCollector,
     CheckStatus,
     Reset,
     ResetCollector,
 } from "../../../../profile/passwordReset/action"
-import { LoginIDFieldAction, LoginIDFormFieldAction } from "../../../../common/field/loginID/action"
+import { LoginIDFormFieldAction } from "../../../../common/field/loginID/action"
 import { PasswordFormFieldAction } from "../../../../common/field/password/action"
 
 import { LoginEvent } from "../../../../login/passwordLogin/event"
@@ -113,21 +113,16 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
                 loginID: initLoginIDFormFieldAction(),
                 password: initPasswordFormFieldAction(),
             },
-
-            field: {
-                loginID: () => loginIDField(),
-            },
         },
         components: {
             renewCredential: initRenewCredentialComponent,
 
             passwordLogin: { core: initPasswordLoginComponent, form: initPasswordLoginFormComponent },
-            passwordResetSession: initPasswordResetSessionComponent,
-            passwordReset: { core: initPasswordResetComponent, form: initPasswordResetFormComponent },
-
-            field: {
-                loginID: initLoginIDFieldComponent,
+            passwordResetSession: {
+                core: initPasswordResetSessionComponent,
+                form: initPasswordResetSessionFormComponent,
             },
+            passwordReset: { core: initPasswordResetComponent, form: initPasswordResetFormComponent },
         },
     }
 
@@ -179,17 +174,17 @@ class LoginProxyMap extends ProxyMap<LoginProxyMessage, LoginEvent> {
         return async (fields, post) => {
             this.post({
                 handlerID: this.register(post),
-                message: { fields: fields },
+                message: { fields },
             })
         }
     }
 }
 class StartSessionProxyMap extends ProxyMap<StartSessionProxyMessage, StartSessionEvent> {
-    init(collector: StartSessionCollector): StartSession {
-        return async (post) => {
+    init(): StartSession {
+        return async (fields, post) => {
             this.post({
                 handlerID: this.register(post),
-                message: { fields: await collector.getFields() },
+                message: { fields },
             })
         }
     }
@@ -211,7 +206,7 @@ class ResetProxyMap extends ProxyMap<ResetProxyMessage, ResetEvent> {
                 handlerID: this.register(post),
                 message: {
                     resetToken: collector.getResetToken(),
-                    fields: fields,
+                    fields,
                 },
             })
         }
@@ -230,7 +225,6 @@ type ForegroundFactory = Readonly<{
             loginID: LoginIDFormFieldAction
             password: PasswordFormFieldAction
         }>
-        field: LoginIDFieldAction
     }>
     components: Readonly<{
         renewCredential: RenewCredentialComponentFactory
@@ -239,14 +233,13 @@ type ForegroundFactory = Readonly<{
             core: PasswordLoginComponentFactory
             form: PasswordLoginFormComponentFactory
         }>
-        passwordResetSession: PasswordResetSessionComponentFactory
+        passwordResetSession: Readonly<{
+            core: PasswordResetSessionComponentFactory
+            form: PasswordResetSessionFormComponentFactory
+        }>
         passwordReset: Readonly<{
             core: PasswordResetComponentFactory
             form: PasswordResetFormComponentFactory
-        }>
-
-        field: Readonly<{
-            loginID: LoginIDFieldComponentFactory
         }>
     }>
 }>
@@ -349,7 +342,7 @@ function initLoginComponentFactory(
                 login: () => proxy.passwordLogin.login.init(),
             },
             passwordResetSession: {
-                startSession: (collector) => proxy.passwordResetSession.startSession.init(collector),
+                startSession: () => proxy.passwordResetSession.startSession.init(),
                 checkStatus: () => proxy.passwordResetSession.checkStatus.init(),
             },
             passwordReset: {

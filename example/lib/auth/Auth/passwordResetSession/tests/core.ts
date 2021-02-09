@@ -3,10 +3,7 @@ import { initApplicationAction, initPasswordResetSessionAction } from "../../Log
 import { initLoginLink } from "../../Login/main/link"
 import { initPasswordResetSessionResource, PasswordResetSessionFactory } from "../../Login/impl/reset"
 
-import { initPasswordResetSessionComponent } from "../impl"
-import { initLoginIDFieldComponent } from "../../field/loginID/impl"
-
-import { loginIDField } from "../../../common/field/loginID/impl/core"
+import { initPasswordResetSessionComponent, initPasswordResetSessionFormComponent } from "../impl"
 
 import { SessionSimulator } from "../../../profile/passwordReset/impl/remote/session/simulate"
 
@@ -14,6 +11,8 @@ import { ApplicationActionConfig } from "../../../common/application/infra"
 import { PasswordResetSessionActionConfig } from "../../../profile/passwordReset/infra"
 
 import { PasswordResetSessionResource } from "../../Login/entryPoint"
+import { initLoginIDFormFieldAction } from "../../Login/main/action/form"
+import { initFormAction } from "../../../../sub/getto-form/main/form"
 
 export type PasswordResetSessionConfig = {
     application: ApplicationActionConfig
@@ -36,16 +35,15 @@ export function newPasswordResetSessionResource(
                 config.passwordResetSession,
                 simulator.session
             ),
-
-            field: {
-                loginID: loginIDField,
+            form: {
+                core: initFormAction(),
+                loginID: initLoginIDFormFieldAction(),
             },
         },
         components: {
-            passwordResetSession: initPasswordResetSessionComponent,
-
-            field: {
-                loginID: initLoginIDFieldComponent,
+            passwordResetSession: {
+                core: initPasswordResetSessionComponent,
+                form: initPasswordResetSessionFormComponent,
             },
         },
     }
