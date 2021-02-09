@@ -22,7 +22,7 @@ export interface PasswordFormFieldComponentFactory {
 }
 export type PasswordFormFieldMaterial = Readonly<{
     password: PasswordFormField
-    checker: PasswordCharacterChecker
+    character: PasswordCharacterChecker
     viewer: PasswordViewer
 }>
 
