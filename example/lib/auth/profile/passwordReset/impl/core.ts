@@ -107,9 +107,8 @@ class StatusChecker {
     }
 }
 
-export const reset = (infra: ResetInfra): ResetPod => (collector) => async (post) => {
-    const content = await collector.getFields()
-    if (!content.valid) {
+export const reset = (infra: ResetInfra): ResetPod => (collector) => async (fields, post) => {
+    if (!fields.success) {
         post({ type: "failed-to-reset", err: { type: "validation-error" } })
         return
     }
@@ -125,7 +124,7 @@ export const reset = (infra: ResetInfra): ResetPod => (collector) => async (post
     const { client, config: time, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(client.reset(resetToken, content.content), time.delay, () =>
+    const response = await delayed(client.reset(resetToken, fields.value), time.delay, () =>
         post({ type: "delayed-to-reset" })
     )
     if (!response.success) {

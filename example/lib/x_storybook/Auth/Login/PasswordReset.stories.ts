@@ -3,7 +3,7 @@ import { h, VNode } from "preact"
 import { Login } from "../../../x_preact/Auth/Login/Login"
 
 import { newMockLoginAsPasswordReset } from "../../../auth/Auth/Login/mock"
-import { mapPasswordResetMockProps, PasswordResetMockProps } from "../../../auth/Auth/passwordReset/mock"
+import { mapPasswordResetMockProps, PasswordResetMockProps_core } from "../../../auth/Auth/passwordReset/mock"
 import {
     mapLoginIDFieldMockProps,
     loginIDFieldMockTypes,
@@ -36,7 +36,7 @@ export default {
     },
 }
 
-type MockProps = PasswordResetMockProps & LoginIDFieldMockProps & PasswordFieldMockProps
+type MockProps = PasswordResetMockProps_core & LoginIDFieldMockProps & PasswordFieldMockProps
 const Template: Story<MockProps> = (args) => {
     const { login, update } = newMockLoginAsPasswordReset()
     return h(Preview, { args })

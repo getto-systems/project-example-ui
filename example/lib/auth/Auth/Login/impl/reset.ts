@@ -3,27 +3,31 @@ import { PasswordResetResource, PasswordResetSessionResource } from "../entryPoi
 import { LoginLinkFactory } from "../../link"
 
 import { LoginIDFieldComponent, LoginIDFieldComponentFactory } from "../../field/loginID/component"
-import { PasswordFieldComponent, PasswordFieldComponentFactory } from "../../field/password/component"
-import { PasswordResetComponentFactory, PasswordResetMaterial } from "../../passwordReset/component"
+import {
+    PasswordResetComponentFactory,
+    PasswordResetFormComponentFactory,
+    PasswordResetFormMaterial,
+    PasswordResetMaterial,
+} from "../../passwordReset/component"
 import {
     PasswordResetSessionComponentFactory,
     PasswordResetSessionMaterial,
 } from "../../passwordResetSession/component"
 
 import { ApplicationAction, SecureScriptPathCollector } from "../../../common/application/action"
-import { LoginIDFieldAction } from "../../../common/field/loginID/action"
-import { PasswordFieldAction } from "../../../common/field/password/action"
+import { LoginIDFieldAction, LoginIDFormFieldAction } from "../../../common/field/loginID/action"
+import { PasswordFormFieldAction } from "../../../common/field/password/action"
 import { SetContinuousRenewAction } from "../../../login/renew/action"
 import {
     PasswordResetAction,
     PasswordResetSessionAction,
-    ResetTokenCollector,
+    ResetCollector,
 } from "../../../profile/passwordReset/action"
+import { FormAction } from "../../../../sub/getto-form/action/action"
 
 import { Content, invalidContent, validContent } from "../../../common/field/data"
 import { LoginID } from "../../../common/loginID/data"
-import { Password } from "../../../common/password/data"
-import { ResetFields, StartSessionFields } from "../../../profile/passwordReset/data"
+import { StartSessionFields } from "../../../profile/passwordReset/data"
 
 export type PasswordResetSessionFactory = Readonly<{
     link: LoginLinkFactory
@@ -65,43 +69,49 @@ export type PasswordResetFactory = Readonly<{
         application: ApplicationAction
         setContinuousRenew: SetContinuousRenewAction
         passwordReset: PasswordResetAction
-        field: LoginIDFieldAction & PasswordFieldAction
+        form: Readonly<{
+            core: FormAction
+            loginID: LoginIDFormFieldAction
+            password: PasswordFormFieldAction
+        }>
     }>
     components: Readonly<{
-        passwordReset: PasswordResetComponentFactory
-
-        field: Readonly<{
-            loginID: LoginIDFieldComponentFactory
-            password: PasswordFieldComponentFactory
+        passwordReset: Readonly<{
+            core: PasswordResetComponentFactory
+            form: PasswordResetFormComponentFactory
         }>
     }>
 }>
 export type PasswordResetCollector = Readonly<{
     application: SecureScriptPathCollector
-    passwordReset: ResetTokenCollector
+    passwordReset: ResetCollector
 }>
 export function initPasswordResetResource(
     factory: PasswordResetFactory,
     collector: PasswordResetCollector
 ): PasswordResetResource {
-    const fields = {
-        loginIDField: initLoginIDFieldComponent(factory),
-        passwordField: initPasswordFieldComponent(factory),
-    }
-
-    const material: PasswordResetMaterial = {
-        link: factory.link(),
-        reset: factory.actions.passwordReset.reset({
-            getFields: () => collectResetFields(fields),
-            ...collector.passwordReset,
-        }),
-        setContinuousRenew: factory.actions.setContinuousRenew.setContinuousRenew(),
-        secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
-    }
-
     return {
-        passwordReset: factory.components.passwordReset(material),
-        ...fields,
+        passwordReset: factory.components.passwordReset.core(core()),
+        form: factory.components.passwordReset.form(form()),
+    }
+
+    function core(): PasswordResetMaterial {
+        return {
+            link: factory.link(),
+            reset: factory.actions.passwordReset.reset(collector.passwordReset),
+            setContinuousRenew: factory.actions.setContinuousRenew.setContinuousRenew(),
+            secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
+        }
+    }
+    function form(): PasswordResetFormMaterial {
+        return {
+            validation: factory.actions.form.core.validation(),
+            history: factory.actions.form.core.history(),
+            loginID: factory.actions.form.loginID.field(),
+            password: factory.actions.form.password.field(),
+            checker: factory.actions.form.password.character(),
+            viewer: factory.actions.form.password.viewer(),
+        }
     }
 }
 
@@ -122,11 +132,6 @@ async function collectStartSessionFields(
     })
 }
 
-type ResetFieldComponents = Readonly<{
-    loginIDField: LoginIDFieldComponent
-    passwordField: PasswordFieldComponent
-}>
-
 export type LoginIDFieldFactory = Readonly<{
     actions: Readonly<{
         field: LoginIDFieldAction
@@ -141,42 +146,9 @@ export function initLoginIDFieldComponent(factory: LoginIDFieldFactory): LoginID
     return factory.components.field.loginID({ loginID: factory.actions.field.loginID() })
 }
 
-export type PasswordFieldFactory = Readonly<{
-    actions: Readonly<{
-        field: PasswordFieldAction
-    }>
-    components: Readonly<{
-        field: Readonly<{
-            password: PasswordFieldComponentFactory
-        }>
-    }>
-}>
-export function initPasswordFieldComponent(factory: PasswordFieldFactory): PasswordFieldComponent {
-    return factory.components.field.password({ password: factory.actions.field.password() })
-}
-
-async function collectResetFields(fields: ResetFieldComponents): Promise<Content<ResetFields>> {
-    const loginID = await collectLoginID(fields.loginIDField)
-    const password = await collectPassword(fields.passwordField)
-
-    if (!loginID.valid || !password.valid) {
-        return invalidContent()
-    }
-    return validContent({
-        loginID: loginID.content,
-        password: password.content,
-    })
-}
 function collectLoginID(loginIDField: LoginIDFieldComponent): Promise<Content<LoginID>> {
     return new Promise((resolve) => {
         loginIDField.validate((event) => {
-            resolve(event.content)
-        })
-    })
-}
-function collectPassword(passwordField: PasswordFieldComponent): Promise<Content<Password>> {
-    return new Promise((resolve) => {
-        passwordField.validate((event) => {
             resolve(event.content)
         })
     })

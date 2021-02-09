@@ -1,4 +1,7 @@
 import { ApplicationComponent } from "../../../sub/getto-example/application/component"
+import { FormComponent, FormMaterial } from "../../../sub/getto-form/component/component"
+import { LoginIDFormFieldComponent, LoginIDFormFieldMaterial } from "../field/loginID/component"
+import { PasswordFormFieldComponent, PasswordFormFieldMaterial } from "../field/password/component"
 
 import { LoginLink } from "../link"
 
@@ -6,9 +9,10 @@ import { Reset } from "../../profile/passwordReset/action"
 import { SetContinuousRenew } from "../../login/renew/action"
 import { SecureScriptPath } from "../../common/application/action"
 
-import { ResetError } from "../../profile/passwordReset/data"
+import { ResetError, ResetFields } from "../../profile/passwordReset/data"
 import { ScriptPath, LoadError } from "../../common/application/data"
 import { StorageError } from "../../common/credential/data"
+import { FormConvertResult } from "../../../sub/getto-form/action/data"
 
 export interface PasswordResetComponentFactory {
     (material: PasswordResetMaterial): PasswordResetComponent
@@ -23,7 +27,7 @@ export type PasswordResetMaterial = Readonly<{
 
 export interface PasswordResetComponent extends ApplicationComponent<PasswordResetComponentState> {
     readonly link: LoginLink
-    reset(): void
+    reset(fields: FormConvertResult<ResetFields>): void
     loadError(err: LoadError): void
 }
 
@@ -38,3 +42,16 @@ export type PasswordResetComponentState =
     | Readonly<{ type: "error"; err: string }>
 
 export const initialPasswordResetComponentState: PasswordResetComponentState = { type: "initial-reset" }
+
+export interface PasswordResetFormComponentFactory {
+    (material: PasswordResetFormMaterial): PasswordResetFormComponent
+}
+export type PasswordResetFormMaterial = FormMaterial &
+    LoginIDFormFieldMaterial &
+    PasswordFormFieldMaterial
+
+export interface PasswordResetFormComponent extends FormComponent {
+    readonly loginID: LoginIDFormFieldComponent
+    readonly password: PasswordFormFieldComponent
+    getResetFields(): FormConvertResult<ResetFields>
+}

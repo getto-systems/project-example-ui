@@ -42,19 +42,20 @@ export function initPasswordLoginResource(
     factory: PasswordLoginFactory,
     collector: PasswordLoginCollector
 ): PasswordLoginResource {
-    const material: PasswordLoginMaterial = {
-        link: factory.link(),
-        login: factory.actions.passwordLogin.login(),
-        setContinuousRenew: factory.actions.setContinuousRenew.setContinuousRenew(),
-        secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
-    }
-
     return {
-        passwordLogin: factory.components.passwordLogin.core(material),
-        form: factory.components.passwordLogin.form(formMaterial()),
+        passwordLogin: factory.components.passwordLogin.core(core()),
+        form: factory.components.passwordLogin.form(form()),
     }
 
-    function formMaterial(): PasswordLoginFormMaterial {
+    function core(): PasswordLoginMaterial {
+        return {
+            link: factory.link(),
+            login: factory.actions.passwordLogin.login(),
+            setContinuousRenew: factory.actions.setContinuousRenew.setContinuousRenew(),
+            secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
+        }
+    }
+    function form(): PasswordLoginFormMaterial {
         return {
             validation: factory.actions.form.core.validation(),
             history: factory.actions.form.core.history(),

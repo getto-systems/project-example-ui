@@ -1,16 +1,36 @@
-import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
+import { MockComponent_legacy, MockPropsPasser } from "../../../sub/getto-example/application/mock"
+import { FormMockComponent, FormMockProps } from "../../../sub/getto-form/component/mock"
+import { initMockLoginIDFormField, LoginIDFormFieldMockProps } from "../field/loginID/mock"
+import { initMockPasswordFormField, PasswordFormFieldMockProps } from "../field/password/mock"
 
 import { initLoginLink } from "../Login/main/link"
 
 import { LoginLink } from "../link"
 
-import { PasswordResetComponent, PasswordResetComponentState } from "./component"
+import {
+    PasswordResetComponent,
+    PasswordResetComponentState,
+    PasswordResetFormComponent,
+} from "./component"
+import { LoginIDFormFieldComponent } from "../field/loginID/component"
+import { PasswordFormFieldComponent } from "../field/password/component"
+import { FormComponentState } from "../../../sub/getto-form/component/component"
+
+import { FormConvertResult } from "../../../sub/getto-form/action/data"
+import { ResetFields } from "../../profile/passwordReset/data"
+
+export type PasswordResetMockPasser = MockPropsPasser<PasswordResetMockProps>
+
+export type PasswordResetMockProps = PasswordResetMockProps_core &
+    FormMockProps &
+    LoginIDFormFieldMockProps &
+    PasswordFormFieldMockProps
 
 export function initMockPasswordReset(state: PasswordResetComponentState): PasswordResetMockComponent {
     return new PasswordResetMockComponent(state)
 }
 
-export type PasswordResetMockProps =
+export type PasswordResetMockProps_core =
     | Readonly<{ type: "initial" }>
     | Readonly<{ type: "try" }>
     | Readonly<{ type: "delayed" }>
@@ -21,7 +41,9 @@ export type PasswordResetMockProps =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function mapPasswordResetMockProps(props: PasswordResetMockProps): PasswordResetComponentState {
+export function mapPasswordResetMockProps(
+    props: PasswordResetMockProps_core
+): PasswordResetComponentState {
     switch (props.type) {
         case "initial":
             return { type: "initial-reset" }
@@ -52,7 +74,8 @@ export function mapPasswordResetMockProps(props: PasswordResetMockProps): Passwo
     }
 }
 
-export class PasswordResetMockComponent extends MockComponent_legacy<PasswordResetComponentState>
+export class PasswordResetMockComponent
+    extends MockComponent_legacy<PasswordResetComponentState>
     implements PasswordResetComponent {
     link: LoginLink
 
@@ -66,5 +89,31 @@ export class PasswordResetMockComponent extends MockComponent_legacy<PasswordRes
     }
     loadError(): void {
         // mock では特に何もしない
+    }
+}
+
+export function initMockPasswordResetForm(passer: PasswordResetMockPasser): PasswordResetFormComponent {
+    return new PasswordResetFormMockComponent(passer)
+}
+
+class PasswordResetFormMockComponent extends FormMockComponent implements PasswordResetFormComponent {
+    readonly loginID: LoginIDFormFieldComponent
+    readonly password: PasswordFormFieldComponent
+
+    constructor(passer: PasswordResetMockPasser) {
+        super()
+        passer.addPropsHandler((props) => {
+            this.post(mapProps(props))
+        })
+        this.loginID = initMockLoginIDFormField(passer)
+        this.password = initMockPasswordFormField(passer)
+
+        function mapProps(props: PasswordResetMockProps): FormComponentState {
+            return { validation: props.validation, history: { undo: false, redo: false } }
+        }
+    }
+
+    getResetFields(): FormConvertResult<ResetFields> {
+        return { success: false }
     }
 }

@@ -15,8 +15,6 @@ import { initAuthCredentialRepository } from "../../../login/renew/impl/reposito
 import { AuthCredentialRepository } from "../../../login/renew/infra"
 
 import { PasswordResetComponentState } from "../component"
-import { LoginIDFieldState } from "../../field/loginID/component"
-import { PasswordFieldState } from "../../field/password/component"
 
 import { markScriptPath } from "../../../common/application/data"
 import {
@@ -25,8 +23,8 @@ import {
     markAuthAt,
     markTicketNonce,
 } from "../../../common/credential/data"
-import { hasError, markInputValue, noError } from "../../../common/field/data"
 import { ResetFields, ResetToken } from "../../../profile/passwordReset/data"
+import { markInputString, toValidationError } from "../../../../sub/getto-form/action/data"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -48,52 +46,52 @@ describe("PasswordReset", () => {
     test("submit valid login-id and password", (done) => {
         const { repository, clock, resource } = standardPasswordResetResource()
 
-        resource.passwordReset.addStateHandler(stateHandler())
+        resource.passwordReset.addStateHandler(initChecker())
 
-        resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
-        resource.passwordField.set(markInputValue(VALID_LOGIN.password))
+        resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
+        resource.form.loginID.input.change()
 
-        resource.passwordReset.reset()
+        resource.form.password.input.input(markInputString(VALID_LOGIN.password))
+        resource.form.password.input.change()
 
-        function stateHandler(): Post<PasswordResetComponentState> {
-            const stack: PasswordResetComponentState[] = []
-            return (state) => {
-                stack.push(state)
+        resource.passwordReset.reset(resource.form.getResetFields())
 
-                switch (state.type) {
-                    case "initial-reset":
-                    case "try-to-reset":
-                    case "delayed-to-reset":
-                        // work in progress...
-                        break
+        function initChecker() {
+            return initAsyncStateChecker(
+                (state: PasswordResetComponentState): boolean => {
+                    switch (state.type) {
+                        case "initial-reset":
+                        case "try-to-reset":
+                        case "delayed-to-reset":
+                            // work in progress...
+                            return false
 
-                    case "try-to-load":
-                        clock.update(COMPLETED_NOW)
-                        expect(stack).toEqual([
-                            { type: "try-to-reset" },
-                            {
-                                type: "try-to-load",
-                                scriptPath: markScriptPath("//secure.example.com/index.js"),
-                            },
-                        ])
-                        expectToSaveLastLogin(repository.authCredentials)
-                        setTimeout(() => {
-                            expectToSaveRenewed(repository.authCredentials)
-                            done()
-                        }, 1) // after setContinuousRenew interval and delay
-                        break
+                        case "try-to-load":
+                            return true
 
-                    case "failed-to-reset":
-                    case "storage-error":
-                    case "load-error":
-                    case "error":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
+                        case "failed-to-reset":
+                        case "storage-error":
+                        case "load-error":
+                        case "error":
+                            throw new Error(state.type)
+                    }
+                },
+                (stack) => {
+                    clock.update(COMPLETED_NOW)
+                    expect(stack).toEqual([
+                        { type: "try-to-reset" },
+                        {
+                            type: "try-to-load",
+                            scriptPath: markScriptPath("//secure.example.com/index.js"),
+                        },
+                    ])
+                    expectToSaveLastLogin(repository.authCredentials)
+                    setTimeout(() => {
+                        expectToSaveRenewed(repository.authCredentials)
+                        done()
+                    }, 1) // after setContinuousRenew interval and delay
                 }
-            }
+            )
         }
     })
 
@@ -101,192 +99,402 @@ describe("PasswordReset", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitPasswordResetResource()
 
-        resource.passwordReset.addStateHandler(stateHandler())
+        resource.passwordReset.addStateHandler(initChecker())
 
-        resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
-        resource.passwordField.set(markInputValue(VALID_LOGIN.password))
+        resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
+        resource.form.loginID.input.change()
 
-        resource.passwordReset.reset()
+        resource.form.password.input.input(markInputString(VALID_LOGIN.password))
+        resource.form.password.input.change()
 
-        function stateHandler(): Post<PasswordResetComponentState> {
-            const stack: PasswordResetComponentState[] = []
-            return (state) => {
-                stack.push(state)
+        resource.passwordReset.reset(resource.form.getResetFields())
 
-                switch (state.type) {
-                    case "initial-reset":
-                    case "try-to-reset":
-                    case "delayed-to-reset":
-                        // work in progress...
-                        break
+        function initChecker() {
+            return initAsyncStateChecker(
+                (state: PasswordResetComponentState): boolean => {
+                    switch (state.type) {
+                        case "initial-reset":
+                        case "try-to-reset":
+                        case "delayed-to-reset":
+                            // work in progress...
+                            return false
 
-                    case "try-to-load":
-                        clock.update(COMPLETED_NOW)
-                        expect(stack).toEqual([
-                            { type: "try-to-reset" },
-                            { type: "delayed-to-reset" }, // delayed event
-                            {
-                                type: "try-to-load",
-                                scriptPath: markScriptPath("//secure.example.com/index.js"),
-                            },
-                        ])
-                        expectToSaveLastLogin(repository.authCredentials)
-                        setTimeout(() => {
-                            expectToSaveRenewed(repository.authCredentials)
-                            done()
-                        }, 1) // after setContinuousRenew interval and delay
-                        break
+                        case "try-to-load":
+                            return true
 
-                    case "failed-to-reset":
-                    case "storage-error":
-                    case "load-error":
-                    case "error":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
+                        case "failed-to-reset":
+                        case "storage-error":
+                        case "load-error":
+                        case "error":
+                            throw new Error(state.type)
+                    }
+                },
+                (stack) => {
+                    clock.update(COMPLETED_NOW)
+                    expect(stack).toEqual([
+                        { type: "try-to-reset" },
+                        { type: "delayed-to-reset" }, // delayed event
+                        {
+                            type: "try-to-load",
+                            scriptPath: markScriptPath("//secure.example.com/index.js"),
+                        },
+                    ])
+                    expectToSaveLastLogin(repository.authCredentials)
+                    setTimeout(() => {
+                        expectToSaveRenewed(repository.authCredentials)
+                        done()
+                    }, 1) // after setContinuousRenew interval and delay
                 }
-            }
+            )
         }
     })
 
     test("submit without fields", (done) => {
         const { repository, resource } = standardPasswordResetResource()
 
-        resource.passwordReset.addStateHandler(stateHandler())
+        resource.passwordReset.addStateHandler(initChecker())
 
         // try to reset without fields
         //resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
         //resource.passwordField.set(markInputValue(VALID_LOGIN.password))
 
-        resource.passwordReset.reset()
+        resource.passwordReset.reset(resource.form.getResetFields())
 
-        function stateHandler(): Post<PasswordResetComponentState> {
-            const stack: PasswordResetComponentState[] = []
-            return (state) => {
-                stack.push(state)
+        function initChecker() {
+            return initAsyncStateChecker(
+                (state: PasswordResetComponentState): boolean => {
+                    switch (state.type) {
+                        case "initial-reset":
+                        case "try-to-reset":
+                        case "delayed-to-reset":
+                            // work in progress...
+                            return false
 
-                switch (state.type) {
-                    case "initial-reset":
-                    case "try-to-reset":
-                    case "delayed-to-reset":
-                        // work in progress...
-                        break
+                        case "try-to-load":
+                            throw new Error(state.type)
 
-                    case "try-to-load":
-                        done(new Error(state.type))
-                        break
+                        case "failed-to-reset":
+                            return true
 
-                    case "failed-to-reset":
-                        expect(stack).toEqual([
-                            { type: "failed-to-reset", err: { type: "validation-error" } },
-                        ])
-                        expectToEmptyLastLogin(repository.authCredentials)
-                        done()
-                        break
-
-                    case "storage-error":
-                    case "load-error":
-                    case "error":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
+                        case "storage-error":
+                        case "load-error":
+                        case "error":
+                            throw new Error(state.type)
+                    }
+                },
+                (stack) => {
+                    expect(stack).toEqual([
+                        { type: "failed-to-reset", err: { type: "validation-error" } },
+                    ])
+                    expectToEmptyLastLogin(repository.authCredentials)
+                    done()
                 }
-            }
+            )
         }
     })
 
     test("submit without resetToken", (done) => {
         const { repository, resource } = emptyResetTokenPasswordResetResource()
 
-        resource.passwordReset.addStateHandler(stateHandler())
+        resource.passwordReset.addStateHandler(initChecker())
 
-        resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
-        resource.passwordField.set(markInputValue(VALID_LOGIN.password))
+        resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
+        resource.form.loginID.input.change()
 
-        resource.passwordReset.reset()
+        resource.form.password.input.input(markInputString(VALID_LOGIN.password))
+        resource.form.password.input.change()
 
-        function stateHandler(): Post<PasswordResetComponentState> {
-            const stack: PasswordResetComponentState[] = []
-            return (state) => {
-                stack.push(state)
+        resource.passwordReset.reset(resource.form.getResetFields())
 
-                switch (state.type) {
-                    case "initial-reset":
-                    case "try-to-reset":
-                    case "delayed-to-reset":
-                        // work in progress...
-                        break
+        function initChecker() {
+            return initAsyncStateChecker(
+                (state: PasswordResetComponentState): boolean => {
+                    switch (state.type) {
+                        case "initial-reset":
+                        case "try-to-reset":
+                        case "delayed-to-reset":
+                            // work in progress...
+                            return false
 
-                    case "try-to-load":
-                        done(new Error(state.type))
-                        break
+                        case "try-to-load":
+                            throw new Error(state.type)
 
-                    case "failed-to-reset":
-                        expect(stack).toEqual([
-                            { type: "failed-to-reset", err: { type: "empty-reset-token" } },
-                        ])
-                        expectToEmptyLastLogin(repository.authCredentials)
-                        done()
-                        break
+                        case "failed-to-reset":
+                            return true
 
-                    case "storage-error":
-                    case "load-error":
-                    case "error":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
+                        case "storage-error":
+                        case "load-error":
+                        case "error":
+                            throw new Error(state.type)
+                    }
+                },
+                (stack) => {
+                    expect(stack).toEqual([
+                        { type: "failed-to-reset", err: { type: "empty-reset-token" } },
+                    ])
+                    expectToEmptyLastLogin(repository.authCredentials)
+                    done()
                 }
-            }
+            )
         }
     })
 
     test("load error", (done) => {
         const { resource } = standardPasswordResetResource()
 
-        resource.passwordReset.addStateHandler(stateHandler())
+        resource.passwordReset.addStateHandler(initChecker())
 
         resource.passwordReset.loadError({ type: "infra-error", err: "load error" })
 
-        function stateHandler(): Post<PasswordResetComponentState> {
-            const stack: PasswordResetComponentState[] = []
-            return (state) => {
-                stack.push(state)
+        function initChecker() {
+            return initAsyncStateChecker(
+                (state: PasswordResetComponentState): boolean => {
+                    switch (state.type) {
+                        case "initial-reset":
+                        case "try-to-reset":
+                        case "delayed-to-reset":
+                            // work in progress...
+                            return false
 
-                switch (state.type) {
-                    case "initial-reset":
-                    case "try-to-reset":
-                    case "delayed-to-reset":
-                        // work in progress...
-                        break
+                        case "try-to-load":
+                            throw new Error(state.type)
 
-                    case "try-to-load":
-                        done(new Error(state.type))
-                        break
+                        case "failed-to-reset":
+                        case "storage-error":
+                        case "error":
+                            throw new Error(state.type)
 
-                    case "failed-to-reset":
-                    case "storage-error":
-                    case "error":
-                        done(new Error(state.type))
-                        break
+                        case "load-error":
+                            return true
+                    }
+                },
+                (stack) => {
+                    expect(stack).toEqual([
+                        { type: "load-error", err: { type: "infra-error", err: "load error" } },
+                    ])
+                    done()
+                }
+            )
+        }
+    })
 
-                    case "load-error":
+    describe("form", () => {
+        test("initial without input field", (done) => {
+            const { resource } = standardPasswordResetResource()
+
+            const checker = initChecker()
+            resource.form.addStateHandler(checker.handler)
+
+            expect(resource.form.getResetFields()).toEqual({ success: false })
+
+            checker.test()
+            done()
+
+            function initChecker() {
+                return initSyncStateChecker((stack) => {
+                    expect(stack).toEqual([
+                        {
+                            validation: "invalid",
+                            history: { undo: false, redo: false },
+                        },
+                        {
+                            validation: "invalid",
+                            history: { undo: false, redo: false },
+                        },
+                    ])
+                })
+            }
+        })
+
+        test("valid with input valid field", (done) => {
+            const { resource } = standardPasswordResetResource()
+
+            const checker = initChecker()
+            resource.form.addStateHandler(checker.handler)
+
+            resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
+            resource.form.loginID.input.change()
+
+            resource.form.password.input.input(markInputString(VALID_LOGIN.password))
+            resource.form.password.input.change()
+
+            expect(resource.form.getResetFields()).toEqual({
+                success: true,
+                value: {
+                    loginID: VALID_LOGIN.loginID,
+                    password: VALID_LOGIN.password,
+                },
+            })
+
+            checker.test()
+            done()
+
+            function initChecker() {
+                return initSyncStateChecker((stack) => {
+                    expect(stack).toEqual([
+                        {
+                            validation: "initial",
+                            history: { undo: false, redo: false },
+                        },
+                        {
+                            validation: "initial",
+                            history: { undo: false, redo: false },
+                        },
+                        {
+                            validation: "valid",
+                            history: { undo: false, redo: false },
+                        },
+                        {
+                            validation: "valid",
+                            history: { undo: true, redo: false },
+                        },
+                        {
+                            validation: "valid",
+                            history: { undo: true, redo: false },
+                        },
+                        {
+                            validation: "valid",
+                            history: { undo: true, redo: false },
+                        },
+                    ])
+                })
+            }
+        })
+
+        test("invalid with input invalid field", (done) => {
+            const { resource } = standardPasswordResetResource()
+
+            const checker = initChecker()
+            resource.form.addStateHandler(checker.handler)
+
+            resource.form.loginID.input.input(markInputString(""))
+            resource.form.loginID.input.change()
+
+            resource.form.password.input.input(markInputString(""))
+            resource.form.password.input.change()
+
+            expect(resource.form.getResetFields()).toEqual({ success: false })
+
+            checker.test()
+            done()
+
+            function initChecker() {
+                return initSyncStateChecker((stack) => {
+                    expect(stack).toEqual([
+                        {
+                            validation: "invalid",
+                            history: { undo: false, redo: false },
+                        },
+                        {
+                            validation: "invalid",
+                            history: { undo: false, redo: false },
+                        },
+                        {
+                            validation: "invalid",
+                            history: { undo: false, redo: false },
+                        },
+                        {
+                            validation: "invalid",
+                            history: { undo: false, redo: false },
+                        },
+                    ])
+                })
+            }
+        })
+
+        test("undo / redo", (done) => {
+            const { resource } = standardPasswordResetResource()
+
+            const checker = initChecker()
+            resource.form.loginID.input.addStateHandler(checker.loginID.handler)
+            resource.form.password.input.addStateHandler(checker.password.handler)
+
+            resource.form.loginID.input.input(markInputString("loginID-a"))
+            resource.form.loginID.input.change()
+
+            resource.form.loginID.input.input(markInputString("loginID-b"))
+            resource.form.loginID.input.change()
+
+            resource.form.undo()
+
+            resource.form.password.input.input(markInputString("password-a"))
+            resource.form.password.input.change()
+
+            resource.form.undo()
+            resource.form.redo()
+
+            resource.form.password.input.input(markInputString("password-b"))
+            resource.form.password.input.change()
+
+            resource.form.loginID.input.input(markInputString("loginID-c"))
+            resource.form.loginID.input.change()
+
+            resource.form.redo()
+
+            checker.loginID.test()
+            checker.password.test()
+            done()
+
+            function initChecker() {
+                return {
+                    loginID: initSyncStateChecker((stack) => {
                         expect(stack).toEqual([
-                            { type: "load-error", err: { type: "infra-error", err: "load error" } },
+                            { value: "loginID-a" },
+                            { value: "loginID-b" },
+                            { value: "loginID-a" },
+                            { value: "loginID-c" },
                         ])
-                        done()
-                        break
-
-                    default:
-                        assertNever(state)
+                    }),
+                    password: initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([
+                            { value: "password-a" },
+                            { value: "" },
+                            { value: "password-a" },
+                            { value: "password-b" },
+                        ])
+                    }),
                 }
             }
-        }
+        })
+
+        test("removeStateHandler", (done) => {
+            const { resource } = standardPasswordResetResource()
+
+            const checker = initChecker()
+            resource.form.loginID.input.addStateHandler(checker.handler)
+            resource.form.loginID.input.removeStateHandler(checker.handler)
+
+            resource.form.loginID.input.input(markInputString("loginID-a"))
+
+            checker.test()
+            done()
+
+            function initChecker() {
+                return initSyncStateChecker((stack) => {
+                    expect(stack).toEqual([])
+                })
+            }
+        })
+
+        test("terminate", (done) => {
+            const { resource } = standardPasswordResetResource()
+
+            const checker = initChecker()
+            resource.form.loginID.input.addStateHandler(checker.handler)
+
+            resource.form.terminate()
+
+            resource.form.loginID.input.input(markInputString("loginID-a"))
+
+            checker.test()
+            done()
+
+            function initChecker() {
+                return initSyncStateChecker((stack) => {
+                    expect(stack).toEqual([])
+                })
+            }
+        })
     })
 
     describe("fields", () => {
@@ -294,18 +502,18 @@ describe("PasswordReset", () => {
             test("invalid with empty string", (done) => {
                 const { resource } = standardPasswordResetResource()
 
-                resource.loginIDField.addStateHandler(stateHandler())
+                const checker = initChecker()
+                resource.form.loginID.addStateHandler(checker.handler)
 
-                resource.loginIDField.set(markInputValue(""))
+                resource.form.loginID.input.input(markInputString(""))
 
-                function stateHandler(): Post<LoginIDFieldState> {
-                    return (state) => {
-                        expect(state).toMatchObject({
-                            type: "succeed-to-update",
-                            result: hasError(["empty"]),
-                        })
-                        done()
-                    }
+                checker.test()
+                done()
+
+                function initChecker() {
+                    return initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([{ result: toValidationError(["empty"]) }])
+                    })
                 }
             })
         })
@@ -314,121 +522,158 @@ describe("PasswordReset", () => {
             test("invalid with empty string", (done) => {
                 const { resource } = standardPasswordResetResource()
 
-                resource.passwordField.addStateHandler(stateHandler())
+                const checker = initChecker()
+                resource.form.password.addStateHandler(checker.handler)
 
-                resource.passwordField.set(markInputValue(""))
+                resource.form.password.input.input(markInputString(""))
 
-                function stateHandler(): Post<PasswordFieldState> {
-                    return (state) => {
-                        expect(state).toMatchObject({
-                            type: "succeed-to-update",
-                            result: hasError(["empty"]),
-                        })
-                        done()
-                    }
+                checker.test()
+                done()
+
+                function initChecker() {
+                    return initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([
+                            {
+                                result: toValidationError(["empty"]),
+                                character: { complex: false },
+                                view: { show: false },
+                            },
+                        ])
+                    })
                 }
             })
 
             test("invalid with too long string", (done) => {
                 const { resource } = standardPasswordResetResource()
 
-                resource.passwordField.addStateHandler(stateHandler())
+                const checker = initChecker()
+                resource.form.password.addStateHandler(checker.handler)
 
-                resource.passwordField.set(markInputValue("a".repeat(73)))
+                resource.form.password.input.input(markInputString("a".repeat(73)))
 
-                function stateHandler(): Post<PasswordFieldState> {
-                    return (state) => {
-                        expect(state).toMatchObject({
-                            type: "succeed-to-update",
-                            result: hasError(["too-long"]),
-                        })
-                        done()
-                    }
+                checker.test()
+                done()
+
+                function initChecker() {
+                    return initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([
+                            {
+                                result: toValidationError(["too-long"]),
+                                character: { complex: false },
+                                view: { show: false },
+                            },
+                        ])
+                    })
                 }
             })
 
             test("invalid with too long string including multi-byte character", (done) => {
                 const { resource } = standardPasswordResetResource()
 
-                resource.passwordField.addStateHandler(stateHandler())
+                const checker = initChecker()
+                resource.form.password.addStateHandler(checker.handler)
 
                 // "あ"(UTF8) is 3 bytes character
-                resource.passwordField.set(markInputValue("あ".repeat(24) + "a"))
+                resource.form.password.input.input(markInputString("あ".repeat(24) + "a"))
 
-                function stateHandler(): Post<PasswordFieldState> {
-                    return (state) => {
-                        expect(state).toMatchObject({
-                            type: "succeed-to-update",
-                            result: hasError(["too-long"]),
-                        })
-                        done()
-                    }
+                checker.test()
+                done()
+
+                function initChecker() {
+                    return initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([
+                            {
+                                result: toValidationError(["too-long"]),
+                                character: { complex: true },
+                                view: { show: false },
+                            },
+                        ])
+                    })
                 }
             })
 
             test("valid with just 72 byte string", (done) => {
                 const { resource } = standardPasswordResetResource()
 
-                resource.passwordField.addStateHandler(stateHandler())
+                const checker = initChecker()
+                resource.form.password.addStateHandler(checker.handler)
 
-                resource.passwordField.set(markInputValue("a".repeat(72)))
+                resource.form.password.input.input(markInputString("a".repeat(72)))
 
-                function stateHandler(): Post<PasswordFieldState> {
-                    return (state) => {
-                        expect(state).toMatchObject({
-                            type: "succeed-to-update",
-                            result: noError(),
-                        })
-                        done()
-                    }
+                checker.test()
+                done()
+
+                function initChecker() {
+                    return initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([
+                            {
+                                result: { valid: true },
+                                character: { complex: false },
+                                view: { show: false },
+                            },
+                        ])
+                    })
                 }
             })
 
             test("valid with just 72 byte string including multi-byte character", (done) => {
                 const { resource } = standardPasswordResetResource()
 
-                resource.passwordField.addStateHandler(stateHandler())
+                const checker = initChecker()
+                resource.form.password.addStateHandler(checker.handler)
 
                 // "あ"(UTF8) is 3 bytes character
-                resource.passwordField.set(markInputValue("あ".repeat(24)))
+                resource.form.password.input.input(markInputString("あ".repeat(24)))
 
-                function stateHandler(): Post<PasswordFieldState> {
-                    return (state) => {
-                        expect(state).toMatchObject({
-                            type: "succeed-to-update",
-                            result: noError(),
-                        })
-                        done()
-                    }
+                checker.test()
+                done()
+
+                function initChecker() {
+                    return initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([
+                            {
+                                result: { valid: true },
+                                character: { complex: true },
+                                view: { show: false },
+                            },
+                        ])
+                    })
                 }
             })
 
             test("show/hide password", (done) => {
                 const { resource } = standardPasswordResetResource()
 
-                resource.passwordField.addStateHandler(stateHandler())
+                const checker = initChecker()
+                resource.form.password.addStateHandler(checker.handler)
 
-                resource.passwordField.set(markInputValue("password"))
-                resource.passwordField.show()
-                resource.passwordField.hide()
+                resource.form.password.input.input(markInputString("password"))
+                resource.form.password.show()
+                resource.form.password.hide()
 
-                function stateHandler(): Post<PasswordFieldState> {
-                    const stack: PasswordFieldState[] = []
-                    return (state) => {
-                        stack.push(state)
+                checker.test()
+                done()
 
-                        if (stack.length === 3) {
-                            expect(stack[1]).toMatchObject({
-                                type: "succeed-to-update",
-                                view: { show: true, password: "password" },
-                            })
-                            expect(stack[2]).toMatchObject({
-                                type: "succeed-to-update",
+                function initChecker() {
+                    return initSyncStateChecker((stack) => {
+                        expect(stack).toEqual([
+                            {
+                                result: { valid: true },
+                                character: { complex: false },
                                 view: { show: false },
-                            })
-                            done()
-                        }
-                    }
+                            },
+                            {
+                                result: { valid: true },
+                                character: { complex: false },
+                                view: { show: true, password: "password" },
+                            },
+                            {
+                                result: { valid: true },
+                                character: { complex: false },
+                                view: { show: false },
+                            },
+                        ])
+                    })
                 }
             })
         })
@@ -582,10 +827,27 @@ function expectToEmptyLastLogin(authCredentials: AuthCredentialRepository) {
     })
 }
 
-interface Post<T> {
-    (state: T): void
+function initAsyncStateChecker<S>(isFinish: { (state: S): boolean }, examine: { (stack: S[]): void }) {
+    const stack: S[] = []
+
+    return (state: S) => {
+        stack.push(state)
+
+        if (isFinish(state)) {
+            examine(stack)
+        }
+    }
 }
 
-function assertNever(_: never): never {
-    throw new Error("NEVER")
+function initSyncStateChecker<S>(examine: { (stack: S[]): void }) {
+    const stack: S[] = []
+
+    return {
+        handler: (state: S) => {
+            stack.push(state)
+        },
+        test: () => {
+            examine(stack)
+        },
+    }
 }
