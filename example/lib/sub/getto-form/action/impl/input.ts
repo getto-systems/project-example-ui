@@ -2,7 +2,7 @@ import { FormInput } from "../action"
 
 import { FormChangeEvent, FormInputEvent } from "../event"
 
-import { FormHistory, FormHistoryPrevious, FormInputString, markInputString } from "../data"
+import { emptyInputString, FormHistory, FormHistoryPrevious, FormInputString } from "../data"
 
 export function initFormInput(): FormInput {
     return new Input()
@@ -14,7 +14,7 @@ class Input implements FormInput {
 
     constructor() {
         this.previous = { type: "first" }
-        this.current = markInputString("")
+        this.current = emptyInputString()
         this.pushHistory(() => {
             // まず初期値のスナップショットを取る
         })
