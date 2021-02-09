@@ -108,15 +108,17 @@ export function PasswordLogin(resource: Props): VNode {
             }
 
             function loginButton() {
+                const label = "ログイン"
+
                 switch (formState.validation) {
                     case "initial":
-                        return button_send({ state: "normal", label: "ログイン", onClick })
+                        return button_send({ state: "normal", label, onClick })
 
                     case "valid":
-                        return button_send({ state: "confirm", label: "ログイン", onClick })
+                        return button_send({ state: "confirm", label, onClick })
 
                     case "invalid":
-                        return button_disabled({ label: "ログイン" })
+                        return button_disabled({ label })
                 }
 
                 function onClick(e: Event) {

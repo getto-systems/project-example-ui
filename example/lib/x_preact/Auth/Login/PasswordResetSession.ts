@@ -2,7 +2,13 @@ import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
 import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
-import { buttons, button_send, fieldError, form } from "../../../z_vendor/getto-css/preact/design/form"
+import {
+    buttons,
+    button_disabled,
+    button_send,
+    fieldError,
+    form,
+} from "../../../z_vendor/getto-css/preact/design/form"
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { v_medium } from "../../../z_vendor/getto-css/preact/design/alignment"
 
@@ -15,6 +21,7 @@ import { LoginIDFormField } from "./field/loginID"
 
 import { PasswordResetSessionResource } from "../../../auth/Auth/Login/entryPoint"
 import { initialPasswordResetSessionComponentState } from "../../../auth/Auth/passwordResetSession/component"
+import { initialFormComponentState } from "../../../sub/getto-form/component/component"
 
 import {
     Destination,
@@ -28,6 +35,7 @@ type Props = PasswordResetSessionResource
 export function PasswordResetSession(resource: Props): VNode {
     const { passwordResetSession } = resource
     const state = useComponent(passwordResetSession, initialPasswordResetSessionComponentState)
+    const formState = useComponent(resource.form, initialFormComponentState)
 
     switch (state.type) {
         case "initial-reset-session":
@@ -97,13 +105,22 @@ export function PasswordResetSession(resource: Props): VNode {
             }
 
             function startSessionButton() {
-                // TODO field に入力されて、すべて OK なら state: confirm にしたい
-                return button_send({ state: "normal", label: "トークン送信", onClick })
+                const label = "トークン送信"
+
+                switch (formState.validation) {
+                    case "initial":
+                        return button_send({ state: "normal", label, onClick })
+
+                    case "valid":
+                        return button_send({ state: "confirm", label, onClick })
+
+                    case "invalid":
+                        return button_disabled({ label })
+                }
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    // TODO passwordResetSession.startSession()
-                    alert("ここでトークン送信！")
+                    passwordResetSession.startSession(resource.form.getStartSessionFields())
                 }
             }
             function connectingButton(): VNode {
