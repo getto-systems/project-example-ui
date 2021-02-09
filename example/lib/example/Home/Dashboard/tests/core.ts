@@ -4,7 +4,7 @@ import { initSeasonAction } from "../../../Outline/seasonInfo/tests/core"
 import { detectMenuTarget } from "../../../../auth/Outline/Menu/impl/location"
 import { MenuBadgeSimulator } from "../../../../auth/permission/menu/impl/remote/menuBadge/simulate"
 
-import { DashboardCollector, DashboardFactory, initDashboardResource } from "../impl/core"
+import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "../impl/core"
 
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initBreadcrumbListComponent } from "../../../../auth/Outline/breadcrumbList/impl"
@@ -49,11 +49,11 @@ export function newDashboardResource(
             example: initExampleComponent,
         },
     }
-    const collector: DashboardCollector = {
+    const locationInfo: DashboardLocationInfo = {
         menu: {
             getMenuTarget: () => detectMenuTarget(version, currentURL),
         },
     }
 
-    return initDashboardResource(factory, collector)
+    return initDashboardResource(factory, locationInfo)
 }

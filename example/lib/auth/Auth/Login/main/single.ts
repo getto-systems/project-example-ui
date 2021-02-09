@@ -9,17 +9,17 @@ import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "./actio
 import { initPasswordLoginAction } from "./action/login"
 import { initPasswordResetAction, initPasswordResetSessionAction } from "./action/reset"
 
-import { LoginViewCollector, View } from "../impl/core"
+import { LoginViewLocationInfo, View } from "../impl/core"
 import {
     initRenewCredentialResource,
-    RenewCredentialCollector,
+    RenewCredentialLocationInfo,
     RenewCredentialFactory,
 } from "../impl/renew"
-import { initPasswordLoginResource, PasswordLoginCollector, PasswordLoginFactory } from "../impl/login"
+import { initPasswordLoginResource, PasswordLoginLocationInfo, PasswordLoginFactory } from "../impl/login"
 import {
     initPasswordResetResource,
     initPasswordResetSessionResource,
-    PasswordResetCollector,
+    PasswordResetLocationInfo,
     PasswordResetFactory,
     PasswordResetSessionFactory,
 } from "../impl/reset"
@@ -89,7 +89,7 @@ export function newLoginAsSingle(): LoginEntryPoint {
             passwordReset: { core: initPasswordResetComponent, form: initPasswordResetFormComponent },
         },
     }
-    const collector: Collector = {
+    const locationInfo: LocationInfo = {
         login: {
             getLoginView: () => detectViewState(currentURL),
         },
@@ -101,12 +101,12 @@ export function newLoginAsSingle(): LoginEntryPoint {
         },
     }
 
-    const view = new View(collector, {
-        renewCredential: (setup) => initRenewCredentialResource(factory, collector, setup),
+    const view = new View(locationInfo, {
+        renewCredential: (setup) => initRenewCredentialResource(factory, locationInfo, setup),
 
-        passwordLogin: () => initPasswordLoginResource(factory, collector),
+        passwordLogin: () => initPasswordLoginResource(factory, locationInfo),
         passwordResetSession: () => initPasswordResetSessionResource(factory),
-        passwordReset: () => initPasswordResetResource(factory, collector),
+        passwordReset: () => initPasswordResetResource(factory, locationInfo),
     })
     return {
         view,
@@ -121,7 +121,7 @@ type Factory = RenewCredentialFactory &
     PasswordResetSessionFactory &
     PasswordResetFactory
 
-type Collector = LoginViewCollector &
-    RenewCredentialCollector &
-    PasswordLoginCollector &
-    PasswordResetCollector
+type LocationInfo = LoginViewLocationInfo &
+    RenewCredentialLocationInfo &
+    PasswordLoginLocationInfo &
+    PasswordResetLocationInfo

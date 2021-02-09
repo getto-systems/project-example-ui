@@ -10,7 +10,7 @@ import {
 } from "../../passwordLogin/component"
 
 import { FormAction } from "../../../../sub/getto-form/action/action"
-import { ApplicationAction, SecureScriptPathCollector } from "../../../common/application/action"
+import { ApplicationAction, SecureScriptPathLocationInfo } from "../../../common/application/action"
 import { LoginIDFormFieldAction } from "../../../common/field/loginID/action"
 import { PasswordFormFieldAction } from "../../../common/field/password/action"
 import { PasswordLoginAction } from "../../../login/passwordLogin/action"
@@ -35,12 +35,12 @@ export type PasswordLoginFactory = Readonly<{
         }>
     }>
 }>
-export type PasswordLoginCollector = Readonly<{
-    application: SecureScriptPathCollector
+export type PasswordLoginLocationInfo = Readonly<{
+    application: SecureScriptPathLocationInfo
 }>
 export function initPasswordLoginResource(
     factory: PasswordLoginFactory,
-    collector: PasswordLoginCollector
+    locationInfo: PasswordLoginLocationInfo
 ): PasswordLoginResource {
     return {
         passwordLogin: factory.components.passwordLogin.core(core()),
@@ -52,7 +52,7 @@ export function initPasswordLoginResource(
             link: factory.link(),
             login: factory.actions.passwordLogin.login(),
             setContinuousRenew: factory.actions.setContinuousRenew.setContinuousRenew(),
-            secureScriptPath: factory.actions.application.secureScriptPath(collector.application),
+            secureScriptPath: factory.actions.application.secureScriptPath(locationInfo.application),
         }
     }
     function form(): PasswordLoginFormMaterial {

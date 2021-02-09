@@ -42,7 +42,7 @@ export function newMenuResource(
         credential: initCredentialAction(repository.apiCredentials),
         menu: initMenuAction(menuTree, repository.menuExpands, simulator.menuBadge),
     }
-    const collector = {
+    const locationInfo = {
         menu: {
             getMenuTarget: () => detectMenuTarget(version, currentURL),
         },
@@ -50,12 +50,12 @@ export function newMenuResource(
 
     return {
         breadcrumbList: initBreadcrumbListComponent({
-            loadBreadcrumb: actions.menu.loadBreadcrumb(collector.menu),
+            loadBreadcrumb: actions.menu.loadBreadcrumb(locationInfo.menu),
         }),
         menuList: initMenuListComponent({
             loadApiNonce: actions.credential.loadApiNonce(),
             loadApiRoles: actions.credential.loadApiRoles(),
-            loadMenu: actions.menu.loadMenu(collector.menu),
+            loadMenu: actions.menu.loadMenu(locationInfo.menu),
             toggleMenuExpand: actions.menu.toggleMenuExpand(),
         }),
     }

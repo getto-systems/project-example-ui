@@ -10,22 +10,22 @@ export type MenuAction = Readonly<{
 }>
 
 export interface LoadBreadcrumbPod {
-    (collector: LoadBreadcrumbCollector): LoadBreadcrumb
+    (locationInfo: LoadBreadcrumbLocationInfo): LoadBreadcrumb
 }
 export interface LoadBreadcrumb {
     (post: Post<LoadBreadcrumbEvent>): void
 }
-export type LoadBreadcrumbCollector = MenuTargetCollector
+export type LoadBreadcrumbLocationInfo = MenuLocationInfo
 
 export interface LoadMenuPod {
-    (collector: LoadMenuCollector): LoadMenu
+    (locationInfo: LoadMenuLocationInfo): LoadMenu
 }
 export interface LoadMenu {
     (nonce: LoadApiCredentialResult<ApiNonce>, roles: LoadApiCredentialResult<ApiRoles>, post: Post<LoadMenuEvent>): void
 }
-export type LoadMenuCollector = MenuTargetCollector
+export type LoadMenuLocationInfo = MenuLocationInfo
 
-export interface MenuTargetCollector {
+export interface MenuLocationInfo {
     getMenuTarget(): MenuTarget
 }
 

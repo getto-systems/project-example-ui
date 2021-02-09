@@ -7,12 +7,12 @@ export type ContentAction = Readonly<{
 }>
 
 export interface LoadContentPod {
-    (collector: LoadContentCollector): LoadContent
+    (locationInfo: LoadContentLocationInfo): LoadContent
 }
 export interface LoadContent {
     (post: Post<LoadContentEvent>): void
 }
-export interface LoadContentCollector {
+export interface LoadContentLocationInfo {
     getContentPath(): ContentPath
 }
 

@@ -1,6 +1,6 @@
 import { env } from "../../../../y_environment/env"
 
-import { DocumentCollector, DocumentFactory, initDocumentResource } from "../impl/core"
+import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
 
 import { detectMenuTarget } from "../../../../auth/Outline/Menu/impl/location"
 import { detectContentPath } from "../impl/location"
@@ -34,7 +34,7 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
             content: initContentComponent,
         },
     }
-    const collector: DocumentCollector = {
+    const locationInfo: DocumentLocationInfo = {
         menu: {
             getMenuTarget: () => detectMenuTarget(env.version, currentURL),
         },
@@ -42,7 +42,7 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
             getContentPath: () => detectContentPath(env.version, currentURL),
         },
     }
-    const resource = initDocumentResource(factory, collector)
+    const resource = initDocumentResource(factory, locationInfo)
     return {
         resource,
         terminate: () => {

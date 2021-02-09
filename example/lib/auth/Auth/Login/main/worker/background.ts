@@ -137,10 +137,10 @@ class ResetHandler {
         handlerID,
         message: { resetToken, fields },
     }: ProxyMessage<ResetProxyMessage>): void {
-        const collector = {
+        const locationInfo = {
             getResetToken: () => resetToken,
         }
-        this.reset(collector)(fields, (event) => {
+        this.reset(locationInfo)(fields, (event) => {
             this.post({ handlerID, done: hasDone(), response: event })
 
             function hasDone() {

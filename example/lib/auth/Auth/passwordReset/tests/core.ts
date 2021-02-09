@@ -2,15 +2,11 @@ import {
     initApplicationAction,
     initSetContinuousRenewAction,
     initPasswordResetAction,
-    initPasswordResetCollector,
+    initPasswordResetLocationInfo,
 } from "../../Login/tests/core"
 
 import { initLoginLink } from "../../Login/main/link"
-import {
-    initPasswordResetResource,
-    PasswordResetCollector,
-    PasswordResetFactory,
-} from "../../Login/impl/reset"
+import { initPasswordResetResource, PasswordResetFactory } from "../../Login/impl/reset"
 
 import { initPasswordResetComponent, initPasswordResetFormComponent } from "../impl"
 import { initFormAction } from "../../../../sub/getto-form/main/form"
@@ -69,7 +65,6 @@ export function newPasswordResetResource(
             passwordReset: { core: initPasswordResetComponent, form: initPasswordResetFormComponent },
         },
     }
-    const collector: PasswordResetCollector = initPasswordResetCollector(currentURL)
 
-    return initPasswordResetResource(factory, collector)
+    return initPasswordResetResource(factory, initPasswordResetLocationInfo(currentURL))
 }

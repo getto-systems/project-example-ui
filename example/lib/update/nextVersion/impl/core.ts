@@ -4,10 +4,10 @@ import { FindPod } from "../action"
 
 import { markVersion, Version } from "../data"
 
-export const find = (infra: FindInfra): FindPod => (collector) => async (post) => {
+export const find = (infra: FindInfra): FindPod => (locationInfo) => async (post) => {
     const { check, config, delayed } = infra
 
-    const current = collector.getAppTarget()
+    const current = locationInfo.getAppTarget()
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const next = await delayed(findNext(check, current.version), config.delay, () =>

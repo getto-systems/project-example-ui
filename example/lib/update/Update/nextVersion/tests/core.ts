@@ -28,10 +28,10 @@ export function newNextVersionResource(
             nextVersion: initNextVersionComponent,
         },
     }
-    const collector = {
+    const locationInfo = {
         nextVersion: {
             getAppTarget: () => detectAppTarget(version, currentURL),
         },
     }
-    return initNextVersionResource(factory, collector)
+    return initNextVersionResource(factory, locationInfo)
 }

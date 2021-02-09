@@ -1,6 +1,6 @@
 import { env } from "../../../../y_environment/env"
 
-import { DashboardCollector, DashboardFactory, initDashboardResource } from "../impl/core"
+import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "../impl/core"
 
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initMenuListComponent } from "../../../../auth/Outline/menuList/impl"
@@ -31,12 +31,12 @@ export function newDashboardAsSingle(): DashboardEntryPoint {
             example: initExampleComponent,
         },
     }
-    const collector: DashboardCollector = {
+    const locationInfo: DashboardLocationInfo = {
         menu: {
             getMenuTarget: () => detectMenuTarget(env.version, currentURL),
         },
     }
-    const resource = initDashboardResource(factory, collector)
+    const resource = initDashboardResource(factory, locationInfo)
     return {
         resource,
         terminate: () => {

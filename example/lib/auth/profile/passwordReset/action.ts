@@ -26,12 +26,12 @@ export interface CheckStatus {
 }
 
 export interface ResetPod {
-    (collector: ResetCollector): Reset
+    (locationInfo: ResetLocationInfo): Reset
 }
 export interface Reset {
     (fields: FormConvertResult<ResetFields>, post: Post<ResetEvent>): void
 }
-export interface ResetCollector {
+export interface ResetLocationInfo {
     getResetToken(): ResetToken
 }
 

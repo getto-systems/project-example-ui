@@ -7,12 +7,12 @@ export type NextVersionAction = Readonly<{
 }>
 
 export interface FindPod {
-    (collector: FindCollector): Find
+    (locationInfo: FindLocationInfo): Find
 }
 export interface Find {
     (post: Post<FindEvent>): void
 }
-export interface FindCollector {
+export interface FindLocationInfo {
     getAppTarget(): AppTarget
 }
 

@@ -1,4 +1,4 @@
-import { FindPod, FindCollector } from "../../../nextVersion/action"
+import { FindPod, FindLocationInfo } from "../../../nextVersion/action"
 import { NextVersionComponentFactory } from "../../nextVersion/component"
 import { NextVersionResource } from "../entryPoint"
 
@@ -12,15 +12,15 @@ export type NextVersionFactory = Readonly<{
         nextVersion: NextVersionComponentFactory
     }>
 }>
-export type NextVersionCollector = Readonly<{
-    nextVersion: FindCollector
+export type NextVersionLocationInfo = Readonly<{
+    nextVersion: FindLocationInfo
 }>
 export function initNextVersionResource(
     factory: NextVersionFactory,
-    collector: NextVersionCollector
+    locationInfo: NextVersionLocationInfo
 ): NextVersionResource {
     const actions = {
-        find: factory.actions.nextVersion.find(collector.nextVersion),
+        find: factory.actions.nextVersion.find(locationInfo.nextVersion),
     }
     return {
         nextVersion: factory.components.nextVersion(actions),
