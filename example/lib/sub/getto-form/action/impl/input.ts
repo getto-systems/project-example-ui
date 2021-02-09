@@ -15,7 +15,7 @@ class Input implements FormInput {
     constructor() {
         this.previous = { type: "first" }
         this.current = markInputString("")
-        this.pushHistory()
+        this.pushHistory() // まず初期値のスナップショットを取る
     }
 
     pushHistory(): FormHistory {
@@ -51,7 +51,7 @@ class Input implements FormInput {
     restore(history: FormHistory, post: Post<FormInputEvent>): void {
         this.previous = history.previous
         this.current = history.current
-        this.pushHistory()
+        this.pushHistory() // restore した値のスナップショットを取る
 
         post({ value: this.current })
     }
