@@ -51,11 +51,9 @@ class Input implements FormInput {
     restore(history: FormHistory, post: Post<FormInputEvent>): void {
         this.previous = history.previous
         this.current = history.current
-        post({ value: this.current })
+        this.pushHistory()
 
-        if (this.previous.type === "first") {
-            this.pushHistory()
-        }
+        post({ value: this.current })
     }
 }
 

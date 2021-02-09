@@ -6,11 +6,11 @@ import { CheckStatusEvent } from "../event"
 
 import { SessionID, CheckStatusError } from "../data"
 
-export const startSession = (infra: StartSessionInfra): StartSessionPod => (collector) => async (
+export const startSession = (infra: StartSessionInfra): StartSessionPod => () => async (
+    fields,
     post
 ) => {
-    const content = await collector.getFields()
-    if (!content.valid) {
+    if (!fields.success) {
         post({ type: "failed-to-start-session", err: { type: "validation-error" } })
         return
     }
@@ -20,7 +20,7 @@ export const startSession = (infra: StartSessionInfra): StartSessionPod => (coll
     const { resetSession: client, config: time, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(client.startSession(content.content), time.delay, () =>
+    const response = await delayed(client.startSession(fields.value), time.delay, () =>
         post({ type: "delayed-to-start-session" })
     )
     if (!response.success) {

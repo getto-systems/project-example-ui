@@ -3,15 +3,11 @@ import { h, VNode } from "preact"
 import { Login } from "../../../x_preact/Auth/Login/Login"
 
 import { newMockLoginAsPasswordResetSession } from "../../../auth/Auth/Login/mock"
-import {
-    mapPasswordResetSessionMockProps,
-    PasswordResetSessionMockProps,
-} from "../../../auth/Auth/passwordResetSession/mock"
-import {
-    mapLoginIDFieldMockProps,
-    loginIDFieldMockTypes,
-    LoginIDFieldMockProps,
-} from "../../../auth/Auth/field/loginID/mock"
+import { PasswordResetSessionMockProps } from "../../../auth/Auth/passwordResetSession/mock"
+import { formValidationStates } from "../../../sub/getto-form/component/mock"
+import { loginIDFormFieldValidations } from "../../../auth/Auth/field/loginID/mock"
+import { initMockPropsPasser } from "../../../sub/getto-example/application/mock"
+import { useEffect } from "preact/hooks"
 
 export default {
     title: "Auth/Login/PasswordResetSession",
@@ -19,27 +15,32 @@ export default {
         type: {
             table: { disable: true },
         },
-        loginIDField: {
+        validation: {
             control: {
                 type: "select",
-                options: loginIDFieldMockTypes,
+                options: formValidationStates,
+            },
+        },
+        loginIDValidation: {
+            control: {
+                type: "select",
+                options: loginIDFormFieldValidations,
             },
         },
     },
 }
 
-type MockProps = PasswordResetSessionMockProps & LoginIDFieldMockProps
+type MockProps = PasswordResetSessionMockProps
 const Template: Story<MockProps> = (args) => {
-    const { login, update } = newMockLoginAsPasswordResetSession()
+    const passer = initMockPropsPasser<PasswordResetSessionMockProps>()
+    const login = newMockLoginAsPasswordResetSession(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
-        updateState(props.args)
+        useEffect(() => {
+            passer.update(props.args)
+        })
         return h(Login, { login })
-    }
-    function updateState(args: MockProps) {
-        update.passwordResetSession(mapPasswordResetSessionMockProps(args))
-        update.loginIDField(mapLoginIDFieldMockProps(args))
     }
 }
 
@@ -49,7 +50,9 @@ interface Story<T> {
 }
 
 const defaultArgs = {
-    loginIDField: "initial",
+    validation: "initial",
+    loginID: "",
+    loginIDValidation: "ok",
 } as const
 
 export const Initial = Template.bind({})

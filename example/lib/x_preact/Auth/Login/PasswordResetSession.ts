@@ -11,8 +11,7 @@ import { siteInfo } from "../../common/site"
 import { icon, spinner } from "../../common/icon"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
-
-import { LoginIDField } from "./PasswordResetSession/LoginIDField"
+import { LoginIDFormField } from "./field/loginID"
 
 import { PasswordResetSessionResource } from "../../../auth/Auth/Login/entryPoint"
 import { initialPasswordResetSessionComponentState } from "../../../auth/Auth/passwordResetSession/component"
@@ -78,7 +77,12 @@ export function PasswordResetSession(resource: Props): VNode {
         return form(
             loginBox(siteInfo(), {
                 title: startSessionTitle(),
-                body: [h(LoginIDField, resource)],
+                body: [
+                    h(LoginIDFormField, {
+                        loginID: resource.form.loginID,
+                        help: ["このログインIDに設定された送信先にリセットトークンを送信します"],
+                    }),
+                ],
                 footer: [buttons({ left: button(), right: loginLink() }), error()],
             })
         )
@@ -98,7 +102,8 @@ export function PasswordResetSession(resource: Props): VNode {
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    passwordResetSession.startSession()
+                    // TODO passwordResetSession.startSession()
+                    alert("ここでトークン送信！")
                 }
             }
             function connectingButton(): VNode {

@@ -2,7 +2,6 @@ import { PasswordResetResource, PasswordResetSessionResource } from "../entryPoi
 
 import { LoginLinkFactory } from "../../link"
 
-import { LoginIDFieldComponent, LoginIDFieldComponentFactory } from "../../field/loginID/component"
 import {
     PasswordResetComponentFactory,
     PasswordResetFormComponentFactory,
@@ -11,11 +10,13 @@ import {
 } from "../../passwordReset/component"
 import {
     PasswordResetSessionComponentFactory,
+    PasswordResetSessionFormComponentFactory,
+    PasswordResetSessionFormMaterial,
     PasswordResetSessionMaterial,
 } from "../../passwordResetSession/component"
 
 import { ApplicationAction, SecureScriptPathCollector } from "../../../common/application/action"
-import { LoginIDFieldAction, LoginIDFormFieldAction } from "../../../common/field/loginID/action"
+import { LoginIDFormFieldAction } from "../../../common/field/loginID/action"
 import { PasswordFormFieldAction } from "../../../common/field/password/action"
 import { SetContinuousRenewAction } from "../../../login/renew/action"
 import {
@@ -25,41 +26,44 @@ import {
 } from "../../../profile/passwordReset/action"
 import { FormAction } from "../../../../sub/getto-form/action/action"
 
-import { Content, invalidContent, validContent } from "../../../common/field/data"
-import { LoginID } from "../../../common/loginID/data"
-import { StartSessionFields } from "../../../profile/passwordReset/data"
-
 export type PasswordResetSessionFactory = Readonly<{
     link: LoginLinkFactory
     actions: Readonly<{
         application: ApplicationAction
         passwordResetSession: PasswordResetSessionAction
-        field: LoginIDFieldAction
+        form: Readonly<{
+            core: FormAction
+            loginID: LoginIDFormFieldAction
+        }>
     }>
     components: Readonly<{
-        passwordResetSession: PasswordResetSessionComponentFactory
-
-        field: Readonly<{
-            loginID: LoginIDFieldComponentFactory
+        passwordResetSession: Readonly<{
+            core: PasswordResetSessionComponentFactory
+            form: PasswordResetSessionFormComponentFactory
         }>
     }>
 }>
 export function initPasswordResetSessionResource(
     factory: PasswordResetSessionFactory
 ): PasswordResetSessionResource {
-    const fields = { loginIDField: initLoginIDFieldComponent(factory) }
-
-    const material: PasswordResetSessionMaterial = {
-        link: factory.link(),
-        startSession: factory.actions.passwordResetSession.startSession({
-            getFields: () => collectStartSessionFields(fields),
-        }),
-        checkStatus: factory.actions.passwordResetSession.checkStatus(),
+    return {
+        passwordResetSession: factory.components.passwordResetSession.core(core()),
+        form: factory.components.passwordResetSession.form(form()),
     }
 
-    return {
-        passwordResetSession: factory.components.passwordResetSession(material),
-        ...fields,
+    function core(): PasswordResetSessionMaterial {
+        return {
+            link: factory.link(),
+            startSession: factory.actions.passwordResetSession.startSession(),
+            checkStatus: factory.actions.passwordResetSession.checkStatus(),
+        }
+    }
+    function form(): PasswordResetSessionFormMaterial {
+        return {
+            validation: factory.actions.form.core.validation(),
+            history: factory.actions.form.core.history(),
+            loginID: factory.actions.form.loginID.field(),
+        }
     }
 }
 
@@ -113,43 +117,4 @@ export function initPasswordResetResource(
             viewer: factory.actions.form.password.viewer(),
         }
     }
-}
-
-type StartSessionFieldComponents = Readonly<{
-    loginIDField: LoginIDFieldComponent
-}>
-
-async function collectStartSessionFields(
-    fields: StartSessionFieldComponents
-): Promise<Content<StartSessionFields>> {
-    const loginID = await collectLoginID(fields.loginIDField)
-
-    if (!loginID.valid) {
-        return invalidContent()
-    }
-    return validContent({
-        loginID: loginID.content,
-    })
-}
-
-export type LoginIDFieldFactory = Readonly<{
-    actions: Readonly<{
-        field: LoginIDFieldAction
-    }>
-    components: Readonly<{
-        field: Readonly<{
-            loginID: LoginIDFieldComponentFactory
-        }>
-    }>
-}>
-export function initLoginIDFieldComponent(factory: LoginIDFieldFactory): LoginIDFieldComponent {
-    return factory.components.field.loginID({ loginID: factory.actions.field.loginID() })
-}
-
-function collectLoginID(loginIDField: LoginIDFieldComponent): Promise<Content<LoginID>> {
-    return new Promise((resolve) => {
-        loginIDField.validate((event) => {
-            resolve(event.content)
-        })
-    })
 }

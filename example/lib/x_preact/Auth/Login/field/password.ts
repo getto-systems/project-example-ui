@@ -23,7 +23,6 @@ import {
     PasswordCharacter,
     PasswordView,
 } from "../../../../auth/common/field/password/data"
-import { Valid } from "../../../../auth/common/field/data"
 
 type Props = Readonly<{
     password: PasswordFormFieldComponent
@@ -57,13 +56,7 @@ export function PasswordFormField({ password, help }: Props): VNode {
     }
 }
 
-export interface PasswordFieldHandler {
-    onInput(event: InputEvent): void
-    show(): void
-    hide(): void
-}
-
-export function passwordValidationError(
+function passwordValidationError(
     result: FormValidationResult<PasswordValidationError>,
     character: PasswordCharacter
 ): VNodeContent[] {
@@ -86,35 +79,12 @@ export function passwordValidationError(
     })
 }
 
-export function passwordFieldError(
-    result: Valid<PasswordValidationError>,
-    character: PasswordCharacter
-): VNode[] {
-    if (result.valid) {
-        return []
-    }
-
-    return result.err.map((err) => {
-        switch (err) {
-            case "empty":
-                return html`<p class="form__message">パスワードを入力してください</p>`
-
-            case "too-long":
-                if (character.complex) {
-                    return html`<p class="form__message">パスワードが長すぎます(18文字程度)</p>`
-                } else {
-                    return html`<p class="form__message">パスワードが長すぎます(72文字以内)</p>`
-                }
-        }
-    })
-}
-
-export interface PasswordViewHandler {
+interface PasswordViewHandler {
     show(): void
     hide(): void
 }
 
-export function passwordView(
+function passwordView(
     handler: PasswordViewHandler,
     view: PasswordView,
     character: PasswordCharacter

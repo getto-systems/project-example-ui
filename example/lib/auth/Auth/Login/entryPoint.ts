@@ -3,10 +3,11 @@ import { ApplicationComponent } from "../../../sub/getto-example/application/com
 import { RenewCredentialComponent } from "../renewCredential/component"
 
 import { PasswordLoginComponent, PasswordLoginFormComponent } from "../passwordLogin/component"
-import { PasswordResetSessionComponent } from "../passwordResetSession/component"
+import {
+    PasswordResetSessionComponent,
+    PasswordResetSessionFormComponent,
+} from "../passwordResetSession/component"
 import { PasswordResetComponent, PasswordResetFormComponent } from "../passwordReset/component"
-
-import { LoginIDFieldComponent } from "../field/loginID/component"
 
 export type LoginEntryPoint = Readonly<{
     view: LoginView
@@ -38,7 +39,7 @@ export type PasswordLoginResource = Readonly<{
 }>
 export type PasswordResetSessionResource = Readonly<{
     passwordResetSession: PasswordResetSessionComponent
-    loginIDField: LoginIDFieldComponent
+    form: PasswordResetSessionFormComponent
 }>
 export type PasswordResetResource = Readonly<{
     passwordReset: PasswordResetComponent

@@ -1,4 +1,6 @@
 import { ApplicationComponent } from "../../../sub/getto-example/application/component"
+import { FormComponent, FormMaterial } from "../../../sub/getto-form/component/component"
+import { LoginIDFormFieldComponent, LoginIDFormFieldMaterial } from "../field/loginID/component"
 
 import { LoginLink } from "../link"
 
@@ -10,7 +12,9 @@ import {
     StartSessionError,
     CheckStatusError,
     SendTokenError,
+    StartSessionFields,
 } from "../../profile/passwordReset/data"
+import { FormConvertResult } from "../../../sub/getto-form/action/data"
 
 export interface PasswordResetSessionComponentFactory {
     (material: PasswordResetSessionMaterial): PasswordResetSessionComponent
@@ -24,7 +28,7 @@ export type PasswordResetSessionMaterial = Readonly<{
 export interface PasswordResetSessionComponent
     extends ApplicationComponent<PasswordResetSessionComponentState> {
     readonly link: LoginLink
-    startSession(): void
+    startSession(fields: FormConvertResult<StartSessionFields>): void
 }
 
 export type PasswordResetSessionComponentState =
@@ -41,4 +45,15 @@ export type PasswordResetSessionComponentState =
 
 export const initialPasswordResetSessionComponentState: PasswordResetSessionComponentState = {
     type: "initial-reset-session",
+}
+
+export interface PasswordResetSessionFormComponentFactory {
+    (material: PasswordResetSessionFormMaterial): PasswordResetSessionFormComponent
+}
+export type PasswordResetSessionFormMaterial = FormMaterial &
+    LoginIDFormFieldMaterial
+
+export interface PasswordResetSessionFormComponent extends FormComponent {
+    readonly loginID: LoginIDFormFieldComponent
+    getStartSessionFields(): FormConvertResult<StartSessionFields>
 }

@@ -25,55 +25,57 @@ class Stack implements FormHistoryStack {
         }
     }
 
-    undo(): FormHistoryRestoreResult {
-        const result = this.undoItem()
+    moveTo(result: FindFormHistoryStackResult): FormHistoryRestoreResult {
         if (!result.found) {
             return { type: "disabled" }
         }
 
-        this.position = this.position - 1
+        this.position = result.nextPosition
         return { type: "enabled", item: result.item }
+    }
+
+    undo(): FormHistoryRestoreResult {
+        return this.moveTo(this.undoItem())
     }
     undoEnabled(): boolean {
         return this.undoItem().found
     }
     undoItem(): FindFormHistoryStackResult {
-        if (this.position >= this.history.length || this.position <= 0) {
-            return { found: false }
-        }
-        const item = this.history[this.position]
-        switch (item.history.previous.type) {
-            case "first":
-                return { found: false }
+        if (this.position >= 0 && this.position < this.history.length) {
+            const item = this.history[this.position]
+            switch (item.history.previous.type) {
+                case "first":
+                    return { found: false }
 
-            case "hasPrevious":
-                return {
-                    found: true,
-                    item: { path: item.path, history: item.history.previous.history },
-                }
+                case "hasPrevious":
+                    return {
+                        found: true,
+                        item: {
+                            path: item.path,
+                            history: item.history.previous.history,
+                        },
+                        nextPosition: this.position - 1,
+                    }
+            }
         }
+        return { found: false }
     }
 
     redo(): FormHistoryRestoreResult {
-        const result = this.redoItem()
-        if (!result.found) {
-            return { type: "disabled" }
-        }
-
-        this.position = this.position + 1
-        return { type: "enabled", item: result.item }
+        return this.moveTo(this.redoItem())
     }
     redoEnabled(): boolean {
         return this.redoItem().found
     }
     redoItem(): FindFormHistoryStackResult {
-        if (this.position + 1 >= this.history.length) {
-            return { found: false }
+        const nextPosition = this.position + 1
+        if (nextPosition >= 0 && nextPosition < this.history.length) {
+            return { found: true, item: this.history[nextPosition], nextPosition }
         }
-        return { found: true, item: this.history[this.position + 1] }
+        return { found: false }
     }
 }
 
 type FindFormHistoryStackResult =
     | Readonly<{ found: false }>
-    | Readonly<{ found: true; item: FormHistoryStackItem }>
+    | Readonly<{ found: true; item: FormHistoryStackItem; nextPosition: number }>
