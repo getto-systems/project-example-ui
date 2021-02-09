@@ -6,11 +6,7 @@ import {
 } from "../../Login/tests/core"
 
 import { initLoginLink } from "../../Login/main/link"
-import {
-    initPasswordResetResource,
-    PasswordResetLocationInfo,
-    PasswordResetFactory,
-} from "../../Login/impl/reset"
+import { initPasswordResetResource, PasswordResetFactory } from "../../Login/impl/reset"
 
 import { initPasswordResetComponent, initPasswordResetFormComponent } from "../impl"
 import { initFormAction } from "../../../../sub/getto-form/main/form"

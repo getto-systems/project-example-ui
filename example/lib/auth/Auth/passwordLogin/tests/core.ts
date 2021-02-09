@@ -7,11 +7,7 @@ import {
 
 import { initLoginLink } from "../../Login/main/link"
 
-import {
-    initPasswordLoginResource,
-    PasswordLoginLocationInfo,
-    PasswordLoginFactory,
-} from "../../Login/impl/login"
+import { initPasswordLoginResource, PasswordLoginFactory } from "../../Login/impl/login"
 
 import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../impl"
 

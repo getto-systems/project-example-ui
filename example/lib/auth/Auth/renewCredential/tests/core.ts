@@ -5,11 +5,7 @@ import {
     initRenewCredentialLocationInfo,
 } from "../../Login/tests/core"
 
-import {
-    initRenewCredentialResource,
-    RenewCredentialLocationInfo,
-    RenewCredentialFactory,
-} from "../../Login/impl/renew"
+import { initRenewCredentialResource, RenewCredentialFactory } from "../../Login/impl/renew"
 
 import { initRenewCredentialComponent } from "../impl"
 
