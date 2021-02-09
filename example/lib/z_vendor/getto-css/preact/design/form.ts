@@ -145,6 +145,9 @@ type FieldHelpContent = Readonly<{
     notice: VNodeContent[]
 }>
 function fieldHelp({ help, notice }: FieldHelpContent) {
+    if (help.length + notice.length == 0) {
+        return ""
+    }
     return html`<aside class="field__help">${help.map(toFieldHelp)}${notice.map(toFieldNotice)}</aside>`
 }
 function toFieldNotice(message: VNodeContent) {

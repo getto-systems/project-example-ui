@@ -39,13 +39,11 @@ import { initAuthCredentialRepository } from "../../../login/renew/impl/reposito
 import { initRenewCredentialComponent } from "../../renewCredential/impl"
 import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../../passwordLogin/impl"
 import { initPasswordResetSessionComponent } from "../../passwordResetSession/impl"
-import { initPasswordResetComponent } from "../../passwordReset/impl"
+import { initPasswordResetComponent, initPasswordResetFormComponent } from "../../passwordReset/impl"
 
 import { initLoginIDFieldComponent } from "../../field/loginID/impl"
-import { initPasswordFieldComponent } from "../../field/password/impl"
 
 import { loginIDField } from "../../../common/field/loginID/impl/core"
-import { passwordField } from "../../../common/field/password/impl/core"
 
 import { currentPagePathname, detectViewState, detectResetToken } from "../impl/location"
 
@@ -83,7 +81,6 @@ export function newLoginAsSingle(): LoginEntryPoint {
 
             field: {
                 loginID: loginIDField,
-                password: passwordField,
             },
         },
         components: {
@@ -91,11 +88,10 @@ export function newLoginAsSingle(): LoginEntryPoint {
 
             passwordLogin: { core: initPasswordLoginComponent, form: initPasswordLoginFormComponent },
             passwordResetSession: initPasswordResetSessionComponent,
-            passwordReset: initPasswordResetComponent,
+            passwordReset: { core: initPasswordResetComponent, form: initPasswordResetFormComponent },
 
             field: {
                 loginID: initLoginIDFieldComponent,
-                password: initPasswordFieldComponent,
             },
         },
     }

@@ -14,8 +14,8 @@ import { appendScript } from "./script"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
-import { LoginIDFormField } from "./PasswordLogin/LoginIDField"
-import { PasswordFormField } from "./PasswordLogin/PasswordField"
+import { LoginIDFormField } from "./field/loginID"
+import { PasswordFormField } from "./field/password"
 
 import { PasswordResetResource } from "../../../auth/Auth/Login/entryPoint"
 import { initialPasswordResetComponentState } from "../../../auth/Auth/passwordReset/component"
@@ -82,7 +82,16 @@ export function PasswordReset(resource: Props): VNode {
         return form(
             loginBox(siteInfo(), {
                 title: resetTitle(),
-                body: [h(LoginIDFormField, resource.form), h(PasswordFormField, resource.form)],
+                body: [
+                    h(LoginIDFormField, {
+                        loginID: resource.form.loginID,
+                        help: ["最初に入力したログインIDを入力してください"],
+                    }),
+                    h(PasswordFormField, {
+                        password: resource.form.password,
+                        help: ["新しいパスワードを入力してください"],
+                    }),
+                ],
                 footer: [buttons({ left: button(), right: sendLink() }), error()],
             })
         )

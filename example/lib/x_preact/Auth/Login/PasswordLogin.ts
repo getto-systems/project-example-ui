@@ -20,8 +20,8 @@ import { appendScript } from "./script"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
-import { LoginIDFormField } from "./PasswordLogin/LoginIDField"
-import { PasswordFormField } from "./PasswordLogin/PasswordField"
+import { LoginIDFormField } from "./field/loginID"
+import { PasswordFormField } from "./field/password"
 
 import { PasswordLoginResource } from "../../../auth/Auth/Login/entryPoint"
 import { initialPasswordLoginComponentState } from "../../../auth/Auth/passwordLogin/component"
@@ -90,7 +90,10 @@ export function PasswordLogin(resource: Props): VNode {
         return form(
             loginBox(siteInfo(), {
                 title: loginTitle(),
-                body: [h(LoginIDFormField, resource.form), h(PasswordFormField, resource.form)],
+                body: [
+                    h(LoginIDFormField, { loginID: resource.form.loginID, help: [] }),
+                    h(PasswordFormField, { password: resource.form.password, help: [] }),
+                ],
                 footer: [buttons({ left: button(), right: resetLink() }), error()],
             })
         )

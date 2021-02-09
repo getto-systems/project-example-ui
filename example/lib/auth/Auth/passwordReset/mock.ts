@@ -1,4 +1,4 @@
-import { MockComponent_legacy, MockPropsPasser } from "../../../sub/getto-example/application/mock"
+import { MockComponent, MockPropsPasser } from "../../../sub/getto-example/application/mock"
 import { FormMockComponent, FormMockProps } from "../../../sub/getto-form/component/mock"
 import { initMockLoginIDFormField, LoginIDFormFieldMockProps } from "../field/loginID/mock"
 import { initMockPasswordFormField, PasswordFormFieldMockProps } from "../field/password/mock"
@@ -26,8 +26,8 @@ export type PasswordResetMockProps = PasswordResetMockProps_core &
     LoginIDFormFieldMockProps &
     PasswordFormFieldMockProps
 
-export function initMockPasswordReset(state: PasswordResetComponentState): PasswordResetMockComponent {
-    return new PasswordResetMockComponent(state)
+export function initMockPasswordReset(passer: PasswordResetMockPasser): PasswordResetMockComponent {
+    return new PasswordResetMockComponent(passer)
 }
 
 export type PasswordResetMockProps_core =
@@ -41,47 +41,48 @@ export type PasswordResetMockProps_core =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function mapPasswordResetMockProps(
-    props: PasswordResetMockProps_core
-): PasswordResetComponentState {
-    switch (props.type) {
-        case "initial":
-            return { type: "initial-reset" }
-
-        case "try":
-            return { type: "try-to-reset" }
-
-        case "delayed":
-            return { type: "delayed-to-reset" }
-
-        case "validation-error":
-            return { type: "failed-to-reset", err: { type: "validation-error" } }
-
-        case "bad-request":
-            return { type: "failed-to-reset", err: { type: "bad-request" } }
-
-        case "invalid":
-            return { type: "failed-to-reset", err: { type: "invalid-password-reset" } }
-
-        case "server-error":
-            return { type: "failed-to-reset", err: { type: "server-error" } }
-
-        case "bad-response":
-            return { type: "failed-to-reset", err: { type: "bad-response", err: props.err } }
-
-        case "infra-error":
-            return { type: "failed-to-reset", err: { type: "infra-error", err: props.err } }
-    }
-}
-
-export class PasswordResetMockComponent
-    extends MockComponent_legacy<PasswordResetComponentState>
+class PasswordResetMockComponent
+    extends MockComponent<PasswordResetComponentState>
     implements PasswordResetComponent {
     link: LoginLink
 
-    constructor(state: PasswordResetComponentState) {
-        super(state)
+    constructor(passer: PasswordResetMockPasser) {
+        super()
+        passer.addPropsHandler((props) => {
+            this.post(mapProps(props))
+        })
         this.link = initLoginLink()
+
+        function mapProps(props: PasswordResetMockProps): PasswordResetComponentState {
+            switch (props.type) {
+                case "initial":
+                    return { type: "initial-reset" }
+
+                case "try":
+                    return { type: "try-to-reset" }
+
+                case "delayed":
+                    return { type: "delayed-to-reset" }
+
+                case "validation-error":
+                    return { type: "failed-to-reset", err: { type: "validation-error" } }
+
+                case "bad-request":
+                    return { type: "failed-to-reset", err: { type: "bad-request" } }
+
+                case "invalid":
+                    return { type: "failed-to-reset", err: { type: "invalid-password-reset" } }
+
+                case "server-error":
+                    return { type: "failed-to-reset", err: { type: "server-error" } }
+
+                case "bad-response":
+                    return { type: "failed-to-reset", err: { type: "bad-response", err: props.err } }
+
+                case "infra-error":
+                    return { type: "failed-to-reset", err: { type: "infra-error", err: props.err } }
+            }
+        }
     }
 
     reset(): void {
