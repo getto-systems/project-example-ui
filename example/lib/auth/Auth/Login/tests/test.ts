@@ -1,4 +1,4 @@
-import { initAuthCredentialTestStorage, initLoginViewCollector } from "./core"
+import { initAuthCredentialTestStorage, initLoginViewLocationInfo } from "./core"
 
 import {
     PasswordLoginConfig,
@@ -234,8 +234,8 @@ function standardLoginView() {
     const currentURL = standardURL()
     const repository = standardRepository()
     const clock = standardClock()
-    const collector = initLoginViewCollector(currentURL)
-    const view = new View(collector, {
+    const locationInfo = initLoginViewLocationInfo(currentURL)
+    const view = new View(locationInfo, {
         renewCredential: (setup) =>
             standardRenewCredentialResource(currentURL, repository, clock, setup),
         passwordLogin: () => standardPasswordLoginResource(currentURL, repository, clock),
@@ -249,8 +249,8 @@ function passwordResetSessionLoginView() {
     const currentURL = passwordResetSessionURL()
     const repository = standardRepository()
     const clock = standardClock()
-    const collector = initLoginViewCollector(currentURL)
-    const view = new View(collector, {
+    const locationInfo = initLoginViewLocationInfo(currentURL)
+    const view = new View(locationInfo, {
         renewCredential: (setup) =>
             standardRenewCredentialResource(currentURL, repository, clock, setup),
         passwordLogin: () => standardPasswordLoginResource(currentURL, repository, clock),
@@ -264,8 +264,8 @@ function passwordResetLoginView() {
     const currentURL = passwordResetURL()
     const repository = standardRepository()
     const clock = standardClock()
-    const collector = initLoginViewCollector(currentURL)
-    const view = new View(collector, {
+    const locationInfo = initLoginViewLocationInfo(currentURL)
+    const view = new View(locationInfo, {
         renewCredential: (setup) =>
             standardRenewCredentialResource(currentURL, repository, clock, setup),
         passwordLogin: () => standardPasswordLoginResource(currentURL, repository, clock),

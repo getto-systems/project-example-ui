@@ -5,11 +5,11 @@ export type ApplicationAction = Readonly<{
 }>
 
 export interface SecureScriptPathPod {
-    (collector: SecureScriptPathCollector): SecureScriptPath
+    (info: SecureScriptPathLocationInfo): SecureScriptPath
 }
 export interface SecureScriptPath {
     (): ScriptPath
 }
-export interface SecureScriptPathCollector {
+export interface SecureScriptPathLocationInfo {
     getPagePathname(): PagePathname
 }

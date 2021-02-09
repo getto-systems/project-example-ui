@@ -13,12 +13,12 @@ import {
 import { RenewCredentialComponent } from "../../renewCredential/component"
 
 export class View extends ApplicationBaseComponent<LoginState> implements LoginView {
-    collector: LoginViewCollector
+    locationInfo: LoginViewLocationInfo
     components: LoginResourceFactory
 
-    constructor(collector: LoginViewCollector, components: LoginResourceFactory) {
+    constructor(locationInfo: LoginViewLocationInfo, components: LoginResourceFactory) {
         super()
-        this.collector = collector
+        this.locationInfo = locationInfo
         this.components = components
     }
 
@@ -38,7 +38,7 @@ export class View extends ApplicationBaseComponent<LoginState> implements LoginV
         renewCredential.addStateHandler((state) => {
             switch (state.type) {
                 case "required-to-login":
-                    this.post(this.mapLoginView(this.collector.login.getLoginView()))
+                    this.post(this.mapLoginView(this.locationInfo.login.getLoginView()))
                     return
             }
         })
@@ -62,7 +62,7 @@ export interface LoginResourceFactory {
     passwordResetSession(): PasswordResetSessionResource
     passwordReset(): PasswordResetResource
 }
-export interface LoginViewCollector {
+export interface LoginViewLocationInfo {
     login: Readonly<{
         getLoginView(): ViewState
     }>

@@ -2,12 +2,12 @@ import {
     initApplicationAction,
     initSetContinuousRenewAction,
     initRenewAction,
-    initRenewCredentialCollector,
+    initRenewCredentialLocationInfo,
 } from "../../Login/tests/core"
 
 import {
     initRenewCredentialResource,
-    RenewCredentialCollector,
+    RenewCredentialLocationInfo,
     RenewCredentialFactory,
 } from "../../Login/impl/renew"
 
@@ -63,9 +63,8 @@ export function newRenewCredentialResource(
             renewCredential: initRenewCredentialComponent,
         },
     }
-    const collector: RenewCredentialCollector = initRenewCredentialCollector(currentURL)
 
-    return initRenewCredentialResource(factory, collector, hook)
+    return initRenewCredentialResource(factory, initRenewCredentialLocationInfo(currentURL), hook)
 }
 
 interface Setup<T> {

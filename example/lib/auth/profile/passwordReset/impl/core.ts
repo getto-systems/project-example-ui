@@ -107,13 +107,13 @@ class StatusChecker {
     }
 }
 
-export const reset = (infra: ResetInfra): ResetPod => (collector) => async (fields, post) => {
+export const reset = (infra: ResetInfra): ResetPod => (locationInfo) => async (fields, post) => {
     if (!fields.success) {
         post({ type: "failed-to-reset", err: { type: "validation-error" } })
         return
     }
 
-    const resetToken = collector.getResetToken()
+    const resetToken = locationInfo.getResetToken()
     if (!resetToken) {
         post({ type: "failed-to-reset", err: { type: "empty-reset-token" } })
         return

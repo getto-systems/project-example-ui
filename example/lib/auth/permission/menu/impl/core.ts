@@ -28,7 +28,7 @@ import {
     MenuCategoryLabel,
 } from "../data"
 
-export const loadBreadcrumb = (infra: LoadBreadcrumbInfra): LoadBreadcrumbPod => (collector) => async (
+export const loadBreadcrumb = (infra: LoadBreadcrumbInfra): LoadBreadcrumbPod => (locationInfo) => async (
     post
 ) => {
     const { menuTree } = infra
@@ -37,7 +37,7 @@ export const loadBreadcrumb = (infra: LoadBreadcrumbInfra): LoadBreadcrumbPod =>
         type: "succeed-to-load",
         breadcrumb: toBreadcrumb({
             menuTree,
-            menuTarget: collector.getMenuTarget(),
+            menuTarget: locationInfo.getMenuTarget(),
         }),
     })
 }
@@ -87,7 +87,7 @@ function toBreadcrumb({ menuTree, menuTarget }: BreadcrumbInfo): Breadcrumb {
     }
 }
 
-export const loadMenu = (infra: LoadMenuInfra): LoadMenuPod => (collector) => async (
+export const loadMenu = (infra: LoadMenuInfra): LoadMenuPod => (locationInfo) => async (
     nonce,
     roles,
     post
@@ -97,7 +97,7 @@ export const loadMenu = (infra: LoadMenuInfra): LoadMenuPod => (collector) => as
     const info: MenuInfo = {
         menuTree: menuTree,
         roles,
-        menuTarget: collector.getMenuTarget(),
+        menuTarget: locationInfo.getMenuTarget(),
     }
 
     const menuExpandResponse = menuExpands.findMenuExpand()

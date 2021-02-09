@@ -3,7 +3,7 @@ import { initCredentialAction, initMenuAction,  } from "../../../../auth/Outline
 import { detectMenuTarget } from "../../../../auth/Outline/Menu/impl/location"
 import { MenuBadgeSimulator } from "../../../../auth/permission/menu/impl/remote/menuBadge/simulate"
 
-import { DocumentCollector, DocumentFactory, initDocumentResource } from "../impl/core"
+import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
 
 import { initBreadcrumbListComponent } from "../../../../auth/Outline/breadcrumbList/impl"
 import { initMenuListComponent } from "../../../../auth/Outline/menuList/impl"
@@ -44,7 +44,7 @@ export function newDocumentResource(
             content: initContentComponent,
         },
     }
-    const collector: DocumentCollector = {
+    const locationInfo: DocumentLocationInfo = {
         menu: {
             getMenuTarget: () => detectMenuTarget(version, currentURL),
         },
@@ -53,7 +53,7 @@ export function newDocumentResource(
         },
     }
 
-    return initDocumentResource(factory, collector)
+    return initDocumentResource(factory, locationInfo)
 }
 
 function initContentAction(): ContentAction {

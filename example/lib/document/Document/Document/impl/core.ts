@@ -6,9 +6,9 @@ import { BreadcrumbListComponentFactory } from "../../../../auth/Outline/breadcr
 import { ContentComponentFactory } from "../../content/component"
 
 import { CredentialAction } from "../../../../auth/common/credential/action"
-import { MenuAction, MenuTargetCollector } from "../../../../auth/permission/menu/action"
+import { MenuAction, MenuLocationInfo } from "../../../../auth/permission/menu/action"
 
-import { ContentAction, LoadContentCollector } from "../../../content/action"
+import { ContentAction, LoadContentLocationInfo } from "../../../content/action"
 
 export type DocumentFactory = Readonly<{
     actions: Readonly<{
@@ -23,23 +23,23 @@ export type DocumentFactory = Readonly<{
         content: ContentComponentFactory
     }>
 }>
-export type DocumentCollector = Readonly<{
-    menu: MenuTargetCollector
-    content: LoadContentCollector
+export type DocumentLocationInfo = Readonly<{
+    menu: MenuLocationInfo
+    content: LoadContentLocationInfo
 }>
 export function initDocumentResource(
     factory: DocumentFactory,
-    collector: DocumentCollector
+    locationInfo: DocumentLocationInfo
 ): DocumentResource {
     const actions = {
         loadApiNonce: factory.actions.credential.loadApiNonce(),
         loadApiRoles: factory.actions.credential.loadApiRoles(),
 
-        loadBreadcrumb: factory.actions.menu.loadBreadcrumb(collector.menu),
-        loadMenu: factory.actions.menu.loadMenu(collector.menu),
+        loadBreadcrumb: factory.actions.menu.loadBreadcrumb(locationInfo.menu),
+        loadMenu: factory.actions.menu.loadMenu(locationInfo.menu),
         toggleMenuExpand: factory.actions.menu.toggleMenuExpand(),
 
-        loadDocument: factory.actions.content.loadContent(collector.content),
+        loadDocument: factory.actions.content.loadContent(locationInfo.content),
     }
     return {
         menuList: factory.components.menuList(actions),

@@ -1,11 +1,11 @@
 import { delayed, wait } from "../../../../z_infra/delayed/core"
 
-import { LoginViewCollector } from "../impl/core"
+import { LoginViewLocationInfo } from "../impl/core"
 import { currentPagePathname, detectResetToken, detectViewState } from "../impl/location"
 
-import { RenewCredentialCollector } from "../impl/renew"
-import { PasswordLoginCollector } from "../impl/login"
-import { PasswordResetCollector } from "../impl/reset"
+import { RenewCredentialLocationInfo } from "../impl/renew"
+import { PasswordLoginLocationInfo } from "../impl/login"
+import { PasswordResetLocationInfo } from "../impl/reset"
 
 import { secureScriptPath } from "../../../common/application/impl/core"
 import { forceRenew, renew, setContinuousRenew } from "../../../login/renew/impl/core"
@@ -135,32 +135,32 @@ export function initPasswordResetAction(
     }
 }
 
-export function initLoginViewCollector(currentURL: URL): LoginViewCollector {
+export function initLoginViewLocationInfo(currentURL: URL): LoginViewLocationInfo {
     return {
         login: {
             getLoginView: () => detectViewState(currentURL),
         },
     }
 }
-export function initRenewCredentialCollector(currentURL: URL): RenewCredentialCollector {
+export function initRenewCredentialLocationInfo(currentURL: URL): RenewCredentialLocationInfo {
     return {
-        application: initApplicationCollector(currentURL),
+        application: initApplicationLocationInfo(currentURL),
     }
 }
-export function initPasswordLoginCollector(currentURL: URL): PasswordLoginCollector {
+export function initPasswordLoginLocationInfo(currentURL: URL): PasswordLoginLocationInfo {
     return {
-        application: initApplicationCollector(currentURL),
+        application: initApplicationLocationInfo(currentURL),
     }
 }
-export function initPasswordResetCollector(currentURL: URL): PasswordResetCollector {
+export function initPasswordResetLocationInfo(currentURL: URL): PasswordResetLocationInfo {
     return {
-        application: initApplicationCollector(currentURL),
+        application: initApplicationLocationInfo(currentURL),
         passwordReset: {
             getResetToken: () => detectResetToken(currentURL),
         },
     }
 }
-function initApplicationCollector(currentURL: URL) {
+function initApplicationLocationInfo(currentURL: URL) {
     return {
         getPagePathname: () => currentPagePathname(currentURL),
     }

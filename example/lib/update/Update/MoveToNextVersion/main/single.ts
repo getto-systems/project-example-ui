@@ -23,12 +23,12 @@ export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPoint {
             nextVersion: initNextVersionComponent,
         },
     }
-    const collector = {
+    const locationInfo = {
         nextVersion: {
             getAppTarget: () => detectAppTarget(env.version, currentURL),
         },
     }
-    const resource = initNextVersionResource(factory, collector)
+    const resource = initNextVersionResource(factory, locationInfo)
     return {
         resource,
         terminate: () => {

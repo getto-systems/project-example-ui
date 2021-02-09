@@ -2,14 +2,14 @@ import {
     initApplicationAction,
     initSetContinuousRenewAction,
     initPasswordLoginAction,
-    initPasswordLoginCollector,
+    initPasswordLoginLocationInfo,
 } from "../../Login/tests/core"
 
 import { initLoginLink } from "../../Login/main/link"
 
 import {
     initPasswordLoginResource,
-    PasswordLoginCollector,
+    PasswordLoginLocationInfo,
     PasswordLoginFactory,
 } from "../../Login/impl/login"
 
@@ -71,7 +71,6 @@ export function newPasswordLoginResource(
             passwordLogin: { core: initPasswordLoginComponent, form: initPasswordLoginFormComponent },
         },
     }
-    const collector: PasswordLoginCollector = initPasswordLoginCollector(currentURL)
 
-    return initPasswordLoginResource(factory, collector)
+    return initPasswordLoginResource(factory, initPasswordLoginLocationInfo(currentURL))
 }

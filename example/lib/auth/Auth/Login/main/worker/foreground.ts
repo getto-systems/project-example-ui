@@ -10,13 +10,13 @@ import {
 
 import { initLoginLink } from "../link"
 
-import { View, LoginResourceFactory, LoginViewCollector } from "../../impl/core"
-import { initRenewCredentialResource, RenewCredentialCollector } from "../../impl/renew"
-import { initPasswordLoginResource, PasswordLoginCollector } from "../../impl/login"
+import { View, LoginResourceFactory, LoginViewLocationInfo } from "../../impl/core"
+import { initRenewCredentialResource, RenewCredentialLocationInfo } from "../../impl/renew"
+import { initPasswordLoginResource, PasswordLoginLocationInfo } from "../../impl/login"
 import {
     initPasswordResetResource,
     initPasswordResetSessionResource,
-    PasswordResetCollector,
+    PasswordResetLocationInfo,
 } from "../../impl/reset"
 
 import { initRenewCredentialComponent } from "../../../renewCredential/impl"
@@ -66,7 +66,7 @@ import {
     StartSession,
     CheckStatus,
     Reset,
-    ResetCollector,
+    ResetLocationInfo,
 } from "../../../../profile/passwordReset/action"
 import { LoginIDFormFieldAction } from "../../../../common/field/loginID/action"
 import { PasswordFormFieldAction } from "../../../../common/field/password/action"
@@ -126,7 +126,7 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
         },
     }
 
-    const collector: Collector = {
+    const locationInfo: LocationInfo = {
         login: {
             getLoginView: () => detectViewState(currentURL),
         },
@@ -138,7 +138,7 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
         },
     }
 
-    return initLoginAsForeground(worker, factory, collector)
+    return initLoginAsForeground(worker, factory, locationInfo)
 }
 
 class ProxyMap<M, E> {
@@ -200,12 +200,12 @@ class CheckStatusProxyMap extends ProxyMap<CheckStatusProxyMessage, CheckStatusE
     }
 }
 class ResetProxyMap extends ProxyMap<ResetProxyMessage, ResetEvent> {
-    init(collector: ResetCollector): Reset {
+    init(locationInfo: ResetLocationInfo): Reset {
         return async (fields, post) => {
             this.post({
                 handlerID: this.register(post),
                 message: {
-                    resetToken: collector.getResetToken(),
+                    resetToken: locationInfo.getResetToken(),
                     fields,
                 },
             })
@@ -243,18 +243,18 @@ type ForegroundFactory = Readonly<{
         }>
     }>
 }>
-type Collector = LoginViewCollector &
-    RenewCredentialCollector &
-    PasswordLoginCollector &
-    PasswordResetCollector
+type LocationInfo = LoginViewLocationInfo &
+    RenewCredentialLocationInfo &
+    PasswordLoginLocationInfo &
+    PasswordResetLocationInfo
 
 function initLoginAsForeground(
     worker: Worker,
     factory: ForegroundFactory,
-    collector: Collector
+    locationInfo: LocationInfo
 ): LoginEntryPoint {
     const map = initProxy(postForegroundMessage)
-    const view = new View(collector, initLoginComponentFactory(factory, collector, map))
+    const view = new View(locationInfo, initLoginComponentFactory(factory, locationInfo, map))
     const errorHandler = (err: string) => {
         view.error(err)
     }
@@ -314,7 +314,7 @@ function initProxy(post: Post<ForegroundMessage>): Proxy {
 }
 function initLoginComponentFactory(
     foregroundFactory: ForegroundFactory,
-    collector: Collector,
+    locationInfo: LocationInfo,
     proxy: Proxy
 ): LoginResourceFactory {
     const factory = {
@@ -323,11 +323,11 @@ function initLoginComponentFactory(
     }
 
     return {
-        renewCredential: (setup) => initRenewCredentialResource(factory, collector, setup),
+        renewCredential: (setup) => initRenewCredentialResource(factory, locationInfo, setup),
 
-        passwordLogin: () => initPasswordLoginResource(factory, collector),
+        passwordLogin: () => initPasswordLoginResource(factory, locationInfo),
         passwordResetSession: () => initPasswordResetSessionResource(factory),
-        passwordReset: () => initPasswordResetResource(factory, collector),
+        passwordReset: () => initPasswordResetResource(factory, locationInfo),
     }
 
     type ActionProxyFactory = Readonly<{
@@ -346,7 +346,7 @@ function initLoginComponentFactory(
                 checkStatus: () => proxy.passwordResetSession.checkStatus.init(),
             },
             passwordReset: {
-                reset: (collector) => proxy.passwordReset.reset.init(collector),
+                reset: (locationInfo) => proxy.passwordReset.reset.init(locationInfo),
             },
         }
     }
