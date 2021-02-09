@@ -6,8 +6,8 @@ export type LoginFields = Readonly<{
     password: Password
 }>
 
-export type LoginError =
-    | Readonly<{ type: "validation-error" }>
+export type LoginError = Readonly<{ type: "validation-error" }> | LoginRemoteError
+export type LoginRemoteError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "invalid-password-login" }>
     | Readonly<{ type: "server-error" }>
