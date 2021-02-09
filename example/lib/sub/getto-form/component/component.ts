@@ -3,6 +3,7 @@ import { ApplicationComponent } from "../../getto-example/application/component"
 import { FormHistoryStack, FormInput, FormValidationStateSet } from "../action/action"
 
 import {
+    emptyInputString,
     FormHistory,
     FormHistoryPath,
     FormHistoryState,
@@ -10,7 +11,6 @@ import {
     FormInputString,
     FormValidationResult,
     FormValidationState,
-    markInputString,
 } from "../action/data"
 
 export type FormMaterial = Readonly<{
@@ -63,7 +63,7 @@ export interface FormInputComponent extends ApplicationComponent<FormInputCompon
 }
 
 export type FormInputComponentState = Readonly<{ value: FormInputString }>
-export const initialFormInputComponentState: FormInputComponentState = { value: markInputString("") }
+export const initialFormInputComponentState: FormInputComponentState = { value: emptyInputString() }
 
 interface Handler<E> {
     (event: E): void
