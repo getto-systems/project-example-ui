@@ -4,10 +4,9 @@ import { RenewCredentialComponent } from "../renewCredential/component"
 
 import { PasswordLoginComponent, PasswordLoginFormComponent } from "../passwordLogin/component"
 import { PasswordResetSessionComponent } from "../passwordResetSession/component"
-import { PasswordResetComponent } from "../passwordReset/component"
+import { PasswordResetComponent, PasswordResetFormComponent } from "../passwordReset/component"
 
 import { LoginIDFieldComponent } from "../field/loginID/component"
-import { PasswordFieldComponent } from "../field/password/component"
 
 export type LoginEntryPoint = Readonly<{
     view: LoginView
@@ -43,8 +42,7 @@ export type PasswordResetSessionResource = Readonly<{
 }>
 export type PasswordResetResource = Readonly<{
     passwordReset: PasswordResetComponent
-    loginIDField: LoginIDFieldComponent
-    passwordField: PasswordFieldComponent
+    form: PasswordResetFormComponent
 }>
 
 interface Terminate {

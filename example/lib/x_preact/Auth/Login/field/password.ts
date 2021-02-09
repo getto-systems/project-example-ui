@@ -1,11 +1,21 @@
-import { VNode } from "preact"
+import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
 import { VNodeContent } from "../../../../z_vendor/getto-css/preact/common"
+import {
+    field,
+    field_error,
+    label_password_fill,
+} from "../../../../z_vendor/getto-css/preact/design/form"
 
-import { mapInputEvent } from "./common"
+import { useComponent } from "../../../common/hooks"
 
-import { PasswordFieldComponent } from "../../../../auth/Auth/field/password/component"
+import { FormInput } from "../../../common/form/FormInput"
+
+import {
+    initialPasswordFormFieldComponentState,
+    PasswordFormFieldComponent,
+} from "../../../../auth/Auth/field/password/component"
 
 import { FormInputString, FormValidationResult } from "../../../../sub/getto-form/action/data"
 import {
@@ -15,24 +25,42 @@ import {
 } from "../../../../auth/common/field/password/data"
 import { Valid } from "../../../../auth/common/field/data"
 
+type Props = Readonly<{
+    password: PasswordFormFieldComponent
+    help: VNodeContent[]
+}>
+export function PasswordFormField({ password, help }: Props): VNode {
+    const state = useComponent(password, initialPasswordFormFieldComponentState)
+
+    return label_password_fill(content())
+
+    function content() {
+        const handler = {
+            show: () => password.show(),
+            hide: () => password.hide(),
+        }
+
+        const content = {
+            title: "パスワード",
+            body: h(FormInput, { type: "password", input: password.input }),
+            help: [...help, passwordView(handler, state.view, state.character)],
+        }
+
+        if (state.result.valid) {
+            return field(content)
+        } else {
+            return field_error({
+                ...content,
+                notice: passwordValidationError(state.result, state.character),
+            })
+        }
+    }
+}
+
 export interface PasswordFieldHandler {
     onInput(event: InputEvent): void
     show(): void
     hide(): void
-}
-
-export function passwordFieldHandler(passwordField: PasswordFieldComponent): PasswordFieldHandler {
-    return {
-        onInput: mapInputEvent((password) => {
-            passwordField.set(password)
-        }),
-        show() {
-            passwordField.show()
-        },
-        hide() {
-            passwordField.hide()
-        },
-    }
 }
 
 export function passwordValidationError(

@@ -12,12 +12,9 @@ import {
     PasswordResetFactory,
 } from "../../Login/impl/reset"
 
-import { initPasswordResetComponent } from "../impl"
-import { initLoginIDFieldComponent } from "../../field/loginID/impl"
-import { initPasswordFieldComponent } from "../../field/password/impl"
-
-import { loginIDField } from "../../../common/field/loginID/impl/core"
-import { passwordField } from "../../../common/field/password/impl/core"
+import { initPasswordResetComponent, initPasswordResetFormComponent } from "../impl"
+import { initFormAction } from "../../../../sub/getto-form/main/form"
+import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "../../Login/main/action/form"
 
 import { ResetSimulator } from "../../../profile/passwordReset/impl/remote/reset/simulate"
 import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
@@ -62,18 +59,14 @@ export function newPasswordResetResource(
 
             passwordReset: initPasswordResetAction(config.passwordReset, simulator.reset),
 
-            field: {
-                loginID: loginIDField,
-                password: passwordField,
+            form: {
+                core: initFormAction(),
+                loginID: initLoginIDFormFieldAction(),
+                password: initPasswordFormFieldAction(),
             },
         },
         components: {
-            passwordReset: initPasswordResetComponent,
-
-            field: {
-                loginID: initLoginIDFieldComponent,
-                password: initPasswordFieldComponent,
-            },
+            passwordReset: { core: initPasswordResetComponent, form: initPasswordResetFormComponent },
         },
     }
     const collector: PasswordResetCollector = initPasswordResetCollector(currentURL)

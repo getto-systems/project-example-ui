@@ -12,12 +12,12 @@ import {
     PasswordLoginFormComponent,
     PasswordLoginComponentState,
 } from "./component"
+import { FormComponentState } from "../../../sub/getto-form/component/component"
 import { LoginIDFormFieldComponent } from "../field/loginID/component"
 import { PasswordFormFieldComponent } from "../field/password/component"
 
 import { FormConvertResult } from "../../../sub/getto-form/action/data"
 import { LoginFields } from "../../login/passwordLogin/data"
-import { FormComponentState } from "../../../sub/getto-form/component/component"
 
 export type PasswordLoginMockPasser = MockPropsPasser<PasswordLoginMockProps>
 

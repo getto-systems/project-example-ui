@@ -35,15 +35,15 @@ export type ProxyResponse<T> = Readonly<{
 }>
 
 export type LoginProxyMessage = Readonly<{
-    content: FormConvertResult<LoginFields>
+    fields: FormConvertResult<LoginFields>
 }>
 export type StartSessionProxyMessage = Readonly<{
-    content: Content<StartSessionFields>
+    fields: Content<StartSessionFields>
 }>
 export type CheckStatusProxyMessage = Readonly<{
     sessionID: SessionID
 }>
 export type ResetProxyMessage = Readonly<{
     resetToken: ResetToken
-    content: Content<ResetFields>
+    fields: FormConvertResult<ResetFields>
 }>

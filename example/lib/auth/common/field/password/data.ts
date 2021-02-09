@@ -1,6 +1,5 @@
 import { FormInput } from "../../../../sub/getto-form/action/action"
 import { FormInputString } from "../../../../sub/getto-form/action/data"
-import { InputValue } from "../data"
 
 export type PasswordInput = FormInput
 
@@ -13,10 +12,5 @@ export type PasswordViewState = Readonly<{ show: false }> | Readonly<{ show: tru
 export type PasswordView =
     | Readonly<{ show: false }>
     | Readonly<{ show: true; password: FormInputString }>
-
-// TODO あとで削除
-export function showPassword(password: InputValue): PasswordView {
-    return { show: true, password: (password as unknown) as FormInputString } as PasswordView
-}
 
 export type PasswordValidationError = "empty" | "too-long"
