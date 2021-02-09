@@ -3,7 +3,12 @@ import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
-import { buttons, button_send, fieldError } from "../../../z_vendor/getto-css/preact/design/form"
+import {
+    buttons,
+    button_disabled,
+    button_send,
+    fieldError,
+} from "../../../z_vendor/getto-css/preact/design/form"
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 
 import { useComponent } from "../../common/hooks"
@@ -19,6 +24,7 @@ import { PasswordFormField } from "./field/password"
 
 import { PasswordResetResource } from "../../../auth/Auth/Login/entryPoint"
 import { initialPasswordResetComponentState } from "../../../auth/Auth/passwordReset/component"
+import { initialFormComponentState } from "../../../sub/getto-form/component/component"
 
 import { ResetError } from "../../../auth/profile/passwordReset/data"
 
@@ -26,6 +32,7 @@ type Props = PasswordResetResource
 export function PasswordReset(resource: Props): VNode {
     const { passwordReset } = resource
     const state = useComponent(passwordReset, initialPasswordResetComponentState)
+    const formState = useComponent(resource.form, initialFormComponentState)
 
     useEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useEffect で行う
@@ -106,13 +113,22 @@ export function PasswordReset(resource: Props): VNode {
             }
 
             function resetButton() {
-                // TODO field に入力されて、すべて OK なら state: confirm にしたい
-                return button_send({ state: "normal", label: "パスワードリセット", onClick })
+                const label = "パスワードリセット"
+
+                switch (formState.validation) {
+                    case "initial":
+                        return button_send({ state: "normal", label, onClick })
+
+                    case "valid":
+                        return button_send({ state: "confirm", label, onClick })
+
+                    case "invalid":
+                        return button_disabled({ label })
+                }
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    // TODO passwordReset.reset()
-                    alert("ここでりせっと！")
+                    passwordReset.reset(resource.form.getResetFields())
                 }
             }
             function connectingButton(): VNode {
