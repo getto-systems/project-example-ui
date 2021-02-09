@@ -148,7 +148,7 @@ function fieldHelp({ help, notice }: FieldHelpContent) {
     if (help.length + notice.length == 0) {
         return ""
     }
-    return html`<aside class="field__help">${help.map(toFieldHelp)}${notice.map(toFieldNotice)}</aside>`
+    return html`<aside class="field__help">${notice.map(toFieldNotice)}${help.map(toFieldHelp)}</aside>`
 }
 function toFieldNotice(message: VNodeContent) {
     return html`<p class="field__notice">${message}</p>`
