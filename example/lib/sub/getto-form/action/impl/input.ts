@@ -15,16 +15,18 @@ class Input implements FormInput {
     constructor() {
         this.previous = { type: "first" }
         this.current = markInputString("")
-        this.pushHistory()
+        this.pushHistory(() => {
+            // まず初期値のスナップショットを取る
+        })
     }
 
-    pushHistory(): FormHistory {
+    pushHistory(hook: Hook): void {
         const history = {
             previous: this.previous,
             current: this.current,
         }
         this.previous = { type: "hasPrevious", history }
-        return history
+        hook(history)
     }
 
     get(): FormInputString {
@@ -36,7 +38,9 @@ class Input implements FormInput {
     }
     change(post: Post<FormChangeEvent>): void {
         if (this.isChanged()) {
-            post({ history: this.pushHistory() })
+            this.pushHistory((history) => {
+                post({ history })
+            })
         }
     }
     isChanged(): boolean {
@@ -48,15 +52,19 @@ class Input implements FormInput {
                 return this.previous.history.current !== this.current
         }
     }
-    restore(history: FormHistory, post: Post<FormInputEvent>): void {
-        this.previous = history.previous
-        this.current = history.current
-        this.pushHistory()
-
-        post({ value: this.current })
+    restore(target: FormHistory, post: Post<FormInputEvent>): void {
+        this.previous = target.previous
+        this.current = target.current
+        this.pushHistory((history) => {
+            // restore した値のスナップショットを取る
+            post({ value: history.current })
+        })
     }
 }
 
+interface Hook {
+    (history: FormHistory): void
+}
 interface Post<E> {
     (event: E): void
 }
