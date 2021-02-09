@@ -121,9 +121,7 @@ export function PasswordLogin(resource: Props): VNode {
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    console.log(resource.form.getLoginFields())
-                    // TODO passwordLogin.login()
-                    alert("ここでログイン！")
+                    passwordLogin.login(resource.form.getLoginFields())
                 }
             }
             function connectingButton(): VNode {
