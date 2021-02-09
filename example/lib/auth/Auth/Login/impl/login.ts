@@ -61,7 +61,7 @@ export function initPasswordLoginResource(
             history: factory.actions.form.core.history(),
             loginID: factory.actions.form.loginID.field(),
             password: factory.actions.form.password.field(),
-            checker: factory.actions.form.password.character(),
+            character: factory.actions.form.password.character(),
             viewer: factory.actions.form.password.viewer(),
         }
     }

@@ -26,7 +26,7 @@ class FieldComponent
                 const password = material.password.input.get()
                 return {
                     result: material.password.validate(),
-                    character: material.checker(password),
+                    character: material.character(password),
                     view: view(),
                 }
 

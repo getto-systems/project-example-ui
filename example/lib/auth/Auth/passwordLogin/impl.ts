@@ -107,7 +107,7 @@ class FormComponent
             "password",
             initPasswordFormFieldComponent({
                 password: material.password,
-                checker: material.checker,
+                character: material.character,
                 viewer: material.viewer,
             })
         )
