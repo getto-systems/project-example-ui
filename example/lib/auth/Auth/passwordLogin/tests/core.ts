@@ -14,12 +14,11 @@ import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../i
 import { initFormAction } from "../../../../sub/getto-form/main/form"
 import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "../../Login/main/action/form"
 
-import { LoginSimulator } from "../../../login/passwordLogin/impl/remote/login/simulate"
 import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 
 import { Clock } from "../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../common/application/infra"
-import { PasswordLoginActionConfig } from "../../../login/passwordLogin/infra"
+import { LoginRemoteAccess, PasswordLoginActionConfig } from "../../../login/passwordLogin/infra"
 import { SetContinuousRenewActionConfig, AuthCredentialRepository } from "../../../login/renew/infra"
 
 import { PasswordLoginResource } from "../../Login/entryPoint"
@@ -33,7 +32,7 @@ export type PasswordLoginRepository = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
 export type PasswordLoginSimulator = Readonly<{
-    login: LoginSimulator
+    login: LoginRemoteAccess
     renew: RenewSimulator
 }>
 

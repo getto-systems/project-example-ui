@@ -1,4 +1,4 @@
-import { initAuthClient } from "../../../../../z_external/api/authClient"
+import { initApiAuthLogin } from "../../../../../z_external/api/auth/login"
 
 import { env } from "../../../../../y_environment/env"
 
@@ -35,10 +35,14 @@ import {
 } from "./message"
 
 export function initLoginWorker(worker: Worker): void {
-    const authClient = initAuthClient(env.authServerURL)
+    const api = {
+        auth: {
+            login: initApiAuthLogin(env.authServerURL),
+        },
+    }
 
     const material: Material = {
-        passwordLogin: initPasswordLoginAction(newPasswordLoginActionConfig(), authClient),
+        passwordLogin: initPasswordLoginAction(newPasswordLoginActionConfig(), api.auth.login),
         passwordResetSession: initPasswordResetSessionAction(newPasswordResetSessionActionConfig()),
         passwordReset: initPasswordResetAction(newPasswordResetActionConfig()),
     }

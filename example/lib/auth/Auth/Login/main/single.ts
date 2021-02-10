@@ -1,4 +1,5 @@
 import { initAuthClient } from "../../../../z_external/api/authClient"
+import { initApiAuthLogin } from "../../../../z_external/api/auth/login"
 
 import { env } from "../../../../y_environment/env"
 
@@ -15,7 +16,11 @@ import {
     RenewCredentialLocationInfo,
     RenewCredentialFactory,
 } from "../impl/renew"
-import { initPasswordLoginResource, PasswordLoginLocationInfo, PasswordLoginFactory } from "../impl/login"
+import {
+    initPasswordLoginResource,
+    PasswordLoginLocationInfo,
+    PasswordLoginFactory,
+} from "../impl/login"
 import {
     initPasswordResetResource,
     initPasswordResetSessionResource,
@@ -52,6 +57,12 @@ export function newLoginAsSingle(): LoginEntryPoint {
     const credentialStorage = localStorage
     const currentURL = new URL(location.toString())
 
+    const api = {
+        auth: {
+            login: initApiAuthLogin(env.authServerURL),
+        },
+    }
+
     const authClient = initAuthClient(env.authServerURL)
     const authCredentials = initAuthCredentialRepository(
         initAuthCredentialStorage(env.storageKey, credentialStorage)
@@ -68,7 +79,7 @@ export function newLoginAsSingle(): LoginEntryPoint {
                 authClient
             ),
 
-            passwordLogin: initPasswordLoginAction(newPasswordLoginActionConfig(), authClient),
+            passwordLogin: initPasswordLoginAction(newPasswordLoginActionConfig(), api.auth.login),
             passwordResetSession: initPasswordResetSessionAction(newPasswordResetSessionActionConfig()),
             passwordReset: initPasswordResetAction(newPasswordResetActionConfig()),
 
