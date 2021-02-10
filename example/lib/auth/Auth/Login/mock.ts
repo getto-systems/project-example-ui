@@ -1,4 +1,4 @@
-import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
+import { MockComponent, MockPropsPasser } from "../../../sub/getto-example/application/mock"
 
 import { initMockRenewCredential, RenewCredentialMockPropsPasser } from "../renewCredential/mock"
 import {
@@ -21,7 +21,7 @@ import { LoginEntryPoint, LoginView, LoginState } from "./entryPoint"
 
 export function newMockLoginAsRenewCredential(passer: RenewCredentialMockPropsPasser): LoginEntryPoint {
     return {
-        view: new View({
+        view: new MockView({
             type: "renew-credential",
             resource: {
                 renewCredential: initMockRenewCredential(passer),
@@ -33,7 +33,7 @@ export function newMockLoginAsRenewCredential(passer: RenewCredentialMockPropsPa
 
 export function newMockLoginAsPasswordLogin(passer: PasswordLoginMockPropsPasser): LoginEntryPoint {
     return {
-        view: new View({
+        view: new MockView({
             type: "password-login",
             resource: {
                 passwordLogin: initMockPasswordLogin(passer),
@@ -48,7 +48,7 @@ export function newMockLoginAsPasswordResetSession(
     passer: PasswordResetSessionMockPropsPasser
 ): LoginEntryPoint {
     return {
-        view: new View({
+        view: new MockView({
             type: "password-reset-session",
             resource: {
                 passwordResetSession: initMockPasswordResetSession(passer),
@@ -61,7 +61,7 @@ export function newMockLoginAsPasswordResetSession(
 
 export function newMockLoginAsPasswordReset(passer: PasswordResetMockPropsPasser): LoginEntryPoint {
     return {
-        view: new View({
+        view: new MockView({
             type: "password-reset",
             resource: {
                 passwordReset: initMockPasswordReset(passer),
@@ -72,60 +72,39 @@ export function newMockLoginAsPasswordReset(passer: PasswordResetMockPropsPasser
     }
 }
 
-export function newMockLoginAsError(): {
-    login: LoginEntryPoint
-    update: { error: Post<string> }
-} {
-    const mock = new MockResource(map("error"), (state) => new View(state))
+export function newMockLoginAsError(passer: LoginErrorMockPropsPasser): LoginEntryPoint {
     return {
-        login: {
-            view: mock.init(),
-            terminate,
-        },
-        update: {
-            error: (err) => {
-                mock.update()(map(err))
-            },
-        },
-    }
-
-    function map(err: string): LoginState {
-        return { type: "error", err }
+        view: new MockErrorView(passer),
+        terminate,
     }
 }
 
-class MockResource<S, C extends MockComponent_legacy<S>> {
-    state: S
-    factory: MockFactory<S, C>
-
-    component: C | null = null
-
-    constructor(state: S, factory: MockFactory<S, C>) {
-        this.state = state
-        this.factory = factory
+class MockView extends MockComponent<LoginState> implements LoginView {
+    constructor(state: LoginState) {
+        super()
+        this.post(state)
     }
 
-    init(): C {
-        if (!this.component) {
-            this.component = this.factory(this.state)
-        }
-        return this.component
+    load(): void {
+        // mock では特に何もしない
     }
-    update(): Post<S> {
-        return (state) => {
-            if (!this.component) {
-                this.state = state
-            } else {
-                this.component.update(state)
-            }
+}
+
+export type LoginErrorMockPropsPasser = MockPropsPasser<LoginErrorMockProps>
+export type LoginErrorMockProps = Readonly<{ error: string }>
+
+class MockErrorView extends MockComponent<LoginState> implements LoginView {
+    constructor(passer: LoginErrorMockPropsPasser) {
+        super()
+        passer.addPropsHandler((props) => {
+            this.post(mapProps(props))
+        })
+
+        function mapProps(err: LoginErrorMockProps): LoginState {
+            return { type: "error", err: err.error }
         }
     }
-}
-interface MockFactory<S, C extends MockComponent_legacy<S>> {
-    (state: S): C
-}
 
-class View extends MockComponent_legacy<LoginState> implements LoginView {
     load(): void {
         // mock では特に何もしない
     }
