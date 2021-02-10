@@ -1,10 +1,11 @@
 import { h, VNode } from "preact"
-import { html } from "htm/preact"
+import { html, useEffect } from "htm/preact"
 
 import { NotFound } from "../../x_preact/Auth/NotFound"
 
 import { newMockNotFound } from "../../auth/NotFound/NotFound/mock"
-import { mapCurrentVersionMockProps } from "../../auth/NotFound/currentVersion/mock"
+import { initMockPropsPasser } from "../../sub/getto-example/application/mock"
+import { CurrentVersionMockProps } from "../../auth/NotFound/currentVersion/mock"
 
 export default {
     title: "Auth/NotFound",
@@ -19,11 +20,14 @@ type MockProps = {
     // no props
 }
 const Template: Story<MockProps> = (args) => {
-    const { notFound, update } = newMockNotFound()
+    const passer = initMockPropsPasser<CurrentVersionMockProps>()
+    const notFound = newMockNotFound(passer)
     return h(Preview, { args })
 
     function Preview(_: { args: MockProps }) {
-        update.currentVersion(mapCurrentVersionMockProps({ type: "success" }))
+        useEffect(() => {
+            passer.update({ type: "success" })
+        })
         return html`
             <style>
                 .sb-main-padded {

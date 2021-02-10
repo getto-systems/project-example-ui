@@ -1,27 +1,36 @@
-import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
+import { MockComponent, MockPropsPasser } from "../../../sub/getto-example/application/mock"
 
 import { CurrentVersionComponent, CurrentVersionComponentState } from "./component"
 
 import { markVersion } from "../../permission/currentVersion/data"
 
-export function initMockCurrentVersionComponent(
-    state: CurrentVersionComponentState
-): CurrentVersionMockComponent {
-    return new CurrentVersionMockComponent(state)
-}
+export type CurrentVersionMockPasser = MockPropsPasser<CurrentVersionMockProps>
 
 export type CurrentVersionMockProps = Readonly<{ type: "success" }>
 
-export function mapCurrentVersionMockProps(props: CurrentVersionMockProps): CurrentVersionComponentState {
-    switch (props.type) {
-        case "success":
-            return { type: "succeed-to-find", version: markVersion("1.0.0") }
-    }
+export function initMockCurrentVersionComponent(
+    passer: CurrentVersionMockPasser
+): CurrentVersionComponent {
+    return new CurrentVersionMockComponent(passer)
 }
 
 class CurrentVersionMockComponent
-    extends MockComponent_legacy<CurrentVersionComponentState>
+    extends MockComponent<CurrentVersionComponentState>
     implements CurrentVersionComponent {
+    constructor(passer: CurrentVersionMockPasser) {
+        super()
+        passer.addPropsHandler((props) => {
+            this.post(mapProps(props))
+        })
+
+        function mapProps(props: CurrentVersionMockProps): CurrentVersionComponentState {
+            switch (props.type) {
+                case "success":
+                    return { type: "succeed-to-find", version: markVersion("1.0.0") }
+            }
+        }
+    }
+
     load() {
         // mock では特に何もしない
     }

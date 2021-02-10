@@ -1,39 +1,14 @@
-import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
-
-import { initMockCurrentVersionComponent } from "../currentVersion/mock"
+import { CurrentVersionMockPasser, initMockCurrentVersionComponent } from "../currentVersion/mock"
 
 import { NotFoundEntryPoint } from "./entryPoint"
 
-import { CurrentVersionComponentState, initialCurrentVersionComponentState } from "../currentVersion/component"
-
-export function newMockNotFound(): NotFoundMockEntryPoint {
-    const resource = {
-        currentVersion: initMockCurrentVersionComponent(initialCurrentVersionComponentState),
-    }
+export function newMockNotFound(passer: CurrentVersionMockPasser): NotFoundEntryPoint {
     return {
-        notFound: {
-            resource,
-            terminate: () => {
-                // mock では特に何もしない
-            },
+        resource: {
+            currentVersion: initMockCurrentVersionComponent(passer),
         },
-        update: {
-            currentVersion: update(resource.currentVersion),
+        terminate: () => {
+            // mock では特に何もしない
         },
     }
-}
-
-export type NotFoundMockEntryPoint = Readonly<{
-    notFound: NotFoundEntryPoint
-    update: Readonly<{
-        currentVersion: Post<CurrentVersionComponentState>
-    }>
-}>
-
-function update<S, C extends MockComponent_legacy<S>>(component: C): Post<S> {
-    return (state) => component.update(state)
-}
-
-interface Post<T> {
-    (state: T): void
 }
