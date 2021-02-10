@@ -1,6 +1,7 @@
 export type FindError = Readonly<{ type: "failed-to-check"; err: CheckError }>
 
-export type CheckError =
+export type CheckError = CheckRemoteError
+export type CheckRemoteError =
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "infra-error"; err: string }>
 

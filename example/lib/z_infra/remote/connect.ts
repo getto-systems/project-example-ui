@@ -2,15 +2,15 @@ import { RawRemoteAccess, RemoteAccess, RemoteAccessError } from "./infra"
 
 export type RemoteAccessConverter<M, S, V, R, E> = Readonly<{
     message: RemoteAccessMessageConverter<M, S>
-    value: RemoteAccessValueConverter<V, R>
+    value: RemoteAccessValueConverter<M, V, R>
     error: RemoteAccessErrorConverter<E>
     unknown: RemoteAccessUnknownErrorConverter<E>
 }>
 export interface RemoteAccessMessageConverter<M, S> {
     (message: M): S
 }
-export interface RemoteAccessValueConverter<V, R> {
-    (raw: R): V
+export interface RemoteAccessValueConverter<M, V, R> {
+    (raw: R, message: M): V
 }
 export interface RemoteAccessErrorConverter<E> {
     (err: RemoteAccessError): E
@@ -29,7 +29,7 @@ export function initConnectRemoteAccess<M, S, V, R, E>(
             if (!result.success) {
                 return { success: false, err: converter.error(result.err) }
             }
-            return { success: true, value: converter.value(result.value) }
+            return { success: true, value: converter.value(result.value, message) }
         } catch (err) {
             return { success: false, err: converter.unknown(err) }
         }

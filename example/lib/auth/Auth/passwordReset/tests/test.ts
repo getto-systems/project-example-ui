@@ -7,17 +7,16 @@ import {
 } from "./core"
 
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
-import {
-    initRenewSimulateRemoteAccess,
-    RenewSimulateResult,
-} from "../../../login/renew/impl/remote/renew/simulate"
-import {
-    initResetSimulateRemoteAccess,
-    ResetSimulateResult,
-} from "../../../profile/passwordReset/impl/remote/reset/simulate"
+import { initRenewSimulateRemoteAccess } from "../../../login/renew/impl/remote/renew/simulate"
+import { initResetSimulateRemoteAccess } from "../../../profile/passwordReset/impl/remote/reset/simulate"
 import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
 
-import { AuthCredentialRepository, RenewRemoteAccess } from "../../../login/renew/infra"
+import {
+    AuthCredentialRepository,
+    RenewRemoteAccess,
+    RenewRemoteAccessResult,
+} from "../../../login/renew/infra"
+import { ResetRemoteAccessResult } from "../../../profile/passwordReset/infra"
 
 import { PasswordResetComponentState } from "../component"
 
@@ -762,7 +761,7 @@ function waitSimulator(): PasswordResetRemoteAccess {
     }
 }
 
-function simulateReset(): ResetSimulateResult {
+function simulateReset(): ResetRemoteAccessResult {
     return {
         success: true,
         value: {
@@ -775,7 +774,7 @@ function simulateReset(): ResetSimulateResult {
 function renewRemoteAccess(): RenewRemoteAccess {
     let renewed = false
     return initRenewSimulateRemoteAccess(
-        (): RenewSimulateResult => {
+        (): RenewRemoteAccessResult => {
             if (renewed) {
                 // 最初の一回だけ renew して、あとは renew を cancel するために null を返す
                 return { success: false, err: { type: "invalid-ticket" } }

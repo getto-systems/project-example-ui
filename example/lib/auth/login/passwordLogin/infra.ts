@@ -1,5 +1,6 @@
 import { Delayed } from "../../../z_infra/delayed/infra"
-import { RemoteAccess } from "../../../z_infra/remote/infra"
+import { RemoteAccess, RemoteAccessResult } from "../../../z_infra/remote/infra"
+import { RemoteAccessSimulator } from "../../../z_infra/remote/simulate"
 import { DelayTime } from "../../../z_infra/time/infra"
 
 import { AuthCredential } from "../../common/credential/data"
@@ -20,3 +21,5 @@ export type LoginConfig = Readonly<{
 }>
 
 export type LoginRemoteAccess = RemoteAccess<LoginFields, AuthCredential, LoginRemoteError>
+export type LoginRemoteAccessResult = RemoteAccessResult<AuthCredential, LoginRemoteError>
+export type LoginSimulator = RemoteAccessSimulator<LoginFields, AuthCredential, LoginRemoteError>

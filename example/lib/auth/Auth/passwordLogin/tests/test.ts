@@ -7,14 +7,17 @@ import {
 } from "./core"
 
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
-import {
-    initLoginSimulateRemoteAccess,
-    LoginSimulateResult,
-} from "../../../login/passwordLogin/impl/remote/login/simulate"
+import { initLoginSimulateRemoteAccess } from "../../../login/passwordLogin/impl/remote/login/simulate"
+import { initRenewSimulateRemoteAccess } from "../../../login/renew/impl/remote/renew/simulate"
 
 import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
 
-import { AuthCredentialRepository, RenewRemoteAccess } from "../../../login/renew/infra"
+import {
+    AuthCredentialRepository,
+    RenewRemoteAccess,
+    RenewRemoteAccessResult,
+} from "../../../login/renew/infra"
+import { LoginRemoteAccessResult } from "../../../login/passwordLogin/infra"
 
 import { PasswordLoginComponentState } from "../component"
 
@@ -22,7 +25,6 @@ import { markScriptPath } from "../../../common/application/data"
 import { markApiCredential, markAuthAt, markTicketNonce } from "../../../common/credential/data"
 import { LoginFields } from "../../../login/passwordLogin/data"
 import { markInputString, toValidationError } from "../../../../sub/getto-form/action/data"
-import { initRenewSimulateRemoteAccess, RenewSimulateResult } from "../../../login/renew/impl/remote/renew/simulate"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -705,7 +707,7 @@ function waitSimulator(): PasswordLoginRemoteAccess {
     }
 }
 
-function simulateLogin(_fields: LoginFields): LoginSimulateResult {
+function simulateLogin(_fields: LoginFields): LoginRemoteAccessResult {
     return {
         success: true,
         value: {
@@ -717,22 +719,25 @@ function simulateLogin(_fields: LoginFields): LoginSimulateResult {
 }
 function renewRemoteAccess(): RenewRemoteAccess {
     let renewed = false
-    return initRenewSimulateRemoteAccess((): RenewSimulateResult => {
-        if (renewed) {
-            // 最初の一回だけ renew して、あとは renew を cancel するために null を返す
-            return { success: false, err: { type: "invalid-ticket" } }
-        }
-        renewed = true
+    return initRenewSimulateRemoteAccess(
+        (): RenewRemoteAccessResult => {
+            if (renewed) {
+                // 最初の一回だけ renew して、あとは renew を cancel するために null を返す
+                return { success: false, err: { type: "invalid-ticket" } }
+            }
+            renewed = true
 
-        return {
-            success: true,
-            value: {
-                ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
-                apiCredential: markApiCredential({ apiRoles: ["role"] }),
-                authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
-            },
-        }
-    }, { wait_millisecond: 0 })
+            return {
+                success: true,
+                value: {
+                    ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
+                    apiCredential: markApiCredential({ apiRoles: ["role"] }),
+                    authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
+                },
+            }
+        },
+        { wait_millisecond: 0 }
+    )
 }
 
 function standardClock(): StaticClock {

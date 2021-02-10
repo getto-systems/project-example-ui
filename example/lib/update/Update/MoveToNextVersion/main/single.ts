@@ -1,6 +1,6 @@
 import { env } from "../../../../y_environment/env"
 
-import { initFetchCheckClient } from "../../../nextVersion/impl/remote/check/fetch"
+import { ApiUpdateCheck, initApiUpdateCheck } from "../../../../z_external/api/update/check"
 
 import { delayed } from "../../../../z_infra/delayed/core"
 import { find } from "../../../nextVersion/impl/core"
@@ -11,13 +11,20 @@ import { initNextVersionResource } from "../impl/core"
 import { initNextVersionComponent } from "../../nextVersion/impl"
 
 import { MoveToNextVersionEntryPoint } from "../entryPoint"
+import { initCheckConnectRemoteAccess } from "../../../nextVersion/impl/remote/check/connect"
 
 export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPoint {
     const currentURL = new URL(location.toString())
 
+    const api = {
+        update: {
+            check: initApiUpdateCheck(),
+        },
+    }
+
     const factory = {
         actions: {
-            nextVersion: initNextVersionAction(),
+            nextVersion: initNextVersionAction(api.update.check),
         },
         components: {
             nextVersion: initNextVersionComponent,
@@ -37,13 +44,13 @@ export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPoint {
     }
 }
 
-function initNextVersionAction() {
+function initNextVersionAction(check: ApiUpdateCheck) {
     return {
         find: find({
             config: {
                 delay: { delay_millisecond: 300 },
             },
-            check: initFetchCheckClient(),
+            check: initCheckConnectRemoteAccess(check),
             delayed,
         }),
     }

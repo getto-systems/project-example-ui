@@ -1,4 +1,5 @@
-import { RemoteAccess } from "../../../z_infra/remote/infra"
+import { RemoteAccess, RemoteAccessResult } from "../../../z_infra/remote/infra"
+import { RemoteAccessSimulator } from "../../../z_infra/remote/simulate"
 import { ApiNonce } from "../../common/credential/data"
 import { LoadMenuBadgeRemoteError, MenuCategoryPath } from "./data"
 
@@ -99,3 +100,5 @@ export type MenuExpandError = Readonly<{ type: "infra-error"; err: string }>
 export type ToggleExpandError = Readonly<{ type: "infra-error"; err: string }>
 
 export type LoadMenuBadgeRemoteAccess = RemoteAccess<ApiNonce, MenuBadge, LoadMenuBadgeRemoteError>
+export type LoadMenuBadgeRemoteAccessResult = RemoteAccessResult<MenuBadge, LoadMenuBadgeRemoteError>
+export type LoadMenuBadgeSimulator = RemoteAccessSimulator<ApiNonce, MenuBadge, LoadMenuBadgeRemoteError>

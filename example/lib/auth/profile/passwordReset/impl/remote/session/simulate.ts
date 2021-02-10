@@ -1,23 +1,14 @@
-import {
-    initSimulateRemoteAccess,
-    RemoteAccessSimulator,
-} from "../../../../../../z_infra/remote/simulate"
+import { initSimulateRemoteAccess } from "../../../../../../z_infra/remote/simulate"
 
-import { RemoteAccessResult } from "../../../../../../z_infra/remote/infra"
 import { WaitTime } from "../../../../../../z_infra/time/infra"
 import {
     GetStatusRemoteAccess,
-    GetStatusResponse,
+    GetStatusSimulator,
     SendTokenRemoteAccess,
+    SendTokenSimulator,
     StartSessionRemoteAccess,
+    StartSessionSimulator,
 } from "../../../infra"
-
-import { CheckStatusRemoteError, StartSessionFields, StartSessionRemoteError } from "../../../data"
-import { SessionID } from "../../../data"
-
-export type StartSessionSimulateResult = RemoteAccessResult<SessionID, StartSessionRemoteError>
-export type SendTokenSimulateResult = RemoteAccessResult<true, CheckStatusRemoteError>
-export type GetStatusSimulateResult = RemoteAccessResult<GetStatusResponse, CheckStatusRemoteError>
 
 export function initStartSessionSimulateRemoteAccess(
     simulator: StartSessionSimulator,
@@ -39,11 +30,3 @@ export function initGetStatusSimulateRemoteAccess(
 ): GetStatusRemoteAccess {
     return initSimulateRemoteAccess(simulator, time)
 }
-
-type StartSessionSimulator = RemoteAccessSimulator<
-    StartSessionFields,
-    SessionID,
-    StartSessionRemoteError
->
-type SendTokenSimulator = RemoteAccessSimulator<null, true, CheckStatusRemoteError>
-type GetStatusSimulator = RemoteAccessSimulator<SessionID, GetStatusResponse, CheckStatusRemoteError>

@@ -1,6 +1,6 @@
-import { newNextVersionResource, NextVersionSimulator } from "./core"
+import { newNextVersionResource, NextVersionRemoteAccess } from "./core"
 
-import { wait } from "../../../../z_infra/delayed/core"
+import { initCheckSimulateRemoteAccess } from "../../../nextVersion/impl/remote/check/simulate"
 
 import { NextVersionActionConfig } from "../../../nextVersion/infra"
 
@@ -645,32 +645,31 @@ function standardConfig(): NextVersionActionConfig {
     }
 }
 
-function standardSimulator(): NextVersionSimulator {
+function standardSimulator(): NextVersionRemoteAccess {
     return {
-        check: {
-            check: async (_version) => {
-                return false
-            },
-        },
+        check: initCheckSimulateRemoteAccess(() => ({ success: true, value: { found: false } }), {
+            wait_millisecond: 0,
+        }),
     }
 }
-function foundSimulator(versions: string[]): NextVersionSimulator {
+function foundSimulator(versions: string[]): NextVersionRemoteAccess {
     return {
-        check: {
-            check: async (version) => {
-                return versions.includes(versionToString(version))
+        check: initCheckSimulateRemoteAccess(
+            (version) => {
+                if (!versions.includes(versionToString(version))) {
+                    return { success: true, value: { found: false } }
+                }
+                return { success: true, value: { found: true, version } }
             },
-        },
+            { wait_millisecond: 0 }
+        ),
     }
 }
-function waitSimulator(): NextVersionSimulator {
+function waitSimulator(): NextVersionRemoteAccess {
     return {
-        check: {
-            check: async (_version) => {
-                await wait({ wait_millisecond: 2 }, () => null)
-                return false
-            },
-        },
+        check: initCheckSimulateRemoteAccess(() => ({ success: true, value: { found: false } }), {
+            wait_millisecond: 2,
+        }),
     }
 }
 

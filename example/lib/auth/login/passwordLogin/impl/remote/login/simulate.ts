@@ -1,15 +1,7 @@
-import { LoginRemoteAccess } from "../../../infra"
-
-import { LoginFields, LoginRemoteError } from "../../../data"
-import { AuthCredential } from "../../../../../common/credential/data"
-import {
-    initSimulateRemoteAccess,
-    RemoteAccessSimulator,
-} from "../../../../../../z_infra/remote/simulate"
+import { LoginRemoteAccess, LoginSimulator } from "../../../infra"
 import { WaitTime } from "../../../../../../z_infra/time/infra"
-import { RemoteAccessResult } from "../../../../../../z_infra/remote/infra"
 
-export type LoginSimulateResult = RemoteAccessResult<AuthCredential, LoginRemoteError>
+import { initSimulateRemoteAccess } from "../../../../../../z_infra/remote/simulate"
 
 export function initLoginSimulateRemoteAccess(
     simulator: LoginSimulator,
@@ -17,5 +9,3 @@ export function initLoginSimulateRemoteAccess(
 ): LoginRemoteAccess {
     return initSimulateRemoteAccess(simulator, time)
 }
-
-type LoginSimulator = RemoteAccessSimulator<LoginFields, AuthCredential, LoginRemoteError>

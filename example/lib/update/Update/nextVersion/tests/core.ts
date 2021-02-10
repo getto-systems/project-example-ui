@@ -3,22 +3,21 @@ import { initNextVersionResource } from "../../MoveToNextVersion/impl/core"
 
 import { initNextVersionComponent } from "../impl"
 
-import { CheckSimulator } from "../../../nextVersion/impl/remote/check/simulate"
-
 import { initNextVersionAction } from "../../MoveToNextVersion/tests/core"
 
-import { NextVersionResource } from "../../MoveToNextVersion/entryPoint"
-import { NextVersionActionConfig } from "../../../nextVersion/infra"
+import { CheckRemoteAccess, NextVersionActionConfig } from "../../../nextVersion/infra"
 
-export type NextVersionSimulator = Readonly<{
-    check: CheckSimulator
+import { NextVersionResource } from "../../MoveToNextVersion/entryPoint"
+
+export type NextVersionRemoteAccess = Readonly<{
+    check: CheckRemoteAccess
 }>
 
 export function newNextVersionResource(
     version: string,
     currentURL: URL,
     config: NextVersionActionConfig,
-    simulator: NextVersionSimulator
+    simulator: NextVersionRemoteAccess
 ): NextVersionResource {
     const factory = {
         actions: {

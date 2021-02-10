@@ -25,30 +25,26 @@ import {
 } from "../../renewCredential/tests/core"
 
 import { initStaticClock } from "../../../../z_infra/clock/simulate"
+import { initLoginSimulateRemoteAccess } from "../../../login/passwordLogin/impl/remote/login/simulate"
+import { initRenewSimulateRemoteAccess } from "../../../login/renew/impl/remote/renew/simulate"
+import { initResetSimulateRemoteAccess } from "../../../profile/passwordReset/impl/remote/reset/simulate"
 import {
-    initLoginSimulateRemoteAccess,
-    LoginSimulateResult,
-} from "../../../login/passwordLogin/impl/remote/login/simulate"
-import {
-    initRenewSimulateRemoteAccess,
-    RenewSimulateResult,
-} from "../../../login/renew/impl/remote/renew/simulate"
-import {
-    initResetSimulateRemoteAccess,
-    ResetSimulateResult,
-} from "../../../profile/passwordReset/impl/remote/reset/simulate"
-import {
-    GetStatusSimulateResult,
     initGetStatusSimulateRemoteAccess,
     initSendTokenSimulateRemoteAccess,
     initStartSessionSimulateRemoteAccess,
-    SendTokenSimulateResult,
-    StartSessionSimulateResult,
 } from "../../../profile/passwordReset/impl/remote/session/simulate"
 
 import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
 
 import { Clock } from "../../../../z_infra/clock/infra"
+import { LoginRemoteAccessResult } from "../../../login/passwordLogin/infra"
+import { RenewRemoteAccessResult } from "../../../login/renew/infra"
+import {
+    GetStatusRemoteAccessResult,
+    ResetRemoteAccessResult,
+    SendTokenRemoteAccessResult,
+    StartSessionRemoteAccessResult,
+} from "../../../profile/passwordReset/infra"
 
 import { RenewCredentialComponent } from "../../renewCredential/component"
 
@@ -427,7 +423,7 @@ function standardRenewCredentialSimulator(): RenewCredentialRemoteAccess {
     }
 }
 
-function simulateLogin(): LoginSimulateResult {
+function simulateLogin(): LoginRemoteAccessResult {
     return {
         success: true,
         value: {
@@ -437,13 +433,13 @@ function simulateLogin(): LoginSimulateResult {
         },
     }
 }
-function simulateRenew(): RenewSimulateResult {
+function simulateRenew(): RenewRemoteAccessResult {
     return {
         success: false,
         err: { type: "invalid-ticket" },
     }
 }
-function simulateReset(): ResetSimulateResult {
+function simulateReset(): ResetRemoteAccessResult {
     return {
         success: true,
         value: {
@@ -454,13 +450,13 @@ function simulateReset(): ResetSimulateResult {
     }
 }
 
-function simulateStartSession(): StartSessionSimulateResult {
+function simulateStartSession(): StartSessionRemoteAccessResult {
     return { success: true, value: markSessionID(SESSION_ID) }
 }
-function simulateSendToken(): SendTokenSimulateResult {
+function simulateSendToken(): SendTokenRemoteAccessResult {
     return { success: true, value: true }
 }
-function simulateGetStatus(): GetStatusSimulateResult {
+function simulateGetStatus(): GetStatusRemoteAccessResult {
     return { success: true, value: { dest: { type: "log" }, done: true, send: true } }
 }
 

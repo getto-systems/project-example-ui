@@ -1,4 +1,4 @@
-import { CheckResponse, CheckClient, FindInfra } from "../infra"
+import { CheckRemoteAccess, CheckRemoteAccessResult, FindInfra } from "../infra"
 
 import { FindPod } from "../action"
 
@@ -18,19 +18,24 @@ export const find = (infra: FindInfra): FindPod => (locationInfo) => async (post
         return
     }
 
-    if (!next.found) {
+    const result = next.value
+    if (!result.found) {
         post({ type: "succeed-to-find", upToDate: true, target: current })
     } else {
-        post({ type: "succeed-to-find", upToDate: false, target: { ...current, version: next.version } })
+        post({
+            type: "succeed-to-find",
+            upToDate: false,
+            target: { ...current, version: result.version },
+        })
     }
 }
 
-async function findNext(check: CheckClient, current: Version): Promise<CheckResponse> {
+async function findNext(check: CheckRemoteAccess, current: Version): Promise<CheckRemoteAccessResult> {
     let result = await checkNext(current)
 
-    while (result.success && result.found) {
-        const next: CheckResponse = await checkNext(result.version)
-        if (!next.success || !next.found) {
+    while (result.success && result.value.found) {
+        const next = await checkNext(result.value.version)
+        if (!next.success || !next.value.found) {
             break
         }
         result = next
@@ -38,15 +43,16 @@ async function findNext(check: CheckClient, current: Version): Promise<CheckResp
 
     return result
 
-    async function checkNext(version: Version): Promise<CheckResponse> {
+    async function checkNext(version: Version): Promise<CheckRemoteAccessResult> {
         // 自動で major バージョンアップをするとまずいので次の major バージョンの情報は返さない
-        const response = await check.check(nextMinorVersion(version))
+        const response = await check(nextMinorVersion(version))
         if (!response.success) {
             return response
         }
-        if (!response.found) {
+        const result = response.value
+        if (!result.found) {
             // 見つからなかったら次の patch バージョンの情報を返す
-            return await check.check(nextPatchVersion(version))
+            return await check(nextPatchVersion(version))
         }
         return response
     }

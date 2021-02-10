@@ -11,8 +11,8 @@ import { RawRemoteAccess, RemoteAccessError } from "../../../../../../z_infra/re
 import { initConnectRemoteAccess } from "../../../../../../z_infra/remote/connect"
 import { RenewRemoteError } from "../../../data"
 
-export type RenewRawRemoteAccess = RawRemoteAccess<TicketNonce, RawAuthCredential>
-export type RawAuthCredential = Readonly<{
+type RenewRawRemoteAccess = RawRemoteAccess<TicketNonce, RawAuthCredential>
+type RawAuthCredential = Readonly<{
     ticketNonce: string
     apiCredential: Readonly<{ apiRoles: string[] }>
 }>
