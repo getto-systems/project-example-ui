@@ -1,40 +1,43 @@
-import { initCredentialAction, initMenuAction,  } from "../../../../auth/Outline/Menu/tests/core"
+import { initCredentialAction, initMenuAction } from "../../../../auth/Outline/Menu/tests/core"
 
 import { detectMenuTarget } from "../../../../auth/Outline/Menu/impl/location"
-import { MenuBadgeSimulator } from "../../../../auth/permission/menu/impl/remote/menuBadge/simulate"
+import { detectContentPath } from "../impl/location"
 
 import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
+import { loadContent } from "../../../content/impl/core"
 
 import { initBreadcrumbListComponent } from "../../../../auth/Outline/breadcrumbList/impl"
 import { initMenuListComponent } from "../../../../auth/Outline/menuList/impl"
 import { initContentComponent } from "../../content/impl"
 
 import { ApiCredentialRepository } from "../../../../auth/common/credential/infra"
-import { MenuExpandRepository, MenuTree } from "../../../../auth/permission/menu/infra"
+import {
+    LoadMenuBadgeRemoteAccess,
+    MenuExpandRepository,
+    MenuTree,
+} from "../../../../auth/permission/menu/infra"
 
 import { DocumentResource } from "../entryPoint"
 import { ContentAction } from "../../../content/action"
-import { loadContent } from "../../../content/impl/core"
-import { detectContentPath } from "../impl/location"
 
 export type DocumentRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
     menuExpands: MenuExpandRepository
 }>
-export type DocumentSimulator = Readonly<{
-    menuBadge: MenuBadgeSimulator
+export type DocumentRemoteAccess = Readonly<{
+    loadMenuBadge: LoadMenuBadgeRemoteAccess
 }>
 export function newDocumentResource(
     version: string,
     currentURL: URL,
     menuTree: MenuTree,
     repository: DocumentRepository,
-    simulator: DocumentSimulator
+    remote: DocumentRemoteAccess
 ): DocumentResource {
     const factory: DocumentFactory = {
         actions: {
             credential: initCredentialAction(repository.apiCredentials),
-            menu: initMenuAction(menuTree, repository.menuExpands, simulator.menuBadge),
+            menu: initMenuAction(menuTree, repository.menuExpands, remote.loadMenuBadge),
             content: initContentAction(),
         },
         components: {

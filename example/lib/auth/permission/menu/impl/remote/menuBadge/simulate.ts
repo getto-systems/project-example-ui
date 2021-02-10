@@ -1,28 +1,22 @@
-import { MenuBadgeClient, MenuBadgeResponse, MenuBadge } from "../../../infra"
+import {
+    initSimulateRemoteAccess,
+    RemoteAccessSimulator,
+} from "../../../../../../z_infra/remote/simulate"
+
+import { RemoteAccessResult } from "../../../../../../z_infra/remote/infra"
+import { WaitTime } from "../../../../../../z_infra/time/infra"
+import { LoadMenuBadgeRemoteAccess, MenuBadge } from "../../../infra"
 
 import { ApiNonce } from "../../../../../common/credential/data"
+import { LoadMenuBadgeRemoteError } from "../../../data"
 
-export function initSimulateMenuBadgeClient(simulator: MenuBadgeSimulator): MenuBadgeClient {
-    return new SimulateMenuBadgeClient(simulator)
+export type LoadMenuBadgeSimulateResult = RemoteAccessResult<MenuBadge, LoadMenuBadgeRemoteError>
+
+export function initLoadMenuBadgeSimulateRemoteAccess(
+    simulator: LoadMenuBadgeSimulator,
+    time: WaitTime
+): LoadMenuBadgeRemoteAccess {
+    return initSimulateRemoteAccess(simulator, time)
 }
 
-export interface MenuBadgeSimulator {
-    // エラーにする場合は MenuBadgeError を throw する（それ以外だとこわれる）
-    getMenuBadge(apiNonce: ApiNonce): Promise<MenuBadge>
-}
-
-class SimulateMenuBadgeClient implements MenuBadgeClient {
-    simulator: MenuBadgeSimulator
-
-    constructor(simulator: MenuBadgeSimulator) {
-        this.simulator = simulator
-    }
-
-    async getBadge(apiNonce: ApiNonce): Promise<MenuBadgeResponse> {
-        try {
-            return { success: true, menuBadge: await this.simulator.getMenuBadge(apiNonce) }
-        } catch (err) {
-            return { success: false, err }
-        }
-    }
-}
+type LoadMenuBadgeSimulator = RemoteAccessSimulator<ApiNonce, MenuBadge, LoadMenuBadgeRemoteError>

@@ -1,8 +1,3 @@
-import {
-    initSimulateMenuBadgeClient,
-    MenuBadgeSimulator,
-} from "../../../permission/menu/impl/remote/menuBadge/simulate"
-
 import { detectMenuTarget } from "../impl/location"
 
 import { initBreadcrumbListComponent } from "../../breadcrumbList/impl"
@@ -12,7 +7,14 @@ import { loadApiNonce, loadApiRoles } from "../../../common/credential/impl/core
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../../../permission/menu/impl/core"
 
 import { ApiCredentialRepository } from "../../../common/credential/infra"
-import { MenuExpandRepository, MenuTree } from "../../../permission/menu/infra"
+import {
+    LoadBreadcrumbInfra,
+    LoadMenuBadgeRemoteAccess,
+    LoadMenuInfra,
+    MenuExpandRepository,
+    MenuTree,
+    ToggleMenuExpandInfra,
+} from "../../../permission/menu/infra"
 
 import { BreadcrumbListComponent } from "../../breadcrumbList/component"
 import { MenuListComponent } from "../../menuList/component"
@@ -28,19 +30,19 @@ export type MenuRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
     menuExpands: MenuExpandRepository
 }>
-export type MenuSimulator = Readonly<{
-    menuBadge: MenuBadgeSimulator
+export type MenuRemoteAccess = Readonly<{
+    loadMenuBadge: LoadMenuBadgeRemoteAccess
 }>
 export function newMenuResource(
     version: string,
     currentURL: URL,
     menuTree: MenuTree,
     repository: MenuRepository,
-    simulator: MenuSimulator
+    remote: MenuRemoteAccess
 ): MenuResource {
     const actions = {
         credential: initCredentialAction(repository.apiCredentials),
-        menu: initMenuAction(menuTree, repository.menuExpands, simulator.menuBadge),
+        menu: initMenuAction(menuTree, repository.menuExpands, remote.loadMenuBadge),
     }
     const locationInfo = {
         menu: {
@@ -75,17 +77,29 @@ export function initCredentialAction(apiCredentials: ApiCredentialRepository): C
 export function initMenuAction(
     menuTree: MenuTree,
     menuExpands: MenuExpandRepository,
-    simulator: MenuBadgeSimulator
+    remote: LoadMenuBadgeRemoteAccess
 ): MenuAction {
-    const infra = {
-        menuTree,
-        menuExpands,
-        menuBadge: initSimulateMenuBadgeClient(simulator),
+    return {
+        loadBreadcrumb: loadBreadcrumb(loadBreadcrumbInfra()),
+        loadMenu: loadMenu(loadMenuInfra()),
+        toggleMenuExpand: toggleMenuExpand(toggleMenuExpandInfra()),
     }
 
-    return {
-        loadBreadcrumb: loadBreadcrumb(infra),
-        loadMenu: loadMenu(infra),
-        toggleMenuExpand: toggleMenuExpand(infra),
+    function loadBreadcrumbInfra(): LoadBreadcrumbInfra {
+        return {
+            menuTree,
+        }
+    }
+    function loadMenuInfra(): LoadMenuInfra {
+        return {
+            menuTree,
+            menuExpands,
+            loadMenuBadge: remote,
+        }
+    }
+    function toggleMenuExpandInfra(): ToggleMenuExpandInfra {
+        return {
+            menuExpands,
+        }
     }
 }

@@ -1,21 +1,22 @@
 import {
     DashboardRepository,
-    DashboardSimulator,
+    DashboardRemoteAccess,
     newDashboardResource,
 } from "../../Dashboard/tests/core"
 
 import { initMemoryTypedStorage } from "../../../../z_infra/storage/memory"
 import { initStaticClock } from "../../../../z_infra/clock/simulate"
+import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/menu/impl/remote/menuBadge/simulate"
 import { initApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential"
 import { initMenuExpandRepository } from "../../../../auth/permission/menu/impl/repository/menuExpand"
 import { initMemorySeasonRepository } from "../../../shared/season/impl/repository/season/memory"
 
 import { Clock } from "../../../../z_infra/clock/infra"
-import { MenuBadge, MenuTree } from "../../../../auth/permission/menu/infra"
+import { MenuTree } from "../../../../auth/permission/menu/infra"
 
 import { ExampleComponentState } from "../component"
 
-import { ApiNonce, markApiCredential } from "../../../../auth/common/credential/data"
+import { markApiCredential } from "../../../../auth/common/credential/data"
 
 // デフォルトの season を取得する
 const NOW = new Date("2021-01-01 10:00:00")
@@ -98,13 +99,11 @@ function standardRepository(): DashboardRepository {
     }
 }
 
-function standardSimulator(): DashboardSimulator {
+function standardSimulator(): DashboardRemoteAccess {
     return {
-        menuBadge: {
-            getMenuBadge: async (_apiNonce: ApiNonce): Promise<MenuBadge> => {
-                return {}
-            },
-        },
+        loadMenuBadge: initLoadMenuBadgeSimulateRemoteAccess(() => ({ success: true, value: {} }), {
+            wait_millisecond: 0,
+        }),
     }
 }
 

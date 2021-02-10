@@ -51,8 +51,8 @@ export type MenuItemNode = Readonly<{
     badgeCount: number
 }>
 
-export type LoadMenuError =
-    | Readonly<{ type: "empty-nonce" }>
+export type LoadMenuError = Readonly<{ type: "empty-nonce" }> | LoadMenuBadgeRemoteError
+export type LoadMenuBadgeRemoteError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>

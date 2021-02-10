@@ -1,5 +1,6 @@
+import { RemoteAccess } from "../../../z_infra/remote/infra"
 import { ApiNonce } from "../../common/credential/data"
-import { MenuCategoryPath } from "./data"
+import { LoadMenuBadgeRemoteError, MenuCategoryPath } from "./data"
 
 export type LoadBreadcrumbInfra = Readonly<{
     menuTree: MenuTree
@@ -8,7 +9,7 @@ export type LoadBreadcrumbInfra = Readonly<{
 export type LoadMenuInfra = Readonly<{
     menuTree: MenuTree
     menuExpands: MenuExpandRepository
-    menuBadge: MenuBadgeClient
+    loadMenuBadge: LoadMenuBadgeRemoteAccess
 }>
 
 export type ToggleMenuExpandInfra = Readonly<{
@@ -97,16 +98,4 @@ export type ToggleExpandResponse =
 export type MenuExpandError = Readonly<{ type: "infra-error"; err: string }>
 export type ToggleExpandError = Readonly<{ type: "infra-error"; err: string }>
 
-export interface MenuBadgeClient {
-    getBadge(apiNonce: ApiNonce): Promise<MenuBadgeResponse>
-}
-
-export type MenuBadgeResponse =
-    | Readonly<{ success: true; menuBadge: MenuBadge }>
-    | Readonly<{ success: false; err: MenuBadgeError }>
-
-export type MenuBadgeError =
-    | Readonly<{ type: "bad-request" }>
-    | Readonly<{ type: "server-error" }>
-    | Readonly<{ type: "bad-response"; err: string }>
-    | Readonly<{ type: "infra-error"; err: string }>
+export type LoadMenuBadgeRemoteAccess = RemoteAccess<ApiNonce, MenuBadge, LoadMenuBadgeRemoteError>

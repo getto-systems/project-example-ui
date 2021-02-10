@@ -92,7 +92,7 @@ export const loadMenu = (infra: LoadMenuInfra): LoadMenuPod => (locationInfo) =>
     roles,
     post
 ) => {
-    const { menuTree, menuExpands, menuBadge } = infra
+    const { menuTree, menuExpands, loadMenuBadge } = infra
 
     const info: MenuInfo = {
         menuTree: menuTree,
@@ -134,7 +134,7 @@ export const loadMenu = (infra: LoadMenuInfra): LoadMenuPod => (locationInfo) =>
         return
     }
 
-    const menuBadgeResponse = await menuBadge.getBadge(nonce.content)
+    const menuBadgeResponse = await loadMenuBadge(nonce.content)
     if (!menuBadgeResponse.success) {
         post({
             type: "failed-to-load",
@@ -146,7 +146,7 @@ export const loadMenu = (infra: LoadMenuInfra): LoadMenuPod => (locationInfo) =>
 
     post({
         type: "succeed-to-load",
-        menu: toMenu(info, menuExpandResponse.menuExpand, menuBadgeResponse.menuBadge),
+        menu: toMenu(info, menuExpandResponse.menuExpand, menuBadgeResponse.value),
     })
 }
 
