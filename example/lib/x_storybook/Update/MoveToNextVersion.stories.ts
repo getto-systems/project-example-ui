@@ -1,7 +1,10 @@
 import { h, VNode } from "preact"
+import { useEffect } from "preact/hooks"
+
+import { initMockPropsPasser } from "../../sub/getto-example/application/mock"
 
 import { newMockMoveToNextVersion } from "../../update/Update/MoveToNextVersion/mock"
-import { mapNextVersionMockProps, NextVersionMockProps } from "../../update/Update/nextVersion/mock"
+import { NextVersionMockProps } from "../../update/Update/nextVersion/mock"
 
 import { MoveToLatestVersion } from "../../x_preact/Update/MoveToLatestVersion/MoveToLatestVersion"
 
@@ -16,11 +19,14 @@ export default {
 
 type MockProps = NextVersionMockProps
 const Template: Story<MockProps> = (args) => {
-    const { moveToNextVersion, update } = newMockMoveToNextVersion()
+    const passer = initMockPropsPasser<NextVersionMockProps>()
+    const moveToNextVersion = newMockMoveToNextVersion(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
-        update.nextVersion(mapNextVersionMockProps(props.args))
+        useEffect(() => {
+            passer.update(props.args)
+        })
         return h(MoveToLatestVersion, { moveToNextVersion })
     }
 }
