@@ -6,9 +6,9 @@ import { Document } from "../../x_preact/Document/Document"
 
 import { initMockPropsPasser } from "../../sub/getto-example/application/mock"
 import { newMockDocument } from "../../document/Document/Document/mock"
-import { mapContentMockProps } from "../../document/Document/content/mock"
 import { MenuListMockProps } from "../../auth/Outline/menuList/mock"
 import { BreadcrumbListMockProps } from "../../auth/Outline/breadcrumbList/mock"
+import { ContentMockProps } from "../../document/Document/content/mock"
 
 export default {
     title: "Document/Document",
@@ -28,8 +28,9 @@ const Template: Story<MockProps> = (args) => {
     const passer = {
         menuList: initMockPropsPasser<MenuListMockProps>(),
         breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
+        content: initMockPropsPasser<ContentMockProps>(),
     }
-    const { document, update } = newMockDocument(passer)
+    const document = newMockDocument(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
@@ -44,8 +45,8 @@ const Template: Story<MockProps> = (args) => {
                 label: props.args.breadcrumbLabel,
                 icon: props.args.breadcrumbIcon,
             })
+            passer.content.update({ type: "success" })
         })
-        update.content(mapContentMockProps({ type: "success" }))
         return html`
             <style>
                 .sb-main-padded {

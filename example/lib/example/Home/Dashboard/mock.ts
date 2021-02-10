@@ -1,10 +1,10 @@
 import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
 
 import {
-    BreadcrumbListMockPasser,
+    BreadcrumbListMockPropsPasser,
     initMockBreadcrumbListComponent,
 } from "../../../auth/Outline/breadcrumbList/mock"
-import { initMockMenuListComponent, MenuListMockPasser } from "../../../auth/Outline/menuList/mock"
+import { initMockMenuListComponent, MenuListMockPropsPasser } from "../../../auth/Outline/menuList/mock"
 import { initMockSeasonInfoComponent } from "../../Outline/seasonInfo/mock"
 import { initMockExampleComponent } from "../example/mock"
 
@@ -16,11 +16,11 @@ import {
 } from "../../Outline/seasonInfo/component"
 import { ExampleComponentState, initialExampleComponentState } from "../example/component"
 
-export type DashboardMockPasser = Readonly<{
-    menuList: MenuListMockPasser
-    breadcrumbList: BreadcrumbListMockPasser
+export type DashboardMockPropsPasser = Readonly<{
+    menuList: MenuListMockPropsPasser
+    breadcrumbList: BreadcrumbListMockPropsPasser
 }>
-export function newMockDashboard(passer: DashboardMockPasser): DashboardMockEntryPoint {
+export function newMockDashboard(passer: DashboardMockPropsPasser): DashboardMockEntryPoint {
     const resource = {
         seasonInfo: initMockSeasonInfoComponent(initialSeasonInfoComponentState),
         menuList: initMockMenuListComponent(passer.menuList),

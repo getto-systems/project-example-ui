@@ -2,7 +2,7 @@ import { MockComponent, MockPropsPasser } from "../../../sub/getto-example/appli
 
 import { RenewCredentialComponent, RenewCredentialComponentState } from "./component"
 
-export type RenewCredentialMockPasser = MockPropsPasser<RenewCredentialMockProps>
+export type RenewCredentialMockPropsPasser = MockPropsPasser<RenewCredentialMockProps>
 
 export type RenewCredentialMockProps =
     | Readonly<{ type: "delayed" }>
@@ -11,14 +11,14 @@ export type RenewCredentialMockProps =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function initMockRenewCredential(passer: RenewCredentialMockPasser): RenewCredentialComponent {
+export function initMockRenewCredential(passer: RenewCredentialMockPropsPasser): RenewCredentialComponent {
     return new RenewCredentialMockComponent(passer)
 }
 
 export class RenewCredentialMockComponent
     extends MockComponent<RenewCredentialComponentState>
     implements RenewCredentialComponent {
-    constructor(passer: RenewCredentialMockPasser) {
+    constructor(passer: RenewCredentialMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))

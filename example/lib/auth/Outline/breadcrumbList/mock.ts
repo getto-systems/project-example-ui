@@ -5,12 +5,12 @@ import { BreadcrumbListComponent, BreadcrumbListComponentState } from "./compone
 
 import { markMenuCategoryLabel, markMenuItem } from "../../permission/menu/data"
 
-export type BreadcrumbListMockPasser = MockPropsPasser<BreadcrumbListMockProps>
+export type BreadcrumbListMockPropsPasser = MockPropsPasser<BreadcrumbListMockProps>
 
 export type BreadcrumbListMockProps = Readonly<{ type: "success"; label: string; icon: string }>
 
 export function initMockBreadcrumbListComponent(
-    passer: BreadcrumbListMockPasser
+    passer: BreadcrumbListMockPropsPasser
 ): BreadcrumbListComponent {
     return new BreadcrumbListMockComponent(passer)
 }
@@ -18,7 +18,7 @@ export function initMockBreadcrumbListComponent(
 class BreadcrumbListMockComponent
     extends MockComponent<BreadcrumbListComponentState>
     implements BreadcrumbListComponent {
-    constructor(passer: BreadcrumbListMockPasser) {
+    constructor(passer: BreadcrumbListMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))

@@ -19,7 +19,7 @@ import { PasswordFormFieldComponent } from "../field/password/component"
 import { FormConvertResult } from "../../../sub/getto-form/action/data"
 import { LoginFields } from "../../login/passwordLogin/data"
 
-export type PasswordLoginMockPasser = MockPropsPasser<PasswordLoginMockProps>
+export type PasswordLoginMockPropsPasser = MockPropsPasser<PasswordLoginMockProps>
 
 export type PasswordLoginMockProps = PasswordLoginMockProps_core &
     FormMockProps &
@@ -37,7 +37,7 @@ type PasswordLoginMockProps_core =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function initMockPasswordLogin(passer: PasswordLoginMockPasser): PasswordLoginMockComponent {
+export function initMockPasswordLogin(passer: PasswordLoginMockPropsPasser): PasswordLoginMockComponent {
     return new PasswordLoginMockComponent(passer)
 }
 
@@ -46,7 +46,7 @@ class PasswordLoginMockComponent
     implements PasswordLoginComponent {
     link: LoginLink
 
-    constructor(passer: PasswordLoginMockPasser) {
+    constructor(passer: PasswordLoginMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))
@@ -93,7 +93,7 @@ class PasswordLoginMockComponent
     }
 }
 
-export function initMockPasswordLoginForm(passer: PasswordLoginMockPasser): PasswordLoginFormComponent {
+export function initMockPasswordLoginForm(passer: PasswordLoginMockPropsPasser): PasswordLoginFormComponent {
     return new PasswordLoginFormMockComponent(passer)
 }
 
@@ -101,7 +101,7 @@ class PasswordLoginFormMockComponent extends FormMockComponent implements Passwo
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
 
-    constructor(passer: PasswordLoginMockPasser) {
+    constructor(passer: PasswordLoginMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))

@@ -1,25 +1,25 @@
 import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
 
-import { initMockRenewCredential, RenewCredentialMockPasser } from "../renewCredential/mock"
+import { initMockRenewCredential, RenewCredentialMockPropsPasser } from "../renewCredential/mock"
 import {
     initMockPasswordLoginForm,
     initMockPasswordLogin,
-    PasswordLoginMockPasser,
+    PasswordLoginMockPropsPasser,
 } from "../passwordLogin/mock"
 import {
     initMockPasswordResetSession,
     initMockPasswordResetSessionForm,
-    PasswordResetSessionMockPasser,
+    PasswordResetSessionMockPropsPasser,
 } from "../passwordResetSession/mock"
 import {
     initMockPasswordReset,
     initMockPasswordResetForm,
-    PasswordResetMockPasser,
+    PasswordResetMockPropsPasser,
 } from "../passwordReset/mock"
 
 import { LoginEntryPoint, LoginView, LoginState } from "./entryPoint"
 
-export function newMockLoginAsRenewCredential(passer: RenewCredentialMockPasser): LoginEntryPoint {
+export function newMockLoginAsRenewCredential(passer: RenewCredentialMockPropsPasser): LoginEntryPoint {
     return {
         view: new View({
             type: "renew-credential",
@@ -31,7 +31,7 @@ export function newMockLoginAsRenewCredential(passer: RenewCredentialMockPasser)
     }
 }
 
-export function newMockLoginAsPasswordLogin(passer: PasswordLoginMockPasser): LoginEntryPoint {
+export function newMockLoginAsPasswordLogin(passer: PasswordLoginMockPropsPasser): LoginEntryPoint {
     return {
         view: new View({
             type: "password-login",
@@ -45,7 +45,7 @@ export function newMockLoginAsPasswordLogin(passer: PasswordLoginMockPasser): Lo
 }
 
 export function newMockLoginAsPasswordResetSession(
-    passer: PasswordResetSessionMockPasser
+    passer: PasswordResetSessionMockPropsPasser
 ): LoginEntryPoint {
     return {
         view: new View({
@@ -59,7 +59,7 @@ export function newMockLoginAsPasswordResetSession(
     }
 }
 
-export function newMockLoginAsPasswordReset(passer: PasswordResetMockPasser): LoginEntryPoint {
+export function newMockLoginAsPasswordReset(passer: PasswordResetMockPropsPasser): LoginEntryPoint {
     return {
         view: new View({
             type: "password-reset",
