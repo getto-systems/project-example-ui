@@ -1,13 +1,15 @@
 import { h, VNode } from "preact"
+import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { Dashboard } from "../../../x_preact/Example/Home/Dashboard"
 
+import { initMockPropsPasser } from "../../../sub/getto-example/application/mock"
 import { newMockDashboard } from "../../../example/Home/Dashboard/mock"
 import { mapExampleMockProps } from "../../../example/Home/example/mock"
-import { mapBreadcrumbMockProps } from "../../../auth/Outline/breadcrumbList/mock"
-import { mapMenuMockProps } from "../../../auth/Outline/menuList/mock"
 import { mapSeasonMockProps } from "../../../example/Outline/seasonInfo/mock"
+import { MenuListMockProps } from "../../../auth/Outline/menuList/mock"
+import { BreadcrumbListMockProps } from "../../../auth/Outline/breadcrumbList/mock"
 
 export default {
     title: "Example/Home/Dashboard",
@@ -25,21 +27,27 @@ type MockProps = Readonly<{
     breadcrumbIcon: string
 }>
 const Template: Story<MockProps> = (args) => {
-    const { dashboard, update } = newMockDashboard()
+    const passer = {
+        menuList: initMockPropsPasser<MenuListMockProps>(),
+        breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
+    }
+    const { dashboard, update } = newMockDashboard(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
-        update.seasonInfo(mapSeasonMockProps({ type: "success", year: props.args.seasonYear }))
-        update.menuList(
-            mapMenuMockProps({ type: "success", label: "ホーム", badgeCount: props.args.menuBadgeCount })
-        )
-        update.breadcrumbList(
-            mapBreadcrumbMockProps({
+        useEffect(() => {
+            passer.menuList.update({
+                type: "success",
+                label: "ホーム",
+                badgeCount: props.args.menuBadgeCount,
+            })
+            passer.breadcrumbList.update({
                 type: "success",
                 label: props.args.breadcrumbLabel,
                 icon: props.args.breadcrumbIcon,
             })
-        )
+        })
+        update.seasonInfo(mapSeasonMockProps({ type: "success", year: props.args.seasonYear }))
         update.example(mapExampleMockProps({ type: "success", year: props.args.seasonYear }))
         return html`
             <style>
