@@ -24,13 +24,19 @@ import {
     RenewCredentialSimulator,
 } from "../../renewCredential/tests/core"
 
-import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 import { initStaticClock } from "../../../../z_infra/clock/simulate"
+import {
+    initSimulateLoginRemoteAccess,
+    LoginSimulateResult,
+} from "../../../login/passwordLogin/impl/remote/login/simulate"
+import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 import { SendTokenState } from "../../../profile/passwordReset/impl/remote/session/simulate"
 
 import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
 
 import { Clock } from "../../../../z_infra/clock/infra"
+
+import { RenewCredentialComponent } from "../../renewCredential/component"
 
 import {
     AuthCredential,
@@ -49,7 +55,6 @@ import {
 } from "../../../profile/passwordReset/data"
 
 import { View } from "../impl/core"
-import { RenewCredentialComponent } from "../../renewCredential/component"
 import { LoginState } from "../entryPoint"
 
 const AUTHORIZED_TICKET_NONCE = "ticket-nonce" as const
@@ -394,11 +399,7 @@ function standardRenewCredentialConfig(): RenewCredentialConfig {
 
 function standardPasswordLoginSimulator(): PasswordLoginSimulator {
     return {
-        login: {
-            login: async (fields) => {
-                return simulateLogin(fields)
-            },
-        },
+        login: initSimulateLoginRemoteAccess(simulateLogin, { wait_millisecond: 0 }),
         renew: renewSimulator(),
     }
 }
@@ -433,11 +434,14 @@ function standardRenewCredentialSimulator(): RenewCredentialSimulator {
     }
 }
 
-function simulateLogin(_fields: LoginFields): AuthCredential {
+function simulateLogin(_fields: LoginFields): LoginSimulateResult {
     return {
-        ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
-        apiCredential: markApiCredential({ apiRoles: ["role"] }),
-        authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
+        success: true,
+        value: {
+            ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
+            apiCredential: markApiCredential({ apiRoles: ["role"] }),
+            authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
+        },
     }
 }
 function renewSimulator(): RenewSimulator {

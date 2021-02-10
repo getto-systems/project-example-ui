@@ -6,9 +6,12 @@ import {
     PasswordLoginSimulator,
 } from "./core"
 
-import { wait } from "../../../../z_infra/delayed/core"
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
 import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
+import {
+    initSimulateLoginRemoteAccess,
+    LoginSimulateResult,
+} from "../../../login/passwordLogin/impl/remote/login/simulate"
 
 import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
 
@@ -17,12 +20,7 @@ import { AuthCredentialRepository } from "../../../login/renew/infra"
 import { PasswordLoginComponentState } from "../component"
 
 import { markScriptPath } from "../../../common/application/data"
-import {
-    AuthCredential,
-    markApiCredential,
-    markAuthAt,
-    markTicketNonce,
-} from "../../../common/credential/data"
+import { markApiCredential, markAuthAt, markTicketNonce } from "../../../common/credential/data"
 import { LoginFields } from "../../../login/passwordLogin/data"
 import { markInputString, toValidationError } from "../../../../sub/getto-form/action/data"
 
@@ -696,32 +694,25 @@ function standardRepository(): PasswordLoginRepository {
 }
 function standardSimulator(): PasswordLoginSimulator {
     return {
-        login: {
-            login: async (fields) => {
-                return simulateLogin(fields)
-            },
-        },
+        login: initSimulateLoginRemoteAccess(simulateLogin, { wait_millisecond: 0 }),
         renew: renewSimulator(),
     }
 }
 function waitSimulator(): PasswordLoginSimulator {
     return {
-        login: {
-            login: async (fields) => {
-                // wait for delayed timeout
-                await wait({ wait_millisecond: 3 }, () => null)
-                return simulateLogin(fields)
-            },
-        },
+        login: initSimulateLoginRemoteAccess(simulateLogin, { wait_millisecond: 3 }),
         renew: renewSimulator(),
     }
 }
 
-function simulateLogin(_fields: LoginFields): AuthCredential {
+function simulateLogin(_fields: LoginFields): LoginSimulateResult {
     return {
-        ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
-        apiCredential: markApiCredential({ apiRoles: ["role"] }),
-        authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
+        success: true,
+        value: {
+            ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
+            apiCredential: markApiCredential({ apiRoles: ["role"] }),
+            authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
+        },
     }
 }
 function renewSimulator(): RenewSimulator {

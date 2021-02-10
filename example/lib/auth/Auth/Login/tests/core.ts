@@ -16,10 +16,6 @@ import { initMemoryTypedStorage, MemoryTypedStorageStore } from "../../../../z_i
 
 import { initSimulateRenewClient, RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 import {
-    initSimulatePasswordLoginClient,
-    LoginSimulator,
-} from "../../../login/passwordLogin/impl/remote/login/simulate"
-import {
     initSimulatePasswordResetClient,
     ResetSimulator,
 } from "../../../profile/passwordReset/impl/remote/reset/simulate"
@@ -33,7 +29,7 @@ import { AuthCredentialStorage } from "../../../login/renew/impl/repository/auth
 import { Clock } from "../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../common/application/infra"
 import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../login/renew/infra"
-import { PasswordLoginActionConfig } from "../../../login/passwordLogin/infra"
+import { LoginRemoteAccess, PasswordLoginActionConfig } from "../../../login/passwordLogin/infra"
 import {
     PasswordResetActionConfig,
     PasswordResetSessionActionConfig,
@@ -90,11 +86,11 @@ export function initSetContinuousRenewAction(
 }
 export function initPasswordLoginAction(
     config: PasswordLoginActionConfig,
-    simulator: LoginSimulator
+    access: LoginRemoteAccess
 ): PasswordLoginAction {
     return {
         login: login({
-            login: initSimulatePasswordLoginClient(simulator),
+            login: access,
             config: config.login,
             delayed,
         }),

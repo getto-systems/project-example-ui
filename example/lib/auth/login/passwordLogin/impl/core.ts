@@ -10,10 +10,10 @@ export const login = (infra: LoginInfra): LoginPod => () => async (fields, post)
 
     post({ type: "try-to-login" })
 
-    const { login: client, config: time, delayed } = infra
+    const { login, config, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(client.login(fields.value), time.delay, () =>
+    const response = await delayed(login(fields.value), config.delay, () =>
         post({ type: "delayed-to-login" })
     )
     if (!response.success) {
@@ -21,5 +21,5 @@ export const login = (infra: LoginInfra): LoginPod => () => async (fields, post)
         return
     }
 
-    post({ type: "succeed-to-login", authCredential: response.authCredential })
+    post({ type: "succeed-to-login", authCredential: response.value })
 }

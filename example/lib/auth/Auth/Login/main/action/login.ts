@@ -1,8 +1,8 @@
-import { AuthClient } from "../../../../../z_external/api/authClient"
+import { ApiAuthLogin } from "../../../../../z_external/api/auth/login"
 
 import { delayed } from "../../../../../z_infra/delayed/core"
 
-import { initFetchPasswordLoginClient } from "../../../../login/passwordLogin/impl/remote/login/fetch"
+import { initConnectLoginRemoteAccess } from "../../../../login/passwordLogin/impl/remote/login/connect"
 
 import { login } from "../../../../login/passwordLogin/impl/core"
 
@@ -12,11 +12,11 @@ import { PasswordLoginAction } from "../../../../login/passwordLogin/action"
 
 export function initPasswordLoginAction(
     config: PasswordLoginActionConfig,
-    authClient: AuthClient
+    apiAuthLogin: ApiAuthLogin
 ): PasswordLoginAction {
     return {
         login: login({
-            login: initFetchPasswordLoginClient(authClient),
+            login: initConnectLoginRemoteAccess(apiAuthLogin),
             config: config.login,
             delayed,
         }),
