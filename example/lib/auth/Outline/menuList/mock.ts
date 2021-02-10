@@ -5,7 +5,7 @@ import { MenuListComponent, MenuListComponentState } from "./component"
 
 import { markMenuCategoryLabel, markMenuItem, Menu } from "../../permission/menu/data"
 
-export type MenuListMockPasser = MockPropsPasser<MenuListMockProps>
+export type MenuListMockPropsPasser = MockPropsPasser<MenuListMockProps>
 
 export type MenuListMockProps =
     | Readonly<{ type: "success"; label: string; badgeCount: number }>
@@ -15,12 +15,12 @@ export type MenuListMockProps =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function initMockMenuListComponent(passer: MenuListMockPasser): MenuListComponent {
+export function initMockMenuListComponent(passer: MenuListMockPropsPasser): MenuListComponent {
     return new MenuListMockComponent(passer)
 }
 
 class MenuListMockComponent extends MockComponent<MenuListComponentState> implements MenuListComponent {
-    constructor(passer: MenuListMockPasser) {
+    constructor(passer: MenuListMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))            

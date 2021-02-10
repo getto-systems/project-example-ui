@@ -4,12 +4,12 @@ import { CurrentVersionComponent, CurrentVersionComponentState } from "./compone
 
 import { markVersion } from "../../permission/currentVersion/data"
 
-export type CurrentVersionMockPasser = MockPropsPasser<CurrentVersionMockProps>
+export type CurrentVersionMockPropsPasser = MockPropsPasser<CurrentVersionMockProps>
 
 export type CurrentVersionMockProps = Readonly<{ type: "success" }>
 
 export function initMockCurrentVersionComponent(
-    passer: CurrentVersionMockPasser
+    passer: CurrentVersionMockPropsPasser
 ): CurrentVersionComponent {
     return new CurrentVersionMockComponent(passer)
 }
@@ -17,7 +17,7 @@ export function initMockCurrentVersionComponent(
 class CurrentVersionMockComponent
     extends MockComponent<CurrentVersionComponentState>
     implements CurrentVersionComponent {
-    constructor(passer: CurrentVersionMockPasser) {
+    constructor(passer: CurrentVersionMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))

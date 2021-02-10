@@ -1,8 +1,8 @@
-import { CurrentVersionMockPasser, initMockCurrentVersionComponent } from "../currentVersion/mock"
+import { CurrentVersionMockPropsPasser, initMockCurrentVersionComponent } from "../currentVersion/mock"
 
 import { NotFoundEntryPoint } from "./entryPoint"
 
-export function newMockNotFound(passer: CurrentVersionMockPasser): NotFoundEntryPoint {
+export function newMockNotFound(passer: CurrentVersionMockPropsPasser): NotFoundEntryPoint {
     return {
         resource: {
             currentVersion: initMockCurrentVersionComponent(passer),

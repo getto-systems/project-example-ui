@@ -16,14 +16,14 @@ import { FormComponentState } from "../../../sub/getto-form/component/component"
 import { FormConvertResult } from "../../../sub/getto-form/action/data"
 import { StartSessionFields } from "../../profile/passwordReset/data"
 
-export type PasswordResetSessionMockPasser = MockPropsPasser<PasswordResetSessionMockProps>
+export type PasswordResetSessionMockPropsPasser = MockPropsPasser<PasswordResetSessionMockProps>
 
 export type PasswordResetSessionMockProps = PasswordResetSessionMockProps_core &
     FormMockProps &
     LoginIDFormFieldMockProps
 
 export function initMockPasswordResetSession(
-    passer: PasswordResetSessionMockPasser
+    passer: PasswordResetSessionMockPropsPasser
 ): PasswordResetSessionMockComponent {
     return new PasswordResetSessionMockComponent(passer)
 }
@@ -54,7 +54,7 @@ export class PasswordResetSessionMockComponent
     implements PasswordResetSessionComponent {
     link: LoginLink
 
-    constructor(passer: PasswordResetSessionMockPasser) {
+    constructor(passer: PasswordResetSessionMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))
@@ -157,7 +157,7 @@ export class PasswordResetSessionMockComponent
 }
 
 export function initMockPasswordResetSessionForm(
-    passer: PasswordResetSessionMockPasser
+    passer: PasswordResetSessionMockPropsPasser
 ): PasswordResetSessionFormComponent {
     return new PasswordResetSessionFormMockComponent(passer)
 }
@@ -167,7 +167,7 @@ class PasswordResetSessionFormMockComponent
     implements PasswordResetSessionFormComponent {
     readonly loginID: LoginIDFormFieldComponent
 
-    constructor(passer: PasswordResetSessionMockPasser) {
+    constructor(passer: PasswordResetSessionMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))
