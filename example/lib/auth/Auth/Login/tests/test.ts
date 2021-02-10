@@ -4,7 +4,7 @@ import {
     PasswordLoginConfig,
     newPasswordLoginResource,
     PasswordLoginRepository,
-    PasswordLoginSimulator,
+    PasswordLoginRemoteAccess,
 } from "../../passwordLogin/tests/core"
 import {
     PasswordResetConfig,
@@ -21,7 +21,7 @@ import {
     RenewCredentialConfig,
     newRenewCredentialResource,
     RenewCredentialRepository,
-    RenewCredentialSimulator,
+    RenewCredentialRemoteAccess,
 } from "../../renewCredential/tests/core"
 
 import { initStaticClock } from "../../../../z_infra/clock/simulate"
@@ -29,7 +29,10 @@ import {
     initSimulateLoginRemoteAccess,
     LoginSimulateResult,
 } from "../../../login/passwordLogin/impl/remote/login/simulate"
-import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
+import {
+    initSimulateRenewRemoteAccess,
+    RenewSimulateResult,
+} from "../../../login/renew/impl/remote/renew/simulate"
 import { SendTokenState } from "../../../profile/passwordReset/impl/remote/session/simulate"
 
 import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
@@ -44,7 +47,6 @@ import {
     markAuthAt,
     markTicketNonce,
 } from "../../../common/credential/data"
-import { LoginFields } from "../../../login/passwordLogin/data"
 import {
     Destination,
     markSessionID,
@@ -397,10 +399,10 @@ function standardRenewCredentialConfig(): RenewCredentialConfig {
     }
 }
 
-function standardPasswordLoginSimulator(): PasswordLoginSimulator {
+function standardPasswordLoginSimulator(): PasswordLoginRemoteAccess {
     return {
         login: initSimulateLoginRemoteAccess(simulateLogin, { wait_millisecond: 0 }),
-        renew: renewSimulator(),
+        renew: initSimulateRenewRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
     }
 }
 function standardPasswordResetSimulator(): PasswordResetSimulator {
@@ -410,7 +412,7 @@ function standardPasswordResetSimulator(): PasswordResetSimulator {
                 return simulateReset(resetToken, fields)
             },
         },
-        renew: renewSimulator(),
+        renew: initSimulateRenewRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
     }
 }
 function standardPasswordResetSessionSimulator(): PasswordResetSessionSimulator {
@@ -428,13 +430,13 @@ function standardPasswordResetSessionSimulator(): PasswordResetSessionSimulator 
         },
     }
 }
-function standardRenewCredentialSimulator(): RenewCredentialSimulator {
+function standardRenewCredentialSimulator(): RenewCredentialRemoteAccess {
     return {
-        renew: renewSimulator(),
+        renew: initSimulateRenewRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
     }
 }
 
-function simulateLogin(_fields: LoginFields): LoginSimulateResult {
+function simulateLogin(): LoginSimulateResult {
     return {
         success: true,
         value: {
@@ -444,11 +446,10 @@ function simulateLogin(_fields: LoginFields): LoginSimulateResult {
         },
     }
 }
-function renewSimulator(): RenewSimulator {
+function simulateRenew(): RenewSimulateResult {
     return {
-        renew: async () => {
-            return null
-        },
+        success: false,
+        err: { type: "invalid-ticket" },
     }
 }
 function simulateReset(_resetToken: ResetToken, _fields: ResetFields): AuthCredential {

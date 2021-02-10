@@ -53,30 +53,30 @@ async function renewCredential(infra: RenewInfra, lastLogin: LastLogin, post: Po
     post({ type: "try-to-renew" })
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(renew.renew(lastLogin.ticketNonce), config.delay, () =>
+    const response = await delayed(renew(lastLogin.ticketNonce), config.delay, () =>
         post({ type: "delayed-to-renew" })
     )
     if (!response.success) {
+        if (response.err.type === "invalid-ticket") {
+            const removeResult = authCredentials.removeAuthCredential()
+            if (!removeResult.success) {
+                post({ type: "storage-error", err: removeResult.err })
+                return
+            }
+            post({ type: "required-to-login" })
+            return
+        }
         post({ type: "failed-to-renew", err: response.err })
         return
     }
-    if (!response.hasCredential) {
-        const removeResult = authCredentials.removeAuthCredential()
-        if (!removeResult.success) {
-            post({ type: "storage-error", err: removeResult.err })
-            return
-        }
-        post({ type: "required-to-login" })
-        return
-    }
 
-    const storeResult = authCredentials.storeAuthCredential(response.authCredential)
+    const storeResult = authCredentials.storeAuthCredential(response.value)
     if (!storeResult.success) {
         post({ type: "storage-error", err: storeResult.err })
         return
     }
 
-    post({ type: "succeed-to-renew", authCredential: response.authCredential })
+    post({ type: "succeed-to-renew", authCredential: response.value })
 }
 
 export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuousRenewPod => () => (
@@ -123,16 +123,15 @@ export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuou
             return NEXT
         }
 
-        const response = await renew.renew(findResult.lastLogin.ticketNonce)
+        const response = await renew(findResult.lastLogin.ticketNonce)
         if (!response.success) {
-            return CANCEL
-        }
-        if (!response.hasCredential) {
-            authCredentials.removeAuthCredential()
+            if (response.err.type === "invalid-ticket") {
+                authCredentials.removeAuthCredential()
+            }
             return CANCEL
         }
 
-        const storeResult = authCredentials.storeAuthCredential(response.authCredential)
+        const storeResult = authCredentials.storeAuthCredential(response.value)
         if (!storeResult.success) {
             return CANCEL
         }

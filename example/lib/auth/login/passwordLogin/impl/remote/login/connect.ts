@@ -19,6 +19,7 @@ export type RawAuthCredential = Readonly<{
 
 export function initConnectLoginRemoteAccess(access: LoginRawRemoteAccess): LoginRemoteAccess {
     return initConnectRemoteAccess(access, {
+        message: (fields: LoginFields): LoginFields => fields,
         value: (response: RawAuthCredential): AuthCredential => ({
             ticketNonce: markTicketNonce(response.ticketNonce),
             apiCredential: markApiCredential({

@@ -17,3 +17,10 @@ export type RenewError =
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
+
+export type RenewRemoteError =
+    | Readonly<{ type: "bad-request" }>
+    | Readonly<{ type: "invalid-ticket" }>
+    | Readonly<{ type: "server-error" }>
+    | Readonly<{ type: "bad-response"; err: string }>
+    | Readonly<{ type: "infra-error"; err: string }>

@@ -9,14 +9,13 @@ import { initRenewCredentialResource, RenewCredentialFactory } from "../../Login
 
 import { initRenewCredentialComponent } from "../impl"
 
-import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
-
 import { Clock } from "../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../common/application/infra"
 import {
     RenewActionConfig,
     SetContinuousRenewActionConfig,
     AuthCredentialRepository,
+    RenewRemoteAccess,
 } from "../../../login/renew/infra"
 
 import { RenewCredentialResource } from "../../Login/entryPoint"
@@ -31,15 +30,15 @@ export type RenewCredentialConfig = {
 export type RenewCredentialRepository = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
-export type RenewCredentialSimulator = Readonly<{
-    renew: RenewSimulator
+export type RenewCredentialRemoteAccess = Readonly<{
+    renew: RenewRemoteAccess
 }>
 
 export function newRenewCredentialResource(
     currentURL: URL,
     config: RenewCredentialConfig,
     repository: RenewCredentialRepository,
-    simulator: RenewCredentialSimulator,
+    remote: RenewCredentialRemoteAccess,
     clock: Clock,
     hook: Setup<RenewCredentialComponent>
 ): RenewCredentialResource {
@@ -49,11 +48,11 @@ export function newRenewCredentialResource(
             setContinuousRenew: initSetContinuousRenewAction(
                 config.setContinuousRenew,
                 repository.authCredentials,
-                simulator.renew,
+                remote.renew,
                 clock
             ),
 
-            renew: initRenewAction(config.renew, repository.authCredentials, simulator.renew, clock),
+            renew: initRenewAction(config.renew, repository.authCredentials, remote.renew, clock),
         },
         components: {
             renewCredential: initRenewCredentialComponent,

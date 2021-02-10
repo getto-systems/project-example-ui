@@ -1,4 +1,4 @@
-import { initAuthClient } from "../../../../../z_external/api/authClient"
+import { initApiAuthRenew } from "../../../../../z_external/api/auth/renew"
 
 import { env } from "../../../../../y_environment/env"
 
@@ -89,7 +89,11 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
     const credentialStorage = localStorage
     const currentURL = new URL(location.toString())
 
-    const authClient = initAuthClient(env.authServerURL)
+    const api = {
+        auth: {
+            renew: initApiAuthRenew(env.authServerURL),
+        },
+    }
 
     const worker = new Worker(`/${env.version}/auth/login.worker.js`)
 
@@ -101,11 +105,11 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
         link: initLoginLink,
         actions: {
             application: initApplicationAction(newApplicationActionConfig()),
-            renew: initRenewAction(newRenewActionConfig(), authCredentials, authClient),
+            renew: initRenewAction(newRenewActionConfig(), authCredentials, api.auth.renew),
             setContinuousRenew: initSetContinuousRenewAction(
                 newSetContinuousRenewActionConfig(),
                 authCredentials,
-                authClient
+                api.auth.renew
             ),
 
             form: {

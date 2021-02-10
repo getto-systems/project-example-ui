@@ -13,12 +13,15 @@ import { initFormAction } from "../../../../sub/getto-form/main/form"
 import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "../../Login/main/action/form"
 
 import { ResetSimulator } from "../../../profile/passwordReset/impl/remote/reset/simulate"
-import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 
 import { Clock } from "../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../common/application/infra"
 import { PasswordResetActionConfig } from "../../../profile/passwordReset/infra"
-import { SetContinuousRenewActionConfig, AuthCredentialRepository } from "../../../login/renew/infra"
+import {
+    SetContinuousRenewActionConfig,
+    AuthCredentialRepository,
+    RenewRemoteAccess,
+} from "../../../login/renew/infra"
 
 import { PasswordResetResource } from "../../Login/entryPoint"
 
@@ -32,7 +35,7 @@ export type PasswordResetRepository = Readonly<{
 }>
 export type PasswordResetSimulator = Readonly<{
     reset: ResetSimulator
-    renew: RenewSimulator
+    renew: RenewRemoteAccess
 }>
 
 export function newPasswordResetResource(

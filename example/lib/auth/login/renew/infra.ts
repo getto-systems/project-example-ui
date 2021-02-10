@@ -1,9 +1,10 @@
 import { Clock } from "../../../z_infra/clock/infra"
 import { Delayed } from "../../../z_infra/delayed/infra"
+import { RemoteAccess } from "../../../z_infra/remote/infra"
 import { DelayTime, ExpireTime, IntervalTime } from "../../../z_infra/time/infra"
 
 import { AuthCredential, LastLogin, StorageError, TicketNonce } from "../../common/credential/data"
-import { RenewError } from "./data"
+import { RenewRemoteError } from "./data"
 
 export type RenewActionConfig = Readonly<{
     renew: RenewConfig
@@ -15,14 +16,14 @@ export type SetContinuousRenewActionConfig = Readonly<{
 export type RenewInfra = Readonly<{
     authCredentials: AuthCredentialRepository
     config: RenewConfig
-    renew: RenewClient
+    renew: RenewRemoteAccess
     clock: Clock
     delayed: Delayed
 }>
 export type SetContinuousRenewInfra = Readonly<{
     authCredentials: AuthCredentialRepository
     config: SetContinuousRenewConfig
-    renew: RenewClient
+    renew: RenewRemoteAccess
     clock: Clock
 }>
 
@@ -58,11 +59,4 @@ export type StorageKey = Readonly<{
     lastAuthAt: string
 }>
 
-export interface RenewClient {
-    renew(ticketNonce: TicketNonce): Promise<RenewResponse>
-}
-
-export type RenewResponse =
-    | Readonly<{ success: false; err: RenewError }>
-    | Readonly<{ success: true; hasCredential: false }>
-    | Readonly<{ success: true; hasCredential: true; authCredential: AuthCredential }>
+export type RenewRemoteAccess = RemoteAccess<TicketNonce, AuthCredential, RenewRemoteError>
