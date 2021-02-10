@@ -1,22 +1,25 @@
 import { h, VNode } from "preact"
+import { useEffect } from "preact/hooks"
 
 import { Login } from "../../../x_preact/Auth/Login/Login"
 
-import { newMockLoginAsError } from "../../../auth/Auth/Login/mock"
+import { LoginErrorMockProps, newMockLoginAsError } from "../../../auth/Auth/Login/mock"
+import { initMockPropsPasser } from "../../../sub/getto-example/application/mock"
 
 export default {
     title: "Auth/Login/Error",
 }
 
-type MockProps = Readonly<{
-    err: string
-}>
+type MockProps = LoginErrorMockProps
 const Template: Story<MockProps> = (args) => {
-    const { login, update } = newMockLoginAsError()
+    const passer = initMockPropsPasser<LoginErrorMockProps>()
+    const login = newMockLoginAsError(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }): VNode {
-        update.error(props.args.err)
+        useEffect(() => {
+            passer.update(props.args)
+        })
         return h(Login, { login })
     }
 }
@@ -27,5 +30,5 @@ interface Story<T> {
 
 export const Error = Template.bind({})
 Error.args = {
-    err: "error",
+    error: "error",
 }
