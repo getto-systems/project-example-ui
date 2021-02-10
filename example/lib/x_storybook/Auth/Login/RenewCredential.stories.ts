@@ -3,10 +3,9 @@ import { h, VNode } from "preact"
 import { Login } from "../../../x_preact/Auth/Login/Login"
 
 import { newMockLoginAsRenewCredential } from "../../../auth/Auth/Login/mock"
-import {
-    mapRenewCredentialMockProps,
-    RenewCredentialMockProps,
-} from "../../../auth/Auth/renewCredential/mock"
+import { RenewCredentialMockProps } from "../../../auth/Auth/renewCredential/mock"
+import { initMockPropsPasser } from "../../../sub/getto-example/application/mock"
+import { useEffect } from "htm/preact"
 
 export default {
     title: "Auth/Login/RenewCredential",
@@ -19,11 +18,14 @@ export default {
 
 type MockProps = RenewCredentialMockProps
 const Template: Story<MockProps> = (args) => {
-    const { login, update } = newMockLoginAsRenewCredential()
+    const passer = initMockPropsPasser<RenewCredentialMockProps>()
+    const login = newMockLoginAsRenewCredential(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }): VNode {
-        update.renewCredential(mapRenewCredentialMockProps(props.args))
+        useEffect(() => {
+            passer.update(props.args)
+        })
         return h(Login, { login })
     }
 }
