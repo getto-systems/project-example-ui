@@ -14,7 +14,6 @@ import { startSession, checkStatus, reset } from "../../../profile/passwordReset
 
 import { initMemoryTypedStorage, MemoryTypedStorageStore } from "../../../../z_infra/storage/memory"
 
-import { initSimulateRenewClient, RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 import {
     initSimulatePasswordResetClient,
     ResetSimulator,
@@ -28,7 +27,11 @@ import { AuthCredentialStorage } from "../../../login/renew/impl/repository/auth
 
 import { Clock } from "../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../common/application/infra"
-import { RenewActionConfig, SetContinuousRenewActionConfig } from "../../../login/renew/infra"
+import {
+    RenewActionConfig,
+    RenewRemoteAccess,
+    SetContinuousRenewActionConfig,
+} from "../../../login/renew/infra"
 import { LoginRemoteAccess, PasswordLoginActionConfig } from "../../../login/passwordLogin/infra"
 import {
     PasswordResetActionConfig,
@@ -51,12 +54,12 @@ export function initApplicationAction(config: ApplicationActionConfig): Applicat
 export function initRenewAction(
     config: RenewActionConfig,
     authCredentials: AuthCredentialRepository,
-    simulator: RenewSimulator,
+    remote: RenewRemoteAccess,
     clock: Clock
 ): RenewAction {
     const infra = {
         authCredentials,
-        renew: initSimulateRenewClient(simulator),
+        renew: remote,
         config: config.renew,
         delayed,
         clock,
@@ -70,15 +73,13 @@ export function initRenewAction(
 export function initSetContinuousRenewAction(
     config: SetContinuousRenewActionConfig,
     authCredentials: AuthCredentialRepository,
-    simulator: RenewSimulator,
+    remote: RenewRemoteAccess,
     clock: Clock
 ): SetContinuousRenewAction {
-    const client = initSimulateRenewClient(simulator)
-
     return {
         setContinuousRenew: setContinuousRenew({
             authCredentials,
-            renew: client,
+            renew: remote,
             config: config.setContinuousRenew,
             clock,
         }),

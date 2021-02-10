@@ -2,21 +2,23 @@ import {
     RenewCredentialConfig,
     newRenewCredentialResource,
     RenewCredentialRepository,
-    RenewCredentialSimulator,
+    RenewCredentialRemoteAccess,
 } from "./core"
+import { initAuthCredentialTestStorage } from "../../Login/tests/core"
 
-import { wait } from "../../../../z_infra/delayed/core"
-import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
+import {
+    initSimulateRenewRemoteAccess,
+    RenewSimulateResult,
+} from "../../../login/renew/impl/remote/renew/simulate"
+import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
 
-import { AuthCredentialRepository } from "../../../login/renew/infra"
+import { AuthCredentialRepository, RenewRemoteAccess } from "../../../login/renew/infra"
 
 import { RenewCredentialComponentState } from "../component"
 
 import { markApiCredential, markAuthAt, markTicketNonce } from "../../../common/credential/data"
 import { markScriptPath } from "../../../common/application/data"
-import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
-import { initAuthCredentialTestStorage } from "../../Login/tests/core"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -450,40 +452,37 @@ function emptyRepository(): RenewCredentialRepository {
         ),
     }
 }
-function standardSimulator(): RenewCredentialSimulator {
+function standardSimulator(): RenewCredentialRemoteAccess {
     return {
-        renew: renewSimulator({ wait_millisecond: 0 }),
+        renew: renewRemoteAccess({ wait_millisecond: 0 }),
     }
 }
-function waitSimulator(): RenewCredentialSimulator {
+function waitSimulator(): RenewCredentialRemoteAccess {
     return {
         // wait for delayed timeout
-        renew: renewSimulator({ wait_millisecond: 3 }),
+        renew: renewRemoteAccess({ wait_millisecond: 3 }),
     }
 }
 
-function renewSimulator(waitTime: WaitTime): RenewSimulator {
+function renewRemoteAccess(waitTime: WaitTime): RenewRemoteAccess {
     let renewedCount = 0
-    return {
-        renew: async () => {
-            if (renewedCount > 1) {
-                // 初回 renew と continuous renew 一回目の 2回だけ
-                // renew して、あとは renew を cancel するために null を返す
-                return null
-            }
-            renewedCount++
+    return initSimulateRenewRemoteAccess((): RenewSimulateResult => {
+        if (renewedCount > 1) {
+            // 初回 renew と continuous renew 一回目の 2回だけ
+            // renew して、あとは renew を cancel するために null を返す
+            return { success: false, err: { type: "invalid-ticket" } }
+        }
+        renewedCount++
 
-            if (waitTime.wait_millisecond > 0) {
-                await wait(waitTime, () => null)
-            }
-
-            return {
+        return {
+            success: true,
+            value: {
                 ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
                 apiCredential: markApiCredential({ apiRoles: ["role"] }),
                 authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
-            }
-        },
-    }
+            },
+        }
+    }, waitTime)
 }
 
 function standardClock(): StaticClock {

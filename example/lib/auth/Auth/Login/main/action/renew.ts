@@ -1,10 +1,10 @@
-import { AuthClient } from "../../../../../z_external/api/authClient"
+import { ApiAuthRenew } from "../../../../../z_external/api/auth/renew"
 
 import { initDateClock } from "../../../../../z_infra/clock/date"
 import { delayed } from "../../../../../z_infra/delayed/core"
 import { initWebTypedStorage } from "../../../../../z_infra/storage/webStorage"
+import { initConnectRenewRemoteAccess } from "../../../../login/renew/impl/remote/renew/connect"
 
-import { initFetchRenewClient } from "../../../../login/renew/impl/remote/renew/fetch"
 import { AuthCredentialStorage } from "../../../../login/renew/impl/repository/authCredential"
 import {
     initLastAuthAtConverter,
@@ -44,11 +44,11 @@ export function initAuthCredentialStorage(
 export function initRenewAction(
     config: RenewActionConfig,
     authCredentials: AuthCredentialRepository,
-    authClient: AuthClient
+    apiAuthRenew: ApiAuthRenew
 ): RenewAction {
     const infra = {
         authCredentials,
-        renew: initFetchRenewClient(authClient),
+        renew: initConnectRenewRemoteAccess(apiAuthRenew),
         config: config.renew,
         delayed,
         clock: initDateClock(),
@@ -62,9 +62,9 @@ export function initRenewAction(
 export function initSetContinuousRenewAction(
     config: SetContinuousRenewActionConfig,
     authCredentials: AuthCredentialRepository,
-    authClient: AuthClient
+    apiAuthRenew: ApiAuthRenew
 ): SetContinuousRenewAction {
-    const client = initFetchRenewClient(authClient)
+    const client = initConnectRenewRemoteAccess(apiAuthRenew)
 
     return {
         setContinuousRenew: setContinuousRenew({

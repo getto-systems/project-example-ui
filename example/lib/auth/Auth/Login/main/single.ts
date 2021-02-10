@@ -1,4 +1,4 @@
-import { initAuthClient } from "../../../../z_external/api/authClient"
+import { initApiAuthRenew } from "../../../../z_external/api/auth/renew"
 import { initApiAuthLogin } from "../../../../z_external/api/auth/login"
 
 import { env } from "../../../../y_environment/env"
@@ -59,11 +59,11 @@ export function newLoginAsSingle(): LoginEntryPoint {
 
     const api = {
         auth: {
+            renew: initApiAuthRenew(env.authServerURL),
             login: initApiAuthLogin(env.authServerURL),
         },
     }
 
-    const authClient = initAuthClient(env.authServerURL)
     const authCredentials = initAuthCredentialRepository(
         initAuthCredentialStorage(env.storageKey, credentialStorage)
     )
@@ -72,11 +72,11 @@ export function newLoginAsSingle(): LoginEntryPoint {
         link: initLoginLink,
         actions: {
             application: initApplicationAction(newApplicationActionConfig()),
-            renew: initRenewAction(newRenewActionConfig(), authCredentials, authClient),
+            renew: initRenewAction(newRenewActionConfig(), authCredentials, api.auth.renew),
             setContinuousRenew: initSetContinuousRenewAction(
                 newSetContinuousRenewActionConfig(),
                 authCredentials,
-                authClient
+                api.auth.renew
             ),
 
             passwordLogin: initPasswordLoginAction(newPasswordLoginActionConfig(), api.auth.login),

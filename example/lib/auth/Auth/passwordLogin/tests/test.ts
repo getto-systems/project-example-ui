@@ -3,11 +3,10 @@ import {
     PasswordLoginConfig,
     newPasswordLoginResource,
     PasswordLoginRepository,
-    PasswordLoginSimulator,
+    PasswordLoginRemoteAccess,
 } from "./core"
 
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
-import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 import {
     initSimulateLoginRemoteAccess,
     LoginSimulateResult,
@@ -15,7 +14,7 @@ import {
 
 import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
 
-import { AuthCredentialRepository } from "../../../login/renew/infra"
+import { AuthCredentialRepository, RenewRemoteAccess } from "../../../login/renew/infra"
 
 import { PasswordLoginComponentState } from "../component"
 
@@ -23,6 +22,7 @@ import { markScriptPath } from "../../../common/application/data"
 import { markApiCredential, markAuthAt, markTicketNonce } from "../../../common/credential/data"
 import { LoginFields } from "../../../login/passwordLogin/data"
 import { markInputString, toValidationError } from "../../../../sub/getto-form/action/data"
+import { initSimulateRenewRemoteAccess, RenewSimulateResult } from "../../../login/renew/impl/remote/renew/simulate"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -692,16 +692,16 @@ function standardRepository(): PasswordLoginRepository {
         ),
     }
 }
-function standardSimulator(): PasswordLoginSimulator {
+function standardSimulator(): PasswordLoginRemoteAccess {
     return {
         login: initSimulateLoginRemoteAccess(simulateLogin, { wait_millisecond: 0 }),
-        renew: renewSimulator(),
+        renew: renewRemoteAccess(),
     }
 }
-function waitSimulator(): PasswordLoginSimulator {
+function waitSimulator(): PasswordLoginRemoteAccess {
     return {
         login: initSimulateLoginRemoteAccess(simulateLogin, { wait_millisecond: 3 }),
-        renew: renewSimulator(),
+        renew: renewRemoteAccess(),
     }
 }
 
@@ -715,22 +715,24 @@ function simulateLogin(_fields: LoginFields): LoginSimulateResult {
         },
     }
 }
-function renewSimulator(): RenewSimulator {
+function renewRemoteAccess(): RenewRemoteAccess {
     let renewed = false
-    return {
-        renew: async () => {
-            if (renewed) {
-                // 最初の一回だけ renew して、あとは renew を cancel するために null を返す
-                return null
-            }
-            renewed = true
-            return {
+    return initSimulateRenewRemoteAccess((): RenewSimulateResult => {
+        if (renewed) {
+            // 最初の一回だけ renew して、あとは renew を cancel するために null を返す
+            return { success: false, err: { type: "invalid-ticket" } }
+        }
+        renewed = true
+
+        return {
+            success: true,
+            value: {
                 ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
                 apiCredential: markApiCredential({ apiRoles: ["role"] }),
                 authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
-            }
-        },
-    }
+            },
+        }
+    }, { wait_millisecond: 0 })
 }
 
 function standardClock(): StaticClock {

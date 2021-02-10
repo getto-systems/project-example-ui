@@ -7,5 +7,6 @@ export type RemoteAccessResult<V, E> =
     | Readonly<{ success: false; err: E }>
 
 export type RawRemoteAccess<M, V> = RemoteAccess<M, V, RemoteAccessError>
+export type RawRemoteAccessResult<V> = RemoteAccessResult<V, RemoteAccessError>
 
 export type RemoteAccessError = Readonly<{ type: string; detail: string }>

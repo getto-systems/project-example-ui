@@ -14,12 +14,10 @@ import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../i
 import { initFormAction } from "../../../../sub/getto-form/main/form"
 import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "../../Login/main/action/form"
 
-import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
-
 import { Clock } from "../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../common/application/infra"
 import { LoginRemoteAccess, PasswordLoginActionConfig } from "../../../login/passwordLogin/infra"
-import { SetContinuousRenewActionConfig, AuthCredentialRepository } from "../../../login/renew/infra"
+import { SetContinuousRenewActionConfig, AuthCredentialRepository, RenewRemoteAccess } from "../../../login/renew/infra"
 
 import { PasswordLoginResource } from "../../Login/entryPoint"
 
@@ -31,16 +29,16 @@ export type PasswordLoginConfig = {
 export type PasswordLoginRepository = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
-export type PasswordLoginSimulator = Readonly<{
+export type PasswordLoginRemoteAccess = Readonly<{
     login: LoginRemoteAccess
-    renew: RenewSimulator
+    renew: RenewRemoteAccess
 }>
 
 export function newPasswordLoginResource(
     currentURL: URL,
     config: PasswordLoginConfig,
     repository: PasswordLoginRepository,
-    simulator: PasswordLoginSimulator,
+    simulator: PasswordLoginRemoteAccess,
     clock: Clock
 ): PasswordLoginResource {
     const factory: PasswordLoginFactory = {

@@ -7,12 +7,15 @@ import {
 } from "./core"
 
 import { wait } from "../../../../z_infra/delayed/core"
-import { RenewSimulator } from "../../../login/renew/impl/remote/renew/simulate"
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
+import {
+    initSimulateRenewRemoteAccess,
+    RenewSimulateResult,
+} from "../../../login/renew/impl/remote/renew/simulate"
 
 import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
 
-import { AuthCredentialRepository } from "../../../login/renew/infra"
+import { AuthCredentialRepository, RenewRemoteAccess } from "../../../login/renew/infra"
 
 import { PasswordResetComponentState } from "../component"
 
@@ -757,7 +760,7 @@ function standardSimulator(): PasswordResetSimulator {
                 return simulateReset(resetToken, fields)
             },
         },
-        renew: renewSimulator(),
+        renew: renewRemoteAccess(),
     }
 }
 function waitSimulator(): PasswordResetSimulator {
@@ -769,7 +772,7 @@ function waitSimulator(): PasswordResetSimulator {
                 return simulateReset(resetToken, fields)
             },
         },
-        renew: renewSimulator(),
+        renew: renewRemoteAccess(),
     }
 }
 
@@ -780,22 +783,27 @@ function simulateReset(_resetToken: ResetToken, _fields: ResetFields): AuthCrede
         authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
     }
 }
-function renewSimulator(): RenewSimulator {
+function renewRemoteAccess(): RenewRemoteAccess {
     let renewed = false
-    return {
-        renew: async () => {
+    return initSimulateRenewRemoteAccess(
+        (): RenewSimulateResult => {
             if (renewed) {
                 // 最初の一回だけ renew して、あとは renew を cancel するために null を返す
-                return null
+                return { success: false, err: { type: "invalid-ticket" } }
             }
             renewed = true
+
             return {
-                ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
-                apiCredential: markApiCredential({ apiRoles: ["role"] }),
-                authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
+                success: true,
+                value: {
+                    ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
+                    apiCredential: markApiCredential({ apiRoles: ["role"] }),
+                    authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
+                },
             }
         },
-    }
+        { wait_millisecond: 0 }
+    )
 }
 
 function standardClock(): StaticClock {
