@@ -10,12 +10,12 @@ import {
     PasswordResetConfig,
     newPasswordResetResource,
     PasswordResetRepository,
-    PasswordResetSimulator,
+    PasswordResetRemoteAccess,
 } from "../../passwordReset/tests/core"
 import {
     PasswordResetSessionConfig,
     newPasswordResetSessionResource,
-    PasswordResetSessionSimulator,
+    PasswordResetSessionRemoteAccess,
 } from "../../passwordResetSession/tests/core"
 import {
     RenewCredentialConfig,
@@ -26,14 +26,25 @@ import {
 
 import { initStaticClock } from "../../../../z_infra/clock/simulate"
 import {
-    initSimulateLoginRemoteAccess,
+    initLoginSimulateRemoteAccess,
     LoginSimulateResult,
 } from "../../../login/passwordLogin/impl/remote/login/simulate"
 import {
-    initSimulateRenewRemoteAccess,
+    initRenewSimulateRemoteAccess,
     RenewSimulateResult,
 } from "../../../login/renew/impl/remote/renew/simulate"
-import { SendTokenState } from "../../../profile/passwordReset/impl/remote/session/simulate"
+import {
+    initResetSimulateRemoteAccess,
+    ResetSimulateResult,
+} from "../../../profile/passwordReset/impl/remote/reset/simulate"
+import {
+    GetStatusSimulateResult,
+    initGetStatusSimulateRemoteAccess,
+    initSendTokenSimulateRemoteAccess,
+    initStartSessionSimulateRemoteAccess,
+    SendTokenSimulateResult,
+    StartSessionSimulateResult,
+} from "../../../profile/passwordReset/impl/remote/session/simulate"
 
 import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
 
@@ -41,20 +52,8 @@ import { Clock } from "../../../../z_infra/clock/infra"
 
 import { RenewCredentialComponent } from "../../renewCredential/component"
 
-import {
-    AuthCredential,
-    markApiCredential,
-    markAuthAt,
-    markTicketNonce,
-} from "../../../common/credential/data"
-import {
-    Destination,
-    markSessionID,
-    ResetFields,
-    ResetToken,
-    SessionID,
-    StartSessionFields,
-} from "../../../profile/passwordReset/data"
+import { markApiCredential, markAuthAt, markTicketNonce } from "../../../common/credential/data"
+import { markSessionID } from "../../../profile/passwordReset/data"
 
 import { View } from "../impl/core"
 import { LoginState } from "../entryPoint"
@@ -285,17 +284,17 @@ function passwordResetLoginView() {
 
 function standardPasswordLoginResource(currentURL: URL, repository: Repository, clock: Clock) {
     const config = standardPasswordLoginConfig()
-    const simulator = standardPasswordLoginSimulator()
+    const simulator = standardPasswordLoginRemoteAccess()
     return newPasswordLoginResource(currentURL, config, repository, simulator, clock)
 }
 function standardPasswordResetResource(currentURL: URL, repository: Repository, clock: Clock) {
     const config = standardPasswordResetConfig()
-    const simulator = standardPasswordResetSimulator()
+    const simulator = standardPasswordResetRemoteAccess()
     return newPasswordResetResource(currentURL, config, repository, simulator, clock)
 }
 function standardPasswordResetSessionResource() {
     const config = standardPasswordResetSessionConfig()
-    const simulator = standardPasswordResetSessionSimulator()
+    const simulator = standardPasswordResetSessionRemoteAccess()
     return newPasswordResetSessionResource(config, simulator)
 }
 function standardRenewCredentialResource(
@@ -399,40 +398,32 @@ function standardRenewCredentialConfig(): RenewCredentialConfig {
     }
 }
 
-function standardPasswordLoginSimulator(): PasswordLoginRemoteAccess {
+function standardPasswordLoginRemoteAccess(): PasswordLoginRemoteAccess {
     return {
-        login: initSimulateLoginRemoteAccess(simulateLogin, { wait_millisecond: 0 }),
-        renew: initSimulateRenewRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
+        login: initLoginSimulateRemoteAccess(simulateLogin, { wait_millisecond: 0 }),
+        renew: initRenewSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
     }
 }
-function standardPasswordResetSimulator(): PasswordResetSimulator {
+function standardPasswordResetRemoteAccess(): PasswordResetRemoteAccess {
     return {
-        reset: {
-            reset: async (resetToken, fields) => {
-                return simulateReset(resetToken, fields)
-            },
-        },
-        renew: initSimulateRenewRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
+        reset: initResetSimulateRemoteAccess(simulateReset, { wait_millisecond: 0 }),
+        renew: initRenewSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
     }
 }
-function standardPasswordResetSessionSimulator(): PasswordResetSessionSimulator {
+function standardPasswordResetSessionRemoteAccess(): PasswordResetSessionRemoteAccess {
     return {
-        session: {
-            startSession: async (fields) => {
-                return simulateStartSession(fields)
-            },
-            sendToken: async (post) => {
-                return simulateSendToken(post)
-            },
-            getDestination: async (sessionID) => {
-                return simulateGetDestination(sessionID)
-            },
-        },
+        startSession: initStartSessionSimulateRemoteAccess(simulateStartSession, {
+            wait_millisecond: 0,
+        }),
+        sendToken: initSendTokenSimulateRemoteAccess(simulateSendToken, {
+            wait_millisecond: 0,
+        }),
+        getStatus: initGetStatusSimulateRemoteAccess(simulateGetStatus, { wait_millisecond: 0 }),
     }
 }
 function standardRenewCredentialSimulator(): RenewCredentialRemoteAccess {
     return {
-        renew: initSimulateRenewRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
+        renew: initRenewSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
     }
 }
 
@@ -452,31 +443,25 @@ function simulateRenew(): RenewSimulateResult {
         err: { type: "invalid-ticket" },
     }
 }
-function simulateReset(_resetToken: ResetToken, _fields: ResetFields): AuthCredential {
+function simulateReset(): ResetSimulateResult {
     return {
-        ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
-        apiCredential: markApiCredential({ apiRoles: ["role"] }),
-        authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
+        success: true,
+        value: {
+            ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
+            apiCredential: markApiCredential({ apiRoles: ["role"] }),
+            authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
+        },
     }
 }
 
-function simulateStartSession(_fields: StartSessionFields): SessionID {
-    return markSessionID(SESSION_ID)
+function simulateStartSession(): StartSessionSimulateResult {
+    return { success: true, value: markSessionID(SESSION_ID) }
 }
-function simulateSendToken(post: Handler<SendTokenState>): true {
-    setTimeout(() => {
-        post({ state: "waiting" })
-    }, 0)
-    setTimeout(() => {
-        post({ state: "sending" })
-    }, 2)
-    setTimeout(() => {
-        post({ state: "success" })
-    }, 4)
-    return true
+function simulateSendToken(): SendTokenSimulateResult {
+    return { success: true, value: true }
 }
-function simulateGetDestination(_sessionID: SessionID): Destination {
-    return { type: "log" }
+function simulateGetStatus(): GetStatusSimulateResult {
+    return { success: true, value: { dest: { type: "log" }, done: true, send: true } }
 }
 
 function standardRepository(): Repository {

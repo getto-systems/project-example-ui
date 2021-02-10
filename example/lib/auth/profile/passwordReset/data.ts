@@ -25,15 +25,16 @@ export type ResetFields = Readonly<{
     password: Password
 }>
 
-export type StartSessionError =
-    | Readonly<{ type: "validation-error" }>
+export type StartSessionError = Readonly<{ type: "validation-error" }> | StartSessionRemoteError
+export type StartSessionRemoteError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "invalid-password-reset" }>
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export type CheckStatusError =
+export type CheckStatusError = CheckStatusRemoteError
+export type CheckStatusRemoteError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "invalid-password-reset" }>
     | Readonly<{ type: "server-error" }>
@@ -45,6 +46,9 @@ export type SendTokenError = Readonly<{ type: "infra-error"; err: string }>
 export type ResetError =
     | Readonly<{ type: "validation-error" }>
     | Readonly<{ type: "empty-reset-token" }>
+    | ResetRemoteError
+
+export type ResetRemoteError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "invalid-password-reset" }>
     | Readonly<{ type: "server-error" }>

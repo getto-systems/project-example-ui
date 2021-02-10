@@ -3,16 +3,18 @@ import {
     PasswordResetConfig,
     newPasswordResetResource,
     PasswordResetRepository,
-    PasswordResetSimulator,
+    PasswordResetRemoteAccess,
 } from "./core"
 
-import { wait } from "../../../../z_infra/delayed/core"
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
 import {
-    initSimulateRenewRemoteAccess,
+    initRenewSimulateRemoteAccess,
     RenewSimulateResult,
 } from "../../../login/renew/impl/remote/renew/simulate"
-
+import {
+    initResetSimulateRemoteAccess,
+    ResetSimulateResult,
+} from "../../../profile/passwordReset/impl/remote/reset/simulate"
 import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
 
 import { AuthCredentialRepository, RenewRemoteAccess } from "../../../login/renew/infra"
@@ -20,13 +22,7 @@ import { AuthCredentialRepository, RenewRemoteAccess } from "../../../login/rene
 import { PasswordResetComponentState } from "../component"
 
 import { markScriptPath } from "../../../common/application/data"
-import {
-    AuthCredential,
-    markApiCredential,
-    markAuthAt,
-    markTicketNonce,
-} from "../../../common/credential/data"
-import { ResetFields, ResetToken } from "../../../profile/passwordReset/data"
+import { markApiCredential, markAuthAt, markTicketNonce } from "../../../common/credential/data"
 import { markInputString, toValidationError } from "../../../../sub/getto-form/action/data"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
@@ -753,39 +749,32 @@ function standardRepository(): PasswordResetRepository {
         ),
     }
 }
-function standardSimulator(): PasswordResetSimulator {
+function standardSimulator(): PasswordResetRemoteAccess {
     return {
-        reset: {
-            reset: async (resetToken, fields) => {
-                return simulateReset(resetToken, fields)
-            },
-        },
+        reset: initResetSimulateRemoteAccess(simulateReset, { wait_millisecond: 0 }),
         renew: renewRemoteAccess(),
     }
 }
-function waitSimulator(): PasswordResetSimulator {
+function waitSimulator(): PasswordResetRemoteAccess {
     return {
-        reset: {
-            reset: async (resetToken, fields) => {
-                // wait for delayed timeout
-                await wait({ wait_millisecond: 3 }, () => null)
-                return simulateReset(resetToken, fields)
-            },
-        },
+        reset: initResetSimulateRemoteAccess(simulateReset, { wait_millisecond: 3 }),
         renew: renewRemoteAccess(),
     }
 }
 
-function simulateReset(_resetToken: ResetToken, _fields: ResetFields): AuthCredential {
+function simulateReset(): ResetSimulateResult {
     return {
-        ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
-        apiCredential: markApiCredential({ apiRoles: ["role"] }),
-        authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
+        success: true,
+        value: {
+            ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
+            apiCredential: markApiCredential({ apiRoles: ["role"] }),
+            authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
+        },
     }
 }
 function renewRemoteAccess(): RenewRemoteAccess {
     let renewed = false
-    return initSimulateRenewRemoteAccess(
+    return initRenewSimulateRemoteAccess(
         (): RenewSimulateResult => {
             if (renewed) {
                 // 最初の一回だけ renew して、あとは renew を cancel するために null を返す

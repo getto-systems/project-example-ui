@@ -1,6 +1,10 @@
 import { delayed, wait } from "../../../../../z_infra/delayed/core"
-import { initSimulatePasswordResetClient } from "../../../../profile/passwordReset/impl/remote/reset/simulate"
-import { initSimulatePasswordResetSessionClient } from "../../../../profile/passwordReset/impl/remote/session/simulate"
+import { initResetSimulateRemoteAccess } from "../../../../profile/passwordReset/impl/remote/reset/simulate"
+import {
+    initGetStatusSimulateRemoteAccess,
+    initSendTokenSimulateRemoteAccess,
+    initStartSessionSimulateRemoteAccess,
+} from "../../../../profile/passwordReset/impl/remote/session/simulate"
 
 import { checkStatus, reset, startSession } from "../../../../profile/passwordReset/impl/core"
 
@@ -20,75 +24,81 @@ import { markSessionID } from "../../../../profile/passwordReset/data"
 export function initPasswordResetSessionAction(
     config: PasswordResetSessionActionConfig
 ): PasswordResetSessionAction {
-    const targetLoginID = "loginID"
     const targetSessionID = markSessionID("session-id")
-
-    const sessionClient = initSimulatePasswordResetSessionClient({
-        // エラーにする場合は StartSessionError を throw (それ以外を throw するとこわれる)
-        async startSession({ loginID }) {
-            if (loginID !== targetLoginID) {
-                throw { type: "invalid-password-reset" }
-            }
-            return targetSessionID
-        },
-        // エラーにする場合は CheckStatusError を throw (それ以外を throw するとこわれる)
-        async sendToken(post) {
-            setTimeout(() => post({ state: "waiting" }), 0.3 * 1000)
-            setTimeout(() => post({ state: "sending" }), 0.6 * 1000)
-            setTimeout(() => post({ state: "success" }), 0.9 * 1000)
-            return true
-        },
-        // エラーにする場合は CheckStatusError を throw (それ以外を throw するとこわれる)
-        async getDestination(sessionID) {
-            if (sessionID != targetSessionID) {
-                throw { type: "invalid-password-reset" }
-            }
-            return { type: "log" }
-        },
-    })
 
     return {
         startSession: startSession({
-            resetSession: sessionClient,
+            startSession: startSessionRemoteAccess(),
             config: config.startSession,
             delayed,
         }),
         checkStatus: checkStatus({
-            reset: sessionClient,
+            sendToken: sendTokenRemoteAccess(),
+            getStatus: getStatusRemoteAccess(),
             config: config.checkStatus,
             delayed,
             wait,
         }),
     }
+
+    function startSessionRemoteAccess() {
+        const targetLoginID = "loginID"
+
+        return initStartSessionSimulateRemoteAccess(
+            ({ loginID }) => {
+                if (loginID !== targetLoginID) {
+                    return { success: false, err: { type: "invalid-password-reset" } }
+                }
+                return { success: true, value: targetSessionID }
+            },
+            { wait_millisecond: 0 }
+        )
+    }
+    function sendTokenRemoteAccess() {
+        return initSendTokenSimulateRemoteAccess(() => ({ success: true, value: true }), {
+            wait_millisecond: 0,
+        })
+    }
+    function getStatusRemoteAccess() {
+        return initGetStatusSimulateRemoteAccess(
+            () => ({ success: true, value: { dest: { type: "log" }, done: true, send: true } }),
+            { wait_millisecond: 0 }
+        )
+    }
 }
 export function initPasswordResetAction(config: PasswordResetActionConfig): PasswordResetAction {
-    const targetLoginID = "loginID"
-    const targetResetToken = "reset-token"
-
-    const resetClient = initSimulatePasswordResetClient({
-        // エラーにする場合は ResetError を throw (それ以外を throw するとこわれる)
-        async reset(resetToken, { loginID }) {
-            if (resetToken !== targetResetToken) {
-                throw { type: "invalid-password-reset" }
-            }
-            if (loginID !== targetLoginID) {
-                throw { type: "invalid-password-reset" }
-            }
-            return {
-                ticketNonce: markTicketNonce("ticket-nonce"),
-                apiCredential: markApiCredential({
-                    apiRoles: ["admin", "development-docs"],
-                }),
-                authAt: markAuthAt(new Date()),
-            }
-        },
-    })
-
     return {
         reset: reset({
-            client: resetClient,
+            reset: resetRemoteAccess(),
             config: config.reset,
             delayed,
         }),
+    }
+
+    function resetRemoteAccess() {
+        const targetLoginID = "loginID"
+        const targetResetToken = "reset-token"
+
+        return initResetSimulateRemoteAccess(
+            ({ resetToken, fields: { loginID } }) => {
+                if (resetToken !== targetResetToken) {
+                    return { success: false, err: { type: "invalid-password-reset" } }
+                }
+                if (loginID !== targetLoginID) {
+                    return { success: false, err: { type: "invalid-password-reset" } }
+                }
+                return {
+                    success: true,
+                    value: {
+                        ticketNonce: markTicketNonce("ticket-nonce"),
+                        apiCredential: markApiCredential({
+                            apiRoles: ["admin", "development-docs"],
+                        }),
+                        authAt: markAuthAt(new Date()),
+                    },
+                }
+            },
+            { wait_millisecond: 0 }
+        )
     }
 }

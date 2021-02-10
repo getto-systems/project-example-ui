@@ -1,4 +1,5 @@
 import { Delayed, Wait } from "../../../z_infra/delayed/infra"
+import { RemoteAccess } from "../../../z_infra/remote/infra"
 import { DelayTime, Limit, WaitTime } from "../../../z_infra/time/infra"
 
 import { AuthCredential } from "../../common/credential/data"
@@ -6,11 +7,12 @@ import {
     StartSessionFields,
     ResetFields,
     SessionID,
-    StartSessionError,
     Destination,
     ResetToken,
     SendingStatus,
-    CheckStatusError,
+    ResetRemoteError,
+    CheckStatusRemoteError,
+    StartSessionRemoteError,
 } from "./data"
 
 export type PasswordResetSessionActionConfig = Readonly<{
@@ -19,12 +21,13 @@ export type PasswordResetSessionActionConfig = Readonly<{
 }>
 
 export type StartSessionInfra = Readonly<{
-    resetSession: PasswordResetSessionClient
+    startSession: StartSessionRemoteAccess
     config: StartSessionConfig
     delayed: Delayed
 }>
 export type CheckStatusInfra = Readonly<{
-    reset: PasswordResetSessionClient
+    sendToken: SendTokenRemoteAccess
+    getStatus: GetStatusRemoteAccess
     config: CheckStatusConfig
     delayed: Delayed
     wait: Wait
@@ -44,7 +47,7 @@ export type PasswordResetActionConfig = Readonly<{
 }>
 
 export type ResetInfra = Readonly<{
-    client: PasswordResetClient
+    reset: ResetRemoteAccess
     config: ResetConfig
     delayed: Delayed
 }>
@@ -53,65 +56,22 @@ export type ResetConfig = Readonly<{
     delay: DelayTime
 }>
 
-export interface PasswordResetSessionClient {
-    startSession(fields: StartSessionFields): Promise<SessionResponse>
-    sendToken(): Promise<SendTokenResponse>
-    getStatus(sessionID: SessionID): Promise<GetStatusResponse>
-}
-
-export type SessionResponse =
-    | Readonly<{ success: false; err: StartSessionError }>
-    | Readonly<{ success: true; sessionID: SessionID }>
-export function startSessionFailed(err: StartSessionError): SessionResponse {
-    return { success: false, err }
-}
-export function startSessionSuccess(sessionID: SessionID): SessionResponse {
-    return { success: true, sessionID }
-}
-
-export type SendTokenResponse =
-    | Readonly<{ success: false; err: CheckStatusError }>
-    | Readonly<{ success: true }>
-export function sendTokenFailed(err: CheckStatusError): SendTokenResponse {
-    return { success: false, err }
-}
-export const sendTokenSuccess: SendTokenResponse = { success: true }
+export type StartSessionRemoteAccess = RemoteAccess<
+    StartSessionFields,
+    SessionID,
+    StartSessionRemoteError
+>
+export type SendTokenRemoteAccess = RemoteAccess<null, true, CheckStatusRemoteError>
+export type GetStatusRemoteAccess = RemoteAccess<SessionID, GetStatusResponse, CheckStatusRemoteError>
 
 export type GetStatusResponse =
-    | Readonly<{ success: false; err: CheckStatusError }>
-    | Readonly<{ success: true; dest: Destination; done: false; status: SendingStatus }>
-    | Readonly<{ success: true; dest: Destination; done: true; send: false; err: string }>
-    | Readonly<{ success: true; dest: Destination; done: true; send: true }>
-export function getStatusFailed(err: CheckStatusError): GetStatusResponse {
-    return { success: false, err }
-}
-export function getStatusInProgress(dest: Destination, status: SendingStatus): GetStatusResponse {
-    return { success: true, done: false, dest, status }
-}
-export function getStatusSendFailed(dest: Destination, err: string): GetStatusResponse {
-    return { success: true, done: true, send: false, dest, err }
-}
-export function getStatusSend(dest: Destination): GetStatusResponse {
-    return { success: true, done: true, send: true, dest }
-}
+    | Readonly<{ dest: Destination; done: false; status: SendingStatus }>
+    | Readonly<{ dest: Destination; done: true; send: false; err: string }>
+    | Readonly<{ dest: Destination; done: true; send: true }>
 
-export interface PasswordResetClient {
-    reset(token: ResetToken, fields: ResetFields): Promise<ResetResponse>
-}
+export type ResetRemoteAccess = RemoteAccess<ResetMessage, AuthCredential, ResetRemoteError>
 
-export type ResetResponse =
-    | Readonly<{ success: false; err: ResetError }>
-    | Readonly<{ success: true; authCredential: AuthCredential }>
-export function resetFailed(err: ResetError): ResetResponse {
-    return { success: false, err }
-}
-export function resetSuccess(authCredential: AuthCredential): ResetResponse {
-    return { success: true, authCredential }
-}
-
-export type ResetError =
-    | Readonly<{ type: "bad-request" }>
-    | Readonly<{ type: "invalid-password-reset" }>
-    | Readonly<{ type: "server-error" }>
-    | Readonly<{ type: "bad-response"; err: string }>
-    | Readonly<{ type: "infra-error"; err: string }>
+export type ResetMessage = Readonly<{
+    resetToken: ResetToken
+    fields: ResetFields
+}>

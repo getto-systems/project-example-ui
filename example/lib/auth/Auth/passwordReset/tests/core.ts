@@ -12,11 +12,9 @@ import { initPasswordResetComponent, initPasswordResetFormComponent } from "../i
 import { initFormAction } from "../../../../sub/getto-form/main/form"
 import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "../../Login/main/action/form"
 
-import { ResetSimulator } from "../../../profile/passwordReset/impl/remote/reset/simulate"
-
 import { Clock } from "../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../common/application/infra"
-import { PasswordResetActionConfig } from "../../../profile/passwordReset/infra"
+import { PasswordResetActionConfig, ResetRemoteAccess } from "../../../profile/passwordReset/infra"
 import {
     SetContinuousRenewActionConfig,
     AuthCredentialRepository,
@@ -33,8 +31,8 @@ export type PasswordResetConfig = {
 export type PasswordResetRepository = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
-export type PasswordResetSimulator = Readonly<{
-    reset: ResetSimulator
+export type PasswordResetRemoteAccess = Readonly<{
+    reset: ResetRemoteAccess
     renew: RenewRemoteAccess
 }>
 
@@ -42,7 +40,7 @@ export function newPasswordResetResource(
     currentURL: URL,
     config: PasswordResetConfig,
     repository: PasswordResetRepository,
-    simulator: PasswordResetSimulator,
+    remote: PasswordResetRemoteAccess,
     clock: Clock
 ): PasswordResetResource {
     const factory: PasswordResetFactory = {
@@ -52,11 +50,11 @@ export function newPasswordResetResource(
             setContinuousRenew: initSetContinuousRenewAction(
                 config.setContinuousRenew,
                 repository.authCredentials,
-                simulator.renew,
+                remote.renew,
                 clock
             ),
 
-            passwordReset: initPasswordResetAction(config.passwordReset, simulator.reset),
+            passwordReset: initPasswordResetAction(config.passwordReset, remote.reset),
 
             form: {
                 core: initFormAction(),

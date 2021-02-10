@@ -8,7 +8,7 @@ import {
 
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
 import {
-    initSimulateLoginRemoteAccess,
+    initLoginSimulateRemoteAccess,
     LoginSimulateResult,
 } from "../../../login/passwordLogin/impl/remote/login/simulate"
 
@@ -22,7 +22,7 @@ import { markScriptPath } from "../../../common/application/data"
 import { markApiCredential, markAuthAt, markTicketNonce } from "../../../common/credential/data"
 import { LoginFields } from "../../../login/passwordLogin/data"
 import { markInputString, toValidationError } from "../../../../sub/getto-form/action/data"
-import { initSimulateRenewRemoteAccess, RenewSimulateResult } from "../../../login/renew/impl/remote/renew/simulate"
+import { initRenewSimulateRemoteAccess, RenewSimulateResult } from "../../../login/renew/impl/remote/renew/simulate"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -694,13 +694,13 @@ function standardRepository(): PasswordLoginRepository {
 }
 function standardSimulator(): PasswordLoginRemoteAccess {
     return {
-        login: initSimulateLoginRemoteAccess(simulateLogin, { wait_millisecond: 0 }),
+        login: initLoginSimulateRemoteAccess(simulateLogin, { wait_millisecond: 0 }),
         renew: renewRemoteAccess(),
     }
 }
 function waitSimulator(): PasswordLoginRemoteAccess {
     return {
-        login: initSimulateLoginRemoteAccess(simulateLogin, { wait_millisecond: 3 }),
+        login: initLoginSimulateRemoteAccess(simulateLogin, { wait_millisecond: 3 }),
         renew: renewRemoteAccess(),
     }
 }
@@ -717,7 +717,7 @@ function simulateLogin(_fields: LoginFields): LoginSimulateResult {
 }
 function renewRemoteAccess(): RenewRemoteAccess {
     let renewed = false
-    return initSimulateRenewRemoteAccess((): RenewSimulateResult => {
+    return initRenewSimulateRemoteAccess((): RenewSimulateResult => {
         if (renewed) {
             // 最初の一回だけ renew して、あとは renew を cancel するために null を返す
             return { success: false, err: { type: "invalid-ticket" } }

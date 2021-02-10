@@ -11,7 +11,7 @@ import { RemoteAccessResult } from "../../../../../../z_infra/remote/infra"
 
 export type LoginSimulateResult = RemoteAccessResult<AuthCredential, LoginRemoteError>
 
-export function initSimulateLoginRemoteAccess(
+export function initLoginSimulateRemoteAccess(
     simulator: LoginSimulator,
     time: WaitTime
 ): LoginRemoteAccess {

@@ -1,21 +1,24 @@
 import {
     PasswordResetSessionConfig,
     newPasswordResetSessionResource,
-    PasswordResetSessionSimulator,
+    PasswordResetSessionRemoteAccess,
 } from "./core"
-
-import { wait } from "../../../../z_infra/delayed/core"
-import { SendTokenState } from "../../../profile/passwordReset/impl/remote/session/simulate"
 
 import { PasswordResetSessionComponentState } from "../component"
 
-import {
-    Destination,
-    markSessionID,
-    SessionID,
-    StartSessionFields,
-} from "../../../profile/passwordReset/data"
+import { WaitTime } from "../../../../z_infra/time/infra"
+import { GetStatusRemoteAccess, GetStatusResponse } from "../../../profile/passwordReset/infra"
+
+import { markSessionID } from "../../../profile/passwordReset/data"
 import { markInputString, toValidationError } from "../../../../sub/getto-form/action/data"
+import {
+    GetStatusSimulateResult,
+    initGetStatusSimulateRemoteAccess,
+    initSendTokenSimulateRemoteAccess,
+    initStartSessionSimulateRemoteAccess,
+    SendTokenSimulateResult,
+    StartSessionSimulateResult,
+} from "../../../profile/passwordReset/impl/remote/session/simulate"
 
 const VALID_LOGIN = { loginID: "login-id" } as const
 const SESSION_ID = "session-id" as const
@@ -56,16 +59,6 @@ describe("PasswordResetSession", () => {
                     expect(stack).toEqual([
                         { type: "try-to-start-session" },
                         { type: "try-to-check-status" },
-                        {
-                            type: "retry-to-check-status",
-                            dest: { type: "log" },
-                            status: { sending: false },
-                        },
-                        {
-                            type: "retry-to-check-status",
-                            dest: { type: "log" },
-                            status: { sending: true },
-                        },
                         { type: "succeed-to-send-token", dest: { type: "log" } },
                     ])
                     done()
@@ -111,16 +104,6 @@ describe("PasswordResetSession", () => {
                         { type: "try-to-start-session" },
                         { type: "delayed-to-start-session" }, // delayed event
                         { type: "try-to-check-status" },
-                        {
-                            type: "retry-to-check-status",
-                            dest: { type: "log" },
-                            status: { sending: false },
-                        },
-                        {
-                            type: "retry-to-check-status",
-                            dest: { type: "log" },
-                            status: { sending: true },
-                        },
                         { type: "succeed-to-send-token", dest: { type: "log" } },
                     ])
                     done()
@@ -170,7 +153,7 @@ describe("PasswordResetSession", () => {
                         {
                             type: "retry-to-check-status",
                             dest: { type: "log" },
-                            status: { sending: false },
+                            status: { sending: true },
                         },
                         {
                             type: "retry-to-check-status",
@@ -446,14 +429,14 @@ describe("PasswordResetSession", () => {
 
 function standardPasswordResetSessionResource() {
     const config = standardConfig()
-    const simulator = standardSimulator()
+    const simulator = standardRemoteAccess()
     const resource = newPasswordResetSessionResource(config, simulator)
 
     return { resource }
 }
 function waitPasswordResetSessionResource() {
     const config = standardConfig()
-    const simulator = waitSimulator()
+    const simulator = waitRemoteAccess()
     const resource = newPasswordResetSessionResource(config, simulator)
 
     return { resource }
@@ -484,87 +467,82 @@ function standardConfig(): PasswordResetSessionConfig {
         },
     }
 }
-function standardSimulator(): PasswordResetSessionSimulator {
+function standardRemoteAccess(): PasswordResetSessionRemoteAccess {
     return {
-        session: {
-            startSession: async (fields) => {
-                return simulateStartSession(fields)
-            },
-            sendToken: async (post) => {
-                return simulateSendToken(post, standardSendTokenTime())
-            },
-            getDestination: async (sessionID) => {
-                return simulateGetDestination(sessionID)
-            },
-        },
+        startSession: initStartSessionSimulateRemoteAccess(simulateStartSession, {
+            wait_millisecond: 0,
+        }),
+        sendToken: initSendTokenSimulateRemoteAccess(simulateSendToken, {
+            wait_millisecond: 0,
+        }),
+        getStatus: getStatusRemoteAccess(standardGetStatusResponse(), { wait_millisecond: 0 }),
     }
 }
-function waitSimulator(): PasswordResetSessionSimulator {
+function waitRemoteAccess(): PasswordResetSessionRemoteAccess {
     return {
-        session: {
-            startSession: async (fields) => {
-                // wait for delayed timeout
-                await wait({ wait_millisecond: 3 }, () => null)
-                return simulateStartSession(fields)
-            },
-            sendToken: async (post) => {
-                return simulateSendToken(post, standardSendTokenTime())
-            },
-            getDestination: async (sessionID) => {
-                return simulateGetDestination(sessionID)
-            },
-        },
+        startSession: initStartSessionSimulateRemoteAccess(simulateStartSession, {
+            wait_millisecond: 3,
+        }),
+        sendToken: initSendTokenSimulateRemoteAccess(simulateSendToken, {
+            wait_millisecond: 0,
+        }),
+        getStatus: getStatusRemoteAccess(standardGetStatusResponse(), { wait_millisecond: 0 }),
     }
 }
-function longSendingSimulator(): PasswordResetSessionSimulator {
+function longSendingSimulator(): PasswordResetSessionRemoteAccess {
     return {
-        session: {
-            startSession: async (fields) => {
-                return simulateStartSession(fields)
-            },
-            sendToken: async (post) => {
-                return simulateSendToken(post, longSendTokenTime())
-            },
-            getDestination: async (sessionID) => {
-                return simulateGetDestination(sessionID)
-            },
-        },
+        startSession: initStartSessionSimulateRemoteAccess(simulateStartSession, {
+            wait_millisecond: 0,
+        }),
+        sendToken: initSendTokenSimulateRemoteAccess(simulateSendToken, {
+            wait_millisecond: 3,
+        }),
+        getStatus: getStatusRemoteAccess(longSendingGetStatusResponse(), { wait_millisecond: 0 }),
     }
 }
 
-function simulateStartSession(_fields: StartSessionFields): SessionID {
-    return markSessionID(SESSION_ID)
+function simulateStartSession(): StartSessionSimulateResult {
+    return { success: true, value: markSessionID(SESSION_ID) }
 }
-function standardSendTokenTime(): SendTokenTime {
-    return {
-        waiting_millisecond: 0,
-        sending_millisecond: 2,
-        success_millisecond: 4,
-    }
+function simulateSendToken(): SendTokenSimulateResult {
+    return { success: true, value: true }
 }
-function longSendTokenTime(): SendTokenTime {
-    return {
-        waiting_millisecond: 0,
-        sending_millisecond: 2,
-        success_millisecond: 100, // 2msec 間隔で 5回 check するのでそのあと success する
-    }
-}
-function simulateSendToken(post: Post<SendTokenState>, sendTokenTime: SendTokenTime): true {
-    setTimeout(() => {
-        post({ state: "waiting" })
-    }, sendTokenTime.waiting_millisecond)
-    setTimeout(() => {
-        post({ state: "sending" })
-    }, sendTokenTime.sending_millisecond)
-    setTimeout(() => {
-        post({ state: "success" })
-    }, sendTokenTime.success_millisecond)
-    return true
-}
-function simulateGetDestination(_sessionID: SessionID): Destination {
-    return { type: "log" }
-}
+function getStatusRemoteAccess(
+    responseCollection: GetStatusResponse[],
+    interval: WaitTime
+): GetStatusRemoteAccess {
+    let position = 0
+    return initGetStatusSimulateRemoteAccess((): GetStatusSimulateResult => {
+        if (responseCollection.length === 0) {
+            return { success: false, err: { type: "infra-error", err: "no response" } }
+        }
+        const response = getResponse()
+        position++
 
+        return { success: true, value: response }
+    }, interval)
+
+    function getResponse(): GetStatusResponse {
+        if (position < responseCollection.length) {
+            return responseCollection[position]
+        }
+        return responseCollection[responseCollection.length - 1]
+    }
+}
+function standardGetStatusResponse(): GetStatusResponse[] {
+    return [{ dest: { type: "log" }, done: true, send: true }]
+}
+function longSendingGetStatusResponse(): GetStatusResponse[] {
+    // 完了するまでに 5回以上かかる
+    return [
+        { dest: { type: "log" }, done: false, status: { sending: true } },
+        { dest: { type: "log" }, done: false, status: { sending: true } },
+        { dest: { type: "log" }, done: false, status: { sending: true } },
+        { dest: { type: "log" }, done: false, status: { sending: true } },
+        { dest: { type: "log" }, done: false, status: { sending: true } },
+        { dest: { type: "log" }, done: false, status: { sending: true } },
+    ]
+}
 function initAsyncStateChecker<S>(isFinish: { (state: S): boolean }, examine: { (stack: S[]): void }) {
     const stack: S[] = []
 

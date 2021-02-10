@@ -5,10 +5,13 @@ import { initPasswordResetSessionResource, PasswordResetSessionFactory } from ".
 
 import { initPasswordResetSessionComponent, initPasswordResetSessionFormComponent } from "../impl"
 
-import { SessionSimulator } from "../../../profile/passwordReset/impl/remote/session/simulate"
-
 import { ApplicationActionConfig } from "../../../common/application/infra"
-import { PasswordResetSessionActionConfig } from "../../../profile/passwordReset/infra"
+import {
+    GetStatusRemoteAccess,
+    PasswordResetSessionActionConfig,
+    SendTokenRemoteAccess,
+    StartSessionRemoteAccess,
+} from "../../../profile/passwordReset/infra"
 
 import { PasswordResetSessionResource } from "../../Login/entryPoint"
 import { initLoginIDFormFieldAction } from "../../Login/main/action/form"
@@ -18,23 +21,22 @@ export type PasswordResetSessionConfig = {
     application: ApplicationActionConfig
     passwordResetSession: PasswordResetSessionActionConfig
 }
-export type PasswordResetSessionSimulator = Readonly<{
-    session: SessionSimulator
+export type PasswordResetSessionRemoteAccess = Readonly<{
+    startSession: StartSessionRemoteAccess
+    sendToken: SendTokenRemoteAccess
+    getStatus: GetStatusRemoteAccess
 }>
 
 export function newPasswordResetSessionResource(
     config: PasswordResetSessionConfig,
-    simulator: PasswordResetSessionSimulator
+    remote: PasswordResetSessionRemoteAccess
 ): PasswordResetSessionResource {
     const factory: PasswordResetSessionFactory = {
         link: initLoginLink,
         actions: {
             application: initApplicationAction(config.application),
 
-            passwordResetSession: initPasswordResetSessionAction(
-                config.passwordResetSession,
-                simulator.session
-            ),
+            passwordResetSession: initPasswordResetSessionAction(config.passwordResetSession, remote),
             form: {
                 core: initFormAction(),
                 loginID: initLoginIDFormFieldAction(),
