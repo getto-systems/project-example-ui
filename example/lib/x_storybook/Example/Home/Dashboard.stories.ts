@@ -6,7 +6,7 @@ import { Dashboard } from "../../../x_preact/Example/Home/Dashboard"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/application/mock"
 import { DashboardMockPropsPasser, newMockDashboard } from "../../../example/Home/Dashboard/mock"
-import { mapSeasonMockProps } from "../../../example/Outline/seasonInfo/mock"
+import { SeasonInfoMockProps } from "../../../example/Outline/seasonInfo/mock"
 import { MenuListMockProps } from "../../../auth/Outline/menuList/mock"
 import { BreadcrumbListMockProps } from "../../../auth/Outline/breadcrumbList/mock"
 import { ExampleMockProps } from "../../../example/Home/example/mock"
@@ -28,15 +28,17 @@ type MockProps = Readonly<{
 }>
 const Template: Story<MockProps> = (args) => {
     const passer: DashboardMockPropsPasser = {
+        seasonInfo: initMockPropsPasser<SeasonInfoMockProps>(),
         menuList: initMockPropsPasser<MenuListMockProps>(),
         breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
         example: initMockPropsPasser<ExampleMockProps>(),
     }
-    const { dashboard, update } = newMockDashboard(passer)
+    const dashboard = newMockDashboard(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
+            passer.seasonInfo.update({ type: "success", year: props.args.seasonYear })
             passer.menuList.update({
                 type: "success",
                 label: "ホーム",
@@ -49,7 +51,6 @@ const Template: Story<MockProps> = (args) => {
             })
             passer.example.update({ type: "success", year: props.args.seasonYear })
         })
-        update.seasonInfo(mapSeasonMockProps({ type: "success", year: props.args.seasonYear }))
         return html`
             <style>
                 .sb-main-padded {

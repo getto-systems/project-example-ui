@@ -16,13 +16,7 @@ import { SeasonInfo } from "../../x_preact/Outline/SeasonInfo"
 
 import { initMockPropsPasser } from "../../sub/getto-example/application/mock"
 import { initMockMenuListComponent, MenuListMockProps } from "../../auth/Outline/menuList/mock"
-import {
-    mapSeasonMockProps,
-    SeasonMockProps,
-    initMockSeasonInfoComponent,
-} from "../../example/Outline/seasonInfo/mock"
-
-import { initialSeasonInfoComponentState } from "../../example/Outline/seasonInfo/component"
+import { SeasonInfoMockProps, initMockSeasonInfoComponent } from "../../example/Outline/seasonInfo/mock"
 
 export default {
     title: "Outline/SeasonInfo",
@@ -33,24 +27,25 @@ export default {
     },
 }
 
-type MockProps = SeasonMockProps
+type MockProps = SeasonInfoMockProps
 const Template: Story<MockProps> = (args) => {
     const passer = {
+        seasonInfo: initMockPropsPasser<SeasonInfoMockProps>(),
         menuList: initMockPropsPasser<MenuListMockProps>(),
     }
+    const seasonInfo = initMockSeasonInfoComponent(passer.seasonInfo)
     const menuList = initMockMenuListComponent(passer.menuList)
-    const seasonInfo = initMockSeasonInfoComponent(initialSeasonInfoComponentState)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
+            passer.seasonInfo.update(props.args)
             passer.menuList.update({
                 type: "success",
                 label: "ホーム",
                 badgeCount: 0,
             })
         })
-        seasonInfo.update(mapSeasonMockProps(props.args))
         return html`
             <style>
                 .sb-main-padded {
