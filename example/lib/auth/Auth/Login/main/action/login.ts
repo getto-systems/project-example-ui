@@ -2,7 +2,7 @@ import { ApiAuthLogin } from "../../../../../z_external/api/auth/login"
 
 import { delayed } from "../../../../../z_infra/delayed/core"
 
-import { initConnectLoginRemoteAccess } from "../../../../login/passwordLogin/impl/remote/login/connect"
+import { initLoginConnectRemoteAccess } from "../../../../login/passwordLogin/impl/remote/login/connect"
 
 import { login } from "../../../../login/passwordLogin/impl/core"
 
@@ -16,7 +16,7 @@ export function initPasswordLoginAction(
 ): PasswordLoginAction {
     return {
         login: login({
-            login: initConnectLoginRemoteAccess(apiAuthLogin),
+            login: initLoginConnectRemoteAccess(apiAuthLogin),
             config: config.login,
             delayed,
         }),

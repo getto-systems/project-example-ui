@@ -17,10 +17,10 @@ export const startSession = (infra: StartSessionInfra): StartSessionPod => () =>
 
     post({ type: "try-to-start-session" })
 
-    const { resetSession: client, config: time, delayed } = infra
+    const { startSession, config: time, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(client.startSession(fields.value), time.delay, () =>
+    const response = await delayed(startSession(fields.value), time.delay, () =>
         post({ type: "delayed-to-start-session" })
     )
     if (!response.success) {
@@ -28,7 +28,7 @@ export const startSession = (infra: StartSessionInfra): StartSessionPod => () =>
         return
     }
 
-    post({ type: "succeed-to-start-session", sessionID: response.sessionID })
+    post({ type: "succeed-to-start-session", sessionID: response.value })
 }
 
 export const checkStatus = (infra: CheckStatusInfra): CheckStatusPod => () => (sessionID, post) => {
@@ -62,30 +62,31 @@ class StatusChecker {
                 return
             }
 
-            const response = await this.infra.reset.getStatus(sessionID)
+            const response = await this.infra.getStatus(sessionID)
             if (!response.success) {
                 post({ type: "failed-to-check-status", err: response.err })
                 return
             }
 
-            if (response.done) {
-                if (!response.send) {
+            const result = response.value
+            if (result.done) {
+                if (!result.send) {
                     post({
                         type: "failed-to-send-token",
-                        dest: response.dest,
-                        err: { type: "infra-error", err: response.err },
+                        dest: result.dest,
+                        err: { type: "infra-error", err: result.err },
                     })
                     return
                 }
 
-                post({ type: "succeed-to-send-token", dest: response.dest })
+                post({ type: "succeed-to-send-token", dest: result.dest })
                 return
             }
 
             post({
                 type: "retry-to-check-status",
-                dest: response.dest,
-                status: response.status,
+                dest: result.dest,
+                status: result.status,
             })
 
             await this.infra.wait(this.infra.config.wait, () => true)
@@ -98,7 +99,7 @@ class StatusChecker {
     }
 
     async sendToken(): Promise<void> {
-        const response = await this.infra.reset.sendToken()
+        const response = await this.infra.sendToken(null)
         if (!response.success) {
             this.sendTokenState = { type: "failed", err: response.err }
             return
@@ -121,10 +122,10 @@ export const reset = (infra: ResetInfra): ResetPod => (locationInfo) => async (f
 
     post({ type: "try-to-reset" })
 
-    const { client, config: time, delayed } = infra
+    const { reset, config, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(client.reset(resetToken, fields.value), time.delay, () =>
+    const response = await delayed(reset({ resetToken, fields: fields.value }), config.delay, () =>
         post({ type: "delayed-to-reset" })
     )
     if (!response.success) {
@@ -132,7 +133,7 @@ export const reset = (infra: ResetInfra): ResetPod => (locationInfo) => async (f
         return
     }
 
-    post({ type: "succeed-to-reset", authCredential: response.authCredential })
+    post({ type: "succeed-to-reset", authCredential: response.value })
 }
 
 interface Post<T> {

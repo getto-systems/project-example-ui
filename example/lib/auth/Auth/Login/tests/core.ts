@@ -14,15 +14,6 @@ import { startSession, checkStatus, reset } from "../../../profile/passwordReset
 
 import { initMemoryTypedStorage, MemoryTypedStorageStore } from "../../../../z_infra/storage/memory"
 
-import {
-    initSimulatePasswordResetClient,
-    ResetSimulator,
-} from "../../../profile/passwordReset/impl/remote/reset/simulate"
-import {
-    initSimulatePasswordResetSessionClient,
-    SessionSimulator,
-} from "../../../profile/passwordReset/impl/remote/session/simulate"
-
 import { AuthCredentialStorage } from "../../../login/renew/impl/repository/authCredential"
 
 import { Clock } from "../../../../z_infra/clock/infra"
@@ -34,8 +25,12 @@ import {
 } from "../../../login/renew/infra"
 import { LoginRemoteAccess, PasswordLoginActionConfig } from "../../../login/passwordLogin/infra"
 import {
+    GetStatusRemoteAccess,
     PasswordResetActionConfig,
     PasswordResetSessionActionConfig,
+    ResetRemoteAccess,
+    SendTokenRemoteAccess,
+    StartSessionRemoteAccess,
 } from "../../../profile/passwordReset/infra"
 import { AuthCredentialRepository } from "../../../login/renew/infra"
 
@@ -99,18 +94,21 @@ export function initPasswordLoginAction(
 }
 export function initPasswordResetSessionAction(
     config: PasswordResetSessionActionConfig,
-    simulator: SessionSimulator
+    remote: Readonly<{
+        startSession: StartSessionRemoteAccess
+        sendToken: SendTokenRemoteAccess
+        getStatus: GetStatusRemoteAccess
+    }>
 ): PasswordResetSessionAction {
-    const sessionClient = initSimulatePasswordResetSessionClient(simulator)
-
     return {
         startSession: startSession({
-            resetSession: sessionClient,
+            startSession: remote.startSession,
             config: config.startSession,
             delayed,
         }),
         checkStatus: checkStatus({
-            reset: sessionClient,
+            sendToken: remote.sendToken,
+            getStatus: remote.getStatus,
             config: config.checkStatus,
             delayed,
             wait,
@@ -119,13 +117,11 @@ export function initPasswordResetSessionAction(
 }
 export function initPasswordResetAction(
     config: PasswordResetActionConfig,
-    simulator: ResetSimulator
+    remote: ResetRemoteAccess
 ): PasswordResetAction {
-    const resetClient = initSimulatePasswordResetClient(simulator)
-
     return {
         reset: reset({
-            client: resetClient,
+            reset: remote,
             config: config.reset,
             delayed,
         }),

@@ -8,7 +8,7 @@ import { initAuthCredentialTestStorage } from "../../Login/tests/core"
 
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
 import {
-    initSimulateRenewRemoteAccess,
+    initRenewSimulateRemoteAccess,
     RenewSimulateResult,
 } from "../../../login/renew/impl/remote/renew/simulate"
 import { initAuthCredentialRepository } from "../../../login/renew/impl/repository/authCredential"
@@ -466,7 +466,7 @@ function waitSimulator(): RenewCredentialRemoteAccess {
 
 function renewRemoteAccess(waitTime: WaitTime): RenewRemoteAccess {
     let renewedCount = 0
-    return initSimulateRenewRemoteAccess((): RenewSimulateResult => {
+    return initRenewSimulateRemoteAccess((): RenewSimulateResult => {
         if (renewedCount > 1) {
             // 初回 renew と continuous renew 一回目の 2回だけ
             // renew して、あとは renew を cancel するために null を返す

@@ -1,29 +1,22 @@
-import { PasswordResetClient, ResetResponse, resetSuccess, resetFailed } from "../../../infra"
+import {
+    initSimulateRemoteAccess,
+    RemoteAccessSimulator,
+} from "../../../../../../z_infra/remote/simulate"
 
-import { ResetToken, ResetFields } from "../../../data"
+import { WaitTime } from "../../../../../../z_infra/time/infra"
+import { RemoteAccessResult } from "../../../../../../z_infra/remote/infra"
+import { ResetMessage, ResetRemoteAccess } from "../../../infra"
+
 import { AuthCredential } from "../../../../../common/credential/data"
+import { ResetRemoteError } from "../../../data"
 
-export function initSimulatePasswordResetClient(simulator: ResetSimulator): PasswordResetClient {
-    return new SimulatePasswordResetClient(simulator)
+export type ResetSimulateResult = RemoteAccessResult<AuthCredential, ResetRemoteError>
+
+export function initResetSimulateRemoteAccess(
+    simulator: ResetSimulator,
+    time: WaitTime
+): ResetRemoteAccess {
+    return initSimulateRemoteAccess(simulator, time)
 }
 
-export interface ResetSimulator {
-    // エラーにする場合は ResetError を throw (それ以外を throw するとこわれる)
-    reset(resetToken: ResetToken, fields: ResetFields): Promise<AuthCredential>
-}
-
-class SimulatePasswordResetClient implements PasswordResetClient {
-    simulator: ResetSimulator
-
-    constructor(simulator: ResetSimulator) {
-        this.simulator = simulator
-    }
-
-    async reset(resetToken: ResetToken, fields: ResetFields): Promise<ResetResponse> {
-        try {
-            return resetSuccess(await this.simulator.reset(resetToken, fields))
-        } catch(err) {
-            return resetFailed(err)
-        }
-    }
-}
+type ResetSimulator = RemoteAccessSimulator<ResetMessage, AuthCredential, ResetRemoteError>

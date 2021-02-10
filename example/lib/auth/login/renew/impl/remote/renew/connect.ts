@@ -17,7 +17,7 @@ export type RawAuthCredential = Readonly<{
     apiCredential: Readonly<{ apiRoles: string[] }>
 }>
 
-export function initConnectRenewRemoteAccess(access: RenewRawRemoteAccess): RenewRemoteAccess {
+export function initRenewConnectRemoteAccess(access: RenewRawRemoteAccess): RenewRemoteAccess {
     return initConnectRemoteAccess(access, {
         message: (nonce: TicketNonce): TicketNonce => nonce,
         value: (response: RawAuthCredential): AuthCredential => {

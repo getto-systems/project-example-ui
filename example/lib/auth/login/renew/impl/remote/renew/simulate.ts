@@ -11,7 +11,7 @@ import {
 
 export type RenewSimulateResult = RemoteAccessResult<AuthCredential, RenewRemoteError>
 
-export function initSimulateRenewRemoteAccess(
+export function initRenewSimulateRemoteAccess(
     simulator: RenewSimulator,
     time: WaitTime
 ): RenewRemoteAccess {
