@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { Document } from "../../x_preact/Document/Document"
 
 import { initMockPropsPasser } from "../../sub/getto-example/application/mock"
-import { newMockDocument } from "../../document/Document/Document/mock"
+import { DocumentMockPropsPasser, newMockDocument } from "../../document/Document/Document/mock"
 import { MenuListMockProps } from "../../auth/Outline/menuList/mock"
 import { BreadcrumbListMockProps } from "../../auth/Outline/breadcrumbList/mock"
 import { ContentMockProps } from "../../document/Document/content/mock"
@@ -25,7 +25,7 @@ type MockProps = Readonly<{
     breadcrumbIcon: string
 }>
 const Template: Story<MockProps> = (args) => {
-    const passer = {
+    const passer: DocumentMockPropsPasser = {
         menuList: initMockPropsPasser<MenuListMockProps>(),
         breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
         content: initMockPropsPasser<ContentMockProps>(),

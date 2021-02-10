@@ -1,14 +1,10 @@
 import { h, VNode } from "preact"
+import { useEffect } from "preact/hooks"
 
 import { Example } from "../../../x_preact/Example/Home/Example"
 
-import {
-    mapExampleMockProps,
-    ExampleMockProps,
-    initMockExampleComponent,
-} from "../../../example/Home/example/mock"
-
-import { initialExampleComponentState } from "../../../example/Home/example/component"
+import { initMockPropsPasser } from "../../../sub/getto-example/application/mock"
+import { ExampleMockProps, initMockExampleComponent } from "../../../example/Home/example/mock"
 
 export default {
     title: "Example/Home/Example",
@@ -21,11 +17,14 @@ export default {
 
 type MockProps = ExampleMockProps
 const Template: Story<MockProps> = (args) => {
-    const example = initMockExampleComponent(initialExampleComponentState)
+    const passer = initMockPropsPasser<ExampleMockProps>()
+    const example = initMockExampleComponent(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
-        example.update(mapExampleMockProps(props.args))
+        useEffect(() => {
+            passer.update(props.args)
+        })
         return h(Example, { example })
     }
 }

@@ -5,11 +5,11 @@ import { html } from "htm/preact"
 import { Dashboard } from "../../../x_preact/Example/Home/Dashboard"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/application/mock"
-import { newMockDashboard } from "../../../example/Home/Dashboard/mock"
-import { mapExampleMockProps } from "../../../example/Home/example/mock"
+import { DashboardMockPropsPasser, newMockDashboard } from "../../../example/Home/Dashboard/mock"
 import { mapSeasonMockProps } from "../../../example/Outline/seasonInfo/mock"
 import { MenuListMockProps } from "../../../auth/Outline/menuList/mock"
 import { BreadcrumbListMockProps } from "../../../auth/Outline/breadcrumbList/mock"
+import { ExampleMockProps } from "../../../example/Home/example/mock"
 
 export default {
     title: "Example/Home/Dashboard",
@@ -27,9 +27,10 @@ type MockProps = Readonly<{
     breadcrumbIcon: string
 }>
 const Template: Story<MockProps> = (args) => {
-    const passer = {
+    const passer: DashboardMockPropsPasser = {
         menuList: initMockPropsPasser<MenuListMockProps>(),
         breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
+        example: initMockPropsPasser<ExampleMockProps>(),
     }
     const { dashboard, update } = newMockDashboard(passer)
     return h(Preview, { args })
@@ -46,9 +47,9 @@ const Template: Story<MockProps> = (args) => {
                 label: props.args.breadcrumbLabel,
                 icon: props.args.breadcrumbIcon,
             })
+            passer.example.update({ type: "success", year: props.args.seasonYear })
         })
         update.seasonInfo(mapSeasonMockProps({ type: "success", year: props.args.seasonYear }))
-        update.example(mapExampleMockProps({ type: "success", year: props.args.seasonYear }))
         return html`
             <style>
                 .sb-main-padded {
