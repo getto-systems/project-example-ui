@@ -1,15 +1,14 @@
 import { h, VNode } from "preact"
+import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { BreadcrumbList } from "../../x_preact/Outline/BreadcrumbList"
 
+import { initMockPropsPasser } from "../../sub/getto-example/application/mock"
 import {
-    mapBreadcrumbMockProps,
-    BreadcrumbMockProps,
+    BreadcrumbListMockProps,
     initMockBreadcrumbListComponent,
 } from "../../auth/Outline/breadcrumbList/mock"
-
-import { initialBreadcrumbListComponentState } from "../../auth/Outline/breadcrumbList/component"
 
 export default {
     title: "Outline/BreadcrumbList",
@@ -20,13 +19,16 @@ export default {
     },
 }
 
-type MockProps = BreadcrumbMockProps
+type MockProps = BreadcrumbListMockProps
 const Template: Story<MockProps> = (args) => {
-    const breadcrumbList = initMockBreadcrumbListComponent(initialBreadcrumbListComponentState)
+    const passer = initMockPropsPasser<BreadcrumbListMockProps>()
+    const breadcrumbList = initMockBreadcrumbListComponent(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
-        breadcrumbList.update(mapBreadcrumbMockProps(props.args))
+        useEffect(() => {
+            passer.update(props.args)
+        })
         return html` <header class="main__header">
             <h1 class="main__title">タイトル</h1>
             ${h(BreadcrumbList, { breadcrumbList })}

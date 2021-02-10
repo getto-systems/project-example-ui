@@ -1,10 +1,11 @@
 import { h, VNode } from "preact"
-import { html, useEffect } from "htm/preact"
+import { useEffect } from "preact/hooks"
+import { html } from "htm/preact"
 
 import { NotFound } from "../../x_preact/Auth/NotFound"
 
-import { newMockNotFound } from "../../auth/NotFound/NotFound/mock"
 import { initMockPropsPasser } from "../../sub/getto-example/application/mock"
+import { newMockNotFound } from "../../auth/NotFound/NotFound/mock"
 import { CurrentVersionMockProps } from "../../auth/NotFound/currentVersion/mock"
 
 export default {

@@ -3,6 +3,7 @@ import { useEffect } from "preact/hooks"
 
 import { Login } from "../../../x_preact/Auth/Login/Login"
 
+import { initMockPropsPasser } from "../../../sub/getto-example/application/mock"
 import { newMockLoginAsPasswordReset } from "../../../auth/Auth/Login/mock"
 import { PasswordResetMockProps } from "../../../auth/Auth/passwordReset/mock"
 import { loginIDFormFieldValidations } from "../../../auth/Auth/field/loginID/mock"
@@ -12,7 +13,6 @@ import {
     passwordFormFieldValidations,
     passwordFormFieldViews,
 } from "../../../auth/Auth/field/password/mock"
-import { initMockPropsPasser } from "../../../sub/getto-example/application/mock"
 
 export default {
     title: "Auth/Login/PasswordReset",

@@ -1,4 +1,5 @@
 import { h, VNode } from "preact"
+import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { copyright, siteInfo } from "../../x_preact/common/site"
@@ -13,14 +14,14 @@ import {
 import { MenuList } from "../../x_preact/Outline/MenuList"
 import { SeasonInfo } from "../../x_preact/Outline/SeasonInfo"
 
-import { initMockMenuListComponent } from "../../auth/Outline/menuList/mock"
+import { initMockPropsPasser } from "../../sub/getto-example/application/mock"
+import { initMockMenuListComponent, MenuListMockProps } from "../../auth/Outline/menuList/mock"
 import {
     mapSeasonMockProps,
     SeasonMockProps,
     initMockSeasonInfoComponent,
 } from "../../example/Outline/seasonInfo/mock"
 
-import { initialMenuListComponentState } from "../../auth/Outline/menuList/component"
 import { initialSeasonInfoComponentState } from "../../example/Outline/seasonInfo/component"
 
 export default {
@@ -34,11 +35,21 @@ export default {
 
 type MockProps = SeasonMockProps
 const Template: Story<MockProps> = (args) => {
-    const menuList = initMockMenuListComponent(initialMenuListComponentState)
+    const passer = {
+        menuList: initMockPropsPasser<MenuListMockProps>(),
+    }
+    const menuList = initMockMenuListComponent(passer.menuList)
     const seasonInfo = initMockSeasonInfoComponent(initialSeasonInfoComponentState)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
+        useEffect(() => {
+            passer.menuList.update({
+                type: "success",
+                label: "ホーム",
+                badgeCount: 0,
+            })
+        })
         seasonInfo.update(mapSeasonMockProps(props.args))
         return html`
             <style>

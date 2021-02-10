@@ -1,22 +1,24 @@
 import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
 
-import { initMockBreadcrumbListComponent } from "../../../auth/Outline/breadcrumbList/mock"
-import { initMockMenuListComponent } from "../../../auth/Outline/menuList/mock"
+import {
+    BreadcrumbListMockPasser,
+    initMockBreadcrumbListComponent,
+} from "../../../auth/Outline/breadcrumbList/mock"
+import { initMockMenuListComponent, MenuListMockPasser } from "../../../auth/Outline/menuList/mock"
 import { initMockContentComponent } from "../content/mock"
 
 import { DocumentEntryPoint } from "./entryPoint"
 
-import {
-    BreadcrumbListComponentState,
-    initialBreadcrumbListComponentState,
-} from "../../../auth/Outline/breadcrumbList/component"
-import { initialMenuListComponentState, MenuListComponentState } from "../../../auth/Outline/menuList/component"
 import { ContentComponentState, initialContentComponentState } from "../content/component"
 
-export function newMockDocument(): DocumentMockEntryPoint {
+export type DocumentMockPasser = Readonly<{
+    menuList: MenuListMockPasser
+    breadcrumbList: BreadcrumbListMockPasser
+}>
+export function newMockDocument(passer: DocumentMockPasser): DocumentMockEntryPoint {
     const resource = {
-        menuList: initMockMenuListComponent(initialMenuListComponentState),
-        breadcrumbList: initMockBreadcrumbListComponent(initialBreadcrumbListComponentState),
+        menuList: initMockMenuListComponent(passer.menuList),
+        breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),
         content: initMockContentComponent(initialContentComponentState),
     }
     return {
@@ -27,8 +29,6 @@ export function newMockDocument(): DocumentMockEntryPoint {
             },
         },
         update: {
-            menuList: update(resource.menuList),
-            breadcrumbList: update(resource.breadcrumbList),
             content: update(resource.content),
         },
     }
@@ -37,8 +37,6 @@ export function newMockDocument(): DocumentMockEntryPoint {
 export type DocumentMockEntryPoint = Readonly<{
     document: DocumentEntryPoint
     update: Readonly<{
-        menuList: Post<MenuListComponentState>
-        breadcrumbList: Post<BreadcrumbListComponentState>
         content: Post<ContentComponentState>
     }>
 }>
