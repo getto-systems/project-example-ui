@@ -1,6 +1,6 @@
 import { MockComponent_legacy } from "../../../sub/getto-example/application/mock"
 
-import { initMockRenewCredential } from "../renewCredential/mock"
+import { initMockRenewCredential, RenewCredentialMockPasser } from "../renewCredential/mock"
 import {
     initMockPasswordLoginForm,
     initMockPasswordLogin,
@@ -18,31 +18,16 @@ import {
 } from "../passwordReset/mock"
 
 import { LoginEntryPoint, LoginView, LoginState } from "./entryPoint"
-import {
-    initialRenewCredentialComponentState,
-    RenewCredentialComponentState,
-} from "../renewCredential/component"
 
-export function newMockLoginAsRenewCredential(): {
-    login: LoginEntryPoint
-    update: { renewCredential: Post<RenewCredentialComponentState> }
-} {
-    const mock = {
-        renewCredential: new MockResource(initialRenewCredentialComponentState, initMockRenewCredential),
-    }
+export function newMockLoginAsRenewCredential(passer: RenewCredentialMockPasser): LoginEntryPoint {
     return {
-        login: {
-            view: new View({
-                type: "renew-credential",
-                resource: {
-                    renewCredential: mock.renewCredential.init(),
-                },
-            }),
-            terminate,
-        },
-        update: {
-            renewCredential: mock.renewCredential.update(),
-        },
+        view: new View({
+            type: "renew-credential",
+            resource: {
+                renewCredential: initMockRenewCredential(passer),
+            },
+        }),
+        terminate,
     }
 }
 
