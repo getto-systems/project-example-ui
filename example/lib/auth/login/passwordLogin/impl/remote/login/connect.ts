@@ -11,8 +11,8 @@ import {
 } from "../../../../../common/credential/data"
 import { RawRemoteAccess, RemoteAccessError } from "../../../../../../z_infra/remote/infra"
 
-export type LoginRawRemoteAccess = RawRemoteAccess<LoginFields, RawAuthCredential>
-export type RawAuthCredential = Readonly<{
+type LoginRawRemoteAccess = RawRemoteAccess<LoginFields, RawAuthCredential>
+type RawAuthCredential = Readonly<{
     ticketNonce: string
     apiCredential: Readonly<{ apiRoles: string[] }>
 }>

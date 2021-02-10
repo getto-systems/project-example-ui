@@ -2,7 +2,6 @@ import { initCredentialAction, initMenuAction } from "../../../../auth/Outline/M
 import { initSeasonAction } from "../../../Outline/seasonInfo/tests/core"
 
 import { detectMenuTarget } from "../../../../auth/Outline/Menu/impl/location"
-import { MenuBadgeSimulator } from "../../../../auth/permission/menu/impl/remote/menuBadge/simulate"
 
 import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "../impl/core"
 
@@ -12,33 +11,36 @@ import { initMenuListComponent } from "../../../../auth/Outline/menuList/impl"
 import { initExampleComponent } from "../../example/impl"
 
 import { ApiCredentialRepository } from "../../../../auth/common/credential/infra"
-import { MenuExpandRepository, MenuTree } from "../../../../auth/permission/menu/infra"
-
-import { DashboardResource } from "../entryPoint"
-
+import {
+    LoadMenuBadgeRemoteAccess,
+    MenuExpandRepository,
+    MenuTree,
+} from "../../../../auth/permission/menu/infra"
 import { SeasonRepository } from "../../../shared/season/infra"
 import { Clock } from "../../../../z_infra/clock/infra"
+
+import { DashboardResource } from "../entryPoint"
 
 export type DashboardRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
     menuExpands: MenuExpandRepository
     seasons: SeasonRepository
 }>
-export type DashboardSimulator = Readonly<{
-    menuBadge: MenuBadgeSimulator
+export type DashboardRemoteAccess = Readonly<{
+    loadMenuBadge: LoadMenuBadgeRemoteAccess
 }>
 export function newDashboardResource(
     version: string,
     currentURL: URL,
     menuTree: MenuTree,
     repository: DashboardRepository,
-    simulator: DashboardSimulator,
+    remote: DashboardRemoteAccess,
     clock: Clock
 ): DashboardResource {
     const factory: DashboardFactory = {
         actions: {
             credential: initCredentialAction(repository.apiCredentials),
-            menu: initMenuAction(menuTree, repository.menuExpands, simulator.menuBadge),
+            menu: initMenuAction(menuTree, repository.menuExpands, remote.loadMenuBadge),
             season: initSeasonAction(repository.seasons, clock),
         },
         components: {

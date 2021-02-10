@@ -1,7 +1,9 @@
 import { Delayed } from "../../z_infra/delayed/infra"
+import { RemoteAccess, RemoteAccessResult } from "../../z_infra/remote/infra"
+import { RemoteAccessSimulator } from "../../z_infra/remote/simulate"
 import { DelayTime } from "../../z_infra/time/infra"
 
-import { CheckError, Version } from "./data"
+import { CheckRemoteError, Version } from "./data"
 
 export type NextVersionActionConfig = Readonly<{
     find: FindConfig
@@ -9,7 +11,7 @@ export type NextVersionActionConfig = Readonly<{
 
 export type FindInfra = Readonly<{
     config: FindConfig
-    check: CheckClient
+    check: CheckRemoteAccess
     delayed: Delayed
 }>
 
@@ -17,11 +19,8 @@ export type FindConfig = Readonly<{
     delay: DelayTime
 }>
 
-export interface CheckClient {
-    check(version: Version): Promise<CheckResponse>
-}
+export type CheckRemoteAccess = RemoteAccess<Version, CheckResponse, CheckRemoteError>
+export type CheckRemoteAccessResult = RemoteAccessResult<CheckResponse, CheckRemoteError>
+export type CheckSimulator = RemoteAccessSimulator<Version, CheckResponse, CheckRemoteError>
 
-export type CheckResponse =
-    | Readonly<{ success: false; err: CheckError }>
-    | Readonly<{ success: true; found: false }>
-    | Readonly<{ success: true; found: true, version: Version }>
+export type CheckResponse = Readonly<{ found: false }> | Readonly<{ found: true; version: Version }>

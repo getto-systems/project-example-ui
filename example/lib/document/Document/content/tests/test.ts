@@ -1,14 +1,15 @@
-import { DocumentRepository, DocumentSimulator, newDocumentResource } from "../../Document/tests/core"
+import { DocumentRepository, DocumentRemoteAccess, newDocumentResource } from "../../Document/tests/core"
 
 import { initMemoryTypedStorage } from "../../../../z_infra/storage/memory"
+import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/menu/impl/remote/menuBadge/simulate"
 import { initApiCredentialRepository } from "../../../../auth/common/credential/impl/repository/apiCredential"
 import { initMenuExpandRepository } from "../../../../auth/permission/menu/impl/repository/menuExpand"
 
-import { MenuBadge, MenuTree } from "../../../../auth/permission/menu/infra"
+import { MenuTree } from "../../../../auth/permission/menu/infra"
 
 import { ContentComponentState } from "../component"
 
-import { ApiNonce, markApiCredential } from "../../../../auth/common/credential/data"
+import { markApiCredential } from "../../../../auth/common/credential/data"
 
 describe("Content", () => {
     test("load content", (done) => {
@@ -82,13 +83,11 @@ function standardRepository(): DocumentRepository {
     }
 }
 
-function standardSimulator(): DocumentSimulator {
+function standardSimulator(): DocumentRemoteAccess {
     return {
-        menuBadge: {
-            getMenuBadge: async (_apiNonce: ApiNonce): Promise<MenuBadge> => {
-                return {}
-            },
-        },
+        loadMenuBadge: initLoadMenuBadgeSimulateRemoteAccess(() => ({ success: true, value: {} }), {
+            wait_millisecond: 0,
+        }),
     }
 }
 

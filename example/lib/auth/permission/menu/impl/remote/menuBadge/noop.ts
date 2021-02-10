@@ -1,15 +1,11 @@
-import { MenuBadgeClient, MenuBadgeResponse, MenuBadge } from "../../../infra"
+import { initSimulateRemoteAccess } from "../../../../../../z_infra/remote/simulate"
 
-import { ApiNonce } from "../../../../../common/credential/data"
+import { MenuBadge, LoadMenuBadgeRemoteAccess } from "../../../infra"
 
-export function initNoopMenuBadgeClient(): MenuBadgeClient {
-    return new NoopMenuBadgeClient()
-}
-
-class NoopMenuBadgeClient implements MenuBadgeClient {
-    async getBadge(_apiNonce: ApiNonce): Promise<MenuBadgeResponse> {
-        return { success: true, menuBadge: EMPTY_BADGE }
-    }
+export function initLoadMenuBadgeNoopRemoteAccess(): LoadMenuBadgeRemoteAccess {
+    return initSimulateRemoteAccess(() => ({ success: true, value: EMPTY_BADGE }), {
+        wait_millisecond: 0,
+    })
 }
 
 const EMPTY_BADGE: MenuBadge = {}

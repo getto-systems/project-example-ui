@@ -1,17 +1,18 @@
-import { MenuRepository, MenuSimulator, newMenuResource } from "./core"
+import { MenuRepository, MenuRemoteAccess, newMenuResource } from "./core"
 
 import { initMemoryTypedStorage } from "../../../../z_infra/storage/memory"
 import { initApiCredentialRepository } from "../../../common/credential/impl/repository/apiCredential"
 import { initMenuExpandRepository } from "../../../permission/menu/impl/repository/menuExpand"
 
 import { ApiCredentialRepository } from "../../../common/credential/infra"
-import { MenuBadge, MenuExpand, MenuExpandRepository, MenuTree } from "../../../permission/menu/infra"
+import { MenuExpand, MenuExpandRepository, MenuTree } from "../../../permission/menu/infra"
 
 import { BreadcrumbListComponentState } from "../../breadcrumbList/component"
 import { MenuListComponentState } from "../../menuList/component"
 
 import { markMenuCategoryLabel, Menu } from "../../../permission/menu/data"
-import { ApiNonce, markApiCredential } from "../../../common/credential/data"
+import { markApiCredential } from "../../../common/credential/data"
+import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../permission/menu/impl/remote/menuBadge/simulate"
 
 describe("BreadcrumbList", () => {
     test("load breadcrumb", (done) => {
@@ -1143,16 +1144,18 @@ function expandRepository(): MenuRepository {
     }
 }
 
-function standardSimulator(): MenuSimulator {
+function standardSimulator(): MenuRemoteAccess {
     return {
-        menuBadge: {
-            getMenuBadge: async (_apiNonce: ApiNonce): Promise<MenuBadge> => {
-                return {
+        loadMenuBadge: initLoadMenuBadgeSimulateRemoteAccess(
+            () => ({
+                success: true,
+                value: {
                     "/index.html": 10,
                     "/docs/index.html": 20,
-                }
-            },
-        },
+                },
+            }),
+            { wait_millisecond: 0 }
+        ),
     }
 }
 

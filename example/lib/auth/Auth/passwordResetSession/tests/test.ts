@@ -4,21 +4,25 @@ import {
     PasswordResetSessionRemoteAccess,
 } from "./core"
 
-import { PasswordResetSessionComponentState } from "../component"
-
-import { WaitTime } from "../../../../z_infra/time/infra"
-import { GetStatusRemoteAccess, GetStatusResponse } from "../../../profile/passwordReset/infra"
-
-import { markSessionID } from "../../../profile/passwordReset/data"
-import { markInputString, toValidationError } from "../../../../sub/getto-form/action/data"
 import {
-    GetStatusSimulateResult,
     initGetStatusSimulateRemoteAccess,
     initSendTokenSimulateRemoteAccess,
     initStartSessionSimulateRemoteAccess,
-    SendTokenSimulateResult,
-    StartSessionSimulateResult,
 } from "../../../profile/passwordReset/impl/remote/session/simulate"
+
+import { WaitTime } from "../../../../z_infra/time/infra"
+import {
+    GetStatusRemoteAccess,
+    GetStatusRemoteAccessResult,
+    GetStatusResponse,
+    SendTokenRemoteAccessResult,
+    StartSessionRemoteAccessResult,
+} from "../../../profile/passwordReset/infra"
+
+import { PasswordResetSessionComponentState } from "../component"
+
+import { markSessionID } from "../../../profile/passwordReset/data"
+import { markInputString, toValidationError } from "../../../../sub/getto-form/action/data"
 
 const VALID_LOGIN = { loginID: "login-id" } as const
 const SESSION_ID = "session-id" as const
@@ -501,10 +505,10 @@ function longSendingSimulator(): PasswordResetSessionRemoteAccess {
     }
 }
 
-function simulateStartSession(): StartSessionSimulateResult {
+function simulateStartSession(): StartSessionRemoteAccessResult {
     return { success: true, value: markSessionID(SESSION_ID) }
 }
-function simulateSendToken(): SendTokenSimulateResult {
+function simulateSendToken(): SendTokenRemoteAccessResult {
     return { success: true, value: true }
 }
 function getStatusRemoteAccess(
@@ -512,7 +516,7 @@ function getStatusRemoteAccess(
     interval: WaitTime
 ): GetStatusRemoteAccess {
     let position = 0
-    return initGetStatusSimulateRemoteAccess((): GetStatusSimulateResult => {
+    return initGetStatusSimulateRemoteAccess((): GetStatusRemoteAccessResult => {
         if (responseCollection.length === 0) {
             return { success: false, err: { type: "infra-error", err: "no response" } }
         }

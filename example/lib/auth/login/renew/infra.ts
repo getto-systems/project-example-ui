@@ -1,6 +1,7 @@
 import { Clock } from "../../../z_infra/clock/infra"
 import { Delayed } from "../../../z_infra/delayed/infra"
-import { RemoteAccess } from "../../../z_infra/remote/infra"
+import { RemoteAccess, RemoteAccessResult } from "../../../z_infra/remote/infra"
+import { RemoteAccessSimulator } from "../../../z_infra/remote/simulate"
 import { DelayTime, ExpireTime, IntervalTime } from "../../../z_infra/time/infra"
 
 import { AuthCredential, LastLogin, StorageError, TicketNonce } from "../../common/credential/data"
@@ -60,3 +61,5 @@ export type StorageKey = Readonly<{
 }>
 
 export type RenewRemoteAccess = RemoteAccess<TicketNonce, AuthCredential, RenewRemoteError>
+export type RenewRemoteAccessResult = RemoteAccessResult<AuthCredential, RenewRemoteError>
+export type RenewSimulator = RemoteAccessSimulator<TicketNonce, AuthCredential, RenewRemoteError>
