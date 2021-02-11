@@ -1,10 +1,12 @@
-import { MoveToNextVersionEntryPoint } from "../../../update/x_components/MoveToNextVersion/EntryPoint/entryPoint"
-import { NextVersionComponentState } from "../../../update/x_components/MoveToNextVersion/nextVersion/component"
+import { MoveToNextVersionEntryPoint } from "../../../available/x_components/MoveToNextVersion/EntryPoint/entryPoint"
+import { NextVersionComponentState } from "../../../available/x_components/MoveToNextVersion/nextVersion/component"
 
-import { AppTarget, appTargetToPath } from "../../../update/nextVersion/data"
+import { AppTarget, appTargetToPath } from "../../../available/nextVersion/data"
 
-type Props = MoveToNextVersionEntryPoint
-export function EntryPoint({ resource, terminate }: Props): void {
+type Props = Readonly<{
+    moveToNextVersion: MoveToNextVersionEntryPoint
+}>
+export function MoveToNextVersion({ moveToNextVersion: { resource, terminate } }: Props): void {
     // /${version}/index.html とかで実行する
     const { nextVersion } = resource
     try {

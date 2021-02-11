@@ -10,10 +10,10 @@ import { spinner } from "../../z_common/icon"
 
 import { ApplicationError } from "../../z_common/System/ApplicationError"
 
-import { NextVersionResource } from "../../../update/x_components/MoveToNextVersion/EntryPoint/entryPoint"
-import { initialNextVersionComponentState } from "../../../update/x_components/MoveToNextVersion/nextVersion/component"
+import { NextVersionResource } from "../../../available/x_components/MoveToNextVersion/EntryPoint/entryPoint"
+import { initialNextVersionComponentState } from "../../../available/x_components/MoveToNextVersion/nextVersion/component"
 
-import { appTargetToPath, FindError } from "../../../update/nextVersion/data"
+import { appTargetToPath, FindError } from "../../../available/nextVersion/data"
 
 type Props = NextVersionResource
 export function NextVersion({ nextVersion }: Props): VNode {

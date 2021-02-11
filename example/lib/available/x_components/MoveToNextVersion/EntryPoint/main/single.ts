@@ -1,6 +1,6 @@
 import { env } from "../../../../../y_environment/env"
 
-import { ApiUpdateCheck, initApiUpdateCheck } from "../../../../../z_external/api/update/check"
+import { ApiUpdateCheck, initApiUpdateCheck } from "../../../../../z_external/api/available/check"
 
 import { delayed } from "../../../../../z_infra/delayed/core"
 import { find } from "../../../../nextVersion/impl/core"

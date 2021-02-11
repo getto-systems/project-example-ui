@@ -29,9 +29,9 @@ export const content_index = (): VNode[] => [
     v_small(),
     container([
         content_index_document(),
-        content_index_deployment(),
+        content_index_available(),
         content_index_auth(),
-        content_index_update(),
+        content_index_deployment(),
     ]),
 ]
 export function content_index_document(): VNode {
@@ -53,15 +53,15 @@ export function content_index_document(): VNode {
         ],
     })
 }
-export function content_index_deployment(): VNode {
+export function content_index_available(): VNode {
     return box({
-        title: "配備構成",
+        title: "保守・運用",
         body: [
+            notice_info("業務の目標を達成する"),
             notice_info("業務で必要な時に使用できる"),
-            notice_info("業務に合ったコストで運用できる"),
             html`
-                <p>業務時間内は常にアクセス可能</p>
-                <p>コストがかかりすぎない構成</p>
+                <p>常に最新版を使用</p>
+                <p>エラーを収集</p>
             `,
         ],
     })
@@ -81,14 +81,15 @@ export function content_index_auth(): VNode {
         ],
     })
 }
-export function content_index_update(): VNode {
+export function content_index_deployment(): VNode {
     return box({
-        title: "最新版の使用",
+        title: "配備構成",
         body: [
             notice_info("業務で必要な時に使用できる"),
+            notice_info("業務に合ったコストで運用できる"),
             html`
-                <p>新しいバージョンの配備を検知</p>
-                <p>自動的に最新版を使用する</p>
+                <p>業務時間内は常にアクセス可能</p>
+                <p>コストがかかりすぎない構成</p>
             `,
         ],
     })
