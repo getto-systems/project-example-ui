@@ -3,8 +3,8 @@ import { useEffect } from "preact/hooks"
 
 import { initMockPropsPasser } from "../../sub/getto-example/x_components/Application/mock"
 
-import { newMockMoveToNextVersion } from "../../update/x_components/Update/MoveToNextVersion/mock"
-import { NextVersionMockProps } from "../../update/x_components/Update/nextVersion/mock"
+import { newMockMoveToNextVersion } from "../../update/x_components/MoveToNextVersion/EntryPoint/mock"
+import { NextVersionMockProps } from "../../update/x_components/MoveToNextVersion/nextVersion/mock"
 
 import { MoveToLatestVersion } from "../../x_preact/Update/MoveToLatestVersion/MoveToLatestVersion"
 

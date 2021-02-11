@@ -5,11 +5,11 @@ import { html } from "htm/preact"
 import { Dashboard } from "../../../x_preact/Example/Home/Dashboard"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
-import { DashboardMockPropsPasser, newMockDashboard } from "../../../example/x_components/Home/Dashboard/mock"
+import { DashboardMockPropsPasser, newMockDashboard } from "../../../example/x_components/Dashboard/EntryPoint/mock"
 import { SeasonInfoMockProps } from "../../../example/x_components/Outline/seasonInfo/mock"
 import { MenuListMockProps } from "../../../auth/x_components/Outline/menuList/mock"
 import { BreadcrumbListMockProps } from "../../../auth/x_components/Outline/breadcrumbList/mock"
-import { ExampleMockProps } from "../../../example/x_components/Home/example/mock"
+import { ExampleMockProps } from "../../../example/x_components/Dashboard/example/mock"
 
 export default {
     title: "Example/Home/Dashboard",

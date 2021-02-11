@@ -1,4 +1,4 @@
-import { DocumentRepository, DocumentRemoteAccess, newDocumentResource } from "../../Document/tests/core"
+import { DocumentRepository, DocumentRemoteAccess, newDocumentResource } from "../../EntryPoint/tests/core"
 
 import { initMemoryTypedStorage } from "../../../../../z_infra/storage/memory"
 import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/menu/impl/remote/menuBadge/simulate"

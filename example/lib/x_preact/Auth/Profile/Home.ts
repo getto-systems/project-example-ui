@@ -18,7 +18,7 @@ import { MenuList } from "../../Outline/MenuList"
 import { BreadcrumbList } from "../../Outline/BreadcrumbList"
 import { Logout } from "./Logout"
 
-import { DashboardEntryPoint } from "../../../example/x_components/Home/Dashboard/entryPoint"
+import { DashboardEntryPoint } from "../../../example/x_components/Dashboard/EntryPoint/entryPoint"
 
 type Props = Readonly<{
     dashboard: DashboardEntryPoint

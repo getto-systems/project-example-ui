@@ -1,13 +1,13 @@
-import { detectAppTarget } from "../../MoveToNextVersion/impl/location"
-import { initNextVersionResource } from "../../MoveToNextVersion/impl/core"
+import { detectAppTarget } from "../../EntryPoint/impl/location"
+import { initNextVersionResource } from "../../EntryPoint/impl/core"
 
 import { initNextVersionComponent } from "../impl"
 
-import { initNextVersionAction } from "../../MoveToNextVersion/tests/core"
+import { initNextVersionAction } from "../../EntryPoint/tests/core"
 
 import { CheckRemoteAccess, NextVersionActionConfig } from "../../../../nextVersion/infra"
 
-import { NextVersionResource } from "../../MoveToNextVersion/entryPoint"
+import { NextVersionResource } from "../../EntryPoint/entryPoint"
 
 export type NextVersionRemoteAccess = Readonly<{
     check: CheckRemoteAccess

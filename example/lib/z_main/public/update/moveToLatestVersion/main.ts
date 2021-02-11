@@ -1,6 +1,6 @@
 import { h, render } from "preact"
 
-import { newMoveToNextVersionAsSingle } from "../../../../update/x_components/Update/MoveToNextVersion/main/single"
+import { newMoveToNextVersionAsSingle } from "../../../../update/x_components/MoveToNextVersion/EntryPoint/main/single"
 
 import { MoveToLatestVersion } from "../../../../x_preact/Update/MoveToLatestVersion/MoveToLatestVersion"
 

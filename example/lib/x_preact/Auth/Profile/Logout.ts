@@ -13,7 +13,7 @@ import { useComponent } from "../../common/hooks"
 import {
     ExampleComponent,
     initialExampleComponentState,
-} from "../../../example/x_components/Home/example/component"
+} from "../../../example/x_components/Dashboard/example/component"
 
 import { Season, SeasonError } from "../../../example/shared/season/data"
 

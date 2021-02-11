@@ -1,5 +1,5 @@
-import { MoveToNextVersionEntryPoint } from "../../../update/x_components/Update/MoveToNextVersion/entryPoint"
-import { NextVersionComponentState } from "../../../update/x_components/Update/nextVersion/component"
+import { MoveToNextVersionEntryPoint } from "../../../update/x_components/MoveToNextVersion/EntryPoint/entryPoint"
+import { NextVersionComponentState } from "../../../update/x_components/MoveToNextVersion/nextVersion/component"
 
 import { AppTarget, appTargetToPath } from "../../../update/nextVersion/data"
 

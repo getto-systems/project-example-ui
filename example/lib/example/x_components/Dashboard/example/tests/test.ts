@@ -2,7 +2,7 @@ import {
     DashboardRepository,
     DashboardRemoteAccess,
     newDashboardResource,
-} from "../../Dashboard/tests/core"
+} from "../../EntryPoint/tests/core"
 
 import { initMemoryTypedStorage } from "../../../../../z_infra/storage/memory"
 import { initStaticClock } from "../../../../../z_infra/clock/simulate"

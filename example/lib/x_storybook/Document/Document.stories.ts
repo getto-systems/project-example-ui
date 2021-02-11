@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { Document } from "../../x_preact/Document/Document"
 
 import { initMockPropsPasser } from "../../sub/getto-example/x_components/Application/mock"
-import { DocumentMockPropsPasser, newMockDocument } from "../../document/x_components/Document/Document/mock"
+import { DocumentMockPropsPasser, newMockDocument } from "../../document/x_components/Document/EntryPoint/mock"
 import { MenuListMockProps } from "../../auth/x_components/Outline/menuList/mock"
 import { BreadcrumbListMockProps } from "../../auth/x_components/Outline/breadcrumbList/mock"
 import { ContentMockProps } from "../../document/x_components/Document/content/mock"
