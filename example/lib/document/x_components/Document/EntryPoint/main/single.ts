@@ -1,15 +1,22 @@
 import { env } from "../../../../../y_environment/env"
 
+import { initApiAvailableNotify } from "../../../../../z_external/api/available/notify"
+
 import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
 
 import { detectMenuTarget } from "../../../../../auth/x_components/Outline/Menu/impl/location"
 import { detectContentPath } from "../impl/location"
 
+import { initErrorComponent } from "../../../../../available/x_components/Error/error/impl"
 import { initMenuListComponent } from "../../../../../auth/x_components/Outline/menuList/impl"
 import { initBreadcrumbListComponent } from "../../../../../auth/x_components/Outline/breadcrumbList/impl"
 import { initContentComponent } from "../../content/impl"
 
-import { initCredentialAction, initDocumentMenuAction } from "../../../../../auth/x_components/Outline/Menu/main/core"
+import { initNotifyAction } from "../../../../../available/x_components/Error/EntryPoint/main/core"
+import {
+    initCredentialAction,
+    initDocumentMenuAction,
+} from "../../../../../auth/x_components/Outline/Menu/main/core"
 
 import { loadContent } from "../../../../content/impl/core"
 
@@ -21,13 +28,21 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
     const webStorage = localStorage
     const currentURL = new URL(location.toString())
 
+    const api = {
+        available: {
+            notify: initApiAvailableNotify(env.apiServerURL),
+        },
+    }
+
     const factory: DocumentFactory = {
         actions: {
+            notify: initNotifyAction(api.available.notify),
             credential: initCredentialAction(webStorage),
             menu: initDocumentMenuAction(webStorage),
             content: initContentAction(),
         },
         components: {
+            error: initErrorComponent,
             menuList: initMenuListComponent,
             breadcrumbList: initBreadcrumbListComponent,
 

@@ -10,16 +10,15 @@ import { NextVersion } from "./NextVersion"
 
 type Props = MoveToNextVersionEntryPoint
 export function EntryPoint({ resource, terminate }: Props): VNode {
+    useTermination(terminate)
+
     const [err] = useErrorBoundary((err) => {
         // 認証前なのでエラーはどうしようもない
         console.log(err)
     })
-
     if (err) {
         return h(ApplicationError, { err: `${err}` })
     }
-
-    useTermination(terminate)
 
     return h(NextVersion, resource)
 }

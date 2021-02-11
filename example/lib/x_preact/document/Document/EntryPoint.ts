@@ -13,16 +13,12 @@ import { appLayout } from "../../../z_vendor/getto-css/preact/layout/app"
 
 type Props = DocumentEntryPoint
 export function EntryPoint({ resource, terminate }: Props): VNode {
-    const [err] = useErrorBoundary((err) => {
-        // TODO ここでエラーをどこかに投げたい。apiCredential が有効なはずなので、api にエラーを投げられるはず
-        console.log(err)
-    })
+    useTermination(terminate)
 
+    const [err] = useErrorBoundary((err) => resource.error.notify(err))
     if (err) {
         return h(ApplicationError, { err: `${err}` })
     }
-
-    useTermination(terminate)
 
     return appLayout({
         siteInfo: siteInfo(),

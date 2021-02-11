@@ -1,4 +1,8 @@
-import { initTestCredentialAction, initTestMenuAction } from "../../../../../auth/x_components/Outline/Menu/tests/core"
+import { initTestNotifyAction } from "../../../../../available/x_components/Error/EntryPoint/tests/core"
+import {
+    initTestCredentialAction,
+    initTestMenuAction,
+} from "../../../../../auth/x_components/Outline/Menu/tests/core"
 
 import { detectMenuTarget } from "../../../../../auth/x_components/Outline/Menu/impl/location"
 import { detectContentPath } from "../impl/location"
@@ -6,6 +10,7 @@ import { detectContentPath } from "../impl/location"
 import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
 import { loadContent } from "../../../../content/impl/core"
 
+import { initErrorComponent } from "../../../../../available/x_components/Error/error/impl"
 import { initBreadcrumbListComponent } from "../../../../../auth/x_components/Outline/breadcrumbList/impl"
 import { initMenuListComponent } from "../../../../../auth/x_components/Outline/menuList/impl"
 import { initContentComponent } from "../../content/impl"
@@ -36,11 +41,13 @@ export function newDocumentResource(
 ): DocumentResource {
     const factory: DocumentFactory = {
         actions: {
+            notify: initTestNotifyAction(),
             credential: initTestCredentialAction(repository.apiCredentials),
             menu: initTestMenuAction(menuTree, repository.menuExpands, remote.loadMenuBadge),
             content: initContentAction(),
         },
         components: {
+            error: initErrorComponent,
             menuList: initMenuListComponent,
             breadcrumbList: initBreadcrumbListComponent,
 

@@ -1,5 +1,6 @@
 import { DocumentResource } from "../entryPoint"
 
+import { ErrorComponentFactory } from "../../../../../available/x_components/Error/error/component"
 import { MenuListComponentFactory } from "../../../../../auth/x_components/Outline/menuList/component"
 import { BreadcrumbListComponentFactory } from "../../../../../auth/x_components/Outline/breadcrumbList/component"
 
@@ -9,14 +10,17 @@ import { CredentialAction } from "../../../../../auth/common/credential/action"
 import { MenuAction, MenuLocationInfo } from "../../../../../auth/permission/menu/action"
 
 import { ContentAction, LoadContentLocationInfo } from "../../../../content/action"
+import { NotifyAction } from "../../../../../available/notify/action"
 
 export type DocumentFactory = Readonly<{
     actions: Readonly<{
+        notify: NotifyAction
         credential: CredentialAction
         menu: MenuAction
         content: ContentAction
     }>
     components: Readonly<{
+        error: ErrorComponentFactory
         menuList: MenuListComponentFactory
         breadcrumbList: BreadcrumbListComponentFactory
 
@@ -32,6 +36,8 @@ export function initDocumentResource(
     locationInfo: DocumentLocationInfo
 ): DocumentResource {
     const actions = {
+        notify: factory.actions.notify.notify(),
+
         loadApiNonce: factory.actions.credential.loadApiNonce(),
         loadApiRoles: factory.actions.credential.loadApiRoles(),
 
@@ -42,6 +48,7 @@ export function initDocumentResource(
         loadDocument: factory.actions.content.loadContent(locationInfo.content),
     }
     return {
+        error: factory.components.error(actions),
         menuList: factory.components.menuList(actions),
         breadcrumbList: factory.components.breadcrumbList(actions),
 
