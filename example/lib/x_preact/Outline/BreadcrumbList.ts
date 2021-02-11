@@ -20,6 +20,7 @@ import {
 } from "../../auth/Outline/breadcrumbList/component"
 
 import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../auth/permission/menu/data"
+import { linky } from "../../z_vendor/getto-css/preact/design/highlight"
 
 type Props = Readonly<{
     breadcrumbList: BreadcrumbListComponent
@@ -56,10 +57,12 @@ function breadcrumbNodes(breadcrumb: Breadcrumb): VNode[] {
     }
 }
 function breadcrumbTop(): VNode {
-    return mainBreadcrumbLink(CATEGORY_HREF, siteInfo().title)
+    // トップリンク href="#menu" は menu の id="menu" と対応
+    // mobile レイアウトで menu の位置に移動
+    return mainBreadcrumbLink(`#${MENU_ID}`, html`${icon("menu-alt-3")} ${siteInfo().title}`)
 }
 function breadcrumbCategory({ label }: MenuCategory): VNode {
-    return mainBreadcrumbLink(CATEGORY_HREF, label)
+    return linky(label)
 }
 function breadcrumbItem({ label, icon, href }: MenuItem): VNode {
     const content = html`<i class="${icon}"></i> ${label}`
@@ -70,9 +73,6 @@ function withSeparator(key: string, content: VNode): VNode {
     return html`<span class="noWrap" key=${key}>${SEPARATOR}${content}</span>`
 }
 
-// カテゴリーのリンク href="#menu" は menu の id="menu" と対応
-// mobile レイアウトで menu の位置に移動
-const CATEGORY_HREF = `#${MENU_ID}`
 const SEPARATOR = mainBreadcrumbSeparator(icon("chevron-right"))
 
 const EMPTY_CONTENT = html``

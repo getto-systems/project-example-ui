@@ -76,10 +76,6 @@ export function sortLink(sort: Sort): SortLink {
     }
 }
 
-export function linky(content: VNodeContent): VNode {
-    return html`<span class="linky">${content}</span>`
-}
-
 export function tableViewColumns(content: VNodeContent): VNode {
     return html`<section class="table__viewColumns">${content}</section>`
 }
