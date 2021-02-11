@@ -19,6 +19,9 @@ export const mainMenuTree = (): MenuTree => [
         item("ホーム", lnir("home"), "/index.html"),
         item("ドキュメント", lnir("files-alt"), "/document/index.html"),
     ]),
+    category("SYSTEM", any, [
+        item("プロフィール", lnir("user"), "/profile/index.html"),
+    ]),
 ]
 
 export const documentMenuTree = (): MenuTree => [
@@ -29,6 +32,7 @@ export const documentMenuTree = (): MenuTree => [
     category("ドキュメント", any, [item("認証・認可", lnir("files-alt"), "/document/auth.html")]),
     category("開発向け", dev, [
         item("Storybook", lnir("files-alt"), "/storybook/index.html"),
+        item("coverage", lnir("files-alt"), "/coverage/lcov-report/index.html"),
         item("配備構成", lnir("files-alt"), "/document/development/deployment.html"),
         category("認証・認可", dev, [
             item("ログイン", lnir("files-alt"), "/document/development/auth/login.html"),

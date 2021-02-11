@@ -31,6 +31,7 @@ export function initRenewConnectRemoteAccess(access: RenewRawRemoteAccess): Rene
         },
         error: (err: RemoteAccessError): RenewRemoteError => {
             switch (err.type) {
+                case "invalid-ticket":
                 case "bad-request":
                 case "server-error":
                     return { type: err.type }
