@@ -15,7 +15,7 @@ import { badge_alert, notice_alert } from "../../z_vendor/getto-css/preact/desig
 import { useComponent } from "../common/hooks"
 import { poweredBy } from "../common/site"
 
-import { MenuListComponent, initialMenuListComponentState } from "../../auth/Outline/menuList/component"
+import { MenuListComponent, initialMenuListComponentState } from "../../auth/x_components/Outline/menuList/component"
 
 import { Menu, MenuCategoryNode, MenuItemNode, LoadMenuError } from "../../auth/permission/menu/data"
 

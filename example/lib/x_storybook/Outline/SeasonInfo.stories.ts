@@ -14,9 +14,9 @@ import {
 import { MenuList } from "../../x_preact/Outline/MenuList"
 import { SeasonInfo } from "../../x_preact/Outline/SeasonInfo"
 
-import { initMockPropsPasser } from "../../sub/getto-example/application/mock"
-import { initMockMenuListComponent, MenuListMockProps } from "../../auth/Outline/menuList/mock"
-import { SeasonInfoMockProps, initMockSeasonInfoComponent } from "../../example/Outline/seasonInfo/mock"
+import { initMockPropsPasser } from "../../sub/getto-example/x_components/Application/mock"
+import { initMockMenuListComponent, MenuListMockProps } from "../../auth/x_components/Outline/menuList/mock"
+import { SeasonInfoMockProps, initMockSeasonInfoComponent } from "../../example/x_components/Outline/seasonInfo/mock"
 
 export default {
     title: "Outline/SeasonInfo",

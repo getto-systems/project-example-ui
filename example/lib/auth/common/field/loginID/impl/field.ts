@@ -1,5 +1,5 @@
-import { initFormField } from "../../../../../sub/getto-form/action/impl/field"
-import { initFormInput } from "../../../../../sub/getto-form/action/impl/input"
+import { initFormField } from "../../../../../sub/getto-form/form/impl/field"
+import { initFormInput } from "../../../../../sub/getto-form/form/impl/input"
 import { LoginIDFormFieldPod } from "../action"
 import { convertLoginID } from "./converter"
 import { validateLoginID } from "./validator"

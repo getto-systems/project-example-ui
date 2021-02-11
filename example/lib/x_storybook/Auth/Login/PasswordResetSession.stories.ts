@@ -3,11 +3,11 @@ import { useEffect } from "preact/hooks"
 
 import { Login } from "../../../x_preact/Auth/Login/Login"
 
-import { initMockPropsPasser } from "../../../sub/getto-example/application/mock"
-import { newMockLoginAsPasswordResetSession } from "../../../auth/Auth/Login/mock"
-import { PasswordResetSessionMockProps } from "../../../auth/Auth/passwordResetSession/mock"
-import { formValidationStates } from "../../../sub/getto-form/component/mock"
-import { loginIDFormFieldValidations } from "../../../auth/Auth/field/loginID/mock"
+import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
+import { newMockLoginAsPasswordResetSession } from "../../../auth/x_components/Login/EntryPoint/mock"
+import { PasswordResetSessionMockProps } from "../../../auth/x_components/Login/passwordResetSession/mock"
+import { formValidationStates } from "../../../sub/getto-form/x_components/Form/mock"
+import { loginIDFormFieldValidations } from "../../../auth/x_components/Login/field/loginID/mock"
 
 export default {
     title: "Auth/Login/PasswordResetSession",

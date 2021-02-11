@@ -1,6 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 
-import { ApplicationComponent } from "../../sub/getto-example/application/component";
+import { ApplicationComponent } from "../../sub/getto-example/x_components/Application/component";
 
 export function useTerminate(terminate: Terminate): void {
     useEffect(() => terminate, [])

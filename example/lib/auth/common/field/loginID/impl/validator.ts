@@ -1,4 +1,4 @@
-import { FormValidationResult, toValidationError } from "../../../../../sub/getto-form/action/data"
+import { FormValidationResult, toValidationError } from "../../../../../sub/getto-form/form/data"
 import { LoginIDValidationError, LoginIDInput } from "../data"
 
 export function validateLoginID(loginID: LoginIDInput): FormValidationResult<LoginIDValidationError> {

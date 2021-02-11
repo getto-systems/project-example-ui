@@ -3,9 +3,9 @@ import { useEffect } from "preact/hooks"
 
 import { Login } from "../../../x_preact/Auth/Login/Login"
 
-import { initMockPropsPasser } from "../../../sub/getto-example/application/mock"
-import { newMockLoginAsRenewCredential } from "../../../auth/Auth/Login/mock"
-import { RenewCredentialMockProps } from "../../../auth/Auth/renewCredential/mock"
+import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
+import { newMockLoginAsRenewCredential } from "../../../auth/x_components/Login/EntryPoint/mock"
+import { RenewCredentialMockProps } from "../../../auth/x_components/Login/renewCredential/mock"
 
 export default {
     title: "Auth/Login/RenewCredential",

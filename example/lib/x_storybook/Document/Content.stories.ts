@@ -3,12 +3,12 @@ import { useEffect } from "preact/hooks"
 
 import { Content } from "../../x_preact/Document/Content"
 
-import { initMockPropsPasser } from "../../sub/getto-example/application/mock"
-import { ContentMockProps, initMockContentComponent } from "../../document/Document/content/mock"
+import { initMockPropsPasser } from "../../sub/getto-example/x_components/Application/mock"
+import { ContentMockProps, initMockContentComponent } from "../../document/x_components/Document/content/mock"
 import {
     BreadcrumbListMockProps,
     initMockBreadcrumbListComponent,
-} from "../../auth/Outline/breadcrumbList/mock"
+} from "../../auth/x_components/Outline/breadcrumbList/mock"
 
 export default {
     title: "Document/Content",

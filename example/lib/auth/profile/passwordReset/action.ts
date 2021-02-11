@@ -1,7 +1,7 @@
 import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "./event"
 
 import { SessionID, ResetToken, StartSessionFields, ResetFields } from "./data"
-import { FormConvertResult } from "../../../sub/getto-form/action/data"
+import { FormConvertResult } from "../../../sub/getto-form/form/data"
 
 export type PasswordResetSessionAction = Readonly<{
     startSession: StartSessionPod
