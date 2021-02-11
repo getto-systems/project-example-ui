@@ -3,7 +3,7 @@ import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
-import { label_alert, notice_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
+import { label_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
 
 import { useComponent } from "../hooks"
 
