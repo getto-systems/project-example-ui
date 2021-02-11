@@ -10,7 +10,7 @@ import { initMenuListComponent } from "../../../../../auth/x_components/Outline/
 import { initBreadcrumbListComponent } from "../../../../../auth/x_components/Outline/breadcrumbList/impl"
 import { initContentComponent } from "../../content/impl"
 
-import { initNotifyAction } from "../../../../../available/x_components/Error/EntryPoint/main/core"
+import { initNotifyAction } from "../../../../../available/x_components/Error/EntryPoint/main/action/notify"
 import {
     initCredentialAction,
     initDocumentMenuAction,
