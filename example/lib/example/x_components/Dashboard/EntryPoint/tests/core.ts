@@ -1,11 +1,9 @@
-import { initTestNotifyAction } from "../../../../../available/x_components/Error/EntryPoint/tests/core"
-import {
-    initTestCredentialAction,
-    initTestMenuAction,
-} from "../../../../../auth/x_components/Outline/Menu/tests/core"
-import { initTestSeasonAction } from "../../../Outline/seasonInfo/tests/core"
+import { initTestNotifyAction } from "../../../../../available/notify/tests/notify"
+import { initTestCredentialAction } from "../../../../../auth/common/credential/tests/credential"
+import { initTestMenuAction } from "../../../../../auth/permission/menu/tests/menu"
+import { initTestSeasonAction } from "../../../../shared/season/tests/season"
 
-import { detectMenuTarget } from "../../../../../auth/x_components/Outline/Menu/impl/location"
+import { detectMenuTarget } from "../../../../../auth/permission/menu/impl/location"
 
 import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "../impl/core"
 
@@ -34,7 +32,7 @@ export type DashboardRepository = Readonly<{
 export type DashboardRemoteAccess = Readonly<{
     loadMenuBadge: LoadMenuBadgeRemoteAccess
 }>
-export function newDashboardResource(
+export function newTestDashboardResource(
     version: string,
     currentURL: URL,
     menuTree: MenuTree,

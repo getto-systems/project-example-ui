@@ -1,12 +1,12 @@
-import { initTestAuthCredentialStorage } from "../../EntryPoint/tests/core"
 import {
-    PasswordLoginConfig,
-    newTestPasswordLoginResource,
-    PasswordLoginRepository,
-    PasswordLoginRemoteAccess,
+    PasswordLoginTestConfig,
+    newPasswordLoginTestResource,
+    PasswordLoginTestRepository,
+    PasswordLoginTestRemoteAccess,
 } from "./core"
 
 import { initStaticClock, StaticClock } from "../../../../../z_infra/clock/simulate"
+import { initTestAuthCredentialStorage } from "../../../../login/credentialStore/tests/storage"
 import { initLoginSimulateRemoteAccess } from "../../../../login/passwordLogin/impl/remote/login/simulate"
 import { initRenewSimulateRemoteAccess } from "../../../../login/credentialStore/impl/remote/renew/simulate"
 
@@ -46,7 +46,7 @@ describe("PasswordLogin", () => {
     test("submit valid login-id and password", (done) => {
         const { repository, clock, resource } = standardPasswordLoginResource()
 
-        resource.passwordLogin.addStateHandler(initChecker())
+        resource.login.addStateHandler(initChecker())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -54,7 +54,7 @@ describe("PasswordLogin", () => {
         resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         resource.form.password.input.change()
 
-        resource.passwordLogin.login(resource.form.getLoginFields())
+        resource.login.submit(resource.form.getLoginFields())
 
         function initChecker() {
             return initAsyncStateChecker(
@@ -99,7 +99,7 @@ describe("PasswordLogin", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitPasswordLoginResource()
 
-        resource.passwordLogin.addStateHandler(initChecker())
+        resource.login.addStateHandler(initChecker())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -107,7 +107,7 @@ describe("PasswordLogin", () => {
         resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         resource.form.password.input.change()
 
-        resource.passwordLogin.login(resource.form.getLoginFields())
+        resource.login.submit(resource.form.getLoginFields())
 
         function initChecker() {
             return initAsyncStateChecker(
@@ -152,7 +152,7 @@ describe("PasswordLogin", () => {
     test("submit without fields", (done) => {
         const { repository, resource } = standardPasswordLoginResource()
 
-        resource.passwordLogin.addStateHandler(initChecker())
+        resource.login.addStateHandler(initChecker())
 
         // try to login without fields
         // resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
@@ -161,7 +161,7 @@ describe("PasswordLogin", () => {
         // resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         // resource.form.password.input.change()
 
-        resource.passwordLogin.login(resource.form.getLoginFields())
+        resource.login.submit(resource.form.getLoginFields())
 
         function initChecker() {
             return initAsyncStateChecker(
@@ -199,9 +199,9 @@ describe("PasswordLogin", () => {
     test("load error", (done) => {
         const { resource } = standardPasswordLoginResource()
 
-        resource.passwordLogin.addStateHandler(initChecker())
+        resource.login.addStateHandler(initChecker())
 
-        resource.passwordLogin.loadError({ type: "infra-error", err: "load error" })
+        resource.login.loadError({ type: "infra-error", err: "load error" })
 
         function initChecker() {
             return initAsyncStateChecker(
@@ -645,7 +645,7 @@ function standardPasswordLoginResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newTestPasswordLoginResource(currentURL, config, repository, simulator, clock)
+    const resource = newPasswordLoginTestResource(currentURL, config, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
@@ -655,7 +655,7 @@ function waitPasswordLoginResource() {
     const repository = standardRepository()
     const simulator = waitSimulator()
     const clock = standardClock()
-    const resource = newTestPasswordLoginResource(currentURL, config, repository, simulator, clock)
+    const resource = newPasswordLoginTestResource(currentURL, config, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
@@ -663,7 +663,7 @@ function waitPasswordLoginResource() {
 function standardURL(): URL {
     return new URL("https://example.com/index.html")
 }
-function standardConfig(): PasswordLoginConfig {
+function standardConfig(): PasswordLoginTestConfig {
     return {
         application: {
             secureScriptPath: {
@@ -683,7 +683,7 @@ function standardConfig(): PasswordLoginConfig {
         },
     }
 }
-function standardRepository(): PasswordLoginRepository {
+function standardRepository(): PasswordLoginTestRepository {
     return {
         authCredentials: initAuthCredentialRepository(
             initTestAuthCredentialStorage({
@@ -694,13 +694,13 @@ function standardRepository(): PasswordLoginRepository {
         ),
     }
 }
-function standardSimulator(): PasswordLoginRemoteAccess {
+function standardSimulator(): PasswordLoginTestRemoteAccess {
     return {
         login: initLoginSimulateRemoteAccess(simulateLogin, { wait_millisecond: 0 }),
         renew: renewRemoteAccess(),
     }
 }
-function waitSimulator(): PasswordLoginRemoteAccess {
+function waitSimulator(): PasswordLoginTestRemoteAccess {
     return {
         login: initLoginSimulateRemoteAccess(simulateLogin, { wait_millisecond: 3 }),
         renew: renewRemoteAccess(),

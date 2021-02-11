@@ -2,7 +2,7 @@ import { ApplicationBaseComponent } from "../../../../sub/getto-example/x_compon
 
 import { LogoutMaterial, LogoutComponent, LogoutComponentState, LogoutComponentFactory } from "./component"
 
-export const initExampleComponent: LogoutComponentFactory = (material) => new Component(material)
+export const initLogoutComponent: LogoutComponentFactory = (material) => new Component(material)
 
 class Component extends ApplicationBaseComponent<LogoutComponentState> implements LogoutComponent {
     material: LogoutMaterial
@@ -12,8 +12,8 @@ class Component extends ApplicationBaseComponent<LogoutComponentState> implement
         this.material = material
     }
 
-    load(): void {
-        this.material.loadSeason((event) => {
+    submit(): void {
+        this.material.logout((event) => {
             this.post(event)
         })
     }

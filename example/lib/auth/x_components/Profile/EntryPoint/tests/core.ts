@@ -1,20 +1,20 @@
-import { initTestNotifyAction } from "../../../../../available/x_components/Error/EntryPoint/tests/core"
-import {
-    initTestCredentialAction,
-    initTestMenuAction,
-} from "../../../Outline/Menu/tests/core"
-import { initTestSeasonAction } from "../../../../../example/x_components/Outline/seasonInfo/tests/core"
+import { detectMenuTarget } from "../../../../permission/menu/impl/location"
 
-import { detectMenuTarget } from "../../../Outline/Menu/impl/location"
-
-import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "../impl/core"
+import { DashboardLocationInfo, ProfileFactory, initDashboardResource } from "../impl/core"
 
 import { initErrorComponent } from "../../../../../available/x_components/Error/error/impl"
 import { initSeasonInfoComponent } from "../../../../../example/x_components/Outline/seasonInfo/impl"
 import { initBreadcrumbListComponent } from "../../../Outline/breadcrumbList/impl"
 import { initMenuListComponent } from "../../../Outline/menuList/impl"
-import { initExampleComponent } from "../../logout/impl"
+import { initLogoutComponent } from "../../logout/impl"
 
+import { initTestNotifyAction } from "../../../../../available/notify/tests/notify"
+import { initTestSeasonAction } from "../../../../../example/shared/season/tests/season"
+import { initTestLogoutAction } from "../../../../login/credentialStore/tests/logout"
+import { initTestCredentialAction } from "../../../../common/credential/tests/credential"
+import { initTestMenuAction } from "../../../../permission/menu/tests/menu"
+
+import { AuthCredentialRepository } from "../../../../login/credentialStore/infra"
 import { ApiCredentialRepository } from "../../../../common/credential/infra"
 import {
     LoadMenuBadgeRemoteAccess,
@@ -26,28 +26,30 @@ import { Clock } from "../../../../../z_infra/clock/infra"
 
 import { ProfileResource } from "../entryPoint"
 
-export type DashboardRepository = Readonly<{
+export type ProfileTestRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
     menuExpands: MenuExpandRepository
     seasons: SeasonRepository
+    authCredentials: AuthCredentialRepository
 }>
-export type DashboardRemoteAccess = Readonly<{
+export type ProfileTestRemoteAccess = Readonly<{
     loadMenuBadge: LoadMenuBadgeRemoteAccess
 }>
-export function newDashboardResource(
+export function newTestProfileResource(
     version: string,
     currentURL: URL,
     menuTree: MenuTree,
-    repository: DashboardRepository,
-    remote: DashboardRemoteAccess,
+    repository: ProfileTestRepository,
+    remote: ProfileTestRemoteAccess,
     clock: Clock
 ): ProfileResource {
-    const factory: DashboardFactory = {
+    const factory: ProfileFactory = {
         actions: {
             notify: initTestNotifyAction(),
             credential: initTestCredentialAction(repository.apiCredentials),
             menu: initTestMenuAction(menuTree, repository.menuExpands, remote.loadMenuBadge),
             season: initTestSeasonAction(repository.seasons, clock),
+            logout: initTestLogoutAction(repository.authCredentials),
         },
         components: {
             error: initErrorComponent,
@@ -55,7 +57,7 @@ export function newDashboardResource(
             menuList: initMenuListComponent,
             breadcrumbList: initBreadcrumbListComponent,
 
-            example: initExampleComponent,
+            logout: initLogoutComponent,
         },
     }
     const locationInfo: DashboardLocationInfo = {

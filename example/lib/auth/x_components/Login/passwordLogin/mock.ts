@@ -85,7 +85,7 @@ class PasswordLoginMockComponent
         }
     }
 
-    login(): void {
+    submit(): void {
         // mock では特に何もしない
     }
     loadError(): void {

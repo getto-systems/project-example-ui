@@ -1,23 +1,23 @@
 import { ApplicationComponent } from "../../../../sub/getto-example/x_components/Application/component"
 
-import { LoadSeason } from "../../../../example/shared/season/action"
+import { Logout } from "../../../login/credentialStore/action"
 
-import { Season, SeasonError } from "../../../../example/shared/season/data"
+import { StorageError } from "../../../common/credential/data"
 
 export interface LogoutComponentFactory {
     (material: LogoutMaterial): LogoutComponent
 }
 export type LogoutMaterial = Readonly<{
-    loadSeason: LoadSeason
+    logout: Logout
 }>
 
 export interface LogoutComponent extends ApplicationComponent<LogoutComponentState> {
-    load(): void
+    submit(): void
 }
 
 export type LogoutComponentState =
     | Readonly<{ type: "initial-logout" }>
-    | Readonly<{ type: "succeed-to-load"; season: Season }>
-    | Readonly<{ type: "failed-to-load"; err: SeasonError }>
+    | Readonly<{ type: "failed-to-logout"; err: StorageError }>
+    | Readonly<{ type: "succeed-to-logout" }>
 
 export const initialLogoutComponentState: LogoutComponentState = { type: "initial-logout" }

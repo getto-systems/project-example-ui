@@ -1,14 +1,11 @@
 import { ApplicationBaseComponent } from "../../../../../sub/getto-example/x_components/Application/impl"
 
-import {
-    LoginView,
-    LoginState,
-    ViewState,
-    RenewCredentialResource,
-    PasswordLoginResource,
-    PasswordResetSessionResource,
-    PasswordResetResource,
-} from "../entryPoint"
+import { LoginView, LoginState, ViewState } from "../entryPoint"
+
+import { RenewCredentialResource } from "../../renewCredential/resource"
+import { PasswordLoginResource } from "../../passwordLogin/resource"
+import { PasswordResetSessionResource } from "../../passwordResetSession/resource"
+import { PasswordResetResource } from "../../passwordReset/resource"
 
 import { RenewCredentialComponent } from "../../renewCredential/component"
 

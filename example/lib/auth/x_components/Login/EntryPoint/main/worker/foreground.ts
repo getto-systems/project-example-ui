@@ -2,61 +2,34 @@ import { env } from "../../../../../../y_environment/env"
 
 import { initLoginLink } from "../link"
 
-import { View, LoginResourceFactory, LoginViewLocationInfo } from "../../impl/core"
-import { initRenewCredentialResource, RenewCredentialLocationInfo } from "../../impl/renew"
-import { initPasswordLoginResource, PasswordLoginLocationInfo } from "../../impl/login"
-import {
-    initPasswordResetResource,
-    initPasswordResetSessionResource,
-    PasswordResetLocationInfo,
-} from "../../impl/reset"
+import { View, LoginResourceFactory } from "../../impl/core"
+import { initLoginViewLocationInfo } from "../../impl/location"
+import { initLoginLocationInfo } from "../../../common/impl/location"
 
-import { initRenewCredentialComponent } from "../../../renewCredential/impl"
-import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../../../passwordLogin/impl"
-import {
-    initPasswordResetSessionComponent,
-    initPasswordResetSessionFormComponent,
-} from "../../../passwordResetSession/impl"
-import { initPasswordResetComponent, initPasswordResetFormComponent } from "../../../passwordReset/impl"
+import { initPasswordLoginResource } from "../../../passwordLogin/impl/resource"
+import { initPasswordResetResource } from "../../../passwordReset/impl/resource"
+import { initPasswordResetSessionResource } from "../../../passwordResetSession/impl/resource"
+import { initRenewCredentialResource } from "../../../renewCredential/impl/resource"
 
-import { initApplicationAction } from "../action/application"
+import { initApplicationAction } from "../../../../../common/application/main/application"
 import { initFormAction } from "../../../../../../sub/getto-form/main/form"
-import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "../action/form"
-import { initRenewAction, initSetContinuousRenewAction } from "../action/renew"
-
-import { currentPagePathname, detectViewState, detectResetToken } from "../../impl/location"
-
-import { LoginLinkFactory } from "../../../link"
-
-import { LoginEntryPoint } from "../../entryPoint"
-import { RenewCredentialComponentFactory } from "../../../renewCredential/component"
+import { initLoginIDFormFieldAction } from "../../../../../common/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../../../common/field/password/main/password"
 import {
-    PasswordLoginComponentFactory,
-    PasswordLoginFormComponentFactory,
-} from "../../../passwordLogin/component"
-import {
-    PasswordResetSessionComponentFactory,
-    PasswordResetSessionFormComponentFactory,
-} from "../../../passwordResetSession/component"
-import {
-    PasswordResetComponentFactory,
-    PasswordResetFormComponentFactory,
-} from "../../../passwordReset/component"
+    initRenewAction,
+    initSetContinuousRenewAction,
+} from "../../../../../login/credentialStore/main/renew"
 
-import { ApplicationAction } from "../../../../../common/application/action"
-import { FormAction } from "../../../../../../sub/getto-form/form/action"
-import { RenewAction, SetContinuousRenewAction } from "../../../../../login/credentialStore/action"
-import { Login, PasswordLoginAction } from "../../../../../login/passwordLogin/action"
+import { LoginBackgroundAction, LoginEntryPoint, LoginForegroundAction } from "../../entryPoint"
+import { LoginLocationInfo } from "../../../common/location"
+
+import { Login } from "../../../../../login/passwordLogin/action"
 import {
-    PasswordResetAction,
-    PasswordResetSessionAction,
     StartSession,
     CheckStatus,
     Reset,
     ResetLocationInfo,
 } from "../../../../../profile/passwordReset/action"
-import { LoginIDFormFieldAction } from "../../../../../common/field/loginID/action"
-import { PasswordFormFieldAction } from "../../../../../common/field/password/action"
 
 import { LoginEvent } from "../../../../../login/passwordLogin/event"
 import {
@@ -77,49 +50,50 @@ import {
 } from "./message"
 
 export function newLoginAsWorkerForeground(): LoginEntryPoint {
-    const credentialStorage = localStorage
+    const webStorage = localStorage
     const currentURL = new URL(location.toString())
 
     const worker = new Worker(`/${env.version}/auth/login.worker.js`)
 
-    const factory: ForegroundFactory = {
+    const foreground: LoginForegroundAction = {
         link: initLoginLink,
-        actions: {
-            application: initApplicationAction(),
-            renew: initRenewAction(credentialStorage),
-            setContinuousRenew: initSetContinuousRenewAction(credentialStorage),
+        application: initApplicationAction(),
+        renew: initRenewAction(webStorage),
+        setContinuousRenew: initSetContinuousRenewAction(webStorage),
 
-            form: {
-                core: initFormAction(),
-                loginID: initLoginIDFormFieldAction(),
-                password: initPasswordFormFieldAction(),
-            },
-        },
-        components: {
-            renewCredential: initRenewCredentialComponent,
-
-            passwordLogin: { core: initPasswordLoginComponent, form: initPasswordLoginFormComponent },
-            passwordResetSession: {
-                core: initPasswordResetSessionComponent,
-                form: initPasswordResetSessionFormComponent,
-            },
-            passwordReset: { core: initPasswordResetComponent, form: initPasswordResetFormComponent },
+        form: {
+            core: initFormAction(),
+            loginID: initLoginIDFormFieldAction(),
+            password: initPasswordFormFieldAction(),
         },
     }
 
-    const locationInfo: LocationInfo = {
-        login: {
-            getLoginView: () => detectViewState(currentURL),
-        },
-        application: {
-            getPagePathname: () => currentPagePathname(currentURL),
-        },
-        passwordReset: {
-            getResetToken: () => detectResetToken(currentURL),
-        },
+    const map = initProxy(postForegroundMessage)
+    const view = new View(
+        initLoginViewLocationInfo(currentURL),
+        initLoginComponentFactory(initLoginLocationInfo(currentURL), foreground, map)
+    )
+    const errorHandler = (err: string) => {
+        view.error(err)
+    }
+    const messageHandler = initBackgroundMessageHandler(map, errorHandler)
+
+    worker.addEventListener("message", (event) => {
+        messageHandler(event.data)
+    })
+
+    return {
+        view,
+        terminate,
     }
 
-    return initLoginAsForeground(worker, factory, locationInfo)
+    function postForegroundMessage(message: ForegroundMessage) {
+        worker.postMessage(message)
+    }
+    function terminate() {
+        worker.terminate()
+        view.terminate()
+    }
 }
 
 class ProxyMap<M, E> {
@@ -194,71 +168,6 @@ class ResetProxyMap extends ProxyMap<ResetProxyMessage, ResetEvent> {
     }
 }
 
-type ForegroundFactory = Readonly<{
-    link: LoginLinkFactory
-    actions: Readonly<{
-        application: ApplicationAction
-        renew: RenewAction
-        setContinuousRenew: SetContinuousRenewAction
-
-        form: Readonly<{
-            core: FormAction
-            loginID: LoginIDFormFieldAction
-            password: PasswordFormFieldAction
-        }>
-    }>
-    components: Readonly<{
-        renewCredential: RenewCredentialComponentFactory
-
-        passwordLogin: Readonly<{
-            core: PasswordLoginComponentFactory
-            form: PasswordLoginFormComponentFactory
-        }>
-        passwordResetSession: Readonly<{
-            core: PasswordResetSessionComponentFactory
-            form: PasswordResetSessionFormComponentFactory
-        }>
-        passwordReset: Readonly<{
-            core: PasswordResetComponentFactory
-            form: PasswordResetFormComponentFactory
-        }>
-    }>
-}>
-type LocationInfo = LoginViewLocationInfo &
-    RenewCredentialLocationInfo &
-    PasswordLoginLocationInfo &
-    PasswordResetLocationInfo
-
-function initLoginAsForeground(
-    worker: Worker,
-    factory: ForegroundFactory,
-    locationInfo: LocationInfo
-): LoginEntryPoint {
-    const map = initProxy(postForegroundMessage)
-    const view = new View(locationInfo, initLoginComponentFactory(factory, locationInfo, map))
-    const errorHandler = (err: string) => {
-        view.error(err)
-    }
-    const messageHandler = initBackgroundMessageHandler(map, errorHandler)
-
-    worker.addEventListener("message", (event) => {
-        messageHandler(event.data)
-    })
-
-    return {
-        view,
-        terminate,
-    }
-
-    function postForegroundMessage(message: ForegroundMessage) {
-        worker.postMessage(message)
-    }
-    function terminate() {
-        worker.terminate()
-        view.terminate()
-    }
-}
-
 type Proxy = Readonly<{
     passwordLogin: Readonly<{
         login: LoginProxyMap
@@ -294,39 +203,30 @@ function initProxy(post: Post<ForegroundMessage>): Proxy {
     }
 }
 function initLoginComponentFactory(
-    foregroundFactory: ForegroundFactory,
-    locationInfo: LocationInfo,
+    locationInfo: LoginLocationInfo,
+    foreground: LoginForegroundAction,
     proxy: Proxy
 ): LoginResourceFactory {
-    const factory = {
-        ...foregroundFactory,
-        actions: { ...foregroundFactory.actions, ...initActionProxyFactory() },
-    }
+    const background = initActionProxyFactory()
 
     return {
-        renewCredential: (setup) => initRenewCredentialResource(factory, locationInfo, setup),
+        renewCredential: (setup) => initRenewCredentialResource(setup, locationInfo, foreground),
 
-        passwordLogin: () => initPasswordLoginResource(factory, locationInfo),
-        passwordResetSession: () => initPasswordResetSessionResource(factory),
-        passwordReset: () => initPasswordResetResource(factory, locationInfo),
+        passwordLogin: () => initPasswordLoginResource(locationInfo, foreground, background),
+        passwordResetSession: () => initPasswordResetSessionResource(foreground, background),
+        passwordReset: () => initPasswordResetResource(locationInfo, foreground, background),
     }
 
-    type ActionProxyFactory = Readonly<{
-        passwordLogin: PasswordLoginAction
-        passwordResetSession: PasswordResetSessionAction
-        passwordReset: PasswordResetAction
-    }>
-
-    function initActionProxyFactory(): ActionProxyFactory {
+    function initActionProxyFactory(): LoginBackgroundAction {
         return {
-            passwordLogin: {
+            login: {
                 login: () => proxy.passwordLogin.login.init(),
             },
-            passwordResetSession: {
+            resetSession: {
                 startSession: () => proxy.passwordResetSession.startSession.init(),
                 checkStatus: () => proxy.passwordResetSession.checkStatus.init(),
             },
-            passwordReset: {
+            reset: {
                 reset: (locationInfo) => proxy.passwordReset.reset.init(locationInfo),
             },
         }

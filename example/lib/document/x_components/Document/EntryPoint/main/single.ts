@@ -2,25 +2,21 @@ import { env } from "../../../../../y_environment/env"
 
 import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
 
-import { detectMenuTarget } from "../../../../../auth/x_components/Outline/Menu/impl/location"
-import { detectContentPath } from "../impl/location"
+import { detectMenuTarget } from "../../../../../auth/permission/menu/impl/location"
+import { detectContentPath } from "../../../../content/impl/location"
 
 import { initErrorComponent } from "../../../../../available/x_components/Error/error/impl"
 import { initMenuListComponent } from "../../../../../auth/x_components/Outline/menuList/impl"
 import { initBreadcrumbListComponent } from "../../../../../auth/x_components/Outline/breadcrumbList/impl"
 import { initContentComponent } from "../../content/impl"
 
-import { initNotifyAction } from "../../../../../available/x_components/Error/EntryPoint/main/action/notify"
-import {
-    initCredentialAction,
-    initDocumentMenuAction,
-} from "../../../../../auth/x_components/Outline/Menu/main/core"
-
-import { loadContent } from "../../../../content/impl/core"
+import { initNotifyAction } from "../../../../../available/notify/main/notify"
+import { initCredentialAction } from "../../../../../auth/common/credential/main/credential"
+import { initDocumentMenuAction } from "../../../../../auth/permission/menu/main/documentMenu"
 
 import { DocumentEntryPoint } from "../entryPoint"
 
-import { ContentAction } from "../../../../content/action"
+import { initContentAction } from "../../../../content/main/content"
 
 export function newDocumentAsSingle(): DocumentEntryPoint {
     const webStorage = localStorage
@@ -57,11 +53,5 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
             resource.breadcrumbList.terminate()
             resource.content.terminate()
         },
-    }
-}
-
-function initContentAction(): ContentAction {
-    return {
-        loadContent: loadContent(),
     }
 }

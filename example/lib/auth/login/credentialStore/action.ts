@@ -1,14 +1,10 @@
-import { ForceRenewEvent, RenewEvent } from "./event"
+import { ForceRenewEvent, LogoutEvent, RenewEvent } from "./event"
 
 import { SetContinuousRenewEvent, StoreAuthCredential } from "./data"
 
 export type RenewAction = Readonly<{
     renew: RenewPod
     forceRenew: ForceRenewPod
-}>
-
-export type SetContinuousRenewAction = Readonly<{
-    setContinuousRenew: SetContinuousRenewPod
 }>
 
 export interface RenewPod {
@@ -25,11 +21,26 @@ export interface ForceRenew {
     (post: Post<ForceRenewEvent>): void
 }
 
+export type SetContinuousRenewAction = Readonly<{
+    setContinuousRenew: SetContinuousRenewPod
+}>
+
 export interface SetContinuousRenewPod {
     (): SetContinuousRenew
 }
 export interface SetContinuousRenew {
     (authCredential: StoreAuthCredential, post: Post<SetContinuousRenewEvent>): void
+}
+
+export type LogoutAction = Readonly<{
+    logout: LogoutPod
+}>
+
+export interface LogoutPod {
+    (): Logout
+}
+export interface Logout {
+    (post: Post<LogoutEvent>): void
 }
 
 interface Post<T> {

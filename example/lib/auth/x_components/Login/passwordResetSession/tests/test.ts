@@ -1,7 +1,7 @@
 import {
-    PasswordResetSessionConfig,
-    newTestPasswordResetSessionResource,
-    PasswordResetSessionRemoteAccess,
+    PasswordResetSessionTestConfig,
+    newPasswordResetSessionTestResource,
+    PasswordResetSessionTestRemoteAccess,
 } from "./core"
 
 import {
@@ -31,11 +31,11 @@ describe("PasswordResetSession", () => {
     test("submit valid login-id", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
-        resource.passwordResetSession.addStateHandler(initChecker())
+        resource.resetSession.addStateHandler(initChecker())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
 
-        resource.passwordResetSession.startSession(resource.form.getStartSessionFields())
+        resource.resetSession.startSession(resource.form.getStartSessionFields())
 
         function initChecker() {
             return initAsyncStateChecker(
@@ -75,11 +75,11 @@ describe("PasswordResetSession", () => {
         // wait for delayed timeout
         const { resource } = waitPasswordResetSessionResource()
 
-        resource.passwordResetSession.addStateHandler(initChecker())
+        resource.resetSession.addStateHandler(initChecker())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
 
-        resource.passwordResetSession.startSession(resource.form.getStartSessionFields())
+        resource.resetSession.startSession(resource.form.getStartSessionFields())
 
         function initChecker() {
             return initAsyncStateChecker(
@@ -120,11 +120,11 @@ describe("PasswordResetSession", () => {
         // wait for send token check limit
         const { resource } = longSendingPasswordResetSessionResource()
 
-        resource.passwordResetSession.addStateHandler(initChecker())
+        resource.resetSession.addStateHandler(initChecker())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
 
-        resource.passwordResetSession.startSession(resource.form.getStartSessionFields())
+        resource.resetSession.startSession(resource.form.getStartSessionFields())
 
         function initChecker() {
             return initAsyncStateChecker(
@@ -193,12 +193,12 @@ describe("PasswordResetSession", () => {
     test("submit without fields", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
-        resource.passwordResetSession.addStateHandler(initChecker())
+        resource.resetSession.addStateHandler(initChecker())
 
         // try to start session without fields
         //resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
 
-        resource.passwordResetSession.startSession(resource.form.getStartSessionFields())
+        resource.resetSession.startSession(resource.form.getStartSessionFields())
 
         function initChecker() {
             return initAsyncStateChecker(
@@ -434,26 +434,26 @@ describe("PasswordResetSession", () => {
 function standardPasswordResetSessionResource() {
     const config = standardConfig()
     const simulator = standardRemoteAccess()
-    const resource = newTestPasswordResetSessionResource(config, simulator)
+    const resource = newPasswordResetSessionTestResource(config, simulator)
 
     return { resource }
 }
 function waitPasswordResetSessionResource() {
     const config = standardConfig()
     const simulator = waitRemoteAccess()
-    const resource = newTestPasswordResetSessionResource(config, simulator)
+    const resource = newPasswordResetSessionTestResource(config, simulator)
 
     return { resource }
 }
 function longSendingPasswordResetSessionResource() {
     const config = standardConfig()
     const simulator = longSendingSimulator()
-    const resource = newTestPasswordResetSessionResource(config, simulator)
+    const resource = newPasswordResetSessionTestResource(config, simulator)
 
     return { resource }
 }
 
-function standardConfig(): PasswordResetSessionConfig {
+function standardConfig(): PasswordResetSessionTestConfig {
     return {
         application: {
             secureScriptPath: {
@@ -471,7 +471,7 @@ function standardConfig(): PasswordResetSessionConfig {
         },
     }
 }
-function standardRemoteAccess(): PasswordResetSessionRemoteAccess {
+function standardRemoteAccess(): PasswordResetSessionTestRemoteAccess {
     return {
         startSession: initStartSessionSimulateRemoteAccess(simulateStartSession, {
             wait_millisecond: 0,
@@ -482,7 +482,7 @@ function standardRemoteAccess(): PasswordResetSessionRemoteAccess {
         getStatus: getStatusRemoteAccess(standardGetStatusResponse(), { wait_millisecond: 0 }),
     }
 }
-function waitRemoteAccess(): PasswordResetSessionRemoteAccess {
+function waitRemoteAccess(): PasswordResetSessionTestRemoteAccess {
     return {
         startSession: initStartSessionSimulateRemoteAccess(simulateStartSession, {
             wait_millisecond: 3,
@@ -493,7 +493,7 @@ function waitRemoteAccess(): PasswordResetSessionRemoteAccess {
         getStatus: getStatusRemoteAccess(standardGetStatusResponse(), { wait_millisecond: 0 }),
     }
 }
-function longSendingSimulator(): PasswordResetSessionRemoteAccess {
+function longSendingSimulator(): PasswordResetSessionTestRemoteAccess {
     return {
         startSession: initStartSessionSimulateRemoteAccess(simulateStartSession, {
             wait_millisecond: 0,

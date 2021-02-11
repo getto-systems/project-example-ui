@@ -3,7 +3,7 @@ import { LoginEvent } from "./event"
 import { FormConvertResult } from "../../../sub/getto-form/form/data"
 import { LoginFields } from "./data"
 
-export type PasswordLoginAction = Readonly<{
+export type LoginAction = Readonly<{
     login: LoginPod
 }>
 

@@ -1,4 +1,4 @@
-import { newTestNotFoundResource } from "../../EntryPoint/tests/core"
+import { newNotFoundTestResource } from "./core"
 
 import { CurrentVersionComponentState } from "../component"
 
@@ -35,7 +35,7 @@ describe("NotFound", () => {
 
 function standardResource() {
     const version = standardVersion()
-    const resource = newTestNotFoundResource(version)
+    const resource = newNotFoundTestResource(version)
 
     return { resource }
 }

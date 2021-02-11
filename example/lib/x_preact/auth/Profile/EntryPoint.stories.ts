@@ -12,7 +12,7 @@ import {
 import { SeasonInfoMockProps } from "../../../example/x_components/Outline/seasonInfo/mock"
 import { MenuListMockProps } from "../../../auth/x_components/Outline/menuList/mock"
 import { BreadcrumbListMockProps } from "../../../auth/x_components/Outline/breadcrumbList/mock"
-import { ExampleMockProps } from "../../../auth/x_components/Profile/logout/mock"
+import { LogoutMockProps } from "../../../auth/x_components/Profile/logout/mock"
 
 export default {
     title: "Auth/Profile",
@@ -34,7 +34,7 @@ const Template: Story<MockProps> = (args) => {
         seasonInfo: initMockPropsPasser<SeasonInfoMockProps>(),
         menuList: initMockPropsPasser<MenuListMockProps>(),
         breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
-        example: initMockPropsPasser<ExampleMockProps>(),
+        logout: initMockPropsPasser<LogoutMockProps>(),
     }
     const entryPoint = newMockDashboard(passer)
     return h(Preview, { args })
@@ -52,7 +52,7 @@ const Template: Story<MockProps> = (args) => {
                 label: props.args.breadcrumbLabel,
                 icon: props.args.breadcrumbIcon,
             })
-            passer.example.update({ type: "success", year: props.args.seasonYear })
+            passer.logout.update({ type: "failed", err: "logout error" })
         })
         return html`
             <style>

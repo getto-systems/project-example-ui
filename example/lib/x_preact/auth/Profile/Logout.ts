@@ -2,11 +2,10 @@ import { VNode } from "preact"
 import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
-import { box_double } from "../../../z_vendor/getto-css/preact/design/box"
-import { field } from "../../../z_vendor/getto-css/preact/design/form"
+import { box } from "../../../z_vendor/getto-css/preact/design/box"
+import { button_delete } from "../../../z_vendor/getto-css/preact/design/form"
 import { notice_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
-import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
+import { v_medium } from "../../../z_vendor/getto-css/preact/design/alignment"
 
 import { useComponent } from "../../z_common/hooks"
 
@@ -15,52 +14,59 @@ import {
     initialLogoutComponentState,
 } from "../../../auth/x_components/Profile/logout/component"
 
-import { Season, SeasonError } from "../../../example/shared/season/data"
+import { StorageError } from "../../../auth/common/credential/data"
 
 type Props = Readonly<{
-    example: LogoutComponent
+    logout: LogoutComponent
 }>
-export function Logout({ example }: Props): VNode {
-    const state = useComponent(example, initialLogoutComponentState)
+export function Logout({ logout }: Props): VNode {
+    const state = useComponent(logout, initialLogoutComponentState)
     useEffect(() => {
-        example.load()
-    }, [])
+        switch (state.type) {
+            case "succeed-to-logout":
+                // credential が削除されているので、reload するとログイン画面になる
+                location.reload()
+                break
+        }
+    }, [state])
 
     switch (state.type) {
         case "initial-logout":
-            return EMPTY_CONTENT
+        case "succeed-to-logout":
+            return logoutBox({ success: true })
 
-        case "succeed-to-load":
-            return seasonBox(seasonInfo(state.season))
-
-        case "failed-to-load":
-            return seasonBox(loadError(state.err))
+        case "failed-to-logout":
+            return logoutBox({ success: false, err: state.err })
     }
-}
 
-function seasonBox(body: VNodeContent): VNode {
-    return box_double({
-        title: "GETTO Example",
-        body: field({
-            title: "シーズン",
-            body,
-        }),
-    })
-}
+    type LogoutBoxContent = Readonly<{ success: true }> | Readonly<{ success: false; err: StorageError }>
 
-function seasonInfo(season: Season): VNodeContent {
-    return season.year
-}
+    function logoutBox(content: LogoutBoxContent): VNode {
+        return box({
+            title: "ログアウト",
+            body: [button_delete({ label: "ログアウト", state: "normal", onClick }), ...error()],
+        })
 
-function loadError(err: SeasonError): VNodeContent {
-    return [notice_alert("ロードエラー"), ...detail()]
-
-    function detail(): VNode[] {
-        if (err.err.length === 0) {
-            return []
+        function onClick() {
+            logout.submit()
         }
-        return [v_small(), html`<small><p>詳細: ${err.err}</p></small>`]
+
+        function error(): VNode[] {
+            if (content.success) {
+                return []
+            }
+            return [
+                v_medium(),
+                notice_alert("ログアウトの処理中にエラーが発生しました"),
+                ...detail(content.err),
+            ]
+
+            function detail(err: StorageError): VNode[] {
+                if (err.err.length === 0) {
+                    return []
+                }
+                return [html`<p>詳細: ${err.err}</p>`]
+            }
+        }
     }
 }
-
-const EMPTY_CONTENT = html``

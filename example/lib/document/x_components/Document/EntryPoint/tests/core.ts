@@ -1,14 +1,11 @@
-import { initTestNotifyAction } from "../../../../../available/x_components/Error/EntryPoint/tests/core"
-import {
-    initTestCredentialAction,
-    initTestMenuAction,
-} from "../../../../../auth/x_components/Outline/Menu/tests/core"
+import { initTestNotifyAction } from "../../../../../available/notify/tests/notify"
+import { initTestCredentialAction } from "../../../../../auth/common/credential/tests/credential"
+import { initTestMenuAction } from "../../../../../auth/permission/menu/tests/menu"
 
-import { detectMenuTarget } from "../../../../../auth/x_components/Outline/Menu/impl/location"
-import { detectContentPath } from "../impl/location"
+import { detectMenuTarget } from "../../../../../auth/permission/menu/impl/location"
+import { detectContentPath } from "../../../../content/impl/location"
 
 import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
-import { loadContent } from "../../../../content/impl/core"
 
 import { initErrorComponent } from "../../../../../available/x_components/Error/error/impl"
 import { initBreadcrumbListComponent } from "../../../../../auth/x_components/Outline/breadcrumbList/impl"
@@ -23,7 +20,7 @@ import {
 } from "../../../../../auth/permission/menu/infra"
 
 import { DocumentResource } from "../entryPoint"
-import { ContentAction } from "../../../../content/action"
+import { initTestContentAction } from "../../../../content/tests/content"
 
 export type DocumentRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
@@ -32,7 +29,7 @@ export type DocumentRepository = Readonly<{
 export type DocumentRemoteAccess = Readonly<{
     loadMenuBadge: LoadMenuBadgeRemoteAccess
 }>
-export function newDocumentResource(
+export function newTestDocumentResource(
     version: string,
     currentURL: URL,
     menuTree: MenuTree,
@@ -44,7 +41,7 @@ export function newDocumentResource(
             notify: initTestNotifyAction(),
             credential: initTestCredentialAction(repository.apiCredentials),
             menu: initTestMenuAction(menuTree, repository.menuExpands, remote.loadMenuBadge),
-            content: initContentAction(),
+            content: initTestContentAction(),
         },
         components: {
             error: initErrorComponent,
@@ -64,10 +61,4 @@ export function newDocumentResource(
     }
 
     return initDocumentResource(factory, locationInfo)
-}
-
-function initContentAction(): ContentAction {
-    return {
-        loadContent: loadContent(),
-    }
 }

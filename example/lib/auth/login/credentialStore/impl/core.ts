@@ -1,6 +1,6 @@
-import { RenewInfra, SetContinuousRenewInfra } from "../infra"
+import { LogoutInfra, RenewInfra, SetContinuousRenewInfra } from "../infra"
 
-import { ForceRenewPod, RenewPod, SetContinuousRenewPod } from "../action"
+import { ForceRenewPod, LogoutPod, RenewPod, SetContinuousRenewPod } from "../action"
 
 import { ForceRenewEvent } from "../event"
 
@@ -138,6 +138,15 @@ export const setContinuousRenew = (infra: SetContinuousRenewInfra): SetContinuou
 
         return NEXT
     }
+}
+
+export const logout = ({ authCredentials }: LogoutInfra): LogoutPod => () => async (post) => {
+    const result = authCredentials.removeAuthCredential()
+    if (!result.success) {
+        post({ type: "failed-to-logout", err: result.err })
+        return
+    }
+    post({ type: "succeed-to-logout" })
 }
 
 interface Post<T> {

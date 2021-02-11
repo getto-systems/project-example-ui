@@ -1,13 +1,16 @@
-import { initPasswordLoginAction } from "../action/login"
-import { initPasswordResetAction, initPasswordResetSessionAction } from "../action/reset"
+import { initPasswordLoginAction } from "../../../../../login/passwordLogin/main/login"
+import {
+    initPasswordResetAction,
+    initPasswordResetSessionAction,
+} from "../../../../../profile/passwordReset/main/reset"
 
-import { LoginPod, PasswordLoginAction } from "../../../../../login/passwordLogin/action"
+import { LoginPod, LoginAction } from "../../../../../login/passwordLogin/action"
 import {
     StartSessionPod,
     CheckStatusPod,
     ResetPod,
-    PasswordResetAction,
-    PasswordResetSessionAction,
+    ResetAction,
+    ResetSessionAction,
 } from "../../../../../profile/passwordReset/action"
 
 import { LoginEvent } from "../../../../../login/passwordLogin/event"
@@ -30,9 +33,9 @@ import {
 
 export function initLoginWorker(worker: Worker): void {
     const material: Material = {
-        passwordLogin: initPasswordLoginAction(),
-        passwordResetSession: initPasswordResetSessionAction(),
-        passwordReset: initPasswordResetAction(),
+        login: initPasswordLoginAction(),
+        resetSession: initPasswordResetSessionAction(),
+        reset: initPasswordResetAction(),
     }
 
     initLoginWorkerAsBackground(material, worker)
@@ -150,9 +153,9 @@ class ResetHandler {
 }
 
 type Material = Readonly<{
-    passwordLogin: PasswordLoginAction
-    passwordResetSession: PasswordResetSessionAction
-    passwordReset: PasswordResetAction
+    login: LoginAction
+    resetSession: ResetSessionAction
+    reset: ResetAction
 }>
 
 function initLoginWorkerAsBackground(material: Material, worker: Worker): void {
@@ -184,24 +187,18 @@ type Handler = Readonly<{
 function initHandler(material: Material, postBackgroundMessage: Post<BackgroundMessage>): Handler {
     return {
         passwordLogin: {
-            login: new LoginHandler(material.passwordLogin.login, (response) => {
+            login: new LoginHandler(material.login.login, (response) => {
                 postBackgroundMessage({ type: "login", response })
             }),
         },
         passwordReset: {
-            startSession: new StartSessionHandler(
-                material.passwordResetSession.startSession,
-                (response) => {
-                    postBackgroundMessage({ type: "startSession", response })
-                }
-            ),
-            checkStatus: new CheckStatusHandler(
-                material.passwordResetSession.checkStatus,
-                (response) => {
-                    postBackgroundMessage({ type: "checkStatus", response })
-                }
-            ),
-            reset: new ResetHandler(material.passwordReset.reset, (response) => {
+            startSession: new StartSessionHandler(material.resetSession.startSession, (response) => {
+                postBackgroundMessage({ type: "startSession", response })
+            }),
+            checkStatus: new CheckStatusHandler(material.resetSession.checkStatus, (response) => {
+                postBackgroundMessage({ type: "checkStatus", response })
+            }),
+            reset: new ResetHandler(material.reset.reset, (response) => {
                 postBackgroundMessage({ type: "reset", response })
             }),
         },

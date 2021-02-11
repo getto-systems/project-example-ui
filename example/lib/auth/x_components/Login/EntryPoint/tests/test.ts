@@ -1,30 +1,31 @@
-import { initTestAuthCredentialStorage, initLoginViewLocationInfo } from "./core"
-
 import {
-    PasswordLoginConfig,
-    newTestPasswordLoginResource,
-    PasswordLoginRepository,
-    PasswordLoginRemoteAccess,
+    PasswordLoginTestConfig,
+    newPasswordLoginTestResource,
+    PasswordLoginTestRepository,
+    PasswordLoginTestRemoteAccess,
 } from "../../passwordLogin/tests/core"
 import {
-    PasswordResetConfig,
-    newTestPasswordResetResource,
-    PasswordResetRepository,
-    PasswordResetRemoteAccess,
+    PasswordResetTestConfig,
+    newPasswordResetTestResource,
+    PasswordResetTestRepository,
+    PasswordResetTestRemoteAccess,
 } from "../../passwordReset/tests/core"
 import {
-    PasswordResetSessionConfig,
-    newTestPasswordResetSessionResource,
-    PasswordResetSessionRemoteAccess,
+    PasswordResetSessionTestConfig,
+    newPasswordResetSessionTestResource,
+    PasswordResetSessionTestRemoteAccess,
 } from "../../passwordResetSession/tests/core"
 import {
-    RenewCredentialConfig,
-    newTestRenewCredentialResource,
-    RenewCredentialRepository,
-    RenewCredentialRemoteAccess,
+    RenewCredentialTestConfig,
+    newRenewCredentialTestResource,
+    RenewCredentialTestRepository,
+    RenewCredentialTestRemoteAccess,
 } from "../../renewCredential/tests/core"
 
+import { initLoginViewLocationInfo } from "../impl/location"
+
 import { initStaticClock } from "../../../../../z_infra/clock/simulate"
+import { initTestAuthCredentialStorage } from "../../../../login/credentialStore/tests/storage"
 import { initLoginSimulateRemoteAccess } from "../../../../login/passwordLogin/impl/remote/login/simulate"
 import { initRenewSimulateRemoteAccess } from "../../../../login/credentialStore/impl/remote/renew/simulate"
 import { initResetSimulateRemoteAccess } from "../../../../profile/passwordReset/impl/remote/reset/simulate"
@@ -82,7 +83,7 @@ describe("LoginView", () => {
                         break
 
                     case "renew-credential":
-                        state.resource.renewCredential.renew()
+                        state.resource.renew.request()
                         break
 
                     case "password-login":
@@ -125,7 +126,7 @@ describe("LoginView", () => {
                         break
 
                     case "renew-credential":
-                        state.resource.renewCredential.renew()
+                        state.resource.renew.request()
                         break
 
                     case "password-reset-session":
@@ -168,7 +169,7 @@ describe("LoginView", () => {
                         break
 
                     case "renew-credential":
-                        state.resource.renewCredential.renew()
+                        state.resource.renew.request()
                         break
 
                     case "password-reset":
@@ -230,14 +231,15 @@ describe("LoginView", () => {
     })
 })
 
-type Repository = PasswordLoginRepository & PasswordResetRepository & RenewCredentialRepository
+type Repository = PasswordLoginTestRepository &
+    PasswordResetTestRepository &
+    RenewCredentialTestRepository
 
 function standardLoginView() {
     const currentURL = standardURL()
     const repository = standardRepository()
     const clock = standardClock()
-    const locationInfo = initLoginViewLocationInfo(currentURL)
-    const view = new View(locationInfo, {
+    const view = new View(initLoginViewLocationInfo(currentURL), {
         renewCredential: (setup) =>
             standardRenewCredentialResource(currentURL, repository, clock, setup),
         passwordLogin: () => standardPasswordLoginResource(currentURL, repository, clock),
@@ -251,8 +253,7 @@ function passwordResetSessionLoginView() {
     const currentURL = passwordResetSessionURL()
     const repository = standardRepository()
     const clock = standardClock()
-    const locationInfo = initLoginViewLocationInfo(currentURL)
-    const view = new View(locationInfo, {
+    const view = new View(initLoginViewLocationInfo(currentURL), {
         renewCredential: (setup) =>
             standardRenewCredentialResource(currentURL, repository, clock, setup),
         passwordLogin: () => standardPasswordLoginResource(currentURL, repository, clock),
@@ -266,8 +267,7 @@ function passwordResetLoginView() {
     const currentURL = passwordResetURL()
     const repository = standardRepository()
     const clock = standardClock()
-    const locationInfo = initLoginViewLocationInfo(currentURL)
-    const view = new View(locationInfo, {
+    const view = new View(initLoginViewLocationInfo(currentURL), {
         renewCredential: (setup) =>
             standardRenewCredentialResource(currentURL, repository, clock, setup),
         passwordLogin: () => standardPasswordLoginResource(currentURL, repository, clock),
@@ -281,17 +281,17 @@ function passwordResetLoginView() {
 function standardPasswordLoginResource(currentURL: URL, repository: Repository, clock: Clock) {
     const config = standardPasswordLoginConfig()
     const simulator = standardPasswordLoginRemoteAccess()
-    return newTestPasswordLoginResource(currentURL, config, repository, simulator, clock)
+    return newPasswordLoginTestResource(currentURL, config, repository, simulator, clock)
 }
 function standardPasswordResetResource(currentURL: URL, repository: Repository, clock: Clock) {
     const config = standardPasswordResetConfig()
     const simulator = standardPasswordResetRemoteAccess()
-    return newTestPasswordResetResource(currentURL, config, repository, simulator, clock)
+    return newPasswordResetTestResource(currentURL, config, repository, simulator, clock)
 }
 function standardPasswordResetSessionResource() {
     const config = standardPasswordResetSessionConfig()
     const simulator = standardPasswordResetSessionRemoteAccess()
-    return newTestPasswordResetSessionResource(config, simulator)
+    return newPasswordResetSessionTestResource(config, simulator)
 }
 function standardRenewCredentialResource(
     currentURL: URL,
@@ -301,7 +301,7 @@ function standardRenewCredentialResource(
 ) {
     const config = standardRenewCredentialConfig()
     const simulator = standardRenewCredentialSimulator()
-    return newTestRenewCredentialResource(currentURL, config, repository, simulator, clock, setup)
+    return newRenewCredentialTestResource(currentURL, config, repository, simulator, clock, setup)
 }
 
 function standardURL(): URL {
@@ -314,7 +314,7 @@ function passwordResetURL(): URL {
     return new URL("https://example.com/index.html?_password_reset=reset")
 }
 
-function standardPasswordLoginConfig(): PasswordLoginConfig {
+function standardPasswordLoginConfig(): PasswordLoginTestConfig {
     return {
         application: {
             secureScriptPath: {
@@ -334,7 +334,7 @@ function standardPasswordLoginConfig(): PasswordLoginConfig {
         },
     }
 }
-function standardPasswordResetConfig(): PasswordResetConfig {
+function standardPasswordResetConfig(): PasswordResetTestConfig {
     return {
         application: {
             secureScriptPath: {
@@ -354,7 +354,7 @@ function standardPasswordResetConfig(): PasswordResetConfig {
         },
     }
 }
-function standardPasswordResetSessionConfig(): PasswordResetSessionConfig {
+function standardPasswordResetSessionConfig(): PasswordResetSessionTestConfig {
     return {
         application: {
             secureScriptPath: {
@@ -372,7 +372,7 @@ function standardPasswordResetSessionConfig(): PasswordResetSessionConfig {
         },
     }
 }
-function standardRenewCredentialConfig(): RenewCredentialConfig {
+function standardRenewCredentialConfig(): RenewCredentialTestConfig {
     return {
         application: {
             secureScriptPath: {
@@ -394,19 +394,19 @@ function standardRenewCredentialConfig(): RenewCredentialConfig {
     }
 }
 
-function standardPasswordLoginRemoteAccess(): PasswordLoginRemoteAccess {
+function standardPasswordLoginRemoteAccess(): PasswordLoginTestRemoteAccess {
     return {
         login: initLoginSimulateRemoteAccess(simulateLogin, { wait_millisecond: 0 }),
         renew: initRenewSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
     }
 }
-function standardPasswordResetRemoteAccess(): PasswordResetRemoteAccess {
+function standardPasswordResetRemoteAccess(): PasswordResetTestRemoteAccess {
     return {
         reset: initResetSimulateRemoteAccess(simulateReset, { wait_millisecond: 0 }),
         renew: initRenewSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
     }
 }
-function standardPasswordResetSessionRemoteAccess(): PasswordResetSessionRemoteAccess {
+function standardPasswordResetSessionRemoteAccess(): PasswordResetSessionTestRemoteAccess {
     return {
         startSession: initStartSessionSimulateRemoteAccess(simulateStartSession, {
             wait_millisecond: 0,
@@ -417,7 +417,7 @@ function standardPasswordResetSessionRemoteAccess(): PasswordResetSessionRemoteA
         getStatus: initGetStatusSimulateRemoteAccess(simulateGetStatus, { wait_millisecond: 0 }),
     }
 }
-function standardRenewCredentialSimulator(): RenewCredentialRemoteAccess {
+function standardRenewCredentialSimulator(): RenewCredentialTestRemoteAccess {
     return {
         renew: initRenewSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
     }

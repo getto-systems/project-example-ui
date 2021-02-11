@@ -1,6 +1,6 @@
 import { FindCurrentVersionEvent } from "./event"
 
-export type CurrentVersionAction = Readonly<{
+export type FindCurrentVersionAction = Readonly<{
     findCurrentVersion: FindCurrentVersionPod
 }>
 

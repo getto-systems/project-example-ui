@@ -1,4 +1,4 @@
-import { DocumentRepository, DocumentRemoteAccess, newDocumentResource } from "../../EntryPoint/tests/core"
+import { DocumentRepository, DocumentRemoteAccess, newTestDocumentResource } from "../../EntryPoint/tests/core"
 
 import { initMemoryTypedStorage } from "../../../../../z_infra/storage/memory"
 import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/menu/impl/remote/menuBadge/simulate"
@@ -48,7 +48,7 @@ function standardResource() {
     const menuTree = standardMenuTree()
     const repository = standardRepository()
     const simulator = standardSimulator()
-    const resource = newDocumentResource(version, url, menuTree, repository, simulator)
+    const resource = newTestDocumentResource(version, url, menuTree, repository, simulator)
 
     return { repository, resource }
 }

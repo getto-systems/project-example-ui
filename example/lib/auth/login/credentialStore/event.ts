@@ -17,3 +17,7 @@ export type ForceRenewEvent =
     | Readonly<{ type: "failed-to-renew"; err: RenewError }>
     | Readonly<{ type: "storage-error"; err: StorageError }>
     | Readonly<{ type: "succeed-to-renew"; authCredential: AuthCredential }>
+
+export type LogoutEvent =
+    | Readonly<{ type: "failed-to-logout"; err: StorageError }>
+    | Readonly<{ type: "succeed-to-logout" }>

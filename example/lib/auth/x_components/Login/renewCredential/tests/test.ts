@@ -1,12 +1,12 @@
 import {
-    RenewCredentialConfig,
-    newTestRenewCredentialResource,
-    RenewCredentialRepository,
-    RenewCredentialRemoteAccess,
+    RenewCredentialTestConfig,
+    newRenewCredentialTestResource,
+    RenewCredentialTestRepository,
+    RenewCredentialTestRemoteAccess,
 } from "./core"
-import { initTestAuthCredentialStorage } from "../../EntryPoint/tests/core"
 
 import { initStaticClock, StaticClock } from "../../../../../z_infra/clock/simulate"
+import { initTestAuthCredentialStorage } from "../../../../login/credentialStore/tests/storage"
 import { initRenewSimulateRemoteAccess } from "../../../../login/credentialStore/impl/remote/renew/simulate"
 import { initAuthCredentialRepository } from "../../../../login/credentialStore/impl/repository/authCredential"
 
@@ -40,9 +40,9 @@ describe("RenewCredential", () => {
     test("instant load", (done) => {
         const { repository, clock, resource } = instantRenewCredentialResource()
 
-        resource.renewCredential.addStateHandler(stateHandler())
+        resource.renew.addStateHandler(stateHandler())
 
-        resource.renewCredential.renew()
+        resource.renew.request()
 
         function stateHandler(): Post<RenewCredentialComponentState> {
             const stack: RenewCredentialComponentState[] = []
@@ -57,7 +57,7 @@ describe("RenewCredential", () => {
                         break
 
                     case "try-to-instant-load":
-                        resource.renewCredential.succeedToInstantLoad()
+                        resource.renew.succeedToInstantLoad()
                         break
 
                     case "succeed-to-set-continuous-renew":
@@ -97,9 +97,9 @@ describe("RenewCredential", () => {
     test("instant load failed", (done) => {
         const { repository, clock, resource } = instantRenewCredentialResource()
 
-        resource.renewCredential.addStateHandler(stateHandler())
+        resource.renew.addStateHandler(stateHandler())
 
-        resource.renewCredential.renew()
+        resource.renew.request()
 
         function stateHandler(): Post<RenewCredentialComponentState> {
             const stack: RenewCredentialComponentState[] = []
@@ -114,7 +114,7 @@ describe("RenewCredential", () => {
                         break
 
                     case "try-to-instant-load":
-                        resource.renewCredential.failedToInstantLoad()
+                        resource.renew.failedToInstantLoad()
                         break
 
                     case "required-to-login":
@@ -158,9 +158,9 @@ describe("RenewCredential", () => {
     test("renew stored credential", (done) => {
         const { repository, clock, resource } = standardRenewCredentialResource()
 
-        resource.renewCredential.addStateHandler(stateHandler())
+        resource.renew.addStateHandler(stateHandler())
 
-        resource.renewCredential.renew()
+        resource.renew.request()
 
         function stateHandler(): Post<RenewCredentialComponentState> {
             const stack: RenewCredentialComponentState[] = []
@@ -213,9 +213,9 @@ describe("RenewCredential", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitRenewCredentialResource()
 
-        resource.renewCredential.addStateHandler(stateHandler())
+        resource.renew.addStateHandler(stateHandler())
 
-        resource.renewCredential.renew()
+        resource.renew.request()
 
         function stateHandler(): Post<RenewCredentialComponentState> {
             const stack: RenewCredentialComponentState[] = []
@@ -269,9 +269,9 @@ describe("RenewCredential", () => {
         // empty credential
         const { repository, resource } = emptyRenewCredentialResource()
 
-        resource.renewCredential.addStateHandler(stateHandler())
+        resource.renew.addStateHandler(stateHandler())
 
-        resource.renewCredential.renew()
+        resource.renew.request()
 
         function stateHandler(): Post<RenewCredentialComponentState> {
             const stack: RenewCredentialComponentState[] = []
@@ -314,9 +314,9 @@ describe("RenewCredential", () => {
     test("load error", (done) => {
         const { resource } = standardRenewCredentialResource()
 
-        resource.renewCredential.addStateHandler(stateHandler())
+        resource.renew.addStateHandler(stateHandler())
 
-        resource.renewCredential.loadError({ type: "infra-error", err: "load error" })
+        resource.renew.loadError({ type: "infra-error", err: "load error" })
 
         function stateHandler(): Post<RenewCredentialComponentState> {
             const stack: RenewCredentialComponentState[] = []
@@ -364,9 +364,16 @@ function standardRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newTestRenewCredentialResource(currentURL, config, repository, simulator, clock, () => {
-        // ここでは特に何もしない
-    })
+    const resource = newRenewCredentialTestResource(
+        currentURL,
+        config,
+        repository,
+        simulator,
+        clock,
+        () => {
+            // ここでは特に何もしない
+        }
+    )
 
     return { repository, clock, resource }
 }
@@ -376,9 +383,16 @@ function instantRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = instantAvailableClock()
-    const resource = newTestRenewCredentialResource(currentURL, config, repository, simulator, clock, () => {
-        // ここでは特に何もしない
-    })
+    const resource = newRenewCredentialTestResource(
+        currentURL,
+        config,
+        repository,
+        simulator,
+        clock,
+        () => {
+            // ここでは特に何もしない
+        }
+    )
 
     return { repository, clock, resource }
 }
@@ -388,9 +402,16 @@ function waitRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = waitSimulator()
     const clock = standardClock()
-    const resource = newTestRenewCredentialResource(currentURL, config, repository, simulator, clock, () => {
-        // ここでは特に何もしない
-    })
+    const resource = newRenewCredentialTestResource(
+        currentURL,
+        config,
+        repository,
+        simulator,
+        clock,
+        () => {
+            // ここでは特に何もしない
+        }
+    )
 
     return { repository, clock, resource }
 }
@@ -400,9 +421,16 @@ function emptyRenewCredentialResource() {
     const repository = emptyRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newTestRenewCredentialResource(currentURL, config, repository, simulator, clock, () => {
-        // ここでは特に何もしない
-    })
+    const resource = newRenewCredentialTestResource(
+        currentURL,
+        config,
+        repository,
+        simulator,
+        clock,
+        () => {
+            // ここでは特に何もしない
+        }
+    )
 
     return { repository, resource }
 }
@@ -410,7 +438,7 @@ function emptyRenewCredentialResource() {
 function standardURL(): URL {
     return new URL("https://example.com/index.html")
 }
-function standardConfig(): RenewCredentialConfig {
+function standardConfig(): RenewCredentialTestConfig {
     return {
         application: {
             secureScriptPath: {
@@ -431,7 +459,7 @@ function standardConfig(): RenewCredentialConfig {
         },
     }
 }
-function standardRepository(): RenewCredentialRepository {
+function standardRepository(): RenewCredentialTestRepository {
     return {
         authCredentials: initAuthCredentialRepository(
             initTestAuthCredentialStorage({
@@ -442,7 +470,7 @@ function standardRepository(): RenewCredentialRepository {
         ),
     }
 }
-function emptyRepository(): RenewCredentialRepository {
+function emptyRepository(): RenewCredentialTestRepository {
     return {
         authCredentials: initAuthCredentialRepository(
             initTestAuthCredentialStorage({
@@ -453,12 +481,12 @@ function emptyRepository(): RenewCredentialRepository {
         ),
     }
 }
-function standardSimulator(): RenewCredentialRemoteAccess {
+function standardSimulator(): RenewCredentialTestRemoteAccess {
     return {
         renew: renewRemoteAccess({ wait_millisecond: 0 }),
     }
 }
-function waitSimulator(): RenewCredentialRemoteAccess {
+function waitSimulator(): RenewCredentialTestRemoteAccess {
     return {
         // wait for delayed timeout
         renew: renewRemoteAccess({ wait_millisecond: 3 }),
