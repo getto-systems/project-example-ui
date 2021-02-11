@@ -128,7 +128,6 @@ export function initTestPasswordResetAction(
     }
 }
 
-// TODO こいつらは実際に使うやつと同じなのでは？
 export function initLoginViewLocationInfo(currentURL: URL): LoginViewLocationInfo {
     return {
         login: {
