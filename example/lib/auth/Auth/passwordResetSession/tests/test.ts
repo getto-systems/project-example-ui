@@ -571,13 +571,3 @@ function initSyncStateChecker<S>(examine: { (stack: S[]): void }) {
         },
     }
 }
-
-interface Post<T> {
-    (state: T): void
-}
-
-type SendTokenTime = {
-    waiting_millisecond: number
-    sending_millisecond: number
-    success_millisecond: number
-}

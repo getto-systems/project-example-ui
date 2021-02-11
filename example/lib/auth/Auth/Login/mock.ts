@@ -113,7 +113,3 @@ class MockErrorView extends MockComponent<LoginState> implements LoginView {
 function terminate() {
     // mock では特に何もしない
 }
-
-interface Post<T> {
-    (state: T): void
-}
