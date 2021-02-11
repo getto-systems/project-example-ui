@@ -1,10 +1,5 @@
-import { initApiAuthRenew } from "../../../../../z_external/api/auth/renew"
-import { initApiAuthLogin } from "../../../../../z_external/api/auth/login"
-
-import { env } from "../../../../../y_environment/env"
-
 import { initFormAction } from "../../../../../sub/getto-form/main/form"
-import { initAuthCredentialStorage, initRenewAction, initSetContinuousRenewAction } from "./action/renew"
+import { initRenewAction, initSetContinuousRenewAction } from "./action/renew"
 import { initApplicationAction } from "./action/application"
 import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "./action/form"
 import { initPasswordLoginAction } from "./action/login"
@@ -29,17 +24,7 @@ import {
     PasswordResetSessionFactory,
 } from "../impl/reset"
 
-import {
-    newApplicationActionConfig,
-    newPasswordLoginActionConfig,
-    newPasswordResetActionConfig,
-    newPasswordResetSessionActionConfig,
-    newRenewActionConfig,
-    newSetContinuousRenewActionConfig,
-} from "./config"
 import { initLoginLink } from "./link"
-
-import { initAuthCredentialRepository } from "../../../../login/renew/impl/repository/authCredential"
 
 import { initRenewCredentialComponent } from "../../renewCredential/impl"
 import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../../passwordLogin/impl"
@@ -57,31 +42,16 @@ export function newLoginAsSingle(): LoginEntryPoint {
     const credentialStorage = localStorage
     const currentURL = new URL(location.toString())
 
-    const api = {
-        auth: {
-            renew: initApiAuthRenew(env.apiServerURL),
-            login: initApiAuthLogin(env.apiServerURL),
-        },
-    }
-
-    const authCredentials = initAuthCredentialRepository(
-        initAuthCredentialStorage(env.storageKey, credentialStorage)
-    )
-
     const factory: Factory = {
         link: initLoginLink,
         actions: {
-            application: initApplicationAction(newApplicationActionConfig()),
-            renew: initRenewAction(newRenewActionConfig(), authCredentials, api.auth.renew),
-            setContinuousRenew: initSetContinuousRenewAction(
-                newSetContinuousRenewActionConfig(),
-                authCredentials,
-                api.auth.renew
-            ),
+            application: initApplicationAction(),
+            renew: initRenewAction(credentialStorage),
+            setContinuousRenew: initSetContinuousRenewAction(credentialStorage),
 
-            passwordLogin: initPasswordLoginAction(newPasswordLoginActionConfig(), api.auth.login),
-            passwordResetSession: initPasswordResetSessionAction(newPasswordResetSessionActionConfig()),
-            passwordReset: initPasswordResetAction(newPasswordResetActionConfig()),
+            passwordLogin: initPasswordLoginAction(),
+            passwordResetSession: initPasswordResetSessionAction(),
+            passwordReset: initPasswordResetAction(),
 
             form: {
                 core: initFormAction(),

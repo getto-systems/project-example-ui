@@ -1,6 +1,6 @@
 import { env } from "../../../../../y_environment/env"
 
-import { ApiAvailableCheck, initApiAvailableCheck } from "../../../../../z_external/api/available/check"
+import { initApiAvailableCheck } from "../../../../../z_external/api/available/check"
 
 import { delayed } from "../../../../../z_infra/delayed/core"
 import { find } from "../../../../nextVersion/impl/core"
@@ -16,15 +16,9 @@ import { initCheckConnectRemoteAccess } from "../../../../nextVersion/impl/remot
 export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPoint {
     const currentURL = new URL(location.toString())
 
-    const api = {
-        available: {
-            check: initApiAvailableCheck(),
-        },
-    }
-
     const factory = {
         actions: {
-            nextVersion: initNextVersionAction(api.available.check),
+            nextVersion: initNextVersionAction(),
         },
         components: {
             nextVersion: initNextVersionComponent,
@@ -44,13 +38,13 @@ export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPoint {
     }
 }
 
-function initNextVersionAction(check: ApiAvailableCheck) {
+function initNextVersionAction() {
     return {
         find: find({
             config: {
                 delay: { delay_millisecond: 300 },
             },
-            check: initCheckConnectRemoteAccess(check),
+            check: initCheckConnectRemoteAccess(initApiAvailableCheck()),
             delayed,
         }),
     }

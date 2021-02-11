@@ -1,13 +1,3 @@
-import { initApiAuthLogin } from "../../../../../../z_external/api/auth/login"
-
-import { env } from "../../../../../../y_environment/env"
-
-import {
-    newPasswordLoginActionConfig,
-    newPasswordResetActionConfig,
-    newPasswordResetSessionActionConfig,
-} from "../config"
-
 import { initPasswordLoginAction } from "../action/login"
 import { initPasswordResetAction, initPasswordResetSessionAction } from "../action/reset"
 
@@ -21,7 +11,11 @@ import {
 } from "../../../../../profile/passwordReset/action"
 
 import { LoginEvent } from "../../../../../login/passwordLogin/event"
-import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../../../profile/passwordReset/event"
+import {
+    CheckStatusEvent,
+    ResetEvent,
+    StartSessionEvent,
+} from "../../../../../profile/passwordReset/event"
 
 import {
     ForegroundMessage,
@@ -35,16 +29,10 @@ import {
 } from "./message"
 
 export function initLoginWorker(worker: Worker): void {
-    const api = {
-        auth: {
-            login: initApiAuthLogin(env.apiServerURL),
-        },
-    }
-
     const material: Material = {
-        passwordLogin: initPasswordLoginAction(newPasswordLoginActionConfig(), api.auth.login),
-        passwordResetSession: initPasswordResetSessionAction(newPasswordResetSessionActionConfig()),
-        passwordReset: initPasswordResetAction(newPasswordResetActionConfig()),
+        passwordLogin: initPasswordLoginAction(),
+        passwordResetSession: initPasswordResetSessionAction(),
+        passwordReset: initPasswordResetAction(),
     }
 
     initLoginWorkerAsBackground(material, worker)

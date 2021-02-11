@@ -1,7 +1,5 @@
 import { env } from "../../../../../y_environment/env"
 
-import { initApiAvailableNotify } from "../../../../../z_external/api/available/notify"
-
 import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
 
 import { detectMenuTarget } from "../../../../../auth/x_components/Outline/Menu/impl/location"
@@ -28,15 +26,9 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
     const webStorage = localStorage
     const currentURL = new URL(location.toString())
 
-    const api = {
-        available: {
-            notify: initApiAvailableNotify(env.apiServerURL),
-        },
-    }
-
     const factory: DocumentFactory = {
         actions: {
-            notify: initNotifyAction(api.available.notify),
+            notify: initNotifyAction(),
             credential: initCredentialAction(webStorage),
             menu: initDocumentMenuAction(webStorage),
             content: initContentAction(),

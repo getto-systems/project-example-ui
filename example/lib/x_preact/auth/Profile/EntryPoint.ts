@@ -29,13 +29,13 @@ export function EntryPoint({ resource, terminate }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    useDocumentTitle("ホーム")
+    useDocumentTitle("プロフィール")
 
     return appLayout({
         siteInfo: siteInfo(),
         header: [h(SeasonInfo, resource)],
         main: appMain({
-            header: mainHeader([mainTitle("ホーム"), h(BreadcrumbList, resource)]),
+            header: mainHeader([mainTitle("プロフィール"), h(BreadcrumbList, resource)]),
             body: mainBody(h(Example, resource)),
             copyright: copyright(),
         }),

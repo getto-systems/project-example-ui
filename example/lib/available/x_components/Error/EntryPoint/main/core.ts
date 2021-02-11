@@ -1,4 +1,6 @@
-import { ApiAvailableNotify } from "../../../../../z_external/api/available/notify"
+import { env } from "../../../../../y_environment/env"
+
+import { initApiAvailableNotify } from "../../../../../z_external/api/available/notify"
 
 import { initNotifyConnectRemoteAccess } from "../../../../notify/impl/remote/notify/connect"
 
@@ -6,10 +8,10 @@ import { notify } from "../../../../notify/impl/core"
 
 import { NotifyAction } from "../../../../notify/action"
 
-export function initNotifyAction(api: ApiAvailableNotify): NotifyAction {
+export function initNotifyAction(): NotifyAction {
     return {
         notify: notify({
-            notify: initNotifyConnectRemoteAccess(api),
+            notify: initNotifyConnectRemoteAccess(initApiAvailableNotify(env.apiServerURL)),
         }),
     }
 }
