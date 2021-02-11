@@ -1,4 +1,4 @@
-import { FormField } from "../../../../sub/getto-form/action/action"
+import { FormField } from "../../../../sub/getto-form/form/action"
 
 import { LoginID } from "../../loginID/data"
 import { LoginIDValidationError, LoginIDInput } from "./data"

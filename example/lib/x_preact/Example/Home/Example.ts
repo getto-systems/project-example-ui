@@ -10,7 +10,7 @@ import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 
 import { useComponent } from "../../common/hooks"
 
-import { ExampleComponent, initialExampleComponentState } from "../../../example/Home/example/component"
+import { ExampleComponent, initialExampleComponentState } from "../../../example/x_components/Dashboard/example/component"
 
 import { Season, SeasonError } from "../../../example/shared/season/data"
 

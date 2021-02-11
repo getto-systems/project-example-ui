@@ -3,8 +3,8 @@ import { useEffect } from "preact/hooks"
 
 import { Login } from "../../../x_preact/Auth/Login/Login"
 
-import { LoginErrorMockProps, newMockLoginAsError } from "../../../auth/Auth/Login/mock"
-import { initMockPropsPasser } from "../../../sub/getto-example/application/mock"
+import { LoginErrorMockProps, newMockLoginAsError } from "../../../auth/x_components/Login/EntryPoint/mock"
+import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
 
 export default {
     title: "Auth/Login/Error",

@@ -3,8 +3,8 @@ import { useEffect } from "preact/hooks"
 
 import { Example } from "../../../x_preact/Example/Home/Example"
 
-import { initMockPropsPasser } from "../../../sub/getto-example/application/mock"
-import { ExampleMockProps, initMockExampleComponent } from "../../../example/Home/example/mock"
+import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
+import { ExampleMockProps, initMockExampleComponent } from "../../../example/x_components/Dashboard/example/mock"
 
 export default {
     title: "Example/Home/Example",

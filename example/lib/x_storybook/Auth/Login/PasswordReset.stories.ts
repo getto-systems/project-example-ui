@@ -3,16 +3,16 @@ import { useEffect } from "preact/hooks"
 
 import { Login } from "../../../x_preact/Auth/Login/Login"
 
-import { initMockPropsPasser } from "../../../sub/getto-example/application/mock"
-import { newMockLoginAsPasswordReset } from "../../../auth/Auth/Login/mock"
-import { PasswordResetMockProps } from "../../../auth/Auth/passwordReset/mock"
-import { loginIDFormFieldValidations } from "../../../auth/Auth/field/loginID/mock"
-import { formValidationStates } from "../../../sub/getto-form/component/mock"
+import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
+import { newMockLoginAsPasswordReset } from "../../../auth/x_components/Login/EntryPoint/mock"
+import { PasswordResetMockProps } from "../../../auth/x_components/Login/passwordReset/mock"
+import { loginIDFormFieldValidations } from "../../../auth/x_components/Login/field/loginID/mock"
+import { formValidationStates } from "../../../sub/getto-form/x_components/Form/mock"
 import {
     passwordFormFieldCharacters,
     passwordFormFieldValidations,
     passwordFormFieldViews,
-} from "../../../auth/Auth/field/password/mock"
+} from "../../../auth/x_components/Login/field/password/mock"
 
 export default {
     title: "Auth/Login/PasswordReset",

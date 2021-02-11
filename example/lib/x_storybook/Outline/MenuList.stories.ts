@@ -14,8 +14,8 @@ import { copyright, siteInfo } from "../../x_preact/common/site"
 
 import { MenuList } from "../../x_preact/Outline/MenuList"
 
-import { initMockPropsPasser } from "../../sub/getto-example/application/mock"
-import { MenuListMockProps, initMockMenuListComponent } from "../../auth/Outline/menuList/mock"
+import { initMockPropsPasser } from "../../sub/getto-example/x_components/Application/mock"
+import { MenuListMockProps, initMockMenuListComponent } from "../../auth/x_components/Outline/menuList/mock"
 
 export default {
     title: "Outline/MenuList",

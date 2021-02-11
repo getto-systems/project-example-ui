@@ -17,7 +17,7 @@ import { MENU_ID } from "./MenuList"
 import {
     BreadcrumbListComponent,
     initialBreadcrumbListComponentState,
-} from "../../auth/Outline/breadcrumbList/component"
+} from "../../auth/x_components/Outline/breadcrumbList/component"
 
 import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../auth/permission/menu/data"
 import { linky } from "../../z_vendor/getto-css/preact/design/highlight"

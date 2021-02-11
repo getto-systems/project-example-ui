@@ -10,8 +10,8 @@ import { spinner } from "../../common/icon"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
-import { NextVersionResource } from "../../../update/Update/MoveToNextVersion/entryPoint"
-import { initialNextVersionComponentState } from "../../../update/Update/nextVersion/component"
+import { NextVersionResource } from "../../../update/x_components/MoveToNextVersion/EntryPoint/entryPoint"
+import { initialNextVersionComponentState } from "../../../update/x_components/MoveToNextVersion/nextVersion/component"
 
 import { appTargetToPath, FindError } from "../../../update/nextVersion/data"
 

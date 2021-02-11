@@ -7,10 +7,10 @@ import { useComponent } from "../../../common/hooks"
 
 import { FormInput } from "../../../common/form/FormInput"
 
-import { LoginIDFormFieldComponent } from "../../../../auth/Auth/field/loginID/component"
-import { initialFormFieldComponentState } from "../../../../sub/getto-form/component/component"
+import { LoginIDFormFieldComponent } from "../../../../auth/x_components/Login/field/loginID/component"
+import { initialFormFieldComponentState } from "../../../../sub/getto-form/x_components/Form/component"
 
-import { FormValidationResult } from "../../../../sub/getto-form/action/data"
+import { FormValidationResult } from "../../../../sub/getto-form/form/data"
 import { LoginIDValidationError } from "../../../../auth/common/field/loginID/data"
 
 type Props = Readonly<{

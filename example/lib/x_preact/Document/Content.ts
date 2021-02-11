@@ -12,8 +12,8 @@ import { BreadcrumbList } from "../Outline/BreadcrumbList"
 import {
     ContentComponent,
     initialContentComponentState,
-} from "../../document/Document/content/component"
-import { BreadcrumbListComponent } from "../../auth/Outline/breadcrumbList/component"
+} from "../../document/x_components/Document/content/component"
+import { BreadcrumbListComponent } from "../../auth/x_components/Outline/breadcrumbList/component"
 
 import { ContentPath } from "../../document/content/data"
 

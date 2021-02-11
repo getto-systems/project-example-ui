@@ -1,7 +1,7 @@
-import { validationStateSet } from "../action/impl/validation"
-import { historyStack } from "../action/impl/history"
+import { validationStateSet } from "../form/impl/validation"
+import { historyStack } from "../form/impl/history"
 
-import { FormAction } from "../action/action"
+import { FormAction } from "../form/action"
 
 export function initFormAction(): FormAction {
     return {

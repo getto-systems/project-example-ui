@@ -19,9 +19,9 @@ import { icon, spinner } from "../../common/icon"
 import { ApplicationError } from "../../common/System/ApplicationError"
 import { LoginIDFormField } from "./field/loginID"
 
-import { PasswordResetSessionResource } from "../../../auth/Auth/Login/entryPoint"
-import { initialPasswordResetSessionComponentState } from "../../../auth/Auth/passwordResetSession/component"
-import { initialFormComponentState } from "../../../sub/getto-form/component/component"
+import { PasswordResetSessionResource } from "../../../auth/x_components/Login/EntryPoint/entryPoint"
+import { initialPasswordResetSessionComponentState } from "../../../auth/x_components/Login/passwordResetSession/component"
+import { initialFormComponentState } from "../../../sub/getto-form/x_components/Form/component"
 
 import {
     Destination,

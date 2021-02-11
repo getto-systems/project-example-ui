@@ -3,16 +3,16 @@ import { useEffect } from "preact/hooks"
 
 import { Login } from "../../../x_preact/Auth/Login/Login"
 
-import { initMockPropsPasser } from "../../../sub/getto-example/application/mock"
-import { newMockLoginAsPasswordLogin } from "../../../auth/Auth/Login/mock"
-import { PasswordLoginMockProps } from "../../../auth/Auth/passwordLogin/mock"
-import { loginIDFormFieldValidations } from "../../../auth/Auth/field/loginID/mock"
+import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
+import { newMockLoginAsPasswordLogin } from "../../../auth/x_components/Login/EntryPoint/mock"
+import { PasswordLoginMockProps } from "../../../auth/x_components/Login/passwordLogin/mock"
+import { loginIDFormFieldValidations } from "../../../auth/x_components/Login/field/loginID/mock"
 import {
     passwordFormFieldCharacters,
     passwordFormFieldValidations,
     passwordFormFieldViews,
-} from "../../../auth/Auth/field/password/mock"
-import { formValidationStates } from "../../../sub/getto-form/component/mock"
+} from "../../../auth/x_components/Login/field/password/mock"
+import { formValidationStates } from "../../../sub/getto-form/x_components/Form/mock"
 
 export default {
     title: "Auth/Login/PasswordLogin",

@@ -7,7 +7,7 @@ import { notice_alert } from "../../z_vendor/getto-css/preact/design/highlight"
 
 import { useComponent } from "../common/hooks"
 
-import { SeasonInfoComponent, initialSeasonInfoComponentState } from "../../example/Outline/seasonInfo/component"
+import { SeasonInfoComponent, initialSeasonInfoComponentState } from "../../example/x_components/Outline/seasonInfo/component"
 
 import { Season, SeasonError } from "../../example/shared/season/data"
 

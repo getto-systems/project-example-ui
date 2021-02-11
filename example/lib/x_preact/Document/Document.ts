@@ -8,7 +8,7 @@ import { ApplicationError } from "../common/System/ApplicationError"
 import { MenuList } from "../Outline/MenuList"
 import { Content } from "./Content"
 
-import { DocumentEntryPoint } from "../../document/Document/Document/entryPoint"
+import { DocumentEntryPoint } from "../../document/x_components/Document/EntryPoint/entryPoint"
 import { appLayout } from "../../z_vendor/getto-css/preact/layout/app"
 
 type Props = {

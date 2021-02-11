@@ -23,11 +23,11 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 import { LoginIDFormField } from "./field/loginID"
 import { PasswordFormField } from "./field/password"
 
-import { PasswordLoginResource } from "../../../auth/Auth/Login/entryPoint"
-import { initialPasswordLoginComponentState } from "../../../auth/Auth/passwordLogin/component"
+import { PasswordLoginResource } from "../../../auth/x_components/Login/EntryPoint/entryPoint"
+import { initialPasswordLoginComponentState } from "../../../auth/x_components/Login/passwordLogin/component"
 
 import { LoginError } from "../../../auth/login/passwordLogin/data"
-import { initialFormComponentState } from "../../../sub/getto-form/component/component"
+import { initialFormComponentState } from "../../../sub/getto-form/x_components/Form/component"
 
 type Props = PasswordLoginResource
 export function PasswordLogin(resource: Props): VNode {
