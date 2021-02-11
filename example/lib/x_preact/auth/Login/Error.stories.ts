@@ -1,7 +1,7 @@
 import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { Login } from "./EntryPoint"
+import { EntryPoint } from "./EntryPoint"
 
 import { LoginErrorMockProps, newMockLoginAsError } from "../../../auth/x_components/Login/EntryPoint/mock"
 import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
@@ -13,14 +13,14 @@ export default {
 type MockProps = LoginErrorMockProps
 const Template: Story<MockProps> = (args) => {
     const passer = initMockPropsPasser<LoginErrorMockProps>()
-    const login = newMockLoginAsError(passer)
+    const entryPoint = newMockLoginAsError(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }): VNode {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(Login, { login })
+        return h(EntryPoint, entryPoint)
     }
 }
 interface Story<T> {

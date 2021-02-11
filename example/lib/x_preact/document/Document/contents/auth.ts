@@ -4,8 +4,8 @@ import { html } from "htm/preact"
 import { itemsSection } from "../box"
 
 import { content_index_auth } from "./home"
-import { box, container } from "../../../z_vendor/getto-css/preact/design/box"
-import { notice_info } from "../../../z_vendor/getto-css/preact/design/highlight"
+import { box, container } from "../../../../z_vendor/getto-css/preact/design/box"
+import { notice_info } from "../../../../z_vendor/getto-css/preact/design/highlight"
 
 export const content_auth = (): VNode[] => [
     container(content_index_auth()),

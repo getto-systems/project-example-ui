@@ -16,14 +16,12 @@ import { ApplicationError } from "../../z_common/System/ApplicationError"
 import { SeasonInfo } from "../../z_common/Outline/SeasonInfo"
 import { MenuList } from "../../z_common/Outline/MenuList"
 import { BreadcrumbList } from "../../z_common/Outline/BreadcrumbList"
-import { Logout } from "./Logout"
+import { Example } from "./Logout"
 
 import { DashboardEntryPoint } from "../../../example/x_components/Dashboard/EntryPoint/entryPoint"
 
-type Props = Readonly<{
-    dashboard: DashboardEntryPoint
-}>
-export function Home({ dashboard: { resource, terminate } }: Props): VNode {
+type Props = DashboardEntryPoint
+export function EntryPoint({ resource, terminate }: Props): VNode {
     const [err] = useErrorBoundary((err) => {
         // TODO ここでエラーをどこかに投げたい。apiCredential が有効なはずなので、api にエラーを投げられるはず
         console.log(err)
@@ -36,15 +34,15 @@ export function Home({ dashboard: { resource, terminate } }: Props): VNode {
     useTerminate(terminate)
 
     useEffect(() => {
-        document.title = `プロフィール | ${document.title}`
+        document.title = `ホーム | ${document.title}`
     }, [])
 
     return appLayout({
         siteInfo: siteInfo(),
         header: [h(SeasonInfo, resource)],
         main: appMain({
-            header: mainHeader([mainTitle("プロフィール"), h(BreadcrumbList, resource)]),
-            body: mainBody(h(Logout, resource)),
+            header: mainHeader([mainTitle("ホーム"), h(BreadcrumbList, resource)]),
+            body: mainBody(h(Example, resource)),
             copyright: copyright(),
         }),
         menu: h(MenuList, resource),

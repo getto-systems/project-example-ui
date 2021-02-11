@@ -10,17 +10,14 @@ import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 
 import { useComponent } from "../../z_common/hooks"
 
-import {
-    ExampleComponent,
-    initialExampleComponentState,
-} from "../../../example/x_components/Dashboard/example/component"
+import { ExampleComponent, initialExampleComponentState } from "../../../example/x_components/Dashboard/example/component"
 
 import { Season, SeasonError } from "../../../example/shared/season/data"
 
 type Props = Readonly<{
     example: ExampleComponent
 }>
-export function Logout({ example }: Props): VNode {
+export function Example({ example }: Props): VNode {
     const state = useComponent(example, initialExampleComponentState)
     useEffect(() => {
         example.load()

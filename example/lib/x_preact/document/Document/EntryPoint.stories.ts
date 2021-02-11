@@ -5,14 +5,16 @@ import { html } from "htm/preact"
 import { EntryPoint } from "./EntryPoint"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
-import { DashboardMockPropsPasser, newMockDashboard } from "../../../example/x_components/Dashboard/EntryPoint/mock"
-import { SeasonInfoMockProps } from "../../../example/x_components/Outline/seasonInfo/mock"
+import {
+    DocumentMockPropsPasser,
+    newMockDocument,
+} from "../../../document/x_components/Document/EntryPoint/mock"
 import { MenuListMockProps } from "../../../auth/x_components/Outline/menuList/mock"
 import { BreadcrumbListMockProps } from "../../../auth/x_components/Outline/breadcrumbList/mock"
-import { ExampleMockProps } from "../../../example/x_components/Dashboard/example/mock"
+import { ContentMockProps } from "../../../document/x_components/Document/content/mock"
 
 export default {
-    title: "Example/Home/Dashboard",
+    title: "Document/Document",
     argTypes: {
         type: {
             table: { disable: true },
@@ -21,24 +23,21 @@ export default {
 }
 
 type MockProps = Readonly<{
-    seasonYear: number
     menuBadgeCount: number
     breadcrumbLabel: string
     breadcrumbIcon: string
 }>
 const Template: Story<MockProps> = (args) => {
-    const passer: DashboardMockPropsPasser = {
-        seasonInfo: initMockPropsPasser<SeasonInfoMockProps>(),
+    const passer: DocumentMockPropsPasser = {
         menuList: initMockPropsPasser<MenuListMockProps>(),
         breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
-        example: initMockPropsPasser<ExampleMockProps>(),
+        content: initMockPropsPasser<ContentMockProps>(),
     }
-    const entryPoint = newMockDashboard(passer)
+    const entryPoint = newMockDocument(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
-            passer.seasonInfo.update({ type: "success", year: props.args.seasonYear })
             passer.menuList.update({
                 type: "success",
                 label: "ホーム",
@@ -49,7 +48,7 @@ const Template: Story<MockProps> = (args) => {
                 label: props.args.breadcrumbLabel,
                 icon: props.args.breadcrumbIcon,
             })
-            passer.example.update({ type: "success", year: props.args.seasonYear })
+            passer.content.update({ type: "success" })
         })
         return html`
             <style>
@@ -69,7 +68,6 @@ interface Story<T> {
 
 export const Initial = Template.bind({})
 Initial.args = {
-    seasonYear: new Date().getFullYear(),
     menuBadgeCount: 99,
     breadcrumbLabel: "ホーム",
     breadcrumbIcon: "home",

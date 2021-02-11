@@ -3,10 +3,8 @@ import { NextVersionComponentState } from "../../../update/x_components/MoveToNe
 
 import { AppTarget, appTargetToPath } from "../../../update/nextVersion/data"
 
-type Props = Readonly<{
-    moveToNextVersion: MoveToNextVersionEntryPoint
-}>
-export function MoveToNextVersion({ moveToNextVersion: { resource, terminate } }: Props): void {
+type Props = MoveToNextVersionEntryPoint
+export function EntryPoint({ resource, terminate }: Props): void {
     // /${version}/index.html とかで実行する
     const { nextVersion } = resource
     try {
