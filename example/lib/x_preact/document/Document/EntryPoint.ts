@@ -1,7 +1,7 @@
 import { h, VNode } from "preact"
 import { useErrorBoundary } from "preact/hooks"
 
-import { useTerminate } from "../../z_common/hooks"
+import { useTermination } from "../../z_common/hooks"
 import { siteInfo } from "../../z_common/site"
 
 import { ApplicationError } from "../../z_common/System/ApplicationError"
@@ -22,7 +22,7 @@ export function EntryPoint({ resource, terminate }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    useTerminate(terminate)
+    useTermination(terminate)
 
     return appLayout({
         siteInfo: siteInfo(),
