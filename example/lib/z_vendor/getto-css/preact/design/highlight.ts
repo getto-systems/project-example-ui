@@ -3,6 +3,10 @@ import { html } from "htm/preact"
 
 import { VNodeContent } from "../common"
 
+export function linky(content: VNodeContent): VNode {
+    return html`<span class="linky">${content}</span>`
+}
+
 type Color = "gray" | "alert" | "success" | "warning" | "pending" | "info"
 
 export function notice_gray(content: VNodeContent): VNode {
