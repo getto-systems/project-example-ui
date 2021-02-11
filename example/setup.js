@@ -39,7 +39,9 @@ function envContent() {
 }
 
 function pathContent() {
-    const files = ["/storybook/index.html"].concat(entryPoint.findSecureFiles())
+    const files = ["/storybook/index.html", "/coverage/lcov-report/index.html"].concat(
+        entryPoint.findSecureFiles()
+    )
     const documents = files.filter(isDocument)
     return [
         "export type StaticMenuPath =" + toTypeVariant(files),
