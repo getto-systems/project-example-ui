@@ -1,4 +1,5 @@
 import { delayed, wait } from "../../../../../../z_infra/delayed/core"
+import { delaySecond, limit, waitSecond } from "../../../../../../z_infra/time/infra"
 import { initResetSimulateRemoteAccess } from "../../../../../profile/passwordReset/impl/remote/reset/simulate"
 import {
     initGetStatusSimulateRemoteAccess,
@@ -9,8 +10,9 @@ import {
 import { checkStatus, reset, startSession } from "../../../../../profile/passwordReset/impl/core"
 
 import {
-    PasswordResetActionConfig,
-    PasswordResetSessionActionConfig,
+    CheckStatusInfra,
+    ResetInfra,
+    StartSessionInfra,
 } from "../../../../../profile/passwordReset/infra"
 
 import {
@@ -21,24 +23,34 @@ import {
 import { markApiCredential, markAuthAt, markTicketNonce } from "../../../../../common/credential/data"
 import { markSessionID } from "../../../../../profile/passwordReset/data"
 
-export function initPasswordResetSessionAction(
-    config: PasswordResetSessionActionConfig
-): PasswordResetSessionAction {
+export function initPasswordResetSessionAction(): PasswordResetSessionAction {
     const targetSessionID = markSessionID("session-id")
 
     return {
-        startSession: startSession({
+        startSession: startSession(startSessionInfra()),
+        checkStatus: checkStatus(checkStatusInfra()),
+    }
+
+    function startSessionInfra(): StartSessionInfra {
+        return {
             startSession: startSessionRemoteAccess(),
-            config: config.startSession,
+            config: {
+                delay: delaySecond(1),
+            },
             delayed,
-        }),
-        checkStatus: checkStatus({
+        }
+    }
+    function checkStatusInfra(): CheckStatusInfra {
+        return {
             sendToken: sendTokenRemoteAccess(),
             getStatus: getStatusRemoteAccess(),
-            config: config.checkStatus,
+            config: {
+                wait: waitSecond(0.25),
+                limit: limit(40),
+            },
             delayed,
             wait,
-        }),
+        }
     }
 
     function startSessionRemoteAccess() {
@@ -66,13 +78,19 @@ export function initPasswordResetSessionAction(
         )
     }
 }
-export function initPasswordResetAction(config: PasswordResetActionConfig): PasswordResetAction {
+export function initPasswordResetAction(): PasswordResetAction {
     return {
-        reset: reset({
+        reset: reset(resetInfra()),
+    }
+
+    function resetInfra(): ResetInfra {
+        return {
             reset: resetRemoteAccess(),
-            config: config.reset,
+            config: {
+                delay: delaySecond(1),
+            },
             delayed,
-        }),
+        }
     }
 
     function resetRemoteAccess() {

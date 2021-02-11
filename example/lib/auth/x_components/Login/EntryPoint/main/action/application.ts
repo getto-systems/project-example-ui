@@ -1,11 +1,15 @@
-import { ApplicationActionConfig } from "../../../../../common/application/infra"
+import { env } from "../../../../../../y_environment/env"
 
 import { secureScriptPath } from "../../../../../common/application/impl/core"
 
 import { ApplicationAction } from "../../../../../common/application/action"
 
-export function initApplicationAction(config: ApplicationActionConfig): ApplicationAction {
+export function initApplicationAction(): ApplicationAction {
     return {
-        secureScriptPath: secureScriptPath({ config: config.secureScriptPath }),
+        secureScriptPath: secureScriptPath({
+            config: {
+                secureServerHost: env.secureServerHost,
+            },
+        }),
     }
 }

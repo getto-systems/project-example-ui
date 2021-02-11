@@ -1,12 +1,4 @@
-import { initApiAuthRenew } from "../../../../../../z_external/api/auth/renew"
-
 import { env } from "../../../../../../y_environment/env"
-
-import {
-    newApplicationActionConfig,
-    newRenewActionConfig,
-    newSetContinuousRenewActionConfig,
-} from "../config"
 
 import { initLoginLink } from "../link"
 
@@ -30,13 +22,8 @@ import { initPasswordResetComponent, initPasswordResetFormComponent } from "../.
 import { initApplicationAction } from "../action/application"
 import { initFormAction } from "../../../../../../sub/getto-form/main/form"
 import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "../action/form"
-import {
-    initAuthCredentialStorage,
-    initRenewAction,
-    initSetContinuousRenewAction,
-} from "../action/renew"
+import { initRenewAction, initSetContinuousRenewAction } from "../action/renew"
 
-import { initAuthCredentialRepository } from "../../../../../login/renew/impl/repository/authCredential"
 import { currentPagePathname, detectViewState, detectResetToken } from "../../impl/location"
 
 import { LoginLinkFactory } from "../../../link"
@@ -72,7 +59,11 @@ import { LoginIDFormFieldAction } from "../../../../../common/field/loginID/acti
 import { PasswordFormFieldAction } from "../../../../../common/field/password/action"
 
 import { LoginEvent } from "../../../../../login/passwordLogin/event"
-import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../../profile/passwordReset/event"
+import {
+    StartSessionEvent,
+    CheckStatusEvent,
+    ResetEvent,
+} from "../../../../../profile/passwordReset/event"
 
 import {
     ForegroundMessage,
@@ -89,28 +80,14 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
     const credentialStorage = localStorage
     const currentURL = new URL(location.toString())
 
-    const api = {
-        auth: {
-            renew: initApiAuthRenew(env.apiServerURL),
-        },
-    }
-
     const worker = new Worker(`/${env.version}/auth/login.worker.js`)
-
-    const authCredentials = initAuthCredentialRepository(
-        initAuthCredentialStorage(env.storageKey, credentialStorage)
-    )
 
     const factory: ForegroundFactory = {
         link: initLoginLink,
         actions: {
-            application: initApplicationAction(newApplicationActionConfig()),
-            renew: initRenewAction(newRenewActionConfig(), authCredentials, api.auth.renew),
-            setContinuousRenew: initSetContinuousRenewAction(
-                newSetContinuousRenewActionConfig(),
-                authCredentials,
-                api.auth.renew
-            ),
+            application: initApplicationAction(),
+            renew: initRenewAction(credentialStorage),
+            setContinuousRenew: initSetContinuousRenewAction(credentialStorage),
 
             form: {
                 core: initFormAction(),

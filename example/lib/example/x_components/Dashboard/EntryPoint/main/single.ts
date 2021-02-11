@@ -1,7 +1,5 @@
 import { env } from "../../../../../y_environment/env"
 
-import { initApiAvailableNotify } from "../../../../../z_external/api/available/notify"
-
 import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "../impl/core"
 
 import { initErrorComponent } from "../../../../../available/x_components/Error/error/impl"
@@ -11,7 +9,7 @@ import { initBreadcrumbListComponent } from "../../../../../auth/x_components/Ou
 import { initExampleComponent } from "../../example/impl"
 import { detectMenuTarget } from "../../../../../auth/x_components/Outline/Menu/impl/location"
 
-import { initNotifyAction } from "../../../../../available/x_components/Error/EntryPoint/main/core"
+import { initNotifyAction } from "../../../../../available/x_components/Error/EntryPoint/main/action/notify"
 import {
     initCredentialAction,
     initMainMenuAction,
@@ -24,15 +22,9 @@ export function newDashboardAsSingle(): DashboardEntryPoint {
     const webStorage = localStorage
     const currentURL = new URL(location.toString())
 
-    const api = {
-        available: {
-            notify: initApiAvailableNotify(env.apiServerURL),
-        },
-    }
-
     const factory: DashboardFactory = {
         actions: {
-            notify: initNotifyAction(api.available.notify),
+            notify: initNotifyAction(),
             credential: initCredentialAction(webStorage),
             menu: initMainMenuAction(webStorage),
             season: initSeasonAction(),

@@ -36,23 +36,30 @@ export function initMainMenuAction(menuExpandStorage: Storage): MenuAction {
     return initMenuAction(
         mainMenuTree(),
         menuExpandStorage,
+        env.storageKey.menuExpand.main,
         initLoadMenuBadgeSimulateRemoteAccess(() => ({ success: true, value: { "/index.html": 50 } }), {
             wait_millisecond: 0,
         })
     )
 }
 export function initDocumentMenuAction(menuExpandStorage: Storage): MenuAction {
-    return initMenuAction(documentMenuTree(), menuExpandStorage, initLoadMenuBadgeNoopRemoteAccess())
+    return initMenuAction(
+        documentMenuTree(),
+        menuExpandStorage,
+        env.storageKey.menuExpand.document,
+        initLoadMenuBadgeNoopRemoteAccess()
+    )
 }
 function initMenuAction(
     menuTree: MenuTree,
     menuExpandStorage: Storage,
+    storageKey: string,
     loadMenuBadge: LoadMenuBadgeRemoteAccess
 ): MenuAction {
     const menuExpands = initMenuExpandRepository({
         menuExpand: initWebTypedStorage(
             menuExpandStorage,
-            env.storageKey.menuExpand.main,
+            storageKey,
             initMenuExpandConverter()
         ),
     })
