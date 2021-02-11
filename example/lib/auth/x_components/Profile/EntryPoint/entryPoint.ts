@@ -15,7 +15,7 @@ export type ProfileResource = Readonly<{
     menuList: MenuListComponent
     breadcrumbList: BreadcrumbListComponent
 
-    example: LogoutComponent
+    logout: LogoutComponent
 }>
 
 interface Terminate {

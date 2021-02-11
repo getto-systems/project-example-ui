@@ -1,33 +1,33 @@
 import { env } from "../../../../../y_environment/env"
 
-import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "../impl/core"
+import { DashboardLocationInfo, ProfileFactory, initDashboardResource } from "../impl/core"
 
 import { initErrorComponent } from "../../../../../available/x_components/Error/error/impl"
 import { initSeasonInfoComponent } from "../../../../../example/x_components/Outline/seasonInfo/impl"
 import { initMenuListComponent } from "../../../Outline/menuList/impl"
 import { initBreadcrumbListComponent } from "../../../Outline/breadcrumbList/impl"
-import { initExampleComponent } from "../../logout/impl"
-import { detectMenuTarget } from "../../../Outline/Menu/impl/location"
+import { initLogoutComponent } from "../../logout/impl"
+import { detectMenuTarget } from "../../../../permission/menu/impl/location"
 
-import { initNotifyAction } from "../../../../../available/x_components/Error/EntryPoint/main/action/notify"
-import {
-    initCredentialAction,
-    initMainMenuAction,
-} from "../../../Outline/Menu/main/core"
-import { initSeasonAction } from "../../../../../example/x_components/Outline/GlobalInfo/main/core"
+import { initNotifyAction } from "../../../../../available/notify/main/notify"
+import { initSeasonAction } from "../../../../../example/shared/season/main/season"
+import { initCredentialAction } from "../../../../common/credential/main/credential"
+import { initMainMenuAction } from "../../../../permission/menu/main/mainMenu"
 
 import { ProfileEntryPoint } from "../entryPoint"
+import { initLogoutAction } from "../../../../login/credentialStore/main/logout"
 
 export function newDashboardAsSingle(): ProfileEntryPoint {
     const webStorage = localStorage
     const currentURL = new URL(location.toString())
 
-    const factory: DashboardFactory = {
+    const factory: ProfileFactory = {
         actions: {
             notify: initNotifyAction(),
             credential: initCredentialAction(webStorage),
             menu: initMainMenuAction(webStorage),
             season: initSeasonAction(),
+            logout: initLogoutAction(webStorage),
         },
         components: {
             error: initErrorComponent,
@@ -35,7 +35,7 @@ export function newDashboardAsSingle(): ProfileEntryPoint {
             breadcrumbList: initBreadcrumbListComponent,
             seasonInfo: initSeasonInfoComponent,
 
-            example: initExampleComponent,
+            logout: initLogoutComponent,
         },
     }
     const locationInfo: DashboardLocationInfo = {
@@ -51,7 +51,7 @@ export function newDashboardAsSingle(): ProfileEntryPoint {
             resource.breadcrumbList.terminate()
             resource.seasonInfo.terminate()
 
-            resource.example.terminate()
+            resource.logout.terminate()
         },
     }
 }

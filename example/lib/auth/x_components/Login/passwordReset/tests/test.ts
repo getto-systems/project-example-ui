@@ -1,12 +1,12 @@
-import { initTestAuthCredentialStorage } from "../../EntryPoint/tests/core"
 import {
-    PasswordResetConfig,
-    newTestPasswordResetResource,
-    PasswordResetRepository,
-    PasswordResetRemoteAccess,
+    PasswordResetTestConfig,
+    newPasswordResetTestResource,
+    PasswordResetTestRepository,
+    PasswordResetTestRemoteAccess,
 } from "./core"
 
 import { initStaticClock, StaticClock } from "../../../../../z_infra/clock/simulate"
+import { initTestAuthCredentialStorage } from "../../../../login/credentialStore/tests/storage"
 import { initRenewSimulateRemoteAccess } from "../../../../login/credentialStore/impl/remote/renew/simulate"
 import { initResetSimulateRemoteAccess } from "../../../../profile/passwordReset/impl/remote/reset/simulate"
 import { initAuthCredentialRepository } from "../../../../login/credentialStore/impl/repository/authCredential"
@@ -44,7 +44,7 @@ describe("PasswordReset", () => {
     test("submit valid login-id and password", (done) => {
         const { repository, clock, resource } = standardPasswordResetResource()
 
-        resource.passwordReset.addStateHandler(initChecker())
+        resource.reset.addStateHandler(initChecker())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -52,7 +52,7 @@ describe("PasswordReset", () => {
         resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         resource.form.password.input.change()
 
-        resource.passwordReset.reset(resource.form.getResetFields())
+        resource.reset.reset(resource.form.getResetFields())
 
         function initChecker() {
             return initAsyncStateChecker(
@@ -97,7 +97,7 @@ describe("PasswordReset", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitPasswordResetResource()
 
-        resource.passwordReset.addStateHandler(initChecker())
+        resource.reset.addStateHandler(initChecker())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -105,7 +105,7 @@ describe("PasswordReset", () => {
         resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         resource.form.password.input.change()
 
-        resource.passwordReset.reset(resource.form.getResetFields())
+        resource.reset.reset(resource.form.getResetFields())
 
         function initChecker() {
             return initAsyncStateChecker(
@@ -150,13 +150,13 @@ describe("PasswordReset", () => {
     test("submit without fields", (done) => {
         const { repository, resource } = standardPasswordResetResource()
 
-        resource.passwordReset.addStateHandler(initChecker())
+        resource.reset.addStateHandler(initChecker())
 
         // try to reset without fields
         //resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
         //resource.passwordField.set(markInputValue(VALID_LOGIN.password))
 
-        resource.passwordReset.reset(resource.form.getResetFields())
+        resource.reset.reset(resource.form.getResetFields())
 
         function initChecker() {
             return initAsyncStateChecker(
@@ -194,7 +194,7 @@ describe("PasswordReset", () => {
     test("submit without resetToken", (done) => {
         const { repository, resource } = emptyResetTokenPasswordResetResource()
 
-        resource.passwordReset.addStateHandler(initChecker())
+        resource.reset.addStateHandler(initChecker())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -202,7 +202,7 @@ describe("PasswordReset", () => {
         resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         resource.form.password.input.change()
 
-        resource.passwordReset.reset(resource.form.getResetFields())
+        resource.reset.reset(resource.form.getResetFields())
 
         function initChecker() {
             return initAsyncStateChecker(
@@ -240,9 +240,9 @@ describe("PasswordReset", () => {
     test("load error", (done) => {
         const { resource } = standardPasswordResetResource()
 
-        resource.passwordReset.addStateHandler(initChecker())
+        resource.reset.addStateHandler(initChecker())
 
-        resource.passwordReset.loadError({ type: "infra-error", err: "load error" })
+        resource.reset.loadError({ type: "infra-error", err: "load error" })
 
         function initChecker() {
             return initAsyncStateChecker(
@@ -686,7 +686,7 @@ function standardPasswordResetResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newTestPasswordResetResource(currentURL, config, repository, simulator, clock)
+    const resource = newPasswordResetTestResource(currentURL, config, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
@@ -696,7 +696,7 @@ function waitPasswordResetResource() {
     const repository = standardRepository()
     const simulator = waitSimulator()
     const clock = standardClock()
-    const resource = newTestPasswordResetResource(currentURL, config, repository, simulator, clock)
+    const resource = newPasswordResetTestResource(currentURL, config, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
@@ -706,7 +706,7 @@ function emptyResetTokenPasswordResetResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newTestPasswordResetResource(currentURL, config, repository, simulator, clock)
+    const resource = newPasswordResetTestResource(currentURL, config, repository, simulator, clock)
 
     return { repository, resource }
 }
@@ -717,7 +717,7 @@ function standardURL(): URL {
 function emptyResetTokenURL(): URL {
     return new URL("https://example.com/index.html")
 }
-function standardConfig(): PasswordResetConfig {
+function standardConfig(): PasswordResetTestConfig {
     return {
         application: {
             secureScriptPath: {
@@ -737,7 +737,7 @@ function standardConfig(): PasswordResetConfig {
         },
     }
 }
-function standardRepository(): PasswordResetRepository {
+function standardRepository(): PasswordResetTestRepository {
     return {
         authCredentials: initAuthCredentialRepository(
             initTestAuthCredentialStorage({
@@ -748,13 +748,13 @@ function standardRepository(): PasswordResetRepository {
         ),
     }
 }
-function standardSimulator(): PasswordResetRemoteAccess {
+function standardSimulator(): PasswordResetTestRemoteAccess {
     return {
         reset: initResetSimulateRemoteAccess(simulateReset, { wait_millisecond: 0 }),
         renew: renewRemoteAccess(),
     }
 }
-function waitSimulator(): PasswordResetRemoteAccess {
+function waitSimulator(): PasswordResetTestRemoteAccess {
     return {
         reset: initResetSimulateRemoteAccess(simulateReset, { wait_millisecond: 3 }),
         renew: renewRemoteAccess(),

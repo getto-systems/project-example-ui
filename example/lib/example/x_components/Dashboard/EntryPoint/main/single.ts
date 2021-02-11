@@ -7,14 +7,12 @@ import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initMenuListComponent } from "../../../../../auth/x_components/Outline/menuList/impl"
 import { initBreadcrumbListComponent } from "../../../../../auth/x_components/Outline/breadcrumbList/impl"
 import { initExampleComponent } from "../../example/impl"
-import { detectMenuTarget } from "../../../../../auth/x_components/Outline/Menu/impl/location"
+import { detectMenuTarget } from "../../../../../auth/permission/menu/impl/location"
 
-import { initNotifyAction } from "../../../../../available/x_components/Error/EntryPoint/main/action/notify"
-import {
-    initCredentialAction,
-    initMainMenuAction,
-} from "../../../../../auth/x_components/Outline/Menu/main/core"
-import { initSeasonAction } from "../../../Outline/GlobalInfo/main/core"
+import { initNotifyAction } from "../../../../../available/notify/main/notify"
+import { initSeasonAction } from "../../../../shared/season/main/season"
+import { initCredentialAction } from "../../../../../auth/common/credential/main/credential"
+import { initMainMenuAction } from "../../../../../auth/permission/menu/main/mainMenu"
 
 import { DashboardEntryPoint } from "../entryPoint"
 

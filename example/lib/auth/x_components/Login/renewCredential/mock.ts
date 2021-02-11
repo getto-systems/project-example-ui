@@ -44,7 +44,7 @@ export class RenewCredentialMockComponent
         }
     }
 
-    renew(): void {
+    request(): void {
         // mock では特に何もしない
     }
     succeedToInstantLoad(): void {

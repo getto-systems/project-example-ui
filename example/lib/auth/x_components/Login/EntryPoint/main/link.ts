@@ -1,6 +1,6 @@
-import { LoginSearch } from "../impl/location"
-
 import { LoginLink } from "../../link"
+
+import { AuthSearchParams } from "../../../../common/searchParams/data"
 
 export function initLoginLink(): LoginLink {
     return {
@@ -10,8 +10,8 @@ export function initLoginLink(): LoginLink {
 }
 
 function passwordLogin(): string {
-    return `?${LoginSearch.passwordLogin}`
+    return `?${AuthSearchParams.passwordLogin}`
 }
 function passwordResetSession(): string {
-    return `?${LoginSearch.passwordReset}=${LoginSearch.passwordReset_start}`
+    return `?${AuthSearchParams.passwordReset}=${AuthSearchParams.passwordReset_start}`
 }

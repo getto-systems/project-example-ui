@@ -24,7 +24,7 @@ export function newMockLoginAsRenewCredential(passer: RenewCredentialMockPropsPa
         view: new MockView({
             type: "renew-credential",
             resource: {
-                renewCredential: initMockRenewCredential(passer),
+                renew: initMockRenewCredential(passer),
             },
         }),
         terminate,
@@ -36,7 +36,7 @@ export function newMockLoginAsPasswordLogin(passer: PasswordLoginMockPropsPasser
         view: new MockView({
             type: "password-login",
             resource: {
-                passwordLogin: initMockPasswordLogin(passer),
+                login: initMockPasswordLogin(passer),
                 form: initMockPasswordLoginForm(passer),
             },
         }),
@@ -51,7 +51,7 @@ export function newMockLoginAsPasswordResetSession(
         view: new MockView({
             type: "password-reset-session",
             resource: {
-                passwordResetSession: initMockPasswordResetSession(passer),
+                resetSession: initMockPasswordResetSession(passer),
                 form: initMockPasswordResetSessionForm(passer),
             },
         }),
@@ -64,7 +64,7 @@ export function newMockLoginAsPasswordReset(passer: PasswordResetMockPropsPasser
         view: new MockView({
             type: "password-reset",
             resource: {
-                passwordReset: initMockPasswordReset(passer),
+                reset: initMockPasswordReset(passer),
                 form: initMockPasswordResetForm(passer),
             },
         }),

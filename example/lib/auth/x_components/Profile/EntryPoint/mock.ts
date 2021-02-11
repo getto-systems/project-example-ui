@@ -8,7 +8,7 @@ import {
 } from "../../Outline/menuList/mock"
 import { initMockErrorComponent } from "../../../../available/x_components/Error/error/mock"
 import { initMockSeasonInfoComponent, SeasonInfoMockPropsPasser } from "../../../../example/x_components/Outline/seasonInfo/mock"
-import { ExampleMockPropsPasser, initMockExampleComponent } from "../logout/mock"
+import { LogoutMockPropsPasser, initMockLogoutComponent } from "../logout/mock"
 
 import { ProfileEntryPoint } from "./entryPoint"
 
@@ -16,7 +16,7 @@ export type DashboardMockPropsPasser = Readonly<{
     seasonInfo: SeasonInfoMockPropsPasser
     menuList: MenuListMockPropsPasser
     breadcrumbList: BreadcrumbListMockPropsPasser
-    example: ExampleMockPropsPasser
+    logout: LogoutMockPropsPasser
 }>
 export function newMockDashboard(passer: DashboardMockPropsPasser): ProfileEntryPoint {
     return {
@@ -25,7 +25,7 @@ export function newMockDashboard(passer: DashboardMockPropsPasser): ProfileEntry
             seasonInfo: initMockSeasonInfoComponent(passer.seasonInfo),
             menuList: initMockMenuListComponent(passer.menuList),
             breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),
-            example: initMockExampleComponent(passer.example),
+            logout: initMockLogoutComponent(passer.logout),
         },
         terminate: () => {
             // mock では特に何もしない

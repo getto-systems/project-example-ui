@@ -1,58 +1,58 @@
-import {
-    initTestApplicationAction,
-    initTestSetContinuousRenewAction,
-    initTestPasswordLoginAction,
-    initPasswordLoginLocationInfo,
-} from "../../EntryPoint/tests/core"
+import { initTestApplicationAction } from "../../../../common/application/tests/application"
+import { initTestSetContinuousRenewAction } from "../../../../login/credentialStore/tests/renew"
+import { initTestPasswordLoginAction } from "../../../../login/passwordLogin/tests/login"
 
 import { initLoginLink } from "../../EntryPoint/main/link"
+import { initLoginLocationInfo } from "../../common/impl/location"
 
-import { initPasswordLoginResource, PasswordLoginFactory } from "../../EntryPoint/impl/login"
-
-import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../impl"
+import { initPasswordLoginResource } from "../impl/resource"
 
 import { initFormAction } from "../../../../../sub/getto-form/main/form"
-import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "../../EntryPoint/main/action/form"
+import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../../common/field/password/main/password"
 
 import { Clock } from "../../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../../common/application/infra"
 import { LoginRemoteAccess, PasswordLoginActionConfig } from "../../../../login/passwordLogin/infra"
-import { SetContinuousRenewActionConfig, AuthCredentialRepository, RenewRemoteAccess } from "../../../../login/credentialStore/infra"
+import {
+    SetContinuousRenewActionConfig,
+    AuthCredentialRepository,
+    RenewRemoteAccess,
+} from "../../../../login/credentialStore/infra"
 
-import { PasswordLoginResource } from "../../EntryPoint/entryPoint"
+import { PasswordLoginResource } from "../resource"
 
-export type PasswordLoginConfig = {
+export type PasswordLoginTestConfig = {
     application: ApplicationActionConfig
     passwordLogin: PasswordLoginActionConfig
     setContinuousRenew: SetContinuousRenewActionConfig
 }
-export type PasswordLoginRepository = Readonly<{
+export type PasswordLoginTestRepository = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
-export type PasswordLoginRemoteAccess = Readonly<{
+export type PasswordLoginTestRemoteAccess = Readonly<{
     login: LoginRemoteAccess
     renew: RenewRemoteAccess
 }>
 
-export function newTestPasswordLoginResource(
+export function newPasswordLoginTestResource(
     currentURL: URL,
-    config: PasswordLoginConfig,
-    repository: PasswordLoginRepository,
-    simulator: PasswordLoginRemoteAccess,
+    config: PasswordLoginTestConfig,
+    repository: PasswordLoginTestRepository,
+    remote: PasswordLoginTestRemoteAccess,
     clock: Clock
 ): PasswordLoginResource {
-    const factory: PasswordLoginFactory = {
-        link: initLoginLink,
-        actions: {
+    return initPasswordLoginResource(
+        initLoginLocationInfo(currentURL),
+        {
+            link: initLoginLink,
             application: initTestApplicationAction(config.application),
             setContinuousRenew: initTestSetContinuousRenewAction(
                 config.setContinuousRenew,
                 repository.authCredentials,
-                simulator.renew,
+                remote.renew,
                 clock
             ),
-
-            passwordLogin: initTestPasswordLoginAction(config.passwordLogin, simulator.login),
 
             form: {
                 core: initFormAction(),
@@ -60,10 +60,8 @@ export function newTestPasswordLoginResource(
                 password: initPasswordFormFieldAction(),
             },
         },
-        components: {
-            passwordLogin: { core: initPasswordLoginComponent, form: initPasswordLoginFormComponent },
-        },
-    }
-
-    return initPasswordLoginResource(factory, initPasswordLoginLocationInfo(currentURL))
+        {
+            login: initTestPasswordLoginAction(config.passwordLogin, remote.login),
+        }
+    )
 }

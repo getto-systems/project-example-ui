@@ -5,8 +5,8 @@ import { Logout } from "./Logout"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
 import {
-    ExampleMockProps,
-    initMockExampleComponent,
+    LogoutMockProps,
+    initMockLogoutComponent,
 } from "../../../auth/x_components/Profile/logout/mock"
 
 export default {
@@ -18,17 +18,17 @@ export default {
     },
 }
 
-type MockProps = ExampleMockProps
+type MockProps = LogoutMockProps
 const Template: Story<MockProps> = (args) => {
-    const passer = initMockPropsPasser<ExampleMockProps>()
-    const example = initMockExampleComponent(passer)
+    const passer = initMockPropsPasser<LogoutMockProps>()
+    const logout = initMockLogoutComponent(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(Logout, { example })
+        return h(Logout, { logout })
     }
 }
 
@@ -37,14 +37,8 @@ interface Story<T> {
     (args: T): VNode
 }
 
-export const Success = Template.bind({})
-Success.args = {
-    type: "success",
-    year: new Date().getFullYear(),
-}
-
 export const Failed = Template.bind({})
 Failed.args = {
     type: "failed",
-    err: "load error",
+    err: "logout error",
 }

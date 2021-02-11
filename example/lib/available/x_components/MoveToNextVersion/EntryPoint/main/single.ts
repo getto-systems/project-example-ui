@@ -1,17 +1,13 @@
 import { env } from "../../../../../y_environment/env"
 
-import { initApiAvailableCheck } from "../../../../../z_external/api/available/check"
+import { initNextVersionAction } from "../../../../nextVersion/main/nextVersion"
 
-import { delayed } from "../../../../../z_infra/delayed/core"
-import { find } from "../../../../nextVersion/impl/core"
-
-import { detectAppTarget } from "../impl/location"
-import { initNextVersionResource } from "../impl/core"
+import { detectAppTarget } from "../../../../nextVersion/impl/location"
+import { initNextVersionResource } from "../impl/nextVersion"
 
 import { initNextVersionComponent } from "../../nextVersion/impl"
 
 import { MoveToNextVersionEntryPoint } from "../entryPoint"
-import { initCheckConnectRemoteAccess } from "../../../../nextVersion/impl/remote/check/connect"
 
 export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPoint {
     const currentURL = new URL(location.toString())
@@ -35,17 +31,5 @@ export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPoint {
         terminate: () => {
             resource.nextVersion.terminate()
         },
-    }
-}
-
-function initNextVersionAction() {
-    return {
-        find: find({
-            config: {
-                delay: { delay_millisecond: 300 },
-            },
-            check: initCheckConnectRemoteAccess(initApiAvailableCheck()),
-            delayed,
-        }),
     }
 }

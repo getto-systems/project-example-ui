@@ -26,7 +26,7 @@ export type PasswordLoginMaterial = Readonly<{
 
 export interface PasswordLoginComponent extends ApplicationComponent<PasswordLoginComponentState> {
     readonly link: LoginLink
-    login(fields: FormConvertResult<LoginFields>): void
+    submit(fields: FormConvertResult<LoginFields>): void
     loadError(err: LoadError): void
 }
 

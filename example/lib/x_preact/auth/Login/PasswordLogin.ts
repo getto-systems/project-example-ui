@@ -23,7 +23,8 @@ import { ApplicationError } from "../../z_common/System/ApplicationError"
 import { LoginIDFormField } from "./field/loginID"
 import { PasswordFormField } from "./field/password"
 
-import { PasswordLoginResource } from "../../../auth/x_components/Login/EntryPoint/entryPoint"
+import { PasswordLoginResource } from "../../../auth/x_components/Login/passwordLogin/resource"
+
 import { initialPasswordLoginComponentState } from "../../../auth/x_components/Login/passwordLogin/component"
 
 import { LoginError } from "../../../auth/login/passwordLogin/data"
@@ -31,8 +32,8 @@ import { initialFormComponentState } from "../../../sub/getto-form/x_components/
 
 type Props = PasswordLoginResource
 export function PasswordLogin(resource: Props): VNode {
-    const { passwordLogin } = resource
-    const state = useComponent(passwordLogin, initialPasswordLoginComponentState)
+    const { login } = resource
+    const state = useComponent(login, initialPasswordLoginComponentState)
     const formState = useComponent(resource.form, initialFormComponentState)
 
     useEffect(() => {
@@ -41,7 +42,7 @@ export function PasswordLogin(resource: Props): VNode {
             case "try-to-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = () => {
-                        passwordLogin.loadError({
+                        login.loadError({
                             type: "infra-error",
                             err: `スクリプトのロードに失敗しました: ${state.type}`,
                         })
@@ -123,7 +124,7 @@ export function PasswordLogin(resource: Props): VNode {
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    passwordLogin.login(resource.form.getLoginFields())
+                    login.submit(resource.form.getLoginFields())
                 }
             }
             function connectingButton(): VNode {
@@ -162,7 +163,7 @@ export function PasswordLogin(resource: Props): VNode {
     }
 
     function resetLink() {
-        return html`<a href="${passwordLogin.link.passwordResetSession()}">
+        return html`<a href="${login.link.passwordResetSession()}">
             ${icon("question-circle")} パスワードがわからない方
         </a>`
     }

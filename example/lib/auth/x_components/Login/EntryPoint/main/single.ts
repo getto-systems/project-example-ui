@@ -1,93 +1,66 @@
 import { initFormAction } from "../../../../../sub/getto-form/main/form"
-import { initRenewAction, initSetContinuousRenewAction } from "./action/renew"
-import { initApplicationAction } from "./action/application"
-import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "./action/form"
-import { initPasswordLoginAction } from "./action/login"
-import { initPasswordResetAction, initPasswordResetSessionAction } from "./action/reset"
 
-import { LoginViewLocationInfo, View } from "../impl/core"
-import {
-    initRenewCredentialResource,
-    RenewCredentialLocationInfo,
-    RenewCredentialFactory,
-} from "../impl/renew"
-import {
-    initPasswordLoginResource,
-    PasswordLoginLocationInfo,
-    PasswordLoginFactory,
-} from "../impl/login"
-import {
-    initPasswordResetResource,
-    initPasswordResetSessionResource,
-    PasswordResetLocationInfo,
-    PasswordResetFactory,
-    PasswordResetSessionFactory,
-} from "../impl/reset"
+import { View } from "../impl/core"
 
 import { initLoginLink } from "./link"
 
-import { initRenewCredentialComponent } from "../../renewCredential/impl"
-import { initPasswordLoginComponent, initPasswordLoginFormComponent } from "../../passwordLogin/impl"
+import { initLoginViewLocationInfo } from "../impl/location"
+import { initLoginLocationInfo } from "../../common/impl/location"
+
+import { initRenewCredentialResource } from "../../renewCredential/impl/resource"
+import { initPasswordLoginResource } from "../../passwordLogin/impl/resource"
+import { initPasswordResetSessionResource } from "../../passwordResetSession/impl/resource"
+import { initPasswordResetResource } from "../../passwordReset/impl/resource"
+
 import {
-    initPasswordResetSessionComponent,
-    initPasswordResetSessionFormComponent,
-} from "../../passwordResetSession/impl"
-import { initPasswordResetComponent, initPasswordResetFormComponent } from "../../passwordReset/impl"
+    initRenewAction,
+    initSetContinuousRenewAction,
+} from "../../../../login/credentialStore/main/renew"
+import { initApplicationAction } from "../../../../common/application/main/application"
+import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../../common/field/password/main/password"
+import { initPasswordLoginAction } from "../../../../login/passwordLogin/main/login"
+import {
+    initPasswordResetAction,
+    initPasswordResetSessionAction,
+} from "../../../../profile/passwordReset/main/reset"
 
-import { currentPagePathname, detectViewState, detectResetToken } from "../impl/location"
-
-import { LoginEntryPoint } from "../entryPoint"
+import { LoginEntryPoint, LoginForegroundAction } from "../entryPoint"
 
 export function newLoginAsSingle(): LoginEntryPoint {
-    const credentialStorage = localStorage
+    const webStorage = localStorage
     const currentURL = new URL(location.toString())
 
-    const factory: Factory = {
+    const foreground: LoginForegroundAction = {
         link: initLoginLink,
-        actions: {
-            application: initApplicationAction(),
-            renew: initRenewAction(credentialStorage),
-            setContinuousRenew: initSetContinuousRenewAction(credentialStorage),
+        application: initApplicationAction(),
+        renew: initRenewAction(webStorage),
+        setContinuousRenew: initSetContinuousRenewAction(webStorage),
 
-            passwordLogin: initPasswordLoginAction(),
-            passwordResetSession: initPasswordResetSessionAction(),
-            passwordReset: initPasswordResetAction(),
-
-            form: {
-                core: initFormAction(),
-                loginID: initLoginIDFormFieldAction(),
-                password: initPasswordFormFieldAction(),
-            },
-        },
-        components: {
-            renewCredential: initRenewCredentialComponent,
-
-            passwordLogin: { core: initPasswordLoginComponent, form: initPasswordLoginFormComponent },
-            passwordResetSession: {
-                core: initPasswordResetSessionComponent,
-                form: initPasswordResetSessionFormComponent,
-            },
-            passwordReset: { core: initPasswordResetComponent, form: initPasswordResetFormComponent },
-        },
-    }
-    const locationInfo: LocationInfo = {
-        login: {
-            getLoginView: () => detectViewState(currentURL),
-        },
-        application: {
-            getPagePathname: () => currentPagePathname(currentURL),
-        },
-        passwordReset: {
-            getResetToken: () => detectResetToken(currentURL),
+        form: {
+            core: initFormAction(),
+            loginID: initLoginIDFormFieldAction(),
+            password: initPasswordFormFieldAction(),
         },
     }
 
-    const view = new View(locationInfo, {
-        renewCredential: (setup) => initRenewCredentialResource(factory, locationInfo, setup),
+    const locationInfo = initLoginLocationInfo(currentURL)
 
-        passwordLogin: () => initPasswordLoginResource(factory, locationInfo),
-        passwordResetSession: () => initPasswordResetSessionResource(factory),
-        passwordReset: () => initPasswordResetResource(factory, locationInfo),
+    const view = new View(initLoginViewLocationInfo(currentURL), {
+        renewCredential: (setup) => initRenewCredentialResource(setup, locationInfo, foreground),
+
+        passwordLogin: () =>
+            initPasswordLoginResource(locationInfo, foreground, {
+                login: initPasswordLoginAction(),
+            }),
+        passwordResetSession: () =>
+            initPasswordResetSessionResource(foreground, {
+                resetSession: initPasswordResetSessionAction(),
+            }),
+        passwordReset: () =>
+            initPasswordResetResource(locationInfo, foreground, {
+                reset: initPasswordResetAction(),
+            }),
     })
     return {
         view,
@@ -96,13 +69,3 @@ export function newLoginAsSingle(): LoginEntryPoint {
         },
     }
 }
-
-type Factory = RenewCredentialFactory &
-    PasswordLoginFactory &
-    PasswordResetSessionFactory &
-    PasswordResetFactory
-
-type LocationInfo = LoginViewLocationInfo &
-    RenewCredentialLocationInfo &
-    PasswordLoginLocationInfo &
-    PasswordResetLocationInfo

@@ -1,9 +1,11 @@
-import { initTestApplicationAction, initTestPasswordResetSessionAction } from "../../EntryPoint/tests/core"
-
 import { initLoginLink } from "../../EntryPoint/main/link"
-import { initPasswordResetSessionResource, PasswordResetSessionFactory } from "../../EntryPoint/impl/reset"
 
-import { initPasswordResetSessionComponent, initPasswordResetSessionFormComponent } from "../impl"
+import { initPasswordResetSessionResource } from "../impl/resource"
+
+import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
+import { initFormAction } from "../../../../../sub/getto-form/main/form"
+import { initTestApplicationAction } from "../../../../common/application/tests/application"
+import { initTestPasswordResetSessionAction } from "../../../../profile/passwordReset/tests/session"
 
 import { ApplicationActionConfig } from "../../../../common/application/infra"
 import {
@@ -13,42 +15,34 @@ import {
     StartSessionRemoteAccess,
 } from "../../../../profile/passwordReset/infra"
 
-import { PasswordResetSessionResource } from "../../EntryPoint/entryPoint"
-import { initLoginIDFormFieldAction } from "../../EntryPoint/main/action/form"
-import { initFormAction } from "../../../../../sub/getto-form/main/form"
+import { PasswordResetSessionResource } from "../resource"
 
-export type PasswordResetSessionConfig = {
+export type PasswordResetSessionTestConfig = {
     application: ApplicationActionConfig
     passwordResetSession: PasswordResetSessionActionConfig
 }
-export type PasswordResetSessionRemoteAccess = Readonly<{
+export type PasswordResetSessionTestRemoteAccess = Readonly<{
     startSession: StartSessionRemoteAccess
     sendToken: SendTokenRemoteAccess
     getStatus: GetStatusRemoteAccess
 }>
 
-export function newTestPasswordResetSessionResource(
-    config: PasswordResetSessionConfig,
-    remote: PasswordResetSessionRemoteAccess
+export function newPasswordResetSessionTestResource(
+    config: PasswordResetSessionTestConfig,
+    remote: PasswordResetSessionTestRemoteAccess
 ): PasswordResetSessionResource {
-    const factory: PasswordResetSessionFactory = {
-        link: initLoginLink,
-        actions: {
+    return initPasswordResetSessionResource(
+        {
+            link: initLoginLink,
             application: initTestApplicationAction(config.application),
 
-            passwordResetSession: initTestPasswordResetSessionAction(config.passwordResetSession, remote),
             form: {
                 core: initFormAction(),
                 loginID: initLoginIDFormFieldAction(),
             },
         },
-        components: {
-            passwordResetSession: {
-                core: initPasswordResetSessionComponent,
-                form: initPasswordResetSessionFormComponent,
-            },
-        },
-    }
-
-    return initPasswordResetSessionResource(factory)
+        {
+            resetSession: initTestPasswordResetSessionAction(config.passwordResetSession, remote),
+        }
+    )
 }

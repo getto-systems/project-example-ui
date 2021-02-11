@@ -14,16 +14,17 @@ import { appendScript } from "./script"
 
 import { ApplicationError } from "../../z_common/System/ApplicationError"
 
-import { RenewCredentialResource } from "../../../auth/x_components/Login/EntryPoint/entryPoint"
+import { RenewCredentialResource } from "../../../auth/x_components/Login/renewCredential/resource"
+
 import { initialRenewCredentialComponentState } from "../../../auth/x_components/Login/renewCredential/component"
 
 import { RenewError } from "../../../auth/login/credentialStore/data"
 
 type Props = RenewCredentialResource
-export function RenewCredential({ renewCredential }: Props): VNode {
-    const state = useComponent(renewCredential, initialRenewCredentialComponentState)
+export function RenewCredential({ renew }: Props): VNode {
+    const state = useComponent(renew, initialRenewCredentialComponentState)
     useEffect(() => {
-        renewCredential.renew()
+        renew.request()
     }, [])
 
     useEffect(() => {
@@ -32,10 +33,10 @@ export function RenewCredential({ renewCredential }: Props): VNode {
             case "try-to-instant-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onload = () => {
-                        renewCredential.succeedToInstantLoad()
+                        renew.succeedToInstantLoad()
                     }
                     script.onerror = () => {
-                        renewCredential.failedToInstantLoad()
+                        renew.failedToInstantLoad()
                     }
                 })
                 break
@@ -43,7 +44,7 @@ export function RenewCredential({ renewCredential }: Props): VNode {
             case "try-to-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = () => {
-                        renewCredential.loadError({
+                        renew.loadError({
                             type: "infra-error",
                             err: `スクリプトのロードに失敗しました: ${state.type}`,
                         })

@@ -19,7 +19,8 @@ import { icon, spinner } from "../../z_common/icon"
 import { ApplicationError } from "../../z_common/System/ApplicationError"
 import { LoginIDFormField } from "./field/loginID"
 
-import { PasswordResetSessionResource } from "../../../auth/x_components/Login/EntryPoint/entryPoint"
+import { PasswordResetSessionResource } from "../../../auth/x_components/Login/passwordResetSession/resource"
+
 import { initialPasswordResetSessionComponentState } from "../../../auth/x_components/Login/passwordResetSession/component"
 import { initialFormComponentState } from "../../../sub/getto-form/x_components/Form/component"
 
@@ -33,8 +34,8 @@ import {
 
 type Props = PasswordResetSessionResource
 export function PasswordResetSession(resource: Props): VNode {
-    const { passwordResetSession } = resource
-    const state = useComponent(passwordResetSession, initialPasswordResetSessionComponentState)
+    const { resetSession } = resource
+    const state = useComponent(resetSession, initialPasswordResetSessionComponentState)
     const formState = useComponent(resource.form, initialFormComponentState)
 
     switch (state.type) {
@@ -120,7 +121,7 @@ export function PasswordResetSession(resource: Props): VNode {
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    passwordResetSession.startSession(resource.form.getStartSessionFields())
+                    resetSession.startSession(resource.form.getStartSessionFields())
                 }
             }
             function connectingButton(): VNode {
@@ -194,7 +195,7 @@ export function PasswordResetSession(resource: Props): VNode {
     }
 
     function loginLink(): VNode {
-        return html`<a href="${passwordResetSession.link.passwordLogin()}">
+        return html`<a href="${resetSession.link.passwordLogin()}">
             ${icon("user")} ログインIDとパスワードでログインする
         </a>`
     }

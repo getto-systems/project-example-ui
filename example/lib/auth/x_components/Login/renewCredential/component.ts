@@ -19,7 +19,7 @@ export type RenewCredentialMaterial = Readonly<{
 }>
 
 export interface RenewCredentialComponent extends ApplicationComponent<RenewCredentialComponentState> {
-    renew(): void
+    request(): void
     succeedToInstantLoad(): void
     failedToInstantLoad(): void
     loadError(err: LoadError): void

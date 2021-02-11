@@ -1,7 +1,7 @@
 import {
     DashboardRepository,
     DashboardRemoteAccess,
-    newDashboardResource,
+    newTestDashboardResource,
 } from "../../EntryPoint/tests/core"
 
 import { initMemoryTypedStorage } from "../../../../../z_infra/storage/memory"
@@ -70,7 +70,7 @@ function standardResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newDashboardResource(version, url, menuTree, repository, simulator, clock)
+    const resource = newTestDashboardResource(version, url, menuTree, repository, simulator, clock)
 
     return { repository, resource }
 }

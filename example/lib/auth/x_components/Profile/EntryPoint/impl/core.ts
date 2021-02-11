@@ -11,13 +11,15 @@ import { MenuAction, MenuLocationInfo } from "../../../../permission/menu/action
 import { SeasonAction } from "../../../../../example/shared/season/action"
 import { ErrorComponentFactory } from "../../../../../available/x_components/Error/error/component"
 import { NotifyAction } from "../../../../../available/notify/action"
+import { LogoutAction } from "../../../../login/credentialStore/action"
 
-export type DashboardFactory = Readonly<{
+export type ProfileFactory = Readonly<{
     actions: Readonly<{
         notify: NotifyAction
         credential: CredentialAction
         menu: MenuAction
         season: SeasonAction
+        logout: LogoutAction
     }>
     components: Readonly<{
         error: ErrorComponentFactory
@@ -25,14 +27,14 @@ export type DashboardFactory = Readonly<{
         menuList: MenuListComponentFactory
         breadcrumbList: BreadcrumbListComponentFactory
 
-        example: LogoutComponentFactory
+        logout: LogoutComponentFactory
     }>
 }>
 export type DashboardLocationInfo = Readonly<{
     menu: MenuLocationInfo
 }>
 export function initDashboardResource(
-    factory: DashboardFactory,
+    factory: ProfileFactory,
     locationInfo: DashboardLocationInfo
 ): ProfileResource {
     const actions = {
@@ -46,6 +48,8 @@ export function initDashboardResource(
         loadBreadcrumb: factory.actions.menu.loadBreadcrumb(locationInfo.menu),
         loadMenu: factory.actions.menu.loadMenu(locationInfo.menu),
         toggleMenuExpand: factory.actions.menu.toggleMenuExpand(),
+
+        logout: factory.actions.logout.logout(),
     }
     return {
         error: factory.components.error(actions),
@@ -53,6 +57,6 @@ export function initDashboardResource(
         menuList: factory.components.menuList(actions),
         breadcrumbList: factory.components.breadcrumbList(actions),
 
-        example: factory.components.example(actions),
+        logout: factory.components.logout(actions),
     }
 }

@@ -1,9 +1,9 @@
-import { detectAppTarget } from "../../EntryPoint/impl/location"
-import { initNextVersionResource } from "../../EntryPoint/impl/core"
+import { detectAppTarget } from "../../../../nextVersion/impl/location"
+import { initNextVersionResource } from "../../EntryPoint/impl/nextVersion"
 
 import { initNextVersionComponent } from "../impl"
 
-import { initNextVersionAction } from "../../EntryPoint/tests/core"
+import { initTestNextVersionAction } from "../../../../nextVersion/tests/nextVersion"
 
 import { CheckRemoteAccess, NextVersionActionConfig } from "../../../../nextVersion/infra"
 
@@ -17,11 +17,11 @@ export function newTestNextVersionResource(
     version: string,
     currentURL: URL,
     config: NextVersionActionConfig,
-    simulator: NextVersionRemoteAccess
+    remote: NextVersionRemoteAccess
 ): NextVersionResource {
     const factory = {
         actions: {
-            nextVersion: initNextVersionAction(config, simulator),
+            nextVersion: initTestNextVersionAction(config, remote.check),
         },
         components: {
             nextVersion: initNextVersionComponent,

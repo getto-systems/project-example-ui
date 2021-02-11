@@ -1,4 +1,4 @@
-import { MenuRepository, MenuRemoteAccess, newTestMenuResource } from "./core"
+import { MenuTestRepository, MenuTestRemoteAccess, newTestMenuResource } from "./core"
 
 import { initMemoryTypedStorage } from "../../../../../z_infra/storage/memory"
 import { initApiCredentialRepository } from "../../../../common/credential/impl/repository/apiCredential"
@@ -1125,26 +1125,26 @@ function standardMenuTree(): MenuTree {
     ]
 }
 
-function standardRepository(): MenuRepository {
+function standardRepository(): MenuTestRepository {
     return {
         apiCredentials: standardApiCredentialRepository(),
         menuExpands: standardMenuExpandRepository([]),
     }
 }
-function developmentDocumentRepository(): MenuRepository {
+function developmentDocumentRepository(): MenuTestRepository {
     return {
         apiCredentials: developmentDocumentApiCredentialRepository(),
         menuExpands: standardMenuExpandRepository([]),
     }
 }
-function expandRepository(): MenuRepository {
+function expandRepository(): MenuTestRepository {
     return {
         apiCredentials: standardApiCredentialRepository(),
         menuExpands: standardMenuExpandRepository([[markMenuCategoryLabel("DOCUMENT")]]),
     }
 }
 
-function standardSimulator(): MenuRemoteAccess {
+function standardSimulator(): MenuTestRemoteAccess {
     return {
         loadMenuBadge: initLoadMenuBadgeSimulateRemoteAccess(
             () => ({
@@ -1190,7 +1190,7 @@ function standardMenuExpandRepository(menuExpand: MenuExpand): MenuExpandReposit
     })
 }
 
-function expectToSaveExpand(repository: MenuRepository, menuExpand: string[][]) {
+function expectToSaveExpand(repository: MenuTestRepository, menuExpand: string[][]) {
     expect(repository.menuExpands.findMenuExpand()).toEqual({ success: true, menuExpand })
 }
 

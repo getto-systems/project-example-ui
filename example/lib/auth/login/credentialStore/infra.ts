@@ -27,6 +27,9 @@ export type SetContinuousRenewInfra = Readonly<{
     renew: RenewRemoteAccess
     clock: Clock
 }>
+export type LogoutInfra = Readonly<{
+    authCredentials: AuthCredentialRepository
+}>
 
 export type RenewConfig = Readonly<{
     instantLoadExpire: ExpireTime
@@ -35,10 +38,6 @@ export type RenewConfig = Readonly<{
 export type SetContinuousRenewConfig = Readonly<{
     interval: IntervalTime
     delay: DelayTime
-}>
-
-export type StoreInfra = Readonly<{
-    authCredentials: AuthCredentialRepository
 }>
 
 export interface AuthCredentialRepository {

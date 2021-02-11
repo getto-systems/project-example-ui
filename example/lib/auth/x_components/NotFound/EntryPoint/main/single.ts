@@ -1,14 +1,10 @@
-import { env } from "../../../../../y_environment/env"
-
 import { NotFoundFactory, initNotFoundResource } from "../impl/core"
 
 import { initCurrentVersionComponent } from "../../currentVersion/impl"
 
-import { findCurrentVersion } from "../../../../permission/currentVersion/impl/core"
-
 import { NotFoundEntryPoint } from "../entryPoint"
 
-import { CurrentVersionAction } from "../../../../permission/currentVersion/action"
+import { initCurrentVersionAction } from "../../../../permission/currentVersion/main/currentVersion"
 
 export function newNotFoundAsSingle(): NotFoundEntryPoint {
     const factory: NotFoundFactory = {
@@ -25,13 +21,5 @@ export function newNotFoundAsSingle(): NotFoundEntryPoint {
         terminate: () => {
             resource.currentVersion.terminate()
         },
-    }
-}
-
-function initCurrentVersionAction(): CurrentVersionAction {
-    return {
-        findCurrentVersion: findCurrentVersion({
-            currentVersion: env.version,
-        }),
     }
 }

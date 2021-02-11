@@ -1,13 +1,12 @@
+import { initTestApplicationAction } from "../../../../common/application/tests/application"
 import {
-    initTestApplicationAction,
-    initTestSetContinuousRenewAction,
     initTestRenewAction,
-    initRenewCredentialLocationInfo,
-} from "../../EntryPoint/tests/core"
+    initTestSetContinuousRenewAction,
+} from "../../../../login/credentialStore/tests/renew"
 
-import { initRenewCredentialResource, RenewCredentialFactory } from "../../EntryPoint/impl/renew"
+import { initLoginLocationInfo } from "../../common/impl/location"
 
-import { initRenewCredentialComponent } from "../impl"
+import { initRenewCredentialResource } from "../impl/resource"
 
 import { Clock } from "../../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../../common/application/infra"
@@ -18,48 +17,40 @@ import {
     RenewRemoteAccess,
 } from "../../../../login/credentialStore/infra"
 
-import { RenewCredentialResource } from "../../EntryPoint/entryPoint"
+import { RenewCredentialResource } from "../resource"
 
 import { RenewCredentialComponent } from "../component"
 
-export type RenewCredentialConfig = {
+export type RenewCredentialTestConfig = {
     application: ApplicationActionConfig
     renew: RenewActionConfig
     setContinuousRenew: SetContinuousRenewActionConfig
 }
-export type RenewCredentialRepository = Readonly<{
+export type RenewCredentialTestRepository = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
-export type RenewCredentialRemoteAccess = Readonly<{
+export type RenewCredentialTestRemoteAccess = Readonly<{
     renew: RenewRemoteAccess
 }>
 
-export function newTestRenewCredentialResource(
+export function newRenewCredentialTestResource(
     currentURL: URL,
-    config: RenewCredentialConfig,
-    repository: RenewCredentialRepository,
-    remote: RenewCredentialRemoteAccess,
+    config: RenewCredentialTestConfig,
+    repository: RenewCredentialTestRepository,
+    remote: RenewCredentialTestRemoteAccess,
     clock: Clock,
     hook: Setup<RenewCredentialComponent>
 ): RenewCredentialResource {
-    const factory: RenewCredentialFactory = {
-        actions: {
-            application: initTestApplicationAction(config.application),
-            setContinuousRenew: initTestSetContinuousRenewAction(
-                config.setContinuousRenew,
-                repository.authCredentials,
-                remote.renew,
-                clock
-            ),
-
-            renew: initTestRenewAction(config.renew, repository.authCredentials, remote.renew, clock),
-        },
-        components: {
-            renewCredential: initRenewCredentialComponent,
-        },
-    }
-
-    return initRenewCredentialResource(factory, initRenewCredentialLocationInfo(currentURL), hook)
+    return initRenewCredentialResource(hook, initLoginLocationInfo(currentURL), {
+        application: initTestApplicationAction(config.application),
+        renew: initTestRenewAction(config.renew, repository.authCredentials, remote.renew, clock),
+        setContinuousRenew: initTestSetContinuousRenewAction(
+            config.setContinuousRenew,
+            repository.authCredentials,
+            remote.renew,
+            clock
+        ),
+    })
 }
 
 interface Setup<T> {
