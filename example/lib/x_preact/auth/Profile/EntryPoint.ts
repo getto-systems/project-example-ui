@@ -24,10 +24,7 @@ type Props = DashboardEntryPoint
 export function EntryPoint({ resource, terminate }: Props): VNode {
     useTermination(terminate)
 
-    const [err] = useErrorBoundary((err) => {
-        // TODO ここでエラーをどこかに投げたい。apiCredential が有効なはずなので、api にエラーを投げられるはず
-        console.log(err)
-    })
+    const [err] = useErrorBoundary((err) => resource.error.notify(err))
     if (err) {
         return h(ApplicationError, { err: `${err}` })
     }
