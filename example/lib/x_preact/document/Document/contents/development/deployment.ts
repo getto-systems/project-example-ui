@@ -2,9 +2,9 @@ import { VNode } from "preact"
 import { html } from "htm/preact"
 
 import { content_index_deployment } from "../home"
-import { box, container } from "../../../../z_vendor/getto-css/preact/design/box"
-import { v_medium, v_small } from "../../../../z_vendor/getto-css/preact/design/alignment"
-import { field } from "../../../../z_vendor/getto-css/preact/design/form"
+import { box, container } from "../../../../../z_vendor/getto-css/preact/design/box"
+import { v_medium, v_small } from "../../../../../z_vendor/getto-css/preact/design/alignment"
+import { field } from "../../../../../z_vendor/getto-css/preact/design/form"
 
 export const content_development_deployment = (): VNode[] => [
     container([

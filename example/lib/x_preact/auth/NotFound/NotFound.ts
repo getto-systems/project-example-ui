@@ -2,26 +2,24 @@ import { h, VNode } from "preact"
 import { useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { loginBox } from "../../z_vendor/getto-css/preact/layout/login"
-import { buttons } from "../../z_vendor/getto-css/preact/design/form"
+import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
+import { buttons } from "../../../z_vendor/getto-css/preact/design/form"
 
-import { useComponent, useTerminate } from "../z_common/hooks"
-import { siteInfo } from "../z_common/site"
-import { icon } from "../z_common/icon"
+import { useComponent, useTerminate } from "../../z_common/hooks"
+import { siteInfo } from "../../z_common/site"
+import { icon } from "../../z_common/icon"
 
-import { ApplicationError } from "../z_common/System/ApplicationError"
+import { ApplicationError } from "../../z_common/System/ApplicationError"
 
-import { NotFoundEntryPoint } from "../../auth/x_components/NotFound/EntryPoint/entryPoint"
+import { NotFoundEntryPoint } from "../../../auth/x_components/NotFound/EntryPoint/entryPoint"
 
 import {
     CurrentVersionComponent,
     initialCurrentVersionComponentState,
-} from "../../auth/x_components/NotFound/currentVersion/component"
+} from "../../../auth/x_components/NotFound/currentVersion/component"
 
-type Props = Readonly<{
-    notFound: NotFoundEntryPoint
-}>
-export function NotFound({ notFound: { resource, terminate } }: Props): VNode {
+type Props = NotFoundEntryPoint
+export function EntryPoint({ resource, terminate }: Props): VNode {
     const [err] = useErrorBoundary((err) => {
         // 認証していないのでエラーはどうしようもない
         console.log(err)

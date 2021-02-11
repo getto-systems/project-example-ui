@@ -20,10 +20,8 @@ import { Example } from "./Example"
 
 import { DashboardEntryPoint } from "../../../example/x_components/Dashboard/EntryPoint/entryPoint"
 
-type Props = Readonly<{
-    dashboard: DashboardEntryPoint
-}>
-export function Dashboard({ dashboard: { resource, terminate } }: Props): VNode {
+type Props = DashboardEntryPoint
+export function EntryPoint({ resource, terminate }: Props): VNode {
     const [err] = useErrorBoundary((err) => {
         // TODO ここでエラーをどこかに投げたい。apiCredential が有効なはずなので、api にエラーを投げられるはず
         console.log(err)

@@ -12,12 +12,13 @@ import { PasswordLogin } from "./PasswordLogin"
 import { PasswordResetSession } from "./PasswordResetSession"
 import { PasswordReset } from "./PasswordReset"
 
-import { LoginEntryPoint, initialLoginState } from "../../../auth/x_components/Login/EntryPoint/entryPoint"
+import {
+    LoginEntryPoint,
+    initialLoginState,
+} from "../../../auth/x_components/Login/EntryPoint/entryPoint"
 
-type Props = Readonly<{
-    login: LoginEntryPoint
-}>
-export function Login({ login: { view, terminate } }: Props): VNode {
+type Props = LoginEntryPoint
+export function EntryPoint({ view, terminate }: Props): VNode {
     const [err] = useErrorBoundary((err) => {
         // 認証前なのでエラーはどうしようもない
         console.log(err)

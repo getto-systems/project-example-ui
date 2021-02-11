@@ -4,8 +4,8 @@ import { html } from "htm/preact"
 import { itemsSection } from "../../../box"
 
 import { content_auth_permission } from "../../auth"
-import { box, container } from "../../../../../z_vendor/getto-css/preact/design/box"
-import { v_medium } from "../../../../../z_vendor/getto-css/preact/design/alignment"
+import { box, container } from "../../../../../../z_vendor/getto-css/preact/design/box"
+import { v_medium } from "../../../../../../z_vendor/getto-css/preact/design/alignment"
 
 export const content_development_auth_permission = (): VNode[] => [
     container([

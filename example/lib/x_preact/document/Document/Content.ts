@@ -2,20 +2,20 @@ import { h, VNode } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../z_vendor/getto-css/preact/common"
-import { appMain, mainBody, mainHeader, mainTitle } from "../../z_vendor/getto-css/preact/layout/app"
+import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
+import { appMain, mainBody, mainHeader, mainTitle } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { copyright } from "../z_common/site"
+import { copyright } from "../../z_common/site"
 
-import { BreadcrumbList } from "../z_common/Outline/BreadcrumbList"
+import { BreadcrumbList } from "../../z_common/Outline/BreadcrumbList"
 
 import {
     ContentComponent,
     initialContentComponentState,
-} from "../../document/x_components/Document/content/component"
-import { BreadcrumbListComponent } from "../../auth/x_components/Outline/breadcrumbList/component"
+} from "../../../document/x_components/Document/content/component"
+import { BreadcrumbListComponent } from "../../../auth/x_components/Outline/breadcrumbList/component"
 
-import { ContentPath } from "../../document/content/data"
+import { ContentPath } from "../../../document/content/data"
 
 type Props = Readonly<{
     content: ContentComponent

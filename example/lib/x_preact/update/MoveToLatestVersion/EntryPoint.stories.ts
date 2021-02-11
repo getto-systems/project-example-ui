@@ -6,7 +6,7 @@ import { initMockPropsPasser } from "../../../sub/getto-example/x_components/App
 import { newMockMoveToNextVersion } from "../../../update/x_components/MoveToNextVersion/EntryPoint/mock"
 import { NextVersionMockProps } from "../../../update/x_components/MoveToNextVersion/nextVersion/mock"
 
-import { MoveToLatestVersion } from "./EntryPoint"
+import { EntryPoint } from "./EntryPoint"
 
 export default {
     title: "Update/MoveToNextVersion",
@@ -20,14 +20,14 @@ export default {
 type MockProps = NextVersionMockProps
 const Template: Story<MockProps> = (args) => {
     const passer = initMockPropsPasser<NextVersionMockProps>()
-    const moveToNextVersion = newMockMoveToNextVersion(passer)
+    const entryPoint = newMockMoveToNextVersion(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(MoveToLatestVersion, { moveToNextVersion })
+        return h(EntryPoint, entryPoint)
     }
 }
 
