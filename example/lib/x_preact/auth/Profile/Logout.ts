@@ -11,23 +11,23 @@ import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 import { useComponent } from "../../z_common/hooks"
 
 import {
-    ExampleComponent,
-    initialExampleComponentState,
-} from "../../../example/x_components/Dashboard/example/component"
+    LogoutComponent,
+    initialLogoutComponentState,
+} from "../../../auth/x_components/Profile/logout/component"
 
 import { Season, SeasonError } from "../../../example/shared/season/data"
 
 type Props = Readonly<{
-    example: ExampleComponent
+    example: LogoutComponent
 }>
-export function Example({ example }: Props): VNode {
-    const state = useComponent(example, initialExampleComponentState)
+export function Logout({ example }: Props): VNode {
+    const state = useComponent(example, initialLogoutComponentState)
     useEffect(() => {
         example.load()
     }, [])
 
     switch (state.type) {
-        case "initial-example":
+        case "initial-logout":
             return EMPTY_CONTENT
 
         case "succeed-to-load":

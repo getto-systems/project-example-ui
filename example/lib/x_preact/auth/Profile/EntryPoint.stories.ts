@@ -8,14 +8,14 @@ import { initMockPropsPasser } from "../../../sub/getto-example/x_components/App
 import {
     DashboardMockPropsPasser,
     newMockDashboard,
-} from "../../../example/x_components/Dashboard/EntryPoint/mock"
+} from "../../../auth/x_components/Profile/EntryPoint/mock"
 import { SeasonInfoMockProps } from "../../../example/x_components/Outline/seasonInfo/mock"
 import { MenuListMockProps } from "../../../auth/x_components/Outline/menuList/mock"
 import { BreadcrumbListMockProps } from "../../../auth/x_components/Outline/breadcrumbList/mock"
-import { ExampleMockProps } from "../../../example/x_components/Dashboard/example/mock"
+import { ExampleMockProps } from "../../../auth/x_components/Profile/logout/mock"
 
 export default {
-    title: "Example/Home/Dashboard",
+    title: "Auth/Profile",
     argTypes: {
         type: {
             table: { disable: true },
