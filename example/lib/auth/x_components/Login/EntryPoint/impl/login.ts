@@ -14,7 +14,7 @@ import { ApplicationAction, SecureScriptPathLocationInfo } from "../../../../com
 import { LoginIDFormFieldAction } from "../../../../common/field/loginID/action"
 import { PasswordFormFieldAction } from "../../../../common/field/password/action"
 import { PasswordLoginAction } from "../../../../login/passwordLogin/action"
-import { SetContinuousRenewAction } from "../../../../login/renew/action"
+import { SetContinuousRenewAction } from "../../../../login/credentialStore/action"
 
 export type PasswordLoginFactory = Readonly<{
     link: LoginLinkFactory

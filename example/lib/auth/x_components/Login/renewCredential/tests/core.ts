@@ -16,7 +16,7 @@ import {
     SetContinuousRenewActionConfig,
     AuthCredentialRepository,
     RenewRemoteAccess,
-} from "../../../../login/renew/infra"
+} from "../../../../login/credentialStore/infra"
 
 import { RenewCredentialResource } from "../../EntryPoint/entryPoint"
 

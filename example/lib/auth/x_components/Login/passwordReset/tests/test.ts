@@ -7,15 +7,15 @@ import {
 } from "./core"
 
 import { initStaticClock, StaticClock } from "../../../../../z_infra/clock/simulate"
-import { initRenewSimulateRemoteAccess } from "../../../../login/renew/impl/remote/renew/simulate"
+import { initRenewSimulateRemoteAccess } from "../../../../login/credentialStore/impl/remote/renew/simulate"
 import { initResetSimulateRemoteAccess } from "../../../../profile/passwordReset/impl/remote/reset/simulate"
-import { initAuthCredentialRepository } from "../../../../login/renew/impl/repository/authCredential"
+import { initAuthCredentialRepository } from "../../../../login/credentialStore/impl/repository/authCredential"
 
 import {
     AuthCredentialRepository,
     RenewRemoteAccess,
     RenewRemoteAccessResult,
-} from "../../../../login/renew/infra"
+} from "../../../../login/credentialStore/infra"
 import { ResetRemoteAccessResult } from "../../../../profile/passwordReset/infra"
 
 import { PasswordResetComponentState } from "../component"

@@ -6,7 +6,7 @@ import { PasswordFormFieldComponent, PasswordFormFieldMaterial } from "../field/
 import { LoginLink } from "../link"
 
 import { Reset } from "../../../profile/passwordReset/action"
-import { SetContinuousRenew } from "../../../login/renew/action"
+import { SetContinuousRenew } from "../../../login/credentialStore/action"
 import { SecureScriptPath } from "../../../common/application/action"
 
 import { ResetError, ResetFields } from "../../../profile/passwordReset/data"

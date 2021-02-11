@@ -6,7 +6,7 @@ import { LoginIDFormFieldComponent, LoginIDFormFieldMaterial } from "../field/lo
 import { PasswordFormFieldComponent, PasswordFormFieldMaterial } from "../field/password/component"
 
 import { Login } from "../../../login/passwordLogin/action"
-import { SetContinuousRenew } from "../../../login/renew/action"
+import { SetContinuousRenew } from "../../../login/credentialStore/action"
 import { SecureScriptPath } from "../../../common/application/action"
 
 import { FormConvertResult } from "../../../../sub/getto-form/form/data"

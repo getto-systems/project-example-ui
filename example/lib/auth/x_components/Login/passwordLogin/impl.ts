@@ -20,7 +20,7 @@ import { PasswordFormFieldComponent } from "../field/password/component"
 import { FormConvertResult } from "../../../../sub/getto-form/form/data"
 import { LoadError } from "../../../common/application/data"
 import { AuthCredential } from "../../../common/credential/data"
-import { storeAuthCredential } from "../../../login/renew/data"
+import { storeAuthCredential } from "../../../login/credentialStore/data"
 import { LoginFields } from "../../../login/passwordLogin/data"
 
 export const initPasswordLoginComponent: PasswordLoginComponentFactory = (material) =>

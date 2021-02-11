@@ -26,7 +26,7 @@ import {
 
 import { initStaticClock } from "../../../../../z_infra/clock/simulate"
 import { initLoginSimulateRemoteAccess } from "../../../../login/passwordLogin/impl/remote/login/simulate"
-import { initRenewSimulateRemoteAccess } from "../../../../login/renew/impl/remote/renew/simulate"
+import { initRenewSimulateRemoteAccess } from "../../../../login/credentialStore/impl/remote/renew/simulate"
 import { initResetSimulateRemoteAccess } from "../../../../profile/passwordReset/impl/remote/reset/simulate"
 import {
     initGetStatusSimulateRemoteAccess,
@@ -34,11 +34,11 @@ import {
     initStartSessionSimulateRemoteAccess,
 } from "../../../../profile/passwordReset/impl/remote/session/simulate"
 
-import { initAuthCredentialRepository } from "../../../../login/renew/impl/repository/authCredential"
+import { initAuthCredentialRepository } from "../../../../login/credentialStore/impl/repository/authCredential"
 
 import { Clock } from "../../../../../z_infra/clock/infra"
 import { LoginRemoteAccessResult } from "../../../../login/passwordLogin/infra"
-import { RenewRemoteAccessResult } from "../../../../login/renew/infra"
+import { RenewRemoteAccessResult } from "../../../../login/credentialStore/infra"
 import {
     GetStatusRemoteAccessResult,
     ResetRemoteAccessResult,

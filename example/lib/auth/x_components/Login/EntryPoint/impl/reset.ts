@@ -18,7 +18,7 @@ import {
 import { ApplicationAction, SecureScriptPathLocationInfo } from "../../../../common/application/action"
 import { LoginIDFormFieldAction } from "../../../../common/field/loginID/action"
 import { PasswordFormFieldAction } from "../../../../common/field/password/action"
-import { SetContinuousRenewAction } from "../../../../login/renew/action"
+import { SetContinuousRenewAction } from "../../../../login/credentialStore/action"
 import {
     PasswordResetAction,
     PasswordResetSessionAction,

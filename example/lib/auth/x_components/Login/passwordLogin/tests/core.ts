@@ -17,7 +17,7 @@ import { initLoginIDFormFieldAction, initPasswordFormFieldAction } from "../../E
 import { Clock } from "../../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../../common/application/infra"
 import { LoginRemoteAccess, PasswordLoginActionConfig } from "../../../../login/passwordLogin/infra"
-import { SetContinuousRenewActionConfig, AuthCredentialRepository, RenewRemoteAccess } from "../../../../login/renew/infra"
+import { SetContinuousRenewActionConfig, AuthCredentialRepository, RenewRemoteAccess } from "../../../../login/credentialStore/infra"
 
 import { PasswordLoginResource } from "../../EntryPoint/entryPoint"
 

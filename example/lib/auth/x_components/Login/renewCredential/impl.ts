@@ -8,7 +8,7 @@ import {
 } from "./component"
 
 import { LoadError } from "../../../common/application/data"
-import { emptyAuthCredential, storeAuthCredential, StoreAuthCredential } from "../../../login/renew/data"
+import { emptyAuthCredential, storeAuthCredential, StoreAuthCredential } from "../../../login/credentialStore/data"
 
 export const initRenewCredentialComponent: RenewCredentialComponentFactory = (material) =>
     new Component(material)

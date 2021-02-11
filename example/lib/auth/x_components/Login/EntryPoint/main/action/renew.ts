@@ -11,23 +11,23 @@ import {
 import { initDateClock } from "../../../../../../z_infra/clock/date"
 import { delayed } from "../../../../../../z_infra/delayed/core"
 import { initWebTypedStorage } from "../../../../../../z_infra/storage/webStorage"
-import { initRenewConnectRemoteAccess } from "../../../../../login/renew/impl/remote/renew/connect"
+import { initRenewConnectRemoteAccess } from "../../../../../login/credentialStore/impl/remote/renew/connect"
 
 import {
     AuthCredentialStorage,
     initAuthCredentialRepository,
-} from "../../../../../login/renew/impl/repository/authCredential"
+} from "../../../../../login/credentialStore/impl/repository/authCredential"
 import {
     initLastAuthAtConverter,
     initTicketNonceConverter,
-} from "../../../../../login/renew/impl/repository/converter"
+} from "../../../../../login/credentialStore/impl/repository/converter"
 
 import { initApiCredentialConverter } from "../../../../../common/credential/impl/repository/converter"
-import { forceRenew, renew, setContinuousRenew } from "../../../../../login/renew/impl/core"
+import { forceRenew, renew, setContinuousRenew } from "../../../../../login/credentialStore/impl/core"
 
-import { RenewInfra, SetContinuousRenewInfra } from "../../../../../login/renew/infra"
+import { RenewInfra, SetContinuousRenewInfra } from "../../../../../login/credentialStore/infra"
 
-import { RenewAction, SetContinuousRenewAction } from "../../../../../login/renew/action"
+import { RenewAction, SetContinuousRenewAction } from "../../../../../login/credentialStore/action"
 
 export function initRenewAction(credentialStorage: Storage): RenewAction {
     return {

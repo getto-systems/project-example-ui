@@ -7,7 +7,7 @@ import {
 } from "../../renewCredential/component"
 
 import { ApplicationAction, SecureScriptPathLocationInfo } from "../../../../common/application/action"
-import { RenewAction, SetContinuousRenewAction } from "../../../../login/renew/action"
+import { RenewAction, SetContinuousRenewAction } from "../../../../login/credentialStore/action"
 
 export type RenewCredentialFactory = Readonly<{
     actions: Readonly<{
