@@ -9,7 +9,10 @@ import { copyright } from "../common/site"
 
 import { BreadcrumbList } from "../Outline/BreadcrumbList"
 
-import { ContentComponent, initialContentComponentState } from "../../document/Document/content/component"
+import {
+    ContentComponent,
+    initialContentComponentState,
+} from "../../document/Document/content/component"
 import { BreadcrumbListComponent } from "../../auth/Outline/breadcrumbList/component"
 
 import { ContentPath } from "../../document/content/data"
@@ -81,25 +84,27 @@ const indexEntry: ContentEntry = entry("ドキュメント", async () =>
     (await import("./contents/home")).content_index()
 )
 const contentMap: Record<ContentPath, ContentEntry> = {
-    "/docs/index.html": indexEntry,
-    "/docs/auth.html": entry("認証・認可", async () => (await import("./contents/auth")).content_auth()),
+    "/document/index.html": indexEntry,
+    "/document/auth.html": entry("認証・認可", async () =>
+        (await import("./contents/auth")).content_auth()
+    ),
 
-    "/docs/development/deployment.html": entry("配備構成", async () =>
+    "/document/development/deployment.html": entry("配備構成", async () =>
         (await import("./contents/development/deployment")).content_development_deployment()
     ),
-    "/docs/development/auth/login.html": entry("ログイン", async () =>
+    "/document/development/auth/login.html": entry("ログイン", async () =>
         (await import("./contents/development/auth/login")).content_development_auth_login()
     ),
-    "/docs/development/auth/permission.html": entry("アクセス制限", async () =>
+    "/document/development/auth/permission.html": entry("アクセス制限", async () =>
         (await import("./contents/development/auth/permission")).content_development_auth_permission()
     ),
-    "/docs/development/auth/user.html": entry("ユーザー管理", async () =>
+    "/document/development/auth/user.html": entry("ユーザー管理", async () =>
         (await import("./contents/development/auth/user")).content_development_auth_user()
     ),
-    "/docs/development/auth/profile.html": entry("認証情報管理", async () =>
+    "/document/development/auth/profile.html": entry("認証情報管理", async () =>
         (await import("./contents/development/auth/profile")).content_development_auth_profile()
     ),
-    "/docs/development/auth/api.html": entry("API 詳細設計", async () =>
+    "/document/development/auth/api.html": entry("API 詳細設計", async () =>
         (await import("./contents/development/auth/api")).content_development_auth_api()
     ),
 }

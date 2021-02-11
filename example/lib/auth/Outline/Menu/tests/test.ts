@@ -141,7 +141,7 @@ describe("MenuList", () => {
                                                 item: {
                                                     label: "ドキュメント",
                                                     icon: "docs",
-                                                    href: "/1.0.0/docs/index.html",
+                                                    href: "/1.0.0/document/index.html",
                                                 },
                                                 isActive: false,
                                                 badgeCount: 0,
@@ -160,7 +160,7 @@ describe("MenuList", () => {
                                                 item: {
                                                     label: "認証・認可",
                                                     icon: "auth",
-                                                    href: "/1.0.0/docs/auth.html",
+                                                    href: "/1.0.0/document/auth.html",
                                                 },
                                                 isActive: false,
                                                 badgeCount: 0,
@@ -175,7 +175,7 @@ describe("MenuList", () => {
                                                         item: {
                                                             label: "詳細",
                                                             icon: "detail",
-                                                            href: "/1.0.0/docs/auth.html",
+                                                            href: "/1.0.0/document/auth.html",
                                                         },
                                                         isActive: false,
                                                         badgeCount: 0,
@@ -213,7 +213,7 @@ describe("MenuList", () => {
                                                 item: {
                                                     label: "ドキュメント",
                                                     icon: "docs",
-                                                    href: "/1.0.0/docs/index.html",
+                                                    href: "/1.0.0/document/index.html",
                                                 },
                                                 isActive: false,
                                                 badgeCount: 20,
@@ -232,7 +232,7 @@ describe("MenuList", () => {
                                                 item: {
                                                     label: "認証・認可",
                                                     icon: "auth",
-                                                    href: "/1.0.0/docs/auth.html",
+                                                    href: "/1.0.0/document/auth.html",
                                                 },
                                                 isActive: false,
                                                 badgeCount: 0,
@@ -247,7 +247,7 @@ describe("MenuList", () => {
                                                         item: {
                                                             label: "詳細",
                                                             icon: "detail",
-                                                            href: "/1.0.0/docs/auth.html",
+                                                            href: "/1.0.0/document/auth.html",
                                                         },
                                                         isActive: false,
                                                         badgeCount: 0,
@@ -322,7 +322,7 @@ describe("MenuList", () => {
                                                 item: {
                                                     label: "ドキュメント",
                                                     icon: "docs",
-                                                    href: "/1.0.0/docs/index.html",
+                                                    href: "/1.0.0/document/index.html",
                                                 },
                                                 isActive: false,
                                                 badgeCount: 0,
@@ -341,7 +341,7 @@ describe("MenuList", () => {
                                                 item: {
                                                     label: "認証・認可",
                                                     icon: "auth",
-                                                    href: "/1.0.0/docs/auth.html",
+                                                    href: "/1.0.0/document/auth.html",
                                                 },
                                                 isActive: false,
                                                 badgeCount: 0,
@@ -356,7 +356,7 @@ describe("MenuList", () => {
                                                         item: {
                                                             label: "詳細",
                                                             icon: "detail",
-                                                            href: "/1.0.0/docs/auth.html",
+                                                            href: "/1.0.0/document/auth.html",
                                                         },
                                                         isActive: false,
                                                         badgeCount: 0,
@@ -394,7 +394,7 @@ describe("MenuList", () => {
                                                 item: {
                                                     label: "ドキュメント",
                                                     icon: "docs",
-                                                    href: "/1.0.0/docs/index.html",
+                                                    href: "/1.0.0/document/index.html",
                                                 },
                                                 isActive: false,
                                                 badgeCount: 20,
@@ -413,7 +413,7 @@ describe("MenuList", () => {
                                                 item: {
                                                     label: "認証・認可",
                                                     icon: "auth",
-                                                    href: "/1.0.0/docs/auth.html",
+                                                    href: "/1.0.0/document/auth.html",
                                                 },
                                                 isActive: false,
                                                 badgeCount: 0,
@@ -428,7 +428,7 @@ describe("MenuList", () => {
                                                         item: {
                                                             label: "詳細",
                                                             icon: "detail",
-                                                            href: "/1.0.0/docs/auth.html",
+                                                            href: "/1.0.0/document/auth.html",
                                                         },
                                                         isActive: false,
                                                         badgeCount: 0,
@@ -530,7 +530,7 @@ describe("MenuList", () => {
                                             item: {
                                                 label: "ドキュメント",
                                                 icon: "docs",
-                                                href: "/1.0.0/docs/index.html",
+                                                href: "/1.0.0/document/index.html",
                                             },
                                             isActive: false,
                                             badgeCount: 0,
@@ -549,7 +549,7 @@ describe("MenuList", () => {
                                             item: {
                                                 label: "認証・認可",
                                                 icon: "auth",
-                                                href: "/1.0.0/docs/auth.html",
+                                                href: "/1.0.0/document/auth.html",
                                             },
                                             isActive: false,
                                             badgeCount: 0,
@@ -564,7 +564,7 @@ describe("MenuList", () => {
                                                     item: {
                                                         label: "詳細",
                                                         icon: "detail",
-                                                        href: "/1.0.0/docs/auth.html",
+                                                        href: "/1.0.0/document/auth.html",
                                                     },
                                                     isActive: false,
                                                     badgeCount: 0,
@@ -602,7 +602,7 @@ describe("MenuList", () => {
                                             item: {
                                                 label: "ドキュメント",
                                                 icon: "docs",
-                                                href: "/1.0.0/docs/index.html",
+                                                href: "/1.0.0/document/index.html",
                                             },
                                             isActive: false,
                                             badgeCount: 20,
@@ -621,7 +621,7 @@ describe("MenuList", () => {
                                             item: {
                                                 label: "認証・認可",
                                                 icon: "auth",
-                                                href: "/1.0.0/docs/auth.html",
+                                                href: "/1.0.0/document/auth.html",
                                             },
                                             isActive: false,
                                             badgeCount: 0,
@@ -636,7 +636,7 @@ describe("MenuList", () => {
                                                     item: {
                                                         label: "詳細",
                                                         icon: "detail",
-                                                        href: "/1.0.0/docs/auth.html",
+                                                        href: "/1.0.0/document/auth.html",
                                                     },
                                                     isActive: false,
                                                     badgeCount: 0,
@@ -674,7 +674,7 @@ describe("MenuList", () => {
                                             item: {
                                                 label: "ドキュメント",
                                                 icon: "docs",
-                                                href: "/1.0.0/docs/index.html",
+                                                href: "/1.0.0/document/index.html",
                                             },
                                             isActive: false,
                                             badgeCount: 20,
@@ -693,7 +693,7 @@ describe("MenuList", () => {
                                             item: {
                                                 label: "認証・認可",
                                                 icon: "auth",
-                                                href: "/1.0.0/docs/auth.html",
+                                                href: "/1.0.0/document/auth.html",
                                             },
                                             isActive: false,
                                             badgeCount: 0,
@@ -708,7 +708,7 @@ describe("MenuList", () => {
                                                     item: {
                                                         label: "詳細",
                                                         icon: "detail",
-                                                        href: "/1.0.0/docs/auth.html",
+                                                        href: "/1.0.0/document/auth.html",
                                                     },
                                                     isActive: false,
                                                     badgeCount: 0,
@@ -746,7 +746,7 @@ describe("MenuList", () => {
                                             item: {
                                                 label: "ドキュメント",
                                                 icon: "docs",
-                                                href: "/1.0.0/docs/index.html",
+                                                href: "/1.0.0/document/index.html",
                                             },
                                             isActive: false,
                                             badgeCount: 20,
@@ -765,7 +765,7 @@ describe("MenuList", () => {
                                             item: {
                                                 label: "認証・認可",
                                                 icon: "auth",
-                                                href: "/1.0.0/docs/auth.html",
+                                                href: "/1.0.0/document/auth.html",
                                             },
                                             isActive: false,
                                             badgeCount: 0,
@@ -780,7 +780,7 @@ describe("MenuList", () => {
                                                     item: {
                                                         label: "詳細",
                                                         icon: "detail",
-                                                        href: "/1.0.0/docs/auth.html",
+                                                        href: "/1.0.0/document/auth.html",
                                                     },
                                                     isActive: false,
                                                     badgeCount: 0,
@@ -803,8 +803,8 @@ describe("MenuList", () => {
         }
     })
 
-    test("load menu; development docs", (done) => {
-        const { resource } = developmentDocsMenuResource()
+    test("load menu; development document", (done) => {
+        const { resource } = developmentDocumentMenuResource()
 
         resource.menuList.addStateHandler(stateHandler())
 
@@ -846,7 +846,7 @@ describe("MenuList", () => {
                                                 item: {
                                                     label: "ドキュメント",
                                                     icon: "docs",
-                                                    href: "/1.0.0/docs/index.html",
+                                                    href: "/1.0.0/document/index.html",
                                                 },
                                                 isActive: false,
                                                 badgeCount: 0,
@@ -865,7 +865,7 @@ describe("MenuList", () => {
                                                 item: {
                                                     label: "認証・認可",
                                                     icon: "auth",
-                                                    href: "/1.0.0/docs/auth.html",
+                                                    href: "/1.0.0/document/auth.html",
                                                 },
                                                 isActive: false,
                                                 badgeCount: 0,
@@ -880,7 +880,7 @@ describe("MenuList", () => {
                                                         item: {
                                                             label: "詳細",
                                                             icon: "detail",
-                                                            href: "/1.0.0/docs/auth.html",
+                                                            href: "/1.0.0/document/auth.html",
                                                         },
                                                         isActive: false,
                                                         badgeCount: 0,
@@ -903,7 +903,7 @@ describe("MenuList", () => {
                                                 item: {
                                                     label: "配備構成",
                                                     icon: "deployment",
-                                                    href: "/1.0.0/docs/development/deployment.html",
+                                                    href: "/1.0.0/document/development/deployment.html",
                                                 },
                                                 isActive: false,
                                                 badgeCount: 0,
@@ -937,7 +937,7 @@ describe("MenuList", () => {
                                                 item: {
                                                     label: "ドキュメント",
                                                     icon: "docs",
-                                                    href: "/1.0.0/docs/index.html",
+                                                    href: "/1.0.0/document/index.html",
                                                 },
                                                 isActive: false,
                                                 badgeCount: 20,
@@ -956,7 +956,7 @@ describe("MenuList", () => {
                                                 item: {
                                                     label: "認証・認可",
                                                     icon: "auth",
-                                                    href: "/1.0.0/docs/auth.html",
+                                                    href: "/1.0.0/document/auth.html",
                                                 },
                                                 isActive: false,
                                                 badgeCount: 0,
@@ -971,7 +971,7 @@ describe("MenuList", () => {
                                                         item: {
                                                             label: "詳細",
                                                             icon: "detail",
-                                                            href: "/1.0.0/docs/auth.html",
+                                                            href: "/1.0.0/document/auth.html",
                                                         },
                                                         isActive: false,
                                                         badgeCount: 0,
@@ -994,7 +994,7 @@ describe("MenuList", () => {
                                                 item: {
                                                     label: "配備構成",
                                                     icon: "deployment",
-                                                    href: "/1.0.0/docs/development/deployment.html",
+                                                    href: "/1.0.0/document/development/deployment.html",
                                                 },
                                                 isActive: false,
                                                 badgeCount: 0,
@@ -1043,11 +1043,11 @@ function unknownMenuResource() {
 
     return { resource }
 }
-function developmentDocsMenuResource() {
+function developmentDocumentMenuResource() {
     const version = standardVersion()
     const url = standardURL()
     const menuTree = standardMenuTree()
-    const repository = developmentDocsRepository()
+    const repository = developmentDocumentRepository()
     const simulator = standardSimulator()
     const resource = newMenuResource(version, url, menuTree, repository, simulator)
 
@@ -1084,7 +1084,7 @@ function standardMenuTree(): MenuTree {
                 { type: "item", item: { label: "ホーム", icon: "home", path: "/index.html" } },
                 {
                     type: "item",
-                    item: { label: "ドキュメント", icon: "docs", path: "/docs/index.html" },
+                    item: { label: "ドキュメント", icon: "docs", path: "/document/index.html" },
                 },
             ],
         },
@@ -1092,14 +1092,14 @@ function standardMenuTree(): MenuTree {
             type: "category",
             category: { label: "DOCUMENT", permission: { type: "any" } },
             children: [
-                { type: "item", item: { label: "認証・認可", icon: "auth", path: "/docs/auth.html" } },
+                { type: "item", item: { label: "認証・認可", icon: "auth", path: "/document/auth.html" } },
                 {
                     type: "category",
                     category: { label: "DETAIL", permission: { type: "any" } },
                     children: [
                         {
                             type: "item",
-                            item: { label: "詳細", icon: "detail", path: "/docs/auth.html" },
+                            item: { label: "詳細", icon: "detail", path: "/document/auth.html" },
                         },
                     ],
                 },
@@ -1109,7 +1109,7 @@ function standardMenuTree(): MenuTree {
             type: "category",
             category: {
                 label: "DEVELOPMENT",
-                permission: { type: "role", roles: ["development-docs"] },
+                permission: { type: "role", roles: ["development-document"] },
             },
             children: [
                 {
@@ -1117,7 +1117,7 @@ function standardMenuTree(): MenuTree {
                     item: {
                         label: "配備構成",
                         icon: "deployment",
-                        path: "/docs/development/deployment.html",
+                        path: "/document/development/deployment.html",
                     },
                 },
             ],
@@ -1131,9 +1131,9 @@ function standardRepository(): MenuRepository {
         menuExpands: standardMenuExpandRepository([]),
     }
 }
-function developmentDocsRepository(): MenuRepository {
+function developmentDocumentRepository(): MenuRepository {
     return {
-        apiCredentials: developmentDocsApiCredentialRepository(),
+        apiCredentials: developmentDocumentApiCredentialRepository(),
         menuExpands: standardMenuExpandRepository([]),
     }
 }
@@ -1151,7 +1151,7 @@ function standardSimulator(): MenuRemoteAccess {
                 success: true,
                 value: {
                     "/index.html": 10,
-                    "/docs/index.html": 20,
+                    "/document/index.html": 20,
                 },
             }),
             { wait_millisecond: 0 }
@@ -1171,14 +1171,14 @@ function standardApiCredentialRepository(): ApiCredentialRepository {
         }),
     })
 }
-function developmentDocsApiCredentialRepository(): ApiCredentialRepository {
+function developmentDocumentApiCredentialRepository(): ApiCredentialRepository {
     return initApiCredentialRepository({
         apiCredential: initMemoryTypedStorage({
             set: true,
             value: markApiCredential({
                 // TODO apiNonce を追加
                 //apiNonce: markApiNonce("api-nonce"),
-                apiRoles: ["admin", "development-docs"],
+                apiRoles: ["admin", "development-document"],
             }),
         }),
     })
