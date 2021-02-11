@@ -3,11 +3,14 @@ import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
-import { notice_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
+import { label_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
 
 import { useComponent } from "../hooks"
 
-import { SeasonInfoComponent, initialSeasonInfoComponentState } from "../../../example/x_components/Outline/seasonInfo/component"
+import {
+    SeasonInfoComponent,
+    initialSeasonInfoComponentState,
+} from "../../../example/x_components/Outline/seasonInfo/component"
 
 import { Season, SeasonError } from "../../../example/shared/season/data"
 
@@ -40,7 +43,14 @@ function seasonContent(season: Season) {
     return season.year
 }
 function errorContent(err: SeasonError) {
-    return [notice_alert("ロードエラー"), html`<small><p>詳細: ${err.err}</p></small>`]
+    return [label_alert("ロードエラー"), ...detail()]
+
+    function detail(): VNode[] {
+        if (err.err.length === 0) {
+            return []
+        }
+        return [html` <small>詳細: ${err.err}</small>`]
+    }
 }
 
 const EMPTY_CONTENT = html``
