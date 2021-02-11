@@ -40,15 +40,15 @@ function envContent() {
 
 function pathContent() {
     const files = ["/storybook/index.html"].concat(entryPoint.findSecureFiles())
-    const docs = files.filter(isDocs)
+    const documents = files.filter(isDocument)
     return [
         "export type StaticMenuPath =" + toTypeVariant(files),
-        "export type StaticContentPath =" + toTypeVariant(docs),
-        "export const staticContentPaths: StaticContentPath[] = " + toConstValue(docs),
+        "export type StaticContentPath =" + toTypeVariant(documents),
+        "export const staticContentPaths: StaticContentPath[] = " + toConstValue(documents),
     ].join("\n")
 
-    function isDocs(file) {
-        return file.startsWith("/docs/")
+    function isDocument(file) {
+        return file.startsWith("/document/")
     }
 
     function toTypeVariant(files) {

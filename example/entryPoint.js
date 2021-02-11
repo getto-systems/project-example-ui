@@ -56,8 +56,8 @@ function toSecureEntryName(file) {
     return file.replace("/", "").replace(/\.html$/, "")
 }
 function toSecureEntryPath(file) {
-    if (file.startsWith("/docs/")) {
-        return "/docs"
+    if (file.startsWith("/document/")) {
+        return "/document"
     }
     return file.replace(/\.html$/, "")
 }
