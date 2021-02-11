@@ -19,7 +19,7 @@ import { PasswordFormFieldComponent } from "../field/password/component"
 
 import { LoadError } from "../../../common/application/data"
 import { AuthCredential } from "../../../common/credential/data"
-import { storeAuthCredential } from "../../../login/renew/data"
+import { storeAuthCredential } from "../../../login/credentialStore/data"
 import { FormConvertResult } from "../../../../sub/getto-form/form/data"
 import { ResetFields } from "../../../profile/passwordReset/data"
 

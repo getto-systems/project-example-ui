@@ -17,7 +17,7 @@ import { ApplicationError } from "../../z_common/System/ApplicationError"
 import { RenewCredentialResource } from "../../../auth/x_components/Login/EntryPoint/entryPoint"
 import { initialRenewCredentialComponentState } from "../../../auth/x_components/Login/renewCredential/component"
 
-import { RenewError } from "../../../auth/login/renew/data"
+import { RenewError } from "../../../auth/login/credentialStore/data"
 
 type Props = RenewCredentialResource
 export function RenewCredential({ renewCredential }: Props): VNode {

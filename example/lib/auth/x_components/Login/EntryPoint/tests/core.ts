@@ -8,13 +8,13 @@ import { PasswordLoginLocationInfo } from "../impl/login"
 import { PasswordResetLocationInfo } from "../impl/reset"
 
 import { secureScriptPath } from "../../../../common/application/impl/core"
-import { forceRenew, renew, setContinuousRenew } from "../../../../login/renew/impl/core"
+import { forceRenew, renew, setContinuousRenew } from "../../../../login/credentialStore/impl/core"
 import { login } from "../../../../login/passwordLogin/impl/core"
 import { startSession, checkStatus, reset } from "../../../../profile/passwordReset/impl/core"
 
 import { initMemoryTypedStorage, MemoryTypedStorageStore } from "../../../../../z_infra/storage/memory"
 
-import { AuthCredentialStorage } from "../../../../login/renew/impl/repository/authCredential"
+import { AuthCredentialStorage } from "../../../../login/credentialStore/impl/repository/authCredential"
 
 import { Clock } from "../../../../../z_infra/clock/infra"
 import { ApplicationActionConfig } from "../../../../common/application/infra"
@@ -22,7 +22,7 @@ import {
     RenewActionConfig,
     RenewRemoteAccess,
     SetContinuousRenewActionConfig,
-} from "../../../../login/renew/infra"
+} from "../../../../login/credentialStore/infra"
 import { LoginRemoteAccess, PasswordLoginActionConfig } from "../../../../login/passwordLogin/infra"
 import {
     GetStatusRemoteAccess,
@@ -32,10 +32,10 @@ import {
     SendTokenRemoteAccess,
     StartSessionRemoteAccess,
 } from "../../../../profile/passwordReset/infra"
-import { AuthCredentialRepository } from "../../../../login/renew/infra"
+import { AuthCredentialRepository } from "../../../../login/credentialStore/infra"
 
 import { ApplicationAction } from "../../../../common/application/action"
-import { RenewAction, SetContinuousRenewAction } from "../../../../login/renew/action"
+import { RenewAction, SetContinuousRenewAction } from "../../../../login/credentialStore/action"
 import { PasswordLoginAction } from "../../../../login/passwordLogin/action"
 import { PasswordResetAction, PasswordResetSessionAction } from "../../../../profile/passwordReset/action"
 

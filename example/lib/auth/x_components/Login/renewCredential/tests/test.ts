@@ -7,14 +7,14 @@ import {
 import { initTestAuthCredentialStorage } from "../../EntryPoint/tests/core"
 
 import { initStaticClock, StaticClock } from "../../../../../z_infra/clock/simulate"
-import { initRenewSimulateRemoteAccess } from "../../../../login/renew/impl/remote/renew/simulate"
-import { initAuthCredentialRepository } from "../../../../login/renew/impl/repository/authCredential"
+import { initRenewSimulateRemoteAccess } from "../../../../login/credentialStore/impl/remote/renew/simulate"
+import { initAuthCredentialRepository } from "../../../../login/credentialStore/impl/repository/authCredential"
 
 import {
     AuthCredentialRepository,
     RenewRemoteAccess,
     RenewRemoteAccessResult,
-} from "../../../../login/renew/infra"
+} from "../../../../login/credentialStore/infra"
 
 import { RenewCredentialComponentState } from "../component"
 

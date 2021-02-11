@@ -1,9 +1,9 @@
 import { ApplicationComponent } from "../../../../sub/getto-example/x_components/Application/component"
 
-import { ForceRenew, Renew, SetContinuousRenew } from "../../../login/renew/action"
+import { ForceRenew, Renew, SetContinuousRenew } from "../../../login/credentialStore/action"
 import { SecureScriptPath } from "../../../common/application/action"
 
-import { RenewError } from "../../../login/renew/data"
+import { RenewError } from "../../../login/credentialStore/data"
 import { ScriptPath, LoadError } from "../../../common/application/data"
 import { StorageError } from "../../../common/credential/data"
 

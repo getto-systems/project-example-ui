@@ -45,7 +45,7 @@ import {
 
 import { ApplicationAction } from "../../../../../common/application/action"
 import { FormAction } from "../../../../../../sub/getto-form/form/action"
-import { RenewAction, SetContinuousRenewAction } from "../../../../../login/renew/action"
+import { RenewAction, SetContinuousRenewAction } from "../../../../../login/credentialStore/action"
 import { Login, PasswordLoginAction } from "../../../../../login/passwordLogin/action"
 import {
     PasswordResetAction,
