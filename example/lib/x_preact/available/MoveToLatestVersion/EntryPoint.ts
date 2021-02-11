@@ -5,7 +5,7 @@ import { useTerminate } from "../../z_common/hooks"
 
 import { ApplicationError } from "../../z_common/System/ApplicationError"
 
-import { MoveToNextVersionEntryPoint } from "../../../update/x_components/MoveToNextVersion/EntryPoint/entryPoint"
+import { MoveToNextVersionEntryPoint } from "../../../available/x_components/MoveToNextVersion/EntryPoint/entryPoint"
 import { NextVersion } from "./NextVersion"
 
 type Props = MoveToNextVersionEntryPoint
