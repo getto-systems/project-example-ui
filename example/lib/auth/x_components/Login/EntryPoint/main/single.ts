@@ -59,8 +59,8 @@ export function newLoginAsSingle(): LoginEntryPoint {
 
     const api = {
         auth: {
-            renew: initApiAuthRenew(env.authServerURL),
-            login: initApiAuthLogin(env.authServerURL),
+            renew: initApiAuthRenew(env.apiServerURL),
+            login: initApiAuthLogin(env.apiServerURL),
         },
     }
 

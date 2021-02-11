@@ -1,4 +1,4 @@
-export interface ApiUpdateCheck {
+export interface ApiAvailableCheck {
     (url: SendURL): Promise<RawCheckResult>
 }
 
@@ -10,19 +10,15 @@ type RawCheckResult =
 
 type RawError = Readonly<{ type: string; detail: string }>
 
-export function initApiUpdateCheck(): ApiUpdateCheck {
+export function initApiAvailableCheck(): ApiAvailableCheck {
     return async (url: SendURL): Promise<RawCheckResult> => {
-        try {
-            const response = await fetch(url, { method: "HEAD" })
-            if (!response.ok) {
-                if (response.status >= 500) {
-                    return { success: false, err: { type: "server-error", detail: "" } }
-                }
-                return { success: true, value: false }
+        const response = await fetch(url, { method: "HEAD" })
+        if (!response.ok) {
+            if (response.status >= 500) {
+                return { success: false, err: { type: "server-error", detail: "" } }
             }
-            return { success: true, value: true }
-        } catch (err) {
-            return { success: false, err: { type: "infra-error", detail: `${err}` } }
+            return { success: true, value: false }
         }
+        return { success: true, value: true }
     }
 }

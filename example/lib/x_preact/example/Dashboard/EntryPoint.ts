@@ -1,5 +1,5 @@
 import { h, VNode } from "preact"
-import { useEffect, useErrorBoundary } from "preact/hooks"
+import { useErrorBoundary } from "preact/hooks"
 
 import {
     appLayout,
@@ -9,7 +9,7 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { useTermination } from "../../z_common/hooks"
+import { useDocumentTitle, useTermination } from "../../z_common/hooks"
 import { copyright, siteInfo } from "../../z_common/site"
 
 import { ApplicationError } from "../../z_common/System/ApplicationError"
@@ -22,20 +22,14 @@ import { DashboardEntryPoint } from "../../../example/x_components/Dashboard/Ent
 
 type Props = DashboardEntryPoint
 export function EntryPoint({ resource, terminate }: Props): VNode {
-    const [err] = useErrorBoundary((err) => {
-        // TODO ここでエラーをどこかに投げたい。apiCredential が有効なはずなので、api にエラーを投げられるはず
-        console.log(err)
-    })
+    useTermination(terminate)
 
+    const [err] = useErrorBoundary((err) => resource.error.notify(err))
     if (err) {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    useTermination(terminate)
-
-    useEffect(() => {
-        document.title = `ホーム | ${document.title}`
-    }, [])
+    useDocumentTitle("ホーム")
 
     return appLayout({
         siteInfo: siteInfo(),

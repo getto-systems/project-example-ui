@@ -10,9 +10,9 @@ export interface ApiAuthRenew {
 type SendTicketNonce = string
 type RawRenewResult = ApiResult<RawAuthCredential>
 
-export function initApiAuthRenew(authServerURL: string): ApiAuthRenew {
+export function initApiAuthRenew(apiServerURL: string): ApiAuthRenew {
     return async (nonce: SendTicketNonce): Promise<RawRenewResult> => {
-        const response = await fetch(authServerURL, {
+        const response = await fetch(apiServerURL, {
             method: "POST",
             credentials: "include",
             headers: [

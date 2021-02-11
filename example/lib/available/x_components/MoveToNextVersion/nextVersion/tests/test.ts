@@ -1,4 +1,4 @@
-import { newNextVersionResource, NextVersionRemoteAccess } from "./core"
+import { newTestNextVersionResource, NextVersionRemoteAccess } from "./core"
 
 import { initCheckSimulateRemoteAccess } from "../../../../nextVersion/impl/remote/check/simulate"
 
@@ -579,7 +579,7 @@ function standardNextVersionResource() {
     const currentURL = standardURL()
     const config = standardConfig()
     const simulator = standardSimulator()
-    const resource = newNextVersionResource(version, currentURL, config, simulator)
+    const resource = newTestNextVersionResource(version, currentURL, config, simulator)
 
     return { resource }
 }
@@ -588,7 +588,7 @@ function foundNextVersionResource(versions: string[]) {
     const currentURL = standardURL()
     const config = standardConfig()
     const simulator = foundSimulator(versions)
-    const resource = newNextVersionResource(version, currentURL, config, simulator)
+    const resource = newTestNextVersionResource(version, currentURL, config, simulator)
 
     return { resource }
 }
@@ -597,7 +597,7 @@ function foundComplexNextVersionResource(versions: string[]) {
     const currentURL = complexURL()
     const config = standardConfig()
     const simulator = foundSimulator(versions)
-    const resource = newNextVersionResource(version, currentURL, config, simulator)
+    const resource = newTestNextVersionResource(version, currentURL, config, simulator)
 
     return { resource }
 }
@@ -606,7 +606,7 @@ function invalidVersionNextVersionResource() {
     const currentURL = invalidVersionURL()
     const config = standardConfig()
     const simulator = standardSimulator()
-    const resource = newNextVersionResource(version, currentURL, config, simulator)
+    const resource = newTestNextVersionResource(version, currentURL, config, simulator)
 
     return { resource }
 }
@@ -615,7 +615,7 @@ function waitNextVersionResource() {
     const currentURL = standardURL()
     const config = standardConfig()
     const simulator = waitSimulator()
-    const resource = newNextVersionResource(version, currentURL, config, simulator)
+    const resource = newTestNextVersionResource(version, currentURL, config, simulator)
 
     return { resource }
 }

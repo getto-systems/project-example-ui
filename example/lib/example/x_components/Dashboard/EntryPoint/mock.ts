@@ -2,7 +2,11 @@ import {
     BreadcrumbListMockPropsPasser,
     initMockBreadcrumbListComponent,
 } from "../../../../auth/x_components/Outline/breadcrumbList/mock"
-import { initMockMenuListComponent, MenuListMockPropsPasser } from "../../../../auth/x_components/Outline/menuList/mock"
+import {
+    initMockMenuListComponent,
+    MenuListMockPropsPasser,
+} from "../../../../auth/x_components/Outline/menuList/mock"
+import { initMockErrorComponent } from "../../../../available/x_components/Error/error/mock"
 import { initMockSeasonInfoComponent, SeasonInfoMockPropsPasser } from "../../Outline/seasonInfo/mock"
 import { ExampleMockPropsPasser, initMockExampleComponent } from "../example/mock"
 
@@ -15,14 +19,14 @@ export type DashboardMockPropsPasser = Readonly<{
     example: ExampleMockPropsPasser
 }>
 export function newMockDashboard(passer: DashboardMockPropsPasser): DashboardEntryPoint {
-    const resource = {
-        seasonInfo: initMockSeasonInfoComponent(passer.seasonInfo),
-        menuList: initMockMenuListComponent(passer.menuList),
-        breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),
-        example: initMockExampleComponent(passer.example),
-    }
     return {
-        resource,
+        resource: {
+            error: initMockErrorComponent(),
+            seasonInfo: initMockSeasonInfoComponent(passer.seasonInfo),
+            menuList: initMockMenuListComponent(passer.menuList),
+            breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),
+            example: initMockExampleComponent(passer.example),
+        },
         terminate: () => {
             // mock では特に何もしない
         },

@@ -1,10 +1,10 @@
 import {
     RenewCredentialConfig,
-    newRenewCredentialResource,
+    newTestRenewCredentialResource,
     RenewCredentialRepository,
     RenewCredentialRemoteAccess,
 } from "./core"
-import { initAuthCredentialTestStorage } from "../../EntryPoint/tests/core"
+import { initTestAuthCredentialStorage } from "../../EntryPoint/tests/core"
 
 import { initStaticClock, StaticClock } from "../../../../../z_infra/clock/simulate"
 import { initRenewSimulateRemoteAccess } from "../../../../login/renew/impl/remote/renew/simulate"
@@ -364,7 +364,7 @@ function standardRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newRenewCredentialResource(currentURL, config, repository, simulator, clock, () => {
+    const resource = newTestRenewCredentialResource(currentURL, config, repository, simulator, clock, () => {
         // ここでは特に何もしない
     })
 
@@ -376,7 +376,7 @@ function instantRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = instantAvailableClock()
-    const resource = newRenewCredentialResource(currentURL, config, repository, simulator, clock, () => {
+    const resource = newTestRenewCredentialResource(currentURL, config, repository, simulator, clock, () => {
         // ここでは特に何もしない
     })
 
@@ -388,7 +388,7 @@ function waitRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = waitSimulator()
     const clock = standardClock()
-    const resource = newRenewCredentialResource(currentURL, config, repository, simulator, clock, () => {
+    const resource = newTestRenewCredentialResource(currentURL, config, repository, simulator, clock, () => {
         // ここでは特に何もしない
     })
 
@@ -400,7 +400,7 @@ function emptyRenewCredentialResource() {
     const repository = emptyRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newRenewCredentialResource(currentURL, config, repository, simulator, clock, () => {
+    const resource = newTestRenewCredentialResource(currentURL, config, repository, simulator, clock, () => {
         // ここでは特に何もしない
     })
 
@@ -434,7 +434,7 @@ function standardConfig(): RenewCredentialConfig {
 function standardRepository(): RenewCredentialRepository {
     return {
         authCredentials: initAuthCredentialRepository(
-            initAuthCredentialTestStorage({
+            initTestAuthCredentialStorage({
                 ticketNonce: { set: true, value: markTicketNonce(STORED_TICKET_NONCE) },
                 apiCredential: { set: true, value: markApiCredential({ apiRoles: ["role"] }) },
                 lastAuthAt: { set: true, value: markAuthAt(STORED_LOGIN_AT) },
@@ -445,7 +445,7 @@ function standardRepository(): RenewCredentialRepository {
 function emptyRepository(): RenewCredentialRepository {
     return {
         authCredentials: initAuthCredentialRepository(
-            initAuthCredentialTestStorage({
+            initTestAuthCredentialStorage({
                 ticketNonce: { set: false },
                 apiCredential: { set: false },
                 lastAuthAt: { set: false },

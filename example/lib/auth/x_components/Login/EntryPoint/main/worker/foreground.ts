@@ -91,7 +91,7 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
 
     const api = {
         auth: {
-            renew: initApiAuthRenew(env.authServerURL),
+            renew: initApiAuthRenew(env.apiServerURL),
         },
     }
 

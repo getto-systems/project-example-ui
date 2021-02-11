@@ -1,25 +1,25 @@
-import { initAuthCredentialTestStorage, initLoginViewLocationInfo } from "./core"
+import { initTestAuthCredentialStorage, initLoginViewLocationInfo } from "./core"
 
 import {
     PasswordLoginConfig,
-    newPasswordLoginResource,
+    newTestPasswordLoginResource,
     PasswordLoginRepository,
     PasswordLoginRemoteAccess,
 } from "../../passwordLogin/tests/core"
 import {
     PasswordResetConfig,
-    newPasswordResetResource,
+    newTestPasswordResetResource,
     PasswordResetRepository,
     PasswordResetRemoteAccess,
 } from "../../passwordReset/tests/core"
 import {
     PasswordResetSessionConfig,
-    newPasswordResetSessionResource,
+    newTestPasswordResetSessionResource,
     PasswordResetSessionRemoteAccess,
 } from "../../passwordResetSession/tests/core"
 import {
     RenewCredentialConfig,
-    newRenewCredentialResource,
+    newTestRenewCredentialResource,
     RenewCredentialRepository,
     RenewCredentialRemoteAccess,
 } from "../../renewCredential/tests/core"
@@ -281,17 +281,17 @@ function passwordResetLoginView() {
 function standardPasswordLoginResource(currentURL: URL, repository: Repository, clock: Clock) {
     const config = standardPasswordLoginConfig()
     const simulator = standardPasswordLoginRemoteAccess()
-    return newPasswordLoginResource(currentURL, config, repository, simulator, clock)
+    return newTestPasswordLoginResource(currentURL, config, repository, simulator, clock)
 }
 function standardPasswordResetResource(currentURL: URL, repository: Repository, clock: Clock) {
     const config = standardPasswordResetConfig()
     const simulator = standardPasswordResetRemoteAccess()
-    return newPasswordResetResource(currentURL, config, repository, simulator, clock)
+    return newTestPasswordResetResource(currentURL, config, repository, simulator, clock)
 }
 function standardPasswordResetSessionResource() {
     const config = standardPasswordResetSessionConfig()
     const simulator = standardPasswordResetSessionRemoteAccess()
-    return newPasswordResetSessionResource(config, simulator)
+    return newTestPasswordResetSessionResource(config, simulator)
 }
 function standardRenewCredentialResource(
     currentURL: URL,
@@ -301,7 +301,7 @@ function standardRenewCredentialResource(
 ) {
     const config = standardRenewCredentialConfig()
     const simulator = standardRenewCredentialSimulator()
-    return newRenewCredentialResource(currentURL, config, repository, simulator, clock, setup)
+    return newTestRenewCredentialResource(currentURL, config, repository, simulator, clock, setup)
 }
 
 function standardURL(): URL {
@@ -463,7 +463,7 @@ function simulateGetStatus(): GetStatusRemoteAccessResult {
 function standardRepository(): Repository {
     return {
         authCredentials: initAuthCredentialRepository(
-            initAuthCredentialTestStorage({
+            initTestAuthCredentialStorage({
                 ticketNonce: { set: false },
                 apiCredential: { set: false },
                 lastAuthAt: { set: false },

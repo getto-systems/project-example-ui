@@ -1,14 +1,21 @@
 import { env } from "../../../../../y_environment/env"
 
+import { initApiAvailableNotify } from "../../../../../z_external/api/available/notify"
+
 import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "../impl/core"
 
+import { initErrorComponent } from "../../../../../available/x_components/Error/error/impl"
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initMenuListComponent } from "../../../../../auth/x_components/Outline/menuList/impl"
 import { initBreadcrumbListComponent } from "../../../../../auth/x_components/Outline/breadcrumbList/impl"
 import { initExampleComponent } from "../../example/impl"
 import { detectMenuTarget } from "../../../../../auth/x_components/Outline/Menu/impl/location"
 
-import { initCredentialAction, initMainMenuAction } from "../../../../../auth/x_components/Outline/Menu/main/core"
+import { initNotifyAction } from "../../../../../available/x_components/Error/EntryPoint/main/core"
+import {
+    initCredentialAction,
+    initMainMenuAction,
+} from "../../../../../auth/x_components/Outline/Menu/main/core"
 import { initSeasonAction } from "../../../Outline/GlobalInfo/main/core"
 
 import { DashboardEntryPoint } from "../entryPoint"
@@ -17,13 +24,21 @@ export function newDashboardAsSingle(): DashboardEntryPoint {
     const webStorage = localStorage
     const currentURL = new URL(location.toString())
 
+    const api = {
+        available: {
+            notify: initApiAvailableNotify(env.apiServerURL),
+        },
+    }
+
     const factory: DashboardFactory = {
         actions: {
+            notify: initNotifyAction(api.available.notify),
             credential: initCredentialAction(webStorage),
             menu: initMainMenuAction(webStorage),
             season: initSeasonAction(),
         },
         components: {
+            error: initErrorComponent,
             menuList: initMenuListComponent,
             breadcrumbList: initBreadcrumbListComponent,
             seasonInfo: initSeasonInfoComponent,

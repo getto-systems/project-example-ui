@@ -1,6 +1,6 @@
 import { env } from "../../../../../y_environment/env"
 
-import { ApiUpdateCheck, initApiUpdateCheck } from "../../../../../z_external/api/available/check"
+import { ApiAvailableCheck, initApiAvailableCheck } from "../../../../../z_external/api/available/check"
 
 import { delayed } from "../../../../../z_infra/delayed/core"
 import { find } from "../../../../nextVersion/impl/core"
@@ -17,14 +17,14 @@ export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPoint {
     const currentURL = new URL(location.toString())
 
     const api = {
-        update: {
-            check: initApiUpdateCheck(),
+        available: {
+            check: initApiAvailableCheck(),
         },
     }
 
     const factory = {
         actions: {
-            nextVersion: initNextVersionAction(api.update.check),
+            nextVersion: initNextVersionAction(api.available.check),
         },
         components: {
             nextVersion: initNextVersionComponent,
@@ -44,7 +44,7 @@ export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPoint {
     }
 }
 
-function initNextVersionAction(check: ApiUpdateCheck) {
+function initNextVersionAction(check: ApiAvailableCheck) {
     return {
         find: find({
             config: {

@@ -9,14 +9,18 @@ import { ExampleComponentFactory } from "../../example/component"
 import { CredentialAction } from "../../../../../auth/common/credential/action"
 import { MenuAction, MenuLocationInfo } from "../../../../../auth/permission/menu/action"
 import { SeasonAction } from "../../../../shared/season/action"
+import { ErrorComponentFactory } from "../../../../../available/x_components/Error/error/component"
+import { NotifyAction } from "../../../../../available/notify/action"
 
 export type DashboardFactory = Readonly<{
     actions: Readonly<{
+        notify: NotifyAction
         credential: CredentialAction
         menu: MenuAction
         season: SeasonAction
     }>
     components: Readonly<{
+        error: ErrorComponentFactory
         seasonInfo: SeasonInfoComponentFactory
         menuList: MenuListComponentFactory
         breadcrumbList: BreadcrumbListComponentFactory
@@ -32,6 +36,8 @@ export function initDashboardResource(
     locationInfo: DashboardLocationInfo
 ): DashboardResource {
     const actions = {
+        notify: factory.actions.notify.notify(),
+
         loadApiNonce: factory.actions.credential.loadApiNonce(),
         loadApiRoles: factory.actions.credential.loadApiRoles(),
 
@@ -42,6 +48,7 @@ export function initDashboardResource(
         toggleMenuExpand: factory.actions.menu.toggleMenuExpand(),
     }
     return {
+        error: factory.components.error(actions),
         seasonInfo: factory.components.seasonInfo(actions),
         menuList: factory.components.menuList(actions),
         breadcrumbList: factory.components.breadcrumbList(actions),

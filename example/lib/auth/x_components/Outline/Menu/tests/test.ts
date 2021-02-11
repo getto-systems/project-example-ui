@@ -1,4 +1,4 @@
-import { MenuRepository, MenuRemoteAccess, newMenuResource } from "./core"
+import { MenuRepository, MenuRemoteAccess, newTestMenuResource } from "./core"
 
 import { initMemoryTypedStorage } from "../../../../../z_infra/storage/memory"
 import { initApiCredentialRepository } from "../../../../common/credential/impl/repository/apiCredential"
@@ -1029,7 +1029,7 @@ function standardMenuResource() {
     const menuTree = standardMenuTree()
     const repository = standardRepository()
     const simulator = standardSimulator()
-    const resource = newMenuResource(version, url, menuTree, repository, simulator)
+    const resource = newTestMenuResource(version, url, menuTree, repository, simulator)
 
     return { repository, resource }
 }
@@ -1039,7 +1039,7 @@ function unknownMenuResource() {
     const menuTree = standardMenuTree()
     const repository = standardRepository()
     const simulator = standardSimulator()
-    const resource = newMenuResource(version, url, menuTree, repository, simulator)
+    const resource = newTestMenuResource(version, url, menuTree, repository, simulator)
 
     return { resource }
 }
@@ -1049,7 +1049,7 @@ function developmentDocumentMenuResource() {
     const menuTree = standardMenuTree()
     const repository = developmentDocumentRepository()
     const simulator = standardSimulator()
-    const resource = newMenuResource(version, url, menuTree, repository, simulator)
+    const resource = newTestMenuResource(version, url, menuTree, repository, simulator)
 
     return { resource }
 }
@@ -1059,7 +1059,7 @@ function expandMenuResource() {
     const menuTree = standardMenuTree()
     const repository = expandRepository()
     const simulator = standardSimulator()
-    const resource = newMenuResource(version, url, menuTree, repository, simulator)
+    const resource = newTestMenuResource(version, url, menuTree, repository, simulator)
 
     return { resource }
 }

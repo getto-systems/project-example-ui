@@ -41,12 +41,12 @@ import { PasswordResetAction, PasswordResetSessionAction } from "../../../../pro
 
 import { ApiCredential, AuthAt, TicketNonce } from "../../../../common/credential/data"
 
-export function initApplicationAction(config: ApplicationActionConfig): ApplicationAction {
+export function initTestApplicationAction(config: ApplicationActionConfig): ApplicationAction {
     return {
         secureScriptPath: secureScriptPath({ config: config.secureScriptPath }),
     }
 }
-export function initRenewAction(
+export function initTestRenewAction(
     config: RenewActionConfig,
     authCredentials: AuthCredentialRepository,
     remote: RenewRemoteAccess,
@@ -65,7 +65,7 @@ export function initRenewAction(
         forceRenew: forceRenew(infra),
     }
 }
-export function initSetContinuousRenewAction(
+export function initTestSetContinuousRenewAction(
     config: SetContinuousRenewActionConfig,
     authCredentials: AuthCredentialRepository,
     remote: RenewRemoteAccess,
@@ -80,7 +80,7 @@ export function initSetContinuousRenewAction(
         }),
     }
 }
-export function initPasswordLoginAction(
+export function initTestPasswordLoginAction(
     config: PasswordLoginActionConfig,
     access: LoginRemoteAccess
 ): PasswordLoginAction {
@@ -92,7 +92,7 @@ export function initPasswordLoginAction(
         }),
     }
 }
-export function initPasswordResetSessionAction(
+export function initTestPasswordResetSessionAction(
     config: PasswordResetSessionActionConfig,
     remote: Readonly<{
         startSession: StartSessionRemoteAccess
@@ -115,7 +115,7 @@ export function initPasswordResetSessionAction(
         }),
     }
 }
-export function initPasswordResetAction(
+export function initTestPasswordResetAction(
     config: PasswordResetActionConfig,
     remote: ResetRemoteAccess
 ): PasswordResetAction {
@@ -128,6 +128,7 @@ export function initPasswordResetAction(
     }
 }
 
+// TODO こいつらは実際に使うやつと同じなのでは？
 export function initLoginViewLocationInfo(currentURL: URL): LoginViewLocationInfo {
     return {
         login: {
@@ -159,13 +160,13 @@ function initApplicationLocationInfo(currentURL: URL) {
     }
 }
 
-export type AuthCredentialTestStorageParam = Readonly<{
+export type AuthCredentialStorageTestParam = Readonly<{
     ticketNonce: MemoryTypedStorageStore<TicketNonce>
     apiCredential: MemoryTypedStorageStore<ApiCredential>
     lastAuthAt: MemoryTypedStorageStore<AuthAt>
 }>
-export function initAuthCredentialTestStorage(
-    params: AuthCredentialTestStorageParam
+export function initTestAuthCredentialStorage(
+    params: AuthCredentialStorageTestParam
 ): AuthCredentialStorage {
     return {
         ticketNonce: initMemoryTypedStorage(params.ticketNonce),

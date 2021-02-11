@@ -1,10 +1,15 @@
-import { initCredentialAction, initMenuAction } from "../../../../../auth/x_components/Outline/Menu/tests/core"
-import { initSeasonAction } from "../../../Outline/seasonInfo/tests/core"
+import { initTestNotifyAction } from "../../../../../available/x_components/Error/EntryPoint/tests/core"
+import {
+    initTestCredentialAction,
+    initTestMenuAction,
+} from "../../../../../auth/x_components/Outline/Menu/tests/core"
+import { initTestSeasonAction } from "../../../Outline/seasonInfo/tests/core"
 
 import { detectMenuTarget } from "../../../../../auth/x_components/Outline/Menu/impl/location"
 
 import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "../impl/core"
 
+import { initErrorComponent } from "../../../../../available/x_components/Error/error/impl"
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initBreadcrumbListComponent } from "../../../../../auth/x_components/Outline/breadcrumbList/impl"
 import { initMenuListComponent } from "../../../../../auth/x_components/Outline/menuList/impl"
@@ -39,11 +44,13 @@ export function newDashboardResource(
 ): DashboardResource {
     const factory: DashboardFactory = {
         actions: {
-            credential: initCredentialAction(repository.apiCredentials),
-            menu: initMenuAction(menuTree, repository.menuExpands, remote.loadMenuBadge),
-            season: initSeasonAction(repository.seasons, clock),
+            notify: initTestNotifyAction(),
+            credential: initTestCredentialAction(repository.apiCredentials),
+            menu: initTestMenuAction(menuTree, repository.menuExpands, remote.loadMenuBadge),
+            season: initTestSeasonAction(repository.seasons, clock),
         },
         components: {
+            error: initErrorComponent,
             seasonInfo: initSeasonInfoComponent,
             menuList: initMenuListComponent,
             breadcrumbList: initBreadcrumbListComponent,

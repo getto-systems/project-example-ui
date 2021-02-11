@@ -1,4 +1,4 @@
-import { newSeasonInfoComponent, SeasonInfoRepository } from "./core"
+import { newTestSeasonInfoComponent, SeasonInfoRepository } from "./core"
 
 import { initStaticClock } from "../../../../../z_infra/clock/simulate"
 import { initMemorySeasonRepository } from "../../../../shared/season/impl/repository/season/memory"
@@ -84,14 +84,14 @@ describe("SeasonInfo", () => {
 function standardSeasonInfoComponent() {
     const repository = standardRepository()
     const clock = standardClock()
-    const seasonInfo = newSeasonInfoComponent(repository, clock)
+    const seasonInfo = newTestSeasonInfoComponent(repository, clock)
 
     return { seasonInfo }
 }
 function emptySeasonInfoComponent() {
     const repository = emptyRepository()
     const clock = standardClock()
-    const seasonInfo = newSeasonInfoComponent(repository, clock)
+    const seasonInfo = newTestSeasonInfoComponent(repository, clock)
 
     return { seasonInfo }
 }

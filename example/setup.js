@@ -22,7 +22,7 @@ function envContent() {
         version,
 
         secureServerHost: process.env.SECURE_SERVER_HOST,
-        authServerURL: process.env.AUTH_SERVER_URL,
+        apiServerURL: process.env.API_SERVER_URL,
 
         storageKey: {
             ticketNonce: process.env.STORAGE_KEY_TICKET_NONCE,

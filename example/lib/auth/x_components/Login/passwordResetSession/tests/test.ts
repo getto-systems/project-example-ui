@@ -1,6 +1,6 @@
 import {
     PasswordResetSessionConfig,
-    newPasswordResetSessionResource,
+    newTestPasswordResetSessionResource,
     PasswordResetSessionRemoteAccess,
 } from "./core"
 
@@ -434,21 +434,21 @@ describe("PasswordResetSession", () => {
 function standardPasswordResetSessionResource() {
     const config = standardConfig()
     const simulator = standardRemoteAccess()
-    const resource = newPasswordResetSessionResource(config, simulator)
+    const resource = newTestPasswordResetSessionResource(config, simulator)
 
     return { resource }
 }
 function waitPasswordResetSessionResource() {
     const config = standardConfig()
     const simulator = waitRemoteAccess()
-    const resource = newPasswordResetSessionResource(config, simulator)
+    const resource = newTestPasswordResetSessionResource(config, simulator)
 
     return { resource }
 }
 function longSendingPasswordResetSessionResource() {
     const config = standardConfig()
     const simulator = longSendingSimulator()
-    const resource = newPasswordResetSessionResource(config, simulator)
+    const resource = newTestPasswordResetSessionResource(config, simulator)
 
     return { resource }
 }

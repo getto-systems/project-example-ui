@@ -12,18 +12,18 @@ import { SeasonAction } from "../../../../shared/season/action"
 export type SeasonInfoRepository = Readonly<{
     seasons: SeasonRepository
 }>
-export function newSeasonInfoComponent(
+export function newTestSeasonInfoComponent(
     repository: SeasonInfoRepository,
     clock: Clock
 ): SeasonInfoComponent {
-    const action = initSeasonAction(repository.seasons, clock)
+    const action = initTestSeasonAction(repository.seasons, clock)
 
     return initSeasonInfoComponent({
         loadSeason: action.loadSeason(),
     })
 }
 
-export function initSeasonAction(seasons: SeasonRepository, clock: Clock): SeasonAction {
+export function initTestSeasonAction(seasons: SeasonRepository, clock: Clock): SeasonAction {
     const infra = {
         seasons,
         clock,
