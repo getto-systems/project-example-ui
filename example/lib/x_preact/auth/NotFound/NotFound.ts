@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { buttons } from "../../../z_vendor/getto-css/preact/design/form"
 
-import { useComponent, useTermination } from "../../z_common/hooks"
+import { useComponent, useDocumentTitle, useTermination } from "../../z_common/hooks"
 import { siteInfo } from "../../z_common/site"
 import { icon } from "../../z_common/icon"
 
@@ -20,6 +20,8 @@ import {
 
 type Props = NotFoundEntryPoint
 export function EntryPoint({ resource, terminate }: Props): VNode {
+    useTermination(terminate)
+
     const [err] = useErrorBoundary((err) => {
         // 認証していないのでエラーはどうしようもない
         console.log(err)
@@ -29,11 +31,7 @@ export function EntryPoint({ resource, terminate }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    useTermination(terminate)
-
-    useEffect(() => {
-        document.title = `Not Found | ${document.title}`
-    }, [])
+    useDocumentTitle("Not Found")
 
     return h(Content, resource)
 }
