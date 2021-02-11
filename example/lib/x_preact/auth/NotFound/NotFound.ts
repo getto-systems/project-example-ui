@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { buttons } from "../../../z_vendor/getto-css/preact/design/form"
 
-import { useComponent, useTerminate } from "../../z_common/hooks"
+import { useComponent, useTermination } from "../../z_common/hooks"
 import { siteInfo } from "../../z_common/site"
 import { icon } from "../../z_common/icon"
 
@@ -29,7 +29,7 @@ export function EntryPoint({ resource, terminate }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    useTerminate(terminate)
+    useTermination(terminate)
 
     useEffect(() => {
         document.title = `Not Found | ${document.title}`

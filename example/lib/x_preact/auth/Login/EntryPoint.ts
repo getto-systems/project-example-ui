@@ -2,7 +2,7 @@ import { h, VNode } from "preact"
 import { useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useComponent, useTerminate } from "../../z_common/hooks"
+import { useComponent, useTermination } from "../../z_common/hooks"
 
 import { ApplicationError } from "../../z_common/System/ApplicationError"
 
@@ -28,7 +28,7 @@ export function EntryPoint({ view, terminate }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    useTerminate(terminate)
+    useTermination(terminate)
 
     const state = useComponent(view, initialLoginState)
     useEffect(() => {

@@ -9,7 +9,7 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { useTerminate } from "../../z_common/hooks"
+import { useTermination } from "../../z_common/hooks"
 import { copyright, siteInfo } from "../../z_common/site"
 
 import { ApplicationError } from "../../z_common/System/ApplicationError"
@@ -31,7 +31,7 @@ export function EntryPoint({ resource, terminate }: Props): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    useTerminate(terminate)
+    useTermination(terminate)
 
     useEffect(() => {
         document.title = `ホーム | ${document.title}`
