@@ -41,7 +41,3 @@ export type RenewCredentialComponentState =
 export const initialRenewCredentialComponentState: RenewCredentialComponentState = {
     type: "initial-renew",
 }
-
-interface Handler<T> {
-    (state: T): void
-}

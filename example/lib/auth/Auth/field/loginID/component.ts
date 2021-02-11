@@ -26,7 +26,3 @@ export type LoginIDFormFieldComponentState = FormFieldComponentState<
     FormFieldEmptyState,
     LoginIDValidationError
 >
-
-interface Handler<T> {
-    (state: T): void
-}
