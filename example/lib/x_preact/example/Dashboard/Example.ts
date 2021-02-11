@@ -10,7 +10,10 @@ import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 
 import { useComponent } from "../../z_common/hooks"
 
-import { ExampleComponent, initialExampleComponentState } from "../../../example/x_components/Dashboard/example/component"
+import {
+    ExampleComponent,
+    initialExampleComponentState,
+} from "../../../example/x_components/Dashboard/example/component"
 
 import { Season, SeasonError } from "../../../example/shared/season/data"
 
@@ -50,7 +53,14 @@ function seasonInfo(season: Season): VNodeContent {
 }
 
 function loadError(err: SeasonError): VNodeContent {
-    return [notice_alert("ロードエラー"), v_small(), html`<small><p>詳細: ${err.err}</p></small>`]
+    return [notice_alert("ロードエラー"), ...detail()]
+
+    function detail(): VNode[] {
+        if (err.err.length === 0) {
+            return []
+        }
+        return [v_small(), html`<small><p>詳細: ${err.err}</p></small>`]
+    }
 }
 
 const EMPTY_CONTENT = html``

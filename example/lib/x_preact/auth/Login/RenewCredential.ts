@@ -119,11 +119,18 @@ function renewError(err: RenewError): VNodeContent[] {
             return ["サーバーの認証処理でエラーが発生しました"]
 
         case "bad-response":
-            return ["サーバーから送信されたデータがエラーでした", `(詳細: ${err.err})`]
+            return ["サーバーから送信されたデータがエラーでした", ...detail(err.err)]
 
         case "infra-error":
-            return ["ネットワーク通信時にエラーが発生しました", `(詳細: ${err.err})`]
+            return ["ネットワーク通信時にエラーが発生しました", ...detail(err.err)]
     }
+}
+
+function detail(err: string): string[] {
+    if (err.length === 0) {
+        return []
+    }
+    return [`(詳細: ${err})`]
 }
 
 const EMPTY_CONTENT: VNode = html``

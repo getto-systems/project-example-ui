@@ -231,10 +231,10 @@ function startSessionError(err: StartSessionError): VNodeContent[] {
             return ["サーバーエラーによりトークンの送信に失敗しました"]
 
         case "bad-response":
-            return ["レスポンスエラーによりトークンの送信に失敗しました", `(詳細: ${err.err})`]
+            return ["レスポンスエラーによりトークンの送信に失敗しました", ...detail(err.err)]
 
         case "infra-error":
-            return ["ネットワークエラーによりトークンの送信に失敗しました", `(詳細: ${err.err})`]
+            return ["ネットワークエラーによりトークンの送信に失敗しました", ...detail(err.err)]
     }
 }
 function checkStatusError(err: CheckStatusError): VNodeContent[] {
@@ -249,17 +249,24 @@ function checkStatusError(err: CheckStatusError): VNodeContent[] {
             return ["サーバーエラーによりステータスの取得に失敗しました"]
 
         case "bad-response":
-            return ["レスポンスエラーによりステータスの取得に失敗しました", `(詳細: ${err.err})`]
+            return ["レスポンスエラーによりステータスの取得に失敗しました", ...detail(err.err)]
 
         case "infra-error":
-            return ["ネットワークエラーによりステータスの取得に失敗しました", `(詳細: ${err.err})`]
+            return ["ネットワークエラーによりステータスの取得に失敗しました", ...detail(err.err)]
     }
 }
 function sendTokenError(err: SendTokenError): VNodeContent[] {
     switch (err.type) {
         case "infra-error":
-            return ["サーバーエラーによりリセットトークンの送信に失敗しました", `(詳細: ${err.err})`]
+            return ["サーバーエラーによりリセットトークンの送信に失敗しました", ...detail(err.err)]
     }
+}
+
+function detail(err: string): string[] {
+    if (err.length === 0) {
+        return []
+    }
+    return [`(詳細: ${err})`]
 }
 
 const EMPTY_CONTENT = html``

@@ -21,7 +21,7 @@ export function ApplicationError({ err }: Props): VNode {
             </p>`,
             v_small(),
             field({ title: "画面", body: html`<pre>${location.pathname}</pre>`, help: [location.host] }),
-            field({ title: "詳細", body: err, help: [] }),
+            field({ title: "詳細", body: detail(err), help: [] }),
             html`<p>
                 お手数ですが、管理者に詳細をお伝えください<br />
                 直前まで行っていた作業も教えていただけると助かります
@@ -33,6 +33,13 @@ export function ApplicationError({ err }: Props): VNode {
         ],
         footer: buttons({ left: [reloadLink()], right: [topLink()] }),
     })
+
+    function detail(err: string) {
+        if (err.length === 0) {
+            return "（詳細な内容は取得できませんでした）"
+        }
+        return err
+    }
 
     function topLink() {
         return html`<a href="/"><i class="lnir lnir-home"></i> ホーム</a>`

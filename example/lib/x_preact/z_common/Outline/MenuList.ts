@@ -15,7 +15,10 @@ import { badge_alert, notice_alert } from "../../../z_vendor/getto-css/preact/de
 import { useComponent } from "../hooks"
 import { poweredBy } from "../site"
 
-import { MenuListComponent, initialMenuListComponentState } from "../../../auth/x_components/Outline/menuList/component"
+import {
+    MenuListComponent,
+    initialMenuListComponentState,
+} from "../../../auth/x_components/Outline/menuList/component"
 
 import { Menu, MenuCategoryNode, MenuItemNode, LoadMenuError } from "../../../auth/permission/menu/data"
 
@@ -109,7 +112,7 @@ function error(err: LoadMenuError): VNode {
 function loadMenuError(err: LoadMenuError): VNode[] {
     switch (err.type) {
         case "empty-nonce":
-            return [notice_alert("認証エラー"), detail("もう一度ログインしてください")]
+            return [notice_alert("認証エラー"), ...detail("もう一度ログインしてください")]
 
         case "bad-request":
             return [notice_alert("アプリケーションエラー")]
@@ -118,14 +121,17 @@ function loadMenuError(err: LoadMenuError): VNode[] {
             return [notice_alert("サーバーエラー")]
 
         case "bad-response":
-            return [notice_alert("レスポンスエラー"), detail(err.err)]
+            return [notice_alert("レスポンスエラー"), ...detail(err.err)]
 
         case "infra-error":
-            return [notice_alert("ネットワークエラー"), detail(err.err)]
+            return [notice_alert("ネットワークエラー"), ...detail(err.err)]
     }
 
-    function detail(err: string) {
-        return html`<small><p>詳細: ${err}</p></small>`
+    function detail(err: string): VNode[] {
+        if (err.length === 0) {
+            return []
+        }
+        return [html`<small><p>詳細: ${err}</p></small>`]
     }
 }
 

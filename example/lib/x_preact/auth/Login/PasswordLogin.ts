@@ -183,11 +183,18 @@ function loginError(err: LoginError): VNodeContent[] {
             return ["サーバーエラーにより認証に失敗しました"]
 
         case "bad-response":
-            return ["レスポンスエラーにより認証に失敗しました", `(詳細: ${err.err})`]
+            return ["レスポンスエラーにより認証に失敗しました", ...detail(err.err)]
 
         case "infra-error":
-            return ["ネットワークエラーにより認証に失敗しました", `(詳細: ${err.err})`]
+            return ["ネットワークエラーにより認証に失敗しました", ...detail(err.err)]
     }
+}
+
+function detail(err: string): string[] {
+    if (err.length === 0) {
+        return []
+    }
+    return [`(詳細: ${err})`]
 }
 
 const EMPTY_CONTENT = html``
