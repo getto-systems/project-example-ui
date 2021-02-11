@@ -37,7 +37,7 @@ import {
 export function initLoginWorker(worker: Worker): void {
     const api = {
         auth: {
-            login: initApiAuthLogin(env.authServerURL),
+            login: initApiAuthLogin(env.apiServerURL),
         },
     }
 

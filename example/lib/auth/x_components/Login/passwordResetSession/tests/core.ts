@@ -1,4 +1,4 @@
-import { initApplicationAction, initPasswordResetSessionAction } from "../../EntryPoint/tests/core"
+import { initTestApplicationAction, initTestPasswordResetSessionAction } from "../../EntryPoint/tests/core"
 
 import { initLoginLink } from "../../EntryPoint/main/link"
 import { initPasswordResetSessionResource, PasswordResetSessionFactory } from "../../EntryPoint/impl/reset"
@@ -27,16 +27,16 @@ export type PasswordResetSessionRemoteAccess = Readonly<{
     getStatus: GetStatusRemoteAccess
 }>
 
-export function newPasswordResetSessionResource(
+export function newTestPasswordResetSessionResource(
     config: PasswordResetSessionConfig,
     remote: PasswordResetSessionRemoteAccess
 ): PasswordResetSessionResource {
     const factory: PasswordResetSessionFactory = {
         link: initLoginLink,
         actions: {
-            application: initApplicationAction(config.application),
+            application: initTestApplicationAction(config.application),
 
-            passwordResetSession: initPasswordResetSessionAction(config.passwordResetSession, remote),
+            passwordResetSession: initTestPasswordResetSessionAction(config.passwordResetSession, remote),
             form: {
                 core: initFormAction(),
                 loginID: initLoginIDFormFieldAction(),

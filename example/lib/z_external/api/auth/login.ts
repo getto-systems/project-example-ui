@@ -14,9 +14,9 @@ export interface ApiAuthLogin {
 type LoginFields = Readonly<{ loginID: string; password: string }>
 type LoginResult = ApiResult<RawAuthCredential>
 
-export function initApiAuthLogin(authServerURL: string): ApiAuthLogin {
+export function initApiAuthLogin(apiServerURL: string): ApiAuthLogin {
     return async (fields: LoginFields): Promise<LoginResult> => {
-        const response = await fetch(authServerURL, {
+        const response = await fetch(apiServerURL, {
             method: "POST",
             credentials: "include",
             headers: [["X-GETTO-EXAMPLE-ID-HANDLER", "PasswordLogin"]],

@@ -8,7 +8,7 @@ import { NotFoundResource } from "../entryPoint"
 
 import { CurrentVersionAction } from "../../../../permission/currentVersion/action"
 
-export function newNotFoundResource(currentVersion: string): NotFoundResource {
+export function newTestNotFoundResource(currentVersion: string): NotFoundResource {
     const factory: NotFoundFactory = {
         actions: {
             currentVersion: initCurrentVersionAction(currentVersion),

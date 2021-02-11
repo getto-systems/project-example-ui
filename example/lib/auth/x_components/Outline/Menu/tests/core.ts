@@ -33,7 +33,7 @@ export type MenuRepository = Readonly<{
 export type MenuRemoteAccess = Readonly<{
     loadMenuBadge: LoadMenuBadgeRemoteAccess
 }>
-export function newMenuResource(
+export function newTestMenuResource(
     version: string,
     currentURL: URL,
     menuTree: MenuTree,
@@ -41,8 +41,8 @@ export function newMenuResource(
     remote: MenuRemoteAccess
 ): MenuResource {
     const actions = {
-        credential: initCredentialAction(repository.apiCredentials),
-        menu: initMenuAction(menuTree, repository.menuExpands, remote.loadMenuBadge),
+        credential: initTestCredentialAction(repository.apiCredentials),
+        menu: initTestMenuAction(menuTree, repository.menuExpands, remote.loadMenuBadge),
     }
     const locationInfo = {
         menu: {
@@ -63,7 +63,7 @@ export function newMenuResource(
     }
 }
 
-export function initCredentialAction(apiCredentials: ApiCredentialRepository): CredentialAction {
+export function initTestCredentialAction(apiCredentials: ApiCredentialRepository): CredentialAction {
     const infra = {
         apiCredentials,
     }
@@ -74,7 +74,7 @@ export function initCredentialAction(apiCredentials: ApiCredentialRepository): C
     }
 }
 
-export function initMenuAction(
+export function initTestMenuAction(
     menuTree: MenuTree,
     menuExpands: MenuExpandRepository,
     remote: LoadMenuBadgeRemoteAccess

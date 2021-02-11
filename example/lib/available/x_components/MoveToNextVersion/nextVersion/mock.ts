@@ -1,4 +1,7 @@
-import { MockComponent, MockPropsPasser } from "../../../../sub/getto-example/x_components/Application/mock"
+import {
+    MockComponent,
+    MockPropsPasser,
+} from "../../../../sub/getto-example/x_components/Application/mock"
 
 import { NextVersionComponent, NextVersionComponentState } from "./component"
 
@@ -7,9 +10,7 @@ export type NextVersionMockProps =
     | Readonly<{ type: "delayed" }>
     | Readonly<{ type: "failed"; err: string }>
 
-export function initMockNextVersionComponent(
-    passer: NextVersionMockPropsPasser
-): NextVersionMockComponent {
+export function initMockNextVersionComponent(passer: NextVersionMockPropsPasser): NextVersionComponent {
     return new NextVersionMockComponent(passer)
 }
 

@@ -1,7 +1,7 @@
-import { initAuthCredentialTestStorage } from "../../EntryPoint/tests/core"
+import { initTestAuthCredentialStorage } from "../../EntryPoint/tests/core"
 import {
     PasswordLoginConfig,
-    newPasswordLoginResource,
+    newTestPasswordLoginResource,
     PasswordLoginRepository,
     PasswordLoginRemoteAccess,
 } from "./core"
@@ -645,7 +645,7 @@ function standardPasswordLoginResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newPasswordLoginResource(currentURL, config, repository, simulator, clock)
+    const resource = newTestPasswordLoginResource(currentURL, config, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
@@ -655,7 +655,7 @@ function waitPasswordLoginResource() {
     const repository = standardRepository()
     const simulator = waitSimulator()
     const clock = standardClock()
-    const resource = newPasswordLoginResource(currentURL, config, repository, simulator, clock)
+    const resource = newTestPasswordLoginResource(currentURL, config, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
@@ -686,7 +686,7 @@ function standardConfig(): PasswordLoginConfig {
 function standardRepository(): PasswordLoginRepository {
     return {
         authCredentials: initAuthCredentialRepository(
-            initAuthCredentialTestStorage({
+            initTestAuthCredentialStorage({
                 ticketNonce: { set: false },
                 apiCredential: { set: false },
                 lastAuthAt: { set: false },

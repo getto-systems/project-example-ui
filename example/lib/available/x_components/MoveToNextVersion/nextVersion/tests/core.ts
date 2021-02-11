@@ -13,7 +13,7 @@ export type NextVersionRemoteAccess = Readonly<{
     check: CheckRemoteAccess
 }>
 
-export function newNextVersionResource(
+export function newTestNextVersionResource(
     version: string,
     currentURL: URL,
     config: NextVersionActionConfig,

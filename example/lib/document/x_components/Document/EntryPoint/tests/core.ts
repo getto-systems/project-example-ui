@@ -1,4 +1,4 @@
-import { initCredentialAction, initMenuAction } from "../../../../../auth/x_components/Outline/Menu/tests/core"
+import { initTestCredentialAction, initTestMenuAction } from "../../../../../auth/x_components/Outline/Menu/tests/core"
 
 import { detectMenuTarget } from "../../../../../auth/x_components/Outline/Menu/impl/location"
 import { detectContentPath } from "../impl/location"
@@ -36,8 +36,8 @@ export function newDocumentResource(
 ): DocumentResource {
     const factory: DocumentFactory = {
         actions: {
-            credential: initCredentialAction(repository.apiCredentials),
-            menu: initMenuAction(menuTree, repository.menuExpands, remote.loadMenuBadge),
+            credential: initTestCredentialAction(repository.apiCredentials),
+            menu: initTestMenuAction(menuTree, repository.menuExpands, remote.loadMenuBadge),
             content: initContentAction(),
         },
         components: {

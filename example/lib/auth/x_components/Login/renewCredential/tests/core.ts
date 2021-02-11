@@ -1,7 +1,7 @@
 import {
-    initApplicationAction,
-    initSetContinuousRenewAction,
-    initRenewAction,
+    initTestApplicationAction,
+    initTestSetContinuousRenewAction,
+    initTestRenewAction,
     initRenewCredentialLocationInfo,
 } from "../../EntryPoint/tests/core"
 
@@ -34,7 +34,7 @@ export type RenewCredentialRemoteAccess = Readonly<{
     renew: RenewRemoteAccess
 }>
 
-export function newRenewCredentialResource(
+export function newTestRenewCredentialResource(
     currentURL: URL,
     config: RenewCredentialConfig,
     repository: RenewCredentialRepository,
@@ -44,15 +44,15 @@ export function newRenewCredentialResource(
 ): RenewCredentialResource {
     const factory: RenewCredentialFactory = {
         actions: {
-            application: initApplicationAction(config.application),
-            setContinuousRenew: initSetContinuousRenewAction(
+            application: initTestApplicationAction(config.application),
+            setContinuousRenew: initTestSetContinuousRenewAction(
                 config.setContinuousRenew,
                 repository.authCredentials,
                 remote.renew,
                 clock
             ),
 
-            renew: initRenewAction(config.renew, repository.authCredentials, remote.renew, clock),
+            renew: initTestRenewAction(config.renew, repository.authCredentials, remote.renew, clock),
         },
         components: {
             renewCredential: initRenewCredentialComponent,

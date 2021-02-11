@@ -1,6 +1,6 @@
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks"
 
-import { ApplicationComponent } from "../../sub/getto-example/x_components/Application/component";
+import { ApplicationComponent } from "../../sub/getto-example/x_components/Application/component"
 
 export function useTermination(terminate: Terminate): void {
     useEffect(() => terminate, [])
@@ -8,6 +8,12 @@ export function useTermination(terminate: Terminate): void {
 
 interface Terminate {
     (): void
+}
+
+export function useDocumentTitle(title: string): void {
+    useEffect(() => {
+        document.title = `${title} | ${document.title}`
+    }, [])
 }
 
 export function useComponent<S>(component: ApplicationComponent<S>, initial: S): S {

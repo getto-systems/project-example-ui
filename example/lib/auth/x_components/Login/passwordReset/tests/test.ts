@@ -1,7 +1,7 @@
-import { initAuthCredentialTestStorage } from "../../EntryPoint/tests/core"
+import { initTestAuthCredentialStorage } from "../../EntryPoint/tests/core"
 import {
     PasswordResetConfig,
-    newPasswordResetResource,
+    newTestPasswordResetResource,
     PasswordResetRepository,
     PasswordResetRemoteAccess,
 } from "./core"
@@ -686,7 +686,7 @@ function standardPasswordResetResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newPasswordResetResource(currentURL, config, repository, simulator, clock)
+    const resource = newTestPasswordResetResource(currentURL, config, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
@@ -696,7 +696,7 @@ function waitPasswordResetResource() {
     const repository = standardRepository()
     const simulator = waitSimulator()
     const clock = standardClock()
-    const resource = newPasswordResetResource(currentURL, config, repository, simulator, clock)
+    const resource = newTestPasswordResetResource(currentURL, config, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
@@ -706,7 +706,7 @@ function emptyResetTokenPasswordResetResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newPasswordResetResource(currentURL, config, repository, simulator, clock)
+    const resource = newTestPasswordResetResource(currentURL, config, repository, simulator, clock)
 
     return { repository, resource }
 }
@@ -740,7 +740,7 @@ function standardConfig(): PasswordResetConfig {
 function standardRepository(): PasswordResetRepository {
     return {
         authCredentials: initAuthCredentialRepository(
-            initAuthCredentialTestStorage({
+            initTestAuthCredentialStorage({
                 ticketNonce: { set: false },
                 apiCredential: { set: false },
                 lastAuthAt: { set: false },

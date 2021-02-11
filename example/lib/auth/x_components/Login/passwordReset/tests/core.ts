@@ -1,7 +1,7 @@
 import {
-    initApplicationAction,
-    initSetContinuousRenewAction,
-    initPasswordResetAction,
+    initTestApplicationAction,
+    initTestSetContinuousRenewAction,
+    initTestPasswordResetAction,
     initPasswordResetLocationInfo,
 } from "../../EntryPoint/tests/core"
 
@@ -36,7 +36,7 @@ export type PasswordResetRemoteAccess = Readonly<{
     renew: RenewRemoteAccess
 }>
 
-export function newPasswordResetResource(
+export function newTestPasswordResetResource(
     currentURL: URL,
     config: PasswordResetConfig,
     repository: PasswordResetRepository,
@@ -46,15 +46,15 @@ export function newPasswordResetResource(
     const factory: PasswordResetFactory = {
         link: initLoginLink,
         actions: {
-            application: initApplicationAction(config.application),
-            setContinuousRenew: initSetContinuousRenewAction(
+            application: initTestApplicationAction(config.application),
+            setContinuousRenew: initTestSetContinuousRenewAction(
                 config.setContinuousRenew,
                 repository.authCredentials,
                 remote.renew,
                 clock
             ),
 
-            passwordReset: initPasswordResetAction(config.passwordReset, remote.reset),
+            passwordReset: initTestPasswordResetAction(config.passwordReset, remote.reset),
 
             form: {
                 core: initFormAction(),
