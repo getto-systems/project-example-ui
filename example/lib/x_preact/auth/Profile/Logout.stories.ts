@@ -1,13 +1,16 @@
 import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { Example } from "./Logout"
+import { Logout } from "./Logout"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
-import { ExampleMockProps, initMockExampleComponent } from "../../../example/x_components/Dashboard/example/mock"
+import {
+    ExampleMockProps,
+    initMockExampleComponent,
+} from "../../../auth/x_components/Profile/logout/mock"
 
 export default {
-    title: "Example/Home/Example",
+    title: "Auth/Profile/Logout",
     argTypes: {
         type: {
             table: { disable: true },
@@ -25,7 +28,7 @@ const Template: Story<MockProps> = (args) => {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(Example, { example })
+        return h(Logout, { example })
     }
 }
 

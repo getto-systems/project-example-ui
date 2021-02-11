@@ -16,11 +16,11 @@ import { ApplicationError } from "../../z_common/System/ApplicationError"
 import { SeasonInfo } from "../../z_common/Outline/SeasonInfo"
 import { MenuList } from "../../z_common/Outline/MenuList"
 import { BreadcrumbList } from "../../z_common/Outline/BreadcrumbList"
-import { Example } from "./Logout"
+import { Logout } from "./Logout"
 
-import { DashboardEntryPoint } from "../../../example/x_components/Dashboard/EntryPoint/entryPoint"
+import { ProfileEntryPoint } from "../../../auth/x_components/Profile/EntryPoint/entryPoint"
 
-type Props = DashboardEntryPoint
+type Props = ProfileEntryPoint
 export function EntryPoint({ resource, terminate }: Props): VNode {
     useTermination(terminate)
 
@@ -36,7 +36,7 @@ export function EntryPoint({ resource, terminate }: Props): VNode {
         header: [h(SeasonInfo, resource)],
         main: appMain({
             header: mainHeader([mainTitle("プロフィール"), h(BreadcrumbList, resource)]),
-            body: mainBody(h(Example, resource)),
+            body: mainBody(h(Logout, resource)),
             copyright: copyright(),
         }),
         menu: h(MenuList, resource),
