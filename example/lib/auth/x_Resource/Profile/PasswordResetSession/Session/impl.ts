@@ -1,24 +1,21 @@
 import { ApplicationBaseComponent } from "../../../../../sub/getto-example/Application/impl"
 
 import {
-    PasswordResetSessionComponentFactory,
-    PasswordResetSessionMaterial,
-    PasswordResetSessionComponent,
-    PasswordResetSessionComponentState,
+    SessionComponentFactory,
+    SessionMaterial,
+    SessionComponent,
+    SessionComponentState,
 } from "./component"
 
 import { SessionID, StartSessionFields } from "../../../../profile/passwordReset/data"
 import { FormConvertResult } from "../../../../../sub/getto-form/form/data"
 
-export const initPasswordResetSessionComponent: PasswordResetSessionComponentFactory = (material) =>
-    new Component(material)
+export const initSessionComponent: SessionComponentFactory = (material) => new Component(material)
 
-class Component
-    extends ApplicationBaseComponent<PasswordResetSessionComponentState>
-    implements PasswordResetSessionComponent {
-    material: PasswordResetSessionMaterial
+class Component extends ApplicationBaseComponent<SessionComponentState> implements SessionComponent {
+    material: SessionMaterial
 
-    constructor(material: PasswordResetSessionMaterial) {
+    constructor(material: SessionMaterial) {
         super()
         this.material = material
     }

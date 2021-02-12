@@ -9,22 +9,22 @@ import { ScriptPath, LoadError } from "../../../../common/application/data"
 import { StorageError } from "../../../../common/credential/data"
 import { FormConvertResult } from "../../../../../sub/getto-form/form/data"
 
-export interface PasswordResetComponentFactory {
-    (material: PasswordResetMaterial): PasswordResetComponent
+export interface ResetComponentFactory {
+    (material: ResetMaterial): ResetComponent
 }
 
-export type PasswordResetMaterial = Readonly<{
+export type ResetMaterial = Readonly<{
     reset: Reset
     setContinuousRenew: SetContinuousRenew
     secureScriptPath: SecureScriptPath
 }>
 
-export interface PasswordResetComponent extends ApplicationComponent<PasswordResetComponentState> {
+export interface ResetComponent extends ApplicationComponent<ResetComponentState> {
     reset(fields: FormConvertResult<ResetFields>): void
     loadError(err: LoadError): void
 }
 
-export type PasswordResetComponentState =
+export type ResetComponentState =
     | Readonly<{ type: "initial-reset" }>
     | Readonly<{ type: "try-to-reset" }>
     | Readonly<{ type: "delayed-to-reset" }>
@@ -34,4 +34,4 @@ export type PasswordResetComponentState =
     | Readonly<{ type: "load-error"; err: LoadError }>
     | Readonly<{ type: "error"; err: string }>
 
-export const initialPasswordResetComponentState: PasswordResetComponentState = { type: "initial-reset" }
+export const initialResetComponentState: ResetComponentState = { type: "initial-reset" }

@@ -5,11 +5,11 @@ import {
     PasswordResetResource,
 } from "./resource"
 
-import { PasswordResetMaterial } from "./Reset/component"
-import { PasswordResetFormMaterial } from "./Form/component"
+import { ResetMaterial } from "./Reset/component"
+import { FormMaterial } from "./Form/component"
 
-import { initPasswordResetComponent } from "./Reset/impl"
-import { initPasswordResetFormComponent } from "./Form/impl"
+import { initResetComponent } from "./Reset/impl"
+import { initFormComponent } from "./Form/impl"
 
 export function initPasswordResetResource(
     locationInfo: PasswordResetLocationInfo,
@@ -17,18 +17,18 @@ export function initPasswordResetResource(
     background: PasswordResetBackgroundAction
 ): PasswordResetResource {
     return {
-        reset: initPasswordResetComponent(core()),
-        form: initPasswordResetFormComponent(form()),
+        reset: initResetComponent(core()),
+        form: initFormComponent(form()),
     }
 
-    function core(): PasswordResetMaterial {
+    function core(): ResetMaterial {
         return {
             reset: background.reset.reset(locationInfo.reset),
             setContinuousRenew: foreground.setContinuousRenew.setContinuousRenew(),
             secureScriptPath: foreground.application.secureScriptPath(locationInfo.application),
         }
     }
-    function form(): PasswordResetFormMaterial {
+    function form(): FormMaterial {
         return {
             validation: foreground.form.core.validation(),
             history: foreground.form.core.history(),

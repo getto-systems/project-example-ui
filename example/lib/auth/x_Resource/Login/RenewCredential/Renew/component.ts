@@ -7,25 +7,25 @@ import { RenewError } from "../../../../login/credentialStore/data"
 import { ScriptPath, LoadError } from "../../../../common/application/data"
 import { StorageError } from "../../../../common/credential/data"
 
-export interface RenewCredentialComponentFactory {
-    (material: RenewCredentialMaterial): RenewCredentialComponent
+export interface RenewComponentFactory {
+    (material: RenewMaterial): RenewComponent
 }
 
-export type RenewCredentialMaterial = Readonly<{
+export type RenewMaterial = Readonly<{
     renew: Renew
     forceRenew: ForceRenew
     setContinuousRenew: SetContinuousRenew
     secureScriptPath: SecureScriptPath
 }>
 
-export interface RenewCredentialComponent extends ApplicationComponent<RenewCredentialComponentState> {
+export interface RenewComponent extends ApplicationComponent<RenewComponentState> {
     request(): void
     succeedToInstantLoad(): void
     failedToInstantLoad(): void
     loadError(err: LoadError): void
 }
 
-export type RenewCredentialComponentState =
+export type RenewComponentState =
     | Readonly<{ type: "initial-renew" }>
     | Readonly<{ type: "try-to-instant-load"; scriptPath: ScriptPath }>
     | Readonly<{ type: "required-to-login" }>
@@ -38,6 +38,6 @@ export type RenewCredentialComponentState =
     | Readonly<{ type: "load-error"; err: LoadError }>
     | Readonly<{ type: "error"; err: string }>
 
-export const initialRenewCredentialComponentState: RenewCredentialComponentState = {
+export const initialRenewComponentState: RenewComponentState = {
     type: "initial-renew",
 }

@@ -1,22 +1,20 @@
 import { ApplicationBaseComponent } from "../../../../../sub/getto-example/Application/impl"
 
-import {
-    RenewCredentialComponentFactory,
-    RenewCredentialMaterial,
-    RenewCredentialComponent,
-    RenewCredentialComponentState,
-} from "./component"
+import { RenewComponentFactory, RenewMaterial, RenewComponent, RenewComponentState } from "./component"
 
 import { LoadError } from "../../../../common/application/data"
-import { emptyAuthCredential, storeAuthCredential, StoreAuthCredential } from "../../../../login/credentialStore/data"
+import {
+    emptyAuthCredential,
+    storeAuthCredential,
+    StoreAuthCredential,
+} from "../../../../login/credentialStore/data"
 
-export const initRenewCredentialComponent: RenewCredentialComponentFactory = (material) =>
-    new Component(material)
+export const initRenewComponent: RenewComponentFactory = (material) => new Component(material)
 
-class Component extends ApplicationBaseComponent<RenewCredentialComponentState> implements RenewCredentialComponent {
-    material: RenewCredentialMaterial
+class Component extends ApplicationBaseComponent<RenewComponentState> implements RenewComponent {
+    material: RenewMaterial
 
-    constructor(material: RenewCredentialMaterial) {
+    constructor(material: RenewMaterial) {
         super()
         this.material = material
     }

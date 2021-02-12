@@ -14,7 +14,7 @@ import { PasswordLoginResource } from "../../../x_Resource/Login/PasswordLogin/r
 import { PasswordResetSessionResource } from "../../../x_Resource/Profile/PasswordResetSession/resource"
 import { PasswordResetResource } from "../../../x_Resource/Profile/PasswordReset/resource"
 
-import { RenewCredentialComponent } from "../../../x_Resource/Login/RenewCredential/Renew/component"
+import { RenewComponent } from "../../../x_Resource/Login/RenewCredential/Renew/component"
 import { LoginLinkResource } from "../../../x_Resource/common/LoginLink/resource"
 
 export class View extends ApplicationBaseComponent<LoginState> implements LoginView {
@@ -47,7 +47,7 @@ export class View extends ApplicationBaseComponent<LoginState> implements LoginV
         this.post({ type: "error", err })
     }
 
-    hookCredentialStateChange(renewCredential: RenewCredentialComponent): void {
+    hookCredentialStateChange(renewCredential: RenewComponent): void {
         renewCredential.addStateHandler((state) => {
             switch (state.type) {
                 case "required-to-login":
@@ -102,7 +102,7 @@ export class View extends ApplicationBaseComponent<LoginState> implements LoginV
 export interface LoginResourceFactory {
     loginLink(): LoginLinkResource
 
-    renewCredential(setup: Setup<RenewCredentialComponent>): RenewCredentialResource
+    renewCredential(setup: Setup<RenewComponent>): RenewCredentialResource
 
     passwordLogin(): PasswordLoginResource
     passwordResetSession(): PasswordResetSessionResource

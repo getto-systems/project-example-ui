@@ -9,21 +9,21 @@ import { ScriptPath, LoadError } from "../../../../common/application/data"
 import { StorageError } from "../../../../common/credential/data"
 import { LoginError, LoginFields } from "../../../../login/passwordLogin/data"
 
-export interface PasswordLoginComponentFactory {
-    (material: PasswordLoginMaterial): PasswordLoginComponent
+export interface LoginComponentFactory {
+    (material: LoginMaterial): LoginComponent
 }
-export type PasswordLoginMaterial = Readonly<{
+export type LoginMaterial = Readonly<{
     login: Login
     setContinuousRenew: SetContinuousRenew
     secureScriptPath: SecureScriptPath
 }>
 
-export interface PasswordLoginComponent extends ApplicationComponent<PasswordLoginComponentState> {
+export interface LoginComponent extends ApplicationComponent<LoginComponentState> {
     submit(fields: FormConvertResult<LoginFields>): void
     loadError(err: LoadError): void
 }
 
-export type PasswordLoginComponentState =
+export type LoginComponentState =
     | Readonly<{ type: "initial-login" }>
     | Readonly<{ type: "try-to-login" }>
     | Readonly<{ type: "delayed-to-login" }>
@@ -33,4 +33,4 @@ export type PasswordLoginComponentState =
     | Readonly<{ type: "load-error"; err: LoadError }>
     | Readonly<{ type: "error"; err: string }>
 
-export const initialPasswordLoginComponentState: PasswordLoginComponentState = { type: "initial-login" }
+export const initialLoginComponentState: LoginComponentState = { type: "initial-login" }

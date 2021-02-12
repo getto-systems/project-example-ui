@@ -1,13 +1,10 @@
-import {
-    MockComponent,
-    MockPropsPasser,
-} from "../../../../../sub/getto-example/Application/mock"
+import { MockComponent, MockPropsPasser } from "../../../../../sub/getto-example/Application/mock"
 
-import { PasswordResetSessionComponent, PasswordResetSessionComponentState } from "./component"
+import { SessionComponent, SessionComponentState } from "./component"
 
-type Passer = MockPropsPasser<PasswordResetSessionMockProps>
+type Passer = MockPropsPasser<SessionMockProps>
 
-export type PasswordResetSessionMockProps =
+export type SessionMockProps =
     | Readonly<{ type: "initial" }>
     | Readonly<{ type: "try" }>
     | Readonly<{ type: "delayed" }>
@@ -28,20 +25,18 @@ export type PasswordResetSessionMockProps =
     | Readonly<{ type: "send-error"; err: string }>
     | Readonly<{ type: "send" }>
 
-export function initMockPasswordResetSession(passer: Passer): PasswordResetSessionMockComponent {
-    return new PasswordResetSessionMockComponent(passer)
+export function initMockSessionComponent(passer: Passer): Component {
+    return new Component(passer)
 }
 
-export class PasswordResetSessionMockComponent
-    extends MockComponent<PasswordResetSessionComponentState>
-    implements PasswordResetSessionComponent {
+export class Component extends MockComponent<SessionComponentState> implements SessionComponent {
     constructor(passer: Passer) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))
         })
 
-        function mapProps(props: PasswordResetSessionMockProps): PasswordResetSessionComponentState {
+        function mapProps(props: SessionMockProps): SessionComponentState {
             switch (props.type) {
                 case "initial":
                     return { type: "initial-reset-session" }

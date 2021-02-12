@@ -16,7 +16,7 @@ import {
     StartSessionRemoteAccessResult,
 } from "../../../profile/passwordReset/infra"
 
-import { PasswordResetSessionComponentState } from "./Session/component"
+import { SessionComponentState } from "./Session/component"
 
 import { markSessionID } from "../../../profile/passwordReset/data"
 import { markInputString, toValidationError } from "../../../../sub/getto-form/form/data"
@@ -43,7 +43,7 @@ describe("PasswordResetSession", () => {
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: PasswordResetSessionComponentState): boolean => {
+                (state: SessionComponentState): boolean => {
                     switch (state.type) {
                         case "initial-reset-session":
                         case "try-to-start-session":
@@ -87,7 +87,7 @@ describe("PasswordResetSession", () => {
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: PasswordResetSessionComponentState): boolean => {
+                (state: SessionComponentState): boolean => {
                     switch (state.type) {
                         case "initial-reset-session":
                         case "try-to-start-session":
@@ -132,7 +132,7 @@ describe("PasswordResetSession", () => {
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: PasswordResetSessionComponentState): boolean => {
+                (state: SessionComponentState): boolean => {
                     switch (state.type) {
                         case "initial-reset-session":
                         case "try-to-start-session":
@@ -206,7 +206,7 @@ describe("PasswordResetSession", () => {
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: PasswordResetSessionComponentState): boolean => {
+                (state: SessionComponentState): boolean => {
                     switch (state.type) {
                         case "initial-reset-session":
                         case "try-to-start-session":

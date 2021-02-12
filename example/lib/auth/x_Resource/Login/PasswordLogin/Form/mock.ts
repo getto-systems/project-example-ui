@@ -1,28 +1,34 @@
 import { MockPropsPasser } from "../../../../../sub/getto-example/Application/mock"
-import { FormMockComponent, FormMockProps } from "../../../../../sub/getto-form/x_Component/Form/mock"
+import {
+    FormContainerMockComponent,
+    FormContainerMockProps,
+} from "../../../../../sub/getto-form/x_Component/Form/mock"
 
 import { initMockLoginIDFormField, LoginIDFormFieldMockProps } from "../../../common/Field/LoginID/mock"
-import { initMockPasswordFormField, PasswordFormFieldMockProps } from "../../../common/Field/Password/mock"
+import {
+    initMockPasswordFormField,
+    PasswordFormFieldMockProps,
+} from "../../../common/Field/Password/mock"
 
 import { FormContainerComponentState } from "../../../../../sub/getto-form/x_Component/Form/component"
 import { LoginIDFormFieldComponent } from "../../../common/Field/LoginID/component"
 import { PasswordFormFieldComponent } from "../../../common/Field/Password/component"
-import { PasswordLoginFormComponent } from "./component"
+import { FormComponent } from "./component"
 
 import { FormConvertResult } from "../../../../../sub/getto-form/form/data"
 import { LoginFields } from "../../../../login/passwordLogin/data"
 
-type Passer = MockPropsPasser<PasswordLoginFormMockProps>
+type Passer = MockPropsPasser<FormMockProps>
 
-export type PasswordLoginFormMockProps = FormMockProps &
+export type FormMockProps = FormContainerMockProps &
     LoginIDFormFieldMockProps &
     PasswordFormFieldMockProps
 
-export function initMockPasswordLoginForm(passer: Passer): PasswordLoginFormComponent {
-    return new PasswordLoginFormMockComponent(passer)
+export function initMockFormComponent(passer: Passer): FormComponent {
+    return new Component(passer)
 }
 
-class PasswordLoginFormMockComponent extends FormMockComponent implements PasswordLoginFormComponent {
+class Component extends FormContainerMockComponent implements FormComponent {
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
 
@@ -34,7 +40,7 @@ class PasswordLoginFormMockComponent extends FormMockComponent implements Passwo
         this.loginID = initMockLoginIDFormField(passer)
         this.password = initMockPasswordFormField(passer)
 
-        function mapProps(props: PasswordLoginFormMockProps): FormContainerComponentState {
+        function mapProps(props: FormMockProps): FormContainerComponentState {
             return { validation: props.validation, history: { undo: false, redo: false } }
         }
     }

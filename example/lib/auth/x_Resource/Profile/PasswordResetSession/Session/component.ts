@@ -12,20 +12,19 @@ import {
 } from "../../../../profile/passwordReset/data"
 import { FormConvertResult } from "../../../../../sub/getto-form/form/data"
 
-export interface PasswordResetSessionComponentFactory {
-    (material: PasswordResetSessionMaterial): PasswordResetSessionComponent
+export interface SessionComponentFactory {
+    (material: SessionMaterial): SessionComponent
 }
-export type PasswordResetSessionMaterial = Readonly<{
+export type SessionMaterial = Readonly<{
     startSession: StartSession
     checkStatus: CheckStatus
 }>
 
-export interface PasswordResetSessionComponent
-    extends ApplicationComponent<PasswordResetSessionComponentState> {
+export interface SessionComponent extends ApplicationComponent<SessionComponentState> {
     startSession(fields: FormConvertResult<StartSessionFields>): void
 }
 
-export type PasswordResetSessionComponentState =
+export type SessionComponentState =
     | Readonly<{ type: "initial-reset-session" }>
     | Readonly<{ type: "try-to-start-session" }>
     | Readonly<{ type: "delayed-to-start-session" }>
@@ -37,6 +36,6 @@ export type PasswordResetSessionComponentState =
     | Readonly<{ type: "succeed-to-send-token"; dest: Destination }>
     | Readonly<{ type: "error"; err: string }>
 
-export const initialPasswordResetSessionComponentState: PasswordResetSessionComponentState = {
+export const initialSessionComponentState: SessionComponentState = {
     type: "initial-reset-session",
 }

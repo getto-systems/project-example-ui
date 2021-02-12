@@ -1,5 +1,5 @@
-import { initPasswordLoginFormComponent } from "./Form/impl"
-import { initPasswordLoginComponent } from "./Login/impl"
+import { initFormComponent } from "./Form/impl"
+import { initLoginComponent } from "./Login/impl"
 
 import {
     PasswordLoginBackgroundAction,
@@ -8,8 +8,8 @@ import {
     PasswordLoginResource,
 } from "./resource"
 
-import { PasswordLoginMaterial } from "./Login/component"
-import { PasswordLoginFormMaterial } from "./Form/component"
+import { LoginMaterial } from "./Login/component"
+import { FormMaterial } from "./Form/component"
 
 export function initPasswordLoginResource(
     locationInfo: PasswordLoginLocationInfo,
@@ -17,18 +17,18 @@ export function initPasswordLoginResource(
     background: PasswordLoginBackgroundAction
 ): PasswordLoginResource {
     return {
-        login: initPasswordLoginComponent(core()),
-        form: initPasswordLoginFormComponent(form()),
+        login: initLoginComponent(core()),
+        form: initFormComponent(form()),
     }
 
-    function core(): PasswordLoginMaterial {
+    function core(): LoginMaterial {
         return {
             setContinuousRenew: foreground.setContinuousRenew.setContinuousRenew(),
             secureScriptPath: foreground.application.secureScriptPath(locationInfo.application),
             login: background.login.login(),
         }
     }
-    function form(): PasswordLoginFormMaterial {
+    function form(): FormMaterial {
         return {
             validation: foreground.form.core.validation(),
             history: foreground.form.core.history(),

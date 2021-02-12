@@ -1,13 +1,10 @@
-import {
-    MockComponent,
-    MockPropsPasser,
-} from "../../../../../sub/getto-example/Application/mock"
+import { MockComponent, MockPropsPasser } from "../../../../../sub/getto-example/Application/mock"
 
-import { PasswordLoginComponent, PasswordLoginComponentState } from "./component"
+import { LoginComponent, LoginComponentState } from "./component"
 
-type Passer = MockPropsPasser<PasswordLoginMockProps>
+type Passer = MockPropsPasser<LoginMockProps>
 
-export type PasswordLoginMockProps =
+export type LoginMockProps =
     | Readonly<{ type: "initial" }>
     | Readonly<{ type: "try" }>
     | Readonly<{ type: "delayed" }>
@@ -18,20 +15,18 @@ export type PasswordLoginMockProps =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function initMockPasswordLogin(passer: Passer): PasswordLoginMockComponent {
-    return new PasswordLoginMockComponent(passer)
+export function initMockLoginComponent(passer: Passer): Component {
+    return new Component(passer)
 }
 
-class PasswordLoginMockComponent
-    extends MockComponent<PasswordLoginComponentState>
-    implements PasswordLoginComponent {
+class Component extends MockComponent<LoginComponentState> implements LoginComponent {
     constructor(passer: Passer) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))
         })
 
-        function mapProps(props: PasswordLoginMockProps): PasswordLoginComponentState {
+        function mapProps(props: LoginMockProps): LoginComponentState {
             switch (props.type) {
                 case "initial":
                     return { type: "initial-login" }

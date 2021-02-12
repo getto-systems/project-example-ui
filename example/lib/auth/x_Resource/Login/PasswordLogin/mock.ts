@@ -1,18 +1,18 @@
 import { MockPropsPasser } from "../../../../sub/getto-example/Application/mock"
 
-import { initMockPasswordLoginForm, PasswordLoginFormMockProps } from "./Form/mock"
-import { initMockPasswordLogin, PasswordLoginMockProps } from "./Login/mock"
+import { initMockFormComponent, FormMockProps } from "./Form/mock"
+import { initMockLoginComponent, LoginMockProps } from "./Login/mock"
 
 import { PasswordLoginResource } from "./resource"
 
 export type PasswordLoginResourceMockPropsPasser = MockPropsPasser<PasswordLoginResourceMockProps>
-export type PasswordLoginResourceMockProps = PasswordLoginMockProps & PasswordLoginFormMockProps
+export type PasswordLoginResourceMockProps = LoginMockProps & FormMockProps
 
 export function initMockPasswordLoginResource(
     passer: PasswordLoginResourceMockPropsPasser
 ): PasswordLoginResource {
     return {
-        login: initMockPasswordLogin(passer),
-        form: initMockPasswordLoginForm(passer),
+        login: initMockLoginComponent(passer),
+        form: initMockFormComponent(passer),
     }
 }

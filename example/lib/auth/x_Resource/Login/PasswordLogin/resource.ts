@@ -1,5 +1,5 @@
-import { PasswordLoginComponent } from "./Login/component"
-import { PasswordLoginFormComponent } from "./Form/component"
+import { LoginComponent } from "./Login/component"
+import { FormComponent } from "./Form/component"
 
 import { FormAction } from "../../../../sub/getto-form/form/action"
 import { ApplicationAction, SecureScriptPathLocationInfo } from "../../../common/application/action"
@@ -9,8 +9,8 @@ import { SetContinuousRenewAction } from "../../../login/credentialStore/action"
 import { LoginAction } from "../../../login/passwordLogin/action"
 
 export type PasswordLoginResource = Readonly<{
-    login: PasswordLoginComponent
-    form: PasswordLoginFormComponent
+    login: LoginComponent
+    form: FormComponent
 }>
 
 export type PasswordLoginLocationInfo = Readonly<{

@@ -1,10 +1,10 @@
-import { RenewCredentialComponent } from "./Renew/component"
+import { RenewComponent } from "./Renew/component"
 
 import { ApplicationAction, SecureScriptPathLocationInfo } from "../../../common/application/action"
 import { RenewAction, SetContinuousRenewAction } from "../../../login/credentialStore/action"
 
 export type RenewCredentialResource = Readonly<{
-    renew: RenewCredentialComponent
+    renew: RenewComponent
 }>
 
 export type RenewCredentialLocationInfo = Readonly<{

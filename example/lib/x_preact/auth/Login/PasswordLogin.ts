@@ -25,7 +25,7 @@ import { PasswordFormField } from "./field/password"
 
 import { PasswordLoginEntryPoint } from "../../../auth/z_EntryPoint/Login/entryPoint"
 
-import { initialPasswordLoginComponentState } from "../../../auth/x_Resource/Login/PasswordLogin/Login/component"
+import { initialLoginComponentState } from "../../../auth/x_Resource/Login/PasswordLogin/Login/component"
 import { initialFormContainerComponentState } from "../../../sub/getto-form/x_Component/Form/component"
 
 import { LoginError } from "../../../auth/login/passwordLogin/data"
@@ -34,7 +34,7 @@ export function PasswordLogin({ resource, terminate }: PasswordLoginEntryPoint):
     useTermination(terminate)
 
     const { login } = resource
-    const state = useComponent(login, initialPasswordLoginComponentState)
+    const state = useComponent(login, initialLoginComponentState)
     const formState = useComponent(resource.form, initialFormContainerComponentState)
 
     useEffect(() => {
