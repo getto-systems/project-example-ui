@@ -4,15 +4,15 @@ import { useEffect } from "preact/hooks"
 import { EntryPoint } from "./EntryPoint"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
-import { newMockLoginAsPasswordReset } from "../../../auth/x_components/Login/EntryPoint/mock"
-import { PasswordResetMockProps } from "../../../auth/x_components/Login/passwordReset/mock"
-import { loginIDFormFieldValidations } from "../../../auth/x_components/Login/field/loginID/mock"
+import { newMockLoginAsPasswordReset } from "../../../auth/z_EntryPoint/Login/EntryPoint/mock"
+import { PasswordResetResourceMockProps } from "../../../auth/x_Resource/Profile/PasswordReset/mock"
+import { loginIDFormFieldValidations } from "../../../auth/x_Resource/Field/LoginID/mock"
 import { formValidationStates } from "../../../sub/getto-form/x_components/Form/mock"
 import {
     passwordFormFieldCharacters,
     passwordFormFieldValidations,
     passwordFormFieldViews,
-} from "../../../auth/x_components/Login/field/password/mock"
+} from "../../../auth/x_Resource/Field/Password/mock"
 
 export default {
     title: "Auth/Login/PasswordReset",
@@ -53,9 +53,9 @@ export default {
     },
 }
 
-type MockProps = PasswordResetMockProps
+type MockProps = PasswordResetResourceMockProps
 const Template: Story<MockProps> = (args) => {
-    const passer = initMockPropsPasser<PasswordResetMockProps>()
+    const passer = initMockPropsPasser<PasswordResetResourceMockProps>()
     const entryPoint = newMockLoginAsPasswordReset(passer)
     return h(Preview, { args })
 

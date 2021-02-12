@@ -9,8 +9,8 @@ import {
     DocumentMockPropsPasser,
     newMockDocument,
 } from "../../../document/x_components/Document/EntryPoint/mock"
-import { MenuListMockProps } from "../../../auth/x_components/Outline/menuList/mock"
-import { BreadcrumbListMockProps } from "../../../auth/x_components/Outline/breadcrumbList/mock"
+import { MenuListMockProps } from "../../../auth/z_EntryPoint/Outline/menuList/mock"
+import { BreadcrumbListMockProps } from "../../../auth/z_EntryPoint/Outline/breadcrumbList/mock"
 import { ContentMockProps } from "../../../document/x_components/Document/content/mock"
 
 export default {

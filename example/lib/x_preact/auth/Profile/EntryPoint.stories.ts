@@ -8,11 +8,11 @@ import { initMockPropsPasser } from "../../../sub/getto-example/x_components/App
 import {
     DashboardMockPropsPasser,
     newMockDashboard,
-} from "../../../auth/x_components/Profile/EntryPoint/mock"
+} from "../../../auth/z_EntryPoint/Profile/EntryPoint/mock"
 import { SeasonInfoMockProps } from "../../../example/x_components/Outline/seasonInfo/mock"
-import { MenuListMockProps } from "../../../auth/x_components/Outline/menuList/mock"
-import { BreadcrumbListMockProps } from "../../../auth/x_components/Outline/breadcrumbList/mock"
-import { LogoutMockProps } from "../../../auth/x_components/Profile/logout/mock"
+import { MenuListMockProps } from "../../../auth/z_EntryPoint/Outline/menuList/mock"
+import { BreadcrumbListMockProps } from "../../../auth/z_EntryPoint/Outline/breadcrumbList/mock"
+import { LogoutMockProps } from "../../../auth/z_EntryPoint/Profile/logout/mock"
 
 export default {
     title: "Auth/Profile",

@@ -4,8 +4,8 @@ import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "
 
 import { initErrorComponent } from "../../../../../available/x_components/Error/error/impl"
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
-import { initMenuListComponent } from "../../../../../auth/x_components/Outline/menuList/impl"
-import { initBreadcrumbListComponent } from "../../../../../auth/x_components/Outline/breadcrumbList/impl"
+import { initMenuListComponent } from "../../../../../auth/z_EntryPoint/Outline/menuList/impl"
+import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/impl"
 import { initExampleComponent } from "../../example/impl"
 import { detectMenuTarget } from "../../../../../auth/permission/menu/impl/location"
 

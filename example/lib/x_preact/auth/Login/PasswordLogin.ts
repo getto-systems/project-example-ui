@@ -23,9 +23,9 @@ import { ApplicationError } from "../../z_common/System/ApplicationError"
 import { LoginIDFormField } from "./field/loginID"
 import { PasswordFormField } from "./field/password"
 
-import { PasswordLoginResource } from "../../../auth/x_components/Login/passwordLogin/resource"
+import { PasswordLoginResource } from "../../../auth/x_Resource/Login/PasswordLogin/resource"
 
-import { initialPasswordLoginComponentState } from "../../../auth/x_components/Login/passwordLogin/component"
+import { initialPasswordLoginComponentState } from "../../../auth/x_Resource/Login/PasswordLogin/Login/component"
 
 import { LoginError } from "../../../auth/login/passwordLogin/data"
 import { initialFormComponentState } from "../../../sub/getto-form/x_components/Form/component"

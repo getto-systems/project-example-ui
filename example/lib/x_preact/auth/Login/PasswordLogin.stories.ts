@@ -4,14 +4,14 @@ import { useEffect } from "preact/hooks"
 import { EntryPoint } from "./EntryPoint"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
-import { newMockLoginAsPasswordLogin } from "../../../auth/x_components/Login/EntryPoint/mock"
-import { PasswordLoginMockProps } from "../../../auth/x_components/Login/passwordLogin/mock"
-import { loginIDFormFieldValidations } from "../../../auth/x_components/Login/field/loginID/mock"
+import { newMockLoginAsPasswordLogin } from "../../../auth/z_EntryPoint/Login/EntryPoint/mock"
+import { PasswordLoginResourceMockProps } from "../../../auth/x_Resource/Login/PasswordLogin/mock"
+import { loginIDFormFieldValidations } from "../../../auth/x_Resource/Field/LoginID/mock"
 import {
     passwordFormFieldCharacters,
     passwordFormFieldValidations,
     passwordFormFieldViews,
-} from "../../../auth/x_components/Login/field/password/mock"
+} from "../../../auth/x_Resource/Field/Password/mock"
 import { formValidationStates } from "../../../sub/getto-form/x_components/Form/mock"
 
 export default {
@@ -53,9 +53,9 @@ export default {
     },
 }
 
-type MockProps = PasswordLoginMockProps
+type MockProps = PasswordLoginResourceMockProps
 const Template: Story<MockProps> = (args) => {
-    const passer = initMockPropsPasser<PasswordLoginMockProps>()
+    const passer = initMockPropsPasser<PasswordLoginResourceMockProps>()
     const entryPoint = newMockLoginAsPasswordLogin(passer)
     return h(Preview, { args })
 

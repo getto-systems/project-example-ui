@@ -8,8 +8,8 @@ import { detectContentPath } from "../../../../content/impl/location"
 import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
 
 import { initErrorComponent } from "../../../../../available/x_components/Error/error/impl"
-import { initBreadcrumbListComponent } from "../../../../../auth/x_components/Outline/breadcrumbList/impl"
-import { initMenuListComponent } from "../../../../../auth/x_components/Outline/menuList/impl"
+import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/impl"
+import { initMenuListComponent } from "../../../../../auth/z_EntryPoint/Outline/menuList/impl"
 import { initContentComponent } from "../../content/impl"
 
 import { ApiCredentialRepository } from "../../../../../auth/common/credential/infra"

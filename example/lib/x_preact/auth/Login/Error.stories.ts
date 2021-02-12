@@ -3,7 +3,7 @@ import { useEffect } from "preact/hooks"
 
 import { EntryPoint } from "./EntryPoint"
 
-import { LoginErrorMockProps, newMockLoginAsError } from "../../../auth/x_components/Login/EntryPoint/mock"
+import { LoginErrorMockProps, newMockLoginAsError } from "../../../auth/z_EntryPoint/Login/EntryPoint/mock"
 import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
 
 export default {

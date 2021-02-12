@@ -7,7 +7,7 @@ import { useComponent } from "../../../z_common/hooks"
 
 import { FormInput } from "../../../z_common/Form/FormInput"
 
-import { LoginIDFormFieldComponent } from "../../../../auth/x_components/Login/field/loginID/component"
+import { LoginIDFormFieldComponent } from "../../../../auth/x_Resource/Field/LoginID/component"
 import { initialFormFieldComponentState } from "../../../../sub/getto-form/x_components/Form/component"
 
 import { FormValidationResult } from "../../../../sub/getto-form/form/data"

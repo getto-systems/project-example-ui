@@ -14,9 +14,9 @@ import { appendScript } from "./script"
 
 import { ApplicationError } from "../../z_common/System/ApplicationError"
 
-import { RenewCredentialResource } from "../../../auth/x_components/Login/renewCredential/resource"
+import { RenewCredentialResource } from "../../../auth/x_Resource/Login/RenewCredential/resource"
 
-import { initialRenewCredentialComponentState } from "../../../auth/x_components/Login/renewCredential/component"
+import { initialRenewCredentialComponentState } from "../../../auth/x_Resource/Login/RenewCredential/Renew/component"
 
 import { RenewError } from "../../../auth/login/credentialStore/data"
 

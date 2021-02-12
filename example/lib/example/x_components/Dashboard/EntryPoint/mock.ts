@@ -1,11 +1,11 @@
 import {
     BreadcrumbListMockPropsPasser,
     initMockBreadcrumbListComponent,
-} from "../../../../auth/x_components/Outline/breadcrumbList/mock"
+} from "../../../../auth/z_EntryPoint/Outline/breadcrumbList/mock"
 import {
     initMockMenuListComponent,
     MenuListMockPropsPasser,
-} from "../../../../auth/x_components/Outline/menuList/mock"
+} from "../../../../auth/z_EntryPoint/Outline/menuList/mock"
 import { initMockErrorComponent } from "../../../../available/x_components/Error/error/mock"
 import { initMockSeasonInfoComponent, SeasonInfoMockPropsPasser } from "../../Outline/seasonInfo/mock"
 import { ExampleMockPropsPasser, initMockExampleComponent } from "../example/mock"

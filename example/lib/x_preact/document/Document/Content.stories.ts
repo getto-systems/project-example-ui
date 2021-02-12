@@ -8,7 +8,7 @@ import { ContentMockProps, initMockContentComponent } from "../../../document/x_
 import {
     BreadcrumbListMockProps,
     initMockBreadcrumbListComponent,
-} from "../../../auth/x_components/Outline/breadcrumbList/mock"
+} from "../../../auth/z_EntryPoint/Outline/breadcrumbList/mock"
 
 export default {
     title: "Document/Content",

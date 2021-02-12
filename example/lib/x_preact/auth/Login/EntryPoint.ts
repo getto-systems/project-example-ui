@@ -15,7 +15,7 @@ import { PasswordReset } from "./PasswordReset"
 import {
     LoginEntryPoint,
     initialLoginState,
-} from "../../../auth/x_components/Login/EntryPoint/entryPoint"
+} from "../../../auth/z_EntryPoint/Login/EntryPoint/entryPoint"
 
 type Props = LoginEntryPoint
 export function EntryPoint({ view, terminate }: Props): VNode {

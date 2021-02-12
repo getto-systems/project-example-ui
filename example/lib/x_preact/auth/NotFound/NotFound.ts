@@ -11,12 +11,12 @@ import { icon } from "../../z_common/icon"
 
 import { ApplicationError } from "../../z_common/System/ApplicationError"
 
-import { NotFoundEntryPoint } from "../../../auth/x_components/NotFound/EntryPoint/entryPoint"
+import { NotFoundEntryPoint } from "../../../available/x_components/NotFound/EntryPoint/entryPoint"
 
 import {
     CurrentVersionComponent,
     initialCurrentVersionComponentState,
-} from "../../../auth/x_components/NotFound/currentVersion/component"
+} from "../../../available/x_components/NotFound/currentVersion/component"
 
 type Props = NotFoundEntryPoint
 export function EntryPoint({ resource, terminate }: Props): VNode {

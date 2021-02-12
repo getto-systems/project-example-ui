@@ -5,8 +5,8 @@ import { html } from "htm/preact"
 import { EntryPoint } from "./NotFound"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
-import { newMockNotFound } from "../../../auth/x_components/NotFound/EntryPoint/mock"
-import { CurrentVersionMockProps } from "../../../auth/x_components/NotFound/currentVersion/mock"
+import { newMockNotFound } from "../../../available/x_components/NotFound/EntryPoint/mock"
+import { CurrentVersionMockProps } from "../../../available/x_components/NotFound/currentVersion/mock"
 
 export default {
     title: "Auth/NotFound",
