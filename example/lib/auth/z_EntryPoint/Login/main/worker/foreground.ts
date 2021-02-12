@@ -1,11 +1,10 @@
 import { env } from "../../../../../y_environment/env"
 
-import { initLoginLink } from "../../../../x_Resource/common/impl/link"
-
 import { View, LoginResourceFactory } from "../../impl/core"
 import { initLoginViewLocationInfo } from "../../impl/location"
 import { initLoginLocationInfo } from "../../../../x_Resource/common/impl/location"
 
+import { initLoginLinkResource } from "../../../../x_Resource/common/LoginLink/impl"
 import { initPasswordLoginResource } from "../../../../x_Resource/Login/PasswordLogin/impl"
 import { initPasswordResetResource } from "../../../../x_Resource/Profile/PasswordReset/impl"
 import { initPasswordResetSessionResource } from "../../../../x_Resource/Profile/PasswordResetSession/impl"
@@ -32,11 +31,7 @@ import {
 } from "../../../../profile/passwordReset/action"
 
 import { LoginEvent } from "../../../../login/passwordLogin/event"
-import {
-    StartSessionEvent,
-    CheckStatusEvent,
-    ResetEvent,
-} from "../../../../profile/passwordReset/event"
+import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../profile/passwordReset/event"
 
 import {
     ForegroundMessage,
@@ -56,7 +51,6 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
     const worker = new Worker(`/${env.version}/auth/login.worker.js`)
 
     const foreground: LoginForegroundAction = {
-        link: initLoginLink,
         application: initApplicationAction(),
         renew: initRenewAction(webStorage),
         setContinuousRenew: initSetContinuousRenewAction(webStorage),
@@ -210,6 +204,8 @@ function initLoginComponentFactory(
     const background = initActionProxyFactory()
 
     return {
+        loginLink: initLoginLinkResource,
+
         renewCredential: (setup) => initRenewCredentialResource(setup, locationInfo, foreground),
 
         passwordLogin: () => initPasswordLoginResource(locationInfo, foreground, background),

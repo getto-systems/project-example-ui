@@ -23,7 +23,6 @@ export function initPasswordResetResource(
 
     function core(): PasswordResetMaterial {
         return {
-            link: foreground.link(),
             reset: background.reset.reset(locationInfo.reset),
             setContinuousRenew: foreground.setContinuousRenew.setContinuousRenew(),
             secureScriptPath: foreground.application.secureScriptPath(locationInfo.application),

@@ -1,5 +1,3 @@
-import { LoginLinkFactory } from "../../common/link"
-
 import { PasswordLoginComponent } from "./Login/component"
 import { PasswordLoginFormComponent } from "./Form/component"
 
@@ -19,7 +17,6 @@ export type PasswordLoginLocationInfo = Readonly<{
     application: SecureScriptPathLocationInfo
 }>
 export type PasswordLoginForegroundAction = Readonly<{
-    link: LoginLinkFactory
     application: ApplicationAction
     setContinuousRenew: SetContinuousRenewAction
     form: Readonly<{

@@ -1,8 +1,8 @@
-import { LoginLink } from "../link"
+import { LinkComponent } from "./component"
 
-import { AuthSearchParams } from "../../../common/searchParams/data"
+import { AuthSearchParams } from "../../../../common/searchParams/data"
 
-export function initLoginLink(): LoginLink {
+export function initLinkComponent(): LinkComponent {
     return {
         passwordLogin,
         passwordResetSession,

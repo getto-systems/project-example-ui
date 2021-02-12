@@ -1,5 +1,3 @@
-import { initLoginLink } from "../../common/impl/link"
-
 import { initPasswordLoginResource } from "./impl"
 
 import { initLoginLocationInfo } from "../../common/impl/location"
@@ -248,15 +246,6 @@ describe("PasswordLogin", () => {
                 }
             )
         }
-    })
-
-    test("link", (done) => {
-        const {  resource } = standardPasswordLoginResource()
-
-        expect(resource.login.link.passwordLogin()).toEqual("?_password_login")
-        expect(resource.login.link.passwordResetSession()).toEqual("?_password_reset=start")
-
-        done()
     })
 
     describe("form", () => {
@@ -707,7 +696,6 @@ function newTestPasswordLoginResource(
     return initPasswordLoginResource(
         initLoginLocationInfo(currentURL),
         {
-            link: initLoginLink,
             application: initTestApplicationAction(config.application),
             setContinuousRenew: initTestSetContinuousRenewAction(
                 config.setContinuousRenew,

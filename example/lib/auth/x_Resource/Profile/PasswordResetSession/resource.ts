@@ -1,5 +1,3 @@
-import { LoginLinkFactory } from "../../common/link"
-
 import { PasswordResetSessionComponent } from "./Session/component"
 import { PasswordResetSessionFormComponent } from "./Form/component"
 
@@ -14,7 +12,6 @@ export type PasswordResetSessionResource = Readonly<{
 }>
 
 export type PasswordResetSessionForegroundAction = Readonly<{
-    link: LoginLinkFactory
     application: ApplicationAction
     form: Readonly<{
         core: FormAction

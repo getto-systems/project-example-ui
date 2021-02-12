@@ -3,10 +3,6 @@ import {
     MockPropsPasser,
 } from "../../../../../sub/getto-example/x_components/Application/mock"
 
-import { initLoginLink } from "../../../common/impl/link"
-
-import { LoginLink } from "../../../common/link"
-
 import { PasswordResetSessionComponent, PasswordResetSessionComponentState } from "./component"
 
 type Passer = MockPropsPasser<PasswordResetSessionMockProps>
@@ -39,14 +35,11 @@ export function initMockPasswordResetSession(passer: Passer): PasswordResetSessi
 export class PasswordResetSessionMockComponent
     extends MockComponent<PasswordResetSessionComponentState>
     implements PasswordResetSessionComponent {
-    link: LoginLink
-
     constructor(passer: Passer) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))
         })
-        this.link = initLoginLink()
 
         function mapProps(props: PasswordResetSessionMockProps): PasswordResetSessionComponentState {
             switch (props.type) {

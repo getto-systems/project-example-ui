@@ -1,7 +1,5 @@
 import { ApplicationBaseComponent } from "../../../../../sub/getto-example/x_components/Application/impl"
 
-import { LoginLink } from "../../../common/link"
-
 import {
     PasswordResetSessionComponentFactory,
     PasswordResetSessionMaterial,
@@ -20,12 +18,9 @@ class Component
     implements PasswordResetSessionComponent {
     material: PasswordResetSessionMaterial
 
-    link: LoginLink
-
     constructor(material: PasswordResetSessionMaterial) {
         super()
         this.material = material
-        this.link = material.link
     }
 
     startSession(fields: FormConvertResult<StartSessionFields>): void {

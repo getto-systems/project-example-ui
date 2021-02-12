@@ -1,5 +1,3 @@
-import { LoginLinkFactory } from "../../common/link"
-
 import { PasswordResetComponent } from "./Reset/component"
 import { PasswordResetFormComponent } from "./Form/component"
 
@@ -20,7 +18,6 @@ export type PasswordResetLocationInfo = Readonly<{
     reset: ResetLocationInfo
 }>
 export type PasswordResetForegroundAction = Readonly<{
-    link: LoginLinkFactory
     application: ApplicationAction
     setContinuousRenew: SetContinuousRenewAction
     form: Readonly<{

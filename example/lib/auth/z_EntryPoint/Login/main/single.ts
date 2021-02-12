@@ -2,20 +2,16 @@ import { initFormAction } from "../../../../sub/getto-form/main/form"
 
 import { View } from "../impl/core"
 
-import { initLoginLink } from "../../../x_Resource/common/impl/link"
-
 import { initLoginViewLocationInfo } from "../impl/location"
 import { initLoginLocationInfo } from "../../../x_Resource/common/impl/location"
 
+import { initLoginLinkResource } from "../../../x_Resource/common/LoginLink/impl"
 import { initRenewCredentialResource } from "../../../x_Resource/Login/RenewCredential/impl"
 import { initPasswordLoginResource } from "../../../x_Resource/Login/PasswordLogin/impl"
 import { initPasswordResetSessionResource } from "../../../x_Resource/Profile/PasswordResetSession/impl"
 import { initPasswordResetResource } from "../../../x_Resource/Profile/PasswordReset/impl"
 
-import {
-    initRenewAction,
-    initSetContinuousRenewAction,
-} from "../../../login/credentialStore/main/renew"
+import { initRenewAction, initSetContinuousRenewAction } from "../../../login/credentialStore/main/renew"
 import { initApplicationAction } from "../../../common/application/main/application"
 import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../common/field/password/main/password"
@@ -32,7 +28,6 @@ export function newLoginAsSingle(): LoginEntryPoint {
     const currentURL = new URL(location.toString())
 
     const foreground: LoginForegroundAction = {
-        link: initLoginLink,
         application: initApplicationAction(),
         renew: initRenewAction(webStorage),
         setContinuousRenew: initSetContinuousRenewAction(webStorage),
@@ -47,6 +42,8 @@ export function newLoginAsSingle(): LoginEntryPoint {
     const locationInfo = initLoginLocationInfo(currentURL)
 
     const view = new View(initLoginViewLocationInfo(currentURL), {
+        loginLink: initLoginLinkResource,
+
         renewCredential: (setup) => initRenewCredentialResource(setup, locationInfo, foreground),
 
         passwordLogin: () =>
