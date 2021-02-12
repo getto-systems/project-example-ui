@@ -36,6 +36,22 @@ export type PasswordLoginEntryPoint = EntryPoint<PasswordLoginResource & LoginLi
 export type PasswordResetSessionEntryPoint = EntryPoint<PasswordResetSessionResource & LoginLinkResource>
 export type PasswordResetEntryPoint = EntryPoint<PasswordResetResource & LoginLinkResource>
 
+export interface LoginResourceFactory {
+    loginLink(): LoginLinkResource
+
+    renewCredential(): RenewCredentialResource
+
+    passwordLogin(): PasswordLoginResource
+    passwordResetSession(): PasswordResetSessionResource
+    passwordReset(): PasswordResetResource
+}
+
+export interface LoginViewLocationInfo {
+    login: Readonly<{
+        getLoginView(): ViewState
+    }>
+}
+
 export interface LoginView extends ApplicationComponent<LoginState> {
     load(): void
 }

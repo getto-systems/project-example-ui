@@ -1,4 +1,5 @@
-import { initLoginViewLocationInfo } from "./impl/location"
+import { initLoginViewLocationInfo, View } from "./impl"
+import { initLoginLocationInfo } from "../../x_Resource/common/LocationInfo/impl"
 
 import { initStaticClock } from "../../../z_infra/clock/simulate"
 import { initTestAuthCredentialStorage } from "../../login/credentialStore/tests/storage"
@@ -13,6 +14,24 @@ import {
 
 import { initAuthCredentialRepository } from "../../login/credentialStore/impl/repository/authCredential"
 
+import { initLoginLinkResource } from "../../x_Resource/common/LoginLink/impl"
+import { initRenewCredentialResource } from "../../x_Resource/Login/RenewCredential/impl"
+import { initPasswordLoginResource } from "../../x_Resource/Login/PasswordLogin/impl"
+import { initPasswordResetSessionResource } from "../../x_Resource/Profile/PasswordResetSession/impl"
+import { initPasswordResetResource } from "../../x_Resource/Profile/PasswordReset/impl"
+
+import { initTestApplicationAction } from "../../common/application/tests/application"
+import { initFormAction } from "../../../sub/getto-form/main/form"
+import { initLoginIDFormFieldAction } from "../../common/field/loginID/main/loginID"
+import { initTestPasswordResetSessionAction } from "../../profile/passwordReset/tests/session"
+import {
+    initTestRenewAction,
+    initTestSetContinuousRenewAction,
+} from "../../login/credentialStore/tests/renew"
+import { initPasswordFormFieldAction } from "../../common/field/password/main/password"
+import { initTestPasswordLoginAction } from "../../login/passwordLogin/tests/login"
+import { initTestPasswordResetAction } from "../../profile/passwordReset/tests/reset"
+
 import { Clock } from "../../../z_infra/clock/infra"
 import { LoginRemoteAccessResult } from "../../login/passwordLogin/infra"
 import { AuthCredentialRepository, RenewRemoteAccessResult } from "../../login/credentialStore/infra"
@@ -23,30 +42,10 @@ import {
     StartSessionRemoteAccessResult,
 } from "../../profile/passwordReset/infra"
 
-import { RenewComponent } from "../../x_Resource/Login/RenewCredential/Renew/component"
+import { LoginState } from "./entryPoint"
 
 import { markApiCredential, markAuthAt, markTicketNonce } from "../../common/credential/data"
 import { markSessionID } from "../../profile/passwordReset/data"
-
-import { View } from "./impl/core"
-import { LoginState } from "./entryPoint"
-import { initPasswordResetSessionResource } from "../../x_Resource/Profile/PasswordResetSession/impl"
-import { initTestApplicationAction } from "../../common/application/tests/application"
-import { initFormAction } from "../../../sub/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../common/field/loginID/main/loginID"
-import { initTestPasswordResetSessionAction } from "../../profile/passwordReset/tests/session"
-import { initPasswordLoginResource } from "../../x_Resource/Login/PasswordLogin/impl"
-import { initLoginLocationInfo } from "../../x_Resource/common/LocationInfo/impl"
-import {
-    initTestRenewAction,
-    initTestSetContinuousRenewAction,
-} from "../../login/credentialStore/tests/renew"
-import { initPasswordFormFieldAction } from "../../common/field/password/main/password"
-import { initTestPasswordLoginAction } from "../../login/passwordLogin/tests/login"
-import { initRenewCredentialResource } from "../../x_Resource/Login/RenewCredential/impl"
-import { initTestPasswordResetAction } from "../../profile/passwordReset/tests/reset"
-import { initPasswordResetResource } from "../../x_Resource/Profile/PasswordReset/impl"
-import { initLoginLinkResource } from "../../x_Resource/common/LoginLink/impl"
 
 const AUTHORIZED_TICKET_NONCE = "ticket-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
@@ -258,8 +257,8 @@ function standardLoginView() {
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
         loginLink: initLoginLinkResource,
-        renewCredential: (setup) =>
-            standardRenewCredentialResource(currentURL, repository.authCredentials, clock, setup),
+        renewCredential: () =>
+            standardRenewCredentialResource(currentURL, repository.authCredentials, clock),
         passwordLogin: () =>
             standardPasswordLoginResource(currentURL, repository.authCredentials, clock),
         passwordReset: () =>
@@ -275,8 +274,8 @@ function passwordResetSessionLoginView() {
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
         loginLink: initLoginLinkResource,
-        renewCredential: (setup) =>
-            standardRenewCredentialResource(currentURL, repository.authCredentials, clock, setup),
+        renewCredential: () =>
+            standardRenewCredentialResource(currentURL, repository.authCredentials, clock),
         passwordLogin: () =>
             standardPasswordLoginResource(currentURL, repository.authCredentials, clock),
         passwordReset: () =>
@@ -292,8 +291,8 @@ function passwordResetLoginView() {
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
         loginLink: initLoginLinkResource,
-        renewCredential: (setup) =>
-            standardRenewCredentialResource(currentURL, repository.authCredentials, clock, setup),
+        renewCredential: () =>
+            standardRenewCredentialResource(currentURL, repository.authCredentials, clock),
         passwordLogin: () =>
             standardPasswordLoginResource(currentURL, repository.authCredentials, clock),
         passwordReset: () =>
@@ -433,10 +432,9 @@ function standardPasswordResetSessionResource() {
 function standardRenewCredentialResource(
     currentURL: URL,
     authCredentials: AuthCredentialRepository,
-    clock: Clock,
-    setup: Setup<RenewComponent>
+    clock: Clock
 ) {
-    return initRenewCredentialResource(setup, initLoginLocationInfo(currentURL), {
+    return initRenewCredentialResource(initLoginLocationInfo(currentURL), {
         application: initTestApplicationAction({
             secureScriptPath: {
                 secureServerHost: standardSecureHost(),
@@ -536,9 +534,6 @@ function standardClock(): Clock {
 
 interface Handler<T> {
     (state: T): void
-}
-interface Setup<T> {
-    (component: T): void
 }
 interface Terminate {
     (): void
