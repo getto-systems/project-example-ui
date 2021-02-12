@@ -1,18 +1,18 @@
 import {
-    FormComponent,
+    FormContainerComponent,
     FormFieldComponent,
     FormFieldComponentState,
     FormInputComponent,
     FormInputComponentState,
-    FormComponentState,
+    FormContainerComponentState,
 } from "./component"
 
 import { FormHistory, FormInputString, FormValidationState, markInputString } from "../../form/data"
 import { MockComponent, MockPropsPasser } from "../../../getto-example/Application/mock"
 
 export class FormMockComponent
-    extends MockComponent<FormComponentState>
-    implements FormComponent {
+    extends MockComponent<FormContainerComponentState>
+    implements FormContainerComponent {
     undo(): void {
         // mock では特に何もしない
     }

@@ -3,7 +3,7 @@ import { MockPropsPasser } from "../../../../../sub/getto-example/Application/mo
 import { FormMockComponent, FormMockProps } from "../../../../../sub/getto-form/x_Component/Form/mock"
 import { initMockLoginIDFormField, LoginIDFormFieldMockProps } from "../../../common/Field/LoginID/mock"
 
-import { FormComponentState } from "../../../../../sub/getto-form/x_Component/Form/component"
+import { FormContainerComponentState } from "../../../../../sub/getto-form/x_Component/Form/component"
 import { LoginIDFormFieldComponent } from "../../../common/Field/LoginID/component"
 import { PasswordResetSessionFormComponent } from "./component"
 
@@ -30,7 +30,7 @@ class PasswordResetSessionFormMockComponent
         })
         this.loginID = initMockLoginIDFormField(passer)
 
-        function mapProps(props: PasswordResetSessionFormMockProps): FormComponentState {
+        function mapProps(props: PasswordResetSessionFormMockProps): FormContainerComponentState {
             return { validation: props.validation, history: { undo: false, redo: false } }
         }
     }

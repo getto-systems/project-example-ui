@@ -1,15 +1,15 @@
 import { ApplicationBaseComponent } from "../../../getto-example/Application/impl"
 
 import {
-    FormComponentState,
+    FormContainerComponentState,
     FormFieldComponent,
     FormFieldHandler,
     FormFieldComponentState,
     FormInputComponent,
     FormInputComponentState,
     FormInputMaterial,
-    FormMaterial,
-    FormComponent,
+    FormContainerMaterial,
+    FormContainerComponent,
     FormInputFinder,
 } from "./component"
 
@@ -23,9 +23,9 @@ import {
     mapValidationResult,
 } from "../../form/data"
 
-export class FormBaseComponent<M extends FormMaterial>
-    extends ApplicationBaseComponent<FormComponentState>
-    implements FormComponent {
+export class FormContainerBaseComponent<M extends FormContainerMaterial>
+    extends ApplicationBaseComponent<FormContainerComponentState>
+    implements FormContainerComponent {
     material: M
     finder: FormInputFinder
 
@@ -52,7 +52,7 @@ export class FormBaseComponent<M extends FormMaterial>
         })
     }
 
-    currentState(): FormComponentState {
+    currentState(): FormContainerComponentState {
         return {
             validation: this.material.validation.state(),
             history: this.material.history.state(),

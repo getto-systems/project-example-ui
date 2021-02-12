@@ -4,7 +4,7 @@ import { FormMockComponent, FormMockProps } from "../../../../../sub/getto-form/
 import { initMockLoginIDFormField, LoginIDFormFieldMockProps } from "../../../common/Field/LoginID/mock"
 import { initMockPasswordFormField, PasswordFormFieldMockProps } from "../../../common/Field/Password/mock"
 
-import { FormComponentState } from "../../../../../sub/getto-form/x_Component/Form/component"
+import { FormContainerComponentState } from "../../../../../sub/getto-form/x_Component/Form/component"
 import { LoginIDFormFieldComponent } from "../../../common/Field/LoginID/component"
 import { PasswordFormFieldComponent } from "../../../common/Field/Password/component"
 import { PasswordLoginFormComponent } from "./component"
@@ -34,7 +34,7 @@ class PasswordLoginFormMockComponent extends FormMockComponent implements Passwo
         this.loginID = initMockLoginIDFormField(passer)
         this.password = initMockPasswordFormField(passer)
 
-        function mapProps(props: PasswordLoginFormMockProps): FormComponentState {
+        function mapProps(props: PasswordLoginFormMockProps): FormContainerComponentState {
             return { validation: props.validation, history: { undo: false, redo: false } }
         }
     }
