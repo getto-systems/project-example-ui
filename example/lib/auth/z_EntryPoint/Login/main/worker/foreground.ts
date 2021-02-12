@@ -2,7 +2,7 @@ import { env } from "../../../../../y_environment/env"
 
 import { View, LoginResourceFactory } from "../../impl/core"
 import { initLoginViewLocationInfo } from "../../impl/location"
-import { initLoginLocationInfo } from "../../../../x_Resource/common/impl/location"
+import { initLoginLocationInfo } from "../../../../x_Resource/common/LocationInfo/impl"
 
 import { initLoginLinkResource } from "../../../../x_Resource/common/LoginLink/impl"
 import { initPasswordLoginResource } from "../../../../x_Resource/Login/PasswordLogin/impl"
@@ -20,7 +20,7 @@ import {
 } from "../../../../login/credentialStore/main/renew"
 
 import { LoginBackgroundAction, LoginEntryPoint, LoginForegroundAction } from "../../entryPoint"
-import { LoginLocationInfo } from "../../../../x_Resource/common/location"
+import { LoginLocationInfo } from "../../../../x_Resource/common/LocationInfo/locationInfo"
 
 import { Login } from "../../../../login/passwordLogin/action"
 import {

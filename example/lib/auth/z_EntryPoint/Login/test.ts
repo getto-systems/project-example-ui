@@ -36,7 +36,7 @@ import { initFormAction } from "../../../sub/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../common/field/loginID/main/loginID"
 import { initTestPasswordResetSessionAction } from "../../profile/passwordReset/tests/session"
 import { initPasswordLoginResource } from "../../x_Resource/Login/PasswordLogin/impl"
-import { initLoginLocationInfo } from "../../x_Resource/common/impl/location"
+import { initLoginLocationInfo } from "../../x_Resource/common/LocationInfo/impl"
 import {
     initTestRenewAction,
     initTestSetContinuousRenewAction,

@@ -164,7 +164,7 @@ export function PasswordReset({ resource, terminate }: PasswordResetEntryPoint):
     }
 
     function sendLink() {
-        return html`<a href="${reset.link.passwordResetSession()}">
+        return html`<a href="${resource.link.passwordResetSession()}">
             ${icon("question-circle")} パスワードがわからない方
         </a>`
     }
