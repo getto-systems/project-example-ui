@@ -8,9 +8,9 @@ import {
     label_password_fill,
 } from "../../../../z_vendor/getto-css/preact/design/form"
 
-import { useComponent } from "../../../z_common/hooks"
+import { useComponent } from "../../../common/hooks"
 
-import { FormInput } from "../../../z_common/Form/FormInput"
+import { FormInput } from "../../../common/Form/FormInput"
 
 import {
     initialPasswordFormFieldComponentState,

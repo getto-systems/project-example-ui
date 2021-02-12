@@ -1,10 +1,10 @@
 import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { EntryPoint } from "./EntryPoint"
+import { RenewCredential } from "./RenewCredential"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/Application/mock"
-import { newMockLoginAsRenewCredential } from "../../../auth/z_EntryPoint/Login/mock"
+import { initMockRenewCredentialEntryPoint } from "../../../auth/z_EntryPoint/Login/mock"
 import { RenewCredentialResourceMockProps } from "../../../auth/x_Resource/Login/RenewCredential/mock"
 
 export default {
@@ -19,14 +19,14 @@ export default {
 type MockProps = RenewCredentialResourceMockProps
 const Template: Story<MockProps> = (args) => {
     const passer = initMockPropsPasser<RenewCredentialResourceMockProps>()
-    const entryPoint = newMockLoginAsRenewCredential(passer)
+    const entryPoint = initMockRenewCredentialEntryPoint(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }): VNode {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(EntryPoint, entryPoint)
+        return h(RenewCredential, entryPoint)
     }
 }
 

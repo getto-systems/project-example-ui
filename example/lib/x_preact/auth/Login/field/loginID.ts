@@ -3,9 +3,9 @@ import { h, VNode } from "preact"
 import { VNodeContent } from "../../../../z_vendor/getto-css/preact/common"
 import { field, field_error, label_text_fill } from "../../../../z_vendor/getto-css/preact/design/form"
 
-import { useComponent } from "../../../z_common/hooks"
+import { useComponent } from "../../../common/hooks"
 
-import { FormInput } from "../../../z_common/Form/FormInput"
+import { FormInput } from "../../../common/Form/FormInput"
 
 import { LoginIDFormFieldComponent } from "../../../../auth/x_Resource/common/Field/LoginID/component"
 import { initialFormFieldComponentState } from "../../../../sub/getto-form/x_Component/Form/component"

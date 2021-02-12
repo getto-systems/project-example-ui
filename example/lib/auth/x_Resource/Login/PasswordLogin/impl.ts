@@ -17,11 +17,11 @@ export function initPasswordLoginResource(
     background: PasswordLoginBackgroundAction
 ): PasswordLoginResource {
     return {
-        login: initLoginComponent(core()),
+        login: initLoginComponent(login()),
         form: initFormComponent(form()),
     }
 
-    function core(): LoginMaterial {
+    function login(): LoginMaterial {
         return {
             setContinuousRenew: foreground.setContinuousRenew.setContinuousRenew(),
             secureScriptPath: foreground.application.secureScriptPath(locationInfo.application),

@@ -2,9 +2,9 @@ import { h, VNode } from "preact"
 import { useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useComponent, useTermination } from "../../z_common/hooks"
+import { useComponent, useTermination } from "../../common/hooks"
 
-import { ApplicationError } from "../../z_common/System/ApplicationError"
+import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { RenewCredential } from "./RenewCredential"
 

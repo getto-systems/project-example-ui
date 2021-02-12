@@ -8,7 +8,7 @@ import { field } from "../../../z_vendor/getto-css/preact/design/form"
 import { notice_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
 import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useComponent } from "../../z_common/hooks"
+import { useComponent } from "../../common/hooks"
 
 import {
     ExampleComponent,

@@ -5,9 +5,9 @@ import { html } from "htm/preact"
 import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
 import { appMain, mainBody, mainHeader, mainTitle } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { copyright } from "../../z_common/site"
+import { copyright } from "../../common/site"
 
-import { BreadcrumbList } from "../../z_common/Outline/BreadcrumbList"
+import { BreadcrumbList } from "../../common/Outline/BreadcrumbList"
 
 import {
     ContentComponent,

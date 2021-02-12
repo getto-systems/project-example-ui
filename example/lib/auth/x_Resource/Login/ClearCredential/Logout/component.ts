@@ -1,8 +1,8 @@
-import { ApplicationComponent } from "../../../../sub/getto-example/Application/component"
+import { ApplicationComponent } from "../../../../../sub/getto-example/Application/component"
 
-import { Logout } from "../../../login/credentialStore/action"
+import { Logout } from "../../../../login/credentialStore/action"
 
-import { StorageError } from "../../../common/credential/data"
+import { StorageError } from "../../../../common/credential/data"
 
 export interface LogoutComponentFactory {
     (material: LogoutMaterial): LogoutComponent

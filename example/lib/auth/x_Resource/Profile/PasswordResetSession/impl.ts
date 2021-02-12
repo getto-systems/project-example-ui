@@ -15,11 +15,11 @@ export function initPasswordResetSessionResource(
     background: PasswordResetSessionBackgroundAction
 ): PasswordResetSessionResource {
     return {
-        session: initSessionComponent(core()),
+        session: initSessionComponent(session()),
         form: initFormComponent(form()),
     }
 
-    function core(): SessionMaterial {
+    function session(): SessionMaterial {
         return {
             startSession: background.resetSession.startSession(),
             checkStatus: background.resetSession.checkStatus(),

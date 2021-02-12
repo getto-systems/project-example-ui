@@ -1,6 +1,7 @@
 import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
-import { html } from "htm/preact"
+
+import { noPadded } from "../../z_storybook/display"
 
 import { copyright, siteInfo } from "../site"
 import {
@@ -15,8 +16,14 @@ import { MenuList } from "./MenuList"
 import { SeasonInfo } from "./SeasonInfo"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/Application/mock"
-import { initMockMenuListComponent, MenuListMockProps } from "../../../auth/z_EntryPoint/Outline/menuList/mock"
-import { SeasonInfoMockProps, initMockSeasonInfoComponent } from "../../../example/x_components/Outline/seasonInfo/mock"
+import {
+    initMockMenuListComponent,
+    MenuListMockProps,
+} from "../../../auth/z_EntryPoint/Outline/menuList/mock"
+import {
+    SeasonInfoMockProps,
+    initMockSeasonInfoComponent,
+} from "../../../example/x_components/Outline/seasonInfo/mock"
 
 export default {
     title: "Outline/SeasonInfo",
@@ -46,17 +53,8 @@ const Template: Story<MockProps> = (args) => {
                 badgeCount: 0,
             })
         })
-        return html`
-            <style>
-                .sb-main-padded {
-                    padding: 0 !important;
-                }
-            </style>
-            ${app()}
-        `
-
-        function app() {
-            return appLayout({
+        return noPadded(
+            appLayout({
                 siteInfo: siteInfo(),
                 header: [h(SeasonInfo, { seasonInfo })],
                 main: appMain({
@@ -66,7 +64,7 @@ const Template: Story<MockProps> = (args) => {
                 }),
                 menu: h(MenuList, { menuList }),
             })
-        }
+        )
     }
 }
 

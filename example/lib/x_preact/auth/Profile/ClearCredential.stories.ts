@@ -1,16 +1,16 @@
 import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { Logout } from "./Logout"
+import { ClearCredential } from "./ClearCredential"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/Application/mock"
 import {
-    LogoutMockProps,
-    initMockLogoutComponent,
-} from "../../../auth/z_EntryPoint/Profile/logout/mock"
+    ClearCredentialResourceMockProps,
+    initMockClearCredentialResource,
+} from "../../../auth/x_Resource/Login/ClearCredential/mock"
 
 export default {
-    title: "Auth/Profile/Logout",
+    title: "Auth/Profile/ClearCredential",
     argTypes: {
         type: {
             table: { disable: true },
@@ -18,17 +18,17 @@ export default {
     },
 }
 
-type MockProps = LogoutMockProps
+type MockProps = ClearCredentialResourceMockProps
 const Template: Story<MockProps> = (args) => {
-    const passer = initMockPropsPasser<LogoutMockProps>()
-    const logout = initMockLogoutComponent(passer)
+    const passer = initMockPropsPasser<ClearCredentialResourceMockProps>()
+    const resource = initMockClearCredentialResource(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(Logout, { logout })
+        return h(ClearCredential, resource)
     }
 }
 

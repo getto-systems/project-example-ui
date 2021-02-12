@@ -1,4 +1,4 @@
-import { ApplicationBaseComponent } from "../../../../sub/getto-example/Application/impl"
+import { ApplicationBaseComponent } from "../../../../../sub/getto-example/Application/impl"
 
 import { LogoutMaterial, LogoutComponent, LogoutComponentState, LogoutComponentFactory } from "./component"
 
