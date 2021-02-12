@@ -18,10 +18,10 @@ export type FormMaterial = Readonly<{
     history: FormHistoryStack
 }>
 
-export type FormHandler = Readonly<{
-    findFieldInput: { (path: FormHistoryPath): FormFindInputResult }
-}>
-export type FormFindInputResult =
+export interface FormInputFinder {
+    (path: FormHistoryPath): FormInputFindResult
+}
+export type FormInputFindResult =
     | Readonly<{ found: false }>
     | Readonly<{ found: true; input: FormInputComponent }>
 
