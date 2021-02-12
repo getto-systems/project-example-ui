@@ -13,10 +13,23 @@ import {
     FormValidationState,
 } from "../../form/data"
 
-export type FormMaterial = Readonly<{
+export type FormContainerMaterial = Readonly<{
     validation: FormValidationStateSet
     history: FormHistoryStack
 }>
+
+export interface FormContainerComponent extends ApplicationComponent<FormContainerComponentState> {
+    undo(): void
+    redo(): void
+}
+export type FormContainerComponentState = Readonly<{
+    validation: FormValidationState
+    history: FormHistoryState
+}>
+export const initialFormContainerComponentState: FormContainerComponentState = {
+    validation: "initial",
+    history: { undo: false, redo: false },
+}
 
 export interface FormInputFinder {
     (path: FormHistoryPath): FormInputFindResult
@@ -24,24 +37,6 @@ export interface FormInputFinder {
 export type FormInputFindResult =
     | Readonly<{ found: false }>
     | Readonly<{ found: true; input: FormInputComponent }>
-
-export interface FormComponent extends ApplicationComponent<FormComponentState> {
-    undo(): void
-    redo(): void
-}
-export type FormComponentState = Readonly<{
-    validation: FormValidationState
-    history: FormHistoryState
-}>
-export const initialFormComponentState: FormComponentState = {
-    validation: "initial",
-    history: { undo: false, redo: false },
-}
-
-export type FormFieldHandler = Readonly<{
-    validate: Handler<FormValidationState>
-    history: Handler<FormInputHistory>
-}>
 
 export interface FormFieldComponent<S, E> extends ApplicationComponent<FormFieldComponentState<S, E>> {
     validate(): void
@@ -52,6 +47,11 @@ export type FormFieldEmptyState = {
     // no state
 }
 export const initialFormFieldComponentState = { result: { valid: true } } as const
+
+export type FormFieldHandler = Readonly<{
+    validate: Handler<FormValidationState>
+    history: Handler<FormInputHistory>
+}>
 
 export type FormInputMaterial = Readonly<{
     input: FormInput

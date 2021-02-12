@@ -1,4 +1,4 @@
-import { FormBaseComponent } from "../../../../../sub/getto-form/x_Component/Form/impl"
+import { FormContainerBaseComponent } from "../../../../../sub/getto-form/x_Component/Form/impl"
 import { initLoginIDFormFieldComponent } from "../../../common/Field/LoginID/impl"
 import { initPasswordFormFieldComponent } from "../../../common/Field/Password/impl"
 
@@ -17,7 +17,7 @@ export const initPasswordLoginFormComponent: PasswordLoginFormComponentFactory =
     new FormComponent(material)
 
 class FormComponent
-    extends FormBaseComponent<PasswordLoginFormMaterial>
+    extends FormContainerBaseComponent<PasswordLoginFormMaterial>
     implements PasswordLoginFormComponent {
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent

@@ -22,7 +22,7 @@ import { LoginIDFormField } from "./field/loginID"
 import { PasswordResetSessionEntryPoint } from "../../../auth/z_EntryPoint/Login/entryPoint"
 
 import { initialPasswordResetSessionComponentState } from "../../../auth/x_Resource/Profile/PasswordResetSession/Session/component"
-import { initialFormComponentState } from "../../../sub/getto-form/x_Component/Form/component"
+import { initialFormContainerComponentState } from "../../../sub/getto-form/x_Component/Form/component"
 
 import {
     Destination,
@@ -37,7 +37,7 @@ export function PasswordResetSession({ resource, terminate }: PasswordResetSessi
 
     const { session } = resource
     const state = useComponent(session, initialPasswordResetSessionComponentState)
-    const formState = useComponent(resource.form, initialFormComponentState)
+    const formState = useComponent(resource.form, initialFormContainerComponentState)
 
     switch (state.type) {
         case "initial-reset-session":
