@@ -1,6 +1,13 @@
 import { ApplicationBaseComponent } from "../../../../sub/getto-example/x_components/Application/impl"
 
-import { LoginView, LoginState, ViewState, PasswordLoginEntryPoint, PasswordResetSessionEntryPoint, PasswordResetEntryPoint } from "../entryPoint"
+import {
+    LoginView,
+    LoginState,
+    ViewState,
+    PasswordLoginEntryPoint,
+    PasswordResetSessionEntryPoint,
+    PasswordResetEntryPoint,
+} from "../entryPoint"
 
 import { RenewCredentialResource } from "../../../x_Resource/Login/RenewCredential/resource"
 import { PasswordLoginResource } from "../../../x_Resource/Login/PasswordLogin/resource"
@@ -8,6 +15,7 @@ import { PasswordResetSessionResource } from "../../../x_Resource/Profile/Passwo
 import { PasswordResetResource } from "../../../x_Resource/Profile/PasswordReset/resource"
 
 import { RenewCredentialComponent } from "../../../x_Resource/Login/RenewCredential/Renew/component"
+import { LoginLinkResource } from "../../../x_Resource/common/LoginLink/resource"
 
 export class View extends ApplicationBaseComponent<LoginState> implements LoginView {
     locationInfo: LoginViewLocationInfo
@@ -60,38 +68,40 @@ export class View extends ApplicationBaseComponent<LoginState> implements LoginV
     }
 
     passwordLogin(): PasswordLoginEntryPoint {
-        const resource = this.components.passwordLogin()
+        const resource = { ...this.components.passwordLogin(), ...this.components.loginLink() }
         return {
             resource,
             terminate: () => {
                 resource.login.terminate()
                 resource.form.terminate()
-            }
+            },
         }
     }
     passwordResetSession(): PasswordResetSessionEntryPoint {
-        const resource = this.components.passwordResetSession()
+        const resource = { ...this.components.passwordResetSession(), ...this.components.loginLink() }
         return {
             resource,
             terminate: () => {
                 resource.session.terminate()
                 resource.form.terminate()
-            }
+            },
         }
     }
     passwordReset(): PasswordResetEntryPoint {
-        const resource = this.components.passwordReset()
+        const resource = { ...this.components.passwordReset(), ...this.components.loginLink() }
         return {
             resource,
             terminate: () => {
                 resource.reset.terminate()
                 resource.form.terminate()
-            }
+            },
         }
     }
 }
 
 export interface LoginResourceFactory {
+    loginLink(): LoginLinkResource
+
     renewCredential(setup: Setup<RenewCredentialComponent>): RenewCredentialResource
 
     passwordLogin(): PasswordLoginResource

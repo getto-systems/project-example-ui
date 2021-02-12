@@ -1,7 +1,5 @@
 import { ApplicationBaseComponent } from "../../../../../sub/getto-example/x_components/Application/impl"
 
-import { LoginLink } from "../../../common/link"
-
 import {
     PasswordLoginComponentFactory,
     PasswordLoginMaterial,
@@ -23,12 +21,9 @@ class Component
     implements PasswordLoginComponent {
     material: PasswordLoginMaterial
 
-    link: LoginLink
-
     constructor(material: PasswordLoginMaterial) {
         super()
         this.material = material
-        this.link = material.link
     }
 
     submit(fields: FormConvertResult<LoginFields>): void {

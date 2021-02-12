@@ -1,5 +1,3 @@
-import { initLoginLink } from "../../common/impl/link"
-
 import { initPasswordResetResource } from "./impl"
 
 import { initLoginLocationInfo } from "../../common/impl/location"
@@ -749,7 +747,6 @@ function newPasswordResetTestResource(
     return initPasswordResetResource(
         initLoginLocationInfo(currentURL),
         {
-            link: initLoginLink,
             application: initTestApplicationAction(config.application),
             setContinuousRenew: initTestSetContinuousRenewAction(
                 config.setContinuousRenew,

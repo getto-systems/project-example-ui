@@ -23,7 +23,6 @@ export function initPasswordLoginResource(
 
     function core(): PasswordLoginMaterial {
         return {
-            link: foreground.link(),
             setContinuousRenew: foreground.setContinuousRenew.setContinuousRenew(),
             secureScriptPath: foreground.application.secureScriptPath(locationInfo.application),
             login: background.login.login(),

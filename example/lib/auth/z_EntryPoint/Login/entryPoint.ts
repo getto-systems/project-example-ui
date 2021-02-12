@@ -16,6 +16,7 @@ import {
 } from "../../x_Resource/Profile/PasswordResetSession/resource"
 
 import { ApplicationComponent } from "../../../sub/getto-example/x_components/Application/component"
+import { LoginLinkResource } from "../../x_Resource/common/LoginLink/resource"
 
 export type LoginForegroundAction = RenewCredentialForegroundAction &
     PasswordLoginForegroundAction &
@@ -31,9 +32,9 @@ export type LoginEntryPoint = Readonly<{
     terminate: Terminate
 }>
 export type RenewCredentialEntryPoint = EntryPoint<RenewCredentialResource>
-export type PasswordLoginEntryPoint = EntryPoint<PasswordLoginResource>
-export type PasswordResetSessionEntryPoint = EntryPoint<PasswordResetSessionResource>
-export type PasswordResetEntryPoint = EntryPoint<PasswordResetResource>
+export type PasswordLoginEntryPoint = EntryPoint<PasswordLoginResource & LoginLinkResource>
+export type PasswordResetSessionEntryPoint = EntryPoint<PasswordResetSessionResource & LoginLinkResource>
+export type PasswordResetEntryPoint = EntryPoint<PasswordResetResource & LoginLinkResource>
 
 export interface LoginView extends ApplicationComponent<LoginState> {
     load(): void

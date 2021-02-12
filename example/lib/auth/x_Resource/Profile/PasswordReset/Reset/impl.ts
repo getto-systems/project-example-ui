@@ -1,7 +1,5 @@
 import { ApplicationBaseComponent } from "../../../../../sub/getto-example/x_components/Application/impl"
 
-import { LoginLink } from "../../../common/link"
-
 import {
     PasswordResetComponentFactory,
     PasswordResetMaterial,
@@ -23,12 +21,9 @@ class Component
     implements PasswordResetComponent {
     material: PasswordResetMaterial
 
-    link: LoginLink
-
     constructor(material: PasswordResetMaterial) {
         super()
         this.material = material
-        this.link = material.link
     }
 
     reset(fields: FormConvertResult<ResetFields>): void {

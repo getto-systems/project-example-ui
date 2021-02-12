@@ -23,7 +23,6 @@ import { markInputString, toValidationError } from "../../../../sub/getto-form/f
 import { ApplicationActionConfig } from "../../../common/application/infra"
 import { PasswordResetSessionResource } from "./resource"
 import { initPasswordResetSessionResource } from "./impl"
-import { initLoginLink } from "../../common/impl/link"
 import { initTestApplicationAction } from "../../../common/application/tests/application"
 import { initFormAction } from "../../../../sub/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
@@ -474,7 +473,6 @@ function newTestPasswordResetSessionResource(
 ): PasswordResetSessionResource {
     return initPasswordResetSessionResource(
         {
-            link: initLoginLink,
             application: initTestApplicationAction(config.application),
 
             form: {

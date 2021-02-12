@@ -1,7 +1,5 @@
 import { ApplicationComponent } from "../../../../../sub/getto-example/x_components/Application/component"
 
-import { LoginLink } from "../../../common/link"
-
 import { StartSession, CheckStatus } from "../../../../profile/passwordReset/action"
 
 import {
@@ -18,14 +16,12 @@ export interface PasswordResetSessionComponentFactory {
     (material: PasswordResetSessionMaterial): PasswordResetSessionComponent
 }
 export type PasswordResetSessionMaterial = Readonly<{
-    link: LoginLink
     startSession: StartSession
     checkStatus: CheckStatus
 }>
 
 export interface PasswordResetSessionComponent
     extends ApplicationComponent<PasswordResetSessionComponentState> {
-    readonly link: LoginLink
     startSession(fields: FormConvertResult<StartSessionFields>): void
 }
 

@@ -1,7 +1,5 @@
 import { ApplicationComponent } from "../../../../../sub/getto-example/x_components/Application/component"
 
-import { LoginLink } from "../../../common/link"
-
 import { Reset } from "../../../../profile/passwordReset/action"
 import { SetContinuousRenew } from "../../../../login/credentialStore/action"
 import { SecureScriptPath } from "../../../../common/application/action"
@@ -16,14 +14,12 @@ export interface PasswordResetComponentFactory {
 }
 
 export type PasswordResetMaterial = Readonly<{
-    link: LoginLink
     reset: Reset
     setContinuousRenew: SetContinuousRenew
     secureScriptPath: SecureScriptPath
 }>
 
 export interface PasswordResetComponent extends ApplicationComponent<PasswordResetComponentState> {
-    readonly link: LoginLink
     reset(fields: FormConvertResult<ResetFields>): void
     loadError(err: LoadError): void
 }

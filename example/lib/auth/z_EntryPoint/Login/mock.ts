@@ -18,6 +18,8 @@ import {
 } from "../../x_Resource/Profile/PasswordReset/mock"
 
 import { LoginEntryPoint, LoginView, LoginState } from "./entryPoint"
+import { LoginLinkResource } from "../../x_Resource/common/LoginLink/resource"
+import { initLoginLinkResource } from "../../x_Resource/common/LoginLink/impl"
 
 export function newMockLoginAsRenewCredential(
     passer: RenewCredentialResourceMockPropsPasser
@@ -75,9 +77,9 @@ interface Terminate {
     (): void
 }
 
-function initEntryPoint<R>(resource: R): EntryPoint<R> {
+function initEntryPoint<R>(resource: R): EntryPoint<R & LoginLinkResource> {
     return {
-        resource,
+        resource: { ...resource, ...initLoginLinkResource() },
         terminate,
     }
 }

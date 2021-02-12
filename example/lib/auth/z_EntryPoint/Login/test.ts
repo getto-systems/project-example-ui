@@ -31,7 +31,6 @@ import { markSessionID } from "../../profile/passwordReset/data"
 import { View } from "./impl/core"
 import { LoginState } from "./entryPoint"
 import { initPasswordResetSessionResource } from "../../x_Resource/Profile/PasswordResetSession/impl"
-import { initLoginLink } from "../../x_Resource/common/impl/link"
 import { initTestApplicationAction } from "../../common/application/tests/application"
 import { initFormAction } from "../../../sub/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../common/field/loginID/main/loginID"
@@ -47,6 +46,7 @@ import { initTestPasswordLoginAction } from "../../login/passwordLogin/tests/log
 import { initRenewCredentialResource } from "../../x_Resource/Login/RenewCredential/impl"
 import { initTestPasswordResetAction } from "../../profile/passwordReset/tests/reset"
 import { initPasswordResetResource } from "../../x_Resource/Profile/PasswordReset/impl"
+import { initLoginLinkResource } from "../../x_Resource/common/LoginLink/impl"
 
 const AUTHORIZED_TICKET_NONCE = "ticket-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
@@ -87,6 +87,13 @@ describe("LoginView", () => {
 
                         expect(stack[0]).toMatchObject({ type: "renew-credential" })
                         expect(stack[1]).toMatchObject({ type: "password-login" })
+
+                        expect(state.entryPoint.resource.link.passwordLogin()).toEqual(
+                            "?_password_login"
+                        )
+                        expect(state.entryPoint.resource.link.passwordResetSession()).toEqual(
+                            "?_password_reset=start"
+                        )
 
                         terminates.forEach((terminate) => terminate())
                         done()
@@ -250,6 +257,7 @@ function standardLoginView() {
     const repository = standardRepository()
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
+        loginLink: initLoginLinkResource,
         renewCredential: (setup) =>
             standardRenewCredentialResource(currentURL, repository.authCredentials, clock, setup),
         passwordLogin: () =>
@@ -266,6 +274,7 @@ function passwordResetSessionLoginView() {
     const repository = standardRepository()
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
+        loginLink: initLoginLinkResource,
         renewCredential: (setup) =>
             standardRenewCredentialResource(currentURL, repository.authCredentials, clock, setup),
         passwordLogin: () =>
@@ -282,6 +291,7 @@ function passwordResetLoginView() {
     const repository = standardRepository()
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
+        loginLink: initLoginLinkResource,
         renewCredential: (setup) =>
             standardRenewCredentialResource(currentURL, repository.authCredentials, clock, setup),
         passwordLogin: () =>
@@ -302,7 +312,6 @@ function standardPasswordLoginResource(
     return initPasswordLoginResource(
         initLoginLocationInfo(currentURL),
         {
-            link: initLoginLink,
             application: initTestApplicationAction({
                 secureScriptPath: {
                     secureServerHost: standardSecureHost(),
@@ -346,7 +355,6 @@ function standardPasswordResetResource(
     return initPasswordResetResource(
         initLoginLocationInfo(currentURL),
         {
-            link: initLoginLink,
             application: initTestApplicationAction({
                 secureScriptPath: {
                     secureServerHost: standardSecureHost(),
@@ -385,7 +393,6 @@ function standardPasswordResetResource(
 function standardPasswordResetSessionResource() {
     return initPasswordResetSessionResource(
         {
-            link: initLoginLink,
             application: initTestApplicationAction({
                 secureScriptPath: {
                     secureServerHost: standardSecureHost(),

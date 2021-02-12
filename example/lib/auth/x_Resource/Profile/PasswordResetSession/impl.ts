@@ -21,7 +21,6 @@ export function initPasswordResetSessionResource(
 
     function core(): PasswordResetSessionMaterial {
         return {
-            link: foreground.link(),
             startSession: background.resetSession.startSession(),
             checkStatus: background.resetSession.checkStatus(),
         }

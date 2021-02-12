@@ -1,5 +1,3 @@
-import { LoginLink } from "../../../common/link"
-
 import { ApplicationComponent } from "../../../../../sub/getto-example/x_components/Application/component"
 
 import { Login } from "../../../../login/passwordLogin/action"
@@ -15,14 +13,12 @@ export interface PasswordLoginComponentFactory {
     (material: PasswordLoginMaterial): PasswordLoginComponent
 }
 export type PasswordLoginMaterial = Readonly<{
-    link: LoginLink
     login: Login
     setContinuousRenew: SetContinuousRenew
     secureScriptPath: SecureScriptPath
 }>
 
 export interface PasswordLoginComponent extends ApplicationComponent<PasswordLoginComponentState> {
-    readonly link: LoginLink
     submit(fields: FormConvertResult<LoginFields>): void
     loadError(err: LoadError): void
 }
