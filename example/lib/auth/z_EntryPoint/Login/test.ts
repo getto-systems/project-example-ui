@@ -67,6 +67,7 @@ describe("LoginView", () => {
 
         function stateHandler(): Handler<LoginState> {
             const stack: LoginState[] = []
+            const terminates: Terminate[] = []
             return (state) => {
                 stack.push(state)
 
@@ -76,12 +77,18 @@ describe("LoginView", () => {
                         break
 
                     case "renew-credential":
+                        terminates.push(state.entryPoint.terminate)
+
                         state.entryPoint.resource.renew.request()
                         break
 
                     case "password-login":
+                        terminates.push(state.entryPoint.terminate)
+
                         expect(stack[0]).toMatchObject({ type: "renew-credential" })
                         expect(stack[1]).toMatchObject({ type: "password-login" })
+
+                        terminates.forEach((terminate) => terminate())
                         done()
                         break
 
@@ -110,6 +117,7 @@ describe("LoginView", () => {
 
         function stateHandler(): Handler<LoginState> {
             const stack: LoginState[] = []
+            const terminates: Terminate[] = []
             return (state) => {
                 stack.push(state)
 
@@ -119,12 +127,18 @@ describe("LoginView", () => {
                         break
 
                     case "renew-credential":
+                        terminates.push(state.entryPoint.terminate)
+
                         state.entryPoint.resource.renew.request()
                         break
 
                     case "password-reset-session":
+                        terminates.push(state.entryPoint.terminate)
+
                         expect(stack[0]).toMatchObject({ type: "renew-credential" })
                         expect(stack[1]).toMatchObject({ type: "password-reset-session" })
+
+                        terminates.forEach((terminate) => terminate())
                         done()
                         break
 
@@ -153,6 +167,7 @@ describe("LoginView", () => {
 
         function stateHandler(): Handler<LoginState> {
             const stack: LoginState[] = []
+            const terminates: Terminate[] = []
             return (state) => {
                 stack.push(state)
 
@@ -162,12 +177,18 @@ describe("LoginView", () => {
                         break
 
                     case "renew-credential":
+                        terminates.push(state.entryPoint.terminate)
+
                         state.entryPoint.resource.renew.request()
                         break
 
                     case "password-reset":
+                        terminates.push(state.entryPoint.terminate)
+
                         expect(stack[0]).toMatchObject({ type: "renew-credential" })
                         expect(stack[1]).toMatchObject({ type: "password-reset" })
+
+                        terminates.forEach((terminate) => terminate())
                         done()
                         break
 
@@ -511,6 +532,9 @@ interface Handler<T> {
 }
 interface Setup<T> {
     (component: T): void
+}
+interface Terminate {
+    (): void
 }
 
 function assertNever(_: never): never {
