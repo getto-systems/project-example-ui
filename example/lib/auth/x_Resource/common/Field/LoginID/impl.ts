@@ -8,8 +8,8 @@ import {
     FormFieldEmptyState,
     FormFieldHandler,
     FormInputComponent,
-} from "../../../../../sub/getto-form/x_components/Form/component"
-import { FormFieldBaseComponent } from "../../../../../sub/getto-form/x_components/Form/impl"
+} from "../../../../../sub/getto-form/x_Component/Form/component"
+import { FormFieldBaseComponent } from "../../../../../sub/getto-form/x_Component/Form/impl"
 import { LoginIDValidationError } from "../../../../common/field/loginID/data"
 
 export const initLoginIDFormFieldComponent: LoginIDFormFieldComponentFactory = (material) => (handler) =>

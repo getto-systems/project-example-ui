@@ -1,4 +1,4 @@
-import { FormComponent, FormMaterial } from "../../../../../sub/getto-form/x_components/Form/component"
+import { FormComponent, FormMaterial } from "../../../../../sub/getto-form/x_Component/Form/component"
 import { LoginIDFormFieldComponent, LoginIDFormFieldMaterial } from "../../../common/Field/LoginID/component"
 
 import { StartSessionFields } from "../../../../profile/passwordReset/data"

@@ -4,7 +4,7 @@ import {
     FormFieldHandler,
     FormFieldComponentState,
     FormInputComponent,
-} from "../../../../../sub/getto-form/x_components/Form/component"
+} from "../../../../../sub/getto-form/x_Component/Form/component"
 
 import { LoginIDFormField } from "../../../../common/field/loginID/action"
 

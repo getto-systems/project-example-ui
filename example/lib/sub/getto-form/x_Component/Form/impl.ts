@@ -1,4 +1,4 @@
-import { ApplicationBaseComponent } from "../../../getto-example/x_components/Application/impl"
+import { ApplicationBaseComponent } from "../../../getto-example/Application/impl"
 
 import {
     FormComponentState,

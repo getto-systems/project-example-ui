@@ -1,4 +1,4 @@
-import { ApplicationBaseComponent } from "../../../../sub/getto-example/x_components/Application/impl"
+import { ApplicationBaseComponent } from "../../../../sub/getto-example/Application/impl"
 
 import {
     MenuListComponentFactory,

@@ -22,7 +22,7 @@ import { LoginIDFormField } from "./field/loginID"
 import { PasswordResetSessionEntryPoint } from "../../../auth/z_EntryPoint/Login/entryPoint"
 
 import { initialPasswordResetSessionComponentState } from "../../../auth/x_Resource/Profile/PasswordResetSession/Session/component"
-import { initialFormComponentState } from "../../../sub/getto-form/x_components/Form/component"
+import { initialFormComponentState } from "../../../sub/getto-form/x_Component/Form/component"
 
 import {
     Destination,

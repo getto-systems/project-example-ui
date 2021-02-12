@@ -26,7 +26,7 @@ import { PasswordFormField } from "./field/password"
 import { PasswordLoginEntryPoint } from "../../../auth/z_EntryPoint/Login/entryPoint"
 
 import { initialPasswordLoginComponentState } from "../../../auth/x_Resource/Login/PasswordLogin/Login/component"
-import { initialFormComponentState } from "../../../sub/getto-form/x_components/Form/component"
+import { initialFormComponentState } from "../../../sub/getto-form/x_Component/Form/component"
 
 import { LoginError } from "../../../auth/login/passwordLogin/data"
 

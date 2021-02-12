@@ -1,4 +1,4 @@
-import { ApplicationComponent } from "../../../getto-example/x_components/Application/component"
+import { ApplicationComponent } from "../../../getto-example/Application/component"
 
 import { FormHistoryStack, FormInput, FormValidationStateSet } from "../../form/action"
 

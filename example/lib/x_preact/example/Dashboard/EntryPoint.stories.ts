@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { EntryPoint } from "./EntryPoint"
 
-import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
+import { initMockPropsPasser } from "../../../sub/getto-example/Application/mock"
 import { DashboardMockPropsPasser, newMockDashboard } from "../../../example/x_components/Dashboard/EntryPoint/mock"
 import { SeasonInfoMockProps } from "../../../example/x_components/Outline/seasonInfo/mock"
 import { MenuListMockProps } from "../../../auth/z_EntryPoint/Outline/menuList/mock"

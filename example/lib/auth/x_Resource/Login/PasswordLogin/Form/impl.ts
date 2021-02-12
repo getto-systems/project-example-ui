@@ -1,4 +1,4 @@
-import { FormBaseComponent } from "../../../../../sub/getto-form/x_components/Form/impl"
+import { FormBaseComponent } from "../../../../../sub/getto-form/x_Component/Form/impl"
 import { initLoginIDFormFieldComponent } from "../../../common/Field/LoginID/impl"
 import { initPasswordFormFieldComponent } from "../../../common/Field/Password/impl"
 

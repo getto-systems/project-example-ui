@@ -1,7 +1,7 @@
 import {
     MockComponent,
     MockPropsPasser,
-} from "../../../../../sub/getto-example/x_components/Application/mock"
+} from "../../../../../sub/getto-example/Application/mock"
 
 import { PasswordResetComponent, PasswordResetComponentState } from "./component"
 

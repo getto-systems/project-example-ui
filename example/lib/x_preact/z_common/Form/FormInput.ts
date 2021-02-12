@@ -6,7 +6,7 @@ import { useComponent } from "../hooks"
 import {
     FormInputComponent,
     initialFormInputComponentState,
-} from "../../../sub/getto-form/x_components/Form/component"
+} from "../../../sub/getto-form/x_Component/Form/component"
 
 import { markInputString } from "../../../sub/getto-form/form/data"
 
