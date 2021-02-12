@@ -1,42 +1,42 @@
-import { env } from "../../../../../../y_environment/env"
+import { env } from "../../../../../y_environment/env"
 
-import { initLoginLink } from "../../../../../x_Resource/common/impl/link"
+import { initLoginLink } from "../../../../x_Resource/common/impl/link"
 
 import { View, LoginResourceFactory } from "../../impl/core"
 import { initLoginViewLocationInfo } from "../../impl/location"
-import { initLoginLocationInfo } from "../../../../../x_Resource/common/impl/location"
+import { initLoginLocationInfo } from "../../../../x_Resource/common/impl/location"
 
-import { initPasswordLoginResource } from "../../../../../x_Resource/Login/PasswordLogin/impl"
-import { initPasswordResetResource } from "../../../../../x_Resource/Profile/PasswordReset/impl"
-import { initPasswordResetSessionResource } from "../../../../../x_Resource/Profile/PasswordResetSession/impl"
-import { initRenewCredentialResource } from "../../../../../x_Resource/Login/RenewCredential/impl"
+import { initPasswordLoginResource } from "../../../../x_Resource/Login/PasswordLogin/impl"
+import { initPasswordResetResource } from "../../../../x_Resource/Profile/PasswordReset/impl"
+import { initPasswordResetSessionResource } from "../../../../x_Resource/Profile/PasswordResetSession/impl"
+import { initRenewCredentialResource } from "../../../../x_Resource/Login/RenewCredential/impl"
 
-import { initApplicationAction } from "../../../../../common/application/main/application"
-import { initFormAction } from "../../../../../../sub/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../../../common/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../../../common/field/password/main/password"
+import { initApplicationAction } from "../../../../common/application/main/application"
+import { initFormAction } from "../../../../../sub/getto-form/main/form"
+import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../../common/field/password/main/password"
 import {
     initRenewAction,
     initSetContinuousRenewAction,
-} from "../../../../../login/credentialStore/main/renew"
+} from "../../../../login/credentialStore/main/renew"
 
 import { LoginBackgroundAction, LoginEntryPoint, LoginForegroundAction } from "../../entryPoint"
-import { LoginLocationInfo } from "../../../../../x_Resource/common/location"
+import { LoginLocationInfo } from "../../../../x_Resource/common/location"
 
-import { Login } from "../../../../../login/passwordLogin/action"
+import { Login } from "../../../../login/passwordLogin/action"
 import {
     StartSession,
     CheckStatus,
     Reset,
     ResetLocationInfo,
-} from "../../../../../profile/passwordReset/action"
+} from "../../../../profile/passwordReset/action"
 
-import { LoginEvent } from "../../../../../login/passwordLogin/event"
+import { LoginEvent } from "../../../../login/passwordLogin/event"
 import {
     StartSessionEvent,
     CheckStatusEvent,
     ResetEvent,
-} from "../../../../../profile/passwordReset/event"
+} from "../../../../profile/passwordReset/event"
 
 import {
     ForegroundMessage,

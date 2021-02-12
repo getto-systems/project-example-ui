@@ -1,24 +1,24 @@
-import { initPasswordLoginAction } from "../../../../../login/passwordLogin/main/login"
+import { initPasswordLoginAction } from "../../../../login/passwordLogin/main/login"
 import {
     initPasswordResetAction,
     initPasswordResetSessionAction,
-} from "../../../../../profile/passwordReset/main/reset"
+} from "../../../../profile/passwordReset/main/reset"
 
-import { LoginPod, LoginAction } from "../../../../../login/passwordLogin/action"
+import { LoginPod, LoginAction } from "../../../../login/passwordLogin/action"
 import {
     StartSessionPod,
     CheckStatusPod,
     ResetPod,
     ResetAction,
     ResetSessionAction,
-} from "../../../../../profile/passwordReset/action"
+} from "../../../../profile/passwordReset/action"
 
-import { LoginEvent } from "../../../../../login/passwordLogin/event"
+import { LoginEvent } from "../../../../login/passwordLogin/event"
 import {
     CheckStatusEvent,
     ResetEvent,
     StartSessionEvent,
-} from "../../../../../profile/passwordReset/event"
+} from "../../../../profile/passwordReset/event"
 
 import {
     ForegroundMessage,

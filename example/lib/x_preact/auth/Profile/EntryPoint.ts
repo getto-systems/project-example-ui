@@ -20,8 +20,7 @@ import { Logout } from "./Logout"
 
 import { ProfileEntryPoint } from "../../../auth/z_EntryPoint/Profile/EntryPoint/entryPoint"
 
-type Props = ProfileEntryPoint
-export function EntryPoint({ resource, terminate }: Props): VNode {
+export function EntryPoint({ resource, terminate }: ProfileEntryPoint): VNode {
     useTermination(terminate)
 
     const [err] = useErrorBoundary((err) => resource.error.notify(err))

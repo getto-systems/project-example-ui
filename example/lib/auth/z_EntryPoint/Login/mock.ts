@@ -1,24 +1,21 @@
-import {
-    MockComponent,
-    MockPropsPasser,
-} from "../../../../sub/getto-example/x_components/Application/mock"
+import { MockComponent, MockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
 
 import {
     initMockRenewCredentialResource,
     RenewCredentialResourceMockPropsPasser,
-} from "../../../x_Resource/Login/RenewCredential/mock"
+} from "../../x_Resource/Login/RenewCredential/mock"
 import {
     initMockPasswordLoginResource,
     PasswordLoginResourceMockPropsPasser,
-} from "../../../x_Resource/Login/PasswordLogin/mock"
+} from "../../x_Resource/Login/PasswordLogin/mock"
 import {
     initMockPasswordResetSessionResource,
     PasswordResetSessionResourceMockPropsPasser,
-} from "../../../x_Resource/Profile/PasswordResetSession/mock"
+} from "../../x_Resource/Profile/PasswordResetSession/mock"
 import {
     initMockPasswordResetResource,
     PasswordResetResourceMockPropsPasser,
-} from "../../../x_Resource/Profile/PasswordReset/mock"
+} from "../../x_Resource/Profile/PasswordReset/mock"
 
 import { LoginEntryPoint, LoginView, LoginState } from "./entryPoint"
 
@@ -28,7 +25,7 @@ export function newMockLoginAsRenewCredential(
     return {
         view: new MockView({
             type: "renew-credential",
-            resource: initMockRenewCredentialResource(passer),
+            entryPoint: initEntryPoint(initMockRenewCredentialResource(passer)),
         }),
         terminate,
     }
@@ -40,7 +37,7 @@ export function newMockLoginAsPasswordLogin(
     return {
         view: new MockView({
             type: "password-login",
-            resource: initMockPasswordLoginResource(passer),
+            entryPoint: initEntryPoint(initMockPasswordLoginResource(passer)),
         }),
         terminate,
     }
@@ -52,7 +49,7 @@ export function newMockLoginAsPasswordResetSession(
     return {
         view: new MockView({
             type: "password-reset-session",
-            resource: initMockPasswordResetSessionResource(passer),
+            entryPoint: initEntryPoint(initMockPasswordResetSessionResource(passer)),
         }),
         terminate,
     }
@@ -64,8 +61,23 @@ export function newMockLoginAsPasswordReset(
     return {
         view: new MockView({
             type: "password-reset",
-            resource: initMockPasswordResetResource(passer),
+            entryPoint: initEntryPoint(initMockPasswordResetResource(passer)),
         }),
+        terminate,
+    }
+}
+
+type EntryPoint<R> = Readonly<{
+    resource: R
+    terminate: Terminate
+}>
+interface Terminate {
+    (): void
+}
+
+function initEntryPoint<R>(resource: R): EntryPoint<R> {
+    return {
+        resource,
         terminate,
     }
 }

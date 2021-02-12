@@ -1,9 +1,9 @@
 import { FormBaseComponent } from "../../../../../sub/getto-form/x_components/Form/impl"
-import { initLoginIDFormFieldComponent } from "../../../Field/LoginID/impl"
-import { initPasswordFormFieldComponent } from "../../../Field/Password/impl"
+import { initLoginIDFormFieldComponent } from "../../../common/Field/LoginID/impl"
+import { initPasswordFormFieldComponent } from "../../../common/Field/Password/impl"
 
-import { LoginIDFormFieldComponent } from "../../../Field/LoginID/component"
-import { PasswordFormFieldComponent } from "../../../Field/Password/component"
+import { LoginIDFormFieldComponent } from "../../../common/Field/LoginID/component"
+import { PasswordFormFieldComponent } from "../../../common/Field/Password/component"
 import {
     PasswordResetFormComponent,
     PasswordResetFormComponentFactory,

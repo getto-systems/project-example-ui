@@ -2,7 +2,7 @@ import { LoginViewLocationInfo } from "./core"
 
 import { ViewState } from "../entryPoint"
 
-import { AuthSearchParams } from "../../../../common/searchParams/data"
+import { AuthSearchParams } from "../../../common/searchParams/data"
 
 export function initLoginViewLocationInfo(currentURL: URL): LoginViewLocationInfo {
     return {

@@ -7,8 +7,8 @@ import {
 import { StartSessionFields } from "../../../../profile/passwordReset/data"
 import { FormConvertResult } from "../../../../../sub/getto-form/form/data"
 import { FormBaseComponent } from "../../../../../sub/getto-form/x_components/Form/impl"
-import { LoginIDFormFieldComponent } from "../../../Field/LoginID/component"
-import { initLoginIDFormFieldComponent } from "../../../Field/LoginID/impl"
+import { LoginIDFormFieldComponent } from "../../../common/Field/LoginID/component"
+import { initLoginIDFormFieldComponent } from "../../../common/Field/LoginID/impl"
 
 export const initPasswordResetSessionFormComponent: PasswordResetSessionFormComponentFactory = (
     material

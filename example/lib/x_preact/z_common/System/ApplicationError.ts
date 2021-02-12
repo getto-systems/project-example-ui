@@ -10,7 +10,6 @@ import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 type Props = Readonly<{
     err: string
 }>
-
 export function ApplicationError({ err }: Props): VNode {
     return loginBox(siteInfo(), {
         title: html`システムエラーが発生しました`,

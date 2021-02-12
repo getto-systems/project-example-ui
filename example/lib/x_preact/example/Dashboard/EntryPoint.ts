@@ -20,8 +20,7 @@ import { Example } from "./Example"
 
 import { DashboardEntryPoint } from "../../../example/x_components/Dashboard/EntryPoint/entryPoint"
 
-type Props = DashboardEntryPoint
-export function EntryPoint({ resource, terminate }: Props): VNode {
+export function EntryPoint({ resource, terminate }: DashboardEntryPoint): VNode {
     useTermination(terminate)
 
     const [err] = useErrorBoundary((err) => resource.error.notify(err))

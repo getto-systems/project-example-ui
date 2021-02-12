@@ -1,52 +1,52 @@
 import { initLoginViewLocationInfo } from "./impl/location"
 
-import { initStaticClock } from "../../../../z_infra/clock/simulate"
-import { initTestAuthCredentialStorage } from "../../../login/credentialStore/tests/storage"
-import { initLoginSimulateRemoteAccess } from "../../../login/passwordLogin/impl/remote/login/simulate"
-import { initRenewSimulateRemoteAccess } from "../../../login/credentialStore/impl/remote/renew/simulate"
-import { initResetSimulateRemoteAccess } from "../../../profile/passwordReset/impl/remote/reset/simulate"
+import { initStaticClock } from "../../../z_infra/clock/simulate"
+import { initTestAuthCredentialStorage } from "../../login/credentialStore/tests/storage"
+import { initLoginSimulateRemoteAccess } from "../../login/passwordLogin/impl/remote/login/simulate"
+import { initRenewSimulateRemoteAccess } from "../../login/credentialStore/impl/remote/renew/simulate"
+import { initResetSimulateRemoteAccess } from "../../profile/passwordReset/impl/remote/reset/simulate"
 import {
     initGetStatusSimulateRemoteAccess,
     initSendTokenSimulateRemoteAccess,
     initStartSessionSimulateRemoteAccess,
-} from "../../../profile/passwordReset/impl/remote/session/simulate"
+} from "../../profile/passwordReset/impl/remote/session/simulate"
 
-import { initAuthCredentialRepository } from "../../../login/credentialStore/impl/repository/authCredential"
+import { initAuthCredentialRepository } from "../../login/credentialStore/impl/repository/authCredential"
 
-import { Clock } from "../../../../z_infra/clock/infra"
-import { LoginRemoteAccessResult } from "../../../login/passwordLogin/infra"
-import { AuthCredentialRepository, RenewRemoteAccessResult } from "../../../login/credentialStore/infra"
+import { Clock } from "../../../z_infra/clock/infra"
+import { LoginRemoteAccessResult } from "../../login/passwordLogin/infra"
+import { AuthCredentialRepository, RenewRemoteAccessResult } from "../../login/credentialStore/infra"
 import {
     GetStatusRemoteAccessResult,
     ResetRemoteAccessResult,
     SendTokenRemoteAccessResult,
     StartSessionRemoteAccessResult,
-} from "../../../profile/passwordReset/infra"
+} from "../../profile/passwordReset/infra"
 
-import { RenewCredentialComponent } from "../../../x_Resource/Login/RenewCredential/Renew/component"
+import { RenewCredentialComponent } from "../../x_Resource/Login/RenewCredential/Renew/component"
 
-import { markApiCredential, markAuthAt, markTicketNonce } from "../../../common/credential/data"
-import { markSessionID } from "../../../profile/passwordReset/data"
+import { markApiCredential, markAuthAt, markTicketNonce } from "../../common/credential/data"
+import { markSessionID } from "../../profile/passwordReset/data"
 
 import { View } from "./impl/core"
 import { LoginState } from "./entryPoint"
-import { initPasswordResetSessionResource } from "../../../x_Resource/Profile/PasswordResetSession/impl"
-import { initLoginLink } from "../../../x_Resource/common/impl/link"
-import { initTestApplicationAction } from "../../../common/application/tests/application"
-import { initFormAction } from "../../../../sub/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
-import { initTestPasswordResetSessionAction } from "../../../profile/passwordReset/tests/session"
-import { initPasswordLoginResource } from "../../../x_Resource/Login/PasswordLogin/impl"
-import { initLoginLocationInfo } from "../../../x_Resource/common/impl/location"
+import { initPasswordResetSessionResource } from "../../x_Resource/Profile/PasswordResetSession/impl"
+import { initLoginLink } from "../../x_Resource/common/impl/link"
+import { initTestApplicationAction } from "../../common/application/tests/application"
+import { initFormAction } from "../../../sub/getto-form/main/form"
+import { initLoginIDFormFieldAction } from "../../common/field/loginID/main/loginID"
+import { initTestPasswordResetSessionAction } from "../../profile/passwordReset/tests/session"
+import { initPasswordLoginResource } from "../../x_Resource/Login/PasswordLogin/impl"
+import { initLoginLocationInfo } from "../../x_Resource/common/impl/location"
 import {
     initTestRenewAction,
     initTestSetContinuousRenewAction,
-} from "../../../login/credentialStore/tests/renew"
-import { initPasswordFormFieldAction } from "../../../common/field/password/main/password"
-import { initTestPasswordLoginAction } from "../../../login/passwordLogin/tests/login"
-import { initRenewCredentialResource } from "../../../x_Resource/Login/RenewCredential/impl"
-import { initTestPasswordResetAction } from "../../../profile/passwordReset/tests/reset"
-import { initPasswordResetResource } from "../../../x_Resource/Profile/PasswordReset/impl"
+} from "../../login/credentialStore/tests/renew"
+import { initPasswordFormFieldAction } from "../../common/field/password/main/password"
+import { initTestPasswordLoginAction } from "../../login/passwordLogin/tests/login"
+import { initRenewCredentialResource } from "../../x_Resource/Login/RenewCredential/impl"
+import { initTestPasswordResetAction } from "../../profile/passwordReset/tests/reset"
+import { initPasswordResetResource } from "../../x_Resource/Profile/PasswordReset/impl"
 
 const AUTHORIZED_TICKET_NONCE = "ticket-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
@@ -76,7 +76,7 @@ describe("LoginView", () => {
                         break
 
                     case "renew-credential":
-                        state.resource.renew.request()
+                        state.entryPoint.resource.renew.request()
                         break
 
                     case "password-login":
@@ -119,7 +119,7 @@ describe("LoginView", () => {
                         break
 
                     case "renew-credential":
-                        state.resource.renew.request()
+                        state.entryPoint.resource.renew.request()
                         break
 
                     case "password-reset-session":
@@ -162,7 +162,7 @@ describe("LoginView", () => {
                         break
 
                     case "renew-credential":
-                        state.resource.renew.request()
+                        state.entryPoint.resource.renew.request()
                         break
 
                     case "password-reset":

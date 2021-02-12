@@ -8,8 +8,7 @@ import { ApplicationError } from "../../z_common/System/ApplicationError"
 import { MoveToNextVersionEntryPoint } from "../../../available/x_components/MoveToNextVersion/EntryPoint/entryPoint"
 import { NextVersion } from "./NextVersion"
 
-type Props = MoveToNextVersionEntryPoint
-export function EntryPoint({ resource, terminate }: Props): VNode {
+export function EntryPoint({ resource, terminate }: MoveToNextVersionEntryPoint): VNode {
     useTermination(terminate)
 
     const [err] = useErrorBoundary((err) => {
