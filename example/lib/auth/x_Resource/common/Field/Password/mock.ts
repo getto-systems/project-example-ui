@@ -1,10 +1,10 @@
-import { mapMockPropsPasser, MockPropsPasser } from "../../../../../sub/getto-example/x_components/Application/mock"
+import { mapMockPropsPasser, MockPropsPasser } from "../../../../../sub/getto-example/Application/mock"
 import {
     FormFieldMockComponent,
     FormInputMockComponent,
-} from "../../../../../sub/getto-form/x_components/Form/mock"
+} from "../../../../../sub/getto-form/x_Component/Form/mock"
 
-import { FormInputComponent } from "../../../../../sub/getto-form/x_components/Form/component"
+import { FormInputComponent } from "../../../../../sub/getto-form/x_Component/Form/component"
 import { PasswordFormFieldComponent, PasswordFormFieldComponentState } from "./component"
 
 import {

@@ -4,7 +4,7 @@ import { useEffect } from "preact/hooks"
 import { EntryPoint } from "./EntryPoint"
 
 import { LoginErrorMockProps, newMockLoginAsError } from "../../../auth/z_EntryPoint/Login/mock"
-import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
+import { initMockPropsPasser } from "../../../sub/getto-example/Application/mock"
 
 export default {
     title: "Auth/Login/Error",

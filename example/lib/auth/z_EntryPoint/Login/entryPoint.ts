@@ -15,7 +15,7 @@ import {
     PasswordResetSessionResource,
 } from "../../x_Resource/Profile/PasswordResetSession/resource"
 
-import { ApplicationComponent } from "../../../sub/getto-example/x_components/Application/component"
+import { ApplicationComponent } from "../../../sub/getto-example/Application/component"
 import { LoginLinkResource } from "../../x_Resource/common/LoginLink/resource"
 
 export type LoginForegroundAction = RenewCredentialForegroundAction &

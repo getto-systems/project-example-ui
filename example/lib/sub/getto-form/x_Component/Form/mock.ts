@@ -8,7 +8,7 @@ import {
 } from "./component"
 
 import { FormHistory, FormInputString, FormValidationState, markInputString } from "../../form/data"
-import { MockComponent, MockPropsPasser } from "../../../getto-example/x_components/Application/mock"
+import { MockComponent, MockPropsPasser } from "../../../getto-example/Application/mock"
 
 export class FormMockComponent
     extends MockComponent<FormComponentState>

@@ -14,7 +14,7 @@ import { copyright, siteInfo } from "../site"
 
 import { MenuList } from "./MenuList"
 
-import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
+import { initMockPropsPasser } from "../../../sub/getto-example/Application/mock"
 import { MenuListMockProps, initMockMenuListComponent } from "../../../auth/z_EntryPoint/Outline/menuList/mock"
 
 export default {

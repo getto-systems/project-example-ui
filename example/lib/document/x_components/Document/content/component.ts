@@ -1,4 +1,4 @@
-import { ApplicationComponent } from "../../../../sub/getto-example/x_components/Application/component"
+import { ApplicationComponent } from "../../../../sub/getto-example/Application/component"
 
 import { LoadContent } from "../../../content/action"
 

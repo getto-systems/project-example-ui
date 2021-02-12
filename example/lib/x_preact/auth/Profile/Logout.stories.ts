@@ -3,7 +3,7 @@ import { useEffect } from "preact/hooks"
 
 import { Logout } from "./Logout"
 
-import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
+import { initMockPropsPasser } from "../../../sub/getto-example/Application/mock"
 import {
     LogoutMockProps,
     initMockLogoutComponent,
