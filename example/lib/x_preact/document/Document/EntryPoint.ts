@@ -11,8 +11,7 @@ import { Content } from "./Content"
 import { DocumentEntryPoint } from "../../../document/x_components/Document/EntryPoint/entryPoint"
 import { appLayout } from "../../../z_vendor/getto-css/preact/layout/app"
 
-type Props = DocumentEntryPoint
-export function EntryPoint({ resource, terminate }: Props): VNode {
+export function EntryPoint({ resource, terminate }: DocumentEntryPoint): VNode {
     useTermination(terminate)
 
     const [err] = useErrorBoundary((err) => resource.error.notify(err))

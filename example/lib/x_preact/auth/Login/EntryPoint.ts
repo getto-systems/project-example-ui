@@ -15,10 +15,9 @@ import { PasswordReset } from "./PasswordReset"
 import {
     LoginEntryPoint,
     initialLoginState,
-} from "../../../auth/z_EntryPoint/Login/EntryPoint/entryPoint"
+} from "../../../auth/z_EntryPoint/Login/entryPoint"
 
-type Props = LoginEntryPoint
-export function EntryPoint({ view, terminate }: Props): VNode {
+export function EntryPoint({ view, terminate }: LoginEntryPoint): VNode {
     useTermination(terminate)
 
     const [err] = useErrorBoundary((err) => {
@@ -39,16 +38,16 @@ export function EntryPoint({ view, terminate }: Props): VNode {
             return EMPTY_CONTENT
 
         case "renew-credential":
-            return h(RenewCredential, state.resource)
+            return h(RenewCredential, state.entryPoint)
 
         case "password-login":
-            return h(PasswordLogin, state.resource)
+            return h(PasswordLogin, state.entryPoint)
 
         case "password-reset-session":
-            return h(PasswordResetSession, state.resource)
+            return h(PasswordResetSession, state.entryPoint)
 
         case "password-reset":
-            return h(PasswordReset, state.resource)
+            return h(PasswordReset, state.entryPoint)
 
         case "error":
             return h(ApplicationError, { err: state.err })

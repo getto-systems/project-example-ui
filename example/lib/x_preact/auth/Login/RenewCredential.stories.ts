@@ -4,7 +4,7 @@ import { useEffect } from "preact/hooks"
 import { EntryPoint } from "./EntryPoint"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
-import { newMockLoginAsRenewCredential } from "../../../auth/z_EntryPoint/Login/EntryPoint/mock"
+import { newMockLoginAsRenewCredential } from "../../../auth/z_EntryPoint/Login/mock"
 import { RenewCredentialResourceMockProps } from "../../../auth/x_Resource/Login/RenewCredential/mock"
 
 export default {

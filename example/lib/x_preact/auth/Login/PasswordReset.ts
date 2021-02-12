@@ -11,7 +11,7 @@ import {
 } from "../../../z_vendor/getto-css/preact/design/form"
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 
-import { useComponent } from "../../z_common/hooks"
+import { useComponent, useTermination } from "../../z_common/hooks"
 import { siteInfo } from "../../z_common/site"
 import { icon, spinner } from "../../z_common/icon"
 
@@ -22,15 +22,16 @@ import { ApplicationError } from "../../z_common/System/ApplicationError"
 import { LoginIDFormField } from "./field/loginID"
 import { PasswordFormField } from "./field/password"
 
-import { PasswordResetResource } from "../../../auth/x_Resource/Profile/PasswordReset/resource"
+import { PasswordResetEntryPoint } from "../../../auth/z_EntryPoint/Login/entryPoint"
 
 import { initialPasswordResetComponentState } from "../../../auth/x_Resource/Profile/PasswordReset/Reset/component"
 import { initialFormComponentState } from "../../../sub/getto-form/x_components/Form/component"
 
 import { ResetError } from "../../../auth/profile/passwordReset/data"
 
-type Props = PasswordResetResource
-export function PasswordReset(resource: Props): VNode {
+export function PasswordReset({ resource, terminate }: PasswordResetEntryPoint): VNode {
+    useTermination(terminate)
+
     const { reset } = resource
     const state = useComponent(reset, initialPasswordResetComponentState)
     const formState = useComponent(resource.form, initialFormComponentState)

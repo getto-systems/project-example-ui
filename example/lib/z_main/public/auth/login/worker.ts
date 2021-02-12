@@ -1,3 +1,3 @@
-import { initLoginWorker } from "../../../../auth/z_EntryPoint/Login/EntryPoint/main/worker/background"
+import { initLoginWorker } from "../../../../auth/z_EntryPoint/Login/main/worker/background"
 
 initLoginWorker((self as unknown) as Worker)

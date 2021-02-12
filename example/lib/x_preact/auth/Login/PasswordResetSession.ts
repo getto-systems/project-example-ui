@@ -12,14 +12,14 @@ import {
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { v_medium } from "../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useComponent } from "../../z_common/hooks"
+import { useComponent, useTermination } from "../../z_common/hooks"
 import { siteInfo } from "../../z_common/site"
 import { icon, spinner } from "../../z_common/icon"
 
 import { ApplicationError } from "../../z_common/System/ApplicationError"
 import { LoginIDFormField } from "./field/loginID"
 
-import { PasswordResetSessionResource } from "../../../auth/x_Resource/Profile/PasswordResetSession/resource"
+import { PasswordResetSessionEntryPoint } from "../../../auth/z_EntryPoint/Login/entryPoint"
 
 import { initialPasswordResetSessionComponentState } from "../../../auth/x_Resource/Profile/PasswordResetSession/Session/component"
 import { initialFormComponentState } from "../../../sub/getto-form/x_components/Form/component"
@@ -32,8 +32,9 @@ import {
     SendTokenError,
 } from "../../../auth/profile/passwordReset/data"
 
-type Props = PasswordResetSessionResource
-export function PasswordResetSession(resource: Props): VNode {
+export function PasswordResetSession({ resource, terminate }: PasswordResetSessionEntryPoint): VNode {
+    useTermination(terminate)
+
     const { session: resetSession } = resource
     const state = useComponent(resetSession, initialPasswordResetSessionComponentState)
     const formState = useComponent(resource.form, initialFormComponentState)

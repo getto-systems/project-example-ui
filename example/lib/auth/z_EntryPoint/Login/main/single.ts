@@ -1,29 +1,29 @@
-import { initFormAction } from "../../../../../sub/getto-form/main/form"
+import { initFormAction } from "../../../../sub/getto-form/main/form"
 
 import { View } from "../impl/core"
 
-import { initLoginLink } from "../../../../x_Resource/common/impl/link"
+import { initLoginLink } from "../../../x_Resource/common/impl/link"
 
 import { initLoginViewLocationInfo } from "../impl/location"
-import { initLoginLocationInfo } from "../../../../x_Resource/common/impl/location"
+import { initLoginLocationInfo } from "../../../x_Resource/common/impl/location"
 
-import { initRenewCredentialResource } from "../../../../x_Resource/Login/RenewCredential/impl"
-import { initPasswordLoginResource } from "../../../../x_Resource/Login/PasswordLogin/impl"
-import { initPasswordResetSessionResource } from "../../../../x_Resource/Profile/PasswordResetSession/impl"
-import { initPasswordResetResource } from "../../../../x_Resource/Profile/PasswordReset/impl"
+import { initRenewCredentialResource } from "../../../x_Resource/Login/RenewCredential/impl"
+import { initPasswordLoginResource } from "../../../x_Resource/Login/PasswordLogin/impl"
+import { initPasswordResetSessionResource } from "../../../x_Resource/Profile/PasswordResetSession/impl"
+import { initPasswordResetResource } from "../../../x_Resource/Profile/PasswordReset/impl"
 
 import {
     initRenewAction,
     initSetContinuousRenewAction,
-} from "../../../../login/credentialStore/main/renew"
-import { initApplicationAction } from "../../../../common/application/main/application"
-import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../../common/field/password/main/password"
-import { initPasswordLoginAction } from "../../../../login/passwordLogin/main/login"
+} from "../../../login/credentialStore/main/renew"
+import { initApplicationAction } from "../../../common/application/main/application"
+import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../common/field/password/main/password"
+import { initPasswordLoginAction } from "../../../login/passwordLogin/main/login"
 import {
     initPasswordResetAction,
     initPasswordResetSessionAction,
-} from "../../../../profile/passwordReset/main/reset"
+} from "../../../profile/passwordReset/main/reset"
 
 import { LoginEntryPoint, LoginForegroundAction } from "../entryPoint"
 

@@ -15,8 +15,7 @@ import { initialNextVersionComponentState } from "../../../available/x_component
 
 import { appTargetToPath, FindError } from "../../../available/nextVersion/data"
 
-type Props = NextVersionResource
-export function NextVersion({ nextVersion }: Props): VNode {
+export function NextVersion({ nextVersion }: NextVersionResource): VNode {
     const state = useComponent(nextVersion, initialNextVersionComponentState)
     useEffect(() => {
         nextVersion.find()

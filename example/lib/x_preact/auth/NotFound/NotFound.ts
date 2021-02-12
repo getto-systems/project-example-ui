@@ -18,8 +18,7 @@ import {
     initialCurrentVersionComponentState,
 } from "../../../available/x_components/NotFound/currentVersion/component"
 
-type Props = NotFoundEntryPoint
-export function EntryPoint({ resource, terminate }: Props): VNode {
+export function EntryPoint({ resource, terminate }: NotFoundEntryPoint): VNode {
     useTermination(terminate)
 
     const [err] = useErrorBoundary((err) => {

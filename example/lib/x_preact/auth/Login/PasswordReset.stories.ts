@@ -4,15 +4,15 @@ import { useEffect } from "preact/hooks"
 import { EntryPoint } from "./EntryPoint"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
-import { newMockLoginAsPasswordReset } from "../../../auth/z_EntryPoint/Login/EntryPoint/mock"
+import { newMockLoginAsPasswordReset } from "../../../auth/z_EntryPoint/Login/mock"
 import { PasswordResetResourceMockProps } from "../../../auth/x_Resource/Profile/PasswordReset/mock"
-import { loginIDFormFieldValidations } from "../../../auth/x_Resource/Field/LoginID/mock"
+import { loginIDFormFieldValidations } from "../../../auth/x_Resource/common/Field/LoginID/mock"
 import { formValidationStates } from "../../../sub/getto-form/x_components/Form/mock"
 import {
     passwordFormFieldCharacters,
     passwordFormFieldValidations,
     passwordFormFieldViews,
-} from "../../../auth/x_Resource/Field/Password/mock"
+} from "../../../auth/x_Resource/common/Field/Password/mock"
 
 export default {
     title: "Auth/Login/PasswordReset",

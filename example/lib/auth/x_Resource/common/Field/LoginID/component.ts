@@ -4,11 +4,11 @@ import {
     FormFieldHandler,
     FormFieldComponentState,
     FormInputComponent,
-} from "../../../../sub/getto-form/x_components/Form/component"
+} from "../../../../../sub/getto-form/x_components/Form/component"
 
-import { LoginIDFormField } from "../../../common/field/loginID/action"
+import { LoginIDFormField } from "../../../../common/field/loginID/action"
 
-import { LoginIDValidationError } from "../../../common/field/loginID/data"
+import { LoginIDValidationError } from "../../../../common/field/loginID/data"
 
 export interface LoginIDFormFieldComponentFactory {
     (material: LoginIDFormFieldMaterial): { (handler: FormFieldHandler): LoginIDFormFieldComponent }

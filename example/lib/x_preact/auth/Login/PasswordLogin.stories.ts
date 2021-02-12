@@ -4,14 +4,14 @@ import { useEffect } from "preact/hooks"
 import { EntryPoint } from "./EntryPoint"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
-import { newMockLoginAsPasswordLogin } from "../../../auth/z_EntryPoint/Login/EntryPoint/mock"
+import { newMockLoginAsPasswordLogin } from "../../../auth/z_EntryPoint/Login/mock"
 import { PasswordLoginResourceMockProps } from "../../../auth/x_Resource/Login/PasswordLogin/mock"
-import { loginIDFormFieldValidations } from "../../../auth/x_Resource/Field/LoginID/mock"
+import { loginIDFormFieldValidations } from "../../../auth/x_Resource/common/Field/LoginID/mock"
 import {
     passwordFormFieldCharacters,
     passwordFormFieldValidations,
     passwordFormFieldViews,
-} from "../../../auth/x_Resource/Field/Password/mock"
+} from "../../../auth/x_Resource/common/Field/Password/mock"
 import { formValidationStates } from "../../../sub/getto-form/x_components/Form/mock"
 
 export default {
