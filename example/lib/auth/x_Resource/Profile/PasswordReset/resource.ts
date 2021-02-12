@@ -1,5 +1,5 @@
-import { PasswordResetComponent } from "./Reset/component"
-import { PasswordResetFormComponent } from "./Form/component"
+import { ResetComponent } from "./Reset/component"
+import { FormComponent } from "./Form/component"
 
 import { FormAction } from "../../../../sub/getto-form/form/action"
 import { ApplicationAction, SecureScriptPathLocationInfo } from "../../../common/application/action"
@@ -9,8 +9,8 @@ import { SetContinuousRenewAction } from "../../../login/credentialStore/action"
 import { ResetAction, ResetLocationInfo } from "../../../profile/passwordReset/action"
 
 export type PasswordResetResource = Readonly<{
-    reset: PasswordResetComponent
-    form: PasswordResetFormComponent
+    reset: ResetComponent
+    form: FormComponent
 }>
 
 export type PasswordResetLocationInfo = Readonly<{

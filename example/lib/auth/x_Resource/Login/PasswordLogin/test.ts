@@ -32,7 +32,7 @@ import { Clock } from "../../../../z_infra/clock/infra"
 
 import { PasswordLoginResource } from "./resource"
 
-import { PasswordLoginComponentState } from "./Login/component"
+import { LoginComponentState } from "./Login/component"
 
 import { markInputString, toValidationError } from "../../../../sub/getto-form/form/data"
 import { markScriptPath } from "../../../common/application/data"
@@ -71,7 +71,7 @@ describe("PasswordLogin", () => {
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: PasswordLoginComponentState): boolean => {
+                (state: LoginComponentState): boolean => {
                     switch (state.type) {
                         case "initial-login":
                         case "try-to-login":
@@ -124,7 +124,7 @@ describe("PasswordLogin", () => {
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: PasswordLoginComponentState): boolean => {
+                (state: LoginComponentState): boolean => {
                     switch (state.type) {
                         case "initial-login":
                         case "try-to-login":
@@ -178,7 +178,7 @@ describe("PasswordLogin", () => {
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: PasswordLoginComponentState): boolean => {
+                (state: LoginComponentState): boolean => {
                     switch (state.type) {
                         case "initial-login":
                         case "try-to-login":
@@ -218,7 +218,7 @@ describe("PasswordLogin", () => {
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: PasswordLoginComponentState): boolean => {
+                (state: LoginComponentState): boolean => {
                     switch (state.type) {
                         case "initial-login":
                         case "try-to-login":

@@ -1,4 +1,7 @@
-import { FormContainerComponent, FormContainerMaterial } from "../../../../../sub/getto-form/x_Component/Form/component"
+import {
+    FormContainerComponent,
+    FormContainerMaterial,
+} from "../../../../../sub/getto-form/x_Component/Form/component"
 import {
     LoginIDFormFieldComponent,
     LoginIDFormFieldMaterial,
@@ -11,14 +14,12 @@ import {
 import { FormConvertResult } from "../../../../../sub/getto-form/form/data"
 import { LoginFields } from "../../../../login/passwordLogin/data"
 
-export interface PasswordLoginFormComponentFactory {
-    (material: PasswordLoginFormMaterial): PasswordLoginFormComponent
+export interface FormComponentFactory {
+    (material: FormMaterial): FormComponent
 }
-export type PasswordLoginFormMaterial = FormContainerMaterial &
-    LoginIDFormFieldMaterial &
-    PasswordFormFieldMaterial
+export type FormMaterial = FormContainerMaterial & LoginIDFormFieldMaterial & PasswordFormFieldMaterial
 
-export interface PasswordLoginFormComponent extends FormContainerComponent {
+export interface FormComponent extends FormContainerComponent {
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
     getLoginFields(): FormConvertResult<LoginFields>

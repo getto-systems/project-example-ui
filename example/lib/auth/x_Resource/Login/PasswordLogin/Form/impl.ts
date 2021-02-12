@@ -4,25 +4,18 @@ import { initPasswordFormFieldComponent } from "../../../common/Field/Password/i
 
 import { LoginIDFormFieldComponent } from "../../../common/Field/LoginID/component"
 import { PasswordFormFieldComponent } from "../../../common/Field/Password/component"
-import {
-    PasswordLoginFormComponentFactory,
-    PasswordLoginFormComponent,
-    PasswordLoginFormMaterial,
-} from "./component"
+import { FormComponentFactory, FormComponent, FormMaterial } from "./component"
 
 import { FormConvertResult } from "../../../../../sub/getto-form/form/data"
 import { LoginFields } from "../../../../login/passwordLogin/data"
 
-export const initPasswordLoginFormComponent: PasswordLoginFormComponentFactory = (material) =>
-    new FormComponent(material)
+export const initFormComponent: FormComponentFactory = (material) => new Component(material)
 
-class FormComponent
-    extends FormContainerBaseComponent<PasswordLoginFormMaterial>
-    implements PasswordLoginFormComponent {
+class Component extends FormContainerBaseComponent<FormMaterial> implements FormComponent {
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
 
-    constructor(material: PasswordLoginFormMaterial) {
+    constructor(material: FormMaterial) {
         super(material, (path) => {
             switch (path.field) {
                 case "loginID":

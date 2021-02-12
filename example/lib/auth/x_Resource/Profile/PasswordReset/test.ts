@@ -31,7 +31,7 @@ import {
 
 import { PasswordResetResource } from "./resource"
 
-import { PasswordResetComponentState } from "./Reset/component"
+import { ResetComponentState } from "./Reset/component"
 
 import { markScriptPath } from "../../../common/application/data"
 import { markApiCredential, markAuthAt, markTicketNonce } from "../../../common/credential/data"
@@ -69,7 +69,7 @@ describe("PasswordReset", () => {
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: PasswordResetComponentState): boolean => {
+                (state: ResetComponentState): boolean => {
                     switch (state.type) {
                         case "initial-reset":
                         case "try-to-reset":
@@ -122,7 +122,7 @@ describe("PasswordReset", () => {
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: PasswordResetComponentState): boolean => {
+                (state: ResetComponentState): boolean => {
                     switch (state.type) {
                         case "initial-reset":
                         case "try-to-reset":
@@ -173,7 +173,7 @@ describe("PasswordReset", () => {
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: PasswordResetComponentState): boolean => {
+                (state: ResetComponentState): boolean => {
                     switch (state.type) {
                         case "initial-reset":
                         case "try-to-reset":
@@ -219,7 +219,7 @@ describe("PasswordReset", () => {
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: PasswordResetComponentState): boolean => {
+                (state: ResetComponentState): boolean => {
                     switch (state.type) {
                         case "initial-reset":
                         case "try-to-reset":
@@ -259,7 +259,7 @@ describe("PasswordReset", () => {
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: PasswordResetComponentState): boolean => {
+                (state: ResetComponentState): boolean => {
                     switch (state.type) {
                         case "initial-reset":
                         case "try-to-reset":

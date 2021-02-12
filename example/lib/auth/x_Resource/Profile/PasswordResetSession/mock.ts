@@ -1,21 +1,20 @@
 import { MockPropsPasser } from "../../../../sub/getto-example/Application/mock"
 
-import { initMockPasswordResetSessionForm, PasswordResetSessionFormMockProps } from "./Form/mock"
-import { initMockPasswordResetSession, PasswordResetSessionMockProps } from "./Session/mock"
+import { initMockFormComponent, FormMockProps } from "./Form/mock"
+import { initMockSessionComponent, SessionMockProps } from "./Session/mock"
 
 import { PasswordResetSessionResource } from "./resource"
 
 export type PasswordResetSessionResourceMockPropsPasser = MockPropsPasser<
     PasswordResetSessionResourceMockProps
 >
-export type PasswordResetSessionResourceMockProps = PasswordResetSessionMockProps &
-    PasswordResetSessionFormMockProps
+export type PasswordResetSessionResourceMockProps = SessionMockProps & FormMockProps
 
 export function initMockPasswordResetSessionResource(
     passer: PasswordResetSessionResourceMockPropsPasser
 ): PasswordResetSessionResource {
     return {
-        session: initMockPasswordResetSession(passer),
-        form: initMockPasswordResetSessionForm(passer),
+        session: initMockSessionComponent(passer),
+        form: initMockFormComponent(passer),
     }
 }

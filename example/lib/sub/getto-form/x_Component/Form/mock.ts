@@ -10,7 +10,7 @@ import {
 import { FormHistory, FormInputString, FormValidationState, markInputString } from "../../form/data"
 import { MockComponent, MockPropsPasser } from "../../../getto-example/Application/mock"
 
-export class FormMockComponent
+export class FormContainerMockComponent
     extends MockComponent<FormContainerComponentState>
     implements FormContainerComponent {
     undo(): void {
@@ -21,7 +21,7 @@ export class FormMockComponent
     }
 }
 
-export type FormMockProps = Readonly<{ validation: FormValidationState }>
+export type FormContainerMockProps = Readonly<{ validation: FormValidationState }>
 
 export const formValidationStates: FormValidationState[] = ["initial", "valid", "invalid"]
 

@@ -1,11 +1,6 @@
 import { ApplicationBaseComponent } from "../../../../../sub/getto-example/Application/impl"
 
-import {
-    PasswordLoginComponentFactory,
-    PasswordLoginMaterial,
-    PasswordLoginComponent,
-    PasswordLoginComponentState,
-} from "./component"
+import { LoginComponentFactory, LoginMaterial, LoginComponent, LoginComponentState } from "./component"
 
 import { FormConvertResult } from "../../../../../sub/getto-form/form/data"
 import { LoadError } from "../../../../common/application/data"
@@ -13,15 +8,12 @@ import { AuthCredential } from "../../../../common/credential/data"
 import { storeAuthCredential } from "../../../../login/credentialStore/data"
 import { LoginFields } from "../../../../login/passwordLogin/data"
 
-export const initPasswordLoginComponent: PasswordLoginComponentFactory = (material) =>
-    new Component(material)
+export const initLoginComponent: LoginComponentFactory = (material) => new Component(material)
 
-class Component
-    extends ApplicationBaseComponent<PasswordLoginComponentState>
-    implements PasswordLoginComponent {
-    material: PasswordLoginMaterial
+class Component extends ApplicationBaseComponent<LoginComponentState> implements LoginComponent {
+    material: LoginMaterial
 
-    constructor(material: PasswordLoginMaterial) {
+    constructor(material: LoginMaterial) {
         super()
         this.material = material
     }

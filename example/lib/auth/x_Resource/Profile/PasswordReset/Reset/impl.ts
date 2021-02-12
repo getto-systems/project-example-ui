@@ -1,11 +1,6 @@
 import { ApplicationBaseComponent } from "../../../../../sub/getto-example/Application/impl"
 
-import {
-    PasswordResetComponentFactory,
-    PasswordResetMaterial,
-    PasswordResetComponent,
-    PasswordResetComponentState,
-} from "./component"
+import { ResetComponentFactory, ResetMaterial, ResetComponent, ResetComponentState } from "./component"
 
 import { LoadError } from "../../../../common/application/data"
 import { AuthCredential } from "../../../../common/credential/data"
@@ -13,15 +8,12 @@ import { storeAuthCredential } from "../../../../login/credentialStore/data"
 import { FormConvertResult } from "../../../../../sub/getto-form/form/data"
 import { ResetFields } from "../../../../profile/passwordReset/data"
 
-export const initPasswordResetComponent: PasswordResetComponentFactory = (material) =>
-    new Component(material)
+export const initResetComponent: ResetComponentFactory = (material) => new Component(material)
 
-class Component
-    extends ApplicationBaseComponent<PasswordResetComponentState>
-    implements PasswordResetComponent {
-    material: PasswordResetMaterial
+class Component extends ApplicationBaseComponent<ResetComponentState> implements ResetComponent {
+    material: ResetMaterial
 
-    constructor(material: PasswordResetMaterial) {
+    constructor(material: ResetMaterial) {
         super()
         this.material = material
     }

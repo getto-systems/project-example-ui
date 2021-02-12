@@ -23,7 +23,7 @@ import {
     StartSessionRemoteAccessResult,
 } from "../../profile/passwordReset/infra"
 
-import { RenewCredentialComponent } from "../../x_Resource/Login/RenewCredential/Renew/component"
+import { RenewComponent } from "../../x_Resource/Login/RenewCredential/Renew/component"
 
 import { markApiCredential, markAuthAt, markTicketNonce } from "../../common/credential/data"
 import { markSessionID } from "../../profile/passwordReset/data"
@@ -434,7 +434,7 @@ function standardRenewCredentialResource(
     currentURL: URL,
     authCredentials: AuthCredentialRepository,
     clock: Clock,
-    setup: Setup<RenewCredentialComponent>
+    setup: Setup<RenewComponent>
 ) {
     return initRenewCredentialResource(setup, initLoginLocationInfo(currentURL), {
         application: initTestApplicationAction({

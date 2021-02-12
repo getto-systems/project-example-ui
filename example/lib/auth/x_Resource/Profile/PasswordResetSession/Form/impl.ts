@@ -1,8 +1,4 @@
-import {
-    PasswordResetSessionFormMaterial,
-    PasswordResetSessionFormComponentFactory,
-    PasswordResetSessionFormComponent,
-} from "./component"
+import { FormMaterial, FormComponentFactory, FormComponent } from "./component"
 
 import { StartSessionFields } from "../../../../profile/passwordReset/data"
 import { FormConvertResult } from "../../../../../sub/getto-form/form/data"
@@ -10,16 +6,12 @@ import { FormContainerBaseComponent } from "../../../../../sub/getto-form/x_Comp
 import { LoginIDFormFieldComponent } from "../../../common/Field/LoginID/component"
 import { initLoginIDFormFieldComponent } from "../../../common/Field/LoginID/impl"
 
-export const initPasswordResetSessionFormComponent: PasswordResetSessionFormComponentFactory = (
-    material
-) => new FormComponent(material)
+export const initFormComponent: FormComponentFactory = (material) => new Component(material)
 
-class FormComponent
-    extends FormContainerBaseComponent<PasswordResetSessionFormMaterial>
-    implements PasswordResetSessionFormComponent {
+class Component extends FormContainerBaseComponent<FormMaterial> implements FormComponent {
     readonly loginID: LoginIDFormFieldComponent
 
-    constructor(material: PasswordResetSessionFormMaterial) {
+    constructor(material: FormMaterial) {
         super(material, (path) => {
             switch (path.field) {
                 case "loginID":

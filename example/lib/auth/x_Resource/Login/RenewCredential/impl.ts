@@ -1,6 +1,6 @@
-import { initRenewCredentialComponent } from "./Renew/impl"
+import { initRenewComponent } from "./Renew/impl"
 
-import { RenewCredentialComponent } from "./Renew/component"
+import { RenewComponent } from "./Renew/component"
 
 import {
     RenewCredentialForegroundAction,
@@ -9,11 +9,11 @@ import {
 } from "./resource"
 
 export function initRenewCredentialResource(
-    setup: Setup<RenewCredentialComponent>,
+    setup: Setup<RenewComponent>,
     locationInfo: RenewCredentialLocationInfo,
     foreground: RenewCredentialForegroundAction
 ): RenewCredentialResource {
-    const renew = initRenewCredentialComponent({
+    const renew = initRenewComponent({
         renew: foreground.renew.renew(),
         forceRenew: foreground.renew.forceRenew(),
         setContinuousRenew: foreground.setContinuousRenew.setContinuousRenew(),

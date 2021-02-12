@@ -16,14 +16,14 @@ import { ApplicationError } from "../../z_common/System/ApplicationError"
 
 import { RenewCredentialEntryPoint } from "../../../auth/z_EntryPoint/Login/entryPoint"
 
-import { initialRenewCredentialComponentState } from "../../../auth/x_Resource/Login/RenewCredential/Renew/component"
+import { initialRenewComponentState } from "../../../auth/x_Resource/Login/RenewCredential/Renew/component"
 
 import { RenewError } from "../../../auth/login/credentialStore/data"
 
 export function RenewCredential({ resource: { renew }, terminate }: RenewCredentialEntryPoint): VNode {
     useTermination(terminate)
 
-    const state = useComponent(renew, initialRenewCredentialComponentState)
+    const state = useComponent(renew, initialRenewComponentState)
     useEffect(() => {
         renew.request()
     }, [])
