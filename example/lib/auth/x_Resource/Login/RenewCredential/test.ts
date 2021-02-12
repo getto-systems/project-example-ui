@@ -25,7 +25,7 @@ import {
 
 import { RenewCredentialResource } from "./resource"
 
-import { RenewComponent, RenewComponentState } from "./Renew/component"
+import { RenewComponentState } from "./Renew/component"
 
 import { markApiCredential, markAuthAt, markTicketNonce } from "../../../common/credential/data"
 import { markScriptPath } from "../../../common/application/data"
@@ -373,16 +373,7 @@ function standardRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newTestRenewCredentialResource(
-        currentURL,
-        config,
-        repository,
-        simulator,
-        clock,
-        () => {
-            // ここでは特に何もしない
-        }
-    )
+    const resource = newTestRenewCredentialResource(currentURL, config, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
@@ -392,16 +383,7 @@ function instantRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = instantAvailableClock()
-    const resource = newTestRenewCredentialResource(
-        currentURL,
-        config,
-        repository,
-        simulator,
-        clock,
-        () => {
-            // ここでは特に何もしない
-        }
-    )
+    const resource = newTestRenewCredentialResource(currentURL, config, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
@@ -411,16 +393,7 @@ function waitRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = waitSimulator()
     const clock = standardClock()
-    const resource = newTestRenewCredentialResource(
-        currentURL,
-        config,
-        repository,
-        simulator,
-        clock,
-        () => {
-            // ここでは特に何もしない
-        }
-    )
+    const resource = newTestRenewCredentialResource(currentURL, config, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
@@ -430,16 +403,7 @@ function emptyRenewCredentialResource() {
     const repository = emptyRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newTestRenewCredentialResource(
-        currentURL,
-        config,
-        repository,
-        simulator,
-        clock,
-        () => {
-            // ここでは特に何もしない
-        }
-    )
+    const resource = newTestRenewCredentialResource(currentURL, config, repository, simulator, clock)
 
     return { repository, resource }
 }
@@ -461,10 +425,9 @@ function newTestRenewCredentialResource(
     config: RenewCredentialTestConfig,
     repository: RenewCredentialTestRepository,
     remote: RenewCredentialTestRemoteAccess,
-    clock: Clock,
-    hook: Setup<RenewComponent>
+    clock: Clock
 ): RenewCredentialResource {
-    return initRenewCredentialResource(hook, initLoginLocationInfo(currentURL), {
+    return initRenewCredentialResource(initLoginLocationInfo(currentURL), {
         application: initTestApplicationAction(config.application),
         renew: initTestRenewAction(config.renew, repository.authCredentials, remote.renew, clock),
         setContinuousRenew: initTestSetContinuousRenewAction(
@@ -581,10 +544,6 @@ function expectToEmptyLastLogin(authCredentials: AuthCredentialRepository) {
 
 interface Post<T> {
     (state: T): void
-}
-
-interface Setup<T> {
-    (component: T): void
 }
 
 type WaitTime = { wait_millisecond: number }

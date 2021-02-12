@@ -1,4 +1,5 @@
-import { ApplicationBaseComponent } from "../../../../sub/getto-example/Application/impl"
+import { ApplicationBaseComponent } from "../../../sub/getto-example/Application/impl"
+import { AuthSearchParams } from "../../common/searchParams/data"
 
 import {
     LoginView,
@@ -7,15 +8,30 @@ import {
     PasswordLoginEntryPoint,
     PasswordResetSessionEntryPoint,
     PasswordResetEntryPoint,
-} from "../entryPoint"
+    LoginViewLocationInfo,
+    LoginResourceFactory,
+} from "./entryPoint"
 
-import { RenewCredentialResource } from "../../../x_Resource/Login/RenewCredential/resource"
-import { PasswordLoginResource } from "../../../x_Resource/Login/PasswordLogin/resource"
-import { PasswordResetSessionResource } from "../../../x_Resource/Profile/PasswordResetSession/resource"
-import { PasswordResetResource } from "../../../x_Resource/Profile/PasswordReset/resource"
+export function initLoginViewLocationInfo(currentURL: URL): LoginViewLocationInfo {
+    return {
+        login: {
+            getLoginView: () => detectViewState(currentURL),
+        },
+    }
+}
 
-import { RenewComponent } from "../../../x_Resource/Login/RenewCredential/Renew/component"
-import { LoginLinkResource } from "../../../x_Resource/common/LoginLink/resource"
+function detectViewState(currentURL: URL): ViewState {
+    // パスワードリセット
+    switch (currentURL.searchParams.get(AuthSearchParams.passwordReset)) {
+        case AuthSearchParams.passwordReset_start:
+            return "password-reset-session"
+        case AuthSearchParams.passwordReset_reset:
+            return "password-reset"
+    }
+
+    // 特に指定が無ければパスワードログイン
+    return "password-login"
+}
 
 export class View extends ApplicationBaseComponent<LoginState> implements LoginView {
     locationInfo: LoginViewLocationInfo
@@ -28,9 +44,13 @@ export class View extends ApplicationBaseComponent<LoginState> implements LoginV
     }
 
     load(): void {
-        // TODO hook 使わなくていいな
-        const resource = this.components.renewCredential((renewCredential) => {
-            this.hookCredentialStateChange(renewCredential)
+        const resource = this.components.renewCredential()
+        resource.renew.addStateHandler((state) => {
+            switch (state.type) {
+                case "required-to-login":
+                    this.post(this.mapLoginView(this.locationInfo.login.getLoginView()))
+                    return
+            }
         })
 
         this.post({
@@ -47,15 +67,6 @@ export class View extends ApplicationBaseComponent<LoginState> implements LoginV
         this.post({ type: "error", err })
     }
 
-    hookCredentialStateChange(renewCredential: RenewComponent): void {
-        renewCredential.addStateHandler((state) => {
-            switch (state.type) {
-                case "required-to-login":
-                    this.post(this.mapLoginView(this.locationInfo.login.getLoginView()))
-                    return
-            }
-        })
-    }
     mapLoginView(loginView: ViewState): LoginState {
         switch (loginView) {
             case "password-login":
@@ -97,23 +108,4 @@ export class View extends ApplicationBaseComponent<LoginState> implements LoginV
             },
         }
     }
-}
-
-export interface LoginResourceFactory {
-    loginLink(): LoginLinkResource
-
-    renewCredential(setup: Setup<RenewComponent>): RenewCredentialResource
-
-    passwordLogin(): PasswordLoginResource
-    passwordResetSession(): PasswordResetSessionResource
-    passwordReset(): PasswordResetResource
-}
-export interface LoginViewLocationInfo {
-    login: Readonly<{
-        getLoginView(): ViewState
-    }>
-}
-
-interface Setup<T> {
-    (component: T): void
 }

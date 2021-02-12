@@ -1,7 +1,6 @@
 import { env } from "../../../../../y_environment/env"
 
-import { View, LoginResourceFactory } from "../../impl/core"
-import { initLoginViewLocationInfo } from "../../impl/location"
+import { initLoginViewLocationInfo, View } from "../../impl"
 import { initLoginLocationInfo } from "../../../../x_Resource/common/LocationInfo/impl"
 
 import { initLoginLinkResource } from "../../../../x_Resource/common/LoginLink/impl"
@@ -19,7 +18,12 @@ import {
     initSetContinuousRenewAction,
 } from "../../../../login/credentialStore/main/renew"
 
-import { LoginBackgroundAction, LoginEntryPoint, LoginForegroundAction } from "../../entryPoint"
+import {
+    LoginBackgroundAction,
+    LoginEntryPoint,
+    LoginForegroundAction,
+    LoginResourceFactory,
+} from "../../entryPoint"
 import { LoginLocationInfo } from "../../../../x_Resource/common/LocationInfo/locationInfo"
 
 import { Login } from "../../../../login/passwordLogin/action"
@@ -206,7 +210,7 @@ function initLoginComponentFactory(
     return {
         loginLink: initLoginLinkResource,
 
-        renewCredential: (setup) => initRenewCredentialResource(setup, locationInfo, foreground),
+        renewCredential: () => initRenewCredentialResource(locationInfo, foreground),
 
         passwordLogin: () => initPasswordLoginResource(locationInfo, foreground, background),
         passwordResetSession: () => initPasswordResetSessionResource(foreground, background),

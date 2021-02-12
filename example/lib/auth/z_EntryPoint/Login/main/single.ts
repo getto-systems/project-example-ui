@@ -1,8 +1,7 @@
 import { initFormAction } from "../../../../sub/getto-form/main/form"
 
-import { View } from "../impl/core"
+import { initLoginViewLocationInfo, View } from "../impl"
 
-import { initLoginViewLocationInfo } from "../impl/location"
 import { initLoginLocationInfo } from "../../../x_Resource/common/LocationInfo/impl"
 
 import { initLoginLinkResource } from "../../../x_Resource/common/LoginLink/impl"
@@ -44,7 +43,7 @@ export function newLoginAsSingle(): LoginEntryPoint {
     const view = new View(initLoginViewLocationInfo(currentURL), {
         loginLink: initLoginLinkResource,
 
-        renewCredential: (setup) => initRenewCredentialResource(setup, locationInfo, foreground),
+        renewCredential: () => initRenewCredentialResource(locationInfo, foreground),
 
         passwordLogin: () =>
             initPasswordLoginResource(locationInfo, foreground, {
