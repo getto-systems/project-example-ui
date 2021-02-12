@@ -20,16 +20,14 @@ class FormComponent
     readonly loginID: LoginIDFormFieldComponent
 
     constructor(material: PasswordResetSessionFormMaterial) {
-        super(material, {
-            findFieldInput: (path) => {
-                switch (path.field) {
-                    case "loginID":
-                        return { found: true, input: this.loginID.input }
+        super(material, (path) => {
+            switch (path.field) {
+                case "loginID":
+                    return { found: true, input: this.loginID.input }
 
-                    default:
-                        return { found: false }
-                }
-            },
+                default:
+                    return { found: false }
+            }
         })
 
         this.loginID = this.initField(

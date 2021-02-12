@@ -10,7 +10,7 @@ import {
     FormInputMaterial,
     FormMaterial,
     FormComponent,
-    FormHandler,
+    FormInputFinder,
 } from "./component"
 
 import { FormChangeEvent, FormInputEvent } from "../../form/event"
@@ -27,12 +27,12 @@ export class FormBaseComponent<M extends FormMaterial>
     extends ApplicationBaseComponent<FormComponentState>
     implements FormComponent {
     material: M
-    handler: FormHandler
+    finder: FormInputFinder
 
-    constructor(material: M, handler: FormHandler) {
+    constructor(material: M, finder: FormInputFinder) {
         super()
         this.material = material
-        this.handler = handler
+        this.finder = finder
     }
 
     initField<F extends FormFieldComponent<S, E>, S, E>(
@@ -82,7 +82,7 @@ export class FormBaseComponent<M extends FormMaterial>
         }
     }
     restore(item: FormHistoryStackItem): void {
-        const result = this.handler.findFieldInput(item.path)
+        const result = this.finder(item.path)
         if (!result.found) {
             return
         }
