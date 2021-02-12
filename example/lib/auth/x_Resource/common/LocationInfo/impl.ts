@@ -1,7 +1,7 @@
 import { detectPagePathname } from "../../../common/application/impl/location"
 import { detectResetToken } from "../../../profile/passwordReset/impl/location"
 
-import { LoginLocationInfo } from "../location"
+import { LoginLocationInfo } from "./locationInfo"
 
 export function initLoginLocationInfo(currentURL: URL): LoginLocationInfo {
     return {

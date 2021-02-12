@@ -1,6 +1,6 @@
 import { initPasswordResetResource } from "./impl"
 
-import { initLoginLocationInfo } from "../../common/impl/location"
+import { initLoginLocationInfo } from "../../common/LocationInfo/impl"
 
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
 import { initTestAuthCredentialStorage } from "../../../login/credentialStore/tests/storage"

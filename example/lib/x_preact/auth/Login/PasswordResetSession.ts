@@ -35,8 +35,8 @@ import {
 export function PasswordResetSession({ resource, terminate }: PasswordResetSessionEntryPoint): VNode {
     useTermination(terminate)
 
-    const { session: resetSession } = resource
-    const state = useComponent(resetSession, initialPasswordResetSessionComponentState)
+    const { session } = resource
+    const state = useComponent(session, initialPasswordResetSessionComponentState)
     const formState = useComponent(resource.form, initialFormComponentState)
 
     switch (state.type) {
@@ -122,7 +122,7 @@ export function PasswordResetSession({ resource, terminate }: PasswordResetSessi
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    resetSession.startSession(resource.form.getStartSessionFields())
+                    session.startSession(resource.form.getStartSessionFields())
                 }
             }
             function connectingButton(): VNode {
@@ -196,7 +196,7 @@ export function PasswordResetSession({ resource, terminate }: PasswordResetSessi
     }
 
     function loginLink(): VNode {
-        return html`<a href="${resetSession.link.passwordLogin()}">
+        return html`<a href="${resource.link.passwordLogin()}">
             ${icon("user")} ログインIDとパスワードでログインする
         </a>`
     }
