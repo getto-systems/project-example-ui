@@ -4,10 +4,10 @@ import { useEffect } from "preact/hooks"
 import { EntryPoint } from "./EntryPoint"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
-import { newMockLoginAsPasswordResetSession } from "../../../auth/x_components/Login/EntryPoint/mock"
-import { PasswordResetSessionMockProps } from "../../../auth/x_components/Login/passwordResetSession/mock"
+import { newMockLoginAsPasswordResetSession } from "../../../auth/z_EntryPoint/Login/EntryPoint/mock"
+import { PasswordResetSessionResourceMockProps } from "../../../auth/x_Resource/Profile/PasswordResetSession/mock"
 import { formValidationStates } from "../../../sub/getto-form/x_components/Form/mock"
-import { loginIDFormFieldValidations } from "../../../auth/x_components/Login/field/loginID/mock"
+import { loginIDFormFieldValidations } from "../../../auth/x_Resource/Field/LoginID/mock"
 
 export default {
     title: "Auth/Login/PasswordResetSession",
@@ -30,9 +30,9 @@ export default {
     },
 }
 
-type MockProps = PasswordResetSessionMockProps
+type MockProps = PasswordResetSessionResourceMockProps
 const Template: Story<MockProps> = (args) => {
-    const passer = initMockPropsPasser<PasswordResetSessionMockProps>()
+    const passer = initMockPropsPasser<PasswordResetSessionResourceMockProps>()
     const entryPoint = newMockLoginAsPasswordResetSession(passer)
     return h(Preview, { args })
 

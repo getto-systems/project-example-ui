@@ -18,7 +18,7 @@ import { poweredBy } from "../site"
 import {
     MenuListComponent,
     initialMenuListComponentState,
-} from "../../../auth/x_components/Outline/menuList/component"
+} from "../../../auth/z_EntryPoint/Outline/menuList/component"
 
 import { Menu, MenuCategoryNode, MenuItemNode, LoadMenuError } from "../../../auth/permission/menu/data"
 

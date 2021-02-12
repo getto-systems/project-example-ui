@@ -1,6 +1,6 @@
 import { render, h } from "preact"
 
-import { newLoginAsWorkerForeground } from "../../../../auth/x_components/Login/EntryPoint/main/worker/foreground"
+import { newLoginAsWorkerForeground } from "../../../../auth/z_EntryPoint/Login/EntryPoint/main/worker/foreground"
 
 import { EntryPoint } from "../../../../x_preact/auth/Login/EntryPoint"
 

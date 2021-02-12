@@ -6,8 +6,8 @@ import { detectMenuTarget } from "../../../../../auth/permission/menu/impl/locat
 import { detectContentPath } from "../../../../content/impl/location"
 
 import { initErrorComponent } from "../../../../../available/x_components/Error/error/impl"
-import { initMenuListComponent } from "../../../../../auth/x_components/Outline/menuList/impl"
-import { initBreadcrumbListComponent } from "../../../../../auth/x_components/Outline/breadcrumbList/impl"
+import { initMenuListComponent } from "../../../../../auth/z_EntryPoint/Outline/menuList/impl"
+import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/impl"
 import { initContentComponent } from "../../content/impl"
 
 import { initNotifyAction } from "../../../../../available/notify/main/notify"

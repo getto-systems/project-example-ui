@@ -18,7 +18,7 @@ import { MenuList } from "../../z_common/Outline/MenuList"
 import { BreadcrumbList } from "../../z_common/Outline/BreadcrumbList"
 import { Logout } from "./Logout"
 
-import { ProfileEntryPoint } from "../../../auth/x_components/Profile/EntryPoint/entryPoint"
+import { ProfileEntryPoint } from "../../../auth/z_EntryPoint/Profile/EntryPoint/entryPoint"
 
 type Props = ProfileEntryPoint
 export function EntryPoint({ resource, terminate }: Props): VNode {

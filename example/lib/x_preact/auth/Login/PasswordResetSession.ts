@@ -19,9 +19,9 @@ import { icon, spinner } from "../../z_common/icon"
 import { ApplicationError } from "../../z_common/System/ApplicationError"
 import { LoginIDFormField } from "./field/loginID"
 
-import { PasswordResetSessionResource } from "../../../auth/x_components/Login/passwordResetSession/resource"
+import { PasswordResetSessionResource } from "../../../auth/x_Resource/Profile/PasswordResetSession/resource"
 
-import { initialPasswordResetSessionComponentState } from "../../../auth/x_components/Login/passwordResetSession/component"
+import { initialPasswordResetSessionComponentState } from "../../../auth/x_Resource/Profile/PasswordResetSession/Session/component"
 import { initialFormComponentState } from "../../../sub/getto-form/x_components/Form/component"
 
 import {
@@ -34,7 +34,7 @@ import {
 
 type Props = PasswordResetSessionResource
 export function PasswordResetSession(resource: Props): VNode {
-    const { resetSession } = resource
+    const { session: resetSession } = resource
     const state = useComponent(resetSession, initialPasswordResetSessionComponentState)
     const formState = useComponent(resource.form, initialFormComponentState)
 

@@ -7,7 +7,7 @@ import { initMockPropsPasser } from "../../../sub/getto-example/x_components/App
 import {
     LogoutMockProps,
     initMockLogoutComponent,
-} from "../../../auth/x_components/Profile/logout/mock"
+} from "../../../auth/z_EntryPoint/Profile/logout/mock"
 
 export default {
     title: "Auth/Profile/Logout",

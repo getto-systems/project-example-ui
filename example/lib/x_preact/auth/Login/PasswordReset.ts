@@ -22,9 +22,9 @@ import { ApplicationError } from "../../z_common/System/ApplicationError"
 import { LoginIDFormField } from "./field/loginID"
 import { PasswordFormField } from "./field/password"
 
-import { PasswordResetResource } from "../../../auth/x_components/Login/passwordReset/resource"
+import { PasswordResetResource } from "../../../auth/x_Resource/Profile/PasswordReset/resource"
 
-import { initialPasswordResetComponentState } from "../../../auth/x_components/Login/passwordReset/component"
+import { initialPasswordResetComponentState } from "../../../auth/x_Resource/Profile/PasswordReset/Reset/component"
 import { initialFormComponentState } from "../../../sub/getto-form/x_components/Form/component"
 
 import { ResetError } from "../../../auth/profile/passwordReset/data"

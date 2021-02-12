@@ -15,7 +15,7 @@ import { MenuList } from "./MenuList"
 import { SeasonInfo } from "./SeasonInfo"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
-import { initMockMenuListComponent, MenuListMockProps } from "../../../auth/x_components/Outline/menuList/mock"
+import { initMockMenuListComponent, MenuListMockProps } from "../../../auth/z_EntryPoint/Outline/menuList/mock"
 import { SeasonInfoMockProps, initMockSeasonInfoComponent } from "../../../example/x_components/Outline/seasonInfo/mock"
 
 export default {

@@ -1,6 +1,6 @@
 import { render, h } from "preact"
 
-import { newNotFoundAsSingle } from "../../../../auth/x_components/NotFound/EntryPoint/main/single"
+import { newNotFoundAsSingle } from "../../../../available/x_components/NotFound/EntryPoint/main/single"
 
 import { EntryPoint } from "../../../../x_preact/auth/NotFound/NotFound"
 

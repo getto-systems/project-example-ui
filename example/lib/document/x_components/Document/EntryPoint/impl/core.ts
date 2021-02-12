@@ -1,8 +1,8 @@
 import { DocumentResource } from "../entryPoint"
 
 import { ErrorComponentFactory } from "../../../../../available/x_components/Error/error/component"
-import { MenuListComponentFactory } from "../../../../../auth/x_components/Outline/menuList/component"
-import { BreadcrumbListComponentFactory } from "../../../../../auth/x_components/Outline/breadcrumbList/component"
+import { MenuListComponentFactory } from "../../../../../auth/z_EntryPoint/Outline/menuList/component"
+import { BreadcrumbListComponentFactory } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/component"
 
 import { ContentComponentFactory } from "../../content/component"
 

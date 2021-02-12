@@ -12,7 +12,7 @@ import { useComponent } from "../../z_common/hooks"
 import {
     LogoutComponent,
     initialLogoutComponentState,
-} from "../../../auth/x_components/Profile/logout/component"
+} from "../../../auth/z_EntryPoint/Profile/logout/component"
 
 import { StorageError } from "../../../auth/common/credential/data"
 

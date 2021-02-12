@@ -4,8 +4,8 @@ import { useEffect } from "preact/hooks"
 import { EntryPoint } from "./EntryPoint"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/x_components/Application/mock"
-import { newMockLoginAsRenewCredential } from "../../../auth/x_components/Login/EntryPoint/mock"
-import { RenewCredentialMockProps } from "../../../auth/x_components/Login/renewCredential/mock"
+import { newMockLoginAsRenewCredential } from "../../../auth/z_EntryPoint/Login/EntryPoint/mock"
+import { RenewCredentialResourceMockProps } from "../../../auth/x_Resource/Login/RenewCredential/mock"
 
 export default {
     title: "Auth/Login/RenewCredential",
@@ -16,9 +16,9 @@ export default {
     },
 }
 
-type MockProps = RenewCredentialMockProps
+type MockProps = RenewCredentialResourceMockProps
 const Template: Story<MockProps> = (args) => {
-    const passer = initMockPropsPasser<RenewCredentialMockProps>()
+    const passer = initMockPropsPasser<RenewCredentialResourceMockProps>()
     const entryPoint = newMockLoginAsRenewCredential(passer)
     return h(Preview, { args })
 

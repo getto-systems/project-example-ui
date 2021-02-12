@@ -8,7 +8,7 @@ import { initMockPropsPasser } from "../../../sub/getto-example/x_components/App
 import {
     BreadcrumbListMockProps,
     initMockBreadcrumbListComponent,
-} from "../../../auth/x_components/Outline/breadcrumbList/mock"
+} from "../../../auth/z_EntryPoint/Outline/breadcrumbList/mock"
 
 export default {
     title: "Outline/BreadcrumbList",

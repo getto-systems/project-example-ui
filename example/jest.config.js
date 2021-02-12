@@ -15,6 +15,7 @@ module.exports = {
     "!lib/**/component.ts",
     "!lib/**/infra.ts",
     "!lib/**/mock.ts",
+    "!lib/**/test.ts",
   ],
   "coverageThreshold": {
     "global": {
