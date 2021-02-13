@@ -1,7 +1,7 @@
-import { LoginEvent } from "../../../../sign/passwordLogin/event"
+import { SubmitEvent } from "../../../../sign/password/login/event"
 import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../../sign/passwordReset/event"
 
-import { LoginFields } from "../../../../sign/passwordLogin/data"
+import { LoginFields } from "../../../../sign/password/login/data"
 import {
     StartSessionFields,
     ResetFields,
@@ -17,7 +17,7 @@ export type ForegroundMessage =
     | Readonly<{ type: "reset"; message: ProxyMessage<ResetProxyMessage> }>
 
 export type BackgroundMessage =
-    | Readonly<{ type: "login"; response: ProxyResponse<LoginEvent> }>
+    | Readonly<{ type: "login"; response: ProxyResponse<SubmitEvent> }>
     | Readonly<{ type: "startSession"; response: ProxyResponse<StartSessionEvent> }>
     | Readonly<{ type: "checkStatus"; response: ProxyResponse<CheckStatusEvent> }>
     | Readonly<{ type: "reset"; response: ProxyResponse<ResetEvent> }>

@@ -1,12 +1,12 @@
 import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
 
-import { Login } from "../../../../sign/passwordLogin/action"
+import { LoginAction } from "../../../../sign/password/login/action"
 import { LocationAction } from "../../../../sign/location/action"
 import { ContinuousRenewAction } from "../../../../sign/authCredential/continuousRenew/action"
 
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 import { ScriptPath, LoadError } from "../../../../sign/location/data"
-import { LoginError, LoginFields } from "../../../../sign/passwordLogin/data"
+import { SubmitError, LoginFields } from "../../../../sign/password/login/data"
 import { StorageError } from "../../../../../common/auth/storage/data"
 
 export interface LoginComponentFactory {
@@ -14,9 +14,8 @@ export interface LoginComponentFactory {
 }
 export type LoginMaterial = Readonly<{
     continuousRenew: ContinuousRenewAction
+    login: LoginAction
     location: LocationAction
-
-    login: Login
 }>
 
 export interface LoginComponent extends ApplicationComponent<LoginComponentState> {
@@ -29,7 +28,7 @@ export type LoginComponentState =
     | Readonly<{ type: "try-to-login" }>
     | Readonly<{ type: "delayed-to-login" }>
     | Readonly<{ type: "try-to-load"; scriptPath: ScriptPath }>
-    | Readonly<{ type: "failed-to-login"; err: LoginError }>
+    | Readonly<{ type: "failed-to-login"; err: SubmitError }>
     | Readonly<{ type: "storage-error"; err: StorageError }>
     | Readonly<{ type: "load-error"; err: LoadError }>
     | Readonly<{ type: "error"; err: string }>

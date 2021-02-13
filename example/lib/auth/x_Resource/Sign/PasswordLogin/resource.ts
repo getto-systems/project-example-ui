@@ -5,7 +5,7 @@ import { FormAction } from "../../../../common/getto-form/form/action"
 import { LocationActionPod, LocationActionLocationInfo } from "../../../sign/location/action"
 import { LoginIDFormFieldAction } from "../../../../common/auth/field/loginID/action"
 import { PasswordFormFieldAction } from "../../../../common/auth/field/password/action"
-import { LoginAction } from "../../../sign/passwordLogin/action"
+import { LoginActionPod } from "../../../sign/password/login/action"
 import { ContinuousRenewActionPod } from "../../../sign/authCredential/continuousRenew/action"
 
 export type PasswordLoginResource = Readonly<{
@@ -24,6 +24,6 @@ export type PasswordLoginForegroundActionPod = Readonly<{
         password: PasswordFormFieldAction
     }>
 }>
-export type PasswordLoginBackgroundAction = Readonly<{
-    login: LoginAction
+export type PasswordLoginBackgroundActionPod = Readonly<{
+    initLogin: LoginActionPod
 }>

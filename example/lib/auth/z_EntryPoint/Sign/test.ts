@@ -2,7 +2,7 @@ import { initLoginViewLocationInfo, View } from "./impl"
 import { initLoginLocationInfo } from "../../x_Resource/common/LocationInfo/impl"
 
 import { initStaticClock } from "../../../z_infra/clock/simulate"
-import { initLoginSimulateRemoteAccess } from "../../sign/passwordLogin/impl/remote/login/simulate"
+import { initLoginSimulateRemoteAccess } from "../../sign/password/login/infra/remote/login/simulate"
 import { initRenewSimulateRemoteAccess } from "../../sign/authCredential/common/infra/remote/renew/simulate"
 import { initResetSimulateRemoteAccess } from "../../sign/passwordReset/impl/remote/reset/simulate"
 import {
@@ -21,11 +21,10 @@ import { initFormAction } from "../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../common/auth/field/loginID/main/loginID"
 import { initTestPasswordResetSessionAction } from "../../sign/passwordReset/tests/session"
 import { initPasswordFormFieldAction } from "../../../common/auth/field/password/main/password"
-import { initTestPasswordLoginAction } from "../../sign/passwordLogin/tests/login"
 import { initTestPasswordResetAction } from "../../sign/passwordReset/tests/reset"
 
 import { Clock } from "../../../z_infra/clock/infra"
-import { LoginRemoteAccessResult } from "../../sign/passwordLogin/infra"
+import { LoginRemoteAccessResult } from "../../sign/password/login/infra"
 import {
     GetStatusRemoteAccessResult,
     ResetRemoteAccessResult,
@@ -49,6 +48,7 @@ import { initRenewActionPod } from "../../sign/authCredential/renew/impl"
 import { delayed } from "../../../z_infra/delayed/core"
 import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/memory"
 import { initLocationActionPod } from "../../sign/location/impl"
+import { initLoginActionPod } from "../../sign/password/login/impl"
 
 const AUTHORIZED_TICKET_NONCE = "ticket-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
@@ -383,14 +383,13 @@ function standardPasswordLoginResource(
             },
         },
         {
-            login: initTestPasswordLoginAction(
-                {
-                    login: {
-                        delay: { delay_millisecond: 1 },
-                    },
+            initLogin: initLoginActionPod({
+                login: initLoginSimulateRemoteAccess(simulateLogin, { wait_millisecond: 0 }),
+                config: {
+                    delay: { delay_millisecond: 1 },
                 },
-                initLoginSimulateRemoteAccess(simulateLogin, { wait_millisecond: 0 })
-            ),
+                delayed,
+            }),
         }
     )
 }

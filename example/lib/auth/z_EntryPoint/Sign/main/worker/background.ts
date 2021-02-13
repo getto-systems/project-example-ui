@@ -1,10 +1,10 @@
-import { initPasswordLoginAction } from "../../../../sign/passwordLogin/main/login"
+import { newLoginActionPod } from "../../../../sign/password/login/main"
 import {
     initPasswordResetAction,
     initPasswordResetSessionAction,
 } from "../../../../sign/passwordReset/main/reset"
 
-import { LoginPod, LoginAction } from "../../../../sign/passwordLogin/action"
+import { LoginActionPod } from "../../../../sign/password/login/action"
 import {
     StartSessionPod,
     CheckStatusPod,
@@ -13,12 +13,8 @@ import {
     ResetSessionAction,
 } from "../../../../sign/passwordReset/action"
 
-import { LoginEvent } from "../../../../sign/passwordLogin/event"
-import {
-    CheckStatusEvent,
-    ResetEvent,
-    StartSessionEvent,
-} from "../../../../sign/passwordReset/event"
+import { SubmitEvent } from "../../../../sign/password/login/event"
+import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../../sign/passwordReset/event"
 
 import {
     ForegroundMessage,
@@ -33,7 +29,7 @@ import {
 
 export function initLoginWorker(worker: Worker): void {
     const material: Material = {
-        login: initPasswordLoginAction(),
+        login: newLoginActionPod(),
         resetSession: initPasswordResetSessionAction(),
         reset: initPasswordResetAction(),
     }
@@ -42,16 +38,16 @@ export function initLoginWorker(worker: Worker): void {
 }
 
 class LoginHandler {
-    login: LoginPod
-    post: Post<ProxyResponse<LoginEvent>>
+    login: LoginActionPod
+    post: Post<ProxyResponse<SubmitEvent>>
 
-    constructor(login: LoginPod, post: Post<ProxyResponse<LoginEvent>>) {
+    constructor(login: LoginActionPod, post: Post<ProxyResponse<SubmitEvent>>) {
         this.login = login
         this.post = post
     }
 
     handleMessage({ handlerID, message: { fields } }: ProxyMessage<LoginProxyMessage>): void {
-        this.login()(fields, (event) => {
+        this.login.initSubmit()(fields, (event) => {
             this.post({ handlerID, done: hasDone(), response: event })
 
             function hasDone() {
@@ -153,7 +149,7 @@ class ResetHandler {
 }
 
 type Material = Readonly<{
-    login: LoginAction
+    login: LoginActionPod
     resetSession: ResetSessionAction
     reset: ResetAction
 }>
@@ -187,7 +183,7 @@ type Handler = Readonly<{
 function initHandler(material: Material, postBackgroundMessage: Post<BackgroundMessage>): Handler {
     return {
         passwordLogin: {
-            login: new LoginHandler(material.login.login, (response) => {
+            login: new LoginHandler(material.login, (response) => {
                 postBackgroundMessage({ type: "login", response })
             }),
         },

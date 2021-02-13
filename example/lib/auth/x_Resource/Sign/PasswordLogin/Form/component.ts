@@ -12,7 +12,7 @@ import {
 } from "../../../common/Field/Password/component"
 
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
-import { LoginFields } from "../../../../sign/passwordLogin/data"
+import { LoginFields } from "../../../../sign/password/login/data"
 
 export interface FormComponentFactory {
     (material: FormMaterial): FormComponent

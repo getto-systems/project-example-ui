@@ -1,8 +1,19 @@
-import { LoginInfra } from "../infra"
+import { LoginActionInfra, Submit } from "./infra"
 
-import { LoginPod } from "../action"
+import { LoginAction, LoginActionPod } from "./action"
 
-export const login = (infra: LoginInfra): LoginPod => () => async (fields, post) => {
+export function initLoginAction(pod: LoginActionPod): LoginAction {
+    return {
+        submit: pod.initSubmit(),
+    }
+}
+export function initLoginActionPod(infra: LoginActionInfra): LoginActionPod {
+    return {
+        initSubmit: submit(infra),
+    }
+}
+
+const submit: Submit = (infra) => () => async (fields, post) => {
     if (!fields.success) {
         post({ type: "failed-to-login", err: { type: "validation-error" } })
         return

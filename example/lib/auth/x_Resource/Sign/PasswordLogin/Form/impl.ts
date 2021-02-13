@@ -7,7 +7,7 @@ import { PasswordFormFieldComponent } from "../../../common/Field/Password/compo
 import { FormComponentFactory, FormComponent, FormMaterial } from "./component"
 
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
-import { LoginFields } from "../../../../sign/passwordLogin/data"
+import { LoginFields } from "../../../../sign/password/login/data"
 
 export const initFormComponent: FormComponentFactory = (material) => new Component(material)
 

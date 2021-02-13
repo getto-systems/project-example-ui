@@ -1,11 +1,11 @@
-import { initConnectRemoteAccess } from "../../../../../../z_infra/remote/connect"
+import { initConnectRemoteAccess } from "../../../../../../../z_infra/remote/connect"
 
 import { LoginRemoteAccess, LoginRemoteResponse } from "../../../infra"
 
-import { LoginFields, LoginRemoteError } from "../../../data"
-import { RawRemoteAccess, RemoteAccessError } from "../../../../../../z_infra/remote/infra"
-import { markAuthAt, markTicketNonce } from "../../../../authCredential/common/data"
-import { markApiNonce, markApiRoles } from "../../../../../../common/auth/apiCredential/data"
+import { LoginFields, SubmitRemoteError } from "../../../data"
+import { RawRemoteAccess, RemoteAccessError } from "../../../../../../../z_infra/remote/infra"
+import { markAuthAt, markTicketNonce } from "../../../../../authCredential/common/data"
+import { markApiNonce, markApiRoles } from "../../../../../../../common/auth/apiCredential/data"
 
 type LoginRawRemoteAccess = RawRemoteAccess<LoginFields, RawAuthCredential>
 type RawAuthCredential = Readonly<{
@@ -23,7 +23,7 @@ export function initLoginConnectRemoteAccess(access: LoginRawRemoteAccess): Logi
                 apiRoles: markApiRoles(response.api.apiRoles),
             },
         }),
-        error: (err: RemoteAccessError): LoginRemoteError => {
+        error: (err: RemoteAccessError): SubmitRemoteError => {
             switch (err.type) {
                 case "bad-request":
                 case "invalid-password-login":
@@ -37,6 +37,6 @@ export function initLoginConnectRemoteAccess(access: LoginRawRemoteAccess): Logi
                     return { type: "infra-error", err: err.detail }
             }
         },
-        unknown: (err: unknown): LoginRemoteError => ({ type: "infra-error", err: `${err}` }),
+        unknown: (err: unknown): SubmitRemoteError => ({ type: "infra-error", err: `${err}` }),
     })
 }
