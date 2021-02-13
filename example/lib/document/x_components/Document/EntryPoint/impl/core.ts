@@ -1,6 +1,6 @@
 import { DocumentResource } from "../entryPoint"
 
-import { ErrorComponentFactory } from "../../../../../available/x_components/Error/error/component"
+import { ErrorComponentFactory } from "../../../../../availability/x_Resource/Error/error/component"
 import { MenuListComponentFactory } from "../../../../../auth/z_EntryPoint/Outline/menuList/component"
 import { BreadcrumbListComponentFactory } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/component"
 
@@ -10,7 +10,7 @@ import { CredentialAction } from "../../../../../auth/common/credential/action"
 import { MenuAction, MenuLocationInfo } from "../../../../../auth/permission/menu/action"
 
 import { ContentAction, LoadContentLocationInfo } from "../../../../content/action"
-import { NotifyAction } from "../../../../../available/notify/action"
+import { NotifyAction } from "../../../../../availability/notify/action"
 
 export type DocumentFactory = Readonly<{
     actions: Readonly<{

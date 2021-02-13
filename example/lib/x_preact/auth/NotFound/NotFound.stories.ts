@@ -6,8 +6,8 @@ import { noPadded } from "../../z_storybook/display"
 import { EntryPoint } from "./NotFound"
 
 import { initMockPropsPasser } from "../../../common/getto-example/Application/mock"
-import { newMockNotFound } from "../../../available/x_components/NotFound/EntryPoint/mock"
-import { CurrentVersionMockProps } from "../../../available/x_components/NotFound/currentVersion/mock"
+import { newMockNotFound } from "../../../availability/z_EntryPoint/NotFound/mock"
+import { CurrentVersionMockProps } from "../../../availability/x_Resource/NotFound/currentVersion/mock"
 
 export default {
     title: "Auth/NotFound",

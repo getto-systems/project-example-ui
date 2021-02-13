@@ -11,12 +11,12 @@ import { icon } from "../../common/icon"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
-import { NotFoundEntryPoint } from "../../../available/x_components/NotFound/EntryPoint/entryPoint"
+import { NotFoundEntryPoint } from "../../../availability/z_EntryPoint/NotFound/entryPoint"
 
 import {
     CurrentVersionComponent,
     initialCurrentVersionComponentState,
-} from "../../../available/x_components/NotFound/currentVersion/component"
+} from "../../../availability/x_Resource/NotFound/currentVersion/component"
 
 export function EntryPoint({ resource, terminate }: NotFoundEntryPoint): VNode {
     useTermination(terminate)

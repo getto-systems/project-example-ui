@@ -1,4 +1,4 @@
-import { initTestNotifyAction } from "../../../../../available/notify/tests/notify"
+import { initTestNotifyAction } from "../../../../../availability/notify/tests/notify"
 import { initTestCredentialAction } from "../../../../../auth/common/credential/tests/credential"
 import { initTestMenuAction } from "../../../../../auth/permission/menu/tests/menu"
 
@@ -7,7 +7,7 @@ import { detectContentPath } from "../../../../content/impl/location"
 
 import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
 
-import { initErrorComponent } from "../../../../../available/x_components/Error/error/impl"
+import { initErrorComponent } from "../../../../../availability/x_Resource/Error/error/impl"
 import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/impl"
 import { initMenuListComponent } from "../../../../../auth/z_EntryPoint/Outline/menuList/impl"
 import { initContentComponent } from "../../content/impl"

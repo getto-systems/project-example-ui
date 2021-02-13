@@ -5,12 +5,12 @@ import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../
 import { detectMenuTarget } from "../../../../../auth/permission/menu/impl/location"
 import { detectContentPath } from "../../../../content/impl/location"
 
-import { initErrorComponent } from "../../../../../available/x_components/Error/error/impl"
+import { initErrorComponent } from "../../../../../availability/x_Resource/Error/error/impl"
 import { initMenuListComponent } from "../../../../../auth/z_EntryPoint/Outline/menuList/impl"
 import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/impl"
 import { initContentComponent } from "../../content/impl"
 
-import { initNotifyAction } from "../../../../../available/notify/main/notify"
+import { initNotifyAction } from "../../../../../availability/notify/main/notify"
 import { initCredentialAction } from "../../../../../auth/common/credential/main/credential"
 import { initDocumentMenuAction } from "../../../../../auth/permission/menu/main/documentMenu"
 

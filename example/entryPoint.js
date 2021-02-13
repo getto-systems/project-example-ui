@@ -8,7 +8,12 @@ module.exports = {
 }
 
 function findPublicEntries() {
-    return ["available/moveToLatestVersion", "available/moveToNextVersion", "auth/login", "auth/notFound"]
+    return [
+        "availability/moveToLatestVersion",
+        "availability/moveToNextVersion",
+        "auth/login",
+        "auth/notFound",
+    ]
 }
 
 function findSecureFiles() {

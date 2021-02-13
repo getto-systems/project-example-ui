@@ -6,7 +6,7 @@ import {
 import {
     ErrorComponent,
     ErrorComponentFactory,
-} from "../../../available/x_components/Error/error/component"
+} from "../../../availability/x_Resource/Error/error/component"
 import {
     SeasonInfoComponent,
     SeasonInfoComponentFactory,
@@ -17,7 +17,7 @@ import {
     BreadcrumbListComponentFactory,
 } from "../Outline/breadcrumbList/component"
 
-import { NotifyAction } from "../../../available/notify/action"
+import { NotifyAction } from "../../../availability/notify/action"
 import { CredentialAction } from "../../common/credential/action"
 import { MenuAction, MenuLocationInfo } from "../../permission/menu/action"
 import { SeasonAction } from "../../../example/shared/season/action"

@@ -6,7 +6,7 @@ import {
     initMockMenuListComponent,
     MenuListMockPropsPasser,
 } from "../Outline/menuList/mock"
-import { initMockErrorComponent } from "../../../available/x_components/Error/error/mock"
+import { initMockErrorComponent } from "../../../availability/x_Resource/Error/error/mock"
 import { initMockSeasonInfoComponent, SeasonInfoMockPropsPasser } from "../../../example/x_components/Outline/seasonInfo/mock"
 import { LogoutMockPropsPasser, initMockLogoutComponent } from "../../x_Resource/Login/ClearCredential/Logout/mock"
 
