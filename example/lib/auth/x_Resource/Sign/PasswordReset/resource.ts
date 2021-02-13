@@ -2,7 +2,7 @@ import { ResetComponent } from "./Reset/component"
 import { FormComponent } from "./Form/component"
 
 import { FormAction } from "../../../../common/getto-form/form/action"
-import { ApplicationAction, SecureScriptPathLocationInfo } from "../../../sign/location/action"
+import { LocationActionPod, LocationActionLocationInfo } from "../../../sign/location/action"
 import { LoginIDFormFieldAction } from "../../../../common/auth/field/loginID/action"
 import { PasswordFormFieldAction } from "../../../../common/auth/field/password/action"
 import { ResetAction, ResetLocationInfo } from "../../../sign/passwordReset/action"
@@ -13,14 +13,14 @@ export type PasswordResetResource = Readonly<{
     form: FormComponent
 }>
 
-export type PasswordResetLocationInfo = Readonly<{
-    application: SecureScriptPathLocationInfo
-    reset: ResetLocationInfo
-}>
+export type PasswordResetLocationInfo = LocationActionLocationInfo &
+    Readonly<{
+        reset: ResetLocationInfo
+    }>
 export type PasswordResetForegroundActionPod = Readonly<{
     initContinuousRenew: ContinuousRenewActionPod
+    initLocation: LocationActionPod
 
-    application: ApplicationAction
     form: Readonly<{
         core: FormAction
         loginID: LoginIDFormFieldAction

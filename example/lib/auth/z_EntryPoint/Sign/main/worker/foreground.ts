@@ -12,7 +12,7 @@ import { initPasswordResetResource } from "../../../../x_Resource/Sign/PasswordR
 import { initPasswordResetSessionResource } from "../../../../x_Resource/Sign/PasswordResetSession/impl"
 import { initRenewCredentialResource } from "../../../../x_Resource/Sign/RenewCredential/impl"
 
-import { initApplicationAction } from "../../../../sign/location/main/application"
+import { newLocationActionPod } from "../../../../sign/location/main"
 import { initFormAction } from "../../../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../../common/auth/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../../common/auth/field/password/main/password"
@@ -57,7 +57,7 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
         initRenew: newRenewActionPod(webStorage),
         initContinuousRenew: newContinuousRenewActionPod(webStorage),
 
-        application: initApplicationAction(),
+        initLocation: newLocationActionPod(),
 
         form: {
             core: initFormAction(),

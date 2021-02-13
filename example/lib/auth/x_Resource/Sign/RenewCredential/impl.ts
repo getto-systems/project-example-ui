@@ -9,6 +9,7 @@ import {
 import { RenewMaterial } from "./Renew/component"
 import { initRenewAction } from "../../../sign/authCredential/renew/impl"
 import { initContinuousRenewAction } from "../../../sign/authCredential/continuousRenew/impl"
+import { initLocationAction } from "../../../sign/location/impl"
 
 export function initRenewCredentialResource(
     locationInfo: RenewCredentialLocationInfo,
@@ -22,8 +23,7 @@ export function initRenewCredentialResource(
         return {
             renew: initRenewAction(foreground.initRenew),
             continuousRenew: initContinuousRenewAction(foreground.initContinuousRenew),
-
-            secureScriptPath: foreground.application.secureScriptPath(locationInfo.application),
+            location: initLocationAction(foreground.initLocation, locationInfo),
         }
     }
 }

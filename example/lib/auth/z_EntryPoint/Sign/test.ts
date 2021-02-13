@@ -17,7 +17,6 @@ import { initPasswordLoginResource } from "../../x_Resource/Sign/PasswordLogin/i
 import { initPasswordResetSessionResource } from "../../x_Resource/Sign/PasswordResetSession/impl"
 import { initPasswordResetResource } from "../../x_Resource/Sign/PasswordReset/impl"
 
-import { initTestApplicationAction } from "../../sign/location/tests/application"
 import { initFormAction } from "../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../common/auth/field/loginID/main/loginID"
 import { initTestPasswordResetSessionAction } from "../../sign/passwordReset/tests/session"
@@ -49,6 +48,7 @@ import { initContinuousRenewActionPod } from "../../sign/authCredential/continuo
 import { initRenewActionPod } from "../../sign/authCredential/renew/impl"
 import { delayed } from "../../../z_infra/delayed/core"
 import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/memory"
+import { initLocationActionPod } from "../../sign/location/impl"
 
 const AUTHORIZED_TICKET_NONCE = "ticket-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
@@ -370,9 +370,8 @@ function standardPasswordLoginResource(
                 },
                 clock,
             }),
-
-            application: initTestApplicationAction({
-                secureScriptPath: {
+            initLocation: initLocationActionPod({
+                config: {
                     secureServerHost: standardSecureHost(),
                 },
             }),
@@ -414,9 +413,8 @@ function standardPasswordResetResource(
                 },
                 clock,
             }),
-
-            application: initTestApplicationAction({
-                secureScriptPath: {
+            initLocation: initLocationActionPod({
+                config: {
                     secureServerHost: standardSecureHost(),
                 },
             }),
@@ -442,12 +440,6 @@ function standardPasswordResetResource(
 function standardPasswordResetSessionResource() {
     return initPasswordResetSessionResource(
         {
-            application: initTestApplicationAction({
-                secureScriptPath: {
-                    secureServerHost: standardSecureHost(),
-                },
-            }),
-
             form: {
                 core: initFormAction(),
                 loginID: initLoginIDFormFieldAction(),
@@ -507,9 +499,8 @@ function standardRenewCredentialResource(
             },
             clock,
         }),
-
-        application: initTestApplicationAction({
-            secureScriptPath: {
+        initLocation: initLocationActionPod({
+            config: {
                 secureServerHost: standardSecureHost(),
             },
         }),

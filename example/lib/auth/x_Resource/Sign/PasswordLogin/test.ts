@@ -6,7 +6,6 @@ import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate
 import { initLoginSimulateRemoteAccess } from "../../../sign/passwordLogin/impl/remote/login/simulate"
 import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/common/infra/remote/renew/simulate"
 
-import { initTestApplicationAction } from "../../../sign/location/tests/application"
 import { initTestPasswordLoginAction } from "../../../sign/passwordLogin/tests/login"
 import { initFormAction } from "../../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
@@ -33,6 +32,7 @@ import {
     RenewRemoteAccessResult,
 } from "../../../sign/authCredential/common/infra"
 import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
+import { initLocationActionPod } from "../../../sign/location/impl"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -691,8 +691,7 @@ function newTestPasswordLoginResource(
                 config: config.continuousRenew,
                 clock,
             }),
-
-            application: initTestApplicationAction(config.application),
+            initLocation: initLocationActionPod({ config: config.location }),
 
             form: {
                 core: initFormAction(),
@@ -711,10 +710,8 @@ function standardURL(): URL {
 }
 function standardConfig() {
     return {
-        application: {
-            secureScriptPath: {
-                secureServerHost: "secure.example.com",
-            },
+        location: {
+            secureServerHost: "secure.example.com",
         },
         passwordLogin: {
             login: {

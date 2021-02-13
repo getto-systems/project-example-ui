@@ -1,6 +1,6 @@
 import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
 
-import { SecureScriptPath } from "../../../../sign/location/action"
+import { LocationAction } from "../../../../sign/location/action"
 
 import { StorageError } from "../../../../../common/auth/storage/data"
 import { RequestError } from "../../../../sign/authCredential/renew/data"
@@ -15,8 +15,7 @@ export interface RenewComponentFactory {
 export type RenewMaterial = Readonly<{
     renew: RenewAction
     continuousRenew: ContinuousRenewAction
-
-    secureScriptPath: SecureScriptPath
+    location: LocationAction
 }>
 
 export interface RenewComponent extends ApplicationComponent<RenewComponentState> {

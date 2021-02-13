@@ -1,11 +1,14 @@
-export type ApplicationActionConfig = Readonly<{
-    secureScriptPath: SecureScriptPathConfig
-}>
+import { GetSecureScriptPathPod } from "./action"
 
-export type SecureScriptPathInfra = Readonly<{
-    config: SecureScriptPathConfig
-}>
+export type LocationActionInfra = GetSecureScriptPathInfra
 
-export type SecureScriptPathConfig = Readonly<{
+export type GetSecureScriptPathInfra = Readonly<{
+    config: GetSecureScriptPathConfig
+}>
+export type GetSecureScriptPathConfig = Readonly<{
     secureServerHost: string
 }>
+
+export interface GetSecureScriptPath {
+    (infra: GetSecureScriptPathInfra): GetSecureScriptPathPod
+}
