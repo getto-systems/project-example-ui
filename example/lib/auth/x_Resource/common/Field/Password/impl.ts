@@ -8,7 +8,7 @@ import {
 } from "./component"
 import { FormFieldHandler, FormInputComponent } from "../../../../../common/getto-form/x_Resource/Form/component"
 
-import { PasswordValidationError, PasswordView } from "../../../../common/field/password/data"
+import { PasswordValidationError, PasswordView } from "../../../../../common/auth/field/password/data"
 
 export const initPasswordFormFieldComponent: PasswordFormFieldComponentFactory = (material) => (
     handler

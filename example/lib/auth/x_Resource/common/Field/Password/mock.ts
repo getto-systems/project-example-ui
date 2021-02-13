@@ -11,7 +11,7 @@ import {
     PasswordCharacter,
     PasswordValidationError,
     PasswordView,
-} from "../../../../common/field/password/data"
+} from "../../../../../common/auth/field/password/data"
 import { FormValidationResult, markInputString } from "../../../../../common/getto-form/form/data"
 
 export function initMockPasswordFormField(

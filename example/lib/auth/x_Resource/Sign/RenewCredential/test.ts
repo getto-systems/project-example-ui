@@ -7,7 +7,7 @@ import { initTestAuthCredentialStorage } from "../../../sign/authCredential/rene
 import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/renew/infra/remote/renew/simulate"
 import { initAuthCredentialRepository } from "../../../sign/authCredential/renew/infra/repository/authCredential"
 
-import { initTestApplicationAction } from "../../../common/application/tests/application"
+import { initTestApplicationAction } from "../../../sign/location/tests/application"
 import {
     initTestRenewAction,
     initTestSetContinuousRenewAction,
@@ -24,7 +24,7 @@ import { RenewCredentialResource } from "./resource"
 
 import { RenewComponentState } from "./Renew/component"
 
-import { markScriptPath } from "../../../common/application/data"
+import { markScriptPath } from "../../../sign/location/data"
 import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/renew/data"
 import { ApiCredentialRepository } from "../../../../common/auth/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../common/auth/apiCredential/impl"

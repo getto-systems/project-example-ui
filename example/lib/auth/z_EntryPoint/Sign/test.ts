@@ -20,15 +20,15 @@ import { initPasswordLoginResource } from "../../x_Resource/Sign/PasswordLogin/i
 import { initPasswordResetSessionResource } from "../../x_Resource/Profile/PasswordResetSession/impl"
 import { initPasswordResetResource } from "../../x_Resource/Profile/PasswordReset/impl"
 
-import { initTestApplicationAction } from "../../common/application/tests/application"
+import { initTestApplicationAction } from "../../sign/location/tests/application"
 import { initFormAction } from "../../../common/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../common/field/loginID/main/loginID"
+import { initLoginIDFormFieldAction } from "../../../common/auth/field/loginID/main/loginID"
 import { initTestPasswordResetSessionAction } from "../../sign/passwordReset/tests/session"
 import {
     initTestRenewAction,
     initTestSetContinuousRenewAction,
 } from "../../sign/authCredential/renew/tests/renew"
-import { initPasswordFormFieldAction } from "../../common/field/password/main/password"
+import { initPasswordFormFieldAction } from "../../../common/auth/field/password/main/password"
 import { initTestPasswordLoginAction } from "../../sign/passwordLogin/tests/login"
 import { initTestPasswordResetAction } from "../../sign/passwordReset/tests/reset"
 

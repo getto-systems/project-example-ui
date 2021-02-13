@@ -3,7 +3,7 @@ import { ApplicationBaseComponent } from "../../../../../common/getto-example/Ap
 import { LoginComponentFactory, LoginMaterial, LoginComponent, LoginComponentState } from "./component"
 
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
-import { LoadError } from "../../../../common/application/data"
+import { LoadError } from "../../../../sign/location/data"
 import { AuthCredential, storeAuthCredential } from "../../../../sign/authCredential/renew/data"
 import { LoginFields } from "../../../../sign/passwordLogin/data"
 

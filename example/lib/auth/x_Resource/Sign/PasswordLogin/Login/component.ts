@@ -2,10 +2,10 @@ import { ApplicationComponent } from "../../../../../common/getto-example/Applic
 
 import { Login } from "../../../../sign/passwordLogin/action"
 import { SetContinuousRenew } from "../../../../sign/authCredential/renew/action"
-import { SecureScriptPath } from "../../../../common/application/action"
+import { SecureScriptPath } from "../../../../sign/location/action"
 
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
-import { ScriptPath, LoadError } from "../../../../common/application/data"
+import { ScriptPath, LoadError } from "../../../../sign/location/data"
 import { LoginError, LoginFields } from "../../../../sign/passwordLogin/data"
 import { StorageError } from "../../../../sign/authCredential/renew/data"
 

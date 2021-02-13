@@ -1,5 +1,5 @@
-import { LoginID } from "../../common/loginID/data"
-import { Password } from "../../common/password/data"
+import { LoginID } from "../../../common/auth/loginID/data"
+import { Password } from "../../../common/auth/password/data"
 
 export type SessionID = string & { SessionID: never }
 export function markSessionID(sessionID: string): SessionID {

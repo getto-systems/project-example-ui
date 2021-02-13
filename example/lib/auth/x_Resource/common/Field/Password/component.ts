@@ -9,13 +9,13 @@ import {
     PasswordCharacterChecker,
     PasswordFormField,
     PasswordViewer,
-} from "../../../../common/field/password/action"
+} from "../../../../../common/auth/field/password/action"
 
 import {
     PasswordValidationError,
     PasswordCharacter,
     PasswordView,
-} from "../../../../common/field/password/data"
+} from "../../../../../common/auth/field/password/data"
 
 export interface PasswordFormFieldComponentFactory {
     (material: PasswordFormFieldMaterial): { (handler: FormFieldHandler): PasswordFormFieldComponent }

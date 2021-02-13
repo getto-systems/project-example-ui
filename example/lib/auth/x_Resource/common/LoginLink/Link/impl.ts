@@ -1,6 +1,6 @@
 import { LinkComponent } from "./component"
 
-import { AuthSearchParams } from "../../../../common/searchParams/data"
+import { AuthSearchParams } from "../../../../sign/location/data"
 
 export function initLinkComponent(): LinkComponent {
     return {

@@ -8,11 +8,11 @@ import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/rene
 import { initResetSimulateRemoteAccess } from "../../../sign/passwordReset/impl/remote/reset/simulate"
 import { initAuthCredentialRepository } from "../../../sign/authCredential/renew/infra/repository/authCredential"
 
-import { initTestApplicationAction } from "../../../common/application/tests/application"
+import { initTestApplicationAction } from "../../../sign/location/tests/application"
 import { initTestSetContinuousRenewAction } from "../../../sign/authCredential/renew/tests/renew"
 import { initFormAction } from "../../../../common/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../common/field/password/main/password"
+import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../../common/auth/field/password/main/password"
 import { initTestPasswordResetAction } from "../../../sign/passwordReset/tests/reset"
 
 import { Clock } from "../../../../z_infra/clock/infra"
@@ -27,7 +27,7 @@ import { PasswordResetResource } from "./resource"
 
 import { ResetComponentState } from "./Reset/component"
 
-import { markScriptPath } from "../../../common/application/data"
+import { markScriptPath } from "../../../sign/location/data"
 import { markInputString, toValidationError } from "../../../../common/getto-form/form/data"
 import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/renew/data"
 import { initMemoryApiCredentialRepository } from "../../../../common/auth/apiCredential/impl"

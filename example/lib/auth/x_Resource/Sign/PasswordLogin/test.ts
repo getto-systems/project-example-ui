@@ -9,12 +9,12 @@ import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/rene
 
 import { initAuthCredentialRepository } from "../../../sign/authCredential/renew/infra/repository/authCredential"
 
-import { initTestApplicationAction } from "../../../common/application/tests/application"
+import { initTestApplicationAction } from "../../../sign/location/tests/application"
 import { initTestSetContinuousRenewAction } from "../../../sign/authCredential/renew/tests/renew"
 import { initTestPasswordLoginAction } from "../../../sign/passwordLogin/tests/login"
 import { initFormAction } from "../../../../common/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../common/field/password/main/password"
+import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../../common/auth/field/password/main/password"
 
 import {
     AuthCredentialRepository,
@@ -29,7 +29,7 @@ import { PasswordLoginResource } from "./resource"
 import { LoginComponentState } from "./Login/component"
 
 import { markInputString, toValidationError } from "../../../../common/getto-form/form/data"
-import { markScriptPath } from "../../../common/application/data"
+import { markScriptPath } from "../../../sign/location/data"
 import { LoginFields } from "../../../sign/passwordLogin/data"
 import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/renew/data"
 import { ApiCredentialRepository } from "../../../../common/auth/apiCredential/infra"

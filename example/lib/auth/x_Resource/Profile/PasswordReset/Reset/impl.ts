@@ -2,7 +2,7 @@ import { ApplicationBaseComponent } from "../../../../../common/getto-example/Ap
 
 import { ResetComponentFactory, ResetMaterial, ResetComponent, ResetComponentState } from "./component"
 
-import { LoadError } from "../../../../common/application/data"
+import { LoadError } from "../../../../sign/location/data"
 import { AuthCredential, storeAuthCredential } from "../../../../sign/authCredential/renew/data"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 import { ResetFields } from "../../../../sign/passwordReset/data"

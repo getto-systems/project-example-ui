@@ -11,9 +11,9 @@ import { initPasswordResetSessionResource } from "../../../x_Resource/Profile/Pa
 import { initPasswordResetResource } from "../../../x_Resource/Profile/PasswordReset/impl"
 
 import { initRenewAction, initSetContinuousRenewAction } from "../../../sign/authCredential/renew/main/renew"
-import { initApplicationAction } from "../../../common/application/main/application"
-import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../common/field/password/main/password"
+import { initApplicationAction } from "../../../sign/location/main/application"
+import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../../common/auth/field/password/main/password"
 import { initPasswordLoginAction } from "../../../sign/passwordLogin/main/login"
 import {
     initPasswordResetAction,

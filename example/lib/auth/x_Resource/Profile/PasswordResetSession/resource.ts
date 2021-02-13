@@ -2,8 +2,8 @@ import { StartComponent } from "./Start/component"
 import { FormComponent } from "./Form/component"
 
 import { FormAction } from "../../../../common/getto-form/form/action"
-import { ApplicationAction } from "../../../common/application/action"
-import { LoginIDFormFieldAction } from "../../../common/field/loginID/action"
+import { ApplicationAction } from "../../../sign/location/action"
+import { LoginIDFormFieldAction } from "../../../../common/auth/field/loginID/action"
 import { ResetSessionAction } from "../../../sign/passwordReset/action"
 
 export type PasswordResetSessionResource = Readonly<{

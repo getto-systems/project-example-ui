@@ -1,5 +1,5 @@
-import { FormInput } from "../../../../common/getto-form/form/action"
-import { FormInputString } from "../../../../common/getto-form/form/data"
+import { FormInput } from "../../../getto-form/form/action"
+import { FormInputString } from "../../../getto-form/form/data"
 
 export type PasswordInput = FormInput
 
