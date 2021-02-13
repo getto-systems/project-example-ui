@@ -1,27 +1,27 @@
-import { RenewCredentialForegroundAction, RenewCredentialResource } from "../../x_Resource/Sign/RenewCredential/resource"
+import { RenewCredentialForegroundActionPod, RenewCredentialResource } from "../../x_Resource/Sign/RenewCredential/resource"
 import {
     PasswordLoginBackgroundAction,
-    PasswordLoginForegroundAction,
+    PasswordLoginForegroundActionPod,
     PasswordLoginResource,
 } from "../../x_Resource/Sign/PasswordLogin/resource"
 import {
     PasswordResetBackgroundAction,
-    PasswordResetForegroundAction,
+    PasswordResetForegroundActionPod,
     PasswordResetResource,
-} from "../../x_Resource/Profile/PasswordReset/resource"
+} from "../../x_Resource/Sign/PasswordReset/resource"
 import {
     PasswordResetSessionBackgroundAction,
     PasswordResetSessionForegroundAction,
     PasswordResetSessionResource,
-} from "../../x_Resource/Profile/PasswordResetSession/resource"
+} from "../../x_Resource/Sign/PasswordResetSession/resource"
 
 import { ApplicationComponent } from "../../../common/getto-example/Application/component"
 import { LoginLinkResource } from "../../x_Resource/common/LoginLink/resource"
 
-export type LoginForegroundAction = RenewCredentialForegroundAction &
-    PasswordLoginForegroundAction &
+export type LoginForegroundAction = RenewCredentialForegroundActionPod &
+    PasswordLoginForegroundActionPod &
     PasswordResetSessionForegroundAction &
-    PasswordResetForegroundAction
+    PasswordResetForegroundActionPod
 
 export type LoginBackgroundAction = PasswordLoginBackgroundAction &
     PasswordResetSessionBackgroundAction &

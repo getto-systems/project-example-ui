@@ -1,3 +1,6 @@
+import { newContinuousRenewActionPod } from "../../../../sign/authCredential/continuousRenew/main"
+import { newRenewActionPod } from "../../../../sign/authCredential/renew/main"
+
 import { env } from "../../../../../y_environment/env"
 
 import { initLoginViewLocationInfo, View } from "../../impl"
@@ -5,18 +8,14 @@ import { initLoginLocationInfo } from "../../../../x_Resource/common/LocationInf
 
 import { initLoginLinkResource } from "../../../../x_Resource/common/LoginLink/impl"
 import { initPasswordLoginResource } from "../../../../x_Resource/Sign/PasswordLogin/impl"
-import { initPasswordResetResource } from "../../../../x_Resource/Profile/PasswordReset/impl"
-import { initPasswordResetSessionResource } from "../../../../x_Resource/Profile/PasswordResetSession/impl"
+import { initPasswordResetResource } from "../../../../x_Resource/Sign/PasswordReset/impl"
+import { initPasswordResetSessionResource } from "../../../../x_Resource/Sign/PasswordResetSession/impl"
 import { initRenewCredentialResource } from "../../../../x_Resource/Sign/RenewCredential/impl"
 
 import { initApplicationAction } from "../../../../sign/location/main/application"
 import { initFormAction } from "../../../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../../common/auth/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../../common/auth/field/password/main/password"
-import {
-    initRenewAction,
-    initSetContinuousRenewAction,
-} from "../../../../sign/authCredential/renew/main/renew"
 
 import {
     LoginBackgroundAction,
@@ -55,9 +54,10 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
     const worker = new Worker(`/${env.version}/auth/login.worker.js`)
 
     const foreground: LoginForegroundAction = {
+        initRenew: newRenewActionPod(webStorage),
+        initContinuousRenew: newContinuousRenewActionPod(webStorage),
+
         application: initApplicationAction(),
-        renew: initRenewAction(webStorage),
-        setContinuousRenew: initSetContinuousRenewAction(webStorage),
 
         form: {
             core: initFormAction(),

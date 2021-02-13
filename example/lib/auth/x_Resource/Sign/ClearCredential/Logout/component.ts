@@ -1,6 +1,6 @@
 import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
 
-import { Logout } from "../../../../sign/authCredential/renew/action"
+import { ClearAction } from "../../../../sign/authCredential/clear/action"
 
 import { StorageError } from "../../../../../common/auth/storage/data"
 
@@ -8,7 +8,7 @@ export interface LogoutComponentFactory {
     (material: LogoutMaterial): LogoutComponent
 }
 export type LogoutMaterial = Readonly<{
-    logout: Logout
+    clear: ClearAction
 }>
 
 export interface LogoutComponent extends ApplicationComponent<LogoutComponentState> {

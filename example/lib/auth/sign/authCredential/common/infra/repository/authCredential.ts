@@ -1,14 +1,8 @@
 import { TypedStorage } from "../../../../../../z_infra/storage/infra"
-import { AuthCredentialRepository, StoreResult, LoadLastLoginResult } from "../../infra"
+import { AuthCredentialRepository, LoadLastLoginResult, StoreResult } from "../../infra"
 
 import { StorageError } from "../../../../../../common/auth/storage/data"
-import {
-    AuthAt,
-    AuthCredential,
-    markAuthAt,
-    markTicketNonce,
-    TicketNonce,
-} from "../../data"
+import { AuthAt, AuthCredential, markAuthAt, markTicketNonce, TicketNonce } from "../../data"
 
 export type AuthCredentialStorage = Readonly<{
     ticketNonce: TypedStorage<TicketNonce>

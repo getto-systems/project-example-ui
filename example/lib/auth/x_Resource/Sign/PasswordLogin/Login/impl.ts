@@ -4,8 +4,8 @@ import { LoginComponentFactory, LoginMaterial, LoginComponent, LoginComponentSta
 
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 import { LoadError } from "../../../../sign/location/data"
-import { AuthCredential, storeAuthCredential } from "../../../../sign/authCredential/renew/data"
 import { LoginFields } from "../../../../sign/passwordLogin/data"
+import { AuthCredential } from "../../../../sign/authCredential/common/data"
 
 export const initLoginComponent: LoginComponentFactory = (material) => new Component(material)
 
@@ -21,9 +21,7 @@ class Component extends ApplicationBaseComponent<LoginComponentState> implements
         this.material.login(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-login":
-                    this.setContinuousRenew(event.authCredential, () => {
-                        this.post({ type: "try-to-load", scriptPath: this.secureScriptPath() })
-                    })
+                    this.startContinuousRenew(event.authCredential)
                     return
 
                 default:
@@ -32,24 +30,25 @@ class Component extends ApplicationBaseComponent<LoginComponentState> implements
             }
         })
     }
+    startContinuousRenew(authCredential: AuthCredential): void {
+        this.material.continuousRenew.start(authCredential, (event) => {
+            switch (event.type) {
+                case "succeed-to-start-continuous-renew":
+                    this.post({ type: "try-to-load", scriptPath: this.secureScriptPath() })
+                    return
+
+                default:
+                    this.post(event)
+                    return
+            }
+        })
+    }
+
     loadError(err: LoadError): void {
         this.post({ type: "load-error", err })
     }
 
     secureScriptPath() {
         return this.material.secureScriptPath()
-    }
-    setContinuousRenew(authCredential: AuthCredential, hook: { (): void }): void {
-        this.material.setContinuousRenew(storeAuthCredential(authCredential), (event) => {
-            switch (event.type) {
-                case "succeed-to-set-continuous-renew":
-                    hook()
-                    return
-
-                default:
-                    this.post(event)
-                    return
-            }
-        })
     }
 }

@@ -1,7 +1,7 @@
 import { Delayed, Wait } from "../../../z_infra/delayed/infra"
 import { RemoteAccess, RemoteAccessResult, RemoteAccessSimulator } from "../../../z_infra/remote/infra"
 import { DelayTime, Limit, WaitTime } from "../../../z_infra/time/infra"
-import { AuthCredential } from "../authCredential/renew/data"
+import { AuthCredential } from "../authCredential/common/data"
 
 import {
     StartSessionFields,

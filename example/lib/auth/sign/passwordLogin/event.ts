@@ -1,4 +1,4 @@
-import { AuthCredential } from "../authCredential/renew/data"
+import { AuthCredential } from "../authCredential/common/data"
 import { LoginError } from "./data"
 
 export type LoginEvent =

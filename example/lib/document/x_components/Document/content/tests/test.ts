@@ -7,7 +7,7 @@ import { initMenuExpandRepository } from "../../../../../auth/permission/menu/im
 import { MenuTree } from "../../../../../auth/permission/menu/infra"
 
 import { ContentComponentState } from "../component"
-import { initMemoryApiCredentialRepository } from "../../../../../common/auth/apiCredential/impl"
+import { initMemoryApiCredentialRepository } from "../../../../../common/auth/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../common/auth/apiCredential/data"
 
 describe("Content", () => {
@@ -70,7 +70,7 @@ function standardRepository() {
     return {
         apiCredentials: initMemoryApiCredentialRepository({
             set: true,
-            value: { nonce: markApiNonce("api-nonce"), roles: markApiRoles(["role"]) },
+            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
         }),
         menuExpands: initMenuExpandRepository({
             menuExpand: initMemoryTypedStorage({ set: false }),

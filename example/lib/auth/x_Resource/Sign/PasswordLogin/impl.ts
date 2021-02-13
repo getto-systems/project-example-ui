@@ -3,17 +3,18 @@ import { initLoginComponent } from "./Login/impl"
 
 import {
     PasswordLoginBackgroundAction,
-    PasswordLoginForegroundAction,
+    PasswordLoginForegroundActionPod,
     PasswordLoginLocationInfo,
     PasswordLoginResource,
 } from "./resource"
 
 import { LoginMaterial } from "./Login/component"
 import { FormMaterial } from "./Form/component"
+import { initContinuousRenewAction } from "../../../sign/authCredential/continuousRenew/impl"
 
 export function initPasswordLoginResource(
     locationInfo: PasswordLoginLocationInfo,
-    foreground: PasswordLoginForegroundAction,
+    foreground: PasswordLoginForegroundActionPod,
     background: PasswordLoginBackgroundAction
 ): PasswordLoginResource {
     return {
@@ -23,7 +24,8 @@ export function initPasswordLoginResource(
 
     function loginMaterial(): LoginMaterial {
         return {
-            setContinuousRenew: foreground.setContinuousRenew.setContinuousRenew(),
+            continuousRenew: initContinuousRenewAction(foreground.initContinuousRenew),
+
             secureScriptPath: foreground.application.secureScriptPath(locationInfo.application),
             login: background.login.login(),
         }

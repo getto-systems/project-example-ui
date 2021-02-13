@@ -14,7 +14,7 @@ import { Clock } from "../../../../../z_infra/clock/infra"
 import { MenuTree } from "../../../../../auth/permission/menu/infra"
 
 import { ExampleComponentState } from "../component"
-import { initMemoryApiCredentialRepository } from "../../../../../common/auth/apiCredential/impl"
+import { initMemoryApiCredentialRepository } from "../../../../../common/auth/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../common/auth/apiCredential/data"
 
 // デフォルトの season を取得する
@@ -83,7 +83,7 @@ function standardRepository(): DashboardRepository {
     return {
         apiCredentials: initMemoryApiCredentialRepository({
             set: true,
-            value: { nonce: markApiNonce("api-nonce"), roles: markApiRoles(["role"]) },
+            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
         }),
         menuExpands: initMenuExpandRepository({
             menuExpand: initMemoryTypedStorage({ set: false }),

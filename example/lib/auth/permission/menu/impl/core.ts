@@ -133,7 +133,7 @@ export const loadMenu = (infra: LoadMenuInfra): LoadMenuPod => (locationInfo) =>
         return
     }
 
-    const menuBadgeResponse = await loadMenuBadge(result.apiCredential.nonce)
+    const menuBadgeResponse = await loadMenuBadge(result.apiCredential.apiNonce)
     if (!menuBadgeResponse.success) {
         post({
             type: "failed-to-load",
@@ -156,7 +156,7 @@ type MenuInfo = Readonly<{
 }>
 function apiRoles(result: LoadApiCredentialResult) {
     if (result.success && result.found) {
-        return result.apiCredential.roles
+        return result.apiCredential.apiRoles
     }
     return emptyApiRoles()
 }

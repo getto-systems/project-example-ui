@@ -10,7 +10,7 @@ import { MenuListComponentState } from "../../menuList/component"
 
 import { markMenuCategoryLabel, Menu } from "../../../../permission/menu/data"
 import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../permission/menu/impl/remote/menuBadge/simulate"
-import { initMemoryApiCredentialRepository } from "../../../../../common/auth/apiCredential/impl"
+import { initMemoryApiCredentialRepository } from "../../../../../common/auth/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../common/auth/apiCredential/data"
 
 describe("BreadcrumbList", () => {
@@ -1326,7 +1326,7 @@ function standardRepository(): MenuTestRepository {
     return {
         apiCredentials: initMemoryApiCredentialRepository({
             set: true,
-            value: { nonce: markApiNonce("api-nonce"), roles: markApiRoles(["admin"]) },
+            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["admin"]) },
         }),
         menuExpands: standardMenuExpandRepository([]),
     }
@@ -1344,8 +1344,8 @@ function developmentDocumentRepository(): MenuTestRepository {
         apiCredentials: initMemoryApiCredentialRepository({
             set: true,
             value: {
-                nonce: markApiNonce("api-nonce"),
-                roles: markApiRoles(["admin", "development-document"]),
+                apiNonce: markApiNonce("api-nonce"),
+                apiRoles: markApiRoles(["admin", "development-document"]),
             },
         }),
         menuExpands: standardMenuExpandRepository([]),
@@ -1355,7 +1355,7 @@ function expandRepository(): MenuTestRepository {
     return {
         apiCredentials: initMemoryApiCredentialRepository({
             set: true,
-            value: { nonce: markApiNonce("api-nonce"), roles: markApiRoles(["admin"]) },
+            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["admin"]) },
         }),
         menuExpands: standardMenuExpandRepository([[markMenuCategoryLabel("DOCUMENT")]]),
     }

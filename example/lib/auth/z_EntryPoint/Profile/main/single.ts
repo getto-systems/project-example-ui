@@ -1,3 +1,5 @@
+import { newClearActionPod } from "../../../sign/authCredential/clear/main"
+
 import { env } from "../../../../y_environment/env"
 
 import { initProfileResource } from "../impl"
@@ -11,7 +13,6 @@ import { detectMenuTarget } from "../../../permission/menu/impl/location"
 import { initNotifyAction } from "../../../../availability/error/notify/main/notify"
 import { initSeasonAction } from "../../../../example/shared/season/main/season"
 import { initMainMenuAction } from "../../../permission/menu/main/mainMenu"
-import { initLogoutAction } from "../../../sign/authCredential/renew/main/logout"
 
 import { ProfileEntryPoint, ProfileFactory, ProfileLocationInfo } from "../entryPoint"
 
@@ -21,10 +22,11 @@ export function newProfileAsSingle(): ProfileEntryPoint {
 
     const factory: ProfileFactory = {
         actions: {
+            initClear: newClearActionPod(webStorage),
+
             notify: initNotifyAction(),
             menu: initMainMenuAction(webStorage),
             season: initSeasonAction(),
-            logout: initLogoutAction(webStorage),
         },
         components: {
             error: initNotifyComponent,

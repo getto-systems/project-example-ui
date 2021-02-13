@@ -1,8 +1,6 @@
 import { detectMenuTarget } from "../../permission/menu/impl/location"
 
 import { initStaticClock } from "../../../z_infra/clock/simulate"
-import { initTestAuthCredentialStorage } from "../../sign/authCredential/renew/tests/storage"
-import { initAuthCredentialRepository } from "../../sign/authCredential/renew/infra/repository/authCredential"
 import { initMemoryTypedStorage } from "../../../z_infra/storage/memory"
 import { initMenuExpandRepository } from "../../permission/menu/impl/repository/menuExpand"
 import { initMemorySeasonRepository } from "../../../example/shared/season/impl/repository/season/memory"
@@ -15,7 +13,6 @@ import { initMenuListComponent } from "../Outline/menuList/impl"
 import { initSeasonInfoComponent } from "../../../example/x_components/Outline/seasonInfo/impl"
 import { initNotifyComponent } from "../../../availability/x_Resource/NotifyError/Notify/impl"
 
-import { initTestLogoutAction } from "../../sign/authCredential/renew/tests/logout"
 import { initTestSeasonAction } from "../../../example/shared/season/tests/season"
 import { initTestMenuAction } from "../../permission/menu/tests/menu"
 import { initTestNotifyAction } from "../../../availability/error/notify/tests/notify"
@@ -24,9 +21,11 @@ import { Clock } from "../../../z_infra/clock/infra"
 import { MenuTree } from "../../permission/menu/infra"
 
 import { ProfileFactory, ProfileLocationInfo } from "./entryPoint"
-import { markAuthAt, markTicketNonce } from "../../sign/authCredential/renew/data"
-import { initMemoryApiCredentialRepository } from "../../../common/auth/apiCredential/impl"
+import { markAuthAt, markTicketNonce } from "../../sign/authCredential/common/data"
+import { initMemoryApiCredentialRepository } from "../../../common/auth/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../common/auth/apiCredential/data"
+import { initClearActionPod } from "../../sign/authCredential/clear/impl"
+import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/memory"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -52,6 +51,8 @@ function standardResource() {
 
     const factory: ProfileFactory = {
         actions: {
+            initClear: initClearActionPod(repository),
+
             notify: initTestNotifyAction(),
             menu: initTestMenuAction(
                 repository.apiCredentials,
@@ -60,7 +61,6 @@ function standardResource() {
                 remote.loadMenuBadge
             ),
             season: initTestSeasonAction(repository.seasons, clock),
-            logout: initTestLogoutAction(repository.apiCredentials, repository.authCredentials),
         },
         components: {
             error: initNotifyComponent,
@@ -94,14 +94,12 @@ function standardRepository() {
     return {
         apiCredentials: initMemoryApiCredentialRepository({
             set: true,
-            value: { nonce: markApiNonce("api-nonce"), roles: markApiRoles(["role"]) },
+            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
         }),
-        authCredentials: initAuthCredentialRepository(
-            initTestAuthCredentialStorage({
-                ticketNonce: { set: true, value: markTicketNonce(STORED_TICKET_NONCE) },
-                lastAuthAt: { set: true, value: markAuthAt(STORED_LOGIN_AT) },
-            })
-        ),
+        authCredentials: initMemoryAuthCredentialRepository({
+            ticketNonce: { set: true, value: markTicketNonce(STORED_TICKET_NONCE) },
+            lastAuthAt: { set: true, value: markAuthAt(STORED_LOGIN_AT) },
+        }),
         menuExpands: initMenuExpandRepository({
             menuExpand: initMemoryTypedStorage({ set: false }),
         }),

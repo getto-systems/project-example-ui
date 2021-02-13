@@ -11,11 +11,11 @@ import {
 import {
     initMockPasswordResetSessionResource,
     PasswordResetSessionResourceMockPropsPasser,
-} from "../../x_Resource/Profile/PasswordResetSession/mock"
+} from "../../x_Resource/Sign/PasswordResetSession/mock"
 import {
     initMockPasswordResetResource,
     PasswordResetResourceMockPropsPasser,
-} from "../../x_Resource/Profile/PasswordReset/mock"
+} from "../../x_Resource/Sign/PasswordReset/mock"
 
 import {
     LoginEntryPoint,
