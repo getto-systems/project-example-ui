@@ -1,3 +1,4 @@
+import { StoreResult } from "../../../../common/auth/storage/infra"
 import { RenewActionInfra, Request, ForceRequest, RequestInfra } from "./infra"
 
 import { RenewAction, RenewActionPod } from "./action"
@@ -62,7 +63,7 @@ function loadLastLogin(
     hook(findResult.lastLogin)
 }
 async function renew(infra: RequestInfra, lastLogin: LastLogin, post: Post<ForceRequestEvent>) {
-    const { authCredentials, renew, config, delayed } = infra
+    const { apiCredentials, authCredentials, renew, config, delayed } = infra
 
     post({ type: "try-to-renew" })
 
@@ -84,13 +85,21 @@ async function renew(infra: RequestInfra, lastLogin: LastLogin, post: Post<Force
         return
     }
 
-    const storeResult = authCredentials.store(response.value)
-    if (!storeResult.success) {
-        post({ type: "storage-error", err: storeResult.err })
+    if (!checkStorageError(authCredentials.store(response.value.auth))) {
+        return
+    }
+    if (!checkStorageError(apiCredentials.store(response.value.api))) {
         return
     }
 
-    post({ type: "succeed-to-renew", authCredential: response.value })
+    post({ type: "succeed-to-renew", authCredential: response.value.auth })
+
+    function checkStorageError(result: StoreResult): boolean {
+        if (!result.success) {
+            post({ type: "storage-error", err: result.err })
+        }
+        return result.success
+    }
 }
 
 interface Post<T> {

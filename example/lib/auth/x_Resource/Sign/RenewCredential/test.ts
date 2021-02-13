@@ -505,8 +505,11 @@ function renewRemoteAccess(waitTime: WaitTime): RenewRemoteAccess {
         return {
             success: true,
             value: {
-                ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
-                authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
+                auth: {
+                    ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
+                    authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
+                },
+                api: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
             },
         }
     }, waitTime)

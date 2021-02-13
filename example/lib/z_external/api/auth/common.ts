@@ -12,7 +12,7 @@ export async function parseAuthCredential(response: Response): Promise<ApiResult
 
         const result = ApiCredentialMessage.decode(decodeBase64StringToUint8Array(credential))
 
-        return { success: true, value: { ticketNonce: nonce, apiCredential: apiCredential(result) } }
+        return { success: true, value: { ticketNonce: nonce, api: apiCredential(result) } }
     } catch (err) {
         return { success: false, err: { type: "bad-response", detail: `${err}` } }
     }
@@ -26,6 +26,7 @@ export async function parseAuthCredential(response: Response): Promise<ApiResult
     }
     function apiCredential(result: ApiCredentialMessage): RawApiCredential {
         return {
+            apiNonce: result.nonce || "",
             apiRoles: result.roles || [],
         }
     }

@@ -1,5 +1,6 @@
 import { TypedStorage } from "../../../../../z_infra/storage/infra"
-import { ApiCredentialRepository, LoadApiCredentialResult, StoreResult } from "../../infra"
+import { StoreResult } from "../../../storage/infra"
+import { ApiCredentialRepository, LoadApiCredentialResult } from "../../infra"
 
 import { StorageError } from "../../../storage/data"
 import { ApiCredential } from "../../data"

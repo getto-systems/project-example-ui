@@ -1,27 +1,27 @@
 import { initConnectRemoteAccess } from "../../../../../../z_infra/remote/connect"
 
-import { LoginRemoteAccess } from "../../../infra"
+import { LoginRemoteAccess, LoginRemoteResponse } from "../../../infra"
 
 import { LoginFields, LoginRemoteError } from "../../../data"
 import { RawRemoteAccess, RemoteAccessError } from "../../../../../../z_infra/remote/infra"
-import { AuthCredential, markAuthAt, markTicketNonce } from "../../../../authCredential/common/data"
+import { markAuthAt, markTicketNonce } from "../../../../authCredential/common/data"
+import { markApiNonce, markApiRoles } from "../../../../../../common/auth/apiCredential/data"
 
 type LoginRawRemoteAccess = RawRemoteAccess<LoginFields, RawAuthCredential>
 type RawAuthCredential = Readonly<{
     ticketNonce: string
-    apiCredential: Readonly<{ apiRoles: string[] }>
+    api: Readonly<{ apiNonce: string; apiRoles: string[] }>
 }>
 
 export function initLoginConnectRemoteAccess(access: LoginRawRemoteAccess): LoginRemoteAccess {
     return initConnectRemoteAccess(access, {
         message: (fields: LoginFields): LoginFields => fields,
-        value: (response: RawAuthCredential): AuthCredential => ({
-            ticketNonce: markTicketNonce(response.ticketNonce),
-            // TODO これ、返さないといけないんだけど
-            // apiCredential: markApiCredential({
-            //     apiRoles: response.apiCredential.apiRoles,
-            // }),
-            authAt: markAuthAt(new Date()),
+        value: (response: RawAuthCredential): LoginRemoteResponse => ({
+            auth: { ticketNonce: markTicketNonce(response.ticketNonce), authAt: markAuthAt(new Date()) },
+            api: {
+                apiNonce: markApiNonce(response.api.apiNonce),
+                apiRoles: markApiRoles(response.api.apiRoles),
+            },
         }),
         error: (err: RemoteAccessError): LoginRemoteError => {
             switch (err.type) {

@@ -52,7 +52,7 @@ function setContinuousRenew(infra: StartInfra) {
 
     async function continuousRenew(): Promise<{ next: boolean }> {
         // 継続更新は本体が置き換わってから実行されるので、イベント通知しない
-        const { authCredentials, renew, clock, config } = infra
+        const { apiCredentials, authCredentials, renew, clock, config } = infra
 
         const CANCEL = { next: false }
         const NEXT = { next: true }
@@ -79,8 +79,10 @@ function setContinuousRenew(infra: StartInfra) {
             return CANCEL
         }
 
-        const storeResult = authCredentials.store(response.value)
-        if (!storeResult.success) {
+        if (!authCredentials.store(response.value.auth).success) {
+            return CANCEL
+        }
+        if (!apiCredentials.store(response.value.api).success) {
             return CANCEL
         }
 

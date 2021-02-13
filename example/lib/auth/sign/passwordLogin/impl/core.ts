@@ -21,5 +21,5 @@ export const login = (infra: LoginInfra): LoginPod => () => async (fields, post)
         return
     }
 
-    post({ type: "succeed-to-login", authCredential: response.value })
+    post({ type: "succeed-to-login", authCredential: response.value.auth })
 }

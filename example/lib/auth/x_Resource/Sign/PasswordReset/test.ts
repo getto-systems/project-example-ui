@@ -810,8 +810,11 @@ function simulateReset(): ResetRemoteAccessResult {
     return {
         success: true,
         value: {
-            ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
-            authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
+            auth: {
+                ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
+                authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
+            },
+            api: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
         },
     }
 }
@@ -828,8 +831,11 @@ function renewRemoteAccess(): RenewRemoteAccess {
             return {
                 success: true,
                 value: {
-                    ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
-                    authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
+                    auth: {
+                        ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
+                        authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
+                    },
+                    api: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
                 },
             }
         },
