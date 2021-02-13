@@ -8,7 +8,7 @@ import { initMenuListComponent } from "../../Outline/menuList/impl"
 import { initBreadcrumbListComponent } from "../../Outline/breadcrumbList/impl"
 import { detectMenuTarget } from "../../../permission/menu/impl/location"
 
-import { initNotifyAction } from "../../../../availability/notify/main/notify"
+import { initNotifyAction } from "../../../../availability/error/notify/main/notify"
 import { initSeasonAction } from "../../../../example/shared/season/main/season"
 import { initCredentialAction } from "../../../common/credential/main/credential"
 import { initMainMenuAction } from "../../../permission/menu/main/mainMenu"

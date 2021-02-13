@@ -9,7 +9,7 @@ import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Ou
 import { initExampleComponent } from "../../example/impl"
 import { detectMenuTarget } from "../../../../../auth/permission/menu/impl/location"
 
-import { initNotifyAction } from "../../../../../availability/notify/main/notify"
+import { initNotifyAction } from "../../../../../availability/error/notify/main/notify"
 import { initSeasonAction } from "../../../../shared/season/main/season"
 import { initCredentialAction } from "../../../../../auth/common/credential/main/credential"
 import { initMainMenuAction } from "../../../../../auth/permission/menu/main/mainMenu"

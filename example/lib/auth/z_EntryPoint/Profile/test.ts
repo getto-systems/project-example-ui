@@ -20,7 +20,7 @@ import { initTestLogoutAction } from "../../login/credentialStore/tests/logout"
 import { initTestSeasonAction } from "../../../example/shared/season/tests/season"
 import { initTestMenuAction } from "../../permission/menu/tests/menu"
 import { initTestCredentialAction } from "../../common/credential/tests/credential"
-import { initTestNotifyAction } from "../../../availability/notify/tests/notify"
+import { initTestNotifyAction } from "../../../availability/error/notify/tests/notify"
 
 import { Clock } from "../../../z_infra/clock/infra"
 import { MenuTree } from "../../permission/menu/infra"

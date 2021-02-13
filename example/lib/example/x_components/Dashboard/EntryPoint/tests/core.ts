@@ -1,4 +1,4 @@
-import { initTestNotifyAction } from "../../../../../availability/notify/tests/notify"
+import { initTestNotifyAction } from "../../../../../availability/error/notify/tests/notify"
 import { initTestCredentialAction } from "../../../../../auth/common/credential/tests/credential"
 import { initTestMenuAction } from "../../../../../auth/permission/menu/tests/menu"
 import { initTestSeasonAction } from "../../../../shared/season/tests/season"

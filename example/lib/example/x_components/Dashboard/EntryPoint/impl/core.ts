@@ -10,7 +10,7 @@ import { CredentialAction } from "../../../../../auth/common/credential/action"
 import { MenuAction, MenuLocationInfo } from "../../../../../auth/permission/menu/action"
 import { SeasonAction } from "../../../../shared/season/action"
 import { NotifyComponentFactory } from "../../../../../availability/x_Resource/NotifyError/Notify/component"
-import { NotifyAction } from "../../../../../availability/notify/action"
+import { NotifyAction } from "../../../../../availability/error/notify/action"
 
 export type DashboardFactory = Readonly<{
     actions: Readonly<{

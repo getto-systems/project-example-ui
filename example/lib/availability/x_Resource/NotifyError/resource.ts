@@ -1,6 +1,6 @@
 import { NotifyComponent } from "./Notify/component"
 
-import { NotifyAction } from "../../notify/action"
+import { NotifyAction } from "../../error/notify/action"
 
 export type NotifyErrorResource = Readonly<{
     notify: NotifyComponent
