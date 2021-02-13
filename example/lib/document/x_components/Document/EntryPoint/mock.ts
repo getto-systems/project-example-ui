@@ -6,7 +6,7 @@ import {
     initMockMenuListComponent,
     MenuListMockPropsPasser,
 } from "../../../../auth/z_EntryPoint/Outline/menuList/mock"
-import { initMockErrorComponent } from "../../../../available/x_components/Error/error/mock"
+import { initMockErrorComponent } from "../../../../availability/x_Resource/Error/error/mock"
 import { ContentMockPropsPasser, initMockContentComponent } from "../content/mock"
 
 import { DocumentEntryPoint } from "./entryPoint"

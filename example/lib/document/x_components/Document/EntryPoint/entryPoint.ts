@@ -1,4 +1,4 @@
-import { ErrorComponent } from "../../../../available/x_components/Error/error/component"
+import { ErrorComponent } from "../../../../availability/x_Resource/Error/error/component"
 import { MenuListComponent } from "../../../../auth/z_EntryPoint/Outline/menuList/component"
 import { BreadcrumbListComponent } from "../../../../auth/z_EntryPoint/Outline/breadcrumbList/component"
 

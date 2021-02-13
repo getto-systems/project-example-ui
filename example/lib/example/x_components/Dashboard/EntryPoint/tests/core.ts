@@ -1,4 +1,4 @@
-import { initTestNotifyAction } from "../../../../../available/notify/tests/notify"
+import { initTestNotifyAction } from "../../../../../availability/notify/tests/notify"
 import { initTestCredentialAction } from "../../../../../auth/common/credential/tests/credential"
 import { initTestMenuAction } from "../../../../../auth/permission/menu/tests/menu"
 import { initTestSeasonAction } from "../../../../shared/season/tests/season"
@@ -7,7 +7,7 @@ import { detectMenuTarget } from "../../../../../auth/permission/menu/impl/locat
 
 import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "../impl/core"
 
-import { initErrorComponent } from "../../../../../available/x_components/Error/error/impl"
+import { initErrorComponent } from "../../../../../availability/x_Resource/Error/error/impl"
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/impl"
 import { initMenuListComponent } from "../../../../../auth/z_EntryPoint/Outline/menuList/impl"
