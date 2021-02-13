@@ -1,4 +1,5 @@
-import { ApiCredential, StorageError } from "./data"
+import { StorageError } from "../storage/data"
+import { ApiCredential } from "./data"
 
 export interface ApiCredentialRepository {
     load(): LoadApiCredentialResult

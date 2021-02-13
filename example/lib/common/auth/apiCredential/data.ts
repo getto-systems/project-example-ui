@@ -15,5 +15,3 @@ export function markApiRoles(roles: string[]): ApiRoles {
 export function emptyApiRoles(): ApiRoles {
     return markApiRoles([])
 }
-
-export type StorageError = Readonly<{ type: "infra-error"; err: string }>

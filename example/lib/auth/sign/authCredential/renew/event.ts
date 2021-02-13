@@ -1,4 +1,5 @@
-import { AuthCredential, RenewError, StorageError } from "./data"
+import { StorageError } from "../../../../common/auth/storage/data"
+import { AuthCredential, RenewError } from "./data"
 
 export type RenewEvent = Readonly<{ type: "try-to-instant-load" }> | ForceRenewEvent
 

@@ -7,7 +7,7 @@ import { SecureScriptPath } from "../../../../sign/location/action"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 import { ScriptPath, LoadError } from "../../../../sign/location/data"
 import { LoginError, LoginFields } from "../../../../sign/passwordLogin/data"
-import { StorageError } from "../../../../sign/authCredential/renew/data"
+import { StorageError } from "../../../../../common/auth/storage/data"
 
 export interface LoginComponentFactory {
     (material: LoginMaterial): LoginComponent

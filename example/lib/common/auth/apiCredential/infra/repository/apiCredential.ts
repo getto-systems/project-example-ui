@@ -1,7 +1,8 @@
 import { TypedStorage } from "../../../../../z_infra/storage/infra"
 import { ApiCredentialRepository, LoadApiCredentialResult, StoreResult } from "../../infra"
 
-import { ApiCredential, StorageError } from "../../data"
+import { StorageError } from "../../../storage/data"
+import { ApiCredential } from "../../data"
 
 export type ApiCredentialStorage = Readonly<{
     apiCredential: TypedStorage<ApiCredential>

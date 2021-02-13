@@ -3,8 +3,9 @@ import { ApplicationComponent } from "../../../../../common/getto-example/Applic
 import { ForceRenew, Renew, SetContinuousRenew } from "../../../../sign/authCredential/renew/action"
 import { SecureScriptPath } from "../../../../sign/location/action"
 
-import { RenewError, StorageError } from "../../../../sign/authCredential/renew/data"
+import { RenewError } from "../../../../sign/authCredential/renew/data"
 import { ScriptPath, LoadError } from "../../../../sign/location/data"
+import { StorageError } from "../../../../../common/auth/storage/data"
 
 export interface RenewComponentFactory {
     (material: RenewMaterial): RenewComponent
