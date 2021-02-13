@@ -7,7 +7,7 @@ import { EntryPoint } from "./NotFound"
 
 import { initMockPropsPasser } from "../../../common/getto-example/Application/mock"
 import { newMockNotFound } from "../../../availability/z_EntryPoint/NotFound/mock"
-import { CurrentVersionMockProps } from "../../../availability/x_Resource/NotFound/currentVersion/mock"
+import { CurrentVersionMockProps } from "../../../availability/x_Resource/GetCurrentVersion/currentVersion/mock"
 
 export default {
     title: "Auth/NotFound",

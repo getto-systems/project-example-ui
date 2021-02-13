@@ -1,10 +1,10 @@
 import { NotFoundFactory, initNotFoundResource } from "../impl/core"
 
-import { initCurrentVersionComponent } from "../../../x_Resource/NotFound/currentVersion/impl"
+import { initCurrentVersionComponent } from "../../../x_Resource/GetCurrentVersion/currentVersion/impl"
 
 import { NotFoundEntryPoint } from "../entryPoint"
 
-import { initCurrentVersionAction } from "../../../currentVersion/main/currentVersion"
+import { initCurrentVersionAction } from "../../../version/currentVersion/main/currentVersion"
 
 export function newNotFoundAsSingle(): NotFoundEntryPoint {
     const factory: NotFoundFactory = {

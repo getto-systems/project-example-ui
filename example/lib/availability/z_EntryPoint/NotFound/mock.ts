@@ -1,7 +1,7 @@
 import {
     CurrentVersionMockPropsPasser,
     initMockCurrentVersionComponent,
-} from "../../x_Resource/NotFound/currentVersion/mock"
+} from "../../x_Resource/GetCurrentVersion/currentVersion/mock"
 
 import { NotFoundEntryPoint } from "./entryPoint"
 

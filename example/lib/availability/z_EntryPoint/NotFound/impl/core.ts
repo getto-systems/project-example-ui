@@ -1,8 +1,8 @@
 import { NotFoundResource } from "../entryPoint"
 
-import { CurrentVersionComponentFactory } from "../../../x_Resource/NotFound/currentVersion/component"
+import { CurrentVersionComponentFactory } from "../../../x_Resource/GetCurrentVersion/currentVersion/component"
 
-import { FindCurrentVersionAction } from "../../../currentVersion/action"
+import { FindCurrentVersionAction } from "../../../version/currentVersion/action"
 
 export type NotFoundFactory = Readonly<{
     actions: Readonly<{

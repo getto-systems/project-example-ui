@@ -16,7 +16,7 @@ import { NotFoundEntryPoint } from "../../../availability/z_EntryPoint/NotFound/
 import {
     CurrentVersionComponent,
     initialCurrentVersionComponentState,
-} from "../../../availability/x_Resource/NotFound/currentVersion/component"
+} from "../../../availability/x_Resource/GetCurrentVersion/currentVersion/component"
 
 export function EntryPoint({ resource, terminate }: NotFoundEntryPoint): VNode {
     useTermination(terminate)

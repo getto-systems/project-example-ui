@@ -2,7 +2,7 @@ import { NotFoundFactory, initNotFoundResource } from "../../../../z_EntryPoint/
 
 import { initCurrentVersionComponent } from "../impl"
 
-import { initTestCurrentVersionAction } from "../../../../currentVersion/tests/currentVersion"
+import { initTestCurrentVersionAction } from "../../../../version/currentVersion/tests/currentVersion"
 
 import { NotFoundResource } from "../../../../z_EntryPoint/NotFound/entryPoint"
 
