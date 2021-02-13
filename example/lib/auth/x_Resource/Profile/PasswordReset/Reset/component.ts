@@ -1,7 +1,7 @@
 import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
 
 import { Reset } from "../../../../profile/passwordReset/action"
-import { SetContinuousRenew } from "../../../../login/credentialStore/action"
+import { SetContinuousRenew } from "../../../../sign/credentialStore/action"
 import { SecureScriptPath } from "../../../../common/application/action"
 
 import { ResetError, ResetFields } from "../../../../profile/passwordReset/data"

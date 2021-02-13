@@ -5,7 +5,7 @@ import { FormAction } from "../../../../common/getto-form/form/action"
 import { ApplicationAction, SecureScriptPathLocationInfo } from "../../../common/application/action"
 import { LoginIDFormFieldAction } from "../../../common/field/loginID/action"
 import { PasswordFormFieldAction } from "../../../common/field/password/action"
-import { SetContinuousRenewAction } from "../../../login/credentialStore/action"
+import { SetContinuousRenewAction } from "../../../sign/credentialStore/action"
 import { ResetAction, ResetLocationInfo } from "../../../profile/passwordReset/action"
 
 export type PasswordResetResource = Readonly<{

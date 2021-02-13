@@ -1,7 +1,7 @@
 import {
     ClearCredentialForegroundAction,
     ClearCredentialResource,
-} from "../../x_Resource/Login/ClearCredential/resource"
+} from "../../x_Resource/Sign/ClearCredential/resource"
 
 import {
     NotifyComponent,

@@ -4,7 +4,7 @@ import { ResetComponentFactory, ResetMaterial, ResetComponent, ResetComponentSta
 
 import { LoadError } from "../../../../common/application/data"
 import { AuthCredential } from "../../../../common/credential/data"
-import { storeAuthCredential } from "../../../../login/credentialStore/data"
+import { storeAuthCredential } from "../../../../sign/credentialStore/data"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 import { ResetFields } from "../../../../profile/passwordReset/data"
 

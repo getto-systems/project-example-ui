@@ -1,8 +1,8 @@
 import { ProfileFactory, ProfileLocationInfo, ProfileResource } from "./entryPoint"
 
-import { initClearCredentialResource } from "../../x_Resource/Login/ClearCredential/impl"
+import { initClearCredentialResource } from "../../x_Resource/Sign/ClearCredential/impl"
 
-import { ClearCredentialResource } from "../../x_Resource/Login/ClearCredential/resource"
+import { ClearCredentialResource } from "../../x_Resource/Sign/ClearCredential/resource"
 
 export function initProfileResource(
     factory: ProfileFactory,
