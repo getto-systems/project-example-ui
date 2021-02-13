@@ -10,6 +10,6 @@ export function initApiCredentialConverter(): TypedStorageConverter<ApiCredentia
     return combineConverter(initApiCredentialDataConverter(), {
         toRaw: (value) => value,
         toValue: (raw) =>
-            decodeSuccess({ nonce: markApiNonce(raw.nonce), roles: markApiRoles(raw.roles) }),
+            decodeSuccess({ apiNonce: markApiNonce(raw.apiNonce), apiRoles: markApiRoles(raw.apiRoles) }),
     })
 }

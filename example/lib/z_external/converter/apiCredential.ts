@@ -8,8 +8,8 @@ import {
 import { decodeError, decodeSuccess, TypedStorageConverter } from "../../z_infra/storage/infra"
 
 export type ApiCredentialDecoded = Readonly<{
-    nonce: string
-    roles: string[]
+    apiNonce: string
+    apiRoles: string[]
 }>
 
 export function initApiCredentialDataConverter(): TypedStorageConverter<ApiCredentialDecoded> {
@@ -18,8 +18,8 @@ export function initApiCredentialDataConverter(): TypedStorageConverter<ApiCrede
             const f = ApiCredentialMessage
             const message = new f()
 
-            message.nonce = value.nonce
-            message.roles = value.roles
+            message.nonce = value.apiNonce
+            message.roles = value.apiRoles
 
             const arr = f.encode(message).finish()
             return encodeUint8ArrayToBase64String(arr)
@@ -27,9 +27,9 @@ export function initApiCredentialDataConverter(): TypedStorageConverter<ApiCrede
         toValue: (raw: string) => {
             try {
                 const message = ApiCredentialMessage.decode(decodeBase64StringToUint8Array(raw))
-                const value = {
-                    nonce: message.nonce ? message.nonce : "",
-                    roles: message.roles ? message.roles : [],
+                const value: ApiCredentialDecoded = {
+                    apiNonce: message.nonce ? message.nonce : "",
+                    apiRoles: message.roles ? message.roles : [],
                 }
                 return decodeSuccess(value)
             } catch (err) {

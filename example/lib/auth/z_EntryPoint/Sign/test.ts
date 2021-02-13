@@ -2,9 +2,8 @@ import { initLoginViewLocationInfo, View } from "./impl"
 import { initLoginLocationInfo } from "../../x_Resource/common/LocationInfo/impl"
 
 import { initStaticClock } from "../../../z_infra/clock/simulate"
-import { initTestAuthCredentialStorage } from "../../sign/authCredential/renew/tests/storage"
 import { initLoginSimulateRemoteAccess } from "../../sign/passwordLogin/impl/remote/login/simulate"
-import { initRenewSimulateRemoteAccess } from "../../sign/authCredential/renew/infra/remote/renew/simulate"
+import { initRenewSimulateRemoteAccess } from "../../sign/authCredential/common/infra/remote/renew/simulate"
 import { initResetSimulateRemoteAccess } from "../../sign/passwordReset/impl/remote/reset/simulate"
 import {
     initGetStatusSimulateRemoteAccess,
@@ -12,29 +11,22 @@ import {
     initStartSessionSimulateRemoteAccess,
 } from "../../sign/passwordReset/impl/remote/session/simulate"
 
-import { initAuthCredentialRepository } from "../../sign/authCredential/renew/infra/repository/authCredential"
-
 import { initLoginLinkResource } from "../../x_Resource/common/LoginLink/impl"
 import { initRenewCredentialResource } from "../../x_Resource/Sign/RenewCredential/impl"
 import { initPasswordLoginResource } from "../../x_Resource/Sign/PasswordLogin/impl"
-import { initPasswordResetSessionResource } from "../../x_Resource/Profile/PasswordResetSession/impl"
-import { initPasswordResetResource } from "../../x_Resource/Profile/PasswordReset/impl"
+import { initPasswordResetSessionResource } from "../../x_Resource/Sign/PasswordResetSession/impl"
+import { initPasswordResetResource } from "../../x_Resource/Sign/PasswordReset/impl"
 
 import { initTestApplicationAction } from "../../sign/location/tests/application"
 import { initFormAction } from "../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../common/auth/field/loginID/main/loginID"
 import { initTestPasswordResetSessionAction } from "../../sign/passwordReset/tests/session"
-import {
-    initTestRenewAction,
-    initTestSetContinuousRenewAction,
-} from "../../sign/authCredential/renew/tests/renew"
 import { initPasswordFormFieldAction } from "../../../common/auth/field/password/main/password"
 import { initTestPasswordLoginAction } from "../../sign/passwordLogin/tests/login"
 import { initTestPasswordResetAction } from "../../sign/passwordReset/tests/reset"
 
 import { Clock } from "../../../z_infra/clock/infra"
 import { LoginRemoteAccessResult } from "../../sign/passwordLogin/infra"
-import { AuthCredentialRepository, RenewRemoteAccessResult } from "../../sign/authCredential/renew/infra"
 import {
     GetStatusRemoteAccessResult,
     ResetRemoteAccessResult,
@@ -45,10 +37,18 @@ import {
 import { LoginState } from "./entryPoint"
 
 import { markSessionID } from "../../sign/passwordReset/data"
-import { markAuthAt, markTicketNonce } from "../../sign/authCredential/renew/data"
+import { markAuthAt, markTicketNonce } from "../../sign/authCredential/common/data"
 import { markApiNonce, markApiRoles } from "../../../common/auth/apiCredential/data"
 import { ApiCredentialRepository } from "../../../common/auth/apiCredential/infra"
-import { initMemoryApiCredentialRepository } from "../../../common/auth/apiCredential/impl"
+import { initMemoryApiCredentialRepository } from "../../../common/auth/apiCredential/infra/repository/memory"
+import {
+    AuthCredentialRepository,
+    RenewRemoteAccessResult,
+} from "../../sign/authCredential/common/infra"
+import { initContinuousRenewActionPod } from "../../sign/authCredential/continuousRenew/impl"
+import { initRenewActionPod } from "../../sign/authCredential/renew/impl"
+import { delayed } from "../../../z_infra/delayed/core"
+import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/memory"
 
 const AUTHORIZED_TICKET_NONCE = "ticket-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
@@ -360,21 +360,22 @@ function standardPasswordLoginResource(
     return initPasswordLoginResource(
         initLoginLocationInfo(currentURL),
         {
+            initContinuousRenew: initContinuousRenewActionPod({
+                apiCredentials,
+                authCredentials,
+                renew: initRenewSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
+                config: {
+                    delay: { delay_millisecond: 1 },
+                    interval: { interval_millisecond: 1 },
+                },
+                clock,
+            }),
+
             application: initTestApplicationAction({
                 secureScriptPath: {
                     secureServerHost: standardSecureHost(),
                 },
             }),
-            setContinuousRenew: initTestSetContinuousRenewAction(
-                {
-                    interval: { interval_millisecond: 1 },
-                    delay: { delay_millisecond: 1 },
-                },
-                apiCredentials,
-                authCredentials,
-                initRenewSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
-                clock
-            ),
 
             form: {
                 core: initFormAction(),
@@ -403,21 +404,22 @@ function standardPasswordResetResource(
     return initPasswordResetResource(
         initLoginLocationInfo(currentURL),
         {
+            initContinuousRenew: initContinuousRenewActionPod({
+                apiCredentials,
+                authCredentials,
+                renew: initRenewSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
+                config: {
+                    delay: { delay_millisecond: 1 },
+                    interval: { interval_millisecond: 1 },
+                },
+                clock,
+            }),
+
             application: initTestApplicationAction({
                 secureScriptPath: {
                     secureServerHost: standardSecureHost(),
                 },
             }),
-            setContinuousRenew: initTestSetContinuousRenewAction(
-                {
-                    interval: { interval_millisecond: 1 },
-                    delay: { delay_millisecond: 1 },
-                },
-                apiCredentials,
-                authCredentials,
-                initRenewSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
-                clock
-            ),
 
             form: {
                 core: initFormAction(),
@@ -484,31 +486,33 @@ function standardRenewCredentialResource(
     clock: Clock
 ) {
     return initRenewCredentialResource(initLoginLocationInfo(currentURL), {
+        initRenew: initRenewActionPod({
+            apiCredentials,
+            authCredentials,
+            renew: initRenewSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
+            config: {
+                instantLoadExpire: { expire_millisecond: 20 * 1000 },
+                delay: { delay_millisecond: 1 },
+            },
+            delayed,
+            clock,
+        }),
+        initContinuousRenew: initContinuousRenewActionPod({
+            apiCredentials,
+            authCredentials,
+            renew: initRenewSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
+            config: {
+                delay: { delay_millisecond: 1 },
+                interval: { interval_millisecond: 1 },
+            },
+            clock,
+        }),
+
         application: initTestApplicationAction({
             secureScriptPath: {
                 secureServerHost: standardSecureHost(),
             },
         }),
-        renew: initTestRenewAction(
-            {
-                instantLoadExpire: { expire_millisecond: 20 * 1000 },
-                delay: { delay_millisecond: 1 },
-            },
-            apiCredentials,
-            authCredentials,
-            initRenewSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
-            clock
-        ),
-        setContinuousRenew: initTestSetContinuousRenewAction(
-            {
-                interval: { interval_millisecond: 1 },
-                delay: { delay_millisecond: 1 },
-            },
-            apiCredentials,
-            authCredentials,
-            initRenewSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
-            clock
-        ),
     })
 }
 
@@ -566,14 +570,12 @@ function standardRepository() {
     return {
         apiCredentials: initMemoryApiCredentialRepository({
             set: true,
-            value: { nonce: markApiNonce("api-nonce"), roles: markApiRoles(["role"]) },
+            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
         }),
-        authCredentials: initAuthCredentialRepository(
-            initTestAuthCredentialStorage({
-                ticketNonce: { set: false },
-                lastAuthAt: { set: false },
-            })
-        ),
+        authCredentials: initMemoryAuthCredentialRepository({
+            ticketNonce: { set: false },
+            lastAuthAt: { set: false },
+        }),
     }
 }
 

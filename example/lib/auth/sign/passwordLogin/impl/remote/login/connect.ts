@@ -4,7 +4,7 @@ import { LoginRemoteAccess } from "../../../infra"
 
 import { LoginFields, LoginRemoteError } from "../../../data"
 import { RawRemoteAccess, RemoteAccessError } from "../../../../../../z_infra/remote/infra"
-import { AuthCredential, markAuthAt, markTicketNonce } from "../../../../authCredential/renew/data"
+import { AuthCredential, markAuthAt, markTicketNonce } from "../../../../authCredential/common/data"
 
 type LoginRawRemoteAccess = RawRemoteAccess<LoginFields, RawAuthCredential>
 type RawAuthCredential = Readonly<{

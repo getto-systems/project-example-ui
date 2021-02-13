@@ -1,7 +1,7 @@
-import { RenewRemoteAccess } from "../../../infra"
+import { initConnectRemoteAccess } from "../../../../../../../z_infra/remote/connect"
 
 import { RawRemoteAccess, RemoteAccessError } from "../../../../../../../z_infra/remote/infra"
-import { initConnectRemoteAccess } from "../../../../../../../z_infra/remote/connect"
+import { RenewRemoteAccess } from "../../../infra"
 
 import {
     AuthCredential,
@@ -21,6 +21,7 @@ export function initRenewConnectRemoteAccess(access: RenewRawRemoteAccess): Rene
     return initConnectRemoteAccess(access, {
         message: (nonce: TicketNonce): TicketNonce => nonce,
         value: (response: RawAuthCredential): AuthCredential => {
+            // TODO ここで apiCredential も返さないといけない
             return {
                 ticketNonce: markTicketNonce(response.ticketNonce),
                 authAt: markAuthAt(new Date()),

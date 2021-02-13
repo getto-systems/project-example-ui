@@ -3,32 +3,30 @@ import { initRenewCredentialResource } from "./impl"
 import { initLoginLocationInfo } from "../../common/LocationInfo/impl"
 
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
-import { initTestAuthCredentialStorage } from "../../../sign/authCredential/renew/tests/storage"
-import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/renew/infra/remote/renew/simulate"
-import { initAuthCredentialRepository } from "../../../sign/authCredential/renew/infra/repository/authCredential"
+import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/common/infra/remote/renew/simulate"
 
 import { initTestApplicationAction } from "../../../sign/location/tests/application"
-import {
-    initTestRenewAction,
-    initTestSetContinuousRenewAction,
-} from "../../../sign/authCredential/renew/tests/renew"
 
 import { Clock } from "../../../../z_infra/clock/infra"
-import {
-    AuthCredentialRepository,
-    RenewRemoteAccess,
-    RenewRemoteAccessResult,
-} from "../../../sign/authCredential/renew/infra"
 
 import { RenewCredentialResource } from "./resource"
 
 import { RenewComponentState } from "./Renew/component"
 
 import { markScriptPath } from "../../../sign/location/data"
-import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/renew/data"
+import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/common/data"
 import { ApiCredentialRepository } from "../../../../common/auth/apiCredential/infra"
-import { initMemoryApiCredentialRepository } from "../../../../common/auth/apiCredential/impl"
+import { initMemoryApiCredentialRepository } from "../../../../common/auth/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../common/auth/apiCredential/data"
+import {
+    AuthCredentialRepository,
+    RenewRemoteAccess,
+    RenewRemoteAccessResult,
+} from "../../../sign/authCredential/common/infra"
+import { delayed } from "../../../../z_infra/delayed/core"
+import { initRenewActionPod } from "../../../sign/authCredential/renew/impl"
+import { initContinuousRenewActionPod } from "../../../sign/authCredential/continuousRenew/impl"
+import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -69,14 +67,14 @@ describe("RenewCredential", () => {
                         resource.renew.succeedToInstantLoad()
                         break
 
-                    case "succeed-to-set-continuous-renew":
+                    case "succeed-to-start-continuous-renew":
                         clock.update(COMPLETED_NOW)
                         expect(stack).toEqual([
                             {
                                 type: "try-to-instant-load",
                                 scriptPath: markScriptPath("//secure.example.com/index.js"),
                             },
-                            { type: "succeed-to-set-continuous-renew" },
+                            { type: "succeed-to-start-continuous-renew" },
                         ])
                         setTimeout(() => {
                             expectToSaveRenewed(repository.authCredentials)
@@ -127,7 +125,7 @@ describe("RenewCredential", () => {
                         break
 
                     case "required-to-login":
-                    case "succeed-to-set-continuous-renew":
+                    case "succeed-to-start-continuous-renew":
                         done(new Error(state.type))
                         break
 
@@ -185,7 +183,7 @@ describe("RenewCredential", () => {
 
                     case "try-to-instant-load":
                     case "required-to-login":
-                    case "succeed-to-set-continuous-renew":
+                    case "succeed-to-start-continuous-renew":
                         done(new Error(state.type))
                         break
 
@@ -240,7 +238,7 @@ describe("RenewCredential", () => {
 
                     case "try-to-instant-load":
                     case "required-to-login":
-                    case "succeed-to-set-continuous-renew":
+                    case "succeed-to-start-continuous-renew":
                         done(new Error(state.type))
                         break
 
@@ -295,7 +293,7 @@ describe("RenewCredential", () => {
                         break
 
                     case "try-to-instant-load":
-                    case "succeed-to-set-continuous-renew":
+                    case "succeed-to-start-continuous-renew":
                     case "try-to-load":
                         done(new Error(state.type))
                         break
@@ -340,7 +338,7 @@ describe("RenewCredential", () => {
                         break
 
                     case "try-to-instant-load":
-                    case "succeed-to-set-continuous-renew":
+                    case "succeed-to-start-continuous-renew":
                     case "required-to-login":
                     case "try-to-load":
                         done(new Error(state.type))
@@ -420,21 +418,21 @@ function newTestRenewCredentialResource(
 ): RenewCredentialResource {
     const config = standardConfig()
     return initRenewCredentialResource(initLoginLocationInfo(currentURL), {
+        initRenew: initRenewActionPod({
+            ...repository,
+            ...remote,
+            config: config.renew,
+            delayed,
+            clock,
+        }),
+        initContinuousRenew: initContinuousRenewActionPod({
+            ...repository,
+            ...remote,
+            config: config.continuousRenew,
+            clock,
+        }),
+
         application: initTestApplicationAction(config.application),
-        renew: initTestRenewAction(
-            config.renew,
-            repository.apiCredentials,
-            repository.authCredentials,
-            remote.renew,
-            clock
-        ),
-        setContinuousRenew: initTestSetContinuousRenewAction(
-            config.setContinuousRenew,
-            repository.apiCredentials,
-            repository.authCredentials,
-            remote.renew,
-            clock
-        ),
     })
 }
 
@@ -452,7 +450,7 @@ function standardConfig() {
             instantLoadExpire: { expire_millisecond: 20 * 1000 },
             delay: { delay_millisecond: 1 },
         },
-        setContinuousRenew: {
+        continuousRenew: {
             interval: { interval_millisecond: 1 },
             delay: { delay_millisecond: 1 },
         },
@@ -463,14 +461,12 @@ function standardRepository(): RenewCredentialTestRepository {
     return {
         apiCredentials: initMemoryApiCredentialRepository({
             set: true,
-            value: { nonce: markApiNonce("api-nonce"), roles: markApiRoles(["role"]) },
+            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
         }),
-        authCredentials: initAuthCredentialRepository(
-            initTestAuthCredentialStorage({
-                ticketNonce: { set: true, value: markTicketNonce(STORED_TICKET_NONCE) },
-                lastAuthAt: { set: true, value: markAuthAt(STORED_LOGIN_AT) },
-            })
-        ),
+        authCredentials: initMemoryAuthCredentialRepository({
+            ticketNonce: { set: true, value: markTicketNonce(STORED_TICKET_NONCE) },
+            lastAuthAt: { set: true, value: markAuthAt(STORED_LOGIN_AT) },
+        }),
     }
 }
 function emptyRepository(): RenewCredentialTestRepository {
@@ -478,12 +474,10 @@ function emptyRepository(): RenewCredentialTestRepository {
         apiCredentials: initMemoryApiCredentialRepository({
             set: false,
         }),
-        authCredentials: initAuthCredentialRepository(
-            initTestAuthCredentialStorage({
-                ticketNonce: { set: false },
-                lastAuthAt: { set: false },
-            })
-        ),
+        authCredentials: initMemoryAuthCredentialRepository({
+            ticketNonce: { set: false },
+            lastAuthAt: { set: false },
+        }),
     }
 }
 function standardSimulator(): RenewCredentialTestRemoteAccess {

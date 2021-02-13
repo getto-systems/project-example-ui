@@ -5,8 +5,8 @@ import { FormAction } from "../../../../common/getto-form/form/action"
 import { ApplicationAction, SecureScriptPathLocationInfo } from "../../../sign/location/action"
 import { LoginIDFormFieldAction } from "../../../../common/auth/field/loginID/action"
 import { PasswordFormFieldAction } from "../../../../common/auth/field/password/action"
-import { SetContinuousRenewAction } from "../../../sign/authCredential/renew/action"
 import { ResetAction, ResetLocationInfo } from "../../../sign/passwordReset/action"
+import { ContinuousRenewActionPod } from "../../../sign/authCredential/continuousRenew/action"
 
 export type PasswordResetResource = Readonly<{
     reset: ResetComponent
@@ -17,9 +17,10 @@ export type PasswordResetLocationInfo = Readonly<{
     application: SecureScriptPathLocationInfo
     reset: ResetLocationInfo
 }>
-export type PasswordResetForegroundAction = Readonly<{
+export type PasswordResetForegroundActionPod = Readonly<{
+    initContinuousRenew: ContinuousRenewActionPod
+
     application: ApplicationAction
-    setContinuousRenew: SetContinuousRenewAction
     form: Readonly<{
         core: FormAction
         loginID: LoginIDFormFieldAction

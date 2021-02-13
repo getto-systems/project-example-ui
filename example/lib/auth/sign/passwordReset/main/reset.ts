@@ -21,7 +21,7 @@ import {
 } from "../action"
 
 import { markSessionID } from "../data"
-import { markAuthAt, markTicketNonce } from "../../authCredential/renew/data"
+import { markAuthAt, markTicketNonce } from "../../authCredential/common/data"
 
 export function initPasswordResetSessionAction(): ResetSessionAction {
     const targetSessionID = markSessionID("session-id")

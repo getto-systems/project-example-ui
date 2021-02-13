@@ -1,20 +1,13 @@
 import { StorageError } from "../../../../common/auth/storage/data"
-import { AuthCredential, RenewError } from "./data"
+import { AuthCredential } from "../common/data"
+import { RequestError } from "./data"
 
-export type RenewEvent = Readonly<{ type: "try-to-instant-load" }> | ForceRenewEvent
+export type RequestEvent = Readonly<{ type: "try-to-instant-load" }> | ForceRequestEvent
 
-export type ForceRenewEvent =
+export type ForceRequestEvent =
     | Readonly<{ type: "required-to-login" }>
     | Readonly<{ type: "try-to-renew" }>
     | Readonly<{ type: "delayed-to-renew" }>
-    | Readonly<{ type: "failed-to-renew"; err: RenewError }>
+    | Readonly<{ type: "failed-to-renew"; err: RequestError }>
     | Readonly<{ type: "storage-error"; err: StorageError }>
     | Readonly<{ type: "succeed-to-renew"; authCredential: AuthCredential }>
-
-export type SetContinuousRenewEvent =
-    | Readonly<{ type: "storage-error"; err: StorageError }>
-    | Readonly<{ type: "succeed-to-set-continuous-renew" }>
-
-export type LogoutEvent =
-    | Readonly<{ type: "failed-to-logout"; err: StorageError }>
-    | Readonly<{ type: "succeed-to-logout" }>

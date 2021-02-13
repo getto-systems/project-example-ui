@@ -1,21 +1,22 @@
 import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
 
 import { Reset } from "../../../../sign/passwordReset/action"
-import { SetContinuousRenew } from "../../../../sign/authCredential/renew/action"
 import { SecureScriptPath } from "../../../../sign/location/action"
 
 import { ResetError, ResetFields } from "../../../../sign/passwordReset/data"
 import { ScriptPath, LoadError } from "../../../../sign/location/data"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 import { StorageError } from "../../../../../common/auth/storage/data"
+import { ContinuousRenewAction } from "../../../../sign/authCredential/continuousRenew/action"
 
 export interface ResetComponentFactory {
     (material: ResetMaterial): ResetComponent
 }
 
 export type ResetMaterial = Readonly<{
+    continuousRenew: ContinuousRenewAction
+
     reset: Reset
-    setContinuousRenew: SetContinuousRenew
     secureScriptPath: SecureScriptPath
 }>
 

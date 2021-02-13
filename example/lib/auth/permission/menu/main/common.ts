@@ -12,7 +12,7 @@ import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../impl/core"
 import { LoadMenuBadgeRemoteAccess, MenuPermission, MenuTree, MenuTreeNode } from "../infra"
 
 import { MenuAction } from "../action"
-import { newApiCredentialRepository } from "../../../../common/auth/apiCredential/main"
+import { newApiCredentialRepository } from "../../../../common/auth/apiCredential/infra/repository/main"
 
 export function initMenuAction(
     menuTree: MenuTree,

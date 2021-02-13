@@ -18,7 +18,7 @@ import { RenewCredentialEntryPoint } from "../../../auth/z_EntryPoint/Sign/entry
 
 import { initialRenewComponentState } from "../../../auth/x_Resource/Sign/RenewCredential/Renew/component"
 
-import { RenewError } from "../../../auth/sign/authCredential/renew/data"
+import { RequestError } from "../../../auth/sign/authCredential/renew/data"
 
 export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoint): VNode {
     useTermination(terminate)
@@ -65,7 +65,7 @@ export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoi
             // スクリプトのロードは appendChild する必要があるため useEffect で行う
             return EMPTY_CONTENT
 
-        case "succeed-to-set-continuous-renew":
+        case "succeed-to-start-continuous-renew":
             // このイベントは instant load 後に設定が完了したことを通知するものなので特に何もしない
             return EMPTY_CONTENT
 
@@ -100,7 +100,7 @@ export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoi
             ],
         })
     }
-    function errorMessage(err: RenewError): VNode {
+    function errorMessage(err: RequestError): VNode {
         return loginBox(siteInfo(), {
             title: "認証に失敗しました",
             body: [
@@ -112,7 +112,7 @@ export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoi
     }
 }
 
-function renewError(err: RenewError): VNodeContent[] {
+function renewError(err: RequestError): VNodeContent[] {
     switch (err.type) {
         case "bad-request":
             return ["認証情報の送信処理でエラーが発生しました"]

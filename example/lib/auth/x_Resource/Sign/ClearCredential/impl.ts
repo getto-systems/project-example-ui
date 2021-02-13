@@ -1,9 +1,10 @@
+import { initClearAction } from "../../../sign/authCredential/clear/impl"
 import { LogoutMaterial } from "./Logout/component"
 import { initLogoutComponent } from "./Logout/impl"
-import { ClearCredentialForegroundAction, ClearCredentialResource } from "./resource"
+import { ClearCredentialForegroundActionPod, ClearCredentialResource } from "./resource"
 
 export function initClearCredentialResource(
-    foreground: ClearCredentialForegroundAction
+    foreground: ClearCredentialForegroundActionPod
 ): ClearCredentialResource {
     return {
         logout: initLogoutComponent(logoutMaterial()),
@@ -11,7 +12,7 @@ export function initClearCredentialResource(
 
     function logoutMaterial(): LogoutMaterial {
         return {
-            logout: foreground.logout.logout(),
+            clear: initClearAction(foreground.initClear),
         }
     }
 }

@@ -1,12 +1,11 @@
 import { LogoutComponentState } from "./Logout/component"
 
-import { initAuthCredentialRepository } from "../../../sign/authCredential/renew/infra/repository/authCredential"
-import { initTestAuthCredentialStorage } from "../../../sign/authCredential/renew/tests/storage"
 import { initClearCredentialResource } from "./impl"
-import { initTestLogoutAction } from "../../../sign/authCredential/renew/tests/logout"
-import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/renew/data"
-import { initMemoryApiCredentialRepository } from "../../../../common/auth/apiCredential/impl"
+import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/common/data"
+import { initMemoryApiCredentialRepository } from "../../../../common/auth/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../common/auth/apiCredential/data"
+import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
+import { initClearActionPod } from "../../../sign/authCredential/clear/impl"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -50,7 +49,7 @@ function standardResource() {
     const repository = standardRepository()
 
     const resource = initClearCredentialResource({
-        logout: initTestLogoutAction(repository.apiCredentials, repository.authCredentials),
+        initClear: initClearActionPod(repository),
     })
 
     return { repository, resource }
@@ -60,14 +59,12 @@ function standardRepository() {
     return {
         apiCredentials: initMemoryApiCredentialRepository({
             set: true,
-            value: { nonce: markApiNonce("api-nonce"), roles: markApiRoles(["role"]) },
+            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
         }),
-        authCredentials: initAuthCredentialRepository(
-            initTestAuthCredentialStorage({
-                ticketNonce: { set: true, value: markTicketNonce(STORED_TICKET_NONCE) },
-                lastAuthAt: { set: true, value: markAuthAt(STORED_LOGIN_AT) },
-            })
-        ),
+        authCredentials: initMemoryAuthCredentialRepository({
+            ticketNonce: { set: true, value: markTicketNonce(STORED_TICKET_NONCE) },
+            lastAuthAt: { set: true, value: markAuthAt(STORED_LOGIN_AT) },
+        }),
     }
 }
 

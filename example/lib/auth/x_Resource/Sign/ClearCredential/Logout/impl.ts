@@ -13,7 +13,7 @@ class Component extends ApplicationBaseComponent<LogoutComponentState> implement
     }
 
     submit(): void {
-        this.material.logout((event) => {
+        this.material.clear.logout((event) => {
             this.post(event)
         })
     }

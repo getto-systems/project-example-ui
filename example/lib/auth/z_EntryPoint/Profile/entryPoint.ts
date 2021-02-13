@@ -1,5 +1,5 @@
 import {
-    ClearCredentialForegroundAction,
+    ClearCredentialForegroundActionPod,
     ClearCredentialResource,
 } from "../../x_Resource/Sign/ClearCredential/resource"
 
@@ -40,7 +40,7 @@ export type ProfileFactory = Readonly<{
         menu: MenuAction
         season: SeasonAction
     }> &
-        ClearCredentialForegroundAction
+        ClearCredentialForegroundActionPod
     components: Readonly<{
         error: NotifyComponentFactory
         seasonInfo: SeasonInfoComponentFactory

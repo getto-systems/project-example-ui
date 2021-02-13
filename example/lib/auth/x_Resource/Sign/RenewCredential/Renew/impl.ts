@@ -3,11 +3,7 @@ import { ApplicationBaseComponent } from "../../../../../common/getto-example/Ap
 import { RenewComponentFactory, RenewMaterial, RenewComponent, RenewComponentState } from "./component"
 
 import { LoadError } from "../../../../sign/location/data"
-import {
-    emptyAuthCredential,
-    storeAuthCredential,
-    StoreAuthCredential,
-} from "../../../../sign/authCredential/renew/data"
+import { AuthCredential } from "../../../../sign/authCredential/common/data"
 
 export const initRenewComponent: RenewComponentFactory = (material) => new Component(material)
 
@@ -20,16 +16,14 @@ class Component extends ApplicationBaseComponent<RenewComponentState> implements
     }
 
     request(): void {
-        this.material.renew((event) => {
+        this.material.renew.request((event) => {
             switch (event.type) {
                 case "try-to-instant-load":
                     this.post({ type: "try-to-instant-load", scriptPath: this.secureScriptPath() })
                     return
 
                 case "succeed-to-renew":
-                    this.setContinuousRenew(storeAuthCredential(event.authCredential), () => {
-                        this.post({ type: "try-to-load", scriptPath: this.secureScriptPath() })
-                    })
+                    this.startContinuousRenew(event.authCredential)
                     return
 
                 default:
@@ -39,17 +33,15 @@ class Component extends ApplicationBaseComponent<RenewComponentState> implements
         })
     }
     succeedToInstantLoad(): void {
-        this.setContinuousRenew(emptyAuthCredential, () => {
-            this.post({ type: "succeed-to-set-continuous-renew" })
+        this.material.continuousRenew.forceStart((event) => {
+            this.post(event)
         })
     }
     failedToInstantLoad(): void {
-        this.material.forceRenew((event) => {
+        this.material.renew.forceRequest((event) => {
             switch (event.type) {
                 case "succeed-to-renew":
-                    this.setContinuousRenew(storeAuthCredential(event.authCredential), () => {
-                        this.post({ type: "try-to-load", scriptPath: this.secureScriptPath() })
-                    })
+                    this.startContinuousRenew(event.authCredential)
                     return
 
                 default:
@@ -65,11 +57,12 @@ class Component extends ApplicationBaseComponent<RenewComponentState> implements
     secureScriptPath() {
         return this.material.secureScriptPath()
     }
-    setContinuousRenew(authCredential: StoreAuthCredential, hook: { (): void }) {
-        this.material.setContinuousRenew(authCredential, (event) => {
+
+    startContinuousRenew(authCredential: AuthCredential) {
+        this.material.continuousRenew.start(authCredential, (event) => {
             switch (event.type) {
-                case "succeed-to-set-continuous-renew":
-                    hook()
+                case "succeed-to-start-continuous-renew":
+                    this.post({ type: "try-to-load", scriptPath: this.secureScriptPath() })
                     return
 
                 default:

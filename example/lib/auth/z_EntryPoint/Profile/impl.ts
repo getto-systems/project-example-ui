@@ -2,8 +2,6 @@ import { ProfileFactory, ProfileLocationInfo, ProfileResource } from "./entryPoi
 
 import { initClearCredentialResource } from "../../x_Resource/Sign/ClearCredential/impl"
 
-import { ClearCredentialResource } from "../../x_Resource/Sign/ClearCredential/resource"
-
 export function initProfileResource(
     factory: ProfileFactory,
     locationInfo: ProfileLocationInfo
@@ -23,12 +21,6 @@ export function initProfileResource(
         menuList: factory.components.menuList(actions),
         breadcrumbList: factory.components.breadcrumbList(actions),
 
-        ...clearCredential(),
-    }
-
-    function clearCredential(): ClearCredentialResource {
-        return initClearCredentialResource({
-            logout: factory.actions.logout,
-        })
+        ...initClearCredentialResource(factory.actions),
     }
 }

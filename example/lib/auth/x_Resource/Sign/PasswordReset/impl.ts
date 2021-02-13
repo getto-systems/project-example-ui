@@ -1,6 +1,6 @@
 import {
     PasswordResetBackgroundAction,
-    PasswordResetForegroundAction,
+    PasswordResetForegroundActionPod,
     PasswordResetLocationInfo,
     PasswordResetResource,
 } from "./resource"
@@ -10,10 +10,11 @@ import { FormMaterial } from "./Form/component"
 
 import { initResetComponent } from "./Reset/impl"
 import { initFormComponent } from "./Form/impl"
+import { initContinuousRenewAction } from "../../../sign/authCredential/continuousRenew/impl"
 
 export function initPasswordResetResource(
     locationInfo: PasswordResetLocationInfo,
-    foreground: PasswordResetForegroundAction,
+    foreground: PasswordResetForegroundActionPod,
     background: PasswordResetBackgroundAction
 ): PasswordResetResource {
     return {
@@ -23,8 +24,9 @@ export function initPasswordResetResource(
 
     function resetMaterial(): ResetMaterial {
         return {
+            continuousRenew: initContinuousRenewAction(foreground.initContinuousRenew),
+
             reset: background.reset.reset(locationInfo.reset),
-            setContinuousRenew: foreground.setContinuousRenew.setContinuousRenew(),
             secureScriptPath: foreground.application.secureScriptPath(locationInfo.application),
         }
     }

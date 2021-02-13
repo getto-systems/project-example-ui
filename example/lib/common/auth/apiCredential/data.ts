@@ -1,6 +1,6 @@
 export type ApiCredential = Readonly<{
-    nonce: ApiNonce
-    roles: ApiRoles
+    apiNonce: ApiNonce
+    apiRoles: ApiRoles
 }>
 
 export type ApiNonce = string & { ApiNonce: never }
