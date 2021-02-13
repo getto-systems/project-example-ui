@@ -1,7 +1,7 @@
 import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
 
 import { Login } from "../../../../sign/passwordLogin/action"
-import { SecureScriptPath } from "../../../../sign/location/action"
+import { LocationAction } from "../../../../sign/location/action"
 import { ContinuousRenewAction } from "../../../../sign/authCredential/continuousRenew/action"
 
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
@@ -14,9 +14,9 @@ export interface LoginComponentFactory {
 }
 export type LoginMaterial = Readonly<{
     continuousRenew: ContinuousRenewAction
+    location: LocationAction
 
     login: Login
-    secureScriptPath: SecureScriptPath
 }>
 
 export interface LoginComponent extends ApplicationComponent<LoginComponentState> {

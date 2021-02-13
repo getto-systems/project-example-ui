@@ -9,7 +9,6 @@ import {
     GetStatusRemoteAccess,
     GetStatusRemoteAccessResult,
     GetStatusResponse,
-    PasswordResetSessionActionConfig,
     SendTokenRemoteAccess,
     SendTokenRemoteAccessResult,
     StartSessionRemoteAccess,
@@ -20,10 +19,8 @@ import { StartComponentState } from "./Start/component"
 
 import { markSessionID } from "../../../sign/passwordReset/data"
 import { markInputString, toValidationError } from "../../../../common/getto-form/form/data"
-import { ApplicationActionConfig } from "../../../sign/location/infra"
 import { PasswordResetSessionResource } from "./resource"
 import { initPasswordResetSessionResource } from "./impl"
-import { initTestApplicationAction } from "../../../sign/location/tests/application"
 import { initFormAction } from "../../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
 import { initTestPasswordResetSessionAction } from "../../../sign/passwordReset/tests/session"
@@ -436,31 +433,24 @@ describe("PasswordResetSession", () => {
 })
 
 function standardPasswordResetSessionResource() {
-    const config = standardConfig()
     const simulator = standardRemoteAccess()
-    const resource = newTestPasswordResetSessionResource(config, simulator)
+    const resource = newTestPasswordResetSessionResource(simulator)
 
     return { resource }
 }
 function waitPasswordResetSessionResource() {
-    const config = standardConfig()
     const simulator = waitRemoteAccess()
-    const resource = newTestPasswordResetSessionResource(config, simulator)
+    const resource = newTestPasswordResetSessionResource(simulator)
 
     return { resource }
 }
 function longSendingPasswordResetSessionResource() {
-    const config = standardConfig()
     const simulator = longSendingSimulator()
-    const resource = newTestPasswordResetSessionResource(config, simulator)
+    const resource = newTestPasswordResetSessionResource(simulator)
 
     return { resource }
 }
 
-type PasswordResetSessionTestConfig = {
-    application: ApplicationActionConfig
-    passwordResetSession: PasswordResetSessionActionConfig
-}
 type PasswordResetSessionTestRemoteAccess = Readonly<{
     startSession: StartSessionRemoteAccess
     sendToken: SendTokenRemoteAccess
@@ -468,13 +458,11 @@ type PasswordResetSessionTestRemoteAccess = Readonly<{
 }>
 
 function newTestPasswordResetSessionResource(
-    config: PasswordResetSessionTestConfig,
     remote: PasswordResetSessionTestRemoteAccess
 ): PasswordResetSessionResource {
+    const config = standardConfig()
     return initPasswordResetSessionResource(
         {
-            application: initTestApplicationAction(config.application),
-
             form: {
                 core: initFormAction(),
                 loginID: initLoginIDFormFieldAction(),
@@ -486,13 +474,8 @@ function newTestPasswordResetSessionResource(
     )
 }
 
-function standardConfig(): PasswordResetSessionTestConfig {
+function standardConfig() {
     return {
-        application: {
-            secureScriptPath: {
-                secureServerHost: "secure.example.com",
-            },
-        },
         passwordResetSession: {
             startSession: {
                 delay: { delay_millisecond: 1 },

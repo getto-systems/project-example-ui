@@ -49,6 +49,6 @@ class Component extends ApplicationBaseComponent<LoginComponentState> implements
     }
 
     secureScriptPath() {
-        return this.material.secureScriptPath()
+        return this.material.location.getSecureScriptPath()
     }
 }

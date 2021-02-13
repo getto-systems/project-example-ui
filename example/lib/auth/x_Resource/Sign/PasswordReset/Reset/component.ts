@@ -1,7 +1,7 @@
 import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
 
 import { Reset } from "../../../../sign/passwordReset/action"
-import { SecureScriptPath } from "../../../../sign/location/action"
+import { LocationAction } from "../../../../sign/location/action"
 
 import { ResetError, ResetFields } from "../../../../sign/passwordReset/data"
 import { ScriptPath, LoadError } from "../../../../sign/location/data"
@@ -15,9 +15,9 @@ export interface ResetComponentFactory {
 
 export type ResetMaterial = Readonly<{
     continuousRenew: ContinuousRenewAction
+    location: LocationAction
 
     reset: Reset
-    secureScriptPath: SecureScriptPath
 }>
 
 export interface ResetComponent extends ApplicationComponent<ResetComponentState> {

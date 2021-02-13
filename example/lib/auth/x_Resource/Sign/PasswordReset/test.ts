@@ -6,7 +6,6 @@ import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate
 import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/common/infra/remote/renew/simulate"
 import { initResetSimulateRemoteAccess } from "../../../sign/passwordReset/impl/remote/reset/simulate"
 
-import { initTestApplicationAction } from "../../../sign/location/tests/application"
 import { initFormAction } from "../../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../common/auth/field/password/main/password"
@@ -32,6 +31,7 @@ import {
 } from "../../../sign/authCredential/common/infra"
 import { initContinuousRenewActionPod } from "../../../sign/authCredential/continuousRenew/impl"
 import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
+import { initLocationActionPod } from "../../../sign/location/impl"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -742,8 +742,7 @@ function newPasswordResetTestResource(
                 config: config.continuousRenew,
                 clock,
             }),
-
-            application: initTestApplicationAction(config.application),
+            initLocation: initLocationActionPod({ config: config.location }),
 
             form: {
                 core: initFormAction(),
@@ -765,10 +764,8 @@ function emptyResetTokenURL(): URL {
 }
 function standardConfig() {
     return {
-        application: {
-            secureScriptPath: {
-                secureServerHost: "secure.example.com",
-            },
+        location: {
+            secureServerHost: "secure.example.com",
         },
         passwordReset: {
             reset: {

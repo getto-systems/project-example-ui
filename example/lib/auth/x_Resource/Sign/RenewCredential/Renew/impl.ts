@@ -55,7 +55,7 @@ class Component extends ApplicationBaseComponent<RenewComponentState> implements
     }
 
     secureScriptPath() {
-        return this.material.secureScriptPath()
+        return this.material.location.getSecureScriptPath()
     }
 
     startContinuousRenew(authCredential: AuthCredential) {

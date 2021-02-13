@@ -5,8 +5,6 @@ import { initLoginLocationInfo } from "../../common/LocationInfo/impl"
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
 import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/common/infra/remote/renew/simulate"
 
-import { initTestApplicationAction } from "../../../sign/location/tests/application"
-
 import { Clock } from "../../../../z_infra/clock/infra"
 
 import { RenewCredentialResource } from "./resource"
@@ -27,6 +25,7 @@ import { delayed } from "../../../../z_infra/delayed/core"
 import { initRenewActionPod } from "../../../sign/authCredential/renew/impl"
 import { initContinuousRenewActionPod } from "../../../sign/authCredential/continuousRenew/impl"
 import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
+import { initLocationActionPod } from "../../../sign/location/impl"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -431,8 +430,7 @@ function newTestRenewCredentialResource(
             config: config.continuousRenew,
             clock,
         }),
-
-        application: initTestApplicationAction(config.application),
+        initLocation: initLocationActionPod({ config: config.location }),
     })
 }
 
@@ -441,10 +439,8 @@ function standardURL(): URL {
 }
 function standardConfig() {
     return {
-        application: {
-            secureScriptPath: {
-                secureServerHost: "secure.example.com",
-            },
+        location: {
+            secureServerHost: "secure.example.com",
         },
         renew: {
             instantLoadExpire: { expire_millisecond: 20 * 1000 },
