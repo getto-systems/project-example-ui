@@ -1,3 +1,4 @@
+import { ApiCredential } from "../../../common/auth/apiCredential/data"
 import { Delayed, Wait } from "../../../z_infra/delayed/infra"
 import { RemoteAccess, RemoteAccessResult, RemoteAccessSimulator } from "../../../z_infra/remote/infra"
 import { DelayTime, Limit, WaitTime } from "../../../z_infra/time/infra"
@@ -85,9 +86,13 @@ export type GetStatusResponse =
     | Readonly<{ dest: Destination; done: true; send: false; err: string }>
     | Readonly<{ dest: Destination; done: true; send: true }>
 
-export type ResetRemoteAccess = RemoteAccess<ResetMessage, AuthCredential, ResetRemoteError>
-export type ResetRemoteAccessResult = RemoteAccessResult<AuthCredential, ResetRemoteError>
-export type ResetSimulator = RemoteAccessSimulator<ResetMessage, AuthCredential, ResetRemoteError>
+export type ResetRemoteAccess = RemoteAccess<ResetMessage, ResetRemoteResponse, ResetRemoteError>
+export type ResetRemoteAccessResult = RemoteAccessResult<ResetRemoteResponse, ResetRemoteError>
+export type ResetSimulator = RemoteAccessSimulator<ResetMessage, ResetRemoteResponse, ResetRemoteError>
+export type ResetRemoteResponse = Readonly<{
+    auth: AuthCredential
+    api: ApiCredential
+}>
 
 export type ResetMessage = Readonly<{
     resetToken: ResetToken

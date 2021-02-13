@@ -9,19 +9,13 @@ import {
 
 import { checkStatus, reset, startSession } from "../impl/core"
 
-import {
-    CheckStatusInfra,
-    ResetInfra,
-    StartSessionInfra,
-} from "../infra"
+import { CheckStatusInfra, ResetInfra, StartSessionInfra } from "../infra"
 
-import {
-    ResetAction,
-    ResetSessionAction,
-} from "../action"
+import { ResetAction, ResetSessionAction } from "../action"
 
 import { markSessionID } from "../data"
 import { markAuthAt, markTicketNonce } from "../../authCredential/common/data"
+import { markApiNonce, markApiRoles } from "../../../../common/auth/apiCredential/data"
 
 export function initPasswordResetSessionAction(): ResetSessionAction {
     const targetSessionID = markSessionID("session-id")
@@ -108,12 +102,14 @@ export function initPasswordResetAction(): ResetAction {
                 return {
                     success: true,
                     value: {
-                        ticketNonce: markTicketNonce("ticket-nonce"),
-                        // TODO これも返さないといけない
-                        // apiCredential: markApiCredential({
-                        //     apiRoles: ["admin", "development-document"],
-                        // }),
-                        authAt: markAuthAt(new Date()),
+                        auth: {
+                            ticketNonce: markTicketNonce("ticket-nonce"),
+                            authAt: markAuthAt(new Date()),
+                        },
+                        api: {
+                            apiNonce: markApiNonce("api-nonce"),
+                            apiRoles: markApiRoles(["admin", "development-document"]),
+                        },
                     },
                 }
             },

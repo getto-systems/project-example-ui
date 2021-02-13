@@ -133,7 +133,7 @@ export const reset = (infra: ResetInfra): ResetPod => (locationInfo) => async (f
         return
     }
 
-    post({ type: "succeed-to-reset", authCredential: response.value })
+    post({ type: "succeed-to-reset", authCredential: response.value.auth })
 }
 
 interface Post<T> {
