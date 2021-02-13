@@ -1,4 +1,4 @@
-import { initFormAction } from "../../../../sub/getto-form/main/form"
+import { initFormAction } from "../../../../common/getto-form/main/form"
 
 import { initLoginViewLocationInfo, View } from "../impl"
 

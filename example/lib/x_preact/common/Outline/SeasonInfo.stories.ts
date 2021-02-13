@@ -15,7 +15,7 @@ import {
 import { MenuList } from "./MenuList"
 import { SeasonInfo } from "./SeasonInfo"
 
-import { initMockPropsPasser } from "../../../sub/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../common/getto-example/Application/mock"
 import {
     initMockMenuListComponent,
     MenuListMockProps,

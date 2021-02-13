@@ -1,6 +1,6 @@
 import { LoginEvent } from "./event"
 
-import { FormConvertResult } from "../../../sub/getto-form/form/data"
+import { FormConvertResult } from "../../../common/getto-form/form/data"
 import { LoginFields } from "./data"
 
 export type LoginAction = Readonly<{

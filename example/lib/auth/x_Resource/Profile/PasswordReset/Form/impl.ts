@@ -1,4 +1,4 @@
-import { FormContainerBaseComponent } from "../../../../../sub/getto-form/x_Component/Form/impl"
+import { FormContainerBaseComponent } from "../../../../../common/getto-form/x_Resource/Form/impl"
 import { initLoginIDFormFieldComponent } from "../../../common/Field/LoginID/impl"
 import { initPasswordFormFieldComponent } from "../../../common/Field/Password/impl"
 
@@ -6,7 +6,7 @@ import { LoginIDFormFieldComponent } from "../../../common/Field/LoginID/compone
 import { PasswordFormFieldComponent } from "../../../common/Field/Password/component"
 import { FormComponent, FormComponentFactory, FormMaterial } from "./component"
 
-import { FormConvertResult } from "../../../../../sub/getto-form/form/data"
+import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 import { ResetFields } from "../../../../profile/passwordReset/data"
 
 export const initFormComponent: FormComponentFactory = (material) => new Component(material)

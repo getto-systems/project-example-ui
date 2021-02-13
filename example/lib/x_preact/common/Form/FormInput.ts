@@ -6,9 +6,9 @@ import { useComponent } from "../hooks"
 import {
     FormInputComponent,
     initialFormInputComponentState,
-} from "../../../sub/getto-form/x_Component/Form/component"
+} from "../../../common/getto-form/x_Resource/Form/component"
 
-import { markInputString } from "../../../sub/getto-form/form/data"
+import { markInputString } from "../../../common/getto-form/form/data"
 
 export type FormInputProps = Readonly<{
     type: FormInputType

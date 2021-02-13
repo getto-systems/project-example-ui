@@ -10,7 +10,7 @@ import { initPasswordResetSessionResource } from "../../../../x_Resource/Profile
 import { initRenewCredentialResource } from "../../../../x_Resource/Login/RenewCredential/impl"
 
 import { initApplicationAction } from "../../../../common/application/main/application"
-import { initFormAction } from "../../../../../sub/getto-form/main/form"
+import { initFormAction } from "../../../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../common/field/password/main/password"
 import {

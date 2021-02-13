@@ -8,7 +8,7 @@ import {
     SessionID,
     ResetToken,
 } from "../../../../profile/passwordReset/data"
-import { FormConvertResult } from "../../../../../sub/getto-form/form/data"
+import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 
 export type ForegroundMessage =
     | Readonly<{ type: "login"; message: ProxyMessage<LoginProxyMessage> }>

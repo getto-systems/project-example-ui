@@ -1,4 +1,4 @@
-import { ApplicationComponent } from "../../../../../sub/getto-example/Application/component"
+import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
 
 import { Reset } from "../../../../profile/passwordReset/action"
 import { SetContinuousRenew } from "../../../../login/credentialStore/action"
@@ -7,7 +7,7 @@ import { SecureScriptPath } from "../../../../common/application/action"
 import { ResetError, ResetFields } from "../../../../profile/passwordReset/data"
 import { ScriptPath, LoadError } from "../../../../common/application/data"
 import { StorageError } from "../../../../common/credential/data"
-import { FormConvertResult } from "../../../../../sub/getto-form/form/data"
+import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 
 export interface ResetComponentFactory {
     (material: ResetMaterial): ResetComponent

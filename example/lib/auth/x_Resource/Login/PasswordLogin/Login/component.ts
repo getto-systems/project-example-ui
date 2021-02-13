@@ -1,10 +1,10 @@
-import { ApplicationComponent } from "../../../../../sub/getto-example/Application/component"
+import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
 
 import { Login } from "../../../../login/passwordLogin/action"
 import { SetContinuousRenew } from "../../../../login/credentialStore/action"
 import { SecureScriptPath } from "../../../../common/application/action"
 
-import { FormConvertResult } from "../../../../../sub/getto-form/form/data"
+import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 import { ScriptPath, LoadError } from "../../../../common/application/data"
 import { StorageError } from "../../../../common/credential/data"
 import { LoginError, LoginFields } from "../../../../login/passwordLogin/data"

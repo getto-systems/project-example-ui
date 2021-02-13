@@ -3,7 +3,7 @@ import { useEffect } from "preact/hooks"
 
 import { ClearCredential } from "./ClearCredential"
 
-import { initMockPropsPasser } from "../../../sub/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../common/getto-example/Application/mock"
 import {
     ClearCredentialResourceMockProps,
     initMockClearCredentialResource,

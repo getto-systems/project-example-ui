@@ -1,8 +1,8 @@
-import { MockPropsPasser } from "../../../../../sub/getto-example/Application/mock"
+import { MockPropsPasser } from "../../../../../common/getto-example/Application/mock"
 import {
     FormContainerMockComponent,
     FormContainerMockProps,
-} from "../../../../../sub/getto-form/x_Component/Form/mock"
+} from "../../../../../common/getto-form/x_Resource/Form/mock"
 
 import { initMockLoginIDFormField, LoginIDFormFieldMockProps } from "../../../common/Field/LoginID/mock"
 import {
@@ -10,12 +10,12 @@ import {
     PasswordFormFieldMockProps,
 } from "../../../common/Field/Password/mock"
 
-import { FormContainerComponentState } from "../../../../../sub/getto-form/x_Component/Form/component"
+import { FormContainerComponentState } from "../../../../../common/getto-form/x_Resource/Form/component"
 import { LoginIDFormFieldComponent } from "../../../common/Field/LoginID/component"
 import { PasswordFormFieldComponent } from "../../../common/Field/Password/component"
 import { FormComponent } from "./component"
 
-import { FormConvertResult } from "../../../../../sub/getto-form/form/data"
+import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 import { LoginFields } from "../../../../login/passwordLogin/data"
 
 type Passer = MockPropsPasser<FormMockProps>

@@ -3,7 +3,7 @@ import {
     FormFieldHandler,
     FormFieldComponentState,
     FormInputComponent,
-} from "../../../../../sub/getto-form/x_Component/Form/component"
+} from "../../../../../common/getto-form/x_Resource/Form/component"
 
 import {
     PasswordCharacterChecker,

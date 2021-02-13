@@ -12,7 +12,7 @@ import { initAuthCredentialRepository } from "../../../login/credentialStore/imp
 import { initTestApplicationAction } from "../../../common/application/tests/application"
 import { initTestSetContinuousRenewAction } from "../../../login/credentialStore/tests/renew"
 import { initTestPasswordLoginAction } from "../../../login/passwordLogin/tests/login"
-import { initFormAction } from "../../../../sub/getto-form/main/form"
+import { initFormAction } from "../../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../common/field/password/main/password"
 
@@ -34,7 +34,7 @@ import { PasswordLoginResource } from "./resource"
 
 import { LoginComponentState } from "./Login/component"
 
-import { markInputString, toValidationError } from "../../../../sub/getto-form/form/data"
+import { markInputString, toValidationError } from "../../../../common/getto-form/form/data"
 import { markScriptPath } from "../../../common/application/data"
 import { markApiCredential, markAuthAt, markTicketNonce } from "../../../common/credential/data"
 import { LoginFields } from "../../../login/passwordLogin/data"
