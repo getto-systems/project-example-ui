@@ -1,6 +1,6 @@
-import { env } from "../../../y_environment/env"
+import { env } from "../../../../y_environment/env"
 
-import { initApiAvailableNotify } from "../../../z_external/api/available/notify"
+import { initApiAvailableNotify } from "../../../../z_external/api/available/notify"
 
 import { initNotifyConnectRemoteAccess } from "../impl/remote/notify/connect"
 

@@ -17,7 +17,7 @@ import {
     BreadcrumbListComponentFactory,
 } from "../Outline/breadcrumbList/component"
 
-import { NotifyAction } from "../../../availability/notify/action"
+import { NotifyAction } from "../../../availability/error/notify/action"
 import { CredentialAction } from "../../common/credential/action"
 import { MenuAction, MenuLocationInfo } from "../../permission/menu/action"
 import { SeasonAction } from "../../../example/shared/season/action"

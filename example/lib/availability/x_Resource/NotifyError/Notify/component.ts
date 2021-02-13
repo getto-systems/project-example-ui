@@ -1,4 +1,4 @@
-import { Notify } from "../../../notify/action";
+import { Notify } from "../../../error/notify/action";
 
 export interface NotifyComponentFactory {
     (material: NotifyMaterial): NotifyComponent

@@ -10,7 +10,7 @@ import { CredentialAction } from "../../../../../auth/common/credential/action"
 import { MenuAction, MenuLocationInfo } from "../../../../../auth/permission/menu/action"
 
 import { ContentAction, LoadContentLocationInfo } from "../../../../content/action"
-import { NotifyAction } from "../../../../../availability/notify/action"
+import { NotifyAction } from "../../../../../availability/error/notify/action"
 
 export type DocumentFactory = Readonly<{
     actions: Readonly<{

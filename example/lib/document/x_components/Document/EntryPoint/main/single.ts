@@ -10,7 +10,7 @@ import { initMenuListComponent } from "../../../../../auth/z_EntryPoint/Outline/
 import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/impl"
 import { initContentComponent } from "../../content/impl"
 
-import { initNotifyAction } from "../../../../../availability/notify/main/notify"
+import { initNotifyAction } from "../../../../../availability/error/notify/main/notify"
 import { initCredentialAction } from "../../../../../auth/common/credential/main/credential"
 import { initDocumentMenuAction } from "../../../../../auth/permission/menu/main/documentMenu"
 

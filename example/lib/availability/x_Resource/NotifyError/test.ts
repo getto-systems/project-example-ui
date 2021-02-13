@@ -1,6 +1,6 @@
 import { initNotifyErrorResource } from "./impl"
 
-import { initTestNotifyAction } from "../../notify/tests/notify"
+import { initTestNotifyAction } from "../../error/notify/tests/notify"
 
 describe("NotifyError", () => {
     test("notify", (done) => {
