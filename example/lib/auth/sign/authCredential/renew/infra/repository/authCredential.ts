@@ -1,12 +1,12 @@
 import { TypedStorage } from "../../../../../../z_infra/storage/infra"
 import { AuthCredentialRepository, StoreResult, LoadLastLoginResult } from "../../infra"
 
+import { StorageError } from "../../../../../../common/auth/storage/data"
 import {
     AuthAt,
     AuthCredential,
     markAuthAt,
     markTicketNonce,
-    StorageError,
     TicketNonce,
 } from "../../data"
 

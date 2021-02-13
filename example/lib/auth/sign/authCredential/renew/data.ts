@@ -36,5 +36,3 @@ export type RenewError =
     | Readonly<{ type: "infra-error"; err: string }>
 
 export type RenewRemoteError = RenewError | Readonly<{ type: "invalid-ticket" }>
-
-export type StorageError = Readonly<{ type: "infra-error"; err: string }>

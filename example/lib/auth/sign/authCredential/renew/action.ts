@@ -1,6 +1,6 @@
 import { ForceRenewEvent, LogoutEvent, RenewEvent, SetContinuousRenewEvent } from "./event"
 
-import {  StoreAuthCredential } from "./data"
+import { StoreAuthCredential } from "./data"
 
 export type RenewAction = Readonly<{
     renew: RenewPod

@@ -8,7 +8,8 @@ import {
 } from "../../../../z_infra/remote/infra"
 import { DelayTime, ExpireTime, IntervalTime } from "../../../../z_infra/time/infra"
 
-import { AuthCredential, LastLogin, RenewRemoteError, StorageError, TicketNonce } from "./data"
+import { StorageError } from "../../../../common/auth/storage/data"
+import { AuthCredential, LastLogin, RenewRemoteError, TicketNonce } from "./data"
 
 export type RenewInfra = Readonly<{
     apiCredentials: ApiCredentialRepository

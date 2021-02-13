@@ -2,7 +2,7 @@ import { ApplicationComponent } from "../../../../../common/getto-example/Applic
 
 import { Logout } from "../../../../sign/authCredential/renew/action"
 
-import { StorageError } from "../../../../sign/authCredential/renew/data"
+import { StorageError } from "../../../../../common/auth/storage/data"
 
 export interface LogoutComponentFactory {
     (material: LogoutMaterial): LogoutComponent

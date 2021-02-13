@@ -7,7 +7,7 @@ import { SecureScriptPath } from "../../../../sign/location/action"
 import { ResetError, ResetFields } from "../../../../sign/passwordReset/data"
 import { ScriptPath, LoadError } from "../../../../sign/location/data"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
-import { StorageError } from "../../../../sign/authCredential/renew/data"
+import { StorageError } from "../../../../../common/auth/storage/data"
 
 export interface ResetComponentFactory {
     (material: ResetMaterial): ResetComponent
