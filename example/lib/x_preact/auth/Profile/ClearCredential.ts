@@ -3,23 +3,19 @@ import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { box } from "../../../z_vendor/getto-css/preact/design/box"
-import { button_delete } from "../../../z_vendor/getto-css/preact/design/form"
+import { button_delete, field } from "../../../z_vendor/getto-css/preact/design/form"
 import { notice_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
-import { v_medium } from "../../../z_vendor/getto-css/preact/design/alignment"
+import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useComponent } from "../../z_common/hooks"
+import { useComponent } from "../../common/hooks"
 
-import {
-    LogoutComponent,
-    initialLogoutComponentState,
-} from "../../../auth/z_EntryPoint/Profile/logout/component"
+import { ClearCredentialResource } from "../../../auth/x_Resource/Login/ClearCredential/resource"
+
+import { initialLogoutComponentState } from "../../../auth/x_Resource/Login/ClearCredential/Logout/component"
 
 import { StorageError } from "../../../auth/common/credential/data"
 
-type Props = Readonly<{
-    logout: LogoutComponent
-}>
-export function Logout({ logout }: Props): VNode {
+export function ClearCredential({ logout }: ClearCredentialResource): VNode {
     const state = useComponent(logout, initialLogoutComponentState)
     useEffect(() => {
         switch (state.type) {
@@ -43,8 +39,15 @@ export function Logout({ logout }: Props): VNode {
 
     function logoutBox(content: LogoutBoxContent): VNode {
         return box({
-            title: "ログアウト",
-            body: [button_delete({ label: "ログアウト", state: "normal", onClick }), ...error()],
+            body: [
+                v_small(),
+                field({
+                    title: "ログアウト",
+                    body: button_delete({ label: "ログアウト", state: "normal", onClick }),
+                    help: ["作業完了後ログアウトしてください"],
+                }),
+                ...error(),
+            ],
         })
 
         function onClick() {
@@ -56,7 +59,7 @@ export function Logout({ logout }: Props): VNode {
                 return []
             }
             return [
-                v_medium(),
+                v_small(),
                 notice_alert("ログアウトの処理中にエラーが発生しました"),
                 ...detail(content.err),
             ]

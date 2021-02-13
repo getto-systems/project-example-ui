@@ -6,13 +6,13 @@ import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { v_medium } from "../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useComponent, useTermination } from "../../z_common/hooks"
-import { siteInfo } from "../../z_common/site"
-import { spinner } from "../../z_common/icon"
+import { useComponent, useTermination } from "../../common/hooks"
+import { siteInfo } from "../../common/site"
+import { spinner } from "../../common/icon"
 
 import { appendScript } from "./script"
 
-import { ApplicationError } from "../../z_common/System/ApplicationError"
+import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { RenewCredentialEntryPoint } from "../../../auth/z_EntryPoint/Login/entryPoint"
 

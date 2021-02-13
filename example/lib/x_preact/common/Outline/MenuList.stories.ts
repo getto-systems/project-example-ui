@@ -1,6 +1,7 @@
 import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
-import { html } from "htm/preact"
+
+import { noPadded } from "../../z_storybook/display"
 
 import {
     appLayout,
@@ -15,7 +16,10 @@ import { copyright, siteInfo } from "../site"
 import { MenuList } from "./MenuList"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/Application/mock"
-import { MenuListMockProps, initMockMenuListComponent } from "../../../auth/z_EntryPoint/Outline/menuList/mock"
+import {
+    MenuListMockProps,
+    initMockMenuListComponent,
+} from "../../../auth/z_EntryPoint/Outline/menuList/mock"
 
 export default {
     title: "Outline/MenuList",
@@ -37,17 +41,8 @@ const Template: Story<MockProps> = (args) => {
             passer.update(props.args)
         })
         const menuProps = { menuList }
-        return html`
-            <style>
-                .sb-main-padded {
-                    padding: 0 !important;
-                }
-            </style>
-            ${app()}
-        `
-
-        function app() {
-            return appLayout({
+        return noPadded(
+            appLayout({
                 siteInfo: siteInfo(),
                 header: [],
                 main: appMain({
@@ -57,7 +52,7 @@ const Template: Story<MockProps> = (args) => {
                 }),
                 menu: h(MenuList, menuProps),
             })
-        }
+        )
     }
 }
 

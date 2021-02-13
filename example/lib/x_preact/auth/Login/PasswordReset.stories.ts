@@ -1,10 +1,10 @@
 import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { EntryPoint } from "./EntryPoint"
+import { PasswordReset } from "./PasswordReset"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/Application/mock"
-import { newMockLoginAsPasswordReset } from "../../../auth/z_EntryPoint/Login/mock"
+import { initMockPasswordResetEntryPoint } from "../../../auth/z_EntryPoint/Login/mock"
 import { PasswordResetResourceMockProps } from "../../../auth/x_Resource/Profile/PasswordReset/mock"
 import { loginIDFormFieldValidations } from "../../../auth/x_Resource/common/Field/LoginID/mock"
 import { formValidationStates } from "../../../sub/getto-form/x_Component/Form/mock"
@@ -56,14 +56,14 @@ export default {
 type MockProps = PasswordResetResourceMockProps
 const Template: Story<MockProps> = (args) => {
     const passer = initMockPropsPasser<PasswordResetResourceMockProps>()
-    const entryPoint = newMockLoginAsPasswordReset(passer)
+    const entryPoint = initMockPasswordResetEntryPoint(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(EntryPoint, entryPoint)
+        return h(PasswordReset, entryPoint)
     }
 }
 

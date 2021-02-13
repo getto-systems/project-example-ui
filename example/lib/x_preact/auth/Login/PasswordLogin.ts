@@ -12,13 +12,13 @@ import {
     form,
 } from "../../../z_vendor/getto-css/preact/design/form"
 
-import { useComponent, useTermination } from "../../z_common/hooks"
-import { siteInfo } from "../../z_common/site"
-import { icon, spinner } from "../../z_common/icon"
+import { useComponent, useTermination } from "../../common/hooks"
+import { siteInfo } from "../../common/site"
+import { icon, spinner } from "../../common/icon"
 
 import { appendScript } from "./script"
 
-import { ApplicationError } from "../../z_common/System/ApplicationError"
+import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { LoginIDFormField } from "./field/loginID"
 import { PasswordFormField } from "./field/password"

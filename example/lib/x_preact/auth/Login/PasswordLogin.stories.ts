@@ -1,10 +1,10 @@
 import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { EntryPoint } from "./EntryPoint"
+import { PasswordLogin } from "./PasswordLogin"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/Application/mock"
-import { newMockLoginAsPasswordLogin } from "../../../auth/z_EntryPoint/Login/mock"
+import { initMockPasswordLoginEntryPoint } from "../../../auth/z_EntryPoint/Login/mock"
 import { PasswordLoginResourceMockProps } from "../../../auth/x_Resource/Login/PasswordLogin/mock"
 import { loginIDFormFieldValidations } from "../../../auth/x_Resource/common/Field/LoginID/mock"
 import {
@@ -56,14 +56,14 @@ export default {
 type MockProps = PasswordLoginResourceMockProps
 const Template: Story<MockProps> = (args) => {
     const passer = initMockPropsPasser<PasswordLoginResourceMockProps>()
-    const entryPoint = newMockLoginAsPasswordLogin(passer)
+    const entryPoint = initMockPasswordLoginEntryPoint(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(EntryPoint, entryPoint)
+        return h(PasswordLogin, entryPoint)
     }
 }
 

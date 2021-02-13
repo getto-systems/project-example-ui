@@ -17,11 +17,11 @@ export function initPasswordResetResource(
     background: PasswordResetBackgroundAction
 ): PasswordResetResource {
     return {
-        reset: initResetComponent(core()),
+        reset: initResetComponent(reset()),
         form: initFormComponent(form()),
     }
 
-    function core(): ResetMaterial {
+    function reset(): ResetMaterial {
         return {
             reset: background.reset.reset(locationInfo.reset),
             setContinuousRenew: foreground.setContinuousRenew.setContinuousRenew(),

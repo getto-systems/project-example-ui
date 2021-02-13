@@ -9,16 +9,16 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { useDocumentTitle, useTermination } from "../../z_common/hooks"
-import { copyright, siteInfo } from "../../z_common/site"
+import { useDocumentTitle, useTermination } from "../../common/hooks"
+import { copyright, siteInfo } from "../../common/site"
 
-import { ApplicationError } from "../../z_common/System/ApplicationError"
-import { SeasonInfo } from "../../z_common/Outline/SeasonInfo"
-import { MenuList } from "../../z_common/Outline/MenuList"
-import { BreadcrumbList } from "../../z_common/Outline/BreadcrumbList"
-import { Logout } from "./Logout"
+import { ApplicationError } from "../../common/System/ApplicationError"
+import { SeasonInfo } from "../../common/Outline/SeasonInfo"
+import { MenuList } from "../../common/Outline/MenuList"
+import { BreadcrumbList } from "../../common/Outline/BreadcrumbList"
+import { ClearCredential } from "./ClearCredential"
 
-import { ProfileEntryPoint } from "../../../auth/z_EntryPoint/Profile/EntryPoint/entryPoint"
+import { ProfileEntryPoint } from "../../../auth/z_EntryPoint/Profile/entryPoint"
 
 export function EntryPoint({ resource, terminate }: ProfileEntryPoint): VNode {
     useTermination(terminate)
@@ -35,7 +35,7 @@ export function EntryPoint({ resource, terminate }: ProfileEntryPoint): VNode {
         header: [h(SeasonInfo, resource)],
         main: appMain({
             header: mainHeader([mainTitle("プロフィール"), h(BreadcrumbList, resource)]),
-            body: mainBody(h(Logout, resource)),
+            body: mainBody(h(ClearCredential, resource)),
             copyright: copyright(),
         }),
         menu: h(MenuList, resource),

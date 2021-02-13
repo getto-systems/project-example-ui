@@ -1,6 +1,7 @@
 import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
-import { html } from "htm/preact"
+
+import { noPadded } from "../../z_storybook/display"
 
 import { EntryPoint } from "./EntryPoint"
 
@@ -50,14 +51,7 @@ const Template: Story<MockProps> = (args) => {
             })
             passer.content.update({ type: "success" })
         })
-        return html`
-            <style>
-                .sb-main-padded {
-                    padding: 0 !important;
-                }
-            </style>
-            ${h(EntryPoint, entryPoint)}
-        `
+        return noPadded(h(EntryPoint, entryPoint))
     }
 }
 

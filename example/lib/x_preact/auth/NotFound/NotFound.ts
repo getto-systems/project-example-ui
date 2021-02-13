@@ -5,11 +5,11 @@ import { html } from "htm/preact"
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { buttons } from "../../../z_vendor/getto-css/preact/design/form"
 
-import { useComponent, useDocumentTitle, useTermination } from "../../z_common/hooks"
-import { siteInfo } from "../../z_common/site"
-import { icon } from "../../z_common/icon"
+import { useComponent, useDocumentTitle, useTermination } from "../../common/hooks"
+import { siteInfo } from "../../common/site"
+import { icon } from "../../common/icon"
 
-import { ApplicationError } from "../../z_common/System/ApplicationError"
+import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { NotFoundEntryPoint } from "../../../available/x_components/NotFound/EntryPoint/entryPoint"
 

@@ -4,11 +4,11 @@ import { html } from "htm/preact"
 
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 
-import { useComponent } from "../../z_common/hooks"
-import { siteInfo } from "../../z_common/site"
-import { spinner } from "../../z_common/icon"
+import { useComponent } from "../../common/hooks"
+import { siteInfo } from "../../common/site"
+import { spinner } from "../../common/icon"
 
-import { ApplicationError } from "../../z_common/System/ApplicationError"
+import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { NextVersionResource } from "../../../available/x_components/MoveToNextVersion/EntryPoint/entryPoint"
 import { initialNextVersionComponentState } from "../../../available/x_components/MoveToNextVersion/nextVersion/component"

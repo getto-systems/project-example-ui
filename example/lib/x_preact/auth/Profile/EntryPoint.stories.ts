@@ -1,18 +1,16 @@
 import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
-import { html } from "htm/preact"
+
+import { noPadded } from "../../z_storybook/display"
 
 import { EntryPoint } from "./EntryPoint"
 
 import { initMockPropsPasser } from "../../../sub/getto-example/Application/mock"
-import {
-    DashboardMockPropsPasser,
-    newMockDashboard,
-} from "../../../auth/z_EntryPoint/Profile/EntryPoint/mock"
+import { ProfileMockPropsPasser, newMockDashboard } from "../../../auth/z_EntryPoint/Profile/mock"
 import { SeasonInfoMockProps } from "../../../example/x_components/Outline/seasonInfo/mock"
 import { MenuListMockProps } from "../../../auth/z_EntryPoint/Outline/menuList/mock"
 import { BreadcrumbListMockProps } from "../../../auth/z_EntryPoint/Outline/breadcrumbList/mock"
-import { LogoutMockProps } from "../../../auth/z_EntryPoint/Profile/logout/mock"
+import { LogoutMockProps } from "../../../auth/x_Resource/Login/ClearCredential/Logout/mock"
 
 export default {
     title: "Auth/Profile",
@@ -30,7 +28,7 @@ type MockProps = Readonly<{
     breadcrumbIcon: string
 }>
 const Template: Story<MockProps> = (args) => {
-    const passer: DashboardMockPropsPasser = {
+    const passer: ProfileMockPropsPasser = {
         seasonInfo: initMockPropsPasser<SeasonInfoMockProps>(),
         menuList: initMockPropsPasser<MenuListMockProps>(),
         breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
@@ -54,14 +52,7 @@ const Template: Story<MockProps> = (args) => {
             })
             passer.logout.update({ type: "failed", err: "logout error" })
         })
-        return html`
-            <style>
-                .sb-main-padded {
-                    padding: 0 !important;
-                }
-            </style>
-            ${h(EntryPoint, entryPoint)}
-        `
+        return noPadded(h(EntryPoint, entryPoint))
     }
 }
 

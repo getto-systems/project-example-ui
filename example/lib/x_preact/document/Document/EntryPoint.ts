@@ -1,11 +1,11 @@
 import { h, VNode } from "preact"
 import { useErrorBoundary } from "preact/hooks"
 
-import { useTermination } from "../../z_common/hooks"
-import { siteInfo } from "../../z_common/site"
+import { useTermination } from "../../common/hooks"
+import { siteInfo } from "../../common/site"
 
-import { ApplicationError } from "../../z_common/System/ApplicationError"
-import { MenuList } from "../../z_common/Outline/MenuList"
+import { ApplicationError } from "../../common/System/ApplicationError"
+import { MenuList } from "../../common/Outline/MenuList"
 import { Content } from "./Content"
 
 import { DocumentEntryPoint } from "../../../document/x_components/Document/EntryPoint/entryPoint"

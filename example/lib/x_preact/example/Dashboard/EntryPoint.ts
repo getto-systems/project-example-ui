@@ -9,13 +9,13 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { useDocumentTitle, useTermination } from "../../z_common/hooks"
-import { copyright, siteInfo } from "../../z_common/site"
+import { useDocumentTitle, useTermination } from "../../common/hooks"
+import { copyright, siteInfo } from "../../common/site"
 
-import { ApplicationError } from "../../z_common/System/ApplicationError"
-import { SeasonInfo } from "../../z_common/Outline/SeasonInfo"
-import { MenuList } from "../../z_common/Outline/MenuList"
-import { BreadcrumbList } from "../../z_common/Outline/BreadcrumbList"
+import { ApplicationError } from "../../common/System/ApplicationError"
+import { SeasonInfo } from "../../common/Outline/SeasonInfo"
+import { MenuList } from "../../common/Outline/MenuList"
+import { BreadcrumbList } from "../../common/Outline/BreadcrumbList"
 import { Example } from "./Example"
 
 import { DashboardEntryPoint } from "../../../example/x_components/Dashboard/EntryPoint/entryPoint"
