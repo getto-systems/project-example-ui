@@ -19,12 +19,12 @@ import {
 import { SessionComponentState } from "./Session/component"
 
 import { markSessionID } from "../../../profile/passwordReset/data"
-import { markInputString, toValidationError } from "../../../../sub/getto-form/form/data"
+import { markInputString, toValidationError } from "../../../../common/getto-form/form/data"
 import { ApplicationActionConfig } from "../../../common/application/infra"
 import { PasswordResetSessionResource } from "./resource"
 import { initPasswordResetSessionResource } from "./impl"
 import { initTestApplicationAction } from "../../../common/application/tests/application"
-import { initFormAction } from "../../../../sub/getto-form/main/form"
+import { initFormAction } from "../../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
 import { initTestPasswordResetSessionAction } from "../../../profile/passwordReset/tests/session"
 

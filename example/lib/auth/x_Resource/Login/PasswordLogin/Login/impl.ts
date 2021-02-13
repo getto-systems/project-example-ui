@@ -1,8 +1,8 @@
-import { ApplicationBaseComponent } from "../../../../../sub/getto-example/Application/impl"
+import { ApplicationBaseComponent } from "../../../../../common/getto-example/Application/impl"
 
 import { LoginComponentFactory, LoginMaterial, LoginComponent, LoginComponentState } from "./component"
 
-import { FormConvertResult } from "../../../../../sub/getto-form/form/data"
+import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 import { LoadError } from "../../../../common/application/data"
 import { AuthCredential } from "../../../../common/credential/data"
 import { storeAuthCredential } from "../../../../login/credentialStore/data"

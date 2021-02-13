@@ -15,7 +15,7 @@ import { copyright, siteInfo } from "../site"
 
 import { MenuList } from "./MenuList"
 
-import { initMockPropsPasser } from "../../../sub/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../common/getto-example/Application/mock"
 import {
     MenuListMockProps,
     initMockMenuListComponent,

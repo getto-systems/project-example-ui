@@ -1,4 +1,4 @@
-import { MockComponent, MockPropsPasser } from "../../../../sub/getto-example/Application/mock"
+import { MockComponent, MockPropsPasser } from "../../../../common/getto-example/Application/mock"
 
 import { ExampleComponent, ExampleComponentState } from "./component"
 

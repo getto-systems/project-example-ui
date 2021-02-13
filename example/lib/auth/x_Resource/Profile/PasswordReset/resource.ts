@@ -1,7 +1,7 @@
 import { ResetComponent } from "./Reset/component"
 import { FormComponent } from "./Form/component"
 
-import { FormAction } from "../../../../sub/getto-form/form/action"
+import { FormAction } from "../../../../common/getto-form/form/action"
 import { ApplicationAction, SecureScriptPathLocationInfo } from "../../../common/application/action"
 import { LoginIDFormFieldAction } from "../../../common/field/loginID/action"
 import { PasswordFormFieldAction } from "../../../common/field/password/action"

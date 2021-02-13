@@ -1,4 +1,4 @@
-import { MockPropsPasser } from "../../../../sub/getto-example/Application/mock"
+import { MockPropsPasser } from "../../../../common/getto-example/Application/mock"
 
 import { initMockRenewComponent, RenewMockProps } from "./Renew/mock"
 

@@ -1,4 +1,4 @@
-import { ApplicationBaseComponent } from "../../../../../sub/getto-example/Application/impl"
+import { ApplicationBaseComponent } from "../../../../../common/getto-example/Application/impl"
 
 import { RenewComponentFactory, RenewMaterial, RenewComponent, RenewComponentState } from "./component"
 

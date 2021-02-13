@@ -1,4 +1,4 @@
-import { ApplicationComponent } from "../../../../../sub/getto-example/Application/component"
+import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
 
 import { Logout } from "../../../../login/credentialStore/action"
 

@@ -1,4 +1,4 @@
-import { ApplicationBaseComponent } from "../../../../sub/getto-example/Application/impl"
+import { ApplicationBaseComponent } from "../../../../common/getto-example/Application/impl"
 
 import { ContentComponentFactory, ContentMaterial, ContentComponent, ContentComponentState } from "./component"
 

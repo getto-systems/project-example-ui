@@ -1,4 +1,4 @@
-import { ApplicationComponent } from "../../../../sub/getto-example/Application/component"
+import { ApplicationComponent } from "../../../../common/getto-example/Application/component"
 
 import { LoadApiNonce, LoadApiRoles } from "../../../common/credential/action"
 import { LoadMenu, ToggleMenuExpand } from "../../../permission/menu/action"

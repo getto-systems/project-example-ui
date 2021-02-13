@@ -1,7 +1,7 @@
 import {
     MockComponent,
     MockPropsPasser,
-} from "../../../../../sub/getto-example/Application/mock"
+} from "../../../../../common/getto-example/Application/mock"
 
 import { LogoutComponent, LogoutComponentState } from "./component"
 

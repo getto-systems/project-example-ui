@@ -1,4 +1,4 @@
-import { MockPropsPasser } from "../../../../sub/getto-example/Application/mock"
+import { MockPropsPasser } from "../../../../common/getto-example/Application/mock"
 import { initMockLogoutComponent, LogoutMockProps } from "./Logout/mock"
 import { ClearCredentialResource } from "./resource"
 

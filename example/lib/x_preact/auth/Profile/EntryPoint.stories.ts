@@ -5,7 +5,7 @@ import { noPadded } from "../../z_storybook/display"
 
 import { EntryPoint } from "./EntryPoint"
 
-import { initMockPropsPasser } from "../../../sub/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../common/getto-example/Application/mock"
 import { ProfileMockPropsPasser, newMockDashboard } from "../../../auth/z_EntryPoint/Profile/mock"
 import { SeasonInfoMockProps } from "../../../example/x_components/Outline/seasonInfo/mock"
 import { MenuListMockProps } from "../../../auth/z_EntryPoint/Outline/menuList/mock"

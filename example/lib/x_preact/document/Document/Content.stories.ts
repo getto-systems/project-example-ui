@@ -3,7 +3,7 @@ import { useEffect } from "preact/hooks"
 
 import { Content } from "./Content"
 
-import { initMockPropsPasser } from "../../../sub/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../common/getto-example/Application/mock"
 import { ContentMockProps, initMockContentComponent } from "../../../document/x_components/Document/content/mock"
 import {
     BreadcrumbListMockProps,

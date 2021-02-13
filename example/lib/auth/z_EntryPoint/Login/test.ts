@@ -21,7 +21,7 @@ import { initPasswordResetSessionResource } from "../../x_Resource/Profile/Passw
 import { initPasswordResetResource } from "../../x_Resource/Profile/PasswordReset/impl"
 
 import { initTestApplicationAction } from "../../common/application/tests/application"
-import { initFormAction } from "../../../sub/getto-form/main/form"
+import { initFormAction } from "../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../common/field/loginID/main/loginID"
 import { initTestPasswordResetSessionAction } from "../../profile/passwordReset/tests/session"
 import {

@@ -1,6 +1,6 @@
-import { FormField, FormInput } from "../../../../sub/getto-form/form/action"
+import { FormField, FormInput } from "../../../../common/getto-form/form/action"
 
-import { FormInputString } from "../../../../sub/getto-form/form/data"
+import { FormInputString } from "../../../../common/getto-form/form/data"
 import { Password } from "../../password/data"
 import { PasswordCharacter, PasswordValidationError, PasswordViewState } from "./data"
 
