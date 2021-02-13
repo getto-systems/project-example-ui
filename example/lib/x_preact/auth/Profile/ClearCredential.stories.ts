@@ -7,7 +7,7 @@ import { initMockPropsPasser } from "../../../common/getto-example/Application/m
 import {
     ClearCredentialResourceMockProps,
     initMockClearCredentialResource,
-} from "../../../auth/x_Resource/Login/ClearCredential/mock"
+} from "../../../auth/x_Resource/Sign/ClearCredential/mock"
 
 export default {
     title: "Auth/Profile/ClearCredential",

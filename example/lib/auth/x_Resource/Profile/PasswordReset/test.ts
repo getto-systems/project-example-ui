@@ -3,13 +3,13 @@ import { initPasswordResetResource } from "./impl"
 import { initLoginLocationInfo } from "../../common/LocationInfo/impl"
 
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
-import { initTestAuthCredentialStorage } from "../../../login/credentialStore/tests/storage"
-import { initRenewSimulateRemoteAccess } from "../../../login/credentialStore/impl/remote/renew/simulate"
+import { initTestAuthCredentialStorage } from "../../../sign/credentialStore/tests/storage"
+import { initRenewSimulateRemoteAccess } from "../../../sign/credentialStore/impl/remote/renew/simulate"
 import { initResetSimulateRemoteAccess } from "../../../profile/passwordReset/impl/remote/reset/simulate"
-import { initAuthCredentialRepository } from "../../../login/credentialStore/impl/repository/authCredential"
+import { initAuthCredentialRepository } from "../../../sign/credentialStore/impl/repository/authCredential"
 
 import { initTestApplicationAction } from "../../../common/application/tests/application"
-import { initTestSetContinuousRenewAction } from "../../../login/credentialStore/tests/renew"
+import { initTestSetContinuousRenewAction } from "../../../sign/credentialStore/tests/renew"
 import { initFormAction } from "../../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../common/field/password/main/password"
@@ -22,7 +22,7 @@ import {
     RenewRemoteAccess,
     RenewRemoteAccessResult,
     SetContinuousRenewActionConfig,
-} from "../../../login/credentialStore/infra"
+} from "../../../sign/credentialStore/infra"
 import {
     PasswordResetActionConfig,
     ResetRemoteAccess,

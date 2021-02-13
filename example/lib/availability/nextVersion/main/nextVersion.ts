@@ -1,4 +1,4 @@
-import { initApiAvailableCheck } from "../../../z_external/api/available/check"
+import { initApiAvailableCheck } from "../../../z_external/api/availability/check"
 
 import { delayed } from "../../../z_infra/delayed/core"
 import { initCheckConnectRemoteAccess } from "../impl/remote/check/connect"

@@ -8,7 +8,7 @@ import {
 } from "../Outline/menuList/mock"
 import { initMockNotifyComponent } from "../../../availability/x_Resource/NotifyError/Notify/mock"
 import { initMockSeasonInfoComponent, SeasonInfoMockPropsPasser } from "../../../example/x_components/Outline/seasonInfo/mock"
-import { LogoutMockPropsPasser, initMockLogoutComponent } from "../../x_Resource/Login/ClearCredential/Logout/mock"
+import { LogoutMockPropsPasser, initMockLogoutComponent } from "../../x_Resource/Sign/ClearCredential/Logout/mock"
 
 import { ProfileEntryPoint } from "./entryPoint"
 

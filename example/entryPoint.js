@@ -11,7 +11,7 @@ function findPublicEntries() {
     return [
         "availability/moveToLatestVersion",
         "availability/moveToNextVersion",
-        "auth/login",
+        "auth/sign",
         "auth/notFound",
     ]
 }

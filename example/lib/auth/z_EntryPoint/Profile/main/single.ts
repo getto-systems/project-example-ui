@@ -12,7 +12,7 @@ import { initNotifyAction } from "../../../../availability/error/notify/main/not
 import { initSeasonAction } from "../../../../example/shared/season/main/season"
 import { initCredentialAction } from "../../../common/credential/main/credential"
 import { initMainMenuAction } from "../../../permission/menu/main/mainMenu"
-import { initLogoutAction } from "../../../login/credentialStore/main/logout"
+import { initLogoutAction } from "../../../sign/credentialStore/main/logout"
 
 import { ProfileEntryPoint, ProfileFactory, ProfileLocationInfo } from "../entryPoint"
 
