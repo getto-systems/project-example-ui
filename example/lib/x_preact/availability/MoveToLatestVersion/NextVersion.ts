@@ -15,10 +15,10 @@ import { initialNextVersionComponentState } from "../../../availability/x_Resour
 
 import { appTargetToPath, FindError } from "../../../availability/nextVersion/data"
 
-export function NextVersion({ nextVersion }: NextVersionResource): VNode {
-    const state = useComponent(nextVersion, initialNextVersionComponentState)
+export function NextVersion(resource: NextVersionResource): VNode {
+    const state = useComponent(resource.nextVersion, initialNextVersionComponentState)
     useEffect(() => {
-        nextVersion.find()
+        resource.nextVersion.find()
     }, [])
 
     useEffect(() => {

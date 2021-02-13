@@ -22,13 +22,11 @@ type Props = Readonly<{
     breadcrumbList: BreadcrumbListComponent
 }>
 export function Content(resource: Props): VNode {
-    const content = resource.content
-
     const [state, setState] = useState(initialContentComponentState)
     const [loadContentState, setLoadContentState] = useState(initialLoadContentState)
     useEffect(() => {
-        content.addStateHandler(setState)
-        content.load()
+        resource.content.addStateHandler(setState)
+        resource.content.load()
     }, [])
 
     useEffect(() => {

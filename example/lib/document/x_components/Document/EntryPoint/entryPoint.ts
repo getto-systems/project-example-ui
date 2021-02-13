@@ -1,4 +1,4 @@
-import { ErrorComponent } from "../../../../availability/x_Resource/Error/error/component"
+import { NotifyComponent } from "../../../../availability/x_Resource/NotifyError/Notify/component"
 import { MenuListComponent } from "../../../../auth/z_EntryPoint/Outline/menuList/component"
 import { BreadcrumbListComponent } from "../../../../auth/z_EntryPoint/Outline/breadcrumbList/component"
 
@@ -10,7 +10,7 @@ export type DocumentEntryPoint = Readonly<{
 }>
 
 export type DocumentResource = Readonly<{
-    error: ErrorComponent
+    error: NotifyComponent
     menuList: MenuListComponent
     breadcrumbList: BreadcrumbListComponent
 

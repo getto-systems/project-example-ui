@@ -17,16 +17,16 @@ type Props = Readonly<{
     loginID: LoginIDFormFieldComponent
     help: VNodeContent[]
 }>
-export function LoginIDFormField({ loginID, help }: Props): VNode {
-    const state = useComponent(loginID, initialFormFieldComponentState)
+export function LoginIDFormField(resource: Props): VNode {
+    const state = useComponent(resource.loginID, initialFormFieldComponentState)
 
     return label_text_fill(content())
 
     function content() {
         const content = {
             title: "ログインID",
-            body: h(FormInput, { type: "text", input: loginID.input }),
-            help,
+            body: h(FormInput, { type: "text", input: resource.loginID.input }),
+            help: resource.help,
         }
 
         if (state.result.valid) {

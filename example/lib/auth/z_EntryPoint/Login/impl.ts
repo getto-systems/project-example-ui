@@ -93,7 +93,7 @@ export class View extends ApplicationBaseComponent<LoginState> implements LoginV
         return {
             resource,
             terminate: () => {
-                resource.session.terminate()
+                resource.start.terminate()
                 resource.form.terminate()
             },
         }

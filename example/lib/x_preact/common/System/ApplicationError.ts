@@ -10,7 +10,7 @@ import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 type Props = Readonly<{
     err: string
 }>
-export function ApplicationError({ err }: Props): VNode {
+export function ApplicationError(resource: Props): VNode {
     return loginBox(siteInfo(), {
         title: html`システムエラーが発生しました`,
         body: [
@@ -20,7 +20,7 @@ export function ApplicationError({ err }: Props): VNode {
             </p>`,
             v_small(),
             field({ title: "画面", body: html`<pre>${location.pathname}</pre>`, help: [location.host] }),
-            field({ title: "詳細", body: detail(err), help: [] }),
+            field({ title: "詳細", body: detail(resource.err), help: [] }),
             html`<p>
                 お手数ですが、管理者に詳細をお伝えください<br />
                 直前まで行っていた作業も教えていただけると助かります

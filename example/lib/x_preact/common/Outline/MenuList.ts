@@ -27,10 +27,10 @@ export const MENU_ID = "menu"
 type Props = Readonly<{
     menuList: MenuListComponent
 }>
-export function MenuList({ menuList }: Props): VNode {
-    const state = useComponent(menuList, initialMenuListComponentState)
+export function MenuList(resource: Props): VNode {
+    const state = useComponent(resource.menuList, initialMenuListComponentState)
     useEffect(() => {
-        menuList.load()
+        resource.menuList.load()
     }, [])
 
     switch (state.type) {
@@ -81,7 +81,7 @@ export function MenuList({ menuList }: Props): VNode {
 
             function toggle(event: Event) {
                 event.preventDefault()
-                menuList.toggle(wholeMenu, node.path)
+                resource.menuList.toggle(wholeMenu, node.path)
             }
         }
 

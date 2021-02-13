@@ -5,7 +5,7 @@ import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../
 import { detectMenuTarget } from "../../../../../auth/permission/menu/impl/location"
 import { detectContentPath } from "../../../../content/impl/location"
 
-import { initErrorComponent } from "../../../../../availability/x_Resource/Error/error/impl"
+import { initNotifyComponent } from "../../../../../availability/x_Resource/NotifyError/Notify/impl"
 import { initMenuListComponent } from "../../../../../auth/z_EntryPoint/Outline/menuList/impl"
 import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/impl"
 import { initContentComponent } from "../../content/impl"
@@ -30,7 +30,7 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
             content: initContentAction(),
         },
         components: {
-            error: initErrorComponent,
+            error: initNotifyComponent,
             menuList: initMenuListComponent,
             breadcrumbList: initBreadcrumbListComponent,
 

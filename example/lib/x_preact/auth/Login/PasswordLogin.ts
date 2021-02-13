@@ -33,8 +33,7 @@ import { LoginError } from "../../../auth/login/passwordLogin/data"
 export function PasswordLogin({ resource, terminate }: PasswordLoginEntryPoint): VNode {
     useTermination(terminate)
 
-    const { login } = resource
-    const state = useComponent(login, initialLoginComponentState)
+    const state = useComponent(resource.login, initialLoginComponentState)
     const formState = useComponent(resource.form, initialFormContainerComponentState)
 
     useEffect(() => {
@@ -43,7 +42,7 @@ export function PasswordLogin({ resource, terminate }: PasswordLoginEntryPoint):
             case "try-to-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = () => {
-                        login.loadError({
+                        resource.login.loadError({
                             type: "infra-error",
                             err: `スクリプトのロードに失敗しました: ${state.type}`,
                         })
@@ -125,7 +124,7 @@ export function PasswordLogin({ resource, terminate }: PasswordLoginEntryPoint):
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    login.submit(resource.form.getLoginFields())
+                    resource.login.submit(resource.form.getLoginFields())
                 }
             }
             function connectingButton(): VNode {

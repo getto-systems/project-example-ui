@@ -15,8 +15,8 @@ import { initialLogoutComponentState } from "../../../auth/x_Resource/Login/Clea
 
 import { StorageError } from "../../../auth/common/credential/data"
 
-export function ClearCredential({ logout }: ClearCredentialResource): VNode {
-    const state = useComponent(logout, initialLogoutComponentState)
+export function ClearCredential(resource: ClearCredentialResource): VNode {
+    const state = useComponent(resource.logout, initialLogoutComponentState)
     useEffect(() => {
         switch (state.type) {
             case "succeed-to-logout":
@@ -51,7 +51,7 @@ export function ClearCredential({ logout }: ClearCredentialResource): VNode {
         })
 
         function onClick() {
-            logout.submit()
+            resource.logout.submit()
         }
 
         function error(): VNode[] {

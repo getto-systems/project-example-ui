@@ -7,7 +7,7 @@ import { detectContentPath } from "../../../../content/impl/location"
 
 import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
 
-import { initErrorComponent } from "../../../../../availability/x_Resource/Error/error/impl"
+import { initNotifyComponent } from "../../../../../availability/x_Resource/NotifyError/Notify/impl"
 import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/impl"
 import { initMenuListComponent } from "../../../../../auth/z_EntryPoint/Outline/menuList/impl"
 import { initContentComponent } from "../../content/impl"
@@ -44,7 +44,7 @@ export function newTestDocumentResource(
             content: initTestContentAction(),
         },
         components: {
-            error: initErrorComponent,
+            error: initNotifyComponent,
             menuList: initMenuListComponent,
             breadcrumbList: initBreadcrumbListComponent,
 

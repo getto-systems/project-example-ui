@@ -18,7 +18,7 @@ class Component extends ApplicationBaseComponent<ResetComponentState> implements
         this.material = material
     }
 
-    reset(fields: FormConvertResult<ResetFields>): void {
+    submit(fields: FormConvertResult<ResetFields>): void {
         this.material.reset(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-reset":

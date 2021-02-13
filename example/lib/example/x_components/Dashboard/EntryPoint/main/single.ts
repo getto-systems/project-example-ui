@@ -2,7 +2,7 @@ import { env } from "../../../../../y_environment/env"
 
 import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "../impl/core"
 
-import { initErrorComponent } from "../../../../../availability/x_Resource/Error/error/impl"
+import { initNotifyComponent } from "../../../../../availability/x_Resource/NotifyError/Notify/impl"
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initMenuListComponent } from "../../../../../auth/z_EntryPoint/Outline/menuList/impl"
 import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/impl"
@@ -28,7 +28,7 @@ export function newDashboardAsSingle(): DashboardEntryPoint {
             season: initSeasonAction(),
         },
         components: {
-            error: initErrorComponent,
+            error: initNotifyComponent,
             menuList: initMenuListComponent,
             breadcrumbList: initBreadcrumbListComponent,
             seasonInfo: initSeasonInfoComponent,

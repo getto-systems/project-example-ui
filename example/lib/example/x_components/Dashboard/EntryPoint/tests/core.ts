@@ -7,7 +7,7 @@ import { detectMenuTarget } from "../../../../../auth/permission/menu/impl/locat
 
 import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "../impl/core"
 
-import { initErrorComponent } from "../../../../../availability/x_Resource/Error/error/impl"
+import { initNotifyComponent } from "../../../../../availability/x_Resource/NotifyError/Notify/impl"
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/impl"
 import { initMenuListComponent } from "../../../../../auth/z_EntryPoint/Outline/menuList/impl"
@@ -48,7 +48,7 @@ export function newTestDashboardResource(
             season: initTestSeasonAction(repository.seasons, clock),
         },
         components: {
-            error: initErrorComponent,
+            error: initNotifyComponent,
             seasonInfo: initSeasonInfoComponent,
             menuList: initMenuListComponent,
             breadcrumbList: initBreadcrumbListComponent,

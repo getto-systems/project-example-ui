@@ -65,7 +65,7 @@ describe("PasswordReset", () => {
         resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         resource.form.password.input.change()
 
-        resource.reset.reset(resource.form.getResetFields())
+        resource.reset.submit(resource.form.getResetFields())
 
         function initChecker() {
             return initAsyncStateChecker(
@@ -118,7 +118,7 @@ describe("PasswordReset", () => {
         resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         resource.form.password.input.change()
 
-        resource.reset.reset(resource.form.getResetFields())
+        resource.reset.submit(resource.form.getResetFields())
 
         function initChecker() {
             return initAsyncStateChecker(
@@ -169,7 +169,7 @@ describe("PasswordReset", () => {
         //resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
         //resource.passwordField.set(markInputValue(VALID_LOGIN.password))
 
-        resource.reset.reset(resource.form.getResetFields())
+        resource.reset.submit(resource.form.getResetFields())
 
         function initChecker() {
             return initAsyncStateChecker(
@@ -215,7 +215,7 @@ describe("PasswordReset", () => {
         resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         resource.form.password.input.change()
 
-        resource.reset.reset(resource.form.getResetFields())
+        resource.reset.submit(resource.form.getResetFields())
 
         function initChecker() {
             return initAsyncStateChecker(

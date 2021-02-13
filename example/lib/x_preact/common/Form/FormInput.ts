@@ -10,23 +10,28 @@ import {
 
 import { markInputString } from "../../../common/getto-form/form/data"
 
+type FormInputType = "text" | "password" | "search" | "number" | "tel" | "email" | "date" | "time"
+
 export type FormInputProps = Readonly<{
     type: FormInputType
     input: FormInputComponent
 }>
-type FormInputType = "text" | "password" | "search" | "number" | "tel" | "email" | "date" | "time"
+export function FormInput(resource: FormInputProps): VNode {
+    const state = useComponent(resource.input, initialFormInputComponentState)
 
-export function FormInput({ type, input }: FormInputProps): VNode {
-    const state = useComponent(input, initialFormInputComponentState)
-
-    return html`<input type=${type} value=${state.value} onInput=${onInput} onChange=${onChange} />`
+    return html`<input
+        type=${resource.type}
+        value=${state.value}
+        onInput=${onInput}
+        onChange=${onChange}
+    />`
 
     function onInput(event: InputEvent) {
         if (event.target instanceof HTMLInputElement) {
-            input.input(markInputString(event.target.value))
+            resource.input.input(markInputString(event.target.value))
         }
     }
     function onChange() {
-        input.change()
+        resource.input.change()
     }
 }

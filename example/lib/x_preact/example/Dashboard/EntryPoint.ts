@@ -23,7 +23,7 @@ import { DashboardEntryPoint } from "../../../example/x_components/Dashboard/Ent
 export function EntryPoint({ resource, terminate }: DashboardEntryPoint): VNode {
     useTermination(terminate)
 
-    const [err] = useErrorBoundary((err) => resource.error.notify(err))
+    const [err] = useErrorBoundary((err) => resource.error.send(err))
     if (err) {
         return h(ApplicationError, { err: `${err}` })
     }

@@ -1,10 +1,10 @@
 import { MockComponent, MockPropsPasser } from "../../../../../common/getto-example/Application/mock"
 
-import { SessionComponent, SessionComponentState } from "./component"
+import { StartComponent, StartComponentState } from "./component"
 
-type Passer = MockPropsPasser<SessionMockProps>
+type Passer = MockPropsPasser<StartMockProps>
 
-export type SessionMockProps =
+export type StartMockProps =
     | Readonly<{ type: "initial" }>
     | Readonly<{ type: "try" }>
     | Readonly<{ type: "delayed" }>
@@ -25,18 +25,18 @@ export type SessionMockProps =
     | Readonly<{ type: "send-error"; err: string }>
     | Readonly<{ type: "send" }>
 
-export function initMockSessionComponent(passer: Passer): Component {
+export function initMockStartComponent(passer: Passer): Component {
     return new Component(passer)
 }
 
-export class Component extends MockComponent<SessionComponentState> implements SessionComponent {
+export class Component extends MockComponent<StartComponentState> implements StartComponent {
     constructor(passer: Passer) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))
         })
 
-        function mapProps(props: SessionMockProps): SessionComponentState {
+        function mapProps(props: StartMockProps): StartComponentState {
             switch (props.type) {
                 case "initial":
                     return { type: "initial-reset-session" }
@@ -124,7 +124,7 @@ export class Component extends MockComponent<SessionComponentState> implements S
         }
     }
 
-    startSession(): void {
+    submit(): void {
         // mock では特に何もしない
     }
 }

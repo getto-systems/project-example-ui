@@ -20,12 +20,12 @@ import { initialRenewComponentState } from "../../../auth/x_Resource/Login/Renew
 
 import { RenewError } from "../../../auth/login/credentialStore/data"
 
-export function RenewCredential({ resource: { renew }, terminate }: RenewCredentialEntryPoint): VNode {
+export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoint): VNode {
     useTermination(terminate)
 
-    const state = useComponent(renew, initialRenewComponentState)
+    const state = useComponent(resource.renew, initialRenewComponentState)
     useEffect(() => {
-        renew.request()
+        resource.renew.request()
     }, [])
 
     useEffect(() => {
@@ -34,10 +34,10 @@ export function RenewCredential({ resource: { renew }, terminate }: RenewCredent
             case "try-to-instant-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onload = () => {
-                        renew.succeedToInstantLoad()
+                        resource.renew.succeedToInstantLoad()
                     }
                     script.onerror = () => {
-                        renew.failedToInstantLoad()
+                        resource.renew.failedToInstantLoad()
                     }
                 })
                 break
@@ -45,7 +45,7 @@ export function RenewCredential({ resource: { renew }, terminate }: RenewCredent
             case "try-to-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = () => {
-                        renew.loadError({
+                        resource.renew.loadError({
                             type: "infra-error",
                             err: `スクリプトのロードに失敗しました: ${state.type}`,
                         })

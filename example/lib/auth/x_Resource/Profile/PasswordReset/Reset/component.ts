@@ -20,7 +20,7 @@ export type ResetMaterial = Readonly<{
 }>
 
 export interface ResetComponent extends ApplicationComponent<ResetComponentState> {
-    reset(fields: FormConvertResult<ResetFields>): void
+    submit(fields: FormConvertResult<ResetFields>): void
     loadError(err: LoadError): void
 }
 

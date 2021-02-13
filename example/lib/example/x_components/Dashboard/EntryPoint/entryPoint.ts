@@ -1,4 +1,4 @@
-import { ErrorComponent } from "../../../../availability/x_Resource/Error/error/component"
+import { NotifyComponent } from "../../../../availability/x_Resource/NotifyError/Notify/component"
 import { SeasonInfoComponent } from "../../Outline/seasonInfo/component"
 import { MenuListComponent } from "../../../../auth/z_EntryPoint/Outline/menuList/component"
 import { BreadcrumbListComponent } from "../../../../auth/z_EntryPoint/Outline/breadcrumbList/component"
@@ -10,7 +10,7 @@ export type DashboardEntryPoint = Readonly<{
 }>
 
 export type DashboardResource = Readonly<{
-    error: ErrorComponent
+    error: NotifyComponent
     seasonInfo: SeasonInfoComponent
     menuList: MenuListComponent
     breadcrumbList: BreadcrumbListComponent

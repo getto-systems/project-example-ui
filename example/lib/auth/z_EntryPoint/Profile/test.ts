@@ -14,7 +14,7 @@ import { initProfileResource } from "./impl"
 import { initBreadcrumbListComponent } from "../Outline/breadcrumbList/impl"
 import { initMenuListComponent } from "../Outline/menuList/impl"
 import { initSeasonInfoComponent } from "../../../example/x_components/Outline/seasonInfo/impl"
-import { initErrorComponent } from "../../../availability/x_Resource/Error/error/impl"
+import { initNotifyComponent } from "../../../availability/x_Resource/NotifyError/Notify/impl"
 
 import { initTestLogoutAction } from "../../login/credentialStore/tests/logout"
 import { initTestSeasonAction } from "../../../example/shared/season/tests/season"
@@ -60,7 +60,7 @@ function standardResource() {
             logout: initTestLogoutAction(repository.authCredentials),
         },
         components: {
-            error: initErrorComponent,
+            error: initNotifyComponent,
             seasonInfo: initSeasonInfoComponent,
             menuList: initMenuListComponent,
             breadcrumbList: initBreadcrumbListComponent,

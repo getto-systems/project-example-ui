@@ -17,18 +17,18 @@ export function initPasswordResetResource(
     background: PasswordResetBackgroundAction
 ): PasswordResetResource {
     return {
-        reset: initResetComponent(reset()),
-        form: initFormComponent(form()),
+        reset: initResetComponent(resetMaterial()),
+        form: initFormComponent(formMaterial()),
     }
 
-    function reset(): ResetMaterial {
+    function resetMaterial(): ResetMaterial {
         return {
             reset: background.reset.reset(locationInfo.reset),
             setContinuousRenew: foreground.setContinuousRenew.setContinuousRenew(),
             secureScriptPath: foreground.application.secureScriptPath(locationInfo.application),
         }
     }
-    function form(): FormMaterial {
+    function formMaterial(): FormMaterial {
         return {
             validation: foreground.form.core.validation(),
             history: foreground.form.core.history(),
