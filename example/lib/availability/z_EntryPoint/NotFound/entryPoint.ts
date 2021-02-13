@@ -1,4 +1,4 @@
-import { CurrentVersionComponent } from "../../x_Resource/NotFound/currentVersion/component"
+import { CurrentVersionComponent } from "../../x_Resource/GetCurrentVersion/currentVersion/component"
 
 export type NotFoundEntryPoint = Readonly<{
     resource: NotFoundResource

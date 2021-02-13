@@ -2,7 +2,7 @@ import { MockComponent, MockPropsPasser } from "../../../../common/getto-example
 
 import { CurrentVersionComponent, CurrentVersionComponentState } from "./component"
 
-import { markVersion } from "../../../currentVersion/data"
+import { markVersion } from "../../../version/currentVersion/data"
 
 export type CurrentVersionMockPropsPasser = MockPropsPasser<CurrentVersionMockProps>
 

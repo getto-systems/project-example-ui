@@ -1,8 +1,8 @@
 import { ApplicationComponent } from "../../../../common/getto-example/Application/component"
 
-import { FindCurrentVersion } from "../../../currentVersion/action"
+import { FindCurrentVersion } from "../../../version/currentVersion/action"
 
-import { Version } from "../../../currentVersion/data"
+import { Version } from "../../../version/currentVersion/data"
 
 export interface CurrentVersionComponentFactory {
     (material: CurrentVersionMaterial): CurrentVersionComponent
