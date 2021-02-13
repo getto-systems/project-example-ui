@@ -9,14 +9,14 @@ import { initPasswordResetResource } from "../../../../x_Resource/Profile/Passwo
 import { initPasswordResetSessionResource } from "../../../../x_Resource/Profile/PasswordResetSession/impl"
 import { initRenewCredentialResource } from "../../../../x_Resource/Sign/RenewCredential/impl"
 
-import { initApplicationAction } from "../../../../common/application/main/application"
+import { initApplicationAction } from "../../../../sign/location/main/application"
 import { initFormAction } from "../../../../../common/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../../common/field/password/main/password"
+import { initLoginIDFormFieldAction } from "../../../../../common/auth/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../../../common/auth/field/password/main/password"
 import {
     initRenewAction,
     initSetContinuousRenewAction,
-} from "../../../../sign/credentialStore/main/renew"
+} from "../../../../sign/authCredential/renew/main/renew"
 
 import {
     LoginBackgroundAction,
@@ -32,10 +32,10 @@ import {
     CheckStatus,
     Reset,
     ResetLocationInfo,
-} from "../../../../profile/passwordReset/action"
+} from "../../../../sign/passwordReset/action"
 
 import { LoginEvent } from "../../../../sign/passwordLogin/event"
-import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../profile/passwordReset/event"
+import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../sign/passwordReset/event"
 
 import {
     ForegroundMessage,

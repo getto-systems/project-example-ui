@@ -18,7 +18,6 @@ import {
 } from "../Outline/breadcrumbList/component"
 
 import { NotifyAction } from "../../../availability/error/notify/action"
-import { CredentialAction } from "../../common/credential/action"
 import { MenuAction, MenuLocationInfo } from "../../permission/menu/action"
 import { SeasonAction } from "../../../example/shared/season/action"
 
@@ -38,7 +37,6 @@ export type ProfileResource = Readonly<{
 export type ProfileFactory = Readonly<{
     actions: Readonly<{
         notify: NotifyAction
-        credential: CredentialAction
         menu: MenuAction
         season: SeasonAction
     }> &

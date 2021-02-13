@@ -1,5 +1,5 @@
 import { LoginEvent } from "../../../../sign/passwordLogin/event"
-import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../../profile/passwordReset/event"
+import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../../sign/passwordReset/event"
 
 import { LoginFields } from "../../../../sign/passwordLogin/data"
 import {
@@ -7,7 +7,7 @@ import {
     ResetFields,
     SessionID,
     ResetToken,
-} from "../../../../profile/passwordReset/data"
+} from "../../../../sign/passwordReset/data"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 
 export type ForegroundMessage =

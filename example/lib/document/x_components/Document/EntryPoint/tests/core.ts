@@ -1,5 +1,4 @@
 import { initTestNotifyAction } from "../../../../../availability/error/notify/tests/notify"
-import { initTestCredentialAction } from "../../../../../auth/common/credential/tests/credential"
 import { initTestMenuAction } from "../../../../../auth/permission/menu/tests/menu"
 
 import { detectMenuTarget } from "../../../../../auth/permission/menu/impl/location"
@@ -12,7 +11,6 @@ import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Ou
 import { initMenuListComponent } from "../../../../../auth/z_EntryPoint/Outline/menuList/impl"
 import { initContentComponent } from "../../content/impl"
 
-import { ApiCredentialRepository } from "../../../../../auth/common/credential/infra"
 import {
     LoadMenuBadgeRemoteAccess,
     MenuExpandRepository,
@@ -21,6 +19,7 @@ import {
 
 import { DocumentResource } from "../entryPoint"
 import { initTestContentAction } from "../../../../content/tests/content"
+import { ApiCredentialRepository } from "../../../../../common/auth/apiCredential/infra"
 
 export type DocumentRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
@@ -39,8 +38,12 @@ export function newTestDocumentResource(
     const factory: DocumentFactory = {
         actions: {
             notify: initTestNotifyAction(),
-            credential: initTestCredentialAction(repository.apiCredentials),
-            menu: initTestMenuAction(menuTree, repository.menuExpands, remote.loadMenuBadge),
+            menu: initTestMenuAction(
+                repository.apiCredentials,
+                menuTree,
+                repository.menuExpands,
+                remote.loadMenuBadge
+            ),
             content: initTestContentAction(),
         },
         components: {

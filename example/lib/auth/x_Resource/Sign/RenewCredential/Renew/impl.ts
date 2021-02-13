@@ -2,12 +2,12 @@ import { ApplicationBaseComponent } from "../../../../../common/getto-example/Ap
 
 import { RenewComponentFactory, RenewMaterial, RenewComponent, RenewComponentState } from "./component"
 
-import { LoadError } from "../../../../common/application/data"
+import { LoadError } from "../../../../sign/location/data"
 import {
     emptyAuthCredential,
     storeAuthCredential,
     StoreAuthCredential,
-} from "../../../../sign/credentialStore/data"
+} from "../../../../sign/authCredential/renew/data"
 
 export const initRenewComponent: RenewComponentFactory = (material) => new Component(material)
 

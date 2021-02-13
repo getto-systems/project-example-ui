@@ -11,7 +11,6 @@ import { detectMenuTarget } from "../../../../../auth/permission/menu/impl/locat
 
 import { initNotifyAction } from "../../../../../availability/error/notify/main/notify"
 import { initSeasonAction } from "../../../../shared/season/main/season"
-import { initCredentialAction } from "../../../../../auth/common/credential/main/credential"
 import { initMainMenuAction } from "../../../../../auth/permission/menu/main/mainMenu"
 
 import { DashboardEntryPoint } from "../entryPoint"
@@ -23,7 +22,6 @@ export function newDashboardAsSingle(): DashboardEntryPoint {
     const factory: DashboardFactory = {
         actions: {
             notify: initNotifyAction(),
-            credential: initCredentialAction(webStorage),
             menu: initMainMenuAction(webStorage),
             season: initSeasonAction(),
         },

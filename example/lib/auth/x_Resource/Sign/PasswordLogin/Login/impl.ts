@@ -3,9 +3,8 @@ import { ApplicationBaseComponent } from "../../../../../common/getto-example/Ap
 import { LoginComponentFactory, LoginMaterial, LoginComponent, LoginComponentState } from "./component"
 
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
-import { LoadError } from "../../../../common/application/data"
-import { AuthCredential } from "../../../../common/credential/data"
-import { storeAuthCredential } from "../../../../sign/credentialStore/data"
+import { LoadError } from "../../../../sign/location/data"
+import { AuthCredential, storeAuthCredential } from "../../../../sign/authCredential/renew/data"
 import { LoginFields } from "../../../../sign/passwordLogin/data"
 
 export const initLoginComponent: LoginComponentFactory = (material) => new Component(material)

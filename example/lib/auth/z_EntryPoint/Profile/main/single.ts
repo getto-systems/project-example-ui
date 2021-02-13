@@ -10,9 +10,8 @@ import { detectMenuTarget } from "../../../permission/menu/impl/location"
 
 import { initNotifyAction } from "../../../../availability/error/notify/main/notify"
 import { initSeasonAction } from "../../../../example/shared/season/main/season"
-import { initCredentialAction } from "../../../common/credential/main/credential"
 import { initMainMenuAction } from "../../../permission/menu/main/mainMenu"
-import { initLogoutAction } from "../../../sign/credentialStore/main/logout"
+import { initLogoutAction } from "../../../sign/authCredential/renew/main/logout"
 
 import { ProfileEntryPoint, ProfileFactory, ProfileLocationInfo } from "../entryPoint"
 
@@ -23,7 +22,6 @@ export function newProfileAsSingle(): ProfileEntryPoint {
     const factory: ProfileFactory = {
         actions: {
             notify: initNotifyAction(),
-            credential: initCredentialAction(webStorage),
             menu: initMainMenuAction(webStorage),
             season: initSeasonAction(),
             logout: initLogoutAction(webStorage),

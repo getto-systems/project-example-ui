@@ -1,5 +1,5 @@
-import { AuthCredential } from "../../common/credential/data";
-import { LoginError } from "./data";
+import { AuthCredential } from "../authCredential/renew/data"
+import { LoginError } from "./data"
 
 export type LoginEvent =
     | Readonly<{ type: "try-to-login" }>

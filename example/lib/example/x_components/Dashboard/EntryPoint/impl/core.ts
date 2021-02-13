@@ -6,7 +6,6 @@ import { BreadcrumbListComponentFactory } from "../../../../../auth/z_EntryPoint
 
 import { ExampleComponentFactory } from "../../example/component"
 
-import { CredentialAction } from "../../../../../auth/common/credential/action"
 import { MenuAction, MenuLocationInfo } from "../../../../../auth/permission/menu/action"
 import { SeasonAction } from "../../../../shared/season/action"
 import { NotifyComponentFactory } from "../../../../../availability/x_Resource/NotifyError/Notify/component"
@@ -15,7 +14,6 @@ import { NotifyAction } from "../../../../../availability/error/notify/action"
 export type DashboardFactory = Readonly<{
     actions: Readonly<{
         notify: NotifyAction
-        credential: CredentialAction
         menu: MenuAction
         season: SeasonAction
     }>
@@ -37,9 +35,6 @@ export function initDashboardResource(
 ): DashboardResource {
     const actions = {
         notify: factory.actions.notify.notify(),
-
-        loadApiNonce: factory.actions.credential.loadApiNonce(),
-        loadApiRoles: factory.actions.credential.loadApiRoles(),
 
         loadSeason: factory.actions.season.loadSeason(),
 

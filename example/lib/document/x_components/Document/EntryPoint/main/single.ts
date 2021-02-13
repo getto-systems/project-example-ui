@@ -11,7 +11,6 @@ import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Ou
 import { initContentComponent } from "../../content/impl"
 
 import { initNotifyAction } from "../../../../../availability/error/notify/main/notify"
-import { initCredentialAction } from "../../../../../auth/common/credential/main/credential"
 import { initDocumentMenuAction } from "../../../../../auth/permission/menu/main/documentMenu"
 
 import { DocumentEntryPoint } from "../entryPoint"
@@ -25,7 +24,6 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
     const factory: DocumentFactory = {
         actions: {
             notify: initNotifyAction(),
-            credential: initCredentialAction(webStorage),
             menu: initDocumentMenuAction(webStorage),
             content: initContentAction(),
         },

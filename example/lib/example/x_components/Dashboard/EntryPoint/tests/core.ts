@@ -1,5 +1,4 @@
 import { initTestNotifyAction } from "../../../../../availability/error/notify/tests/notify"
-import { initTestCredentialAction } from "../../../../../auth/common/credential/tests/credential"
 import { initTestMenuAction } from "../../../../../auth/permission/menu/tests/menu"
 import { initTestSeasonAction } from "../../../../shared/season/tests/season"
 
@@ -13,7 +12,6 @@ import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Ou
 import { initMenuListComponent } from "../../../../../auth/z_EntryPoint/Outline/menuList/impl"
 import { initExampleComponent } from "../../example/impl"
 
-import { ApiCredentialRepository } from "../../../../../auth/common/credential/infra"
 import {
     LoadMenuBadgeRemoteAccess,
     MenuExpandRepository,
@@ -23,6 +21,7 @@ import { SeasonRepository } from "../../../../shared/season/infra"
 import { Clock } from "../../../../../z_infra/clock/infra"
 
 import { DashboardResource } from "../entryPoint"
+import { ApiCredentialRepository } from "../../../../../common/auth/apiCredential/infra"
 
 export type DashboardRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
@@ -43,8 +42,12 @@ export function newTestDashboardResource(
     const factory: DashboardFactory = {
         actions: {
             notify: initTestNotifyAction(),
-            credential: initTestCredentialAction(repository.apiCredentials),
-            menu: initTestMenuAction(menuTree, repository.menuExpands, remote.loadMenuBadge),
+            menu: initTestMenuAction(
+                repository.apiCredentials,
+                menuTree,
+                repository.menuExpands,
+                remote.loadMenuBadge
+            ),
             season: initTestSeasonAction(repository.seasons, clock),
         },
         components: {

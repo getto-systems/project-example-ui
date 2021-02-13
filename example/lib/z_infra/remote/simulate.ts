@@ -1,11 +1,7 @@
 import { wait } from "../delayed/core"
 import { WaitTime } from "../time/infra"
 
-import { RemoteAccess, RemoteAccessResult } from "./infra"
-
-export interface RemoteAccessSimulator<M, V, E> {
-    (message: M): RemoteAccessResult<V, E>
-}
+import { RemoteAccess, RemoteAccessSimulator } from "./infra"
 
 export function initSimulateRemoteAccess<M, V, E>(
     simulator: RemoteAccessSimulator<M, V, E>,

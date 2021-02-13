@@ -1,6 +1,11 @@
 import { ApplicationBaseComponent } from "../../../../common/getto-example/Application/impl"
 
-import { ExampleMaterial, ExampleComponent, ExampleComponentState, ExampleComponentFactory } from "./component"
+import {
+    ExampleMaterial,
+    ExampleComponent,
+    ExampleComponentState,
+    ExampleComponentFactory,
+} from "./component"
 
 export const initExampleComponent: ExampleComponentFactory = (material) => new Component(material)
 

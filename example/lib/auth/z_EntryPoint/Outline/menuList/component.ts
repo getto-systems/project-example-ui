@@ -1,6 +1,5 @@
 import { ApplicationComponent } from "../../../../common/getto-example/Application/component"
 
-import { LoadApiNonce, LoadApiRoles } from "../../../common/credential/action"
 import { LoadMenu, ToggleMenuExpand } from "../../../permission/menu/action"
 
 import { Menu, LoadMenuError, MenuCategoryPath } from "../../../permission/menu/data"
@@ -9,8 +8,6 @@ export interface MenuListComponentFactory {
     (material: MenuListMaterial): MenuListComponent
 }
 export type MenuListMaterial = Readonly<{
-    loadApiNonce: LoadApiNonce
-    loadApiRoles: LoadApiRoles
     loadMenu: LoadMenu
 
     toggleMenuExpand: ToggleMenuExpand

@@ -2,10 +2,10 @@ import { LoginComponent } from "./Login/component"
 import { FormComponent } from "./Form/component"
 
 import { FormAction } from "../../../../common/getto-form/form/action"
-import { ApplicationAction, SecureScriptPathLocationInfo } from "../../../common/application/action"
-import { LoginIDFormFieldAction } from "../../../common/field/loginID/action"
-import { PasswordFormFieldAction } from "../../../common/field/password/action"
-import { SetContinuousRenewAction } from "../../../sign/credentialStore/action"
+import { ApplicationAction, SecureScriptPathLocationInfo } from "../../../sign/location/action"
+import { LoginIDFormFieldAction } from "../../../../common/auth/field/loginID/action"
+import { PasswordFormFieldAction } from "../../../../common/auth/field/password/action"
+import { SetContinuousRenewAction } from "../../../sign/authCredential/renew/action"
 import { LoginAction } from "../../../sign/passwordLogin/action"
 
 export type PasswordLoginResource = Readonly<{

@@ -3,10 +3,8 @@ import { detectMenuTarget } from "../../../../permission/menu/impl/location"
 import { initBreadcrumbListComponent } from "../../breadcrumbList/impl"
 import { initMenuListComponent } from "../../menuList/impl"
 
-import { initTestCredentialAction } from "../../../../common/credential/tests/credential"
 import { initTestMenuAction } from "../../../../permission/menu/tests/menu"
 
-import { ApiCredentialRepository } from "../../../../common/credential/infra"
 import {
     LoadMenuBadgeRemoteAccess,
     MenuExpandRepository,
@@ -15,6 +13,7 @@ import {
 
 import { BreadcrumbListComponent } from "../../breadcrumbList/component"
 import { MenuListComponent } from "../../menuList/component"
+import { ApiCredentialRepository } from "../../../../../common/auth/apiCredential/infra"
 
 export type MenuTestResource = Readonly<{
     breadcrumbList: BreadcrumbListComponent
@@ -35,8 +34,12 @@ export function newTestMenuResource(
     remote: MenuTestRemoteAccess
 ): MenuTestResource {
     const actions = {
-        credential: initTestCredentialAction(repository.apiCredentials),
-        menu: initTestMenuAction(menuTree, repository.menuExpands, remote.loadMenuBadge),
+        menu: initTestMenuAction(
+            repository.apiCredentials,
+            menuTree,
+            repository.menuExpands,
+            remote.loadMenuBadge
+        ),
     }
     const locationInfo = {
         menu: {
@@ -49,8 +52,6 @@ export function newTestMenuResource(
             loadBreadcrumb: actions.menu.loadBreadcrumb(locationInfo.menu),
         }),
         menuList: initMenuListComponent({
-            loadApiNonce: actions.credential.loadApiNonce(),
-            loadApiRoles: actions.credential.loadApiRoles(),
             loadMenu: actions.menu.loadMenu(locationInfo.menu),
             toggleMenuExpand: actions.menu.toggleMenuExpand(),
         }),

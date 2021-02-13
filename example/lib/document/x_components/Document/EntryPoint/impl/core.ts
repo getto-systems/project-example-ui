@@ -6,7 +6,6 @@ import { BreadcrumbListComponentFactory } from "../../../../../auth/z_EntryPoint
 
 import { ContentComponentFactory } from "../../content/component"
 
-import { CredentialAction } from "../../../../../auth/common/credential/action"
 import { MenuAction, MenuLocationInfo } from "../../../../../auth/permission/menu/action"
 
 import { ContentAction, LoadContentLocationInfo } from "../../../../content/action"
@@ -15,7 +14,6 @@ import { NotifyAction } from "../../../../../availability/error/notify/action"
 export type DocumentFactory = Readonly<{
     actions: Readonly<{
         notify: NotifyAction
-        credential: CredentialAction
         menu: MenuAction
         content: ContentAction
     }>
@@ -37,9 +35,6 @@ export function initDocumentResource(
 ): DocumentResource {
     const actions = {
         notify: factory.actions.notify.notify(),
-
-        loadApiNonce: factory.actions.credential.loadApiNonce(),
-        loadApiRoles: factory.actions.credential.loadApiRoles(),
 
         loadBreadcrumb: factory.actions.menu.loadBreadcrumb(locationInfo.menu),
         loadMenu: factory.actions.menu.loadMenu(locationInfo.menu),

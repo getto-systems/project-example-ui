@@ -1,5 +1,4 @@
 import { ApplicationBaseComponent } from "../../../common/getto-example/Application/impl"
-import { AuthSearchParams } from "../../common/searchParams/data"
 
 import {
     LoginView,
@@ -11,6 +10,8 @@ import {
     LoginViewLocationInfo,
     LoginResourceFactory,
 } from "./entryPoint"
+
+import { AuthSearchParams } from "../../sign/location/data"
 
 export function initLoginViewLocationInfo(currentURL: URL): LoginViewLocationInfo {
     return {

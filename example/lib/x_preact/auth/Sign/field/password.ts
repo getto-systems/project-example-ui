@@ -22,7 +22,7 @@ import {
     PasswordValidationError,
     PasswordCharacter,
     PasswordView,
-} from "../../../../auth/common/field/password/data"
+} from "../../../../common/auth/field/password/data"
 
 type Props = Readonly<{
     password: PasswordFormFieldComponent

@@ -3,39 +3,36 @@ import { initPasswordResetResource } from "./impl"
 import { initLoginLocationInfo } from "../../common/LocationInfo/impl"
 
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
-import { initTestAuthCredentialStorage } from "../../../sign/credentialStore/tests/storage"
-import { initRenewSimulateRemoteAccess } from "../../../sign/credentialStore/impl/remote/renew/simulate"
-import { initResetSimulateRemoteAccess } from "../../../profile/passwordReset/impl/remote/reset/simulate"
-import { initAuthCredentialRepository } from "../../../sign/credentialStore/impl/repository/authCredential"
+import { initTestAuthCredentialStorage } from "../../../sign/authCredential/renew/tests/storage"
+import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/renew/infra/remote/renew/simulate"
+import { initResetSimulateRemoteAccess } from "../../../sign/passwordReset/impl/remote/reset/simulate"
+import { initAuthCredentialRepository } from "../../../sign/authCredential/renew/infra/repository/authCredential"
 
-import { initTestApplicationAction } from "../../../common/application/tests/application"
-import { initTestSetContinuousRenewAction } from "../../../sign/credentialStore/tests/renew"
+import { initTestApplicationAction } from "../../../sign/location/tests/application"
+import { initTestSetContinuousRenewAction } from "../../../sign/authCredential/renew/tests/renew"
 import { initFormAction } from "../../../../common/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../common/field/password/main/password"
-import { initTestPasswordResetAction } from "../../../profile/passwordReset/tests/reset"
+import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../../common/auth/field/password/main/password"
+import { initTestPasswordResetAction } from "../../../sign/passwordReset/tests/reset"
 
 import { Clock } from "../../../../z_infra/clock/infra"
-import { ApplicationActionConfig } from "../../../common/application/infra"
 import {
     AuthCredentialRepository,
     RenewRemoteAccess,
     RenewRemoteAccessResult,
-    SetContinuousRenewActionConfig,
-} from "../../../sign/credentialStore/infra"
-import {
-    PasswordResetActionConfig,
-    ResetRemoteAccess,
-    ResetRemoteAccessResult,
-} from "../../../profile/passwordReset/infra"
+} from "../../../sign/authCredential/renew/infra"
+import { ResetRemoteAccess, ResetRemoteAccessResult } from "../../../sign/passwordReset/infra"
 
 import { PasswordResetResource } from "./resource"
 
 import { ResetComponentState } from "./Reset/component"
 
-import { markScriptPath } from "../../../common/application/data"
-import { markApiCredential, markAuthAt, markTicketNonce } from "../../../common/credential/data"
+import { markScriptPath } from "../../../sign/location/data"
 import { markInputString, toValidationError } from "../../../../common/getto-form/form/data"
+import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/renew/data"
+import { initMemoryApiCredentialRepository } from "../../../../common/auth/apiCredential/impl"
+import { markApiNonce, markApiRoles } from "../../../../common/auth/apiCredential/data"
+import { ApiCredentialRepository } from "../../../../common/auth/apiCredential/infra"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -695,41 +692,34 @@ describe("PasswordReset", () => {
 
 function standardPasswordResetResource() {
     const currentURL = standardURL()
-    const config = standardConfig()
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newPasswordResetTestResource(currentURL, config, repository, simulator, clock)
+    const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
 function waitPasswordResetResource() {
     const currentURL = standardURL()
-    const config = standardConfig()
     const repository = standardRepository()
     const simulator = waitSimulator()
     const clock = standardClock()
-    const resource = newPasswordResetTestResource(currentURL, config, repository, simulator, clock)
+    const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
 function emptyResetTokenPasswordResetResource() {
     const currentURL = emptyResetTokenURL()
-    const config = standardConfig()
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newPasswordResetTestResource(currentURL, config, repository, simulator, clock)
+    const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
 
     return { repository, resource }
 }
 
-type PasswordResetTestConfig = {
-    application: ApplicationActionConfig
-    passwordReset: PasswordResetActionConfig
-    setContinuousRenew: SetContinuousRenewActionConfig
-}
 type PasswordResetTestRepository = Readonly<{
+    apiCredentials: ApiCredentialRepository
     authCredentials: AuthCredentialRepository
 }>
 type PasswordResetTestRemoteAccess = Readonly<{
@@ -739,17 +729,18 @@ type PasswordResetTestRemoteAccess = Readonly<{
 
 function newPasswordResetTestResource(
     currentURL: URL,
-    config: PasswordResetTestConfig,
     repository: PasswordResetTestRepository,
     remote: PasswordResetTestRemoteAccess,
     clock: Clock
 ): PasswordResetResource {
+    const config = standardConfig()
     return initPasswordResetResource(
         initLoginLocationInfo(currentURL),
         {
             application: initTestApplicationAction(config.application),
             setContinuousRenew: initTestSetContinuousRenewAction(
                 config.setContinuousRenew,
+                repository.apiCredentials,
                 repository.authCredentials,
                 remote.renew,
                 clock
@@ -773,7 +764,7 @@ function standardURL(): URL {
 function emptyResetTokenURL(): URL {
     return new URL("https://example.com/index.html")
 }
-function standardConfig(): PasswordResetTestConfig {
+function standardConfig() {
     return {
         application: {
             secureScriptPath: {
@@ -786,19 +777,20 @@ function standardConfig(): PasswordResetTestConfig {
             },
         },
         setContinuousRenew: {
-            setContinuousRenew: {
-                interval: { interval_millisecond: 1 },
-                delay: { delay_millisecond: 1 },
-            },
+            interval: { interval_millisecond: 1 },
+            delay: { delay_millisecond: 1 },
         },
     }
 }
-function standardRepository(): PasswordResetTestRepository {
+function standardRepository() {
     return {
+        apiCredentials: initMemoryApiCredentialRepository({
+            set: true,
+            value: { nonce: markApiNonce("api-nonce"), roles: markApiRoles(["role"]) },
+        }),
         authCredentials: initAuthCredentialRepository(
             initTestAuthCredentialStorage({
                 ticketNonce: { set: false },
-                apiCredential: { set: false },
                 lastAuthAt: { set: false },
             })
         ),
@@ -822,7 +814,6 @@ function simulateReset(): ResetRemoteAccessResult {
         success: true,
         value: {
             ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
-            apiCredential: markApiCredential({ apiRoles: ["role"] }),
             authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
         },
     }
@@ -841,7 +832,6 @@ function renewRemoteAccess(): RenewRemoteAccess {
                 success: true,
                 value: {
                     ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
-                    apiCredential: markApiCredential({ apiRoles: ["role"] }),
                     authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
                 },
             }
@@ -855,7 +845,7 @@ function standardClock(): StaticClock {
 }
 
 function expectToSaveLastLogin(authCredentials: AuthCredentialRepository) {
-    expect(authCredentials.findLastLogin()).toEqual({
+    expect(authCredentials.load()).toEqual({
         success: true,
         found: true,
         lastLogin: {
@@ -865,7 +855,7 @@ function expectToSaveLastLogin(authCredentials: AuthCredentialRepository) {
     })
 }
 function expectToSaveRenewed(authCredentials: AuthCredentialRepository) {
-    expect(authCredentials.findLastLogin()).toEqual({
+    expect(authCredentials.load()).toEqual({
         success: true,
         found: true,
         lastLogin: {
@@ -875,7 +865,7 @@ function expectToSaveRenewed(authCredentials: AuthCredentialRepository) {
     })
 }
 function expectToEmptyLastLogin(authCredentials: AuthCredentialRepository) {
-    expect(authCredentials.findLastLogin()).toEqual({
+    expect(authCredentials.load()).toEqual({
         success: true,
         found: false,
     })

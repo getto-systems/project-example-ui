@@ -1,5 +1,6 @@
 import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../impl/core"
 
+import { ApiCredentialRepository } from "../../../../common/auth/apiCredential/infra"
 import {
     LoadBreadcrumbInfra,
     LoadMenuBadgeRemoteAccess,
@@ -12,6 +13,7 @@ import {
 import { MenuAction } from "../action"
 
 export function initTestMenuAction(
+    apiCredentials: ApiCredentialRepository,
     menuTree: MenuTree,
     menuExpands: MenuExpandRepository,
     remote: LoadMenuBadgeRemoteAccess
@@ -29,6 +31,7 @@ export function initTestMenuAction(
     }
     function loadMenuInfra(): LoadMenuInfra {
         return {
+            apiCredentials,
             menuTree,
             menuExpands,
             loadMenuBadge: remote,

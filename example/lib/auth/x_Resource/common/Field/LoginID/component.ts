@@ -6,9 +6,9 @@ import {
     FormInputComponent,
 } from "../../../../../common/getto-form/x_Resource/Form/component"
 
-import { LoginIDFormField } from "../../../../common/field/loginID/action"
+import { LoginIDFormField } from "../../../../../common/auth/field/loginID/action"
 
-import { LoginIDValidationError } from "../../../../common/field/loginID/data"
+import { LoginIDValidationError } from "../../../../../common/auth/field/loginID/data"
 
 export interface LoginIDFormFieldComponentFactory {
     (material: LoginIDFormFieldMaterial): { (handler: FormFieldHandler): LoginIDFormFieldComponent }

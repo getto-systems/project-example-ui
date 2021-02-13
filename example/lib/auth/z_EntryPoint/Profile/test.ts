@@ -1,9 +1,8 @@
 import { detectMenuTarget } from "../../permission/menu/impl/location"
 
 import { initStaticClock } from "../../../z_infra/clock/simulate"
-import { initTestAuthCredentialStorage } from "../../sign/credentialStore/tests/storage"
-import { initAuthCredentialRepository } from "../../sign/credentialStore/impl/repository/authCredential"
-import { initApiCredentialRepository } from "../../common/credential/impl/repository/apiCredential"
+import { initTestAuthCredentialStorage } from "../../sign/authCredential/renew/tests/storage"
+import { initAuthCredentialRepository } from "../../sign/authCredential/renew/infra/repository/authCredential"
 import { initMemoryTypedStorage } from "../../../z_infra/storage/memory"
 import { initMenuExpandRepository } from "../../permission/menu/impl/repository/menuExpand"
 import { initMemorySeasonRepository } from "../../../example/shared/season/impl/repository/season/memory"
@@ -16,18 +15,18 @@ import { initMenuListComponent } from "../Outline/menuList/impl"
 import { initSeasonInfoComponent } from "../../../example/x_components/Outline/seasonInfo/impl"
 import { initNotifyComponent } from "../../../availability/x_Resource/NotifyError/Notify/impl"
 
-import { initTestLogoutAction } from "../../sign/credentialStore/tests/logout"
+import { initTestLogoutAction } from "../../sign/authCredential/renew/tests/logout"
 import { initTestSeasonAction } from "../../../example/shared/season/tests/season"
 import { initTestMenuAction } from "../../permission/menu/tests/menu"
-import { initTestCredentialAction } from "../../common/credential/tests/credential"
 import { initTestNotifyAction } from "../../../availability/error/notify/tests/notify"
 
 import { Clock } from "../../../z_infra/clock/infra"
 import { MenuTree } from "../../permission/menu/infra"
 
 import { ProfileFactory, ProfileLocationInfo } from "./entryPoint"
-
-import { markApiCredential, markAuthAt, markTicketNonce } from "../../common/credential/data"
+import { markAuthAt, markTicketNonce } from "../../sign/authCredential/renew/data"
+import { initMemoryApiCredentialRepository } from "../../../common/auth/apiCredential/impl"
+import { markApiNonce, markApiRoles } from "../../../common/auth/apiCredential/data"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -54,10 +53,14 @@ function standardResource() {
     const factory: ProfileFactory = {
         actions: {
             notify: initTestNotifyAction(),
-            credential: initTestCredentialAction(repository.apiCredentials),
-            menu: initTestMenuAction(menuTree, repository.menuExpands, remote.loadMenuBadge),
+            menu: initTestMenuAction(
+                repository.apiCredentials,
+                menuTree,
+                repository.menuExpands,
+                remote.loadMenuBadge
+            ),
             season: initTestSeasonAction(repository.seasons, clock),
-            logout: initTestLogoutAction(repository.authCredentials),
+            logout: initTestLogoutAction(repository.apiCredentials, repository.authCredentials),
         },
         components: {
             error: initNotifyComponent,
@@ -89,23 +92,16 @@ function standardMenuTree(): MenuTree {
 
 function standardRepository() {
     return {
+        apiCredentials: initMemoryApiCredentialRepository({
+            set: true,
+            value: { nonce: markApiNonce("api-nonce"), roles: markApiRoles(["role"]) },
+        }),
         authCredentials: initAuthCredentialRepository(
             initTestAuthCredentialStorage({
                 ticketNonce: { set: true, value: markTicketNonce(STORED_TICKET_NONCE) },
-                apiCredential: { set: true, value: markApiCredential({ apiRoles: ["role"] }) },
                 lastAuthAt: { set: true, value: markAuthAt(STORED_LOGIN_AT) },
             })
         ),
-        apiCredentials: initApiCredentialRepository({
-            apiCredential: initMemoryTypedStorage({
-                set: true,
-                value: markApiCredential({
-                    // TODO apiNonce を追加
-                    //apiNonce: markApiNonce("api-nonce"),
-                    apiRoles: ["admin"],
-                }),
-            }),
-        }),
         menuExpands: initMenuExpandRepository({
             menuExpand: initMemoryTypedStorage({ set: false }),
         }),
