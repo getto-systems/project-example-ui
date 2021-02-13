@@ -3,15 +3,14 @@ import { initPasswordLoginResource } from "./impl"
 import { initLoginLocationInfo } from "../../common/LocationInfo/impl"
 
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
-import { initLoginSimulateRemoteAccess } from "../../../sign/passwordLogin/impl/remote/login/simulate"
+import { initLoginSimulateRemoteAccess } from "../../../sign/password/login/infra/remote/login/simulate"
 import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/common/infra/remote/renew/simulate"
 
-import { initTestPasswordLoginAction } from "../../../sign/passwordLogin/tests/login"
 import { initFormAction } from "../../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../common/auth/field/password/main/password"
 
-import { LoginRemoteAccess, LoginRemoteAccessResult } from "../../../sign/passwordLogin/infra"
+import { LoginRemoteAccess, LoginRemoteAccessResult } from "../../../sign/password/login/infra"
 import { Clock } from "../../../../z_infra/clock/infra"
 
 import { PasswordLoginResource } from "./resource"
@@ -20,7 +19,7 @@ import { LoginComponentState } from "./Login/component"
 
 import { markInputString, toValidationError } from "../../../../common/getto-form/form/data"
 import { markScriptPath } from "../../../sign/location/data"
-import { LoginFields } from "../../../sign/passwordLogin/data"
+import { LoginFields } from "../../../sign/password/login/data"
 import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/common/data"
 import { ApiCredentialRepository } from "../../../../common/auth/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../common/auth/apiCredential/infra/repository/memory"
@@ -33,6 +32,8 @@ import {
 } from "../../../sign/authCredential/common/infra"
 import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
 import { initLocationActionPod } from "../../../sign/location/impl"
+import { delayed } from "../../../../z_infra/delayed/core"
+import { initLoginActionPod } from "../../../sign/password/login/impl"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -700,7 +701,11 @@ function newTestPasswordLoginResource(
             },
         },
         {
-            login: initTestPasswordLoginAction(config.passwordLogin, remote.login),
+            initLogin: initLoginActionPod({
+                ...remote,
+                config: config.login,
+                delayed,
+            }),
         }
     )
 }
@@ -713,10 +718,8 @@ function standardConfig() {
         location: {
             secureServerHost: "secure.example.com",
         },
-        passwordLogin: {
-            login: {
-                delay: { delay_millisecond: 1 },
-            },
+        login: {
+            delay: { delay_millisecond: 1 },
         },
         continuousRenew: {
             interval: { interval_millisecond: 1 },

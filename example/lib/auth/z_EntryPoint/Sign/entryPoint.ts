@@ -1,6 +1,6 @@
 import { RenewCredentialForegroundActionPod, RenewCredentialResource } from "../../x_Resource/Sign/RenewCredential/resource"
 import {
-    PasswordLoginBackgroundAction,
+    PasswordLoginBackgroundActionPod,
     PasswordLoginForegroundActionPod,
     PasswordLoginResource,
 } from "../../x_Resource/Sign/PasswordLogin/resource"
@@ -23,7 +23,7 @@ export type LoginForegroundAction = RenewCredentialForegroundActionPod &
     PasswordResetSessionForegroundAction &
     PasswordResetForegroundActionPod
 
-export type LoginBackgroundAction = PasswordLoginBackgroundAction &
+export type LoginBackgroundAction = PasswordLoginBackgroundActionPod &
     PasswordResetSessionBackgroundAction &
     PasswordResetBackgroundAction
 

@@ -4,7 +4,7 @@ import { LoginComponentFactory, LoginMaterial, LoginComponent, LoginComponentSta
 
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 import { LoadError } from "../../../../sign/location/data"
-import { LoginFields } from "../../../../sign/passwordLogin/data"
+import { LoginFields } from "../../../../sign/password/login/data"
 import { AuthCredential } from "../../../../sign/authCredential/common/data"
 
 export const initLoginComponent: LoginComponentFactory = (material) => new Component(material)
@@ -18,7 +18,7 @@ class Component extends ApplicationBaseComponent<LoginComponentState> implements
     }
 
     submit(fields: FormConvertResult<LoginFields>): void {
-        this.material.login(fields, (event) => {
+        this.material.login.submit(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-login":
                     this.startContinuousRenew(event.authCredential)

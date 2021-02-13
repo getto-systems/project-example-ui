@@ -25,7 +25,7 @@ import {
 } from "../../entryPoint"
 import { LoginLocationInfo } from "../../../../x_Resource/common/LocationInfo/locationInfo"
 
-import { Login } from "../../../../sign/passwordLogin/action"
+import { LoginActionPod } from "../../../../sign/password/login/action"
 import {
     StartSession,
     CheckStatus,
@@ -33,7 +33,7 @@ import {
     ResetLocationInfo,
 } from "../../../../sign/passwordReset/action"
 
-import { LoginEvent } from "../../../../sign/passwordLogin/event"
+import { SubmitEvent } from "../../../../sign/password/login/event"
 import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../sign/passwordReset/event"
 
 import {
@@ -122,13 +122,15 @@ class ProxyMap<M, E> {
         }
     }
 }
-class LoginProxyMap extends ProxyMap<LoginProxyMessage, LoginEvent> {
-    init(): Login {
-        return async (fields, post) => {
-            this.post({
-                handlerID: this.register(post),
-                message: { fields },
-            })
+class LoginProxyMap extends ProxyMap<LoginProxyMessage, SubmitEvent> {
+    init(): LoginActionPod {
+        return {
+            initSubmit: () => async (fields, post) => {
+                this.post({
+                    handlerID: this.register(post),
+                    message: { fields },
+                })
+            },
         }
     }
 }
@@ -219,9 +221,7 @@ function initLoginComponentFactory(
 
     function initActionProxyFactory(): LoginBackgroundAction {
         return {
-            login: {
-                login: () => proxy.passwordLogin.login.init(),
-            },
+            initLogin: proxy.passwordLogin.login.init(),
             resetSession: {
                 startSession: () => proxy.passwordResetSession.startSession.init(),
                 checkStatus: () => proxy.passwordResetSession.checkStatus.init(),

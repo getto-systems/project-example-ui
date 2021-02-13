@@ -16,7 +16,7 @@ import { initPasswordResetResource } from "../../../x_Resource/Sign/PasswordRese
 import { newLocationActionPod } from "../../../sign/location/main"
 import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../common/auth/field/password/main/password"
-import { initPasswordLoginAction } from "../../../sign/passwordLogin/main/login"
+import { newLoginActionPod } from "../../../sign/password/login/main"
 import {
     initPasswordResetAction,
     initPasswordResetSessionAction,
@@ -49,7 +49,7 @@ export function newLoginAsSingle(): LoginEntryPoint {
 
         passwordLogin: () =>
             initPasswordLoginResource(locationInfo, foreground, {
-                login: initPasswordLoginAction(),
+                initLogin: newLoginActionPod(),
             }),
         passwordResetSession: () =>
             initPasswordResetSessionResource(foreground, {
