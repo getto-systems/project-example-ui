@@ -32,8 +32,7 @@ import { ResetError } from "../../../auth/profile/passwordReset/data"
 export function PasswordReset({ resource, terminate }: PasswordResetEntryPoint): VNode {
     useTermination(terminate)
 
-    const { reset } = resource
-    const state = useComponent(reset, initialResetComponentState)
+    const state = useComponent(resource.reset, initialResetComponentState)
     const formState = useComponent(resource.form, initialFormContainerComponentState)
 
     useEffect(() => {
@@ -42,7 +41,7 @@ export function PasswordReset({ resource, terminate }: PasswordResetEntryPoint):
             case "try-to-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = () => {
-                        reset.loadError({
+                        resource.reset.loadError({
                             type: "infra-error",
                             err: `スクリプトのロードに失敗しました: ${state.type}`,
                         })
@@ -130,7 +129,7 @@ export function PasswordReset({ resource, terminate }: PasswordResetEntryPoint):
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    reset.reset(resource.form.getResetFields())
+                    resource.reset.submit(resource.form.getResetFields())
                 }
             }
             function connectingButton(): VNode {

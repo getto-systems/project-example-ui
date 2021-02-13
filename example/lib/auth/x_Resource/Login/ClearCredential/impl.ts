@@ -6,10 +6,10 @@ export function initClearCredentialResource(
     foreground: ClearCredentialForegroundAction
 ): ClearCredentialResource {
     return {
-        logout: initLogoutComponent(logout()),
+        logout: initLogoutComponent(logoutMaterial()),
     }
 
-    function logout(): LogoutMaterial {
+    function logoutMaterial(): LogoutMaterial {
         return {
             logout: foreground.logout.logout(),
         }

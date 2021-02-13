@@ -17,18 +17,18 @@ export function initPasswordLoginResource(
     background: PasswordLoginBackgroundAction
 ): PasswordLoginResource {
     return {
-        login: initLoginComponent(login()),
-        form: initFormComponent(form()),
+        login: initLoginComponent(loginMaterial()),
+        form: initFormComponent(formMaterial()),
     }
 
-    function login(): LoginMaterial {
+    function loginMaterial(): LoginMaterial {
         return {
             setContinuousRenew: foreground.setContinuousRenew.setContinuousRenew(),
             secureScriptPath: foreground.application.secureScriptPath(locationInfo.application),
             login: background.login.login(),
         }
     }
-    function form(): FormMaterial {
+    function formMaterial(): FormMaterial {
         return {
             validation: foreground.form.core.validation(),
             history: foreground.form.core.history(),

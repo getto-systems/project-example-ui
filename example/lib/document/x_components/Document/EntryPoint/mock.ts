@@ -6,7 +6,7 @@ import {
     initMockMenuListComponent,
     MenuListMockPropsPasser,
 } from "../../../../auth/z_EntryPoint/Outline/menuList/mock"
-import { initMockErrorComponent } from "../../../../availability/x_Resource/Error/error/mock"
+import { initMockNotifyComponent } from "../../../../availability/x_Resource/NotifyError/Notify/mock"
 import { ContentMockPropsPasser, initMockContentComponent } from "../content/mock"
 
 import { DocumentEntryPoint } from "./entryPoint"
@@ -19,7 +19,7 @@ export type DocumentMockPropsPasser = Readonly<{
 export function newMockDocument(passer: DocumentMockPropsPasser): DocumentEntryPoint {
     return {
         resource: {
-            error: initMockErrorComponent(),
+            error: initMockNotifyComponent(),
             menuList: initMockMenuListComponent(passer.menuList),
             breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),
             content: initMockContentComponent(passer.content),

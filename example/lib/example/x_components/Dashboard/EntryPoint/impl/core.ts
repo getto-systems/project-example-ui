@@ -9,7 +9,7 @@ import { ExampleComponentFactory } from "../../example/component"
 import { CredentialAction } from "../../../../../auth/common/credential/action"
 import { MenuAction, MenuLocationInfo } from "../../../../../auth/permission/menu/action"
 import { SeasonAction } from "../../../../shared/season/action"
-import { ErrorComponentFactory } from "../../../../../availability/x_Resource/Error/error/component"
+import { NotifyComponentFactory } from "../../../../../availability/x_Resource/NotifyError/Notify/component"
 import { NotifyAction } from "../../../../../availability/notify/action"
 
 export type DashboardFactory = Readonly<{
@@ -20,7 +20,7 @@ export type DashboardFactory = Readonly<{
         season: SeasonAction
     }>
     components: Readonly<{
-        error: ErrorComponentFactory
+        error: NotifyComponentFactory
         seasonInfo: SeasonInfoComponentFactory
         menuList: MenuListComponentFactory
         breadcrumbList: BreadcrumbListComponentFactory

@@ -21,7 +21,7 @@ import { LoginIDFormField } from "./field/loginID"
 
 import { PasswordResetSessionEntryPoint } from "../../../auth/z_EntryPoint/Login/entryPoint"
 
-import { initialSessionComponentState } from "../../../auth/x_Resource/Profile/PasswordResetSession/Session/component"
+import { initialStartComponentState } from "../../../auth/x_Resource/Profile/PasswordResetSession/Start/component"
 import { initialFormContainerComponentState } from "../../../common/getto-form/x_Resource/Form/component"
 
 import {
@@ -35,8 +35,7 @@ import {
 export function PasswordResetSession({ resource, terminate }: PasswordResetSessionEntryPoint): VNode {
     useTermination(terminate)
 
-    const { session } = resource
-    const state = useComponent(session, initialSessionComponentState)
+    const state = useComponent(resource.start, initialStartComponentState)
     const formState = useComponent(resource.form, initialFormContainerComponentState)
 
     switch (state.type) {
@@ -122,7 +121,7 @@ export function PasswordResetSession({ resource, terminate }: PasswordResetSessi
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    session.startSession(resource.form.getStartSessionFields())
+                    resource.start.submit(resource.form.getStartSessionFields())
                 }
             }
             function connectingButton(): VNode {

@@ -4,9 +4,9 @@ import {
 } from "../../x_Resource/Login/ClearCredential/resource"
 
 import {
-    ErrorComponent,
-    ErrorComponentFactory,
-} from "../../../availability/x_Resource/Error/error/component"
+    NotifyComponent,
+    NotifyComponentFactory,
+} from "../../../availability/x_Resource/NotifyError/Notify/component"
 import {
     SeasonInfoComponent,
     SeasonInfoComponentFactory,
@@ -28,7 +28,7 @@ export type ProfileEntryPoint = Readonly<{
 }>
 
 export type ProfileResource = Readonly<{
-    error: ErrorComponent
+    error: NotifyComponent
     seasonInfo: SeasonInfoComponent
     menuList: MenuListComponent
     breadcrumbList: BreadcrumbListComponent
@@ -44,7 +44,7 @@ export type ProfileFactory = Readonly<{
     }> &
         ClearCredentialForegroundAction
     components: Readonly<{
-        error: ErrorComponentFactory
+        error: NotifyComponentFactory
         seasonInfo: SeasonInfoComponentFactory
         menuList: MenuListComponentFactory
         breadcrumbList: BreadcrumbListComponentFactory

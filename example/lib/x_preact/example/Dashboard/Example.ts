@@ -20,10 +20,10 @@ import { Season, SeasonError } from "../../../example/shared/season/data"
 type Props = Readonly<{
     example: ExampleComponent
 }>
-export function Example({ example }: Props): VNode {
-    const state = useComponent(example, initialExampleComponentState)
+export function Example(resource: Props): VNode {
+    const state = useComponent(resource.example, initialExampleComponentState)
     useEffect(() => {
-        example.load()
+        resource.example.load()
     }, [])
 
     switch (state.type) {

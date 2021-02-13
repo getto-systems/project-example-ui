@@ -58,7 +58,7 @@ class Component extends MockComponent<ResetComponentState> implements ResetCompo
         }
     }
 
-    reset(): void {
+    submit(): void {
         // mock では特に何もしない
     }
     loadError(): void {

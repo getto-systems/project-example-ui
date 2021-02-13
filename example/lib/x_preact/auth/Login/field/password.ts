@@ -28,21 +28,21 @@ type Props = Readonly<{
     password: PasswordFormFieldComponent
     help: VNodeContent[]
 }>
-export function PasswordFormField({ password, help }: Props): VNode {
-    const state = useComponent(password, initialPasswordFormFieldComponentState)
+export function PasswordFormField(resource: Props): VNode {
+    const state = useComponent(resource.password, initialPasswordFormFieldComponentState)
 
     return label_password_fill(content())
 
     function content() {
         const handler = {
-            show: () => password.show(),
-            hide: () => password.hide(),
+            show: () => resource.password.show(),
+            hide: () => resource.password.hide(),
         }
 
         const content = {
             title: "パスワード",
-            body: h(FormInput, { type: "password", input: password.input }),
-            help: [...help, passwordView(handler, state.view, state.character)],
+            body: h(FormInput, { type: "password", input: resource.password.input }),
+            help: [...resource.help, passwordView(handler, state.view, state.character)],
         }
 
         if (state.result.valid) {

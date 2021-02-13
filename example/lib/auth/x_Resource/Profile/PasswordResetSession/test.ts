@@ -16,7 +16,7 @@ import {
     StartSessionRemoteAccessResult,
 } from "../../../profile/passwordReset/infra"
 
-import { SessionComponentState } from "./Session/component"
+import { StartComponentState } from "./Start/component"
 
 import { markSessionID } from "../../../profile/passwordReset/data"
 import { markInputString, toValidationError } from "../../../../common/getto-form/form/data"
@@ -35,15 +35,15 @@ describe("PasswordResetSession", () => {
     test("submit valid login-id", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
-        resource.session.addStateHandler(initChecker())
+        resource.start.addStateHandler(initChecker())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
 
-        resource.session.startSession(resource.form.getStartSessionFields())
+        resource.start.submit(resource.form.getStartSessionFields())
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: SessionComponentState): boolean => {
+                (state: StartComponentState): boolean => {
                     switch (state.type) {
                         case "initial-reset-session":
                         case "try-to-start-session":
@@ -79,15 +79,15 @@ describe("PasswordResetSession", () => {
         // wait for delayed timeout
         const { resource } = waitPasswordResetSessionResource()
 
-        resource.session.addStateHandler(initChecker())
+        resource.start.addStateHandler(initChecker())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
 
-        resource.session.startSession(resource.form.getStartSessionFields())
+        resource.start.submit(resource.form.getStartSessionFields())
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: SessionComponentState): boolean => {
+                (state: StartComponentState): boolean => {
                     switch (state.type) {
                         case "initial-reset-session":
                         case "try-to-start-session":
@@ -124,15 +124,15 @@ describe("PasswordResetSession", () => {
         // wait for send token check limit
         const { resource } = longSendingPasswordResetSessionResource()
 
-        resource.session.addStateHandler(initChecker())
+        resource.start.addStateHandler(initChecker())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
 
-        resource.session.startSession(resource.form.getStartSessionFields())
+        resource.start.submit(resource.form.getStartSessionFields())
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: SessionComponentState): boolean => {
+                (state: StartComponentState): boolean => {
                     switch (state.type) {
                         case "initial-reset-session":
                         case "try-to-start-session":
@@ -197,16 +197,16 @@ describe("PasswordResetSession", () => {
     test("submit without fields", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
-        resource.session.addStateHandler(initChecker())
+        resource.start.addStateHandler(initChecker())
 
         // try to start session without fields
         //resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
 
-        resource.session.startSession(resource.form.getStartSessionFields())
+        resource.start.submit(resource.form.getStartSessionFields())
 
         function initChecker() {
             return initAsyncStateChecker(
-                (state: SessionComponentState): boolean => {
+                (state: StartComponentState): boolean => {
                     switch (state.type) {
                         case "initial-reset-session":
                         case "try-to-start-session":

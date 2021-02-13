@@ -25,10 +25,10 @@ import { linky } from "../../../z_vendor/getto-css/preact/design/highlight"
 type Props = Readonly<{
     breadcrumbList: BreadcrumbListComponent
 }>
-export function BreadcrumbList({ breadcrumbList }: Props): VNode {
-    const state = useComponent(breadcrumbList, initialBreadcrumbListComponentState)
+export function BreadcrumbList(resource: Props): VNode {
+    const state = useComponent(resource.breadcrumbList, initialBreadcrumbListComponentState)
     useEffect(() => {
-        breadcrumbList.load()
+        resource.breadcrumbList.load()
     }, [])
 
     switch (state.type) {

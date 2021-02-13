@@ -1,6 +1,6 @@
 import { DocumentResource } from "../entryPoint"
 
-import { ErrorComponentFactory } from "../../../../../availability/x_Resource/Error/error/component"
+import { NotifyComponentFactory } from "../../../../../availability/x_Resource/NotifyError/Notify/component"
 import { MenuListComponentFactory } from "../../../../../auth/z_EntryPoint/Outline/menuList/component"
 import { BreadcrumbListComponentFactory } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/component"
 
@@ -20,7 +20,7 @@ export type DocumentFactory = Readonly<{
         content: ContentAction
     }>
     components: Readonly<{
-        error: ErrorComponentFactory
+        error: NotifyComponentFactory
         menuList: MenuListComponentFactory
         breadcrumbList: BreadcrumbListComponentFactory
 

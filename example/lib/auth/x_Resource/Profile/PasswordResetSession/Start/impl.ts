@@ -1,26 +1,26 @@
 import { ApplicationBaseComponent } from "../../../../../common/getto-example/Application/impl"
 
 import {
-    SessionComponentFactory,
-    SessionMaterial,
-    SessionComponent,
-    SessionComponentState,
+    StartComponentFactory,
+    StartMaterial,
+    StartComponent,
+    StartComponentState,
 } from "./component"
 
 import { SessionID, StartSessionFields } from "../../../../profile/passwordReset/data"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 
-export const initSessionComponent: SessionComponentFactory = (material) => new Component(material)
+export const initStartComponent: StartComponentFactory = (material) => new Component(material)
 
-class Component extends ApplicationBaseComponent<SessionComponentState> implements SessionComponent {
-    material: SessionMaterial
+class Component extends ApplicationBaseComponent<StartComponentState> implements StartComponent {
+    material: StartMaterial
 
-    constructor(material: SessionMaterial) {
+    constructor(material: StartMaterial) {
         super()
         this.material = material
     }
 
-    startSession(fields: FormConvertResult<StartSessionFields>): void {
+    submit(fields: FormConvertResult<StartSessionFields>): void {
         this.material.startSession(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-start-session":

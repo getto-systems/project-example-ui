@@ -6,7 +6,7 @@ import {
     initMockMenuListComponent,
     MenuListMockPropsPasser,
 } from "../Outline/menuList/mock"
-import { initMockErrorComponent } from "../../../availability/x_Resource/Error/error/mock"
+import { initMockNotifyComponent } from "../../../availability/x_Resource/NotifyError/Notify/mock"
 import { initMockSeasonInfoComponent, SeasonInfoMockPropsPasser } from "../../../example/x_components/Outline/seasonInfo/mock"
 import { LogoutMockPropsPasser, initMockLogoutComponent } from "../../x_Resource/Login/ClearCredential/Logout/mock"
 
@@ -21,7 +21,7 @@ export type ProfileMockPropsPasser = Readonly<{
 export function newMockDashboard(passer: ProfileMockPropsPasser): ProfileEntryPoint {
     return {
         resource: {
-            error: initMockErrorComponent(),
+            error: initMockNotifyComponent(),
             seasonInfo: initMockSeasonInfoComponent(passer.seasonInfo),
             menuList: initMockMenuListComponent(passer.menuList),
             breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),

@@ -54,13 +54,6 @@ describe("Example", () => {
             }
         }
     })
-
-    test("notify error", (done) => {
-        const { resource } = standardResource()
-
-        resource.error.notify("error")
-        done()
-    })
 })
 
 function standardResource() {

@@ -23,7 +23,7 @@ import { ProfileEntryPoint } from "../../../auth/z_EntryPoint/Profile/entryPoint
 export function EntryPoint({ resource, terminate }: ProfileEntryPoint): VNode {
     useTermination(terminate)
 
-    const [err] = useErrorBoundary((err) => resource.error.notify(err))
+    const [err] = useErrorBoundary((err) => resource.error.send(err))
     if (err) {
         return h(ApplicationError, { err: `${err}` })
     }

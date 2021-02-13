@@ -13,10 +13,10 @@ export function initRenewCredentialResource(
     foreground: RenewCredentialForegroundAction
 ): RenewCredentialResource {
     return {
-        renew: initRenewComponent(renew()),
+        renew: initRenewComponent(renewMaterial()),
     }
 
-    function renew(): RenewMaterial {
+    function renewMaterial(): RenewMaterial {
         return {
             renew: foreground.renew.renew(),
             forceRenew: foreground.renew.forceRenew(),
