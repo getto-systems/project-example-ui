@@ -16,7 +16,7 @@ import { initPasswordFormFieldAction } from "../../../../common/field/password/m
 import {
     initRenewAction,
     initSetContinuousRenewAction,
-} from "../../../../sign/credentialStore/main/renew"
+} from "../../../../sign/authCredential/renew/main/renew"
 
 import {
     LoginBackgroundAction,
@@ -32,10 +32,10 @@ import {
     CheckStatus,
     Reset,
     ResetLocationInfo,
-} from "../../../../profile/passwordReset/action"
+} from "../../../../sign/passwordReset/action"
 
 import { LoginEvent } from "../../../../sign/passwordLogin/event"
-import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../profile/passwordReset/event"
+import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../sign/passwordReset/event"
 
 import {
     ForegroundMessage,

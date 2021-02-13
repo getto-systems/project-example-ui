@@ -3,14 +3,14 @@ import { initPasswordLoginResource } from "./impl"
 import { initLoginLocationInfo } from "../../common/LocationInfo/impl"
 
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
-import { initTestAuthCredentialStorage } from "../../../sign/credentialStore/tests/storage"
+import { initTestAuthCredentialStorage } from "../../../sign/authCredential/renew/tests/storage"
 import { initLoginSimulateRemoteAccess } from "../../../sign/passwordLogin/impl/remote/login/simulate"
-import { initRenewSimulateRemoteAccess } from "../../../sign/credentialStore/impl/remote/renew/simulate"
+import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/renew/infra/remote/renew/simulate"
 
-import { initAuthCredentialRepository } from "../../../sign/credentialStore/impl/repository/authCredential"
+import { initAuthCredentialRepository } from "../../../sign/authCredential/renew/infra/repository/authCredential"
 
 import { initTestApplicationAction } from "../../../common/application/tests/application"
-import { initTestSetContinuousRenewAction } from "../../../sign/credentialStore/tests/renew"
+import { initTestSetContinuousRenewAction } from "../../../sign/authCredential/renew/tests/renew"
 import { initTestPasswordLoginAction } from "../../../sign/passwordLogin/tests/login"
 import { initFormAction } from "../../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
@@ -20,14 +20,8 @@ import {
     AuthCredentialRepository,
     RenewRemoteAccess,
     RenewRemoteAccessResult,
-    SetContinuousRenewActionConfig,
-} from "../../../sign/credentialStore/infra"
-import {
-    LoginRemoteAccess,
-    LoginRemoteAccessResult,
-    PasswordLoginActionConfig,
-} from "../../../sign/passwordLogin/infra"
-import { ApplicationActionConfig } from "../../../common/application/infra"
+} from "../../../sign/authCredential/renew/infra"
+import { LoginRemoteAccess, LoginRemoteAccessResult } from "../../../sign/passwordLogin/infra"
 import { Clock } from "../../../../z_infra/clock/infra"
 
 import { PasswordLoginResource } from "./resource"
@@ -36,8 +30,11 @@ import { LoginComponentState } from "./Login/component"
 
 import { markInputString, toValidationError } from "../../../../common/getto-form/form/data"
 import { markScriptPath } from "../../../common/application/data"
-import { markApiCredential, markAuthAt, markTicketNonce } from "../../../common/credential/data"
 import { LoginFields } from "../../../sign/passwordLogin/data"
+import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/renew/data"
+import { ApiCredentialRepository } from "../../../../common/auth/apiCredential/infra"
+import { initMemoryApiCredentialRepository } from "../../../../common/auth/apiCredential/impl"
+import { markApiNonce, markApiRoles } from "../../../../common/auth/apiCredential/data"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -654,31 +651,25 @@ describe("PasswordLogin", () => {
 
 function standardPasswordLoginResource() {
     const currentURL = standardURL()
-    const config = standardConfig()
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newTestPasswordLoginResource(currentURL, config, repository, simulator, clock)
+    const resource = newTestPasswordLoginResource(currentURL, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
 function waitPasswordLoginResource() {
     const currentURL = standardURL()
-    const config = standardConfig()
     const repository = standardRepository()
     const simulator = waitSimulator()
     const clock = standardClock()
-    const resource = newTestPasswordLoginResource(currentURL, config, repository, simulator, clock)
+    const resource = newTestPasswordLoginResource(currentURL, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
 
-type PasswordLoginTestConfig = {
-    application: ApplicationActionConfig
-    passwordLogin: PasswordLoginActionConfig
-    setContinuousRenew: SetContinuousRenewActionConfig
-}
 type PasswordLoginTestRepository = Readonly<{
+    apiCredentials: ApiCredentialRepository
     authCredentials: AuthCredentialRepository
 }>
 type PasswordLoginTestRemoteAccess = Readonly<{
@@ -688,17 +679,18 @@ type PasswordLoginTestRemoteAccess = Readonly<{
 
 function newTestPasswordLoginResource(
     currentURL: URL,
-    config: PasswordLoginTestConfig,
     repository: PasswordLoginTestRepository,
     remote: PasswordLoginTestRemoteAccess,
     clock: Clock
 ): PasswordLoginResource {
+    const config = standardConfig()
     return initPasswordLoginResource(
         initLoginLocationInfo(currentURL),
         {
             application: initTestApplicationAction(config.application),
             setContinuousRenew: initTestSetContinuousRenewAction(
                 config.setContinuousRenew,
+                repository.apiCredentials,
                 repository.authCredentials,
                 remote.renew,
                 clock
@@ -719,7 +711,7 @@ function newTestPasswordLoginResource(
 function standardURL(): URL {
     return new URL("https://example.com/index.html")
 }
-function standardConfig(): PasswordLoginTestConfig {
+function standardConfig() {
     return {
         application: {
             secureScriptPath: {
@@ -732,19 +724,20 @@ function standardConfig(): PasswordLoginTestConfig {
             },
         },
         setContinuousRenew: {
-            setContinuousRenew: {
-                interval: { interval_millisecond: 1 },
-                delay: { delay_millisecond: 1 },
-            },
+            interval: { interval_millisecond: 1 },
+            delay: { delay_millisecond: 1 },
         },
     }
 }
 function standardRepository(): PasswordLoginTestRepository {
     return {
+        apiCredentials: initMemoryApiCredentialRepository({
+            set: true,
+            value: { nonce: markApiNonce("api-nonce"), roles: markApiRoles(["role"]) },
+        }),
         authCredentials: initAuthCredentialRepository(
             initTestAuthCredentialStorage({
                 ticketNonce: { set: false },
-                apiCredential: { set: false },
                 lastAuthAt: { set: false },
             })
         ),
@@ -768,7 +761,6 @@ function simulateLogin(_fields: LoginFields): LoginRemoteAccessResult {
         success: true,
         value: {
             ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
-            apiCredential: markApiCredential({ apiRoles: ["role"] }),
             authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
         },
     }
@@ -787,7 +779,6 @@ function renewRemoteAccess(): RenewRemoteAccess {
                 success: true,
                 value: {
                     ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
-                    apiCredential: markApiCredential({ apiRoles: ["role"] }),
                     authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
                 },
             }
@@ -801,7 +792,7 @@ function standardClock(): StaticClock {
 }
 
 function expectToSaveLastLogin(authCredentials: AuthCredentialRepository) {
-    expect(authCredentials.findLastLogin()).toEqual({
+    expect(authCredentials.load()).toEqual({
         success: true,
         found: true,
         lastLogin: {
@@ -811,7 +802,7 @@ function expectToSaveLastLogin(authCredentials: AuthCredentialRepository) {
     })
 }
 function expectToSaveRenewed(authCredentials: AuthCredentialRepository) {
-    expect(authCredentials.findLastLogin()).toEqual({
+    expect(authCredentials.load()).toEqual({
         success: true,
         found: true,
         lastLogin: {
@@ -821,7 +812,7 @@ function expectToSaveRenewed(authCredentials: AuthCredentialRepository) {
     })
 }
 function expectToEmptyLastLogin(authCredentials: AuthCredentialRepository) {
-    expect(authCredentials.findLastLogin()).toEqual({
+    expect(authCredentials.load()).toEqual({
         success: true,
         found: false,
     })

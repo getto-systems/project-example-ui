@@ -3,10 +3,9 @@ import { ApplicationBaseComponent } from "../../../../../common/getto-example/Ap
 import { ResetComponentFactory, ResetMaterial, ResetComponent, ResetComponentState } from "./component"
 
 import { LoadError } from "../../../../common/application/data"
-import { AuthCredential } from "../../../../common/credential/data"
-import { storeAuthCredential } from "../../../../sign/credentialStore/data"
+import { AuthCredential, storeAuthCredential } from "../../../../sign/authCredential/renew/data"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
-import { ResetFields } from "../../../../profile/passwordReset/data"
+import { ResetFields } from "../../../../sign/passwordReset/data"
 
 export const initResetComponent: ResetComponentFactory = (material) => new Component(material)
 

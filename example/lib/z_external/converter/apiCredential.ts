@@ -5,42 +5,36 @@ import {
     encodeUint8ArrayToBase64String,
 } from "../../z_vendor/protobufUtil"
 
-import {
-    decodeError,
-    decodeSuccess,
-    TypedStorageConverter,
-    TypedStorageValue,
-} from "../../z_infra/storage/infra"
+import { decodeError, decodeSuccess, TypedStorageConverter } from "../../z_infra/storage/infra"
 
 export type ApiCredentialDecoded = Readonly<{
-    apiRoles: string[]
+    nonce: string
+    roles: string[]
 }>
 
 export function initApiCredentialDataConverter(): TypedStorageConverter<ApiCredentialDecoded> {
-    return new Converter()
-}
+    return {
+        toRaw: (value: ApiCredentialDecoded) => {
+            const f = ApiCredentialMessage
+            const message = new f()
 
-class Converter implements TypedStorageConverter<ApiCredentialDecoded> {
-    toRaw(value: ApiCredentialDecoded): string {
-        const f = ApiCredentialMessage
-        const message = new f()
+            message.nonce = value.nonce
+            message.roles = value.roles
 
-        // TODO api nonce を追加
-        //message.nonce = value.apiNonce
-        message.roles = value.apiRoles
-
-        const arr = f.encode(message).finish()
-        return encodeUint8ArrayToBase64String(arr)
-    }
-    toValue(raw: string): TypedStorageValue<ApiCredentialDecoded> {
-        try {
-            const message = ApiCredentialMessage.decode(decodeBase64StringToUint8Array(raw))
-            const value = {
-                apiRoles: message.roles ? message.roles : [],
+            const arr = f.encode(message).finish()
+            return encodeUint8ArrayToBase64String(arr)
+        },
+        toValue: (raw: string) => {
+            try {
+                const message = ApiCredentialMessage.decode(decodeBase64StringToUint8Array(raw))
+                const value = {
+                    nonce: message.nonce ? message.nonce : "",
+                    roles: message.roles ? message.roles : [],
+                }
+                return decodeSuccess(value)
+            } catch (err) {
+                return decodeError(err)
             }
-            return decodeSuccess(value)
-        } catch (err) {
-            return decodeError(err)
-        }
+        },
     }
 }

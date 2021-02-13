@@ -1,11 +1,10 @@
 import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
 
-import { ForceRenew, Renew, SetContinuousRenew } from "../../../../sign/credentialStore/action"
+import { ForceRenew, Renew, SetContinuousRenew } from "../../../../sign/authCredential/renew/action"
 import { SecureScriptPath } from "../../../../common/application/action"
 
-import { RenewError } from "../../../../sign/credentialStore/data"
+import { RenewError, StorageError } from "../../../../sign/authCredential/renew/data"
 import { ScriptPath, LoadError } from "../../../../common/application/data"
-import { StorageError } from "../../../../common/credential/data"
 
 export interface RenewComponentFactory {
     (material: RenewMaterial): RenewComponent

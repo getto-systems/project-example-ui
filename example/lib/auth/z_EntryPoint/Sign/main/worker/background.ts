@@ -2,7 +2,7 @@ import { initPasswordLoginAction } from "../../../../sign/passwordLogin/main/log
 import {
     initPasswordResetAction,
     initPasswordResetSessionAction,
-} from "../../../../profile/passwordReset/main/reset"
+} from "../../../../sign/passwordReset/main/reset"
 
 import { LoginPod, LoginAction } from "../../../../sign/passwordLogin/action"
 import {
@@ -11,14 +11,14 @@ import {
     ResetPod,
     ResetAction,
     ResetSessionAction,
-} from "../../../../profile/passwordReset/action"
+} from "../../../../sign/passwordReset/action"
 
 import { LoginEvent } from "../../../../sign/passwordLogin/event"
 import {
     CheckStatusEvent,
     ResetEvent,
     StartSessionEvent,
-} from "../../../../profile/passwordReset/event"
+} from "../../../../sign/passwordReset/event"
 
 import {
     ForegroundMessage,

@@ -13,7 +13,6 @@ import {
 
 import { LoadBreadcrumbPod, LoadMenuPod, ToggleMenuExpandPod } from "../action"
 
-import { ApiRoles, LoadApiCredentialResult } from "../../../common/credential/data"
 import {
     Breadcrumb,
     BreadcrumbNode,
@@ -27,10 +26,12 @@ import {
     markMenuCategoryLabel,
     MenuCategoryLabel,
 } from "../data"
+import { LoadApiCredentialResult } from "../../../../common/auth/apiCredential/infra"
+import { ApiRoles, emptyApiRoles } from "../../../../common/auth/apiCredential/data"
 
-export const loadBreadcrumb = (infra: LoadBreadcrumbInfra): LoadBreadcrumbPod => (locationInfo) => async (
-    post
-) => {
+export const loadBreadcrumb = (infra: LoadBreadcrumbInfra): LoadBreadcrumbPod => (
+    locationInfo
+) => async (post) => {
     const { menuTree } = infra
 
     post({
@@ -87,16 +88,14 @@ function toBreadcrumb({ menuTree, menuTarget }: BreadcrumbInfo): Breadcrumb {
     }
 }
 
-export const loadMenu = (infra: LoadMenuInfra): LoadMenuPod => (locationInfo) => async (
-    nonce,
-    roles,
-    post
-) => {
-    const { menuTree, menuExpands, loadMenuBadge } = infra
+export const loadMenu = (infra: LoadMenuInfra): LoadMenuPod => (locationInfo) => async (post) => {
+    const { apiCredentials, menuTree, menuExpands, loadMenuBadge } = infra
+
+    const result = apiCredentials.load()
 
     const info: MenuInfo = {
         menuTree: menuTree,
-        roles,
+        roles: apiRoles(result),
         menuTarget: locationInfo.getMenuTarget(),
     }
 
@@ -117,15 +116,15 @@ export const loadMenu = (infra: LoadMenuInfra): LoadMenuPod => (locationInfo) =>
         menu: toMenu(info, menuExpandResponse.menuExpand, EMPTY_BADGE),
     })
 
-    if (!nonce.success) {
+    if (!result.success) {
         post({
             type: "failed-to-load",
             menu: toMenu(info, menuExpandResponse.menuExpand, EMPTY_BADGE),
-            err: nonce.err,
+            err: result.err,
         })
         return
     }
-    if (!nonce.found) {
+    if (!result.found) {
         post({
             type: "failed-to-load",
             menu: toMenu(info, menuExpandResponse.menuExpand, EMPTY_BADGE),
@@ -134,7 +133,7 @@ export const loadMenu = (infra: LoadMenuInfra): LoadMenuPod => (locationInfo) =>
         return
     }
 
-    const menuBadgeResponse = await loadMenuBadge(nonce.content)
+    const menuBadgeResponse = await loadMenuBadge(result.apiCredential.nonce)
     if (!menuBadgeResponse.success) {
         post({
             type: "failed-to-load",
@@ -152,9 +151,15 @@ export const loadMenu = (infra: LoadMenuInfra): LoadMenuPod => (locationInfo) =>
 
 type MenuInfo = Readonly<{
     menuTree: MenuTree
-    roles: LoadApiCredentialResult<ApiRoles>
+    roles: ApiRoles
     menuTarget: MenuTarget
 }>
+function apiRoles(result: LoadApiCredentialResult) {
+    if (result.success && result.found) {
+        return result.apiCredential.roles
+    }
+    return emptyApiRoles()
+}
 
 function toMenu(
     { menuTree, menuTarget, roles }: MenuInfo,
@@ -212,11 +217,8 @@ function toMenu(
                 case "any":
                     return true
                 case "role":
-                    if (!roles.success || !roles.found) {
-                        return false
-                    }
                     return category.permission.roles.some((role) => {
-                        return roles.content.includes(role)
+                        return roles.includes(role)
                     })
             }
         }

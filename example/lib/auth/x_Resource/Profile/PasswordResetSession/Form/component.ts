@@ -7,7 +7,7 @@ import {
     LoginIDFormFieldMaterial,
 } from "../../../common/Field/LoginID/component"
 
-import { StartSessionFields } from "../../../../profile/passwordReset/data"
+import { StartSessionFields } from "../../../../sign/passwordReset/data"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 
 export interface FormComponentFactory {

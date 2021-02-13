@@ -1,5 +1,9 @@
-import { RemoteAccess, RemoteAccessError, RemoteAccessResult } from "../../../z_infra/remote/infra"
-import { RemoteAccessSimulator } from "../../../z_infra/remote/simulate"
+import {
+    RemoteAccess,
+    RemoteAccessError,
+    RemoteAccessResult,
+    RemoteAccessSimulator,
+} from "../../../z_infra/remote/infra"
 
 export type NotifyInfra = Readonly<{
     notify: NotifyRemoteAccess

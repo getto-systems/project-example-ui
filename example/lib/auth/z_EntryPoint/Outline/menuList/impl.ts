@@ -20,9 +20,7 @@ class Component extends ApplicationBaseComponent<MenuListComponentState> impleme
     }
 
     load(): void {
-        const nonce = this.material.loadApiNonce()
-        const roles = this.material.loadApiRoles()
-        this.material.loadMenu(nonce, roles, (event) => {
+        this.material.loadMenu((event) => {
             this.post(event)
         })
     }

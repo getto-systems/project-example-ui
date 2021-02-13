@@ -7,7 +7,7 @@ import {
     emptyAuthCredential,
     storeAuthCredential,
     StoreAuthCredential,
-} from "../../../../sign/credentialStore/data"
+} from "../../../../sign/authCredential/renew/data"
 
 export const initRenewComponent: RenewComponentFactory = (material) => new Component(material)
 

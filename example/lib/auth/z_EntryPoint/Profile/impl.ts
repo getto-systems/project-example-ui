@@ -11,9 +11,6 @@ export function initProfileResource(
     const actions = {
         notify: factory.actions.notify.notify(),
 
-        loadApiNonce: factory.actions.credential.loadApiNonce(),
-        loadApiRoles: factory.actions.credential.loadApiRoles(),
-
         loadSeason: factory.actions.season.loadSeason(),
 
         loadBreadcrumb: factory.actions.menu.loadBreadcrumb(locationInfo.menu),

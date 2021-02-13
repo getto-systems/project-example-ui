@@ -27,7 +27,7 @@ import { PasswordResetEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPo
 import { initialResetComponentState } from "../../../auth/x_Resource/Profile/PasswordReset/Reset/component"
 import { initialFormContainerComponentState } from "../../../common/getto-form/x_Resource/Form/component"
 
-import { ResetError } from "../../../auth/profile/passwordReset/data"
+import { ResetError } from "../../../auth/sign/passwordReset/data"
 
 export function PasswordReset({ resource, terminate }: PasswordResetEntryPoint): VNode {
     useTermination(terminate)

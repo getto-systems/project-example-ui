@@ -3,13 +3,8 @@ import { initConnectRemoteAccess } from "../../../../../../z_infra/remote/connec
 import { LoginRemoteAccess } from "../../../infra"
 
 import { LoginFields, LoginRemoteError } from "../../../data"
-import {
-    markTicketNonce,
-    markAuthAt,
-    markApiCredential,
-    AuthCredential,
-} from "../../../../../common/credential/data"
 import { RawRemoteAccess, RemoteAccessError } from "../../../../../../z_infra/remote/infra"
+import { AuthCredential, markAuthAt, markTicketNonce } from "../../../../authCredential/renew/data"
 
 type LoginRawRemoteAccess = RawRemoteAccess<LoginFields, RawAuthCredential>
 type RawAuthCredential = Readonly<{
@@ -22,9 +17,10 @@ export function initLoginConnectRemoteAccess(access: LoginRawRemoteAccess): Logi
         message: (fields: LoginFields): LoginFields => fields,
         value: (response: RawAuthCredential): AuthCredential => ({
             ticketNonce: markTicketNonce(response.ticketNonce),
-            apiCredential: markApiCredential({
-                apiRoles: response.apiCredential.apiRoles,
-            }),
+            // TODO これ、返さないといけないんだけど
+            // apiCredential: markApiCredential({
+            //     apiRoles: response.apiCredential.apiRoles,
+            // }),
             authAt: markAuthAt(new Date()),
         }),
         error: (err: RemoteAccessError): LoginRemoteError => {

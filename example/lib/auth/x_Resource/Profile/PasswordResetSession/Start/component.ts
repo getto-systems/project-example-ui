@@ -1,6 +1,6 @@
 import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
 
-import { StartSession, CheckStatus } from "../../../../profile/passwordReset/action"
+import { StartSession, CheckStatus } from "../../../../sign/passwordReset/action"
 
 import {
     Destination,
@@ -9,7 +9,7 @@ import {
     CheckStatusError,
     SendTokenError,
     StartSessionFields,
-} from "../../../../profile/passwordReset/data"
+} from "../../../../sign/passwordReset/data"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 
 export interface StartComponentFactory {

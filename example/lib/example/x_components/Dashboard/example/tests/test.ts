@@ -7,7 +7,6 @@ import {
 import { initMemoryTypedStorage } from "../../../../../z_infra/storage/memory"
 import { initStaticClock } from "../../../../../z_infra/clock/simulate"
 import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/menu/impl/remote/menuBadge/simulate"
-import { initApiCredentialRepository } from "../../../../../auth/common/credential/impl/repository/apiCredential"
 import { initMenuExpandRepository } from "../../../../../auth/permission/menu/impl/repository/menuExpand"
 import { initMemorySeasonRepository } from "../../../../shared/season/impl/repository/season/memory"
 
@@ -15,8 +14,8 @@ import { Clock } from "../../../../../z_infra/clock/infra"
 import { MenuTree } from "../../../../../auth/permission/menu/infra"
 
 import { ExampleComponentState } from "../component"
-
-import { markApiCredential } from "../../../../../auth/common/credential/data"
+import { initMemoryApiCredentialRepository } from "../../../../../common/auth/apiCredential/impl"
+import { markApiNonce, markApiRoles } from "../../../../../common/auth/apiCredential/data"
 
 // デフォルトの season を取得する
 const NOW = new Date("2021-01-01 10:00:00")
@@ -82,15 +81,9 @@ function standardMenuTree(): MenuTree {
 
 function standardRepository(): DashboardRepository {
     return {
-        apiCredentials: initApiCredentialRepository({
-            apiCredential: initMemoryTypedStorage({
-                set: true,
-                value: markApiCredential({
-                    // TODO apiNonce を追加
-                    //apiNonce: markApiNonce("api-nonce"),
-                    apiRoles: ["admin"],
-                }),
-            }),
+        apiCredentials: initMemoryApiCredentialRepository({
+            set: true,
+            value: { nonce: markApiNonce("api-nonce"), roles: markApiRoles(["role"]) },
         }),
         menuExpands: initMenuExpandRepository({
             menuExpand: initMemoryTypedStorage({ set: false }),

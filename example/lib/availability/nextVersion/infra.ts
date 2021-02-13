@@ -1,6 +1,5 @@
 import { Delayed } from "../../z_infra/delayed/infra"
-import { RemoteAccess, RemoteAccessResult } from "../../z_infra/remote/infra"
-import { RemoteAccessSimulator } from "../../z_infra/remote/simulate"
+import { RemoteAccess, RemoteAccessResult, RemoteAccessSimulator } from "../../z_infra/remote/infra"
 import { DelayTime } from "../../z_infra/time/infra"
 
 import { CheckRemoteError, Version } from "./data"

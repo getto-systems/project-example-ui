@@ -1,6 +1,7 @@
-import { RemoteAccess, RemoteAccessResult } from "../../../z_infra/remote/infra"
-import { RemoteAccessSimulator } from "../../../z_infra/remote/simulate"
-import { ApiNonce } from "../../common/credential/data"
+import { RemoteAccess, RemoteAccessResult, RemoteAccessSimulator } from "../../../z_infra/remote/infra"
+import { ApiCredentialRepository } from "../../../common/auth/apiCredential/infra"
+
+import { ApiNonce } from "../../../common/auth/apiCredential/data"
 import { LoadMenuBadgeRemoteError, MenuCategoryPath } from "./data"
 
 export type LoadBreadcrumbInfra = Readonly<{
@@ -8,6 +9,7 @@ export type LoadBreadcrumbInfra = Readonly<{
 }>
 
 export type LoadMenuInfra = Readonly<{
+    apiCredentials: ApiCredentialRepository
     menuTree: MenuTree
     menuExpands: MenuExpandRepository
     loadMenuBadge: LoadMenuBadgeRemoteAccess

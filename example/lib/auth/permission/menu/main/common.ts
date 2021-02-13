@@ -12,6 +12,7 @@ import { loadBreadcrumb, loadMenu, toggleMenuExpand } from "../impl/core"
 import { LoadMenuBadgeRemoteAccess, MenuPermission, MenuTree, MenuTreeNode } from "../infra"
 
 import { MenuAction } from "../action"
+import { newApiCredentialRepository } from "../../../../common/auth/apiCredential/main"
 
 export function initMenuAction(
     menuTree: MenuTree,
@@ -19,13 +20,14 @@ export function initMenuAction(
     storageKey: string,
     loadMenuBadge: LoadMenuBadgeRemoteAccess
 ): MenuAction {
+    const apiCredentials = newApiCredentialRepository(menuExpandStorage)
     const menuExpands = initMenuExpandRepository({
         menuExpand: initWebTypedStorage(menuExpandStorage, storageKey, initMenuExpandConverter()),
     })
 
     return {
         loadBreadcrumb: loadBreadcrumb({ menuTree }),
-        loadMenu: loadMenu({ menuTree, loadMenuBadge: loadMenuBadge, menuExpands }),
+        loadMenu: loadMenu({ menuTree, loadMenuBadge: loadMenuBadge, menuExpands, apiCredentials }),
         toggleMenuExpand: toggleMenuExpand({ menuExpands }),
     }
 }

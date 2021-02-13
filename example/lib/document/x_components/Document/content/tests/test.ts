@@ -1,15 +1,14 @@
-import { DocumentRepository, DocumentRemoteAccess, newTestDocumentResource } from "../../EntryPoint/tests/core"
+import { DocumentRemoteAccess, newTestDocumentResource } from "../../EntryPoint/tests/core"
 
 import { initMemoryTypedStorage } from "../../../../../z_infra/storage/memory"
 import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/menu/impl/remote/menuBadge/simulate"
-import { initApiCredentialRepository } from "../../../../../auth/common/credential/impl/repository/apiCredential"
 import { initMenuExpandRepository } from "../../../../../auth/permission/menu/impl/repository/menuExpand"
 
 import { MenuTree } from "../../../../../auth/permission/menu/infra"
 
 import { ContentComponentState } from "../component"
-
-import { markApiCredential } from "../../../../../auth/common/credential/data"
+import { initMemoryApiCredentialRepository } from "../../../../../common/auth/apiCredential/impl"
+import { markApiNonce, markApiRoles } from "../../../../../common/auth/apiCredential/data"
 
 describe("Content", () => {
     test("load content", (done) => {
@@ -30,7 +29,9 @@ describe("Content", () => {
                         break
 
                     case "succeed-to-load":
-                        expect(stack).toEqual([{ type: "succeed-to-load", path: "/document/index.html" }])
+                        expect(stack).toEqual([
+                            { type: "succeed-to-load", path: "/document/index.html" },
+                        ])
                         done()
                         break
 
@@ -65,17 +66,11 @@ function standardMenuTree(): MenuTree {
     return []
 }
 
-function standardRepository(): DocumentRepository {
+function standardRepository() {
     return {
-        apiCredentials: initApiCredentialRepository({
-            apiCredential: initMemoryTypedStorage({
-                set: true,
-                value: markApiCredential({
-                    // TODO apiNonce を追加
-                    //apiNonce: markApiNonce("api-nonce"),
-                    apiRoles: ["admin"],
-                }),
-            }),
+        apiCredentials: initMemoryApiCredentialRepository({
+            set: true,
+            value: { nonce: markApiNonce("api-nonce"), roles: markApiRoles(["role"]) },
         }),
         menuExpands: initMenuExpandRepository({
             menuExpand: initMemoryTypedStorage({ set: false }),
