@@ -1,5 +1,13 @@
-import { SubmitEvent } from "../../../../sign/password/login/event"
-import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../../sign/passwordReset/event"
+import {
+    LoginActionProxyMessage,
+    LoginActionProxyResponse,
+} from "../../../../sign/password/login/worker/message"
+
+import {
+    CheckStatusEvent,
+    ResetEvent,
+    StartSessionEvent,
+} from "../../../../sign/password/reset/register/event"
 
 import { LoginFields } from "../../../../sign/password/login/data"
 import {
@@ -7,17 +15,17 @@ import {
     ResetFields,
     SessionID,
     ResetToken,
-} from "../../../../sign/passwordReset/data"
+} from "../../../../sign/password/reset/register/data"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 
 export type ForegroundMessage =
-    | Readonly<{ type: "login"; message: ProxyMessage<LoginProxyMessage> }>
+    | Readonly<{ type: "login"; action: LoginActionProxyMessage }>
     | Readonly<{ type: "startSession"; message: ProxyMessage<StartSessionProxyMessage> }>
     | Readonly<{ type: "checkStatus"; message: ProxyMessage<CheckStatusProxyMessage> }>
     | Readonly<{ type: "reset"; message: ProxyMessage<ResetProxyMessage> }>
 
 export type BackgroundMessage =
-    | Readonly<{ type: "login"; response: ProxyResponse<SubmitEvent> }>
+    | Readonly<{ type: "login"; action: LoginActionProxyResponse }>
     | Readonly<{ type: "startSession"; response: ProxyResponse<StartSessionEvent> }>
     | Readonly<{ type: "checkStatus"; response: ProxyResponse<CheckStatusEvent> }>
     | Readonly<{ type: "reset"; response: ProxyResponse<ResetEvent> }>

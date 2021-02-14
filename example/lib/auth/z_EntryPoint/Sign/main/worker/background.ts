@@ -1,35 +1,37 @@
-import { newLoginActionPod } from "../../../../sign/password/login/main"
 import {
     initPasswordResetAction,
     initPasswordResetSessionAction,
-} from "../../../../sign/passwordReset/main/reset"
+} from "../../../../sign/password/reset/register/main/reset"
 
-import { LoginActionPod } from "../../../../sign/password/login/action"
 import {
     StartSessionPod,
     CheckStatusPod,
     ResetPod,
     ResetAction,
     ResetSessionAction,
-} from "../../../../sign/passwordReset/action"
+} from "../../../../sign/password/reset/register/action"
 
-import { SubmitEvent } from "../../../../sign/password/login/event"
-import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "../../../../sign/passwordReset/event"
+import {
+    CheckStatusEvent,
+    ResetEvent,
+    StartSessionEvent,
+} from "../../../../sign/password/reset/register/event"
 
 import {
     ForegroundMessage,
     BackgroundMessage,
     ProxyMessage,
     ProxyResponse,
-    LoginProxyMessage,
     StartSessionProxyMessage,
     CheckStatusProxyMessage,
     ResetProxyMessage,
 } from "./message"
+import { WorkerBackgroundHandler } from "../../../../../common/getto-worker/worker/background"
+import { LoginActionProxyMessage } from "../../../../sign/password/login/worker/message"
+import { newLoginActionBackgroundHandler } from "../../../../sign/password/login/worker/background"
 
 export function initLoginWorker(worker: Worker): void {
     const material: Material = {
-        login: newLoginActionPod(),
         resetSession: initPasswordResetSessionAction(),
         reset: initPasswordResetAction(),
     }
@@ -37,32 +39,6 @@ export function initLoginWorker(worker: Worker): void {
     initLoginWorkerAsBackground(material, worker)
 }
 
-class LoginHandler {
-    login: LoginActionPod
-    post: Post<ProxyResponse<SubmitEvent>>
-
-    constructor(login: LoginActionPod, post: Post<ProxyResponse<SubmitEvent>>) {
-        this.login = login
-        this.post = post
-    }
-
-    handleMessage({ handlerID, message: { fields } }: ProxyMessage<LoginProxyMessage>): void {
-        this.login.initSubmit()(fields, (event) => {
-            this.post({ handlerID, done: hasDone(), response: event })
-
-            function hasDone() {
-                switch (event.type) {
-                    case "try-to-login":
-                    case "delayed-to-login":
-                        return false
-
-                    default:
-                        return true
-                }
-            }
-        })
-    }
-}
 class StartSessionHandler {
     startSession: StartSessionPod
     post: Post<ProxyResponse<StartSessionEvent>>
@@ -149,7 +125,6 @@ class ResetHandler {
 }
 
 type Material = Readonly<{
-    login: LoginActionPod
     resetSession: ResetSessionAction
     reset: ResetAction
 }>
@@ -172,7 +147,7 @@ function initLoginWorkerAsBackground(material: Material, worker: Worker): void {
 
 type Handler = Readonly<{
     passwordLogin: Readonly<{
-        login: LoginHandler
+        login: WorkerBackgroundHandler<LoginActionProxyMessage>
     }>
     passwordReset: Readonly<{
         startSession: StartSessionHandler
@@ -183,8 +158,8 @@ type Handler = Readonly<{
 function initHandler(material: Material, postBackgroundMessage: Post<BackgroundMessage>): Handler {
     return {
         passwordLogin: {
-            login: new LoginHandler(material.login, (response) => {
-                postBackgroundMessage({ type: "login", response })
+            login: newLoginActionBackgroundHandler((response) => {
+                postBackgroundMessage({ type: "login", action: response })
             }),
         },
         passwordReset: {
@@ -208,7 +183,7 @@ function initForegroundMessageHandler(
         try {
             switch (message.type) {
                 case "login":
-                    handler.passwordLogin.login.handleMessage(message.message)
+                    handler.passwordLogin.login(message.action)
                     break
 
                 case "startSession":

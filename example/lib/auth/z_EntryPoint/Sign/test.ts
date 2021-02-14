@@ -4,12 +4,12 @@ import { initLoginLocationInfo } from "../../x_Resource/common/LocationInfo/impl
 import { initStaticClock } from "../../../z_infra/clock/simulate"
 import { initLoginSimulateRemoteAccess } from "../../sign/password/login/infra/remote/login/simulate"
 import { initRenewSimulateRemoteAccess } from "../../sign/authCredential/common/infra/remote/renew/simulate"
-import { initResetSimulateRemoteAccess } from "../../sign/passwordReset/impl/remote/reset/simulate"
+import { initResetSimulateRemoteAccess } from "../../sign/password/reset/register/impl/remote/reset/simulate"
 import {
     initGetStatusSimulateRemoteAccess,
     initSendTokenSimulateRemoteAccess,
     initStartSessionSimulateRemoteAccess,
-} from "../../sign/passwordReset/impl/remote/session/simulate"
+} from "../../sign/password/reset/register/impl/remote/session/simulate"
 
 import { initLoginLinkResource } from "../../x_Resource/common/LoginLink/impl"
 import { initRenewCredentialResource } from "../../x_Resource/Sign/RenewCredential/impl"
@@ -19,9 +19,9 @@ import { initPasswordResetResource } from "../../x_Resource/Sign/PasswordReset/i
 
 import { initFormAction } from "../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../common/auth/field/loginID/main/loginID"
-import { initTestPasswordResetSessionAction } from "../../sign/passwordReset/tests/session"
+import { initTestPasswordResetSessionAction } from "../../sign/password/reset/register/tests/session"
 import { initPasswordFormFieldAction } from "../../../common/auth/field/password/main/password"
-import { initTestPasswordResetAction } from "../../sign/passwordReset/tests/reset"
+import { initTestPasswordResetAction } from "../../sign/password/reset/register/tests/reset"
 
 import { Clock } from "../../../z_infra/clock/infra"
 import { LoginRemoteAccessResult } from "../../sign/password/login/infra"
@@ -30,11 +30,11 @@ import {
     ResetRemoteAccessResult,
     SendTokenRemoteAccessResult,
     StartSessionRemoteAccessResult,
-} from "../../sign/passwordReset/infra"
+} from "../../sign/password/reset/register/infra"
 
 import { LoginState } from "./entryPoint"
 
-import { markSessionID } from "../../sign/passwordReset/data"
+import { markSessionID } from "../../sign/password/reset/register/data"
 import { markAuthAt, markTicketNonce } from "../../sign/authCredential/common/data"
 import { markApiNonce, markApiRoles } from "../../../common/auth/apiCredential/data"
 import { ApiCredentialRepository } from "../../../common/auth/apiCredential/infra"

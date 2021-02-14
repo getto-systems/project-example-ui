@@ -1,5 +1,5 @@
-import { delayed, wait } from "../../../../z_infra/delayed/core"
-import { delaySecond, limit, waitSecond } from "../../../../z_infra/time/infra"
+import { delayed, wait } from "../../../../../../z_infra/delayed/core"
+import { delaySecond, limit, waitSecond } from "../../../../../../z_infra/time/infra"
 import { initResetSimulateRemoteAccess } from "../impl/remote/reset/simulate"
 import {
     initGetStatusSimulateRemoteAccess,
@@ -14,8 +14,8 @@ import { CheckStatusInfra, ResetInfra, StartSessionInfra } from "../infra"
 import { ResetAction, ResetSessionAction } from "../action"
 
 import { markSessionID } from "../data"
-import { markAuthAt, markTicketNonce } from "../../authCredential/common/data"
-import { markApiNonce, markApiRoles } from "../../../../common/auth/apiCredential/data"
+import { markAuthAt, markTicketNonce } from "../../../../authCredential/common/data"
+import { markApiNonce, markApiRoles } from "../../../../../../common/auth/apiCredential/data"
 
 export function initPasswordResetSessionAction(): ResetSessionAction {
     const targetSessionID = markSessionID("session-id")

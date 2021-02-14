@@ -4,15 +4,15 @@ import { initLoginLocationInfo } from "../../common/LocationInfo/impl"
 
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
 import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/common/infra/remote/renew/simulate"
-import { initResetSimulateRemoteAccess } from "../../../sign/passwordReset/impl/remote/reset/simulate"
+import { initResetSimulateRemoteAccess } from "../../../sign/password/reset/register/impl/remote/reset/simulate"
 
 import { initFormAction } from "../../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../common/auth/field/password/main/password"
-import { initTestPasswordResetAction } from "../../../sign/passwordReset/tests/reset"
+import { initTestPasswordResetAction } from "../../../sign/password/reset/register/tests/reset"
 
 import { Clock } from "../../../../z_infra/clock/infra"
-import { ResetRemoteAccess, ResetRemoteAccessResult } from "../../../sign/passwordReset/infra"
+import { ResetRemoteAccess, ResetRemoteAccessResult } from "../../../sign/password/reset/register/infra"
 
 import { PasswordResetResource } from "./resource"
 

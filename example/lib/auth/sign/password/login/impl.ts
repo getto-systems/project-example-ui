@@ -1,6 +1,7 @@
 import { LoginActionInfra, Submit } from "./infra"
 
 import { LoginAction, LoginActionPod } from "./action"
+import { SubmitEvent } from "./event"
 
 export function initLoginAction(pod: LoginActionPod): LoginAction {
     return {
@@ -33,4 +34,16 @@ const submit: Submit = (infra) => () => async (fields, post) => {
     }
 
     post({ type: "succeed-to-login", authCredential: response.value.auth })
+}
+
+export function submitEventHasDone(event: SubmitEvent): boolean {
+    switch (event.type) {
+        case "succeed-to-login":
+        case "failed-to-login":
+            return true
+
+        case "try-to-login":
+        case "delayed-to-login":
+            return false
+    }
 }

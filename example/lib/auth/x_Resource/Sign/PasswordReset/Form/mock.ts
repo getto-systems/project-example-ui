@@ -15,7 +15,7 @@ import { PasswordFormFieldComponent } from "../../../common/Field/Password/compo
 import { FormComponent } from "./component"
 
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
-import { ResetFields } from "../../../../sign/passwordReset/data"
+import { ResetFields } from "../../../../sign/password/reset/register/data"
 
 type Passer = MockPropsPasser<FormMockProps>
 

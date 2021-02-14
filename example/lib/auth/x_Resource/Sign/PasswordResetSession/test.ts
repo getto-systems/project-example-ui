@@ -2,7 +2,7 @@ import {
     initGetStatusSimulateRemoteAccess,
     initSendTokenSimulateRemoteAccess,
     initStartSessionSimulateRemoteAccess,
-} from "../../../sign/passwordReset/impl/remote/session/simulate"
+} from "../../../sign/password/reset/register/impl/remote/session/simulate"
 
 import { WaitTime } from "../../../../z_infra/time/infra"
 import {
@@ -13,17 +13,17 @@ import {
     SendTokenRemoteAccessResult,
     StartSessionRemoteAccess,
     StartSessionRemoteAccessResult,
-} from "../../../sign/passwordReset/infra"
+} from "../../../sign/password/reset/register/infra"
 
 import { StartComponentState } from "./Start/component"
 
-import { markSessionID } from "../../../sign/passwordReset/data"
+import { markSessionID } from "../../../sign/password/reset/register/data"
 import { markInputString, toValidationError } from "../../../../common/getto-form/form/data"
 import { PasswordResetSessionResource } from "./resource"
 import { initPasswordResetSessionResource } from "./impl"
 import { initFormAction } from "../../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
-import { initTestPasswordResetSessionAction } from "../../../sign/passwordReset/tests/session"
+import { initTestPasswordResetSessionAction } from "../../../sign/password/reset/register/tests/session"
 
 const VALID_LOGIN = { loginID: "login-id" } as const
 const SESSION_ID = "session-id" as const

@@ -30,7 +30,7 @@ import {
     StartSessionError,
     CheckStatusError,
     SendTokenError,
-} from "../../../auth/sign/passwordReset/data"
+} from "../../../auth/sign/password/reset/register/data"
 
 export function PasswordResetSession({ resource, terminate }: PasswordResetSessionEntryPoint): VNode {
     useTermination(terminate)

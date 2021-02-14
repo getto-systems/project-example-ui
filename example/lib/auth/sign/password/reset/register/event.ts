@@ -1,4 +1,4 @@
-import { AuthCredential } from "../authCredential/common/data"
+import { AuthCredential } from "../../../authCredential/common/data"
 import {
     CheckStatusError,
     Destination,

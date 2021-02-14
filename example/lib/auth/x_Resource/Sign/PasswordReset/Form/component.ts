@@ -11,7 +11,7 @@ import {
     PasswordFormFieldMaterial,
 } from "../../../common/Field/Password/component"
 
-import { ResetFields } from "../../../../sign/passwordReset/data"
+import { ResetFields } from "../../../../sign/password/reset/register/data"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 
 export interface FormComponentFactory {
