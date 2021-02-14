@@ -20,7 +20,7 @@ import { newLoginActionPod } from "../../../sign/password/login/main"
 import {
     initPasswordResetAction,
     initPasswordResetSessionAction,
-} from "../../../sign/passwordReset/main/reset"
+} from "../../../sign/password/reset/register/main/reset"
 
 import { LoginEntryPoint, LoginForegroundAction } from "../entryPoint"
 

@@ -1,5 +1,5 @@
 import { detectPagePathname } from "../../../sign/location/impl"
-import { detectResetToken } from "../../../sign/passwordReset/impl/location"
+import { detectResetToken } from "../../../sign/password/reset/register/impl/location"
 
 import { LoginLocationInfo } from "./locationInfo"
 

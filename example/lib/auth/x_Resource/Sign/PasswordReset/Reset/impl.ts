@@ -4,7 +4,7 @@ import { ResetComponentFactory, ResetMaterial, ResetComponent, ResetComponentSta
 
 import { LoadError } from "../../../../sign/location/data"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
-import { ResetFields } from "../../../../sign/passwordReset/data"
+import { ResetFields } from "../../../../sign/password/reset/register/data"
 import { AuthCredential } from "../../../../sign/authCredential/common/data"
 
 export const initResetComponent: ResetComponentFactory = (material) => new Component(material)

@@ -1,4 +1,4 @@
-import { AuthSearchParams } from "../../location/data"
+import { AuthSearchParams } from "../../../../location/data"
 import { markResetToken, ResetToken } from "../data"
 
 export function detectResetToken(currentURL: URL): ResetToken {

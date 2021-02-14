@@ -1,9 +1,9 @@
 import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
 
-import { Reset } from "../../../../sign/passwordReset/action"
+import { Reset } from "../../../../sign/password/reset/register/action"
 import { LocationAction } from "../../../../sign/location/action"
 
-import { ResetError, ResetFields } from "../../../../sign/passwordReset/data"
+import { ResetError, ResetFields } from "../../../../sign/password/reset/register/data"
 import { ScriptPath, LoadError } from "../../../../sign/location/data"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 import { StorageError } from "../../../../../common/auth/storage/data"

@@ -7,7 +7,7 @@ import {
     StartComponentState,
 } from "./component"
 
-import { SessionID, StartSessionFields } from "../../../../sign/passwordReset/data"
+import { SessionID, StartSessionFields } from "../../../../sign/password/reset/register/data"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 
 export const initStartComponent: StartComponentFactory = (material) => new Component(material)

@@ -33,7 +33,11 @@ import {
 import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
 import { initLocationActionPod } from "../../../sign/location/impl"
 import { delayed } from "../../../../z_infra/delayed/core"
-import { initLoginActionPod } from "../../../sign/password/login/impl"
+import { initLoginActionPod, submitEventHasDone } from "../../../sign/password/login/impl"
+import {
+    initAsyncComponentStateTester,
+    initSyncComponentTestChecker,
+} from "../../../../common/getto-example/Application/testHelper"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -55,7 +59,7 @@ describe("PasswordLogin", () => {
     test("submit valid login-id and password", (done) => {
         const { repository, clock, resource } = standardPasswordLoginResource()
 
-        resource.login.addStateHandler(initChecker())
+        resource.login.addStateHandler(initTester())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -65,42 +69,22 @@ describe("PasswordLogin", () => {
 
         resource.login.submit(resource.form.getLoginFields())
 
-        function initChecker() {
-            return initAsyncStateChecker(
-                (state: LoginComponentState): boolean => {
-                    switch (state.type) {
-                        case "initial-login":
-                        case "try-to-login":
-                        case "delayed-to-login":
-                            // work in progress...
-                            return false
-
-                        case "try-to-load":
-                            return true
-
-                        case "failed-to-login":
-                        case "storage-error":
-                        case "load-error":
-                        case "error":
-                            throw new Error(state.type)
-                    }
-                },
-                (stack) => {
-                    clock.update(COMPLETED_NOW)
-                    expect(stack).toEqual([
-                        { type: "try-to-login" },
-                        {
-                            type: "try-to-load",
-                            scriptPath: markScriptPath("//secure.example.com/index.js"),
-                        },
-                    ])
-                    expectToSaveLastLogin(repository.authCredentials)
-                    setTimeout(() => {
-                        expectToSaveRenewed(repository.authCredentials)
-                        done()
-                    }, 1) // after setContinuousRenew interval and delay
-                }
-            )
+        function initTester() {
+            return initAsyncTester()((stack) => {
+                clock.update(COMPLETED_NOW)
+                expect(stack).toEqual([
+                    { type: "try-to-login" },
+                    {
+                        type: "try-to-load",
+                        scriptPath: markScriptPath("//secure.example.com/index.js"),
+                    },
+                ])
+                expectToSaveLastLogin(repository.authCredentials)
+                setTimeout(() => {
+                    expectToSaveRenewed(repository.authCredentials)
+                    done()
+                }, 1) // after setContinuousRenew interval and delay
+            })
         }
     })
 
@@ -108,7 +92,7 @@ describe("PasswordLogin", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitPasswordLoginResource()
 
-        resource.login.addStateHandler(initChecker())
+        resource.login.addStateHandler(initTester())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -118,50 +102,30 @@ describe("PasswordLogin", () => {
 
         resource.login.submit(resource.form.getLoginFields())
 
-        function initChecker() {
-            return initAsyncStateChecker(
-                (state: LoginComponentState): boolean => {
-                    switch (state.type) {
-                        case "initial-login":
-                        case "try-to-login":
-                        case "delayed-to-login":
-                            // work in progress...
-                            return false
-
-                        case "try-to-load":
-                            return true
-
-                        case "failed-to-login":
-                        case "storage-error":
-                        case "load-error":
-                        case "error":
-                            throw new Error(state.type)
-                    }
-                },
-                (stack) => {
-                    clock.update(COMPLETED_NOW)
-                    expect(stack).toEqual([
-                        { type: "try-to-login" },
-                        { type: "delayed-to-login" }, // delayed event
-                        {
-                            type: "try-to-load",
-                            scriptPath: markScriptPath("//secure.example.com/index.js"),
-                        },
-                    ])
-                    expectToSaveLastLogin(repository.authCredentials)
-                    setTimeout(() => {
-                        expectToSaveRenewed(repository.authCredentials)
-                        done()
-                    }, 1) // after setContinuousRenew interval and delay
-                }
-            )
+        function initTester() {
+            return initAsyncTester()((stack) => {
+                clock.update(COMPLETED_NOW)
+                expect(stack).toEqual([
+                    { type: "try-to-login" },
+                    { type: "delayed-to-login" }, // delayed event
+                    {
+                        type: "try-to-load",
+                        scriptPath: markScriptPath("//secure.example.com/index.js"),
+                    },
+                ])
+                expectToSaveLastLogin(repository.authCredentials)
+                setTimeout(() => {
+                    expectToSaveRenewed(repository.authCredentials)
+                    done()
+                }, 1) // after setContinuousRenew interval and delay
+            })
         }
     })
 
     test("submit without fields", (done) => {
         const { repository, resource } = standardPasswordLoginResource()
 
-        resource.login.addStateHandler(initChecker())
+        resource.login.addStateHandler(initTester())
 
         // try to login without fields
         // resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
@@ -172,75 +136,29 @@ describe("PasswordLogin", () => {
 
         resource.login.submit(resource.form.getLoginFields())
 
-        function initChecker() {
-            return initAsyncStateChecker(
-                (state: LoginComponentState): boolean => {
-                    switch (state.type) {
-                        case "initial-login":
-                        case "try-to-login":
-                        case "delayed-to-login":
-                            // work in progress...
-                            return false
-
-                        case "try-to-load":
-                            throw new Error(state.type)
-
-                        case "failed-to-login":
-                            return true
-
-                        case "storage-error":
-                        case "load-error":
-                        case "error":
-                            throw new Error(state.type)
-                    }
-                },
-                (stack) => {
-                    expect(stack).toEqual([
-                        { type: "failed-to-login", err: { type: "validation-error" } },
-                    ])
-                    expectToEmptyLastLogin(repository.authCredentials)
-                    done()
-                }
-            )
+        function initTester() {
+            return initAsyncTester()((stack) => {
+                expect(stack).toEqual([{ type: "failed-to-login", err: { type: "validation-error" } }])
+                expectToEmptyLastLogin(repository.authCredentials)
+                done()
+            })
         }
     })
 
     test("load error", (done) => {
         const { resource } = standardPasswordLoginResource()
 
-        resource.login.addStateHandler(initChecker())
+        resource.login.addStateHandler(initTester())
 
         resource.login.loadError({ type: "infra-error", err: "load error" })
 
-        function initChecker() {
-            return initAsyncStateChecker(
-                (state: LoginComponentState): boolean => {
-                    switch (state.type) {
-                        case "initial-login":
-                        case "try-to-login":
-                        case "delayed-to-login":
-                            // work in progress...
-                            return false
-
-                        case "try-to-load":
-                            throw new Error(state.type)
-
-                        case "failed-to-login":
-                        case "storage-error":
-                        case "error":
-                            throw new Error(state.type)
-
-                        case "load-error":
-                            return true
-                    }
-                },
-                (stack) => {
-                    expect(stack).toEqual([
-                        { type: "load-error", err: { type: "infra-error", err: "load error" } },
-                    ])
-                    done()
-                }
-            )
+        function initTester() {
+            return initAsyncTester()((stack) => {
+                expect(stack).toEqual([
+                    { type: "load-error", err: { type: "infra-error", err: "load error" } },
+                ])
+                done()
+            })
         }
     })
 
@@ -253,11 +171,10 @@ describe("PasswordLogin", () => {
 
             expect(resource.form.getLoginFields()).toEqual({ success: false })
 
-            checker.test()
-            done()
+            checker.done()
 
             function initChecker() {
-                return initSyncStateChecker((stack) => {
+                return initSyncComponentTestChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -268,6 +185,7 @@ describe("PasswordLogin", () => {
                             history: { undo: false, redo: false },
                         },
                     ])
+                    done()
                 })
             }
         })
@@ -292,11 +210,10 @@ describe("PasswordLogin", () => {
                 },
             })
 
-            checker.test()
-            done()
+            checker.done()
 
             function initChecker() {
-                return initSyncStateChecker((stack) => {
+                return initSyncComponentTestChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "initial",
@@ -323,6 +240,7 @@ describe("PasswordLogin", () => {
                             history: { undo: true, redo: false },
                         },
                     ])
+                    done()
                 })
             }
         })
@@ -341,11 +259,10 @@ describe("PasswordLogin", () => {
 
             expect(resource.form.getLoginFields()).toEqual({ success: false })
 
-            checker.test()
-            done()
+            checker.done()
 
             function initChecker() {
-                return initSyncStateChecker((stack) => {
+                return initSyncComponentTestChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -364,6 +281,7 @@ describe("PasswordLogin", () => {
                             history: { undo: false, redo: false },
                         },
                     ])
+                    done()
                 })
             }
         })
@@ -399,27 +317,34 @@ describe("PasswordLogin", () => {
 
             resource.form.redo()
 
-            checker.loginID.test()
-            checker.password.test()
-            done()
+            checker.loginID.done()
+            checker.password.done()
+            checker.main.done()
 
             function initChecker() {
+                const result = { loginID: false, password: false }
                 return {
-                    loginID: initSyncStateChecker((stack) => {
+                    main: initSyncComponentTestChecker(() => {
+                        expect(result).toEqual({ loginID: true, password: true })
+                        done()
+                    }),
+                    loginID: initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([
                             { value: "loginID-a" },
                             { value: "loginID-b" },
                             { value: "loginID-a" },
                             { value: "loginID-c" },
                         ])
+                        result.loginID = true
                     }),
-                    password: initSyncStateChecker((stack) => {
+                    password: initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([
                             { value: "password-a" },
                             { value: "" },
                             { value: "password-a" },
                             { value: "password-b" },
                         ])
+                        result.password = true
                     }),
                 }
             }
@@ -434,12 +359,12 @@ describe("PasswordLogin", () => {
 
             resource.form.loginID.input.input(markInputString("loginID-a"))
 
-            checker.test()
-            done()
+            checker.done()
 
             function initChecker() {
-                return initSyncStateChecker((stack) => {
+                return initSyncComponentTestChecker((stack) => {
                     expect(stack).toEqual([])
+                    done()
                 })
             }
         })
@@ -454,12 +379,12 @@ describe("PasswordLogin", () => {
 
             resource.form.loginID.input.input(markInputString("loginID-a"))
 
-            checker.test()
-            done()
+            checker.done()
 
             function initChecker() {
-                return initSyncStateChecker((stack) => {
+                return initSyncComponentTestChecker((stack) => {
                     expect(stack).toEqual([])
+                    done()
                 })
             }
         })
@@ -475,12 +400,12 @@ describe("PasswordLogin", () => {
 
                 resource.form.loginID.input.input(markInputString(""))
 
-                checker.test()
-                done()
+                checker.done()
 
                 function initChecker() {
-                    return initSyncStateChecker((stack) => {
+                    return initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([{ result: toValidationError(["empty"]) }])
+                        done()
                     })
                 }
             })
@@ -495,11 +420,10 @@ describe("PasswordLogin", () => {
 
                 resource.form.password.input.input(markInputString(""))
 
-                checker.test()
-                done()
+                checker.done()
 
                 function initChecker() {
-                    return initSyncStateChecker((stack) => {
+                    return initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["empty"]),
@@ -507,6 +431,7 @@ describe("PasswordLogin", () => {
                                 view: { show: false },
                             },
                         ])
+                        done()
                     })
                 }
             })
@@ -519,11 +444,10 @@ describe("PasswordLogin", () => {
 
                 resource.form.password.input.input(markInputString("a".repeat(73)))
 
-                checker.test()
-                done()
+                checker.done()
 
                 function initChecker() {
-                    return initSyncStateChecker((stack) => {
+                    return initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["too-long"]),
@@ -531,6 +455,7 @@ describe("PasswordLogin", () => {
                                 view: { show: false },
                             },
                         ])
+                        done()
                     })
                 }
             })
@@ -544,11 +469,10 @@ describe("PasswordLogin", () => {
                 // "あ"(UTF8) is 3 bytes character
                 resource.form.password.input.input(markInputString("あ".repeat(24) + "a"))
 
-                checker.test()
-                done()
+                checker.done()
 
                 function initChecker() {
-                    return initSyncStateChecker((stack) => {
+                    return initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["too-long"]),
@@ -556,6 +480,7 @@ describe("PasswordLogin", () => {
                                 view: { show: false },
                             },
                         ])
+                        done()
                     })
                 }
             })
@@ -568,11 +493,10 @@ describe("PasswordLogin", () => {
 
                 resource.form.password.input.input(markInputString("a".repeat(72)))
 
-                checker.test()
-                done()
+                checker.done()
 
                 function initChecker() {
-                    return initSyncStateChecker((stack) => {
+                    return initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -580,6 +504,7 @@ describe("PasswordLogin", () => {
                                 view: { show: false },
                             },
                         ])
+                        done()
                     })
                 }
             })
@@ -593,11 +518,10 @@ describe("PasswordLogin", () => {
                 // "あ"(UTF8) is 3 bytes character
                 resource.form.password.input.input(markInputString("あ".repeat(24)))
 
-                checker.test()
-                done()
+                checker.done()
 
                 function initChecker() {
-                    return initSyncStateChecker((stack) => {
+                    return initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -605,6 +529,7 @@ describe("PasswordLogin", () => {
                                 view: { show: false },
                             },
                         ])
+                        done()
                     })
                 }
             })
@@ -619,11 +544,10 @@ describe("PasswordLogin", () => {
                 resource.form.password.show()
                 resource.form.password.hide()
 
-                checker.test()
-                done()
+                checker.done()
 
                 function initChecker() {
-                    return initSyncStateChecker((stack) => {
+                    return initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -641,6 +565,7 @@ describe("PasswordLogin", () => {
                                 view: { show: false },
                             },
                         ])
+                        done()
                     })
                 }
             })
@@ -820,27 +745,20 @@ function expectToEmptyLastLogin(authCredentials: AuthCredentialRepository) {
     })
 }
 
-function initAsyncStateChecker<S>(isFinish: { (state: S): boolean }, examine: { (stack: S[]): void }) {
-    const stack: S[] = []
+function initAsyncTester() {
+    return initAsyncComponentStateTester((state: LoginComponentState) => {
+        switch (state.type) {
+            case "initial-login":
+                return false
 
-    return (state: S) => {
-        stack.push(state)
+            case "try-to-load":
+            case "storage-error":
+            case "load-error":
+            case "error":
+                return true
 
-        if (isFinish(state)) {
-            examine(stack)
+            default:
+                return submitEventHasDone(state)
         }
-    }
-}
-
-function initSyncStateChecker<S>(examine: { (stack: S[]): void }) {
-    const stack: S[] = []
-
-    return {
-        handler: (state: S) => {
-            stack.push(state)
-        },
-        test: () => {
-            examine(stack)
-        },
-    }
+    })
 }

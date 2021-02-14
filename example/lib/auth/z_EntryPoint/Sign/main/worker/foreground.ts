@@ -1,8 +1,6 @@
 import { newContinuousRenewActionPod } from "../../../../sign/authCredential/continuousRenew/main"
 import { newRenewActionPod } from "../../../../sign/authCredential/renew/main"
 
-import { env } from "../../../../../y_environment/env"
-
 import { initLoginViewLocationInfo, View } from "../../impl"
 import { initLoginLocationInfo } from "../../../../x_Resource/common/LocationInfo/impl"
 
@@ -25,33 +23,36 @@ import {
 } from "../../entryPoint"
 import { LoginLocationInfo } from "../../../../x_Resource/common/LocationInfo/locationInfo"
 
-import { LoginActionPod } from "../../../../sign/password/login/action"
 import {
     StartSession,
     CheckStatus,
     Reset,
     ResetLocationInfo,
-} from "../../../../sign/passwordReset/action"
+} from "../../../../sign/password/reset/register/action"
 
-import { SubmitEvent } from "../../../../sign/password/login/event"
-import { StartSessionEvent, CheckStatusEvent, ResetEvent } from "../../../../sign/passwordReset/event"
+import {
+    StartSessionEvent,
+    CheckStatusEvent,
+    ResetEvent,
+} from "../../../../sign/password/reset/register/event"
 
 import {
     ForegroundMessage,
     BackgroundMessage,
     ProxyMessage,
     ProxyResponse,
-    LoginProxyMessage,
     StartSessionProxyMessage,
     CheckStatusProxyMessage,
     ResetProxyMessage,
 } from "./message"
+import { newWorker } from "../../../../../common/getto-worker/worker/foreground"
+import { LoginActionForegroundProxy, newLoginActionForegroundProxy } from "../../../../sign/password/login/worker/foreground"
 
 export function newLoginAsWorkerForeground(): LoginEntryPoint {
+    const worker = newWorker()
+
     const webStorage = localStorage
     const currentURL = new URL(location.toString())
-
-    const worker = new Worker(`/${env.version}/auth/login.worker.js`)
 
     const foreground: LoginForegroundAction = {
         initRenew: newRenewActionPod(webStorage),
@@ -122,18 +123,6 @@ class ProxyMap<M, E> {
         }
     }
 }
-class LoginProxyMap extends ProxyMap<LoginProxyMessage, SubmitEvent> {
-    init(): LoginActionPod {
-        return {
-            initSubmit: () => async (fields, post) => {
-                this.post({
-                    handlerID: this.register(post),
-                    message: { fields },
-                })
-            },
-        }
-    }
-}
 class StartSessionProxyMap extends ProxyMap<StartSessionProxyMessage, StartSessionEvent> {
     init(): StartSession {
         return async (fields, post) => {
@@ -170,7 +159,7 @@ class ResetProxyMap extends ProxyMap<ResetProxyMessage, ResetEvent> {
 
 type Proxy = Readonly<{
     passwordLogin: Readonly<{
-        login: LoginProxyMap
+        login: LoginActionForegroundProxy
     }>
     passwordResetSession: Readonly<{
         startSession: StartSessionProxyMap
@@ -183,8 +172,8 @@ type Proxy = Readonly<{
 function initProxy(post: Post<ForegroundMessage>): Proxy {
     return {
         passwordLogin: {
-            login: new LoginProxyMap((message) => {
-                post({ type: "login", message })
+            login: newLoginActionForegroundProxy((message) => {
+                post({ type: "login", action: message })
             }),
         },
         passwordResetSession: {
@@ -221,7 +210,7 @@ function initLoginComponentFactory(
 
     function initActionProxyFactory(): LoginBackgroundAction {
         return {
-            initLogin: proxy.passwordLogin.login.init(),
+            initLogin: proxy.passwordLogin.login.pod(),
             resetSession: {
                 startSession: () => proxy.passwordResetSession.startSession.init(),
                 checkStatus: () => proxy.passwordResetSession.checkStatus.init(),
@@ -240,7 +229,7 @@ function initBackgroundMessageHandler(
         try {
             switch (message.type) {
                 case "login":
-                    proxy.passwordLogin.login.resolve(message.response)
+                    proxy.passwordLogin.login.resolve(message.action)
                     break
 
                 case "startSession":
