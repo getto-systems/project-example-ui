@@ -18,7 +18,7 @@ class Component extends ApplicationBaseComponent<ResetComponentState> implements
     }
 
     submit(fields: FormConvertResult<ResetFields>): void {
-        this.material.reset(fields, (event) => {
+        this.material.register.submit(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-reset":
                     this.startContinuousRenew(event.authCredential)

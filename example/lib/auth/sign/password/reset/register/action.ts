@@ -1,39 +1,24 @@
-import { CheckStatusEvent, ResetEvent, StartSessionEvent } from "./event"
+import { SubmitEvent } from "./event"
 
-import { SessionID, ResetToken, StartSessionFields, ResetFields } from "./data"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
+import { ResetToken, ResetFields } from "./data"
 
-export type ResetSessionAction = Readonly<{
-    startSession: StartSessionPod
-    checkStatus: CheckStatusPod
+export type RegisterAction = Readonly<{
+    submit: SubmitMethod
 }>
-
-export interface StartSessionPod {
-    (): StartSession
-}
-export interface StartSession {
-    (fields: FormConvertResult<StartSessionFields>, post: Post<StartSessionEvent>): void
-}
-
-export interface CheckStatusPod {
-    (): CheckStatus
-}
-export interface CheckStatus {
-    (sessionID: SessionID, post: Post<CheckStatusEvent>): void
-}
-
-export type ResetAction = Readonly<{
-    reset: ResetPod
+export type RegisterActionPod = Readonly<{
+    initSubmit: SubmitPod
 }>
+export type RegisterActionLocationInfo = SubmitLocationInfo
 
-export interface ResetPod {
-    (locationInfo: ResetLocationInfo): Reset
+export interface SubmitPod {
+    (locationInfo: SubmitLocationInfo): SubmitMethod
 }
-export interface ResetLocationInfo {
+export interface SubmitLocationInfo {
     getResetToken(): ResetToken
 }
-export interface Reset {
-    (fields: FormConvertResult<ResetFields>, post: Post<ResetEvent>): void
+export interface SubmitMethod {
+    (fields: FormConvertResult<ResetFields>, post: Post<SubmitEvent>): void
 }
 
 interface Post<T> {

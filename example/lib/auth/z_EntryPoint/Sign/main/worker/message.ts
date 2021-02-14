@@ -2,55 +2,22 @@ import {
     LoginActionProxyMessage,
     LoginActionProxyResponse,
 } from "../../../../sign/password/login/worker/message"
-
 import {
-    CheckStatusEvent,
-    ResetEvent,
-    StartSessionEvent,
-} from "../../../../sign/password/reset/register/event"
-
-import { LoginFields } from "../../../../sign/password/login/data"
+    SessionActionProxyMessage,
+    SessionActionProxyResponse,
+} from "../../../../sign/password/reset/session/worker/message"
 import {
-    StartSessionFields,
-    ResetFields,
-    SessionID,
-    ResetToken,
-} from "../../../../sign/password/reset/register/data"
-import { FormConvertResult } from "../../../../../common/getto-form/form/data"
+    RegisterActionProxyMessage,
+    RegisterActionProxyResponse,
+} from "../../../../sign/password/reset/register/worker/message"
 
 export type ForegroundMessage =
-    | Readonly<{ type: "login"; action: LoginActionProxyMessage }>
-    | Readonly<{ type: "startSession"; message: ProxyMessage<StartSessionProxyMessage> }>
-    | Readonly<{ type: "checkStatus"; message: ProxyMessage<CheckStatusProxyMessage> }>
-    | Readonly<{ type: "reset"; message: ProxyMessage<ResetProxyMessage> }>
+    | Readonly<{ type: "login"; message: LoginActionProxyMessage }>
+    | Readonly<{ type: "reset-session"; message: SessionActionProxyMessage }>
+    | Readonly<{ type: "reset-register"; message: RegisterActionProxyMessage }>
 
 export type BackgroundMessage =
-    | Readonly<{ type: "login"; action: LoginActionProxyResponse }>
-    | Readonly<{ type: "startSession"; response: ProxyResponse<StartSessionEvent> }>
-    | Readonly<{ type: "checkStatus"; response: ProxyResponse<CheckStatusEvent> }>
-    | Readonly<{ type: "reset"; response: ProxyResponse<ResetEvent> }>
+    | Readonly<{ type: "login"; response: LoginActionProxyResponse }>
+    | Readonly<{ type: "reset-session"; response: SessionActionProxyResponse }>
+    | Readonly<{ type: "reset-register"; response: RegisterActionProxyResponse }>
     | Readonly<{ type: "error"; err: string }>
-
-export type ProxyMessage<T> = Readonly<{
-    handlerID: number
-    message: T
-}>
-export type ProxyResponse<T> = Readonly<{
-    handlerID: number
-    done: boolean
-    response: T
-}>
-
-export type LoginProxyMessage = Readonly<{
-    fields: FormConvertResult<LoginFields>
-}>
-export type StartSessionProxyMessage = Readonly<{
-    fields: FormConvertResult<StartSessionFields>
-}>
-export type CheckStatusProxyMessage = Readonly<{
-    sessionID: SessionID
-}>
-export type ResetProxyMessage = Readonly<{
-    resetToken: ResetToken
-    fields: FormConvertResult<ResetFields>
-}>

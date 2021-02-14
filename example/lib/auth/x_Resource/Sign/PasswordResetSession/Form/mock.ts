@@ -11,7 +11,7 @@ import { LoginIDFormFieldComponent } from "../../../common/Field/LoginID/compone
 import { FormComponent } from "./component"
 
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
-import { StartSessionFields } from "../../../../sign/password/reset/register/data"
+import { StartSessionFields } from "../../../../sign/password/reset/session/data"
 
 type Passer = MockPropsPasser<FormMockProps>
 

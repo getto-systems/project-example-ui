@@ -3,19 +3,19 @@ import { FormComponent } from "./Form/component"
 
 import { FormAction } from "../../../../common/getto-form/form/action"
 import { LoginIDFormFieldAction } from "../../../../common/auth/field/loginID/action"
-import { ResetSessionAction } from "../../../sign/password/reset/register/action"
+import { SessionActionPod } from "../../../sign/password/reset/session/action"
 
 export type PasswordResetSessionResource = Readonly<{
     start: StartComponent
     form: FormComponent
 }>
 
-export type PasswordResetSessionForegroundAction = Readonly<{
+export type PasswordResetSessionForegroundActionPod = Readonly<{
     form: Readonly<{
         core: FormAction
         loginID: LoginIDFormFieldAction
     }>
 }>
-export type PasswordResetSessionBackgroundAction = Readonly<{
-    resetSession: ResetSessionAction
+export type PasswordResetSessionBackgroundActionPod = Readonly<{
+    initSession: SessionActionPod
 }>

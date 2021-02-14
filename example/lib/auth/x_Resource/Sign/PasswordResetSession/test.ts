@@ -2,7 +2,7 @@ import {
     initGetStatusSimulateRemoteAccess,
     initSendTokenSimulateRemoteAccess,
     initStartSessionSimulateRemoteAccess,
-} from "../../../sign/password/reset/register/impl/remote/session/simulate"
+} from "../../../sign/password/reset/session/infra/remote/session/simulate"
 
 import { WaitTime } from "../../../../z_infra/time/infra"
 import {
@@ -13,17 +13,26 @@ import {
     SendTokenRemoteAccessResult,
     StartSessionRemoteAccess,
     StartSessionRemoteAccessResult,
-} from "../../../sign/password/reset/register/infra"
+} from "../../../sign/password/reset/session/infra"
 
 import { StartComponentState } from "./Start/component"
 
-import { markSessionID } from "../../../sign/password/reset/register/data"
+import { markSessionID } from "../../../sign/password/reset/session/data"
 import { markInputString, toValidationError } from "../../../../common/getto-form/form/data"
 import { PasswordResetSessionResource } from "./resource"
 import { initPasswordResetSessionResource } from "./impl"
 import { initFormAction } from "../../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
-import { initTestPasswordResetSessionAction } from "../../../sign/password/reset/register/tests/session"
+import {
+    checkStatusEventHasDone,
+    initSessionActionPod,
+    startSessionEventHasDone,
+} from "../../../sign/password/reset/session/impl"
+import { delayed, wait } from "../../../../z_infra/delayed/core"
+import {
+    initAsyncComponentStateTester,
+    initSyncComponentTestChecker,
+} from "../../../../common/getto-example/Application/testHelper"
 
 const VALID_LOGIN = { loginID: "login-id" } as const
 const SESSION_ID = "session-id" as const
@@ -32,43 +41,21 @@ describe("PasswordResetSession", () => {
     test("submit valid login-id", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
-        resource.start.addStateHandler(initChecker())
+        resource.start.addStateHandler(initTester())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
 
         resource.start.submit(resource.form.getStartSessionFields())
 
-        function initChecker() {
-            return initAsyncStateChecker(
-                (state: StartComponentState): boolean => {
-                    switch (state.type) {
-                        case "initial-reset-session":
-                        case "try-to-start-session":
-                        case "delayed-to-start-session":
-                        case "try-to-check-status":
-                        case "retry-to-check-status":
-                            // work in progress...
-                            return false
-
-                        case "succeed-to-send-token":
-                            return true
-
-                        case "failed-to-start-session":
-                        case "failed-to-check-status":
-                        case "failed-to-send-token":
-                        case "error":
-                            throw new Error(state.type)
-                    }
-                },
-                (stack) => {
-                    expect(stack).toEqual([
-                        { type: "try-to-start-session" },
-                        { type: "try-to-check-status" },
-                        { type: "succeed-to-send-token", dest: { type: "log" } },
-                    ])
-                    done()
-                }
-            )
+        function initTester() {
+            return initAsyncTester()((stack) => {
+                expect(stack).toEqual([
+                    { type: "try-to-start-session" },
+                    { type: "try-to-check-status" },
+                    { type: "succeed-to-send-token", dest: { type: "log" } },
+                ])
+                done()
+            })
         }
     })
 
@@ -76,44 +63,22 @@ describe("PasswordResetSession", () => {
         // wait for delayed timeout
         const { resource } = waitPasswordResetSessionResource()
 
-        resource.start.addStateHandler(initChecker())
+        resource.start.addStateHandler(initTester())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
 
         resource.start.submit(resource.form.getStartSessionFields())
 
-        function initChecker() {
-            return initAsyncStateChecker(
-                (state: StartComponentState): boolean => {
-                    switch (state.type) {
-                        case "initial-reset-session":
-                        case "try-to-start-session":
-                        case "delayed-to-start-session":
-                        case "try-to-check-status":
-                        case "retry-to-check-status":
-                            // work in progress...
-                            return false
-
-                        case "succeed-to-send-token":
-                            return true
-
-                        case "failed-to-start-session":
-                        case "failed-to-check-status":
-                        case "failed-to-send-token":
-                        case "error":
-                            throw new Error(state.type)
-                    }
-                },
-                (stack) => {
-                    expect(stack).toEqual([
-                        { type: "try-to-start-session" },
-                        { type: "delayed-to-start-session" }, // delayed event
-                        { type: "try-to-check-status" },
-                        { type: "succeed-to-send-token", dest: { type: "log" } },
-                    ])
-                    done()
-                }
-            )
+        function initTester() {
+            return initAsyncTester()((stack) => {
+                expect(stack).toEqual([
+                    { type: "try-to-start-session" },
+                    { type: "delayed-to-start-session" }, // delayed event
+                    { type: "try-to-check-status" },
+                    { type: "succeed-to-send-token", dest: { type: "log" } },
+                ])
+                done()
+            })
         }
     })
 
@@ -121,117 +86,69 @@ describe("PasswordResetSession", () => {
         // wait for send token check limit
         const { resource } = longSendingPasswordResetSessionResource()
 
-        resource.start.addStateHandler(initChecker())
+        resource.start.addStateHandler(initTester())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
 
         resource.start.submit(resource.form.getStartSessionFields())
 
-        function initChecker() {
-            return initAsyncStateChecker(
-                (state: StartComponentState): boolean => {
-                    switch (state.type) {
-                        case "initial-reset-session":
-                        case "try-to-start-session":
-                        case "delayed-to-start-session":
-                        case "try-to-check-status":
-                        case "retry-to-check-status":
-                            // work in progress...
-                            return false
-
-                        case "succeed-to-send-token":
-                            throw new Error(state.type)
-
-                        case "failed-to-check-status":
-                            return true
-
-                        case "failed-to-start-session":
-                        case "failed-to-send-token":
-                        case "error":
-                            throw new Error(state.type)
-                    }
-                },
-                (stack) => {
-                    expect(stack).toEqual([
-                        { type: "try-to-start-session" },
-                        { type: "try-to-check-status" },
-                        {
-                            type: "retry-to-check-status",
-                            dest: { type: "log" },
-                            status: { sending: true },
-                        },
-                        {
-                            type: "retry-to-check-status",
-                            dest: { type: "log" },
-                            status: { sending: true },
-                        },
-                        {
-                            type: "retry-to-check-status",
-                            dest: { type: "log" },
-                            status: { sending: true },
-                        },
-                        {
-                            type: "retry-to-check-status",
-                            dest: { type: "log" },
-                            status: { sending: true },
-                        },
-                        {
-                            type: "retry-to-check-status",
-                            dest: { type: "log" },
-                            status: { sending: true },
-                        },
-                        {
-                            type: "failed-to-check-status",
-                            err: { type: "infra-error", err: "overflow check limit" },
-                        },
-                    ])
-                    done()
-                }
-            )
+        function initTester() {
+            return initAsyncTester()((stack) => {
+                expect(stack).toEqual([
+                    { type: "try-to-start-session" },
+                    { type: "try-to-check-status" },
+                    {
+                        type: "retry-to-check-status",
+                        dest: { type: "log" },
+                        status: { sending: true },
+                    },
+                    {
+                        type: "retry-to-check-status",
+                        dest: { type: "log" },
+                        status: { sending: true },
+                    },
+                    {
+                        type: "retry-to-check-status",
+                        dest: { type: "log" },
+                        status: { sending: true },
+                    },
+                    {
+                        type: "retry-to-check-status",
+                        dest: { type: "log" },
+                        status: { sending: true },
+                    },
+                    {
+                        type: "retry-to-check-status",
+                        dest: { type: "log" },
+                        status: { sending: true },
+                    },
+                    {
+                        type: "failed-to-check-status",
+                        err: { type: "infra-error", err: "overflow check limit" },
+                    },
+                ])
+                done()
+            })
         }
     })
 
     test("submit without fields", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
-        resource.start.addStateHandler(initChecker())
+        resource.start.addStateHandler(initTester())
 
         // try to start session without fields
         //resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
 
         resource.start.submit(resource.form.getStartSessionFields())
 
-        function initChecker() {
-            return initAsyncStateChecker(
-                (state: StartComponentState): boolean => {
-                    switch (state.type) {
-                        case "initial-reset-session":
-                        case "try-to-start-session":
-                        case "delayed-to-start-session":
-                        case "try-to-check-status":
-                        case "retry-to-check-status":
-                            // work in progress...
-                            return false
-
-                        case "succeed-to-send-token":
-                            throw new Error(state.type)
-
-                        case "failed-to-start-session":
-                            return true
-
-                        case "failed-to-check-status":
-                        case "failed-to-send-token":
-                        case "error":
-                            throw new Error(state.type)
-                    }
-                },
-                (stack) => {
-                    expect(stack).toEqual([
-                        { type: "failed-to-start-session", err: { type: "validation-error" } },
-                    ])
-                    done()
-                }
-            )
+        function initTester() {
+            return initAsyncTester()((stack) => {
+                expect(stack).toEqual([
+                    { type: "failed-to-start-session", err: { type: "validation-error" } },
+                ])
+                done()
+            })
         }
     })
 
@@ -244,17 +161,17 @@ describe("PasswordResetSession", () => {
 
             expect(resource.form.getStartSessionFields()).toEqual({ success: false })
 
-            checker.test()
-            done()
+            checker.done()
 
             function initChecker() {
-                return initSyncStateChecker((stack) => {
+                return initSyncComponentTestChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
                             history: { undo: false, redo: false },
                         },
                     ])
+                    done()
                 })
             }
         })
@@ -275,11 +192,10 @@ describe("PasswordResetSession", () => {
                 },
             })
 
-            checker.test()
-            done()
+            checker.done()
 
             function initChecker() {
-                return initSyncStateChecker((stack) => {
+                return initSyncComponentTestChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "valid",
@@ -294,6 +210,7 @@ describe("PasswordResetSession", () => {
                             history: { undo: true, redo: false },
                         },
                     ])
+                    done()
                 })
             }
         })
@@ -309,11 +226,10 @@ describe("PasswordResetSession", () => {
 
             expect(resource.form.getStartSessionFields()).toEqual({ success: false })
 
-            checker.test()
-            done()
+            checker.done()
 
             function initChecker() {
-                return initSyncStateChecker((stack) => {
+                return initSyncComponentTestChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -324,6 +240,7 @@ describe("PasswordResetSession", () => {
                             history: { undo: false, redo: false },
                         },
                     ])
+                    done()
                 })
             }
         })
@@ -352,11 +269,10 @@ describe("PasswordResetSession", () => {
 
             resource.form.redo()
 
-            checker.test()
-            done()
+            checker.done()
 
             function initChecker() {
-                return initSyncStateChecker((stack) => {
+                return initSyncComponentTestChecker((stack) => {
                     expect(stack).toEqual([
                         { value: "loginID-a" },
                         { value: "" },
@@ -365,6 +281,7 @@ describe("PasswordResetSession", () => {
                         { value: "loginID-a" },
                         { value: "loginID-c" },
                     ])
+                    done()
                 })
             }
         })
@@ -378,12 +295,12 @@ describe("PasswordResetSession", () => {
 
             resource.form.loginID.input.input(markInputString("loginID-a"))
 
-            checker.test()
-            done()
+            checker.done()
 
             function initChecker() {
-                return initSyncStateChecker((stack) => {
+                return initSyncComponentTestChecker((stack) => {
                     expect(stack).toEqual([])
+                    done()
                 })
             }
         })
@@ -398,12 +315,12 @@ describe("PasswordResetSession", () => {
 
             resource.form.loginID.input.input(markInputString("loginID-a"))
 
-            checker.test()
-            done()
+            checker.done()
 
             function initChecker() {
-                return initSyncStateChecker((stack) => {
+                return initSyncComponentTestChecker((stack) => {
                     expect(stack).toEqual([])
+                    done()
                 })
             }
         })
@@ -419,12 +336,12 @@ describe("PasswordResetSession", () => {
 
                 resource.form.loginID.input.input(markInputString(""))
 
-                checker.test()
-                done()
+                checker.done()
 
                 function initChecker() {
-                    return initSyncStateChecker((stack) => {
+                    return initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([{ result: toValidationError(["empty"]) }])
+                        done()
                     })
                 }
             })
@@ -469,14 +386,19 @@ function newTestPasswordResetSessionResource(
             },
         },
         {
-            resetSession: initTestPasswordResetSessionAction(config.passwordResetSession, remote),
+            initSession: initSessionActionPod({
+                ...remote,
+                config: config.session,
+                delayed,
+                wait,
+            }),
         }
     )
 }
 
 function standardConfig() {
     return {
-        passwordResetSession: {
+        session: {
             startSession: {
                 delay: { delay_millisecond: 1 },
             },
@@ -563,27 +485,27 @@ function longSendingGetStatusResponse(): GetStatusResponse[] {
         { dest: { type: "log" }, done: false, status: { sending: true } },
     ]
 }
-function initAsyncStateChecker<S>(isFinish: { (state: S): boolean }, examine: { (stack: S[]): void }) {
-    const stack: S[] = []
 
-    return (state: S) => {
-        stack.push(state)
+function initAsyncTester() {
+    return initAsyncComponentStateTester((state: StartComponentState) => {
+        switch (state.type) {
+            case "initial-reset-session":
+                return false
 
-        if (isFinish(state)) {
-            examine(stack)
+            case "try-to-start-session":
+            case "delayed-to-start-session":
+            case "failed-to-start-session":
+                return startSessionEventHasDone(state)
+
+            case "try-to-check-status":
+            case "retry-to-check-status":
+            case "failed-to-check-status":
+            case "failed-to-send-token":
+            case "succeed-to-send-token":
+                return checkStatusEventHasDone(state)
+
+            case "error":
+                return true
         }
-    }
-}
-
-function initSyncStateChecker<S>(examine: { (stack: S[]): void }) {
-    const stack: S[] = []
-
-    return {
-        handler: (state: S) => {
-            stack.push(state)
-        },
-        test: () => {
-            examine(stack)
-        },
-    }
+    })
 }

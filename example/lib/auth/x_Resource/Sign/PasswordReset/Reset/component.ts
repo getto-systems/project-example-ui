@@ -1,9 +1,9 @@
 import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
 
-import { Reset } from "../../../../sign/password/reset/register/action"
+import { RegisterAction } from "../../../../sign/password/reset/register/action"
 import { LocationAction } from "../../../../sign/location/action"
 
-import { ResetError, ResetFields } from "../../../../sign/password/reset/register/data"
+import { SubmitError, ResetFields } from "../../../../sign/password/reset/register/data"
 import { ScriptPath, LoadError } from "../../../../sign/location/data"
 import { FormConvertResult } from "../../../../../common/getto-form/form/data"
 import { StorageError } from "../../../../../common/auth/storage/data"
@@ -16,8 +16,7 @@ export interface ResetComponentFactory {
 export type ResetMaterial = Readonly<{
     continuousRenew: ContinuousRenewAction
     location: LocationAction
-
-    reset: Reset
+    register: RegisterAction
 }>
 
 export interface ResetComponent extends ApplicationComponent<ResetComponentState> {
@@ -29,7 +28,7 @@ export type ResetComponentState =
     | Readonly<{ type: "initial-reset" }>
     | Readonly<{ type: "try-to-reset" }>
     | Readonly<{ type: "delayed-to-reset" }>
-    | Readonly<{ type: "failed-to-reset"; err: ResetError }>
+    | Readonly<{ type: "failed-to-reset"; err: SubmitError }>
     | Readonly<{ type: "try-to-load"; scriptPath: ScriptPath }>
     | Readonly<{ type: "storage-error"; err: StorageError }>
     | Readonly<{ type: "load-error"; err: LoadError }>
