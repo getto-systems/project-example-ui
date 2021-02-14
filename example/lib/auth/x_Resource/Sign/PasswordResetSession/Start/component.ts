@@ -1,4 +1,4 @@
-import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
+import { ApplicationComponent } from "../../../../../vendor/getto-example/Application/component"
 
 import { SessionAction } from "../../../../sign/password/reset/session/action"
 
@@ -10,7 +10,7 @@ import {
     SendTokenError,
     StartSessionFields,
 } from "../../../../sign/password/reset/session/data"
-import { FormConvertResult } from "../../../../../common/getto-form/form/data"
+import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"
 
 export interface StartComponentFactory {
     (material: StartMaterial): StartComponent

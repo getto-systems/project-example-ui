@@ -1,18 +1,18 @@
 import {
     BreadcrumbListMockPropsPasser,
     initMockBreadcrumbListComponent,
-} from "../../../../auth/z_EntryPoint/Outline/breadcrumbList/mock"
+} from "../../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
 import {
-    initMockMenuListComponent,
-    MenuListMockPropsPasser,
-} from "../../../../auth/z_EntryPoint/Outline/menuList/mock"
+    initMockMenuComponent,
+    MenuMockPropsPasser,
+} from "../../../../common/x_Resource/Outline/Menu/Menu/mock"
 import { initMockNotifyComponent } from "../../../../availability/x_Resource/NotifyError/Notify/mock"
 import { ContentMockPropsPasser, initMockContentComponent } from "../content/mock"
 
 import { DocumentEntryPoint } from "./entryPoint"
 
 export type DocumentMockPropsPasser = Readonly<{
-    menuList: MenuListMockPropsPasser
+    menu: MenuMockPropsPasser
     breadcrumbList: BreadcrumbListMockPropsPasser
     content: ContentMockPropsPasser
 }>
@@ -20,7 +20,7 @@ export function newMockDocument(passer: DocumentMockPropsPasser): DocumentEntryP
     return {
         resource: {
             error: initMockNotifyComponent(),
-            menuList: initMockMenuListComponent(passer.menuList),
+            menu: initMockMenuComponent(passer.menu),
             breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),
             content: initMockContentComponent(passer.content),
         },

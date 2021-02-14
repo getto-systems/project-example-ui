@@ -1,4 +1,4 @@
-import { ApiCredentialRepository } from "../../../../common/auth/apiCredential/infra"
+import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
 import { Clock } from "../../../../z_infra/clock/infra"
 import { DelayTime, IntervalTime } from "../../../../z_infra/time/infra"
 import { AuthCredentialRepository, RenewRemoteAccess } from "../common/infra"

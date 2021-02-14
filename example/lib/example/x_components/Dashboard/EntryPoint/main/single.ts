@@ -4,14 +4,15 @@ import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "
 
 import { initNotifyComponent } from "../../../../../availability/x_Resource/NotifyError/Notify/impl"
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
-import { initMenuListComponent } from "../../../../../auth/z_EntryPoint/Outline/menuList/impl"
-import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/impl"
 import { initExampleComponent } from "../../example/impl"
-import { detectMenuTarget } from "../../../../../auth/permission/menu/impl/location"
+import { detectMenuTarget } from "../../../../../auth/permission/menu/impl"
 
 import { initNotifyAction } from "../../../../../availability/error/notify/main/notify"
 import { initSeasonAction } from "../../../../shared/season/main/season"
-import { initMainMenuAction } from "../../../../../auth/permission/menu/main/mainMenu"
+import {
+    newMainBreadcrumbListActionPod,
+    newMainMenuActionPod,
+} from "../../../../../auth/permission/menu/main/main"
 
 import { DashboardEntryPoint } from "../entryPoint"
 
@@ -21,29 +22,27 @@ export function newDashboardAsSingle(): DashboardEntryPoint {
 
     const factory: DashboardFactory = {
         actions: {
+            initBreadcrumbList: newMainBreadcrumbListActionPod(),
+            initMenu: newMainMenuActionPod(webStorage),
+
             notify: initNotifyAction(),
-            menu: initMainMenuAction(webStorage),
             season: initSeasonAction(),
         },
         components: {
             error: initNotifyComponent,
-            menuList: initMenuListComponent,
-            breadcrumbList: initBreadcrumbListComponent,
             seasonInfo: initSeasonInfoComponent,
 
             example: initExampleComponent,
         },
     }
     const locationInfo: DashboardLocationInfo = {
-        menu: {
-            getMenuTarget: () => detectMenuTarget(env.version, currentURL),
-        },
+        getMenuTarget: () => detectMenuTarget(env.version, currentURL),
     }
     const resource = initDashboardResource(factory, locationInfo)
     return {
         resource,
         terminate: () => {
-            resource.menuList.terminate()
+            resource.menu.terminate()
             resource.breadcrumbList.terminate()
             resource.seasonInfo.terminate()
 

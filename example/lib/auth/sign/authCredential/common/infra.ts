@@ -3,11 +3,11 @@ import {
     RemoteAccessResult,
     RemoteAccessSimulator,
 } from "../../../../z_infra/remote/infra"
-import { StoreResult } from "../../../../common/auth/storage/infra"
+import { StoreResult } from "../../../../common/storage/infra"
 
-import { StorageError } from "../../../../common/auth/storage/data"
+import { StorageError } from "../../../../common/storage/data"
 import { AuthCredential, LastLogin, RenewRemoteError, TicketNonce } from "./data"
-import { ApiCredential } from "../../../../common/auth/apiCredential/data"
+import { ApiCredential } from "../../../../common/apiCredential/data"
 
 export interface AuthCredentialRepository {
     load(): LoadLastLoginResult

@@ -15,15 +15,15 @@ import {
     PasswordResetSessionResource,
 } from "../../x_Resource/Sign/PasswordResetSession/resource"
 
-import { ApplicationComponent } from "../../../common/getto-example/Application/component"
+import { ApplicationComponent } from "../../../vendor/getto-example/Application/component"
 import { LoginLinkResource } from "../../x_Resource/common/LoginLink/resource"
 
-export type LoginForegroundAction = RenewCredentialForegroundActionPod &
+export type LoginForegroundActionPod = RenewCredentialForegroundActionPod &
     PasswordLoginForegroundActionPod &
     PasswordResetSessionForegroundActionPod &
     PasswordResetForegroundActionPod
 
-export type LoginBackgroundAction = PasswordLoginBackgroundActionPod &
+export type LoginBackgroundActionPod = PasswordLoginBackgroundActionPod &
     PasswordResetSessionBackgroundActionPod &
     PasswordResetBackgroundActionPod
 

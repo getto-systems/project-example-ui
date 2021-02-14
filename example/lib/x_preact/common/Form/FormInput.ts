@@ -6,9 +6,9 @@ import { useComponent } from "../hooks"
 import {
     FormInputComponent,
     initialFormInputComponentState,
-} from "../../../common/getto-form/x_Resource/Form/component"
+} from "../../../vendor/getto-form/x_Resource/Form/component"
 
-import { markInputString } from "../../../common/getto-form/form/data"
+import { markInputString } from "../../../vendor/getto-form/form/data"
 
 type FormInputType = "text" | "password" | "search" | "number" | "tel" | "email" | "date" | "time"
 

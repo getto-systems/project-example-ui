@@ -1,7 +1,7 @@
 import {
     FormContainerComponent,
     FormContainerMaterial,
-} from "../../../../../common/getto-form/x_Resource/Form/component"
+} from "../../../../../vendor/getto-form/x_Resource/Form/component"
 import {
     LoginIDFormFieldComponent,
     LoginIDFormFieldMaterial,
@@ -11,7 +11,7 @@ import {
     PasswordFormFieldMaterial,
 } from "../../../common/Field/Password/component"
 
-import { FormConvertResult } from "../../../../../common/getto-form/form/data"
+import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"
 import { LoginFields } from "../../../../sign/password/login/data"
 
 export interface FormComponentFactory {

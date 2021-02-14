@@ -1,4 +1,4 @@
-import { WorkerBackgroundHandler } from "../../../../../../common/getto-worker/worker/background"
+import { WorkerBackgroundHandler } from "../../../../../../vendor/getto-worker/worker/background"
 import { submitEventHasDone } from "../impl"
 import { newRegisterActionPod } from "../main"
 import { RegisterActionProxyMessage, RegisterActionProxyResponse } from "./message"

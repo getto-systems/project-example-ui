@@ -14,7 +14,7 @@ import { copyright, siteInfo } from "../../common/site"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 import { SeasonInfo } from "../../common/Outline/SeasonInfo"
-import { MenuList } from "../../common/Outline/MenuList"
+import { Menu } from "../../common/Outline/Menu"
 import { BreadcrumbList } from "../../common/Outline/BreadcrumbList"
 import { Example } from "./Example"
 
@@ -38,6 +38,6 @@ export function EntryPoint({ resource, terminate }: DashboardEntryPoint): VNode 
             body: mainBody(h(Example, resource)),
             copyright: copyright(),
         }),
-        menu: h(MenuList, resource),
+        menu: h(Menu, resource),
     })
 }

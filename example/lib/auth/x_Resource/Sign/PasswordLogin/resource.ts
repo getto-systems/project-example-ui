@@ -1,10 +1,10 @@
 import { LoginComponent } from "./Login/component"
 import { FormComponent } from "./Form/component"
 
-import { FormAction } from "../../../../common/getto-form/form/action"
+import { FormAction } from "../../../../vendor/getto-form/form/action"
 import { LocationActionPod, LocationActionLocationInfo } from "../../../sign/location/action"
-import { LoginIDFormFieldAction } from "../../../../common/auth/field/loginID/action"
-import { PasswordFormFieldAction } from "../../../../common/auth/field/password/action"
+import { LoginIDFormFieldAction } from "../../../common/field/loginID/action"
+import { PasswordFormFieldAction } from "../../../common/field/password/action"
 import { LoginActionPod } from "../../../sign/password/login/action"
 import { ContinuousRenewActionPod } from "../../../sign/authCredential/continuousRenew/action"
 

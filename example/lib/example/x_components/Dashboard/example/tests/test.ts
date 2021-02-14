@@ -6,16 +6,16 @@ import {
 
 import { initMemoryTypedStorage } from "../../../../../z_infra/storage/memory"
 import { initStaticClock } from "../../../../../z_infra/clock/simulate"
-import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/menu/impl/remote/menuBadge/simulate"
-import { initMenuExpandRepository } from "../../../../../auth/permission/menu/impl/repository/menuExpand"
+import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/menu/infra/remote/menuBadge/simulate"
+import { initMenuExpandRepository } from "../../../../../auth/permission/menu/infra/repository/menuExpand"
 import { initMemorySeasonRepository } from "../../../../shared/season/impl/repository/season/memory"
 
 import { Clock } from "../../../../../z_infra/clock/infra"
 import { MenuTree } from "../../../../../auth/permission/menu/infra"
 
 import { ExampleComponentState } from "../component"
-import { initMemoryApiCredentialRepository } from "../../../../../common/auth/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../../../common/auth/apiCredential/data"
+import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
+import { markApiNonce, markApiRoles } from "../../../../../common/apiCredential/data"
 
 // デフォルトの season を取得する
 const NOW = new Date("2021-01-01 10:00:00")

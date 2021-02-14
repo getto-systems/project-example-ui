@@ -5,9 +5,9 @@ import { newRenewActionPod } from "../../../sign/authCredential/renew/main"
 import { newSessionActionPod } from "../../../sign/password/reset/session/main"
 import { newLocationActionPod } from "../../../sign/location/main"
 
-import { initFormAction } from "../../../../common/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../../common/auth/field/password/main/password"
+import { initFormAction } from "../../../../vendor/getto-form/main/form"
+import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../common/field/password/main/password"
 
 import { initLoginViewLocationInfo, View } from "../impl"
 import { initLoginLocationInfo } from "../../../x_Resource/common/LocationInfo/impl"
@@ -18,13 +18,13 @@ import { initPasswordLoginResource } from "../../../x_Resource/Sign/PasswordLogi
 import { initPasswordResetSessionResource } from "../../../x_Resource/Sign/PasswordResetSession/impl"
 import { initPasswordResetResource } from "../../../x_Resource/Sign/PasswordReset/impl"
 
-import { LoginBackgroundAction, LoginEntryPoint, LoginForegroundAction } from "../entryPoint"
+import { LoginBackgroundActionPod, LoginEntryPoint, LoginForegroundActionPod } from "../entryPoint"
 
 export function newLoginAsSingle(): LoginEntryPoint {
     const webStorage = localStorage
     const currentURL = new URL(location.toString())
 
-    const foreground: LoginForegroundAction = {
+    const foreground: LoginForegroundActionPod = {
         initRenew: newRenewActionPod(webStorage),
         initContinuousRenew: newContinuousRenewActionPod(webStorage),
         initLocation: newLocationActionPod(),
@@ -35,7 +35,7 @@ export function newLoginAsSingle(): LoginEntryPoint {
             password: initPasswordFormFieldAction(),
         },
     }
-    const background: LoginBackgroundAction = {
+    const background: LoginBackgroundActionPod = {
         initLogin: newLoginActionPod(),
         initSession: newSessionActionPod(),
         initRegister: newRegisterActionPod(),

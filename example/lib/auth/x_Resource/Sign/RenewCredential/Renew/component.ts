@@ -1,8 +1,8 @@
-import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
+import { ApplicationComponent } from "../../../../../vendor/getto-example/Application/component"
 
 import { LocationAction } from "../../../../sign/location/action"
 
-import { StorageError } from "../../../../../common/auth/storage/data"
+import { StorageError } from "../../../../../common/storage/data"
 import { RequestError } from "../../../../sign/authCredential/renew/data"
 import { ScriptPath, LoadError } from "../../../../sign/location/data"
 import { RenewAction } from "../../../../sign/authCredential/renew/action"

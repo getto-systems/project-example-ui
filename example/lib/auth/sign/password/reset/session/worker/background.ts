@@ -1,4 +1,4 @@
-import { WorkerBackgroundHandler } from "../../../../../../common/getto-worker/worker/background"
+import { WorkerBackgroundHandler } from "../../../../../../vendor/getto-worker/worker/background"
 
 import { newSessionActionPod } from "../main"
 

@@ -2,8 +2,8 @@ import { LogoutComponentState } from "./Logout/component"
 
 import { initClearCredentialResource } from "./impl"
 import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/common/data"
-import { initMemoryApiCredentialRepository } from "../../../../common/auth/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../../common/auth/apiCredential/data"
+import { initMemoryApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/memory"
+import { markApiNonce, markApiRoles } from "../../../../common/apiCredential/data"
 import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
 import { initClearActionPod } from "../../../sign/authCredential/clear/impl"
 

@@ -1,52 +1,42 @@
 import { DocumentResource } from "../entryPoint"
 
 import { NotifyComponentFactory } from "../../../../../availability/x_Resource/NotifyError/Notify/component"
-import { MenuListComponentFactory } from "../../../../../auth/z_EntryPoint/Outline/menuList/component"
-import { BreadcrumbListComponentFactory } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/component"
 
 import { ContentComponentFactory } from "../../content/component"
 
-import { MenuAction, MenuLocationInfo } from "../../../../../auth/permission/menu/action"
-
 import { ContentAction, LoadContentLocationInfo } from "../../../../content/action"
 import { NotifyAction } from "../../../../../availability/error/notify/action"
+import { MenuForegroundActionPod } from "../../../../../common/x_Resource/Outline/Menu/resource"
+import { MenuActionLocationInfo } from "../../../../../auth/permission/menu/action"
+import { initMenuResource } from "../../../../../common/x_Resource/Outline/Menu/impl"
 
 export type DocumentFactory = Readonly<{
     actions: Readonly<{
         notify: NotifyAction
-        menu: MenuAction
         content: ContentAction
-    }>
+    }> &
+        MenuForegroundActionPod
     components: Readonly<{
         error: NotifyComponentFactory
-        menuList: MenuListComponentFactory
-        breadcrumbList: BreadcrumbListComponentFactory
-
         content: ContentComponentFactory
     }>
 }>
-export type DocumentLocationInfo = Readonly<{
-    menu: MenuLocationInfo
-    content: LoadContentLocationInfo
-}>
+export type DocumentLocationInfo = MenuActionLocationInfo &
+    Readonly<{
+        content: LoadContentLocationInfo
+    }>
 export function initDocumentResource(
     factory: DocumentFactory,
     locationInfo: DocumentLocationInfo
 ): DocumentResource {
     const actions = {
         notify: factory.actions.notify.notify(),
-
-        loadBreadcrumb: factory.actions.menu.loadBreadcrumb(locationInfo.menu),
-        loadMenu: factory.actions.menu.loadMenu(locationInfo.menu),
-        toggleMenuExpand: factory.actions.menu.toggleMenuExpand(),
-
         loadDocument: factory.actions.content.loadContent(locationInfo.content),
     }
     return {
         error: factory.components.error(actions),
-        menuList: factory.components.menuList(actions),
-        breadcrumbList: factory.components.breadcrumbList(actions),
-
         content: factory.components.content(actions),
+
+        ...initMenuResource(locationInfo, factory.actions),
     }
 }

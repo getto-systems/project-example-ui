@@ -12,14 +12,11 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { MenuList } from "./MenuList"
+import { Menu } from "./Menu"
 import { SeasonInfo } from "./SeasonInfo"
 
-import { initMockPropsPasser } from "../../../common/getto-example/Application/mock"
-import {
-    initMockMenuListComponent,
-    MenuListMockProps,
-} from "../../../auth/z_EntryPoint/Outline/menuList/mock"
+import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
+import { initMockMenuComponent, MenuMockProps } from "../../../common/x_Resource/Outline/Menu/Menu/mock"
 import {
     SeasonInfoMockProps,
     initMockSeasonInfoComponent,
@@ -38,10 +35,10 @@ type MockProps = SeasonInfoMockProps
 const Template: Story<MockProps> = (args) => {
     const passer = {
         seasonInfo: initMockPropsPasser<SeasonInfoMockProps>(),
-        menuList: initMockPropsPasser<MenuListMockProps>(),
+        menuList: initMockPropsPasser<MenuMockProps>(),
     }
     const seasonInfo = initMockSeasonInfoComponent(passer.seasonInfo)
-    const menuList = initMockMenuListComponent(passer.menuList)
+    const menu = initMockMenuComponent(passer.menuList)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
@@ -62,7 +59,7 @@ const Template: Story<MockProps> = (args) => {
                     body: mainBody("コンテンツ"),
                     copyright: copyright(),
                 }),
-                menu: h(MenuList, { menuList }),
+                menu: h(Menu, { menu }),
             })
         )
     }

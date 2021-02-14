@@ -5,14 +5,14 @@ import { noPadded } from "../../z_storybook/display"
 
 import { EntryPoint } from "./EntryPoint"
 
-import { initMockPropsPasser } from "../../../common/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
 import {
     DashboardMockPropsPasser,
     newMockDashboard,
 } from "../../../example/x_components/Dashboard/EntryPoint/mock"
 import { SeasonInfoMockProps } from "../../../example/x_components/Outline/seasonInfo/mock"
-import { MenuListMockProps } from "../../../auth/z_EntryPoint/Outline/menuList/mock"
-import { BreadcrumbListMockProps } from "../../../auth/z_EntryPoint/Outline/breadcrumbList/mock"
+import { MenuMockProps } from "../../../common/x_Resource/Outline/Menu/Menu/mock"
+import { BreadcrumbListMockProps } from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
 import { ExampleMockProps } from "../../../example/x_components/Dashboard/example/mock"
 
 export default {
@@ -33,7 +33,7 @@ type MockProps = Readonly<{
 const Template: Story<MockProps> = (args) => {
     const passer: DashboardMockPropsPasser = {
         seasonInfo: initMockPropsPasser<SeasonInfoMockProps>(),
-        menuList: initMockPropsPasser<MenuListMockProps>(),
+        menu: initMockPropsPasser<MenuMockProps>(),
         breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
         example: initMockPropsPasser<ExampleMockProps>(),
     }
@@ -43,7 +43,7 @@ const Template: Story<MockProps> = (args) => {
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
             passer.seasonInfo.update({ type: "success", year: props.args.seasonYear })
-            passer.menuList.update({
+            passer.menu.update({
                 type: "success",
                 label: "ホーム",
                 badgeCount: props.args.menuBadgeCount,

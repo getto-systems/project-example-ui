@@ -1,23 +1,41 @@
 import { RemoteAccess, RemoteAccessResult, RemoteAccessSimulator } from "../../../z_infra/remote/infra"
-import { ApiCredentialRepository } from "../../../common/auth/apiCredential/infra"
+import { ApiCredentialRepository } from "../../../common/apiCredential/infra"
 
-import { ApiNonce } from "../../../common/auth/apiCredential/data"
+import { ApiNonce } from "../../../common/apiCredential/data"
 import { LoadMenuBadgeRemoteError, MenuCategoryPath } from "./data"
+import { LoadBreadcrumbListPod, LoadMenuPod, ToggleMenuExpandPod } from "./action"
+import { StoreResult } from "../../../common/storage/infra"
+import { StorageError } from "../../../common/storage/data"
 
-export type LoadBreadcrumbInfra = Readonly<{
+export type BreadcrumbListActionInfra = LoadBreadcrumbListInfra
+export type MenuActionInfra = LoadMenuInfra & ToggleMenuExpandInfra
+
+export type LoadBreadcrumbListInfra = Readonly<{
     menuTree: MenuTree
 }>
+
+export interface LoadBreadcrumbList {
+    (infra: LoadBreadcrumbListInfra): LoadBreadcrumbListPod
+}
 
 export type LoadMenuInfra = Readonly<{
-    apiCredentials: ApiCredentialRepository
-    menuTree: MenuTree
-    menuExpands: MenuExpandRepository
     loadMenuBadge: LoadMenuBadgeRemoteAccess
+    apiCredentials: ApiCredentialRepository
+    menuExpands: MenuExpandRepository
+    menuTree: MenuTree
 }>
+
+export interface LoadMenu {
+    (infra: LoadMenuInfra): LoadMenuPod
+}
 
 export type ToggleMenuExpandInfra = Readonly<{
     menuExpands: MenuExpandRepository
 }>
+
+export interface ToggleMenuExpand {
+    (infra: ToggleMenuExpandInfra): ToggleMenuExpandPod
+}
 
 export type MenuTreeLabel = string
 export type MenuPath = string
@@ -86,20 +104,13 @@ export class MenuCategoryPathSet extends ArraySet<MenuCategoryPath> {
 }
 
 export interface MenuExpandRepository {
-    findMenuExpand(): MenuExpandResponse
-    saveMenuExpand(menuExpand: MenuExpand): ToggleExpandResponse
+    load(): MenuExpandResponse
+    store(menuExpand: MenuExpand): StoreResult
 }
 
 export type MenuExpandResponse =
     | Readonly<{ success: true; menuExpand: MenuExpand }>
-    | Readonly<{ success: false; err: MenuExpandError }>
-
-export type ToggleExpandResponse =
-    | Readonly<{ success: true }>
-    | Readonly<{ success: false; err: ToggleExpandError }>
-
-export type MenuExpandError = Readonly<{ type: "infra-error"; err: string }>
-export type ToggleExpandError = Readonly<{ type: "infra-error"; err: string }>
+    | Readonly<{ success: false; err: StorageError }>
 
 export type LoadMenuBadgeRemoteAccess = RemoteAccess<ApiNonce, MenuBadge, LoadMenuBadgeRemoteError>
 export type LoadMenuBadgeRemoteAccessResult = RemoteAccessResult<MenuBadge, LoadMenuBadgeRemoteError>

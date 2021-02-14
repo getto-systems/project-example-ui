@@ -3,19 +3,19 @@ import {
     FormFieldHandler,
     FormFieldComponentState,
     FormInputComponent,
-} from "../../../../../common/getto-form/x_Resource/Form/component"
+} from "../../../../../vendor/getto-form/x_Resource/Form/component"
 
 import {
     PasswordCharacterChecker,
     PasswordFormField,
     PasswordViewer,
-} from "../../../../../common/auth/field/password/action"
+} from "../../../../common/field/password/action"
 
 import {
     PasswordValidationError,
     PasswordCharacter,
     PasswordView,
-} from "../../../../../common/auth/field/password/data"
+} from "../../../../common/field/password/data"
 
 export interface PasswordFormFieldComponentFactory {
     (material: PasswordFormFieldMaterial): { (handler: FormFieldHandler): PasswordFormFieldComponent }

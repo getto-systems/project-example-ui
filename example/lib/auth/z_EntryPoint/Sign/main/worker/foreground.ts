@@ -1,4 +1,4 @@
-import { newWorker } from "../../../../../common/getto-worker/worker/foreground"
+import { newWorker } from "../../../../../vendor/getto-worker/worker/foreground"
 
 import { newContinuousRenewActionPod } from "../../../../sign/authCredential/continuousRenew/main"
 import { newRenewActionPod } from "../../../../sign/authCredential/renew/main"
@@ -13,11 +13,11 @@ import { initPasswordResetSessionResource } from "../../../../x_Resource/Sign/Pa
 import { initRenewCredentialResource } from "../../../../x_Resource/Sign/RenewCredential/impl"
 
 import { newLocationActionPod } from "../../../../sign/location/main"
-import { initFormAction } from "../../../../../common/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../../../common/auth/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../../../common/auth/field/password/main/password"
+import { initFormAction } from "../../../../../vendor/getto-form/main/form"
+import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../../common/field/password/main/password"
 
-import { LoginBackgroundAction, LoginEntryPoint, LoginForegroundAction } from "../../entryPoint"
+import { LoginBackgroundActionPod, LoginEntryPoint, LoginForegroundActionPod } from "../../entryPoint"
 
 import {
     LoginActionForegroundProxy,
@@ -40,7 +40,7 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
     const webStorage = localStorage
     const currentURL = new URL(location.toString())
 
-    const foreground: LoginForegroundAction = {
+    const foreground: LoginForegroundActionPod = {
         initRenew: newRenewActionPod(webStorage),
         initContinuousRenew: newContinuousRenewActionPod(webStorage),
 
@@ -54,7 +54,7 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
     }
 
     const proxy = initProxy(postForegroundMessage)
-    const background: LoginBackgroundAction = {
+    const background: LoginBackgroundActionPod = {
         initLogin: proxy.login.pod(),
         initSession: proxy.reset.session.pod(),
         initRegister: proxy.reset.register.pod(),

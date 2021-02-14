@@ -1,4 +1,4 @@
-import { ApplicationBaseComponent } from "../../../../common/getto-example/Application/impl"
+import { ApplicationBaseComponent } from "../../../../vendor/getto-example/Application/impl"
 
 import {
     ExampleMaterial,

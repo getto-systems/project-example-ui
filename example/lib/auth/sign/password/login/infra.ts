@@ -1,4 +1,4 @@
-import { ApiCredential } from "../../../../common/auth/apiCredential/data"
+import { ApiCredential } from "../../../../common/apiCredential/data"
 import { Delayed } from "../../../../z_infra/delayed/infra"
 import { RemoteAccess, RemoteAccessResult, RemoteAccessSimulator } from "../../../../z_infra/remote/infra"
 import { DelayTime } from "../../../../z_infra/time/infra"

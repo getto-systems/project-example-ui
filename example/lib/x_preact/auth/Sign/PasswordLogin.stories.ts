@@ -3,7 +3,7 @@ import { useEffect } from "preact/hooks"
 
 import { PasswordLogin } from "./PasswordLogin"
 
-import { initMockPropsPasser } from "../../../common/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
 import { initMockPasswordLoginEntryPoint } from "../../../auth/z_EntryPoint/Sign/mock"
 import { PasswordLoginResourceMockProps } from "../../../auth/x_Resource/Sign/PasswordLogin/mock"
 import { loginIDFormFieldValidations } from "../../../auth/x_Resource/common/Field/LoginID/mock"
@@ -12,7 +12,7 @@ import {
     passwordFormFieldValidations,
     passwordFormFieldViews,
 } from "../../../auth/x_Resource/common/Field/Password/mock"
-import { formValidationStates } from "../../../common/getto-form/x_Resource/Form/mock"
+import { formValidationStates } from "../../../vendor/getto-form/x_Resource/Form/mock"
 
 export default {
     title: "Auth/Login/PasswordLogin",

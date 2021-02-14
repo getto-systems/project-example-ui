@@ -13,7 +13,7 @@ import {
     ContentComponent,
     initialContentComponentState,
 } from "../../../document/x_components/Document/content/component"
-import { BreadcrumbListComponent } from "../../../auth/z_EntryPoint/Outline/breadcrumbList/component"
+import { BreadcrumbListComponent } from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/component"
 
 import { ContentPath } from "../../../document/content/data"
 

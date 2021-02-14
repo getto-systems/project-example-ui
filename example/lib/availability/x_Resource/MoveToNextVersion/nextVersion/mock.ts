@@ -1,7 +1,7 @@
 import {
     MockComponent,
     MockPropsPasser,
-} from "../../../../common/getto-example/Application/mock"
+} from "../../../../vendor/getto-example/Application/mock"
 
 import { NextVersionComponent, NextVersionComponentState } from "./component"
 

@@ -1,8 +1,7 @@
 import { NotifyComponent } from "../../../../availability/x_Resource/NotifyError/Notify/component"
 import { SeasonInfoComponent } from "../../Outline/seasonInfo/component"
-import { MenuListComponent } from "../../../../auth/z_EntryPoint/Outline/menuList/component"
-import { BreadcrumbListComponent } from "../../../../auth/z_EntryPoint/Outline/breadcrumbList/component"
 import { ExampleComponent } from "../example/component"
+import { MenuResource } from "../../../../common/x_Resource/Outline/Menu/resource"
 
 export type DashboardEntryPoint = Readonly<{
     resource: DashboardResource
@@ -12,11 +11,10 @@ export type DashboardEntryPoint = Readonly<{
 export type DashboardResource = Readonly<{
     error: NotifyComponent
     seasonInfo: SeasonInfoComponent
-    menuList: MenuListComponent
-    breadcrumbList: BreadcrumbListComponent
 
     example: ExampleComponent
-}>
+}> &
+    MenuResource
 
 interface Terminate {
     (): void

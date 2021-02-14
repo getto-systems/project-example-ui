@@ -1,7 +1,7 @@
 import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { initMockPropsPasser } from "../../../common/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
 
 import { newMockMoveToNextVersion } from "../../../availability/z_EntryPoint/MoveToNextVersion/mock"
 import { NextVersionMockProps } from "../../../availability/x_Resource/MoveToNextVersion/nextVersion/mock"

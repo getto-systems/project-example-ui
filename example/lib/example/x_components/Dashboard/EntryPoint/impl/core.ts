@@ -1,53 +1,43 @@
 import { DashboardResource } from "../entryPoint"
 
 import { SeasonInfoComponentFactory } from "../../../Outline/seasonInfo/component"
-import { MenuListComponentFactory } from "../../../../../auth/z_EntryPoint/Outline/menuList/component"
-import { BreadcrumbListComponentFactory } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/component"
-
 import { ExampleComponentFactory } from "../../example/component"
 
-import { MenuAction, MenuLocationInfo } from "../../../../../auth/permission/menu/action"
 import { SeasonAction } from "../../../../shared/season/action"
 import { NotifyComponentFactory } from "../../../../../availability/x_Resource/NotifyError/Notify/component"
 import { NotifyAction } from "../../../../../availability/error/notify/action"
+import { MenuForegroundActionPod } from "../../../../../common/x_Resource/Outline/Menu/resource"
+import { MenuActionLocationInfo } from "../../../../../auth/permission/menu/action"
+import { initMenuResource } from "../../../../../common/x_Resource/Outline/Menu/impl"
 
 export type DashboardFactory = Readonly<{
     actions: Readonly<{
         notify: NotifyAction
-        menu: MenuAction
         season: SeasonAction
-    }>
+    }> &
+        MenuForegroundActionPod
     components: Readonly<{
         error: NotifyComponentFactory
         seasonInfo: SeasonInfoComponentFactory
-        menuList: MenuListComponentFactory
-        breadcrumbList: BreadcrumbListComponentFactory
 
         example: ExampleComponentFactory
     }>
 }>
-export type DashboardLocationInfo = Readonly<{
-    menu: MenuLocationInfo
-}>
+export type DashboardLocationInfo = MenuActionLocationInfo
 export function initDashboardResource(
     factory: DashboardFactory,
     locationInfo: DashboardLocationInfo
 ): DashboardResource {
     const actions = {
         notify: factory.actions.notify.notify(),
-
         loadSeason: factory.actions.season.loadSeason(),
-
-        loadBreadcrumb: factory.actions.menu.loadBreadcrumb(locationInfo.menu),
-        loadMenu: factory.actions.menu.loadMenu(locationInfo.menu),
-        toggleMenuExpand: factory.actions.menu.toggleMenuExpand(),
     }
     return {
         error: factory.components.error(actions),
         seasonInfo: factory.components.seasonInfo(actions),
-        menuList: factory.components.menuList(actions),
-        breadcrumbList: factory.components.breadcrumbList(actions),
 
         example: factory.components.example(actions),
+
+        ...initMenuResource(locationInfo, factory.actions),
     }
 }

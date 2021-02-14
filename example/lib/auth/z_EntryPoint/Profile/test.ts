@@ -1,20 +1,21 @@
-import { detectMenuTarget } from "../../permission/menu/impl/location"
+import {
+    detectMenuTarget,
+    initBreadcrumbListActionPod,
+    initMenuActionPod,
+} from "../../permission/menu/impl"
 
 import { initStaticClock } from "../../../z_infra/clock/simulate"
 import { initMemoryTypedStorage } from "../../../z_infra/storage/memory"
-import { initMenuExpandRepository } from "../../permission/menu/impl/repository/menuExpand"
+import { initMenuExpandRepository } from "../../permission/menu/infra/repository/menuExpand"
 import { initMemorySeasonRepository } from "../../../example/shared/season/impl/repository/season/memory"
-import { initLoadMenuBadgeSimulateRemoteAccess } from "../../permission/menu/impl/remote/menuBadge/simulate"
+import { initLoadMenuBadgeSimulateRemoteAccess } from "../../permission/menu/infra/remote/menuBadge/simulate"
 
 import { initProfileResource } from "./impl"
 
-import { initBreadcrumbListComponent } from "../Outline/breadcrumbList/impl"
-import { initMenuListComponent } from "../Outline/menuList/impl"
 import { initSeasonInfoComponent } from "../../../example/x_components/Outline/seasonInfo/impl"
 import { initNotifyComponent } from "../../../availability/x_Resource/NotifyError/Notify/impl"
 
 import { initTestSeasonAction } from "../../../example/shared/season/tests/season"
-import { initTestMenuAction } from "../../permission/menu/tests/menu"
 import { initTestNotifyAction } from "../../../availability/error/notify/tests/notify"
 
 import { Clock } from "../../../z_infra/clock/infra"
@@ -22,8 +23,8 @@ import { MenuTree } from "../../permission/menu/infra"
 
 import { ProfileFactory, ProfileLocationInfo } from "./entryPoint"
 import { markAuthAt, markTicketNonce } from "../../sign/authCredential/common/data"
-import { initMemoryApiCredentialRepository } from "../../../common/auth/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../common/auth/apiCredential/data"
+import { initMemoryApiCredentialRepository } from "../../../common/apiCredential/infra/repository/memory"
+import { markApiNonce, markApiRoles } from "../../../common/apiCredential/data"
 import { initClearActionPod } from "../../sign/authCredential/clear/impl"
 import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/memory"
 
@@ -52,27 +53,23 @@ function standardResource() {
     const factory: ProfileFactory = {
         actions: {
             initClear: initClearActionPod(repository),
+            initBreadcrumbList: initBreadcrumbListActionPod({ menuTree }),
+            initMenu: initMenuActionPod({
+                ...repository,
+                ...remote,
+                menuTree,
+            }),
 
             notify: initTestNotifyAction(),
-            menu: initTestMenuAction(
-                repository.apiCredentials,
-                menuTree,
-                repository.menuExpands,
-                remote.loadMenuBadge
-            ),
             season: initTestSeasonAction(repository.seasons, clock),
         },
         components: {
             error: initNotifyComponent,
             seasonInfo: initSeasonInfoComponent,
-            menuList: initMenuListComponent,
-            breadcrumbList: initBreadcrumbListComponent,
         },
     }
     const locationInfo: ProfileLocationInfo = {
-        menu: {
-            getMenuTarget: () => detectMenuTarget(version, url),
-        },
+        getMenuTarget: () => detectMenuTarget(version, url),
     }
 
     return initProfileResource(factory, locationInfo)

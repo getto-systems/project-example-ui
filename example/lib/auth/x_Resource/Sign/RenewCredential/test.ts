@@ -13,9 +13,9 @@ import { RenewComponentState } from "./Renew/component"
 
 import { markScriptPath } from "../../../sign/location/data"
 import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/common/data"
-import { ApiCredentialRepository } from "../../../../common/auth/apiCredential/infra"
-import { initMemoryApiCredentialRepository } from "../../../../common/auth/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../../common/auth/apiCredential/data"
+import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
+import { initMemoryApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/memory"
+import { markApiNonce, markApiRoles } from "../../../../common/apiCredential/data"
 import {
     AuthCredentialRepository,
     RenewRemoteAccess,
