@@ -1,3 +1,5 @@
+import { newWorker } from "../../../../../common/getto-worker/worker/foreground"
+
 import { newContinuousRenewActionPod } from "../../../../sign/authCredential/continuousRenew/main"
 import { newRenewActionPod } from "../../../../sign/authCredential/renew/main"
 
@@ -15,38 +17,22 @@ import { initFormAction } from "../../../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../../common/auth/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../../common/auth/field/password/main/password"
 
-import {
-    LoginBackgroundAction,
-    LoginEntryPoint,
-    LoginForegroundAction,
-    LoginResourceFactory,
-} from "../../entryPoint"
-import { LoginLocationInfo } from "../../../../x_Resource/common/LocationInfo/locationInfo"
+import { LoginBackgroundAction, LoginEntryPoint, LoginForegroundAction } from "../../entryPoint"
 
 import {
-    StartSession,
-    CheckStatus,
-    Reset,
-    ResetLocationInfo,
-} from "../../../../sign/password/reset/register/action"
-
+    LoginActionForegroundProxy,
+    newLoginActionForegroundProxy,
+} from "../../../../sign/password/login/worker/foreground"
 import {
-    StartSessionEvent,
-    CheckStatusEvent,
-    ResetEvent,
-} from "../../../../sign/password/reset/register/event"
-
+    newSessionActionForegroundProxy,
+    SessionActionForegroundProxy,
+} from "../../../../sign/password/reset/session/worker/foreground"
 import {
-    ForegroundMessage,
-    BackgroundMessage,
-    ProxyMessage,
-    ProxyResponse,
-    StartSessionProxyMessage,
-    CheckStatusProxyMessage,
-    ResetProxyMessage,
-} from "./message"
-import { newWorker } from "../../../../../common/getto-worker/worker/foreground"
-import { LoginActionForegroundProxy, newLoginActionForegroundProxy } from "../../../../sign/password/login/worker/foreground"
+    newRegisterActionForegroundProxy,
+    RegisterActionForegroundProxy,
+} from "../../../../sign/password/reset/register/worker/foreground"
+
+import { ForegroundMessage, BackgroundMessage } from "./message"
 
 export function newLoginAsWorkerForeground(): LoginEntryPoint {
     const worker = newWorker()
@@ -67,15 +53,28 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
         },
     }
 
-    const map = initProxy(postForegroundMessage)
-    const view = new View(
-        initLoginViewLocationInfo(currentURL),
-        initLoginComponentFactory(initLoginLocationInfo(currentURL), foreground, map)
-    )
-    const errorHandler = (err: string) => {
-        view.error(err)
+    const proxy = initProxy(postForegroundMessage)
+    const background: LoginBackgroundAction = {
+        initLogin: proxy.login.pod(),
+        initSession: proxy.reset.session.pod(),
+        initRegister: proxy.reset.register.pod(),
     }
-    const messageHandler = initBackgroundMessageHandler(map, errorHandler)
+
+    const locationInfo = initLoginLocationInfo(currentURL)
+
+    const view = new View(initLoginViewLocationInfo(currentURL), {
+        loginLink: initLoginLinkResource,
+
+        renewCredential: () => initRenewCredentialResource(locationInfo, foreground),
+
+        passwordLogin: () => initPasswordLoginResource(locationInfo, foreground, background),
+        passwordResetSession: () => initPasswordResetSessionResource(foreground, background),
+        passwordReset: () => initPasswordResetResource(locationInfo, foreground, background),
+    })
+
+    const messageHandler = initBackgroundMessageHandler(proxy, (err: string) => {
+        view.error(err)
+    })
 
     worker.addEventListener("message", (event) => {
         messageHandler(event.data)
@@ -95,130 +94,24 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
     }
 }
 
-class ProxyMap<M, E> {
-    idGenerator: IDGenerator
-    post: Post<ProxyMessage<M>>
-
-    map: Record<number, Post<E>> = {}
-
-    constructor(post: Post<ProxyMessage<M>>) {
-        this.idGenerator = new IDGenerator()
-        this.post = post
-    }
-
-    register(post: Post<E>): number {
-        const handlerID = this.idGenerator.generate()
-        this.map[handlerID] = post
-        return handlerID
-    }
-    resolve({ handlerID, done, response }: ProxyResponse<E>): void {
-        if (!this.map[handlerID]) {
-            throw new Error("handler is not set")
-        }
-
-        this.map[handlerID](response)
-
-        if (done) {
-            delete this.map[handlerID]
-        }
-    }
-}
-class StartSessionProxyMap extends ProxyMap<StartSessionProxyMessage, StartSessionEvent> {
-    init(): StartSession {
-        return async (fields, post) => {
-            this.post({
-                handlerID: this.register(post),
-                message: { fields },
-            })
-        }
-    }
-}
-class CheckStatusProxyMap extends ProxyMap<CheckStatusProxyMessage, CheckStatusEvent> {
-    init(): CheckStatus {
-        return async (sessionID, post) => {
-            this.post({
-                handlerID: this.register(post),
-                message: { sessionID },
-            })
-        }
-    }
-}
-class ResetProxyMap extends ProxyMap<ResetProxyMessage, ResetEvent> {
-    init(locationInfo: ResetLocationInfo): Reset {
-        return async (fields, post) => {
-            this.post({
-                handlerID: this.register(post),
-                message: {
-                    resetToken: locationInfo.getResetToken(),
-                    fields,
-                },
-            })
-        }
-    }
-}
-
 type Proxy = Readonly<{
-    passwordLogin: Readonly<{
-        login: LoginActionForegroundProxy
-    }>
-    passwordResetSession: Readonly<{
-        startSession: StartSessionProxyMap
-        checkStatus: CheckStatusProxyMap
-    }>
-    passwordReset: Readonly<{
-        reset: ResetProxyMap
+    login: LoginActionForegroundProxy
+    reset: Readonly<{
+        session: SessionActionForegroundProxy
+        register: RegisterActionForegroundProxy
     }>
 }>
 function initProxy(post: Post<ForegroundMessage>): Proxy {
     return {
-        passwordLogin: {
-            login: newLoginActionForegroundProxy((message) => {
-                post({ type: "login", action: message })
-            }),
+        login: newLoginActionForegroundProxy((message) => post({ type: "login", message })),
+        reset: {
+            session: newSessionActionForegroundProxy((message) =>
+                post({ type: "reset-session", message })
+            ),
+            register: newRegisterActionForegroundProxy((message) =>
+                post({ type: "reset-register", message })
+            ),
         },
-        passwordResetSession: {
-            startSession: new StartSessionProxyMap((message) => {
-                post({ type: "startSession", message })
-            }),
-            checkStatus: new CheckStatusProxyMap((message) => {
-                post({ type: "checkStatus", message })
-            }),
-        },
-        passwordReset: {
-            reset: new ResetProxyMap((message) => {
-                post({ type: "reset", message })
-            }),
-        },
-    }
-}
-function initLoginComponentFactory(
-    locationInfo: LoginLocationInfo,
-    foreground: LoginForegroundAction,
-    proxy: Proxy
-): LoginResourceFactory {
-    const background = initActionProxyFactory()
-
-    return {
-        loginLink: initLoginLinkResource,
-
-        renewCredential: () => initRenewCredentialResource(locationInfo, foreground),
-
-        passwordLogin: () => initPasswordLoginResource(locationInfo, foreground, background),
-        passwordResetSession: () => initPasswordResetSessionResource(foreground, background),
-        passwordReset: () => initPasswordResetResource(locationInfo, foreground, background),
-    }
-
-    function initActionProxyFactory(): LoginBackgroundAction {
-        return {
-            initLogin: proxy.passwordLogin.login.pod(),
-            resetSession: {
-                startSession: () => proxy.passwordResetSession.startSession.init(),
-                checkStatus: () => proxy.passwordResetSession.checkStatus.init(),
-            },
-            reset: {
-                reset: (locationInfo) => proxy.passwordReset.reset.init(locationInfo),
-            },
-        }
     }
 }
 function initBackgroundMessageHandler(
@@ -229,19 +122,15 @@ function initBackgroundMessageHandler(
         try {
             switch (message.type) {
                 case "login":
-                    proxy.passwordLogin.login.resolve(message.action)
+                    proxy.login.resolve(message.response)
                     break
 
-                case "startSession":
-                    proxy.passwordResetSession.startSession.resolve(message.response)
+                case "reset-session":
+                    proxy.reset.session.resolve(message.response)
                     break
 
-                case "checkStatus":
-                    proxy.passwordResetSession.checkStatus.resolve(message.response)
-                    break
-
-                case "reset":
-                    proxy.passwordReset.reset.resolve(message.response)
+                case "reset-register":
+                    proxy.reset.register.resolve(message.response)
                     break
 
                 case "error":
@@ -257,19 +146,10 @@ function initBackgroundMessageHandler(
     }
 }
 
-class IDGenerator {
-    id = 0
-
-    generate(): number {
-        this.id += 1
-        return this.id
-    }
+function assertNever(_: never): never {
+    throw new Error("NEVER")
 }
 
 interface Post<T> {
     (state: T): void
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER")
 }

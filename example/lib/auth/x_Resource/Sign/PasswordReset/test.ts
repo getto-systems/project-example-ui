@@ -4,15 +4,17 @@ import { initLoginLocationInfo } from "../../common/LocationInfo/impl"
 
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
 import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/common/infra/remote/renew/simulate"
-import { initResetSimulateRemoteAccess } from "../../../sign/password/reset/register/impl/remote/reset/simulate"
+import { initResetSimulateRemoteAccess } from "../../../sign/password/reset/register/infra/remote/reset/simulate"
 
 import { initFormAction } from "../../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../common/auth/field/password/main/password"
-import { initTestPasswordResetAction } from "../../../sign/password/reset/register/tests/reset"
 
 import { Clock } from "../../../../z_infra/clock/infra"
-import { ResetRemoteAccess, ResetRemoteAccessResult } from "../../../sign/password/reset/register/infra"
+import {
+    RegisterRemoteAccess,
+    RegisterRemoteAccessResult,
+} from "../../../sign/password/reset/register/infra"
 
 import { PasswordResetResource } from "./resource"
 
@@ -32,6 +34,12 @@ import {
 import { initContinuousRenewActionPod } from "../../../sign/authCredential/continuousRenew/impl"
 import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
 import { initLocationActionPod } from "../../../sign/location/impl"
+import { initRegisterActionPod, submitEventHasDone } from "../../../sign/password/reset/register/impl"
+import { delayed } from "../../../../z_infra/delayed/core"
+import {
+    initAsyncComponentStateTester,
+    initSyncComponentTestChecker,
+} from "../../../../common/getto-example/Application/testHelper"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -53,7 +61,7 @@ describe("PasswordReset", () => {
     test("submit valid login-id and password", (done) => {
         const { repository, clock, resource } = standardPasswordResetResource()
 
-        resource.reset.addStateHandler(initChecker())
+        resource.reset.addStateHandler(initTester())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -63,42 +71,22 @@ describe("PasswordReset", () => {
 
         resource.reset.submit(resource.form.getResetFields())
 
-        function initChecker() {
-            return initAsyncStateChecker(
-                (state: ResetComponentState): boolean => {
-                    switch (state.type) {
-                        case "initial-reset":
-                        case "try-to-reset":
-                        case "delayed-to-reset":
-                            // work in progress...
-                            return false
-
-                        case "try-to-load":
-                            return true
-
-                        case "failed-to-reset":
-                        case "storage-error":
-                        case "load-error":
-                        case "error":
-                            throw new Error(state.type)
-                    }
-                },
-                (stack) => {
-                    clock.update(COMPLETED_NOW)
-                    expect(stack).toEqual([
-                        { type: "try-to-reset" },
-                        {
-                            type: "try-to-load",
-                            scriptPath: markScriptPath("//secure.example.com/index.js"),
-                        },
-                    ])
-                    expectToSaveLastLogin(repository.authCredentials)
-                    setTimeout(() => {
-                        expectToSaveRenewed(repository.authCredentials)
-                        done()
-                    }, 1) // after setContinuousRenew interval and delay
-                }
-            )
+        function initTester() {
+            return initAsyncTester()((stack) => {
+                clock.update(COMPLETED_NOW)
+                expect(stack).toEqual([
+                    { type: "try-to-reset" },
+                    {
+                        type: "try-to-load",
+                        scriptPath: markScriptPath("//secure.example.com/index.js"),
+                    },
+                ])
+                expectToSaveLastLogin(repository.authCredentials)
+                setTimeout(() => {
+                    expectToSaveRenewed(repository.authCredentials)
+                    done()
+                }, 1) // after setContinuousRenew interval and delay
+            })
         }
     })
 
@@ -106,7 +94,7 @@ describe("PasswordReset", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitPasswordResetResource()
 
-        resource.reset.addStateHandler(initChecker())
+        resource.reset.addStateHandler(initTester())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -116,50 +104,30 @@ describe("PasswordReset", () => {
 
         resource.reset.submit(resource.form.getResetFields())
 
-        function initChecker() {
-            return initAsyncStateChecker(
-                (state: ResetComponentState): boolean => {
-                    switch (state.type) {
-                        case "initial-reset":
-                        case "try-to-reset":
-                        case "delayed-to-reset":
-                            // work in progress...
-                            return false
-
-                        case "try-to-load":
-                            return true
-
-                        case "failed-to-reset":
-                        case "storage-error":
-                        case "load-error":
-                        case "error":
-                            throw new Error(state.type)
-                    }
-                },
-                (stack) => {
-                    clock.update(COMPLETED_NOW)
-                    expect(stack).toEqual([
-                        { type: "try-to-reset" },
-                        { type: "delayed-to-reset" }, // delayed event
-                        {
-                            type: "try-to-load",
-                            scriptPath: markScriptPath("//secure.example.com/index.js"),
-                        },
-                    ])
-                    expectToSaveLastLogin(repository.authCredentials)
-                    setTimeout(() => {
-                        expectToSaveRenewed(repository.authCredentials)
-                        done()
-                    }, 1) // after setContinuousRenew interval and delay
-                }
-            )
+        function initTester() {
+            return initAsyncTester()((stack) => {
+                clock.update(COMPLETED_NOW)
+                expect(stack).toEqual([
+                    { type: "try-to-reset" },
+                    { type: "delayed-to-reset" }, // delayed event
+                    {
+                        type: "try-to-load",
+                        scriptPath: markScriptPath("//secure.example.com/index.js"),
+                    },
+                ])
+                expectToSaveLastLogin(repository.authCredentials)
+                setTimeout(() => {
+                    expectToSaveRenewed(repository.authCredentials)
+                    done()
+                }, 1) // after setContinuousRenew interval and delay
+            })
         }
     })
 
     test("submit without fields", (done) => {
         const { repository, resource } = standardPasswordResetResource()
 
-        resource.reset.addStateHandler(initChecker())
+        resource.reset.addStateHandler(initTester())
 
         // try to reset without fields
         //resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
@@ -167,43 +135,19 @@ describe("PasswordReset", () => {
 
         resource.reset.submit(resource.form.getResetFields())
 
-        function initChecker() {
-            return initAsyncStateChecker(
-                (state: ResetComponentState): boolean => {
-                    switch (state.type) {
-                        case "initial-reset":
-                        case "try-to-reset":
-                        case "delayed-to-reset":
-                            // work in progress...
-                            return false
-
-                        case "try-to-load":
-                            throw new Error(state.type)
-
-                        case "failed-to-reset":
-                            return true
-
-                        case "storage-error":
-                        case "load-error":
-                        case "error":
-                            throw new Error(state.type)
-                    }
-                },
-                (stack) => {
-                    expect(stack).toEqual([
-                        { type: "failed-to-reset", err: { type: "validation-error" } },
-                    ])
-                    expectToEmptyLastLogin(repository.authCredentials)
-                    done()
-                }
-            )
+        function initTester() {
+            return initAsyncTester()((stack) => {
+                expect(stack).toEqual([{ type: "failed-to-reset", err: { type: "validation-error" } }])
+                expectToEmptyLastLogin(repository.authCredentials)
+                done()
+            })
         }
     })
 
     test("submit without resetToken", (done) => {
         const { repository, resource } = emptyResetTokenPasswordResetResource()
 
-        resource.reset.addStateHandler(initChecker())
+        resource.reset.addStateHandler(initTester())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -213,75 +157,29 @@ describe("PasswordReset", () => {
 
         resource.reset.submit(resource.form.getResetFields())
 
-        function initChecker() {
-            return initAsyncStateChecker(
-                (state: ResetComponentState): boolean => {
-                    switch (state.type) {
-                        case "initial-reset":
-                        case "try-to-reset":
-                        case "delayed-to-reset":
-                            // work in progress...
-                            return false
-
-                        case "try-to-load":
-                            throw new Error(state.type)
-
-                        case "failed-to-reset":
-                            return true
-
-                        case "storage-error":
-                        case "load-error":
-                        case "error":
-                            throw new Error(state.type)
-                    }
-                },
-                (stack) => {
-                    expect(stack).toEqual([
-                        { type: "failed-to-reset", err: { type: "empty-reset-token" } },
-                    ])
-                    expectToEmptyLastLogin(repository.authCredentials)
-                    done()
-                }
-            )
+        function initTester() {
+            return initAsyncTester()((stack) => {
+                expect(stack).toEqual([{ type: "failed-to-reset", err: { type: "empty-reset-token" } }])
+                expectToEmptyLastLogin(repository.authCredentials)
+                done()
+            })
         }
     })
 
     test("load error", (done) => {
         const { resource } = standardPasswordResetResource()
 
-        resource.reset.addStateHandler(initChecker())
+        resource.reset.addStateHandler(initTester())
 
         resource.reset.loadError({ type: "infra-error", err: "load error" })
 
-        function initChecker() {
-            return initAsyncStateChecker(
-                (state: ResetComponentState): boolean => {
-                    switch (state.type) {
-                        case "initial-reset":
-                        case "try-to-reset":
-                        case "delayed-to-reset":
-                            // work in progress...
-                            return false
-
-                        case "try-to-load":
-                            throw new Error(state.type)
-
-                        case "failed-to-reset":
-                        case "storage-error":
-                        case "error":
-                            throw new Error(state.type)
-
-                        case "load-error":
-                            return true
-                    }
-                },
-                (stack) => {
-                    expect(stack).toEqual([
-                        { type: "load-error", err: { type: "infra-error", err: "load error" } },
-                    ])
-                    done()
-                }
-            )
+        function initTester() {
+            return initAsyncTester()((stack) => {
+                expect(stack).toEqual([
+                    { type: "load-error", err: { type: "infra-error", err: "load error" } },
+                ])
+                done()
+            })
         }
     })
 
@@ -294,11 +192,10 @@ describe("PasswordReset", () => {
 
             expect(resource.form.getResetFields()).toEqual({ success: false })
 
-            checker.test()
-            done()
+            checker.done()
 
             function initChecker() {
-                return initSyncStateChecker((stack) => {
+                return initSyncComponentTestChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -309,6 +206,7 @@ describe("PasswordReset", () => {
                             history: { undo: false, redo: false },
                         },
                     ])
+                    done()
                 })
             }
         })
@@ -333,11 +231,10 @@ describe("PasswordReset", () => {
                 },
             })
 
-            checker.test()
-            done()
+            checker.done()
 
             function initChecker() {
-                return initSyncStateChecker((stack) => {
+                return initSyncComponentTestChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "initial",
@@ -364,6 +261,7 @@ describe("PasswordReset", () => {
                             history: { undo: true, redo: false },
                         },
                     ])
+                    done()
                 })
             }
         })
@@ -382,11 +280,10 @@ describe("PasswordReset", () => {
 
             expect(resource.form.getResetFields()).toEqual({ success: false })
 
-            checker.test()
-            done()
+            checker.done()
 
             function initChecker() {
-                return initSyncStateChecker((stack) => {
+                return initSyncComponentTestChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -405,6 +302,7 @@ describe("PasswordReset", () => {
                             history: { undo: false, redo: false },
                         },
                     ])
+                    done()
                 })
             }
         })
@@ -440,27 +338,34 @@ describe("PasswordReset", () => {
 
             resource.form.redo()
 
-            checker.loginID.test()
-            checker.password.test()
-            done()
+            checker.loginID.done()
+            checker.password.done()
+            checker.main.done()
 
             function initChecker() {
+                const result = { loginID: false, password: false }
                 return {
-                    loginID: initSyncStateChecker((stack) => {
+                    main: initSyncComponentTestChecker(() => {
+                        expect(result).toEqual({ loginID: true, password: true })
+                        done()
+                    }),
+                    loginID: initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([
                             { value: "loginID-a" },
                             { value: "loginID-b" },
                             { value: "loginID-a" },
                             { value: "loginID-c" },
                         ])
+                        result.loginID = true
                     }),
-                    password: initSyncStateChecker((stack) => {
+                    password: initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([
                             { value: "password-a" },
                             { value: "" },
                             { value: "password-a" },
                             { value: "password-b" },
                         ])
+                        result.password = true
                     }),
                 }
             }
@@ -475,12 +380,12 @@ describe("PasswordReset", () => {
 
             resource.form.loginID.input.input(markInputString("loginID-a"))
 
-            checker.test()
-            done()
+            checker.done()
 
             function initChecker() {
-                return initSyncStateChecker((stack) => {
+                return initSyncComponentTestChecker((stack) => {
                     expect(stack).toEqual([])
+                    done()
                 })
             }
         })
@@ -495,12 +400,12 @@ describe("PasswordReset", () => {
 
             resource.form.loginID.input.input(markInputString("loginID-a"))
 
-            checker.test()
-            done()
+            checker.done()
 
             function initChecker() {
-                return initSyncStateChecker((stack) => {
+                return initSyncComponentTestChecker((stack) => {
                     expect(stack).toEqual([])
+                    done()
                 })
             }
         })
@@ -516,12 +421,12 @@ describe("PasswordReset", () => {
 
                 resource.form.loginID.input.input(markInputString(""))
 
-                checker.test()
-                done()
+                checker.done()
 
                 function initChecker() {
-                    return initSyncStateChecker((stack) => {
+                    return initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([{ result: toValidationError(["empty"]) }])
+                        done()
                     })
                 }
             })
@@ -536,11 +441,10 @@ describe("PasswordReset", () => {
 
                 resource.form.password.input.input(markInputString(""))
 
-                checker.test()
-                done()
+                checker.done()
 
                 function initChecker() {
-                    return initSyncStateChecker((stack) => {
+                    return initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["empty"]),
@@ -548,6 +452,7 @@ describe("PasswordReset", () => {
                                 view: { show: false },
                             },
                         ])
+                        done()
                     })
                 }
             })
@@ -560,11 +465,10 @@ describe("PasswordReset", () => {
 
                 resource.form.password.input.input(markInputString("a".repeat(73)))
 
-                checker.test()
-                done()
+                checker.done()
 
                 function initChecker() {
-                    return initSyncStateChecker((stack) => {
+                    return initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["too-long"]),
@@ -572,6 +476,7 @@ describe("PasswordReset", () => {
                                 view: { show: false },
                             },
                         ])
+                        done()
                     })
                 }
             })
@@ -585,11 +490,10 @@ describe("PasswordReset", () => {
                 // "あ"(UTF8) is 3 bytes character
                 resource.form.password.input.input(markInputString("あ".repeat(24) + "a"))
 
-                checker.test()
-                done()
+                checker.done()
 
                 function initChecker() {
-                    return initSyncStateChecker((stack) => {
+                    return initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["too-long"]),
@@ -597,6 +501,7 @@ describe("PasswordReset", () => {
                                 view: { show: false },
                             },
                         ])
+                        done()
                     })
                 }
             })
@@ -609,11 +514,10 @@ describe("PasswordReset", () => {
 
                 resource.form.password.input.input(markInputString("a".repeat(72)))
 
-                checker.test()
-                done()
+                checker.done()
 
                 function initChecker() {
-                    return initSyncStateChecker((stack) => {
+                    return initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -621,6 +525,7 @@ describe("PasswordReset", () => {
                                 view: { show: false },
                             },
                         ])
+                        done()
                     })
                 }
             })
@@ -634,11 +539,10 @@ describe("PasswordReset", () => {
                 // "あ"(UTF8) is 3 bytes character
                 resource.form.password.input.input(markInputString("あ".repeat(24)))
 
-                checker.test()
-                done()
+                checker.done()
 
                 function initChecker() {
-                    return initSyncStateChecker((stack) => {
+                    return initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -646,6 +550,7 @@ describe("PasswordReset", () => {
                                 view: { show: false },
                             },
                         ])
+                        done()
                     })
                 }
             })
@@ -660,11 +565,10 @@ describe("PasswordReset", () => {
                 resource.form.password.show()
                 resource.form.password.hide()
 
-                checker.test()
-                done()
+                checker.done()
 
                 function initChecker() {
-                    return initSyncStateChecker((stack) => {
+                    return initSyncComponentTestChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -682,6 +586,7 @@ describe("PasswordReset", () => {
                                 view: { show: false },
                             },
                         ])
+                        done()
                     })
                 }
             })
@@ -722,7 +627,7 @@ type PasswordResetTestRepository = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
 type PasswordResetTestRemoteAccess = Readonly<{
-    reset: ResetRemoteAccess
+    reset: RegisterRemoteAccess
     renew: RenewRemoteAccess
 }>
 
@@ -751,7 +656,11 @@ function newPasswordResetTestResource(
             },
         },
         {
-            reset: initTestPasswordResetAction(config.passwordReset, remote.reset),
+            initRegister: initRegisterActionPod({
+                ...remote,
+                config: config.reset,
+                delayed,
+            }),
         }
     )
 }
@@ -767,10 +676,8 @@ function standardConfig() {
         location: {
             secureServerHost: "secure.example.com",
         },
-        passwordReset: {
-            reset: {
-                delay: { delay_millisecond: 1 },
-            },
+        reset: {
+            delay: { delay_millisecond: 1 },
         },
         continuousRenew: {
             interval: { interval_millisecond: 1 },
@@ -803,7 +710,7 @@ function waitSimulator(): PasswordResetTestRemoteAccess {
     }
 }
 
-function simulateReset(): ResetRemoteAccessResult {
+function simulateReset(): RegisterRemoteAccessResult {
     return {
         success: true,
         value: {
@@ -871,27 +778,20 @@ function expectToEmptyLastLogin(authCredentials: AuthCredentialRepository) {
     })
 }
 
-function initAsyncStateChecker<S>(isFinish: { (state: S): boolean }, examine: { (stack: S[]): void }) {
-    const stack: S[] = []
+function initAsyncTester() {
+    return initAsyncComponentStateTester((state: ResetComponentState) => {
+        switch (state.type) {
+            case "initial-reset":
+                return false
 
-    return (state: S) => {
-        stack.push(state)
+            case "try-to-load":
+            case "storage-error":
+            case "load-error":
+            case "error":
+                return true
 
-        if (isFinish(state)) {
-            examine(stack)
+            default:
+                return submitEventHasDone(state)
         }
-    }
-}
-
-function initSyncStateChecker<S>(examine: { (stack: S[]): void }) {
-    const stack: S[] = []
-
-    return {
-        handler: (state: S) => {
-            stack.push(state)
-        },
-        test: () => {
-            examine(stack)
-        },
-    }
+    })
 }

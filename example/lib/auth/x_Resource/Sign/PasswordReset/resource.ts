@@ -5,7 +5,10 @@ import { FormAction } from "../../../../common/getto-form/form/action"
 import { LocationActionPod, LocationActionLocationInfo } from "../../../sign/location/action"
 import { LoginIDFormFieldAction } from "../../../../common/auth/field/loginID/action"
 import { PasswordFormFieldAction } from "../../../../common/auth/field/password/action"
-import { ResetAction, ResetLocationInfo } from "../../../sign/password/reset/register/action"
+import {
+    RegisterActionLocationInfo,
+    RegisterActionPod,
+} from "../../../sign/password/reset/register/action"
 import { ContinuousRenewActionPod } from "../../../sign/authCredential/continuousRenew/action"
 
 export type PasswordResetResource = Readonly<{
@@ -13,10 +16,7 @@ export type PasswordResetResource = Readonly<{
     form: FormComponent
 }>
 
-export type PasswordResetLocationInfo = LocationActionLocationInfo &
-    Readonly<{
-        reset: ResetLocationInfo
-    }>
+export type PasswordResetLocationInfo = LocationActionLocationInfo & RegisterActionLocationInfo
 export type PasswordResetForegroundActionPod = Readonly<{
     initContinuousRenew: ContinuousRenewActionPod
     initLocation: LocationActionPod
@@ -27,6 +27,6 @@ export type PasswordResetForegroundActionPod = Readonly<{
         password: PasswordFormFieldAction
     }>
 }>
-export type PasswordResetBackgroundAction = Readonly<{
-    reset: ResetAction
+export type PasswordResetBackgroundActionPod = Readonly<{
+    initRegister: RegisterActionPod
 }>

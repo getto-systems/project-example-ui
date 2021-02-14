@@ -1,6 +1,6 @@
 import {
-    PasswordResetSessionBackgroundAction,
-    PasswordResetSessionForegroundAction,
+    PasswordResetSessionBackgroundActionPod,
+    PasswordResetSessionForegroundActionPod,
     PasswordResetSessionResource,
 } from "./resource"
 
@@ -9,10 +9,11 @@ import { FormMaterial } from "./Form/component"
 
 import { initFormComponent } from "./Form/impl"
 import { initStartComponent } from "./Start/impl"
+import { initSessionAction } from "../../../sign/password/reset/session/impl"
 
 export function initPasswordResetSessionResource(
-    foreground: PasswordResetSessionForegroundAction,
-    background: PasswordResetSessionBackgroundAction
+    foreground: PasswordResetSessionForegroundActionPod,
+    background: PasswordResetSessionBackgroundActionPod
 ): PasswordResetSessionResource {
     return {
         start: initStartComponent(startMaterial()),
@@ -21,8 +22,7 @@ export function initPasswordResetSessionResource(
 
     function startMaterial(): StartMaterial {
         return {
-            startSession: background.resetSession.startSession(),
-            checkStatus: background.resetSession.checkStatus(),
+            session: initSessionAction(background.initSession),
         }
     }
     function formMaterial(): FormMaterial {

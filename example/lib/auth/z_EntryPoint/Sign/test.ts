@@ -4,12 +4,12 @@ import { initLoginLocationInfo } from "../../x_Resource/common/LocationInfo/impl
 import { initStaticClock } from "../../../z_infra/clock/simulate"
 import { initLoginSimulateRemoteAccess } from "../../sign/password/login/infra/remote/login/simulate"
 import { initRenewSimulateRemoteAccess } from "../../sign/authCredential/common/infra/remote/renew/simulate"
-import { initResetSimulateRemoteAccess } from "../../sign/password/reset/register/impl/remote/reset/simulate"
+import { initResetSimulateRemoteAccess } from "../../sign/password/reset/register/infra/remote/reset/simulate"
 import {
     initGetStatusSimulateRemoteAccess,
     initSendTokenSimulateRemoteAccess,
     initStartSessionSimulateRemoteAccess,
-} from "../../sign/password/reset/register/impl/remote/session/simulate"
+} from "../../sign/password/reset/session/infra/remote/session/simulate"
 
 import { initLoginLinkResource } from "../../x_Resource/common/LoginLink/impl"
 import { initRenewCredentialResource } from "../../x_Resource/Sign/RenewCredential/impl"
@@ -19,22 +19,14 @@ import { initPasswordResetResource } from "../../x_Resource/Sign/PasswordReset/i
 
 import { initFormAction } from "../../../common/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../common/auth/field/loginID/main/loginID"
-import { initTestPasswordResetSessionAction } from "../../sign/password/reset/register/tests/session"
 import { initPasswordFormFieldAction } from "../../../common/auth/field/password/main/password"
-import { initTestPasswordResetAction } from "../../sign/password/reset/register/tests/reset"
 
 import { Clock } from "../../../z_infra/clock/infra"
 import { LoginRemoteAccessResult } from "../../sign/password/login/infra"
-import {
-    GetStatusRemoteAccessResult,
-    ResetRemoteAccessResult,
-    SendTokenRemoteAccessResult,
-    StartSessionRemoteAccessResult,
-} from "../../sign/password/reset/register/infra"
+import { RegisterRemoteAccessResult } from "../../sign/password/reset/register/infra"
 
 import { LoginState } from "./entryPoint"
 
-import { markSessionID } from "../../sign/password/reset/register/data"
 import { markAuthAt, markTicketNonce } from "../../sign/authCredential/common/data"
 import { markApiNonce, markApiRoles } from "../../../common/auth/apiCredential/data"
 import { ApiCredentialRepository } from "../../../common/auth/apiCredential/infra"
@@ -45,10 +37,18 @@ import {
 } from "../../sign/authCredential/common/infra"
 import { initContinuousRenewActionPod } from "../../sign/authCredential/continuousRenew/impl"
 import { initRenewActionPod } from "../../sign/authCredential/renew/impl"
-import { delayed } from "../../../z_infra/delayed/core"
+import { delayed, wait } from "../../../z_infra/delayed/core"
 import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/memory"
 import { initLocationActionPod } from "../../sign/location/impl"
 import { initLoginActionPod } from "../../sign/password/login/impl"
+import { initRegisterActionPod } from "../../sign/password/reset/register/impl"
+import { initSessionActionPod } from "../../sign/password/reset/session/impl"
+import {
+    GetStatusRemoteAccessResult,
+    SendTokenRemoteAccessResult,
+    StartSessionRemoteAccessResult,
+} from "../../sign/password/reset/session/infra"
+import { markSessionID } from "../../sign/password/reset/session/data"
 
 const AUTHORIZED_TICKET_NONCE = "ticket-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
@@ -425,14 +425,13 @@ function standardPasswordResetResource(
             },
         },
         {
-            reset: initTestPasswordResetAction(
-                {
-                    reset: {
-                        delay: { delay_millisecond: 1 },
-                    },
+            initRegister: initRegisterActionPod({
+                reset: initResetSimulateRemoteAccess(simulateReset, { wait_millisecond: 0 }),
+                config: {
+                    delay: { delay_millisecond: 1 },
                 },
-                initResetSimulateRemoteAccess(simulateReset, { wait_millisecond: 0 })
-            ),
+                delayed,
+            }),
         }
     )
 }
@@ -445,8 +444,17 @@ function standardPasswordResetSessionResource() {
             },
         },
         {
-            resetSession: initTestPasswordResetSessionAction(
-                {
+            initSession: initSessionActionPod({
+                startSession: initStartSessionSimulateRemoteAccess(simulateStartSession, {
+                    wait_millisecond: 0,
+                }),
+                sendToken: initSendTokenSimulateRemoteAccess(simulateSendToken, {
+                    wait_millisecond: 0,
+                }),
+                getStatus: initGetStatusSimulateRemoteAccess(simulateGetStatus, {
+                    wait_millisecond: 0,
+                }),
+                config: {
                     startSession: {
                         delay: { delay_millisecond: 1 },
                     },
@@ -455,18 +463,9 @@ function standardPasswordResetSessionResource() {
                         limit: { limit: 5 },
                     },
                 },
-                {
-                    startSession: initStartSessionSimulateRemoteAccess(simulateStartSession, {
-                        wait_millisecond: 0,
-                    }),
-                    sendToken: initSendTokenSimulateRemoteAccess(simulateSendToken, {
-                        wait_millisecond: 0,
-                    }),
-                    getStatus: initGetStatusSimulateRemoteAccess(simulateGetStatus, {
-                        wait_millisecond: 0,
-                    }),
-                }
-            ),
+                delayed,
+                wait,
+            }),
         }
     )
 }
@@ -538,7 +537,7 @@ function simulateRenew(): RenewRemoteAccessResult {
         err: { type: "invalid-ticket" },
     }
 }
-function simulateReset(): ResetRemoteAccessResult {
+function simulateReset(): RegisterRemoteAccessResult {
     return {
         success: true,
         value: {

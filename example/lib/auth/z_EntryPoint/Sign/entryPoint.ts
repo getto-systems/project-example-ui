@@ -5,13 +5,13 @@ import {
     PasswordLoginResource,
 } from "../../x_Resource/Sign/PasswordLogin/resource"
 import {
-    PasswordResetBackgroundAction,
+    PasswordResetBackgroundActionPod,
     PasswordResetForegroundActionPod,
     PasswordResetResource,
 } from "../../x_Resource/Sign/PasswordReset/resource"
 import {
-    PasswordResetSessionBackgroundAction,
-    PasswordResetSessionForegroundAction,
+    PasswordResetSessionBackgroundActionPod,
+    PasswordResetSessionForegroundActionPod,
     PasswordResetSessionResource,
 } from "../../x_Resource/Sign/PasswordResetSession/resource"
 
@@ -20,12 +20,12 @@ import { LoginLinkResource } from "../../x_Resource/common/LoginLink/resource"
 
 export type LoginForegroundAction = RenewCredentialForegroundActionPod &
     PasswordLoginForegroundActionPod &
-    PasswordResetSessionForegroundAction &
+    PasswordResetSessionForegroundActionPod &
     PasswordResetForegroundActionPod
 
 export type LoginBackgroundAction = PasswordLoginBackgroundActionPod &
-    PasswordResetSessionBackgroundAction &
-    PasswordResetBackgroundAction
+    PasswordResetSessionBackgroundActionPod &
+    PasswordResetBackgroundActionPod
 
 export type LoginEntryPoint = Readonly<{
     view: LoginView
