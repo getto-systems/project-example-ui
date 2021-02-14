@@ -1,3 +1,4 @@
+import { MenuForegroundActionPod, MenuResource } from "../../../common/x_Resource/Outline/Menu/resource"
 import {
     ClearCredentialForegroundActionPod,
     ClearCredentialResource,
@@ -11,14 +12,9 @@ import {
     SeasonInfoComponent,
     SeasonInfoComponentFactory,
 } from "../../../example/x_components/Outline/seasonInfo/component"
-import { MenuListComponent, MenuListComponentFactory } from "../Outline/menuList/component"
-import {
-    BreadcrumbListComponent,
-    BreadcrumbListComponentFactory,
-} from "../Outline/breadcrumbList/component"
 
 import { NotifyAction } from "../../../availability/error/notify/action"
-import { MenuAction, MenuLocationInfo } from "../../permission/menu/action"
+import { MenuActionLocationInfo } from "../../permission/menu/action"
 import { SeasonAction } from "../../../example/shared/season/action"
 
 export type ProfileEntryPoint = Readonly<{
@@ -29,28 +25,23 @@ export type ProfileEntryPoint = Readonly<{
 export type ProfileResource = Readonly<{
     error: NotifyComponent
     seasonInfo: SeasonInfoComponent
-    menuList: MenuListComponent
-    breadcrumbList: BreadcrumbListComponent
 }> &
+    MenuResource &
     ClearCredentialResource
 
 export type ProfileFactory = Readonly<{
     actions: Readonly<{
         notify: NotifyAction
-        menu: MenuAction
         season: SeasonAction
     }> &
+        MenuForegroundActionPod &
         ClearCredentialForegroundActionPod
     components: Readonly<{
         error: NotifyComponentFactory
         seasonInfo: SeasonInfoComponentFactory
-        menuList: MenuListComponentFactory
-        breadcrumbList: BreadcrumbListComponentFactory
     }>
 }>
-export type ProfileLocationInfo = Readonly<{
-    menu: MenuLocationInfo
-}>
+export type ProfileLocationInfo = MenuActionLocationInfo
 interface Terminate {
     (): void
 }

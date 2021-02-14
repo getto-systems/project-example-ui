@@ -12,12 +12,12 @@ import { useComponent } from "../hooks"
 import { siteInfo } from "../site"
 import { icon } from "../icon"
 
-import { MENU_ID } from "./MenuList"
+import { MENU_ID } from "./Menu"
 
 import {
     BreadcrumbListComponent,
     initialBreadcrumbListComponentState,
-} from "../../../auth/z_EntryPoint/Outline/breadcrumbList/component"
+} from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/component"
 
 import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../../auth/permission/menu/data"
 import { linky } from "../../../z_vendor/getto-css/preact/design/highlight"

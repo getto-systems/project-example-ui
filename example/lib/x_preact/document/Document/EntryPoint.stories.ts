@@ -5,13 +5,13 @@ import { noPadded } from "../../z_storybook/display"
 
 import { EntryPoint } from "./EntryPoint"
 
-import { initMockPropsPasser } from "../../../common/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
 import {
     DocumentMockPropsPasser,
     newMockDocument,
 } from "../../../document/x_components/Document/EntryPoint/mock"
-import { MenuListMockProps } from "../../../auth/z_EntryPoint/Outline/menuList/mock"
-import { BreadcrumbListMockProps } from "../../../auth/z_EntryPoint/Outline/breadcrumbList/mock"
+import { MenuMockProps } from "../../../common/x_Resource/Outline/Menu/Menu/mock"
+import { BreadcrumbListMockProps } from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
 import { ContentMockProps } from "../../../document/x_components/Document/content/mock"
 
 export default {
@@ -30,7 +30,7 @@ type MockProps = Readonly<{
 }>
 const Template: Story<MockProps> = (args) => {
     const passer: DocumentMockPropsPasser = {
-        menuList: initMockPropsPasser<MenuListMockProps>(),
+        menu: initMockPropsPasser<MenuMockProps>(),
         breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
         content: initMockPropsPasser<ContentMockProps>(),
     }
@@ -39,7 +39,7 @@ const Template: Story<MockProps> = (args) => {
 
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
-            passer.menuList.update({
+            passer.menu.update({
                 type: "success",
                 label: "ホーム",
                 badgeCount: props.args.menuBadgeCount,

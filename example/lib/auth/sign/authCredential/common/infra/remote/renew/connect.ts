@@ -9,7 +9,7 @@ import {
     RenewRemoteError,
     TicketNonce,
 } from "../../../data"
-import { markApiNonce, markApiRoles } from "../../../../../../../common/auth/apiCredential/data"
+import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
 
 type RenewRawRemoteAccess = RawRemoteAccess<TicketNonce, RawAuthCredential>
 type RawAuthCredential = Readonly<{

@@ -1,4 +1,4 @@
-import { ApiCredentialRepository } from "../../../../common/auth/apiCredential/infra"
+import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
 import { AuthCredentialRepository } from "../common/infra"
 
 import { LogoutPod } from "./action"

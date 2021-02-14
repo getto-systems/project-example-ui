@@ -1,8 +1,8 @@
 import { FormMaterial, FormComponentFactory, FormComponent } from "./component"
 
 import { StartSessionFields } from "../../../../sign/password/reset/session/data"
-import { FormConvertResult } from "../../../../../common/getto-form/form/data"
-import { FormContainerBaseComponent } from "../../../../../common/getto-form/x_Resource/Form/impl"
+import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"
+import { FormContainerBaseComponent } from "../../../../../vendor/getto-form/x_Resource/Form/impl"
 import { LoginIDFormFieldComponent } from "../../../common/Field/LoginID/component"
 import { initLoginIDFormFieldComponent } from "../../../common/Field/LoginID/impl"
 

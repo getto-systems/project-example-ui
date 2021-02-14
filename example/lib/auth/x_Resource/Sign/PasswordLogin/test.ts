@@ -6,9 +6,9 @@ import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate
 import { initLoginSimulateRemoteAccess } from "../../../sign/password/login/infra/remote/login/simulate"
 import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/common/infra/remote/renew/simulate"
 
-import { initFormAction } from "../../../../common/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../../common/auth/field/password/main/password"
+import { initFormAction } from "../../../../vendor/getto-form/main/form"
+import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../common/field/password/main/password"
 
 import { LoginRemoteAccess, LoginRemoteAccessResult } from "../../../sign/password/login/infra"
 import { Clock } from "../../../../z_infra/clock/infra"
@@ -17,13 +17,13 @@ import { PasswordLoginResource } from "./resource"
 
 import { LoginComponentState } from "./Login/component"
 
-import { markInputString, toValidationError } from "../../../../common/getto-form/form/data"
+import { markInputString, toValidationError } from "../../../../vendor/getto-form/form/data"
 import { markScriptPath } from "../../../sign/location/data"
 import { LoginFields } from "../../../sign/password/login/data"
 import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/common/data"
-import { ApiCredentialRepository } from "../../../../common/auth/apiCredential/infra"
-import { initMemoryApiCredentialRepository } from "../../../../common/auth/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../../common/auth/apiCredential/data"
+import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
+import { initMemoryApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/memory"
+import { markApiNonce, markApiRoles } from "../../../../common/apiCredential/data"
 import { initContinuousRenewActionPod } from "../../../sign/authCredential/continuousRenew/impl"
 import {
     AuthCredentialRepository,
@@ -37,7 +37,7 @@ import { initLoginActionPod, submitEventHasDone } from "../../../sign/password/l
 import {
     initAsyncComponentStateTester,
     initSyncComponentTestChecker,
-} from "../../../../common/getto-example/Application/testHelper"
+} from "../../../../vendor/getto-example/Application/testHelper"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 

@@ -1,8 +1,8 @@
-import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
+import { ApplicationComponent } from "../../../../../vendor/getto-example/Application/component"
 
 import { ClearAction } from "../../../../sign/authCredential/clear/action"
 
-import { StorageError } from "../../../../../common/auth/storage/data"
+import { StorageError } from "../../../../../common/storage/data"
 
 export interface LogoutComponentFactory {
     (material: LogoutMaterial): LogoutComponent

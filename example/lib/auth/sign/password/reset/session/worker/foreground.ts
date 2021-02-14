@@ -2,7 +2,7 @@ import {
     WorkerForegroundProxyAction,
     WorkerForegroundProxyBase,
     WorkerForegroundProxyMethod,
-} from "../../../../../../common/getto-worker/worker/foreground"
+} from "../../../../../../vendor/getto-worker/worker/foreground"
 
 import {
     CheckStatusProxyParams,

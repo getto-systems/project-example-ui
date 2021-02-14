@@ -4,11 +4,11 @@ import { html } from "htm/preact"
 
 import { BreadcrumbList } from "./BreadcrumbList"
 
-import { initMockPropsPasser } from "../../../common/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
 import {
     BreadcrumbListMockProps,
     initMockBreadcrumbListComponent,
-} from "../../../auth/z_EntryPoint/Outline/breadcrumbList/mock"
+} from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
 
 export default {
     title: "Outline/BreadcrumbList",

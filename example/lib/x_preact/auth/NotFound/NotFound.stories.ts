@@ -5,7 +5,7 @@ import { noPadded } from "../../z_storybook/display"
 
 import { EntryPoint } from "./NotFound"
 
-import { initMockPropsPasser } from "../../../common/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
 import { newMockNotFound } from "../../../availability/z_EntryPoint/NotFound/mock"
 import { CurrentVersionMockProps } from "../../../availability/x_Resource/GetCurrentVersion/currentVersion/mock"
 

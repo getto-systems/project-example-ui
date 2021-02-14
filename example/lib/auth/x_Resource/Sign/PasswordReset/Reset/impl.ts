@@ -1,9 +1,9 @@
-import { ApplicationBaseComponent } from "../../../../../common/getto-example/Application/impl"
+import { ApplicationBaseComponent } from "../../../../../vendor/getto-example/Application/impl"
 
 import { ResetComponentFactory, ResetMaterial, ResetComponent, ResetComponentState } from "./component"
 
 import { LoadError } from "../../../../sign/location/data"
-import { FormConvertResult } from "../../../../../common/getto-form/form/data"
+import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"
 import { ResetFields } from "../../../../sign/password/reset/register/data"
 import { AuthCredential } from "../../../../sign/authCredential/common/data"
 

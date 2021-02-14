@@ -1,7 +1,6 @@
-import { NotifyComponent } from "../../../../availability/x_Resource/NotifyError/Notify/component"
-import { MenuListComponent } from "../../../../auth/z_EntryPoint/Outline/menuList/component"
-import { BreadcrumbListComponent } from "../../../../auth/z_EntryPoint/Outline/breadcrumbList/component"
+import { MenuResource } from "../../../../common/x_Resource/Outline/Menu/resource"
 
+import { NotifyComponent } from "../../../../availability/x_Resource/NotifyError/Notify/component"
 import { ContentComponent } from "../content/component"
 
 export type DocumentEntryPoint = Readonly<{
@@ -11,11 +10,9 @@ export type DocumentEntryPoint = Readonly<{
 
 export type DocumentResource = Readonly<{
     error: NotifyComponent
-    menuList: MenuListComponent
-    breadcrumbList: BreadcrumbListComponent
-
     content: ContentComponent
-}>
+}> &
+    MenuResource
 
 interface Terminate {
     (): void

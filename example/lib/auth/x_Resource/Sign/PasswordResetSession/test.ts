@@ -2,7 +2,7 @@ import {
     initGetStatusSimulateRemoteAccess,
     initSendTokenSimulateRemoteAccess,
     initStartSessionSimulateRemoteAccess,
-} from "../../../sign/password/reset/session/infra/remote/session/simulate"
+} from "../../../sign/password/reset/session/infra/remote/startSession/simulate"
 
 import { WaitTime } from "../../../../z_infra/time/infra"
 import {
@@ -18,11 +18,11 @@ import {
 import { StartComponentState } from "./Start/component"
 
 import { markSessionID } from "../../../sign/password/reset/session/data"
-import { markInputString, toValidationError } from "../../../../common/getto-form/form/data"
+import { markInputString, toValidationError } from "../../../../vendor/getto-form/form/data"
 import { PasswordResetSessionResource } from "./resource"
 import { initPasswordResetSessionResource } from "./impl"
-import { initFormAction } from "../../../../common/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
+import { initFormAction } from "../../../../vendor/getto-form/main/form"
+import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
 import {
     checkStatusEventHasDone,
     initSessionActionPod,
@@ -32,7 +32,7 @@ import { delayed, wait } from "../../../../z_infra/delayed/core"
 import {
     initAsyncComponentStateTester,
     initSyncComponentTestChecker,
-} from "../../../../common/getto-example/Application/testHelper"
+} from "../../../../vendor/getto-example/Application/testHelper"
 
 const VALID_LOGIN = { loginID: "login-id" } as const
 const SESSION_ID = "session-id" as const

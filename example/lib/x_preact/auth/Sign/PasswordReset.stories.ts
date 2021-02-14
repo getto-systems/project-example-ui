@@ -3,11 +3,11 @@ import { useEffect } from "preact/hooks"
 
 import { PasswordReset } from "./PasswordReset"
 
-import { initMockPropsPasser } from "../../../common/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
 import { initMockPasswordResetEntryPoint } from "../../../auth/z_EntryPoint/Sign/mock"
 import { PasswordResetResourceMockProps } from "../../../auth/x_Resource/Sign/PasswordReset/mock"
 import { loginIDFormFieldValidations } from "../../../auth/x_Resource/common/Field/LoginID/mock"
-import { formValidationStates } from "../../../common/getto-form/x_Resource/Form/mock"
+import { formValidationStates } from "../../../vendor/getto-form/x_Resource/Form/mock"
 import {
     passwordFormFieldCharacters,
     passwordFormFieldValidations,

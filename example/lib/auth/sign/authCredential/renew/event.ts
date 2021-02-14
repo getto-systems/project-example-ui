@@ -1,4 +1,4 @@
-import { StorageError } from "../../../../common/auth/storage/data"
+import { StorageError } from "../../../../common/storage/data"
 import { AuthCredential } from "../common/data"
 import { RequestError } from "./data"
 

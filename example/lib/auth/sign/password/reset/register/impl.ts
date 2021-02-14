@@ -39,7 +39,7 @@ const submit: Submit = (infra) => (locationInfo) => async (fields, post) => {
 
     post({ type: "try-to-reset" })
 
-    const { reset, config, delayed } = infra
+    const { register: reset, config, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const response = await delayed(reset({ resetToken, fields: fields.value }), config.delay, () =>

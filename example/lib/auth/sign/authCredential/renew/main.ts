@@ -1,4 +1,4 @@
-import { newApiCredentialRepository } from "../../../../common/auth/apiCredential/infra/repository/main"
+import { newApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/main"
 import { newAuthCredentialRepository } from "../common/infra/repository/main"
 import { newRenewRemoteAccess } from "../common/infra/remote/renew/main"
 

@@ -1,6 +1,6 @@
 import { SubmitEvent } from "./event"
 
-import { FormConvertResult } from "../../../../common/getto-form/form/data"
+import { FormConvertResult } from "../../../../vendor/getto-form/form/data"
 import { LoginFields } from "./data"
 
 export type LoginActionPod = Readonly<{

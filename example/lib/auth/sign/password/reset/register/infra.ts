@@ -1,4 +1,4 @@
-import { ApiCredential } from "../../../../../common/auth/apiCredential/data"
+import { ApiCredential } from "../../../../../common/apiCredential/data"
 import { Delayed } from "../../../../../z_infra/delayed/infra"
 import {
     RemoteAccess,
@@ -19,7 +19,7 @@ export interface Submit {
 }
 
 export type SubmitInfra = Readonly<{
-    reset: RegisterRemoteAccess
+    register: RegisterRemoteAccess
     config: SubmitConfig
     delayed: Delayed
 }>

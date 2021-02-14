@@ -13,7 +13,7 @@ import { ClearCredentialResource } from "../../../auth/x_Resource/Sign/ClearCred
 
 import { initialLogoutComponentState } from "../../../auth/x_Resource/Sign/ClearCredential/Logout/component"
 
-import { StorageError } from "../../../common/auth/storage/data"
+import { StorageError } from "../../../common/storage/data"
 
 export function ClearCredential(resource: ClearCredentialResource): VNode {
     const state = useComponent(resource.logout, initialLogoutComponentState)

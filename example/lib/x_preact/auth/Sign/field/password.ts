@@ -17,12 +17,12 @@ import {
     PasswordFormFieldComponent,
 } from "../../../../auth/x_Resource/common/Field/Password/component"
 
-import { FormInputString, FormValidationResult } from "../../../../common/getto-form/form/data"
+import { FormInputString, FormValidationResult } from "../../../../vendor/getto-form/form/data"
 import {
     PasswordValidationError,
     PasswordCharacter,
     PasswordView,
-} from "../../../../common/auth/field/password/data"
+} from "../../../../auth/common/field/password/data"
 
 type Props = Readonly<{
     password: PasswordFormFieldComponent

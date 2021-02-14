@@ -1,4 +1,4 @@
-import { ApplicationBaseComponent } from "../../../../../common/getto-example/Application/impl"
+import { ApplicationBaseComponent } from "../../../../../vendor/getto-example/Application/impl"
 
 import {
     StartComponentFactory,
@@ -8,7 +8,7 @@ import {
 } from "./component"
 
 import { SessionID, StartSessionFields } from "../../../../sign/password/reset/session/data"
-import { FormConvertResult } from "../../../../../common/getto-form/form/data"
+import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"
 
 export const initStartComponent: StartComponentFactory = (material) => new Component(material)
 

@@ -1,37 +1,49 @@
-import { LoadMenuEvent, ToggleMenuExpandEvent } from "./event"
+import { LoadBreadcrumbListEvent, LoadMenuEvent, ToggleMenuExpandEvent } from "./event"
 
-import { LoadBreadcrumbEvent, Menu, MenuCategoryPath, MenuTarget } from "./data"
+import { Menu, MenuCategoryPath, MenuTarget } from "./data"
 
-export type MenuAction = Readonly<{
-    loadBreadcrumb: LoadBreadcrumbPod
-    loadMenu: LoadMenuPod
-    toggleMenuExpand: ToggleMenuExpandPod
+export type BreadcrumbListAction = Readonly<{
+    loadBreadcrumbList: LoadBreadcrumbListMethod
+}>
+export type BreadcrumbListActionPod = Readonly<{
+    initLoadBreadcrumbList: LoadBreadcrumbListPod
 }>
 
-export interface LoadBreadcrumbPod {
-    (locationInfo: LoadBreadcrumbLocationInfo): LoadBreadcrumb
+export type BreadcrumbListActionLocationInfo = LoadMenuLocationInfo
+
+export type MenuAction = Readonly<{
+    loadMenu: LoadMenuMethod
+    toggleMenuExpand: ToggleMenuExpandMethod
+}>
+export type MenuActionPod = Readonly<{
+    initLoadMenu: LoadMenuPod
+    initToggleMenuExpand: ToggleMenuExpandPod
+}>
+
+export type MenuActionLocationInfo = LoadMenuLocationInfo
+
+export interface LoadBreadcrumbListPod {
+    (locationInfo: LoadBreadcrumbListLocationInfo): LoadBreadcrumbListMethod
 }
-export interface LoadBreadcrumb {
-    (post: Post<LoadBreadcrumbEvent>): void
+export type LoadBreadcrumbListLocationInfo = LoadMenuLocationInfo
+export interface LoadBreadcrumbListMethod {
+    (post: Post<LoadBreadcrumbListEvent>): void
 }
-export type LoadBreadcrumbLocationInfo = MenuLocationInfo
 
 export interface LoadMenuPod {
-    (locationInfo: LoadMenuLocationInfo): LoadMenu
+    (locationInfo: LoadMenuLocationInfo): LoadMenuMethod
 }
-export interface LoadMenu {
-    (post: Post<LoadMenuEvent>): void
-}
-export type LoadMenuLocationInfo = MenuLocationInfo
-
-export interface MenuLocationInfo {
+export type LoadMenuLocationInfo = {
     getMenuTarget(): MenuTarget
+}
+export interface LoadMenuMethod {
+    (post: Post<LoadMenuEvent>): void
 }
 
 export interface ToggleMenuExpandPod {
-    (): ToggleMenuExpand
+    (): ToggleMenuExpandMethod
 }
-export interface ToggleMenuExpand {
+export interface ToggleMenuExpandMethod {
     (menu: Menu, path: MenuCategoryPath, post: Post<ToggleMenuExpandEvent>): void
 }
 

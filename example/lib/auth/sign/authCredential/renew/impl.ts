@@ -1,4 +1,4 @@
-import { StoreResult } from "../../../../common/auth/storage/infra"
+import { StoreResult } from "../../../../common/storage/infra"
 import { RenewActionInfra, Request, ForceRequest, RequestInfra } from "./infra"
 
 import { RenewAction, RenewActionPod } from "./action"

@@ -1,15 +1,16 @@
 import { initTestNotifyAction } from "../../../../../availability/error/notify/tests/notify"
-import { initTestMenuAction } from "../../../../../auth/permission/menu/tests/menu"
 import { initTestSeasonAction } from "../../../../shared/season/tests/season"
 
-import { detectMenuTarget } from "../../../../../auth/permission/menu/impl/location"
+import {
+    detectMenuTarget,
+    initBreadcrumbListActionPod,
+    initMenuActionPod,
+} from "../../../../../auth/permission/menu/impl"
 
 import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "../impl/core"
 
 import { initNotifyComponent } from "../../../../../availability/x_Resource/NotifyError/Notify/impl"
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
-import { initBreadcrumbListComponent } from "../../../../../auth/z_EntryPoint/Outline/breadcrumbList/impl"
-import { initMenuListComponent } from "../../../../../auth/z_EntryPoint/Outline/menuList/impl"
 import { initExampleComponent } from "../../example/impl"
 
 import {
@@ -21,7 +22,7 @@ import { SeasonRepository } from "../../../../shared/season/infra"
 import { Clock } from "../../../../../z_infra/clock/infra"
 
 import { DashboardResource } from "../entryPoint"
-import { ApiCredentialRepository } from "../../../../../common/auth/apiCredential/infra"
+import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
 
 export type DashboardRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
@@ -41,28 +42,25 @@ export function newTestDashboardResource(
 ): DashboardResource {
     const factory: DashboardFactory = {
         actions: {
-            notify: initTestNotifyAction(),
-            menu: initTestMenuAction(
-                repository.apiCredentials,
+            initBreadcrumbList: initBreadcrumbListActionPod({ menuTree }),
+            initMenu: initMenuActionPod({
+                ...repository,
+                ...remote,
                 menuTree,
-                repository.menuExpands,
-                remote.loadMenuBadge
-            ),
+            }),
+
+            notify: initTestNotifyAction(),
             season: initTestSeasonAction(repository.seasons, clock),
         },
         components: {
             error: initNotifyComponent,
             seasonInfo: initSeasonInfoComponent,
-            menuList: initMenuListComponent,
-            breadcrumbList: initBreadcrumbListComponent,
 
             example: initExampleComponent,
         },
     }
     const locationInfo: DashboardLocationInfo = {
-        menu: {
-            getMenuTarget: () => detectMenuTarget(version, currentURL),
-        },
+        getMenuTarget: () => detectMenuTarget(version, currentURL),
     }
 
     return initDashboardResource(factory, locationInfo)

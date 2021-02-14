@@ -32,8 +32,6 @@ export type BreadcrumbNode =
     | Readonly<{ type: "category"; category: MenuCategory }>
     | Readonly<{ type: "item"; item: MenuItem }>
 
-export type LoadBreadcrumbEvent = Readonly<{ type: "succeed-to-load"; breadcrumb: Breadcrumb }>
-
 export type Menu = MenuNode[]
 export type MenuNode = MenuCategoryNode | MenuItemNode
 export type MenuCategoryNode = Readonly<{
@@ -57,5 +55,3 @@ export type LoadMenuBadgeRemoteError =
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
-
-export type ToggleMenuExpandError = Readonly<{ type: "infra-error"; err: string }>

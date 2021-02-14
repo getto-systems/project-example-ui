@@ -4,11 +4,11 @@ import { initLoginLocationInfo } from "../../common/LocationInfo/impl"
 
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
 import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/common/infra/remote/renew/simulate"
-import { initResetSimulateRemoteAccess } from "../../../sign/password/reset/register/infra/remote/reset/simulate"
+import { initResetSimulateRemoteAccess } from "../../../sign/password/reset/register/infra/remote/register/simulate"
 
-import { initFormAction } from "../../../../common/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../../common/auth/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../../common/auth/field/password/main/password"
+import { initFormAction } from "../../../../vendor/getto-form/main/form"
+import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../common/field/password/main/password"
 
 import { Clock } from "../../../../z_infra/clock/infra"
 import {
@@ -21,11 +21,11 @@ import { PasswordResetResource } from "./resource"
 import { ResetComponentState } from "./Reset/component"
 
 import { markScriptPath } from "../../../sign/location/data"
-import { markInputString, toValidationError } from "../../../../common/getto-form/form/data"
+import { markInputString, toValidationError } from "../../../../vendor/getto-form/form/data"
 import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/common/data"
-import { initMemoryApiCredentialRepository } from "../../../../common/auth/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../../common/auth/apiCredential/data"
-import { ApiCredentialRepository } from "../../../../common/auth/apiCredential/infra"
+import { initMemoryApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/memory"
+import { markApiNonce, markApiRoles } from "../../../../common/apiCredential/data"
+import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
 import {
     AuthCredentialRepository,
     RenewRemoteAccess,
@@ -39,7 +39,7 @@ import { delayed } from "../../../../z_infra/delayed/core"
 import {
     initAsyncComponentStateTester,
     initSyncComponentTestChecker,
-} from "../../../../common/getto-example/Application/testHelper"
+} from "../../../../vendor/getto-example/Application/testHelper"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -597,7 +597,7 @@ describe("PasswordReset", () => {
 function standardPasswordResetResource() {
     const currentURL = standardURL()
     const repository = standardRepository()
-    const simulator = standardSimulator()
+    const simulator = standardRemoteAccess()
     const clock = standardClock()
     const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
 
@@ -606,7 +606,7 @@ function standardPasswordResetResource() {
 function waitPasswordResetResource() {
     const currentURL = standardURL()
     const repository = standardRepository()
-    const simulator = waitSimulator()
+    const simulator = waitRemoteAccess()
     const clock = standardClock()
     const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
 
@@ -615,7 +615,7 @@ function waitPasswordResetResource() {
 function emptyResetTokenPasswordResetResource() {
     const currentURL = emptyResetTokenURL()
     const repository = standardRepository()
-    const simulator = standardSimulator()
+    const simulator = standardRemoteAccess()
     const clock = standardClock()
     const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
 
@@ -627,7 +627,7 @@ type PasswordResetTestRepository = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
 type PasswordResetTestRemoteAccess = Readonly<{
-    reset: RegisterRemoteAccess
+    register: RegisterRemoteAccess
     renew: RenewRemoteAccess
 }>
 
@@ -697,15 +697,15 @@ function standardRepository() {
         }),
     }
 }
-function standardSimulator(): PasswordResetTestRemoteAccess {
+function standardRemoteAccess(): PasswordResetTestRemoteAccess {
     return {
-        reset: initResetSimulateRemoteAccess(simulateReset, { wait_millisecond: 0 }),
+        register: initResetSimulateRemoteAccess(simulateReset, { wait_millisecond: 0 }),
         renew: renewRemoteAccess(),
     }
 }
-function waitSimulator(): PasswordResetTestRemoteAccess {
+function waitRemoteAccess(): PasswordResetTestRemoteAccess {
     return {
-        reset: initResetSimulateRemoteAccess(simulateReset, { wait_millisecond: 3 }),
+        register: initResetSimulateRemoteAccess(simulateReset, { wait_millisecond: 3 }),
         renew: renewRemoteAccess(),
     }
 }

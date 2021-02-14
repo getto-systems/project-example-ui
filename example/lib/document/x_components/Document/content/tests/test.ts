@@ -1,14 +1,14 @@
 import { DocumentRemoteAccess, newTestDocumentResource } from "../../EntryPoint/tests/core"
 
 import { initMemoryTypedStorage } from "../../../../../z_infra/storage/memory"
-import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/menu/impl/remote/menuBadge/simulate"
-import { initMenuExpandRepository } from "../../../../../auth/permission/menu/impl/repository/menuExpand"
+import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/menu/infra/remote/menuBadge/simulate"
+import { initMenuExpandRepository } from "../../../../../auth/permission/menu/infra/repository/menuExpand"
 
 import { MenuTree } from "../../../../../auth/permission/menu/infra"
 
 import { ContentComponentState } from "../component"
-import { initMemoryApiCredentialRepository } from "../../../../../common/auth/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../../../common/auth/apiCredential/data"
+import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
+import { markApiNonce, markApiRoles } from "../../../../../common/apiCredential/data"
 
 describe("Content", () => {
     test("load content", (done) => {

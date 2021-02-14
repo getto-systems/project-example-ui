@@ -1,14 +1,14 @@
 import {
     FormContainerComponent,
     FormContainerMaterial,
-} from "../../../../../common/getto-form/x_Resource/Form/component"
+} from "../../../../../vendor/getto-form/x_Resource/Form/component"
 import {
     LoginIDFormFieldComponent,
     LoginIDFormFieldMaterial,
 } from "../../../common/Field/LoginID/component"
 
 import { StartSessionFields } from "../../../../sign/password/reset/session/data"
-import { FormConvertResult } from "../../../../../common/getto-form/form/data"
+import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"
 
 export interface FormComponentFactory {
     (material: FormMaterial): FormComponent

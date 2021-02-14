@@ -1,13 +1,13 @@
-import { ApplicationComponent } from "../../../../../common/getto-example/Application/component"
+import { ApplicationComponent } from "../../../../../vendor/getto-example/Application/component"
 
 import { LoginAction } from "../../../../sign/password/login/action"
 import { LocationAction } from "../../../../sign/location/action"
 import { ContinuousRenewAction } from "../../../../sign/authCredential/continuousRenew/action"
 
-import { FormConvertResult } from "../../../../../common/getto-form/form/data"
+import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"
 import { ScriptPath, LoadError } from "../../../../sign/location/data"
 import { SubmitError, LoginFields } from "../../../../sign/password/login/data"
-import { StorageError } from "../../../../../common/auth/storage/data"
+import { StorageError } from "../../../../../common/storage/data"
 
 export interface LoginComponentFactory {
     (material: LoginMaterial): LoginComponent
