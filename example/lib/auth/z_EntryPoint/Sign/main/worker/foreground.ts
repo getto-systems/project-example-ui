@@ -1,6 +1,6 @@
 import { newWorker } from "../../../../../vendor/getto-worker/worker/foreground"
 
-import { newContinuousRenewActionPod } from "../../../../sign/authCredential/continuousRenew/main"
+import { newContinuousRenewAction } from "../../../../sign/authCredential/continuousRenew/main"
 import { newRenewActionPod } from "../../../../sign/authCredential/renew/main"
 
 import { initLoginViewLocationInfo, View } from "../../impl"
@@ -17,7 +17,7 @@ import { initFormAction } from "../../../../../vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../common/field/password/main/password"
 
-import { LoginBackgroundActionPod, LoginEntryPoint, LoginForegroundActionPod } from "../../entryPoint"
+import { LoginBackgroundActionPod, LoginEntryPoint, LoginForegroundAction } from "../../entryPoint"
 
 import {
     LoginActionForegroundProxy,
@@ -40,9 +40,9 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
     const webStorage = localStorage
     const currentURL = new URL(location.toString())
 
-    const foreground: LoginForegroundActionPod = {
-        initRenew: newRenewActionPod(webStorage),
-        initContinuousRenew: newContinuousRenewActionPod(webStorage),
+    const foreground: LoginForegroundAction = {
+        renew: newRenewActionPod(webStorage),
+        continuousRenew: newContinuousRenewAction(webStorage),
 
         initLocation: newLocationActionPod(),
 

@@ -5,10 +5,6 @@ export type ContinuousRenewAction = Readonly<{
     start: StartMethod
     forceStart: ForceStartMethod
 }>
-export type ContinuousRenewActionPod = Readonly<{
-    initStart: StartPod
-    initForceStart: ForceStartPod
-}>
 
 export interface StartPod {
     (): StartMethod

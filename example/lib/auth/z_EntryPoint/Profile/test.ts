@@ -25,7 +25,7 @@ import { ProfileFactory } from "./entryPoint"
 import { markAuthAt, markTicketNonce } from "../../sign/authCredential/common/data"
 import { initMemoryApiCredentialRepository } from "../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../common/apiCredential/data"
-import { initClearActionPod } from "../../sign/authCredential/clear/impl"
+import { initClearAction } from "../../sign/authCredential/clear/impl"
 import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/memory"
 import { MenuActionLocationInfo } from "../../permission/outline/action"
 
@@ -56,7 +56,7 @@ function standardResource() {
     }
     const factory: ProfileFactory = {
         actions: {
-            initClear: initClearActionPod(repository),
+            clear: initClearAction(repository),
             breadcrumbList: initBreadcrumbListAction(locationInfo, { menuTree }),
             menu: initMenuAction(locationInfo, {
                 ...repository,

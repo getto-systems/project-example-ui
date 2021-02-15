@@ -6,7 +6,7 @@ import { LocationActionPod, LocationActionLocationInfo } from "../../../sign/loc
 import { LoginIDFormFieldAction } from "../../../common/field/loginID/action"
 import { PasswordFormFieldAction } from "../../../common/field/password/action"
 import { LoginActionPod } from "../../../sign/password/login/action"
-import { ContinuousRenewActionPod } from "../../../sign/authCredential/continuousRenew/action"
+import { ContinuousRenewAction } from "../../../sign/authCredential/continuousRenew/action"
 
 export type PasswordLoginResource = Readonly<{
     login: LoginComponent
@@ -14,8 +14,8 @@ export type PasswordLoginResource = Readonly<{
 }>
 
 export type PasswordLoginLocationInfo = LocationActionLocationInfo
-export type PasswordLoginForegroundActionPod = Readonly<{
-    initContinuousRenew: ContinuousRenewActionPod
+export type PasswordLoginForegroundAction = Readonly<{
+    continuousRenew: ContinuousRenewAction
     initLocation: LocationActionPod
 
     form: Readonly<{

@@ -4,14 +4,14 @@ import { newRenewRemoteAccess } from "../common/infra/remote/renew/main"
 
 import { initDateClock } from "../../../../z_infra/clock/date"
 
-import { initContinuousRenewActionPod } from "./impl"
+import { initContinuousRenewAction } from "./impl"
 
 import { delayMinute, intervalMinute } from "../../../../z_infra/time/infra"
 
-import { ContinuousRenewActionPod } from "./action"
+import { ContinuousRenewAction } from "./action"
 
-export function newContinuousRenewActionPod(webStorage: Storage): ContinuousRenewActionPod {
-    return initContinuousRenewActionPod({
+export function newContinuousRenewAction(webStorage: Storage): ContinuousRenewAction {
+    return initContinuousRenewAction({
         apiCredentials: newApiCredentialRepository(webStorage),
         authCredentials: newAuthCredentialRepository(webStorage),
         renew: newRenewRemoteAccess(),

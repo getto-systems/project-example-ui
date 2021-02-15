@@ -1,19 +1,17 @@
 import { initRenewComponent } from "./Renew/impl"
 
 import {
-    RenewCredentialForegroundActionPod,
+    RenewCredentialForegroundAction,
     RenewCredentialLocationInfo,
     RenewCredentialResource,
 } from "./resource"
 
 import { RenewMaterial } from "./Renew/component"
-import { initRenewAction } from "../../../sign/authCredential/renew/impl"
-import { initContinuousRenewAction } from "../../../sign/authCredential/continuousRenew/impl"
 import { initLocationAction } from "../../../sign/location/impl"
 
 export function initRenewCredentialResource(
     locationInfo: RenewCredentialLocationInfo,
-    foreground: RenewCredentialForegroundActionPod
+    foreground: RenewCredentialForegroundAction
 ): RenewCredentialResource {
     return {
         renew: initRenewComponent(renewMaterial()),
@@ -21,8 +19,7 @@ export function initRenewCredentialResource(
 
     function renewMaterial(): RenewMaterial {
         return {
-            renew: initRenewAction(foreground.initRenew),
-            continuousRenew: initContinuousRenewAction(foreground.initContinuousRenew),
+            ...foreground,
             location: initLocationAction(foreground.initLocation, locationInfo),
         }
     }
