@@ -1,5 +1,4 @@
 import { h, VNode } from "preact"
-import { useErrorBoundary } from "preact/hooks"
 
 import {
     appLayout,
@@ -9,7 +8,7 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { useDocumentTitle, useTermination } from "../../common/hooks"
+import { useDocumentTitle, useErrorNotify, useTermination } from "../../common/hooks"
 import { copyright, siteInfo } from "../../common/site"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
@@ -23,7 +22,7 @@ import { DashboardEntryPoint } from "../../../example/x_components/Dashboard/Ent
 export function EntryPoint({ resource, terminate }: DashboardEntryPoint): VNode {
     useTermination(terminate)
 
-    const [err] = useErrorBoundary((err) => resource.notify.send(err))
+    const err = useErrorNotify(resource.notify)
     if (err) {
         return h(ApplicationError, { err: `${err}` })
     }
