@@ -6,15 +6,18 @@ import {
     PasswordFormFieldComponent,
     PasswordFormFieldMaterial,
 } from "./component"
-import { FormFieldHandler, FormInputComponent } from "../../../../../vendor/getto-form/x_Resource/Form/component"
+import {
+    FormFieldHandler,
+    FormInputComponent,
+} from "../../../../../vendor/getto-form/x_Resource/Form/component"
 
 import { PasswordValidationError, PasswordView } from "../../../../common/field/password/data"
 
 export const initPasswordFormFieldComponent: PasswordFormFieldComponentFactory = (material) => (
     handler
-) => new FieldComponent(material, handler)
+) => new Component(material, handler)
 
-class FieldComponent
+class Component
     extends FormFieldBaseComponent<PasswordState, PasswordValidationError>
     implements PasswordFormFieldComponent {
     material: PasswordFormFieldMaterial

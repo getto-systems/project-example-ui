@@ -14,12 +14,7 @@ import {
     BreadcrumbListActionInfra,
 } from "./infra"
 
-import {
-    BreadcrumbListAction,
-    BreadcrumbListActionLocationInfo,
-    MenuAction,
-    MenuActionLocationInfo,
-} from "./action"
+import { BreadcrumbListAction, MenuAction, OutlineActionLocationInfo } from "./action"
 
 import { ApiRoles, emptyApiRoles } from "../../../common/apiCredential/data"
 import {
@@ -37,7 +32,16 @@ import {
     markMenuTarget,
 } from "./data"
 
-export function detectMenuTarget(version: string, currentURL: URL): MenuTarget {
+export function initOutlineActionLocationInfo(
+    version: string,
+    currentURL: URL
+): OutlineActionLocationInfo {
+    return {
+        getMenuTarget: () => detectMenuTarget(version, currentURL),
+    }
+}
+
+function detectMenuTarget(version: string, currentURL: URL): MenuTarget {
     const pathname = currentURL.pathname
     const versionPrefix = `/${version}/`
     if (!pathname.startsWith(versionPrefix)) {
@@ -51,7 +55,7 @@ export function detectMenuTarget(version: string, currentURL: URL): MenuTarget {
 }
 
 export function initBreadcrumbListAction(
-    locationInfo: BreadcrumbListActionLocationInfo,
+    locationInfo: OutlineActionLocationInfo,
     infra: BreadcrumbListActionInfra
 ): BreadcrumbListAction {
     return {
@@ -59,7 +63,10 @@ export function initBreadcrumbListAction(
     }
 }
 
-export function initMenuAction(locationInfo: MenuActionLocationInfo, infra: MenuActionInfra): MenuAction {
+export function initMenuAction(
+    locationInfo: OutlineActionLocationInfo,
+    infra: MenuActionInfra
+): MenuAction {
     return {
         loadMenu: loadMenu(infra)(locationInfo),
         toggleMenuExpand: toggleMenuExpand(infra)(),

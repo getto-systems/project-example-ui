@@ -13,14 +13,12 @@ import {
     MenuTreeNode,
 } from "../infra"
 
-import { MenuActionLocationInfo, MenuAction } from "../action"
+import { OutlineActionLocationInfo, MenuAction } from "../action"
 import { newApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/main"
-import { detectMenuTarget, initMenuAction } from "../impl"
+import { initMenuAction, initOutlineActionLocationInfo } from "../impl"
 
-export function newMenuActionLocationInfo(): MenuActionLocationInfo {
-    return {
-        getMenuTarget: () => detectMenuTarget(env.version, currentURL()),
-    }
+export function newOutlineActionLocationInfo(): OutlineActionLocationInfo {
+    return initOutlineActionLocationInfo(env.version, currentURL())
 }
 
 export function newMenuAction(
@@ -29,7 +27,7 @@ export function newMenuAction(
     menuTree: MenuTree,
     loadMenuBadge: LoadMenuBadgeRemoteAccess
 ): MenuAction {
-    return initMenuAction(newMenuActionLocationInfo(), {
+    return initMenuAction(newOutlineActionLocationInfo(), {
         loadMenuBadge,
         apiCredentials: newApiCredentialRepository(webStorage),
         menuExpands: newMenuExpandRepository(webStorage),

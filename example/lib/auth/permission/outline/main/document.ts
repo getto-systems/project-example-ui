@@ -3,7 +3,7 @@ import { newDocumentMenuExpandRepository } from "../infra/repository/main"
 
 import { lnir } from "../../../../z_vendor/icon"
 
-import { category, newMenuAction, item, newMenuActionLocationInfo } from "./common"
+import { category, newMenuAction, item, newOutlineActionLocationInfo } from "./common"
 
 import { initBreadcrumbListAction } from "../impl"
 
@@ -19,7 +19,7 @@ export function newDocumentOutlineAction(webStorage: Storage): OutlineAction {
 }
 
 function newDocumentBreadcrumbListAction(): BreadcrumbListAction {
-    return initBreadcrumbListAction(newMenuActionLocationInfo(), { menuTree: documentMenuTree() })
+    return initBreadcrumbListAction(newOutlineActionLocationInfo(), { menuTree: documentMenuTree() })
 }
 
 function newDocumentMenuAction(webStorage: Storage): MenuAction {

@@ -3,10 +3,14 @@ import { newRegisterRemoteAccess } from "./infra/remote/register/main"
 import { delayed } from "../../../../../z_infra/delayed/core"
 import { delaySecond } from "../../../../../z_infra/time/infra"
 
-import { initRegisterActionPod } from "./impl"
+import { initRegisterAction, initRegisterActionLocationInfo, initRegisterActionPod } from "./impl"
 
-import { RegisterActionPod } from "./action"
+import { RegisterAction, RegisterActionLocationInfo, RegisterActionPod } from "./action"
+import { currentURL } from "../../../../../z_infra/location/url"
 
+export function newRegisterAction(pod: RegisterActionPod): RegisterAction {
+    return initRegisterAction(newRegisterActionLocationInfo(), pod)
+}
 export function newRegisterActionPod(): RegisterActionPod {
     return initRegisterActionPod({
         register: newRegisterRemoteAccess(),
@@ -15,4 +19,8 @@ export function newRegisterActionPod(): RegisterActionPod {
         },
         delayed,
     })
+}
+
+export function newRegisterActionLocationInfo(): RegisterActionLocationInfo {
+    return initRegisterActionLocationInfo(currentURL())
 }

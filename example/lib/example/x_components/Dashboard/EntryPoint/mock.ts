@@ -6,11 +6,11 @@ import {
     initMockMenuComponent,
     MenuMockPropsPasser,
 } from "../../../../common/x_Resource/Outline/Menu/Menu/mock"
-import { initMockNotifyComponent } from "../../../../availability/x_Resource/NotifyError/Notify/mock"
 import { initMockSeasonInfoComponent, SeasonInfoMockPropsPasser } from "../../Outline/seasonInfo/mock"
 import { ExampleMockPropsPasser, initMockExampleComponent } from "../example/mock"
 
 import { DashboardEntryPoint } from "./entryPoint"
+import { initMockErrorResource } from "../../../../availability/x_Resource/Error/mock"
 
 export type DashboardMockPropsPasser = Readonly<{
     seasonInfo: SeasonInfoMockPropsPasser
@@ -21,7 +21,7 @@ export type DashboardMockPropsPasser = Readonly<{
 export function newMockDashboard(passer: DashboardMockPropsPasser): DashboardEntryPoint {
     return {
         resource: {
-            error: initMockNotifyComponent(),
+            ...initMockErrorResource(),
             seasonInfo: initMockSeasonInfoComponent(passer.seasonInfo),
             menu: initMockMenuComponent(passer.menu),
             breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),

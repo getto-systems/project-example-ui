@@ -19,7 +19,7 @@ export function initPasswordResetResource(
     return {
         reset: initResetComponent({
             ...foreground,
-            register: initRegisterAction(background.initRegister, locationInfo),
+            register: initRegisterAction(locationInfo, background.initRegister),
         }),
         form: initFormComponent(formMaterial()),
     }

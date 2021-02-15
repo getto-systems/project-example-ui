@@ -2,18 +2,17 @@ import { env } from "../../../../../y_environment/env"
 
 import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
 
-import { detectMenuTarget } from "../../../../../auth/permission/outline/impl"
 import { detectContentPath } from "../../../../content/impl/location"
 
-import { initNotifyComponent } from "../../../../../availability/x_Resource/NotifyError/Notify/impl"
 import { initContentComponent } from "../../content/impl"
 
-import { newNotifyAction } from "../../../../../availability/error/notify/main/notify"
+import { newErrorAction } from "../../../../../availability/error/main"
 
 import { DocumentEntryPoint } from "../entryPoint"
 
 import { initContentAction } from "../../../../content/main/content"
 import { newDocumentOutlineAction } from "../../../../../auth/permission/outline/main/document"
+import { newOutlineActionLocationInfo } from "../../../../../auth/permission/outline/main/common"
 
 export function newDocumentAsSingle(): DocumentEntryPoint {
     const webStorage = localStorage
@@ -21,18 +20,17 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
 
     const factory: DocumentFactory = {
         actions: {
+            error: newErrorAction(),
             ...newDocumentOutlineAction(webStorage),
 
-            notify: newNotifyAction(),
             content: initContentAction(),
         },
         components: {
-            error: initNotifyComponent,
             content: initContentComponent,
         },
     }
     const locationInfo: DocumentLocationInfo = {
-        getMenuTarget: () => detectMenuTarget(env.version, currentURL),
+        ...newOutlineActionLocationInfo(),
         content: {
             getContentPath: () => detectContentPath(env.version, currentURL),
         },

@@ -4,7 +4,13 @@ import { LocationAction, LocationActionLocationInfo } from "./action"
 
 import { markPagePathname, markScriptPath, PagePathname } from "./data"
 
-export function detectPagePathname(currentURL: URL): PagePathname {
+export function initLocationActionLocationInfo(currentURL: URL): LocationActionLocationInfo {
+    return {
+        getPagePathname: () => detectPagePathname(currentURL),
+    }
+}
+
+function detectPagePathname(currentURL: URL): PagePathname {
     return markPagePathname(currentURL.pathname)
 }
 

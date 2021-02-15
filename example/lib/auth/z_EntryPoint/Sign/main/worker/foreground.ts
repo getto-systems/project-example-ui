@@ -1,10 +1,10 @@
 import { newWorker } from "../../../../../vendor/getto-worker/worker/foreground"
 
+import { newLocationAction } from "../../../../sign/location/main"
 import { newContinuousRenewAction } from "../../../../sign/authCredential/continuousRenew/main"
 import { newRenewActionPod } from "../../../../sign/authCredential/renew/main"
 
 import { initLoginViewLocationInfo, View } from "../../impl"
-import { initLoginLocationInfo } from "../../../../x_Resource/common/LocationInfo/impl"
 
 import { initLoginLinkResource } from "../../../../x_Resource/common/LoginLink/impl"
 import { initPasswordLoginResource } from "../../../../x_Resource/Sign/PasswordLogin/impl"
@@ -12,10 +12,10 @@ import { initPasswordResetResource } from "../../../../x_Resource/Sign/PasswordR
 import { initPasswordResetSessionResource } from "../../../../x_Resource/Sign/PasswordResetSession/impl"
 import { initRenewCredentialResource } from "../../../../x_Resource/Sign/RenewCredential/impl"
 
-import { newLocationAction } from "../../../../sign/location/main"
 import { initFormAction } from "../../../../../vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../common/field/password/main/password"
+import { initRegisterActionLocationInfo } from "../../../../sign/password/reset/register/impl"
 
 import { LoginBackgroundActionPod, LoginEntryPoint, LoginForegroundAction } from "../../entryPoint"
 
@@ -60,8 +60,6 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
         initRegister: proxy.reset.register.pod(),
     }
 
-    const locationInfo = initLoginLocationInfo(currentURL)
-
     const view = new View(initLoginViewLocationInfo(currentURL), {
         loginLink: initLoginLinkResource,
 
@@ -69,7 +67,12 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
 
         passwordLogin: () => initPasswordLoginResource(foreground, background),
         passwordResetSession: () => initPasswordResetSessionResource(foreground, background),
-        passwordReset: () => initPasswordResetResource(locationInfo, foreground, background),
+        passwordReset: () =>
+            initPasswordResetResource(
+                initRegisterActionLocationInfo(currentURL),
+                foreground,
+                background
+            ),
     })
 
     const messageHandler = initBackgroundMessageHandler(proxy, (err: string) => {

@@ -10,6 +10,6 @@ class Component implements NotifyComponent {
     }
 
     send(err: unknown): void {
-        this.material.notify(err)
+        this.material.error.notify(err)
     }
 }

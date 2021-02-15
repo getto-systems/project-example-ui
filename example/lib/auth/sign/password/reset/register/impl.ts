@@ -7,13 +7,19 @@ import { AuthSearchParams } from "../../../location/data"
 import { Submit } from "./infra"
 import { SubmitEvent } from "./event"
 
-export function detectResetToken(currentURL: URL): ResetToken {
+export function initRegisterActionLocationInfo(currentURL: URL): RegisterActionLocationInfo {
+    return {
+        getResetToken: () => detectResetToken(currentURL)
+    }
+}
+
+function detectResetToken(currentURL: URL): ResetToken {
     return markResetToken(currentURL.searchParams.get(AuthSearchParams.passwordResetToken) || "")
 }
 
 export function initRegisterAction(
+    locationInfo: RegisterActionLocationInfo,
     pod: RegisterActionPod,
-    locationInfo: RegisterActionLocationInfo
 ): RegisterAction {
     return {
         submit: pod.initSubmit(locationInfo),

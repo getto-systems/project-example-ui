@@ -25,7 +25,6 @@ export function EntryPoint({ resource, terminate }: NotFoundEntryPoint): VNode {
         // 認証していないのでエラーはどうしようもない
         console.log(err)
     })
-
     if (err) {
         return h(ApplicationError, { err: `${err}` })
     }

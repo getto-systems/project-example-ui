@@ -1,10 +1,10 @@
-import { Notify } from "../../../error/notify/action";
+import { ErrorAction } from "../../../error/action"
 
 export interface NotifyComponentFactory {
     (material: NotifyMaterial): NotifyComponent
 }
 export type NotifyMaterial = Readonly<{
-    notify: Notify
+    error: ErrorAction
 }>
 
 export interface NotifyComponent {

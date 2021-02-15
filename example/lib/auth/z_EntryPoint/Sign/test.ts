@@ -1,5 +1,4 @@
 import { initLoginViewLocationInfo, View } from "./impl"
-import { initLoginLocationInfo } from "../../x_Resource/common/LocationInfo/impl"
 
 import { initStaticClock } from "../../../z_infra/clock/simulate"
 import { initLoginSimulateRemoteAccess } from "../../sign/password/login/infra/remote/login/simulate"
@@ -39,9 +38,12 @@ import { initContinuousRenewAction } from "../../sign/authCredential/continuousR
 import { initRenewAction } from "../../sign/authCredential/renew/impl"
 import { delayed, wait } from "../../../z_infra/delayed/core"
 import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/memory"
-import { detectPagePathname, initLocationAction } from "../../sign/location/impl"
+import { initLocationAction, initLocationActionLocationInfo } from "../../sign/location/impl"
 import { initLoginActionPod } from "../../sign/password/login/impl"
-import { initRegisterActionPod } from "../../sign/password/reset/register/impl"
+import {
+    initRegisterActionLocationInfo,
+    initRegisterActionPod,
+} from "../../sign/password/reset/register/impl"
 import { initSessionActionPod } from "../../sign/password/reset/session/impl"
 import {
     GetStatusRemoteAccessResult,
@@ -369,14 +371,11 @@ function standardPasswordLoginResource(
                 },
                 clock,
             }),
-            location: initLocationAction(
-                { getPagePathname: () => detectPagePathname(currentURL) },
-                {
-                    config: {
-                        secureServerHost: standardSecureHost(),
-                    },
-                }
-            ),
+            location: initLocationAction(initLocationActionLocationInfo(currentURL), {
+                config: {
+                    secureServerHost: standardSecureHost(),
+                },
+            }),
 
             form: {
                 core: initFormAction(),
@@ -402,7 +401,7 @@ function standardPasswordResetResource(
     clock: Clock
 ) {
     return initPasswordResetResource(
-        initLoginLocationInfo(currentURL),
+        initRegisterActionLocationInfo(currentURL),
         {
             continuousRenew: initContinuousRenewAction({
                 apiCredentials,
@@ -414,14 +413,11 @@ function standardPasswordResetResource(
                 },
                 clock,
             }),
-            location: initLocationAction(
-                { getPagePathname: () => detectPagePathname(currentURL) },
-                {
-                    config: {
-                        secureServerHost: standardSecureHost(),
-                    },
-                }
-            ),
+            location: initLocationAction(initLocationActionLocationInfo(currentURL), {
+                config: {
+                    secureServerHost: standardSecureHost(),
+                },
+            }),
 
             form: {
                 core: initFormAction(),
@@ -502,14 +498,11 @@ function standardRenewCredentialResource(
             },
             clock,
         }),
-        location: initLocationAction(
-            { getPagePathname: () => detectPagePathname(currentURL) },
-            {
-                config: {
-                    secureServerHost: standardSecureHost(),
-                },
-            }
-        ),
+        location: initLocationAction(initLocationActionLocationInfo(currentURL), {
+            config: {
+                secureServerHost: standardSecureHost(),
+            },
+        }),
     })
 }
 

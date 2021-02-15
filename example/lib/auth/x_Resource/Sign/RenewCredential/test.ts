@@ -23,7 +23,7 @@ import { delayed } from "../../../../z_infra/delayed/core"
 import { initRenewAction } from "../../../sign/authCredential/renew/impl"
 import { initContinuousRenewAction } from "../../../sign/authCredential/continuousRenew/impl"
 import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
-import { detectPagePathname, initLocationAction } from "../../../sign/location/impl"
+import { initLocationAction, initLocationActionLocationInfo } from "../../../sign/location/impl"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -428,12 +428,9 @@ function newTestRenewCredentialResource(
             config: config.continuousRenew,
             clock,
         }),
-        location: initLocationAction(
-            {
-                getPagePathname: () => detectPagePathname(currentURL),
-            },
-            { config: config.location }
-        ),
+        location: initLocationAction(initLocationActionLocationInfo(currentURL), {
+            config: config.location,
+        }),
     })
 }
 

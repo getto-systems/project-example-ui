@@ -6,11 +6,17 @@ import {
     initMockMenuComponent,
     MenuMockPropsPasser,
 } from "../../../common/x_Resource/Outline/Menu/Menu/mock"
-import { initMockNotifyComponent } from "../../../availability/x_Resource/NotifyError/Notify/mock"
-import { initMockSeasonInfoComponent, SeasonInfoMockPropsPasser } from "../../../example/x_components/Outline/seasonInfo/mock"
-import { LogoutMockPropsPasser, initMockLogoutComponent } from "../../x_Resource/Sign/ClearCredential/Logout/mock"
+import {
+    initMockSeasonInfoComponent,
+    SeasonInfoMockPropsPasser,
+} from "../../../example/x_components/Outline/seasonInfo/mock"
+import {
+    LogoutMockPropsPasser,
+    initMockLogoutComponent,
+} from "../../x_Resource/Sign/ClearCredential/Logout/mock"
 
 import { ProfileEntryPoint } from "./entryPoint"
+import { initMockErrorResource } from "../../../availability/x_Resource/Error/mock"
 
 export type ProfileMockPropsPasser = Readonly<{
     seasonInfo: SeasonInfoMockPropsPasser
@@ -21,7 +27,7 @@ export type ProfileMockPropsPasser = Readonly<{
 export function newMockDashboard(passer: ProfileMockPropsPasser): ProfileEntryPoint {
     return {
         resource: {
-            error: initMockNotifyComponent(),
+            ...initMockErrorResource(),
             seasonInfo: initMockSeasonInfoComponent(passer.seasonInfo),
             menu: initMockMenuComponent(passer.menu),
             breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),

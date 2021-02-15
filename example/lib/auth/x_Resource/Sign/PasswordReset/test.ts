@@ -1,7 +1,5 @@
 import { initPasswordResetResource } from "./impl"
 
-import { initLoginLocationInfo } from "../../common/LocationInfo/impl"
-
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
 import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/common/infra/remote/renew/simulate"
 import { initResetSimulateRemoteAccess } from "../../../sign/password/reset/register/infra/remote/register/simulate"
@@ -33,8 +31,12 @@ import {
 } from "../../../sign/authCredential/common/infra"
 import { initContinuousRenewAction } from "../../../sign/authCredential/continuousRenew/impl"
 import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
-import { detectPagePathname, initLocationAction } from "../../../sign/location/impl"
-import { initRegisterActionPod, submitEventHasDone } from "../../../sign/password/reset/register/impl"
+import { initLocationAction, initLocationActionLocationInfo } from "../../../sign/location/impl"
+import {
+    initRegisterActionLocationInfo,
+    initRegisterActionPod,
+    submitEventHasDone,
+} from "../../../sign/password/reset/register/impl"
 import { delayed } from "../../../../z_infra/delayed/core"
 import {
     initAsyncComponentStateTester,
@@ -639,7 +641,7 @@ function newPasswordResetTestResource(
 ): PasswordResetResource {
     const config = standardConfig()
     return initPasswordResetResource(
-        initLoginLocationInfo(currentURL),
+        initRegisterActionLocationInfo(currentURL),
         {
             continuousRenew: initContinuousRenewAction({
                 ...repository,
@@ -647,10 +649,9 @@ function newPasswordResetTestResource(
                 config: config.continuousRenew,
                 clock,
             }),
-            location: initLocationAction(
-                { getPagePathname: () => detectPagePathname(currentURL) },
-                { config: config.location }
-            ),
+            location: initLocationAction(initLocationActionLocationInfo(currentURL), {
+                config: config.location,
+            }),
 
             form: {
                 core: initFormAction(),

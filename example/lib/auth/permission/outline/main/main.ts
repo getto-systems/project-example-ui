@@ -3,7 +3,7 @@ import { newLoadMenuBadgeRemoteAccess } from "../infra/remote/menuBadge/main"
 
 import { lnir } from "../../../../z_vendor/icon"
 
-import { category, newMenuAction, item, newMenuActionLocationInfo } from "./common"
+import { category, newMenuAction, item, newOutlineActionLocationInfo } from "./common"
 
 import { initBreadcrumbListAction } from "../impl"
 
@@ -19,7 +19,7 @@ export function newMainOutlineAction(webStorage: Storage): OutlineAction {
 }
 
 function newMainBreadcrumbListAction(): BreadcrumbListAction {
-    return initBreadcrumbListAction(newMenuActionLocationInfo(), { menuTree: mainMenuTree() })
+    return initBreadcrumbListAction(newOutlineActionLocationInfo(), { menuTree: mainMenuTree() })
 }
 
 function newMainMenuAction(webStorage: Storage): MenuAction {

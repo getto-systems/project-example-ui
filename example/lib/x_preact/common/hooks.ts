@@ -1,6 +1,7 @@
-import { useEffect, useState } from "preact/hooks"
+import { useEffect, useErrorBoundary, useState } from "preact/hooks"
 
 import { ApplicationComponent } from "../../vendor/getto-example/Application/component"
+import { NotifyComponent } from "../../availability/x_Resource/Error/Notify/component"
 
 export function useTermination(terminate: Terminate): void {
     useEffect(() => terminate, [])
@@ -8,6 +9,11 @@ export function useTermination(terminate: Terminate): void {
 
 interface Terminate {
     (): void
+}
+
+export function useErrorNotify(notify: NotifyComponent): unknown {
+    const [err] = useErrorBoundary((err) => notify.send(err))
+    return err
 }
 
 export function useDocumentTitle(title: string): void {

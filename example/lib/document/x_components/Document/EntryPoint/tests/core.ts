@@ -1,15 +1,12 @@
-import { initTestNotifyAction } from "../../../../../availability/error/notify/tests/notify"
-
 import {
-    detectMenuTarget,
     initBreadcrumbListAction,
     initMenuAction,
+    initOutlineActionLocationInfo,
 } from "../../../../../auth/permission/outline/impl"
 import { detectContentPath } from "../../../../content/impl/location"
 
 import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
 
-import { initNotifyComponent } from "../../../../../availability/x_Resource/NotifyError/Notify/impl"
 import { initContentComponent } from "../../content/impl"
 
 import {
@@ -21,6 +18,8 @@ import {
 import { DocumentResource } from "../entryPoint"
 import { initTestContentAction } from "../../../../content/tests/content"
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
+import { initNotifySimulateRemoteAccess } from "../../../../../availability/error/infra/remote/notify/simulate"
+import { initErrorAction } from "../../../../../availability/error/impl"
 
 export type DocumentRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
@@ -37,13 +36,16 @@ export function newTestDocumentResource(
     remote: DocumentRemoteAccess
 ): DocumentResource {
     const locationInfo: DocumentLocationInfo = {
-        getMenuTarget: () => detectMenuTarget(version, currentURL),
+        ...initOutlineActionLocationInfo(version, currentURL),
         content: {
             getContentPath: () => detectContentPath(version, currentURL),
         },
     }
     const factory: DocumentFactory = {
         actions: {
+            error: initErrorAction({
+                notify: initNotifySimulateRemoteAccess(),
+            }),
             breadcrumbList: initBreadcrumbListAction(locationInfo, { menuTree }),
             menu: initMenuAction(locationInfo, {
                 ...repository,
@@ -51,11 +53,9 @@ export function newTestDocumentResource(
                 menuTree,
             }),
 
-            notify: initTestNotifyAction(),
             content: initTestContentAction(),
         },
         components: {
-            error: initNotifyComponent,
             content: initContentComponent,
         },
     }
