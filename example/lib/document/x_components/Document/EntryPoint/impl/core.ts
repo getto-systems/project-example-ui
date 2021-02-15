@@ -7,7 +7,7 @@ import { ContentComponentFactory } from "../../content/component"
 import { ContentAction, LoadContentLocationInfo } from "../../../../content/action"
 import { NotifyAction } from "../../../../../availability/error/notify/action"
 import { MenuForegroundAction } from "../../../../../common/x_Resource/Outline/Menu/resource"
-import { MenuActionLocationInfo } from "../../../../../auth/permission/outline/action"
+import { OutlineActionLocationInfo } from "../../../../../auth/permission/outline/action"
 import { initMenuResource } from "../../../../../common/x_Resource/Outline/Menu/impl"
 
 export type DocumentFactory = Readonly<{
@@ -21,7 +21,7 @@ export type DocumentFactory = Readonly<{
         content: ContentComponentFactory
     }>
 }>
-export type DocumentLocationInfo = MenuActionLocationInfo &
+export type DocumentLocationInfo = OutlineActionLocationInfo &
     Readonly<{
         content: LoadContentLocationInfo
     }>

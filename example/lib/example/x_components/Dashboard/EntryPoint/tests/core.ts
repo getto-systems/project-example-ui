@@ -2,9 +2,9 @@ import { initTestNotifyAction } from "../../../../../availability/error/notify/t
 import { initTestSeasonAction } from "../../../../shared/season/tests/season"
 
 import {
-    detectMenuTarget,
     initBreadcrumbListAction,
     initMenuAction,
+    initOutlineActionLocationInfo,
 } from "../../../../../auth/permission/outline/impl"
 
 import { DashboardFactory, initDashboardResource } from "../impl/core"
@@ -23,7 +23,6 @@ import { Clock } from "../../../../../z_infra/clock/infra"
 
 import { DashboardResource } from "../entryPoint"
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
-import { MenuActionLocationInfo } from "../../../../../auth/permission/outline/action"
 
 export type DashboardRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
@@ -41,9 +40,7 @@ export function newTestDashboardResource(
     remote: DashboardRemoteAccess,
     clock: Clock
 ): DashboardResource {
-    const locationInfo: MenuActionLocationInfo = {
-        getMenuTarget: () => detectMenuTarget(version, currentURL),
-    }
+    const locationInfo = initOutlineActionLocationInfo(version, currentURL)
     const factory: DashboardFactory = {
         actions: {
             breadcrumbList: initBreadcrumbListAction(locationInfo, { menuTree }),

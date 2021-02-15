@@ -1,8 +1,4 @@
-import {
-    detectMenuTarget,
-    initBreadcrumbListAction,
-    initMenuAction,
-} from "../../permission/outline/impl"
+import { initBreadcrumbListAction, initMenuAction, initOutlineActionLocationInfo } from "../../permission/outline/impl"
 
 import { initStaticClock } from "../../../z_infra/clock/simulate"
 import { initMemoryTypedStorage } from "../../../z_infra/storage/memory"
@@ -27,7 +23,6 @@ import { initMemoryApiCredentialRepository } from "../../../common/apiCredential
 import { markApiNonce, markApiRoles } from "../../../common/apiCredential/data"
 import { initClearAction } from "../../sign/authCredential/clear/impl"
 import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/memory"
-import { MenuActionLocationInfo } from "../../permission/outline/action"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -51,9 +46,7 @@ function standardResource() {
     const remote = standardRemoteAccess()
     const clock = standardClock()
 
-    const locationInfo: MenuActionLocationInfo = {
-        getMenuTarget: () => detectMenuTarget(version, url),
-    }
+    const locationInfo = initOutlineActionLocationInfo(version, url)
     const factory: ProfileFactory = {
         actions: {
             clear: initClearAction(repository),

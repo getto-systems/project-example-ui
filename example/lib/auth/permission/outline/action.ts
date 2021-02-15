@@ -6,24 +6,23 @@ export type OutlineAction = Readonly<{
     breadcrumbList: BreadcrumbListAction
     menu: MenuAction
 }>
+export type OutlineActionLocationInfo = {
+    getMenuTarget(): MenuTarget
+}
 
 export type BreadcrumbListAction = Readonly<{
     loadBreadcrumbList: LoadBreadcrumbListMethod
 }>
-
-export type BreadcrumbListActionLocationInfo = LoadMenuLocationInfo
 
 export type MenuAction = Readonly<{
     loadMenu: LoadMenuMethod
     toggleMenuExpand: ToggleMenuExpandMethod
 }>
 
-export type MenuActionLocationInfo = LoadMenuLocationInfo
-
 export interface LoadBreadcrumbListPod {
     (locationInfo: LoadBreadcrumbListLocationInfo): LoadBreadcrumbListMethod
 }
-export type LoadBreadcrumbListLocationInfo = LoadMenuLocationInfo
+export type LoadBreadcrumbListLocationInfo = OutlineActionLocationInfo
 export interface LoadBreadcrumbListMethod {
     (post: Post<LoadBreadcrumbListEvent>): void
 }
@@ -31,9 +30,7 @@ export interface LoadBreadcrumbListMethod {
 export interface LoadMenuPod {
     (locationInfo: LoadMenuLocationInfo): LoadMenuMethod
 }
-export type LoadMenuLocationInfo = {
-    getMenuTarget(): MenuTarget
-}
+export type LoadMenuLocationInfo = OutlineActionLocationInfo
 export interface LoadMenuMethod {
     (post: Post<LoadMenuEvent>): void
 }

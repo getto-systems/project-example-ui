@@ -1,10 +1,6 @@
 import { initTestNotifyAction } from "../../../../../availability/error/notify/tests/notify"
 
-import {
-    detectMenuTarget,
-    initBreadcrumbListAction,
-    initMenuAction,
-} from "../../../../../auth/permission/outline/impl"
+import { initBreadcrumbListAction, initMenuAction, initOutlineActionLocationInfo } from "../../../../../auth/permission/outline/impl"
 import { detectContentPath } from "../../../../content/impl/location"
 
 import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
@@ -37,7 +33,7 @@ export function newTestDocumentResource(
     remote: DocumentRemoteAccess
 ): DocumentResource {
     const locationInfo: DocumentLocationInfo = {
-        getMenuTarget: () => detectMenuTarget(version, currentURL),
+        ...initOutlineActionLocationInfo(version, currentURL),
         content: {
             getContentPath: () => detectContentPath(version, currentURL),
         },

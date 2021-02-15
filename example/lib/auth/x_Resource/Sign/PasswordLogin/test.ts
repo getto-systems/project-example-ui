@@ -29,7 +29,7 @@ import {
     RenewRemoteAccessResult,
 } from "../../../sign/authCredential/common/infra"
 import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
-import { detectPagePathname, initLocationAction } from "../../../sign/location/impl"
+import { initLocationAction, initLocationActionLocationInfo } from "../../../sign/location/impl"
 import { delayed } from "../../../../z_infra/delayed/core"
 import { initLoginActionPod, submitEventHasDone } from "../../../sign/password/login/impl"
 import {
@@ -614,12 +614,9 @@ function newTestPasswordLoginResource(
                 config: config.continuousRenew,
                 clock,
             }),
-            location: initLocationAction(
-                {
-                    getPagePathname: () => detectPagePathname(currentURL),
-                },
-                { config: config.location }
-            ),
+            location: initLocationAction(initLocationActionLocationInfo(currentURL), {
+                config: config.location,
+            }),
 
             form: {
                 core: initFormAction(),

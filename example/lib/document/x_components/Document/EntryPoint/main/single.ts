@@ -2,7 +2,6 @@ import { env } from "../../../../../y_environment/env"
 
 import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
 
-import { detectMenuTarget } from "../../../../../auth/permission/outline/impl"
 import { detectContentPath } from "../../../../content/impl/location"
 
 import { initNotifyComponent } from "../../../../../availability/x_Resource/NotifyError/Notify/impl"
@@ -14,6 +13,7 @@ import { DocumentEntryPoint } from "../entryPoint"
 
 import { initContentAction } from "../../../../content/main/content"
 import { newDocumentOutlineAction } from "../../../../../auth/permission/outline/main/document"
+import { newOutlineActionLocationInfo } from "../../../../../auth/permission/outline/main/common"
 
 export function newDocumentAsSingle(): DocumentEntryPoint {
     const webStorage = localStorage
@@ -32,7 +32,7 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
         },
     }
     const locationInfo: DocumentLocationInfo = {
-        getMenuTarget: () => detectMenuTarget(env.version, currentURL),
+        ...newOutlineActionLocationInfo(),
         content: {
             getContentPath: () => detectContentPath(env.version, currentURL),
         },

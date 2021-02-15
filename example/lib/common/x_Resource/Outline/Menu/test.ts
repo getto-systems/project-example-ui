@@ -1,9 +1,9 @@
-import { MenuActionLocationInfo } from "../../../../auth/permission/outline/action"
+import { OutlineActionLocationInfo } from "../../../../auth/permission/outline/action"
 import { markMenuCategoryLabel } from "../../../../auth/permission/outline/data"
 import {
-    detectMenuTarget,
     initBreadcrumbListAction,
     initMenuAction,
+    initOutlineActionLocationInfo,
 } from "../../../../auth/permission/outline/impl"
 import { MenuExpand, MenuExpandRepository, MenuTree } from "../../../../auth/permission/outline/infra"
 import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/outline/infra/remote/menuBadge/simulate"
@@ -437,7 +437,7 @@ type Repository = Readonly<{
 }>
 
 function newTestMenuResource(
-    locationInfo: MenuActionLocationInfo,
+    locationInfo: OutlineActionLocationInfo,
     repository: Repository
 ): MenuResource {
     const menuTree = standardMenuTree()
@@ -454,17 +454,17 @@ function newTestMenuResource(
     })
 }
 
-function standardLocationInfo(): MenuActionLocationInfo {
-    return {
-        getMenuTarget: () =>
-            detectMenuTarget(standardVersion(), new URL("https://example.com/1.0.0/index.html")),
-    }
+function standardLocationInfo(): OutlineActionLocationInfo {
+    return initOutlineActionLocationInfo(
+        standardVersion(),
+        new URL("https://example.com/1.0.0/index.html")
+    )
 }
-function unknownLocationInfo(): MenuActionLocationInfo {
-    return {
-        getMenuTarget: () =>
-            detectMenuTarget(standardVersion(), new URL("https://example.com/1.0.0/unknown.html")),
-    }
+function unknownLocationInfo(): OutlineActionLocationInfo {
+    return initOutlineActionLocationInfo(
+        standardVersion(),
+        new URL("https://example.com/1.0.0/unknown.html")
+    )
 }
 function standardVersion(): string {
     return "1.0.0"
