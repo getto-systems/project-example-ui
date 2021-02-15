@@ -1,4 +1,7 @@
-import { mapMockPropsPasser, MockPropsPasser } from "../../../../../vendor/getto-example/Application/mock"
+import {
+    mapMockPropsPasser,
+    MockPropsPasser,
+} from "../../../../../vendor/getto-example/Application/mock"
 import {
     FormFieldMockComponent,
     FormInputMockComponent,
@@ -17,10 +20,10 @@ import { FormValidationResult, markInputString } from "../../../../../vendor/get
 export function initMockPasswordFormField(
     passer: MockPropsPasser<PasswordFormFieldMockProps>
 ): PasswordFormFieldComponent {
-    return new PasswordFormFieldMockComponent(passer)
+    return new Component(passer)
 }
 
-class PasswordFormFieldMockComponent
+class Component
     extends FormFieldMockComponent<PasswordFormFieldComponentState, PasswordValidationError>
     implements PasswordFormFieldComponent {
     input: FormInputComponent

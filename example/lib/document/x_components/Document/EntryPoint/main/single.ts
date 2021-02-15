@@ -4,10 +4,9 @@ import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../
 
 import { detectContentPath } from "../../../../content/impl/location"
 
-import { initNotifyComponent } from "../../../../../availability/x_Resource/NotifyError/Notify/impl"
 import { initContentComponent } from "../../content/impl"
 
-import { newNotifyAction } from "../../../../../availability/error/notify/main/notify"
+import { newErrorAction } from "../../../../../availability/error/main"
 
 import { DocumentEntryPoint } from "../entryPoint"
 
@@ -21,13 +20,12 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
 
     const factory: DocumentFactory = {
         actions: {
+            error: newErrorAction(),
             ...newDocumentOutlineAction(webStorage),
 
-            notify: newNotifyAction(),
             content: initContentAction(),
         },
         components: {
-            error: initNotifyComponent,
             content: initContentComponent,
         },
     }

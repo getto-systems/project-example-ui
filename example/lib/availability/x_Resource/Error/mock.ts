@@ -1,8 +1,8 @@
 import { initMockNotifyComponent } from "./Notify/mock"
 
-import { NotifyErrorResource } from "./resource"
+import { ErrorResource } from "./resource"
 
-export function initMockNotifyErrorResource(): NotifyErrorResource {
+export function initMockErrorResource(): ErrorResource {
     return {
         notify: initMockNotifyComponent(),
     }

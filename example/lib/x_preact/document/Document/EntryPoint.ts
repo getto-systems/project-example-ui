@@ -14,7 +14,7 @@ import { appLayout } from "../../../z_vendor/getto-css/preact/layout/app"
 export function EntryPoint({ resource, terminate }: DocumentEntryPoint): VNode {
     useTermination(terminate)
 
-    const [err] = useErrorBoundary((err) => resource.error.send(err))
+    const [err] = useErrorBoundary((err) => resource.notify.send(err))
     if (err) {
         return h(ApplicationError, { err: `${err}` })
     }

@@ -5,16 +5,12 @@ import {
 } from "../../x_Resource/Sign/ClearCredential/resource"
 
 import {
-    NotifyComponent,
-    NotifyComponentFactory,
-} from "../../../availability/x_Resource/NotifyError/Notify/component"
-import {
     SeasonInfoComponent,
     SeasonInfoComponentFactory,
 } from "../../../example/x_components/Outline/seasonInfo/component"
 
-import { NotifyAction } from "../../../availability/error/notify/action"
 import { SeasonAction } from "../../../example/shared/season/action"
+import { ErrorForegroundAction, ErrorResource } from "../../../availability/x_Resource/Error/resource"
 
 export type ProfileEntryPoint = Readonly<{
     resource: ProfileResource
@@ -22,21 +18,20 @@ export type ProfileEntryPoint = Readonly<{
 }>
 
 export type ProfileResource = Readonly<{
-    error: NotifyComponent
     seasonInfo: SeasonInfoComponent
 }> &
+    ErrorResource &
     MenuResource &
     ClearCredentialResource
 
 export type ProfileFactory = Readonly<{
     actions: Readonly<{
-        notify: NotifyAction
         season: SeasonAction
     }> &
+        ErrorForegroundAction &
         MenuForegroundAction &
         ClearCredentialForegroundAction
     components: Readonly<{
-        error: NotifyComponentFactory
         seasonInfo: SeasonInfoComponentFactory
     }>
 }>

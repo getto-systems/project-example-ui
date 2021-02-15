@@ -13,9 +13,9 @@ import { FormFieldBaseComponent } from "../../../../../vendor/getto-form/x_Resou
 import { LoginIDValidationError } from "../../../../common/field/loginID/data"
 
 export const initLoginIDFormFieldComponent: LoginIDFormFieldComponentFactory = (material) => (handler) =>
-    new FieldComponent(material, handler)
+    new Component(material, handler)
 
-class FieldComponent
+class Component
     extends FormFieldBaseComponent<FormFieldEmptyState, LoginIDValidationError>
     implements LoginIDFormFieldComponent {
     readonly input: FormInputComponent

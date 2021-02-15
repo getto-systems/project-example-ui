@@ -1,7 +1,7 @@
-import { NotifyComponent } from "../../../../availability/x_Resource/NotifyError/Notify/component"
 import { SeasonInfoComponent } from "../../Outline/seasonInfo/component"
 import { ExampleComponent } from "../example/component"
 import { MenuResource } from "../../../../common/x_Resource/Outline/Menu/resource"
+import { ErrorResource } from "../../../../availability/x_Resource/Error/resource"
 
 export type DashboardEntryPoint = Readonly<{
     resource: DashboardResource
@@ -9,11 +9,11 @@ export type DashboardEntryPoint = Readonly<{
 }>
 
 export type DashboardResource = Readonly<{
-    error: NotifyComponent
     seasonInfo: SeasonInfoComponent
 
     example: ExampleComponent
 }> &
+    ErrorResource &
     MenuResource
 
 interface Terminate {

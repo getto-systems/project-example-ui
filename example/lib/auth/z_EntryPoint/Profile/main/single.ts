@@ -3,10 +3,9 @@ import { newClearAction } from "../../../sign/authCredential/clear/main"
 
 import { initProfileResource } from "../impl"
 
-import { initNotifyComponent } from "../../../../availability/x_Resource/NotifyError/Notify/impl"
 import { initSeasonInfoComponent } from "../../../../example/x_components/Outline/seasonInfo/impl"
 
-import { newNotifyAction } from "../../../../availability/error/notify/main/notify"
+import { newErrorAction } from "../../../../availability/error/main"
 import { initSeasonAction } from "../../../../example/shared/season/main/season"
 
 import { ProfileEntryPoint, ProfileFactory } from "../entryPoint"
@@ -16,14 +15,13 @@ export function newProfileAsSingle(): ProfileEntryPoint {
 
     const factory: ProfileFactory = {
         actions: {
+            error: newErrorAction(),
             clear: newClearAction(webStorage),
             ...newMainOutlineAction(webStorage),
 
-            notify: newNotifyAction(),
             season: initSeasonAction(),
         },
         components: {
-            error: initNotifyComponent,
             seasonInfo: initSeasonInfoComponent,
         },
     }

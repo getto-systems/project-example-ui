@@ -1,7 +1,7 @@
 import { MenuResource } from "../../../../common/x_Resource/Outline/Menu/resource"
 
-import { NotifyComponent } from "../../../../availability/x_Resource/NotifyError/Notify/component"
 import { ContentComponent } from "../content/component"
+import { ErrorResource } from "../../../../availability/x_Resource/Error/resource"
 
 export type DocumentEntryPoint = Readonly<{
     resource: DocumentResource
@@ -9,9 +9,9 @@ export type DocumentEntryPoint = Readonly<{
 }>
 
 export type DocumentResource = Readonly<{
-    error: NotifyComponent
     content: ContentComponent
 }> &
+    ErrorResource &
     MenuResource
 
 interface Terminate {

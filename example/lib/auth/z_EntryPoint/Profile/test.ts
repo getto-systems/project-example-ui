@@ -9,10 +9,8 @@ import { initLoadMenuBadgeSimulateRemoteAccess } from "../../permission/outline/
 import { initProfileResource } from "./impl"
 
 import { initSeasonInfoComponent } from "../../../example/x_components/Outline/seasonInfo/impl"
-import { initNotifyComponent } from "../../../availability/x_Resource/NotifyError/Notify/impl"
 
 import { initTestSeasonAction } from "../../../example/shared/season/tests/season"
-import { initTestNotifyAction } from "../../../availability/error/notify/tests/notify"
 
 import { Clock } from "../../../z_infra/clock/infra"
 import { MenuTree } from "../../permission/outline/infra"
@@ -23,6 +21,8 @@ import { initMemoryApiCredentialRepository } from "../../../common/apiCredential
 import { markApiNonce, markApiRoles } from "../../../common/apiCredential/data"
 import { initClearAction } from "../../sign/authCredential/clear/impl"
 import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/memory"
+import { initNotifySimulateRemoteAccess } from "../../../availability/error/infra/remote/notify/simulate"
+import { initErrorAction } from "../../../availability/error/impl"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -49,6 +49,9 @@ function standardResource() {
     const locationInfo = initOutlineActionLocationInfo(version, url)
     const factory: ProfileFactory = {
         actions: {
+            error: initErrorAction({
+                notify: initNotifySimulateRemoteAccess(),
+            }),
             clear: initClearAction(repository),
             breadcrumbList: initBreadcrumbListAction(locationInfo, { menuTree }),
             menu: initMenuAction(locationInfo, {
@@ -57,11 +60,9 @@ function standardResource() {
                 menuTree,
             }),
 
-            notify: initTestNotifyAction(),
             season: initTestSeasonAction(repository.seasons, clock),
         },
         components: {
-            error: initNotifyComponent,
             seasonInfo: initSeasonInfoComponent,
         },
     }

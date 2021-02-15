@@ -1,10 +1,9 @@
 import { DashboardFactory, initDashboardResource } from "../impl/core"
 
-import { initNotifyComponent } from "../../../../../availability/x_Resource/NotifyError/Notify/impl"
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initExampleComponent } from "../../example/impl"
 
-import { newNotifyAction } from "../../../../../availability/error/notify/main/notify"
+import { newErrorAction } from "../../../../../availability/error/main"
 import { initSeasonAction } from "../../../../shared/season/main/season"
 import { newMainOutlineAction } from "../../../../../auth/permission/outline/main/main"
 
@@ -15,13 +14,12 @@ export function newDashboardAsSingle(): DashboardEntryPoint {
 
     const factory: DashboardFactory = {
         actions: {
+            error: newErrorAction(),
             ...newMainOutlineAction(webStorage),
 
-            notify: newNotifyAction(),
             season: initSeasonAction(),
         },
         components: {
-            error: initNotifyComponent,
             seasonInfo: initSeasonInfoComponent,
 
             example: initExampleComponent,

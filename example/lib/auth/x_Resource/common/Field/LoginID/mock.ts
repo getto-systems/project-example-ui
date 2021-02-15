@@ -1,4 +1,7 @@
-import { mapMockPropsPasser, MockPropsPasser } from "../../../../../vendor/getto-example/Application/mock"
+import {
+    mapMockPropsPasser,
+    MockPropsPasser,
+} from "../../../../../vendor/getto-example/Application/mock"
 import {
     FormFieldMockComponent,
     FormInputMockComponent,
@@ -12,10 +15,10 @@ import { LoginIDValidationError } from "../../../../common/field/loginID/data"
 export function initMockLoginIDFormField(
     passer: MockPropsPasser<LoginIDFormFieldMockProps>
 ): LoginIDFormFieldComponent {
-    return new LoginIDFormFieldMockComponent(passer)
+    return new Component(passer)
 }
 
-class LoginIDFormFieldMockComponent
+class Component
     extends FormFieldMockComponent<LoginIDFormFieldComponentState, LoginIDValidationError>
     implements LoginIDFormFieldComponent {
     input: FormInputComponent
