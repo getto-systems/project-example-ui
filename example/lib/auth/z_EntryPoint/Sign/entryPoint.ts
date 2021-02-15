@@ -1,4 +1,4 @@
-import { RenewCredentialForegroundAction, RenewCredentialResource } from "../../x_Resource/sign/RenewCredential/resource"
+import { RenewAuthCredentialForegroundAction, AuthSignAuthCredentialClearResource } from "../../x_Resource/sign/authCredential/Renew/resource"
 import {
     PasswordLoginBackgroundActionPod,
     PasswordLoginForegroundAction,
@@ -16,9 +16,9 @@ import {
 } from "../../x_Resource/sign/PasswordResetSession/resource"
 
 import { ApplicationComponent } from "../../../vendor/getto-example/Application/component"
-import { LoginLinkResource } from "../../x_Resource/common/LoginLink/resource"
+import { SignLinkResource } from "./Link/resource"
 
-export type LoginForegroundAction = RenewCredentialForegroundAction &
+export type LoginForegroundAction = RenewAuthCredentialForegroundAction &
     PasswordLoginForegroundAction &
     PasswordResetSessionForegroundAction &
     PasswordResetForegroundAction
@@ -31,15 +31,15 @@ export type LoginEntryPoint = Readonly<{
     view: LoginView
     terminate: Terminate
 }>
-export type RenewCredentialEntryPoint = EntryPoint<RenewCredentialResource>
-export type PasswordLoginEntryPoint = EntryPoint<PasswordLoginResource & LoginLinkResource>
-export type PasswordResetSessionEntryPoint = EntryPoint<PasswordResetSessionResource & LoginLinkResource>
-export type PasswordResetEntryPoint = EntryPoint<PasswordResetResource & LoginLinkResource>
+export type RenewCredentialEntryPoint = EntryPoint<AuthSignAuthCredentialClearResource>
+export type PasswordLoginEntryPoint = EntryPoint<PasswordLoginResource & SignLinkResource>
+export type PasswordResetSessionEntryPoint = EntryPoint<PasswordResetSessionResource & SignLinkResource>
+export type PasswordResetEntryPoint = EntryPoint<PasswordResetResource & SignLinkResource>
 
 export interface LoginResourceFactory {
-    loginLink(): LoginLinkResource
+    loginLink(): SignLinkResource
 
-    renewCredential(): RenewCredentialResource
+    renewCredential(): AuthSignAuthCredentialClearResource
 
     passwordLogin(): PasswordLoginResource
     passwordResetSession(): PasswordResetSessionResource

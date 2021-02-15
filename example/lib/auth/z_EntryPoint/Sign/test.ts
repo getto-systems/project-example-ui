@@ -6,8 +6,8 @@ import { initRenewAuthCredentialSimulateRemoteAccess } from "../../sign/authCred
 import { initSubmitPasswordResetResetSimulateRemoteAccess } from "../../sign/password/reset/register/infra/remote/submitPasswordResetRegister/simulate"
 import { initStartPasswordResetSessionSimulateRemoteAccess } from "../../sign/password/reset/session/infra/remote/startPasswordResetSession/simulate"
 
-import { initLoginLinkResource } from "../../x_Resource/common/LoginLink/impl"
-import { initRenewCredentialResource } from "../../x_Resource/sign/RenewCredential/impl"
+import { initSignLinkResource } from "./Link/impl"
+import { initRenewCredentialResource } from "../../x_Resource/sign/authCredential/Renew/impl"
 import { initPasswordLoginResource } from "../../x_Resource/sign/PasswordLogin/impl"
 import { initPasswordResetSessionResource } from "../../x_Resource/sign/PasswordResetSession/impl"
 import { initPasswordResetResource } from "../../x_Resource/sign/PasswordReset/impl"
@@ -90,10 +90,10 @@ describe("LoginView", () => {
                         expect(stack[0]).toMatchObject({ type: "renew-credential" })
                         expect(stack[1]).toMatchObject({ type: "password-login" })
 
-                        expect(state.entryPoint.resource.link.passwordLogin()).toEqual(
+                        expect(state.entryPoint.resource.href.passwordLogin()).toEqual(
                             "?_password_login"
                         )
-                        expect(state.entryPoint.resource.link.passwordResetSession()).toEqual(
+                        expect(state.entryPoint.resource.href.passwordResetSession()).toEqual(
                             "?_password_reset=start"
                         )
 
@@ -259,7 +259,7 @@ function standardLoginView() {
     const repository = standardRepository()
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        loginLink: initLoginLinkResource,
+        loginLink: initSignLinkResource,
         renewCredential: () =>
             standardRenewCredentialResource(
                 currentURL,
@@ -291,7 +291,7 @@ function passwordResetSessionLoginView() {
     const repository = standardRepository()
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        loginLink: initLoginLinkResource,
+        loginLink: initSignLinkResource,
         renewCredential: () =>
             standardRenewCredentialResource(
                 currentURL,
@@ -323,7 +323,7 @@ function passwordResetLoginView() {
     const repository = standardRepository()
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        loginLink: initLoginLinkResource,
+        loginLink: initSignLinkResource,
         renewCredential: () =>
             standardRenewCredentialResource(
                 currentURL,

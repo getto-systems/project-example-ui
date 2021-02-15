@@ -195,7 +195,7 @@ export function PasswordResetSession({ resource, terminate }: PasswordResetSessi
     }
 
     function loginLink(): VNode {
-        return html`<a href="${resource.link.passwordLogin()}">
+        return html`<a href="${resource.href.passwordLogin()}">
             ${icon("user")} ログインIDとパスワードでログインする
         </a>`
     }

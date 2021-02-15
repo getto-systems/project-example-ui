@@ -17,9 +17,9 @@ import { Menu } from "../../common/Outline/Menu"
 import { BreadcrumbList } from "../../common/Outline/BreadcrumbList"
 import { ClearCredential } from "./ClearCredential"
 
-import { ProfileEntryPoint } from "../../../auth/z_EntryPoint/Profile/entryPoint"
+import { AuthProfileEntryPoint } from "../../../auth/z_EntryPoint/Profile/entryPoint"
 
-export function EntryPoint({ resource, terminate }: ProfileEntryPoint): VNode {
+export function EntryPoint({ resource, terminate }: AuthProfileEntryPoint): VNode {
     useTermination(terminate)
 
     const err = useErrorNotify(resource.notify)

@@ -1,3 +1,8 @@
+import { initMockErrorResource } from "../../../availability/x_Resource/Error/mock"
+import {
+    AuthProfileLogoutMockPropsPasser,
+    initMockAuthProfileLogoutResource,
+} from "./resources/Logout/mock"
 import {
     BreadcrumbListMockPropsPasser,
     initMockBreadcrumbListComponent,
@@ -10,28 +15,23 @@ import {
     initMockSeasonInfoComponent,
     SeasonInfoMockPropsPasser,
 } from "../../../example/x_components/Outline/seasonInfo/mock"
-import {
-    LogoutMockPropsPasser,
-    initMockLogoutComponent,
-} from "../../x_Resource/sign/ClearCredential/Logout/mock"
 
-import { ProfileEntryPoint } from "./entryPoint"
-import { initMockErrorResource } from "../../../availability/x_Resource/Error/mock"
+import { AuthProfileEntryPoint } from "./entryPoint"
 
-export type ProfileMockPropsPasser = Readonly<{
+export type AuthProfileMockPropsPasser = Readonly<{
     seasonInfo: SeasonInfoMockPropsPasser
     menu: MenuMockPropsPasser
     breadcrumbList: BreadcrumbListMockPropsPasser
-    logout: LogoutMockPropsPasser
+    logout: AuthProfileLogoutMockPropsPasser
 }>
-export function newMockDashboard(passer: ProfileMockPropsPasser): ProfileEntryPoint {
+export function newMockAuthProfile(passer: AuthProfileMockPropsPasser): AuthProfileEntryPoint {
     return {
         resource: {
             ...initMockErrorResource(),
+            ...initMockAuthProfileLogoutResource(passer.logout),
             seasonInfo: initMockSeasonInfoComponent(passer.seasonInfo),
             menu: initMockMenuComponent(passer.menu),
             breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),
-            logout: initMockLogoutComponent(passer.logout),
         },
         terminate: () => {
             // mock では特に何もしない

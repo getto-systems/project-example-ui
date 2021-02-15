@@ -5,9 +5,9 @@ import { ClearCredential } from "./ClearCredential"
 
 import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
 import {
-    ClearCredentialResourceMockProps,
-    initMockClearCredentialResource,
-} from "../../../auth/x_Resource/sign/ClearCredential/mock"
+    AuthProfileLogoutMockProps,
+    initMockAuthProfileLogoutResource,
+} from "../../../auth/z_EntryPoint/Profile/resources/Logout/mock"
 
 export default {
     title: "Auth/Profile/ClearCredential",
@@ -18,10 +18,10 @@ export default {
     },
 }
 
-type MockProps = ClearCredentialResourceMockProps
+type MockProps = AuthProfileLogoutMockProps
 const Template: Story<MockProps> = (args) => {
-    const passer = initMockPropsPasser<ClearCredentialResourceMockProps>()
-    const resource = initMockClearCredentialResource(passer)
+    const passer = initMockPropsPasser<AuthProfileLogoutMockProps>()
+    const resource = initMockAuthProfileLogoutResource(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {

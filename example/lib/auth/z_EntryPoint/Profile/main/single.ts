@@ -1,16 +1,16 @@
 import { newMainOutlineAction } from "../../../permission/outline/main/main"
 import { newClearAuthCredentialAction } from "../../../sign/authCredential/clear/main"
+import { newErrorAction } from "../../../../availability/unexpectedError/main"
 
-import { initProfileResource } from "../impl"
+import { initAuthProfileResource } from "../impl"
 
 import { initSeasonInfoComponent } from "../../../../example/x_components/Outline/seasonInfo/impl"
 
-import { newErrorAction } from "../../../../availability/unexpectedError/main"
 import { initSeasonAction } from "../../../../example/shared/season/main/season"
 
-import { ProfileEntryPoint, ProfileFactory } from "../entryPoint"
+import { AuthProfileEntryPoint, ProfileFactory } from "../entryPoint"
 
-export function newProfileAsSingle(): ProfileEntryPoint {
+export function newAuthProfileAsSingle(): AuthProfileEntryPoint {
     const webStorage = localStorage
 
     const factory: ProfileFactory = {
@@ -25,7 +25,7 @@ export function newProfileAsSingle(): ProfileEntryPoint {
             seasonInfo: initSeasonInfoComponent,
         },
     }
-    const resource = initProfileResource(factory)
+    const resource = initAuthProfileResource(factory)
     return {
         resource,
         terminate: () => {
@@ -33,7 +33,7 @@ export function newProfileAsSingle(): ProfileEntryPoint {
             resource.breadcrumbList.terminate()
             resource.seasonInfo.terminate()
 
-            resource.logout.terminate()
+            resource.clearAuthCredential.terminate()
         },
     }
 }

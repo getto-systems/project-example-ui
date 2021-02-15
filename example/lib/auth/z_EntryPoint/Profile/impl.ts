@@ -1,10 +1,10 @@
-import { ProfileFactory, ProfileResource } from "./entryPoint"
+import { ProfileFactory, AuthProfileResource } from "./entryPoint"
 
 import { initErrorResource } from "../../../availability/x_Resource/Error/impl"
-import { initClearCredentialResource } from "../../x_Resource/sign/ClearCredential/impl"
+import { initAuthProfileLogoutResource } from "./resources/Logout/impl"
 import { initMenuResource } from "../../../common/x_Resource/Outline/Menu/impl"
 
-export function initProfileResource(factory: ProfileFactory): ProfileResource {
+export function initAuthProfileResource(factory: ProfileFactory): AuthProfileResource {
     const actions = {
         loadSeason: factory.actions.season.loadSeason(),
     }
@@ -13,6 +13,6 @@ export function initProfileResource(factory: ProfileFactory): ProfileResource {
 
         ...initErrorResource(factory.actions),
         ...initMenuResource(factory.actions),
-        ...initClearCredentialResource(factory.actions),
+        ...initAuthProfileLogoutResource({ foreground: factory.actions }),
     }
 }

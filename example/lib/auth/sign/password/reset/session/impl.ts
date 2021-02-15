@@ -22,12 +22,12 @@ export function initPasswordResetSessionActionPod(
     infra: PasswordResetSessionSessionActionInfra
 ): PasswordResetSessionActionPod {
     return {
-        initStart: startSession(infra),
+        initStart: start(infra),
         initCheckStatus: checkStatus(infra),
     }
 }
 
-const startSession: StartPasswordResetSession = (infra) => () => async (fields, post) => {
+const start: StartPasswordResetSession = (infra) => () => async (fields, post) => {
     if (!fields.success) {
         post({ type: "failed-to-start-session", err: { type: "validation-error" } })
         return

@@ -1,8 +1,8 @@
-import { LinkComponent } from "./component"
+import { SignLinkHrefComponent } from "./component"
 
 import { AuthLocationSearchParams } from "../../../../sign/authLocation/data"
 
-export function initLinkComponent(): LinkComponent {
+export function initSignLinkHrefComponent(): SignLinkHrefComponent {
     return {
         passwordLogin,
         passwordResetSession,

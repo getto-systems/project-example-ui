@@ -6,7 +6,7 @@ import { initOutlineMenuExpandRepository } from "../../permission/outline/infra/
 import { initMemorySeasonRepository } from "../../../example/shared/season/impl/repository/season/memory"
 import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../permission/outline/infra/remote/loadOutlineMenuBadge/simulate"
 
-import { initProfileResource } from "./impl"
+import { initAuthProfileResource } from "./impl"
 
 import { initSeasonInfoComponent } from "../../../example/x_components/Outline/seasonInfo/impl"
 
@@ -31,7 +31,7 @@ const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
 // SUCCEED_TO_LOGIN_AT と setContinuousRenew の delay との間でうまく調整する
 const NOW = new Date("2020-01-01 10:00:30")
 
-describe("Profile", () => {
+describe("AuthProfile", () => {
     test("init", (done) => {
         standardResource()
         done()
@@ -67,7 +67,7 @@ function standardResource() {
         },
     }
 
-    return initProfileResource(factory)
+    return initAuthProfileResource(factory)
 }
 
 function standardVersion(): string {

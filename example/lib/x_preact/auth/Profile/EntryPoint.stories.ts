@@ -6,11 +6,11 @@ import { noPadded } from "../../z_storybook/display"
 import { EntryPoint } from "./EntryPoint"
 
 import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
-import { ProfileMockPropsPasser, newMockDashboard } from "../../../auth/z_EntryPoint/Profile/mock"
+import { AuthProfileMockPropsPasser, newMockAuthProfile } from "../../../auth/z_EntryPoint/Profile/mock"
 import { SeasonInfoMockProps } from "../../../example/x_components/Outline/seasonInfo/mock"
 import { MenuMockProps } from "../../../common/x_Resource/Outline/Menu/Menu/mock"
 import { BreadcrumbListMockProps } from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
-import { LogoutMockProps } from "../../../auth/x_Resource/sign/ClearCredential/Logout/mock"
+import { ClearAuthCredentialMockProps } from "../../../auth/z_EntryPoint/Profile/resources/Logout/ClearAuthCredential/mock"
 
 export default {
     title: "Auth/Profile",
@@ -28,13 +28,13 @@ type MockProps = Readonly<{
     breadcrumbIcon: string
 }>
 const Template: Story<MockProps> = (args) => {
-    const passer: ProfileMockPropsPasser = {
+    const passer: AuthProfileMockPropsPasser = {
         seasonInfo: initMockPropsPasser<SeasonInfoMockProps>(),
         menu: initMockPropsPasser<MenuMockProps>(),
         breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
-        logout: initMockPropsPasser<LogoutMockProps>(),
+        logout: initMockPropsPasser<ClearAuthCredentialMockProps>(),
     }
-    const entryPoint = newMockDashboard(passer)
+    const entryPoint = newMockAuthProfile(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {

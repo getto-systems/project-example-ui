@@ -6,11 +6,11 @@ import { newRenewAuthCredentialActionPod } from "../../../../sign/authCredential
 
 import { initLoginViewLocationInfo, View } from "../../impl"
 
-import { initLoginLinkResource } from "../../../../x_Resource/common/LoginLink/impl"
+import { initSignLinkResource } from "../../Link/impl"
 import { initPasswordLoginResource } from "../../../../x_Resource/sign/PasswordLogin/impl"
 import { initPasswordResetResource } from "../../../../x_Resource/sign/PasswordReset/impl"
 import { initPasswordResetSessionResource } from "../../../../x_Resource/sign/PasswordResetSession/impl"
-import { initRenewCredentialResource } from "../../../../x_Resource/sign/RenewCredential/impl"
+import { initRenewCredentialResource } from "../../../../x_Resource/sign/authCredential/Renew/impl"
 
 import { initFormAction } from "../../../../../vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
@@ -61,7 +61,7 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
     }
 
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        loginLink: initLoginLinkResource,
+        loginLink: initSignLinkResource,
 
         renewCredential: () => initRenewCredentialResource(foreground),
 

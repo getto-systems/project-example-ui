@@ -1,4 +1,4 @@
-export interface LinkComponent {
+export interface SignLinkHrefComponent {
     passwordLogin(): string
     passwordResetSession(): string
 }

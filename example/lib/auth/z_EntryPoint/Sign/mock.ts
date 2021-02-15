@@ -3,7 +3,7 @@ import { MockComponent, MockPropsPasser } from "../../../vendor/getto-example/Ap
 import {
     initMockRenewCredentialResource,
     RenewCredentialResourceMockPropsPasser,
-} from "../../x_Resource/sign/RenewCredential/mock"
+} from "../../x_Resource/sign/authCredential/Renew/mock"
 import {
     initMockPasswordLoginResource,
     PasswordLoginResourceMockPropsPasser,
@@ -26,8 +26,8 @@ import {
     PasswordResetSessionEntryPoint,
     PasswordResetEntryPoint,
 } from "./entryPoint"
-import { LoginLinkResource } from "../../x_Resource/common/LoginLink/resource"
-import { initLoginLinkResource } from "../../x_Resource/common/LoginLink/impl"
+import { SignLinkResource } from "./Link/resource"
+import { initSignLinkResource } from "./Link/impl"
 
 export function initMockRenewCredentialEntryPoint(
     passer: RenewCredentialResourceMockPropsPasser
@@ -61,9 +61,9 @@ interface Terminate {
     (): void
 }
 
-function initEntryPoint<R>(resource: R): EntryPoint<R & LoginLinkResource> {
+function initEntryPoint<R>(resource: R): EntryPoint<R & SignLinkResource> {
     return {
-        resource: { ...resource, ...initLoginLinkResource() },
+        resource: { ...resource, ...initSignLinkResource() },
         terminate,
     }
 }

@@ -9,14 +9,14 @@ import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 
 import { useComponent } from "../../common/hooks"
 
-import { ClearCredentialResource } from "../../../auth/x_Resource/sign/ClearCredential/resource"
+import { AuthProfileLogoutResource } from "../../../auth/z_EntryPoint/Profile/resources/Logout/resource"
 
-import { initialLogoutComponentState } from "../../../auth/x_Resource/sign/ClearCredential/Logout/component"
+import { initialClearAuthCredentialComponentState } from "../../../auth/z_EntryPoint/Profile/resources/Logout/ClearAuthCredential/component"
 
 import { StorageError } from "../../../common/storage/data"
 
-export function ClearCredential(resource: ClearCredentialResource): VNode {
-    const state = useComponent(resource.logout, initialLogoutComponentState)
+export function ClearCredential(resource: AuthProfileLogoutResource): VNode {
+    const state = useComponent(resource.clearAuthCredential, initialClearAuthCredentialComponentState)
     useEffect(() => {
         switch (state.type) {
             case "succeed-to-logout":
@@ -51,7 +51,7 @@ export function ClearCredential(resource: ClearCredentialResource): VNode {
         })
 
         function onClick() {
-            resource.logout.submit()
+            resource.clearAuthCredential.submit()
         }
 
         function error(): VNode[] {
