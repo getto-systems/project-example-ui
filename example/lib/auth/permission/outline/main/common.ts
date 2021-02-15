@@ -1,4 +1,7 @@
+import { env } from "../../../../y_environment/env"
 import { StaticMenuPath } from "../../../../y_environment/path"
+
+import { currentURL } from "../../../../z_infra/location/url"
 
 import { Icon, iconClass } from "../../../../z_vendor/icon"
 
@@ -10,17 +13,23 @@ import {
     MenuTreeNode,
 } from "../infra"
 
-import { MenuActionPod } from "../action"
+import { MenuActionLocationInfo, MenuAction } from "../action"
 import { newApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/main"
-import { initMenuActionPod } from "../impl"
+import { detectMenuTarget, initMenuAction } from "../impl"
 
-export function newMenuActionPod(
+export function newMenuActionLocationInfo(): MenuActionLocationInfo {
+    return {
+        getMenuTarget: () => detectMenuTarget(env.version, currentURL()),
+    }
+}
+
+export function newMenuAction(
     webStorage: Storage,
     newMenuExpandRepository: { (webStorage: Storage): MenuExpandRepository },
     menuTree: MenuTree,
     loadMenuBadge: LoadMenuBadgeRemoteAccess
-): MenuActionPod {
-    return initMenuActionPod({
+): MenuAction {
+    return initMenuAction(newMenuActionLocationInfo(), {
         loadMenuBadge,
         apiCredentials: newApiCredentialRepository(webStorage),
         menuExpands: newMenuExpandRepository(webStorage),

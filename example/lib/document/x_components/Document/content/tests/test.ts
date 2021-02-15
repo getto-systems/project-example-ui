@@ -1,10 +1,10 @@
 import { DocumentRemoteAccess, newTestDocumentResource } from "../../EntryPoint/tests/core"
 
 import { initMemoryTypedStorage } from "../../../../../z_infra/storage/memory"
-import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/menu/infra/remote/menuBadge/simulate"
-import { initMenuExpandRepository } from "../../../../../auth/permission/menu/infra/repository/menuExpand"
+import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/outline/infra/remote/menuBadge/simulate"
+import { initMenuExpandRepository } from "../../../../../auth/permission/outline/infra/repository/menuExpand"
 
-import { MenuTree } from "../../../../../auth/permission/menu/infra"
+import { MenuTree } from "../../../../../auth/permission/outline/infra"
 
 import { ContentComponentState } from "../component"
 import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"

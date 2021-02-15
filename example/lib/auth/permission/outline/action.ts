@@ -2,11 +2,13 @@ import { LoadBreadcrumbListEvent, LoadMenuEvent, ToggleMenuExpandEvent } from ".
 
 import { Menu, MenuCategoryPath, MenuTarget } from "./data"
 
+export type OutlineAction = Readonly<{
+    breadcrumbList: BreadcrumbListAction
+    menu: MenuAction
+}>
+
 export type BreadcrumbListAction = Readonly<{
     loadBreadcrumbList: LoadBreadcrumbListMethod
-}>
-export type BreadcrumbListActionPod = Readonly<{
-    initLoadBreadcrumbList: LoadBreadcrumbListPod
 }>
 
 export type BreadcrumbListActionLocationInfo = LoadMenuLocationInfo
@@ -14,10 +16,6 @@ export type BreadcrumbListActionLocationInfo = LoadMenuLocationInfo
 export type MenuAction = Readonly<{
     loadMenu: LoadMenuMethod
     toggleMenuExpand: ToggleMenuExpandMethod
-}>
-export type MenuActionPod = Readonly<{
-    initLoadMenu: LoadMenuPod
-    initToggleMenuExpand: ToggleMenuExpandPod
 }>
 
 export type MenuActionLocationInfo = LoadMenuLocationInfo

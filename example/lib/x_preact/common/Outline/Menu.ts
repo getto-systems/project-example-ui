@@ -20,7 +20,7 @@ import {
     initialMenuComponentState,
 } from "../../../common/x_Resource/Outline/Menu/Menu/component"
 
-import { Menu, MenuCategoryNode, MenuItemNode, LoadMenuError } from "../../../auth/permission/menu/data"
+import { Menu, MenuCategoryNode, MenuItemNode, LoadMenuError } from "../../../auth/permission/outline/data"
 
 export const MENU_ID = "menu"
 

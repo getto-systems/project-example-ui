@@ -6,12 +6,12 @@ import {
 
 import { initMemoryTypedStorage } from "../../../../../z_infra/storage/memory"
 import { initStaticClock } from "../../../../../z_infra/clock/simulate"
-import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/menu/infra/remote/menuBadge/simulate"
-import { initMenuExpandRepository } from "../../../../../auth/permission/menu/infra/repository/menuExpand"
+import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/outline/infra/remote/menuBadge/simulate"
+import { initMenuExpandRepository } from "../../../../../auth/permission/outline/infra/repository/menuExpand"
 import { initMemorySeasonRepository } from "../../../../shared/season/impl/repository/season/memory"
 
 import { Clock } from "../../../../../z_infra/clock/infra"
-import { MenuTree } from "../../../../../auth/permission/menu/infra"
+import { MenuTree } from "../../../../../auth/permission/outline/infra"
 
 import { ExampleComponentState } from "../component"
 import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"

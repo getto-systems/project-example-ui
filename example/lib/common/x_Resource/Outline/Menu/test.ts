@@ -1,12 +1,13 @@
-import { markMenuCategoryLabel } from "../../../../auth/permission/menu/data"
+import { MenuActionLocationInfo } from "../../../../auth/permission/outline/action"
+import { markMenuCategoryLabel } from "../../../../auth/permission/outline/data"
 import {
     detectMenuTarget,
-    initBreadcrumbListActionPod,
-    initMenuActionPod,
-} from "../../../../auth/permission/menu/impl"
-import { MenuExpand, MenuExpandRepository, MenuTree } from "../../../../auth/permission/menu/infra"
-import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/menu/infra/remote/menuBadge/simulate"
-import { initMemoryMenuExpandRepository } from "../../../../auth/permission/menu/infra/repository/memory"
+    initBreadcrumbListAction,
+    initMenuAction,
+} from "../../../../auth/permission/outline/impl"
+import { MenuExpand, MenuExpandRepository, MenuTree } from "../../../../auth/permission/outline/infra"
+import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/outline/infra/remote/menuBadge/simulate"
+import { initMemoryMenuExpandRepository } from "../../../../auth/permission/outline/infra/repository/memory"
 import { initAsyncComponentStateTester } from "../../../../vendor/getto-example/Application/testHelper"
 import { markApiNonce, markApiRoles } from "../../../apiCredential/data"
 import { ApiCredentialRepository } from "../../../apiCredential/infra"
@@ -14,7 +15,7 @@ import { initMemoryApiCredentialRepository } from "../../../apiCredential/infra/
 import { BreadcrumbListComponentState } from "./BreadcrumbList/component"
 import { initMenuResource } from "./impl"
 import { MenuComponentState } from "./Menu/component"
-import { MenuLocationInfo, MenuResource } from "./resource"
+import { MenuResource } from "./resource"
 
 describe("BreadcrumbList", () => {
     test("load breadcrumb", (done) => {
@@ -435,14 +436,17 @@ type Repository = Readonly<{
     menuExpands: MenuExpandRepository
 }>
 
-function newTestMenuResource(locationInfo: MenuLocationInfo, repository: Repository): MenuResource {
+function newTestMenuResource(
+    locationInfo: MenuActionLocationInfo,
+    repository: Repository
+): MenuResource {
     const menuTree = standardMenuTree()
 
-    return initMenuResource(locationInfo, {
-        initBreadcrumbList: initBreadcrumbListActionPod({
+    return initMenuResource({
+        breadcrumbList: initBreadcrumbListAction(locationInfo, {
             menuTree,
         }),
-        initMenu: initMenuActionPod({
+        menu: initMenuAction(locationInfo, {
             ...standardRemoteAccess(),
             ...repository,
             menuTree,
@@ -450,13 +454,13 @@ function newTestMenuResource(locationInfo: MenuLocationInfo, repository: Reposit
     })
 }
 
-function standardLocationInfo(): MenuLocationInfo {
+function standardLocationInfo(): MenuActionLocationInfo {
     return {
         getMenuTarget: () =>
             detectMenuTarget(standardVersion(), new URL("https://example.com/1.0.0/index.html")),
     }
 }
-function unknownLocationInfo(): MenuLocationInfo {
+function unknownLocationInfo(): MenuActionLocationInfo {
     return {
         getMenuTarget: () =>
             detectMenuTarget(standardVersion(), new URL("https://example.com/1.0.0/unknown.html")),

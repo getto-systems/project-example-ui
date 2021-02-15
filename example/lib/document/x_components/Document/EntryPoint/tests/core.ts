@@ -2,9 +2,9 @@ import { initTestNotifyAction } from "../../../../../availability/error/notify/t
 
 import {
     detectMenuTarget,
-    initBreadcrumbListActionPod,
-    initMenuActionPod,
-} from "../../../../../auth/permission/menu/impl"
+    initBreadcrumbListAction,
+    initMenuAction,
+} from "../../../../../auth/permission/outline/impl"
 import { detectContentPath } from "../../../../content/impl/location"
 
 import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
@@ -16,7 +16,7 @@ import {
     LoadMenuBadgeRemoteAccess,
     MenuExpandRepository,
     MenuTree,
-} from "../../../../../auth/permission/menu/infra"
+} from "../../../../../auth/permission/outline/infra"
 
 import { DocumentResource } from "../entryPoint"
 import { initTestContentAction } from "../../../../content/tests/content"
@@ -36,10 +36,16 @@ export function newTestDocumentResource(
     repository: DocumentRepository,
     remote: DocumentRemoteAccess
 ): DocumentResource {
+    const locationInfo: DocumentLocationInfo = {
+        getMenuTarget: () => detectMenuTarget(version, currentURL),
+        content: {
+            getContentPath: () => detectContentPath(version, currentURL),
+        },
+    }
     const factory: DocumentFactory = {
         actions: {
-            initBreadcrumbList: initBreadcrumbListActionPod({ menuTree }),
-            initMenu: initMenuActionPod({
+            breadcrumbList: initBreadcrumbListAction(locationInfo, { menuTree }),
+            menu: initMenuAction(locationInfo, {
                 ...repository,
                 ...remote,
                 menuTree,
@@ -51,12 +57,6 @@ export function newTestDocumentResource(
         components: {
             error: initNotifyComponent,
             content: initContentComponent,
-        },
-    }
-    const locationInfo: DocumentLocationInfo = {
-        getMenuTarget: () => detectMenuTarget(version, currentURL),
-        content: {
-            getContentPath: () => detectContentPath(version, currentURL),
         },
     }
 

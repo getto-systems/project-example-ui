@@ -3,11 +3,11 @@ import { initTestSeasonAction } from "../../../../shared/season/tests/season"
 
 import {
     detectMenuTarget,
-    initBreadcrumbListActionPod,
-    initMenuActionPod,
-} from "../../../../../auth/permission/menu/impl"
+    initBreadcrumbListAction,
+    initMenuAction,
+} from "../../../../../auth/permission/outline/impl"
 
-import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "../impl/core"
+import { DashboardFactory, initDashboardResource } from "../impl/core"
 
 import { initNotifyComponent } from "../../../../../availability/x_Resource/NotifyError/Notify/impl"
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
@@ -17,12 +17,13 @@ import {
     LoadMenuBadgeRemoteAccess,
     MenuExpandRepository,
     MenuTree,
-} from "../../../../../auth/permission/menu/infra"
+} from "../../../../../auth/permission/outline/infra"
 import { SeasonRepository } from "../../../../shared/season/infra"
 import { Clock } from "../../../../../z_infra/clock/infra"
 
 import { DashboardResource } from "../entryPoint"
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
+import { MenuActionLocationInfo } from "../../../../../auth/permission/outline/action"
 
 export type DashboardRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
@@ -40,10 +41,13 @@ export function newTestDashboardResource(
     remote: DashboardRemoteAccess,
     clock: Clock
 ): DashboardResource {
+    const locationInfo: MenuActionLocationInfo = {
+        getMenuTarget: () => detectMenuTarget(version, currentURL),
+    }
     const factory: DashboardFactory = {
         actions: {
-            initBreadcrumbList: initBreadcrumbListActionPod({ menuTree }),
-            initMenu: initMenuActionPod({
+            breadcrumbList: initBreadcrumbListAction(locationInfo, { menuTree }),
+            menu: initMenuAction(locationInfo, {
                 ...repository,
                 ...remote,
                 menuTree,
@@ -59,9 +63,6 @@ export function newTestDashboardResource(
             example: initExampleComponent,
         },
     }
-    const locationInfo: DashboardLocationInfo = {
-        getMenuTarget: () => detectMenuTarget(version, currentURL),
-    }
 
-    return initDashboardResource(factory, locationInfo)
+    return initDashboardResource(factory)
 }

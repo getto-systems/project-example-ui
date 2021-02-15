@@ -8,7 +8,7 @@ import { notify } from "../impl/core"
 
 import { NotifyAction } from "../action"
 
-export function initNotifyAction(): NotifyAction {
+export function newNotifyAction(): NotifyAction {
     return {
         notify: notify({
             notify: initNotifyConnectRemoteAccess(initApiAvailableNotify(env.apiServerURL)),

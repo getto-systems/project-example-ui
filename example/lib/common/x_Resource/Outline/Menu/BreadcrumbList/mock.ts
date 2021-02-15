@@ -3,7 +3,7 @@ import { MockComponent, MockPropsPasser } from "../../../../../vendor/getto-exam
 
 import { BreadcrumbListComponent, BreadcrumbListComponentState } from "./component"
 
-import { markMenuCategoryLabel, markMenuItem } from "../../../../../auth/permission/menu/data"
+import { markMenuCategoryLabel, markMenuItem } from "../../../../../auth/permission/outline/data"
 
 export type BreadcrumbListMockPropsPasser = MockPropsPasser<BreadcrumbListMockProps>
 

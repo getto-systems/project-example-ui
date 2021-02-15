@@ -17,10 +17,8 @@ import {
 import {
     BreadcrumbListAction,
     BreadcrumbListActionLocationInfo,
-    BreadcrumbListActionPod,
     MenuAction,
     MenuActionLocationInfo,
-    MenuActionPod,
 } from "./action"
 
 import { ApiRoles, emptyApiRoles } from "../../../common/apiCredential/data"
@@ -53,29 +51,18 @@ export function detectMenuTarget(version: string, currentURL: URL): MenuTarget {
 }
 
 export function initBreadcrumbListAction(
-    pod: BreadcrumbListActionPod,
-    locationInfo: BreadcrumbListActionLocationInfo
+    locationInfo: BreadcrumbListActionLocationInfo,
+    infra: BreadcrumbListActionInfra
 ): BreadcrumbListAction {
     return {
-        loadBreadcrumbList: pod.initLoadBreadcrumbList(locationInfo),
-    }
-}
-export function initBreadcrumbListActionPod(infra: BreadcrumbListActionInfra): BreadcrumbListActionPod {
-    return {
-        initLoadBreadcrumbList: loadBreadcrumbList(infra),
+        loadBreadcrumbList: loadBreadcrumbList(infra)(locationInfo),
     }
 }
 
-export function initMenuAction(pod: MenuActionPod, locationInfo: MenuActionLocationInfo): MenuAction {
+export function initMenuAction(locationInfo: MenuActionLocationInfo, infra: MenuActionInfra): MenuAction {
     return {
-        loadMenu: pod.initLoadMenu(locationInfo),
-        toggleMenuExpand: pod.initToggleMenuExpand(),
-    }
-}
-export function initMenuActionPod(infra: MenuActionInfra): MenuActionPod {
-    return {
-        initLoadMenu: loadMenu(infra),
-        initToggleMenuExpand: toggleMenuExpand(infra),
+        loadMenu: loadMenu(infra)(locationInfo),
+        toggleMenuExpand: toggleMenuExpand(infra)(),
     }
 }
 
