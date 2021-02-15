@@ -1,4 +1,4 @@
-import { WorkerBackgroundHandler } from "../../../../../../../vendor/getto-worker/worker/background"
+import { WorkerBackgroundHandler } from "../../../../../../../vendor/getto-worker/main/background"
 
 import { newPasswordResetSessionActionPod } from "../core"
 

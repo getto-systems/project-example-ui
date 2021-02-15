@@ -1,4 +1,4 @@
-import { newWorker } from "../../../../../vendor/getto-worker/worker/foreground"
+import { newWorker } from "../../../../../vendor/getto-worker/main/foreground"
 
 import { newAuthLocationAction } from "../../../../sign/authLocation/main"
 import { newContinuousRenewAuthCredentialAction } from "../../../../sign/authCredential/continuousRenew/main"
@@ -30,7 +30,7 @@ import {
 import {
     newRegisterActionForegroundProxy,
     RegisterActionForegroundProxy,
-} from "../../../../sign/password/reset/register/worker/foreground"
+} from "../../../../sign/password/reset/register/main/worker/foreground"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
 

@@ -1,14 +1,14 @@
-import { WorkerBackgroundHandler } from "../../../../../vendor/getto-worker/worker/background"
+import { WorkerBackgroundHandler } from "../../../../../vendor/getto-worker/main/background"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
 
 import { PasswordLoginActionProxyMessage } from "../../../../sign/password/login/main/worker/message"
 import { PasswordResetSessionActionProxyMessage } from "../../../../sign/password/reset/session/main/worker/message"
-import { RegisterActionProxyMessage } from "../../../../sign/password/reset/register/worker/message"
+import { RegisterActionProxyMessage } from "../../../../sign/password/reset/register/main/worker/message"
 
 import { newPasswordLoginActionBackgroundHandler } from "../../../../sign/password/login/main/worker/background"
 import { newPasswordResetSessionActionBackgroundHandler } from "../../../../sign/password/reset/session/main/worker/background"
-import { newRegisterActionBackgroundHandler } from "../../../../sign/password/reset/register/worker/background"
+import { newRegisterActionBackgroundHandler } from "../../../../sign/password/reset/register/main/worker/background"
 
 export function newLoginWorker(worker: Worker): void {
     const handler: Handler = {

@@ -1,20 +1,20 @@
-import { newSubmitPasswordResetRegisterRemoteAccess } from "./infra/remote/submitPasswordResetRegister/main"
+import { newSubmitPasswordResetRegisterRemoteAccess } from "../infra/remote/submitPasswordResetRegister/main"
 
-import { delayed } from "../../../../../z_infra/delayed/core"
-import { delaySecond } from "../../../../../z_infra/time/infra"
+import { delayed } from "../../../../../../z_infra/delayed/core"
+import { delaySecond } from "../../../../../../z_infra/time/infra"
 
 import {
     initPasswordResetRegisterAction,
     initPasswordResetRegisterActionLocationInfo,
     initRegisterActionPod,
-} from "./impl"
+} from "../impl"
 
 import {
     PasswordResetRegisterAction,
     PasswordResetRegisterActionLocationInfo,
     PasswordResetRegisterActionPod,
-} from "./action"
-import { currentURL } from "../../../../../z_infra/location/url"
+} from "../action"
+import { currentURL } from "../../../../../../z_infra/location/url"
 
 export function newPasswordResetRegisterRegisterAction(
     pod: PasswordResetRegisterActionPod

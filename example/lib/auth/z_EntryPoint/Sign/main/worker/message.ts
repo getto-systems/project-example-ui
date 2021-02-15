@@ -9,7 +9,7 @@ import {
 import {
     RegisterActionProxyMessage,
     RegisterActionProxyResponse,
-} from "../../../../sign/password/reset/register/worker/message"
+} from "../../../../sign/password/reset/register/main/worker/message"
 
 export type ForegroundMessage =
     | Readonly<{ type: "login"; message: PasswordLoginActionProxyMessage }>

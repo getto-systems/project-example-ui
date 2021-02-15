@@ -1,7 +1,7 @@
 import {
     WorkerProxyMethodMessage,
     WorkerProxyMethodResponse,
-} from "../../../../../../vendor/getto-worker/worker/message"
+} from "../../../../../../vendor/getto-worker/main/message"
 
 import { SubmitPasswordLoginEvent } from "../../event"
 

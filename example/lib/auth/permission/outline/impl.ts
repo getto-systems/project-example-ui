@@ -12,11 +12,12 @@ import {
     LoadOutlineMenu,
     ToggleOutlineMenuExpand,
     OutlineBreadcrumbListActionInfra,
+    OutlineMenuPermission,
 } from "./infra"
 
 import { OutlineBreadcrumbListAction, OutlineMenuAction, OutlineActionLocationInfo } from "./action"
 
-import { emptyApiRoles } from "../../../common/apiCredential/data"
+import { ApiRoles, emptyApiRoles } from "../../../common/apiCredential/data"
 import {
     OutlineBreadcrumb,
     OutlineBreadcrumbNode,
@@ -131,53 +132,61 @@ const loadBreadcrumbList: LoadOutlineBreadcrumbList = (infra) => (locationInfo) 
 const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
     const { apiCredentials, menuExpands, loadMenuBadge } = infra
 
+    const apiCredentialLoadResult = apiCredentials.load()
+    const apiRoles = toApiRoles(apiCredentialLoadResult)
+
     const menuExpandResponse = menuExpands.load()
     if (!menuExpandResponse.success) {
-        failed(EMPTY_EXPAND, menuExpandResponse.err)
+        failed(apiRoles, EMPTY_EXPAND, menuExpandResponse.err)
         return
     }
+
+    const menuExpand = menuExpandResponse.menuExpand
 
     // badge の取得には時間がかかる可能性があるのでまず空 badge で返す
     // expand の取得には時間がかからないはずなので expand の取得前には返さない
     post({
         type: "succeed-to-instant-load",
-        menu: buildMenu(menuExpandResponse.menuExpand, EMPTY_BADGE),
+        menu: buildMenu(apiRoles, menuExpand, EMPTY_BADGE),
     })
 
-    const apiCredentialLoadResult = apiCredentials.load()
-    const roles = apiRoles(apiCredentialLoadResult)
-
-    const menuExpand = menuExpandResponse.menuExpand
-
     if (!apiCredentialLoadResult.success) {
-        failed(menuExpand, apiCredentialLoadResult.err)
+        failed(apiRoles, menuExpand, apiCredentialLoadResult.err)
         return
     }
     if (!apiCredentialLoadResult.found) {
-        failed(menuExpand, { type: "empty-nonce" })
+        failed(apiRoles, menuExpand, { type: "empty-nonce" })
         return
     }
 
     const menuBadgeResponse = await loadMenuBadge(apiCredentialLoadResult.apiCredential.apiNonce)
     if (!menuBadgeResponse.success) {
-        failed(menuExpand, menuBadgeResponse.err)
+        failed(apiRoles, menuExpand, menuBadgeResponse.err)
         return
     }
 
-    post({ type: "succeed-to-load", menu: buildMenu(menuExpand, menuBadgeResponse.value) })
+    post({ type: "succeed-to-load", menu: buildMenu(apiRoles, menuExpand, menuBadgeResponse.value) })
 
-    function failed(menuExpand: OutlineMenuExpand, err: LoadOutlineMenuBadgeError): void {
-        post({ type: "failed-to-load", menu: buildMenu(menuExpand, EMPTY_BADGE), err })
-    }
-
-    function apiRoles(result: LoadApiCredentialResult) {
+    function toApiRoles(result: LoadApiCredentialResult) {
         if (result.success && result.found) {
             return result.apiCredential.apiRoles
         }
         return emptyApiRoles()
     }
 
-    function buildMenu(menuExpand: OutlineMenuExpand, menuBadge: OutlineMenuBadge): OutlineMenu {
+    function failed(
+        permittedRoles: ApiRoles,
+        menuExpand: OutlineMenuExpand,
+        err: LoadOutlineMenuBadgeError
+    ): void {
+        post({ type: "failed-to-load", menu: buildMenu(permittedRoles, menuExpand, EMPTY_BADGE), err })
+    }
+
+    function buildMenu(
+        permittedRoles: ApiRoles,
+        menuExpand: OutlineMenuExpand,
+        menuBadge: OutlineMenuBadge
+    ): OutlineMenu {
         const { menuTree } = infra
         const menuTarget = locationInfo.getOutlineMenuTarget()
 
@@ -208,7 +217,7 @@ const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
             menuTree: OutlineMenuTree,
             path: OutlineMenuCategoryPath
         ): OutlineMenuNode[] {
-            if (!isAllow()) {
+            if (!isAllow(category.permission)) {
                 return EMPTY_MENU
             }
 
@@ -230,14 +239,19 @@ const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
                 },
             ]
 
-            function isAllow(): boolean {
-                switch (category.permission.type) {
-                    case "any":
+            function isAllow(permission: OutlineMenuPermission): boolean {
+                switch (permission.type) {
+                    case "allow":
                         return true
+
+                    case "any":
+                        return permission.permits.some(isAllow)
+
+                    case "all":
+                        return permission.permits.every(isAllow)
+
                     case "role":
-                        return category.permission.roles.some((role) => {
-                            return roles.includes(role)
-                        })
+                        return permittedRoles.includes(permission.role)
                 }
             }
             function hasActive(node: OutlineMenuNode): boolean {

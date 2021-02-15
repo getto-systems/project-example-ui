@@ -1,6 +1,6 @@
-import { WorkerBackgroundHandler } from "../../../../../../vendor/getto-worker/worker/background"
-import { submitPasswordResetRegisterEventHasDone } from "../impl"
-import { newPasswordResetRegisterRegisterActionPod } from "../main"
+import { WorkerBackgroundHandler } from "../../../../../../../vendor/getto-worker/main/background"
+import { submitPasswordResetRegisterEventHasDone } from "../../impl"
+import { newPasswordResetRegisterRegisterActionPod } from "../core"
 import { RegisterActionProxyMessage, RegisterActionProxyResponse } from "./message"
 
 export function newRegisterActionBackgroundHandler(

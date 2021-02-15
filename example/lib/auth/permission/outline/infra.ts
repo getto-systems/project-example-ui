@@ -56,8 +56,10 @@ export type OutlineMenuTreeItem = Readonly<{
 }>
 
 export type OutlineMenuPermission =
-    | Readonly<{ type: "any" }>
-    | Readonly<{ type: "role"; roles: string[] }>
+    | Readonly<{ type: "allow" }>
+    | Readonly<{ type: "any"; permits: OutlineMenuPermission[] }>
+    | Readonly<{ type: "all"; permits: OutlineMenuPermission[] }>
+    | Readonly<{ type: "role"; role: string }>
 
 export type OutlineMenuBadge = Record<string, number>
 export type OutlineMenuExpand = OutlineMenuCategoryPath[]

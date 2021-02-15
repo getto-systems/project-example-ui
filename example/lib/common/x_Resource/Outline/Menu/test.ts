@@ -474,7 +474,7 @@ function standardMenuTree(): OutlineMenuTree {
     return [
         {
             type: "category",
-            category: { label: "MAIN", permission: { type: "any" } },
+            category: { label: "MAIN", permission: { type: "allow" } },
             children: [
                 { type: "item", item: { label: "ホーム", icon: "home", path: "/index.html" } },
                 {
@@ -485,7 +485,7 @@ function standardMenuTree(): OutlineMenuTree {
         },
         {
             type: "category",
-            category: { label: "DOCUMENT", permission: { type: "any" } },
+            category: { label: "DOCUMENT", permission: { type: "allow" } },
             children: [
                 {
                     type: "item",
@@ -493,7 +493,7 @@ function standardMenuTree(): OutlineMenuTree {
                 },
                 {
                     type: "category",
-                    category: { label: "DETAIL", permission: { type: "any" } },
+                    category: { label: "DETAIL", permission: { type: "allow" } },
                     children: [
                         {
                             type: "item",
@@ -507,7 +507,7 @@ function standardMenuTree(): OutlineMenuTree {
             type: "category",
             category: {
                 label: "DEVELOPMENT",
-                permission: { type: "role", roles: ["development-document"] },
+                permission: { type: "role", role: "development-document" },
             },
             children: [
                 {

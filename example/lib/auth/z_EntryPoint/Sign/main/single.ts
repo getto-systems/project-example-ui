@@ -1,5 +1,5 @@
 import { newPasswordLoginActionPod } from "../../../sign/password/login/main/core"
-import { newPasswordResetRegisterRegisterActionPod } from "../../../sign/password/reset/register/main"
+import { newPasswordResetRegisterRegisterActionPod } from "../../../sign/password/reset/register/main/core"
 import { newContinuousRenewAuthCredentialAction } from "../../../sign/authCredential/continuousRenew/main"
 import { newRenewAuthCredentialActionPod } from "../../../sign/authCredential/renew/main"
 import { newPasswordResetSessionActionPod } from "../../../sign/password/reset/session/main/core"

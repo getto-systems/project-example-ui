@@ -1,12 +1,12 @@
 import {
     WorkerProxyMethodMessage,
     WorkerProxyMethodResponse,
-} from "../../../../../../vendor/getto-worker/worker/message"
+} from "../../../../../../../vendor/getto-worker/main/message"
 
-import { SubmitPasswordResetRegisterEvent } from "../event"
+import { SubmitPasswordResetRegisterEvent } from "../../event"
 
-import { FormConvertResult } from "../../../../../../vendor/getto-form/form/data"
-import { PasswordResetFields, PasswordResetToken } from "../data"
+import { FormConvertResult } from "../../../../../../../vendor/getto-form/form/data"
+import { PasswordResetFields, PasswordResetToken } from "../../data"
 
 export type RegisterActionProxyMessage = WorkerProxyMethodMessage<"submit", SubmitProxyParams>
 export type RegisterActionProxyResponse = WorkerProxyMethodResponse<"submit", SubmitPasswordResetRegisterEvent>

@@ -2,13 +2,13 @@ import {
     WorkerForegroundProxyAction,
     WorkerForegroundProxyBase,
     WorkerForegroundProxyMethod,
-} from "../../../../../../vendor/getto-worker/worker/foreground"
+} from "../../../../../../../vendor/getto-worker/main/foreground"
 
 import { RegisterActionProxyMessage, RegisterActionProxyResponse, SubmitProxyParams } from "./message"
 
-import { PasswordResetRegisterActionPod } from "../action"
+import { PasswordResetRegisterActionPod } from "../../action"
 
-import { SubmitPasswordResetRegisterEvent } from "../event"
+import { SubmitPasswordResetRegisterEvent } from "../../event"
 
 export function newRegisterActionForegroundProxy(
     post: Post<RegisterActionProxyMessage>

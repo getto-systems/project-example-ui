@@ -22,12 +22,12 @@ export function newMainOutlineAction(webStorage: Storage): OutlineAction {
     }
 }
 
-const any: OutlineMenuPermission = { type: "any" }
+const allow: OutlineMenuPermission = { type: "allow" }
 
 const mainMenuTree = (): OutlineMenuTree => [
-    category("MAIN", any, [
+    category("MAIN", allow, [
         item("ホーム", lnir("home"), "/index.html"),
         item("ドキュメント", lnir("files-alt"), "/document/index.html"),
     ]),
-    category("SYSTEM", any, [item("プロフィール", lnir("user"), "/profile/index.html")]),
+    category("SYSTEM", allow, [item("プロフィール", lnir("user"), "/profile/index.html")]),
 ]

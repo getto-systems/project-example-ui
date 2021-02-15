@@ -22,15 +22,15 @@ export function newDocumentOutlineAction(webStorage: Storage): OutlineAction {
     }
 }
 
-const any: OutlineMenuPermission = { type: "any" }
-const dev: OutlineMenuPermission = { type: "role", roles: ["development-document"] }
+const allow: OutlineMenuPermission = { type: "allow" }
+const dev: OutlineMenuPermission = { type: "role", role: "development-document" }
 
 const documentMenuTree = (): OutlineMenuTree => [
-    category("MAIN", any, [
+    category("MAIN", allow, [
         item("ホーム", lnir("home"), "/index.html"),
         item("ドキュメント", lnir("files-alt"), "/document/index.html"),
     ]),
-    category("ドキュメント", any, [item("認証・認可", lnir("files-alt"), "/document/auth.html")]),
+    category("ドキュメント", allow, [item("認証・認可", lnir("files-alt"), "/document/auth.html")]),
     category("開発向け", dev, [
         item("Storybook", lnir("files-alt"), "/storybook/index.html"),
         item("coverage", lnir("files-alt"), "/coverage/lcov-report/index.html"),
