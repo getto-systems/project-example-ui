@@ -22,8 +22,8 @@ import {
     RenewRemoteAccessResult,
 } from "../../../sign/authCredential/common/infra"
 import { delayed } from "../../../../z_infra/delayed/core"
-import { initRenewActionPod } from "../../../sign/authCredential/renew/impl"
-import { initContinuousRenewActionPod } from "../../../sign/authCredential/continuousRenew/impl"
+import { initRenewAction } from "../../../sign/authCredential/renew/impl"
+import { initContinuousRenewAction } from "../../../sign/authCredential/continuousRenew/impl"
 import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
 import { initLocationActionPod } from "../../../sign/location/impl"
 
@@ -417,14 +417,14 @@ function newTestRenewCredentialResource(
 ): RenewCredentialResource {
     const config = standardConfig()
     return initRenewCredentialResource(initLoginLocationInfo(currentURL), {
-        initRenew: initRenewActionPod({
+        renew: initRenewAction({
             ...repository,
             ...remote,
             config: config.renew,
             delayed,
             clock,
         }),
-        initContinuousRenew: initContinuousRenewActionPod({
+        continuousRenew: initContinuousRenewAction({
             ...repository,
             ...remote,
             config: config.continuousRenew,

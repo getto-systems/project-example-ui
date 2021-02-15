@@ -1,5 +1,5 @@
 import { newMainOutlineAction } from "../../../permission/outline/main/main"
-import { newClearActionPod } from "../../../sign/authCredential/clear/main"
+import { newClearAction } from "../../../sign/authCredential/clear/main"
 
 import { initProfileResource } from "../impl"
 
@@ -16,7 +16,7 @@ export function newProfileAsSingle(): ProfileEntryPoint {
 
     const factory: ProfileFactory = {
         actions: {
-            initClear: newClearActionPod(webStorage),
+            clear: newClearAction(webStorage),
             ...newMainOutlineAction(webStorage),
 
             notify: newNotifyAction(),

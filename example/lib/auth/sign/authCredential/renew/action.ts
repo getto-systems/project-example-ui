@@ -4,10 +4,6 @@ export type RenewAction = Readonly<{
     request: RequestMethod
     forceRequest: ForceRequestMethod
 }>
-export type RenewActionPod = Readonly<{
-    initRequest: RequestPod
-    initForceRequest: ForceRequestPod
-}>
 
 export interface RequestPod {
     (): RequestMethod

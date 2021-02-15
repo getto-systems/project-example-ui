@@ -31,7 +31,7 @@ import {
     RenewRemoteAccess,
     RenewRemoteAccessResult,
 } from "../../../sign/authCredential/common/infra"
-import { initContinuousRenewActionPod } from "../../../sign/authCredential/continuousRenew/impl"
+import { initContinuousRenewAction } from "../../../sign/authCredential/continuousRenew/impl"
 import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
 import { initLocationActionPod } from "../../../sign/location/impl"
 import { initRegisterActionPod, submitEventHasDone } from "../../../sign/password/reset/register/impl"
@@ -641,7 +641,7 @@ function newPasswordResetTestResource(
     return initPasswordResetResource(
         initLoginLocationInfo(currentURL),
         {
-            initContinuousRenew: initContinuousRenewActionPod({
+            continuousRenew: initContinuousRenewAction({
                 ...repository,
                 ...remote,
                 config: config.continuousRenew,

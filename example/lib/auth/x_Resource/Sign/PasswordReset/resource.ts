@@ -9,7 +9,7 @@ import {
     RegisterActionLocationInfo,
     RegisterActionPod,
 } from "../../../sign/password/reset/register/action"
-import { ContinuousRenewActionPod } from "../../../sign/authCredential/continuousRenew/action"
+import { ContinuousRenewAction } from "../../../sign/authCredential/continuousRenew/action"
 
 export type PasswordResetResource = Readonly<{
     reset: ResetComponent
@@ -17,8 +17,8 @@ export type PasswordResetResource = Readonly<{
 }>
 
 export type PasswordResetLocationInfo = LocationActionLocationInfo & RegisterActionLocationInfo
-export type PasswordResetForegroundActionPod = Readonly<{
-    initContinuousRenew: ContinuousRenewActionPod
+export type PasswordResetForegroundAction = Readonly<{
+    continuousRenew: ContinuousRenewAction
     initLocation: LocationActionPod
 
     form: Readonly<{

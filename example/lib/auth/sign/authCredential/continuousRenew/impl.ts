@@ -1,21 +1,13 @@
 import { ContinuousRenewActionInfra, ForceStart, Start, StartInfra } from "./infra"
 
-import { ContinuousRenewAction, ContinuousRenewActionPod } from "./action"
+import { ContinuousRenewAction } from "./action"
 
 import { hasExpired } from "../common/data"
 
-export function initContinuousRenewAction(pod: ContinuousRenewActionPod): ContinuousRenewAction {
+export function initContinuousRenewAction(infra: ContinuousRenewActionInfra): ContinuousRenewAction {
     return {
-        start: pod.initStart(),
-        forceStart: pod.initForceStart(),
-    }
-}
-export function initContinuousRenewActionPod(
-    infra: ContinuousRenewActionInfra
-): ContinuousRenewActionPod {
-    return {
-        initStart: start(infra),
-        initForceStart: forceStart(infra),
+        start: start(infra)(),
+        forceStart: forceStart(infra)(),
     }
 }
 

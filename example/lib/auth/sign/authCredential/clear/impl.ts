@@ -1,15 +1,10 @@
 import { ClearActionInfra, Logout } from "./infra"
 
-import { ClearAction, ClearActionPod } from "./action"
+import { ClearAction,  } from "./action"
 
-export function initClearAction(pod: ClearActionPod): ClearAction {
+export function initClearAction(infra: ClearActionInfra): ClearAction {
     return {
-        logout: pod.initLogout(),
-    }
-}
-export function initClearActionPod(infra: ClearActionInfra): ClearActionPod {
-    return {
-        initLogout: logout(infra),
+        logout: logout(infra)(),
     }
 }
 

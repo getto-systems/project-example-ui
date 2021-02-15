@@ -1,22 +1,16 @@
 import { StoreResult } from "../../../../common/storage/infra"
 import { RenewActionInfra, Request, ForceRequest, RequestInfra } from "./infra"
 
-import { RenewAction, RenewActionPod } from "./action"
+import {  RenewAction } from "./action"
 
 import { ForceRequestEvent } from "./event"
 
 import { hasExpired, LastLogin } from "../common/data"
 
-export function initRenewAction(pod: RenewActionPod): RenewAction {
+export function initRenewAction(infra: RenewActionInfra): RenewAction {
     return {
-        request: pod.initRequest(),
-        forceRequest: pod.initForceRequest(),
-    }
-}
-export function initRenewActionPod(infra: RenewActionInfra): RenewActionPod {
-    return {
-        initRequest: request(infra),
-        initForceRequest: forceRequest(infra),
+        request: request(infra)(),
+        forceRequest: forceRequest(infra)(),
     }
 }
 

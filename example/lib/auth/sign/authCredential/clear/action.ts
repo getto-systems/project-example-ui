@@ -3,9 +3,6 @@ import { LogoutEvent } from "./event"
 export type ClearAction = Readonly<{
     logout: LogoutMethod
 }>
-export type ClearActionPod = Readonly<{
-    initLogout: LogoutPod
-}>
 
 export interface LogoutPod {
     (): LogoutMethod

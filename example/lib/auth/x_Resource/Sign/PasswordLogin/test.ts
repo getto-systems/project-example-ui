@@ -24,7 +24,7 @@ import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/common
 import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../common/apiCredential/data"
-import { initContinuousRenewActionPod } from "../../../sign/authCredential/continuousRenew/impl"
+import { initContinuousRenewAction } from "../../../sign/authCredential/continuousRenew/impl"
 import {
     AuthCredentialRepository,
     RenewRemoteAccess,
@@ -611,7 +611,7 @@ function newTestPasswordLoginResource(
     return initPasswordLoginResource(
         initLoginLocationInfo(currentURL),
         {
-            initContinuousRenew: initContinuousRenewActionPod({
+            continuousRenew: initContinuousRenewAction({
                 ...repository,
                 ...remote,
                 config: config.continuousRenew,

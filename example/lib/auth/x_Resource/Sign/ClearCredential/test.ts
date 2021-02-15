@@ -5,7 +5,7 @@ import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/common
 import { initMemoryApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../common/apiCredential/data"
 import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
-import { initClearActionPod } from "../../../sign/authCredential/clear/impl"
+import { initClearAction } from "../../../sign/authCredential/clear/impl"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -49,7 +49,7 @@ function standardResource() {
     const repository = standardRepository()
 
     const resource = initClearCredentialResource({
-        initClear: initClearActionPod(repository),
+        clear: initClearAction(repository),
     })
 
     return { repository, resource }
