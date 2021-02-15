@@ -5,7 +5,7 @@ import { RenewCredential } from "./RenewCredential"
 
 import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
 import { initMockRenewCredentialEntryPoint } from "../../../auth/z_EntryPoint/Sign/mock"
-import { RenewCredentialResourceMockProps } from "../../../auth/x_Resource/sign/RenewCredential/mock"
+import { RenewCredentialResourceMockProps } from "../../../auth/x_Resource/sign/authCredential/Renew/mock"
 
 export default {
     title: "Auth/Login/RenewCredential",

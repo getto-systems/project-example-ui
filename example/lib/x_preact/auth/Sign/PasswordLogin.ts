@@ -163,7 +163,7 @@ export function PasswordLogin({ resource, terminate }: PasswordLoginEntryPoint):
     }
 
     function resetLink() {
-        return html`<a href="${resource.link.passwordResetSession()}">
+        return html`<a href="${resource.href.passwordResetSession()}">
             ${icon("question-circle")} パスワードがわからない方
         </a>`
     }

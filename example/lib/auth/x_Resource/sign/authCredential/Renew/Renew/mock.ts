@@ -1,6 +1,6 @@
-import { MockComponent, MockPropsPasser } from "../../../../../vendor/getto-example/Application/mock"
+import { MockComponent, MockPropsPasser } from "../../../../../../vendor/getto-example/Application/mock"
 
-import { RenewComponent, RenewComponentState } from "./component"
+import { RenewAuthCredentialComponent, RenewAuthCredentialComponentState } from "./component"
 
 type Passer = MockPropsPasser<RenewMockProps>
 
@@ -11,18 +11,20 @@ export type RenewMockProps =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function initMockRenewComponent(passer: Passer): RenewComponent {
+export function initMockRenewAuthCredentialComponent(passer: Passer): RenewAuthCredentialComponent {
     return new Component(passer)
 }
 
-class Component extends MockComponent<RenewComponentState> implements RenewComponent {
+class Component
+    extends MockComponent<RenewAuthCredentialComponentState>
+    implements RenewAuthCredentialComponent {
     constructor(passer: Passer) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))
         })
 
-        function mapProps(props: RenewMockProps): RenewComponentState {
+        function mapProps(props: RenewMockProps): RenewAuthCredentialComponentState {
             switch (props.type) {
                 case "delayed":
                     return { type: "delayed-to-renew" }

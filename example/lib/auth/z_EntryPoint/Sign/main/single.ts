@@ -11,8 +11,8 @@ import { initPasswordFormFieldAction } from "../../../common/field/password/main
 
 import { initLoginViewLocationInfo, View } from "../impl"
 
-import { initLoginLinkResource } from "../../../x_Resource/common/LoginLink/impl"
-import { initRenewCredentialResource } from "../../../x_Resource/sign/RenewCredential/impl"
+import { initSignLinkResource } from "../Link/impl"
+import { initRenewCredentialResource } from "../../../x_Resource/sign/authCredential/Renew/impl"
 import { initPasswordLoginResource } from "../../../x_Resource/sign/PasswordLogin/impl"
 import { initPasswordResetSessionResource } from "../../../x_Resource/sign/PasswordResetSession/impl"
 import { initPasswordResetResource } from "../../../x_Resource/sign/PasswordReset/impl"
@@ -42,7 +42,7 @@ export function newLoginAsSingle(): LoginEntryPoint {
     }
 
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        loginLink: initLoginLinkResource,
+        loginLink: initSignLinkResource,
 
         renewCredential: () => initRenewCredentialResource(foreground),
 

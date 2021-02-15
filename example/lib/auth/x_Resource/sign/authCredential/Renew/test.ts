@@ -1,29 +1,29 @@
 import { initRenewCredentialResource } from "./impl"
 
-import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
-import { initRenewAuthCredentialSimulateRemoteAccess } from "../../../sign/authCredential/common/infra/remote/renewAuthCredential/simulate"
+import { initStaticClock, StaticClock } from "../../../../../z_infra/clock/simulate"
+import { initRenewAuthCredentialSimulateRemoteAccess } from "../../../../sign/authCredential/common/infra/remote/renewAuthCredential/simulate"
 
-import { Clock } from "../../../../z_infra/clock/infra"
+import { Clock } from "../../../../../z_infra/clock/infra"
 
-import { RenewCredentialResource } from "./resource"
+import { AuthSignAuthCredentialClearResource } from "./resource"
 
-import { RenewComponentState } from "./Renew/component"
+import { RenewAuthCredentialComponentState } from "./Renew/component"
 
-import { markSecureScriptPath } from "../../../sign/authLocation/data"
-import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/common/data"
-import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
-import { initMemoryApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../../common/apiCredential/data"
+import { markSecureScriptPath } from "../../../../sign/authLocation/data"
+import { markAuthAt, markTicketNonce } from "../../../../sign/authCredential/common/data"
+import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
+import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
+import { markApiNonce, markApiRoles } from "../../../../../common/apiCredential/data"
 import {
     AuthCredentialRepository,
     RenewAuthCredentialRemoteAccess,
     RenewAuthCredentialRemoteAccessResult,
-} from "../../../sign/authCredential/common/infra"
-import { delayed } from "../../../../z_infra/delayed/core"
-import { initRenewAuthCredentialAction } from "../../../sign/authCredential/renew/impl"
-import { initContinuousRenewAuthCredentialAction } from "../../../sign/authCredential/continuousRenew/impl"
-import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/authCredential/memory"
-import { initAuthLocationAction, initAuthLocationActionLocationInfo } from "../../../sign/authLocation/impl"
+} from "../../../../sign/authCredential/common/infra"
+import { delayed } from "../../../../../z_infra/delayed/core"
+import { initRenewAuthCredentialAction } from "../../../../sign/authCredential/renew/impl"
+import { initContinuousRenewAuthCredentialAction } from "../../../../sign/authCredential/continuousRenew/impl"
+import { initMemoryAuthCredentialRepository } from "../../../../sign/authCredential/common/infra/repository/authCredential/memory"
+import { initAuthLocationAction, initAuthLocationActionLocationInfo } from "../../../../sign/authLocation/impl"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -48,8 +48,8 @@ describe("RenewCredential", () => {
 
         resource.renew.request()
 
-        function stateHandler(): Post<RenewComponentState> {
-            const stack: RenewComponentState[] = []
+        function stateHandler(): Post<RenewAuthCredentialComponentState> {
+            const stack: RenewAuthCredentialComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -105,8 +105,8 @@ describe("RenewCredential", () => {
 
         resource.renew.request()
 
-        function stateHandler(): Post<RenewComponentState> {
-            const stack: RenewComponentState[] = []
+        function stateHandler(): Post<RenewAuthCredentialComponentState> {
+            const stack: RenewAuthCredentialComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -166,8 +166,8 @@ describe("RenewCredential", () => {
 
         resource.renew.request()
 
-        function stateHandler(): Post<RenewComponentState> {
-            const stack: RenewComponentState[] = []
+        function stateHandler(): Post<RenewAuthCredentialComponentState> {
+            const stack: RenewAuthCredentialComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -221,8 +221,8 @@ describe("RenewCredential", () => {
 
         resource.renew.request()
 
-        function stateHandler(): Post<RenewComponentState> {
-            const stack: RenewComponentState[] = []
+        function stateHandler(): Post<RenewAuthCredentialComponentState> {
+            const stack: RenewAuthCredentialComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -277,8 +277,8 @@ describe("RenewCredential", () => {
 
         resource.renew.request()
 
-        function stateHandler(): Post<RenewComponentState> {
-            const stack: RenewComponentState[] = []
+        function stateHandler(): Post<RenewAuthCredentialComponentState> {
+            const stack: RenewAuthCredentialComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -322,8 +322,8 @@ describe("RenewCredential", () => {
 
         resource.renew.loadError({ type: "infra-error", err: "load error" })
 
-        function stateHandler(): Post<RenewComponentState> {
-            const stack: RenewComponentState[] = []
+        function stateHandler(): Post<RenewAuthCredentialComponentState> {
+            const stack: RenewAuthCredentialComponentState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -412,7 +412,7 @@ function newTestRenewCredentialResource(
     repository: RenewCredentialTestRepository,
     remote: RenewCredentialTestRemoteAccess,
     clock: Clock
-): RenewCredentialResource {
+): AuthSignAuthCredentialClearResource {
     const config = standardConfig()
     return initRenewCredentialResource({
         renew: initRenewAuthCredentialAction({

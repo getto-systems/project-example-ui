@@ -1,8 +1,8 @@
 import { MenuForegroundAction, MenuResource } from "../../../common/x_Resource/Outline/Menu/resource"
 import {
-    ClearCredentialForegroundAction,
-    ClearCredentialResource,
-} from "../../x_Resource/sign/ClearCredential/resource"
+    AuthProfileLogoutForegroundMaterial,
+    AuthProfileLogoutResource,
+} from "./resources/Logout/resource"
 
 import {
     SeasonInfoComponent,
@@ -12,29 +12,36 @@ import {
 import { SeasonAction } from "../../../example/shared/season/action"
 import { ErrorForegroundAction, ErrorResource } from "../../../availability/x_Resource/Error/resource"
 
-export type ProfileEntryPoint = Readonly<{
-    resource: ProfileResource
+export type AuthProfileEntryPoint = Readonly<{
+    resource: AuthProfileResource
     terminate: Terminate
 }>
 
-export type ProfileResource = Readonly<{
+export type AuthProfileResource = Readonly<{
     seasonInfo: SeasonInfoComponent
 }> &
     ErrorResource &
     MenuResource &
-    ClearCredentialResource
+    AuthProfileLogoutResource
+
+export type AuthProfileEntryPointMaterial = Readonly<{
+    foreground: AuthProfileForegroundMaterial
+}>
+
+export type AuthProfileForegroundMaterial = ErrorForegroundAction &
+    MenuForegroundAction &
+    AuthProfileLogoutForegroundMaterial
 
 export type ProfileFactory = Readonly<{
     actions: Readonly<{
         season: SeasonAction
     }> &
-        ErrorForegroundAction &
-        MenuForegroundAction &
-        ClearCredentialForegroundAction
+        AuthProfileForegroundMaterial
     components: Readonly<{
         seasonInfo: SeasonInfoComponentFactory
     }>
 }>
+
 interface Terminate {
     (): void
 }
