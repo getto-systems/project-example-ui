@@ -19,7 +19,7 @@ import {
     initialBreadcrumbListComponentState,
 } from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/component"
 
-import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../../auth/permission/outline/data"
+import { OutlineBreadcrumb, OutlineBreadcrumbNode, OutlineMenuCategory, OutlineMenuItem } from "../../../auth/permission/outline/data"
 import { linky } from "../../../z_vendor/getto-css/preact/design/highlight"
 
 type Props = Readonly<{
@@ -40,13 +40,13 @@ export function BreadcrumbList(resource: Props): VNode {
     }
 }
 
-function content(breadcrumb: Breadcrumb): VNode {
+function content(breadcrumb: OutlineBreadcrumb): VNode {
     return mainBreadcrumb(breadcrumbNodes(breadcrumb))
 }
-function breadcrumbNodes(breadcrumb: Breadcrumb): VNode[] {
+function breadcrumbNodes(breadcrumb: OutlineBreadcrumb): VNode[] {
     return [breadcrumbTop()].concat(breadcrumb.map((node) => withSeparator(...map(node))))
 
-    function map(node: BreadcrumbNode): [string, VNode] {
+    function map(node: OutlineBreadcrumbNode): [string, VNode] {
         switch (node.type) {
             case "category":
                 return [node.category.label, breadcrumbCategory(node.category)]
@@ -61,10 +61,10 @@ function breadcrumbTop(): VNode {
     // mobile レイアウトで menu の位置に移動
     return mainBreadcrumbLink(`#${MENU_ID}`, html`${icon("menu-alt-3")} ${siteInfo().title}`)
 }
-function breadcrumbCategory({ label }: MenuCategory): VNode {
+function breadcrumbCategory({ label }: OutlineMenuCategory): VNode {
     return linky(label)
 }
-function breadcrumbItem({ label, icon, href }: MenuItem): VNode {
+function breadcrumbItem({ label, icon, href }: OutlineMenuItem): VNode {
     const content = html`<i class="${icon}"></i> ${label}`
     return mainBreadcrumbLink(href, content)
 }

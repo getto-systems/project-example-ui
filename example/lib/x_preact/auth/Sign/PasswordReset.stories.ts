@@ -5,7 +5,7 @@ import { PasswordReset } from "./PasswordReset"
 
 import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
 import { initMockPasswordResetEntryPoint } from "../../../auth/z_EntryPoint/Sign/mock"
-import { PasswordResetResourceMockProps } from "../../../auth/x_Resource/Sign/PasswordReset/mock"
+import { PasswordResetResourceMockProps } from "../../../auth/x_Resource/sign/PasswordReset/mock"
 import { loginIDFormFieldValidations } from "../../../auth/x_Resource/common/Field/LoginID/mock"
 import { formValidationStates } from "../../../vendor/getto-form/x_Resource/Form/mock"
 import {

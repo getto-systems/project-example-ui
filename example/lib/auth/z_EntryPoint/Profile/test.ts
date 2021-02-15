@@ -1,10 +1,10 @@
-import { initBreadcrumbListAction, initMenuAction, initOutlineActionLocationInfo } from "../../permission/outline/impl"
+import { initOutlineBreadcrumbListAction, initOutlineMenuAction, initOutlineActionLocationInfo } from "../../permission/outline/impl"
 
 import { initStaticClock } from "../../../z_infra/clock/simulate"
 import { initMemoryTypedStorage } from "../../../z_infra/storage/memory"
-import { initMenuExpandRepository } from "../../permission/outline/infra/repository/menuExpand"
+import { initOutlineMenuExpandRepository } from "../../permission/outline/infra/repository/outlineMenuExpand/core"
 import { initMemorySeasonRepository } from "../../../example/shared/season/impl/repository/season/memory"
-import { initLoadMenuBadgeSimulateRemoteAccess } from "../../permission/outline/infra/remote/menuBadge/simulate"
+import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../permission/outline/infra/remote/loadOutlineMenuBadge/simulate"
 
 import { initProfileResource } from "./impl"
 
@@ -13,16 +13,16 @@ import { initSeasonInfoComponent } from "../../../example/x_components/Outline/s
 import { initTestSeasonAction } from "../../../example/shared/season/tests/season"
 
 import { Clock } from "../../../z_infra/clock/infra"
-import { MenuTree } from "../../permission/outline/infra"
+import { OutlineMenuTree } from "../../permission/outline/infra"
 
 import { ProfileFactory } from "./entryPoint"
 import { markAuthAt, markTicketNonce } from "../../sign/authCredential/common/data"
 import { initMemoryApiCredentialRepository } from "../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../common/apiCredential/data"
-import { initClearAction } from "../../sign/authCredential/clear/impl"
-import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/memory"
-import { initNotifySimulateRemoteAccess } from "../../../availability/error/infra/remote/notify/simulate"
-import { initErrorAction } from "../../../availability/error/impl"
+import { initClearAuthCredentialAction } from "../../sign/authCredential/clear/impl"
+import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/authCredential/memory"
+import { initNotifyUnexpectedErrorSimulateRemoteAccess } from "../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/simulate"
+import { initUnexpectedErrorAction } from "../../../availability/unexpectedError/impl"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -49,12 +49,12 @@ function standardResource() {
     const locationInfo = initOutlineActionLocationInfo(version, url)
     const factory: ProfileFactory = {
         actions: {
-            error: initErrorAction({
-                notify: initNotifySimulateRemoteAccess(),
+            error: initUnexpectedErrorAction({
+                notify: initNotifyUnexpectedErrorSimulateRemoteAccess(),
             }),
-            clear: initClearAction(repository),
-            breadcrumbList: initBreadcrumbListAction(locationInfo, { menuTree }),
-            menu: initMenuAction(locationInfo, {
+            clear: initClearAuthCredentialAction(repository),
+            breadcrumbList: initOutlineBreadcrumbListAction(locationInfo, { menuTree }),
+            menu: initOutlineMenuAction(locationInfo, {
                 ...repository,
                 ...remote,
                 menuTree,
@@ -78,7 +78,7 @@ function standardURL(): URL {
     return new URL("https://example.com/1.0.0/index.html")
 }
 
-function standardMenuTree(): MenuTree {
+function standardMenuTree(): OutlineMenuTree {
     return []
 }
 
@@ -92,7 +92,7 @@ function standardRepository() {
             ticketNonce: { set: true, value: markTicketNonce(STORED_TICKET_NONCE) },
             lastAuthAt: { set: true, value: markAuthAt(STORED_LOGIN_AT) },
         }),
-        menuExpands: initMenuExpandRepository({
+        menuExpands: initOutlineMenuExpandRepository({
             menuExpand: initMemoryTypedStorage({ set: false }),
         }),
         seasons: initMemorySeasonRepository({ stored: false }),
@@ -101,7 +101,7 @@ function standardRepository() {
 
 function standardRemoteAccess() {
     return {
-        loadMenuBadge: initLoadMenuBadgeSimulateRemoteAccess(() => ({ success: true, value: {} }), {
+        loadMenuBadge: initLoadOutlineMenuBadgeSimulateRemoteAccess(() => ({ success: true, value: {} }), {
             wait_millisecond: 0,
         }),
     }

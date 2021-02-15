@@ -1,12 +1,12 @@
 import { newApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/main"
-import { newAuthCredentialRepository } from "../common/infra/repository/main"
+import { newAuthCredentialRepository } from "../common/infra/repository/authCredential/main"
 
-import { initClearAction } from "./impl"
+import { initClearAuthCredentialAction } from "./impl"
 
-import { ClearAction } from "./action"
+import { ClearAuthCredentialAction } from "./action"
 
-export function newClearAction(webStorage: Storage): ClearAction {
-    return initClearAction({
+export function newClearAuthCredentialAction(webStorage: Storage): ClearAuthCredentialAction {
+    return initClearAuthCredentialAction({
         apiCredentials: newApiCredentialRepository(webStorage),
         authCredentials: newAuthCredentialRepository(webStorage),
     })

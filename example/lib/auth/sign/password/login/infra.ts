@@ -1,32 +1,46 @@
 import { ApiCredential } from "../../../../common/apiCredential/data"
 import { Delayed } from "../../../../z_infra/delayed/infra"
-import { RemoteAccess, RemoteAccessResult, RemoteAccessSimulator } from "../../../../z_infra/remote/infra"
+import {
+    RemoteAccess,
+    RemoteAccessResult,
+    RemoteAccessSimulator,
+} from "../../../../z_infra/remote/infra"
 import { DelayTime } from "../../../../z_infra/time/infra"
 
 import { AuthCredential } from "../../authCredential/common/data"
-import { SubmitPod } from "./action"
+import { SubmitPasswordLoginPod } from "./action"
 
-import { LoginFields, SubmitRemoteError } from "./data"
+import { PasswordLoginFields, SubmitPasswordLoginRemoteError } from "./data"
 
-export type LoginActionInfra = SubmitInfra
+export type PasswordLoginActionInfra = SubmitPasswordLoginInfra
 
-export type SubmitInfra = Readonly<{
-    login: LoginRemoteAccess
-    config: SubmitConfig
+export type SubmitPasswordLoginInfra = Readonly<{
+    login: SubmitPasswordLoginRemoteAccess
     delayed: Delayed
-}>
-export type SubmitConfig = Readonly<{
-    delay: DelayTime
+    config: Readonly<{
+        delay: DelayTime
+    }>
 }>
 
-export interface Submit {
-    (infra: SubmitInfra): SubmitPod
+export interface SubmitPasswordLogin {
+    (infra: SubmitPasswordLoginInfra): SubmitPasswordLoginPod
 }
 
-export type LoginRemoteAccess = RemoteAccess<LoginFields, LoginRemoteResponse, SubmitRemoteError>
-export type LoginRemoteAccessResult = RemoteAccessResult<LoginRemoteResponse, SubmitRemoteError>
-export type LoginSimulator = RemoteAccessSimulator<LoginFields, LoginRemoteResponse, SubmitRemoteError>
-export type LoginRemoteResponse = Readonly<{
+export type SubmitPasswordLoginRemoteAccess = RemoteAccess<
+    PasswordLoginFields,
+    SubmitPasswordLoginRemoteResponse,
+    SubmitPasswordLoginRemoteError
+>
+export type SubmitLoginRemoteAccessResult = RemoteAccessResult<
+    SubmitPasswordLoginRemoteResponse,
+    SubmitPasswordLoginRemoteError
+>
+export type SubmitPasswordLoginSimulator = RemoteAccessSimulator<
+    PasswordLoginFields,
+    SubmitPasswordLoginRemoteResponse,
+    SubmitPasswordLoginRemoteError
+>
+export type SubmitPasswordLoginRemoteResponse = Readonly<{
     auth: AuthCredential
     api: ApiCredential
 }>

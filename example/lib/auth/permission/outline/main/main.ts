@@ -1,42 +1,33 @@
-import { newMainMenuExpandRepository } from "../infra/repository/main"
-import { newLoadMenuBadgeRemoteAccess } from "../infra/remote/menuBadge/main"
+import { newMainOutlineMenuExpandRepository } from "../infra/repository/outlineMenuExpand/main"
+import { newLoadOutlineMenuBadgeRemoteAccess } from "../infra/remote/loadOutlineMenuBadge/main"
 
 import { lnir } from "../../../../z_vendor/icon"
 
-import { category, newMenuAction, item, newOutlineActionLocationInfo } from "./common"
+import { category, newOutlineMenuAction, item, newOutlineBreadcrumbListAction } from "./common"
 
-import { initBreadcrumbListAction } from "../impl"
+import { OutlineMenuPermission, OutlineMenuTree } from "../infra"
 
-import { MenuPermission, MenuTree } from "../infra"
-
-import { BreadcrumbListAction, MenuAction, OutlineAction } from "../action"
+import { OutlineAction } from "../action"
 
 export function newMainOutlineAction(webStorage: Storage): OutlineAction {
+    const menuTree = mainMenuTree()
     return {
-        breadcrumbList: newMainBreadcrumbListAction(),
-        menu: newMainMenuAction(webStorage),
+        breadcrumbList: newOutlineBreadcrumbListAction(menuTree),
+        menu: newOutlineMenuAction(
+            webStorage,
+            newMainOutlineMenuExpandRepository,
+            menuTree,
+            newLoadOutlineMenuBadgeRemoteAccess()
+        ),
     }
 }
 
-function newMainBreadcrumbListAction(): BreadcrumbListAction {
-    return initBreadcrumbListAction(newOutlineActionLocationInfo(), { menuTree: mainMenuTree() })
-}
+const allow: OutlineMenuPermission = { type: "allow" }
 
-function newMainMenuAction(webStorage: Storage): MenuAction {
-    return newMenuAction(
-        webStorage,
-        newMainMenuExpandRepository,
-        mainMenuTree(),
-        newLoadMenuBadgeRemoteAccess()
-    )
-}
-
-const any: MenuPermission = { type: "any" }
-
-const mainMenuTree = (): MenuTree => [
-    category("MAIN", any, [
+const mainMenuTree = (): OutlineMenuTree => [
+    category("MAIN", allow, [
         item("ホーム", lnir("home"), "/index.html"),
         item("ドキュメント", lnir("files-alt"), "/document/index.html"),
     ]),
-    category("SYSTEM", any, [item("プロフィール", lnir("user"), "/profile/index.html")]),
+    category("SYSTEM", allow, [item("プロフィール", lnir("user"), "/profile/index.html")]),
 ]

@@ -1,13 +1,16 @@
 import { StorageError } from "../../../common/storage/data"
-import { Breadcrumb, LoadMenuError, Menu } from "./data"
+import { OutlineBreadcrumb, LoadOutlineMenuBadgeError, OutlineMenu } from "./data"
 
-export type LoadBreadcrumbListEvent = Readonly<{ type: "succeed-to-load"; breadcrumb: Breadcrumb }>
+export type LoadOutlineBreadcrumbListEvent = Readonly<{
+    type: "succeed-to-load"
+    breadcrumb: OutlineBreadcrumb
+}>
 
-export type LoadMenuEvent =
-    | Readonly<{ type: "succeed-to-instant-load"; menu: Menu }>
-    | Readonly<{ type: "succeed-to-load"; menu: Menu }>
-    | Readonly<{ type: "failed-to-load"; menu: Menu; err: LoadMenuError }>
+export type LoadOutlineMenuEvent =
+    | Readonly<{ type: "succeed-to-instant-load"; menu: OutlineMenu }>
+    | Readonly<{ type: "succeed-to-load"; menu: OutlineMenu }>
+    | Readonly<{ type: "failed-to-load"; menu: OutlineMenu; err: LoadOutlineMenuBadgeError }>
 
-export type ToggleMenuExpandEvent =
-    | Readonly<{ type: "succeed-to-toggle"; menu: Menu }>
-    | Readonly<{ type: "failed-to-toggle"; menu: Menu; err: StorageError }>
+export type ToggleOutlineMenuExpandEvent =
+    | Readonly<{ type: "succeed-to-toggle"; menu: OutlineMenu }>
+    | Readonly<{ type: "failed-to-toggle"; menu: OutlineMenu; err: StorageError }>

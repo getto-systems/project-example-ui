@@ -1,25 +1,33 @@
-import { SessionActionInfra, StartSession, CheckStatus } from "./infra"
+import {
+    PasswordResetSessionSessionActionInfra,
+    StartPasswordResetSession,
+    CheckPasswordResetSessionStatus,
+} from "./infra"
 
-import { SessionActionPod, SessionAction } from "./action"
+import { PasswordResetSessionAction, PasswordResetSessionActionPod } from "./action"
 
-import { CheckStatusEvent, StartSessionEvent } from "./event"
+import { CheckPasswordResetSessionStatusEvent, StartPasswordResetSessionEvent } from "./event"
 
-import { CheckStatusError } from "./data"
+import { CheckPasswordResetSessionStatusError } from "./data"
 
-export function initSessionAction(pod: SessionActionPod): SessionAction {
+export function initPasswordResetSessionAction(
+    pod: PasswordResetSessionActionPod
+): PasswordResetSessionAction {
     return {
-        startSession: pod.initStartSession(),
+        start: pod.initStart(),
         checkStatus: pod.initCheckStatus(),
     }
 }
-export function initSessionActionPod(infra: SessionActionInfra): SessionActionPod {
+export function initPasswordResetSessionActionPod(
+    infra: PasswordResetSessionSessionActionInfra
+): PasswordResetSessionActionPod {
     return {
-        initStartSession: startSession(infra),
+        initStart: startSession(infra),
         initCheckStatus: checkStatus(infra),
     }
 }
 
-const startSession: StartSession = (infra) => () => async (fields, post) => {
+const startSession: StartPasswordResetSession = (infra) => () => async (fields, post) => {
     if (!fields.success) {
         post({ type: "failed-to-start-session", err: { type: "validation-error" } })
         return
@@ -27,10 +35,10 @@ const startSession: StartSession = (infra) => () => async (fields, post) => {
 
     post({ type: "try-to-start-session" })
 
-    const { startSession, config, delayed } = infra
+    const { start: startSession, config, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(startSession(fields.value), config.startSession.delay, () =>
+    const response = await delayed(startSession(fields.value), config.start.delay, () =>
         post({ type: "delayed-to-start-session" })
     )
     if (!response.success) {
@@ -41,7 +49,7 @@ const startSession: StartSession = (infra) => () => async (fields, post) => {
     post({ type: "succeed-to-start-session", sessionID: response.value })
 }
 
-export function startSessionEventHasDone(event: StartSessionEvent): boolean {
+export function startPasswordResetSessionEventHasDone(event: StartPasswordResetSessionEvent): boolean {
     switch (event.type) {
         case "succeed-to-start-session":
         case "failed-to-start-session":
@@ -55,10 +63,10 @@ export function startSessionEventHasDone(event: StartSessionEvent): boolean {
 
 type SendTokenState =
     | Readonly<{ type: "initial" }>
-    | Readonly<{ type: "failed"; err: CheckStatusError }>
+    | Readonly<{ type: "failed"; err: CheckPasswordResetSessionStatusError }>
     | Readonly<{ type: "success" }>
 
-const checkStatus: CheckStatus = (infra) => () => async (sessionID, post) => {
+const checkStatus: CheckPasswordResetSessionStatus = (infra) => () => async (sessionID, post) => {
     const { getStatus, sendToken, config, wait } = infra
 
     let sendTokenState: SendTokenState = { type: "initial" }
@@ -122,7 +130,9 @@ const checkStatus: CheckStatus = (infra) => () => async (sessionID, post) => {
     }
 }
 
-export function checkStatusEventHasDone(event: CheckStatusEvent): boolean {
+export function checkPasswordResetSessionStatusEventHasDone(
+    event: CheckPasswordResetSessionStatusEvent
+): boolean {
     switch (event.type) {
         case "succeed-to-send-token":
         case "failed-to-check-status":

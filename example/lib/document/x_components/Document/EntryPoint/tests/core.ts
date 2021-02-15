@@ -1,53 +1,48 @@
 import {
-    initBreadcrumbListAction,
-    initMenuAction,
+    initOutlineBreadcrumbListAction,
+    initOutlineMenuAction,
     initOutlineActionLocationInfo,
 } from "../../../../../auth/permission/outline/impl"
 import { detectContentPath } from "../../../../content/impl/location"
 
-import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
+import { DocumentFactory, initDocumentResource } from "../impl/core"
 
 import { initContentComponent } from "../../content/impl"
 
 import {
-    LoadMenuBadgeRemoteAccess,
-    MenuExpandRepository,
-    MenuTree,
+    LoadOutlineMenuBadgeRemoteAccess,
+    OutlineMenuExpandRepository,
+    OutlineMenuTree,
 } from "../../../../../auth/permission/outline/infra"
 
 import { DocumentResource } from "../entryPoint"
 import { initTestContentAction } from "../../../../content/tests/content"
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
-import { initNotifySimulateRemoteAccess } from "../../../../../availability/error/infra/remote/notify/simulate"
-import { initErrorAction } from "../../../../../availability/error/impl"
+import { initNotifyUnexpectedErrorSimulateRemoteAccess } from "../../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/simulate"
+import { initUnexpectedErrorAction } from "../../../../../availability/unexpectedError/impl"
 
 export type DocumentRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
-    menuExpands: MenuExpandRepository
+    menuExpands: OutlineMenuExpandRepository
 }>
 export type DocumentRemoteAccess = Readonly<{
-    loadMenuBadge: LoadMenuBadgeRemoteAccess
+    loadMenuBadge: LoadOutlineMenuBadgeRemoteAccess
 }>
 export function newTestDocumentResource(
     version: string,
     currentURL: URL,
-    menuTree: MenuTree,
+    menuTree: OutlineMenuTree,
     repository: DocumentRepository,
     remote: DocumentRemoteAccess
 ): DocumentResource {
-    const locationInfo: DocumentLocationInfo = {
-        ...initOutlineActionLocationInfo(version, currentURL),
-        content: {
-            getContentPath: () => detectContentPath(version, currentURL),
-        },
-    }
+    const locationInfo = initOutlineActionLocationInfo(version, currentURL)
     const factory: DocumentFactory = {
         actions: {
-            error: initErrorAction({
-                notify: initNotifySimulateRemoteAccess(),
+            error: initUnexpectedErrorAction({
+                notify: initNotifyUnexpectedErrorSimulateRemoteAccess(),
             }),
-            breadcrumbList: initBreadcrumbListAction(locationInfo, { menuTree }),
-            menu: initMenuAction(locationInfo, {
+            breadcrumbList: initOutlineBreadcrumbListAction(locationInfo, { menuTree }),
+            menu: initOutlineMenuAction(locationInfo, {
                 ...repository,
                 ...remote,
                 menuTree,
@@ -60,5 +55,9 @@ export function newTestDocumentResource(
         },
     }
 
-    return initDocumentResource(factory, locationInfo)
+    return initDocumentResource(factory, {
+        content: {
+            getContentPath: () => detectContentPath(version, currentURL),
+        },
+    })
 }

@@ -10,7 +10,7 @@ import { ProfileMockPropsPasser, newMockDashboard } from "../../../auth/z_EntryP
 import { SeasonInfoMockProps } from "../../../example/x_components/Outline/seasonInfo/mock"
 import { MenuMockProps } from "../../../common/x_Resource/Outline/Menu/Menu/mock"
 import { BreadcrumbListMockProps } from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
-import { LogoutMockProps } from "../../../auth/x_Resource/Sign/ClearCredential/Logout/mock"
+import { LogoutMockProps } from "../../../auth/x_Resource/sign/ClearCredential/Logout/mock"
 
 export default {
     title: "Auth/Profile",

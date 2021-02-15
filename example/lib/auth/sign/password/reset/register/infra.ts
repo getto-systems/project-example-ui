@@ -8,42 +8,44 @@ import {
 import { DelayTime } from "../../../../../z_infra/time/infra"
 import { AuthCredential } from "../../../authCredential/common/data"
 
-import { ResetFields, ResetToken, SubmitRemoteError } from "./data"
+import { PasswordResetFields, PasswordResetToken, SubmitPasswordResetRegisterRemoteError } from "./data"
 
-import { SubmitPod } from "./action"
+import { SubmitPasswordResetRegisterPod } from "./action"
 
-export type RegisterActionInfra = SubmitInfra
+export type PasswordResetRegisterActionInfra = SubmitPasswordResetRegisterInfra
 
-export interface Submit {
-    (infra: SubmitInfra): SubmitPod
+export type SubmitPasswordResetRegisterInfra = Readonly<{
+    register: SubmitPasswordResetRegisterRemoteAccess
+    delayed: Delayed
+    config: Readonly<{
+        delay: DelayTime
+    }>
+}>
+
+export interface SubmitPasswordResetRegister {
+    (infra: SubmitPasswordResetRegisterInfra): SubmitPasswordResetRegisterPod
 }
 
-export type SubmitInfra = Readonly<{
-    register: RegisterRemoteAccess
-    config: SubmitConfig
-    delayed: Delayed
-}>
-export type SubmitConfig = Readonly<{
-    delay: DelayTime
-}>
-
-export type RegisterRemoteAccess = RemoteAccess<
-    RegisterRemoteMessage,
-    RegisterRemoteResponse,
-    SubmitRemoteError
+export type SubmitPasswordResetRegisterRemoteAccess = RemoteAccess<
+    SubmitPasswordResetRegisterRemoteMessage,
+    SubmitPasswordResetRegisterRemoteResponse,
+    SubmitPasswordResetRegisterRemoteError
 >
-export type RegisterRemoteAccessResult = RemoteAccessResult<RegisterRemoteResponse, SubmitRemoteError>
-export type RegisterSimulator = RemoteAccessSimulator<
-    RegisterRemoteMessage,
-    RegisterRemoteResponse,
-    SubmitRemoteError
+export type SubmitPasswordResetRegisterRemoteAccessResult = RemoteAccessResult<
+    SubmitPasswordResetRegisterRemoteResponse,
+    SubmitPasswordResetRegisterRemoteError
 >
-export type RegisterRemoteResponse = Readonly<{
+export type SubmitPasswordResetRegisterSimulator = RemoteAccessSimulator<
+    SubmitPasswordResetRegisterRemoteMessage,
+    SubmitPasswordResetRegisterRemoteResponse,
+    SubmitPasswordResetRegisterRemoteError
+>
+export type SubmitPasswordResetRegisterRemoteResponse = Readonly<{
     auth: AuthCredential
     api: ApiCredential
 }>
 
-export type RegisterRemoteMessage = Readonly<{
-    resetToken: ResetToken
-    fields: ResetFields
+export type SubmitPasswordResetRegisterRemoteMessage = Readonly<{
+    resetToken: PasswordResetToken
+    fields: PasswordResetFields
 }>

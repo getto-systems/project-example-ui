@@ -25,10 +25,10 @@ import { PasswordFormField } from "./field/password"
 
 import { PasswordLoginEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialLoginComponentState } from "../../../auth/x_Resource/Sign/PasswordLogin/Login/component"
+import { initialLoginComponentState } from "../../../auth/x_Resource/sign/PasswordLogin/Login/component"
 import { initialFormContainerComponentState } from "../../../vendor/getto-form/x_Resource/Form/component"
 
-import { SubmitError } from "../../../auth/sign/password/login/data"
+import { SubmitPasswordLoginError } from "../../../auth/sign/password/login/data"
 
 export function PasswordLogin({ resource, terminate }: PasswordLoginEntryPoint): VNode {
     useTermination(terminate)
@@ -169,7 +169,7 @@ export function PasswordLogin({ resource, terminate }: PasswordLoginEntryPoint):
     }
 }
 
-function loginError(err: SubmitError): VNodeContent[] {
+function loginError(err: SubmitPasswordLoginError): VNodeContent[] {
     switch (err.type) {
         case "validation-error":
             return ["正しく入力してください"]

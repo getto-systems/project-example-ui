@@ -3,7 +3,7 @@ export type AuthCredential = Readonly<{
     authAt: AuthAt
 }>
 
-export type LastLogin = Readonly<{
+export type LastAuth = Readonly<{
     ticketNonce: TicketNonce
     lastAuthAt: AuthAt
 }>
@@ -21,10 +21,12 @@ export function hasExpired(authAt: AuthAt, target: { now: Date; expire_milliseco
     return target.now.getTime() > authAt.getTime() + target.expire_millisecond
 }
 
-export type RenewError =
+export type RenewAuthCredentialError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export type RenewRemoteError = RenewError | Readonly<{ type: "invalid-ticket" }>
+export type RenewAuthCredentialRemoteError =
+    | RenewAuthCredentialError
+    | Readonly<{ type: "invalid-ticket" }>

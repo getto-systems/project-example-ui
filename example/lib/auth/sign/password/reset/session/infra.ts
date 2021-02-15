@@ -6,71 +6,95 @@ import {
 } from "../../../../../z_infra/remote/infra"
 import { DelayTime, Limit, WaitTime } from "../../../../../z_infra/time/infra"
 
-import { CheckStatusPod, StartSessionPod } from "./action"
+import { CheckPasswordResetSessionStatusPod, StartPasswordResetSessionPod } from "./action"
 
 import {
-    CheckStatusRemoteError,
-    Destination,
-    SendingStatus,
-    SessionID,
-    StartSessionFields,
-    StartSessionRemoteError,
+    CheckPasswordResetSessionStatusRemoteError,
+    PasswordResetDestination,
+    PasswordResetSendingStatus,
+    PasswordResetSessionID,
+    PasswordResetSessionFields,
+    StartPasswordResetSessionRemoteError,
 } from "./data"
 
-export type SessionActionInfra = StartSessionInfra & CheckStatusInfra
+export type PasswordResetSessionSessionActionInfra = StartPasswordResetSessionInfra &
+    CheckPasswordResetSessionStatusInfra
 
-export type StartSessionInfra = Readonly<{
-    startSession: StartSessionRemoteAccess
-    config: Readonly<{ startSession: StartSessionConfig }>
+export type StartPasswordResetSessionInfra = Readonly<{
+    start: StartPasswordResetSessionSessionRemoteAccess
     delayed: Delayed
-}>
-export type StartSessionConfig = Readonly<{
-    delay: DelayTime
+    config: Readonly<{
+        start: Readonly<{
+            delay: DelayTime
+        }>
+    }>
 }>
 
-export type CheckStatusInfra = Readonly<{
-    sendToken: SendTokenRemoteAccess
-    getStatus: GetStatusRemoteAccess
-    config: Readonly<{ checkStatus: CheckStatusConfig }>
+export type CheckPasswordResetSessionStatusInfra = Readonly<{
+    sendToken: SendPasswordResetSessionTokenRemoteAccess
+    getStatus: GetPasswordResetSessionStatusRemoteAccess
     wait: Wait
+    config: Readonly<{
+        checkStatus: Readonly<{
+            wait: WaitTime
+            limit: Limit
+        }>
+    }>
 }>
-export type CheckStatusConfig = Readonly<{
-    wait: WaitTime
-    limit: Limit
-}>
 
-export interface StartSession {
-    (infra: StartSessionInfra): StartSessionPod
+export interface StartPasswordResetSession {
+    (infra: StartPasswordResetSessionInfra): StartPasswordResetSessionPod
 }
-export interface CheckStatus {
-    (infra: CheckStatusInfra): CheckStatusPod
+export interface CheckPasswordResetSessionStatus {
+    (infra: CheckPasswordResetSessionStatusInfra): CheckPasswordResetSessionStatusPod
 }
 
-export type StartSessionRemoteAccess = RemoteAccess<
-    StartSessionFields,
-    SessionID,
-    StartSessionRemoteError
+export type StartPasswordResetSessionSessionRemoteAccess = RemoteAccess<
+    PasswordResetSessionFields,
+    PasswordResetSessionID,
+    StartPasswordResetSessionRemoteError
 >
-export type StartSessionRemoteAccessResult = RemoteAccessResult<SessionID, StartSessionRemoteError>
-export type StartSessionSimulator = RemoteAccessSimulator<
-    StartSessionFields,
-    SessionID,
-    StartSessionRemoteError
+export type StartPasswordResetSessionSessionRemoteAccessResult = RemoteAccessResult<
+    PasswordResetSessionID,
+    StartPasswordResetSessionRemoteError
 >
-
-export type SendTokenRemoteAccess = RemoteAccess<null, true, CheckStatusRemoteError>
-export type SendTokenRemoteAccessResult = RemoteAccessResult<true, CheckStatusRemoteError>
-export type SendTokenSimulator = RemoteAccessSimulator<null, true, CheckStatusRemoteError>
-
-export type GetStatusRemoteAccess = RemoteAccess<SessionID, GetStatusResponse, CheckStatusRemoteError>
-export type GetStatusRemoteAccessResult = RemoteAccessResult<GetStatusResponse, CheckStatusRemoteError>
-export type GetStatusSimulator = RemoteAccessSimulator<
-    SessionID,
-    GetStatusResponse,
-    CheckStatusRemoteError
+export type StartPasswordResetSessionSessionSimulator = RemoteAccessSimulator<
+    PasswordResetSessionFields,
+    PasswordResetSessionID,
+    StartPasswordResetSessionRemoteError
 >
 
-export type GetStatusResponse =
-    | Readonly<{ dest: Destination; done: false; status: SendingStatus }>
-    | Readonly<{ dest: Destination; done: true; send: false; err: string }>
-    | Readonly<{ dest: Destination; done: true; send: true }>
+export type SendPasswordResetSessionTokenRemoteAccess = RemoteAccess<
+    null,
+    true,
+    CheckPasswordResetSessionStatusRemoteError
+>
+export type SendPasswordResetSessionTokenRemoteAccessResult = RemoteAccessResult<
+    true,
+    CheckPasswordResetSessionStatusRemoteError
+>
+export type SendPasswordResetSessionTokenSimulator = RemoteAccessSimulator<
+    null,
+    true,
+    CheckPasswordResetSessionStatusRemoteError
+>
+
+export type GetPasswordResetSessionStatusRemoteAccess = RemoteAccess<
+    PasswordResetSessionID,
+    GetPasswordResetSessionStatusResponse,
+    CheckPasswordResetSessionStatusRemoteError
+>
+export type GetPasswordResetSessionStatusRemoteAccessResult = RemoteAccessResult<
+    GetPasswordResetSessionStatusResponse,
+    CheckPasswordResetSessionStatusRemoteError
+>
+export type GetPasswordResetSessionStatusSimulator = RemoteAccessSimulator<
+    PasswordResetSessionID,
+    GetPasswordResetSessionStatusResponse,
+    CheckPasswordResetSessionStatusRemoteError
+>
+
+export type GetPasswordResetSessionStatusResponse =
+    | Readonly<{ dest: PasswordResetDestination; done: false; status: PasswordResetSendingStatus }>
+    | Readonly<{ dest: PasswordResetDestination; done: true; send: false; err: string }>
+    | Readonly<{ dest: PasswordResetDestination; done: true; send: true }>

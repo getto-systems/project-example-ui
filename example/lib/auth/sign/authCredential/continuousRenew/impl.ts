@@ -1,17 +1,24 @@
-import { ContinuousRenewActionInfra, ForceStart, Start, StartInfra } from "./infra"
+import {
+    ContinuousRenewAuthCredentialActionInfra,
+    ForceStartContinuousRenewAuthCredential,
+    StartContinuousRenewAuthCredential,
+    StartContinuousRenewAuthCredentialInfra,
+} from "./infra"
 
-import { ContinuousRenewAction } from "./action"
+import { ContinuousRenewAuthCredentialAction } from "./action"
 
 import { hasExpired } from "../common/data"
 
-export function initContinuousRenewAction(infra: ContinuousRenewActionInfra): ContinuousRenewAction {
+export function initContinuousRenewAuthCredentialAction(
+    infra: ContinuousRenewAuthCredentialActionInfra
+): ContinuousRenewAuthCredentialAction {
     return {
         start: start(infra)(),
         forceStart: forceStart(infra)(),
     }
 }
 
-const start: Start = (infra) => () => (authCredential, post) => {
+const start: StartContinuousRenewAuthCredential = (infra) => () => (authCredential, post) => {
     const { authCredentials } = infra
 
     const storeResult = authCredentials.store(authCredential)
@@ -25,13 +32,13 @@ const start: Start = (infra) => () => (authCredential, post) => {
     post({ type: "succeed-to-start-continuous-renew" })
 }
 
-const forceStart: ForceStart = (infra) => () => (post) => {
+const forceStart: ForceStartContinuousRenewAuthCredential = (infra) => () => (post) => {
     setContinuousRenew(infra)
 
     post({ type: "succeed-to-start-continuous-renew" })
 }
 
-function setContinuousRenew(infra: StartInfra) {
+function setContinuousRenew(infra: StartContinuousRenewAuthCredentialInfra) {
     const { config } = infra
 
     const timer = setInterval(async () => {

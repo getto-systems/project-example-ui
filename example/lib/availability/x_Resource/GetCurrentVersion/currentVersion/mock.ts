@@ -2,7 +2,7 @@ import { MockComponent, MockPropsPasser } from "../../../../vendor/getto-example
 
 import { CurrentVersionComponent, CurrentVersionComponentState } from "./component"
 
-import { markVersion } from "../../../version/currentVersion/data"
+import { markVersionString } from "../../../version/common/data"
 
 export type CurrentVersionMockPropsPasser = MockPropsPasser<CurrentVersionMockProps>
 
@@ -26,7 +26,7 @@ class CurrentVersionMockComponent
         function mapProps(props: CurrentVersionMockProps): CurrentVersionComponentState {
             switch (props.type) {
                 case "success":
-                    return { type: "succeed-to-find", version: markVersion("1.0.0") }
+                    return { type: "succeed-to-find", version: markVersionString("1.0.0") }
             }
         }
     }

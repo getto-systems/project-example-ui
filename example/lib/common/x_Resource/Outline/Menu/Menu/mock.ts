@@ -3,7 +3,7 @@ import { MockComponent, MockPropsPasser } from "../../../../../vendor/getto-exam
 
 import { MenuComponent, MenuComponentState } from "./component"
 
-import { markMenuCategoryLabel, markMenuItem, Menu } from "../../../../../auth/permission/outline/data"
+import { markOutlineMenuCategoryLabel, markOutlineMenuItem, OutlineMenu } from "../../../../../auth/permission/outline/data"
 
 export type MenuMockPropsPasser = MockPropsPasser<MenuMockProps>
 
@@ -35,20 +35,20 @@ class Component extends MockComponent<MenuComponentState> implements MenuCompone
                     return { type: "failed-to-load", menu: menu("ホーム", 0), err: props }
             }
 
-            function menu(label: string, badgeCount: number): Menu {
+            function menu(label: string, badgeCount: number): OutlineMenu {
                 return [
                     {
                         type: "category",
                         isExpand: true,
                         badgeCount,
-                        category: { label: markMenuCategoryLabel("MAIN") },
-                        path: [markMenuCategoryLabel("MAIN")],
+                        category: { label: markOutlineMenuCategoryLabel("MAIN") },
+                        path: [markOutlineMenuCategoryLabel("MAIN")],
                         children: [
                             {
                                 type: "item",
                                 isActive: true,
                                 badgeCount,
-                                item: markMenuItem({
+                                item: markOutlineMenuItem({
                                     label,
                                     icon: iconClass(lnir("home")),
                                     href: "/dist/index.html",

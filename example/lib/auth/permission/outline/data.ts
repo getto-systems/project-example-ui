@@ -1,56 +1,59 @@
-export type MenuTarget = MenuTarget_data & { MenuTarget: never }
-type MenuTarget_data =
+export type OutlineMenuTarget = OutlineMenuTarget_data & { MenuTarget: never }
+type OutlineMenuTarget_data =
     | Readonly<{ versioned: false; version: string }>
     | Readonly<{ versioned: true; version: string; currentPath: string }>
-export function markMenuTarget(menuTarget: MenuTarget_data): MenuTarget {
-    return menuTarget as MenuTarget
+export function markOutlineMenuTarget(menuTarget: OutlineMenuTarget_data): OutlineMenuTarget {
+    return menuTarget as OutlineMenuTarget
 }
 
-export type MenuCategory = Readonly<{
-    label: MenuCategoryLabel
+export type OutlineBreadcrumb = OutlineBreadcrumbNode[]
+
+export type OutlineBreadcrumbNode =
+    | Readonly<{ type: "category"; category: OutlineMenuCategory }>
+    | Readonly<{ type: "item"; item: OutlineMenuItem }>
+
+export type OutlineMenuCategory = Readonly<{
+    label: OutlineMenuCategoryLabel
 }>
 
-export type MenuCategoryLabel = string & { MenuCategoryLabel: never }
-export function markMenuCategoryLabel(label: string): MenuCategoryLabel {
-    return label as MenuCategoryLabel
-}
-export type MenuCategoryPath = MenuCategoryLabel[]
-
-export type MenuItem = MenuItem_data & { MenuItem: never }
-type MenuItem_data = Readonly<{
-    label: string
-    icon: string
-    href: string
-}>
-export function markMenuItem(item: MenuItem_data): MenuItem {
-    return item as MenuItem
-}
-
-export type Breadcrumb = BreadcrumbNode[]
-
-export type BreadcrumbNode =
-    | Readonly<{ type: "category"; category: MenuCategory }>
-    | Readonly<{ type: "item"; item: MenuItem }>
-
-export type Menu = MenuNode[]
-export type MenuNode = MenuCategoryNode | MenuItemNode
-export type MenuCategoryNode = Readonly<{
+export type OutlineMenu = OutlineMenuNode[]
+export type OutlineMenuNode = OutlineMenuCategoryNode | OutlineMenuItemNode
+export type OutlineMenuCategoryNode = Readonly<{
     type: "category"
-    category: MenuCategory
-    path: MenuCategoryPath
-    children: Menu
+    category: OutlineMenuCategory
+    path: OutlineMenuCategoryPath
+    children: OutlineMenu
     isExpand: boolean
     badgeCount: number
 }>
-export type MenuItemNode = Readonly<{
+export type OutlineMenuItemNode = Readonly<{
     type: "item"
-    item: MenuItem
+    item: OutlineMenuItem
     isActive: boolean
     badgeCount: number
 }>
 
-export type LoadMenuError = Readonly<{ type: "empty-nonce" }> | LoadMenuBadgeRemoteError
-export type LoadMenuBadgeRemoteError =
+export type OutlineMenuCategoryLabel = string & { MenuCategoryLabel: never }
+export function markOutlineMenuCategoryLabel(label: string): OutlineMenuCategoryLabel {
+    return label as OutlineMenuCategoryLabel
+}
+export type OutlineMenuCategoryPath = OutlineMenuCategoryLabel[]
+
+export type OutlineMenuItem = OutlineMenuItem_data & { MenuItem: never }
+type OutlineMenuItem_data = Readonly<{
+    label: string
+    icon: string
+    href: string
+}>
+export function markOutlineMenuItem(item: OutlineMenuItem_data): OutlineMenuItem {
+    return item as OutlineMenuItem
+}
+
+export type LoadOutlineMenuBadgeError =
+    | Readonly<{ type: "empty-nonce" }>
+    | LoadOutlineMenuBadgeRemoteError
+
+export type LoadOutlineMenuBadgeRemoteError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>

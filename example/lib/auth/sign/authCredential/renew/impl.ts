@@ -1,20 +1,20 @@
 import { StoreResult } from "../../../../common/storage/infra"
-import { RenewActionInfra, Request, ForceRequest, RequestInfra } from "./infra"
+import { RenewAuthCredentialActionInfra, RequestRenewAuthCredential, ForceRequestRenewAuthCredential, RequestRenewAuthCredentialInfra } from "./infra"
 
-import {  RenewAction } from "./action"
+import { RenewAuthCredentialAction } from "./action"
 
-import { ForceRequestEvent } from "./event"
+import { ForceRequestRenewAuthCredentialEvent } from "./event"
 
-import { hasExpired, LastLogin } from "../common/data"
+import { hasExpired, LastAuth } from "../common/data"
 
-export function initRenewAction(infra: RenewActionInfra): RenewAction {
+export function initRenewAuthCredentialAction(infra: RenewAuthCredentialActionInfra): RenewAuthCredentialAction {
     return {
         request: request(infra)(),
         forceRequest: forceRequest(infra)(),
     }
 }
 
-const request: Request = (infra) => () => async (post) => {
+const request: RequestRenewAuthCredential = (infra) => () => async (post) => {
     const { clock, config } = infra
 
     loadLastLogin(infra, post, (lastLogin) => {
@@ -31,16 +31,16 @@ const request: Request = (infra) => () => async (post) => {
     })
 }
 
-const forceRequest: ForceRequest = (infra) => () => async (post) => {
+const forceRequest: ForceRequestRenewAuthCredential = (infra) => () => async (post) => {
     loadLastLogin(infra, post, (lastLogin) => {
         renew(infra, lastLogin, post)
     })
 }
 
 function loadLastLogin(
-    infra: RequestInfra,
-    post: Post<ForceRequestEvent>,
-    hook: { (lastLogin: LastLogin): void }
+    infra: RequestRenewAuthCredentialInfra,
+    post: Post<ForceRequestRenewAuthCredentialEvent>,
+    hook: { (lastLogin: LastAuth): void }
 ) {
     const { authCredentials } = infra
 
@@ -56,7 +56,11 @@ function loadLastLogin(
 
     hook(findResult.lastLogin)
 }
-async function renew(infra: RequestInfra, lastLogin: LastLogin, post: Post<ForceRequestEvent>) {
+async function renew(
+    infra: RequestRenewAuthCredentialInfra,
+    lastLogin: LastAuth,
+    post: Post<ForceRequestRenewAuthCredentialEvent>
+) {
     const { apiCredentials, authCredentials, renew, config, delayed } = infra
 
     post({ type: "try-to-renew" })

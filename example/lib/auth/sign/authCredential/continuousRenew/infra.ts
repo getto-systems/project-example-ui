@@ -1,27 +1,29 @@
 import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
 import { Clock } from "../../../../z_infra/clock/infra"
 import { DelayTime, IntervalTime } from "../../../../z_infra/time/infra"
-import { AuthCredentialRepository, RenewRemoteAccess } from "../common/infra"
+import { AuthCredentialRepository, RenewAuthCredentialRemoteAccess } from "../common/infra"
 
-import { ForceStartPod, StartPod } from "./action"
+import {
+    ForceStartContinuousRenewAuthCredentialPod,
+    StartContinuousRenewAuthCredentialPod,
+} from "./action"
 
-export type ContinuousRenewActionInfra = StartInfra
+export type ContinuousRenewAuthCredentialActionInfra = StartContinuousRenewAuthCredentialInfra
 
-export type StartInfra = Readonly<{
+export type StartContinuousRenewAuthCredentialInfra = Readonly<{
     apiCredentials: ApiCredentialRepository
     authCredentials: AuthCredentialRepository
-    config: StartConfig
-    renew: RenewRemoteAccess
+    renew: RenewAuthCredentialRemoteAccess
     clock: Clock
-}>
-export type StartConfig = Readonly<{
-    interval: IntervalTime
-    delay: DelayTime // TODO delay 表示を出すまでの待ち時間、って感じの名前にしたい
+    config: Readonly<{
+        interval: IntervalTime
+        delay: DelayTime // TODO delay 表示を出すまでの待ち時間、って感じの名前にしたい
+    }>
 }>
 
-export interface Start {
-    (infra: StartInfra): StartPod
+export interface StartContinuousRenewAuthCredential {
+    (infra: StartContinuousRenewAuthCredentialInfra): StartContinuousRenewAuthCredentialPod
 }
-export interface ForceStart {
-    (infra: StartInfra): ForceStartPod
+export interface ForceStartContinuousRenewAuthCredential {
+    (infra: StartContinuousRenewAuthCredentialInfra): ForceStartContinuousRenewAuthCredentialPod
 }

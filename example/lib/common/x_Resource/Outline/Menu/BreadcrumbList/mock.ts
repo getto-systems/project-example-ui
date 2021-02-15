@@ -3,7 +3,7 @@ import { MockComponent, MockPropsPasser } from "../../../../../vendor/getto-exam
 
 import { BreadcrumbListComponent, BreadcrumbListComponentState } from "./component"
 
-import { markMenuCategoryLabel, markMenuItem } from "../../../../../auth/permission/outline/data"
+import { markOutlineMenuCategoryLabel, markOutlineMenuItem } from "../../../../../auth/permission/outline/data"
 
 export type BreadcrumbListMockPropsPasser = MockPropsPasser<BreadcrumbListMockProps>
 
@@ -30,11 +30,11 @@ class Component extends MockComponent<BreadcrumbListComponentState> implements B
                         breadcrumb: [
                             {
                                 type: "category",
-                                category: { label: markMenuCategoryLabel("MAIN") },
+                                category: { label: markOutlineMenuCategoryLabel("MAIN") },
                             },
                             {
                                 type: "item",
-                                item: markMenuItem({
+                                item: markOutlineMenuItem({
                                     label: props.label,
                                     icon: iconClass(lnir(props.icon)),
                                     href: "/dist/index.html",

@@ -4,7 +4,7 @@ import { initCurrentVersionComponent } from "../../../x_Resource/GetCurrentVersi
 
 import { NotFoundEntryPoint } from "../entryPoint"
 
-import { initCurrentVersionAction } from "../../../version/currentVersion/main/currentVersion"
+import { initCurrentVersionAction } from "../../../version/local/main/currentVersion"
 
 export function newNotFoundAsSingle(): NotFoundEntryPoint {
     const factory: NotFoundFactory = {

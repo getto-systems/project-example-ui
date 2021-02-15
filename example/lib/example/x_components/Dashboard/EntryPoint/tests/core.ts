@@ -1,8 +1,8 @@
 import { initTestSeasonAction } from "../../../../shared/season/tests/season"
 
 import {
-    initBreadcrumbListAction,
-    initMenuAction,
+    initOutlineBreadcrumbListAction,
+    initOutlineMenuAction,
     initOutlineActionLocationInfo,
 } from "../../../../../auth/permission/outline/impl"
 
@@ -12,30 +12,30 @@ import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initExampleComponent } from "../../example/impl"
 
 import {
-    LoadMenuBadgeRemoteAccess,
-    MenuExpandRepository,
-    MenuTree,
+    LoadOutlineMenuBadgeRemoteAccess,
+    OutlineMenuExpandRepository,
+    OutlineMenuTree,
 } from "../../../../../auth/permission/outline/infra"
 import { SeasonRepository } from "../../../../shared/season/infra"
 import { Clock } from "../../../../../z_infra/clock/infra"
 
 import { DashboardResource } from "../entryPoint"
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
-import { initNotifySimulateRemoteAccess } from "../../../../../availability/error/infra/remote/notify/simulate"
-import { initErrorAction } from "../../../../../availability/error/impl"
+import { initNotifyUnexpectedErrorSimulateRemoteAccess } from "../../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/simulate"
+import { initUnexpectedErrorAction } from "../../../../../availability/unexpectedError/impl"
 
 export type DashboardRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
-    menuExpands: MenuExpandRepository
+    menuExpands: OutlineMenuExpandRepository
     seasons: SeasonRepository
 }>
 export type DashboardRemoteAccess = Readonly<{
-    loadMenuBadge: LoadMenuBadgeRemoteAccess
+    loadMenuBadge: LoadOutlineMenuBadgeRemoteAccess
 }>
 export function newTestDashboardResource(
     version: string,
     currentURL: URL,
-    menuTree: MenuTree,
+    menuTree: OutlineMenuTree,
     repository: DashboardRepository,
     remote: DashboardRemoteAccess,
     clock: Clock
@@ -43,11 +43,11 @@ export function newTestDashboardResource(
     const locationInfo = initOutlineActionLocationInfo(version, currentURL)
     const factory: DashboardFactory = {
         actions: {
-            error: initErrorAction({
-                notify: initNotifySimulateRemoteAccess(),
+            error: initUnexpectedErrorAction({
+                notify: initNotifyUnexpectedErrorSimulateRemoteAccess(),
             }),
-            breadcrumbList: initBreadcrumbListAction(locationInfo, { menuTree }),
-            menu: initMenuAction(locationInfo, {
+            breadcrumbList: initOutlineBreadcrumbListAction(locationInfo, { menuTree }),
+            menu: initOutlineMenuAction(locationInfo, {
                 ...repository,
                 ...remote,
                 menuTree,

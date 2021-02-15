@@ -1,45 +1,36 @@
-import { newLoadMenuBadgeNoopRemoteAccess } from "../infra/remote/menuBadge/noop"
-import { newDocumentMenuExpandRepository } from "../infra/repository/main"
+import { newLoadOutlineMenuBadgeNoopRemoteAccess } from "../infra/remote/loadOutlineMenuBadge/noop"
+import { newDocumentOutlineMenuExpandRepository } from "../infra/repository/outlineMenuExpand/main"
 
 import { lnir } from "../../../../z_vendor/icon"
 
-import { category, newMenuAction, item, newOutlineActionLocationInfo } from "./common"
+import { category, newOutlineMenuAction, item, newOutlineBreadcrumbListAction } from "./common"
 
-import { initBreadcrumbListAction } from "../impl"
+import { OutlineMenuPermission, OutlineMenuTree } from "../infra"
 
-import { MenuPermission, MenuTree } from "../infra"
-
-import { BreadcrumbListAction, MenuAction, OutlineAction } from "../action"
+import { OutlineAction } from "../action"
 
 export function newDocumentOutlineAction(webStorage: Storage): OutlineAction {
+    const menuTree = documentMenuTree()
     return {
-        breadcrumbList: newDocumentBreadcrumbListAction(),
-        menu: newDocumentMenuAction(webStorage),
+        breadcrumbList: newOutlineBreadcrumbListAction(menuTree),
+        menu: newOutlineMenuAction(
+            webStorage,
+            newDocumentOutlineMenuExpandRepository,
+            menuTree,
+            newLoadOutlineMenuBadgeNoopRemoteAccess()
+        ),
     }
 }
 
-function newDocumentBreadcrumbListAction(): BreadcrumbListAction {
-    return initBreadcrumbListAction(newOutlineActionLocationInfo(), { menuTree: documentMenuTree() })
-}
+const allow: OutlineMenuPermission = { type: "allow" }
+const dev: OutlineMenuPermission = { type: "role", role: "development-document" }
 
-function newDocumentMenuAction(webStorage: Storage): MenuAction {
-    return newMenuAction(
-        webStorage,
-        newDocumentMenuExpandRepository,
-        documentMenuTree(),
-        newLoadMenuBadgeNoopRemoteAccess()
-    )
-}
-
-const any: MenuPermission = { type: "any" }
-const dev: MenuPermission = { type: "role", roles: ["development-document"] }
-
-const documentMenuTree = (): MenuTree => [
-    category("MAIN", any, [
+const documentMenuTree = (): OutlineMenuTree => [
+    category("MAIN", allow, [
         item("ホーム", lnir("home"), "/index.html"),
         item("ドキュメント", lnir("files-alt"), "/document/index.html"),
     ]),
-    category("ドキュメント", any, [item("認証・認可", lnir("files-alt"), "/document/auth.html")]),
+    category("ドキュメント", allow, [item("認証・認可", lnir("files-alt"), "/document/auth.html")]),
     category("開発向け", dev, [
         item("Storybook", lnir("files-alt"), "/storybook/index.html"),
         item("coverage", lnir("files-alt"), "/coverage/lcov-report/index.html"),
