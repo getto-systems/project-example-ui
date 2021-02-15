@@ -1,29 +1,29 @@
-import { CheckStatusEvent, StartSessionEvent } from "./event"
+import { CheckPasswordResetSessionStatusEvent, StartPasswordResetSessionEvent } from "./event"
 
 import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"
-import { SessionID, StartSessionFields } from "./data"
+import { PasswordResetSessionID, PasswordResetSessionFields } from "./data"
 
-export type SessionAction = Readonly<{
-    startSession: StartSessionMethod
-    checkStatus: CheckStatusMethod
+export type PasswordResetSessionAction = Readonly<{
+    start: StartPasswordResetSessionMethod
+    checkStatus: CheckPasswordResetSessionStatusMethod
 }>
-export type SessionActionPod = Readonly<{
-    initStartSession: StartSessionPod
-    initCheckStatus: CheckStatusPod
+export type PasswordResetSessionActionPod = Readonly<{
+    initStart: StartPasswordResetSessionPod
+    initCheckStatus: CheckPasswordResetSessionStatusPod
 }>
 
-export interface StartSessionPod {
-    (): StartSessionMethod
+export interface StartPasswordResetSessionPod {
+    (): StartPasswordResetSessionMethod
 }
-export interface StartSessionMethod {
-    (fields: FormConvertResult<StartSessionFields>, post: Post<StartSessionEvent>): void
+export interface StartPasswordResetSessionMethod {
+    (fields: FormConvertResult<PasswordResetSessionFields>, post: Post<StartPasswordResetSessionEvent>): void
 }
 
-export interface CheckStatusPod {
-    (): CheckStatusMethod
+export interface CheckPasswordResetSessionStatusPod {
+    (): CheckPasswordResetSessionStatusMethod
 }
-export interface CheckStatusMethod {
-    (sessionID: SessionID, post: Post<CheckStatusEvent>): void
+export interface CheckPasswordResetSessionStatusMethod {
+    (sessionID: PasswordResetSessionID, post: Post<CheckPasswordResetSessionStatusEvent>): void
 }
 
 interface Post<T> {

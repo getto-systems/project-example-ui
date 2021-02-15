@@ -1,20 +1,20 @@
-import { LoginActionInfra, Submit } from "./infra"
+import { PasswordLoginActionInfra, SubmitPasswordLogin } from "./infra"
 
-import { LoginAction, LoginActionPod } from "./action"
-import { SubmitEvent } from "./event"
+import { PasswordLoginAction, PasswordLoginActionPod } from "./action"
+import { SubmitPasswordLoginEvent } from "./event"
 
-export function initLoginAction(pod: LoginActionPod): LoginAction {
+export function initPasswordLoginAction(pod: PasswordLoginActionPod): PasswordLoginAction {
     return {
         submit: pod.initSubmit(),
     }
 }
-export function initLoginActionPod(infra: LoginActionInfra): LoginActionPod {
+export function initPasswordLoginActionPod(infra: PasswordLoginActionInfra): PasswordLoginActionPod {
     return {
         initSubmit: submit(infra),
     }
 }
 
-const submit: Submit = (infra) => () => async (fields, post) => {
+const submit: SubmitPasswordLogin = (infra) => () => async (fields, post) => {
     if (!fields.success) {
         post({ type: "failed-to-login", err: { type: "validation-error" } })
         return
@@ -36,7 +36,7 @@ const submit: Submit = (infra) => () => async (fields, post) => {
     post({ type: "succeed-to-login", authCredential: response.value.auth })
 }
 
-export function submitEventHasDone(event: SubmitEvent): boolean {
+export function submitEventHasDone(event: SubmitPasswordLoginEvent): boolean {
     switch (event.type) {
         case "succeed-to-login":
         case "failed-to-login":

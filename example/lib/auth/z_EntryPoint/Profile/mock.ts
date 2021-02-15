@@ -13,7 +13,7 @@ import {
 import {
     LogoutMockPropsPasser,
     initMockLogoutComponent,
-} from "../../x_Resource/Sign/ClearCredential/Logout/mock"
+} from "../../x_Resource/sign/ClearCredential/Logout/mock"
 
 import { ProfileEntryPoint } from "./entryPoint"
 import { initMockErrorResource } from "../../../availability/x_Resource/Error/mock"

@@ -11,7 +11,7 @@ import {
     LoginResourceFactory,
 } from "./entryPoint"
 
-import { AuthSearchParams } from "../../sign/location/data"
+import { AuthLocationSearchParams } from "../../sign/authLocation/data"
 
 export function initLoginViewLocationInfo(currentURL: URL): LoginViewLocationInfo {
     return {
@@ -23,10 +23,10 @@ export function initLoginViewLocationInfo(currentURL: URL): LoginViewLocationInf
 
 function detectViewState(currentURL: URL): ViewState {
     // パスワードリセット
-    switch (currentURL.searchParams.get(AuthSearchParams.passwordReset)) {
-        case AuthSearchParams.passwordReset_start:
+    switch (currentURL.searchParams.get(AuthLocationSearchParams.passwordReset)) {
+        case AuthLocationSearchParams.passwordReset_start:
             return "password-reset-session"
-        case AuthSearchParams.passwordReset_reset:
+        case AuthLocationSearchParams.passwordReset_reset:
             return "password-reset"
     }
 

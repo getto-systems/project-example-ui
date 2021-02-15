@@ -1,10 +1,10 @@
-import { ErrorAction } from "../../../error/action"
+import { UnexpectedErrorAction } from "../../../unexpectedError/action"
 
 export interface NotifyComponentFactory {
     (material: NotifyMaterial): NotifyComponent
 }
 export type NotifyMaterial = Readonly<{
-    error: ErrorAction
+    error: UnexpectedErrorAction
 }>
 
 export interface NotifyComponent {

@@ -1,14 +1,14 @@
 import { ApplicationComponent } from "../../../../../vendor/getto-example/Application/component"
 
-import { BreadcrumbListAction } from "../../../../../auth/permission/outline/action"
+import { OutlineBreadcrumbListAction } from "../../../../../auth/permission/outline/action"
 
-import { Breadcrumb } from "../../../../../auth/permission/outline/data"
+import { OutlineBreadcrumb } from "../../../../../auth/permission/outline/data"
 
 export interface BreadcrumbListComponentFactory {
     (material: BreadcrumbListMaterial): BreadcrumbListComponent
 }
 export type BreadcrumbListMaterial = Readonly<{
-    breadcrumbList: BreadcrumbListAction
+    breadcrumbList: OutlineBreadcrumbListAction
 }>
 
 export interface BreadcrumbListComponent extends ApplicationComponent<BreadcrumbListComponentState> {
@@ -17,7 +17,7 @@ export interface BreadcrumbListComponent extends ApplicationComponent<Breadcrumb
 
 export type BreadcrumbListComponentState =
     | Readonly<{ type: "initial-breadcrumb-list" }>
-    | Readonly<{ type: "succeed-to-load"; breadcrumb: Breadcrumb }>
+    | Readonly<{ type: "succeed-to-load"; breadcrumb: OutlineBreadcrumb }>
 
 export const initialBreadcrumbListComponentState: BreadcrumbListComponentState = {
     type: "initial-breadcrumb-list",

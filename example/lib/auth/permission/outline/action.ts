@@ -1,45 +1,43 @@
-import { LoadBreadcrumbListEvent, LoadMenuEvent, ToggleMenuExpandEvent } from "./event"
+import { LoadOutlineBreadcrumbListEvent, LoadOutlineMenuEvent, ToggleOutlineMenuExpandEvent } from "./event"
 
-import { Menu, MenuCategoryPath, MenuTarget } from "./data"
+import { OutlineMenu, OutlineMenuCategoryPath, OutlineMenuTarget } from "./data"
 
 export type OutlineAction = Readonly<{
-    breadcrumbList: BreadcrumbListAction
-    menu: MenuAction
+    breadcrumbList: OutlineBreadcrumbListAction
+    menu: OutlineMenuAction
 }>
 export type OutlineActionLocationInfo = {
-    getMenuTarget(): MenuTarget
+    getOutlineMenuTarget(): OutlineMenuTarget
 }
 
-export type BreadcrumbListAction = Readonly<{
+export type OutlineBreadcrumbListAction = Readonly<{
     loadBreadcrumbList: LoadBreadcrumbListMethod
 }>
 
-export type MenuAction = Readonly<{
-    loadMenu: LoadMenuMethod
-    toggleMenuExpand: ToggleMenuExpandMethod
+export type OutlineMenuAction = Readonly<{
+    loadMenu: LoadOutlineMenuMethod
+    toggleMenuExpand: ToggleOutlineMenuExpandMethod
 }>
 
-export interface LoadBreadcrumbListPod {
-    (locationInfo: LoadBreadcrumbListLocationInfo): LoadBreadcrumbListMethod
+export interface LoadOutlineBreadcrumbListPod {
+    (locationInfo: OutlineActionLocationInfo): LoadBreadcrumbListMethod
 }
-export type LoadBreadcrumbListLocationInfo = OutlineActionLocationInfo
 export interface LoadBreadcrumbListMethod {
-    (post: Post<LoadBreadcrumbListEvent>): void
+    (post: Post<LoadOutlineBreadcrumbListEvent>): void
 }
 
-export interface LoadMenuPod {
-    (locationInfo: LoadMenuLocationInfo): LoadMenuMethod
+export interface LoadOutlineMenuPod {
+    (locationInfo: OutlineActionLocationInfo): LoadOutlineMenuMethod
 }
-export type LoadMenuLocationInfo = OutlineActionLocationInfo
-export interface LoadMenuMethod {
-    (post: Post<LoadMenuEvent>): void
+export interface LoadOutlineMenuMethod {
+    (post: Post<LoadOutlineMenuEvent>): void
 }
 
-export interface ToggleMenuExpandPod {
-    (): ToggleMenuExpandMethod
+export interface ToggleOutlineMenuExpandPod {
+    (): ToggleOutlineMenuExpandMethod
 }
-export interface ToggleMenuExpandMethod {
-    (menu: Menu, path: MenuCategoryPath, post: Post<ToggleMenuExpandEvent>): void
+export interface ToggleOutlineMenuExpandMethod {
+    (menu: OutlineMenu, path: OutlineMenuCategoryPath, post: Post<ToggleOutlineMenuExpandEvent>): void
 }
 
 interface Post<T> {

@@ -1,11 +1,11 @@
 import { NotifyComponent } from "./Notify/component"
 
-import { ErrorAction } from "../../error/action"
+import { UnexpectedErrorAction } from "../../unexpectedError/action"
 
 export type ErrorResource = Readonly<{
     notify: NotifyComponent
 }>
 
 export type ErrorForegroundAction = Readonly<{
-    error: ErrorAction
+    error: UnexpectedErrorAction
 }>

@@ -1,23 +1,23 @@
 import { AuthCredential } from "../common/data"
-import { ForceStartEvent, StartEvent } from "./event"
+import { ForceStartContinuousRenewAuthCredentialEvent, StartContinuousRenewAuthCredentialEvent } from "./event"
 
-export type ContinuousRenewAction = Readonly<{
-    start: StartMethod
-    forceStart: ForceStartMethod
+export type ContinuousRenewAuthCredentialAction = Readonly<{
+    start: StartContinuousRenewAuthCredentialMethod
+    forceStart: ForceStartContinuousRenewAuthCredentialMethod
 }>
 
-export interface StartPod {
-    (): StartMethod
+export interface StartContinuousRenewAuthCredentialPod {
+    (): StartContinuousRenewAuthCredentialMethod
 }
-export interface StartMethod {
-    (authCredential: AuthCredential, post: Post<StartEvent>): void
+export interface StartContinuousRenewAuthCredentialMethod {
+    (authCredential: AuthCredential, post: Post<StartContinuousRenewAuthCredentialEvent>): void
 }
 
-export interface ForceStartPod {
-    (): ForceStartMethod
+export interface ForceStartContinuousRenewAuthCredentialPod {
+    (): ForceStartContinuousRenewAuthCredentialMethod
 }
-export interface ForceStartMethod {
-    (post: Post<ForceStartEvent>): void
+export interface ForceStartContinuousRenewAuthCredentialMethod {
+    (post: Post<ForceStartContinuousRenewAuthCredentialEvent>): void
 }
 
 interface Post<E> {

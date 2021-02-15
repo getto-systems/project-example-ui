@@ -9,9 +9,9 @@ import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 
 import { useComponent } from "../../common/hooks"
 
-import { ClearCredentialResource } from "../../../auth/x_Resource/Sign/ClearCredential/resource"
+import { ClearCredentialResource } from "../../../auth/x_Resource/sign/ClearCredential/resource"
 
-import { initialLogoutComponentState } from "../../../auth/x_Resource/Sign/ClearCredential/Logout/component"
+import { initialLogoutComponentState } from "../../../auth/x_Resource/sign/ClearCredential/Logout/component"
 
 import { StorageError } from "../../../common/storage/data"
 

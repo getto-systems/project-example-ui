@@ -2,63 +2,65 @@ import { RemoteAccess, RemoteAccessResult, RemoteAccessSimulator } from "../../.
 import { ApiCredentialRepository } from "../../../common/apiCredential/infra"
 
 import { ApiNonce } from "../../../common/apiCredential/data"
-import { LoadMenuBadgeRemoteError, MenuCategoryPath } from "./data"
-import { LoadBreadcrumbListPod, LoadMenuPod, ToggleMenuExpandPod } from "./action"
+import { LoadOutlineMenuBadgeRemoteError, OutlineMenuCategoryPath } from "./data"
+import { LoadOutlineBreadcrumbListPod, LoadOutlineMenuPod, ToggleOutlineMenuExpandPod } from "./action"
 import { StoreResult } from "../../../common/storage/infra"
 import { StorageError } from "../../../common/storage/data"
 
-export type BreadcrumbListActionInfra = LoadBreadcrumbListInfra
-export type MenuActionInfra = LoadMenuInfra & ToggleMenuExpandInfra
+export type OutlineBreadcrumbListActionInfra = LoadOutlineBreadcrumbListInfra
+export type OutlineMenuActionInfra = LoadOutlineMenuInfra & ToggleOutlineMenuExpandInfra
 
-export type LoadBreadcrumbListInfra = Readonly<{
-    menuTree: MenuTree
+export type LoadOutlineBreadcrumbListInfra = Readonly<{
+    menuTree: OutlineMenuTree
 }>
 
-export interface LoadBreadcrumbList {
-    (infra: LoadBreadcrumbListInfra): LoadBreadcrumbListPod
+export interface LoadOutlineBreadcrumbList {
+    (infra: LoadOutlineBreadcrumbListInfra): LoadOutlineBreadcrumbListPod
 }
 
-export type LoadMenuInfra = Readonly<{
-    loadMenuBadge: LoadMenuBadgeRemoteAccess
+export type LoadOutlineMenuInfra = Readonly<{
+    loadMenuBadge: LoadOutlineMenuBadgeRemoteAccess
     apiCredentials: ApiCredentialRepository
-    menuExpands: MenuExpandRepository
-    menuTree: MenuTree
+    menuExpands: OutlineMenuExpandRepository
+    menuTree: OutlineMenuTree
 }>
 
-export interface LoadMenu {
-    (infra: LoadMenuInfra): LoadMenuPod
+export interface LoadOutlineMenu {
+    (infra: LoadOutlineMenuInfra): LoadOutlineMenuPod
 }
 
-export type ToggleMenuExpandInfra = Readonly<{
-    menuExpands: MenuExpandRepository
+export type ToggleOutlineMenuExpandInfra = Readonly<{
+    menuExpands: OutlineMenuExpandRepository
 }>
 
-export interface ToggleMenuExpand {
-    (infra: ToggleMenuExpandInfra): ToggleMenuExpandPod
+export interface ToggleOutlineMenuExpand {
+    (infra: ToggleOutlineMenuExpandInfra): ToggleOutlineMenuExpandPod
 }
 
-export type MenuTreeLabel = string
-export type MenuPath = string
+export type OutlineMenuTreeLabel = string
+export type OutlineMenuPath = string
 
-export type MenuTree = MenuTreeNode[]
-export type MenuTreeNode =
-    | Readonly<{ type: "category"; category: MenuTreeCategory; children: MenuTree }>
-    | Readonly<{ type: "item"; item: MenuTreeItem }>
+export type OutlineMenuTree = OutlineMenuTreeNode[]
+export type OutlineMenuTreeNode =
+    | Readonly<{ type: "category"; category: OutlineMenuTreeCategory; children: OutlineMenuTree }>
+    | Readonly<{ type: "item"; item: OutlineMenuTreeItem }>
 
-export type MenuTreeCategory = Readonly<{
-    label: MenuTreeLabel
-    permission: MenuPermission
+export type OutlineMenuTreeCategory = Readonly<{
+    label: OutlineMenuTreeLabel
+    permission: OutlineMenuPermission
 }>
-export type MenuTreeItem = Readonly<{
-    path: MenuPath
+export type OutlineMenuTreeItem = Readonly<{
+    path: OutlineMenuPath
     label: string
     icon: string
 }>
 
-export type MenuPermission = Readonly<{ type: "any" }> | Readonly<{ type: "role"; roles: string[] }>
+export type OutlineMenuPermission =
+    | Readonly<{ type: "any" }>
+    | Readonly<{ type: "role"; roles: string[] }>
 
-export type MenuBadge = Record<string, number>
-export type MenuExpand = MenuCategoryPath[]
+export type OutlineMenuBadge = Record<string, number>
+export type OutlineMenuExpand = OutlineMenuCategoryPath[]
 
 class ArraySet<T> {
     set: T[] = []
@@ -87,7 +89,7 @@ interface ArraySetEntryEquals<T> {
     (a: T, b: T): boolean
 }
 
-export class MenuCategoryPathSet extends ArraySet<MenuCategoryPath> {
+export class OutlineMenuCategoryPathSet extends ArraySet<OutlineMenuCategoryPath> {
     constructor() {
         super((a, b) => {
             if (a.length !== b.length) {
@@ -103,15 +105,26 @@ export class MenuCategoryPathSet extends ArraySet<MenuCategoryPath> {
     }
 }
 
-export interface MenuExpandRepository {
-    load(): MenuExpandResponse
-    store(menuExpand: MenuExpand): StoreResult
+export interface OutlineMenuExpandRepository {
+    load(): OutlineMenuExpandResponse
+    store(menuExpand: OutlineMenuExpand): StoreResult
 }
 
-export type MenuExpandResponse =
-    | Readonly<{ success: true; menuExpand: MenuExpand }>
+export type OutlineMenuExpandResponse =
+    | Readonly<{ success: true; menuExpand: OutlineMenuExpand }>
     | Readonly<{ success: false; err: StorageError }>
 
-export type LoadMenuBadgeRemoteAccess = RemoteAccess<ApiNonce, MenuBadge, LoadMenuBadgeRemoteError>
-export type LoadMenuBadgeRemoteAccessResult = RemoteAccessResult<MenuBadge, LoadMenuBadgeRemoteError>
-export type LoadMenuBadgeSimulator = RemoteAccessSimulator<ApiNonce, MenuBadge, LoadMenuBadgeRemoteError>
+export type LoadOutlineMenuBadgeRemoteAccess = RemoteAccess<
+    ApiNonce,
+    OutlineMenuBadge,
+    LoadOutlineMenuBadgeRemoteError
+>
+export type LoadOutlineMenuBadgeRemoteAccessResult = RemoteAccessResult<
+    OutlineMenuBadge,
+    LoadOutlineMenuBadgeRemoteError
+>
+export type LoadOutlineMenuBadgeSimulator = RemoteAccessSimulator<
+    ApiNonce,
+    OutlineMenuBadge,
+    LoadOutlineMenuBadgeRemoteError
+>

@@ -1,6 +1,6 @@
 import { LinkComponent } from "./component"
 
-import { AuthSearchParams } from "../../../../sign/location/data"
+import { AuthLocationSearchParams } from "../../../../sign/authLocation/data"
 
 export function initLinkComponent(): LinkComponent {
     return {
@@ -10,8 +10,8 @@ export function initLinkComponent(): LinkComponent {
 }
 
 function passwordLogin(): string {
-    return `?${AuthSearchParams.passwordLogin}`
+    return `?${AuthLocationSearchParams.passwordLogin}`
 }
 function passwordResetSession(): string {
-    return `?${AuthSearchParams.passwordReset}=${AuthSearchParams.passwordReset_start}`
+    return `?${AuthLocationSearchParams.passwordReset}=${AuthLocationSearchParams.passwordReset_start}`
 }

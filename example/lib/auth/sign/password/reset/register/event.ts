@@ -1,8 +1,8 @@
 import { AuthCredential } from "../../../authCredential/common/data"
-import { SubmitError } from "./data"
+import { SubmitPasswordResetRegisterError } from "./data"
 
-export type SubmitEvent =
+export type SubmitPasswordResetRegisterEvent =
     | Readonly<{ type: "try-to-reset" }>
     | Readonly<{ type: "delayed-to-reset" }>
-    | Readonly<{ type: "failed-to-reset"; err: SubmitError }>
+    | Readonly<{ type: "failed-to-reset"; err: SubmitPasswordResetRegisterError }>
     | Readonly<{ type: "succeed-to-reset"; authCredential: AuthCredential }>

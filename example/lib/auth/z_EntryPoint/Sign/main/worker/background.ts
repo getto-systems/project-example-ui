@@ -2,21 +2,21 @@ import { WorkerBackgroundHandler } from "../../../../../vendor/getto-worker/work
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
 
-import { LoginActionProxyMessage } from "../../../../sign/password/login/worker/message"
-import { SessionActionProxyMessage } from "../../../../sign/password/reset/session/worker/message"
+import { PasswordLoginActionProxyMessage } from "../../../../sign/password/login/main/worker/message"
+import { PasswordResetSessionActionProxyMessage } from "../../../../sign/password/reset/session/main/worker/message"
 import { RegisterActionProxyMessage } from "../../../../sign/password/reset/register/worker/message"
 
-import { newLoginActionBackgroundHandler } from "../../../../sign/password/login/worker/background"
-import { newSessionActionBackgroundHandler } from "../../../../sign/password/reset/session/worker/background"
+import { newPasswordLoginActionBackgroundHandler } from "../../../../sign/password/login/main/worker/background"
+import { newPasswordResetSessionActionBackgroundHandler } from "../../../../sign/password/reset/session/main/worker/background"
 import { newRegisterActionBackgroundHandler } from "../../../../sign/password/reset/register/worker/background"
 
 export function newLoginWorker(worker: Worker): void {
     const handler: Handler = {
-        login: newLoginActionBackgroundHandler((response) =>
+        login: newPasswordLoginActionBackgroundHandler((response) =>
             postBackgroundMessage({ type: "login", response })
         ),
         reset: {
-            session: newSessionActionBackgroundHandler((response) =>
+            session: newPasswordResetSessionActionBackgroundHandler((response) =>
                 postBackgroundMessage({ type: "reset-session", response })
             ),
             register: newRegisterActionBackgroundHandler((response) =>
@@ -39,9 +39,9 @@ export function newLoginWorker(worker: Worker): void {
 }
 
 type Handler = Readonly<{
-    login: WorkerBackgroundHandler<LoginActionProxyMessage>
+    login: WorkerBackgroundHandler<PasswordLoginActionProxyMessage>
     reset: Readonly<{
-        session: WorkerBackgroundHandler<SessionActionProxyMessage>
+        session: WorkerBackgroundHandler<PasswordResetSessionActionProxyMessage>
         register: WorkerBackgroundHandler<RegisterActionProxyMessage>
     }>
 }>

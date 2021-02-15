@@ -3,19 +3,19 @@ import { MockComponent, MockPropsPasser } from "../../../vendor/getto-example/Ap
 import {
     initMockRenewCredentialResource,
     RenewCredentialResourceMockPropsPasser,
-} from "../../x_Resource/Sign/RenewCredential/mock"
+} from "../../x_Resource/sign/RenewCredential/mock"
 import {
     initMockPasswordLoginResource,
     PasswordLoginResourceMockPropsPasser,
-} from "../../x_Resource/Sign/PasswordLogin/mock"
+} from "../../x_Resource/sign/PasswordLogin/mock"
 import {
     initMockPasswordResetSessionResource,
     PasswordResetSessionResourceMockPropsPasser,
-} from "../../x_Resource/Sign/PasswordResetSession/mock"
+} from "../../x_Resource/sign/PasswordResetSession/mock"
 import {
     initMockPasswordResetResource,
     PasswordResetResourceMockPropsPasser,
-} from "../../x_Resource/Sign/PasswordReset/mock"
+} from "../../x_Resource/sign/PasswordReset/mock"
 
 import {
     LoginEntryPoint,

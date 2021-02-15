@@ -1,43 +1,53 @@
-import { RegisterActionInfra } from "./infra"
+import { PasswordResetRegisterActionInfra } from "./infra"
 
-import { RegisterActionPod, RegisterAction, RegisterActionLocationInfo } from "./action"
+import {
+    PasswordResetRegisterActionPod,
+    PasswordResetRegisterAction,
+    PasswordResetRegisterActionLocationInfo,
+} from "./action"
 
-import { markResetToken, ResetToken } from "./data"
-import { AuthSearchParams } from "../../../location/data"
-import { Submit } from "./infra"
-import { SubmitEvent } from "./event"
+import { markPasswordResetToken, PasswordResetToken } from "./data"
+import { AuthLocationSearchParams } from "../../../authLocation/data"
+import { SubmitPasswordResetRegister } from "./infra"
+import { SubmitPasswordResetRegisterEvent } from "./event"
 
-export function initRegisterActionLocationInfo(currentURL: URL): RegisterActionLocationInfo {
+export function initPasswordResetRegisterActionLocationInfo(
+    currentURL: URL
+): PasswordResetRegisterActionLocationInfo {
     return {
-        getResetToken: () => detectResetToken(currentURL)
+        getPasswordResetToken: () => detectResetToken(currentURL),
     }
 }
 
-function detectResetToken(currentURL: URL): ResetToken {
-    return markResetToken(currentURL.searchParams.get(AuthSearchParams.passwordResetToken) || "")
+function detectResetToken(currentURL: URL): PasswordResetToken {
+    return markPasswordResetToken(
+        currentURL.searchParams.get(AuthLocationSearchParams.passwordResetToken) || ""
+    )
 }
 
-export function initRegisterAction(
-    locationInfo: RegisterActionLocationInfo,
-    pod: RegisterActionPod,
-): RegisterAction {
+export function initPasswordResetRegisterAction(
+    locationInfo: PasswordResetRegisterActionLocationInfo,
+    pod: PasswordResetRegisterActionPod
+): PasswordResetRegisterAction {
     return {
         submit: pod.initSubmit(locationInfo),
     }
 }
-export function initRegisterActionPod(infra: RegisterActionInfra): RegisterActionPod {
+export function initRegisterActionPod(
+    infra: PasswordResetRegisterActionInfra
+): PasswordResetRegisterActionPod {
     return {
         initSubmit: submit(infra),
     }
 }
 
-const submit: Submit = (infra) => (locationInfo) => async (fields, post) => {
+const submit: SubmitPasswordResetRegister = (infra) => (locationInfo) => async (fields, post) => {
     if (!fields.success) {
         post({ type: "failed-to-reset", err: { type: "validation-error" } })
         return
     }
 
-    const resetToken = locationInfo.getResetToken()
+    const resetToken = locationInfo.getPasswordResetToken()
     if (!resetToken) {
         post({ type: "failed-to-reset", err: { type: "empty-reset-token" } })
         return
@@ -59,7 +69,9 @@ const submit: Submit = (infra) => (locationInfo) => async (fields, post) => {
     post({ type: "succeed-to-reset", authCredential: response.value.auth })
 }
 
-export function submitEventHasDone(event: SubmitEvent): boolean {
+export function submitPasswordResetRegisterEventHasDone(
+    event: SubmitPasswordResetRegisterEvent
+): boolean {
     switch (event.type) {
         case "succeed-to-reset":
         case "failed-to-reset":

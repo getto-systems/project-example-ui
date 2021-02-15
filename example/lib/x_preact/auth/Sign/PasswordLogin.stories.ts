@@ -5,7 +5,7 @@ import { PasswordLogin } from "./PasswordLogin"
 
 import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
 import { initMockPasswordLoginEntryPoint } from "../../../auth/z_EntryPoint/Sign/mock"
-import { PasswordLoginResourceMockProps } from "../../../auth/x_Resource/Sign/PasswordLogin/mock"
+import { PasswordLoginResourceMockProps } from "../../../auth/x_Resource/sign/PasswordLogin/mock"
 import { loginIDFormFieldValidations } from "../../../auth/x_Resource/common/Field/LoginID/mock"
 import {
     passwordFormFieldCharacters,

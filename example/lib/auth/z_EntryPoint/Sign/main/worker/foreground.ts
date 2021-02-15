@@ -1,32 +1,32 @@
 import { newWorker } from "../../../../../vendor/getto-worker/worker/foreground"
 
-import { newLocationAction } from "../../../../sign/location/main"
-import { newContinuousRenewAction } from "../../../../sign/authCredential/continuousRenew/main"
-import { newRenewActionPod } from "../../../../sign/authCredential/renew/main"
+import { newAuthLocationAction } from "../../../../sign/authLocation/main"
+import { newContinuousRenewAuthCredentialAction } from "../../../../sign/authCredential/continuousRenew/main"
+import { newRenewAuthCredentialActionPod } from "../../../../sign/authCredential/renew/main"
 
 import { initLoginViewLocationInfo, View } from "../../impl"
 
 import { initLoginLinkResource } from "../../../../x_Resource/common/LoginLink/impl"
-import { initPasswordLoginResource } from "../../../../x_Resource/Sign/PasswordLogin/impl"
-import { initPasswordResetResource } from "../../../../x_Resource/Sign/PasswordReset/impl"
-import { initPasswordResetSessionResource } from "../../../../x_Resource/Sign/PasswordResetSession/impl"
-import { initRenewCredentialResource } from "../../../../x_Resource/Sign/RenewCredential/impl"
+import { initPasswordLoginResource } from "../../../../x_Resource/sign/PasswordLogin/impl"
+import { initPasswordResetResource } from "../../../../x_Resource/sign/PasswordReset/impl"
+import { initPasswordResetSessionResource } from "../../../../x_Resource/sign/PasswordResetSession/impl"
+import { initRenewCredentialResource } from "../../../../x_Resource/sign/RenewCredential/impl"
 
 import { initFormAction } from "../../../../../vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../common/field/password/main/password"
-import { initRegisterActionLocationInfo } from "../../../../sign/password/reset/register/impl"
+import { initPasswordResetRegisterActionLocationInfo } from "../../../../sign/password/reset/register/impl"
 
 import { LoginBackgroundActionPod, LoginEntryPoint, LoginForegroundAction } from "../../entryPoint"
 
 import {
-    LoginActionForegroundProxy,
-    newLoginActionForegroundProxy,
-} from "../../../../sign/password/login/worker/foreground"
+    PasswordLoginActionForegroundProxy,
+    newPasswordLoginActionForegroundProxy,
+} from "../../../../sign/password/login/main/worker/foreground"
 import {
-    newSessionActionForegroundProxy,
-    SessionActionForegroundProxy,
-} from "../../../../sign/password/reset/session/worker/foreground"
+    newPasswordResetSessionActionForegroundProxy,
+    PasswordResetSessionActionForegroundProxy,
+} from "../../../../sign/password/reset/session/main/worker/foreground"
 import {
     newRegisterActionForegroundProxy,
     RegisterActionForegroundProxy,
@@ -41,10 +41,10 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
     const currentURL = new URL(location.toString())
 
     const foreground: LoginForegroundAction = {
-        renew: newRenewActionPod(webStorage),
-        continuousRenew: newContinuousRenewAction(webStorage),
+        renew: newRenewAuthCredentialActionPod(webStorage),
+        continuousRenew: newContinuousRenewAuthCredentialAction(webStorage),
 
-        location: newLocationAction(),
+        location: newAuthLocationAction(),
 
         form: {
             core: initFormAction(),
@@ -69,7 +69,7 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
         passwordResetSession: () => initPasswordResetSessionResource(foreground, background),
         passwordReset: () =>
             initPasswordResetResource(
-                initRegisterActionLocationInfo(currentURL),
+                initPasswordResetRegisterActionLocationInfo(currentURL),
                 foreground,
                 background
             ),
@@ -98,17 +98,17 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
 }
 
 type Proxy = Readonly<{
-    login: LoginActionForegroundProxy
+    login: PasswordLoginActionForegroundProxy
     reset: Readonly<{
-        session: SessionActionForegroundProxy
+        session: PasswordResetSessionActionForegroundProxy
         register: RegisterActionForegroundProxy
     }>
 }>
 function initProxy(post: Post<ForegroundMessage>): Proxy {
     return {
-        login: newLoginActionForegroundProxy((message) => post({ type: "login", message })),
+        login: newPasswordLoginActionForegroundProxy((message) => post({ type: "login", message })),
         reset: {
-            session: newSessionActionForegroundProxy((message) =>
+            session: newPasswordResetSessionActionForegroundProxy((message) =>
                 post({ type: "reset-session", message })
             ),
             register: newRegisterActionForegroundProxy((message) =>

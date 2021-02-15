@@ -1,13 +1,13 @@
 import { OutlineActionLocationInfo } from "../../../../auth/permission/outline/action"
-import { markMenuCategoryLabel } from "../../../../auth/permission/outline/data"
+import { markOutlineMenuCategoryLabel } from "../../../../auth/permission/outline/data"
 import {
-    initBreadcrumbListAction,
-    initMenuAction,
+    initOutlineBreadcrumbListAction,
+    initOutlineMenuAction,
     initOutlineActionLocationInfo,
 } from "../../../../auth/permission/outline/impl"
-import { MenuExpand, MenuExpandRepository, MenuTree } from "../../../../auth/permission/outline/infra"
-import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/outline/infra/remote/menuBadge/simulate"
-import { initMemoryMenuExpandRepository } from "../../../../auth/permission/outline/infra/repository/memory"
+import { OutlineMenuExpand, OutlineMenuExpandRepository, OutlineMenuTree } from "../../../../auth/permission/outline/infra"
+import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/outline/infra/remote/loadOutlineMenuBadge/simulate"
+import { initMemoryOutlineMenuExpandRepository } from "../../../../auth/permission/outline/infra/repository/outlineMenuExpand/memory"
 import { initAsyncComponentStateTester } from "../../../../vendor/getto-example/Application/testHelper"
 import { markApiNonce, markApiRoles } from "../../../apiCredential/data"
 import { ApiCredentialRepository } from "../../../apiCredential/infra"
@@ -220,7 +220,7 @@ describe("Menu", () => {
                         resource.menu.terminate()
 
                         resource.menu.addStateHandler(initFirstToggleTester())
-                        resource.menu.toggle(last.menu, [markMenuCategoryLabel("DOCUMENT")])
+                        resource.menu.toggle(last.menu, [markOutlineMenuCategoryLabel("DOCUMENT")])
                     }
                 }
             })
@@ -252,8 +252,8 @@ describe("Menu", () => {
 
                         resource.menu.addStateHandler(initSecondToggleTester())
                         resource.menu.toggle(last.menu, [
-                            markMenuCategoryLabel("DOCUMENT"),
-                            markMenuCategoryLabel("DETAIL"),
+                            markOutlineMenuCategoryLabel("DOCUMENT"),
+                            markOutlineMenuCategoryLabel("DETAIL"),
                         ])
                     }
                 }
@@ -433,7 +433,7 @@ function expandMenuResource() {
 
 type Repository = Readonly<{
     apiCredentials: ApiCredentialRepository
-    menuExpands: MenuExpandRepository
+    menuExpands: OutlineMenuExpandRepository
 }>
 
 function newTestMenuResource(
@@ -443,10 +443,10 @@ function newTestMenuResource(
     const menuTree = standardMenuTree()
 
     return initMenuResource({
-        breadcrumbList: initBreadcrumbListAction(locationInfo, {
+        breadcrumbList: initOutlineBreadcrumbListAction(locationInfo, {
             menuTree,
         }),
-        menu: initMenuAction(locationInfo, {
+        menu: initOutlineMenuAction(locationInfo, {
             ...standardRemoteAccess(),
             ...repository,
             menuTree,
@@ -470,7 +470,7 @@ function standardVersion(): string {
     return "1.0.0"
 }
 
-function standardMenuTree(): MenuTree {
+function standardMenuTree(): OutlineMenuTree {
     return [
         {
             type: "category",
@@ -558,13 +558,13 @@ function expandRepository(): Repository {
             set: true,
             value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["admin"]) },
         }),
-        menuExpands: standardMenuExpandRepository([[markMenuCategoryLabel("DOCUMENT")]]),
+        menuExpands: standardMenuExpandRepository([[markOutlineMenuCategoryLabel("DOCUMENT")]]),
     }
 }
 
 function standardRemoteAccess() {
     return {
-        loadMenuBadge: initLoadMenuBadgeSimulateRemoteAccess(
+        loadMenuBadge: initLoadOutlineMenuBadgeSimulateRemoteAccess(
             () => ({
                 success: true,
                 value: {
@@ -577,8 +577,8 @@ function standardRemoteAccess() {
     }
 }
 
-function standardMenuExpandRepository(menuExpand: MenuExpand): MenuExpandRepository {
-    return initMemoryMenuExpandRepository({ menuExpand: { set: true, value: menuExpand } })
+function standardMenuExpandRepository(menuExpand: OutlineMenuExpand): OutlineMenuExpandRepository {
+    return initMemoryOutlineMenuExpandRepository({ menuExpand: { set: true, value: menuExpand } })
 }
 
 function expectToSaveExpand(repository: Repository, menuExpand: string[][]) {

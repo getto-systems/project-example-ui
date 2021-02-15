@@ -1,21 +1,29 @@
 import {
-    CheckStatusError,
-    Destination,
-    SendingStatus,
-    SendTokenError,
-    SessionID,
-    StartSessionError,
+    CheckPasswordResetSessionStatusError,
+    PasswordResetDestination,
+    PasswordResetSendingStatus,
+    SendPasswordResetSessionTokenError,
+    PasswordResetSessionID,
+    StartPasswordResetSessionError,
 } from "./data"
 
-export type StartSessionEvent =
+export type StartPasswordResetSessionEvent =
     | Readonly<{ type: "try-to-start-session" }>
     | Readonly<{ type: "delayed-to-start-session" }>
-    | Readonly<{ type: "failed-to-start-session"; err: StartSessionError }>
-    | Readonly<{ type: "succeed-to-start-session"; sessionID: SessionID }>
+    | Readonly<{ type: "failed-to-start-session"; err: StartPasswordResetSessionError }>
+    | Readonly<{ type: "succeed-to-start-session"; sessionID: PasswordResetSessionID }>
 
-export type CheckStatusEvent =
+export type CheckPasswordResetSessionStatusEvent =
     | Readonly<{ type: "try-to-check-status" }>
-    | Readonly<{ type: "retry-to-check-status"; dest: Destination; status: SendingStatus }>
-    | Readonly<{ type: "failed-to-check-status"; err: CheckStatusError }>
-    | Readonly<{ type: "failed-to-send-token"; dest: Destination; err: SendTokenError }>
-    | Readonly<{ type: "succeed-to-send-token"; dest: Destination }>
+    | Readonly<{
+          type: "retry-to-check-status"
+          dest: PasswordResetDestination
+          status: PasswordResetSendingStatus
+      }>
+    | Readonly<{ type: "failed-to-check-status"; err: CheckPasswordResetSessionStatusError }>
+    | Readonly<{
+          type: "failed-to-send-token"
+          dest: PasswordResetDestination
+          err: SendPasswordResetSessionTokenError
+      }>
+    | Readonly<{ type: "succeed-to-send-token"; dest: PasswordResetDestination }>

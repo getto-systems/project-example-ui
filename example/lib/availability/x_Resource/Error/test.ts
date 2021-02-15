@@ -1,6 +1,6 @@
-import { initNotifySimulateRemoteAccess } from "../../error/infra/remote/notify/simulate"
+import { initNotifyUnexpectedErrorSimulateRemoteAccess } from "../../unexpectedError/infra/remote/notifyUnexpectedError/simulate"
 
-import { initErrorAction } from "../../error/impl"
+import { initUnexpectedErrorAction } from "../../unexpectedError/impl"
 
 import { initErrorResource } from "./impl"
 
@@ -22,8 +22,8 @@ function standardResource() {
 
 function newTestNotifyErrorResource() {
     return initErrorResource({
-        error: initErrorAction({
-            notify: initNotifySimulateRemoteAccess(),
+        error: initUnexpectedErrorAction({
+            notify: initNotifyUnexpectedErrorSimulateRemoteAccess(),
         }),
     })
 }

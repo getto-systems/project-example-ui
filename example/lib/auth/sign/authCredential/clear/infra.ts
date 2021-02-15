@@ -1,14 +1,14 @@
 import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
 import { AuthCredentialRepository } from "../common/infra"
 
-import { LogoutPod } from "./action"
+import { SubmitClearAuthCredentialPod } from "./action"
 
-export type ClearActionInfra = LogoutInfra
+export type ClearActionInfra = SubmitClearAuthCredentialInfra
 
-export type LogoutInfra = Readonly<{
+export type SubmitClearAuthCredentialInfra = Readonly<{
     apiCredentials: ApiCredentialRepository
     authCredentials: AuthCredentialRepository
 }>
-export interface Logout {
-    (infra: LogoutInfra): LogoutPod
+export interface SubmitClearAuthCredential {
+    (infra: SubmitClearAuthCredentialInfra): SubmitClearAuthCredentialPod
 }

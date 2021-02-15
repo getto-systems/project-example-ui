@@ -1,24 +1,24 @@
-import { SubmitEvent } from "./event"
+import { SubmitPasswordResetRegisterEvent } from "./event"
 
 import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"
-import { ResetToken, ResetFields } from "./data"
+import { PasswordResetToken, PasswordResetFields } from "./data"
 
-export type RegisterAction = Readonly<{
-    submit: SubmitMethod
+export type PasswordResetRegisterAction = Readonly<{
+    submit: SubmitPasswordResetRegisterMethod
 }>
-export type RegisterActionPod = Readonly<{
-    initSubmit: SubmitPod
+export type PasswordResetRegisterActionPod = Readonly<{
+    initSubmit: SubmitPasswordResetRegisterPod
 }>
-export type RegisterActionLocationInfo = SubmitLocationInfo
+export type PasswordResetRegisterActionLocationInfo = SubmitPasswordResetRegisterLocationInfo
 
-export interface SubmitPod {
-    (locationInfo: SubmitLocationInfo): SubmitMethod
+export interface SubmitPasswordResetRegisterPod {
+    (locationInfo: SubmitPasswordResetRegisterLocationInfo): SubmitPasswordResetRegisterMethod
 }
-export interface SubmitLocationInfo {
-    getResetToken(): ResetToken
+export interface SubmitPasswordResetRegisterLocationInfo {
+    getPasswordResetToken(): PasswordResetToken
 }
-export interface SubmitMethod {
-    (fields: FormConvertResult<ResetFields>, post: Post<SubmitEvent>): void
+export interface SubmitPasswordResetRegisterMethod {
+    (fields: FormConvertResult<PasswordResetFields>, post: Post<SubmitPasswordResetRegisterEvent>): void
 }
 
 interface Post<T> {

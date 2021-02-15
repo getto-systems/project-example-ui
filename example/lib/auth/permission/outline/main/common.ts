@@ -6,28 +6,34 @@ import { currentURL } from "../../../../z_infra/location/url"
 import { Icon, iconClass } from "../../../../z_vendor/icon"
 
 import {
-    LoadMenuBadgeRemoteAccess,
-    MenuExpandRepository,
-    MenuPermission,
-    MenuTree,
-    MenuTreeNode,
+    LoadOutlineMenuBadgeRemoteAccess,
+    OutlineMenuExpandRepository,
+    OutlineMenuPermission,
+    OutlineMenuTree,
+    OutlineMenuTreeNode,
 } from "../infra"
 
-import { OutlineActionLocationInfo, MenuAction } from "../action"
+import { OutlineActionLocationInfo, OutlineBreadcrumbListAction, OutlineMenuAction } from "../action"
 import { newApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/main"
-import { initMenuAction, initOutlineActionLocationInfo } from "../impl"
+import {
+    initOutlineMenuAction,
+    initOutlineActionLocationInfo,
+    initOutlineBreadcrumbListAction,
+} from "../impl"
 
-export function newOutlineActionLocationInfo(): OutlineActionLocationInfo {
-    return initOutlineActionLocationInfo(env.version, currentURL())
+export function newOutlineBreadcrumbListAction(menuTree: OutlineMenuTree): OutlineBreadcrumbListAction {
+    return initOutlineBreadcrumbListAction(newLocationInfo(), {
+        menuTree,
+    })
 }
 
-export function newMenuAction(
+export function newOutlineMenuAction(
     webStorage: Storage,
-    newMenuExpandRepository: { (webStorage: Storage): MenuExpandRepository },
-    menuTree: MenuTree,
-    loadMenuBadge: LoadMenuBadgeRemoteAccess
-): MenuAction {
-    return initMenuAction(newOutlineActionLocationInfo(), {
+    newMenuExpandRepository: { (webStorage: Storage): OutlineMenuExpandRepository },
+    menuTree: OutlineMenuTree,
+    loadMenuBadge: LoadOutlineMenuBadgeRemoteAccess
+): OutlineMenuAction {
+    return initOutlineMenuAction(newLocationInfo(), {
         loadMenuBadge,
         apiCredentials: newApiCredentialRepository(webStorage),
         menuExpands: newMenuExpandRepository(webStorage),
@@ -35,10 +41,18 @@ export function newMenuAction(
     })
 }
 
-export function category(label: string, permission: MenuPermission, children: MenuTree): MenuTreeNode {
+function newLocationInfo(): OutlineActionLocationInfo {
+    return initOutlineActionLocationInfo(env.version, currentURL())
+}
+
+export function category(
+    label: string,
+    permission: OutlineMenuPermission,
+    children: OutlineMenuTree
+): OutlineMenuTreeNode {
     return { type: "category", category: { label, permission }, children }
 }
 
-export function item(label: string, icon: Icon, path: StaticMenuPath): MenuTreeNode {
+export function item(label: string, icon: Icon, path: StaticMenuPath): OutlineMenuTreeNode {
     return { type: "item", item: { label, icon: iconClass(icon), path } }
 }

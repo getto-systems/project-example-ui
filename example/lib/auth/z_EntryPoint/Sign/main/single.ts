@@ -1,9 +1,9 @@
-import { newLoginActionPod } from "../../../sign/password/login/main"
-import { newRegisterActionPod } from "../../../sign/password/reset/register/main"
-import { newContinuousRenewAction } from "../../../sign/authCredential/continuousRenew/main"
-import { newRenewActionPod } from "../../../sign/authCredential/renew/main"
-import { newSessionActionPod } from "../../../sign/password/reset/session/main"
-import { newLocationAction } from "../../../sign/location/main"
+import { newPasswordLoginActionPod } from "../../../sign/password/login/main/core"
+import { newPasswordResetRegisterRegisterActionPod } from "../../../sign/password/reset/register/main"
+import { newContinuousRenewAuthCredentialAction } from "../../../sign/authCredential/continuousRenew/main"
+import { newRenewAuthCredentialActionPod } from "../../../sign/authCredential/renew/main"
+import { newPasswordResetSessionActionPod } from "../../../sign/password/reset/session/main/core"
+import { newAuthLocationAction } from "../../../sign/authLocation/main"
 
 import { initFormAction } from "../../../../vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
@@ -12,11 +12,11 @@ import { initPasswordFormFieldAction } from "../../../common/field/password/main
 import { initLoginViewLocationInfo, View } from "../impl"
 
 import { initLoginLinkResource } from "../../../x_Resource/common/LoginLink/impl"
-import { initRenewCredentialResource } from "../../../x_Resource/Sign/RenewCredential/impl"
-import { initPasswordLoginResource } from "../../../x_Resource/Sign/PasswordLogin/impl"
-import { initPasswordResetSessionResource } from "../../../x_Resource/Sign/PasswordResetSession/impl"
-import { initPasswordResetResource } from "../../../x_Resource/Sign/PasswordReset/impl"
-import { initRegisterActionLocationInfo } from "../../../sign/password/reset/register/impl"
+import { initRenewCredentialResource } from "../../../x_Resource/sign/RenewCredential/impl"
+import { initPasswordLoginResource } from "../../../x_Resource/sign/PasswordLogin/impl"
+import { initPasswordResetSessionResource } from "../../../x_Resource/sign/PasswordResetSession/impl"
+import { initPasswordResetResource } from "../../../x_Resource/sign/PasswordReset/impl"
+import { initPasswordResetRegisterActionLocationInfo } from "../../../sign/password/reset/register/impl"
 
 import { LoginBackgroundActionPod, LoginEntryPoint, LoginForegroundAction } from "../entryPoint"
 
@@ -25,9 +25,9 @@ export function newLoginAsSingle(): LoginEntryPoint {
     const currentURL = new URL(location.toString())
 
     const foreground: LoginForegroundAction = {
-        renew: newRenewActionPod(webStorage),
-        continuousRenew: newContinuousRenewAction(webStorage),
-        location: newLocationAction(),
+        renew: newRenewAuthCredentialActionPod(webStorage),
+        continuousRenew: newContinuousRenewAuthCredentialAction(webStorage),
+        location: newAuthLocationAction(),
 
         form: {
             core: initFormAction(),
@@ -36,9 +36,9 @@ export function newLoginAsSingle(): LoginEntryPoint {
         },
     }
     const background: LoginBackgroundActionPod = {
-        initLogin: newLoginActionPod(),
-        initSession: newSessionActionPod(),
-        initRegister: newRegisterActionPod(),
+        initLogin: newPasswordLoginActionPod(),
+        initSession: newPasswordResetSessionActionPod(),
+        initRegister: newPasswordResetRegisterRegisterActionPod(),
     }
 
     const view = new View(initLoginViewLocationInfo(currentURL), {
@@ -50,7 +50,7 @@ export function newLoginAsSingle(): LoginEntryPoint {
         passwordResetSession: () => initPasswordResetSessionResource(foreground, background),
         passwordReset: () =>
             initPasswordResetResource(
-                initRegisterActionLocationInfo(currentURL),
+                initPasswordResetRegisterActionLocationInfo(currentURL),
                 foreground,
                 background
             ),

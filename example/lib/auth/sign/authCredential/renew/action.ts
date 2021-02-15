@@ -1,22 +1,22 @@
-import { ForceRequestEvent, RequestEvent } from "./event"
+import { ForceRequestRenewAuthCredentialEvent, RequestRenewAuthCredentialEvent } from "./event"
 
-export type RenewAction = Readonly<{
-    request: RequestMethod
-    forceRequest: ForceRequestMethod
+export type RenewAuthCredentialAction = Readonly<{
+    request: RequestRenewAuthCredentialMethod
+    forceRequest: ForceRequestRenewAuthCredentialMethod
 }>
 
-export interface RequestPod {
-    (): RequestMethod
+export interface RequestRenewAuthCredentialPod {
+    (): RequestRenewAuthCredentialMethod
 }
-export interface RequestMethod {
-    (post: Post<RequestEvent>): void
+export interface RequestRenewAuthCredentialMethod {
+    (post: Post<RequestRenewAuthCredentialEvent>): void
 }
 
-export interface ForceRequestPod {
-    (): ForceRequestMethod
+export interface ForceRequestRenewAuthCredentialPod {
+    (): ForceRequestRenewAuthCredentialMethod
 }
-export interface ForceRequestMethod {
-    (post: Post<ForceRequestEvent>): void
+export interface ForceRequestRenewAuthCredentialMethod {
+    (post: Post<ForceRequestRenewAuthCredentialEvent>): void
 }
 
 interface Post<E> {

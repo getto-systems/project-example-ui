@@ -1,21 +1,21 @@
 import { newApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/main"
-import { newAuthCredentialRepository } from "../common/infra/repository/main"
-import { newRenewRemoteAccess } from "../common/infra/remote/renew/main"
+import { newAuthCredentialRepository } from "../common/infra/repository/authCredential/main"
+import { newRenewAuthCredentialRemoteAccess } from "../common/infra/remote/renewAuthCredential/main"
 
 import { initDateClock } from "../../../../z_infra/clock/date"
 import { delayed } from "../../../../z_infra/delayed/core"
 
-import { initRenewAction } from "./impl"
+import { initRenewAuthCredentialAction } from "./impl"
 
 import { delaySecond, expireMinute } from "../../../../z_infra/time/infra"
 
-import { RenewAction } from "./action"
+import { RenewAuthCredentialAction } from "./action"
 
-export function newRenewActionPod(webStorage: Storage): RenewAction {
-    return initRenewAction({
+export function newRenewAuthCredentialActionPod(webStorage: Storage): RenewAuthCredentialAction {
+    return initRenewAuthCredentialAction({
         apiCredentials: newApiCredentialRepository(webStorage),
         authCredentials: newAuthCredentialRepository(webStorage),
-        renew: newRenewRemoteAccess(),
+        renew: newRenewAuthCredentialRemoteAccess(),
         config: {
             instantLoadExpire: expireMinute(3),
             delay: delaySecond(0.5),

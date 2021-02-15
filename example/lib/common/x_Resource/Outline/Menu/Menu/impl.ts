@@ -7,7 +7,7 @@ import {
     MenuComponentState,
 } from "./component"
 
-import { Menu, MenuCategoryPath } from "../../../../../auth/permission/outline/data"
+import { OutlineMenu, OutlineMenuCategoryPath } from "../../../../../auth/permission/outline/data"
 
 export const initMenuComponent: MenuComponentFactory = (material) => new Component(material)
 
@@ -24,7 +24,7 @@ class Component extends ApplicationBaseComponent<MenuComponentState> implements 
             this.post(event)
         })
     }
-    toggle(menu: Menu, path: MenuCategoryPath): void {
+    toggle(menu: OutlineMenu, path: OutlineMenuCategoryPath): void {
         this.material.menu.toggleMenuExpand(menu, path, (event) => {
             this.post(event)
         })

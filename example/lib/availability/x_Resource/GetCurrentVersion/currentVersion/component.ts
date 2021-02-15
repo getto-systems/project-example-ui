@@ -1,8 +1,8 @@
 import { ApplicationComponent } from "../../../../vendor/getto-example/Application/component"
 
-import { FindCurrentVersion } from "../../../version/currentVersion/action"
+import { FindCurrentVersion } from "../../../version/local/action"
 
-import { Version } from "../../../version/currentVersion/data"
+import { VersionString } from "../../../version/common/data"
 
 export interface CurrentVersionComponentFactory {
     (material: CurrentVersionMaterial): CurrentVersionComponent
@@ -17,7 +17,7 @@ export interface CurrentVersionComponent extends ApplicationComponent<CurrentVer
 
 export type CurrentVersionComponentState =
     | Readonly<{ type: "initial-current-version" }>
-    | Readonly<{ type: "succeed-to-find"; version: Version }>
+    | Readonly<{ type: "succeed-to-find"; version: VersionString }>
 
 export const initialCurrentVersionComponentState: CurrentVersionComponentState = {
     type: "initial-current-version",

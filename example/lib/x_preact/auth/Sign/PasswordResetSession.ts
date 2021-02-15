@@ -21,15 +21,15 @@ import { LoginIDFormField } from "./field/loginID"
 
 import { PasswordResetSessionEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialStartComponentState } from "../../../auth/x_Resource/Sign/PasswordResetSession/Start/component"
+import { initialStartComponentState } from "../../../auth/x_Resource/sign/PasswordResetSession/Start/component"
 import { initialFormContainerComponentState } from "../../../vendor/getto-form/x_Resource/Form/component"
 
 import {
-    Destination,
-    SendingStatus,
-    StartSessionError,
-    CheckStatusError,
-    SendTokenError,
+    PasswordResetDestination,
+    PasswordResetSendingStatus,
+    StartPasswordResetSessionError,
+    CheckPasswordResetSessionStatusError,
+    SendPasswordResetSessionTokenError,
 } from "../../../auth/sign/password/reset/session/data"
 
 export function PasswordResetSession({ resource, terminate }: PasswordResetSessionEntryPoint): VNode {
@@ -156,7 +156,7 @@ export function PasswordResetSession({ resource, terminate }: PasswordResetSessi
 
     type CheckStatusContent =
         | Readonly<{ type: "initial" }>
-        | Readonly<{ type: "retry"; dest: Destination; status: SendingStatus }>
+        | Readonly<{ type: "retry"; dest: PasswordResetDestination; status: PasswordResetSendingStatus }>
 
     function checkStatusMessage(content: CheckStatusContent): VNode {
         return loginBox(siteInfo(), {
@@ -175,7 +175,7 @@ export function PasswordResetSession({ resource, terminate }: PasswordResetSessi
             }
         }
     }
-    function successMessage(dest: Destination): VNode {
+    function successMessage(dest: PasswordResetDestination): VNode {
         return loginBox(siteInfo(), {
             title: "リセットトークンを送信しました",
             body: sendTokenMessage(dest),
@@ -201,7 +201,7 @@ export function PasswordResetSession({ resource, terminate }: PasswordResetSessi
     }
 }
 
-function status(dest: Destination, status: SendingStatus): VNodeContent {
+function status(dest: PasswordResetDestination, status: PasswordResetSendingStatus): VNodeContent {
     if (!status.sending) {
         return html`<p>${spinner} トークン送信の準備をしています</p>`
     }
@@ -210,14 +210,14 @@ function status(dest: Destination, status: SendingStatus): VNodeContent {
             return html`<p>${spinner} トークンを送信しています</p>`
     }
 }
-function sendTokenMessage(dest: Destination): VNodeContent {
+function sendTokenMessage(dest: PasswordResetDestination): VNodeContent {
     switch (dest.type) {
         case "log":
             return html`<p>サーバーのログに記載されたリセットトークンを確認してください</p>`
     }
 }
 
-function startSessionError(err: StartSessionError): VNodeContent[] {
+function startSessionError(err: StartPasswordResetSessionError): VNodeContent[] {
     switch (err.type) {
         case "validation-error":
             return ["正しく入力してください"]
@@ -238,7 +238,7 @@ function startSessionError(err: StartSessionError): VNodeContent[] {
             return ["ネットワークエラーによりトークンの送信に失敗しました", ...detail(err.err)]
     }
 }
-function checkStatusError(err: CheckStatusError): VNodeContent[] {
+function checkStatusError(err: CheckPasswordResetSessionStatusError): VNodeContent[] {
     switch (err.type) {
         case "bad-request":
             return ["アプリケーションエラーによりステータスの取得に失敗しました"]
@@ -256,7 +256,7 @@ function checkStatusError(err: CheckStatusError): VNodeContent[] {
             return ["ネットワークエラーによりステータスの取得に失敗しました", ...detail(err.err)]
     }
 }
-function sendTokenError(err: SendTokenError): VNodeContent[] {
+function sendTokenError(err: SendPasswordResetSessionTokenError): VNodeContent[] {
     switch (err.type) {
         case "infra-error":
             return ["サーバーエラーによりリセットトークンの送信に失敗しました", ...detail(err.err)]

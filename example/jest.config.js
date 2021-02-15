@@ -12,7 +12,6 @@ module.exports = {
     "!lib/**/test.ts",
     "!lib/**/testHelper.ts",
     "!lib/**/main/**",
-    "!lib/**/worker/**",
     "!lib/**/main.ts",
     "!lib/**/infra/**",
     "!lib/**/infra.ts",

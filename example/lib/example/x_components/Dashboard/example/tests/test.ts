@@ -6,12 +6,12 @@ import {
 
 import { initMemoryTypedStorage } from "../../../../../z_infra/storage/memory"
 import { initStaticClock } from "../../../../../z_infra/clock/simulate"
-import { initLoadMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/outline/infra/remote/menuBadge/simulate"
-import { initMenuExpandRepository } from "../../../../../auth/permission/outline/infra/repository/menuExpand"
+import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/outline/infra/remote/loadOutlineMenuBadge/simulate"
+import { initOutlineMenuExpandRepository } from "../../../../../auth/permission/outline/infra/repository/outlineMenuExpand/core"
 import { initMemorySeasonRepository } from "../../../../shared/season/impl/repository/season/memory"
 
 import { Clock } from "../../../../../z_infra/clock/infra"
-import { MenuTree } from "../../../../../auth/permission/outline/infra"
+import { OutlineMenuTree } from "../../../../../auth/permission/outline/infra"
 
 import { ExampleComponentState } from "../component"
 import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
@@ -75,7 +75,7 @@ function standardURL(): URL {
     return new URL("https://example.com/1.0.0/index.html")
 }
 
-function standardMenuTree(): MenuTree {
+function standardMenuTree(): OutlineMenuTree {
     return []
 }
 
@@ -85,7 +85,7 @@ function standardRepository(): DashboardRepository {
             set: true,
             value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
         }),
-        menuExpands: initMenuExpandRepository({
+        menuExpands: initOutlineMenuExpandRepository({
             menuExpand: initMemoryTypedStorage({ set: false }),
         }),
         seasons: initMemorySeasonRepository({ stored: false }),
@@ -94,7 +94,7 @@ function standardRepository(): DashboardRepository {
 
 function standardSimulator(): DashboardRemoteAccess {
     return {
-        loadMenuBadge: initLoadMenuBadgeSimulateRemoteAccess(() => ({ success: true, value: {} }), {
+        loadMenuBadge: initLoadOutlineMenuBadgeSimulateRemoteAccess(() => ({ success: true, value: {} }), {
             wait_millisecond: 0,
         }),
     }

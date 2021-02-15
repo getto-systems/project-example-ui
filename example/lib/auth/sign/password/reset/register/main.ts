@@ -1,19 +1,29 @@
-import { newRegisterRemoteAccess } from "./infra/remote/register/main"
+import { newSubmitPasswordResetRegisterRemoteAccess } from "./infra/remote/submitPasswordResetRegister/main"
 
 import { delayed } from "../../../../../z_infra/delayed/core"
 import { delaySecond } from "../../../../../z_infra/time/infra"
 
-import { initRegisterAction, initRegisterActionLocationInfo, initRegisterActionPod } from "./impl"
+import {
+    initPasswordResetRegisterAction,
+    initPasswordResetRegisterActionLocationInfo,
+    initRegisterActionPod,
+} from "./impl"
 
-import { RegisterAction, RegisterActionLocationInfo, RegisterActionPod } from "./action"
+import {
+    PasswordResetRegisterAction,
+    PasswordResetRegisterActionLocationInfo,
+    PasswordResetRegisterActionPod,
+} from "./action"
 import { currentURL } from "../../../../../z_infra/location/url"
 
-export function newRegisterAction(pod: RegisterActionPod): RegisterAction {
-    return initRegisterAction(newRegisterActionLocationInfo(), pod)
+export function newPasswordResetRegisterRegisterAction(
+    pod: PasswordResetRegisterActionPod
+): PasswordResetRegisterAction {
+    return initPasswordResetRegisterAction(newLocationInfo(), pod)
 }
-export function newRegisterActionPod(): RegisterActionPod {
+export function newPasswordResetRegisterRegisterActionPod(): PasswordResetRegisterActionPod {
     return initRegisterActionPod({
-        register: newRegisterRemoteAccess(),
+        register: newSubmitPasswordResetRegisterRemoteAccess(),
         config: {
             delay: delaySecond(1),
         },
@@ -21,6 +31,6 @@ export function newRegisterActionPod(): RegisterActionPod {
     })
 }
 
-export function newRegisterActionLocationInfo(): RegisterActionLocationInfo {
-    return initRegisterActionLocationInfo(currentURL())
+function newLocationInfo(): PasswordResetRegisterActionLocationInfo {
+    return initPasswordResetRegisterActionLocationInfo(currentURL())
 }

@@ -2,7 +2,7 @@ import { MenuForegroundAction, MenuResource } from "../../../common/x_Resource/O
 import {
     ClearCredentialForegroundAction,
     ClearCredentialResource,
-} from "../../x_Resource/Sign/ClearCredential/resource"
+} from "../../x_Resource/sign/ClearCredential/resource"
 
 import {
     SeasonInfoComponent,

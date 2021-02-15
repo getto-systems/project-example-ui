@@ -1,20 +1,20 @@
-import { SubmitEvent } from "./event"
+import { SubmitPasswordLoginEvent } from "./event"
 
 import { FormConvertResult } from "../../../../vendor/getto-form/form/data"
-import { LoginFields } from "./data"
+import { PasswordLoginFields } from "./data"
 
-export type LoginActionPod = Readonly<{
-    initSubmit: SubmitPod
+export type PasswordLoginActionPod = Readonly<{
+    initSubmit: SubmitPasswordLoginPod
 }>
-export type LoginAction = Readonly<{
-    submit: SubmitMethod
+export type PasswordLoginAction = Readonly<{
+    submit: SubmitPasswordLoginMethod
 }>
 
-export interface SubmitPod {
-    (): SubmitMethod
+export interface SubmitPasswordLoginPod {
+    (): SubmitPasswordLoginMethod
 }
-export interface SubmitMethod {
-    (fields: FormConvertResult<LoginFields>, post: Post<SubmitEvent>): void
+export interface SubmitPasswordLoginMethod {
+    (fields: FormConvertResult<PasswordLoginFields>, post: Post<SubmitPasswordLoginEvent>): void
 }
 
 interface Post<E> {

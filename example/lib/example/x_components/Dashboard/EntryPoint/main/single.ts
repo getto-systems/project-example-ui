@@ -3,7 +3,7 @@ import { DashboardFactory, initDashboardResource } from "../impl/core"
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initExampleComponent } from "../../example/impl"
 
-import { newErrorAction } from "../../../../../availability/error/main"
+import { newErrorAction } from "../../../../../availability/unexpectedError/main"
 import { initSeasonAction } from "../../../../shared/season/main/season"
 import { newMainOutlineAction } from "../../../../../auth/permission/outline/main/main"
 

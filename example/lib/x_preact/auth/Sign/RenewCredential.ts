@@ -16,9 +16,9 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { RenewCredentialEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialRenewComponentState } from "../../../auth/x_Resource/Sign/RenewCredential/Renew/component"
+import { initialRenewComponentState } from "../../../auth/x_Resource/sign/RenewCredential/Renew/component"
 
-import { RequestError } from "../../../auth/sign/authCredential/renew/data"
+import { RequestRenewAuthCredentialError } from "../../../auth/sign/authCredential/renew/data"
 
 export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoint): VNode {
     useTermination(terminate)
@@ -100,7 +100,7 @@ export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoi
             ],
         })
     }
-    function errorMessage(err: RequestError): VNode {
+    function errorMessage(err: RequestRenewAuthCredentialError): VNode {
         return loginBox(siteInfo(), {
             title: "認証に失敗しました",
             body: [
@@ -112,7 +112,7 @@ export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoi
     }
 }
 
-function renewError(err: RequestError): VNodeContent[] {
+function renewError(err: RequestRenewAuthCredentialError): VNodeContent[] {
     switch (err.type) {
         case "bad-request":
             return ["認証情報の送信処理でエラーが発生しました"]

@@ -1,14 +1,14 @@
-import { LogoutEvent } from "./event"
+import { SubmitClearAuthCredentialEvent } from "./event"
 
-export type ClearAction = Readonly<{
-    logout: LogoutMethod
+export type ClearAuthCredentialAction = Readonly<{
+    submit: SubmitClearAuthCredentialMethod
 }>
 
-export interface LogoutPod {
-    (): LogoutMethod
+export interface SubmitClearAuthCredentialPod {
+    (): SubmitClearAuthCredentialMethod
 }
-export interface LogoutMethod {
-    (post: Post<LogoutEvent>): void
+export interface SubmitClearAuthCredentialMethod {
+    (post: Post<SubmitClearAuthCredentialEvent>): void
 }
 
 interface Post<E> {

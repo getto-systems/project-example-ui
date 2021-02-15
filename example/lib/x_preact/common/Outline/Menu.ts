@@ -20,7 +20,7 @@ import {
     initialMenuComponentState,
 } from "../../../common/x_Resource/Outline/Menu/Menu/component"
 
-import { Menu, MenuCategoryNode, MenuItemNode, LoadMenuError } from "../../../auth/permission/outline/data"
+import { OutlineMenu, OutlineMenuCategoryNode, OutlineMenuItemNode, LoadOutlineMenuBadgeError } from "../../../auth/permission/outline/data"
 
 export const MENU_ID = "menu"
 
@@ -51,12 +51,12 @@ export function Menu(resource: Props): VNode {
         return appMenu([...content, menuFooter(poweredBy())])
     }
 
-    function content(wholeMenu: Menu): VNode {
+    function content(wholeMenu: OutlineMenu): VNode {
         // id="menu" は breadcrumb の href="#menu" と対応
         // mobile レイアウトで menu に移動
         return menuBody(MENU_ID, menuContent(wholeMenu))
 
-        function menuContent(menu: Menu): VNode[] {
+        function menuContent(menu: OutlineMenu): VNode[] {
             return menu.map((node) => {
                 switch (node.type) {
                     case "category":
@@ -68,7 +68,7 @@ export function Menu(resource: Props): VNode {
             })
         }
 
-        function menuCategoryContent(node: MenuCategoryNode) {
+        function menuCategoryContent(node: OutlineMenuCategoryNode) {
             const { label } = node.category
 
             return menuCategory({
@@ -85,7 +85,7 @@ export function Menu(resource: Props): VNode {
             }
         }
 
-        function menuItemContent(node: MenuItemNode) {
+        function menuItemContent(node: OutlineMenuItemNode) {
             const { label, icon, href } = node.item
 
             return menuItem({
@@ -106,10 +106,10 @@ function badge(badgeCount: number) {
     return badge_alert(html`${badgeCount}`)
 }
 
-function error(err: LoadMenuError): VNode {
+function error(err: LoadOutlineMenuBadgeError): VNode {
     return menuBox(loadMenuError(err))
 }
-function loadMenuError(err: LoadMenuError): VNode[] {
+function loadMenuError(err: LoadOutlineMenuBadgeError): VNode[] {
     switch (err.type) {
         case "empty-nonce":
             return [notice_alert("認証エラー"), ...detail("もう一度ログインしてください")]

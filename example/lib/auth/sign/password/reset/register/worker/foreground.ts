@@ -6,9 +6,9 @@ import {
 
 import { RegisterActionProxyMessage, RegisterActionProxyResponse, SubmitProxyParams } from "./message"
 
-import { RegisterActionPod } from "../action"
+import { PasswordResetRegisterActionPod } from "../action"
 
-import { SubmitEvent } from "../event"
+import { SubmitPasswordResetRegisterEvent } from "../event"
 
 export function newRegisterActionForegroundProxy(
     post: Post<RegisterActionProxyMessage>
@@ -16,7 +16,7 @@ export function newRegisterActionForegroundProxy(
     return new Proxy(post)
 }
 export type RegisterActionForegroundProxy = WorkerForegroundProxyAction<
-    RegisterActionPod,
+    PasswordResetRegisterActionPod,
     RegisterActionProxyMessage,
     RegisterActionProxyResponse
 >
@@ -24,17 +24,17 @@ export type RegisterActionForegroundProxy = WorkerForegroundProxyAction<
 class Proxy
     extends WorkerForegroundProxyBase<RegisterActionProxyMessage>
     implements RegisterActionForegroundProxy {
-    submit: WorkerForegroundProxyMethod<SubmitProxyParams, SubmitEvent>
+    submit: WorkerForegroundProxyMethod<SubmitProxyParams, SubmitPasswordResetRegisterEvent>
 
     constructor(post: Post<RegisterActionProxyMessage>) {
         super(post)
         this.submit = this.method((message) => ({ method: "submit", ...message }))
     }
 
-    pod(): RegisterActionPod {
+    pod(): PasswordResetRegisterActionPod {
         return {
             initSubmit: (locationInfo) => (fields, post) =>
-                this.submit.call({ fields, resetToken: locationInfo.getResetToken() }, post),
+                this.submit.call({ fields, resetToken: locationInfo.getPasswordResetToken() }, post),
         }
     }
     resolve(response: RegisterActionProxyResponse): void {
