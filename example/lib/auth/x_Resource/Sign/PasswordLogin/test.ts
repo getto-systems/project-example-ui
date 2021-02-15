@@ -1,7 +1,5 @@
 import { initPasswordLoginResource } from "./impl"
 
-import { initLoginLocationInfo } from "../../common/LocationInfo/impl"
-
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
 import { initLoginSimulateRemoteAccess } from "../../../sign/password/login/infra/remote/login/simulate"
 import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/common/infra/remote/renew/simulate"
@@ -31,7 +29,7 @@ import {
     RenewRemoteAccessResult,
 } from "../../../sign/authCredential/common/infra"
 import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
-import { initLocationActionPod } from "../../../sign/location/impl"
+import { detectPagePathname, initLocationAction } from "../../../sign/location/impl"
 import { delayed } from "../../../../z_infra/delayed/core"
 import { initLoginActionPod, submitEventHasDone } from "../../../sign/password/login/impl"
 import {
@@ -609,7 +607,6 @@ function newTestPasswordLoginResource(
 ): PasswordLoginResource {
     const config = standardConfig()
     return initPasswordLoginResource(
-        initLoginLocationInfo(currentURL),
         {
             continuousRenew: initContinuousRenewAction({
                 ...repository,
@@ -617,7 +614,12 @@ function newTestPasswordLoginResource(
                 config: config.continuousRenew,
                 clock,
             }),
-            initLocation: initLocationActionPod({ config: config.location }),
+            location: initLocationAction(
+                {
+                    getPagePathname: () => detectPagePathname(currentURL),
+                },
+                { config: config.location }
+            ),
 
             form: {
                 core: initFormAction(),

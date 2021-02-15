@@ -4,32 +4,24 @@ import { initLoginComponent } from "./Login/impl"
 import {
     PasswordLoginBackgroundActionPod,
     PasswordLoginForegroundAction,
-    PasswordLoginLocationInfo,
     PasswordLoginResource,
 } from "./resource"
 
-import { LoginMaterial } from "./Login/component"
 import { FormMaterial } from "./Form/component"
-import { initLocationAction } from "../../../sign/location/impl"
 import { initLoginAction } from "../../../sign/password/login/impl"
 
 export function initPasswordLoginResource(
-    locationInfo: PasswordLoginLocationInfo,
     foreground: PasswordLoginForegroundAction,
     background: PasswordLoginBackgroundActionPod
 ): PasswordLoginResource {
     return {
-        login: initLoginComponent(loginMaterial()),
+        login: initLoginComponent({
+            ...foreground,
+            login: initLoginAction(background.initLogin),
+        }),
         form: initFormComponent(formMaterial()),
     }
 
-    function loginMaterial(): LoginMaterial {
-        return {
-            ...foreground,
-            login: initLoginAction(background.initLogin),
-            location: initLocationAction(foreground.initLocation, locationInfo),
-        }
-    }
     function formMaterial(): FormMaterial {
         return {
             validation: foreground.form.core.validation(),

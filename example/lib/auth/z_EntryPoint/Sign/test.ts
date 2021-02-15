@@ -39,7 +39,7 @@ import { initContinuousRenewAction } from "../../sign/authCredential/continuousR
 import { initRenewAction } from "../../sign/authCredential/renew/impl"
 import { delayed, wait } from "../../../z_infra/delayed/core"
 import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/memory"
-import { initLocationActionPod } from "../../sign/location/impl"
+import { detectPagePathname, initLocationAction } from "../../sign/location/impl"
 import { initLoginActionPod } from "../../sign/password/login/impl"
 import { initRegisterActionPod } from "../../sign/password/reset/register/impl"
 import { initSessionActionPod } from "../../sign/password/reset/session/impl"
@@ -358,7 +358,6 @@ function standardPasswordLoginResource(
     clock: Clock
 ) {
     return initPasswordLoginResource(
-        initLoginLocationInfo(currentURL),
         {
             continuousRenew: initContinuousRenewAction({
                 apiCredentials,
@@ -370,11 +369,14 @@ function standardPasswordLoginResource(
                 },
                 clock,
             }),
-            initLocation: initLocationActionPod({
-                config: {
-                    secureServerHost: standardSecureHost(),
-                },
-            }),
+            location: initLocationAction(
+                { getPagePathname: () => detectPagePathname(currentURL) },
+                {
+                    config: {
+                        secureServerHost: standardSecureHost(),
+                    },
+                }
+            ),
 
             form: {
                 core: initFormAction(),
@@ -412,11 +414,14 @@ function standardPasswordResetResource(
                 },
                 clock,
             }),
-            initLocation: initLocationActionPod({
-                config: {
-                    secureServerHost: standardSecureHost(),
-                },
-            }),
+            location: initLocationAction(
+                { getPagePathname: () => detectPagePathname(currentURL) },
+                {
+                    config: {
+                        secureServerHost: standardSecureHost(),
+                    },
+                }
+            ),
 
             form: {
                 core: initFormAction(),
@@ -475,7 +480,7 @@ function standardRenewCredentialResource(
     authCredentials: AuthCredentialRepository,
     clock: Clock
 ) {
-    return initRenewCredentialResource(initLoginLocationInfo(currentURL), {
+    return initRenewCredentialResource({
         renew: initRenewAction({
             apiCredentials,
             authCredentials,
@@ -497,11 +502,14 @@ function standardRenewCredentialResource(
             },
             clock,
         }),
-        initLocation: initLocationActionPod({
-            config: {
-                secureServerHost: standardSecureHost(),
-            },
-        }),
+        location: initLocationAction(
+            { getPagePathname: () => detectPagePathname(currentURL) },
+            {
+                config: {
+                    secureServerHost: standardSecureHost(),
+                },
+            }
+        ),
     })
 }
 

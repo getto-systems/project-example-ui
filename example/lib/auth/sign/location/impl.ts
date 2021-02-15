@@ -1,6 +1,6 @@
 import { GetSecureScriptPath, LocationActionInfra } from "./infra"
 
-import { LocationAction, LocationActionLocationInfo, LocationActionPod } from "./action"
+import { LocationAction, LocationActionLocationInfo } from "./action"
 
 import { markPagePathname, markScriptPath, PagePathname } from "./data"
 
@@ -9,16 +9,11 @@ export function detectPagePathname(currentURL: URL): PagePathname {
 }
 
 export function initLocationAction(
-    pod: LocationActionPod,
-    locationInfo: LocationActionLocationInfo
+    locationInfo: LocationActionLocationInfo,
+    infra: LocationActionInfra
 ): LocationAction {
     return {
-        getSecureScriptPath: pod.initGetSecureScriptPath(locationInfo),
-    }
-}
-export function initLocationActionPod(infra: LocationActionInfra): LocationActionPod {
-    return {
-        initGetSecureScriptPath: getSecureScriptPath(infra),
+        getSecureScriptPath: getSecureScriptPath(infra)(locationInfo),
     }
 }
 
