@@ -7,7 +7,7 @@ import {
     MenuComponentState,
 } from "./component"
 
-import { Menu, MenuCategoryPath } from "../../../../../auth/permission/menu/data"
+import { Menu, MenuCategoryPath } from "../../../../../auth/permission/outline/data"
 
 export const initMenuComponent: MenuComponentFactory = (material) => new Component(material)
 

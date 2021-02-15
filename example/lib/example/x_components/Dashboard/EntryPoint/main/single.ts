@@ -1,31 +1,23 @@
-import { env } from "../../../../../y_environment/env"
-
-import { DashboardLocationInfo, DashboardFactory, initDashboardResource } from "../impl/core"
+import { DashboardFactory, initDashboardResource } from "../impl/core"
 
 import { initNotifyComponent } from "../../../../../availability/x_Resource/NotifyError/Notify/impl"
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initExampleComponent } from "../../example/impl"
-import { detectMenuTarget } from "../../../../../auth/permission/menu/impl"
 
-import { initNotifyAction } from "../../../../../availability/error/notify/main/notify"
+import { newNotifyAction } from "../../../../../availability/error/notify/main/notify"
 import { initSeasonAction } from "../../../../shared/season/main/season"
-import {
-    newMainBreadcrumbListActionPod,
-    newMainMenuActionPod,
-} from "../../../../../auth/permission/menu/main/main"
+import { newMainOutlineAction } from "../../../../../auth/permission/outline/main/main"
 
 import { DashboardEntryPoint } from "../entryPoint"
 
 export function newDashboardAsSingle(): DashboardEntryPoint {
     const webStorage = localStorage
-    const currentURL = new URL(location.toString())
 
     const factory: DashboardFactory = {
         actions: {
-            initBreadcrumbList: newMainBreadcrumbListActionPod(),
-            initMenu: newMainMenuActionPod(webStorage),
+            ...newMainOutlineAction(webStorage),
 
-            notify: initNotifyAction(),
+            notify: newNotifyAction(),
             season: initSeasonAction(),
         },
         components: {
@@ -35,10 +27,7 @@ export function newDashboardAsSingle(): DashboardEntryPoint {
             example: initExampleComponent,
         },
     }
-    const locationInfo: DashboardLocationInfo = {
-        getMenuTarget: () => detectMenuTarget(env.version, currentURL),
-    }
-    const resource = initDashboardResource(factory, locationInfo)
+    const resource = initDashboardResource(factory)
     return {
         resource,
         terminate: () => {

@@ -1,4 +1,4 @@
-import { MenuForegroundActionPod, MenuResource } from "../../../common/x_Resource/Outline/Menu/resource"
+import { MenuForegroundAction, MenuResource } from "../../../common/x_Resource/Outline/Menu/resource"
 import {
     ClearCredentialForegroundActionPod,
     ClearCredentialResource,
@@ -14,7 +14,6 @@ import {
 } from "../../../example/x_components/Outline/seasonInfo/component"
 
 import { NotifyAction } from "../../../availability/error/notify/action"
-import { MenuActionLocationInfo } from "../../permission/menu/action"
 import { SeasonAction } from "../../../example/shared/season/action"
 
 export type ProfileEntryPoint = Readonly<{
@@ -34,14 +33,13 @@ export type ProfileFactory = Readonly<{
         notify: NotifyAction
         season: SeasonAction
     }> &
-        MenuForegroundActionPod &
+        MenuForegroundAction &
         ClearCredentialForegroundActionPod
     components: Readonly<{
         error: NotifyComponentFactory
         seasonInfo: SeasonInfoComponentFactory
     }>
 }>
-export type ProfileLocationInfo = MenuActionLocationInfo
 interface Terminate {
     (): void
 }

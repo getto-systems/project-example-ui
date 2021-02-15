@@ -1,8 +1,8 @@
 import { ApplicationComponent } from "../../../../../vendor/getto-example/Application/component"
 
-import { BreadcrumbListAction } from "../../../../../auth/permission/menu/action"
+import { BreadcrumbListAction } from "../../../../../auth/permission/outline/action"
 
-import { Breadcrumb } from "../../../../../auth/permission/menu/data"
+import { Breadcrumb } from "../../../../../auth/permission/outline/data"
 
 export interface BreadcrumbListComponentFactory {
     (material: BreadcrumbListMaterial): BreadcrumbListComponent

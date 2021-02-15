@@ -19,7 +19,7 @@ import {
     initialBreadcrumbListComponentState,
 } from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/component"
 
-import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../../auth/permission/menu/data"
+import { Breadcrumb, BreadcrumbNode, MenuCategory, MenuItem } from "../../../auth/permission/outline/data"
 import { linky } from "../../../z_vendor/getto-css/preact/design/highlight"
 
 type Props = Readonly<{

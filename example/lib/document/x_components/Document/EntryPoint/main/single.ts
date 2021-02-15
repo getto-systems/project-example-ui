@@ -2,21 +2,18 @@ import { env } from "../../../../../y_environment/env"
 
 import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
 
-import { detectMenuTarget } from "../../../../../auth/permission/menu/impl"
+import { detectMenuTarget } from "../../../../../auth/permission/outline/impl"
 import { detectContentPath } from "../../../../content/impl/location"
 
 import { initNotifyComponent } from "../../../../../availability/x_Resource/NotifyError/Notify/impl"
 import { initContentComponent } from "../../content/impl"
 
-import { initNotifyAction } from "../../../../../availability/error/notify/main/notify"
+import { newNotifyAction } from "../../../../../availability/error/notify/main/notify"
 
 import { DocumentEntryPoint } from "../entryPoint"
 
 import { initContentAction } from "../../../../content/main/content"
-import {
-    newDocumentBreadcrumbListActionPod,
-    newDocumentMenuActionPod,
-} from "../../../../../auth/permission/menu/main/document"
+import { newDocumentOutlineAction } from "../../../../../auth/permission/outline/main/document"
 
 export function newDocumentAsSingle(): DocumentEntryPoint {
     const webStorage = localStorage
@@ -24,10 +21,9 @@ export function newDocumentAsSingle(): DocumentEntryPoint {
 
     const factory: DocumentFactory = {
         actions: {
-            initBreadcrumbList: newDocumentBreadcrumbListActionPod(),
-            initMenu: newDocumentMenuActionPod(webStorage),
+            ...newDocumentOutlineAction(webStorage),
 
-            notify: initNotifyAction(),
+            notify: newNotifyAction(),
             content: initContentAction(),
         },
         components: {

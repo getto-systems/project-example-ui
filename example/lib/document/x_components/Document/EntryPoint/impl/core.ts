@@ -6,8 +6,8 @@ import { ContentComponentFactory } from "../../content/component"
 
 import { ContentAction, LoadContentLocationInfo } from "../../../../content/action"
 import { NotifyAction } from "../../../../../availability/error/notify/action"
-import { MenuForegroundActionPod } from "../../../../../common/x_Resource/Outline/Menu/resource"
-import { MenuActionLocationInfo } from "../../../../../auth/permission/menu/action"
+import { MenuForegroundAction } from "../../../../../common/x_Resource/Outline/Menu/resource"
+import { MenuActionLocationInfo } from "../../../../../auth/permission/outline/action"
 import { initMenuResource } from "../../../../../common/x_Resource/Outline/Menu/impl"
 
 export type DocumentFactory = Readonly<{
@@ -15,7 +15,7 @@ export type DocumentFactory = Readonly<{
         notify: NotifyAction
         content: ContentAction
     }> &
-        MenuForegroundActionPod
+        MenuForegroundAction
     components: Readonly<{
         error: NotifyComponentFactory
         content: ContentComponentFactory
@@ -37,6 +37,6 @@ export function initDocumentResource(
         error: factory.components.error(actions),
         content: factory.components.content(actions),
 
-        ...initMenuResource(locationInfo, factory.actions),
+        ...initMenuResource(factory.actions),
     }
 }

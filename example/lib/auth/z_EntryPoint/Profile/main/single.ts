@@ -1,30 +1,25 @@
-import { newMainBreadcrumbListActionPod, newMainMenuActionPod } from "../../../permission/menu/main/main"
+import { newMainOutlineAction } from "../../../permission/outline/main/main"
 import { newClearActionPod } from "../../../sign/authCredential/clear/main"
-
-import { env } from "../../../../y_environment/env"
 
 import { initProfileResource } from "../impl"
 
 import { initNotifyComponent } from "../../../../availability/x_Resource/NotifyError/Notify/impl"
 import { initSeasonInfoComponent } from "../../../../example/x_components/Outline/seasonInfo/impl"
-import { detectMenuTarget } from "../../../permission/menu/impl"
 
-import { initNotifyAction } from "../../../../availability/error/notify/main/notify"
+import { newNotifyAction } from "../../../../availability/error/notify/main/notify"
 import { initSeasonAction } from "../../../../example/shared/season/main/season"
 
-import { ProfileEntryPoint, ProfileFactory, ProfileLocationInfo } from "../entryPoint"
+import { ProfileEntryPoint, ProfileFactory } from "../entryPoint"
 
 export function newProfileAsSingle(): ProfileEntryPoint {
     const webStorage = localStorage
-    const currentURL = new URL(location.toString())
 
     const factory: ProfileFactory = {
         actions: {
             initClear: newClearActionPod(webStorage),
-            initBreadcrumbList: newMainBreadcrumbListActionPod(),
-            initMenu: newMainMenuActionPod(webStorage),
+            ...newMainOutlineAction(webStorage),
 
-            notify: initNotifyAction(),
+            notify: newNotifyAction(),
             season: initSeasonAction(),
         },
         components: {
@@ -32,10 +27,7 @@ export function newProfileAsSingle(): ProfileEntryPoint {
             seasonInfo: initSeasonInfoComponent,
         },
     }
-    const locationInfo: ProfileLocationInfo = {
-        getMenuTarget: () => detectMenuTarget(env.version, currentURL),
-    }
-    const resource = initProfileResource(factory, locationInfo)
+    const resource = initProfileResource(factory)
     return {
         resource,
         terminate: () => {

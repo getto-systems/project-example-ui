@@ -3,20 +3,27 @@ import { newDocumentMenuExpandRepository } from "../infra/repository/main"
 
 import { lnir } from "../../../../z_vendor/icon"
 
-import { category, newMenuActionPod, item } from "./common"
+import { category, newMenuAction, item, newMenuActionLocationInfo } from "./common"
 
-import { initBreadcrumbListActionPod } from "../impl"
+import { initBreadcrumbListAction } from "../impl"
 
 import { MenuPermission, MenuTree } from "../infra"
 
-import { BreadcrumbListActionPod, MenuActionPod } from "../action"
+import { BreadcrumbListAction, MenuAction, OutlineAction } from "../action"
 
-export function newDocumentBreadcrumbListActionPod(): BreadcrumbListActionPod {
-    return initBreadcrumbListActionPod({ menuTree: documentMenuTree() })
+export function newDocumentOutlineAction(webStorage: Storage): OutlineAction {
+    return {
+        breadcrumbList: newDocumentBreadcrumbListAction(),
+        menu: newDocumentMenuAction(webStorage),
+    }
 }
 
-export function newDocumentMenuActionPod(webStorage: Storage): MenuActionPod {
-    return newMenuActionPod(
+function newDocumentBreadcrumbListAction(): BreadcrumbListAction {
+    return initBreadcrumbListAction(newMenuActionLocationInfo(), { menuTree: documentMenuTree() })
+}
+
+function newDocumentMenuAction(webStorage: Storage): MenuAction {
+    return newMenuAction(
         webStorage,
         newDocumentMenuExpandRepository,
         documentMenuTree(),

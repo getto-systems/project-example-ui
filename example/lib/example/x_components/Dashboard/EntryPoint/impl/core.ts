@@ -6,8 +6,7 @@ import { ExampleComponentFactory } from "../../example/component"
 import { SeasonAction } from "../../../../shared/season/action"
 import { NotifyComponentFactory } from "../../../../../availability/x_Resource/NotifyError/Notify/component"
 import { NotifyAction } from "../../../../../availability/error/notify/action"
-import { MenuForegroundActionPod } from "../../../../../common/x_Resource/Outline/Menu/resource"
-import { MenuActionLocationInfo } from "../../../../../auth/permission/menu/action"
+import { MenuForegroundAction } from "../../../../../common/x_Resource/Outline/Menu/resource"
 import { initMenuResource } from "../../../../../common/x_Resource/Outline/Menu/impl"
 
 export type DashboardFactory = Readonly<{
@@ -15,7 +14,7 @@ export type DashboardFactory = Readonly<{
         notify: NotifyAction
         season: SeasonAction
     }> &
-        MenuForegroundActionPod
+        MenuForegroundAction
     components: Readonly<{
         error: NotifyComponentFactory
         seasonInfo: SeasonInfoComponentFactory
@@ -23,11 +22,7 @@ export type DashboardFactory = Readonly<{
         example: ExampleComponentFactory
     }>
 }>
-export type DashboardLocationInfo = MenuActionLocationInfo
-export function initDashboardResource(
-    factory: DashboardFactory,
-    locationInfo: DashboardLocationInfo
-): DashboardResource {
+export function initDashboardResource(factory: DashboardFactory): DashboardResource {
     const actions = {
         notify: factory.actions.notify.notify(),
         loadSeason: factory.actions.season.loadSeason(),
@@ -38,6 +33,6 @@ export function initDashboardResource(
 
         example: factory.components.example(actions),
 
-        ...initMenuResource(locationInfo, factory.actions),
+        ...initMenuResource(factory.actions),
     }
 }

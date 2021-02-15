@@ -3,20 +3,27 @@ import { newLoadMenuBadgeRemoteAccess } from "../infra/remote/menuBadge/main"
 
 import { lnir } from "../../../../z_vendor/icon"
 
-import { category, newMenuActionPod, item } from "./common"
+import { category, newMenuAction, item, newMenuActionLocationInfo } from "./common"
 
-import { initBreadcrumbListActionPod } from "../impl"
+import { initBreadcrumbListAction } from "../impl"
 
 import { MenuPermission, MenuTree } from "../infra"
 
-import { BreadcrumbListActionPod, MenuActionPod } from "../action"
+import { BreadcrumbListAction, MenuAction, OutlineAction } from "../action"
 
-export function newMainBreadcrumbListActionPod(): BreadcrumbListActionPod {
-    return initBreadcrumbListActionPod({ menuTree: mainMenuTree() })
+export function newMainOutlineAction(webStorage: Storage): OutlineAction {
+    return {
+        breadcrumbList: newMainBreadcrumbListAction(),
+        menu: newMainMenuAction(webStorage),
+    }
 }
 
-export function newMainMenuActionPod(webStorage: Storage): MenuActionPod {
-    return newMenuActionPod(
+function newMainBreadcrumbListAction(): BreadcrumbListAction {
+    return initBreadcrumbListAction(newMenuActionLocationInfo(), { menuTree: mainMenuTree() })
+}
+
+function newMainMenuAction(webStorage: Storage): MenuAction {
+    return newMenuAction(
         webStorage,
         newMainMenuExpandRepository,
         mainMenuTree(),

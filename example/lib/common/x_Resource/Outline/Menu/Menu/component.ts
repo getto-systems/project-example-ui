@@ -1,8 +1,8 @@
 import { ApplicationComponent } from "../../../../../vendor/getto-example/Application/component"
 
-import { MenuAction } from "../../../../../auth/permission/menu/action"
+import { MenuAction } from "../../../../../auth/permission/outline/action"
 
-import { Menu, LoadMenuError, MenuCategoryPath } from "../../../../../auth/permission/menu/data"
+import { Menu, LoadMenuError, MenuCategoryPath } from "../../../../../auth/permission/outline/data"
 
 export interface MenuComponentFactory {
     (material: MenuMaterial): MenuComponent
