@@ -12,8 +12,8 @@ export function detectResetToken(currentURL: URL): ResetToken {
 }
 
 export function initRegisterAction(
+    locationInfo: RegisterActionLocationInfo,
     pod: RegisterActionPod,
-    locationInfo: RegisterActionLocationInfo
 ): RegisterAction {
     return {
         submit: pod.initSubmit(locationInfo),
