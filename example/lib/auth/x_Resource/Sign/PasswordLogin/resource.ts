@@ -2,7 +2,7 @@ import { LoginComponent } from "./Login/component"
 import { FormComponent } from "./Form/component"
 
 import { FormAction } from "../../../../vendor/getto-form/form/action"
-import { LocationActionPod, LocationActionLocationInfo } from "../../../sign/location/action"
+import { LocationAction } from "../../../sign/location/action"
 import { LoginIDFormFieldAction } from "../../../common/field/loginID/action"
 import { PasswordFormFieldAction } from "../../../common/field/password/action"
 import { LoginActionPod } from "../../../sign/password/login/action"
@@ -13,10 +13,9 @@ export type PasswordLoginResource = Readonly<{
     form: FormComponent
 }>
 
-export type PasswordLoginLocationInfo = LocationActionLocationInfo
 export type PasswordLoginForegroundAction = Readonly<{
     continuousRenew: ContinuousRenewAction
-    initLocation: LocationActionPod
+    location: LocationAction
 
     form: Readonly<{
         core: FormAction

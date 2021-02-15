@@ -5,12 +5,10 @@ import {
     PasswordResetResource,
 } from "./resource"
 
-import { ResetMaterial } from "./Reset/component"
 import { FormMaterial } from "./Form/component"
 
 import { initResetComponent } from "./Reset/impl"
 import { initFormComponent } from "./Form/impl"
-import { initLocationAction } from "../../../sign/location/impl"
 import { initRegisterAction } from "../../../sign/password/reset/register/impl"
 
 export function initPasswordResetResource(
@@ -19,17 +17,13 @@ export function initPasswordResetResource(
     background: PasswordResetBackgroundActionPod
 ): PasswordResetResource {
     return {
-        reset: initResetComponent(resetMaterial()),
+        reset: initResetComponent({
+            ...foreground,
+            register: initRegisterAction(background.initRegister, locationInfo),
+        }),
         form: initFormComponent(formMaterial()),
     }
 
-    function resetMaterial(): ResetMaterial {
-        return {
-            ...foreground,
-            location: initLocationAction(foreground.initLocation, locationInfo),
-            register: initRegisterAction(background.initRegister, locationInfo),
-        }
-    }
     function formMaterial(): FormMaterial {
         return {
             validation: foreground.form.core.validation(),

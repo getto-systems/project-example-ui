@@ -1,8 +1,5 @@
 import { PagePathname, ScriptPath } from "./data"
 
-export type LocationActionPod = Readonly<{
-    initGetSecureScriptPath: GetSecureScriptPathPod
-}>
 export type LocationAction = Readonly<{
     getSecureScriptPath: GetSecureScriptPathMethod
 }>

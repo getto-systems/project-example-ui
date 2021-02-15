@@ -33,7 +33,7 @@ import {
 } from "../../../sign/authCredential/common/infra"
 import { initContinuousRenewAction } from "../../../sign/authCredential/continuousRenew/impl"
 import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
-import { initLocationActionPod } from "../../../sign/location/impl"
+import { detectPagePathname, initLocationAction } from "../../../sign/location/impl"
 import { initRegisterActionPod, submitEventHasDone } from "../../../sign/password/reset/register/impl"
 import { delayed } from "../../../../z_infra/delayed/core"
 import {
@@ -647,7 +647,10 @@ function newPasswordResetTestResource(
                 config: config.continuousRenew,
                 clock,
             }),
-            initLocation: initLocationActionPod({ config: config.location }),
+            location: initLocationAction(
+                { getPagePathname: () => detectPagePathname(currentURL) },
+                { config: config.location }
+            ),
 
             form: {
                 core: initFormAction(),

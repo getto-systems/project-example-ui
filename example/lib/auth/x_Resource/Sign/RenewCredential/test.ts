@@ -1,7 +1,5 @@
 import { initRenewCredentialResource } from "./impl"
 
-import { initLoginLocationInfo } from "../../common/LocationInfo/impl"
-
 import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
 import { initRenewSimulateRemoteAccess } from "../../../sign/authCredential/common/infra/remote/renew/simulate"
 
@@ -25,7 +23,7 @@ import { delayed } from "../../../../z_infra/delayed/core"
 import { initRenewAction } from "../../../sign/authCredential/renew/impl"
 import { initContinuousRenewAction } from "../../../sign/authCredential/continuousRenew/impl"
 import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/memory"
-import { initLocationActionPod } from "../../../sign/location/impl"
+import { detectPagePathname, initLocationAction } from "../../../sign/location/impl"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -416,7 +414,7 @@ function newTestRenewCredentialResource(
     clock: Clock
 ): RenewCredentialResource {
     const config = standardConfig()
-    return initRenewCredentialResource(initLoginLocationInfo(currentURL), {
+    return initRenewCredentialResource({
         renew: initRenewAction({
             ...repository,
             ...remote,
@@ -430,7 +428,12 @@ function newTestRenewCredentialResource(
             config: config.continuousRenew,
             clock,
         }),
-        initLocation: initLocationActionPod({ config: config.location }),
+        location: initLocationAction(
+            {
+                getPagePathname: () => detectPagePathname(currentURL),
+            },
+            { config: config.location }
+        ),
     })
 }
 

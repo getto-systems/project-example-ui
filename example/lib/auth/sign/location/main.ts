@@ -1,13 +1,19 @@
 import { env } from "../../../y_environment/env"
 
-import { initLocationActionPod } from "./impl"
+import { detectPagePathname, initLocationAction } from "./impl"
 
-import { LocationActionPod } from "./action"
+import { LocationAction } from "./action"
+import { currentURL } from "../../../z_infra/location/url"
 
-export function newLocationActionPod(): LocationActionPod {
-    return initLocationActionPod({
-        config: {
-            secureServerHost: env.secureServerHost,
+export function newLocationAction(): LocationAction {
+    return initLocationAction(
+        {
+            getPagePathname: () => detectPagePathname(currentURL()),
         },
-    })
+        {
+            config: {
+                secureServerHost: env.secureServerHost,
+            },
+        }
+    )
 }
