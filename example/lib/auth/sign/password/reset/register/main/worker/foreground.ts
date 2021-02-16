@@ -4,29 +4,36 @@ import {
     WorkerForegroundProxyMethod,
 } from "../../../../../../../vendor/getto-worker/main/foreground"
 
-import { RegisterActionProxyMessage, RegisterActionProxyResponse, SubmitProxyParams } from "./message"
+import {
+    PasswordResetRegisterActionProxyMessage,
+    PasswordResetRegisterActionProxyResponse,
+    SubmitPasswordResetRegisterProxyParams,
+} from "./message"
 
 import { PasswordResetRegisterActionPod } from "../../action"
 
 import { SubmitPasswordResetRegisterEvent } from "../../event"
 
-export function newRegisterActionForegroundProxy(
-    post: Post<RegisterActionProxyMessage>
+export function newPasswordResetRegisterActionForegroundProxy(
+    post: Post<PasswordResetRegisterActionProxyMessage>
 ): RegisterActionForegroundProxy {
     return new Proxy(post)
 }
 export type RegisterActionForegroundProxy = WorkerForegroundProxyAction<
     PasswordResetRegisterActionPod,
-    RegisterActionProxyMessage,
-    RegisterActionProxyResponse
+    PasswordResetRegisterActionProxyMessage,
+    PasswordResetRegisterActionProxyResponse
 >
 
 class Proxy
-    extends WorkerForegroundProxyBase<RegisterActionProxyMessage>
+    extends WorkerForegroundProxyBase<PasswordResetRegisterActionProxyMessage>
     implements RegisterActionForegroundProxy {
-    submit: WorkerForegroundProxyMethod<SubmitProxyParams, SubmitPasswordResetRegisterEvent>
+    submit: WorkerForegroundProxyMethod<
+        SubmitPasswordResetRegisterProxyParams,
+        SubmitPasswordResetRegisterEvent
+    >
 
-    constructor(post: Post<RegisterActionProxyMessage>) {
+    constructor(post: Post<PasswordResetRegisterActionProxyMessage>) {
         super(post)
         this.submit = this.method((message) => ({ method: "submit", ...message }))
     }
@@ -37,7 +44,7 @@ class Proxy
                 this.submit.call({ fields, resetToken: locationInfo.getPasswordResetToken() }, post),
         }
     }
-    resolve(response: RegisterActionProxyResponse): void {
+    resolve(response: PasswordResetRegisterActionProxyResponse): void {
         switch (response.method) {
             case "submit":
                 this.submit.resolve(response)

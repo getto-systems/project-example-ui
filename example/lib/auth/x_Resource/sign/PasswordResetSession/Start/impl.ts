@@ -1,13 +1,11 @@
 import { ApplicationBaseComponent } from "../../../../../vendor/getto-example/Application/impl"
 
-import {
-    StartComponentFactory,
-    StartMaterial,
-    StartComponent,
-    StartComponentState,
-} from "./component"
+import { StartComponentFactory, StartMaterial, StartComponent, StartComponentState } from "./component"
 
-import { PasswordResetSessionID, PasswordResetSessionFields } from "../../../../sign/password/reset/session/data"
+import {
+    PasswordResetSessionID,
+    PasswordResetSessionFields,
+} from "../../../../sign/password/reset/session/data"
 import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"
 
 export const initStartComponent: StartComponentFactory = (material) => new Component(material)

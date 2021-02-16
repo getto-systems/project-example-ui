@@ -6,13 +6,13 @@ import { PasswordReset } from "./PasswordReset"
 import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
 import { initMockPasswordResetEntryPoint } from "../../../auth/z_EntryPoint/Sign/mock"
 import { PasswordResetResourceMockProps } from "../../../auth/x_Resource/sign/PasswordReset/mock"
-import { loginIDFormFieldValidations } from "../../../auth/x_Resource/common/Field/LoginID/mock"
+import { loginIDFormFieldValidations } from "../../../auth/common/x_Component/Field/LoginID/mock"
 import { formValidationStates } from "../../../vendor/getto-form/x_Resource/Form/mock"
 import {
     passwordFormFieldCharacters,
     passwordFormFieldValidations,
     passwordFormFieldViews,
-} from "../../../auth/x_Resource/common/Field/Password/mock"
+} from "../../../auth/common/x_Component/Field/Password/mock"
 
 export default {
     title: "Auth/Login/PasswordReset",

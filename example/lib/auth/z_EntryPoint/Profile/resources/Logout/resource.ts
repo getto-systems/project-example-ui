@@ -1,13 +1,10 @@
 import {
     ClearAuthCredentialComponent,
-    ClearAuthCredentialForegroundMaterial,
-} from "./ClearAuthCredential/component"
+    ClearAuthCredentialMaterial,
+} from "../../../../sign/x_Component/AuthCredential/Clear/component"
 
 export type AuthProfileLogoutResource = Readonly<{
-    clearAuthCredential: ClearAuthCredentialComponent
+    clear: ClearAuthCredentialComponent
 }>
 
-export type AuthProfileLogoutMaterial = Readonly<{
-    foreground: AuthProfileLogoutForegroundMaterial
-}>
-export type AuthProfileLogoutForegroundMaterial = ClearAuthCredentialForegroundMaterial
+export type AuthProfileLogoutMaterial = ClearAuthCredentialMaterial

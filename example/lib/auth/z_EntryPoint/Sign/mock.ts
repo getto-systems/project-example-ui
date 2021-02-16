@@ -1,13 +1,13 @@
 import { MockComponent, MockPropsPasser } from "../../../vendor/getto-example/Application/mock"
 
 import {
-    initMockRenewCredentialResource,
-    RenewCredentialResourceMockPropsPasser,
-} from "../../x_Resource/sign/authCredential/Renew/mock"
+    initMockAuthSignRenewResource,
+    AuthSignRenewMockPropsPasser,
+} from "./resources/Renew/mock"
 import {
-    initMockPasswordLoginResource,
-    PasswordLoginResourceMockPropsPasser,
-} from "../../x_Resource/sign/PasswordLogin/mock"
+    initMockAuthSignPasswordLoginResource,
+    AuthSignPasswordLoginMockPropsPasser,
+} from "./resources/Password/Login/mock"
 import {
     initMockPasswordResetSessionResource,
     PasswordResetSessionResourceMockPropsPasser,
@@ -18,27 +18,27 @@ import {
 } from "../../x_Resource/sign/PasswordReset/mock"
 
 import {
-    LoginEntryPoint,
-    LoginView,
-    LoginState,
+    AuthSignEntryPoint,
+    AuthSignView,
+    AuthSignViewState,
     PasswordLoginEntryPoint,
     RenewCredentialEntryPoint,
     PasswordResetSessionEntryPoint,
     PasswordResetEntryPoint,
 } from "./entryPoint"
-import { SignLinkResource } from "./Link/resource"
-import { initSignLinkResource } from "./Link/impl"
+import { AuthSignLinkResource } from "./resources/Link/resource"
+import { initAuthSignLinkResource } from "./resources/Link/impl"
 
 export function initMockRenewCredentialEntryPoint(
-    passer: RenewCredentialResourceMockPropsPasser
+    passer: AuthSignRenewMockPropsPasser
 ): RenewCredentialEntryPoint {
-    return initEntryPoint(initMockRenewCredentialResource(passer))
+    return initEntryPoint(initMockAuthSignRenewResource(passer))
 }
 
 export function initMockPasswordLoginEntryPoint(
-    passer: PasswordLoginResourceMockPropsPasser
+    passer: AuthSignPasswordLoginMockPropsPasser
 ): PasswordLoginEntryPoint {
-    return initEntryPoint(initMockPasswordLoginResource(passer))
+    return initEntryPoint(initMockAuthSignPasswordLoginResource(passer))
 }
 
 export function initMockPasswordResetSessionEntryPoint(
@@ -61,14 +61,14 @@ interface Terminate {
     (): void
 }
 
-function initEntryPoint<R>(resource: R): EntryPoint<R & SignLinkResource> {
+function initEntryPoint<R>(resource: R): EntryPoint<R & AuthSignLinkResource> {
     return {
-        resource: { ...resource, ...initSignLinkResource() },
+        resource: { ...resource, ...initAuthSignLinkResource() },
         terminate,
     }
 }
 
-export function initMockLoginEntryPointAsError(passer: LoginErrorMockPropsPasser): LoginEntryPoint {
+export function initMockLoginEntryPointAsError(passer: LoginErrorMockPropsPasser): AuthSignEntryPoint {
     return {
         view: new MockErrorView(passer),
         terminate,
@@ -78,14 +78,14 @@ export function initMockLoginEntryPointAsError(passer: LoginErrorMockPropsPasser
 export type LoginErrorMockPropsPasser = MockPropsPasser<LoginErrorMockProps>
 export type LoginErrorMockProps = Readonly<{ error: string }>
 
-class MockErrorView extends MockComponent<LoginState> implements LoginView {
+class MockErrorView extends MockComponent<AuthSignViewState> implements AuthSignView {
     constructor(passer: LoginErrorMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))
         })
 
-        function mapProps(err: LoginErrorMockProps): LoginState {
+        function mapProps(err: LoginErrorMockProps): AuthSignViewState {
             return { type: "error", err: err.error }
         }
     }

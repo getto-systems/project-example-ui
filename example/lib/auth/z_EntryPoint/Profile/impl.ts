@@ -13,6 +13,6 @@ export function initAuthProfileResource(factory: ProfileFactory): AuthProfileRes
 
         ...initErrorResource(factory.actions),
         ...initMenuResource(factory.actions),
-        ...initAuthProfileLogoutResource({ foreground: factory.actions }),
+        ...initAuthProfileLogoutResource(factory.actions),
     }
 }

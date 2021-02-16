@@ -5,7 +5,7 @@ import {
 import {
     LoginIDFormFieldComponent,
     LoginIDFormFieldMaterial,
-} from "../../../common/Field/LoginID/component"
+} from "../../../../common/x_Component/Field/LoginID/component"
 
 import { PasswordResetSessionFields } from "../../../../sign/password/reset/session/data"
 import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"

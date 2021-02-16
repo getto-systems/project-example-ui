@@ -5,13 +5,13 @@ import { PasswordLogin } from "./PasswordLogin"
 
 import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
 import { initMockPasswordLoginEntryPoint } from "../../../auth/z_EntryPoint/Sign/mock"
-import { PasswordLoginResourceMockProps } from "../../../auth/x_Resource/sign/PasswordLogin/mock"
-import { loginIDFormFieldValidations } from "../../../auth/x_Resource/common/Field/LoginID/mock"
+import { AuthSignPasswordLoginMockProps } from "../../../auth/z_EntryPoint/Sign/resources/Password/Login/mock"
+import { loginIDFormFieldValidations } from "../../../auth/common/x_Component/Field/LoginID/mock"
 import {
     passwordFormFieldCharacters,
     passwordFormFieldValidations,
     passwordFormFieldViews,
-} from "../../../auth/x_Resource/common/Field/Password/mock"
+} from "../../../auth/common/x_Component/Field/Password/mock"
 import { formValidationStates } from "../../../vendor/getto-form/x_Resource/Form/mock"
 
 export default {
@@ -53,9 +53,9 @@ export default {
     },
 }
 
-type MockProps = PasswordLoginResourceMockProps
+type MockProps = AuthSignPasswordLoginMockProps
 const Template: Story<MockProps> = (args) => {
-    const passer = initMockPropsPasser<PasswordLoginResourceMockProps>()
+    const passer = initMockPropsPasser<AuthSignPasswordLoginMockProps>()
     const entryPoint = initMockPasswordLoginEntryPoint(passer)
     return h(Preview, { args })
 

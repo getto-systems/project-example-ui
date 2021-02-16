@@ -2,22 +2,22 @@ import { newWorker } from "../../../../../vendor/getto-worker/main/foreground"
 
 import { newAuthLocationAction } from "../../../../sign/authLocation/main"
 import { newContinuousRenewAuthCredentialAction } from "../../../../sign/authCredential/continuousRenew/main"
-import { newRenewAuthCredentialActionPod } from "../../../../sign/authCredential/renew/main"
+import { newRenewAuthCredentialAction } from "../../../../sign/authCredential/renew/main"
 
 import { initLoginViewLocationInfo, View } from "../../impl"
 
-import { initSignLinkResource } from "../../Link/impl"
-import { initPasswordLoginResource } from "../../../../x_Resource/sign/PasswordLogin/impl"
+import { initAuthSignLinkResource } from "../../resources/Link/impl"
+import { initAuthSignPasswordLoginResource } from "../../resources/Password/Login/impl"
 import { initPasswordResetResource } from "../../../../x_Resource/sign/PasswordReset/impl"
 import { initPasswordResetSessionResource } from "../../../../x_Resource/sign/PasswordResetSession/impl"
-import { initRenewCredentialResource } from "../../../../x_Resource/sign/authCredential/Renew/impl"
+import { initAuthSignRenewResource } from "../../resources/Renew/impl"
 
 import { initFormAction } from "../../../../../vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../common/field/password/main/password"
 import { initPasswordResetRegisterActionLocationInfo } from "../../../../sign/password/reset/register/impl"
 
-import { LoginBackgroundActionPod, LoginEntryPoint, LoginForegroundAction } from "../../entryPoint"
+import { AuthSignEntryPoint } from "../../entryPoint"
 
 import {
     PasswordLoginActionForegroundProxy,
@@ -28,20 +28,21 @@ import {
     PasswordResetSessionActionForegroundProxy,
 } from "../../../../sign/password/reset/session/main/worker/foreground"
 import {
-    newRegisterActionForegroundProxy,
+    newPasswordResetRegisterActionForegroundProxy,
     RegisterActionForegroundProxy,
 } from "../../../../sign/password/reset/register/main/worker/foreground"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
+import { initPasswordLoginAction } from "../../../../sign/password/login/impl"
 
-export function newLoginAsWorkerForeground(): LoginEntryPoint {
+export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     const worker = newWorker()
 
     const webStorage = localStorage
     const currentURL = new URL(location.toString())
 
-    const foreground: LoginForegroundAction = {
-        renew: newRenewAuthCredentialActionPod(webStorage),
+    const foreground = {
+        renew: newRenewAuthCredentialAction(webStorage),
         continuousRenew: newContinuousRenewAuthCredentialAction(webStorage),
 
         location: newAuthLocationAction(),
@@ -54,18 +55,27 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
     }
 
     const proxy = initProxy(postForegroundMessage)
-    const background: LoginBackgroundActionPod = {
-        initLogin: proxy.login.pod(),
+    const background = {
         initSession: proxy.reset.session.pod(),
         initRegister: proxy.reset.register.pod(),
     }
 
+    const material = {
+        login: {
+            continuousRenew: newContinuousRenewAuthCredentialAction(webStorage),
+            location: newAuthLocationAction(),
+            login: initPasswordLoginAction(proxy.login.pod()),
+        },
+
+        form: formMaterial(),
+    }
+
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        loginLink: initSignLinkResource,
+        link: initAuthSignLinkResource,
 
-        renewCredential: () => initRenewCredentialResource(foreground),
+        renewCredential: () => initAuthSignRenewResource(foreground),
 
-        passwordLogin: () => initPasswordLoginResource(foreground, background),
+        passwordLogin: () => initAuthSignPasswordLoginResource(material),
         passwordResetSession: () => initPasswordResetSessionResource(foreground, background),
         passwordReset: () =>
             initPasswordResetResource(
@@ -96,6 +106,19 @@ export function newLoginAsWorkerForeground(): LoginEntryPoint {
         view.terminate()
     }
 }
+function formMaterial() {
+    const form = initFormAction()
+    const loginID = initLoginIDFormFieldAction()
+    const password = initPasswordFormFieldAction()
+    return {
+        validation: form.validation(),
+        history: form.history(),
+        loginID: loginID.field(),
+        password: password.field(),
+        character: password.character(),
+        viewer: password.viewer(),
+    }
+}
 
 type Proxy = Readonly<{
     login: PasswordLoginActionForegroundProxy
@@ -111,7 +134,7 @@ function initProxy(post: Post<ForegroundMessage>): Proxy {
             session: newPasswordResetSessionActionForegroundProxy((message) =>
                 post({ type: "reset-session", message })
             ),
-            register: newRegisterActionForegroundProxy((message) =>
+            register: newPasswordResetRegisterActionForegroundProxy((message) =>
                 post({ type: "reset-register", message })
             ),
         },

@@ -33,7 +33,7 @@ export function newAuthProfileAsSingle(): AuthProfileEntryPoint {
             resource.breadcrumbList.terminate()
             resource.seasonInfo.terminate()
 
-            resource.clearAuthCredential.terminate()
+            resource.clear.terminate()
         },
     }
 }

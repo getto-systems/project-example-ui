@@ -15,7 +15,7 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 import { SeasonInfo } from "../../common/Outline/SeasonInfo"
 import { Menu } from "../../common/Outline/Menu"
 import { BreadcrumbList } from "../../common/Outline/BreadcrumbList"
-import { ClearCredential } from "./ClearCredential"
+import { AuthProfileLogout } from "./Logout"
 
 import { AuthProfileEntryPoint } from "../../../auth/z_EntryPoint/Profile/entryPoint"
 
@@ -34,7 +34,7 @@ export function EntryPoint({ resource, terminate }: AuthProfileEntryPoint): VNod
         header: [h(SeasonInfo, resource)],
         main: appMain({
             header: mainHeader([mainTitle("プロフィール"), h(BreadcrumbList, resource)]),
-            body: mainBody(h(ClearCredential, resource)),
+            body: mainBody(h(AuthProfileLogout, resource)),
             copyright: copyright(),
         }),
         menu: h(Menu, resource),

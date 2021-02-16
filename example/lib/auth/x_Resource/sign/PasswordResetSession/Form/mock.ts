@@ -4,10 +4,10 @@ import {
     FormContainerMockComponent,
     FormContainerMockProps,
 } from "../../../../../vendor/getto-form/x_Resource/Form/mock"
-import { initMockLoginIDFormField, LoginIDFormFieldMockProps } from "../../../common/Field/LoginID/mock"
+import { initMockLoginIDFormField, LoginIDFormFieldMockProps } from "../../../../common/x_Component/Field/LoginID/mock"
 
 import { FormContainerComponentState } from "../../../../../vendor/getto-form/x_Resource/Form/component"
-import { LoginIDFormFieldComponent } from "../../../common/Field/LoginID/component"
+import { LoginIDFormFieldComponent } from "../../../../common/x_Component/Field/LoginID/component"
 import { FormComponent } from "./component"
 
 import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"

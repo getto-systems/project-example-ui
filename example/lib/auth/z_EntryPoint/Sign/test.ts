@@ -6,9 +6,9 @@ import { initRenewAuthCredentialSimulateRemoteAccess } from "../../sign/authCred
 import { initSubmitPasswordResetResetSimulateRemoteAccess } from "../../sign/password/reset/register/infra/remote/submitPasswordResetRegister/simulate"
 import { initStartPasswordResetSessionSimulateRemoteAccess } from "../../sign/password/reset/session/infra/remote/startPasswordResetSession/simulate"
 
-import { initSignLinkResource } from "./Link/impl"
-import { initRenewCredentialResource } from "../../x_Resource/sign/authCredential/Renew/impl"
-import { initPasswordLoginResource } from "../../x_Resource/sign/PasswordLogin/impl"
+import { initAuthSignLinkResource } from "./resources/Link/impl"
+import { initAuthSignRenewResource } from "./resources/Renew/impl"
+import { initAuthSignPasswordLoginResource } from "./resources/Password/Login/impl"
 import { initPasswordResetSessionResource } from "../../x_Resource/sign/PasswordResetSession/impl"
 import { initPasswordResetResource } from "../../x_Resource/sign/PasswordReset/impl"
 
@@ -20,7 +20,7 @@ import { Clock } from "../../../z_infra/clock/infra"
 import { SubmitLoginRemoteAccessResult } from "../../sign/password/login/infra"
 import { SubmitPasswordResetRegisterRemoteAccessResult } from "../../sign/password/reset/register/infra"
 
-import { LoginState } from "./entryPoint"
+import { AuthSignViewState } from "./entryPoint"
 
 import { markAuthAt, markTicketNonce } from "../../sign/authCredential/common/data"
 import { markApiNonce, markApiRoles } from "../../../common/apiCredential/data"
@@ -35,7 +35,7 @@ import { initRenewAuthCredentialAction } from "../../sign/authCredential/renew/i
 import { delayed, wait } from "../../../z_infra/delayed/core"
 import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/authCredential/memory"
 import { initAuthLocationAction, initAuthLocationActionLocationInfo } from "../../sign/authLocation/impl"
-import { initPasswordLoginActionPod } from "../../sign/password/login/impl"
+import { initPasswordLoginAction, initPasswordLoginActionPod } from "../../sign/password/login/impl"
 import {
     initPasswordResetRegisterActionLocationInfo,
     initRegisterActionPod,
@@ -67,8 +67,8 @@ describe("LoginView", () => {
 
         view.load()
 
-        function stateHandler(): Handler<LoginState> {
-            const stack: LoginState[] = []
+        function stateHandler(): Handler<AuthSignViewState> {
+            const stack: AuthSignViewState[] = []
             const terminates: Terminate[] = []
             return (state) => {
                 stack.push(state)
@@ -124,8 +124,8 @@ describe("LoginView", () => {
 
         view.load()
 
-        function stateHandler(): Handler<LoginState> {
-            const stack: LoginState[] = []
+        function stateHandler(): Handler<AuthSignViewState> {
+            const stack: AuthSignViewState[] = []
             const terminates: Terminate[] = []
             return (state) => {
                 stack.push(state)
@@ -174,8 +174,8 @@ describe("LoginView", () => {
 
         view.load()
 
-        function stateHandler(): Handler<LoginState> {
-            const stack: LoginState[] = []
+        function stateHandler(): Handler<AuthSignViewState> {
+            const stack: AuthSignViewState[] = []
             const terminates: Terminate[] = []
             return (state) => {
                 stack.push(state)
@@ -224,8 +224,8 @@ describe("LoginView", () => {
 
         view.error("view error")
 
-        function stateHandler(): Handler<LoginState> {
-            const stack: LoginState[] = []
+        function stateHandler(): Handler<AuthSignViewState> {
+            const stack: AuthSignViewState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -259,7 +259,7 @@ function standardLoginView() {
     const repository = standardRepository()
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        loginLink: initSignLinkResource,
+        link: initAuthSignLinkResource,
         renewCredential: () =>
             standardRenewCredentialResource(
                 currentURL,
@@ -291,7 +291,7 @@ function passwordResetSessionLoginView() {
     const repository = standardRepository()
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        loginLink: initSignLinkResource,
+        link: initAuthSignLinkResource,
         renewCredential: () =>
             standardRenewCredentialResource(
                 currentURL,
@@ -323,7 +323,7 @@ function passwordResetLoginView() {
     const repository = standardRepository()
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        loginLink: initSignLinkResource,
+        link: initAuthSignLinkResource,
         renewCredential: () =>
             standardRenewCredentialResource(
                 currentURL,
@@ -357,8 +357,8 @@ function standardPasswordLoginResource(
     authCredentials: AuthCredentialRepository,
     clock: Clock
 ) {
-    return initPasswordLoginResource(
-        {
+    return initAuthSignPasswordLoginResource({
+        login: {
             continuousRenew: initContinuousRenewAuthCredentialAction({
                 apiCredentials,
                 authCredentials,
@@ -376,25 +376,35 @@ function standardPasswordLoginResource(
                     secureServerHost: standardSecureHost(),
                 },
             }),
-
-            form: {
-                core: initFormAction(),
-                loginID: initLoginIDFormFieldAction(),
-                password: initPasswordFormFieldAction(),
-            },
+            login: initPasswordLoginAction(
+                initPasswordLoginActionPod({
+                    login: initSubmitPasswordLoginSimulateRemoteAccess(simulateLogin, {
+                        wait_millisecond: 0,
+                    }),
+                    config: {
+                        delay: { delay_millisecond: 1 },
+                    },
+                    delayed,
+                })
+            ),
         },
-        {
-            initLogin: initPasswordLoginActionPod({
-                login: initSubmitPasswordLoginSimulateRemoteAccess(simulateLogin, {
-                    wait_millisecond: 0,
-                }),
-                config: {
-                    delay: { delay_millisecond: 1 },
-                },
-                delayed,
-            }),
+
+        form: formMaterial(),
+    })
+
+    function formMaterial() {
+        const form = initFormAction()
+        const loginID = initLoginIDFormFieldAction()
+        const password = initPasswordFormFieldAction()
+        return {
+            validation: form.validation(),
+            history: form.history(),
+            loginID: loginID.field(),
+            password: password.field(),
+            character: password.character(),
+            viewer: password.viewer(),
         }
-    )
+    }
 }
 function standardPasswordResetResource(
     currentURL: URL,
@@ -482,7 +492,7 @@ function standardRenewCredentialResource(
     authCredentials: AuthCredentialRepository,
     clock: Clock
 ) {
-    return initRenewCredentialResource({
+    return initAuthSignRenewResource({
         renew: initRenewAuthCredentialAction({
             apiCredentials,
             authCredentials,
