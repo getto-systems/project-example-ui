@@ -10,7 +10,7 @@ import {
     SubmitPasswordLoginProxyParams,
 } from "./message"
 
-import { AuthenticatePasswordActionPod } from "../../action"
+import { AuthenticatePasswordActionPod_legacy } from "../../action"
 
 import { AuthenticatePasswordEvent } from "../../event"
 
@@ -20,7 +20,7 @@ export function newPasswordLoginActionForegroundProxy(
     return new Proxy(post)
 }
 export type PasswordLoginActionForegroundProxy = WorkerForegroundProxyAction<
-    AuthenticatePasswordActionPod,
+    AuthenticatePasswordActionPod_legacy,
     PasswordLoginActionProxyMessage,
     PasswordLoginActionProxyResponse
 >
@@ -35,7 +35,7 @@ class Proxy
         this.submit = this.method((message) => ({ method: "submit", ...message }))
     }
 
-    pod(): AuthenticatePasswordActionPod {
+    pod(): AuthenticatePasswordActionPod_legacy {
         return {
             initAuthenticate: () => (fields, post) => this.submit.call({ fields }, post),
         }

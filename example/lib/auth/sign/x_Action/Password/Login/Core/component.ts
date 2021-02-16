@@ -1,6 +1,6 @@
 import { ApplicationAction } from "../../../../../../common/vendor/getto-example/Application/action"
 
-import { AuthenticatePasswordAction } from "../../../../password/authenticate/action"
+import { AuthenticatePasswordAction_legacy } from "../../../../password/authenticate/action"
 import { GetSecureScriptPathAction_legacy } from "../../../../secureScriptPath/get/action"
 import { StartContinuousRenewAuthnInfoAction_legacy } from "../../../../authnInfo/startContinuousRenew/action"
 
@@ -17,7 +17,7 @@ export interface PasswordLoginComponent extends ApplicationAction<PasswordLoginC
 export type PasswordLoginMaterial = Readonly<{
     continuousRenew: StartContinuousRenewAuthnInfoAction_legacy
     location: GetSecureScriptPathAction_legacy
-    login: AuthenticatePasswordAction
+    login: AuthenticatePasswordAction_legacy
 }>
 
 export type PasswordLoginComponentState =

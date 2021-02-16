@@ -4,7 +4,6 @@ import { newAuthSignRenewResource } from "../../resources/Renew/main"
 
 import { newAuthLocationAction_legacy } from "../../../../sign/secureScriptPath/get/main"
 import { newContinuousRenewAuthnInfoAction_legacy } from "../../../../sign/authnInfo/startContinuousRenew/main"
-import { newRenewAuthnInfoAction_legacy } from "../../../../sign/authnInfo/renew/main"
 
 import { initLoginViewLocationInfo, View } from "../../impl"
 
@@ -37,7 +36,7 @@ import {
 } from "../../../../sign/password/resetSession/register/main/worker/foreground"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
-import { initPasswordLoginAction } from "../../../../sign/password/authenticate/impl"
+import { initPasswordLoginAction_legacy } from "../../../../sign/password/authenticate/impl"
 
 export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     const worker = newWorker()
@@ -46,7 +45,6 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     const currentURL = new URL(location.toString())
 
     const foreground = {
-        renew: newRenewAuthnInfoAction_legacy(webStorage),
         continuousRenew: newContinuousRenewAuthnInfoAction_legacy(webStorage),
 
         location: newAuthLocationAction_legacy(),
@@ -74,7 +72,7 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
                 login: {
                     continuousRenew: newContinuousRenewAuthnInfoAction_legacy(webStorage),
                     location: newAuthLocationAction_legacy(),
-                    login: initPasswordLoginAction(proxy.login.pod()),
+                    login: initPasswordLoginAction_legacy(proxy.login.pod()),
                 },
 
                 form: formMaterial(),

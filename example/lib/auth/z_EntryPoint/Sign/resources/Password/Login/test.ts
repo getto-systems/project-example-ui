@@ -41,8 +41,8 @@ import {
 } from "../../../../../sign/secureScriptPath/get/impl"
 import { delayed } from "../../../../../../z_infra/delayed/core"
 import {
-    initPasswordLoginAction,
-    initPasswordLoginActionPod,
+    initPasswordLoginAction_legacy,
+    initPasswordLoginActionPod_legacy,
     submitEventHasDone,
 } from "../../../../../sign/password/authenticate/impl"
 import {
@@ -648,8 +648,8 @@ function newTestPasswordLoginResource(
                 },
                 initGetSecureScriptPathLocationInfo(currentURL)
             ),
-            login: initPasswordLoginAction(
-                initPasswordLoginActionPod({
+            login: initPasswordLoginAction_legacy(
+                initPasswordLoginActionPod_legacy({
                     ...remote,
                     config: config.login,
                     delayed,

@@ -12,7 +12,7 @@ import { AuthenticatePasswordPod } from "./action"
 
 import { PasswordLoginFields, AuthenticatePasswordRemoteError } from "./data"
 
-export type AuthenticatePasswordActionInfra = AuthenticatePasswordInfra
+export type AuthenticatePasswordActionInfra_legacy = AuthenticatePasswordInfra
 
 export type AuthenticatePasswordInfra = Readonly<{
     login: AuthenticatePasswordRemoteAccess

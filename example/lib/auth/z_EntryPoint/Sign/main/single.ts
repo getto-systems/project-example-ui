@@ -6,7 +6,6 @@ import {
     newPasswordResetRegisterActionPod,
 } from "../../../sign/password/resetSession/register/main/core"
 import { newContinuousRenewAuthnInfoAction_legacy } from "../../../sign/authnInfo/startContinuousRenew/main"
-import { newRenewAuthnInfoAction_legacy } from "../../../sign/authnInfo/renew/main"
 import { newPasswordResetSessionActionPod } from "../../../sign/password/resetSession/start/main/core"
 import { newAuthLocationAction_legacy } from "../../../sign/secureScriptPath/get/main"
 
@@ -28,7 +27,6 @@ export function newLoginAsSingle(): AuthSignEntryPoint {
     const currentURL = new URL(location.toString())
 
     const foreground = {
-        renew: newRenewAuthnInfoAction_legacy(webStorage),
         continuousRenew: newContinuousRenewAuthnInfoAction_legacy(webStorage),
         location: newAuthLocationAction_legacy(),
 

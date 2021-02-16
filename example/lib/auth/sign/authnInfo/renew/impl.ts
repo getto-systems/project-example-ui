@@ -1,25 +1,9 @@
 import { StoreResult } from "../../../../common/storage/infra"
-import {
-    RenewAuthnInfoActionInfra_legacy,
-    RenewAuthnInfo,
-    ForceRenewAuthnInfo,
-    RenewAuthnInfoInfra,
-} from "./infra"
-
-import { RenewAuthnInfoAction_legacy } from "./action"
+import { RenewAuthnInfo, ForceRenewAuthnInfo, RenewAuthnInfoInfra } from "./infra"
 
 import { ForceRequestRenewAuthnInfoEvent } from "./event"
 
 import { hasExpired, LastAuth } from "../common/data"
-
-export function initRenewAuthnInfoAction_legacy(
-    infra: RenewAuthnInfoActionInfra_legacy
-): RenewAuthnInfoAction_legacy {
-    return {
-        request: renewAuthnInfo(infra),
-        forceRequest: forceRenewAuthnInfo(infra),
-    }
-}
 
 export const renewAuthnInfo: RenewAuthnInfo = (infra) => async (post) => {
     const { clock, config } = infra

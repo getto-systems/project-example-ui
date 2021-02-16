@@ -6,8 +6,6 @@ import { AuthnInfoRepository, RenewAuthnInfoRemoteAccess } from "../common/infra
 
 import { ForceRenewAuthnInfoMethod, RenewAuthnInfoMethod } from "./action"
 
-export type RenewAuthnInfoActionInfra_legacy = RenewAuthnInfoInfra
-
 export type RenewAuthnInfoInfra = Readonly<{
     apiCredentials: ApiCredentialRepository
     authnInfos: AuthnInfoRepository

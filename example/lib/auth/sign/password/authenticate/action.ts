@@ -3,10 +3,10 @@ import { AuthenticatePasswordEvent } from "./event"
 import { FormConvertResult } from "../../../../common/vendor/getto-form/form/data"
 import { PasswordLoginFields } from "./data"
 
-export type AuthenticatePasswordActionPod = Readonly<{
+export type AuthenticatePasswordActionPod_legacy = Readonly<{
     initAuthenticate: AuthenticatePasswordPod
 }>
-export type AuthenticatePasswordAction = Readonly<{
+export type AuthenticatePasswordAction_legacy = Readonly<{
     authenticate: AuthenticatePasswordMethod
 }>
 

@@ -37,8 +37,8 @@ import {
     initGetSecureScriptPathLocationInfo,
 } from "../../sign/secureScriptPath/get/impl"
 import {
-    initPasswordLoginAction,
-    initPasswordLoginActionPod,
+    initPasswordLoginAction_legacy,
+    initPasswordLoginActionPod_legacy,
 } from "../../sign/password/authenticate/impl"
 import {
     initPasswordResetRegisterAction,
@@ -385,8 +385,8 @@ function standardPasswordLoginResource(
                 },
                 initGetSecureScriptPathLocationInfo(currentURL)
             ),
-            login: initPasswordLoginAction(
-                initPasswordLoginActionPod({
+            login: initPasswordLoginAction_legacy(
+                initPasswordLoginActionPod_legacy({
                     login: initAuthenticatePasswordSimulateRemoteAccess(simulateLogin, {
                         wait_millisecond: 0,
                     }),
