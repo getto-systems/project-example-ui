@@ -1,20 +1,22 @@
-import { WorkerBackgroundHandler } from "../../../../../common/vendor/getto-worker/main/background"
+import { WorkerHandler } from "../../../../../common/vendor/getto-worker/main/background"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
 
-import { PasswordLoginActionProxyMessage } from "../../../../sign/password/authenticate/main/worker/message"
+import { AuthSignPasswordAuthenticateProxyMessage } from "../../resources/Password/Authenticate/main/worker/message"
 import { PasswordResetSessionActionProxyMessage } from "../../../../sign/password/resetSession/start/main/worker/message"
 import { PasswordResetRegisterActionProxyMessage } from "../../../../sign/password/resetSession/register/main/worker/message"
 
-import { newPasswordLoginActionBackgroundHandler } from "../../../../sign/password/authenticate/main/worker/background"
+import { newAuthSignPasswordAuthenticateHandler } from "../../resources/Password/Authenticate/main/worker/background"
 import { newPasswordResetSessionActionBackgroundHandler } from "../../../../sign/password/resetSession/start/main/worker/background"
 import { newPasswordResetRegisterActionBackgroundHandler } from "../../../../sign/password/resetSession/register/main/worker/background"
 
 export function newLoginWorker(worker: Worker): void {
     const handler: Handler = {
-        login: newPasswordLoginActionBackgroundHandler((response) =>
-            postBackgroundMessage({ type: "login", response })
-        ),
+        password: {
+            authenticate: newAuthSignPasswordAuthenticateHandler((response) =>
+                postBackgroundMessage({ type: "password-authenticate", response })
+            ),
+        },
         reset: {
             session: newPasswordResetSessionActionBackgroundHandler((response) =>
                 postBackgroundMessage({ type: "reset-session", response })
@@ -39,10 +41,12 @@ export function newLoginWorker(worker: Worker): void {
 }
 
 type Handler = Readonly<{
-    login: WorkerBackgroundHandler<PasswordLoginActionProxyMessage>
+    password: Readonly<{
+        authenticate: WorkerHandler<AuthSignPasswordAuthenticateProxyMessage>
+    }>
     reset: Readonly<{
-        session: WorkerBackgroundHandler<PasswordResetSessionActionProxyMessage>
-        register: WorkerBackgroundHandler<PasswordResetRegisterActionProxyMessage>
+        session: WorkerHandler<PasswordResetSessionActionProxyMessage>
+        register: WorkerHandler<PasswordResetRegisterActionProxyMessage>
     }>
 }>
 
@@ -53,8 +57,8 @@ function initForegroundMessageHandler(
     return (message) => {
         try {
             switch (message.type) {
-                case "login":
-                    handler.login(message.message)
+                case "password-authenticate":
+                    handler.password.authenticate(message.message)
                     break
 
                 case "reset-session":
@@ -74,8 +78,8 @@ function initForegroundMessageHandler(
     }
 }
 
-interface Post<T> {
-    (state: T): void
+interface Post<M> {
+    (message: M): void
 }
 
 function assertNever(_: never): never {

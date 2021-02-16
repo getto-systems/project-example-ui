@@ -17,6 +17,7 @@ module.exports = {
     "!lib/**/infra.ts",
     "!lib/**/impl/*/**",
     "!lib/**/entryPoint.ts",
+    "!lib/**/action.ts",
     "!lib/**/component.ts",
     "!lib/**/mock.ts",
   ],

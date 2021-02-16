@@ -1,4 +1,4 @@
-import { WorkerBackgroundHandler } from "../../../../../../../common/vendor/getto-worker/main/background"
+import { WorkerHandler } from "../../../../../../../common/vendor/getto-worker/main/background"
 import { submitPasswordResetRegisterEventHasDone } from "../../impl"
 import { newPasswordResetRegisterActionPod } from "../core"
 import {
@@ -8,7 +8,7 @@ import {
 
 export function newPasswordResetRegisterActionBackgroundHandler(
     post: Post<PasswordResetRegisterActionProxyResponse>
-): WorkerBackgroundHandler<PasswordResetRegisterActionProxyMessage> {
+): WorkerHandler<PasswordResetRegisterActionProxyMessage> {
     const pod = newPasswordResetRegisterActionPod()
     return (message) => {
         switch (message.method) {

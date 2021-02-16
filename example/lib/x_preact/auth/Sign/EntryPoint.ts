@@ -8,7 +8,7 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { RenewCredential } from "./RenewCredential"
 
-import { PasswordLogin } from "./PasswordLogin"
+import { AuthSignPasswordAuthenticate } from "./Password/Authenticate"
 import { PasswordResetSession } from "./PasswordResetSession"
 import { PasswordReset } from "./PasswordReset"
 
@@ -41,7 +41,7 @@ export function EntryPoint({ view, terminate }: AuthSignEntryPoint): VNode {
             return h(RenewCredential, state.entryPoint)
 
         case "password-login":
-            return h(PasswordLogin, state.entryPoint)
+            return h(AuthSignPasswordAuthenticate, state.entryPoint)
 
         case "password-reset-session":
             return h(PasswordResetSession, state.entryPoint)

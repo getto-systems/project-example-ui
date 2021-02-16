@@ -1,4 +1,8 @@
-import { WorkerProxyCallID, WorkerProxyCallResponse, WorkerProxyCallMessage } from "./message"
+import {
+    WorkerProxyCallID,
+    WorkerProxyCallResponse,
+    WorkerProxyCallMessage,
+} from "./message"
 
 export function newWorker(): Worker {
     const src = document.currentScript?.getAttribute("src")
@@ -8,14 +12,21 @@ export function newWorker(): Worker {
     return new Worker(src.replace(/\.js$/, ".worker.js"))
 }
 
+// TODO ForegroundProxy -> Proxy
 export interface WorkerForegroundProxy<M> {
-    method<T, E>(map: WorkerForegroundProxyMessageMapper<M, T>): WorkerForegroundProxyMethod<T, E>
+    method<T, E>(
+        map: WorkerForegroundProxyMessageMapper<M, T>
+    ): WorkerForegroundProxyMethod<T, E>
 }
 export interface WorkerForegroundProxyMessageMapper<M, T> {
     (message: WorkerProxyCallMessage<T>): M
 }
-export interface WorkerForegroundProxyAction<P, M, R> extends WorkerForegroundProxy<M> {
+export interface WorkerForegroundProxyAction_legacy<P, M, R>
+    extends WorkerForegroundProxy<M> {
     pod(): P
+    resolve(response: R): void
+}
+export interface WorkerForegroundProxyAction<M, R> extends WorkerForegroundProxy<M> {
     resolve(response: R): void
 }
 
@@ -31,7 +42,9 @@ export class WorkerForegroundProxyBase<M> implements WorkerForegroundProxy<M> {
         this.post = post
     }
 
-    method<T, E>(map: WorkerForegroundProxyMessageMapper<M, T>): WorkerForegroundProxyMethod<T, E> {
+    method<T, E>(
+        map: WorkerForegroundProxyMessageMapper<M, T>
+    ): WorkerForegroundProxyMethod<T, E> {
         return new ProxyMethod((message) => this.post(map(message)))
     }
 }

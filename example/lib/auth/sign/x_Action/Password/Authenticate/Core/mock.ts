@@ -1,10 +1,13 @@
-import { MockAction, MockPropsPasser } from "../../../../../../common/vendor/getto-example/Application/mock"
+import {
+    MockAction,
+    MockPropsPasser,
+} from "../../../../../../common/vendor/getto-example/Application/mock"
 
-import { PasswordLoginComponent, PasswordLoginComponentState } from "./component"
+import { AuthenticatePasswordAction, AuthenticatePasswordActionState } from "./action"
 
-type Passer = MockPropsPasser<PasswordLoginMockProps>
+type Passer = MockPropsPasser<AuthenticatePasswordMockProps>
 
-export type PasswordLoginMockProps =
+export type AuthenticatePasswordMockProps =
     | Readonly<{ type: "initial" }>
     | Readonly<{ type: "try" }>
     | Readonly<{ type: "delayed" }>
@@ -15,18 +18,22 @@ export type PasswordLoginMockProps =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function initMockPasswordLoginComponent(passer: Passer): Component {
-    return new Component(passer)
+export function initMockAuthenticatePasswordAction(passer: Passer): Action {
+    return new Action(passer)
 }
 
-class Component extends MockAction<PasswordLoginComponentState> implements PasswordLoginComponent {
+class Action
+    extends MockAction<AuthenticatePasswordActionState>
+    implements AuthenticatePasswordAction {
     constructor(passer: Passer) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))
         })
 
-        function mapProps(props: PasswordLoginMockProps): PasswordLoginComponentState {
+        function mapProps(
+            props: AuthenticatePasswordMockProps
+        ): AuthenticatePasswordActionState {
             switch (props.type) {
                 case "initial":
                     return { type: "initial-login" }
@@ -44,16 +51,25 @@ class Component extends MockAction<PasswordLoginComponentState> implements Passw
                     return { type: "failed-to-login", err: { type: "bad-request" } }
 
                 case "invalid":
-                    return { type: "failed-to-login", err: { type: "invalid-password-login" } }
+                    return {
+                        type: "failed-to-login",
+                        err: { type: "invalid-password-login" },
+                    }
 
                 case "server-error":
                     return { type: "failed-to-login", err: { type: "server-error" } }
 
                 case "bad-response":
-                    return { type: "failed-to-login", err: { type: "bad-response", err: props.err } }
+                    return {
+                        type: "failed-to-login",
+                        err: { type: "bad-response", err: props.err },
+                    }
 
                 case "infra-error":
-                    return { type: "failed-to-login", err: { type: "infra-error", err: props.err } }
+                    return {
+                        type: "failed-to-login",
+                        err: { type: "infra-error", err: props.err },
+                    }
             }
         }
     }

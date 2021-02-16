@@ -7,20 +7,19 @@ import {
     startContinuousRenewAuthnInfo,
 } from "../../../authnInfo/startContinuousRenew/impl"
 
+import { RenewAuthnInfoInfra } from "../../../authnInfo/renew/infra"
+import { StartContinuousRenewAuthnInfoInfra } from "../../../authnInfo/startContinuousRenew/infra"
+import { GetSecureScriptPathInfra } from "../../../secureScriptPath/get/infra"
+
 import {
     RenewAuthnInfoMaterial,
     RenewAuthnInfoAction,
     RenewAuthnInfoActionState,
 } from "./action"
-
-import { RenewAuthnInfoInfra } from "../../../authnInfo/renew/infra"
-import { StartContinuousRenewAuthnInfoInfra } from "../../../authnInfo/startContinuousRenew/infra"
-import { GetSecureScriptPathInfra } from "../../../secureScriptPath/get/infra"
-
 import { GetSecureScriptPathLocationInfo } from "../../../secureScriptPath/get/action"
 
-import { LoadSecureScriptError } from "../../../secureScriptPath/get/data"
 import { AuthnInfo } from "../../../authnInfo/common/data"
+import { LoadSecureScriptError } from "../../../secureScriptPath/get/data"
 
 export type RenewAuthnInfoActionInfra = Readonly<{
     renew: RenewAuthnInfoInfra

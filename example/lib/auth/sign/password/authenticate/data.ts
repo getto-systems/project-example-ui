@@ -1,7 +1,7 @@
 import { LoginID } from "../../../common/loginID/data"
 import { Password } from "../../../common/password/data"
 
-export type PasswordLoginFields = Readonly<{
+export type AuthenticatePasswordFields = Readonly<{
     loginID: LoginID
     password: Password
 }>

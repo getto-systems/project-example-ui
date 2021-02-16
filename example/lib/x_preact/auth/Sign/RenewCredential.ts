@@ -82,9 +82,6 @@ export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoi
         case "storage-error":
         case "load-error":
             return h(ApplicationError, { err: state.err.err })
-
-        case "error":
-            return h(ApplicationError, { err: state.err })
     }
 
     function delayedMessage() {

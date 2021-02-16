@@ -1,30 +1,12 @@
-import { AuthenticatePasswordActionInfra_legacy, AuthenticatePassword } from "./infra"
+import { AuthenticatePasswordInfra } from "./infra"
 
-import {
-    AuthenticatePasswordAction_legacy,
-    AuthenticatePasswordActionPod_legacy,
-} from "./action"
+import { AuthenticatePasswordMethod } from "./action"
 import { AuthenticatePasswordEvent } from "./event"
 
-export function initPasswordLoginAction_legacy(
-    pod: AuthenticatePasswordActionPod_legacy
-): AuthenticatePasswordAction_legacy {
-    return {
-        authenticate: pod.initAuthenticate(),
-    }
+interface Authenticate {
+    (infra: AuthenticatePasswordInfra): AuthenticatePasswordMethod
 }
-export function initPasswordLoginActionPod_legacy(
-    infra: AuthenticatePasswordActionInfra_legacy
-): AuthenticatePasswordActionPod_legacy {
-    return {
-        initAuthenticate: authenticatePassword(infra),
-    }
-}
-
-export const authenticatePassword: AuthenticatePassword = (infra) => () => async (
-    fields,
-    post
-) => {
+export const authenticatePassword: Authenticate = (infra) => async (fields, post) => {
     if (!fields.success) {
         post({ type: "failed-to-login", err: { type: "validation-error" } })
         return
@@ -46,7 +28,9 @@ export const authenticatePassword: AuthenticatePassword = (infra) => () => async
     post({ type: "succeed-to-login", authnInfo: response.value.auth })
 }
 
-export function submitEventHasDone(event: AuthenticatePasswordEvent): boolean {
+export function authenticatePasswordEventHasDone(
+    event: AuthenticatePasswordEvent
+): boolean {
     switch (event.type) {
         case "succeed-to-login":
         case "failed-to-login":

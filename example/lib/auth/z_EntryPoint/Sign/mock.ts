@@ -5,9 +5,9 @@ import {
     AuthSignRenewMockPropsPasser,
 } from "./resources/Renew/mock"
 import {
-    initMockAuthSignPasswordLoginResource,
-    AuthSignPasswordLoginMockPropsPasser,
-} from "./resources/Password/Login/mock"
+    initMockAuthSignPasswordAuthenticateResource,
+    AuthSignPasswordAuthenticateMockPropsPasser,
+} from "./resources/Password/Authenticate/mock"
 import {
     initMockPasswordResetSessionResource,
     PasswordResetSessionResourceMockPropsPasser,
@@ -36,9 +36,9 @@ export function initMockRenewCredentialEntryPoint(
 }
 
 export function initMockPasswordLoginEntryPoint(
-    passer: AuthSignPasswordLoginMockPropsPasser
+    passer: AuthSignPasswordAuthenticateMockPropsPasser
 ): PasswordLoginEntryPoint {
-    return initEntryPoint(initMockAuthSignPasswordLoginResource(passer))
+    return initEntryPoint(initMockAuthSignPasswordAuthenticateResource(passer))
 }
 
 export function initMockPasswordResetSessionEntryPoint(

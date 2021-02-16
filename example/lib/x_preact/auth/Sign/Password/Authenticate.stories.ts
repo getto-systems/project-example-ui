@@ -1,21 +1,21 @@
 import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { PasswordLogin } from "./PasswordLogin"
+import { AuthSignPasswordAuthenticate } from "./Authenticate"
 
-import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
-import { initMockPasswordLoginEntryPoint } from "../../../auth/z_EntryPoint/Sign/mock"
-import { AuthSignPasswordLoginMockProps } from "../../../auth/z_EntryPoint/Sign/resources/Password/Login/mock"
-import { loginIDFormFieldValidations } from "../../../auth/common/x_Component/Field/LoginID/mock"
+import { initMockPropsPasser } from "../../../../common/vendor/getto-example/Application/mock"
+import { initMockPasswordLoginEntryPoint } from "../../../../auth/z_EntryPoint/Sign/mock"
+import { AuthSignPasswordAuthenticateMockProps } from "../../../../auth/z_EntryPoint/Sign/resources/Password/Authenticate/mock"
+import { loginIDFormFieldValidations } from "../../../../auth/common/x_Component/Field/LoginID/mock"
 import {
     passwordFormFieldCharacters,
     passwordFormFieldValidations,
     passwordFormFieldViews,
-} from "../../../auth/common/x_Component/Field/Password/mock"
-import { formValidationStates } from "../../../common/vendor/getto-form/x_Resource/Form/mock"
+} from "../../../../auth/common/x_Component/Field/Password/mock"
+import { formValidationStates } from "../../../../common/vendor/getto-form/x_Resource/Form/mock"
 
 export default {
-    title: "Auth/Login/PasswordLogin",
+    title: "Auth/Sign/Password/Authenticate",
     argTypes: {
         type: {
             table: { disable: true },
@@ -53,9 +53,9 @@ export default {
     },
 }
 
-type MockProps = AuthSignPasswordLoginMockProps
+type MockProps = AuthSignPasswordAuthenticateMockProps
 const Template: Story<MockProps> = (args) => {
-    const passer = initMockPropsPasser<AuthSignPasswordLoginMockProps>()
+    const passer = initMockPropsPasser<AuthSignPasswordAuthenticateMockProps>()
     const entryPoint = initMockPasswordLoginEntryPoint(passer)
     return h(Preview, { args })
 
@@ -63,7 +63,7 @@ const Template: Story<MockProps> = (args) => {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(PasswordLogin, entryPoint)
+        return h(AuthSignPasswordAuthenticate, entryPoint)
     }
 }
 

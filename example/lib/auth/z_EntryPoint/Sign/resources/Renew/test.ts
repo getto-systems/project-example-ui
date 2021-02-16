@@ -86,7 +86,6 @@ describe("AuthSignRenew", () => {
                     case "failed-to-renew":
                     case "storage-error":
                     case "load-error":
-                    case "error":
                         done(new Error(state.type))
                         break
 
@@ -151,7 +150,6 @@ describe("AuthSignRenew", () => {
                     case "failed-to-renew":
                     case "storage-error":
                     case "load-error":
-                    case "error":
                         done(new Error(state.type))
                         break
 
@@ -207,7 +205,6 @@ describe("AuthSignRenew", () => {
                     case "failed-to-renew":
                     case "storage-error":
                     case "load-error":
-                    case "error":
                         done(new Error(state.type))
                         break
 
@@ -265,7 +262,6 @@ describe("AuthSignRenew", () => {
                     case "failed-to-renew":
                     case "storage-error":
                     case "load-error":
-                    case "error":
                         done(new Error(state.type))
                         break
 
@@ -311,7 +307,6 @@ describe("AuthSignRenew", () => {
                     case "failed-to-renew":
                     case "storage-error":
                     case "load-error":
-                    case "error":
                         done(new Error(state.type))
                         break
 
@@ -350,7 +345,6 @@ describe("AuthSignRenew", () => {
 
                     case "failed-to-renew":
                     case "storage-error":
-                    case "error":
                         done(new Error(state.type))
                         break
 

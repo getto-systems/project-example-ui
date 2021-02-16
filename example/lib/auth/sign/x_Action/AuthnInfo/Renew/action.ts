@@ -44,7 +44,6 @@ export type RenewAuthnInfoActionState =
     | Readonly<{ type: "try-to-instant-load"; scriptPath: SecureScriptPath }>
     | Readonly<{ type: "try-to-load"; scriptPath: SecureScriptPath }>
     | Readonly<{ type: "load-error"; err: LoadSecureScriptError }>
-    | Readonly<{ type: "error"; err: string }>
 
 export const initialRenewAuthnInfoAction3State: RenewAuthnInfoActionState = {
     type: "initial-renew",

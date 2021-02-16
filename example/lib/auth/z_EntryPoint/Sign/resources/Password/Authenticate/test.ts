@@ -1,5 +1,3 @@
-import { initAuthSignPasswordLoginResource } from "./impl"
-
 import { newStaticClock, StaticClock } from "../../../../../../z_infra/clock/simulate"
 import { initAuthenticatePasswordSimulateRemoteAccess } from "../../../../../sign/password/authenticate/infra/remote/authenticate/simulate"
 import { initRenewAuthnInfoSimulateRemoteAccess } from "../../../../../sign/authnInfo/common/infra/remote/renew/simulate"
@@ -14,41 +12,35 @@ import {
 } from "../../../../../sign/password/authenticate/infra"
 import { Clock } from "../../../../../../z_infra/clock/infra"
 
-import { AuthSignPasswordLoginResource } from "./resource"
+import { AuthSignPasswordAuthenticateResource } from "./resource"
 
-import { PasswordLoginComponentState } from "../../../../../sign/x_Action/Password/Login/Core/component"
+import { AuthenticatePasswordActionState } from "../../../../../sign/x_Action/Password/Authenticate/Core/action"
 
 import {
     markInputString,
     toValidationError,
 } from "../../../../../../common/vendor/getto-form/form/data"
 import { markSecureScriptPath } from "../../../../../sign/secureScriptPath/get/data"
-import { PasswordLoginFields } from "../../../../../sign/password/authenticate/data"
+import { AuthenticatePasswordFields } from "../../../../../sign/password/authenticate/data"
 import { markAuthAt, markAuthnNonce } from "../../../../../sign/authnInfo/common/data"
 import { ApiCredentialRepository } from "../../../../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../../common/apiCredential/data"
-import { initStartContinuousRenewAuthnInfoAction_legacy } from "../../../../../sign/authnInfo/startContinuousRenew/impl"
 import {
     AuthnInfoRepository,
     RenewAuthnInfoRemoteAccess,
     RenewAuthnInfoRemoteAccessResult,
 } from "../../../../../sign/authnInfo/common/infra"
 import { initMemoryAuthnInfoRepository } from "../../../../../sign/authnInfo/common/infra/repository/authnInfo/memory"
-import {
-    initGetSecureScriptPathAction_legacy,
-    initGetSecureScriptPathLocationInfo,
-} from "../../../../../sign/secureScriptPath/get/impl"
+import { initGetSecureScriptPathLocationInfo } from "../../../../../sign/secureScriptPath/get/impl"
 import { delayed } from "../../../../../../z_infra/delayed/core"
-import {
-    initPasswordLoginAction_legacy,
-    initPasswordLoginActionPod_legacy,
-    submitEventHasDone,
-} from "../../../../../sign/password/authenticate/impl"
+import { authenticatePasswordEventHasDone } from "../../../../../sign/password/authenticate/impl"
 import {
     initAsyncActionTester,
     initSyncActionChecker,
 } from "../../../../../../common/vendor/getto-example/Application/testHelper"
+import { initAuthenticatePasswordFormAction } from "../../../../../sign/x_Action/Password/Authenticate/Form/impl"
+import { initAuthenticatePasswordAction } from "../../../../../sign/x_Action/Password/Authenticate/Core/impl"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -66,11 +58,11 @@ const NOW = new Date("2020-01-01 10:00:30")
 // テストが完了したら clock が返す値をこっちにする
 const COMPLETED_NOW = new Date("2020-01-01 11:00:00")
 
-describe("PasswordLogin", () => {
+describe("AuthSignPasswordAuthenticate", () => {
     test("submit valid login-id and password", (done) => {
         const { repository, clock, resource } = standardPasswordLoginResource()
 
-        resource.login.addStateHandler(initTester())
+        resource.authenticate.addStateHandler(initTester())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -78,7 +70,7 @@ describe("PasswordLogin", () => {
         resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         resource.form.password.input.change()
 
-        resource.login.submit(resource.form.getLoginFields())
+        resource.authenticate.submit(resource.form.getLoginFields())
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -103,7 +95,7 @@ describe("PasswordLogin", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitPasswordLoginResource()
 
-        resource.login.addStateHandler(initTester())
+        resource.authenticate.addStateHandler(initTester())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -111,7 +103,7 @@ describe("PasswordLogin", () => {
         resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         resource.form.password.input.change()
 
-        resource.login.submit(resource.form.getLoginFields())
+        resource.authenticate.submit(resource.form.getLoginFields())
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -136,7 +128,7 @@ describe("PasswordLogin", () => {
     test("submit without fields", (done) => {
         const { repository, resource } = standardPasswordLoginResource()
 
-        resource.login.addStateHandler(initTester())
+        resource.authenticate.addStateHandler(initTester())
 
         // try to login without fields
         // resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
@@ -145,7 +137,7 @@ describe("PasswordLogin", () => {
         // resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         // resource.form.password.input.change()
 
-        resource.login.submit(resource.form.getLoginFields())
+        resource.authenticate.submit(resource.form.getLoginFields())
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -161,9 +153,9 @@ describe("PasswordLogin", () => {
     test("load error", (done) => {
         const { resource } = standardPasswordLoginResource()
 
-        resource.login.addStateHandler(initTester())
+        resource.authenticate.addStateHandler(initTester())
 
-        resource.login.loadError({ type: "infra-error", err: "load error" })
+        resource.authenticate.loadError({ type: "infra-error", err: "load error" })
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -632,33 +624,31 @@ function newTestPasswordLoginResource(
     repository: PasswordLoginTestRepository,
     remote: PasswordLoginTestRemoteAccess,
     clock: Clock
-): AuthSignPasswordLoginResource {
+): AuthSignPasswordAuthenticateResource {
     const config = standardConfig()
-    return initAuthSignPasswordLoginResource({
-        login: {
-            continuousRenew: initStartContinuousRenewAuthnInfoAction_legacy({
-                ...repository,
-                ...remote,
-                config: config.continuousRenew,
-                clock,
-            }),
-            location: initGetSecureScriptPathAction_legacy(
-                {
+    return {
+        authenticate: initAuthenticatePasswordAction(
+            {
+                startContinuousRenew: {
+                    ...repository,
+                    ...remote,
+                    config: config.continuousRenew,
+                    clock,
+                },
+                getSecureScriptPath: {
                     config: config.location,
                 },
-                initGetSecureScriptPathLocationInfo(currentURL)
-            ),
-            login: initPasswordLoginAction_legacy(
-                initPasswordLoginActionPod_legacy({
+                authenticate: {
                     ...remote,
                     config: config.login,
                     delayed,
-                })
-            ),
-        },
+                },
+            },
+            initGetSecureScriptPathLocationInfo(currentURL)
+        ),
 
-        form: formMaterial(),
-    })
+        form: initAuthenticatePasswordFormAction(formMaterial()),
+    }
 
     function formMaterial() {
         const form = initFormAction()
@@ -725,7 +715,7 @@ function waitSimulator(): PasswordLoginTestRemoteAccess {
 }
 
 function simulateLogin(
-    _fields: PasswordLoginFields
+    _fields: AuthenticatePasswordFields
 ): AuthenticatePasswordRemoteAccessResult {
     return {
         success: true,
@@ -801,7 +791,7 @@ function expectToEmptyLastAuth(authnInfos: AuthnInfoRepository) {
 }
 
 function initAsyncTester() {
-    return initAsyncActionTester((state: PasswordLoginComponentState) => {
+    return initAsyncActionTester((state: AuthenticatePasswordActionState) => {
         switch (state.type) {
             case "initial-login":
                 return false
@@ -809,11 +799,10 @@ function initAsyncTester() {
             case "try-to-load":
             case "storage-error":
             case "load-error":
-            case "error":
                 return true
 
             default:
-                return submitEventHasDone(state)
+                return authenticatePasswordEventHasDone(state)
         }
     })
 }
