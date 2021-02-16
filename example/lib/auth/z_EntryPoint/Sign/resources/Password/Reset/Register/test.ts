@@ -1,47 +1,51 @@
 import { initPasswordResetResource } from "./impl"
 
-import { initStaticClock, StaticClock } from "../../../../z_infra/clock/simulate"
-import { initRenewAuthCredentialSimulateRemoteAccess } from "../../../sign/authCredential/common/infra/remote/renewAuthCredential/simulate"
-import { initSubmitPasswordResetResetSimulateRemoteAccess } from "../../../sign/password/reset/register/infra/remote/submitPasswordResetRegister/simulate"
+import { initStaticClock, StaticClock } from "../../../../../../../z_infra/clock/simulate"
+import { initRenewAuthCredentialSimulateRemoteAccess } from "../../../../../../sign/authCredential/common/infra/remote/renewAuthCredential/simulate"
+import { initSubmitPasswordResetResetSimulateRemoteAccess } from "../../../../../../sign/password/reset/register/infra/remote/submitPasswordResetRegister/simulate"
 
-import { initFormAction } from "../../../../vendor/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../common/field/password/main/password"
+import { initFormAction } from "../../../../../../../vendor/getto-form/main/form"
+import { initLoginIDFormFieldAction } from "../../../../../../common/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../../../../common/field/password/main/password"
 
-import { Clock } from "../../../../z_infra/clock/infra"
+import { Clock } from "../../../../../../../z_infra/clock/infra"
 import {
     SubmitPasswordResetRegisterRemoteAccess,
     SubmitPasswordResetRegisterRemoteAccessResult,
-} from "../../../sign/password/reset/register/infra"
+} from "../../../../../../sign/password/reset/register/infra"
 
-import { PasswordResetResource } from "./resource"
+import { AuthSignPasswordResetResource } from "./resource"
 
-import { ResetComponentState } from "./Reset/component"
+import { PasswordResetRegisterComponentState } from "../../../../../../sign/x_Component/Password/Reset/Register/Reset/component"
 
-import { markSecureScriptPath } from "../../../sign/authLocation/data"
-import { markInputString, toValidationError } from "../../../../vendor/getto-form/form/data"
-import { markAuthAt, markTicketNonce } from "../../../sign/authCredential/common/data"
-import { initMemoryApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../../common/apiCredential/data"
-import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
+import { markSecureScriptPath } from "../../../../../../sign/authLocation/data"
+import { markInputString, toValidationError } from "../../../../../../../vendor/getto-form/form/data"
+import { markAuthAt, markTicketNonce } from "../../../../../../sign/authCredential/common/data"
+import { initMemoryApiCredentialRepository } from "../../../../../../../common/apiCredential/infra/repository/memory"
+import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
+import { ApiCredentialRepository } from "../../../../../../../common/apiCredential/infra"
 import {
     AuthCredentialRepository,
     RenewAuthCredentialRemoteAccess,
     RenewAuthCredentialRemoteAccessResult,
-} from "../../../sign/authCredential/common/infra"
-import { initContinuousRenewAuthCredentialAction } from "../../../sign/authCredential/continuousRenew/impl"
-import { initMemoryAuthCredentialRepository } from "../../../sign/authCredential/common/infra/repository/authCredential/memory"
-import { initAuthLocationAction, initAuthLocationActionLocationInfo } from "../../../sign/authLocation/impl"
+} from "../../../../../../sign/authCredential/common/infra"
+import { initContinuousRenewAuthCredentialAction } from "../../../../../../sign/authCredential/continuousRenew/impl"
+import { initMemoryAuthCredentialRepository } from "../../../../../../sign/authCredential/common/infra/repository/authCredential/memory"
 import {
+    initAuthLocationAction,
+    initAuthLocationActionLocationInfo,
+} from "../../../../../../sign/authLocation/impl"
+import {
+    initPasswordResetRegisterAction,
     initPasswordResetRegisterActionLocationInfo,
-    initRegisterActionPod,
+    initPasswordResetRegisterActionPod,
     submitPasswordResetRegisterEventHasDone,
-} from "../../../sign/password/reset/register/impl"
-import { delayed } from "../../../../z_infra/delayed/core"
+} from "../../../../../../sign/password/reset/register/impl"
+import { delayed } from "../../../../../../../z_infra/delayed/core"
 import {
     initAsyncComponentStateTester,
     initSyncComponentTestChecker,
-} from "../../../../vendor/getto-example/Application/testHelper"
+} from "../../../../../../../vendor/getto-example/Application/testHelper"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -63,7 +67,7 @@ describe("PasswordReset", () => {
     test("submit valid login-id and password", (done) => {
         const { repository, clock, resource } = standardPasswordResetResource()
 
-        resource.reset.addStateHandler(initTester())
+        resource.register.addStateHandler(initTester())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -71,7 +75,7 @@ describe("PasswordReset", () => {
         resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         resource.form.password.input.change()
 
-        resource.reset.submit(resource.form.getResetFields())
+        resource.register.submit(resource.form.getResetFields())
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -96,7 +100,7 @@ describe("PasswordReset", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitPasswordResetResource()
 
-        resource.reset.addStateHandler(initTester())
+        resource.register.addStateHandler(initTester())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -104,7 +108,7 @@ describe("PasswordReset", () => {
         resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         resource.form.password.input.change()
 
-        resource.reset.submit(resource.form.getResetFields())
+        resource.register.submit(resource.form.getResetFields())
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -129,13 +133,13 @@ describe("PasswordReset", () => {
     test("submit without fields", (done) => {
         const { repository, resource } = standardPasswordResetResource()
 
-        resource.reset.addStateHandler(initTester())
+        resource.register.addStateHandler(initTester())
 
         // try to reset without fields
         //resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
         //resource.passwordField.set(markInputValue(VALID_LOGIN.password))
 
-        resource.reset.submit(resource.form.getResetFields())
+        resource.register.submit(resource.form.getResetFields())
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -149,7 +153,7 @@ describe("PasswordReset", () => {
     test("submit without resetToken", (done) => {
         const { repository, resource } = emptyResetTokenPasswordResetResource()
 
-        resource.reset.addStateHandler(initTester())
+        resource.register.addStateHandler(initTester())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -157,7 +161,7 @@ describe("PasswordReset", () => {
         resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         resource.form.password.input.change()
 
-        resource.reset.submit(resource.form.getResetFields())
+        resource.register.submit(resource.form.getResetFields())
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -171,9 +175,9 @@ describe("PasswordReset", () => {
     test("load error", (done) => {
         const { resource } = standardPasswordResetResource()
 
-        resource.reset.addStateHandler(initTester())
+        resource.register.addStateHandler(initTester())
 
-        resource.reset.loadError({ type: "infra-error", err: "load error" })
+        resource.register.loadError({ type: "infra-error", err: "load error" })
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -638,35 +642,47 @@ function newPasswordResetTestResource(
     repository: PasswordResetTestRepository,
     remote: PasswordResetTestRemoteAccess,
     clock: Clock
-): PasswordResetResource {
+): AuthSignPasswordResetResource {
     const config = standardConfig()
-    return initPasswordResetResource(
-        initPasswordResetRegisterActionLocationInfo(currentURL),
-        {
+    return initPasswordResetResource({
+        register: {
             continuousRenew: initContinuousRenewAuthCredentialAction({
                 ...repository,
                 ...remote,
                 config: config.continuousRenew,
                 clock,
             }),
-            location: initAuthLocationAction(initAuthLocationActionLocationInfo(currentURL), {
-                config: config.location,
-            }),
-
-            form: {
-                core: initFormAction(),
-                loginID: initLoginIDFormFieldAction(),
-                password: initPasswordFormFieldAction(),
-            },
+            location: initAuthLocationAction(
+                {
+                    config: config.location,
+                },
+                initAuthLocationActionLocationInfo(currentURL)
+            ),
+            register: initPasswordResetRegisterAction(
+                initPasswordResetRegisterActionPod({
+                    ...remote,
+                    config: config.reset,
+                    delayed,
+                }),
+                initPasswordResetRegisterActionLocationInfo(currentURL)
+            ),
         },
-        {
-            initRegister: initRegisterActionPod({
-                ...remote,
-                config: config.reset,
-                delayed,
-            }),
+        form: formMaterial(),
+    })
+
+    function formMaterial() {
+        const form = initFormAction()
+        const loginID = initLoginIDFormFieldAction()
+        const password = initPasswordFormFieldAction()
+        return {
+            validation: form.validation(),
+            history: form.history(),
+            loginID: loginID.field(),
+            password: password.field(),
+            character: password.character(),
+            viewer: password.viewer(),
         }
-    )
+    }
 }
 
 function standardURL(): URL {
@@ -703,13 +719,17 @@ function standardRepository() {
 }
 function standardRemoteAccess(): PasswordResetTestRemoteAccess {
     return {
-        register: initSubmitPasswordResetResetSimulateRemoteAccess(simulateReset, { wait_millisecond: 0 }),
+        register: initSubmitPasswordResetResetSimulateRemoteAccess(simulateReset, {
+            wait_millisecond: 0,
+        }),
         renew: renewRemoteAccess(),
     }
 }
 function waitRemoteAccess(): PasswordResetTestRemoteAccess {
     return {
-        register: initSubmitPasswordResetResetSimulateRemoteAccess(simulateReset, { wait_millisecond: 3 }),
+        register: initSubmitPasswordResetResetSimulateRemoteAccess(simulateReset, {
+            wait_millisecond: 3,
+        }),
         renew: renewRemoteAccess(),
     }
 }
@@ -783,7 +803,7 @@ function expectToEmptyLastLogin(authCredentials: AuthCredentialRepository) {
 }
 
 function initAsyncTester() {
-    return initAsyncComponentStateTester((state: ResetComponentState) => {
+    return initAsyncComponentStateTester((state: PasswordResetRegisterComponentState) => {
         switch (state.type) {
             case "initial-reset":
                 return false

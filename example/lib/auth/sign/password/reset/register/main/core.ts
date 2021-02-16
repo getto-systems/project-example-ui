@@ -6,7 +6,7 @@ import { delaySecond } from "../../../../../../z_infra/time/infra"
 import {
     initPasswordResetRegisterAction,
     initPasswordResetRegisterActionLocationInfo,
-    initRegisterActionPod,
+    initPasswordResetRegisterActionPod,
 } from "../impl"
 
 import {
@@ -16,13 +16,11 @@ import {
 } from "../action"
 import { currentURL } from "../../../../../../z_infra/location/url"
 
-export function newPasswordResetRegisterAction(
-    pod: PasswordResetRegisterActionPod
-): PasswordResetRegisterAction {
-    return initPasswordResetRegisterAction(newLocationInfo(), pod)
+export function newPasswordResetRegisterAction(): PasswordResetRegisterAction {
+    return initPasswordResetRegisterAction(newPasswordResetRegisterActionPod(), newLocationInfo())
 }
 export function newPasswordResetRegisterActionPod(): PasswordResetRegisterActionPod {
-    return initRegisterActionPod({
+    return initPasswordResetRegisterActionPod({
         register: newSubmitPasswordResetRegisterRemoteAccess(),
         config: {
             delay: delaySecond(1),

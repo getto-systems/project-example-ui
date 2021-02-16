@@ -15,8 +15,8 @@ function detectPathname(currentURL: URL): LocationPathname {
 }
 
 export function initAuthLocationAction(
-    locationInfo: AuthLocationActionLocationInfo,
-    infra: AuthLocationActionInfra
+    infra: AuthLocationActionInfra,
+    locationInfo: AuthLocationActionLocationInfo
 ): AuthLocationAction {
     return {
         getSecureScriptPath: getSecureScriptPath(infra)(locationInfo),

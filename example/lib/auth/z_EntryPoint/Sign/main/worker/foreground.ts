@@ -8,14 +8,17 @@ import { initLoginViewLocationInfo, View } from "../../impl"
 
 import { initAuthSignLinkResource } from "../../resources/Link/impl"
 import { initAuthSignPasswordLoginResource } from "../../resources/Password/Login/impl"
-import { initPasswordResetResource } from "../../../../x_Resource/sign/PasswordReset/impl"
+import { initPasswordResetResource } from "../../resources/Password/Reset/Register/impl"
 import { initPasswordResetSessionResource } from "../../../../x_Resource/sign/PasswordResetSession/impl"
 import { initAuthSignRenewResource } from "../../resources/Renew/impl"
 
 import { initFormAction } from "../../../../../vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../common/field/password/main/password"
-import { initPasswordResetRegisterActionLocationInfo } from "../../../../sign/password/reset/register/impl"
+import {
+    initPasswordResetRegisterAction,
+    initPasswordResetRegisterActionLocationInfo,
+} from "../../../../sign/password/reset/register/impl"
 
 import { AuthSignEntryPoint } from "../../entryPoint"
 
@@ -77,11 +80,18 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
             }),
         passwordResetSession: () => initPasswordResetSessionResource(foreground, background),
         passwordReset: () =>
-            initPasswordResetResource(
-                initPasswordResetRegisterActionLocationInfo(currentURL),
-                foreground,
-                background
-            ),
+            initPasswordResetResource({
+                register: {
+                    continuousRenew: newContinuousRenewAuthCredentialAction(webStorage),
+                    location: newAuthLocationAction(),
+                    register: initPasswordResetRegisterAction(
+                        proxy.reset.register.pod(),
+                        initPasswordResetRegisterActionLocationInfo(currentURL)
+                    ),
+                },
+
+                form: formMaterial(),
+            }),
     })
 
     const messageHandler = initBackgroundMessageHandler(proxy, (err: string) => {

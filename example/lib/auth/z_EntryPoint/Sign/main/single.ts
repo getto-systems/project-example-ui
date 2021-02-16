@@ -1,5 +1,5 @@
 import { newPasswordLoginAction } from "../../../sign/password/login/main/core"
-import { newPasswordResetRegisterActionPod } from "../../../sign/password/reset/register/main/core"
+import { newPasswordResetRegisterAction, newPasswordResetRegisterActionPod } from "../../../sign/password/reset/register/main/core"
 import { newContinuousRenewAuthCredentialAction } from "../../../sign/authCredential/continuousRenew/main"
 import { newRenewAuthCredentialAction } from "../../../sign/authCredential/renew/main"
 import { newPasswordResetSessionActionPod } from "../../../sign/password/reset/session/main/core"
@@ -15,8 +15,7 @@ import { initAuthSignLinkResource } from "../resources/Link/impl"
 import { initAuthSignRenewResource } from "../resources/Renew/impl"
 import { initAuthSignPasswordLoginResource } from "../resources/Password/Login/impl"
 import { initPasswordResetSessionResource } from "../../../x_Resource/sign/PasswordResetSession/impl"
-import { initPasswordResetResource } from "../../../x_Resource/sign/PasswordReset/impl"
-import { initPasswordResetRegisterActionLocationInfo } from "../../../sign/password/reset/register/impl"
+import { initPasswordResetResource } from "../resources/Password/Reset/Register/impl"
 
 import { AuthSignEntryPoint } from "../entryPoint"
 
@@ -62,11 +61,15 @@ export function newLoginAsSingle(): AuthSignEntryPoint {
             }),
         passwordResetSession: () => initPasswordResetSessionResource(foreground, background),
         passwordReset: () =>
-            initPasswordResetResource(
-                initPasswordResetRegisterActionLocationInfo(currentURL),
-                foreground,
-                background
-            ),
+            initPasswordResetResource({
+                register: {
+                    continuousRenew: newContinuousRenewAuthCredentialAction(webStorage),
+                    location: newAuthLocationAction(),
+                    register: newPasswordResetRegisterAction(),
+                },
+
+                form: formMaterial(),
+            }),
     })
     return {
         view,

@@ -10,7 +10,7 @@ import { initAuthSignLinkResource } from "./resources/Link/impl"
 import { initAuthSignRenewResource } from "./resources/Renew/impl"
 import { initAuthSignPasswordLoginResource } from "./resources/Password/Login/impl"
 import { initPasswordResetSessionResource } from "../../x_Resource/sign/PasswordResetSession/impl"
-import { initPasswordResetResource } from "../../x_Resource/sign/PasswordReset/impl"
+import { initPasswordResetResource } from "./resources/Password/Reset/Register/impl"
 
 import { initFormAction } from "../../../vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../common/field/loginID/main/loginID"
@@ -37,8 +37,9 @@ import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/co
 import { initAuthLocationAction, initAuthLocationActionLocationInfo } from "../../sign/authLocation/impl"
 import { initPasswordLoginAction, initPasswordLoginActionPod } from "../../sign/password/login/impl"
 import {
+    initPasswordResetRegisterAction,
     initPasswordResetRegisterActionLocationInfo,
-    initRegisterActionPod,
+    initPasswordResetRegisterActionPod,
 } from "../../sign/password/reset/register/impl"
 import { initPasswordResetSessionActionPod } from "../../sign/password/reset/session/impl"
 import {
@@ -371,11 +372,14 @@ function standardPasswordLoginResource(
                 },
                 clock,
             }),
-            location: initAuthLocationAction(initAuthLocationActionLocationInfo(currentURL), {
-                config: {
-                    secureServerHost: standardSecureHost(),
+            location: initAuthLocationAction(
+                {
+                    config: {
+                        secureServerHost: standardSecureHost(),
+                    },
                 },
-            }),
+                initAuthLocationActionLocationInfo(currentURL)
+            ),
             login: initPasswordLoginAction(
                 initPasswordLoginActionPod({
                     login: initSubmitPasswordLoginSimulateRemoteAccess(simulateLogin, {
@@ -412,9 +416,8 @@ function standardPasswordResetResource(
     authCredentials: AuthCredentialRepository,
     clock: Clock
 ) {
-    return initPasswordResetResource(
-        initPasswordResetRegisterActionLocationInfo(currentURL),
-        {
+    return initPasswordResetResource({
+        register: {
             continuousRenew: initContinuousRenewAuthCredentialAction({
                 apiCredentials,
                 authCredentials,
@@ -427,30 +430,44 @@ function standardPasswordResetResource(
                 },
                 clock,
             }),
-            location: initAuthLocationAction(initAuthLocationActionLocationInfo(currentURL), {
-                config: {
-                    secureServerHost: standardSecureHost(),
+            location: initAuthLocationAction(
+                {
+                    config: {
+                        secureServerHost: standardSecureHost(),
+                    },
                 },
-            }),
-
-            form: {
-                core: initFormAction(),
-                loginID: initLoginIDFormFieldAction(),
-                password: initPasswordFormFieldAction(),
-            },
-        },
-        {
-            initRegister: initRegisterActionPod({
-                register: initSubmitPasswordResetResetSimulateRemoteAccess(simulateReset, {
-                    wait_millisecond: 0,
+                initAuthLocationActionLocationInfo(currentURL)
+            ),
+            register: initPasswordResetRegisterAction(
+                initPasswordResetRegisterActionPod({
+                    register: initSubmitPasswordResetResetSimulateRemoteAccess(simulateReset, {
+                        wait_millisecond: 0,
+                    }),
+                    config: {
+                        delay: { delay_millisecond: 1 },
+                    },
+                    delayed,
                 }),
-                config: {
-                    delay: { delay_millisecond: 1 },
-                },
-                delayed,
-            }),
+                initPasswordResetRegisterActionLocationInfo(currentURL)
+            ),
+        },
+
+        form: formMaterial(),
+    })
+
+    function formMaterial() {
+        const form = initFormAction()
+        const loginID = initLoginIDFormFieldAction()
+        const password = initPasswordFormFieldAction()
+        return {
+            validation: form.validation(),
+            history: form.history(),
+            loginID: loginID.field(),
+            password: password.field(),
+            character: password.character(),
+            viewer: password.viewer(),
         }
-    )
+    }
 }
 function standardPasswordResetSessionResource() {
     return initPasswordResetSessionResource(
@@ -514,11 +531,14 @@ function standardRenewCredentialResource(
             },
             clock,
         }),
-        location: initAuthLocationAction(initAuthLocationActionLocationInfo(currentURL), {
-            config: {
-                secureServerHost: standardSecureHost(),
+        location: initAuthLocationAction(
+            {
+                config: {
+                    secureServerHost: standardSecureHost(),
+                },
             },
-        }),
+            initAuthLocationActionLocationInfo(currentURL)
+        ),
     })
 }
 

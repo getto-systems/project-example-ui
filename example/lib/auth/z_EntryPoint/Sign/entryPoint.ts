@@ -1,6 +1,6 @@
 import { AuthSignRenewResource } from "./resources/Renew/resource"
 import { AuthSignPasswordLoginResource } from "./resources/Password/Login/resource"
-import { PasswordResetResource } from "../../x_Resource/sign/PasswordReset/resource"
+import { AuthSignPasswordResetResource } from "./resources/Password/Reset/Register/resource"
 import { PasswordResetSessionResource } from "../../x_Resource/sign/PasswordResetSession/resource"
 
 import { ApplicationComponent } from "../../../vendor/getto-example/Application/component"
@@ -16,7 +16,7 @@ export type PasswordLoginEntryPoint = EntryPoint<AuthSignPasswordLoginResource &
 export type PasswordResetSessionEntryPoint = EntryPoint<
     PasswordResetSessionResource & AuthSignLinkResource
 >
-export type PasswordResetEntryPoint = EntryPoint<PasswordResetResource & AuthSignLinkResource>
+export type PasswordResetEntryPoint = EntryPoint<AuthSignPasswordResetResource & AuthSignLinkResource>
 
 export interface AuthSignResourceFactory {
     link(): AuthSignLinkResource
@@ -25,7 +25,7 @@ export interface AuthSignResourceFactory {
 
     passwordLogin(): AuthSignPasswordLoginResource
     passwordResetSession(): PasswordResetSessionResource
-    passwordReset(): PasswordResetResource
+    passwordReset(): AuthSignPasswordResetResource
 }
 
 export interface AuthSignViewLocationInfo {

@@ -1,21 +1,27 @@
-import { FormContainerBaseComponent } from "../../../../../vendor/getto-form/x_Resource/Form/impl"
-import { initLoginIDFormFieldComponent } from "../../../../common/x_Component/Field/LoginID/impl"
-import { initPasswordFormFieldComponent } from "../../../../common/x_Component/Field/Password/impl"
+import { FormContainerBaseComponent } from "../../../../../../../vendor/getto-form/x_Resource/Form/impl"
+import { initLoginIDFormFieldComponent } from "../../../../../../common/x_Component/Field/LoginID/impl"
+import { initPasswordFormFieldComponent } from "../../../../../../common/x_Component/Field/Password/impl"
 
-import { LoginIDFormFieldComponent } from "../../../../common/x_Component/Field/LoginID/component"
-import { PasswordFormFieldComponent } from "../../../../common/x_Component/Field/Password/component"
-import { FormComponent, FormComponentFactory, FormMaterial } from "./component"
+import { LoginIDFormFieldComponent } from "../../../../../../common/x_Component/Field/LoginID/component"
+import { PasswordFormFieldComponent } from "../../../../../../common/x_Component/Field/Password/component"
+import { PasswordResetRegisterFormComponent, PasswordResetRegisterFormMaterial } from "./component"
 
-import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"
-import { PasswordResetFields } from "../../../../sign/password/reset/register/data"
+import { FormConvertResult } from "../../../../../../../vendor/getto-form/form/data"
+import { PasswordResetFields } from "../../../../../password/reset/register/data"
 
-export const initFormComponent: FormComponentFactory = (material) => new Component(material)
+export function initPasswordResetRegisterFormComponent(
+    material: PasswordResetRegisterFormMaterial
+): PasswordResetRegisterFormComponent {
+    return new Component(material)
+}
 
-class Component extends FormContainerBaseComponent<FormMaterial> implements FormComponent {
+class Component
+    extends FormContainerBaseComponent<PasswordResetRegisterFormMaterial>
+    implements PasswordResetRegisterFormComponent {
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
 
-    constructor(material: FormMaterial) {
+    constructor(material: PasswordResetRegisterFormMaterial) {
         super(material, (path) => {
             switch (path.field) {
                 case "loginID":

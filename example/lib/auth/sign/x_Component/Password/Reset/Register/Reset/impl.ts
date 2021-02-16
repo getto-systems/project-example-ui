@@ -1,18 +1,28 @@
-import { ApplicationBaseComponent } from "../../../../../vendor/getto-example/Application/impl"
+import { ApplicationBaseComponent } from "../../../../../../../vendor/getto-example/Application/impl"
 
-import { ResetComponentFactory, ResetMaterial, ResetComponent, ResetComponentState } from "./component"
+import {
+    PasswordResetRegisterMaterial,
+    PasswordResetRegisterComponent,
+    PasswordResetRegisterComponentState,
+} from "./component"
 
-import { LoadSecureScriptError } from "../../../../sign/authLocation/data"
-import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"
-import { PasswordResetFields } from "../../../../sign/password/reset/register/data"
-import { AuthCredential } from "../../../../sign/authCredential/common/data"
+import { LoadSecureScriptError } from "../../../../../authLocation/data"
+import { FormConvertResult } from "../../../../../../../vendor/getto-form/form/data"
+import { PasswordResetFields } from "../../../../../password/reset/register/data"
+import { AuthCredential } from "../../../../../authCredential/common/data"
 
-export const initResetComponent: ResetComponentFactory = (material) => new Component(material)
+export function initPasswordResetRegisterComponent(
+    material: PasswordResetRegisterMaterial
+): PasswordResetRegisterComponent {
+    return new Component(material)
+}
 
-class Component extends ApplicationBaseComponent<ResetComponentState> implements ResetComponent {
-    material: ResetMaterial
+class Component
+    extends ApplicationBaseComponent<PasswordResetRegisterComponentState>
+    implements PasswordResetRegisterComponent {
+    material: PasswordResetRegisterMaterial
 
-    constructor(material: ResetMaterial) {
+    constructor(material: PasswordResetRegisterMaterial) {
         super()
         this.material = material
     }
