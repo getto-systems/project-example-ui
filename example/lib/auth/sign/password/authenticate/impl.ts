@@ -17,11 +17,14 @@ export function initPasswordLoginActionPod_legacy(
     infra: AuthenticatePasswordActionInfra_legacy
 ): AuthenticatePasswordActionPod_legacy {
     return {
-        initAuthenticate: submit(infra),
+        initAuthenticate: authenticatePassword(infra),
     }
 }
 
-const submit: AuthenticatePassword = (infra) => () => async (fields, post) => {
+export const authenticatePassword: AuthenticatePassword = (infra) => () => async (
+    fields,
+    post
+) => {
     if (!fields.success) {
         post({ type: "failed-to-login", err: { type: "validation-error" } })
         return

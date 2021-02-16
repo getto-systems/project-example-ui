@@ -1,11 +1,15 @@
 import { StoreResult } from "../../../../common/storage/infra"
-import { RenewAuthnInfo, ForceRenewAuthnInfo, RenewAuthnInfoInfra } from "./infra"
+import { RenewAuthnInfoInfra } from "./infra"
 
 import { ForceRequestRenewAuthnInfoEvent } from "./event"
 
 import { hasExpired, LastAuth } from "../common/data"
+import { ForceRenewAuthnInfoMethod, RenewAuthnInfoMethod } from "./action"
 
-export const renewAuthnInfo: RenewAuthnInfo = (infra) => async (post) => {
+interface Renew {
+    (infra: RenewAuthnInfoInfra): RenewAuthnInfoMethod
+}
+export const renewAuthnInfo: Renew = (infra) => async (post) => {
     const { clock, config } = infra
 
     loadLastAuth(infra, post, (lastAuth) => {
@@ -22,7 +26,10 @@ export const renewAuthnInfo: RenewAuthnInfo = (infra) => async (post) => {
     })
 }
 
-export const forceRenewAuthnInfo: ForceRenewAuthnInfo = (infra) => async (post) => {
+interface ForceRenew {
+    (infra: RenewAuthnInfoInfra): ForceRenewAuthnInfoMethod
+}
+export const forceRenewAuthnInfo: ForceRenew = (infra) => async (post) => {
     loadLastAuth(infra, post, (lastAuth) => {
         renew(infra, lastAuth, post)
     })
