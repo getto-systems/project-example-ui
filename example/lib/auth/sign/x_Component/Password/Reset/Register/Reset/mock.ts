@@ -1,6 +1,9 @@
-import { MockComponent, MockPropsPasser } from "../../../../../vendor/getto-example/Application/mock"
+import {
+    MockComponent,
+    MockPropsPasser,
+} from "../../../../../../../vendor/getto-example/Application/mock"
 
-import { ResetComponent, ResetComponentState } from "./component"
+import { PasswordResetRegisterComponent, PasswordResetRegisterComponentState } from "./component"
 
 type Passer = MockPropsPasser<ResetMockProps>
 
@@ -15,18 +18,20 @@ export type ResetMockProps =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function initMockResetComponent(passer: Passer): Component {
+export function initMockPasswordResetRegisterComponent(passer: Passer): Component {
     return new Component(passer)
 }
 
-class Component extends MockComponent<ResetComponentState> implements ResetComponent {
+class Component
+    extends MockComponent<PasswordResetRegisterComponentState>
+    implements PasswordResetRegisterComponent {
     constructor(passer: Passer) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))
         })
 
-        function mapProps(props: ResetMockProps): ResetComponentState {
+        function mapProps(props: ResetMockProps): PasswordResetRegisterComponentState {
             switch (props.type) {
                 case "initial":
                     return { type: "initial-reset" }

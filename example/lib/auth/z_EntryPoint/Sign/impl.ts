@@ -102,7 +102,7 @@ export class View extends ApplicationBaseComponent<AuthSignViewState> implements
         return {
             resource,
             terminate: () => {
-                resource.reset.terminate()
+                resource.register.terminate()
                 resource.form.terminate()
             },
         }

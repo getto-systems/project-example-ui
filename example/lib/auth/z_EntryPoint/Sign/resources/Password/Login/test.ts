@@ -624,9 +624,12 @@ function newTestPasswordLoginResource(
                 config: config.continuousRenew,
                 clock,
             }),
-            location: initAuthLocationAction(initAuthLocationActionLocationInfo(currentURL), {
-                config: config.location,
-            }),
+            location: initAuthLocationAction(
+                {
+                    config: config.location,
+                },
+                initAuthLocationActionLocationInfo(currentURL)
+            ),
             login: initPasswordLoginAction(
                 initPasswordLoginActionPod({
                     ...remote,

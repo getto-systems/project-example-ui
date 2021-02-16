@@ -15,7 +15,7 @@ import {
 import {
     initMockPasswordResetResource,
     PasswordResetResourceMockPropsPasser,
-} from "../../x_Resource/sign/PasswordReset/mock"
+} from "./resources/Password/Reset/Register/mock"
 
 import {
     AuthSignEntryPoint,

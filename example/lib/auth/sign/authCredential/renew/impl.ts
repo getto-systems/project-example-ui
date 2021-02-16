@@ -1,5 +1,10 @@
 import { StoreResult } from "../../../../common/storage/infra"
-import { RenewAuthCredentialActionInfra, RequestRenewAuthCredential, ForceRequestRenewAuthCredential, RequestRenewAuthCredentialInfra } from "./infra"
+import {
+    RenewAuthCredentialActionInfra,
+    RequestRenewAuthCredential,
+    ForceRequestRenewAuthCredential,
+    RequestRenewAuthCredentialInfra,
+} from "./infra"
 
 import { RenewAuthCredentialAction } from "./action"
 
@@ -7,7 +12,9 @@ import { ForceRequestRenewAuthCredentialEvent } from "./event"
 
 import { hasExpired, LastAuth } from "../common/data"
 
-export function initRenewAuthCredentialAction(infra: RenewAuthCredentialActionInfra): RenewAuthCredentialAction {
+export function initRenewAuthCredentialAction(
+    infra: RenewAuthCredentialActionInfra
+): RenewAuthCredentialAction {
     return {
         request: request(infra)(),
         forceRequest: forceRequest(infra)(),

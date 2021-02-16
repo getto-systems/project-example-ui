@@ -24,7 +24,7 @@ import { PasswordFormField } from "./field/password"
 
 import { PasswordResetEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialResetComponentState } from "../../../auth/x_Resource/sign/PasswordReset/Reset/component"
+import { initialPasswordResetRegisterComponentState } from "../../../auth/sign/x_Component/Password/Reset/Register/Reset/component"
 import { initialFormContainerComponentState } from "../../../vendor/getto-form/x_Resource/Form/component"
 
 import { SubmitPasswordResetRegisterError } from "../../../auth/sign/password/reset/register/data"
@@ -32,7 +32,7 @@ import { SubmitPasswordResetRegisterError } from "../../../auth/sign/password/re
 export function PasswordReset({ resource, terminate }: PasswordResetEntryPoint): VNode {
     useTermination(terminate)
 
-    const state = useComponent(resource.reset, initialResetComponentState)
+    const state = useComponent(resource.register, initialPasswordResetRegisterComponentState)
     const formState = useComponent(resource.form, initialFormContainerComponentState)
 
     useEffect(() => {
@@ -41,7 +41,7 @@ export function PasswordReset({ resource, terminate }: PasswordResetEntryPoint):
             case "try-to-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = () => {
-                        resource.reset.loadError({
+                        resource.register.loadError({
                             type: "infra-error",
                             err: `スクリプトのロードに失敗しました: ${state.type}`,
                         })
@@ -129,7 +129,7 @@ export function PasswordReset({ resource, terminate }: PasswordResetEntryPoint):
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    resource.reset.submit(resource.form.getResetFields())
+                    resource.register.submit(resource.form.getResetFields())
                 }
             }
             function connectingButton(): VNode {

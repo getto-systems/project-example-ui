@@ -26,14 +26,14 @@ function detectResetToken(currentURL: URL): PasswordResetToken {
 }
 
 export function initPasswordResetRegisterAction(
-    locationInfo: PasswordResetRegisterActionLocationInfo,
-    pod: PasswordResetRegisterActionPod
+    pod: PasswordResetRegisterActionPod,
+    locationInfo: PasswordResetRegisterActionLocationInfo
 ): PasswordResetRegisterAction {
     return {
         submit: pod.initSubmit(locationInfo),
     }
 }
-export function initRegisterActionPod(
+export function initPasswordResetRegisterActionPod(
     infra: PasswordResetRegisterActionInfra
 ): PasswordResetRegisterActionPod {
     return {

@@ -23,7 +23,10 @@ import { delayed } from "../../../../../z_infra/delayed/core"
 import { initRenewAuthCredentialAction } from "../../../../sign/authCredential/renew/impl"
 import { initContinuousRenewAuthCredentialAction } from "../../../../sign/authCredential/continuousRenew/impl"
 import { initMemoryAuthCredentialRepository } from "../../../../sign/authCredential/common/infra/repository/authCredential/memory"
-import { initAuthLocationAction, initAuthLocationActionLocationInfo } from "../../../../sign/authLocation/impl"
+import {
+    initAuthLocationAction,
+    initAuthLocationActionLocationInfo,
+} from "../../../../sign/authLocation/impl"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -428,9 +431,12 @@ function newTestRenewCredentialResource(
             config: config.continuousRenew,
             clock,
         }),
-        location: initAuthLocationAction(initAuthLocationActionLocationInfo(currentURL), {
-            config: config.location,
-        }),
+        location: initAuthLocationAction(
+            {
+                config: config.location,
+            },
+            initAuthLocationActionLocationInfo(currentURL)
+        ),
     })
 }
 
