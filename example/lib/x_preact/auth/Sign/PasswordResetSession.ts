@@ -12,7 +12,7 @@ import {
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { v_medium } from "../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useComponent, useTermination } from "../../common/hooks"
+import { useAction, useTermination } from "../../common/hooks"
 import { siteInfo } from "../../common/site"
 import { icon, spinner } from "../../common/icon"
 
@@ -21,8 +21,8 @@ import { LoginIDFormField } from "./field/loginID"
 
 import { PasswordResetSessionEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialStartComponentState } from "../../../auth/sign/x_Component/Password/Reset/Session/Start/component"
-import { initialFormContainerComponentState } from "../../../vendor/getto-form/x_Resource/Form/component"
+import { initialStartComponentState } from "../../../auth/sign/x_Action/Password/Reset/Session/Start/component"
+import { initialFormContainerComponentState } from "../../../common/vendor/getto-form/x_Resource/Form/component"
 
 import {
     PasswordResetDestination,
@@ -35,8 +35,8 @@ import {
 export function PasswordResetSession({ resource, terminate }: PasswordResetSessionEntryPoint): VNode {
     useTermination(terminate)
 
-    const state = useComponent(resource.start, initialStartComponentState)
-    const formState = useComponent(resource.form, initialFormContainerComponentState)
+    const state = useAction(resource.start, initialStartComponentState)
+    const formState = useAction(resource.form, initialFormContainerComponentState)
 
     switch (state.type) {
         case "initial-reset-session":

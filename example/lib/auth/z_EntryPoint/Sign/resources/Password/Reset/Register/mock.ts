@@ -1,7 +1,7 @@
-import { MockPropsPasser } from "../../../../../../../vendor/getto-example/Application/mock"
+import { MockPropsPasser } from "../../../../../../../common/vendor/getto-example/Application/mock"
 
-import { initMockPasswordResetRegisterFormComponent, PasswordResetRegisterFormMockProps } from "../../../../../../sign/x_Component/Password/Reset/Register/Form/mock"
-import { initMockPasswordResetRegisterComponent, ResetMockProps } from "../../../../../../sign/x_Component/Password/Reset/Register/Reset/mock"
+import { initMockPasswordResetRegisterFormComponent, PasswordResetRegisterFormMockProps } from "../../../../../../sign/x_Action/Password/Reset/Register/Form/mock"
+import { initMockPasswordResetRegisterComponent, ResetMockProps } from "../../../../../../sign/x_Action/Password/Reset/Register/Reset/mock"
 
 import { AuthSignPasswordResetResource } from "./resource"
 

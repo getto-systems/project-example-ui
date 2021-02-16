@@ -9,7 +9,7 @@ import {
     LoginErrorMockProps,
     initMockLoginEntryPointAsError,
 } from "../../../auth/z_EntryPoint/Sign/mock"
-import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
 
 export default {
     title: "Auth/Login/Error",

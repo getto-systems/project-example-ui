@@ -5,7 +5,7 @@ import { ApiCredential } from "./data"
 
 export interface ApiCredentialRepository {
     load(): LoadApiCredentialResult
-    store(authCredential: ApiCredential): StoreResult
+    store(authnInfo: ApiCredential): StoreResult
     remove(): StoreResult
 }
 

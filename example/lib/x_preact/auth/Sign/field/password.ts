@@ -8,7 +8,7 @@ import {
     label_password_fill,
 } from "../../../../z_vendor/getto-css/preact/design/form"
 
-import { useComponent } from "../../../common/hooks"
+import { useAction } from "../../../common/hooks"
 
 import { FormInput } from "../../../common/Form/FormInput"
 
@@ -17,7 +17,7 @@ import {
     PasswordFormFieldComponent,
 } from "../../../../auth/common/x_Component/Field/Password/component"
 
-import { FormInputString, FormValidationResult } from "../../../../vendor/getto-form/form/data"
+import { FormInputString, FormValidationResult } from "../../../../common/vendor/getto-form/form/data"
 import {
     PasswordValidationError,
     PasswordCharacter,
@@ -29,7 +29,7 @@ type Props = Readonly<{
     help: VNodeContent[]
 }>
 export function PasswordFormField(resource: Props): VNode {
-    const state = useComponent(resource.password, initialPasswordFormFieldComponentState)
+    const state = useAction(resource.password, initialPasswordFormFieldComponentState)
 
     return label_password_fill(content())
 

@@ -1,6 +1,6 @@
 import { SubmitPasswordResetRegisterEvent } from "./event"
 
-import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"
+import { FormConvertResult } from "../../../../../common/vendor/getto-form/form/data"
 import { PasswordResetToken, PasswordResetFields } from "./data"
 
 export type RegisterPasswordResetSessionAction = Readonly<{

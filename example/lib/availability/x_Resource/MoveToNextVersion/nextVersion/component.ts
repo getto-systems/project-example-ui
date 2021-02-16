@@ -1,4 +1,4 @@
-import { ApplicationComponent } from "../../../../vendor/getto-example/Application/component"
+import { ApplicationAction } from "../../../../common/vendor/getto-example/Application/action"
 
 import { Find } from "../../../nextVersion/action"
 
@@ -11,7 +11,7 @@ export type NextVersionMaterial = Readonly<{
     find: Find
 }>
 
-export interface NextVersionComponent extends ApplicationComponent<NextVersionComponentState> {
+export interface NextVersionComponent extends ApplicationAction<NextVersionComponentState> {
     find(): void
 }
 

@@ -15,7 +15,7 @@ import { copyright, siteInfo } from "../site"
 
 import { Menu } from "./Menu"
 
-import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
 import { MenuMockProps, initMockMenuComponent } from "../../../common/x_Resource/Outline/Menu/Menu/mock"
 
 export default {

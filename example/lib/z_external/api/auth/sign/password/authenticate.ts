@@ -2,9 +2,9 @@ import { PasswordLoginMessage } from "../../../y_protobuf/password_login_pb.js"
 
 import { encodeUint8ArrayToBase64String } from "../../../../../z_vendor/protobufUtil"
 
-import { parseAuthCredential, parseError } from "../common"
+import { parseAuthnInfo, parseError } from "../common"
 
-import { RawAuthCredential } from "../data"
+import { RawAuthnInfo } from "../data"
 import { ApiResult } from "../../../data"
 
 export interface ApiAuthSignPasswordAuthenticate {
@@ -12,7 +12,7 @@ export interface ApiAuthSignPasswordAuthenticate {
 }
 
 type LoginFields = Readonly<{ loginID: string; password: string }>
-type LoginResult = ApiResult<RawAuthCredential>
+type LoginResult = ApiResult<RawAuthnInfo>
 
 export function newApiAuthSignPasswordAuthenticate(
     apiServerURL: string
@@ -26,7 +26,7 @@ export function newApiAuthSignPasswordAuthenticate(
         })
 
         if (response.ok) {
-            return parseAuthCredential(response)
+            return parseAuthnInfo(response)
         } else {
             return { success: false, err: await parseError(response) }
         }

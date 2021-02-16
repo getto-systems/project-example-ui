@@ -6,7 +6,7 @@ import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { v_medium } from "../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useComponent, useTermination } from "../../common/hooks"
+import { useAction, useTermination } from "../../common/hooks"
 import { siteInfo } from "../../common/site"
 import { spinner } from "../../common/icon"
 
@@ -16,14 +16,14 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { RenewCredentialEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialRenewAuthCredentialComponentState } from "../../../auth/sign/x_Component/AuthCredential/Renew/component"
+import { initialRenewAuthnInfoAction3State } from "../../../auth/sign/x_Action/AuthnInfo/Renew/action"
 
-import { RequestRenewAuthCredentialError } from "../../../auth/sign/authCredential/renew/data"
+import { RequestRenewAuthnInfoError } from "../../../auth/sign/authnInfo/renew/data"
 
 export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoint): VNode {
     useTermination(terminate)
 
-    const state = useComponent(resource.renew, initialRenewAuthCredentialComponentState)
+    const state = useAction(resource.renew, initialRenewAuthnInfoAction3State)
     useEffect(() => {
         resource.renew.request()
     }, [])
@@ -100,7 +100,7 @@ export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoi
             ],
         })
     }
-    function errorMessage(err: RequestRenewAuthCredentialError): VNode {
+    function errorMessage(err: RequestRenewAuthnInfoError): VNode {
         return loginBox(siteInfo(), {
             title: "認証に失敗しました",
             body: [
@@ -112,7 +112,7 @@ export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoi
     }
 }
 
-function renewError(err: RequestRenewAuthCredentialError): VNodeContent[] {
+function renewError(err: RequestRenewAuthnInfoError): VNodeContent[] {
     switch (err.type) {
         case "bad-request":
             return ["認証情報の送信処理でエラーが発生しました"]

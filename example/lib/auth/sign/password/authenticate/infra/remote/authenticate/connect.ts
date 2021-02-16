@@ -1,15 +1,24 @@
 import { initConnectRemoteAccess } from "../../../../../../../z_infra/remote/connect"
 
-import { AuthenticatePasswordRemoteAccess, AuthenticatePasswordRemoteResponse } from "../../../infra"
+import {
+    AuthenticatePasswordRemoteAccess,
+    AuthenticatePasswordRemoteResponse,
+} from "../../../infra"
 
 import { PasswordLoginFields, AuthenticatePasswordRemoteError } from "../../../data"
-import { RawRemoteAccess, RemoteAccessError } from "../../../../../../../z_infra/remote/infra"
-import { markAuthAt, markTicketNonce } from "../../../../../authCredential/common/data"
-import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
+import {
+    RawRemoteAccess,
+    RemoteAccessError,
+} from "../../../../../../../z_infra/remote/infra"
+import { markAuthAt, markAuthnNonce } from "../../../../../authnInfo/common/data"
+import {
+    markApiNonce,
+    markApiRoles,
+} from "../../../../../../../common/apiCredential/data"
 
-type Raw = RawRemoteAccess<PasswordLoginFields, RawAuthCredential>
-type RawAuthCredential = Readonly<{
-    ticketNonce: string
+type Raw = RawRemoteAccess<PasswordLoginFields, RawAuthnInfo>
+type RawAuthnInfo = Readonly<{
+    authnNonce: string
     api: Readonly<{ apiNonce: string; apiRoles: string[] }>
 }>
 
@@ -18,8 +27,11 @@ export function initAuthenticatePasswordConnectRemoteAccess(
 ): AuthenticatePasswordRemoteAccess {
     return initConnectRemoteAccess(access, {
         message: (fields: PasswordLoginFields): PasswordLoginFields => fields,
-        value: (response: RawAuthCredential): AuthenticatePasswordRemoteResponse => ({
-            auth: { ticketNonce: markTicketNonce(response.ticketNonce), authAt: markAuthAt(new Date()) },
+        value: (response: RawAuthnInfo): AuthenticatePasswordRemoteResponse => ({
+            auth: {
+                authnNonce: markAuthnNonce(response.authnNonce),
+                authAt: markAuthAt(new Date()),
+            },
             api: {
                 apiNonce: markApiNonce(response.api.apiNonce),
                 apiRoles: markApiRoles(response.api.apiRoles),

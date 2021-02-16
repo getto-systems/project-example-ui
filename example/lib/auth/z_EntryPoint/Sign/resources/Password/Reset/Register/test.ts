@@ -1,10 +1,10 @@
 import { initPasswordResetResource } from "./impl"
 
-import { initStaticClock, StaticClock } from "../../../../../../../z_infra/clock/simulate"
-import { initRenewAuthCredentialSimulateRemoteAccess } from "../../../../../../sign/authCredential/common/infra/remote/renewAuthCredential/simulate"
+import { newStaticClock, StaticClock } from "../../../../../../../z_infra/clock/simulate"
+import { initRenewAuthnInfoSimulateRemoteAccess } from "../../../../../../sign/authnInfo/common/infra/remote/renew/simulate"
 import { initSubmitPasswordResetResetSimulateRemoteAccess } from "../../../../../../sign/password/resetSession/register/infra/remote/submitPasswordResetRegister/simulate"
 
-import { initFormAction } from "../../../../../../../vendor/getto-form/main/form"
+import { initFormAction } from "../../../../../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../../../common/field/password/main/password"
 
@@ -16,24 +16,30 @@ import {
 
 import { AuthSignPasswordResetResource } from "./resource"
 
-import { PasswordResetRegisterComponentState } from "../../../../../../sign/x_Component/Password/Reset/Register/Reset/component"
+import { PasswordResetRegisterComponentState } from "../../../../../../sign/x_Action/Password/Reset/Register/Reset/component"
 
 import { markSecureScriptPath } from "../../../../../../sign/secureScriptPath/get/data"
-import { markInputString, toValidationError } from "../../../../../../../vendor/getto-form/form/data"
-import { markAuthAt, markTicketNonce } from "../../../../../../sign/authCredential/common/data"
+import {
+    markInputString,
+    toValidationError,
+} from "../../../../../../../common/vendor/getto-form/form/data"
+import { markAuthAt, markAuthnNonce } from "../../../../../../sign/authnInfo/common/data"
 import { initMemoryApiCredentialRepository } from "../../../../../../../common/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
+import {
+    markApiNonce,
+    markApiRoles,
+} from "../../../../../../../common/apiCredential/data"
 import { ApiCredentialRepository } from "../../../../../../../common/apiCredential/infra"
 import {
-    AuthCredentialRepository,
-    RenewAuthCredentialRemoteAccess,
-    RenewAuthCredentialRemoteAccessResult,
-} from "../../../../../../sign/authCredential/common/infra"
-import { initStartContinuousRenewAuthCredentialAction } from "../../../../../../sign/authCredential/startContinuousRenew/impl"
-import { initMemoryAuthCredentialRepository } from "../../../../../../sign/authCredential/common/infra/repository/authCredential/memory"
+    AuthnInfoRepository,
+    RenewAuthnInfoRemoteAccess,
+    RenewAuthnInfoRemoteAccessResult,
+} from "../../../../../../sign/authnInfo/common/infra"
+import { initStartContinuousRenewAuthnInfoAction_legacy } from "../../../../../../sign/authnInfo/startContinuousRenew/impl"
+import { initMemoryAuthnInfoRepository } from "../../../../../../sign/authnInfo/common/infra/repository/authnInfo/memory"
 import {
-    initGetSecureScriptPathAction,
-    initGetSecureScriptPathActionLocationInfo,
+    initGetSecureScriptPathAction_legacy,
+    initGetSecureScriptPathLocationInfo,
 } from "../../../../../../sign/secureScriptPath/get/impl"
 import {
     initPasswordResetRegisterAction,
@@ -43,16 +49,16 @@ import {
 } from "../../../../../../sign/password/resetSession/register/impl"
 import { delayed } from "../../../../../../../z_infra/delayed/core"
 import {
-    initAsyncComponentStateTester,
-    initSyncComponentTestChecker,
-} from "../../../../../../../vendor/getto-example/Application/testHelper"
+    initAsyncActionTester,
+    initSyncActionChecker,
+} from "../../../../../../../common/vendor/getto-example/Application/testHelper"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
-const AUTHORIZED_TICKET_NONCE = "ticket-nonce" as const
+const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
 
-const RENEWED_TICKET_NONCE = "renewed-ticket-nonce" as const
+const RENEWED_AUTHN_NONCE = "renewed-authn-nonce" as const
 const SUCCEED_TO_RENEW_AT = new Date("2020-01-01 10:01:00")
 
 // renew リクエストを投げるべきかの判定に使用する
@@ -87,9 +93,9 @@ describe("PasswordReset", () => {
                         scriptPath: markSecureScriptPath("//secure.example.com/index.js"),
                     },
                 ])
-                expectToSaveLastLogin(repository.authCredentials)
+                expectToSaveLastAuth(repository.authnInfos)
                 setTimeout(() => {
-                    expectToSaveRenewed(repository.authCredentials)
+                    expectToSaveRenewed(repository.authnInfos)
                     done()
                 }, 1) // after setContinuousRenew interval and delay
             })
@@ -121,9 +127,9 @@ describe("PasswordReset", () => {
                         scriptPath: markSecureScriptPath("//secure.example.com/index.js"),
                     },
                 ])
-                expectToSaveLastLogin(repository.authCredentials)
+                expectToSaveLastAuth(repository.authnInfos)
                 setTimeout(() => {
-                    expectToSaveRenewed(repository.authCredentials)
+                    expectToSaveRenewed(repository.authnInfos)
                     done()
                 }, 1) // after setContinuousRenew interval and delay
             })
@@ -143,8 +149,10 @@ describe("PasswordReset", () => {
 
         function initTester() {
             return initAsyncTester()((stack) => {
-                expect(stack).toEqual([{ type: "failed-to-reset", err: { type: "validation-error" } }])
-                expectToEmptyLastLogin(repository.authCredentials)
+                expect(stack).toEqual([
+                    { type: "failed-to-reset", err: { type: "validation-error" } },
+                ])
+                expectToEmptyLastAuth(repository.authnInfos)
                 done()
             })
         }
@@ -165,8 +173,10 @@ describe("PasswordReset", () => {
 
         function initTester() {
             return initAsyncTester()((stack) => {
-                expect(stack).toEqual([{ type: "failed-to-reset", err: { type: "empty-reset-token" } }])
-                expectToEmptyLastLogin(repository.authCredentials)
+                expect(stack).toEqual([
+                    { type: "failed-to-reset", err: { type: "empty-reset-token" } },
+                ])
+                expectToEmptyLastAuth(repository.authnInfos)
                 done()
             })
         }
@@ -182,7 +192,10 @@ describe("PasswordReset", () => {
         function initTester() {
             return initAsyncTester()((stack) => {
                 expect(stack).toEqual([
-                    { type: "load-error", err: { type: "infra-error", err: "load error" } },
+                    {
+                        type: "load-error",
+                        err: { type: "infra-error", err: "load error" },
+                    },
                 ])
                 done()
             })
@@ -201,7 +214,7 @@ describe("PasswordReset", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -240,7 +253,7 @@ describe("PasswordReset", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "initial",
@@ -289,7 +302,7 @@ describe("PasswordReset", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -351,11 +364,11 @@ describe("PasswordReset", () => {
             function initChecker() {
                 const result = { loginID: false, password: false }
                 return {
-                    main: initSyncComponentTestChecker(() => {
+                    main: initSyncActionChecker(() => {
                         expect(result).toEqual({ loginID: true, password: true })
                         done()
                     }),
-                    loginID: initSyncComponentTestChecker((stack) => {
+                    loginID: initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             { value: "loginID-a" },
                             { value: "loginID-b" },
@@ -364,7 +377,7 @@ describe("PasswordReset", () => {
                         ])
                         result.loginID = true
                     }),
-                    password: initSyncComponentTestChecker((stack) => {
+                    password: initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             { value: "password-a" },
                             { value: "" },
@@ -389,7 +402,7 @@ describe("PasswordReset", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([])
                     done()
                 })
@@ -409,7 +422,7 @@ describe("PasswordReset", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([])
                     done()
                 })
@@ -430,7 +443,7 @@ describe("PasswordReset", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([{ result: toValidationError(["empty"]) }])
                         done()
                     })
@@ -450,7 +463,7 @@ describe("PasswordReset", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["empty"]),
@@ -474,7 +487,7 @@ describe("PasswordReset", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["too-long"]),
@@ -499,7 +512,7 @@ describe("PasswordReset", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["too-long"]),
@@ -523,7 +536,7 @@ describe("PasswordReset", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -548,7 +561,7 @@ describe("PasswordReset", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -574,7 +587,7 @@ describe("PasswordReset", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -605,7 +618,12 @@ function standardPasswordResetResource() {
     const repository = standardRepository()
     const simulator = standardRemoteAccess()
     const clock = standardClock()
-    const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
+    const resource = newPasswordResetTestResource(
+        currentURL,
+        repository,
+        simulator,
+        clock
+    )
 
     return { repository, clock, resource }
 }
@@ -614,7 +632,12 @@ function waitPasswordResetResource() {
     const repository = standardRepository()
     const simulator = waitRemoteAccess()
     const clock = standardClock()
-    const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
+    const resource = newPasswordResetTestResource(
+        currentURL,
+        repository,
+        simulator,
+        clock
+    )
 
     return { repository, clock, resource }
 }
@@ -623,18 +646,23 @@ function emptyResetTokenPasswordResetResource() {
     const repository = standardRepository()
     const simulator = standardRemoteAccess()
     const clock = standardClock()
-    const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
+    const resource = newPasswordResetTestResource(
+        currentURL,
+        repository,
+        simulator,
+        clock
+    )
 
     return { repository, resource }
 }
 
 type PasswordResetTestRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
-    authCredentials: AuthCredentialRepository
+    authnInfos: AuthnInfoRepository
 }>
 type PasswordResetTestRemoteAccess = Readonly<{
     register: SubmitPasswordResetRegisterRemoteAccess
-    renew: RenewAuthCredentialRemoteAccess
+    renew: RenewAuthnInfoRemoteAccess
 }>
 
 function newPasswordResetTestResource(
@@ -646,17 +674,17 @@ function newPasswordResetTestResource(
     const config = standardConfig()
     return initPasswordResetResource({
         register: {
-            continuousRenew: initStartContinuousRenewAuthCredentialAction({
+            continuousRenew: initStartContinuousRenewAuthnInfoAction_legacy({
                 ...repository,
                 ...remote,
                 config: config.continuousRenew,
                 clock,
             }),
-            location: initGetSecureScriptPathAction(
+            location: initGetSecureScriptPathAction_legacy(
                 {
                     config: config.location,
                 },
-                initGetSecureScriptPathActionLocationInfo(currentURL)
+                initGetSecureScriptPathLocationInfo(currentURL)
             ),
             register: initPasswordResetRegisterAction(
                 initPasswordResetRegisterActionPod({
@@ -709,10 +737,13 @@ function standardRepository() {
     return {
         apiCredentials: initMemoryApiCredentialRepository({
             set: true,
-            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
+            value: {
+                apiNonce: markApiNonce("api-nonce"),
+                apiRoles: markApiRoles(["role"]),
+            },
         }),
-        authCredentials: initMemoryAuthCredentialRepository({
-            ticketNonce: { set: false },
+        authnInfos: initMemoryAuthnInfoRepository({
+            authnNonce: { set: false },
             lastAuthAt: { set: false },
         }),
     }
@@ -739,17 +770,20 @@ function simulateReset(): SubmitPasswordResetRegisterRemoteAccessResult {
         success: true,
         value: {
             auth: {
-                ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
+                authnNonce: markAuthnNonce(AUTHORIZED_AUTHN_NONCE),
                 authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
             },
-            api: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
+            api: {
+                apiNonce: markApiNonce("api-nonce"),
+                apiRoles: markApiRoles(["role"]),
+            },
         },
     }
 }
-function renewRemoteAccess(): RenewAuthCredentialRemoteAccess {
+function renewRemoteAccess(): RenewAuthnInfoRemoteAccess {
     let renewed = false
-    return initRenewAuthCredentialSimulateRemoteAccess(
-        (): RenewAuthCredentialRemoteAccessResult => {
+    return initRenewAuthnInfoSimulateRemoteAccess(
+        (): RenewAuthnInfoRemoteAccessResult => {
             if (renewed) {
                 // 最初の一回だけ renew して、あとは renew を cancel するために null を返す
                 return { success: false, err: { type: "invalid-ticket" } }
@@ -760,10 +794,13 @@ function renewRemoteAccess(): RenewAuthCredentialRemoteAccess {
                 success: true,
                 value: {
                     auth: {
-                        ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
+                        authnNonce: markAuthnNonce(RENEWED_AUTHN_NONCE),
                         authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
                     },
-                    api: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
+                    api: {
+                        apiNonce: markApiNonce("api-nonce"),
+                        apiRoles: markApiRoles(["role"]),
+                    },
                 },
             }
         },
@@ -772,38 +809,38 @@ function renewRemoteAccess(): RenewAuthCredentialRemoteAccess {
 }
 
 function standardClock(): StaticClock {
-    return initStaticClock(NOW)
+    return newStaticClock(NOW)
 }
 
-function expectToSaveLastLogin(authCredentials: AuthCredentialRepository) {
-    expect(authCredentials.load()).toEqual({
+function expectToSaveLastAuth(authnInfos: AuthnInfoRepository) {
+    expect(authnInfos.load()).toEqual({
         success: true,
         found: true,
-        lastLogin: {
-            ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
+        lastAuth: {
+            authnNonce: markAuthnNonce(AUTHORIZED_AUTHN_NONCE),
             lastAuthAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
         },
     })
 }
-function expectToSaveRenewed(authCredentials: AuthCredentialRepository) {
-    expect(authCredentials.load()).toEqual({
+function expectToSaveRenewed(authnInfos: AuthnInfoRepository) {
+    expect(authnInfos.load()).toEqual({
         success: true,
         found: true,
-        lastLogin: {
-            ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
+        lastAuth: {
+            authnNonce: markAuthnNonce(RENEWED_AUTHN_NONCE),
             lastAuthAt: markAuthAt(SUCCEED_TO_RENEW_AT),
         },
     })
 }
-function expectToEmptyLastLogin(authCredentials: AuthCredentialRepository) {
-    expect(authCredentials.load()).toEqual({
+function expectToEmptyLastAuth(authnInfos: AuthnInfoRepository) {
+    expect(authnInfos.load()).toEqual({
         success: true,
         found: false,
     })
 }
 
 function initAsyncTester() {
-    return initAsyncComponentStateTester((state: PasswordResetRegisterComponentState) => {
+    return initAsyncActionTester((state: PasswordResetRegisterComponentState) => {
         switch (state.type) {
             case "initial-reset":
                 return false

@@ -1,4 +1,4 @@
-import { MockComponent, MockPropsPasser } from "../../../../vendor/getto-example/Application/mock"
+import { MockAction, MockPropsPasser } from "../../../../common/vendor/getto-example/Application/mock"
 import { ContentComponent, ContentComponentState } from "./component"
 
 export type ContentMockPropsPasser = MockPropsPasser<ContentMockProps>
@@ -9,7 +9,7 @@ export function initMockContentComponent(passer: ContentMockPropsPasser): Conten
     return new ContentMockComponent(passer)
 }
 
-class ContentMockComponent extends MockComponent<ContentComponentState> implements ContentComponent {
+class ContentMockComponent extends MockAction<ContentComponentState> implements ContentComponent {
     constructor(passer: ContentMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {

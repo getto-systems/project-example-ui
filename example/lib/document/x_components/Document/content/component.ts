@@ -1,4 +1,4 @@
-import { ApplicationComponent } from "../../../../vendor/getto-example/Application/component"
+import { ApplicationAction } from "../../../../common/vendor/getto-example/Application/action"
 
 import { LoadContent } from "../../../content/action"
 
@@ -11,7 +11,7 @@ export type ContentMaterial = Readonly<{
     loadDocument: LoadContent
 }>
 
-export interface ContentComponent extends ApplicationComponent<ContentComponentState> {
+export interface ContentComponent extends ApplicationAction<ContentComponentState> {
     load(): void
 }
 

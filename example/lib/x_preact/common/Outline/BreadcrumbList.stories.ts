@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { BreadcrumbList } from "./BreadcrumbList"
 
-import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
 import {
     BreadcrumbListMockProps,
     initMockBreadcrumbListComponent,

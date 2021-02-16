@@ -1,14 +1,14 @@
 import { html } from "htm/preact"
 import { VNode } from "preact"
 
-import { useComponent } from "../hooks"
+import { useAction } from "../hooks"
 
 import {
     FormInputComponent,
     initialFormInputComponentState,
-} from "../../../vendor/getto-form/x_Resource/Form/component"
+} from "../../../common/vendor/getto-form/x_Resource/Form/component"
 
-import { markInputString } from "../../../vendor/getto-form/form/data"
+import { markInputString } from "../../../common/vendor/getto-form/form/data"
 
 type FormInputType = "text" | "password" | "search" | "number" | "tel" | "email" | "date" | "time"
 
@@ -17,7 +17,7 @@ export type FormInputProps = Readonly<{
     input: FormInputComponent
 }>
 export function FormInput(resource: FormInputProps): VNode {
-    const state = useComponent(resource.input, initialFormInputComponentState)
+    const state = useAction(resource.input, initialFormInputComponentState)
 
     return html`<input
         type=${resource.type}

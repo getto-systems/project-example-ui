@@ -1,6 +1,6 @@
 import { newTestSeasonInfoComponent, SeasonInfoRepository } from "./core"
 
-import { initStaticClock } from "../../../../../z_infra/clock/simulate"
+import { newStaticClock } from "../../../../../z_infra/clock/simulate"
 import { initMemorySeasonRepository } from "../../../../shared/season/impl/repository/season/memory"
 
 import { Clock } from "../../../../../z_infra/clock/infra"
@@ -111,7 +111,7 @@ function emptyRepository(): SeasonInfoRepository {
 }
 
 function standardClock(): Clock {
-    return initStaticClock(NOW)
+    return newStaticClock(NOW)
 }
 
 interface Post<T> {

@@ -66,7 +66,7 @@ const submit: SubmitPasswordResetRegister = (infra) => (locationInfo) => async (
         return
     }
 
-    post({ type: "succeed-to-reset", authCredential: response.value.auth })
+    post({ type: "succeed-to-reset", authnInfo: response.value.auth })
 }
 
 export function submitPasswordResetRegisterEventHasDone(

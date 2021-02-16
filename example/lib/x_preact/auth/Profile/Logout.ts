@@ -7,16 +7,16 @@ import { button_delete, field } from "../../../z_vendor/getto-css/preact/design/
 import { notice_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
 import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useComponent } from "../../common/hooks"
+import { useAction } from "../../common/hooks"
 
 import { AuthProfileLogoutResource } from "../../../auth/z_EntryPoint/Profile/resources/Logout/resource"
 
-import { initialClearAuthCredentialComponentState } from "../../../auth/sign/x_Component/AuthCredential/Clear/component"
+import { initialClearAuthnInfoActionState } from "../../../auth/sign/x_Action/AuthnInfo/Clear/action"
 
 import { StorageError } from "../../../common/storage/data"
 
 export function AuthProfileLogout(resource: AuthProfileLogoutResource): VNode {
-    const state = useComponent(resource.clear, initialClearAuthCredentialComponentState)
+    const state = useAction(resource.clear, initialClearAuthnInfoActionState)
     useEffect(() => {
         switch (state.type) {
             case "succeed-to-logout":

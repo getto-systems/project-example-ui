@@ -1,6 +1,6 @@
 import { useEffect, useErrorBoundary, useState } from "preact/hooks"
 
-import { ApplicationComponent } from "../../vendor/getto-example/Application/component"
+import { ApplicationAction } from "../../common/vendor/getto-example/Application/action"
 import { NotifyComponent } from "../../availability/x_Resource/Error/Notify/component"
 
 export function useTermination(terminate: Terminate): void {
@@ -22,12 +22,15 @@ export function useDocumentTitle(title: string): void {
     }, [])
 }
 
-export function useComponent<S>(component: ApplicationComponent<S>, initial: S): S {
+export function useAction<S>(
+    action: ApplicationAction<S>,
+    initial: S
+): S {
     const [state, setState] = useState(initial)
     useEffect(() => {
-        component.addStateHandler(setState)
+        action.addStateHandler(setState)
         return () => {
-            component.removeStateHandler(setState)
+            action.removeStateHandler(setState)
         }
     }, [])
     return state

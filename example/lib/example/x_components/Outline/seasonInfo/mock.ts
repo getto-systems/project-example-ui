@@ -1,4 +1,4 @@
-import { MockComponent, MockPropsPasser } from "../../../../vendor/getto-example/Application/mock"
+import { MockAction, MockPropsPasser } from "../../../../common/vendor/getto-example/Application/mock"
 
 import { SeasonInfoComponent, SeasonInfoComponentState } from "./component"
 
@@ -14,7 +14,7 @@ export function initMockSeasonInfoComponent(passer: SeasonInfoMockPropsPasser): 
 }
 
 class SeasonInfoMockComponent
-    extends MockComponent<SeasonInfoComponentState>
+    extends MockAction<SeasonInfoComponentState>
     implements SeasonInfoComponent {
     constructor(passer: SeasonInfoMockPropsPasser) {
         super()

@@ -1,20 +1,30 @@
-import { AuthenticatePasswordActionInfra, AuthenticatePassword } from "./infra"
+import { AuthenticatePasswordActionInfra_legacy, AuthenticatePassword } from "./infra"
 
-import { AuthenticatePasswordAction, AuthenticatePasswordActionPod } from "./action"
+import {
+    AuthenticatePasswordAction_legacy,
+    AuthenticatePasswordActionPod_legacy,
+} from "./action"
 import { AuthenticatePasswordEvent } from "./event"
 
-export function initPasswordLoginAction(pod: AuthenticatePasswordActionPod): AuthenticatePasswordAction {
+export function initPasswordLoginAction_legacy(
+    pod: AuthenticatePasswordActionPod_legacy
+): AuthenticatePasswordAction_legacy {
     return {
         authenticate: pod.initAuthenticate(),
     }
 }
-export function initPasswordLoginActionPod(infra: AuthenticatePasswordActionInfra): AuthenticatePasswordActionPod {
+export function initPasswordLoginActionPod_legacy(
+    infra: AuthenticatePasswordActionInfra_legacy
+): AuthenticatePasswordActionPod_legacy {
     return {
-        initAuthenticate: submit(infra),
+        initAuthenticate: authenticatePassword(infra),
     }
 }
 
-const submit: AuthenticatePassword = (infra) => () => async (fields, post) => {
+export const authenticatePassword: AuthenticatePassword = (infra) => () => async (
+    fields,
+    post
+) => {
     if (!fields.success) {
         post({ type: "failed-to-login", err: { type: "validation-error" } })
         return
@@ -33,7 +43,7 @@ const submit: AuthenticatePassword = (infra) => () => async (fields, post) => {
         return
     }
 
-    post({ type: "succeed-to-login", authCredential: response.value.auth })
+    post({ type: "succeed-to-login", authnInfo: response.value.auth })
 }
 
 export function submitEventHasDone(event: AuthenticatePasswordEvent): boolean {

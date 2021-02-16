@@ -11,13 +11,13 @@ import {
     StartPasswordResetSessionSessionRemoteAccessResult,
 } from "../../../sign/password/resetSession/start/infra"
 
-import { StartComponentState } from "../../../sign/x_Component/Password/Reset/Session/Start/component"
+import { StartComponentState } from "../../../sign/x_Action/Password/Reset/Session/Start/component"
 
 import { markPasswordResetSessionID } from "../../../sign/password/resetSession/start/data"
-import { markInputString, toValidationError } from "../../../../vendor/getto-form/form/data"
+import { markInputString, toValidationError } from "../../../../common/vendor/getto-form/form/data"
 import { PasswordResetSessionResource } from "./resource"
 import { initPasswordResetSessionResource } from "./impl"
-import { initFormAction } from "../../../../vendor/getto-form/main/form"
+import { initFormAction } from "../../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
 import {
     checkPasswordResetSessionStatusEventHasDone,
@@ -26,9 +26,9 @@ import {
 } from "../../../sign/password/resetSession/start/impl"
 import { delayed, wait } from "../../../../z_infra/delayed/core"
 import {
-    initAsyncComponentStateTester,
-    initSyncComponentTestChecker,
-} from "../../../../vendor/getto-example/Application/testHelper"
+    initAsyncActionTester,
+    initSyncActionChecker,
+} from "../../../../common/vendor/getto-example/Application/testHelper"
 import { initSendPasswordResetSessionTokenSimulateRemoteAccess } from "../../../sign/password/resetSession/start/infra/remote/sendPasswordResetSessionToken/simulate"
 import { initGetPasswordResetSessionStatusSimulateRemoteAccess } from "../../../sign/password/resetSession/start/infra/remote/getPasswordResetSessionStatus/simulate"
 
@@ -162,7 +162,7 @@ describe("PasswordResetSession", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -193,7 +193,7 @@ describe("PasswordResetSession", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "valid",
@@ -227,7 +227,7 @@ describe("PasswordResetSession", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -270,7 +270,7 @@ describe("PasswordResetSession", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([
                         { value: "loginID-a" },
                         { value: "" },
@@ -296,7 +296,7 @@ describe("PasswordResetSession", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([])
                     done()
                 })
@@ -316,7 +316,7 @@ describe("PasswordResetSession", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([])
                     done()
                 })
@@ -337,7 +337,7 @@ describe("PasswordResetSession", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([{ result: toValidationError(["empty"]) }])
                         done()
                     })
@@ -488,7 +488,7 @@ function longSendingGetStatusResponse(): GetPasswordResetSessionStatusResponse[]
 }
 
 function initAsyncTester() {
-    return initAsyncComponentStateTester((state: StartComponentState) => {
+    return initAsyncActionTester((state: StartComponentState) => {
         switch (state.type) {
             case "initial-reset-session":
                 return false

@@ -3,14 +3,14 @@ import { h, VNode } from "preact"
 import { VNodeContent } from "../../../../z_vendor/getto-css/preact/common"
 import { field, field_error, label_text_fill } from "../../../../z_vendor/getto-css/preact/design/form"
 
-import { useComponent } from "../../../common/hooks"
+import { useAction } from "../../../common/hooks"
 
 import { FormInput } from "../../../common/Form/FormInput"
 
 import { LoginIDFormFieldComponent } from "../../../../auth/common/x_Component/Field/LoginID/component"
-import { initialFormFieldComponentState } from "../../../../vendor/getto-form/x_Resource/Form/component"
+import { initialFormFieldComponentState } from "../../../../common/vendor/getto-form/x_Resource/Form/component"
 
-import { FormValidationResult } from "../../../../vendor/getto-form/form/data"
+import { FormValidationResult } from "../../../../common/vendor/getto-form/form/data"
 import { LoginIDValidationError } from "../../../../auth/common/field/loginID/data"
 
 type Props = Readonly<{
@@ -18,7 +18,7 @@ type Props = Readonly<{
     help: VNodeContent[]
 }>
 export function LoginIDFormField(resource: Props): VNode {
-    const state = useComponent(resource.loginID, initialFormFieldComponentState)
+    const state = useAction(resource.loginID, initialFormFieldComponentState)
 
     return label_text_fill(content())
 

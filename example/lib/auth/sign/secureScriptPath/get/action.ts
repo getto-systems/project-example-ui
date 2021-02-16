@@ -1,9 +1,9 @@
 import { LocationPathname, SecureScriptPath } from "./data"
 
-export type GetSecureScriptPathAction = Readonly<{
+export type GetSecureScriptPathAction_legacy = Readonly<{
     get: GetSecureScriptPathMethod
 }>
-export type GetSecureScriptPathActionLocationInfo = GetSecureScriptPathLocationInfo
+export type GetSecureScriptPathActionLocationInfo_legacy = GetSecureScriptPathLocationInfo
 
 export interface GetSecureScriptPathPod {
     (info: GetSecureScriptPathLocationInfo): GetSecureScriptPathMethod

@@ -1,5 +1,5 @@
 import { iconClass, lnir } from "../../../../../z_vendor/icon"
-import { MockComponent, MockPropsPasser } from "../../../../../vendor/getto-example/Application/mock"
+import { MockAction, MockPropsPasser } from "../../../../vendor/getto-example/Application/mock"
 
 import { BreadcrumbListComponent, BreadcrumbListComponentState } from "./component"
 
@@ -15,7 +15,7 @@ export function initMockBreadcrumbListComponent(
     return new Component(passer)
 }
 
-class Component extends MockComponent<BreadcrumbListComponentState> implements BreadcrumbListComponent {
+class Component extends MockAction<BreadcrumbListComponentState> implements BreadcrumbListComponent {
     constructor(passer: BreadcrumbListMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {

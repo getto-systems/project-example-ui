@@ -1,5 +1,5 @@
 import { MenuForegroundAction, MenuResource } from "../../../common/x_Resource/Outline/Menu/resource"
-import { AuthProfileLogoutMaterial, AuthProfileLogoutResource } from "./resources/Logout/resource"
+import { AuthProfileLogoutResource } from "./resources/Logout/resource"
 
 import {
     SeasonInfoComponent,
@@ -21,9 +21,7 @@ export type AuthProfileResource = Readonly<{
     MenuResource &
     AuthProfileLogoutResource
 
-export type AuthProfileMaterial = ErrorForegroundAction &
-    MenuForegroundAction &
-    AuthProfileLogoutMaterial
+export type AuthProfileMaterial = ErrorForegroundAction & MenuForegroundAction
 
 export type ProfileFactory = Readonly<{
     actions: Readonly<{

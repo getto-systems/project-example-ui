@@ -1,4 +1,4 @@
-import { ApplicationComponent } from "../../../../vendor/getto-example/Application/component"
+import { ApplicationAction } from "../../../../common/vendor/getto-example/Application/action"
 
 import { FindCurrentVersion } from "../../../version/local/action"
 
@@ -11,7 +11,7 @@ export type CurrentVersionMaterial = Readonly<{
     findCurrentVersion: FindCurrentVersion
 }>
 
-export interface CurrentVersionComponent extends ApplicationComponent<CurrentVersionComponentState> {
+export interface CurrentVersionComponent extends ApplicationAction<CurrentVersionComponentState> {
     load(): void
 }
 

@@ -1,10 +1,5 @@
-import {
-    ClearAuthCredentialComponent,
-    ClearAuthCredentialMaterial,
-} from "../../../../sign/x_Component/AuthCredential/Clear/component"
+import { ClearAuthnInfoAction } from "../../../../sign/x_Action/AuthnInfo/Clear/action"
 
 export type AuthProfileLogoutResource = Readonly<{
-    clear: ClearAuthCredentialComponent
+    clear: ClearAuthnInfoAction
 }>
-
-export type AuthProfileLogoutMaterial = ClearAuthCredentialMaterial

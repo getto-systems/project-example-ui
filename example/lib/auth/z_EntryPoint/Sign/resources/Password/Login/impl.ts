@@ -1,5 +1,5 @@
-import { initPasswordLoginFormComponent } from "../../../../../sign/x_Component/Password/Login/Form/impl"
-import { initPasswordLoginComponent } from "../../../../../sign/x_Component/Password/Login/Core/impl"
+import { initPasswordLoginFormComponent } from "../../../../../sign/x_Action/Password/Login/Form/impl"
+import { initPasswordLoginComponent } from "../../../../../sign/x_Action/Password/Login/Core/impl"
 
 import { AuthSignPasswordLoginMaterial, AuthSignPasswordLoginResource } from "./resource"
 

@@ -1,10 +1,10 @@
 import { initAuthSignPasswordLoginResource } from "./impl"
 
-import { initStaticClock, StaticClock } from "../../../../../../z_infra/clock/simulate"
+import { newStaticClock, StaticClock } from "../../../../../../z_infra/clock/simulate"
 import { initAuthenticatePasswordSimulateRemoteAccess } from "../../../../../sign/password/authenticate/infra/remote/authenticate/simulate"
-import { initRenewAuthCredentialSimulateRemoteAccess } from "../../../../../sign/authCredential/common/infra/remote/renewAuthCredential/simulate"
+import { initRenewAuthnInfoSimulateRemoteAccess } from "../../../../../sign/authnInfo/common/infra/remote/renew/simulate"
 
-import { initFormAction } from "../../../../../../vendor/getto-form/main/form"
+import { initFormAction } from "../../../../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../../common/field/password/main/password"
 
@@ -16,43 +16,46 @@ import { Clock } from "../../../../../../z_infra/clock/infra"
 
 import { AuthSignPasswordLoginResource } from "./resource"
 
-import { PasswordLoginComponentState } from "../../../../../sign/x_Component/Password/Login/Core/component"
+import { PasswordLoginComponentState } from "../../../../../sign/x_Action/Password/Login/Core/component"
 
-import { markInputString, toValidationError } from "../../../../../../vendor/getto-form/form/data"
+import {
+    markInputString,
+    toValidationError,
+} from "../../../../../../common/vendor/getto-form/form/data"
 import { markSecureScriptPath } from "../../../../../sign/secureScriptPath/get/data"
 import { PasswordLoginFields } from "../../../../../sign/password/authenticate/data"
-import { markAuthAt, markTicketNonce } from "../../../../../sign/authCredential/common/data"
+import { markAuthAt, markAuthnNonce } from "../../../../../sign/authnInfo/common/data"
 import { ApiCredentialRepository } from "../../../../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../../common/apiCredential/data"
-import { initStartContinuousRenewAuthCredentialAction } from "../../../../../sign/authCredential/startContinuousRenew/impl"
+import { initStartContinuousRenewAuthnInfoAction_legacy } from "../../../../../sign/authnInfo/startContinuousRenew/impl"
 import {
-    AuthCredentialRepository,
-    RenewAuthCredentialRemoteAccess,
-    RenewAuthCredentialRemoteAccessResult,
-} from "../../../../../sign/authCredential/common/infra"
-import { initMemoryAuthCredentialRepository } from "../../../../../sign/authCredential/common/infra/repository/authCredential/memory"
+    AuthnInfoRepository,
+    RenewAuthnInfoRemoteAccess,
+    RenewAuthnInfoRemoteAccessResult,
+} from "../../../../../sign/authnInfo/common/infra"
+import { initMemoryAuthnInfoRepository } from "../../../../../sign/authnInfo/common/infra/repository/authnInfo/memory"
 import {
-    initGetSecureScriptPathAction,
-    initGetSecureScriptPathActionLocationInfo,
+    initGetSecureScriptPathAction_legacy,
+    initGetSecureScriptPathLocationInfo,
 } from "../../../../../sign/secureScriptPath/get/impl"
 import { delayed } from "../../../../../../z_infra/delayed/core"
 import {
-    initPasswordLoginAction,
-    initPasswordLoginActionPod,
+    initPasswordLoginAction_legacy,
+    initPasswordLoginActionPod_legacy,
     submitEventHasDone,
 } from "../../../../../sign/password/authenticate/impl"
 import {
-    initAsyncComponentStateTester,
-    initSyncComponentTestChecker,
-} from "../../../../../../vendor/getto-example/Application/testHelper"
+    initAsyncActionTester,
+    initSyncActionChecker,
+} from "../../../../../../common/vendor/getto-example/Application/testHelper"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
-const AUTHORIZED_TICKET_NONCE = "ticket-nonce" as const
+const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
 
-const RENEWED_TICKET_NONCE = "renewed-ticket-nonce" as const
+const RENEWED_AUTHN_NONCE = "renewed-authn-nonce" as const
 const SUCCEED_TO_RENEW_AT = new Date("2020-01-01 10:01:00")
 
 // renew リクエストを投げるべきかの判定に使用する
@@ -87,9 +90,9 @@ describe("PasswordLogin", () => {
                         scriptPath: markSecureScriptPath("//secure.example.com/index.js"),
                     },
                 ])
-                expectToSaveLastLogin(repository.authCredentials)
+                expectToSaveLastAuth(repository.authnInfos)
                 setTimeout(() => {
-                    expectToSaveRenewed(repository.authCredentials)
+                    expectToSaveRenewed(repository.authnInfos)
                     done()
                 }, 1) // after setContinuousRenew interval and delay
             })
@@ -121,9 +124,9 @@ describe("PasswordLogin", () => {
                         scriptPath: markSecureScriptPath("//secure.example.com/index.js"),
                     },
                 ])
-                expectToSaveLastLogin(repository.authCredentials)
+                expectToSaveLastAuth(repository.authnInfos)
                 setTimeout(() => {
-                    expectToSaveRenewed(repository.authCredentials)
+                    expectToSaveRenewed(repository.authnInfos)
                     done()
                 }, 1) // after setContinuousRenew interval and delay
             })
@@ -146,8 +149,10 @@ describe("PasswordLogin", () => {
 
         function initTester() {
             return initAsyncTester()((stack) => {
-                expect(stack).toEqual([{ type: "failed-to-login", err: { type: "validation-error" } }])
-                expectToEmptyLastLogin(repository.authCredentials)
+                expect(stack).toEqual([
+                    { type: "failed-to-login", err: { type: "validation-error" } },
+                ])
+                expectToEmptyLastAuth(repository.authnInfos)
                 done()
             })
         }
@@ -163,7 +168,10 @@ describe("PasswordLogin", () => {
         function initTester() {
             return initAsyncTester()((stack) => {
                 expect(stack).toEqual([
-                    { type: "load-error", err: { type: "infra-error", err: "load error" } },
+                    {
+                        type: "load-error",
+                        err: { type: "infra-error", err: "load error" },
+                    },
                 ])
                 done()
             })
@@ -182,7 +190,7 @@ describe("PasswordLogin", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -221,7 +229,7 @@ describe("PasswordLogin", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "initial",
@@ -270,7 +278,7 @@ describe("PasswordLogin", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -332,11 +340,11 @@ describe("PasswordLogin", () => {
             function initChecker() {
                 const result = { loginID: false, password: false }
                 return {
-                    main: initSyncComponentTestChecker(() => {
+                    main: initSyncActionChecker(() => {
                         expect(result).toEqual({ loginID: true, password: true })
                         done()
                     }),
-                    loginID: initSyncComponentTestChecker((stack) => {
+                    loginID: initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             { value: "loginID-a" },
                             { value: "loginID-b" },
@@ -345,7 +353,7 @@ describe("PasswordLogin", () => {
                         ])
                         result.loginID = true
                     }),
-                    password: initSyncComponentTestChecker((stack) => {
+                    password: initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             { value: "password-a" },
                             { value: "" },
@@ -370,7 +378,7 @@ describe("PasswordLogin", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([])
                     done()
                 })
@@ -390,7 +398,7 @@ describe("PasswordLogin", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([])
                     done()
                 })
@@ -411,7 +419,7 @@ describe("PasswordLogin", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([{ result: toValidationError(["empty"]) }])
                         done()
                     })
@@ -431,7 +439,7 @@ describe("PasswordLogin", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["empty"]),
@@ -455,7 +463,7 @@ describe("PasswordLogin", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["too-long"]),
@@ -480,7 +488,7 @@ describe("PasswordLogin", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["too-long"]),
@@ -504,7 +512,7 @@ describe("PasswordLogin", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -529,7 +537,7 @@ describe("PasswordLogin", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -555,7 +563,7 @@ describe("PasswordLogin", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -586,7 +594,12 @@ function standardPasswordLoginResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newTestPasswordLoginResource(currentURL, repository, simulator, clock)
+    const resource = newTestPasswordLoginResource(
+        currentURL,
+        repository,
+        simulator,
+        clock
+    )
 
     return { repository, clock, resource }
 }
@@ -595,18 +608,23 @@ function waitPasswordLoginResource() {
     const repository = standardRepository()
     const simulator = waitSimulator()
     const clock = standardClock()
-    const resource = newTestPasswordLoginResource(currentURL, repository, simulator, clock)
+    const resource = newTestPasswordLoginResource(
+        currentURL,
+        repository,
+        simulator,
+        clock
+    )
 
     return { repository, clock, resource }
 }
 
 type PasswordLoginTestRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
-    authCredentials: AuthCredentialRepository
+    authnInfos: AuthnInfoRepository
 }>
 type PasswordLoginTestRemoteAccess = Readonly<{
     login: AuthenticatePasswordRemoteAccess
-    renew: RenewAuthCredentialRemoteAccess
+    renew: RenewAuthnInfoRemoteAccess
 }>
 
 function newTestPasswordLoginResource(
@@ -618,20 +636,20 @@ function newTestPasswordLoginResource(
     const config = standardConfig()
     return initAuthSignPasswordLoginResource({
         login: {
-            continuousRenew: initStartContinuousRenewAuthCredentialAction({
+            continuousRenew: initStartContinuousRenewAuthnInfoAction_legacy({
                 ...repository,
                 ...remote,
                 config: config.continuousRenew,
                 clock,
             }),
-            location: initGetSecureScriptPathAction(
+            location: initGetSecureScriptPathAction_legacy(
                 {
                     config: config.location,
                 },
-                initGetSecureScriptPathActionLocationInfo(currentURL)
+                initGetSecureScriptPathLocationInfo(currentURL)
             ),
-            login: initPasswordLoginAction(
-                initPasswordLoginActionPod({
+            login: initPasswordLoginAction_legacy(
+                initPasswordLoginActionPod_legacy({
                     ...remote,
                     config: config.login,
                     delayed,
@@ -678,43 +696,55 @@ function standardRepository(): PasswordLoginTestRepository {
     return {
         apiCredentials: initMemoryApiCredentialRepository({
             set: true,
-            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
+            value: {
+                apiNonce: markApiNonce("api-nonce"),
+                apiRoles: markApiRoles(["role"]),
+            },
         }),
-        authCredentials: initMemoryAuthCredentialRepository({
-            ticketNonce: { set: false },
+        authnInfos: initMemoryAuthnInfoRepository({
+            authnNonce: { set: false },
             lastAuthAt: { set: false },
         }),
     }
 }
 function standardSimulator(): PasswordLoginTestRemoteAccess {
     return {
-        login: initAuthenticatePasswordSimulateRemoteAccess(simulateLogin, { wait_millisecond: 0 }),
+        login: initAuthenticatePasswordSimulateRemoteAccess(simulateLogin, {
+            wait_millisecond: 0,
+        }),
         renew: renewRemoteAccess(),
     }
 }
 function waitSimulator(): PasswordLoginTestRemoteAccess {
     return {
-        login: initAuthenticatePasswordSimulateRemoteAccess(simulateLogin, { wait_millisecond: 3 }),
+        login: initAuthenticatePasswordSimulateRemoteAccess(simulateLogin, {
+            wait_millisecond: 3,
+        }),
         renew: renewRemoteAccess(),
     }
 }
 
-function simulateLogin(_fields: PasswordLoginFields): AuthenticatePasswordRemoteAccessResult {
+function simulateLogin(
+    _fields: PasswordLoginFields
+): AuthenticatePasswordRemoteAccessResult {
     return {
         success: true,
         value: {
             auth: {
-                ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
+                authnNonce: markAuthnNonce(AUTHORIZED_AUTHN_NONCE),
                 authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
             },
-            api: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
+            api: {
+                apiNonce: markApiNonce("api-nonce"),
+                apiRoles: markApiRoles(["role"]),
+            },
         },
     }
 }
-function renewRemoteAccess(): RenewAuthCredentialRemoteAccess {
+function renewRemoteAccess(): RenewAuthnInfoRemoteAccess {
     let renewed = false
-    return initRenewAuthCredentialSimulateRemoteAccess(
-        (): RenewAuthCredentialRemoteAccessResult => {
+    return initRenewAuthnInfoSimulateRemoteAccess(
+        (): RenewAuthnInfoRemoteAccessResult => {
             if (renewed) {
                 // 最初の一回だけ renew して、あとは renew を cancel するために null を返す
                 return { success: false, err: { type: "invalid-ticket" } }
@@ -725,10 +755,13 @@ function renewRemoteAccess(): RenewAuthCredentialRemoteAccess {
                 success: true,
                 value: {
                     auth: {
-                        ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
+                        authnNonce: markAuthnNonce(RENEWED_AUTHN_NONCE),
                         authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
                     },
-                    api: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
+                    api: {
+                        apiNonce: markApiNonce("api-nonce"),
+                        apiRoles: markApiRoles(["role"]),
+                    },
                 },
             }
         },
@@ -737,38 +770,38 @@ function renewRemoteAccess(): RenewAuthCredentialRemoteAccess {
 }
 
 function standardClock(): StaticClock {
-    return initStaticClock(NOW)
+    return newStaticClock(NOW)
 }
 
-function expectToSaveLastLogin(authCredentials: AuthCredentialRepository) {
-    expect(authCredentials.load()).toEqual({
+function expectToSaveLastAuth(authnInfos: AuthnInfoRepository) {
+    expect(authnInfos.load()).toEqual({
         success: true,
         found: true,
-        lastLogin: {
-            ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
+        lastAuth: {
+            authnNonce: markAuthnNonce(AUTHORIZED_AUTHN_NONCE),
             lastAuthAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
         },
     })
 }
-function expectToSaveRenewed(authCredentials: AuthCredentialRepository) {
-    expect(authCredentials.load()).toEqual({
+function expectToSaveRenewed(authnInfos: AuthnInfoRepository) {
+    expect(authnInfos.load()).toEqual({
         success: true,
         found: true,
-        lastLogin: {
-            ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
+        lastAuth: {
+            authnNonce: markAuthnNonce(RENEWED_AUTHN_NONCE),
             lastAuthAt: markAuthAt(SUCCEED_TO_RENEW_AT),
         },
     })
 }
-function expectToEmptyLastLogin(authCredentials: AuthCredentialRepository) {
-    expect(authCredentials.load()).toEqual({
+function expectToEmptyLastAuth(authnInfos: AuthnInfoRepository) {
+    expect(authnInfos.load()).toEqual({
         success: true,
         found: false,
     })
 }
 
 function initAsyncTester() {
-    return initAsyncComponentStateTester((state: PasswordLoginComponentState) => {
+    return initAsyncActionTester((state: PasswordLoginComponentState) => {
         switch (state.type) {
             case "initial-login":
                 return false

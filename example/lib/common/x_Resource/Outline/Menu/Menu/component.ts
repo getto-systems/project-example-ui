@@ -1,4 +1,4 @@
-import { ApplicationComponent } from "../../../../../vendor/getto-example/Application/component"
+import { ApplicationAction } from "../../../../vendor/getto-example/Application/action"
 
 import { LoadOutlineMenuAction } from "../../../../../auth/permission/outline/load/action"
 
@@ -11,7 +11,7 @@ export type MenuMaterial = Readonly<{
     menu: LoadOutlineMenuAction
 }>
 
-export interface MenuComponent extends ApplicationComponent<MenuComponentState> {
+export interface MenuComponent extends ApplicationAction<MenuComponentState> {
     load(): void
     toggle(menu: OutlineMenu, path: OutlineMenuCategoryPath): void
 }
