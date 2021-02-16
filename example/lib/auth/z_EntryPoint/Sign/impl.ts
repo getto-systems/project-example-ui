@@ -1,27 +1,27 @@
 import { ApplicationBaseComponent } from "../../../vendor/getto-example/Application/impl"
 
 import {
-    LoginView,
-    LoginState,
-    ViewState,
+    AuthSignView,
+    AuthSignViewState,
+    AuthSignViewType,
     PasswordLoginEntryPoint,
     PasswordResetSessionEntryPoint,
     PasswordResetEntryPoint,
-    LoginViewLocationInfo,
-    LoginResourceFactory,
+    AuthSignViewLocationInfo,
+    AuthSignResourceFactory,
 } from "./entryPoint"
 
 import { AuthLocationSearchParams } from "../../sign/authLocation/data"
 
-export function initLoginViewLocationInfo(currentURL: URL): LoginViewLocationInfo {
+export function initLoginViewLocationInfo(currentURL: URL): AuthSignViewLocationInfo {
     return {
         login: {
-            getLoginView: () => detectViewState(currentURL),
+            getAuthSignView: () => detectViewState(currentURL),
         },
     }
 }
 
-function detectViewState(currentURL: URL): ViewState {
+function detectViewState(currentURL: URL): AuthSignViewType {
     // パスワードリセット
     switch (currentURL.searchParams.get(AuthLocationSearchParams.passwordReset)) {
         case AuthLocationSearchParams.passwordReset_start:
@@ -34,11 +34,11 @@ function detectViewState(currentURL: URL): ViewState {
     return "password-login"
 }
 
-export class View extends ApplicationBaseComponent<LoginState> implements LoginView {
-    locationInfo: LoginViewLocationInfo
-    components: LoginResourceFactory
+export class View extends ApplicationBaseComponent<AuthSignViewState> implements AuthSignView {
+    locationInfo: AuthSignViewLocationInfo
+    components: AuthSignResourceFactory
 
-    constructor(locationInfo: LoginViewLocationInfo, components: LoginResourceFactory) {
+    constructor(locationInfo: AuthSignViewLocationInfo, components: AuthSignResourceFactory) {
         super()
         this.locationInfo = locationInfo
         this.components = components
@@ -49,7 +49,7 @@ export class View extends ApplicationBaseComponent<LoginState> implements LoginV
         resource.renew.addStateHandler((state) => {
             switch (state.type) {
                 case "required-to-login":
-                    this.post(this.mapLoginView(this.locationInfo.login.getLoginView()))
+                    this.post(this.mapLoginView(this.locationInfo.login.getAuthSignView()))
                     return
             }
         })
@@ -68,7 +68,7 @@ export class View extends ApplicationBaseComponent<LoginState> implements LoginV
         this.post({ type: "error", err })
     }
 
-    mapLoginView(loginView: ViewState): LoginState {
+    mapLoginView(loginView: AuthSignViewType): AuthSignViewState {
         switch (loginView) {
             case "password-login":
                 return { type: loginView, entryPoint: this.passwordLogin() }
@@ -80,7 +80,7 @@ export class View extends ApplicationBaseComponent<LoginState> implements LoginV
     }
 
     passwordLogin(): PasswordLoginEntryPoint {
-        const resource = { ...this.components.passwordLogin(), ...this.components.loginLink() }
+        const resource = { ...this.components.passwordLogin(), ...this.components.link() }
         return {
             resource,
             terminate: () => {
@@ -90,7 +90,7 @@ export class View extends ApplicationBaseComponent<LoginState> implements LoginV
         }
     }
     passwordResetSession(): PasswordResetSessionEntryPoint {
-        const resource = { ...this.components.passwordResetSession(), ...this.components.loginLink() }
+        const resource = { ...this.components.passwordResetSession(), ...this.components.link() }
         return {
             resource,
             terminate: () => {
@@ -100,7 +100,7 @@ export class View extends ApplicationBaseComponent<LoginState> implements LoginV
         }
     }
     passwordReset(): PasswordResetEntryPoint {
-        const resource = { ...this.components.passwordReset(), ...this.components.loginLink() }
+        const resource = { ...this.components.passwordReset(), ...this.components.link() }
         return {
             resource,
             terminate: () => {

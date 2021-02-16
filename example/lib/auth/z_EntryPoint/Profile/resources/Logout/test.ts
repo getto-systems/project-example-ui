@@ -1,4 +1,4 @@
-import { ClearAuthCredentialComponentState } from "./ClearAuthCredential/component"
+import { ClearAuthCredentialComponentState } from "../../../../sign/x_Component/AuthCredential/Clear/component"
 
 import { initAuthProfileLogoutResource } from "./impl"
 import { markAuthAt, markTicketNonce } from "../../../../sign/authCredential/common/data"
@@ -11,39 +11,37 @@ const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
 
 describe("AuthProfileLogout", () => {
-    describe("clearAuthCredential", () => {
-        test("submit", (done) => {
-            const { resource } = standardResource()
+    test("clear", (done) => {
+        const { resource } = standardResource()
 
-            resource.clearAuthCredential.addStateHandler(stateHandler())
+        resource.clear.addStateHandler(stateHandler())
 
-            resource.clearAuthCredential.submit()
+        resource.clear.submit()
 
-            function stateHandler(): Post<ClearAuthCredentialComponentState> {
-                const stack: ClearAuthCredentialComponentState[] = []
-                return (state) => {
-                    stack.push(state)
+        function stateHandler(): Post<ClearAuthCredentialComponentState> {
+            const stack: ClearAuthCredentialComponentState[] = []
+            return (state) => {
+                stack.push(state)
 
-                    switch (state.type) {
-                        case "initial-logout":
-                            // work in progress...
-                            break
+                switch (state.type) {
+                    case "initial-logout":
+                        // work in progress...
+                        break
 
-                        case "succeed-to-logout":
-                            expect(stack).toEqual([{ type: "succeed-to-logout" }])
-                            done()
-                            break
+                    case "succeed-to-logout":
+                        expect(stack).toEqual([{ type: "succeed-to-logout" }])
+                        done()
+                        break
 
-                        case "failed-to-logout":
-                            done(new Error(state.type))
-                            break
+                    case "failed-to-logout":
+                        done(new Error(state.type))
+                        break
 
-                        default:
-                            assertNever(state)
-                    }
+                    default:
+                        assertNever(state)
                 }
             }
-        })
+        }
     })
 })
 
@@ -51,9 +49,7 @@ function standardResource() {
     const repository = standardRepository()
 
     const resource = initAuthProfileLogoutResource({
-        foreground: {
-            clear: initClearAuthCredentialAction(repository),
-        },
+        clear: initClearAuthCredentialAction(repository),
     })
 
     return { repository, resource }

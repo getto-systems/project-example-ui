@@ -1,9 +1,9 @@
-import { RenewAuthCredentialForegroundAction, AuthSignAuthCredentialClearResource } from "../../x_Resource/sign/authCredential/Renew/resource"
+import { AuthSignRenewMaterial, AuthSignRenewResource } from "./resources/Renew/resource"
 import {
-    PasswordLoginBackgroundActionPod,
-    PasswordLoginForegroundAction,
-    PasswordLoginResource,
-} from "../../x_Resource/sign/PasswordLogin/resource"
+    AuthSignPasswordLoginForegroundMaterial,
+    AuthSignPasswordLoginBackgroundMaterialPod,
+    AuthSignPasswordLoginResource,
+} from "./resources/Password/Login/resource"
 import {
     PasswordResetBackgroundActionPod,
     PasswordResetForegroundAction,
@@ -16,47 +16,50 @@ import {
 } from "../../x_Resource/sign/PasswordResetSession/resource"
 
 import { ApplicationComponent } from "../../../vendor/getto-example/Application/component"
-import { SignLinkResource } from "./Link/resource"
+import { AuthSignLinkResource } from "./resources/Link/resource"
 
-export type LoginForegroundAction = RenewAuthCredentialForegroundAction &
-    PasswordLoginForegroundAction &
+export type AuthSignEntryPoint = Readonly<{
+    view: AuthSignView
+    terminate: Terminate
+}>
+
+export type AuthSignForegroundMaterial = AuthSignRenewMaterial &
+    AuthSignPasswordLoginForegroundMaterial &
     PasswordResetSessionForegroundAction &
     PasswordResetForegroundAction
 
-export type LoginBackgroundActionPod = PasswordLoginBackgroundActionPod &
+export type AuthSignBackgroundMaterialPod = AuthSignPasswordLoginBackgroundMaterialPod &
     PasswordResetSessionBackgroundActionPod &
     PasswordResetBackgroundActionPod
 
-export type LoginEntryPoint = Readonly<{
-    view: LoginView
-    terminate: Terminate
-}>
-export type RenewCredentialEntryPoint = EntryPoint<AuthSignAuthCredentialClearResource>
-export type PasswordLoginEntryPoint = EntryPoint<PasswordLoginResource & SignLinkResource>
-export type PasswordResetSessionEntryPoint = EntryPoint<PasswordResetSessionResource & SignLinkResource>
-export type PasswordResetEntryPoint = EntryPoint<PasswordResetResource & SignLinkResource>
+export type RenewCredentialEntryPoint = EntryPoint<AuthSignRenewResource>
+export type PasswordLoginEntryPoint = EntryPoint<AuthSignPasswordLoginResource & AuthSignLinkResource>
+export type PasswordResetSessionEntryPoint = EntryPoint<
+    PasswordResetSessionResource & AuthSignLinkResource
+>
+export type PasswordResetEntryPoint = EntryPoint<PasswordResetResource & AuthSignLinkResource>
 
-export interface LoginResourceFactory {
-    loginLink(): SignLinkResource
+export interface AuthSignResourceFactory {
+    link(): AuthSignLinkResource
 
-    renewCredential(): AuthSignAuthCredentialClearResource
+    renewCredential(): AuthSignRenewResource
 
-    passwordLogin(): PasswordLoginResource
+    passwordLogin(): AuthSignPasswordLoginResource
     passwordResetSession(): PasswordResetSessionResource
     passwordReset(): PasswordResetResource
 }
 
-export interface LoginViewLocationInfo {
+export interface AuthSignViewLocationInfo {
     login: Readonly<{
-        getLoginView(): ViewState
+        getAuthSignView(): AuthSignViewType
     }>
 }
 
-export interface LoginView extends ApplicationComponent<LoginState> {
+export interface AuthSignView extends ApplicationComponent<AuthSignViewState> {
     load(): void
 }
 
-export type LoginState =
+export type AuthSignViewState =
     | Readonly<{ type: "initial-view" }>
     | Readonly<{ type: "renew-credential"; entryPoint: RenewCredentialEntryPoint }>
     | Readonly<{ type: "password-login"; entryPoint: PasswordLoginEntryPoint }>
@@ -64,9 +67,9 @@ export type LoginState =
     | Readonly<{ type: "password-reset"; entryPoint: PasswordResetEntryPoint }>
     | Readonly<{ type: "error"; err: string }>
 
-export type ViewState = "password-login" | "password-reset-session" | "password-reset"
+export type AuthSignViewType = "password-login" | "password-reset-session" | "password-reset"
 
-export const initialLoginState: LoginState = { type: "initial-view" }
+export const initialAuthSignViewState: AuthSignViewState = { type: "initial-view" }
 
 type EntryPoint<R> = Readonly<{
     resource: R

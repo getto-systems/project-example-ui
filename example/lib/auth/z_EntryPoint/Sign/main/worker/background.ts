@@ -4,11 +4,11 @@ import { ForegroundMessage, BackgroundMessage } from "./message"
 
 import { PasswordLoginActionProxyMessage } from "../../../../sign/password/login/main/worker/message"
 import { PasswordResetSessionActionProxyMessage } from "../../../../sign/password/reset/session/main/worker/message"
-import { RegisterActionProxyMessage } from "../../../../sign/password/reset/register/main/worker/message"
+import { PasswordResetRegisterActionProxyMessage } from "../../../../sign/password/reset/register/main/worker/message"
 
 import { newPasswordLoginActionBackgroundHandler } from "../../../../sign/password/login/main/worker/background"
 import { newPasswordResetSessionActionBackgroundHandler } from "../../../../sign/password/reset/session/main/worker/background"
-import { newRegisterActionBackgroundHandler } from "../../../../sign/password/reset/register/main/worker/background"
+import { newPasswordResetRegisterActionBackgroundHandler } from "../../../../sign/password/reset/register/main/worker/background"
 
 export function newLoginWorker(worker: Worker): void {
     const handler: Handler = {
@@ -19,7 +19,7 @@ export function newLoginWorker(worker: Worker): void {
             session: newPasswordResetSessionActionBackgroundHandler((response) =>
                 postBackgroundMessage({ type: "reset-session", response })
             ),
-            register: newRegisterActionBackgroundHandler((response) =>
+            register: newPasswordResetRegisterActionBackgroundHandler((response) =>
                 postBackgroundMessage({ type: "reset-register", response })
             ),
         },
@@ -42,7 +42,7 @@ type Handler = Readonly<{
     login: WorkerBackgroundHandler<PasswordLoginActionProxyMessage>
     reset: Readonly<{
         session: WorkerBackgroundHandler<PasswordResetSessionActionProxyMessage>
-        register: WorkerBackgroundHandler<RegisterActionProxyMessage>
+        register: WorkerBackgroundHandler<PasswordResetRegisterActionProxyMessage>
     }>
 }>
 

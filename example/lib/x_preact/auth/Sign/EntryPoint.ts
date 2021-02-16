@@ -13,11 +13,11 @@ import { PasswordResetSession } from "./PasswordResetSession"
 import { PasswordReset } from "./PasswordReset"
 
 import {
-    LoginEntryPoint,
-    initialLoginState,
+    AuthSignEntryPoint,
+    initialAuthSignViewState,
 } from "../../../auth/z_EntryPoint/Sign/entryPoint"
 
-export function EntryPoint({ view, terminate }: LoginEntryPoint): VNode {
+export function EntryPoint({ view, terminate }: AuthSignEntryPoint): VNode {
     useTermination(terminate)
 
     const [err] = useErrorBoundary((err) => {
@@ -28,7 +28,7 @@ export function EntryPoint({ view, terminate }: LoginEntryPoint): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    const state = useComponent(view, initialLoginState)
+    const state = useComponent(view, initialAuthSignViewState)
     useEffect(() => {
         view.load()
     }, [])

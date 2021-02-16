@@ -3,8 +3,8 @@ import { FormMaterial, FormComponentFactory, FormComponent } from "./component"
 import { PasswordResetSessionFields } from "../../../../sign/password/reset/session/data"
 import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"
 import { FormContainerBaseComponent } from "../../../../../vendor/getto-form/x_Resource/Form/impl"
-import { LoginIDFormFieldComponent } from "../../../common/Field/LoginID/component"
-import { initLoginIDFormFieldComponent } from "../../../common/Field/LoginID/impl"
+import { LoginIDFormFieldComponent } from "../../../../common/x_Component/Field/LoginID/component"
+import { initLoginIDFormFieldComponent } from "../../../../common/x_Component/Field/LoginID/impl"
 
 export const initFormComponent: FormComponentFactory = (material) => new Component(material)
 

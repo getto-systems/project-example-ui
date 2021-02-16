@@ -29,9 +29,17 @@ export type StartComponentState =
     | Readonly<{ type: "delayed-to-start-session" }>
     | Readonly<{ type: "failed-to-start-session"; err: StartPasswordResetSessionError }>
     | Readonly<{ type: "try-to-check-status" }>
-    | Readonly<{ type: "retry-to-check-status"; dest: PasswordResetDestination; status: PasswordResetSendingStatus }>
+    | Readonly<{
+          type: "retry-to-check-status"
+          dest: PasswordResetDestination
+          status: PasswordResetSendingStatus
+      }>
     | Readonly<{ type: "failed-to-check-status"; err: CheckPasswordResetSessionStatusError }>
-    | Readonly<{ type: "failed-to-send-token"; dest: PasswordResetDestination; err: SendPasswordResetSessionTokenError }>
+    | Readonly<{
+          type: "failed-to-send-token"
+          dest: PasswordResetDestination
+          err: SendPasswordResetSessionTokenError
+      }>
     | Readonly<{ type: "succeed-to-send-token"; dest: PasswordResetDestination }>
     | Readonly<{ type: "error"; err: string }>
 

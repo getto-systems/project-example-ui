@@ -15,7 +15,7 @@ import { FormInput } from "../../../common/Form/FormInput"
 import {
     initialPasswordFormFieldComponentState,
     PasswordFormFieldComponent,
-} from "../../../../auth/x_Resource/common/Field/Password/component"
+} from "../../../../auth/common/x_Component/Field/Password/component"
 
 import { FormInputString, FormValidationResult } from "../../../../vendor/getto-form/form/data"
 import {

@@ -23,6 +23,7 @@ import {
     mapValidationResult,
 } from "../../form/data"
 
+// TODO extends FormContainerMaterial でなく Readonly<{ container: FormContainerMaterial }> にするべき
 export class FormContainerBaseComponent<M extends FormContainerMaterial>
     extends ApplicationBaseComponent<FormContainerComponentState>
     implements FormContainerComponent {

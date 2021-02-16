@@ -11,7 +11,7 @@ import { delaySecond, expireMinute } from "../../../../z_infra/time/infra"
 
 import { RenewAuthCredentialAction } from "./action"
 
-export function newRenewAuthCredentialActionPod(webStorage: Storage): RenewAuthCredentialAction {
+export function newRenewAuthCredentialAction(webStorage: Storage): RenewAuthCredentialAction {
     return initRenewAuthCredentialAction({
         apiCredentials: newApiCredentialRepository(webStorage),
         authCredentials: newAuthCredentialRepository(webStorage),

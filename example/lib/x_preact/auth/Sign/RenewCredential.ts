@@ -16,7 +16,7 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { RenewCredentialEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialRenewAuthCredentialComponentState } from "../../../auth/x_Resource/sign/authCredential/Renew/Renew/component"
+import { initialRenewAuthCredentialComponentState } from "../../../auth/sign/x_Component/AuthCredential/Renew/component"
 
 import { RequestRenewAuthCredentialError } from "../../../auth/sign/authCredential/renew/data"
 

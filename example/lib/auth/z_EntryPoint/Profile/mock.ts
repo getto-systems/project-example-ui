@@ -1,6 +1,6 @@
 import { initMockErrorResource } from "../../../availability/x_Resource/Error/mock"
 import {
-    AuthProfileLogoutMockPropsPasser,
+    AuthProfileLogoutResourceMockPropsPasser,
     initMockAuthProfileLogoutResource,
 } from "./resources/Logout/mock"
 import {
@@ -22,7 +22,7 @@ export type AuthProfileMockPropsPasser = Readonly<{
     seasonInfo: SeasonInfoMockPropsPasser
     menu: MenuMockPropsPasser
     breadcrumbList: BreadcrumbListMockPropsPasser
-    logout: AuthProfileLogoutMockPropsPasser
+    logout: AuthProfileLogoutResourceMockPropsPasser
 }>
 export function newMockAuthProfile(passer: AuthProfileMockPropsPasser): AuthProfileEntryPoint {
     return {

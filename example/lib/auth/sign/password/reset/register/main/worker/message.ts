@@ -8,10 +8,16 @@ import { SubmitPasswordResetRegisterEvent } from "../../event"
 import { FormConvertResult } from "../../../../../../../vendor/getto-form/form/data"
 import { PasswordResetFields, PasswordResetToken } from "../../data"
 
-export type RegisterActionProxyMessage = WorkerProxyMethodMessage<"submit", SubmitProxyParams>
-export type RegisterActionProxyResponse = WorkerProxyMethodResponse<"submit", SubmitPasswordResetRegisterEvent>
+export type PasswordResetRegisterActionProxyMessage = WorkerProxyMethodMessage<
+    "submit",
+    SubmitPasswordResetRegisterProxyParams
+>
+export type PasswordResetRegisterActionProxyResponse = WorkerProxyMethodResponse<
+    "submit",
+    SubmitPasswordResetRegisterEvent
+>
 
-export type SubmitProxyParams = Readonly<{
+export type SubmitPasswordResetRegisterProxyParams = Readonly<{
     fields: FormConvertResult<PasswordResetFields>
     resetToken: PasswordResetToken
 }>

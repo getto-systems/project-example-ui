@@ -16,12 +16,12 @@ import {
 } from "../action"
 import { currentURL } from "../../../../../../z_infra/location/url"
 
-export function newPasswordResetRegisterRegisterAction(
+export function newPasswordResetRegisterAction(
     pod: PasswordResetRegisterActionPod
 ): PasswordResetRegisterAction {
     return initPasswordResetRegisterAction(newLocationInfo(), pod)
 }
-export function newPasswordResetRegisterRegisterActionPod(): PasswordResetRegisterActionPod {
+export function newPasswordResetRegisterActionPod(): PasswordResetRegisterActionPod {
     return initRegisterActionPod({
         register: newSubmitPasswordResetRegisterRemoteAccess(),
         config: {

@@ -1,9 +1,9 @@
 import { FormContainerBaseComponent } from "../../../../../vendor/getto-form/x_Resource/Form/impl"
-import { initLoginIDFormFieldComponent } from "../../../common/Field/LoginID/impl"
-import { initPasswordFormFieldComponent } from "../../../common/Field/Password/impl"
+import { initLoginIDFormFieldComponent } from "../../../../common/x_Component/Field/LoginID/impl"
+import { initPasswordFormFieldComponent } from "../../../../common/x_Component/Field/Password/impl"
 
-import { LoginIDFormFieldComponent } from "../../../common/Field/LoginID/component"
-import { PasswordFormFieldComponent } from "../../../common/Field/Password/component"
+import { LoginIDFormFieldComponent } from "../../../../common/x_Component/Field/LoginID/component"
+import { PasswordFormFieldComponent } from "../../../../common/x_Component/Field/Password/component"
 import { FormComponent, FormComponentFactory, FormMaterial } from "./component"
 
 import { FormConvertResult } from "../../../../../vendor/getto-form/form/data"

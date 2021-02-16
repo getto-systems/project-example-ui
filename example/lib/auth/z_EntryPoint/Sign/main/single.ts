@@ -1,7 +1,7 @@
 import { newPasswordLoginActionPod } from "../../../sign/password/login/main/core"
-import { newPasswordResetRegisterRegisterActionPod } from "../../../sign/password/reset/register/main/core"
+import { newPasswordResetRegisterActionPod } from "../../../sign/password/reset/register/main/core"
 import { newContinuousRenewAuthCredentialAction } from "../../../sign/authCredential/continuousRenew/main"
-import { newRenewAuthCredentialActionPod } from "../../../sign/authCredential/renew/main"
+import { newRenewAuthCredentialAction } from "../../../sign/authCredential/renew/main"
 import { newPasswordResetSessionActionPod } from "../../../sign/password/reset/session/main/core"
 import { newAuthLocationAction } from "../../../sign/authLocation/main"
 
@@ -11,21 +11,22 @@ import { initPasswordFormFieldAction } from "../../../common/field/password/main
 
 import { initLoginViewLocationInfo, View } from "../impl"
 
-import { initSignLinkResource } from "../Link/impl"
-import { initRenewCredentialResource } from "../../../x_Resource/sign/authCredential/Renew/impl"
-import { initPasswordLoginResource } from "../../../x_Resource/sign/PasswordLogin/impl"
+import { initAuthSignLinkResource } from "../resources/Link/impl"
+import { initAuthSignRenewResource } from "../resources/Renew/impl"
+import { initAuthSignPasswordLoginResource } from "../resources/Password/Login/impl"
 import { initPasswordResetSessionResource } from "../../../x_Resource/sign/PasswordResetSession/impl"
 import { initPasswordResetResource } from "../../../x_Resource/sign/PasswordReset/impl"
 import { initPasswordResetRegisterActionLocationInfo } from "../../../sign/password/reset/register/impl"
 
-import { LoginBackgroundActionPod, LoginEntryPoint, LoginForegroundAction } from "../entryPoint"
+import { AuthSignEntryPoint } from "../entryPoint"
+import { initPasswordLoginAction } from "../../../sign/password/login/impl"
 
-export function newLoginAsSingle(): LoginEntryPoint {
+export function newLoginAsSingle(): AuthSignEntryPoint {
     const webStorage = localStorage
     const currentURL = new URL(location.toString())
 
-    const foreground: LoginForegroundAction = {
-        renew: newRenewAuthCredentialActionPod(webStorage),
+    const foreground = {
+        renew: newRenewAuthCredentialAction(webStorage),
         continuousRenew: newContinuousRenewAuthCredentialAction(webStorage),
         location: newAuthLocationAction(),
 
@@ -35,18 +36,27 @@ export function newLoginAsSingle(): LoginEntryPoint {
             password: initPasswordFormFieldAction(),
         },
     }
-    const background: LoginBackgroundActionPod = {
-        initLogin: newPasswordLoginActionPod(),
+    const background = {
         initSession: newPasswordResetSessionActionPod(),
-        initRegister: newPasswordResetRegisterRegisterActionPod(),
+        initRegister: newPasswordResetRegisterActionPod(),
+    }
+
+    const material = {
+        login: {
+            continuousRenew: newContinuousRenewAuthCredentialAction(webStorage),
+            location: newAuthLocationAction(),
+            login: initPasswordLoginAction(newPasswordLoginActionPod()),
+        },
+
+        form: formMaterial(),
     }
 
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        loginLink: initSignLinkResource,
+        link: initAuthSignLinkResource,
 
-        renewCredential: () => initRenewCredentialResource(foreground),
+        renewCredential: () => initAuthSignRenewResource(foreground),
 
-        passwordLogin: () => initPasswordLoginResource(foreground, background),
+        passwordLogin: () => initAuthSignPasswordLoginResource(material),
         passwordResetSession: () => initPasswordResetSessionResource(foreground, background),
         passwordReset: () =>
             initPasswordResetResource(
@@ -60,5 +70,19 @@ export function newLoginAsSingle(): LoginEntryPoint {
         terminate: () => {
             view.terminate()
         },
+    }
+}
+
+function formMaterial() {
+    const form = initFormAction()
+    const loginID = initLoginIDFormFieldAction()
+    const password = initPasswordFormFieldAction()
+    return {
+        validation: form.validation(),
+        history: form.history(),
+        loginID: loginID.field(),
+        password: password.field(),
+        character: password.character(),
+        viewer: password.viewer(),
     }
 }

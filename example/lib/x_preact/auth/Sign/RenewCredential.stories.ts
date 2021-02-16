@@ -5,7 +5,7 @@ import { RenewCredential } from "./RenewCredential"
 
 import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
 import { initMockRenewCredentialEntryPoint } from "../../../auth/z_EntryPoint/Sign/mock"
-import { RenewCredentialResourceMockProps } from "../../../auth/x_Resource/sign/authCredential/Renew/mock"
+import { AuthSignRenewMockProps } from "../../../auth/z_EntryPoint/Sign/resources/Renew/mock"
 
 export default {
     title: "Auth/Login/RenewCredential",
@@ -16,9 +16,9 @@ export default {
     },
 }
 
-type MockProps = RenewCredentialResourceMockProps
+type MockProps = AuthSignRenewMockProps
 const Template: Story<MockProps> = (args) => {
-    const passer = initMockPropsPasser<RenewCredentialResourceMockProps>()
+    const passer = initMockPropsPasser<AuthSignRenewMockProps>()
     const entryPoint = initMockRenewCredentialEntryPoint(passer)
     return h(Preview, { args })
 
