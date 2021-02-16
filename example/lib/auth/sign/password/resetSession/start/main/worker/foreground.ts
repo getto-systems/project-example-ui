@@ -1,5 +1,5 @@
 import {
-    WorkerForegroundProxyAction,
+    WorkerForegroundProxyAction_legacy,
     WorkerForegroundProxyBase,
     WorkerForegroundProxyMethod,
 } from "../../../../../../../common/vendor/getto-worker/main/foreground"
@@ -20,7 +20,7 @@ export function newPasswordResetSessionActionForegroundProxy(
 ): PasswordResetSessionActionForegroundProxy {
     return new Proxy(post)
 }
-export type PasswordResetSessionActionForegroundProxy = WorkerForegroundProxyAction<
+export type PasswordResetSessionActionForegroundProxy = WorkerForegroundProxyAction_legacy<
     PasswordResetSessionActionPod,
     PasswordResetSessionActionProxyMessage,
     PasswordResetSessionActionProxyResponse

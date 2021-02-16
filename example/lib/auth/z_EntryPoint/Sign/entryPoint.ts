@@ -1,5 +1,5 @@
 import { AuthSignRenewResource } from "./resources/Renew/resource"
-import { AuthSignPasswordLoginResource } from "./resources/Password/Login/resource"
+import { AuthSignPasswordAuthenticateResource } from "./resources/Password/Authenticate/resource"
 import { AuthSignPasswordResetResource } from "./resources/Password/Reset/Register/resource"
 import { PasswordResetSessionResource } from "../../x_Resource/sign/PasswordResetSession/resource"
 
@@ -12,7 +12,7 @@ export type AuthSignEntryPoint = Readonly<{
 }>
 
 export type RenewCredentialEntryPoint = EntryPoint<AuthSignRenewResource>
-export type PasswordLoginEntryPoint = EntryPoint<AuthSignPasswordLoginResource & AuthSignLinkResource>
+export type PasswordLoginEntryPoint = EntryPoint<AuthSignPasswordAuthenticateResource & AuthSignLinkResource>
 export type PasswordResetSessionEntryPoint = EntryPoint<
     PasswordResetSessionResource & AuthSignLinkResource
 >
@@ -23,7 +23,7 @@ export interface AuthSignResourceFactory {
 
     renew(): AuthSignRenewResource
 
-    passwordLogin(): AuthSignPasswordLoginResource
+    passwordLogin(): AuthSignPasswordAuthenticateResource
     passwordResetSession(): PasswordResetSessionResource
     passwordReset(): AuthSignPasswordResetResource
 }

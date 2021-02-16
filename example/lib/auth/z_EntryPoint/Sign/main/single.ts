@@ -1,6 +1,5 @@
 import { newAuthSignRenewResource } from "../resources/Renew/main"
 
-import { newPasswordLoginAction } from "../../../sign/password/authenticate/main/core"
 import {
     newPasswordResetRegisterAction,
     newPasswordResetRegisterActionPod,
@@ -16,11 +15,11 @@ import { initPasswordFormFieldAction } from "../../../common/field/password/main
 import { initLoginViewLocationInfo, View } from "../impl"
 
 import { initAuthSignLinkResource } from "../resources/Link/impl"
-import { initAuthSignPasswordLoginResource } from "../resources/Password/Login/impl"
 import { initPasswordResetSessionResource } from "../../../x_Resource/sign/PasswordResetSession/impl"
 import { initPasswordResetResource } from "../resources/Password/Reset/Register/impl"
 
 import { AuthSignEntryPoint } from "../entryPoint"
+import { newAuthSignPasswordAuthenticateResource } from "../resources/Password/Authenticate/main/core"
 
 export function newLoginAsSingle(): AuthSignEntryPoint {
     const webStorage = localStorage
@@ -46,16 +45,7 @@ export function newLoginAsSingle(): AuthSignEntryPoint {
 
         renew: () => newAuthSignRenewResource(webStorage),
 
-        passwordLogin: () =>
-            initAuthSignPasswordLoginResource({
-                login: {
-                    continuousRenew: newContinuousRenewAuthnInfoAction_legacy(webStorage),
-                    location: newAuthLocationAction_legacy(),
-                    login: newPasswordLoginAction(),
-                },
-
-                form: formMaterial(),
-            }),
+        passwordLogin: () => newAuthSignPasswordAuthenticateResource(webStorage),
         passwordResetSession: () =>
             initPasswordResetSessionResource(foreground, background),
         passwordReset: () =>

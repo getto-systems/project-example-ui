@@ -82,7 +82,7 @@ export class View extends ApplicationBaseAction<AuthSignViewState> implements Au
         return {
             resource,
             terminate: () => {
-                resource.login.terminate()
+                resource.authenticate.terminate()
                 resource.form.terminate()
             },
         }

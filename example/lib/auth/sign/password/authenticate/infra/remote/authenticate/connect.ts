@@ -5,7 +5,7 @@ import {
     AuthenticatePasswordRemoteResponse,
 } from "../../../infra"
 
-import { PasswordLoginFields, AuthenticatePasswordRemoteError } from "../../../data"
+import { AuthenticatePasswordFields, AuthenticatePasswordRemoteError } from "../../../data"
 import {
     RawRemoteAccess,
     RemoteAccessError,
@@ -16,7 +16,7 @@ import {
     markApiRoles,
 } from "../../../../../../../common/apiCredential/data"
 
-type Raw = RawRemoteAccess<PasswordLoginFields, RawAuthnInfo>
+type Raw = RawRemoteAccess<AuthenticatePasswordFields, RawAuthnInfo>
 type RawAuthnInfo = Readonly<{
     authnNonce: string
     api: Readonly<{ apiNonce: string; apiRoles: string[] }>
@@ -26,7 +26,7 @@ export function initAuthenticatePasswordConnectRemoteAccess(
     access: Raw
 ): AuthenticatePasswordRemoteAccess {
     return initConnectRemoteAccess(access, {
-        message: (fields: PasswordLoginFields): PasswordLoginFields => fields,
+        message: (fields: AuthenticatePasswordFields): AuthenticatePasswordFields => fields,
         value: (response: RawAuthnInfo): AuthenticatePasswordRemoteResponse => ({
             auth: {
                 authnNonce: markAuthnNonce(response.authnNonce),

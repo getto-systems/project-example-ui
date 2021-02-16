@@ -2,38 +2,41 @@ import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
-import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
+import { VNodeContent } from "../../../../z_vendor/getto-css/preact/common"
+import { loginBox } from "../../../../z_vendor/getto-css/preact/layout/login"
 import {
     buttons,
     button_disabled,
     button_send,
     fieldError,
     form,
-} from "../../../z_vendor/getto-css/preact/design/form"
+} from "../../../../z_vendor/getto-css/preact/design/form"
 
-import { useAction, useTermination } from "../../common/hooks"
-import { siteInfo } from "../../common/site"
-import { icon, spinner } from "../../common/icon"
+import { useAction, useTermination } from "../../../common/hooks"
+import { siteInfo } from "../../../common/site"
+import { icon, spinner } from "../../../common/icon"
 
-import { appendScript } from "./script"
+import { appendScript } from "../script"
 
-import { ApplicationError } from "../../common/System/ApplicationError"
+import { ApplicationError } from "../../../common/System/ApplicationError"
 
-import { LoginIDFormField } from "./field/loginID"
-import { PasswordFormField } from "./field/password"
+import { LoginIDFormField } from "../field/loginID"
+import { PasswordFormField } from "../field/password"
 
-import { PasswordLoginEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
+import { PasswordLoginEntryPoint } from "../../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialPasswordLoginComponentState } from "../../../auth/sign/x_Action/Password/Login/Core/component"
-import { initialFormContainerComponentState } from "../../../common/vendor/getto-form/x_Resource/Form/component"
+import { initialAuthenticatePasswordActionState } from "../../../../auth/sign/x_Action/Password/Authenticate/Core/action"
+import { initialFormContainerComponentState } from "../../../../common/vendor/getto-form/x_Resource/Form/component"
 
-import { AuthenticatePasswordError } from "../../../auth/sign/password/authenticate/data"
+import { AuthenticatePasswordError } from "../../../../auth/sign/password/authenticate/data"
 
-export function PasswordLogin({ resource, terminate }: PasswordLoginEntryPoint): VNode {
+export function AuthSignPasswordAuthenticate({
+    resource,
+    terminate,
+}: PasswordLoginEntryPoint): VNode {
     useTermination(terminate)
 
-    const state = useAction(resource.login, initialPasswordLoginComponentState)
+    const state = useAction(resource.authenticate, initialAuthenticatePasswordActionState)
     const formState = useAction(resource.form, initialFormContainerComponentState)
 
     useEffect(() => {
@@ -42,7 +45,7 @@ export function PasswordLogin({ resource, terminate }: PasswordLoginEntryPoint):
             case "try-to-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = () => {
-                        resource.login.loadError({
+                        resource.authenticate.loadError({
                             type: "infra-error",
                             err: `スクリプトのロードに失敗しました: ${state.type}`,
                         })
@@ -72,14 +75,13 @@ export function PasswordLogin({ resource, terminate }: PasswordLoginEntryPoint):
         case "storage-error":
         case "load-error":
             return h(ApplicationError, { err: state.err.err })
-
-        case "error":
-            return h(ApplicationError, { err: state.err })
     }
 
     type LoginFormState = "login" | "connecting"
 
-    type LoginFormContent = LoginFormContent_base | (LoginFormContent_base & LoginFormContent_error)
+    type LoginFormContent =
+        | LoginFormContent_base
+        | (LoginFormContent_base & LoginFormContent_error)
     type LoginFormContent_base = Readonly<{ state: LoginFormState }>
     type LoginFormContent_error = Readonly<{ error: VNodeContent[] }>
 
@@ -124,11 +126,14 @@ export function PasswordLogin({ resource, terminate }: PasswordLoginEntryPoint):
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    resource.login.submit(resource.form.getLoginFields())
+                    resource.authenticate.submit(resource.form.getLoginFields())
                 }
             }
             function connectingButton(): VNode {
-                return button_send({ state: "connect", label: html`ログインしています ${spinner}` })
+                return button_send({
+                    state: "connect",
+                    label: html`ログインしています ${spinner}`,
+                })
             }
         }
 

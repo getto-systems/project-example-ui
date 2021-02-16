@@ -12,14 +12,14 @@ import {
 } from "../../../../../common/x_Component/Field/Password/component"
 
 import { FormConvertResult } from "../../../../../../common/vendor/getto-form/form/data"
-import { PasswordLoginFields } from "../../../../password/authenticate/data"
+import { AuthenticatePasswordFields } from "../../../../password/authenticate/data"
 
-export interface PasswordLoginFormComponent extends FormContainerComponent {
+export interface AuthenticatePasswordFormAction extends FormContainerComponent {
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
-    getLoginFields(): FormConvertResult<PasswordLoginFields>
+    getLoginFields(): FormConvertResult<AuthenticatePasswordFields>
 }
 
-export type PasswordLoginFormMaterial = FormContainerMaterial &
+export type AuthenticatePasswordFormMaterial = FormContainerMaterial &
     LoginIDFormFieldMaterial &
     PasswordFormFieldMaterial

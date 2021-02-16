@@ -16,10 +16,10 @@ import {
 import { FormContainerComponentState } from "../../../../../../common/vendor/getto-form/x_Resource/Form/component"
 import { LoginIDFormFieldComponent } from "../../../../../common/x_Component/Field/LoginID/component"
 import { PasswordFormFieldComponent } from "../../../../../common/x_Component/Field/Password/component"
-import { PasswordLoginFormComponent } from "./component"
+import { AuthenticatePasswordFormAction } from "./action"
 
 import { FormConvertResult } from "../../../../../../common/vendor/getto-form/form/data"
-import { PasswordLoginFields } from "../../../../password/authenticate/data"
+import { AuthenticatePasswordFields } from "../../../../password/authenticate/data"
 
 type Passer = MockPropsPasser<PasswordLoginFormMockProps>
 
@@ -27,11 +27,11 @@ export type PasswordLoginFormMockProps = FormContainerMockProps &
     LoginIDFormFieldMockProps &
     PasswordFormFieldMockProps
 
-export function initMockPasswordLoginFormComponent(passer: Passer): PasswordLoginFormComponent {
+export function initMockPasswordLoginFormComponent(passer: Passer): AuthenticatePasswordFormAction {
     return new Component(passer)
 }
 
-class Component extends FormContainerMockComponent implements PasswordLoginFormComponent {
+class Component extends FormContainerMockComponent implements AuthenticatePasswordFormAction {
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
 
@@ -48,7 +48,7 @@ class Component extends FormContainerMockComponent implements PasswordLoginFormC
         }
     }
 
-    getLoginFields(): FormConvertResult<PasswordLoginFields> {
+    getLoginFields(): FormConvertResult<AuthenticatePasswordFields> {
         return { success: false }
     }
 }

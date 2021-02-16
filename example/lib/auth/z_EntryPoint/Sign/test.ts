@@ -7,7 +7,6 @@ import { initSubmitPasswordResetResetSimulateRemoteAccess } from "../../sign/pas
 import { initStartPasswordResetSessionSimulateRemoteAccess } from "../../sign/password/resetSession/start/infra/remote/startPasswordResetSession/simulate"
 
 import { initAuthSignLinkResource } from "./resources/Link/impl"
-import { initAuthSignPasswordLoginResource } from "./resources/Password/Login/impl"
 import { initPasswordResetSessionResource } from "../../x_Resource/sign/PasswordResetSession/impl"
 import { initPasswordResetResource } from "./resources/Password/Reset/Register/impl"
 
@@ -37,10 +36,6 @@ import {
     initGetSecureScriptPathLocationInfo,
 } from "../../sign/secureScriptPath/get/impl"
 import {
-    initPasswordLoginAction_legacy,
-    initPasswordLoginActionPod_legacy,
-} from "../../sign/password/authenticate/impl"
-import {
     initPasswordResetRegisterAction,
     initPasswordResetRegisterActionLocationInfo,
     initPasswordResetRegisterActionPod,
@@ -55,6 +50,8 @@ import { markPasswordResetSessionID } from "../../sign/password/resetSession/sta
 import { initSendPasswordResetSessionTokenSimulateRemoteAccess } from "../../sign/password/resetSession/start/infra/remote/sendPasswordResetSessionToken/simulate"
 import { initGetPasswordResetSessionStatusSimulateRemoteAccess } from "../../sign/password/resetSession/start/infra/remote/getPasswordResetSessionStatus/simulate"
 import { initRenewAuthnInfoAction } from "../../sign/x_Action/AuthnInfo/Renew/impl"
+import { initAuthenticatePasswordFormAction } from "../../sign/x_Action/Password/Authenticate/Form/impl"
+import { initAuthenticatePasswordAction } from "../../sign/x_Action/Password/Authenticate/Core/impl"
 
 const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
@@ -363,30 +360,27 @@ function standardPasswordLoginResource(
     authnInfos: AuthnInfoRepository,
     clock: Clock
 ) {
-    return initAuthSignPasswordLoginResource({
-        login: {
-            continuousRenew: initStartContinuousRenewAuthnInfoAction_legacy({
-                apiCredentials,
-                authnInfos,
-                renew: initRenewAuthnInfoSimulateRemoteAccess(simulateRenew, {
-                    wait_millisecond: 0,
-                }),
-                config: {
-                    delay: { delay_millisecond: 1 },
-                    interval: { interval_millisecond: 1 },
+    return {
+        authenticate: initAuthenticatePasswordAction(
+            {
+                startContinuousRenew: {
+                    apiCredentials,
+                    authnInfos,
+                    renew: initRenewAuthnInfoSimulateRemoteAccess(simulateRenew, {
+                        wait_millisecond: 0,
+                    }),
+                    config: {
+                        delay: { delay_millisecond: 1 },
+                        interval: { interval_millisecond: 1 },
+                    },
+                    clock,
                 },
-                clock,
-            }),
-            location: initGetSecureScriptPathAction_legacy(
-                {
+                getSecureScriptPath: {
                     config: {
                         secureServerHost: standardSecureHost(),
                     },
                 },
-                initGetSecureScriptPathLocationInfo(currentURL)
-            ),
-            login: initPasswordLoginAction_legacy(
-                initPasswordLoginActionPod_legacy({
+                authenticate: {
                     login: initAuthenticatePasswordSimulateRemoteAccess(simulateLogin, {
                         wait_millisecond: 0,
                     }),
@@ -394,12 +388,13 @@ function standardPasswordLoginResource(
                         delay: { delay_millisecond: 1 },
                     },
                     delayed,
-                })
-            ),
-        },
+                },
+            },
+            initGetSecureScriptPathLocationInfo(currentURL)
+        ),
 
-        form: formMaterial(),
-    })
+        form: initAuthenticatePasswordFormAction(formMaterial()),
+    }
 
     function formMaterial() {
         const form = initFormAction()

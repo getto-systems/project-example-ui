@@ -8,11 +8,8 @@ import {
 import { DelayTime } from "../../../../z_infra/time/infra"
 
 import { AuthnInfo } from "../../authnInfo/common/data"
-import { AuthenticatePasswordPod } from "./action"
 
-import { PasswordLoginFields, AuthenticatePasswordRemoteError } from "./data"
-
-export type AuthenticatePasswordActionInfra_legacy = AuthenticatePasswordInfra
+import { AuthenticatePasswordFields, AuthenticatePasswordRemoteError } from "./data"
 
 export type AuthenticatePasswordInfra = Readonly<{
     login: AuthenticatePasswordRemoteAccess
@@ -22,12 +19,8 @@ export type AuthenticatePasswordInfra = Readonly<{
     }>
 }>
 
-export interface AuthenticatePassword {
-    (infra: AuthenticatePasswordInfra): AuthenticatePasswordPod
-}
-
 export type AuthenticatePasswordRemoteAccess = RemoteAccess<
-    PasswordLoginFields,
+    AuthenticatePasswordFields,
     AuthenticatePasswordRemoteResponse,
     AuthenticatePasswordRemoteError
 >
@@ -36,7 +29,7 @@ export type AuthenticatePasswordRemoteAccessResult = RemoteAccessResult<
     AuthenticatePasswordRemoteError
 >
 export type AuthenticatePasswordSimulator = RemoteAccessSimulator<
-    PasswordLoginFields,
+    AuthenticatePasswordFields,
     AuthenticatePasswordRemoteResponse,
     AuthenticatePasswordRemoteError
 >

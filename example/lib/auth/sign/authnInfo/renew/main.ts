@@ -6,7 +6,6 @@ import { newDateClock } from "../../../../z_infra/clock/date"
 import { delayed } from "../../../../z_infra/delayed/core"
 
 import { delaySecond, expireMinute } from "../../../../z_infra/time/infra"
-
 import { RenewAuthnInfoInfra } from "./infra"
 
 export function newRenewAuthnInfoInfra(webStorage: Storage): RenewAuthnInfoInfra {

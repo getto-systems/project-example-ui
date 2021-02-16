@@ -4,24 +4,27 @@ import { initPasswordFormFieldComponent } from "../../../../../common/x_Componen
 
 import { LoginIDFormFieldComponent } from "../../../../../common/x_Component/Field/LoginID/component"
 import { PasswordFormFieldComponent } from "../../../../../common/x_Component/Field/Password/component"
-import { PasswordLoginFormComponent, PasswordLoginFormMaterial } from "./component"
+import {
+    AuthenticatePasswordFormAction,
+    AuthenticatePasswordFormMaterial,
+} from "./action"
 
 import { FormConvertResult } from "../../../../../../common/vendor/getto-form/form/data"
-import { PasswordLoginFields } from "../../../../password/authenticate/data"
+import { AuthenticatePasswordFields } from "../../../../password/authenticate/data"
 
-export function initPasswordLoginFormComponent(
-    material: PasswordLoginFormMaterial
-): PasswordLoginFormComponent {
-    return new Component(material)
+export function initAuthenticatePasswordFormAction(
+    material: AuthenticatePasswordFormMaterial
+): AuthenticatePasswordFormAction {
+    return new Action(material)
 }
 
-class Component
-    extends FormContainerBaseComponent<PasswordLoginFormMaterial>
-    implements PasswordLoginFormComponent {
+class Action
+    extends FormContainerBaseComponent<AuthenticatePasswordFormMaterial>
+    implements AuthenticatePasswordFormAction {
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
 
-    constructor(material: PasswordLoginFormMaterial) {
+    constructor(material: AuthenticatePasswordFormMaterial) {
         super(material, (path) => {
             switch (path.field) {
                 case "loginID":
@@ -54,7 +57,7 @@ class Component
         })
     }
 
-    getLoginFields(): FormConvertResult<PasswordLoginFields> {
+    getLoginFields(): FormConvertResult<AuthenticatePasswordFields> {
         this.loginID.validate()
         this.password.validate()
 

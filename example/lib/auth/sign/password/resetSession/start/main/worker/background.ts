@@ -1,4 +1,4 @@
-import { WorkerBackgroundHandler } from "../../../../../../../common/vendor/getto-worker/main/background"
+import { WorkerHandler } from "../../../../../../../common/vendor/getto-worker/main/background"
 
 import { newPasswordResetSessionActionPod } from "../core"
 
@@ -14,7 +14,7 @@ import {
 
 export function newPasswordResetSessionActionBackgroundHandler(
     post: Post<PasswordResetSessionActionProxyResponse>
-): WorkerBackgroundHandler<PasswordResetSessionActionProxyMessage> {
+): WorkerHandler<PasswordResetSessionActionProxyMessage> {
     const pod = newPasswordResetSessionActionPod()
     return (message) => {
         switch (message.method) {
