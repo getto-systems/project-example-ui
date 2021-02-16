@@ -5,7 +5,7 @@ import { initExampleComponent } from "../../example/impl"
 
 import { newErrorAction } from "../../../../../availability/unexpectedError/main"
 import { initSeasonAction } from "../../../../shared/season/main/season"
-import { newMainOutlineAction } from "../../../../../auth/permission/outline/main/main"
+import { newMainOutlineAction } from "../../../../../auth/permission/outline/load/main/main"
 
 import { DashboardEntryPoint } from "../entryPoint"
 

@@ -3,8 +3,8 @@ import { ApplicationBaseComponent } from "../../../../../../vendor/getto-example
 import { PasswordLoginMaterial, PasswordLoginComponent, PasswordLoginComponentState } from "./component"
 
 import { FormConvertResult } from "../../../../../../vendor/getto-form/form/data"
-import { LoadSecureScriptError } from "../../../../authLocation/data"
-import { PasswordLoginFields } from "../../../../password/login/data"
+import { LoadSecureScriptError } from "../../../../secureScriptPath/get/data"
+import { PasswordLoginFields } from "../../../../password/authenticate/data"
 import { AuthCredential } from "../../../../authCredential/common/data"
 
 export function initPasswordLoginComponent(material: PasswordLoginMaterial): PasswordLoginComponent {
@@ -22,7 +22,7 @@ class Component
     }
 
     submit(fields: FormConvertResult<PasswordLoginFields>): void {
-        this.material.login.submit(fields, (event) => {
+        this.material.login.authenticate(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-login":
                     this.startContinuousRenew(event.authCredential)
@@ -53,6 +53,6 @@ class Component
     }
 
     secureScriptPath() {
-        return this.material.location.getSecureScriptPath()
+        return this.material.location.get()
     }
 }

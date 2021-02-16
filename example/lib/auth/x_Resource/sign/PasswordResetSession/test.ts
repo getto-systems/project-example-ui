@@ -1,4 +1,4 @@
-import { initStartPasswordResetSessionSimulateRemoteAccess } from "../../../sign/password/reset/session/infra/remote/startPasswordResetSession/simulate"
+import { initStartPasswordResetSessionSimulateRemoteAccess } from "../../../sign/password/resetSession/start/infra/remote/startPasswordResetSession/simulate"
 
 import { WaitTime } from "../../../../z_infra/time/infra"
 import {
@@ -9,11 +9,11 @@ import {
     SendPasswordResetSessionTokenRemoteAccessResult,
     StartPasswordResetSessionSessionRemoteAccess,
     StartPasswordResetSessionSessionRemoteAccessResult,
-} from "../../../sign/password/reset/session/infra"
+} from "../../../sign/password/resetSession/start/infra"
 
-import { StartComponentState } from "./Start/component"
+import { StartComponentState } from "../../../sign/x_Component/Password/Reset/Session/Start/component"
 
-import { markPasswordResetSessionID } from "../../../sign/password/reset/session/data"
+import { markPasswordResetSessionID } from "../../../sign/password/resetSession/start/data"
 import { markInputString, toValidationError } from "../../../../vendor/getto-form/form/data"
 import { PasswordResetSessionResource } from "./resource"
 import { initPasswordResetSessionResource } from "./impl"
@@ -23,14 +23,14 @@ import {
     checkPasswordResetSessionStatusEventHasDone,
     initPasswordResetSessionActionPod,
     startPasswordResetSessionEventHasDone,
-} from "../../../sign/password/reset/session/impl"
+} from "../../../sign/password/resetSession/start/impl"
 import { delayed, wait } from "../../../../z_infra/delayed/core"
 import {
     initAsyncComponentStateTester,
     initSyncComponentTestChecker,
 } from "../../../../vendor/getto-example/Application/testHelper"
-import { initSendPasswordResetSessionTokenSimulateRemoteAccess } from "../../../sign/password/reset/session/infra/remote/sendPasswordResetSessionToken/simulate"
-import { initGetPasswordResetSessionStatusSimulateRemoteAccess } from "../../../sign/password/reset/session/infra/remote/getPasswordResetSessionStatus/simulate"
+import { initSendPasswordResetSessionTokenSimulateRemoteAccess } from "../../../sign/password/resetSession/start/infra/remote/sendPasswordResetSessionToken/simulate"
+import { initGetPasswordResetSessionStatusSimulateRemoteAccess } from "../../../sign/password/resetSession/start/infra/remote/getPasswordResetSessionStatus/simulate"
 
 const VALID_LOGIN = { loginID: "login-id" } as const
 const SESSION_ID = "session-id" as const

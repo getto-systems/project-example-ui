@@ -3,7 +3,7 @@ import { MockComponent, MockPropsPasser } from "../../../../../vendor/getto-exam
 
 import { MenuComponent, MenuComponentState } from "./component"
 
-import { markOutlineMenuCategoryLabel, markOutlineMenuItem, OutlineMenu } from "../../../../../auth/permission/outline/data"
+import { markOutlineMenuCategoryLabel, markOutlineMenuItem, OutlineMenu } from "../../../../../auth/permission/outline/load/data"
 
 export type MenuMockPropsPasser = MockPropsPasser<MenuMockProps>
 

@@ -1,12 +1,12 @@
 import { ApplicationComponent } from "../../../../../vendor/getto-example/Application/component"
 
-import { AuthLocationAction } from "../../../authLocation/action"
+import { GetSecureScriptPathAction } from "../../../secureScriptPath/get/action"
 import { RenewAuthCredentialAction } from "../../../authCredential/renew/action"
-import { ContinuousRenewAuthCredentialAction } from "../../../authCredential/continuousRenew/action"
+import { StartContinuousRenewAuthCredentialAction } from "../../../authCredential/startContinuousRenew/action"
 
 import { StorageError } from "../../../../../common/storage/data"
 import { RequestRenewAuthCredentialError } from "../../../authCredential/renew/data"
-import { SecureScriptPath, LoadSecureScriptError } from "../../../authLocation/data"
+import { SecureScriptPath, LoadSecureScriptError } from "../../../secureScriptPath/get/data"
 
 export interface RenewAuthCredentialComponent
     extends ApplicationComponent<RenewAuthCredentialComponentState> {
@@ -18,8 +18,8 @@ export interface RenewAuthCredentialComponent
 
 export type RenewAuthCredentialMaterial = Readonly<{
     renew: RenewAuthCredentialAction
-    continuousRenew: ContinuousRenewAuthCredentialAction
-    location: AuthLocationAction
+    continuousRenew: StartContinuousRenewAuthCredentialAction
+    location: GetSecureScriptPathAction
 }>
 
 export type RenewAuthCredentialComponentState =

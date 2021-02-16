@@ -16,12 +16,12 @@ export function initRenewAuthCredentialAction(
     infra: RenewAuthCredentialActionInfra
 ): RenewAuthCredentialAction {
     return {
-        request: request(infra)(),
-        forceRequest: forceRequest(infra)(),
+        request: request(infra),
+        forceRequest: forceRequest(infra),
     }
 }
 
-const request: RequestRenewAuthCredential = (infra) => () => async (post) => {
+const request: RequestRenewAuthCredential = (infra) => async (post) => {
     const { clock, config } = infra
 
     loadLastLogin(infra, post, (lastLogin) => {
@@ -38,7 +38,7 @@ const request: RequestRenewAuthCredential = (infra) => () => async (post) => {
     })
 }
 
-const forceRequest: ForceRequestRenewAuthCredential = (infra) => () => async (post) => {
+const forceRequest: ForceRequestRenewAuthCredential = (infra) => async (post) => {
     loadLastLogin(infra, post, (lastLogin) => {
         renew(infra, lastLogin, post)
     })

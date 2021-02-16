@@ -7,7 +7,7 @@ import { PasswordFormFieldComponent } from "../../../../../../common/x_Component
 import { PasswordResetRegisterFormComponent, PasswordResetRegisterFormMaterial } from "./component"
 
 import { FormConvertResult } from "../../../../../../../vendor/getto-form/form/data"
-import { PasswordResetFields } from "../../../../../password/reset/register/data"
+import { PasswordResetFields } from "../../../../../password/resetSession/register/data"
 
 export function initPasswordResetRegisterFormComponent(
     material: PasswordResetRegisterFormMaterial

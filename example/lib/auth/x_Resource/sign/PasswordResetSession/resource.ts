@@ -1,13 +1,13 @@
-import { StartComponent } from "./Start/component"
-import { FormComponent } from "./Form/component"
+import { PasswordResetSessionStartComponent } from "../../../sign/x_Component/Password/Reset/Session/Start/component"
+import { PasswordResetSessionFormComponent } from "../../../sign/x_Component/Password/Reset/Session/Form/component"
 
 import { FormAction } from "../../../../vendor/getto-form/form/action"
 import { LoginIDFormFieldAction } from "../../../common/field/loginID/action"
-import { PasswordResetSessionActionPod } from "../../../sign/password/reset/session/action"
+import { PasswordResetSessionActionPod } from "../../../sign/password/resetSession/start/action"
 
 export type PasswordResetSessionResource = Readonly<{
-    start: StartComponent
-    form: FormComponent
+    start: PasswordResetSessionStartComponent
+    form: PasswordResetSessionFormComponent
 }>
 
 export type PasswordResetSessionForegroundAction = Readonly<{

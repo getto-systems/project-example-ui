@@ -12,7 +12,7 @@ import {
 } from "../../../../../common/x_Component/Field/Password/component"
 
 import { FormConvertResult } from "../../../../../../vendor/getto-form/form/data"
-import { PasswordLoginFields } from "../../../../password/login/data"
+import { PasswordLoginFields } from "../../../../password/authenticate/data"
 
 export interface PasswordLoginFormComponent extends FormContainerComponent {
     readonly loginID: LoginIDFormFieldComponent

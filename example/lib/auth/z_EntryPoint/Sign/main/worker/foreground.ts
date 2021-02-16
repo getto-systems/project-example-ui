@@ -1,7 +1,7 @@
 import { newWorker } from "../../../../../vendor/getto-worker/main/foreground"
 
-import { newAuthLocationAction } from "../../../../sign/authLocation/main"
-import { newContinuousRenewAuthCredentialAction } from "../../../../sign/authCredential/continuousRenew/main"
+import { newAuthLocationAction } from "../../../../sign/secureScriptPath/get/main"
+import { newContinuousRenewAuthCredentialAction } from "../../../../sign/authCredential/startContinuousRenew/main"
 import { newRenewAuthCredentialAction } from "../../../../sign/authCredential/renew/main"
 
 import { initLoginViewLocationInfo, View } from "../../impl"
@@ -18,25 +18,25 @@ import { initPasswordFormFieldAction } from "../../../../common/field/password/m
 import {
     initPasswordResetRegisterAction,
     initPasswordResetRegisterActionLocationInfo,
-} from "../../../../sign/password/reset/register/impl"
+} from "../../../../sign/password/resetSession/register/impl"
 
 import { AuthSignEntryPoint } from "../../entryPoint"
 
 import {
     PasswordLoginActionForegroundProxy,
     newPasswordLoginActionForegroundProxy,
-} from "../../../../sign/password/login/main/worker/foreground"
+} from "../../../../sign/password/authenticate/main/worker/foreground"
 import {
     newPasswordResetSessionActionForegroundProxy,
     PasswordResetSessionActionForegroundProxy,
-} from "../../../../sign/password/reset/session/main/worker/foreground"
+} from "../../../../sign/password/resetSession/start/main/worker/foreground"
 import {
     newPasswordResetRegisterActionForegroundProxy,
     RegisterActionForegroundProxy,
-} from "../../../../sign/password/reset/register/main/worker/foreground"
+} from "../../../../sign/password/resetSession/register/main/worker/foreground"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
-import { initPasswordLoginAction } from "../../../../sign/password/login/impl"
+import { initPasswordLoginAction } from "../../../../sign/password/authenticate/impl"
 
 export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     const worker = newWorker()

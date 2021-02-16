@@ -2,7 +2,7 @@ import { initPasswordResetResource } from "./impl"
 
 import { initStaticClock, StaticClock } from "../../../../../../../z_infra/clock/simulate"
 import { initRenewAuthCredentialSimulateRemoteAccess } from "../../../../../../sign/authCredential/common/infra/remote/renewAuthCredential/simulate"
-import { initSubmitPasswordResetResetSimulateRemoteAccess } from "../../../../../../sign/password/reset/register/infra/remote/submitPasswordResetRegister/simulate"
+import { initSubmitPasswordResetResetSimulateRemoteAccess } from "../../../../../../sign/password/resetSession/register/infra/remote/submitPasswordResetRegister/simulate"
 
 import { initFormAction } from "../../../../../../../vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../../../common/field/loginID/main/loginID"
@@ -12,13 +12,13 @@ import { Clock } from "../../../../../../../z_infra/clock/infra"
 import {
     SubmitPasswordResetRegisterRemoteAccess,
     SubmitPasswordResetRegisterRemoteAccessResult,
-} from "../../../../../../sign/password/reset/register/infra"
+} from "../../../../../../sign/password/resetSession/register/infra"
 
 import { AuthSignPasswordResetResource } from "./resource"
 
 import { PasswordResetRegisterComponentState } from "../../../../../../sign/x_Component/Password/Reset/Register/Reset/component"
 
-import { markSecureScriptPath } from "../../../../../../sign/authLocation/data"
+import { markSecureScriptPath } from "../../../../../../sign/secureScriptPath/get/data"
 import { markInputString, toValidationError } from "../../../../../../../vendor/getto-form/form/data"
 import { markAuthAt, markTicketNonce } from "../../../../../../sign/authCredential/common/data"
 import { initMemoryApiCredentialRepository } from "../../../../../../../common/apiCredential/infra/repository/memory"
@@ -29,18 +29,18 @@ import {
     RenewAuthCredentialRemoteAccess,
     RenewAuthCredentialRemoteAccessResult,
 } from "../../../../../../sign/authCredential/common/infra"
-import { initContinuousRenewAuthCredentialAction } from "../../../../../../sign/authCredential/continuousRenew/impl"
+import { initStartContinuousRenewAuthCredentialAction } from "../../../../../../sign/authCredential/startContinuousRenew/impl"
 import { initMemoryAuthCredentialRepository } from "../../../../../../sign/authCredential/common/infra/repository/authCredential/memory"
 import {
-    initAuthLocationAction,
-    initAuthLocationActionLocationInfo,
-} from "../../../../../../sign/authLocation/impl"
+    initGetSecureScriptPathAction,
+    initGetSecureScriptPathActionLocationInfo,
+} from "../../../../../../sign/secureScriptPath/get/impl"
 import {
     initPasswordResetRegisterAction,
     initPasswordResetRegisterActionLocationInfo,
     initPasswordResetRegisterActionPod,
     submitPasswordResetRegisterEventHasDone,
-} from "../../../../../../sign/password/reset/register/impl"
+} from "../../../../../../sign/password/resetSession/register/impl"
 import { delayed } from "../../../../../../../z_infra/delayed/core"
 import {
     initAsyncComponentStateTester,
@@ -646,17 +646,17 @@ function newPasswordResetTestResource(
     const config = standardConfig()
     return initPasswordResetResource({
         register: {
-            continuousRenew: initContinuousRenewAuthCredentialAction({
+            continuousRenew: initStartContinuousRenewAuthCredentialAction({
                 ...repository,
                 ...remote,
                 config: config.continuousRenew,
                 clock,
             }),
-            location: initAuthLocationAction(
+            location: initGetSecureScriptPathAction(
                 {
                     config: config.location,
                 },
-                initAuthLocationActionLocationInfo(currentURL)
+                initGetSecureScriptPathActionLocationInfo(currentURL)
             ),
             register: initPasswordResetRegisterAction(
                 initPasswordResetRegisterActionPod({

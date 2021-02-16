@@ -6,9 +6,9 @@ import {
     PasswordResetRegisterComponentState,
 } from "./component"
 
-import { LoadSecureScriptError } from "../../../../../authLocation/data"
+import { LoadSecureScriptError } from "../../../../../secureScriptPath/get/data"
 import { FormConvertResult } from "../../../../../../../vendor/getto-form/form/data"
-import { PasswordResetFields } from "../../../../../password/reset/register/data"
+import { PasswordResetFields } from "../../../../../password/resetSession/register/data"
 import { AuthCredential } from "../../../../../authCredential/common/data"
 
 export function initPasswordResetRegisterComponent(
@@ -59,6 +59,6 @@ class Component
     }
 
     secureScriptPath() {
-        return this.material.location.getSecureScriptPath()
+        return this.material.location.get()
     }
 }

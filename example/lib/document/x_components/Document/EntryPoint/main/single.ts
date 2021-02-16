@@ -11,7 +11,7 @@ import { newErrorAction } from "../../../../../availability/unexpectedError/main
 import { DocumentEntryPoint } from "../entryPoint"
 
 import { initContentAction } from "../../../../content/main/content"
-import { newDocumentOutlineAction } from "../../../../../auth/permission/outline/main/document"
+import { newDocumentOutlineAction } from "../../../../../auth/permission/outline/load/main/document"
 
 export function newDocumentAsSingle(): DocumentEntryPoint {
     const webStorage = localStorage

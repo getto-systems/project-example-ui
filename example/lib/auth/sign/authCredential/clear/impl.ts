@@ -4,11 +4,11 @@ import { ClearAuthCredentialAction } from "./action"
 
 export function initClearAuthCredentialAction(infra: ClearActionInfra): ClearAuthCredentialAction {
     return {
-        submit: submit(infra)(),
+        submit: submit(infra),
     }
 }
 
-const submit: SubmitClearAuthCredential = (infra) => () => async (post) => {
+const submit: SubmitClearAuthCredential = (infra) => async (post) => {
     const { authCredentials } = infra
     const result = authCredentials.remove()
     if (!result.success) {

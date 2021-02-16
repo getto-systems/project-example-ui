@@ -7,7 +7,7 @@ import { PasswordFormFieldComponent } from "../../../../../common/x_Component/Fi
 import { PasswordLoginFormComponent, PasswordLoginFormMaterial } from "./component"
 
 import { FormConvertResult } from "../../../../../../vendor/getto-form/form/data"
-import { PasswordLoginFields } from "../../../../password/login/data"
+import { PasswordLoginFields } from "../../../../password/authenticate/data"
 
 export function initPasswordLoginFormComponent(
     material: PasswordLoginFormMaterial

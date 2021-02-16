@@ -1,10 +1,10 @@
-import { initOutlineBreadcrumbListAction, initOutlineMenuAction, initOutlineActionLocationInfo } from "../../permission/outline/impl"
+import { initOutlineBreadcrumbListAction, initOutlineMenuAction, initOutlineActionLocationInfo } from "../../permission/outline/load/impl"
 
 import { initStaticClock } from "../../../z_infra/clock/simulate"
 import { initMemoryTypedStorage } from "../../../z_infra/storage/memory"
-import { initOutlineMenuExpandRepository } from "../../permission/outline/infra/repository/outlineMenuExpand/core"
+import { initOutlineMenuExpandRepository } from "../../permission/outline/load/infra/repository/outlineMenuExpand/core"
 import { initMemorySeasonRepository } from "../../../example/shared/season/impl/repository/season/memory"
-import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../permission/outline/infra/remote/loadOutlineMenuBadge/simulate"
+import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"
 
 import { initAuthProfileResource } from "./impl"
 
@@ -13,7 +13,7 @@ import { initSeasonInfoComponent } from "../../../example/x_components/Outline/s
 import { initTestSeasonAction } from "../../../example/shared/season/tests/season"
 
 import { Clock } from "../../../z_infra/clock/infra"
-import { OutlineMenuTree } from "../../permission/outline/infra"
+import { OutlineMenuTree } from "../../permission/outline/load/infra"
 
 import { ProfileFactory } from "./entryPoint"
 import { markAuthAt, markTicketNonce } from "../../sign/authCredential/common/data"

@@ -1,13 +1,13 @@
-import { OutlineActionLocationInfo } from "../../../../auth/permission/outline/action"
-import { markOutlineMenuCategoryLabel } from "../../../../auth/permission/outline/data"
+import { LoadOutlineActionLocationInfo } from "../../../../auth/permission/outline/load/action"
+import { markOutlineMenuCategoryLabel } from "../../../../auth/permission/outline/load/data"
 import {
     initOutlineBreadcrumbListAction,
     initOutlineMenuAction,
     initOutlineActionLocationInfo,
-} from "../../../../auth/permission/outline/impl"
-import { OutlineMenuExpand, OutlineMenuExpandRepository, OutlineMenuTree } from "../../../../auth/permission/outline/infra"
-import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/outline/infra/remote/loadOutlineMenuBadge/simulate"
-import { initMemoryOutlineMenuExpandRepository } from "../../../../auth/permission/outline/infra/repository/outlineMenuExpand/memory"
+} from "../../../../auth/permission/outline/load/impl"
+import { OutlineMenuExpand, OutlineMenuExpandRepository, OutlineMenuTree } from "../../../../auth/permission/outline/load/infra"
+import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"
+import { initMemoryOutlineMenuExpandRepository } from "../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/memory"
 import { initAsyncComponentStateTester } from "../../../../vendor/getto-example/Application/testHelper"
 import { markApiNonce, markApiRoles } from "../../../apiCredential/data"
 import { ApiCredentialRepository } from "../../../apiCredential/infra"
@@ -437,7 +437,7 @@ type Repository = Readonly<{
 }>
 
 function newTestMenuResource(
-    locationInfo: OutlineActionLocationInfo,
+    locationInfo: LoadOutlineActionLocationInfo,
     repository: Repository
 ): MenuResource {
     const menuTree = standardMenuTree()
@@ -454,13 +454,13 @@ function newTestMenuResource(
     })
 }
 
-function standardLocationInfo(): OutlineActionLocationInfo {
+function standardLocationInfo(): LoadOutlineActionLocationInfo {
     return initOutlineActionLocationInfo(
         standardVersion(),
         new URL("https://example.com/1.0.0/index.html")
     )
 }
-function unknownLocationInfo(): OutlineActionLocationInfo {
+function unknownLocationInfo(): LoadOutlineActionLocationInfo {
     return initOutlineActionLocationInfo(
         standardVersion(),
         new URL("https://example.com/1.0.0/unknown.html")

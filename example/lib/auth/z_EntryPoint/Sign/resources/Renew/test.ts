@@ -9,7 +9,7 @@ import { AuthSignRenewResource } from "./resource"
 
 import { RenewAuthCredentialComponentState } from "../../../../sign/x_Component/AuthCredential/Renew/component"
 
-import { markSecureScriptPath } from "../../../../sign/authLocation/data"
+import { markSecureScriptPath } from "../../../../sign/secureScriptPath/get/data"
 import { markAuthAt, markTicketNonce } from "../../../../sign/authCredential/common/data"
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
@@ -21,12 +21,12 @@ import {
 } from "../../../../sign/authCredential/common/infra"
 import { delayed } from "../../../../../z_infra/delayed/core"
 import { initRenewAuthCredentialAction } from "../../../../sign/authCredential/renew/impl"
-import { initContinuousRenewAuthCredentialAction } from "../../../../sign/authCredential/continuousRenew/impl"
+import { initStartContinuousRenewAuthCredentialAction } from "../../../../sign/authCredential/startContinuousRenew/impl"
 import { initMemoryAuthCredentialRepository } from "../../../../sign/authCredential/common/infra/repository/authCredential/memory"
 import {
-    initAuthLocationAction,
-    initAuthLocationActionLocationInfo,
-} from "../../../../sign/authLocation/impl"
+    initGetSecureScriptPathAction,
+    initGetSecureScriptPathActionLocationInfo,
+} from "../../../../sign/secureScriptPath/get/impl"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -425,17 +425,17 @@ function newTestRenewCredentialResource(
             delayed,
             clock,
         }),
-        continuousRenew: initContinuousRenewAuthCredentialAction({
+        continuousRenew: initStartContinuousRenewAuthCredentialAction({
             ...repository,
             ...remote,
             config: config.continuousRenew,
             clock,
         }),
-        location: initAuthLocationAction(
+        location: initGetSecureScriptPathAction(
             {
                 config: config.location,
             },
-            initAuthLocationActionLocationInfo(currentURL)
+            initGetSecureScriptPathActionLocationInfo(currentURL)
         ),
     })
 }

@@ -1,7 +1,7 @@
 import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
 import { AuthCredentialRepository } from "../common/infra"
 
-import { SubmitClearAuthCredentialPod } from "./action"
+import { SubmitClearAuthCredentialMethod } from "./action"
 
 export type ClearActionInfra = SubmitClearAuthCredentialInfra
 
@@ -10,5 +10,5 @@ export type SubmitClearAuthCredentialInfra = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
 export interface SubmitClearAuthCredential {
-    (infra: SubmitClearAuthCredentialInfra): SubmitClearAuthCredentialPod
+    (infra: SubmitClearAuthCredentialInfra): SubmitClearAuthCredentialMethod
 }
