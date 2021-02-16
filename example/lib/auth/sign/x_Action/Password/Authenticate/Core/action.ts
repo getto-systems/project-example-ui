@@ -1,8 +1,8 @@
 import { ApplicationAction } from "../../../../../../common/vendor/getto-example/Application/action"
 
-import { AuthenticatePasswordMethod } from "../../../../password/authenticate/action"
-import { GetSecureScriptPathMethod } from "../../../../secureScriptPath/get/action"
-import { StartContinuousRenewAuthnInfoMethod } from "../../../../authnInfo/startContinuousRenew/action"
+import { AuthenticatePasswordMethod } from "../../../../password/authenticate/method"
+import { GetSecureScriptPathMethod } from "../../../../secureScriptPath/get/method"
+import { StartContinuousRenewAuthnInfoMethod } from "../../../../authnInfo/startContinuousRenew/method"
 
 import { AuthenticatePasswordEvent } from "../../../../password/authenticate/event"
 import { StartContinuousRenewAuthnInfoEvent } from "../../../../authnInfo/startContinuousRenew/event"

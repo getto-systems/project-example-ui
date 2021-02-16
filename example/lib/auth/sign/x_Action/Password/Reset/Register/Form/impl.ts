@@ -4,24 +4,27 @@ import { initPasswordFormFieldComponent } from "../../../../../../common/x_Compo
 
 import { LoginIDFormFieldComponent } from "../../../../../../common/x_Component/Field/LoginID/component"
 import { PasswordFormFieldComponent } from "../../../../../../common/x_Component/Field/Password/component"
-import { PasswordResetRegisterFormComponent, PasswordResetRegisterFormMaterial } from "./component"
+import {
+    RegisterPasswordResetSessionFormAction,
+    RegisterPasswordResetSessionFormMaterial,
+} from "./action"
 
 import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
 import { PasswordResetFields } from "../../../../../password/resetSession/register/data"
 
-export function initPasswordResetRegisterFormComponent(
-    material: PasswordResetRegisterFormMaterial
-): PasswordResetRegisterFormComponent {
-    return new Component(material)
+export function initRegisterPasswordResetSessionFormAction(
+    material: RegisterPasswordResetSessionFormMaterial
+): RegisterPasswordResetSessionFormAction {
+    return new Action(material)
 }
 
-class Component
-    extends FormContainerBaseComponent<PasswordResetRegisterFormMaterial>
-    implements PasswordResetRegisterFormComponent {
+class Action
+    extends FormContainerBaseComponent<RegisterPasswordResetSessionFormMaterial>
+    implements RegisterPasswordResetSessionFormAction {
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
 
-    constructor(material: PasswordResetRegisterFormMaterial) {
+    constructor(material: RegisterPasswordResetSessionFormMaterial) {
         super(material, (path) => {
             switch (path.field) {
                 case "loginID":

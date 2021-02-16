@@ -15,7 +15,7 @@ import {
 import { FormContainerComponentState } from "../../../../../../../common/vendor/getto-form/x_Resource/Form/component"
 import { LoginIDFormFieldComponent } from "../../../../../../common/x_Component/Field/LoginID/component"
 import { PasswordFormFieldComponent } from "../../../../../../common/x_Component/Field/Password/component"
-import { PasswordResetRegisterFormComponent } from "./component"
+import { RegisterPasswordResetSessionFormAction } from "./action"
 
 import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
 import { PasswordResetFields } from "../../../../../password/resetSession/register/data"
@@ -28,11 +28,11 @@ export type PasswordResetRegisterFormMockProps = FormContainerMockProps &
 
 export function initMockPasswordResetRegisterFormComponent(
     passer: Passer
-): PasswordResetRegisterFormComponent {
+): RegisterPasswordResetSessionFormAction {
     return new Component(passer)
 }
 
-class Component extends FormContainerMockComponent implements PasswordResetRegisterFormComponent {
+class Component extends FormContainerMockComponent implements RegisterPasswordResetSessionFormAction {
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
 

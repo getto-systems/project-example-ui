@@ -8,7 +8,7 @@ import {
     AuthSignPasswordAuthenticateProxyResponse,
 } from "./message"
 
-export type AuthenticatePasswordProxy = Readonly<{
+export type AuthSignPasswordAuthenticateProxy = Readonly<{
     resource: AuthSignPasswordAuthenticateResource
     resolve: Resolve<AuthSignPasswordAuthenticateProxyResponse>
 }>
@@ -16,15 +16,15 @@ export type AuthenticatePasswordProxy = Readonly<{
 export function newAuthSignPasswordAuthenticateProxy(
     webStorage: Storage,
     post: Post<AuthSignPasswordAuthenticateProxyMessage>
-): AuthenticatePasswordProxy {
+): AuthSignPasswordAuthenticateProxy {
     const proxy = {
-        authenticate: newAuthenticatePasswordActionProxy((message) =>
+        authenticate: newAuthenticatePasswordActionProxy(webStorage, (message) =>
             post({ type: "authenticate", message })
         ),
     }
     return {
         resource: newAuthSignPasswordAuthenticateResource_merge({
-            authenticate: proxy.authenticate.action(webStorage),
+            authenticate: proxy.authenticate.action(),
         }),
         resolve: (response) => {
             switch (response.type) {

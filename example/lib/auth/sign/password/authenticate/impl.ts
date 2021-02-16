@@ -1,6 +1,6 @@
 import { AuthenticatePasswordInfra } from "./infra"
 
-import { AuthenticatePasswordMethod } from "./action"
+import { AuthenticatePasswordMethod } from "./method"
 import { AuthenticatePasswordEvent } from "./event"
 
 interface Authenticate {

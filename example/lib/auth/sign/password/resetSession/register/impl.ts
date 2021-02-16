@@ -1,19 +1,18 @@
-import { PasswordResetRegisterActionInfra } from "./infra"
+import { RegisterPasswordResetSessionInfra } from "./infra"
 
 import {
-    PasswordResetRegisterActionPod,
-    RegisterPasswordResetSessionAction,
-    PasswordResetRegisterActionLocationInfo,
-} from "./action"
+    RegisterPasswordResetSessionLocationInfo,
+    RegisterPasswordResetSessionPod,
+} from "./method"
 
-import { markPasswordResetToken, PasswordResetToken } from "./data"
+import { RegisterPasswordResetSessionEvent } from "./event"
+
 import { AuthLocationSearchParams } from "../../../secureScriptPath/get/data"
-import { SubmitPasswordResetRegister } from "./infra"
-import { SubmitPasswordResetRegisterEvent } from "./event"
+import { markPasswordResetToken, PasswordResetToken } from "./data"
 
-export function initPasswordResetRegisterActionLocationInfo(
+export function initRegisterPasswordResetSessionLocationInfo(
     currentURL: URL
-): PasswordResetRegisterActionLocationInfo {
+): RegisterPasswordResetSessionLocationInfo {
     return {
         getPasswordResetToken: () => detectResetToken(currentURL),
     }
@@ -25,23 +24,13 @@ function detectResetToken(currentURL: URL): PasswordResetToken {
     )
 }
 
-export function initPasswordResetRegisterAction(
-    pod: PasswordResetRegisterActionPod,
-    locationInfo: PasswordResetRegisterActionLocationInfo
-): RegisterPasswordResetSessionAction {
-    return {
-        submit: pod.initSubmit(locationInfo),
-    }
+interface Register {
+    (infra: RegisterPasswordResetSessionInfra): RegisterPasswordResetSessionPod
 }
-export function initPasswordResetRegisterActionPod(
-    infra: PasswordResetRegisterActionInfra
-): PasswordResetRegisterActionPod {
-    return {
-        initSubmit: submit(infra),
-    }
-}
-
-const submit: SubmitPasswordResetRegister = (infra) => (locationInfo) => async (fields, post) => {
+export const registerPasswordResetSession: Register = (infra) => (locationInfo) => async (
+    fields,
+    post
+) => {
     if (!fields.success) {
         post({ type: "failed-to-reset", err: { type: "validation-error" } })
         return
@@ -55,11 +44,13 @@ const submit: SubmitPasswordResetRegister = (infra) => (locationInfo) => async (
 
     post({ type: "try-to-reset" })
 
-    const { register: reset, config, delayed } = infra
+    const { register, config, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(reset({ resetToken, fields: fields.value }), config.delay, () =>
-        post({ type: "delayed-to-reset" })
+    const response = await delayed(
+        register({ resetToken, fields: fields.value }),
+        config.delay,
+        () => post({ type: "delayed-to-reset" })
     )
     if (!response.success) {
         post({ type: "failed-to-reset", err: response.err })
@@ -69,8 +60,8 @@ const submit: SubmitPasswordResetRegister = (infra) => (locationInfo) => async (
     post({ type: "succeed-to-reset", authnInfo: response.value.auth })
 }
 
-export function submitPasswordResetRegisterEventHasDone(
-    event: SubmitPasswordResetRegisterEvent
+export function registerPasswordResetSessionEventHasDone(
+    event: RegisterPasswordResetSessionEvent
 ): boolean {
     switch (event.type) {
         case "succeed-to-reset":

@@ -4,8 +4,10 @@ import {
     newGetSecureScriptPathLocationInfo,
     newGetSecureScriptPathInfra,
 } from "../../../secureScriptPath/get/main"
-import { RenewAuthnInfoAction } from "./action"
+
 import { initRenewAuthnInfoAction } from "./impl"
+
+import { RenewAuthnInfoAction } from "./action"
 
 export function newRenewAuthnInfoAction(webStorage: Storage): RenewAuthnInfoAction {
     return initRenewAuthnInfoAction(

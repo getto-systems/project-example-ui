@@ -2,13 +2,13 @@ import { initSimulateRemoteAccess } from "../../../../../../../../z_infra/remote
 
 import { WaitTime } from "../../../../../../../../z_infra/time/infra"
 import {
-    SubmitPasswordResetRegisterRemoteAccess,
-    SubmitPasswordResetRegisterSimulator,
+    RegisterPasswordResetSessionRemoteAccess,
+    RegisterPasswordResetSessionSimulator,
 } from "../../../infra"
 
-export function initSubmitPasswordResetResetSimulateRemoteAccess(
-    simulator: SubmitPasswordResetRegisterSimulator,
+export function initRegisterPasswordResetSessionSimulateRemoteAccess(
+    simulator: RegisterPasswordResetSessionSimulator,
     time: WaitTime
-): SubmitPasswordResetRegisterRemoteAccess {
+): RegisterPasswordResetSessionRemoteAccess {
     return initSimulateRemoteAccess(simulator, time)
 }

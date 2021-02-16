@@ -4,7 +4,7 @@ import { RenewAuthnInfoInfra } from "./infra"
 import { ForceRequestRenewAuthnInfoEvent } from "./event"
 
 import { hasExpired, LastAuth } from "../common/data"
-import { ForceRenewAuthnInfoMethod, RenewAuthnInfoMethod } from "./action"
+import { ForceRenewAuthnInfoMethod, RenewAuthnInfoMethod } from "./method"
 
 interface Renew {
     (infra: RenewAuthnInfoInfra): RenewAuthnInfoMethod

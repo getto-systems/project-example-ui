@@ -8,44 +8,40 @@ import {
 import { DelayTime } from "../../../../../z_infra/time/infra"
 import { AuthnInfo } from "../../../authnInfo/common/data"
 
-import { PasswordResetFields, PasswordResetToken, SubmitPasswordResetRegisterRemoteError } from "./data"
+import {
+    PasswordResetFields,
+    PasswordResetToken,
+    RegisterPasswordResetSessionRemoteError,
+} from "./data"
 
-import { SubmitPasswordResetRegisterPod } from "./action"
-
-export type PasswordResetRegisterActionInfra = SubmitPasswordResetRegisterInfra
-
-export type SubmitPasswordResetRegisterInfra = Readonly<{
-    register: SubmitPasswordResetRegisterRemoteAccess
+export type RegisterPasswordResetSessionInfra = Readonly<{
+    register: RegisterPasswordResetSessionRemoteAccess
     delayed: Delayed
     config: Readonly<{
         delay: DelayTime
     }>
 }>
 
-export interface SubmitPasswordResetRegister {
-    (infra: SubmitPasswordResetRegisterInfra): SubmitPasswordResetRegisterPod
-}
-
-export type SubmitPasswordResetRegisterRemoteAccess = RemoteAccess<
-    SubmitPasswordResetRegisterRemoteMessage,
-    SubmitPasswordResetRegisterRemoteResponse,
-    SubmitPasswordResetRegisterRemoteError
+export type RegisterPasswordResetSessionRemoteAccess = RemoteAccess<
+    RegisterPasswordResetSessionRemoteMessage,
+    RegisterPasswordResetSessionRemoteResponse,
+    RegisterPasswordResetSessionRemoteError
 >
-export type SubmitPasswordResetRegisterRemoteAccessResult = RemoteAccessResult<
-    SubmitPasswordResetRegisterRemoteResponse,
-    SubmitPasswordResetRegisterRemoteError
+export type RegisterPasswordResetSessionRemoteAccessResult = RemoteAccessResult<
+    RegisterPasswordResetSessionRemoteResponse,
+    RegisterPasswordResetSessionRemoteError
 >
-export type SubmitPasswordResetRegisterSimulator = RemoteAccessSimulator<
-    SubmitPasswordResetRegisterRemoteMessage,
-    SubmitPasswordResetRegisterRemoteResponse,
-    SubmitPasswordResetRegisterRemoteError
+export type RegisterPasswordResetSessionSimulator = RemoteAccessSimulator<
+    RegisterPasswordResetSessionRemoteMessage,
+    RegisterPasswordResetSessionRemoteResponse,
+    RegisterPasswordResetSessionRemoteError
 >
-export type SubmitPasswordResetRegisterRemoteResponse = Readonly<{
+export type RegisterPasswordResetSessionRemoteResponse = Readonly<{
     auth: AuthnInfo
     api: ApiCredential
 }>
 
-export type SubmitPasswordResetRegisterRemoteMessage = Readonly<{
+export type RegisterPasswordResetSessionRemoteMessage = Readonly<{
     resetToken: PasswordResetToken
     fields: PasswordResetFields
 }>

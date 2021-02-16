@@ -26,7 +26,8 @@ export interface WorkerForegroundProxyAction_legacy<P, M, R>
     pod(): P
     resolve(response: R): void
 }
-export interface WorkerForegroundProxyAction<M, R> extends WorkerForegroundProxy<M> {
+export interface WorkerForegroundProxyAction<A, M, R> extends WorkerForegroundProxy<M> {
+    action(): A
     resolve(response: R): void
 }
 

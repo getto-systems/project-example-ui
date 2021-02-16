@@ -1,12 +1,7 @@
-import { GetSecureScriptPath, AuthLocationActionInfra } from "./infra"
-
-import {
-    GetSecureScriptPathAction_legacy,
-    GetSecureScriptPathActionLocationInfo_legacy,
-    GetSecureScriptPathLocationInfo,
-} from "./action"
+import { GetSecureScriptPathLocationInfo, GetSecureScriptPathPod } from "./method"
 
 import { markLocationPathname, markSecureScriptPath, LocationPathname } from "./data"
+import { GetSecureScriptPathInfra } from "./infra"
 
 export function initGetSecureScriptPathLocationInfo(
     currentURL: URL
@@ -20,15 +15,9 @@ function detectPathname(currentURL: URL): LocationPathname {
     return markLocationPathname(currentURL.pathname)
 }
 
-export function initGetSecureScriptPathAction_legacy(
-    infra: AuthLocationActionInfra,
-    locationInfo: GetSecureScriptPathActionLocationInfo_legacy
-): GetSecureScriptPathAction_legacy {
-    return {
-        get: getSecureScriptPath(infra)(locationInfo),
-    }
+interface GetSecureScriptPath {
+    (infra: GetSecureScriptPathInfra): GetSecureScriptPathPod
 }
-
 export const getSecureScriptPath: GetSecureScriptPath = (infra) => (
     locationInfo
 ) => () => {

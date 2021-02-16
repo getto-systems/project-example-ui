@@ -3,11 +3,14 @@ import {
     MockPropsPasser,
 } from "../../../../../../../common/vendor/getto-example/Application/mock"
 
-import { PasswordResetRegisterComponent, PasswordResetRegisterComponentState } from "./component"
+import {
+    RegisterPasswordResetSessionAction,
+    RegisterPasswordResetSessionActionState,
+} from "./action"
 
-type Passer = MockPropsPasser<ResetMockProps>
+type Passer = MockPropsPasser<RegisterPasswordResetSessionMockProps>
 
-export type ResetMockProps =
+export type RegisterPasswordResetSessionMockProps =
     | Readonly<{ type: "initial" }>
     | Readonly<{ type: "try" }>
     | Readonly<{ type: "delayed" }>
@@ -18,20 +21,22 @@ export type ResetMockProps =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function initMockPasswordResetRegisterComponent(passer: Passer): Component {
-    return new Component(passer)
+export function initMockRegisterPasswordResetSessionAction(passer: Passer): Action {
+    return new Action(passer)
 }
 
-class Component
-    extends MockAction<PasswordResetRegisterComponentState>
-    implements PasswordResetRegisterComponent {
+class Action
+    extends MockAction<RegisterPasswordResetSessionActionState>
+    implements RegisterPasswordResetSessionAction {
     constructor(passer: Passer) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))
         })
 
-        function mapProps(props: ResetMockProps): PasswordResetRegisterComponentState {
+        function mapProps(
+            props: RegisterPasswordResetSessionMockProps
+        ): RegisterPasswordResetSessionActionState {
             switch (props.type) {
                 case "initial":
                     return { type: "initial-reset" }
@@ -49,16 +54,25 @@ class Component
                     return { type: "failed-to-reset", err: { type: "bad-request" } }
 
                 case "invalid":
-                    return { type: "failed-to-reset", err: { type: "invalid-password-reset" } }
+                    return {
+                        type: "failed-to-reset",
+                        err: { type: "invalid-password-reset" },
+                    }
 
                 case "server-error":
                     return { type: "failed-to-reset", err: { type: "server-error" } }
 
                 case "bad-response":
-                    return { type: "failed-to-reset", err: { type: "bad-response", err: props.err } }
+                    return {
+                        type: "failed-to-reset",
+                        err: { type: "bad-response", err: props.err },
+                    }
 
                 case "infra-error":
-                    return { type: "failed-to-reset", err: { type: "infra-error", err: props.err } }
+                    return {
+                        type: "failed-to-reset",
+                        err: { type: "infra-error", err: props.err },
+                    }
             }
         }
     }
