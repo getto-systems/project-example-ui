@@ -1,7 +1,7 @@
 import { newRenewAuthnInfoInfra } from "../../../authnInfo/renew/main"
 import { newStartContinuousRenewAuthnInfoInfra } from "../../../authnInfo/startContinuousRenew/main"
 import {
-    newGetSecureScriptPathActionLocationInfo,
+    newGetSecureScriptPathLocationInfo,
     newGetSecureScriptPathInfra,
 } from "../../../secureScriptPath/get/main"
 import { RenewAuthnInfoAction } from "./action"
@@ -14,6 +14,6 @@ export function newRenewAuthnInfoAction(webStorage: Storage): RenewAuthnInfoActi
             startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webStorage),
             getSecureScriptPath: newGetSecureScriptPathInfra(),
         },
-        newGetSecureScriptPathActionLocationInfo()
+        newGetSecureScriptPathLocationInfo()
     )
 }

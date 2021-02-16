@@ -19,7 +19,7 @@ import {
 } from "../../../../sign/authnInfo/common/infra"
 import { delayed } from "../../../../../z_infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../../../sign/authnInfo/common/infra/repository/authnInfo/memory"
-import { initGetSecureScriptPathActionLocationInfo } from "../../../../sign/secureScriptPath/get/impl"
+import { initGetSecureScriptPathLocationInfo } from "../../../../sign/secureScriptPath/get/impl"
 import { initRenewAuthnInfoAction } from "../../../../sign/x_Action/AuthnInfo/Renew/impl"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
@@ -304,7 +304,7 @@ describe("AuthSignRenew", () => {
 
                     case "required-to-login":
                         expect(stack).toEqual([{ type: "required-to-login" }])
-                        expectToEmptyLastLogin(repository.authnInfos)
+                        expectToEmptyLastAuth(repository.authnInfos)
                         done()
                         break
 
@@ -464,7 +464,7 @@ function newTestRenewCredentialResource(
                     config: config.location,
                 },
             },
-            initGetSecureScriptPathActionLocationInfo(currentURL)
+            initGetSecureScriptPathLocationInfo(currentURL)
         ),
     }
 }
@@ -566,13 +566,13 @@ function expectToSaveRenewed(authnInfos: AuthnInfoRepository) {
     expect(authnInfos.load()).toEqual({
         success: true,
         found: true,
-        lastLogin: {
+        lastAuth: {
             authnNonce: markAuthnNonce(RENEWED_AUTHN_NONCE),
             lastAuthAt: markAuthAt(SUCCEED_TO_RENEW_AT),
         },
     })
 }
-function expectToEmptyLastLogin(authnInfos: AuthnInfoRepository) {
+function expectToEmptyLastAuth(authnInfos: AuthnInfoRepository) {
     expect(authnInfos.load()).toEqual({
         success: true,
         found: false,

@@ -4,7 +4,7 @@ import {
     StartContinuousRenewAuthnInfoEvent,
 } from "./event"
 
-export type StartContinuousRenewAuthnInfoAction = Readonly<{
+export type StartContinuousRenewAuthnInfoAction_legacy = Readonly<{
     start: StartContinuousRenewAuthnInfoMethod
     forceStart: ForceStartContinuousRenewAuthnInfoMethod
 }>

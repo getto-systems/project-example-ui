@@ -28,7 +28,7 @@ import { markAuthAt, markAuthnNonce } from "../../../../../sign/authnInfo/common
 import { ApiCredentialRepository } from "../../../../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../../common/apiCredential/data"
-import { initStartContinuousRenewAuthnInfoAction } from "../../../../../sign/authnInfo/startContinuousRenew/impl"
+import { initStartContinuousRenewAuthnInfoAction_legacy } from "../../../../../sign/authnInfo/startContinuousRenew/impl"
 import {
     AuthnInfoRepository,
     RenewAuthnInfoRemoteAccess,
@@ -36,8 +36,8 @@ import {
 } from "../../../../../sign/authnInfo/common/infra"
 import { initMemoryAuthnInfoRepository } from "../../../../../sign/authnInfo/common/infra/repository/authnInfo/memory"
 import {
-    initGetSecureScriptPathAction,
-    initGetSecureScriptPathActionLocationInfo,
+    initGetSecureScriptPathAction_legacy,
+    initGetSecureScriptPathLocationInfo,
 } from "../../../../../sign/secureScriptPath/get/impl"
 import { delayed } from "../../../../../../z_infra/delayed/core"
 import {
@@ -90,7 +90,7 @@ describe("PasswordLogin", () => {
                         scriptPath: markSecureScriptPath("//secure.example.com/index.js"),
                     },
                 ])
-                expectToSaveLastLogin(repository.authnInfos)
+                expectToSaveLastAuth(repository.authnInfos)
                 setTimeout(() => {
                     expectToSaveRenewed(repository.authnInfos)
                     done()
@@ -124,7 +124,7 @@ describe("PasswordLogin", () => {
                         scriptPath: markSecureScriptPath("//secure.example.com/index.js"),
                     },
                 ])
-                expectToSaveLastLogin(repository.authnInfos)
+                expectToSaveLastAuth(repository.authnInfos)
                 setTimeout(() => {
                     expectToSaveRenewed(repository.authnInfos)
                     done()
@@ -152,7 +152,7 @@ describe("PasswordLogin", () => {
                 expect(stack).toEqual([
                     { type: "failed-to-login", err: { type: "validation-error" } },
                 ])
-                expectToEmptyLastLogin(repository.authnInfos)
+                expectToEmptyLastAuth(repository.authnInfos)
                 done()
             })
         }
@@ -636,17 +636,17 @@ function newTestPasswordLoginResource(
     const config = standardConfig()
     return initAuthSignPasswordLoginResource({
         login: {
-            continuousRenew: initStartContinuousRenewAuthnInfoAction({
+            continuousRenew: initStartContinuousRenewAuthnInfoAction_legacy({
                 ...repository,
                 ...remote,
                 config: config.continuousRenew,
                 clock,
             }),
-            location: initGetSecureScriptPathAction(
+            location: initGetSecureScriptPathAction_legacy(
                 {
                     config: config.location,
                 },
-                initGetSecureScriptPathActionLocationInfo(currentURL)
+                initGetSecureScriptPathLocationInfo(currentURL)
             ),
             login: initPasswordLoginAction(
                 initPasswordLoginActionPod({
@@ -773,11 +773,11 @@ function standardClock(): StaticClock {
     return newStaticClock(NOW)
 }
 
-function expectToSaveLastLogin(authnInfos: AuthnInfoRepository) {
+function expectToSaveLastAuth(authnInfos: AuthnInfoRepository) {
     expect(authnInfos.load()).toEqual({
         success: true,
         found: true,
-        lastLogin: {
+        lastAuth: {
             authnNonce: markAuthnNonce(AUTHORIZED_AUTHN_NONCE),
             lastAuthAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
         },
@@ -787,13 +787,13 @@ function expectToSaveRenewed(authnInfos: AuthnInfoRepository) {
     expect(authnInfos.load()).toEqual({
         success: true,
         found: true,
-        lastLogin: {
+        lastAuth: {
             authnNonce: markAuthnNonce(RENEWED_AUTHN_NONCE),
             lastAuthAt: markAuthAt(SUCCEED_TO_RENEW_AT),
         },
     })
 }
-function expectToEmptyLastLogin(authnInfos: AuthnInfoRepository) {
+function expectToEmptyLastAuth(authnInfos: AuthnInfoRepository) {
     expect(authnInfos.load()).toEqual({
         success: true,
         found: false,

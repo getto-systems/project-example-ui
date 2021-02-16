@@ -5,13 +5,13 @@ import {
     StartContinuousRenewAuthnInfoInfra,
 } from "./infra"
 
-import { StartContinuousRenewAuthnInfoAction } from "./action"
+import { StartContinuousRenewAuthnInfoAction_legacy } from "./action"
 
 import { hasExpired } from "../common/data"
 
-export function initStartContinuousRenewAuthnInfoAction(
+export function initStartContinuousRenewAuthnInfoAction_legacy(
     infra: StartContinuousRenewAuthnInfoActionInfra
-): StartContinuousRenewAuthnInfoAction {
+): StartContinuousRenewAuthnInfoAction_legacy {
     return {
         start: startContinuousRenewAuthnInfo(infra),
         forceStart: forceStartContinuousRenewAuthnInfo(infra),

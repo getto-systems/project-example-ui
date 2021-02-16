@@ -1,7 +1,9 @@
 import { newWorker } from "../../../../../common/vendor/getto-worker/main/foreground"
 
-import { newAuthLocationAction } from "../../../../sign/secureScriptPath/get/main"
-import { newContinuousRenewAuthnInfoAction } from "../../../../sign/authnInfo/startContinuousRenew/main"
+import { newAuthSignRenewResource } from "../../resources/Renew/main"
+
+import { newAuthLocationAction_legacy } from "../../../../sign/secureScriptPath/get/main"
+import { newContinuousRenewAuthnInfoAction_legacy } from "../../../../sign/authnInfo/startContinuousRenew/main"
 import { newRenewAuthnInfoAction_legacy } from "../../../../sign/authnInfo/renew/main"
 
 import { initLoginViewLocationInfo, View } from "../../impl"
@@ -36,7 +38,6 @@ import {
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
 import { initPasswordLoginAction } from "../../../../sign/password/authenticate/impl"
-import { newRenewAuthnInfoAction } from "../../../../sign/x_Action/AuthnInfo/Renew/main"
 
 export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     const worker = newWorker()
@@ -46,9 +47,9 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
 
     const foreground = {
         renew: newRenewAuthnInfoAction_legacy(webStorage),
-        continuousRenew: newContinuousRenewAuthnInfoAction(webStorage),
+        continuousRenew: newContinuousRenewAuthnInfoAction_legacy(webStorage),
 
-        location: newAuthLocationAction(),
+        location: newAuthLocationAction_legacy(),
 
         form: {
             core: initFormAction(),
@@ -66,13 +67,13 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     const view = new View(initLoginViewLocationInfo(currentURL), {
         link: initAuthSignLinkResource,
 
-        renew: () => ({ renew: newRenewAuthnInfoAction(webStorage) }),
+        renew: () => newAuthSignRenewResource(webStorage),
 
         passwordLogin: () =>
             initAuthSignPasswordLoginResource({
                 login: {
-                    continuousRenew: newContinuousRenewAuthnInfoAction(webStorage),
-                    location: newAuthLocationAction(),
+                    continuousRenew: newContinuousRenewAuthnInfoAction_legacy(webStorage),
+                    location: newAuthLocationAction_legacy(),
                     login: initPasswordLoginAction(proxy.login.pod()),
                 },
 
@@ -83,8 +84,8 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
         passwordReset: () =>
             initPasswordResetResource({
                 register: {
-                    continuousRenew: newContinuousRenewAuthnInfoAction(webStorage),
-                    location: newAuthLocationAction(),
+                    continuousRenew: newContinuousRenewAuthnInfoAction_legacy(webStorage),
+                    location: newAuthLocationAction_legacy(),
                     register: initPasswordResetRegisterAction(
                         proxy.reset.register.pod(),
                         initPasswordResetRegisterActionLocationInfo(currentURL)

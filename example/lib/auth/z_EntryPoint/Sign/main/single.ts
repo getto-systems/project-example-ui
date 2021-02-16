@@ -1,12 +1,14 @@
+import { newAuthSignRenewResource } from "../resources/Renew/main"
+
 import { newPasswordLoginAction } from "../../../sign/password/authenticate/main/core"
 import {
     newPasswordResetRegisterAction,
     newPasswordResetRegisterActionPod,
 } from "../../../sign/password/resetSession/register/main/core"
-import { newContinuousRenewAuthnInfoAction } from "../../../sign/authnInfo/startContinuousRenew/main"
+import { newContinuousRenewAuthnInfoAction_legacy } from "../../../sign/authnInfo/startContinuousRenew/main"
 import { newRenewAuthnInfoAction_legacy } from "../../../sign/authnInfo/renew/main"
 import { newPasswordResetSessionActionPod } from "../../../sign/password/resetSession/start/main/core"
-import { newAuthLocationAction } from "../../../sign/secureScriptPath/get/main"
+import { newAuthLocationAction_legacy } from "../../../sign/secureScriptPath/get/main"
 
 import { initFormAction } from "../../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
@@ -20,7 +22,6 @@ import { initPasswordResetSessionResource } from "../../../x_Resource/sign/Passw
 import { initPasswordResetResource } from "../resources/Password/Reset/Register/impl"
 
 import { AuthSignEntryPoint } from "../entryPoint"
-import { newRenewAuthnInfoAction } from "../../../sign/x_Action/AuthnInfo/Renew/main"
 
 export function newLoginAsSingle(): AuthSignEntryPoint {
     const webStorage = localStorage
@@ -28,8 +29,8 @@ export function newLoginAsSingle(): AuthSignEntryPoint {
 
     const foreground = {
         renew: newRenewAuthnInfoAction_legacy(webStorage),
-        continuousRenew: newContinuousRenewAuthnInfoAction(webStorage),
-        location: newAuthLocationAction(),
+        continuousRenew: newContinuousRenewAuthnInfoAction_legacy(webStorage),
+        location: newAuthLocationAction_legacy(),
 
         form: {
             core: initFormAction(),
@@ -45,13 +46,13 @@ export function newLoginAsSingle(): AuthSignEntryPoint {
     const view = new View(initLoginViewLocationInfo(currentURL), {
         link: initAuthSignLinkResource,
 
-        renew: () => ({ renew: newRenewAuthnInfoAction(webStorage) }),
+        renew: () => newAuthSignRenewResource(webStorage),
 
         passwordLogin: () =>
             initAuthSignPasswordLoginResource({
                 login: {
-                    continuousRenew: newContinuousRenewAuthnInfoAction(webStorage),
-                    location: newAuthLocationAction(),
+                    continuousRenew: newContinuousRenewAuthnInfoAction_legacy(webStorage),
+                    location: newAuthLocationAction_legacy(),
                     login: newPasswordLoginAction(),
                 },
 
@@ -62,8 +63,8 @@ export function newLoginAsSingle(): AuthSignEntryPoint {
         passwordReset: () =>
             initPasswordResetResource({
                 register: {
-                    continuousRenew: newContinuousRenewAuthnInfoAction(webStorage),
-                    location: newAuthLocationAction(),
+                    continuousRenew: newContinuousRenewAuthnInfoAction_legacy(webStorage),
+                    location: newAuthLocationAction_legacy(),
                     register: newPasswordResetRegisterAction(),
                 },
 

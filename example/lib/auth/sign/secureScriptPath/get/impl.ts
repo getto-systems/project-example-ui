@@ -1,15 +1,16 @@
 import { GetSecureScriptPath, AuthLocationActionInfra } from "./infra"
 
 import {
-    GetSecureScriptPathAction,
-    GetSecureScriptPathActionLocationInfo,
+    GetSecureScriptPathAction_legacy,
+    GetSecureScriptPathActionLocationInfo_legacy,
+    GetSecureScriptPathLocationInfo,
 } from "./action"
 
 import { markLocationPathname, markSecureScriptPath, LocationPathname } from "./data"
 
-export function initGetSecureScriptPathActionLocationInfo(
+export function initGetSecureScriptPathLocationInfo(
     currentURL: URL
-): GetSecureScriptPathActionLocationInfo {
+): GetSecureScriptPathLocationInfo {
     return {
         getLocationPathname: () => detectPathname(currentURL),
     }
@@ -19,10 +20,10 @@ function detectPathname(currentURL: URL): LocationPathname {
     return markLocationPathname(currentURL.pathname)
 }
 
-export function initGetSecureScriptPathAction(
+export function initGetSecureScriptPathAction_legacy(
     infra: AuthLocationActionInfra,
-    locationInfo: GetSecureScriptPathActionLocationInfo
-): GetSecureScriptPathAction {
+    locationInfo: GetSecureScriptPathActionLocationInfo_legacy
+): GetSecureScriptPathAction_legacy {
     return {
         get: getSecureScriptPath(infra)(locationInfo),
     }

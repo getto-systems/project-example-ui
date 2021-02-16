@@ -1,7 +1,7 @@
 import { ApplicationAction } from "../../../../../../../common/vendor/getto-example/Application/action"
 
 import { RegisterPasswordResetSessionAction } from "../../../../../password/resetSession/register/action"
-import { GetSecureScriptPathAction } from "../../../../../secureScriptPath/get/action"
+import { GetSecureScriptPathAction_legacy } from "../../../../../secureScriptPath/get/action"
 
 import {
     SubmitPasswordResetRegisterError,
@@ -10,7 +10,7 @@ import {
 import { SecureScriptPath, LoadSecureScriptError } from "../../../../../secureScriptPath/get/data"
 import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
 import { StorageError } from "../../../../../../../common/storage/data"
-import { StartContinuousRenewAuthnInfoAction } from "../../../../../authnInfo/startContinuousRenew/action"
+import { StartContinuousRenewAuthnInfoAction_legacy } from "../../../../../authnInfo/startContinuousRenew/action"
 
 export interface PasswordResetRegisterComponent
     extends ApplicationAction<PasswordResetRegisterComponentState> {
@@ -19,8 +19,8 @@ export interface PasswordResetRegisterComponent
 }
 
 export type PasswordResetRegisterMaterial = Readonly<{
-    continuousRenew: StartContinuousRenewAuthnInfoAction
-    location: GetSecureScriptPathAction
+    continuousRenew: StartContinuousRenewAuthnInfoAction_legacy
+    location: GetSecureScriptPathAction_legacy
     register: RegisterPasswordResetSessionAction
 }>
 

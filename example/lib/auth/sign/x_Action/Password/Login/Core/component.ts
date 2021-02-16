@@ -1,8 +1,8 @@
 import { ApplicationAction } from "../../../../../../common/vendor/getto-example/Application/action"
 
 import { AuthenticatePasswordAction } from "../../../../password/authenticate/action"
-import { GetSecureScriptPathAction } from "../../../../secureScriptPath/get/action"
-import { StartContinuousRenewAuthnInfoAction } from "../../../../authnInfo/startContinuousRenew/action"
+import { GetSecureScriptPathAction_legacy } from "../../../../secureScriptPath/get/action"
+import { StartContinuousRenewAuthnInfoAction_legacy } from "../../../../authnInfo/startContinuousRenew/action"
 
 import { FormConvertResult } from "../../../../../../common/vendor/getto-form/form/data"
 import { SecureScriptPath, LoadSecureScriptError } from "../../../../secureScriptPath/get/data"
@@ -15,8 +15,8 @@ export interface PasswordLoginComponent extends ApplicationAction<PasswordLoginC
 }
 
 export type PasswordLoginMaterial = Readonly<{
-    continuousRenew: StartContinuousRenewAuthnInfoAction
-    location: GetSecureScriptPathAction
+    continuousRenew: StartContinuousRenewAuthnInfoAction_legacy
+    location: GetSecureScriptPathAction_legacy
     login: AuthenticatePasswordAction
 }>
 

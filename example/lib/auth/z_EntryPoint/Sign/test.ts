@@ -29,12 +29,12 @@ import {
     AuthnInfoRepository,
     RenewAuthnInfoRemoteAccessResult,
 } from "../../sign/authnInfo/common/infra"
-import { initStartContinuousRenewAuthnInfoAction } from "../../sign/authnInfo/startContinuousRenew/impl"
+import { initStartContinuousRenewAuthnInfoAction_legacy } from "../../sign/authnInfo/startContinuousRenew/impl"
 import { delayed, wait } from "../../../z_infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../sign/authnInfo/common/infra/repository/authnInfo/memory"
 import {
-    initGetSecureScriptPathAction,
-    initGetSecureScriptPathActionLocationInfo,
+    initGetSecureScriptPathAction_legacy,
+    initGetSecureScriptPathLocationInfo,
 } from "../../sign/secureScriptPath/get/impl"
 import {
     initPasswordLoginAction,
@@ -365,7 +365,7 @@ function standardPasswordLoginResource(
 ) {
     return initAuthSignPasswordLoginResource({
         login: {
-            continuousRenew: initStartContinuousRenewAuthnInfoAction({
+            continuousRenew: initStartContinuousRenewAuthnInfoAction_legacy({
                 apiCredentials,
                 authnInfos,
                 renew: initRenewAuthnInfoSimulateRemoteAccess(simulateRenew, {
@@ -377,13 +377,13 @@ function standardPasswordLoginResource(
                 },
                 clock,
             }),
-            location: initGetSecureScriptPathAction(
+            location: initGetSecureScriptPathAction_legacy(
                 {
                     config: {
                         secureServerHost: standardSecureHost(),
                     },
                 },
-                initGetSecureScriptPathActionLocationInfo(currentURL)
+                initGetSecureScriptPathLocationInfo(currentURL)
             ),
             login: initPasswordLoginAction(
                 initPasswordLoginActionPod({
@@ -423,7 +423,7 @@ function standardPasswordResetResource(
 ) {
     return initPasswordResetResource({
         register: {
-            continuousRenew: initStartContinuousRenewAuthnInfoAction({
+            continuousRenew: initStartContinuousRenewAuthnInfoAction_legacy({
                 apiCredentials,
                 authnInfos,
                 renew: initRenewAuthnInfoSimulateRemoteAccess(simulateRenew, {
@@ -435,13 +435,13 @@ function standardPasswordResetResource(
                 },
                 clock,
             }),
-            location: initGetSecureScriptPathAction(
+            location: initGetSecureScriptPathAction_legacy(
                 {
                     config: {
                         secureServerHost: standardSecureHost(),
                     },
                 },
-                initGetSecureScriptPathActionLocationInfo(currentURL)
+                initGetSecureScriptPathLocationInfo(currentURL)
             ),
             register: initPasswordResetRegisterAction(
                 initPasswordResetRegisterActionPod({
@@ -560,7 +560,7 @@ function standardRenewCredentialResource(
                     },
                 },
             },
-            initGetSecureScriptPathActionLocationInfo(currentURL)
+            initGetSecureScriptPathLocationInfo(currentURL)
         ),
     }
 }

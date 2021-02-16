@@ -24,13 +24,13 @@ export function initRenewAuthnInfoAction_legacy(
 export const renewAuthnInfo: RenewAuthnInfo = (infra) => async (post) => {
     const { clock, config } = infra
 
-    loadLastLogin(infra, post, (lastLogin) => {
+    loadLastAuth(infra, post, (lastAuth) => {
         const time = {
             now: clock.now(),
             expire_millisecond: config.instantLoadExpire.expire_millisecond,
         }
-        if (hasExpired(lastLogin.lastAuthAt, time)) {
-            renew(infra, lastLogin, post)
+        if (hasExpired(lastAuth.lastAuthAt, time)) {
+            renew(infra, lastAuth, post)
             return
         }
 
@@ -39,15 +39,15 @@ export const renewAuthnInfo: RenewAuthnInfo = (infra) => async (post) => {
 }
 
 export const forceRenewAuthnInfo: ForceRenewAuthnInfo = (infra) => async (post) => {
-    loadLastLogin(infra, post, (lastLogin) => {
-        renew(infra, lastLogin, post)
+    loadLastAuth(infra, post, (lastAuth) => {
+        renew(infra, lastAuth, post)
     })
 }
 
-function loadLastLogin(
+function loadLastAuth(
     infra: RenewAuthnInfoInfra,
     post: Post<ForceRequestRenewAuthnInfoEvent>,
-    hook: { (lastLogin: LastAuth): void }
+    hook: { (lastAuth: LastAuth): void }
 ) {
     const { authnInfos } = infra
 
@@ -65,7 +65,7 @@ function loadLastLogin(
 }
 async function renew(
     infra: RenewAuthnInfoInfra,
-    lastLogin: LastAuth,
+    lastAuth: LastAuth,
     post: Post<ForceRequestRenewAuthnInfoEvent>
 ) {
     const { apiCredentials, authnInfos, renew, config, delayed } = infra
@@ -73,7 +73,7 @@ async function renew(
     post({ type: "try-to-renew" })
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(renew(lastLogin.authnNonce), config.delay, () =>
+    const response = await delayed(renew(lastAuth.authnNonce), config.delay, () =>
         post({ type: "delayed-to-renew" })
     )
     if (!response.success) {

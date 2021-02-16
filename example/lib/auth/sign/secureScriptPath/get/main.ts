@@ -1,13 +1,13 @@
 import { env } from "../../../../y_environment/env"
 
 import {
-    initGetSecureScriptPathAction,
-    initGetSecureScriptPathActionLocationInfo,
+    initGetSecureScriptPathAction_legacy,
+    initGetSecureScriptPathLocationInfo,
 } from "./impl"
 
 import {
-    GetSecureScriptPathAction,
-    GetSecureScriptPathActionLocationInfo,
+    GetSecureScriptPathAction_legacy,
+    GetSecureScriptPathLocationInfo,
 } from "./action"
 import { currentURL } from "../../../../z_infra/location/url"
 import { GetSecureScriptPathInfra } from "./infra"
@@ -26,17 +26,17 @@ export function newGetSecureScriptPathInfra(): GetSecureScriptPathInfra {
     }
 }
 
-export function newAuthLocationAction(): GetSecureScriptPathAction {
-    return initGetSecureScriptPathAction(
+export function newAuthLocationAction_legacy(): GetSecureScriptPathAction_legacy {
+    return initGetSecureScriptPathAction_legacy(
         {
             config: {
                 secureServerHost: env.secureServerHost,
             },
         },
-        newGetSecureScriptPathActionLocationInfo()
+        newGetSecureScriptPathLocationInfo()
     )
 }
 
-export function newGetSecureScriptPathActionLocationInfo(): GetSecureScriptPathActionLocationInfo {
-    return initGetSecureScriptPathActionLocationInfo(currentURL())
+export function newGetSecureScriptPathLocationInfo(): GetSecureScriptPathLocationInfo {
+    return initGetSecureScriptPathLocationInfo(currentURL())
 }

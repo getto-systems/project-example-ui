@@ -4,11 +4,11 @@ import { newRenewAuthnInfoRemoteAccess } from "../common/infra/remote/renew/main
 
 import { newDateClock } from "../../../../z_infra/clock/date"
 
-import { initStartContinuousRenewAuthnInfoAction } from "./impl"
+import { initStartContinuousRenewAuthnInfoAction_legacy } from "./impl"
 
 import { delayMinute, intervalMinute } from "../../../../z_infra/time/infra"
 
-import { StartContinuousRenewAuthnInfoAction } from "./action"
+import { StartContinuousRenewAuthnInfoAction_legacy } from "./action"
 import { StartContinuousRenewAuthnInfoInfra } from "./infra"
 
 export function newStartContinuousRenewAuthnInfoInfra(
@@ -26,10 +26,10 @@ export function newStartContinuousRenewAuthnInfoInfra(
     }
 }
 
-export function newContinuousRenewAuthnInfoAction(
+export function newContinuousRenewAuthnInfoAction_legacy(
     webStorage: Storage
-): StartContinuousRenewAuthnInfoAction {
-    return initStartContinuousRenewAuthnInfoAction({
+): StartContinuousRenewAuthnInfoAction_legacy {
+    return initStartContinuousRenewAuthnInfoAction_legacy({
         apiCredentials: newApiCredentialRepository(webStorage),
         authnInfos: newAuthnInfoRepository(webStorage),
         renew: newRenewAuthnInfoRemoteAccess(),
