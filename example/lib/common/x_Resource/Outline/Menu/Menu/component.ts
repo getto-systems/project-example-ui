@@ -1,14 +1,14 @@
 import { ApplicationComponent } from "../../../../../vendor/getto-example/Application/component"
 
-import { OutlineMenuAction } from "../../../../../auth/permission/outline/action"
+import { LoadOutlineMenuAction } from "../../../../../auth/permission/outline/load/action"
 
-import { OutlineMenu, LoadOutlineMenuBadgeError, OutlineMenuCategoryPath } from "../../../../../auth/permission/outline/data"
+import { OutlineMenu, LoadOutlineMenuBadgeError, OutlineMenuCategoryPath } from "../../../../../auth/permission/outline/load/data"
 
 export interface MenuComponentFactory {
     (material: MenuMaterial): MenuComponent
 }
 export type MenuMaterial = Readonly<{
-    menu: OutlineMenuAction
+    menu: LoadOutlineMenuAction
 }>
 
 export interface MenuComponent extends ApplicationComponent<MenuComponentState> {

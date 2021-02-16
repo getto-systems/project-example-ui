@@ -1,15 +1,15 @@
 import {
     PasswordLoginActionProxyMessage,
     PasswordLoginActionProxyResponse,
-} from "../../../../sign/password/login/main/worker/message"
+} from "../../../../sign/password/authenticate/main/worker/message"
 import {
     PasswordResetSessionActionProxyMessage,
     PasswordResetSessionActionProxyResponse,
-} from "../../../../sign/password/reset/session/main/worker/message"
+} from "../../../../sign/password/resetSession/start/main/worker/message"
 import {
     PasswordResetRegisterActionProxyMessage,
     PasswordResetRegisterActionProxyResponse,
-} from "../../../../sign/password/reset/register/main/worker/message"
+} from "../../../../sign/password/resetSession/register/main/worker/message"
 
 export type ForegroundMessage =
     | Readonly<{ type: "login"; message: PasswordLoginActionProxyMessage }>

@@ -4,7 +4,7 @@ import { DelayTime, ExpireTime } from "../../../../z_infra/time/infra"
 import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
 import { AuthCredentialRepository, RenewAuthCredentialRemoteAccess } from "../common/infra"
 
-import { ForceRequestRenewAuthCredentialPod, RequestRenewAuthCredentialPod } from "./action"
+import { ForceRequestRenewAuthCredentialMethod, RequestRenewAuthCredentialMethod } from "./action"
 
 export type RenewAuthCredentialActionInfra = RequestRenewAuthCredentialInfra
 
@@ -21,8 +21,8 @@ export type RequestRenewAuthCredentialInfra = Readonly<{
 }>
 
 export interface RequestRenewAuthCredential {
-    (infra: RequestRenewAuthCredentialInfra): RequestRenewAuthCredentialPod
+    (infra: RequestRenewAuthCredentialInfra): RequestRenewAuthCredentialMethod
 }
 export interface ForceRequestRenewAuthCredential {
-    (infra: RequestRenewAuthCredentialInfra): ForceRequestRenewAuthCredentialPod
+    (infra: RequestRenewAuthCredentialInfra): ForceRequestRenewAuthCredentialMethod
 }

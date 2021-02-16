@@ -4,9 +4,6 @@ export type ClearAuthCredentialAction = Readonly<{
     submit: SubmitClearAuthCredentialMethod
 }>
 
-export interface SubmitClearAuthCredentialPod {
-    (): SubmitClearAuthCredentialMethod
-}
 export interface SubmitClearAuthCredentialMethod {
     (post: Post<SubmitClearAuthCredentialEvent>): void
 }

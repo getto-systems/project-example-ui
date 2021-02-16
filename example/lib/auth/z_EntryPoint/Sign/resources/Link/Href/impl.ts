@@ -1,6 +1,6 @@
 import { AuthSignLinkHrefComponent } from "./component"
 
-import { AuthLocationSearchParams } from "../../../../../sign/authLocation/data"
+import { AuthLocationSearchParams } from "../../../../../sign/secureScriptPath/get/data"
 
 export function initAuthSignLinkHrefComponent(): AuthSignLinkHrefComponent {
     return {

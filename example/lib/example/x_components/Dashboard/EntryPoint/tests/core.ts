@@ -4,7 +4,7 @@ import {
     initOutlineBreadcrumbListAction,
     initOutlineMenuAction,
     initOutlineActionLocationInfo,
-} from "../../../../../auth/permission/outline/impl"
+} from "../../../../../auth/permission/outline/load/impl"
 
 import { DashboardFactory, initDashboardResource } from "../impl/core"
 
@@ -15,7 +15,7 @@ import {
     LoadOutlineMenuBadgeRemoteAccess,
     OutlineMenuExpandRepository,
     OutlineMenuTree,
-} from "../../../../../auth/permission/outline/infra"
+} from "../../../../../auth/permission/outline/load/infra"
 import { SeasonRepository } from "../../../../shared/season/infra"
 import { Clock } from "../../../../../z_infra/clock/infra"
 

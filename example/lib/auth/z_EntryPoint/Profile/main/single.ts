@@ -1,4 +1,4 @@
-import { newMainOutlineAction } from "../../../permission/outline/main/main"
+import { newMainOutlineAction } from "../../../permission/outline/load/main/main"
 import { newClearAuthCredentialAction } from "../../../sign/authCredential/clear/main"
 import { newErrorAction } from "../../../../availability/unexpectedError/main"
 

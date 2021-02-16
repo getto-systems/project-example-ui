@@ -11,7 +11,7 @@ import {
     AuthSignResourceFactory,
 } from "./entryPoint"
 
-import { AuthLocationSearchParams } from "../../sign/authLocation/data"
+import { AuthLocationSearchParams } from "../../sign/secureScriptPath/get/data"
 
 export function initLoginViewLocationInfo(currentURL: URL): AuthSignViewLocationInfo {
     return {

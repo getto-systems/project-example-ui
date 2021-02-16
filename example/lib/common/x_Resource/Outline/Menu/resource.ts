@@ -1,7 +1,7 @@
 import { BreadcrumbListComponent } from "./BreadcrumbList/component"
 import { MenuComponent } from "./Menu/component"
 
-import { OutlineBreadcrumbListAction, OutlineMenuAction } from "../../../../auth/permission/outline/action"
+import { LoadOutlineBreadcrumbListAction, LoadOutlineMenuAction } from "../../../../auth/permission/outline/load/action"
 
 export type MenuResource = Readonly<{
     breadcrumbList: BreadcrumbListComponent
@@ -9,6 +9,6 @@ export type MenuResource = Readonly<{
 }>
 
 export type MenuForegroundAction = Readonly<{
-    breadcrumbList: OutlineBreadcrumbListAction
-    menu: OutlineMenuAction
+    breadcrumbList: LoadOutlineBreadcrumbListAction
+    menu: LoadOutlineMenuAction
 }>

@@ -1,10 +1,10 @@
 import { initLoginViewLocationInfo, View } from "./impl"
 
 import { initStaticClock } from "../../../z_infra/clock/simulate"
-import { initSubmitPasswordLoginSimulateRemoteAccess } from "../../sign/password/login/infra/remote/submitPasswordLogin/simulate"
+import { initAuthenticatePasswordSimulateRemoteAccess } from "../../sign/password/authenticate/infra/remote/authenticate/simulate"
 import { initRenewAuthCredentialSimulateRemoteAccess } from "../../sign/authCredential/common/infra/remote/renewAuthCredential/simulate"
-import { initSubmitPasswordResetResetSimulateRemoteAccess } from "../../sign/password/reset/register/infra/remote/submitPasswordResetRegister/simulate"
-import { initStartPasswordResetSessionSimulateRemoteAccess } from "../../sign/password/reset/session/infra/remote/startPasswordResetSession/simulate"
+import { initSubmitPasswordResetResetSimulateRemoteAccess } from "../../sign/password/resetSession/register/infra/remote/submitPasswordResetRegister/simulate"
+import { initStartPasswordResetSessionSimulateRemoteAccess } from "../../sign/password/resetSession/start/infra/remote/startPasswordResetSession/simulate"
 
 import { initAuthSignLinkResource } from "./resources/Link/impl"
 import { initAuthSignRenewResource } from "./resources/Renew/impl"
@@ -17,8 +17,8 @@ import { initLoginIDFormFieldAction } from "../../common/field/loginID/main/logi
 import { initPasswordFormFieldAction } from "../../common/field/password/main/password"
 
 import { Clock } from "../../../z_infra/clock/infra"
-import { SubmitLoginRemoteAccessResult } from "../../sign/password/login/infra"
-import { SubmitPasswordResetRegisterRemoteAccessResult } from "../../sign/password/reset/register/infra"
+import { AuthenticatePasswordRemoteAccessResult } from "../../sign/password/authenticate/infra"
+import { SubmitPasswordResetRegisterRemoteAccessResult } from "../../sign/password/resetSession/register/infra"
 
 import { AuthSignViewState } from "./entryPoint"
 
@@ -30,26 +30,26 @@ import {
     AuthCredentialRepository,
     RenewAuthCredentialRemoteAccessResult,
 } from "../../sign/authCredential/common/infra"
-import { initContinuousRenewAuthCredentialAction } from "../../sign/authCredential/continuousRenew/impl"
+import { initStartContinuousRenewAuthCredentialAction } from "../../sign/authCredential/startContinuousRenew/impl"
 import { initRenewAuthCredentialAction } from "../../sign/authCredential/renew/impl"
 import { delayed, wait } from "../../../z_infra/delayed/core"
 import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/authCredential/memory"
-import { initAuthLocationAction, initAuthLocationActionLocationInfo } from "../../sign/authLocation/impl"
-import { initPasswordLoginAction, initPasswordLoginActionPod } from "../../sign/password/login/impl"
+import { initGetSecureScriptPathAction, initGetSecureScriptPathActionLocationInfo } from "../../sign/secureScriptPath/get/impl"
+import { initPasswordLoginAction, initPasswordLoginActionPod } from "../../sign/password/authenticate/impl"
 import {
     initPasswordResetRegisterAction,
     initPasswordResetRegisterActionLocationInfo,
     initPasswordResetRegisterActionPod,
-} from "../../sign/password/reset/register/impl"
-import { initPasswordResetSessionActionPod } from "../../sign/password/reset/session/impl"
+} from "../../sign/password/resetSession/register/impl"
+import { initPasswordResetSessionActionPod } from "../../sign/password/resetSession/start/impl"
 import {
     GetPasswordResetSessionStatusRemoteAccessResult,
     SendPasswordResetSessionTokenRemoteAccessResult,
     StartPasswordResetSessionSessionRemoteAccessResult,
-} from "../../sign/password/reset/session/infra"
-import { markPasswordResetSessionID } from "../../sign/password/reset/session/data"
-import { initSendPasswordResetSessionTokenSimulateRemoteAccess } from "../../sign/password/reset/session/infra/remote/sendPasswordResetSessionToken/simulate"
-import { initGetPasswordResetSessionStatusSimulateRemoteAccess } from "../../sign/password/reset/session/infra/remote/getPasswordResetSessionStatus/simulate"
+} from "../../sign/password/resetSession/start/infra"
+import { markPasswordResetSessionID } from "../../sign/password/resetSession/start/data"
+import { initSendPasswordResetSessionTokenSimulateRemoteAccess } from "../../sign/password/resetSession/start/infra/remote/sendPasswordResetSessionToken/simulate"
+import { initGetPasswordResetSessionStatusSimulateRemoteAccess } from "../../sign/password/resetSession/start/infra/remote/getPasswordResetSessionStatus/simulate"
 
 const AUTHORIZED_TICKET_NONCE = "ticket-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
@@ -360,7 +360,7 @@ function standardPasswordLoginResource(
 ) {
     return initAuthSignPasswordLoginResource({
         login: {
-            continuousRenew: initContinuousRenewAuthCredentialAction({
+            continuousRenew: initStartContinuousRenewAuthCredentialAction({
                 apiCredentials,
                 authCredentials,
                 renew: initRenewAuthCredentialSimulateRemoteAccess(simulateRenew, {
@@ -372,17 +372,17 @@ function standardPasswordLoginResource(
                 },
                 clock,
             }),
-            location: initAuthLocationAction(
+            location: initGetSecureScriptPathAction(
                 {
                     config: {
                         secureServerHost: standardSecureHost(),
                     },
                 },
-                initAuthLocationActionLocationInfo(currentURL)
+                initGetSecureScriptPathActionLocationInfo(currentURL)
             ),
             login: initPasswordLoginAction(
                 initPasswordLoginActionPod({
-                    login: initSubmitPasswordLoginSimulateRemoteAccess(simulateLogin, {
+                    login: initAuthenticatePasswordSimulateRemoteAccess(simulateLogin, {
                         wait_millisecond: 0,
                     }),
                     config: {
@@ -418,7 +418,7 @@ function standardPasswordResetResource(
 ) {
     return initPasswordResetResource({
         register: {
-            continuousRenew: initContinuousRenewAuthCredentialAction({
+            continuousRenew: initStartContinuousRenewAuthCredentialAction({
                 apiCredentials,
                 authCredentials,
                 renew: initRenewAuthCredentialSimulateRemoteAccess(simulateRenew, {
@@ -430,13 +430,13 @@ function standardPasswordResetResource(
                 },
                 clock,
             }),
-            location: initAuthLocationAction(
+            location: initGetSecureScriptPathAction(
                 {
                     config: {
                         secureServerHost: standardSecureHost(),
                     },
                 },
-                initAuthLocationActionLocationInfo(currentURL)
+                initGetSecureScriptPathActionLocationInfo(currentURL)
             ),
             register: initPasswordResetRegisterAction(
                 initPasswordResetRegisterActionPod({
@@ -521,7 +521,7 @@ function standardRenewCredentialResource(
             delayed,
             clock,
         }),
-        continuousRenew: initContinuousRenewAuthCredentialAction({
+        continuousRenew: initStartContinuousRenewAuthCredentialAction({
             apiCredentials,
             authCredentials,
             renew: initRenewAuthCredentialSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
@@ -531,13 +531,13 @@ function standardRenewCredentialResource(
             },
             clock,
         }),
-        location: initAuthLocationAction(
+        location: initGetSecureScriptPathAction(
             {
                 config: {
                     secureServerHost: standardSecureHost(),
                 },
             },
-            initAuthLocationActionLocationInfo(currentURL)
+            initGetSecureScriptPathActionLocationInfo(currentURL)
         ),
     })
 }
@@ -556,7 +556,7 @@ function standardSecureHost(): string {
     return "secure.example.com"
 }
 
-function simulateLogin(): SubmitLoginRemoteAccessResult {
+function simulateLogin(): AuthenticatePasswordRemoteAccessResult {
     return {
         success: true,
         value: {

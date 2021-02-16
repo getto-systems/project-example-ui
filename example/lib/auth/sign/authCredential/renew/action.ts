@@ -5,16 +5,10 @@ export type RenewAuthCredentialAction = Readonly<{
     forceRequest: ForceRequestRenewAuthCredentialMethod
 }>
 
-export interface RequestRenewAuthCredentialPod {
-    (): RequestRenewAuthCredentialMethod
-}
 export interface RequestRenewAuthCredentialMethod {
     (post: Post<RequestRenewAuthCredentialEvent>): void
 }
 
-export interface ForceRequestRenewAuthCredentialPod {
-    (): ForceRequestRenewAuthCredentialMethod
-}
 export interface ForceRequestRenewAuthCredentialMethod {
     (post: Post<ForceRequestRenewAuthCredentialEvent>): void
 }

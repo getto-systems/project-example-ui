@@ -1,16 +1,16 @@
 import { ApplicationComponent } from "../../../../../../../vendor/getto-example/Application/component"
 
-import { PasswordResetRegisterAction } from "../../../../../password/reset/register/action"
-import { AuthLocationAction } from "../../../../../authLocation/action"
+import { RegisterPasswordResetSessionAction } from "../../../../../password/resetSession/register/action"
+import { GetSecureScriptPathAction } from "../../../../../secureScriptPath/get/action"
 
 import {
     SubmitPasswordResetRegisterError,
     PasswordResetFields,
-} from "../../../../../password/reset/register/data"
-import { SecureScriptPath, LoadSecureScriptError } from "../../../../../authLocation/data"
+} from "../../../../../password/resetSession/register/data"
+import { SecureScriptPath, LoadSecureScriptError } from "../../../../../secureScriptPath/get/data"
 import { FormConvertResult } from "../../../../../../../vendor/getto-form/form/data"
 import { StorageError } from "../../../../../../../common/storage/data"
-import { ContinuousRenewAuthCredentialAction } from "../../../../../authCredential/continuousRenew/action"
+import { StartContinuousRenewAuthCredentialAction } from "../../../../../authCredential/startContinuousRenew/action"
 
 export interface PasswordResetRegisterComponent
     extends ApplicationComponent<PasswordResetRegisterComponentState> {
@@ -19,9 +19,9 @@ export interface PasswordResetRegisterComponent
 }
 
 export type PasswordResetRegisterMaterial = Readonly<{
-    continuousRenew: ContinuousRenewAuthCredentialAction
-    location: AuthLocationAction
-    register: PasswordResetRegisterAction
+    continuousRenew: StartContinuousRenewAuthCredentialAction
+    location: GetSecureScriptPathAction
+    register: RegisterPasswordResetSessionAction
 }>
 
 export type PasswordResetRegisterComponentState =

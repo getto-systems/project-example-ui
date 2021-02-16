@@ -4,12 +4,12 @@ import {
     PasswordResetSessionResource,
 } from "./resource"
 
-import { StartMaterial } from "./Start/component"
-import { FormMaterial } from "./Form/component"
+import { PasswordResetSessionStartMaterial } from "../../../sign/x_Component/Password/Reset/Session/Start/component"
+import { PasswordResetSessionFormMaterial } from "../../../sign/x_Component/Password/Reset/Session/Form/component"
 
-import { initFormComponent } from "./Form/impl"
-import { initStartComponent } from "./Start/impl"
-import { initPasswordResetSessionAction } from "../../../sign/password/reset/session/impl"
+import { initPasswordResetSessionFormComponent } from "../../../sign/x_Component/Password/Reset/Session/Form/impl"
+import { initStartComponent } from "../../../sign/x_Component/Password/Reset/Session/Start/impl"
+import { initPasswordResetSessionAction } from "../../../sign/password/resetSession/start/impl"
 
 export function initPasswordResetSessionResource(
     foreground: PasswordResetSessionForegroundAction,
@@ -17,15 +17,15 @@ export function initPasswordResetSessionResource(
 ): PasswordResetSessionResource {
     return {
         start: initStartComponent(startMaterial()),
-        form: initFormComponent(formMaterial()),
+        form: initPasswordResetSessionFormComponent(formMaterial()),
     }
 
-    function startMaterial(): StartMaterial {
+    function startMaterial(): PasswordResetSessionStartMaterial {
         return {
             session: initPasswordResetSessionAction(background.initSession),
         }
     }
-    function formMaterial(): FormMaterial {
+    function formMaterial(): PasswordResetSessionFormMaterial {
         return {
             validation: foreground.form.core.validation(),
             history: foreground.form.core.history(),

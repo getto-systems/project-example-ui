@@ -6,7 +6,7 @@ import {
     RenewAuthCredentialComponentState,
 } from "./component"
 
-import { LoadSecureScriptError } from "../../../authLocation/data"
+import { LoadSecureScriptError } from "../../../secureScriptPath/get/data"
 import { AuthCredential } from "../../../authCredential/common/data"
 
 export function initRenewAuthCredentialComponent(
@@ -65,7 +65,7 @@ class Component
     }
 
     secureScriptPath() {
-        return this.material.location.getSecureScriptPath()
+        return this.material.location.get()
     }
 
     startContinuousRenew(authCredential: AuthCredential) {

@@ -7,7 +7,7 @@ import {
     MenuComponentState,
 } from "./component"
 
-import { OutlineMenu, OutlineMenuCategoryPath } from "../../../../../auth/permission/outline/data"
+import { OutlineMenu, OutlineMenuCategoryPath } from "../../../../../auth/permission/outline/load/data"
 
 export const initMenuComponent: MenuComponentFactory = (material) => new Component(material)
 

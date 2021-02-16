@@ -11,7 +11,7 @@ import {
     PasswordFormFieldMaterial,
 } from "../../../../../../common/x_Component/Field/Password/component"
 
-import { PasswordResetFields } from "../../../../../password/reset/register/data"
+import { PasswordResetFields } from "../../../../../password/resetSession/register/data"
 import { FormConvertResult } from "../../../../../../../vendor/getto-form/form/data"
 
 export interface PasswordResetRegisterFormComponent extends FormContainerComponent {

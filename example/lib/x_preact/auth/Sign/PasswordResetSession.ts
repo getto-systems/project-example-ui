@@ -21,7 +21,7 @@ import { LoginIDFormField } from "./field/loginID"
 
 import { PasswordResetSessionEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialStartComponentState } from "../../../auth/x_Resource/sign/PasswordResetSession/Start/component"
+import { initialStartComponentState } from "../../../auth/sign/x_Component/Password/Reset/Session/Start/component"
 import { initialFormContainerComponentState } from "../../../vendor/getto-form/x_Resource/Form/component"
 
 import {
@@ -30,7 +30,7 @@ import {
     StartPasswordResetSessionError,
     CheckPasswordResetSessionStatusError,
     SendPasswordResetSessionTokenError,
-} from "../../../auth/sign/password/reset/session/data"
+} from "../../../auth/sign/password/resetSession/start/data"
 
 export function PasswordResetSession({ resource, terminate }: PasswordResetSessionEntryPoint): VNode {
     useTermination(terminate)

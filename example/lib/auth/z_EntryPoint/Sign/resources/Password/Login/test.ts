@@ -1,7 +1,7 @@
 import { initAuthSignPasswordLoginResource } from "./impl"
 
 import { initStaticClock, StaticClock } from "../../../../../../z_infra/clock/simulate"
-import { initSubmitPasswordLoginSimulateRemoteAccess } from "../../../../../sign/password/login/infra/remote/submitPasswordLogin/simulate"
+import { initAuthenticatePasswordSimulateRemoteAccess } from "../../../../../sign/password/authenticate/infra/remote/authenticate/simulate"
 import { initRenewAuthCredentialSimulateRemoteAccess } from "../../../../../sign/authCredential/common/infra/remote/renewAuthCredential/simulate"
 
 import { initFormAction } from "../../../../../../vendor/getto-form/main/form"
@@ -9,9 +9,9 @@ import { initLoginIDFormFieldAction } from "../../../../../common/field/loginID/
 import { initPasswordFormFieldAction } from "../../../../../common/field/password/main/password"
 
 import {
-    SubmitPasswordLoginRemoteAccess,
-    SubmitLoginRemoteAccessResult,
-} from "../../../../../sign/password/login/infra"
+    AuthenticatePasswordRemoteAccess,
+    AuthenticatePasswordRemoteAccessResult,
+} from "../../../../../sign/password/authenticate/infra"
 import { Clock } from "../../../../../../z_infra/clock/infra"
 
 import { AuthSignPasswordLoginResource } from "./resource"
@@ -19,13 +19,13 @@ import { AuthSignPasswordLoginResource } from "./resource"
 import { PasswordLoginComponentState } from "../../../../../sign/x_Component/Password/Login/Core/component"
 
 import { markInputString, toValidationError } from "../../../../../../vendor/getto-form/form/data"
-import { markSecureScriptPath } from "../../../../../sign/authLocation/data"
-import { PasswordLoginFields } from "../../../../../sign/password/login/data"
+import { markSecureScriptPath } from "../../../../../sign/secureScriptPath/get/data"
+import { PasswordLoginFields } from "../../../../../sign/password/authenticate/data"
 import { markAuthAt, markTicketNonce } from "../../../../../sign/authCredential/common/data"
 import { ApiCredentialRepository } from "../../../../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../../common/apiCredential/data"
-import { initContinuousRenewAuthCredentialAction } from "../../../../../sign/authCredential/continuousRenew/impl"
+import { initStartContinuousRenewAuthCredentialAction } from "../../../../../sign/authCredential/startContinuousRenew/impl"
 import {
     AuthCredentialRepository,
     RenewAuthCredentialRemoteAccess,
@@ -33,15 +33,15 @@ import {
 } from "../../../../../sign/authCredential/common/infra"
 import { initMemoryAuthCredentialRepository } from "../../../../../sign/authCredential/common/infra/repository/authCredential/memory"
 import {
-    initAuthLocationAction,
-    initAuthLocationActionLocationInfo,
-} from "../../../../../sign/authLocation/impl"
+    initGetSecureScriptPathAction,
+    initGetSecureScriptPathActionLocationInfo,
+} from "../../../../../sign/secureScriptPath/get/impl"
 import { delayed } from "../../../../../../z_infra/delayed/core"
 import {
     initPasswordLoginAction,
     initPasswordLoginActionPod,
     submitEventHasDone,
-} from "../../../../../sign/password/login/impl"
+} from "../../../../../sign/password/authenticate/impl"
 import {
     initAsyncComponentStateTester,
     initSyncComponentTestChecker,
@@ -605,7 +605,7 @@ type PasswordLoginTestRepository = Readonly<{
     authCredentials: AuthCredentialRepository
 }>
 type PasswordLoginTestRemoteAccess = Readonly<{
-    login: SubmitPasswordLoginRemoteAccess
+    login: AuthenticatePasswordRemoteAccess
     renew: RenewAuthCredentialRemoteAccess
 }>
 
@@ -618,17 +618,17 @@ function newTestPasswordLoginResource(
     const config = standardConfig()
     return initAuthSignPasswordLoginResource({
         login: {
-            continuousRenew: initContinuousRenewAuthCredentialAction({
+            continuousRenew: initStartContinuousRenewAuthCredentialAction({
                 ...repository,
                 ...remote,
                 config: config.continuousRenew,
                 clock,
             }),
-            location: initAuthLocationAction(
+            location: initGetSecureScriptPathAction(
                 {
                     config: config.location,
                 },
-                initAuthLocationActionLocationInfo(currentURL)
+                initGetSecureScriptPathActionLocationInfo(currentURL)
             ),
             login: initPasswordLoginAction(
                 initPasswordLoginActionPod({
@@ -688,18 +688,18 @@ function standardRepository(): PasswordLoginTestRepository {
 }
 function standardSimulator(): PasswordLoginTestRemoteAccess {
     return {
-        login: initSubmitPasswordLoginSimulateRemoteAccess(simulateLogin, { wait_millisecond: 0 }),
+        login: initAuthenticatePasswordSimulateRemoteAccess(simulateLogin, { wait_millisecond: 0 }),
         renew: renewRemoteAccess(),
     }
 }
 function waitSimulator(): PasswordLoginTestRemoteAccess {
     return {
-        login: initSubmitPasswordLoginSimulateRemoteAccess(simulateLogin, { wait_millisecond: 3 }),
+        login: initAuthenticatePasswordSimulateRemoteAccess(simulateLogin, { wait_millisecond: 3 }),
         renew: renewRemoteAccess(),
     }
 }
 
-function simulateLogin(_fields: PasswordLoginFields): SubmitLoginRemoteAccessResult {
+function simulateLogin(_fields: PasswordLoginFields): AuthenticatePasswordRemoteAccessResult {
     return {
         success: true,
         value: {

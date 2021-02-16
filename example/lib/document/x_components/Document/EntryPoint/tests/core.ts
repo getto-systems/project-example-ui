@@ -2,7 +2,7 @@ import {
     initOutlineBreadcrumbListAction,
     initOutlineMenuAction,
     initOutlineActionLocationInfo,
-} from "../../../../../auth/permission/outline/impl"
+} from "../../../../../auth/permission/outline/load/impl"
 import { detectContentPath } from "../../../../content/impl/location"
 
 import { DocumentFactory, initDocumentResource } from "../impl/core"
@@ -13,7 +13,7 @@ import {
     LoadOutlineMenuBadgeRemoteAccess,
     OutlineMenuExpandRepository,
     OutlineMenuTree,
-} from "../../../../../auth/permission/outline/infra"
+} from "../../../../../auth/permission/outline/load/infra"
 
 import { DocumentResource } from "../entryPoint"
 import { initTestContentAction } from "../../../../content/tests/content"
