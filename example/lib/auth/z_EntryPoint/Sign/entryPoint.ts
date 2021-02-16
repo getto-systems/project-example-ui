@@ -1,19 +1,7 @@
-import { AuthSignRenewMaterial, AuthSignRenewResource } from "./resources/Renew/resource"
-import {
-    AuthSignPasswordLoginForegroundMaterial,
-    AuthSignPasswordLoginBackgroundMaterialPod,
-    AuthSignPasswordLoginResource,
-} from "./resources/Password/Login/resource"
-import {
-    PasswordResetBackgroundActionPod,
-    PasswordResetForegroundAction,
-    PasswordResetResource,
-} from "../../x_Resource/sign/PasswordReset/resource"
-import {
-    PasswordResetSessionBackgroundActionPod,
-    PasswordResetSessionForegroundAction,
-    PasswordResetSessionResource,
-} from "../../x_Resource/sign/PasswordResetSession/resource"
+import { AuthSignRenewResource } from "./resources/Renew/resource"
+import { AuthSignPasswordLoginResource } from "./resources/Password/Login/resource"
+import { PasswordResetResource } from "../../x_Resource/sign/PasswordReset/resource"
+import { PasswordResetSessionResource } from "../../x_Resource/sign/PasswordResetSession/resource"
 
 import { ApplicationComponent } from "../../../vendor/getto-example/Application/component"
 import { AuthSignLinkResource } from "./resources/Link/resource"
@@ -22,15 +10,6 @@ export type AuthSignEntryPoint = Readonly<{
     view: AuthSignView
     terminate: Terminate
 }>
-
-export type AuthSignForegroundMaterial = AuthSignRenewMaterial &
-    AuthSignPasswordLoginForegroundMaterial &
-    PasswordResetSessionForegroundAction &
-    PasswordResetForegroundAction
-
-export type AuthSignBackgroundMaterialPod = AuthSignPasswordLoginBackgroundMaterialPod &
-    PasswordResetSessionBackgroundActionPod &
-    PasswordResetBackgroundActionPod
 
 export type RenewCredentialEntryPoint = EntryPoint<AuthSignRenewResource>
 export type PasswordLoginEntryPoint = EntryPoint<AuthSignPasswordLoginResource & AuthSignLinkResource>
@@ -42,7 +21,7 @@ export type PasswordResetEntryPoint = EntryPoint<PasswordResetResource & AuthSig
 export interface AuthSignResourceFactory {
     link(): AuthSignLinkResource
 
-    renewCredential(): AuthSignRenewResource
+    renew(): AuthSignRenewResource
 
     passwordLogin(): AuthSignPasswordLoginResource
     passwordResetSession(): PasswordResetSessionResource
@@ -50,9 +29,7 @@ export interface AuthSignResourceFactory {
 }
 
 export interface AuthSignViewLocationInfo {
-    login: Readonly<{
-        getAuthSignView(): AuthSignViewType
-    }>
+    getAuthSignViewType(): AuthSignViewType
 }
 
 export interface AuthSignView extends ApplicationComponent<AuthSignViewState> {

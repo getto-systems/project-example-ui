@@ -260,7 +260,7 @@ function standardLoginView() {
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
         link: initAuthSignLinkResource,
-        renewCredential: () =>
+        renew: () =>
             standardRenewCredentialResource(
                 currentURL,
                 repository.apiCredentials,
@@ -292,7 +292,7 @@ function passwordResetSessionLoginView() {
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
         link: initAuthSignLinkResource,
-        renewCredential: () =>
+        renew: () =>
             standardRenewCredentialResource(
                 currentURL,
                 repository.apiCredentials,
@@ -324,7 +324,7 @@ function passwordResetLoginView() {
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
         link: initAuthSignLinkResource,
-        renewCredential: () =>
+        renew: () =>
             standardRenewCredentialResource(
                 currentURL,
                 repository.apiCredentials,

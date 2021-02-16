@@ -1,6 +1,6 @@
 import { ApplicationComponent } from "../../../../../../vendor/getto-example/Application/component"
 
-import { PasswordLoginAction, PasswordLoginActionPod } from "../../../../password/login/action"
+import { PasswordLoginAction } from "../../../../password/login/action"
 import { AuthLocationAction } from "../../../../authLocation/action"
 import { ContinuousRenewAuthCredentialAction } from "../../../../authCredential/continuousRenew/action"
 
@@ -14,18 +14,10 @@ export interface PasswordLoginComponent extends ApplicationComponent<PasswordLog
     loadError(err: LoadSecureScriptError): void
 }
 
-export type PasswordLoginMaterial = PasswordLoginForegroundMaterial & PasswordLoginBackgroundMaterial
-
-export type PasswordLoginForegroundMaterial = Readonly<{
+export type PasswordLoginMaterial = Readonly<{
     continuousRenew: ContinuousRenewAuthCredentialAction
     location: AuthLocationAction
-}>
-
-export type PasswordLoginBackgroundMaterial = Readonly<{
     login: PasswordLoginAction
-}>
-export type PasswordLoginBackgroundMaterialPod = Readonly<{
-    initLogin: PasswordLoginActionPod
 }>
 
 export type PasswordLoginComponentState =

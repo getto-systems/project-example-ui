@@ -60,22 +60,21 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
         initRegister: proxy.reset.register.pod(),
     }
 
-    const material = {
-        login: {
-            continuousRenew: newContinuousRenewAuthCredentialAction(webStorage),
-            location: newAuthLocationAction(),
-            login: initPasswordLoginAction(proxy.login.pod()),
-        },
-
-        form: formMaterial(),
-    }
-
     const view = new View(initLoginViewLocationInfo(currentURL), {
         link: initAuthSignLinkResource,
 
-        renewCredential: () => initAuthSignRenewResource(foreground),
+        renew: () => initAuthSignRenewResource(foreground),
 
-        passwordLogin: () => initAuthSignPasswordLoginResource(material),
+        passwordLogin: () =>
+            initAuthSignPasswordLoginResource({
+                login: {
+                    continuousRenew: newContinuousRenewAuthCredentialAction(webStorage),
+                    location: newAuthLocationAction(),
+                    login: initPasswordLoginAction(proxy.login.pod()),
+                },
+
+                form: formMaterial(),
+            }),
         passwordResetSession: () => initPasswordResetSessionResource(foreground, background),
         passwordReset: () =>
             initPasswordResetResource(
