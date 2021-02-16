@@ -12,7 +12,7 @@ import {
 } from "../../../z_vendor/getto-css/preact/layout/app"
 import { badge_alert, notice_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
 
-import { useComponent } from "../hooks"
+import { useAction } from "../hooks"
 import { poweredBy } from "../site"
 
 import {
@@ -28,7 +28,7 @@ type Props = Readonly<{
     menu: MenuComponent
 }>
 export function Menu(resource: Props): VNode {
-    const state = useComponent(resource.menu, initialMenuComponentState)
+    const state = useAction(resource.menu, initialMenuComponentState)
     useEffect(() => {
         resource.menu.load()
     }, [])

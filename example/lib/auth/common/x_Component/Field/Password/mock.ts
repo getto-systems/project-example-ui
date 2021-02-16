@@ -1,13 +1,13 @@
 import {
     mapMockPropsPasser,
     MockPropsPasser,
-} from "../../../../../vendor/getto-example/Application/mock"
+} from "../../../../../common/vendor/getto-example/Application/mock"
 import {
     FormFieldMockComponent,
     FormInputMockComponent,
-} from "../../../../../vendor/getto-form/x_Resource/Form/mock"
+} from "../../../../../common/vendor/getto-form/x_Resource/Form/mock"
 
-import { FormInputComponent } from "../../../../../vendor/getto-form/x_Resource/Form/component"
+import { FormInputComponent } from "../../../../../common/vendor/getto-form/x_Resource/Form/component"
 import { PasswordFormFieldComponent, PasswordFormFieldComponentState } from "./component"
 
 import {
@@ -15,7 +15,7 @@ import {
     PasswordValidationError,
     PasswordView,
 } from "../../../field/password/data"
-import { FormValidationResult, markInputString } from "../../../../../vendor/getto-form/form/data"
+import { FormValidationResult, markInputString } from "../../../../../common/vendor/getto-form/form/data"
 
 export function initMockPasswordFormField(
     passer: MockPropsPasser<PasswordFormFieldMockProps>

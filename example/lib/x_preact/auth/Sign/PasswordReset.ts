@@ -11,7 +11,7 @@ import {
 } from "../../../z_vendor/getto-css/preact/design/form"
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 
-import { useComponent, useTermination } from "../../common/hooks"
+import { useAction, useTermination } from "../../common/hooks"
 import { siteInfo } from "../../common/site"
 import { icon, spinner } from "../../common/icon"
 
@@ -24,16 +24,16 @@ import { PasswordFormField } from "./field/password"
 
 import { PasswordResetEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialPasswordResetRegisterComponentState } from "../../../auth/sign/x_Component/Password/Reset/Register/Reset/component"
-import { initialFormContainerComponentState } from "../../../vendor/getto-form/x_Resource/Form/component"
+import { initialPasswordResetRegisterComponentState } from "../../../auth/sign/x_Action/Password/Reset/Register/Reset/component"
+import { initialFormContainerComponentState } from "../../../common/vendor/getto-form/x_Resource/Form/component"
 
 import { SubmitPasswordResetRegisterError } from "../../../auth/sign/password/resetSession/register/data"
 
 export function PasswordReset({ resource, terminate }: PasswordResetEntryPoint): VNode {
     useTermination(terminate)
 
-    const state = useComponent(resource.register, initialPasswordResetRegisterComponentState)
-    const formState = useComponent(resource.form, initialFormContainerComponentState)
+    const state = useAction(resource.register, initialPasswordResetRegisterComponentState)
+    const formState = useAction(resource.form, initialFormContainerComponentState)
 
     useEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useEffect で行う

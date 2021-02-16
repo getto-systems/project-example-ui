@@ -1,13 +1,13 @@
-import { MockPropsPasser } from "../../../../../../vendor/getto-example/Application/mock"
+import { MockPropsPasser } from "../../../../../../common/vendor/getto-example/Application/mock"
 
 import {
     initMockPasswordLoginFormComponent,
     PasswordLoginFormMockProps,
-} from "../../../../../sign/x_Component/Password/Login/Form/mock"
+} from "../../../../../sign/x_Action/Password/Login/Form/mock"
 import {
     initMockPasswordLoginComponent,
     PasswordLoginMockProps,
-} from "../../../../../sign/x_Component/Password/Login/Core/mock"
+} from "../../../../../sign/x_Action/Password/Login/Core/mock"
 
 import { AuthSignPasswordLoginResource } from "./resource"
 

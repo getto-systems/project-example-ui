@@ -1,14 +1,11 @@
-import { ClearActionInfra, SubmitClearAuthCredential } from "./infra"
+import { ClearAuthCredentialInfra } from "./infra"
 
-import { ClearAuthCredentialAction } from "./action"
+import { ClearAuthCredentialMethod } from "./method"
 
-export function initClearAuthCredentialAction(infra: ClearActionInfra): ClearAuthCredentialAction {
-    return {
-        submit: submit(infra),
-    }
+interface Clear {
+    (infra: ClearAuthCredentialInfra): ClearAuthCredentialMethod
 }
-
-const submit: SubmitClearAuthCredential = (infra) => async (post) => {
+export const clearAuthCredential: Clear = (infra) => async (post) => {
     const { authCredentials } = infra
     const result = authCredentials.remove()
     if (!result.success) {

@@ -1,4 +1,4 @@
-import { initRenewAuthCredentialComponent } from "../../../../sign/x_Component/AuthCredential/Renew/impl"
+import { initRenewAuthCredentialComponent } from "../../../../sign/x_Action/AuthCredential/Renew/impl"
 
 import { AuthSignRenewMaterial, AuthSignRenewResource } from "./resource"
 

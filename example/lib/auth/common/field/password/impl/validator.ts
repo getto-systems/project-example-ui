@@ -1,4 +1,4 @@
-import { FormValidationResult, toValidationError } from "../../../../../vendor/getto-form/form/data"
+import { FormValidationResult, toValidationError } from "../../../../../common/vendor/getto-form/form/data"
 import { PasswordValidationError, PasswordInput } from "../data"
 
 // bcrypt を想定しているので、72 バイト以上のパスワードは無効

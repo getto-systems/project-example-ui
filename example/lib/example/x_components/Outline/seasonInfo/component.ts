@@ -1,4 +1,4 @@
-import { ApplicationComponent } from "../../../../vendor/getto-example/Application/component"
+import { ApplicationAction } from "../../../../common/vendor/getto-example/Application/action"
 
 import { LoadSeason } from "../../../shared/season/action"
 
@@ -11,7 +11,7 @@ export type SeasonInfoMaterial = Readonly<{
     loadSeason: LoadSeason
 }>
 
-export interface SeasonInfoComponent extends ApplicationComponent<SeasonInfoComponentState> {
+export interface SeasonInfoComponent extends ApplicationAction<SeasonInfoComponentState> {
     load(): void
 }
 

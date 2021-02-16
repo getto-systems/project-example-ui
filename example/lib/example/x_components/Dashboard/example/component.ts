@@ -1,4 +1,4 @@
-import { ApplicationComponent } from "../../../../vendor/getto-example/Application/component"
+import { ApplicationAction } from "../../../../common/vendor/getto-example/Application/action"
 
 import { LoadSeason } from "../../../shared/season/action"
 
@@ -11,7 +11,7 @@ export type ExampleMaterial = Readonly<{
     loadSeason: LoadSeason
 }>
 
-export interface ExampleComponent extends ApplicationComponent<ExampleComponentState> {
+export interface ExampleComponent extends ApplicationAction<ExampleComponentState> {
     load(): void
 }
 

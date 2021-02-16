@@ -1,4 +1,4 @@
-import { newWorker } from "../../../../../vendor/getto-worker/main/foreground"
+import { newWorker } from "../../../../../common/vendor/getto-worker/main/foreground"
 
 import { newAuthLocationAction } from "../../../../sign/secureScriptPath/get/main"
 import { newContinuousRenewAuthCredentialAction } from "../../../../sign/authCredential/startContinuousRenew/main"
@@ -12,7 +12,7 @@ import { initPasswordResetResource } from "../../resources/Password/Reset/Regist
 import { initPasswordResetSessionResource } from "../../../../x_Resource/sign/PasswordResetSession/impl"
 import { initAuthSignRenewResource } from "../../resources/Renew/impl"
 
-import { initFormAction } from "../../../../../vendor/getto-form/main/form"
+import { initFormAction } from "../../../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../common/field/password/main/password"
 import {

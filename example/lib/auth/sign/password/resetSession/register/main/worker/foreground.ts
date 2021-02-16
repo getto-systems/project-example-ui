@@ -2,7 +2,7 @@ import {
     WorkerForegroundProxyAction,
     WorkerForegroundProxyBase,
     WorkerForegroundProxyMethod,
-} from "../../../../../../../vendor/getto-worker/main/foreground"
+} from "../../../../../../../common/vendor/getto-worker/main/foreground"
 
 import {
     PasswordResetRegisterActionProxyMessage,

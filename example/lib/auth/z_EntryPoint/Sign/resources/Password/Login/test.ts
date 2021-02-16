@@ -4,7 +4,7 @@ import { initStaticClock, StaticClock } from "../../../../../../z_infra/clock/si
 import { initAuthenticatePasswordSimulateRemoteAccess } from "../../../../../sign/password/authenticate/infra/remote/authenticate/simulate"
 import { initRenewAuthCredentialSimulateRemoteAccess } from "../../../../../sign/authCredential/common/infra/remote/renewAuthCredential/simulate"
 
-import { initFormAction } from "../../../../../../vendor/getto-form/main/form"
+import { initFormAction } from "../../../../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../../common/field/password/main/password"
 
@@ -16,9 +16,9 @@ import { Clock } from "../../../../../../z_infra/clock/infra"
 
 import { AuthSignPasswordLoginResource } from "./resource"
 
-import { PasswordLoginComponentState } from "../../../../../sign/x_Component/Password/Login/Core/component"
+import { PasswordLoginComponentState } from "../../../../../sign/x_Action/Password/Login/Core/component"
 
-import { markInputString, toValidationError } from "../../../../../../vendor/getto-form/form/data"
+import { markInputString, toValidationError } from "../../../../../../common/vendor/getto-form/form/data"
 import { markSecureScriptPath } from "../../../../../sign/secureScriptPath/get/data"
 import { PasswordLoginFields } from "../../../../../sign/password/authenticate/data"
 import { markAuthAt, markTicketNonce } from "../../../../../sign/authCredential/common/data"
@@ -43,9 +43,9 @@ import {
     submitEventHasDone,
 } from "../../../../../sign/password/authenticate/impl"
 import {
-    initAsyncComponentStateTester,
-    initSyncComponentTestChecker,
-} from "../../../../../../vendor/getto-example/Application/testHelper"
+    initAsyncActionTester,
+    initSyncActionChecker,
+} from "../../../../../../common/vendor/getto-example/Application/testHelper"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -182,7 +182,7 @@ describe("PasswordLogin", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -221,7 +221,7 @@ describe("PasswordLogin", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "initial",
@@ -270,7 +270,7 @@ describe("PasswordLogin", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -332,11 +332,11 @@ describe("PasswordLogin", () => {
             function initChecker() {
                 const result = { loginID: false, password: false }
                 return {
-                    main: initSyncComponentTestChecker(() => {
+                    main: initSyncActionChecker(() => {
                         expect(result).toEqual({ loginID: true, password: true })
                         done()
                     }),
-                    loginID: initSyncComponentTestChecker((stack) => {
+                    loginID: initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             { value: "loginID-a" },
                             { value: "loginID-b" },
@@ -345,7 +345,7 @@ describe("PasswordLogin", () => {
                         ])
                         result.loginID = true
                     }),
-                    password: initSyncComponentTestChecker((stack) => {
+                    password: initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             { value: "password-a" },
                             { value: "" },
@@ -370,7 +370,7 @@ describe("PasswordLogin", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([])
                     done()
                 })
@@ -390,7 +390,7 @@ describe("PasswordLogin", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([])
                     done()
                 })
@@ -411,7 +411,7 @@ describe("PasswordLogin", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([{ result: toValidationError(["empty"]) }])
                         done()
                     })
@@ -431,7 +431,7 @@ describe("PasswordLogin", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["empty"]),
@@ -455,7 +455,7 @@ describe("PasswordLogin", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["too-long"]),
@@ -480,7 +480,7 @@ describe("PasswordLogin", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["too-long"]),
@@ -504,7 +504,7 @@ describe("PasswordLogin", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -529,7 +529,7 @@ describe("PasswordLogin", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -555,7 +555,7 @@ describe("PasswordLogin", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -768,7 +768,7 @@ function expectToEmptyLastLogin(authCredentials: AuthCredentialRepository) {
 }
 
 function initAsyncTester() {
-    return initAsyncComponentStateTester((state: PasswordLoginComponentState) => {
+    return initAsyncActionTester((state: PasswordLoginComponentState) => {
         switch (state.type) {
             case "initial-login":
                 return false

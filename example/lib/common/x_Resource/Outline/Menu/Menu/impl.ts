@@ -1,4 +1,4 @@
-import { ApplicationBaseComponent } from "../../../../../vendor/getto-example/Application/impl"
+import { ApplicationBaseAction } from "../../../../vendor/getto-example/Application/impl"
 
 import {
     MenuComponentFactory,
@@ -11,7 +11,7 @@ import { OutlineMenu, OutlineMenuCategoryPath } from "../../../../../auth/permis
 
 export const initMenuComponent: MenuComponentFactory = (material) => new Component(material)
 
-class Component extends ApplicationBaseComponent<MenuComponentState> implements MenuComponent {
+class Component extends ApplicationBaseAction<MenuComponentState> implements MenuComponent {
     material: MenuMaterial
 
     constructor(material: MenuMaterial) {

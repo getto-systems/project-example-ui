@@ -1,4 +1,4 @@
-import { ApplicationComponent } from "../../../../../vendor/getto-example/Application/component"
+import { ApplicationAction } from "../../../../vendor/getto-example/Application/action"
 
 import { LoadOutlineBreadcrumbListAction } from "../../../../../auth/permission/outline/load/action"
 
@@ -11,7 +11,7 @@ export type BreadcrumbListMaterial = Readonly<{
     breadcrumbList: LoadOutlineBreadcrumbListAction
 }>
 
-export interface BreadcrumbListComponent extends ApplicationComponent<BreadcrumbListComponentState> {
+export interface BreadcrumbListComponent extends ApplicationAction<BreadcrumbListComponentState> {
     load(): void
 }
 

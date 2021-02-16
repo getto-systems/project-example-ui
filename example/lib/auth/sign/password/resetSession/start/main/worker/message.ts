@@ -1,11 +1,11 @@
 import {
     WorkerProxyMethodMessage,
     WorkerProxyMethodResponse,
-} from "../../../../../../../vendor/getto-worker/main/message"
+} from "../../../../../../../common/vendor/getto-worker/main/message"
 
 import { CheckPasswordResetSessionStatusEvent, StartPasswordResetSessionEvent } from "../../event"
 
-import { FormConvertResult } from "../../../../../../../vendor/getto-form/form/data"
+import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
 import { PasswordResetSessionID, PasswordResetSessionFields } from "../../data"
 
 export type PasswordResetSessionActionProxyMessage =

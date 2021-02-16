@@ -8,7 +8,7 @@ import {
     mainBreadcrumbSeparator,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { useComponent } from "../hooks"
+import { useAction } from "../hooks"
 import { siteInfo } from "../site"
 import { icon } from "../icon"
 
@@ -26,7 +26,7 @@ type Props = Readonly<{
     breadcrumbList: BreadcrumbListComponent
 }>
 export function BreadcrumbList(resource: Props): VNode {
-    const state = useComponent(resource.breadcrumbList, initialBreadcrumbListComponentState)
+    const state = useAction(resource.breadcrumbList, initialBreadcrumbListComponentState)
     useEffect(() => {
         resource.breadcrumbList.load()
     }, [])

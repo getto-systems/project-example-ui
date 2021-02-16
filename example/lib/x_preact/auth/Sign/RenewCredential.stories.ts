@@ -3,7 +3,7 @@ import { useEffect } from "preact/hooks"
 
 import { RenewCredential } from "./RenewCredential"
 
-import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
 import { initMockRenewCredentialEntryPoint } from "../../../auth/z_EntryPoint/Sign/mock"
 import { AuthSignRenewMockProps } from "../../../auth/z_EntryPoint/Sign/resources/Renew/mock"
 

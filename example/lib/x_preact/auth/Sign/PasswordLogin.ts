@@ -12,7 +12,7 @@ import {
     form,
 } from "../../../z_vendor/getto-css/preact/design/form"
 
-import { useComponent, useTermination } from "../../common/hooks"
+import { useAction, useTermination } from "../../common/hooks"
 import { siteInfo } from "../../common/site"
 import { icon, spinner } from "../../common/icon"
 
@@ -25,16 +25,16 @@ import { PasswordFormField } from "./field/password"
 
 import { PasswordLoginEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialPasswordLoginComponentState } from "../../../auth/sign/x_Component/Password/Login/Core/component"
-import { initialFormContainerComponentState } from "../../../vendor/getto-form/x_Resource/Form/component"
+import { initialPasswordLoginComponentState } from "../../../auth/sign/x_Action/Password/Login/Core/component"
+import { initialFormContainerComponentState } from "../../../common/vendor/getto-form/x_Resource/Form/component"
 
 import { AuthenticatePasswordError } from "../../../auth/sign/password/authenticate/data"
 
 export function PasswordLogin({ resource, terminate }: PasswordLoginEntryPoint): VNode {
     useTermination(terminate)
 
-    const state = useComponent(resource.login, initialPasswordLoginComponentState)
-    const formState = useComponent(resource.form, initialFormContainerComponentState)
+    const state = useAction(resource.login, initialPasswordLoginComponentState)
+    const formState = useAction(resource.form, initialFormContainerComponentState)
 
     useEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useEffect で行う

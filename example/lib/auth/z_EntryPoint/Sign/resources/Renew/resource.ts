@@ -1,7 +1,7 @@
 import {
     RenewAuthCredentialComponent,
     RenewAuthCredentialMaterial,
-} from "../../../../sign/x_Component/AuthCredential/Renew/component"
+} from "../../../../sign/x_Action/AuthCredential/Renew/component"
 
 export type AuthSignRenewResource = Readonly<{
     renew: RenewAuthCredentialComponent

@@ -5,7 +5,7 @@ import { newRenewAuthCredentialAction } from "../../../sign/authCredential/renew
 import { newPasswordResetSessionActionPod } from "../../../sign/password/resetSession/start/main/core"
 import { newAuthLocationAction } from "../../../sign/secureScriptPath/get/main"
 
-import { initFormAction } from "../../../../vendor/getto-form/main/form"
+import { initFormAction } from "../../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../common/field/password/main/password"
 

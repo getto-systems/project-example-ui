@@ -1,5 +1,5 @@
 import { lnir, iconClass } from "../../../../../z_vendor/icon"
-import { MockComponent, MockPropsPasser } from "../../../../../vendor/getto-example/Application/mock"
+import { MockAction, MockPropsPasser } from "../../../../vendor/getto-example/Application/mock"
 
 import { MenuComponent, MenuComponentState } from "./component"
 
@@ -19,7 +19,7 @@ export function initMockMenuComponent(passer: MenuMockPropsPasser): MenuComponen
     return new Component(passer)
 }
 
-class Component extends MockComponent<MenuComponentState> implements MenuComponent {
+class Component extends MockAction<MenuComponentState> implements MenuComponent {
     constructor(passer: MenuMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {

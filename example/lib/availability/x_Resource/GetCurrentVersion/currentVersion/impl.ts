@@ -1,4 +1,4 @@
-import { ApplicationBaseComponent } from "../../../../vendor/getto-example/Application/impl"
+import { ApplicationBaseAction } from "../../../../common/vendor/getto-example/Application/impl"
 
 import {
     CurrentVersionMaterial,
@@ -10,7 +10,7 @@ import {
 export const initCurrentVersionComponent: CurrentVersionComponentFactory = (material) =>
     new Component(material)
 
-class Component extends ApplicationBaseComponent<CurrentVersionComponentState> implements CurrentVersionComponent {
+class Component extends ApplicationBaseAction<CurrentVersionComponentState> implements CurrentVersionComponent {
     material: CurrentVersionMaterial
 
     constructor(material: CurrentVersionMaterial) {

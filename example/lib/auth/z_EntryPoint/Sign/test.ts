@@ -12,7 +12,7 @@ import { initAuthSignPasswordLoginResource } from "./resources/Password/Login/im
 import { initPasswordResetSessionResource } from "../../x_Resource/sign/PasswordResetSession/impl"
 import { initPasswordResetResource } from "./resources/Password/Reset/Register/impl"
 
-import { initFormAction } from "../../../vendor/getto-form/main/form"
+import { initFormAction } from "../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../common/field/password/main/password"
 

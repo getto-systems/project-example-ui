@@ -1,4 +1,4 @@
-import { ApplicationBaseComponent } from "../../../vendor/getto-example/Application/impl"
+import { ApplicationBaseAction } from "../../../common/vendor/getto-example/Application/impl"
 
 import {
     AuthSignView,
@@ -32,7 +32,7 @@ function detectViewState(currentURL: URL): AuthSignViewType {
     return "password-login"
 }
 
-export class View extends ApplicationBaseComponent<AuthSignViewState> implements AuthSignView {
+export class View extends ApplicationBaseAction<AuthSignViewState> implements AuthSignView {
     locationInfo: AuthSignViewLocationInfo
     components: AuthSignResourceFactory
 

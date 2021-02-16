@@ -1,4 +1,4 @@
-import { MockComponent, MockPropsPasser } from "../../../../vendor/getto-example/Application/mock"
+import { MockAction, MockPropsPasser } from "../../../../common/vendor/getto-example/Application/mock"
 
 import { CurrentVersionComponent, CurrentVersionComponentState } from "./component"
 
@@ -15,7 +15,7 @@ export function initMockCurrentVersionComponent(
 }
 
 class CurrentVersionMockComponent
-    extends MockComponent<CurrentVersionComponentState>
+    extends MockAction<CurrentVersionComponentState>
     implements CurrentVersionComponent {
     constructor(passer: CurrentVersionMockPropsPasser) {
         super()

@@ -3,7 +3,7 @@ import { useEffect } from "preact/hooks"
 
 import { AuthProfileLogout } from "./Logout"
 
-import { initMockPropsPasser } from "../../../vendor/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
 import {
     AuthProfileLogoutResourceMockProps,
     initMockAuthProfileLogoutResource,
@@ -31,14 +31,16 @@ const Template: Story<MockProps> = (args) => {
         return h(AuthProfileLogout, resource)
     }
 }
-
-interface Story<T> {
-    args?: T
-    (args: T): VNode
+function bind(props: MockProps) {
+    const template = Template.bind({})
+    template.args = props
+    return template
 }
 
-export const Failed = Template.bind({})
-Failed.args = {
-    type: "failed",
-    err: "logout error",
+export const Initial = bind({ type: "initial-clear-authCredential" })
+export const Failed = bind({ type: "failed-clear-authCredential", err: "logout error" })
+
+interface Story<P> {
+    args?: P
+    (args: P): VNode
 }

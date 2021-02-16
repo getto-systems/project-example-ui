@@ -1,11 +1,10 @@
-import { ClearAuthCredentialComponentState } from "../../../../sign/x_Component/AuthCredential/Clear/component"
+import { ClearAuthCredentialActionState } from "../../../../sign/x_Action/AuthCredential/Clear/action"
 
-import { initAuthProfileLogoutResource } from "./impl"
 import { markAuthAt, markTicketNonce } from "../../../../sign/authCredential/common/data"
 import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../common/apiCredential/data"
 import { initMemoryAuthCredentialRepository } from "../../../../sign/authCredential/common/infra/repository/authCredential/memory"
-import { initClearAuthCredentialAction } from "../../../../sign/authCredential/clear/impl"
+import { initClearAuthCredentialAction } from "../../../../sign/x_Action/AuthCredential/Clear/impl"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -18,8 +17,8 @@ describe("AuthProfileLogout", () => {
 
         resource.clear.submit()
 
-        function stateHandler(): Post<ClearAuthCredentialComponentState> {
-            const stack: ClearAuthCredentialComponentState[] = []
+        function stateHandler(): Post<ClearAuthCredentialActionState> {
+            const stack: ClearAuthCredentialActionState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -48,9 +47,9 @@ describe("AuthProfileLogout", () => {
 function standardResource() {
     const repository = standardRepository()
 
-    const resource = initAuthProfileLogoutResource({
-        clear: initClearAuthCredentialAction(repository),
-    })
+    const resource = {
+        clear: initClearAuthCredentialAction({ clear: repository }),
+    }
 
     return { repository, resource }
 }

@@ -1,7 +1,7 @@
-import { MockPropsPasser } from "../../../../vendor/getto-example/Application/mock"
+import { MockPropsPasser } from "../../../../common/vendor/getto-example/Application/mock"
 
-import { initMockPasswordResetSessionFormComponent, PasswordResetSessionFormMockProps } from "../../../sign/x_Component/Password/Reset/Session/Form/mock"
-import { initMockStartComponent, StartMockProps } from "../../../sign/x_Component/Password/Reset/Session/Start/mock"
+import { initMockPasswordResetSessionFormComponent, PasswordResetSessionFormMockProps } from "../../../sign/x_Action/Password/Reset/Session/Form/mock"
+import { initMockStartComponent, StartMockProps } from "../../../sign/x_Action/Password/Reset/Session/Start/mock"
 
 import { PasswordResetSessionResource } from "./resource"
 

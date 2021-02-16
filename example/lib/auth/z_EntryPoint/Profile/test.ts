@@ -1,4 +1,8 @@
-import { initOutlineBreadcrumbListAction, initOutlineMenuAction, initOutlineActionLocationInfo } from "../../permission/outline/load/impl"
+import {
+    initOutlineBreadcrumbListAction,
+    initOutlineMenuAction,
+    initOutlineActionLocationInfo,
+} from "../../permission/outline/load/impl"
 
 import { initStaticClock } from "../../../z_infra/clock/simulate"
 import { initMemoryTypedStorage } from "../../../z_infra/storage/memory"
@@ -19,10 +23,10 @@ import { ProfileFactory } from "./entryPoint"
 import { markAuthAt, markTicketNonce } from "../../sign/authCredential/common/data"
 import { initMemoryApiCredentialRepository } from "../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../common/apiCredential/data"
-import { initClearAuthCredentialAction } from "../../sign/authCredential/clear/impl"
 import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/authCredential/memory"
 import { initNotifyUnexpectedErrorSimulateRemoteAccess } from "../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/simulate"
 import { initUnexpectedErrorAction } from "../../../availability/unexpectedError/impl"
+import { initClearAuthCredentialAction } from "../../sign/x_Action/AuthCredential/Clear/impl"
 
 const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
@@ -52,7 +56,6 @@ function standardResource() {
             error: initUnexpectedErrorAction({
                 notify: initNotifyUnexpectedErrorSimulateRemoteAccess(),
             }),
-            clear: initClearAuthCredentialAction(repository),
             breadcrumbList: initOutlineBreadcrumbListAction(locationInfo, { menuTree }),
             menu: initOutlineMenuAction(locationInfo, {
                 ...repository,
@@ -67,7 +70,9 @@ function standardResource() {
         },
     }
 
-    return initAuthProfileResource(factory)
+    return initAuthProfileResource(factory, {
+        clear: initClearAuthCredentialAction({ clear: repository }),
+    })
 }
 
 function standardVersion(): string {
@@ -101,9 +106,12 @@ function standardRepository() {
 
 function standardRemoteAccess() {
     return {
-        loadMenuBadge: initLoadOutlineMenuBadgeSimulateRemoteAccess(() => ({ success: true, value: {} }), {
-            wait_millisecond: 0,
-        }),
+        loadMenuBadge: initLoadOutlineMenuBadgeSimulateRemoteAccess(
+            () => ({ success: true, value: {} }),
+            {
+                wait_millisecond: 0,
+            }
+        ),
     }
 }
 

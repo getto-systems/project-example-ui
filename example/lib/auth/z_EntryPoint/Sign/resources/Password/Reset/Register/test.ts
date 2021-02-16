@@ -4,7 +4,7 @@ import { initStaticClock, StaticClock } from "../../../../../../../z_infra/clock
 import { initRenewAuthCredentialSimulateRemoteAccess } from "../../../../../../sign/authCredential/common/infra/remote/renewAuthCredential/simulate"
 import { initSubmitPasswordResetResetSimulateRemoteAccess } from "../../../../../../sign/password/resetSession/register/infra/remote/submitPasswordResetRegister/simulate"
 
-import { initFormAction } from "../../../../../../../vendor/getto-form/main/form"
+import { initFormAction } from "../../../../../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../../../common/field/password/main/password"
 
@@ -16,10 +16,10 @@ import {
 
 import { AuthSignPasswordResetResource } from "./resource"
 
-import { PasswordResetRegisterComponentState } from "../../../../../../sign/x_Component/Password/Reset/Register/Reset/component"
+import { PasswordResetRegisterComponentState } from "../../../../../../sign/x_Action/Password/Reset/Register/Reset/component"
 
 import { markSecureScriptPath } from "../../../../../../sign/secureScriptPath/get/data"
-import { markInputString, toValidationError } from "../../../../../../../vendor/getto-form/form/data"
+import { markInputString, toValidationError } from "../../../../../../../common/vendor/getto-form/form/data"
 import { markAuthAt, markTicketNonce } from "../../../../../../sign/authCredential/common/data"
 import { initMemoryApiCredentialRepository } from "../../../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
@@ -43,9 +43,9 @@ import {
 } from "../../../../../../sign/password/resetSession/register/impl"
 import { delayed } from "../../../../../../../z_infra/delayed/core"
 import {
-    initAsyncComponentStateTester,
-    initSyncComponentTestChecker,
-} from "../../../../../../../vendor/getto-example/Application/testHelper"
+    initAsyncActionTester,
+    initSyncActionChecker,
+} from "../../../../../../../common/vendor/getto-example/Application/testHelper"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -201,7 +201,7 @@ describe("PasswordReset", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -240,7 +240,7 @@ describe("PasswordReset", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "initial",
@@ -289,7 +289,7 @@ describe("PasswordReset", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -351,11 +351,11 @@ describe("PasswordReset", () => {
             function initChecker() {
                 const result = { loginID: false, password: false }
                 return {
-                    main: initSyncComponentTestChecker(() => {
+                    main: initSyncActionChecker(() => {
                         expect(result).toEqual({ loginID: true, password: true })
                         done()
                     }),
-                    loginID: initSyncComponentTestChecker((stack) => {
+                    loginID: initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             { value: "loginID-a" },
                             { value: "loginID-b" },
@@ -364,7 +364,7 @@ describe("PasswordReset", () => {
                         ])
                         result.loginID = true
                     }),
-                    password: initSyncComponentTestChecker((stack) => {
+                    password: initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             { value: "password-a" },
                             { value: "" },
@@ -389,7 +389,7 @@ describe("PasswordReset", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([])
                     done()
                 })
@@ -409,7 +409,7 @@ describe("PasswordReset", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncComponentTestChecker((stack) => {
+                return initSyncActionChecker((stack) => {
                     expect(stack).toEqual([])
                     done()
                 })
@@ -430,7 +430,7 @@ describe("PasswordReset", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([{ result: toValidationError(["empty"]) }])
                         done()
                     })
@@ -450,7 +450,7 @@ describe("PasswordReset", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["empty"]),
@@ -474,7 +474,7 @@ describe("PasswordReset", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["too-long"]),
@@ -499,7 +499,7 @@ describe("PasswordReset", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["too-long"]),
@@ -523,7 +523,7 @@ describe("PasswordReset", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -548,7 +548,7 @@ describe("PasswordReset", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -574,7 +574,7 @@ describe("PasswordReset", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncComponentTestChecker((stack) => {
+                    return initSyncActionChecker((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -803,7 +803,7 @@ function expectToEmptyLastLogin(authCredentials: AuthCredentialRepository) {
 }
 
 function initAsyncTester() {
-    return initAsyncComponentStateTester((state: PasswordResetRegisterComponentState) => {
+    return initAsyncActionTester((state: PasswordResetRegisterComponentState) => {
         switch (state.type) {
             case "initial-reset":
                 return false

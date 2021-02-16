@@ -1,11 +1,11 @@
 import {
     WorkerProxyMethodMessage,
     WorkerProxyMethodResponse,
-} from "../../../../../../vendor/getto-worker/main/message"
+} from "../../../../../../common/vendor/getto-worker/main/message"
 
 import { AuthenticatePasswordEvent } from "../../event"
 
-import { FormConvertResult } from "../../../../../../vendor/getto-form/form/data"
+import { FormConvertResult } from "../../../../../../common/vendor/getto-form/form/data"
 import { PasswordLoginFields } from "../../data"
 
 export type PasswordLoginActionProxyMessage = WorkerProxyMethodMessage<

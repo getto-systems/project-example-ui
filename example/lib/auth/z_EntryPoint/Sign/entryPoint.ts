@@ -3,7 +3,7 @@ import { AuthSignPasswordLoginResource } from "./resources/Password/Login/resour
 import { AuthSignPasswordResetResource } from "./resources/Password/Reset/Register/resource"
 import { PasswordResetSessionResource } from "../../x_Resource/sign/PasswordResetSession/resource"
 
-import { ApplicationComponent } from "../../../vendor/getto-example/Application/component"
+import { ApplicationAction } from "../../../common/vendor/getto-example/Application/action"
 import { AuthSignLinkResource } from "./resources/Link/resource"
 
 export type AuthSignEntryPoint = Readonly<{
@@ -32,7 +32,7 @@ export interface AuthSignViewLocationInfo {
     getAuthSignViewType(): AuthSignViewType
 }
 
-export interface AuthSignView extends ApplicationComponent<AuthSignViewState> {
+export interface AuthSignView extends ApplicationAction<AuthSignViewState> {
     load(): void
 }
 

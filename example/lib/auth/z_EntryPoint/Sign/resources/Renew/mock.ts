@@ -1,9 +1,9 @@
-import { MockPropsPasser } from "../../../../../vendor/getto-example/Application/mock"
+import { MockPropsPasser } from "../../../../../common/vendor/getto-example/Application/mock"
 
 import {
     initMockRenewAuthCredentialComponent,
     RenewMockProps,
-} from "../../../../sign/x_Component/AuthCredential/Renew/mock"
+} from "../../../../sign/x_Action/AuthCredential/Renew/mock"
 
 import { AuthSignRenewResource } from "./resource"
 

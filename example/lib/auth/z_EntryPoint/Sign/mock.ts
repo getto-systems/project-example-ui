@@ -1,4 +1,4 @@
-import { MockComponent, MockPropsPasser } from "../../../vendor/getto-example/Application/mock"
+import { MockAction, MockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
 
 import {
     initMockAuthSignRenewResource,
@@ -78,7 +78,7 @@ export function initMockLoginEntryPointAsError(passer: LoginErrorMockPropsPasser
 export type LoginErrorMockPropsPasser = MockPropsPasser<LoginErrorMockProps>
 export type LoginErrorMockProps = Readonly<{ error: string }>
 
-class MockErrorView extends MockComponent<AuthSignViewState> implements AuthSignView {
+class MockErrorView extends MockAction<AuthSignViewState> implements AuthSignView {
     constructor(passer: LoginErrorMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {

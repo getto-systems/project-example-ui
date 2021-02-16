@@ -7,7 +7,7 @@ import { Clock } from "../../../../../z_infra/clock/infra"
 
 import { AuthSignRenewResource } from "./resource"
 
-import { RenewAuthCredentialComponentState } from "../../../../sign/x_Component/AuthCredential/Renew/component"
+import { RenewAuthCredentialComponentState } from "../../../../sign/x_Action/AuthCredential/Renew/component"
 
 import { markSecureScriptPath } from "../../../../sign/secureScriptPath/get/data"
 import { markAuthAt, markTicketNonce } from "../../../../sign/authCredential/common/data"

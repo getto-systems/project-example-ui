@@ -2,7 +2,7 @@ import { newPasswordLoginActionPod } from "../core"
 
 import { submitEventHasDone } from "../../impl"
 
-import { WorkerBackgroundHandler } from "../../../../../../vendor/getto-worker/main/background"
+import { WorkerBackgroundHandler } from "../../../../../../common/vendor/getto-worker/main/background"
 
 import { PasswordLoginActionProxyMessage, PasswordLoginActionProxyResponse } from "./message"
 

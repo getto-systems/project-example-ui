@@ -1,7 +1,7 @@
-import { PasswordResetSessionStartComponent } from "../../../sign/x_Component/Password/Reset/Session/Start/component"
-import { PasswordResetSessionFormComponent } from "../../../sign/x_Component/Password/Reset/Session/Form/component"
+import { PasswordResetSessionStartComponent } from "../../../sign/x_Action/Password/Reset/Session/Start/component"
+import { PasswordResetSessionFormComponent } from "../../../sign/x_Action/Password/Reset/Session/Form/component"
 
-import { FormAction } from "../../../../vendor/getto-form/form/action"
+import { FormAction } from "../../../../common/vendor/getto-form/form/action"
 import { LoginIDFormFieldAction } from "../../../common/field/loginID/action"
 import { PasswordResetSessionActionPod } from "../../../sign/password/resetSession/start/action"
 

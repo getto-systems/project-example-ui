@@ -6,7 +6,7 @@ import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { v_medium } from "../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useComponent, useTermination } from "../../common/hooks"
+import { useAction, useTermination } from "../../common/hooks"
 import { siteInfo } from "../../common/site"
 import { spinner } from "../../common/icon"
 
@@ -16,14 +16,14 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { RenewCredentialEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialRenewAuthCredentialComponentState } from "../../../auth/sign/x_Component/AuthCredential/Renew/component"
+import { initialRenewAuthCredentialComponentState } from "../../../auth/sign/x_Action/AuthCredential/Renew/component"
 
 import { RequestRenewAuthCredentialError } from "../../../auth/sign/authCredential/renew/data"
 
 export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoint): VNode {
     useTermination(terminate)
 
-    const state = useComponent(resource.renew, initialRenewAuthCredentialComponentState)
+    const state = useAction(resource.renew, initialRenewAuthCredentialComponentState)
     useEffect(() => {
         resource.renew.request()
     }, [])
