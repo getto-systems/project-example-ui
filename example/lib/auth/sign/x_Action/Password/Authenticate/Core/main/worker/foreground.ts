@@ -1,8 +1,8 @@
 import { newAuthenticatePasswordAction_merge } from "../core"
 
-import { AuthenticatePasswordEvent } from "../../../../../../password/authenticate/event"
-
 import { AuthenticatePasswordAction } from "../../action"
+
+import { AuthenticatePasswordEvent } from "../../../../../../password/authenticate/event"
 
 import {
     WorkerForegroundProxyAction,
@@ -17,36 +17,37 @@ import {
 } from "./message"
 
 export function newAuthenticatePasswordActionProxy(
+    webStorage: Storage,
     post: Post<AuthenticatePasswordProxyMessage>
 ): AuthenticatePasswordActionProxy {
-    return new Proxy(post)
+    return new Proxy(webStorage, post)
 }
-export interface AuthenticatePasswordActionProxy
-    extends WorkerForegroundProxyAction<
-        AuthenticatePasswordProxyMessage,
-        AuthenticatePasswordProxyResponse
-    > {
-    action(webStorage: Storage): AuthenticatePasswordAction
-}
+export type AuthenticatePasswordActionProxy = WorkerForegroundProxyAction<
+    AuthenticatePasswordAction,
+    AuthenticatePasswordProxyMessage,
+    AuthenticatePasswordProxyResponse
+>
 
 class Proxy
     extends WorkerForegroundProxyBase<AuthenticatePasswordProxyMessage>
     implements AuthenticatePasswordActionProxy {
+    webStorage: Storage
     authenticate: WorkerForegroundProxyMethod<
         AuthenticatePasswordProxyParams,
         AuthenticatePasswordEvent
     >
 
-    constructor(post: Post<AuthenticatePasswordProxyMessage>) {
+    constructor(webStorage: Storage, post: Post<AuthenticatePasswordProxyMessage>) {
         super(post)
+        this.webStorage = webStorage
         this.authenticate = this.method((message) => ({
             method: "authenticate",
             ...message,
         }))
     }
 
-    action(webStorage: Storage): AuthenticatePasswordAction {
-        return newAuthenticatePasswordAction_merge(webStorage, {
+    action(): AuthenticatePasswordAction {
+        return newAuthenticatePasswordAction_merge(this.webStorage, {
             authenticate: (fields, post) => this.authenticate.call({ fields }, post),
         })
     }

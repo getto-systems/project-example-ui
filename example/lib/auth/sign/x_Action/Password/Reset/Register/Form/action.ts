@@ -14,12 +14,12 @@ import {
 import { PasswordResetFields } from "../../../../../password/resetSession/register/data"
 import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
 
-export interface PasswordResetRegisterFormComponent extends FormContainerComponent {
+export interface RegisterPasswordResetSessionFormAction extends FormContainerComponent {
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
     getResetFields(): FormConvertResult<PasswordResetFields>
 }
 
-export type PasswordResetRegisterFormMaterial = FormContainerMaterial &
+export type RegisterPasswordResetSessionFormMaterial = FormContainerMaterial &
     LoginIDFormFieldMaterial &
     PasswordFormFieldMaterial

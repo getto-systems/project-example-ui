@@ -24,15 +24,15 @@ import { PasswordFormField } from "./field/password"
 
 import { PasswordResetEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialPasswordResetRegisterComponentState } from "../../../auth/sign/x_Action/Password/Reset/Register/Reset/component"
+import { initialRegisterPasswordResetSessionActionState } from "../../../auth/sign/x_Action/Password/Reset/Register/Core/action"
 import { initialFormContainerComponentState } from "../../../common/vendor/getto-form/x_Resource/Form/component"
 
-import { SubmitPasswordResetRegisterError } from "../../../auth/sign/password/resetSession/register/data"
+import { RegisterPasswordResetSessionError } from "../../../auth/sign/password/resetSession/register/data"
 
 export function PasswordReset({ resource, terminate }: PasswordResetEntryPoint): VNode {
     useTermination(terminate)
 
-    const state = useAction(resource.register, initialPasswordResetRegisterComponentState)
+    const state = useAction(resource.register, initialRegisterPasswordResetSessionActionState)
     const formState = useAction(resource.form, initialFormContainerComponentState)
 
     useEffect(() => {
@@ -71,9 +71,6 @@ export function PasswordReset({ resource, terminate }: PasswordResetEntryPoint):
         case "storage-error":
         case "load-error":
             return h(ApplicationError, { err: state.err.err })
-
-        case "error":
-            return h(ApplicationError, { err: state.err })
     }
 
     type ResetFormState = "reset" | "connecting"
@@ -169,7 +166,7 @@ export function PasswordReset({ resource, terminate }: PasswordResetEntryPoint):
     }
 }
 
-function resetError(err: SubmitPasswordResetRegisterError): VNodeContent[] {
+function resetError(err: RegisterPasswordResetSessionError): VNodeContent[] {
     switch (err.type) {
         case "validation-error":
             return ["正しく入力してください"]

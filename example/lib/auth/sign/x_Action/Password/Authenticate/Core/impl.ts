@@ -2,7 +2,7 @@ import { ApplicationBaseAction } from "../../../../../../common/vendor/getto-exa
 
 import { startContinuousRenewAuthnInfo } from "../../../../authnInfo/startContinuousRenew/impl"
 import { getSecureScriptPath } from "../../../../secureScriptPath/get/impl"
-import { GetSecureScriptPathLocationInfo } from "../../../../secureScriptPath/get/action"
+import { GetSecureScriptPathLocationInfo } from "../../../../secureScriptPath/get/method"
 import { authenticatePassword } from "../../../../password/authenticate/impl"
 
 import { AuthenticatePasswordInfra } from "../../../../password/authenticate/infra"
@@ -22,14 +22,14 @@ import { LoadSecureScriptError } from "../../../../secureScriptPath/get/data"
 import { AuthenticatePasswordFields } from "../../../../password/authenticate/data"
 import { AuthnInfo } from "../../../../authnInfo/common/data"
 
-export type AuthenticatePasswordActionInfra = AuthenticatePasswordActionForegroundInfra &
-    AuthenticatePasswordActionBackgroundInfra
+export type AuthenticatePasswordActionInfra = AuthenticatePasswordForegroundInfra &
+    AuthenticatePasswordBackgroundInfra
 
-export type AuthenticatePasswordActionForegroundInfra = Readonly<{
+export type AuthenticatePasswordForegroundInfra = Readonly<{
     startContinuousRenew: StartContinuousRenewAuthnInfoInfra
     getSecureScriptPath: GetSecureScriptPathInfra
 }>
-export type AuthenticatePasswordActionBackgroundInfra = Readonly<{
+export type AuthenticatePasswordBackgroundInfra = Readonly<{
     authenticate: AuthenticatePasswordInfra
 }>
 
@@ -44,7 +44,7 @@ export function initAuthenticatePasswordAction(
     )
 }
 export function initAuthenticatePasswordAction_merge(
-    infra: AuthenticatePasswordActionForegroundInfra,
+    infra: AuthenticatePasswordForegroundInfra,
     locationInfo: GetSecureScriptPathLocationInfo,
     background: AuthenticatePasswordBackgroundMaterial
 ): AuthenticatePasswordAction {
@@ -54,7 +54,7 @@ export function initAuthenticatePasswordAction_merge(
     })
 }
 function initAuthenticatePasswordForegroundMaterial(
-    infra: AuthenticatePasswordActionForegroundInfra,
+    infra: AuthenticatePasswordForegroundInfra,
     locationInfo: GetSecureScriptPathLocationInfo
 ): AuthenticatePasswordForegroundMaterial {
     return {
@@ -63,7 +63,7 @@ function initAuthenticatePasswordForegroundMaterial(
     }
 }
 export function initAuthenticatePasswordBackgroundMaterial(
-    infra: AuthenticatePasswordActionBackgroundInfra
+    infra: AuthenticatePasswordBackgroundInfra
 ): AuthenticatePasswordBackgroundMaterial {
     return {
         authenticate: authenticatePassword(infra.authenticate),

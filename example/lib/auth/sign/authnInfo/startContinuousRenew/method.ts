@@ -4,11 +4,6 @@ import {
     StartContinuousRenewAuthnInfoEvent,
 } from "./event"
 
-export type StartContinuousRenewAuthnInfoAction_legacy = Readonly<{
-    start: StartContinuousRenewAuthnInfoMethod
-    forceStart: ForceStartContinuousRenewAuthnInfoMethod
-}>
-
 export interface StartContinuousRenewAuthnInfoMethod {
     (authnInfo: AuthnInfo, post: Post<StartContinuousRenewAuthnInfoEvent>): void
 }

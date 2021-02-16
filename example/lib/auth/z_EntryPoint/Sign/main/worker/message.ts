@@ -3,13 +3,13 @@ import {
     PasswordResetSessionActionProxyResponse,
 } from "../../../../sign/password/resetSession/start/main/worker/message"
 import {
-    PasswordResetRegisterActionProxyMessage,
-    PasswordResetRegisterActionProxyResponse,
-} from "../../../../sign/password/resetSession/register/main/worker/message"
-import {
     AuthSignPasswordAuthenticateProxyMessage,
     AuthSignPasswordAuthenticateProxyResponse,
 } from "../../resources/Password/Authenticate/main/worker/message"
+import {
+    AuthSignPasswordResetSessionRegisterProxyMessage,
+    AuthSignPasswordResetSessionRegisterProxyResponse,
+} from "../../resources/Password/ResetSession/Register/main/worker/message"
 
 export type ForegroundMessage =
     | Readonly<{
@@ -18,8 +18,8 @@ export type ForegroundMessage =
       }>
     | Readonly<{ type: "reset-session"; message: PasswordResetSessionActionProxyMessage }>
     | Readonly<{
-          type: "reset-register"
-          message: PasswordResetRegisterActionProxyMessage
+          type: "password-resetSession-register"
+          message: AuthSignPasswordResetSessionRegisterProxyMessage
       }>
 
 export type BackgroundMessage =
@@ -32,7 +32,7 @@ export type BackgroundMessage =
           response: PasswordResetSessionActionProxyResponse
       }>
     | Readonly<{
-          type: "reset-register"
-          response: PasswordResetRegisterActionProxyResponse
+          type: "password-resetSession-register"
+          response: AuthSignPasswordResetSessionRegisterProxyResponse
       }>
     | Readonly<{ type: "error"; err: string }>

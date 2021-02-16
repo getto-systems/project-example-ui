@@ -1,8 +1,6 @@
-import { initPasswordResetResource } from "./impl"
-
 import { newStaticClock, StaticClock } from "../../../../../../../z_infra/clock/simulate"
 import { initRenewAuthnInfoSimulateRemoteAccess } from "../../../../../../sign/authnInfo/common/infra/remote/renew/simulate"
-import { initSubmitPasswordResetResetSimulateRemoteAccess } from "../../../../../../sign/password/resetSession/register/infra/remote/submitPasswordResetRegister/simulate"
+import { initRegisterPasswordResetSessionSimulateRemoteAccess } from "../../../../../../sign/password/resetSession/register/infra/remote/register/simulate"
 
 import { initFormAction } from "../../../../../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../../../common/field/loginID/main/loginID"
@@ -10,13 +8,13 @@ import { initPasswordFormFieldAction } from "../../../../../../common/field/pass
 
 import { Clock } from "../../../../../../../z_infra/clock/infra"
 import {
-    SubmitPasswordResetRegisterRemoteAccess,
-    SubmitPasswordResetRegisterRemoteAccessResult,
+    RegisterPasswordResetSessionRemoteAccess,
+    RegisterPasswordResetSessionRemoteAccessResult,
 } from "../../../../../../sign/password/resetSession/register/infra"
 
-import { AuthSignPasswordResetResource } from "./resource"
+import { AuthSignPasswordResetSessionRegisterResource } from "./resource"
 
-import { PasswordResetRegisterComponentState } from "../../../../../../sign/x_Action/Password/Reset/Register/Reset/component"
+import { RegisterPasswordResetSessionActionState } from "../../../../../../sign/x_Action/Password/Reset/Register/Core/action"
 
 import { markSecureScriptPath } from "../../../../../../sign/secureScriptPath/get/data"
 import {
@@ -35,23 +33,19 @@ import {
     RenewAuthnInfoRemoteAccess,
     RenewAuthnInfoRemoteAccessResult,
 } from "../../../../../../sign/authnInfo/common/infra"
-import { initStartContinuousRenewAuthnInfoAction_legacy } from "../../../../../../sign/authnInfo/startContinuousRenew/impl"
 import { initMemoryAuthnInfoRepository } from "../../../../../../sign/authnInfo/common/infra/repository/authnInfo/memory"
+import { initGetSecureScriptPathLocationInfo } from "../../../../../../sign/secureScriptPath/get/impl"
 import {
-    initGetSecureScriptPathAction_legacy,
-    initGetSecureScriptPathLocationInfo,
-} from "../../../../../../sign/secureScriptPath/get/impl"
-import {
-    initPasswordResetRegisterAction,
-    initPasswordResetRegisterActionLocationInfo,
-    initPasswordResetRegisterActionPod,
-    submitPasswordResetRegisterEventHasDone,
+    initRegisterPasswordResetSessionLocationInfo,
+    registerPasswordResetSessionEventHasDone,
 } from "../../../../../../sign/password/resetSession/register/impl"
 import { delayed } from "../../../../../../../z_infra/delayed/core"
 import {
     initAsyncActionTester,
     initSyncActionChecker,
 } from "../../../../../../../common/vendor/getto-example/Application/testHelper"
+import { initRegisterPasswordResetSessionAction } from "../../../../../../sign/x_Action/Password/Reset/Register/Core/impl"
+import { initRegisterPasswordResetSessionFormAction } from "../../../../../../sign/x_Action/Password/Reset/Register/Form/impl"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -661,7 +655,7 @@ type PasswordResetTestRepository = Readonly<{
     authnInfos: AuthnInfoRepository
 }>
 type PasswordResetTestRemoteAccess = Readonly<{
-    register: SubmitPasswordResetRegisterRemoteAccess
+    register: RegisterPasswordResetSessionRemoteAccess
     renew: RenewAuthnInfoRemoteAccess
 }>
 
@@ -670,33 +664,33 @@ function newPasswordResetTestResource(
     repository: PasswordResetTestRepository,
     remote: PasswordResetTestRemoteAccess,
     clock: Clock
-): AuthSignPasswordResetResource {
+): AuthSignPasswordResetSessionRegisterResource {
     const config = standardConfig()
-    return initPasswordResetResource({
-        register: {
-            continuousRenew: initStartContinuousRenewAuthnInfoAction_legacy({
-                ...repository,
-                ...remote,
-                config: config.continuousRenew,
-                clock,
-            }),
-            location: initGetSecureScriptPathAction_legacy(
-                {
+    return {
+        register: initRegisterPasswordResetSessionAction(
+            {
+                startContinuousRenew: {
+                    ...repository,
+                    ...remote,
+                    config: config.continuousRenew,
+                    clock,
+                },
+                getSecureScriptPath: {
                     config: config.location,
                 },
-                initGetSecureScriptPathLocationInfo(currentURL)
-            ),
-            register: initPasswordResetRegisterAction(
-                initPasswordResetRegisterActionPod({
+                register: {
                     ...remote,
                     config: config.reset,
                     delayed,
-                }),
-                initPasswordResetRegisterActionLocationInfo(currentURL)
-            ),
-        },
-        form: formMaterial(),
-    })
+                },
+            },
+            {
+                ...initGetSecureScriptPathLocationInfo(currentURL),
+                ...initRegisterPasswordResetSessionLocationInfo(currentURL),
+            }
+        ),
+        form: initRegisterPasswordResetSessionFormAction(formMaterial()),
+    }
 
     function formMaterial() {
         const form = initFormAction()
@@ -750,7 +744,7 @@ function standardRepository() {
 }
 function standardRemoteAccess(): PasswordResetTestRemoteAccess {
     return {
-        register: initSubmitPasswordResetResetSimulateRemoteAccess(simulateReset, {
+        register: initRegisterPasswordResetSessionSimulateRemoteAccess(simulateReset, {
             wait_millisecond: 0,
         }),
         renew: renewRemoteAccess(),
@@ -758,14 +752,14 @@ function standardRemoteAccess(): PasswordResetTestRemoteAccess {
 }
 function waitRemoteAccess(): PasswordResetTestRemoteAccess {
     return {
-        register: initSubmitPasswordResetResetSimulateRemoteAccess(simulateReset, {
+        register: initRegisterPasswordResetSessionSimulateRemoteAccess(simulateReset, {
             wait_millisecond: 3,
         }),
         renew: renewRemoteAccess(),
     }
 }
 
-function simulateReset(): SubmitPasswordResetRegisterRemoteAccessResult {
+function simulateReset(): RegisterPasswordResetSessionRemoteAccessResult {
     return {
         success: true,
         value: {
@@ -840,7 +834,7 @@ function expectToEmptyLastAuth(authnInfos: AuthnInfoRepository) {
 }
 
 function initAsyncTester() {
-    return initAsyncActionTester((state: PasswordResetRegisterComponentState) => {
+    return initAsyncActionTester((state: RegisterPasswordResetSessionActionState) => {
         switch (state.type) {
             case "initial-reset":
                 return false
@@ -848,11 +842,10 @@ function initAsyncTester() {
             case "try-to-load":
             case "storage-error":
             case "load-error":
-            case "error":
                 return true
 
             default:
-                return submitPasswordResetRegisterEventHasDone(state)
+                return registerPasswordResetSessionEventHasDone(state)
         }
     })
 }

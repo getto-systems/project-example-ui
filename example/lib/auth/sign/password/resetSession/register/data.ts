@@ -11,12 +11,12 @@ export type PasswordResetFields = Readonly<{
     password: Password
 }>
 
-export type SubmitPasswordResetRegisterError =
+export type RegisterPasswordResetSessionError =
     | Readonly<{ type: "validation-error" }>
     | Readonly<{ type: "empty-reset-token" }>
-    | SubmitPasswordResetRegisterRemoteError
+    | RegisterPasswordResetSessionRemoteError
 
-export type SubmitPasswordResetRegisterRemoteError =
+export type RegisterPasswordResetSessionRemoteError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "invalid-password-reset" }>
     | Readonly<{ type: "server-error" }>

@@ -13,9 +13,9 @@ import {
     PasswordResetSessionResourceMockPropsPasser,
 } from "../../x_Resource/sign/PasswordResetSession/mock"
 import {
-    initMockPasswordResetResource,
-    PasswordResetResourceMockPropsPasser,
-} from "./resources/Password/Reset/Register/mock"
+    initMockAuthSignPasswordResetSessionRegister,
+    AuthSignPasswordResetSessionRegisterMockPropsPasser,
+} from "./resources/Password/ResetSession/Register/mock"
 
 import {
     AuthSignEntryPoint,
@@ -48,9 +48,9 @@ export function initMockPasswordResetSessionEntryPoint(
 }
 
 export function initMockPasswordResetEntryPoint(
-    passer: PasswordResetResourceMockPropsPasser
+    passer: AuthSignPasswordResetSessionRegisterMockPropsPasser
 ): PasswordResetEntryPoint {
-    return initEntryPoint(initMockPasswordResetResource(passer))
+    return initEntryPoint(initMockAuthSignPasswordResetSessionRegister(passer))
 }
 
 type EntryPoint<R> = Readonly<{

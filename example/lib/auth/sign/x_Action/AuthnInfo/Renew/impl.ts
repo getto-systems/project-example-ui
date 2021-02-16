@@ -16,7 +16,8 @@ import {
     RenewAuthnInfoAction,
     RenewAuthnInfoActionState,
 } from "./action"
-import { GetSecureScriptPathLocationInfo } from "../../../secureScriptPath/get/action"
+
+import { GetSecureScriptPathLocationInfo } from "../../../secureScriptPath/get/method"
 
 import { AuthnInfo } from "../../../authnInfo/common/data"
 import { LoadSecureScriptError } from "../../../secureScriptPath/get/data"

@@ -1,22 +1,10 @@
 import {
-    StartContinuousRenewAuthnInfoActionInfra,
     ForceStartContinuousRenewAuthnInfo,
     StartContinuousRenewAuthnInfo,
     StartContinuousRenewAuthnInfoInfra,
 } from "./infra"
 
-import { StartContinuousRenewAuthnInfoAction_legacy } from "./action"
-
 import { hasExpired } from "../common/data"
-
-export function initStartContinuousRenewAuthnInfoAction_legacy(
-    infra: StartContinuousRenewAuthnInfoActionInfra
-): StartContinuousRenewAuthnInfoAction_legacy {
-    return {
-        start: startContinuousRenewAuthnInfo(infra),
-        forceStart: forceStartContinuousRenewAuthnInfo(infra),
-    }
-}
 
 export const startContinuousRenewAuthnInfo: StartContinuousRenewAuthnInfo = (infra) => (
     authnInfo,

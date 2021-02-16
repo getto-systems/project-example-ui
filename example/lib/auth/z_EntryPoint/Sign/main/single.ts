@@ -1,9 +1,5 @@
 import { newAuthSignRenewResource } from "../resources/Renew/main"
 
-import {
-    newPasswordResetRegisterAction,
-    newPasswordResetRegisterActionPod,
-} from "../../../sign/password/resetSession/register/main/core"
 import { newContinuousRenewAuthnInfoAction_legacy } from "../../../sign/authnInfo/startContinuousRenew/main"
 import { newPasswordResetSessionActionPod } from "../../../sign/password/resetSession/start/main/core"
 import { newAuthLocationAction_legacy } from "../../../sign/secureScriptPath/get/main"
@@ -16,10 +12,10 @@ import { initLoginViewLocationInfo, View } from "../impl"
 
 import { initAuthSignLinkResource } from "../resources/Link/impl"
 import { initPasswordResetSessionResource } from "../../../x_Resource/sign/PasswordResetSession/impl"
-import { initPasswordResetResource } from "../resources/Password/Reset/Register/impl"
 
 import { AuthSignEntryPoint } from "../entryPoint"
 import { newAuthSignPasswordAuthenticateResource } from "../resources/Password/Authenticate/main/core"
+import { newAuthSignPasswordResetSessionRegisterResource } from "../resources/Password/ResetSession/Register/main/core"
 
 export function newLoginAsSingle(): AuthSignEntryPoint {
     const webStorage = localStorage
@@ -37,7 +33,6 @@ export function newLoginAsSingle(): AuthSignEntryPoint {
     }
     const background = {
         initSession: newPasswordResetSessionActionPod(),
-        initRegister: newPasswordResetRegisterActionPod(),
     }
 
     const view = new View(initLoginViewLocationInfo(currentURL), {
@@ -48,35 +43,12 @@ export function newLoginAsSingle(): AuthSignEntryPoint {
         passwordLogin: () => newAuthSignPasswordAuthenticateResource(webStorage),
         passwordResetSession: () =>
             initPasswordResetSessionResource(foreground, background),
-        passwordReset: () =>
-            initPasswordResetResource({
-                register: {
-                    continuousRenew: newContinuousRenewAuthnInfoAction_legacy(webStorage),
-                    location: newAuthLocationAction_legacy(),
-                    register: newPasswordResetRegisterAction(),
-                },
-
-                form: formMaterial(),
-            }),
+        passwordReset: () => newAuthSignPasswordResetSessionRegisterResource(webStorage),
     })
     return {
         view,
         terminate: () => {
             view.terminate()
         },
-    }
-}
-
-function formMaterial() {
-    const form = initFormAction()
-    const loginID = initLoginIDFormFieldAction()
-    const password = initPasswordFormFieldAction()
-    return {
-        validation: form.validation(),
-        history: form.history(),
-        loginID: loginID.field(),
-        password: password.field(),
-        character: password.character(),
-        viewer: password.viewer(),
     }
 }

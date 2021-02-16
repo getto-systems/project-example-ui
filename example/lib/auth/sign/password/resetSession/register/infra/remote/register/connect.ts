@@ -8,27 +8,27 @@ import {
     RemoteAccessError,
 } from "../../../../../../../../z_infra/remote/infra"
 import { markAuthAt, markAuthnNonce } from "../../../../../../authnInfo/common/data"
-import { SubmitPasswordResetRegisterRemoteError } from "../../../data"
+import { RegisterPasswordResetSessionRemoteError } from "../../../data"
 import {
-    SubmitPasswordResetRegisterRemoteAccess,
-    SubmitPasswordResetRegisterRemoteMessage,
-    SubmitPasswordResetRegisterRemoteResponse,
+    RegisterPasswordResetSessionRemoteAccess,
+    RegisterPasswordResetSessionRemoteMessage,
+    RegisterPasswordResetSessionRemoteResponse,
 } from "../../../infra"
 
-type Raw = RawRemoteAccess<SubmitPasswordResetRegisterRemoteMessage, RawAuthnInfo>
+type Raw = RawRemoteAccess<RegisterPasswordResetSessionRemoteMessage, RawAuthnInfo>
 type RawAuthnInfo = Readonly<{
     authnNonce: string
     api: Readonly<{ apiNonce: string; apiRoles: string[] }>
 }>
 
-export function initSubmitPasswordResetRegisterConnectRemoteAccess(
+export function initRegisterPasswordResetSessionConnectRemoteAccess(
     access: Raw
-): SubmitPasswordResetRegisterRemoteAccess {
+): RegisterPasswordResetSessionRemoteAccess {
     return initConnectRemoteAccess(access, {
         message: (
-            message: SubmitPasswordResetRegisterRemoteMessage
-        ): SubmitPasswordResetRegisterRemoteMessage => message,
-        value: (response: RawAuthnInfo): SubmitPasswordResetRegisterRemoteResponse => {
+            message: RegisterPasswordResetSessionRemoteMessage
+        ): RegisterPasswordResetSessionRemoteMessage => message,
+        value: (response: RawAuthnInfo): RegisterPasswordResetSessionRemoteResponse => {
             return {
                 auth: {
                     authnNonce: markAuthnNonce(response.authnNonce),
@@ -40,7 +40,7 @@ export function initSubmitPasswordResetRegisterConnectRemoteAccess(
                 },
             }
         },
-        error: (err: RemoteAccessError): SubmitPasswordResetRegisterRemoteError => {
+        error: (err: RemoteAccessError): RegisterPasswordResetSessionRemoteError => {
             switch (err.type) {
                 case "bad-request":
                 case "server-error":
@@ -53,7 +53,7 @@ export function initSubmitPasswordResetRegisterConnectRemoteAccess(
                     return { type: "infra-error", err: err.detail }
             }
         },
-        unknown: (err: unknown): SubmitPasswordResetRegisterRemoteError => ({
+        unknown: (err: unknown): RegisterPasswordResetSessionRemoteError => ({
             type: "infra-error",
             err: `${err}`,
         }),

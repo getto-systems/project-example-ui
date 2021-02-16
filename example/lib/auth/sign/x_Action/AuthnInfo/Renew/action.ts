@@ -1,14 +1,14 @@
 import { ApplicationAction } from "../../../../../common/vendor/getto-example/Application/action"
 
-import { GetSecureScriptPathMethod } from "../../../secureScriptPath/get/action"
+import { GetSecureScriptPathMethod } from "../../../secureScriptPath/get/method"
 import {
     ForceRenewAuthnInfoMethod,
     RenewAuthnInfoMethod,
-} from "../../../authnInfo/renew/action"
+} from "../../../authnInfo/renew/method"
 import {
     ForceStartContinuousRenewAuthnInfoMethod,
     StartContinuousRenewAuthnInfoMethod,
-} from "../../../authnInfo/startContinuousRenew/action"
+} from "../../../authnInfo/startContinuousRenew/method"
 
 import { RequestRenewAuthnInfoEvent } from "../../../authnInfo/renew/event"
 
