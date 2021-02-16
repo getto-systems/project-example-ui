@@ -3,10 +3,13 @@ import { newSubmitPasswordLoginRemoteAccess } from "../infra/remote/submitPasswo
 import { delayed } from "../../../../../z_infra/delayed/core"
 import { delaySecond } from "../../../../../z_infra/time/infra"
 
-import { initPasswordLoginActionPod } from "../impl"
+import { initPasswordLoginAction, initPasswordLoginActionPod } from "../impl"
 
-import { PasswordLoginActionPod } from "../action"
+import { PasswordLoginAction, PasswordLoginActionPod } from "../action"
 
+export function newPasswordLoginAction(): PasswordLoginAction {
+    return initPasswordLoginAction(newPasswordLoginActionPod())
+}
 export function newPasswordLoginActionPod(): PasswordLoginActionPod {
     return initPasswordLoginActionPod({
         login: newSubmitPasswordLoginRemoteAccess(),

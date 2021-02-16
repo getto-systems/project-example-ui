@@ -1,4 +1,4 @@
-import { newPasswordLoginActionPod } from "../../../sign/password/login/main/core"
+import { newPasswordLoginAction } from "../../../sign/password/login/main/core"
 import { newPasswordResetRegisterActionPod } from "../../../sign/password/reset/register/main/core"
 import { newContinuousRenewAuthCredentialAction } from "../../../sign/authCredential/continuousRenew/main"
 import { newRenewAuthCredentialAction } from "../../../sign/authCredential/renew/main"
@@ -19,7 +19,6 @@ import { initPasswordResetResource } from "../../../x_Resource/sign/PasswordRese
 import { initPasswordResetRegisterActionLocationInfo } from "../../../sign/password/reset/register/impl"
 
 import { AuthSignEntryPoint } from "../entryPoint"
-import { initPasswordLoginAction } from "../../../sign/password/login/impl"
 
 export function newLoginAsSingle(): AuthSignEntryPoint {
     const webStorage = localStorage
@@ -41,22 +40,26 @@ export function newLoginAsSingle(): AuthSignEntryPoint {
         initRegister: newPasswordResetRegisterActionPod(),
     }
 
-    const material = {
-        login: {
-            continuousRenew: newContinuousRenewAuthCredentialAction(webStorage),
-            location: newAuthLocationAction(),
-            login: initPasswordLoginAction(newPasswordLoginActionPod()),
-        },
-
-        form: formMaterial(),
-    }
-
     const view = new View(initLoginViewLocationInfo(currentURL), {
         link: initAuthSignLinkResource,
 
-        renewCredential: () => initAuthSignRenewResource(foreground),
+        renew: () =>
+            initAuthSignRenewResource({
+                renew: newRenewAuthCredentialAction(webStorage),
+                continuousRenew: newContinuousRenewAuthCredentialAction(webStorage),
+                location: newAuthLocationAction(),
+            }),
 
-        passwordLogin: () => initAuthSignPasswordLoginResource(material),
+        passwordLogin: () =>
+            initAuthSignPasswordLoginResource({
+                login: {
+                    continuousRenew: newContinuousRenewAuthCredentialAction(webStorage),
+                    location: newAuthLocationAction(),
+                    login: newPasswordLoginAction(),
+                },
+
+                form: formMaterial(),
+            }),
         passwordResetSession: () => initPasswordResetSessionResource(foreground, background),
         passwordReset: () =>
             initPasswordResetResource(

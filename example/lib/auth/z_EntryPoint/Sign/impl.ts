@@ -15,9 +15,7 @@ import { AuthLocationSearchParams } from "../../sign/authLocation/data"
 
 export function initLoginViewLocationInfo(currentURL: URL): AuthSignViewLocationInfo {
     return {
-        login: {
-            getAuthSignView: () => detectViewState(currentURL),
-        },
+        getAuthSignViewType: () => detectViewState(currentURL),
     }
 }
 
@@ -45,11 +43,11 @@ export class View extends ApplicationBaseComponent<AuthSignViewState> implements
     }
 
     load(): void {
-        const resource = this.components.renewCredential()
+        const resource = this.components.renew()
         resource.renew.addStateHandler((state) => {
             switch (state.type) {
                 case "required-to-login":
-                    this.post(this.mapLoginView(this.locationInfo.login.getAuthSignView()))
+                    this.post(this.mapViewType(this.locationInfo.getAuthSignViewType()))
                     return
             }
         })
@@ -68,14 +66,14 @@ export class View extends ApplicationBaseComponent<AuthSignViewState> implements
         this.post({ type: "error", err })
     }
 
-    mapLoginView(loginView: AuthSignViewType): AuthSignViewState {
-        switch (loginView) {
+    mapViewType(type: AuthSignViewType): AuthSignViewState {
+        switch (type) {
             case "password-login":
-                return { type: loginView, entryPoint: this.passwordLogin() }
+                return { type, entryPoint: this.passwordLogin() }
             case "password-reset-session":
-                return { type: loginView, entryPoint: this.passwordResetSession() }
+                return { type, entryPoint: this.passwordResetSession() }
             case "password-reset":
-                return { type: loginView, entryPoint: this.passwordReset() }
+                return { type, entryPoint: this.passwordReset() }
         }
     }
 
