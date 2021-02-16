@@ -3,9 +3,6 @@ import { newWorker } from "../../../../../common/vendor/getto-worker/main/foregr
 import { newAuthSignRenewResource } from "../../resources/Renew/main"
 import { newAuthSignPasswordAuthenticateResource_merge } from "../../resources/Password/Authenticate/main/core"
 
-import { newAuthLocationAction_legacy } from "../../../../sign/secureScriptPath/get/main"
-import { newContinuousRenewAuthnInfoAction_legacy } from "../../../../sign/authnInfo/startContinuousRenew/main"
-
 import { initLoginViewLocationInfo, View } from "../../impl"
 
 import { initAuthSignLinkResource } from "../../resources/Link/impl"
@@ -40,10 +37,6 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     const currentURL = new URL(location.toString())
 
     const foreground = {
-        continuousRenew: newContinuousRenewAuthnInfoAction_legacy(webStorage),
-
-        location: newAuthLocationAction_legacy(),
-
         form: {
             core: initFormAction(),
             loginID: initLoginIDFormFieldAction(),

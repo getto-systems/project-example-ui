@@ -1,8 +1,6 @@
 import { newAuthSignRenewResource } from "../resources/Renew/main"
 
-import { newContinuousRenewAuthnInfoAction_legacy } from "../../../sign/authnInfo/startContinuousRenew/main"
 import { newPasswordResetSessionActionPod } from "../../../sign/password/resetSession/start/main/core"
-import { newAuthLocationAction_legacy } from "../../../sign/secureScriptPath/get/main"
 
 import { initFormAction } from "../../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../common/field/loginID/main/loginID"
@@ -22,9 +20,6 @@ export function newLoginAsSingle(): AuthSignEntryPoint {
     const currentURL = new URL(location.toString())
 
     const foreground = {
-        continuousRenew: newContinuousRenewAuthnInfoAction_legacy(webStorage),
-        location: newAuthLocationAction_legacy(),
-
         form: {
             core: initFormAction(),
             loginID: initLoginIDFormFieldAction(),
