@@ -1,20 +1,20 @@
 import { MockPropsPasser } from "../../../../../common/vendor/getto-example/Application/mock"
 import {
-    ClearAuthCredentialMockProps,
-    initMockClearAuthCredentialAction,
-} from "../../../../sign/x_Action/AuthCredential/Clear/mock"
+    ClearAuthnInfoMockProps,
+    initMockClearAuthnInfoAction,
+} from "../../../../sign/x_Action/AuthnInfo/Clear/mock"
 
 import { AuthProfileLogoutResource } from "./resource"
 
 export type AuthProfileLogoutResourceMockPropsPasser = MockPropsPasser<
     AuthProfileLogoutResourceMockProps
 >
-export type AuthProfileLogoutResourceMockProps = ClearAuthCredentialMockProps
+export type AuthProfileLogoutResourceMockProps = ClearAuthnInfoMockProps
 
 export function initMockAuthProfileLogoutResource(
     passer: AuthProfileLogoutResourceMockPropsPasser
 ): AuthProfileLogoutResource {
     return {
-        clear: initMockClearAuthCredentialAction(passer),
+        clear: initMockClearAuthnInfoAction(passer),
     }
 }

@@ -9,7 +9,7 @@ import {
 import { LoadSecureScriptError } from "../../../../../secureScriptPath/get/data"
 import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
 import { PasswordResetFields } from "../../../../../password/resetSession/register/data"
-import { AuthCredential } from "../../../../../authCredential/common/data"
+import { AuthnInfo } from "../../../../../authnInfo/common/data"
 
 export function initPasswordResetRegisterComponent(
     material: PasswordResetRegisterMaterial
@@ -31,7 +31,7 @@ class Component
         this.material.register.submit(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-reset":
-                    this.startContinuousRenew(event.authCredential)
+                    this.startContinuousRenew(event.authnInfo)
                     return
 
                 default:
@@ -40,11 +40,14 @@ class Component
             }
         })
     }
-    startContinuousRenew(authCredential: AuthCredential): void {
-        this.material.continuousRenew.start(authCredential, (event) => {
+    startContinuousRenew(authnInfo: AuthnInfo): void {
+        this.material.continuousRenew.start(authnInfo, (event) => {
             switch (event.type) {
                 case "succeed-to-start-continuous-renew":
-                    this.post({ type: "try-to-load", scriptPath: this.secureScriptPath() })
+                    this.post({
+                        type: "try-to-load",
+                        scriptPath: this.secureScriptPath(),
+                    })
                     return
 
                 default:

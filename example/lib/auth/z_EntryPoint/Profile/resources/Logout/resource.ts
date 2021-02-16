@@ -1,12 +1,12 @@
 import {
-    ClearAuthCredentialAction,
-    ClearAuthCredentialMaterial,
-} from "../../../../sign/x_Action/AuthCredential/Clear/action"
+    ClearAuthnInfoAction,
+    ClearAuthnInfoMaterial,
+} from "../../../../sign/x_Action/AuthnInfo/Clear/action"
 
 export type AuthProfileLogoutResource = Readonly<{
-    clear: ClearAuthCredentialAction
+    clear: ClearAuthnInfoAction
 }>
 
 export type AuthProfileLogoutMaterial = Readonly<{
-    clear: ClearAuthCredentialMaterial
+    clear: ClearAuthnInfoMaterial
 }>

@@ -10,7 +10,7 @@ import {
 import { SecureScriptPath, LoadSecureScriptError } from "../../../../../secureScriptPath/get/data"
 import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
 import { StorageError } from "../../../../../../../common/storage/data"
-import { StartContinuousRenewAuthCredentialAction } from "../../../../../authCredential/startContinuousRenew/action"
+import { StartContinuousRenewAuthnInfoAction } from "../../../../../authnInfo/startContinuousRenew/action"
 
 export interface PasswordResetRegisterComponent
     extends ApplicationAction<PasswordResetRegisterComponentState> {
@@ -19,7 +19,7 @@ export interface PasswordResetRegisterComponent
 }
 
 export type PasswordResetRegisterMaterial = Readonly<{
-    continuousRenew: StartContinuousRenewAuthCredentialAction
+    continuousRenew: StartContinuousRenewAuthnInfoAction
     location: GetSecureScriptPathAction
     register: RegisterPasswordResetSessionAction
 }>

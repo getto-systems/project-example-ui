@@ -7,7 +7,7 @@ import {
 } from "../../../../z_infra/remote/infra"
 import { DelayTime } from "../../../../z_infra/time/infra"
 
-import { AuthCredential } from "../../authCredential/common/data"
+import { AuthnInfo } from "../../authnInfo/common/data"
 import { AuthenticatePasswordPod } from "./action"
 
 import { PasswordLoginFields, AuthenticatePasswordRemoteError } from "./data"
@@ -41,6 +41,6 @@ export type AuthenticatePasswordSimulator = RemoteAccessSimulator<
     AuthenticatePasswordRemoteError
 >
 export type AuthenticatePasswordRemoteResponse = Readonly<{
-    auth: AuthCredential
+    auth: AuthnInfo
     api: ApiCredential
 }>

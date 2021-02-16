@@ -33,7 +33,7 @@ const submit: AuthenticatePassword = (infra) => () => async (fields, post) => {
         return
     }
 
-    post({ type: "succeed-to-login", authCredential: response.value.auth })
+    post({ type: "succeed-to-login", authnInfo: response.value.auth })
 }
 
 export function submitEventHasDone(event: AuthenticatePasswordEvent): boolean {

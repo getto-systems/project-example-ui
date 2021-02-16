@@ -37,8 +37,8 @@ function bind(props: MockProps) {
     return template
 }
 
-export const Initial = bind({ type: "initial-clear-authCredential" })
-export const Failed = bind({ type: "failed-clear-authCredential", err: "logout error" })
+export const Initial = bind({ type: "initial-clear-authnInfo" })
+export const Failed = bind({ type: "failed-clear-authnInfo", err: "logout error" })
 
 interface Story<P> {
     args?: P

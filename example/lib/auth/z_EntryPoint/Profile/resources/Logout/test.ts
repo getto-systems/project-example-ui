@@ -1,12 +1,12 @@
-import { ClearAuthCredentialActionState } from "../../../../sign/x_Action/AuthCredential/Clear/action"
+import { ClearAuthnInfoActionState } from "../../../../sign/x_Action/AuthnInfo/Clear/action"
 
-import { markAuthAt, markTicketNonce } from "../../../../sign/authCredential/common/data"
+import { markAuthAt, markAuthnNonce } from "../../../../sign/authnInfo/common/data"
 import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../common/apiCredential/data"
-import { initMemoryAuthCredentialRepository } from "../../../../sign/authCredential/common/infra/repository/authCredential/memory"
-import { initClearAuthCredentialAction } from "../../../../sign/x_Action/AuthCredential/Clear/impl"
+import { initMemoryAuthnInfoRepository } from "../../../../sign/authnInfo/common/infra/repository/authnInfo/memory"
+import { initClearAuthnInfoAction } from "../../../../sign/x_Action/AuthnInfo/Clear/impl"
 
-const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
+const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
 
 describe("AuthProfileLogout", () => {
@@ -17,8 +17,8 @@ describe("AuthProfileLogout", () => {
 
         resource.clear.submit()
 
-        function stateHandler(): Post<ClearAuthCredentialActionState> {
-            const stack: ClearAuthCredentialActionState[] = []
+        function stateHandler(): Post<ClearAuthnInfoActionState> {
+            const stack: ClearAuthnInfoActionState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -48,7 +48,7 @@ function standardResource() {
     const repository = standardRepository()
 
     const resource = {
-        clear: initClearAuthCredentialAction({ clear: repository }),
+        clear: initClearAuthnInfoAction({ clear: repository }),
     }
 
     return { repository, resource }
@@ -58,10 +58,13 @@ function standardRepository() {
     return {
         apiCredentials: initMemoryApiCredentialRepository({
             set: true,
-            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
+            value: {
+                apiNonce: markApiNonce("api-nonce"),
+                apiRoles: markApiRoles(["role"]),
+            },
         }),
-        authCredentials: initMemoryAuthCredentialRepository({
-            ticketNonce: { set: true, value: markTicketNonce(STORED_TICKET_NONCE) },
+        authnInfos: initMemoryAuthnInfoRepository({
+            authnNonce: { set: true, value: markAuthnNonce(STORED_AUTHN_NONCE) },
             lastAuthAt: { set: true, value: markAuthAt(STORED_LOGIN_AT) },
         }),
     }

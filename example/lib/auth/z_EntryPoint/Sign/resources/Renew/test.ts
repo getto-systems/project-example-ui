@@ -1,37 +1,31 @@
-import { initAuthSignRenewResource } from "./impl"
-
-import { initStaticClock, StaticClock } from "../../../../../z_infra/clock/simulate"
-import { initRenewAuthCredentialSimulateRemoteAccess } from "../../../../sign/authCredential/common/infra/remote/renewAuthCredential/simulate"
+import { newStaticClock, StaticClock } from "../../../../../z_infra/clock/simulate"
+import { initRenewAuthnInfoSimulateRemoteAccess } from "../../../../sign/authnInfo/common/infra/remote/renew/simulate"
 
 import { Clock } from "../../../../../z_infra/clock/infra"
 
 import { AuthSignRenewResource } from "./resource"
 
-import { RenewAuthCredentialComponentState } from "../../../../sign/x_Action/AuthCredential/Renew/component"
+import { RenewAuthnInfoActionState } from "../../../../sign/x_Action/AuthnInfo/Renew/action"
 
 import { markSecureScriptPath } from "../../../../sign/secureScriptPath/get/data"
-import { markAuthAt, markTicketNonce } from "../../../../sign/authCredential/common/data"
+import { markAuthAt, markAuthnNonce } from "../../../../sign/authnInfo/common/data"
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../common/apiCredential/data"
 import {
-    AuthCredentialRepository,
-    RenewAuthCredentialRemoteAccess,
-    RenewAuthCredentialRemoteAccessResult,
-} from "../../../../sign/authCredential/common/infra"
+    AuthnInfoRepository,
+    RenewAuthnInfoRemoteAccess,
+    RenewAuthnInfoRemoteAccessResult,
+} from "../../../../sign/authnInfo/common/infra"
 import { delayed } from "../../../../../z_infra/delayed/core"
-import { initRenewAuthCredentialAction } from "../../../../sign/authCredential/renew/impl"
-import { initStartContinuousRenewAuthCredentialAction } from "../../../../sign/authCredential/startContinuousRenew/impl"
-import { initMemoryAuthCredentialRepository } from "../../../../sign/authCredential/common/infra/repository/authCredential/memory"
-import {
-    initGetSecureScriptPathAction,
-    initGetSecureScriptPathActionLocationInfo,
-} from "../../../../sign/secureScriptPath/get/impl"
+import { initMemoryAuthnInfoRepository } from "../../../../sign/authnInfo/common/infra/repository/authnInfo/memory"
+import { initGetSecureScriptPathActionLocationInfo } from "../../../../sign/secureScriptPath/get/impl"
+import { initRenewAuthnInfoAction } from "../../../../sign/x_Action/AuthnInfo/Renew/impl"
 
-const STORED_TICKET_NONCE = "stored-ticket-nonce" as const
+const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
 
-const RENEWED_TICKET_NONCE = "renewed-ticket-nonce" as const
+const RENEWED_AUTHN_NONCE = "renewed-authn-nonce" as const
 const SUCCEED_TO_RENEW_AT = new Date("2020-01-01 10:00:00")
 
 // renew リクエストを投げるべきか、instant load していいかの判定に使用する
@@ -51,8 +45,8 @@ describe("AuthSignRenew", () => {
 
         resource.renew.request()
 
-        function stateHandler(): Post<RenewAuthCredentialComponentState> {
-            const stack: RenewAuthCredentialComponentState[] = []
+        function stateHandler(): Post<RenewAuthnInfoActionState> {
+            const stack: RenewAuthnInfoActionState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -72,12 +66,14 @@ describe("AuthSignRenew", () => {
                         expect(stack).toEqual([
                             {
                                 type: "try-to-instant-load",
-                                scriptPath: markSecureScriptPath("//secure.example.com/index.js"),
+                                scriptPath: markSecureScriptPath(
+                                    "//secure.example.com/index.js"
+                                ),
                             },
                             { type: "succeed-to-start-continuous-renew" },
                         ])
                         setTimeout(() => {
-                            expectToSaveRenewed(repository.authCredentials)
+                            expectToSaveRenewed(repository.authnInfos)
                             done()
                         }, 1) // after setContinuousRenew interval and delay
                         break
@@ -108,8 +104,8 @@ describe("AuthSignRenew", () => {
 
         resource.renew.request()
 
-        function stateHandler(): Post<RenewAuthCredentialComponentState> {
-            const stack: RenewAuthCredentialComponentState[] = []
+        function stateHandler(): Post<RenewAuthnInfoActionState> {
+            const stack: RenewAuthnInfoActionState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -134,16 +130,20 @@ describe("AuthSignRenew", () => {
                         expect(stack).toEqual([
                             {
                                 type: "try-to-instant-load",
-                                scriptPath: markSecureScriptPath("//secure.example.com/index.js"),
+                                scriptPath: markSecureScriptPath(
+                                    "//secure.example.com/index.js"
+                                ),
                             },
                             { type: "try-to-renew" },
                             {
                                 type: "try-to-load",
-                                scriptPath: markSecureScriptPath("//secure.example.com/index.js"),
+                                scriptPath: markSecureScriptPath(
+                                    "//secure.example.com/index.js"
+                                ),
                             },
                         ])
                         setTimeout(() => {
-                            expectToSaveRenewed(repository.authCredentials)
+                            expectToSaveRenewed(repository.authnInfos)
                             done()
                         }, 1) // after setContinuousRenew interval and delay
                         break
@@ -169,8 +169,8 @@ describe("AuthSignRenew", () => {
 
         resource.renew.request()
 
-        function stateHandler(): Post<RenewAuthCredentialComponentState> {
-            const stack: RenewAuthCredentialComponentState[] = []
+        function stateHandler(): Post<RenewAuthnInfoActionState> {
+            const stack: RenewAuthnInfoActionState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -193,11 +193,13 @@ describe("AuthSignRenew", () => {
                             { type: "try-to-renew" },
                             {
                                 type: "try-to-load",
-                                scriptPath: markSecureScriptPath("//secure.example.com/index.js"),
+                                scriptPath: markSecureScriptPath(
+                                    "//secure.example.com/index.js"
+                                ),
                             },
                         ])
                         setTimeout(() => {
-                            expectToSaveRenewed(repository.authCredentials)
+                            expectToSaveRenewed(repository.authnInfos)
                             done()
                         }, 1) // after setContinuousRenew interval and delay
                         break
@@ -224,8 +226,8 @@ describe("AuthSignRenew", () => {
 
         resource.renew.request()
 
-        function stateHandler(): Post<RenewAuthCredentialComponentState> {
-            const stack: RenewAuthCredentialComponentState[] = []
+        function stateHandler(): Post<RenewAuthnInfoActionState> {
+            const stack: RenewAuthnInfoActionState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -249,11 +251,13 @@ describe("AuthSignRenew", () => {
                             { type: "delayed-to-renew" }, // delayed event
                             {
                                 type: "try-to-load",
-                                scriptPath: markSecureScriptPath("//secure.example.com/index.js"),
+                                scriptPath: markSecureScriptPath(
+                                    "//secure.example.com/index.js"
+                                ),
                             },
                         ])
                         setTimeout(() => {
-                            expectToSaveRenewed(repository.authCredentials)
+                            expectToSaveRenewed(repository.authnInfos)
                             done()
                         }, 1) // after setContinuousRenew interval and delay
                         break
@@ -280,8 +284,8 @@ describe("AuthSignRenew", () => {
 
         resource.renew.request()
 
-        function stateHandler(): Post<RenewAuthCredentialComponentState> {
-            const stack: RenewAuthCredentialComponentState[] = []
+        function stateHandler(): Post<RenewAuthnInfoActionState> {
+            const stack: RenewAuthnInfoActionState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -300,7 +304,7 @@ describe("AuthSignRenew", () => {
 
                     case "required-to-login":
                         expect(stack).toEqual([{ type: "required-to-login" }])
-                        expectToEmptyLastLogin(repository.authCredentials)
+                        expectToEmptyLastLogin(repository.authnInfos)
                         done()
                         break
 
@@ -325,8 +329,8 @@ describe("AuthSignRenew", () => {
 
         resource.renew.loadError({ type: "infra-error", err: "load error" })
 
-        function stateHandler(): Post<RenewAuthCredentialComponentState> {
-            const stack: RenewAuthCredentialComponentState[] = []
+        function stateHandler(): Post<RenewAuthnInfoActionState> {
+            const stack: RenewAuthnInfoActionState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -352,7 +356,10 @@ describe("AuthSignRenew", () => {
 
                     case "load-error":
                         expect(stack).toEqual([
-                            { type: "load-error", err: { type: "infra-error", err: "load error" } },
+                            {
+                                type: "load-error",
+                                err: { type: "infra-error", err: "load error" },
+                            },
                         ])
                         done()
                         break
@@ -370,7 +377,12 @@ function standardRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newTestRenewCredentialResource(currentURL, repository, simulator, clock)
+    const resource = newTestRenewCredentialResource(
+        currentURL,
+        repository,
+        simulator,
+        clock
+    )
 
     return { repository, clock, resource }
 }
@@ -379,7 +391,12 @@ function instantRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = instantAvailableClock()
-    const resource = newTestRenewCredentialResource(currentURL, repository, simulator, clock)
+    const resource = newTestRenewCredentialResource(
+        currentURL,
+        repository,
+        simulator,
+        clock
+    )
 
     return { repository, clock, resource }
 }
@@ -388,7 +405,12 @@ function waitRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = waitSimulator()
     const clock = standardClock()
-    const resource = newTestRenewCredentialResource(currentURL, repository, simulator, clock)
+    const resource = newTestRenewCredentialResource(
+        currentURL,
+        repository,
+        simulator,
+        clock
+    )
 
     return { repository, clock, resource }
 }
@@ -397,17 +419,22 @@ function emptyRenewCredentialResource() {
     const repository = emptyRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newTestRenewCredentialResource(currentURL, repository, simulator, clock)
+    const resource = newTestRenewCredentialResource(
+        currentURL,
+        repository,
+        simulator,
+        clock
+    )
 
     return { repository, resource }
 }
 
 type RenewCredentialTestRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
-    authCredentials: AuthCredentialRepository
+    authnInfos: AuthnInfoRepository
 }>
 type RenewCredentialTestRemoteAccess = Readonly<{
-    renew: RenewAuthCredentialRemoteAccess
+    renew: RenewAuthnInfoRemoteAccess
 }>
 
 function newTestRenewCredentialResource(
@@ -417,27 +444,29 @@ function newTestRenewCredentialResource(
     clock: Clock
 ): AuthSignRenewResource {
     const config = standardConfig()
-    return initAuthSignRenewResource({
-        renew: initRenewAuthCredentialAction({
-            ...repository,
-            ...remote,
-            config: config.renew,
-            delayed,
-            clock,
-        }),
-        continuousRenew: initStartContinuousRenewAuthCredentialAction({
-            ...repository,
-            ...remote,
-            config: config.continuousRenew,
-            clock,
-        }),
-        location: initGetSecureScriptPathAction(
+    return {
+        renew: initRenewAuthnInfoAction(
             {
-                config: config.location,
+                renew: {
+                    ...repository,
+                    ...remote,
+                    config: config.renew,
+                    delayed,
+                    clock,
+                },
+                startContinuousRenew: {
+                    ...repository,
+                    ...remote,
+                    config: config.continuousRenew,
+                    clock,
+                },
+                getSecureScriptPath: {
+                    config: config.location,
+                },
             },
             initGetSecureScriptPathActionLocationInfo(currentURL)
         ),
-    })
+    }
 }
 
 function standardURL(): URL {
@@ -463,10 +492,13 @@ function standardRepository(): RenewCredentialTestRepository {
     return {
         apiCredentials: initMemoryApiCredentialRepository({
             set: true,
-            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
+            value: {
+                apiNonce: markApiNonce("api-nonce"),
+                apiRoles: markApiRoles(["role"]),
+            },
         }),
-        authCredentials: initMemoryAuthCredentialRepository({
-            ticketNonce: { set: true, value: markTicketNonce(STORED_TICKET_NONCE) },
+        authnInfos: initMemoryAuthnInfoRepository({
+            authnNonce: { set: true, value: markAuthnNonce(STORED_AUTHN_NONCE) },
             lastAuthAt: { set: true, value: markAuthAt(STORED_LOGIN_AT) },
         }),
     }
@@ -476,8 +508,8 @@ function emptyRepository(): RenewCredentialTestRepository {
         apiCredentials: initMemoryApiCredentialRepository({
             set: false,
         }),
-        authCredentials: initMemoryAuthCredentialRepository({
-            ticketNonce: { set: false },
+        authnInfos: initMemoryAuthnInfoRepository({
+            authnNonce: { set: false },
             lastAuthAt: { set: false },
         }),
     }
@@ -494,48 +526,54 @@ function waitSimulator(): RenewCredentialTestRemoteAccess {
     }
 }
 
-function renewRemoteAccess(waitTime: WaitTime): RenewAuthCredentialRemoteAccess {
+function renewRemoteAccess(waitTime: WaitTime): RenewAuthnInfoRemoteAccess {
     let renewedCount = 0
-    return initRenewAuthCredentialSimulateRemoteAccess((): RenewAuthCredentialRemoteAccessResult => {
-        if (renewedCount > 1) {
-            // 初回 renew と continuous renew 一回目の 2回だけ
-            // renew して、あとは renew を cancel するために null を返す
-            return { success: false, err: { type: "invalid-ticket" } }
-        }
-        renewedCount++
+    return initRenewAuthnInfoSimulateRemoteAccess(
+        (): RenewAuthnInfoRemoteAccessResult => {
+            if (renewedCount > 1) {
+                // 初回 renew と continuous renew 一回目の 2回だけ
+                // renew して、あとは renew を cancel するために null を返す
+                return { success: false, err: { type: "invalid-ticket" } }
+            }
+            renewedCount++
 
-        return {
-            success: true,
-            value: {
-                auth: {
-                    ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
-                    authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
+            return {
+                success: true,
+                value: {
+                    auth: {
+                        authnNonce: markAuthnNonce(RENEWED_AUTHN_NONCE),
+                        authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
+                    },
+                    api: {
+                        apiNonce: markApiNonce("api-nonce"),
+                        apiRoles: markApiRoles(["role"]),
+                    },
                 },
-                api: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
-            },
-        }
-    }, waitTime)
+            }
+        },
+        waitTime
+    )
 }
 
 function standardClock(): StaticClock {
-    return initStaticClock(NOW_INSTANT_LOAD_DISABLED)
+    return newStaticClock(NOW_INSTANT_LOAD_DISABLED)
 }
 function instantAvailableClock(): StaticClock {
-    return initStaticClock(NOW_INSTANT_LOAD_AVAILABLE)
+    return newStaticClock(NOW_INSTANT_LOAD_AVAILABLE)
 }
 
-function expectToSaveRenewed(authCredentials: AuthCredentialRepository) {
-    expect(authCredentials.load()).toEqual({
+function expectToSaveRenewed(authnInfos: AuthnInfoRepository) {
+    expect(authnInfos.load()).toEqual({
         success: true,
         found: true,
         lastLogin: {
-            ticketNonce: markTicketNonce(RENEWED_TICKET_NONCE),
+            authnNonce: markAuthnNonce(RENEWED_AUTHN_NONCE),
             lastAuthAt: markAuthAt(SUCCEED_TO_RENEW_AT),
         },
     })
 }
-function expectToEmptyLastLogin(authCredentials: AuthCredentialRepository) {
-    expect(authCredentials.load()).toEqual({
+function expectToEmptyLastLogin(authnInfos: AuthnInfoRepository) {
+    expect(authnInfos.load()).toEqual({
         success: true,
         found: false,
     })

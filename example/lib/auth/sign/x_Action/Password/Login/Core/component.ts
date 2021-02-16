@@ -2,7 +2,7 @@ import { ApplicationAction } from "../../../../../../common/vendor/getto-example
 
 import { AuthenticatePasswordAction } from "../../../../password/authenticate/action"
 import { GetSecureScriptPathAction } from "../../../../secureScriptPath/get/action"
-import { StartContinuousRenewAuthCredentialAction } from "../../../../authCredential/startContinuousRenew/action"
+import { StartContinuousRenewAuthnInfoAction } from "../../../../authnInfo/startContinuousRenew/action"
 
 import { FormConvertResult } from "../../../../../../common/vendor/getto-form/form/data"
 import { SecureScriptPath, LoadSecureScriptError } from "../../../../secureScriptPath/get/data"
@@ -15,7 +15,7 @@ export interface PasswordLoginComponent extends ApplicationAction<PasswordLoginC
 }
 
 export type PasswordLoginMaterial = Readonly<{
-    continuousRenew: StartContinuousRenewAuthCredentialAction
+    continuousRenew: StartContinuousRenewAuthnInfoAction
     location: GetSecureScriptPathAction
     login: AuthenticatePasswordAction
 }>

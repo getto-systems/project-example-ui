@@ -1,10 +1,10 @@
 import {
-    RenewAuthCredentialComponent,
-    RenewAuthCredentialMaterial,
-} from "../../../../sign/x_Action/AuthCredential/Renew/component"
+    RenewAuthnInfoAction,
+    RenewAuthnInfoMaterial,
+} from "../../../../sign/x_Action/AuthnInfo/Renew/action"
 
 export type AuthSignRenewResource = Readonly<{
-    renew: RenewAuthCredentialComponent
+    renew: RenewAuthnInfoAction
 }>
 
-export type AuthSignRenewMaterial = RenewAuthCredentialMaterial
+export type AuthSignRenewMaterial = RenewAuthnInfoMaterial

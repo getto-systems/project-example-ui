@@ -1,7 +1,13 @@
-import { markApiNonce, markApiRoles } from "../../../../../../../../common/apiCredential/data"
+import {
+    markApiNonce,
+    markApiRoles,
+} from "../../../../../../../../common/apiCredential/data"
 import { initConnectRemoteAccess } from "../../../../../../../../z_infra/remote/connect"
-import { RawRemoteAccess, RemoteAccessError } from "../../../../../../../../z_infra/remote/infra"
-import { markAuthAt, markTicketNonce } from "../../../../../../authCredential/common/data"
+import {
+    RawRemoteAccess,
+    RemoteAccessError,
+} from "../../../../../../../../z_infra/remote/infra"
+import { markAuthAt, markAuthnNonce } from "../../../../../../authnInfo/common/data"
 import { SubmitPasswordResetRegisterRemoteError } from "../../../data"
 import {
     SubmitPasswordResetRegisterRemoteAccess,
@@ -9,9 +15,9 @@ import {
     SubmitPasswordResetRegisterRemoteResponse,
 } from "../../../infra"
 
-type Raw = RawRemoteAccess<SubmitPasswordResetRegisterRemoteMessage, RawAuthCredential>
-type RawAuthCredential = Readonly<{
-    ticketNonce: string
+type Raw = RawRemoteAccess<SubmitPasswordResetRegisterRemoteMessage, RawAuthnInfo>
+type RawAuthnInfo = Readonly<{
+    authnNonce: string
     api: Readonly<{ apiNonce: string; apiRoles: string[] }>
 }>
 
@@ -22,10 +28,10 @@ export function initSubmitPasswordResetRegisterConnectRemoteAccess(
         message: (
             message: SubmitPasswordResetRegisterRemoteMessage
         ): SubmitPasswordResetRegisterRemoteMessage => message,
-        value: (response: RawAuthCredential): SubmitPasswordResetRegisterRemoteResponse => {
+        value: (response: RawAuthnInfo): SubmitPasswordResetRegisterRemoteResponse => {
             return {
                 auth: {
-                    ticketNonce: markTicketNonce(response.ticketNonce),
+                    authnNonce: markAuthnNonce(response.authnNonce),
                     authAt: markAuthAt(new Date()),
                 },
                 api: {

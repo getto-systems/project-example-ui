@@ -6,7 +6,7 @@ import {
     RemoteAccessSimulator,
 } from "../../../../../z_infra/remote/infra"
 import { DelayTime } from "../../../../../z_infra/time/infra"
-import { AuthCredential } from "../../../authCredential/common/data"
+import { AuthnInfo } from "../../../authnInfo/common/data"
 
 import { PasswordResetFields, PasswordResetToken, SubmitPasswordResetRegisterRemoteError } from "./data"
 
@@ -41,7 +41,7 @@ export type SubmitPasswordResetRegisterSimulator = RemoteAccessSimulator<
     SubmitPasswordResetRegisterRemoteError
 >
 export type SubmitPasswordResetRegisterRemoteResponse = Readonly<{
-    auth: AuthCredential
+    auth: AuthnInfo
     api: ApiCredential
 }>
 

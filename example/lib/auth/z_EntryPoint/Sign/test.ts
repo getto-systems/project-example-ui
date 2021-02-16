@@ -1,13 +1,12 @@
 import { initLoginViewLocationInfo, View } from "./impl"
 
-import { initStaticClock } from "../../../z_infra/clock/simulate"
+import { newStaticClock } from "../../../z_infra/clock/simulate"
 import { initAuthenticatePasswordSimulateRemoteAccess } from "../../sign/password/authenticate/infra/remote/authenticate/simulate"
-import { initRenewAuthCredentialSimulateRemoteAccess } from "../../sign/authCredential/common/infra/remote/renewAuthCredential/simulate"
+import { initRenewAuthnInfoSimulateRemoteAccess } from "../../sign/authnInfo/common/infra/remote/renew/simulate"
 import { initSubmitPasswordResetResetSimulateRemoteAccess } from "../../sign/password/resetSession/register/infra/remote/submitPasswordResetRegister/simulate"
 import { initStartPasswordResetSessionSimulateRemoteAccess } from "../../sign/password/resetSession/start/infra/remote/startPasswordResetSession/simulate"
 
 import { initAuthSignLinkResource } from "./resources/Link/impl"
-import { initAuthSignRenewResource } from "./resources/Renew/impl"
 import { initAuthSignPasswordLoginResource } from "./resources/Password/Login/impl"
 import { initPasswordResetSessionResource } from "../../x_Resource/sign/PasswordResetSession/impl"
 import { initPasswordResetResource } from "./resources/Password/Reset/Register/impl"
@@ -22,20 +21,25 @@ import { SubmitPasswordResetRegisterRemoteAccessResult } from "../../sign/passwo
 
 import { AuthSignViewState } from "./entryPoint"
 
-import { markAuthAt, markTicketNonce } from "../../sign/authCredential/common/data"
+import { markAuthAt, markAuthnNonce } from "../../sign/authnInfo/common/data"
 import { markApiNonce, markApiRoles } from "../../../common/apiCredential/data"
 import { ApiCredentialRepository } from "../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../common/apiCredential/infra/repository/memory"
 import {
-    AuthCredentialRepository,
-    RenewAuthCredentialRemoteAccessResult,
-} from "../../sign/authCredential/common/infra"
-import { initStartContinuousRenewAuthCredentialAction } from "../../sign/authCredential/startContinuousRenew/impl"
-import { initRenewAuthCredentialAction } from "../../sign/authCredential/renew/impl"
+    AuthnInfoRepository,
+    RenewAuthnInfoRemoteAccessResult,
+} from "../../sign/authnInfo/common/infra"
+import { initStartContinuousRenewAuthnInfoAction } from "../../sign/authnInfo/startContinuousRenew/impl"
 import { delayed, wait } from "../../../z_infra/delayed/core"
-import { initMemoryAuthCredentialRepository } from "../../sign/authCredential/common/infra/repository/authCredential/memory"
-import { initGetSecureScriptPathAction, initGetSecureScriptPathActionLocationInfo } from "../../sign/secureScriptPath/get/impl"
-import { initPasswordLoginAction, initPasswordLoginActionPod } from "../../sign/password/authenticate/impl"
+import { initMemoryAuthnInfoRepository } from "../../sign/authnInfo/common/infra/repository/authnInfo/memory"
+import {
+    initGetSecureScriptPathAction,
+    initGetSecureScriptPathActionLocationInfo,
+} from "../../sign/secureScriptPath/get/impl"
+import {
+    initPasswordLoginAction,
+    initPasswordLoginActionPod,
+} from "../../sign/password/authenticate/impl"
 import {
     initPasswordResetRegisterAction,
     initPasswordResetRegisterActionLocationInfo,
@@ -50,8 +54,9 @@ import {
 import { markPasswordResetSessionID } from "../../sign/password/resetSession/start/data"
 import { initSendPasswordResetSessionTokenSimulateRemoteAccess } from "../../sign/password/resetSession/start/infra/remote/sendPasswordResetSessionToken/simulate"
 import { initGetPasswordResetSessionStatusSimulateRemoteAccess } from "../../sign/password/resetSession/start/infra/remote/getPasswordResetSessionStatus/simulate"
+import { initRenewAuthnInfoAction } from "../../sign/x_Action/AuthnInfo/Renew/impl"
 
-const AUTHORIZED_TICKET_NONCE = "ticket-nonce" as const
+const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
 
 const SESSION_ID = "session-id" as const
@@ -94,9 +99,9 @@ describe("LoginView", () => {
                         expect(state.entryPoint.resource.href.passwordLogin()).toEqual(
                             "?_password_login"
                         )
-                        expect(state.entryPoint.resource.href.passwordResetSession()).toEqual(
-                            "?_password_reset=start"
-                        )
+                        expect(
+                            state.entryPoint.resource.href.passwordResetSession()
+                        ).toEqual("?_password_reset=start")
 
                         terminates.forEach((terminate) => terminate())
                         done()
@@ -265,21 +270,21 @@ function standardLoginView() {
             standardRenewCredentialResource(
                 currentURL,
                 repository.apiCredentials,
-                repository.authCredentials,
+                repository.authnInfos,
                 clock
             ),
         passwordLogin: () =>
             standardPasswordLoginResource(
                 currentURL,
                 repository.apiCredentials,
-                repository.authCredentials,
+                repository.authnInfos,
                 clock
             ),
         passwordReset: () =>
             standardPasswordResetResource(
                 currentURL,
                 repository.apiCredentials,
-                repository.authCredentials,
+                repository.authnInfos,
                 clock
             ),
         passwordResetSession: () => standardPasswordResetSessionResource(),
@@ -297,21 +302,21 @@ function passwordResetSessionLoginView() {
             standardRenewCredentialResource(
                 currentURL,
                 repository.apiCredentials,
-                repository.authCredentials,
+                repository.authnInfos,
                 clock
             ),
         passwordLogin: () =>
             standardPasswordLoginResource(
                 currentURL,
                 repository.apiCredentials,
-                repository.authCredentials,
+                repository.authnInfos,
                 clock
             ),
         passwordReset: () =>
             standardPasswordResetResource(
                 currentURL,
                 repository.apiCredentials,
-                repository.authCredentials,
+                repository.authnInfos,
                 clock
             ),
         passwordResetSession: () => standardPasswordResetSessionResource(),
@@ -329,21 +334,21 @@ function passwordResetLoginView() {
             standardRenewCredentialResource(
                 currentURL,
                 repository.apiCredentials,
-                repository.authCredentials,
+                repository.authnInfos,
                 clock
             ),
         passwordLogin: () =>
             standardPasswordLoginResource(
                 currentURL,
                 repository.apiCredentials,
-                repository.authCredentials,
+                repository.authnInfos,
                 clock
             ),
         passwordReset: () =>
             standardPasswordResetResource(
                 currentURL,
                 repository.apiCredentials,
-                repository.authCredentials,
+                repository.authnInfos,
                 clock
             ),
         passwordResetSession: () => standardPasswordResetSessionResource(),
@@ -355,15 +360,15 @@ function passwordResetLoginView() {
 function standardPasswordLoginResource(
     currentURL: URL,
     apiCredentials: ApiCredentialRepository,
-    authCredentials: AuthCredentialRepository,
+    authnInfos: AuthnInfoRepository,
     clock: Clock
 ) {
     return initAuthSignPasswordLoginResource({
         login: {
-            continuousRenew: initStartContinuousRenewAuthCredentialAction({
+            continuousRenew: initStartContinuousRenewAuthnInfoAction({
                 apiCredentials,
-                authCredentials,
-                renew: initRenewAuthCredentialSimulateRemoteAccess(simulateRenew, {
+                authnInfos,
+                renew: initRenewAuthnInfoSimulateRemoteAccess(simulateRenew, {
                     wait_millisecond: 0,
                 }),
                 config: {
@@ -413,15 +418,15 @@ function standardPasswordLoginResource(
 function standardPasswordResetResource(
     currentURL: URL,
     apiCredentials: ApiCredentialRepository,
-    authCredentials: AuthCredentialRepository,
+    authnInfos: AuthnInfoRepository,
     clock: Clock
 ) {
     return initPasswordResetResource({
         register: {
-            continuousRenew: initStartContinuousRenewAuthCredentialAction({
+            continuousRenew: initStartContinuousRenewAuthnInfoAction({
                 apiCredentials,
-                authCredentials,
-                renew: initRenewAuthCredentialSimulateRemoteAccess(simulateRenew, {
+                authnInfos,
+                renew: initRenewAuthnInfoSimulateRemoteAccess(simulateRenew, {
                     wait_millisecond: 0,
                 }),
                 config: {
@@ -440,9 +445,12 @@ function standardPasswordResetResource(
             ),
             register: initPasswordResetRegisterAction(
                 initPasswordResetRegisterActionPod({
-                    register: initSubmitPasswordResetResetSimulateRemoteAccess(simulateReset, {
-                        wait_millisecond: 0,
-                    }),
+                    register: initSubmitPasswordResetResetSimulateRemoteAccess(
+                        simulateReset,
+                        {
+                            wait_millisecond: 0,
+                        }
+                    ),
                     config: {
                         delay: { delay_millisecond: 1 },
                     },
@@ -479,15 +487,24 @@ function standardPasswordResetSessionResource() {
         },
         {
             initSession: initPasswordResetSessionActionPod({
-                start: initStartPasswordResetSessionSimulateRemoteAccess(simulateStartSession, {
-                    wait_millisecond: 0,
-                }),
-                sendToken: initSendPasswordResetSessionTokenSimulateRemoteAccess(simulateSendToken, {
-                    wait_millisecond: 0,
-                }),
-                getStatus: initGetPasswordResetSessionStatusSimulateRemoteAccess(simulateGetStatus, {
-                    wait_millisecond: 0,
-                }),
+                start: initStartPasswordResetSessionSimulateRemoteAccess(
+                    simulateStartSession,
+                    {
+                        wait_millisecond: 0,
+                    }
+                ),
+                sendToken: initSendPasswordResetSessionTokenSimulateRemoteAccess(
+                    simulateSendToken,
+                    {
+                        wait_millisecond: 0,
+                    }
+                ),
+                getStatus: initGetPasswordResetSessionStatusSimulateRemoteAccess(
+                    simulateGetStatus,
+                    {
+                        wait_millisecond: 0,
+                    }
+                ),
                 config: {
                     start: {
                         delay: { delay_millisecond: 1 },
@@ -506,40 +523,46 @@ function standardPasswordResetSessionResource() {
 function standardRenewCredentialResource(
     currentURL: URL,
     apiCredentials: ApiCredentialRepository,
-    authCredentials: AuthCredentialRepository,
+    authnInfos: AuthnInfoRepository,
     clock: Clock
 ) {
-    return initAuthSignRenewResource({
-        renew: initRenewAuthCredentialAction({
-            apiCredentials,
-            authCredentials,
-            renew: initRenewAuthCredentialSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
-            config: {
-                instantLoadExpire: { expire_millisecond: 20 * 1000 },
-                delay: { delay_millisecond: 1 },
-            },
-            delayed,
-            clock,
-        }),
-        continuousRenew: initStartContinuousRenewAuthCredentialAction({
-            apiCredentials,
-            authCredentials,
-            renew: initRenewAuthCredentialSimulateRemoteAccess(simulateRenew, { wait_millisecond: 0 }),
-            config: {
-                delay: { delay_millisecond: 1 },
-                interval: { interval_millisecond: 1 },
-            },
-            clock,
-        }),
-        location: initGetSecureScriptPathAction(
+    return {
+        renew: initRenewAuthnInfoAction(
             {
-                config: {
-                    secureServerHost: standardSecureHost(),
+                renew: {
+                    apiCredentials,
+                    authnInfos,
+                    renew: initRenewAuthnInfoSimulateRemoteAccess(simulateRenew, {
+                        wait_millisecond: 0,
+                    }),
+                    config: {
+                        instantLoadExpire: { expire_millisecond: 20 * 1000 },
+                        delay: { delay_millisecond: 1 },
+                    },
+                    delayed,
+                    clock,
+                },
+                startContinuousRenew: {
+                    apiCredentials,
+                    authnInfos: authnInfos,
+                    renew: initRenewAuthnInfoSimulateRemoteAccess(simulateRenew, {
+                        wait_millisecond: 0,
+                    }),
+                    config: {
+                        delay: { delay_millisecond: 1 },
+                        interval: { interval_millisecond: 1 },
+                    },
+                    clock,
+                },
+                getSecureScriptPath: {
+                    config: {
+                        secureServerHost: standardSecureHost(),
+                    },
                 },
             },
             initGetSecureScriptPathActionLocationInfo(currentURL)
         ),
-    })
+    }
 }
 
 function standardURL(): URL {
@@ -561,14 +584,17 @@ function simulateLogin(): AuthenticatePasswordRemoteAccessResult {
         success: true,
         value: {
             auth: {
-                ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
+                authnNonce: markAuthnNonce(AUTHORIZED_AUTHN_NONCE),
                 authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
             },
-            api: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
+            api: {
+                apiNonce: markApiNonce("api-nonce"),
+                apiRoles: markApiRoles(["role"]),
+            },
         },
     }
 }
-function simulateRenew(): RenewAuthCredentialRemoteAccessResult {
+function simulateRenew(): RenewAuthnInfoRemoteAccessResult {
     return {
         success: false,
         err: { type: "invalid-ticket" },
@@ -579,10 +605,13 @@ function simulateReset(): SubmitPasswordResetRegisterRemoteAccessResult {
         success: true,
         value: {
             auth: {
-                ticketNonce: markTicketNonce(AUTHORIZED_TICKET_NONCE),
+                authnNonce: markAuthnNonce(AUTHORIZED_AUTHN_NONCE),
                 authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
             },
-            api: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
+            api: {
+                apiNonce: markApiNonce("api-nonce"),
+                apiRoles: markApiRoles(["role"]),
+            },
         },
     }
 }
@@ -601,17 +630,20 @@ function standardRepository() {
     return {
         apiCredentials: initMemoryApiCredentialRepository({
             set: true,
-            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
+            value: {
+                apiNonce: markApiNonce("api-nonce"),
+                apiRoles: markApiRoles(["role"]),
+            },
         }),
-        authCredentials: initMemoryAuthCredentialRepository({
-            ticketNonce: { set: false },
+        authnInfos: initMemoryAuthnInfoRepository({
+            authnNonce: { set: false },
             lastAuthAt: { set: false },
         }),
     }
 }
 
 function standardClock(): Clock {
-    return initStaticClock(NOW)
+    return newStaticClock(NOW)
 }
 
 interface Handler<T> {

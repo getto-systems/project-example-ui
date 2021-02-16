@@ -1,9 +1,9 @@
-import { newClearAuthCredentialAction } from "../../../../sign/x_Action/AuthCredential/Clear/main"
+import { newClearAuthnInfoAction } from "../../../../sign/x_Action/AuthnInfo/Clear/main"
 
 import { AuthProfileLogoutResource } from "./resource"
 
 export function newAuthProfileLogoutResource(webStorage: Storage): AuthProfileLogoutResource {
     return {
-        clear: newClearAuthCredentialAction(webStorage),
+        clear: newClearAuthnInfoAction(webStorage),
     }
 }

@@ -12,7 +12,9 @@ function envContent() {
     const isProduction = process.env.BUILD_ENV == "production"
     const version = (() => {
         if (isProduction) {
-            return fs.readFileSync(path.join(__dirname, "../.release-version"), "utf8").trim()
+            return fs
+                .readFileSync(path.join(__dirname, "../.release-version"), "utf8")
+                .trim()
         } else {
             return "dist"
         }
@@ -25,7 +27,7 @@ function envContent() {
         apiServerURL: process.env.API_SERVER_URL,
 
         storageKey: {
-            ticketNonce: process.env.STORAGE_KEY_TICKET_NONCE,
+            authnNonce: process.env.STORAGE_KEY_AUTHN_NONCE,
             apiCredential: process.env.STORAGE_KEY_API_CREDENTIAL,
             lastAuthAt: process.env.STORAGE_KEY_LAST_AUTH_AT,
             menuExpand: {
@@ -46,7 +48,8 @@ function pathContent() {
     return [
         "export type StaticMenuPath =" + toTypeVariant(files),
         "export type StaticContentPath =" + toTypeVariant(documents),
-        "export const staticContentPaths: StaticContentPath[] = " + toConstValue(documents),
+        "export const staticContentPaths: StaticContentPath[] = " +
+            toConstValue(documents),
     ].join("\n")
 
     function isDocument(file) {

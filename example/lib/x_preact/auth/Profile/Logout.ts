@@ -11,12 +11,12 @@ import { useAction } from "../../common/hooks"
 
 import { AuthProfileLogoutResource } from "../../../auth/z_EntryPoint/Profile/resources/Logout/resource"
 
-import { initialClearAuthCredentialActionState } from "../../../auth/sign/x_Action/AuthCredential/Clear/action"
+import { initialClearAuthnInfoActionState } from "../../../auth/sign/x_Action/AuthnInfo/Clear/action"
 
 import { StorageError } from "../../../common/storage/data"
 
 export function AuthProfileLogout(resource: AuthProfileLogoutResource): VNode {
-    const state = useAction(resource.clear, initialClearAuthCredentialActionState)
+    const state = useAction(resource.clear, initialClearAuthnInfoActionState)
     useEffect(() => {
         switch (state.type) {
             case "succeed-to-logout":
