@@ -9,12 +9,12 @@ import { v_small } from "../../../../../../../../z_vendor/getto-css/preact/desig
 
 import { useAction } from "../../../../../../../../x_preact/common/hooks"
 
-import { initialClearAuthnInfoState, LogoutResource } from "../Core/action"
+import { initialLogoutState, LogoutResource } from "../action"
 
 import { StorageError } from "../../../../../../../../common/storage/data"
 
 export function Logout(resource: LogoutResource): VNode {
-    const state = useAction(resource.clear, initialClearAuthnInfoState)
+    const state = useAction(resource.logout, initialLogoutState)
     useEffect(() => {
         switch (state.type) {
             case "succeed-to-logout":
@@ -51,7 +51,7 @@ export function Logout(resource: LogoutResource): VNode {
         })
 
         function onClick() {
-            resource.clear.submit()
+            resource.logout.submit()
         }
 
         function error(): VNode[] {

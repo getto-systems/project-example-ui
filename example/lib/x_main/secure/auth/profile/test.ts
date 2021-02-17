@@ -26,7 +26,7 @@ import { markApiNonce, markApiRoles } from "../../../../common/apiCredential/dat
 import { initMemoryAuthnInfoRepository } from "../../../../auth/sign/kernel/authnInfo/common/infra/repository/authnInfo/memory"
 import { initNotifyUnexpectedErrorSimulateRemoteAccess } from "../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/simulate"
 import { initUnexpectedErrorAction } from "../../../../availability/unexpectedError/impl"
-import { initClearAuthnInfoAction } from "../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/Core/impl"
+import { initClearAuthnInfoAction } from "../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/impl"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
 const STORED_AUTH_AT = new Date("2020-01-01 09:00:00")
@@ -71,7 +71,7 @@ function standardResource() {
     }
 
     return initAuthProfileResource(factory, {
-        clear: initClearAuthnInfoAction({ clear: repository }),
+        logout: initClearAuthnInfoAction({ clear: repository }),
     })
 }
 
