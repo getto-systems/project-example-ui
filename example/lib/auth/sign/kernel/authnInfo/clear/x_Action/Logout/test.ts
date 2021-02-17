@@ -1,13 +1,14 @@
-import { ClearAuthnInfoState } from "./Core/action"
-
-import { markAuthAt, markAuthnNonce } from "../../../common/data"
 import { initMemoryApiCredentialRepository } from "../../../../../../../common/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
 import { initMemoryAuthnInfoRepository } from "../../../common/infra/repository/authnInfo/memory"
 import { initClearAuthnInfoAction } from "./Core/impl"
 
+import { ClearAuthnInfoState } from "./Core/action"
+
+import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
+import { markAuthAt, markAuthnNonce } from "../../../common/data"
+
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
-const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
+const STORED_AUTH_AT = new Date("2020-01-01 09:00:00")
 
 describe("Logout", () => {
     test("clear", (done) => {
@@ -65,7 +66,7 @@ function standardRepository() {
         }),
         authnInfos: initMemoryAuthnInfoRepository({
             authnNonce: { set: true, value: markAuthnNonce(STORED_AUTHN_NONCE) },
-            lastAuthAt: { set: true, value: markAuthAt(STORED_LOGIN_AT) },
+            lastAuthAt: { set: true, value: markAuthAt(STORED_AUTH_AT) },
         }),
     }
 }

@@ -45,13 +45,13 @@ import { initAuthenticatePasswordAction } from "../../../../sign/x_Action/Passwo
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
 const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
-const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
+const SUCCEED_TO_AUTH_AT = new Date("2020-01-01 10:00:00")
 
 const RENEWED_AUTHN_NONCE = "renewed-authn-nonce" as const
 const SUCCEED_TO_RENEW_AT = new Date("2020-01-01 10:01:00")
 
 // renew リクエストを投げるべきかの判定に使用する
-// SUCCEED_TO_LOGIN_AT と setContinuousRenew の delay との間でうまく調整する
+// SUCCEED_TO_AUTH_AT と setContinuousRenew の delay との間でうまく調整する
 const NOW = new Date("2020-01-01 10:00:30")
 
 // continuous renew リクエストを投げるべきかの判定に使用する
@@ -720,7 +720,7 @@ function simulateLogin(_fields: AuthenticatePasswordFields): AuthenticatePasswor
         value: {
             auth: {
                 authnNonce: markAuthnNonce(AUTHORIZED_AUTHN_NONCE),
-                authAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
+                authAt: markAuthAt(SUCCEED_TO_AUTH_AT),
             },
             api: {
                 apiNonce: markApiNonce("api-nonce"),
@@ -767,7 +767,7 @@ function expectToSaveLastAuth(authnInfos: AuthnInfoRepository) {
         found: true,
         lastAuth: {
             authnNonce: markAuthnNonce(AUTHORIZED_AUTHN_NONCE),
-            lastAuthAt: markAuthAt(SUCCEED_TO_LOGIN_AT),
+            lastAuthAt: markAuthAt(SUCCEED_TO_AUTH_AT),
         },
     })
 }
