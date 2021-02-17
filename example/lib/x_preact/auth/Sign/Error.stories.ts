@@ -1,22 +1,24 @@
 import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { noPadded } from "../../z_storybook/display"
+import { storyTemplate } from "../../z_storybook/story"
+import { noPaddedStory } from "../../z_storybook/display"
 
 import { EntryPoint } from "./EntryPoint"
+
+import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
 
 import {
     LoginErrorMockProps,
     initMockLoginEntryPointAsError,
 } from "../../../auth/z_EntryPoint/Sign/mock"
-import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
 
 export default {
-    title: "Auth/Login/Error",
+    title: "Auth/Sign/Error",
 }
 
 type MockProps = LoginErrorMockProps
-const Template: Story<MockProps> = (args) => {
+const template = storyTemplate<MockProps>((args) => {
     const passer = initMockPropsPasser<LoginErrorMockProps>()
     const entryPoint = initMockLoginEntryPointAsError(passer)
     return h(Preview, { args })
@@ -25,15 +27,8 @@ const Template: Story<MockProps> = (args) => {
         useEffect(() => {
             passer.update(props.args)
         })
-        return noPadded(h(EntryPoint, entryPoint))
+        return noPaddedStory(h(EntryPoint, entryPoint))
     }
-}
-interface Story<T> {
-    args?: T
-    (args: T): VNode
-}
+})
 
-export const Error = Template.bind({})
-Error.args = {
-    error: "error",
-}
+export const Error = template({ error: "error" })

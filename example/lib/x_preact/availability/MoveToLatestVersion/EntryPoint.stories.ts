@@ -1,12 +1,15 @@
-import { h, VNode } from "preact"
+import { h } from "preact"
 import { useEffect } from "preact/hooks"
+
+import { storyTemplate } from "../../z_storybook/story"
+
+import { EntryPoint } from "./EntryPoint"
 
 import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
 
 import { newMockMoveToNextVersion } from "../../../availability/z_EntryPoint/MoveToNextVersion/mock"
-import { NextVersionMockProps } from "../../../availability/x_Resource/MoveToNextVersion/nextVersion/mock"
 
-import { EntryPoint } from "./EntryPoint"
+import { NextVersionMockProps } from "../../../availability/x_Resource/MoveToNextVersion/nextVersion/mock"
 
 export default {
     title: "Update/MoveToNextVersion",
@@ -18,7 +21,7 @@ export default {
 }
 
 type MockProps = NextVersionMockProps
-const Template: Story<MockProps> = (args) => {
+const template = storyTemplate<MockProps>((args) => {
     const passer = initMockPropsPasser<NextVersionMockProps>()
     const entryPoint = newMockMoveToNextVersion(passer)
     return h(Preview, { args })
@@ -29,20 +32,7 @@ const Template: Story<MockProps> = (args) => {
         })
         return h(EntryPoint, entryPoint)
     }
-}
+})
 
-interface Story<T> {
-    args?: T
-    (args: T): VNode
-}
-
-export const Delayed = Template.bind({})
-Delayed.args = {
-    type: "delayed",
-}
-
-export const Failed = Template.bind({})
-Failed.args = {
-    type: "failed",
-    err: "find error",
-}
+export const Delayed = template({ type: "delayed" })
+export const Failed = template({ type: "failed", err: "find error" })

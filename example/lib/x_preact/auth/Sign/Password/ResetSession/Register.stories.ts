@@ -1,26 +1,25 @@
 import { h } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { storyTemplate } from "../../../z_storybook/story"
+import { storyTemplate } from "../../../../z_storybook/story"
 
-import { AuthenticatePassword } from "./Authenticate"
+import { RegisterPassword } from "./Register"
 
-import { initMockPropsPasser } from "../../../../common/vendor/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../../../common/vendor/getto-example/Application/mock"
+import { initMockPasswordResetEntryPoint } from "../../../../../auth/z_EntryPoint/Sign/mock"
 
-import { initMockPasswordLoginEntryPoint } from "../../../../auth/z_EntryPoint/Sign/mock"
-
-import { loginIDFormFieldValidations } from "../../../../auth/common/x_Component/Field/LoginID/mock"
+import { loginIDFormFieldValidations } from "../../../../../auth/common/x_Component/Field/LoginID/mock"
+import { formValidationStates } from "../../../../../common/vendor/getto-form/x_Resource/Form/mock"
 import {
     passwordFormFieldCharacters,
     passwordFormFieldValidations,
     passwordFormFieldViews,
-} from "../../../../auth/common/x_Component/Field/Password/mock"
-import { formValidationStates } from "../../../../common/vendor/getto-form/x_Resource/Form/mock"
+} from "../../../../../auth/common/x_Component/Field/Password/mock"
 
-import { AuthenticatePasswordResourceMockProps } from "../../../../auth/x_Resource/Sign/Password/Authenticate/mock"
+import { RegisterPasswordResourceMockProps } from "../../../../../auth/x_Resource/Sign/Password/ResetSession/Register/mock"
 
 export default {
-    title: "Auth/Sign/Password/Authenticate",
+    title: "Auth/Sign/Password/ResetSession/Register",
     argTypes: {
         type: {
             table: { disable: true },
@@ -43,17 +42,17 @@ export default {
     },
 }
 
-type MockProps = AuthenticatePasswordResourceMockProps
+type MockProps = RegisterPasswordResourceMockProps
 const template = storyTemplate<MockProps>((args) => {
-    const passer = initMockPropsPasser<AuthenticatePasswordResourceMockProps>()
-    const entryPoint = initMockPasswordLoginEntryPoint(passer)
+    const passer = initMockPropsPasser<RegisterPasswordResourceMockProps>()
+    const entryPoint = initMockPasswordResetEntryPoint(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(AuthenticatePassword, entryPoint)
+        return h(RegisterPassword, entryPoint)
     }
 })
 

@@ -1,7 +1,8 @@
-import { h, VNode } from "preact"
+import { h } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { noPadded } from "../../z_storybook/display"
+import { storyTemplate } from "../../z_storybook/story"
+import { noPaddedStory } from "../../z_storybook/display"
 
 import { EntryPoint } from "./EntryPoint"
 
@@ -30,7 +31,7 @@ type MockProps = Readonly<{
     breadcrumbLabel: string
     breadcrumbIcon: string
 }>
-const Template: Story<MockProps> = (args) => {
+const template = storyTemplate<MockProps>((args) => {
     const passer: DashboardMockPropsPasser = {
         seasonInfo: initMockPropsPasser<SeasonInfoMockProps>(),
         menu: initMockPropsPasser<MenuMockProps>(),
@@ -55,19 +56,13 @@ const Template: Story<MockProps> = (args) => {
             })
             passer.example.update({ type: "success", year: props.args.seasonYear })
         })
-        return noPadded(h(EntryPoint, entryPoint))
+        return noPaddedStory(h(EntryPoint, entryPoint))
     }
-}
+})
 
-interface Story<T> {
-    args?: T
-    (args: T): VNode
-}
-
-export const Initial = Template.bind({})
-Initial.args = {
+export const Initial = template({
     seasonYear: new Date().getFullYear(),
     menuBadgeCount: 99,
     breadcrumbLabel: "ホーム",
     breadcrumbIcon: "home",
-}
+})

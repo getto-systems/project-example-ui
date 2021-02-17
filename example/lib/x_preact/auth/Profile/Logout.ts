@@ -15,7 +15,7 @@ import { initialClearAuthnInfoState } from "../../../auth/sign/x_Action/AuthnInf
 
 import { StorageError } from "../../../common/storage/data"
 
-export function AuthProfileLogout(resource: LogoutResource): VNode {
+export function Logout(resource: LogoutResource): VNode {
     const state = useAction(resource.clear, initialClearAuthnInfoState)
     useEffect(() => {
         switch (state.type) {

@@ -30,7 +30,7 @@ import { initialFormContainerComponentState } from "../../../../common/vendor/ge
 
 import { AuthenticatePasswordError } from "../../../../auth/sign/password/authenticate/data"
 
-export function AuthSignPasswordAuthenticate({
+export function AuthenticatePassword({
     resource,
     terminate,
 }: PasswordLoginEntryPoint): VNode {

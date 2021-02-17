@@ -1,10 +1,15 @@
-import { h, VNode } from "preact"
+import { h } from "preact"
 import { useEffect } from "preact/hooks"
+
+import { storyTemplate } from "../../z_storybook/story"
 
 import { Example } from "./Example"
 
 import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
-import { ExampleMockProps, initMockExampleComponent } from "../../../example/x_components/Dashboard/example/mock"
+import {
+    ExampleMockProps,
+    initMockExampleComponent,
+} from "../../../example/x_components/Dashboard/example/mock"
 
 export default {
     title: "Example/Home/Example",
@@ -16,7 +21,7 @@ export default {
 }
 
 type MockProps = ExampleMockProps
-const Template: Story<MockProps> = (args) => {
+const template = storyTemplate<MockProps>((args) => {
     const passer = initMockPropsPasser<ExampleMockProps>()
     const example = initMockExampleComponent(passer)
     return h(Preview, { args })
@@ -27,21 +32,7 @@ const Template: Story<MockProps> = (args) => {
         })
         return h(Example, { example })
     }
-}
+})
 
-interface Story<T> {
-    args?: T
-    (args: T): VNode
-}
-
-export const Success = Template.bind({})
-Success.args = {
-    type: "success",
-    year: new Date().getFullYear(),
-}
-
-export const Failed = Template.bind({})
-Failed.args = {
-    type: "failed",
-    err: "load error",
-}
+export const Success = template({ type: "success", year: new Date().getFullYear() })
+export const Failed = template({ type: "failed", err: "load error" })
