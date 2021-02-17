@@ -20,7 +20,7 @@ import {
     markInputString,
     toValidationError,
 } from "../../../../../common/vendor/getto-form/form/data"
-import { markSecureScriptPath } from "../../../../sign/secureScriptPath/get/data"
+import { markSecureScriptPath } from "../../../../sign/common/secureScriptPath/get/data"
 import { AuthenticatePasswordFields } from "../../../../sign/password/authenticate/data"
 import { markAuthAt, markAuthnNonce } from "../../../../sign/kernel/authnInfo/common/data"
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
@@ -32,7 +32,7 @@ import {
     RenewAuthnInfoResult,
 } from "../../../../sign/kernel/authnInfo/common/infra"
 import { initMemoryAuthnInfoRepository } from "../../../../sign/kernel/authnInfo/common/infra/repository/authnInfo/memory"
-import { initGetSecureScriptPathLocationInfo } from "../../../../sign/secureScriptPath/get/impl"
+import { initGetSecureScriptPathLocationInfo } from "../../../../sign/common/secureScriptPath/get/impl"
 import { delayed } from "../../../../../z_infra/delayed/core"
 import { authenticatePasswordEventHasDone } from "../../../../sign/password/authenticate/impl"
 import {

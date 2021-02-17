@@ -1,6 +1,6 @@
 import { ApplicationAction } from "../../../../../common/vendor/getto-example/Application/action"
 
-import { GetSecureScriptPathMethod } from "../../../secureScriptPath/get/method"
+import { GetSecureScriptPathMethod } from "../../../common/secureScriptPath/get/method"
 import {
     ForceRenewAuthnInfoMethod,
     RenewAuthnInfoMethod,
@@ -15,7 +15,7 @@ import { RenewAuthnInfoEvent } from "../../../kernel/authnInfo/renew/event"
 import {
     SecureScriptPath,
     LoadSecureScriptError,
-} from "../../../secureScriptPath/get/data"
+} from "../../../common/secureScriptPath/get/data"
 import { StartContinuousRenewAuthnInfoEvent } from "../../../kernel/authnInfo/startContinuousRenew/event"
 
 export interface RenewAuthnInfoAction extends ApplicationAction<RenewAuthnInfoState> {

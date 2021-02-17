@@ -1,13 +1,13 @@
 import { ApplicationAbstractAction } from "../../../../../../common/vendor/getto-example/Application/impl"
 
 import { startContinuousRenewAuthnInfo } from "../../../../kernel/authnInfo/startContinuousRenew/impl"
-import { getSecureScriptPath } from "../../../../secureScriptPath/get/impl"
-import { GetSecureScriptPathLocationInfo } from "../../../../secureScriptPath/get/method"
+import { getSecureScriptPath } from "../../../../common/secureScriptPath/get/impl"
+import { GetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/method"
 import { authenticatePassword } from "../../../../password/authenticate/impl"
 
 import { AuthenticatePasswordInfra } from "../../../../password/authenticate/infra"
 import { StartContinuousRenewAuthnInfoInfra } from "../../../../kernel/authnInfo/startContinuousRenew/infra"
-import { GetSecureScriptPathInfra } from "../../../../secureScriptPath/get/infra"
+import { GetSecureScriptPathInfra } from "../../../../common/secureScriptPath/get/infra"
 
 import {
     AuthenticatePasswordMaterial,
@@ -18,7 +18,7 @@ import {
 } from "./action"
 
 import { FormConvertResult } from "../../../../../../common/vendor/getto-form/form/data"
-import { LoadSecureScriptError } from "../../../../secureScriptPath/get/data"
+import { LoadSecureScriptError } from "../../../../common/secureScriptPath/get/data"
 import { AuthenticatePasswordFields } from "../../../../password/authenticate/data"
 import { AuthnInfo } from "../../../../kernel/authnInfo/common/data"
 

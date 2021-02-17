@@ -25,7 +25,7 @@ import { initMemoryApiCredentialRepository } from "../../../common/apiCredential
 import { AuthnInfoRepository, RenewAuthnInfoResult } from "../../sign/kernel/authnInfo/common/infra"
 import { delayed, wait } from "../../../z_infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../sign/kernel/authnInfo/common/infra/repository/authnInfo/memory"
-import { initGetSecureScriptPathLocationInfo } from "../../sign/secureScriptPath/get/impl"
+import { initGetSecureScriptPathLocationInfo } from "../../sign/common/secureScriptPath/get/impl"
 import { initRegisterPasswordLocationInfo } from "../../sign/password/resetSession/register/impl"
 import {
     GetPasswordResetSessionStatusResult,

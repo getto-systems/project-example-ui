@@ -16,7 +16,7 @@ import { RegisterPasswordResource } from "./resource"
 
 import { RegisterPasswordState } from "../../../../../sign/x_Action/Password/ResetSession/Register/Core/action"
 
-import { markSecureScriptPath } from "../../../../../sign/secureScriptPath/get/data"
+import { markSecureScriptPath } from "../../../../../sign/common/secureScriptPath/get/data"
 import {
     markInputString,
     toValidationError,
@@ -34,7 +34,7 @@ import {
     RenewAuthnInfoResult,
 } from "../../../../../sign/kernel/authnInfo/common/infra"
 import { initMemoryAuthnInfoRepository } from "../../../../../sign/kernel/authnInfo/common/infra/repository/authnInfo/memory"
-import { initGetSecureScriptPathLocationInfo } from "../../../../../sign/secureScriptPath/get/impl"
+import { initGetSecureScriptPathLocationInfo } from "../../../../../sign/common/secureScriptPath/get/impl"
 import {
     initRegisterPasswordLocationInfo,
     registerPasswordEventHasDone,

@@ -7,7 +7,7 @@ import { RenewAuthInfoResource } from "./resource"
 
 import { RenewAuthnInfoState } from "../../../../sign/x_Action/AuthnInfo/Renew/action"
 
-import { markSecureScriptPath } from "../../../../sign/secureScriptPath/get/data"
+import { markSecureScriptPath } from "../../../../sign/common/secureScriptPath/get/data"
 import { markAuthAt, markAuthnNonce } from "../../../../sign/kernel/authnInfo/common/data"
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
@@ -19,7 +19,7 @@ import {
 } from "../../../../sign/kernel/authnInfo/common/infra"
 import { delayed } from "../../../../../z_infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../../../sign/kernel/authnInfo/common/infra/repository/authnInfo/memory"
-import { initGetSecureScriptPathLocationInfo } from "../../../../sign/secureScriptPath/get/impl"
+import { initGetSecureScriptPathLocationInfo } from "../../../../sign/common/secureScriptPath/get/impl"
 import { initRenewAuthnInfoAction } from "../../../../sign/x_Action/AuthnInfo/Renew/impl"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const

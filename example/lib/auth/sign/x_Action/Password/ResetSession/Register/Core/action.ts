@@ -1,7 +1,7 @@
 import { ApplicationAction } from "../../../../../../../common/vendor/getto-example/Application/action"
 
 import { RegisterPasswordMethod } from "../../../../../password/resetSession/register/method"
-import { GetSecureScriptPathMethod } from "../../../../../secureScriptPath/get/method"
+import { GetSecureScriptPathMethod } from "../../../../../common/secureScriptPath/get/method"
 import { StartContinuousRenewAuthnInfoMethod } from "../../../../../kernel/authnInfo/startContinuousRenew/method"
 
 import { RegisterPasswordEvent } from "../../../../../password/resetSession/register/event"
@@ -12,7 +12,7 @@ import { PasswordResetFields } from "../../../../../password/resetSession/regist
 import {
     SecureScriptPath,
     LoadSecureScriptError,
-} from "../../../../../secureScriptPath/get/data"
+} from "../../../../../common/secureScriptPath/get/data"
 
 export interface RegisterPasswordAction extends ApplicationAction<RegisterPasswordState> {
     submit(fields: FormConvertResult<PasswordResetFields>): void

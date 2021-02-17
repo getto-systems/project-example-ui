@@ -3,7 +3,7 @@ import { newStartContinuousRenewAuthnInfoInfra } from "../../../kernel/authnInfo
 import {
     newGetSecureScriptPathLocationInfo,
     newGetSecureScriptPathInfra,
-} from "../../../secureScriptPath/get/main"
+} from "../../../common/secureScriptPath/get/main"
 
 import { initRenewAuthnInfoAction } from "./impl"
 

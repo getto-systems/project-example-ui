@@ -1,6 +1,6 @@
 import { AuthSignLinkResource } from "./resource"
 
-import { AuthLocationSearchParams } from "../../../sign/secureScriptPath/get/data"
+import { AuthLocationSearchParams } from "../../../sign/common/secureScriptPath/get/data"
 
 export function initAuthSignLinkResource(): AuthSignLinkResource {
     return {

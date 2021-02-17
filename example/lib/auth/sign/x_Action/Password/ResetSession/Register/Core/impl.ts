@@ -1,11 +1,11 @@
 import { ApplicationAbstractAction } from "../../../../../../../common/vendor/getto-example/Application/impl"
 
 import { registerPassword } from "../../../../../password/resetSession/register/impl"
-import { getSecureScriptPath } from "../../../../../secureScriptPath/get/impl"
+import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
 import { startContinuousRenewAuthnInfo } from "../../../../../kernel/authnInfo/startContinuousRenew/impl"
 
 import { StartContinuousRenewAuthnInfoInfra } from "../../../../../kernel/authnInfo/startContinuousRenew/infra"
-import { GetSecureScriptPathInfra } from "../../../../../secureScriptPath/get/infra"
+import { GetSecureScriptPathInfra } from "../../../../../common/secureScriptPath/get/infra"
 import { RegisterPasswordInfra } from "../../../../../password/resetSession/register/infra"
 
 import {
@@ -16,10 +16,10 @@ import {
     RegisterPasswordForeground,
 } from "./action"
 
-import { GetSecureScriptPathLocationInfo } from "../../../../../secureScriptPath/get/method"
+import { GetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/method"
 import { RegisterPasswordLocationInfo } from "../../../../../password/resetSession/register/method"
 
-import { LoadSecureScriptError } from "../../../../../secureScriptPath/get/data"
+import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
 import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
 import { PasswordResetFields } from "../../../../../password/resetSession/register/data"
 import { AuthnInfo } from "../../../../../kernel/authnInfo/common/data"

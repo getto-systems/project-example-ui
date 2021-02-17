@@ -4,7 +4,7 @@ import { RegisterPasswordLocationInfo, RegisterPasswordPod } from "./method"
 
 import { RegisterPasswordEvent } from "./event"
 
-import { AuthLocationSearchParams } from "../../../secureScriptPath/get/data"
+import { AuthLocationSearchParams } from "../../../common/secureScriptPath/get/data"
 import { markPasswordResetToken, PasswordResetToken } from "./data"
 
 export function initRegisterPasswordLocationInfo(
