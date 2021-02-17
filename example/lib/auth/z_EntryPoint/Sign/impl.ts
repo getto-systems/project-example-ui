@@ -11,7 +11,7 @@ import {
     AuthSignResourceFactory,
 } from "./entryPoint"
 
-import { AuthLocationSearchParams } from "../../sign/common/secureScriptPath/get/data"
+import { AuthSignSearchParams } from "../../sign/common/searchParams/data"
 
 export function initLoginViewLocationInfo(currentURL: URL): AuthSignViewLocationInfo {
     return {
@@ -21,10 +21,10 @@ export function initLoginViewLocationInfo(currentURL: URL): AuthSignViewLocation
 
 function detectViewState(currentURL: URL): AuthSignViewType {
     // パスワードリセット
-    switch (currentURL.searchParams.get(AuthLocationSearchParams.passwordReset)) {
-        case AuthLocationSearchParams.passwordReset_start:
+    switch (currentURL.searchParams.get(AuthSignSearchParams.passwordReset)) {
+        case AuthSignSearchParams.passwordReset_start:
             return "password-reset-session"
-        case AuthLocationSearchParams.passwordReset_reset:
+        case AuthSignSearchParams.passwordReset_reset:
             return "password-reset"
     }
 

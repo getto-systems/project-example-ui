@@ -4,7 +4,7 @@ import { RegisterPasswordResource } from "../../x_Resource/Sign/Password/ResetSe
 import { StartPasswordResetSessionResource } from "../../x_Resource/Sign/Password/ResetSession/Start/resource"
 
 import { ApplicationAction } from "../../../common/vendor/getto-example/Application/action"
-import { AuthSignLinkResource } from "../../x_Resource/Sign/Link/resource"
+import { AuthSignLinkResource } from "../../sign/common/searchParams/x_Action/Link/action"
 
 export type AuthSignEntryPoint = Readonly<{
     view: AuthSignView
