@@ -1,15 +1,13 @@
 import { newAuthenticatePasswordResourceHandler } from "../../../../x_Resource/Sign/Password/Authenticate/main/worker/background"
 import { newRegisterPasswordResourceHandler } from "../../../../x_Resource/Sign/Password/ResetSession/Register/main/worker/background"
+import { newStartPasswordResetSessionResourceHandler } from "../../../../x_Resource/Sign/Password/ResetSession/Start/main/worker/background"
 
 import { WorkerHandler } from "../../../../../common/vendor/getto-worker/main/background"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
-
 import { AuthenticatePasswordResourceProxyMessage } from "../../../../x_Resource/Sign/Password/Authenticate/main/worker/message"
 import { RegisterPasswordResourceProxyMessage } from "../../../../x_Resource/Sign/Password/ResetSession/Register/main/worker/message"
-import { PasswordResetSessionActionProxyMessage } from "../../../../sign/password/resetSession/start/main/worker/message"
-
-import { newPasswordResetSessionActionBackgroundHandler } from "../../../../sign/password/resetSession/start/main/worker/background"
+import { StartPasswordResetSessionResourceProxyMessage } from "../../../../x_Resource/Sign/Password/ResetSession/Start/main/worker/message"
 
 export function newLoginWorker(worker: Worker): void {
     const handler: Handler = {
@@ -24,12 +22,10 @@ export function newLoginWorker(worker: Worker): void {
                         response,
                     })
                 ),
+                start: newStartPasswordResetSessionResourceHandler((response) =>
+                    postBackgroundMessage({ type: "password-resetSession-start", response })
+                ),
             },
-        },
-        reset: {
-            session: newPasswordResetSessionActionBackgroundHandler((response) =>
-                postBackgroundMessage({ type: "reset-session", response })
-            ),
         },
     }
 
@@ -51,10 +47,8 @@ type Handler = Readonly<{
         authenticate: WorkerHandler<AuthenticatePasswordResourceProxyMessage>
         resetSession: Readonly<{
             register: WorkerHandler<RegisterPasswordResourceProxyMessage>
+            start: WorkerHandler<StartPasswordResetSessionResourceProxyMessage>
         }>
-    }>
-    reset: Readonly<{
-        session: WorkerHandler<PasswordResetSessionActionProxyMessage>
     }>
 }>
 
@@ -69,8 +63,8 @@ function initForegroundMessageHandler(
                     handler.password.authenticate(message.message)
                     break
 
-                case "reset-session":
-                    handler.reset.session(message.message)
+                case "password-resetSession-start":
+                    handler.password.resetSession.start(message.message)
                     break
 
                 case "password-resetSession-register":

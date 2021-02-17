@@ -19,12 +19,8 @@ export interface WorkerProxy<A, M, R> extends WorkerProxyContainer<M> {
     action(): A
     resolve(response: R): void
 }
-export interface WorkerForegroundProxyAction_legacy<P, M, R>
-    extends WorkerProxyContainer<M> {
-    pod(): P
-    resolve(response: R): void
-}
 
+// TODO これは message に移動するべきだな
 export interface WorkerProxyMethod<M, E> {
     call(message: M, post: Post<E>): void
     resolve({ id, done, event }: WorkerProxyCallResponse<E>): void
