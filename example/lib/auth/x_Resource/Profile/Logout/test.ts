@@ -1,9 +1,9 @@
 import { ClearAuthnInfoState } from "../../../sign/x_Action/AuthnInfo/Clear/action"
 
-import { markAuthAt, markAuthnNonce } from "../../../sign/authnInfo/common/data"
+import { markAuthAt, markAuthnNonce } from "../../../sign/kernel/authnInfo/common/data"
 import { initMemoryApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../common/apiCredential/data"
-import { initMemoryAuthnInfoRepository } from "../../../sign/authnInfo/common/infra/repository/authnInfo/memory"
+import { initMemoryAuthnInfoRepository } from "../../../sign/kernel/authnInfo/common/infra/repository/authnInfo/memory"
 import { initClearAuthnInfoAction } from "../../../sign/x_Action/AuthnInfo/Clear/impl"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const

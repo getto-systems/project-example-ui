@@ -1,4 +1,4 @@
-import { newApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/main"
+import { newApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/main"
 import { newAuthnInfoRepository } from "../common/infra/repository/authnInfo/main"
 
 import { ClearAuthnInfoInfra } from "./infra"

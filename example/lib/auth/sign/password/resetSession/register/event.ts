@@ -1,4 +1,4 @@
-import { AuthnInfo } from "../../../authnInfo/common/data"
+import { AuthnInfo } from "../../../kernel/authnInfo/common/data"
 import { RegisterPasswordError } from "./data"
 
 export type RegisterPasswordEvent =

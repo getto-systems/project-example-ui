@@ -1,8 +1,8 @@
-import { Remote, RemoteResult, RemoteSimulator } from "../../../../z_infra/remote/infra"
-import { StoreResult } from "../../../../common/storage/infra"
+import { Remote, RemoteResult, RemoteSimulator } from "../../../../../z_infra/remote/infra"
+import { StoreResult } from "../../../../../common/storage/infra"
 
-import { StorageError } from "../../../../common/storage/data"
-import { ApiCredential } from "../../../../common/apiCredential/data"
+import { StorageError } from "../../../../../common/storage/data"
+import { ApiCredential } from "../../../../../common/apiCredential/data"
 import { AuthnInfo, LastAuth, RenewAuthnInfoRemoteError, AuthnNonce } from "./data"
 
 export interface AuthnInfoRepository {

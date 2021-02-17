@@ -2,10 +2,10 @@ import { ApplicationAction } from "../../../../../../../common/vendor/getto-exam
 
 import { RegisterPasswordMethod } from "../../../../../password/resetSession/register/method"
 import { GetSecureScriptPathMethod } from "../../../../../secureScriptPath/get/method"
-import { StartContinuousRenewAuthnInfoMethod } from "../../../../../authnInfo/startContinuousRenew/method"
+import { StartContinuousRenewAuthnInfoMethod } from "../../../../../kernel/authnInfo/startContinuousRenew/method"
 
 import { RegisterPasswordEvent } from "../../../../../password/resetSession/register/event"
-import { StartContinuousRenewAuthnInfoEvent } from "../../../../../authnInfo/startContinuousRenew/event"
+import { StartContinuousRenewAuthnInfoEvent } from "../../../../../kernel/authnInfo/startContinuousRenew/event"
 
 import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
 import { PasswordResetFields } from "../../../../../password/resetSession/register/data"

@@ -10,7 +10,7 @@ import {
     AuthenticatePasswordRemoteError,
 } from "../../../data"
 import { RawRemote, RemoteError } from "../../../../../../../z_infra/remote/infra"
-import { markAuthAt, markAuthnNonce } from "../../../../../authnInfo/common/data"
+import { markAuthAt, markAuthnNonce } from "../../../../../kernel/authnInfo/common/data"
 import {
     markApiNonce,
     markApiRoles,

@@ -1,6 +1,6 @@
-import { initConnectRemoteAccess } from "../../../../../../../z_infra/remote/connect"
+import { initConnectRemoteAccess } from "../../../../../../../../z_infra/remote/connect"
 
-import { RawRemote, RemoteError } from "../../../../../../../z_infra/remote/infra"
+import { RawRemote, RemoteError } from "../../../../../../../../z_infra/remote/infra"
 import { RenewAuthnInfoRemote, RenewAuthnInfoResponse } from "../../../infra"
 
 import {
@@ -12,7 +12,7 @@ import {
 import {
     markApiNonce,
     markApiRoles,
-} from "../../../../../../../common/apiCredential/data"
+} from "../../../../../../../../common/apiCredential/data"
 
 type Raw = RawRemote<AuthnNonce, RawAuthnInfo>
 type RawAuthnInfo = Readonly<{

@@ -1,6 +1,6 @@
-import { env } from "../../../../../../../y_environment/env"
+import { env } from "../../../../../../../../y_environment/env"
 
-import { newApiAuthSignRenew } from "../../../../../../../z_external/api/auth/sign/renew"
+import { newApiAuthSignRenew } from "../../../../../../../../z_external/api/auth/sign/renew"
 
 import { initRenewAuthnInfoConnect } from "./connect"
 

@@ -4,19 +4,19 @@ import { GetSecureScriptPathMethod } from "../../../secureScriptPath/get/method"
 import {
     ForceRenewAuthnInfoMethod,
     RenewAuthnInfoMethod,
-} from "../../../authnInfo/renew/method"
+} from "../../../kernel/authnInfo/renew/method"
 import {
     ForceStartContinuousRenewAuthnInfoMethod,
     StartContinuousRenewAuthnInfoMethod,
-} from "../../../authnInfo/startContinuousRenew/method"
+} from "../../../kernel/authnInfo/startContinuousRenew/method"
 
-import { RenewAuthnInfoEvent } from "../../../authnInfo/renew/event"
+import { RenewAuthnInfoEvent } from "../../../kernel/authnInfo/renew/event"
 
 import {
     SecureScriptPath,
     LoadSecureScriptError,
 } from "../../../secureScriptPath/get/data"
-import { StartContinuousRenewAuthnInfoEvent } from "../../../authnInfo/startContinuousRenew/event"
+import { StartContinuousRenewAuthnInfoEvent } from "../../../kernel/authnInfo/startContinuousRenew/event"
 
 export interface RenewAuthnInfoAction extends ApplicationAction<RenewAuthnInfoState> {
     request(): void

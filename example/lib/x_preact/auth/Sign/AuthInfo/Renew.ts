@@ -18,7 +18,7 @@ import { RenewCredentialEntryPoint } from "../../../../auth/z_EntryPoint/Sign/en
 
 import { initialRenewAuthnInfoState } from "../../../../auth/sign/x_Action/AuthnInfo/Renew/action"
 
-import { RenewAuthnInfoError } from "../../../../auth/sign/authnInfo/renew/data"
+import { RenewAuthnInfoError } from "../../../../auth/sign/kernel/authnInfo/renew/data"
 
 export function RenewAuthInfo({ resource, terminate }: RenewCredentialEntryPoint): VNode {
     useTermination(terminate)

@@ -1,6 +1,6 @@
 import { newStaticClock, StaticClock } from "../../../../../z_infra/clock/simulate"
 import { initAuthenticatePasswordSimulate } from "../../../../sign/password/authenticate/infra/remote/authenticate/simulate"
-import { initRenewAuthnInfoSimulate } from "../../../../sign/authnInfo/common/infra/remote/renew/simulate"
+import { initRenewAuthnInfoSimulate } from "../../../../sign/kernel/authnInfo/common/infra/remote/renew/simulate"
 
 import { initFormAction } from "../../../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
@@ -22,7 +22,7 @@ import {
 } from "../../../../../common/vendor/getto-form/form/data"
 import { markSecureScriptPath } from "../../../../sign/secureScriptPath/get/data"
 import { AuthenticatePasswordFields } from "../../../../sign/password/authenticate/data"
-import { markAuthAt, markAuthnNonce } from "../../../../sign/authnInfo/common/data"
+import { markAuthAt, markAuthnNonce } from "../../../../sign/kernel/authnInfo/common/data"
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../common/apiCredential/data"
@@ -30,8 +30,8 @@ import {
     AuthnInfoRepository,
     RenewAuthnInfoRemote,
     RenewAuthnInfoResult,
-} from "../../../../sign/authnInfo/common/infra"
-import { initMemoryAuthnInfoRepository } from "../../../../sign/authnInfo/common/infra/repository/authnInfo/memory"
+} from "../../../../sign/kernel/authnInfo/common/infra"
+import { initMemoryAuthnInfoRepository } from "../../../../sign/kernel/authnInfo/common/infra/repository/authnInfo/memory"
 import { initGetSecureScriptPathLocationInfo } from "../../../../sign/secureScriptPath/get/impl"
 import { delayed } from "../../../../../z_infra/delayed/core"
 import { authenticatePasswordEventHasDone } from "../../../../sign/password/authenticate/impl"
