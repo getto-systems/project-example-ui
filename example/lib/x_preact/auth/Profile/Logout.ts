@@ -9,14 +9,14 @@ import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 
 import { useAction } from "../../common/hooks"
 
-import { AuthProfileLogoutResource } from "../../../auth/z_EntryPoint/Profile/resources/Logout/resource"
+import { LogoutResource } from "../../../auth/x_Resource/Profile/Logout/resource"
 
-import { initialClearAuthnInfoActionState } from "../../../auth/sign/x_Action/AuthnInfo/Clear/action"
+import { initialClearAuthnInfoState } from "../../../auth/sign/x_Action/AuthnInfo/Clear/action"
 
 import { StorageError } from "../../../common/storage/data"
 
-export function AuthProfileLogout(resource: AuthProfileLogoutResource): VNode {
-    const state = useAction(resource.clear, initialClearAuthnInfoActionState)
+export function AuthProfileLogout(resource: LogoutResource): VNode {
+    const state = useAction(resource.clear, initialClearAuthnInfoState)
     useEffect(() => {
         switch (state.type) {
             case "succeed-to-logout":

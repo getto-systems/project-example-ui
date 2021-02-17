@@ -1,4 +1,4 @@
-import { newAuthenticatePasswordBackgroundMaterial } from "../core"
+import { newAuthenticatePasswordBackground } from "../core"
 
 import { authenticatePasswordEventHasDone } from "../../../../../../password/authenticate/impl"
 
@@ -12,7 +12,7 @@ import {
 export function newAuthenticatePasswordHandler(
     post: Post<AuthenticatePasswordProxyResponse>
 ): WorkerHandler<AuthenticatePasswordProxyMessage> {
-    const material = newAuthenticatePasswordBackgroundMaterial()
+    const material = newAuthenticatePasswordBackground()
     return (message) => {
         switch (message.method) {
             case "authenticate":

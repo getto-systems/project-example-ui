@@ -1,11 +1,14 @@
-import { AuthenticatePasswordRemoteAccess, AuthenticatePasswordSimulator } from "../../../infra"
+import {
+    AuthenticatePasswordRemote,
+    AuthenticatePasswordSimulator,
+} from "../../../infra"
 import { WaitTime } from "../../../../../../../z_infra/time/infra"
 
 import { initSimulateRemoteAccess } from "../../../../../../../z_infra/remote/simulate"
 
-export function initAuthenticatePasswordSimulateRemoteAccess(
+export function initAuthenticatePasswordSimulate(
     simulator: AuthenticatePasswordSimulator,
     time: WaitTime
-): AuthenticatePasswordRemoteAccess {
+): AuthenticatePasswordRemote {
     return initSimulateRemoteAccess(simulator, time)
 }

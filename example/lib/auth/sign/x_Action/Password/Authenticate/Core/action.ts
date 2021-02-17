@@ -15,23 +15,23 @@ import {
 import { AuthenticatePasswordFields } from "../../../../password/authenticate/data"
 
 export interface AuthenticatePasswordAction
-    extends ApplicationAction<AuthenticatePasswordActionState> {
+    extends ApplicationAction<AuthenticatePasswordState> {
     submit(fields: FormConvertResult<AuthenticatePasswordFields>): void
     loadError(err: LoadSecureScriptError): void
 }
 
-export type AuthenticatePasswordMaterial = AuthenticatePasswordForegroundMaterial &
-    AuthenticatePasswordBackgroundMaterial
+export type AuthenticatePasswordMaterial = AuthenticatePasswordForeground &
+    AuthenticatePasswordBackground
 
-export type AuthenticatePasswordForegroundMaterial = Readonly<{
+export type AuthenticatePasswordForeground = Readonly<{
     startContinuousRenew: StartContinuousRenewAuthnInfoMethod
     getSecureScriptPath: GetSecureScriptPathMethod
 }>
-export type AuthenticatePasswordBackgroundMaterial = Readonly<{
+export type AuthenticatePasswordBackground = Readonly<{
     authenticate: AuthenticatePasswordMethod
 }>
 
-export type AuthenticatePasswordActionState =
+export type AuthenticatePasswordState =
     | Readonly<{ type: "initial-login" }>
     | Exclude<AuthenticatePasswordEvent, { type: "succeed-to-login" }>
     | Exclude<
@@ -41,6 +41,6 @@ export type AuthenticatePasswordActionState =
     | Readonly<{ type: "try-to-load"; scriptPath: SecureScriptPath }>
     | Readonly<{ type: "load-error"; err: LoadSecureScriptError }>
 
-export const initialAuthenticatePasswordActionState: AuthenticatePasswordActionState = {
+export const initialAuthenticatePasswordState: AuthenticatePasswordState = {
     type: "initial-login",
 }

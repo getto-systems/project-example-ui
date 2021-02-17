@@ -1,10 +1,6 @@
 import { ApiCredential } from "../../../../common/apiCredential/data"
 import { Delayed } from "../../../../z_infra/delayed/infra"
-import {
-    RemoteAccess,
-    RemoteAccessResult,
-    RemoteAccessSimulator,
-} from "../../../../z_infra/remote/infra"
+import { Remote, RemoteResult, RemoteSimulator } from "../../../../z_infra/remote/infra"
 import { DelayTime } from "../../../../z_infra/time/infra"
 
 import { AuthnInfo } from "../../authnInfo/common/data"
@@ -12,28 +8,28 @@ import { AuthnInfo } from "../../authnInfo/common/data"
 import { AuthenticatePasswordFields, AuthenticatePasswordRemoteError } from "./data"
 
 export type AuthenticatePasswordInfra = Readonly<{
-    login: AuthenticatePasswordRemoteAccess
+    login: AuthenticatePasswordRemote
     delayed: Delayed
     config: Readonly<{
         delay: DelayTime
     }>
 }>
 
-export type AuthenticatePasswordRemoteAccess = RemoteAccess<
+export type AuthenticatePasswordRemote = Remote<
     AuthenticatePasswordFields,
-    AuthenticatePasswordRemoteResponse,
+    AuthenticatePasswordResponse,
     AuthenticatePasswordRemoteError
 >
-export type AuthenticatePasswordRemoteAccessResult = RemoteAccessResult<
-    AuthenticatePasswordRemoteResponse,
+export type AuthenticatePasswordResult = RemoteResult<
+    AuthenticatePasswordResponse,
     AuthenticatePasswordRemoteError
 >
-export type AuthenticatePasswordSimulator = RemoteAccessSimulator<
+export type AuthenticatePasswordSimulator = RemoteSimulator<
     AuthenticatePasswordFields,
-    AuthenticatePasswordRemoteResponse,
+    AuthenticatePasswordResponse,
     AuthenticatePasswordRemoteError
 >
-export type AuthenticatePasswordRemoteResponse = Readonly<{
+export type AuthenticatePasswordResponse = Readonly<{
     auth: AuthnInfo
     api: ApiCredential
 }>

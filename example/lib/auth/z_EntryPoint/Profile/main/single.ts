@@ -8,7 +8,7 @@ import { initSeasonInfoComponent } from "../../../../example/x_components/Outlin
 import { initSeasonAction } from "../../../../example/shared/season/main/season"
 
 import { AuthProfileEntryPoint, ProfileFactory } from "../entryPoint"
-import { newAuthProfileLogoutResource } from "../resources/Logout/main"
+import { newLogoutResource } from "../../../x_Resource/Profile/Logout/main"
 
 export function newAuthProfileAsSingle(): AuthProfileEntryPoint {
     const webStorage = localStorage
@@ -25,7 +25,7 @@ export function newAuthProfileAsSingle(): AuthProfileEntryPoint {
         },
     }
     const resource = initAuthProfileResource(factory, {
-        ...newAuthProfileLogoutResource(webStorage),
+        ...newLogoutResource(webStorage),
     })
     return {
         resource,

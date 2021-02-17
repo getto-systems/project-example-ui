@@ -1,12 +1,12 @@
 import { wait } from "../delayed/core"
 import { WaitTime } from "../time/infra"
 
-import { RemoteAccess, RemoteAccessSimulator } from "./infra"
+import { Remote, RemoteSimulator } from "./infra"
 
 export function initSimulateRemoteAccess<M, V, E>(
-    simulator: RemoteAccessSimulator<M, V, E>,
+    simulator: RemoteSimulator<M, V, E>,
     time: WaitTime
-): RemoteAccess<M, V, E> {
+): Remote<M, V, E> {
     return async (message) => {
         if (time.wait_millisecond > 0) {
             await wait(time, () => null)

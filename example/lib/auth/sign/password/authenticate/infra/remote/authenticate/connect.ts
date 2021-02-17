@@ -1,33 +1,34 @@
 import { initConnectRemoteAccess } from "../../../../../../../z_infra/remote/connect"
 
 import {
-    AuthenticatePasswordRemoteAccess,
-    AuthenticatePasswordRemoteResponse,
+    AuthenticatePasswordRemote,
+    AuthenticatePasswordResponse,
 } from "../../../infra"
 
-import { AuthenticatePasswordFields, AuthenticatePasswordRemoteError } from "../../../data"
 import {
-    RawRemoteAccess,
-    RemoteAccessError,
-} from "../../../../../../../z_infra/remote/infra"
+    AuthenticatePasswordFields,
+    AuthenticatePasswordRemoteError,
+} from "../../../data"
+import { RawRemote, RemoteError } from "../../../../../../../z_infra/remote/infra"
 import { markAuthAt, markAuthnNonce } from "../../../../../authnInfo/common/data"
 import {
     markApiNonce,
     markApiRoles,
 } from "../../../../../../../common/apiCredential/data"
 
-type Raw = RawRemoteAccess<AuthenticatePasswordFields, RawAuthnInfo>
+type Raw = RawRemote<AuthenticatePasswordFields, RawAuthnInfo>
 type RawAuthnInfo = Readonly<{
     authnNonce: string
     api: Readonly<{ apiNonce: string; apiRoles: string[] }>
 }>
 
-export function initAuthenticatePasswordConnectRemoteAccess(
+export function initAuthenticatePasswordConnect(
     access: Raw
-): AuthenticatePasswordRemoteAccess {
+): AuthenticatePasswordRemote {
     return initConnectRemoteAccess(access, {
-        message: (fields: AuthenticatePasswordFields): AuthenticatePasswordFields => fields,
-        value: (response: RawAuthnInfo): AuthenticatePasswordRemoteResponse => ({
+        message: (fields: AuthenticatePasswordFields): AuthenticatePasswordFields =>
+            fields,
+        value: (response: RawAuthnInfo): AuthenticatePasswordResponse => ({
             auth: {
                 authnNonce: markAuthnNonce(response.authnNonce),
                 authAt: markAuthAt(new Date()),
@@ -37,7 +38,7 @@ export function initAuthenticatePasswordConnectRemoteAccess(
                 apiRoles: markApiRoles(response.api.apiRoles),
             },
         }),
-        error: (err: RemoteAccessError): AuthenticatePasswordRemoteError => {
+        error: (err: RemoteError): AuthenticatePasswordRemoteError => {
             switch (err.type) {
                 case "bad-request":
                 case "invalid-password-login":

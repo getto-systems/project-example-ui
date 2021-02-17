@@ -1,8 +1,8 @@
 import {
-    RemoteAccess,
-    RemoteAccessError,
-    RemoteAccessResult,
-    RemoteAccessSimulator,
+    Remote,
+    RemoteError,
+    RemoteResult,
+    RemoteSimulator,
 } from "../../z_infra/remote/infra"
 
 import { NotifyUnexpectedErrorPod } from "./action"
@@ -17,6 +17,6 @@ export interface NotifyUnexpectedError {
     (infra: UnexpectedNotifyInfra): NotifyUnexpectedErrorPod
 }
 
-export type NotifyUnexpectedErrorRemoteAccess = RemoteAccess<unknown, true, RemoteAccessError>
-export type NotifyUnexpectedErrorRemoteAccessResult = RemoteAccessResult<true, RemoteAccessError>
-export type NotifyUnexpectedErrorSimulator = RemoteAccessSimulator<unknown, true, RemoteAccessError>
+export type NotifyUnexpectedErrorRemoteAccess = Remote<unknown, true, RemoteError>
+export type NotifyUnexpectedErrorRemoteAccessResult = RemoteResult<true, RemoteError>
+export type NotifyUnexpectedErrorSimulator = RemoteSimulator<unknown, true, RemoteError>

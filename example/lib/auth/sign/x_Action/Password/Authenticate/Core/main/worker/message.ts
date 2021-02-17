@@ -1,6 +1,6 @@
 import {
-    WorkerProxyMethodMessage,
-    WorkerProxyMethodResponse,
+    WorkerProxyMessage,
+    WorkerProxyResponse,
 } from "../../../../../../../../common/vendor/getto-worker/main/message"
 
 import { AuthenticatePasswordEvent } from "../../../../../../password/authenticate/event"
@@ -8,11 +8,11 @@ import { AuthenticatePasswordEvent } from "../../../../../../password/authentica
 import { FormConvertResult } from "../../../../../../../../common/vendor/getto-form/form/data"
 import { AuthenticatePasswordFields } from "../../../../../../password/authenticate/data"
 
-export type AuthenticatePasswordProxyMessage = WorkerProxyMethodMessage<
+export type AuthenticatePasswordProxyMessage = WorkerProxyMessage<
     "authenticate",
     AuthenticatePasswordProxyParams
 >
-export type AuthenticatePasswordProxyResponse = WorkerProxyMethodResponse<
+export type AuthenticatePasswordProxyResponse = WorkerProxyResponse<
     "authenticate",
     AuthenticatePasswordEvent
 >

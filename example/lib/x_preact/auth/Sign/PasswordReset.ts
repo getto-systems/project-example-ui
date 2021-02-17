@@ -24,15 +24,15 @@ import { PasswordFormField } from "./field/password"
 
 import { PasswordResetEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialRegisterPasswordResetSessionActionState } from "../../../auth/sign/x_Action/Password/Reset/Register/Core/action"
+import { initialRegisterPasswordState } from "../../../auth/sign/x_Action/Password/ResetSession/Register/Core/action"
 import { initialFormContainerComponentState } from "../../../common/vendor/getto-form/x_Resource/Form/component"
 
-import { RegisterPasswordResetSessionError } from "../../../auth/sign/password/resetSession/register/data"
+import { RegisterPasswordError } from "../../../auth/sign/password/resetSession/register/data"
 
 export function PasswordReset({ resource, terminate }: PasswordResetEntryPoint): VNode {
     useTermination(terminate)
 
-    const state = useAction(resource.register, initialRegisterPasswordResetSessionActionState)
+    const state = useAction(resource.register, initialRegisterPasswordState)
     const formState = useAction(resource.form, initialFormContainerComponentState)
 
     useEffect(() => {
@@ -166,7 +166,7 @@ export function PasswordReset({ resource, terminate }: PasswordResetEntryPoint):
     }
 }
 
-function resetError(err: RegisterPasswordResetSessionError): VNodeContent[] {
+function resetError(err: RegisterPasswordError): VNodeContent[] {
     switch (err.type) {
         case "validation-error":
             return ["正しく入力してください"]

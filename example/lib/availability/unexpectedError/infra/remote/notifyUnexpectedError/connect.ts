@@ -1,9 +1,9 @@
 import { NotifyUnexpectedErrorRemoteAccess } from "../../../infra"
 
-import { RawRemoteAccess, RemoteAccessError } from "../../../../../z_infra/remote/infra"
+import { RawRemote, RemoteError } from "../../../../../z_infra/remote/infra"
 import { initConnectRemoteAccess } from "../../../../../z_infra/remote/connect"
 
-type NotifyRawRemoteAccess = RawRemoteAccess<unknown, true>
+type NotifyRawRemoteAccess = RawRemote<unknown, true>
 
 export function initNotifyUnexpectedErrorConnectRemoteAccess(
     access: NotifyRawRemoteAccess
@@ -11,7 +11,7 @@ export function initNotifyUnexpectedErrorConnectRemoteAccess(
     return initConnectRemoteAccess(access, {
         message: (err: unknown): unknown => err,
         value: (response: true): true => response,
-        error: (err: RemoteAccessError): RemoteAccessError => err,
-        unknown: (err: unknown): RemoteAccessError => ({ type: "infra-error", detail: `${err}` }),
+        error: (err: RemoteError): RemoteError => err,
+        unknown: (err: unknown): RemoteError => ({ type: "infra-error", detail: `${err}` }),
     })
 }

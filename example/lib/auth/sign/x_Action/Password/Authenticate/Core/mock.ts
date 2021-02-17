@@ -3,7 +3,7 @@ import {
     MockPropsPasser,
 } from "../../../../../../common/vendor/getto-example/Application/mock"
 
-import { AuthenticatePasswordAction, AuthenticatePasswordActionState } from "./action"
+import { AuthenticatePasswordAction, AuthenticatePasswordState } from "./action"
 
 type Passer = MockPropsPasser<AuthenticatePasswordMockProps>
 
@@ -23,7 +23,7 @@ export function initMockAuthenticatePasswordAction(passer: Passer): Action {
 }
 
 class Action
-    extends MockAction<AuthenticatePasswordActionState>
+    extends MockAction<AuthenticatePasswordState>
     implements AuthenticatePasswordAction {
     constructor(passer: Passer) {
         super()
@@ -33,7 +33,7 @@ class Action
 
         function mapProps(
             props: AuthenticatePasswordMockProps
-        ): AuthenticatePasswordActionState {
+        ): AuthenticatePasswordState {
             switch (props.type) {
                 case "initial":
                     return { type: "initial-login" }

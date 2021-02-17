@@ -7,48 +7,43 @@ import {
 
 import {
     initAuthenticatePasswordAction,
-    initAuthenticatePasswordBackgroundMaterial,
+    initAuthenticatePasswordBackground,
     initAuthenticatePasswordAction_merge,
-    AuthenticatePasswordForegroundInfra,
-    AuthenticatePasswordBackgroundInfra,
+    AuthenticatePasswordForegroundBase,
+    AuthenticatePasswordBackgroundBase,
 } from "../impl"
 
-import {
-    AuthenticatePasswordAction,
-    AuthenticatePasswordBackgroundMaterial,
-} from "../action"
+import { AuthenticatePasswordAction, AuthenticatePasswordBackground } from "../action"
 
 export function newAuthenticatePasswordAction(
     webStorage: Storage
 ): AuthenticatePasswordAction {
     return initAuthenticatePasswordAction(
-        { ...newForegroundInfra(webStorage), ...newBackgroundInfra() },
+        { ...newForegroundBase(webStorage), ...newBackgroundBase() },
         newGetSecureScriptPathLocationInfo()
     )
 }
 export function newAuthenticatePasswordAction_merge(
     webStorage: Storage,
-    background: AuthenticatePasswordBackgroundMaterial
+    background: AuthenticatePasswordBackground
 ): AuthenticatePasswordAction {
     return initAuthenticatePasswordAction_merge(
-        newForegroundInfra(webStorage),
+        newForegroundBase(webStorage),
         newGetSecureScriptPathLocationInfo(),
         background
     )
 }
-export function newAuthenticatePasswordBackgroundMaterial(): AuthenticatePasswordBackgroundMaterial {
-    return initAuthenticatePasswordBackgroundMaterial(newBackgroundInfra())
+export function newAuthenticatePasswordBackground(): AuthenticatePasswordBackground {
+    return initAuthenticatePasswordBackground(newBackgroundBase())
 }
 
-function newForegroundInfra(
-    webStorage: Storage
-): AuthenticatePasswordForegroundInfra {
+function newForegroundBase(webStorage: Storage): AuthenticatePasswordForegroundBase {
     return {
         startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webStorage),
         getSecureScriptPath: newGetSecureScriptPathInfra(),
     }
 }
-function newBackgroundInfra(): AuthenticatePasswordBackgroundInfra {
+function newBackgroundBase(): AuthenticatePasswordBackgroundBase {
     return {
         authenticate: newAuthenticatePasswordInfra(),
     }

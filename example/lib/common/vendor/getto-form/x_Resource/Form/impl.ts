@@ -1,4 +1,4 @@
-import { ApplicationBaseAction } from "../../../getto-example/Application/impl"
+import { ApplicationAbstractAction } from "../../../getto-example/Application/impl"
 
 import {
     FormContainerComponentState,
@@ -25,7 +25,7 @@ import {
 
 // TODO extends FormContainerMaterial でなく Readonly<{ container: FormContainerMaterial }> にするべき
 export class FormContainerBaseComponent<M extends FormContainerMaterial>
-    extends ApplicationBaseAction<FormContainerComponentState>
+    extends ApplicationAbstractAction<FormContainerComponentState>
     implements FormContainerComponent {
     material: M
     finder: FormInputFinder
@@ -96,7 +96,7 @@ export type FormFieldFactory<S, E> = Readonly<{
 }>
 
 export class FormFieldBaseComponent<S, E>
-    extends ApplicationBaseAction<FormFieldComponentState<S, E>>
+    extends ApplicationAbstractAction<FormFieldComponentState<S, E>>
     implements FormFieldComponent<S, E> {
     state: { (): FormFieldComponentState<S, E> }
     onValidate: Handler<FormFieldComponentState<S, E>>
@@ -144,7 +144,7 @@ export function initFormInputComponent(
     return new Input(material, handler)
 }
 
-class Input extends ApplicationBaseAction<FormInputComponentState> implements FormInputComponent {
+class Input extends ApplicationAbstractAction<FormInputComponentState> implements FormInputComponent {
     material: FormInputMaterial
     onInput: Handler<FormInputEvent>
     onChange: Handler<FormChangeEvent>

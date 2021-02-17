@@ -1,6 +1,6 @@
 import { initConnectRemoteAccess } from "../../../../../../../../z_infra/remote/connect"
 
-import { RawRemoteAccess, RemoteAccessError } from "../../../../../../../../z_infra/remote/infra"
+import { RawRemote, RemoteError } from "../../../../../../../../z_infra/remote/infra"
 import { StartPasswordResetSessionSessionRemoteAccess } from "../../../infra"
 
 import {
@@ -10,7 +10,7 @@ import {
     StartPasswordResetSessionRemoteError,
 } from "../../../data"
 
-type Raw = RawRemoteAccess<PasswordResetSessionFields, RawSessionID>
+type Raw = RawRemote<PasswordResetSessionFields, RawSessionID>
 type RawSessionID = string
 
 export function initStartPasswordResetSessionConnectRemoteAccess(
@@ -19,7 +19,7 @@ export function initStartPasswordResetSessionConnectRemoteAccess(
     return initConnectRemoteAccess(access, {
         message: (fields: PasswordResetSessionFields): PasswordResetSessionFields => fields,
         value: (response: RawSessionID): PasswordResetSessionID => markPasswordResetSessionID(response),
-        error: (err: RemoteAccessError): StartPasswordResetSessionRemoteError => {
+        error: (err: RemoteError): StartPasswordResetSessionRemoteError => {
             switch (err.type) {
                 case "bad-request":
                 case "server-error":

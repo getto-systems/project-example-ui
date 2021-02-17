@@ -3,11 +3,11 @@ import { ProfileFactory, AuthProfileResource } from "./entryPoint"
 import { initErrorResource } from "../../../availability/x_Resource/Error/impl"
 import { initMenuResource } from "../../../common/x_Resource/Outline/Menu/impl"
 
-import { AuthProfileLogoutResource } from "./resources/Logout/resource"
+import { LogoutResource } from "../../x_Resource/Profile/Logout/resource"
 
 export function initAuthProfileResource(
     factory: ProfileFactory,
-    resource: AuthProfileLogoutResource
+    resource: LogoutResource
 ): AuthProfileResource {
     const actions = {
         loadSeason: factory.actions.season.loadSeason(),

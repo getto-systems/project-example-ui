@@ -1,31 +1,31 @@
-import { AuthSignRenewResource } from "./resources/Renew/resource"
-import { AuthSignPasswordAuthenticateResource } from "./resources/Password/Authenticate/resource"
-import { AuthSignPasswordResetSessionRegisterResource } from "./resources/Password/ResetSession/Register/resource"
-import { PasswordResetSessionResource } from "../../x_Resource/sign/PasswordResetSession/resource"
+import { RenewAuthInfoResource } from "../../x_Resource/Sign/AuthInfo/Renew/resource"
+import { AuthenticatePasswordResource } from "../../x_Resource/Sign/Password/Authenticate/resource"
+import { RegisterPasswordResource } from "../../x_Resource/Sign/Password/ResetSession/Register/resource"
+import { PasswordResetSessionResource } from "../../x_Resource/Sign/PasswordResetSession/resource"
 
 import { ApplicationAction } from "../../../common/vendor/getto-example/Application/action"
-import { AuthSignLinkResource } from "./resources/Link/resource"
+import { AuthSignLinkResource } from "../../x_Resource/Sign/Link/resource"
 
 export type AuthSignEntryPoint = Readonly<{
     view: AuthSignView
     terminate: Terminate
 }>
 
-export type RenewCredentialEntryPoint = EntryPoint<AuthSignRenewResource>
-export type PasswordLoginEntryPoint = EntryPoint<AuthSignPasswordAuthenticateResource & AuthSignLinkResource>
+export type RenewCredentialEntryPoint = EntryPoint<RenewAuthInfoResource>
+export type PasswordLoginEntryPoint = EntryPoint<AuthenticatePasswordResource & AuthSignLinkResource>
 export type PasswordResetSessionEntryPoint = EntryPoint<
     PasswordResetSessionResource & AuthSignLinkResource
 >
-export type PasswordResetEntryPoint = EntryPoint<AuthSignPasswordResetSessionRegisterResource & AuthSignLinkResource>
+export type PasswordResetEntryPoint = EntryPoint<RegisterPasswordResource & AuthSignLinkResource>
 
 export interface AuthSignResourceFactory {
     link(): AuthSignLinkResource
 
-    renew(): AuthSignRenewResource
+    renew(): RenewAuthInfoResource
 
-    passwordLogin(): AuthSignPasswordAuthenticateResource
+    passwordLogin(): AuthenticatePasswordResource
     passwordResetSession(): PasswordResetSessionResource
-    passwordReset(): AuthSignPasswordResetSessionRegisterResource
+    passwordReset(): RegisterPasswordResource
 }
 
 export interface AuthSignViewLocationInfo {

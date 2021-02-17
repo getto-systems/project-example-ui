@@ -5,9 +5,9 @@ import { AuthenticatePasswordAction } from "../../action"
 import { AuthenticatePasswordEvent } from "../../../../../../password/authenticate/event"
 
 import {
-    WorkerForegroundProxyAction,
-    WorkerForegroundProxyBase,
-    WorkerForegroundProxyMethod,
+    WorkerProxy,
+    WorkerAbstractProxy,
+    WorkerProxyMethod,
 } from "../../../../../../../../common/vendor/getto-worker/main/foreground"
 
 import {
@@ -16,23 +16,23 @@ import {
     AuthenticatePasswordProxyResponse,
 } from "./message"
 
-export function newAuthenticatePasswordActionProxy(
-    webStorage: Storage,
-    post: Post<AuthenticatePasswordProxyMessage>
-): AuthenticatePasswordActionProxy {
-    return new Proxy(webStorage, post)
-}
-export type AuthenticatePasswordActionProxy = WorkerForegroundProxyAction<
+export type AuthenticatePasswordProxy = WorkerProxy<
     AuthenticatePasswordAction,
     AuthenticatePasswordProxyMessage,
     AuthenticatePasswordProxyResponse
 >
+export function newAuthenticatePasswordProxy(
+    webStorage: Storage,
+    post: Post<AuthenticatePasswordProxyMessage>
+): AuthenticatePasswordProxy {
+    return new Proxy(webStorage, post)
+}
 
 class Proxy
-    extends WorkerForegroundProxyBase<AuthenticatePasswordProxyMessage>
-    implements AuthenticatePasswordActionProxy {
+    extends WorkerAbstractProxy<AuthenticatePasswordProxyMessage>
+    implements AuthenticatePasswordProxy {
     webStorage: Storage
-    authenticate: WorkerForegroundProxyMethod<
+    authenticate: WorkerProxyMethod<
         AuthenticatePasswordProxyParams,
         AuthenticatePasswordEvent
     >

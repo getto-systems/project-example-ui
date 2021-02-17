@@ -1,7 +1,7 @@
 import { StoreResult } from "../../../../common/storage/infra"
 import { RenewAuthnInfoInfra } from "./infra"
 
-import { ForceRequestRenewAuthnInfoEvent } from "./event"
+import { ForceRenewAuthnInfoEvent } from "./event"
 
 import { hasExpired, LastAuth } from "../common/data"
 import { ForceRenewAuthnInfoMethod, RenewAuthnInfoMethod } from "./method"
@@ -37,7 +37,7 @@ export const forceRenewAuthnInfo: ForceRenew = (infra) => async (post) => {
 
 function loadLastAuth(
     infra: RenewAuthnInfoInfra,
-    post: Post<ForceRequestRenewAuthnInfoEvent>,
+    post: Post<ForceRenewAuthnInfoEvent>,
     hook: { (lastAuth: LastAuth): void }
 ) {
     const { authnInfos } = infra
@@ -57,7 +57,7 @@ function loadLastAuth(
 async function renew(
     infra: RenewAuthnInfoInfra,
     lastAuth: LastAuth,
-    post: Post<ForceRequestRenewAuthnInfoEvent>
+    post: Post<ForceRenewAuthnInfoEvent>
 ) {
     const { apiCredentials, authnInfos, renew, config, delayed } = infra
 

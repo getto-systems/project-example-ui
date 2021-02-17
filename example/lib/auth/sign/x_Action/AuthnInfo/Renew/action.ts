@@ -10,7 +10,7 @@ import {
     StartContinuousRenewAuthnInfoMethod,
 } from "../../../authnInfo/startContinuousRenew/method"
 
-import { RequestRenewAuthnInfoEvent } from "../../../authnInfo/renew/event"
+import { RenewAuthnInfoEvent } from "../../../authnInfo/renew/event"
 
 import {
     SecureScriptPath,
@@ -18,8 +18,7 @@ import {
 } from "../../../secureScriptPath/get/data"
 import { StartContinuousRenewAuthnInfoEvent } from "../../../authnInfo/startContinuousRenew/event"
 
-export interface RenewAuthnInfoAction
-    extends ApplicationAction<RenewAuthnInfoActionState> {
+export interface RenewAuthnInfoAction extends ApplicationAction<RenewAuthnInfoState> {
     request(): void
     succeedToInstantLoad(): void
     failedToInstantLoad(): void
@@ -34,10 +33,10 @@ export type RenewAuthnInfoMaterial = Readonly<{
     getSecureScriptPath: GetSecureScriptPathMethod
 }>
 
-export type RenewAuthnInfoActionState =
+export type RenewAuthnInfoState =
     | Readonly<{ type: "initial-renew" }>
     | Exclude<
-          RequestRenewAuthnInfoEvent,
+          RenewAuthnInfoEvent,
           { type: "try-to-instant-load" } | { type: "succeed-to-renew" }
       >
     | StartContinuousRenewAuthnInfoEvent
@@ -45,6 +44,6 @@ export type RenewAuthnInfoActionState =
     | Readonly<{ type: "try-to-load"; scriptPath: SecureScriptPath }>
     | Readonly<{ type: "load-error"; err: LoadSecureScriptError }>
 
-export const initialRenewAuthnInfoAction3State: RenewAuthnInfoActionState = {
+export const initialRenewAuthnInfoState: RenewAuthnInfoState = {
     type: "initial-renew",
 }

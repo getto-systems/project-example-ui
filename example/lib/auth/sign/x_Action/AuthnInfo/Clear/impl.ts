@@ -1,4 +1,4 @@
-import { ApplicationBaseAction } from "../../../../../common/vendor/getto-example/Application/impl"
+import { ApplicationAbstractAction } from "../../../../../common/vendor/getto-example/Application/impl"
 
 import { clearAuthnInfo } from "../../../authnInfo/clear/impl"
 
@@ -6,23 +6,21 @@ import { ClearAuthnInfoInfra } from "../../../authnInfo/clear/infra"
 
 import {
     ClearAuthnInfoAction,
-    ClearAuthnInfoActionState,
+    ClearAuthnInfoState,
     ClearAuthnInfoMaterial,
 } from "./action"
 
-export type ClearAuthnInfoActionInfra = Readonly<{
+export type ClearAuthnInfoBase = Readonly<{
     clear: ClearAuthnInfoInfra
 }>
-export function initClearAuthnInfoAction(
-    infra: ClearAuthnInfoActionInfra
-): ClearAuthnInfoAction {
+export function initClearAuthnInfoAction(base: ClearAuthnInfoBase): ClearAuthnInfoAction {
     return new Action({
-        clear: clearAuthnInfo(infra.clear),
+        clear: clearAuthnInfo(base.clear),
     })
 }
 
 class Action
-    extends ApplicationBaseAction<ClearAuthnInfoActionState>
+    extends ApplicationAbstractAction<ClearAuthnInfoState>
     implements ClearAuthnInfoAction {
     material: ClearAuthnInfoMaterial
 

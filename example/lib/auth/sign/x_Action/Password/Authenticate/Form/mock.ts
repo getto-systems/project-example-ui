@@ -21,17 +21,21 @@ import { AuthenticatePasswordFormAction } from "./action"
 import { FormConvertResult } from "../../../../../../common/vendor/getto-form/form/data"
 import { AuthenticatePasswordFields } from "../../../../password/authenticate/data"
 
-type Passer = MockPropsPasser<PasswordLoginFormMockProps>
+type Passer = MockPropsPasser<AuthenticatePasswordFormMockProps>
 
-export type PasswordLoginFormMockProps = FormContainerMockProps &
+export type AuthenticatePasswordFormMockProps = FormContainerMockProps &
     LoginIDFormFieldMockProps &
     PasswordFormFieldMockProps
 
-export function initMockPasswordLoginFormComponent(passer: Passer): AuthenticatePasswordFormAction {
-    return new Component(passer)
+export function initMockAuthenticatePasswordFormAction(
+    passer: Passer
+): AuthenticatePasswordFormAction {
+    return new Action(passer)
 }
 
-class Component extends FormContainerMockComponent implements AuthenticatePasswordFormAction {
+class Action
+    extends FormContainerMockComponent
+    implements AuthenticatePasswordFormAction {
     readonly loginID: LoginIDFormFieldComponent
     readonly password: PasswordFormFieldComponent
 
@@ -43,7 +47,9 @@ class Component extends FormContainerMockComponent implements AuthenticatePasswo
         this.loginID = initMockLoginIDFormField(passer)
         this.password = initMockPasswordFormField(passer)
 
-        function mapProps(props: PasswordLoginFormMockProps): FormContainerComponentState {
+        function mapProps(
+            props: AuthenticatePasswordFormMockProps
+        ): FormContainerComponentState {
             return { validation: props.validation, history: { undo: false, redo: false } }
         }
     }

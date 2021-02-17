@@ -2,12 +2,12 @@ import { env } from "../../../../../../../y_environment/env"
 
 import { newApiAuthSignPasswordAuthenticate } from "../../../../../../../z_external/api/auth/sign/password/authenticate"
 
-import { initAuthenticatePasswordConnectRemoteAccess } from "./connect"
+import { initAuthenticatePasswordConnect } from "./connect"
 
-import { AuthenticatePasswordRemoteAccess } from "../../../infra"
+import { AuthenticatePasswordRemote } from "../../../infra"
 
-export function newAuthenticatePasswordRemoteAccess(): AuthenticatePasswordRemoteAccess {
-    return initAuthenticatePasswordConnectRemoteAccess(
+export function newAuthenticatePasswordRemote(): AuthenticatePasswordRemote {
+    return initAuthenticatePasswordConnect(
         newApiAuthSignPasswordAuthenticate(env.apiServerURL)
     )
 }

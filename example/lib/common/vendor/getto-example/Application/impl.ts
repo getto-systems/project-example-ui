@@ -1,6 +1,6 @@
 import { ApplicationAction, ApplicationStateHandler } from "./action"
 
-export class ApplicationBaseAction<S> implements ApplicationAction<S> {
+export class ApplicationAbstractAction<S> implements ApplicationAction<S> {
     handlers: ApplicationStateHandler<S>[] = []
     terminates: ApplicationTerminateHook[] = []
 

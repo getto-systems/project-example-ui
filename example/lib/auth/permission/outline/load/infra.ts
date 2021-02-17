@@ -1,7 +1,7 @@
 import {
-    RemoteAccess,
-    RemoteAccessResult,
-    RemoteAccessSimulator,
+    Remote,
+    RemoteResult,
+    RemoteSimulator,
 } from "../../../../z_infra/remote/infra"
 import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
 
@@ -124,16 +124,16 @@ export type OutlineMenuExpandResponse =
     | Readonly<{ success: true; menuExpand: OutlineMenuExpand }>
     | Readonly<{ success: false; err: StorageError }>
 
-export type LoadOutlineMenuBadgeRemoteAccess = RemoteAccess<
+export type LoadOutlineMenuBadgeRemoteAccess = Remote<
     ApiNonce,
     OutlineMenuBadge,
     LoadOutlineMenuBadgeRemoteError
 >
-export type LoadOutlineMenuBadgeRemoteAccessResult = RemoteAccessResult<
+export type LoadOutlineMenuBadgeRemoteAccessResult = RemoteResult<
     OutlineMenuBadge,
     LoadOutlineMenuBadgeRemoteError
 >
-export type LoadOutlineMenuBadgeSimulator = RemoteAccessSimulator<
+export type LoadOutlineMenuBadgeSimulator = RemoteSimulator<
     ApiNonce,
     OutlineMenuBadge,
     LoadOutlineMenuBadgeRemoteError

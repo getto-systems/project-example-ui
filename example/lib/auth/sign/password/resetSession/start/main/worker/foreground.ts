@@ -1,7 +1,7 @@
 import {
     WorkerForegroundProxyAction_legacy,
-    WorkerForegroundProxyBase,
-    WorkerForegroundProxyMethod,
+    WorkerAbstractProxy,
+    WorkerProxyMethod,
 } from "../../../../../../../common/vendor/getto-worker/main/foreground"
 
 import {
@@ -27,13 +27,13 @@ export type PasswordResetSessionActionForegroundProxy = WorkerForegroundProxyAct
 >
 
 class Proxy
-    extends WorkerForegroundProxyBase<PasswordResetSessionActionProxyMessage>
+    extends WorkerAbstractProxy<PasswordResetSessionActionProxyMessage>
     implements PasswordResetSessionActionForegroundProxy {
-    start: WorkerForegroundProxyMethod<
+    start: WorkerProxyMethod<
         StartPasswordResetSessionProxyParams,
         StartPasswordResetSessionEvent
     >
-    checkStatus: WorkerForegroundProxyMethod<
+    checkStatus: WorkerProxyMethod<
         CheckPasswordResetSessionStatusProxyParams,
         CheckPasswordResetSessionStatusEvent
     >

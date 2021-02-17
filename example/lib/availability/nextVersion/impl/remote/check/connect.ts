@@ -1,10 +1,10 @@
 import { CheckRemoteAccess, CheckResponse } from "../../../infra"
 
 import { CheckRemoteError, Version, versionToString } from "../../../data"
-import { RawRemoteAccess, RemoteAccessError } from "../../../../../z_infra/remote/infra"
+import { RawRemote, RemoteError } from "../../../../../z_infra/remote/infra"
 import { initConnectRemoteAccess } from "../../../../../z_infra/remote/connect"
 
-type CheckRawRemoteAccess = RawRemoteAccess<string, boolean>
+type CheckRawRemoteAccess = RawRemote<string, boolean>
 
 export function initCheckConnectRemoteAccess(access: CheckRawRemoteAccess): CheckRemoteAccess {
     return initConnectRemoteAccess(access, {
@@ -15,7 +15,7 @@ export function initCheckConnectRemoteAccess(access: CheckRawRemoteAccess): Chec
             }
             return { found: true, version }
         },
-        error: (err: RemoteAccessError): CheckRemoteError => {
+        error: (err: RemoteError): CheckRemoteError => {
             switch (err.type) {
                 case "server-error":
                     return { type: err.type }

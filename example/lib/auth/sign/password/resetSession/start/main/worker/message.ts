@@ -1,6 +1,6 @@
 import {
-    WorkerProxyMethodMessage,
-    WorkerProxyMethodResponse,
+    WorkerProxyMessage,
+    WorkerProxyResponse,
 } from "../../../../../../../common/vendor/getto-worker/main/message"
 
 import { CheckPasswordResetSessionStatusEvent, StartPasswordResetSessionEvent } from "../../event"
@@ -9,12 +9,12 @@ import { FormConvertResult } from "../../../../../../../common/vendor/getto-form
 import { PasswordResetSessionID, PasswordResetSessionFields } from "../../data"
 
 export type PasswordResetSessionActionProxyMessage =
-    | WorkerProxyMethodMessage<"start", StartPasswordResetSessionProxyParams>
-    | WorkerProxyMethodMessage<"checkStatus", CheckPasswordResetSessionStatusProxyParams>
+    | WorkerProxyMessage<"start", StartPasswordResetSessionProxyParams>
+    | WorkerProxyMessage<"checkStatus", CheckPasswordResetSessionStatusProxyParams>
 
 export type PasswordResetSessionActionProxyResponse =
-    | WorkerProxyMethodResponse<"start", StartPasswordResetSessionEvent>
-    | WorkerProxyMethodResponse<"checkStatus", CheckPasswordResetSessionStatusEvent>
+    | WorkerProxyResponse<"start", StartPasswordResetSessionEvent>
+    | WorkerProxyResponse<"checkStatus", CheckPasswordResetSessionStatusEvent>
 
 export type StartPasswordResetSessionProxyParams = Readonly<{
     fields: FormConvertResult<PasswordResetSessionFields>

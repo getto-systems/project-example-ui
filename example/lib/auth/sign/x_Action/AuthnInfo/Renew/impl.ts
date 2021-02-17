@@ -1,4 +1,4 @@
-import { ApplicationBaseAction } from "../../../../../common/vendor/getto-example/Application/impl"
+import { ApplicationAbstractAction } from "../../../../../common/vendor/getto-example/Application/impl"
 
 import { getSecureScriptPath } from "../../../secureScriptPath/get/impl"
 import { forceRenewAuthnInfo, renewAuthnInfo } from "../../../authnInfo/renew/impl"
@@ -14,7 +14,7 @@ import { GetSecureScriptPathInfra } from "../../../secureScriptPath/get/infra"
 import {
     RenewAuthnInfoMaterial,
     RenewAuthnInfoAction,
-    RenewAuthnInfoActionState,
+    RenewAuthnInfoState,
 } from "./action"
 
 import { GetSecureScriptPathLocationInfo } from "../../../secureScriptPath/get/method"
@@ -22,14 +22,14 @@ import { GetSecureScriptPathLocationInfo } from "../../../secureScriptPath/get/m
 import { AuthnInfo } from "../../../authnInfo/common/data"
 import { LoadSecureScriptError } from "../../../secureScriptPath/get/data"
 
-export type RenewAuthnInfoActionInfra = Readonly<{
+export type RenewAuthnInfoBase = Readonly<{
     renew: RenewAuthnInfoInfra
     startContinuousRenew: StartContinuousRenewAuthnInfoInfra
     getSecureScriptPath: GetSecureScriptPathInfra
 }>
 
 export function initRenewAuthnInfoAction(
-    infra: RenewAuthnInfoActionInfra,
+    infra: RenewAuthnInfoBase,
     locationInfo: GetSecureScriptPathLocationInfo
 ): RenewAuthnInfoAction {
     return new Action({
@@ -44,7 +44,7 @@ export function initRenewAuthnInfoAction(
 }
 
 class Action
-    extends ApplicationBaseAction<RenewAuthnInfoActionState>
+    extends ApplicationAbstractAction<RenewAuthnInfoState>
     implements RenewAuthnInfoAction {
     material: RenewAuthnInfoMaterial
 

@@ -2,12 +2,10 @@ import { initApiAuthSignResetRegister } from "../../../../../../../../z_external
 
 import { env } from "../../../../../../../../y_environment/env"
 
-import { initRegisterPasswordResetSessionConnectRemoteAccess } from "./connect"
+import { initRegisterPasswordConnect } from "./connect"
 
-import { RegisterPasswordResetSessionRemoteAccess } from "../../../infra"
+import { RegisterPasswordRemote } from "../../../infra"
 
-export function newRegisterPasswordResetSessionRemoteAccess(): RegisterPasswordResetSessionRemoteAccess {
-    return initRegisterPasswordResetSessionConnectRemoteAccess(
-        initApiAuthSignResetRegister(env.apiServerURL)
-    )
+export function newRegisterPasswordRemote(): RegisterPasswordRemote {
+    return initRegisterPasswordConnect(initApiAuthSignResetRegister(env.apiServerURL))
 }

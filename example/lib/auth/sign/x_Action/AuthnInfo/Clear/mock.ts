@@ -3,7 +3,7 @@ import {
     MockPropsPasser,
 } from "../../../../../common/vendor/getto-example/Application/mock"
 
-import { ClearAuthnInfoAction, ClearAuthnInfoActionState } from "./action"
+import { ClearAuthnInfoAction, ClearAuthnInfoState } from "./action"
 
 export type ClearAuthnInfoMockPropsPasser = MockPropsPasser<ClearAuthnInfoMockProps>
 export type ClearAuthnInfoMockProps =
@@ -17,7 +17,7 @@ export function initMockClearAuthnInfoAction(
 }
 
 class Action
-    extends MockAction<ClearAuthnInfoActionState>
+    extends MockAction<ClearAuthnInfoState>
     implements ClearAuthnInfoAction {
     constructor(passer: ClearAuthnInfoMockPropsPasser) {
         super()
@@ -25,7 +25,7 @@ class Action
             this.post(mapProps(props))
         })
 
-        function mapProps(props: ClearAuthnInfoMockProps): ClearAuthnInfoActionState {
+        function mapProps(props: ClearAuthnInfoMockProps): ClearAuthnInfoState {
             switch (props.type) {
                 case "initial-clear-authnInfo":
                     return { type: "initial-logout" }
