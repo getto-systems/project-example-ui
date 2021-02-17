@@ -1,8 +1,8 @@
 import { initMemoryApiCredentialRepository } from "../../../../../../../common/apiCredential/infra/repository/memory"
 import { initMemoryAuthnInfoRepository } from "../../../common/infra/repository/authnInfo/memory"
-import { initClearAuthnInfoAction } from "./Core/impl"
+import { initClearAuthnInfoAction } from "./impl"
 
-import { ClearAuthnInfoState } from "./Core/action"
+import { LogoutState } from "./action"
 
 import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
 import { markAuthAt, markAuthnNonce } from "../../../common/data"
@@ -18,8 +18,8 @@ describe("Logout", () => {
 
         resource.clear.submit()
 
-        function stateHandler(): Post<ClearAuthnInfoState> {
-            const stack: ClearAuthnInfoState[] = []
+        function stateHandler(): Post<LogoutState> {
+            const stack: LogoutState[] = []
             return (state) => {
                 stack.push(state)
 

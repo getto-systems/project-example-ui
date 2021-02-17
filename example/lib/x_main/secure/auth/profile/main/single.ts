@@ -1,6 +1,6 @@
 import { newMainOutlineAction } from "../../../../../auth/permission/outline/load/main/main"
 import { newErrorAction } from "../../../../../availability/unexpectedError/main"
-import { newClearAuthnInfoAction } from "../../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/Core/main"
+import { newClearAuthnInfoAction } from "../../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/main"
 
 import { initAuthProfileResource } from "../impl"
 
@@ -25,7 +25,7 @@ export function newEntryPoint(): AuthProfileEntryPoint {
         },
     }
     const resource = initAuthProfileResource(factory, {
-        clear: newClearAuthnInfoAction(webStorage),
+        logout: newClearAuthnInfoAction(webStorage),
     })
     return {
         resource,
@@ -34,7 +34,7 @@ export function newEntryPoint(): AuthProfileEntryPoint {
             resource.breadcrumbList.terminate()
             resource.seasonInfo.terminate()
 
-            resource.clear.terminate()
+            resource.logout.terminate()
         },
     }
 }

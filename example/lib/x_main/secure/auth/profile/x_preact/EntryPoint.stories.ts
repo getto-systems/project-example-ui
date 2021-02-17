@@ -16,7 +16,7 @@ import { initMockPropsPasser } from "../../../../../common/vendor/getto-example/
 import { SeasonInfoMockProps } from "../../../../../example/x_components/Outline/seasonInfo/mock"
 import { MenuMockProps } from "../../../../../common/x_Resource/Outline/Menu/Menu/mock"
 import { BreadcrumbListMockProps } from "../../../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
-import { ClearAuthnInfoMockProps } from "../../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/Core/mock"
+import { LogoutMockProps } from "../../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/mock"
 
 export default {
     title: "Auth/Profile",
@@ -38,7 +38,7 @@ const template = storyTemplate<MockProps>((args) => {
         seasonInfo: initMockPropsPasser<SeasonInfoMockProps>(),
         menu: initMockPropsPasser<MenuMockProps>(),
         breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
-        clear: initMockPropsPasser<ClearAuthnInfoMockProps>(),
+        logout: initMockPropsPasser<LogoutMockProps>(),
     }
     const entryPoint = newMockAuthProfile(passer)
     return h(Preview, { args })
@@ -56,7 +56,7 @@ const template = storyTemplate<MockProps>((args) => {
                 label: props.args.breadcrumbLabel,
                 icon: props.args.breadcrumbIcon,
             })
-            passer.clear.update({ type: "failed-clear-authnInfo", err: "logout error" })
+            passer.logout.update({ type: "failed-logout", err: "logout error" })
         })
         return noPaddedStory(h(EntryPoint, entryPoint))
     }
