@@ -6,7 +6,7 @@ import { useAction, useTermination } from "../../common/hooks"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
-import { RenewAuthInfo } from "./AuthInfo/Renew"
+import { RenewAuthInfo } from "../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/x_preact/Renew"
 
 import { AuthenticatePassword } from "./Password/Authenticate"
 import { PasswordResetSession } from "./Password/ResetSession/Start"

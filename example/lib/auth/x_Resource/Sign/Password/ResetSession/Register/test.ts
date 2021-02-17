@@ -1,5 +1,5 @@
 import { newStaticClock, StaticClock } from "../../../../../../z_infra/clock/simulate"
-import { initRenewAuthnInfoSimulate } from "../../../../../sign/kernel/authnInfo/common/infra/remote/renew/simulate"
+import { initRenewAuthnInfoSimulate } from "../../../../../sign/kernel/authnInfo/kernel/infra/remote/renew/simulate"
 import { initRegisterPasswordSimulate } from "../../../../../sign/password/resetSession/register/infra/remote/register/simulate"
 
 import { initFormAction } from "../../../../../../common/vendor/getto-form/main/form"
@@ -21,7 +21,7 @@ import {
     markInputString,
     toValidationError,
 } from "../../../../../../common/vendor/getto-form/form/data"
-import { markAuthAt, markAuthnNonce } from "../../../../../sign/kernel/authnInfo/common/data"
+import { markAuthAt, markAuthnNonce } from "../../../../../sign/kernel/authnInfo/kernel/data"
 import { initMemoryApiCredentialRepository } from "../../../../../../common/apiCredential/infra/repository/memory"
 import {
     markApiNonce,
@@ -32,8 +32,8 @@ import {
     AuthnInfoRepository,
     RenewAuthnInfoRemote,
     RenewAuthnInfoResult,
-} from "../../../../../sign/kernel/authnInfo/common/infra"
-import { initMemoryAuthnInfoRepository } from "../../../../../sign/kernel/authnInfo/common/infra/repository/authnInfo/memory"
+} from "../../../../../sign/kernel/authnInfo/kernel/infra"
+import { initMemoryAuthnInfoRepository } from "../../../../../sign/kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
 import { initGetSecureScriptPathLocationInfo } from "../../../../../sign/common/secureScriptPath/get/impl"
 import {
     initRegisterPasswordLocationInfo,

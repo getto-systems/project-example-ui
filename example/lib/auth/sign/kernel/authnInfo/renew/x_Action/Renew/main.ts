@@ -1,9 +1,9 @@
-import { newRenewAuthnInfoInfra } from "../../../kernel/authnInfo/renew/main"
-import { newStartContinuousRenewAuthnInfoInfra } from "../../../kernel/authnInfo/startContinuousRenew/main"
+import { newRenewAuthnInfoInfra } from "../../main"
+import { newStartContinuousRenewAuthnInfoInfra } from "../../../common/startContinuousRenew/main"
 import {
     newGetSecureScriptPathLocationInfo,
     newGetSecureScriptPathInfra,
-} from "../../../common/secureScriptPath/get/main"
+} from "../../../../../common/secureScriptPath/get/main"
 
 import { initRenewAuthnInfoAction } from "./impl"
 

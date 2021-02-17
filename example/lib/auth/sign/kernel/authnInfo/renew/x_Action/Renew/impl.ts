@@ -1,26 +1,22 @@
-import { ApplicationAbstractAction } from "../../../../../common/vendor/getto-example/Application/impl"
+import { ApplicationAbstractAction } from "../../../../../../../common/vendor/getto-example/Application/impl"
 
-import { getSecureScriptPath } from "../../../common/secureScriptPath/get/impl"
-import { forceRenewAuthnInfo, renewAuthnInfo } from "../../../kernel/authnInfo/renew/impl"
+import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
+import { forceRenewAuthnInfo, renewAuthnInfo } from "../../impl"
 import {
     forceStartContinuousRenewAuthnInfo,
     startContinuousRenewAuthnInfo,
-} from "../../../kernel/authnInfo/startContinuousRenew/impl"
+} from "../../../common/startContinuousRenew/impl"
 
-import { RenewAuthnInfoInfra } from "../../../kernel/authnInfo/renew/infra"
-import { StartContinuousRenewAuthnInfoInfra } from "../../../kernel/authnInfo/startContinuousRenew/infra"
-import { GetSecureScriptPathInfra } from "../../../common/secureScriptPath/get/infra"
+import { RenewAuthnInfoInfra } from "../../infra"
+import { StartContinuousRenewAuthnInfoInfra } from "../../../common/startContinuousRenew/infra"
+import { GetSecureScriptPathInfra } from "../../../../../common/secureScriptPath/get/infra"
 
-import {
-    RenewAuthnInfoMaterial,
-    RenewAuthnInfoAction,
-    RenewAuthnInfoState,
-} from "./action"
+import { RenewAuthnInfoMaterial, RenewAuthnInfoAction, RenewAuthnInfoState } from "./action"
 
-import { GetSecureScriptPathLocationInfo } from "../../../common/secureScriptPath/get/method"
+import { GetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/method"
 
-import { AuthnInfo } from "../../../kernel/authnInfo/common/data"
-import { LoadSecureScriptError } from "../../../common/secureScriptPath/get/data"
+import { AuthnInfo } from "../../../kernel/data"
+import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
 
 export type RenewAuthnInfoBase = Readonly<{
     renew: RenewAuthnInfoInfra
@@ -36,9 +32,7 @@ export function initRenewAuthnInfoAction(
         renew: renewAuthnInfo(infra.renew),
         forceRenew: forceRenewAuthnInfo(infra.renew),
         startContinuousRenew: startContinuousRenewAuthnInfo(infra.startContinuousRenew),
-        forceStartContinuousRenew: forceStartContinuousRenewAuthnInfo(
-            infra.startContinuousRenew
-        ),
+        forceStartContinuousRenew: forceStartContinuousRenewAuthnInfo(infra.startContinuousRenew),
         getSecureScriptPath: getSecureScriptPath(infra.getSecureScriptPath)(locationInfo),
     })
 }

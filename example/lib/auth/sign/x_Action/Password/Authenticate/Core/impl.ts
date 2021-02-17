@@ -1,12 +1,12 @@
 import { ApplicationAbstractAction } from "../../../../../../common/vendor/getto-example/Application/impl"
 
-import { startContinuousRenewAuthnInfo } from "../../../../kernel/authnInfo/startContinuousRenew/impl"
+import { startContinuousRenewAuthnInfo } from "../../../../kernel/authnInfo/common/startContinuousRenew/impl"
 import { getSecureScriptPath } from "../../../../common/secureScriptPath/get/impl"
 import { GetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/method"
 import { authenticatePassword } from "../../../../password/authenticate/impl"
 
 import { AuthenticatePasswordInfra } from "../../../../password/authenticate/infra"
-import { StartContinuousRenewAuthnInfoInfra } from "../../../../kernel/authnInfo/startContinuousRenew/infra"
+import { StartContinuousRenewAuthnInfoInfra } from "../../../../kernel/authnInfo/common/startContinuousRenew/infra"
 import { GetSecureScriptPathInfra } from "../../../../common/secureScriptPath/get/infra"
 
 import {
@@ -20,7 +20,7 @@ import {
 import { FormConvertResult } from "../../../../../../common/vendor/getto-form/form/data"
 import { LoadSecureScriptError } from "../../../../common/secureScriptPath/get/data"
 import { AuthenticatePasswordFields } from "../../../../password/authenticate/data"
-import { AuthnInfo } from "../../../../kernel/authnInfo/common/data"
+import { AuthnInfo } from "../../../../kernel/authnInfo/kernel/data"
 
 export type AuthenticatePasswordBase = AuthenticatePasswordForegroundBase &
     AuthenticatePasswordBackgroundBase

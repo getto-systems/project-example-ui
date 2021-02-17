@@ -2,10 +2,10 @@ import { ApplicationAction } from "../../../../../../common/vendor/getto-example
 
 import { AuthenticatePasswordMethod } from "../../../../password/authenticate/method"
 import { GetSecureScriptPathMethod } from "../../../../common/secureScriptPath/get/method"
-import { StartContinuousRenewAuthnInfoMethod } from "../../../../kernel/authnInfo/startContinuousRenew/method"
+import { StartContinuousRenewAuthnInfoMethod } from "../../../../kernel/authnInfo/common/startContinuousRenew/method"
 
 import { AuthenticatePasswordEvent } from "../../../../password/authenticate/event"
-import { StartContinuousRenewAuthnInfoEvent } from "../../../../kernel/authnInfo/startContinuousRenew/event"
+import { StartContinuousRenewAuthnInfoEvent } from "../../../../kernel/authnInfo/common/startContinuousRenew/event"
 
 import { FormConvertResult } from "../../../../../../common/vendor/getto-form/form/data"
 import {

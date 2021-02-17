@@ -1,4 +1,4 @@
-import { AuthnInfo } from "../common/data"
+import { AuthnInfo } from "../../kernel/data"
 import {
     ForceStartContinuousRenewAuthnInfoEvent,
     StartContinuousRenewAuthnInfoEvent,

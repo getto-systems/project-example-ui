@@ -1,6 +1,6 @@
-import { newRenewAuthInfoResource } from "../../../x_Resource/Sign/AuthInfo/Renew/main"
 import { newPasswordAuthenticateResource } from "../../../x_Resource/Sign/Password/Authenticate/main/core"
 import { newRegisterPasswordResource } from "../../../x_Resource/Sign/Password/ResetSession/Register/main/core"
+import { newRenewAuthnInfoAction } from "../../../sign/kernel/authnInfo/renew/x_Action/Renew/main"
 
 import { initLoginViewLocationInfo, View } from "../impl"
 
@@ -16,7 +16,7 @@ export function newLoginAsSingle(): AuthSignEntryPoint {
     const view = new View(initLoginViewLocationInfo(currentURL()), {
         link: initAuthSignLinkResource,
 
-        renew: () => newRenewAuthInfoResource(webStorage),
+        renew: () => ({ renew: newRenewAuthnInfoAction(webStorage) }),
 
         passwordLogin: () => newPasswordAuthenticateResource(webStorage),
         passwordResetSession: () => newStartPasswordResetSessionResource(),

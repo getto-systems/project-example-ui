@@ -1,22 +1,27 @@
-import { ApplicationAction } from "../../../../../common/vendor/getto-example/Application/action"
+import { ApplicationAction } from "../../../../../../../common/vendor/getto-example/Application/action"
 
-import { GetSecureScriptPathMethod } from "../../../common/secureScriptPath/get/method"
-import {
-    ForceRenewAuthnInfoMethod,
-    RenewAuthnInfoMethod,
-} from "../../../kernel/authnInfo/renew/method"
+import { GetSecureScriptPathMethod } from "../../../../../common/secureScriptPath/get/method"
+import { ForceRenewAuthnInfoMethod, RenewAuthnInfoMethod } from "../../method"
 import {
     ForceStartContinuousRenewAuthnInfoMethod,
     StartContinuousRenewAuthnInfoMethod,
-} from "../../../kernel/authnInfo/startContinuousRenew/method"
+} from "../../../common/startContinuousRenew/method"
 
-import { RenewAuthnInfoEvent } from "../../../kernel/authnInfo/renew/event"
+import { RenewAuthnInfoEvent } from "../../event"
 
 import {
     SecureScriptPath,
     LoadSecureScriptError,
-} from "../../../common/secureScriptPath/get/data"
-import { StartContinuousRenewAuthnInfoEvent } from "../../../kernel/authnInfo/startContinuousRenew/event"
+} from "../../../../../common/secureScriptPath/get/data"
+import { StartContinuousRenewAuthnInfoEvent } from "../../../common/startContinuousRenew/event"
+
+export type RenewAuthnInfoEntryPoint = Readonly<{
+    resource: RenewAuthnInfoResource
+    terminate: { (): void }
+}>
+export type RenewAuthnInfoResource = Readonly<{
+    renew: RenewAuthnInfoAction
+}>
 
 export interface RenewAuthnInfoAction extends ApplicationAction<RenewAuthnInfoState> {
     request(): void
@@ -35,10 +40,7 @@ export type RenewAuthnInfoMaterial = Readonly<{
 
 export type RenewAuthnInfoState =
     | Readonly<{ type: "initial-renew" }>
-    | Exclude<
-          RenewAuthnInfoEvent,
-          { type: "try-to-instant-load" } | { type: "succeed-to-renew" }
-      >
+    | Exclude<RenewAuthnInfoEvent, { type: "try-to-instant-load" } | { type: "succeed-to-renew" }>
     | StartContinuousRenewAuthnInfoEvent
     | Readonly<{ type: "try-to-instant-load"; scriptPath: SecureScriptPath }>
     | Readonly<{ type: "try-to-load"; scriptPath: SecureScriptPath }>
