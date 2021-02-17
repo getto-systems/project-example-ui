@@ -1,21 +1,20 @@
 import { h } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { storyTemplate } from "../../z_storybook/story"
+import { storyTemplate } from "../../../../z_storybook/story"
 
-import { PasswordResetSession } from "./PasswordResetSession"
+import { PasswordResetSession } from "./Start"
 
-import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../../../common/vendor/getto-example/Application/mock"
 
-import { initMockPasswordResetSessionEntryPoint } from "../../../auth/z_EntryPoint/Sign/mock"
+import { initMockPasswordResetSessionEntryPoint } from "../../../../../auth/z_EntryPoint/Sign/mock"
 
-import { formValidationStates } from "../../../common/vendor/getto-form/x_Resource/Form/mock"
-import { loginIDFormFieldValidations } from "../../../auth/common/x_Component/Field/LoginID/mock"
-import { StartPasswordResetSessionResourceMockProps } from "../../../auth/x_Resource/Sign/Password/ResetSession/Start/mock"
-
+import { formValidationStates } from "../../../../../common/vendor/getto-form/x_Resource/Form/mock"
+import { loginIDFormFieldValidations } from "../../../../../auth/common/x_Component/Field/LoginID/mock"
+import { StartPasswordResetSessionResourceMockProps } from "../../../../../auth/x_Resource/Sign/Password/ResetSession/Start/mock"
 
 export default {
-    title: "Auth/Login/PasswordResetSession",
+    title: "Auth/Sign/Password/ResetSession/Start",
     argTypes: {
         type: {
             table: { disable: true },

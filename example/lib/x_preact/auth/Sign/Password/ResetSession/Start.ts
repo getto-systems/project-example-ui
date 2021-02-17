@@ -1,27 +1,27 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
+import { VNodeContent } from "../../../../../z_vendor/getto-css/preact/common"
 import {
     buttons,
     button_disabled,
     button_send,
     fieldError,
     form,
-} from "../../../z_vendor/getto-css/preact/design/form"
-import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
-import { v_medium } from "../../../z_vendor/getto-css/preact/design/alignment"
+} from "../../../../../z_vendor/getto-css/preact/design/form"
+import { loginBox } from "../../../../../z_vendor/getto-css/preact/layout/login"
+import { v_medium } from "../../../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useAction, useTermination } from "../../common/hooks"
-import { siteInfo } from "../../common/site"
-import { icon, spinner } from "../../common/icon"
+import { useAction, useTermination } from "../../../../common/hooks"
+import { siteInfo } from "../../../../common/site"
+import { icon, spinner } from "../../../../common/icon"
 
-import { LoginIDFormField } from "./field/loginID"
+import { LoginIDFormField } from "../../field/loginID"
 
-import { PasswordResetSessionEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
+import { PasswordResetSessionEntryPoint } from "../../../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialStartPasswordResetSessionState } from "../../../auth/sign/x_Action/Password/ResetSession/Start/Core/action"
-import { initialFormContainerComponentState } from "../../../common/vendor/getto-form/x_Resource/Form/component"
+import { initialStartPasswordResetSessionState } from "../../../../../auth/sign/x_Action/Password/ResetSession/Start/Core/action"
+import { initialFormContainerComponentState } from "../../../../../common/vendor/getto-form/x_Resource/Form/component"
 
 import {
     PasswordResetDestination,
@@ -29,7 +29,7 @@ import {
     StartPasswordResetSessionError,
     CheckPasswordResetSessionStatusError,
     SendPasswordResetSessionTokenError,
-} from "../../../auth/sign/password/resetSession/start/data"
+} from "../../../../../auth/sign/password/resetSession/start/data"
 
 export function PasswordResetSession({
     resource,
