@@ -1,4 +1,4 @@
-import { newClearAuthnInfoAction } from "../../../sign/x_Action/AuthnInfo/Clear/main"
+import { newClearAuthnInfoAction } from "./Core/main"
 
 import { LogoutResource } from "./resource"
 

@@ -1,16 +1,16 @@
-import { newMainOutlineAction } from "../../../permission/outline/load/main/main"
-import { newErrorAction } from "../../../../availability/unexpectedError/main"
+import { newMainOutlineAction } from "../../../../../auth/permission/outline/load/main/main"
+import { newErrorAction } from "../../../../../availability/unexpectedError/main"
+import { newLogoutResource } from "../../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/main"
 
 import { initAuthProfileResource } from "../impl"
 
-import { initSeasonInfoComponent } from "../../../../example/x_components/Outline/seasonInfo/impl"
+import { initSeasonInfoComponent } from "../../../../../example/x_components/Outline/seasonInfo/impl"
 
-import { initSeasonAction } from "../../../../example/shared/season/main/season"
+import { initSeasonAction } from "../../../../../example/shared/season/main/season"
 
 import { AuthProfileEntryPoint, ProfileFactory } from "../entryPoint"
-import { newLogoutResource } from "../../../x_Resource/Profile/Logout/main"
 
-export function newAuthProfileAsSingle(): AuthProfileEntryPoint {
+export function newEntryPoint(): AuthProfileEntryPoint {
     const webStorage = localStorage
 
     const factory: ProfileFactory = {

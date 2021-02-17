@@ -1,10 +1,10 @@
-import { ClearAuthnInfoState } from "../../../sign/x_Action/AuthnInfo/Clear/action"
+import { ClearAuthnInfoState } from "./Core/action"
 
-import { markAuthAt, markAuthnNonce } from "../../../sign/kernel/authnInfo/common/data"
-import { initMemoryApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../../common/apiCredential/data"
-import { initMemoryAuthnInfoRepository } from "../../../sign/kernel/authnInfo/common/infra/repository/authnInfo/memory"
-import { initClearAuthnInfoAction } from "../../../sign/x_Action/AuthnInfo/Clear/impl"
+import { markAuthAt, markAuthnNonce } from "../../../common/data"
+import { initMemoryApiCredentialRepository } from "../../../../../../../common/apiCredential/infra/repository/memory"
+import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
+import { initMemoryAuthnInfoRepository } from "../../../common/infra/repository/authnInfo/memory"
+import { initClearAuthnInfoAction } from "./Core/impl"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")

@@ -1,22 +1,22 @@
 import { h } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { storyTemplate } from "../../z_storybook/story"
-import { noPaddedStory } from "../../z_storybook/display"
+import { storyTemplate } from "../../../../../x_preact/z_storybook/story"
+import { noPaddedStory } from "../../../../../x_preact/z_storybook/display"
 
 import { EntryPoint } from "./EntryPoint"
 
 import {
     AuthProfileMockPropsPasser,
     newMockAuthProfile,
-} from "../../../auth/z_EntryPoint/Profile/mock"
+} from "../mock"
 
-import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../../../common/vendor/getto-example/Application/mock"
 
-import { SeasonInfoMockProps } from "../../../example/x_components/Outline/seasonInfo/mock"
-import { MenuMockProps } from "../../../common/x_Resource/Outline/Menu/Menu/mock"
-import { BreadcrumbListMockProps } from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
-import { ClearAuthnInfoMockProps } from "../../../auth/sign/x_Action/AuthnInfo/Clear/mock"
+import { SeasonInfoMockProps } from "../../../../../example/x_components/Outline/seasonInfo/mock"
+import { MenuMockProps } from "../../../../../common/x_Resource/Outline/Menu/Menu/mock"
+import { BreadcrumbListMockProps } from "../../../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
+import { ClearAuthnInfoMockProps } from "../../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/Core/mock"
 
 export default {
     title: "Auth/Profile",

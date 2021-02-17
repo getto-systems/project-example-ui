@@ -1,8 +1,8 @@
-import { MockPropsPasser } from "../../../../common/vendor/getto-example/Application/mock"
+import { MockPropsPasser } from "../../../../../../../common/vendor/getto-example/Application/mock"
 import {
     ClearAuthnInfoMockProps,
     initMockClearAuthnInfoAction,
-} from "../../../sign/x_Action/AuthnInfo/Clear/mock"
+} from "./Core/mock"
 
 import { LogoutResource } from "./resource"
 

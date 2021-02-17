@@ -29,5 +29,5 @@ const mainMenuTree = (): OutlineMenuTree => [
         item("ホーム", lnir("home"), "/index.html"),
         item("ドキュメント", lnir("files-alt"), "/document/index.html"),
     ]),
-    category("SYSTEM", allow, [item("プロフィール", lnir("user"), "/profile/index.html")]),
+    category("SYSTEM", allow, [item("プロフィール", lnir("user"), "/auth/profile.html")]),
 ]

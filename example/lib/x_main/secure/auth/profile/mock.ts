@@ -1,20 +1,20 @@
-import { initMockErrorResource } from "../../../availability/x_Resource/Error/mock"
+import { initMockErrorResource } from "../../../../availability/x_Resource/Error/mock"
 import {
     LogoutResourceMockPropsPasser,
     initMockLogoutResource,
-} from "../../x_Resource/Profile/Logout/mock"
+} from "../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/mock"
 import {
     BreadcrumbListMockPropsPasser,
     initMockBreadcrumbListComponent,
-} from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
+} from "../../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
 import {
     initMockMenuComponent,
     MenuMockPropsPasser,
-} from "../../../common/x_Resource/Outline/Menu/Menu/mock"
+} from "../../../../common/x_Resource/Outline/Menu/Menu/mock"
 import {
     initMockSeasonInfoComponent,
     SeasonInfoMockPropsPasser,
-} from "../../../example/x_components/Outline/seasonInfo/mock"
+} from "../../../../example/x_components/Outline/seasonInfo/mock"
 
 import { AuthProfileEntryPoint } from "./entryPoint"
 
