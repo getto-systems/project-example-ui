@@ -1,6 +1,6 @@
-import { env } from "../../../../y_environment/env"
+import { env } from "../../../../../y_environment/env"
 
-import { currentURL } from "../../../../z_infra/location/url"
+import { currentURL } from "../../../../../z_infra/location/url"
 
 import { initGetSecureScriptPathLocationInfo } from "./impl"
 

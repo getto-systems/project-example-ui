@@ -1,7 +1,7 @@
 import { ApplicationAction } from "../../../../../../common/vendor/getto-example/Application/action"
 
 import { AuthenticatePasswordMethod } from "../../../../password/authenticate/method"
-import { GetSecureScriptPathMethod } from "../../../../secureScriptPath/get/method"
+import { GetSecureScriptPathMethod } from "../../../../common/secureScriptPath/get/method"
 import { StartContinuousRenewAuthnInfoMethod } from "../../../../kernel/authnInfo/startContinuousRenew/method"
 
 import { AuthenticatePasswordEvent } from "../../../../password/authenticate/event"
@@ -11,7 +11,7 @@ import { FormConvertResult } from "../../../../../../common/vendor/getto-form/fo
 import {
     SecureScriptPath,
     LoadSecureScriptError,
-} from "../../../../secureScriptPath/get/data"
+} from "../../../../common/secureScriptPath/get/data"
 import { AuthenticatePasswordFields } from "../../../../password/authenticate/data"
 
 export interface AuthenticatePasswordAction

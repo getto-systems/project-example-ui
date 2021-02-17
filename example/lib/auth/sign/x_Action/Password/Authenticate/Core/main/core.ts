@@ -3,7 +3,7 @@ import { newAuthenticatePasswordInfra } from "../../../../../password/authentica
 import {
     newGetSecureScriptPathInfra,
     newGetSecureScriptPathLocationInfo,
-} from "../../../../../secureScriptPath/get/main"
+} from "../../../../../common/secureScriptPath/get/main"
 
 import {
     initAuthenticatePasswordAction,
