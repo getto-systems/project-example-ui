@@ -9,7 +9,7 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 import { RenewAuthInfo } from "./AuthInfo/Renew"
 
 import { AuthenticatePassword } from "./Password/Authenticate"
-import { PasswordResetSession } from "./PasswordResetSession"
+import { PasswordResetSession } from "./Password/ResetSession/Start"
 import { RegisterPassword } from "./Password/ResetSession/Register"
 
 import {
