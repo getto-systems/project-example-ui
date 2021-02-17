@@ -20,7 +20,12 @@ import {
     initialMenuComponentState,
 } from "../../../common/x_Resource/Outline/Menu/Menu/component"
 
-import { OutlineMenu, OutlineMenuCategoryNode, OutlineMenuItemNode, LoadOutlineMenuBadgeError } from "../../../auth/permission/outline/load/data"
+import {
+    OutlineMenu,
+    OutlineMenuCategoryNode,
+    OutlineMenuItemNode,
+    LoadOutlineMenuBadgeError,
+} from "../../../auth/permission/outline/load/data"
 
 export const MENU_ID = "menu"
 
@@ -54,13 +59,23 @@ export function Menu(resource: Props): VNode {
     function content(wholeMenu: OutlineMenu): VNode {
         // id="menu" は breadcrumb の href="#menu" と対応
         // mobile レイアウトで menu に移動
-        return menuBody(MENU_ID, menuContent(wholeMenu))
+        return menuBody(MENU_ID, menuContent(wholeMenu, bareCategory))
 
-        function menuContent(menu: OutlineMenu): VNode[] {
+        interface CategoryDecorator {
+            (content: VNode): VNode
+        }
+        function bareCategory(content: VNode) {
+            return content
+        }
+        function liCategory(content: VNode) {
+            return html`<li>${content}</li>`
+        }
+
+        function menuContent(menu: OutlineMenu, categoryDecorator: CategoryDecorator): VNode[] {
             return menu.map((node) => {
                 switch (node.type) {
                     case "category":
-                        return menuCategoryContent(node)
+                        return categoryDecorator(menuCategoryContent(node))
 
                     case "item":
                         return menuItemContent(node)
@@ -76,7 +91,7 @@ export function Menu(resource: Props): VNode {
                 label,
                 toggle,
                 badge: badge(node.badgeCount),
-                children: menuContent(node.children).map((content) => html`<li>${content}</li>`),
+                children: menuContent(node.children, liCategory),
             })
 
             function toggle(event: Event) {

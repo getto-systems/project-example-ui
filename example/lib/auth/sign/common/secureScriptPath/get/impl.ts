@@ -18,9 +18,7 @@ function detectPathname(currentURL: URL): LocationPathname {
 interface GetSecureScriptPath {
     (infra: GetSecureScriptPathInfra): GetSecureScriptPathPod
 }
-export const getSecureScriptPath: GetSecureScriptPath = (infra) => (
-    locationInfo
-) => () => {
+export const getSecureScriptPath: GetSecureScriptPath = (infra) => (locationInfo) => () => {
     const {
         config: { secureServerHost },
     } = infra
@@ -29,6 +27,6 @@ export const getSecureScriptPath: GetSecureScriptPath = (infra) => (
 
     // アクセス中の html と同じパスで secure host に js がホストされている
     return markSecureScriptPath(
-        `//${secureServerHost}${pagePathname.replace(/\.html$/, "")}.js`
+        `https://${secureServerHost}${pagePathname.replace(/\.html$/, "")}.js`
     )
 }
