@@ -1,14 +1,13 @@
 import { h } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { storyTemplate } from "../../../z_storybook/story"
+import { storyTemplate } from "../../../../../../../../x_preact/z_storybook/story"
 
 import { RenewAuthInfo } from "./Renew"
 
-import { initMockPropsPasser } from "../../../../common/vendor/getto-example/Application/mock"
-import { initMockRenewCredentialEntryPoint } from "../../../../auth/z_EntryPoint/Sign/mock"
-
-import { RenewAuthInfoMockProps } from "../../../../auth/x_Resource/Sign/AuthInfo/Renew/mock"
+import { initMockPropsPasser } from "../../../../../../../../common/vendor/getto-example/Application/mock"
+import { initMockRenewAuthnInfoAction, RenewAuthnInfoMockProps } from "../mock"
+import { RenewAuthnInfoEntryPoint } from "../action"
 
 export default {
     title: "Auth/Sign/AuthInfo/Renew",
@@ -19,17 +18,20 @@ export default {
     },
 }
 
-type MockProps = RenewAuthInfoMockProps
+type MockProps = RenewAuthnInfoMockProps
 const template = storyTemplate<MockProps>((args) => {
-    const passer = initMockPropsPasser<RenewAuthInfoMockProps>()
-    const entryPoint = initMockRenewCredentialEntryPoint(passer)
+    const passer = initMockPropsPasser<RenewAuthnInfoMockProps>()
+    const renew = initMockRenewAuthnInfoAction(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(RenewAuthInfo, entryPoint)
+        return h(RenewAuthInfo, <RenewAuthnInfoEntryPoint>{
+            resource: { renew },
+            terminate: () => null,
+        })
     }
 })
 

@@ -1,15 +1,15 @@
-import { ApplicationAbstractAction } from "../../../../../common/vendor/getto-example/Application/impl"
+import { ApplicationAbstractAction } from "../../../../../../../common/vendor/getto-example/Application/impl"
 
-import { getSecureScriptPath } from "../../../common/secureScriptPath/get/impl"
-import { forceRenewAuthnInfo, renewAuthnInfo } from "../../../kernel/authnInfo/renew/impl"
+import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
+import { forceRenewAuthnInfo, renewAuthnInfo } from "../../impl"
 import {
     forceStartContinuousRenewAuthnInfo,
     startContinuousRenewAuthnInfo,
-} from "../../../kernel/authnInfo/startContinuousRenew/impl"
+} from "../../../startContinuousRenew/impl"
 
-import { RenewAuthnInfoInfra } from "../../../kernel/authnInfo/renew/infra"
-import { StartContinuousRenewAuthnInfoInfra } from "../../../kernel/authnInfo/startContinuousRenew/infra"
-import { GetSecureScriptPathInfra } from "../../../common/secureScriptPath/get/infra"
+import { RenewAuthnInfoInfra } from "../../infra"
+import { StartContinuousRenewAuthnInfoInfra } from "../../../startContinuousRenew/infra"
+import { GetSecureScriptPathInfra } from "../../../../../common/secureScriptPath/get/infra"
 
 import {
     RenewAuthnInfoMaterial,
@@ -17,10 +17,10 @@ import {
     RenewAuthnInfoState,
 } from "./action"
 
-import { GetSecureScriptPathLocationInfo } from "../../../common/secureScriptPath/get/method"
+import { GetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/method"
 
-import { AuthnInfo } from "../../../kernel/authnInfo/common/data"
-import { LoadSecureScriptError } from "../../../common/secureScriptPath/get/data"
+import { AuthnInfo } from "../../../common/data"
+import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
 
 export type RenewAuthnInfoBase = Readonly<{
     renew: RenewAuthnInfoInfra

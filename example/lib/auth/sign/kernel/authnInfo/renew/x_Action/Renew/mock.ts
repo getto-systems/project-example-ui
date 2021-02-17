@@ -1,33 +1,32 @@
 import {
     MockAction,
     MockPropsPasser,
-} from "../../../../../common/vendor/getto-example/Application/mock"
+} from "../../../../../../../common/vendor/getto-example/Application/mock"
 
 import { RenewAuthnInfoAction, RenewAuthnInfoState } from "./action"
 
-type Passer = MockPropsPasser<RenewMockProps>
-
-export type RenewMockProps =
+export type RenewAuthnInfoMockPropsPasser = MockPropsPasser<RenewAuthnInfoMockProps>
+export type RenewAuthnInfoMockProps =
     | Readonly<{ type: "delayed" }>
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function initMockRenewAuthnInfoAction(passer: Passer): RenewAuthnInfoAction {
+export function initMockRenewAuthnInfoAction(
+    passer: RenewAuthnInfoMockPropsPasser
+): RenewAuthnInfoAction {
     return new Action(passer)
 }
 
-class Action
-    extends MockAction<RenewAuthnInfoState>
-    implements RenewAuthnInfoAction {
-    constructor(passer: Passer) {
+class Action extends MockAction<RenewAuthnInfoState> implements RenewAuthnInfoAction {
+    constructor(passer: RenewAuthnInfoMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))
         })
 
-        function mapProps(props: RenewMockProps): RenewAuthnInfoState {
+        function mapProps(props: RenewAuthnInfoMockProps): RenewAuthnInfoState {
             switch (props.type) {
                 case "delayed":
                     return { type: "delayed-to-renew" }

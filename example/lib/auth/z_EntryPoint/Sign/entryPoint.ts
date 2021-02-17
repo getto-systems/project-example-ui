@@ -1,4 +1,4 @@
-import { RenewAuthInfoResource } from "../../x_Resource/Sign/AuthInfo/Renew/resource"
+import { RenewAuthnInfoResource } from "../../sign/kernel/authnInfo/renew/x_Action/Renew/action"
 import { AuthenticatePasswordResource } from "../../x_Resource/Sign/Password/Authenticate/resource"
 import { RegisterPasswordResource } from "../../x_Resource/Sign/Password/ResetSession/Register/resource"
 import { StartPasswordResetSessionResource } from "../../x_Resource/Sign/Password/ResetSession/Start/resource"
@@ -11,7 +11,7 @@ export type AuthSignEntryPoint = Readonly<{
     terminate: Terminate
 }>
 
-export type RenewCredentialEntryPoint = EntryPoint<RenewAuthInfoResource>
+export type RenewCredentialEntryPoint = EntryPoint<RenewAuthnInfoResource>
 export type PasswordLoginEntryPoint = EntryPoint<
     AuthenticatePasswordResource & AuthSignLinkResource
 >
@@ -24,7 +24,7 @@ export interface AuthSignResourceFactory {
     link(): AuthSignLinkResource
 
     // TODO 階層構造に合わせて rename
-    renew(): RenewAuthInfoResource
+    renew(): RenewAuthnInfoResource
 
     passwordLogin(): AuthenticatePasswordResource
     passwordResetSession(): StartPasswordResetSessionResource
