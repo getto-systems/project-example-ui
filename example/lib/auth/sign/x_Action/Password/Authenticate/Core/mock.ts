@@ -18,7 +18,9 @@ export type AuthenticatePasswordMockProps =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function initMockAuthenticatePasswordAction(passer: Passer): Action {
+export function initMockAuthenticatePasswordAction(
+    passer: Passer
+): AuthenticatePasswordAction {
     return new Action(passer)
 }
 

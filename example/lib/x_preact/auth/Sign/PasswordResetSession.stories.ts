@@ -11,8 +11,8 @@ import { initMockPasswordResetSessionEntryPoint } from "../../../auth/z_EntryPoi
 
 import { formValidationStates } from "../../../common/vendor/getto-form/x_Resource/Form/mock"
 import { loginIDFormFieldValidations } from "../../../auth/common/x_Component/Field/LoginID/mock"
+import { StartPasswordResetSessionResourceMockProps } from "../../../auth/x_Resource/Sign/Password/ResetSession/Start/mock"
 
-import { PasswordResetSessionResourceMockProps } from "../../../auth/x_Resource/Sign/PasswordResetSession/mock"
 
 export default {
     title: "Auth/Login/PasswordResetSession",
@@ -29,9 +29,9 @@ export default {
     },
 }
 
-type MockProps = PasswordResetSessionResourceMockProps
+type MockProps = StartPasswordResetSessionResourceMockProps
 const template = storyTemplate<MockProps>((args) => {
-    const passer = initMockPropsPasser<PasswordResetSessionResourceMockProps>()
+    const passer = initMockPropsPasser<StartPasswordResetSessionResourceMockProps>()
     const entryPoint = initMockPasswordResetSessionEntryPoint(passer)
     return h(Preview, { args })
 

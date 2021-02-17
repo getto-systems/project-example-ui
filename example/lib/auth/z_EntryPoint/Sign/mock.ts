@@ -9,11 +9,11 @@ import {
     AuthenticatePasswordResourceMockPropsPasser,
 } from "../../x_Resource/Sign/Password/Authenticate/mock"
 import {
-    initMockPasswordResetSessionResource,
-    PasswordResetSessionResourceMockPropsPasser,
-} from "../../x_Resource/Sign/PasswordResetSession/mock"
+    initMockStartPasswordResetSessionResource,
+    StartPasswordResetSessionResourceMockPropsPasser,
+} from "../../x_Resource/Sign/Password/ResetSession/Start/mock"
 import {
-    initMockRegisterPasswordResourceRegister,
+    initMockRegisterPasswordResource,
     RegisterPasswordResourceMockPropsPasser,
 } from "../../x_Resource/Sign/Password/ResetSession/Register/mock"
 
@@ -42,15 +42,15 @@ export function initMockPasswordLoginEntryPoint(
 }
 
 export function initMockPasswordResetSessionEntryPoint(
-    passer: PasswordResetSessionResourceMockPropsPasser
+    passer: StartPasswordResetSessionResourceMockPropsPasser
 ): PasswordResetSessionEntryPoint {
-    return initEntryPoint(initMockPasswordResetSessionResource(passer))
+    return initEntryPoint(initMockStartPasswordResetSessionResource(passer))
 }
 
 export function initMockPasswordResetEntryPoint(
     passer: RegisterPasswordResourceMockPropsPasser
 ): PasswordResetEntryPoint {
-    return initEntryPoint(initMockRegisterPasswordResourceRegister(passer))
+    return initEntryPoint(initMockRegisterPasswordResource(passer))
 }
 
 type EntryPoint<R> = Readonly<{
@@ -68,7 +68,9 @@ function initEntryPoint<R>(resource: R): EntryPoint<R & AuthSignLinkResource> {
     }
 }
 
-export function initMockLoginEntryPointAsError(passer: LoginErrorMockPropsPasser): AuthSignEntryPoint {
+export function initMockLoginEntryPointAsError(
+    passer: LoginErrorMockPropsPasser
+): AuthSignEntryPoint {
     return {
         view: new MockErrorView(passer),
         terminate,

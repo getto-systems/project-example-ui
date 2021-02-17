@@ -4,10 +4,9 @@ import { newStaticClock } from "../../../z_infra/clock/simulate"
 import { initAuthenticatePasswordSimulate } from "../../sign/password/authenticate/infra/remote/authenticate/simulate"
 import { initRenewAuthnInfoSimulate } from "../../sign/authnInfo/common/infra/remote/renew/simulate"
 import { initRegisterPasswordSimulate } from "../../sign/password/resetSession/register/infra/remote/register/simulate"
-import { initStartPasswordResetSessionSimulateRemoteAccess } from "../../sign/password/resetSession/start/infra/remote/startPasswordResetSession/simulate"
+import { initStartPasswordResetSessionSimulate } from "../../sign/password/resetSession/start/infra/remote/start/simulate"
 
 import { initAuthSignLinkResource } from "../../x_Resource/Sign/Link/impl"
-import { initPasswordResetSessionResource } from "../../x_Resource/Sign/PasswordResetSession/impl"
 
 import { initFormAction } from "../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../common/field/loginID/main/loginID"
@@ -23,28 +22,26 @@ import { markAuthAt, markAuthnNonce } from "../../sign/authnInfo/common/data"
 import { markApiNonce, markApiRoles } from "../../../common/apiCredential/data"
 import { ApiCredentialRepository } from "../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../common/apiCredential/infra/repository/memory"
-import {
-    AuthnInfoRepository,
-    RenewAuthnInfoResult,
-} from "../../sign/authnInfo/common/infra"
+import { AuthnInfoRepository, RenewAuthnInfoResult } from "../../sign/authnInfo/common/infra"
 import { delayed, wait } from "../../../z_infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../sign/authnInfo/common/infra/repository/authnInfo/memory"
 import { initGetSecureScriptPathLocationInfo } from "../../sign/secureScriptPath/get/impl"
 import { initRegisterPasswordLocationInfo } from "../../sign/password/resetSession/register/impl"
-import { initPasswordResetSessionActionPod } from "../../sign/password/resetSession/start/impl"
 import {
-    GetPasswordResetSessionStatusRemoteAccessResult,
-    SendPasswordResetSessionTokenRemoteAccessResult,
-    StartPasswordResetSessionSessionRemoteAccessResult,
+    GetPasswordResetSessionStatusResult,
+    SendPasswordResetSessionTokenResult,
+    StartPasswordResetSessionSessionResult,
 } from "../../sign/password/resetSession/start/infra"
 import { markPasswordResetSessionID } from "../../sign/password/resetSession/start/data"
-import { initSendPasswordResetSessionTokenSimulateRemoteAccess } from "../../sign/password/resetSession/start/infra/remote/sendPasswordResetSessionToken/simulate"
-import { initGetPasswordResetSessionStatusSimulateRemoteAccess } from "../../sign/password/resetSession/start/infra/remote/getPasswordResetSessionStatus/simulate"
+import { initSendPasswordResetSessionTokenSimulate } from "../../sign/password/resetSession/start/infra/remote/sendToken/simulate"
+import { initGetPasswordResetSessionStatusSimulate } from "../../sign/password/resetSession/start/infra/remote/getStatus/simulate"
 import { initRenewAuthnInfoAction } from "../../sign/x_Action/AuthnInfo/Renew/impl"
 import { initAuthenticatePasswordFormAction } from "../../sign/x_Action/Password/Authenticate/Form/impl"
 import { initAuthenticatePasswordAction } from "../../sign/x_Action/Password/Authenticate/Core/impl"
 import { initRegisterPasswordAction } from "../../sign/x_Action/Password/ResetSession/Register/Core/impl"
 import { initRegisterPasswordFormAction } from "../../sign/x_Action/Password/ResetSession/Register/Form/impl"
+import { initStartPasswordResetSessionFormAction } from "../../sign/x_Action/Password/ResetSession/Start/Form/impl"
+import { initStartPasswordResetSessionAction } from "../../sign/x_Action/Password/ResetSession/Start/Core/impl"
 
 const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
@@ -89,9 +86,9 @@ describe("LoginView", () => {
                         expect(state.entryPoint.resource.href.passwordLogin()).toEqual(
                             "?_password_login"
                         )
-                        expect(
-                            state.entryPoint.resource.href.passwordResetSession()
-                        ).toEqual("?_password_reset=start")
+                        expect(state.entryPoint.resource.href.passwordResetSession()).toEqual(
+                            "?_password_reset=start"
+                        )
 
                         terminates.forEach((terminate) => terminate())
                         done()
@@ -430,12 +427,9 @@ function standardPasswordResetResource(
                     },
                 },
                 register: {
-                    register: initRegisterPasswordSimulate(
-                        simulateReset,
-                        {
-                            wait_millisecond: 0,
-                        }
-                    ),
+                    register: initRegisterPasswordSimulate(simulateReset, {
+                        wait_millisecond: 0,
+                    }),
                     config: {
                         delay: { delay_millisecond: 1 },
                     },
@@ -466,47 +460,43 @@ function standardPasswordResetResource(
     }
 }
 function standardPasswordResetSessionResource() {
-    return initPasswordResetSessionResource(
-        {
-            form: {
-                core: initFormAction(),
-                loginID: initLoginIDFormFieldAction(),
-            },
-        },
-        {
-            initSession: initPasswordResetSessionActionPod({
-                start: initStartPasswordResetSessionSimulateRemoteAccess(
-                    simulateStartSession,
-                    {
-                        wait_millisecond: 0,
-                    }
-                ),
-                sendToken: initSendPasswordResetSessionTokenSimulateRemoteAccess(
-                    simulateSendToken,
-                    {
-                        wait_millisecond: 0,
-                    }
-                ),
-                getStatus: initGetPasswordResetSessionStatusSimulateRemoteAccess(
-                    simulateGetStatus,
-                    {
-                        wait_millisecond: 0,
-                    }
-                ),
+    return {
+        start: initStartPasswordResetSessionAction({
+            start: {
+                start: initStartPasswordResetSessionSimulate(simulateStartSession, {
+                    wait_millisecond: 0,
+                }),
                 config: {
-                    start: {
-                        delay: { delay_millisecond: 1 },
-                    },
-                    checkStatus: {
-                        wait: { wait_millisecond: 2 },
-                        limit: { limit: 5 },
-                    },
+                    delay: { delay_millisecond: 1 },
                 },
                 delayed,
+            },
+            checkStatus: {
+                sendToken: initSendPasswordResetSessionTokenSimulate(simulateSendToken, {
+                    wait_millisecond: 0,
+                }),
+                getStatus: initGetPasswordResetSessionStatusSimulate(simulateGetStatus, {
+                    wait_millisecond: 0,
+                }),
+                config: {
+                    wait: { wait_millisecond: 2 },
+                    limit: { limit: 5 },
+                },
                 wait,
-            }),
+            },
+        }),
+        form: initStartPasswordResetSessionFormAction(formMaterial()),
+    }
+
+    function formMaterial() {
+        const form = initFormAction()
+        const loginID = initLoginIDFormFieldAction()
+        return {
+            validation: form.validation(),
+            history: form.history(),
+            loginID: loginID.field(),
         }
-    )
+    }
 }
 function standardRenewCredentialResource(
     currentURL: URL,
@@ -604,13 +594,13 @@ function simulateReset(): RegisterPasswordResult {
     }
 }
 
-function simulateStartSession(): StartPasswordResetSessionSessionRemoteAccessResult {
+function simulateStartSession(): StartPasswordResetSessionSessionResult {
     return { success: true, value: markPasswordResetSessionID(SESSION_ID) }
 }
-function simulateSendToken(): SendPasswordResetSessionTokenRemoteAccessResult {
+function simulateSendToken(): SendPasswordResetSessionTokenResult {
     return { success: true, value: true }
 }
-function simulateGetStatus(): GetPasswordResetSessionStatusRemoteAccessResult {
+function simulateGetStatus(): GetPasswordResetSessionStatusResult {
     return { success: true, value: { dest: { type: "log" }, done: true, send: true } }
 }
 

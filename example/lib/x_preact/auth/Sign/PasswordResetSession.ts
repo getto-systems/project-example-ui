@@ -16,12 +16,11 @@ import { useAction, useTermination } from "../../common/hooks"
 import { siteInfo } from "../../common/site"
 import { icon, spinner } from "../../common/icon"
 
-import { ApplicationError } from "../../common/System/ApplicationError"
 import { LoginIDFormField } from "./field/loginID"
 
 import { PasswordResetSessionEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialStartComponentState } from "../../../auth/sign/x_Action/Password/ResetSession/Session/Start/component"
+import { initialStartPasswordResetSessionState } from "../../../auth/sign/x_Action/Password/ResetSession/Start/Core/action"
 import { initialFormContainerComponentState } from "../../../common/vendor/getto-form/x_Resource/Form/component"
 
 import {
@@ -32,10 +31,13 @@ import {
     SendPasswordResetSessionTokenError,
 } from "../../../auth/sign/password/resetSession/start/data"
 
-export function PasswordResetSession({ resource, terminate }: PasswordResetSessionEntryPoint): VNode {
+export function PasswordResetSession({
+    resource,
+    terminate,
+}: PasswordResetSessionEntryPoint): VNode {
     useTermination(terminate)
 
-    const state = useAction(resource.start, initialStartComponentState)
+    const state = useAction(resource.start, initialStartPasswordResetSessionState)
     const formState = useAction(resource.form, initialFormContainerComponentState)
 
     switch (state.type) {
@@ -65,9 +67,6 @@ export function PasswordResetSession({ resource, terminate }: PasswordResetSessi
 
         case "failed-to-send-token":
             return errorMessage("リセットトークンの送信に失敗しました", sendTokenError(state.err))
-
-        case "error":
-            return h(ApplicationError, { err: state.err })
     }
 
     type StartSessionFormState = "start" | "connecting"
@@ -156,7 +155,11 @@ export function PasswordResetSession({ resource, terminate }: PasswordResetSessi
 
     type CheckStatusContent =
         | Readonly<{ type: "initial" }>
-        | Readonly<{ type: "retry"; dest: PasswordResetDestination; status: PasswordResetSendingStatus }>
+        | Readonly<{
+              type: "retry"
+              dest: PasswordResetDestination
+              status: PasswordResetSendingStatus
+          }>
 
     function checkStatusMessage(content: CheckStatusContent): VNode {
         return loginBox(siteInfo(), {

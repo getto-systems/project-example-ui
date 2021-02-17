@@ -17,7 +17,7 @@ export type RegisterPasswordResourceMockPropsPasser = MockPropsPasser<
 export type RegisterPasswordResourceMockProps = RegisterPasswordMockProps &
     RegisterPasswordFormMockProps
 
-export function initMockRegisterPasswordResourceRegister(
+export function initMockRegisterPasswordResource(
     passer: RegisterPasswordResourceMockPropsPasser
 ): RegisterPasswordResource {
     return {

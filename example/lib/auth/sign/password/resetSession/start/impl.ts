@@ -1,33 +1,15 @@
-import {
-    PasswordResetSessionSessionActionInfra,
-    StartPasswordResetSession,
-    CheckPasswordResetSessionStatus,
-} from "./infra"
+import { CheckPasswordResetSessionStatusInfra, StartPasswordResetSessionInfra } from "./infra"
 
-import { PasswordResetSessionAction, PasswordResetSessionActionPod } from "./action"
+import { StartPasswordResetSessionMethod, CheckPasswordResetSessionStatusMethod } from "./method"
 
 import { CheckPasswordResetSessionStatusEvent, StartPasswordResetSessionEvent } from "./event"
 
 import { CheckPasswordResetSessionStatusError } from "./data"
 
-export function initPasswordResetSessionAction(
-    pod: PasswordResetSessionActionPod
-): PasswordResetSessionAction {
-    return {
-        start: pod.initStart(),
-        checkStatus: pod.initCheckStatus(),
-    }
+interface Start {
+    (infra: StartPasswordResetSessionInfra): StartPasswordResetSessionMethod
 }
-export function initPasswordResetSessionActionPod(
-    infra: PasswordResetSessionSessionActionInfra
-): PasswordResetSessionActionPod {
-    return {
-        initStart: start(infra),
-        initCheckStatus: checkStatus(infra),
-    }
-}
-
-const start: StartPasswordResetSession = (infra) => () => async (fields, post) => {
+export const startPasswordResetSession: Start = (infra) => async (fields, post) => {
     if (!fields.success) {
         post({ type: "failed-to-start-session", err: { type: "validation-error" } })
         return
@@ -38,7 +20,7 @@ const start: StartPasswordResetSession = (infra) => () => async (fields, post) =
     const { start: startSession, config, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(startSession(fields.value), config.start.delay, () =>
+    const response = await delayed(startSession(fields.value), config.delay, () =>
         post({ type: "delayed-to-start-session" })
     )
     if (!response.success) {
@@ -49,7 +31,9 @@ const start: StartPasswordResetSession = (infra) => () => async (fields, post) =
     post({ type: "succeed-to-start-session", sessionID: response.value })
 }
 
-export function startPasswordResetSessionEventHasDone(event: StartPasswordResetSessionEvent): boolean {
+export function startPasswordResetSessionEventHasDone(
+    event: StartPasswordResetSessionEvent
+): boolean {
     switch (event.type) {
         case "succeed-to-start-session":
         case "failed-to-start-session":
@@ -61,13 +45,16 @@ export function startPasswordResetSessionEventHasDone(event: StartPasswordResetS
     }
 }
 
-type SendTokenState =
-    | Readonly<{ type: "initial" }>
-    | Readonly<{ type: "failed"; err: CheckPasswordResetSessionStatusError }>
-    | Readonly<{ type: "success" }>
-
-const checkStatus: CheckPasswordResetSessionStatus = (infra) => () => async (sessionID, post) => {
+interface CheckStatus {
+    (infra: CheckPasswordResetSessionStatusInfra): CheckPasswordResetSessionStatusMethod
+}
+export const checkPasswordResetSessionStatus: CheckStatus = (infra) => async (sessionID, post) => {
     const { getStatus, sendToken, config, wait } = infra
+
+    type SendTokenState =
+        | Readonly<{ type: "initial" }>
+        | Readonly<{ type: "failed"; err: CheckPasswordResetSessionStatusError }>
+        | Readonly<{ type: "success" }>
 
     let sendTokenState: SendTokenState = { type: "initial" }
     function getSendTokenState(): SendTokenState {
@@ -78,7 +65,7 @@ const checkStatus: CheckPasswordResetSessionStatus = (infra) => () => async (ses
 
     requestSendToken()
 
-    for (let i_ = 0; i_ < config.checkStatus.limit.limit; i_++) {
+    for (let i_ = 0; i_ < config.limit.limit; i_++) {
         const currentSendTokenState = getSendTokenState()
         if (currentSendTokenState.type === "failed") {
             post({ type: "failed-to-check-status", err: currentSendTokenState.err })
@@ -112,7 +99,7 @@ const checkStatus: CheckPasswordResetSessionStatus = (infra) => () => async (ses
             status: result.status,
         })
 
-        await wait(config.checkStatus.wait, () => true)
+        await wait(config.wait, () => true)
     }
 
     post({

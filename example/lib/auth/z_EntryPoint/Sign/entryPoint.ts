@@ -1,7 +1,7 @@
 import { RenewAuthInfoResource } from "../../x_Resource/Sign/AuthInfo/Renew/resource"
 import { AuthenticatePasswordResource } from "../../x_Resource/Sign/Password/Authenticate/resource"
 import { RegisterPasswordResource } from "../../x_Resource/Sign/Password/ResetSession/Register/resource"
-import { PasswordResetSessionResource } from "../../x_Resource/Sign/PasswordResetSession/resource"
+import { StartPasswordResetSessionResource } from "../../x_Resource/Sign/Password/ResetSession/Start/resource"
 
 import { ApplicationAction } from "../../../common/vendor/getto-example/Application/action"
 import { AuthSignLinkResource } from "../../x_Resource/Sign/Link/resource"
@@ -12,19 +12,22 @@ export type AuthSignEntryPoint = Readonly<{
 }>
 
 export type RenewCredentialEntryPoint = EntryPoint<RenewAuthInfoResource>
-export type PasswordLoginEntryPoint = EntryPoint<AuthenticatePasswordResource & AuthSignLinkResource>
+export type PasswordLoginEntryPoint = EntryPoint<
+    AuthenticatePasswordResource & AuthSignLinkResource
+>
 export type PasswordResetSessionEntryPoint = EntryPoint<
-    PasswordResetSessionResource & AuthSignLinkResource
+    StartPasswordResetSessionResource & AuthSignLinkResource
 >
 export type PasswordResetEntryPoint = EntryPoint<RegisterPasswordResource & AuthSignLinkResource>
 
 export interface AuthSignResourceFactory {
     link(): AuthSignLinkResource
 
+    // TODO 階層構造に合わせて rename
     renew(): RenewAuthInfoResource
 
     passwordLogin(): AuthenticatePasswordResource
-    passwordResetSession(): PasswordResetSessionResource
+    passwordResetSession(): StartPasswordResetSessionResource
     passwordReset(): RegisterPasswordResource
 }
 
@@ -40,7 +43,10 @@ export type AuthSignViewState =
     | Readonly<{ type: "initial-view" }>
     | Readonly<{ type: "renew-credential"; entryPoint: RenewCredentialEntryPoint }>
     | Readonly<{ type: "password-login"; entryPoint: PasswordLoginEntryPoint }>
-    | Readonly<{ type: "password-reset-session"; entryPoint: PasswordResetSessionEntryPoint }>
+    | Readonly<{
+          type: "password-reset-session"
+          entryPoint: PasswordResetSessionEntryPoint
+      }>
     | Readonly<{ type: "password-reset"; entryPoint: PasswordResetEntryPoint }>
     | Readonly<{ type: "error"; err: string }>
 

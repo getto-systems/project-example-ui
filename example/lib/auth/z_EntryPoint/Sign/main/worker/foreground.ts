@@ -2,24 +2,8 @@ import { newWorker } from "../../../../../common/vendor/getto-worker/main/foregr
 
 import { newRenewAuthInfoResource } from "../../../../x_Resource/Sign/AuthInfo/Renew/main"
 import { newPasswordAuthenticateResource_merge } from "../../../../x_Resource/Sign/Password/Authenticate/main/core"
-
-import { initLoginViewLocationInfo, View } from "../../impl"
-
-import { initAuthSignLinkResource } from "../../../../x_Resource/Sign/Link/impl"
-import { initPasswordResetSessionResource } from "../../../../x_Resource/Sign/PasswordResetSession/impl"
-
-import { initFormAction } from "../../../../../common/vendor/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../../common/field/password/main/password"
-
-import { AuthSignEntryPoint } from "../../entryPoint"
-
-import {
-    newPasswordResetSessionActionForegroundProxy,
-    PasswordResetSessionActionForegroundProxy,
-} from "../../../../sign/password/resetSession/start/main/worker/foreground"
-
-import { ForegroundMessage, BackgroundMessage } from "./message"
+import { newRegisterPasswordResource_merge } from "../../../../x_Resource/Sign/Password/ResetSession/Register/main/core"
+import { newStartPasswordResetSessionResource_merge } from "../../../../x_Resource/Sign/Password/ResetSession/Start/main/core"
 import {
     AuthenticatePasswordResourceProxy,
     newAuthenticatePasswordResourceProxy,
@@ -28,42 +12,39 @@ import {
     RegisterPasswordResourceProxy,
     newRegisterPasswordResourceProxy,
 } from "../../../../x_Resource/Sign/Password/ResetSession/Register/main/worker/foreground"
-import { newRegisterPasswordResource_merge } from "../../../../x_Resource/Sign/Password/ResetSession/Register/main/core"
+import {
+    newStartPasswordResetSessionResourceProxy,
+    StartPasswordResetSessionResourceProxy,
+} from "../../../../x_Resource/Sign/Password/ResetSession/Start/main/worker/foreground"
+
+import { currentURL } from "../../../../../z_infra/location/url"
+
+import { initLoginViewLocationInfo, View } from "../../impl"
+
+import { initAuthSignLinkResource } from "../../../../x_Resource/Sign/Link/impl"
+
+import { AuthSignEntryPoint } from "../../entryPoint"
+
+import { ForegroundMessage, BackgroundMessage } from "./message"
 
 export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     const worker = newWorker()
 
     const webStorage = localStorage
-    const currentURL = new URL(location.toString())
-
-    const foreground = {
-        form: {
-            core: initFormAction(),
-            loginID: initLoginIDFormFieldAction(),
-            password: initPasswordFormFieldAction(),
-        },
-    }
 
     const proxy = initProxy(webStorage, postForegroundMessage)
-    const background = {
-        initSession: proxy.reset.session.pod(),
-    }
 
-    const view = new View(initLoginViewLocationInfo(currentURL), {
+    const view = new View(initLoginViewLocationInfo(currentURL()), {
         link: initAuthSignLinkResource,
 
         renew: () => newRenewAuthInfoResource(webStorage),
 
         passwordLogin: () =>
-            newPasswordAuthenticateResource_merge(
-                proxy.password.authenticate.resource
-            ),
+            newPasswordAuthenticateResource_merge(proxy.password.authenticate.resource),
         passwordResetSession: () =>
-            initPasswordResetSessionResource(foreground, background),
+            newStartPasswordResetSessionResource_merge(proxy.password.resetSession.start.resource),
         passwordReset: () =>
-            newRegisterPasswordResource_merge(
-                proxy.password.resetSession.register.resource
-            ),
+            newRegisterPasswordResource_merge(proxy.password.resetSession.register.resource),
     })
 
     const messageHandler = initBackgroundMessageHandler(proxy, (err: string) => {
@@ -93,10 +74,8 @@ type Proxy = Readonly<{
         authenticate: AuthenticatePasswordResourceProxy
         resetSession: Readonly<{
             register: RegisterPasswordResourceProxy
+            start: StartPasswordResetSessionResourceProxy
         }>
-    }>
-    reset: Readonly<{
-        session: PasswordResetSessionActionForegroundProxy
     }>
 }>
 function initProxy(webStorage: Storage, post: Post<ForegroundMessage>): Proxy {
@@ -106,16 +85,13 @@ function initProxy(webStorage: Storage, post: Post<ForegroundMessage>): Proxy {
                 post({ type: "password-authenticate", message })
             ),
             resetSession: {
-                register: newRegisterPasswordResourceProxy(
-                    webStorage,
-                    (message) => post({ type: "password-resetSession-register", message })
+                register: newRegisterPasswordResourceProxy(webStorage, (message) =>
+                    post({ type: "password-resetSession-register", message })
+                ),
+                start: newStartPasswordResetSessionResourceProxy((message) =>
+                    post({ type: "password-resetSession-start", message })
                 ),
             },
-        },
-        reset: {
-            session: newPasswordResetSessionActionForegroundProxy((message) =>
-                post({ type: "reset-session", message })
-            ),
         },
     }
 }
@@ -130,8 +106,8 @@ function initBackgroundMessageHandler(
                     proxy.password.authenticate.resolve(message.response)
                     break
 
-                case "reset-session":
-                    proxy.reset.session.resolve(message.response)
+                case "password-resetSession-start":
+                    proxy.password.resetSession.start.resolve(message.response)
                     break
 
                 case "password-resetSession-register":
