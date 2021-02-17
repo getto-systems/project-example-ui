@@ -1,8 +1,8 @@
 import { ApplicationAbstractAction } from "../../../../../common/vendor/getto-example/Application/impl"
 
-import { clearAuthnInfo } from "../../../authnInfo/clear/impl"
+import { clearAuthnInfo } from "../../../kernel/authnInfo/clear/impl"
 
-import { ClearAuthnInfoInfra } from "../../../authnInfo/clear/infra"
+import { ClearAuthnInfoInfra } from "../../../kernel/authnInfo/clear/infra"
 
 import {
     ClearAuthnInfoAction,

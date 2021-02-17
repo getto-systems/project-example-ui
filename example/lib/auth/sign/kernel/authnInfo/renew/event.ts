@@ -1,4 +1,4 @@
-import { StorageError } from "../../../../common/storage/data"
+import { StorageError } from "../../../../../common/storage/data"
 import { AuthnInfo } from "../common/data"
 import { RenewAuthnInfoError } from "./data"
 

@@ -1,4 +1,4 @@
-import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
+import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
 import { AuthnInfoRepository } from "../common/infra"
 
 export type ClearAuthnInfoInfra = Readonly<{

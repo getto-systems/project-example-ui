@@ -1,6 +1,6 @@
-import { initSimulateRemoteAccess } from "../../../../../../../z_infra/remote/simulate"
+import { initSimulateRemoteAccess } from "../../../../../../../../z_infra/remote/simulate"
 
-import { WaitTime } from "../../../../../../../z_infra/time/infra"
+import { WaitTime } from "../../../../../../../../z_infra/time/infra"
 import { RenewAuthnInfoRemote, RenewAuthnInfoSimulator } from "../../../infra"
 
 export function initRenewAuthnInfoSimulate(

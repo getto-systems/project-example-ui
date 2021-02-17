@@ -1,4 +1,4 @@
-import { StoreResult } from "../../../../common/storage/infra"
+import { StoreResult } from "../../../../../common/storage/infra"
 import { RenewAuthnInfoInfra } from "./infra"
 
 import { ForceRenewAuthnInfoEvent } from "./event"

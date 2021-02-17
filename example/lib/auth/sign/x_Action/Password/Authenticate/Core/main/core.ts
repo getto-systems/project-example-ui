@@ -1,4 +1,4 @@
-import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../authnInfo/startContinuousRenew/main"
+import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../kernel/authnInfo/startContinuousRenew/main"
 import { newAuthenticatePasswordInfra } from "../../../../../password/authenticate/main"
 import {
     newGetSecureScriptPathInfra,

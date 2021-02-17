@@ -1,5 +1,5 @@
 import { newStaticClock, StaticClock } from "../../../../../z_infra/clock/simulate"
-import { initRenewAuthnInfoSimulate } from "../../../../sign/authnInfo/common/infra/remote/renew/simulate"
+import { initRenewAuthnInfoSimulate } from "../../../../sign/kernel/authnInfo/common/infra/remote/renew/simulate"
 
 import { Clock } from "../../../../../z_infra/clock/infra"
 
@@ -8,7 +8,7 @@ import { RenewAuthInfoResource } from "./resource"
 import { RenewAuthnInfoState } from "../../../../sign/x_Action/AuthnInfo/Renew/action"
 
 import { markSecureScriptPath } from "../../../../sign/secureScriptPath/get/data"
-import { markAuthAt, markAuthnNonce } from "../../../../sign/authnInfo/common/data"
+import { markAuthAt, markAuthnNonce } from "../../../../sign/kernel/authnInfo/common/data"
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../common/apiCredential/data"
@@ -16,9 +16,9 @@ import {
     AuthnInfoRepository,
     RenewAuthnInfoRemote,
     RenewAuthnInfoResult,
-} from "../../../../sign/authnInfo/common/infra"
+} from "../../../../sign/kernel/authnInfo/common/infra"
 import { delayed } from "../../../../../z_infra/delayed/core"
-import { initMemoryAuthnInfoRepository } from "../../../../sign/authnInfo/common/infra/repository/authnInfo/memory"
+import { initMemoryAuthnInfoRepository } from "../../../../sign/kernel/authnInfo/common/infra/repository/authnInfo/memory"
 import { initGetSecureScriptPathLocationInfo } from "../../../../sign/secureScriptPath/get/impl"
 import { initRenewAuthnInfoAction } from "../../../../sign/x_Action/AuthnInfo/Renew/impl"
 

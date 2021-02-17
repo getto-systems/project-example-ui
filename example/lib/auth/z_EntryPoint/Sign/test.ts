@@ -2,7 +2,7 @@ import { initLoginViewLocationInfo, View } from "./impl"
 
 import { newStaticClock } from "../../../z_infra/clock/simulate"
 import { initAuthenticatePasswordSimulate } from "../../sign/password/authenticate/infra/remote/authenticate/simulate"
-import { initRenewAuthnInfoSimulate } from "../../sign/authnInfo/common/infra/remote/renew/simulate"
+import { initRenewAuthnInfoSimulate } from "../../sign/kernel/authnInfo/common/infra/remote/renew/simulate"
 import { initRegisterPasswordSimulate } from "../../sign/password/resetSession/register/infra/remote/register/simulate"
 import { initStartPasswordResetSessionSimulate } from "../../sign/password/resetSession/start/infra/remote/start/simulate"
 
@@ -18,13 +18,13 @@ import { RegisterPasswordResult } from "../../sign/password/resetSession/registe
 
 import { AuthSignViewState } from "./entryPoint"
 
-import { markAuthAt, markAuthnNonce } from "../../sign/authnInfo/common/data"
+import { markAuthAt, markAuthnNonce } from "../../sign/kernel/authnInfo/common/data"
 import { markApiNonce, markApiRoles } from "../../../common/apiCredential/data"
 import { ApiCredentialRepository } from "../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../common/apiCredential/infra/repository/memory"
-import { AuthnInfoRepository, RenewAuthnInfoResult } from "../../sign/authnInfo/common/infra"
+import { AuthnInfoRepository, RenewAuthnInfoResult } from "../../sign/kernel/authnInfo/common/infra"
 import { delayed, wait } from "../../../z_infra/delayed/core"
-import { initMemoryAuthnInfoRepository } from "../../sign/authnInfo/common/infra/repository/authnInfo/memory"
+import { initMemoryAuthnInfoRepository } from "../../sign/kernel/authnInfo/common/infra/repository/authnInfo/memory"
 import { initGetSecureScriptPathLocationInfo } from "../../sign/secureScriptPath/get/impl"
 import { initRegisterPasswordLocationInfo } from "../../sign/password/resetSession/register/impl"
 import {
