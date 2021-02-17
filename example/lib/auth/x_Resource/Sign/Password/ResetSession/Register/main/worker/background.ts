@@ -1,6 +1,6 @@
 import { newRegisterPasswordHandler } from "../../../../../../../sign/x_Action/Password/ResetSession/Register/Core/main/worker/background"
 
-import { WorkerHandler } from "../../../../../../../../common/vendor/getto-worker/main/background"
+import { WorkerHandler } from "../../../../../../../../z_vendor/getto-worker/background"
 
 import {
     RegisterPasswordResourceProxyMessage,

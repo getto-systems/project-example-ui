@@ -1,10 +1,12 @@
 /* eslint-disable */
 
+const fs = require("fs")
+const path = require("path")
+
 module.exports = {
     findPublicEntries,
     findSecureFiles,
-    toSecureEntryName,
-    toSecureEntryPath,
+    findSecureEntries,
 }
 
 function findPublicEntries() {
@@ -13,13 +15,10 @@ function findPublicEntries() {
         "availability/moveToNextVersion",
         "auth/sign",
         "auth/notFound",
-    ]
+    ].reduce(toEntry("public"), {})
 }
 
 function findSecureFiles() {
-    const fs = require("fs")
-    const path = require("path")
-
     const root = path.join(__dirname, "./public/dist")
     return gatherFiles(root).map((file) => file.replace(root, ""))
 
@@ -56,13 +55,48 @@ function findSecureFiles() {
         }
     }
 }
-
-function toSecureEntryName(file) {
-    return file.replace("/", "").replace(/\.html$/, "")
+function findSecureEntries() {
+    return findSecureFiles()
+        .map((file) => file.replace("/", "").replace(/\.html$/, ""))
+        .reduce(toEntry("secure"), {})
 }
-function toSecureEntryPath(file) {
-    if (file.startsWith("/document/")) {
-        return "/document"
+
+function toEntry(root) {
+    return (acc, name) => {
+        acc[name] = toMainPath(name)
+
+        const worker = toWorkerPath(name)
+        if (exists(worker)) {
+            acc[`${name}.worker`] = worker
+        }
+        return acc
     }
-    return file.replace(/\.html$/, "")
+
+    function toMainPath(file) {
+        return toPath("main", file)
+    }
+    function toWorkerPath(file) {
+        return toPath("worker", file)
+    }
+    function toPath(type, file) {
+        return path.join(__dirname, "./lib/x_main", root, ...toSecureEntryPath(file), `${type}.ts`)
+    }
+    function toSecureEntryPath(file) {
+        if (file.startsWith("auth/profile")) {
+            return [file, "x_preact"]
+        }
+        if (file.startsWith("document/")) {
+            return ["document"]
+        }
+        return [file]
+    }
+
+    function exists(file) {
+        try {
+            fs.accessSync(file)
+            return true
+        } catch (err) {
+            return false
+        }
+    }
 }

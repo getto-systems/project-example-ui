@@ -1,4 +1,4 @@
-import { newWorker } from "../../../../../common/vendor/getto-worker/main/foreground"
+import { newWorker } from "../../../../../z_vendor/getto-worker/foreground"
 
 import { newRenewAuthInfoResource } from "../../../../x_Resource/Sign/AuthInfo/Renew/main"
 import { newPasswordAuthenticateResource_merge } from "../../../../x_Resource/Sign/Password/Authenticate/main/core"

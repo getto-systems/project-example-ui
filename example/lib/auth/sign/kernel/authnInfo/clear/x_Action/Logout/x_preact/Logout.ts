@@ -2,18 +2,18 @@ import { VNode } from "preact"
 import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { box } from "../../../z_vendor/getto-css/preact/design/box"
-import { button_delete, field } from "../../../z_vendor/getto-css/preact/design/form"
-import { notice_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
-import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
+import { box } from "../../../../../../../../z_vendor/getto-css/preact/design/box"
+import { button_delete, field } from "../../../../../../../../z_vendor/getto-css/preact/design/form"
+import { notice_alert } from "../../../../../../../../z_vendor/getto-css/preact/design/highlight"
+import { v_small } from "../../../../../../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useAction } from "../../common/hooks"
+import { useAction } from "../../../../../../../../x_preact/common/hooks"
 
-import { LogoutResource } from "../../../auth/x_Resource/Profile/Logout/resource"
+import { LogoutResource } from "../resource"
 
-import { initialClearAuthnInfoState } from "../../../auth/sign/x_Action/AuthnInfo/Clear/action"
+import { initialClearAuthnInfoState } from "../Core/action"
 
-import { StorageError } from "../../../common/storage/data"
+import { StorageError } from "../../../../../../../../common/storage/data"
 
 export function Logout(resource: LogoutResource): VNode {
     const state = useAction(resource.clear, initialClearAuthnInfoState)
@@ -35,7 +35,9 @@ export function Logout(resource: LogoutResource): VNode {
             return logoutBox({ success: false, err: state.err })
     }
 
-    type LogoutBoxContent = Readonly<{ success: true }> | Readonly<{ success: false; err: StorageError }>
+    type LogoutBoxContent =
+        | Readonly<{ success: true }>
+        | Readonly<{ success: false; err: StorageError }>
 
     function logoutBox(content: LogoutBoxContent): VNode {
         return box({

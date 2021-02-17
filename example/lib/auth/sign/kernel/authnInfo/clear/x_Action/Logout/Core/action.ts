@@ -1,8 +1,8 @@
-import { ApplicationAction } from "../../../../../common/vendor/getto-example/Application/action"
+import { ApplicationAction } from "../../../../../../../../common/vendor/getto-example/Application/action"
 
-import { ClearAuthnInfoMethod } from "../../../kernel/authnInfo/clear/method"
+import { ClearAuthnInfoMethod } from "../../../method"
 
-import { ClearAuthnInfoEvent } from "../../../kernel/authnInfo/clear/event"
+import { ClearAuthnInfoEvent } from "../../../event"
 
 export interface ClearAuthnInfoAction
     extends ApplicationAction<ClearAuthnInfoState> {

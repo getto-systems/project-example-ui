@@ -1,6 +1,6 @@
 import { newStartPasswordResetSessionHandler } from "../../../../../../../sign/x_Action/Password/ResetSession/Start/Core/main/worker/background"
 
-import { WorkerHandler } from "../../../../../../../../common/vendor/getto-worker/main/background"
+import { WorkerHandler } from "../../../../../../../../z_vendor/getto-worker/background"
 
 import {
     StartPasswordResetSessionResourceProxyMessage,

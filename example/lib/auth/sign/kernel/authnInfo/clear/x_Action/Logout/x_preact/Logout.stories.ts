@@ -1,14 +1,12 @@
 import { h } from "preact"
 import { useEffect } from "preact/hooks"
 
+import { storyTemplate } from "../../../../../../../../x_preact/z_storybook/story"
+
 import { Logout } from "./Logout"
 
-import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
-import {
-    LogoutResourceMockProps,
-    initMockLogoutResource,
-} from "../../../auth/x_Resource/Profile/Logout/mock"
-import { storyTemplate } from "../../z_storybook/story"
+import { initMockPropsPasser } from "../../../../../../../../common/vendor/getto-example/Application/mock"
+import { LogoutResourceMockProps, initMockLogoutResource } from "../mock"
 
 export default {
     title: "Auth/Profile/Logout",

@@ -6,18 +6,18 @@ import {
     mainBody,
     mainHeader,
     mainTitle,
-} from "../../../z_vendor/getto-css/preact/layout/app"
+} from "../../../../../z_vendor/getto-css/preact/layout/app"
 
-import { useDocumentTitle, useErrorNotify, useTermination } from "../../common/hooks"
-import { copyright, siteInfo } from "../../common/site"
+import { useDocumentTitle, useErrorNotify, useTermination } from "../../../../../x_preact/common/hooks"
+import { copyright, siteInfo } from "../../../../../x_preact/common/site"
 
-import { ApplicationError } from "../../common/System/ApplicationError"
-import { SeasonInfo } from "../../common/Outline/SeasonInfo"
-import { Menu } from "../../common/Outline/Menu"
-import { BreadcrumbList } from "../../common/Outline/BreadcrumbList"
-import { Logout } from "./Logout"
+import { ApplicationError } from "../../../../../x_preact/common/System/ApplicationError"
+import { SeasonInfo } from "../../../../../x_preact/common/Outline/SeasonInfo"
+import { Menu } from "../../../../../x_preact/common/Outline/Menu"
+import { BreadcrumbList } from "../../../../../x_preact/common/Outline/BreadcrumbList"
+import { Logout } from "../../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/x_preact/Logout"
 
-import { AuthProfileEntryPoint } from "../../../auth/z_EntryPoint/Profile/entryPoint"
+import { AuthProfileEntryPoint } from "../entryPoint"
 
 export function EntryPoint({ resource, terminate }: AuthProfileEntryPoint): VNode {
     useTermination(terminate)

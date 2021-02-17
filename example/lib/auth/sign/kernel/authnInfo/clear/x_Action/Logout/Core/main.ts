@@ -1,4 +1,4 @@
-import { newClearAuthnInfoInfra } from "../../../kernel/authnInfo/clear/main"
+import { newClearAuthnInfoInfra } from "../../../main"
 
 import { initClearAuthnInfoAction } from "./impl"
 

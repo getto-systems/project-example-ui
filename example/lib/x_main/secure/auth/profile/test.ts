@@ -2,31 +2,31 @@ import {
     initOutlineBreadcrumbListAction,
     initOutlineMenuAction,
     initOutlineActionLocationInfo,
-} from "../../permission/outline/load/impl"
+} from "../../../../auth/permission/outline/load/impl"
 
-import { newStaticClock } from "../../../z_infra/clock/simulate"
-import { initMemoryTypedStorage } from "../../../z_infra/storage/memory"
-import { initOutlineMenuExpandRepository } from "../../permission/outline/load/infra/repository/outlineMenuExpand/core"
-import { initMemorySeasonRepository } from "../../../example/shared/season/impl/repository/season/memory"
-import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"
+import { newStaticClock } from "../../../../z_infra/clock/simulate"
+import { initMemoryTypedStorage } from "../../../../z_infra/storage/memory"
+import { initOutlineMenuExpandRepository } from "../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/core"
+import { initMemorySeasonRepository } from "../../../../example/shared/season/impl/repository/season/memory"
+import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"
 
 import { initAuthProfileResource } from "./impl"
 
-import { initSeasonInfoComponent } from "../../../example/x_components/Outline/seasonInfo/impl"
+import { initSeasonInfoComponent } from "../../../../example/x_components/Outline/seasonInfo/impl"
 
-import { initTestSeasonAction } from "../../../example/shared/season/tests/season"
+import { initTestSeasonAction } from "../../../../example/shared/season/tests/season"
 
-import { Clock } from "../../../z_infra/clock/infra"
-import { OutlineMenuTree } from "../../permission/outline/load/infra"
+import { Clock } from "../../../../z_infra/clock/infra"
+import { OutlineMenuTree } from "../../../../auth/permission/outline/load/infra"
 
 import { ProfileFactory } from "./entryPoint"
-import { markAuthAt, markAuthnNonce } from "../../sign/kernel/authnInfo/common/data"
-import { initMemoryApiCredentialRepository } from "../../../common/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../common/apiCredential/data"
-import { initMemoryAuthnInfoRepository } from "../../sign/kernel/authnInfo/common/infra/repository/authnInfo/memory"
-import { initNotifyUnexpectedErrorSimulateRemoteAccess } from "../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/simulate"
-import { initUnexpectedErrorAction } from "../../../availability/unexpectedError/impl"
-import { initClearAuthnInfoAction } from "../../sign/x_Action/AuthnInfo/Clear/impl"
+import { markAuthAt, markAuthnNonce } from "../../../../auth/sign/kernel/authnInfo/common/data"
+import { initMemoryApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/memory"
+import { markApiNonce, markApiRoles } from "../../../../common/apiCredential/data"
+import { initMemoryAuthnInfoRepository } from "../../../../auth/sign/kernel/authnInfo/common/infra/repository/authnInfo/memory"
+import { initNotifyUnexpectedErrorSimulateRemoteAccess } from "../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/simulate"
+import { initUnexpectedErrorAction } from "../../../../availability/unexpectedError/impl"
+import { initClearAuthnInfoAction } from "../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/Core/impl"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
 const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
