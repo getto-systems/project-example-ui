@@ -1,4 +1,5 @@
-import { h, VNode } from "preact"
+import { h } from "preact"
+import { storyTemplate } from "../../z_storybook/story"
 
 import { ApplicationError } from "./ApplicationError"
 
@@ -9,15 +10,8 @@ export default {
 type MockProps = Readonly<{
     err: string
 }>
-const Template: Story<MockProps> = (args) => {
+const template = storyTemplate<MockProps>((args) => {
     return h(ApplicationError, args)
-}
-interface Story<T> {
-    args?: T
-    (args: T): VNode
-}
+})
 
-export const Error = Template.bind({})
-Error.args = {
-    err: "application error",
-}
+export const Error = template({ err: "application error" })

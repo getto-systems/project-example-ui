@@ -1,7 +1,7 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-export function noPadded(content: VNode): VNode {
+export function noPaddedStory(content: VNode): VNode {
     return html`
         <style>
             .sb-main-padded {

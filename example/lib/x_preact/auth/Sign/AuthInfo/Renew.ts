@@ -2,25 +2,25 @@ import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
-import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
-import { v_medium } from "../../../z_vendor/getto-css/preact/design/alignment"
+import { VNodeContent } from "../../../../z_vendor/getto-css/preact/common"
+import { loginBox } from "../../../../z_vendor/getto-css/preact/layout/login"
+import { v_medium } from "../../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useAction, useTermination } from "../../common/hooks"
-import { siteInfo } from "../../common/site"
-import { spinner } from "../../common/icon"
+import { useAction, useTermination } from "../../../common/hooks"
+import { siteInfo } from "../../../common/site"
+import { spinner } from "../../../common/icon"
 
-import { appendScript } from "./script"
+import { appendScript } from "../script"
 
-import { ApplicationError } from "../../common/System/ApplicationError"
+import { ApplicationError } from "../../../common/System/ApplicationError"
 
-import { RenewCredentialEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
+import { RenewCredentialEntryPoint } from "../../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialRenewAuthnInfoState } from "../../../auth/sign/x_Action/AuthnInfo/Renew/action"
+import { initialRenewAuthnInfoState } from "../../../../auth/sign/x_Action/AuthnInfo/Renew/action"
 
-import { RenewAuthnInfoError } from "../../../auth/sign/authnInfo/renew/data"
+import { RenewAuthnInfoError } from "../../../../auth/sign/authnInfo/renew/data"
 
-export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoint): VNode {
+export function RenewAuthInfo({ resource, terminate }: RenewCredentialEntryPoint): VNode {
     useTermination(terminate)
 
     const state = useAction(resource.renew, initialRenewAuthnInfoState)

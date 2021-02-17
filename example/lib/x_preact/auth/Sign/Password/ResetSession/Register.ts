@@ -2,34 +2,34 @@ import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
+import { VNodeContent } from "../../../../../z_vendor/getto-css/preact/common"
 import {
     buttons,
     button_disabled,
     button_send,
     fieldError,
-} from "../../../z_vendor/getto-css/preact/design/form"
-import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
+} from "../../../../../z_vendor/getto-css/preact/design/form"
+import { loginBox } from "../../../../../z_vendor/getto-css/preact/layout/login"
 
-import { useAction, useTermination } from "../../common/hooks"
-import { siteInfo } from "../../common/site"
-import { icon, spinner } from "../../common/icon"
+import { useAction, useTermination } from "../../../../common/hooks"
+import { siteInfo } from "../../../../common/site"
+import { icon, spinner } from "../../../../common/icon"
 
-import { appendScript } from "./script"
+import { appendScript } from "../../script"
 
-import { ApplicationError } from "../../common/System/ApplicationError"
+import { ApplicationError } from "../../../../common/System/ApplicationError"
 
-import { LoginIDFormField } from "./field/loginID"
-import { PasswordFormField } from "./field/password"
+import { LoginIDFormField } from "../../field/loginID"
+import { PasswordFormField } from "../../field/password"
 
-import { PasswordResetEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
+import { PasswordResetEntryPoint } from "../../../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialRegisterPasswordState } from "../../../auth/sign/x_Action/Password/ResetSession/Register/Core/action"
-import { initialFormContainerComponentState } from "../../../common/vendor/getto-form/x_Resource/Form/component"
+import { initialRegisterPasswordState } from "../../../../../auth/sign/x_Action/Password/ResetSession/Register/Core/action"
+import { initialFormContainerComponentState } from "../../../../../common/vendor/getto-form/x_Resource/Form/component"
 
-import { RegisterPasswordError } from "../../../auth/sign/password/resetSession/register/data"
+import { RegisterPasswordError } from "../../../../../auth/sign/password/resetSession/register/data"
 
-export function PasswordReset({ resource, terminate }: PasswordResetEntryPoint): VNode {
+export function RegisterPassword({ resource, terminate }: PasswordResetEntryPoint): VNode {
     useTermination(terminate)
 
     const state = useAction(resource.register, initialRegisterPasswordState)

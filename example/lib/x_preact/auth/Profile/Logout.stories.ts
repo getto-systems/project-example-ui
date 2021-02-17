@@ -1,13 +1,14 @@
-import { h, VNode } from "preact"
+import { h } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { AuthProfileLogout } from "./Logout"
+import { Logout } from "./Logout"
 
 import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
 import {
     LogoutResourceMockProps,
     initMockLogoutResource,
 } from "../../../auth/x_Resource/Profile/Logout/mock"
+import { storyTemplate } from "../../z_storybook/story"
 
 export default {
     title: "Auth/Profile/Logout",
@@ -18,29 +19,19 @@ export default {
     },
 }
 
-type MockProps = LogoutResourceMockProps
-const Template: Story<MockProps> = (args) => {
+type Props = LogoutResourceMockProps
+const template = storyTemplate<Props>((args) => {
     const passer = initMockPropsPasser<LogoutResourceMockProps>()
     const resource = initMockLogoutResource(passer)
     return h(Preview, { args })
 
-    function Preview(props: { args: MockProps }) {
+    function Preview(props: { args: Props }) {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(AuthProfileLogout, resource)
+        return h(Logout, resource)
     }
-}
-function bind(props: MockProps) {
-    const template = Template.bind({})
-    template.args = props
-    return template
-}
+})
 
-export const Initial = bind({ type: "initial-clear-authnInfo" })
-export const Failed = bind({ type: "failed-clear-authnInfo", err: "logout error" })
-
-interface Story<P> {
-    args?: P
-    (args: P): VNode
-}
+export const Initial = template({ type: "initial-clear-authnInfo" })
+export const Failed = template({ type: "failed-clear-authnInfo", err: "logout error" })

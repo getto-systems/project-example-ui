@@ -6,11 +6,11 @@ import { useAction, useTermination } from "../../common/hooks"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
-import { RenewCredential } from "./RenewCredential"
+import { RenewAuthInfo } from "./AuthInfo/Renew"
 
-import { AuthSignPasswordAuthenticate } from "./Password/Authenticate"
+import { AuthenticatePassword } from "./Password/Authenticate"
 import { PasswordResetSession } from "./PasswordResetSession"
-import { PasswordReset } from "./PasswordReset"
+import { RegisterPassword } from "./Password/ResetSession/Register"
 
 import {
     AuthSignEntryPoint,
@@ -38,16 +38,16 @@ export function EntryPoint({ view, terminate }: AuthSignEntryPoint): VNode {
             return EMPTY_CONTENT
 
         case "renew-credential":
-            return h(RenewCredential, state.entryPoint)
+            return h(RenewAuthInfo, state.entryPoint)
 
         case "password-login":
-            return h(AuthSignPasswordAuthenticate, state.entryPoint)
+            return h(AuthenticatePassword, state.entryPoint)
 
         case "password-reset-session":
             return h(PasswordResetSession, state.entryPoint)
 
         case "password-reset":
-            return h(PasswordReset, state.entryPoint)
+            return h(RegisterPassword, state.entryPoint)
 
         case "error":
             return h(ApplicationError, { err: state.err })

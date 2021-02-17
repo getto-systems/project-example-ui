@@ -1,10 +1,15 @@
-import { h, VNode } from "preact"
+import { h } from "preact"
 import { useEffect } from "preact/hooks"
+
+import { storyTemplate } from "../../z_storybook/story"
 
 import { Content } from "./Content"
 
 import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
-import { ContentMockProps, initMockContentComponent } from "../../../document/x_components/Document/content/mock"
+import {
+    ContentMockProps,
+    initMockContentComponent,
+} from "../../../document/x_components/Document/content/mock"
 import {
     BreadcrumbListMockProps,
     initMockBreadcrumbListComponent,
@@ -20,7 +25,7 @@ export default {
 }
 
 type MockProps = ContentMockProps
-const Template: Story<MockProps> = (args) => {
+const template = storyTemplate<MockProps>((args) => {
     const passer = {
         breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
         content: initMockPropsPasser<ContentMockProps>(),
@@ -31,19 +36,15 @@ const Template: Story<MockProps> = (args) => {
 
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
-            passer.breadcrumbList.update({ type: "success", label: "ホーム", icon: "home" })
+            passer.breadcrumbList.update({
+                type: "success",
+                label: "ホーム",
+                icon: "home",
+            })
             passer.content.update(props.args)
         })
         return h(Content, { content, breadcrumbList })
     }
-}
+})
 
-interface Story<T> {
-    args?: T
-    (args: T): VNode
-}
-
-export const Success = Template.bind({})
-Success.args = {
-    type: "success",
-}
+export const Success = template({ type: "success" })

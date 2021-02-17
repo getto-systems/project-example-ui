@@ -1,7 +1,8 @@
-import { h, VNode } from "preact"
+import { h } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { noPadded } from "../../z_storybook/display"
+import { storyTemplate } from "../../z_storybook/story"
+import { noPaddedStory } from "../../z_storybook/display"
 
 import { copyright, siteInfo } from "../site"
 import {
@@ -16,7 +17,10 @@ import { Menu } from "./Menu"
 import { SeasonInfo } from "./SeasonInfo"
 
 import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
-import { initMockMenuComponent, MenuMockProps } from "../../../common/x_Resource/Outline/Menu/Menu/mock"
+import {
+    initMockMenuComponent,
+    MenuMockProps,
+} from "../../../common/x_Resource/Outline/Menu/Menu/mock"
 import {
     SeasonInfoMockProps,
     initMockSeasonInfoComponent,
@@ -32,7 +36,7 @@ export default {
 }
 
 type MockProps = SeasonInfoMockProps
-const Template: Story<MockProps> = (args) => {
+const template = storyTemplate<MockProps>((args) => {
     const passer = {
         seasonInfo: initMockPropsPasser<SeasonInfoMockProps>(),
         menuList: initMockPropsPasser<MenuMockProps>(),
@@ -50,7 +54,7 @@ const Template: Story<MockProps> = (args) => {
                 badgeCount: 0,
             })
         })
-        return noPadded(
+        return noPaddedStory(
             appLayout({
                 siteInfo: siteInfo(),
                 header: [h(SeasonInfo, { seasonInfo })],
@@ -63,21 +67,7 @@ const Template: Story<MockProps> = (args) => {
             })
         )
     }
-}
+})
 
-interface Story<T> {
-    args?: T
-    (args: T): VNode
-}
-
-export const Success = Template.bind({})
-Success.args = {
-    type: "success",
-    year: new Date().getFullYear(),
-}
-
-export const Failed = Template.bind({})
-Failed.args = {
-    type: "failed",
-    err: "load error",
-}
+export const Success = template({ type: "success", year: new Date().getFullYear() })
+export const Failed = template({ type: "failed", err: "load error" })
