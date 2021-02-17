@@ -1,5 +1,5 @@
-import { AuthenticatePasswordAction } from "../../../../sign/x_Action/Password/Authenticate/Core/action"
-import { AuthenticatePasswordFormAction } from "../../../../sign/x_Action/Password/Authenticate/Form/action"
+import { AuthenticatePasswordAction } from "./Core/action"
+import { AuthenticatePasswordFormAction } from "./Form/action"
 
 export type AuthenticatePasswordResource = AuthenticatePasswordForegroundResource &
     AuthenticatePasswordBackgroundResource

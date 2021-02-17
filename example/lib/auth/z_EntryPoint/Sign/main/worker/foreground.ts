@@ -1,13 +1,13 @@
 import { newWorker } from "../../../../../z_vendor/getto-worker/foreground"
 
 import { newRenewAuthnInfoAction } from "../../../../sign/kernel/authnInfo/renew/x_Action/Renew/main"
-import { newPasswordAuthenticateResource_merge } from "../../../../x_Resource/Sign/Password/Authenticate/main/core"
+import { newPasswordAuthenticateResource_merge } from "../../../../sign/password/authenticate/x_Action/Authenticate/main/core"
 import { newRegisterPasswordResource_merge } from "../../../../x_Resource/Sign/Password/ResetSession/Register/main/core"
 import { newStartPasswordResetSessionResource_merge } from "../../../../x_Resource/Sign/Password/ResetSession/Start/main/core"
 import {
     AuthenticatePasswordResourceProxy,
     newAuthenticatePasswordResourceProxy,
-} from "../../../../x_Resource/Sign/Password/Authenticate/main/worker/foreground"
+} from "../../../../sign/password/authenticate/x_Action/Authenticate/main/worker/foreground"
 import {
     RegisterPasswordResourceProxy,
     newRegisterPasswordResourceProxy,

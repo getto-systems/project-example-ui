@@ -1,16 +1,16 @@
-import { FormContainerBaseComponent } from "../../../../../../common/vendor/getto-form/x_Resource/Form/impl"
-import { initLoginIDFormFieldComponent } from "../../../../../common/x_Component/Field/LoginID/impl"
-import { initPasswordFormFieldComponent } from "../../../../../common/x_Component/Field/Password/impl"
+import { FormContainerBaseComponent } from "../../../../../../../common/vendor/getto-form/x_Resource/Form/impl"
+import { initLoginIDFormFieldComponent } from "../../../../../../common/x_Component/Field/LoginID/impl"
+import { initPasswordFormFieldComponent } from "../../../../../../common/x_Component/Field/Password/impl"
 
-import { LoginIDFormFieldComponent } from "../../../../../common/x_Component/Field/LoginID/component"
-import { PasswordFormFieldComponent } from "../../../../../common/x_Component/Field/Password/component"
+import { LoginIDFormFieldComponent } from "../../../../../../common/x_Component/Field/LoginID/component"
+import { PasswordFormFieldComponent } from "../../../../../../common/x_Component/Field/Password/component"
 import {
     AuthenticatePasswordFormAction,
     AuthenticatePasswordFormMaterial,
 } from "./action"
 
-import { FormConvertResult } from "../../../../../../common/vendor/getto-form/form/data"
-import { AuthenticatePasswordFields } from "../../../../password/authenticate/data"
+import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
+import { AuthenticatePasswordFields } from "../../../data"
 
 export function initAuthenticatePasswordFormAction(
     material: AuthenticatePasswordFormMaterial

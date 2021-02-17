@@ -3,7 +3,7 @@ import { MockAction, MockPropsPasser } from "../../../common/vendor/getto-exampl
 import {
     initMockPasswordAuthenticateResource,
     AuthenticatePasswordResourceMockPropsPasser,
-} from "../../x_Resource/Sign/Password/Authenticate/mock"
+} from "../../sign/password/authenticate/x_Action/Authenticate/mock"
 import {
     initMockStartPasswordResetSessionResource,
     StartPasswordResetSessionResourceMockPropsPasser,

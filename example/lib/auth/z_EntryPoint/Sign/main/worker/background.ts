@@ -1,11 +1,11 @@
-import { newAuthenticatePasswordResourceHandler } from "../../../../x_Resource/Sign/Password/Authenticate/main/worker/background"
+import { newAuthenticatePasswordResourceHandler } from "../../../../sign/password/authenticate/x_Action/Authenticate/main/worker/background"
 import { newRegisterPasswordResourceHandler } from "../../../../x_Resource/Sign/Password/ResetSession/Register/main/worker/background"
 import { newStartPasswordResetSessionResourceHandler } from "../../../../x_Resource/Sign/Password/ResetSession/Start/main/worker/background"
 
 import { WorkerHandler } from "../../../../../z_vendor/getto-worker/background"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
-import { AuthenticatePasswordResourceProxyMessage } from "../../../../x_Resource/Sign/Password/Authenticate/main/worker/message"
+import { AuthenticatePasswordResourceProxyMessage } from "../../../../sign/password/authenticate/x_Action/Authenticate/main/worker/message"
 import { RegisterPasswordResourceProxyMessage } from "../../../../x_Resource/Sign/Password/ResetSession/Register/main/worker/message"
 import { StartPasswordResetSessionResourceProxyMessage } from "../../../../x_Resource/Sign/Password/ResetSession/Start/main/worker/message"
 

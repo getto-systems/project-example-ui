@@ -1,23 +1,23 @@
 import { h } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { storyTemplate } from "../../../z_storybook/story"
+import { storyTemplate } from "../../../../../../../x_preact/z_storybook/story"
 
 import { AuthenticatePassword } from "./Authenticate"
 
-import { initMockPropsPasser } from "../../../../common/vendor/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../../../../../common/vendor/getto-example/Application/mock"
 
-import { initMockPasswordLoginEntryPoint } from "../../../../auth/z_EntryPoint/Sign/mock"
+import { initMockPasswordLoginEntryPoint } from "../../../../../../z_EntryPoint/Sign/mock"
 
-import { loginIDFormFieldValidations } from "../../../../auth/common/x_Component/Field/LoginID/mock"
+import { loginIDFormFieldValidations } from "../../../../../../common/x_Component/Field/LoginID/mock"
 import {
     passwordFormFieldCharacters,
     passwordFormFieldValidations,
     passwordFormFieldViews,
-} from "../../../../auth/common/x_Component/Field/Password/mock"
-import { formValidationStates } from "../../../../common/vendor/getto-form/x_Resource/Form/mock"
+} from "../../../../../../common/x_Component/Field/Password/mock"
+import { formValidationStates } from "../../../../../../../common/vendor/getto-form/x_Resource/Form/mock"
 
-import { AuthenticatePasswordResourceMockProps } from "../../../../auth/x_Resource/Sign/Password/Authenticate/mock"
+import { AuthenticatePasswordResourceMockProps } from "../mock"
 
 export default {
     title: "Auth/Sign/Password/Authenticate",

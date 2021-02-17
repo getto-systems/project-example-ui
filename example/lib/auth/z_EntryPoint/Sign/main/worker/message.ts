@@ -1,7 +1,7 @@
 import {
     AuthenticatePasswordResourceProxyMessage,
     AuthenticatePasswordResourceProxyResponse,
-} from "../../../../x_Resource/Sign/Password/Authenticate/main/worker/message"
+} from "../../../../sign/password/authenticate/x_Action/Authenticate/main/worker/message"
 import {
     RegisterPasswordResourceProxyMessage,
     RegisterPasswordResourceProxyResponse,

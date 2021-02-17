@@ -2,38 +2,35 @@ import { h, VNode } from "preact"
 import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../../z_vendor/getto-css/preact/common"
-import { loginBox } from "../../../../z_vendor/getto-css/preact/layout/login"
+import { VNodeContent } from "../../../../../../../z_vendor/getto-css/preact/common"
+import { loginBox } from "../../../../../../../z_vendor/getto-css/preact/layout/login"
 import {
     buttons,
     button_disabled,
     button_send,
     fieldError,
     form,
-} from "../../../../z_vendor/getto-css/preact/design/form"
+} from "../../../../../../../z_vendor/getto-css/preact/design/form"
 
-import { useAction, useTermination } from "../../../common/hooks"
-import { siteInfo } from "../../../common/site"
-import { icon, spinner } from "../../../common/icon"
+import { useAction, useTermination } from "../../../../../../../x_preact/common/hooks"
+import { siteInfo } from "../../../../../../../x_preact/common/site"
+import { icon, spinner } from "../../../../../../../x_preact/common/icon"
 
-import { appendScript } from "../script"
+import { appendScript } from "../../../../../../../x_preact/auth/Sign/script"
 
-import { ApplicationError } from "../../../common/System/ApplicationError"
+import { ApplicationError } from "../../../../../../../x_preact/common/System/ApplicationError"
 
-import { LoginIDFormField } from "../field/loginID"
-import { PasswordFormField } from "../field/password"
+import { LoginIDFormField } from "../../../../../../../x_preact/auth/Sign/field/loginID"
+import { PasswordFormField } from "../../../../../../../x_preact/auth/Sign/field/password"
 
-import { PasswordLoginEntryPoint } from "../../../../auth/z_EntryPoint/Sign/entryPoint"
+import { PasswordLoginEntryPoint } from "../../../../../../z_EntryPoint/Sign/entryPoint"
 
-import { initialAuthenticatePasswordState } from "../../../../auth/sign/x_Action/Password/Authenticate/Core/action"
-import { initialFormContainerComponentState } from "../../../../common/vendor/getto-form/x_Resource/Form/component"
+import { initialAuthenticatePasswordState } from "../Core/action"
+import { initialFormContainerComponentState } from "../../../../../../../common/vendor/getto-form/x_Resource/Form/component"
 
-import { AuthenticatePasswordError } from "../../../../auth/sign/password/authenticate/data"
+import { AuthenticatePasswordError } from "../../../data"
 
-export function AuthenticatePassword({
-    resource,
-    terminate,
-}: PasswordLoginEntryPoint): VNode {
+export function AuthenticatePassword({ resource, terminate }: PasswordLoginEntryPoint): VNode {
     useTermination(terminate)
 
     const state = useAction(resource.authenticate, initialAuthenticatePasswordState)
@@ -79,9 +76,7 @@ export function AuthenticatePassword({
 
     type LoginFormState = "login" | "connecting"
 
-    type LoginFormContent =
-        | LoginFormContent_base
-        | (LoginFormContent_base & LoginFormContent_error)
+    type LoginFormContent = LoginFormContent_base | (LoginFormContent_base & LoginFormContent_error)
     type LoginFormContent_base = Readonly<{ state: LoginFormState }>
     type LoginFormContent_error = Readonly<{ error: VNodeContent[] }>
 

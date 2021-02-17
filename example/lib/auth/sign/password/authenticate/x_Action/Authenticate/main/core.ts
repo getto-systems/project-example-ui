@@ -1,5 +1,5 @@
-import { newAuthenticatePasswordAction } from "../../../../../sign/x_Action/Password/Authenticate/Core/main/core"
-import { newAuthenticatePasswordFormAction } from "../../../../../sign/x_Action/Password/Authenticate/Form/main"
+import { newAuthenticatePasswordAction } from "../Core/main/core"
+import { newAuthenticatePasswordFormAction } from "../Form/main"
 
 import {
     AuthenticatePasswordBackgroundResource,

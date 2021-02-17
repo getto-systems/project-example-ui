@@ -5,7 +5,7 @@ import { AuthenticatePasswordAction } from "../../action"
 import {
     WorkerProxy,
     WorkerAbstractProxy,
-} from "../../../../../../../../z_vendor/getto-worker/foreground"
+} from "../../../../../../../../../z_vendor/getto-worker/foreground"
 
 import {
     AuthenticatePasswordProxyMessage,

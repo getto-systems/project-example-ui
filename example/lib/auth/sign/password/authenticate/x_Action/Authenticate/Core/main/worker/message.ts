@@ -2,12 +2,12 @@ import {
     WorkerProxyMessage,
     WorkerProxyMethod,
     WorkerProxyResponse,
-} from "../../../../../../../../z_vendor/getto-worker/message"
+} from "../../../../../../../../../z_vendor/getto-worker/message"
 
-import { AuthenticatePasswordEvent } from "../../../../../../password/authenticate/event"
+import { AuthenticatePasswordEvent } from "../../../../../event"
 
-import { FormConvertResult } from "../../../../../../../../common/vendor/getto-form/form/data"
-import { AuthenticatePasswordFields } from "../../../../../../password/authenticate/data"
+import { FormConvertResult } from "../../../../../../../../../common/vendor/getto-form/form/data"
+import { AuthenticatePasswordFields } from "../../../../../data"
 
 export type AuthenticatePasswordProxyMethod = WorkerProxyMethod<
     AuthenticatePasswordProxyParams,

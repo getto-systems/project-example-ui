@@ -1,4 +1,4 @@
-import { newAuthenticatePasswordProxy } from "../../../../../../sign/x_Action/Password/Authenticate/Core/main/worker/foreground"
+import { newAuthenticatePasswordProxy } from "../../Core/main/worker/foreground"
 import { newPasswordAuthenticateResource_merge } from "../core"
 
 import { AuthenticatePasswordResource } from "../../resource"

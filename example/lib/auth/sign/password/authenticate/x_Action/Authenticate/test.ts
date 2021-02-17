@@ -1,46 +1,46 @@
-import { newStaticClock, StaticClock } from "../../../../../z_infra/clock/simulate"
-import { initAuthenticatePasswordSimulate } from "../../../../sign/password/authenticate/infra/remote/authenticate/simulate"
-import { initRenewAuthnInfoSimulate } from "../../../../sign/kernel/authnInfo/kernel/infra/remote/renew/simulate"
+import { newStaticClock, StaticClock } from "../../../../../../z_infra/clock/simulate"
+import { initAuthenticatePasswordSimulate } from "../../infra/remote/authenticate/simulate"
+import { initRenewAuthnInfoSimulate } from "../../../../kernel/authnInfo/kernel/infra/remote/renew/simulate"
 
-import { initFormAction } from "../../../../../common/vendor/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../../common/field/password/main/password"
+import { initFormAction } from "../../../../../../common/vendor/getto-form/main/form"
+import { initLoginIDFormFieldAction } from "../../../../../common/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../../../common/field/password/main/password"
 
 import {
     AuthenticatePasswordRemote,
     AuthenticatePasswordResult,
-} from "../../../../sign/password/authenticate/infra"
-import { Clock } from "../../../../../z_infra/clock/infra"
+} from "../../infra"
+import { Clock } from "../../../../../../z_infra/clock/infra"
 
 import { AuthenticatePasswordResource } from "./resource"
 
-import { AuthenticatePasswordState } from "../../../../sign/x_Action/Password/Authenticate/Core/action"
+import { AuthenticatePasswordState } from "./Core/action"
 
 import {
     markInputString,
     toValidationError,
-} from "../../../../../common/vendor/getto-form/form/data"
-import { markSecureScriptPath } from "../../../../sign/common/secureScriptPath/get/data"
-import { AuthenticatePasswordFields } from "../../../../sign/password/authenticate/data"
-import { markAuthAt, markAuthnNonce } from "../../../../sign/kernel/authnInfo/kernel/data"
-import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
-import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../../../common/apiCredential/data"
+} from "../../../../../../common/vendor/getto-form/form/data"
+import { markSecureScriptPath } from "../../../../common/secureScriptPath/get/data"
+import { AuthenticatePasswordFields } from "../../data"
+import { markAuthAt, markAuthnNonce } from "../../../../kernel/authnInfo/kernel/data"
+import { ApiCredentialRepository } from "../../../../../../common/apiCredential/infra"
+import { initMemoryApiCredentialRepository } from "../../../../../../common/apiCredential/infra/repository/memory"
+import { markApiNonce, markApiRoles } from "../../../../../../common/apiCredential/data"
 import {
     AuthnInfoRepository,
     RenewAuthnInfoRemote,
     RenewAuthnInfoResult,
-} from "../../../../sign/kernel/authnInfo/kernel/infra"
-import { initMemoryAuthnInfoRepository } from "../../../../sign/kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
-import { initGetSecureScriptPathLocationInfo } from "../../../../sign/common/secureScriptPath/get/impl"
-import { delayed } from "../../../../../z_infra/delayed/core"
-import { authenticatePasswordEventHasDone } from "../../../../sign/password/authenticate/impl"
+} from "../../../../kernel/authnInfo/kernel/infra"
+import { initMemoryAuthnInfoRepository } from "../../../../kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
+import { initGetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/impl"
+import { delayed } from "../../../../../../z_infra/delayed/core"
+import { authenticatePasswordEventHasDone } from "../../impl"
 import {
     initAsyncActionTester,
     initSyncActionChecker,
-} from "../../../../../common/vendor/getto-example/Application/testHelper"
-import { initAuthenticatePasswordFormAction } from "../../../../sign/x_Action/Password/Authenticate/Form/impl"
-import { initAuthenticatePasswordAction } from "../../../../sign/x_Action/Password/Authenticate/Core/impl"
+} from "../../../../../../common/vendor/getto-example/Application/testHelper"
+import { initAuthenticatePasswordFormAction } from "./Form/impl"
+import { initAuthenticatePasswordAction } from "./Core/impl"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 

@@ -8,7 +8,7 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { RenewAuthInfo } from "../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/x_preact/Renew"
 
-import { AuthenticatePassword } from "./Password/Authenticate"
+import { AuthenticatePassword } from "../../../auth/sign/password/authenticate/x_Action/Authenticate/x_preact/Authenticate"
 import { PasswordResetSession } from "./Password/ResetSession/Start"
 import { RegisterPassword } from "./Password/ResetSession/Register"
 
