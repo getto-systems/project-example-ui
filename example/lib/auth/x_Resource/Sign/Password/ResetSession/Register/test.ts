@@ -84,7 +84,7 @@ describe("RegisterPassword", () => {
                     { type: "try-to-reset" },
                     {
                         type: "try-to-load",
-                        scriptPath: markSecureScriptPath("//secure.example.com/index.js"),
+                        scriptPath: markSecureScriptPath("https://secure.example.com/index.js"),
                     },
                 ])
                 expectToSaveLastAuth(repository.authnInfos)
@@ -118,7 +118,7 @@ describe("RegisterPassword", () => {
                     { type: "delayed-to-reset" }, // delayed event
                     {
                         type: "try-to-load",
-                        scriptPath: markSecureScriptPath("//secure.example.com/index.js"),
+                        scriptPath: markSecureScriptPath("https://secure.example.com/index.js"),
                     },
                 ])
                 expectToSaveLastAuth(repository.authnInfos)

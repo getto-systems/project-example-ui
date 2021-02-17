@@ -1,6 +1,6 @@
 import { newMainOutlineAction } from "../../../../../auth/permission/outline/load/main/main"
 import { newErrorAction } from "../../../../../availability/unexpectedError/main"
-import { newLogoutResource } from "../../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/main"
+import { newClearAuthnInfoAction } from "../../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/Core/main"
 
 import { initAuthProfileResource } from "../impl"
 
@@ -25,7 +25,7 @@ export function newEntryPoint(): AuthProfileEntryPoint {
         },
     }
     const resource = initAuthProfileResource(factory, {
-        ...newLogoutResource(webStorage),
+        clear: newClearAuthnInfoAction(webStorage),
     })
     return {
         resource,

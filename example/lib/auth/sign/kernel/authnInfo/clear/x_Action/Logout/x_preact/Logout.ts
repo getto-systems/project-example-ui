@@ -9,9 +9,7 @@ import { v_small } from "../../../../../../../../z_vendor/getto-css/preact/desig
 
 import { useAction } from "../../../../../../../../x_preact/common/hooks"
 
-import { LogoutResource } from "../resource"
-
-import { initialClearAuthnInfoState } from "../Core/action"
+import { initialClearAuthnInfoState, LogoutResource } from "../Core/action"
 
 import { StorageError } from "../../../../../../../../common/storage/data"
 

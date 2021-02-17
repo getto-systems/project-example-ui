@@ -67,7 +67,7 @@ describe("RenewAuthInfo", () => {
                             {
                                 type: "try-to-instant-load",
                                 scriptPath: markSecureScriptPath(
-                                    "//secure.example.com/index.js"
+                                    "https://secure.example.com/index.js"
                                 ),
                             },
                             { type: "succeed-to-start-continuous-renew" },
@@ -130,14 +130,14 @@ describe("RenewAuthInfo", () => {
                             {
                                 type: "try-to-instant-load",
                                 scriptPath: markSecureScriptPath(
-                                    "//secure.example.com/index.js"
+                                    "https://secure.example.com/index.js"
                                 ),
                             },
                             { type: "try-to-renew" },
                             {
                                 type: "try-to-load",
                                 scriptPath: markSecureScriptPath(
-                                    "//secure.example.com/index.js"
+                                    "https://secure.example.com/index.js"
                                 ),
                             },
                         ])
@@ -192,7 +192,7 @@ describe("RenewAuthInfo", () => {
                             {
                                 type: "try-to-load",
                                 scriptPath: markSecureScriptPath(
-                                    "//secure.example.com/index.js"
+                                    "https://secure.example.com/index.js"
                                 ),
                             },
                         ])
@@ -249,7 +249,7 @@ describe("RenewAuthInfo", () => {
                             {
                                 type: "try-to-load",
                                 scriptPath: markSecureScriptPath(
-                                    "//secure.example.com/index.js"
+                                    "https://secure.example.com/index.js"
                                 ),
                             },
                         ])

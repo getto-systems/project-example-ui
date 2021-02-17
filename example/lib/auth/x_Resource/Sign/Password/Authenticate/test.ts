@@ -79,7 +79,7 @@ describe("PasswordAuthenticate", () => {
                     { type: "try-to-login" },
                     {
                         type: "try-to-load",
-                        scriptPath: markSecureScriptPath("//secure.example.com/index.js"),
+                        scriptPath: markSecureScriptPath("https://secure.example.com/index.js"),
                     },
                 ])
                 expectToSaveLastAuth(repository.authnInfos)
@@ -113,7 +113,7 @@ describe("PasswordAuthenticate", () => {
                     { type: "delayed-to-login" }, // delayed event
                     {
                         type: "try-to-load",
-                        scriptPath: markSecureScriptPath("//secure.example.com/index.js"),
+                        scriptPath: markSecureScriptPath("https://secure.example.com/index.js"),
                     },
                 ])
                 expectToSaveLastAuth(repository.authnInfos)

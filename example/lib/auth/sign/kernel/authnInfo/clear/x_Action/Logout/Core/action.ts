@@ -4,6 +4,10 @@ import { ClearAuthnInfoMethod } from "../../../method"
 
 import { ClearAuthnInfoEvent } from "../../../event"
 
+export type LogoutResource = Readonly<{
+    clear: ClearAuthnInfoAction
+}>
+
 export interface ClearAuthnInfoAction
     extends ApplicationAction<ClearAuthnInfoState> {
     submit(): void
