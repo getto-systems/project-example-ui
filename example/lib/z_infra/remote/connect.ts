@@ -1,4 +1,4 @@
-import { RawRemoteAccess, RemoteAccess, RemoteAccessError } from "./infra"
+import { RawRemote, Remote, RemoteError } from "./infra"
 
 export type RemoteAccessConverter<M, S, V, R, E> = Readonly<{
     message: RemoteAccessMessageConverter<M, S>
@@ -13,16 +13,16 @@ export interface RemoteAccessValueConverter<M, V, R> {
     (raw: R, message: M): V
 }
 export interface RemoteAccessErrorConverter<E> {
-    (err: RemoteAccessError): E
+    (err: RemoteError): E
 }
 export interface RemoteAccessUnknownErrorConverter<E> {
     (err: unknown): E
 }
 
 export function initConnectRemoteAccess<M, S, V, R, E>(
-    access: RawRemoteAccess<S, R>,
+    access: RawRemote<S, R>,
     converter: RemoteAccessConverter<M, S, V, R, E>
-): RemoteAccess<M, V, E> {
+): Remote<M, V, E> {
     return async (message) => {
         try {
             const result = await access(converter.message(message))

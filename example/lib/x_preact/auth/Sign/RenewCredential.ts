@@ -16,14 +16,14 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { RenewCredentialEntryPoint } from "../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialRenewAuthnInfoAction3State } from "../../../auth/sign/x_Action/AuthnInfo/Renew/action"
+import { initialRenewAuthnInfoState } from "../../../auth/sign/x_Action/AuthnInfo/Renew/action"
 
-import { RequestRenewAuthnInfoError } from "../../../auth/sign/authnInfo/renew/data"
+import { RenewAuthnInfoError } from "../../../auth/sign/authnInfo/renew/data"
 
 export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoint): VNode {
     useTermination(terminate)
 
-    const state = useAction(resource.renew, initialRenewAuthnInfoAction3State)
+    const state = useAction(resource.renew, initialRenewAuthnInfoState)
     useEffect(() => {
         resource.renew.request()
     }, [])
@@ -97,7 +97,7 @@ export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoi
             ],
         })
     }
-    function errorMessage(err: RequestRenewAuthnInfoError): VNode {
+    function errorMessage(err: RenewAuthnInfoError): VNode {
         return loginBox(siteInfo(), {
             title: "認証に失敗しました",
             body: [
@@ -109,7 +109,7 @@ export function RenewCredential({ resource, terminate }: RenewCredentialEntryPoi
     }
 }
 
-function renewError(err: RequestRenewAuthnInfoError): VNodeContent[] {
+function renewError(err: RenewAuthnInfoError): VNodeContent[] {
     switch (err.type) {
         case "bad-request":
             return ["認証情報の送信処理でエラーが発生しました"]

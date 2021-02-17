@@ -25,7 +25,7 @@ import { PasswordFormField } from "../field/password"
 
 import { PasswordLoginEntryPoint } from "../../../../auth/z_EntryPoint/Sign/entryPoint"
 
-import { initialAuthenticatePasswordActionState } from "../../../../auth/sign/x_Action/Password/Authenticate/Core/action"
+import { initialAuthenticatePasswordState } from "../../../../auth/sign/x_Action/Password/Authenticate/Core/action"
 import { initialFormContainerComponentState } from "../../../../common/vendor/getto-form/x_Resource/Form/component"
 
 import { AuthenticatePasswordError } from "../../../../auth/sign/password/authenticate/data"
@@ -36,7 +36,7 @@ export function AuthSignPasswordAuthenticate({
 }: PasswordLoginEntryPoint): VNode {
     useTermination(terminate)
 
-    const state = useAction(resource.authenticate, initialAuthenticatePasswordActionState)
+    const state = useAction(resource.authenticate, initialAuthenticatePasswordState)
     const formState = useAction(resource.form, initialFormContainerComponentState)
 
     useEffect(() => {

@@ -1,4 +1,4 @@
-import { ApplicationBaseAction } from "../../../../common/vendor/getto-example/Application/impl"
+import { ApplicationAbstractAction } from "../../../../common/vendor/getto-example/Application/impl"
 
 import {
     ExampleMaterial,
@@ -9,7 +9,7 @@ import {
 
 export const initExampleComponent: ExampleComponentFactory = (material) => new Component(material)
 
-class Component extends ApplicationBaseAction<ExampleComponentState> implements ExampleComponent {
+class Component extends ApplicationAbstractAction<ExampleComponentState> implements ExampleComponent {
     material: ExampleMaterial
 
     constructor(material: ExampleMaterial) {

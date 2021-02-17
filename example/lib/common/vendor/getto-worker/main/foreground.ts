@@ -12,45 +12,41 @@ export function newWorker(): Worker {
     return new Worker(src.replace(/\.js$/, ".worker.js"))
 }
 
-// TODO ForegroundProxy -> Proxy
-export interface WorkerForegroundProxy<M> {
-    method<T, E>(
-        map: WorkerForegroundProxyMessageMapper<M, T>
-    ): WorkerForegroundProxyMethod<T, E>
+export interface WorkerProxyContainer<M> {
+    method<T, E>(map: WorkerProxyMessageMapper<M, T>): WorkerProxyMethod<T, E>
 }
-export interface WorkerForegroundProxyMessageMapper<M, T> {
-    (message: WorkerProxyCallMessage<T>): M
-}
-export interface WorkerForegroundProxyAction_legacy<P, M, R>
-    extends WorkerForegroundProxy<M> {
-    pod(): P
-    resolve(response: R): void
-}
-export interface WorkerForegroundProxyAction<A, M, R> extends WorkerForegroundProxy<M> {
+export interface WorkerProxy<A, M, R> extends WorkerProxyContainer<M> {
     action(): A
     resolve(response: R): void
 }
+export interface WorkerForegroundProxyAction_legacy<P, M, R>
+    extends WorkerProxyContainer<M> {
+    pod(): P
+    resolve(response: R): void
+}
 
-export interface WorkerForegroundProxyMethod<M, E> {
+export interface WorkerProxyMethod<M, E> {
     call(message: M, post: Post<E>): void
     resolve({ id, done, event }: WorkerProxyCallResponse<E>): void
 }
 
-export class WorkerForegroundProxyBase<M> implements WorkerForegroundProxy<M> {
+export interface WorkerProxyMessageMapper<M, T> {
+    (message: WorkerProxyCallMessage<T>): M
+}
+
+export class WorkerAbstractProxy<M> implements WorkerProxyContainer<M> {
     post: Post<M>
 
     constructor(post: Post<M>) {
         this.post = post
     }
 
-    method<T, E>(
-        map: WorkerForegroundProxyMessageMapper<M, T>
-    ): WorkerForegroundProxyMethod<T, E> {
+    method<T, E>(map: WorkerProxyMessageMapper<M, T>): WorkerProxyMethod<T, E> {
         return new ProxyMethod((message) => this.post(map(message)))
     }
 }
 
-class ProxyMethod<M, E> implements WorkerForegroundProxyMethod<M, E> {
+class ProxyMethod<M, E> implements WorkerProxyMethod<M, E> {
     post: Post<WorkerProxyCallMessage<M>>
 
     idGenerator: IDGenerator

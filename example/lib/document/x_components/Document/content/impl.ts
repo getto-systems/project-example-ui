@@ -1,10 +1,10 @@
-import { ApplicationBaseAction } from "../../../../common/vendor/getto-example/Application/impl"
+import { ApplicationAbstractAction } from "../../../../common/vendor/getto-example/Application/impl"
 
 import { ContentComponentFactory, ContentMaterial, ContentComponent, ContentComponentState } from "./component"
 
 export const initContentComponent: ContentComponentFactory = (material) => new Component(material)
 
-class Component extends ApplicationBaseAction<ContentComponentState> implements ContentComponent {
+class Component extends ApplicationAbstractAction<ContentComponentState> implements ContentComponent {
     material: ContentMaterial
 
     constructor(material: ContentMaterial) {

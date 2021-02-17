@@ -1,15 +1,15 @@
 import { StorageError } from "../../../../common/storage/data"
 import { AuthnInfo } from "../common/data"
-import { RequestRenewAuthnInfoError } from "./data"
+import { RenewAuthnInfoError } from "./data"
 
-export type RequestRenewAuthnInfoEvent =
+export type RenewAuthnInfoEvent =
     | Readonly<{ type: "try-to-instant-load" }>
-    | ForceRequestRenewAuthnInfoEvent
+    | ForceRenewAuthnInfoEvent
 
-export type ForceRequestRenewAuthnInfoEvent =
+export type ForceRenewAuthnInfoEvent =
     | Readonly<{ type: "required-to-login" }>
     | Readonly<{ type: "try-to-renew" }>
     | Readonly<{ type: "delayed-to-renew" }>
-    | Readonly<{ type: "failed-to-renew"; err: RequestRenewAuthnInfoError }>
+    | Readonly<{ type: "failed-to-renew"; err: RenewAuthnInfoError }>
     | Readonly<{ type: "storage-error"; err: StorageError }>
     | Readonly<{ type: "succeed-to-renew"; authnInfo: AuthnInfo }>

@@ -1,9 +1,9 @@
 import { ApiCredential } from "../../../../../common/apiCredential/data"
 import { Delayed } from "../../../../../z_infra/delayed/infra"
 import {
-    RemoteAccess,
-    RemoteAccessResult,
-    RemoteAccessSimulator,
+    Remote,
+    RemoteResult,
+    RemoteSimulator,
 } from "../../../../../z_infra/remote/infra"
 import { DelayTime } from "../../../../../z_infra/time/infra"
 import { AuthnInfo } from "../../../authnInfo/common/data"
@@ -11,37 +11,36 @@ import { AuthnInfo } from "../../../authnInfo/common/data"
 import {
     PasswordResetFields,
     PasswordResetToken,
-    RegisterPasswordResetSessionRemoteError,
+    RegisterPasswordRemoteError,
 } from "./data"
 
-export type RegisterPasswordResetSessionInfra = Readonly<{
-    register: RegisterPasswordResetSessionRemoteAccess
+export type RegisterPasswordInfra = Readonly<{
+    register: RegisterPasswordRemote
     delayed: Delayed
     config: Readonly<{
         delay: DelayTime
     }>
 }>
 
-export type RegisterPasswordResetSessionRemoteAccess = RemoteAccess<
-    RegisterPasswordResetSessionRemoteMessage,
-    RegisterPasswordResetSessionRemoteResponse,
-    RegisterPasswordResetSessionRemoteError
+export type RegisterPasswordRemote = Remote<
+    RegisterPasswordMessage,
+    RegisterPasswordResponse,
+    RegisterPasswordRemoteError
 >
-export type RegisterPasswordResetSessionRemoteAccessResult = RemoteAccessResult<
-    RegisterPasswordResetSessionRemoteResponse,
-    RegisterPasswordResetSessionRemoteError
+export type RegisterPasswordResult = RemoteResult<
+    RegisterPasswordResponse,
+    RegisterPasswordRemoteError
 >
-export type RegisterPasswordResetSessionSimulator = RemoteAccessSimulator<
-    RegisterPasswordResetSessionRemoteMessage,
-    RegisterPasswordResetSessionRemoteResponse,
-    RegisterPasswordResetSessionRemoteError
+export type RegisterPasswordSimulator = RemoteSimulator<
+    RegisterPasswordMessage,
+    RegisterPasswordResponse,
+    RegisterPasswordRemoteError
 >
-export type RegisterPasswordResetSessionRemoteResponse = Readonly<{
-    auth: AuthnInfo
-    api: ApiCredential
-}>
-
-export type RegisterPasswordResetSessionRemoteMessage = Readonly<{
+export type RegisterPasswordMessage = Readonly<{
     resetToken: PasswordResetToken
     fields: PasswordResetFields
+}>
+export type RegisterPasswordResponse = Readonly<{
+    auth: AuthnInfo // TODO キーを authn にする
+    api: ApiCredential // キーを authz にする
 }>

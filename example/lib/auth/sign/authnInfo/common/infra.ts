@@ -1,8 +1,4 @@
-import {
-    RemoteAccess,
-    RemoteAccessResult,
-    RemoteAccessSimulator,
-} from "../../../../z_infra/remote/infra"
+import { Remote, RemoteResult, RemoteSimulator } from "../../../../z_infra/remote/infra"
 import { StoreResult } from "../../../../common/storage/infra"
 
 import { StorageError } from "../../../../common/storage/data"
@@ -20,21 +16,21 @@ export type LoadLastAuthResult =
     | Readonly<{ success: true; found: false }>
     | Readonly<{ success: false; err: StorageError }>
 
-export type RenewAuthnInfoRemoteAccess = RemoteAccess<
+export type RenewAuthnInfoRemote = Remote<
     AuthnNonce,
-    RenewAuthnInfoRemoteResponse,
+    RenewAuthnInfoResponse,
     RenewAuthnInfoRemoteError
 >
-export type RenewAuthnInfoRemoteAccessResult = RemoteAccessResult<
-    RenewAuthnInfoRemoteResponse,
+export type RenewAuthnInfoResult = RemoteResult<
+    RenewAuthnInfoResponse,
     RenewAuthnInfoRemoteError
 >
-export type RenewAuthnInfoSimulator = RemoteAccessSimulator<
+export type RenewAuthnInfoSimulator = RemoteSimulator<
     AuthnNonce,
-    RenewAuthnInfoRemoteResponse,
+    RenewAuthnInfoResponse,
     RenewAuthnInfoRemoteError
 >
-export type RenewAuthnInfoRemoteResponse = Readonly<{
+export type RenewAuthnInfoResponse = Readonly<{
     auth: AuthnInfo
     api: ApiCredential
 }>

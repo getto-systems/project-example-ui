@@ -1,11 +1,11 @@
-import { ForceRequestRenewAuthnInfoEvent, RequestRenewAuthnInfoEvent } from "./event"
+import { ForceRenewAuthnInfoEvent, RenewAuthnInfoEvent } from "./event"
 
 export interface RenewAuthnInfoMethod {
-    (post: Post<RequestRenewAuthnInfoEvent>): void
+    (post: Post<RenewAuthnInfoEvent>): void
 }
 
 export interface ForceRenewAuthnInfoMethod {
-    (post: Post<ForceRequestRenewAuthnInfoEvent>): void
+    (post: Post<ForceRenewAuthnInfoEvent>): void
 }
 
 interface Post<E> {

@@ -1,16 +1,16 @@
-import { newRegisterPasswordResetSessionRemoteAccess } from "./infra/remote/register/main"
+import { newRegisterPasswordRemote } from "./infra/remote/register/main"
 
 import { delayed } from "../../../../../z_infra/delayed/core"
 
 import { delaySecond } from "../../../../../z_infra/time/infra"
-import { RegisterPasswordResetSessionInfra } from "./infra"
-import { initRegisterPasswordResetSessionLocationInfo } from "./impl"
+import { RegisterPasswordInfra } from "./infra"
+import { initRegisterPasswordLocationInfo } from "./impl"
 import { currentURL } from "../../../../../z_infra/location/url"
-import { RegisterPasswordResetSessionLocationInfo } from "./method"
+import { RegisterPasswordLocationInfo } from "./method"
 
-export function newRegisterPasswordResetSessionInfra(): RegisterPasswordResetSessionInfra {
+export function newRegisterPasswordInfra(): RegisterPasswordInfra {
     return {
-        register: newRegisterPasswordResetSessionRemoteAccess(),
+        register: newRegisterPasswordRemote(),
         delayed: delayed,
         config: {
             delay: delaySecond(1),
@@ -18,6 +18,6 @@ export function newRegisterPasswordResetSessionInfra(): RegisterPasswordResetSes
     }
 }
 
-export function newRegisterPasswordResetSessionLocationInfo(): RegisterPasswordResetSessionLocationInfo {
-    return initRegisterPasswordResetSessionLocationInfo(currentURL())
+export function newRegisterPasswordLocationInfo(): RegisterPasswordLocationInfo {
+    return initRegisterPasswordLocationInfo(currentURL())
 }

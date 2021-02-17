@@ -5,7 +5,7 @@ import { PasswordReset } from "./PasswordReset"
 
 import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
 import { initMockPasswordResetEntryPoint } from "../../../auth/z_EntryPoint/Sign/mock"
-import { PasswordResetResourceMockProps } from "../../../auth/z_EntryPoint/Sign/resources/Password/ResetSession/Register/mock"
+import { RegisterPasswordResourceMockProps } from "../../../auth/x_Resource/Sign/Password/ResetSession/Register/mock"
 import { loginIDFormFieldValidations } from "../../../auth/common/x_Component/Field/LoginID/mock"
 import { formValidationStates } from "../../../common/vendor/getto-form/x_Resource/Form/mock"
 import {
@@ -53,9 +53,9 @@ export default {
     },
 }
 
-type MockProps = PasswordResetResourceMockProps
+type MockProps = RegisterPasswordResourceMockProps
 const Template: Story<MockProps> = (args) => {
-    const passer = initMockPropsPasser<PasswordResetResourceMockProps>()
+    const passer = initMockPropsPasser<RegisterPasswordResourceMockProps>()
     const entryPoint = initMockPasswordResetEntryPoint(passer)
     return h(Preview, { args })
 

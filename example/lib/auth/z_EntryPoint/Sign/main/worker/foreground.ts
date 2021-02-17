@@ -1,15 +1,12 @@
 import { newWorker } from "../../../../../common/vendor/getto-worker/main/foreground"
 
-import { newAuthSignRenewResource } from "../../resources/Renew/main"
-import { newAuthSignPasswordAuthenticateResource_merge } from "../../resources/Password/Authenticate/main/core"
-
-import { newAuthLocationAction_legacy } from "../../../../sign/secureScriptPath/get/main"
-import { newContinuousRenewAuthnInfoAction_legacy } from "../../../../sign/authnInfo/startContinuousRenew/main"
+import { newRenewAuthInfoResource } from "../../../../x_Resource/Sign/AuthInfo/Renew/main"
+import { newPasswordAuthenticateResource_merge } from "../../../../x_Resource/Sign/Password/Authenticate/main/core"
 
 import { initLoginViewLocationInfo, View } from "../../impl"
 
-import { initAuthSignLinkResource } from "../../resources/Link/impl"
-import { initPasswordResetSessionResource } from "../../../../x_Resource/sign/PasswordResetSession/impl"
+import { initAuthSignLinkResource } from "../../../../x_Resource/Sign/Link/impl"
+import { initPasswordResetSessionResource } from "../../../../x_Resource/Sign/PasswordResetSession/impl"
 
 import { initFormAction } from "../../../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../common/field/loginID/main/loginID"
@@ -24,14 +21,14 @@ import {
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
 import {
-    AuthSignPasswordAuthenticateProxy,
-    newAuthSignPasswordAuthenticateProxy,
-} from "../../resources/Password/Authenticate/main/worker/foreground"
+    AuthenticatePasswordResourceProxy,
+    newAuthenticatePasswordResourceProxy,
+} from "../../../../x_Resource/Sign/Password/Authenticate/main/worker/foreground"
 import {
-    AuthSignPasswordResetSessionRegisterProxy,
-    newAuthSignPasswordResetSessionRegisterProxy,
-} from "../../resources/Password/ResetSession/Register/main/worker/foreground"
-import { newAuthSignPasswordResetSessionRegisterResource_merge } from "../../resources/Password/ResetSession/Register/main/core"
+    RegisterPasswordResourceProxy,
+    newRegisterPasswordResourceProxy,
+} from "../../../../x_Resource/Sign/Password/ResetSession/Register/main/worker/foreground"
+import { newRegisterPasswordResource_merge } from "../../../../x_Resource/Sign/Password/ResetSession/Register/main/core"
 
 export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     const worker = newWorker()
@@ -40,10 +37,6 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     const currentURL = new URL(location.toString())
 
     const foreground = {
-        continuousRenew: newContinuousRenewAuthnInfoAction_legacy(webStorage),
-
-        location: newAuthLocationAction_legacy(),
-
         form: {
             core: initFormAction(),
             loginID: initLoginIDFormFieldAction(),
@@ -59,16 +52,16 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     const view = new View(initLoginViewLocationInfo(currentURL), {
         link: initAuthSignLinkResource,
 
-        renew: () => newAuthSignRenewResource(webStorage),
+        renew: () => newRenewAuthInfoResource(webStorage),
 
         passwordLogin: () =>
-            newAuthSignPasswordAuthenticateResource_merge(
+            newPasswordAuthenticateResource_merge(
                 proxy.password.authenticate.resource
             ),
         passwordResetSession: () =>
             initPasswordResetSessionResource(foreground, background),
         passwordReset: () =>
-            newAuthSignPasswordResetSessionRegisterResource_merge(
+            newRegisterPasswordResource_merge(
                 proxy.password.resetSession.register.resource
             ),
     })
@@ -97,9 +90,9 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
 
 type Proxy = Readonly<{
     password: Readonly<{
-        authenticate: AuthSignPasswordAuthenticateProxy
+        authenticate: AuthenticatePasswordResourceProxy
         resetSession: Readonly<{
-            register: AuthSignPasswordResetSessionRegisterProxy
+            register: RegisterPasswordResourceProxy
         }>
     }>
     reset: Readonly<{
@@ -109,11 +102,11 @@ type Proxy = Readonly<{
 function initProxy(webStorage: Storage, post: Post<ForegroundMessage>): Proxy {
     return {
         password: {
-            authenticate: newAuthSignPasswordAuthenticateProxy(webStorage, (message) =>
+            authenticate: newAuthenticatePasswordResourceProxy(webStorage, (message) =>
                 post({ type: "password-authenticate", message })
             ),
             resetSession: {
-                register: newAuthSignPasswordResetSessionRegisterProxy(
+                register: newRegisterPasswordResourceProxy(
                     webStorage,
                     (message) => post({ type: "password-resetSession-register", message })
                 ),

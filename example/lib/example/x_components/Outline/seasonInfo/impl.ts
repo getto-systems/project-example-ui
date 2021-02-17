@@ -1,4 +1,4 @@
-import { ApplicationBaseAction } from "../../../../common/vendor/getto-example/Application/impl"
+import { ApplicationAbstractAction } from "../../../../common/vendor/getto-example/Application/impl"
 
 import {
     SeasonInfoComponentFactory,
@@ -9,7 +9,7 @@ import {
 
 export const initSeasonInfoComponent: SeasonInfoComponentFactory = (material) => new Component(material)
 
-class Component extends ApplicationBaseAction<SeasonInfoComponentState> implements SeasonInfoComponent {
+class Component extends ApplicationAbstractAction<SeasonInfoComponentState> implements SeasonInfoComponent {
     material: SeasonInfoMaterial
 
     constructor(material: SeasonInfoMaterial) {

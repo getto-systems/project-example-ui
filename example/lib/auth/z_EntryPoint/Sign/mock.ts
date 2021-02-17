@@ -1,21 +1,21 @@
 import { MockAction, MockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
 
 import {
-    initMockAuthSignRenewResource,
-    AuthSignRenewMockPropsPasser,
-} from "./resources/Renew/mock"
+    initMockRenewAuthInfoResource,
+    RenewAuthInfoMockPropsPasser,
+} from "../../x_Resource/Sign/AuthInfo/Renew/mock"
 import {
-    initMockAuthSignPasswordAuthenticateResource,
-    AuthSignPasswordAuthenticateMockPropsPasser,
-} from "./resources/Password/Authenticate/mock"
+    initMockPasswordAuthenticateResource,
+    AuthenticatePasswordResourceMockPropsPasser,
+} from "../../x_Resource/Sign/Password/Authenticate/mock"
 import {
     initMockPasswordResetSessionResource,
     PasswordResetSessionResourceMockPropsPasser,
-} from "../../x_Resource/sign/PasswordResetSession/mock"
+} from "../../x_Resource/Sign/PasswordResetSession/mock"
 import {
-    initMockAuthSignPasswordResetSessionRegister,
-    AuthSignPasswordResetSessionRegisterMockPropsPasser,
-} from "./resources/Password/ResetSession/Register/mock"
+    initMockRegisterPasswordResourceRegister,
+    RegisterPasswordResourceMockPropsPasser,
+} from "../../x_Resource/Sign/Password/ResetSession/Register/mock"
 
 import {
     AuthSignEntryPoint,
@@ -26,19 +26,19 @@ import {
     PasswordResetSessionEntryPoint,
     PasswordResetEntryPoint,
 } from "./entryPoint"
-import { AuthSignLinkResource } from "./resources/Link/resource"
-import { initAuthSignLinkResource } from "./resources/Link/impl"
+import { AuthSignLinkResource } from "../../x_Resource/Sign/Link/resource"
+import { initAuthSignLinkResource } from "../../x_Resource/Sign/Link/impl"
 
 export function initMockRenewCredentialEntryPoint(
-    passer: AuthSignRenewMockPropsPasser
+    passer: RenewAuthInfoMockPropsPasser
 ): RenewCredentialEntryPoint {
-    return initEntryPoint(initMockAuthSignRenewResource(passer))
+    return initEntryPoint(initMockRenewAuthInfoResource(passer))
 }
 
 export function initMockPasswordLoginEntryPoint(
-    passer: AuthSignPasswordAuthenticateMockPropsPasser
+    passer: AuthenticatePasswordResourceMockPropsPasser
 ): PasswordLoginEntryPoint {
-    return initEntryPoint(initMockAuthSignPasswordAuthenticateResource(passer))
+    return initEntryPoint(initMockPasswordAuthenticateResource(passer))
 }
 
 export function initMockPasswordResetSessionEntryPoint(
@@ -48,9 +48,9 @@ export function initMockPasswordResetSessionEntryPoint(
 }
 
 export function initMockPasswordResetEntryPoint(
-    passer: AuthSignPasswordResetSessionRegisterMockPropsPasser
+    passer: RegisterPasswordResourceMockPropsPasser
 ): PasswordResetEntryPoint {
-    return initEntryPoint(initMockAuthSignPasswordResetSessionRegister(passer))
+    return initEntryPoint(initMockRegisterPasswordResourceRegister(passer))
 }
 
 type EntryPoint<R> = Readonly<{

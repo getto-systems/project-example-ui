@@ -1,4 +1,4 @@
-import { newAuthenticatePasswordRemoteAccess } from "./infra/remote/authenticate/main"
+import { newAuthenticatePasswordRemote } from "./infra/remote/authenticate/main"
 
 import { delayed } from "../../../../z_infra/delayed/core"
 
@@ -7,7 +7,7 @@ import { AuthenticatePasswordInfra } from "./infra"
 
 export function newAuthenticatePasswordInfra(): AuthenticatePasswordInfra {
     return {
-        login: newAuthenticatePasswordRemoteAccess(),
+        login: newAuthenticatePasswordRemote(),
         delayed,
         config: {
             delay: delaySecond(1),

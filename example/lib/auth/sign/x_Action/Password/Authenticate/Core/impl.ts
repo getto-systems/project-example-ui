@@ -1,4 +1,4 @@
-import { ApplicationBaseAction } from "../../../../../../common/vendor/getto-example/Application/impl"
+import { ApplicationAbstractAction } from "../../../../../../common/vendor/getto-example/Application/impl"
 
 import { startContinuousRenewAuthnInfo } from "../../../../authnInfo/startContinuousRenew/impl"
 import { getSecureScriptPath } from "../../../../secureScriptPath/get/impl"
@@ -12,9 +12,9 @@ import { GetSecureScriptPathInfra } from "../../../../secureScriptPath/get/infra
 import {
     AuthenticatePasswordMaterial,
     AuthenticatePasswordAction,
-    AuthenticatePasswordActionState,
-    AuthenticatePasswordBackgroundMaterial,
-    AuthenticatePasswordForegroundMaterial,
+    AuthenticatePasswordState,
+    AuthenticatePasswordBackground,
+    AuthenticatePasswordForeground,
 } from "./action"
 
 import { FormConvertResult } from "../../../../../../common/vendor/getto-form/form/data"
@@ -22,56 +22,56 @@ import { LoadSecureScriptError } from "../../../../secureScriptPath/get/data"
 import { AuthenticatePasswordFields } from "../../../../password/authenticate/data"
 import { AuthnInfo } from "../../../../authnInfo/common/data"
 
-export type AuthenticatePasswordActionInfra = AuthenticatePasswordForegroundInfra &
-    AuthenticatePasswordBackgroundInfra
+export type AuthenticatePasswordBase = AuthenticatePasswordForegroundBase &
+    AuthenticatePasswordBackgroundBase
 
-export type AuthenticatePasswordForegroundInfra = Readonly<{
+export type AuthenticatePasswordForegroundBase = Readonly<{
     startContinuousRenew: StartContinuousRenewAuthnInfoInfra
     getSecureScriptPath: GetSecureScriptPathInfra
 }>
-export type AuthenticatePasswordBackgroundInfra = Readonly<{
+export type AuthenticatePasswordBackgroundBase = Readonly<{
     authenticate: AuthenticatePasswordInfra
 }>
 
 export function initAuthenticatePasswordAction(
-    infra: AuthenticatePasswordActionInfra,
+    infra: AuthenticatePasswordBase,
     locationInfo: GetSecureScriptPathLocationInfo
 ): AuthenticatePasswordAction {
     return initAuthenticatePasswordAction_merge(
         infra,
         locationInfo,
-        initAuthenticatePasswordBackgroundMaterial(infra)
+        initAuthenticatePasswordBackground(infra)
     )
 }
 export function initAuthenticatePasswordAction_merge(
-    infra: AuthenticatePasswordForegroundInfra,
+    infra: AuthenticatePasswordForegroundBase,
     locationInfo: GetSecureScriptPathLocationInfo,
-    background: AuthenticatePasswordBackgroundMaterial
+    background: AuthenticatePasswordBackground
 ): AuthenticatePasswordAction {
     return new Action({
-        ...initAuthenticatePasswordForegroundMaterial(infra, locationInfo),
+        ...initAuthenticatePasswordForeground(infra, locationInfo),
         ...background,
     })
 }
-function initAuthenticatePasswordForegroundMaterial(
-    infra: AuthenticatePasswordForegroundInfra,
+function initAuthenticatePasswordForeground(
+    infra: AuthenticatePasswordForegroundBase,
     locationInfo: GetSecureScriptPathLocationInfo
-): AuthenticatePasswordForegroundMaterial {
+): AuthenticatePasswordForeground {
     return {
         startContinuousRenew: startContinuousRenewAuthnInfo(infra.startContinuousRenew),
         getSecureScriptPath: getSecureScriptPath(infra.getSecureScriptPath)(locationInfo),
     }
 }
-export function initAuthenticatePasswordBackgroundMaterial(
-    infra: AuthenticatePasswordBackgroundInfra
-): AuthenticatePasswordBackgroundMaterial {
+export function initAuthenticatePasswordBackground(
+    infra: AuthenticatePasswordBackgroundBase
+): AuthenticatePasswordBackground {
     return {
         authenticate: authenticatePassword(infra.authenticate),
     }
 }
 
 class Action
-    extends ApplicationBaseAction<AuthenticatePasswordActionState>
+    extends ApplicationAbstractAction<AuthenticatePasswordState>
     implements AuthenticatePasswordAction {
     material: AuthenticatePasswordMaterial
 

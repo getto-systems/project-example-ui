@@ -3,7 +3,7 @@ import {
     MockPropsPasser,
 } from "../../../../../common/vendor/getto-example/Application/mock"
 
-import { RenewAuthnInfoAction, RenewAuthnInfoActionState } from "./action"
+import { RenewAuthnInfoAction, RenewAuthnInfoState } from "./action"
 
 type Passer = MockPropsPasser<RenewMockProps>
 
@@ -19,7 +19,7 @@ export function initMockRenewAuthnInfoAction(passer: Passer): RenewAuthnInfoActi
 }
 
 class Action
-    extends MockAction<RenewAuthnInfoActionState>
+    extends MockAction<RenewAuthnInfoState>
     implements RenewAuthnInfoAction {
     constructor(passer: Passer) {
         super()
@@ -27,7 +27,7 @@ class Action
             this.post(mapProps(props))
         })
 
-        function mapProps(props: RenewMockProps): RenewAuthnInfoActionState {
+        function mapProps(props: RenewMockProps): RenewAuthnInfoState {
             switch (props.type) {
                 case "delayed":
                     return { type: "delayed-to-renew" }

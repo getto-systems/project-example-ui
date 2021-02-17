@@ -1,18 +1,15 @@
-import { RegisterPasswordResetSessionInfra } from "./infra"
+import { RegisterPasswordInfra } from "./infra"
 
-import {
-    RegisterPasswordResetSessionLocationInfo,
-    RegisterPasswordResetSessionPod,
-} from "./method"
+import { RegisterPasswordLocationInfo, RegisterPasswordPod } from "./method"
 
-import { RegisterPasswordResetSessionEvent } from "./event"
+import { RegisterPasswordEvent } from "./event"
 
 import { AuthLocationSearchParams } from "../../../secureScriptPath/get/data"
 import { markPasswordResetToken, PasswordResetToken } from "./data"
 
-export function initRegisterPasswordResetSessionLocationInfo(
+export function initRegisterPasswordLocationInfo(
     currentURL: URL
-): RegisterPasswordResetSessionLocationInfo {
+): RegisterPasswordLocationInfo {
     return {
         getPasswordResetToken: () => detectResetToken(currentURL),
     }
@@ -25,9 +22,9 @@ function detectResetToken(currentURL: URL): PasswordResetToken {
 }
 
 interface Register {
-    (infra: RegisterPasswordResetSessionInfra): RegisterPasswordResetSessionPod
+    (infra: RegisterPasswordInfra): RegisterPasswordPod
 }
-export const registerPasswordResetSession: Register = (infra) => (locationInfo) => async (
+export const registerPassword: Register = (infra) => (locationInfo) => async (
     fields,
     post
 ) => {
@@ -60,9 +57,7 @@ export const registerPasswordResetSession: Register = (infra) => (locationInfo) 
     post({ type: "succeed-to-reset", authnInfo: response.value.auth })
 }
 
-export function registerPasswordResetSessionEventHasDone(
-    event: RegisterPasswordResetSessionEvent
-): boolean {
+export function registerPasswordEventHasDone(event: RegisterPasswordEvent): boolean {
     switch (event.type) {
         case "succeed-to-reset":
         case "failed-to-reset":

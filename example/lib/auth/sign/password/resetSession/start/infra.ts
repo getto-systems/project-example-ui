@@ -1,8 +1,8 @@
 import { Delayed, Wait } from "../../../../../z_infra/delayed/infra"
 import {
-    RemoteAccess,
-    RemoteAccessResult,
-    RemoteAccessSimulator,
+    Remote,
+    RemoteResult,
+    RemoteSimulator,
 } from "../../../../../z_infra/remote/infra"
 import { DelayTime, Limit, WaitTime } from "../../../../../z_infra/time/infra"
 
@@ -49,46 +49,46 @@ export interface CheckPasswordResetSessionStatus {
     (infra: CheckPasswordResetSessionStatusInfra): CheckPasswordResetSessionStatusPod
 }
 
-export type StartPasswordResetSessionSessionRemoteAccess = RemoteAccess<
+export type StartPasswordResetSessionSessionRemoteAccess = Remote<
     PasswordResetSessionFields,
     PasswordResetSessionID,
     StartPasswordResetSessionRemoteError
 >
-export type StartPasswordResetSessionSessionRemoteAccessResult = RemoteAccessResult<
+export type StartPasswordResetSessionSessionRemoteAccessResult = RemoteResult<
     PasswordResetSessionID,
     StartPasswordResetSessionRemoteError
 >
-export type StartPasswordResetSessionSessionSimulator = RemoteAccessSimulator<
+export type StartPasswordResetSessionSessionSimulator = RemoteSimulator<
     PasswordResetSessionFields,
     PasswordResetSessionID,
     StartPasswordResetSessionRemoteError
 >
 
-export type SendPasswordResetSessionTokenRemoteAccess = RemoteAccess<
+export type SendPasswordResetSessionTokenRemoteAccess = Remote<
     null,
     true,
     CheckPasswordResetSessionStatusRemoteError
 >
-export type SendPasswordResetSessionTokenRemoteAccessResult = RemoteAccessResult<
+export type SendPasswordResetSessionTokenRemoteAccessResult = RemoteResult<
     true,
     CheckPasswordResetSessionStatusRemoteError
 >
-export type SendPasswordResetSessionTokenSimulator = RemoteAccessSimulator<
+export type SendPasswordResetSessionTokenSimulator = RemoteSimulator<
     null,
     true,
     CheckPasswordResetSessionStatusRemoteError
 >
 
-export type GetPasswordResetSessionStatusRemoteAccess = RemoteAccess<
+export type GetPasswordResetSessionStatusRemoteAccess = Remote<
     PasswordResetSessionID,
     GetPasswordResetSessionStatusResponse,
     CheckPasswordResetSessionStatusRemoteError
 >
-export type GetPasswordResetSessionStatusRemoteAccessResult = RemoteAccessResult<
+export type GetPasswordResetSessionStatusRemoteAccessResult = RemoteResult<
     GetPasswordResetSessionStatusResponse,
     CheckPasswordResetSessionStatusRemoteError
 >
-export type GetPasswordResetSessionStatusSimulator = RemoteAccessSimulator<
+export type GetPasswordResetSessionStatusSimulator = RemoteSimulator<
     PasswordResetSessionID,
     GetPasswordResetSessionStatusResponse,
     CheckPasswordResetSessionStatusRemoteError

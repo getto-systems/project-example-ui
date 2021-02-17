@@ -5,9 +5,9 @@ import { AuthProfileLogout } from "./Logout"
 
 import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
 import {
-    AuthProfileLogoutResourceMockProps,
-    initMockAuthProfileLogoutResource,
-} from "../../../auth/z_EntryPoint/Profile/resources/Logout/mock"
+    LogoutResourceMockProps,
+    initMockLogoutResource,
+} from "../../../auth/x_Resource/Profile/Logout/mock"
 
 export default {
     title: "Auth/Profile/Logout",
@@ -18,10 +18,10 @@ export default {
     },
 }
 
-type MockProps = AuthProfileLogoutResourceMockProps
+type MockProps = LogoutResourceMockProps
 const Template: Story<MockProps> = (args) => {
-    const passer = initMockPropsPasser<AuthProfileLogoutResourceMockProps>()
-    const resource = initMockAuthProfileLogoutResource(passer)
+    const passer = initMockPropsPasser<LogoutResourceMockProps>()
+    const resource = initMockLogoutResource(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {

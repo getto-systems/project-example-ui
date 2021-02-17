@@ -1,5 +1,5 @@
 import { initConnectRemoteAccess } from "../../../../../../../../z_infra/remote/connect"
-import { RawRemoteAccess, RemoteAccessError } from "../../../../../../../../z_infra/remote/infra"
+import { RawRemote, RemoteError } from "../../../../../../../../z_infra/remote/infra"
 
 import { CheckPasswordResetSessionStatusRemoteError, PasswordResetSessionID } from "../../../data"
 import {
@@ -7,7 +7,7 @@ import {
     GetPasswordResetSessionStatusResponse,
 } from "../../../infra"
 
-type Raw = RawRemoteAccess<PasswordResetSessionID, RawSessionStatus>
+type Raw = RawRemote<PasswordResetSessionID, RawSessionStatus>
 type RawSessionStatus =
     | Readonly<{ dest: RawDestination; done: false; status: SendingStatus }>
     | Readonly<{ dest: RawDestination; done: true; send: false; err: string }>
@@ -25,7 +25,7 @@ export function initGetPasswordResetSessionStatusConnectRemoteAccess(
             // TODO ちゃんと mark する
             return response
         },
-        error: (err: RemoteAccessError): CheckPasswordResetSessionStatusRemoteError => {
+        error: (err: RemoteError): CheckPasswordResetSessionStatusRemoteError => {
             switch (err.type) {
                 case "bad-request":
                 case "server-error":

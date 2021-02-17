@@ -1,21 +1,21 @@
 import { initLoginViewLocationInfo, View } from "./impl"
 
 import { newStaticClock } from "../../../z_infra/clock/simulate"
-import { initAuthenticatePasswordSimulateRemoteAccess } from "../../sign/password/authenticate/infra/remote/authenticate/simulate"
-import { initRenewAuthnInfoSimulateRemoteAccess } from "../../sign/authnInfo/common/infra/remote/renew/simulate"
-import { initRegisterPasswordResetSessionSimulateRemoteAccess } from "../../sign/password/resetSession/register/infra/remote/register/simulate"
+import { initAuthenticatePasswordSimulate } from "../../sign/password/authenticate/infra/remote/authenticate/simulate"
+import { initRenewAuthnInfoSimulate } from "../../sign/authnInfo/common/infra/remote/renew/simulate"
+import { initRegisterPasswordSimulate } from "../../sign/password/resetSession/register/infra/remote/register/simulate"
 import { initStartPasswordResetSessionSimulateRemoteAccess } from "../../sign/password/resetSession/start/infra/remote/startPasswordResetSession/simulate"
 
-import { initAuthSignLinkResource } from "./resources/Link/impl"
-import { initPasswordResetSessionResource } from "../../x_Resource/sign/PasswordResetSession/impl"
+import { initAuthSignLinkResource } from "../../x_Resource/Sign/Link/impl"
+import { initPasswordResetSessionResource } from "../../x_Resource/Sign/PasswordResetSession/impl"
 
 import { initFormAction } from "../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../common/field/password/main/password"
 
 import { Clock } from "../../../z_infra/clock/infra"
-import { AuthenticatePasswordRemoteAccessResult } from "../../sign/password/authenticate/infra"
-import { RegisterPasswordResetSessionRemoteAccessResult } from "../../sign/password/resetSession/register/infra"
+import { AuthenticatePasswordResult } from "../../sign/password/authenticate/infra"
+import { RegisterPasswordResult } from "../../sign/password/resetSession/register/infra"
 
 import { AuthSignViewState } from "./entryPoint"
 
@@ -25,12 +25,12 @@ import { ApiCredentialRepository } from "../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../common/apiCredential/infra/repository/memory"
 import {
     AuthnInfoRepository,
-    RenewAuthnInfoRemoteAccessResult,
+    RenewAuthnInfoResult,
 } from "../../sign/authnInfo/common/infra"
 import { delayed, wait } from "../../../z_infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../sign/authnInfo/common/infra/repository/authnInfo/memory"
 import { initGetSecureScriptPathLocationInfo } from "../../sign/secureScriptPath/get/impl"
-import { initRegisterPasswordResetSessionLocationInfo } from "../../sign/password/resetSession/register/impl"
+import { initRegisterPasswordLocationInfo } from "../../sign/password/resetSession/register/impl"
 import { initPasswordResetSessionActionPod } from "../../sign/password/resetSession/start/impl"
 import {
     GetPasswordResetSessionStatusRemoteAccessResult,
@@ -43,8 +43,8 @@ import { initGetPasswordResetSessionStatusSimulateRemoteAccess } from "../../sig
 import { initRenewAuthnInfoAction } from "../../sign/x_Action/AuthnInfo/Renew/impl"
 import { initAuthenticatePasswordFormAction } from "../../sign/x_Action/Password/Authenticate/Form/impl"
 import { initAuthenticatePasswordAction } from "../../sign/x_Action/Password/Authenticate/Core/impl"
-import { initRegisterPasswordResetSessionAction } from "../../sign/x_Action/Password/Reset/Register/Core/impl"
-import { initRegisterPasswordResetSessionFormAction } from "../../sign/x_Action/Password/Reset/Register/Form/impl"
+import { initRegisterPasswordAction } from "../../sign/x_Action/Password/ResetSession/Register/Core/impl"
+import { initRegisterPasswordFormAction } from "../../sign/x_Action/Password/ResetSession/Register/Form/impl"
 
 const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
 const SUCCEED_TO_LOGIN_AT = new Date("2020-01-01 10:00:00")
@@ -359,7 +359,7 @@ function standardPasswordLoginResource(
                 startContinuousRenew: {
                     apiCredentials,
                     authnInfos,
-                    renew: initRenewAuthnInfoSimulateRemoteAccess(simulateRenew, {
+                    renew: initRenewAuthnInfoSimulate(simulateRenew, {
                         wait_millisecond: 0,
                     }),
                     config: {
@@ -374,7 +374,7 @@ function standardPasswordLoginResource(
                     },
                 },
                 authenticate: {
-                    login: initAuthenticatePasswordSimulateRemoteAccess(simulateLogin, {
+                    login: initAuthenticatePasswordSimulate(simulateLogin, {
                         wait_millisecond: 0,
                     }),
                     config: {
@@ -410,12 +410,12 @@ function standardPasswordResetResource(
     clock: Clock
 ) {
     return {
-        register: initRegisterPasswordResetSessionAction(
+        register: initRegisterPasswordAction(
             {
                 startContinuousRenew: {
                     apiCredentials,
                     authnInfos,
-                    renew: initRenewAuthnInfoSimulateRemoteAccess(simulateRenew, {
+                    renew: initRenewAuthnInfoSimulate(simulateRenew, {
                         wait_millisecond: 0,
                     }),
                     config: {
@@ -430,7 +430,7 @@ function standardPasswordResetResource(
                     },
                 },
                 register: {
-                    register: initRegisterPasswordResetSessionSimulateRemoteAccess(
+                    register: initRegisterPasswordSimulate(
                         simulateReset,
                         {
                             wait_millisecond: 0,
@@ -444,11 +444,11 @@ function standardPasswordResetResource(
             },
             {
                 ...initGetSecureScriptPathLocationInfo(currentURL),
-                ...initRegisterPasswordResetSessionLocationInfo(currentURL),
+                ...initRegisterPasswordLocationInfo(currentURL),
             }
         ),
 
-        form: initRegisterPasswordResetSessionFormAction(formMaterial()),
+        form: initRegisterPasswordFormAction(formMaterial()),
     }
 
     function formMaterial() {
@@ -520,7 +520,7 @@ function standardRenewCredentialResource(
                 renew: {
                     apiCredentials,
                     authnInfos,
-                    renew: initRenewAuthnInfoSimulateRemoteAccess(simulateRenew, {
+                    renew: initRenewAuthnInfoSimulate(simulateRenew, {
                         wait_millisecond: 0,
                     }),
                     config: {
@@ -533,7 +533,7 @@ function standardRenewCredentialResource(
                 startContinuousRenew: {
                     apiCredentials,
                     authnInfos: authnInfos,
-                    renew: initRenewAuthnInfoSimulateRemoteAccess(simulateRenew, {
+                    renew: initRenewAuthnInfoSimulate(simulateRenew, {
                         wait_millisecond: 0,
                     }),
                     config: {
@@ -567,7 +567,7 @@ function standardSecureHost(): string {
     return "secure.example.com"
 }
 
-function simulateLogin(): AuthenticatePasswordRemoteAccessResult {
+function simulateLogin(): AuthenticatePasswordResult {
     return {
         success: true,
         value: {
@@ -582,13 +582,13 @@ function simulateLogin(): AuthenticatePasswordRemoteAccessResult {
         },
     }
 }
-function simulateRenew(): RenewAuthnInfoRemoteAccessResult {
+function simulateRenew(): RenewAuthnInfoResult {
     return {
         success: false,
         err: { type: "invalid-ticket" },
     }
 }
-function simulateReset(): RegisterPasswordResetSessionRemoteAccessResult {
+function simulateReset(): RegisterPasswordResult {
     return {
         success: true,
         value: {
