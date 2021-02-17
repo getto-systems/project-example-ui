@@ -1,12 +1,12 @@
 import { newStaticClock, StaticClock } from "../../../../../../../z_infra/clock/simulate"
-import { initRenewAuthnInfoSimulate } from "../../../common/infra/remote/renew/simulate"
+import { initRenewAuthnInfoSimulate } from "../../../kernel/infra/remote/renew/simulate"
 
 import { Clock } from "../../../../../../../z_infra/clock/infra"
 
 import { RenewAuthnInfoResource, RenewAuthnInfoState } from "./action"
 
 import { markSecureScriptPath } from "../../../../../common/secureScriptPath/get/data"
-import { markAuthAt, markAuthnNonce } from "../../../common/data"
+import { markAuthAt, markAuthnNonce } from "../../../kernel/data"
 import { ApiCredentialRepository } from "../../../../../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
@@ -14,9 +14,9 @@ import {
     AuthnInfoRepository,
     RenewAuthnInfoRemote,
     RenewAuthnInfoResult,
-} from "../../../common/infra"
+} from "../../../kernel/infra"
 import { delayed } from "../../../../../../../z_infra/delayed/core"
-import { initMemoryAuthnInfoRepository } from "../../../common/infra/repository/authnInfo/memory"
+import { initMemoryAuthnInfoRepository } from "../../../kernel/infra/repository/authnInfo/memory"
 import { initGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
 import { initRenewAuthnInfoAction } from "./impl"
 

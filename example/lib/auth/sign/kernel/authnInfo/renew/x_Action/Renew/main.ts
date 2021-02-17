@@ -1,5 +1,5 @@
 import { newRenewAuthnInfoInfra } from "../../main"
-import { newStartContinuousRenewAuthnInfoInfra } from "../../../startContinuousRenew/main"
+import { newStartContinuousRenewAuthnInfoInfra } from "../../../common/startContinuousRenew/main"
 import {
     newGetSecureScriptPathLocationInfo,
     newGetSecureScriptPathInfra,

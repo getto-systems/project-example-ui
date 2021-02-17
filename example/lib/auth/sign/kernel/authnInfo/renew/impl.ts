@@ -3,7 +3,7 @@ import { RenewAuthnInfoInfra } from "./infra"
 
 import { ForceRenewAuthnInfoEvent } from "./event"
 
-import { hasExpired, LastAuth } from "../common/data"
+import { hasExpired, LastAuth } from "../kernel/data"
 import { ForceRenewAuthnInfoMethod, RenewAuthnInfoMethod } from "./method"
 
 interface Renew {

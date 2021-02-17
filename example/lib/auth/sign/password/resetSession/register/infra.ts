@@ -6,7 +6,7 @@ import {
     RemoteSimulator,
 } from "../../../../../z_infra/remote/infra"
 import { DelayTime } from "../../../../../z_infra/time/infra"
-import { AuthnInfo } from "../../../kernel/authnInfo/common/data"
+import { AuthnInfo } from "../../../kernel/authnInfo/kernel/data"
 
 import {
     PasswordResetFields,

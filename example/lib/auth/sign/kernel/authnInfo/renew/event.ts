@@ -1,5 +1,5 @@
 import { StorageError } from "../../../../../common/storage/data"
-import { AuthnInfo } from "../common/data"
+import { AuthnInfo } from "../kernel/data"
 import { RenewAuthnInfoError } from "./data"
 
 export type RenewAuthnInfoEvent =

@@ -1,11 +1,11 @@
 import { initMemoryApiCredentialRepository } from "../../../../../../../common/apiCredential/infra/repository/memory"
-import { initMemoryAuthnInfoRepository } from "../../../common/infra/repository/authnInfo/memory"
+import { initMemoryAuthnInfoRepository } from "../../../kernel/infra/repository/authnInfo/memory"
 import { initClearAuthnInfoAction } from "./impl"
 
 import { LogoutState } from "./action"
 
 import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
-import { markAuthAt, markAuthnNonce } from "../../../common/data"
+import { markAuthAt, markAuthnNonce } from "../../../kernel/data"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
 const STORED_AUTH_AT = new Date("2020-01-01 09:00:00")

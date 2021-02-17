@@ -5,7 +5,7 @@ import { ForceRenewAuthnInfoMethod, RenewAuthnInfoMethod } from "../../method"
 import {
     ForceStartContinuousRenewAuthnInfoMethod,
     StartContinuousRenewAuthnInfoMethod,
-} from "../../../startContinuousRenew/method"
+} from "../../../common/startContinuousRenew/method"
 
 import { RenewAuthnInfoEvent } from "../../event"
 
@@ -13,7 +13,7 @@ import {
     SecureScriptPath,
     LoadSecureScriptError,
 } from "../../../../../common/secureScriptPath/get/data"
-import { StartContinuousRenewAuthnInfoEvent } from "../../../startContinuousRenew/event"
+import { StartContinuousRenewAuthnInfoEvent } from "../../../common/startContinuousRenew/event"
 
 export type RenewAuthnInfoEntryPoint = Readonly<{
     resource: RenewAuthnInfoResource

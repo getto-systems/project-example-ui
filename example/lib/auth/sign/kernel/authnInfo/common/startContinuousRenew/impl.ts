@@ -5,7 +5,7 @@ import {
     StartContinuousRenewAuthnInfoMethod,
 } from "./method"
 
-import { hasExpired } from "../common/data"
+import { hasExpired } from "../../kernel/data"
 
 interface Start {
     (infra: StartContinuousRenewAuthnInfoInfra): StartContinuousRenewAuthnInfoMethod

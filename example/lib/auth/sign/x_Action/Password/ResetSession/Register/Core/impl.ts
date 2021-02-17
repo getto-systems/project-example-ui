@@ -2,9 +2,9 @@ import { ApplicationAbstractAction } from "../../../../../../../common/vendor/ge
 
 import { registerPassword } from "../../../../../password/resetSession/register/impl"
 import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
-import { startContinuousRenewAuthnInfo } from "../../../../../kernel/authnInfo/startContinuousRenew/impl"
+import { startContinuousRenewAuthnInfo } from "../../../../../kernel/authnInfo/common/startContinuousRenew/impl"
 
-import { StartContinuousRenewAuthnInfoInfra } from "../../../../../kernel/authnInfo/startContinuousRenew/infra"
+import { StartContinuousRenewAuthnInfoInfra } from "../../../../../kernel/authnInfo/common/startContinuousRenew/infra"
 import { GetSecureScriptPathInfra } from "../../../../../common/secureScriptPath/get/infra"
 import { RegisterPasswordInfra } from "../../../../../password/resetSession/register/infra"
 
@@ -22,7 +22,7 @@ import { RegisterPasswordLocationInfo } from "../../../../../password/resetSessi
 import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
 import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
 import { PasswordResetFields } from "../../../../../password/resetSession/register/data"
-import { AuthnInfo } from "../../../../../kernel/authnInfo/common/data"
+import { AuthnInfo } from "../../../../../kernel/authnInfo/kernel/data"
 
 export type RegisterPasswordBase = RegisterPasswordForegroundBase &
     RegisterPasswordBackgroundBase
