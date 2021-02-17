@@ -1,5 +1,6 @@
 import {
     WorkerProxyMessage,
+    WorkerProxyMethod,
     WorkerProxyResponse,
 } from "../../../../../../../../../common/vendor/getto-worker/main/message"
 
@@ -11,14 +12,15 @@ import {
     PasswordResetToken,
 } from "../../../../../../../password/resetSession/register/data"
 
+export type RegisterPasswordProxyMethod = WorkerProxyMethod<
+    RegisterPasswordProxyParams,
+    RegisterPasswordEvent
+>
 export type RegisterPasswordProxyMessage = WorkerProxyMessage<
     "register",
     RegisterPasswordProxyParams
 >
-export type RegisterPasswordProxyResponse = WorkerProxyResponse<
-    "register",
-    RegisterPasswordEvent
->
+export type RegisterPasswordProxyResponse = WorkerProxyResponse<"register", RegisterPasswordEvent>
 
 export type RegisterPasswordProxyParams = Readonly<{
     fields: FormConvertResult<PasswordResetFields>

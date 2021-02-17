@@ -2,17 +2,14 @@ import { newAuthenticatePasswordAction_merge } from "../core"
 
 import { AuthenticatePasswordAction } from "../../action"
 
-import { AuthenticatePasswordEvent } from "../../../../../../password/authenticate/event"
-
 import {
     WorkerProxy,
     WorkerAbstractProxy,
-    WorkerProxyMethod,
 } from "../../../../../../../../common/vendor/getto-worker/main/foreground"
 
 import {
     AuthenticatePasswordProxyMessage,
-    AuthenticatePasswordProxyParams,
+    AuthenticatePasswordProxyMethod,
     AuthenticatePasswordProxyResponse,
 } from "./message"
 
@@ -32,10 +29,7 @@ class Proxy
     extends WorkerAbstractProxy<AuthenticatePasswordProxyMessage>
     implements AuthenticatePasswordProxy {
     webStorage: Storage
-    authenticate: WorkerProxyMethod<
-        AuthenticatePasswordProxyParams,
-        AuthenticatePasswordEvent
-    >
+    authenticate: AuthenticatePasswordProxyMethod
 
     constructor(webStorage: Storage, post: Post<AuthenticatePasswordProxyMessage>) {
         super(post)
