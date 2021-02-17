@@ -1,6 +1,6 @@
-import { newAuthenticatePasswordHandler } from "../../../../../../sign/x_Action/Password/Authenticate/Core/main/worker/background"
+import { newAuthenticatePasswordHandler } from "../../Core/main/worker/background"
 
-import { WorkerHandler } from "../../../../../../../z_vendor/getto-worker/background"
+import { WorkerHandler } from "../../../../../../../../z_vendor/getto-worker/background"
 
 import {
     AuthenticatePasswordResourceProxyMessage,

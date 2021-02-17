@@ -1,9 +1,9 @@
-import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../kernel/authnInfo/common/startContinuousRenew/main"
-import { newAuthenticatePasswordInfra } from "../../../../../password/authenticate/main"
+import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/main"
+import { newAuthenticatePasswordInfra } from "../../../../main"
 import {
     newGetSecureScriptPathInfra,
     newGetSecureScriptPathLocationInfo,
-} from "../../../../../common/secureScriptPath/get/main"
+} from "../../../../../../common/secureScriptPath/get/main"
 
 import {
     initAuthenticatePasswordAction,

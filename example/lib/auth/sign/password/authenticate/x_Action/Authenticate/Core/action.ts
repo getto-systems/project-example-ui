@@ -1,18 +1,18 @@
-import { ApplicationAction } from "../../../../../../common/vendor/getto-example/Application/action"
+import { ApplicationAction } from "../../../../../../../common/vendor/getto-example/Application/action"
 
-import { AuthenticatePasswordMethod } from "../../../../password/authenticate/method"
-import { GetSecureScriptPathMethod } from "../../../../common/secureScriptPath/get/method"
-import { StartContinuousRenewAuthnInfoMethod } from "../../../../kernel/authnInfo/common/startContinuousRenew/method"
+import { AuthenticatePasswordMethod } from "../../../method"
+import { GetSecureScriptPathMethod } from "../../../../../common/secureScriptPath/get/method"
+import { StartContinuousRenewAuthnInfoMethod } from "../../../../../kernel/authnInfo/common/startContinuousRenew/method"
 
-import { AuthenticatePasswordEvent } from "../../../../password/authenticate/event"
-import { StartContinuousRenewAuthnInfoEvent } from "../../../../kernel/authnInfo/common/startContinuousRenew/event"
+import { AuthenticatePasswordEvent } from "../../../event"
+import { StartContinuousRenewAuthnInfoEvent } from "../../../../../kernel/authnInfo/common/startContinuousRenew/event"
 
-import { FormConvertResult } from "../../../../../../common/vendor/getto-form/form/data"
+import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
 import {
     SecureScriptPath,
     LoadSecureScriptError,
-} from "../../../../common/secureScriptPath/get/data"
-import { AuthenticatePasswordFields } from "../../../../password/authenticate/data"
+} from "../../../../../common/secureScriptPath/get/data"
+import { AuthenticatePasswordFields } from "../../../data"
 
 export interface AuthenticatePasswordAction
     extends ApplicationAction<AuthenticatePasswordState> {

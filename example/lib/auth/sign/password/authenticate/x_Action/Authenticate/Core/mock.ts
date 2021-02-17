@@ -1,7 +1,7 @@
 import {
     MockAction,
     MockPropsPasser,
-} from "../../../../../../common/vendor/getto-example/Application/mock"
+} from "../../../../../../../common/vendor/getto-example/Application/mock"
 
 import { AuthenticatePasswordAction, AuthenticatePasswordState } from "./action"
 

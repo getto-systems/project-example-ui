@@ -1,4 +1,4 @@
-import { newPasswordAuthenticateResource } from "../../../x_Resource/Sign/Password/Authenticate/main/core"
+import { newPasswordAuthenticateResource } from "../../../sign/password/authenticate/x_Action/Authenticate/main/core"
 import { newRegisterPasswordResource } from "../../../x_Resource/Sign/Password/ResetSession/Register/main/core"
 import { newRenewAuthnInfoAction } from "../../../sign/kernel/authnInfo/renew/x_Action/Renew/main"
 

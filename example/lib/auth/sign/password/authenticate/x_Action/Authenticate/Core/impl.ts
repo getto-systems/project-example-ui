@@ -1,13 +1,13 @@
-import { ApplicationAbstractAction } from "../../../../../../common/vendor/getto-example/Application/impl"
+import { ApplicationAbstractAction } from "../../../../../../../common/vendor/getto-example/Application/impl"
 
-import { startContinuousRenewAuthnInfo } from "../../../../kernel/authnInfo/common/startContinuousRenew/impl"
-import { getSecureScriptPath } from "../../../../common/secureScriptPath/get/impl"
-import { GetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/method"
-import { authenticatePassword } from "../../../../password/authenticate/impl"
+import { startContinuousRenewAuthnInfo } from "../../../../../kernel/authnInfo/common/startContinuousRenew/impl"
+import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
+import { GetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/method"
+import { authenticatePassword } from "../../../impl"
 
-import { AuthenticatePasswordInfra } from "../../../../password/authenticate/infra"
-import { StartContinuousRenewAuthnInfoInfra } from "../../../../kernel/authnInfo/common/startContinuousRenew/infra"
-import { GetSecureScriptPathInfra } from "../../../../common/secureScriptPath/get/infra"
+import { AuthenticatePasswordInfra } from "../../../infra"
+import { StartContinuousRenewAuthnInfoInfra } from "../../../../../kernel/authnInfo/common/startContinuousRenew/infra"
+import { GetSecureScriptPathInfra } from "../../../../../common/secureScriptPath/get/infra"
 
 import {
     AuthenticatePasswordMaterial,
@@ -17,10 +17,10 @@ import {
     AuthenticatePasswordForeground,
 } from "./action"
 
-import { FormConvertResult } from "../../../../../../common/vendor/getto-form/form/data"
-import { LoadSecureScriptError } from "../../../../common/secureScriptPath/get/data"
-import { AuthenticatePasswordFields } from "../../../../password/authenticate/data"
-import { AuthnInfo } from "../../../../kernel/authnInfo/kernel/data"
+import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
+import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
+import { AuthenticatePasswordFields } from "../../../data"
+import { AuthnInfo } from "../../../../../kernel/authnInfo/kernel/data"
 
 export type AuthenticatePasswordBase = AuthenticatePasswordForegroundBase &
     AuthenticatePasswordBackgroundBase

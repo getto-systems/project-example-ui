@@ -1,25 +1,25 @@
-import { MockPropsPasser } from "../../../../../../common/vendor/getto-example/Application/mock"
+import { MockPropsPasser } from "../../../../../../../common/vendor/getto-example/Application/mock"
 import {
     FormContainerMockComponent,
     FormContainerMockProps,
-} from "../../../../../../common/vendor/getto-form/x_Resource/Form/mock"
+} from "../../../../../../../common/vendor/getto-form/x_Resource/Form/mock"
 
 import {
     initMockLoginIDFormField,
     LoginIDFormFieldMockProps,
-} from "../../../../../common/x_Component/Field/LoginID/mock"
+} from "../../../../../../common/x_Component/Field/LoginID/mock"
 import {
     initMockPasswordFormField,
     PasswordFormFieldMockProps,
-} from "../../../../../common/x_Component/Field/Password/mock"
+} from "../../../../../../common/x_Component/Field/Password/mock"
 
-import { FormContainerComponentState } from "../../../../../../common/vendor/getto-form/x_Resource/Form/component"
-import { LoginIDFormFieldComponent } from "../../../../../common/x_Component/Field/LoginID/component"
-import { PasswordFormFieldComponent } from "../../../../../common/x_Component/Field/Password/component"
+import { FormContainerComponentState } from "../../../../../../../common/vendor/getto-form/x_Resource/Form/component"
+import { LoginIDFormFieldComponent } from "../../../../../../common/x_Component/Field/LoginID/component"
+import { PasswordFormFieldComponent } from "../../../../../../common/x_Component/Field/Password/component"
 import { AuthenticatePasswordFormAction } from "./action"
 
-import { FormConvertResult } from "../../../../../../common/vendor/getto-form/form/data"
-import { AuthenticatePasswordFields } from "../../../../password/authenticate/data"
+import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
+import { AuthenticatePasswordFields } from "../../../data"
 
 type Passer = MockPropsPasser<AuthenticatePasswordFormMockProps>
 

@@ -1,6 +1,6 @@
-import { initFormAction } from "../../../../../../common/vendor/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../../../common/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../../../common/field/password/main/password"
+import { initFormAction } from "../../../../../../../common/vendor/getto-form/main/form"
+import { initLoginIDFormFieldAction } from "../../../../../../common/field/loginID/main/loginID"
+import { initPasswordFormFieldAction } from "../../../../../../common/field/password/main/password"
 import { initAuthenticatePasswordFormAction } from "./impl"
 
 import { AuthenticatePasswordFormAction } from "./action"
