@@ -5,17 +5,14 @@ import { RegisterPasswordAction } from "../../action"
 
 import { RegisterPasswordLocationInfo } from "../../../../../../../password/resetSession/register/method"
 
-import { RegisterPasswordEvent } from "../../../../../../../password/resetSession/register/event"
-
 import {
     WorkerProxy,
     WorkerAbstractProxy,
-    WorkerProxyMethod,
 } from "../../../../../../../../../common/vendor/getto-worker/main/foreground"
 
 import {
     RegisterPasswordProxyMessage,
-    RegisterPasswordProxyParams,
+    RegisterPasswordProxyMethod,
     RegisterPasswordProxyResponse,
 } from "./message"
 
@@ -28,10 +25,7 @@ export function newRegisterPasswordProxy(
     webStorage: Storage,
     post: Post<RegisterPasswordProxyMessage>
 ): RegisterPasswordProxy {
-    return new Proxy(
-        { webStorage, locationInfo: newRegisterPasswordLocationInfo() },
-        post
-    )
+    return new Proxy({ webStorage, locationInfo: newRegisterPasswordLocationInfo() }, post)
 }
 
 type Infra = Readonly<{
@@ -42,7 +36,7 @@ class Proxy
     extends WorkerAbstractProxy<RegisterPasswordProxyMessage>
     implements RegisterPasswordProxy {
     infra: Infra
-    register: WorkerProxyMethod<RegisterPasswordProxyParams, RegisterPasswordEvent>
+    register: RegisterPasswordProxyMethod
 
     constructor(infra: Infra, post: Post<RegisterPasswordProxyMessage>) {
         super(post)

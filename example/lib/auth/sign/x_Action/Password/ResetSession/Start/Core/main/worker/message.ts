@@ -1,5 +1,6 @@
 import {
     WorkerProxyMessage,
+    WorkerProxyMethod,
     WorkerProxyResponse,
 } from "../../../../../../../../../common/vendor/getto-worker/main/message"
 
@@ -14,6 +15,14 @@ import {
     PasswordResetSessionID,
 } from "../../../../../../../password/resetSession/start/data"
 
+export type StartPasswordResetSessionProxyMethod = WorkerProxyMethod<
+    StartPasswordResetSessionProxyParams,
+    StartPasswordResetSessionEvent
+>
+export type CheckPasswordResetSessionStatusProxyMethod = WorkerProxyMethod<
+    CheckPasswordResetSessionStatusProxyParams,
+    CheckPasswordResetSessionStatusEvent
+>
 export type StartPasswordResetSessionProxyMessage =
     | WorkerProxyMessage<"start", StartPasswordResetSessionProxyParams>
     | WorkerProxyMessage<"checkStatus", CheckPasswordResetSessionStatusProxyParams>

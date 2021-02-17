@@ -3,22 +3,16 @@ import { newStartPasswordResetSessionAction_merge } from "../core"
 import {
     WorkerProxy,
     WorkerAbstractProxy,
-    WorkerProxyMethod,
 } from "../../../../../../../../../common/vendor/getto-worker/main/foreground"
 
 import {
-    CheckPasswordResetSessionStatusProxyParams,
+    CheckPasswordResetSessionStatusProxyMethod,
     StartPasswordResetSessionProxyMessage,
-    StartPasswordResetSessionProxyParams,
+    StartPasswordResetSessionProxyMethod,
     StartPasswordResetSessionProxyResponse,
 } from "./message"
 
 import { StartPasswordResetSessionAction } from "../../action"
-
-import {
-    CheckPasswordResetSessionStatusEvent,
-    StartPasswordResetSessionEvent,
-} from "../../../../../../../password/resetSession/start/event"
 
 export type StartPasswordResetSessionProxy = WorkerProxy<
     StartPasswordResetSessionAction,
@@ -34,11 +28,8 @@ export function newStartPasswordResetSessionProxy(
 class Proxy
     extends WorkerAbstractProxy<StartPasswordResetSessionProxyMessage>
     implements StartPasswordResetSessionProxy {
-    start: WorkerProxyMethod<StartPasswordResetSessionProxyParams, StartPasswordResetSessionEvent>
-    checkStatus: WorkerProxyMethod<
-        CheckPasswordResetSessionStatusProxyParams,
-        CheckPasswordResetSessionStatusEvent
-    >
+    start: StartPasswordResetSessionProxyMethod
+    checkStatus: CheckPasswordResetSessionStatusProxyMethod
 
     constructor(post: Post<StartPasswordResetSessionProxyMessage>) {
         super(post)
