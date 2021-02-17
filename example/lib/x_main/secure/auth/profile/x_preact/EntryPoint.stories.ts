@@ -38,7 +38,7 @@ const template = storyTemplate<MockProps>((args) => {
         seasonInfo: initMockPropsPasser<SeasonInfoMockProps>(),
         menu: initMockPropsPasser<MenuMockProps>(),
         breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
-        logout: initMockPropsPasser<ClearAuthnInfoMockProps>(),
+        clear: initMockPropsPasser<ClearAuthnInfoMockProps>(),
     }
     const entryPoint = newMockAuthProfile(passer)
     return h(Preview, { args })
@@ -56,7 +56,7 @@ const template = storyTemplate<MockProps>((args) => {
                 label: props.args.breadcrumbLabel,
                 icon: props.args.breadcrumbIcon,
             })
-            passer.logout.update({ type: "failed-clear-authnInfo", err: "logout error" })
+            passer.clear.update({ type: "failed-clear-authnInfo", err: "logout error" })
         })
         return noPaddedStory(h(EntryPoint, entryPoint))
     }

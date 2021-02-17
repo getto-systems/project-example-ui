@@ -1,8 +1,8 @@
-import { initMockErrorResource } from "../../../../availability/x_Resource/Error/mock"
 import {
-    LogoutResourceMockPropsPasser,
-    initMockLogoutResource,
-} from "../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/mock"
+    ClearAuthnInfoMockPropsPasser,
+    initMockClearAuthnInfoAction,
+} from "../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/Core/mock"
+import { initMockErrorResource } from "../../../../availability/x_Resource/Error/mock"
 import {
     BreadcrumbListMockPropsPasser,
     initMockBreadcrumbListComponent,
@@ -22,13 +22,13 @@ export type AuthProfileMockPropsPasser = Readonly<{
     seasonInfo: SeasonInfoMockPropsPasser
     menu: MenuMockPropsPasser
     breadcrumbList: BreadcrumbListMockPropsPasser
-    logout: LogoutResourceMockPropsPasser
+    clear: ClearAuthnInfoMockPropsPasser
 }>
 export function newMockAuthProfile(passer: AuthProfileMockPropsPasser): AuthProfileEntryPoint {
     return {
         resource: {
             ...initMockErrorResource(),
-            ...initMockLogoutResource(passer.logout),
+            clear: initMockClearAuthnInfoAction(passer.clear),
             seasonInfo: initMockSeasonInfoComponent(passer.seasonInfo),
             menu: initMockMenuComponent(passer.menu),
             breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),

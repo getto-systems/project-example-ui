@@ -6,7 +6,7 @@ import { storyTemplate } from "../../../../../../../../x_preact/z_storybook/stor
 import { Logout } from "./Logout"
 
 import { initMockPropsPasser } from "../../../../../../../../common/vendor/getto-example/Application/mock"
-import { LogoutResourceMockProps, initMockLogoutResource } from "../mock"
+import { ClearAuthnInfoMockProps, initMockClearAuthnInfoAction } from "../Core/mock"
 
 export default {
     title: "Auth/Profile/Logout",
@@ -17,17 +17,17 @@ export default {
     },
 }
 
-type Props = LogoutResourceMockProps
+type Props = ClearAuthnInfoMockProps
 const template = storyTemplate<Props>((args) => {
-    const passer = initMockPropsPasser<LogoutResourceMockProps>()
-    const resource = initMockLogoutResource(passer)
+    const passer = initMockPropsPasser<ClearAuthnInfoMockProps>()
+    const clear = initMockClearAuthnInfoAction(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: Props }) {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(Logout, resource)
+        return h(Logout, { clear })
     }
 })
 
