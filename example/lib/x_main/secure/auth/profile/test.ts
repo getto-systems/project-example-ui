@@ -29,10 +29,10 @@ import { initUnexpectedErrorAction } from "../../../../availability/unexpectedEr
 import { initClearAuthnInfoAction } from "../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/Core/impl"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
-const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
+const STORED_AUTH_AT = new Date("2020-01-01 09:00:00")
 
 // renew リクエストを投げるべきかの判定に使用する
-// SUCCEED_TO_LOGIN_AT と setContinuousRenew の delay との間でうまく調整する
+// SUCCEED_TO_AUTH_AT と setContinuousRenew の delay との間でうまく調整する
 const NOW = new Date("2020-01-01 10:00:30")
 
 describe("AuthProfile", () => {
@@ -98,7 +98,7 @@ function standardRepository() {
         }),
         authnInfos: initMemoryAuthnInfoRepository({
             authnNonce: { set: true, value: markAuthnNonce(STORED_AUTHN_NONCE) },
-            lastAuthAt: { set: true, value: markAuthAt(STORED_LOGIN_AT) },
+            lastAuthAt: { set: true, value: markAuthAt(STORED_AUTH_AT) },
         }),
         menuExpands: initOutlineMenuExpandRepository({
             menuExpand: initMemoryTypedStorage({ set: false }),

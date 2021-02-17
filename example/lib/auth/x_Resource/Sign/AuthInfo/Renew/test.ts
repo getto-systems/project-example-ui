@@ -23,13 +23,13 @@ import { initGetSecureScriptPathLocationInfo } from "../../../../sign/common/sec
 import { initRenewAuthnInfoAction } from "../../../../sign/x_Action/AuthnInfo/Renew/impl"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
-const STORED_LOGIN_AT = new Date("2020-01-01 09:00:00")
+const STORED_AUTH_AT = new Date("2020-01-01 09:00:00")
 
 const RENEWED_AUTHN_NONCE = "renewed-authn-nonce" as const
 const SUCCEED_TO_RENEW_AT = new Date("2020-01-01 10:00:00")
 
 // renew リクエストを投げるべきか、instant load していいかの判定に使用する
-// SUCCEED_TO_LOGIN_AT と setContinuousRenew の delay との間でうまく調整する
+// SUCCEED_TO_AUTH_AT と setContinuousRenew の delay との間でうまく調整する
 const NOW_INSTANT_LOAD_AVAILABLE = new Date("2020-01-01 09:00:10")
 const NOW_INSTANT_LOAD_DISABLED = new Date("2020-01-01 09:00:30")
 
@@ -493,7 +493,7 @@ function standardRepository(): RenewCredentialTestRepository {
         }),
         authnInfos: initMemoryAuthnInfoRepository({
             authnNonce: { set: true, value: markAuthnNonce(STORED_AUTHN_NONCE) },
-            lastAuthAt: { set: true, value: markAuthAt(STORED_LOGIN_AT) },
+            lastAuthAt: { set: true, value: markAuthAt(STORED_AUTH_AT) },
         }),
     }
 }
