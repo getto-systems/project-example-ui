@@ -2,7 +2,7 @@ import {
     WorkerProxyMessage,
     WorkerProxyMethod,
     WorkerProxyResponse,
-} from "../../../../../../../../common/vendor/getto-worker/main/message"
+} from "../../../../../../../../z_vendor/getto-worker/message"
 
 import { AuthenticatePasswordEvent } from "../../../../../../password/authenticate/event"
 

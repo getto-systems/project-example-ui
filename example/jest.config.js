@@ -8,6 +8,7 @@ module.exports = {
     "!lib/x_*/**",
     "!lib/y_*/**",
     "!lib/z_*/**",
+    "!lib/**/x_preact/**",
     "!lib/**/tests/**",
     "!lib/**/test.ts",
     "!lib/**/testHelper.ts",

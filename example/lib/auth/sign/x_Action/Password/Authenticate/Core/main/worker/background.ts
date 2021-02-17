@@ -2,7 +2,7 @@ import { newAuthenticatePasswordBackground } from "../core"
 
 import { authenticatePasswordEventHasDone } from "../../../../../../password/authenticate/impl"
 
-import { WorkerHandler } from "../../../../../../../../common/vendor/getto-worker/main/background"
+import { WorkerHandler } from "../../../../../../../../z_vendor/getto-worker/background"
 
 import {
     AuthenticatePasswordProxyMessage,
