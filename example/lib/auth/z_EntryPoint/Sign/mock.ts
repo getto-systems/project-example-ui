@@ -27,11 +27,11 @@ import {
     PasswordResetEntryPoint,
 } from "./entryPoint"
 
-import { AuthSignLinkResource } from "../../x_Resource/Sign/Link/resource"
+import { AuthSignLinkResource } from "../../sign/common/searchParams/x_Action/Link/action"
 
 import { RenewAuthnInfoResource } from "../../sign/kernel/authnInfo/renew/x_Action/Renew/action"
 
-import { initAuthSignLinkResource } from "../../x_Resource/Sign/Link/impl"
+import { initAuthSignLinkResource } from "../../sign/common/searchParams/x_Action/Link/impl"
 
 export function initMockRenewCredentialEntryPoint(
     passer: RenewAuthnInfoMockPropsPasser

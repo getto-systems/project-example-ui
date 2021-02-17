@@ -6,7 +6,7 @@ import { initRenewAuthnInfoSimulate } from "../../sign/kernel/authnInfo/kernel/i
 import { initRegisterPasswordSimulate } from "../../sign/password/resetSession/register/infra/remote/register/simulate"
 import { initStartPasswordResetSessionSimulate } from "../../sign/password/resetSession/start/infra/remote/start/simulate"
 
-import { initAuthSignLinkResource } from "../../x_Resource/Sign/Link/impl"
+import { initAuthSignLinkResource } from "../../sign/common/searchParams/x_Action/Link/impl"
 
 import { initFormAction } from "../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../common/field/loginID/main/loginID"

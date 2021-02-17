@@ -4,7 +4,7 @@ import { newRenewAuthnInfoAction } from "../../../sign/kernel/authnInfo/renew/x_
 
 import { initLoginViewLocationInfo, View } from "../impl"
 
-import { initAuthSignLinkResource } from "../../../x_Resource/Sign/Link/impl"
+import { initAuthSignLinkResource } from "../../../sign/common/searchParams/x_Action/Link/impl"
 
 import { AuthSignEntryPoint } from "../entryPoint"
 import { newStartPasswordResetSessionResource } from "../../../x_Resource/Sign/Password/ResetSession/Start/main/core"

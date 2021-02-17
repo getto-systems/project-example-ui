@@ -4,7 +4,7 @@ import { RegisterPasswordLocationInfo, RegisterPasswordPod } from "./method"
 
 import { RegisterPasswordEvent } from "./event"
 
-import { AuthLocationSearchParams } from "../../../common/secureScriptPath/get/data"
+import { AuthSignSearchParams } from "../../../common/searchParams/data"
 import { markPasswordResetToken, PasswordResetToken } from "./data"
 
 export function initRegisterPasswordLocationInfo(
@@ -17,7 +17,7 @@ export function initRegisterPasswordLocationInfo(
 
 function detectResetToken(currentURL: URL): PasswordResetToken {
     return markPasswordResetToken(
-        currentURL.searchParams.get(AuthLocationSearchParams.passwordResetToken) || ""
+        currentURL.searchParams.get(AuthSignSearchParams.passwordResetToken) || ""
     )
 }
 
