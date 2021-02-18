@@ -13,8 +13,8 @@ export function initInputBoardAction<N extends string>(
     infra: InputBoardInfra
 ): InputBoardAction {
     return new Action({
-        set: setBoardValue(embed)(infra),
-        clear: clearBoard(embed)(infra),
+        set: setBoardValue(embed, infra),
+        clear: clearBoard(embed, infra),
     })
 }
 

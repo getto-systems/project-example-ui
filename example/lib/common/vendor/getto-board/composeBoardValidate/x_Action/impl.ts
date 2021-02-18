@@ -15,7 +15,7 @@ export function initComposeBoardValidateAction<N extends string>(
     infra: ComposeBoardValidateInfra
 ): ComposeBoardValidateAction {
     return new Action({
-        compose: composeBoardValidate(embed)(infra),
+        compose: composeBoardValidate(embed, infra),
     })
 }
 

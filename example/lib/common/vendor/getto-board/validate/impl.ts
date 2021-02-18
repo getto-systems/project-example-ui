@@ -15,11 +15,12 @@ export interface BoardValidator<E> {
 }
 
 interface Validate {
-    <N extends string, E>(embed: ValidateBoardEmbed<N, E>): {
-        (infra: ValidateBoardInfra): ValidateBoardMethod<E>
-    }
+    <N extends string, E>(
+        embed: ValidateBoardEmbed<N, E>,
+        infra: ValidateBoardInfra
+    ): ValidateBoardMethod<E>
 }
-export const validateBoard: Validate = (embed) => (infra) => (post) => {
+export const validateBoard: Validate = (embed, infra) => (post) => {
     const { name, validator } = embed
     const { board, stack } = infra
     const result = boardValidateResult(validator(board))
