@@ -4,7 +4,7 @@ import { ValidateBoardMethod } from "../../method"
 
 import { ValidateBoardEvent } from "../../event"
 
-import { emptyBoardValue, EmptyBoardValue } from "../../../kernel/data"
+import { emptyBoardValue, BoardValue_empty } from "../../../kernel/data"
 
 export type ValidateBoardResource<E> = Readonly<{
     validate: ValidateBoardAction<E>
@@ -19,7 +19,7 @@ export type ValidateBoardMaterial<E> = Readonly<{
 }>
 
 export type ValidateBoardState<E> =
-    | Readonly<{ type: "initial-board"; value: EmptyBoardValue }>
+    | Readonly<{ type: "initial-board"; value: BoardValue_empty }>
     | ValidateBoardEvent<E>
 
 export const initialValidateBoardState = {
