@@ -11,7 +11,7 @@ export function initValidateBoardAction<N extends string, E>(
     infra: ValidateBoardInfra
 ): ValidateBoardAction<E> {
     return new Action({
-        validate: validateBoard(embed)(infra),
+        validate: validateBoard(embed, infra),
     })
 }
 

@@ -8,11 +8,12 @@ export type ComposeBoardValidateEmbed<N extends string> = Readonly<{
 }>
 
 interface Compose {
-    <N extends string>(embed: ComposeBoardValidateEmbed<N>): {
-        (infra: ComposeBoardValidateInfra): ComposeBoardValidateMethod
-    }
+    <N extends string>(
+        embed: ComposeBoardValidateEmbed<N>,
+        infra: ComposeBoardValidateInfra
+    ): ComposeBoardValidateMethod
 }
-export const composeBoardValidate: Compose = (embed) => (infra) => (post) => {
+export const composeBoardValidate: Compose = (embed, infra) => (post) => {
     const { fields } = embed
     const { stack } = infra
 

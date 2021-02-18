@@ -9,11 +9,9 @@ export type InputBoardEmbed<N extends string> = Readonly<{
 }>
 
 interface SetValue {
-    <N extends string>(embed: InputBoardEmbed<N>): {
-        (infra: InputBoardInfra): SetBoardValueMethod
-    }
+    <N extends string>(embed: InputBoardEmbed<N>, infra: InputBoardInfra): SetBoardValueMethod
 }
-export const setBoardValue: SetValue = (embed) => (infra) => (value, post) => {
+export const setBoardValue: SetValue = (embed, infra) => (value, post) => {
     const { name } = embed
     const { board } = infra
     board.set(name, value)
@@ -21,9 +19,9 @@ export const setBoardValue: SetValue = (embed) => (infra) => (value, post) => {
 }
 
 interface Clear {
-    <N extends string>(embed: InputBoardEmbed<N>): { (infra: InputBoardInfra): ClearBoardMethod }
+    <N extends string>(embed: InputBoardEmbed<N>, infra: InputBoardInfra): ClearBoardMethod
 }
-export const clearBoard: Clear = (embed) => (infra) => (post) => {
+export const clearBoard: Clear = (embed, infra) => (post) => {
     const { name } = embed
     const { board } = infra
     board.clear(name)
