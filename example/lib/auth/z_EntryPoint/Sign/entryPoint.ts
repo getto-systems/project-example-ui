@@ -1,5 +1,5 @@
 import { RenewAuthnInfoResource } from "../../sign/kernel/authnInfo/renew/x_Action/Renew/action"
-import { AuthenticatePasswordResource } from "../../sign/password/authenticate/x_Action/Authenticate/resource"
+import { AuthenticatePasswordResource } from "../../sign/password/authenticate/x_Action/Authenticate/action"
 import { RegisterPasswordResource } from "../../x_Resource/Sign/Password/ResetSession/Register/resource"
 import { StartPasswordResetSessionResource } from "../../x_Resource/Sign/Password/ResetSession/Start/resource"
 

@@ -12,7 +12,7 @@ import {
     form,
 } from "../../../../../../../z_vendor/getto-css/preact/design/form"
 
-import { useAction, useTermination } from "../../../../../../../x_preact/common/hooks"
+import { useAction, useEntryPoint } from "../../../../../../../x_preact/common/hooks"
 import { siteInfo } from "../../../../../../../x_preact/common/site"
 import { icon, spinner } from "../../../../../../../x_preact/common/icon"
 
@@ -23,17 +23,17 @@ import { ApplicationError } from "../../../../../../../x_preact/common/System/Ap
 import { LoginIDFormField } from "../../../../../../../x_preact/auth/Sign/field/loginID"
 import { PasswordFormField } from "../../../../../../../x_preact/auth/Sign/field/password"
 
-import { PasswordLoginEntryPoint } from "../../../../../../z_EntryPoint/Sign/entryPoint"
-
-import { initialAuthenticatePasswordState } from "../Core/action"
+import { initialAuthenticatePasswordCoreState } from "../Core/action"
 import { initialFormContainerComponentState } from "../../../../../../../common/vendor/getto-form/x_Resource/Form/component"
+
+import { AuthenticatePasswordEntryPoint } from "../action"
 
 import { AuthenticatePasswordError } from "../../../data"
 
-export function AuthenticatePassword({ resource, terminate }: PasswordLoginEntryPoint): VNode {
-    useTermination(terminate)
+export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint): VNode {
+    const resource = useEntryPoint(entryPoint)
 
-    const state = useAction(resource.authenticate, initialAuthenticatePasswordState)
+    const state = useAction(resource.core, initialAuthenticatePasswordCoreState)
     const formState = useAction(resource.form, initialFormContainerComponentState)
 
     useEffect(() => {
@@ -42,7 +42,7 @@ export function AuthenticatePassword({ resource, terminate }: PasswordLoginEntry
             case "try-to-load":
                 appendScript(state.scriptPath, (script) => {
                     script.onerror = () => {
-                        resource.authenticate.loadError({
+                        resource.core.loadError({
                             type: "infra-error",
                             err: `スクリプトのロードに失敗しました: ${state.type}`,
                         })
@@ -121,7 +121,7 @@ export function AuthenticatePassword({ resource, terminate }: PasswordLoginEntry
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    resource.authenticate.submit(resource.form.getLoginFields())
+                    resource.core.submit(resource.form.getLoginFields())
                 }
             }
             function connectingButton(): VNode {

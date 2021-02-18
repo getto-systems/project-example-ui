@@ -3,11 +3,11 @@ import {
     MockPropsPasser,
 } from "../../../../../../../common/vendor/getto-example/Application/mock"
 
-import { AuthenticatePasswordAction, AuthenticatePasswordState } from "./action"
+import { AuthenticatePasswordCoreAction, AuthenticatePasswordCoreState } from "./action"
 
-type Passer = MockPropsPasser<AuthenticatePasswordMockProps>
+type Passer = MockPropsPasser<AuthenticatePasswordCoreMockProps>
 
-export type AuthenticatePasswordMockProps =
+export type AuthenticatePasswordCoreMockProps =
     | Readonly<{ type: "initial" }>
     | Readonly<{ type: "try" }>
     | Readonly<{ type: "delayed" }>
@@ -18,24 +18,22 @@ export type AuthenticatePasswordMockProps =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export function initMockAuthenticatePasswordAction(
+export function initMockAuthenticatePasswordCoreAction(
     passer: Passer
-): AuthenticatePasswordAction {
+): AuthenticatePasswordCoreAction {
     return new Action(passer)
 }
 
 class Action
-    extends MockAction<AuthenticatePasswordState>
-    implements AuthenticatePasswordAction {
+    extends MockAction<AuthenticatePasswordCoreState>
+    implements AuthenticatePasswordCoreAction {
     constructor(passer: Passer) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))
         })
 
-        function mapProps(
-            props: AuthenticatePasswordMockProps
-        ): AuthenticatePasswordState {
+        function mapProps(props: AuthenticatePasswordCoreMockProps): AuthenticatePasswordCoreState {
             switch (props.type) {
                 case "initial":
                     return { type: "initial-login" }

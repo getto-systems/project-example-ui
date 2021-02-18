@@ -8,7 +8,7 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { useDocumentTitle, useErrorNotify, useTermination } from "../../common/hooks"
+import { useDocumentTitle, useErrorNotify, useTermination_deprecated } from "../../common/hooks"
 import { copyright, siteInfo } from "../../common/site"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
@@ -20,7 +20,7 @@ import { Example } from "./Example"
 import { DashboardEntryPoint } from "../../../example/x_components/Dashboard/EntryPoint/entryPoint"
 
 export function EntryPoint({ resource, terminate }: DashboardEntryPoint): VNode {
-    useTermination(terminate)
+    useTermination_deprecated(terminate)
 
     const err = useErrorNotify(resource.notify)
     if (err) {

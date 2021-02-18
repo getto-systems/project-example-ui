@@ -10,11 +10,11 @@ import { StartContinuousRenewAuthnInfoInfra } from "../../../../../kernel/authnI
 import { GetSecureScriptPathInfra } from "../../../../../common/secureScriptPath/get/infra"
 
 import {
-    AuthenticatePasswordMaterial,
-    AuthenticatePasswordAction,
-    AuthenticatePasswordState,
-    AuthenticatePasswordBackground,
-    AuthenticatePasswordForeground,
+    AuthenticatePasswordCoreMaterial,
+    AuthenticatePasswordCoreAction,
+    AuthenticatePasswordCoreState,
+    AuthenticatePasswordCoreBackground,
+    AuthenticatePasswordCoreForeground,
 } from "./action"
 
 import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
@@ -22,60 +22,60 @@ import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/ge
 import { AuthenticatePasswordFields } from "../../../data"
 import { AuthnInfo } from "../../../../../kernel/authnInfo/kernel/data"
 
-export type AuthenticatePasswordBase = AuthenticatePasswordForegroundBase &
-    AuthenticatePasswordBackgroundBase
+export type AuthenticatePasswordCoreBase = AuthenticatePasswordCoreForegroundBase &
+    AuthenticatePasswordCoreBackgroundBase
 
-export type AuthenticatePasswordForegroundBase = Readonly<{
+export type AuthenticatePasswordCoreForegroundBase = Readonly<{
     startContinuousRenew: StartContinuousRenewAuthnInfoInfra
     getSecureScriptPath: GetSecureScriptPathInfra
 }>
-export type AuthenticatePasswordBackgroundBase = Readonly<{
+export type AuthenticatePasswordCoreBackgroundBase = Readonly<{
     authenticate: AuthenticatePasswordInfra
 }>
 
-export function initAuthenticatePasswordAction(
-    infra: AuthenticatePasswordBase,
+export function initAuthenticatePasswordCoreAction(
+    infra: AuthenticatePasswordCoreBase,
     locationInfo: GetSecureScriptPathLocationInfo
-): AuthenticatePasswordAction {
-    return initAuthenticatePasswordAction_merge(
+): AuthenticatePasswordCoreAction {
+    return initAuthenticatePasswordCoreAction_merge(
         infra,
         locationInfo,
-        initAuthenticatePasswordBackground(infra)
+        initAuthenticatePasswordCoreBackground(infra)
     )
 }
-export function initAuthenticatePasswordAction_merge(
-    infra: AuthenticatePasswordForegroundBase,
+export function initAuthenticatePasswordCoreAction_merge(
+    infra: AuthenticatePasswordCoreForegroundBase,
     locationInfo: GetSecureScriptPathLocationInfo,
-    background: AuthenticatePasswordBackground
-): AuthenticatePasswordAction {
+    background: AuthenticatePasswordCoreBackground
+): AuthenticatePasswordCoreAction {
     return new Action({
-        ...initAuthenticatePasswordForeground(infra, locationInfo),
+        ...initAuthenticatePasswordCoreForeground(infra, locationInfo),
         ...background,
     })
 }
-function initAuthenticatePasswordForeground(
-    infra: AuthenticatePasswordForegroundBase,
+function initAuthenticatePasswordCoreForeground(
+    infra: AuthenticatePasswordCoreForegroundBase,
     locationInfo: GetSecureScriptPathLocationInfo
-): AuthenticatePasswordForeground {
+): AuthenticatePasswordCoreForeground {
     return {
         startContinuousRenew: startContinuousRenewAuthnInfo(infra.startContinuousRenew),
         getSecureScriptPath: getSecureScriptPath(infra.getSecureScriptPath)(locationInfo),
     }
 }
-export function initAuthenticatePasswordBackground(
-    infra: AuthenticatePasswordBackgroundBase
-): AuthenticatePasswordBackground {
+export function initAuthenticatePasswordCoreBackground(
+    infra: AuthenticatePasswordCoreBackgroundBase
+): AuthenticatePasswordCoreBackground {
     return {
         authenticate: authenticatePassword(infra.authenticate),
     }
 }
 
 class Action
-    extends ApplicationAbstractAction<AuthenticatePasswordState>
-    implements AuthenticatePasswordAction {
-    material: AuthenticatePasswordMaterial
+    extends ApplicationAbstractAction<AuthenticatePasswordCoreState>
+    implements AuthenticatePasswordCoreAction {
+    material: AuthenticatePasswordCoreMaterial
 
-    constructor(material: AuthenticatePasswordMaterial) {
+    constructor(material: AuthenticatePasswordCoreMaterial) {
         super()
         this.material = material
     }

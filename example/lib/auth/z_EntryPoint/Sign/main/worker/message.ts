@@ -1,6 +1,6 @@
 import {
-    AuthenticatePasswordResourceProxyMessage,
-    AuthenticatePasswordResourceProxyResponse,
+    AuthenticatePasswordProxyMessage,
+    AuthenticatePasswordProxyResponse,
 } from "../../../../sign/password/authenticate/x_Action/Authenticate/main/worker/message"
 import {
     RegisterPasswordResourceProxyMessage,
@@ -14,7 +14,7 @@ import {
 export type ForegroundMessage =
     | Readonly<{
           type: "password-authenticate"
-          message: AuthenticatePasswordResourceProxyMessage
+          message: AuthenticatePasswordProxyMessage
       }>
     | Readonly<{
           type: "password-resetSession-start"
@@ -28,7 +28,7 @@ export type ForegroundMessage =
 export type BackgroundMessage =
     | Readonly<{
           type: "password-authenticate"
-          response: AuthenticatePasswordResourceProxyResponse
+          response: AuthenticatePasswordProxyResponse
       }>
     | Readonly<{
           type: "password-resetSession-start"

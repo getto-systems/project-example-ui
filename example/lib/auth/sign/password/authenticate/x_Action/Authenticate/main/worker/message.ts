@@ -1,13 +1,18 @@
-import {
-    AuthenticatePasswordProxyMessage,
-    AuthenticatePasswordProxyResponse,
-} from "../../Core/main/worker/message"
+import { WorkerProxySpec } from "../../../../../../../../z_vendor/getto-worker/message"
 
-export type AuthenticatePasswordResourceProxyMessage = Readonly<{
-    type: "authenticate"
-    message: AuthenticatePasswordProxyMessage
+import { AuthenticatePasswordEvent } from "../../../../event"
+
+import { FormConvertResult } from "../../../../../../../../common/vendor/getto-form/form/data"
+import { AuthenticatePasswordFields } from "../../../../data"
+
+export type AuthenticatePasswordProxyMaterial = Readonly<{
+    authenticate: Authenticate["method"]
 }>
-export type AuthenticatePasswordResourceProxyResponse = Readonly<{
-    type: "authenticate"
-    response: AuthenticatePasswordProxyResponse
-}>
+export type AuthenticatePasswordProxyMessage = Authenticate["message"]
+export type AuthenticatePasswordProxyResponse = Authenticate["response"]
+
+type Authenticate = WorkerProxySpec<
+    "authenticate",
+    Readonly<{ fields: FormConvertResult<AuthenticatePasswordFields> }>,
+    AuthenticatePasswordEvent
+>

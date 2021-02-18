@@ -22,7 +22,7 @@ export function newStartPasswordResetSessionResourceProxy(
     }
     return {
         resource: newStartPasswordResetSessionResource_merge({
-            start: proxy.start.action(),
+            start: proxy.start.background(),
         }),
         resolve: (response) => {
             switch (response.type) {

@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { buttons } from "../../../z_vendor/getto-css/preact/design/form"
 
-import { useAction, useDocumentTitle, useTermination } from "../../common/hooks"
+import { useAction, useDocumentTitle, useTermination_deprecated } from "../../common/hooks"
 import { siteInfo } from "../../common/site"
 import { icon } from "../../common/icon"
 
@@ -19,7 +19,7 @@ import {
 } from "../../../availability/x_Resource/GetCurrentVersion/currentVersion/component"
 
 export function EntryPoint({ resource, terminate }: NotFoundEntryPoint): VNode {
-    useTermination(terminate)
+    useTermination_deprecated(terminate)
 
     const [err] = useErrorBoundary((err) => {
         // 認証していないのでエラーはどうしようもない

@@ -7,7 +7,6 @@ import { Logout } from "./Logout"
 
 import { initMockPropsPasser } from "../../../../../../../../common/vendor/getto-example/Application/mock"
 import { LogoutMockProps, initMockLogoutAction } from "../mock"
-import { LogoutResource } from "../action"
 
 export default {
     title: "Auth/Profile/Logout",
@@ -21,14 +20,14 @@ export default {
 type Props = LogoutMockProps
 const template = storyTemplate<Props>((args) => {
     const passer = initMockPropsPasser<LogoutMockProps>()
-    const logout = initMockLogoutAction(passer)
+    const action = initMockLogoutAction(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: Props }) {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(Logout, <LogoutResource>{ logout })
+        return h(Logout, { logout: action })
     }
 })
 

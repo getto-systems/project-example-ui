@@ -7,7 +7,6 @@ import { RenewAuthInfo } from "./Renew"
 
 import { initMockPropsPasser } from "../../../../../../../../common/vendor/getto-example/Application/mock"
 import { initMockRenewAuthnInfoAction, RenewAuthnInfoMockProps } from "../mock"
-import { RenewAuthnInfoEntryPoint } from "../action"
 
 export default {
     title: "Auth/Sign/AuthInfo/Renew",
@@ -21,15 +20,15 @@ export default {
 type MockProps = RenewAuthnInfoMockProps
 const template = storyTemplate<MockProps>((args) => {
     const passer = initMockPropsPasser<RenewAuthnInfoMockProps>()
-    const renew = initMockRenewAuthnInfoAction(passer)
+    const action = initMockRenewAuthnInfoAction(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(RenewAuthInfo, <RenewAuthnInfoEntryPoint>{
-            resource: { renew },
+        return h(RenewAuthInfo, {
+            resource: { renew: action },
             terminate: () => null,
         })
     }
