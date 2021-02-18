@@ -4,11 +4,7 @@ import { clearAuthnInfo } from "../../impl"
 
 import { ClearAuthnInfoInfra } from "../../infra"
 
-import {
-    LogoutAction,
-    LogoutState,
-    LogoutMaterial,
-} from "./action"
+import { LogoutAction, LogoutState, LogoutMaterial } from "./action"
 
 export type ClearAuthnInfoBase = Readonly<{
     clear: ClearAuthnInfoInfra
@@ -19,9 +15,7 @@ export function initClearAuthnInfoAction(base: ClearAuthnInfoBase): LogoutAction
     })
 }
 
-class Action
-    extends ApplicationAbstractAction<LogoutState>
-    implements LogoutAction {
+class Action extends ApplicationAbstractAction<LogoutState> implements LogoutAction {
     material: LogoutMaterial
 
     constructor(material: LogoutMaterial) {
@@ -30,8 +24,6 @@ class Action
     }
 
     submit(): void {
-        this.material.clear((event) => {
-            this.post(event)
-        })
+        this.material.clear((event) => this.post(event))
     }
 }

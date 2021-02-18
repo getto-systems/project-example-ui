@@ -15,11 +15,28 @@ export function initAsyncActionTester<S>(hasDone: ActionHasDone<S>): ActionTeste
 
 export interface SyncActionChecker<S> {
     readonly handler: ActionStateHandler<S>
+    check(examine: ExamineActionStateStack<S>): void
+}
+export function initSyncActionChecker<S>(): SyncActionChecker<S> {
+    let stack: S[] = []
+    return {
+        handler: (state: S) => {
+            stack = [...stack, state]
+        },
+        check: (examine) => {
+            examine(stack)
+            stack = []
+        },
+    }
+}
+
+export interface SyncActionChecker_legacy<S> {
+    readonly handler: ActionStateHandler<S>
     done(): void
 }
-export function initSyncActionChecker<S>(
+export function initSyncActionChecker_legacy<S>(
     examine: ExamineActionStateStack<S>
-): SyncActionChecker<S> {
+): SyncActionChecker_legacy<S> {
     const stack: S[] = []
     return {
         handler: (state: S) => {

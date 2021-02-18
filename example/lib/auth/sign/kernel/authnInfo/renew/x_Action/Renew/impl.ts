@@ -68,9 +68,7 @@ class Action
         })
     }
     succeedToInstantLoad(): void {
-        this.material.forceStartContinuousRenew((event) => {
-            this.post(event)
-        })
+        this.material.forceStartContinuousRenew((event) => this.post(event))
     }
     failedToInstantLoad(): void {
         this.material.forceRenew((event) => {
