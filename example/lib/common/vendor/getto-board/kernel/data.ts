@@ -3,5 +3,5 @@ export function markBoardValue(input: string): BoardValue {
     return input as BoardValue
 }
 
-export type EmptyBoardValue = "" & BoardValue
-export const emptyBoardValue: EmptyBoardValue = "" as EmptyBoardValue
+export type BoardValue_empty = "" & BoardValue
+export const emptyBoardValue: BoardValue_empty = "" as BoardValue_empty

@@ -4,7 +4,7 @@ import { ClearBoardMethod, SetBoardValueMethod } from "../../method"
 
 import { InputBoardEvent } from "../../event"
 
-import { BoardValue, emptyBoardValue, EmptyBoardValue } from "../../../kernel/data"
+import { BoardValue, emptyBoardValue, BoardValue_empty } from "../../../kernel/data"
 
 export type InputBoardResource = Readonly<{
     input: InputBoardAction
@@ -21,7 +21,7 @@ export type InputBoardMaterial = Readonly<{
 }>
 
 export type InputBoardState =
-    | Readonly<{ type: "initial-board"; value: EmptyBoardValue }>
+    | Readonly<{ type: "initial-board"; value: BoardValue_empty }>
     | InputBoardEvent
 
 export const initialInputBoardState: InputBoardState = {

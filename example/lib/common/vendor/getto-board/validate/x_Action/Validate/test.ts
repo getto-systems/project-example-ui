@@ -1,7 +1,7 @@
 import { initSyncActionChecker } from "../../../../getto-example/Application/testHelper"
 
 import { newBoard } from "../../../kernel/infra/board"
-import { newBoardValidateStack } from "../../infra/stack"
+import { newBoardValidateStack } from "../../../kernel/infra/stack"
 
 import { initValidateBoardAction } from "./impl"
 
@@ -11,7 +11,7 @@ import { ValidateBoardResource, ValidateBoardState } from "./action"
 
 import { markBoardValue } from "../../../kernel/data"
 
-describe("InputBoard", () => {
+describe("ValidateBoard", () => {
     test("validate; valid input", () => {
         const { resource, board, validateStack } = standardResource()
 
@@ -24,7 +24,7 @@ describe("InputBoard", () => {
         resource.validate.check()
         checker.check((stack) => {
             expect(stack).toEqual([{ type: "succeed-to-validate", result: { success: true } }])
-            expect(validateStack.get("field")).toEqual(true)
+            expect(validateStack.get("field")).toEqual({ found: true, state: true })
         })
     })
 
@@ -42,7 +42,7 @@ describe("InputBoard", () => {
             expect(stack).toEqual([
                 { type: "succeed-to-validate", result: { success: false, err: ["empty"] } },
             ])
-            expect(validateStack.get("field")).toEqual(false)
+            expect(validateStack.get("field")).toEqual({ found: true, state: false })
         })
     })
 })
