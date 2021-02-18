@@ -1,8 +1,8 @@
 import {
     WorkerProxyCallID,
-    WorkerProxyCallResponse,
-    WorkerProxyCallMessage,
     WorkerProxyMethod,
+    WorkerProxyCallMessage,
+    WorkerProxyCallResponse,
 } from "./message"
 
 export function newWorker(): Worker {
@@ -14,15 +14,15 @@ export function newWorker(): Worker {
 }
 
 export interface WorkerProxyContainer<M> {
-    method<T, E>(map: WorkerProxyMessageMapper<M, T>): WorkerProxyMethod<T, E>
+    method<N, P, E>(method: N, map: WorkerProxyMessageMapper<N, M, P>): WorkerProxyMethod<N, P, E>
 }
 export interface WorkerProxy<A, M, R> extends WorkerProxyContainer<M> {
     action(): A
     resolve(response: R): void
 }
 
-export interface WorkerProxyMessageMapper<M, T> {
-    (message: WorkerProxyCallMessage<T>): M
+export interface WorkerProxyMessageMapper<N, M, T> {
+    (message: WorkerProxyCallMessage<N, T>): M
 }
 
 export class WorkerAbstractProxy<M> implements WorkerProxyContainer<M> {
@@ -32,18 +32,19 @@ export class WorkerAbstractProxy<M> implements WorkerProxyContainer<M> {
         this.post = post
     }
 
-    method<T, E>(map: WorkerProxyMessageMapper<M, T>): WorkerProxyMethod<T, E> {
-        return new ProxyMethod((message) => this.post(map(message)))
+    method<N, T, E>(method: N, map: WorkerProxyMessageMapper<N, M, T>): WorkerProxyMethod<N, T, E> {
+        return new ProxyMethod(method, (message) => this.post(map(message)))
     }
 }
-
-class ProxyMethod<M, E> implements WorkerProxyMethod<M, E> {
-    post: Post<WorkerProxyCallMessage<M>>
+class ProxyMethod<N, M, E> implements WorkerProxyMethod<N, M, E> {
+    readonly method: N
+    post: Post<WorkerProxyCallMessage<N, M>>
 
     idGenerator: IDGenerator
     map: Record<number, Post<E>> = {}
 
-    constructor(post: Post<WorkerProxyCallMessage<M>>) {
+    constructor(method: N, post: Post<WorkerProxyCallMessage<N, M>>) {
+        this.method = method
         this.post = post
         this.idGenerator = idGenerator()
     }
@@ -51,9 +52,9 @@ class ProxyMethod<M, E> implements WorkerProxyMethod<M, E> {
     call(params: M, post: Post<E>): void {
         const id = this.idGenerator()
         this.map[id] = post
-        this.post({ id, params })
+        this.post({ method: this.method, id, params })
     }
-    resolve({ id, done, event }: WorkerProxyCallResponse<E>): void {
+    resolve({ id, done, event }: WorkerProxyCallResponse<N, E>): void {
         if (!this.map[id]) {
             throw new Error("handler is not set")
         }
