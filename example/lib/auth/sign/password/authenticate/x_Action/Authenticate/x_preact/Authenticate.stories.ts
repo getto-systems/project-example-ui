@@ -7,8 +7,6 @@ import { AuthenticatePassword } from "./Authenticate"
 
 import { initMockPropsPasser } from "../../../../../../../common/vendor/getto-example/Application/mock"
 
-import { initMockPasswordLoginEntryPoint } from "../../../../../../z_EntryPoint/Sign/mock"
-
 import { loginIDFormFieldValidations } from "../../../../../../common/x_Component/Field/LoginID/mock"
 import {
     passwordFormFieldCharacters,
@@ -17,7 +15,10 @@ import {
 } from "../../../../../../common/x_Component/Field/Password/mock"
 import { formValidationStates } from "../../../../../../../common/vendor/getto-form/x_Resource/Form/mock"
 
-import { AuthenticatePasswordResourceMockProps } from "../mock"
+import {
+    AuthenticatePasswordResourceMockProps,
+    initMockAuthenticatePasswordEntryPoint,
+} from "../mock"
 
 export default {
     title: "Auth/Sign/Password/Authenticate",
@@ -46,7 +47,7 @@ export default {
 type MockProps = AuthenticatePasswordResourceMockProps
 const template = storyTemplate<MockProps>((args) => {
     const passer = initMockPropsPasser<AuthenticatePasswordResourceMockProps>()
-    const entryPoint = initMockPasswordLoginEntryPoint(passer)
+    const entryPoint = initMockAuthenticatePasswordEntryPoint(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
