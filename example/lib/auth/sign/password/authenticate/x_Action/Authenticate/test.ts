@@ -12,9 +12,9 @@ import {
 } from "../../infra"
 import { Clock } from "../../../../../../z_infra/clock/infra"
 
-import { AuthenticatePasswordResource } from "./resource"
+import { AuthenticatePasswordResource } from "./action"
 
-import { AuthenticatePasswordState } from "./Core/action"
+import { AuthenticatePasswordCoreState } from "./Core/action"
 
 import {
     markInputString,
@@ -40,7 +40,7 @@ import {
     initSyncActionChecker,
 } from "../../../../../../common/vendor/getto-example/Application/testHelper"
 import { initAuthenticatePasswordFormAction } from "./Form/impl"
-import { initAuthenticatePasswordAction } from "./Core/impl"
+import { initAuthenticatePasswordCoreAction } from "./Core/impl"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -62,7 +62,7 @@ describe("PasswordAuthenticate", () => {
     test("submit valid login-id and password", (done) => {
         const { repository, clock, resource } = standardPasswordLoginResource()
 
-        resource.authenticate.addStateHandler(initTester())
+        resource.core.addStateHandler(initTester())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -70,7 +70,7 @@ describe("PasswordAuthenticate", () => {
         resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         resource.form.password.input.change()
 
-        resource.authenticate.submit(resource.form.getLoginFields())
+        resource.core.submit(resource.form.getLoginFields())
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -95,7 +95,7 @@ describe("PasswordAuthenticate", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitPasswordLoginResource()
 
-        resource.authenticate.addStateHandler(initTester())
+        resource.core.addStateHandler(initTester())
 
         resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
         resource.form.loginID.input.change()
@@ -103,7 +103,7 @@ describe("PasswordAuthenticate", () => {
         resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         resource.form.password.input.change()
 
-        resource.authenticate.submit(resource.form.getLoginFields())
+        resource.core.submit(resource.form.getLoginFields())
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -128,7 +128,7 @@ describe("PasswordAuthenticate", () => {
     test("submit without fields", (done) => {
         const { repository, resource } = standardPasswordLoginResource()
 
-        resource.authenticate.addStateHandler(initTester())
+        resource.core.addStateHandler(initTester())
 
         // try to login without fields
         // resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
@@ -137,7 +137,7 @@ describe("PasswordAuthenticate", () => {
         // resource.form.password.input.input(markInputString(VALID_LOGIN.password))
         // resource.form.password.input.change()
 
-        resource.authenticate.submit(resource.form.getLoginFields())
+        resource.core.submit(resource.form.getLoginFields())
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -153,9 +153,9 @@ describe("PasswordAuthenticate", () => {
     test("load error", (done) => {
         const { resource } = standardPasswordLoginResource()
 
-        resource.authenticate.addStateHandler(initTester())
+        resource.core.addStateHandler(initTester())
 
-        resource.authenticate.loadError({ type: "infra-error", err: "load error" })
+        resource.core.loadError({ type: "infra-error", err: "load error" })
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -627,7 +627,7 @@ function newTestPasswordLoginResource(
 ): AuthenticatePasswordResource {
     const config = standardConfig()
     return {
-        authenticate: initAuthenticatePasswordAction(
+        core: initAuthenticatePasswordCoreAction(
             {
                 startContinuousRenew: {
                     ...repository,
@@ -789,7 +789,7 @@ function expectToEmptyLastAuth(authnInfos: AuthnInfoRepository) {
 }
 
 function initAsyncTester() {
-    return initAsyncActionTester((state: AuthenticatePasswordState) => {
+    return initAsyncActionTester((state: AuthenticatePasswordCoreState) => {
         switch (state.type) {
             case "initial-login":
                 return false

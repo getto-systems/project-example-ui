@@ -37,7 +37,7 @@ class Proxy
         this.checkStatus = this.method("checkStatus", (message) => message)
     }
 
-    action(): StartPasswordResetSessionAction {
+    background(): StartPasswordResetSessionAction {
         return newStartPasswordResetSessionAction_merge({
             start: (fields, post) => this.start.call({ fields }, post),
             checkStatus: (sessionID, post) => this.checkStatus.call({ sessionID }, post),

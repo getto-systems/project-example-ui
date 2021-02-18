@@ -16,8 +16,8 @@ export function newWorker(): Worker {
 export interface WorkerProxyContainer<M> {
     method<N, P, E>(method: N, map: WorkerProxyMessageMapper<N, M, P>): WorkerProxyMethod<N, P, E>
 }
-export interface WorkerProxy<A, M, R> extends WorkerProxyContainer<M> {
-    action(): A
+export interface WorkerProxy<B, M, R> extends WorkerProxyContainer<M> {
+    background(): B
     resolve(response: R): void
 }
 

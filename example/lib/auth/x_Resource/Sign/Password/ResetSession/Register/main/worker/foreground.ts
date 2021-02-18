@@ -23,7 +23,7 @@ export function newRegisterPasswordResourceProxy(
     }
     return {
         resource: newRegisterPasswordResource_merge({
-            register: proxy.register.action(),
+            register: proxy.register.background(),
         }),
         resolve: (response) => {
             switch (response.type) {

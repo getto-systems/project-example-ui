@@ -1,13 +1,9 @@
 import { newWorker } from "../../../../../z_vendor/getto-worker/foreground"
 
 import { newRenewAuthnInfoAction } from "../../../../sign/kernel/authnInfo/renew/x_Action/Renew/main"
-import { newPasswordAuthenticateResource_merge } from "../../../../sign/password/authenticate/x_Action/Authenticate/main/core"
+import { newPasswordAuthenticate_proxy } from "../../../../sign/password/authenticate/x_Action/Authenticate/main/core"
 import { newRegisterPasswordResource_merge } from "../../../../x_Resource/Sign/Password/ResetSession/Register/main/core"
 import { newStartPasswordResetSessionResource_merge } from "../../../../x_Resource/Sign/Password/ResetSession/Start/main/core"
-import {
-    AuthenticatePasswordResourceProxy,
-    newAuthenticatePasswordResourceProxy,
-} from "../../../../sign/password/authenticate/x_Action/Authenticate/main/worker/foreground"
 import {
     RegisterPasswordResourceProxy,
     newRegisterPasswordResourceProxy,
@@ -26,6 +22,10 @@ import { initAuthSignLinkResource } from "../../../../sign/common/searchParams/x
 import { AuthSignEntryPoint } from "../../entryPoint"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
+import {
+    AuthenticatePasswordProxy,
+    newAuthenticatePasswordProxy,
+} from "../../../../sign/password/authenticate/x_Action/Authenticate/main/worker/foreground"
 
 export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     const worker = newWorker()
@@ -40,7 +40,7 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
         renew: () => ({ renew: newRenewAuthnInfoAction(webStorage) }),
 
         passwordLogin: () =>
-            newPasswordAuthenticateResource_merge(proxy.password.authenticate.resource),
+            newPasswordAuthenticate_proxy(webStorage, proxy.password.authenticate.background()),
         passwordResetSession: () =>
             newStartPasswordResetSessionResource_merge(proxy.password.resetSession.start.resource),
         passwordReset: () =>
@@ -71,7 +71,7 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
 
 type Proxy = Readonly<{
     password: Readonly<{
-        authenticate: AuthenticatePasswordResourceProxy
+        authenticate: AuthenticatePasswordProxy
         resetSession: Readonly<{
             register: RegisterPasswordResourceProxy
             start: StartPasswordResetSessionResourceProxy
@@ -81,7 +81,7 @@ type Proxy = Readonly<{
 function initProxy(webStorage: Storage, post: Post<ForegroundMessage>): Proxy {
     return {
         password: {
-            authenticate: newAuthenticatePasswordResourceProxy(webStorage, (message) =>
+            authenticate: newAuthenticatePasswordProxy(webStorage, (message) =>
                 post({ type: "password-authenticate", message })
             ),
             resetSession: {

@@ -1,24 +1,25 @@
-import { newAuthenticatePasswordHandler } from "../../Core/main/worker/background"
+import { newAuthenticatePasswordCoreBackground } from "../core"
+
+import { authenticatePasswordEventHasDone } from "../../../../impl"
 
 import { WorkerHandler } from "../../../../../../../../z_vendor/getto-worker/background"
 
-import {
-    AuthenticatePasswordResourceProxyMessage,
-    AuthenticatePasswordResourceProxyResponse,
-} from "./message"
+import { AuthenticatePasswordProxyMessage, AuthenticatePasswordProxyResponse } from "./message"
 
-export function newAuthenticatePasswordResourceHandler(
-    post: Post<AuthenticatePasswordResourceProxyResponse>
-): WorkerHandler<AuthenticatePasswordResourceProxyMessage> {
-    const handler = {
-        authenticate: newAuthenticatePasswordHandler((response) => {
-            post({ type: "authenticate", response })
-        }),
-    }
+export function newAuthenticatePasswordHandler(
+    post: Post<AuthenticatePasswordProxyResponse>
+): WorkerHandler<AuthenticatePasswordProxyMessage> {
+    const material = newAuthenticatePasswordCoreBackground()
     return (message) => {
-        switch (message.type) {
+        switch (message.method) {
             case "authenticate":
-                handler.authenticate(message.message)
+                material.authenticate(message.params.fields, (event) => {
+                    post({
+                        ...message,
+                        done: authenticatePasswordEventHasDone(event),
+                        event,
+                    })
+                })
                 return
         }
     }

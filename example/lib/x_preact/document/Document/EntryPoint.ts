@@ -1,6 +1,6 @@
 import { h, VNode } from "preact"
 
-import { useErrorNotify, useTermination } from "../../common/hooks"
+import { useErrorNotify, useTermination_deprecated } from "../../common/hooks"
 import { siteInfo } from "../../common/site"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
@@ -11,7 +11,7 @@ import { DocumentEntryPoint } from "../../../document/x_components/Document/Entr
 import { appLayout } from "../../../z_vendor/getto-css/preact/layout/app"
 
 export function EntryPoint({ resource, terminate }: DocumentEntryPoint): VNode {
-    useTermination(terminate)
+    useTermination_deprecated(terminate)
 
     const err = useErrorNotify(resource.notify)
     if (err) {

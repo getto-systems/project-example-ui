@@ -5,23 +5,23 @@ import {
     AuthenticatePasswordFormMockProps,
 } from "./Form/mock"
 import {
-    initMockAuthenticatePasswordAction,
-    AuthenticatePasswordMockProps,
+    initMockAuthenticatePasswordCoreAction,
+    AuthenticatePasswordCoreMockProps,
 } from "./Core/mock"
 
-import { AuthenticatePasswordResource } from "./resource"
+import { AuthenticatePasswordResource } from "./action"
 
 export type AuthenticatePasswordResourceMockPropsPasser = MockPropsPasser<
     AuthenticatePasswordResourceMockProps
 >
-export type AuthenticatePasswordResourceMockProps = AuthenticatePasswordMockProps &
+export type AuthenticatePasswordResourceMockProps = AuthenticatePasswordCoreMockProps &
     AuthenticatePasswordFormMockProps
 
 export function initMockPasswordAuthenticateResource(
     passer: AuthenticatePasswordResourceMockPropsPasser
 ): AuthenticatePasswordResource {
     return {
-        authenticate: initMockAuthenticatePasswordAction(passer),
+        core: initMockAuthenticatePasswordCoreAction(passer),
         form: initMockAuthenticatePasswordFormAction(passer),
     }
 }

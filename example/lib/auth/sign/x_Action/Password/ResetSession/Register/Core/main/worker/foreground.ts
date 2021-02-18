@@ -44,7 +44,7 @@ class Proxy
         this.register = this.method("register", (message) => message)
     }
 
-    action(): RegisterPasswordAction {
+    background(): RegisterPasswordAction {
         return newRegisterPasswordAction_merge(this.infra.webStorage, {
             register: (fields, post) =>
                 this.register.call(

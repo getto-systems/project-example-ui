@@ -8,7 +8,7 @@ import {
     mainTitle,
 } from "../../../../../z_vendor/getto-css/preact/layout/app"
 
-import { useDocumentTitle, useErrorNotify, useTermination } from "../../../../../x_preact/common/hooks"
+import { useDocumentTitle, useErrorNotify, useTermination_deprecated } from "../../../../../x_preact/common/hooks"
 import { copyright, siteInfo } from "../../../../../x_preact/common/site"
 
 import { ApplicationError } from "../../../../../x_preact/common/System/ApplicationError"
@@ -20,7 +20,7 @@ import { Logout } from "../../../../../auth/sign/kernel/authnInfo/clear/x_Action
 import { AuthProfileEntryPoint } from "../entryPoint"
 
 export function EntryPoint({ resource, terminate }: AuthProfileEntryPoint): VNode {
-    useTermination(terminate)
+    useTermination_deprecated(terminate)
 
     const err = useErrorNotify(resource.notify)
     if (err) {

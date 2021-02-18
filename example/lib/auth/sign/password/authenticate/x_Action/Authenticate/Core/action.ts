@@ -14,33 +14,30 @@ import {
 } from "../../../../../common/secureScriptPath/get/data"
 import { AuthenticatePasswordFields } from "../../../data"
 
-export interface AuthenticatePasswordAction
-    extends ApplicationAction<AuthenticatePasswordState> {
+export interface AuthenticatePasswordCoreAction
+    extends ApplicationAction<AuthenticatePasswordCoreState> {
     submit(fields: FormConvertResult<AuthenticatePasswordFields>): void
     loadError(err: LoadSecureScriptError): void
 }
 
-export type AuthenticatePasswordMaterial = AuthenticatePasswordForeground &
-    AuthenticatePasswordBackground
+export type AuthenticatePasswordCoreMaterial = AuthenticatePasswordCoreForeground &
+    AuthenticatePasswordCoreBackground
 
-export type AuthenticatePasswordForeground = Readonly<{
+export type AuthenticatePasswordCoreForeground = Readonly<{
     startContinuousRenew: StartContinuousRenewAuthnInfoMethod
     getSecureScriptPath: GetSecureScriptPathMethod
 }>
-export type AuthenticatePasswordBackground = Readonly<{
+export type AuthenticatePasswordCoreBackground = Readonly<{
     authenticate: AuthenticatePasswordMethod
 }>
 
-export type AuthenticatePasswordState =
+export type AuthenticatePasswordCoreState =
     | Readonly<{ type: "initial-login" }>
     | Exclude<AuthenticatePasswordEvent, { type: "succeed-to-login" }>
-    | Exclude<
-          StartContinuousRenewAuthnInfoEvent,
-          { type: "succeed-to-start-continuous-renew" }
-      >
+    | Exclude<StartContinuousRenewAuthnInfoEvent, { type: "succeed-to-start-continuous-renew" }>
     | Readonly<{ type: "try-to-load"; scriptPath: SecureScriptPath }>
     | Readonly<{ type: "load-error"; err: LoadSecureScriptError }>
 
-export const initialAuthenticatePasswordState: AuthenticatePasswordState = {
+export const initialAuthenticatePasswordCoreState: AuthenticatePasswordCoreState = {
     type: "initial-login",
 }

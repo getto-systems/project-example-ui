@@ -11,7 +11,7 @@ import {
 } from "../../../../../z_vendor/getto-css/preact/design/form"
 import { loginBox } from "../../../../../z_vendor/getto-css/preact/layout/login"
 
-import { useAction, useTermination } from "../../../../common/hooks"
+import { useAction, useTermination_deprecated } from "../../../../common/hooks"
 import { siteInfo } from "../../../../common/site"
 import { icon, spinner } from "../../../../common/icon"
 
@@ -30,7 +30,7 @@ import { initialFormContainerComponentState } from "../../../../../common/vendor
 import { RegisterPasswordError } from "../../../../../auth/sign/password/resetSession/register/data"
 
 export function RegisterPassword({ resource, terminate }: PasswordResetEntryPoint): VNode {
-    useTermination(terminate)
+    useTermination_deprecated(terminate)
 
     const state = useAction(resource.register, initialRegisterPasswordState)
     const formState = useAction(resource.form, initialFormContainerComponentState)

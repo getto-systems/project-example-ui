@@ -37,7 +37,7 @@ import { initSendPasswordResetSessionTokenSimulate } from "../../sign/password/r
 import { initGetPasswordResetSessionStatusSimulate } from "../../sign/password/resetSession/start/infra/remote/getStatus/simulate"
 import { initRenewAuthnInfoAction } from "../../sign/kernel/authnInfo/renew/x_Action/Renew/impl"
 import { initAuthenticatePasswordFormAction } from "../../sign/password/authenticate/x_Action/Authenticate/Form/impl"
-import { initAuthenticatePasswordAction } from "../../sign/password/authenticate/x_Action/Authenticate/Core/impl"
+import { initAuthenticatePasswordCoreAction } from "../../sign/password/authenticate/x_Action/Authenticate/Core/impl"
 import { initRegisterPasswordAction } from "../../sign/x_Action/Password/ResetSession/Register/Core/impl"
 import { initRegisterPasswordFormAction } from "../../sign/x_Action/Password/ResetSession/Register/Form/impl"
 import { initStartPasswordResetSessionFormAction } from "../../sign/x_Action/Password/ResetSession/Start/Form/impl"
@@ -351,7 +351,7 @@ function standardPasswordLoginResource(
     clock: Clock
 ) {
     return {
-        authenticate: initAuthenticatePasswordAction(
+        core: initAuthenticatePasswordCoreAction(
             {
                 startContinuousRenew: {
                     apiCredentials,

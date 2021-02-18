@@ -1,7 +1,7 @@
 import { h, VNode } from "preact"
 import { useErrorBoundary } from "preact/hooks"
 
-import { useTermination } from "../../common/hooks"
+import { useTermination_deprecated } from "../../common/hooks"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
@@ -9,7 +9,7 @@ import { MoveToNextVersionEntryPoint } from "../../../availability/z_EntryPoint/
 import { NextVersion } from "./NextVersion"
 
 export function EntryPoint({ resource, terminate }: MoveToNextVersionEntryPoint): VNode {
-    useTermination(terminate)
+    useTermination_deprecated(terminate)
 
     const [err] = useErrorBoundary((err) => {
         // 認証前なのでエラーはどうしようもない

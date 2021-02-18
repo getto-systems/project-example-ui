@@ -1,44 +1,54 @@
-import { newAuthenticatePasswordProxy } from "../../Core/main/worker/foreground"
-import { newPasswordAuthenticateResource_merge } from "../core"
-
-import { AuthenticatePasswordResource } from "../../resource"
+import { AuthenticatePasswordCoreBackground } from "../../Core/action"
 
 import {
-    AuthenticatePasswordResourceProxyMessage,
-    AuthenticatePasswordResourceProxyResponse,
-} from "./message"
+    WorkerProxy,
+    WorkerAbstractProxy,
+} from "../../../../../../../../z_vendor/getto-worker/foreground"
 
-export type AuthenticatePasswordResourceProxy = Readonly<{
-    resource: AuthenticatePasswordResource
-    resolve: Resolve<AuthenticatePasswordResourceProxyResponse>
-}>
+import {
+    AuthenticatePasswordProxyMaterial,
+    AuthenticatePasswordProxyMessage,
+    AuthenticatePasswordProxyResponse,
+} from "../../main/worker/message"
 
-export function newAuthenticatePasswordResourceProxy(
+export type AuthenticatePasswordProxy = WorkerProxy<
+    AuthenticatePasswordCoreBackground,
+    AuthenticatePasswordProxyMessage,
+    AuthenticatePasswordProxyResponse
+>
+export function newAuthenticatePasswordProxy(
     webStorage: Storage,
-    post: Post<AuthenticatePasswordResourceProxyMessage>
-): AuthenticatePasswordResourceProxy {
-    const proxy = {
-        authenticate: newAuthenticatePasswordProxy(webStorage, (message) =>
-            post({ type: "authenticate", message })
-        ),
+    post: Post<AuthenticatePasswordProxyMessage>
+): AuthenticatePasswordProxy {
+    return new Proxy(webStorage, post)
+}
+
+class Proxy
+    extends WorkerAbstractProxy<AuthenticatePasswordProxyMessage>
+    implements AuthenticatePasswordProxy {
+    webStorage: Storage
+    material: AuthenticatePasswordProxyMaterial
+
+    constructor(webStorage: Storage, post: Post<AuthenticatePasswordProxyMessage>) {
+        super(post)
+        this.webStorage = webStorage
+        this.material = { authenticate: this.method("authenticate", (message) => message) }
     }
-    return {
-        resource: newPasswordAuthenticateResource_merge({
-            authenticate: proxy.authenticate.action(),
-        }),
-        resolve: (response) => {
-            switch (response.type) {
-                case "authenticate":
-                    proxy.authenticate.resolve(response.response)
-                    return
-            }
-        },
+
+    background(): AuthenticatePasswordCoreBackground {
+        return {
+            authenticate: (fields, post) => this.material.authenticate.call({ fields }, post),
+        }
+    }
+    resolve(response: AuthenticatePasswordProxyResponse): void {
+        switch (response.method) {
+            case "authenticate":
+                this.material.authenticate.resolve(response)
+                break
+        }
     }
 }
 
 interface Post<M> {
     (message: M): void
-}
-interface Resolve<R> {
-    (response: R): void
 }
