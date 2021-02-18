@@ -9,7 +9,8 @@ import {
     AuthenticatePasswordCoreMockProps,
 } from "./Core/mock"
 
-import { AuthenticatePasswordResource } from "./action"
+import { AuthenticatePasswordEntryPoint } from "./action"
+import { initAuthSignLinkResource } from "../../../../common/searchParams/x_Action/Link/impl"
 
 export type AuthenticatePasswordResourceMockPropsPasser = MockPropsPasser<
     AuthenticatePasswordResourceMockProps
@@ -17,11 +18,15 @@ export type AuthenticatePasswordResourceMockPropsPasser = MockPropsPasser<
 export type AuthenticatePasswordResourceMockProps = AuthenticatePasswordCoreMockProps &
     AuthenticatePasswordFormMockProps
 
-export function initMockPasswordAuthenticateResource(
+export function initMockAuthenticatePasswordEntryPoint(
     passer: AuthenticatePasswordResourceMockPropsPasser
-): AuthenticatePasswordResource {
+): AuthenticatePasswordEntryPoint {
     return {
-        core: initMockAuthenticatePasswordCoreAction(passer),
-        form: initMockAuthenticatePasswordFormAction(passer),
+        resource: {
+            core: initMockAuthenticatePasswordCoreAction(passer),
+            form: initMockAuthenticatePasswordFormAction(passer),
+            ...initAuthSignLinkResource(),
+        },
+        terminate: () => null,
     }
 }
