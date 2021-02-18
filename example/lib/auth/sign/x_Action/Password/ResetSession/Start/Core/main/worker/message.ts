@@ -1,8 +1,4 @@
-import {
-    WorkerProxyMessage,
-    WorkerProxyMethod,
-    WorkerProxyResponse,
-} from "../../../../../../../../../z_vendor/getto-worker/message"
+import { WorkerProxySpec } from "../../../../../../../../../z_vendor/getto-worker/message"
 
 import {
     CheckPasswordResetSessionStatusEvent,
@@ -15,21 +11,9 @@ import {
     PasswordResetSessionID,
 } from "../../../../../../../password/resetSession/start/data"
 
-export type StartPasswordResetSessionProxyMethod = WorkerProxyMethod<
-    StartPasswordResetSessionProxyParams,
-    StartPasswordResetSessionEvent
->
-export type CheckPasswordResetSessionStatusProxyMethod = WorkerProxyMethod<
-    CheckPasswordResetSessionStatusProxyParams,
-    CheckPasswordResetSessionStatusEvent
->
-export type StartPasswordResetSessionProxyMessage =
-    | WorkerProxyMessage<"start", StartPasswordResetSessionProxyParams>
-    | WorkerProxyMessage<"checkStatus", CheckPasswordResetSessionStatusProxyParams>
+export type StartPasswordResetSessionProxyMessage = Start["message"] | CheckStatus["message"]
 
-export type StartPasswordResetSessionProxyResponse =
-    | WorkerProxyResponse<"start", StartPasswordResetSessionEvent>
-    | WorkerProxyResponse<"checkStatus", CheckPasswordResetSessionStatusEvent>
+export type StartPasswordResetSessionProxyResponse = Start["response"] | CheckStatus["response"]
 
 export type StartPasswordResetSessionProxyParams = Readonly<{
     fields: FormConvertResult<PasswordResetSessionFields>
@@ -37,3 +21,17 @@ export type StartPasswordResetSessionProxyParams = Readonly<{
 export type CheckPasswordResetSessionStatusProxyParams = Readonly<{
     sessionID: PasswordResetSessionID
 }>
+
+export type StartPasswordResetSessionProxyMethod = Start["method"]
+type Start = WorkerProxySpec<
+    "start",
+    Readonly<{ fields: FormConvertResult<PasswordResetSessionFields> }>,
+    StartPasswordResetSessionEvent
+>
+
+export type CheckPasswordResetSessionStatusProxyMethod = CheckStatus["method"]
+type CheckStatus = WorkerProxySpec<
+    "checkStatus",
+    Readonly<{ sessionID: PasswordResetSessionID }>,
+    CheckPasswordResetSessionStatusEvent
+>

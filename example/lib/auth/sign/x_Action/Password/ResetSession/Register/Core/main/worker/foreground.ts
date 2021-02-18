@@ -41,10 +41,7 @@ class Proxy
     constructor(infra: Infra, post: Post<RegisterPasswordProxyMessage>) {
         super(post)
         this.infra = infra
-        this.register = this.method((message) => ({
-            method: "register",
-            ...message,
-        }))
+        this.register = this.method("register", (message) => message)
     }
 
     action(): RegisterPasswordAction {

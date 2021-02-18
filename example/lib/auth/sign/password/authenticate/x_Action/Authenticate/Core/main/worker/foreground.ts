@@ -34,10 +34,7 @@ class Proxy
     constructor(webStorage: Storage, post: Post<AuthenticatePasswordProxyMessage>) {
         super(post)
         this.webStorage = webStorage
-        this.authenticate = this.method((message) => ({
-            method: "authenticate",
-            ...message,
-        }))
+        this.authenticate = this.method("authenticate", (message) => message)
     }
 
     action(): AuthenticatePasswordAction {

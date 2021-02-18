@@ -1,8 +1,4 @@
-import {
-    WorkerProxyMessage,
-    WorkerProxyMethod,
-    WorkerProxyResponse,
-} from "../../../../../../../../../z_vendor/getto-worker/message"
+import { WorkerProxySpec } from "../../../../../../../../../z_vendor/getto-worker/message"
 
 import { RegisterPasswordEvent } from "../../../../../../../password/resetSession/register/event"
 
@@ -12,17 +8,12 @@ import {
     PasswordResetToken,
 } from "../../../../../../../password/resetSession/register/data"
 
-export type RegisterPasswordProxyMethod = WorkerProxyMethod<
-    RegisterPasswordProxyParams,
+export type RegisterPasswordProxyMessage = Register["message"]
+export type RegisterPasswordProxyResponse = Register["response"]
+
+export type RegisterPasswordProxyMethod = Register["method"]
+type Register = WorkerProxySpec<
+    "register",
+    Readonly<{ fields: FormConvertResult<PasswordResetFields>; resetToken: PasswordResetToken }>,
     RegisterPasswordEvent
 >
-export type RegisterPasswordProxyMessage = WorkerProxyMessage<
-    "register",
-    RegisterPasswordProxyParams
->
-export type RegisterPasswordProxyResponse = WorkerProxyResponse<"register", RegisterPasswordEvent>
-
-export type RegisterPasswordProxyParams = Readonly<{
-    fields: FormConvertResult<PasswordResetFields>
-    resetToken: PasswordResetToken
-}>

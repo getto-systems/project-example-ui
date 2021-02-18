@@ -1,16 +1,20 @@
-export interface WorkerProxyMethod<M, E> {
-    call(message: M, post: Post<E>): void
-    resolve({ id, done, event }: WorkerProxyCallResponse<E>): void
+export type WorkerProxySpec<N, P, E> = {
+    method: WorkerProxyMethod<N, P, E>
+    message: WorkerProxyCallMessage<N, P>
+    response: WorkerProxyCallResponse<N, E>
 }
-
-export type WorkerProxyMessage<N, P> = Readonly<{ method: N }> & WorkerProxyCallMessage<P>
-export type WorkerProxyResponse<N, E> = Readonly<{ method: N }> & WorkerProxyCallResponse<E>
-
-export type WorkerProxyCallMessage<P> = Readonly<{
+export interface WorkerProxyMethod<N, P, E> {
+    readonly method: N
+    call(params: P, post: Post<E>): void
+    resolve(response: WorkerProxyCallResponse<N, E>): void
+}
+export type WorkerProxyCallMessage<N, P> = Readonly<{
+    method: N
     id: WorkerProxyCallID
     params: P
 }>
-export type WorkerProxyCallResponse<E> = Readonly<{
+export type WorkerProxyCallResponse<N, E> = Readonly<{
+    method: N
     id: WorkerProxyCallID
     done: boolean
     event: E

@@ -33,8 +33,8 @@ class Proxy
 
     constructor(post: Post<StartPasswordResetSessionProxyMessage>) {
         super(post)
-        this.start = this.method((message) => ({ method: "start", ...message }))
-        this.checkStatus = this.method((message) => ({ method: "checkStatus", ...message }))
+        this.start = this.method("start", (message) => message)
+        this.checkStatus = this.method("checkStatus", (message) => message)
     }
 
     action(): StartPasswordResetSessionAction {
