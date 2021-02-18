@@ -1,9 +1,12 @@
 import { initSyncActionChecker } from "../../../../getto-example/Application/testHelper"
-import { markBoardValue } from "../../../kernel/data"
+
 import { newBoard } from "../../../kernel/infra/board"
 
-import { InputBoardResource, InputBoardState } from "./action"
 import { initInputBoardAction } from "./impl"
+
+import { InputBoardResource, InputBoardState } from "./action"
+
+import { markBoardValue } from "../../../kernel/data"
 
 describe("InputBoard", () => {
     test("input and clear", () => {
