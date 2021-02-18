@@ -52,9 +52,7 @@ function standardResource() {
     const stack = newBoardValidateStack()
 
     const resource: ValidateBoardResource<ValidateError> = {
-        validate: initValidateBoardAction({
-            validate: { board, stack, name: "field", validator },
-        }),
+        validate: initValidateBoardAction({ name: "field", validator }, { board, stack }),
     }
 
     return { board, validateStack: stack, resource }

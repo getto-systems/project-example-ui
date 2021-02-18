@@ -1,19 +1,17 @@
 import { ApplicationAbstractAction } from "../../../../getto-example/Application/impl"
 
-import { validateBoard } from "../../impl"
+import { validateBoard, ValidateBoardEmbed } from "../../impl"
 
 import { ValidateBoardInfra } from "../../infra"
 
 import { ValidateBoardAction, ValidateBoardState, ValidateBoardMaterial } from "./action"
 
-export type ValidateBoardBase<N extends string, E> = Readonly<{
-    validate: ValidateBoardInfra<N, E>
-}>
 export function initValidateBoardAction<N extends string, E>(
-    base: ValidateBoardBase<N, E>
+    embed: ValidateBoardEmbed<N, E>,
+    infra: ValidateBoardInfra
 ): ValidateBoardAction<E> {
     return new Action({
-        validate: validateBoard(base.validate),
+        validate: validateBoard(embed)(infra),
     })
 }
 

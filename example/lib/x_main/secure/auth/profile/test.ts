@@ -71,7 +71,7 @@ function standardResource() {
     }
 
     return initAuthProfileResource(factory, {
-        logout: initClearAuthnInfoAction({ clear: repository }),
+        logout: initClearAuthnInfoAction(repository),
     })
 }
 

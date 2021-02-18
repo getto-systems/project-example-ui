@@ -33,7 +33,7 @@ function standardResource() {
     const board = newBoard()
 
     const resource: InputBoardResource = {
-        input: initInputBoardAction({ input: { board, name: "input" } }),
+        input: initInputBoardAction({ name: "input" }, { board }),
     }
 
     return { board, resource }

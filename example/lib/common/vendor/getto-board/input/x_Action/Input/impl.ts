@@ -1,6 +1,6 @@
 import { ApplicationAbstractAction } from "../../../../getto-example/Application/impl"
 
-import { clearBoard, setBoardValue } from "../../impl"
+import { clearBoard, InputBoardEmbed, setBoardValue } from "../../impl"
 
 import { InputBoardInfra } from "../../infra"
 
@@ -8,13 +8,13 @@ import { InputBoardAction, InputBoardState, InputBoardMaterial } from "./action"
 
 import { BoardValue } from "../../../kernel/data"
 
-export type InputBoardBase<N extends string> = Readonly<{
-    input: InputBoardInfra<N>
-}>
-export function initInputBoardAction<N extends string>(base: InputBoardBase<N>): InputBoardAction {
+export function initInputBoardAction<N extends string>(
+    embed: InputBoardEmbed<N>,
+    infra: InputBoardInfra
+): InputBoardAction {
     return new Action({
-        set: setBoardValue(base.input),
-        clear: clearBoard(base.input),
+        set: setBoardValue(embed)(infra),
+        clear: clearBoard(embed)(infra),
     })
 }
 

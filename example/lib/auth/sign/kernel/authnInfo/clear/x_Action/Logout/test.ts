@@ -49,7 +49,7 @@ function standardResource() {
     const repository = standardRepository()
 
     const resource = {
-        clear: initClearAuthnInfoAction({ clear: repository }),
+        clear: initClearAuthnInfoAction(repository),
     }
 
     return { repository, resource }

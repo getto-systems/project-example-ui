@@ -1,13 +1,14 @@
 import { initValidateBoardAction } from "./impl"
 
+import { ValidateBoardEmbed } from "../../impl"
+
 import { ValidateBoardInfra } from "../../infra"
 
 import { ValidateBoardAction } from "./action"
 
 export function newValidateBoardAction<N extends string, E>(
-    infra: ValidateBoardInfra<N, E>
+    embed: ValidateBoardEmbed<N, E>,
+    infra: ValidateBoardInfra
 ): ValidateBoardAction<E> {
-    return initValidateBoardAction({
-        validate: infra,
-    })
+    return initValidateBoardAction(embed, infra)
 }
