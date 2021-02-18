@@ -27,7 +27,7 @@ import {
 import { delayed, wait } from "../../../../../../z_infra/delayed/core"
 import {
     initAsyncActionTester,
-    initSyncActionChecker,
+    initSyncActionChecker_legacy,
 } from "../../../../../../common/vendor/getto-example/Application/testHelper"
 import { initSendPasswordResetSessionTokenSimulate } from "../../../../../sign/password/resetSession/start/infra/remote/sendToken/simulate"
 import { initGetPasswordResetSessionStatusSimulate } from "../../../../../sign/password/resetSession/start/infra/remote/getStatus/simulate"
@@ -165,7 +165,7 @@ describe("PasswordResetSession", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncActionChecker((stack) => {
+                return initSyncActionChecker_legacy((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -196,7 +196,7 @@ describe("PasswordResetSession", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncActionChecker((stack) => {
+                return initSyncActionChecker_legacy((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "valid",
@@ -230,7 +230,7 @@ describe("PasswordResetSession", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncActionChecker((stack) => {
+                return initSyncActionChecker_legacy((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -273,7 +273,7 @@ describe("PasswordResetSession", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncActionChecker((stack) => {
+                return initSyncActionChecker_legacy((stack) => {
                     expect(stack).toEqual([
                         { value: "loginID-a" },
                         { value: "" },
@@ -299,7 +299,7 @@ describe("PasswordResetSession", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncActionChecker((stack) => {
+                return initSyncActionChecker_legacy((stack) => {
                     expect(stack).toEqual([])
                     done()
                 })
@@ -319,7 +319,7 @@ describe("PasswordResetSession", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncActionChecker((stack) => {
+                return initSyncActionChecker_legacy((stack) => {
                     expect(stack).toEqual([])
                     done()
                 })
@@ -340,7 +340,7 @@ describe("PasswordResetSession", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncActionChecker((stack) => {
+                    return initSyncActionChecker_legacy((stack) => {
                         expect(stack).toEqual([{ result: toValidationError(["empty"]) }])
                         done()
                     })

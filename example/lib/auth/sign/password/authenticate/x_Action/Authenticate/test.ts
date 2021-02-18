@@ -37,7 +37,7 @@ import { delayed } from "../../../../../../z_infra/delayed/core"
 import { authenticatePasswordEventHasDone } from "../../impl"
 import {
     initAsyncActionTester,
-    initSyncActionChecker,
+    initSyncActionChecker_legacy,
 } from "../../../../../../common/vendor/getto-example/Application/testHelper"
 import { initAuthenticatePasswordFormAction } from "./Form/impl"
 import { initAuthenticatePasswordCoreAction } from "./Core/impl"
@@ -182,7 +182,7 @@ describe("PasswordAuthenticate", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncActionChecker((stack) => {
+                return initSyncActionChecker_legacy((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -221,7 +221,7 @@ describe("PasswordAuthenticate", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncActionChecker((stack) => {
+                return initSyncActionChecker_legacy((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "initial",
@@ -270,7 +270,7 @@ describe("PasswordAuthenticate", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncActionChecker((stack) => {
+                return initSyncActionChecker_legacy((stack) => {
                     expect(stack).toEqual([
                         {
                             validation: "invalid",
@@ -332,11 +332,11 @@ describe("PasswordAuthenticate", () => {
             function initChecker() {
                 const result = { loginID: false, password: false }
                 return {
-                    main: initSyncActionChecker(() => {
+                    main: initSyncActionChecker_legacy(() => {
                         expect(result).toEqual({ loginID: true, password: true })
                         done()
                     }),
-                    loginID: initSyncActionChecker((stack) => {
+                    loginID: initSyncActionChecker_legacy((stack) => {
                         expect(stack).toEqual([
                             { value: "loginID-a" },
                             { value: "loginID-b" },
@@ -345,7 +345,7 @@ describe("PasswordAuthenticate", () => {
                         ])
                         result.loginID = true
                     }),
-                    password: initSyncActionChecker((stack) => {
+                    password: initSyncActionChecker_legacy((stack) => {
                         expect(stack).toEqual([
                             { value: "password-a" },
                             { value: "" },
@@ -370,7 +370,7 @@ describe("PasswordAuthenticate", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncActionChecker((stack) => {
+                return initSyncActionChecker_legacy((stack) => {
                     expect(stack).toEqual([])
                     done()
                 })
@@ -390,7 +390,7 @@ describe("PasswordAuthenticate", () => {
             checker.done()
 
             function initChecker() {
-                return initSyncActionChecker((stack) => {
+                return initSyncActionChecker_legacy((stack) => {
                     expect(stack).toEqual([])
                     done()
                 })
@@ -411,7 +411,7 @@ describe("PasswordAuthenticate", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncActionChecker((stack) => {
+                    return initSyncActionChecker_legacy((stack) => {
                         expect(stack).toEqual([{ result: toValidationError(["empty"]) }])
                         done()
                     })
@@ -431,7 +431,7 @@ describe("PasswordAuthenticate", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncActionChecker((stack) => {
+                    return initSyncActionChecker_legacy((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["empty"]),
@@ -455,7 +455,7 @@ describe("PasswordAuthenticate", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncActionChecker((stack) => {
+                    return initSyncActionChecker_legacy((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["too-long"]),
@@ -480,7 +480,7 @@ describe("PasswordAuthenticate", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncActionChecker((stack) => {
+                    return initSyncActionChecker_legacy((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: toValidationError(["too-long"]),
@@ -504,7 +504,7 @@ describe("PasswordAuthenticate", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncActionChecker((stack) => {
+                    return initSyncActionChecker_legacy((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -529,7 +529,7 @@ describe("PasswordAuthenticate", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncActionChecker((stack) => {
+                    return initSyncActionChecker_legacy((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
@@ -555,7 +555,7 @@ describe("PasswordAuthenticate", () => {
                 checker.done()
 
                 function initChecker() {
-                    return initSyncActionChecker((stack) => {
+                    return initSyncActionChecker_legacy((stack) => {
                         expect(stack).toEqual([
                             {
                                 result: { valid: true },
