@@ -11,7 +11,7 @@ export type InputBoardProps = InputBoardValueResource
 export function InputBoard(resource: InputBoardProps): VNode {
     const state = useAction(resource.input, initialInputBoardState)
 
-    return html`<input type=${resource.input.type} value=${state} onInput=${onInput} />`
+    return html`<input type=${resource.type} value=${state} onInput=${onInput} />`
 
     function onInput(event: InputEvent) {
         if (event.target instanceof HTMLInputElement) {

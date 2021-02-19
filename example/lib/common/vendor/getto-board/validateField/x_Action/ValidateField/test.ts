@@ -1,6 +1,6 @@
 import { initSyncActionChecker } from "../../../../getto-example/Application/testHelper"
 
-import { newBoard } from "../../../kernel/infra/board"
+import { newBoardValueStore } from "../../../input/infra/store"
 import { newBoardValidateStack } from "../../../kernel/infra/stack"
 
 import { initValidateBoardFieldAction } from "./impl"
@@ -17,7 +17,7 @@ describe("ValidateBoard", () => {
         action.addStateHandler(checker.handler)
 
         // valid input
-        board.set("input", markBoardValue("valid"))
+        board.set(markBoardValue("valid"))
 
         action.check()
         checker.check((stack) => {
@@ -34,7 +34,7 @@ describe("ValidateBoard", () => {
         action.addStateHandler(checker.handler)
 
         // invalid input : see validator()
-        board.set("input", markBoardValue(""))
+        board.set(markBoardValue(""))
 
         action.check()
         checker.check((stack) => {
@@ -46,19 +46,19 @@ describe("ValidateBoard", () => {
 })
 
 function standardResource() {
-    const board = newBoard()
+    const board = newBoardValueStore()
     const stack = newBoardValidateStack()
 
-    const action: ValidateBoardFieldAction<FieldValue, ValidateError> = initValidateBoardFieldAction(
-        { name: "field", converter, validator },
-        { stack }
-    )
+    const action: ValidateBoardFieldAction<
+        FieldValue,
+        ValidateError
+    > = initValidateBoardFieldAction({ name: "field", converter, validator }, { stack })
 
     function converter(): BoardConvertResult<FieldValue> {
-        return { success: true, value: board.get("input") }
+        return { success: true, value: board.get() }
     }
     function validator(): ValidateError[] {
-        if (board.get("input") === "") {
+        if (board.get() === "") {
             return ["empty"]
         }
         return []

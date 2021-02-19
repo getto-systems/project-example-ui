@@ -2,7 +2,6 @@ import { initValidateBoardFieldAction } from "../../../../../../common/vendor/ge
 import { initInputBoardValueAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/impl"
 
 import { ValidateBoardFieldInfra } from "../../../../../../common/vendor/getto-board/validateField/infra"
-import { InputBoardValueInfra } from "../../../../../../common/vendor/getto-board/input/infra"
 
 import { LoginIDBoardFieldAction } from "./action"
 
@@ -19,9 +18,9 @@ export type LoginIDBoardEmbed<N extends string> = Readonly<{
 
 export function initLoginIDBoardFieldAction<N extends string>(
     embed: LoginIDBoardEmbed<N>,
-    infra: ValidateBoardFieldInfra & InputBoardValueInfra
+    infra: ValidateBoardFieldInfra
 ): LoginIDBoardFieldAction {
-    const input = initInputBoardValueAction({ name: "input", type: "text" }, infra)
+    const input = initInputBoardValueAction()
 
     const validate = initValidateBoardFieldAction(
         {

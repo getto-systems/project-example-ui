@@ -1,7 +1,6 @@
 import { initLoginViewLocationInfo, View } from "./impl"
 
 import { newBoardValidateStack } from "../../../common/vendor/getto-board/kernel/infra/stack"
-import { newBoard } from "../../../common/vendor/getto-board/kernel/infra/board"
 import { newStaticClock } from "../../../z_infra/clock/simulate"
 import { initAuthenticatePasswordSimulate } from "../../sign/password/authenticate/infra/remote/authenticate/simulate"
 import { initRenewAuthnInfoSimulate } from "../../sign/kernel/authnInfo/kernel/infra/remote/renew/simulate"
@@ -387,7 +386,6 @@ function standardPasswordLoginEntryPoint(
         ),
 
         form: initAuthenticatePasswordFormAction({
-            board: newBoard(),
             stack: newBoardValidateStack(),
         }),
     })

@@ -5,13 +5,10 @@ import { initValidateBoardAction } from "../../../../../../../common/vendor/gett
 
 import { ValidateBoardInfra } from "../../../../../../../common/vendor/getto-board/validateBoard/infra"
 import { ValidateBoardFieldInfra } from "../../../../../../../common/vendor/getto-board/validateField/infra"
-import { InputBoardValueInfra } from "../../../../../../../common/vendor/getto-board/input/infra"
 
 import { AuthenticatePasswordFormAction } from "./action"
 
-export type AuthenticatePasswordFormBase = ValidateBoardInfra &
-    ValidateBoardFieldInfra &
-    InputBoardValueInfra
+export type AuthenticatePasswordFormBase = ValidateBoardInfra & ValidateBoardFieldInfra
 
 export function initAuthenticatePasswordFormAction(
     infra: AuthenticatePasswordFormBase
@@ -43,7 +40,7 @@ export function initAuthenticatePasswordFormAction(
     )
 
     loginID.input.addInputHandler(() => validate.check())
-    password.input.addInputHandler(() => validate.check())    
+    password.input.addInputHandler(() => validate.check())
 
     return { loginID, password, validate }
 }

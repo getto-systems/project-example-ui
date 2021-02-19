@@ -1,7 +1,5 @@
 import { initSyncActionChecker } from "../../../../getto-example/Application/testHelper"
 
-import { newBoard } from "../../../kernel/infra/board"
-
 import { initInputBoardValueAction } from "./impl"
 
 import { InputBoardValueState } from "./action"
@@ -30,9 +28,7 @@ describe("InputBoardValue", () => {
 })
 
 function standardResource() {
-    const board = newBoard()
+    const action = initInputBoardValueAction()
 
-    const action = initInputBoardValueAction({ name: "input", type: "text" }, { board })
-
-    return { board, action }
+    return { action }
 }
