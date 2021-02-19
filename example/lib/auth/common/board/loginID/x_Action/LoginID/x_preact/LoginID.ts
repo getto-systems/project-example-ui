@@ -52,7 +52,7 @@ function loginIDValidationError(result: BoardValidateResult<ValidateLoginIDError
                 return ["ログインIDを入力してください"]
 
             case "too-long":
-                return [`ログインIDは${LOGIN_ID_MAX_LENGTH}字以内で入力してください`]
+                return [`ログインIDが長すぎます(${LOGIN_ID_MAX_LENGTH}文字以内)`]
         }
     })
 }

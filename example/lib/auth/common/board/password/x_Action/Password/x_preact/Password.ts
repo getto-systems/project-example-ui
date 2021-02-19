@@ -111,6 +111,7 @@ function passwordValidationError(
 
             case "too-long":
                 if (character.multiByte) {
+                    // マルチバイト文字は最大で 4 bytes なので max bytes / 4 をヒントとして表示する
                     return [`パスワードが長すぎます(${Math.floor(PASSWORD_MAX_BYTES / 4)}文字程度)`]
                 } else {
                     return [`パスワードが長すぎます(${PASSWORD_MAX_BYTES}文字以内)`]
