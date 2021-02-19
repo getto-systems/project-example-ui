@@ -7,7 +7,7 @@ import { newAuthenticatePasswordInfra } from "../../../main"
 import { newBoard } from "../../../../../../../common/vendor/getto-board/kernel/infra/board"
 import { newBoardValidateStack } from "../../../../../../../common/vendor/getto-board/kernel/infra/stack"
 
-import { initAuthenticatePasswordFormResource } from "../Form/impl"
+import { initAuthenticatePasswordFormAction } from "../Form/impl"
 import {
     AuthenticatePasswordCoreBackgroundBase,
     AuthenticatePasswordCoreForegroundBase,
@@ -17,9 +17,9 @@ import {
 } from "../Core/impl"
 import { toAuthenticatePasswordEntryPoint } from "../impl"
 
-import { AuthenticatePasswordEntryPoint, AuthenticatePasswordResource } from "../action"
+import { AuthenticatePasswordEntryPoint, AuthenticatePasswordAction } from "../action"
 import { AuthenticatePasswordCoreAction, AuthenticatePasswordCoreBackground } from "../Core/action"
-import { AuthenticatePasswordFormResource } from "../Form/action"
+import { AuthenticatePasswordFormAction } from "../Form/action"
 
 export function newAuthenticatePassword(webStorage: Storage): AuthenticatePasswordEntryPoint {
     return toAuthenticatePasswordEntryPoint(mergeResource(newCoreAction(webStorage)))
@@ -38,7 +38,7 @@ export function newAuthenticatePassword_proxy(
         )
     )
 }
-function mergeResource(core: AuthenticatePasswordCoreAction): AuthenticatePasswordResource {
+function mergeResource(core: AuthenticatePasswordCoreAction): AuthenticatePasswordAction {
     return { core, form: newFormResource() }
 }
 
@@ -65,8 +65,8 @@ function newBackgroundBase(): AuthenticatePasswordCoreBackgroundBase {
     }
 }
 
-function newFormResource(): AuthenticatePasswordFormResource {
-    return initAuthenticatePasswordFormResource({
+function newFormResource(): AuthenticatePasswordFormAction {
+    return initAuthenticatePasswordFormAction({
         board: newBoard(),
         stack: newBoardValidateStack(),
     })

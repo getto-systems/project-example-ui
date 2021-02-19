@@ -5,7 +5,7 @@ import { initRenewAuthnInfoSimulate } from "../../../../kernel/authnInfo/kernel/
 import { AuthenticatePasswordRemote, AuthenticatePasswordResult } from "../../infra"
 import { Clock } from "../../../../../../z_infra/clock/infra"
 
-import { AuthenticatePasswordResource } from "./action"
+import { AuthenticatePasswordAction } from "./action"
 
 import { AuthenticatePasswordCoreState } from "./Core/action"
 
@@ -25,7 +25,7 @@ import { initGetSecureScriptPathLocationInfo } from "../../../../common/secureSc
 import { delayed, wait } from "../../../../../../z_infra/delayed/core"
 import { authenticatePasswordEventHasDone } from "../../impl"
 import { initAsyncActionChecker } from "../../../../../../common/vendor/getto-example/Application/testHelper"
-import { initAuthenticatePasswordFormResource } from "./Form/impl"
+import { initAuthenticatePasswordFormAction } from "./Form/impl"
 import { initAuthenticatePasswordCoreAction } from "./Core/impl"
 import { markBoardValue } from "../../../../../../common/vendor/getto-board/kernel/data"
 import { newBoard } from "../../../../../../common/vendor/getto-board/kernel/infra/board"
@@ -200,7 +200,7 @@ function newTestPasswordLoginResource(
     repository: PasswordLoginTestRepository,
     remote: PasswordLoginTestRemoteAccess,
     clock: Clock
-): AuthenticatePasswordResource {
+): AuthenticatePasswordAction {
     const config = standardConfig()
     return {
         core: initAuthenticatePasswordCoreAction(
@@ -223,7 +223,7 @@ function newTestPasswordLoginResource(
             initGetSecureScriptPathLocationInfo(currentURL)
         ),
 
-        form: initAuthenticatePasswordFormResource({
+        form: initAuthenticatePasswordFormAction({
             board: newBoard(),
             stack: newBoardValidateStack(),
         }),

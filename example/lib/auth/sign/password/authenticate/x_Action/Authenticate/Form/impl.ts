@@ -7,15 +7,15 @@ import { ValidateBoardInfra } from "../../../../../../../common/vendor/getto-boa
 import { ValidateBoardFieldInfra } from "../../../../../../../common/vendor/getto-board/validateField/infra"
 import { InputBoardValueInfra } from "../../../../../../../common/vendor/getto-board/input/infra"
 
-import { AuthenticatePasswordFormResource } from "./action"
+import { AuthenticatePasswordFormAction } from "./action"
 
 export type AuthenticatePasswordFormBase = ValidateBoardInfra &
     ValidateBoardFieldInfra &
     InputBoardValueInfra
 
-export function initAuthenticatePasswordFormResource(
+export function initAuthenticatePasswordFormAction(
     infra: AuthenticatePasswordFormBase
-): AuthenticatePasswordFormResource {
+): AuthenticatePasswordFormAction {
     const loginID = initLoginIDBoardFieldAction({ name: "loginID" }, infra)
     const password = initPasswordBoardFieldAction({ name: "password" }, infra)
     const validate = initValidateBoardAction(

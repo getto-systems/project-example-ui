@@ -16,7 +16,7 @@ import {
 import { formValidationStates } from "../../../../../../../common/vendor/getto-form/x_Resource/Form/mock"
 
 import {
-    AuthenticatePasswordResourceMockProps,
+    AuthenticatePasswordActionMockProps,
     initMockAuthenticatePasswordEntryPoint,
 } from "../mock"
 
@@ -44,9 +44,9 @@ export default {
     },
 }
 
-type MockProps = AuthenticatePasswordResourceMockProps
+type MockProps = AuthenticatePasswordActionMockProps
 const template = storyTemplate<MockProps>((args) => {
-    const passer = initMockPropsPasser<AuthenticatePasswordResourceMockProps>()
+    const passer = initMockPropsPasser<AuthenticatePasswordActionMockProps>()
     const entryPoint = initMockAuthenticatePasswordEntryPoint(passer)
     return h(Preview, { args })
 

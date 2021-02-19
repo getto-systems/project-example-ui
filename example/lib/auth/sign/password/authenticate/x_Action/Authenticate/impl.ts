@@ -2,10 +2,10 @@ import { newAuthSignLinkResource } from "../../../../common/searchParams/x_Actio
 import { terminateLoginIDBoardFieldAction } from "../../../../../common/board/loginID/x_Action/LoginID/impl"
 import { terminatePasswordBoardFieldAction } from "../../../../../common/board/password/x_Action/Password/impl"
 
-import { AuthenticatePasswordEntryPoint, AuthenticatePasswordResource } from "./action"
+import { AuthenticatePasswordEntryPoint, AuthenticatePasswordAction } from "./action"
 
 export function toAuthenticatePasswordEntryPoint(
-    resource: AuthenticatePasswordResource
+    resource: AuthenticatePasswordAction
 ): AuthenticatePasswordEntryPoint {
     return {
         resource: { ...resource, ...newAuthSignLinkResource() },

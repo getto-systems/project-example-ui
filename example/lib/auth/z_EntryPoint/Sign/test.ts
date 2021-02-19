@@ -38,7 +38,7 @@ import { markPasswordResetSessionID } from "../../sign/password/resetSession/sta
 import { initSendPasswordResetSessionTokenSimulate } from "../../sign/password/resetSession/start/infra/remote/sendToken/simulate"
 import { initGetPasswordResetSessionStatusSimulate } from "../../sign/password/resetSession/start/infra/remote/getStatus/simulate"
 import { initRenewAuthnInfoAction } from "../../sign/kernel/authnInfo/renew/x_Action/Renew/impl"
-import { initAuthenticatePasswordFormResource } from "../../sign/password/authenticate/x_Action/Authenticate/Form/impl"
+import { initAuthenticatePasswordFormAction } from "../../sign/password/authenticate/x_Action/Authenticate/Form/impl"
 import { initAuthenticatePasswordCoreAction } from "../../sign/password/authenticate/x_Action/Authenticate/Core/impl"
 import { initRegisterPasswordAction } from "../../sign/x_Action/Password/ResetSession/Register/Core/impl"
 import { initRegisterPasswordFormAction } from "../../sign/x_Action/Password/ResetSession/Register/Form/impl"
@@ -386,7 +386,7 @@ function standardPasswordLoginEntryPoint(
             initGetSecureScriptPathLocationInfo(currentURL)
         ),
 
-        form: initAuthenticatePasswordFormResource({
+        form: initAuthenticatePasswordFormAction({
             board: newBoard(),
             stack: newBoardValidateStack(),
         }),
