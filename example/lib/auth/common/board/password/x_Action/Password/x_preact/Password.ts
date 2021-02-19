@@ -33,7 +33,7 @@ export function PasswordBoard(resource: Props): VNode {
     function content() {
         const content = {
             title: "パスワード",
-            body: h(InputBoard, resource.field),
+            body: h(InputBoard, { type: "password", ...resource.field }),
             help: [...resource.help, ...passwordDisplay()],
         }
 

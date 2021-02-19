@@ -1,5 +1,11 @@
-import { Board } from "../kernel/infra"
+import { BoardValue } from "../kernel/data"
 
 export type InputBoardValueInfra = Readonly<{
-    board: Board
+    store: BoardValueStore
 }>
+
+export interface BoardValueStore {
+    get(): BoardValue
+    set(value: BoardValue): void
+    clear(): void
+}

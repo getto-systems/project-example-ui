@@ -8,12 +8,11 @@ import { BoardValue, emptyBoardValue } from "../../../kernel/data"
 import { InputBoardValueType } from "../../data"
 
 export type InputBoardValueResource = Readonly<{
+    type: InputBoardValueType
     input: InputBoardValueAction
 }>
 
 export interface InputBoardValueAction extends ApplicationAction<InputBoardValueState> {
-    readonly type: InputBoardValueType
-
     addInputHandler(handler: InputBoardValueHandler): void
 
     get(): BoardValue

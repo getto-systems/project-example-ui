@@ -29,7 +29,7 @@ export function LoginIDBoard(resource: Props): VNode {
     function content() {
         const content = {
             title: "ログインID",
-            body: h(InputBoard, resource.field),
+            body: h(InputBoard, { type: "text", ...resource.field }),
             help: resource.help,
         }
 

@@ -28,7 +28,6 @@ import { initAsyncActionChecker } from "../../../../../../common/vendor/getto-ex
 import { initAuthenticatePasswordFormAction } from "./Form/impl"
 import { initAuthenticatePasswordCoreAction } from "./Core/impl"
 import { markBoardValue } from "../../../../../../common/vendor/getto-board/kernel/data"
-import { newBoard } from "../../../../../../common/vendor/getto-board/kernel/infra/board"
 import { newBoardValidateStack } from "../../../../../../common/vendor/getto-board/kernel/infra/stack"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
@@ -224,7 +223,6 @@ function newTestPasswordLoginResource(
         ),
 
         form: initAuthenticatePasswordFormAction({
-            board: newBoard(),
             stack: newBoardValidateStack(),
         }),
     }

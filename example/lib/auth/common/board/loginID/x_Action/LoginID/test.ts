@@ -1,5 +1,4 @@
 import { markBoardValue } from "../../../../../../common/vendor/getto-board/kernel/data"
-import { newBoard } from "../../../../../../common/vendor/getto-board/kernel/infra/board"
 import { newBoardValidateStack } from "../../../../../../common/vendor/getto-board/kernel/infra/stack"
 import { ValidateBoardFieldState } from "../../../../../../common/vendor/getto-board/validateField/x_Action/ValidateField/action"
 import { initSyncActionChecker } from "../../../../../../common/vendor/getto-example/Application/testHelper"
@@ -84,10 +83,9 @@ describe("LoginIDBoard", () => {
 })
 
 function standardResource() {
-    const board = newBoard()
     const stack = newBoardValidateStack()
 
-    const resource = initLoginIDBoardFieldAction({ name: "field" }, { board, stack })
+    const resource = initLoginIDBoardFieldAction({ name: "field" }, { stack })
 
     return { resource }
 }

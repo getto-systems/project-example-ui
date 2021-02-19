@@ -6,7 +6,6 @@ import { initInputBoardValueAction } from "../../../../../../common/vendor/getto
 import { hidePasswordDisplayBoard, showPasswordDisplayBoard } from "../../toggleDisplay/impl"
 
 import { ValidateBoardFieldInfra } from "../../../../../../common/vendor/getto-board/validateField/infra"
-import { InputBoardValueInfra } from "../../../../../../common/vendor/getto-board/input/infra"
 
 import {
     PasswordBoardFieldAction,
@@ -28,9 +27,9 @@ export type PasswordBoardEmbed<N extends string> = Readonly<{
 
 export function initPasswordBoardFieldAction<N extends string>(
     embed: PasswordBoardEmbed<N>,
-    infra: ValidateBoardFieldInfra & InputBoardValueInfra
+    infra: ValidateBoardFieldInfra
 ): PasswordBoardFieldAction {
-    const input = initInputBoardValueAction({ name: "input", type: "password" }, infra)
+    const input = initInputBoardValueAction()
 
     const validate = initValidateBoardFieldAction(
         {

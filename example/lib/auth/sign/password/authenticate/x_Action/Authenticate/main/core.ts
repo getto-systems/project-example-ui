@@ -4,7 +4,6 @@ import {
 } from "../../../../../common/secureScriptPath/get/main"
 import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../kernel/authnInfo/common/startContinuousRenew/main"
 import { newAuthenticatePasswordInfra } from "../../../main"
-import { newBoard } from "../../../../../../../common/vendor/getto-board/kernel/infra/board"
 import { newBoardValidateStack } from "../../../../../../../common/vendor/getto-board/kernel/infra/stack"
 
 import { initAuthenticatePasswordFormAction } from "../Form/impl"
@@ -67,7 +66,6 @@ function newBackgroundBase(): AuthenticatePasswordCoreBackgroundBase {
 
 function newFormResource(): AuthenticatePasswordFormAction {
     return initAuthenticatePasswordFormAction({
-        board: newBoard(),
         stack: newBoardValidateStack(),
     })
 }
