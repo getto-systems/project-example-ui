@@ -8,11 +8,11 @@ import { LoginID } from "../../../../loginID/data"
 import { ValidateLoginIDError } from "./data"
 
 // TODO BoardField だな
-export type LoginIDBoardResource = Readonly<{
-    field: LoginIDBoardAction
+export type LoginIDBoardFieldResource = Readonly<{
+    field: LoginIDBoardFieldAction
 }>
 
-export type LoginIDBoardAction = Readonly<{
+export type LoginIDBoardFieldAction = Readonly<{
     input: InputBoardValueAction
     validate: ValidateLoginIDAction
 }>
