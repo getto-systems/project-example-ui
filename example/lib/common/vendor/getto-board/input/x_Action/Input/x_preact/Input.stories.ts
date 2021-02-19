@@ -28,7 +28,7 @@ const template = storyTemplate<MockProps>((args) => {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(InputBoard, { input: action, onChange: () => null })
+        return h(InputBoard, { type: props.args.inputType, input: action, onChange: () => null })
     }
 })
 
