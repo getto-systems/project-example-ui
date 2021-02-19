@@ -4,6 +4,7 @@ import {
     ValidateBoardState,
 } from "../../../../../../common/vendor/getto-board/validate/x_Action/Validate/action"
 
+import { LoginID } from "../../../../loginID/data"
 import { ValidateLoginIDError } from "./data"
 
 export type LoginIDBoardResource = Readonly<{
@@ -11,5 +12,5 @@ export type LoginIDBoardResource = Readonly<{
     input: InputBoardAction
 }>
 
-export type ValidateLoginIDAction = ValidateBoardAction<ValidateLoginIDError>
+export type ValidateLoginIDAction = ValidateBoardAction<LoginID, ValidateLoginIDError>
 export type ValidateLoginIDState = ValidateBoardState<ValidateLoginIDError>

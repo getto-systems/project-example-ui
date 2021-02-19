@@ -10,6 +10,7 @@ import {
     ShowPasswordDisplayBoardMethod,
 } from "../../toggleDisplay/method"
 
+import { Password } from "../../../../password/data"
 import { PasswordCharacterState, ValidatePasswordError } from "./data"
 
 export type PasswordBoardResource = Readonly<{
@@ -19,7 +20,7 @@ export type PasswordBoardResource = Readonly<{
     characterState: PasswordCharacterStateDetecter
 }>
 
-export type ValidatePasswordAction = ValidateBoardAction<ValidatePasswordError>
+export type ValidatePasswordAction = ValidateBoardAction<Password, ValidatePasswordError>
 export type ValidatePasswordState = ValidateBoardState<ValidatePasswordError>
 
 export interface TogglePasswordDisplayBoardAction
