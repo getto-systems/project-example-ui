@@ -17,7 +17,8 @@ import { initialTogglePasswordDisplayBoardState, PasswordBoardResource } from ".
 
 import { BoardValue } from "../../../../../../../common/vendor/getto-board/kernel/data"
 import { BoardValidateResult } from "../../../../../../../common/vendor/getto-board/validate/data"
-import { PasswordCharacterState, ValidatePasswordError } from "../data"
+import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "../data"
+import { icon } from "../../../../../../../x_preact/common/icon"
 
 type Props = PasswordBoardResource &
     Readonly<{
@@ -50,14 +51,14 @@ export function PasswordBoard(resource: Props): VNode {
         if (toggleState.visible) {
             return [
                 html`<a href="#" onClick=${onHide}>
-                    <i class="lnir lnir-key-alt"></i> パスワードを隠す ${characterHelp()}
+                    ${icon("key-alt")} パスワードを隠す ${characterHelp()}
                 </a>`,
                 showPassword(resource.input.get()),
             ]
         } else {
             return [
                 html`<a href="#" onClick=${onShow}>
-                    <i class="lnir lnir-key-alt"></i> パスワードを表示 ${characterHelp()}
+                    ${icon("key-alt")} パスワードを表示 ${characterHelp()}
                 </a>`,
             ]
         }
@@ -111,9 +112,10 @@ function passwordValidationError(
 
             case "too-long":
                 if (character.multiByte) {
-                    return ["パスワードが長すぎます(18文字程度)"]
+                    // マルチバイト文字は最大で 4 bytes なので max bytes / 4 をヒントとして表示する
+                    return [`パスワードが長すぎます(${Math.floor(PASSWORD_MAX_BYTES / 4)}文字程度)`]
                 } else {
-                    return ["パスワードが長すぎます(72文字以内)"]
+                    return [`パスワードが長すぎます(${PASSWORD_MAX_BYTES}文字以内)`]
                 }
         }
     })

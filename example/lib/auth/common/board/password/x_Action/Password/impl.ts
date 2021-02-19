@@ -12,7 +12,7 @@ import {
 } from "./action"
 
 import { BoardValue } from "../../../../../../common/vendor/getto-board/kernel/data"
-import { PasswordCharacterState, ValidatePasswordError } from "./data"
+import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "./data"
 import { ApplicationAbstractAction } from "../../../../../../common/vendor/getto-example/Application/impl"
 import { hidePasswordDisplayBoard, showPasswordDisplayBoard } from "../../toggleDisplay/impl"
 
@@ -43,9 +43,6 @@ export function initPasswordBoardResource<N extends string>(
         characterState: () => checkPasswordCharacter(input.get())
     }
 }
-
-// bcrypt を想定しているので、72 バイト以上ではいけない
-const PASSWORD_MAX_BYTES = 72
 
 export function validatePassword(value: BoardValue): ValidatePasswordError[] {
     if (value.length === 0) {

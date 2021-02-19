@@ -7,7 +7,7 @@ import { InputBoardInfra } from "../../../../../../common/vendor/getto-board/inp
 import { LoginIDBoardResource } from "./action"
 
 import { BoardValue } from "../../../../../../common/vendor/getto-board/kernel/data"
-import { ValidateLoginIDError } from "./data"
+import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "./data"
 
 export type LoginIDBoardEmbed<N extends string> = Readonly<{
     name: N
@@ -29,14 +29,11 @@ export function initLoginIDBoardResource<N extends string>(
     return { validate, input }
 }
 
-// login id には技術的な制限はないが、使用可能な最大長さは定義しておく
-const MAX_LENGTH = 100 as const
-
 function validateLoginID(value: BoardValue): ValidateLoginIDError[] {
     if (value.length === 0) {
         return EMPTY
     }
-    if (value.length > MAX_LENGTH) {
+    if (value.length > LOGIN_ID_MAX_LENGTH) {
         return TOO_LONG
     }
     return OK

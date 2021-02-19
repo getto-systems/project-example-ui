@@ -14,7 +14,7 @@ import { InputBoard } from "../../../../../../../common/vendor/getto-board/input
 import { initialValidateBoardState } from "../../../../../../../common/vendor/getto-board/validate/x_Action/Validate/action"
 import { LoginIDBoardResource } from "../action"
 
-import { ValidateLoginIDError } from "../data"
+import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "../data"
 import { BoardValidateResult } from "../../../../../../../common/vendor/getto-board/validate/data"
 
 type Props = LoginIDBoardResource &
@@ -52,7 +52,7 @@ function loginIDValidationError(result: BoardValidateResult<ValidateLoginIDError
                 return ["ログインIDを入力してください"]
 
             case "too-long":
-                return ["ログインIDは100字以内で入力してください"]
+                return [`ログインIDが長すぎます(${LOGIN_ID_MAX_LENGTH}文字以内)`]
         }
     })
 }
