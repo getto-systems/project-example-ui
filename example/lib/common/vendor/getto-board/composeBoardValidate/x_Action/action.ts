@@ -19,10 +19,15 @@ export type ComposeBoardValidateMaterial = Readonly<{
 }>
 
 export type ComposeBoardValidateState =
-    | Readonly<{ type: "initial-validate"; state: BoardValidateState_initial }>
+    | ComposeBoardValidateState_initial
     | ComposeBoardValidateEvent
 
-export const initialComposeBoardValidateState = {
+type ComposeBoardValidateState_initial = Readonly<{
+    type: "initial-validate"
+    state: BoardValidateState_initial
+}>
+
+export const initialComposeBoardValidateState: ComposeBoardValidateState_initial = {
     type: "initial-validate",
     state: initialBoardValidateState,
-} as const
+}

@@ -1,6 +1,5 @@
 import { ValidateBoardMethod } from "./method"
 
-import { Board } from "../kernel/infra"
 import { ValidateBoardInfra } from "./infra"
 
 import { boardValidateResult } from "./data"
@@ -11,7 +10,7 @@ export type ValidateBoardEmbed<N extends string, E> = Readonly<{
 }>
 
 export interface BoardValidator<E> {
-    (board: Board): E[]
+    (): E[]
 }
 
 interface Validate {
@@ -22,8 +21,8 @@ interface Validate {
 }
 export const validateBoard: Validate = (embed, infra) => (post) => {
     const { name, validator } = embed
-    const { board, stack } = infra
-    const result = boardValidateResult(validator(board))
-    stack.update(name, result.success)
+    const { stack } = infra
+    const result = boardValidateResult(validator())
+    stack.update(name, result.valid)
     post({ type: "succeed-to-validate", result })
 }

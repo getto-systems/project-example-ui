@@ -4,15 +4,24 @@ import { ClearBoardMethod, SetBoardValueMethod } from "../../method"
 
 import { InputBoardEvent } from "../../event"
 
-import { BoardValue, emptyBoardValue, BoardValue_empty } from "../../../kernel/data"
+import { BoardValue, BoardValue_empty, emptyBoardValue } from "../../../kernel/data"
+import { BoardInputType } from "../../data"
 
 export type InputBoardResource = Readonly<{
     input: InputBoardAction
 }>
 
 export interface InputBoardAction extends ApplicationAction<InputBoardState> {
+    readonly type: BoardInputType
+
+    addInputHandler(handler: BoardInputHandler): void
+
+    get(): BoardValue
     set(value: BoardValue): void
     clear(): void
+}
+export interface BoardInputHandler {
+    (): void
 }
 
 export type InputBoardMaterial = Readonly<{
