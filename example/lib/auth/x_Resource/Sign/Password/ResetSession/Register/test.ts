@@ -41,7 +41,7 @@ import {
 } from "../../../../../sign/password/resetSession/register/impl"
 import { delayed } from "../../../../../../z_infra/delayed/core"
 import {
-    initAsyncActionTester,
+    initAsyncActionTester_legacy,
     initSyncActionChecker_legacy,
 } from "../../../../../../common/vendor/getto-example/Application/testHelper"
 import { initRegisterPasswordAction } from "../../../../../sign/x_Action/Password/ResetSession/Register/Core/impl"
@@ -834,7 +834,7 @@ function expectToEmptyLastAuth(authnInfos: AuthnInfoRepository) {
 }
 
 function initAsyncTester() {
-    return initAsyncActionTester((state: RegisterPasswordState) => {
+    return initAsyncActionTester_legacy((state: RegisterPasswordState) => {
         switch (state.type) {
             case "initial-reset":
                 return false

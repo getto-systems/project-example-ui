@@ -1,60 +1,20 @@
-import { MockPropsPasser } from "../../../../../../../common/vendor/getto-example/Application/mock"
-import {
-    FormContainerMockComponent,
-    FormContainerMockProps,
-} from "../../../../../../../common/vendor/getto-form/x_Resource/Form/mock"
+import { initMockPropsPasser } from "../../../../../../../common/vendor/getto-example/Application/mock"
 
 import {
-    initMockLoginIDFormField,
-    LoginIDFormFieldMockProps,
-} from "../../../../../../common/x_Component/Field/LoginID/mock"
-import {
-    initMockPasswordFormField,
-    PasswordFormFieldMockProps,
-} from "../../../../../../common/x_Component/Field/Password/mock"
+    initMockValidateBoardAction,
+    ValidateBoardMockPropsPasser,
+} from "../../../../../../../common/vendor/getto-board/validateBoard/x_Action/ValidateBoard/mock"
+import { initMockLoginIDBoardResource } from "../../../../../../common/board/loginID/x_Action/LoginID/mock"
+import { initMockPasswordBoardResource } from "../../../../../../common/board/password/x_Action/Password/mock"
 
-import { FormContainerComponentState } from "../../../../../../../common/vendor/getto-form/x_Resource/Form/component"
-import { LoginIDFormFieldComponent } from "../../../../../../common/x_Component/Field/LoginID/component"
-import { PasswordFormFieldComponent } from "../../../../../../common/x_Component/Field/Password/component"
-import { AuthenticatePasswordFormAction } from "./action"
+import { AuthenticatePasswordFormResource } from "./action"
 
-import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
-import { AuthenticatePasswordFields } from "../../../data"
-
-type Passer = MockPropsPasser<AuthenticatePasswordFormMockProps>
-
-export type AuthenticatePasswordFormMockProps = FormContainerMockProps &
-    LoginIDFormFieldMockProps &
-    PasswordFormFieldMockProps
-
-export function initMockAuthenticatePasswordFormAction(
-    passer: Passer
-): AuthenticatePasswordFormAction {
-    return new Action(passer)
-}
-
-class Action
-    extends FormContainerMockComponent
-    implements AuthenticatePasswordFormAction {
-    readonly loginID: LoginIDFormFieldComponent
-    readonly password: PasswordFormFieldComponent
-
-    constructor(passer: Passer) {
-        super()
-        passer.addPropsHandler((props) => {
-            this.post(mapProps(props))
-        })
-        this.loginID = initMockLoginIDFormField(passer)
-        this.password = initMockPasswordFormField(passer)
-
-        function mapProps(
-            props: AuthenticatePasswordFormMockProps
-        ): FormContainerComponentState {
-            return { validation: props.validation, history: { undo: false, redo: false } }
-        }
-    }
-
-    getLoginFields(): FormConvertResult<AuthenticatePasswordFields> {
-        return { success: false }
+export function initMockAuthenticatePasswordFormResource(
+    passer: ValidateBoardMockPropsPasser
+): AuthenticatePasswordFormResource {
+    return {
+        loginID: initMockLoginIDBoardResource(initMockPropsPasser()),
+        password: initMockPasswordBoardResource(initMockPropsPasser()),
+        validate: initMockValidateBoardAction(passer),
     }
 }

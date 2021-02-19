@@ -3,18 +3,17 @@ import { initSyncActionChecker } from "../../../../getto-example/Application/tes
 import { newBoard } from "../../../kernel/infra/board"
 import { newBoardValidateStack } from "../../../kernel/infra/stack"
 
-import { initValidateBoardAction } from "./impl"
+import { initValidateBoardFieldAction } from "./impl"
 
-import { ValidateBoardAction, ValidateBoardState } from "./action"
+import { ValidateBoardFieldAction, ValidateBoardFieldState } from "./action"
 
-import { markBoardValue } from "../../../kernel/data"
-import { BoardConvertResult } from "../../data"
+import { BoardConvertResult, markBoardValue } from "../../../kernel/data"
 
 describe("ValidateBoard", () => {
     test("validate; valid input", () => {
         const { action, board, validateStack } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardState<ValidateError>>()
+        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidateError>>()
         action.addStateHandler(checker.handler)
 
         // valid input
@@ -31,7 +30,7 @@ describe("ValidateBoard", () => {
     test("validate; invalid input", () => {
         const { action, board, validateStack } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardState<ValidateError>>()
+        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidateError>>()
         action.addStateHandler(checker.handler)
 
         // invalid input : see validator()
@@ -50,7 +49,7 @@ function standardResource() {
     const board = newBoard()
     const stack = newBoardValidateStack()
 
-    const action: ValidateBoardAction<FieldValue, ValidateError> = initValidateBoardAction(
+    const action: ValidateBoardFieldAction<FieldValue, ValidateError> = initValidateBoardFieldAction(
         { name: "field", converter, validator },
         { stack }
     )

@@ -1,7 +1,64 @@
-export interface ActionTester<S> {
+export interface AsyncActionChecker<S> {
+    (done: { (): void }): {
+        readonly handler: ActionStateHandler<S>
+        check: { (statement: AsyncActionTestStatement, examine: ExamineActionStateStack<S>): void }
+    }
+}
+export function initAsyncActionChecker<S>(hasDone: ActionHasDone<S>): AsyncActionChecker<S> {
+    let stack: S[] = []
+
+    let queue: AsyncActionTestInfo<S>[] = []
+    let current: AsyncActionTestInfo<S> | null = null
+
+    return (hook) => {
+        return {
+            handler: (state: S) => {
+                stack = [...stack, state]
+
+                if (hasDone(state)) {
+                    checkCurrent()
+                }
+            },
+            check(statement, examine) {
+                queue = [...queue, { statement, examine }]
+
+                if (!current) {
+                    checkNext()
+                }
+            },
+        }
+
+        function checkCurrent() {
+            if (current) {
+                current.examine(stack)
+            }
+            stack = []
+            checkNext()
+        }
+        function checkNext() {
+            if (queue.length === 0) {
+                hook()
+                return
+            }
+            current = queue[0]
+            queue = queue.slice(1)
+
+            current.statement(checkCurrent)
+        }
+    }
+}
+export type AsyncActionTestInfo<S> = Readonly<{
+    statement: AsyncActionTestStatement
+    examine: ExamineActionStateStack<S>
+}>
+export interface AsyncActionTestStatement {
+    (hook: { (): void }): void
+}
+
+export interface ActionTester_legacy<S> {
     (examine: ExamineActionStateStack<S>): ActionStateHandler<S>
 }
-export function initAsyncActionTester<S>(hasDone: ActionHasDone<S>): ActionTester<S> {
+export function initAsyncActionTester_legacy<S>(hasDone: ActionHasDone<S>): ActionTester_legacy<S> {
     const stack: S[] = []
 
     return (examine) => (state) => {

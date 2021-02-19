@@ -12,11 +12,11 @@ import { useAction } from "../../../../../../../x_preact/common/hooks"
 
 import { InputBoard } from "../../../../../../../common/vendor/getto-board/input/x_Action/Input/x_preact/Input"
 
-import { initialValidateBoardState } from "../../../../../../../common/vendor/getto-board/validate/x_Action/Validate/action"
+import { initialValidateBoardFieldState } from "../../../../../../../common/vendor/getto-board/validateField/x_Action/ValidateField/action"
 import { initialTogglePasswordDisplayBoardState, PasswordBoardResource } from "../action"
 
 import { BoardValue } from "../../../../../../../common/vendor/getto-board/kernel/data"
-import { BoardValidateResult } from "../../../../../../../common/vendor/getto-board/validate/data"
+import { BoardFieldValidateResult } from "../../../../../../../common/vendor/getto-board/validateField/data"
 import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "../data"
 import { icon } from "../../../../../../../x_preact/common/icon"
 
@@ -25,7 +25,7 @@ type Props = PasswordBoardResource &
         help: VNodeContent[]
     }>
 export function PasswordBoard(resource: Props): VNode {
-    const state = useAction(resource.validate, initialValidateBoardState)
+    const state = useAction(resource.validate, initialValidateBoardFieldState)
     const toggleState = useAction(resource.toggle, initialTogglePasswordDisplayBoardState)
 
     return label_password_fill(content())
@@ -37,12 +37,12 @@ export function PasswordBoard(resource: Props): VNode {
             help: [...resource.help, ...passwordDisplay()],
         }
 
-        if (state.result.valid) {
+        if (state.valid) {
             return field(content)
         } else {
             return field_error({
                 ...content,
-                notice: passwordValidationError(state.result, resource.characterState()),
+                notice: passwordValidationError(state, resource.characterState()),
             })
         }
     }
@@ -98,7 +98,7 @@ export function PasswordBoard(resource: Props): VNode {
 }
 
 function passwordValidationError(
-    result: BoardValidateResult<ValidatePasswordError>,
+    result: BoardFieldValidateResult<ValidatePasswordError>,
     character: PasswordCharacterState
 ): VNodeContent[] {
     if (result.valid) {

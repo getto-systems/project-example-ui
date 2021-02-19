@@ -1,7 +1,7 @@
 import { markBoardValue } from "../../../../../../common/vendor/getto-board/kernel/data"
 import { newBoard } from "../../../../../../common/vendor/getto-board/kernel/infra/board"
 import { newBoardValidateStack } from "../../../../../../common/vendor/getto-board/kernel/infra/stack"
-import { ValidateBoardState } from "../../../../../../common/vendor/getto-board/validate/x_Action/Validate/action"
+import { ValidateBoardFieldState } from "../../../../../../common/vendor/getto-board/validateField/x_Action/ValidateField/action"
 import { initSyncActionChecker } from "../../../../../../common/vendor/getto-example/Application/testHelper"
 import { TogglePasswordDisplayBoardState } from "./action"
 import { ValidatePasswordError } from "./data"
@@ -11,7 +11,7 @@ describe("PasswordBoard", () => {
     test("validate; valid input", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardState<ValidatePasswordError>>()
+        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidatePasswordError>>()
         resource.validate.addStateHandler(checker.handler)
 
         // valid input
@@ -26,7 +26,7 @@ describe("PasswordBoard", () => {
     test("validate; invalid : empty", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardState<ValidatePasswordError>>()
+        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidatePasswordError>>()
         resource.validate.addStateHandler(checker.handler)
 
         // empty
@@ -41,7 +41,7 @@ describe("PasswordBoard", () => {
     test("validate; invalid : too-long", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardState<ValidatePasswordError>>()
+        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidatePasswordError>>()
         resource.validate.addStateHandler(checker.handler)
 
         // too-long
@@ -56,7 +56,7 @@ describe("PasswordBoard", () => {
     test("validate; valid : just max-length", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardState<ValidatePasswordError>>()
+        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidatePasswordError>>()
         resource.validate.addStateHandler(checker.handler)
 
         // just max-length
@@ -71,7 +71,7 @@ describe("PasswordBoard", () => {
     test("validate; invalid : too-long : multi-byte", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardState<ValidatePasswordError>>()
+        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidatePasswordError>>()
         resource.validate.addStateHandler(checker.handler)
 
         // too-long : "あ"(UTF8) is 3 bytes character
@@ -86,7 +86,7 @@ describe("PasswordBoard", () => {
     test("validate; valid : just max-length : multi-byte", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardState<ValidatePasswordError>>()
+        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidatePasswordError>>()
         resource.validate.addStateHandler(checker.handler)
 
         // just max-length : "あ"(UTF8) is 3 bytes character
@@ -134,7 +134,7 @@ describe("PasswordBoard", () => {
     test("terminate", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardState<ValidatePasswordError>>()
+        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidatePasswordError>>()
         resource.validate.addStateHandler(checker.handler)
 
         resource.input.terminate()

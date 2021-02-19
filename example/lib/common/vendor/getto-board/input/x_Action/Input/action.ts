@@ -1,39 +1,34 @@
 import { ApplicationAction } from "../../../../getto-example/Application/action"
 
-import { ClearBoardMethod, SetBoardValueMethod } from "../../method"
+import { ClearBoardValueMethod, SetBoardValueMethod } from "../../method"
 
-import { InputBoardEvent } from "../../event"
+import { InputBoardValueEvent } from "../../event"
 
-import { BoardValue, BoardValue_empty, emptyBoardValue } from "../../../kernel/data"
-import { BoardInputType } from "../../data"
+import { BoardValue, emptyBoardValue } from "../../../kernel/data"
+import { InputBoardValueType } from "../../data"
 
-export type InputBoardResource = Readonly<{
-    input: InputBoardAction
+export type InputBoardValueResource = Readonly<{
+    input: InputBoardValueAction
 }>
 
-export interface InputBoardAction extends ApplicationAction<InputBoardState> {
-    readonly type: BoardInputType
+export interface InputBoardValueAction extends ApplicationAction<InputBoardValueState> {
+    readonly type: InputBoardValueType
 
-    addInputHandler(handler: BoardInputHandler): void
+    addInputHandler(handler: InputBoardValueHandler): void
 
     get(): BoardValue
     set(value: BoardValue): void
     clear(): void
 }
-export interface BoardInputHandler {
+export interface InputBoardValueHandler {
     (): void
 }
 
-export type InputBoardMaterial = Readonly<{
+export type InputBoardValueMaterial = Readonly<{
     set: SetBoardValueMethod
-    clear: ClearBoardMethod
+    clear: ClearBoardValueMethod
 }>
 
-export type InputBoardState =
-    | Readonly<{ type: "initial-board"; value: BoardValue_empty }>
-    | InputBoardEvent
+export type InputBoardValueState = InputBoardValueEvent
 
-export const initialInputBoardState: InputBoardState = {
-    type: "initial-board",
-    value: emptyBoardValue,
-}
+export const initialInputBoardState: InputBoardValueState = emptyBoardValue

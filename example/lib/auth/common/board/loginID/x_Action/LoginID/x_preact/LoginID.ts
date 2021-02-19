@@ -11,18 +11,18 @@ import { useAction } from "../../../../../../../x_preact/common/hooks"
 
 import { InputBoard } from "../../../../../../../common/vendor/getto-board/input/x_Action/Input/x_preact/Input"
 
-import { initialValidateBoardState } from "../../../../../../../common/vendor/getto-board/validate/x_Action/Validate/action"
+import { initialValidateBoardFieldState } from "../../../../../../../common/vendor/getto-board/validateField/x_Action/ValidateField/action"
 import { LoginIDBoardResource } from "../action"
 
 import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "../data"
-import { BoardValidateResult } from "../../../../../../../common/vendor/getto-board/validate/data"
+import { BoardFieldValidateResult } from "../../../../../../../common/vendor/getto-board/validateField/data"
 
 type Props = LoginIDBoardResource &
     Readonly<{
         help: VNodeContent[]
     }>
 export function LoginIDBoard(resource: Props): VNode {
-    const state = useAction(resource.validate, initialValidateBoardState)
+    const state = useAction(resource.validate, initialValidateBoardFieldState)
 
     return label_text_fill(content())
 
@@ -33,15 +33,17 @@ export function LoginIDBoard(resource: Props): VNode {
             help: resource.help,
         }
 
-        if (state.result.valid) {
+        if (state.valid) {
             return field(content)
         } else {
-            return field_error({ ...content, notice: loginIDValidationError(state.result) })
+            return field_error({ ...content, notice: loginIDValidationError(state) })
         }
     }
 }
 
-function loginIDValidationError(result: BoardValidateResult<ValidateLoginIDError>): VNodeContent[] {
+function loginIDValidationError(
+    result: BoardFieldValidateResult<ValidateLoginIDError>
+): VNodeContent[] {
     if (result.valid) {
         return []
     }

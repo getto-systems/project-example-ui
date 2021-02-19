@@ -26,7 +26,7 @@ import {
 } from "../../../../../sign/password/resetSession/start/impl"
 import { delayed, wait } from "../../../../../../z_infra/delayed/core"
 import {
-    initAsyncActionTester,
+    initAsyncActionTester_legacy,
     initSyncActionChecker_legacy,
 } from "../../../../../../common/vendor/getto-example/Application/testHelper"
 import { initSendPasswordResetSessionTokenSimulate } from "../../../../../sign/password/resetSession/start/infra/remote/sendToken/simulate"
@@ -497,7 +497,7 @@ function longSendingGetStatusResponse(): GetPasswordResetSessionStatusResponse[]
 }
 
 function initAsyncTester() {
-    return initAsyncActionTester((state: StartPasswordResetSessionState) => {
+    return initAsyncActionTester_legacy((state: StartPasswordResetSessionState) => {
         switch (state.type) {
             case "initial-reset-session":
                 return false

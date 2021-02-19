@@ -2,7 +2,7 @@ import { AuthSignLinkResource } from "./action"
 
 import { AuthSignSearchParams } from "../../data"
 
-export function initAuthSignLinkResource(): AuthSignLinkResource {
+export function newAuthSignLinkResource(): AuthSignLinkResource {
     return {
         href: {
             passwordLogin,

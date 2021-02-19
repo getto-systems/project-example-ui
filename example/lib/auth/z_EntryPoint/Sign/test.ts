@@ -1,12 +1,14 @@
 import { initLoginViewLocationInfo, View } from "./impl"
 
+import { newBoardValidateStack } from "../../../common/vendor/getto-board/kernel/infra/stack"
+import { newBoard } from "../../../common/vendor/getto-board/kernel/infra/board"
 import { newStaticClock } from "../../../z_infra/clock/simulate"
 import { initAuthenticatePasswordSimulate } from "../../sign/password/authenticate/infra/remote/authenticate/simulate"
 import { initRenewAuthnInfoSimulate } from "../../sign/kernel/authnInfo/kernel/infra/remote/renew/simulate"
 import { initRegisterPasswordSimulate } from "../../sign/password/resetSession/register/infra/remote/register/simulate"
 import { initStartPasswordResetSessionSimulate } from "../../sign/password/resetSession/start/infra/remote/start/simulate"
 
-import { initAuthSignLinkResource } from "../../sign/common/searchParams/x_Action/Link/impl"
+import { newAuthSignLinkResource } from "../../sign/common/searchParams/x_Action/Link/impl"
 
 import { initFormAction } from "../../../common/vendor/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../common/field/loginID/main/loginID"
@@ -36,12 +38,13 @@ import { markPasswordResetSessionID } from "../../sign/password/resetSession/sta
 import { initSendPasswordResetSessionTokenSimulate } from "../../sign/password/resetSession/start/infra/remote/sendToken/simulate"
 import { initGetPasswordResetSessionStatusSimulate } from "../../sign/password/resetSession/start/infra/remote/getStatus/simulate"
 import { initRenewAuthnInfoAction } from "../../sign/kernel/authnInfo/renew/x_Action/Renew/impl"
-import { initAuthenticatePasswordFormAction } from "../../sign/password/authenticate/x_Action/Authenticate/Form/impl"
+import { initAuthenticatePasswordFormResource } from "../../sign/password/authenticate/x_Action/Authenticate/Form/impl"
 import { initAuthenticatePasswordCoreAction } from "../../sign/password/authenticate/x_Action/Authenticate/Core/impl"
 import { initRegisterPasswordAction } from "../../sign/x_Action/Password/ResetSession/Register/Core/impl"
 import { initRegisterPasswordFormAction } from "../../sign/x_Action/Password/ResetSession/Register/Form/impl"
 import { initStartPasswordResetSessionFormAction } from "../../sign/x_Action/Password/ResetSession/Start/Form/impl"
 import { initStartPasswordResetSessionAction } from "../../sign/x_Action/Password/ResetSession/Start/Core/impl"
+import { toAuthenticatePasswordEntryPoint } from "../../sign/password/authenticate/x_Action/Authenticate/impl"
 
 const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
 const SUCCEED_TO_AUTH_AT = new Date("2020-01-01 10:00:00")
@@ -252,7 +255,7 @@ function standardLoginView() {
     const repository = standardRepository()
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        link: initAuthSignLinkResource,
+        link: newAuthSignLinkResource,
         renew: () =>
             standardRenewCredentialResource(
                 currentURL,
@@ -261,7 +264,7 @@ function standardLoginView() {
                 clock
             ),
         passwordLogin: () =>
-            standardPasswordLoginResource(
+            standardPasswordLoginEntryPoint(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
@@ -284,7 +287,7 @@ function passwordResetSessionLoginView() {
     const repository = standardRepository()
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        link: initAuthSignLinkResource,
+        link: newAuthSignLinkResource,
         renew: () =>
             standardRenewCredentialResource(
                 currentURL,
@@ -293,7 +296,7 @@ function passwordResetSessionLoginView() {
                 clock
             ),
         passwordLogin: () =>
-            standardPasswordLoginResource(
+            standardPasswordLoginEntryPoint(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
@@ -316,7 +319,7 @@ function passwordResetLoginView() {
     const repository = standardRepository()
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        link: initAuthSignLinkResource,
+        link: newAuthSignLinkResource,
         renew: () =>
             standardRenewCredentialResource(
                 currentURL,
@@ -325,7 +328,7 @@ function passwordResetLoginView() {
                 clock
             ),
         passwordLogin: () =>
-            standardPasswordLoginResource(
+            standardPasswordLoginEntryPoint(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
@@ -344,13 +347,13 @@ function passwordResetLoginView() {
     return { view }
 }
 
-function standardPasswordLoginResource(
+function standardPasswordLoginEntryPoint(
     currentURL: URL,
     apiCredentials: ApiCredentialRepository,
     authnInfos: AuthnInfoRepository,
     clock: Clock
 ) {
-    return {
+    return toAuthenticatePasswordEntryPoint({
         core: initAuthenticatePasswordCoreAction(
             {
                 startContinuousRenew: {
@@ -383,22 +386,11 @@ function standardPasswordLoginResource(
             initGetSecureScriptPathLocationInfo(currentURL)
         ),
 
-        form: initAuthenticatePasswordFormAction(formMaterial()),
-    }
-
-    function formMaterial() {
-        const form = initFormAction()
-        const loginID = initLoginIDFormFieldAction()
-        const password = initPasswordFormFieldAction()
-        return {
-            validation: form.validation(),
-            history: form.history(),
-            loginID: loginID.field(),
-            password: password.field(),
-            character: password.character(),
-            viewer: password.viewer(),
-        }
-    }
+        form: initAuthenticatePasswordFormResource({
+            board: newBoard(),
+            stack: newBoardValidateStack(),
+        }),
+    })
 }
 function standardPasswordResetResource(
     currentURL: URL,

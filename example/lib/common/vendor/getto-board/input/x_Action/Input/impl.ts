@@ -1,36 +1,43 @@
 import { ApplicationAbstractAction } from "../../../../getto-example/Application/impl"
 
-import { clearBoard, InputBoardEmbed, setBoardValue } from "../../impl"
+import { clearBoardValue, InputBoardEmbed, setBoardValue } from "../../impl"
 
-import { InputBoardInfra } from "../../infra"
+import { InputBoardValueInfra } from "../../infra"
 
-import { InputBoardAction, InputBoardState, InputBoardMaterial, BoardInputHandler } from "./action"
+import {
+    InputBoardValueAction,
+    InputBoardValueState,
+    InputBoardValueMaterial,
+    InputBoardValueHandler,
+} from "./action"
 
 import { BoardValue } from "../../../kernel/data"
-import { BoardInputType } from "../../data"
+import { InputBoardValueType } from "../../data"
 
-export function initInputBoardAction(
+export function initInputBoardValueAction(
     embed: InputBoardEmbed,
-    infra: InputBoardInfra
-): InputBoardAction {
+    infra: InputBoardValueInfra
+): InputBoardValueAction {
     return new Action(embed.type, () => infra.board.get(embed.name), {
         set: setBoardValue(embed, infra),
-        clear: clearBoard(embed, infra),
+        clear: clearBoardValue(embed, infra),
     })
 }
 
 interface Pick {
     (): BoardValue
 }
-class Action extends ApplicationAbstractAction<InputBoardState> implements InputBoardAction {
-    readonly type: BoardInputType
+class Action
+    extends ApplicationAbstractAction<InputBoardValueState>
+    implements InputBoardValueAction {
+    readonly type: InputBoardValueType
 
-    inputHandlers: BoardInputHandler[] = []
+    inputHandlers: InputBoardValueHandler[] = []
 
     pick: Pick
-    material: InputBoardMaterial
+    material: InputBoardValueMaterial
 
-    constructor(type: BoardInputType, pick: Pick, material: InputBoardMaterial) {
+    constructor(type: InputBoardValueType, pick: Pick, material: InputBoardValueMaterial) {
         super()
         this.type = type
         this.pick = pick
@@ -41,7 +48,7 @@ class Action extends ApplicationAbstractAction<InputBoardState> implements Input
         })
     }
 
-    addInputHandler(handler: BoardInputHandler): void {
+    addInputHandler(handler: InputBoardValueHandler): void {
         this.inputHandlers = [...this.inputHandlers, handler]
     }
 

@@ -1,31 +1,31 @@
-import { ClearBoardMethod, SetBoardValueMethod } from "./method"
+import { ClearBoardValueMethod, SetBoardValueMethod } from "./method"
 
-import { InputBoardInfra } from "./infra"
+import { InputBoardValueInfra } from "./infra"
 
 import { emptyBoardValue } from "../kernel/data"
-import { BoardInputType } from "./data"
+import { InputBoardValueType } from "./data"
 
 export type InputBoardEmbed = Readonly<{
     name: string
-    type: BoardInputType
+    type: InputBoardValueType
 }>
 
 interface SetValue {
-    (embed: InputBoardEmbed, infra: InputBoardInfra): SetBoardValueMethod
+    (embed: InputBoardEmbed, infra: InputBoardValueInfra): SetBoardValueMethod
 }
 export const setBoardValue: SetValue = (embed, infra) => (value, post) => {
     const { name } = embed
     const { board } = infra
     board.set(name, value)
-    post({ type: "succeed-to-input", value })
+    post(value)
 }
 
 interface Clear {
-    (embed: InputBoardEmbed, infra: InputBoardInfra): ClearBoardMethod
+    (embed: InputBoardEmbed, infra: InputBoardValueInfra): ClearBoardValueMethod
 }
-export const clearBoard: Clear = (embed, infra) => (post) => {
+export const clearBoardValue: Clear = (embed, infra) => (post) => {
     const { name } = embed
     const { board } = infra
     board.clear(name)
-    post({ type: "succeed-to-input", value: emptyBoardValue })
+    post(emptyBoardValue)
 }

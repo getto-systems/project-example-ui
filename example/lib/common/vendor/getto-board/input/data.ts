@@ -1,4 +1,4 @@
-export const boardInputTypes = [
+export const inputBoardValueTypes = [
     "text",
     "password",
     "search",
@@ -9,4 +9,12 @@ export const boardInputTypes = [
     "time",
 ] as const
 // variant 追加時 : typeof boardInputTypes[*] からの quick fix で展開できる
-export type BoardInputType = "number" | "text" | "password" | "search" | "tel" | "email" | "date" | "time"
+export type InputBoardValueType =
+    | "number"
+    | "text"
+    | "password"
+    | "search"
+    | "tel"
+    | "email"
+    | "date"
+    | "time"

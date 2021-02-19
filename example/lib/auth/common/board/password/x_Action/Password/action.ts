@@ -1,8 +1,8 @@
-import { InputBoardAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/action"
+import { InputBoardValueAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/action"
 import {
-    ValidateBoardAction,
-    ValidateBoardState,
-} from "../../../../../../common/vendor/getto-board/validate/x_Action/Validate/action"
+    ValidateBoardFieldAction,
+    ValidateBoardFieldState,
+} from "../../../../../../common/vendor/getto-board/validateField/x_Action/ValidateField/action"
 import { ApplicationAction } from "../../../../../../common/vendor/getto-example/Application/action"
 import { TogglePasswordDisplayBoardEvent } from "../../toggleDisplay/event"
 import {
@@ -15,13 +15,13 @@ import { PasswordCharacterState, ValidatePasswordError } from "./data"
 
 export type PasswordBoardResource = Readonly<{
     validate: ValidatePasswordAction
-    input: InputBoardAction
+    input: InputBoardValueAction
     toggle: TogglePasswordDisplayBoardAction
     characterState: PasswordCharacterStateDetecter
 }>
 
-export type ValidatePasswordAction = ValidateBoardAction<Password, ValidatePasswordError>
-export type ValidatePasswordState = ValidateBoardState<ValidatePasswordError>
+export type ValidatePasswordAction = ValidateBoardFieldAction<Password, ValidatePasswordError>
+export type ValidatePasswordState = ValidateBoardFieldState<ValidatePasswordError>
 
 export interface TogglePasswordDisplayBoardAction
     extends ApplicationAction<TogglePasswordDisplayBoardState> {

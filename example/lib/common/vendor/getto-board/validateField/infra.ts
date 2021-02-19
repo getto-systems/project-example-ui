@@ -1,5 +1,5 @@
 import { BoardValidateStack } from "../kernel/infra"
 
-export type ComposeBoardValidateInfra = Readonly<{
+export type ValidateBoardFieldInfra = Readonly<{
     stack: BoardValidateStack
 }>
