@@ -6,7 +6,7 @@ import {
 } from "../../../../../../common/vendor/getto-example/Application/mock"
 
 import {
-    PasswordBoardResource,
+    PasswordBoardFieldAction,
     TogglePasswordDisplayBoardAction,
     TogglePasswordDisplayBoardState,
     ValidatePasswordAction,
@@ -16,8 +16,8 @@ import {
 import { BoardConvertResult } from "../../../../../../common/vendor/getto-board/kernel/data"
 import { Password } from "../../../../password/data"
 
-export type PasswordBoardResourceMockPropsPasser = MockPropsPasser<PasswordBoardResourceMockProps>
-export type PasswordBoardResourceMockProps = PasswordBoardMockProps &
+export type PasswordBoardFieldActionMockPropsPasser = MockPropsPasser<PasswordBoardFieldActionMockProps>
+export type PasswordBoardFieldActionMockProps = PasswordBoardMockProps &
     TogglePasswordDisplayBoardMockProps &
     PasswordCharacterStateMockProps
 
@@ -42,9 +42,9 @@ export const passwordCharacterStateTypes: PasswordCharacterStateMockProps["chara
     "multiByte",
 ]
 
-export function initMockPasswordBoardResource(
-    passer: PasswordBoardResourceMockPropsPasser
-): PasswordBoardResource {
+export function initMockPasswordBoardFieldAction(
+    passer: PasswordBoardFieldActionMockPropsPasser
+): PasswordBoardFieldAction {
     let characterState = { multiByte: false }
     passer.addPropsHandler((props) => {
         characterState = { multiByte: props.character === "multiByte" }
@@ -60,7 +60,7 @@ export function initMockPasswordBoardResource(
 class Action extends MockAction<ValidatePasswordState> implements ValidatePasswordAction {
     readonly name = "password"
 
-    constructor(passer: PasswordBoardResourceMockPropsPasser) {
+    constructor(passer: PasswordBoardFieldActionMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))
@@ -89,7 +89,7 @@ class Action extends MockAction<ValidatePasswordState> implements ValidatePasswo
 class ToggleAction
     extends MockAction<TogglePasswordDisplayBoardState>
     implements TogglePasswordDisplayBoardAction {
-    constructor(passer: PasswordBoardResourceMockPropsPasser) {
+    constructor(passer: PasswordBoardFieldActionMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {
             this.post(mapProps(props))

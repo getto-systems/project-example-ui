@@ -1,6 +1,6 @@
 import { newAuthSignLinkResource } from "../../../../common/searchParams/x_Action/Link/impl"
-import { terminateLoginIDBoardResource } from "../../../../../common/board/loginID/x_Action/LoginID/impl"
-import { terminatePasswordBoardResource } from "../../../../../common/board/password/x_Action/Password/impl"
+import { terminateLoginIDBoardAction } from "../../../../../common/board/loginID/x_Action/LoginID/impl"
+import { terminatePasswordBoardFieldAction } from "../../../../../common/board/password/x_Action/Password/impl"
 
 import { AuthenticatePasswordEntryPoint, AuthenticatePasswordResource } from "./action"
 
@@ -12,8 +12,8 @@ export function toAuthenticatePasswordEntryPoint(
         terminate: () => {
             resource.core.terminate()
             resource.form.validate.terminate()
-            terminateLoginIDBoardResource(resource.form.loginID)
-            terminatePasswordBoardResource(resource.form.password)
+            terminateLoginIDBoardAction(resource.form.loginID)
+            terminatePasswordBoardFieldAction(resource.form.password)
         },
     }
 }

@@ -4,7 +4,7 @@ import { newBoardValidateStack } from "../../../../../../common/vendor/getto-boa
 import { ValidateBoardFieldState } from "../../../../../../common/vendor/getto-board/validateField/x_Action/ValidateField/action"
 import { initSyncActionChecker } from "../../../../../../common/vendor/getto-example/Application/testHelper"
 import { ValidateLoginIDError } from "./data"
-import { initLoginIDBoardResource } from "./impl"
+import { initLoginIDBoardAction } from "./impl"
 
 describe("LoginIDBoard", () => {
     test("validate; valid input", () => {
@@ -87,7 +87,7 @@ function standardResource() {
     const board = newBoard()
     const stack = newBoardValidateStack()
 
-    const resource = initLoginIDBoardResource({ name: "field" }, { board, stack })
+    const resource = initLoginIDBoardAction({ name: "field" }, { board, stack })
 
     return { resource }
 }

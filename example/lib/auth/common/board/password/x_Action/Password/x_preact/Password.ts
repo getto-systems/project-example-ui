@@ -13,27 +13,27 @@ import { useAction } from "../../../../../../../x_preact/common/hooks"
 import { InputBoard } from "../../../../../../../common/vendor/getto-board/input/x_Action/Input/x_preact/Input"
 
 import { initialValidateBoardFieldState } from "../../../../../../../common/vendor/getto-board/validateField/x_Action/ValidateField/action"
-import { initialTogglePasswordDisplayBoardState, PasswordBoardResource } from "../action"
+import { initialTogglePasswordDisplayBoardState, PasswordBoardFieldResource } from "../action"
 
 import { BoardValue } from "../../../../../../../common/vendor/getto-board/kernel/data"
 import { BoardFieldValidateResult } from "../../../../../../../common/vendor/getto-board/validateField/data"
 import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "../data"
 import { icon } from "../../../../../../../x_preact/common/icon"
 
-type Props = PasswordBoardResource &
+type Props = PasswordBoardFieldResource &
     Readonly<{
         help: VNodeContent[]
     }>
 export function PasswordBoard(resource: Props): VNode {
-    const state = useAction(resource.validate, initialValidateBoardFieldState)
-    const toggleState = useAction(resource.toggle, initialTogglePasswordDisplayBoardState)
+    const state = useAction(resource.field.validate, initialValidateBoardFieldState)
+    const toggleState = useAction(resource.field.toggle, initialTogglePasswordDisplayBoardState)
 
     return label_password_fill(content())
 
     function content() {
         const content = {
             title: "パスワード",
-            body: h(InputBoard, resource),
+            body: h(InputBoard, resource.field),
             help: [...resource.help, ...passwordDisplay()],
         }
 
@@ -42,7 +42,7 @@ export function PasswordBoard(resource: Props): VNode {
         } else {
             return field_error({
                 ...content,
-                notice: passwordValidationError(state, resource.characterState()),
+                notice: passwordValidationError(state, resource.field.characterState()),
             })
         }
     }
@@ -53,7 +53,7 @@ export function PasswordBoard(resource: Props): VNode {
                 html`<a href="#" onClick=${onHide}>
                     ${icon("key-alt")} パスワードを隠す ${characterHelp()}
                 </a>`,
-                showPassword(resource.input.get()),
+                showPassword(resource.field.input.get()),
             ]
         } else {
             return [
@@ -71,7 +71,7 @@ export function PasswordBoard(resource: Props): VNode {
         }
 
         function characterHelp(): string {
-            if (resource.characterState().multiByte) {
+            if (resource.field.characterState().multiByte) {
                 return "(マルチバイト文字が含まれています)"
             } else {
                 return ""
@@ -80,11 +80,11 @@ export function PasswordBoard(resource: Props): VNode {
 
         function onShow(e: MouseEvent) {
             linkClicked(e)
-            resource.toggle.show()
+            resource.field.toggle.show()
         }
         function onHide(e: MouseEvent) {
             linkClicked(e)
-            resource.toggle.hide()
+            resource.field.toggle.hide()
         }
         function linkClicked(e: MouseEvent) {
             e.preventDefault()

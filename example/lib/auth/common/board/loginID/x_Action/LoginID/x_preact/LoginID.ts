@@ -22,14 +22,14 @@ type Props = LoginIDBoardResource &
         help: VNodeContent[]
     }>
 export function LoginIDBoard(resource: Props): VNode {
-    const state = useAction(resource.validate, initialValidateBoardFieldState)
+    const state = useAction(resource.field.validate, initialValidateBoardFieldState)
 
     return label_text_fill(content())
 
     function content() {
         const content = {
             title: "ログインID",
-            body: h(InputBoard, resource),
+            body: h(InputBoard, resource.field),
             help: resource.help,
         }
 
