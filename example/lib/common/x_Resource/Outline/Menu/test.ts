@@ -8,7 +8,7 @@ import {
 import { OutlineMenuExpand, OutlineMenuExpandRepository, OutlineMenuTree } from "../../../../auth/permission/outline/load/infra"
 import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"
 import { initMemoryOutlineMenuExpandRepository } from "../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/memory"
-import { initAsyncActionTester } from "../../../vendor/getto-example/Application/testHelper"
+import { initAsyncActionTester_legacy } from "../../../vendor/getto-example/Application/testHelper"
 import { markApiNonce, markApiRoles } from "../../../apiCredential/data"
 import { ApiCredentialRepository } from "../../../apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../apiCredential/infra/repository/memory"
@@ -586,7 +586,7 @@ function expectToSaveExpand(repository: Repository, menuExpand: string[][]) {
 }
 
 function initAsyncBreadcrumbListTester() {
-    return initAsyncActionTester((state: BreadcrumbListComponentState) => {
+    return initAsyncActionTester_legacy((state: BreadcrumbListComponentState) => {
         switch (state.type) {
             case "initial-breadcrumb-list":
                 return false
@@ -597,7 +597,7 @@ function initAsyncBreadcrumbListTester() {
     })
 }
 function initAsyncMenuTester() {
-    return initAsyncActionTester((state: MenuComponentState) => {
+    return initAsyncActionTester_legacy((state: MenuComponentState) => {
         switch (state.type) {
             case "initial-menu":
             case "succeed-to-instant-load":

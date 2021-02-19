@@ -19,22 +19,18 @@ import { icon, spinner } from "../../../../../../../x_preact/common/icon"
 import { appendScript } from "../../../../../../../x_preact/auth/Sign/script"
 
 import { ApplicationError } from "../../../../../../../x_preact/common/System/ApplicationError"
+import { LoginIDBoard } from "../../../../../../common/board/loginID/x_Action/LoginID/x_preact/LoginID"
+import { PasswordBoard } from "../../../../../../common/board/password/x_Action/Password/x_preact/Password"
 
-import { LoginIDFormField } from "../../../../../../../x_preact/auth/Sign/field/loginID"
-import { PasswordFormField } from "../../../../../../../x_preact/auth/Sign/field/password"
-
-import { initialAuthenticatePasswordCoreState } from "../Core/action"
-import { initialFormContainerComponentState } from "../../../../../../../common/vendor/getto-form/x_Resource/Form/component"
-
-import { AuthenticatePasswordEntryPoint } from "../action"
+import { AuthenticatePasswordEntryPoint, initialAuthenticatePasswordState } from "../action"
 
 import { AuthenticatePasswordError } from "../../../data"
 
 export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
 
-    const state = useAction(resource.core, initialAuthenticatePasswordCoreState)
-    const formState = useAction(resource.form, initialFormContainerComponentState)
+    const state = useAction(resource.core, initialAuthenticatePasswordState.core)
+    const validateState = useAction(resource.form.validate, initialAuthenticatePasswordState.form)
 
     useEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useEffect で行う
@@ -89,8 +85,8 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
             loginBox(siteInfo(), {
                 title: loginTitle(),
                 body: [
-                    h(LoginIDFormField, { loginID: resource.form.loginID, help: [] }),
-                    h(PasswordFormField, { password: resource.form.password, help: [] }),
+                    h(LoginIDBoard, { ...resource.form.loginID, help: [] }),
+                    h(PasswordBoard, { ...resource.form.password, help: [] }),
                 ],
                 footer: [buttons({ left: button(), right: resetLink() }), error()],
             })
@@ -108,7 +104,7 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
             function loginButton() {
                 const label = "ログイン"
 
-                switch (formState.validation) {
+                switch (validateState) {
                     case "initial":
                         return button_send({ state: "normal", label, onClick })
 
@@ -121,7 +117,7 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    resource.core.submit(resource.form.getLoginFields())
+                    resource.core.submit(resource.form.validate.get())
                 }
             }
             function connectingButton(): VNode {
@@ -137,7 +133,7 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
                 return fieldError(content.error)
             }
 
-            switch (formState.validation) {
+            switch (validateState) {
                 case "initial":
                 case "valid":
                     return ""

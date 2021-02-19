@@ -4,7 +4,6 @@ import {
     AuthSignView,
     AuthSignViewState,
     AuthSignViewType,
-    PasswordLoginEntryPoint,
     PasswordResetSessionEntryPoint,
     PasswordResetEntryPoint,
     AuthSignViewLocationInfo,
@@ -12,6 +11,7 @@ import {
 } from "./entryPoint"
 
 import { AuthSignSearchParams } from "../../sign/common/searchParams/data"
+import { AuthenticatePasswordEntryPoint } from "../../sign/password/authenticate/x_Action/Authenticate/action"
 
 export function initLoginViewLocationInfo(currentURL: URL): AuthSignViewLocationInfo {
     return {
@@ -34,6 +34,7 @@ function detectViewState(currentURL: URL): AuthSignViewType {
 
 export class View extends ApplicationAbstractAction<AuthSignViewState> implements AuthSignView {
     locationInfo: AuthSignViewLocationInfo
+    // TODO もう components ではない 
     components: AuthSignResourceFactory
 
     constructor(locationInfo: AuthSignViewLocationInfo, components: AuthSignResourceFactory) {
@@ -77,15 +78,8 @@ export class View extends ApplicationAbstractAction<AuthSignViewState> implement
         }
     }
 
-    passwordLogin(): PasswordLoginEntryPoint {
-        const resource = { ...this.components.passwordLogin(), ...this.components.link() }
-        return {
-            resource,
-            terminate: () => {
-                resource.core.terminate()
-                resource.form.terminate()
-            },
-        }
+    passwordLogin(): AuthenticatePasswordEntryPoint {
+        return this.components.passwordLogin()
     }
     passwordResetSession(): PasswordResetSessionEntryPoint {
         const resource = { ...this.components.passwordResetSession(), ...this.components.link() }

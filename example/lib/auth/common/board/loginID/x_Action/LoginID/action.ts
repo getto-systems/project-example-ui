@@ -1,16 +1,16 @@
-import { InputBoardAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/action"
+import { InputBoardValueAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/action"
 import {
-    ValidateBoardAction,
-    ValidateBoardState,
-} from "../../../../../../common/vendor/getto-board/validate/x_Action/Validate/action"
+    ValidateBoardFieldAction,
+    ValidateBoardFieldState,
+} from "../../../../../../common/vendor/getto-board/validateField/x_Action/ValidateField/action"
 
 import { LoginID } from "../../../../loginID/data"
 import { ValidateLoginIDError } from "./data"
 
 export type LoginIDBoardResource = Readonly<{
+    input: InputBoardValueAction
     validate: ValidateLoginIDAction
-    input: InputBoardAction
 }>
 
-export type ValidateLoginIDAction = ValidateBoardAction<LoginID, ValidateLoginIDError>
-export type ValidateLoginIDState = ValidateBoardState<ValidateLoginIDError>
+export type ValidateLoginIDAction = ValidateBoardFieldAction<LoginID, ValidateLoginIDError>
+export type ValidateLoginIDState = ValidateBoardFieldState<ValidateLoginIDError>

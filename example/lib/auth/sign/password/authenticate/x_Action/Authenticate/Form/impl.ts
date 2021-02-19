@@ -1,79 +1,49 @@
-import { FormContainerBaseComponent } from "../../../../../../../common/vendor/getto-form/x_Resource/Form/impl"
-import { initLoginIDFormFieldComponent } from "../../../../../../common/x_Component/Field/LoginID/impl"
-import { initPasswordFormFieldComponent } from "../../../../../../common/x_Component/Field/Password/impl"
+import { initLoginIDBoardResource } from "../../../../../../common/board/loginID/x_Action/LoginID/impl"
+import { initPasswordBoardResource } from "../../../../../../common/board/password/x_Action/Password/impl"
 
-import { LoginIDFormFieldComponent } from "../../../../../../common/x_Component/Field/LoginID/component"
-import { PasswordFormFieldComponent } from "../../../../../../common/x_Component/Field/Password/component"
-import {
-    AuthenticatePasswordFormAction,
-    AuthenticatePasswordFormMaterial,
-} from "./action"
+import { initValidateBoardAction } from "../../../../../../../common/vendor/getto-board/validateBoard/x_Action/ValidateBoard/impl"
 
-import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
-import { AuthenticatePasswordFields } from "../../../data"
+import { ValidateBoardInfra } from "../../../../../../../common/vendor/getto-board/validateBoard/infra"
+import { ValidateBoardFieldInfra } from "../../../../../../../common/vendor/getto-board/validateField/infra"
+import { InputBoardValueInfra } from "../../../../../../../common/vendor/getto-board/input/infra"
 
-export function initAuthenticatePasswordFormAction(
-    material: AuthenticatePasswordFormMaterial
-): AuthenticatePasswordFormAction {
-    return new Action(material)
-}
+import { AuthenticatePasswordFormResource } from "./action"
 
-class Action
-    extends FormContainerBaseComponent<AuthenticatePasswordFormMaterial>
-    implements AuthenticatePasswordFormAction {
-    readonly loginID: LoginIDFormFieldComponent
-    readonly password: PasswordFormFieldComponent
+export type AuthenticatePasswordFormBase = ValidateBoardInfra &
+    ValidateBoardFieldInfra &
+    InputBoardValueInfra
 
-    constructor(material: AuthenticatePasswordFormMaterial) {
-        super(material, (path) => {
-            switch (path.field) {
-                case "loginID":
-                    return { found: true, input: this.loginID.input }
+export function initAuthenticatePasswordFormResource(
+    infra: AuthenticatePasswordFormBase
+): AuthenticatePasswordFormResource {
+    const loginID = initLoginIDBoardResource({ name: "loginID" }, infra)
+    const password = initPasswordBoardResource({ name: "password" }, infra)
+    const validate = initValidateBoardAction(
+        {
+            fields: [loginID.validate.name, password.validate.name],
+            converter: () => {
+                loginID.validate.check()
+                password.validate.check()
 
-                case "password":
-                    return { found: true, input: this.password.input }
-
-                default:
-                    return { found: false }
-            }
-        })
-
-        this.loginID = this.initField(
-            "loginID",
-            initLoginIDFormFieldComponent({ loginID: material.loginID })
-        )
-        this.password = this.initField(
-            "password",
-            initPasswordFormFieldComponent({
-                password: material.password,
-                character: material.character,
-                viewer: material.viewer,
-            })
-        )
-
-        this.terminateHook(() => {
-            this.loginID.terminate()
-            this.password.terminate()
-        })
-    }
-
-    getLoginFields(): FormConvertResult<AuthenticatePasswordFields> {
-        this.loginID.validate()
-        this.password.validate()
-
-        const result = {
-            loginID: this.material.loginID.convert(),
-            password: this.material.password.convert(),
-        }
-        if (!result.loginID.success || !result.password.success) {
-            return { success: false }
-        }
-        return {
-            success: true,
-            value: {
-                loginID: result.loginID.value,
-                password: result.password.value,
+                const loginIDResult = loginID.validate.get()
+                const passwordResult = password.validate.get()
+                if (!loginIDResult.success || !passwordResult.success) {
+                    return { success: false }
+                }
+                return {
+                    success: true,
+                    value: {
+                        loginID: loginIDResult.value,
+                        password: passwordResult.value,
+                    },
+                }
             },
-        }
-    }
+        },
+        infra
+    )
+
+    loginID.input.addInputHandler(() => validate.check())
+    password.input.addInputHandler(() => validate.check())    
+
+    return { loginID, password, validate }
 }

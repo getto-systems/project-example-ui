@@ -1,12 +1,12 @@
 import { ApplicationAbstractAction } from "../../../../../../common/vendor/getto-example/Application/impl"
 
-import { initValidateBoardAction } from "../../../../../../common/vendor/getto-board/validate/x_Action/Validate/impl"
-import { initInputBoardAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/impl"
+import { initValidateBoardFieldAction } from "../../../../../../common/vendor/getto-board/validateField/x_Action/ValidateField/impl"
+import { initInputBoardValueAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/impl"
 
 import { hidePasswordDisplayBoard, showPasswordDisplayBoard } from "../../toggleDisplay/impl"
 
-import { ValidateBoardInfra } from "../../../../../../common/vendor/getto-board/validate/infra"
-import { InputBoardInfra } from "../../../../../../common/vendor/getto-board/input/infra"
+import { ValidateBoardFieldInfra } from "../../../../../../common/vendor/getto-board/validateField/infra"
+import { InputBoardValueInfra } from "../../../../../../common/vendor/getto-board/input/infra"
 
 import {
     PasswordBoardResource,
@@ -15,10 +15,12 @@ import {
     TogglePasswordDisplayBoardState,
 } from "./action"
 
-import { BoardValue } from "../../../../../../common/vendor/getto-board/kernel/data"
+import {
+    BoardConvertResult,
+    BoardValue,
+} from "../../../../../../common/vendor/getto-board/kernel/data"
 import { markPassword, Password } from "../../../../password/data"
 import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "./data"
-import { BoardConvertResult } from "../../../../../../common/vendor/getto-board/validate/data"
 
 export type PasswordBoardEmbed<N extends string> = Readonly<{
     name: N
@@ -26,11 +28,11 @@ export type PasswordBoardEmbed<N extends string> = Readonly<{
 
 export function initPasswordBoardResource<N extends string>(
     embed: PasswordBoardEmbed<N>,
-    infra: ValidateBoardInfra & InputBoardInfra
+    infra: ValidateBoardFieldInfra & InputBoardValueInfra
 ): PasswordBoardResource {
-    const input = initInputBoardAction({ name: "input", type: "password" }, infra)
+    const input = initInputBoardValueAction({ name: "input", type: "password" }, infra)
 
-    const validate = initValidateBoardAction(
+    const validate = initValidateBoardFieldAction(
         {
             name: embed.name,
             validator: () => validatePassword(input.get()),
@@ -50,6 +52,10 @@ export function initPasswordBoardResource<N extends string>(
         }),
         characterState: () => checkPasswordCharacter(input.get()),
     }
+}
+export function terminatePasswordBoardResource(resource: PasswordBoardResource): void {
+    resource.input.terminate()
+    resource.validate.terminate()
 }
 
 function convertPassword(value: BoardValue): BoardConvertResult<Password> {

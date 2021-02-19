@@ -1,12 +1,12 @@
-import { InputBoardEvent } from "./event"
+import { InputBoardValueEvent } from "./event"
 
 import { BoardValue } from "../kernel/data"
 
 export interface SetBoardValueMethod {
-    (value: BoardValue, post: Post<InputBoardEvent>): void
+    (value: BoardValue, post: Post<InputBoardValueEvent>): void
 }
-export interface ClearBoardMethod {
-    (post: Post<InputBoardEvent>): void
+export interface ClearBoardValueMethod {
+    (post: Post<InputBoardValueEvent>): void
 }
 
 interface Post<E> {

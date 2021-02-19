@@ -2,28 +2,28 @@ import { initSyncActionChecker } from "../../../../getto-example/Application/tes
 
 import { newBoard } from "../../../kernel/infra/board"
 
-import { initInputBoardAction } from "./impl"
+import { initInputBoardValueAction } from "./impl"
 
-import { InputBoardState } from "./action"
+import { InputBoardValueState } from "./action"
 
 import { markBoardValue } from "../../../kernel/data"
 
-describe("InputBoard", () => {
+describe("InputBoardValue", () => {
     test("input and clear", () => {
         const { action } = standardResource()
 
-        const checker = initSyncActionChecker<InputBoardState>()
+        const checker = initSyncActionChecker<InputBoardValueState>()
         action.addStateHandler(checker.handler)
 
         action.set(markBoardValue("input"))
         checker.check((stack) => {
-            expect(stack).toEqual([{ type: "succeed-to-input", value: "input" }])
+            expect(stack).toEqual(["input"])
             expect(action.get()).toEqual("input")
         })
 
         action.clear()
         checker.check((stack) => {
-            expect(stack).toEqual([{ type: "succeed-to-input", value: "" }])
+            expect(stack).toEqual([""])
             expect(action.get()).toEqual("")
         })
     })
@@ -32,7 +32,7 @@ describe("InputBoard", () => {
 function standardResource() {
     const board = newBoard()
 
-    const action = initInputBoardAction({ name: "input", type: "text" }, { board })
+    const action = initInputBoardValueAction({ name: "input", type: "text" }, { board })
 
     return { board, action }
 }

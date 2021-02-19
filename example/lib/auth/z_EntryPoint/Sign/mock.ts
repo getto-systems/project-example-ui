@@ -26,7 +26,7 @@ import { AuthSignLinkResource } from "../../sign/common/searchParams/x_Action/Li
 
 import { RenewAuthnInfoResource } from "../../sign/kernel/authnInfo/renew/x_Action/Renew/action"
 
-import { initAuthSignLinkResource } from "../../sign/common/searchParams/x_Action/Link/impl"
+import { newAuthSignLinkResource } from "../../sign/common/searchParams/x_Action/Link/impl"
 
 export function initMockRenewCredentialEntryPoint(
     passer: RenewAuthnInfoMockPropsPasser
@@ -56,7 +56,7 @@ interface Terminate {
 
 function initEntryPoint<R>(resource: R): EntryPoint<R & AuthSignLinkResource> {
     return {
-        resource: { ...resource, ...initAuthSignLinkResource() },
+        resource: { ...resource, ...newAuthSignLinkResource() },
         terminate,
     }
 }

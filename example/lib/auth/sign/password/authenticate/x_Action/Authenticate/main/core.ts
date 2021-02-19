@@ -4,12 +4,10 @@ import {
 } from "../../../../../common/secureScriptPath/get/main"
 import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../kernel/authnInfo/common/startContinuousRenew/main"
 import { newAuthenticatePasswordInfra } from "../../../main"
+import { newBoard } from "../../../../../../../common/vendor/getto-board/kernel/infra/board"
+import { newBoardValidateStack } from "../../../../../../../common/vendor/getto-board/kernel/infra/stack"
 
-import { initFormAction } from "../../../../../../../common/vendor/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../../../../common/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../../../../common/field/password/main/password"
-import { initAuthenticatePasswordFormAction } from "../Form/impl"
-
+import { initAuthenticatePasswordFormResource } from "../Form/impl"
 import {
     AuthenticatePasswordCoreBackgroundBase,
     AuthenticatePasswordCoreForegroundBase,
@@ -17,28 +15,31 @@ import {
     initAuthenticatePasswordCoreAction_merge,
     initAuthenticatePasswordCoreBackground,
 } from "../Core/impl"
+import { toAuthenticatePasswordEntryPoint } from "../impl"
 
-import { AuthenticatePasswordResource } from "../action"
+import { AuthenticatePasswordEntryPoint, AuthenticatePasswordResource } from "../action"
 import { AuthenticatePasswordCoreAction, AuthenticatePasswordCoreBackground } from "../Core/action"
-import { AuthenticatePasswordFormAction } from "../Form/action"
+import { AuthenticatePasswordFormResource } from "../Form/action"
 
-export function newPasswordAuthenticate(webStorage: Storage): AuthenticatePasswordResource {
-    return mergeResource(newCoreAction(webStorage))
+export function newAuthenticatePassword(webStorage: Storage): AuthenticatePasswordEntryPoint {
+    return toAuthenticatePasswordEntryPoint(mergeResource(newCoreAction(webStorage)))
 }
-export function newPasswordAuthenticate_proxy(
+export function newAuthenticatePassword_proxy(
     webStorage: Storage,
     background: AuthenticatePasswordCoreBackground
-): AuthenticatePasswordResource {
-    return mergeResource(
-        initAuthenticatePasswordCoreAction_merge(
-            newForegroundBase(webStorage),
-            newGetSecureScriptPathLocationInfo(),
-            background
+): AuthenticatePasswordEntryPoint {
+    return toAuthenticatePasswordEntryPoint(
+        mergeResource(
+            initAuthenticatePasswordCoreAction_merge(
+                newForegroundBase(webStorage),
+                newGetSecureScriptPathLocationInfo(),
+                background
+            )
         )
     )
 }
 function mergeResource(core: AuthenticatePasswordCoreAction): AuthenticatePasswordResource {
-    return { core, form: newFormAction() }
+    return { core, form: newFormResource() }
 }
 
 export function newAuthenticatePasswordCoreBackground(): AuthenticatePasswordCoreBackground {
@@ -64,16 +65,9 @@ function newBackgroundBase(): AuthenticatePasswordCoreBackgroundBase {
     }
 }
 
-function newFormAction(): AuthenticatePasswordFormAction {
-    const form = initFormAction()
-    const loginID = initLoginIDFormFieldAction()
-    const password = initPasswordFormFieldAction()
-    return initAuthenticatePasswordFormAction({
-        validation: form.validation(),
-        history: form.history(),
-        loginID: loginID.field(),
-        password: password.field(),
-        character: password.character(),
-        viewer: password.viewer(),
+function newFormResource(): AuthenticatePasswordFormResource {
+    return initAuthenticatePasswordFormResource({
+        board: newBoard(),
+        stack: newBoardValidateStack(),
     })
 }

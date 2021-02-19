@@ -1,15 +1,17 @@
-import { initValidateBoardAction } from "../../../../../../common/vendor/getto-board/validate/x_Action/Validate/impl"
-import { initInputBoardAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/impl"
+import { initValidateBoardFieldAction } from "../../../../../../common/vendor/getto-board/validateField/x_Action/ValidateField/impl"
+import { initInputBoardValueAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/impl"
 
-import { ValidateBoardInfra } from "../../../../../../common/vendor/getto-board/validate/infra"
-import { InputBoardInfra } from "../../../../../../common/vendor/getto-board/input/infra"
+import { ValidateBoardFieldInfra } from "../../../../../../common/vendor/getto-board/validateField/infra"
+import { InputBoardValueInfra } from "../../../../../../common/vendor/getto-board/input/infra"
 
 import { LoginIDBoardResource } from "./action"
 
-import { BoardValue } from "../../../../../../common/vendor/getto-board/kernel/data"
+import {
+    BoardConvertResult,
+    BoardValue,
+} from "../../../../../../common/vendor/getto-board/kernel/data"
 import { LoginID, markLoginID } from "../../../../loginID/data"
 import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "./data"
-import { BoardConvertResult } from "../../../../../../common/vendor/getto-board/validate/data"
 
 export type LoginIDBoardEmbed<N extends string> = Readonly<{
     name: N
@@ -17,11 +19,11 @@ export type LoginIDBoardEmbed<N extends string> = Readonly<{
 
 export function initLoginIDBoardResource<N extends string>(
     embed: LoginIDBoardEmbed<N>,
-    infra: ValidateBoardInfra & InputBoardInfra
+    infra: ValidateBoardFieldInfra & InputBoardValueInfra
 ): LoginIDBoardResource {
-    const input = initInputBoardAction({ name: "input", type: "text" }, infra)
+    const input = initInputBoardValueAction({ name: "input", type: "text" }, infra)
 
-    const validate = initValidateBoardAction(
+    const validate = initValidateBoardFieldAction(
         {
             name: embed.name,
             converter: () => convertLoginID(input.get()),
@@ -32,7 +34,11 @@ export function initLoginIDBoardResource<N extends string>(
 
     input.addInputHandler(() => validate.check())
 
-    return { validate, input }
+    return { input, validate }
+}
+export function terminateLoginIDBoardResource(resource: LoginIDBoardResource): void {
+    resource.input.terminate()
+    resource.validate.terminate()
 }
 
 function convertLoginID(value: BoardValue): BoardConvertResult<LoginID> {

@@ -1,5 +1,5 @@
 import { Board } from "../kernel/infra"
 
-export type InputBoardInfra = Readonly<{
+export type InputBoardValueInfra = Readonly<{
     board: Board
 }>

@@ -1,7 +1,7 @@
 import { newWorker } from "../../../../../z_vendor/getto-worker/foreground"
 
 import { newRenewAuthnInfoAction } from "../../../../sign/kernel/authnInfo/renew/x_Action/Renew/main"
-import { newPasswordAuthenticate_proxy } from "../../../../sign/password/authenticate/x_Action/Authenticate/main/core"
+import { newAuthenticatePassword_proxy } from "../../../../sign/password/authenticate/x_Action/Authenticate/main/core"
 import { newRegisterPasswordResource_merge } from "../../../../x_Resource/Sign/Password/ResetSession/Register/main/core"
 import { newStartPasswordResetSessionResource_merge } from "../../../../x_Resource/Sign/Password/ResetSession/Start/main/core"
 import {
@@ -17,7 +17,7 @@ import { currentURL } from "../../../../../z_infra/location/url"
 
 import { initLoginViewLocationInfo, View } from "../../impl"
 
-import { initAuthSignLinkResource } from "../../../../sign/common/searchParams/x_Action/Link/impl"
+import { newAuthSignLinkResource } from "../../../../sign/common/searchParams/x_Action/Link/impl"
 
 import { AuthSignEntryPoint } from "../../entryPoint"
 
@@ -35,12 +35,12 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     const proxy = initProxy(webStorage, postForegroundMessage)
 
     const view = new View(initLoginViewLocationInfo(currentURL()), {
-        link: initAuthSignLinkResource,
+        link: newAuthSignLinkResource,
 
         renew: () => ({ renew: newRenewAuthnInfoAction(webStorage) }),
 
         passwordLogin: () =>
-            newPasswordAuthenticate_proxy(webStorage, proxy.password.authenticate.background()),
+            newAuthenticatePassword_proxy(webStorage, proxy.password.authenticate.background()),
         passwordResetSession: () =>
             newStartPasswordResetSessionResource_merge(proxy.password.resetSession.start.resource),
         passwordReset: () =>

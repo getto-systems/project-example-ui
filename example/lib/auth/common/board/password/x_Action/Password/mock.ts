@@ -1,4 +1,4 @@
-import { initMockInputBoardAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/mock"
+import { initMockInputBoardValueAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/mock"
 import {
     initMockPropsPasser,
     MockAction,
@@ -12,6 +12,9 @@ import {
     ValidatePasswordAction,
     ValidatePasswordState,
 } from "./action"
+
+import { BoardConvertResult } from "../../../../../../common/vendor/getto-board/kernel/data"
+import { Password } from "../../../../password/data"
 
 export type PasswordBoardResourceMockPropsPasser = MockPropsPasser<PasswordBoardResourceMockProps>
 export type PasswordBoardResourceMockProps = PasswordBoardMockProps &
@@ -48,13 +51,15 @@ export function initMockPasswordBoardResource(
     })
     return {
         validate: new Action(passer),
-        input: initMockInputBoardAction(initMockPropsPasser(), "password"),
+        input: initMockInputBoardValueAction(initMockPropsPasser(), "password"),
         toggle: new ToggleAction(passer),
         characterState: () => characterState,
     }
 }
 
 class Action extends MockAction<ValidatePasswordState> implements ValidatePasswordAction {
+    readonly name = "password"
+
     constructor(passer: PasswordBoardResourceMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {
@@ -64,18 +69,18 @@ class Action extends MockAction<ValidatePasswordState> implements ValidatePasswo
         function mapProps(props: PasswordBoardMockProps): ValidatePasswordState {
             switch (props.type) {
                 case "valid":
-                    return { type: "initial-board", result: { valid: true } }
+                    return { valid: true }
 
                 case "empty":
                 case "too-long":
-                    return {
-                        type: "succeed-to-validate",
-                        result: { valid: false, err: [props.type] },
-                    }
+                    return { valid: false, err: [props.type] }
             }
         }
     }
 
+    get(): BoardConvertResult<Password> {
+        return { success: false }
+    }
     check() {
         // mock では特に何もしない
     }
