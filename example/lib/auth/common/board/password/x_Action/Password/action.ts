@@ -4,11 +4,11 @@ import {
     ValidateBoardState,
 } from "../../../../../../common/vendor/getto-board/validate/x_Action/Validate/action"
 import { ApplicationAction } from "../../../../../../common/vendor/getto-example/Application/action"
-import { TogglePasswordDisplayBoardEvent } from "../../common/toggleDisplay/event"
+import { TogglePasswordDisplayBoardEvent } from "../../toggleDisplay/event"
 import {
     HidePasswordDisplayBoardMethod,
     ShowPasswordDisplayBoardMethod,
-} from "../../common/toggleDisplay/method"
+} from "../../toggleDisplay/method"
 
 import { PasswordCharacterState, ValidatePasswordError } from "./data"
 
