@@ -1,8 +1,8 @@
-import { InputBoardAction } from "../../../../../common/vendor/getto-board/input/x_Action/Input/action"
+import { InputBoardAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/action"
 import {
     ValidateBoardAction,
     ValidateBoardState,
-} from "../../../../../common/vendor/getto-board/validate/x_Action/Validate/action"
+} from "../../../../../../common/vendor/getto-board/validate/x_Action/Validate/action"
 
 import { ValidateLoginIDError } from "./data"
 

@@ -1,9 +1,9 @@
-import { initMockInputBoardAction } from "../../../../../common/vendor/getto-board/input/x_Action/Input/mock"
+import { initMockInputBoardAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/mock"
 import {
     initMockPropsPasser,
     MockAction,
     MockPropsPasser,
-} from "../../../../../common/vendor/getto-example/Application/mock"
+} from "../../../../../../common/vendor/getto-example/Application/mock"
 
 import { LoginIDBoardResource, ValidateLoginIDAction, ValidateLoginIDState } from "./action"
 
