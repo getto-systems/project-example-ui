@@ -87,6 +87,7 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
                 body: [
                     h(LoginIDBoard, { field: resource.form.loginID, help: [] }),
                     h(PasswordBoard, { field: resource.form.password, help: [] }),
+                    clearButton(), // TODO 右寄せにしたい
                 ],
                 footer: [buttons({ left: button(), right: resetLink() }), error()],
             })
@@ -158,10 +159,16 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
         })
     }
 
+    function clearButton() {
+        // TODO fill state みたいなものが欲しい : 入力されているならクリアボタンを有効にする
+        return button_disabled({ label: "入力内容をクリア" })
+    }
     function resetLink() {
-        return html`<a href="${resource.href.passwordResetSession()}">
-            ${icon("question-circle")} パスワードがわからない方
-        </a>`
+        return html`<p>
+            <a href="${resource.href.passwordResetSession()}">
+                ${icon("question-circle")} パスワードがわからない方
+            </a>
+        </p>`
     }
 }
 
