@@ -3,13 +3,15 @@ import { ClearBoardMethod, SetBoardValueMethod } from "./method"
 import { InputBoardInfra } from "./infra"
 
 import { emptyBoardValue } from "../kernel/data"
+import { BoardInputType } from "./data"
 
-export type InputBoardEmbed<N extends string> = Readonly<{
-    name: N
+export type InputBoardEmbed = Readonly<{
+    name: string
+    type: BoardInputType
 }>
 
 interface SetValue {
-    <N extends string>(embed: InputBoardEmbed<N>, infra: InputBoardInfra): SetBoardValueMethod
+    (embed: InputBoardEmbed, infra: InputBoardInfra): SetBoardValueMethod
 }
 export const setBoardValue: SetValue = (embed, infra) => (value, post) => {
     const { name } = embed
@@ -19,7 +21,7 @@ export const setBoardValue: SetValue = (embed, infra) => (value, post) => {
 }
 
 interface Clear {
-    <N extends string>(embed: InputBoardEmbed<N>, infra: InputBoardInfra): ClearBoardMethod
+    (embed: InputBoardEmbed, infra: InputBoardInfra): ClearBoardMethod
 }
 export const clearBoard: Clear = (embed, infra) => (post) => {
     const { name } = embed
