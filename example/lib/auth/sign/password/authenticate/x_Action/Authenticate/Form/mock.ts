@@ -16,5 +16,6 @@ export function initMockAuthenticatePasswordFormAction(
         loginID: initMockLoginIDBoardFieldAction(initMockPropsPasser()),
         password: initMockPasswordBoardFieldAction(initMockPropsPasser()),
         validate: initMockValidateBoardAction(passer),
+        clear: () => null,
     }
 }

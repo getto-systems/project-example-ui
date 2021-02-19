@@ -42,5 +42,10 @@ export function initAuthenticatePasswordFormAction(
     loginID.input.addInputHandler(() => validate.check())
     password.input.addInputHandler(() => validate.check())
 
-    return { loginID, password, validate }
+    return { loginID, password, validate, clear }
+
+    function clear() {
+        loginID.clear()
+        password.clear()
+    }
 }

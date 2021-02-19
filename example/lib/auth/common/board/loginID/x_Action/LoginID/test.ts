@@ -66,6 +66,15 @@ describe("LoginIDBoard", () => {
         expect(resource.validate.get()).toEqual({ success: true, value: "a".repeat(100) })
     })
 
+    test("clear", () => {
+        const { resource } = standardResource()
+
+        resource.input.set(markBoardValue("valid"))
+        resource.clear()
+
+        expect(resource.input.get()).toEqual("")
+    })
+
     test("terminate", () => {
         const { resource } = standardResource()
 

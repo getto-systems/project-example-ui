@@ -8,6 +8,11 @@ export type AuthenticatePasswordFormAction = Readonly<{
     loginID: LoginIDBoardFieldAction
     password: PasswordBoardFieldAction
     validate: AuthenticatePasswordValidateAction
+    clear: ClearAction
 }>
 
 export type AuthenticatePasswordValidateAction = ValidateBoardAction<AuthenticatePasswordFields>
+
+interface ClearAction {
+    (): void
+}

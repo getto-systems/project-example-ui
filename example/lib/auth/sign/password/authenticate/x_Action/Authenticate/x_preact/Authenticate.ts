@@ -8,6 +8,7 @@ import {
     buttons,
     button_disabled,
     button_send,
+    button_undo,
     fieldError,
     form,
 } from "../../../../../../../z_vendor/getto-css/preact/design/form"
@@ -87,11 +88,28 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
                 body: [
                     h(LoginIDBoard, { field: resource.form.loginID, help: [] }),
                     h(PasswordBoard, { field: resource.form.password, help: [] }),
-                    clearButton(), // TODO 右寄せにしたい
+                    buttons({ right: clearButton() }),
                 ],
                 footer: [buttons({ left: button(), right: resetLink() }), error()],
             })
         )
+
+        function clearButton() {
+            const label = "入力内容をクリア"
+            switch (validateState) {
+                case "initial":
+                    return button_disabled({ label })
+
+                case "invalid":
+                case "valid":
+                    return button_undo({ label, onClick })
+            }
+
+            function onClick(e: Event) {
+                e.preventDefault()
+                resource.form.clear()
+            }
+        }
 
         function button() {
             switch (content.state) {
@@ -159,16 +177,10 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
         })
     }
 
-    function clearButton() {
-        // TODO fill state みたいなものが欲しい : 入力されているならクリアボタンを有効にする
-        return button_disabled({ label: "入力内容をクリア" })
-    }
     function resetLink() {
-        return html`<p>
-            <a href="${resource.href.passwordResetSession()}">
-                ${icon("question-circle")} パスワードがわからない方
-            </a>
-        </p>`
+        return html`<a href="${resource.href.passwordResetSession()}">
+            ${icon("question-circle")} パスワードがわからない方
+        </a>`
     }
 }
 

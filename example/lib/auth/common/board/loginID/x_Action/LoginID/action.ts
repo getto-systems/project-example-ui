@@ -15,7 +15,12 @@ export type LoginIDBoardFieldResource = Readonly<{
 export type LoginIDBoardFieldAction = Readonly<{
     input: InputBoardValueAction
     validate: ValidateLoginIDAction
+    clear: ClearAction
 }>
 
 export type ValidateLoginIDAction = ValidateBoardFieldAction<LoginID, ValidateLoginIDError>
 export type ValidateLoginIDState = ValidateBoardFieldState<ValidateLoginIDError>
+
+interface ClearAction {
+    (): void
+}

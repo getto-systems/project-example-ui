@@ -43,8 +43,9 @@ export function initPasswordBoardFieldAction<N extends string>(
     input.addInputHandler(() => validate.check())
 
     return {
-        validate,
         input,
+        validate,
+        clear: () => input.clear(),        
         toggle: new ToggleAction({
             show: showPasswordDisplayBoard,
             hide: hidePasswordDisplayBoard,

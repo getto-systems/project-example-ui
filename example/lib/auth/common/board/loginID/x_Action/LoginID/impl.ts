@@ -33,7 +33,7 @@ export function initLoginIDBoardFieldAction<N extends string>(
 
     input.addInputHandler(() => validate.check())
 
-    return { input, validate }
+    return { input, validate, clear: () => input.clear() }
 }
 export function terminateLoginIDBoardFieldAction(resource: LoginIDBoardFieldAction): void {
     resource.input.terminate()

@@ -144,6 +144,17 @@ describe("PasswordAuthenticate", () => {
         )
     })
 
+    test("clear", () => {
+        const { resource } = standardPasswordLoginResource()
+
+        resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
+        resource.form.password.input.set(markBoardValue(VALID_LOGIN.password))
+        resource.form.clear()
+
+        expect(resource.form.loginID.input.get()).toEqual("")
+        expect(resource.form.password.input.get()).toEqual("")
+    })
+
     test("load error", (done) => {
         const { resource } = standardPasswordLoginResource()
 
