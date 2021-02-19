@@ -14,7 +14,7 @@ import {
 import { BoardValue } from "../../../../../../common/vendor/getto-board/kernel/data"
 import { PasswordCharacterState, ValidatePasswordError } from "./data"
 import { ApplicationAbstractAction } from "../../../../../../common/vendor/getto-example/Application/impl"
-import { hidePasswordDisplayBoard, showPasswordDisplayBoard } from "../../common/toggleDisplay/impl"
+import { hidePasswordDisplayBoard, showPasswordDisplayBoard } from "../../toggleDisplay/impl"
 
 export type PasswordBoardEmbed<N extends string> = Readonly<{
     name: N
