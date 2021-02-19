@@ -1,11 +1,11 @@
 import { h } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { storyTemplate } from "../../../../../../x_preact/z_storybook/story"
+import { storyTemplate } from "../../../../../../../x_preact/z_storybook/story"
 
 import { LoginIDBoard } from "./LoginID"
 
-import { initMockPropsPasser } from "../../../../../../common/vendor/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../../../../../common/vendor/getto-example/Application/mock"
 import { LoginIDBoardMockProps, initMockLoginIDBoardResource } from "../mock"
 
 export default {

@@ -1,19 +1,21 @@
 import { h, VNode } from "preact"
 
-import { VNodeContent } from "../../../../../../z_vendor/getto-css/preact/common"
-
-import { useAction } from "../../../../../../x_preact/common/hooks"
-
-import { initialValidateBoardState } from "../../../../../../common/vendor/getto-board/validate/x_Action/Validate/action"
-import { LoginIDBoardResource } from "../action"
+import { VNodeContent } from "../../../../../../../z_vendor/getto-css/preact/common"
 import {
     field,
     field_error,
     label_text_fill,
-} from "../../../../../../z_vendor/getto-css/preact/design/form"
-import { InputBoard } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/x_preact/Input"
+} from "../../../../../../../z_vendor/getto-css/preact/design/form"
+
+import { useAction } from "../../../../../../../x_preact/common/hooks"
+
+import { InputBoard } from "../../../../../../../common/vendor/getto-board/input/x_Action/Input/x_preact/Input"
+
+import { initialValidateBoardState } from "../../../../../../../common/vendor/getto-board/validate/x_Action/Validate/action"
+import { LoginIDBoardResource } from "../action"
+
 import { ValidateLoginIDError } from "../data"
-import { BoardValidateResult } from "../../../../../../common/vendor/getto-board/validate/data"
+import { BoardValidateResult } from "../../../../../../../common/vendor/getto-board/validate/data"
 
 type Props = LoginIDBoardResource &
     Readonly<{
@@ -39,9 +41,7 @@ export function LoginIDBoard(resource: Props): VNode {
     }
 }
 
-function loginIDValidationError(
-    result: BoardValidateResult<ValidateLoginIDError>
-): VNodeContent[] {
+function loginIDValidationError(result: BoardValidateResult<ValidateLoginIDError>): VNodeContent[] {
     if (result.valid) {
         return []
     }
