@@ -7,7 +7,9 @@ import { InputBoardInfra } from "../../../../../../common/vendor/getto-board/inp
 import { LoginIDBoardResource } from "./action"
 
 import { BoardValue } from "../../../../../../common/vendor/getto-board/kernel/data"
+import { LoginID, markLoginID } from "../../../../loginID/data"
 import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "./data"
+import { BoardConvertResult } from "../../../../../../common/vendor/getto-board/validate/data"
 
 export type LoginIDBoardEmbed<N extends string> = Readonly<{
     name: N
@@ -20,7 +22,11 @@ export function initLoginIDBoardResource<N extends string>(
     const input = initInputBoardAction({ name: "input", type: "text" }, infra)
 
     const validate = initValidateBoardAction(
-        { name: embed.name, validator: () => validateLoginID(input.get()) },
+        {
+            name: embed.name,
+            converter: () => convertLoginID(input.get()),
+            validator: () => validateLoginID(input.get()),
+        },
         infra
     )
 
@@ -29,6 +35,9 @@ export function initLoginIDBoardResource<N extends string>(
     return { validate, input }
 }
 
+function convertLoginID(value: BoardValue): BoardConvertResult<LoginID> {
+    return { success: true, value: markLoginID(value) }
+}
 function validateLoginID(value: BoardValue): ValidateLoginIDError[] {
     if (value.length === 0) {
         return EMPTY

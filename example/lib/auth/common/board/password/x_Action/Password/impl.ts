@@ -1,5 +1,9 @@
+import { ApplicationAbstractAction } from "../../../../../../common/vendor/getto-example/Application/impl"
+
 import { initValidateBoardAction } from "../../../../../../common/vendor/getto-board/validate/x_Action/Validate/impl"
 import { initInputBoardAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/impl"
+
+import { hidePasswordDisplayBoard, showPasswordDisplayBoard } from "../../toggleDisplay/impl"
 
 import { ValidateBoardInfra } from "../../../../../../common/vendor/getto-board/validate/infra"
 import { InputBoardInfra } from "../../../../../../common/vendor/getto-board/input/infra"
@@ -12,9 +16,9 @@ import {
 } from "./action"
 
 import { BoardValue } from "../../../../../../common/vendor/getto-board/kernel/data"
+import { markPassword, Password } from "../../../../password/data"
 import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "./data"
-import { ApplicationAbstractAction } from "../../../../../../common/vendor/getto-example/Application/impl"
-import { hidePasswordDisplayBoard, showPasswordDisplayBoard } from "../../toggleDisplay/impl"
+import { BoardConvertResult } from "../../../../../../common/vendor/getto-board/validate/data"
 
 export type PasswordBoardEmbed<N extends string> = Readonly<{
     name: N
@@ -27,7 +31,11 @@ export function initPasswordBoardResource<N extends string>(
     const input = initInputBoardAction({ name: "input", type: "password" }, infra)
 
     const validate = initValidateBoardAction(
-        { name: embed.name, validator: () => validatePassword(input.get()) },
+        {
+            name: embed.name,
+            validator: () => validatePassword(input.get()),
+            converter: () => convertPassword(input.get()),
+        },
         infra
     )
 
@@ -40,11 +48,15 @@ export function initPasswordBoardResource<N extends string>(
             show: showPasswordDisplayBoard,
             hide: hidePasswordDisplayBoard,
         }),
-        characterState: () => checkPasswordCharacter(input.get())
+        characterState: () => checkPasswordCharacter(input.get()),
     }
 }
 
-export function validatePassword(value: BoardValue): ValidatePasswordError[] {
+function convertPassword(value: BoardValue): BoardConvertResult<Password> {
+    return { success: true, value: markPassword(value) }
+}
+
+function validatePassword(value: BoardValue): ValidatePasswordError[] {
     if (value.length === 0) {
         return EMPTY
     }

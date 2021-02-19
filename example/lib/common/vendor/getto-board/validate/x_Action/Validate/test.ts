@@ -8,6 +8,7 @@ import { initValidateBoardAction } from "./impl"
 import { ValidateBoardAction, ValidateBoardState } from "./action"
 
 import { markBoardValue } from "../../../kernel/data"
+import { BoardConvertResult } from "../../data"
 
 describe("ValidateBoard", () => {
     test("validate; valid input", () => {
@@ -21,8 +22,9 @@ describe("ValidateBoard", () => {
 
         action.check()
         checker.check((stack) => {
-            expect(stack).toEqual([{ type: "succeed-to-validate", result: { valid: true } }])
+            expect(stack).toEqual([{ valid: true }])
             expect(validateStack.get("field")).toEqual({ found: true, state: true })
+            expect(action.get()).toEqual({ success: true, value: "valid" })
         })
     })
 
@@ -37,10 +39,9 @@ describe("ValidateBoard", () => {
 
         action.check()
         checker.check((stack) => {
-            expect(stack).toEqual([
-                { type: "succeed-to-validate", result: { valid: false, err: ["empty"] } },
-            ])
+            expect(stack).toEqual([{ valid: false, err: ["empty"] }])
             expect(validateStack.get("field")).toEqual({ found: true, state: false })
+            expect(action.get()).toEqual({ success: false })
         })
     })
 })
@@ -49,11 +50,14 @@ function standardResource() {
     const board = newBoard()
     const stack = newBoardValidateStack()
 
-    const action: ValidateBoardAction<ValidateError> = initValidateBoardAction(
-        { name: "field", validator },
+    const action: ValidateBoardAction<FieldValue, ValidateError> = initValidateBoardAction(
+        { name: "field", converter, validator },
         { stack }
     )
 
+    function converter(): BoardConvertResult<FieldValue> {
+        return { success: true, value: board.get("input") }
+    }
     function validator(): ValidateError[] {
         if (board.get("input") === "") {
             return ["empty"]
@@ -64,4 +68,5 @@ function standardResource() {
     return { board, validateStack: stack, action }
 }
 
+type FieldValue = string
 type ValidateError = "empty"

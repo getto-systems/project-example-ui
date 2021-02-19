@@ -4,9 +4,10 @@ import { ValidateBoardMethod } from "../../method"
 
 import { ValidateBoardEvent } from "../../event"
 
-import { boardValidateResult_ok, BoardValidateResult_ok } from "../../data"
+import { BoardConvertResult, boardValidateResult_ok, BoardValidateResult_ok } from "../../data"
 
-export interface ValidateBoardAction<E> extends ApplicationAction<ValidateBoardState<E>> {
+export interface ValidateBoardAction<T, E> extends ApplicationAction<ValidateBoardState<E>> {
+    get(): BoardConvertResult<T>
     check(): void
 }
 

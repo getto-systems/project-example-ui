@@ -2,20 +2,24 @@ import { ValidateBoardMethod } from "./method"
 
 import { ValidateBoardInfra } from "./infra"
 
-import { boardValidateResult } from "./data"
+import { BoardConvertResult, boardValidateResult } from "./data"
 
-export type ValidateBoardEmbed<N extends string, E> = Readonly<{
+export type ValidateBoardEmbed<N extends string, T, E> = Readonly<{
     name: N
+    converter: BoardConverter<T>
     validator: BoardValidator<E>
 }>
 
+export interface BoardConverter<T> {
+    (): BoardConvertResult<T>
+}
 export interface BoardValidator<E> {
     (): E[]
 }
 
 interface Validate {
-    <N extends string, E>(
-        embed: ValidateBoardEmbed<N, E>,
+    <N extends string, T, E>(
+        embed: ValidateBoardEmbed<N, T, E>,
         infra: ValidateBoardInfra
     ): ValidateBoardMethod<E>
 }
@@ -24,5 +28,5 @@ export const validateBoard: Validate = (embed, infra) => (post) => {
     const { stack } = infra
     const result = boardValidateResult(validator())
     stack.update(name, result.valid)
-    post({ type: "succeed-to-validate", result })
+    post(result)
 }

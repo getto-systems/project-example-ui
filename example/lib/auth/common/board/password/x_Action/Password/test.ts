@@ -18,8 +18,9 @@ describe("PasswordBoard", () => {
         resource.input.set(markBoardValue("valid"))
 
         checker.check((stack) => {
-            expect(stack).toEqual([{ type: "succeed-to-validate", result: { valid: true } }])
+            expect(stack).toEqual([{ valid: true }])
         })
+        expect(resource.validate.get()).toEqual({ success: true, value: "valid" })
     })
 
     test("validate; invalid : empty", () => {
@@ -32,10 +33,9 @@ describe("PasswordBoard", () => {
         resource.input.set(markBoardValue(""))
 
         checker.check((stack) => {
-            expect(stack).toEqual([
-                { type: "succeed-to-validate", result: { valid: false, err: ["empty"] } },
-            ])
+            expect(stack).toEqual([{ valid: false, err: ["empty"] }])
         })
+        expect(resource.validate.get()).toEqual({ success: false })
     })
 
     test("validate; invalid : too-long", () => {
@@ -48,10 +48,9 @@ describe("PasswordBoard", () => {
         resource.input.set(markBoardValue("a".repeat(72 + 1)))
 
         checker.check((stack) => {
-            expect(stack).toEqual([
-                { type: "succeed-to-validate", result: { valid: false, err: ["too-long"] } },
-            ])
+            expect(stack).toEqual([{ valid: false, err: ["too-long"] }])
         })
+        expect(resource.validate.get()).toEqual({ success: false })
     })
 
     test("validate; valid : just max-length", () => {
@@ -64,8 +63,9 @@ describe("PasswordBoard", () => {
         resource.input.set(markBoardValue("a".repeat(72)))
 
         checker.check((stack) => {
-            expect(stack).toEqual([{ type: "succeed-to-validate", result: { valid: true } }])
+            expect(stack).toEqual([{ valid: true }])
         })
+        expect(resource.validate.get()).toEqual({ success: true, value: "a".repeat(72) })
     })
 
     test("validate; invalid : too-long : multi-byte", () => {
@@ -78,10 +78,9 @@ describe("PasswordBoard", () => {
         resource.input.set(markBoardValue("あ".repeat(24) + "a"))
 
         checker.check((stack) => {
-            expect(stack).toEqual([
-                { type: "succeed-to-validate", result: { valid: false, err: ["too-long"] } },
-            ])
+            expect(stack).toEqual([{ valid: false, err: ["too-long"] }])
         })
+        expect(resource.validate.get()).toEqual({ success: false })
     })
 
     test("validate; valid : just max-length : multi-byte", () => {
@@ -94,8 +93,9 @@ describe("PasswordBoard", () => {
         resource.input.set(markBoardValue("あ".repeat(24)))
 
         checker.check((stack) => {
-            expect(stack).toEqual([{ type: "succeed-to-validate", result: { valid: true } }])
+            expect(stack).toEqual([{ valid: true }])
         })
+        expect(resource.validate.get()).toEqual({ success: true, value: "あ".repeat(24) })
     })
 
     test("toggle password", () => {
