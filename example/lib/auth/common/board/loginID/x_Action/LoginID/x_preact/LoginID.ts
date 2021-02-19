@@ -12,12 +12,12 @@ import { useAction } from "../../../../../../../x_preact/common/hooks"
 import { InputBoard } from "../../../../../../../common/vendor/getto-board/input/x_Action/Input/x_preact/Input"
 
 import { initialValidateBoardFieldState } from "../../../../../../../common/vendor/getto-board/validateField/x_Action/ValidateField/action"
-import { LoginIDBoardResource } from "../action"
+import { LoginIDBoardFieldResource } from "../action"
 
 import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "../data"
 import { BoardFieldValidateResult } from "../../../../../../../common/vendor/getto-board/validateField/data"
 
-type Props = LoginIDBoardResource &
+type Props = LoginIDBoardFieldResource &
     Readonly<{
         help: VNodeContent[]
     }>

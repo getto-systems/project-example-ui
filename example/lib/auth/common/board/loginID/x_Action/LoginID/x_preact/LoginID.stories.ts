@@ -6,7 +6,7 @@ import { storyTemplate } from "../../../../../../../x_preact/z_storybook/story"
 import { LoginIDBoard } from "./LoginID"
 
 import { initMockPropsPasser } from "../../../../../../../common/vendor/getto-example/Application/mock"
-import { LoginIDBoardMockProps, initMockLoginIDBoardAction } from "../mock"
+import { LoginIDBoardMockProps, initMockLoginIDBoardFieldAction } from "../mock"
 
 export default {
     title: "Auth/Common/Board/LoginID",
@@ -20,7 +20,7 @@ export default {
 type Props = LoginIDBoardMockProps & { help: string }
 const template = storyTemplate<Props>((args) => {
     const passer = initMockPropsPasser<LoginIDBoardMockProps>()
-    const action = initMockLoginIDBoardAction(passer)
+    const action = initMockLoginIDBoardFieldAction(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: Props }) {
