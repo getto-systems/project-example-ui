@@ -7,11 +7,11 @@ import {
 import { initMockLoginIDBoardFieldAction } from "../../../../../../common/board/loginID/x_Action/LoginID/mock"
 import { initMockPasswordBoardFieldAction } from "../../../../../../common/board/password/x_Action/Password/mock"
 
-import { AuthenticatePasswordFormResource } from "./action"
+import { AuthenticatePasswordFormAction } from "./action"
 
-export function initMockAuthenticatePasswordFormResource(
+export function initMockAuthenticatePasswordFormAction(
     passer: ValidateBoardMockPropsPasser
-): AuthenticatePasswordFormResource {
+): AuthenticatePasswordFormAction {
     return {
         loginID: initMockLoginIDBoardFieldAction(initMockPropsPasser()),
         password: initMockPasswordBoardFieldAction(initMockPropsPasser()),
