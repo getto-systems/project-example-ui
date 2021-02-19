@@ -86,7 +86,7 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
                 title: loginTitle(),
                 body: [
                     h(LoginIDBoard, { field: resource.form.loginID, help: [] }),
-                    h(PasswordBoard, { ...resource.form.password, help: [] }),
+                    h(PasswordBoard, { field: resource.form.password, help: [] }),
                 ],
                 footer: [buttons({ left: button(), right: resetLink() }), error()],
             })

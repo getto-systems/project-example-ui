@@ -9,7 +9,7 @@ import { ValidateBoardFieldInfra } from "../../../../../../common/vendor/getto-b
 import { InputBoardValueInfra } from "../../../../../../common/vendor/getto-board/input/infra"
 
 import {
-    PasswordBoardResource,
+    PasswordBoardFieldAction,
     TogglePasswordDisplayBoardAction,
     TogglePasswordDisplayBoardMaterial,
     TogglePasswordDisplayBoardState,
@@ -26,10 +26,10 @@ export type PasswordBoardEmbed<N extends string> = Readonly<{
     name: N
 }>
 
-export function initPasswordBoardResource<N extends string>(
+export function initPasswordBoardFieldAction<N extends string>(
     embed: PasswordBoardEmbed<N>,
     infra: ValidateBoardFieldInfra & InputBoardValueInfra
-): PasswordBoardResource {
+): PasswordBoardFieldAction {
     const input = initInputBoardValueAction({ name: "input", type: "password" }, infra)
 
     const validate = initValidateBoardFieldAction(
@@ -53,7 +53,7 @@ export function initPasswordBoardResource<N extends string>(
         characterState: () => checkPasswordCharacter(input.get()),
     }
 }
-export function terminatePasswordBoardResource(resource: PasswordBoardResource): void {
+export function terminatePasswordBoardFieldAction(resource: PasswordBoardFieldAction): void {
     resource.input.terminate()
     resource.validate.terminate()
 }

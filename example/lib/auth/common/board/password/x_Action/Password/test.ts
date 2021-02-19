@@ -5,7 +5,7 @@ import { ValidateBoardFieldState } from "../../../../../../common/vendor/getto-b
 import { initSyncActionChecker } from "../../../../../../common/vendor/getto-example/Application/testHelper"
 import { TogglePasswordDisplayBoardState } from "./action"
 import { ValidatePasswordError } from "./data"
-import { initPasswordBoardResource } from "./impl"
+import { initPasswordBoardFieldAction } from "./impl"
 
 describe("PasswordBoard", () => {
     test("validate; valid input", () => {
@@ -151,7 +151,7 @@ function standardResource() {
     const board = newBoard()
     const stack = newBoardValidateStack()
 
-    const resource = initPasswordBoardResource({ name: "field" }, { board, stack })
+    const resource = initPasswordBoardFieldAction({ name: "field" }, { board, stack })
 
     return { resource }
 }

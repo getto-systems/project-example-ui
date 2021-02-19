@@ -13,7 +13,11 @@ import {
 import { Password } from "../../../../password/data"
 import { PasswordCharacterState, ValidatePasswordError } from "./data"
 
-export type PasswordBoardResource = Readonly<{
+export type PasswordBoardFieldResource = Readonly<{
+    field: PasswordBoardFieldAction
+}>
+
+export type PasswordBoardFieldAction = Readonly<{
     validate: ValidatePasswordAction
     input: InputBoardValueAction
     toggle: TogglePasswordDisplayBoardAction

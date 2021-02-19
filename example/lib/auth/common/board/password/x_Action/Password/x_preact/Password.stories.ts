@@ -7,8 +7,8 @@ import { PasswordBoard } from "./Password"
 
 import { initMockPropsPasser } from "../../../../../../../common/vendor/getto-example/Application/mock"
 import {
-    initMockPasswordBoardResource,
-    PasswordBoardResourceMockProps,
+    initMockPasswordBoardFieldAction,
+    PasswordBoardFieldActionMockProps,
     passwordCharacterStateTypes,
     passwordDisplayBoardTypes,
 } from "../mock"
@@ -28,17 +28,17 @@ export default {
     },
 }
 
-type Props = PasswordBoardResourceMockProps & { help: string }
+type Props = PasswordBoardFieldActionMockProps & { help: string }
 const template = storyTemplate<Props>((args) => {
-    const passer = initMockPropsPasser<PasswordBoardResourceMockProps>()
-    const resource = initMockPasswordBoardResource(passer)
+    const passer = initMockPropsPasser<PasswordBoardFieldActionMockProps>()
+    const action = initMockPasswordBoardFieldAction(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: Props }) {
         useEffect(() => {
             passer.update(props.args)
         })
-        return h(PasswordBoard, { ...resource, help: [args.help] })
+        return h(PasswordBoard, { field: action, help: [args.help] })
     }
 })
 
