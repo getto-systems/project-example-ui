@@ -8,6 +8,10 @@ import { LoginID } from "../../../../loginID/data"
 import { ValidateLoginIDError } from "./data"
 
 export type LoginIDBoardResource = Readonly<{
+    field: LoginIDBoardAction
+}>
+
+export type LoginIDBoardAction = Readonly<{
     input: InputBoardValueAction
     validate: ValidateLoginIDAction
 }>

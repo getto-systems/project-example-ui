@@ -1,4 +1,4 @@
-import { initLoginIDBoardResource } from "../../../../../../common/board/loginID/x_Action/LoginID/impl"
+import { initLoginIDBoardAction } from "../../../../../../common/board/loginID/x_Action/LoginID/impl"
 import { initPasswordBoardResource } from "../../../../../../common/board/password/x_Action/Password/impl"
 
 import { initValidateBoardAction } from "../../../../../../../common/vendor/getto-board/validateBoard/x_Action/ValidateBoard/impl"
@@ -16,7 +16,7 @@ export type AuthenticatePasswordFormBase = ValidateBoardInfra &
 export function initAuthenticatePasswordFormResource(
     infra: AuthenticatePasswordFormBase
 ): AuthenticatePasswordFormResource {
-    const loginID = initLoginIDBoardResource({ name: "loginID" }, infra)
+    const loginID = initLoginIDBoardAction({ name: "loginID" }, infra)
     const password = initPasswordBoardResource({ name: "password" }, infra)
     const validate = initValidateBoardAction(
         {

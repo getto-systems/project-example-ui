@@ -5,7 +5,7 @@ import {
     MockPropsPasser,
 } from "../../../../../../common/vendor/getto-example/Application/mock"
 
-import { LoginIDBoardResource, ValidateLoginIDAction, ValidateLoginIDState } from "./action"
+import { LoginIDBoardAction, ValidateLoginIDAction, ValidateLoginIDState } from "./action"
 
 import { LoginID } from "../../../../loginID/data"
 import { BoardConvertResult } from "../../../../../../common/vendor/getto-board/kernel/data"
@@ -16,9 +16,9 @@ export type LoginIDBoardMockProps =
     | Readonly<{ type: "empty" }>
     | Readonly<{ type: "too-long" }>
 
-export function initMockLoginIDBoardResource(
+export function initMockLoginIDBoardAction(
     passer: LoginIDBoardMockPropsPasser
-): LoginIDBoardResource {
+): LoginIDBoardAction {
     return {
         validate: new Action(passer),
         input: initMockInputBoardValueAction(initMockPropsPasser(), "text"),

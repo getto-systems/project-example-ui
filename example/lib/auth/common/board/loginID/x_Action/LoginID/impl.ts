@@ -4,7 +4,7 @@ import { initInputBoardValueAction } from "../../../../../../common/vendor/getto
 import { ValidateBoardFieldInfra } from "../../../../../../common/vendor/getto-board/validateField/infra"
 import { InputBoardValueInfra } from "../../../../../../common/vendor/getto-board/input/infra"
 
-import { LoginIDBoardResource } from "./action"
+import { LoginIDBoardAction } from "./action"
 
 import {
     BoardConvertResult,
@@ -17,10 +17,10 @@ export type LoginIDBoardEmbed<N extends string> = Readonly<{
     name: N
 }>
 
-export function initLoginIDBoardResource<N extends string>(
+export function initLoginIDBoardAction<N extends string>(
     embed: LoginIDBoardEmbed<N>,
     infra: ValidateBoardFieldInfra & InputBoardValueInfra
-): LoginIDBoardResource {
+): LoginIDBoardAction {
     const input = initInputBoardValueAction({ name: "input", type: "text" }, infra)
 
     const validate = initValidateBoardFieldAction(
@@ -36,7 +36,7 @@ export function initLoginIDBoardResource<N extends string>(
 
     return { input, validate }
 }
-export function terminateLoginIDBoardResource(resource: LoginIDBoardResource): void {
+export function terminateLoginIDBoardAction(resource: LoginIDBoardAction): void {
     resource.input.terminate()
     resource.validate.terminate()
 }

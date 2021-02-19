@@ -85,7 +85,7 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
             loginBox(siteInfo(), {
                 title: loginTitle(),
                 body: [
-                    h(LoginIDBoard, { ...resource.form.loginID, help: [] }),
+                    h(LoginIDBoard, { field: resource.form.loginID, help: [] }),
                     h(PasswordBoard, { ...resource.form.password, help: [] }),
                 ],
                 footer: [buttons({ left: button(), right: resetLink() }), error()],
