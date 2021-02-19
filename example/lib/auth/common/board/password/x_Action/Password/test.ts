@@ -130,6 +130,15 @@ describe("PasswordBoard", () => {
         expect(resource.characterState()).toEqual({ multiByte: true })
     })
 
+    test("clear", () => {
+        const { resource } = standardResource()
+
+        resource.input.set(markBoardValue("valid"))
+        resource.clear()
+
+        expect(resource.input.get()).toEqual("")
+    })
+
     test("terminate", () => {
         const { resource } = standardResource()
 

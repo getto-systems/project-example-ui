@@ -18,8 +18,9 @@ export type PasswordBoardFieldResource = Readonly<{
 }>
 
 export type PasswordBoardFieldAction = Readonly<{
-    validate: ValidatePasswordAction
     input: InputBoardValueAction
+    validate: ValidatePasswordAction
+    clear: ClearAction
     toggle: TogglePasswordDisplayBoardAction
     characterState: PasswordCharacterStateDetecter
 }>
@@ -46,4 +47,8 @@ export const initialTogglePasswordDisplayBoardState: TogglePasswordDisplayBoardS
 
 export interface PasswordCharacterStateDetecter {
     (): PasswordCharacterState
+}
+
+interface ClearAction {
+    (): void
 }

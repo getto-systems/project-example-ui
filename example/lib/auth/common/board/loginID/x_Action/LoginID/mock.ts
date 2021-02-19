@@ -22,6 +22,7 @@ export function initMockLoginIDBoardFieldAction(
     return {
         validate: new Action(passer),
         input: initMockInputBoardValueAction(initMockPropsPasser(), "text"),
+        clear: () => null,
     }
 }
 

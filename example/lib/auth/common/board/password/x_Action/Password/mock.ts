@@ -16,7 +16,9 @@ import {
 import { BoardConvertResult } from "../../../../../../common/vendor/getto-board/kernel/data"
 import { Password } from "../../../../password/data"
 
-export type PasswordBoardFieldActionMockPropsPasser = MockPropsPasser<PasswordBoardFieldActionMockProps>
+export type PasswordBoardFieldActionMockPropsPasser = MockPropsPasser<
+    PasswordBoardFieldActionMockProps
+>
 export type PasswordBoardFieldActionMockProps = PasswordBoardMockProps &
     TogglePasswordDisplayBoardMockProps &
     PasswordCharacterStateMockProps
@@ -50,8 +52,9 @@ export function initMockPasswordBoardFieldAction(
         characterState = { multiByte: props.character === "multiByte" }
     })
     return {
-        validate: new Action(passer),
         input: initMockInputBoardValueAction(initMockPropsPasser(), "password"),
+        validate: new Action(passer),
+        clear: () => null,
         toggle: new ToggleAction(passer),
         characterState: () => characterState,
     }
