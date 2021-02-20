@@ -22,7 +22,7 @@ import { ApplicationError } from "../../../../common/System/ApplicationError"
 import { LoginIDFormField } from "../../field/loginID"
 import { PasswordFormField } from "../../field/password"
 
-import { PasswordResetEntryPoint } from "../../../../../auth/z_EntryPoint/Sign/entryPoint"
+import { PasswordResetEntryPoint } from "../../../../../x_main/public/auth/sign/entryPoint"
 
 import { initialRegisterPasswordState } from "../../../../../auth/sign/x_Action/Password/ResetSession/Register/Core/action"
 import { initialFormContainerComponentState } from "../../../../../z_getto/getto-form/x_Resource/Form/component"

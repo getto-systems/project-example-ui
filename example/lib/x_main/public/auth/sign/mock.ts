@@ -1,17 +1,17 @@
-import { MockAction, MockPropsPasser } from "../../../z_getto/application/mock"
+import { MockAction, MockPropsPasser } from "../../../../z_getto/application/mock"
 
 import {
     initMockStartPasswordResetSessionResource,
     StartPasswordResetSessionResourceMockPropsPasser,
-} from "../../x_Resource/Sign/Password/ResetSession/Start/mock"
+} from "../../../../auth/x_Resource/Sign/Password/ResetSession/Start/mock"
 import {
     initMockRegisterPasswordResource,
     RegisterPasswordResourceMockPropsPasser,
-} from "../../x_Resource/Sign/Password/ResetSession/Register/mock"
+} from "../../../../auth/x_Resource/Sign/Password/ResetSession/Register/mock"
 import {
     initMockRenewAuthnInfoAction,
     RenewAuthnInfoMockPropsPasser,
-} from "../../sign/kernel/authnInfo/renew/x_Action/Renew/mock"
+} from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/mock"
 
 import {
     AuthSignEntryPoint,
@@ -22,11 +22,11 @@ import {
     PasswordResetEntryPoint,
 } from "./entryPoint"
 
-import { AuthSignLinkResource } from "../../sign/common/searchParams/x_Action/Link/action"
+import { AuthSignLinkResource } from "../../../../auth/sign/common/searchParams/x_Action/Link/action"
 
-import { RenewAuthnInfoResource } from "../../sign/kernel/authnInfo/renew/x_Action/Renew/action"
+import { RenewAuthnInfoResource } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/action"
 
-import { newAuthSignLinkResource } from "../../sign/common/searchParams/x_Action/Link/impl"
+import { newAuthSignLinkResource } from "../../../../auth/sign/common/searchParams/x_Action/Link/impl"
 
 export function initMockRenewCredentialEntryPoint(
     passer: RenewAuthnInfoMockPropsPasser

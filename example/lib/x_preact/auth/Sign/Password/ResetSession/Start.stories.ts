@@ -7,7 +7,7 @@ import { PasswordResetSession } from "./Start"
 
 import { initMockPropsPasser } from "../../../../../z_getto/application/mock"
 
-import { initMockPasswordResetSessionEntryPoint } from "../../../../../auth/z_EntryPoint/Sign/mock"
+import { initMockPasswordResetSessionEntryPoint } from "../../../../../x_main/public/auth/sign/mock"
 
 import { formValidationStates } from "../../../../../z_getto/getto-form/x_Resource/Form/mock"
 import { loginIDFormFieldValidations } from "../../../../../auth/common/x_Component/Field/LoginID/mock"

@@ -11,7 +11,7 @@ import { initMockPropsPasser } from "../../../z_getto/application/mock"
 import {
     LoginErrorMockProps,
     initMockLoginEntryPointAsError,
-} from "../../../auth/z_EntryPoint/Sign/mock"
+} from "../../../x_main/public/auth/sign/mock"
 
 export default {
     title: "Auth/Sign/Error",

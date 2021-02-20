@@ -1,10 +1,10 @@
-import { RenewAuthnInfoResource } from "../../sign/kernel/authnInfo/renew/x_Action/Renew/action"
-import { AuthenticatePasswordEntryPoint } from "../../sign/password/authenticate/x_Action/Authenticate/action"
-import { RegisterPasswordResource } from "../../x_Resource/Sign/Password/ResetSession/Register/resource"
-import { StartPasswordResetSessionResource } from "../../x_Resource/Sign/Password/ResetSession/Start/resource"
+import { RenewAuthnInfoResource } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/action"
+import { AuthenticatePasswordEntryPoint } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/action"
+import { RegisterPasswordResource } from "../../../../auth/x_Resource/Sign/Password/ResetSession/Register/resource"
+import { StartPasswordResetSessionResource } from "../../../../auth/x_Resource/Sign/Password/ResetSession/Start/resource"
 
-import { ApplicationAction } from "../../../z_getto/application/action"
-import { AuthSignLinkResource } from "../../sign/common/searchParams/x_Action/Link/action"
+import { ApplicationAction } from "../../../../z_getto/application/action"
+import { AuthSignLinkResource } from "../../../../auth/sign/common/searchParams/x_Action/Link/action"
 
 export type AuthSignEntryPoint = Readonly<{
     view: AuthSignView

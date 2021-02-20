@@ -1,23 +1,23 @@
-import { newWorker } from "../../../../../z_getto/application/worker/foreground"
+import { newWorker } from "../../../../../../z_getto/application/worker/foreground"
 
-import { newRenewAuthnInfoAction } from "../../../../sign/kernel/authnInfo/renew/x_Action/Renew/main"
-import { newAuthenticatePassword_proxy } from "../../../../sign/password/authenticate/x_Action/Authenticate/main/core"
-import { newRegisterPasswordResource_merge } from "../../../../x_Resource/Sign/Password/ResetSession/Register/main/core"
-import { newStartPasswordResetSessionResource_merge } from "../../../../x_Resource/Sign/Password/ResetSession/Start/main/core"
+import { newRenewAuthnInfoAction } from "../../../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/main"
+import { newAuthenticatePassword_proxy } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/core"
+import { newRegisterPasswordResource_merge } from "../../../../../../auth/x_Resource/Sign/Password/ResetSession/Register/main/core"
+import { newStartPasswordResetSessionResource_merge } from "../../../../../../auth/x_Resource/Sign/Password/ResetSession/Start/main/core"
 import {
     RegisterPasswordResourceProxy,
     newRegisterPasswordResourceProxy,
-} from "../../../../x_Resource/Sign/Password/ResetSession/Register/main/worker/foreground"
+} from "../../../../../../auth/x_Resource/Sign/Password/ResetSession/Register/main/worker/foreground"
 import {
     newStartPasswordResetSessionResourceProxy,
     StartPasswordResetSessionResourceProxy,
-} from "../../../../x_Resource/Sign/Password/ResetSession/Start/main/worker/foreground"
+} from "../../../../../../auth/x_Resource/Sign/Password/ResetSession/Start/main/worker/foreground"
 
-import { currentURL } from "../../../../../z_getto/infra/location/url"
+import { currentURL } from "../../../../../../z_getto/infra/location/url"
 
 import { initLoginViewLocationInfo, View } from "../../impl"
 
-import { newAuthSignLinkResource } from "../../../../sign/common/searchParams/x_Action/Link/impl"
+import { newAuthSignLinkResource } from "../../../../../../auth/sign/common/searchParams/x_Action/Link/impl"
 
 import { AuthSignEntryPoint } from "../../entryPoint"
 
@@ -25,7 +25,7 @@ import { ForegroundMessage, BackgroundMessage } from "./message"
 import {
     AuthenticatePasswordProxy,
     newAuthenticatePasswordProxy,
-} from "../../../../sign/password/authenticate/x_Action/Authenticate/main/worker/foreground"
+} from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/worker/foreground"
 
 export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     const worker = newWorker()

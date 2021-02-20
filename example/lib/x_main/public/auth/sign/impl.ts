@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../z_getto/application/impl"
+import { ApplicationAbstractAction } from "../../../../z_getto/application/impl"
 
 import {
     AuthSignView,
@@ -10,8 +10,8 @@ import {
     AuthSignResourceFactory,
 } from "./entryPoint"
 
-import { AuthSignSearchParams } from "../../sign/common/searchParams/data"
-import { AuthenticatePasswordEntryPoint } from "../../sign/password/authenticate/x_Action/Authenticate/action"
+import { AuthSignSearchParams } from "../../../../auth/sign/common/searchParams/data"
+import { AuthenticatePasswordEntryPoint } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/action"
 
 export function initLoginViewLocationInfo(currentURL: URL): AuthSignViewLocationInfo {
     return {
