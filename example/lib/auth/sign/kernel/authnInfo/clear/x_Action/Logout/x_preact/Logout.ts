@@ -1,5 +1,5 @@
 import { VNode } from "preact"
-import { useEffect } from "preact/hooks"
+import { useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { box } from "../../../../../../../../z_vendor/getto-css/preact/design/box"
@@ -15,7 +15,7 @@ import { StorageError } from "../../../../../../../../z_getto/storage/data"
 
 export function Logout(resource: LogoutResource): VNode {
     const state = useApplicationAction(resource.logout, initialLogoutState)
-    useEffect(() => {
+    useLayoutEffect(() => {
         switch (state.type) {
             case "succeed-to-logout":
                 // credential が削除されているので、reload するとログイン画面になる

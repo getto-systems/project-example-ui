@@ -1,4 +1,4 @@
-import { useEffect, useState } from "preact/hooks"
+import { useLayoutEffect, useState } from "preact/hooks"
 
 import { VNodeKey } from "../../../common"
 
@@ -10,7 +10,7 @@ export function useReportRowsComposition<R>(
     content: ReportRowsCompositionContent
 ): ReportRowsComposition<R> {
     const [data, setData] = useState(initialReportRowsComposition(rows))
-    useEffect(() => {
+    useLayoutEffect(() => {
         const nextComposition = composeReportRows(content, data)
         if (nextComposition.hasNext) {
             setData(nextComposition.data)

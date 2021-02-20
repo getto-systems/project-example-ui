@@ -3,7 +3,7 @@ import { ApplicationAction, ApplicationStateHandler } from "./action"
 export class ApplicationAbstractAction<S> implements ApplicationAction<S> {
     handlers: ApplicationStateHandler<S>[] = []
 
-    igniteHooks: ApplicationHook[] = []
+    igniteHooks: IgniteHookList = { ignite: false, hooks: [] }
     terminateHooks: ApplicationHook[] = []
 
     addStateHandler(handler: ApplicationStateHandler<S>): void {
@@ -18,10 +18,23 @@ export class ApplicationAbstractAction<S> implements ApplicationAction<S> {
     }
 
     igniteHook(hook: ApplicationHook): void {
-        this.igniteHooks = [...this.igniteHooks, hook]
+        if (this.igniteHooks.ignite) {
+            console.warn("igniteHook IGNORED: ignite hook added in ignite hook")
+            return
+        }
+        this.igniteHooks = { ignite: false, hooks: [...this.igniteHooks.hooks, hook] }
     }
     ignite(): void {
-        this.igniteHooks.forEach((hook) => hook())
+        // 同期的にすべての state handler を追加した後で ignite するための setTimeout
+        setTimeout(() => {
+            // 一回 ignite したら ignite 済みとしてマーク
+            // addStateHandler + ignite が複数の箇所からコールされることを想定している
+            if (!this.igniteHooks.ignite) {
+                const hooks = this.igniteHooks.hooks
+                this.igniteHooks = { ignite: true }
+                hooks.forEach((hook) => hook())
+            }
+        })
     }
 
     terminateHook(hook: ApplicationHook): void {
@@ -36,3 +49,7 @@ export class ApplicationAbstractAction<S> implements ApplicationAction<S> {
 export interface ApplicationHook {
     (): void
 }
+
+type IgniteHookList =
+    | Readonly<{ ignite: false; hooks: ApplicationHook[] }>
+    | Readonly<{ ignite: true }>

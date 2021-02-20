@@ -40,7 +40,7 @@ type ContentProps = Readonly<{
 function Content({ currentVersion }: ContentProps): VNode {
     const state = useApplicationAction(currentVersion, initialCurrentVersionComponentState)
     useEffect(() => {
-        currentVersion.load()
+        currentVersion.load() // TODO ignite に移す
     }, [])
 
     return loginBox(siteInfo(), {

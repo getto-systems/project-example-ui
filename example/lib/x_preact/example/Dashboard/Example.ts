@@ -23,7 +23,7 @@ type Props = Readonly<{
 export function Example(resource: Props): VNode {
     const state = useApplicationAction(resource.example, initialExampleComponentState)
     useEffect(() => {
-        resource.example.load()
+        resource.example.load() // TODO ignite に移す
     }, [])
 
     switch (state.type) {

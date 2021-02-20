@@ -1,5 +1,5 @@
 import { h, VNode } from "preact"
-import { useEffect } from "preact/hooks"
+import { useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { VNodeContent } from "../../../../../../../z_vendor/getto-css/preact/common"
@@ -33,8 +33,8 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
     const state = useApplicationAction(resource.core, initialAuthenticatePasswordState.core)
     const validateState = useApplicationAction(resource.form.validate, initialAuthenticatePasswordState.form)
 
-    useEffect(() => {
-        // スクリプトのロードは appendChild する必要があるため useEffect で行う
+    useLayoutEffect(() => {
+        // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
         switch (state.type) {
             case "try-to-load":
                 appendScript(state.scriptPath, (script) => {
@@ -63,7 +63,7 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
             return delayedMessage()
 
         case "try-to-load":
-            // スクリプトのロードは appendChild する必要があるため useEffect で行う
+            // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
             return EMPTY_CONTENT
 
         case "storage-error":

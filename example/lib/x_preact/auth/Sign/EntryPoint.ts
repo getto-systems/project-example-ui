@@ -30,7 +30,7 @@ export function EntryPoint({ view, terminate }: AuthSignEntryPoint): VNode {
 
     const state = useApplicationAction(view, initialAuthSignViewState)
     useEffect(() => {
-        view.load()
+        view.load() // TODO ignite に移す
     }, [])
 
     switch (state.type) {

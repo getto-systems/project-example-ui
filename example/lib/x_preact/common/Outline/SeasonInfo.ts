@@ -20,7 +20,7 @@ type Props = Readonly<{
 export function SeasonInfo(resource: Props): VNode {
     const state = useApplicationAction(resource.seasonInfo, initialSeasonInfoComponentState)
     useEffect(() => {
-        resource.seasonInfo.load()
+        resource.seasonInfo.load() // TODO ignite に移す
     }, [])
 
     switch (state.type) {
