@@ -1,4 +1,4 @@
-import { newWorker } from "../../../../../z_getto/worker/foreground"
+import { newWorker } from "../../../../../z_getto/application/worker/foreground"
 
 import { newRenewAuthnInfoAction } from "../../../../sign/kernel/authnInfo/renew/x_Action/Renew/main"
 import { newAuthenticatePassword_proxy } from "../../../../sign/password/authenticate/x_Action/Authenticate/main/core"
@@ -13,7 +13,7 @@ import {
     StartPasswordResetSessionResourceProxy,
 } from "../../../../x_Resource/Sign/Password/ResetSession/Start/main/worker/foreground"
 
-import { currentURL } from "../../../../../z_infra/location/url"
+import { currentURL } from "../../../../../z_getto/infra/location/url"
 
 import { initLoginViewLocationInfo, View } from "../../impl"
 

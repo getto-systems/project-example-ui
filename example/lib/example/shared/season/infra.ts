@@ -1,4 +1,4 @@
-import { Clock } from "../../../z_infra/clock/infra"
+import { Clock } from "../../../z_getto/infra/clock/infra"
 
 import { Season, SeasonError } from "./data"
 

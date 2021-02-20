@@ -3,7 +3,7 @@ import { newStartPasswordResetSessionAction_merge } from "../core"
 import {
     WorkerProxy,
     WorkerAbstractProxy,
-} from "../../../../../../../../../z_getto/worker/foreground"
+} from "../../../../../../../../../z_getto/application/worker/foreground"
 
 import {
     CheckPasswordResetSessionStatusProxyMethod,

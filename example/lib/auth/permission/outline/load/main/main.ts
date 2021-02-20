@@ -1,7 +1,7 @@
 import { newMainOutlineMenuExpandRepository } from "../infra/repository/outlineMenuExpand/main"
 import { newLoadOutlineMenuBadgeRemoteAccess } from "../infra/remote/loadOutlineMenuBadge/main"
 
-import { lnir } from "../../../../../z_vendor/icon"
+import { lnir } from "../../../../../z_vendor/icon/core"
 
 import { category, newOutlineMenuAction, item, newOutlineBreadcrumbListAction } from "./common"
 

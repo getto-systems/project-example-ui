@@ -1,6 +1,6 @@
-import { initConnectRemoteAccess } from "../../../../../../../z_infra/remote/connect"
+import { initConnectRemoteAccess } from "../../../../../../../z_getto/infra/remote/connect"
 
-import { RawRemote, RemoteError } from "../../../../../../../z_infra/remote/infra"
+import { RawRemote, RemoteError } from "../../../../../../../z_getto/infra/remote/infra"
 import { LoadOutlineMenuBadgeRemoteAccess, OutlineMenuBadge } from "../../../infra"
 
 import { ApiNonce } from "../../../../../../../common/apiCredential/data"

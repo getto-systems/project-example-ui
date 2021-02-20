@@ -1,9 +1,9 @@
-import { initStaticClock, StaticClock } from "../../../../../../z_infra/clock/simulate"
+import { initStaticClock, StaticClock } from "../../../../../../z_getto/infra/clock/simulate"
 import { initAuthenticatePasswordSimulate } from "../../infra/remote/authenticate/simulate"
 import { initRenewAuthnInfoSimulate } from "../../../../kernel/authnInfo/kernel/infra/remote/renew/simulate"
 
 import { AuthenticatePasswordRemote, AuthenticatePasswordResult } from "../../infra"
-import { Clock } from "../../../../../../z_infra/clock/infra"
+import { Clock } from "../../../../../../z_getto/infra/clock/infra"
 
 import { AuthenticatePasswordAction } from "./action"
 
@@ -22,7 +22,7 @@ import {
 } from "../../../../kernel/authnInfo/kernel/infra"
 import { initMemoryAuthnInfoRepository } from "../../../../kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
 import { initGetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/impl"
-import { delayed, wait } from "../../../../../../z_infra/delayed/core"
+import { delayed, wait } from "../../../../../../z_getto/infra/delayed/core"
 import { authenticatePasswordEventHasDone } from "../../impl"
 import { initAsyncActionChecker } from "../../../../../../z_getto/application/testHelper"
 import { initAuthenticatePasswordFormAction } from "./Form/impl"

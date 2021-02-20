@@ -1,7 +1,7 @@
 import { ApiCredential } from "../../../../common/apiCredential/data"
-import { Delayed } from "../../../../z_infra/delayed/infra"
-import { Remote, RemoteResult, RemoteSimulator } from "../../../../z_infra/remote/infra"
-import { DelayTime } from "../../../../z_infra/time/infra"
+import { Delayed } from "../../../../z_getto/infra/delayed/infra"
+import { Remote, RemoteResult, RemoteSimulator } from "../../../../z_getto/infra/remote/infra"
+import { DelayTime } from "../../../../z_getto/infra/config/infra"
 
 import { AuthnInfo } from "../../kernel/authnInfo/kernel/data"
 

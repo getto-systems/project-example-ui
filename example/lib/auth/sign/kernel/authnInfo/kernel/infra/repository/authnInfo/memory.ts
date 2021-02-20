@@ -1,7 +1,7 @@
 import {
     initMemoryTypedStorage,
     MemoryTypedStorageStore,
-} from "../../../../../../../../z_infra/storage/memory"
+} from "../../../../../../../../z_getto/infra/storage/memory"
 import { initAuthnInfoRepository } from "./core"
 
 import { AuthnInfoRepository } from "../../../infra"

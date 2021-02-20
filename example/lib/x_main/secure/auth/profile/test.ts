@@ -4,8 +4,8 @@ import {
     initOutlineActionLocationInfo,
 } from "../../../../auth/permission/outline/load/impl"
 
-import { initStaticClock } from "../../../../z_infra/clock/simulate"
-import { initMemoryTypedStorage } from "../../../../z_infra/storage/memory"
+import { initStaticClock } from "../../../../z_getto/infra/clock/simulate"
+import { initMemoryTypedStorage } from "../../../../z_getto/infra/storage/memory"
 import { initOutlineMenuExpandRepository } from "../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/core"
 import { initMemorySeasonRepository } from "../../../../example/shared/season/impl/repository/season/memory"
 import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"
@@ -16,7 +16,7 @@ import { initSeasonInfoComponent } from "../../../../example/x_components/Outlin
 
 import { initTestSeasonAction } from "../../../../example/shared/season/tests/season"
 
-import { Clock } from "../../../../z_infra/clock/infra"
+import { Clock } from "../../../../z_getto/infra/clock/infra"
 import { OutlineMenuTree } from "../../../../auth/permission/outline/load/infra"
 
 import { ProfileFactory } from "./entryPoint"

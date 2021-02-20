@@ -1,7 +1,7 @@
 import { newLoadOutlineMenuBadgeNoopRemoteAccess } from "../infra/remote/loadOutlineMenuBadge/noop"
 import { newDocumentOutlineMenuExpandRepository } from "../infra/repository/outlineMenuExpand/main"
 
-import { lnir } from "../../../../../z_vendor/icon"
+import { lnir } from "../../../../../z_vendor/icon/core"
 
 import { category, newOutlineMenuAction, item, newOutlineBreadcrumbListAction } from "./common"
 

@@ -1,6 +1,6 @@
 import { initStartPasswordResetSessionSimulate } from "../../../../../sign/password/resetSession/start/infra/remote/start/simulate"
 
-import { WaitTime } from "../../../../../../z_infra/time/infra"
+import { WaitTime } from "../../../../../../z_getto/infra/config/infra"
 import {
     GetPasswordResetSessionStatusRemote,
     GetPasswordResetSessionStatusResult,
@@ -24,7 +24,7 @@ import {
     checkPasswordResetSessionStatusEventHasDone,
     startPasswordResetSessionEventHasDone,
 } from "../../../../../sign/password/resetSession/start/impl"
-import { delayed, wait } from "../../../../../../z_infra/delayed/core"
+import { delayed, wait } from "../../../../../../z_getto/infra/delayed/core"
 import {
     initAsyncActionTester_legacy,
     initSyncActionChecker_legacy,

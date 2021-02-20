@@ -1,4 +1,4 @@
-import { WorkerProxySpec } from "../../../../../../../../../z_getto/worker/message"
+import { WorkerProxySpec } from "../../../../../../../../../z_getto/application/worker/message"
 
 import { RegisterPasswordEvent } from "../../../../../../../password/resetSession/register/event"
 

@@ -1,8 +1,8 @@
 import { CheckRemoteAccess, CheckResponse } from "../../../infra"
 
 import { CheckRemoteError, Version, versionToString } from "../../../data"
-import { RawRemote, RemoteError } from "../../../../../z_infra/remote/infra"
-import { initConnectRemoteAccess } from "../../../../../z_infra/remote/connect"
+import { RawRemote, RemoteError } from "../../../../../z_getto/infra/remote/infra"
+import { initConnectRemoteAccess } from "../../../../../z_getto/infra/remote/connect"
 
 type CheckRawRemoteAccess = RawRemote<string, boolean>
 

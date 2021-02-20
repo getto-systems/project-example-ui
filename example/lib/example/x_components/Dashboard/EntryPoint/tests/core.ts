@@ -17,7 +17,7 @@ import {
     OutlineMenuTree,
 } from "../../../../../auth/permission/outline/load/infra"
 import { SeasonRepository } from "../../../../shared/season/infra"
-import { Clock } from "../../../../../z_infra/clock/infra"
+import { Clock } from "../../../../../z_getto/infra/clock/infra"
 
 import { DashboardResource } from "../entryPoint"
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"

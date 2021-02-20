@@ -1,4 +1,4 @@
-import { initStaticClock, StaticClock } from "../../../../../../z_infra/clock/simulate"
+import { initStaticClock, StaticClock } from "../../../../../../z_getto/infra/clock/simulate"
 import { initRenewAuthnInfoSimulate } from "../../../../../sign/kernel/authnInfo/kernel/infra/remote/renew/simulate"
 import { initRegisterPasswordSimulate } from "../../../../../sign/password/resetSession/register/infra/remote/register/simulate"
 
@@ -6,7 +6,7 @@ import { initFormAction } from "../../../../../../z_getto/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../../common/field/password/main/password"
 
-import { Clock } from "../../../../../../z_infra/clock/infra"
+import { Clock } from "../../../../../../z_getto/infra/clock/infra"
 import {
     RegisterPasswordRemote,
     RegisterPasswordResult,
@@ -39,7 +39,7 @@ import {
     initRegisterPasswordLocationInfo,
     registerPasswordEventHasDone,
 } from "../../../../../sign/password/resetSession/register/impl"
-import { delayed } from "../../../../../../z_infra/delayed/core"
+import { delayed } from "../../../../../../z_getto/infra/delayed/core"
 import {
     initAsyncActionTester_legacy,
     initSyncActionChecker_legacy,

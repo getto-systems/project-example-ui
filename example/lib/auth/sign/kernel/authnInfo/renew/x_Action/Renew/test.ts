@@ -1,7 +1,7 @@
-import { initStaticClock, StaticClock } from "../../../../../../../z_infra/clock/simulate"
+import { initStaticClock, StaticClock } from "../../../../../../../z_getto/infra/clock/simulate"
 import { initRenewAuthnInfoSimulate } from "../../../kernel/infra/remote/renew/simulate"
 
-import { Clock } from "../../../../../../../z_infra/clock/infra"
+import { Clock } from "../../../../../../../z_getto/infra/clock/infra"
 
 import { RenewAuthnInfoResource, RenewAuthnInfoState } from "./action"
 
@@ -15,7 +15,7 @@ import {
     RenewAuthnInfoRemote,
     RenewAuthnInfoResult,
 } from "../../../kernel/infra"
-import { delayed } from "../../../../../../../z_infra/delayed/core"
+import { delayed } from "../../../../../../../z_getto/infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../../kernel/infra/repository/authnInfo/memory"
 import { initGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
 import { initRenewAuthnInfoAction } from "./impl"

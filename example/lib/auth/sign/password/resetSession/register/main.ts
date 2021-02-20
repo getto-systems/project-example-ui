@@ -1,11 +1,11 @@
 import { newRegisterPasswordRemote } from "./infra/remote/register/main"
 
-import { delayed } from "../../../../../z_infra/delayed/core"
+import { delayed } from "../../../../../z_getto/infra/delayed/core"
 
-import { delaySecond } from "../../../../../z_infra/time/infra"
+import { delaySecond } from "../../../../../z_getto/infra/config/infra"
 import { RegisterPasswordInfra } from "./infra"
 import { initRegisterPasswordLocationInfo } from "./impl"
-import { currentURL } from "../../../../../z_infra/location/url"
+import { currentURL } from "../../../../../z_getto/infra/location/url"
 import { RegisterPasswordLocationInfo } from "./method"
 
 export function newRegisterPasswordInfra(): RegisterPasswordInfra {

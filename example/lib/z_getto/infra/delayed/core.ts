@@ -1,4 +1,4 @@
-import { DelayTime, WaitTime } from "../time/infra"
+import { DelayTime, WaitTime } from "../config/infra"
 import { DelayedHandler, WaitContent } from "./infra"
 
 export async function delayed<T>(

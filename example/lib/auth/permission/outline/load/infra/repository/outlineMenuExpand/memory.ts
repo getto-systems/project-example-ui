@@ -1,7 +1,7 @@
 import {
     initMemoryTypedStorage,
     MemoryTypedStorageStore,
-} from "../../../../../../../z_infra/storage/memory"
+} from "../../../../../../../z_getto/infra/storage/memory"
 import { initOutlineMenuExpandRepository } from "./core"
 
 import { OutlineMenuExpand, OutlineMenuExpandRepository } from "../../../infra"

@@ -1,4 +1,4 @@
-import { DelayTime, WaitTime } from "../time/infra"
+import { DelayTime, WaitTime } from "../config/infra"
 
 export interface Delayed {
     <T>(promise: Promise<T>, time: DelayTime, handler: DelayedHandler): Promise<T>
