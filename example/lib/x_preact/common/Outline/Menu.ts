@@ -1,5 +1,4 @@
 import { VNode } from "preact"
-import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import {
@@ -34,9 +33,6 @@ type Props = Readonly<{
 }>
 export function Menu(resource: Props): VNode {
     const state = useApplicationAction(resource.menu, initialMenuComponentState)
-    useEffect(() => {
-        resource.menu.load() // TODO ignite に移す
-    }, [])
 
     switch (state.type) {
         case "initial-menu":

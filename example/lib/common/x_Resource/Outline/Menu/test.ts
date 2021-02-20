@@ -72,7 +72,7 @@ describe("Menu", () => {
 
         resource.menu.addStateHandler(initTester())
 
-        resource.menu.load()
+        resource.menu.ignite()
 
         function initTester() {
             return initAsyncMenuTester()((stack) => {
@@ -118,7 +118,7 @@ describe("Menu", () => {
 
         resource.menu.addStateHandler(initTester())
 
-        resource.menu.load()
+        resource.menu.ignite()
 
         function initTester() {
             return initAsyncMenuTester()((stack) => {
@@ -165,7 +165,7 @@ describe("Menu", () => {
 
         resource.menu.addStateHandler(initTester())
 
-        resource.menu.load()
+        resource.menu.ignite()
 
         function initTester() {
             return initAsyncMenuTester()((stack) => {
@@ -210,7 +210,7 @@ describe("Menu", () => {
         const { repository, resource } = standardMenuResource()
 
         resource.menu.addStateHandler(initNoopTester())
-        resource.menu.load()
+        resource.menu.ignite()
 
         function initNoopTester() {
             return initAsyncMenuTester()((stack) => {
@@ -289,7 +289,7 @@ describe("Menu", () => {
 
         resource.menu.addStateHandler(initTester())
 
-        resource.menu.load()
+        resource.menu.ignite()
 
         function initTester() {
             return initAsyncMenuTester()((stack) => {
