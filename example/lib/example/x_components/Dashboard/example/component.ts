@@ -11,9 +11,7 @@ export type ExampleMaterial = Readonly<{
     loadSeason: LoadSeason
 }>
 
-export interface ExampleComponent extends ApplicationAction<ExampleComponentState> {
-    load(): void
-}
+export type ExampleComponent = ApplicationAction<ExampleComponentState>
 
 export type ExampleComponentState =
     | Readonly<{ type: "initial-example" }>

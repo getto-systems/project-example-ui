@@ -26,7 +26,7 @@ describe("Example", () => {
 
         resource.example.addStateHandler(stateHandler())
 
-        resource.example.load()
+        resource.example.ignite()
 
         function stateHandler(): Post<ExampleComponentState> {
             const stack: ExampleComponentState[] = []
