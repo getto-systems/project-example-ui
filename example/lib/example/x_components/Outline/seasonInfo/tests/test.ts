@@ -18,7 +18,7 @@ describe("SeasonInfo", () => {
 
         seasonInfo.addStateHandler(stateHandler())
 
-        seasonInfo.load()
+        seasonInfo.ignite()
 
         function stateHandler(): Post<SeasonInfoComponentState> {
             const stack: SeasonInfoComponentState[] = []
@@ -51,7 +51,7 @@ describe("SeasonInfo", () => {
 
         seasonInfo.addStateHandler(stateHandler())
 
-        seasonInfo.load()
+        seasonInfo.ignite()
 
         function stateHandler(): Post<SeasonInfoComponentState> {
             const stack: SeasonInfoComponentState[] = []
