@@ -1,9 +1,14 @@
 import { h, VNode } from "preact"
-import { useState, useEffect, useLayoutEffect } from "preact/hooks"
+import { useState, useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
-import { appMain, mainBody, mainHeader, mainTitle } from "../../../z_vendor/getto-css/preact/layout/app"
+import {
+    appMain,
+    mainBody,
+    mainHeader,
+    mainTitle,
+} from "../../../z_vendor/getto-css/preact/layout/app"
 
 import { copyright } from "../../common/site"
 
@@ -16,20 +21,15 @@ import {
 import { BreadcrumbListComponent } from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/component"
 
 import { ContentPath } from "../../../document/content/data"
+import { useApplicationAction } from "../../common/hooks"
 
 type Props = Readonly<{
     content: ContentComponent
     breadcrumbList: BreadcrumbListComponent
 }>
 export function Content(resource: Props): VNode {
-    const [state, setState] = useState(initialContentComponentState)
+    const state = useApplicationAction(resource.content, initialContentComponentState)
     const [loadContentState, setLoadContentState] = useState(initialLoadContentState)
-    useLayoutEffect(() => {
-        resource.content.addStateHandler(setState)
-    }, [])
-    useEffect(() => {
-        resource.content.load() // TODO ignite に移す
-    }, [])
 
     useLayoutEffect(() => {
         switch (state.type) {
@@ -51,14 +51,19 @@ export function Content(resource: Props): VNode {
                 return EMPTY_CONTENT
             }
             return appMain({
-                header: mainHeader([mainTitle(documentTitle(state.path)), h(BreadcrumbList, resource)]),
+                header: mainHeader([
+                    mainTitle(documentTitle(state.path)),
+                    h(BreadcrumbList, resource),
+                ]),
                 body: mainBody(loadContentState.content),
                 copyright: copyright(),
             })
     }
 }
 
-type LoadContentState = Readonly<{ loaded: false }> | Readonly<{ loaded: true; content: VNodeContent }>
+type LoadContentState =
+    | Readonly<{ loaded: false }>
+    | Readonly<{ loaded: true; content: VNodeContent }>
 const initialLoadContentState: LoadContentState = { loaded: false }
 
 function documentTitle(path: ContentPath): string {
@@ -96,7 +101,9 @@ const contentMap: Record<ContentPath, ContentEntry> = {
         (await import("./contents/development/auth/login")).content_development_auth_login()
     ),
     "/document/development/auth/permission.html": entry("アクセス制限", async () =>
-        (await import("./contents/development/auth/permission")).content_development_auth_permission()
+        (
+            await import("./contents/development/auth/permission")
+        ).content_development_auth_permission()
     ),
     "/document/development/auth/user.html": entry("ユーザー管理", async () =>
         (await import("./contents/development/auth/user")).content_development_auth_user()

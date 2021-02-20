@@ -11,9 +11,7 @@ export type ContentMaterial = Readonly<{
     loadDocument: LoadContent
 }>
 
-export interface ContentComponent extends ApplicationAction<ContentComponentState> {
-    load(): void
-}
+export type ContentComponent = ApplicationAction<ContentComponentState>
 
 export type ContentComponentState =
     | Readonly<{ type: "initial-content" }>
