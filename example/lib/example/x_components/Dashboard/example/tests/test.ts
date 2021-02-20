@@ -5,7 +5,7 @@ import {
 } from "../../EntryPoint/tests/core"
 
 import { initMemoryTypedStorage } from "../../../../../z_infra/storage/memory"
-import { newStaticClock } from "../../../../../z_infra/clock/simulate"
+import { initStaticClock } from "../../../../../z_infra/clock/simulate"
 import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"
 import { initOutlineMenuExpandRepository } from "../../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/core"
 import { initMemorySeasonRepository } from "../../../../shared/season/impl/repository/season/memory"
@@ -101,7 +101,7 @@ function standardSimulator(): DashboardRemoteAccess {
 }
 
 function standardClock(): Clock {
-    return newStaticClock(NOW)
+    return initStaticClock(NOW)
 }
 
 interface Post<T> {

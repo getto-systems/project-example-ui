@@ -1,6 +1,6 @@
 import { Clock } from "./infra"
 
-export function newStaticClock(staticNow: Date): StaticClock {
+export function initStaticClock(staticNow: Date): StaticClock {
     return new StaticClock(staticNow)
 }
 
