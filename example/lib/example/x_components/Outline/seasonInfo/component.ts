@@ -11,9 +11,7 @@ export type SeasonInfoMaterial = Readonly<{
     loadSeason: LoadSeason
 }>
 
-export interface SeasonInfoComponent extends ApplicationAction<SeasonInfoComponentState> {
-    load(): void
-}
+export type SeasonInfoComponent = ApplicationAction<SeasonInfoComponentState>
 
 export type SeasonInfoComponentState =
     | Readonly<{ type: "initial-season" }>
