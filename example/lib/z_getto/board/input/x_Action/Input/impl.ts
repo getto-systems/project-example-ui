@@ -15,7 +15,7 @@ import {
 
 import { BoardValue } from "../../../kernel/data"
 
-export function initInputBoardValueAction(): InputBoardValueAction {
+export function newInputBoardValueAction(): InputBoardValueAction {
     const infra: InputBoardValueInfra = { store: newBoardValueStore() }
     return new Action(() => infra.store.get(), {
         set: setBoardValue(infra),

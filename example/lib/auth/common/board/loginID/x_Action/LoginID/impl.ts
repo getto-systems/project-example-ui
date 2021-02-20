@@ -1,5 +1,5 @@
 import { initValidateBoardFieldAction } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/impl"
-import { initInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/impl"
+import { newInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/impl"
 
 import { ValidateBoardFieldInfra } from "../../../../../../z_getto/board/validateField/infra"
 
@@ -20,7 +20,7 @@ export function initLoginIDBoardFieldAction<N extends string>(
     embed: LoginIDBoardEmbed<N>,
     infra: ValidateBoardFieldInfra
 ): LoginIDBoardFieldAction {
-    const input = initInputBoardValueAction()
+    const input = newInputBoardValueAction()
 
     const validate = initValidateBoardFieldAction(
         {
