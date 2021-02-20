@@ -76,7 +76,7 @@ describe("LoginView", () => {
                     case "renew-credential":
                         terminates.push(state.entryPoint.terminate)
 
-                        state.entryPoint.resource.renew.request()
+                        state.entryPoint.resource.renew.ignite()
                         break
 
                     case "password-login":
@@ -133,7 +133,7 @@ describe("LoginView", () => {
                     case "renew-credential":
                         terminates.push(state.entryPoint.terminate)
 
-                        state.entryPoint.resource.renew.request()
+                        state.entryPoint.resource.renew.ignite()
                         break
 
                     case "password-reset-session":
@@ -183,7 +183,7 @@ describe("LoginView", () => {
                     case "renew-credential":
                         terminates.push(state.entryPoint.terminate)
 
-                        state.entryPoint.resource.renew.request()
+                        state.entryPoint.resource.renew.ignite()
                         break
 
                     case "password-reset":

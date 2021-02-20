@@ -24,7 +24,6 @@ export type RenewAuthnInfoResource = Readonly<{
 }>
 
 export interface RenewAuthnInfoAction extends ApplicationAction<RenewAuthnInfoState> {
-    request(): void
     succeedToInstantLoad(): void
     failedToInstantLoad(): void
     loadError(err: LoadSecureScriptError): void
