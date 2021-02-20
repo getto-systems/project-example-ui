@@ -16,7 +16,7 @@ describe("Content", () => {
 
         resource.content.addStateHandler(stateHandler())
 
-        resource.content.load()
+        resource.content.ignite()
 
         function stateHandler(): Post<ContentComponentState> {
             const stack: ContentComponentState[] = []
