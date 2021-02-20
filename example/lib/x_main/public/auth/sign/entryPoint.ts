@@ -32,9 +32,7 @@ export interface AuthSignViewLocationInfo {
     getAuthSignViewType(): AuthSignViewType
 }
 
-export interface AuthSignView extends ApplicationAction<AuthSignViewState> {
-    load(): void
-}
+export type AuthSignView = ApplicationAction<AuthSignViewState>
 
     // TODO 階層構造に合わせて rename
 export type AuthSignViewState =

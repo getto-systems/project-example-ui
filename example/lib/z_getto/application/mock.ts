@@ -20,6 +20,10 @@ export class MockAction<S> implements ApplicationAction<S> {
     removeStateHandler(_handler: ApplicationStateHandler<S>): void {
         this.handler = null
     }
+
+    ignite(): void {
+        // mock では特に何もしない
+    }
     terminate(): void {
         this.handler = null
     }

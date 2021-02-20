@@ -60,7 +60,7 @@ describe("LoginView", () => {
 
         view.addStateHandler(stateHandler())
 
-        view.load()
+        view.ignite()
 
         function stateHandler(): Handler<AuthSignViewState> {
             const stack: AuthSignViewState[] = []
@@ -117,7 +117,7 @@ describe("LoginView", () => {
 
         view.addStateHandler(stateHandler())
 
-        view.load()
+        view.ignite()
 
         function stateHandler(): Handler<AuthSignViewState> {
             const stack: AuthSignViewState[] = []
@@ -167,7 +167,7 @@ describe("LoginView", () => {
 
         view.addStateHandler(stateHandler())
 
-        view.load()
+        view.ignite()
 
         function stateHandler(): Handler<AuthSignViewState> {
             const stack: AuthSignViewState[] = []
