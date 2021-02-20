@@ -11,7 +11,7 @@ import { useAction } from "../../../../../../../../x_preact/common/hooks"
 
 import { initialLogoutState, LogoutResource } from "../action"
 
-import { StorageError } from "../../../../../../../../common/storage/data"
+import { StorageError } from "../../../../../../../../z_getto/storage/data"
 
 export function Logout(resource: LogoutResource): VNode {
     const state = useAction(resource.logout, initialLogoutState)

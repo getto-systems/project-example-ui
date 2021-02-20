@@ -2,8 +2,8 @@ import {
     markApiNonce,
     markApiRoles,
 } from "../../../../../../../../common/apiCredential/data"
-import { initConnectRemoteAccess } from "../../../../../../../../z_getto/infra/remote/connect"
-import { RawRemote, RemoteError } from "../../../../../../../../z_getto/infra/remote/infra"
+import { initConnectRemoteAccess } from "../../../../../../../../z_getto/remote/connect"
+import { RawRemote, RemoteError } from "../../../../../../../../z_getto/remote/infra"
 import { markAuthAt, markAuthnNonce } from "../../../../../../kernel/authnInfo/kernel/data"
 import { RegisterPasswordRemoteError } from "../../../data"
 import {

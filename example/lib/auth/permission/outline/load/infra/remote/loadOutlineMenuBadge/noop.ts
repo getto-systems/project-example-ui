@@ -1,4 +1,4 @@
-import { initSimulateRemoteAccess } from "../../../../../../../z_getto/infra/remote/simulate"
+import { initSimulateRemoteAccess } from "../../../../../../../z_getto/remote/simulate"
 
 import { OutlineMenuBadge, LoadOutlineMenuBadgeRemoteAccess } from "../../../infra"
 

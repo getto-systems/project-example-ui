@@ -1,4 +1,4 @@
-import { initMemoryTypedStorage, MemoryTypedStorageStore } from "../../../../z_getto/infra/storage/memory"
+import { initMemoryTypedStorage, MemoryTypedStorageStore } from "../../../../z_getto/storage/typed/memory"
 import { initApiCredentialRepository } from "./apiCredential"
 
 import { ApiCredentialRepository } from "../../infra"

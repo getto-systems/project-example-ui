@@ -3,7 +3,7 @@ import {
     RemoteError,
     RemoteResult,
     RemoteSimulator,
-} from "../../z_getto/infra/remote/infra"
+} from "../../z_getto/remote/infra"
 
 import { NotifyUnexpectedErrorPod } from "./action"
 

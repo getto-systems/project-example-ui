@@ -1,6 +1,6 @@
 import { env } from "../../../../../../../../y_environment/env"
 
-import { initWebTypedStorage } from "../../../../../../../../z_getto/infra/storage/webStorage"
+import { initWebTypedStorage } from "../../../../../../../../z_getto/storage/typed/web"
 import { initAuthnInfoRepository } from "./core"
 import { initLastAuthAtConverter, initAuthnNonceConverter } from "./converter"
 

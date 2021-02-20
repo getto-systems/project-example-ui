@@ -1,4 +1,4 @@
-import { StorageError } from "../../../../common/storage/data"
+import { StorageError } from "../../../../z_getto/storage/data"
 import { OutlineBreadcrumb, LoadOutlineMenuBadgeError, OutlineMenu } from "./data"
 
 export type LoadOutlineBreadcrumbListEvent = Readonly<{

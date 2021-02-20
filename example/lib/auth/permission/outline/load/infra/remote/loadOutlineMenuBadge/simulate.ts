@@ -1,4 +1,4 @@
-import { initSimulateRemoteAccess } from "../../../../../../../z_getto/infra/remote/simulate"
+import { initSimulateRemoteAccess } from "../../../../../../../z_getto/remote/simulate"
 
 import { WaitTime } from "../../../../../../../z_getto/infra/config/infra"
 import { LoadOutlineMenuBadgeRemoteAccess, LoadOutlineMenuBadgeSimulator } from "../../../infra"

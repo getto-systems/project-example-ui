@@ -2,7 +2,7 @@ import {
     Remote,
     RemoteResult,
     RemoteSimulator,
-} from "../../../../z_getto/infra/remote/infra"
+} from "../../../../z_getto/remote/infra"
 import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
 
 import { ApiNonce } from "../../../../common/apiCredential/data"
@@ -12,8 +12,8 @@ import {
     LoadOutlineMenuPod,
     ToggleOutlineMenuExpandMethod,
 } from "./action"
-import { StoreResult } from "../../../../common/storage/infra"
-import { StorageError } from "../../../../common/storage/data"
+import { StoreResult } from "../../../../z_getto/storage/infra"
+import { StorageError } from "../../../../z_getto/storage/data"
 
 export type OutlineBreadcrumbListActionInfra = LoadOutlineBreadcrumbListInfra
 export type OutlineMenuActionInfra = LoadOutlineMenuInfra & ToggleOutlineMenuExpandInfra
