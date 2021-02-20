@@ -5,7 +5,7 @@ import {
     encodeUint8ArrayToBase64String,
 } from "../../z_vendor/protobuf/transform"
 
-import { decodeError, decodeSuccess, TypedStorageConverter } from "../../z_getto/infra/storage/infra"
+import { decodeError, decodeSuccess, TypedStorageConverter } from "../../z_getto/storage/typed/infra"
 
 export type ApiCredentialDecoded = Readonly<{
     apiNonce: string

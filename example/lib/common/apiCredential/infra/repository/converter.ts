@@ -1,8 +1,8 @@
 import { initApiCredentialDataConverter } from "../../../../z_external/converter/apiCredential"
 
-import { combineConverter } from "../../../../z_getto/infra/storage/converter/combine"
+import { combineConverter } from "../../../../z_getto/storage/typed/converter/combine"
 
-import { decodeSuccess, TypedStorageConverter } from "../../../../z_getto/infra/storage/infra"
+import { decodeSuccess, TypedStorageConverter } from "../../../../z_getto/storage/typed/infra"
 
 import { ApiCredential, markApiNonce, markApiRoles } from "../../data"
 

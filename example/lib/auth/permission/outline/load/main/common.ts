@@ -3,7 +3,7 @@ import { StaticMenuPath } from "../../../../../y_environment/path"
 
 import { currentURL } from "../../../../../z_getto/infra/location/url"
 
-import { Icon, iconClass } from "../../../../../z_vendor/icon/core"
+import { Icon, iconClass } from "../../../../../z_external/icon/core"
 
 import {
     LoadOutlineMenuBadgeRemoteAccess,

@@ -5,7 +5,7 @@ import {
 } from "../../../../auth/permission/outline/load/impl"
 
 import { initStaticClock } from "../../../../z_getto/infra/clock/simulate"
-import { initMemoryTypedStorage } from "../../../../z_getto/infra/storage/memory"
+import { initMemoryTypedStorage } from "../../../../z_getto/storage/typed/memory"
 import { initOutlineMenuExpandRepository } from "../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/core"
 import { initMemorySeasonRepository } from "../../../../example/shared/season/impl/repository/season/memory"
 import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"

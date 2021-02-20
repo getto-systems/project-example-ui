@@ -4,7 +4,7 @@ import {
     Remote,
     RemoteResult,
     RemoteSimulator,
-} from "../../../../../z_getto/infra/remote/infra"
+} from "../../../../../z_getto/remote/infra"
 import { DelayTime } from "../../../../../z_getto/infra/config/infra"
 import { AuthnInfo } from "../../../kernel/authnInfo/kernel/data"
 

@@ -1,6 +1,6 @@
-import { initConnectRemoteAccess } from "../../../../../../../../z_getto/infra/remote/connect"
+import { initConnectRemoteAccess } from "../../../../../../../../z_getto/remote/connect"
 
-import { RawRemote, RemoteError } from "../../../../../../../../z_getto/infra/remote/infra"
+import { RawRemote, RemoteError } from "../../../../../../../../z_getto/remote/infra"
 import { RenewAuthnInfoRemote, RenewAuthnInfoResponse } from "../../../infra"
 
 import {

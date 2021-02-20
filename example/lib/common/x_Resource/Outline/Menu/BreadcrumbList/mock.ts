@@ -1,4 +1,4 @@
-import { iconClass, lnir } from "../../../../../z_vendor/icon/core"
+import { iconClass, lnir } from "../../../../../z_external/icon/core"
 import { MockAction, MockPropsPasser } from "../../../../../z_getto/application/mock"
 
 import { BreadcrumbListComponent, BreadcrumbListComponentState } from "./component"

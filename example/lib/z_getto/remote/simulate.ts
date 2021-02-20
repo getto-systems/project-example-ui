@@ -1,5 +1,5 @@
-import { wait } from "../delayed/core"
-import { WaitTime } from "../config/infra"
+import { wait } from "../infra/delayed/core"
+import { WaitTime } from "../infra/config/infra"
 
 import { Remote, RemoteSimulator } from "./infra"
 

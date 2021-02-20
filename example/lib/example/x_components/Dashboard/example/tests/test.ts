@@ -4,7 +4,7 @@ import {
     newTestDashboardResource,
 } from "../../EntryPoint/tests/core"
 
-import { initMemoryTypedStorage } from "../../../../../z_getto/infra/storage/memory"
+import { initMemoryTypedStorage } from "../../../../../z_getto/storage/typed/memory"
 import { initStaticClock } from "../../../../../z_getto/infra/clock/simulate"
 import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"
 import { initOutlineMenuExpandRepository } from "../../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/core"

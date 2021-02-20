@@ -1,10 +1,10 @@
-import { combineConverter } from "../../../../../../../../z_getto/infra/storage/converter/combine"
-import { initDateConverter } from "../../../../../../../../z_getto/infra/storage/converter/date"
+import { combineConverter } from "../../../../../../../../z_getto/storage/typed/converter/combine"
+import { initDateConverter } from "../../../../../../../../z_getto/storage/typed/converter/date"
 
 import {
     decodeSuccess,
     TypedStorageConverter,
-} from "../../../../../../../../z_getto/infra/storage/infra"
+} from "../../../../../../../../z_getto/storage/typed/infra"
 
 import { AuthAt, markAuthAt, markAuthnNonce, AuthnNonce } from "../../../data"
 

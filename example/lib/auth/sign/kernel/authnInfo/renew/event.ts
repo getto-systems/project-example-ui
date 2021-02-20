@@ -1,4 +1,4 @@
-import { StorageError } from "../../../../../common/storage/data"
+import { StorageError } from "../../../../../z_getto/storage/data"
 import { AuthnInfo } from "../kernel/data"
 import { RenewAuthnInfoError } from "./data"
 
