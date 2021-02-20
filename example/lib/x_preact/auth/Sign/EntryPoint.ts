@@ -15,7 +15,7 @@ import { RegisterPassword } from "./Password/ResetSession/Register"
 import {
     AuthSignEntryPoint,
     initialAuthSignViewState,
-} from "../../../auth/z_EntryPoint/Sign/entryPoint"
+} from "../../../x_main/public/auth/sign/entryPoint"
 
 export function EntryPoint({ view, terminate }: AuthSignEntryPoint): VNode {
     useTermination_deprecated(terminate)

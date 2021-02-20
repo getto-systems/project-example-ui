@@ -18,7 +18,7 @@ import { icon, spinner } from "../../../../common/icon"
 
 import { LoginIDFormField } from "../../field/loginID"
 
-import { PasswordResetSessionEntryPoint } from "../../../../../auth/z_EntryPoint/Sign/entryPoint"
+import { PasswordResetSessionEntryPoint } from "../../../../../x_main/public/auth/sign/entryPoint"
 
 import { initialStartPasswordResetSessionState } from "../../../../../auth/sign/x_Action/Password/ResetSession/Start/Core/action"
 import { initialFormContainerComponentState } from "../../../../../z_getto/getto-form/x_Resource/Form/component"

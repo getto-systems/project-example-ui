@@ -4,12 +4,12 @@ import { PasswordBoardFieldAction } from "../../../../../../common/board/passwor
 
 import { AuthenticatePasswordFields } from "../../../data"
 
-export type AuthenticatePasswordFormAction = Readonly<{
-    loginID: LoginIDBoardFieldAction
-    password: PasswordBoardFieldAction
-    validate: AuthenticatePasswordValidateAction
-    clear: ClearAction
-}>
+export interface AuthenticatePasswordFormAction {
+    readonly loginID: LoginIDBoardFieldAction
+    readonly password: PasswordBoardFieldAction
+    readonly validate: AuthenticatePasswordValidateAction
+    readonly clear: ClearAction
+}
 
 export type AuthenticatePasswordValidateAction = ValidateBoardAction<AuthenticatePasswordFields>
 

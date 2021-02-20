@@ -63,7 +63,7 @@ function findSecureEntries() {
 
 function toEntry(root) {
     return (acc, name) => {
-        acc[name] = toMainPath(name)
+        acc[name] = toForegroundPath(name)
 
         const worker = toWorkerPath(name)
         if (exists(worker)) {
@@ -72,8 +72,8 @@ function toEntry(root) {
         return acc
     }
 
-    function toMainPath(file) {
-        return toPath("main", file)
+    function toForegroundPath(file) {
+        return toPath("foreground", file)
     }
     function toWorkerPath(file) {
         return toPath("worker", file)
@@ -82,8 +82,8 @@ function toEntry(root) {
         return path.join(__dirname, "./lib/x_main", root, ...toSecureEntryPath(file), `${type}.ts`)
     }
     function toSecureEntryPath(file) {
-        if (file.startsWith("auth/profile")) {
-            return [file, "x_preact"]
+        if (file.startsWith("auth")) {
+            return [file, "entryPoint"]
         }
         if (file.startsWith("document/")) {
             return ["document"]
