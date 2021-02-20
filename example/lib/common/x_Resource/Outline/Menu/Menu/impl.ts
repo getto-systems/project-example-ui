@@ -15,13 +15,14 @@ class Component extends ApplicationAbstractAction<MenuComponentState> implements
     constructor(material: MenuMaterial) {
         super()
         this.material = material
-    }
 
-    load(): void {
-        this.material.menu.loadMenu((event) => {
-            this.post(event)
+        this.igniteHook(() => {
+            this.material.menu.loadMenu((event) => {
+                this.post(event)
+            })
         })
     }
+
     toggle(menu: OutlineMenu, path: OutlineMenuCategoryPath): void {
         this.material.menu.toggleMenuExpand(menu, path, (event) => {
             this.post(event)

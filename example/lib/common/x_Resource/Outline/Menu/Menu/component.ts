@@ -12,7 +12,6 @@ export type MenuMaterial = Readonly<{
 }>
 
 export interface MenuComponent extends ApplicationAction<MenuComponentState> {
-    load(): void
     toggle(menu: OutlineMenu, path: OutlineMenuCategoryPath): void
 }
 
