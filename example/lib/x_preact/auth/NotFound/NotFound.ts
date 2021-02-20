@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { buttons } from "../../../z_vendor/getto-css/preact/design/form"
 
-import { useAction, useDocumentTitle, useTermination_deprecated } from "../../common/hooks"
+import { useApplicationAction, useDocumentTitle, useTermination_deprecated } from "../../common/hooks"
 import { siteInfo } from "../../common/site"
 import { icon } from "../../common/icon"
 
@@ -38,7 +38,7 @@ type ContentProps = Readonly<{
     currentVersion: CurrentVersionComponent
 }>
 function Content({ currentVersion }: ContentProps): VNode {
-    const state = useAction(currentVersion, initialCurrentVersionComponentState)
+    const state = useApplicationAction(currentVersion, initialCurrentVersionComponentState)
     useEffect(() => {
         currentVersion.load()
     }, [])

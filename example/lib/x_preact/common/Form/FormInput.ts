@@ -1,7 +1,7 @@
 import { html } from "htm/preact"
 import { VNode } from "preact"
 
-import { useAction } from "../hooks"
+import { useApplicationAction } from "../hooks"
 
 import {
     FormInputComponent,
@@ -17,7 +17,7 @@ export type FormInputProps = Readonly<{
     input: FormInputComponent
 }>
 export function FormInput(resource: FormInputProps): VNode {
-    const state = useAction(resource.input, initialFormInputComponentState)
+    const state = useApplicationAction(resource.input, initialFormInputComponentState)
 
     return html`<input
         type=${resource.type}

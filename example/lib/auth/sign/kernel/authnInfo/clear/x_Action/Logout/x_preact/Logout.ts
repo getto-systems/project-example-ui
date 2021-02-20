@@ -7,14 +7,14 @@ import { button_send, field } from "../../../../../../../../z_vendor/getto-css/p
 import { notice_alert } from "../../../../../../../../z_vendor/getto-css/preact/design/highlight"
 import { v_small } from "../../../../../../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useAction } from "../../../../../../../../x_preact/common/hooks"
+import { useApplicationAction } from "../../../../../../../../x_preact/common/hooks"
 
 import { initialLogoutState, LogoutResource } from "../action"
 
 import { StorageError } from "../../../../../../../../z_getto/storage/data"
 
 export function Logout(resource: LogoutResource): VNode {
-    const state = useAction(resource.logout, initialLogoutState)
+    const state = useApplicationAction(resource.logout, initialLogoutState)
     useEffect(() => {
         switch (state.type) {
             case "succeed-to-logout":

@@ -3,7 +3,7 @@ import { h, VNode } from "preact"
 import { VNodeContent } from "../../../../z_vendor/getto-css/preact/common"
 import { field, field_error, label_text_fill } from "../../../../z_vendor/getto-css/preact/design/form"
 
-import { useAction } from "../../../common/hooks"
+import { useApplicationAction } from "../../../common/hooks"
 
 import { FormInput } from "../../../common/Form/FormInput"
 
@@ -18,7 +18,7 @@ type Props = Readonly<{
     help: VNodeContent[]
 }>
 export function LoginIDFormField(resource: Props): VNode {
-    const state = useAction(resource.loginID, initialFormFieldComponentState)
+    const state = useApplicationAction(resource.loginID, initialFormFieldComponentState)
 
     return label_text_fill(content())
 

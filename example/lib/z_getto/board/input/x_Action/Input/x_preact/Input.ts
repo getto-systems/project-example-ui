@@ -1,7 +1,7 @@
 import { html } from "htm/preact"
 import { VNode } from "preact"
 
-import { useAction } from "../../../../../../x_preact/common/hooks"
+import { useApplicationAction } from "../../../../../../x_preact/common/hooks"
 
 import { initialInputBoardState, InputBoardValueResource } from "../action"
 
@@ -9,7 +9,7 @@ import { markBoardValue } from "../../../../kernel/data"
 
 export type InputBoardProps = InputBoardValueResource
 export function InputBoard(resource: InputBoardProps): VNode {
-    const state = useAction(resource.input, initialInputBoardState)
+    const state = useApplicationAction(resource.input, initialInputBoardState)
 
     return html`<input type=${resource.type} value=${state} onInput=${onInput} />`
 

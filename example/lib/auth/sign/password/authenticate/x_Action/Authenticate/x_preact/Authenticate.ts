@@ -13,7 +13,7 @@ import {
     form,
 } from "../../../../../../../z_vendor/getto-css/preact/design/form"
 
-import { useAction, useEntryPoint } from "../../../../../../../x_preact/common/hooks"
+import { useApplicationAction, useEntryPoint } from "../../../../../../../x_preact/common/hooks"
 import { siteInfo } from "../../../../../../../x_preact/common/site"
 import { icon, spinner } from "../../../../../../../x_preact/common/icon"
 
@@ -30,8 +30,8 @@ import { AuthenticatePasswordError } from "../../../data"
 export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
 
-    const state = useAction(resource.core, initialAuthenticatePasswordState.core)
-    const validateState = useAction(resource.form.validate, initialAuthenticatePasswordState.form)
+    const state = useApplicationAction(resource.core, initialAuthenticatePasswordState.core)
+    const validateState = useApplicationAction(resource.form.validate, initialAuthenticatePasswordState.form)
 
     useEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useEffect で行う

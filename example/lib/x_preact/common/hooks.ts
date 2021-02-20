@@ -1,4 +1,4 @@
-import { useEffect, useErrorBoundary, useState } from "preact/hooks"
+import { useEffect, useErrorBoundary, useLayoutEffect, useState } from "preact/hooks"
 
 import { ApplicationAction } from "../../z_getto/application/action"
 import { NotifyComponent } from "../../availability/x_Resource/Error/Notify/component"
@@ -30,9 +30,9 @@ export function useDocumentTitle(title: string): void {
     }, [])
 }
 
-export function useAction<S>(action: ApplicationAction<S>, initial: S): S {
+export function useApplicationAction<S>(action: ApplicationAction<S>, initial: S): S {
     const [state, setState] = useState(initial)
-    useEffect(() => {
+    useLayoutEffect(() => {
         action.addStateHandler(setState)
         return () => {
             action.removeStateHandler(setState)

@@ -8,7 +8,7 @@ import { field } from "../../../z_vendor/getto-css/preact/design/form"
 import { notice_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
 import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useAction } from "../../common/hooks"
+import { useApplicationAction } from "../../common/hooks"
 
 import {
     ExampleComponent,
@@ -21,7 +21,7 @@ type Props = Readonly<{
     example: ExampleComponent
 }>
 export function Example(resource: Props): VNode {
-    const state = useAction(resource.example, initialExampleComponentState)
+    const state = useApplicationAction(resource.example, initialExampleComponentState)
     useEffect(() => {
         resource.example.load()
     }, [])

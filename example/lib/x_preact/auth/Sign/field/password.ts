@@ -8,7 +8,7 @@ import {
     label_password_fill,
 } from "../../../../z_vendor/getto-css/preact/design/form"
 
-import { useAction } from "../../../common/hooks"
+import { useApplicationAction } from "../../../common/hooks"
 
 import { FormInput } from "../../../common/Form/FormInput"
 
@@ -29,7 +29,7 @@ type Props = Readonly<{
     help: VNodeContent[]
 }>
 export function PasswordFormField(resource: Props): VNode {
-    const state = useAction(resource.password, initialPasswordFormFieldComponentState)
+    const state = useApplicationAction(resource.password, initialPasswordFormFieldComponentState)
 
     return label_password_fill(content())
 

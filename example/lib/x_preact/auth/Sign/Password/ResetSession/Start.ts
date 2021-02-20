@@ -12,7 +12,7 @@ import {
 import { loginBox } from "../../../../../z_vendor/getto-css/preact/layout/login"
 import { v_medium } from "../../../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useAction, useTermination_deprecated } from "../../../../common/hooks"
+import { useApplicationAction, useTermination_deprecated } from "../../../../common/hooks"
 import { siteInfo } from "../../../../common/site"
 import { icon, spinner } from "../../../../common/icon"
 
@@ -37,8 +37,8 @@ export function PasswordResetSession({
 }: PasswordResetSessionEntryPoint): VNode {
     useTermination_deprecated(terminate)
 
-    const state = useAction(resource.start, initialStartPasswordResetSessionState)
-    const formState = useAction(resource.form, initialFormContainerComponentState)
+    const state = useApplicationAction(resource.start, initialStartPasswordResetSessionState)
+    const formState = useApplicationAction(resource.form, initialFormContainerComponentState)
 
     switch (state.type) {
         case "initial-reset-session":

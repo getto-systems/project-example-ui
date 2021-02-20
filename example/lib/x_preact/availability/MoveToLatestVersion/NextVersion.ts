@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 
-import { useAction } from "../../common/hooks"
+import { useApplicationAction } from "../../common/hooks"
 import { siteInfo } from "../../common/site"
 import { spinner } from "../../common/icon"
 
@@ -16,7 +16,7 @@ import { initialNextVersionComponentState } from "../../../availability/x_Resour
 import { appTargetToPath, FindError } from "../../../availability/nextVersion/data"
 
 export function NextVersion(resource: NextVersionResource): VNode {
-    const state = useAction(resource.nextVersion, initialNextVersionComponentState)
+    const state = useApplicationAction(resource.nextVersion, initialNextVersionComponentState)
     useEffect(() => {
         resource.nextVersion.find()
     }, [])
