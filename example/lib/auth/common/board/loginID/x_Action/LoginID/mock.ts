@@ -1,14 +1,14 @@
-import { initMockInputBoardValueAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/mock"
+import { initMockInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/mock"
 import {
     initMockPropsPasser,
     MockAction,
     MockPropsPasser,
-} from "../../../../../../common/vendor/getto-example/Application/mock"
+} from "../../../../../../z_getto/application/mock"
 
 import { LoginIDBoardFieldAction, ValidateLoginIDAction, ValidateLoginIDState } from "./action"
 
 import { LoginID } from "../../../../loginID/data"
-import { BoardConvertResult } from "../../../../../../common/vendor/getto-board/kernel/data"
+import { BoardConvertResult } from "../../../../../../z_getto/board/kernel/data"
 
 export type LoginIDBoardMockPropsPasser = MockPropsPasser<LoginIDBoardMockProps>
 export type LoginIDBoardMockProps =

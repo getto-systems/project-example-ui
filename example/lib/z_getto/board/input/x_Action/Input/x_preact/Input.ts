@@ -1,7 +1,7 @@
 import { html } from "htm/preact"
 import { VNode } from "preact"
 
-import { useAction } from "../../../../../../../x_preact/common/hooks"
+import { useAction } from "../../../../../../x_preact/common/hooks"
 
 import { initialInputBoardState, InputBoardValueResource } from "../action"
 

@@ -1,4 +1,4 @@
-import { initSyncActionChecker } from "../../../../getto-example/Application/testHelper"
+import { initSyncActionChecker } from "../../../../application/testHelper"
 
 import { initInputBoardValueAction } from "./impl"
 

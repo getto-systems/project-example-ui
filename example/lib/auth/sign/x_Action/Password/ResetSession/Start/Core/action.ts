@@ -1,11 +1,11 @@
-import { ApplicationAction } from "../../../../../../../common/vendor/getto-example/Application/action"
+import { ApplicationAction } from "../../../../../../../z_getto/application/action"
 
 import {
     CheckPasswordResetSessionStatusMethod,
     StartPasswordResetSessionMethod,
 } from "../../../../../password/resetSession/start/method"
 
-import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
+import { FormConvertResult } from "../../../../../../../z_getto/getto-form/form/data"
 import { PasswordResetSessionFields } from "../../../../../password/resetSession/start/data"
 import {
     CheckPasswordResetSessionStatusEvent,

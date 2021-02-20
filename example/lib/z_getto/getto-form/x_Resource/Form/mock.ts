@@ -8,7 +8,7 @@ import {
 } from "./component"
 
 import { FormHistory, FormInputString, FormValidationState, markInputString } from "../../form/data"
-import { MockAction, MockPropsPasser } from "../../../getto-example/Application/mock"
+import { MockAction, MockPropsPasser } from "../../../application/mock"
 
 export class FormContainerMockComponent
     extends MockAction<FormContainerComponentState>

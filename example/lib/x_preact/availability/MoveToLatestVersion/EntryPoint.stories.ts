@@ -5,7 +5,7 @@ import { storyTemplate } from "../../z_storybook/story"
 
 import { EntryPoint } from "./EntryPoint"
 
-import { initMockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../z_getto/application/mock"
 
 import { newMockMoveToNextVersion } from "../../../availability/z_EntryPoint/MoveToNextVersion/mock"
 

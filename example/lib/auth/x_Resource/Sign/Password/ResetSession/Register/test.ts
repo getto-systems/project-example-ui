@@ -2,7 +2,7 @@ import { initStaticClock, StaticClock } from "../../../../../../z_infra/clock/si
 import { initRenewAuthnInfoSimulate } from "../../../../../sign/kernel/authnInfo/kernel/infra/remote/renew/simulate"
 import { initRegisterPasswordSimulate } from "../../../../../sign/password/resetSession/register/infra/remote/register/simulate"
 
-import { initFormAction } from "../../../../../../common/vendor/getto-form/main/form"
+import { initFormAction } from "../../../../../../z_getto/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../../../../common/field/password/main/password"
 
@@ -20,7 +20,7 @@ import { markSecureScriptPath } from "../../../../../sign/common/secureScriptPat
 import {
     markInputString,
     toValidationError,
-} from "../../../../../../common/vendor/getto-form/form/data"
+} from "../../../../../../z_getto/getto-form/form/data"
 import { markAuthAt, markAuthnNonce } from "../../../../../sign/kernel/authnInfo/kernel/data"
 import { initMemoryApiCredentialRepository } from "../../../../../../common/apiCredential/infra/repository/memory"
 import {
@@ -43,7 +43,7 @@ import { delayed } from "../../../../../../z_infra/delayed/core"
 import {
     initAsyncActionTester_legacy,
     initSyncActionChecker_legacy,
-} from "../../../../../../common/vendor/getto-example/Application/testHelper"
+} from "../../../../../../z_getto/application/testHelper"
 import { initRegisterPasswordAction } from "../../../../../sign/x_Action/Password/ResetSession/Register/Core/impl"
 import { initRegisterPasswordFormAction } from "../../../../../sign/x_Action/Password/ResetSession/Register/Form/impl"
 

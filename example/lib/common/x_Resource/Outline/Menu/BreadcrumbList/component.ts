@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../vendor/getto-example/Application/action"
+import { ApplicationAction } from "../../../../../z_getto/application/action"
 
 import { LoadOutlineBreadcrumbListAction } from "../../../../../auth/permission/outline/load/action"
 

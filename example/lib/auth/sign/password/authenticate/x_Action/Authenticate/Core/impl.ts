@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../../../../common/vendor/getto-example/Application/impl"
+import { ApplicationAbstractAction } from "../../../../../../../z_getto/application/impl"
 
 import { startContinuousRenewAuthnInfo } from "../../../../../kernel/authnInfo/common/startContinuousRenew/impl"
 import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
@@ -17,7 +17,7 @@ import {
     AuthenticatePasswordCoreForeground,
 } from "./action"
 
-import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
+import { FormConvertResult } from "../../../../../../../z_getto/getto-form/form/data"
 import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
 import { AuthenticatePasswordFields } from "../../../data"
 import { AuthnInfo } from "../../../../../kernel/authnInfo/kernel/data"

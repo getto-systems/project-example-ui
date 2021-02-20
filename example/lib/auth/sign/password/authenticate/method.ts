@@ -1,6 +1,6 @@
 import { AuthenticatePasswordEvent } from "./event"
 
-import { FormConvertResult } from "../../../../common/vendor/getto-form/form/data"
+import { FormConvertResult } from "../../../../z_getto/getto-form/form/data"
 import { AuthenticatePasswordFields } from "./data"
 
 export interface AuthenticatePasswordMethod {

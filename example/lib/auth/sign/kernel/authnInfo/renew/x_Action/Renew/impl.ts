@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../../../../common/vendor/getto-example/Application/impl"
+import { ApplicationAbstractAction } from "../../../../../../../z_getto/application/impl"
 
 import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
 import { forceRenewAuthnInfo, renewAuthnInfo } from "../../impl"

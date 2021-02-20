@@ -1,4 +1,4 @@
-import { FormInput } from "../../../../common/vendor/getto-form/form/action"
+import { FormInput } from "../../../../z_getto/getto-form/form/action"
 
 export type LoginIDInput = FormInput
 

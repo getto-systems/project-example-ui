@@ -5,7 +5,7 @@ import {
     startPasswordResetSessionEventHasDone,
 } from "../../../../../../../password/resetSession/start/impl"
 
-import { WorkerHandler } from "../../../../../../../../../z_vendor/getto-worker/background"
+import { WorkerHandler } from "../../../../../../../../../z_getto/worker/background"
 
 import {
     StartPasswordResetSessionProxyMessage,

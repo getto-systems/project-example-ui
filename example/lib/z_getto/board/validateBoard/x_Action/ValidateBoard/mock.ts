@@ -1,4 +1,4 @@
-import { MockAction, MockPropsPasser } from "../../../../getto-example/Application/mock"
+import { MockAction, MockPropsPasser } from "../../../../application/mock"
 import { BoardConvertResult } from "../../../kernel/data"
 import { ValidateBoardAction, ValidateBoardState } from "./action"
 

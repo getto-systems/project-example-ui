@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../../../../common/vendor/getto-example/Application/impl"
+import { ApplicationAbstractAction } from "../../../../../../../z_getto/application/impl"
 
 import { registerPassword } from "../../../../../password/resetSession/register/impl"
 import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
@@ -20,7 +20,7 @@ import { GetSecureScriptPathLocationInfo } from "../../../../../common/secureScr
 import { RegisterPasswordLocationInfo } from "../../../../../password/resetSession/register/method"
 
 import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
-import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
+import { FormConvertResult } from "../../../../../../../z_getto/getto-form/form/data"
 import { PasswordResetFields } from "../../../../../password/resetSession/register/data"
 import { AuthnInfo } from "../../../../../kernel/authnInfo/kernel/data"
 

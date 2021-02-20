@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../getto-example/Application/action"
+import { ApplicationAction } from "../../../../application/action"
 
 import { ClearBoardValueMethod, SetBoardValueMethod } from "../../method"
 

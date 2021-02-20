@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../vendor/getto-example/Application/impl"
+import { ApplicationAbstractAction } from "../../../../../z_getto/application/impl"
 
 import {
     MenuComponentFactory,

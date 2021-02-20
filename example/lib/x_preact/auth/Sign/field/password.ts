@@ -17,7 +17,7 @@ import {
     PasswordFormFieldComponent,
 } from "../../../../auth/common/x_Component/Field/Password/component"
 
-import { FormInputString, FormValidationResult } from "../../../../common/vendor/getto-form/form/data"
+import { FormInputString, FormValidationResult } from "../../../../z_getto/getto-form/form/data"
 import {
     PasswordValidationError,
     PasswordCharacter,

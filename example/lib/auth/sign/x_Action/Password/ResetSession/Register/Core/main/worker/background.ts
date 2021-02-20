@@ -2,7 +2,7 @@ import { newRegisterPasswordBackground } from "../core"
 
 import { registerPasswordEventHasDone } from "../../../../../../../password/resetSession/register/impl"
 
-import { WorkerHandler } from "../../../../../../../../../z_vendor/getto-worker/background"
+import { WorkerHandler } from "../../../../../../../../../z_getto/worker/background"
 
 import { RegisterPasswordProxyMessage, RegisterPasswordProxyResponse } from "./message"
 

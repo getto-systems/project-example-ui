@@ -3,7 +3,7 @@ import { AuthenticatePasswordEntryPoint } from "../../sign/password/authenticate
 import { RegisterPasswordResource } from "../../x_Resource/Sign/Password/ResetSession/Register/resource"
 import { StartPasswordResetSessionResource } from "../../x_Resource/Sign/Password/ResetSession/Start/resource"
 
-import { ApplicationAction } from "../../../common/vendor/getto-example/Application/action"
+import { ApplicationAction } from "../../../z_getto/application/action"
 import { AuthSignLinkResource } from "../../sign/common/searchParams/x_Action/Link/action"
 
 export type AuthSignEntryPoint = Readonly<{

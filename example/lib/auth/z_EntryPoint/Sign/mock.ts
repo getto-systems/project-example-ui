@@ -1,4 +1,4 @@
-import { MockAction, MockPropsPasser } from "../../../common/vendor/getto-example/Application/mock"
+import { MockAction, MockPropsPasser } from "../../../z_getto/application/mock"
 
 import {
     initMockStartPasswordResetSessionResource,

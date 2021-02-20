@@ -1,7 +1,7 @@
 import {
     FormContainerComponent,
     FormContainerMaterial,
-} from "../../../../../../../common/vendor/getto-form/x_Resource/Form/component"
+} from "../../../../../../../z_getto/getto-form/x_Resource/Form/component"
 import {
     LoginIDFormFieldComponent,
     LoginIDFormFieldMaterial,
@@ -12,7 +12,7 @@ import {
 } from "../../../../../../common/x_Component/Field/Password/component"
 
 import { PasswordResetFields } from "../../../../../password/resetSession/register/data"
-import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
+import { FormConvertResult } from "../../../../../../../z_getto/getto-form/form/data"
 
 export interface RegisterPasswordFormAction extends FormContainerComponent {
     readonly loginID: LoginIDFormFieldComponent

@@ -1,19 +1,19 @@
-import { MockPropsPasser } from "../../../../../../../common/vendor/getto-example/Application/mock"
+import { MockPropsPasser } from "../../../../../../../z_getto/application/mock"
 
 import {
     FormContainerMockComponent,
     FormContainerMockProps,
-} from "../../../../../../../common/vendor/getto-form/x_Resource/Form/mock"
+} from "../../../../../../../z_getto/getto-form/x_Resource/Form/mock"
 import {
     initMockLoginIDFormField,
     LoginIDFormFieldMockProps,
 } from "../../../../../../common/x_Component/Field/LoginID/mock"
 
-import { FormContainerComponentState } from "../../../../../../../common/vendor/getto-form/x_Resource/Form/component"
+import { FormContainerComponentState } from "../../../../../../../z_getto/getto-form/x_Resource/Form/component"
 import { LoginIDFormFieldComponent } from "../../../../../../common/x_Component/Field/LoginID/component"
 import { StartPasswordResetSessionFormAction } from "./action"
 
-import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
+import { FormConvertResult } from "../../../../../../../z_getto/getto-form/form/data"
 import { PasswordResetSessionFields } from "../../../../../password/resetSession/start/data"
 
 type Passer = MockPropsPasser<StartPasswordResetSessionFormMockProps>

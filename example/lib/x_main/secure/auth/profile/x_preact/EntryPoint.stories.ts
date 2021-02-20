@@ -11,7 +11,7 @@ import {
     newMockAuthProfile,
 } from "../mock"
 
-import { initMockPropsPasser } from "../../../../../common/vendor/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../../../z_getto/application/mock"
 
 import { SeasonInfoMockProps } from "../../../../../example/x_components/Outline/seasonInfo/mock"
 import { MenuMockProps } from "../../../../../common/x_Resource/Outline/Menu/Menu/mock"

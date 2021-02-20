@@ -1,4 +1,4 @@
-import { initialValidateBoardState } from "../../../../../../common/vendor/getto-board/validateBoard/x_Action/ValidateBoard/action"
+import { initialValidateBoardState } from "../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/action"
 import { AuthSignLinkResource } from "../../../../common/searchParams/x_Action/Link/action"
 import { AuthenticatePasswordCoreAction, initialAuthenticatePasswordCoreState } from "./Core/action"
 import { AuthenticatePasswordFormAction } from "./Form/action"

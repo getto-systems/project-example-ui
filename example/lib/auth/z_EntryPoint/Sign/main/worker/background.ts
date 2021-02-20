@@ -2,7 +2,7 @@ import { newAuthenticatePasswordHandler } from "../../../../sign/password/authen
 import { newRegisterPasswordResourceHandler } from "../../../../x_Resource/Sign/Password/ResetSession/Register/main/worker/background"
 import { newStartPasswordResetSessionResourceHandler } from "../../../../x_Resource/Sign/Password/ResetSession/Start/main/worker/background"
 
-import { WorkerHandler } from "../../../../../z_vendor/getto-worker/background"
+import { WorkerHandler } from "../../../../../z_getto/worker/background"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
 import { AuthenticatePasswordProxyMessage } from "../../../../sign/password/authenticate/x_Action/Authenticate/main/worker/message"

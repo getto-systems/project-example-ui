@@ -1,4 +1,4 @@
-import { initSyncActionChecker } from "../../../../getto-example/Application/testHelper"
+import { initSyncActionChecker } from "../../../../application/testHelper"
 import { BoardConvertResult } from "../../../kernel/data"
 import { newBoardValidateStack } from "../../../kernel/infra/stack"
 import { ValidateBoardState } from "./action"

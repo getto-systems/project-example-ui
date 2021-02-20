@@ -8,7 +8,7 @@ import { RegisterPasswordLocationInfo } from "../../../../../../../password/rese
 import {
     WorkerProxy,
     WorkerAbstractProxy,
-} from "../../../../../../../../../z_vendor/getto-worker/foreground"
+} from "../../../../../../../../../z_getto/worker/foreground"
 
 import {
     RegisterPasswordProxyMessage,

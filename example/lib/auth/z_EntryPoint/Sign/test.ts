@@ -1,6 +1,6 @@
 import { initLoginViewLocationInfo, View } from "./impl"
 
-import { newBoardValidateStack } from "../../../common/vendor/getto-board/kernel/infra/stack"
+import { newBoardValidateStack } from "../../../z_getto/board/kernel/infra/stack"
 import { initStaticClock } from "../../../z_infra/clock/simulate"
 import { initAuthenticatePasswordSimulate } from "../../sign/password/authenticate/infra/remote/authenticate/simulate"
 import { initRenewAuthnInfoSimulate } from "../../sign/kernel/authnInfo/kernel/infra/remote/renew/simulate"
@@ -9,7 +9,7 @@ import { initStartPasswordResetSessionSimulate } from "../../sign/password/reset
 
 import { newAuthSignLinkResource } from "../../sign/common/searchParams/x_Action/Link/impl"
 
-import { initFormAction } from "../../../common/vendor/getto-form/main/form"
+import { initFormAction } from "../../../z_getto/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../common/field/loginID/main/loginID"
 import { initPasswordFormFieldAction } from "../../common/field/password/main/password"
 

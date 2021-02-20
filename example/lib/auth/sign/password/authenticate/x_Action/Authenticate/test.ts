@@ -24,11 +24,11 @@ import { initMemoryAuthnInfoRepository } from "../../../../kernel/authnInfo/kern
 import { initGetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/impl"
 import { delayed, wait } from "../../../../../../z_infra/delayed/core"
 import { authenticatePasswordEventHasDone } from "../../impl"
-import { initAsyncActionChecker } from "../../../../../../common/vendor/getto-example/Application/testHelper"
+import { initAsyncActionChecker } from "../../../../../../z_getto/application/testHelper"
 import { initAuthenticatePasswordFormAction } from "./Form/impl"
 import { initAuthenticatePasswordCoreAction } from "./Core/impl"
-import { markBoardValue } from "../../../../../../common/vendor/getto-board/kernel/data"
-import { newBoardValidateStack } from "../../../../../../common/vendor/getto-board/kernel/infra/stack"
+import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
+import { newBoardValidateStack } from "../../../../../../z_getto/board/kernel/infra/stack"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 

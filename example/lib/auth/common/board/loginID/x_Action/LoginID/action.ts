@@ -1,8 +1,8 @@
-import { InputBoardValueAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/action"
+import { InputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/action"
 import {
     ValidateBoardFieldAction,
     ValidateBoardFieldState,
-} from "../../../../../../common/vendor/getto-board/validateField/x_Action/ValidateField/action"
+} from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
 
 import { LoginID } from "../../../../loginID/data"
 import { ValidateLoginIDError } from "./data"

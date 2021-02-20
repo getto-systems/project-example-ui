@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../getto-example/Application/impl"
+import { ApplicationAbstractAction } from "../../../../application/impl"
 
 import { convertBoardField, validateBoardField, ValidateBoardFieldEmbed } from "../../impl"
 

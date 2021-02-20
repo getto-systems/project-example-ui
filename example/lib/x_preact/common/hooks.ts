@@ -1,6 +1,6 @@
 import { useEffect, useErrorBoundary, useState } from "preact/hooks"
 
-import { ApplicationAction } from "../../common/vendor/getto-example/Application/action"
+import { ApplicationAction } from "../../z_getto/application/action"
 import { NotifyComponent } from "../../availability/x_Resource/Error/Notify/component"
 
 export function useEntryPoint<R>({ resource, terminate }: EntryPoint<R>): R {

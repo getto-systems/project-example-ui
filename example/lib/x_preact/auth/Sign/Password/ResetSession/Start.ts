@@ -21,7 +21,7 @@ import { LoginIDFormField } from "../../field/loginID"
 import { PasswordResetSessionEntryPoint } from "../../../../../auth/z_EntryPoint/Sign/entryPoint"
 
 import { initialStartPasswordResetSessionState } from "../../../../../auth/sign/x_Action/Password/ResetSession/Start/Core/action"
-import { initialFormContainerComponentState } from "../../../../../common/vendor/getto-form/x_Resource/Form/component"
+import { initialFormContainerComponentState } from "../../../../../z_getto/getto-form/x_Resource/Form/component"
 
 import {
     PasswordResetDestination,

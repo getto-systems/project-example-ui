@@ -1,4 +1,4 @@
-import { newWorker } from "../../../../../z_vendor/getto-worker/foreground"
+import { newWorker } from "../../../../../z_getto/worker/foreground"
 
 import { newRenewAuthnInfoAction } from "../../../../sign/kernel/authnInfo/renew/x_Action/Renew/main"
 import { newAuthenticatePassword_proxy } from "../../../../sign/password/authenticate/x_Action/Authenticate/main/core"

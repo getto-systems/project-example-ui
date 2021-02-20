@@ -1,7 +1,7 @@
-import { markBoardValue } from "../../../../../../common/vendor/getto-board/kernel/data"
-import { newBoardValidateStack } from "../../../../../../common/vendor/getto-board/kernel/infra/stack"
-import { ValidateBoardFieldState } from "../../../../../../common/vendor/getto-board/validateField/x_Action/ValidateField/action"
-import { initSyncActionChecker } from "../../../../../../common/vendor/getto-example/Application/testHelper"
+import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
+import { newBoardValidateStack } from "../../../../../../z_getto/board/kernel/infra/stack"
+import { ValidateBoardFieldState } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
+import { initSyncActionChecker } from "../../../../../../z_getto/application/testHelper"
 import { ValidateLoginIDError } from "./data"
 import { initLoginIDBoardFieldAction } from "./impl"
 

@@ -5,7 +5,7 @@ import { storyTemplate } from "../../../../../../../../x_preact/z_storybook/stor
 
 import { RenewAuthInfo } from "./Renew"
 
-import { initMockPropsPasser } from "../../../../../../../../common/vendor/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../../../../../../z_getto/application/mock"
 import { initMockRenewAuthnInfoAction, RenewAuthnInfoMockProps } from "../mock"
 
 export default {

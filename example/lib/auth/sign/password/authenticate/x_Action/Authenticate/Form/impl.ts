@@ -1,10 +1,10 @@
 import { initLoginIDBoardFieldAction } from "../../../../../../common/board/loginID/x_Action/LoginID/impl"
 import { initPasswordBoardFieldAction } from "../../../../../../common/board/password/x_Action/Password/impl"
 
-import { initValidateBoardAction } from "../../../../../../../common/vendor/getto-board/validateBoard/x_Action/ValidateBoard/impl"
+import { initValidateBoardAction } from "../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/impl"
 
-import { ValidateBoardInfra } from "../../../../../../../common/vendor/getto-board/validateBoard/infra"
-import { ValidateBoardFieldInfra } from "../../../../../../../common/vendor/getto-board/validateField/infra"
+import { ValidateBoardInfra } from "../../../../../../../z_getto/board/validateBoard/infra"
+import { ValidateBoardFieldInfra } from "../../../../../../../z_getto/board/validateField/infra"
 
 import { AuthenticatePasswordFormAction } from "./action"
 

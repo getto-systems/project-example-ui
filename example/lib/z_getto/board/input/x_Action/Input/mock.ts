@@ -1,4 +1,4 @@
-import { MockAction, MockPropsPasser } from "../../../../getto-example/Application/mock"
+import { MockAction, MockPropsPasser } from "../../../../application/mock"
 import { BoardValue, emptyBoardValue, markBoardValue } from "../../../kernel/data"
 import { InputBoardValueType } from "../../data"
 import { InputBoardValueAction, InputBoardValueState } from "./action"

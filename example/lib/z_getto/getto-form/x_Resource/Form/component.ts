@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../getto-example/Application/action"
+import { ApplicationAction } from "../../../application/action"
 
 import { FormHistoryStack, FormInput, FormValidationStateSet } from "../../form/action"
 
