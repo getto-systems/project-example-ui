@@ -52,10 +52,10 @@ class Action
         return this.pick()
     }
     set(value: BoardValue): void {
-        this.material.set(value, (event) => this.post(event))
+        this.material.set(value, this.post)
         this.inputHandlers.forEach((handler) => handler())
     }
     clear(): void {
-        this.material.clear((event) => this.post(event))
+        this.material.clear(this.post)
     }
 }

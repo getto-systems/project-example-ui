@@ -31,9 +31,7 @@ class Action extends MockAction<ValidateLoginIDState> implements ValidateLoginID
 
     constructor(passer: LoginIDBoardMockPropsPasser) {
         super()
-        passer.addPropsHandler((props) => {
-            this.post(mapProps(props))
-        })
+        passer.addPropsHandler((props) => this.post(mapProps(props)))
 
         function mapProps(props: LoginIDBoardMockProps): ValidateLoginIDState {
             switch (props.type) {

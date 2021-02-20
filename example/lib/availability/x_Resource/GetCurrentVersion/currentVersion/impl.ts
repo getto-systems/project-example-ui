@@ -20,9 +20,7 @@ class Component
         this.material = material
 
         this.igniteHook(() => {
-            this.material.findCurrentVersion((event) => {
-                this.post(event)
-            })
+            this.material.findCurrentVersion(this.post)
         })
     }
 }

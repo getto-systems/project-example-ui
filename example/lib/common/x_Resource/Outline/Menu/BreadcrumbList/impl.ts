@@ -20,9 +20,7 @@ class Component
         this.material = material
 
         this.igniteHook(() => {
-            this.material.breadcrumbList.loadBreadcrumbList((event) => {
-                this.post(event)
-            })
+            this.material.breadcrumbList.loadBreadcrumbList(this.post)
         })
     }
 }

@@ -21,6 +21,6 @@ class Action extends ApplicationAbstractAction<LogoutState> implements LogoutAct
     }
 
     submit(): void {
-        this.material.clear((event) => this.post(event))
+        this.material.clear(this.post)
     }
 }

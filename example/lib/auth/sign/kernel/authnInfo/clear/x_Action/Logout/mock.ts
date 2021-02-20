@@ -1,7 +1,4 @@
-import {
-    MockAction,
-    MockPropsPasser,
-} from "../../../../../../../z_getto/application/mock"
+import { MockAction, MockPropsPasser } from "../../../../../../../z_getto/application/mock"
 
 import { LogoutAction, LogoutState } from "./action"
 
@@ -10,20 +7,14 @@ export type LogoutMockProps =
     | Readonly<{ type: "initial-logout" }>
     | Readonly<{ type: "failed-logout"; err: string }>
 
-export function initMockLogoutAction(
-    passer: LogoutMockPropsPasser
-): LogoutAction {
+export function initMockLogoutAction(passer: LogoutMockPropsPasser): LogoutAction {
     return new Action(passer)
 }
 
-class Action
-    extends MockAction<LogoutState>
-    implements LogoutAction {
+class Action extends MockAction<LogoutState> implements LogoutAction {
     constructor(passer: LogoutMockPropsPasser) {
         super()
-        passer.addPropsHandler((props) => {
-            this.post(mapProps(props))
-        })
+        passer.addPropsHandler((props) => this.post(mapProps(props)))
 
         function mapProps(props: LogoutMockProps): LogoutState {
             switch (props.type) {

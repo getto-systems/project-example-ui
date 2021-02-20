@@ -19,7 +19,7 @@ class Component
         this.material = material
 
         this.igniteHook(() => {
-            this.material.loadSeason((event) => this.post(event))
+            this.material.loadSeason(this.post)
         })
     }
 }

@@ -20,9 +20,7 @@ class Component
         this.material = material
 
         this.igniteHook(() => {
-            this.material.find((event) => {
-                this.post(event)
-            })
+            this.material.find(this.post)
         })
     }
 }

@@ -1,7 +1,4 @@
-import {
-    MockAction,
-    MockPropsPasser,
-} from "../../../../../../../z_getto/application/mock"
+import { MockAction, MockPropsPasser } from "../../../../../../../z_getto/application/mock"
 
 import { RegisterPasswordAction, RegisterPasswordState } from "./action"
 
@@ -25,9 +22,7 @@ export function initMockRegisterPasswordAction(passer: Passer): RegisterPassword
 class Action extends MockAction<RegisterPasswordState> implements RegisterPasswordAction {
     constructor(passer: Passer) {
         super()
-        passer.addPropsHandler((props) => {
-            this.post(mapProps(props))
-        })
+        passer.addPropsHandler((props) => this.post(mapProps(props)))
 
         function mapProps(props: RegisterPasswordMockProps): RegisterPasswordState {
             switch (props.type) {

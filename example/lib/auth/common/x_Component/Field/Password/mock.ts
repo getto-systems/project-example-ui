@@ -1,7 +1,4 @@
-import {
-    mapMockPropsPasser,
-    MockPropsPasser,
-} from "../../../../../z_getto/application/mock"
+import { mapMockPropsPasser, MockPropsPasser } from "../../../../../z_getto/application/mock"
 import {
     FormFieldMockComponent,
     FormInputMockComponent,
@@ -30,9 +27,7 @@ class Component
 
     constructor(passer: MockPropsPasser<PasswordFormFieldMockProps>) {
         super()
-        passer.addPropsHandler((props) => {
-            this.post(mapProps(props))
-        })
+        passer.addPropsHandler((props) => this.post(mapProps(props)))
         this.input = new FormInputMockComponent(
             mapMockPropsPasser(passer, (props) => ({ input: props.password }))
         )
@@ -95,6 +90,10 @@ export type PasswordFormFieldValidation = "ok" | "empty" | "too-long"
 export type PasswordFormFieldCharacter = "simple" | "complex"
 export type PasswordFormFieldView = "show" | "hide"
 
-export const passwordFormFieldValidations: PasswordFormFieldValidation[] = ["ok", "empty", "too-long"]
+export const passwordFormFieldValidations: PasswordFormFieldValidation[] = [
+    "ok",
+    "empty",
+    "too-long",
+]
 export const passwordFormFieldCharacters: PasswordFormFieldCharacter[] = ["simple", "complex"]
 export const passwordFormFieldViews: PasswordFormFieldView[] = ["hide", "show"]

@@ -14,10 +14,7 @@ import {
     TogglePasswordDisplayBoardState,
 } from "./action"
 
-import {
-    BoardConvertResult,
-    BoardValue,
-} from "../../../../../../z_getto/board/kernel/data"
+import { BoardConvertResult, BoardValue } from "../../../../../../z_getto/board/kernel/data"
 import { markPassword, Password } from "../../../../password/data"
 import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "./data"
 
@@ -45,7 +42,7 @@ export function initPasswordBoardFieldAction<N extends string>(
     return {
         input,
         validate,
-        clear: () => input.clear(),        
+        clear: () => input.clear(),
         toggle: new ToggleAction({
             show: showPasswordDisplayBoard,
             hide: hidePasswordDisplayBoard,
@@ -89,10 +86,10 @@ class ToggleAction
     }
 
     show(): void {
-        this.material.show((event) => this.post(event))
+        this.material.show(this.post)
     }
     hide(): void {
-        this.material.hide((event) => this.post(event))
+        this.material.hide(this.post)
     }
 }
 

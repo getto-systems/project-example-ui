@@ -69,8 +69,6 @@ class Action
     }
 
     checkStatus(sessionID: PasswordResetSessionID): void {
-        this.material.checkStatus(sessionID, (event) => {
-            this.post(event)
-        })
+        this.material.checkStatus(sessionID, this.post)
     }
 }
