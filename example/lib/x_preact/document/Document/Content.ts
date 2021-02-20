@@ -1,5 +1,5 @@
 import { h, VNode } from "preact"
-import { useState, useEffect } from "preact/hooks"
+import { useState, useEffect, useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
@@ -24,12 +24,14 @@ type Props = Readonly<{
 export function Content(resource: Props): VNode {
     const [state, setState] = useState(initialContentComponentState)
     const [loadContentState, setLoadContentState] = useState(initialLoadContentState)
-    useEffect(() => {
+    useLayoutEffect(() => {
         resource.content.addStateHandler(setState)
-        resource.content.load()
+    }, [])
+    useEffect(() => {
+        resource.content.load() // TODO ignite に移す
     }, [])
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         switch (state.type) {
             case "succeed-to-load":
                 document.title = `${documentTitle(state.path)} | ${document.title}`

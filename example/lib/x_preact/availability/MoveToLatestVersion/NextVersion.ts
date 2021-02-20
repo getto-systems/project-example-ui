@@ -1,5 +1,5 @@
 import { h, VNode } from "preact"
-import { useEffect } from "preact/hooks"
+import { useEffect, useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
@@ -18,10 +18,10 @@ import { appTargetToPath, FindError } from "../../../availability/nextVersion/da
 export function NextVersion(resource: NextVersionResource): VNode {
     const state = useApplicationAction(resource.nextVersion, initialNextVersionComponentState)
     useEffect(() => {
-        resource.nextVersion.find()
+        resource.nextVersion.find() // TODO ignite に移す
     }, [])
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         switch (state.type) {
             case "succeed-to-find":
                 // /index.html から呼び出されるはずなので、最新かによらず
@@ -39,7 +39,7 @@ export function NextVersion(resource: NextVersionResource): VNode {
             return delayedMessage()
 
         case "succeed-to-find":
-            // location の変更は useEffect で行うので中身は空
+            // location の変更は useLayoutEffect で行うので中身は空
             return EMPTY_CONTENT
 
         case "failed-to-find":

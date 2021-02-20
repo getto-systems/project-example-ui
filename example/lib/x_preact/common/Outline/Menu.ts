@@ -35,7 +35,7 @@ type Props = Readonly<{
 export function Menu(resource: Props): VNode {
     const state = useApplicationAction(resource.menu, initialMenuComponentState)
     useEffect(() => {
-        resource.menu.load()
+        resource.menu.load() // TODO ignite に移す
     }, [])
 
     switch (state.type) {

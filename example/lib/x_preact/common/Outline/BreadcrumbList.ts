@@ -28,7 +28,7 @@ type Props = Readonly<{
 export function BreadcrumbList(resource: Props): VNode {
     const state = useApplicationAction(resource.breadcrumbList, initialBreadcrumbListComponentState)
     useEffect(() => {
-        resource.breadcrumbList.load()
+        resource.breadcrumbList.load() // TODO ignite に移す
     }, [])
 
     switch (state.type) {

@@ -34,6 +34,7 @@ export function useApplicationAction<S>(action: ApplicationAction<S>, initial: S
     const [state, setState] = useState(initial)
     useLayoutEffect(() => {
         action.addStateHandler(setState)
+        action.ignite()
         return () => {
             action.removeStateHandler(setState)
         }

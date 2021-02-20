@@ -1,5 +1,5 @@
 import { h, VNode } from "preact"
-import { useEffect } from "preact/hooks"
+import { useEffect, useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { VNodeContent } from "../../../../../../../../z_vendor/getto-css/preact/common"
@@ -23,11 +23,11 @@ export function RenewAuthInfo(entryPoint: RenewAuthnInfoEntryPoint): VNode {
 
     const state = useApplicationAction(resource.renew, initialRenewAuthnInfoState)
     useEffect(() => {
-        resource.renew.request()
+        resource.renew.request() // TODO ignite に移す
     }, [])
 
-    useEffect(() => {
-        // スクリプトのロードは appendChild する必要があるため useEffect で行う
+    useLayoutEffect(() => {
+        // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
         switch (state.type) {
             case "try-to-instant-load":
                 appendScript(state.scriptPath, (script) => {
@@ -60,7 +60,7 @@ export function RenewAuthInfo(entryPoint: RenewAuthnInfoEntryPoint): VNode {
 
         case "try-to-instant-load":
         case "try-to-load":
-            // スクリプトのロードは appendChild する必要があるため useEffect で行う
+            // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
             return EMPTY_CONTENT
 
         case "succeed-to-start-continuous-renew":
