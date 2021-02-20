@@ -3,7 +3,7 @@ import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { box } from "../../../../../../../../z_vendor/getto-css/preact/design/box"
-import { button_delete, field } from "../../../../../../../../z_vendor/getto-css/preact/design/form"
+import { button_send, field } from "../../../../../../../../z_vendor/getto-css/preact/design/form"
 import { notice_alert } from "../../../../../../../../z_vendor/getto-css/preact/design/highlight"
 import { v_small } from "../../../../../../../../z_vendor/getto-css/preact/design/alignment"
 
@@ -43,7 +43,7 @@ export function Logout(resource: LogoutResource): VNode {
                 v_small(),
                 field({
                     title: "ログアウト",
-                    body: button_delete({ label: "ログアウト", state: "normal", onClick }),
+                    body: button_send({ label: "ログアウト", state: "normal", onClick }),
                     help: ["作業完了後ログアウトしてください"],
                 }),
                 ...error(),
