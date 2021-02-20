@@ -2,7 +2,7 @@ import { h } from "preact"
 import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { storyTemplate } from "../../z_storybook/story"
+import { storyTemplate } from "../../../z_vendor/storybook/preact/story"
 
 import { BreadcrumbList } from "./BreadcrumbList"
 
