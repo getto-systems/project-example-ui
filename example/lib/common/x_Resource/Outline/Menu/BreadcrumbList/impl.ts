@@ -10,17 +10,19 @@ import {
 export const initBreadcrumbListComponent: BreadcrumbListComponentFactory = (material) =>
     new Component(material)
 
-class Component extends ApplicationAbstractAction<BreadcrumbListComponentState> implements BreadcrumbListComponent {
+class Component
+    extends ApplicationAbstractAction<BreadcrumbListComponentState>
+    implements BreadcrumbListComponent {
     material: BreadcrumbListMaterial
 
     constructor(material: BreadcrumbListMaterial) {
         super()
         this.material = material
-    }
 
-    load(): void {
-        this.material.breadcrumbList.loadBreadcrumbList((event) => {
-            this.post(event)
+        this.igniteHook(() => {
+            this.material.breadcrumbList.loadBreadcrumbList((event) => {
+                this.post(event)
+            })
         })
     }
 }
