@@ -2,7 +2,16 @@ import { ApplicationAction, ApplicationStateHandler } from "./action"
 
 export class ApplicationAbstractAction<S> implements ApplicationAction<S> {
     handlers: ApplicationStateHandler<S>[] = []
-    terminates: ApplicationTerminateHook[] = []
+
+    igniteHooks: ApplicationHook[] = []
+    terminateHooks: ApplicationHook[] = []
+
+    igniteHook(hook: ApplicationHook): void {
+        this.igniteHooks = [...this.igniteHooks, hook]
+    }
+    ignite(): void {
+        this.igniteHooks.forEach((hook) => hook())
+    }
 
     addStateHandler(handler: ApplicationStateHandler<S>): void {
         this.handlers = [...this.handlers, handler]
@@ -15,15 +24,15 @@ export class ApplicationAbstractAction<S> implements ApplicationAction<S> {
         this.handlers.forEach((post) => post(state))
     }
 
-    terminateHook(hook: ApplicationTerminateHook): void {
-        this.terminates = [...this.terminates, hook]
+    terminateHook(hook: ApplicationHook): void {
+        this.terminateHooks = [...this.terminateHooks, hook]
     }
     terminate(): void {
         this.handlers = []
-        this.terminates.forEach((terminate) => terminate())
+        this.terminateHooks.forEach((terminate) => terminate())
     }
 }
 
-export interface ApplicationTerminateHook {
+export interface ApplicationHook {
     (): void
 }
