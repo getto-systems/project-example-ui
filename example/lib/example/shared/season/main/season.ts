@@ -1,6 +1,6 @@
 import { loadSeason } from "../impl/core"
 
-import { newDateClock } from "../../../../z_infra/clock/date"
+import { newClock } from "../../../../z_infra/clock/main"
 import { initMemorySeasonRepository } from "../impl/repository/season/memory"
 
 import { SeasonAction } from "../action"
@@ -14,7 +14,7 @@ export function initSeasonAction(): SeasonAction {
                 stored: true,
                 season: markSeason({ year: new Date().getFullYear() }),
             }),
-            clock: newDateClock(),
+            clock: newClock(),
         }),
     }
 }

@@ -1,7 +1,7 @@
 import { initLoginViewLocationInfo, View } from "./impl"
 
 import { newBoardValidateStack } from "../../../common/vendor/getto-board/kernel/infra/stack"
-import { newStaticClock } from "../../../z_infra/clock/simulate"
+import { initStaticClock } from "../../../z_infra/clock/simulate"
 import { initAuthenticatePasswordSimulate } from "../../sign/password/authenticate/infra/remote/authenticate/simulate"
 import { initRenewAuthnInfoSimulate } from "../../sign/kernel/authnInfo/kernel/infra/remote/renew/simulate"
 import { initRegisterPasswordSimulate } from "../../sign/password/resetSession/register/infra/remote/register/simulate"
@@ -611,7 +611,7 @@ function standardRepository() {
 }
 
 function standardClock(): Clock {
-    return newStaticClock(NOW)
+    return initStaticClock(NOW)
 }
 
 interface Handler<T> {

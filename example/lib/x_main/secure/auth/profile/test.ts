@@ -4,7 +4,7 @@ import {
     initOutlineActionLocationInfo,
 } from "../../../../auth/permission/outline/load/impl"
 
-import { newStaticClock } from "../../../../z_infra/clock/simulate"
+import { initStaticClock } from "../../../../z_infra/clock/simulate"
 import { initMemoryTypedStorage } from "../../../../z_infra/storage/memory"
 import { initOutlineMenuExpandRepository } from "../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/core"
 import { initMemorySeasonRepository } from "../../../../example/shared/season/impl/repository/season/memory"
@@ -119,5 +119,5 @@ function standardRemoteAccess() {
 }
 
 function standardClock(): Clock {
-    return newStaticClock(NOW)
+    return initStaticClock(NOW)
 }

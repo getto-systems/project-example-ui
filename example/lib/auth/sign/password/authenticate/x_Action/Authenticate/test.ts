@@ -1,4 +1,4 @@
-import { newStaticClock, StaticClock } from "../../../../../../z_infra/clock/simulate"
+import { initStaticClock, StaticClock } from "../../../../../../z_infra/clock/simulate"
 import { initAuthenticatePasswordSimulate } from "../../infra/remote/authenticate/simulate"
 import { initRenewAuthnInfoSimulate } from "../../../../kernel/authnInfo/kernel/infra/remote/renew/simulate"
 
@@ -332,7 +332,7 @@ function renewRemoteAccess(): RenewAuthnInfoRemote {
 }
 
 function standardClock(): StaticClock {
-    return newStaticClock(NOW)
+    return initStaticClock(NOW)
 }
 
 function expectToSaveLastAuth(authnInfos: AuthnInfoRepository) {

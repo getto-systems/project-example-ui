@@ -2,7 +2,7 @@ import { newApiCredentialRepository } from "../../../../../common/apiCredential/
 import { newAuthnInfoRepository } from "../kernel/infra/repository/authnInfo/main"
 import { newRenewAuthnInfoRemote } from "../kernel/infra/remote/renew/main"
 
-import { newDateClock } from "../../../../../z_infra/clock/date"
+import { newClock } from "../../../../../z_infra/clock/main"
 import { delayed } from "../../../../../z_infra/delayed/core"
 
 import { delaySecond, expireMinute } from "../../../../../z_infra/time/infra"
@@ -13,7 +13,7 @@ export function newRenewAuthnInfoInfra(webStorage: Storage): RenewAuthnInfoInfra
         apiCredentials: newApiCredentialRepository(webStorage),
         authnInfos: newAuthnInfoRepository(webStorage),
         renew: newRenewAuthnInfoRemote(),
-        clock: newDateClock(),
+        clock: newClock(),
         delayed,
         config: {
             instantLoadExpire: expireMinute(3),
