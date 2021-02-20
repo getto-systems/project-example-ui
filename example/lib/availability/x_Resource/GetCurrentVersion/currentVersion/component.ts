@@ -11,9 +11,7 @@ export type CurrentVersionMaterial = Readonly<{
     findCurrentVersion: FindCurrentVersion
 }>
 
-export interface CurrentVersionComponent extends ApplicationAction<CurrentVersionComponentState> {
-    load(): void
-}
+export type CurrentVersionComponent = ApplicationAction<CurrentVersionComponentState>
 
 export type CurrentVersionComponentState =
     | Readonly<{ type: "initial-current-version" }>

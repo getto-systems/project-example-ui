@@ -10,17 +10,19 @@ import {
 export const initCurrentVersionComponent: CurrentVersionComponentFactory = (material) =>
     new Component(material)
 
-class Component extends ApplicationAbstractAction<CurrentVersionComponentState> implements CurrentVersionComponent {
+class Component
+    extends ApplicationAbstractAction<CurrentVersionComponentState>
+    implements CurrentVersionComponent {
     material: CurrentVersionMaterial
 
     constructor(material: CurrentVersionMaterial) {
         super()
         this.material = material
-    }
 
-    load(): void {
-        this.material.findCurrentVersion((event) => {
-            this.post(event)
+        this.igniteHook(() => {
+            this.material.findCurrentVersion((event) => {
+                this.post(event)
+            })
         })
     }
 }
