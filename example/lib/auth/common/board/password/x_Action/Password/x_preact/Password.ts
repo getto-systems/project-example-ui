@@ -8,7 +8,7 @@ import {
     label_password_fill,
 } from "../../../../../../../z_vendor/getto-css/preact/design/form"
 
-import { useAction } from "../../../../../../../x_preact/common/hooks"
+import { useApplicationAction } from "../../../../../../../x_preact/common/hooks"
 
 import { InputBoard } from "../../../../../../../z_getto/board/input/x_Action/Input/x_preact/Input"
 
@@ -25,8 +25,8 @@ type Props = PasswordBoardFieldResource &
         help: VNodeContent[]
     }>
 export function PasswordBoard(resource: Props): VNode {
-    const state = useAction(resource.field.validate, initialValidateBoardFieldState)
-    const toggleState = useAction(resource.field.toggle, initialTogglePasswordDisplayBoardState)
+    const state = useApplicationAction(resource.field.validate, initialValidateBoardFieldState)
+    const toggleState = useApplicationAction(resource.field.toggle, initialTogglePasswordDisplayBoardState)
 
     return label_password_fill(content())
 

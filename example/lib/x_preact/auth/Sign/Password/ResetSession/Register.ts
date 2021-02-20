@@ -11,7 +11,7 @@ import {
 } from "../../../../../z_vendor/getto-css/preact/design/form"
 import { loginBox } from "../../../../../z_vendor/getto-css/preact/layout/login"
 
-import { useAction, useTermination_deprecated } from "../../../../common/hooks"
+import { useApplicationAction, useTermination_deprecated } from "../../../../common/hooks"
 import { siteInfo } from "../../../../common/site"
 import { icon, spinner } from "../../../../common/icon"
 
@@ -32,8 +32,8 @@ import { RegisterPasswordError } from "../../../../../auth/sign/password/resetSe
 export function RegisterPassword({ resource, terminate }: PasswordResetEntryPoint): VNode {
     useTermination_deprecated(terminate)
 
-    const state = useAction(resource.register, initialRegisterPasswordState)
-    const formState = useAction(resource.form, initialFormContainerComponentState)
+    const state = useApplicationAction(resource.register, initialRegisterPasswordState)
+    const formState = useApplicationAction(resource.form, initialFormContainerComponentState)
 
     useEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useEffect で行う

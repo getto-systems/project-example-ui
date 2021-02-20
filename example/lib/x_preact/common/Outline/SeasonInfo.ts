@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
 import { label_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
 
-import { useAction } from "../hooks"
+import { useApplicationAction } from "../hooks"
 
 import {
     SeasonInfoComponent,
@@ -18,7 +18,7 @@ type Props = Readonly<{
     seasonInfo: SeasonInfoComponent
 }>
 export function SeasonInfo(resource: Props): VNode {
-    const state = useAction(resource.seasonInfo, initialSeasonInfoComponentState)
+    const state = useApplicationAction(resource.seasonInfo, initialSeasonInfoComponentState)
     useEffect(() => {
         resource.seasonInfo.load()
     }, [])

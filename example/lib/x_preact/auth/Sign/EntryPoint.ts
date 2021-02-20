@@ -2,7 +2,7 @@ import { h, VNode } from "preact"
 import { useEffect, useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useAction, useTermination_deprecated } from "../../common/hooks"
+import { useApplicationAction, useTermination_deprecated } from "../../common/hooks"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
@@ -28,7 +28,7 @@ export function EntryPoint({ view, terminate }: AuthSignEntryPoint): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    const state = useAction(view, initialAuthSignViewState)
+    const state = useApplicationAction(view, initialAuthSignViewState)
     useEffect(() => {
         view.load()
     }, [])

@@ -6,7 +6,7 @@ import { VNodeContent } from "../../../../../../../../z_vendor/getto-css/preact/
 import { loginBox } from "../../../../../../../../z_vendor/getto-css/preact/layout/login"
 import { v_medium } from "../../../../../../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useAction, useEntryPoint } from "../../../../../../../../x_preact/common/hooks"
+import { useApplicationAction, useEntryPoint } from "../../../../../../../../x_preact/common/hooks"
 import { siteInfo } from "../../../../../../../../x_preact/common/site"
 import { spinner } from "../../../../../../../../x_preact/common/icon"
 
@@ -21,7 +21,7 @@ import { RenewAuthnInfoError } from "../../../data"
 export function RenewAuthInfo(entryPoint: RenewAuthnInfoEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
 
-    const state = useAction(resource.renew, initialRenewAuthnInfoState)
+    const state = useApplicationAction(resource.renew, initialRenewAuthnInfoState)
     useEffect(() => {
         resource.renew.request()
     }, [])
