@@ -14,7 +14,7 @@ describe("NextVersion", () => {
 
         resource.nextVersion.addStateHandler(stateHandler())
 
-        resource.nextVersion.find()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -71,7 +71,7 @@ describe("NextVersion", () => {
 
         resource.nextVersion.addStateHandler(stateHandler())
 
-        resource.nextVersion.find()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -129,7 +129,7 @@ describe("NextVersion", () => {
 
         resource.nextVersion.addStateHandler(stateHandler())
 
-        resource.nextVersion.find()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -186,7 +186,7 @@ describe("NextVersion", () => {
 
         resource.nextVersion.addStateHandler(stateHandler())
 
-        resource.nextVersion.find()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -243,7 +243,7 @@ describe("NextVersion", () => {
 
         resource.nextVersion.addStateHandler(stateHandler())
 
-        resource.nextVersion.find()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -300,7 +300,7 @@ describe("NextVersion", () => {
 
         resource.nextVersion.addStateHandler(stateHandler())
 
-        resource.nextVersion.find()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -357,7 +357,7 @@ describe("NextVersion", () => {
 
         resource.nextVersion.addStateHandler(stateHandler())
 
-        resource.nextVersion.find()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -414,7 +414,7 @@ describe("NextVersion", () => {
 
         resource.nextVersion.addStateHandler(stateHandler())
 
-        resource.nextVersion.find()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -471,7 +471,7 @@ describe("NextVersion", () => {
 
         resource.nextVersion.addStateHandler(stateHandler())
 
-        resource.nextVersion.find()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -528,7 +528,7 @@ describe("NextVersion", () => {
 
         resource.nextVersion.addStateHandler(stateHandler())
 
-        resource.nextVersion.find()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []

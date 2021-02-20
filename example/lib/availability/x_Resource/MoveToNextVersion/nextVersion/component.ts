@@ -11,9 +11,7 @@ export type NextVersionMaterial = Readonly<{
     find: Find
 }>
 
-export interface NextVersionComponent extends ApplicationAction<NextVersionComponentState> {
-    find(): void
-}
+export type NextVersionComponent = ApplicationAction<NextVersionComponentState>
 
 export type NextVersionComponentState =
     | Readonly<{ type: "initial-next-version" }>

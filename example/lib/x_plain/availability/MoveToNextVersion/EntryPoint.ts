@@ -8,8 +8,7 @@ export function EntryPoint({ resource, terminate }: MoveToNextVersionEntryPoint)
     const { nextVersion } = resource
     try {
         nextVersion.addStateHandler(handleState)
-
-        nextVersion.find()
+        nextVersion.ignite()
     } catch (err) {
         handleError(err)
     }
