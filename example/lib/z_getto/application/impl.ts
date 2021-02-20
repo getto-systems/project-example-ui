@@ -1,25 +1,26 @@
 import { ApplicationAction, ApplicationStateHandler } from "./action"
 
 export class ApplicationAbstractAction<S> implements ApplicationAction<S> {
-    handlers: ApplicationStateHandler<S>[] = []
+    stateHandlers: ApplicationStateHandler<S>[] = []
 
     igniteHooks: IgniteHookList = { ignite: false, hooks: [] }
     terminateHooks: ApplicationHook[] = []
 
-    addStateHandler(handler: ApplicationStateHandler<S>): void {
-        this.handlers = [...this.handlers, handler]
-    }
-    removeStateHandler(target: ApplicationStateHandler<S>): void {
-        this.handlers = this.handlers.filter((handler) => handler !== target)
+    // this.material.doSomething(this.post) できるようにプロパティとして定義
+    post: Post<S> = (state: S) => {
+        this.stateHandlers.forEach((post) => post(state))
     }
 
-    post(state: S): void {
-        this.handlers.forEach((post) => post(state))
+    addStateHandler(handler: ApplicationStateHandler<S>): void {
+        this.stateHandlers = [...this.stateHandlers, handler]
+    }
+    removeStateHandler(target: ApplicationStateHandler<S>): void {
+        this.stateHandlers = this.stateHandlers.filter((handler) => handler !== target)
     }
 
     igniteHook(hook: ApplicationHook): void {
         if (this.igniteHooks.ignite) {
-            console.warn("igniteHook IGNORED: ignite hook added in ignite hook")
+            console.warn("igniteHook IGNORED: hook added in ignite hook")
             return
         }
         this.igniteHooks = { ignite: false, hooks: [...this.igniteHooks.hooks, hook] }
@@ -41,7 +42,7 @@ export class ApplicationAbstractAction<S> implements ApplicationAction<S> {
         this.terminateHooks = [...this.terminateHooks, hook]
     }
     terminate(): void {
-        this.handlers = []
+        this.stateHandlers = []
         this.terminateHooks.forEach((terminate) => terminate())
     }
 }
@@ -53,3 +54,7 @@ export interface ApplicationHook {
 type IgniteHookList =
     | Readonly<{ ignite: false; hooks: ApplicationHook[] }>
     | Readonly<{ ignite: true }>
+
+interface Post<S> {
+    (state: S): void
+}

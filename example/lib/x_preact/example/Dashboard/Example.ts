@@ -1,5 +1,4 @@
 import { VNode } from "preact"
-import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
@@ -22,9 +21,6 @@ type Props = Readonly<{
 }>
 export function Example(resource: Props): VNode {
     const state = useApplicationAction(resource.example, initialExampleComponentState)
-    useEffect(() => {
-        resource.example.load() // TODO ignite に移す
-    }, [])
 
     switch (state.type) {
         case "initial-example":

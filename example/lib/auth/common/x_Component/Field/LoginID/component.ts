@@ -14,7 +14,6 @@ export interface LoginIDFormFieldComponentFactory {
     (material: LoginIDFormFieldMaterial): { (handler: FormFieldHandler): LoginIDFormFieldComponent }
 }
 export type LoginIDFormFieldMaterial = Readonly<{
-    // TODO field という名前にしたい
     loginID: LoginIDFormField
 }>
 

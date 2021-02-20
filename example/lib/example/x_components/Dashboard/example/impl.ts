@@ -9,17 +9,17 @@ import {
 
 export const initExampleComponent: ExampleComponentFactory = (material) => new Component(material)
 
-class Component extends ApplicationAbstractAction<ExampleComponentState> implements ExampleComponent {
+class Component
+    extends ApplicationAbstractAction<ExampleComponentState>
+    implements ExampleComponent {
     material: ExampleMaterial
 
     constructor(material: ExampleMaterial) {
         super()
         this.material = material
-    }
 
-    load(): void {
-        this.material.loadSeason((event) => {
-            this.post(event)
+        this.igniteHook(() => {
+            this.material.loadSeason((event) => this.post(event))
         })
     }
 }
