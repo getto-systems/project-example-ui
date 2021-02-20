@@ -17,13 +17,13 @@ export type PasswordBoardFieldResource = Readonly<{
     field: PasswordBoardFieldAction
 }>
 
-export type PasswordBoardFieldAction = Readonly<{
-    input: InputBoardValueAction
-    validate: ValidatePasswordAction
-    clear: ClearAction
-    toggle: TogglePasswordDisplayBoardAction
-    characterState: PasswordCharacterStateDetecter
-}>
+export interface PasswordBoardFieldAction {
+    readonly input: InputBoardValueAction
+    readonly validate: ValidatePasswordAction
+    readonly clear: ClearAction
+    readonly toggle: TogglePasswordDisplayBoardAction
+    readonly characterState: PasswordCharacterStateDetecter
+}
 
 export type ValidatePasswordAction = ValidateBoardFieldAction<Password, ValidatePasswordError>
 export type ValidatePasswordState = ValidateBoardFieldState<ValidatePasswordError>

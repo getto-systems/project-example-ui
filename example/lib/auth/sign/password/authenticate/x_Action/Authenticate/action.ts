@@ -7,10 +7,10 @@ export type AuthenticatePasswordEntryPoint = Readonly<{
     resource: AuthenticatePasswordAction & AuthSignLinkResource
     terminate: { (): void }
 }>
-export type AuthenticatePasswordAction = Readonly<{
-    core: AuthenticatePasswordCoreAction
-    form: AuthenticatePasswordFormAction
-}>
+export interface AuthenticatePasswordAction {
+    readonly core: AuthenticatePasswordCoreAction
+    readonly form: AuthenticatePasswordFormAction
+}
 
 export const initialAuthenticatePasswordState = {
     core: initialAuthenticatePasswordCoreState,
