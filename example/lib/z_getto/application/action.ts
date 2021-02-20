@@ -1,7 +1,7 @@
 export interface ApplicationAction<S> {
-    ignite(): void
     addStateHandler(handler: ApplicationStateHandler<S>): void
     removeStateHandler(handler: ApplicationStateHandler<S>): void
+    ignite(): void
     terminate(): void
 }
 

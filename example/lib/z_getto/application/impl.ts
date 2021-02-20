@@ -6,13 +6,6 @@ export class ApplicationAbstractAction<S> implements ApplicationAction<S> {
     igniteHooks: ApplicationHook[] = []
     terminateHooks: ApplicationHook[] = []
 
-    igniteHook(hook: ApplicationHook): void {
-        this.igniteHooks = [...this.igniteHooks, hook]
-    }
-    ignite(): void {
-        this.igniteHooks.forEach((hook) => hook())
-    }
-
     addStateHandler(handler: ApplicationStateHandler<S>): void {
         this.handlers = [...this.handlers, handler]
     }
@@ -22,6 +15,13 @@ export class ApplicationAbstractAction<S> implements ApplicationAction<S> {
 
     post(state: S): void {
         this.handlers.forEach((post) => post(state))
+    }
+
+    igniteHook(hook: ApplicationHook): void {
+        this.igniteHooks = [...this.igniteHooks, hook]
+    }
+    ignite(): void {
+        this.igniteHooks.forEach((hook) => hook())
     }
 
     terminateHook(hook: ApplicationHook): void {
