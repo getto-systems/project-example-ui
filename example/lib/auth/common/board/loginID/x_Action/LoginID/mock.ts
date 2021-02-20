@@ -1,9 +1,5 @@
 import { initMockInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/mock"
-import {
-    initMockPropsPasser,
-    MockAction,
-    MockPropsPasser,
-} from "../../../../../../z_getto/application/mock"
+import { MockAction, MockPropsPasser } from "../../../../../../z_getto/application/mock"
 
 import { LoginIDBoardFieldAction, ValidateLoginIDAction, ValidateLoginIDState } from "./action"
 
@@ -21,7 +17,7 @@ export function initMockLoginIDBoardFieldAction(
 ): LoginIDBoardFieldAction {
     return {
         validate: new Action(passer),
-        input: initMockInputBoardValueAction(initMockPropsPasser(), "text"),
+        input: initMockInputBoardValueAction(),
         clear: () => null,
     }
 }
