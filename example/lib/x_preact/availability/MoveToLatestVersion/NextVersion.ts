@@ -1,5 +1,5 @@
 import { h, VNode } from "preact"
-import { useEffect, useLayoutEffect } from "preact/hooks"
+import { useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
@@ -17,9 +17,6 @@ import { appTargetToPath, FindError } from "../../../availability/nextVersion/da
 
 export function NextVersion(resource: NextVersionResource): VNode {
     const state = useApplicationAction(resource.nextVersion, initialNextVersionComponentState)
-    useEffect(() => {
-        resource.nextVersion.find() // TODO ignite に移す
-    }, [])
 
     useLayoutEffect(() => {
         switch (state.type) {
