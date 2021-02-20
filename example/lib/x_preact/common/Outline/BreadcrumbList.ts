@@ -1,5 +1,4 @@
 import { VNode } from "preact"
-import { useEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import {
@@ -19,7 +18,12 @@ import {
     initialBreadcrumbListComponentState,
 } from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/component"
 
-import { OutlineBreadcrumb, OutlineBreadcrumbNode, OutlineMenuCategory, OutlineMenuItem } from "../../../auth/permission/outline/load/data"
+import {
+    OutlineBreadcrumb,
+    OutlineBreadcrumbNode,
+    OutlineMenuCategory,
+    OutlineMenuItem,
+} from "../../../auth/permission/outline/load/data"
 import { linky } from "../../../z_vendor/getto-css/preact/design/highlight"
 
 type Props = Readonly<{
@@ -27,9 +31,6 @@ type Props = Readonly<{
 }>
 export function BreadcrumbList(resource: Props): VNode {
     const state = useApplicationAction(resource.breadcrumbList, initialBreadcrumbListComponentState)
-    useEffect(() => {
-        resource.breadcrumbList.load() // TODO ignite に移す
-    }, [])
 
     switch (state.type) {
         case "initial-breadcrumb-list":

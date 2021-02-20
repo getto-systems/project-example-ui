@@ -23,7 +23,7 @@ describe("BreadcrumbList", () => {
 
         resource.breadcrumbList.addStateHandler(initTester())
 
-        resource.breadcrumbList.load()
+        resource.breadcrumbList.ignite()
 
         function initTester() {
             return initAsyncBreadcrumbListTester()((stack) => {
@@ -43,7 +43,7 @@ describe("BreadcrumbList", () => {
 
         resource.breadcrumbList.addStateHandler(initTester())
 
-        resource.breadcrumbList.load()
+        resource.breadcrumbList.ignite()
 
         function initTester() {
             return initAsyncBreadcrumbListTester()((stack) => {

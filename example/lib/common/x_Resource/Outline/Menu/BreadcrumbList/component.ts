@@ -11,9 +11,7 @@ export type BreadcrumbListMaterial = Readonly<{
     breadcrumbList: LoadOutlineBreadcrumbListAction
 }>
 
-export interface BreadcrumbListComponent extends ApplicationAction<BreadcrumbListComponentState> {
-    load(): void
-}
+export type BreadcrumbListComponent = ApplicationAction<BreadcrumbListComponentState>
 
 export type BreadcrumbListComponentState =
     | Readonly<{ type: "initial-breadcrumb-list" }>
