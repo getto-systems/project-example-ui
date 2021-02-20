@@ -1,7 +1,4 @@
-import {
-    mapMockPropsPasser,
-    MockPropsPasser,
-} from "../../../../../z_getto/application/mock"
+import { mapMockPropsPasser, MockPropsPasser } from "../../../../../z_getto/application/mock"
 import {
     FormFieldMockComponent,
     FormInputMockComponent,
@@ -25,9 +22,7 @@ class Component
 
     constructor(passer: MockPropsPasser<LoginIDFormFieldMockProps>) {
         super()
-        passer.addPropsHandler((props) => {
-            this.post(mapProps(props))
-        })
+        passer.addPropsHandler((props) => this.post(mapProps(props)))
         this.input = new FormInputMockComponent(
             mapMockPropsPasser(passer, (props) => ({ input: props.loginID }))
         )

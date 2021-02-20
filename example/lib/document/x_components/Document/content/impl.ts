@@ -19,9 +19,7 @@ class Component
         this.material = material
 
         this.igniteHook(() => {
-            this.material.loadDocument((event) => {
-                this.post(event)
-            })
+            this.material.loadDocument(this.post)
         })
     }
 }

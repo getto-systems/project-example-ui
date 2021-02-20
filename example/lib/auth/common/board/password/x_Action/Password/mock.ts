@@ -65,9 +65,7 @@ class Action extends MockAction<ValidatePasswordState> implements ValidatePasswo
 
     constructor(passer: PasswordBoardFieldActionMockPropsPasser) {
         super()
-        passer.addPropsHandler((props) => {
-            this.post(mapProps(props))
-        })
+        passer.addPropsHandler((props) => this.post(mapProps(props)))
 
         function mapProps(props: PasswordBoardMockProps): ValidatePasswordState {
             switch (props.type) {
@@ -94,9 +92,7 @@ class ToggleAction
     implements TogglePasswordDisplayBoardAction {
     constructor(passer: PasswordBoardFieldActionMockPropsPasser) {
         super()
-        passer.addPropsHandler((props) => {
-            this.post(mapProps(props))
-        })
+        passer.addPropsHandler((props) => this.post(mapProps(props)))
 
         function mapProps(
             props: TogglePasswordDisplayBoardMockProps

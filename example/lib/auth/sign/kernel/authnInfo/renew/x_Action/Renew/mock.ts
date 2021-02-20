@@ -1,7 +1,4 @@
-import {
-    MockAction,
-    MockPropsPasser,
-} from "../../../../../../../z_getto/application/mock"
+import { MockAction, MockPropsPasser } from "../../../../../../../z_getto/application/mock"
 
 import { RenewAuthnInfoAction, RenewAuthnInfoState } from "./action"
 
@@ -22,9 +19,7 @@ export function initMockRenewAuthnInfoAction(
 class Action extends MockAction<RenewAuthnInfoState> implements RenewAuthnInfoAction {
     constructor(passer: RenewAuthnInfoMockPropsPasser) {
         super()
-        passer.addPropsHandler((props) => {
-            this.post(mapProps(props))
-        })
+        passer.addPropsHandler((props) => this.post(mapProps(props)))
 
         function mapProps(props: RenewAuthnInfoMockProps): RenewAuthnInfoState {
             switch (props.type) {

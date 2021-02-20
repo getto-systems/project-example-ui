@@ -1,7 +1,4 @@
-import {
-    MockAction,
-    MockPropsPasser,
-} from "../../../../../../../z_getto/application/mock"
+import { MockAction, MockPropsPasser } from "../../../../../../../z_getto/application/mock"
 
 import { AuthenticatePasswordCoreAction, AuthenticatePasswordCoreState } from "./action"
 
@@ -29,9 +26,7 @@ class Action
     implements AuthenticatePasswordCoreAction {
     constructor(passer: Passer) {
         super()
-        passer.addPropsHandler((props) => {
-            this.post(mapProps(props))
-        })
+        passer.addPropsHandler((props) => this.post(mapProps(props)))
 
         function mapProps(props: AuthenticatePasswordCoreMockProps): AuthenticatePasswordCoreState {
             switch (props.type) {
