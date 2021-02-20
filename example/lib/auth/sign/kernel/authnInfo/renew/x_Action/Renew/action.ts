@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../../../../common/vendor/getto-example/Application/action"
+import { ApplicationAction } from "../../../../../../../z_getto/application/action"
 
 import { GetSecureScriptPathMethod } from "../../../../../common/secureScriptPath/get/method"
 import { ForceRenewAuthnInfoMethod, RenewAuthnInfoMethod } from "../../method"

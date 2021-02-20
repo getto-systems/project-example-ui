@@ -1,7 +1,7 @@
 import {
     MockAction,
     MockPropsPasser,
-} from "../../../../../../../common/vendor/getto-example/Application/mock"
+} from "../../../../../../../z_getto/application/mock"
 
 import { RegisterPasswordAction, RegisterPasswordState } from "./action"
 

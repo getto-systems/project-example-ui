@@ -4,7 +4,7 @@ import {
 } from "../../../../../common/secureScriptPath/get/main"
 import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../kernel/authnInfo/common/startContinuousRenew/main"
 import { newAuthenticatePasswordInfra } from "../../../main"
-import { newBoardValidateStack } from "../../../../../../../common/vendor/getto-board/kernel/infra/stack"
+import { newBoardValidateStack } from "../../../../../../../z_getto/board/kernel/infra/stack"
 
 import { initAuthenticatePasswordFormAction } from "../Form/impl"
 import {

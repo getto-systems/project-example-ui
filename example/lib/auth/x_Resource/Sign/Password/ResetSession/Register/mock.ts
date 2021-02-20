@@ -1,4 +1,4 @@
-import { MockPropsPasser } from "../../../../../../common/vendor/getto-example/Application/mock"
+import { MockPropsPasser } from "../../../../../../z_getto/application/mock"
 
 import {
     initMockRegisterPasswordFormAction,

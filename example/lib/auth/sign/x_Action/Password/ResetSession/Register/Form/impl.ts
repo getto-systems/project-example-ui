@@ -1,4 +1,4 @@
-import { FormContainerBaseComponent } from "../../../../../../../common/vendor/getto-form/x_Resource/Form/impl"
+import { FormContainerBaseComponent } from "../../../../../../../z_getto/getto-form/x_Resource/Form/impl"
 import { initLoginIDFormFieldComponent } from "../../../../../../common/x_Component/Field/LoginID/impl"
 import { initPasswordFormFieldComponent } from "../../../../../../common/x_Component/Field/Password/impl"
 
@@ -6,7 +6,7 @@ import { LoginIDFormFieldComponent } from "../../../../../../common/x_Component/
 import { PasswordFormFieldComponent } from "../../../../../../common/x_Component/Field/Password/component"
 import { RegisterPasswordFormAction, RegisterPasswordFormMaterial } from "./action"
 
-import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
+import { FormConvertResult } from "../../../../../../../z_getto/getto-form/form/data"
 import { PasswordResetFields } from "../../../../../password/resetSession/register/data"
 
 export function initRegisterPasswordFormAction(

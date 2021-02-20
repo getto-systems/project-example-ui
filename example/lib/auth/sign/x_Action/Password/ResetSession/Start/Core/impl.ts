@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../../../../common/vendor/getto-example/Application/impl"
+import { ApplicationAbstractAction } from "../../../../../../../z_getto/application/impl"
 
 import {
     StartPasswordResetSessionMaterial,
@@ -10,7 +10,7 @@ import {
     PasswordResetSessionID,
     PasswordResetSessionFields,
 } from "../../../../../password/resetSession/start/data"
-import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
+import { FormConvertResult } from "../../../../../../../z_getto/getto-form/form/data"
 import {
     CheckPasswordResetSessionStatusInfra,
     StartPasswordResetSessionInfra,

@@ -1,9 +1,9 @@
 import { newTestSeasonInfoComponent, SeasonInfoRepository } from "./core"
 
-import { initStaticClock } from "../../../../../z_infra/clock/simulate"
+import { initStaticClock } from "../../../../../z_getto/infra/clock/simulate"
 import { initMemorySeasonRepository } from "../../../../shared/season/impl/repository/season/memory"
 
-import { Clock } from "../../../../../z_infra/clock/infra"
+import { Clock } from "../../../../../z_getto/infra/clock/infra"
 
 import { SeasonInfoComponentState } from "../component"
 

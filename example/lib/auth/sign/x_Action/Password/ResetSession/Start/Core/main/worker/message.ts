@@ -1,11 +1,11 @@
-import { WorkerProxySpec } from "../../../../../../../../../z_vendor/getto-worker/message"
+import { WorkerProxySpec } from "../../../../../../../../../z_getto/application/worker/message"
 
 import {
     CheckPasswordResetSessionStatusEvent,
     StartPasswordResetSessionEvent,
 } from "../../../../../../../password/resetSession/start/event"
 
-import { FormConvertResult } from "../../../../../../../../../common/vendor/getto-form/form/data"
+import { FormConvertResult } from "../../../../../../../../../z_getto/getto-form/form/data"
 import {
     PasswordResetSessionFields,
     PasswordResetSessionID,

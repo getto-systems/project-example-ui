@@ -1,6 +1,6 @@
 import { initStartPasswordResetSessionSimulate } from "../../../../../sign/password/resetSession/start/infra/remote/start/simulate"
 
-import { WaitTime } from "../../../../../../z_infra/time/infra"
+import { WaitTime } from "../../../../../../z_getto/infra/config/infra"
 import {
     GetPasswordResetSessionStatusRemote,
     GetPasswordResetSessionStatusResult,
@@ -17,18 +17,18 @@ import { markPasswordResetSessionID } from "../../../../../sign/password/resetSe
 import {
     markInputString,
     toValidationError,
-} from "../../../../../../common/vendor/getto-form/form/data"
-import { initFormAction } from "../../../../../../common/vendor/getto-form/main/form"
+} from "../../../../../../z_getto/getto-form/form/data"
+import { initFormAction } from "../../../../../../z_getto/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../../common/field/loginID/main/loginID"
 import {
     checkPasswordResetSessionStatusEventHasDone,
     startPasswordResetSessionEventHasDone,
 } from "../../../../../sign/password/resetSession/start/impl"
-import { delayed, wait } from "../../../../../../z_infra/delayed/core"
+import { delayed, wait } from "../../../../../../z_getto/infra/delayed/core"
 import {
     initAsyncActionTester_legacy,
     initSyncActionChecker_legacy,
-} from "../../../../../../common/vendor/getto-example/Application/testHelper"
+} from "../../../../../../z_getto/application/testHelper"
 import { initSendPasswordResetSessionTokenSimulate } from "../../../../../sign/password/resetSession/start/infra/remote/sendToken/simulate"
 import { initGetPasswordResetSessionStatusSimulate } from "../../../../../sign/password/resetSession/start/infra/remote/getStatus/simulate"
 import { initStartPasswordResetSessionFormAction } from "../../../../../sign/x_Action/Password/ResetSession/Start/Form/impl"

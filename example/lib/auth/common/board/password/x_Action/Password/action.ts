@@ -1,9 +1,9 @@
-import { InputBoardValueAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/action"
+import { InputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/action"
 import {
     ValidateBoardFieldAction,
     ValidateBoardFieldState,
-} from "../../../../../../common/vendor/getto-board/validateField/x_Action/ValidateField/action"
-import { ApplicationAction } from "../../../../../../common/vendor/getto-example/Application/action"
+} from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
+import { ApplicationAction } from "../../../../../../z_getto/application/action"
 import { TogglePasswordDisplayBoardEvent } from "../../toggleDisplay/event"
 import {
     HidePasswordDisplayBoardMethod,

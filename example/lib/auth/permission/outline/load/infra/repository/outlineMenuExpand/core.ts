@@ -1,4 +1,4 @@
-import { TypedStorage } from "../../../../../../../z_infra/storage/infra"
+import { TypedStorage } from "../../../../../../../z_getto/infra/storage/infra"
 import { StoreResult } from "../../../../../../../common/storage/infra"
 import { OutlineMenuExpand, OutlineMenuExpandRepository, OutlineMenuExpandResponse } from "../../../infra"
 

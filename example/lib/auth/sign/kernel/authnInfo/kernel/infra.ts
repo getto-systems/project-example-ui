@@ -1,4 +1,4 @@
-import { Remote, RemoteResult, RemoteSimulator } from "../../../../../z_infra/remote/infra"
+import { Remote, RemoteResult, RemoteSimulator } from "../../../../../z_getto/infra/remote/infra"
 import { StoreResult } from "../../../../../common/storage/infra"
 
 import { StorageError } from "../../../../../common/storage/data"

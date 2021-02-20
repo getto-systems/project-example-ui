@@ -1,14 +1,14 @@
-import { initValidateBoardFieldAction } from "../../../../../../common/vendor/getto-board/validateField/x_Action/ValidateField/impl"
-import { initInputBoardValueAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/impl"
+import { initValidateBoardFieldAction } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/impl"
+import { initInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/impl"
 
-import { ValidateBoardFieldInfra } from "../../../../../../common/vendor/getto-board/validateField/infra"
+import { ValidateBoardFieldInfra } from "../../../../../../z_getto/board/validateField/infra"
 
 import { LoginIDBoardFieldAction } from "./action"
 
 import {
     BoardConvertResult,
     BoardValue,
-} from "../../../../../../common/vendor/getto-board/kernel/data"
+} from "../../../../../../z_getto/board/kernel/data"
 import { LoginID, markLoginID } from "../../../../loginID/data"
 import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "./data"
 

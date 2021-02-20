@@ -8,9 +8,9 @@ import { useAction } from "../../../common/hooks"
 import { FormInput } from "../../../common/Form/FormInput"
 
 import { LoginIDFormFieldComponent } from "../../../../auth/common/x_Component/Field/LoginID/component"
-import { initialFormFieldComponentState } from "../../../../common/vendor/getto-form/x_Resource/Form/component"
+import { initialFormFieldComponentState } from "../../../../z_getto/getto-form/x_Resource/Form/component"
 
-import { FormValidationResult } from "../../../../common/vendor/getto-form/form/data"
+import { FormValidationResult } from "../../../../z_getto/getto-form/form/data"
 import { LoginIDValidationError } from "../../../../auth/common/field/loginID/data"
 
 type Props = Readonly<{

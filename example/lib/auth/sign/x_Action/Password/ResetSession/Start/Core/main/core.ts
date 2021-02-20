@@ -2,7 +2,7 @@ import { newGetPasswordResetSessionStatusRemote } from "../../../../../../passwo
 import { newSendPasswordResetSessionTokenRemote } from "../../../../../../password/resetSession/start/infra/remote/sendToken/main"
 import { newStartPasswordResetSessionRemote } from "../../../../../../password/resetSession/start/infra/remote/start/main"
 
-import { delayed, wait } from "../../../../../../../../z_infra/delayed/core"
+import { delayed, wait } from "../../../../../../../../z_getto/infra/delayed/core"
 
 import {
     initStartPasswordResetSessionAction,
@@ -11,7 +11,7 @@ import {
     StartPasswordResetSessionBase,
 } from "../impl"
 
-import { delaySecond, limit, waitSecond } from "../../../../../../../../z_infra/time/infra"
+import { delaySecond, limit, waitSecond } from "../../../../../../../../z_getto/infra/config/infra"
 
 import { StartPasswordResetSessionAction, StartPasswordResetSessionMaterial } from "../action"
 

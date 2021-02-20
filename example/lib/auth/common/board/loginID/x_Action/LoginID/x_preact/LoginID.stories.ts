@@ -5,7 +5,7 @@ import { storyTemplate } from "../../../../../../../x_preact/z_storybook/story"
 
 import { LoginIDBoard } from "./LoginID"
 
-import { initMockPropsPasser } from "../../../../../../../common/vendor/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../../../../../z_getto/application/mock"
 import { LoginIDBoardMockProps, initMockLoginIDBoardFieldAction } from "../mock"
 
 export default {

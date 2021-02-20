@@ -3,9 +3,9 @@ import { ApiCredentialMessage } from "./y_protobuf/api_pb.js"
 import {
     decodeBase64StringToUint8Array,
     encodeUint8ArrayToBase64String,
-} from "../../z_vendor/protobufUtil"
+} from "../../z_vendor/protobuf/transform"
 
-import { decodeError, decodeSuccess, TypedStorageConverter } from "../../z_infra/storage/infra"
+import { decodeError, decodeSuccess, TypedStorageConverter } from "../../z_getto/infra/storage/infra"
 
 export type ApiCredentialDecoded = Readonly<{
     apiNonce: string

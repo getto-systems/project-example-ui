@@ -1,4 +1,4 @@
-import { FormFieldBaseComponent } from "../../../../../common/vendor/getto-form/x_Resource/Form/impl"
+import { FormFieldBaseComponent } from "../../../../../z_getto/getto-form/x_Resource/Form/impl"
 
 import {
     PasswordFormFieldComponentFactory,
@@ -9,7 +9,7 @@ import {
 import {
     FormFieldHandler,
     FormInputComponent,
-} from "../../../../../common/vendor/getto-form/x_Resource/Form/component"
+} from "../../../../../z_getto/getto-form/x_Resource/Form/component"
 
 import { PasswordValidationError, PasswordView } from "../../../field/password/data"
 

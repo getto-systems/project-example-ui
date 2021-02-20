@@ -1,9 +1,9 @@
 import { env } from "../../../../../y_environment/env"
 import { StaticMenuPath } from "../../../../../y_environment/path"
 
-import { currentURL } from "../../../../../z_infra/location/url"
+import { currentURL } from "../../../../../z_getto/infra/location/url"
 
-import { Icon, iconClass } from "../../../../../z_vendor/icon"
+import { Icon, iconClass } from "../../../../../z_vendor/icon/core"
 
 import {
     LoadOutlineMenuBadgeRemoteAccess,

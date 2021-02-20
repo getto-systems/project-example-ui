@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../common/vendor/getto-example/Application/action"
+import { ApplicationAction } from "../../../../z_getto/application/action"
 
 import { LoadSeason } from "../../../shared/season/action"
 

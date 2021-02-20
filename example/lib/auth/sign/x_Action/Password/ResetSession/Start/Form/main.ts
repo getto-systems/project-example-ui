@@ -1,4 +1,4 @@
-import { initFormAction } from "../../../../../../../common/vendor/getto-form/main/form"
+import { initFormAction } from "../../../../../../../z_getto/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../../../common/field/loginID/main/loginID"
 
 import { initStartPasswordResetSessionFormAction } from "./impl"

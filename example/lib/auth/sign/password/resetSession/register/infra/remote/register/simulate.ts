@@ -1,6 +1,6 @@
-import { initSimulateRemoteAccess } from "../../../../../../../../z_infra/remote/simulate"
+import { initSimulateRemoteAccess } from "../../../../../../../../z_getto/infra/remote/simulate"
 
-import { WaitTime } from "../../../../../../../../z_infra/time/infra"
+import { WaitTime } from "../../../../../../../../z_getto/infra/config/infra"
 import { RegisterPasswordRemote, RegisterPasswordSimulator } from "../../../infra"
 
 export function initRegisterPasswordSimulate(

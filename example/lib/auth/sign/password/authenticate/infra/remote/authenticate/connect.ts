@@ -1,4 +1,4 @@
-import { initConnectRemoteAccess } from "../../../../../../../z_infra/remote/connect"
+import { initConnectRemoteAccess } from "../../../../../../../z_getto/infra/remote/connect"
 
 import {
     AuthenticatePasswordRemote,
@@ -9,7 +9,7 @@ import {
     AuthenticatePasswordFields,
     AuthenticatePasswordRemoteError,
 } from "../../../data"
-import { RawRemote, RemoteError } from "../../../../../../../z_infra/remote/infra"
+import { RawRemote, RemoteError } from "../../../../../../../z_getto/infra/remote/infra"
 import { markAuthAt, markAuthnNonce } from "../../../../../kernel/authnInfo/kernel/data"
 import {
     markApiNonce,

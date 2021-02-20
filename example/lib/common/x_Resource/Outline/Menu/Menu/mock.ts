@@ -1,5 +1,5 @@
-import { lnir, iconClass } from "../../../../../z_vendor/icon"
-import { MockAction, MockPropsPasser } from "../../../../vendor/getto-example/Application/mock"
+import { lnir, iconClass } from "../../../../../z_vendor/icon/core"
+import { MockAction, MockPropsPasser } from "../../../../../z_getto/application/mock"
 
 import { MenuComponent, MenuComponentState } from "./component"
 

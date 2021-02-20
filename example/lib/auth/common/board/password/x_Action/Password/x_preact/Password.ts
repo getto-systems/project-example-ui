@@ -10,13 +10,13 @@ import {
 
 import { useAction } from "../../../../../../../x_preact/common/hooks"
 
-import { InputBoard } from "../../../../../../../common/vendor/getto-board/input/x_Action/Input/x_preact/Input"
+import { InputBoard } from "../../../../../../../z_getto/board/input/x_Action/Input/x_preact/Input"
 
-import { initialValidateBoardFieldState } from "../../../../../../../common/vendor/getto-board/validateField/x_Action/ValidateField/action"
+import { initialValidateBoardFieldState } from "../../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
 import { initialTogglePasswordDisplayBoardState, PasswordBoardFieldResource } from "../action"
 
-import { BoardValue } from "../../../../../../../common/vendor/getto-board/kernel/data"
-import { BoardFieldValidateResult } from "../../../../../../../common/vendor/getto-board/validateField/data"
+import { BoardValue } from "../../../../../../../z_getto/board/kernel/data"
+import { BoardFieldValidateResult } from "../../../../../../../z_getto/board/validateField/data"
 import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "../data"
 import { icon } from "../../../../../../../x_preact/common/icon"
 

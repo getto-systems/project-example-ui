@@ -25,7 +25,7 @@ import { PasswordFormField } from "../../field/password"
 import { PasswordResetEntryPoint } from "../../../../../auth/z_EntryPoint/Sign/entryPoint"
 
 import { initialRegisterPasswordState } from "../../../../../auth/sign/x_Action/Password/ResetSession/Register/Core/action"
-import { initialFormContainerComponentState } from "../../../../../common/vendor/getto-form/x_Resource/Form/component"
+import { initialFormContainerComponentState } from "../../../../../z_getto/getto-form/x_Resource/Form/component"
 
 import { RegisterPasswordError } from "../../../../../auth/sign/password/resetSession/register/data"
 

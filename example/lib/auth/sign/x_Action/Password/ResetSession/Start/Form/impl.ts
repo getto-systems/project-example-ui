@@ -4,8 +4,8 @@ import {
 } from "./action"
 
 import { PasswordResetSessionFields } from "../../../../../password/resetSession/start/data"
-import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
-import { FormContainerBaseComponent } from "../../../../../../../common/vendor/getto-form/x_Resource/Form/impl"
+import { FormConvertResult } from "../../../../../../../z_getto/getto-form/form/data"
+import { FormContainerBaseComponent } from "../../../../../../../z_getto/getto-form/x_Resource/Form/impl"
 import { LoginIDFormFieldComponent } from "../../../../../../common/x_Component/Field/LoginID/component"
 import { initLoginIDFormFieldComponent } from "../../../../../../common/x_Component/Field/LoginID/impl"
 

@@ -5,11 +5,11 @@ import { storyTemplate } from "../../../../z_storybook/story"
 
 import { RegisterPassword } from "./Register"
 
-import { initMockPropsPasser } from "../../../../../common/vendor/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../../../z_getto/application/mock"
 import { initMockPasswordResetEntryPoint } from "../../../../../auth/z_EntryPoint/Sign/mock"
 
 import { loginIDFormFieldValidations } from "../../../../../auth/common/x_Component/Field/LoginID/mock"
-import { formValidationStates } from "../../../../../common/vendor/getto-form/x_Resource/Form/mock"
+import { formValidationStates } from "../../../../../z_getto/getto-form/x_Resource/Form/mock"
 import {
     passwordFormFieldCharacters,
     passwordFormFieldValidations,

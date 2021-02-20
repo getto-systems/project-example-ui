@@ -8,7 +8,7 @@ import { newAuthSignLinkResource } from "../../../sign/common/searchParams/x_Act
 
 import { AuthSignEntryPoint } from "../entryPoint"
 import { newStartPasswordResetSessionResource } from "../../../x_Resource/Sign/Password/ResetSession/Start/main/core"
-import { currentURL } from "../../../../z_infra/location/url"
+import { currentURL } from "../../../../z_getto/infra/location/url"
 
 export function newLoginAsSingle(): AuthSignEntryPoint {
     const webStorage = localStorage

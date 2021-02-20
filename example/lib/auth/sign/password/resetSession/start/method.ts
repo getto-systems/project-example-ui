@@ -1,6 +1,6 @@
 import { CheckPasswordResetSessionStatusEvent, StartPasswordResetSessionEvent } from "./event"
 
-import { FormConvertResult } from "../../../../../common/vendor/getto-form/form/data"
+import { FormConvertResult } from "../../../../../z_getto/getto-form/form/data"
 import { PasswordResetSessionID, PasswordResetSessionFields } from "./data"
 
 export interface StartPasswordResetSessionMethod {

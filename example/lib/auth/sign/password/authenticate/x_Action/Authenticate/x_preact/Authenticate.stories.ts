@@ -5,7 +5,7 @@ import { storyTemplate } from "../../../../../../../x_preact/z_storybook/story"
 
 import { AuthenticatePassword } from "./Authenticate"
 
-import { initMockPropsPasser } from "../../../../../../../common/vendor/getto-example/Application/mock"
+import { initMockPropsPasser } from "../../../../../../../z_getto/application/mock"
 
 import { loginIDFormFieldValidations } from "../../../../../../common/x_Component/Field/LoginID/mock"
 import {
@@ -13,7 +13,7 @@ import {
     passwordFormFieldValidations,
     passwordFormFieldViews,
 } from "../../../../../../common/x_Component/Field/Password/mock"
-import { formValidationStates } from "../../../../../../../common/vendor/getto-form/x_Resource/Form/mock"
+import { formValidationStates } from "../../../../../../../z_getto/getto-form/x_Resource/Form/mock"
 
 import {
     AuthenticatePasswordActionMockProps,

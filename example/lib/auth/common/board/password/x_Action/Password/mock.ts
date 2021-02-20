@@ -1,9 +1,9 @@
-import { initMockInputBoardValueAction } from "../../../../../../common/vendor/getto-board/input/x_Action/Input/mock"
+import { initMockInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/mock"
 import {
     initMockPropsPasser,
     MockAction,
     MockPropsPasser,
-} from "../../../../../../common/vendor/getto-example/Application/mock"
+} from "../../../../../../z_getto/application/mock"
 
 import {
     PasswordBoardFieldAction,
@@ -13,7 +13,7 @@ import {
     ValidatePasswordState,
 } from "./action"
 
-import { BoardConvertResult } from "../../../../../../common/vendor/getto-board/kernel/data"
+import { BoardConvertResult } from "../../../../../../z_getto/board/kernel/data"
 import { Password } from "../../../../password/data"
 
 export type PasswordBoardFieldActionMockPropsPasser = MockPropsPasser<

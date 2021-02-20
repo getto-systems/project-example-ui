@@ -1,7 +1,7 @@
 import {
     initMockPropsPasser,
     MockPropsPasser,
-} from "../../../../../../common/vendor/getto-example/Application/mock"
+} from "../../../../../../z_getto/application/mock"
 
 import { initMockAuthenticatePasswordFormAction } from "./Form/mock"
 import {

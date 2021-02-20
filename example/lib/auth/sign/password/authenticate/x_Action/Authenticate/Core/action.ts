@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../../../../common/vendor/getto-example/Application/action"
+import { ApplicationAction } from "../../../../../../../z_getto/application/action"
 
 import { AuthenticatePasswordMethod } from "../../../method"
 import { GetSecureScriptPathMethod } from "../../../../../common/secureScriptPath/get/method"
@@ -7,7 +7,7 @@ import { StartContinuousRenewAuthnInfoMethod } from "../../../../../kernel/authn
 import { AuthenticatePasswordEvent } from "../../../event"
 import { StartContinuousRenewAuthnInfoEvent } from "../../../../../kernel/authnInfo/common/startContinuousRenew/event"
 
-import { FormConvertResult } from "../../../../../../../common/vendor/getto-form/form/data"
+import { FormConvertResult } from "../../../../../../../z_getto/getto-form/form/data"
 import {
     SecureScriptPath,
     LoadSecureScriptError,
