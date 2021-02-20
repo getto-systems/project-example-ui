@@ -1,5 +1,5 @@
 import { h, VNode } from "preact"
-import { useEffect, useErrorBoundary } from "preact/hooks"
+import { useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { useApplicationAction, useTermination_deprecated } from "../../common/hooks"
@@ -29,9 +29,6 @@ export function EntryPoint({ view, terminate }: AuthSignEntryPoint): VNode {
     }
 
     const state = useApplicationAction(view, initialAuthSignViewState)
-    useEffect(() => {
-        view.load() // TODO ignite に移す
-    }, [])
 
     switch (state.type) {
         case "initial-view":

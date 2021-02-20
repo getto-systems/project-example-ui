@@ -34,35 +34,37 @@ function detectViewState(currentURL: URL): AuthSignViewType {
 
 export class View extends ApplicationAbstractAction<AuthSignViewState> implements AuthSignView {
     locationInfo: AuthSignViewLocationInfo
-    // TODO もう components ではない 
+    // TODO もう components ではない
     components: AuthSignResourceFactory
 
     constructor(locationInfo: AuthSignViewLocationInfo, components: AuthSignResourceFactory) {
         super()
         this.locationInfo = locationInfo
         this.components = components
-    }
 
-    load(): void {
-        const resource = this.components.renew()
-        resource.renew.addStateHandler((state) => {
-            switch (state.type) {
-                case "required-to-login":
-                    this.post(this.mapViewType(this.locationInfo.getAuthSignViewType()))
-                    return
-            }
-        })
+        this.igniteHook(() => {
+            // TODO entry point を返すようにするべき
+            const resource = this.components.renew()
+            resource.renew.addStateHandler((state) => {
+                switch (state.type) {
+                    case "required-to-login":
+                        this.post(this.mapViewType(this.locationInfo.getAuthSignViewType()))
+                        return
+                }
+            })
 
-        this.post({
-            type: "renew-credential",
-            entryPoint: {
-                resource,
-                terminate: () => {
-                    resource.renew.terminate()
+            this.post({
+                type: "renew-credential",
+                entryPoint: {
+                    resource,
+                    terminate: () => {
+                        resource.renew.terminate()
+                    },
                 },
-            },
+            })
         })
     }
+
     error(err: string): void {
         this.post({ type: "error", err })
     }
