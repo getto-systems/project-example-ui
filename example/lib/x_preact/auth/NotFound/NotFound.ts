@@ -1,11 +1,15 @@
 import { h, VNode } from "preact"
-import { useEffect, useErrorBoundary } from "preact/hooks"
+import { useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { buttons } from "../../../z_vendor/getto-css/preact/design/form"
 
-import { useApplicationAction, useDocumentTitle, useTermination_deprecated } from "../../common/hooks"
+import {
+    useApplicationAction,
+    useDocumentTitle,
+    useTermination_deprecated,
+} from "../../common/hooks"
 import { siteInfo } from "../../common/site"
 import { icon } from "../../common/icon"
 
@@ -39,9 +43,6 @@ type ContentProps = Readonly<{
 }>
 function Content({ currentVersion }: ContentProps): VNode {
     const state = useApplicationAction(currentVersion, initialCurrentVersionComponentState)
-    useEffect(() => {
-        currentVersion.load() // TODO ignite に移す
-    }, [])
 
     return loginBox(siteInfo(), {
         title: "リンクが切れていました",

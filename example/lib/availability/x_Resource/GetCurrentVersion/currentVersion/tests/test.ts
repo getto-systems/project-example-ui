@@ -8,7 +8,7 @@ describe("NotFound", () => {
 
         resource.currentVersion.addStateHandler(stateHandler())
 
-        resource.currentVersion.load()
+        resource.currentVersion.ignite()
 
         function stateHandler(): Post<CurrentVersionComponentState> {
             const stack: CurrentVersionComponentState[] = []
