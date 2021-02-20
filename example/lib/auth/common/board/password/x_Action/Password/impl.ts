@@ -1,7 +1,7 @@
 import { ApplicationAbstractAction } from "../../../../../../z_getto/application/impl"
 
 import { initValidateBoardFieldAction } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/impl"
-import { initInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/impl"
+import { newInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/impl"
 
 import { hidePasswordDisplayBoard, showPasswordDisplayBoard } from "../../toggleDisplay/impl"
 
@@ -29,7 +29,7 @@ export function initPasswordBoardFieldAction<N extends string>(
     embed: PasswordBoardEmbed<N>,
     infra: ValidateBoardFieldInfra
 ): PasswordBoardFieldAction {
-    const input = initInputBoardValueAction()
+    const input = newInputBoardValueAction()
 
     const validate = initValidateBoardFieldAction(
         {
