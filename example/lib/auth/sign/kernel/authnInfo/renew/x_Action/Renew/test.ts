@@ -41,7 +41,7 @@ describe("RenewAuthInfo", () => {
 
         resource.renew.addStateHandler(stateHandler())
 
-        resource.renew.request()
+        resource.renew.ignite()
 
         function stateHandler(): Post<RenewAuthnInfoState> {
             const stack: RenewAuthnInfoState[] = []
@@ -99,7 +99,7 @@ describe("RenewAuthInfo", () => {
 
         resource.renew.addStateHandler(stateHandler())
 
-        resource.renew.request()
+        resource.renew.ignite()
 
         function stateHandler(): Post<RenewAuthnInfoState> {
             const stack: RenewAuthnInfoState[] = []
@@ -163,7 +163,7 @@ describe("RenewAuthInfo", () => {
 
         resource.renew.addStateHandler(stateHandler())
 
-        resource.renew.request()
+        resource.renew.ignite()
 
         function stateHandler(): Post<RenewAuthnInfoState> {
             const stack: RenewAuthnInfoState[] = []
@@ -219,7 +219,7 @@ describe("RenewAuthInfo", () => {
 
         resource.renew.addStateHandler(stateHandler())
 
-        resource.renew.request()
+        resource.renew.ignite()
 
         function stateHandler(): Post<RenewAuthnInfoState> {
             const stack: RenewAuthnInfoState[] = []
@@ -276,7 +276,7 @@ describe("RenewAuthInfo", () => {
 
         resource.renew.addStateHandler(stateHandler())
 
-        resource.renew.request()
+        resource.renew.ignite()
 
         function stateHandler(): Post<RenewAuthnInfoState> {
             const stack: RenewAuthnInfoState[] = []

@@ -45,28 +45,29 @@ class Action
     constructor(material: RenewAuthnInfoMaterial) {
         super()
         this.material = material
-    }
 
-    request(): void {
-        this.material.renew((event) => {
-            switch (event.type) {
-                case "try-to-instant-load":
-                    this.post({
-                        type: "try-to-instant-load",
-                        scriptPath: this.secureScriptPath(),
-                    })
-                    return
+        this.igniteHook(() => {
+            this.material.renew((event) => {
+                switch (event.type) {
+                    case "try-to-instant-load":
+                        this.post({
+                            type: "try-to-instant-load",
+                            scriptPath: this.secureScriptPath(),
+                        })
+                        return
 
-                case "succeed-to-renew":
-                    this.startContinuousRenew(event.authnInfo)
-                    return
+                    case "succeed-to-renew":
+                        this.startContinuousRenew(event.authnInfo)
+                        return
 
-                default:
-                    this.post(event)
-                    return
-            }
+                    default:
+                        this.post(event)
+                        return
+                }
+            })
         })
     }
+
     succeedToInstantLoad(): void {
         this.material.forceStartContinuousRenew((event) => this.post(event))
     }

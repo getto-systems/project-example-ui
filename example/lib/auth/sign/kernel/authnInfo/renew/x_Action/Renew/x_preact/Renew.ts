@@ -1,5 +1,5 @@
 import { h, VNode } from "preact"
-import { useEffect, useLayoutEffect } from "preact/hooks"
+import { useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { VNodeContent } from "../../../../../../../../z_vendor/getto-css/preact/common"
@@ -20,11 +20,7 @@ import { RenewAuthnInfoError } from "../../../data"
 
 export function RenewAuthInfo(entryPoint: RenewAuthnInfoEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
-
     const state = useApplicationAction(resource.renew, initialRenewAuthnInfoState)
-    useEffect(() => {
-        resource.renew.request() // TODO ignite に移す
-    }, [])
 
     useLayoutEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
