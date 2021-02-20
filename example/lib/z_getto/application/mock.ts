@@ -1,5 +1,21 @@
 import { ApplicationAction, ApplicationStateHandler } from "./action"
 
+export class MockAction_simple<S> implements ApplicationAction<S> {
+    addStateHandler(): void {
+        // mock では特に何もしない
+    }
+    removeStateHandler(): void {
+        // mock では特に何もしない
+    }
+
+    ignite(): void {
+        // mock では特に何もしない
+    }
+    terminate(): void {
+        // mock では特に何もしない
+    }
+}
+
 export class MockAction<S> implements ApplicationAction<S> {
     state: S | null = null
 

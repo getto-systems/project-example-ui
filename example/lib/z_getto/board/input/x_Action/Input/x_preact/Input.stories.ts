@@ -1,35 +1,34 @@
 import { h } from "preact"
-import { useEffect } from "preact/hooks"
 import { storyTemplate } from "../../../../../../x_preact/z_storybook/story"
-import { initMockPropsPasser } from "../../../../../application/mock"
+import { markBoardValue } from "../../../../kernel/data"
 import { InputBoardValueType, inputBoardValueTypes } from "../../../data"
-import { initMockInputBoardValueAction, InputBoardMockProps } from "../mock"
-import { InputBoard } from "./Input"
+import { InputBoardValueState } from "../action"
+import { initMockInputBoardValueAction } from "../mock"
+import { View } from "./Input"
 
 export default {
-    title: "Common/Vendor/GettoBoard/Input",
+    title: "Getto/Board/Input",
     argTypes: {
-        type: {
-            table: { disable: true },
-        },
         inputType: {
             control: { type: "select", options: inputBoardValueTypes },
         },
     },
 }
 
-type MockProps = InputBoardMockProps & Readonly<{ inputType: InputBoardValueType }>
-const template = storyTemplate<MockProps>((args) => {
-    const passer = initMockPropsPasser<InputBoardMockProps>()
-    const action = initMockInputBoardValueAction(passer, args.inputType)
-    return h(Preview, { args })
+type Props = Readonly<{
+    inputType: InputBoardValueType
+    value: string
+}>
+const template = storyTemplate<Props>((props) => {
+    return h(View, {
+        type: props.inputType,
+        input: initMockInputBoardValueAction(),
+        state: state(),
+    })
 
-    function Preview(props: { args: MockProps }) {
-        useEffect(() => {
-            passer.update(props.args)
-        })
-        return h(InputBoard, { type: props.args.inputType, input: action, onChange: () => null })
+    function state(): InputBoardValueState {
+        return markBoardValue(props.value)
     }
 })
 
-export const Initial = template({ type: "initial", inputType: "text", value: "" })
+export const Initial = template({ inputType: "text", value: "" })
