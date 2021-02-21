@@ -5,15 +5,15 @@ import { terminatePasswordBoardFieldAction } from "../../../../../common/board/p
 import { AuthenticatePasswordEntryPoint, AuthenticatePasswordAction } from "./action"
 
 export function toAuthenticatePasswordEntryPoint(
-    resource: AuthenticatePasswordAction
+    action: AuthenticatePasswordAction
 ): AuthenticatePasswordEntryPoint {
     return {
-        resource: { ...resource, ...newAuthSignLinkResource() },
+        resource: { authenticate: action, ...newAuthSignLinkResource() },
         terminate: () => {
-            resource.core.terminate()
-            resource.form.validate.terminate()
-            terminateLoginIDBoardFieldAction(resource.form.loginID)
-            terminatePasswordBoardFieldAction(resource.form.password)
+            action.core.terminate()
+            action.form.validate.terminate()
+            terminateLoginIDBoardFieldAction(action.form.loginID)
+            terminatePasswordBoardFieldAction(action.form.password)
         },
     }
 }

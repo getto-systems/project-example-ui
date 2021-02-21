@@ -7,7 +7,10 @@ export type AuthenticatePasswordEntryPoint = Readonly<{
     resource: AuthenticatePasswordResource
     terminate: { (): void }
 }>
-export type AuthenticatePasswordResource = AuthenticatePasswordAction & AuthSignLinkResource
+
+export type AuthenticatePasswordResource = AuthSignLinkResource &
+    Readonly<{ authenticate: AuthenticatePasswordAction }>
+
 export interface AuthenticatePasswordAction {
     readonly core: AuthenticatePasswordCoreAction
     readonly form: AuthenticatePasswordFormAction
