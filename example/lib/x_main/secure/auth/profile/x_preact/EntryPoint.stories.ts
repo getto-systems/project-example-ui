@@ -3,9 +3,9 @@ import { useEffect } from "preact/hooks"
 
 import { storyTemplate } from "../../../../../z_vendor/storybook/preact/story"
 
-import { EntryPoint } from "./EntryPoint"
+import { View } from "./EntryPoint"
 
-import { AuthProfileMockPropsPasser, newMockAuthProfile } from "../mock"
+import { AuthProfileMockPropsPasser, initMockAuthProfileResource } from "../mock"
 
 import { initMockPropsPasser } from "../../../../../z_getto/application/mock"
 
@@ -37,7 +37,7 @@ const template = storyTemplate<MockProps>((args) => {
         menu: initMockPropsPasser<MenuMockProps>(),
         breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
     }
-    const entryPoint = newMockAuthProfile(passer)
+    const resource = initMockAuthProfileResource(passer)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
@@ -54,7 +54,7 @@ const template = storyTemplate<MockProps>((args) => {
                 icon: props.args.breadcrumbIcon,
             })
         })
-        return h(EntryPoint, entryPoint)
+        return h(View, resource)
     }
 })
 

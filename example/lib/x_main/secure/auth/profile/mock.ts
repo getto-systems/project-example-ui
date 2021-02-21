@@ -13,24 +13,21 @@ import {
     SeasonInfoMockPropsPasser,
 } from "../../../../example/x_components/Outline/seasonInfo/mock"
 
-import { AuthProfileEntryPoint } from "./entryPoint"
+import { AuthProfileResource } from "./entryPoint"
 
 export type AuthProfileMockPropsPasser = Readonly<{
     seasonInfo: SeasonInfoMockPropsPasser
     menu: MenuMockPropsPasser
     breadcrumbList: BreadcrumbListMockPropsPasser
 }>
-export function newMockAuthProfile(passer: AuthProfileMockPropsPasser): AuthProfileEntryPoint {
+export function initMockAuthProfileResource(
+    passer: AuthProfileMockPropsPasser,
+): AuthProfileResource {
     return {
-        resource: {
-            ...initMockErrorResource(),
-            logout: initMockLogoutAction(),
-            seasonInfo: initMockSeasonInfoComponent(passer.seasonInfo),
-            menu: initMockMenuComponent(passer.menu),
-            breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),
-        },
-        terminate: () => {
-            // mock では特に何もしない
-        },
+        ...initMockErrorResource(),
+        logout: initMockLogoutAction(),
+        seasonInfo: initMockSeasonInfoComponent(passer.seasonInfo),
+        menu: initMockMenuComponent(passer.menu),
+        breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),
     }
 }
