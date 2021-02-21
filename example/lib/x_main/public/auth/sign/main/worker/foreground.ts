@@ -6,7 +6,7 @@ import { newStartPasswordResetSession_proxy } from "../../../../../../auth/sign/
 
 import { currentURL } from "../../../../../../z_getto/infra/location/url"
 
-import { initLoginViewLocationInfo, View } from "../../impl"
+import { initLoginViewLocationInfo, toAuthSignEntryPoint, View } from "../../impl"
 
 import { newAuthSignLinkResource } from "../../../../../../auth/sign/common/searchParams/x_Action/Link/impl"
 
@@ -27,7 +27,7 @@ import {
     StartPasswordResetSessionProxy,
 } from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/worker/foreground"
 
-export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
+export function newAuthSignAsWorkerForeground(): AuthSignEntryPoint {
     const worker = newWorker()
 
     const webStorage = localStorage
@@ -51,6 +51,7 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     })
 
     const messageHandler = initBackgroundMessageHandler(proxy, (err: string) => {
+        // TODO これは公開されてるやつじゃないぞ
         view.error(err)
     })
 
@@ -58,17 +59,17 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
         messageHandler(event.data)
     })
 
+    const entryPoint = toAuthSignEntryPoint(view)
     return {
-        view,
-        terminate,
+        resource: entryPoint.resource,
+        terminate: () => {
+            worker.terminate()
+            entryPoint.terminate()
+        },
     }
 
     function postForegroundMessage(message: ForegroundMessage) {
         worker.postMessage(message)
-    }
-    function terminate() {
-        worker.terminate()
-        view.terminate()
     }
 }
 

@@ -6,8 +6,11 @@ import { RegisterPasswordEntryPoint } from "../../../../auth/sign/password/reset
 import { StartPasswordResetSessionEntryPoint } from "../../../../auth/sign/password/resetSession/start/x_Action/Start/action"
 
 export type AuthSignEntryPoint = Readonly<{
-    view: AuthSignView
+    resource: AuthSignResource
     terminate: Terminate
+}>
+export type AuthSignResource = Readonly<{
+    view: AuthSignAction
 }>
 
 export interface AuthSignResourceFactory {
@@ -25,10 +28,10 @@ export interface AuthSignViewLocationInfo {
     getAuthSignViewType(): AuthSignViewType
 }
 
-export type AuthSignView = ApplicationAction<AuthSignViewState>
+export type AuthSignAction = ApplicationAction<AuthSignActionState>
 
 // TODO 階層構造に合わせて rename
-export type AuthSignViewState =
+export type AuthSignActionState =
     | Readonly<{ type: "initial-view" }>
     | Readonly<{ type: "renew-credential"; entryPoint: RenewAuthnInfoEntryPoint }>
     | Readonly<{ type: "password-login"; entryPoint: AuthenticatePasswordEntryPoint }>
@@ -41,7 +44,7 @@ export type AuthSignViewState =
 
 export type AuthSignViewType = "password-login" | "password-reset-session" | "password-reset"
 
-export const initialAuthSignViewState: AuthSignViewState = { type: "initial-view" }
+export const initialAuthSignViewState: AuthSignActionState = { type: "initial-view" }
 
 interface Terminate {
     (): void

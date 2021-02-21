@@ -9,7 +9,7 @@ import { AuthenticatePasswordProxyMessage } from "../../../../../../auth/sign/pa
 import { RegisterPasswordProxyMessage } from "../../../../../../auth/sign/password/resetSession/register/x_Action/Register/main/worker/message"
 import { StartPasswordResetSessionProxyMessage } from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/worker/message"
 
-export function newLoginWorker(worker: Worker): void {
+export function newAuthSignWorker(worker: Worker): void {
     const handler: Handler = {
         password: {
             authenticate: newAuthenticatePasswordHandler((response) =>
