@@ -3,7 +3,7 @@ import { MockAction, MockPropsPasser } from "../../../../z_getto/application/moc
 import {
     initMockStartPasswordResetSessionResource,
     StartPasswordResetSessionResourceMockPropsPasser,
-} from "../../../../auth/x_Resource/Sign/Password/ResetSession/Start/mock"
+} from "../../../../auth/sign/password/resetSession/start/x_Action/Start/mock"
 
 import {
     AuthSignEntryPoint,

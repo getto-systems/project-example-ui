@@ -37,6 +37,7 @@ const NOW = new Date("2020-01-01 10:00:30")
 
 describe("AuthProfile", () => {
     test("init", (done) => {
+        // TODO 単にロードするだけのテストをやるべきか？ここは coverage 取らないから必要ない気がする
         standardResource()
         done()
     })

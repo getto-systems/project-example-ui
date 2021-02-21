@@ -1,7 +1,7 @@
 import { RenewAuthnInfoEntryPoint } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/action"
 import { AuthenticatePasswordEntryPoint } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/action"
 import { RegisterPasswordEntryPoint } from "../../../../auth/sign/password/resetSession/register/x_Action/Register/action"
-import { StartPasswordResetSessionResource } from "../../../../auth/x_Resource/Sign/Password/ResetSession/Start/resource"
+import { StartPasswordResetSessionResource } from "../../../../auth/sign/password/resetSession/start/x_Action/Start/resource"
 
 import { ApplicationAction } from "../../../../z_getto/application/action"
 import { AuthSignLinkResource } from "../../../../auth/sign/common/searchParams/x_Action/Link/action"

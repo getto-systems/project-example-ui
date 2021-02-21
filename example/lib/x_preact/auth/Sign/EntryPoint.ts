@@ -9,7 +9,7 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 import { RenewAuthInfo } from "../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/x_preact/Renew"
 
 import { AuthenticatePassword } from "../../../auth/sign/password/authenticate/x_Action/Authenticate/x_preact/Authenticate"
-import { PasswordResetSession } from "./Password/ResetSession/Start"
+import { PasswordResetSession } from "../../../auth/sign/password/resetSession/start/x_Action/Start/x_preact/Start"
 import { RegisterPassword } from "../../../auth/sign/password/resetSession/register/x_Action/Register/x_preact/Register"
 
 import {
