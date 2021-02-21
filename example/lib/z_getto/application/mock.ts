@@ -1,8 +1,6 @@
 import { ApplicationAction } from "./action"
 
 import { ApplicationStateHandler } from "./data"
-import { StateHandler } from "./infra"
-import { newStateHandler } from "./infra/stateHandler"
 
 export class MockAction_simple<S> implements ApplicationAction<S> {
     addStateHandler(): void {
@@ -17,34 +15,6 @@ export class MockAction_simple<S> implements ApplicationAction<S> {
     }
     terminate(): void {
         // mock では特に何もしない
-    }
-}
-
-export class MockAction_state<S> implements ApplicationAction<S> {
-    state: S
-
-    stateHandler: StateHandler<S> = newStateHandler()
-
-    constructor(state: S) {
-        this.state = state
-    }
-
-    addStateHandler(handler: ApplicationStateHandler<S>): void {
-        this.stateHandler.add(handler)
-    }
-    removeStateHandler(target: ApplicationStateHandler<S>): void {
-        this.stateHandler.remove(target)
-    }
-
-    ignite(): void {
-        // 同期的にすべての state handler を追加した後で ignite するための setTimeout
-        setTimeout(() => {
-            this.stateHandler.post(this.state)
-        })
-    }
-
-    terminate(): void {
-        this.stateHandler.removeAll()
     }
 }
 
