@@ -2,7 +2,7 @@ import { h, VNode } from "preact"
 import { useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useApplicationAction, useTermination_deprecated } from "../../../../../x_preact/common/hooks"
+import { useApplicationAction, useEntryPoint } from "../../../../../x_preact/common/hooks"
 
 import { ApplicationError } from "../../../../../x_preact/common/System/ApplicationError"
 
@@ -14,11 +14,13 @@ import { RegisterPassword } from "../../../../../auth/sign/password/resetSession
 
 import {
     AuthSignEntryPoint,
+    AuthSignResource,
+    AuthSignActionState,
     initialAuthSignViewState,
 } from "../entryPoint"
 
-export function EntryPoint({ view, terminate }: AuthSignEntryPoint): VNode {
-    useTermination_deprecated(terminate)
+export function EntryPoint(entryPoint: AuthSignEntryPoint): VNode {
+    const resource = useEntryPoint(entryPoint)
 
     const [err] = useErrorBoundary((err) => {
         // 認証前なのでエラーはどうしようもない
@@ -28,26 +30,32 @@ export function EntryPoint({ view, terminate }: AuthSignEntryPoint): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    const state = useApplicationAction(view, initialAuthSignViewState)
+    return h(View, <AuthSignProps>{
+        ...resource,
+        state: useApplicationAction(resource.view, initialAuthSignViewState),
+    })
+}
 
-    switch (state.type) {
+export type AuthSignProps = AuthSignResource & Readonly<{ state: AuthSignActionState }>
+export function View(props: AuthSignProps): VNode {
+    switch (props.state.type) {
         case "initial-view":
             return EMPTY_CONTENT
 
         case "renew-credential":
-            return h(RenewAuthInfo, state.entryPoint)
+            return h(RenewAuthInfo, props.state.entryPoint)
 
         case "password-login":
-            return h(AuthenticatePassword, state.entryPoint)
+            return h(AuthenticatePassword, props.state.entryPoint)
 
         case "password-reset-session":
-            return h(PasswordResetSession, state.entryPoint)
+            return h(PasswordResetSession, props.state.entryPoint)
 
         case "password-reset":
-            return h(RegisterPassword, state.entryPoint)
+            return h(RegisterPassword, props.state.entryPoint)
 
         case "error":
-            return h(ApplicationError, { err: state.err })
+            return h(ApplicationError, { err: props.state.err })
     }
 }
 

@@ -13,7 +13,7 @@ import { Clock } from "../../../../z_getto/infra/clock/infra"
 import { AuthenticatePasswordResult } from "../../../../auth/sign/password/authenticate/infra"
 import { RegisterPasswordResult } from "../../../../auth/sign/password/resetSession/register/infra"
 
-import { AuthSignViewState } from "./entryPoint"
+import { AuthSignActionState } from "./entryPoint"
 
 import { markAuthAt, markAuthnNonce } from "../../../../auth/sign/kernel/authnInfo/kernel/data"
 import { markApiNonce, markApiRoles } from "../../../../common/apiCredential/data"
@@ -66,8 +66,8 @@ describe("LoginView", () => {
 
         view.ignite()
 
-        function stateHandler(): Handler<AuthSignViewState> {
-            const stack: AuthSignViewState[] = []
+        function stateHandler(): Handler<AuthSignActionState> {
+            const stack: AuthSignActionState[] = []
             const terminates: Terminate[] = []
             return (state) => {
                 stack.push(state)
@@ -123,8 +123,8 @@ describe("LoginView", () => {
 
         view.ignite()
 
-        function stateHandler(): Handler<AuthSignViewState> {
-            const stack: AuthSignViewState[] = []
+        function stateHandler(): Handler<AuthSignActionState> {
+            const stack: AuthSignActionState[] = []
             const terminates: Terminate[] = []
             return (state) => {
                 stack.push(state)
@@ -173,8 +173,8 @@ describe("LoginView", () => {
 
         view.ignite()
 
-        function stateHandler(): Handler<AuthSignViewState> {
-            const stack: AuthSignViewState[] = []
+        function stateHandler(): Handler<AuthSignActionState> {
+            const stack: AuthSignActionState[] = []
             const terminates: Terminate[] = []
             return (state) => {
                 stack.push(state)
@@ -223,8 +223,8 @@ describe("LoginView", () => {
 
         view.error("view error")
 
-        function stateHandler(): Handler<AuthSignViewState> {
-            const stack: AuthSignViewState[] = []
+        function stateHandler(): Handler<AuthSignActionState> {
+            const stack: AuthSignActionState[] = []
             return (state) => {
                 stack.push(state)
 

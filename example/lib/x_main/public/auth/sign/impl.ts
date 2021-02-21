@@ -1,14 +1,24 @@
 import { ApplicationAbstractAction } from "../../../../z_getto/application/impl"
 
 import {
-    AuthSignView,
-    AuthSignViewState,
+    AuthSignAction,
+    AuthSignActionState,
     AuthSignViewType,
     AuthSignViewLocationInfo,
     AuthSignResourceFactory,
+    AuthSignEntryPoint,
 } from "./entryPoint"
 
 import { AuthSignSearchParams } from "../../../../auth/sign/common/searchParams/data"
+
+export function toAuthSignEntryPoint(action: AuthSignAction): AuthSignEntryPoint {
+    return {
+        resource: { view: action },
+        terminate: () => {
+            action.terminate()
+        },
+    }
+}
 
 export function initLoginViewLocationInfo(currentURL: URL): AuthSignViewLocationInfo {
     return {
@@ -29,7 +39,7 @@ function detectViewState(currentURL: URL): AuthSignViewType {
     return "password-login"
 }
 
-export class View extends ApplicationAbstractAction<AuthSignViewState> implements AuthSignView {
+export class View extends ApplicationAbstractAction<AuthSignActionState> implements AuthSignAction {
     locationInfo: AuthSignViewLocationInfo
     // TODO もう components ではない
     components: AuthSignResourceFactory
@@ -57,7 +67,7 @@ export class View extends ApplicationAbstractAction<AuthSignViewState> implement
         this.post({ type: "error", err })
     }
 
-    mapViewType(type: AuthSignViewType): AuthSignViewState {
+    mapViewType(type: AuthSignViewType): AuthSignActionState {
         switch (type) {
             case "password-login":
                 return { type, entryPoint: this.components.passwordLogin() }

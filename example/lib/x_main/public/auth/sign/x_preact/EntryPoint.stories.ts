@@ -1,13 +1,12 @@
-import { h, VNode } from "preact"
-import { useEffect } from "preact/hooks"
+import { h } from "preact"
 
 import { storyTemplate } from "../../../../../z_vendor/storybook/preact/story"
 
-import { EntryPoint } from "./EntryPoint"
+import { AuthSignProps, View } from "./EntryPoint"
 
-import { initMockPropsPasser } from "../../../../../z_getto/application/mock"
+import { initMockAuthSignAction } from "../mock"
 
-import { LoginErrorMockProps, initMockLoginEntryPointAsError } from "../mock"
+import { AuthSignActionState } from "../entryPoint"
 
 export default {
     title: "main/Auth/Sign",
@@ -16,18 +15,19 @@ export default {
     },
 }
 
-type MockProps = LoginErrorMockProps
-const template = storyTemplate<MockProps>((args) => {
-    const passer = initMockPropsPasser<LoginErrorMockProps>()
-    const entryPoint = initMockLoginEntryPointAsError(passer)
-    return h(Preview, { args })
+type Props = Readonly<{
+    err: string
+}>
+const template = storyTemplate<Props>((props) => {
+    const action = initMockAuthSignAction()
+    return h(View, <AuthSignProps>{
+        view: action,
+        state: state(),
+    })
 
-    function Preview(props: { args: MockProps }): VNode {
-        useEffect(() => {
-            passer.update(props.args)
-        })
-        return h(EntryPoint, entryPoint)
+    function state(): AuthSignActionState {
+        return { type: "error", err: props.err }
     }
 })
 
-export const Error = template({ error: "error" })
+export const Error = template({ err: "error" })

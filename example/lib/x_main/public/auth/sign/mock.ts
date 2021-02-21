@@ -1,36 +1,13 @@
-import { MockAction, MockPropsPasser } from "../../../../z_getto/application/mock"
+import { MockAction_simple } from "../../../../z_getto/application/mock"
 
-import { AuthSignEntryPoint, AuthSignView, AuthSignViewState } from "./entryPoint"
+import { AuthSignAction, AuthSignActionState } from "./entryPoint"
 
-export function initMockLoginEntryPointAsError(
-    passer: LoginErrorMockPropsPasser,
-): AuthSignEntryPoint {
-    return {
-        view: new MockErrorView(passer),
-        terminate,
-    }
+export function initMockAuthSignAction(): AuthSignAction {
+    return new Action()
 }
 
-export type LoginErrorMockPropsPasser = MockPropsPasser<LoginErrorMockProps>
-export type LoginErrorMockProps = Readonly<{ error: string }>
-
-class MockErrorView extends MockAction<AuthSignViewState> implements AuthSignView {
-    constructor(passer: LoginErrorMockPropsPasser) {
-        super()
-        passer.addPropsHandler((props) => {
-            this.post(mapProps(props))
-        })
-
-        function mapProps(err: LoginErrorMockProps): AuthSignViewState {
-            return { type: "error", err: err.error }
-        }
-    }
-
+class Action extends MockAction_simple<AuthSignActionState> implements AuthSignAction {
     load(): void {
         // mock では特に何もしない
     }
-}
-
-function terminate() {
-    // mock では特に何もしない
 }
