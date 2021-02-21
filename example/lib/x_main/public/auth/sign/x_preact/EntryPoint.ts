@@ -2,20 +2,20 @@ import { h, VNode } from "preact"
 import { useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useApplicationAction, useTermination_deprecated } from "../../common/hooks"
+import { useApplicationAction, useTermination_deprecated } from "../../../../../x_preact/common/hooks"
 
-import { ApplicationError } from "../../common/System/ApplicationError"
+import { ApplicationError } from "../../../../../x_preact/common/System/ApplicationError"
 
-import { RenewAuthInfo } from "../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/x_preact/Renew"
+import { RenewAuthInfo } from "../../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/x_preact/Renew"
 
-import { AuthenticatePassword } from "../../../auth/sign/password/authenticate/x_Action/Authenticate/x_preact/Authenticate"
-import { PasswordResetSession } from "../../../auth/sign/password/resetSession/start/x_Action/Start/x_preact/Start"
-import { RegisterPassword } from "../../../auth/sign/password/resetSession/register/x_Action/Register/x_preact/Register"
+import { AuthenticatePassword } from "../../../../../auth/sign/password/authenticate/x_Action/Authenticate/x_preact/Authenticate"
+import { PasswordResetSession } from "../../../../../auth/sign/password/resetSession/start/x_Action/Start/x_preact/Start"
+import { RegisterPassword } from "../../../../../auth/sign/password/resetSession/register/x_Action/Register/x_preact/Register"
 
 import {
     AuthSignEntryPoint,
     initialAuthSignViewState,
-} from "../../../x_main/public/auth/sign/entryPoint"
+} from "../entryPoint"
 
 export function EntryPoint({ view, terminate }: AuthSignEntryPoint): VNode {
     useTermination_deprecated(terminate)
