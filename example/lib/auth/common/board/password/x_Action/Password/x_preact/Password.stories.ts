@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
 
-import { View } from "./Password"
+import { PasswordBoardFieldProps, View } from "./Password"
 
 import { initMockPasswordBoardFieldAction } from "../mock"
 
@@ -38,7 +38,7 @@ type Props = Readonly<{
     help: string
 }>
 const template = storyTemplate<Props>((props) => {
-    return h(View, {
+    return h(View, <PasswordBoardFieldProps>{
         field: initMockPasswordBoardFieldAction(markBoardValue(props.password), characterState()),
         help: [props.help],
         state: {

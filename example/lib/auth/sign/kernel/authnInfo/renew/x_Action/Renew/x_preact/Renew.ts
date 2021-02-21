@@ -14,42 +14,53 @@ import { appendScript } from "../../../../../../../../x_preact/auth/Sign/script"
 
 import { ApplicationError } from "../../../../../../../../x_preact/common/System/ApplicationError"
 
-import { initialRenewAuthnInfoState, RenewAuthnInfoEntryPoint } from "../action"
+import {
+    initialRenewAuthnInfoState,
+    RenewAuthnInfoEntryPoint,
+    RenewAuthnInfoResource,
+    RenewAuthnInfoState,
+} from "../action"
 
 import { RenewAuthnInfoError } from "../../../data"
 
 export function RenewAuthInfo(entryPoint: RenewAuthnInfoEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
-    const state = useApplicationAction(resource.renew, initialRenewAuthnInfoState)
+    return h(View, <RenewAuthnInfoProps>{
+        ...resource,
+        state: useApplicationAction(resource.renew, initialRenewAuthnInfoState),        
+    })
+}
 
+export type RenewAuthnInfoProps = RenewAuthnInfoResource & Readonly<{ state: RenewAuthnInfoState }>
+export function View(props: RenewAuthnInfoProps): VNode {
     useLayoutEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
-        switch (state.type) {
+        switch (props.state.type) {
             case "try-to-instant-load":
-                appendScript(state.scriptPath, (script) => {
+                appendScript(props.state.scriptPath, (script) => {
                     script.onload = () => {
-                        resource.renew.succeedToInstantLoad()
+                        props.renew.succeedToInstantLoad()
                     }
                     script.onerror = () => {
-                        resource.renew.failedToInstantLoad()
+                        props.renew.failedToInstantLoad()
                     }
                 })
                 break
 
             case "try-to-load":
-                appendScript(state.scriptPath, (script) => {
+                appendScript(props.state.scriptPath, (script) => {
                     script.onerror = () => {
-                        resource.renew.loadError({
+                        props.renew.loadError({
                             type: "infra-error",
-                            err: `スクリプトのロードに失敗しました: ${state.type}`,
+                            err: `スクリプトのロードに失敗しました: ${props.state.type}`,
                         })
                     }
                 })
                 break
         }
-    }, [state])
+    }, [props.state])
 
-    switch (state.type) {
+    switch (props.state.type) {
         case "initial-renew":
         case "required-to-login":
             return EMPTY_CONTENT
@@ -71,11 +82,11 @@ export function RenewAuthInfo(entryPoint: RenewAuthnInfoEntryPoint): VNode {
             return delayedMessage()
 
         case "failed-to-renew":
-            return errorMessage(state.err)
+            return errorMessage(props.state.err)
 
         case "storage-error":
         case "load-error":
-            return h(ApplicationError, { err: state.err.err })
+            return h(ApplicationError, { err: props.state.err.err })
     }
 
     function delayedMessage() {

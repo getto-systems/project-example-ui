@@ -14,7 +14,7 @@ import { initialLogoutState, LogoutResource, LogoutState } from "../action"
 import { StorageError } from "../../../../../../../../z_getto/storage/data"
 
 export function Logout(resource: LogoutResource): VNode {
-    return h(View, {
+    return h(View, <LogoutProps>{
         ...resource,
         state: useApplicationAction(resource.logout, initialLogoutState),
     })

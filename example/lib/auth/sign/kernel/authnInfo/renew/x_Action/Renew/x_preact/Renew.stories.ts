@@ -1,41 +1,67 @@
 import { h } from "preact"
-import { useEffect } from "preact/hooks"
 
 import { storyTemplate } from "../../../../../../../../z_vendor/storybook/preact/story"
 
-import { RenewAuthInfo } from "./Renew"
+import { RenewAuthnInfoProps, View } from "./Renew"
 
-import { initMockPropsPasser } from "../../../../../../../../z_getto/application/mock"
-import { initMockRenewAuthnInfoAction, RenewAuthnInfoMockProps } from "../mock"
+import { initMockRenewAuthnInfoAction } from "../mock"
+
+import { RenewAuthnInfoState } from "../action"
+
+const renewOptions = [
+    "delayed",
+    "bad-request",
+    "server-error",
+    "bad-response",
+    "infra-error",
+] as const
 
 export default {
-    title: "Auth/Sign/AuthInfo/Renew",
+    title: "library/Auth/Sign/AuthInfo/Renew",
     argTypes: {
-        type: {
-            table: { disable: true },
+        renew: {
+            control: { type: "select", options: renewOptions },
         },
     },
 }
 
-type MockProps = RenewAuthnInfoMockProps
-const template = storyTemplate<MockProps>((args) => {
-    const passer = initMockPropsPasser<RenewAuthnInfoMockProps>()
-    const action = initMockRenewAuthnInfoAction(passer)
-    return h(Preview, { args })
+type Props = Readonly<{
+    renew: "delayed" | "bad-request" | "server-error" | "bad-response" | "infra-error"
+    err: string
+}>
+const template = storyTemplate<Props>((props) => {
+    return h(View, <RenewAuthnInfoProps>{
+        renew: initMockRenewAuthnInfoAction(),
+        state: state(),
+    })
 
-    function Preview(props: { args: MockProps }) {
-        useEffect(() => {
-            passer.update(props.args)
-        })
-        return h(RenewAuthInfo, {
-            resource: { renew: action },
-            terminate: () => null,
-        })
+    function state(): RenewAuthnInfoState {
+        switch (props.renew) {
+            case "delayed":
+                return { type: "delayed-to-renew" }
+
+            case "bad-request":
+                return { type: "failed-to-renew", err: { type: "bad-request" } }
+
+            case "server-error":
+                return { type: "failed-to-renew", err: { type: "server-error" } }
+
+            case "bad-response":
+                return {
+                    type: "failed-to-renew",
+                    err: { type: "bad-response", err: props.err },
+                }
+
+            case "infra-error":
+                return {
+                    type: "failed-to-renew",
+                    err: { type: "infra-error", err: props.err },
+                }
+        }
     }
 })
 
-export const Delayed = template({ type: "delayed" })
-export const BadRequest = template({ type: "bad-request" })
-export const ServerError = template({ type: "server-error" })
-export const BadResponse = template({ type: "bad-response", err: "bad response error" })
-export const InfraError = template({ type: "infra-error", err: "infra error" })
+export const Box = template({
+    renew: "delayed",
+    err: "",
+})
