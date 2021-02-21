@@ -9,9 +9,6 @@ import { initStartPasswordResetSessionSimulate } from "../../../../auth/sign/pas
 
 import { newAuthSignLinkResource } from "../../../../auth/sign/common/searchParams/x_Action/Link/impl"
 
-import { initFormAction } from "../../../../z_getto/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../../auth/common/field/loginID/main/loginID"
-
 import { Clock } from "../../../../z_getto/infra/clock/infra"
 import { AuthenticatePasswordResult } from "../../../../auth/sign/password/authenticate/infra"
 import { RegisterPasswordResult } from "../../../../auth/sign/password/resetSession/register/infra"
@@ -47,9 +44,10 @@ import { initAuthenticatePasswordCoreAction } from "../../../../auth/sign/passwo
 import { initRegisterPasswordCoreAction } from "../../../../auth/sign/password/resetSession/register/x_Action/Register/Core/impl"
 import { initRegisterPasswordFormAction } from "../../../../auth/sign/password/resetSession/register/x_Action/Register/Form/impl"
 import { initStartPasswordResetSessionFormAction } from "../../../../auth/sign/password/resetSession/start/x_Action/Start/Form/impl"
-import { initStartPasswordResetSessionAction } from "../../../../auth/sign/password/resetSession/start/x_Action/Start/Core/impl"
+import { initStartPasswordResetSessionCoreAction } from "../../../../auth/sign/password/resetSession/start/x_Action/Start/Core/impl"
 import { toAuthenticatePasswordEntryPoint } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/impl"
 import { toRegisterPasswordEntryPoint } from "../../../../auth/sign/password/resetSession/register/x_Action/Register/impl"
+import { toStartPasswordResetSessionEntryPoint } from "../../../../auth/sign/password/resetSession/start/x_Action/Start/impl"
 
 const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
 const SUCCEED_TO_AUTH_AT = new Date("2020-01-01 10:00:00")
@@ -92,10 +90,10 @@ describe("LoginView", () => {
                         expect(stack[1]).toMatchObject({ type: "password-login" })
 
                         expect(state.entryPoint.resource.href.passwordLogin()).toEqual(
-                            "?_password_login"
+                            "?_password_login",
                         )
                         expect(state.entryPoint.resource.href.passwordResetSession()).toEqual(
-                            "?_password_reset=start"
+                            "?_password_reset=start",
                         )
 
                         terminates.forEach((terminate) => terminate())
@@ -266,21 +264,21 @@ function standardLoginView() {
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
-                clock
+                clock,
             ),
         passwordLogin: () =>
             standardPasswordLoginEntryPoint(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
-                clock
+                clock,
             ),
         passwordReset: () =>
             standardPasswordResetResource(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
-                clock
+                clock,
             ),
         passwordResetSession: () => standardPasswordResetSessionResource(),
     })
@@ -298,21 +296,21 @@ function passwordResetSessionLoginView() {
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
-                clock
+                clock,
             ),
         passwordLogin: () =>
             standardPasswordLoginEntryPoint(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
-                clock
+                clock,
             ),
         passwordReset: () =>
             standardPasswordResetResource(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
-                clock
+                clock,
             ),
         passwordResetSession: () => standardPasswordResetSessionResource(),
     })
@@ -330,21 +328,21 @@ function passwordResetLoginView() {
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
-                clock
+                clock,
             ),
         passwordLogin: () =>
             standardPasswordLoginEntryPoint(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
-                clock
+                clock,
             ),
         passwordReset: () =>
             standardPasswordResetResource(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
-                clock
+                clock,
             ),
         passwordResetSession: () => standardPasswordResetSessionResource(),
     })
@@ -356,7 +354,7 @@ function standardPasswordLoginEntryPoint(
     currentURL: URL,
     apiCredentials: ApiCredentialRepository,
     authnInfos: AuthnInfoRepository,
-    clock: Clock
+    clock: Clock,
 ) {
     return toAuthenticatePasswordEntryPoint({
         core: initAuthenticatePasswordCoreAction(
@@ -388,7 +386,7 @@ function standardPasswordLoginEntryPoint(
                     delayed,
                 },
             },
-            initGetSecureScriptPathLocationInfo(currentURL)
+            initGetSecureScriptPathLocationInfo(currentURL),
         ),
 
         form: initAuthenticatePasswordFormAction({
@@ -400,7 +398,7 @@ function standardPasswordResetResource(
     currentURL: URL,
     apiCredentials: ApiCredentialRepository,
     authnInfos: AuthnInfoRepository,
-    clock: Clock
+    clock: Clock,
 ) {
     return toRegisterPasswordEntryPoint({
         core: initRegisterPasswordCoreAction(
@@ -435,7 +433,7 @@ function standardPasswordResetResource(
             {
                 ...initGetSecureScriptPathLocationInfo(currentURL),
                 ...initRegisterPasswordLocationInfo(currentURL),
-            }
+            },
         ),
 
         form: initRegisterPasswordFormAction({
@@ -444,8 +442,8 @@ function standardPasswordResetResource(
     })
 }
 function standardPasswordResetSessionResource() {
-    return {
-        start: initStartPasswordResetSessionAction({
+    return toStartPasswordResetSessionEntryPoint({
+        core: initStartPasswordResetSessionCoreAction({
             start: {
                 start: initStartPasswordResetSessionSimulate(simulateStartSession, {
                     wait_millisecond: 0,
@@ -469,24 +467,17 @@ function standardPasswordResetSessionResource() {
                 wait,
             },
         }),
-        form: initStartPasswordResetSessionFormAction(formMaterial()),
-    }
 
-    function formMaterial() {
-        const form = initFormAction()
-        const loginID = initLoginIDFormFieldAction()
-        return {
-            validation: form.validation(),
-            history: form.history(),
-            loginID: loginID.field(),
-        }
-    }
+        form: initStartPasswordResetSessionFormAction({
+            stack: newBoardValidateStack(),
+        }),
+    })
 }
 function standardRenewCredentialEntryPoint(
     currentURL: URL,
     apiCredentials: ApiCredentialRepository,
     authnInfos: AuthnInfoRepository,
-    clock: Clock
+    clock: Clock,
 ) {
     return toRenewAuthnInfoEntryPoint(
         initRenewAuthnInfoAction(
@@ -522,8 +513,8 @@ function standardRenewCredentialEntryPoint(
                     },
                 },
             },
-            initGetSecureScriptPathLocationInfo(currentURL)
-        )
+            initGetSecureScriptPathLocationInfo(currentURL),
+        ),
     )
 }
 

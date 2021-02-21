@@ -11,29 +11,23 @@ import {
     StartPasswordResetSessionSessionResult,
 } from "../../infra"
 
-import { StartPasswordResetSessionState } from "./Core/action"
+import { StartPasswordResetSessionCoreState } from "./Core/action"
 
 import { markPasswordResetSessionID } from "../../data"
-import {
-    markInputString,
-    toValidationError,
-} from "../../../../../../../z_getto/getto-form/form/data"
-import { initFormAction } from "../../../../../../../z_getto/getto-form/main/form"
-import { initLoginIDFormFieldAction } from "../../../../../../common/field/loginID/main/loginID"
 import {
     checkPasswordResetSessionStatusEventHasDone,
     startPasswordResetSessionEventHasDone,
 } from "../../impl"
 import { delayed, wait } from "../../../../../../../z_getto/infra/delayed/core"
-import {
-    initAsyncActionTester_legacy,
-    initSyncActionChecker_legacy,
-} from "../../../../../../../z_getto/application/testHelper"
+import { initAsyncActionTester_legacy } from "../../../../../../../z_getto/application/testHelper"
 import { initSendPasswordResetSessionTokenSimulate } from "../../infra/remote/sendToken/simulate"
 import { initGetPasswordResetSessionStatusSimulate } from "../../infra/remote/getStatus/simulate"
 import { initStartPasswordResetSessionFormAction } from "./Form/impl"
-import { initStartPasswordResetSessionAction } from "./Core/impl"
-import { StartPasswordResetSessionResource } from "./resource"
+import { initStartPasswordResetSessionCoreAction } from "./Core/impl"
+import { StartPasswordResetSessionAction } from "./action"
+import { newBoardValidateStack } from "../../../../../../../z_getto/board/kernel/infra/stack"
+import { standardBoardValueStore } from "../../../../../../../z_getto/board/input/x_Action/Input/testHelper"
+import { markBoardValue } from "../../../../../../../z_getto/board/kernel/data"
 
 const VALID_LOGIN = { loginID: "login-id" } as const
 const SESSION_ID = "session-id" as const
@@ -42,11 +36,11 @@ describe("PasswordResetSession", () => {
     test("submit valid login-id", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
-        resource.start.addStateHandler(initTester())
+        resource.core.addStateHandler(initTester())
 
-        resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
+        resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
 
-        resource.start.submit(resource.form.getStartSessionFields())
+        resource.core.submit(resource.form.validate.get())
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -64,11 +58,11 @@ describe("PasswordResetSession", () => {
         // wait for delayed timeout
         const { resource } = waitPasswordResetSessionResource()
 
-        resource.start.addStateHandler(initTester())
+        resource.core.addStateHandler(initTester())
 
-        resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
+        resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
 
-        resource.start.submit(resource.form.getStartSessionFields())
+        resource.core.submit(resource.form.validate.get())
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -87,11 +81,11 @@ describe("PasswordResetSession", () => {
         // wait for send token check limit
         const { resource } = longSendingPasswordResetSessionResource()
 
-        resource.start.addStateHandler(initTester())
+        resource.core.addStateHandler(initTester())
 
-        resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
+        resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
 
-        resource.start.submit(resource.form.getStartSessionFields())
+        resource.core.submit(resource.form.validate.get())
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -136,12 +130,12 @@ describe("PasswordResetSession", () => {
     test("submit without fields", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
-        resource.start.addStateHandler(initTester())
+        resource.core.addStateHandler(initTester())
 
         // try to start session without fields
         //resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
 
-        resource.start.submit(resource.form.getStartSessionFields())
+        resource.core.submit(resource.form.validate.get())
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -153,200 +147,13 @@ describe("PasswordResetSession", () => {
         }
     })
 
-    describe("form", () => {
-        test("initial without input field", (done) => {
-            const { resource } = standardPasswordResetSessionResource()
+    test("clear", () => {
+        const { resource } = standardPasswordResetSessionResource()
 
-            const checker = initChecker()
-            resource.form.addStateHandler(checker.handler)
+        resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
+        resource.form.clear()
 
-            expect(resource.form.getStartSessionFields()).toEqual({ success: false })
-
-            checker.done()
-
-            function initChecker() {
-                return initSyncActionChecker_legacy((stack) => {
-                    expect(stack).toEqual([
-                        {
-                            validation: "invalid",
-                            history: { undo: false, redo: false },
-                        },
-                    ])
-                    done()
-                })
-            }
-        })
-
-        test("valid with input valid field", (done) => {
-            const { resource } = standardPasswordResetSessionResource()
-
-            const checker = initChecker()
-            resource.form.addStateHandler(checker.handler)
-
-            resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
-            resource.form.loginID.input.change()
-
-            expect(resource.form.getStartSessionFields()).toEqual({
-                success: true,
-                value: {
-                    loginID: VALID_LOGIN.loginID,
-                },
-            })
-
-            checker.done()
-
-            function initChecker() {
-                return initSyncActionChecker_legacy((stack) => {
-                    expect(stack).toEqual([
-                        {
-                            validation: "valid",
-                            history: { undo: false, redo: false },
-                        },
-                        {
-                            validation: "valid",
-                            history: { undo: true, redo: false },
-                        },
-                        {
-                            validation: "valid",
-                            history: { undo: true, redo: false },
-                        },
-                    ])
-                    done()
-                })
-            }
-        })
-
-        test("invalid with input invalid field", (done) => {
-            const { resource } = standardPasswordResetSessionResource()
-
-            const checker = initChecker()
-            resource.form.addStateHandler(checker.handler)
-
-            resource.form.loginID.input.input(markInputString(""))
-            resource.form.loginID.input.change()
-
-            expect(resource.form.getStartSessionFields()).toEqual({ success: false })
-
-            checker.done()
-
-            function initChecker() {
-                return initSyncActionChecker_legacy((stack) => {
-                    expect(stack).toEqual([
-                        {
-                            validation: "invalid",
-                            history: { undo: false, redo: false },
-                        },
-                        {
-                            validation: "invalid",
-                            history: { undo: false, redo: false },
-                        },
-                    ])
-                    done()
-                })
-            }
-        })
-
-        test("undo / redo", (done) => {
-            const { resource } = standardPasswordResetSessionResource()
-
-            const checker = initChecker()
-            resource.form.loginID.input.addStateHandler(checker.handler)
-
-            resource.form.undo()
-
-            resource.form.loginID.input.input(markInputString("loginID-a"))
-            resource.form.loginID.input.change()
-
-            resource.form.undo()
-            resource.form.redo()
-
-            resource.form.loginID.input.input(markInputString("loginID-b"))
-            resource.form.loginID.input.change()
-
-            resource.form.undo()
-
-            resource.form.loginID.input.input(markInputString("loginID-c"))
-            resource.form.loginID.input.change()
-
-            resource.form.redo()
-
-            checker.done()
-
-            function initChecker() {
-                return initSyncActionChecker_legacy((stack) => {
-                    expect(stack).toEqual([
-                        { value: "loginID-a" },
-                        { value: "" },
-                        { value: "loginID-a" },
-                        { value: "loginID-b" },
-                        { value: "loginID-a" },
-                        { value: "loginID-c" },
-                    ])
-                    done()
-                })
-            }
-        })
-
-        test("removeStateHandler", (done) => {
-            const { resource } = standardPasswordResetSessionResource()
-
-            const checker = initChecker()
-            resource.form.loginID.input.addStateHandler(checker.handler)
-            resource.form.loginID.input.removeStateHandler(checker.handler)
-
-            resource.form.loginID.input.input(markInputString("loginID-a"))
-
-            checker.done()
-
-            function initChecker() {
-                return initSyncActionChecker_legacy((stack) => {
-                    expect(stack).toEqual([])
-                    done()
-                })
-            }
-        })
-
-        test("terminate", (done) => {
-            const { resource } = standardPasswordResetSessionResource()
-
-            const checker = initChecker()
-            resource.form.loginID.input.addStateHandler(checker.handler)
-
-            resource.form.terminate()
-
-            resource.form.loginID.input.input(markInputString("loginID-a"))
-
-            checker.done()
-
-            function initChecker() {
-                return initSyncActionChecker_legacy((stack) => {
-                    expect(stack).toEqual([])
-                    done()
-                })
-            }
-        })
-    })
-
-    describe("fields", () => {
-        describe("loginID", () => {
-            test("invalid with empty string", (done) => {
-                const { resource } = standardPasswordResetSessionResource()
-
-                const checker = initChecker()
-                resource.form.loginID.addStateHandler(checker.handler)
-
-                resource.form.loginID.input.input(markInputString(""))
-
-                checker.done()
-
-                function initChecker() {
-                    return initSyncActionChecker_legacy((stack) => {
-                        expect(stack).toEqual([{ result: toValidationError(["empty"]) }])
-                        done()
-                    })
-                }
-            })
-        })
+        expect(resource.form.loginID.input.get()).toEqual("")
     })
 })
 
@@ -376,11 +183,11 @@ type PasswordResetSessionTestRemoteAccess = Readonly<{
 }>
 
 function newTestPasswordResetSessionResource(
-    remote: PasswordResetSessionTestRemoteAccess
-): StartPasswordResetSessionResource {
+    remote: PasswordResetSessionTestRemoteAccess,
+): StartPasswordResetSessionAction {
     const config = standardConfig()
-    return {
-        start: initStartPasswordResetSessionAction({
+    const action = {
+        core: initStartPasswordResetSessionCoreAction({
             start: {
                 ...remote,
                 config: config.session.start,
@@ -392,18 +199,15 @@ function newTestPasswordResetSessionResource(
                 wait,
             },
         }),
-        form: initStartPasswordResetSessionFormAction(formMaterial()),
+
+        form: initStartPasswordResetSessionFormAction({
+            stack: newBoardValidateStack(),
+        }),
     }
 
-    function formMaterial() {
-        const form = initFormAction()
-        const loginID = initLoginIDFormFieldAction()
-        return {
-            validation: form.validation(),
-            history: form.history(),
-            loginID: loginID.field(),
-        }
-    }
+    action.form.loginID.input.linkStore(standardBoardValueStore())
+
+    return action
 }
 
 function standardConfig() {
@@ -461,7 +265,7 @@ function simulateSendToken(): SendPasswordResetSessionTokenResult {
 }
 function getStatusRemoteAccess(
     responseCollection: GetPasswordResetSessionStatusResponse[],
-    interval: WaitTime
+    interval: WaitTime,
 ): GetPasswordResetSessionStatusRemote {
     let position = 0
     return initGetPasswordResetSessionStatusSimulate((): GetPasswordResetSessionStatusResult => {
@@ -497,7 +301,7 @@ function longSendingGetStatusResponse(): GetPasswordResetSessionStatusResponse[]
 }
 
 function initAsyncTester() {
-    return initAsyncActionTester_legacy((state: StartPasswordResetSessionState) => {
+    return initAsyncActionTester_legacy((state: StartPasswordResetSessionCoreState) => {
         switch (state.type) {
             case "initial-reset-session":
                 return false

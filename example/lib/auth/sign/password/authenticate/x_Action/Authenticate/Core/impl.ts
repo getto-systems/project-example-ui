@@ -17,10 +17,10 @@ import {
     AuthenticatePasswordCoreForeground,
 } from "./action"
 
-import { FormConvertResult } from "../../../../../../../z_getto/getto-form/form/data"
 import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
 import { AuthenticatePasswordFields } from "../../../data"
 import { AuthnInfo } from "../../../../../kernel/authnInfo/kernel/data"
+import { BoardConvertResult } from "../../../../../../../z_getto/board/kernel/data"
 
 export type AuthenticatePasswordCoreBase = AuthenticatePasswordCoreForegroundBase &
     AuthenticatePasswordCoreBackgroundBase
@@ -35,18 +35,18 @@ export type AuthenticatePasswordCoreBackgroundBase = Readonly<{
 
 export function initAuthenticatePasswordCoreAction(
     infra: AuthenticatePasswordCoreBase,
-    locationInfo: GetSecureScriptPathLocationInfo
+    locationInfo: GetSecureScriptPathLocationInfo,
 ): AuthenticatePasswordCoreAction {
     return initAuthenticatePasswordCoreAction_merge(
         infra,
         locationInfo,
-        initAuthenticatePasswordCoreBackground(infra)
+        initAuthenticatePasswordCoreBackground(infra),
     )
 }
 export function initAuthenticatePasswordCoreAction_merge(
     infra: AuthenticatePasswordCoreForegroundBase,
     locationInfo: GetSecureScriptPathLocationInfo,
-    background: AuthenticatePasswordCoreBackground
+    background: AuthenticatePasswordCoreBackground,
 ): AuthenticatePasswordCoreAction {
     return new Action({
         ...initAuthenticatePasswordCoreForeground(infra, locationInfo),
@@ -55,7 +55,7 @@ export function initAuthenticatePasswordCoreAction_merge(
 }
 function initAuthenticatePasswordCoreForeground(
     infra: AuthenticatePasswordCoreForegroundBase,
-    locationInfo: GetSecureScriptPathLocationInfo
+    locationInfo: GetSecureScriptPathLocationInfo,
 ): AuthenticatePasswordCoreForeground {
     return {
         startContinuousRenew: startContinuousRenewAuthnInfo(infra.startContinuousRenew),
@@ -63,7 +63,7 @@ function initAuthenticatePasswordCoreForeground(
     }
 }
 export function initAuthenticatePasswordCoreBackground(
-    infra: AuthenticatePasswordCoreBackgroundBase
+    infra: AuthenticatePasswordCoreBackgroundBase,
 ): AuthenticatePasswordCoreBackground {
     return {
         authenticate: authenticatePassword(infra.authenticate),
@@ -80,7 +80,7 @@ class Action
         this.material = material
     }
 
-    submit(fields: FormConvertResult<AuthenticatePasswordFields>): void {
+    submit(fields: BoardConvertResult<AuthenticatePasswordFields>): void {
         this.material.authenticate(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-login":

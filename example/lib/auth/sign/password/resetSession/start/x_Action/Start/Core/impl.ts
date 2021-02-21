@@ -1,43 +1,41 @@
 import { ApplicationAbstractAction } from "../../../../../../../../z_getto/application/impl"
 
-import {
-    StartPasswordResetSessionMaterial,
-    StartPasswordResetSessionAction,
-    StartPasswordResetSessionState,
-} from "./action"
+import { checkPasswordResetSessionStatus, startPasswordResetSession } from "../../../impl"
 
-import {
-    PasswordResetSessionID,
-    PasswordResetSessionFields,
-} from "../../../data"
-import { FormConvertResult } from "../../../../../../../../z_getto/getto-form/form/data"
 import {
     CheckPasswordResetSessionStatusInfra,
     StartPasswordResetSessionInfra,
 } from "../../../infra"
-import {
-    checkPasswordResetSessionStatus,
-    startPasswordResetSession,
-} from "../../../impl"
 
-export type StartPasswordResetSessionBase = Readonly<{
+import {
+    StartPasswordResetSessionCoreMaterial,
+    StartPasswordResetSessionCoreAction,
+    StartPasswordResetSessionCoreState,
+} from "./action"
+
+import { PasswordResetSessionID, PasswordResetSessionFields } from "../../../data"
+import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
+
+export type StartPasswordResetSessionCoreBase = Readonly<{
     start: StartPasswordResetSessionInfra
     checkStatus: CheckPasswordResetSessionStatusInfra
 }>
 
-export function initStartPasswordResetSessionAction(
-    base: StartPasswordResetSessionBase
-): StartPasswordResetSessionAction {
-    return initStartPasswordResetSessionAction_merge(initStartPasswordResetSessionMaterial(base))
+export function initStartPasswordResetSessionCoreAction(
+    base: StartPasswordResetSessionCoreBase,
+): StartPasswordResetSessionCoreAction {
+    return initStartPasswordResetSessionCoreAction_merge(
+        initStartPasswordResetSessionCoreMaterial(base),
+    )
 }
-export function initStartPasswordResetSessionAction_merge(
-    material: StartPasswordResetSessionMaterial
-): StartPasswordResetSessionAction {
+export function initStartPasswordResetSessionCoreAction_merge(
+    material: StartPasswordResetSessionCoreMaterial,
+): StartPasswordResetSessionCoreAction {
     return new Action(material)
 }
-export function initStartPasswordResetSessionMaterial(
-    base: StartPasswordResetSessionBase
-): StartPasswordResetSessionMaterial {
+export function initStartPasswordResetSessionCoreMaterial(
+    base: StartPasswordResetSessionCoreBase,
+): StartPasswordResetSessionCoreMaterial {
     return {
         start: startPasswordResetSession(base.start),
         checkStatus: checkPasswordResetSessionStatus(base.checkStatus),
@@ -45,16 +43,16 @@ export function initStartPasswordResetSessionMaterial(
 }
 
 class Action
-    extends ApplicationAbstractAction<StartPasswordResetSessionState>
-    implements StartPasswordResetSessionAction {
-    material: StartPasswordResetSessionMaterial
+    extends ApplicationAbstractAction<StartPasswordResetSessionCoreState>
+    implements StartPasswordResetSessionCoreAction {
+    material: StartPasswordResetSessionCoreMaterial
 
-    constructor(material: StartPasswordResetSessionMaterial) {
+    constructor(material: StartPasswordResetSessionCoreMaterial) {
         super()
         this.material = material
     }
 
-    submit(fields: FormConvertResult<PasswordResetSessionFields>): void {
+    submit(fields: BoardConvertResult<PasswordResetSessionFields>): void {
         this.material.start(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-start-session":

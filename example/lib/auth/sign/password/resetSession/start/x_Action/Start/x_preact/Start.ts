@@ -12,16 +12,16 @@ import {
 import { loginBox } from "../../../../../../../../z_vendor/getto-css/preact/layout/login"
 import { v_medium } from "../../../../../../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useApplicationAction, useTermination_deprecated } from "../../../../../../../../x_preact/common/hooks"
+import { useApplicationAction, useEntryPoint } from "../../../../../../../../x_preact/common/hooks"
 import { siteInfo } from "../../../../../../../../x_preact/common/site"
 import { icon, spinner } from "../../../../../../../../x_preact/common/icon"
 
-import { LoginIDFormField } from "../../../../../../../../x_preact/auth/Sign/field/loginID"
-
-import { PasswordResetSessionEntryPoint } from "../../../../../../../../x_main/public/auth/sign/entryPoint"
-
-import { initialStartPasswordResetSessionState } from "../Core/action"
-import { initialFormContainerComponentState } from "../../../../../../../../z_getto/getto-form/x_Resource/Form/component"
+import {
+    initialStartPasswordResetSessionState,
+    StartPasswordResetSessionEntryPoint,
+    StartPasswordResetSessionResource,
+    StartPasswordResetSessionResourceState,
+} from "../action"
 
 import {
     PasswordResetDestination,
@@ -30,22 +30,37 @@ import {
     CheckPasswordResetSessionStatusError,
     SendPasswordResetSessionTokenError,
 } from "../../../data"
+import { LoginIDBoard } from "../../../../../../../common/board/loginID/x_Action/LoginID/x_preact/LoginID"
 
-export function PasswordResetSession({
-    resource,
-    terminate,
-}: PasswordResetSessionEntryPoint): VNode {
-    useTermination_deprecated(terminate)
+export function PasswordResetSession(entryPoint: StartPasswordResetSessionEntryPoint): VNode {
+    const resource = useEntryPoint(entryPoint)
+    return h(View, <StartPasswordResetSessionProps>{
+        ...resource,
+        state: {
+            core: useApplicationAction(
+                resource.start.core,
+                initialStartPasswordResetSessionState.core,
+            ),
+            form: useApplicationAction(
+                resource.start.form.validate,
+                initialStartPasswordResetSessionState.form,
+            ),
+        },
+    })
+}
 
-    const state = useApplicationAction(resource.start, initialStartPasswordResetSessionState)
-    const formState = useApplicationAction(resource.form, initialFormContainerComponentState)
-
-    switch (state.type) {
+export type StartPasswordResetSessionProps = StartPasswordResetSessionResource &
+    Readonly<{ state: StartPasswordResetSessionResourceState }>
+export function View(props: StartPasswordResetSessionProps): VNode {
+    switch (props.state.core.type) {
         case "initial-reset-session":
             return startSessionForm({ state: "start" })
 
         case "failed-to-start-session":
-            return startSessionForm({ state: "start", error: startSessionError(state.err) })
+            return startSessionForm({
+                state: "start",
+                error: startSessionError(props.state.core.err),
+            })
 
         case "try-to-start-session":
             return startSessionForm({ state: "connecting" })
@@ -57,16 +72,26 @@ export function PasswordResetSession({
             return checkStatusMessage({ type: "initial" })
 
         case "retry-to-check-status":
-            return checkStatusMessage({ type: "retry", dest: state.dest, status: state.status })
+            return checkStatusMessage({
+                type: "retry",
+                dest: props.state.core.dest,
+                status: props.state.core.status,
+            })
 
         case "succeed-to-send-token":
-            return successMessage(state.dest)
+            return successMessage(props.state.core.dest)
 
         case "failed-to-check-status":
-            return errorMessage("ステータスの取得に失敗しました", checkStatusError(state.err))
+            return errorMessage(
+                "ステータスの取得に失敗しました",
+                checkStatusError(props.state.core.err),
+            )
 
         case "failed-to-send-token":
-            return errorMessage("リセットトークンの送信に失敗しました", sendTokenError(state.err))
+            return errorMessage(
+                "リセットトークンの送信に失敗しました",
+                sendTokenError(props.state.core.err),
+            )
     }
 
     type StartSessionFormState = "start" | "connecting"
@@ -86,13 +111,13 @@ export function PasswordResetSession({
             loginBox(siteInfo(), {
                 title: startSessionTitle(),
                 body: [
-                    h(LoginIDFormField, {
-                        loginID: resource.form.loginID,
+                    h(LoginIDBoard, {
+                        field: props.start.form.loginID,
                         help: ["このログインIDに設定された送信先にリセットトークンを送信します"],
                     }),
                 ],
                 footer: [buttons({ left: button(), right: loginLink() }), error()],
-            })
+            }),
         )
 
         function button() {
@@ -107,7 +132,7 @@ export function PasswordResetSession({
             function startSessionButton() {
                 const label = "トークン送信"
 
-                switch (formState.validation) {
+                switch (props.state.form) {
                     case "initial":
                         return button_send({ state: "normal", label, onClick })
 
@@ -120,7 +145,7 @@ export function PasswordResetSession({
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    resource.start.submit(resource.form.getStartSessionFields())
+                    props.start.core.submit(props.start.form.validate.get())
                 }
             }
             function connectingButton(): VNode {
@@ -198,7 +223,7 @@ export function PasswordResetSession({
     }
 
     function loginLink(): VNode {
-        return html`<a href="${resource.href.passwordLogin()}">
+        return html`<a href="${props.href.passwordLogin()}">
             ${icon("user")} ログインIDとパスワードでログインする
         </a>`
     }

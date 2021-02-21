@@ -5,28 +5,29 @@ import {
     StartPasswordResetSessionMethod,
 } from "../../../method"
 
-import { FormConvertResult } from "../../../../../../../../z_getto/getto-form/form/data"
-import { PasswordResetSessionFields } from "../../../data"
 import {
     CheckPasswordResetSessionStatusEvent,
     StartPasswordResetSessionEvent,
 } from "../../../event"
 
-export interface StartPasswordResetSessionAction
-    extends ApplicationAction<StartPasswordResetSessionState> {
-    submit(fields: FormConvertResult<PasswordResetSessionFields>): void
+import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
+import { PasswordResetSessionFields } from "../../../data"
+
+export interface StartPasswordResetSessionCoreAction
+    extends ApplicationAction<StartPasswordResetSessionCoreState> {
+    submit(fields: BoardConvertResult<PasswordResetSessionFields>): void
 }
 
-export type StartPasswordResetSessionMaterial = Readonly<{
+export type StartPasswordResetSessionCoreMaterial = Readonly<{
     start: StartPasswordResetSessionMethod
     checkStatus: CheckPasswordResetSessionStatusMethod
 }>
 
-export type StartPasswordResetSessionState =
+export type StartPasswordResetSessionCoreState =
     | Readonly<{ type: "initial-reset-session" }>
     | Exclude<StartPasswordResetSessionEvent, { type: "succeed-to-start-session" }>
     | CheckPasswordResetSessionStatusEvent
 
-export const initialStartPasswordResetSessionState: StartPasswordResetSessionState = {
+export const initialStartPasswordResetSessionCoreState: StartPasswordResetSessionCoreState = {
     type: "initial-reset-session",
 }

@@ -1,42 +1,59 @@
-import { newStartPasswordResetSessionProxy } from "../../Core/main/worker/foreground"
-
-import { newStartPasswordResetSessionResource_merge } from "../core"
+import {
+    WorkerAbstractProxy,
+    WorkerProxy,
+} from "../../../../../../../../../z_getto/application/worker/foreground"
 
 import {
-    StartPasswordResetSessionResourceProxyMessage,
-    StartPasswordResetSessionResourceProxyResponse,
+    StartPasswordResetSessionProxyMaterial,
+    StartPasswordResetSessionProxyMessage,
+    StartPasswordResetSessionProxyResponse,
 } from "./message"
 
-import { StartPasswordResetSessionResource } from "../../resource"
+import { StartPasswordResetSessionCoreMaterial } from "../../Core/action"
 
-export type StartPasswordResetSessionResourceProxy = Readonly<{
-    resource: StartPasswordResetSessionResource
-    resolve: Resolve<StartPasswordResetSessionResourceProxyResponse>
-}>
+export type StartPasswordResetSessionProxy = WorkerProxy<
+    StartPasswordResetSessionCoreMaterial,
+    StartPasswordResetSessionProxyMessage,
+    StartPasswordResetSessionProxyResponse
+>
+export function newStartPasswordResetSessionProxy(
+    post: Post<StartPasswordResetSessionProxyMessage>,
+): StartPasswordResetSessionProxy {
+    return new Proxy(post)
+}
 
-export function newStartPasswordResetSessionResourceProxy(
-    post: Post<StartPasswordResetSessionResourceProxyMessage>
-): StartPasswordResetSessionResourceProxy {
-    const proxy = {
-        start: newStartPasswordResetSessionProxy((message) => post({ type: "start", message })),
+class Proxy
+    extends WorkerAbstractProxy<StartPasswordResetSessionProxyMessage>
+    implements StartPasswordResetSessionProxy {
+    material: StartPasswordResetSessionProxyMaterial
+
+    constructor(post: Post<StartPasswordResetSessionProxyMessage>) {
+        super(post)
+        this.material = {
+            start: this.method("start", (message) => message),
+            checkStatus: this.method("checkStatus", (message) => message),
+        }
     }
-    return {
-        resource: newStartPasswordResetSessionResource_merge({
-            start: proxy.start.background(),
-        }),
-        resolve: (response) => {
-            switch (response.type) {
-                case "start":
-                    proxy.start.resolve(response.response)
-                    return
-            }
-        },
+
+    background(): StartPasswordResetSessionCoreMaterial {
+        return {
+            start: (fields, post) => this.material.start.call({ fields }, post),
+            checkStatus: (sessionID, post) => this.material.checkStatus.call({ sessionID }, post),
+        }
+    }
+    resolve(response: StartPasswordResetSessionProxyResponse): void {
+        switch (response.method) {
+            case "start":
+                this.material.start.resolve(response)
+                break
+
+            case "checkStatus":
+                this.material.checkStatus.resolve(response)
+                break
+        }
     }
 }
 
 interface Post<M> {
     (message: M): void
-}
-interface Resolve<R> {
-    (response: R): void
 }
