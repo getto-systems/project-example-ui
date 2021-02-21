@@ -1,5 +1,7 @@
+import { BoardValueStore } from "../../infra"
+
 import { BoardValue } from "../../../kernel/data"
-import { BoardValueStore, InputBoardValueType } from "../../data"
+import { InputBoardValueType } from "../../data"
 
 export type InputBoardValueResource = Readonly<{
     type: InputBoardValueType

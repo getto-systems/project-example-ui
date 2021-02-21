@@ -1,5 +1,3 @@
-import { BoardValue } from "../kernel/data"
-
 export const inputBoardValueTypes = [
     "text",
     "password",
@@ -20,8 +18,3 @@ export type InputBoardValueType =
     | "email"
     | "date"
     | "time"
-
-export interface BoardValueStore {
-    get(): BoardValue
-    set(value: BoardValue): void
-}
