@@ -3,7 +3,6 @@ import { MockAction_simple } from "../../../../../../z_getto/application/mock"
 
 import {
     CheckPasswordCharacterAction,
-    CheckPasswordCharacterState,
     PasswordBoardFieldAction,
     TogglePasswordDisplayBoardAction,
     TogglePasswordDisplayBoardState,
@@ -11,16 +10,20 @@ import {
     ValidatePasswordState,
 } from "./action"
 
-import { BoardConvertResult } from "../../../../../../z_getto/board/kernel/data"
+import { BoardConvertResult, BoardValue } from "../../../../../../z_getto/board/kernel/data"
 import { Password } from "../../../../password/data"
+import { PasswordCharacterState } from "./data"
 
-export function initMockPasswordBoardFieldAction(): PasswordBoardFieldAction {
+export function initMockPasswordBoardFieldAction(
+    password: BoardValue,
+    characterState: PasswordCharacterState
+): PasswordBoardFieldAction {
     return {
-        input: initMockInputBoardValueAction(),
+        input: initMockInputBoardValueAction(password),
         validate: new Action(),
         clear: () => null,
         toggle: new ToggleAction(),
-        passwordCharacter: new CheckAction(),
+        passwordCharacter: new CheckAction(characterState),
     }
 }
 
@@ -46,6 +49,14 @@ class ToggleAction
     }
 }
 
-class CheckAction
-    extends MockAction_simple<CheckPasswordCharacterState>
-    implements CheckPasswordCharacterAction {}
+class CheckAction implements CheckPasswordCharacterAction {
+    state: PasswordCharacterState
+
+    constructor(state: PasswordCharacterState) {
+        this.state = state
+    }
+
+    check(): PasswordCharacterState {
+        return this.state
+    }
+}

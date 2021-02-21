@@ -15,8 +15,6 @@ import { InputBoard } from "../../../../../../../z_getto/board/input/x_Action/In
 
 import { initialValidateBoardFieldState } from "../../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
 import {
-    CheckPasswordCharacterState,
-    initialCheckPasswordCharacterState,
     initialTogglePasswordDisplayBoardState,
     PasswordBoardFieldResource,
     TogglePasswordDisplayBoardState,
@@ -37,10 +35,6 @@ export function PasswordBoard(resource: Resource): VNode {
                 resource.field.toggle,
                 initialTogglePasswordDisplayBoardState
             ),
-            passwordCharacter: useApplicationAction(
-                resource.field.passwordCharacter,
-                initialCheckPasswordCharacterState
-            ),
         },
     })
 }
@@ -50,7 +44,6 @@ export type PasswordBoardFieldProps = Resource &
         state: Readonly<{
             validate: ValidatePasswordState
             toggle: TogglePasswordDisplayBoardState
-            passwordCharacter: CheckPasswordCharacterState
         }>
     }>
 export function View(props: PasswordBoardFieldProps): VNode {
@@ -70,7 +63,7 @@ export function View(props: PasswordBoardFieldProps): VNode {
                 ...content,
                 notice: passwordValidationError(
                     props.state.validate,
-                    props.state.passwordCharacter
+                    props.field.passwordCharacter.check()
                 ),
             })
         }
@@ -82,7 +75,7 @@ export function View(props: PasswordBoardFieldProps): VNode {
                 html`<a href="#" onClick=${onHide}>
                     ${icon("key-alt")} パスワードを隠す ${characterHelp()}
                 </a>`,
-                showPassword(props.state.toggle.password),
+                showPassword(props.field.input.get()),
             ]
         } else {
             return [
@@ -100,7 +93,7 @@ export function View(props: PasswordBoardFieldProps): VNode {
         }
 
         function characterHelp(): string {
-            if (props.state.passwordCharacter.multiByte) {
+            if (props.field.passwordCharacter.check().multiByte) {
                 return "(マルチバイト文字が含まれています)"
             } else {
                 return ""

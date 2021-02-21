@@ -1,4 +1,4 @@
-import { initSyncActionChecker } from "../../../../application/testHelper"
+import { initSyncActionChecker_simple } from "../../../../application/testHelper"
 
 import { newInputBoardValueAction } from "./impl"
 
@@ -10,7 +10,7 @@ describe("InputBoardValue", () => {
     test("input and clear", () => {
         const { action } = standardResource()
 
-        const checker = initSyncActionChecker<InputBoardValueState>()
+        const checker = initSyncActionChecker_simple<InputBoardValueState>()
         action.addStateHandler(checker.handler)
 
         action.set(markBoardValue("input"))

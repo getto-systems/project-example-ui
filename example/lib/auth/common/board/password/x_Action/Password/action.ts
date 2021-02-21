@@ -4,10 +4,10 @@ import {
     ValidateBoardFieldState,
 } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
 import { ApplicationAction } from "../../../../../../z_getto/application/action"
-import { TogglePasswordDisplayBoardEvent } from "../../toggleDisplay/event"
+import { TogglePasswordDisplayEvent } from "../../toggleDisplay/event"
 import {
-    HidePasswordDisplayBoardMethod,
-    ShowPasswordDisplayBoardMethod,
+    HidePasswordDisplayMethod,
+    ShowPasswordDisplayMethod,
 } from "../../toggleDisplay/method"
 
 import { Password } from "../../../../password/data"
@@ -36,24 +36,23 @@ export interface TogglePasswordDisplayBoardAction
 }
 
 export type TogglePasswordDisplayBoardMaterial = Readonly<{
-    show: ShowPasswordDisplayBoardMethod
-    hide: HidePasswordDisplayBoardMethod
+    show: ShowPasswordDisplayMethod
+    hide: HidePasswordDisplayMethod
 }>
 
-export type TogglePasswordDisplayBoardState = TogglePasswordDisplayBoardEvent
+export type TogglePasswordDisplayBoardState = TogglePasswordDisplayEvent
 
 export const initialTogglePasswordDisplayBoardState: TogglePasswordDisplayBoardState = {
     visible: false,
 }
 
-export type CheckPasswordCharacterAction = ApplicationAction<PasswordCharacterState>
+export interface CheckPasswordCharacterAction {
+    check(): PasswordCharacterState
+}
 
 export type CheckPasswordCharacterMaterial = Readonly<{
     check: CheckPasswordCharacterMethod
 }>
-
-export type CheckPasswordCharacterState = PasswordCharacterState
-export const initialCheckPasswordCharacterState: PasswordCharacterState = { multiByte: false }
 
 interface ClearAction {
     (): void

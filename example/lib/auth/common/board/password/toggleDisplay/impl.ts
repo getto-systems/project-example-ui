@@ -1,8 +1,8 @@
-import { HidePasswordDisplayBoardMethod, ShowPasswordDisplayBoardMethod } from "./method"
+import { HidePasswordDisplayMethod, ShowPasswordDisplayMethod } from "./method"
 
-export const showPasswordDisplayBoard: ShowPasswordDisplayBoardMethod = (password, post) => {
-    post({ visible: true, password })
+export const showPasswordDisplay: ShowPasswordDisplayMethod = (post) => {
+    post({ visible: true })
 }
-export const hidePasswordDisplayBoard: HidePasswordDisplayBoardMethod = (post) => {
+export const hidePasswordDisplay: HidePasswordDisplayMethod = (post) => {
     post({ visible: false })
 }

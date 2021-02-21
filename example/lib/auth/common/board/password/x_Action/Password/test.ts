@@ -1,8 +1,11 @@
 import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
 import { newBoardValidateStack } from "../../../../../../z_getto/board/kernel/infra/stack"
 import { ValidateBoardFieldState } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
-import { initSyncActionChecker } from "../../../../../../z_getto/application/testHelper"
-import { CheckPasswordCharacterState, TogglePasswordDisplayBoardState } from "./action"
+import {
+    initSyncActionTestRunner,
+    initSyncActionChecker_simple,
+} from "../../../../../../z_getto/application/testHelper"
+import { TogglePasswordDisplayBoardState } from "./action"
 import { ValidatePasswordError } from "./data"
 import { initPasswordBoardFieldAction } from "./impl"
 
@@ -10,7 +13,9 @@ describe("PasswordBoard", () => {
     test("validate; valid input", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidatePasswordError>>()
+        const checker = initSyncActionChecker_simple<
+            ValidateBoardFieldState<ValidatePasswordError>
+        >()
         resource.validate.addStateHandler(checker.handler)
 
         // valid input
@@ -25,7 +30,9 @@ describe("PasswordBoard", () => {
     test("validate; invalid : empty", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidatePasswordError>>()
+        const checker = initSyncActionChecker_simple<
+            ValidateBoardFieldState<ValidatePasswordError>
+        >()
         resource.validate.addStateHandler(checker.handler)
 
         // empty
@@ -40,7 +47,9 @@ describe("PasswordBoard", () => {
     test("validate; invalid : too-long", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidatePasswordError>>()
+        const checker = initSyncActionChecker_simple<
+            ValidateBoardFieldState<ValidatePasswordError>
+        >()
         resource.validate.addStateHandler(checker.handler)
 
         // too-long
@@ -55,7 +64,9 @@ describe("PasswordBoard", () => {
     test("validate; valid : just max-length", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidatePasswordError>>()
+        const checker = initSyncActionChecker_simple<
+            ValidateBoardFieldState<ValidatePasswordError>
+        >()
         resource.validate.addStateHandler(checker.handler)
 
         // just max-length
@@ -70,7 +81,9 @@ describe("PasswordBoard", () => {
     test("validate; invalid : too-long : multi-byte", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidatePasswordError>>()
+        const checker = initSyncActionChecker_simple<
+            ValidateBoardFieldState<ValidatePasswordError>
+        >()
         resource.validate.addStateHandler(checker.handler)
 
         // too-long : "あ"(UTF8) is 3 bytes character
@@ -85,7 +98,9 @@ describe("PasswordBoard", () => {
     test("validate; valid : just max-length : multi-byte", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidatePasswordError>>()
+        const checker = initSyncActionChecker_simple<
+            ValidateBoardFieldState<ValidatePasswordError>
+        >()
         resource.validate.addStateHandler(checker.handler)
 
         // just max-length : "あ"(UTF8) is 3 bytes character
@@ -97,47 +112,44 @@ describe("PasswordBoard", () => {
         expect(resource.validate.get()).toEqual({ success: true, value: "あ".repeat(24) })
     })
 
-    test("toggle password", () => {
+    test("toggle password", (done) => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<TogglePasswordDisplayBoardState>()
-        resource.toggle.addStateHandler(checker.handler)
+        const checker = initSyncActionTestRunner<TogglePasswordDisplayBoardState>()
 
-        resource.toggle.show()
+        checker.addTestCase(
+            () => {
+                resource.toggle.show()
+            },
+            (stack) => {
+                expect(stack).toEqual([{ visible: true }])
+            }
+        )
 
-        checker.check((stack) => {
-            expect(stack).toEqual([{ visible: true, password: "" }])
-        })
+        checker.addTestCase(
+            () => {
+                resource.toggle.hide()
+            },
+            (stack) => {
+                expect(stack).toEqual([{ visible: false }])
+            }
+        )
 
-        resource.toggle.hide()
-
-        checker.check((stack) => {
-            expect(stack).toEqual([{ visible: false }])
-        })
+        resource.toggle.addStateHandler(checker.run(done))
     })
 
     test("password character state : single byte", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<CheckPasswordCharacterState>()
-        resource.passwordCharacter.addStateHandler(checker.handler)
-
         resource.input.set(markBoardValue("password"))
-        checker.check((stack) => {
-            expect(stack).toEqual([{ multiByte: false }])
-        })
+        expect(resource.passwordCharacter.check()).toEqual({ multiByte: false })
     })
 
     test("password character state : multi byte", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<CheckPasswordCharacterState>()
-        resource.passwordCharacter.addStateHandler(checker.handler)
-
         resource.input.set(markBoardValue("パスワード"))
-        checker.check((stack) => {
-            expect(stack).toEqual([{ multiByte: true }])
-        })
+        expect(resource.passwordCharacter.check()).toEqual({ multiByte: true })
     })
 
     test("clear", () => {
@@ -152,7 +164,9 @@ describe("PasswordBoard", () => {
     test("terminate", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidatePasswordError>>()
+        const checker = initSyncActionChecker_simple<
+            ValidateBoardFieldState<ValidatePasswordError>
+        >()
         resource.validate.addStateHandler(checker.handler)
 
         resource.input.terminate()

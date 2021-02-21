@@ -1,4 +1,4 @@
-import { initSyncActionChecker } from "../../../../application/testHelper"
+import { initSyncActionChecker_simple } from "../../../../application/testHelper"
 
 import { newBoardValueStore } from "../../../input/infra/store"
 import { newBoardValidateStack } from "../../../kernel/infra/stack"
@@ -13,7 +13,7 @@ describe("ValidateBoard", () => {
     test("validate; valid input", () => {
         const { action, board, validateStack } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidateError>>()
+        const checker = initSyncActionChecker_simple<ValidateBoardFieldState<ValidateError>>()
         action.addStateHandler(checker.handler)
 
         // valid input
@@ -30,7 +30,7 @@ describe("ValidateBoard", () => {
     test("validate; invalid input", () => {
         const { action, board, validateStack } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardFieldState<ValidateError>>()
+        const checker = initSyncActionChecker_simple<ValidateBoardFieldState<ValidateError>>()
         action.addStateHandler(checker.handler)
 
         // invalid input : see validator()

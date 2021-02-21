@@ -3,7 +3,7 @@ import { ApplicationAbstractAction } from "../../../../../../z_getto/application
 import { initValidateBoardFieldAction } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/impl"
 import { newInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/impl"
 
-import { hidePasswordDisplayBoard, showPasswordDisplayBoard } from "../../toggleDisplay/impl"
+import { hidePasswordDisplay, showPasswordDisplay } from "../../toggleDisplay/impl"
 
 import { ValidateBoardFieldInfra } from "../../../../../../z_getto/board/validateField/infra"
 
@@ -42,18 +42,17 @@ export function initPasswordBoardFieldAction<N extends string>(
 
     const clear = () => input.clear()
 
-    const toggle = new ToggleAction(() => input.get(), {
-        show: showPasswordDisplayBoard,
-        hide: hidePasswordDisplayBoard,
+    const toggle = new ToggleAction({
+        show: showPasswordDisplay,
+        hide: hidePasswordDisplay,
     })
 
-    const passwordCharacter = new CheckAction({
+    const passwordCharacter = new CheckAction(() => input.get(), {
         check: checkPasswordCharacter,
     })
 
     input.addInputHandler(() => {
         validate.check()
-        passwordCharacter.check(input.get())
     })
 
     return { input, validate, clear, toggle, passwordCharacter }
@@ -86,37 +85,37 @@ const TOO_LONG: ValidatePasswordError[] = ["too-long"]
 class ToggleAction
     extends ApplicationAbstractAction<TogglePasswordDisplayBoardState>
     implements TogglePasswordDisplayBoardAction {
-    password: PasswordGetter
     material: TogglePasswordDisplayBoardMaterial
 
-    constructor(password: PasswordGetter, material: TogglePasswordDisplayBoardMaterial) {
+    constructor(material: TogglePasswordDisplayBoardMaterial) {
         super()
-        this.password = password
         this.material = material
     }
 
     show(): void {
-        this.material.show(this.password(), this.post)
+        this.material.show(this.post)
     }
     hide(): void {
         this.material.hide(this.post)
     }
 }
-interface PasswordGetter {
-    (): BoardValue
-}
 
 class CheckAction
     extends ApplicationAbstractAction<PasswordCharacterState>
     implements CheckPasswordCharacterAction {
+    password: PasswordGetter
     material: CheckPasswordCharacterMaterial
 
-    constructor(material: CheckPasswordCharacterMaterial) {
+    constructor(password: PasswordGetter, material: CheckPasswordCharacterMaterial) {
         super()
+        this.password = password
         this.material = material
     }
 
-    check(password: BoardValue): void {
-        this.material.check(password, this.post)
+    check(): PasswordCharacterState {
+        return this.material.check(this.password())
     }
+}
+interface PasswordGetter {
+    (): BoardValue
 }

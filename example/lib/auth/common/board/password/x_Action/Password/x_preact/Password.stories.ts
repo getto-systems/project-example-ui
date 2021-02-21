@@ -39,12 +39,11 @@ type Props = Readonly<{
 }>
 const template = storyTemplate<Props>((props) => {
     return h(View, {
-        field: initMockPasswordBoardFieldAction(),
+        field: initMockPasswordBoardFieldAction(markBoardValue(props.password), characterState()),
         help: [props.help],
         state: {
             validate: validateState(),
             toggle: toggleState(),
-            passwordCharacter: characterState(),
         },
     })
 
@@ -61,7 +60,7 @@ const template = storyTemplate<Props>((props) => {
     function toggleState(): TogglePasswordDisplayBoardState {
         switch (props.display) {
             case "show":
-                return { visible: true, password: markBoardValue(props.password) }
+                return { visible: true }
 
             case "hide":
                 return { visible: false }

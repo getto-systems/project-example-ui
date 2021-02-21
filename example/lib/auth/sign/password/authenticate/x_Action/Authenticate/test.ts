@@ -24,7 +24,7 @@ import { initMemoryAuthnInfoRepository } from "../../../../kernel/authnInfo/kern
 import { initGetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/impl"
 import { delayed, wait } from "../../../../../../z_getto/infra/delayed/core"
 import { authenticatePasswordEventHasDone } from "../../impl"
-import { initAsyncActionChecker } from "../../../../../../z_getto/application/testHelper"
+import { initAsyncActionTestRunner } from "../../../../../../z_getto/application/testHelper"
 import { initAuthenticatePasswordFormAction } from "./Form/impl"
 import { initAuthenticatePasswordCoreAction } from "./Core/impl"
 import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
@@ -50,10 +50,9 @@ describe("PasswordAuthenticate", () => {
     test("submit valid login-id and password", (done) => {
         const { repository, clock, resource } = standardPasswordLoginResource()
 
-        const checker = initAsyncChecker(() => done())
-        resource.core.addStateHandler(checker.handler)
+        const checker = initAsyncRunner()
 
-        checker.check(
+        checker.addTestCase(
             () => {
                 resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
                 resource.form.password.input.set(markBoardValue(VALID_LOGIN.password))
@@ -72,7 +71,7 @@ describe("PasswordAuthenticate", () => {
                 expectToSaveLastAuth(repository.authnInfos)
             }
         )
-        checker.check(
+        checker.addTestCase(
             (check) => {
                 // after setContinuousRenew interval and delay
                 wait({ wait_millisecond: 1 }, check)
@@ -81,16 +80,17 @@ describe("PasswordAuthenticate", () => {
                 expectToSaveRenewed(repository.authnInfos)
             }
         )
+
+        resource.core.addStateHandler(checker.run(done))
     })
 
     test("submit valid login-id and password; with delayed", (done) => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitPasswordLoginResource()
 
-        const checker = initAsyncChecker(() => done())
-        resource.core.addStateHandler(checker.handler)
+        const checker = initAsyncRunner()
 
-        checker.check(
+        checker.addTestCase(
             () => {
                 resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
                 resource.form.password.input.set(markBoardValue(VALID_LOGIN.password))
@@ -110,7 +110,7 @@ describe("PasswordAuthenticate", () => {
                 expectToSaveLastAuth(repository.authnInfos)
             }
         )
-        checker.check(
+        checker.addTestCase(
             (check) => {
                 // after setContinuousRenew interval and delay
                 wait({ wait_millisecond: 1 }, check)
@@ -119,15 +119,16 @@ describe("PasswordAuthenticate", () => {
                 expectToSaveRenewed(repository.authnInfos)
             }
         )
+
+        resource.core.addStateHandler(checker.run(done))
     })
 
     test("submit without fields", (done) => {
         const { repository, resource } = standardPasswordLoginResource()
 
-        const checker = initAsyncChecker(() => done())
-        resource.core.addStateHandler(checker.handler)
+        const checker = initAsyncRunner()
 
-        checker.check(
+        checker.addTestCase(
             () => {
                 // try to login without fields
                 // resource.form.loginID.input.input(markInputString(VALID_LOGIN.loginID))
@@ -142,6 +143,8 @@ describe("PasswordAuthenticate", () => {
                 expectToEmptyLastAuth(repository.authnInfos)
             }
         )
+
+        resource.core.addStateHandler(checker.run(done))
     })
 
     test("clear", () => {
@@ -158,10 +161,9 @@ describe("PasswordAuthenticate", () => {
     test("load error", (done) => {
         const { resource } = standardPasswordLoginResource()
 
-        const checker = initAsyncChecker(() => done())
-        resource.core.addStateHandler(checker.handler)
+        const checker = initAsyncRunner()
 
-        checker.check(
+        checker.addTestCase(
             () => {
                 resource.core.loadError({ type: "infra-error", err: "load error" })
             },
@@ -174,6 +176,8 @@ describe("PasswordAuthenticate", () => {
                 ])
             }
         )
+
+        resource.core.addStateHandler(checker.run(done))
     })
 })
 
@@ -362,8 +366,8 @@ function expectToEmptyLastAuth(authnInfos: AuthnInfoRepository) {
     })
 }
 
-function initAsyncChecker(hook: { (): void }) {
-    return initAsyncActionChecker((state: AuthenticatePasswordCoreState) => {
+function initAsyncRunner() {
+    return initAsyncActionTestRunner((state: AuthenticatePasswordCoreState) => {
         switch (state.type) {
             case "initial-login":
                 return false
@@ -376,5 +380,5 @@ function initAsyncChecker(hook: { (): void }) {
             default:
                 return authenticatePasswordEventHasDone(state)
         }
-    })(hook)
+    })
 }

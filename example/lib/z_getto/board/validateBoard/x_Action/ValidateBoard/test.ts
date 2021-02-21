@@ -1,4 +1,4 @@
-import { initSyncActionChecker } from "../../../../application/testHelper"
+import { initSyncActionChecker_simple } from "../../../../application/testHelper"
 import { BoardConvertResult } from "../../../kernel/data"
 import { newBoardValidateStack } from "../../../kernel/infra/stack"
 import { ValidateBoardState } from "./action"
@@ -8,7 +8,7 @@ describe("ComposeBoardValidate", () => {
     test("validate; all valid state", () => {
         const { action, validateStack } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardState>()
+        const checker = initSyncActionChecker_simple<ValidateBoardState>()
         action.addStateHandler(checker.handler)
 
         // all valid
@@ -28,7 +28,7 @@ describe("ComposeBoardValidate", () => {
     test("validate; invalid exists", () => {
         const { action, validateStack } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardState>()
+        const checker = initSyncActionChecker_simple<ValidateBoardState>()
         action.addStateHandler(checker.handler)
 
         validateStack.update("name", false) // invalid
@@ -44,7 +44,7 @@ describe("ComposeBoardValidate", () => {
     test("validate; initial exists", () => {
         const { action, validateStack } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardState>()
+        const checker = initSyncActionChecker_simple<ValidateBoardState>()
         action.addStateHandler(checker.handler)
 
         validateStack.update("name", true)
@@ -60,7 +60,7 @@ describe("ComposeBoardValidate", () => {
     test("validate; all initial", () => {
         const { action } = standardResource()
 
-        const checker = initSyncActionChecker<ValidateBoardState>()
+        const checker = initSyncActionChecker_simple<ValidateBoardState>()
         action.addStateHandler(checker.handler)
 
         action.check()
