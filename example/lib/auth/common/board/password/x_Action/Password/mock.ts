@@ -4,8 +4,6 @@ import { MockAction_simple } from "../../../../../../z_getto/application/mock"
 import {
     CheckPasswordCharacterAction,
     PasswordBoardFieldAction,
-    TogglePasswordDisplayBoardAction,
-    TogglePasswordDisplayBoardState,
     ValidatePasswordAction,
     ValidatePasswordState,
 } from "./action"
@@ -22,7 +20,6 @@ export function initMockPasswordBoardFieldAction(
         input: initMockInputBoardValueAction(password),
         validate: new Action(),
         clear: () => null,
-        toggle: new ToggleAction(),
         passwordCharacter: new CheckAction(characterState),
     }
 }
@@ -34,17 +31,6 @@ class Action extends MockAction_simple<ValidatePasswordState> implements Validat
         return { success: false }
     }
     check() {
-        // mock では特に何もしない
-    }
-}
-
-class ToggleAction
-    extends MockAction_simple<TogglePasswordDisplayBoardState>
-    implements TogglePasswordDisplayBoardAction {
-    show() {
-        // mock では特に何もしない
-    }
-    hide() {
         // mock では特に何もしない
     }
 }

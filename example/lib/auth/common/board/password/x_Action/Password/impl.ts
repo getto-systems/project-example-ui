@@ -3,17 +3,12 @@ import { ApplicationAbstractAction } from "../../../../../../z_getto/application
 import { initValidateBoardFieldAction } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/impl"
 import { newInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/impl"
 
-import { hidePasswordDisplay, showPasswordDisplay } from "../../toggleDisplay/impl"
-
 import { ValidateBoardFieldInfra } from "../../../../../../z_getto/board/validateField/infra"
 
 import {
     CheckPasswordCharacterAction,
     CheckPasswordCharacterMaterial,
     PasswordBoardFieldAction,
-    TogglePasswordDisplayBoardAction,
-    TogglePasswordDisplayBoardMaterial,
-    TogglePasswordDisplayBoardState,
 } from "./action"
 
 import { BoardConvertResult, BoardValue } from "../../../../../../z_getto/board/kernel/data"
@@ -27,7 +22,7 @@ export type PasswordBoardEmbed<N extends string> = Readonly<{
 
 export function initPasswordBoardFieldAction<N extends string>(
     embed: PasswordBoardEmbed<N>,
-    infra: ValidateBoardFieldInfra
+    infra: ValidateBoardFieldInfra,
 ): PasswordBoardFieldAction {
     const input = newInputBoardValueAction()
 
@@ -37,15 +32,10 @@ export function initPasswordBoardFieldAction<N extends string>(
             validator: () => validatePassword(input.get()),
             converter: () => convertPassword(input.get()),
         },
-        infra
+        infra,
     )
 
     const clear = () => input.clear()
-
-    const toggle = new ToggleAction({
-        show: showPasswordDisplay,
-        hide: hidePasswordDisplay,
-    })
 
     const passwordCharacter = new CheckAction(() => input.get(), {
         check: checkPasswordCharacter,
@@ -55,7 +45,7 @@ export function initPasswordBoardFieldAction<N extends string>(
         validate.check()
     })
 
-    return { input, validate, clear, toggle, passwordCharacter }
+    return { input, validate, clear, passwordCharacter }
 }
 export function terminatePasswordBoardFieldAction(resource: PasswordBoardFieldAction): void {
     resource.validate.terminate()
@@ -80,24 +70,6 @@ function validatePassword(value: BoardValue): ValidatePasswordError[] {
 const OK: ValidatePasswordError[] = []
 const EMPTY: ValidatePasswordError[] = ["empty"]
 const TOO_LONG: ValidatePasswordError[] = ["too-long"]
-
-class ToggleAction
-    extends ApplicationAbstractAction<TogglePasswordDisplayBoardState>
-    implements TogglePasswordDisplayBoardAction {
-    material: TogglePasswordDisplayBoardMaterial
-
-    constructor(material: TogglePasswordDisplayBoardMaterial) {
-        super()
-        this.material = material
-    }
-
-    show(): void {
-        this.material.show(this.post)
-    }
-    hide(): void {
-        this.material.hide(this.post)
-    }
-}
 
 class CheckAction
     extends ApplicationAbstractAction<PasswordCharacterState>

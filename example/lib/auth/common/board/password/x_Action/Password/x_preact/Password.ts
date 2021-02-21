@@ -1,5 +1,4 @@
 import { h, VNode } from "preact"
-import { html } from "htm/preact"
 
 import { VNodeContent } from "../../../../../../../z_vendor/getto-css/preact/common"
 import {
@@ -9,19 +8,12 @@ import {
 } from "../../../../../../../z_vendor/getto-css/preact/design/form"
 
 import { useApplicationAction } from "../../../../../../../x_preact/common/hooks"
-import { icon } from "../../../../../../../x_preact/common/icon"
 
 import { InputBoard } from "../../../../../../../z_getto/board/input/x_Action/Input/x_preact/Input"
 
 import { initialValidateBoardFieldState } from "../../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
-import {
-    initialTogglePasswordDisplayBoardState,
-    PasswordBoardFieldResource,
-    TogglePasswordDisplayBoardState,
-    ValidatePasswordState,
-} from "../action"
+import { PasswordBoardFieldResource, ValidatePasswordState } from "../action"
 
-import { BoardValue } from "../../../../../../../z_getto/board/kernel/data"
 import { BoardFieldValidateResult } from "../../../../../../../z_getto/board/validateField/data"
 import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "../data"
 
@@ -29,23 +21,11 @@ type Resource = PasswordBoardFieldResource & Readonly<{ help: VNodeContent[] }>
 export function PasswordBoard(resource: Resource): VNode {
     return h(View, <PasswordBoardFieldProps>{
         ...resource,
-        state: {
-            validate: useApplicationAction(resource.field.validate, initialValidateBoardFieldState),
-            toggle: useApplicationAction(
-                resource.field.toggle,
-                initialTogglePasswordDisplayBoardState
-            ),
-        },
+        state: useApplicationAction(resource.field.validate, initialValidateBoardFieldState),
     })
 }
 
-export type PasswordBoardFieldProps = Resource &
-    Readonly<{
-        state: Readonly<{
-            validate: ValidatePasswordState
-            toggle: TogglePasswordDisplayBoardState
-        }>
-    }>
+export type PasswordBoardFieldProps = Resource & Readonly<{ state: ValidatePasswordState }>
 export function View(props: PasswordBoardFieldProps): VNode {
     return label_password_fill(content())
 
@@ -53,75 +33,31 @@ export function View(props: PasswordBoardFieldProps): VNode {
         const content = {
             title: "パスワード",
             body: h(InputBoard, { type: "password", ...props.field }),
-            help: [...props.help, ...passwordDisplay()],
+            help: [...props.help, characterHelp()],
         }
 
-        if (props.state.validate.valid) {
+        if (props.state.valid) {
             return field(content)
         } else {
             return field_error({
                 ...content,
-                notice: passwordValidationError(
-                    props.state.validate,
-                    props.field.passwordCharacter.check()
-                ),
+                notice: passwordValidationError(props.state, props.field.passwordCharacter.check()),
             })
         }
     }
 
-    function passwordDisplay(): VNodeContent[] {
-        if (props.state.toggle.visible) {
-            return [
-                html`<a href="#" onClick=${onHide}>
-                    ${icon("key-alt")} パスワードを隠す ${characterHelp()}
-                </a>`,
-                showPassword(props.field.input.get()),
-            ]
+    function characterHelp(): string {
+        if (props.field.passwordCharacter.check().multiByte) {
+            return "(マルチバイト文字が含まれています)"
         } else {
-            return [
-                html`<a href="#" onClick=${onShow}>
-                    ${icon("key-alt")} パスワードを表示 ${characterHelp()}
-                </a>`,
-            ]
-        }
-
-        function showPassword(password: BoardValue): string {
-            if (password.length === 0) {
-                return "(入力されていません)"
-            }
-            return password
-        }
-
-        function characterHelp(): string {
-            if (props.field.passwordCharacter.check().multiByte) {
-                return "(マルチバイト文字が含まれています)"
-            } else {
-                return ""
-            }
-        }
-
-        function onShow(e: MouseEvent) {
-            linkClicked(e)
-            props.field.toggle.show()
-        }
-        function onHide(e: MouseEvent) {
-            linkClicked(e)
-            props.field.toggle.hide()
-        }
-        function linkClicked(e: MouseEvent) {
-            e.preventDefault()
-
-            // クリック後 focus 状態になるのでキャンセル
-            if (e.target instanceof HTMLElement) {
-                e.target.blur()
-            }
+            return ""
         }
     }
 }
 
 function passwordValidationError(
     result: BoardFieldValidateResult<ValidatePasswordError>,
-    character: PasswordCharacterState
+    character: PasswordCharacterState,
 ): VNodeContent[] {
     if (result.valid) {
         return []
