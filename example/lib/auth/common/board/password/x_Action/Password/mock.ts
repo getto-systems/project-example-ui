@@ -1,9 +1,5 @@
 import { initMockInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/mock"
-import {
-    initMockPropsPasser,
-    MockAction,
-    MockPropsPasser,
-} from "../../../../../../z_getto/application/mock"
+import { MockAction, MockPropsPasser } from "../../../../../../z_getto/application/mock"
 
 import {
     PasswordBoardFieldAction,
@@ -52,7 +48,7 @@ export function initMockPasswordBoardFieldAction(
         characterState = { multiByte: props.character === "multiByte" }
     })
     return {
-        input: initMockInputBoardValueAction(initMockPropsPasser(), "password"),
+        input: initMockInputBoardValueAction(),
         validate: new Action(passer),
         clear: () => null,
         toggle: new ToggleAction(passer),

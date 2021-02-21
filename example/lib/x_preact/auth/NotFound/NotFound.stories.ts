@@ -1,8 +1,8 @@
 import { h } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { storyTemplate } from "../../z_storybook/story"
-import { noPaddedStory } from "../../z_storybook/display"
+import { storyTemplate } from "../../../z_vendor/storybook/preact/story"
+import { noPaddedStory } from "../../../z_vendor/storybook/preact/display"
 
 import { EntryPoint } from "./NotFound"
 

@@ -1,7 +1,7 @@
 import { h } from "preact"
 import { useEffect } from "preact/hooks"
 
-import { storyTemplate } from "../../../../../../../x_preact/z_storybook/story"
+import { storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
 
 import { PasswordBoard } from "./Password"
 

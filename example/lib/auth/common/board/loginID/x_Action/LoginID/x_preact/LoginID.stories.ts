@@ -1,12 +1,11 @@
 import { h } from "preact"
-import { useEffect } from "preact/hooks"
 
-import { storyTemplate } from "../../../../../../../x_preact/z_storybook/story"
+import { storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
 
-import { LoginIDBoard } from "./LoginID"
+import { View } from "./LoginID"
 
-import { initMockPropsPasser } from "../../../../../../../z_getto/application/mock"
-import { LoginIDBoardMockProps, initMockLoginIDBoardFieldAction } from "../mock"
+import { initMockLoginIDBoardFieldAction } from "../mock"
+import { ValidateLoginIDState } from "../action"
 
 export default {
     title: "Auth/Common/Board/LoginID",
@@ -17,17 +16,28 @@ export default {
     },
 }
 
-type Props = LoginIDBoardMockProps & { help: string }
-const template = storyTemplate<Props>((args) => {
-    const passer = initMockPropsPasser<LoginIDBoardMockProps>()
-    const action = initMockLoginIDBoardFieldAction(passer)
-    return h(Preview, { args })
+type Props =
+    | Readonly<{ type: "valid"; help: string }>
+    | Readonly<{ type: "empty"; help: string }>
+    | Readonly<{ type: "too-long"; help: string }>
 
-    function Preview(props: { args: Props }) {
-        useEffect(() => {
-            passer.update(props.args)
-        })
-        return h(LoginIDBoard, { field: action, help: [args.help] })
+const template = storyTemplate<Props>((props) => {
+    const action = initMockLoginIDBoardFieldAction()
+    return h(View, {
+        field: action,
+        help: [props.help],
+        state: state(),
+    })
+
+    function state(): ValidateLoginIDState {
+        switch (props.type) {
+            case "valid":
+                return { valid: true }
+
+            case "empty":
+            case "too-long":
+                return { valid: false, err: [props.type] }
+        }
     }
 })
 

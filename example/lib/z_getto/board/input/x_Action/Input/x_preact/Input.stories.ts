@@ -1,5 +1,5 @@
 import { h } from "preact"
-import { storyTemplate } from "../../../../../../x_preact/z_storybook/story"
+import { storyTemplate } from "../../../../../../z_vendor/storybook/preact/story"
 import { markBoardValue } from "../../../../kernel/data"
 import { InputBoardValueType, inputBoardValueTypes } from "../../../data"
 import { InputBoardValueState } from "../action"

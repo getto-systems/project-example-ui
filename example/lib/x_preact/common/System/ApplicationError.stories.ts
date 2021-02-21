@@ -1,5 +1,5 @@
 import { h } from "preact"
-import { storyTemplate } from "../../z_storybook/story"
+import { storyTemplate } from "../../../z_vendor/storybook/preact/story"
 
 import { ApplicationError } from "./ApplicationError"
 

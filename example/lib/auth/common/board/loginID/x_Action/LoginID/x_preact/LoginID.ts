@@ -12,31 +12,34 @@ import { useApplicationAction } from "../../../../../../../x_preact/common/hooks
 import { InputBoard } from "../../../../../../../z_getto/board/input/x_Action/Input/x_preact/Input"
 
 import { initialValidateBoardFieldState } from "../../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
-import { LoginIDBoardFieldResource } from "../action"
+import { LoginIDBoardFieldResource, ValidateLoginIDState } from "../action"
 
 import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "../data"
 import { BoardFieldValidateResult } from "../../../../../../../z_getto/board/validateField/data"
 
-type Props = LoginIDBoardFieldResource &
-    Readonly<{
-        help: VNodeContent[]
-    }>
-export function LoginIDBoard(resource: Props): VNode {
-    const state = useApplicationAction(resource.field.validate, initialValidateBoardFieldState)
+type Resource = LoginIDBoardFieldResource & Readonly<{ help: VNodeContent[] }>
+export function LoginIDBoard(resource: Resource): VNode {
+    return h(View, {
+        ...resource,
+        state: useApplicationAction(resource.field.validate, initialValidateBoardFieldState),
+    })
+}
 
+export type LoginIDBoardFieldProps = Resource & Readonly<{ state: ValidateLoginIDState }>
+export function View(props: LoginIDBoardFieldProps): VNode {
     return label_text_fill(content())
 
     function content() {
         const content = {
             title: "ログインID",
-            body: h(InputBoard, { type: "text", ...resource.field }),
-            help: resource.help,
+            body: h(InputBoard, { type: "text", ...props.field }),
+            help: props.help,
         }
 
-        if (state.valid) {
+        if (props.state.valid) {
             return field(content)
         } else {
-            return field_error({ ...content, notice: loginIDValidationError(state) })
+            return field_error({ ...content, notice: loginIDValidationError(props.state) })
         }
     }
 }
