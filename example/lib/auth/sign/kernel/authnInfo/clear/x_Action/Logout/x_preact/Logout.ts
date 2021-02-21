@@ -1,4 +1,4 @@
-import { VNode } from "preact"
+import { h, VNode } from "preact"
 import { useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
@@ -9,28 +9,35 @@ import { v_small } from "../../../../../../../../z_vendor/getto-css/preact/desig
 
 import { useApplicationAction } from "../../../../../../../../x_preact/common/hooks"
 
-import { initialLogoutState, LogoutResource } from "../action"
+import { initialLogoutState, LogoutResource, LogoutState } from "../action"
 
 import { StorageError } from "../../../../../../../../z_getto/storage/data"
 
 export function Logout(resource: LogoutResource): VNode {
-    const state = useApplicationAction(resource.logout, initialLogoutState)
+    return h(View, {
+        ...resource,
+        state: useApplicationAction(resource.logout, initialLogoutState),
+    })
+}
+
+export type LogoutProps = LogoutResource & Readonly<{ state: LogoutState }>
+export function View(props: LogoutProps): VNode {
     useLayoutEffect(() => {
-        switch (state.type) {
+        switch (props.state.type) {
             case "succeed-to-logout":
                 // credential が削除されているので、reload するとログイン画面になる
                 location.reload()
                 break
         }
-    }, [state])
+    }, [props.state])
 
-    switch (state.type) {
+    switch (props.state.type) {
         case "initial-logout":
         case "succeed-to-logout":
             return logoutBox({ success: true })
 
         case "failed-to-logout":
-            return logoutBox({ success: false, err: state.err })
+            return logoutBox({ success: false, err: props.state.err })
     }
 
     type LogoutBoxContent =
@@ -51,7 +58,7 @@ export function Logout(resource: LogoutResource): VNode {
         })
 
         function onClick() {
-            resource.logout.submit()
+            props.logout.submit()
         }
 
         function error(): VNode[] {

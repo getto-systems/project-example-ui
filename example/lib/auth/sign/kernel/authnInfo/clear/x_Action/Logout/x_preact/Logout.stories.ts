@@ -1,35 +1,44 @@
 import { h } from "preact"
-import { useEffect } from "preact/hooks"
 
 import { storyTemplate } from "../../../../../../../../z_vendor/storybook/preact/story"
 
-import { Logout } from "./Logout"
+import { View } from "./Logout"
 
-import { initMockPropsPasser } from "../../../../../../../../z_getto/application/mock"
-import { LogoutMockProps, initMockLogoutAction } from "../mock"
+import { initMockLogoutAction } from "../mock"
+import { LogoutState } from "../action"
+
+const logoutOptions = ["initial", "failed"] as const
 
 export default {
-    title: "Auth/Profile/Logout",
+    title: "library/Auth/Profile/Logout",
     argTypes: {
-        type: {
-            table: { disable: true },
+        logout: {
+            control: { type: "select", options: logoutOptions },
         },
     },
 }
 
-type Props = LogoutMockProps
-const template = storyTemplate<Props>((args) => {
-    const passer = initMockPropsPasser<LogoutMockProps>()
-    const action = initMockLogoutAction(passer)
-    return h(Preview, { args })
+type Props = Readonly<{
+    logout: "initial" | "failed"
+    err: string
+}>
 
-    function Preview(props: { args: Props }) {
-        useEffect(() => {
-            passer.update(props.args)
-        })
-        return h(Logout, { logout: action })
+const template = storyTemplate<Props>((props) => {
+    const action = initMockLogoutAction()
+    return h(View, { logout: action, state: state() })
+
+    function state(): LogoutState {
+        switch (props.logout) {
+            case "initial":
+                return { type: "initial-logout" }
+
+            case "failed":
+                return {
+                    type: "failed-to-logout",
+                    err: { type: "infra-error", err: props.err },
+                }
+        }
     }
 })
 
-export const Initial = template({ type: "initial-logout" })
-export const Failed = template({ type: "failed-logout", err: "logout error" })
+export const Box = template({ logout: "initial", err: "" })

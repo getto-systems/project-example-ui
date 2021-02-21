@@ -16,7 +16,7 @@ const displayOptions = ["hide", "show"] as const
 const characterOptions = ["singleByte", "multiByte"] as const
 
 export default {
-    title: "Auth/Common/Board/Password",
+    title: "library/Auth/Common/Board/Password",
     argTypes: {
         validate: {
             control: { type: "select", options: typeOptions },

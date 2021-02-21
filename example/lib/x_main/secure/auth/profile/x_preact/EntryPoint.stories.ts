@@ -2,28 +2,26 @@ import { h } from "preact"
 import { useEffect } from "preact/hooks"
 
 import { storyTemplate } from "../../../../../z_vendor/storybook/preact/story"
-import { noPaddedStory } from "../../../../../z_vendor/storybook/preact/display"
 
 import { EntryPoint } from "./EntryPoint"
 
-import {
-    AuthProfileMockPropsPasser,
-    newMockAuthProfile,
-} from "../mock"
+import { AuthProfileMockPropsPasser, newMockAuthProfile } from "../mock"
 
 import { initMockPropsPasser } from "../../../../../z_getto/application/mock"
 
 import { SeasonInfoMockProps } from "../../../../../example/x_components/Outline/seasonInfo/mock"
 import { MenuMockProps } from "../../../../../common/x_Resource/Outline/Menu/Menu/mock"
 import { BreadcrumbListMockProps } from "../../../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
-import { LogoutMockProps } from "../../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/mock"
 
 export default {
-    title: "Auth/Profile",
+    title: "main/secure/Auth/Profile",
     argTypes: {
         type: {
             table: { disable: true },
         },
+    },
+    parameters: {
+        layout: "fullscreen",
     },
 }
 
@@ -38,7 +36,6 @@ const template = storyTemplate<MockProps>((args) => {
         seasonInfo: initMockPropsPasser<SeasonInfoMockProps>(),
         menu: initMockPropsPasser<MenuMockProps>(),
         breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
-        logout: initMockPropsPasser<LogoutMockProps>(),
     }
     const entryPoint = newMockAuthProfile(passer)
     return h(Preview, { args })
@@ -56,9 +53,8 @@ const template = storyTemplate<MockProps>((args) => {
                 label: props.args.breadcrumbLabel,
                 icon: props.args.breadcrumbIcon,
             })
-            passer.logout.update({ type: "failed-logout", err: "logout error" })
         })
-        return noPaddedStory(h(EntryPoint, entryPoint))
+        return h(EntryPoint, entryPoint)
     }
 })
 
