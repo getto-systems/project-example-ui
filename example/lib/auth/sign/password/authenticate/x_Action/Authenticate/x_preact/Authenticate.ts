@@ -23,38 +23,55 @@ import { ApplicationError } from "../../../../../../../x_preact/common/System/Ap
 import { LoginIDBoard } from "../../../../../../common/board/loginID/x_Action/LoginID/x_preact/LoginID"
 import { PasswordBoard } from "../../../../../../common/board/password/x_Action/Password/x_preact/Password"
 
-import { AuthenticatePasswordEntryPoint, initialAuthenticatePasswordState } from "../action"
+import {
+    AuthenticatePasswordEntryPoint,
+    AuthenticatePasswordResource,
+    initialAuthenticatePasswordState,
+} from "../action"
 
 import { AuthenticatePasswordError } from "../../../data"
+import { AuthenticatePasswordCoreState } from "../Core/action"
+import { ValidateBoardState } from "../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/action"
 
 export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
+    return h(View, <AuthenticatePasswordProps>{
+        ...resource,
+        state: {
+            core: useApplicationAction(resource.core, initialAuthenticatePasswordState.core),
+            form: useApplicationAction(
+                resource.form.validate,
+                initialAuthenticatePasswordState.form
+            ),
+        },
+    })
+}
 
-    const state = useApplicationAction(resource.core, initialAuthenticatePasswordState.core)
-    const validateState = useApplicationAction(resource.form.validate, initialAuthenticatePasswordState.form)
-
+export type AuthenticatePasswordProps = AuthenticatePasswordResource &
+    Readonly<{ state: Readonly<{ core: AuthenticatePasswordCoreState; form: ValidateBoardState }> }>
+export function View(props: AuthenticatePasswordProps): VNode {
     useLayoutEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
-        switch (state.type) {
+        switch (props.state.core.type) {
             case "try-to-load":
-                appendScript(state.scriptPath, (script) => {
+                appendScript(props.state.core.scriptPath, (script) => {
                     script.onerror = () => {
-                        resource.core.loadError({
+                        props.core.loadError({
                             type: "infra-error",
-                            err: `スクリプトのロードに失敗しました: ${state.type}`,
+                            err: `スクリプトのロードに失敗しました: ${props.state.core.type}`,
                         })
                     }
                 })
                 break
         }
-    }, [state])
+    }, [props.state.core])
 
-    switch (state.type) {
+    switch (props.state.core.type) {
         case "initial-login":
             return loginForm({ state: "login" })
 
         case "failed-to-login":
-            return loginForm({ state: "login", error: loginError(state.err) })
+            return loginForm({ state: "login", error: loginError(props.state.core.err) })
 
         case "try-to-login":
             return loginForm({ state: "connecting" })
@@ -68,7 +85,7 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
 
         case "storage-error":
         case "load-error":
-            return h(ApplicationError, { err: state.err.err })
+            return h(ApplicationError, { err: props.state.core.err.err })
     }
 
     type LoginFormState = "login" | "connecting"
@@ -86,8 +103,8 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
             loginBox(siteInfo(), {
                 title: loginTitle(),
                 body: [
-                    h(LoginIDBoard, { field: resource.form.loginID, help: [] }),
-                    h(PasswordBoard, { field: resource.form.password, help: [] }),
+                    h(LoginIDBoard, { field: props.form.loginID, help: [] }),
+                    h(PasswordBoard, { field: props.form.password, help: [] }),
                     buttons({ right: clearButton() }),
                 ],
                 footer: [buttons({ left: button(), right: resetLink() }), error()],
@@ -96,7 +113,7 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
 
         function clearButton() {
             const label = "入力内容をクリア"
-            switch (validateState) {
+            switch (props.state.form) {
                 case "initial":
                     return button_disabled({ label })
 
@@ -107,7 +124,7 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
 
             function onClick(e: Event) {
                 e.preventDefault()
-                resource.form.clear()
+                props.form.clear()
             }
         }
 
@@ -123,7 +140,7 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
             function loginButton() {
                 const label = "ログイン"
 
-                switch (validateState) {
+                switch (props.state.form) {
                     case "initial":
                         return button_send({ state: "normal", label, onClick })
 
@@ -136,7 +153,7 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    resource.core.submit(resource.form.validate.get())
+                    props.core.submit(props.form.validate.get())
                 }
             }
             function connectingButton(): VNode {
@@ -152,7 +169,7 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
                 return fieldError(content.error)
             }
 
-            switch (validateState) {
+            switch (props.state.form) {
                 case "initial":
                 case "valid":
                     return ""
@@ -178,7 +195,7 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
     }
 
     function resetLink() {
-        return html`<a href="${resource.href.passwordResetSession()}">
+        return html`<a href="${props.href.passwordResetSession()}">
             ${icon("question-circle")} パスワードがわからない方
         </a>`
     }

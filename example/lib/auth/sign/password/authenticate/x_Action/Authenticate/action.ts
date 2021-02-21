@@ -4,9 +4,10 @@ import { AuthenticatePasswordCoreAction, initialAuthenticatePasswordCoreState } 
 import { AuthenticatePasswordFormAction } from "./Form/action"
 
 export type AuthenticatePasswordEntryPoint = Readonly<{
-    resource: AuthenticatePasswordAction & AuthSignLinkResource
+    resource: AuthenticatePasswordResource
     terminate: { (): void }
 }>
+export type AuthenticatePasswordResource = AuthenticatePasswordAction & AuthSignLinkResource
 export interface AuthenticatePasswordAction {
     readonly core: AuthenticatePasswordCoreAction
     readonly form: AuthenticatePasswordFormAction

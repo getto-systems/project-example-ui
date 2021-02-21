@@ -1,87 +1,104 @@
 import { h } from "preact"
-import { useEffect } from "preact/hooks"
 
 import { storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
 
-import { AuthenticatePassword } from "./Authenticate"
+import { AuthenticatePasswordProps, View } from "./Authenticate"
 
-import { initMockPropsPasser } from "../../../../../../../z_getto/application/mock"
+import { initMockAuthenticatePasswordResource } from "../mock"
+import { validateBoardOptions } from "../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/mock"
 
-import { loginIDFormFieldValidations } from "../../../../../../common/x_Component/Field/LoginID/mock"
-import {
-    passwordFormFieldCharacters,
-    passwordFormFieldValidations,
-    passwordFormFieldViews,
-} from "../../../../../../common/x_Component/Field/Password/mock"
-import { formValidationStates } from "../../../../../../../z_getto/getto-form/x_Resource/Form/mock"
+import { AuthenticatePasswordCoreState } from "../Core/action"
+import { ValidateBoardState } from "../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/action"
 
-import {
-    AuthenticatePasswordActionMockProps,
-    initMockAuthenticatePasswordEntryPoint,
-} from "../mock"
+const authenticateOptions = [
+    "initial",
+    "try",
+    "delayed",
+    "validation-error",
+    "bad-request",
+    "invalid",
+    "server-error",
+    "bad-response",
+    "infra-error",
+] as const
 
 export default {
-    title: "Auth/Sign/Password/Authenticate",
+    title: "library/Auth/Sign/Password/Authenticate",
     argTypes: {
-        type: {
-            table: { disable: true },
+        authenticate: {
+            control: { type: "select", options: authenticateOptions },
         },
-        validation: {
-            control: { type: "select", options: formValidationStates },
-        },
-        loginIDValidation: {
-            control: { type: "select", options: loginIDFormFieldValidations },
-        },
-        passwordValidation: {
-            control: { type: "select", options: passwordFormFieldValidations },
-        },
-        passwordCharacter: {
-            control: { type: "select", options: passwordFormFieldCharacters },
-        },
-        passwordView: {
-            control: { type: "select", options: passwordFormFieldViews },
+        form: {
+            control: { type: "select", options: validateBoardOptions },
         },
     },
 }
 
-type MockProps = AuthenticatePasswordActionMockProps
-const template = storyTemplate<MockProps>((args) => {
-    const passer = initMockPropsPasser<AuthenticatePasswordActionMockProps>()
-    const entryPoint = initMockAuthenticatePasswordEntryPoint(passer)
-    return h(Preview, { args })
+export type Props = Readonly<{
+    authenticate:
+        | "initial"
+        | "try"
+        | "delayed"
+        | "validation-error"
+        | "bad-request"
+        | "invalid"
+        | "server-error"
+        | "bad-response"
+        | "infra-error"
+    form: ValidateBoardState
+    err: string
+}>
+const template = storyTemplate<Props>((props) => {
+    return h(View, <AuthenticatePasswordProps>{
+        ...initMockAuthenticatePasswordResource(),
+        state: {
+            core: coreState(),
+            form: formState(),
+        },
+    })
 
-    function Preview(props: { args: MockProps }) {
-        useEffect(() => {
-            passer.update(props.args)
-        })
-        return h(AuthenticatePassword, entryPoint)
+    function coreState(): AuthenticatePasswordCoreState {
+        switch (props.authenticate) {
+            case "initial":
+                return { type: "initial-login" }
+
+            case "try":
+                return { type: "try-to-login" }
+
+            case "delayed":
+                return { type: "delayed-to-login" }
+
+            case "validation-error":
+                return { type: "failed-to-login", err: { type: "validation-error" } }
+
+            case "bad-request":
+                return { type: "failed-to-login", err: { type: "bad-request" } }
+
+            case "invalid":
+                return {
+                    type: "failed-to-login",
+                    err: { type: "invalid-password-login" },
+                }
+
+            case "server-error":
+                return { type: "failed-to-login", err: { type: "server-error" } }
+
+            case "bad-response":
+                return {
+                    type: "failed-to-login",
+                    err: { type: "bad-response", err: props.err },
+                }
+
+            case "infra-error":
+                return {
+                    type: "failed-to-login",
+                    err: { type: "infra-error", err: props.err },
+                }
+        }
+    }
+    function formState(): ValidateBoardState {
+        return props.form
     }
 })
 
-const defaultArgs = {
-    validation: "initial",
-    loginID: "",
-    loginIDValidation: "ok",
-    password: "",
-    passwordValidation: "ok",
-    passwordCharacter: "simple",
-    passwordView: "hide",
-} as const
-
-export const Initial = template({ ...defaultArgs, type: "initial" })
-export const Try = template({ ...defaultArgs, type: "try" })
-export const Delayed = template({ ...defaultArgs, type: "delayed" })
-export const ValidationError = template({ ...defaultArgs, type: "validation-error" })
-export const BadRequest = template({ ...defaultArgs, type: "bad-request" })
-export const Invalid = template({ ...defaultArgs, type: "invalid" })
-export const ServerError = template({ ...defaultArgs, type: "server-error" })
-export const BadResponse = template({
-    ...defaultArgs,
-    type: "bad-response",
-    err: "bad response error",
-})
-export const InfraError = template({
-    ...defaultArgs,
-    type: "infra-error",
-    err: "infra error",
-})
+export const Box = template({ authenticate: "initial", form: "valid", err: "" })

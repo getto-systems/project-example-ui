@@ -1,31 +1,13 @@
-import {
-    initMockPropsPasser,
-    MockPropsPasser,
-} from "../../../../../../z_getto/application/mock"
-
 import { initMockAuthenticatePasswordFormAction } from "./Form/mock"
-import {
-    initMockAuthenticatePasswordCoreAction,
-    AuthenticatePasswordCoreMockProps,
-} from "./Core/mock"
+import { initMockAuthenticatePasswordCoreAction } from "./Core/mock"
 
-import { AuthenticatePasswordEntryPoint } from "./action"
+import { AuthenticatePasswordResource } from "./action"
 import { newAuthSignLinkResource } from "../../../../common/searchParams/x_Action/Link/impl"
 
-export type AuthenticatePasswordActionMockPropsPasser = MockPropsPasser<
-    AuthenticatePasswordActionMockProps
->
-export type AuthenticatePasswordActionMockProps = AuthenticatePasswordCoreMockProps
-
-export function initMockAuthenticatePasswordEntryPoint(
-    passer: AuthenticatePasswordActionMockPropsPasser
-): AuthenticatePasswordEntryPoint {
+export function initMockAuthenticatePasswordResource(): AuthenticatePasswordResource {
     return {
-        resource: {
-            core: initMockAuthenticatePasswordCoreAction(passer),
-            form: initMockAuthenticatePasswordFormAction(initMockPropsPasser()),
-            ...newAuthSignLinkResource(),
-        },
-        terminate: () => null,
+        core: initMockAuthenticatePasswordCoreAction(),
+        form: initMockAuthenticatePasswordFormAction(),
+        ...newAuthSignLinkResource(),
     }
 }
