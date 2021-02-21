@@ -2,9 +2,10 @@ import { h } from "preact"
 
 import { storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
 
-import { View } from "./LoginID"
+import { LoginIDBoardFieldProps, View } from "./LoginID"
 
 import { initMockLoginIDBoardFieldAction } from "../mock"
+
 import { ValidateLoginIDState } from "../action"
 
 const typeOptions = ["valid", "empty", "too-long"] as const
@@ -20,9 +21,8 @@ export default {
 
 type Props = Readonly<{ validate: "valid" | "empty" | "too-long"; help: string }>
 const template = storyTemplate<Props>((props) => {
-    const action = initMockLoginIDBoardFieldAction()
-    return h(View, {
-        field: action,
+    return h(View, <LoginIDBoardFieldProps>{
+        field: initMockLoginIDBoardFieldAction(),
         help: [props.help],
         state: state(),
     })

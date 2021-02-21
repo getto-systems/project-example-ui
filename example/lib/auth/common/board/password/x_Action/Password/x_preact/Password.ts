@@ -27,7 +27,7 @@ import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } fro
 
 type Resource = PasswordBoardFieldResource & Readonly<{ help: VNodeContent[] }>
 export function PasswordBoard(resource: Resource): VNode {
-    return h(View, {
+    return h(View, <PasswordBoardFieldProps>{
         ...resource,
         state: {
             validate: useApplicationAction(resource.field.validate, initialValidateBoardFieldState),

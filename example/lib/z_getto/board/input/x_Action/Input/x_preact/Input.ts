@@ -8,7 +8,7 @@ import { initialInputBoardState, InputBoardValueResource, InputBoardValueState }
 import { markBoardValue } from "../../../../kernel/data"
 
 export function InputBoard(resource: InputBoardValueResource): VNode {
-    return h(View, {
+    return h(View, <InputBoardProps>{
         ...resource,
         state: useApplicationAction(resource.input, initialInputBoardState),
     })

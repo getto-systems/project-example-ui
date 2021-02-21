@@ -19,7 +19,7 @@ import { BoardFieldValidateResult } from "../../../../../../../z_getto/board/val
 
 type Resource = LoginIDBoardFieldResource & Readonly<{ help: VNodeContent[] }>
 export function LoginIDBoard(resource: Resource): VNode {
-    return h(View, {
+    return h(View, <LoginIDBoardFieldProps>{
         ...resource,
         state: useApplicationAction(resource.field.validate, initialValidateBoardFieldState),
     })

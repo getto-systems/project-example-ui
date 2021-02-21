@@ -2,9 +2,10 @@ import { h } from "preact"
 
 import { storyTemplate } from "../../../../../../../../z_vendor/storybook/preact/story"
 
-import { View } from "./Logout"
+import { LogoutProps, View } from "./Logout"
 
 import { initMockLogoutAction } from "../mock"
+
 import { LogoutState } from "../action"
 
 const logoutOptions = ["initial", "failed"] as const
@@ -24,8 +25,10 @@ type Props = Readonly<{
 }>
 
 const template = storyTemplate<Props>((props) => {
-    const action = initMockLogoutAction()
-    return h(View, { logout: action, state: state() })
+    return h(View, <LogoutProps>{
+        logout: initMockLogoutAction(),
+        state: state(),
+    })
 
     function state(): LogoutState {
         switch (props.logout) {
