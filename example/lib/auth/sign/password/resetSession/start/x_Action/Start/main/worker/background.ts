@@ -1,24 +1,41 @@
-import { newStartPasswordResetSessionHandler } from "../../Core/main/worker/background"
+import { newStartPasswordResetSessionMaterial } from "../core"
+
+import {
+    checkPasswordResetSessionStatusEventHasDone,
+    startPasswordResetSessionEventHasDone,
+} from "../../../../impl"
 
 import { WorkerHandler } from "../../../../../../../../../z_getto/application/worker/background"
 
 import {
-    StartPasswordResetSessionResourceProxyMessage,
-    StartPasswordResetSessionResourceProxyResponse,
+    StartPasswordResetSessionProxyMessage,
+    StartPasswordResetSessionProxyResponse,
 } from "./message"
 
-export function newStartPasswordResetSessionResourceHandler(
-    post: Post<StartPasswordResetSessionResourceProxyResponse>
-): WorkerHandler<StartPasswordResetSessionResourceProxyMessage> {
-    const handler = {
-        start: newStartPasswordResetSessionHandler((response) => {
-            post({ type: "start", response })
-        }),
-    }
+export function newStartPasswordResetSessionHandler(
+    post: Post<StartPasswordResetSessionProxyResponse>,
+): WorkerHandler<StartPasswordResetSessionProxyMessage> {
+    const material = newStartPasswordResetSessionMaterial()
     return (message) => {
-        switch (message.type) {
+        switch (message.method) {
             case "start":
-                handler.start(message.message)
+                material.start(message.params.fields, (event) => {
+                    post({
+                        ...message,
+                        done: startPasswordResetSessionEventHasDone(event),
+                        event,
+                    })
+                })
+                return
+
+            case "checkStatus":
+                material.checkStatus(message.params.sessionID, (event) => {
+                    post({
+                        ...message,
+                        done: checkPasswordResetSessionStatusEventHasDone(event),
+                        event,
+                    })
+                })
                 return
         }
     }

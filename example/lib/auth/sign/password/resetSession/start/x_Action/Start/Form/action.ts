@@ -1,18 +1,18 @@
-import {
-    FormContainerComponent,
-    FormContainerMaterial,
-} from "../../../../../../../../z_getto/getto-form/x_Resource/Form/component"
-import {
-    LoginIDFormFieldComponent,
-    LoginIDFormFieldMaterial,
-} from "../../../../../../../common/x_Component/Field/LoginID/component"
+import { ValidateBoardAction } from "../../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/action"
+import { LoginIDBoardFieldAction } from "../../../../../../../common/board/loginID/x_Action/LoginID/action"
 
 import { PasswordResetSessionFields } from "../../../data"
-import { FormConvertResult } from "../../../../../../../../z_getto/getto-form/form/data"
 
-export interface StartPasswordResetSessionFormAction extends FormContainerComponent {
-    readonly loginID: LoginIDFormFieldComponent
-    getStartSessionFields(): FormConvertResult<PasswordResetSessionFields>
+export interface StartPasswordResetSessionFormAction {
+    readonly loginID: LoginIDBoardFieldAction
+    readonly validate: StartPasswordResetSessionValidateAction
+    readonly clear: ClearAction
 }
 
-export type StartPasswordResetSessionFormMaterial = FormContainerMaterial & LoginIDFormFieldMaterial
+export type StartPasswordResetSessionValidateAction = ValidateBoardAction<
+    PasswordResetSessionFields
+>
+
+interface ClearAction {
+    (): void
+}

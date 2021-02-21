@@ -7,15 +7,15 @@ import { StartContinuousRenewAuthnInfoMethod } from "../../../../../../kernel/au
 import { RegisterPasswordEvent } from "../../../event"
 import { StartContinuousRenewAuthnInfoEvent } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/event"
 
-import { FormConvertResult } from "../../../../../../../../z_getto/getto-form/form/data"
 import { PasswordResetFields } from "../../../data"
 import {
     SecureScriptPath,
     LoadSecureScriptError,
 } from "../../../../../../common/secureScriptPath/get/data"
+import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
 
 export interface RegisterPasswordCoreAction extends ApplicationAction<RegisterPasswordCoreState> {
-    submit(fields: FormConvertResult<PasswordResetFields>): void
+    submit(fields: BoardConvertResult<PasswordResetFields>): void
     loadError(err: LoadSecureScriptError): void
 }
 
@@ -33,10 +33,7 @@ export type RegisterPasswordCoreBackground = Readonly<{
 export type RegisterPasswordCoreState =
     | Readonly<{ type: "initial-reset" }>
     | Exclude<RegisterPasswordEvent, { type: "succeed-to-reset" }>
-    | Exclude<
-          StartContinuousRenewAuthnInfoEvent,
-          { type: "succeed-to-start-continuous-renew" }
-      >
+    | Exclude<StartContinuousRenewAuthnInfoEvent, { type: "succeed-to-start-continuous-renew" }>
     | Readonly<{ type: "try-to-load"; scriptPath: SecureScriptPath }>
     | Readonly<{ type: "load-error"; err: LoadSecureScriptError }>
 

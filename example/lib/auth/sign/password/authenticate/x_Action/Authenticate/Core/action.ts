@@ -7,16 +7,16 @@ import { StartContinuousRenewAuthnInfoMethod } from "../../../../../kernel/authn
 import { AuthenticatePasswordEvent } from "../../../event"
 import { StartContinuousRenewAuthnInfoEvent } from "../../../../../kernel/authnInfo/common/startContinuousRenew/event"
 
-import { FormConvertResult } from "../../../../../../../z_getto/getto-form/form/data"
 import {
     SecureScriptPath,
     LoadSecureScriptError,
 } from "../../../../../common/secureScriptPath/get/data"
 import { AuthenticatePasswordFields } from "../../../data"
+import { BoardConvertResult } from "../../../../../../../z_getto/board/kernel/data"
 
 export interface AuthenticatePasswordCoreAction
     extends ApplicationAction<AuthenticatePasswordCoreState> {
-    submit(fields: FormConvertResult<AuthenticatePasswordFields>): void
+    submit(fields: BoardConvertResult<AuthenticatePasswordFields>): void
     loadError(err: LoadSecureScriptError): void
 }
 

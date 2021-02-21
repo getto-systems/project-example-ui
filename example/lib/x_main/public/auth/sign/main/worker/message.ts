@@ -7,8 +7,8 @@ import {
     RegisterPasswordProxyResponse,
 } from "../../../../../../auth/sign/password/resetSession/register/x_Action/Register/main/worker/message"
 import {
-    StartPasswordResetSessionResourceProxyMessage,
-    StartPasswordResetSessionResourceProxyResponse,
+    StartPasswordResetSessionProxyMessage,
+    StartPasswordResetSessionProxyResponse,
 } from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/worker/message"
 
 export type ForegroundMessage =
@@ -18,7 +18,7 @@ export type ForegroundMessage =
       }>
     | Readonly<{
           type: "password-resetSession-start"
-          message: StartPasswordResetSessionResourceProxyMessage
+          message: StartPasswordResetSessionProxyMessage
       }>
     | Readonly<{
           type: "password-resetSession-register"
@@ -32,7 +32,7 @@ export type BackgroundMessage =
       }>
     | Readonly<{
           type: "password-resetSession-start"
-          response: StartPasswordResetSessionResourceProxyResponse
+          response: StartPasswordResetSessionProxyResponse
       }>
     | Readonly<{
           type: "password-resetSession-register"

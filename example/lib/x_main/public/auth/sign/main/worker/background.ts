@@ -1,29 +1,29 @@
 import { newAuthenticatePasswordHandler } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/worker/background"
-import { newStartPasswordResetSessionResourceHandler } from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/worker/background"
+import { newStartPasswordResetSessionHandler } from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/worker/background"
+import { newRegisterPasswordHandler } from "../../../../../../auth/sign/password/resetSession/register/x_Action/Register/main/worker/background"
 
 import { WorkerHandler } from "../../../../../../z_getto/application/worker/background"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
 import { AuthenticatePasswordProxyMessage } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/worker/message"
-import { StartPasswordResetSessionResourceProxyMessage } from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/worker/message"
-import { newRegisterPasswordHandler } from "../../../../../../auth/sign/password/resetSession/register/x_Action/Register/main/worker/background"
 import { RegisterPasswordProxyMessage } from "../../../../../../auth/sign/password/resetSession/register/x_Action/Register/main/worker/message"
+import { StartPasswordResetSessionProxyMessage } from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/worker/message"
 
 export function newLoginWorker(worker: Worker): void {
     const handler: Handler = {
         password: {
             authenticate: newAuthenticatePasswordHandler((response) =>
-                postBackgroundMessage({ type: "password-authenticate", response })
+                postBackgroundMessage({ type: "password-authenticate", response }),
             ),
             resetSession: {
                 register: newRegisterPasswordHandler((response) =>
                     postBackgroundMessage({
                         type: "password-resetSession-register",
                         response,
-                    })
+                    }),
                 ),
-                start: newStartPasswordResetSessionResourceHandler((response) =>
-                    postBackgroundMessage({ type: "password-resetSession-start", response })
+                start: newStartPasswordResetSessionHandler((response) =>
+                    postBackgroundMessage({ type: "password-resetSession-start", response }),
                 ),
             },
         },
@@ -47,14 +47,14 @@ type Handler = Readonly<{
         authenticate: WorkerHandler<AuthenticatePasswordProxyMessage>
         resetSession: Readonly<{
             register: WorkerHandler<RegisterPasswordProxyMessage>
-            start: WorkerHandler<StartPasswordResetSessionResourceProxyMessage>
+            start: WorkerHandler<StartPasswordResetSessionProxyMessage>
         }>
     }>
 }>
 
 function initForegroundMessageHandler(
     handler: Handler,
-    errorHandler: Post<string>
+    errorHandler: Post<string>,
 ): Post<ForegroundMessage> {
     return (message) => {
         try {

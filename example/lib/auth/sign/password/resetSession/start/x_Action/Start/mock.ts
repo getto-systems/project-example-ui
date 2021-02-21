@@ -1,27 +1,16 @@
-import { MockPropsPasser } from "../../../../../../../z_getto/application/mock"
+import { newAuthSignLinkResource } from "../../../../../common/searchParams/x_Action/Link/impl"
 
-import {
-    initMockStartPasswordResetSessionAction,
-    StartPasswordResetSessionMockProps,
-} from "./Core/mock"
-import {
-    initMockStartPasswordResetSessionFormAction,
-    StartPasswordResetSessionFormMockProps,
-} from "./Form/mock"
+import { initMockStartPasswordResetSessionCoreAction } from "./Core/mock"
+import { initMockStartPasswordResetSessionFormAction } from "./Form/mock"
 
-import { StartPasswordResetSessionResource } from "./resource"
+import { StartPasswordResetSessionResource } from "./action"
 
-export type StartPasswordResetSessionResourceMockPropsPasser = MockPropsPasser<
-    StartPasswordResetSessionResourceMockProps
->
-export type StartPasswordResetSessionResourceMockProps = StartPasswordResetSessionMockProps &
-    StartPasswordResetSessionFormMockProps
-
-export function initMockStartPasswordResetSessionResource(
-    passer: StartPasswordResetSessionResourceMockPropsPasser
-): StartPasswordResetSessionResource {
+export function initMockStartPasswordResetSessionResource(): StartPasswordResetSessionResource {
     return {
-        start: initMockStartPasswordResetSessionAction(passer),
-        form: initMockStartPasswordResetSessionFormAction(passer),
+        start: {
+            core: initMockStartPasswordResetSessionCoreAction(),
+            form: initMockStartPasswordResetSessionFormAction(),
+        },
+        ...newAuthSignLinkResource(),
     }
 }

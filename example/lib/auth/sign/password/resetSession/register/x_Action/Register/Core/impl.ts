@@ -20,9 +20,9 @@ import { GetSecureScriptPathLocationInfo } from "../../../../../../common/secure
 import { RegisterPasswordLocationInfo } from "../../../method"
 
 import { LoadSecureScriptError } from "../../../../../../common/secureScriptPath/get/data"
-import { FormConvertResult } from "../../../../../../../../z_getto/getto-form/form/data"
 import { PasswordResetFields } from "../../../data"
 import { AuthnInfo } from "../../../../../../kernel/authnInfo/kernel/data"
+import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
 
 export type RegisterPasswordCoreBase = RegisterPasswordCoreForegroundBase &
     RegisterPasswordCoreBackgroundBase
@@ -37,18 +37,18 @@ export type RegisterPasswordCoreBackgroundBase = Readonly<{
 
 export function initRegisterPasswordCoreAction(
     infra: RegisterPasswordCoreBase,
-    locationInfo: GetSecureScriptPathLocationInfo & RegisterPasswordLocationInfo
+    locationInfo: GetSecureScriptPathLocationInfo & RegisterPasswordLocationInfo,
 ): RegisterPasswordCoreAction {
     return initRegisterPasswordCoreAction_merge(
         infra,
         locationInfo,
-        initRegisterPasswordCoreBackground(infra, locationInfo)
+        initRegisterPasswordCoreBackground(infra, locationInfo),
     )
 }
 export function initRegisterPasswordCoreAction_merge(
     infra: RegisterPasswordCoreForegroundBase,
     locationInfo: GetSecureScriptPathLocationInfo,
-    background: RegisterPasswordCoreBackground
+    background: RegisterPasswordCoreBackground,
 ): RegisterPasswordCoreAction {
     return new Action({
         ...initRegisterPasswordCoreForeground(infra, locationInfo),
@@ -57,7 +57,7 @@ export function initRegisterPasswordCoreAction_merge(
 }
 function initRegisterPasswordCoreForeground(
     infra: RegisterPasswordCoreForegroundBase,
-    locationInfo: GetSecureScriptPathLocationInfo
+    locationInfo: GetSecureScriptPathLocationInfo,
 ): RegisterPasswordCoreForeground {
     return {
         startContinuousRenew: startContinuousRenewAuthnInfo(infra.startContinuousRenew),
@@ -66,7 +66,7 @@ function initRegisterPasswordCoreForeground(
 }
 export function initRegisterPasswordCoreBackground(
     infra: RegisterPasswordCoreBackgroundBase,
-    locationInfo: RegisterPasswordLocationInfo
+    locationInfo: RegisterPasswordLocationInfo,
 ): RegisterPasswordCoreBackground {
     return {
         register: registerPassword(infra.register)(locationInfo),
@@ -83,7 +83,7 @@ class Action
         this.material = material
     }
 
-    submit(fields: FormConvertResult<PasswordResetFields>): void {
+    submit(fields: BoardConvertResult<PasswordResetFields>): void {
         this.material.register(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-reset":

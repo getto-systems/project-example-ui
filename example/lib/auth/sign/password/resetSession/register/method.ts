@@ -1,7 +1,7 @@
 import { RegisterPasswordEvent } from "./event"
 
-import { FormConvertResult } from "../../../../../z_getto/getto-form/form/data"
 import { PasswordResetToken, PasswordResetFields } from "./data"
+import { BoardConvertResult } from "../../../../../z_getto/board/kernel/data"
 
 export interface RegisterPasswordPod {
     (locationInfo: RegisterPasswordLocationInfo): RegisterPasswordMethod
@@ -10,10 +10,7 @@ export interface RegisterPasswordLocationInfo {
     getPasswordResetToken(): PasswordResetToken
 }
 export interface RegisterPasswordMethod {
-    (
-        fields: FormConvertResult<PasswordResetFields>,
-        post: Post<RegisterPasswordEvent>
-    ): void
+    (fields: BoardConvertResult<PasswordResetFields>, post: Post<RegisterPasswordEvent>): void
 }
 
 interface Post<T> {

@@ -4,14 +4,11 @@ import {
     AuthSignView,
     AuthSignViewState,
     AuthSignViewType,
-    PasswordResetSessionEntryPoint,
     AuthSignViewLocationInfo,
     AuthSignResourceFactory,
 } from "./entryPoint"
 
 import { AuthSignSearchParams } from "../../../../auth/sign/common/searchParams/data"
-import { AuthenticatePasswordEntryPoint } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/action"
-import { RegisterPasswordEntryPoint } from "../../../../auth/sign/password/resetSession/register/x_Action/Register/action"
 
 export function initLoginViewLocationInfo(currentURL: URL): AuthSignViewLocationInfo {
     return {
@@ -63,28 +60,11 @@ export class View extends ApplicationAbstractAction<AuthSignViewState> implement
     mapViewType(type: AuthSignViewType): AuthSignViewState {
         switch (type) {
             case "password-login":
-                return { type, entryPoint: this.passwordLogin() }
+                return { type, entryPoint: this.components.passwordLogin() }
             case "password-reset-session":
-                return { type, entryPoint: this.passwordResetSession() }
+                return { type, entryPoint: this.components.passwordResetSession() }
             case "password-reset":
-                return { type, entryPoint: this.passwordReset() }
+                return { type, entryPoint: this.components.passwordReset() }
         }
-    }
-
-    passwordLogin(): AuthenticatePasswordEntryPoint {
-        return this.components.passwordLogin()
-    }
-    passwordResetSession(): PasswordResetSessionEntryPoint {
-        const resource = { ...this.components.passwordResetSession(), ...this.components.link() }
-        return {
-            resource,
-            terminate: () => {
-                resource.start.terminate()
-                resource.form.terminate()
-            },
-        }
-    }
-    passwordReset(): RegisterPasswordEntryPoint {
-        return this.components.passwordReset()
     }
 }

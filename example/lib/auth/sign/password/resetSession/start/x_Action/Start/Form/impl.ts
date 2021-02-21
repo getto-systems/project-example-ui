@@ -1,60 +1,44 @@
-import {
-    StartPasswordResetSessionFormMaterial,
-    StartPasswordResetSessionFormAction,
-} from "./action"
+import { StartPasswordResetSessionFormAction } from "./action"
 
-import { PasswordResetSessionFields } from "../../../data"
-import { FormConvertResult } from "../../../../../../../../z_getto/getto-form/form/data"
-import { FormContainerBaseComponent } from "../../../../../../../../z_getto/getto-form/x_Resource/Form/impl"
-import { LoginIDFormFieldComponent } from "../../../../../../../common/x_Component/Field/LoginID/component"
-import { initLoginIDFormFieldComponent } from "../../../../../../../common/x_Component/Field/LoginID/impl"
+import { initLoginIDBoardFieldAction } from "../../../../../../../common/board/loginID/x_Action/LoginID/impl"
+import { initValidateBoardAction } from "../../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/impl"
+
+import { ValidateBoardInfra } from "../../../../../../../../z_getto/board/validateBoard/infra"
+import { ValidateBoardFieldInfra } from "../../../../../../../../z_getto/board/validateField/infra"
+
+// TODO ValidateBoardInfra & ValidateBoardFieldInfra を BoardBase として定義しよう
+export type StartPasswordResetSessionFormBase = ValidateBoardInfra & ValidateBoardFieldInfra
 
 export function initStartPasswordResetSessionFormAction(
-    material: StartPasswordResetSessionFormMaterial
+    infra: StartPasswordResetSessionFormBase,
 ): StartPasswordResetSessionFormAction {
-    return new Action(material)
-}
+    const loginID = initLoginIDBoardFieldAction({ name: "loginID" }, infra)
+    const validate = initValidateBoardAction(
+        {
+            fields: [loginID.validate.name],
+            converter: () => {
+                loginID.validate.check()
 
-class Action
-    extends FormContainerBaseComponent<StartPasswordResetSessionFormMaterial>
-    implements StartPasswordResetSessionFormAction {
-    readonly loginID: LoginIDFormFieldComponent
-
-    constructor(material: StartPasswordResetSessionFormMaterial) {
-        super(material, (path) => {
-            switch (path.field) {
-                case "loginID":
-                    return { found: true, input: this.loginID.input }
-
-                default:
-                    return { found: false }
-            }
-        })
-
-        this.loginID = this.initField(
-            "loginID",
-            initLoginIDFormFieldComponent({ loginID: material.loginID })
-        )
-
-        this.terminateHook(() => {
-            this.loginID.terminate()
-        })
-    }
-
-    getStartSessionFields(): FormConvertResult<PasswordResetSessionFields> {
-        this.loginID.validate()
-
-        const result = {
-            loginID: this.material.loginID.convert(),
-        }
-        if (!result.loginID.success) {
-            return { success: false }
-        }
-        return {
-            success: true,
-            value: {
-                loginID: result.loginID.value,
+                const loginIDResult = loginID.validate.get()
+                if (!loginIDResult.success) {
+                    return { success: false }
+                }
+                return {
+                    success: true,
+                    value: {
+                        loginID: loginIDResult.value,
+                    },
+                }
             },
-        }
+        },
+        infra,
+    )
+
+    loginID.input.addInputHandler(() => validate.check())
+
+    return { loginID, validate, clear }
+
+    function clear() {
+        loginID.clear()
     }
 }

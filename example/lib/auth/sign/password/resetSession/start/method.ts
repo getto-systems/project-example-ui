@@ -1,12 +1,12 @@
 import { CheckPasswordResetSessionStatusEvent, StartPasswordResetSessionEvent } from "./event"
 
-import { FormConvertResult } from "../../../../../z_getto/getto-form/form/data"
+import { BoardConvertResult } from "../../../../../z_getto/board/kernel/data"
 import { PasswordResetSessionID, PasswordResetSessionFields } from "./data"
 
 export interface StartPasswordResetSessionMethod {
     (
-        fields: FormConvertResult<PasswordResetSessionFields>,
-        post: Post<StartPasswordResetSessionEvent>
+        fields: BoardConvertResult<PasswordResetSessionFields>,
+        post: Post<StartPasswordResetSessionEvent>,
     ): void
 }
 

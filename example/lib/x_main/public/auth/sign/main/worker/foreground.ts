@@ -2,11 +2,7 @@ import { newWorker } from "../../../../../../z_getto/application/worker/foregrou
 
 import { newRenewAuthnInfo } from "../../../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/main"
 import { newAuthenticatePassword_proxy } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/core"
-import { newStartPasswordResetSessionResource_merge } from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/core"
-import {
-    newStartPasswordResetSessionResourceProxy,
-    StartPasswordResetSessionResourceProxy,
-} from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/worker/foreground"
+import { newStartPasswordResetSession_proxy } from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/core"
 
 import { currentURL } from "../../../../../../z_getto/infra/location/url"
 
@@ -26,6 +22,10 @@ import {
     newRegisterPasswordProxy,
     RegisterPasswordProxy,
 } from "../../../../../../auth/sign/password/resetSession/register/x_Action/Register/main/worker/foreground"
+import {
+    newStartPasswordResetSessionProxy,
+    StartPasswordResetSessionProxy,
+} from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/worker/foreground"
 
 export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     const worker = newWorker()
@@ -42,11 +42,11 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
         passwordLogin: () =>
             newAuthenticatePassword_proxy(webStorage, proxy.password.authenticate.background()),
         passwordResetSession: () =>
-            newStartPasswordResetSessionResource_merge(proxy.password.resetSession.start.resource),
+            newStartPasswordResetSession_proxy(proxy.password.resetSession.start.background()),
         passwordReset: () =>
             newRegisterPassword_proxy(
                 webStorage,
-                proxy.password.resetSession.register.background()
+                proxy.password.resetSession.register.background(),
             ),
     })
 
@@ -77,7 +77,7 @@ type Proxy = Readonly<{
         authenticate: AuthenticatePasswordProxy
         resetSession: Readonly<{
             register: RegisterPasswordProxy
-            start: StartPasswordResetSessionResourceProxy
+            start: StartPasswordResetSessionProxy
         }>
     }>
 }>
@@ -85,14 +85,14 @@ function initProxy(webStorage: Storage, post: Post<ForegroundMessage>): Proxy {
     return {
         password: {
             authenticate: newAuthenticatePasswordProxy(webStorage, (message) =>
-                post({ type: "password-authenticate", message })
+                post({ type: "password-authenticate", message }),
             ),
             resetSession: {
                 register: newRegisterPasswordProxy(webStorage, (message) =>
-                    post({ type: "password-resetSession-register", message })
+                    post({ type: "password-resetSession-register", message }),
                 ),
-                start: newStartPasswordResetSessionResourceProxy((message) =>
-                    post({ type: "password-resetSession-start", message })
+                start: newStartPasswordResetSessionProxy((message) =>
+                    post({ type: "password-resetSession-start", message }),
                 ),
             },
         },
@@ -100,7 +100,7 @@ function initProxy(webStorage: Storage, post: Post<ForegroundMessage>): Proxy {
 }
 function initBackgroundMessageHandler(
     proxy: Proxy,
-    errorHandler: Post<string>
+    errorHandler: Post<string>,
 ): Post<BackgroundMessage> {
     return (message) => {
         try {

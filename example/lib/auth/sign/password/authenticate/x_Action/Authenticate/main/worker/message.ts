@@ -2,8 +2,8 @@ import { WorkerProxySpec } from "../../../../../../../../z_getto/application/wor
 
 import { AuthenticatePasswordEvent } from "../../../../event"
 
-import { FormConvertResult } from "../../../../../../../../z_getto/getto-form/form/data"
 import { AuthenticatePasswordFields } from "../../../../data"
+import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
 
 export type AuthenticatePasswordProxyMaterial = Readonly<{
     authenticate: Authenticate["method"]
@@ -13,6 +13,6 @@ export type AuthenticatePasswordProxyResponse = Authenticate["response"]
 
 type Authenticate = WorkerProxySpec<
     "authenticate",
-    Readonly<{ fields: FormConvertResult<AuthenticatePasswordFields> }>,
+    Readonly<{ fields: BoardConvertResult<AuthenticatePasswordFields> }>,
     AuthenticatePasswordEvent
 >
