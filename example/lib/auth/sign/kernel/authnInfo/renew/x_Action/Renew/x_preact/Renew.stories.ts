@@ -61,7 +61,4 @@ const template = storyTemplate<Props>((props) => {
     }
 })
 
-export const Box = template({
-    renew: "delayed",
-    err: "",
-})
+export const Box = template({ renew: "delayed", err: "" })
