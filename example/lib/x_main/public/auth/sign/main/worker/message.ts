@@ -9,7 +9,7 @@ import {
 import {
     StartPasswordResetSessionResourceProxyMessage,
     StartPasswordResetSessionResourceProxyResponse,
-} from "../../../../../../auth/x_Resource/Sign/Password/ResetSession/Start/main/worker/message"
+} from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/worker/message"
 
 export type ForegroundMessage =
     | Readonly<{

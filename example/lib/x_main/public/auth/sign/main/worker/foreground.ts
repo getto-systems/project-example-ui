@@ -2,11 +2,11 @@ import { newWorker } from "../../../../../../z_getto/application/worker/foregrou
 
 import { newRenewAuthnInfo } from "../../../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/main"
 import { newAuthenticatePassword_proxy } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/core"
-import { newStartPasswordResetSessionResource_merge } from "../../../../../../auth/x_Resource/Sign/Password/ResetSession/Start/main/core"
+import { newStartPasswordResetSessionResource_merge } from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/core"
 import {
     newStartPasswordResetSessionResourceProxy,
     StartPasswordResetSessionResourceProxy,
-} from "../../../../../../auth/x_Resource/Sign/Password/ResetSession/Start/main/worker/foreground"
+} from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/worker/foreground"
 
 import { currentURL } from "../../../../../../z_getto/infra/location/url"
 

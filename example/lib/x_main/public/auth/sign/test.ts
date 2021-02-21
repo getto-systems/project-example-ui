@@ -46,8 +46,8 @@ import { initAuthenticatePasswordFormAction } from "../../../../auth/sign/passwo
 import { initAuthenticatePasswordCoreAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Core/impl"
 import { initRegisterPasswordCoreAction } from "../../../../auth/sign/password/resetSession/register/x_Action/Register/Core/impl"
 import { initRegisterPasswordFormAction } from "../../../../auth/sign/password/resetSession/register/x_Action/Register/Form/impl"
-import { initStartPasswordResetSessionFormAction } from "../../../../auth/sign/x_Action/Password/ResetSession/Start/Form/impl"
-import { initStartPasswordResetSessionAction } from "../../../../auth/sign/x_Action/Password/ResetSession/Start/Core/impl"
+import { initStartPasswordResetSessionFormAction } from "../../../../auth/sign/password/resetSession/start/x_Action/Start/Form/impl"
+import { initStartPasswordResetSessionAction } from "../../../../auth/sign/password/resetSession/start/x_Action/Start/Core/impl"
 import { toAuthenticatePasswordEntryPoint } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/impl"
 import { toRegisterPasswordEntryPoint } from "../../../../auth/sign/password/resetSession/register/x_Action/Register/impl"
 

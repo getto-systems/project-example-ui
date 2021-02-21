@@ -6,7 +6,7 @@ import { initLoginViewLocationInfo, View } from "../impl"
 import { newAuthSignLinkResource } from "../../../../../auth/sign/common/searchParams/x_Action/Link/impl"
 
 import { AuthSignEntryPoint } from "../entryPoint"
-import { newStartPasswordResetSessionResource } from "../../../../../auth/x_Resource/Sign/Password/ResetSession/Start/main/core"
+import { newStartPasswordResetSessionResource } from "../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/core"
 import { currentURL } from "../../../../../z_getto/infra/location/url"
 import { newRegisterPassword } from "../../../../../auth/sign/password/resetSession/register/x_Action/Register/main/core"
 
