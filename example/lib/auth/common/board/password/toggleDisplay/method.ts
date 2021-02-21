@@ -1,7 +1,9 @@
 import { TogglePasswordDisplayBoardEvent } from "./event"
 
+import { BoardValue } from "../../../../../z_getto/board/kernel/data"
+
 export interface ShowPasswordDisplayBoardMethod {
-    (post: Post<TogglePasswordDisplayBoardEvent>): void
+    (password: BoardValue, post: Post<TogglePasswordDisplayBoardEvent>): void
 }
 export interface HidePasswordDisplayBoardMethod {
     (post: Post<TogglePasswordDisplayBoardEvent>): void

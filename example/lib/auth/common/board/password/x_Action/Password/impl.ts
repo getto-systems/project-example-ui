@@ -8,6 +8,8 @@ import { hidePasswordDisplayBoard, showPasswordDisplayBoard } from "../../toggle
 import { ValidateBoardFieldInfra } from "../../../../../../z_getto/board/validateField/infra"
 
 import {
+    CheckPasswordCharacterAction,
+    CheckPasswordCharacterMaterial,
     PasswordBoardFieldAction,
     TogglePasswordDisplayBoardAction,
     TogglePasswordDisplayBoardMaterial,
@@ -17,6 +19,7 @@ import {
 import { BoardConvertResult, BoardValue } from "../../../../../../z_getto/board/kernel/data"
 import { markPassword, Password } from "../../../../password/data"
 import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "./data"
+import { checkPasswordCharacter } from "../../checkCharacter/impl"
 
 export type PasswordBoardEmbed<N extends string> = Readonly<{
     name: N
@@ -37,18 +40,23 @@ export function initPasswordBoardFieldAction<N extends string>(
         infra
     )
 
-    input.addInputHandler(() => validate.check())
+    const clear = () => input.clear()
 
-    return {
-        input,
-        validate,
-        clear: () => input.clear(),
-        toggle: new ToggleAction({
-            show: showPasswordDisplayBoard,
-            hide: hidePasswordDisplayBoard,
-        }),
-        characterState: () => checkPasswordCharacter(input.get()),
-    }
+    const toggle = new ToggleAction(() => input.get(), {
+        show: showPasswordDisplayBoard,
+        hide: hidePasswordDisplayBoard,
+    })
+
+    const passwordCharacter = new CheckAction({
+        check: checkPasswordCharacter,
+    })
+
+    input.addInputHandler(() => {
+        validate.check()
+        passwordCharacter.check(input.get())
+    })
+
+    return { input, validate, clear, toggle, passwordCharacter }
 }
 export function terminatePasswordBoardFieldAction(resource: PasswordBoardFieldAction): void {
     resource.input.terminate()
@@ -78,27 +86,37 @@ const TOO_LONG: ValidatePasswordError[] = ["too-long"]
 class ToggleAction
     extends ApplicationAbstractAction<TogglePasswordDisplayBoardState>
     implements TogglePasswordDisplayBoardAction {
+    password: PasswordGetter
     material: TogglePasswordDisplayBoardMaterial
 
-    constructor(material: TogglePasswordDisplayBoardMaterial) {
+    constructor(password: PasswordGetter, material: TogglePasswordDisplayBoardMaterial) {
         super()
+        this.password = password
         this.material = material
     }
 
     show(): void {
-        this.material.show(this.post)
+        this.material.show(this.password(), this.post)
     }
     hide(): void {
         this.material.hide(this.post)
     }
 }
+interface PasswordGetter {
+    (): BoardValue
+}
 
-function checkPasswordCharacter(password: BoardValue): PasswordCharacterState {
-    for (let i = 0; i < password.length; i++) {
-        // 1文字でも 128バイト以上の文字があれば complex
-        if (password.charCodeAt(i) >= 128) {
-            return { multiByte: true }
-        }
+class CheckAction
+    extends ApplicationAbstractAction<PasswordCharacterState>
+    implements CheckPasswordCharacterAction {
+    material: CheckPasswordCharacterMaterial
+
+    constructor(material: CheckPasswordCharacterMaterial) {
+        super()
+        this.material = material
     }
-    return { multiByte: false }
+
+    check(password: BoardValue): void {
+        this.material.check(password, this.post)
+    }
 }

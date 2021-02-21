@@ -2,7 +2,7 @@ import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
 import { newBoardValidateStack } from "../../../../../../z_getto/board/kernel/infra/stack"
 import { ValidateBoardFieldState } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
 import { initSyncActionChecker } from "../../../../../../z_getto/application/testHelper"
-import { TogglePasswordDisplayBoardState } from "./action"
+import { CheckPasswordCharacterState, TogglePasswordDisplayBoardState } from "./action"
 import { ValidatePasswordError } from "./data"
 import { initPasswordBoardFieldAction } from "./impl"
 
@@ -106,7 +106,7 @@ describe("PasswordBoard", () => {
         resource.toggle.show()
 
         checker.check((stack) => {
-            expect(stack).toEqual([{ visible: true }])
+            expect(stack).toEqual([{ visible: true, password: "" }])
         })
 
         resource.toggle.hide()
@@ -119,15 +119,25 @@ describe("PasswordBoard", () => {
     test("password character state : single byte", () => {
         const { resource } = standardResource()
 
+        const checker = initSyncActionChecker<CheckPasswordCharacterState>()
+        resource.passwordCharacter.addStateHandler(checker.handler)
+
         resource.input.set(markBoardValue("password"))
-        expect(resource.characterState()).toEqual({ multiByte: false })
+        checker.check((stack) => {
+            expect(stack).toEqual([{ multiByte: false }])
+        })
     })
 
     test("password character state : multi byte", () => {
         const { resource } = standardResource()
 
+        const checker = initSyncActionChecker<CheckPasswordCharacterState>()
+        resource.passwordCharacter.addStateHandler(checker.handler)
+
         resource.input.set(markBoardValue("パスワード"))
-        expect(resource.characterState()).toEqual({ multiByte: true })
+        checker.check((stack) => {
+            expect(stack).toEqual([{ multiByte: true }])
+        })
     })
 
     test("clear", () => {

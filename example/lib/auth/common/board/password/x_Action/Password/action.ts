@@ -12,6 +12,7 @@ import {
 
 import { Password } from "../../../../password/data"
 import { PasswordCharacterState, ValidatePasswordError } from "./data"
+import { CheckPasswordCharacterMethod } from "../../checkCharacter/method"
 
 export type PasswordBoardFieldResource = Readonly<{
     field: PasswordBoardFieldAction
@@ -22,7 +23,7 @@ export interface PasswordBoardFieldAction {
     readonly validate: ValidatePasswordAction
     readonly clear: ClearAction
     readonly toggle: TogglePasswordDisplayBoardAction
-    readonly characterState: PasswordCharacterStateDetecter
+    readonly passwordCharacter: CheckPasswordCharacterAction
 }
 
 export type ValidatePasswordAction = ValidateBoardFieldAction<Password, ValidatePasswordError>
@@ -45,9 +46,14 @@ export const initialTogglePasswordDisplayBoardState: TogglePasswordDisplayBoardS
     visible: false,
 }
 
-export interface PasswordCharacterStateDetecter {
-    (): PasswordCharacterState
-}
+export type CheckPasswordCharacterAction = ApplicationAction<PasswordCharacterState>
+
+export type CheckPasswordCharacterMaterial = Readonly<{
+    check: CheckPasswordCharacterMethod
+}>
+
+export type CheckPasswordCharacterState = PasswordCharacterState
+export const initialCheckPasswordCharacterState: PasswordCharacterState = { multiByte: false }
 
 interface ClearAction {
     (): void

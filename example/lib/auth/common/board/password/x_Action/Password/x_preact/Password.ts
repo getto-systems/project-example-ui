@@ -9,51 +9,80 @@ import {
 } from "../../../../../../../z_vendor/getto-css/preact/design/form"
 
 import { useApplicationAction } from "../../../../../../../x_preact/common/hooks"
+import { icon } from "../../../../../../../x_preact/common/icon"
 
 import { InputBoard } from "../../../../../../../z_getto/board/input/x_Action/Input/x_preact/Input"
 
 import { initialValidateBoardFieldState } from "../../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
-import { initialTogglePasswordDisplayBoardState, PasswordBoardFieldResource } from "../action"
+import {
+    CheckPasswordCharacterState,
+    initialCheckPasswordCharacterState,
+    initialTogglePasswordDisplayBoardState,
+    PasswordBoardFieldResource,
+    TogglePasswordDisplayBoardState,
+    ValidatePasswordState,
+} from "../action"
 
 import { BoardValue } from "../../../../../../../z_getto/board/kernel/data"
 import { BoardFieldValidateResult } from "../../../../../../../z_getto/board/validateField/data"
 import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "../data"
-import { icon } from "../../../../../../../x_preact/common/icon"
 
-type Props = PasswordBoardFieldResource &
+type Resource = PasswordBoardFieldResource & Readonly<{ help: VNodeContent[] }>
+export function PasswordBoard(resource: Resource): VNode {
+    return h(View, {
+        ...resource,
+        state: {
+            validate: useApplicationAction(resource.field.validate, initialValidateBoardFieldState),
+            toggle: useApplicationAction(
+                resource.field.toggle,
+                initialTogglePasswordDisplayBoardState
+            ),
+            passwordCharacter: useApplicationAction(
+                resource.field.passwordCharacter,
+                initialCheckPasswordCharacterState
+            ),
+        },
+    })
+}
+
+export type PasswordBoardFieldProps = Resource &
     Readonly<{
-        help: VNodeContent[]
+        state: Readonly<{
+            validate: ValidatePasswordState
+            toggle: TogglePasswordDisplayBoardState
+            passwordCharacter: CheckPasswordCharacterState
+        }>
     }>
-export function PasswordBoard(resource: Props): VNode {
-    const state = useApplicationAction(resource.field.validate, initialValidateBoardFieldState)
-    const toggleState = useApplicationAction(resource.field.toggle, initialTogglePasswordDisplayBoardState)
-
+export function View(props: PasswordBoardFieldProps): VNode {
     return label_password_fill(content())
 
     function content() {
         const content = {
             title: "パスワード",
-            body: h(InputBoard, { type: "password", ...resource.field }),
-            help: [...resource.help, ...passwordDisplay()],
+            body: h(InputBoard, { type: "password", ...props.field }),
+            help: [...props.help, ...passwordDisplay()],
         }
 
-        if (state.valid) {
+        if (props.state.validate.valid) {
             return field(content)
         } else {
             return field_error({
                 ...content,
-                notice: passwordValidationError(state, resource.field.characterState()),
+                notice: passwordValidationError(
+                    props.state.validate,
+                    props.state.passwordCharacter
+                ),
             })
         }
     }
 
     function passwordDisplay(): VNodeContent[] {
-        if (toggleState.visible) {
+        if (props.state.toggle.visible) {
             return [
                 html`<a href="#" onClick=${onHide}>
                     ${icon("key-alt")} パスワードを隠す ${characterHelp()}
                 </a>`,
-                showPassword(resource.field.input.get()),
+                showPassword(props.state.toggle.password),
             ]
         } else {
             return [
@@ -71,7 +100,7 @@ export function PasswordBoard(resource: Props): VNode {
         }
 
         function characterHelp(): string {
-            if (resource.field.characterState().multiByte) {
+            if (props.state.passwordCharacter.multiByte) {
                 return "(マルチバイト文字が含まれています)"
             } else {
                 return ""
@@ -80,11 +109,11 @@ export function PasswordBoard(resource: Props): VNode {
 
         function onShow(e: MouseEvent) {
             linkClicked(e)
-            resource.field.toggle.show()
+            props.field.toggle.show()
         }
         function onHide(e: MouseEvent) {
             linkClicked(e)
-            resource.field.toggle.hide()
+            props.field.toggle.hide()
         }
         function linkClicked(e: MouseEvent) {
             e.preventDefault()

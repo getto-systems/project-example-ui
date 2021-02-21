@@ -1,4 +1,6 @@
-import { ApplicationAction, ApplicationStateHandler } from "./action"
+import { ApplicationAction } from "./action"
+
+import { ApplicationStateHandler } from "./data"
 
 export class MockAction_simple<S> implements ApplicationAction<S> {
     addStateHandler(): void {
