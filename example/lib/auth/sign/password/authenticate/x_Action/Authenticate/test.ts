@@ -29,6 +29,7 @@ import { initAuthenticatePasswordFormAction } from "./Form/impl"
 import { initAuthenticatePasswordCoreAction } from "./Core/impl"
 import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
 import { newBoardValidateStack } from "../../../../../../z_getto/board/kernel/infra/stack"
+import { standardBoardValueStore } from "../../../../../../z_getto/board/input/x_Action/Input/testHelper"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -69,7 +70,7 @@ describe("PasswordAuthenticate", () => {
                     },
                 ])
                 expectToSaveLastAuth(repository.authnInfos)
-            }
+            },
         )
         checker.addTestCase(
             (check) => {
@@ -78,7 +79,7 @@ describe("PasswordAuthenticate", () => {
             },
             () => {
                 expectToSaveRenewed(repository.authnInfos)
-            }
+            },
         )
 
         resource.core.addStateHandler(checker.run(done))
@@ -108,7 +109,7 @@ describe("PasswordAuthenticate", () => {
                     },
                 ])
                 expectToSaveLastAuth(repository.authnInfos)
-            }
+            },
         )
         checker.addTestCase(
             (check) => {
@@ -117,7 +118,7 @@ describe("PasswordAuthenticate", () => {
             },
             () => {
                 expectToSaveRenewed(repository.authnInfos)
-            }
+            },
         )
 
         resource.core.addStateHandler(checker.run(done))
@@ -141,7 +142,7 @@ describe("PasswordAuthenticate", () => {
                     { type: "failed-to-login", err: { type: "validation-error" } },
                 ])
                 expectToEmptyLastAuth(repository.authnInfos)
-            }
+            },
         )
 
         resource.core.addStateHandler(checker.run(done))
@@ -174,7 +175,7 @@ describe("PasswordAuthenticate", () => {
                         err: { type: "infra-error", err: "load error" },
                     },
                 ])
-            }
+            },
         )
 
         resource.core.addStateHandler(checker.run(done))
@@ -213,10 +214,10 @@ function newTestPasswordLoginResource(
     currentURL: URL,
     repository: PasswordLoginTestRepository,
     remote: PasswordLoginTestRemoteAccess,
-    clock: Clock
+    clock: Clock,
 ): AuthenticatePasswordAction {
     const config = standardConfig()
-    return {
+    const action = {
         core: initAuthenticatePasswordCoreAction(
             {
                 startContinuousRenew: {
@@ -234,13 +235,18 @@ function newTestPasswordLoginResource(
                     delayed,
                 },
             },
-            initGetSecureScriptPathLocationInfo(currentURL)
+            initGetSecureScriptPathLocationInfo(currentURL),
         ),
 
         form: initAuthenticatePasswordFormAction({
             stack: newBoardValidateStack(),
         }),
     }
+
+    action.form.loginID.input.linkStore(standardBoardValueStore())
+    action.form.password.input.linkStore(standardBoardValueStore())
+
+    return action
 }
 
 function standardURL(): URL {
@@ -331,7 +337,7 @@ function renewRemoteAccess(): RenewAuthnInfoRemote {
                 },
             }
         },
-        { wait_millisecond: 0 }
+        { wait_millisecond: 0 },
     )
 }
 

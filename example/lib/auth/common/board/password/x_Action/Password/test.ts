@@ -8,6 +8,7 @@ import {
 import { TogglePasswordDisplayBoardState } from "./action"
 import { ValidatePasswordError } from "./data"
 import { initPasswordBoardFieldAction } from "./impl"
+import { standardBoardValueStore } from "../../../../../../z_getto/board/input/x_Action/Input/testHelper"
 
 describe("PasswordBoard", () => {
     test("validate; valid input", () => {
@@ -123,7 +124,7 @@ describe("PasswordBoard", () => {
             },
             (stack) => {
                 expect(stack).toEqual([{ visible: true }])
-            }
+            },
         )
 
         checker.addTestCase(
@@ -132,7 +133,7 @@ describe("PasswordBoard", () => {
             },
             (stack) => {
                 expect(stack).toEqual([{ visible: false }])
-            }
+            },
         )
 
         resource.toggle.addStateHandler(checker.run(done))
@@ -160,29 +161,13 @@ describe("PasswordBoard", () => {
 
         expect(resource.input.get()).toEqual("")
     })
-
-    test("terminate", () => {
-        const { resource } = standardResource()
-
-        const checker = initSyncActionChecker_simple<
-            ValidateBoardFieldState<ValidatePasswordError>
-        >()
-        resource.validate.addStateHandler(checker.handler)
-
-        resource.input.terminate()
-
-        resource.input.set(markBoardValue(""))
-
-        checker.check((stack) => {
-            expect(stack).toEqual([])
-        })
-    })
 })
 
 function standardResource() {
     const stack = newBoardValidateStack()
 
     const resource = initPasswordBoardFieldAction({ name: "field" }, { stack })
+    resource.input.linkStore(standardBoardValueStore())
 
     return { resource }
 }

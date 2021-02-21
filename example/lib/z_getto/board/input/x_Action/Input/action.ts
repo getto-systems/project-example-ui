@@ -1,19 +1,16 @@
-import { ApplicationAction } from "../../../../application/action"
-
-import { ClearBoardValueMethod, SetBoardValueMethod } from "../../method"
-
-import { InputBoardValueEvent } from "../../event"
-
-import { BoardValue, emptyBoardValue } from "../../../kernel/data"
-import { InputBoardValueType } from "../../data"
+import { BoardValue } from "../../../kernel/data"
+import { BoardValueStore, InputBoardValueType } from "../../data"
 
 export type InputBoardValueResource = Readonly<{
     type: InputBoardValueType
     input: InputBoardValueAction
 }>
 
-export interface InputBoardValueAction extends ApplicationAction<InputBoardValueState> {
+export interface InputBoardValueAction {
+    linkStore(store: BoardValueStore): void
+
     addInputHandler(handler: InputBoardValueHandler): void
+    triggerInputEvent(): void
 
     get(): BoardValue
     set(value: BoardValue): void
@@ -22,12 +19,3 @@ export interface InputBoardValueAction extends ApplicationAction<InputBoardValue
 export interface InputBoardValueHandler {
     (): void
 }
-
-export type InputBoardValueMaterial = Readonly<{
-    set: SetBoardValueMethod
-    clear: ClearBoardValueMethod
-}>
-
-export type InputBoardValueState = InputBoardValueEvent
-
-export const initialInputBoardState: InputBoardValueState = emptyBoardValue

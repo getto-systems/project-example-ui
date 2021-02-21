@@ -1,26 +1,35 @@
+import { VNode } from "preact"
+import { useLayoutEffect, useRef } from "preact/hooks"
 import { html } from "htm/preact"
-import { h, VNode } from "preact"
 
-import { useApplicationAction } from "../../../../../../x_preact/common/hooks"
+import { InputBoardValueResource } from "../action"
 
-import { initialInputBoardState, InputBoardValueResource, InputBoardValueState } from "../action"
+import { BoardValue, emptyBoardValue, markBoardValue } from "../../../../kernel/data"
 
-import { markBoardValue } from "../../../../kernel/data"
+export type InputBoardProps = InputBoardValueResource
+export function InputBoard(props: InputBoardProps): VNode {
+    const REF = useRef<HTMLInputElement>()
+    useLayoutEffect(() => {
+        props.input.linkStore({
+            get,
+            set,
+        })
+    }, [])
+    return html`<input ref=${REF} type=${props.type} onInput=${onInput} />`
 
-export function InputBoard(resource: InputBoardValueResource): VNode {
-    return h(View, <InputBoardProps>{
-        ...resource,
-        state: useApplicationAction(resource.input, initialInputBoardState),
-    })
-}
+    function onInput() {
+        props.input.triggerInputEvent()
+    }
 
-export type InputBoardProps = InputBoardValueResource & Readonly<{ state: InputBoardValueState }>
-export function View(props: InputBoardProps): VNode {
-    return html`<input type=${props.type} value=${props.state} onInput=${onInput} />`
-
-    function onInput(event: InputEvent) {
-        if (event.target instanceof HTMLInputElement) {
-            props.input.set(markBoardValue(event.target.value))
+    function get() {
+        if (!REF.current) {
+            return emptyBoardValue
+        }
+        return markBoardValue(REF.current.value)
+    }
+    function set(value: BoardValue) {
+        if (REF.current) {
+            REF.current.value = value
         }
     }
 }

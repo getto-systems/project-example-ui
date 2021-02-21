@@ -28,6 +28,7 @@ import { initRegisterPasswordCoreAction } from "./Core/impl"
 import { markBoardValue } from "../../../../../../../z_getto/board/kernel/data"
 import { newBoardValidateStack } from "../../../../../../../z_getto/board/kernel/infra/stack"
 import { initRegisterPasswordFormAction } from "./Form/impl"
+import { standardBoardValueStore } from "../../../../../../../z_getto/board/input/x_Action/Input/testHelper"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -222,10 +223,10 @@ function newPasswordResetTestResource(
     currentURL: URL,
     repository: PasswordResetTestRepository,
     remote: PasswordResetTestRemoteAccess,
-    clock: Clock
+    clock: Clock,
 ): RegisterPasswordAction {
     const config = standardConfig()
-    return {
+    const action = {
         core: initRegisterPasswordCoreAction(
             {
                 startContinuousRenew: {
@@ -246,13 +247,18 @@ function newPasswordResetTestResource(
             {
                 ...initGetSecureScriptPathLocationInfo(currentURL),
                 ...initRegisterPasswordLocationInfo(currentURL),
-            }
+            },
         ),
 
         form: initRegisterPasswordFormAction({
             stack: newBoardValidateStack(),
         }),
     }
+
+    action.form.loginID.input.linkStore(standardBoardValueStore())
+    action.form.password.input.linkStore(standardBoardValueStore())
+
+    return action
 }
 
 function standardURL(): URL {
@@ -346,7 +352,7 @@ function renewRemoteAccess(): RenewAuthnInfoRemote {
                 },
             }
         },
-        { wait_millisecond: 0 }
+        { wait_millisecond: 0 },
     )
 }
 
