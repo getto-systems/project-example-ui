@@ -2,11 +2,9 @@ import { h } from "preact"
 
 import { storyTemplate } from "../../../../../../z_vendor/storybook/preact/story"
 
-import { InputBoardProps, View } from "./Input"
+import { InputBoard, InputBoardProps } from "./Input"
 
 import { initMockInputBoardValueAction } from "../mock"
-
-import { initialInputBoardState, InputBoardValueState } from "../action"
 
 import { markBoardValue } from "../../../../kernel/data"
 import { InputBoardValueType, inputBoardValueTypes } from "../../../data"
@@ -25,15 +23,10 @@ type Props = Readonly<{
     value: string
 }>
 const template = storyTemplate<Props>((props) => {
-    return h(View, <InputBoardProps>{
+    return h(InputBoard, <InputBoardProps>{
         type: props.inputType,
-        input: initMockInputBoardValueAction(initialInputBoardState),
-        state: state(),
+        input: initMockInputBoardValueAction(markBoardValue(props.value)),
     })
-
-    function state(): InputBoardValueState {
-        return markBoardValue(props.value)
-    }
 })
 
 export const Initial = template({ inputType: "text", value: "" })

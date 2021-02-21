@@ -58,7 +58,6 @@ export function initPasswordBoardFieldAction<N extends string>(
     return { input, validate, clear, toggle, passwordCharacter }
 }
 export function terminatePasswordBoardFieldAction(resource: PasswordBoardFieldAction): void {
-    resource.input.terminate()
     resource.validate.terminate()
 }
 

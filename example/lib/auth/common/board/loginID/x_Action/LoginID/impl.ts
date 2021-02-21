@@ -36,7 +36,6 @@ export function initLoginIDBoardFieldAction<N extends string>(
     return { input, validate, clear: () => input.clear() }
 }
 export function terminateLoginIDBoardFieldAction(resource: LoginIDBoardFieldAction): void {
-    resource.input.terminate()
     resource.validate.terminate()
 }
 

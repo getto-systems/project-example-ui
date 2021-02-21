@@ -1,61 +1,46 @@
-import { ApplicationAbstractAction } from "../../../../application/impl"
+import { InputBoardValueAction, InputBoardValueHandler } from "./action"
 
-import { newBoardValueStore } from "../../infra/store"
-
-import { clearBoardValue, setBoardValue } from "../../impl"
-
-import { InputBoardValueInfra } from "../../infra"
-
-import {
-    InputBoardValueAction,
-    InputBoardValueState,
-    InputBoardValueMaterial,
-    InputBoardValueHandler,
-} from "./action"
-
-import { BoardValue } from "../../../kernel/data"
+import { BoardValue, emptyBoardValue } from "../../../kernel/data"
+import { BoardValueStore } from "../../data"
 
 export function newInputBoardValueAction(): InputBoardValueAction {
-    const infra: InputBoardValueInfra = { store: newBoardValueStore() }
-    return new Action(() => infra.store.get(), {
-        set: setBoardValue(infra),
-        clear: clearBoardValue(infra),
-    })
+    return new Action()
 }
 
-interface Pick {
-    (): BoardValue
-}
-class Action
-    extends ApplicationAbstractAction<InputBoardValueState>
-    implements InputBoardValueAction {
+class Action implements InputBoardValueAction {
+    link: BoardValueStoreLink = { connect: false }
+
     inputHandlers: InputBoardValueHandler[] = []
 
-    pick: Pick
-    material: InputBoardValueMaterial
-
-    constructor(pick: Pick, material: InputBoardValueMaterial) {
-        super()
-        this.pick = pick
-        this.material = material
-
-        this.terminateHook(() => {
-            this.inputHandlers = []
-        })
+    linkStore(store: BoardValueStore): void {
+        this.link = { connect: true, store }
     }
 
     addInputHandler(handler: InputBoardValueHandler): void {
         this.inputHandlers = [...this.inputHandlers, handler]
     }
-
-    get(): BoardValue {
-        return this.pick()
-    }
-    set(value: BoardValue): void {
-        this.material.set(value, this.post)
+    triggerInputEvent(): void {
         this.inputHandlers.forEach((handler) => handler())
     }
+
+    get(): BoardValue {
+        if (!this.link.connect) {
+            return emptyBoardValue
+        }
+        return this.link.store.get()
+    }
+    set(value: BoardValue): void {
+        if (!this.link.connect) {
+            return
+        }
+        this.link.store.set(value)
+        this.triggerInputEvent()
+    }
     clear(): void {
-        this.material.clear(this.post)
+        this.set(emptyBoardValue)
     }
 }
+
+type BoardValueStoreLink =
+    | Readonly<{ connect: false }>
+    | Readonly<{ connect: true; store: BoardValueStore }>

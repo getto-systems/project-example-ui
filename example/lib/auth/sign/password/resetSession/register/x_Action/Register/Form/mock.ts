@@ -2,13 +2,14 @@ import { initMockLoginIDBoardFieldAction } from "../../../../../../../common/boa
 import { initMockPasswordBoardFieldAction } from "../../../../../../../common/board/password/x_Action/Password/mock"
 import { initMockValidateBoardAction } from "../../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/mock"
 
-import { initialInputBoardState } from "../../../../../../../../z_getto/board/input/x_Action/Input/action"
 import { RegisterPasswordFormAction } from "./action"
+
+import { emptyBoardValue } from "../../../../../../../../z_getto/board/kernel/data"
 
 export function initMockRegisterPasswordFormAction(): RegisterPasswordFormAction {
     return {
         loginID: initMockLoginIDBoardFieldAction(),
-        password: initMockPasswordBoardFieldAction(initialInputBoardState, { multiByte: false }),
+        password: initMockPasswordBoardFieldAction(emptyBoardValue, { multiByte: false }),
         validate: initMockValidateBoardAction(),
         clear: () => null,
     }

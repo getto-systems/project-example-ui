@@ -1,15 +1,22 @@
-import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
-import { newBoardValidateStack } from "../../../../../../z_getto/board/kernel/infra/stack"
-import { ValidateBoardFieldState } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
 import { initSyncActionChecker_simple } from "../../../../../../z_getto/application/testHelper"
-import { ValidateLoginIDError } from "./data"
+import { standardBoardValueStore } from "../../../../../../z_getto/board/input/x_Action/Input/testHelper"
+
+import { newBoardValidateStack } from "../../../../../../z_getto/board/kernel/infra/stack"
+
 import { initLoginIDBoardFieldAction } from "./impl"
+
+import { ValidateBoardFieldState } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
+
+import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
+import { ValidateLoginIDError } from "./data"
 
 describe("LoginIDBoard", () => {
     test("validate; valid input", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker_simple<ValidateBoardFieldState<ValidateLoginIDError>>()
+        const checker = initSyncActionChecker_simple<
+            ValidateBoardFieldState<ValidateLoginIDError>
+        >()
         resource.validate.addStateHandler(checker.handler)
 
         // valid input
@@ -24,7 +31,9 @@ describe("LoginIDBoard", () => {
     test("validate; invalid : empty", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker_simple<ValidateBoardFieldState<ValidateLoginIDError>>()
+        const checker = initSyncActionChecker_simple<
+            ValidateBoardFieldState<ValidateLoginIDError>
+        >()
         resource.validate.addStateHandler(checker.handler)
 
         // empty
@@ -39,7 +48,9 @@ describe("LoginIDBoard", () => {
     test("validate; invalid : too-long", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker_simple<ValidateBoardFieldState<ValidateLoginIDError>>()
+        const checker = initSyncActionChecker_simple<
+            ValidateBoardFieldState<ValidateLoginIDError>
+        >()
         resource.validate.addStateHandler(checker.handler)
 
         // too-long
@@ -54,7 +65,9 @@ describe("LoginIDBoard", () => {
     test("validate; valid : just max-length", () => {
         const { resource } = standardResource()
 
-        const checker = initSyncActionChecker_simple<ValidateBoardFieldState<ValidateLoginIDError>>()
+        const checker = initSyncActionChecker_simple<
+            ValidateBoardFieldState<ValidateLoginIDError>
+        >()
         resource.validate.addStateHandler(checker.handler)
 
         // just max-length
@@ -74,27 +87,13 @@ describe("LoginIDBoard", () => {
 
         expect(resource.input.get()).toEqual("")
     })
-
-    test("terminate", () => {
-        const { resource } = standardResource()
-
-        const checker = initSyncActionChecker_simple<ValidateBoardFieldState<ValidateLoginIDError>>()
-        resource.validate.addStateHandler(checker.handler)
-
-        resource.input.terminate()
-
-        resource.input.set(markBoardValue(""))
-
-        checker.check((stack) => {
-            expect(stack).toEqual([])
-        })
-    })
 })
 
 function standardResource() {
     const stack = newBoardValidateStack()
 
     const resource = initLoginIDBoardFieldAction({ name: "field" }, { stack })
+    resource.input.linkStore(standardBoardValueStore())
 
     return { resource }
 }
