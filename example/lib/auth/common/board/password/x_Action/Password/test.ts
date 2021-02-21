@@ -1,11 +1,7 @@
 import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
 import { newBoardValidateStack } from "../../../../../../z_getto/board/kernel/infra/stack"
 import { ValidateBoardFieldState } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
-import {
-    initSyncActionTestRunner,
-    initSyncActionChecker_simple,
-} from "../../../../../../z_getto/application/testHelper"
-import { TogglePasswordDisplayBoardState } from "./action"
+import { initSyncActionChecker_simple } from "../../../../../../z_getto/application/testHelper"
 import { ValidatePasswordError } from "./data"
 import { initPasswordBoardFieldAction } from "./impl"
 import { standardBoardValueStore } from "../../../../../../z_getto/board/input/x_Action/Input/testHelper"
@@ -111,32 +107,6 @@ describe("PasswordBoard", () => {
             expect(stack).toEqual([{ valid: true }])
         })
         expect(resource.validate.get()).toEqual({ success: true, value: "あ".repeat(24) })
-    })
-
-    test("toggle password", (done) => {
-        const { resource } = standardResource()
-
-        const checker = initSyncActionTestRunner<TogglePasswordDisplayBoardState>()
-
-        checker.addTestCase(
-            () => {
-                resource.toggle.show()
-            },
-            (stack) => {
-                expect(stack).toEqual([{ visible: true }])
-            },
-        )
-
-        checker.addTestCase(
-            () => {
-                resource.toggle.hide()
-            },
-            (stack) => {
-                expect(stack).toEqual([{ visible: false }])
-            },
-        )
-
-        resource.toggle.addStateHandler(checker.run(done))
     })
 
     test("password character state : single byte", () => {
