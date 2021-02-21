@@ -10,7 +10,7 @@ import { ValidateLoginIDState } from "../action"
 const typeOptions = ["valid", "empty", "too-long"] as const
 
 export default {
-    title: "Auth/Common/Board/LoginID",
+    title: "library/Auth/Common/Board/LoginID",
     argTypes: {
         validate: {
             control: { type: "select", options: typeOptions },
