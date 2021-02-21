@@ -1,5 +1,6 @@
+import { BoardValueStore } from "../../infra"
+
 import { BoardValue, emptyBoardValue } from "../../../kernel/data"
-import { BoardValueStore } from "../../data"
 
 export function standardBoardValueStore(): BoardValueStore {
     let store: BoardValue = emptyBoardValue
