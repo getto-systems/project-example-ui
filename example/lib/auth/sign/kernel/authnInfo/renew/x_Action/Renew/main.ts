@@ -9,7 +9,7 @@ import { initRenewAuthnInfoAction, toRenewAuthnInfoEntryPoint } from "./impl"
 
 import { RenewAuthnInfoEntryPoint } from "./action"
 
-export function newRenewAuthnInfoEntryPoint(webStorage: Storage): RenewAuthnInfoEntryPoint {
+export function newRenewAuthnInfo(webStorage: Storage): RenewAuthnInfoEntryPoint {
     return toRenewAuthnInfoEntryPoint(
         initRenewAuthnInfoAction(
             {

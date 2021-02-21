@@ -5,13 +5,13 @@ import {
     AuthSignViewState,
     AuthSignViewType,
     PasswordResetSessionEntryPoint,
-    PasswordResetEntryPoint,
     AuthSignViewLocationInfo,
     AuthSignResourceFactory,
 } from "./entryPoint"
 
 import { AuthSignSearchParams } from "../../../../auth/sign/common/searchParams/data"
 import { AuthenticatePasswordEntryPoint } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/action"
+import { RegisterPasswordEntryPoint } from "../../../../auth/sign/password/resetSession/register/x_Action/Register/action"
 
 export function initLoginViewLocationInfo(currentURL: URL): AuthSignViewLocationInfo {
     return {
@@ -84,14 +84,7 @@ export class View extends ApplicationAbstractAction<AuthSignViewState> implement
             },
         }
     }
-    passwordReset(): PasswordResetEntryPoint {
-        const resource = { ...this.components.passwordReset(), ...this.components.link() }
-        return {
-            resource,
-            terminate: () => {
-                resource.register.terminate()
-                resource.form.terminate()
-            },
-        }
+    passwordReset(): RegisterPasswordEntryPoint {
+        return this.components.passwordReset()
     }
 }

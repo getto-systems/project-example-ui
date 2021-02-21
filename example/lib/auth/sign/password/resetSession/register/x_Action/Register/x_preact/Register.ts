@@ -2,61 +2,73 @@ import { h, VNode } from "preact"
 import { useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../../../z_vendor/getto-css/preact/common"
+import { VNodeContent } from "../../../../../../../../z_vendor/getto-css/preact/common"
 import {
     buttons,
     button_disabled,
     button_send,
     fieldError,
-} from "../../../../../z_vendor/getto-css/preact/design/form"
-import { loginBox } from "../../../../../z_vendor/getto-css/preact/layout/login"
+} from "../../../../../../../../z_vendor/getto-css/preact/design/form"
+import { loginBox } from "../../../../../../../../z_vendor/getto-css/preact/layout/login"
 
-import { useApplicationAction, useTermination_deprecated } from "../../../../common/hooks"
-import { siteInfo } from "../../../../common/site"
-import { icon, spinner } from "../../../../common/icon"
+import { useApplicationAction, useEntryPoint } from "../../../../../../../../x_preact/common/hooks"
+import { siteInfo } from "../../../../../../../../x_preact/common/site"
+import { icon, spinner } from "../../../../../../../../x_preact/common/icon"
 
-import { appendScript } from "../../script"
+import { appendScript } from "../../../../../../../../x_preact/auth/Sign/script"
 
-import { ApplicationError } from "../../../../common/System/ApplicationError"
+import { ApplicationError } from "../../../../../../../../x_preact/common/System/ApplicationError"
+import { LoginIDBoard } from "../../../../../../../common/board/loginID/x_Action/LoginID/x_preact/LoginID"
+import { PasswordBoard } from "../../../../../../../common/board/password/x_Action/Password/x_preact/Password"
 
-import { LoginIDFormField } from "../../field/loginID"
-import { PasswordFormField } from "../../field/password"
+import {
+    initialRegisterPasswordState,
+    RegisterPasswordEntryPoint,
+    RegisterPasswordResource,
+    RegisterPasswordResourceState,
+} from "../action"
 
-import { PasswordResetEntryPoint } from "../../../../../x_main/public/auth/sign/entryPoint"
+import { RegisterPasswordError } from "../../../data"
 
-import { initialRegisterPasswordState } from "../../../../../auth/sign/x_Action/Password/ResetSession/Register/Core/action"
-import { initialFormContainerComponentState } from "../../../../../z_getto/getto-form/x_Resource/Form/component"
+export function RegisterPassword(entryPoint: RegisterPasswordEntryPoint): VNode {
+    const resource = useEntryPoint(entryPoint)
+    return h(View, <RegisterPasswordProps>{
+        ...resource,
+        state: {
+            core: useApplicationAction(resource.reset.core, initialRegisterPasswordState.core),
+            form: useApplicationAction(
+                resource.reset.form.validate,
+                initialRegisterPasswordState.form
+            ),
+        },
+    })
+}
 
-import { RegisterPasswordError } from "../../../../../auth/sign/password/resetSession/register/data"
-
-export function RegisterPassword({ resource, terminate }: PasswordResetEntryPoint): VNode {
-    useTermination_deprecated(terminate)
-
-    const state = useApplicationAction(resource.register, initialRegisterPasswordState)
-    const formState = useApplicationAction(resource.form, initialFormContainerComponentState)
-
+export type RegisterPasswordProps = RegisterPasswordResource &
+    Readonly<{ state: RegisterPasswordResourceState }>
+export function View(props: RegisterPasswordProps): VNode {
     useLayoutEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
-        switch (state.type) {
+        switch (props.state.core.type) {
             case "try-to-load":
-                appendScript(state.scriptPath, (script) => {
+                appendScript(props.state.core.scriptPath, (script) => {
                     script.onerror = () => {
-                        resource.register.loadError({
+                        props.reset.core.loadError({
                             type: "infra-error",
-                            err: `スクリプトのロードに失敗しました: ${state.type}`,
+                            err: `スクリプトのロードに失敗しました: ${props.state.core.type}`,
                         })
                     }
                 })
                 break
         }
-    }, [state])
+    }, [props.state.core])
 
-    switch (state.type) {
+    switch (props.state.core.type) {
         case "initial-reset":
             return resetForm({ state: "reset" })
 
         case "failed-to-reset":
-            return resetForm({ state: "reset", error: resetError(state.err) })
+            return resetForm({ state: "reset", error: resetError(props.state.core.err) })
 
         case "try-to-reset":
             return resetForm({ state: "connecting" })
@@ -70,7 +82,7 @@ export function RegisterPassword({ resource, terminate }: PasswordResetEntryPoin
 
         case "storage-error":
         case "load-error":
-            return h(ApplicationError, { err: state.err.err })
+            return h(ApplicationError, { err: props.state.core.err.err })
     }
 
     type ResetFormState = "reset" | "connecting"
@@ -88,12 +100,12 @@ export function RegisterPassword({ resource, terminate }: PasswordResetEntryPoin
             loginBox(siteInfo(), {
                 title: resetTitle(),
                 body: [
-                    h(LoginIDFormField, {
-                        loginID: resource.form.loginID,
+                    h(LoginIDBoard, {
+                        field: props.reset.form.loginID,
                         help: ["最初に入力したログインIDを入力してください"],
                     }),
-                    h(PasswordFormField, {
-                        password: resource.form.password,
+                    h(PasswordBoard, {
+                        field: props.reset.form.password,
                         help: ["新しいパスワードを入力してください"],
                     }),
                 ],
@@ -113,7 +125,7 @@ export function RegisterPassword({ resource, terminate }: PasswordResetEntryPoin
             function resetButton() {
                 const label = "パスワードリセット"
 
-                switch (formState.validation) {
+                switch (props.state.form) {
                     case "initial":
                         return button_send({ state: "normal", label, onClick })
 
@@ -126,7 +138,7 @@ export function RegisterPassword({ resource, terminate }: PasswordResetEntryPoin
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    resource.register.submit(resource.form.getResetFields())
+                    props.reset.core.submit(props.reset.form.validate.get())
                 }
             }
             function connectingButton(): VNode {
@@ -160,7 +172,7 @@ export function RegisterPassword({ resource, terminate }: PasswordResetEntryPoin
     }
 
     function sendLink() {
-        return html`<a href="${resource.href.passwordResetSession()}">
+        return html`<a href="${props.href.passwordResetSession()}">
             ${icon("question-circle")} パスワードがわからない方
         </a>`
     }

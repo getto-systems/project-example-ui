@@ -3,9 +3,9 @@ import {
     AuthenticatePasswordProxyResponse,
 } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/worker/message"
 import {
-    RegisterPasswordResourceProxyMessage,
-    RegisterPasswordResourceProxyResponse,
-} from "../../../../../../auth/x_Resource/Sign/Password/ResetSession/Register/main/worker/message"
+    RegisterPasswordProxyMessage,
+    RegisterPasswordProxyResponse,
+} from "../../../../../../auth/sign/password/resetSession/register/x_Action/Register/main/worker/message"
 import {
     StartPasswordResetSessionResourceProxyMessage,
     StartPasswordResetSessionResourceProxyResponse,
@@ -22,7 +22,7 @@ export type ForegroundMessage =
       }>
     | Readonly<{
           type: "password-resetSession-register"
-          message: RegisterPasswordResourceProxyMessage
+          message: RegisterPasswordProxyMessage
       }>
 
 export type BackgroundMessage =
@@ -36,6 +36,6 @@ export type BackgroundMessage =
       }>
     | Readonly<{
           type: "password-resetSession-register"
-          response: RegisterPasswordResourceProxyResponse
+          response: RegisterPasswordProxyResponse
       }>
     | Readonly<{ type: "error"; err: string }>

@@ -21,14 +21,14 @@ import { AuthenticatePasswordCoreAction, AuthenticatePasswordCoreBackground } fr
 import { AuthenticatePasswordFormAction } from "../Form/action"
 
 export function newAuthenticatePassword(webStorage: Storage): AuthenticatePasswordEntryPoint {
-    return toAuthenticatePasswordEntryPoint(mergeResource(newCoreAction(webStorage)))
+    return toAuthenticatePasswordEntryPoint(mergeAction(newCoreAction(webStorage)))
 }
 export function newAuthenticatePassword_proxy(
     webStorage: Storage,
     background: AuthenticatePasswordCoreBackground
 ): AuthenticatePasswordEntryPoint {
     return toAuthenticatePasswordEntryPoint(
-        mergeResource(
+        mergeAction(
             initAuthenticatePasswordCoreAction_merge(
                 newForegroundBase(webStorage),
                 newGetSecureScriptPathLocationInfo(),
@@ -37,8 +37,8 @@ export function newAuthenticatePassword_proxy(
         )
     )
 }
-function mergeResource(core: AuthenticatePasswordCoreAction): AuthenticatePasswordAction {
-    return { core, form: newFormResource() }
+function mergeAction(core: AuthenticatePasswordCoreAction): AuthenticatePasswordAction {
+    return { core, form: newFormAction() }
 }
 
 export function newAuthenticatePasswordCoreBackground(): AuthenticatePasswordCoreBackground {
@@ -64,7 +64,7 @@ function newBackgroundBase(): AuthenticatePasswordCoreBackgroundBase {
     }
 }
 
-function newFormResource(): AuthenticatePasswordFormAction {
+function newFormAction(): AuthenticatePasswordFormAction {
     return initAuthenticatePasswordFormAction({
         stack: newBoardValidateStack(),
     })

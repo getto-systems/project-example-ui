@@ -11,7 +11,6 @@ import { newAuthSignLinkResource } from "../../../../auth/sign/common/searchPara
 
 import { initFormAction } from "../../../../z_getto/getto-form/main/form"
 import { initLoginIDFormFieldAction } from "../../../../auth/common/field/loginID/main/loginID"
-import { initPasswordFormFieldAction } from "../../../../auth/common/field/password/main/password"
 
 import { Clock } from "../../../../z_getto/infra/clock/infra"
 import { AuthenticatePasswordResult } from "../../../../auth/sign/password/authenticate/infra"
@@ -45,11 +44,12 @@ import {
 } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/impl"
 import { initAuthenticatePasswordFormAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Form/impl"
 import { initAuthenticatePasswordCoreAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Core/impl"
-import { initRegisterPasswordAction } from "../../../../auth/sign/x_Action/Password/ResetSession/Register/Core/impl"
-import { initRegisterPasswordFormAction } from "../../../../auth/sign/x_Action/Password/ResetSession/Register/Form/impl"
+import { initRegisterPasswordCoreAction } from "../../../../auth/sign/password/resetSession/register/x_Action/Register/Core/impl"
+import { initRegisterPasswordFormAction } from "../../../../auth/sign/password/resetSession/register/x_Action/Register/Form/impl"
 import { initStartPasswordResetSessionFormAction } from "../../../../auth/sign/x_Action/Password/ResetSession/Start/Form/impl"
 import { initStartPasswordResetSessionAction } from "../../../../auth/sign/x_Action/Password/ResetSession/Start/Core/impl"
 import { toAuthenticatePasswordEntryPoint } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/impl"
+import { toRegisterPasswordEntryPoint } from "../../../../auth/sign/password/resetSession/register/x_Action/Register/impl"
 
 const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
 const SUCCEED_TO_AUTH_AT = new Date("2020-01-01 10:00:00")
@@ -402,8 +402,8 @@ function standardPasswordResetResource(
     authnInfos: AuthnInfoRepository,
     clock: Clock
 ) {
-    return {
-        register: initRegisterPasswordAction(
+    return toRegisterPasswordEntryPoint({
+        core: initRegisterPasswordCoreAction(
             {
                 startContinuousRenew: {
                     apiCredentials,
@@ -438,22 +438,10 @@ function standardPasswordResetResource(
             }
         ),
 
-        form: initRegisterPasswordFormAction(formMaterial()),
-    }
-
-    function formMaterial() {
-        const form = initFormAction()
-        const loginID = initLoginIDFormFieldAction()
-        const password = initPasswordFormFieldAction()
-        return {
-            validation: form.validation(),
-            history: form.history(),
-            loginID: loginID.field(),
-            password: password.field(),
-            character: password.character(),
-            viewer: password.viewer(),
-        }
-    }
+        form: initRegisterPasswordFormAction({
+            stack: newBoardValidateStack(),
+        }),
+    })
 }
 function standardPasswordResetSessionResource() {
     return {

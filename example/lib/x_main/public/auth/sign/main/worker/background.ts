@@ -1,13 +1,13 @@
 import { newAuthenticatePasswordHandler } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/worker/background"
-import { newRegisterPasswordResourceHandler } from "../../../../../../auth/x_Resource/Sign/Password/ResetSession/Register/main/worker/background"
 import { newStartPasswordResetSessionResourceHandler } from "../../../../../../auth/x_Resource/Sign/Password/ResetSession/Start/main/worker/background"
 
 import { WorkerHandler } from "../../../../../../z_getto/application/worker/background"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
 import { AuthenticatePasswordProxyMessage } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/worker/message"
-import { RegisterPasswordResourceProxyMessage } from "../../../../../../auth/x_Resource/Sign/Password/ResetSession/Register/main/worker/message"
 import { StartPasswordResetSessionResourceProxyMessage } from "../../../../../../auth/x_Resource/Sign/Password/ResetSession/Start/main/worker/message"
+import { newRegisterPasswordHandler } from "../../../../../../auth/sign/password/resetSession/register/x_Action/Register/main/worker/background"
+import { RegisterPasswordProxyMessage } from "../../../../../../auth/sign/password/resetSession/register/x_Action/Register/main/worker/message"
 
 export function newLoginWorker(worker: Worker): void {
     const handler: Handler = {
@@ -16,7 +16,7 @@ export function newLoginWorker(worker: Worker): void {
                 postBackgroundMessage({ type: "password-authenticate", response })
             ),
             resetSession: {
-                register: newRegisterPasswordResourceHandler((response) =>
+                register: newRegisterPasswordHandler((response) =>
                     postBackgroundMessage({
                         type: "password-resetSession-register",
                         response,
@@ -46,7 +46,7 @@ type Handler = Readonly<{
     password: Readonly<{
         authenticate: WorkerHandler<AuthenticatePasswordProxyMessage>
         resetSession: Readonly<{
-            register: WorkerHandler<RegisterPasswordResourceProxyMessage>
+            register: WorkerHandler<RegisterPasswordProxyMessage>
             start: WorkerHandler<StartPasswordResetSessionResourceProxyMessage>
         }>
     }>
