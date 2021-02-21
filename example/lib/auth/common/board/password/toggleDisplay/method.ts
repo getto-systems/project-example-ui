@@ -1,10 +1,10 @@
-import { TogglePasswordDisplayBoardEvent } from "./event"
+import { TogglePasswordDisplayEvent } from "./event"
 
-export interface ShowPasswordDisplayBoardMethod {
-    (post: Post<TogglePasswordDisplayBoardEvent>): void
+export interface ShowPasswordDisplayMethod {
+    (post: Post<TogglePasswordDisplayEvent>): void
 }
-export interface HidePasswordDisplayBoardMethod {
-    (post: Post<TogglePasswordDisplayBoardEvent>): void
+export interface HidePasswordDisplayMethod {
+    (post: Post<TogglePasswordDisplayEvent>): void
 }
 
 interface Post<E> {

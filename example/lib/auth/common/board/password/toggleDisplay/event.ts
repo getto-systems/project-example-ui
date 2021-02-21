@@ -1,1 +1,1 @@
-export type TogglePasswordDisplayBoardEvent = Readonly<{ visible: boolean }>
+export type TogglePasswordDisplayEvent = Readonly<{ visible: boolean }>

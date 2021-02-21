@@ -1,20 +1,20 @@
-import { MockAction_simple } from "../../../../application/mock"
+import { MockAction_state } from "../../../../application/mock"
 
 import { InputBoardValueAction, InputBoardValueState } from "./action"
 
-import { BoardValue, emptyBoardValue } from "../../../kernel/data"
+import { BoardValue } from "../../../kernel/data"
 
-export function initMockInputBoardValueAction(): InputBoardValueAction {
-    return new Action()
+export function initMockInputBoardValueAction(state: InputBoardValueState): InputBoardValueAction {
+    return new Action(state)
 }
 
-class Action extends MockAction_simple<InputBoardValueState> implements InputBoardValueAction {
+class Action extends MockAction_state<InputBoardValueState> implements InputBoardValueAction {
     addInputHandler() {
         // mock では特に何もしない
     }
 
     get(): BoardValue {
-        return emptyBoardValue
+        return this.state
     }
     set() {
         // mock では特に何もしない

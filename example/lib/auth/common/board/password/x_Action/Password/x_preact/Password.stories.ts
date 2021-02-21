@@ -1,53 +1,80 @@
 import { h } from "preact"
-import { useEffect } from "preact/hooks"
 
 import { storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
 
-import { PasswordBoard } from "./Password"
+import { View } from "./Password"
 
-import { initMockPropsPasser } from "../../../../../../../z_getto/application/mock"
-import {
-    initMockPasswordBoardFieldAction,
-    PasswordBoardFieldActionMockProps,
-    passwordCharacterStateTypes,
-    passwordDisplayBoardTypes,
-} from "../mock"
+import { initMockPasswordBoardFieldAction } from "../mock"
+
+import { TogglePasswordDisplayBoardState, ValidatePasswordState } from "../action"
+
+import { markBoardValue } from "../../../../../../../z_getto/board/kernel/data"
+import { PasswordCharacterState } from "../data"
+
+const typeOptions = ["valid", "empty", "too-long"] as const
+const displayOptions = ["hide", "show"] as const
+const characterOptions = ["singleByte", "multiByte"] as const
 
 export default {
     title: "Auth/Common/Board/Password",
     argTypes: {
-        type: {
-            table: { disable: true },
+        validate: {
+            control: { type: "select", options: typeOptions },
         },
         display: {
-            control: { type: "select", options: passwordDisplayBoardTypes },
+            control: { type: "select", options: displayOptions },
         },
         character: {
-            control: { type: "select", options: passwordCharacterStateTypes },
+            control: { type: "select", options: characterOptions },
         },
     },
 }
 
-type Props = PasswordBoardFieldActionMockProps & { help: string }
-const template = storyTemplate<Props>((args) => {
-    const passer = initMockPropsPasser<PasswordBoardFieldActionMockProps>()
-    const action = initMockPasswordBoardFieldAction(passer)
-    return h(Preview, { args })
+type Props = Readonly<{
+    password: string
+    validate: "valid" | "empty" | "too-long"
+    display: "hide" | "show"
+    character: "singleByte" | "multiByte"
+    help: string
+}>
+const template = storyTemplate<Props>((props) => {
+    return h(View, {
+        field: initMockPasswordBoardFieldAction(markBoardValue(props.password), characterState()),
+        help: [props.help],
+        state: {
+            validate: validateState(),
+            toggle: toggleState(),
+        },
+    })
 
-    function Preview(props: { args: Props }) {
-        useEffect(() => {
-            passer.update(props.args)
-        })
-        return h(PasswordBoard, { field: action, help: [args.help] })
+    function validateState(): ValidatePasswordState {
+        switch (props.validate) {
+            case "valid":
+                return { valid: true }
+
+            case "empty":
+            case "too-long":
+                return { valid: false, err: [props.validate] }
+        }
+    }
+    function toggleState(): TogglePasswordDisplayBoardState {
+        switch (props.display) {
+            case "show":
+                return { visible: true }
+
+            case "hide":
+                return { visible: false }
+        }
+    }
+    function characterState(): PasswordCharacterState {
+        return { multiByte: props.character === "multiByte" }
     }
 })
 
-const defaultArgs = {
-    help: "",
+export const Field = template({
+    password: "",
+    validate: "valid",
     display: "hide",
     character: "singleByte",
-} as const
-
-export const Valid = template({ ...defaultArgs, type: "valid" })
-export const Empty = template({ ...defaultArgs, type: "empty" })
-export const TooLong = template({ ...defaultArgs, type: "too-long" })
+    help: "",
+})

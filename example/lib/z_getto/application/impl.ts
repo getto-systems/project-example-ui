@@ -1,59 +1,51 @@
-import { ApplicationAction, ApplicationStateHandler } from "./action"
+import { newIgniteHook } from "./infra/igniteHook"
+import { newStateHandler } from "./infra/stateHandler"
+import { newTerminateHook } from "./infra/terminateHook"
+
+import { ApplicationAction } from "./action"
+
+import { IgniteHook, StateHandler, TerminateHook } from "./infra"
+
+import { ApplicationHook, ApplicationStateHandler } from "./data"
 
 export class ApplicationAbstractAction<S> implements ApplicationAction<S> {
-    stateHandlers: ApplicationStateHandler<S>[] = []
+    stateHandler: StateHandler<S> = newStateHandler()
 
-    igniteHooks: IgniteHookList = { ignite: false, hooks: [] }
-    terminateHooks: ApplicationHook[] = []
+    hook: Readonly<{ ignite: IgniteHook; terminate: TerminateHook }> = {
+        ignite: newIgniteHook(),
+        terminate: newTerminateHook(),
+    }
 
     // this.material.doSomething(this.post) できるようにプロパティとして定義
     post: Post<S> = (state: S) => {
-        this.stateHandlers.forEach((post) => post(state))
+        this.stateHandler.post(state)
     }
 
     addStateHandler(handler: ApplicationStateHandler<S>): void {
-        this.stateHandlers = [...this.stateHandlers, handler]
+        this.stateHandler.add(handler)
     }
     removeStateHandler(target: ApplicationStateHandler<S>): void {
-        this.stateHandlers = this.stateHandlers.filter((handler) => handler !== target)
+        this.stateHandler.remove(target)
     }
 
     igniteHook(hook: ApplicationHook): void {
-        if (this.igniteHooks.ignite) {
-            console.warn("igniteHook IGNORED: hook added in ignite hook")
-            return
-        }
-        this.igniteHooks = { ignite: false, hooks: [...this.igniteHooks.hooks, hook] }
+        this.hook.ignite.register(hook)
     }
     ignite(): void {
         // 同期的にすべての state handler を追加した後で ignite するための setTimeout
         setTimeout(() => {
-            // 一回 ignite したら ignite 済みとしてマーク
-            // addStateHandler + ignite が複数の箇所からコールされることを想定している
-            if (!this.igniteHooks.ignite) {
-                const hooks = this.igniteHooks.hooks
-                this.igniteHooks = { ignite: true }
-                hooks.forEach((hook) => hook())
-            }
+            this.hook.ignite.run()
         })
     }
 
     terminateHook(hook: ApplicationHook): void {
-        this.terminateHooks = [...this.terminateHooks, hook]
+        this.hook.terminate.register(hook)
     }
     terminate(): void {
-        this.stateHandlers = []
-        this.terminateHooks.forEach((terminate) => terminate())
+        this.stateHandler.removeAll()
+        this.hook.terminate.run()
     }
 }
-
-export interface ApplicationHook {
-    (): void
-}
-
-type IgniteHookList =
-    | Readonly<{ ignite: false; hooks: ApplicationHook[] }>
-    | Readonly<{ ignite: true }>
 
 interface Post<S> {
     (state: S): void

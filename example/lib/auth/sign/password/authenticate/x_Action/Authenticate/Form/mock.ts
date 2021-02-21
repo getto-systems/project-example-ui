@@ -1,5 +1,3 @@
-import { initMockPropsPasser } from "../../../../../../../z_getto/application/mock"
-
 import {
     initMockValidateBoardAction,
     ValidateBoardMockPropsPasser,
@@ -7,14 +5,15 @@ import {
 import { initMockLoginIDBoardFieldAction } from "../../../../../../common/board/loginID/x_Action/LoginID/mock"
 import { initMockPasswordBoardFieldAction } from "../../../../../../common/board/password/x_Action/Password/mock"
 
+import { initialInputBoardState } from "../../../../../../../z_getto/board/input/x_Action/Input/action"
 import { AuthenticatePasswordFormAction } from "./action"
 
 export function initMockAuthenticatePasswordFormAction(
     passer: ValidateBoardMockPropsPasser
 ): AuthenticatePasswordFormAction {
     return {
-        loginID: initMockLoginIDBoardFieldAction(initMockPropsPasser()),
-        password: initMockPasswordBoardFieldAction(initMockPropsPasser()),
+        loginID: initMockLoginIDBoardFieldAction(),
+        password: initMockPasswordBoardFieldAction(initialInputBoardState, { multiByte: false }),
         validate: initMockValidateBoardAction(passer),
         clear: () => null,
     }

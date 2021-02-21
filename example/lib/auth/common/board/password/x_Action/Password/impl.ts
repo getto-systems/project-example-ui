@@ -3,11 +3,13 @@ import { ApplicationAbstractAction } from "../../../../../../z_getto/application
 import { initValidateBoardFieldAction } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/impl"
 import { newInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/impl"
 
-import { hidePasswordDisplayBoard, showPasswordDisplayBoard } from "../../toggleDisplay/impl"
+import { hidePasswordDisplay, showPasswordDisplay } from "../../toggleDisplay/impl"
 
 import { ValidateBoardFieldInfra } from "../../../../../../z_getto/board/validateField/infra"
 
 import {
+    CheckPasswordCharacterAction,
+    CheckPasswordCharacterMaterial,
     PasswordBoardFieldAction,
     TogglePasswordDisplayBoardAction,
     TogglePasswordDisplayBoardMaterial,
@@ -17,6 +19,7 @@ import {
 import { BoardConvertResult, BoardValue } from "../../../../../../z_getto/board/kernel/data"
 import { markPassword, Password } from "../../../../password/data"
 import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "./data"
+import { checkPasswordCharacter } from "../../checkCharacter/impl"
 
 export type PasswordBoardEmbed<N extends string> = Readonly<{
     name: N
@@ -37,18 +40,22 @@ export function initPasswordBoardFieldAction<N extends string>(
         infra
     )
 
-    input.addInputHandler(() => validate.check())
+    const clear = () => input.clear()
 
-    return {
-        input,
-        validate,
-        clear: () => input.clear(),
-        toggle: new ToggleAction({
-            show: showPasswordDisplayBoard,
-            hide: hidePasswordDisplayBoard,
-        }),
-        characterState: () => checkPasswordCharacter(input.get()),
-    }
+    const toggle = new ToggleAction({
+        show: showPasswordDisplay,
+        hide: hidePasswordDisplay,
+    })
+
+    const passwordCharacter = new CheckAction(() => input.get(), {
+        check: checkPasswordCharacter,
+    })
+
+    input.addInputHandler(() => {
+        validate.check()
+    })
+
+    return { input, validate, clear, toggle, passwordCharacter }
 }
 export function terminatePasswordBoardFieldAction(resource: PasswordBoardFieldAction): void {
     resource.input.terminate()
@@ -93,12 +100,22 @@ class ToggleAction
     }
 }
 
-function checkPasswordCharacter(password: BoardValue): PasswordCharacterState {
-    for (let i = 0; i < password.length; i++) {
-        // 1文字でも 128バイト以上の文字があれば complex
-        if (password.charCodeAt(i) >= 128) {
-            return { multiByte: true }
-        }
+class CheckAction
+    extends ApplicationAbstractAction<PasswordCharacterState>
+    implements CheckPasswordCharacterAction {
+    password: PasswordGetter
+    material: CheckPasswordCharacterMaterial
+
+    constructor(password: PasswordGetter, material: CheckPasswordCharacterMaterial) {
+        super()
+        this.password = password
+        this.material = material
     }
-    return { multiByte: false }
+
+    check(): PasswordCharacterState {
+        return this.material.check(this.password())
+    }
+}
+interface PasswordGetter {
+    (): BoardValue
 }

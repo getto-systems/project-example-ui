@@ -1,10 +1,15 @@
 import { h } from "preact"
+
 import { storyTemplate } from "../../../../../../z_vendor/storybook/preact/story"
+
+import { View } from "./Input"
+
+import { initMockInputBoardValueAction } from "../mock"
+
+import { initialInputBoardState, InputBoardValueState } from "../action"
+
 import { markBoardValue } from "../../../../kernel/data"
 import { InputBoardValueType, inputBoardValueTypes } from "../../../data"
-import { InputBoardValueState } from "../action"
-import { initMockInputBoardValueAction } from "../mock"
-import { View } from "./Input"
 
 export default {
     title: "Getto/Board/Input",
@@ -22,7 +27,7 @@ type Props = Readonly<{
 const template = storyTemplate<Props>((props) => {
     return h(View, {
         type: props.inputType,
-        input: initMockInputBoardValueAction(),
+        input: initMockInputBoardValueAction(initialInputBoardState),
         state: state(),
     })
 
