@@ -1,23 +1,22 @@
-import { newRegisterPasswordLocationInfo } from "../../../../../../../password/resetSession/register/main"
-import { newRegisterPasswordAction_merge } from "../core"
-
-import { RegisterPasswordAction } from "../../action"
-
-import { RegisterPasswordLocationInfo } from "../../../../../../../password/resetSession/register/method"
+import { newRegisterPasswordLocationInfo } from "../../../../main"
 
 import {
-    WorkerProxy,
     WorkerAbstractProxy,
+    WorkerProxy,
 } from "../../../../../../../../../z_getto/application/worker/foreground"
 
 import {
+    RegisterPasswordProxyMaterial,
     RegisterPasswordProxyMessage,
-    RegisterPasswordProxyMethod,
     RegisterPasswordProxyResponse,
 } from "./message"
 
+import { RegisterPasswordCoreBackground } from "../../Core/action"
+
+import { RegisterPasswordLocationInfo } from "../../../../method"
+
 export type RegisterPasswordProxy = WorkerProxy<
-    RegisterPasswordAction,
+    RegisterPasswordCoreBackground,
     RegisterPasswordProxyMessage,
     RegisterPasswordProxyResponse
 >
@@ -36,30 +35,32 @@ class Proxy
     extends WorkerAbstractProxy<RegisterPasswordProxyMessage>
     implements RegisterPasswordProxy {
     infra: Infra
-    register: RegisterPasswordProxyMethod
+    material: RegisterPasswordProxyMaterial
 
     constructor(infra: Infra, post: Post<RegisterPasswordProxyMessage>) {
         super(post)
         this.infra = infra
-        this.register = this.method("register", (message) => message)
+        this.material = {
+            reset: this.method("register", (message) => message),
+        }
     }
 
-    background(): RegisterPasswordAction {
-        return newRegisterPasswordAction_merge(this.infra.webStorage, {
+    background(): RegisterPasswordCoreBackground {
+        return {
             register: (fields, post) =>
-                this.register.call(
+                this.material.reset.call(
                     {
                         fields,
                         resetToken: this.infra.locationInfo.getPasswordResetToken(),
                     },
                     post
                 ),
-        })
+        }
     }
     resolve(response: RegisterPasswordProxyResponse): void {
         switch (response.method) {
             case "register":
-                this.register.resolve(response)
+                this.material.reset.resolve(response)
                 break
         }
     }

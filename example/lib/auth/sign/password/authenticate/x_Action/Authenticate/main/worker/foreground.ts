@@ -32,7 +32,9 @@ class Proxy
     constructor(webStorage: Storage, post: Post<AuthenticatePasswordProxyMessage>) {
         super(post)
         this.webStorage = webStorage
-        this.material = { authenticate: this.method("authenticate", (message) => message) }
+        this.material = {
+            authenticate: this.method("authenticate", (message) => message),
+        }
     }
 
     background(): AuthenticatePasswordCoreBackground {

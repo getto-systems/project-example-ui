@@ -1,6 +1,5 @@
 import { newAuthenticatePassword } from "../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/core"
-import { newRegisterPasswordResource } from "../../../../../auth/x_Resource/Sign/Password/ResetSession/Register/main/core"
-import { newRenewAuthnInfoAction } from "../../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/main"
+import { newRenewAuthnInfo } from "../../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/main"
 
 import { initLoginViewLocationInfo, View } from "../impl"
 
@@ -9,6 +8,7 @@ import { newAuthSignLinkResource } from "../../../../../auth/sign/common/searchP
 import { AuthSignEntryPoint } from "../entryPoint"
 import { newStartPasswordResetSessionResource } from "../../../../../auth/x_Resource/Sign/Password/ResetSession/Start/main/core"
 import { currentURL } from "../../../../../z_getto/infra/location/url"
+import { newRegisterPassword } from "../../../../../auth/sign/password/resetSession/register/x_Action/Register/main/core"
 
 export function newLoginAsSingle(): AuthSignEntryPoint {
     const webStorage = localStorage
@@ -16,11 +16,11 @@ export function newLoginAsSingle(): AuthSignEntryPoint {
     const view = new View(initLoginViewLocationInfo(currentURL()), {
         link: newAuthSignLinkResource,
 
-        renew: () => ({ renew: newRenewAuthnInfoAction(webStorage) }),
+        renew: () => newRenewAuthnInfo(webStorage),
 
         passwordLogin: () => newAuthenticatePassword(webStorage),
         passwordResetSession: () => newStartPasswordResetSessionResource(),
-        passwordReset: () => newRegisterPasswordResource(webStorage),
+        passwordReset: () => newRegisterPassword(webStorage),
     })
     return {
         view,

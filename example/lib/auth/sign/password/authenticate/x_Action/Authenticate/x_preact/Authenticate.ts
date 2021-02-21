@@ -26,12 +26,11 @@ import { PasswordBoard } from "../../../../../../common/board/password/x_Action/
 import {
     AuthenticatePasswordEntryPoint,
     AuthenticatePasswordResource,
+    AuthenticatePasswordResourceState,
     initialAuthenticatePasswordState,
 } from "../action"
 
 import { AuthenticatePasswordError } from "../../../data"
-import { AuthenticatePasswordCoreState } from "../Core/action"
-import { ValidateBoardState } from "../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/action"
 
 export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
@@ -51,7 +50,7 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
 }
 
 export type AuthenticatePasswordProps = AuthenticatePasswordResource &
-    Readonly<{ state: Readonly<{ core: AuthenticatePasswordCoreState; form: ValidateBoardState }> }>
+    Readonly<{ state: AuthenticatePasswordResourceState }>
 export function View(props: AuthenticatePasswordProps): VNode {
     useLayoutEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う

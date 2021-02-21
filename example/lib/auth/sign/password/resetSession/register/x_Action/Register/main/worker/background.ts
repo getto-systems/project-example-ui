@@ -1,6 +1,6 @@
 import { newRegisterPasswordBackground } from "../core"
 
-import { registerPasswordEventHasDone } from "../../../../../../../password/resetSession/register/impl"
+import { registerPasswordEventHasDone } from "../../../../impl"
 
 import { WorkerHandler } from "../../../../../../../../../z_getto/application/worker/background"
 

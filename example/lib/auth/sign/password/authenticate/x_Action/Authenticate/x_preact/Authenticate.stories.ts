@@ -51,13 +51,10 @@ export type Props = Readonly<{
 const template = storyTemplate<Props>((props) => {
     return h(View, <AuthenticatePasswordProps>{
         ...initMockAuthenticatePasswordResource(),
-        state: {
-            core: coreState(),
-            form: formState(),
-        },
+        state: { core: state(), form: props.form },
     })
 
-    function coreState(): AuthenticatePasswordCoreState {
+    function state(): AuthenticatePasswordCoreState {
         switch (props.authenticate) {
             case "initial":
                 return { type: "initial-login" }
@@ -95,9 +92,6 @@ const template = storyTemplate<Props>((props) => {
                     err: { type: "infra-error", err: props.err },
                 }
         }
-    }
-    function formState(): ValidateBoardState {
-        return props.form
     }
 })
 

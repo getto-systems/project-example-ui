@@ -1,12 +1,13 @@
 import { WorkerProxySpec } from "../../../../../../../../../z_getto/application/worker/message"
 
-import { RegisterPasswordEvent } from "../../../../../../../password/resetSession/register/event"
+import { RegisterPasswordEvent } from "../../../../event"
 
 import { FormConvertResult } from "../../../../../../../../../z_getto/getto-form/form/data"
-import {
-    PasswordResetFields,
-    PasswordResetToken,
-} from "../../../../../../../password/resetSession/register/data"
+import { PasswordResetFields, PasswordResetToken } from "../../../../data"
+
+export type RegisterPasswordProxyMaterial = Readonly<{
+    reset: Register["method"]
+}>
 
 export type RegisterPasswordProxyMessage = Register["message"]
 export type RegisterPasswordProxyResponse = Register["response"]

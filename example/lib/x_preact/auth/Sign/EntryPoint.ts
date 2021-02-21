@@ -10,7 +10,7 @@ import { RenewAuthInfo } from "../../../auth/sign/kernel/authnInfo/renew/x_Actio
 
 import { AuthenticatePassword } from "../../../auth/sign/password/authenticate/x_Action/Authenticate/x_preact/Authenticate"
 import { PasswordResetSession } from "./Password/ResetSession/Start"
-import { RegisterPassword } from "./Password/ResetSession/Register"
+import { RegisterPassword } from "../../../auth/sign/password/resetSession/register/x_Action/Register/x_preact/Register"
 
 import {
     AuthSignEntryPoint,
