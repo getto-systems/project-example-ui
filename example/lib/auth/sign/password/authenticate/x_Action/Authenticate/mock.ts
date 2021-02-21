@@ -6,8 +6,10 @@ import { newAuthSignLinkResource } from "../../../../common/searchParams/x_Actio
 
 export function initMockAuthenticatePasswordResource(): AuthenticatePasswordResource {
     return {
-        core: initMockAuthenticatePasswordCoreAction(),
-        form: initMockAuthenticatePasswordFormAction(),
+        authenticate: {
+            core: initMockAuthenticatePasswordCoreAction(),
+            form: initMockAuthenticatePasswordFormAction(),
+        },
         ...newAuthSignLinkResource(),
     }
 }

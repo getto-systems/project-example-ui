@@ -38,9 +38,12 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
     return h(View, <AuthenticatePasswordProps>{
         ...resource,
         state: {
-            core: useApplicationAction(resource.core, initialAuthenticatePasswordState.core),
+            core: useApplicationAction(
+                resource.authenticate.core,
+                initialAuthenticatePasswordState.core
+            ),
             form: useApplicationAction(
-                resource.form.validate,
+                resource.authenticate.form.validate,
                 initialAuthenticatePasswordState.form
             ),
         },
@@ -56,7 +59,7 @@ export function View(props: AuthenticatePasswordProps): VNode {
             case "try-to-load":
                 appendScript(props.state.core.scriptPath, (script) => {
                     script.onerror = () => {
-                        props.core.loadError({
+                        props.authenticate.core.loadError({
                             type: "infra-error",
                             err: `スクリプトのロードに失敗しました: ${props.state.core.type}`,
                         })
@@ -103,8 +106,8 @@ export function View(props: AuthenticatePasswordProps): VNode {
             loginBox(siteInfo(), {
                 title: loginTitle(),
                 body: [
-                    h(LoginIDBoard, { field: props.form.loginID, help: [] }),
-                    h(PasswordBoard, { field: props.form.password, help: [] }),
+                    h(LoginIDBoard, { field: props.authenticate.form.loginID, help: [] }),
+                    h(PasswordBoard, { field: props.authenticate.form.password, help: [] }),
                     buttons({ right: clearButton() }),
                 ],
                 footer: [buttons({ left: button(), right: resetLink() }), error()],
@@ -124,7 +127,7 @@ export function View(props: AuthenticatePasswordProps): VNode {
 
             function onClick(e: Event) {
                 e.preventDefault()
-                props.form.clear()
+                props.authenticate.form.clear()
             }
         }
 
@@ -153,7 +156,7 @@ export function View(props: AuthenticatePasswordProps): VNode {
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    props.core.submit(props.form.validate.get())
+                    props.authenticate.core.submit(props.authenticate.form.validate.get())
                 }
             }
             function connectingButton(): VNode {
