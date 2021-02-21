@@ -12,7 +12,9 @@ type FieldContent =
     | Readonly<{ type: SearchFieldType; content: NormalFieldContent }>
     | Readonly<{ type: NoticeFieldType; content: NoticeFieldContent }>
 
-export type NormalFieldContent = NormalFieldContent_base | (NormalFieldContent_base & FieldContent_help)
+export type NormalFieldContent =
+    | NormalFieldContent_base
+    | (NormalFieldContent_base & FieldContent_help)
 export type NoticeFieldContent = NormalFieldContent & FieldContent_notice
 
 type NormalFieldContent_base = Readonly<{
@@ -148,7 +150,9 @@ function fieldHelp({ help, notice }: FieldHelpContent) {
     if (help.length + notice.length == 0) {
         return ""
     }
-    return html`<aside class="field__help">${notice.map(toFieldNotice)}${help.map(toFieldHelp)}</aside>`
+    return html`<aside class="field__help">
+        ${notice.map(toFieldNotice)}${help.map(toFieldHelp)}
+    </aside>`
 }
 function toFieldNotice(message: VNodeContent) {
     return html`<p class="field__notice">${message}</p>`
@@ -187,8 +191,14 @@ export function buttons(content: ButtonsContent): VNode {
 
 type ButtonContent =
     | Readonly<{ type: StatefulButtonType; content: StatefulButtonContent }>
-    | Readonly<{ type: StatelessButtonType; content: StatelessButtonContent & NormalStateButtonContent }>
-    | Readonly<{ type: DisabledButtonType; content: DisabledButtonContent & NormalStateButtonContent }>
+    | Readonly<{
+          type: StatelessButtonType
+          content: StatelessButtonContent & NormalStateButtonContent
+      }>
+    | Readonly<{
+          type: DisabledButtonType
+          content: DisabledButtonContent & NormalStateButtonContent
+      }>
 
 export type StatefulButtonContent = ClickableButtonContent | ConnectButtonContent
 type ClickableButtonContent = Readonly<{
@@ -273,28 +283,57 @@ export function button_disabled(content: DisabledButtonContent): VNode {
 function buttonContent(button: ButtonContent): VNode {
     const info = detect()
     if (info.clickable) {
-        return html`<button class=${buttonClass()} onClick=${info.onClick}>
+        return html`<button type=${info.type} class=${buttonClass()} onClick=${info.onClick}>
             ${button.content.label}
         </button>`
     } else {
-        return html`<button type="button" class=${buttonClass()}>${button.content.label}</button>`
+        return html`<button type=${info.type} class=${buttonClass()}>
+            ${button.content.label}
+        </button>`
     }
 
     function buttonClass() {
         return `button ${mapButtonType(button.type)} ${mapButtonState(button.content.state)}`
     }
 
-    type Info = Readonly<{ clickable: false }> | Readonly<{ clickable: true; onClick: Handler<Event> }>
+    type SubmitType = "submit" | "button"
+    type Info =
+        | Readonly<{ clickable: false; type: SubmitType }>
+        | Readonly<{ clickable: true; type: SubmitType; onClick: Handler<Event> }>
     function detect(): Info {
+        const type = submitType()
         if (button.type === "disabled") {
-            return { clickable: false }
+            return { clickable: false, type }
         }
         switch (button.content.state) {
             case "connect":
-                return { clickable: false }
+                // connect はクリックできないので button
+                return { clickable: false, type: "button" }
 
             default:
-                return { clickable: true, onClick: button.content.onClick }
+                return { clickable: true, type, onClick: button.content.onClick }
+        }
+
+        function submitType(): SubmitType {
+            switch (button.type) {
+                // 正常実行系は submit
+                case "edit":
+                case "send":
+                case "search":
+                case "complete":
+                    return "submit"
+
+                // 警告系、キャンセル、その他操作は button
+                case "delete":
+                case "warning":
+                case "pending":
+                case "cancel":
+                case "close":
+                case "undo":
+                case "redo":
+                case "disabled":
+                    return "button"
+            }
         }
     }
 }
@@ -400,7 +439,11 @@ function labelContent({ style, content }: LabelContent): VNode {
     return html`<label class=${mapInputStyle(style)}>${content}</label>`
 }
 
-export type CheckableContent = Readonly<{ isChecked: boolean; input: VNodeContent; key: CheckableKey }>
+export type CheckableContent = Readonly<{
+    isChecked: boolean
+    input: VNodeContent
+    key: CheckableKey
+}>
 type CheckableKey = string | number
 
 type CheckableType = "checkbox" | "radio"
@@ -430,7 +473,7 @@ export function radio_block(content: CheckableContent): VNode {
 function checkableContent(
     type: CheckableType,
     style: CheckableStyle,
-    { isChecked, input, key }: CheckableContent
+    { isChecked, input, key }: CheckableContent,
 ): VNode {
     const checkClass = isChecked ? "input_checked" : ""
     return html`<label class="${mapCheckableStyle(type, style)} ${checkClass}" key=${key}
