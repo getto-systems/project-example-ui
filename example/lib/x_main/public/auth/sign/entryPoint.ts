@@ -1,4 +1,4 @@
-import { RenewAuthnInfoResource } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/action"
+import { RenewAuthnInfoEntryPoint } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/action"
 import { AuthenticatePasswordEntryPoint } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/action"
 import { RegisterPasswordResource } from "../../../../auth/x_Resource/Sign/Password/ResetSession/Register/resource"
 import { StartPasswordResetSessionResource } from "../../../../auth/x_Resource/Sign/Password/ResetSession/Start/resource"
@@ -11,7 +11,6 @@ export type AuthSignEntryPoint = Readonly<{
     terminate: Terminate
 }>
 
-export type RenewCredentialEntryPoint = EntryPoint<RenewAuthnInfoResource>
 export type PasswordResetSessionEntryPoint = EntryPoint<
     StartPasswordResetSessionResource & AuthSignLinkResource
 >
@@ -21,7 +20,7 @@ export interface AuthSignResourceFactory {
     link(): AuthSignLinkResource
 
     // TODO 階層構造に合わせて rename
-    renew(): RenewAuthnInfoResource
+    renew(): RenewAuthnInfoEntryPoint
 
     passwordLogin(): AuthenticatePasswordEntryPoint
     passwordResetSession(): StartPasswordResetSessionResource
@@ -34,10 +33,10 @@ export interface AuthSignViewLocationInfo {
 
 export type AuthSignView = ApplicationAction<AuthSignViewState>
 
-    // TODO 階層構造に合わせて rename
+// TODO 階層構造に合わせて rename
 export type AuthSignViewState =
     | Readonly<{ type: "initial-view" }>
-    | Readonly<{ type: "renew-credential"; entryPoint: RenewCredentialEntryPoint }>
+    | Readonly<{ type: "renew-credential"; entryPoint: RenewAuthnInfoEntryPoint }>
     | Readonly<{ type: "password-login"; entryPoint: AuthenticatePasswordEntryPoint }>
     | Readonly<{
           type: "password-reset-session"

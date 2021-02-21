@@ -23,7 +23,10 @@ import { markAuthAt, markAuthnNonce } from "../../../../auth/sign/kernel/authnIn
 import { markApiNonce, markApiRoles } from "../../../../common/apiCredential/data"
 import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/memory"
-import { AuthnInfoRepository, RenewAuthnInfoResult } from "../../../../auth/sign/kernel/authnInfo/kernel/infra"
+import {
+    AuthnInfoRepository,
+    RenewAuthnInfoResult,
+} from "../../../../auth/sign/kernel/authnInfo/kernel/infra"
 import { delayed, wait } from "../../../../z_getto/infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../../../auth/sign/kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
 import { initGetSecureScriptPathLocationInfo } from "../../../../auth/sign/common/secureScriptPath/get/impl"
@@ -36,7 +39,10 @@ import {
 import { markPasswordResetSessionID } from "../../../../auth/sign/password/resetSession/start/data"
 import { initSendPasswordResetSessionTokenSimulate } from "../../../../auth/sign/password/resetSession/start/infra/remote/sendToken/simulate"
 import { initGetPasswordResetSessionStatusSimulate } from "../../../../auth/sign/password/resetSession/start/infra/remote/getStatus/simulate"
-import { initRenewAuthnInfoAction } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/impl"
+import {
+    initRenewAuthnInfoAction,
+    toRenewAuthnInfoEntryPoint,
+} from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/impl"
 import { initAuthenticatePasswordFormAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Form/impl"
 import { initAuthenticatePasswordCoreAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Core/impl"
 import { initRegisterPasswordAction } from "../../../../auth/sign/x_Action/Password/ResetSession/Register/Core/impl"
@@ -256,7 +262,7 @@ function standardLoginView() {
     const view = new View(initLoginViewLocationInfo(currentURL), {
         link: newAuthSignLinkResource,
         renew: () =>
-            standardRenewCredentialResource(
+            standardRenewCredentialEntryPoint(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
@@ -288,7 +294,7 @@ function passwordResetSessionLoginView() {
     const view = new View(initLoginViewLocationInfo(currentURL), {
         link: newAuthSignLinkResource,
         renew: () =>
-            standardRenewCredentialResource(
+            standardRenewCredentialEntryPoint(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
@@ -320,7 +326,7 @@ function passwordResetLoginView() {
     const view = new View(initLoginViewLocationInfo(currentURL), {
         link: newAuthSignLinkResource,
         renew: () =>
-            standardRenewCredentialResource(
+            standardRenewCredentialEntryPoint(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
@@ -488,14 +494,14 @@ function standardPasswordResetSessionResource() {
         }
     }
 }
-function standardRenewCredentialResource(
+function standardRenewCredentialEntryPoint(
     currentURL: URL,
     apiCredentials: ApiCredentialRepository,
     authnInfos: AuthnInfoRepository,
     clock: Clock
 ) {
-    return {
-        renew: initRenewAuthnInfoAction(
+    return toRenewAuthnInfoEntryPoint(
+        initRenewAuthnInfoAction(
             {
                 renew: {
                     apiCredentials,
@@ -529,8 +535,8 @@ function standardRenewCredentialResource(
                 },
             },
             initGetSecureScriptPathLocationInfo(currentURL)
-        ),
-    }
+        )
+    )
 }
 
 function standardURL(): URL {

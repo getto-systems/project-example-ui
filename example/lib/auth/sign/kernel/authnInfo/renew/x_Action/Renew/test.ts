@@ -18,7 +18,7 @@ import {
 import { delayed } from "../../../../../../../z_getto/infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../../kernel/infra/repository/authnInfo/memory"
 import { initGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
-import { initRenewAuthnInfoAction } from "./impl"
+import { initRenewAuthnInfoAction, toRenewAuthnInfoEntryPoint } from "./impl"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
 const STORED_AUTH_AT = new Date("2020-01-01 09:00:00")
@@ -369,7 +369,7 @@ function standardRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newTestRenewCredentialResource(currentURL, repository, simulator, clock)
+    const resource = newTestRenewAuthnInfoResource(currentURL, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
@@ -378,7 +378,7 @@ function instantRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = standardSimulator()
     const clock = instantAvailableClock()
-    const resource = newTestRenewCredentialResource(currentURL, repository, simulator, clock)
+    const resource = newTestRenewAuthnInfoResource(currentURL, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
@@ -387,7 +387,7 @@ function waitRenewCredentialResource() {
     const repository = standardRepository()
     const simulator = waitSimulator()
     const clock = standardClock()
-    const resource = newTestRenewCredentialResource(currentURL, repository, simulator, clock)
+    const resource = newTestRenewAuthnInfoResource(currentURL, repository, simulator, clock)
 
     return { repository, clock, resource }
 }
@@ -396,7 +396,7 @@ function emptyRenewCredentialResource() {
     const repository = emptyRepository()
     const simulator = standardSimulator()
     const clock = standardClock()
-    const resource = newTestRenewCredentialResource(currentURL, repository, simulator, clock)
+    const resource = newTestRenewAuthnInfoResource(currentURL, repository, simulator, clock)
 
     return { repository, resource }
 }
@@ -409,15 +409,15 @@ type RenewCredentialTestRemoteAccess = Readonly<{
     renew: RenewAuthnInfoRemote
 }>
 
-function newTestRenewCredentialResource(
+function newTestRenewAuthnInfoResource(
     currentURL: URL,
     repository: RenewCredentialTestRepository,
     remote: RenewCredentialTestRemoteAccess,
     clock: Clock
 ): RenewAuthnInfoResource {
     const config = standardConfig()
-    return {
-        renew: initRenewAuthnInfoAction(
+    return toRenewAuthnInfoEntryPoint(
+        initRenewAuthnInfoAction(
             {
                 renew: {
                     ...repository,
@@ -437,8 +437,8 @@ function newTestRenewCredentialResource(
                 },
             },
             initGetSecureScriptPathLocationInfo(currentURL)
-        ),
-    }
+        )
+    ).resource
 }
 
 function standardURL(): URL {

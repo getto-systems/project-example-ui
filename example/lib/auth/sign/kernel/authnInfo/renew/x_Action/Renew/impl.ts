@@ -11,12 +11,26 @@ import { RenewAuthnInfoInfra } from "../../infra"
 import { StartContinuousRenewAuthnInfoInfra } from "../../../common/startContinuousRenew/infra"
 import { GetSecureScriptPathInfra } from "../../../../../common/secureScriptPath/get/infra"
 
-import { RenewAuthnInfoMaterial, RenewAuthnInfoAction, RenewAuthnInfoState } from "./action"
+import {
+    RenewAuthnInfoMaterial,
+    RenewAuthnInfoAction,
+    RenewAuthnInfoState,
+    RenewAuthnInfoEntryPoint,
+} from "./action"
 
 import { GetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/method"
 
 import { AuthnInfo } from "../../../kernel/data"
 import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
+
+export function toRenewAuthnInfoEntryPoint(action: RenewAuthnInfoAction): RenewAuthnInfoEntryPoint {
+    return {
+        resource: { renew: action },
+        terminate: () => {
+            action.terminate()
+        },
+    }
+}
 
 export type RenewAuthnInfoBase = Readonly<{
     renew: RenewAuthnInfoInfra

@@ -43,9 +43,8 @@ export class View extends ApplicationAbstractAction<AuthSignViewState> implement
         this.components = components
 
         this.igniteHook(() => {
-            // TODO entry point を返すようにするべき
-            const resource = this.components.renew()
-            resource.renew.addStateHandler((state) => {
+            const entryPoint = this.components.renew()
+            entryPoint.resource.renew.addStateHandler((state) => {
                 switch (state.type) {
                     case "required-to-login":
                         this.post(this.mapViewType(this.locationInfo.getAuthSignViewType()))
@@ -53,15 +52,7 @@ export class View extends ApplicationAbstractAction<AuthSignViewState> implement
                 }
             })
 
-            this.post({
-                type: "renew-credential",
-                entryPoint: {
-                    resource,
-                    terminate: () => {
-                        resource.renew.terminate()
-                    },
-                },
-            })
+            this.post({ type: "renew-credential", entryPoint })
         })
     }
 

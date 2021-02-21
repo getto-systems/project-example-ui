@@ -1,6 +1,6 @@
 import { newWorker } from "../../../../../../z_getto/application/worker/foreground"
 
-import { newRenewAuthnInfoAction } from "../../../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/main"
+import { newRenewAuthnInfoEntryPoint } from "../../../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/main"
 import { newAuthenticatePassword_proxy } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/core"
 import { newRegisterPasswordResource_merge } from "../../../../../../auth/x_Resource/Sign/Password/ResetSession/Register/main/core"
 import { newStartPasswordResetSessionResource_merge } from "../../../../../../auth/x_Resource/Sign/Password/ResetSession/Start/main/core"
@@ -37,7 +37,7 @@ export function newLoginAsWorkerForeground(): AuthSignEntryPoint {
     const view = new View(initLoginViewLocationInfo(currentURL()), {
         link: newAuthSignLinkResource,
 
-        renew: () => ({ renew: newRenewAuthnInfoAction(webStorage) }),
+        renew: () => newRenewAuthnInfoEntryPoint(webStorage),
 
         passwordLogin: () =>
             newAuthenticatePassword_proxy(webStorage, proxy.password.authenticate.background()),
