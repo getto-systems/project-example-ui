@@ -27,7 +27,9 @@ export interface AuthSignViewLocationInfo {
     getAuthSignViewType(): AuthSignViewType
 }
 
-export type AuthSignAction = ApplicationAction<AuthSignActionState>
+export interface AuthSignAction extends ApplicationAction<AuthSignActionState> {
+    error(err: string): void
+}
 
 export type AuthSignActionState =
     | Readonly<{ type: "initial-view" }>
