@@ -1,6 +1,6 @@
 import { AuthSignLinkResource } from "./action"
 
-import { AuthSignSearchParams } from "../../data"
+import { authSignSearch_password_login, authSignSearch_password_reset } from "../../data"
 
 export function newAuthSignLinkResource(): AuthSignLinkResource {
     return {
@@ -12,8 +12,8 @@ export function newAuthSignLinkResource(): AuthSignLinkResource {
 }
 
 function passwordLogin(): string {
-    return `?${AuthSignSearchParams.passwordLogin}`
+    return `?${authSignSearch_password_login()}`
 }
 function passwordResetSession(): string {
-    return `?${AuthSignSearchParams.passwordReset}=${AuthSignSearchParams.passwordReset_start}`
+    return `?${authSignSearch_password_reset("start")}`
 }
