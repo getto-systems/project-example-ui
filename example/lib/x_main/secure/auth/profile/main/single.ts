@@ -10,13 +10,17 @@ import { initSeasonAction } from "../../../../../example/shared/season/main/seas
 
 import { AuthProfileEntryPoint, ProfileFactory } from "../entryPoint"
 
-export function newEntryPoint(): AuthProfileEntryPoint {
-    const webStorage = localStorage
+type OutsideFeature = Readonly<{
+    webStorage: Storage
+    currentURL: URL
+}>
+export function newForeground(feature: OutsideFeature): AuthProfileEntryPoint {
+    const { webStorage, currentURL } = feature
 
     const factory: ProfileFactory = {
         actions: {
             error: newErrorAction(),
-            ...newMainOutlineAction(webStorage),
+            ...newMainOutlineAction(webStorage, currentURL),
 
             season: initSeasonAction(),
         },

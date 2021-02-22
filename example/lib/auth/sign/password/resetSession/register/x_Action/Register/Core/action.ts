@@ -1,6 +1,6 @@
 import { ApplicationAction } from "../../../../../../../../z_getto/application/action"
 
-import { RegisterPasswordMethod } from "../../../method"
+import { RegisterPasswordMethod, RegisterPasswordPod } from "../../../method"
 import { GetSecureScriptPathMethod } from "../../../../../../common/secureScriptPath/get/method"
 import { StartContinuousRenewAuthnInfoMethod } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/method"
 
@@ -28,6 +28,9 @@ export type RegisterPasswordCoreForeground = Readonly<{
 }>
 export type RegisterPasswordCoreBackground = Readonly<{
     register: RegisterPasswordMethod
+}>
+export type RegisterPasswordCoreBackgroundPod = Readonly<{
+    initRegister: RegisterPasswordPod
 }>
 
 export type RegisterPasswordCoreState =

@@ -1,7 +1,4 @@
-import {
-    newGetSecureScriptPathInfra,
-    newGetSecureScriptPathLocationInfo,
-} from "../../../../../common/secureScriptPath/get/main"
+import { newGetSecureScriptPathInfra } from "../../../../../common/secureScriptPath/get/main"
 import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../kernel/authnInfo/common/startContinuousRenew/main"
 import { newAuthenticatePasswordInfra } from "../../../main"
 import { newBoardValidateStack } from "../../../../../../../z_getto/board/kernel/infra/stack"
@@ -19,22 +16,27 @@ import { toAuthenticatePasswordEntryPoint } from "../impl"
 import { AuthenticatePasswordEntryPoint, AuthenticatePasswordAction } from "../action"
 import { AuthenticatePasswordCoreAction, AuthenticatePasswordCoreBackground } from "../Core/action"
 import { AuthenticatePasswordFormAction } from "../Form/action"
+import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
 
-export function newAuthenticatePassword(webStorage: Storage): AuthenticatePasswordEntryPoint {
-    return toAuthenticatePasswordEntryPoint(mergeAction(newCoreAction(webStorage)))
+export function newAuthenticatePassword(
+    webStorage: Storage,
+    currentURL: URL,
+): AuthenticatePasswordEntryPoint {
+    return toAuthenticatePasswordEntryPoint(mergeAction(newCoreAction(webStorage, currentURL)))
 }
 export function newAuthenticatePassword_proxy(
     webStorage: Storage,
-    background: AuthenticatePasswordCoreBackground
+    currentURL: URL,
+    background: AuthenticatePasswordCoreBackground,
 ): AuthenticatePasswordEntryPoint {
     return toAuthenticatePasswordEntryPoint(
         mergeAction(
             initAuthenticatePasswordCoreAction_merge(
                 newForegroundBase(webStorage),
-                newGetSecureScriptPathLocationInfo(),
-                background
-            )
-        )
+                newGetSecureScriptPathLocationInfo(currentURL),
+                background,
+            ),
+        ),
     )
 }
 function mergeAction(core: AuthenticatePasswordCoreAction): AuthenticatePasswordAction {
@@ -45,10 +47,10 @@ export function newAuthenticatePasswordCoreBackground(): AuthenticatePasswordCor
     return initAuthenticatePasswordCoreBackground(newBackgroundBase())
 }
 
-function newCoreAction(webStorage: Storage): AuthenticatePasswordCoreAction {
+function newCoreAction(webStorage: Storage, currentURL: URL): AuthenticatePasswordCoreAction {
     return initAuthenticatePasswordCoreAction(
         { ...newForegroundBase(webStorage), ...newBackgroundBase() },
-        newGetSecureScriptPathLocationInfo()
+        newGetSecureScriptPathLocationInfo(currentURL),
     )
 }
 

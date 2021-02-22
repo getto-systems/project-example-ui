@@ -7,21 +7,23 @@ import { newAuthSignLinkResource } from "../../../../../auth/sign/common/searchP
 
 import { AuthSignEntryPoint } from "../entryPoint"
 import { newStartPasswordResetSession } from "../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/core"
-import { currentURL } from "../../../../../z_getto/infra/location/url"
 import { newRegisterPassword } from "../../../../../auth/sign/password/resetSession/register/x_Action/Register/main/core"
 
-export function newAuthSignAsSingle(): AuthSignEntryPoint {
-    const webStorage = localStorage
-
+type OutsideFeature = Readonly<{
+    webStorage: Storage
+    currentURL: URL
+}>
+export function newForeground(feature: OutsideFeature): AuthSignEntryPoint {
+    const { webStorage, currentURL } = feature
     return toAuthSignEntryPoint(
-        new View(initLoginViewLocationInfo(currentURL()), {
+        new View(initLoginViewLocationInfo(currentURL), {
             link: newAuthSignLinkResource,
 
-            renew: () => newRenewAuthnInfo(webStorage),
+            renew: () => newRenewAuthnInfo(webStorage, currentURL),
 
-            passwordLogin: () => newAuthenticatePassword(webStorage),
+            passwordLogin: () => newAuthenticatePassword(webStorage, currentURL),
             passwordResetSession: () => newStartPasswordResetSession(),
-            passwordReset: () => newRegisterPassword(webStorage),
+            passwordReset: () => newRegisterPassword(webStorage, currentURL),
         }),
     )
 }

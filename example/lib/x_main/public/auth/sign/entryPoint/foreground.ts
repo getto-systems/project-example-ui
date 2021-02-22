@@ -1,7 +1,18 @@
 import { render, h } from "preact"
+import { newWorker } from "../../../../../z_getto/application/worker/foreground"
 
-import { newAuthSignAsWorkerForeground } from "../main/worker/foreground"
+import { newWorkerForeground } from "../main/worker/foreground"
 
 import { EntryPoint } from "../x_preact/EntryPoint"
 
-render(h(EntryPoint, newAuthSignAsWorkerForeground()), document.body)
+render(
+    h(
+        EntryPoint,
+        newWorkerForeground({
+            webStorage: localStorage,
+            currentURL: new URL(location.toString()),
+            worker: newWorker(),
+        }),
+    ),
+    document.body,
+)

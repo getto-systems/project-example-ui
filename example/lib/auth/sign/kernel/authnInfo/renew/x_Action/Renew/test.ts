@@ -17,7 +17,7 @@ import {
 } from "../../../kernel/infra"
 import { delayed } from "../../../../../../../z_getto/infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../../kernel/infra/repository/authnInfo/memory"
-import { initGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
+import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
 import { initRenewAuthnInfoAction, toRenewAuthnInfoEntryPoint } from "./impl"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
@@ -436,7 +436,7 @@ function newTestRenewAuthnInfoResource(
                     config: config.location,
                 },
             },
-            initGetSecureScriptPathLocationInfo(currentURL)
+            newGetSecureScriptPathLocationInfo(currentURL)
         )
     ).resource
 }

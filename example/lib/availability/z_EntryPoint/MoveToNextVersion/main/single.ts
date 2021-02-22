@@ -9,9 +9,11 @@ import { initNextVersionComponent } from "../../../x_Resource/MoveToNextVersion/
 
 import { MoveToNextVersionEntryPoint } from "../entryPoint"
 
-export function newMoveToNextVersionAsSingle(): MoveToNextVersionEntryPoint {
-    const currentURL = new URL(location.toString())
-
+type OutsideFeature = Readonly<{
+    currentURL: URL
+}>
+export function newForeground(feature: OutsideFeature): MoveToNextVersionEntryPoint {
+    const { currentURL } = feature
     const factory = {
         actions: {
             nextVersion: initNextVersionAction(),

@@ -1,4 +1,4 @@
-import { newRegisterPasswordBackground } from "../core"
+import { newRegisterPasswordBackgroundPod } from "../core"
 
 import { registerPasswordEventHasDone } from "../../../../impl"
 
@@ -7,19 +7,22 @@ import { WorkerHandler } from "../../../../../../../../../z_getto/application/wo
 import { RegisterPasswordProxyMessage, RegisterPasswordProxyResponse } from "./message"
 
 export function newRegisterPasswordHandler(
-    post: Post<RegisterPasswordProxyResponse>
+    post: Post<RegisterPasswordProxyResponse>,
 ): WorkerHandler<RegisterPasswordProxyMessage> {
-    const material = newRegisterPasswordBackground()
+    const pod = newRegisterPasswordBackgroundPod()
     return (message) => {
         switch (message.method) {
             case "register":
-                material.register(message.params.fields, (event) => {
-                    post({
-                        ...message,
-                        done: registerPasswordEventHasDone(event),
-                        event,
-                    })
-                })
+                pod.initRegister({ getPasswordResetToken: () => message.params.resetToken })(
+                    message.params.fields,
+                    (event) => {
+                        post({
+                            ...message,
+                            done: registerPasswordEventHasDone(event),
+                            event,
+                        })
+                    },
+                )
                 return
         }
     }

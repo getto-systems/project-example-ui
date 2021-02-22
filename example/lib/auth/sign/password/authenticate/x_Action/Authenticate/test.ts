@@ -21,7 +21,7 @@ import {
     RenewAuthnInfoResult,
 } from "../../../../kernel/authnInfo/kernel/infra"
 import { initMemoryAuthnInfoRepository } from "../../../../kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
-import { initGetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/impl"
+import { newGetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/impl"
 import { delayed, wait } from "../../../../../../z_getto/infra/delayed/core"
 import { authenticatePasswordEventHasDone } from "../../impl"
 import { initAsyncActionTestRunner } from "../../../../../../z_getto/application/testHelper"
@@ -235,7 +235,7 @@ function newTestPasswordLoginResource(
                     delayed,
                 },
             },
-            initGetSecureScriptPathLocationInfo(currentURL),
+            newGetSecureScriptPathLocationInfo(currentURL),
         ),
 
         form: initAuthenticatePasswordFormAction({
