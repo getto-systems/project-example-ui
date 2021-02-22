@@ -35,7 +35,7 @@ class Proxy
         }
     }
 
-    background(): StartPasswordResetSessionCoreMaterial {
+    pod(): StartPasswordResetSessionCoreMaterial {
         return {
             start: (fields, post) => this.material.start.call({ fields }, post),
             checkStatus: (sessionID, post) => this.material.checkStatus.call({ sessionID }, post),

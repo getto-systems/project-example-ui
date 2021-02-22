@@ -1,10 +1,6 @@
-import { newWorker } from "../../../../../../z_getto/application/worker/foreground"
-
 import { newRenewAuthnInfo } from "../../../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/main"
 import { newAuthenticatePassword_proxy } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/core"
 import { newStartPasswordResetSession_proxy } from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/core"
-
-import { currentURL } from "../../../../../../z_getto/infra/location/url"
 
 import { initLoginViewLocationInfo, toAuthSignEntryPoint, View } from "../../impl"
 
@@ -27,26 +23,33 @@ import {
     StartPasswordResetSessionProxy,
 } from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/worker/foreground"
 
-export function newAuthSignAsWorkerForeground(): AuthSignEntryPoint {
-    const worker = newWorker()
+type OutsideFeature = Readonly<{
+    webStorage: Storage
+    currentURL: URL
+    worker: Worker
+}>
+export function newWorkerForeground(feature: OutsideFeature): AuthSignEntryPoint {
+    const { webStorage, currentURL, worker } = feature
+    const proxy = initProxy(webStorage, currentURL, postForegroundMessage)
 
-    const webStorage = localStorage
-
-    const proxy = initProxy(webStorage, postForegroundMessage)
-
-    const view = new View(initLoginViewLocationInfo(currentURL()), {
+    const view = new View(initLoginViewLocationInfo(currentURL), {
         link: newAuthSignLinkResource,
 
-        renew: () => newRenewAuthnInfo(webStorage),
+        renew: () => newRenewAuthnInfo(webStorage, currentURL),
 
         passwordLogin: () =>
-            newAuthenticatePassword_proxy(webStorage, proxy.password.authenticate.background()),
+            newAuthenticatePassword_proxy(
+                webStorage,
+                currentURL,
+                proxy.password.authenticate.pod(),
+            ),
         passwordResetSession: () =>
-            newStartPasswordResetSession_proxy(proxy.password.resetSession.start.background()),
+            newStartPasswordResetSession_proxy(proxy.password.resetSession.start.pod()),
         passwordReset: () =>
             newRegisterPassword_proxy(
                 webStorage,
-                proxy.password.resetSession.register.background(),
+                currentURL,
+                proxy.password.resetSession.register.pod(),
             ),
     })
 
@@ -82,7 +85,7 @@ type Proxy = Readonly<{
         }>
     }>
 }>
-function initProxy(webStorage: Storage, post: Post<ForegroundMessage>): Proxy {
+function initProxy(webStorage: Storage, currentURL: URL, post: Post<ForegroundMessage>): Proxy {
     return {
         password: {
             authenticate: newAuthenticatePasswordProxy(webStorage, (message) =>

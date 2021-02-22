@@ -37,7 +37,7 @@ class Proxy
         }
     }
 
-    background(): AuthenticatePasswordCoreBackground {
+    pod(): AuthenticatePasswordCoreBackground {
         return {
             authenticate: (fields, post) => this.material.authenticate.call({ fields }, post),
         }

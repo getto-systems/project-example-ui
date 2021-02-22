@@ -3,8 +3,8 @@ import { GetSecureScriptPathLocationInfo, GetSecureScriptPathPod } from "./metho
 import { markLocationPathname, markSecureScriptPath, LocationPathname } from "./data"
 import { GetSecureScriptPathInfra } from "./infra"
 
-export function initGetSecureScriptPathLocationInfo(
-    currentURL: URL
+export function newGetSecureScriptPathLocationInfo(
+    currentURL: URL,
 ): GetSecureScriptPathLocationInfo {
     return {
         getLocationPathname: () => detectPathname(currentURL),
@@ -27,6 +27,6 @@ export const getSecureScriptPath: GetSecureScriptPath = (infra) => (locationInfo
 
     // アクセス中の html と同じパスで secure host に js がホストされている
     return markSecureScriptPath(
-        `https://${secureServerHost}${pagePathname.replace(/\.html$/, "")}.js`
+        `https://${secureServerHost}${pagePathname.replace(/\.html$/, "")}.js`,
     )
 }

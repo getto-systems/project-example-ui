@@ -7,7 +7,7 @@ import { RegisterPasswordEvent } from "./event"
 import { authSignSearchKey_password_reset_token } from "../../../common/searchParams/data"
 import { markPasswordResetToken, PasswordResetToken } from "./data"
 
-export function initRegisterPasswordLocationInfo(currentURL: URL): RegisterPasswordLocationInfo {
+export function newRegisterPasswordLocationInfo(currentURL: URL): RegisterPasswordLocationInfo {
     return {
         getPasswordResetToken: () => detectResetToken(currentURL),
     }

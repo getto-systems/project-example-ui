@@ -1,7 +1,16 @@
 import { h, render } from "preact"
 
-import { newEntryPoint } from "../main/single"
+import { newForeground } from "../main/single"
 
 import { EntryPoint } from "../x_preact/EntryPoint"
 
-render(h(EntryPoint, newEntryPoint()), document.body)
+render(
+    h(
+        EntryPoint,
+        newForeground({
+            webStorage: localStorage,
+            currentURL: new URL(location.toString()),
+        }),
+    ),
+    document.body,
+)

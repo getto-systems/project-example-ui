@@ -1,3 +1,3 @@
-import { newAuthSignWorker } from "../main/worker/background"
+import { newWorkerBackground } from "../main/worker/background"
 
-newAuthSignWorker((self as unknown) as Worker)
+newWorkerBackground((self as unknown) as Worker)

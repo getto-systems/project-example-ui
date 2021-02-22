@@ -13,14 +13,17 @@ import { DocumentEntryPoint } from "../entryPoint"
 import { initContentAction } from "../../../../content/main/content"
 import { newDocumentOutlineAction } from "../../../../../auth/permission/outline/load/main/document"
 
-export function newDocumentAsSingle(): DocumentEntryPoint {
-    const webStorage = localStorage
-    const currentURL = new URL(location.toString())
+type OutsideFeature = Readonly<{
+    webStorage: Storage
+    currentURL: URL
+}>
+export function newForeground(feature: OutsideFeature): DocumentEntryPoint {
+    const { webStorage, currentURL } = feature
 
     const factory: DocumentFactory = {
         actions: {
             error: newErrorAction(),
-            ...newDocumentOutlineAction(webStorage),
+            ...newDocumentOutlineAction(webStorage, currentURL),
 
             content: initContentAction(),
         },

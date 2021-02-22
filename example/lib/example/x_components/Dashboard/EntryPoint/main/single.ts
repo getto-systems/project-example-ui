@@ -9,13 +9,17 @@ import { newMainOutlineAction } from "../../../../../auth/permission/outline/loa
 
 import { DashboardEntryPoint } from "../entryPoint"
 
-export function newDashboardAsSingle(): DashboardEntryPoint {
-    const webStorage = localStorage
+type OutsideFeature = Readonly<{
+    webStorage: Storage
+    currentURL: URL
+}>
+export function newForeground(feature: OutsideFeature): DashboardEntryPoint {
+    const { webStorage, currentURL } = feature
 
     const factory: DashboardFactory = {
         actions: {
             error: newErrorAction(),
-            ...newMainOutlineAction(webStorage),
+            ...newMainOutlineAction(webStorage, currentURL),
 
             season: initSeasonAction(),
         },

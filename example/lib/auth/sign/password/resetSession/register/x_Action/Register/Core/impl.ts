@@ -12,8 +12,8 @@ import {
     RegisterPasswordCoreMaterial,
     RegisterPasswordCoreAction,
     RegisterPasswordCoreState,
-    RegisterPasswordCoreBackground,
     RegisterPasswordCoreForeground,
+    RegisterPasswordCoreBackgroundPod,
 } from "./action"
 
 import { GetSecureScriptPathLocationInfo } from "../../../../../../common/secureScriptPath/get/method"
@@ -42,17 +42,17 @@ export function initRegisterPasswordCoreAction(
     return initRegisterPasswordCoreAction_merge(
         infra,
         locationInfo,
-        initRegisterPasswordCoreBackground(infra, locationInfo),
+        initRegisterPasswordCoreBackgroundPod(infra),
     )
 }
 export function initRegisterPasswordCoreAction_merge(
     infra: RegisterPasswordCoreForegroundBase,
-    locationInfo: GetSecureScriptPathLocationInfo,
-    background: RegisterPasswordCoreBackground,
+    locationInfo: GetSecureScriptPathLocationInfo & RegisterPasswordLocationInfo,
+    background: RegisterPasswordCoreBackgroundPod,
 ): RegisterPasswordCoreAction {
     return new Action({
         ...initRegisterPasswordCoreForeground(infra, locationInfo),
-        ...background,
+        register: background.initRegister(locationInfo),
     })
 }
 function initRegisterPasswordCoreForeground(
@@ -64,12 +64,11 @@ function initRegisterPasswordCoreForeground(
         getSecureScriptPath: getSecureScriptPath(infra.getSecureScriptPath)(locationInfo),
     }
 }
-export function initRegisterPasswordCoreBackground(
+export function initRegisterPasswordCoreBackgroundPod(
     infra: RegisterPasswordCoreBackgroundBase,
-    locationInfo: RegisterPasswordLocationInfo,
-): RegisterPasswordCoreBackground {
+): RegisterPasswordCoreBackgroundPod {
     return {
-        register: registerPassword(infra.register)(locationInfo),
+        initRegister: registerPassword(infra.register),
     }
 }
 

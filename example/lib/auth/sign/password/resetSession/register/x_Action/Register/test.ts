@@ -20,8 +20,8 @@ import {
     RenewAuthnInfoResult,
 } from "../../../../../kernel/authnInfo/kernel/infra"
 import { initMemoryAuthnInfoRepository } from "../../../../../kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
-import { initGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
-import { initRegisterPasswordLocationInfo, registerPasswordEventHasDone } from "../../impl"
+import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
+import { newRegisterPasswordLocationInfo, registerPasswordEventHasDone } from "../../impl"
 import { delayed } from "../../../../../../../z_getto/infra/delayed/core"
 import { initAsyncActionTester_legacy } from "../../../../../../../z_getto/application/testHelper"
 import { initRegisterPasswordCoreAction } from "./Core/impl"
@@ -245,8 +245,8 @@ function newPasswordResetTestResource(
                 },
             },
             {
-                ...initGetSecureScriptPathLocationInfo(currentURL),
-                ...initRegisterPasswordLocationInfo(currentURL),
+                ...newGetSecureScriptPathLocationInfo(currentURL),
+                ...newRegisterPasswordLocationInfo(currentURL),
             },
         ),
 

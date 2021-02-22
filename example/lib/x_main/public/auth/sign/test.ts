@@ -25,8 +25,8 @@ import {
 } from "../../../../auth/sign/kernel/authnInfo/kernel/infra"
 import { delayed, wait } from "../../../../z_getto/infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../../../auth/sign/kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
-import { initGetSecureScriptPathLocationInfo } from "../../../../auth/sign/common/secureScriptPath/get/impl"
-import { initRegisterPasswordLocationInfo } from "../../../../auth/sign/password/resetSession/register/impl"
+import { newGetSecureScriptPathLocationInfo } from "../../../../auth/sign/common/secureScriptPath/get/impl"
+import { newRegisterPasswordLocationInfo } from "../../../../auth/sign/password/resetSession/register/impl"
 import {
     GetPasswordResetSessionStatusResult,
     SendPasswordResetSessionTokenResult,
@@ -379,7 +379,7 @@ function standardPasswordLoginEntryPoint(
                     delayed,
                 },
             },
-            initGetSecureScriptPathLocationInfo(currentURL),
+            newGetSecureScriptPathLocationInfo(currentURL),
         ),
 
         form: initAuthenticatePasswordFormAction({
@@ -424,8 +424,8 @@ function standardPasswordResetResource(
                 },
             },
             {
-                ...initGetSecureScriptPathLocationInfo(currentURL),
-                ...initRegisterPasswordLocationInfo(currentURL),
+                ...newGetSecureScriptPathLocationInfo(currentURL),
+                ...newRegisterPasswordLocationInfo(currentURL),
             },
         ),
 
@@ -506,7 +506,7 @@ function standardRenewCredentialEntryPoint(
                     },
                 },
             },
-            initGetSecureScriptPathLocationInfo(currentURL),
+            newGetSecureScriptPathLocationInfo(currentURL),
         ),
     )
 }

@@ -1,5 +1,3 @@
-import { newRegisterPasswordLocationInfo } from "../../../../main"
-
 import {
     WorkerAbstractProxy,
     WorkerProxy,
@@ -11,25 +9,22 @@ import {
     RegisterPasswordProxyResponse,
 } from "./message"
 
-import { RegisterPasswordCoreBackground } from "../../Core/action"
-
-import { RegisterPasswordLocationInfo } from "../../../../method"
+import { RegisterPasswordCoreBackgroundPod } from "../../Core/action"
 
 export type RegisterPasswordProxy = WorkerProxy<
-    RegisterPasswordCoreBackground,
+    RegisterPasswordCoreBackgroundPod,
     RegisterPasswordProxyMessage,
     RegisterPasswordProxyResponse
 >
 export function newRegisterPasswordProxy(
     webStorage: Storage,
-    post: Post<RegisterPasswordProxyMessage>
+    post: Post<RegisterPasswordProxyMessage>,
 ): RegisterPasswordProxy {
-    return new Proxy({ webStorage, locationInfo: newRegisterPasswordLocationInfo() }, post)
+    return new Proxy({ webStorage }, post)
 }
 
 type Infra = Readonly<{
     webStorage: Storage
-    locationInfo: RegisterPasswordLocationInfo
 }>
 class Proxy
     extends WorkerAbstractProxy<RegisterPasswordProxyMessage>
@@ -45,15 +40,15 @@ class Proxy
         }
     }
 
-    background(): RegisterPasswordCoreBackground {
+    pod(): RegisterPasswordCoreBackgroundPod {
         return {
-            register: (fields, post) =>
+            initRegister: (locationInfo) => (fields, post) =>
                 this.material.reset.call(
                     {
                         fields,
-                        resetToken: this.infra.locationInfo.getPasswordResetToken(),
+                        resetToken: locationInfo.getPasswordResetToken(),
                     },
-                    post
+                    post,
                 ),
         }
     }
