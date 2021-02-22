@@ -3,10 +3,13 @@
 const fs = require("fs")
 const path = require("path")
 
+const docsDirectory = "docs"
+
 module.exports = {
     findPublicEntries,
     findSecureFiles,
     findSecureEntries,
+    docsDirectory,
 }
 
 function findPublicEntries() {
@@ -85,8 +88,8 @@ function toEntry(root) {
         if (file.startsWith("auth")) {
             return [file, "entryPoint"]
         }
-        if (file.startsWith("document/")) {
-            return ["document"]
+        if (file.startsWith(`${docsDirectory}/`)) {
+            return [docsDirectory]
         }
         return [file]
     }

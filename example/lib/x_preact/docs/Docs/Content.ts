@@ -17,10 +17,10 @@ import { BreadcrumbList } from "../../common/Outline/BreadcrumbList"
 import {
     ContentComponent,
     initialContentComponentState,
-} from "../../../document/x_components/Document/content/component"
+} from "../../../docs/x_components/Docs/content/component"
 import { BreadcrumbListComponent } from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/component"
 
-import { ContentPath } from "../../../document/content/data"
+import { ContentPath } from "../../../docs/content/data"
 import { useApplicationAction } from "../../common/hooks"
 
 type Props = Readonly<{
@@ -86,33 +86,33 @@ function entry(title: string, content: ContentFactory<VNodeContent>): ContentEnt
 }
 
 const indexEntry: ContentEntry = entry("ドキュメント", async () =>
-    (await import("./contents/home")).content_index()
+    (await import("./contents/home")).content_index(),
 )
 const contentMap: Record<ContentPath, ContentEntry> = {
-    "/document/index.html": indexEntry,
-    "/document/auth.html": entry("認証・認可", async () =>
-        (await import("./contents/auth")).content_auth()
+    "/docs/index.html": indexEntry,
+    "/docs/auth.html": entry("認証・認可", async () =>
+        (await import("./contents/auth")).content_auth(),
     ),
 
-    "/document/development/deployment.html": entry("配備構成", async () =>
-        (await import("./contents/development/deployment")).content_development_deployment()
+    "/docs/z_dev/deployment.html": entry("配備構成", async () =>
+        (await import("./contents/z_dev/deployment")).content_development_deployment(),
     ),
-    "/document/development/auth/login.html": entry("ログイン", async () =>
-        (await import("./contents/development/auth/login")).content_development_auth_login()
+    "/docs/z_dev/auth/login.html": entry("ログイン", async () =>
+        (await import("./contents/z_dev/auth/login")).content_development_auth_login(),
     ),
-    "/document/development/auth/permission.html": entry("アクセス制限", async () =>
+    "/docs/z_dev/auth/permission.html": entry("アクセス制限", async () =>
         (
-            await import("./contents/development/auth/permission")
-        ).content_development_auth_permission()
+            await import("./contents/z_dev/auth/permission")
+        ).content_development_auth_permission(),
     ),
-    "/document/development/auth/user.html": entry("ユーザー管理", async () =>
-        (await import("./contents/development/auth/user")).content_development_auth_user()
+    "/docs/z_dev/auth/user.html": entry("ユーザー管理", async () =>
+        (await import("./contents/z_dev/auth/user")).content_development_auth_user(),
     ),
-    "/document/development/auth/profile.html": entry("認証情報管理", async () =>
-        (await import("./contents/development/auth/profile")).content_development_auth_profile()
+    "/docs/z_dev/auth/profile.html": entry("認証情報管理", async () =>
+        (await import("./contents/z_dev/auth/profile")).content_development_auth_profile(),
     ),
-    "/document/development/auth/api.html": entry("API 詳細設計", async () =>
-        (await import("./contents/development/auth/api")).content_development_auth_api()
+    "/docs/z_dev/auth/api.html": entry("API 詳細設計", async () =>
+        (await import("./contents/z_dev/auth/api")).content_development_auth_api(),
     ),
 }
 

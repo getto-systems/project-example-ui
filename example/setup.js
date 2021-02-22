@@ -53,7 +53,7 @@ function pathContent() {
     ].join("\n")
 
     function isDocument(file) {
-        return file.startsWith("/document/")
+        return file.startsWith(`/${entryPoint.docsDirectory}/`)
     }
 
     function toTypeVariant(files) {

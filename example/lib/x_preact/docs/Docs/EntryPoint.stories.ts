@@ -10,10 +10,10 @@ import { initMockPropsPasser } from "../../../z_getto/application/mock"
 import {
     DocumentMockPropsPasser,
     newMockDocument,
-} from "../../../document/x_components/Document/EntryPoint/mock"
+} from "../../../docs/x_components/Docs/EntryPoint/mock"
 import { MenuMockProps } from "../../../common/x_Resource/Outline/Menu/Menu/mock"
 import { BreadcrumbListMockProps } from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
-import { ContentMockProps } from "../../../document/x_components/Document/content/mock"
+import { ContentMockProps } from "../../../docs/x_components/Docs/content/mock"
 
 export default {
     title: "Document/Document",
