@@ -30,7 +30,7 @@ describe("Content", () => {
 
                     case "succeed-to-load":
                         expect(stack).toEqual([
-                            { type: "succeed-to-load", path: "/document/index.html" },
+                            { type: "succeed-to-load", path: "/docs/index.html" },
                         ])
                         done()
                         break
@@ -59,7 +59,7 @@ function standardVersion(): string {
 }
 
 function standardURL(): URL {
-    return new URL("https://example.com/1.0.0/document/index.html")
+    return new URL("https://example.com/1.0.0/docs/index.html")
 }
 
 function standardMenuTree(): OutlineMenuTree {

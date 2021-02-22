@@ -9,7 +9,7 @@ import { initMockPropsPasser } from "../../../z_getto/application/mock"
 import {
     ContentMockProps,
     initMockContentComponent,
-} from "../../../document/x_components/Document/content/mock"
+} from "../../../docs/x_components/Docs/content/mock"
 import {
     BreadcrumbListMockProps,
     initMockBreadcrumbListComponent,

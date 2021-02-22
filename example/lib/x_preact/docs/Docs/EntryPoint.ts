@@ -7,7 +7,7 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 import { Menu } from "../../common/Outline/Menu"
 import { Content } from "./Content"
 
-import { DocumentEntryPoint } from "../../../document/x_components/Document/EntryPoint/entryPoint"
+import { DocumentEntryPoint } from "../../../docs/x_components/Docs/EntryPoint/entryPoint"
 import { appLayout } from "../../../z_vendor/getto-css/preact/layout/app"
 
 export function EntryPoint({ resource, terminate }: DocumentEntryPoint): VNode {

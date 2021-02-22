@@ -1,6 +1,6 @@
 import { render, h } from "preact"
-import { newWorker } from "../../../../../z_getto/application/worker/foreground"
 
+import { newWorker } from "../../../../../z_getto/application/worker/foreground"
 import { newWorkerForeground } from "../main/worker/foreground"
 
 import { EntryPoint } from "../x_preact/EntryPoint"
@@ -11,7 +11,9 @@ render(
         newWorkerForeground({
             webStorage: localStorage,
             currentURL: new URL(location.toString()),
-            worker: newWorker(),
+            worker: newWorker({
+                currentScript: document.currentScript,
+            }),
         }),
     ),
     document.body,

@@ -15,4 +15,4 @@ export function detectContentPath(version: string, currentURL: URL): ContentPath
     return defaultDocumentTarget
 }
 
-const defaultDocumentTarget = "/document/index.html"
+const defaultDocumentTarget = "/docs/index.html" as const
