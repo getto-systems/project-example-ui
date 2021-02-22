@@ -9,7 +9,7 @@ import {
     AuthSignEntryPoint,
 } from "./entryPoint"
 
-import { AuthSignSearchParams } from "../../../../auth/sign/common/searchParams/data"
+import { authSignSearchVariant_password_reset } from "../../../../auth/sign/common/searchParams/data"
 
 export function toAuthSignEntryPoint(action: AuthSignAction): AuthSignEntryPoint {
     return {
@@ -26,17 +26,38 @@ export function initLoginViewLocationInfo(currentURL: URL): AuthSignViewLocation
     }
 }
 
+const viewTypes = {
+    reset: {
+        start: "password-reset-session",
+        reset: "password-reset",
+    },
+} as const
+
 function detectViewState(currentURL: URL): AuthSignViewType {
     // パスワードリセット
-    switch (currentURL.searchParams.get(AuthSignSearchParams.passwordReset)) {
-        case AuthSignSearchParams.passwordReset_start:
-            return "password-reset-session"
-        case AuthSignSearchParams.passwordReset_reset:
-            return "password-reset"
+    const password_reset = viewType_password_reset()
+    if (password_reset.found) {
+        return password_reset.viewType
     }
 
     // 特に指定が無ければパスワードログイン
     return "password-login"
+
+    type ViewTypeResult =
+        | Readonly<{ found: false }>
+        | Readonly<{ found: true; viewType: AuthSignViewType }>
+
+    function viewType_password_reset(): ViewTypeResult {
+        const reset = authSignSearchVariant_password_reset()
+        const search = currentURL.searchParams.get(reset.key)
+        if (search) {
+            const variant = reset.variant(search)
+            if (variant.found) {
+                return { found: true, viewType: viewTypes.reset[variant.key] }
+            }
+        }
+        return { found: false }
+    }
 }
 
 export class View extends ApplicationAbstractAction<AuthSignActionState> implements AuthSignAction {

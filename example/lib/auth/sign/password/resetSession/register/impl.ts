@@ -4,12 +4,10 @@ import { RegisterPasswordLocationInfo, RegisterPasswordPod } from "./method"
 
 import { RegisterPasswordEvent } from "./event"
 
-import { AuthSignSearchParams } from "../../../common/searchParams/data"
+import { authSignSearchKey_password_reset_token } from "../../../common/searchParams/data"
 import { markPasswordResetToken, PasswordResetToken } from "./data"
 
-export function initRegisterPasswordLocationInfo(
-    currentURL: URL
-): RegisterPasswordLocationInfo {
+export function initRegisterPasswordLocationInfo(currentURL: URL): RegisterPasswordLocationInfo {
     return {
         getPasswordResetToken: () => detectResetToken(currentURL),
     }
@@ -17,17 +15,14 @@ export function initRegisterPasswordLocationInfo(
 
 function detectResetToken(currentURL: URL): PasswordResetToken {
     return markPasswordResetToken(
-        currentURL.searchParams.get(AuthSignSearchParams.passwordResetToken) || ""
+        currentURL.searchParams.get(authSignSearchKey_password_reset_token()) || "",
     )
 }
 
 interface Register {
     (infra: RegisterPasswordInfra): RegisterPasswordPod
 }
-export const registerPassword: Register = (infra) => (locationInfo) => async (
-    fields,
-    post
-) => {
+export const registerPassword: Register = (infra) => (locationInfo) => async (fields, post) => {
     if (!fields.success) {
         post({ type: "failed-to-reset", err: { type: "validation-error" } })
         return
@@ -47,7 +42,7 @@ export const registerPassword: Register = (infra) => (locationInfo) => async (
     const response = await delayed(
         register({ resetToken, fields: fields.value }),
         config.delay,
-        () => post({ type: "delayed-to-reset" })
+        () => post({ type: "delayed-to-reset" }),
     )
     if (!response.success) {
         post({ type: "failed-to-reset", err: response.err })

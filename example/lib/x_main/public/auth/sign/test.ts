@@ -89,13 +89,6 @@ describe("LoginView", () => {
                         expect(stack[0]).toMatchObject({ type: "renew-credential" })
                         expect(stack[1]).toMatchObject({ type: "password-login" })
 
-                        expect(state.entryPoint.resource.href.passwordLogin()).toEqual(
-                            "?_password_login",
-                        )
-                        expect(state.entryPoint.resource.href.passwordResetSession()).toEqual(
-                            "?_password_reset=start",
-                        )
-
                         terminates.forEach((terminate) => terminate())
                         done()
                         break

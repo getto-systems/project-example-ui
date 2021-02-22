@@ -6,7 +6,6 @@ import { initValidateBoardAction } from "../../../../../../../../z_getto/board/v
 import { ValidateBoardInfra } from "../../../../../../../../z_getto/board/validateBoard/infra"
 import { ValidateBoardFieldInfra } from "../../../../../../../../z_getto/board/validateField/infra"
 
-// TODO ValidateBoardInfra & ValidateBoardFieldInfra を BoardBase として定義しよう
 export type StartPasswordResetSessionFormBase = ValidateBoardInfra & ValidateBoardFieldInfra
 
 export function initStartPasswordResetSessionFormAction(
