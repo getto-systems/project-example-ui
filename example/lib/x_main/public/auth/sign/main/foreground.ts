@@ -3,8 +3,6 @@ import { newRenewAuthnInfo } from "../../../../../auth/sign/kernel/authnInfo/ren
 
 import { initLoginViewLocationInfo, toAuthSignEntryPoint, View } from "../impl"
 
-import { newAuthSignLinkResource } from "../../../../../auth/sign/common/searchParams/x_Action/Link/impl"
-
 import { AuthSignEntryPoint } from "../entryPoint"
 import { newRequestPasswordResetToken } from "../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/main/core"
 import { newResetPassword } from "../../../../../auth/sign/password/reset/reset/x_Action/Reset/main/core"
@@ -18,8 +16,6 @@ export function newForeground(feature: OutsideFeature): AuthSignEntryPoint {
     const { webStorage, currentURL } = feature
     return toAuthSignEntryPoint(
         new View(initLoginViewLocationInfo(currentURL), {
-            link: newAuthSignLinkResource,
-
             renew: () => newRenewAuthnInfo(webStorage, currentURL),
 
             password_authenticate: () => newAuthenticatePassword(webStorage, currentURL),
