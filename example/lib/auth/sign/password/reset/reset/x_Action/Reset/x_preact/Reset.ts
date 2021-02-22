@@ -7,6 +7,7 @@ import {
     buttons,
     button_disabled,
     button_send,
+    button_undo,
     fieldError,
 } from "../../../../../../../../z_vendor/getto-css/preact/design/form"
 import { loginBox } from "../../../../../../../../z_vendor/getto-css/preact/layout/login"
@@ -108,10 +109,28 @@ export function View(props: ResetPasswordProps): VNode {
                         field: props.reset.form.password,
                         help: ["新しいパスワードを入力してください"],
                     }),
+                    buttons({ right: clearButton() }),
                 ],
                 footer: [buttons({ left: button(), right: sendLink() }), error()],
             }),
         )
+
+        function clearButton() {
+            const label = "入力内容をクリア"
+            switch (props.state.form) {
+                case "initial":
+                    return button_disabled({ label })
+
+                case "invalid":
+                case "valid":
+                    return button_undo({ label, onClick })
+            }
+
+            function onClick(e: Event) {
+                e.preventDefault()
+                props.reset.form.clear()
+            }
+        }
 
         function button() {
             switch (content.state) {
@@ -173,7 +192,7 @@ export function View(props: ResetPasswordProps): VNode {
 
     function sendLink() {
         return html`<a href="${props.href.password_reset()}">
-            ${icon("question-circle")} パスワードがわからない方
+            ${icon("question-circle")} リセットトークンをもう一度送信する
         </a>`
     }
 }

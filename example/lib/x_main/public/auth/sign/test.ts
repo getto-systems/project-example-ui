@@ -5,8 +5,6 @@ import { initStaticClock } from "../../../../z_getto/infra/clock/simulate"
 import { initAuthenticatePasswordSimulate } from "../../../../auth/sign/password/authenticate/infra/remote/authenticate/simulate"
 import { initRenewAuthnInfoSimulate } from "../../../../auth/sign/kernel/authnInfo/kernel/infra/remote/renew/simulate"
 
-import { newAuthSignLinkResource } from "../../../../auth/sign/common/searchParams/x_Action/Link/impl"
-
 import { Clock } from "../../../../z_getto/infra/clock/infra"
 import { AuthenticatePasswordResult } from "../../../../auth/sign/password/authenticate/infra"
 
@@ -311,7 +309,6 @@ function standardLoginView() {
     const repository = standardRepository()
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        link: newAuthSignLinkResource,
         renew: () =>
             standardRenewCredentialEntryPoint(
                 currentURL,
@@ -345,7 +342,6 @@ function passwordResetSessionLoginView() {
     const repository = standardRepository()
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        link: newAuthSignLinkResource,
         renew: () =>
             standardRenewCredentialEntryPoint(
                 currentURL,
@@ -379,7 +375,6 @@ function passwordResetCheckStatusLoginView() {
     const repository = standardRepository()
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        link: newAuthSignLinkResource,
         renew: () =>
             standardRenewCredentialEntryPoint(
                 currentURL,
@@ -413,7 +408,6 @@ function passwordResetLoginView() {
     const repository = standardRepository()
     const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        link: newAuthSignLinkResource,
         renew: () =>
             standardRenewCredentialEntryPoint(
                 currentURL,

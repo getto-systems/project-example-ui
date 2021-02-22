@@ -6,7 +6,6 @@ import { newCheckPasswordResetSendingStatus_proxy } from "../../../../../../auth
 
 import { initLoginViewLocationInfo, toAuthSignEntryPoint, View } from "../../impl"
 
-import { newAuthSignLinkResource } from "../../../../../../auth/sign/common/searchParams/x_Action/Link/impl"
 import {
     AuthenticatePasswordProxy,
     newAuthenticatePasswordProxy,
@@ -38,8 +37,6 @@ export function newWorkerForeground(feature: OutsideFeature): AuthSignEntryPoint
     const proxy = initProxy(webStorage, currentURL, postForegroundMessage)
 
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        link: newAuthSignLinkResource,
-
         renew: () => newRenewAuthnInfo(webStorage, currentURL),
 
         password_authenticate: () =>
