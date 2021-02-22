@@ -3,13 +3,17 @@ import {
     AuthenticatePasswordProxyResponse,
 } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/worker/message"
 import {
-    RegisterPasswordProxyMessage,
-    RegisterPasswordProxyResponse,
-} from "../../../../../../auth/sign/password/resetSession/register/x_Action/Register/main/worker/message"
+    CheckPasswordResetSendingStatusProxyMessage,
+    CheckPasswordResetSendingStatusProxyResponse,
+} from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/main/worker/message"
 import {
-    StartPasswordResetSessionProxyMessage,
-    StartPasswordResetSessionProxyResponse,
-} from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/worker/message"
+    RequestPasswordResetTokenProxyMessage,
+    RequestPasswordResetTokenProxyResponse,
+} from "../../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/main/worker/message"
+import {
+    ResetPasswordProxyMessage,
+    ResetPasswordProxyResponse,
+} from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/main/worker/message"
 
 export type ForegroundMessage =
     | Readonly<{
@@ -17,12 +21,16 @@ export type ForegroundMessage =
           message: AuthenticatePasswordProxyMessage
       }>
     | Readonly<{
-          type: "password-resetSession-start"
-          message: StartPasswordResetSessionProxyMessage
+          type: "password-reset-requestToken"
+          message: RequestPasswordResetTokenProxyMessage
       }>
     | Readonly<{
-          type: "password-resetSession-register"
-          message: RegisterPasswordProxyMessage
+          type: "password-reset-checkStatus"
+          message: CheckPasswordResetSendingStatusProxyMessage
+      }>
+    | Readonly<{
+          type: "password-reset"
+          message: ResetPasswordProxyMessage
       }>
 
 export type BackgroundMessage =
@@ -31,11 +39,15 @@ export type BackgroundMessage =
           response: AuthenticatePasswordProxyResponse
       }>
     | Readonly<{
-          type: "password-resetSession-start"
-          response: StartPasswordResetSessionProxyResponse
+          type: "password-reset-requestToken"
+          response: RequestPasswordResetTokenProxyResponse
       }>
     | Readonly<{
-          type: "password-resetSession-register"
-          response: RegisterPasswordProxyResponse
+          type: "password-reset-checkStatus"
+          response: CheckPasswordResetSendingStatusProxyResponse
+      }>
+    | Readonly<{
+          type: "password-reset"
+          response: ResetPasswordProxyResponse
       }>
     | Readonly<{ type: "error"; err: string }>

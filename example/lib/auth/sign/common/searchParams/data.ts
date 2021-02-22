@@ -1,10 +1,15 @@
 // ログイン前画面ではアンダースコアから始まるクエリを使用する
 const authSignSearchParams = {
     password: {
-        login: { key: "_password_login", variant: { login: "login" } },
+        authenticate: { key: "_password_authenticate", variant: { authenticate: "authenticate" } },
         reset: {
             key: "_password_reset",
-            variant: { start: "start", reset: "reset" },
+            variant: {
+                request: "request",
+                checkStatus: "checkStatus",
+                reset: "reset",
+            },
+            sessionID: "_password_reset_session_id",
             token: "_password_reset_token",
         },
     },
@@ -17,16 +22,40 @@ type Search<K extends string> = Readonly<{
 
 type Variant_password_reset = keyof typeof authSignSearchParams["password"]["reset"]["variant"]
 
-export function authSignSearch_password_login(): string {
-    return search(authSignSearchParams.password.login, "login")
-}
-export function authSignSearch_password_reset(target: Variant_password_reset): string {
-    return search(authSignSearchParams.password.reset, target)
-}
-function search<K extends string>(keys: Search<K>, target: K) {
-    return `${keys.key}=${keys.variant[target]}`
+export type AuthSignHref = string & { AuthSignHref: never }
+function markAuthSignHref(href: string): AuthSignHref {
+    return href as AuthSignHref
 }
 
+export function authSignHref_password_authenticate(): AuthSignHref {
+    return searchQuery(authSignSearchParams.password.authenticate, "authenticate", [])
+}
+export function authSignHref_password_reset_checkStatus(sessionID: string): AuthSignHref {
+    const search = authSignSearchParams.password.reset
+    return searchQuery(search, "checkStatus", [[search.sessionID, sessionID]])
+}
+export function authSignHref_password_reset(target: Variant_password_reset): AuthSignHref {
+    return searchQuery(authSignSearchParams.password.reset, target, [])
+}
+function searchQuery<K extends string>(
+    keys: Search<K>,
+    target: K,
+    query: [string, string][],
+): AuthSignHref {
+    return markAuthSignHref(
+        [
+            `?${keys.key}=${keys.variant[target]}`,
+            ...query.map((param) => {
+                const [key, value] = param
+                return `${key}=${value}`
+            }),
+        ].join("&"),
+    )
+}
+
+export function authSignSearchKey_password_reset_sessionID(): string {
+    return authSignSearchParams.password.reset.sessionID
+}
 export function authSignSearchKey_password_reset_token(): string {
     return authSignSearchParams.password.reset.token
 }

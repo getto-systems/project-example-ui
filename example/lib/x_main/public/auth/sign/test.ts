@@ -4,14 +4,11 @@ import { newBoardValidateStack } from "../../../../z_getto/board/kernel/infra/st
 import { initStaticClock } from "../../../../z_getto/infra/clock/simulate"
 import { initAuthenticatePasswordSimulate } from "../../../../auth/sign/password/authenticate/infra/remote/authenticate/simulate"
 import { initRenewAuthnInfoSimulate } from "../../../../auth/sign/kernel/authnInfo/kernel/infra/remote/renew/simulate"
-import { initRegisterPasswordSimulate } from "../../../../auth/sign/password/resetSession/register/infra/remote/register/simulate"
-import { initStartPasswordResetSessionSimulate } from "../../../../auth/sign/password/resetSession/start/infra/remote/start/simulate"
 
 import { newAuthSignLinkResource } from "../../../../auth/sign/common/searchParams/x_Action/Link/impl"
 
 import { Clock } from "../../../../z_getto/infra/clock/infra"
 import { AuthenticatePasswordResult } from "../../../../auth/sign/password/authenticate/infra"
-import { RegisterPasswordResult } from "../../../../auth/sign/password/resetSession/register/infra"
 
 import { AuthSignActionState } from "./entryPoint"
 
@@ -26,28 +23,36 @@ import {
 import { delayed, wait } from "../../../../z_getto/infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../../../auth/sign/kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
 import { newGetSecureScriptPathLocationInfo } from "../../../../auth/sign/common/secureScriptPath/get/impl"
-import { newRegisterPasswordLocationInfo } from "../../../../auth/sign/password/resetSession/register/impl"
-import {
-    GetPasswordResetSessionStatusResult,
-    SendPasswordResetSessionTokenResult,
-    StartPasswordResetSessionSessionResult,
-} from "../../../../auth/sign/password/resetSession/start/infra"
-import { markPasswordResetSessionID } from "../../../../auth/sign/password/resetSession/start/data"
-import { initSendPasswordResetSessionTokenSimulate } from "../../../../auth/sign/password/resetSession/start/infra/remote/sendToken/simulate"
-import { initGetPasswordResetSessionStatusSimulate } from "../../../../auth/sign/password/resetSession/start/infra/remote/getStatus/simulate"
 import {
     initRenewAuthnInfoAction,
     toRenewAuthnInfoEntryPoint,
 } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/impl"
 import { initAuthenticatePasswordFormAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Form/impl"
 import { initAuthenticatePasswordCoreAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Core/impl"
-import { initRegisterPasswordCoreAction } from "../../../../auth/sign/password/resetSession/register/x_Action/Register/Core/impl"
-import { initRegisterPasswordFormAction } from "../../../../auth/sign/password/resetSession/register/x_Action/Register/Form/impl"
-import { initStartPasswordResetSessionFormAction } from "../../../../auth/sign/password/resetSession/start/x_Action/Start/Form/impl"
-import { initStartPasswordResetSessionCoreAction } from "../../../../auth/sign/password/resetSession/start/x_Action/Start/Core/impl"
 import { toAuthenticatePasswordEntryPoint } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/impl"
-import { toRegisterPasswordEntryPoint } from "../../../../auth/sign/password/resetSession/register/x_Action/Register/impl"
-import { toStartPasswordResetSessionEntryPoint } from "../../../../auth/sign/password/resetSession/start/x_Action/Start/impl"
+import { toRequestPasswordResetTokenEntryPoint } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/impl"
+import { initRequestPasswordResetTokenCoreAction } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/Core/impl"
+import {
+    initCheckPasswordResetSendingStatusAction,
+    toCheckPasswordResetSendingStatusEntryPoint,
+} from "../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/impl"
+import { newCheckPasswordResetSendingStatusLocationInfo } from "../../../../auth/sign/password/reset/checkStatus/impl"
+import { initResetPasswordCoreAction } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/Core/impl"
+import { toResetPasswordEntryPoint } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/impl"
+import { initResetPasswordSimulate } from "../../../../auth/sign/password/reset/reset/infra/remote/reset/simulate"
+import { initResetPasswordFormAction } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/Form/impl"
+import { initRequestPasswordResetTokenSimulate } from "../../../../auth/sign/password/reset/requestToken/infra/remote/requestToken/simulate"
+import { initRequestPasswordResetTokenFormAction } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/Form/impl"
+import { initSendPasswordResetTokenSimulate } from "../../../../auth/sign/password/reset/checkStatus/infra/remote/sendToken/simulate"
+import { initGetPasswordResetSendingStatusSimulate } from "../../../../auth/sign/password/reset/checkStatus/infra/remote/getStatus/simulate"
+import { ResetPasswordResult } from "../../../../auth/sign/password/reset/reset/infra"
+import { RequestPasswordResetTokenResult } from "../../../../auth/sign/password/reset/requestToken/infra"
+import { markPasswordResetSessionID } from "../../../../auth/sign/password/reset/kernel/data"
+import {
+    GetPasswordResetSendingStatusResult,
+    SendPasswordResetTokenResult,
+} from "../../../../auth/sign/password/reset/checkStatus/infra"
+import { newResetPasswordLocationInfo } from "../../../../auth/sign/password/reset/reset/impl"
 
 const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
 const SUCCEED_TO_AUTH_AT = new Date("2020-01-01 10:00:00")
@@ -83,17 +88,18 @@ describe("LoginView", () => {
                         state.entryPoint.resource.renew.ignite()
                         break
 
-                    case "password-login":
+                    case "password-authenticate":
                         terminates.push(state.entryPoint.terminate)
 
                         expect(stack[0]).toMatchObject({ type: "renew-credential" })
-                        expect(stack[1]).toMatchObject({ type: "password-login" })
+                        expect(stack[1]).toMatchObject({ type: "password-authenticate" })
 
                         terminates.forEach((terminate) => terminate())
                         done()
                         break
 
-                    case "password-reset-session":
+                    case "password-reset-requestToken":
+                    case "password-reset-checkStatus":
                     case "password-reset":
                         done(new Error(state.type))
                         break
@@ -109,7 +115,7 @@ describe("LoginView", () => {
         }
     })
 
-    test("password reset session", (done) => {
+    test("password reset request token", (done) => {
         const { view } = passwordResetSessionLoginView()
 
         view.addStateHandler(stateHandler())
@@ -133,17 +139,69 @@ describe("LoginView", () => {
                         state.entryPoint.resource.renew.ignite()
                         break
 
-                    case "password-reset-session":
+                    case "password-reset-requestToken":
                         terminates.push(state.entryPoint.terminate)
 
                         expect(stack[0]).toMatchObject({ type: "renew-credential" })
-                        expect(stack[1]).toMatchObject({ type: "password-reset-session" })
+                        expect(stack[1]).toMatchObject({ type: "password-reset-requestToken" })
 
                         terminates.forEach((terminate) => terminate())
                         done()
                         break
 
-                    case "password-login":
+                    case "password-authenticate":
+                    case "password-reset-checkStatus":
+                    case "password-reset":
+                        done(new Error(state.type))
+                        break
+
+                    case "error":
+                        done(new Error(state.type))
+                        break
+
+                    default:
+                        assertNever(state)
+                }
+            }
+        }
+    })
+
+    test("password reset check status", (done) => {
+        const { view } = passwordResetCheckStatusLoginView()
+
+        view.addStateHandler(stateHandler())
+
+        view.ignite()
+
+        function stateHandler(): Handler<AuthSignActionState> {
+            const stack: AuthSignActionState[] = []
+            const terminates: Terminate[] = []
+            return (state) => {
+                stack.push(state)
+
+                switch (state.type) {
+                    case "initial-view":
+                        // work in progress...
+                        break
+
+                    case "renew-credential":
+                        terminates.push(state.entryPoint.terminate)
+
+                        state.entryPoint.resource.renew.ignite()
+                        break
+
+                    case "password-reset-checkStatus":
+                        terminates.push(state.entryPoint.terminate)
+
+                        expect(stack[0]).toMatchObject({ type: "renew-credential" })
+                        expect(stack[1]).toMatchObject({ type: "password-reset-checkStatus" })
+
+                        terminates.forEach((terminate) => terminate())
+                        done()
+                        break
+
+                    case "password-authenticate":
+                    case "password-reset-requestToken":
                     case "password-reset":
                         done(new Error(state.type))
                         break
@@ -193,8 +251,9 @@ describe("LoginView", () => {
                         done()
                         break
 
-                    case "password-login":
-                    case "password-reset-session":
+                    case "password-authenticate":
+                    case "password-reset-requestToken":
+                    case "password-reset-checkStatus":
                         done(new Error(state.type))
                         break
 
@@ -227,8 +286,9 @@ describe("LoginView", () => {
                         break
 
                     case "renew-credential":
-                    case "password-login":
-                    case "password-reset-session":
+                    case "password-authenticate":
+                    case "password-reset-requestToken":
+                    case "password-reset-checkStatus":
                     case "password-reset":
                         done(new Error(state.type))
                         break
@@ -259,21 +319,23 @@ function standardLoginView() {
                 repository.authnInfos,
                 clock,
             ),
-        passwordLogin: () =>
+        password_authenticate: () =>
             standardPasswordLoginEntryPoint(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
                 clock,
             ),
-        passwordReset: () =>
+        password_reset: () =>
             standardPasswordResetResource(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
                 clock,
             ),
-        passwordResetSession: () => standardPasswordResetSessionResource(),
+        password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
+        password_reset_checkStatus: () =>
+            standardCheckPasswordResetSendingStatusResource(currentURL),
     })
 
     return { view }
@@ -291,21 +353,57 @@ function passwordResetSessionLoginView() {
                 repository.authnInfos,
                 clock,
             ),
-        passwordLogin: () =>
+        password_authenticate: () =>
             standardPasswordLoginEntryPoint(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
                 clock,
             ),
-        passwordReset: () =>
+        password_reset: () =>
             standardPasswordResetResource(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
                 clock,
             ),
-        passwordResetSession: () => standardPasswordResetSessionResource(),
+        password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
+        password_reset_checkStatus: () =>
+            standardCheckPasswordResetSendingStatusResource(currentURL),
+    })
+
+    return { view }
+}
+function passwordResetCheckStatusLoginView() {
+    const currentURL = passwordResetCheckStatusURL()
+    const repository = standardRepository()
+    const clock = standardClock()
+    const view = new View(initLoginViewLocationInfo(currentURL), {
+        link: newAuthSignLinkResource,
+        renew: () =>
+            standardRenewCredentialEntryPoint(
+                currentURL,
+                repository.apiCredentials,
+                repository.authnInfos,
+                clock,
+            ),
+        password_authenticate: () =>
+            standardPasswordLoginEntryPoint(
+                currentURL,
+                repository.apiCredentials,
+                repository.authnInfos,
+                clock,
+            ),
+        password_reset: () =>
+            standardPasswordResetResource(
+                currentURL,
+                repository.apiCredentials,
+                repository.authnInfos,
+                clock,
+            ),
+        password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
+        password_reset_checkStatus: () =>
+            standardCheckPasswordResetSendingStatusResource(currentURL),
     })
 
     return { view }
@@ -323,21 +421,23 @@ function passwordResetLoginView() {
                 repository.authnInfos,
                 clock,
             ),
-        passwordLogin: () =>
+        password_authenticate: () =>
             standardPasswordLoginEntryPoint(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
                 clock,
             ),
-        passwordReset: () =>
+        password_reset: () =>
             standardPasswordResetResource(
                 currentURL,
                 repository.apiCredentials,
                 repository.authnInfos,
                 clock,
             ),
-        passwordResetSession: () => standardPasswordResetSessionResource(),
+        password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
+        password_reset_checkStatus: () =>
+            standardCheckPasswordResetSendingStatusResource(currentURL),
     })
 
     return { view }
@@ -393,8 +493,8 @@ function standardPasswordResetResource(
     authnInfos: AuthnInfoRepository,
     clock: Clock,
 ) {
-    return toRegisterPasswordEntryPoint({
-        core: initRegisterPasswordCoreAction(
+    return toResetPasswordEntryPoint({
+        core: initResetPasswordCoreAction(
             {
                 startContinuousRenew: {
                     apiCredentials,
@@ -413,8 +513,8 @@ function standardPasswordResetResource(
                         secureServerHost: standardSecureHost(),
                     },
                 },
-                register: {
-                    register: initRegisterPasswordSimulate(simulateReset, {
+                reset: {
+                    reset: initResetPasswordSimulate(simulateReset, {
                         wait_millisecond: 0,
                     }),
                     config: {
@@ -425,20 +525,20 @@ function standardPasswordResetResource(
             },
             {
                 ...newGetSecureScriptPathLocationInfo(currentURL),
-                ...newRegisterPasswordLocationInfo(currentURL),
+                ...newResetPasswordLocationInfo(currentURL),
             },
         ),
 
-        form: initRegisterPasswordFormAction({
+        form: initResetPasswordFormAction({
             stack: newBoardValidateStack(),
         }),
     })
 }
-function standardPasswordResetSessionResource() {
-    return toStartPasswordResetSessionEntryPoint({
-        core: initStartPasswordResetSessionCoreAction({
-            start: {
-                start: initStartPasswordResetSessionSimulate(simulateStartSession, {
+function standardRequestPasswordResetTokenResource() {
+    return toRequestPasswordResetTokenEntryPoint({
+        core: initRequestPasswordResetTokenCoreAction({
+            request: {
+                request: initRequestPasswordResetTokenSimulate(simulateRequestToken, {
                     wait_millisecond: 0,
                 }),
                 config: {
@@ -446,25 +546,34 @@ function standardPasswordResetSessionResource() {
                 },
                 delayed,
             },
-            checkStatus: {
-                sendToken: initSendPasswordResetSessionTokenSimulate(simulateSendToken, {
-                    wait_millisecond: 0,
-                }),
-                getStatus: initGetPasswordResetSessionStatusSimulate(simulateGetStatus, {
-                    wait_millisecond: 0,
-                }),
-                config: {
-                    wait: { wait_millisecond: 2 },
-                    limit: { limit: 5 },
-                },
-                wait,
-            },
         }),
 
-        form: initStartPasswordResetSessionFormAction({
+        form: initRequestPasswordResetTokenFormAction({
             stack: newBoardValidateStack(),
         }),
     })
+}
+function standardCheckPasswordResetSendingStatusResource(currentURL: URL) {
+    return toCheckPasswordResetSendingStatusEntryPoint(
+        initCheckPasswordResetSendingStatusAction(
+            {
+                checkStatus: {
+                    sendToken: initSendPasswordResetTokenSimulate(simulateSendToken, {
+                        wait_millisecond: 0,
+                    }),
+                    getStatus: initGetPasswordResetSendingStatusSimulate(simulateGetStatus, {
+                        wait_millisecond: 0,
+                    }),
+                    config: {
+                        wait: { wait_millisecond: 2 },
+                        limit: { limit: 5 },
+                    },
+                    wait,
+                },
+            },
+            newCheckPasswordResetSendingStatusLocationInfo(currentURL),
+        ),
+    )
 }
 function standardRenewCredentialEntryPoint(
     currentURL: URL,
@@ -515,7 +624,10 @@ function standardURL(): URL {
     return new URL("https://example.com/index.html")
 }
 function passwordResetSessionURL(): URL {
-    return new URL("https://example.com/index.html?_password_reset=start")
+    return new URL("https://example.com/index.html?_password_reset=request")
+}
+function passwordResetCheckStatusURL(): URL {
+    return new URL("https://example.com/index.html?_password_reset=checkStatus")
 }
 function passwordResetURL(): URL {
     return new URL("https://example.com/index.html?_password_reset=reset")
@@ -546,7 +658,7 @@ function simulateRenew(): RenewAuthnInfoResult {
         err: { type: "invalid-ticket" },
     }
 }
-function simulateReset(): RegisterPasswordResult {
+function simulateReset(): ResetPasswordResult {
     return {
         success: true,
         value: {
@@ -562,14 +674,14 @@ function simulateReset(): RegisterPasswordResult {
     }
 }
 
-function simulateStartSession(): StartPasswordResetSessionSessionResult {
+function simulateRequestToken(): RequestPasswordResetTokenResult {
     return { success: true, value: markPasswordResetSessionID(SESSION_ID) }
 }
-function simulateSendToken(): SendPasswordResetSessionTokenResult {
+function simulateSendToken(): SendPasswordResetTokenResult {
     return { success: true, value: true }
 }
-function simulateGetStatus(): GetPasswordResetSessionStatusResult {
-    return { success: true, value: { dest: { type: "log" }, done: true, send: true } }
+function simulateGetStatus(): GetPasswordResetSendingStatusResult {
+    return { success: true, value: { done: true, send: true } }
 }
 
 function standardRepository() {

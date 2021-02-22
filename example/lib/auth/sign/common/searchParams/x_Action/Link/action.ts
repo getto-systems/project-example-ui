@@ -1,6 +1,6 @@
 export type AuthSignLinkResource = Readonly<{
     href: {
-        passwordLogin(): string
-        passwordResetSession(): string
+        password_authenticate(): string
+        password_reset(): string
     }
 }>
