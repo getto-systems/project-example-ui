@@ -68,7 +68,7 @@ function toEntry(root) {
     return (acc, name) => {
         acc[name] = toForegroundPath(name)
 
-        const worker = toWorkerPath(name)
+        const worker = toBackgroundPath(name)
         if (exists(worker)) {
             acc[`${name}.worker`] = worker
         }
@@ -76,10 +76,10 @@ function toEntry(root) {
     }
 
     function toForegroundPath(file) {
-        return toPath("foreground", file)
+        return toPath("mainForeground", file)
     }
-    function toWorkerPath(file) {
-        return toPath("worker", file)
+    function toBackgroundPath(file) {
+        return toPath("mainBackground", file)
     }
     function toPath(type, file) {
         return path.join(__dirname, "./lib/x_main", root, ...toSecureEntryPath(file), `${type}.ts`)

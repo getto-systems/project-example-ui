@@ -11,7 +11,9 @@ render(
         newWorkerForeground({
             webStorage: localStorage,
             currentURL: new URL(location.toString()),
-            worker: newWorker(),
+            worker: newWorker({
+                renderedDocument: document,
+            }),
         }),
     ),
     document.body,

@@ -82,12 +82,12 @@ describe("Menu", () => {
                         menu: [
                             category("MAIN", ["MAIN"], true, 0, [
                                 item("ホーム", "home", "/1.0.0/index.html", true, 0),
-                                item("ドキュメント", "docs", "/1.0.0/document/index.html", false, 0),
+                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 0),
                             ]),
                             category("DOCUMENT", ["DOCUMENT"], false, 0, [
-                                item("認証・認可", "auth", "/1.0.0/document/auth.html", false, 0),
+                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
                                 category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/document/auth.html", false, 0),
+                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
                                 ]),
                             ]),
                         ],
@@ -97,12 +97,12 @@ describe("Menu", () => {
                         menu: [
                             category("MAIN", ["MAIN"], true, 30, [
                                 item("ホーム", "home", "/1.0.0/index.html", true, 10),
-                                item("ドキュメント", "docs", "/1.0.0/document/index.html", false, 20),
+                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 20),
                             ]),
                             category("DOCUMENT", ["DOCUMENT"], false, 0, [
-                                item("認証・認可", "auth", "/1.0.0/document/auth.html", false, 0),
+                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
                                 category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/document/auth.html", false, 0),
+                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
                                 ]),
                             ]),
                         ],
@@ -128,12 +128,12 @@ describe("Menu", () => {
                         menu: [
                             category("MAIN", ["MAIN"], true, 0, [
                                 item("ホーム", "home", "/1.0.0/index.html", true, 0),
-                                item("ドキュメント", "docs", "/1.0.0/document/index.html", false, 0),
+                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 0),
                             ]),
                             category("DOCUMENT", ["DOCUMENT"], false, 0, [
-                                item("認証・認可", "auth", "/1.0.0/document/auth.html", false, 0),
+                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
                                 category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/document/auth.html", false, 0),
+                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
                                 ]),
                             ]),
                         ],
@@ -144,12 +144,12 @@ describe("Menu", () => {
                         menu: [
                             category("MAIN", ["MAIN"], true, 0, [
                                 item("ホーム", "home", "/1.0.0/index.html", true, 0),
-                                item("ドキュメント", "docs", "/1.0.0/document/index.html", false, 0),
+                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 0),
                             ]),
                             category("DOCUMENT", ["DOCUMENT"], false, 0, [
-                                item("認証・認可", "auth", "/1.0.0/document/auth.html", false, 0),
+                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
                                 category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/document/auth.html", false, 0),
+                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
                                 ]),
                             ]),
                         ],
@@ -175,12 +175,12 @@ describe("Menu", () => {
                         menu: [
                             category("MAIN", ["MAIN"], true, 0, [
                                 item("ホーム", "home", "/1.0.0/index.html", true, 0),
-                                item("ドキュメント", "docs", "/1.0.0/document/index.html", false, 0),
+                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 0),
                             ]),
                             category("DOCUMENT", ["DOCUMENT"], true, 0, [
-                                item("認証・認可", "auth", "/1.0.0/document/auth.html", false, 0),
+                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
                                 category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/document/auth.html", false, 0),
+                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
                                 ]),
                             ]),
                         ],
@@ -190,12 +190,12 @@ describe("Menu", () => {
                         menu: [
                             category("MAIN", ["MAIN"], true, 30, [
                                 item("ホーム", "home", "/1.0.0/index.html", true, 10),
-                                item("ドキュメント", "docs", "/1.0.0/document/index.html", false, 20),
+                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 20),
                             ]),
                             category("DOCUMENT", ["DOCUMENT"], true, 0, [
-                                item("認証・認可", "auth", "/1.0.0/document/auth.html", false, 0),
+                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
                                 category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/document/auth.html", false, 0),
+                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
                                 ]),
                             ]),
                         ],
@@ -233,12 +233,12 @@ describe("Menu", () => {
                         menu: [
                             category("MAIN", ["MAIN"], true, 30, [
                                 item("ホーム", "home", "/1.0.0/index.html", true, 10),
-                                item("ドキュメント", "docs", "/1.0.0/document/index.html", false, 20),
+                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 20),
                             ]),
                             category("DOCUMENT", ["DOCUMENT"], true, 0, [
-                                item("認証・認可", "auth", "/1.0.0/document/auth.html", false, 0),
+                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
                                 category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/document/auth.html", false, 0),
+                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
                                 ]),
                             ]),
                         ],
@@ -267,12 +267,12 @@ describe("Menu", () => {
                         menu: [
                             category("MAIN", ["MAIN"], true, 30, [
                                 item("ホーム", "home", "/1.0.0/index.html", true, 10),
-                                item("ドキュメント", "docs", "/1.0.0/document/index.html", false, 20),
+                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 20),
                             ]),
                             category("DOCUMENT", ["DOCUMENT"], true, 0, [
-                                item("認証・認可", "auth", "/1.0.0/document/auth.html", false, 0),
+                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
                                 category("DETAIL", ["DOCUMENT", "DETAIL"], true, 0, [
-                                    item("詳細", "detail", "/1.0.0/document/auth.html", false, 0),
+                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
                                 ]),
                             ]),
                         ],
@@ -299,19 +299,19 @@ describe("Menu", () => {
                         menu: [
                             category("MAIN", ["MAIN"], true, 0, [
                                 item("ホーム", "home", "/1.0.0/index.html", true, 0),
-                                item("ドキュメント", "docs", "/1.0.0/document/index.html", false, 0),
+                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 0),
                             ]),
                             category("DOCUMENT", ["DOCUMENT"], false, 0, [
-                                item("認証・認可", "auth", "/1.0.0/document/auth.html", false, 0),
+                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
                                 category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/document/auth.html", false, 0),
+                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
                                 ]),
                             ]),
                             category("DEVELOPMENT", ["DEVELOPMENT"], false, 0, [
                                 item(
                                     "配備構成",
                                     "deployment",
-                                    "/1.0.0/document/development/deployment.html",
+                                    "/1.0.0/docs/development/deployment.html",
                                     false,
                                     0
                                 ),
@@ -323,19 +323,19 @@ describe("Menu", () => {
                         menu: [
                             category("MAIN", ["MAIN"], true, 30, [
                                 item("ホーム", "home", "/1.0.0/index.html", true, 10),
-                                item("ドキュメント", "docs", "/1.0.0/document/index.html", false, 20),
+                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 20),
                             ]),
                             category("DOCUMENT", ["DOCUMENT"], false, 0, [
-                                item("認証・認可", "auth", "/1.0.0/document/auth.html", false, 0),
+                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
                                 category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/document/auth.html", false, 0),
+                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
                                 ]),
                             ]),
                             category("DEVELOPMENT", ["DEVELOPMENT"], false, 0, [
                                 item(
                                     "配備構成",
                                     "deployment",
-                                    "/1.0.0/document/development/deployment.html",
+                                    "/1.0.0/docs/development/deployment.html",
                                     false,
                                     0
                                 ),
@@ -479,7 +479,7 @@ function standardMenuTree(): OutlineMenuTree {
                 { type: "item", item: { label: "ホーム", icon: "home", path: "/index.html" } },
                 {
                     type: "item",
-                    item: { label: "ドキュメント", icon: "docs", path: "/document/index.html" },
+                    item: { label: "ドキュメント", icon: "docs", path: "/docs/index.html" },
                 },
             ],
         },
@@ -489,7 +489,7 @@ function standardMenuTree(): OutlineMenuTree {
             children: [
                 {
                     type: "item",
-                    item: { label: "認証・認可", icon: "auth", path: "/document/auth.html" },
+                    item: { label: "認証・認可", icon: "auth", path: "/docs/auth.html" },
                 },
                 {
                     type: "category",
@@ -497,7 +497,7 @@ function standardMenuTree(): OutlineMenuTree {
                     children: [
                         {
                             type: "item",
-                            item: { label: "詳細", icon: "detail", path: "/document/auth.html" },
+                            item: { label: "詳細", icon: "detail", path: "/docs/auth.html" },
                         },
                     ],
                 },
@@ -515,7 +515,7 @@ function standardMenuTree(): OutlineMenuTree {
                     item: {
                         label: "配備構成",
                         icon: "deployment",
-                        path: "/document/development/deployment.html",
+                        path: "/docs/development/deployment.html",
                     },
                 },
             ],
@@ -569,7 +569,7 @@ function standardRemoteAccess() {
                 success: true,
                 value: {
                     "/index.html": 10,
-                    "/document/index.html": 20,
+                    "/docs/index.html": 20,
                 },
             }),
             { wait_millisecond: 0 }

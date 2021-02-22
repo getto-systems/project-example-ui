@@ -59,7 +59,7 @@ function standardVersion(): string {
 }
 
 function standardURL(): URL {
-    return new URL("https://example.com/1.0.0/document/index.html")
+    return new URL("https://example.com/1.0.0/docs/index.html")
 }
 
 function standardMenuTree(): OutlineMenuTree {

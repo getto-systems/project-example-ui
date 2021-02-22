@@ -5,8 +5,12 @@ import {
     WorkerProxyCallResponse,
 } from "./message"
 
-export function newWorker(): Worker {
-    const src = document.currentScript?.getAttribute("src")
+type OutsideFeature = Readonly<{
+    renderedDocument: Document
+}>
+export function newWorker(feature: OutsideFeature): Worker {
+    const { renderedDocument } = feature
+    const src = renderedDocument.currentScript?.getAttribute("src")
     if (!src) {
         throw new Error("invalid script src")
     }
