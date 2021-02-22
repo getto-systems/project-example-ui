@@ -6,11 +6,11 @@ import {
 } from "./message"
 
 type OutsideFeature = Readonly<{
-    renderedDocument: Document
+    currentScript: HTMLScriptElement | SVGScriptElement | null
 }>
 export function newWorker(feature: OutsideFeature): Worker {
-    const { renderedDocument } = feature
-    const src = renderedDocument.currentScript?.getAttribute("src")
+    const { currentScript } = feature
+    const src = currentScript?.getAttribute("src")
     if (!src) {
         throw new Error("invalid script src")
     }

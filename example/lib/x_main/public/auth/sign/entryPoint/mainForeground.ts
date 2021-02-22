@@ -12,7 +12,7 @@ render(
             webStorage: localStorage,
             currentURL: new URL(location.toString()),
             worker: newWorker({
-                renderedDocument: document,
+                currentScript: document.currentScript,
             }),
         }),
     ),
