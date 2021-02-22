@@ -5,7 +5,7 @@ import {
     AuthSignActionState,
     AuthSignViewType,
     AuthSignViewLocationInfo,
-    AuthSignResourceFactory,
+    AuthSignSubEntryPoint,
     AuthSignEntryPoint,
 } from "./entryPoint"
 
@@ -28,7 +28,8 @@ export function initLoginViewLocationInfo(currentURL: URL): AuthSignViewLocation
 
 const viewTypes = {
     reset: {
-        start: "password-reset-session",
+        request: "password-reset-requestToken",
+        checkStatus: "password-reset-checkStatus",
         reset: "password-reset",
     },
 } as const
@@ -41,7 +42,7 @@ function detectViewState(currentURL: URL): AuthSignViewType {
     }
 
     // 特に指定が無ければパスワードログイン
-    return "password-login"
+    return "password-authenticate"
 
     type ViewTypeResult =
         | Readonly<{ found: false }>
@@ -63,9 +64,9 @@ function detectViewState(currentURL: URL): AuthSignViewType {
 export class View extends ApplicationAbstractAction<AuthSignActionState> implements AuthSignAction {
     locationInfo: AuthSignViewLocationInfo
     // TODO もう components ではない
-    components: AuthSignResourceFactory
+    components: AuthSignSubEntryPoint
 
-    constructor(locationInfo: AuthSignViewLocationInfo, components: AuthSignResourceFactory) {
+    constructor(locationInfo: AuthSignViewLocationInfo, components: AuthSignSubEntryPoint) {
         super()
         this.locationInfo = locationInfo
         this.components = components
@@ -90,12 +91,14 @@ export class View extends ApplicationAbstractAction<AuthSignActionState> impleme
 
     mapViewType(type: AuthSignViewType): AuthSignActionState {
         switch (type) {
-            case "password-login":
-                return { type, entryPoint: this.components.passwordLogin() }
-            case "password-reset-session":
-                return { type, entryPoint: this.components.passwordResetSession() }
+            case "password-authenticate":
+                return { type, entryPoint: this.components.password_authenticate() }
+            case "password-reset-requestToken":
+                return { type, entryPoint: this.components.password_reset_requestToken() }
+            case "password-reset-checkStatus":
+                return { type, entryPoint: this.components.password_reset_checkStatus() }
             case "password-reset":
-                return { type, entryPoint: this.components.passwordReset() }
+                return { type, entryPoint: this.components.password_reset() }
         }
     }
 }

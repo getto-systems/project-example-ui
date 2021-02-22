@@ -6,8 +6,9 @@ import { initLoginViewLocationInfo, toAuthSignEntryPoint, View } from "../impl"
 import { newAuthSignLinkResource } from "../../../../../auth/sign/common/searchParams/x_Action/Link/impl"
 
 import { AuthSignEntryPoint } from "../entryPoint"
-import { newStartPasswordResetSession } from "../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/core"
-import { newRegisterPassword } from "../../../../../auth/sign/password/resetSession/register/x_Action/Register/main/core"
+import { newRequestPasswordResetToken } from "../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/main/core"
+import { newResetPassword } from "../../../../../auth/sign/password/reset/reset/x_Action/Reset/main/core"
+import { newCheckPasswordResetSendingStatus } from "../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/main/core"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
@@ -21,9 +22,11 @@ export function newForeground(feature: OutsideFeature): AuthSignEntryPoint {
 
             renew: () => newRenewAuthnInfo(webStorage, currentURL),
 
-            passwordLogin: () => newAuthenticatePassword(webStorage, currentURL),
-            passwordResetSession: () => newStartPasswordResetSession(),
-            passwordReset: () => newRegisterPassword(webStorage, currentURL),
+            password_authenticate: () => newAuthenticatePassword(webStorage, currentURL),
+
+            password_reset_requestToken: () => newRequestPasswordResetToken(),
+            password_reset_checkStatus: () => newCheckPasswordResetSendingStatus(currentURL),
+            password_reset: () => newResetPassword(webStorage, currentURL),
         }),
     )
 }

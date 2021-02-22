@@ -223,7 +223,7 @@ export function View(props: StartPasswordResetSessionProps): VNode {
     }
 
     function loginLink(): VNode {
-        return html`<a href="${props.href.passwordLogin()}">
+        return html`<a href="${props.href.password_authenticate()}">
             ${icon("user")} ログインIDとパスワードでログインする
         </a>`
     }

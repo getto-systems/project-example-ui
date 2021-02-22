@@ -1,13 +1,15 @@
 import { newAuthenticatePasswordHandler } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/worker/background"
-import { newStartPasswordResetSessionHandler } from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/worker/background"
-import { newRegisterPasswordHandler } from "../../../../../../auth/sign/password/resetSession/register/x_Action/Register/main/worker/background"
+import { newRequestPasswordResetTokenHandler } from "../../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/main/worker/background"
+import { newCheckPasswordResetSendingStatusHandler } from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/main/worker/background"
+import { newResetPasswordHandler } from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/main/worker/background"
 
 import { WorkerHandler } from "../../../../../../z_getto/application/worker/background"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
 import { AuthenticatePasswordProxyMessage } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/worker/message"
-import { RegisterPasswordProxyMessage } from "../../../../../../auth/sign/password/resetSession/register/x_Action/Register/main/worker/message"
-import { StartPasswordResetSessionProxyMessage } from "../../../../../../auth/sign/password/resetSession/start/x_Action/Start/main/worker/message"
+import { RequestPasswordResetTokenProxyMessage } from "../../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/main/worker/message"
+import { CheckPasswordResetSendingStatusProxyMessage } from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/main/worker/message"
+import { ResetPasswordProxyMessage } from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/main/worker/message"
 
 export function newWorkerBackground(worker: Worker): void {
     const handler: Handler = {
@@ -15,15 +17,18 @@ export function newWorkerBackground(worker: Worker): void {
             authenticate: newAuthenticatePasswordHandler((response) =>
                 postBackgroundMessage({ type: "password-authenticate", response }),
             ),
-            resetSession: {
-                register: newRegisterPasswordHandler((response) =>
+            reset: {
+                requestToken: newRequestPasswordResetTokenHandler((response) =>
+                    postBackgroundMessage({ type: "password-reset-requestToken", response }),
+                ),
+                checkStatus: newCheckPasswordResetSendingStatusHandler((response) =>
+                    postBackgroundMessage({ type: "password-reset-checkStatus", response }),
+                ),
+                reset: newResetPasswordHandler((response) =>
                     postBackgroundMessage({
-                        type: "password-resetSession-register",
+                        type: "password-reset",
                         response,
                     }),
-                ),
-                start: newStartPasswordResetSessionHandler((response) =>
-                    postBackgroundMessage({ type: "password-resetSession-start", response }),
                 ),
             },
         },
@@ -45,9 +50,10 @@ export function newWorkerBackground(worker: Worker): void {
 type Handler = Readonly<{
     password: Readonly<{
         authenticate: WorkerHandler<AuthenticatePasswordProxyMessage>
-        resetSession: Readonly<{
-            register: WorkerHandler<RegisterPasswordProxyMessage>
-            start: WorkerHandler<StartPasswordResetSessionProxyMessage>
+        reset: Readonly<{
+            requestToken: WorkerHandler<RequestPasswordResetTokenProxyMessage>
+            checkStatus: WorkerHandler<CheckPasswordResetSendingStatusProxyMessage>
+            reset: WorkerHandler<ResetPasswordProxyMessage>
         }>
     }>
 }>
@@ -63,12 +69,16 @@ function initForegroundMessageHandler(
                     handler.password.authenticate(message.message)
                     break
 
-                case "password-resetSession-start":
-                    handler.password.resetSession.start(message.message)
+                case "password-reset-requestToken":
+                    handler.password.reset.requestToken(message.message)
                     break
 
-                case "password-resetSession-register":
-                    handler.password.resetSession.register(message.message)
+                case "password-reset-checkStatus":
+                    handler.password.reset.checkStatus(message.message)
+                    break
+
+                case "password-reset":
+                    handler.password.reset.reset(message.message)
                     break
 
                 default:

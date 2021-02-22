@@ -172,7 +172,7 @@ export function View(props: RegisterPasswordProps): VNode {
     }
 
     function sendLink() {
-        return html`<a href="${props.href.passwordResetSession()}">
+        return html`<a href="${props.href.password_reset()}">
             ${icon("question-circle")} パスワードがわからない方
         </a>`
     }
