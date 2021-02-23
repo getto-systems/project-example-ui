@@ -1,5 +1,3 @@
-import { ApplicationAbstractStateAction } from "../../../../../../z_getto/application/impl"
-
 import { initValidateBoardFieldAction } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/impl"
 import { newInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/impl"
 
@@ -45,10 +43,16 @@ export function initPasswordBoardFieldAction<N extends string>(
         validate.check()
     })
 
-    return { input, validate, clear, passwordCharacter }
-}
-export function terminatePasswordBoardFieldAction(resource: PasswordBoardFieldAction): void {
-    resource.validate.terminate()
+    return {
+        input,
+        validate,
+        clear,
+        passwordCharacter,
+        terminate: () => {
+            input.terminate()
+            validate.terminate()
+        },
+    }
 }
 
 function convertPassword(value: BoardValue): BoardConvertResult<Password> {
@@ -71,14 +75,11 @@ const OK: ValidatePasswordError[] = []
 const EMPTY: ValidatePasswordError[] = ["empty"]
 const TOO_LONG: ValidatePasswordError[] = ["too-long"]
 
-class CheckAction
-    extends ApplicationAbstractStateAction<PasswordCharacterState>
-    implements CheckPasswordCharacterAction {
+class CheckAction implements CheckPasswordCharacterAction {
     password: PasswordGetter
     material: CheckPasswordCharacterMaterial
 
     constructor(password: PasswordGetter, material: CheckPasswordCharacterMaterial) {
-        super()
         this.password = password
         this.material = material
     }

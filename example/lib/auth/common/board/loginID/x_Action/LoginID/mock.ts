@@ -11,9 +11,7 @@ export function initMockLoginIDBoardFieldAction(): LoginIDBoardFieldAction {
         validate: new Action(),
         input: initMockInputBoardValueAction(emptyBoardValue),
         clear: () => null,
-        terminate: () => {
-            // mock では特に何もしない
-        },
+        terminate: () => null,
     }
 }
 
