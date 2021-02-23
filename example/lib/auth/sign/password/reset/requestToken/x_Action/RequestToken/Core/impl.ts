@@ -1,53 +1,33 @@
 import { ApplicationAbstractStateAction } from "../../../../../../../../z_getto/application/impl"
 
-import { requestPasswordResetToken } from "../../../impl"
+import { requestToken } from "../../../impl"
 
-import { RequestPasswordResetTokenInfra } from "../../../infra"
+import { RequestTokenInfra } from "../../../infra"
 
-import {
-    RequestPasswordResetTokenCoreMaterial,
-    RequestPasswordResetTokenCoreAction,
-    RequestPasswordResetTokenCoreState,
-} from "./action"
+import { CoreMaterial, CoreAction, CoreState } from "./action"
 
-import { PasswordResetRequestFields } from "../../../data"
+import { RequestTokenFields } from "../../../data"
 import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
 
-export type RequestPasswordResetTokenCoreBase = Readonly<{
-    request: RequestPasswordResetTokenInfra
-}>
-
-export function initRequestPasswordResetTokenCoreAction(
-    base: RequestPasswordResetTokenCoreBase,
-): RequestPasswordResetTokenCoreAction {
-    return initRequestPasswordResetTokenCoreAction_merge(
-        initRequestPasswordResetTokenCoreMaterial(base),
-    )
-}
-export function initRequestPasswordResetTokenCoreAction_merge(
-    material: RequestPasswordResetTokenCoreMaterial,
-): RequestPasswordResetTokenCoreAction {
-    return new Action(material)
-}
-export function initRequestPasswordResetTokenCoreMaterial(
-    base: RequestPasswordResetTokenCoreBase,
-): RequestPasswordResetTokenCoreMaterial {
+export function initCoreMaterial(infra: RequestTokenInfra): CoreMaterial {
     return {
-        request: requestPasswordResetToken(base.request),
+        requestToken: requestToken(infra),
     }
 }
 
-class Action
-    extends ApplicationAbstractStateAction<RequestPasswordResetTokenCoreState>
-    implements RequestPasswordResetTokenCoreAction {
-    material: RequestPasswordResetTokenCoreMaterial
+export function initCoreAction(material: CoreMaterial): CoreAction {
+    return new Action(material)
+}
 
-    constructor(material: RequestPasswordResetTokenCoreMaterial) {
+class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAction {
+    material: CoreMaterial
+
+    constructor(material: CoreMaterial) {
         super()
         this.material = material
     }
 
-    submit(fields: BoardConvertResult<PasswordResetRequestFields>): void {
-        this.material.request(fields, this.post)
+    submit(fields: BoardConvertResult<RequestTokenFields>): void {
+        this.material.requestToken(fields, this.post)
     }
 }

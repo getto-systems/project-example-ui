@@ -29,7 +29,6 @@ import {
 } from "../../../../../../../z_getto/application/testHelper"
 import { initResetPasswordCoreAction } from "./Core/impl"
 import { markBoardValue } from "../../../../../../../z_getto/board/kernel/data"
-import { newBoardValidateStack } from "../../../../../../../z_getto/board/kernel/infra/stack"
 import { initResetPasswordFormAction } from "./Form/impl"
 import { standardBoardValueStore } from "../../../../../../../z_getto/board/input/x_Action/Input/testHelper"
 import { toResetPasswordAction } from "./impl"
@@ -290,9 +289,7 @@ function newPasswordResetTestResource(
             },
         ),
 
-        form: initResetPasswordFormAction({
-            stack: newBoardValidateStack(),
-        }),
+        form: initResetPasswordFormAction(),
     })
 
     action.form.loginID.input.linkStore(standardBoardValueStore())

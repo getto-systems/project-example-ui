@@ -1,14 +1,15 @@
-import { RequestPasswordResetTokenInfra } from "./infra"
+import { RequestTokenInfra } from "./infra"
 
-import { RequestPasswordResetTokenMethod } from "./method"
+import { RequestTokenMethod } from "./method"
 
-import { RequestPasswordResetTokenEvent } from "./event"
+import { RequestTokenEvent } from "./event"
+
 import { authSignHref_password_reset_checkStatus } from "../../../common/searchParams/data"
 
 interface RequestToken {
-    (infra: RequestPasswordResetTokenInfra): RequestPasswordResetTokenMethod
+    (infra: RequestTokenInfra): RequestTokenMethod
 }
-export const requestPasswordResetToken: RequestToken = (infra) => async (fields, post) => {
+export const requestToken: RequestToken = (infra) => async (fields, post) => {
     if (!fields.success) {
         post({ type: "failed-to-request-token", err: { type: "validation-error" } })
         return
@@ -33,9 +34,7 @@ export const requestPasswordResetToken: RequestToken = (infra) => async (fields,
     })
 }
 
-export function requestPasswordResetTokenEventHasDone(
-    event: RequestPasswordResetTokenEvent,
-): boolean {
+export function requestTokenEventHasDone(event: RequestTokenEvent): boolean {
     switch (event.type) {
         case "succeed-to-request-token":
         case "failed-to-request-token":

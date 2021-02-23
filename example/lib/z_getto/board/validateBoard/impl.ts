@@ -1,8 +1,9 @@
-import { BoardConvertResult } from "../kernel/data"
-import { BoardValidateStackFound } from "../kernel/infra"
-import { BoardValidateState } from "./data"
-import { ValidateBoardInfra } from "./infra"
+import { BoardValidateStackFound, ValidateBoardInfra } from "../kernel/infra"
+
 import { ConvertBoardMethod, ValidateBoardMethod } from "./method"
+
+import { BoardConvertResult } from "../kernel/data"
+import { BoardValidateState } from "./data"
 
 export type ValidateBoardEmbed<N extends string, T> = ConvertEmbed<T> & ValidateEmbed<N>
 

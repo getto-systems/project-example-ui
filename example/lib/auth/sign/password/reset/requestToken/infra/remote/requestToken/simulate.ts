@@ -1,14 +1,11 @@
 import { initSimulateRemoteAccess } from "../../../../../../../../z_getto/remote/simulate"
 
 import { WaitTime } from "../../../../../../../../z_getto/infra/config/infra"
-import {
-    RequestPasswordResetTokenRemote,
-    RequestPasswordResetTokenSimulator,
-} from "../../../infra"
+import { RequestTokenRemote, RequestTokenSimulator } from "../../../infra"
 
-export function initRequestPasswordResetTokenSimulate(
-    simulator: RequestPasswordResetTokenSimulator,
-    time: WaitTime
-): RequestPasswordResetTokenRemote {
+export function initRequestTokenSimulate(
+    simulator: RequestTokenSimulator,
+    time: WaitTime,
+): RequestTokenRemote {
     return initSimulateRemoteAccess(simulator, time)
 }

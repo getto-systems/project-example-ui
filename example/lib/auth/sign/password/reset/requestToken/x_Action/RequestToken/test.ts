@@ -1,23 +1,25 @@
-import { initAsyncActionTester_legacy, initSyncActionTestRunner } from "../../../../../../../z_getto/application/testHelper"
+import {
+    initAsyncActionTester_legacy,
+    initSyncActionTestRunner,
+} from "../../../../../../../z_getto/application/testHelper"
 import { standardBoardValueStore } from "../../../../../../../z_getto/board/input/x_Action/Input/testHelper"
 
-import { initRequestPasswordResetTokenCoreAction } from "./Core/impl"
-import { initRequestPasswordResetTokenFormAction } from "./Form/impl"
+import { initCoreMaterial, initCoreAction } from "./Core/impl"
+import { initFormAction } from "./Form/impl"
 
 import { delayed } from "../../../../../../../z_getto/infra/delayed/core"
-import { newBoardValidateStack } from "../../../../../../../z_getto/board/kernel/infra/stack"
-import { initRequestPasswordResetTokenSimulate } from "../../infra/remote/requestToken/simulate"
+import { initRequestTokenSimulate } from "../../infra/remote/requestToken/simulate"
 
-import { requestPasswordResetTokenEventHasDone } from "../../impl"
+import { requestTokenEventHasDone } from "../../impl"
 
-import { RequestPasswordResetTokenRemote, RequestPasswordResetTokenResult } from "../../infra"
+import { RequestTokenRemote, RequestTokenResult } from "../../infra"
 
 import { RequestPasswordResetTokenAction } from "./action"
-import { RequestPasswordResetTokenCoreState } from "./Core/action"
+import { CoreState } from "./Core/action"
 
 import { markBoardValue } from "../../../../../../../z_getto/board/kernel/data"
 import { markPasswordResetSessionID } from "../../../kernel/data"
-import { toRequestPasswordResetTokenAction } from "./impl"
+import { toAction, toEntryPoint } from "./impl"
 
 const VALID_LOGIN = { loginID: "login-id" } as const
 const SESSION_ID = "session-id" as const
@@ -103,6 +105,7 @@ describe("RequestPasswordResetToken", () => {
 
     test("terminate", (done) => {
         const { resource } = standardPasswordResetSessionResource()
+        const entryPoint = toEntryPoint(resource)
 
         const ignition = {
             core: resource.core.ignition(),
@@ -114,7 +117,7 @@ describe("RequestPasswordResetToken", () => {
 
         runner.addTestCase(
             () => {
-                resource.terminate()
+                entryPoint.terminate()
                 resource.form.loginID.input.set(markBoardValue("login-id"))
             },
             (stack) => {
@@ -145,25 +148,23 @@ function waitPasswordResetSessionResource() {
 }
 
 type PasswordResetSessionTestRemoteAccess = Readonly<{
-    request: RequestPasswordResetTokenRemote
+    request: RequestTokenRemote
 }>
 
 function newTestPasswordResetSessionResource(
     remote: PasswordResetSessionTestRemoteAccess,
 ): RequestPasswordResetTokenAction {
     const config = standardConfig()
-    const action = toRequestPasswordResetTokenAction({
-        core: initRequestPasswordResetTokenCoreAction({
-            request: {
+    const action = toAction({
+        core: initCoreAction(
+            initCoreMaterial({
                 ...remote,
                 config: config.session.request,
                 delayed,
-            },
-        }),
+            }),
+        ),
 
-        form: initRequestPasswordResetTokenFormAction({
-            stack: newBoardValidateStack(),
-        }),
+        form: initFormAction(),
     })
 
     action.form.loginID.input.linkStore(standardBoardValueStore())
@@ -182,25 +183,25 @@ function standardConfig() {
 }
 function standardRemoteAccess(): PasswordResetSessionTestRemoteAccess {
     return {
-        request: initRequestPasswordResetTokenSimulate(simulateRequestToken, {
+        request: initRequestTokenSimulate(simulateRequestToken, {
             wait_millisecond: 0,
         }),
     }
 }
 function waitRemoteAccess(): PasswordResetSessionTestRemoteAccess {
     return {
-        request: initRequestPasswordResetTokenSimulate(simulateRequestToken, {
+        request: initRequestTokenSimulate(simulateRequestToken, {
             wait_millisecond: 3,
         }),
     }
 }
 
-function simulateRequestToken(): RequestPasswordResetTokenResult {
+function simulateRequestToken(): RequestTokenResult {
     return { success: true, value: markPasswordResetSessionID(SESSION_ID) }
 }
 
 function initAsyncTester() {
-    return initAsyncActionTester_legacy((state: RequestPasswordResetTokenCoreState) => {
+    return initAsyncActionTester_legacy((state: CoreState) => {
         switch (state.type) {
             case "initial-request-token":
                 return false
@@ -209,7 +210,7 @@ function initAsyncTester() {
             case "delayed-to-request-token":
             case "failed-to-request-token":
             case "succeed-to-request-token":
-                return requestPasswordResetTokenEventHasDone(state)
+                return requestTokenEventHasDone(state)
         }
     })
 }

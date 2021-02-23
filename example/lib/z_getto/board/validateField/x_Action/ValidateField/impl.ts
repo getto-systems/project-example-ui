@@ -2,7 +2,7 @@ import { ApplicationAbstractStateAction } from "../../../../application/impl"
 
 import { convertBoardField, validateBoardField, ValidateBoardFieldEmbed } from "../../impl"
 
-import { ValidateBoardFieldInfra } from "../../infra"
+import { ValidateBoardInfra } from "../../../kernel/infra"
 
 import {
     ValidateBoardFieldAction,
@@ -14,7 +14,7 @@ import { BoardConvertResult } from "../../../kernel/data"
 
 export function initValidateBoardFieldAction<N extends string, T, E>(
     embed: ValidateBoardFieldEmbed<N, T, E>,
-    infra: ValidateBoardFieldInfra
+    infra: ValidateBoardInfra,
 ): ValidateBoardFieldAction<T, E> {
     return new Action(embed.name, {
         convert: convertBoardField(embed),

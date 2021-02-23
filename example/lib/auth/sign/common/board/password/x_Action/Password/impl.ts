@@ -1,7 +1,9 @@
 import { initValidateBoardFieldAction } from "../../../../../../../z_getto/board/validateField/x_Action/ValidateField/impl"
 import { newInputBoardValueAction } from "../../../../../../../z_getto/board/input/x_Action/Input/impl"
 
-import { ValidateBoardFieldInfra } from "../../../../../../../z_getto/board/validateField/infra"
+import { checkPasswordCharacter } from "../../checkCharacter/impl"
+
+import { ValidateBoardInfra } from "../../../../../../../z_getto/board/kernel/infra"
 
 import {
     CheckPasswordCharacterAction,
@@ -12,7 +14,6 @@ import {
 import { BoardConvertResult, BoardValue } from "../../../../../../../z_getto/board/kernel/data"
 import { markPassword, Password } from "../../../../password/data"
 import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "./data"
-import { checkPasswordCharacter } from "../../checkCharacter/impl"
 
 export type PasswordBoardEmbed<N extends string> = Readonly<{
     name: N
@@ -20,7 +21,7 @@ export type PasswordBoardEmbed<N extends string> = Readonly<{
 
 export function initPasswordBoardFieldAction<N extends string>(
     embed: PasswordBoardEmbed<N>,
-    infra: ValidateBoardFieldInfra,
+    infra: ValidateBoardInfra,
 ): PasswordBoardFieldAction {
     const input = newInputBoardValueAction()
 

@@ -1,21 +1,21 @@
 import { newAuthSignLinkResource } from "../../../../../common/searchParams/x_Action/Link/impl"
 import { RequestPasswordResetTokenAction, RequestPasswordResetTokenEntryPoint } from "./action"
-import { RequestPasswordResetTokenCoreAction } from "./Core/action"
-import { RequestPasswordResetTokenFormAction } from "./Form/action"
+import { CoreAction } from "./Core/action"
+import { FormAction } from "./Form/action"
 
-export function toRequestPasswordResetTokenEntryPoint(
+export function toEntryPoint(
     action: RequestPasswordResetTokenAction,
 ): RequestPasswordResetTokenEntryPoint {
     return {
-        resource: { request: action, ...newAuthSignLinkResource() },
+        resource: { requestToken: action, ...newAuthSignLinkResource() },
         terminate: () => action.terminate(),
     }
 }
 
-export function toRequestPasswordResetTokenAction(
+export function toAction(
     actions: Readonly<{
-        core: RequestPasswordResetTokenCoreAction
-        form: RequestPasswordResetTokenFormAction
+        core: CoreAction
+        form: FormAction
     }>,
 ): RequestPasswordResetTokenAction {
     return {

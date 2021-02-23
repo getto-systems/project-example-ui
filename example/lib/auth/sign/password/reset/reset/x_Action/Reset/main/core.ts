@@ -3,7 +3,6 @@ import { newResetPasswordInfra } from "../../../main"
 import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/main"
 
 import { initResetPasswordFormAction } from "../Form/impl"
-import { newBoardValidateStack } from "../../../../../../../../z_getto/board/kernel/infra/stack"
 import {
     initResetPasswordCoreAction,
     initResetPasswordCoreAction_merge,
@@ -72,7 +71,5 @@ function newBackgroundBase(): ResetPasswordCoreBackgroundBase {
 }
 
 function newFormAction(): ResetPasswordFormAction {
-    return initResetPasswordFormAction({
-        stack: newBoardValidateStack(),
-    })
+    return initResetPasswordFormAction()
 }

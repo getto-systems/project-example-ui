@@ -1,6 +1,6 @@
-import { ConvertBoardFieldMethod, ValidateBoardFieldMethod } from "./method"
+import { ValidateBoardInfra } from "../kernel/infra"
 
-import { ValidateBoardFieldInfra } from "./infra"
+import { ConvertBoardFieldMethod, ValidateBoardFieldMethod } from "./method"
 
 import { boardFieldValidateResult } from "./data"
 import { BoardConvertResult } from "../kernel/data"
@@ -29,7 +29,7 @@ export const convertBoardField: Convert = (embed) => embed.converter
 interface Validate {
     <N extends string, E>(
         embed: ValidateEmbed<N, E>,
-        infra: ValidateBoardFieldInfra
+        infra: ValidateBoardInfra,
     ): ValidateBoardFieldMethod<E>
 }
 export const validateBoardField: Validate = (embed, infra) => () => {

@@ -9,7 +9,7 @@ import { ValidateBoardFieldAction, ValidateBoardFieldState } from "./action"
 
 import { BoardConvertResult, markBoardValue } from "../../../kernel/data"
 
-describe("ValidateBoard", () => {
+describe("ValidateBoardField", () => {
     test("validate; valid input", (done) => {
         const { action, store, validateStack } = standardResource()
 

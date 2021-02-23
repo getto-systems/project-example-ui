@@ -6,3 +6,7 @@ export interface BoardValidateStack {
 export type BoardValidateStackFound =
     | Readonly<{ found: true; state: boolean }>
     | Readonly<{ found: false }>
+
+export type ValidateBoardInfra = Readonly<{
+    stack: BoardValidateStack
+}>

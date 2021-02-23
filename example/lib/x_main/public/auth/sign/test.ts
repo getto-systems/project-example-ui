@@ -1,6 +1,5 @@
 import { initLoginViewLocationInfo, View } from "./impl"
 
-import { newBoardValidateStack } from "../../../../z_getto/board/kernel/infra/stack"
 import { initStaticClock } from "../../../../z_getto/infra/clock/simulate"
 import { initRenewAuthnInfoSimulate } from "../../../../auth/sign/kernel/authnInfo/kernel/infra/remote/renew/simulate"
 
@@ -24,11 +23,6 @@ import {
     toRenewAuthnInfoEntryPoint,
 } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/impl"
 import {
-    toRequestPasswordResetTokenAction,
-    toRequestPasswordResetTokenEntryPoint,
-} from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/impl"
-import { initRequestPasswordResetTokenCoreAction } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/Core/impl"
-import {
     initCheckPasswordResetSendingStatusAction,
     toCheckPasswordResetSendingStatusEntryPoint,
 } from "../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/impl"
@@ -40,24 +34,19 @@ import {
 } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/impl"
 import { initResetPasswordSimulate } from "../../../../auth/sign/password/reset/reset/infra/remote/reset/simulate"
 import { initResetPasswordFormAction } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/Form/impl"
-import { initRequestPasswordResetTokenSimulate } from "../../../../auth/sign/password/reset/requestToken/infra/remote/requestToken/simulate"
-import { initRequestPasswordResetTokenFormAction } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/Form/impl"
 import { initSendPasswordResetTokenSimulate } from "../../../../auth/sign/password/reset/checkStatus/infra/remote/sendToken/simulate"
 import { initGetPasswordResetSendingStatusSimulate } from "../../../../auth/sign/password/reset/checkStatus/infra/remote/getStatus/simulate"
 import { ResetPasswordResult } from "../../../../auth/sign/password/reset/reset/infra"
-import { RequestPasswordResetTokenResult } from "../../../../auth/sign/password/reset/requestToken/infra"
-import { markPasswordResetSessionID } from "../../../../auth/sign/password/reset/kernel/data"
 import {
     GetPasswordResetSendingStatusResult,
     SendPasswordResetTokenResult,
 } from "../../../../auth/sign/password/reset/checkStatus/infra"
 import { newResetPasswordLocationInfo } from "../../../../auth/sign/password/reset/reset/impl"
 import { initMockAuthenticatePasswordResource } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/mock"
+import { initMockRequestPasswordResetTokenResource } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/mock"
 
 const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
 const SUCCEED_TO_AUTH_AT = new Date("2020-01-01 10:00:00")
-
-const SESSION_ID = "session-id" as const
 
 // renew リクエストを投げるべきかの判定に使用する
 // SUCCEED_TO_AUTH_AT と setContinuousRenew の delay との間でうまく調整する
@@ -469,32 +458,15 @@ function standardPasswordResetResource(
                 },
             ),
 
-            form: initResetPasswordFormAction({
-                stack: newBoardValidateStack(),
-            }),
+            form: initResetPasswordFormAction(),
         }),
     )
 }
 function standardRequestPasswordResetTokenResource() {
-    return toRequestPasswordResetTokenEntryPoint(
-        toRequestPasswordResetTokenAction({
-            core: initRequestPasswordResetTokenCoreAction({
-                request: {
-                    request: initRequestPasswordResetTokenSimulate(simulateRequestToken, {
-                        wait_millisecond: 0,
-                    }),
-                    config: {
-                        delay: { delay_millisecond: 1 },
-                    },
-                    delayed,
-                },
-            }),
-
-            form: initRequestPasswordResetTokenFormAction({
-                stack: newBoardValidateStack(),
-            }),
-        }),
-    )
+    return {
+        resource: initMockRequestPasswordResetTokenResource(),
+        terminate: () => null,
+    }
 }
 function standardCheckPasswordResetSendingStatusResource(currentURL: URL) {
     return toCheckPasswordResetSendingStatusEntryPoint(
@@ -602,9 +574,6 @@ function simulateReset(): ResetPasswordResult {
     }
 }
 
-function simulateRequestToken(): RequestPasswordResetTokenResult {
-    return { success: true, value: markPasswordResetSessionID(SESSION_ID) }
-}
 function simulateSendToken(): SendPasswordResetTokenResult {
     return { success: true, value: true }
 }

@@ -1,14 +1,14 @@
 import { LoginID } from "../../../common/loginID/data"
 
-export type PasswordResetRequestFields = Readonly<{
+export type RequestTokenFields = Readonly<{
     loginID: LoginID
 }>
 
-export type RequestPasswordResetTokenError =
+export type RequestTokenError =
     | Readonly<{ type: "validation-error" }>
-    | RequestPasswordResetTokenRemoteError
+    | RequestTokenRemoteError
 
-export type RequestPasswordResetTokenRemoteError =
+export type RequestTokenRemoteError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "invalid-password-reset" }>
     | Readonly<{ type: "server-error" }>

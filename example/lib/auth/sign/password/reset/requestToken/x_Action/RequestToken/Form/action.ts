@@ -2,17 +2,15 @@ import { ApplicationAction } from "../../../../../../../../z_getto/application/a
 import { ValidateBoardAction } from "../../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/action"
 import { LoginIDBoardFieldAction } from "../../../../../../common/board/loginID/x_Action/LoginID/action"
 
-import { PasswordResetRequestFields } from "../../../data"
+import { RequestTokenFields } from "../../../data"
 
-export interface RequestPasswordResetTokenFormAction extends ApplicationAction {
+export interface FormAction extends ApplicationAction {
     readonly loginID: LoginIDBoardFieldAction
-    readonly validate: RequestPasswordResetTokenValidateAction
+    readonly validate: ValidateRequestTokenAction
     readonly clear: ClearAction
 }
 
-export type RequestPasswordResetTokenValidateAction = ValidateBoardAction<
-    PasswordResetRequestFields
->
+export type ValidateRequestTokenAction = ValidateBoardAction<RequestTokenFields>
 
 interface ClearAction {
     (): void

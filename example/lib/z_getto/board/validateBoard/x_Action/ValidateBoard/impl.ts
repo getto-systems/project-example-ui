@@ -2,7 +2,7 @@ import { ApplicationAbstractStateAction } from "../../../../application/impl"
 
 import { convertBoard, validateBoard, ValidateBoardEmbed } from "../../impl"
 
-import { ValidateBoardInfra } from "../../infra"
+import { ValidateBoardInfra } from "../../../kernel/infra"
 
 import { ValidateBoardAction, ValidateBoardMaterial, ValidateBoardState } from "./action"
 

@@ -1,18 +1,17 @@
-import { RequestPasswordResetTokenFormAction } from "./action"
+import { newBoardValidateStack } from "../../../../../../../../z_getto/board/kernel/infra/stack"
 
 import { initLoginIDBoardFieldAction } from "../../../../../../common/board/loginID/x_Action/LoginID/impl"
 import { initValidateBoardAction } from "../../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/impl"
 
-import { ValidateBoardInfra } from "../../../../../../../../z_getto/board/validateBoard/infra"
-import { ValidateBoardFieldInfra } from "../../../../../../../../z_getto/board/validateField/infra"
+import { ValidateBoardInfra } from "../../../../../../../../z_getto/board/kernel/infra"
+
+import { FormAction } from "./action"
+
 import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
-import { PasswordResetRequestFields } from "../../../data"
+import { RequestTokenFields } from "../../../data"
 
-export type RequestPasswordResetTokenFormBase = ValidateBoardInfra & ValidateBoardFieldInfra
-
-export function initRequestPasswordResetTokenFormAction(
-    infra: RequestPasswordResetTokenFormBase,
-): RequestPasswordResetTokenFormAction {
+export function initFormAction(): FormAction {
+    const infra: ValidateBoardInfra = { stack: newBoardValidateStack() }
     const loginID = initLoginIDBoardFieldAction({ name: "loginID" }, infra)
     const validate = initValidateBoardAction(
         {
@@ -31,7 +30,7 @@ export function initRequestPasswordResetTokenFormAction(
         terminate: () => loginID.terminate(),
     }
 
-    function converter(): BoardConvertResult<PasswordResetRequestFields> {
+    function converter(): BoardConvertResult<RequestTokenFields> {
         loginID.validate.check()
 
         const loginIDResult = loginID.validate.get()

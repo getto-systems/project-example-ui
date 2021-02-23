@@ -8,7 +8,7 @@ import { ResetPasswordInfra } from "./infra"
 export function newResetPasswordInfra(): ResetPasswordInfra {
     return {
         reset: newResetPasswordRemote(),
-        delayed: delayed,
+        delayed,
         config: {
             delay: delaySecond(1),
         },
