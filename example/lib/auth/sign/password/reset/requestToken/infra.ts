@@ -2,28 +2,25 @@ import { Delayed } from "../../../../../z_getto/infra/delayed/infra"
 import { Remote, RemoteResult, RemoteSimulator } from "../../../../../z_getto/remote/infra"
 import { DelayTime } from "../../../../../z_getto/infra/config/infra"
 
-import { PasswordResetRequestFields, RequestPasswordResetTokenRemoteError } from "./data"
+import { RequestTokenFields, RequestTokenRemoteError } from "./data"
 import { PasswordResetSessionID } from "../kernel/data"
 
-export type RequestPasswordResetTokenInfra = Readonly<{
-    request: RequestPasswordResetTokenRemote
+export type RequestTokenInfra = Readonly<{
+    request: RequestTokenRemote
     delayed: Delayed
     config: Readonly<{
         delay: DelayTime
     }>
 }>
 
-export type RequestPasswordResetTokenRemote = Remote<
-    PasswordResetRequestFields,
+export type RequestTokenRemote = Remote<
+    RequestTokenFields,
     PasswordResetSessionID,
-    RequestPasswordResetTokenRemoteError
+    RequestTokenRemoteError
 >
-export type RequestPasswordResetTokenResult = RemoteResult<
+export type RequestTokenResult = RemoteResult<PasswordResetSessionID, RequestTokenRemoteError>
+export type RequestTokenSimulator = RemoteSimulator<
+    RequestTokenFields,
     PasswordResetSessionID,
-    RequestPasswordResetTokenRemoteError
->
-export type RequestPasswordResetTokenSimulator = RemoteSimulator<
-    PasswordResetRequestFields,
-    PasswordResetSessionID,
-    RequestPasswordResetTokenRemoteError
+    RequestTokenRemoteError
 >

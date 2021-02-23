@@ -24,7 +24,7 @@ import {
     RequestPasswordResetTokenResourceState,
 } from "../action"
 
-import { RequestPasswordResetTokenError } from "../../../data"
+import { RequestTokenError } from "../../../data"
 import { LoginIDBoard } from "../../../../../../common/board/loginID/x_Action/LoginID/x_preact/LoginID"
 
 export function RequestPasswordResetToken(entryPoint: RequestPasswordResetTokenEntryPoint): VNode {
@@ -33,11 +33,11 @@ export function RequestPasswordResetToken(entryPoint: RequestPasswordResetTokenE
         ...resource,
         state: {
             core: useApplicationAction(
-                resource.request.core,
+                resource.requestToken.core,
                 initialRequestPasswordResetTokenState.core,
             ),
             form: useApplicationAction(
-                resource.request.form.validate,
+                resource.requestToken.form.validate,
                 initialRequestPasswordResetTokenState.form,
             ),
         },
@@ -94,7 +94,7 @@ export function View(props: RequestPasswordResetTokenProps): VNode {
                 title: startSessionTitle(),
                 body: [
                     h(LoginIDBoard, {
-                        field: props.request.form.loginID,
+                        field: props.requestToken.form.loginID,
                         help: ["このログインIDに設定された送信先にリセットトークンを送信します"],
                     }),
                     buttons({ right: clearButton() }),
@@ -116,7 +116,7 @@ export function View(props: RequestPasswordResetTokenProps): VNode {
 
             function onClick(e: Event) {
                 e.preventDefault()
-                props.request.form.clear()
+                props.requestToken.form.clear()
             }
         }
 
@@ -145,7 +145,7 @@ export function View(props: RequestPasswordResetTokenProps): VNode {
 
                 function onClick(e: Event) {
                     e.preventDefault()
-                    props.request.core.submit(props.request.form.validate.get())
+                    props.requestToken.core.submit(props.requestToken.form.validate.get())
                 }
             }
             function connectingButton(): VNode {
@@ -185,7 +185,7 @@ export function View(props: RequestPasswordResetTokenProps): VNode {
     }
 }
 
-function requestTokenError(err: RequestPasswordResetTokenError): VNodeContent[] {
+function requestTokenError(err: RequestTokenError): VNodeContent[] {
     switch (err.type) {
         case "validation-error":
             return ["正しく入力してください"]

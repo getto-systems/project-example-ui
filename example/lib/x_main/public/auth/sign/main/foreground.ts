@@ -4,7 +4,7 @@ import { newRenewAuthnInfo } from "../../../../../auth/sign/kernel/authnInfo/ren
 import { initLoginViewLocationInfo, toAuthSignEntryPoint, View } from "../impl"
 
 import { AuthSignEntryPoint } from "../entryPoint"
-import { newRequestPasswordResetToken } from "../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/main/core"
+import { newRequestPasswordResetToken } from "../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/init/foreground"
 import { newResetPassword } from "../../../../../auth/sign/password/reset/reset/x_Action/Reset/main/core"
 import { newCheckPasswordResetSendingStatus } from "../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/main/core"
 

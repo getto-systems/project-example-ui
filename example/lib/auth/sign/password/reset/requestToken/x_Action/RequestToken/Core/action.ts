@@ -1,25 +1,22 @@
 import { ApplicationStateAction } from "../../../../../../../../z_getto/application/action"
 
-import { RequestPasswordResetTokenMethod } from "../../../method"
+import { RequestTokenMethod } from "../../../method"
 
-import { RequestPasswordResetTokenEvent } from "../../../event"
+import { RequestTokenEvent } from "../../../event"
 
 import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
-import { PasswordResetRequestFields } from "../../../data"
+import { RequestTokenFields } from "../../../data"
 
-export interface RequestPasswordResetTokenCoreAction
-    extends ApplicationStateAction<RequestPasswordResetTokenCoreState> {
-    submit(fields: BoardConvertResult<PasswordResetRequestFields>): void
+export interface CoreAction extends ApplicationStateAction<CoreState> {
+    submit(fields: BoardConvertResult<RequestTokenFields>): void
 }
 
-export type RequestPasswordResetTokenCoreMaterial = Readonly<{
-    request: RequestPasswordResetTokenMethod
+export type CoreMaterial = Readonly<{
+    requestToken: RequestTokenMethod
 }>
 
-export type RequestPasswordResetTokenCoreState =
-    | Readonly<{ type: "initial-request-token" }>
-    | RequestPasswordResetTokenEvent
+export type CoreState = Readonly<{ type: "initial-request-token" }> | RequestTokenEvent
 
-export const initialRequestPasswordResetTokenCoreState: RequestPasswordResetTokenCoreState = {
+export const initialCoreState: CoreState = {
     type: "initial-request-token",
 }

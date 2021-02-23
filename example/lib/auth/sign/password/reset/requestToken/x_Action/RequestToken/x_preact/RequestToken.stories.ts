@@ -8,7 +8,7 @@ import { initMockRequestPasswordResetTokenResource } from "../mock"
 import { validateBoardOptions } from "../../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/mock"
 
 import { ValidateBoardState } from "../../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/action"
-import { RequestPasswordResetTokenCoreState } from "../Core/action"
+import { CoreState } from "../Core/action"
 
 const requestOptions = [
     "initial",
@@ -58,7 +58,7 @@ const template = storyTemplate<Props>((props) => {
         },
     })
 
-    function state(): RequestPasswordResetTokenCoreState {
+    function state(): CoreState {
         switch (props.request) {
             case "initial":
                 return { type: "initial-request-token" }

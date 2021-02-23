@@ -4,7 +4,7 @@ import { newBoardValidateStack } from "../../../kernel/infra/stack"
 import { ValidateBoardState } from "./action"
 import { initValidateBoardAction } from "./impl"
 
-describe("ComposeBoardValidate", () => {
+describe("ValidateBoard", () => {
     test("validate; all valid state", () => {
         const { action, validateStack } = standardResource()
 

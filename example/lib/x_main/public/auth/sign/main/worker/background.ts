@@ -1,5 +1,5 @@
 import { newAuthenticatePasswordWorkerHandler } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/init/worker/background"
-import { newRequestPasswordResetTokenHandler } from "../../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/main/worker/background"
+import { newRequestPasswordResetTokenWorkerHandler } from "../../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/init/worker/background"
 import { newCheckPasswordResetSendingStatusHandler } from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/main/worker/background"
 import { newResetPasswordHandler } from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/main/worker/background"
 
@@ -7,7 +7,7 @@ import { WorkerHandler } from "../../../../../../z_getto/application/worker/back
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
 import { AuthenticatePasswordProxyMessage } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/init/worker/message"
-import { RequestPasswordResetTokenProxyMessage } from "../../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/main/worker/message"
+import { RequestPasswordResetTokenProxyMessage } from "../../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/init/worker/message"
 import { CheckPasswordResetSendingStatusProxyMessage } from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/main/worker/message"
 import { ResetPasswordProxyMessage } from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/main/worker/message"
 
@@ -18,7 +18,7 @@ export function newWorkerBackground(worker: Worker): void {
                 postBackgroundMessage({ type: "password-authenticate", response }),
             ),
             reset: {
-                requestToken: newRequestPasswordResetTokenHandler((response) =>
+                requestToken: newRequestPasswordResetTokenWorkerHandler((response) =>
                     postBackgroundMessage({ type: "password-reset-requestToken", response }),
                 ),
                 checkStatus: newCheckPasswordResetSendingStatusHandler((response) =>

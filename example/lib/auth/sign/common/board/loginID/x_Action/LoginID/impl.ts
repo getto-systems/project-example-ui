@@ -1,7 +1,7 @@
 import { initValidateBoardFieldAction } from "../../../../../../../z_getto/board/validateField/x_Action/ValidateField/impl"
 import { newInputBoardValueAction } from "../../../../../../../z_getto/board/input/x_Action/Input/impl"
 
-import { ValidateBoardFieldInfra } from "../../../../../../../z_getto/board/validateField/infra"
+import { ValidateBoardInfra } from "../../../../../../../z_getto/board/kernel/infra"
 
 import { LoginIDBoardFieldAction } from "./action"
 
@@ -15,7 +15,7 @@ export type LoginIDBoardEmbed<N extends string> = Readonly<{
 
 export function initLoginIDBoardFieldAction<N extends string>(
     embed: LoginIDBoardEmbed<N>,
-    infra: ValidateBoardFieldInfra,
+    infra: ValidateBoardInfra,
 ): LoginIDBoardFieldAction {
     const input = newInputBoardValueAction()
 

@@ -1,20 +1,20 @@
 import { initConnectRemoteAccess } from "../../../../../../../../z_getto/remote/connect"
 
 import { RawRemote, RemoteError } from "../../../../../../../../z_getto/remote/infra"
-import { RequestPasswordResetTokenRemote } from "../../../infra"
+import { RequestTokenRemote } from "../../../infra"
 
-import { PasswordResetRequestFields, RequestPasswordResetTokenRemoteError } from "../../../data"
+import { RequestTokenFields, RequestTokenRemoteError } from "../../../data"
 import { markPasswordResetSessionID, PasswordResetSessionID } from "../../../../kernel/data"
 
-type Raw = RawRemote<PasswordResetRequestFields, RawSessionID>
+type Raw = RawRemote<RequestTokenFields, RawSessionID>
 type RawSessionID = string
 
-export function initRequestPasswordResetTokenConnect(access: Raw): RequestPasswordResetTokenRemote {
+export function initRequestTokenConnect(access: Raw): RequestTokenRemote {
     return initConnectRemoteAccess(access, {
-        message: (fields: PasswordResetRequestFields): PasswordResetRequestFields => fields,
+        message: (fields: RequestTokenFields): RequestTokenFields => fields,
         value: (response: RawSessionID): PasswordResetSessionID =>
             markPasswordResetSessionID(response),
-        error: (err: RemoteError): RequestPasswordResetTokenRemoteError => {
+        error: (err: RemoteError): RequestTokenRemoteError => {
             switch (err.type) {
                 case "bad-request":
                 case "server-error":
@@ -27,7 +27,7 @@ export function initRequestPasswordResetTokenConnect(access: Raw): RequestPasswo
                     return { type: "infra-error", err: err.detail }
             }
         },
-        unknown: (err: unknown): RequestPasswordResetTokenRemoteError => ({
+        unknown: (err: unknown): RequestTokenRemoteError => ({
             type: "infra-error",
             err: `${err}`,
         }),

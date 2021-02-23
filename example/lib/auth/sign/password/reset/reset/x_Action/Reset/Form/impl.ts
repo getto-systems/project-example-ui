@@ -1,17 +1,18 @@
+import { newBoardValidateStack } from "../../../../../../../../z_getto/board/kernel/infra/stack"
+
 import { initLoginIDBoardFieldAction } from "../../../../../../common/board/loginID/x_Action/LoginID/impl"
 import { initPasswordBoardFieldAction } from "../../../../../../common/board/password/x_Action/Password/impl"
 import { initValidateBoardAction } from "../../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/impl"
 
-import { ValidateBoardInfra } from "../../../../../../../../z_getto/board/validateBoard/infra"
-import { ValidateBoardFieldInfra } from "../../../../../../../../z_getto/board/validateField/infra"
+import { ValidateBoardInfra } from "../../../../../../../../z_getto/board/kernel/infra"
 
 import { ResetPasswordFormAction } from "./action"
+
 import { PasswordResetFields } from "../../../data"
 import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
 
-export type ResetPasswordFormBase = ValidateBoardInfra & ValidateBoardFieldInfra
-
-export function initResetPasswordFormAction(infra: ResetPasswordFormBase): ResetPasswordFormAction {
+export function initResetPasswordFormAction(): ResetPasswordFormAction {
+    const infra: ValidateBoardInfra = { stack: newBoardValidateStack() }
     const loginID = initLoginIDBoardFieldAction({ name: "loginID" }, infra)
     const password = initPasswordBoardFieldAction({ name: "password" }, infra)
     const validate = initValidateBoardAction(
