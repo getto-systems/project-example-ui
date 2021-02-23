@@ -14,8 +14,8 @@ export function newAuthenticatePassword(
 
     return newEntryPoint(
         initAuthenticatePasswordCoreAction({
-            ...foreground.core,
-            ...background.core,
+            ...foreground,
+            ...background,
         }),
     )
 }

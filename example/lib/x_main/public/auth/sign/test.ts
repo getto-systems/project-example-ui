@@ -26,11 +26,10 @@ import {
     toRenewAuthnInfoEntryPoint,
 } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/impl"
 import { initAuthenticatePasswordFormAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Form/impl"
-import { initAuthenticatePasswordCoreAction_byInfra } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Core/impl"
 import {
     toAuthenticatePasswordAction,
     toAuthenticatePasswordEntryPoint,
-} from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/init/common"
+} from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/impl"
 import {
     toRequestPasswordResetTokenAction,
     toRequestPasswordResetTokenEntryPoint,
@@ -60,6 +59,10 @@ import {
     SendPasswordResetTokenResult,
 } from "../../../../auth/sign/password/reset/checkStatus/infra"
 import { newResetPasswordLocationInfo } from "../../../../auth/sign/password/reset/reset/impl"
+import {
+    initAuthenticatePasswordCoreAction,
+    initAuthenticatePasswordCoreMaterial,
+} from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Core/impl"
 
 const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
 const SUCCEED_TO_AUTH_AT = new Date("2020-01-01 10:00:00")
@@ -459,36 +462,38 @@ function standardPasswordLoginEntryPoint(
 ) {
     return toAuthenticatePasswordEntryPoint(
         toAuthenticatePasswordAction({
-            core: initAuthenticatePasswordCoreAction_byInfra(
-                {
-                    startContinuousRenew: {
-                        apiCredentials,
-                        authnInfos,
-                        renew: initRenewAuthnInfoSimulate(simulateRenew, {
-                            wait_millisecond: 0,
-                        }),
-                        config: {
-                            delay: { delay_millisecond: 1 },
-                            interval: { interval_millisecond: 1 },
+            core: initAuthenticatePasswordCoreAction(
+                initAuthenticatePasswordCoreMaterial(
+                    {
+                        startContinuousRenew: {
+                            apiCredentials,
+                            authnInfos,
+                            renew: initRenewAuthnInfoSimulate(simulateRenew, {
+                                wait_millisecond: 0,
+                            }),
+                            config: {
+                                delay: { delay_millisecond: 1 },
+                                interval: { interval_millisecond: 1 },
+                            },
+                            clock,
                         },
-                        clock,
-                    },
-                    getSecureScriptPath: {
-                        config: {
-                            secureServerHost: standardSecureHost(),
+                        getSecureScriptPath: {
+                            config: {
+                                secureServerHost: standardSecureHost(),
+                            },
+                        },
+                        authenticate: {
+                            authenticate: initAuthenticatePasswordSimulate(simulateLogin, {
+                                wait_millisecond: 0,
+                            }),
+                            config: {
+                                delay: { delay_millisecond: 1 },
+                            },
+                            delayed,
                         },
                     },
-                    authenticate: {
-                        authenticate: initAuthenticatePasswordSimulate(simulateLogin, {
-                            wait_millisecond: 0,
-                        }),
-                        config: {
-                            delay: { delay_millisecond: 1 },
-                        },
-                        delayed,
-                    },
-                },
-                newGetSecureScriptPathLocationInfo(currentURL),
+                    newGetSecureScriptPathLocationInfo(currentURL),
+                ),
             ),
 
             form: initAuthenticatePasswordFormAction(),

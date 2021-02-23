@@ -29,10 +29,10 @@ import {
     initSyncActionTestRunner,
 } from "../../../../../../z_getto/application/testHelper"
 import { initAuthenticatePasswordFormAction } from "./Form/impl"
-import { initAuthenticatePasswordCoreAction_byInfra } from "./Core/impl"
 import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
 import { standardBoardValueStore } from "../../../../../../z_getto/board/input/x_Action/Input/testHelper"
-import { toAuthenticatePasswordAction } from "./init/common"
+import { toAuthenticatePasswordAction } from "./impl"
+import { initAuthenticatePasswordCoreAction, initAuthenticatePasswordCoreMaterial } from "./Core/impl"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -258,24 +258,26 @@ function newTestPasswordLoginResource(
 ): AuthenticatePasswordAction {
     const config = standardConfig()
     const action = toAuthenticatePasswordAction({
-        core: initAuthenticatePasswordCoreAction_byInfra(
-            {
-                startContinuousRenew: {
-                    ...repository,
-                    ...remote,
-                    config: config.continuousRenew,
-                    clock,
+        core: initAuthenticatePasswordCoreAction(
+            initAuthenticatePasswordCoreMaterial(
+                {
+                    startContinuousRenew: {
+                        ...repository,
+                        ...remote,
+                        config: config.continuousRenew,
+                        clock,
+                    },
+                    getSecureScriptPath: {
+                        config: config.location,
+                    },
+                    authenticate: {
+                        ...remote,
+                        config: config.login,
+                        delayed,
+                    },
                 },
-                getSecureScriptPath: {
-                    config: config.location,
-                },
-                authenticate: {
-                    ...remote,
-                    config: config.login,
-                    delayed,
-                },
-            },
-            newGetSecureScriptPathLocationInfo(currentURL),
+                newGetSecureScriptPathLocationInfo(currentURL),
+            ),
         ),
 
         form: initAuthenticatePasswordFormAction(),

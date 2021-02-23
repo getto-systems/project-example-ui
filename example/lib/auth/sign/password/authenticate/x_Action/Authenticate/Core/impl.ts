@@ -2,7 +2,6 @@ import { ApplicationAbstractStateAction } from "../../../../../../../z_getto/app
 
 import { startContinuousRenewAuthnInfo } from "../../../../../kernel/authnInfo/common/startContinuousRenew/impl"
 import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
-import { GetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/method"
 import { authenticatePassword } from "../../../impl"
 
 import { AuthenticatePasswordInfra } from "../../../infra"
@@ -13,8 +12,11 @@ import {
     AuthenticatePasswordCoreMaterial,
     AuthenticatePasswordCoreAction,
     AuthenticatePasswordCoreState,
+    AuthenticatePasswordCoreForeground,
     AuthenticatePasswordCoreBackground,
 } from "./action"
+
+import { GetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/method"
 
 import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
 import { AuthenticatePasswordFields } from "../../../data"
@@ -32,34 +34,30 @@ export type AuthenticatePasswordCoreBackgroundBase = Readonly<{
     authenticate: AuthenticatePasswordInfra
 }>
 
-export function initAuthenticatePasswordCoreAction_byInfra(
-    infra: AuthenticatePasswordCoreBase,
+export function initAuthenticatePasswordCoreMaterial(
+    base: AuthenticatePasswordCoreBase,
     locationInfo: GetSecureScriptPathLocationInfo,
-): AuthenticatePasswordCoreAction {
-    return initAuthenticatePasswordCoreAction_merge(
-        infra,
-        locationInfo,
-        initAuthenticatePasswordCoreBackground(infra),
-    )
-}
-function initAuthenticatePasswordCoreBackground(
-    infra: AuthenticatePasswordCoreBackgroundBase,
-): AuthenticatePasswordCoreBackground {
+): AuthenticatePasswordCoreMaterial {
     return {
-        authenticate: authenticatePassword(infra.authenticate),
+        ...initForegroundMaterial(base, locationInfo),
+        ...initBackgroundMaterial(base),
     }
 }
-
-function initAuthenticatePasswordCoreAction_merge(
-    infra: AuthenticatePasswordCoreForegroundBase,
+export function initForegroundMaterial(
+    base: AuthenticatePasswordCoreForegroundBase,
     locationInfo: GetSecureScriptPathLocationInfo,
-    background: AuthenticatePasswordCoreBackground,
-): AuthenticatePasswordCoreAction {
-    return new Action({
-        startContinuousRenew: startContinuousRenewAuthnInfo(infra.startContinuousRenew),
-        getSecureScriptPath: getSecureScriptPath(infra.getSecureScriptPath)(locationInfo),
-        ...background,
-    })
+): AuthenticatePasswordCoreForeground {
+    return {
+        startContinuousRenew: startContinuousRenewAuthnInfo(base.startContinuousRenew),
+        getSecureScriptPath: getSecureScriptPath(base.getSecureScriptPath)(locationInfo),
+    }
+}
+export function initBackgroundMaterial(
+    base: AuthenticatePasswordCoreBackgroundBase,
+): AuthenticatePasswordCoreBackground {
+    return {
+        authenticate: authenticatePassword(base.authenticate),
+    }
 }
 
 export function initAuthenticatePasswordCoreAction(

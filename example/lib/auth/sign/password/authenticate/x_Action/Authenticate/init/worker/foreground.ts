@@ -1,11 +1,9 @@
-import {
-    newForegroundMaterial,
-    toAuthenticatePasswordAction,
-    toAuthenticatePasswordEntryPoint,
-} from "../common"
+import { newForegroundMaterial } from "../common"
 
 import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/main"
 import { newGetSecureScriptPathInfra } from "../../../../../../common/secureScriptPath/get/main"
+
+import { toAuthenticatePasswordAction, toAuthenticatePasswordEntryPoint } from "../../impl"
 
 import {
     AuthenticatePasswordCoreForegroundBase,
@@ -55,7 +53,7 @@ class Proxy
         return newEntryPoint(
             initAuthenticatePasswordCoreAction({
                 authenticate: (fields, post) => this.material.authenticate.call({ fields }, post),
-                ...foreground.core,
+                ...foreground,
             }),
         )
     }

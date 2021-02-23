@@ -17,7 +17,7 @@ export function newAuthenticatePasswordWorkerHandler(
     return (message) => {
         switch (message.method) {
             case "authenticate":
-                material.core.authenticate(message.params.fields, (event) => {
+                material.authenticate(message.params.fields, (event) => {
                     post({
                         ...message,
                         done: authenticatePasswordEventHasDone(event),
