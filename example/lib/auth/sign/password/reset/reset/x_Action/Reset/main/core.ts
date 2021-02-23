@@ -11,7 +11,7 @@ import {
     ResetPasswordCoreBackgroundBase,
     ResetPasswordCoreForegroundBase,
 } from "../Core/impl"
-import { toResetPasswordEntryPoint } from "../impl"
+import { toResetPasswordAction, toResetPasswordEntryPoint } from "../impl"
 
 import { ResetPasswordFormAction } from "../Form/action"
 import { ResetPasswordCoreAction, ResetPasswordCoreBackgroundPod } from "../Core/action"
@@ -38,7 +38,7 @@ export function newResetPassword_proxy(
     )
 }
 function mergeAction(core: ResetPasswordCoreAction): ResetPasswordAction {
-    return { core, form: newFormAction() }
+    return toResetPasswordAction({ core, form: newFormAction() })
 }
 
 export function newResetPasswordBackgroundPod(): ResetPasswordCoreBackgroundPod {

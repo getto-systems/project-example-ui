@@ -23,12 +23,16 @@ import { initMemoryAuthnInfoRepository } from "../../../../../kernel/authnInfo/k
 import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
 import { newResetPasswordLocationInfo, resetPasswordEventHasDone } from "../../impl"
 import { delayed } from "../../../../../../../z_getto/infra/delayed/core"
-import { initAsyncActionTester_legacy } from "../../../../../../../z_getto/application/testHelper"
+import {
+    initAsyncActionTester_legacy,
+    initSyncActionTestRunner,
+} from "../../../../../../../z_getto/application/testHelper"
 import { initResetPasswordCoreAction } from "./Core/impl"
 import { markBoardValue } from "../../../../../../../z_getto/board/kernel/data"
 import { newBoardValidateStack } from "../../../../../../../z_getto/board/kernel/infra/stack"
 import { initResetPasswordFormAction } from "./Form/impl"
 import { standardBoardValueStore } from "../../../../../../../z_getto/board/input/x_Action/Input/testHelper"
+import { toResetPasswordAction } from "./impl"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -183,6 +187,39 @@ describe("RegisterPassword", () => {
             })
         }
     })
+
+    test("terminate", (done) => {
+        const { resource } = standardPasswordResetResource()
+
+        const ignition = {
+            core: resource.core.ignition(),
+            form: resource.form.validate.ignition(),
+            loginID: resource.form.loginID.validate.ignition(),
+            password: resource.form.password.validate.ignition(),
+        }
+
+        const runner = initSyncActionTestRunner()
+
+        runner.addTestCase(
+            () => {
+                resource.terminate()
+                resource.form.loginID.input.set(markBoardValue("login-id"))
+                resource.form.password.input.set(markBoardValue("password"))
+            },
+            (stack) => {
+                // no input/validate event after terminate
+                expect(stack).toEqual([])
+            },
+        )
+
+        const handler = runner.run(done)
+        ignition.core.addStateHandler(handler)
+        ignition.form.addStateHandler(handler)
+        ignition.loginID.addStateHandler(handler)
+        ignition.password.addStateHandler(handler)
+        resource.form.loginID.input.addInputHandler(() => handler("input"))
+        resource.form.password.input.addInputHandler(() => handler("input"))
+    })
 })
 
 function standardPasswordResetResource() {
@@ -229,7 +266,7 @@ function newPasswordResetTestResource(
     clock: Clock,
 ): ResetPasswordAction {
     const config = standardConfig()
-    const action = {
+    const action = toResetPasswordAction({
         core: initResetPasswordCoreAction(
             {
                 startContinuousRenew: {
@@ -256,7 +293,7 @@ function newPasswordResetTestResource(
         form: initResetPasswordFormAction({
             stack: newBoardValidateStack(),
         }),
-    }
+    })
 
     action.form.loginID.input.linkStore(standardBoardValueStore())
     action.form.password.input.linkStore(standardBoardValueStore())

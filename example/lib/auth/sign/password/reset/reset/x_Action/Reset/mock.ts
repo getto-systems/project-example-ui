@@ -10,6 +10,7 @@ export function initMockResetPasswordResource(): ResetPasswordResource {
         reset: {
             core: initMockResetPasswordCoreAction(),
             form: initMockResetPasswordFormAction(),
+            terminate: () => null,
         },
         ...newAuthSignLinkResource(),
     }
