@@ -4,33 +4,25 @@ import { Remote, RemoteResult, RemoteSimulator } from "../../../../../z_getto/re
 import { DelayTime } from "../../../../../z_getto/infra/config/infra"
 import { AuthnInfo } from "../../../kernel/authnInfo/kernel/data"
 
-import { PasswordResetFields, ResetPasswordRemoteError } from "./data"
-import { PasswordResetToken } from "../kernel/data"
+import { ResetFields, ResetRemoteError } from "./data"
+import { ResetToken } from "../kernel/data"
 
-export type ResetPasswordInfra = Readonly<{
-    reset: ResetPasswordRemote
+export type ResetInfra = Readonly<{
+    reset: ResetRemote
     delayed: Delayed
     config: Readonly<{
         delay: DelayTime
     }>
 }>
 
-export type ResetPasswordRemote = Remote<
-    ResetPasswordMessage,
-    ResetPasswordResponse,
-    ResetPasswordRemoteError
->
-export type ResetPasswordResult = RemoteResult<ResetPasswordResponse, ResetPasswordRemoteError>
-export type ResetPasswordSimulator = RemoteSimulator<
-    ResetPasswordMessage,
-    ResetPasswordResponse,
-    ResetPasswordRemoteError
->
-export type ResetPasswordMessage = Readonly<{
-    resetToken: PasswordResetToken
-    fields: PasswordResetFields
+export type ResetRemote = Remote<ResetMessage, ResetResponse, ResetRemoteError>
+export type ResetResult = RemoteResult<ResetResponse, ResetRemoteError>
+export type ResetSimulator = RemoteSimulator<ResetMessage, ResetResponse, ResetRemoteError>
+export type ResetMessage = Readonly<{
+    resetToken: ResetToken
+    fields: ResetFields
 }>
-export type ResetPasswordResponse = Readonly<{
+export type ResetResponse = Readonly<{
     auth: AuthnInfo // TODO キーを authn にする
     api: ApiCredential // キーを authz にする
 }>

@@ -3,14 +3,14 @@ import { newEntryPoint } from "./worker/foreground"
 import { initCoreAction } from "../Core/impl"
 
 import { AuthenticatePasswordEntryPoint } from "../action"
-import { newBackgroundMaterial, newForegroundMaterial } from "./common"
+import { newCoreBackgroundMaterial, newCoreForegroundMaterial } from "./common"
 
 export function newAuthenticatePassword(
     webStorage: Storage,
     currentURL: URL,
 ): AuthenticatePasswordEntryPoint {
-    const foreground = newForegroundMaterial(webStorage, currentURL)
-    const background = newBackgroundMaterial()
+    const foreground = newCoreForegroundMaterial(webStorage, currentURL)
+    const background = newCoreBackgroundMaterial()
 
     return newEntryPoint(
         initCoreAction({

@@ -1,44 +1,44 @@
 import { ApplicationStateAction } from "../../../../../../../../z_getto/application/action"
 
-import { ResetPasswordMethod, ResetPasswordPod } from "../../../method"
+import { ResetMethod, ResetPod } from "../../../method"
 import { GetSecureScriptPathMethod } from "../../../../../../common/secureScriptPath/get/method"
 import { StartContinuousRenewAuthnInfoMethod } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/method"
 
-import { ResetPasswordEvent } from "../../../event"
+import { ResetEvent } from "../../../event"
 import { StartContinuousRenewAuthnInfoEvent } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/event"
 
-import { PasswordResetFields } from "../../../data"
+import { ResetFields } from "../../../data"
 import {
     SecureScriptPath,
     LoadSecureScriptError,
 } from "../../../../../../common/secureScriptPath/get/data"
 import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
 
-export interface ResetPasswordCoreAction extends ApplicationStateAction<ResetPasswordCoreState> {
-    submit(fields: BoardConvertResult<PasswordResetFields>): void
+export interface CoreAction extends ApplicationStateAction<CoreState> {
+    submit(fields: BoardConvertResult<ResetFields>): void
     loadError(err: LoadSecureScriptError): void
 }
 
-export type ResetPasswordCoreMaterial = ResetPasswordCoreForeground & ResetPasswordCoreBackground
+export type CoreMaterial = CoreForegroundMaterial & CoreBackgroundMaterial
 
-export type ResetPasswordCoreForeground = Readonly<{
+export type CoreForegroundMaterial = Readonly<{
     startContinuousRenew: StartContinuousRenewAuthnInfoMethod
     getSecureScriptPath: GetSecureScriptPathMethod
 }>
-export type ResetPasswordCoreBackground = Readonly<{
-    reset: ResetPasswordMethod
+export type CoreBackgroundMaterial = Readonly<{
+    reset: ResetMethod
 }>
-export type ResetPasswordCoreBackgroundPod = Readonly<{
-    initReset: ResetPasswordPod
+export type CoreBackgroundPod = Readonly<{
+    initReset: ResetPod
 }>
 
-export type ResetPasswordCoreState =
+export type CoreState =
     | Readonly<{ type: "initial-reset" }>
-    | Exclude<ResetPasswordEvent, { type: "succeed-to-reset" }>
+    | Exclude<ResetEvent, { type: "succeed-to-reset" }>
     | Exclude<StartContinuousRenewAuthnInfoEvent, { type: "succeed-to-start-continuous-renew" }>
     | Readonly<{ type: "try-to-load"; scriptPath: SecureScriptPath }>
     | Readonly<{ type: "load-error"; err: LoadSecureScriptError }>
 
-export const initialResetPasswordCoreState: ResetPasswordCoreState = {
+export const initialCoreState: CoreState = {
     type: "initial-reset",
 }

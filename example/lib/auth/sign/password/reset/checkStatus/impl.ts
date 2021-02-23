@@ -8,7 +8,7 @@ import {
 import { CheckPasswordResetSendingStatusEvent } from "./event"
 
 import { CheckPasswordResetSendingStatusError } from "./data"
-import { markPasswordResetSessionID, PasswordResetSessionID } from "../kernel/data"
+import { markResetSessionID, ResetSessionID } from "../kernel/data"
 import { authSignSearchKey_password_reset_sessionID } from "../../../common/searchParams/data"
 
 export function newCheckPasswordResetSendingStatusLocationInfo(
@@ -19,8 +19,8 @@ export function newCheckPasswordResetSendingStatusLocationInfo(
     }
 }
 
-function detectSessionID(currentURL: URL): PasswordResetSessionID {
-    return markPasswordResetSessionID(
+function detectSessionID(currentURL: URL): ResetSessionID {
+    return markResetSessionID(
         currentURL.searchParams.get(authSignSearchKey_password_reset_sessionID()) || "",
     )
 }

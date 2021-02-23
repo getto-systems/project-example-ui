@@ -1,34 +1,34 @@
-import { ResetPasswordInfra } from "./infra"
+import { ResetInfra } from "./infra"
 
-import { ResetPasswordLocationInfo, ResetPasswordPod } from "./method"
+import { ResetLocationInfo, ResetPod } from "./method"
 
-import { ResetPasswordEvent } from "./event"
+import { ResetEvent } from "./event"
 
 import { authSignSearchKey_password_reset_token } from "../../../common/searchParams/data"
-import { markPasswordResetToken, PasswordResetToken } from "../kernel/data"
+import { markResetToken, ResetToken } from "../kernel/data"
 
-export function newResetPasswordLocationInfo(currentURL: URL): ResetPasswordLocationInfo {
+export function initResetLocationInfo(currentURL: URL): ResetLocationInfo {
     return {
-        getPasswordResetToken: () => detectResetToken(currentURL),
+        getResetToken: () => detectResetToken(currentURL),
     }
 }
 
-function detectResetToken(currentURL: URL): PasswordResetToken {
-    return markPasswordResetToken(
+export function detectResetToken(currentURL: URL): ResetToken {
+    return markResetToken(
         currentURL.searchParams.get(authSignSearchKey_password_reset_token()) || "",
     )
 }
 
 interface Reset {
-    (infra: ResetPasswordInfra): ResetPasswordPod
+    (infra: ResetInfra): ResetPod
 }
-export const resetPassword: Reset = (infra) => (locationInfo) => async (fields, post) => {
+export const reset: Reset = (infra) => (locationInfo) => async (fields, post) => {
     if (!fields.success) {
         post({ type: "failed-to-reset", err: { type: "validation-error" } })
         return
     }
 
-    const resetToken = locationInfo.getPasswordResetToken()
+    const resetToken = locationInfo.getResetToken()
     if (!resetToken) {
         post({ type: "failed-to-reset", err: { type: "empty-reset-token" } })
         return
@@ -52,7 +52,7 @@ export const resetPassword: Reset = (infra) => (locationInfo) => async (fields, 
     post({ type: "succeed-to-reset", authnInfo: response.value.auth })
 }
 
-export function resetPasswordEventHasDone(event: ResetPasswordEvent): boolean {
+export function resetEventHasDone(event: ResetEvent): boolean {
     switch (event.type) {
         case "succeed-to-reset":
         case "failed-to-reset":

@@ -3,7 +3,7 @@ import { Remote, RemoteResult, RemoteSimulator } from "../../../../../z_getto/re
 import { DelayTime } from "../../../../../z_getto/infra/config/infra"
 
 import { RequestTokenFields, RequestTokenRemoteError } from "./data"
-import { PasswordResetSessionID } from "../kernel/data"
+import { ResetSessionID } from "../kernel/data"
 
 export type RequestTokenInfra = Readonly<{
     request: RequestTokenRemote
@@ -15,12 +15,12 @@ export type RequestTokenInfra = Readonly<{
 
 export type RequestTokenRemote = Remote<
     RequestTokenFields,
-    PasswordResetSessionID,
+    ResetSessionID,
     RequestTokenRemoteError
 >
-export type RequestTokenResult = RemoteResult<PasswordResetSessionID, RequestTokenRemoteError>
+export type RequestTokenResult = RemoteResult<ResetSessionID, RequestTokenRemoteError>
 export type RequestTokenSimulator = RemoteSimulator<
     RequestTokenFields,
-    PasswordResetSessionID,
+    ResetSessionID,
     RequestTokenRemoteError
 >

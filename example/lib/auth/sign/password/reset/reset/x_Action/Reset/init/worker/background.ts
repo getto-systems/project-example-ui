@@ -1,30 +1,40 @@
-import { newResetPasswordBackgroundPod } from "../core"
+import { newResetInfra } from "../../../../init"
 
-import { resetPasswordEventHasDone } from "../../../../impl"
+import { newCoreBackgroundPod } from "../common"
+
+import { resetEventHasDone } from "../../../../impl"
 
 import { WorkerHandler } from "../../../../../../../../../z_getto/application/worker/background"
+
+import { CoreBackgroundInfra } from "../../Core/impl"
 
 import { ResetPasswordProxyMessage, ResetPasswordProxyResponse } from "./message"
 
 export function newResetPasswordHandler(
     post: Post<ResetPasswordProxyResponse>,
 ): WorkerHandler<ResetPasswordProxyMessage> {
-    const pod = newResetPasswordBackgroundPod()
+    const pod = newCoreBackgroundPod()
     return (message) => {
         switch (message.method) {
             case "reset":
-                pod.initReset({ getPasswordResetToken: () => message.params.resetToken })(
+                pod.initReset({ getResetToken: () => message.params.resetToken })(
                     message.params.fields,
                     (event) => {
                         post({
                             ...message,
-                            done: resetPasswordEventHasDone(event),
+                            done: resetEventHasDone(event),
                             event,
                         })
                     },
                 )
                 return
         }
+    }
+}
+
+export function newCoreBackgroundInfra(): CoreBackgroundInfra {
+    return {
+        reset: newResetInfra(),
     }
 }
 

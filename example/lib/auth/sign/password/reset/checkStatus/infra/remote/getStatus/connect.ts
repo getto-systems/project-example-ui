@@ -1,6 +1,6 @@
 import { initConnectRemoteAccess } from "../../../../../../../../z_getto/remote/connect"
 import { RawRemote, RemoteError } from "../../../../../../../../z_getto/remote/infra"
-import { PasswordResetSessionID } from "../../../../kernel/data"
+import { ResetSessionID } from "../../../../kernel/data"
 
 import { CheckPasswordResetSendingStatusRemoteError } from "../../../data"
 import {
@@ -8,7 +8,7 @@ import {
     GetPasswordResetSendingStatusResponse,
 } from "../../../infra"
 
-type Raw = RawRemote<PasswordResetSessionID, RawSessionStatus>
+type Raw = RawRemote<ResetSessionID, RawSessionStatus>
 type RawSessionStatus =
     | Readonly<{ done: false; status: SendingStatus }>
     | Readonly<{ done: true; send: false; err: string }>
@@ -20,7 +20,7 @@ export function initGetPasswordResetSendingStatusConnect(
     access: Raw,
 ): GetPasswordResetSendingStatusRemote {
     return initConnectRemoteAccess(access, {
-        message: (sessionID: PasswordResetSessionID): PasswordResetSessionID => sessionID,
+        message: (sessionID: ResetSessionID): ResetSessionID => sessionID,
         value: (response: RawSessionStatus): GetPasswordResetSendingStatusResponse => response,
         error: (err: RemoteError): CheckPasswordResetSendingStatusRemoteError => {
             switch (err.type) {

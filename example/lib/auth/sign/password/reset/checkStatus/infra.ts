@@ -3,7 +3,7 @@ import { Remote, RemoteResult, RemoteSimulator } from "../../../../../z_getto/re
 import { Limit, WaitTime } from "../../../../../z_getto/infra/config/infra"
 
 import { CheckPasswordResetSendingStatusRemoteError, PasswordResetSendingStatus } from "./data"
-import { PasswordResetSessionID } from "../kernel/data"
+import { ResetSessionID } from "../kernel/data"
 
 export type CheckPasswordResetSendingStatusInfra = Readonly<{
     sendToken: SendPasswordResetTokenRemote
@@ -31,7 +31,7 @@ export type SendPasswordResetTokenSimulator = RemoteSimulator<
 >
 
 export type GetPasswordResetSendingStatusRemote = Remote<
-    PasswordResetSessionID,
+    ResetSessionID,
     GetPasswordResetSendingStatusResponse,
     CheckPasswordResetSendingStatusRemoteError
 >
@@ -40,7 +40,7 @@ export type GetPasswordResetSendingStatusResult = RemoteResult<
     CheckPasswordResetSendingStatusRemoteError
 >
 export type GetPasswordResetSendingStatusSimulator = RemoteSimulator<
-    PasswordResetSessionID,
+    ResetSessionID,
     GetPasswordResetSendingStatusResponse,
     CheckPasswordResetSendingStatusRemoteError
 >

@@ -5,11 +5,11 @@ import {
 } from "../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/action"
 import { AuthSignLinkResource } from "../../../../../common/searchParams/x_Action/Link/action"
 import {
-    initialResetPasswordCoreState,
-    ResetPasswordCoreAction,
-    ResetPasswordCoreState,
+    initialCoreState,
+    CoreAction,
+    CoreState,
 } from "./Core/action"
-import { ResetPasswordFormAction } from "./Form/action"
+import { FormAction } from "./Form/action"
 
 export type ResetPasswordEntryPoint = Readonly<{
     resource: ResetPasswordResource
@@ -19,15 +19,15 @@ export type ResetPasswordEntryPoint = Readonly<{
 export type ResetPasswordResource = AuthSignLinkResource & Readonly<{ reset: ResetPasswordAction }>
 
 export interface ResetPasswordAction extends ApplicationAction {
-    readonly core: ResetPasswordCoreAction
-    readonly form: ResetPasswordFormAction
+    readonly core: CoreAction
+    readonly form: FormAction
 }
 
 export type ResetPasswordResourceState = Readonly<{
-    core: ResetPasswordCoreState
+    core: CoreState
     form: ValidateBoardState
 }>
 export const initialResetPasswordState: ResetPasswordResourceState = {
-    core: initialResetPasswordCoreState,
+    core: initialCoreState,
     form: initialValidateBoardState,
 }

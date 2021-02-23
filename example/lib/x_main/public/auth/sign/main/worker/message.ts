@@ -13,7 +13,7 @@ import {
 import {
     ResetPasswordProxyMessage,
     ResetPasswordProxyResponse,
-} from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/main/worker/message"
+} from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/init/worker/message"
 
 export type ForegroundMessage =
     | Readonly<{

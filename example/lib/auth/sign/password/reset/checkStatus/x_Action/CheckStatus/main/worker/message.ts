@@ -1,5 +1,5 @@
 import { WorkerProxySpec } from "../../../../../../../../../z_getto/application/worker/message"
-import { PasswordResetSessionID } from "../../../../../kernel/data"
+import { ResetSessionID } from "../../../../../kernel/data"
 
 import { CheckPasswordResetSendingStatusEvent } from "../../../../event"
 
@@ -11,6 +11,6 @@ export type CheckPasswordResetSendingStatusProxyResponse = CheckStatus["response
 
 type CheckStatus = WorkerProxySpec<
     "checkStatus",
-    Readonly<{ sessionID: PasswordResetSessionID }>,
+    Readonly<{ sessionID: ResetSessionID }>,
     CheckPasswordResetSendingStatusEvent
 >

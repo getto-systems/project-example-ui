@@ -18,7 +18,7 @@ import { RequestPasswordResetTokenAction } from "./action"
 import { CoreState } from "./Core/action"
 
 import { markBoardValue } from "../../../../../../../z_getto/board/kernel/data"
-import { markPasswordResetSessionID } from "../../../kernel/data"
+import { markResetSessionID } from "../../../kernel/data"
 import { toAction, toEntryPoint } from "./impl"
 
 const VALID_LOGIN = { loginID: "login-id" } as const
@@ -197,7 +197,7 @@ function waitRemoteAccess(): PasswordResetSessionTestRemoteAccess {
 }
 
 function simulateRequestToken(): RequestTokenResult {
-    return { success: true, value: markPasswordResetSessionID(SESSION_ID) }
+    return { success: true, value: markResetSessionID(SESSION_ID) }
 }
 
 function initAsyncTester() {

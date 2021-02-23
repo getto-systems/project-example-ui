@@ -1,4 +1,4 @@
-import { newForegroundMaterial } from "../common"
+import { newCoreForegroundMaterial } from "../common"
 
 import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/main"
 import { newGetSecureScriptPathInfra } from "../../../../../../common/secureScriptPath/get/main"
@@ -46,7 +46,7 @@ class Proxy
     }
 
     entryPoint(webStorage: Storage, currentURL: URL): AuthenticatePasswordEntryPoint {
-        const foreground = newForegroundMaterial(webStorage, currentURL)
+        const foreground = newCoreForegroundMaterial(webStorage, currentURL)
         return newEntryPoint(
             initCoreAction({
                 authenticate: (fields, post) => this.material.authenticate.call({ fields }, post),
@@ -63,7 +63,7 @@ class Proxy
     }
 }
 
-export function newForegroundInfra(webStorage: Storage): CoreForegroundInfra {
+export function newCoreForegroundInfra(webStorage: Storage): CoreForegroundInfra {
     return {
         startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webStorage),
         getSecureScriptPath: newGetSecureScriptPathInfra(),

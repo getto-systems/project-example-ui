@@ -1,25 +1,20 @@
 import { newAuthSignLinkResource } from "../../../../../common/searchParams/x_Action/Link/impl"
 
 import { ResetPasswordAction, ResetPasswordEntryPoint } from "./action"
-import { ResetPasswordCoreAction } from "./Core/action"
-import { ResetPasswordFormAction } from "./Form/action"
+import { CoreAction } from "./Core/action"
+import { FormAction } from "./Form/action"
 
-export function toResetPasswordEntryPoint(action: ResetPasswordAction): ResetPasswordEntryPoint {
+export function toEntryPoint(action: ResetPasswordAction): ResetPasswordEntryPoint {
     return {
         resource: { reset: action, ...newAuthSignLinkResource() },
-        terminate: () => {
-            action.core.terminate()
-            action.form.validate.terminate()
-            action.form.loginID.terminate()
-            action.form.password.terminate()
-        },
+        terminate: () => action.terminate(),
     }
 }
 
-export function toResetPasswordAction(
+export function toAction(
     actions: Readonly<{
-        core: ResetPasswordCoreAction
-        form: ResetPasswordFormAction
+        core: CoreAction
+        form: FormAction
     }>,
 ): ResetPasswordAction {
     return {

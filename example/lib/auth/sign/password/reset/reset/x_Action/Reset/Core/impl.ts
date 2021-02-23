@@ -1,88 +1,86 @@
 import { ApplicationAbstractStateAction } from "../../../../../../../../z_getto/application/impl"
 
-import { resetPassword } from "../../../impl"
+import { reset } from "../../../impl"
 import { getSecureScriptPath } from "../../../../../../common/secureScriptPath/get/impl"
 import { startContinuousRenewAuthnInfo } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/impl"
 
 import { StartContinuousRenewAuthnInfoInfra } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/infra"
 import { GetSecureScriptPathInfra } from "../../../../../../common/secureScriptPath/get/infra"
-import { ResetPasswordInfra } from "../../../infra"
+import { ResetInfra } from "../../../infra"
 
 import {
-    ResetPasswordCoreMaterial,
-    ResetPasswordCoreAction,
-    ResetPasswordCoreState,
-    ResetPasswordCoreForeground,
-    ResetPasswordCoreBackgroundPod,
+    CoreMaterial,
+    CoreAction,
+    CoreState,
+    CoreForegroundMaterial,
+    CoreBackgroundPod,
+    CoreBackgroundMaterial,
 } from "./action"
 
 import { GetSecureScriptPathLocationInfo } from "../../../../../../common/secureScriptPath/get/method"
-import { ResetPasswordLocationInfo } from "../../../method"
+import { ResetLocationInfo } from "../../../method"
 
 import { LoadSecureScriptError } from "../../../../../../common/secureScriptPath/get/data"
-import { PasswordResetFields } from "../../../data"
+import { ResetFields } from "../../../data"
 import { AuthnInfo } from "../../../../../../kernel/authnInfo/kernel/data"
 import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
 
-export type ResetPasswordCoreBase = ResetPasswordCoreForegroundBase &
-    ResetPasswordCoreBackgroundBase
+export type CoreInfra = CoreForegroundInfra & CoreBackgroundInfra
 
-export type ResetPasswordCoreForegroundBase = Readonly<{
+export type CoreForegroundInfra = Readonly<{
     startContinuousRenew: StartContinuousRenewAuthnInfoInfra
     getSecureScriptPath: GetSecureScriptPathInfra
 }>
-export type ResetPasswordCoreBackgroundBase = Readonly<{
-    reset: ResetPasswordInfra
+export type CoreBackgroundInfra = Readonly<{
+    reset: ResetInfra
 }>
 
-export function initResetPasswordCoreAction(
-    infra: ResetPasswordCoreBase,
-    locationInfo: GetSecureScriptPathLocationInfo & ResetPasswordLocationInfo,
-): ResetPasswordCoreAction {
-    return initResetPasswordCoreAction_merge(
-        infra,
-        locationInfo,
-        initResetPasswordCoreBackgroundPod(infra),
-    )
+export function initCoreMaterial(
+    infra: CoreInfra,
+    locationInfo: GetSecureScriptPathLocationInfo & ResetLocationInfo,
+): CoreMaterial {
+    return {
+        ...initCoreForegroundMaterial(infra, locationInfo),
+        ...initCoreBackgroundMaterial(infra, locationInfo),
+    }
 }
-export function initResetPasswordCoreAction_merge(
-    infra: ResetPasswordCoreForegroundBase,
-    locationInfo: GetSecureScriptPathLocationInfo & ResetPasswordLocationInfo,
-    background: ResetPasswordCoreBackgroundPod,
-): ResetPasswordCoreAction {
-    return new Action({
-        ...initResetPasswordCoreForeground(infra, locationInfo),
-        reset: background.initReset(locationInfo),
-    })
-}
-function initResetPasswordCoreForeground(
-    infra: ResetPasswordCoreForegroundBase,
+export function initCoreForegroundMaterial(
+    infra: CoreForegroundInfra,
     locationInfo: GetSecureScriptPathLocationInfo,
-): ResetPasswordCoreForeground {
+): CoreForegroundMaterial {
     return {
         startContinuousRenew: startContinuousRenewAuthnInfo(infra.startContinuousRenew),
         getSecureScriptPath: getSecureScriptPath(infra.getSecureScriptPath)(locationInfo),
     }
 }
-export function initResetPasswordCoreBackgroundPod(
-    infra: ResetPasswordCoreBackgroundBase,
-): ResetPasswordCoreBackgroundPod {
+export function initCoreBackgroundMaterial(
+    infra: CoreBackgroundInfra,
+    locationInfo: ResetLocationInfo,
+): CoreBackgroundMaterial {
+    const pod = initCoreBackgroundPod(infra)
     return {
-        initReset: resetPassword(infra.reset),
+        reset: pod.initReset(locationInfo),
+    }
+}
+export function initCoreBackgroundPod(infra: CoreBackgroundInfra): CoreBackgroundPod {
+    return {
+        initReset: reset(infra.reset),
     }
 }
 
-class Action
-    extends ApplicationAbstractStateAction<ResetPasswordCoreState>
-    implements ResetPasswordCoreAction {
-    material: ResetPasswordCoreMaterial
+export function initCoreAction(material: CoreMaterial): CoreAction {
+    return new Action(material)
+}
 
-    constructor(material: ResetPasswordCoreMaterial) {
+class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAction {
+    material: CoreMaterial
+
+    constructor(material: CoreMaterial) {
         super()
         this.material = material
     }
 
-    submit(fields: BoardConvertResult<PasswordResetFields>): void {
+    submit(fields: BoardConvertResult<ResetFields>): void {
         this.material.reset(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-reset":
