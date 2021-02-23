@@ -14,7 +14,7 @@ export type InputBoardValueResource = Readonly<{
 export interface InputBoardValueAction extends ApplicationAction {
     linkStore(store: BoardValueStore): void
 
-    addInputHandler(handler: InputBoardValueHandler): void
+    subscribeInputEvent(handler: InputBoardValueHandler): void
     triggerInputEvent(): void
 
     get(): BoardValue

@@ -28,7 +28,7 @@ export function initLoginIDBoardFieldAction<N extends string>(
         infra,
     )
 
-    input.addInputHandler(() => validate.check())
+    input.subscribeInputEvent(() => validate.check())
 
     return {
         input,

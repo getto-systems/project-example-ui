@@ -118,7 +118,7 @@ describe("LoginIDBoard", () => {
         )
 
         const handler = runner.run(done)
-        resource.input.addInputHandler(() => handler(resource.input.get()))
+        resource.input.subscribeInputEvent(() => handler(resource.input.get()))
         ignition.subscribe(handler)
     })
 })

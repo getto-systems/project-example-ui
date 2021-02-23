@@ -22,7 +22,7 @@ export function initRequestPasswordResetTokenFormAction(
         infra,
     )
 
-    loginID.input.addInputHandler(() => validate.check())
+    loginID.input.subscribeInputEvent(() => validate.check())
 
     return {
         loginID,

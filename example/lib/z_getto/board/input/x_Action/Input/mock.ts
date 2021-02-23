@@ -17,7 +17,7 @@ class Action implements InputBoardValueAction {
         // mock では特に何もしない
     }
 
-    addInputHandler() {
+    subscribeInputEvent() {
         // mock では特に何もしない
     }
     triggerInputEvent() {

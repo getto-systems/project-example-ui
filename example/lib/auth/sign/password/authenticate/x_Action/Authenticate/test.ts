@@ -218,8 +218,8 @@ describe("AuthenticatePassword", () => {
         ignition.form.subscribe(handler)
         ignition.loginID.subscribe(handler)
         ignition.password.subscribe(handler)
-        resource.form.loginID.input.addInputHandler(() => handler("input"))
-        resource.form.password.input.addInputHandler(() => handler("input"))
+        resource.form.loginID.input.subscribeInputEvent(() => handler("input"))
+        resource.form.password.input.subscribeInputEvent(() => handler("input"))
     })
 })
 

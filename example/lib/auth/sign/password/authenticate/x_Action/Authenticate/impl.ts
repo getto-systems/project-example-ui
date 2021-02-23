@@ -4,9 +4,7 @@ import { AuthenticatePasswordAction, AuthenticatePasswordEntryPoint } from "./ac
 import { CoreAction } from "./Core/action"
 import { FormAction } from "./Form/action"
 
-export function toEntryPoint(
-    action: AuthenticatePasswordAction,
-): AuthenticatePasswordEntryPoint {
+export function toEntryPoint(action: AuthenticatePasswordAction): AuthenticatePasswordEntryPoint {
     return {
         // TODO newAuthSignLinkResource ではなく、 href: newSignHrefMaterial にしたい
         // TODO あるいは、引数で渡されるべきなのかも
@@ -16,10 +14,7 @@ export function toEntryPoint(
 }
 
 export function toAction(
-    actions: Readonly<{
-        core: CoreAction
-        form: FormAction
-    }>,
+    actions: Readonly<{ core: CoreAction; form: FormAction }>,
 ): AuthenticatePasswordAction {
     return {
         ...actions,

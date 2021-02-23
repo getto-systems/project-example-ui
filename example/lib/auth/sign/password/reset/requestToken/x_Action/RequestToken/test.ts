@@ -127,7 +127,7 @@ describe("RequestPasswordResetToken", () => {
         ignition.core.subscribe(handler)
         ignition.form.subscribe(handler)
         ignition.loginID.subscribe(handler)
-        resource.form.loginID.input.addInputHandler(() => handler("input"))
+        resource.form.loginID.input.subscribeInputEvent(() => handler("input"))
     })
 })
 
