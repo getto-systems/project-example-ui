@@ -23,38 +23,37 @@ import { AuthenticateFields } from "../../../data"
 import { AuthnInfo } from "../../../../../kernel/authnInfo/kernel/data"
 import { BoardConvertResult } from "../../../../../../../z_getto/board/kernel/data"
 
-// TODO Base にする必要ないな
-export type CoreBase = CoreForegroundBase & CoreBackgroundBase
+export type CoreInfra = CoreForegroundInfra & CoreBackgroundInfra
 
-export type CoreForegroundBase = Readonly<{
+export type CoreForegroundInfra = Readonly<{
     startContinuousRenew: StartContinuousRenewAuthnInfoInfra
     getSecureScriptPath: GetSecureScriptPathInfra
 }>
-export type CoreBackgroundBase = Readonly<{
+export type CoreBackgroundInfra = Readonly<{
     authenticate: AuthenticateInfra
 }>
 
 export function initCoreMaterial(
-    base: CoreBase,
+    infra: CoreInfra,
     locationInfo: GetSecureScriptPathLocationInfo,
 ): CoreMaterial {
     return {
-        ...initCoreForegroundMaterial(base, locationInfo),
-        ...initCoreBackgroundMaterial(base),
+        ...initCoreForegroundMaterial(infra, locationInfo),
+        ...initCoreBackgroundMaterial(infra),
     }
 }
 export function initCoreForegroundMaterial(
-    base: CoreForegroundBase,
+    infra: CoreForegroundInfra,
     locationInfo: GetSecureScriptPathLocationInfo,
 ): CoreForegroundMaterial {
     return {
-        startContinuousRenew: startContinuousRenewAuthnInfo(base.startContinuousRenew),
-        getSecureScriptPath: getSecureScriptPath(base.getSecureScriptPath)(locationInfo),
+        startContinuousRenew: startContinuousRenewAuthnInfo(infra.startContinuousRenew),
+        getSecureScriptPath: getSecureScriptPath(infra.getSecureScriptPath)(locationInfo),
     }
 }
-export function initCoreBackgroundMaterial(base: CoreBackgroundBase): CoreBackgroundMaterial {
+export function initCoreBackgroundMaterial(infra: CoreBackgroundInfra): CoreBackgroundMaterial {
     return {
-        authenticate: authenticate(base.authenticate),
+        authenticate: authenticate(infra.authenticate),
     }
 }
 
