@@ -5,7 +5,7 @@ import { newGetSecureScriptPathInfra } from "../../../../../../common/secureScri
 
 import { toAction, toEntryPoint } from "../../impl"
 
-import { CoreForegroundBase, initCoreAction } from "../../Core/impl"
+import { CoreForegroundInfra, initCoreAction } from "../../Core/impl"
 import { initFormAction } from "../../Form/impl"
 
 import {
@@ -63,7 +63,7 @@ class Proxy
     }
 }
 
-export function newForegroundBase(webStorage: Storage): CoreForegroundBase {
+export function newForegroundInfra(webStorage: Storage): CoreForegroundInfra {
     return {
         startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webStorage),
         getSecureScriptPath: newGetSecureScriptPathInfra(),

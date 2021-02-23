@@ -1,6 +1,6 @@
 import { newAuthenticateInfra } from "../../../../init"
 
-import { CoreBackgroundBase } from "../../Core/impl"
+import { CoreBackgroundInfra } from "../../Core/impl"
 
 import { authenticateEventHasDone } from "../../../../impl"
 
@@ -29,7 +29,7 @@ export function newAuthenticatePasswordWorkerHandler(
     }
 }
 
-export function newBackgroundBase(): CoreBackgroundBase {
+export function newBackgroundInfra(): CoreBackgroundInfra {
     return {
         authenticate: newAuthenticateInfra(),
     }

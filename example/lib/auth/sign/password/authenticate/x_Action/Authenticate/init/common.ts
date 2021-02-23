@@ -1,5 +1,5 @@
-import { newBackgroundBase } from "./worker/background"
-import { newForegroundBase } from "./worker/foreground"
+import { newBackgroundInfra } from "./worker/background"
+import { newForegroundInfra } from "./worker/foreground"
 
 import { initCoreBackgroundMaterial, initCoreForegroundMaterial } from "../Core/impl"
 
@@ -11,11 +11,11 @@ export function newForegroundMaterial(
     webStorage: Storage,
     currentURL: URL,
 ): CoreForegroundMaterial {
-    const base = newForegroundBase(webStorage)
+    const infra = newForegroundInfra(webStorage)
     const locationInfo = newGetSecureScriptPathLocationInfo(currentURL)
-    return initCoreForegroundMaterial(base, locationInfo)
+    return initCoreForegroundMaterial(infra, locationInfo)
 }
 
 export function newBackgroundMaterial(): CoreBackgroundMaterial {
-    return initCoreBackgroundMaterial(newBackgroundBase())
+    return initCoreBackgroundMaterial(newBackgroundInfra())
 }
