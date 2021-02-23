@@ -32,7 +32,7 @@ describe("InputBoardValue", () => {
         )
 
         const handler = checker.run(done)
-        action.addInputHandler(() => handler(action.get()))
+        action.subscribeInputEvent(() => handler(action.get()))
     })
 
     test("get / set / clear; no store linked", (done) => {
@@ -53,7 +53,7 @@ describe("InputBoardValue", () => {
         )
 
         const handler = checker.run(done)
-        action.addInputHandler(() => handler(action.get()))
+        action.subscribeInputEvent(() => handler(action.get()))
     })
 
     test("terminate", (done) => {
@@ -75,7 +75,7 @@ describe("InputBoardValue", () => {
         )
 
         const handler = checker.run(done)
-        action.addInputHandler(() => handler(action.get()))
+        action.subscribeInputEvent(() => handler(action.get()))
     })
 })
 

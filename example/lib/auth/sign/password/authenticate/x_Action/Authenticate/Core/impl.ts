@@ -23,6 +23,7 @@ import { AuthenticateFields } from "../../../data"
 import { AuthnInfo } from "../../../../../kernel/authnInfo/kernel/data"
 import { BoardConvertResult } from "../../../../../../../z_getto/board/kernel/data"
 
+// TODO Base にする必要ないな
 export type CoreBase = CoreForegroundBase & CoreBackgroundBase
 
 export type CoreForegroundBase = Readonly<{

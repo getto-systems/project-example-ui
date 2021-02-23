@@ -5,10 +5,7 @@ import { newGetSecureScriptPathInfra } from "../../../../../../common/secureScri
 
 import { toAction, toEntryPoint } from "../../impl"
 
-import {
-    CoreForegroundBase,
-    initCoreAction,
-} from "../../Core/impl"
+import { CoreForegroundBase, initCoreAction } from "../../Core/impl"
 import { initFormAction } from "../../Form/impl"
 
 import {
@@ -73,12 +70,8 @@ export function newForegroundBase(webStorage: Storage): CoreForegroundBase {
     }
 }
 
-export function newEntryPoint(
-    core: CoreAction,
-): AuthenticatePasswordEntryPoint {
-    return toEntryPoint(
-        toAction({ core, form: newFormAction() }),
-    )
+export function newEntryPoint(core: CoreAction): AuthenticatePasswordEntryPoint {
+    return toEntryPoint(toAction({ core, form: newFormAction() }))
 }
 
 function newFormAction(): FormAction {

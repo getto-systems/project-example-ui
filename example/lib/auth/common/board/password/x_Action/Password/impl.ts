@@ -39,7 +39,7 @@ export function initPasswordBoardFieldAction<N extends string>(
         check: checkPasswordCharacter,
     })
 
-    input.addInputHandler(() => {
+    input.subscribeInputEvent(() => {
         validate.check()
     })
 

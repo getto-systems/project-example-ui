@@ -5,10 +5,7 @@ import { initCoreBackgroundMaterial, initCoreForegroundMaterial } from "../Core/
 
 import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
 
-import {
-    CoreBackgroundMaterial,
-    CoreForegroundMaterial,
-} from "../Core/action"
+import { CoreBackgroundMaterial, CoreForegroundMaterial } from "../Core/action"
 
 export function newForegroundMaterial(
     webStorage: Storage,

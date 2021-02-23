@@ -17,7 +17,7 @@ class Action implements InputBoardValueAction {
         this.link = { connect: true, store }
     }
 
-    addInputHandler(handler: InputBoardValueHandler): void {
+    subscribeInputEvent(handler: InputBoardValueHandler): void {
         this.inputHandlers = [...this.inputHandlers, handler]
     }
     triggerInputEvent(): void {
