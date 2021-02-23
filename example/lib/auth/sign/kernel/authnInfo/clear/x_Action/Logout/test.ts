@@ -15,7 +15,7 @@ describe("Logout", () => {
         const { resource } = standardResource()
 
         const ignition = resource.clear.ignition()        
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         resource.clear.submit()
 

@@ -55,7 +55,7 @@ describe("RegisterPassword", () => {
         const { repository, clock, resource } = standardPasswordResetResource()
 
         const ignition = resource.core.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
         resource.form.password.input.set(markBoardValue(VALID_LOGIN.password))
@@ -86,7 +86,7 @@ describe("RegisterPassword", () => {
         const { repository, clock, resource } = waitPasswordResetResource()
 
         const ignition = resource.core.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
         resource.form.password.input.set(markBoardValue(VALID_LOGIN.password))
@@ -117,7 +117,7 @@ describe("RegisterPassword", () => {
         const { repository, resource } = standardPasswordResetResource()
 
         const ignition = resource.core.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         // try to reset without fields
 
@@ -138,7 +138,7 @@ describe("RegisterPassword", () => {
         const { repository, resource } = emptyResetTokenPasswordResetResource()
 
         const ignition = resource.core.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
         resource.form.password.input.set(markBoardValue(VALID_LOGIN.password))
@@ -171,7 +171,7 @@ describe("RegisterPassword", () => {
         const { resource } = standardPasswordResetResource()
 
         const ignition = resource.core.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         resource.core.loadError({ type: "infra-error", err: "load error" })
 
@@ -213,10 +213,10 @@ describe("RegisterPassword", () => {
         )
 
         const handler = runner.run(done)
-        ignition.core.addStateHandler(handler)
-        ignition.form.addStateHandler(handler)
-        ignition.loginID.addStateHandler(handler)
-        ignition.password.addStateHandler(handler)
+        ignition.core.subscribe(handler)
+        ignition.form.subscribe(handler)
+        ignition.loginID.subscribe(handler)
+        ignition.password.subscribe(handler)
         resource.form.loginID.input.addInputHandler(() => handler("input"))
         resource.form.password.input.addInputHandler(() => handler("input"))
     })

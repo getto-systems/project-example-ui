@@ -25,7 +25,7 @@ describe("CheckPasswordResetSendingStatus", () => {
         const { resource } = standardPasswordResetSessionResource()
 
         const ignition = resource.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         ignition.ignite()
 
@@ -45,7 +45,7 @@ describe("CheckPasswordResetSendingStatus", () => {
         const { resource } = longSendingPasswordResetSessionResource()
 
         const ignition = resource.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         ignition.ignite()
 
@@ -72,7 +72,7 @@ describe("CheckPasswordResetSendingStatus", () => {
         const { resource } = noSessionIDPasswordResetSessionResource()
 
         const ignition = resource.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         ignition.ignite()
 

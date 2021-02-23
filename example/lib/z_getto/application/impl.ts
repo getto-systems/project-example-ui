@@ -59,8 +59,8 @@ function initPubSub<S>(): PubSub<S> {
     return {
         post: (state: S) => stateHandler.post(state),
         subscriber: {
-            addStateHandler: (handler) => stateHandler.subscribe(handler),
-            removeStateHandler: (target) => stateHandler.unsubscribe(target),
+            subscribe: (handler) => stateHandler.subscribe(handler),
+            unsubscribe: (target) => stateHandler.unsubscribe(target),
         },
         clear: () => stateHandler.clear(),
     }

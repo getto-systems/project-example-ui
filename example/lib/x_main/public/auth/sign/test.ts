@@ -75,7 +75,7 @@ describe("LoginView", () => {
         const { view } = standardLoginView()
 
         const ignition = view.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -127,7 +127,7 @@ describe("LoginView", () => {
         const { view } = passwordResetSessionLoginView()
 
         const ignition = view.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -179,7 +179,7 @@ describe("LoginView", () => {
         const { view } = passwordResetCheckStatusLoginView()
 
         const ignition = view.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -231,7 +231,7 @@ describe("LoginView", () => {
         const { view } = passwordResetLoginView()
 
         const ignition = view.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -283,7 +283,7 @@ describe("LoginView", () => {
         const { view } = standardLoginView()
 
         const ignition = view.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         view.error("view error")
 

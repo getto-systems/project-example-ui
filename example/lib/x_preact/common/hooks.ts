@@ -34,10 +34,10 @@ export function useApplicationAction<S>(action: ApplicationStateAction<S>, initi
     const [state, setState] = useState(initial)
     useLayoutEffect(() => {
         const ignition = action.ignition()
-        ignition.addStateHandler(setState)
+        ignition.subscribe(setState)
         ignition.ignite()
         return () => {
-            ignition.removeStateHandler(setState)
+            ignition.unsubscribe(setState)
         }
     }, [])
     return state

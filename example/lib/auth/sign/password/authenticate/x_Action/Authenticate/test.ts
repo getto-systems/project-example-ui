@@ -84,7 +84,7 @@ describe("PasswordAuthenticate", () => {
             },
         )
 
-        ignition.addStateHandler(checker.run(done))
+        ignition.subscribe(checker.run(done))
     })
 
     test("submit valid login-id and password; with delayed", (done) => {
@@ -124,7 +124,7 @@ describe("PasswordAuthenticate", () => {
             },
         )
 
-        ignition.addStateHandler(checker.run(done))
+        ignition.subscribe(checker.run(done))
     })
 
     test("submit without fields", (done) => {
@@ -149,7 +149,7 @@ describe("PasswordAuthenticate", () => {
             },
         )
 
-        ignition.addStateHandler(checker.run(done))
+        ignition.subscribe(checker.run(done))
     })
 
     test("clear", () => {
@@ -183,7 +183,7 @@ describe("PasswordAuthenticate", () => {
             },
         )
 
-        ignition.addStateHandler(checker.run(done))
+        ignition.subscribe(checker.run(done))
     })
 
     test("terminate", (done) => {
@@ -211,10 +211,10 @@ describe("PasswordAuthenticate", () => {
         )
 
         const handler = runner.run(done)
-        ignition.core.addStateHandler(handler)
-        ignition.form.addStateHandler(handler)
-        ignition.loginID.addStateHandler(handler)
-        ignition.password.addStateHandler(handler)
+        ignition.core.subscribe(handler)
+        ignition.form.subscribe(handler)
+        ignition.loginID.subscribe(handler)
+        ignition.password.subscribe(handler)
         resource.form.loginID.input.addInputHandler(() => handler("input"))
         resource.form.password.input.addInputHandler(() => handler("input"))
     })

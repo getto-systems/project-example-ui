@@ -13,7 +13,7 @@ describe("NextVersion", () => {
         const { resource } = standardNextVersionResource()
 
         const ignition = resource.nextVersion.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -71,7 +71,7 @@ describe("NextVersion", () => {
         const { resource } = waitNextVersionResource()
 
         const ignition = resource.nextVersion.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -130,7 +130,7 @@ describe("NextVersion", () => {
         const { resource } = foundNextVersionResource(["1.1.0"])
 
         const ignition = resource.nextVersion.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -188,7 +188,7 @@ describe("NextVersion", () => {
         const { resource } = foundNextVersionResource(["1.0.1"])
 
         const ignition = resource.nextVersion.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -246,7 +246,7 @@ describe("NextVersion", () => {
         const { resource } = foundNextVersionResource(["1.1.0", "1.2.0"])
 
         const ignition = resource.nextVersion.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -304,7 +304,7 @@ describe("NextVersion", () => {
         const { resource } = foundNextVersionResource(["1.0.1", "1.0.2"])
 
         const ignition = resource.nextVersion.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -362,7 +362,7 @@ describe("NextVersion", () => {
         const { resource } = foundNextVersionResource(["1.1.0", "1.1.1"])
 
         const ignition = resource.nextVersion.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -420,7 +420,7 @@ describe("NextVersion", () => {
         const { resource } = foundNextVersionResource(["1.1.0", "1.1.1", "1.1.3"])
 
         const ignition = resource.nextVersion.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -478,7 +478,7 @@ describe("NextVersion", () => {
         const { resource } = foundComplexNextVersionResource(["1.1.0"])
 
         const ignition = resource.nextVersion.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -536,7 +536,7 @@ describe("NextVersion", () => {
         const { resource } = invalidVersionNextVersionResource()
 
         const ignition = resource.nextVersion.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 

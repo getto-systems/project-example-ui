@@ -7,7 +7,7 @@ describe("NotFound", () => {
         const { resource } = standardResource()
 
         const ignition = resource.currentVersion.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 

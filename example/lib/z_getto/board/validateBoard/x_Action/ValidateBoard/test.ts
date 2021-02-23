@@ -11,7 +11,7 @@ describe("ComposeBoardValidate", () => {
         const checker = initSyncActionChecker_simple<ValidateBoardState>()
 
         const ignition = action.ignition()
-        ignition.addStateHandler(checker.handler)
+        ignition.subscribe(checker.handler)
 
         // all valid
         validateStack.update("name", true)
@@ -33,7 +33,7 @@ describe("ComposeBoardValidate", () => {
         const checker = initSyncActionChecker_simple<ValidateBoardState>()
 
         const ignition = action.ignition()
-        ignition.addStateHandler(checker.handler)
+        ignition.subscribe(checker.handler)
 
         validateStack.update("name", false) // invalid
         validateStack.update("value", true)
@@ -51,7 +51,7 @@ describe("ComposeBoardValidate", () => {
         const checker = initSyncActionChecker_simple<ValidateBoardState>()
 
         const ignition = action.ignition()
-        ignition.addStateHandler(checker.handler)
+        ignition.subscribe(checker.handler)
 
         validateStack.update("name", true)
         // validateStack.update("value", true) // initial
@@ -69,7 +69,7 @@ describe("ComposeBoardValidate", () => {
         const checker = initSyncActionChecker_simple<ValidateBoardState>()
 
         const ignition = action.ignition()
-        ignition.addStateHandler(checker.handler)
+        ignition.subscribe(checker.handler)
 
         action.check()
         checker.check((stack) => {
