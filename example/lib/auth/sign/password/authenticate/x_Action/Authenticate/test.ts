@@ -24,12 +24,13 @@ import { initMemoryAuthnInfoRepository } from "../../../../kernel/authnInfo/kern
 import { newGetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/impl"
 import { delayed, wait } from "../../../../../../z_getto/infra/delayed/core"
 import { authenticatePasswordEventHasDone } from "../../impl"
-import { initAsyncActionTestRunner } from "../../../../../../z_getto/application/testHelper"
+import { initAsyncActionTestRunner, initSyncActionTestRunner } from "../../../../../../z_getto/application/testHelper"
 import { initAuthenticatePasswordFormAction } from "./Form/impl"
 import { initAuthenticatePasswordCoreAction } from "./Core/impl"
 import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
 import { newBoardValidateStack } from "../../../../../../z_getto/board/kernel/infra/stack"
 import { standardBoardValueStore } from "../../../../../../z_getto/board/input/x_Action/Input/testHelper"
+import { toAuthenticatePasswordAction } from "./impl"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -184,6 +185,39 @@ describe("PasswordAuthenticate", () => {
 
         ignition.addStateHandler(checker.run(done))
     })
+
+    test("terminate", (done) => {
+        const { resource } = standardPasswordLoginResource()
+
+        const ignition = {
+            core: resource.core.ignition(),
+            form: resource.form.validate.ignition(),
+            loginID: resource.form.loginID.validate.ignition(),
+            password: resource.form.password.validate.ignition(),
+        }
+
+        const runner = initSyncActionTestRunner()
+
+        runner.addTestCase(
+            () => {
+                resource.terminate()
+                resource.form.loginID.input.set(markBoardValue("login-id"))
+                resource.form.password.input.set(markBoardValue("password"))
+            },
+            (stack) => {
+                // no input/validate event after terminate
+                expect(stack).toEqual([])
+            },
+        )
+
+        const handler = runner.run(done)
+        ignition.core.addStateHandler(handler)
+        ignition.form.addStateHandler(handler)
+        ignition.loginID.addStateHandler(handler)
+        ignition.password.addStateHandler(handler)
+        resource.form.loginID.input.addInputHandler(() => handler("input"))
+        resource.form.password.input.addInputHandler(() => handler("input"))
+    })
 })
 
 function standardPasswordLoginResource() {
@@ -221,7 +255,7 @@ function newTestPasswordLoginResource(
     clock: Clock,
 ): AuthenticatePasswordAction {
     const config = standardConfig()
-    const action = {
+    const action = toAuthenticatePasswordAction({
         core: initAuthenticatePasswordCoreAction(
             {
                 startContinuousRenew: {
@@ -245,7 +279,7 @@ function newTestPasswordLoginResource(
         form: initAuthenticatePasswordFormAction({
             stack: newBoardValidateStack(),
         }),
-    }
+    })
 
     action.form.loginID.input.linkStore(standardBoardValueStore())
     action.form.password.input.linkStore(standardBoardValueStore())

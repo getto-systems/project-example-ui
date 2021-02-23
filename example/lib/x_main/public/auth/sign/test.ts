@@ -27,7 +27,10 @@ import {
 } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/impl"
 import { initAuthenticatePasswordFormAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Form/impl"
 import { initAuthenticatePasswordCoreAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Core/impl"
-import { toAuthenticatePasswordEntryPoint } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/impl"
+import {
+    toAuthenticatePasswordAction,
+    toAuthenticatePasswordEntryPoint,
+} from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/impl"
 import { toRequestPasswordResetTokenEntryPoint } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/impl"
 import { initRequestPasswordResetTokenCoreAction } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/Core/impl"
 import {
@@ -448,43 +451,45 @@ function standardPasswordLoginEntryPoint(
     authnInfos: AuthnInfoRepository,
     clock: Clock,
 ) {
-    return toAuthenticatePasswordEntryPoint({
-        core: initAuthenticatePasswordCoreAction(
-            {
-                startContinuousRenew: {
-                    apiCredentials,
-                    authnInfos,
-                    renew: initRenewAuthnInfoSimulate(simulateRenew, {
-                        wait_millisecond: 0,
-                    }),
-                    config: {
-                        delay: { delay_millisecond: 1 },
-                        interval: { interval_millisecond: 1 },
+    return toAuthenticatePasswordEntryPoint(
+        toAuthenticatePasswordAction({
+            core: initAuthenticatePasswordCoreAction(
+                {
+                    startContinuousRenew: {
+                        apiCredentials,
+                        authnInfos,
+                        renew: initRenewAuthnInfoSimulate(simulateRenew, {
+                            wait_millisecond: 0,
+                        }),
+                        config: {
+                            delay: { delay_millisecond: 1 },
+                            interval: { interval_millisecond: 1 },
+                        },
+                        clock,
                     },
-                    clock,
-                },
-                getSecureScriptPath: {
-                    config: {
-                        secureServerHost: standardSecureHost(),
+                    getSecureScriptPath: {
+                        config: {
+                            secureServerHost: standardSecureHost(),
+                        },
+                    },
+                    authenticate: {
+                        login: initAuthenticatePasswordSimulate(simulateLogin, {
+                            wait_millisecond: 0,
+                        }),
+                        config: {
+                            delay: { delay_millisecond: 1 },
+                        },
+                        delayed,
                     },
                 },
-                authenticate: {
-                    login: initAuthenticatePasswordSimulate(simulateLogin, {
-                        wait_millisecond: 0,
-                    }),
-                    config: {
-                        delay: { delay_millisecond: 1 },
-                    },
-                    delayed,
-                },
-            },
-            newGetSecureScriptPathLocationInfo(currentURL),
-        ),
+                newGetSecureScriptPathLocationInfo(currentURL),
+            ),
 
-        form: initAuthenticatePasswordFormAction({
-            stack: newBoardValidateStack(),
+            form: initAuthenticatePasswordFormAction({
+                stack: newBoardValidateStack(),
+            }),
         }),
-    })
+    )
 }
 function standardPasswordResetResource(
     currentURL: URL,
