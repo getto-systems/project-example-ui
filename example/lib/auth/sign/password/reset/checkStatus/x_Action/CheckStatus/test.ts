@@ -1,24 +1,21 @@
-import { initAsyncActionTester_legacy } from "../../../../../../../z_getto/application/testHelper"
+import {
+    initAsyncActionTester_legacy,
+    initSyncActionTestRunner,
+} from "../../../../../../../z_getto/application/testHelper"
 import { WaitTime } from "../../../../../../../z_getto/infra/config/infra"
 import { wait } from "../../../../../../../z_getto/infra/delayed/core"
+import { checkSessionStatusEventHasDone, initCheckSendingStatusLocationInfo } from "../../impl"
 import {
-    checkPasswordResetSessionStatusEventHasDone,
-    newCheckPasswordResetSendingStatusLocationInfo,
-} from "../../impl"
-import {
-    GetPasswordResetSendingStatusRemote,
-    GetPasswordResetSendingStatusResponse,
-    GetPasswordResetSendingStatusResult,
-    SendPasswordResetTokenRemote,
-    SendPasswordResetTokenResult,
+    GetSendingStatusRemote,
+    GetSendingStatusResponse,
+    GetSendingStatusResult,
+    SendTokenRemote,
+    SendTokenResult,
 } from "../../infra"
-import { initGetPasswordResetSendingStatusSimulate } from "../../infra/remote/getStatus/simulate"
-import { initSendPasswordResetTokenSimulate } from "../../infra/remote/sendToken/simulate"
-import {
-    CheckPasswordResetSendingStatusAction,
-    CheckPasswordResetSendingStatusState,
-} from "./action"
-import { initCheckPasswordResetSendingStatusAction } from "./impl"
+import { initGetSendingStatusSimulate } from "../../infra/remote/getSendingStatus/simulate"
+import { initSendTokenSimulate } from "../../infra/remote/sendToken/simulate"
+import { CheckPasswordResetSendingStatusAction, CheckSendingStatusState } from "./action"
+import { initCheckSendingStatusAction, initMaterial, toEntryPoint } from "./impl"
 
 describe("CheckPasswordResetSendingStatus", () => {
     test("valid session-id", (done) => {
@@ -85,6 +82,32 @@ describe("CheckPasswordResetSendingStatus", () => {
             })
         }
     })
+
+    test("terminate", (done) => {
+        const { resource } = standardPasswordResetSessionResource()
+        const entryPoint = toEntryPoint(resource)
+
+        const ignition = resource.ignition()
+
+        const runner = initSyncActionTestRunner()
+
+        runner.addTestCase(
+            (check) => {
+                entryPoint.terminate()
+                ignition.ignite()
+
+                // checkStatus の処理が終わるのを待つ                
+                setTimeout(check, 32)
+            },
+            (stack) => {
+                // no input/validate event after terminate
+                expect(stack).toEqual([])
+            },
+        )
+
+        const handler = runner.run(done)
+        ignition.subscribe(handler)
+    })
 })
 
 function standardPasswordResetSessionResource() {
@@ -120,8 +143,8 @@ function noSessionID_URL() {
 }
 
 type PasswordResetSessionTestRemoteAccess = Readonly<{
-    sendToken: SendPasswordResetTokenRemote
-    getStatus: GetPasswordResetSendingStatusRemote
+    sendToken: SendTokenRemote
+    getStatus: GetSendingStatusRemote
 }>
 
 function newTestPasswordResetSessionResource(
@@ -129,15 +152,15 @@ function newTestPasswordResetSessionResource(
     remote: PasswordResetSessionTestRemoteAccess,
 ): CheckPasswordResetSendingStatusAction {
     const config = standardConfig()
-    return initCheckPasswordResetSendingStatusAction(
-        {
-            checkStatus: {
+    return initCheckSendingStatusAction(
+        initMaterial(
+            {
                 ...remote,
                 config: config.session.checkStatus,
                 wait,
             },
-        },
-        newCheckPasswordResetSendingStatusLocationInfo(currentURL),
+            initCheckSendingStatusLocationInfo(currentURL),
+        ),
     )
 }
 
@@ -153,7 +176,7 @@ function standardConfig() {
 }
 function standardRemoteAccess(): PasswordResetSessionTestRemoteAccess {
     return {
-        sendToken: initSendPasswordResetTokenSimulate(simulateSendToken, {
+        sendToken: initSendTokenSimulate(simulateSendToken, {
             wait_millisecond: 0,
         }),
         getStatus: getStatusRemoteAccess(standardGetStatusResponse(), { wait_millisecond: 0 }),
@@ -161,22 +184,22 @@ function standardRemoteAccess(): PasswordResetSessionTestRemoteAccess {
 }
 function longSendingSimulator(): PasswordResetSessionTestRemoteAccess {
     return {
-        sendToken: initSendPasswordResetTokenSimulate(simulateSendToken, {
+        sendToken: initSendTokenSimulate(simulateSendToken, {
             wait_millisecond: 3,
         }),
         getStatus: getStatusRemoteAccess(longSendingGetStatusResponse(), { wait_millisecond: 0 }),
     }
 }
 
-function simulateSendToken(): SendPasswordResetTokenResult {
+function simulateSendToken(): SendTokenResult {
     return { success: true, value: true }
 }
 function getStatusRemoteAccess(
-    responseCollection: GetPasswordResetSendingStatusResponse[],
+    responseCollection: GetSendingStatusResponse[],
     interval: WaitTime,
-): GetPasswordResetSendingStatusRemote {
+): GetSendingStatusRemote {
     let position = 0
-    return initGetPasswordResetSendingStatusSimulate((): GetPasswordResetSendingStatusResult => {
+    return initGetSendingStatusSimulate((): GetSendingStatusResult => {
         if (responseCollection.length === 0) {
             return { success: false, err: { type: "infra-error", err: "no response" } }
         }
@@ -186,17 +209,17 @@ function getStatusRemoteAccess(
         return { success: true, value: response }
     }, interval)
 
-    function getResponse(): GetPasswordResetSendingStatusResponse {
+    function getResponse(): GetSendingStatusResponse {
         if (position < responseCollection.length) {
             return responseCollection[position]
         }
         return responseCollection[responseCollection.length - 1]
     }
 }
-function standardGetStatusResponse(): GetPasswordResetSendingStatusResponse[] {
+function standardGetStatusResponse(): GetSendingStatusResponse[] {
     return [{ done: true, send: true }]
 }
-function longSendingGetStatusResponse(): GetPasswordResetSendingStatusResponse[] {
+function longSendingGetStatusResponse(): GetSendingStatusResponse[] {
     // 完了するまでに 5回以上かかる
     return [
         { done: false, status: { sending: true } },
@@ -209,7 +232,7 @@ function longSendingGetStatusResponse(): GetPasswordResetSendingStatusResponse[]
 }
 
 function initAsyncTester() {
-    return initAsyncActionTester_legacy((state: CheckPasswordResetSendingStatusState) => {
+    return initAsyncActionTester_legacy((state: CheckSendingStatusState) => {
         switch (state.type) {
             case "initial-check-status":
                 return false
@@ -219,7 +242,7 @@ function initAsyncTester() {
             case "failed-to-check-status":
             case "failed-to-send-token":
             case "succeed-to-send-token":
-                return checkPasswordResetSessionStatusEventHasDone(state)
+                return checkSessionStatusEventHasDone(state)
         }
     })
 }

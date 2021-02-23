@@ -1,6 +1,6 @@
 import {
     WorkerAbstractProxy,
-    WorkerProxy_legacy,
+    WorkerProxy,
 } from "../../../../../../../../../z_getto/application/worker/foreground"
 
 import {
@@ -9,13 +9,17 @@ import {
     CheckPasswordResetSendingStatusProxyResponse,
 } from "./message"
 
-import { CheckPasswordResetSendingStatusMaterialPod } from "../../action"
+import { CheckPasswordResetSendingStatusEntryPoint } from "../../action"
+import { initCheckSendingStatusAction, toEntryPoint } from "../../impl"
+import { newCheckSendingStatusLocationInfo } from "../../../../init"
 
-export type CheckPasswordResetSendingStatusProxy = WorkerProxy_legacy<
-    CheckPasswordResetSendingStatusMaterialPod,
-    CheckPasswordResetSendingStatusProxyMessage,
-    CheckPasswordResetSendingStatusProxyResponse
->
+export interface CheckPasswordResetSendingStatusProxy
+    extends WorkerProxy<
+        CheckPasswordResetSendingStatusProxyMessage,
+        CheckPasswordResetSendingStatusProxyResponse
+    > {
+    entryPoint(currentLocation: Location): CheckPasswordResetSendingStatusEntryPoint
+}
 export function newCheckPasswordResetSendingStatusProxy(
     post: Post<CheckPasswordResetSendingStatusProxyMessage>,
 ): CheckPasswordResetSendingStatusProxy {
@@ -34,14 +38,17 @@ class Proxy
         }
     }
 
-    pod(): CheckPasswordResetSendingStatusMaterialPod {
-        return {
-            initCheckStatus: (locationInfo) => (post) =>
-                this.material.checkStatus.call(
-                    { sessionID: locationInfo.getPasswordResetSessionID() },
-                    post,
-                ),
-        }
+    entryPoint(currentLocation: Location): CheckPasswordResetSendingStatusEntryPoint {
+        const locationInfo = newCheckSendingStatusLocationInfo(currentLocation)
+        return toEntryPoint(
+            initCheckSendingStatusAction({
+                checkStatus: (post) =>
+                    this.material.checkStatus.call(
+                        { sessionID: locationInfo.getPasswordResetSessionID() },
+                        post,
+                    ),
+            }),
+        )
     }
     resolve(response: CheckPasswordResetSendingStatusProxyResponse): void {
         switch (response.method) {

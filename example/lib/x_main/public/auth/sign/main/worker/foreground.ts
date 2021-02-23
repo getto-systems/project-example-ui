@@ -1,5 +1,4 @@
 import { newRenewAuthnInfo } from "../../../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/main"
-import { newCheckPasswordResetSendingStatus_proxy } from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/main/core"
 
 import { initLoginViewLocationInfo, toAuthSignEntryPoint, View } from "../../impl"
 
@@ -14,7 +13,7 @@ import {
 import {
     CheckPasswordResetSendingStatusProxy,
     newCheckPasswordResetSendingStatusProxy,
-} from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/main/worker/foreground"
+} from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/init/worker/foreground"
 import {
     newResetPasswordProxy,
     ResetPasswordProxy,
@@ -40,10 +39,7 @@ export function newWorkerForeground(feature: OutsideFeature): AuthSignEntryPoint
         password_authenticate: () => proxy.password.authenticate.entryPoint(webStorage, currentURL),
         password_reset_requestToken: () => proxy.password.reset.requestToken.entryPoint(),
         password_reset_checkStatus: () =>
-            newCheckPasswordResetSendingStatus_proxy(
-                currentURL,
-                proxy.password.reset.checkStatus.pod(),
-            ),
+            proxy.password.reset.checkStatus.entryPoint(currentLocation),
         password_reset: () =>
             proxy.password.reset.reset.entryPoint(webStorage, currentURL, currentLocation),
     })

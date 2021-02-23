@@ -1,16 +1,14 @@
 import { ResetSessionID } from "../kernel/data"
-import { CheckPasswordResetSendingStatusEvent } from "./event"
+import { CheckSendingStatusEvent } from "./event"
 
-export interface CheckPasswordResetSendingStatusMethodPod {
-    (
-        locationInfo: CheckPasswordResetSendingStatusLocationInfo,
-    ): CheckPasswordResetSendingStatusMethod
+export interface CheckSendingStatusMethodPod {
+    (locationInfo: CheckSendingStatusLocationInfo): CheckSendingStatusMethod
 }
-export interface CheckPasswordResetSendingStatusLocationInfo {
+export interface CheckSendingStatusLocationInfo {
     getPasswordResetSessionID(): ResetSessionID
 }
-export interface CheckPasswordResetSendingStatusMethod {
-    (post: Post<CheckPasswordResetSendingStatusEvent>): void
+export interface CheckSendingStatusMethod {
+    (post: Post<CheckSendingStatusEvent>): void
 }
 
 interface Post<T> {

@@ -1,6 +1,4 @@
-import { newCheckPasswordResetSendingStatusMaterialPod } from "../core"
-
-import { checkPasswordResetSessionStatusEventHasDone } from "../../../../impl"
+import { checkSessionStatusEventHasDone } from "../../../../impl"
 
 import { WorkerHandler } from "../../../../../../../../../z_getto/application/worker/background"
 
@@ -8,11 +6,12 @@ import {
     CheckPasswordResetSendingStatusProxyMessage,
     CheckPasswordResetSendingStatusProxyResponse,
 } from "./message"
+import { newCheckSendingStatusMaterialPod } from "../common"
 
-export function newCheckPasswordResetSendingStatusHandler(
+export function newCheckPasswordResetSendingStatusWorkerHandler(
     post: Post<CheckPasswordResetSendingStatusProxyResponse>,
 ): WorkerHandler<CheckPasswordResetSendingStatusProxyMessage> {
-    const pod = newCheckPasswordResetSendingStatusMaterialPod()
+    const pod = newCheckSendingStatusMaterialPod()
     return (message) => {
         switch (message.method) {
             case "checkStatus":
@@ -20,7 +19,7 @@ export function newCheckPasswordResetSendingStatusHandler(
                     (event) => {
                         post({
                             ...message,
-                            done: checkPasswordResetSessionStatusEventHasDone(event),
+                            done: checkSessionStatusEventHasDone(event),
                             event,
                         })
                     },

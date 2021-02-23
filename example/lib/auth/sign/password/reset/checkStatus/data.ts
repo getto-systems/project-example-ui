@@ -1,7 +1,7 @@
-export type PasswordResetSendingStatus = Readonly<{ sending: boolean }>
+export type SendingStatus = Readonly<{ sending: boolean }>
 
-export type CheckPasswordResetSendingStatusError = CheckPasswordResetSendingStatusRemoteError
-export type CheckPasswordResetSendingStatusRemoteError =
+export type CheckSendingStatusError = CheckSendingStatusRemoteError
+export type CheckSendingStatusRemoteError =
     | Readonly<{ type: "empty-session-id" }>
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "invalid-password-reset" }>
@@ -9,4 +9,4 @@ export type CheckPasswordResetSendingStatusRemoteError =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export type SendPasswordResetTokenError = Readonly<{ type: "infra-error"; err: string }>
+export type SendTokenError = Readonly<{ type: "infra-error"; err: string }>

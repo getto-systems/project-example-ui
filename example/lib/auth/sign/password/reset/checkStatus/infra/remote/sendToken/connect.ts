@@ -1,17 +1,17 @@
 import { initConnectRemoteAccess } from "../../../../../../../../z_getto/remote/connect"
 
 import { RawRemote, RemoteError } from "../../../../../../../../z_getto/remote/infra"
-import { SendPasswordResetTokenRemote } from "../../../infra"
+import { SendTokenRemote } from "../../../infra"
 
-import { CheckPasswordResetSendingStatusRemoteError } from "../../../data"
+import { CheckSendingStatusRemoteError } from "../../../data"
 
 type Raw = RawRemote<null, true>
 
-export function initSendPasswordResetTokenConnect(access: Raw): SendPasswordResetTokenRemote {
+export function initSendTokenConnect(access: Raw): SendTokenRemote {
     return initConnectRemoteAccess(access, {
         message: (message: null): null => message,
         value: (response: true): true => response,
-        error: (err: RemoteError): CheckPasswordResetSendingStatusRemoteError => {
+        error: (err: RemoteError): CheckSendingStatusRemoteError => {
             switch (err.type) {
                 case "bad-request":
                 case "server-error":
@@ -24,7 +24,7 @@ export function initSendPasswordResetTokenConnect(access: Raw): SendPasswordRese
                     return { type: "infra-error", err: err.detail }
             }
         },
-        unknown: (err: unknown): CheckPasswordResetSendingStatusRemoteError => ({
+        unknown: (err: unknown): CheckSendingStatusRemoteError => ({
             type: "infra-error",
             err: `${err}`,
         }),

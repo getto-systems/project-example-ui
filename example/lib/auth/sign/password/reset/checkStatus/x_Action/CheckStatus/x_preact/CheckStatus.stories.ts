@@ -6,7 +6,7 @@ import { CheckPasswordResetSendingStatusProps, View } from "./CheckStatus"
 
 import { initMockStartPasswordResetSessionResource } from "../mock"
 
-import { CheckPasswordResetSendingStatusState } from "../action"
+import { CheckSendingStatusState } from "../action"
 
 const checkStatusOptions = [
     "initial",
@@ -53,7 +53,7 @@ const template = storyTemplate<Props>((props) => {
         state: state(),
     })
 
-    function state(): CheckPasswordResetSendingStatusState {
+    function state(): CheckSendingStatusState {
         switch (props.checkStatus) {
             case "initial":
                 return { type: "initial-check-status" }

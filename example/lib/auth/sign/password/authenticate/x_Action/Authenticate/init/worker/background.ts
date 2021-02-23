@@ -10,7 +10,7 @@ import { AuthenticatePasswordProxyMessage, AuthenticatePasswordProxyResponse } f
 
 import { newCoreBackgroundMaterial } from "../common"
 
-export function newAuthenticatePasswordWorkerHandler(
+export function newAuthenticatePasswordHandler(
     post: Post<AuthenticatePasswordProxyResponse>,
 ): WorkerHandler<AuthenticatePasswordProxyMessage> {
     const material = newCoreBackgroundMaterial()

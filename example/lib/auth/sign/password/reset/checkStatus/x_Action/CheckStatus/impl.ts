@@ -2,66 +2,56 @@ import { ApplicationAbstractStateAction } from "../../../../../../../z_getto/app
 
 import { newAuthSignLinkResource } from "../../../../../common/searchParams/x_Action/Link/impl"
 
-import { checkPasswordResetSendingStatus } from "../../impl"
+import { checkSendingStatus } from "../../impl"
 
-import { CheckPasswordResetSendingStatusInfra } from "../../infra"
+import { CheckSendingStatusInfra } from "../../infra"
 
 import {
     CheckPasswordResetSendingStatusAction,
     CheckPasswordResetSendingStatusEntryPoint,
-    CheckPasswordResetSendingStatusMaterial,
-    CheckPasswordResetSendingStatusMaterialPod,
-    CheckPasswordResetSendingStatusState,
+    CheckSendingStatusMaterial,
+    CheckSendingStatusMaterialPod,
+    CheckSendingStatusState,
 } from "./action"
 
-import { CheckPasswordResetSendingStatusLocationInfo } from "../../method"
+import { CheckSendingStatusLocationInfo } from "../../method"
 
-export function toCheckPasswordResetSendingStatusEntryPoint(
+export function toEntryPoint(
     action: CheckPasswordResetSendingStatusAction,
 ): CheckPasswordResetSendingStatusEntryPoint {
     return {
         resource: { checkStatus: action, ...newAuthSignLinkResource() },
-        terminate: () => {
-            action.terminate()
-        },
+        terminate: () => action.terminate(),
     }
 }
 
-export type CheckPasswordResetSendingStatusBase = Readonly<{
-    checkStatus: CheckPasswordResetSendingStatusInfra
-}>
-
-export function initCheckPasswordResetSendingStatusAction(
-    base: CheckPasswordResetSendingStatusBase,
-    locationInfo: CheckPasswordResetSendingStatusLocationInfo,
-): CheckPasswordResetSendingStatusAction {
-    return initCheckPasswordResetSendingStatusAction_merge(
-        initCheckPasswordResetSendingStatusMaterialPod(base),
-        locationInfo,
-    )
-}
-export function initCheckPasswordResetSendingStatusAction_merge(
-    pod: CheckPasswordResetSendingStatusMaterialPod,
-    locationInfo: CheckPasswordResetSendingStatusLocationInfo,
-): CheckPasswordResetSendingStatusAction {
-    return new Action({
-        checkStatus: pod.initCheckStatus(locationInfo),
-    })
-}
-export function initCheckPasswordResetSendingStatusMaterialPod(
-    base: CheckPasswordResetSendingStatusBase,
-): CheckPasswordResetSendingStatusMaterialPod {
+export function initMaterial(
+    infra: CheckSendingStatusInfra,
+    locationInfo: CheckSendingStatusLocationInfo,
+): CheckSendingStatusMaterial {
+    const pod = initMaterialPod(infra)
     return {
-        initCheckStatus: checkPasswordResetSendingStatus(base.checkStatus),
+        checkStatus: pod.initCheckStatus(locationInfo),
     }
+}
+export function initMaterialPod(infra: CheckSendingStatusInfra): CheckSendingStatusMaterialPod {
+    return {
+        initCheckStatus: checkSendingStatus(infra),
+    }
+}
+
+export function initCheckSendingStatusAction(
+    material: CheckSendingStatusMaterial,
+): CheckPasswordResetSendingStatusAction {
+    return new Action(material)
 }
 
 class Action
-    extends ApplicationAbstractStateAction<CheckPasswordResetSendingStatusState>
+    extends ApplicationAbstractStateAction<CheckSendingStatusState>
     implements CheckPasswordResetSendingStatusAction {
-    material: CheckPasswordResetSendingStatusMaterial
+    material: CheckSendingStatusMaterial
 
-    constructor(material: CheckPasswordResetSendingStatusMaterial) {
+    constructor(material: CheckSendingStatusMaterial) {
         super()
         this.material = material
 

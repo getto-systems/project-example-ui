@@ -13,15 +13,11 @@ import { icon, spinner } from "../../../../../../../../x_preact/common/icon"
 import {
     CheckPasswordResetSendingStatusEntryPoint,
     CheckPasswordResetSendingStatusResource,
-    CheckPasswordResetSendingStatusState,
-    initialCheckPasswordResetSendingStatusState,
+    CheckSendingStatusState,
+    initialCheckSendingStatusState,
 } from "../action"
 
-import {
-    PasswordResetSendingStatus,
-    CheckPasswordResetSendingStatusError,
-    SendPasswordResetTokenError,
-} from "../../../data"
+import { SendingStatus, CheckSendingStatusError, SendTokenError } from "../../../data"
 
 export function CheckPasswordResetSendingStatus(
     entryPoint: CheckPasswordResetSendingStatusEntryPoint,
@@ -29,15 +25,12 @@ export function CheckPasswordResetSendingStatus(
     const resource = useEntryPoint(entryPoint)
     return h(View, <CheckPasswordResetSendingStatusProps>{
         ...resource,
-        state: useApplicationAction(
-            resource.checkStatus,
-            initialCheckPasswordResetSendingStatusState,
-        ),
+        state: useApplicationAction(resource.checkStatus, initialCheckSendingStatusState),
     })
 }
 
 export type CheckPasswordResetSendingStatusProps = CheckPasswordResetSendingStatusResource &
-    Readonly<{ state: CheckPasswordResetSendingStatusState }>
+    Readonly<{ state: CheckSendingStatusState }>
 export function View(props: CheckPasswordResetSendingStatusProps): VNode {
     switch (props.state.type) {
         case "initial-check-status":
@@ -65,7 +58,7 @@ export function View(props: CheckPasswordResetSendingStatusProps): VNode {
 
     type CheckStatusContent =
         | Readonly<{ type: "initial" }>
-        | Readonly<{ type: "retry"; status: PasswordResetSendingStatus }>
+        | Readonly<{ type: "retry"; status: SendingStatus }>
 
     function checkStatusMessage(content: CheckStatusContent): VNode {
         return loginBox(siteInfo(), {
@@ -110,7 +103,7 @@ export function View(props: CheckPasswordResetSendingStatusProps): VNode {
     }
 }
 
-function status(status: PasswordResetSendingStatus): VNodeContent {
+function status(status: SendingStatus): VNodeContent {
     if (!status.sending) {
         return html`<p>${spinner} トークン送信の準備をしています</p>`
     }
@@ -120,7 +113,7 @@ function sendTokenMessage(): VNodeContent {
     return html`<p>送信しURLからパスワードのリセットができます</p>`
 }
 
-function checkStatusError(err: CheckPasswordResetSendingStatusError): VNodeContent[] {
+function checkStatusError(err: CheckSendingStatusError): VNodeContent[] {
     switch (err.type) {
         case "empty-session-id":
             return ["パスワードリセットのためのセッションIDが取得できませんでした"]
@@ -141,7 +134,7 @@ function checkStatusError(err: CheckPasswordResetSendingStatusError): VNodeConte
             return ["ネットワークエラーによりステータスの取得に失敗しました", ...detail(err.err)]
     }
 }
-function sendTokenError(err: SendPasswordResetTokenError): VNodeContent[] {
+function sendTokenError(err: SendTokenError): VNodeContent[] {
     switch (err.type) {
         case "infra-error":
             return ["サーバーエラーによりリセットトークンの送信に失敗しました", ...detail(err.err)]

@@ -1,19 +1,16 @@
-import { CheckPasswordResetSendingStatusInfra } from "./infra"
+import { CheckSendingStatusInfra } from "./infra"
 
-import {
-    CheckPasswordResetSendingStatusLocationInfo,
-    CheckPasswordResetSendingStatusMethodPod,
-} from "./method"
+import { CheckSendingStatusLocationInfo, CheckSendingStatusMethodPod } from "./method"
 
-import { CheckPasswordResetSendingStatusEvent } from "./event"
+import { CheckSendingStatusEvent } from "./event"
 
-import { CheckPasswordResetSendingStatusError } from "./data"
+import { CheckSendingStatusError } from "./data"
 import { markResetSessionID, ResetSessionID } from "../kernel/data"
 import { authSignSearchKey_password_reset_sessionID } from "../../../common/searchParams/data"
 
-export function newCheckPasswordResetSendingStatusLocationInfo(
+export function initCheckSendingStatusLocationInfo(
     currentURL: URL,
-): CheckPasswordResetSendingStatusLocationInfo {
+): CheckSendingStatusLocationInfo {
     return {
         getPasswordResetSessionID: () => detectSessionID(currentURL),
     }
@@ -26,11 +23,9 @@ function detectSessionID(currentURL: URL): ResetSessionID {
 }
 
 interface CheckStatus {
-    (infra: CheckPasswordResetSendingStatusInfra): CheckPasswordResetSendingStatusMethodPod
+    (infra: CheckSendingStatusInfra): CheckSendingStatusMethodPod
 }
-export const checkPasswordResetSendingStatus: CheckStatus = (infra) => (locationInfo) => async (
-    post,
-) => {
+export const checkSendingStatus: CheckStatus = (infra) => (locationInfo) => async (post) => {
     const { getStatus, sendToken, config, wait } = infra
 
     const sessionID = locationInfo.getPasswordResetSessionID()
@@ -41,7 +36,7 @@ export const checkPasswordResetSendingStatus: CheckStatus = (infra) => (location
 
     type SendTokenState =
         | Readonly<{ type: "initial" }>
-        | Readonly<{ type: "failed"; err: CheckPasswordResetSendingStatusError }>
+        | Readonly<{ type: "failed"; err: CheckSendingStatusError }>
         | Readonly<{ type: "success" }>
 
     let sendTokenState: SendTokenState = { type: "initial" }
@@ -100,9 +95,7 @@ export const checkPasswordResetSendingStatus: CheckStatus = (infra) => (location
     }
 }
 
-export function checkPasswordResetSessionStatusEventHasDone(
-    event: CheckPasswordResetSendingStatusEvent,
-): boolean {
+export function checkSessionStatusEventHasDone(event: CheckSendingStatusEvent): boolean {
     switch (event.type) {
         case "succeed-to-send-token":
         case "failed-to-check-status":

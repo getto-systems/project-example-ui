@@ -2,10 +2,10 @@ import { initConnectRemoteAccess } from "../../../../../../../../z_getto/remote/
 import { RawRemote, RemoteError } from "../../../../../../../../z_getto/remote/infra"
 import { ResetSessionID } from "../../../../kernel/data"
 
-import { CheckPasswordResetSendingStatusRemoteError } from "../../../data"
+import { CheckSendingStatusRemoteError } from "../../../data"
 import {
-    GetPasswordResetSendingStatusRemote,
-    GetPasswordResetSendingStatusResponse,
+    GetSendingStatusRemote,
+    GetSendingStatusResponse,
 } from "../../../infra"
 
 type Raw = RawRemote<ResetSessionID, RawSessionStatus>
@@ -16,13 +16,13 @@ type RawSessionStatus =
 
 type SendingStatus = Readonly<{ sending: boolean }>
 
-export function initGetPasswordResetSendingStatusConnect(
+export function initGetSendingStatusConnect(
     access: Raw,
-): GetPasswordResetSendingStatusRemote {
+): GetSendingStatusRemote {
     return initConnectRemoteAccess(access, {
         message: (sessionID: ResetSessionID): ResetSessionID => sessionID,
-        value: (response: RawSessionStatus): GetPasswordResetSendingStatusResponse => response,
-        error: (err: RemoteError): CheckPasswordResetSendingStatusRemoteError => {
+        value: (response: RawSessionStatus): GetSendingStatusResponse => response,
+        error: (err: RemoteError): CheckSendingStatusRemoteError => {
             switch (err.type) {
                 case "invalid-password-reset":
                 case "bad-request":
@@ -36,7 +36,7 @@ export function initGetPasswordResetSendingStatusConnect(
                     return { type: "infra-error", err: err.detail }
             }
         },
-        unknown: (err: unknown): CheckPasswordResetSendingStatusRemoteError => ({
+        unknown: (err: unknown): CheckSendingStatusRemoteError => ({
             type: "infra-error",
             err: `${err}`,
         }),

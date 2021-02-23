@@ -9,7 +9,7 @@ import {
     RequestPasswordResetTokenProxyResponse,
 } from "./message"
 
-export function newRequestPasswordResetTokenWorkerHandler(
+export function newRequestPasswordResetTokenHandler(
     post: Post<RequestPasswordResetTokenProxyResponse>,
 ): WorkerHandler<RequestPasswordResetTokenProxyMessage> {
     const material = newCoreMaterial()

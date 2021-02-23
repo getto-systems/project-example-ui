@@ -6,11 +6,11 @@ import { newCoreForegroundInfra } from "./worker/foreground"
 
 import {
     initCoreBackgroundMaterial,
-    initCoreBackgroundPod,
+    initCoreBackgroundMaterialPod,
     initCoreForegroundMaterial,
 } from "../Core/impl"
 
-import { CoreBackgroundMaterial, CoreBackgroundPod, CoreForegroundMaterial } from "../Core/action"
+import { CoreBackgroundMaterial, CoreBackgroundMaterialPod, CoreForegroundMaterial } from "../Core/action"
 
 export function newCoreForegroundMaterial(
     webStorage: Storage,
@@ -21,8 +21,8 @@ export function newCoreForegroundMaterial(
     return initCoreForegroundMaterial(infra, locationInfo)
 }
 
-export function newCoreBackgroundPod(): CoreBackgroundPod {
-    return initCoreBackgroundPod(newCoreBackgroundInfra())
+export function newCoreBackgroundPod(): CoreBackgroundMaterialPod {
+    return initCoreBackgroundMaterialPod(newCoreBackgroundInfra())
 }
 export function newCoreBackgroundMaterial(currentLocation: Location): CoreBackgroundMaterial {
     const infra = newCoreBackgroundInfra()
