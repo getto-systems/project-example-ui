@@ -1,25 +1,22 @@
 import { ApplicationStateAction } from "../../../../../../../z_getto/application/action"
 
-import { ClearAuthnInfoMethod } from "../../method"
+import { ClearMethod } from "../../method"
 
-import { ClearAuthnInfoEvent } from "../../event"
+import { ClearEvent } from "../../event"
 
 export type LogoutResource = Readonly<{
     logout: LogoutAction
 }>
 
-export interface LogoutAction
-    extends ApplicationStateAction<LogoutState> {
+export interface LogoutAction extends ApplicationStateAction<LogoutState> {
     submit(): void
 }
 
 export type LogoutMaterial = Readonly<{
-    clear: ClearAuthnInfoMethod
+    clear: ClearMethod
 }>
 
-export type LogoutState =
-    | Readonly<{ type: "initial-logout" }>
-    | ClearAuthnInfoEvent
+export type LogoutState = Readonly<{ type: "initial-logout" }> | ClearEvent
 
 export const initialLogoutState: LogoutState = {
     type: "initial-logout",

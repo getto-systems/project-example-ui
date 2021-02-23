@@ -1,14 +1,14 @@
 import { ApplicationAbstractStateAction } from "../../../../../../../z_getto/application/impl"
 
-import { clearAuthnInfo } from "../../impl"
+import { clear } from "../../impl"
 
-import { ClearAuthnInfoInfra } from "../../infra"
+import { ClearInfra } from "../../infra"
 
 import { LogoutAction, LogoutState, LogoutMaterial } from "./action"
 
-export function initClearAuthnInfoAction(infra: ClearAuthnInfoInfra): LogoutAction {
+export function initLogoutAction(infra: ClearInfra): LogoutAction {
     return new Action({
-        clear: clearAuthnInfo(infra),
+        clear: clear(infra),
     })
 }
 

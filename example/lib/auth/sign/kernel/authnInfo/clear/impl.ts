@@ -1,11 +1,11 @@
-import { ClearAuthnInfoInfra } from "./infra"
+import { ClearInfra } from "./infra"
 
-import { ClearAuthnInfoMethod } from "./method"
+import { ClearMethod } from "./method"
 
 interface Clear {
-    (infra: ClearAuthnInfoInfra): ClearAuthnInfoMethod
+    (infra: ClearInfra): ClearMethod
 }
-export const clearAuthnInfo: Clear = (infra) => async (post) => {
+export const clear: Clear = (infra) => async (post) => {
     const { authnInfos } = infra
     const result = authnInfos.remove()
     if (!result.success) {
