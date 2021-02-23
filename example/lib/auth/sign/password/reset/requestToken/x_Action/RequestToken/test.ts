@@ -1,4 +1,4 @@
-import { initAsyncActionTester_legacy } from "../../../../../../../z_getto/application/testHelper"
+import { initAsyncActionTester_legacy, initSyncActionTestRunner } from "../../../../../../../z_getto/application/testHelper"
 import { standardBoardValueStore } from "../../../../../../../z_getto/board/input/x_Action/Input/testHelper"
 
 import { initRequestPasswordResetTokenCoreAction } from "./Core/impl"
@@ -17,6 +17,7 @@ import { RequestPasswordResetTokenCoreState } from "./Core/action"
 
 import { markBoardValue } from "../../../../../../../z_getto/board/kernel/data"
 import { markPasswordResetSessionID } from "../../../kernel/data"
+import { toRequestPasswordResetTokenAction } from "./impl"
 
 const VALID_LOGIN = { loginID: "login-id" } as const
 const SESSION_ID = "session-id" as const
@@ -99,6 +100,35 @@ describe("RequestPasswordResetToken", () => {
 
         expect(resource.form.loginID.input.get()).toEqual("")
     })
+
+    test("terminate", (done) => {
+        const { resource } = standardPasswordResetSessionResource()
+
+        const ignition = {
+            core: resource.core.ignition(),
+            form: resource.form.validate.ignition(),
+            loginID: resource.form.loginID.validate.ignition(),
+        }
+
+        const runner = initSyncActionTestRunner()
+
+        runner.addTestCase(
+            () => {
+                resource.terminate()
+                resource.form.loginID.input.set(markBoardValue("login-id"))
+            },
+            (stack) => {
+                // no input/validate event after terminate
+                expect(stack).toEqual([])
+            },
+        )
+
+        const handler = runner.run(done)
+        ignition.core.addStateHandler(handler)
+        ignition.form.addStateHandler(handler)
+        ignition.loginID.addStateHandler(handler)
+        resource.form.loginID.input.addInputHandler(() => handler("input"))
+    })
 })
 
 function standardPasswordResetSessionResource() {
@@ -122,7 +152,7 @@ function newTestPasswordResetSessionResource(
     remote: PasswordResetSessionTestRemoteAccess,
 ): RequestPasswordResetTokenAction {
     const config = standardConfig()
-    const action = {
+    const action = toRequestPasswordResetTokenAction({
         core: initRequestPasswordResetTokenCoreAction({
             request: {
                 ...remote,
@@ -134,7 +164,7 @@ function newTestPasswordResetSessionResource(
         form: initRequestPasswordResetTokenFormAction({
             stack: newBoardValidateStack(),
         }),
-    }
+    })
 
     action.form.loginID.input.linkStore(standardBoardValueStore())
 

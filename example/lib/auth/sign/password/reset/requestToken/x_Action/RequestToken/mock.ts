@@ -10,6 +10,7 @@ export function initMockRequestPasswordResetTokenResource(): RequestPasswordRese
         request: {
             core: initMockRequestPasswordResetTokenCoreAction(),
             form: initMockRequestPasswordResetTokenFormAction(),
+            terminate: () => null,
         },
         ...newAuthSignLinkResource(),
     }
