@@ -5,18 +5,6 @@ import {
     WorkerProxyCallResponse,
 } from "./message"
 
-type OutsideFeature = Readonly<{
-    currentScript: HTMLScriptElement | SVGScriptElement | null
-}>
-export function newWorker(feature: OutsideFeature): Worker {
-    const { currentScript } = feature
-    const src = currentScript?.getAttribute("src")
-    if (!src) {
-        throw new Error("invalid script src")
-    }
-    return new Worker(src.replace(/\.js$/, ".worker.js"))
-}
-
 export interface WorkerProxyContainer<M> {
     method<N, P, E>(method: N, map: WorkerProxyMessageMapper<N, M, P>): WorkerProxyMethod<N, P, E>
 }
