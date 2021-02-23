@@ -1,5 +1,4 @@
 import { newRenewAuthnInfo } from "../../../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/main"
-import { newAuthenticatePassword_proxy } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/core"
 import { newResetPassword_proxy } from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/main/core"
 import { newRequestPasswordResetToken_proxy } from "../../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/main/core"
 import { newCheckPasswordResetSendingStatus_proxy } from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/main/core"
@@ -9,7 +8,7 @@ import { initLoginViewLocationInfo, toAuthSignEntryPoint, View } from "../../imp
 import {
     AuthenticatePasswordProxy,
     newAuthenticatePasswordProxy,
-} from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/worker/foreground"
+} from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/init/worker/foreground"
 import {
     newRequestPasswordResetTokenProxy,
     RequestPasswordResetTokenProxy,
@@ -39,12 +38,7 @@ export function newWorkerForeground(feature: OutsideFeature): AuthSignEntryPoint
     const view: AuthSignAction = new View(initLoginViewLocationInfo(currentURL), {
         renew: () => newRenewAuthnInfo(webStorage, currentURL),
 
-        password_authenticate: () =>
-            newAuthenticatePassword_proxy(
-                webStorage,
-                currentURL,
-                proxy.password.authenticate.pod(),
-            ),
+        password_authenticate: () => proxy.password.authenticate.entryPoint(webStorage, currentURL),
         password_reset_requestToken: () =>
             newRequestPasswordResetToken_proxy(proxy.password.reset.requestToken.pod()),
         password_reset_checkStatus: () =>
@@ -91,7 +85,7 @@ type Proxy = Readonly<{
 function initProxy(webStorage: Storage, currentURL: URL, post: Post<ForegroundMessage>): Proxy {
     return {
         password: {
-            authenticate: newAuthenticatePasswordProxy(webStorage, (message) =>
+            authenticate: newAuthenticatePasswordProxy((message) =>
                 post({ type: "password-authenticate", message }),
             ),
             reset: {

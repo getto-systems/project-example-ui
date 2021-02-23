@@ -6,6 +6,8 @@ import {
 import { AuthSignLinkResource } from "../../../../common/searchParams/x_Action/Link/action"
 import {
     AuthenticatePasswordCoreAction,
+    AuthenticatePasswordCoreBackground,
+    AuthenticatePasswordCoreForeground,
     AuthenticatePasswordCoreState,
     initialAuthenticatePasswordCoreState,
 } from "./Core/action"
@@ -23,6 +25,13 @@ export interface AuthenticatePasswordAction extends ApplicationAction {
     readonly core: AuthenticatePasswordCoreAction
     readonly form: AuthenticatePasswordFormAction
 }
+
+export type AuthenticatePasswordForeground = Readonly<{
+    core: AuthenticatePasswordCoreForeground
+}>
+export type AuthenticatePasswordBackground = Readonly<{
+    core: AuthenticatePasswordCoreBackground
+}>
 
 export type AuthenticatePasswordResourceState = Readonly<{
     core: AuthenticatePasswordCoreState

@@ -1,6 +1,6 @@
 import {
     WorkerAbstractProxy,
-    WorkerProxy,
+    WorkerProxy_legacy,
 } from "../../../../../../../../../z_getto/application/worker/foreground"
 
 import {
@@ -11,7 +11,7 @@ import {
 
 import { RequestPasswordResetTokenCoreMaterial } from "../../Core/action"
 
-export type RequestPasswordResetTokenProxy = WorkerProxy<
+export type RequestPasswordResetTokenProxy = WorkerProxy_legacy<
     RequestPasswordResetTokenCoreMaterial,
     RequestPasswordResetTokenProxyMessage,
     RequestPasswordResetTokenProxyResponse

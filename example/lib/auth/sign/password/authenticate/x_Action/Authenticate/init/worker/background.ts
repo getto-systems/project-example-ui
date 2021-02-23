@@ -1,4 +1,6 @@
-import { newAuthenticatePasswordCoreBackground } from "../core"
+import { newAuthenticatePasswordInfra } from "../../../../init"
+
+import { AuthenticatePasswordCoreBackgroundBase } from "../../Core/impl"
 
 import { authenticatePasswordEventHasDone } from "../../../../impl"
 
@@ -6,14 +8,16 @@ import { WorkerHandler } from "../../../../../../../../z_getto/application/worke
 
 import { AuthenticatePasswordProxyMessage, AuthenticatePasswordProxyResponse } from "./message"
 
-export function newAuthenticatePasswordHandler(
-    post: Post<AuthenticatePasswordProxyResponse>
+import { newBackgroundMaterial } from "../common"
+
+export function newAuthenticatePasswordWorkerHandler(
+    post: Post<AuthenticatePasswordProxyResponse>,
 ): WorkerHandler<AuthenticatePasswordProxyMessage> {
-    const material = newAuthenticatePasswordCoreBackground()
+    const material = newBackgroundMaterial()
     return (message) => {
         switch (message.method) {
             case "authenticate":
-                material.authenticate(message.params.fields, (event) => {
+                material.core.authenticate(message.params.fields, (event) => {
                     post({
                         ...message,
                         done: authenticatePasswordEventHasDone(event),
@@ -22,6 +26,12 @@ export function newAuthenticatePasswordHandler(
                 })
                 return
         }
+    }
+}
+
+export function newBackgroundBase(): AuthenticatePasswordCoreBackgroundBase {
+    return {
+        authenticate: newAuthenticatePasswordInfra(),
     }
 }
 

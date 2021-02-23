@@ -26,11 +26,11 @@ import {
     toRenewAuthnInfoEntryPoint,
 } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/impl"
 import { initAuthenticatePasswordFormAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Form/impl"
-import { initAuthenticatePasswordCoreAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Core/impl"
+import { initAuthenticatePasswordCoreAction_byInfra } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Core/impl"
 import {
     toAuthenticatePasswordAction,
     toAuthenticatePasswordEntryPoint,
-} from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/impl"
+} from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/init/common"
 import {
     toRequestPasswordResetTokenAction,
     toRequestPasswordResetTokenEntryPoint,
@@ -459,7 +459,7 @@ function standardPasswordLoginEntryPoint(
 ) {
     return toAuthenticatePasswordEntryPoint(
         toAuthenticatePasswordAction({
-            core: initAuthenticatePasswordCoreAction(
+            core: initAuthenticatePasswordCoreAction_byInfra(
                 {
                     startContinuousRenew: {
                         apiCredentials,
@@ -479,7 +479,7 @@ function standardPasswordLoginEntryPoint(
                         },
                     },
                     authenticate: {
-                        login: initAuthenticatePasswordSimulate(simulateLogin, {
+                        authenticate: initAuthenticatePasswordSimulate(simulateLogin, {
                             wait_millisecond: 0,
                         }),
                         config: {
@@ -491,9 +491,7 @@ function standardPasswordLoginEntryPoint(
                 newGetSecureScriptPathLocationInfo(currentURL),
             ),
 
-            form: initAuthenticatePasswordFormAction({
-                stack: newBoardValidateStack(),
-            }),
+            form: initAuthenticatePasswordFormAction(),
         }),
     )
 }

@@ -8,7 +8,7 @@ import { AuthnInfo } from "../../kernel/authnInfo/kernel/data"
 import { AuthenticatePasswordFields, AuthenticatePasswordRemoteError } from "./data"
 
 export type AuthenticatePasswordInfra = Readonly<{
-    login: AuthenticatePasswordRemote
+    authenticate: AuthenticatePasswordRemote
     delayed: Delayed
     config: Readonly<{
         delay: DelayTime

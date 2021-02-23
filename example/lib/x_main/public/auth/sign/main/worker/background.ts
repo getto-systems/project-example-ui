@@ -1,4 +1,4 @@
-import { newAuthenticatePasswordHandler } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/worker/background"
+import { newAuthenticatePasswordWorkerHandler } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/init/worker/background"
 import { newRequestPasswordResetTokenHandler } from "../../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/main/worker/background"
 import { newCheckPasswordResetSendingStatusHandler } from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/main/worker/background"
 import { newResetPasswordHandler } from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/main/worker/background"
@@ -6,7 +6,7 @@ import { newResetPasswordHandler } from "../../../../../../auth/sign/password/re
 import { WorkerHandler } from "../../../../../../z_getto/application/worker/background"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
-import { AuthenticatePasswordProxyMessage } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/worker/message"
+import { AuthenticatePasswordProxyMessage } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/init/worker/message"
 import { RequestPasswordResetTokenProxyMessage } from "../../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/main/worker/message"
 import { CheckPasswordResetSendingStatusProxyMessage } from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/main/worker/message"
 import { ResetPasswordProxyMessage } from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/main/worker/message"
@@ -14,7 +14,7 @@ import { ResetPasswordProxyMessage } from "../../../../../../auth/sign/password/
 export function newWorkerBackground(worker: Worker): void {
     const handler: Handler = {
         password: {
-            authenticate: newAuthenticatePasswordHandler((response) =>
+            authenticate: newAuthenticatePasswordWorkerHandler((response) =>
                 postBackgroundMessage({ type: "password-authenticate", response }),
             ),
             reset: {

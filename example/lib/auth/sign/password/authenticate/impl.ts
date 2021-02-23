@@ -14,7 +14,7 @@ export const authenticatePassword: Authenticate = (infra) => async (fields, post
 
     post({ type: "try-to-login" })
 
-    const { login, config, delayed } = infra
+    const { authenticate: login, config, delayed } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const response = await delayed(login(fields.value), config.delay, () =>

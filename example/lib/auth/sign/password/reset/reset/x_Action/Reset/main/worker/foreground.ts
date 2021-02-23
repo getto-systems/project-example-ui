@@ -1,6 +1,6 @@
 import {
     WorkerAbstractProxy,
-    WorkerProxy,
+    WorkerProxy_legacy,
 } from "../../../../../../../../../z_getto/application/worker/foreground"
 
 import {
@@ -11,7 +11,7 @@ import {
 
 import { ResetPasswordCoreBackgroundPod } from "../../Core/action"
 
-export type ResetPasswordProxy = WorkerProxy<
+export type ResetPasswordProxy = WorkerProxy_legacy<
     ResetPasswordCoreBackgroundPod,
     ResetPasswordProxyMessage,
     ResetPasswordProxyResponse

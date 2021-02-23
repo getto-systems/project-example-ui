@@ -8,7 +8,10 @@ import {
 export interface WorkerProxyContainer<M> {
     method<N, P, E>(method: N, map: WorkerProxyMessageMapper<N, M, P>): WorkerProxyMethod<N, P, E>
 }
-export interface WorkerProxy<P, M, R> extends WorkerProxyContainer<M> {
+export interface WorkerProxy<M, R> extends WorkerProxyContainer<M> {
+    resolve(response: R): void
+}
+export interface WorkerProxy_legacy<P, M, R> extends WorkerProxyContainer<M> {
     pod(): P
     resolve(response: R): void
 }

@@ -24,13 +24,15 @@ import { initMemoryAuthnInfoRepository } from "../../../../kernel/authnInfo/kern
 import { newGetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/impl"
 import { delayed, wait } from "../../../../../../z_getto/infra/delayed/core"
 import { authenticatePasswordEventHasDone } from "../../impl"
-import { initAsyncActionTestRunner, initSyncActionTestRunner } from "../../../../../../z_getto/application/testHelper"
+import {
+    initAsyncActionTestRunner,
+    initSyncActionTestRunner,
+} from "../../../../../../z_getto/application/testHelper"
 import { initAuthenticatePasswordFormAction } from "./Form/impl"
-import { initAuthenticatePasswordCoreAction } from "./Core/impl"
+import { initAuthenticatePasswordCoreAction_byInfra } from "./Core/impl"
 import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
-import { newBoardValidateStack } from "../../../../../../z_getto/board/kernel/infra/stack"
 import { standardBoardValueStore } from "../../../../../../z_getto/board/input/x_Action/Input/testHelper"
-import { toAuthenticatePasswordAction } from "./impl"
+import { toAuthenticatePasswordAction } from "./init/common"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -244,7 +246,7 @@ type PasswordLoginTestRepository = Readonly<{
     authnInfos: AuthnInfoRepository
 }>
 type PasswordLoginTestRemoteAccess = Readonly<{
-    login: AuthenticatePasswordRemote
+    authenticate: AuthenticatePasswordRemote
     renew: RenewAuthnInfoRemote
 }>
 
@@ -256,7 +258,7 @@ function newTestPasswordLoginResource(
 ): AuthenticatePasswordAction {
     const config = standardConfig()
     const action = toAuthenticatePasswordAction({
-        core: initAuthenticatePasswordCoreAction(
+        core: initAuthenticatePasswordCoreAction_byInfra(
             {
                 startContinuousRenew: {
                     ...repository,
@@ -276,9 +278,7 @@ function newTestPasswordLoginResource(
             newGetSecureScriptPathLocationInfo(currentURL),
         ),
 
-        form: initAuthenticatePasswordFormAction({
-            stack: newBoardValidateStack(),
-        }),
+        form: initAuthenticatePasswordFormAction(),
     })
 
     action.form.loginID.input.linkStore(standardBoardValueStore())
@@ -321,7 +321,7 @@ function standardRepository(): PasswordLoginTestRepository {
 }
 function standardSimulator(): PasswordLoginTestRemoteAccess {
     return {
-        login: initAuthenticatePasswordSimulate(simulateLogin, {
+        authenticate: initAuthenticatePasswordSimulate(simulateLogin, {
             wait_millisecond: 0,
         }),
         renew: renewRemoteAccess(),
@@ -329,7 +329,7 @@ function standardSimulator(): PasswordLoginTestRemoteAccess {
 }
 function waitSimulator(): PasswordLoginTestRemoteAccess {
     return {
-        login: initAuthenticatePasswordSimulate(simulateLogin, {
+        authenticate: initAuthenticatePasswordSimulate(simulateLogin, {
             wait_millisecond: 3,
         }),
         renew: renewRemoteAccess(),

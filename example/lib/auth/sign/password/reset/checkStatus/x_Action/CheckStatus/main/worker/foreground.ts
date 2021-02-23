@@ -1,6 +1,6 @@
 import {
     WorkerAbstractProxy,
-    WorkerProxy,
+    WorkerProxy_legacy,
 } from "../../../../../../../../../z_getto/application/worker/foreground"
 
 import {
@@ -11,7 +11,7 @@ import {
 
 import { CheckPasswordResetSendingStatusMaterialPod } from "../../action"
 
-export type CheckPasswordResetSendingStatusProxy = WorkerProxy<
+export type CheckPasswordResetSendingStatusProxy = WorkerProxy_legacy<
     CheckPasswordResetSendingStatusMaterialPod,
     CheckPasswordResetSendingStatusProxyMessage,
     CheckPasswordResetSendingStatusProxyResponse
