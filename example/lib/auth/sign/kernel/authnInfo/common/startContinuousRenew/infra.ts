@@ -1,12 +1,12 @@
 import { ApiCredentialRepository } from "../../../../../../common/apiCredential/infra"
 import { Clock } from "../../../../../../z_getto/infra/clock/infra"
 import { DelayTime, IntervalTime } from "../../../../../../z_getto/infra/config/infra"
-import { AuthnInfoRepository, RenewAuthnInfoRemote } from "../../kernel/infra"
+import { AuthnInfoRepository, RenewRemote } from "../../kernel/infra"
 
-export type StartContinuousRenewAuthnInfoInfra = Readonly<{
+export type StartContinuousRenewInfra = Readonly<{
     apiCredentials: ApiCredentialRepository
     authnInfos: AuthnInfoRepository
-    renew: RenewAuthnInfoRemote
+    renew: RenewRemote
     clock: Clock
     config: Readonly<{
         interval: IntervalTime

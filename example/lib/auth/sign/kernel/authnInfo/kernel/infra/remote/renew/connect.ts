@@ -1,18 +1,10 @@
 import { initConnectRemoteAccess } from "../../../../../../../../z_getto/remote/connect"
 
 import { RawRemote, RemoteError } from "../../../../../../../../z_getto/remote/infra"
-import { RenewAuthnInfoRemote, RenewAuthnInfoResponse } from "../../../infra"
+import { RenewRemote, RenewResponse } from "../../../infra"
 
-import {
-    markAuthAt,
-    markAuthnNonce,
-    RenewAuthnInfoRemoteError,
-    AuthnNonce,
-} from "../../../data"
-import {
-    markApiNonce,
-    markApiRoles,
-} from "../../../../../../../../common/apiCredential/data"
+import { markAuthAt, markAuthnNonce, RenewRemoteError, AuthnNonce } from "../../../data"
+import { markApiNonce, markApiRoles } from "../../../../../../../../common/apiCredential/data"
 
 type Raw = RawRemote<AuthnNonce, RawAuthnInfo>
 type RawAuthnInfo = Readonly<{
@@ -20,10 +12,10 @@ type RawAuthnInfo = Readonly<{
     api: Readonly<{ apiNonce: string; apiRoles: string[] }>
 }>
 
-export function initRenewAuthnInfoConnect(access: Raw): RenewAuthnInfoRemote {
+export function initRenewConnect(access: Raw): RenewRemote {
     return initConnectRemoteAccess(access, {
         message: (nonce: AuthnNonce): AuthnNonce => nonce,
-        value: (response: RawAuthnInfo): RenewAuthnInfoResponse => {
+        value: (response: RawAuthnInfo): RenewResponse => {
             return {
                 auth: {
                     authnNonce: markAuthnNonce(response.authnNonce),
@@ -35,7 +27,7 @@ export function initRenewAuthnInfoConnect(access: Raw): RenewAuthnInfoRemote {
                 },
             }
         },
-        error: (err: RemoteError): RenewAuthnInfoRemoteError => {
+        error: (err: RemoteError): RenewRemoteError => {
             switch (err.type) {
                 case "invalid-ticket":
                 case "bad-request":
@@ -49,7 +41,7 @@ export function initRenewAuthnInfoConnect(access: Raw): RenewAuthnInfoRemote {
                     return { type: "infra-error", err: err.detail }
             }
         },
-        unknown: (err: unknown): RenewAuthnInfoRemoteError => ({
+        unknown: (err: unknown): RenewRemoteError => ({
             type: "infra-error",
             err: `${err}`,
         }),

@@ -3,12 +3,12 @@ import { ApplicationAbstractStateAction } from "../../../../../../../z_getto/app
 import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
 import { forceRenewAuthnInfo, renewAuthnInfo } from "../../impl"
 import {
-    forceStartContinuousRenewAuthnInfo,
-    startContinuousRenewAuthnInfo,
+    forceStartContinuousRenew,
+    startContinuousRenew,
 } from "../../../common/startContinuousRenew/impl"
 
 import { RenewAuthnInfoInfra } from "../../infra"
-import { StartContinuousRenewAuthnInfoInfra } from "../../../common/startContinuousRenew/infra"
+import { StartContinuousRenewInfra } from "../../../common/startContinuousRenew/infra"
 import { GetSecureScriptPathInfra } from "../../../../../common/secureScriptPath/get/infra"
 
 import {
@@ -34,7 +34,7 @@ export function toRenewAuthnInfoEntryPoint(action: RenewAuthnInfoAction): RenewA
 
 export type RenewAuthnInfoBase = Readonly<{
     renew: RenewAuthnInfoInfra
-    startContinuousRenew: StartContinuousRenewAuthnInfoInfra
+    startContinuousRenew: StartContinuousRenewInfra
     getSecureScriptPath: GetSecureScriptPathInfra
 }>
 
@@ -45,8 +45,8 @@ export function initRenewAuthnInfoAction(
     return new Action({
         renew: renewAuthnInfo(infra.renew),
         forceRenew: forceRenewAuthnInfo(infra.renew),
-        startContinuousRenew: startContinuousRenewAuthnInfo(infra.startContinuousRenew),
-        forceStartContinuousRenew: forceStartContinuousRenewAuthnInfo(infra.startContinuousRenew),
+        startContinuousRenew: startContinuousRenew(infra.startContinuousRenew),
+        forceStartContinuousRenew: forceStartContinuousRenew(infra.startContinuousRenew),
         getSecureScriptPath: getSecureScriptPath(infra.getSecureScriptPath)(locationInfo),
     })
 }

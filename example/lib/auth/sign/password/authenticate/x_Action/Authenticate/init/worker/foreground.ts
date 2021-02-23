@@ -1,6 +1,6 @@
 import { newCoreForegroundMaterial } from "../common"
 
-import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/main"
+import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/init"
 import { newGetSecureScriptPathInfra } from "../../../../../../common/secureScriptPath/get/main"
 
 import { toAction, toEntryPoint } from "../../impl"

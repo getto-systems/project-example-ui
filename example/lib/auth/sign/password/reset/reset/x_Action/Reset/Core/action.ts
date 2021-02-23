@@ -2,10 +2,10 @@ import { ApplicationStateAction } from "../../../../../../../../z_getto/applicat
 
 import { ResetMethod, ResetPod } from "../../../method"
 import { GetSecureScriptPathMethod } from "../../../../../../common/secureScriptPath/get/method"
-import { StartContinuousRenewAuthnInfoMethod } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/method"
+import { StartContinuousRenewMethod } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/method"
 
 import { ResetEvent } from "../../../event"
-import { StartContinuousRenewAuthnInfoEvent } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/event"
+import { StartContinuousRenewEvent } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/event"
 
 import { ResetFields } from "../../../data"
 import {
@@ -22,7 +22,7 @@ export interface CoreAction extends ApplicationStateAction<CoreState> {
 export type CoreMaterial = CoreForegroundMaterial & CoreBackgroundMaterial
 
 export type CoreForegroundMaterial = Readonly<{
-    startContinuousRenew: StartContinuousRenewAuthnInfoMethod
+    startContinuousRenew: StartContinuousRenewMethod
     getSecureScriptPath: GetSecureScriptPathMethod
 }>
 export type CoreBackgroundMaterial = Readonly<{
@@ -35,7 +35,7 @@ export type CoreBackgroundMaterialPod = Readonly<{
 export type CoreState =
     | Readonly<{ type: "initial-reset" }>
     | Exclude<ResetEvent, { type: "succeed-to-reset" }>
-    | Exclude<StartContinuousRenewAuthnInfoEvent, { type: "succeed-to-start-continuous-renew" }>
+    | Exclude<StartContinuousRenewEvent, { type: "succeed-to-start-continuous-renew" }>
     | Readonly<{ type: "try-to-load"; scriptPath: SecureScriptPath }>
     | Readonly<{ type: "load-error"; err: LoadSecureScriptError }>
 

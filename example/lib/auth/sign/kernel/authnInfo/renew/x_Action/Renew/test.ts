@@ -1,5 +1,5 @@
 import { initStaticClock, StaticClock } from "../../../../../../../z_getto/infra/clock/simulate"
-import { initRenewAuthnInfoSimulate } from "../../../kernel/infra/remote/renew/simulate"
+import { initRenewSimulate } from "../../../kernel/infra/remote/renew/simulate"
 
 import { Clock } from "../../../../../../../z_getto/infra/clock/infra"
 
@@ -12,8 +12,8 @@ import { initMemoryApiCredentialRepository } from "../../../../../../../common/a
 import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
 import {
     AuthnInfoRepository,
-    RenewAuthnInfoRemote,
-    RenewAuthnInfoResult,
+    RenewRemote,
+    RenewResult,
 } from "../../../kernel/infra"
 import { delayed } from "../../../../../../../z_getto/infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../../kernel/infra/repository/authnInfo/memory"
@@ -412,7 +412,7 @@ type RenewCredentialTestRepository = Readonly<{
     authnInfos: AuthnInfoRepository
 }>
 type RenewCredentialTestRemoteAccess = Readonly<{
-    renew: RenewAuthnInfoRemote
+    renew: RenewRemote
 }>
 
 function newTestRenewAuthnInfoResource(
@@ -504,9 +504,9 @@ function waitSimulator(): RenewCredentialTestRemoteAccess {
     }
 }
 
-function renewRemoteAccess(waitTime: WaitTime): RenewAuthnInfoRemote {
+function renewRemoteAccess(waitTime: WaitTime): RenewRemote {
     let renewedCount = 0
-    return initRenewAuthnInfoSimulate((): RenewAuthnInfoResult => {
+    return initRenewSimulate((): RenewResult => {
         // 初回 renew と continuous renew 一回目の 2回だけ正しく返す
         // 以降は invalid-ticket でタイマーを止める
         if (renewedCount > 1) {

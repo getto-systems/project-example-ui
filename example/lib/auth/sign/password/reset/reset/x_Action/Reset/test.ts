@@ -1,5 +1,5 @@
 import { initStaticClock, StaticClock } from "../../../../../../../z_getto/infra/clock/simulate"
-import { initRenewAuthnInfoSimulate } from "../../../../../kernel/authnInfo/kernel/infra/remote/renew/simulate"
+import { initRenewSimulate } from "../../../../../kernel/authnInfo/kernel/infra/remote/renew/simulate"
 import { initResetSimulate } from "../../infra/remote/reset/simulate"
 
 import { Clock } from "../../../../../../../z_getto/infra/clock/infra"
@@ -16,8 +16,8 @@ import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCrede
 import { ApiCredentialRepository } from "../../../../../../../common/apiCredential/infra"
 import {
     AuthnInfoRepository,
-    RenewAuthnInfoRemote,
-    RenewAuthnInfoResult,
+    RenewRemote,
+    RenewResult,
 } from "../../../../../kernel/authnInfo/kernel/infra"
 import { initMemoryAuthnInfoRepository } from "../../../../../kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
 import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
@@ -256,7 +256,7 @@ type PasswordResetTestRepository = Readonly<{
 }>
 type PasswordResetTestRemoteAccess = Readonly<{
     reset: ResetRemote
-    renew: RenewAuthnInfoRemote
+    renew: RenewRemote
 }>
 
 function newPasswordResetTestResource(
@@ -368,10 +368,10 @@ function simulateReset(): ResetResult {
         },
     }
 }
-function renewRemoteAccess(): RenewAuthnInfoRemote {
+function renewRemoteAccess(): RenewRemote {
     let renewed = false
-    return initRenewAuthnInfoSimulate(
-        (): RenewAuthnInfoResult => {
+    return initRenewSimulate(
+        (): RenewResult => {
             if (renewed) {
                 // 最初の一回だけ renew して、あとは renew を cancel するために null を返す
                 return { success: false, err: { type: "invalid-ticket" } }
