@@ -17,6 +17,6 @@ export interface ApplicationStateIgnition<S> extends ApplicationStateSubscriber<
     ignite(): void
 }
 export interface ApplicationStateSubscriber<S> {
-    addStateHandler(handler: ApplicationStateHandler<S>): void
-    removeStateHandler(target: ApplicationStateHandler<S>): void
+    subscribe(handler: ApplicationStateHandler<S>): void
+    unsubscribe(target: ApplicationStateHandler<S>): void
 }

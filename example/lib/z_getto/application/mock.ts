@@ -5,10 +5,10 @@ import { ApplicationStateHandler } from "./data"
 export class MockStateAction_simple<S> implements ApplicationStateAction<S> {
     ignition(): ApplicationStateIgnition<S> {
         return {
-            addStateHandler() {
+            subscribe() {
                 // mock では特に何もしない
             },
-            removeStateHandler() {
+            unsubscribe() {
                 // mock では特に何もしない
             },
             ignite() {
@@ -29,13 +29,13 @@ export class MockAction<S> implements ApplicationStateAction<S> {
 
     ignition(): ApplicationStateIgnition<S> {
         return {
-            addStateHandler: (handler: ApplicationStateHandler<S>) => {
+            subscribe: (handler: ApplicationStateHandler<S>) => {
                 if (this.state !== null) {
                     handler(this.state)
                 }
                 this.handler = handler
             },
-            removeStateHandler: () => {
+            unsubscribe: () => {
                 this.handler = null
             },
             ignite() {

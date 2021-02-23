@@ -30,7 +30,7 @@ describe("ValidateBoard", () => {
             },
         )
 
-        ignition.addStateHandler(checker.run(done))
+        ignition.subscribe(checker.run(done))
     })
 
     test("validate; invalid input", (done) => {
@@ -53,7 +53,7 @@ describe("ValidateBoard", () => {
             },
         )
 
-        ignition.addStateHandler(checker.run(done))
+        ignition.subscribe(checker.run(done))
     })
 })
 

@@ -8,7 +8,7 @@ export function EntryPoint({ resource, terminate }: MoveToNextVersionEntryPoint)
     const { nextVersion } = resource
     try {
         const ignition = nextVersion.ignition()
-        ignition.addStateHandler(handleState)
+        ignition.subscribe(handleState)
         ignition.ignite()
     } catch (err) {
         handleError(err)

@@ -27,7 +27,7 @@ describe("RequestPasswordResetToken", () => {
         const { resource } = standardPasswordResetSessionResource()
 
         const ignition = resource.core.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
 
@@ -52,7 +52,7 @@ describe("RequestPasswordResetToken", () => {
         const { resource } = waitPasswordResetSessionResource()
 
         const ignition = resource.core.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
 
@@ -77,7 +77,7 @@ describe("RequestPasswordResetToken", () => {
         const { resource } = standardPasswordResetSessionResource()
 
         const ignition = resource.core.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         // try to request token without fields
         resource.core.submit(resource.form.validate.get())
@@ -124,9 +124,9 @@ describe("RequestPasswordResetToken", () => {
         )
 
         const handler = runner.run(done)
-        ignition.core.addStateHandler(handler)
-        ignition.form.addStateHandler(handler)
-        ignition.loginID.addStateHandler(handler)
+        ignition.core.subscribe(handler)
+        ignition.form.subscribe(handler)
+        ignition.loginID.subscribe(handler)
         resource.form.loginID.input.addInputHandler(() => handler("input"))
     })
 })

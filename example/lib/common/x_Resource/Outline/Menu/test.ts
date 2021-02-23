@@ -26,7 +26,7 @@ describe("BreadcrumbList", () => {
         const { resource } = standardMenuResource()
 
         const ignition = resource.breadcrumbList.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         ignition.ignite()
 
@@ -47,7 +47,7 @@ describe("BreadcrumbList", () => {
         const { resource } = unknownMenuResource()
 
         const ignition = resource.breadcrumbList.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         ignition.ignite()
 
@@ -77,7 +77,7 @@ describe("Menu", () => {
         const { resource } = standardMenuResource()
 
         const ignition = resource.menu.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         ignition.ignite()
 
@@ -124,7 +124,7 @@ describe("Menu", () => {
         const { resource } = emptyMenuResource()
 
         const ignition = resource.menu.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         ignition.ignite()
 
@@ -172,7 +172,7 @@ describe("Menu", () => {
         const { resource } = expandMenuResource()
 
         const ignition = resource.menu.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         ignition.ignite()
 
@@ -219,7 +219,7 @@ describe("Menu", () => {
         const { repository, resource } = standardMenuResource()
 
         const ignition = resource.menu.ignition()
-        ignition.addStateHandler(initNoopTester())
+        ignition.subscribe(initNoopTester())
 
         ignition.ignite()
 
@@ -230,7 +230,7 @@ describe("Menu", () => {
                     if (last.type === "succeed-to-load") {
                         resource.menu.terminate()
 
-                        ignition.addStateHandler(initFirstToggleTester())
+                        ignition.subscribe(initFirstToggleTester())
                         resource.menu.toggle(last.menu, [markOutlineMenuCategoryLabel("DOCUMENT")])
                     }
                 }
@@ -261,7 +261,7 @@ describe("Menu", () => {
                     if (last.type === "succeed-to-toggle") {
                         resource.menu.terminate()
 
-                        ignition.addStateHandler(initSecondToggleTester())
+                        ignition.subscribe(initSecondToggleTester())
                         resource.menu.toggle(last.menu, [
                             markOutlineMenuCategoryLabel("DOCUMENT"),
                             markOutlineMenuCategoryLabel("DETAIL"),
@@ -299,7 +299,7 @@ describe("Menu", () => {
         const { resource } = developmentDocumentMenuResource()
 
         const ignition = resource.menu.ignition()
-        ignition.addStateHandler(initTester())
+        ignition.subscribe(initTester())
 
         ignition.ignite()
 

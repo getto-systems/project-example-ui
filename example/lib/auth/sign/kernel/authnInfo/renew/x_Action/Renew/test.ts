@@ -40,7 +40,7 @@ describe("RenewAuthInfo", () => {
         const { repository, clock, resource } = instantRenewCredentialResource()
 
         const ignition = resource.renew.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -99,7 +99,7 @@ describe("RenewAuthInfo", () => {
         const { repository, clock, resource } = instantRenewCredentialResource()
 
         const ignition = resource.renew.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -164,7 +164,7 @@ describe("RenewAuthInfo", () => {
         const { repository, clock, resource } = standardRenewCredentialResource()
 
         const ignition = resource.renew.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -221,7 +221,7 @@ describe("RenewAuthInfo", () => {
         const { repository, clock, resource } = waitRenewCredentialResource()
 
         const ignition = resource.renew.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -279,7 +279,7 @@ describe("RenewAuthInfo", () => {
         const { repository, resource } = emptyRenewCredentialResource()
 
         const ignition = resource.renew.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -324,7 +324,7 @@ describe("RenewAuthInfo", () => {
         const { resource } = standardRenewCredentialResource()
 
         const ignition = resource.renew.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         resource.renew.loadError({ type: "infra-error", err: "load error" })
 

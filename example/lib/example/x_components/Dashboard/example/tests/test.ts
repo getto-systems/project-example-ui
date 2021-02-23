@@ -25,7 +25,7 @@ describe("Example", () => {
         const { resource } = standardResource()
 
         const ignition = resource.example.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 

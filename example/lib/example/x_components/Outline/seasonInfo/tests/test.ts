@@ -17,7 +17,7 @@ describe("SeasonInfo", () => {
         const { seasonInfo } = standardSeasonInfoComponent()
 
         const ignition = seasonInfo.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
@@ -51,7 +51,7 @@ describe("SeasonInfo", () => {
         const { seasonInfo } = emptySeasonInfoComponent()
 
         const ignition = seasonInfo.ignition()
-        ignition.addStateHandler(stateHandler())
+        ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
