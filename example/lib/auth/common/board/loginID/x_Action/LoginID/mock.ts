@@ -1,5 +1,5 @@
 import { initMockInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/mock"
-import { MockAction_simple } from "../../../../../../z_getto/application/mock"
+import { MockStateAction_simple } from "../../../../../../z_getto/application/mock"
 
 import { LoginIDBoardFieldAction, ValidateLoginIDAction, ValidateLoginIDState } from "./action"
 
@@ -14,7 +14,7 @@ export function initMockLoginIDBoardFieldAction(): LoginIDBoardFieldAction {
     }
 }
 
-class Action extends MockAction_simple<ValidateLoginIDState> implements ValidateLoginIDAction {
+class Action extends MockStateAction_simple<ValidateLoginIDState> implements ValidateLoginIDAction {
     readonly name = "loginID"
 
     get(): BoardConvertResult<LoginID> {

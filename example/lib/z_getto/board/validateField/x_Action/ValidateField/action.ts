@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../application/action"
+import { ApplicationStateAction } from "../../../../application/action"
 
 import { ConvertBoardFieldMethod, ValidateBoardFieldMethod } from "../../method"
 
@@ -6,7 +6,7 @@ import { BoardFieldValidateResult, boardFieldValidateResult_ok } from "../../dat
 import { BoardConvertResult } from "../../../kernel/data"
 
 export interface ValidateBoardFieldAction<T, E>
-    extends ApplicationAction<ValidateBoardFieldState<E>> {
+    extends ApplicationStateAction<ValidateBoardFieldState<E>> {
     readonly name: string
     get(): BoardConvertResult<T>
     check(): void

@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../z_getto/application/action"
+import { ApplicationStateAction } from "../../../../z_getto/application/action"
 
 import { FindCurrentVersion } from "../../../version/local/action"
 
@@ -11,7 +11,7 @@ export type CurrentVersionMaterial = Readonly<{
     findCurrentVersion: FindCurrentVersion
 }>
 
-export type CurrentVersionComponent = ApplicationAction<CurrentVersionComponentState>
+export type CurrentVersionComponent = ApplicationStateAction<CurrentVersionComponentState>
 
 export type CurrentVersionComponentState =
     | Readonly<{ type: "initial-current-version" }>

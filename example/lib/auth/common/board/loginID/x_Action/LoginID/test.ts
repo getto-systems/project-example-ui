@@ -17,7 +17,9 @@ describe("LoginIDBoard", () => {
         const checker = initSyncActionChecker_simple<
             ValidateBoardFieldState<ValidateLoginIDError>
         >()
-        resource.validate.addStateHandler(checker.handler)
+
+        const ignition = resource.validate.ignition()
+        ignition.addStateHandler(checker.handler)
 
         // valid input
         resource.input.set(markBoardValue("valid"))
@@ -34,7 +36,9 @@ describe("LoginIDBoard", () => {
         const checker = initSyncActionChecker_simple<
             ValidateBoardFieldState<ValidateLoginIDError>
         >()
-        resource.validate.addStateHandler(checker.handler)
+
+        const ignition = resource.validate.ignition()
+        ignition.addStateHandler(checker.handler)
 
         // empty
         resource.input.set(markBoardValue(""))
@@ -51,7 +55,9 @@ describe("LoginIDBoard", () => {
         const checker = initSyncActionChecker_simple<
             ValidateBoardFieldState<ValidateLoginIDError>
         >()
-        resource.validate.addStateHandler(checker.handler)
+
+        const ignition = resource.validate.ignition()
+        ignition.addStateHandler(checker.handler)
 
         // too-long
         resource.input.set(markBoardValue("a".repeat(100 + 1)))
@@ -68,7 +74,9 @@ describe("LoginIDBoard", () => {
         const checker = initSyncActionChecker_simple<
             ValidateBoardFieldState<ValidateLoginIDError>
         >()
-        resource.validate.addStateHandler(checker.handler)
+
+        const ignition = resource.validate.ignition()
+        ignition.addStateHandler(checker.handler)
 
         // just max-length
         resource.input.set(markBoardValue("a".repeat(100)))

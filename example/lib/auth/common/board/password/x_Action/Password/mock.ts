@@ -1,5 +1,5 @@
 import { initMockInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/mock"
-import { MockAction_simple } from "../../../../../../z_getto/application/mock"
+import { MockStateAction_simple } from "../../../../../../z_getto/application/mock"
 
 import {
     CheckPasswordCharacterAction,
@@ -24,7 +24,7 @@ export function initMockPasswordBoardFieldAction(
     }
 }
 
-class Action extends MockAction_simple<ValidatePasswordState> implements ValidatePasswordAction {
+class Action extends MockStateAction_simple<ValidatePasswordState> implements ValidatePasswordAction {
     readonly name = "password"
 
     get(): BoardConvertResult<Password> {

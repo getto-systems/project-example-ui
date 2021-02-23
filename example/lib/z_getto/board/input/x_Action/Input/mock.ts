@@ -33,4 +33,8 @@ class Action implements InputBoardValueAction {
     clear() {
         // mock では特に何もしない
     }
+
+    terminate() {
+        // mock では特に何もしない
+    }
 }

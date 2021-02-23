@@ -3,9 +3,9 @@ import { ApplicationHook, ApplicationStateHandler } from "./data"
 export interface StateHandler<S> {
     post(state: S): void
 
-    add(handler: ApplicationStateHandler<S>): void
-    remove(target: ApplicationStateHandler<S>): void
-    removeAll(): void
+    subscribe(handler: ApplicationStateHandler<S>): void
+    unsubscribe(target: ApplicationStateHandler<S>): void
+    clear(): void
 }
 
 export interface IgniteHook {

@@ -39,9 +39,10 @@ describe("RenewAuthInfo", () => {
     test("instant load", (done) => {
         const { repository, clock, resource } = instantRenewCredentialResource()
 
-        resource.renew.addStateHandler(stateHandler())
+        const ignition = resource.renew.ignition()
+        ignition.addStateHandler(stateHandler())
 
-        resource.renew.ignite()
+        ignition.ignite()
 
         function stateHandler(): Post<RenewAuthnInfoState> {
             const stack: RenewAuthnInfoState[] = []
@@ -65,7 +66,7 @@ describe("RenewAuthInfo", () => {
                             {
                                 type: "try-to-instant-load",
                                 scriptPath: markSecureScriptPath(
-                                    "https://secure.example.com/index.js"
+                                    "https://secure.example.com/index.js",
                                 ),
                             },
                             { type: "succeed-to-start-continuous-renew" },
@@ -97,9 +98,10 @@ describe("RenewAuthInfo", () => {
     test("instant load failed", (done) => {
         const { repository, clock, resource } = instantRenewCredentialResource()
 
-        resource.renew.addStateHandler(stateHandler())
+        const ignition = resource.renew.ignition()
+        ignition.addStateHandler(stateHandler())
 
-        resource.renew.ignite()
+        ignition.ignite()
 
         function stateHandler(): Post<RenewAuthnInfoState> {
             const stack: RenewAuthnInfoState[] = []
@@ -128,14 +130,14 @@ describe("RenewAuthInfo", () => {
                             {
                                 type: "try-to-instant-load",
                                 scriptPath: markSecureScriptPath(
-                                    "https://secure.example.com/index.js"
+                                    "https://secure.example.com/index.js",
                                 ),
                             },
                             { type: "try-to-renew" },
                             {
                                 type: "try-to-load",
                                 scriptPath: markSecureScriptPath(
-                                    "https://secure.example.com/index.js"
+                                    "https://secure.example.com/index.js",
                                 ),
                             },
                         ])
@@ -161,9 +163,10 @@ describe("RenewAuthInfo", () => {
     test("renew stored credential", (done) => {
         const { repository, clock, resource } = standardRenewCredentialResource()
 
-        resource.renew.addStateHandler(stateHandler())
+        const ignition = resource.renew.ignition()
+        ignition.addStateHandler(stateHandler())
 
-        resource.renew.ignite()
+        ignition.ignite()
 
         function stateHandler(): Post<RenewAuthnInfoState> {
             const stack: RenewAuthnInfoState[] = []
@@ -190,7 +193,7 @@ describe("RenewAuthInfo", () => {
                             {
                                 type: "try-to-load",
                                 scriptPath: markSecureScriptPath(
-                                    "https://secure.example.com/index.js"
+                                    "https://secure.example.com/index.js",
                                 ),
                             },
                         ])
@@ -217,9 +220,10 @@ describe("RenewAuthInfo", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitRenewCredentialResource()
 
-        resource.renew.addStateHandler(stateHandler())
+        const ignition = resource.renew.ignition()
+        ignition.addStateHandler(stateHandler())
 
-        resource.renew.ignite()
+        ignition.ignite()
 
         function stateHandler(): Post<RenewAuthnInfoState> {
             const stack: RenewAuthnInfoState[] = []
@@ -247,7 +251,7 @@ describe("RenewAuthInfo", () => {
                             {
                                 type: "try-to-load",
                                 scriptPath: markSecureScriptPath(
-                                    "https://secure.example.com/index.js"
+                                    "https://secure.example.com/index.js",
                                 ),
                             },
                         ])
@@ -274,9 +278,10 @@ describe("RenewAuthInfo", () => {
         // empty credential
         const { repository, resource } = emptyRenewCredentialResource()
 
-        resource.renew.addStateHandler(stateHandler())
+        const ignition = resource.renew.ignition()
+        ignition.addStateHandler(stateHandler())
 
-        resource.renew.ignite()
+        ignition.ignite()
 
         function stateHandler(): Post<RenewAuthnInfoState> {
             const stack: RenewAuthnInfoState[] = []
@@ -318,7 +323,8 @@ describe("RenewAuthInfo", () => {
     test("load error", (done) => {
         const { resource } = standardRenewCredentialResource()
 
-        resource.renew.addStateHandler(stateHandler())
+        const ignition = resource.renew.ignition()
+        ignition.addStateHandler(stateHandler())
 
         resource.renew.loadError({ type: "infra-error", err: "load error" })
 
@@ -413,7 +419,7 @@ function newTestRenewAuthnInfoResource(
     currentURL: URL,
     repository: RenewCredentialTestRepository,
     remote: RenewCredentialTestRemoteAccess,
-    clock: Clock
+    clock: Clock,
 ): RenewAuthnInfoResource {
     const config = standardConfig()
     return toRenewAuthnInfoEntryPoint(
@@ -436,8 +442,8 @@ function newTestRenewAuthnInfoResource(
                     config: config.location,
                 },
             },
-            newGetSecureScriptPathLocationInfo(currentURL)
-        )
+            newGetSecureScriptPathLocationInfo(currentURL),
+        ),
     ).resource
 }
 

@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../../../../z_getto/application/impl"
 
 import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
 import { forceRenewAuthnInfo, renewAuthnInfo } from "../../impl"
@@ -52,7 +52,7 @@ export function initRenewAuthnInfoAction(
 }
 
 class Action
-    extends ApplicationAbstractAction<RenewAuthnInfoState>
+    extends ApplicationAbstractStateAction<RenewAuthnInfoState>
     implements RenewAuthnInfoAction {
     material: RenewAuthnInfoMaterial
 

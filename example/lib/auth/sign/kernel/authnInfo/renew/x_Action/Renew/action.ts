@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../../../../z_getto/application/action"
+import { ApplicationStateAction } from "../../../../../../../z_getto/application/action"
 
 import { GetSecureScriptPathMethod } from "../../../../../common/secureScriptPath/get/method"
 import { ForceRenewAuthnInfoMethod, RenewAuthnInfoMethod } from "../../method"
@@ -23,7 +23,7 @@ export type RenewAuthnInfoResource = Readonly<{
     renew: RenewAuthnInfoAction
 }>
 
-export interface RenewAuthnInfoAction extends ApplicationAction<RenewAuthnInfoState> {
+export interface RenewAuthnInfoAction extends ApplicationStateAction<RenewAuthnInfoState> {
     succeedToInstantLoad(): void
     failedToInstantLoad(): void
     loadError(err: LoadSecureScriptError): void

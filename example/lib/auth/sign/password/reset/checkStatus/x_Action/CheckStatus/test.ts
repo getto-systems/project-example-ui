@@ -24,9 +24,10 @@ describe("CheckPasswordResetSendingStatus", () => {
     test("valid session-id", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
-        resource.addStateHandler(initTester())
+        const ignition = resource.ignition()
+        ignition.addStateHandler(initTester())
 
-        resource.ignite()
+        ignition.ignite()
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -43,9 +44,10 @@ describe("CheckPasswordResetSendingStatus", () => {
         // wait for send token check limit
         const { resource } = longSendingPasswordResetSessionResource()
 
-        resource.addStateHandler(initTester())
+        const ignition = resource.ignition()
+        ignition.addStateHandler(initTester())
 
-        resource.ignite()
+        ignition.ignite()
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -69,9 +71,10 @@ describe("CheckPasswordResetSendingStatus", () => {
     test("check without session id", (done) => {
         const { resource } = noSessionIDPasswordResetSessionResource()
 
-        resource.addStateHandler(initTester())
+        const ignition = resource.ignition()
+        ignition.addStateHandler(initTester())
 
-        resource.ignite()
+        ignition.ignite()
 
         function initTester() {
             return initAsyncTester()((stack) => {

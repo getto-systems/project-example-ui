@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../../z_getto/application/action"
+import { ApplicationStateAction } from "../../../../../z_getto/application/action"
 
 import { LoadOutlineBreadcrumbListAction } from "../../../../../auth/permission/outline/load/action"
 
@@ -11,7 +11,7 @@ export type BreadcrumbListMaterial = Readonly<{
     breadcrumbList: LoadOutlineBreadcrumbListAction
 }>
 
-export type BreadcrumbListComponent = ApplicationAction<BreadcrumbListComponentState>
+export type BreadcrumbListComponent = ApplicationStateAction<BreadcrumbListComponentState>
 
 export type BreadcrumbListComponentState =
     | Readonly<{ type: "initial-breadcrumb-list" }>

@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../z_getto/application/impl"
 
 import {
     NextVersionComponentFactory,
@@ -11,7 +11,7 @@ export const initNextVersionComponent: NextVersionComponentFactory = (material) 
     new Component(material)
 
 class Component
-    extends ApplicationAbstractAction<NextVersionComponentState>
+    extends ApplicationAbstractStateAction<NextVersionComponentState>
     implements NextVersionComponent {
     material: NextVersionMaterial
 

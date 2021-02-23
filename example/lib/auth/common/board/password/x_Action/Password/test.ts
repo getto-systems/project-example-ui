@@ -13,7 +13,9 @@ describe("PasswordBoard", () => {
         const checker = initSyncActionChecker_simple<
             ValidateBoardFieldState<ValidatePasswordError>
         >()
-        resource.validate.addStateHandler(checker.handler)
+
+        const ignition = resource.validate.ignition()
+        ignition.addStateHandler(checker.handler)
 
         // valid input
         resource.input.set(markBoardValue("valid"))
@@ -30,7 +32,9 @@ describe("PasswordBoard", () => {
         const checker = initSyncActionChecker_simple<
             ValidateBoardFieldState<ValidatePasswordError>
         >()
-        resource.validate.addStateHandler(checker.handler)
+
+        const ignition = resource.validate.ignition()
+        ignition.addStateHandler(checker.handler)
 
         // empty
         resource.input.set(markBoardValue(""))
@@ -47,7 +51,9 @@ describe("PasswordBoard", () => {
         const checker = initSyncActionChecker_simple<
             ValidateBoardFieldState<ValidatePasswordError>
         >()
-        resource.validate.addStateHandler(checker.handler)
+
+        const ignition = resource.validate.ignition()
+        ignition.addStateHandler(checker.handler)
 
         // too-long
         resource.input.set(markBoardValue("a".repeat(72 + 1)))
@@ -64,7 +70,9 @@ describe("PasswordBoard", () => {
         const checker = initSyncActionChecker_simple<
             ValidateBoardFieldState<ValidatePasswordError>
         >()
-        resource.validate.addStateHandler(checker.handler)
+        
+        const ignition = resource.validate.ignition()
+        ignition.addStateHandler(checker.handler)
 
         // just max-length
         resource.input.set(markBoardValue("a".repeat(72)))
@@ -81,7 +89,9 @@ describe("PasswordBoard", () => {
         const checker = initSyncActionChecker_simple<
             ValidateBoardFieldState<ValidatePasswordError>
         >()
-        resource.validate.addStateHandler(checker.handler)
+
+        const ignition = resource.validate.ignition()
+        ignition.addStateHandler(checker.handler)
 
         // too-long : "あ"(UTF8) is 3 bytes character
         resource.input.set(markBoardValue("あ".repeat(24) + "a"))
@@ -98,7 +108,9 @@ describe("PasswordBoard", () => {
         const checker = initSyncActionChecker_simple<
             ValidateBoardFieldState<ValidatePasswordError>
         >()
-        resource.validate.addStateHandler(checker.handler)
+
+        const ignition = resource.validate.ignition()
+        ignition.addStateHandler(checker.handler)
 
         // just max-length : "あ"(UTF8) is 3 bytes character
         resource.input.set(markBoardValue("あ".repeat(24)))

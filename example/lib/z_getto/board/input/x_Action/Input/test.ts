@@ -9,9 +9,9 @@ describe("InputBoardValue", () => {
     test("get / set / clear; store linked", (done) => {
         const { action, store } = standardResource()
 
-        const checker = initSyncActionTestRunner<BoardValue>()
-
         action.linkStore(store)
+
+        const checker = initSyncActionTestRunner<BoardValue>()
 
         checker.addTestCase(
             () => {
@@ -19,7 +19,6 @@ describe("InputBoardValue", () => {
             },
             (stack) => {
                 expect(stack).toEqual(["value"])
-                expect(action.get()).toEqual("value")
             },
         )
 
@@ -29,7 +28,6 @@ describe("InputBoardValue", () => {
             },
             (stack) => {
                 expect(stack).toEqual([""])
-                expect(action.get()).toEqual("")
             },
         )
 
@@ -40,28 +38,39 @@ describe("InputBoardValue", () => {
     test("get / set / clear; no store linked", (done) => {
         const { action } = standardResource()
 
-        const checker = initSyncActionTestRunner<BoardValue>()
+        // no linked store
 
-        // no store linked
-        // action.linkStore(store)
+        const checker = initSyncActionTestRunner<BoardValue>()
 
         checker.addTestCase(
             () => {
                 action.set(markBoardValue("value"))
             },
             (stack) => {
-                expect(stack).toEqual([])
-                expect(action.get()).toEqual("")
+                // event triggered, got empty value
+                expect(stack).toEqual([""])
             },
         )
 
+        const handler = checker.run(done)
+        action.addInputHandler(() => handler(action.get()))
+    })
+
+    test("terminate", (done) => {
+        const { action, store } = standardResource()
+
+        action.linkStore(store)
+
+        const checker = initSyncActionTestRunner<BoardValue>()
+
         checker.addTestCase(
             () => {
-                action.clear()
+                action.terminate()
+                action.set(markBoardValue("value"))
             },
             (stack) => {
+                // no event after terminate
                 expect(stack).toEqual([])
-                expect(action.get()).toEqual("")
             },
         )
 

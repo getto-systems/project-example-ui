@@ -52,6 +52,7 @@ describe("PasswordAuthenticate", () => {
         const { repository, clock, resource } = standardPasswordLoginResource()
 
         const checker = initAsyncRunner()
+        const ignition = resource.core.ignition()
 
         checker.addTestCase(
             () => {
@@ -82,7 +83,7 @@ describe("PasswordAuthenticate", () => {
             },
         )
 
-        resource.core.addStateHandler(checker.run(done))
+        ignition.addStateHandler(checker.run(done))
     })
 
     test("submit valid login-id and password; with delayed", (done) => {
@@ -90,6 +91,7 @@ describe("PasswordAuthenticate", () => {
         const { repository, clock, resource } = waitPasswordLoginResource()
 
         const checker = initAsyncRunner()
+        const ignition = resource.core.ignition()
 
         checker.addTestCase(
             () => {
@@ -121,13 +123,14 @@ describe("PasswordAuthenticate", () => {
             },
         )
 
-        resource.core.addStateHandler(checker.run(done))
+        ignition.addStateHandler(checker.run(done))
     })
 
     test("submit without fields", (done) => {
         const { repository, resource } = standardPasswordLoginResource()
 
         const checker = initAsyncRunner()
+        const ignition = resource.core.ignition()
 
         checker.addTestCase(
             () => {
@@ -145,7 +148,7 @@ describe("PasswordAuthenticate", () => {
             },
         )
 
-        resource.core.addStateHandler(checker.run(done))
+        ignition.addStateHandler(checker.run(done))
     })
 
     test("clear", () => {
@@ -163,6 +166,7 @@ describe("PasswordAuthenticate", () => {
         const { resource } = standardPasswordLoginResource()
 
         const checker = initAsyncRunner()
+        const ignition = resource.core.ignition()
 
         checker.addTestCase(
             () => {
@@ -178,7 +182,7 @@ describe("PasswordAuthenticate", () => {
             },
         )
 
-        resource.core.addStateHandler(checker.run(done))
+        ignition.addStateHandler(checker.run(done))
     })
 })
 

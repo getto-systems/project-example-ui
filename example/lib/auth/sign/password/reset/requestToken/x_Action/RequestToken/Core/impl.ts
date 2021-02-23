@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../../../../../z_getto/application/impl"
 
 import { requestPasswordResetToken } from "../../../impl"
 
@@ -38,7 +38,7 @@ export function initRequestPasswordResetTokenCoreMaterial(
 }
 
 class Action
-    extends ApplicationAbstractAction<RequestPasswordResetTokenCoreState>
+    extends ApplicationAbstractStateAction<RequestPasswordResetTokenCoreState>
     implements RequestPasswordResetTokenCoreAction {
     material: RequestPasswordResetTokenCoreMaterial
 

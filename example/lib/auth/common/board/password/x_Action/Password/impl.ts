@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../../../z_getto/application/impl"
 
 import { initValidateBoardFieldAction } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/impl"
 import { newInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/impl"
@@ -72,7 +72,7 @@ const EMPTY: ValidatePasswordError[] = ["empty"]
 const TOO_LONG: ValidatePasswordError[] = ["too-long"]
 
 class CheckAction
-    extends ApplicationAbstractAction<PasswordCharacterState>
+    extends ApplicationAbstractStateAction<PasswordCharacterState>
     implements CheckPasswordCharacterAction {
     password: PasswordGetter
     material: CheckPasswordCharacterMaterial

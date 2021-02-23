@@ -1,6 +1,6 @@
 import { useEffect, useErrorBoundary, useLayoutEffect, useState } from "preact/hooks"
 
-import { ApplicationAction } from "../../z_getto/application/action"
+import { ApplicationStateAction } from "../../z_getto/application/action"
 import { NotifyComponent } from "../../availability/x_Resource/Error/Notify/component"
 
 export function useEntryPoint<R>({ resource, terminate }: EntryPoint<R>): R {
@@ -30,13 +30,14 @@ export function useDocumentTitle(title: string): void {
     }, [])
 }
 
-export function useApplicationAction<S>(action: ApplicationAction<S>, initial: S): S {
+export function useApplicationAction<S>(action: ApplicationStateAction<S>, initial: S): S {
     const [state, setState] = useState(initial)
     useLayoutEffect(() => {
-        action.addStateHandler(setState)
-        action.ignite()
+        const ignition = action.ignition()
+        ignition.addStateHandler(setState)
+        ignition.ignite()
         return () => {
-            action.removeStateHandler(setState)
+            ignition.removeStateHandler(setState)
         }
     }, [])
     return state

@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../../../../z_getto/application/impl"
 
 import { clearAuthnInfo } from "../../impl"
 
@@ -12,7 +12,7 @@ export function initClearAuthnInfoAction(infra: ClearAuthnInfoInfra): LogoutActi
     })
 }
 
-class Action extends ApplicationAbstractAction<LogoutState> implements LogoutAction {
+class Action extends ApplicationAbstractStateAction<LogoutState> implements LogoutAction {
     material: LogoutMaterial
 
     constructor(material: LogoutMaterial) {

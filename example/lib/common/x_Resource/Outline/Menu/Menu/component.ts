@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../../z_getto/application/action"
+import { ApplicationStateAction } from "../../../../../z_getto/application/action"
 
 import { LoadOutlineMenuAction } from "../../../../../auth/permission/outline/load/action"
 
@@ -11,7 +11,7 @@ export type MenuMaterial = Readonly<{
     menu: LoadOutlineMenuAction
 }>
 
-export interface MenuComponent extends ApplicationAction<MenuComponentState> {
+export interface MenuComponent extends ApplicationStateAction<MenuComponentState> {
     toggle(menu: OutlineMenu, path: OutlineMenuCategoryPath): void
 }
 

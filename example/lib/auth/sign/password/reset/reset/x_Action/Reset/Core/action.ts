@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../../../../../z_getto/application/action"
+import { ApplicationStateAction } from "../../../../../../../../z_getto/application/action"
 
 import { ResetPasswordMethod, ResetPasswordPod } from "../../../method"
 import { GetSecureScriptPathMethod } from "../../../../../../common/secureScriptPath/get/method"
@@ -14,7 +14,7 @@ import {
 } from "../../../../../../common/secureScriptPath/get/data"
 import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
 
-export interface ResetPasswordCoreAction extends ApplicationAction<ResetPasswordCoreState> {
+export interface ResetPasswordCoreAction extends ApplicationStateAction<ResetPasswordCoreState> {
     submit(fields: BoardConvertResult<PasswordResetFields>): void
     loadError(err: LoadSecureScriptError): void
 }

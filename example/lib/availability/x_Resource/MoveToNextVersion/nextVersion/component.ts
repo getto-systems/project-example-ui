@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../z_getto/application/action"
+import { ApplicationStateAction } from "../../../../z_getto/application/action"
 
 import { Find } from "../../../nextVersion/action"
 
@@ -11,7 +11,7 @@ export type NextVersionMaterial = Readonly<{
     find: Find
 }>
 
-export type NextVersionComponent = ApplicationAction<NextVersionComponentState>
+export type NextVersionComponent = ApplicationStateAction<NextVersionComponentState>
 
 export type NextVersionComponentState =
     | Readonly<{ type: "initial-next-version" }>

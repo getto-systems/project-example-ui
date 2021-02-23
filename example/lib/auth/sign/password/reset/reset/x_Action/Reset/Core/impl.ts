@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../../../../../z_getto/application/impl"
 
 import { resetPassword } from "../../../impl"
 import { getSecureScriptPath } from "../../../../../../common/secureScriptPath/get/impl"
@@ -73,7 +73,7 @@ export function initResetPasswordCoreBackgroundPod(
 }
 
 class Action
-    extends ApplicationAbstractAction<ResetPasswordCoreState>
+    extends ApplicationAbstractStateAction<ResetPasswordCoreState>
     implements ResetPasswordCoreAction {
     material: ResetPasswordCoreMaterial
 

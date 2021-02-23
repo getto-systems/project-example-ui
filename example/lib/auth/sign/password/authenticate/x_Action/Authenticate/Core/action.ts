@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../../../../z_getto/application/action"
+import { ApplicationStateAction } from "../../../../../../../z_getto/application/action"
 
 import { AuthenticatePasswordMethod } from "../../../method"
 import { GetSecureScriptPathMethod } from "../../../../../common/secureScriptPath/get/method"
@@ -15,7 +15,7 @@ import { AuthenticatePasswordFields } from "../../../data"
 import { BoardConvertResult } from "../../../../../../../z_getto/board/kernel/data"
 
 export interface AuthenticatePasswordCoreAction
-    extends ApplicationAction<AuthenticatePasswordCoreState> {
+    extends ApplicationStateAction<AuthenticatePasswordCoreState> {
     submit(fields: BoardConvertResult<AuthenticatePasswordFields>): void
     loadError(err: LoadSecureScriptError): void
 }
