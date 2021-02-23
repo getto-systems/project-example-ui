@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../../../../../z_getto/application/action"
+import { ApplicationStateAction } from "../../../../../../../../z_getto/application/action"
 
 import { RequestPasswordResetTokenMethod } from "../../../method"
 
@@ -8,7 +8,7 @@ import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel
 import { PasswordResetRequestFields } from "../../../data"
 
 export interface RequestPasswordResetTokenCoreAction
-    extends ApplicationAction<RequestPasswordResetTokenCoreState> {
+    extends ApplicationStateAction<RequestPasswordResetTokenCoreState> {
     submit(fields: BoardConvertResult<PasswordResetRequestFields>): void
 }
 

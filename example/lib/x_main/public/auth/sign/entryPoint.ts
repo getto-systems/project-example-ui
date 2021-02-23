@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../z_getto/application/action"
+import { ApplicationStateAction } from "../../../../z_getto/application/action"
 import { RenewAuthnInfoEntryPoint } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/action"
 import { AuthenticatePasswordEntryPoint } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/action"
 import { RequestPasswordResetTokenEntryPoint } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/action"
@@ -27,7 +27,7 @@ export interface AuthSignViewLocationInfo {
     getAuthSignViewType(): AuthSignViewType
 }
 
-export interface AuthSignAction extends ApplicationAction<AuthSignActionState> {
+export interface AuthSignAction extends ApplicationStateAction<AuthSignActionState> {
     error(err: string): void
 }
 

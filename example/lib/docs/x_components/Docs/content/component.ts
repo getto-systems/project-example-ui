@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../z_getto/application/action"
+import { ApplicationStateAction } from "../../../../z_getto/application/action"
 
 import { LoadContent } from "../../../content/action"
 
@@ -11,7 +11,7 @@ export type ContentMaterial = Readonly<{
     loadDocument: LoadContent
 }>
 
-export type ContentComponent = ApplicationAction<ContentComponentState>
+export type ContentComponent = ApplicationStateAction<ContentComponentState>
 
 export type ContentComponentState =
     | Readonly<{ type: "initial-content" }>

@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../../../../z_getto/application/impl"
 
 import { startContinuousRenewAuthnInfo } from "../../../../../kernel/authnInfo/common/startContinuousRenew/impl"
 import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
@@ -71,7 +71,7 @@ export function initAuthenticatePasswordCoreBackground(
 }
 
 class Action
-    extends ApplicationAbstractAction<AuthenticatePasswordCoreState>
+    extends ApplicationAbstractStateAction<AuthenticatePasswordCoreState>
     implements AuthenticatePasswordCoreAction {
     material: AuthenticatePasswordCoreMaterial
 

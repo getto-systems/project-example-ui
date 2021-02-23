@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../../../../z_getto/application/impl"
 
 import { newAuthSignLinkResource } from "../../../../../common/searchParams/x_Action/Link/impl"
 
@@ -57,7 +57,7 @@ export function initCheckPasswordResetSendingStatusMaterialPod(
 }
 
 class Action
-    extends ApplicationAbstractAction<CheckPasswordResetSendingStatusState>
+    extends ApplicationAbstractStateAction<CheckPasswordResetSendingStatusState>
     implements CheckPasswordResetSendingStatusAction {
     material: CheckPasswordResetSendingStatusMaterial
 

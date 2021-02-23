@@ -7,8 +7,9 @@ export function EntryPoint({ resource, terminate }: MoveToNextVersionEntryPoint)
     // /${version}/index.html とかで実行する
     const { nextVersion } = resource
     try {
-        nextVersion.addStateHandler(handleState)
-        nextVersion.ignite()
+        const ignition = nextVersion.ignition()
+        ignition.addStateHandler(handleState)
+        ignition.ignite()
     } catch (err) {
         handleError(err)
     }

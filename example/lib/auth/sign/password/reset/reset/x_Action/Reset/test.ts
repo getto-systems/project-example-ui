@@ -50,7 +50,8 @@ describe("RegisterPassword", () => {
     test("submit valid login-id and password", (done) => {
         const { repository, clock, resource } = standardPasswordResetResource()
 
-        resource.core.addStateHandler(initTester())
+        const ignition = resource.core.ignition()
+        ignition.addStateHandler(initTester())
 
         resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
         resource.form.password.input.set(markBoardValue(VALID_LOGIN.password))
@@ -80,7 +81,8 @@ describe("RegisterPassword", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitPasswordResetResource()
 
-        resource.core.addStateHandler(initTester())
+        const ignition = resource.core.ignition()
+        ignition.addStateHandler(initTester())
 
         resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
         resource.form.password.input.set(markBoardValue(VALID_LOGIN.password))
@@ -110,11 +112,10 @@ describe("RegisterPassword", () => {
     test("submit without fields", (done) => {
         const { repository, resource } = standardPasswordResetResource()
 
-        resource.core.addStateHandler(initTester())
+        const ignition = resource.core.ignition()
+        ignition.addStateHandler(initTester())
 
         // try to reset without fields
-        //resource.loginIDField.set(markInputValue(VALID_LOGIN.loginID))
-        //resource.passwordField.set(markInputValue(VALID_LOGIN.password))
 
         resource.core.submit(resource.form.validate.get())
 
@@ -132,7 +133,8 @@ describe("RegisterPassword", () => {
     test("submit without resetToken", (done) => {
         const { repository, resource } = emptyResetTokenPasswordResetResource()
 
-        resource.core.addStateHandler(initTester())
+        const ignition = resource.core.ignition()
+        ignition.addStateHandler(initTester())
 
         resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
         resource.form.password.input.set(markBoardValue(VALID_LOGIN.password))
@@ -164,7 +166,8 @@ describe("RegisterPassword", () => {
     test("load error", (done) => {
         const { resource } = standardPasswordResetResource()
 
-        resource.core.addStateHandler(initTester())
+        const ignition = resource.core.ignition()
+        ignition.addStateHandler(initTester())
 
         resource.core.loadError({ type: "infra-error", err: "load error" })
 

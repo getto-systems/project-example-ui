@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../application/impl"
+import { ApplicationAbstractStateAction } from "../../../../application/impl"
 
 import { convertBoard, validateBoard, ValidateBoardEmbed } from "../../impl"
 
@@ -19,7 +19,7 @@ export function initValidateBoardAction<N extends string, T>(
 }
 
 class Action<T>
-    extends ApplicationAbstractAction<ValidateBoardState>
+    extends ApplicationAbstractStateAction<ValidateBoardState>
     implements ValidateBoardAction<T> {
     material: ValidateBoardMaterial<T>
 

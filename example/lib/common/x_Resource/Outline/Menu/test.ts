@@ -5,7 +5,11 @@ import {
     initOutlineMenuAction,
     initOutlineActionLocationInfo,
 } from "../../../../auth/permission/outline/load/impl"
-import { OutlineMenuExpand, OutlineMenuExpandRepository, OutlineMenuTree } from "../../../../auth/permission/outline/load/infra"
+import {
+    OutlineMenuExpand,
+    OutlineMenuExpandRepository,
+    OutlineMenuTree,
+} from "../../../../auth/permission/outline/load/infra"
 import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"
 import { initMemoryOutlineMenuExpandRepository } from "../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/memory"
 import { initAsyncActionTester_legacy } from "../../../../z_getto/application/testHelper"
@@ -21,9 +25,10 @@ describe("BreadcrumbList", () => {
     test("load breadcrumb", (done) => {
         const { resource } = standardMenuResource()
 
-        resource.breadcrumbList.addStateHandler(initTester())
+        const ignition = resource.breadcrumbList.ignition()
+        ignition.addStateHandler(initTester())
 
-        resource.breadcrumbList.ignite()
+        ignition.ignite()
 
         function initTester() {
             return initAsyncBreadcrumbListTester()((stack) => {
@@ -41,9 +46,10 @@ describe("BreadcrumbList", () => {
     test("load empty breadcrumb; unknown menu target", (done) => {
         const { resource } = unknownMenuResource()
 
-        resource.breadcrumbList.addStateHandler(initTester())
+        const ignition = resource.breadcrumbList.ignition()
+        ignition.addStateHandler(initTester())
 
-        resource.breadcrumbList.ignite()
+        ignition.ignite()
 
         function initTester() {
             return initAsyncBreadcrumbListTester()((stack) => {
@@ -70,9 +76,10 @@ describe("Menu", () => {
     test("load menu", (done) => {
         const { resource } = standardMenuResource()
 
-        resource.menu.addStateHandler(initTester())
+        const ignition = resource.menu.ignition()
+        ignition.addStateHandler(initTester())
 
-        resource.menu.ignite()
+        ignition.ignite()
 
         function initTester() {
             return initAsyncMenuTester()((stack) => {
@@ -116,9 +123,10 @@ describe("Menu", () => {
     test("load menu; empty roles", (done) => {
         const { resource } = emptyMenuResource()
 
-        resource.menu.addStateHandler(initTester())
+        const ignition = resource.menu.ignition()
+        ignition.addStateHandler(initTester())
 
-        resource.menu.ignite()
+        ignition.ignite()
 
         function initTester() {
             return initAsyncMenuTester()((stack) => {
@@ -163,9 +171,10 @@ describe("Menu", () => {
     test("load menu; saved expands", (done) => {
         const { resource } = expandMenuResource()
 
-        resource.menu.addStateHandler(initTester())
+        const ignition = resource.menu.ignition()
+        ignition.addStateHandler(initTester())
 
-        resource.menu.ignite()
+        ignition.ignite()
 
         function initTester() {
             return initAsyncMenuTester()((stack) => {
@@ -209,8 +218,10 @@ describe("Menu", () => {
     test("load menu; toggle expands", (done) => {
         const { repository, resource } = standardMenuResource()
 
-        resource.menu.addStateHandler(initNoopTester())
-        resource.menu.ignite()
+        const ignition = resource.menu.ignition()
+        ignition.addStateHandler(initNoopTester())
+
+        ignition.ignite()
 
         function initNoopTester() {
             return initAsyncMenuTester()((stack) => {
@@ -219,7 +230,7 @@ describe("Menu", () => {
                     if (last.type === "succeed-to-load") {
                         resource.menu.terminate()
 
-                        resource.menu.addStateHandler(initFirstToggleTester())
+                        ignition.addStateHandler(initFirstToggleTester())
                         resource.menu.toggle(last.menu, [markOutlineMenuCategoryLabel("DOCUMENT")])
                     }
                 }
@@ -250,7 +261,7 @@ describe("Menu", () => {
                     if (last.type === "succeed-to-toggle") {
                         resource.menu.terminate()
 
-                        resource.menu.addStateHandler(initSecondToggleTester())
+                        ignition.addStateHandler(initSecondToggleTester())
                         resource.menu.toggle(last.menu, [
                             markOutlineMenuCategoryLabel("DOCUMENT"),
                             markOutlineMenuCategoryLabel("DETAIL"),
@@ -287,9 +298,10 @@ describe("Menu", () => {
     test("load menu; development document", (done) => {
         const { resource } = developmentDocumentMenuResource()
 
-        resource.menu.addStateHandler(initTester())
+        const ignition = resource.menu.ignition()
+        ignition.addStateHandler(initTester())
 
-        resource.menu.ignite()
+        ignition.ignite()
 
         function initTester() {
             return initAsyncMenuTester()((stack) => {
@@ -313,7 +325,7 @@ describe("Menu", () => {
                                     "deployment",
                                     "/1.0.0/docs/development/deployment.html",
                                     false,
-                                    0
+                                    0,
                                 ),
                             ]),
                         ],
@@ -337,7 +349,7 @@ describe("Menu", () => {
                                     "deployment",
                                     "/1.0.0/docs/development/deployment.html",
                                     false,
-                                    0
+                                    0,
                                 ),
                             ]),
                         ],
@@ -368,7 +380,7 @@ describe("Menu", () => {
         path: string[],
         isExpand: boolean,
         badgeCount: number,
-        children: MenuNode[]
+        children: MenuNode[],
     ): MenuNode {
         return {
             type: "category",
@@ -384,7 +396,7 @@ describe("Menu", () => {
         icon: string,
         href: string,
         isActive: boolean,
-        badgeCount: number
+        badgeCount: number,
     ): MenuNode {
         return {
             type: "item",
@@ -438,7 +450,7 @@ type Repository = Readonly<{
 
 function newTestMenuResource(
     locationInfo: LoadOutlineActionLocationInfo,
-    repository: Repository
+    repository: Repository,
 ): MenuResource {
     const menuTree = standardMenuTree()
 
@@ -457,13 +469,13 @@ function newTestMenuResource(
 function standardLocationInfo(): LoadOutlineActionLocationInfo {
     return initOutlineActionLocationInfo(
         standardVersion(),
-        new URL("https://example.com/1.0.0/index.html")
+        new URL("https://example.com/1.0.0/index.html"),
     )
 }
 function unknownLocationInfo(): LoadOutlineActionLocationInfo {
     return initOutlineActionLocationInfo(
         standardVersion(),
-        new URL("https://example.com/1.0.0/unknown.html")
+        new URL("https://example.com/1.0.0/unknown.html"),
     )
 }
 function standardVersion(): string {
@@ -572,7 +584,7 @@ function standardRemoteAccess() {
                     "/docs/index.html": 20,
                 },
             }),
-            { wait_millisecond: 0 }
+            { wait_millisecond: 0 },
         ),
     }
 }

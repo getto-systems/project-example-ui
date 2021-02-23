@@ -5,20 +5,20 @@ export function newStateHandler<S>(): StateHandler<S> {
     return new Handler()
 }
 
-class Handler<S> {
+class Handler<S> implements StateHandler<S> {
     handlers: ApplicationStateHandler<S>[] = []
 
     post(state: S) {
         this.handlers.forEach((post) => post(state))
     }
 
-    add(handler: ApplicationStateHandler<S>): void {
+    subscribe(handler: ApplicationStateHandler<S>): void {
         this.handlers = [...this.handlers, handler]
     }
-    remove(target: ApplicationStateHandler<S>): void {
+    unsubscribe(target: ApplicationStateHandler<S>): void {
         this.handlers = this.handlers.filter((handler) => handler !== target)
     }
-    removeAll(): void {
+    clear(): void {
         this.handlers = []
     }
 }

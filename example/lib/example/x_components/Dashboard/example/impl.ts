@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../z_getto/application/impl"
 
 import {
     ExampleMaterial,
@@ -10,7 +10,7 @@ import {
 export const initExampleComponent: ExampleComponentFactory = (material) => new Component(material)
 
 class Component
-    extends ApplicationAbstractAction<ExampleComponentState>
+    extends ApplicationAbstractStateAction<ExampleComponentState>
     implements ExampleComponent {
     material: ExampleMaterial
 

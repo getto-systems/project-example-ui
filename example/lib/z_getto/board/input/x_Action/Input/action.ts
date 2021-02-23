@@ -1,6 +1,8 @@
 // この infra は UI で実行時に構築されるので、例外的に action で参照していい
 import { BoardValueStore } from "../../infra"
 
+import { ApplicationAction } from "../../../../application/action"
+
 import { BoardValue } from "../../../kernel/data"
 import { InputBoardValueType } from "../../data"
 
@@ -9,7 +11,7 @@ export type InputBoardValueResource = Readonly<{
     input: InputBoardValueAction
 }>
 
-export interface InputBoardValueAction {
+export interface InputBoardValueAction extends ApplicationAction {
     linkStore(store: BoardValueStore): void
 
     addInputHandler(handler: InputBoardValueHandler): void

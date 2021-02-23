@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../../../../z_getto/application/action"
+import { ApplicationStateAction } from "../../../../../../../z_getto/application/action"
 
 import { AuthSignLinkResource } from "../../../../../common/searchParams/x_Action/Link/action"
 
@@ -19,7 +19,7 @@ export type CheckPasswordResetSendingStatusResource = AuthSignLinkResource &
         checkStatus: CheckPasswordResetSendingStatusAction
     }>
 
-export type CheckPasswordResetSendingStatusAction = ApplicationAction<
+export type CheckPasswordResetSendingStatusAction = ApplicationStateAction<
     CheckPasswordResetSendingStatusState
 >
 

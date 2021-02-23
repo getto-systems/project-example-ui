@@ -1,11 +1,11 @@
-import { ApplicationAction } from "../../../../application/action"
+import { ApplicationStateAction } from "../../../../application/action"
 
 import { ConvertBoardMethod, ValidateBoardMethod } from "../../method"
 
 import { BoardValidateState, boardValidateState_initial } from "../../data"
 import { BoardConvertResult } from "../../../kernel/data"
 
-export interface ValidateBoardAction<T> extends ApplicationAction<ValidateBoardState> {
+export interface ValidateBoardAction<T> extends ApplicationStateAction<ValidateBoardState> {
     get(): BoardConvertResult<T>
     check(): void
 }

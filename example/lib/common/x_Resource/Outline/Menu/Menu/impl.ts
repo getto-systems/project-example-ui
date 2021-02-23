@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../../z_getto/application/impl"
 
 import { MenuComponentFactory, MenuMaterial, MenuComponent, MenuComponentState } from "./component"
 
@@ -9,7 +9,7 @@ import {
 
 export const initMenuComponent: MenuComponentFactory = (material) => new Component(material)
 
-class Component extends ApplicationAbstractAction<MenuComponentState> implements MenuComponent {
+class Component extends ApplicationAbstractStateAction<MenuComponentState> implements MenuComponent {
     material: MenuMaterial
 
     constructor(material: MenuMaterial) {

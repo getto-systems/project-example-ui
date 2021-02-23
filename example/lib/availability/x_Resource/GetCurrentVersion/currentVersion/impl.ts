@@ -1,4 +1,4 @@
-import { ApplicationAbstractAction } from "../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../z_getto/application/impl"
 
 import {
     CurrentVersionMaterial,
@@ -11,7 +11,7 @@ export const initCurrentVersionComponent: CurrentVersionComponentFactory = (mate
     new Component(material)
 
 class Component
-    extends ApplicationAbstractAction<CurrentVersionComponentState>
+    extends ApplicationAbstractStateAction<CurrentVersionComponentState>
     implements CurrentVersionComponent {
     material: CurrentVersionMaterial
 

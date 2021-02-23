@@ -1,47 +1,56 @@
-import { ApplicationAction } from "./action"
+import { ApplicationStateAction, ApplicationStateIgnition } from "./action"
 
 import { ApplicationStateHandler } from "./data"
 
-export class MockAction_simple<S> implements ApplicationAction<S> {
-    addStateHandler(): void {
-        // mock では特に何もしない
-    }
-    removeStateHandler(): void {
-        // mock では特に何もしない
+export class MockStateAction_simple<S> implements ApplicationStateAction<S> {
+    ignition(): ApplicationStateIgnition<S> {
+        return {
+            addStateHandler() {
+                // mock では特に何もしない
+            },
+            removeStateHandler() {
+                // mock では特に何もしない
+            },
+            ignite() {
+                // mock では特に何もしない
+            },
+        }
     }
 
-    ignite(): void {
-        // mock では特に何もしない
-    }
     terminate(): void {
         // mock では特に何もしない
     }
 }
 
-export class MockAction<S> implements ApplicationAction<S> {
+export class MockAction<S> implements ApplicationStateAction<S> {
     state: S | null = null
 
     handler: ApplicationStateHandler<S> | null = null
 
-    addStateHandler(handler: ApplicationStateHandler<S>): void {
-        if (this.state !== null) {
-            handler(this.state)
+    ignition(): ApplicationStateIgnition<S> {
+        return {
+            addStateHandler: (handler: ApplicationStateHandler<S>) => {
+                if (this.state !== null) {
+                    handler(this.state)
+                }
+                this.handler = handler
+            },
+            removeStateHandler: () => {
+                this.handler = null
+            },
+            ignite() {
+                // mock では特に何もしない
+            },
         }
-        this.handler = handler
     }
+
     post(state: S): void {
         this.state = state
         if (this.handler !== null) {
             this.handler(state)
         }
     }
-    removeStateHandler(_handler: ApplicationStateHandler<S>): void {
-        this.handler = null
-    }
 
-    ignite(): void {
-        // mock では特に何もしない
-    }
     terminate(): void {
         this.handler = null
     }
@@ -53,7 +62,7 @@ export function initMockPropsPasser<P>(): MockPropsPasser<P> {
 
 export function mapMockPropsPasser<B, P>(
     base: MockPropsPasser<B>,
-    map: MockPropsMapper<B, P>
+    map: MockPropsMapper<B, P>,
 ): MockPropsPasser<P> {
     return new MappedPasser(base, map)
 }

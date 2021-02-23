@@ -5,7 +5,7 @@ import {
     CheckPasswordResetSendingStatusResource,
     CheckPasswordResetSendingStatusState,
 } from "./action"
-import { MockAction_simple } from "../../../../../../../z_getto/application/mock"
+import { MockStateAction_simple } from "../../../../../../../z_getto/application/mock"
 
 export function initMockStartPasswordResetSessionResource(): CheckPasswordResetSendingStatusResource {
     return {
@@ -19,5 +19,5 @@ export function initMockStartPasswordResetSendingStatusAction(): CheckPasswordRe
 }
 
 export class Action
-    extends MockAction_simple<CheckPasswordResetSendingStatusState>
+    extends MockStateAction_simple<CheckPasswordResetSendingStatusState>
     implements CheckPasswordResetSendingStatusAction {}

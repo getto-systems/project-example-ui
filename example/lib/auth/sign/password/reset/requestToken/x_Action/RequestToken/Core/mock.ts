@@ -1,4 +1,4 @@
-import { MockAction_simple } from "../../../../../../../../z_getto/application/mock"
+import { MockStateAction_simple } from "../../../../../../../../z_getto/application/mock"
 
 import { RequestPasswordResetTokenCoreAction, RequestPasswordResetTokenCoreState } from "./action"
 
@@ -7,7 +7,7 @@ export function initMockRequestPasswordResetTokenCoreAction(): RequestPasswordRe
 }
 
 export class Action
-    extends MockAction_simple<RequestPasswordResetTokenCoreState>
+    extends MockStateAction_simple<RequestPasswordResetTokenCoreState>
     implements RequestPasswordResetTokenCoreAction {
     submit(): void {
         // mock では特に何もしない

@@ -1,4 +1,4 @@
-import { MockAction_simple } from "../../../../application/mock"
+import { MockStateAction_simple } from "../../../../application/mock"
 import { BoardConvertResult } from "../../../kernel/data"
 import { ValidateBoardAction, ValidateBoardState } from "./action"
 
@@ -8,7 +8,7 @@ export function initMockValidateBoardAction<T>(): ValidateBoardAction<T> {
     return new Action()
 }
 
-class Action<T> extends MockAction_simple<ValidateBoardState> implements ValidateBoardAction<T> {
+class Action<T> extends MockStateAction_simple<ValidateBoardState> implements ValidateBoardAction<T> {
     get(): BoardConvertResult<T> {
         return { success: false }
     }

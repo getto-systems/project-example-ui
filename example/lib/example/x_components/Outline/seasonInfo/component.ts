@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../z_getto/application/action"
+import { ApplicationStateAction } from "../../../../z_getto/application/action"
 
 import { LoadSeason } from "../../../shared/season/action"
 
@@ -11,7 +11,7 @@ export type SeasonInfoMaterial = Readonly<{
     loadSeason: LoadSeason
 }>
 
-export type SeasonInfoComponent = ApplicationAction<SeasonInfoComponentState>
+export type SeasonInfoComponent = ApplicationStateAction<SeasonInfoComponentState>
 
 export type SeasonInfoComponentState =
     | Readonly<{ type: "initial-season" }>

@@ -25,7 +25,8 @@ describe("RequestPasswordResetToken", () => {
     test("submit valid login-id", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
-        resource.core.addStateHandler(initTester())
+        const ignition = resource.core.ignition()
+        ignition.addStateHandler(initTester())
 
         resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
 
@@ -49,7 +50,8 @@ describe("RequestPasswordResetToken", () => {
         // wait for delayed timeout
         const { resource } = waitPasswordResetSessionResource()
 
-        resource.core.addStateHandler(initTester())
+        const ignition = resource.core.ignition()
+        ignition.addStateHandler(initTester())
 
         resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
 
@@ -73,7 +75,8 @@ describe("RequestPasswordResetToken", () => {
     test("submit without fields", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
-        resource.core.addStateHandler(initTester())
+        const ignition = resource.core.ignition()
+        ignition.addStateHandler(initTester())
 
         // try to request token without fields
         resource.core.submit(resource.form.validate.get())

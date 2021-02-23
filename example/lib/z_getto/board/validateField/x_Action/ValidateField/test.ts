@@ -14,6 +14,7 @@ describe("ValidateBoard", () => {
         const { action, store, validateStack } = standardResource()
 
         const checker = initSyncActionTestRunner<ValidateBoardFieldState<ValidateError>>()
+        const ignition = action.ignition()
 
         checker.addTestCase(
             () => {
@@ -29,13 +30,14 @@ describe("ValidateBoard", () => {
             },
         )
 
-        action.addStateHandler(checker.run(done))
+        ignition.addStateHandler(checker.run(done))
     })
 
     test("validate; invalid input", (done) => {
         const { action, store, validateStack } = standardResource()
 
         const checker = initSyncActionTestRunner<ValidateBoardFieldState<ValidateError>>()
+        const ignition = action.ignition()
 
         checker.addTestCase(
             () => {
@@ -51,7 +53,7 @@ describe("ValidateBoard", () => {
             },
         )
 
-        action.addStateHandler(checker.run(done))
+        ignition.addStateHandler(checker.run(done))
     })
 })
 

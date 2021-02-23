@@ -31,14 +31,17 @@ class Action implements InputBoardValueAction {
         return this.link.store.get()
     }
     set(value: BoardValue): void {
-        if (!this.link.connect) {
-            return
+        if (this.link.connect) {
+            this.link.store.set(value)
         }
-        this.link.store.set(value)
         this.triggerInputEvent()
     }
     clear(): void {
         this.set(emptyBoardValue)
+    }
+
+    terminate(): void {
+        this.inputHandlers = []
     }
 }
 
