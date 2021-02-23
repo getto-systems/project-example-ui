@@ -3,21 +3,17 @@ import { newAuthSignLinkResource } from "../../../../../common/searchParams/x_Ac
 import {
     CheckPasswordResetSendingStatusAction,
     CheckPasswordResetSendingStatusResource,
-    CheckPasswordResetSendingStatusState,
+    CheckSendingStatusState,
 } from "./action"
 import { MockStateAction_simple } from "../../../../../../../z_getto/application/mock"
 
 export function initMockStartPasswordResetSessionResource(): CheckPasswordResetSendingStatusResource {
     return {
-        checkStatus: initMockStartPasswordResetSendingStatusAction(),
+        checkStatus: new Action(),
         ...newAuthSignLinkResource(),
     }
 }
 
-export function initMockStartPasswordResetSendingStatusAction(): CheckPasswordResetSendingStatusAction {
-    return new Action()
-}
-
 export class Action
-    extends MockStateAction_simple<CheckPasswordResetSendingStatusState>
+    extends MockStateAction_simple<CheckSendingStatusState>
     implements CheckPasswordResetSendingStatusAction {}

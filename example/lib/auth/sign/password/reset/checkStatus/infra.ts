@@ -2,12 +2,12 @@ import { Wait } from "../../../../../z_getto/infra/delayed/infra"
 import { Remote, RemoteResult, RemoteSimulator } from "../../../../../z_getto/remote/infra"
 import { Limit, WaitTime } from "../../../../../z_getto/infra/config/infra"
 
-import { CheckPasswordResetSendingStatusRemoteError, PasswordResetSendingStatus } from "./data"
+import { CheckSendingStatusRemoteError, SendingStatus } from "./data"
 import { ResetSessionID } from "../kernel/data"
 
-export type CheckPasswordResetSendingStatusInfra = Readonly<{
-    sendToken: SendPasswordResetTokenRemote
-    getStatus: GetPasswordResetSendingStatusRemote
+export type CheckSendingStatusInfra = Readonly<{
+    sendToken: SendTokenRemote
+    getStatus: GetSendingStatusRemote
     wait: Wait
     config: Readonly<{
         wait: WaitTime
@@ -15,37 +15,26 @@ export type CheckPasswordResetSendingStatusInfra = Readonly<{
     }>
 }>
 
-export type SendPasswordResetTokenRemote = Remote<
-    null,
-    true,
-    CheckPasswordResetSendingStatusRemoteError
+export type SendTokenRemote = Remote<null, true, CheckSendingStatusRemoteError>
+export type SendTokenResult = RemoteResult<true, CheckSendingStatusRemoteError>
+export type SendTokenSimulator = RemoteSimulator<null, true, CheckSendingStatusRemoteError>
+
+export type GetSendingStatusRemote = Remote<
+    ResetSessionID,
+    GetSendingStatusResponse,
+    CheckSendingStatusRemoteError
 >
-export type SendPasswordResetTokenResult = RemoteResult<
-    true,
-    CheckPasswordResetSendingStatusRemoteError
+export type GetSendingStatusResult = RemoteResult<
+    GetSendingStatusResponse,
+    CheckSendingStatusRemoteError
 >
-export type SendPasswordResetTokenSimulator = RemoteSimulator<
-    null,
-    true,
-    CheckPasswordResetSendingStatusRemoteError
+export type GetSendingStatusSimulator = RemoteSimulator<
+    ResetSessionID,
+    GetSendingStatusResponse,
+    CheckSendingStatusRemoteError
 >
 
-export type GetPasswordResetSendingStatusRemote = Remote<
-    ResetSessionID,
-    GetPasswordResetSendingStatusResponse,
-    CheckPasswordResetSendingStatusRemoteError
->
-export type GetPasswordResetSendingStatusResult = RemoteResult<
-    GetPasswordResetSendingStatusResponse,
-    CheckPasswordResetSendingStatusRemoteError
->
-export type GetPasswordResetSendingStatusSimulator = RemoteSimulator<
-    ResetSessionID,
-    GetPasswordResetSendingStatusResponse,
-    CheckPasswordResetSendingStatusRemoteError
->
-
-export type GetPasswordResetSendingStatusResponse =
-    | Readonly<{ done: false; status: PasswordResetSendingStatus }>
+export type GetSendingStatusResponse =
+    | Readonly<{ done: false; status: SendingStatus }>
     | Readonly<{ done: true; send: false; err: string }>
     | Readonly<{ done: true; send: true }>

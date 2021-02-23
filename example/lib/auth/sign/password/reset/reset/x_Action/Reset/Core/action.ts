@@ -28,7 +28,7 @@ export type CoreForegroundMaterial = Readonly<{
 export type CoreBackgroundMaterial = Readonly<{
     reset: ResetMethod
 }>
-export type CoreBackgroundPod = Readonly<{
+export type CoreBackgroundMaterialPod = Readonly<{
     initReset: ResetPod
 }>
 

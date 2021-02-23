@@ -14,27 +14,17 @@ import {
     AuthnInfoRepository,
     RenewAuthnInfoResult,
 } from "../../../../auth/sign/kernel/authnInfo/kernel/infra"
-import { delayed, wait } from "../../../../z_getto/infra/delayed/core"
+import { delayed } from "../../../../z_getto/infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../../../auth/sign/kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
 import { newGetSecureScriptPathLocationInfo } from "../../../../auth/sign/common/secureScriptPath/get/impl"
 import {
     initRenewAuthnInfoAction,
     toRenewAuthnInfoEntryPoint,
 } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/impl"
-import {
-    initCheckPasswordResetSendingStatusAction,
-    toCheckPasswordResetSendingStatusEntryPoint,
-} from "../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/impl"
-import { newCheckPasswordResetSendingStatusLocationInfo } from "../../../../auth/sign/password/reset/checkStatus/impl"
-import { initSendPasswordResetTokenSimulate } from "../../../../auth/sign/password/reset/checkStatus/infra/remote/sendToken/simulate"
-import { initGetPasswordResetSendingStatusSimulate } from "../../../../auth/sign/password/reset/checkStatus/infra/remote/getStatus/simulate"
-import {
-    GetPasswordResetSendingStatusResult,
-    SendPasswordResetTokenResult,
-} from "../../../../auth/sign/password/reset/checkStatus/infra"
 import { initMockAuthenticatePasswordResource } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/mock"
 import { initMockRequestPasswordResetTokenResource } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/mock"
 import { initMockResetPasswordResource } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/mock"
+import { initMockStartPasswordResetSessionResource } from "../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/mock"
 
 // renew リクエストを投げるべきかの判定に使用する
 // SUCCEED_TO_AUTH_AT と setContinuousRenew の delay との間でうまく調整する
@@ -303,8 +293,7 @@ function standardLoginView() {
         password_authenticate: () => standardPasswordLoginEntryPoint(),
         password_reset: () => standardPasswordResetResource(),
         password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
-        password_reset_checkStatus: () =>
-            standardCheckPasswordResetSendingStatusResource(currentURL),
+        password_reset_checkStatus: () => standardCheckPasswordResetSendingStatusResource(),
     })
 
     return { view }
@@ -324,8 +313,7 @@ function passwordResetSessionLoginView() {
         password_authenticate: () => standardPasswordLoginEntryPoint(),
         password_reset: () => standardPasswordResetResource(),
         password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
-        password_reset_checkStatus: () =>
-            standardCheckPasswordResetSendingStatusResource(currentURL),
+        password_reset_checkStatus: () => standardCheckPasswordResetSendingStatusResource(),
     })
 
     return { view }
@@ -345,8 +333,7 @@ function passwordResetCheckStatusLoginView() {
         password_authenticate: () => standardPasswordLoginEntryPoint(),
         password_reset: () => standardPasswordResetResource(),
         password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
-        password_reset_checkStatus: () =>
-            standardCheckPasswordResetSendingStatusResource(currentURL),
+        password_reset_checkStatus: () => standardCheckPasswordResetSendingStatusResource(),
     })
 
     return { view }
@@ -366,8 +353,7 @@ function passwordResetLoginView() {
         password_authenticate: () => standardPasswordLoginEntryPoint(),
         password_reset: () => standardPasswordResetResource(),
         password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
-        password_reset_checkStatus: () =>
-            standardCheckPasswordResetSendingStatusResource(currentURL),
+        password_reset_checkStatus: () => standardCheckPasswordResetSendingStatusResource(),
     })
 
     return { view }
@@ -391,27 +377,11 @@ function standardRequestPasswordResetTokenResource() {
         terminate: () => null,
     }
 }
-function standardCheckPasswordResetSendingStatusResource(currentURL: URL) {
-    return toCheckPasswordResetSendingStatusEntryPoint(
-        initCheckPasswordResetSendingStatusAction(
-            {
-                checkStatus: {
-                    sendToken: initSendPasswordResetTokenSimulate(simulateSendToken, {
-                        wait_millisecond: 0,
-                    }),
-                    getStatus: initGetPasswordResetSendingStatusSimulate(simulateGetStatus, {
-                        wait_millisecond: 0,
-                    }),
-                    config: {
-                        wait: { wait_millisecond: 2 },
-                        limit: { limit: 5 },
-                    },
-                    wait,
-                },
-            },
-            newCheckPasswordResetSendingStatusLocationInfo(currentURL),
-        ),
-    )
+function standardCheckPasswordResetSendingStatusResource() {
+    return {
+        resource: initMockStartPasswordResetSessionResource(),
+        terminate: () => null,
+    }
 }
 function standardRenewCredentialEntryPoint(
     currentURL: URL,
@@ -480,13 +450,6 @@ function simulateRenew(): RenewAuthnInfoResult {
         success: false,
         err: { type: "invalid-ticket" },
     }
-}
-
-function simulateSendToken(): SendPasswordResetTokenResult {
-    return { success: true, value: true }
-}
-function simulateGetStatus(): GetPasswordResetSendingStatusResult {
-    return { success: true, value: { done: true, send: true } }
 }
 
 function standardRepository() {

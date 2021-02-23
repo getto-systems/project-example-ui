@@ -2,12 +2,9 @@ import { ApplicationStateAction } from "../../../../../../../z_getto/application
 
 import { AuthSignLinkResource } from "../../../../../common/searchParams/x_Action/Link/action"
 
-import {
-    CheckPasswordResetSendingStatusMethod,
-    CheckPasswordResetSendingStatusMethodPod,
-} from "../../method"
+import { CheckSendingStatusMethod, CheckSendingStatusMethodPod } from "../../method"
 
-import { CheckPasswordResetSendingStatusEvent } from "../../event"
+import { CheckSendingStatusEvent } from "../../event"
 
 export type CheckPasswordResetSendingStatusEntryPoint = Readonly<{
     resource: CheckPasswordResetSendingStatusResource
@@ -15,25 +12,21 @@ export type CheckPasswordResetSendingStatusEntryPoint = Readonly<{
 }>
 
 export type CheckPasswordResetSendingStatusResource = AuthSignLinkResource &
-    Readonly<{
-        checkStatus: CheckPasswordResetSendingStatusAction
-    }>
+    Readonly<{ checkStatus: CheckPasswordResetSendingStatusAction }>
 
-export type CheckPasswordResetSendingStatusAction = ApplicationStateAction<
-    CheckPasswordResetSendingStatusState
->
+export type CheckPasswordResetSendingStatusAction = ApplicationStateAction<CheckSendingStatusState>
 
-export type CheckPasswordResetSendingStatusMaterial = Readonly<{
-    checkStatus: CheckPasswordResetSendingStatusMethod
+export type CheckSendingStatusMaterial = Readonly<{
+    checkStatus: CheckSendingStatusMethod
 }>
-export type CheckPasswordResetSendingStatusMaterialPod = Readonly<{
-    initCheckStatus: CheckPasswordResetSendingStatusMethodPod
+export type CheckSendingStatusMaterialPod = Readonly<{
+    initCheckStatus: CheckSendingStatusMethodPod
 }>
 
-export type CheckPasswordResetSendingStatusState =
+export type CheckSendingStatusState =
     | Readonly<{ type: "initial-check-status" }>
-    | CheckPasswordResetSendingStatusEvent
+    | CheckSendingStatusEvent
 
-export const initialCheckPasswordResetSendingStatusState: CheckPasswordResetSendingStatusState = {
+export const initialCheckSendingStatusState: CheckSendingStatusState = {
     type: "initial-check-status",
 }

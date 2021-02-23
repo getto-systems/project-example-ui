@@ -5,7 +5,7 @@ import {
 import {
     CheckPasswordResetSendingStatusProxyMessage,
     CheckPasswordResetSendingStatusProxyResponse,
-} from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/main/worker/message"
+} from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/init/worker/message"
 import {
     RequestPasswordResetTokenProxyMessage,
     RequestPasswordResetTokenProxyResponse,

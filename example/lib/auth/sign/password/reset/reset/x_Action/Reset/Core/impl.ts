@@ -13,7 +13,7 @@ import {
     CoreAction,
     CoreState,
     CoreForegroundMaterial,
-    CoreBackgroundPod,
+    CoreBackgroundMaterialPod,
     CoreBackgroundMaterial,
 } from "./action"
 
@@ -57,12 +57,14 @@ export function initCoreBackgroundMaterial(
     infra: CoreBackgroundInfra,
     locationInfo: ResetLocationInfo,
 ): CoreBackgroundMaterial {
-    const pod = initCoreBackgroundPod(infra)
+    const pod = initCoreBackgroundMaterialPod(infra)
     return {
         reset: pod.initReset(locationInfo),
     }
 }
-export function initCoreBackgroundPod(infra: CoreBackgroundInfra): CoreBackgroundPod {
+export function initCoreBackgroundMaterialPod(
+    infra: CoreBackgroundInfra,
+): CoreBackgroundMaterialPod {
     return {
         initReset: reset(infra.reset),
     }
