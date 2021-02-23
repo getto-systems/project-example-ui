@@ -29,7 +29,7 @@ import {
     ResetPasswordResourceState,
 } from "../action"
 
-import { ResetPasswordError } from "../../../data"
+import { ResetError } from "../../../data"
 
 export function ResetPassword(entryPoint: ResetPasswordEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
@@ -197,7 +197,7 @@ export function View(props: ResetPasswordProps): VNode {
     }
 }
 
-function resetError(err: ResetPasswordError): VNodeContent[] {
+function resetError(err: ResetError): VNodeContent[] {
     switch (err.type) {
         case "validation-error":
             return ["正しく入力してください"]

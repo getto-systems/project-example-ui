@@ -7,7 +7,6 @@ import { Clock } from "../../../../z_getto/infra/clock/infra"
 
 import { AuthSignActionState } from "./entryPoint"
 
-import { markAuthAt, markAuthnNonce } from "../../../../auth/sign/kernel/authnInfo/kernel/data"
 import { markApiNonce, markApiRoles } from "../../../../common/apiCredential/data"
 import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/memory"
@@ -27,26 +26,15 @@ import {
     toCheckPasswordResetSendingStatusEntryPoint,
 } from "../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/impl"
 import { newCheckPasswordResetSendingStatusLocationInfo } from "../../../../auth/sign/password/reset/checkStatus/impl"
-import { initResetPasswordCoreAction } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/Core/impl"
-import {
-    toResetPasswordAction,
-    toResetPasswordEntryPoint,
-} from "../../../../auth/sign/password/reset/reset/x_Action/Reset/impl"
-import { initResetPasswordSimulate } from "../../../../auth/sign/password/reset/reset/infra/remote/reset/simulate"
-import { initResetPasswordFormAction } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/Form/impl"
 import { initSendPasswordResetTokenSimulate } from "../../../../auth/sign/password/reset/checkStatus/infra/remote/sendToken/simulate"
 import { initGetPasswordResetSendingStatusSimulate } from "../../../../auth/sign/password/reset/checkStatus/infra/remote/getStatus/simulate"
-import { ResetPasswordResult } from "../../../../auth/sign/password/reset/reset/infra"
 import {
     GetPasswordResetSendingStatusResult,
     SendPasswordResetTokenResult,
 } from "../../../../auth/sign/password/reset/checkStatus/infra"
-import { newResetPasswordLocationInfo } from "../../../../auth/sign/password/reset/reset/impl"
 import { initMockAuthenticatePasswordResource } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/mock"
 import { initMockRequestPasswordResetTokenResource } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/mock"
-
-const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
-const SUCCEED_TO_AUTH_AT = new Date("2020-01-01 10:00:00")
+import { initMockResetPasswordResource } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/mock"
 
 // renew リクエストを投げるべきかの判定に使用する
 // SUCCEED_TO_AUTH_AT と setContinuousRenew の delay との間でうまく調整する
@@ -313,13 +301,7 @@ function standardLoginView() {
                 clock,
             ),
         password_authenticate: () => standardPasswordLoginEntryPoint(),
-        password_reset: () =>
-            standardPasswordResetResource(
-                currentURL,
-                repository.apiCredentials,
-                repository.authnInfos,
-                clock,
-            ),
+        password_reset: () => standardPasswordResetResource(),
         password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
         password_reset_checkStatus: () =>
             standardCheckPasswordResetSendingStatusResource(currentURL),
@@ -340,13 +322,7 @@ function passwordResetSessionLoginView() {
                 clock,
             ),
         password_authenticate: () => standardPasswordLoginEntryPoint(),
-        password_reset: () =>
-            standardPasswordResetResource(
-                currentURL,
-                repository.apiCredentials,
-                repository.authnInfos,
-                clock,
-            ),
+        password_reset: () => standardPasswordResetResource(),
         password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
         password_reset_checkStatus: () =>
             standardCheckPasswordResetSendingStatusResource(currentURL),
@@ -367,13 +343,7 @@ function passwordResetCheckStatusLoginView() {
                 clock,
             ),
         password_authenticate: () => standardPasswordLoginEntryPoint(),
-        password_reset: () =>
-            standardPasswordResetResource(
-                currentURL,
-                repository.apiCredentials,
-                repository.authnInfos,
-                clock,
-            ),
+        password_reset: () => standardPasswordResetResource(),
         password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
         password_reset_checkStatus: () =>
             standardCheckPasswordResetSendingStatusResource(currentURL),
@@ -394,13 +364,7 @@ function passwordResetLoginView() {
                 clock,
             ),
         password_authenticate: () => standardPasswordLoginEntryPoint(),
-        password_reset: () =>
-            standardPasswordResetResource(
-                currentURL,
-                repository.apiCredentials,
-                repository.authnInfos,
-                clock,
-            ),
+        password_reset: () => standardPasswordResetResource(),
         password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
         password_reset_checkStatus: () =>
             standardCheckPasswordResetSendingStatusResource(currentURL),
@@ -415,52 +379,11 @@ function standardPasswordLoginEntryPoint() {
         terminate: () => null,
     }
 }
-function standardPasswordResetResource(
-    currentURL: URL,
-    apiCredentials: ApiCredentialRepository,
-    authnInfos: AuthnInfoRepository,
-    clock: Clock,
-) {
-    return toResetPasswordEntryPoint(
-        toResetPasswordAction({
-            core: initResetPasswordCoreAction(
-                {
-                    startContinuousRenew: {
-                        apiCredentials,
-                        authnInfos,
-                        renew: initRenewAuthnInfoSimulate(simulateRenew, {
-                            wait_millisecond: 0,
-                        }),
-                        config: {
-                            delay: { delay_millisecond: 1 },
-                            interval: { interval_millisecond: 1 },
-                        },
-                        clock,
-                    },
-                    getSecureScriptPath: {
-                        config: {
-                            secureServerHost: standardSecureHost(),
-                        },
-                    },
-                    reset: {
-                        reset: initResetPasswordSimulate(simulateReset, {
-                            wait_millisecond: 0,
-                        }),
-                        config: {
-                            delay: { delay_millisecond: 1 },
-                        },
-                        delayed,
-                    },
-                },
-                {
-                    ...newGetSecureScriptPathLocationInfo(currentURL),
-                    ...newResetPasswordLocationInfo(currentURL),
-                },
-            ),
-
-            form: initResetPasswordFormAction(),
-        }),
-    )
+function standardPasswordResetResource() {
+    return {
+        resource: initMockResetPasswordResource(),
+        terminate: () => null,
+    }
 }
 function standardRequestPasswordResetTokenResource() {
     return {
@@ -556,21 +479,6 @@ function simulateRenew(): RenewAuthnInfoResult {
     return {
         success: false,
         err: { type: "invalid-ticket" },
-    }
-}
-function simulateReset(): ResetPasswordResult {
-    return {
-        success: true,
-        value: {
-            auth: {
-                authnNonce: markAuthnNonce(AUTHORIZED_AUTHN_NONCE),
-                authAt: markAuthAt(SUCCEED_TO_AUTH_AT),
-            },
-            api: {
-                apiNonce: markApiNonce("api-nonce"),
-                apiRoles: markApiRoles(["role"]),
-            },
-        },
     }
 }
 

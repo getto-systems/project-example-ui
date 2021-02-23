@@ -3,16 +3,16 @@ import { LoginIDBoardFieldAction } from "../../../../../../common/board/loginID/
 import { PasswordBoardFieldAction } from "../../../../../../common/board/password/x_Action/Password/action"
 import { ValidateBoardAction } from "../../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/action"
 
-import { PasswordResetFields } from "../../../data"
+import { ResetFields } from "../../../data"
 
-export interface ResetPasswordFormAction extends ApplicationAction {
+export interface FormAction extends ApplicationAction {
     readonly loginID: LoginIDBoardFieldAction
     readonly password: PasswordBoardFieldAction
-    readonly validate: ResetPasswordValidateAction
+    readonly validate: ValidateResetAction
     readonly clear: ClearAction
 }
 
-export type ResetPasswordValidateAction = ValidateBoardAction<PasswordResetFields>
+export type ValidateResetAction = ValidateBoardAction<ResetFields>
 
 interface ClearAction {
     (): void

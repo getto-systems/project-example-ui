@@ -8,7 +8,7 @@ import { initMockResetPasswordResource } from "../mock"
 import { validateBoardOptions } from "../../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/mock"
 
 import { ValidateBoardState } from "../../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/action"
-import { ResetPasswordCoreState } from "../Core/action"
+import { CoreState } from "../Core/action"
 
 const resetOptions = [
     "initial",
@@ -54,7 +54,7 @@ const template = storyTemplate<Props>((props) => {
         state: { core: state(), form: props.form },
     })
 
-    function state(): ResetPasswordCoreState {
+    function state(): CoreState {
         switch (props.reset) {
             case "initial":
                 return { type: "initial-reset" }

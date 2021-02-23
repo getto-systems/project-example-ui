@@ -8,12 +8,12 @@ import { WorkerHandler } from "../../../../../../../../z_getto/application/worke
 
 import { AuthenticatePasswordProxyMessage, AuthenticatePasswordProxyResponse } from "./message"
 
-import { newBackgroundMaterial } from "../common"
+import { newCoreBackgroundMaterial } from "../common"
 
 export function newAuthenticatePasswordWorkerHandler(
     post: Post<AuthenticatePasswordProxyResponse>,
 ): WorkerHandler<AuthenticatePasswordProxyMessage> {
-    const material = newBackgroundMaterial()
+    const material = newCoreBackgroundMaterial()
     return (message) => {
         switch (message.method) {
             case "authenticate":
@@ -29,7 +29,7 @@ export function newAuthenticatePasswordWorkerHandler(
     }
 }
 
-export function newBackgroundInfra(): CoreBackgroundInfra {
+export function newCoreBackgroundInfra(): CoreBackgroundInfra {
     return {
         authenticate: newAuthenticateInfra(),
     }

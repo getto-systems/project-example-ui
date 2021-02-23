@@ -14,14 +14,12 @@ import {
 import { AuthenticateFields } from "../../../data"
 import { BoardConvertResult } from "../../../../../../../z_getto/board/kernel/data"
 
-export interface CoreAction
-    extends ApplicationStateAction<CoreState> {
+export interface CoreAction extends ApplicationStateAction<CoreState> {
     submit(fields: BoardConvertResult<AuthenticateFields>): void
     loadError(err: LoadSecureScriptError): void
 }
 
-export type CoreMaterial = CoreForegroundMaterial &
-    CoreBackgroundMaterial
+export type CoreMaterial = CoreForegroundMaterial & CoreBackgroundMaterial
 
 export type CoreForegroundMaterial = Readonly<{
     startContinuousRenew: StartContinuousRenewAuthnInfoMethod

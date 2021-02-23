@@ -4,7 +4,7 @@ import { RawRemote, RemoteError } from "../../../../../../../../z_getto/remote/i
 import { RequestTokenRemote } from "../../../infra"
 
 import { RequestTokenFields, RequestTokenRemoteError } from "../../../data"
-import { markPasswordResetSessionID, PasswordResetSessionID } from "../../../../kernel/data"
+import { markResetSessionID, ResetSessionID } from "../../../../kernel/data"
 
 type Raw = RawRemote<RequestTokenFields, RawSessionID>
 type RawSessionID = string
@@ -12,8 +12,8 @@ type RawSessionID = string
 export function initRequestTokenConnect(access: Raw): RequestTokenRemote {
     return initConnectRemoteAccess(access, {
         message: (fields: RequestTokenFields): RequestTokenFields => fields,
-        value: (response: RawSessionID): PasswordResetSessionID =>
-            markPasswordResetSessionID(response),
+        value: (response: RawSessionID): ResetSessionID =>
+            markResetSessionID(response),
         error: (err: RemoteError): RequestTokenRemoteError => {
             switch (err.type) {
                 case "bad-request":

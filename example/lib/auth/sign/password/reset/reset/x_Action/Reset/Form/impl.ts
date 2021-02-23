@@ -6,12 +6,12 @@ import { initValidateBoardAction } from "../../../../../../../../z_getto/board/v
 
 import { ValidateBoardInfra } from "../../../../../../../../z_getto/board/kernel/infra"
 
-import { ResetPasswordFormAction } from "./action"
+import { FormAction } from "./action"
 
-import { PasswordResetFields } from "../../../data"
+import { ResetFields } from "../../../data"
 import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
 
-export function initResetPasswordFormAction(): ResetPasswordFormAction {
+export function initFormAction(): FormAction {
     const infra: ValidateBoardInfra = { stack: newBoardValidateStack() }
     const loginID = initLoginIDBoardFieldAction({ name: "loginID" }, infra)
     const password = initPasswordBoardFieldAction({ name: "password" }, infra)
@@ -40,7 +40,7 @@ export function initResetPasswordFormAction(): ResetPasswordFormAction {
         },
     }
 
-    function converter(): BoardConvertResult<PasswordResetFields> {
+    function converter(): BoardConvertResult<ResetFields> {
         loginID.validate.check()
         password.validate.check()
 

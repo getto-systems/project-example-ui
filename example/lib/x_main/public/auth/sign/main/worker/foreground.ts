@@ -1,5 +1,4 @@
 import { newRenewAuthnInfo } from "../../../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/main"
-import { newResetPassword_proxy } from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/main/core"
 import { newCheckPasswordResetSendingStatus_proxy } from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/main/core"
 
 import { initLoginViewLocationInfo, toAuthSignEntryPoint, View } from "../../impl"
@@ -19,7 +18,7 @@ import {
 import {
     newResetPasswordProxy,
     ResetPasswordProxy,
-} from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/main/worker/foreground"
+} from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/init/worker/foreground"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
 
@@ -28,10 +27,11 @@ import { AuthSignAction, AuthSignEntryPoint } from "../../entryPoint"
 type OutsideFeature = Readonly<{
     webStorage: Storage
     currentURL: URL
+    currentLocation: Location
     worker: Worker
 }>
 export function newWorkerForeground(feature: OutsideFeature): AuthSignEntryPoint {
-    const { webStorage, currentURL, worker } = feature
+    const { webStorage, currentURL, currentLocation, worker } = feature
     const proxy = initProxy(webStorage, currentURL, postForegroundMessage)
 
     const view: AuthSignAction = new View(initLoginViewLocationInfo(currentURL), {
@@ -45,7 +45,7 @@ export function newWorkerForeground(feature: OutsideFeature): AuthSignEntryPoint
                 proxy.password.reset.checkStatus.pod(),
             ),
         password_reset: () =>
-            newResetPassword_proxy(webStorage, currentURL, proxy.password.reset.reset.pod()),
+            proxy.password.reset.reset.entryPoint(webStorage, currentURL, currentLocation),
     })
 
     const messageHandler = initBackgroundMessageHandler(proxy, (err: string) => {
@@ -93,7 +93,7 @@ function initProxy(webStorage: Storage, currentURL: URL, post: Post<ForegroundMe
                 checkStatus: newCheckPasswordResetSendingStatusProxy((message) =>
                     post({ type: "password-reset-checkStatus", message }),
                 ),
-                reset: newResetPasswordProxy(webStorage, (message) =>
+                reset: newResetPasswordProxy((message) =>
                     post({ type: "password-reset", message }),
                 ),
             },

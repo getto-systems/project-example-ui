@@ -1,13 +1,13 @@
 import { initStaticClock, StaticClock } from "../../../../../../../z_getto/infra/clock/simulate"
 import { initRenewAuthnInfoSimulate } from "../../../../../kernel/authnInfo/kernel/infra/remote/renew/simulate"
-import { initResetPasswordSimulate } from "../../infra/remote/reset/simulate"
+import { initResetSimulate } from "../../infra/remote/reset/simulate"
 
 import { Clock } from "../../../../../../../z_getto/infra/clock/infra"
-import { ResetPasswordRemote, ResetPasswordResult } from "../../infra"
+import { ResetRemote, ResetResult } from "../../infra"
 
 import { ResetPasswordAction } from "./action"
 
-import { ResetPasswordCoreState } from "./Core/action"
+import { CoreState } from "./Core/action"
 
 import { markSecureScriptPath } from "../../../../../common/secureScriptPath/get/data"
 import { markAuthAt, markAuthnNonce } from "../../../../../kernel/authnInfo/kernel/data"
@@ -21,17 +21,17 @@ import {
 } from "../../../../../kernel/authnInfo/kernel/infra"
 import { initMemoryAuthnInfoRepository } from "../../../../../kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
 import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
-import { newResetPasswordLocationInfo, resetPasswordEventHasDone } from "../../impl"
+import { initResetLocationInfo, resetEventHasDone } from "../../impl"
 import { delayed } from "../../../../../../../z_getto/infra/delayed/core"
 import {
     initAsyncActionTester_legacy,
     initSyncActionTestRunner,
 } from "../../../../../../../z_getto/application/testHelper"
-import { initResetPasswordCoreAction } from "./Core/impl"
 import { markBoardValue } from "../../../../../../../z_getto/board/kernel/data"
-import { initResetPasswordFormAction } from "./Form/impl"
+import { initFormAction } from "./Form/impl"
 import { standardBoardValueStore } from "../../../../../../../z_getto/board/input/x_Action/Input/testHelper"
-import { toResetPasswordAction } from "./impl"
+import { toAction, toEntryPoint } from "./impl"
+import { initCoreAction, initCoreMaterial } from "./Core/impl"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -189,6 +189,7 @@ describe("RegisterPassword", () => {
 
     test("terminate", (done) => {
         const { resource } = standardPasswordResetResource()
+        const entryPoint = toEntryPoint(resource)
 
         const ignition = {
             core: resource.core.ignition(),
@@ -201,7 +202,7 @@ describe("RegisterPassword", () => {
 
         runner.addTestCase(
             () => {
-                resource.terminate()
+                entryPoint.terminate()
                 resource.form.loginID.input.set(markBoardValue("login-id"))
                 resource.form.password.input.set(markBoardValue("password"))
             },
@@ -254,7 +255,7 @@ type PasswordResetTestRepository = Readonly<{
     authnInfos: AuthnInfoRepository
 }>
 type PasswordResetTestRemoteAccess = Readonly<{
-    reset: ResetPasswordRemote
+    reset: ResetRemote
     renew: RenewAuthnInfoRemote
 }>
 
@@ -265,31 +266,33 @@ function newPasswordResetTestResource(
     clock: Clock,
 ): ResetPasswordAction {
     const config = standardConfig()
-    const action = toResetPasswordAction({
-        core: initResetPasswordCoreAction(
-            {
-                startContinuousRenew: {
-                    ...repository,
-                    ...remote,
-                    config: config.continuousRenew,
-                    clock,
+    const action = toAction({
+        core: initCoreAction(
+            initCoreMaterial(
+                {
+                    startContinuousRenew: {
+                        ...repository,
+                        ...remote,
+                        config: config.continuousRenew,
+                        clock,
+                    },
+                    getSecureScriptPath: {
+                        config: config.location,
+                    },
+                    reset: {
+                        ...remote,
+                        config: config.reset,
+                        delayed,
+                    },
                 },
-                getSecureScriptPath: {
-                    config: config.location,
+                {
+                    ...newGetSecureScriptPathLocationInfo(currentURL),
+                    ...initResetLocationInfo(currentURL),
                 },
-                reset: {
-                    ...remote,
-                    config: config.reset,
-                    delayed,
-                },
-            },
-            {
-                ...newGetSecureScriptPathLocationInfo(currentURL),
-                ...newResetPasswordLocationInfo(currentURL),
-            },
+            ),
         ),
 
-        form: initResetPasswordFormAction(),
+        form: initFormAction(),
     })
 
     action.form.loginID.input.linkStore(standardBoardValueStore())
@@ -335,7 +338,7 @@ function standardRepository() {
 }
 function standardRemoteAccess(): PasswordResetTestRemoteAccess {
     return {
-        reset: initResetPasswordSimulate(simulateReset, {
+        reset: initResetSimulate(simulateReset, {
             wait_millisecond: 0,
         }),
         renew: renewRemoteAccess(),
@@ -343,14 +346,14 @@ function standardRemoteAccess(): PasswordResetTestRemoteAccess {
 }
 function waitRemoteAccess(): PasswordResetTestRemoteAccess {
     return {
-        reset: initResetPasswordSimulate(simulateReset, {
+        reset: initResetSimulate(simulateReset, {
             wait_millisecond: 3,
         }),
         renew: renewRemoteAccess(),
     }
 }
 
-function simulateReset(): ResetPasswordResult {
+function simulateReset(): ResetResult {
     return {
         success: true,
         value: {
@@ -425,7 +428,7 @@ function expectToEmptyLastAuth(authnInfos: AuthnInfoRepository) {
 }
 
 function initAsyncTester() {
-    return initAsyncActionTester_legacy((state: ResetPasswordCoreState) => {
+    return initAsyncActionTester_legacy((state: CoreState) => {
         switch (state.type) {
             case "initial-reset":
                 return false
@@ -436,7 +439,7 @@ function initAsyncTester() {
                 return true
 
             default:
-                return resetPasswordEventHasDone(state)
+                return resetEventHasDone(state)
         }
     })
 }

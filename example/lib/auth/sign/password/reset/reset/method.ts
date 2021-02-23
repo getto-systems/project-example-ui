@@ -1,17 +1,17 @@
-import { ResetPasswordEvent } from "./event"
+import { ResetEvent } from "./event"
 
-import { PasswordResetFields } from "./data"
 import { BoardConvertResult } from "../../../../../z_getto/board/kernel/data"
-import { PasswordResetToken } from "../kernel/data"
+import { ResetToken } from "../kernel/data"
+import { ResetFields } from "./data"
 
-export interface ResetPasswordPod {
-    (locationInfo: ResetPasswordLocationInfo): ResetPasswordMethod
+export interface ResetPod {
+    (locationInfo: ResetLocationInfo): ResetMethod
 }
-export interface ResetPasswordLocationInfo {
-    getPasswordResetToken(): PasswordResetToken
+export interface ResetLocationInfo {
+    getResetToken(): ResetToken
 }
-export interface ResetPasswordMethod {
-    (fields: BoardConvertResult<PasswordResetFields>, post: Post<ResetPasswordEvent>): void
+export interface ResetMethod {
+    (fields: BoardConvertResult<ResetFields>, post: Post<ResetEvent>): void
 }
 
 interface Post<T> {

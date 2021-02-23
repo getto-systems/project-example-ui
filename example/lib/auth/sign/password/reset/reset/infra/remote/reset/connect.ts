@@ -2,19 +2,19 @@ import { markApiNonce, markApiRoles } from "../../../../../../../../common/apiCr
 import { initConnectRemoteAccess } from "../../../../../../../../z_getto/remote/connect"
 import { RawRemote, RemoteError } from "../../../../../../../../z_getto/remote/infra"
 import { markAuthAt, markAuthnNonce } from "../../../../../../kernel/authnInfo/kernel/data"
-import { ResetPasswordRemoteError } from "../../../data"
-import { ResetPasswordRemote, ResetPasswordMessage, ResetPasswordResponse } from "../../../infra"
+import { ResetRemoteError } from "../../../data"
+import { ResetRemote, ResetMessage, ResetResponse } from "../../../infra"
 
-type Raw = RawRemote<ResetPasswordMessage, RawAuthnInfo>
+type Raw = RawRemote<ResetMessage, RawAuthnInfo>
 type RawAuthnInfo = Readonly<{
     authnNonce: string
     api: Readonly<{ apiNonce: string; apiRoles: string[] }>
 }>
 
-export function initResetPasswordConnect(access: Raw): ResetPasswordRemote {
+export function initResetConnect(access: Raw): ResetRemote {
     return initConnectRemoteAccess(access, {
-        message: (message: ResetPasswordMessage): ResetPasswordMessage => message,
-        value: (response: RawAuthnInfo): ResetPasswordResponse => {
+        message: (message: ResetMessage): ResetMessage => message,
+        value: (response: RawAuthnInfo): ResetResponse => {
             return {
                 auth: {
                     authnNonce: markAuthnNonce(response.authnNonce),
@@ -26,7 +26,7 @@ export function initResetPasswordConnect(access: Raw): ResetPasswordRemote {
                 },
             }
         },
-        error: (err: RemoteError): ResetPasswordRemoteError => {
+        error: (err: RemoteError): ResetRemoteError => {
             switch (err.type) {
                 case "bad-request":
                 case "server-error":
@@ -39,7 +39,7 @@ export function initResetPasswordConnect(access: Raw): ResetPasswordRemote {
                     return { type: "infra-error", err: err.detail }
             }
         },
-        unknown: (err: unknown): ResetPasswordRemoteError => ({
+        unknown: (err: unknown): ResetRemoteError => ({
             type: "infra-error",
             err: `${err}`,
         }),
