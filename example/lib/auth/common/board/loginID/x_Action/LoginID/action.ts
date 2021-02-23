@@ -1,3 +1,4 @@
+import { ApplicationAction } from "../../../../../../z_getto/application/action"
 import { InputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/action"
 import {
     ValidateBoardFieldAction,
@@ -11,7 +12,7 @@ export type LoginIDBoardFieldResource = Readonly<{
     field: LoginIDBoardFieldAction
 }>
 
-export interface LoginIDBoardFieldAction {
+export interface LoginIDBoardFieldAction extends ApplicationAction {
     readonly input: InputBoardValueAction
     readonly validate: ValidateLoginIDAction
     readonly clear: ClearAction

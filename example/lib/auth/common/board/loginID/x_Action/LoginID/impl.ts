@@ -5,10 +5,7 @@ import { ValidateBoardFieldInfra } from "../../../../../../z_getto/board/validat
 
 import { LoginIDBoardFieldAction } from "./action"
 
-import {
-    BoardConvertResult,
-    BoardValue,
-} from "../../../../../../z_getto/board/kernel/data"
+import { BoardConvertResult, BoardValue } from "../../../../../../z_getto/board/kernel/data"
 import { LoginID, markLoginID } from "../../../../loginID/data"
 import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "./data"
 
@@ -18,7 +15,7 @@ export type LoginIDBoardEmbed<N extends string> = Readonly<{
 
 export function initLoginIDBoardFieldAction<N extends string>(
     embed: LoginIDBoardEmbed<N>,
-    infra: ValidateBoardFieldInfra
+    infra: ValidateBoardFieldInfra,
 ): LoginIDBoardFieldAction {
     const input = newInputBoardValueAction()
 
@@ -28,15 +25,20 @@ export function initLoginIDBoardFieldAction<N extends string>(
             converter: () => convertLoginID(input.get()),
             validator: () => validateLoginID(input.get()),
         },
-        infra
+        infra,
     )
 
     input.addInputHandler(() => validate.check())
 
-    return { input, validate, clear: () => input.clear() }
-}
-export function terminateLoginIDBoardFieldAction(resource: LoginIDBoardFieldAction): void {
-    resource.validate.terminate()
+    return {
+        input,
+        validate,
+        clear: () => input.clear(),
+        terminate: () => {
+            input.terminate()
+            validate.terminate()
+        },
+    }
 }
 
 function convertLoginID(value: BoardValue): BoardConvertResult<LoginID> {
