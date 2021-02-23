@@ -8,5 +8,6 @@ export function initMockRequestPasswordResetTokenFormAction(): RequestPasswordRe
         loginID: initMockLoginIDBoardFieldAction(),
         validate: initMockValidateBoardAction(),
         clear: () => null,
+        terminate: () => null,
     }
 }

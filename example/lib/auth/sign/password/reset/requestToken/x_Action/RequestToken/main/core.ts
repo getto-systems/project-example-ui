@@ -15,7 +15,7 @@ import {
     RequestPasswordResetTokenCoreAction,
     RequestPasswordResetTokenCoreMaterial,
 } from "../Core/action"
-import { toRequestPasswordResetTokenEntryPoint } from "../impl"
+import { toRequestPasswordResetTokenAction, toRequestPasswordResetTokenEntryPoint } from "../impl"
 
 export function newRequestPasswordResetToken(): RequestPasswordResetTokenEntryPoint {
     return toRequestPasswordResetTokenEntryPoint(mergeAction(newCoreAction()))
@@ -28,10 +28,10 @@ export function newRequestPasswordResetToken_proxy(
     )
 }
 function mergeAction(core: RequestPasswordResetTokenCoreAction): RequestPasswordResetTokenAction {
-    return {
+    return toRequestPasswordResetTokenAction({
         core,
         form: newFormAction(),
-    }
+    })
 }
 
 export function newRequestPasswordResetTokenMaterial(): RequestPasswordResetTokenCoreMaterial {

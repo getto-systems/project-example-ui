@@ -31,7 +31,10 @@ import {
     toAuthenticatePasswordAction,
     toAuthenticatePasswordEntryPoint,
 } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/impl"
-import { toRequestPasswordResetTokenEntryPoint } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/impl"
+import {
+    toRequestPasswordResetTokenAction,
+    toRequestPasswordResetTokenEntryPoint,
+} from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/impl"
 import { initRequestPasswordResetTokenCoreAction } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/Core/impl"
 import {
     initCheckPasswordResetSendingStatusAction,
@@ -539,23 +542,25 @@ function standardPasswordResetResource(
     })
 }
 function standardRequestPasswordResetTokenResource() {
-    return toRequestPasswordResetTokenEntryPoint({
-        core: initRequestPasswordResetTokenCoreAction({
-            request: {
-                request: initRequestPasswordResetTokenSimulate(simulateRequestToken, {
-                    wait_millisecond: 0,
-                }),
-                config: {
-                    delay: { delay_millisecond: 1 },
+    return toRequestPasswordResetTokenEntryPoint(
+        toRequestPasswordResetTokenAction({
+            core: initRequestPasswordResetTokenCoreAction({
+                request: {
+                    request: initRequestPasswordResetTokenSimulate(simulateRequestToken, {
+                        wait_millisecond: 0,
+                    }),
+                    config: {
+                        delay: { delay_millisecond: 1 },
+                    },
+                    delayed,
                 },
-                delayed,
-            },
-        }),
+            }),
 
-        form: initRequestPasswordResetTokenFormAction({
-            stack: newBoardValidateStack(),
+            form: initRequestPasswordResetTokenFormAction({
+                stack: newBoardValidateStack(),
+            }),
         }),
-    })
+    )
 }
 function standardCheckPasswordResetSendingStatusResource(currentURL: URL) {
     return toCheckPasswordResetSendingStatusEntryPoint(

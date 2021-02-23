@@ -1,3 +1,4 @@
+import { ApplicationAction } from "../../../../../../../z_getto/application/action"
 import {
     initialValidateBoardState,
     ValidateBoardState,
@@ -20,10 +21,10 @@ export type RequestPasswordResetTokenResource = AuthSignLinkResource &
         request: RequestPasswordResetTokenAction
     }>
 
-export type RequestPasswordResetTokenAction = Readonly<{
-    core: RequestPasswordResetTokenCoreAction
-    form: RequestPasswordResetTokenFormAction
-}>
+export interface RequestPasswordResetTokenAction extends ApplicationAction {
+    readonly core: RequestPasswordResetTokenCoreAction
+    readonly form: RequestPasswordResetTokenFormAction
+}
 
 export type RequestPasswordResetTokenResourceState = Readonly<{
     core: RequestPasswordResetTokenCoreState
