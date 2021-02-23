@@ -7,7 +7,7 @@ export function initMockAuthSignAction(): AuthSignAction {
 }
 
 class Action extends MockAction_simple<AuthSignActionState> implements AuthSignAction {
-    load(): void {
+    error(): void {
         // mock では特に何もしない
     }
 }

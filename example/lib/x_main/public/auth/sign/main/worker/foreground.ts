@@ -25,7 +25,7 @@ import {
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
 
-import { AuthSignEntryPoint } from "../../entryPoint"
+import { AuthSignAction, AuthSignEntryPoint } from "../../entryPoint"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
@@ -36,7 +36,7 @@ export function newWorkerForeground(feature: OutsideFeature): AuthSignEntryPoint
     const { webStorage, currentURL, worker } = feature
     const proxy = initProxy(webStorage, currentURL, postForegroundMessage)
 
-    const view = new View(initLoginViewLocationInfo(currentURL), {
+    const view: AuthSignAction = new View(initLoginViewLocationInfo(currentURL), {
         renew: () => newRenewAuthnInfo(webStorage, currentURL),
 
         password_authenticate: () =>
@@ -57,7 +57,6 @@ export function newWorkerForeground(feature: OutsideFeature): AuthSignEntryPoint
     })
 
     const messageHandler = initBackgroundMessageHandler(proxy, (err: string) => {
-        // TODO これは公開されてるやつじゃないぞ
         view.error(err)
     })
 

@@ -63,16 +63,15 @@ function detectViewState(currentURL: URL): AuthSignViewType {
 
 export class View extends ApplicationAbstractAction<AuthSignActionState> implements AuthSignAction {
     locationInfo: AuthSignViewLocationInfo
-    // TODO もう components ではない
-    components: AuthSignSubEntryPoint
+    entryPoints: AuthSignSubEntryPoint
 
     constructor(locationInfo: AuthSignViewLocationInfo, components: AuthSignSubEntryPoint) {
         super()
         this.locationInfo = locationInfo
-        this.components = components
+        this.entryPoints = components
 
         this.igniteHook(() => {
-            const entryPoint = this.components.renew()
+            const entryPoint = this.entryPoints.renew()
             entryPoint.resource.renew.addStateHandler((state) => {
                 switch (state.type) {
                     case "required-to-login":
@@ -92,13 +91,13 @@ export class View extends ApplicationAbstractAction<AuthSignActionState> impleme
     mapViewType(type: AuthSignViewType): AuthSignActionState {
         switch (type) {
             case "password-authenticate":
-                return { type, entryPoint: this.components.password_authenticate() }
+                return { type, entryPoint: this.entryPoints.password_authenticate() }
             case "password-reset-requestToken":
-                return { type, entryPoint: this.components.password_reset_requestToken() }
+                return { type, entryPoint: this.entryPoints.password_reset_requestToken() }
             case "password-reset-checkStatus":
-                return { type, entryPoint: this.components.password_reset_checkStatus() }
+                return { type, entryPoint: this.entryPoints.password_reset_checkStatus() }
             case "password-reset":
-                return { type, entryPoint: this.components.password_reset() }
+                return { type, entryPoint: this.entryPoints.password_reset() }
         }
     }
 }
