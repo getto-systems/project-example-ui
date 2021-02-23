@@ -3,13 +3,13 @@ import { newForegroundMaterial } from "../common"
 import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/main"
 import { newGetSecureScriptPathInfra } from "../../../../../../common/secureScriptPath/get/main"
 
-import { toAuthenticatePasswordAction, toAuthenticatePasswordEntryPoint } from "../../impl"
+import { toAction, toEntryPoint } from "../../impl"
 
 import {
-    AuthenticatePasswordCoreForegroundBase,
-    initAuthenticatePasswordCoreAction,
+    CoreForegroundBase,
+    initCoreAction,
 } from "../../Core/impl"
-import { initAuthenticatePasswordFormAction } from "../../Form/impl"
+import { initFormAction } from "../../Form/impl"
 
 import {
     WorkerProxy,
@@ -23,8 +23,8 @@ import {
 } from "./message"
 
 import { AuthenticatePasswordEntryPoint } from "../../action"
-import { AuthenticatePasswordCoreAction } from "../../Core/action"
-import { AuthenticatePasswordFormAction } from "../../Form/action"
+import { CoreAction } from "../../Core/action"
+import { FormAction } from "../../Form/action"
 
 export interface AuthenticatePasswordProxy
     extends WorkerProxy<AuthenticatePasswordProxyMessage, AuthenticatePasswordProxyResponse> {
@@ -51,7 +51,7 @@ class Proxy
     entryPoint(webStorage: Storage, currentURL: URL): AuthenticatePasswordEntryPoint {
         const foreground = newForegroundMaterial(webStorage, currentURL)
         return newEntryPoint(
-            initAuthenticatePasswordCoreAction({
+            initCoreAction({
                 authenticate: (fields, post) => this.material.authenticate.call({ fields }, post),
                 ...foreground,
             }),
@@ -66,7 +66,7 @@ class Proxy
     }
 }
 
-export function newForegroundBase(webStorage: Storage): AuthenticatePasswordCoreForegroundBase {
+export function newForegroundBase(webStorage: Storage): CoreForegroundBase {
     return {
         startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webStorage),
         getSecureScriptPath: newGetSecureScriptPathInfra(),
@@ -74,15 +74,15 @@ export function newForegroundBase(webStorage: Storage): AuthenticatePasswordCore
 }
 
 export function newEntryPoint(
-    core: AuthenticatePasswordCoreAction,
+    core: CoreAction,
 ): AuthenticatePasswordEntryPoint {
-    return toAuthenticatePasswordEntryPoint(
-        toAuthenticatePasswordAction({ core, form: newFormAction() }),
+    return toEntryPoint(
+        toAction({ core, form: newFormAction() }),
     )
 }
 
-function newFormAction(): AuthenticatePasswordFormAction {
-    return initAuthenticatePasswordFormAction()
+function newFormAction(): FormAction {
+    return initFormAction()
 }
 
 interface Post<M> {

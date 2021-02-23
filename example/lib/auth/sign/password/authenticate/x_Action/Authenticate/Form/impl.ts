@@ -3,12 +3,12 @@ import { initPasswordBoardFieldAction } from "../../../../../../common/board/pas
 
 import { initValidateBoardAction } from "../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/impl"
 
-import { AuthenticatePasswordFormAction } from "./action"
+import { FormAction } from "./action"
 import { BoardConvertResult } from "../../../../../../../z_getto/board/kernel/data"
-import { AuthenticatePasswordFields } from "../../../data"
+import { AuthenticateFields } from "../../../data"
 import { newBoardValidateStack } from "../../../../../../../z_getto/board/kernel/infra/stack"
 
-export function initAuthenticatePasswordFormAction(): AuthenticatePasswordFormAction {
+export function initFormAction(): FormAction {
     const infra = { stack: newBoardValidateStack() }
     const loginID = initLoginIDBoardFieldAction({ name: "loginID" }, infra)
     const password = initPasswordBoardFieldAction({ name: "password" }, infra)
@@ -39,7 +39,7 @@ export function initAuthenticatePasswordFormAction(): AuthenticatePasswordFormAc
         },
     }
 
-    function converter(): BoardConvertResult<AuthenticatePasswordFields> {
+    function converter(): BoardConvertResult<AuthenticateFields> {
         loginID.validate.check()
         password.validate.check()
 

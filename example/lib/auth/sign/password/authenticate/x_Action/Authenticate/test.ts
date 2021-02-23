@@ -1,16 +1,16 @@
 import { initStaticClock, StaticClock } from "../../../../../../z_getto/infra/clock/simulate"
-import { initAuthenticatePasswordSimulate } from "../../infra/remote/authenticate/simulate"
+import { initAuthenticateSimulate } from "../../infra/remote/authenticate/simulate"
 import { initRenewAuthnInfoSimulate } from "../../../../kernel/authnInfo/kernel/infra/remote/renew/simulate"
 
-import { AuthenticatePasswordRemote, AuthenticatePasswordResult } from "../../infra"
+import { AuthenticateRemote, AuthenticateResult } from "../../infra"
 import { Clock } from "../../../../../../z_getto/infra/clock/infra"
 
 import { AuthenticatePasswordAction } from "./action"
 
-import { AuthenticatePasswordCoreState } from "./Core/action"
+import { CoreState } from "./Core/action"
 
 import { markSecureScriptPath } from "../../../../common/secureScriptPath/get/data"
-import { AuthenticatePasswordFields } from "../../data"
+import { AuthenticateFields } from "../../data"
 import { markAuthAt, markAuthnNonce } from "../../../../kernel/authnInfo/kernel/data"
 import { ApiCredentialRepository } from "../../../../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../../../common/apiCredential/infra/repository/memory"
@@ -23,16 +23,16 @@ import {
 import { initMemoryAuthnInfoRepository } from "../../../../kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
 import { newGetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/impl"
 import { delayed, wait } from "../../../../../../z_getto/infra/delayed/core"
-import { authenticatePasswordEventHasDone } from "../../impl"
+import { authenticateEventHasDone } from "../../impl"
 import {
     initAsyncActionTestRunner,
     initSyncActionTestRunner,
 } from "../../../../../../z_getto/application/testHelper"
-import { initAuthenticatePasswordFormAction } from "./Form/impl"
+import { initFormAction } from "./Form/impl"
 import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
 import { standardBoardValueStore } from "../../../../../../z_getto/board/input/x_Action/Input/testHelper"
-import { toAuthenticatePasswordAction } from "./impl"
-import { initAuthenticatePasswordCoreAction, initAuthenticatePasswordCoreMaterial } from "./Core/impl"
+import { toAction, toEntryPoint } from "./impl"
+import { initCoreAction, initCoreMaterial } from "./Core/impl"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -50,7 +50,7 @@ const NOW = new Date("2020-01-01 10:00:30")
 // テストが完了したら clock が返す値をこっちにする
 const COMPLETED_NOW = new Date("2020-01-01 11:00:00")
 
-describe("PasswordAuthenticate", () => {
+describe("AuthenticatePassword", () => {
     test("submit valid login-id and password", (done) => {
         const { repository, clock, resource } = standardPasswordLoginResource()
 
@@ -190,6 +190,7 @@ describe("PasswordAuthenticate", () => {
 
     test("terminate", (done) => {
         const { resource } = standardPasswordLoginResource()
+        const entryPoint = toEntryPoint(resource)
 
         const ignition = {
             core: resource.core.ignition(),
@@ -202,7 +203,7 @@ describe("PasswordAuthenticate", () => {
 
         runner.addTestCase(
             () => {
-                resource.terminate()
+                entryPoint.terminate()
                 resource.form.loginID.input.set(markBoardValue("login-id"))
                 resource.form.password.input.set(markBoardValue("password"))
             },
@@ -246,7 +247,7 @@ type PasswordLoginTestRepository = Readonly<{
     authnInfos: AuthnInfoRepository
 }>
 type PasswordLoginTestRemoteAccess = Readonly<{
-    authenticate: AuthenticatePasswordRemote
+    authenticate: AuthenticateRemote
     renew: RenewAuthnInfoRemote
 }>
 
@@ -257,9 +258,9 @@ function newTestPasswordLoginResource(
     clock: Clock,
 ): AuthenticatePasswordAction {
     const config = standardConfig()
-    const action = toAuthenticatePasswordAction({
-        core: initAuthenticatePasswordCoreAction(
-            initAuthenticatePasswordCoreMaterial(
+    const action = toAction({
+        core: initCoreAction(
+            initCoreMaterial(
                 {
                     startContinuousRenew: {
                         ...repository,
@@ -280,7 +281,7 @@ function newTestPasswordLoginResource(
             ),
         ),
 
-        form: initAuthenticatePasswordFormAction(),
+        form: initFormAction(),
     })
 
     action.form.loginID.input.linkStore(standardBoardValueStore())
@@ -323,7 +324,7 @@ function standardRepository(): PasswordLoginTestRepository {
 }
 function standardSimulator(): PasswordLoginTestRemoteAccess {
     return {
-        authenticate: initAuthenticatePasswordSimulate(simulateLogin, {
+        authenticate: initAuthenticateSimulate(simulateLogin, {
             wait_millisecond: 0,
         }),
         renew: renewRemoteAccess(),
@@ -331,14 +332,14 @@ function standardSimulator(): PasswordLoginTestRemoteAccess {
 }
 function waitSimulator(): PasswordLoginTestRemoteAccess {
     return {
-        authenticate: initAuthenticatePasswordSimulate(simulateLogin, {
+        authenticate: initAuthenticateSimulate(simulateLogin, {
             wait_millisecond: 3,
         }),
         renew: renewRemoteAccess(),
     }
 }
 
-function simulateLogin(_fields: AuthenticatePasswordFields): AuthenticatePasswordResult {
+function simulateLogin(_fields: AuthenticateFields): AuthenticateResult {
     return {
         success: true,
         value: {
@@ -413,7 +414,7 @@ function expectToEmptyLastAuth(authnInfos: AuthnInfoRepository) {
 }
 
 function initAsyncRunner() {
-    return initAsyncActionTestRunner((state: AuthenticatePasswordCoreState) => {
+    return initAsyncActionTestRunner((state: CoreState) => {
         switch (state.type) {
             case "initial-login":
                 return false
@@ -424,7 +425,7 @@ function initAsyncRunner() {
                 return true
 
             default:
-                return authenticatePasswordEventHasDone(state)
+                return authenticateEventHasDone(state)
         }
     })
 }

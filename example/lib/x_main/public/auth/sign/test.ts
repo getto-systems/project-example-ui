@@ -2,11 +2,11 @@ import { initLoginViewLocationInfo, View } from "./impl"
 
 import { newBoardValidateStack } from "../../../../z_getto/board/kernel/infra/stack"
 import { initStaticClock } from "../../../../z_getto/infra/clock/simulate"
-import { initAuthenticatePasswordSimulate } from "../../../../auth/sign/password/authenticate/infra/remote/authenticate/simulate"
+import { initAuthenticateSimulate } from "../../../../auth/sign/password/authenticate/infra/remote/authenticate/simulate"
 import { initRenewAuthnInfoSimulate } from "../../../../auth/sign/kernel/authnInfo/kernel/infra/remote/renew/simulate"
 
 import { Clock } from "../../../../z_getto/infra/clock/infra"
-import { AuthenticatePasswordResult } from "../../../../auth/sign/password/authenticate/infra"
+import { AuthenticateResult } from "../../../../auth/sign/password/authenticate/infra"
 
 import { AuthSignActionState } from "./entryPoint"
 
@@ -25,10 +25,10 @@ import {
     initRenewAuthnInfoAction,
     toRenewAuthnInfoEntryPoint,
 } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/impl"
-import { initAuthenticatePasswordFormAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Form/impl"
+import { initFormAction as initAuthenticatePasswordFormAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Form/impl"
 import {
-    toAuthenticatePasswordAction,
-    toAuthenticatePasswordEntryPoint,
+    toAction as toAuthenticatePasswordAction,
+    toEntryPoint as toAuthenticatePasswordEntryPoint,
 } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/impl"
 import {
     toRequestPasswordResetTokenAction,
@@ -60,8 +60,8 @@ import {
 } from "../../../../auth/sign/password/reset/checkStatus/infra"
 import { newResetPasswordLocationInfo } from "../../../../auth/sign/password/reset/reset/impl"
 import {
-    initAuthenticatePasswordCoreAction,
-    initAuthenticatePasswordCoreMaterial,
+    initCoreAction as initAuthenticatePasswordCoreAction,
+    initCoreMaterial as initAuthenticatePasswordCoreMaterial,
 } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Core/impl"
 
 const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
@@ -483,7 +483,7 @@ function standardPasswordLoginEntryPoint(
                             },
                         },
                         authenticate: {
-                            authenticate: initAuthenticatePasswordSimulate(simulateLogin, {
+                            authenticate: initAuthenticateSimulate(simulateLogin, {
                                 wait_millisecond: 0,
                             }),
                             config: {
@@ -654,7 +654,7 @@ function standardSecureHost(): string {
     return "secure.example.com"
 }
 
-function simulateLogin(): AuthenticatePasswordResult {
+function simulateLogin(): AuthenticateResult {
     return {
         success: true,
         value: {

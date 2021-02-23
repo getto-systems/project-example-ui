@@ -1,8 +1,8 @@
-import { newAuthenticatePasswordInfra } from "../../../../init"
+import { newAuthenticateInfra } from "../../../../init"
 
-import { AuthenticatePasswordCoreBackgroundBase } from "../../Core/impl"
+import { CoreBackgroundBase } from "../../Core/impl"
 
-import { authenticatePasswordEventHasDone } from "../../../../impl"
+import { authenticateEventHasDone } from "../../../../impl"
 
 import { WorkerHandler } from "../../../../../../../../z_getto/application/worker/background"
 
@@ -20,7 +20,7 @@ export function newAuthenticatePasswordWorkerHandler(
                 material.authenticate(message.params.fields, (event) => {
                     post({
                         ...message,
-                        done: authenticatePasswordEventHasDone(event),
+                        done: authenticateEventHasDone(event),
                         event,
                     })
                 })
@@ -29,9 +29,9 @@ export function newAuthenticatePasswordWorkerHandler(
     }
 }
 
-export function newBackgroundBase(): AuthenticatePasswordCoreBackgroundBase {
+export function newBackgroundBase(): CoreBackgroundBase {
     return {
-        authenticate: newAuthenticatePasswordInfra(),
+        authenticate: newAuthenticateInfra(),
     }
 }
 

@@ -3,16 +3,16 @@ import { ValidateBoardAction } from "../../../../../../../z_getto/board/validate
 import { LoginIDBoardFieldAction } from "../../../../../../common/board/loginID/x_Action/LoginID/action"
 import { PasswordBoardFieldAction } from "../../../../../../common/board/password/x_Action/Password/action"
 
-import { AuthenticatePasswordFields } from "../../../data"
+import { AuthenticateFields } from "../../../data"
 
-export interface AuthenticatePasswordFormAction extends ApplicationAction {
+export interface FormAction extends ApplicationAction {
     readonly loginID: LoginIDBoardFieldAction
     readonly password: PasswordBoardFieldAction
-    readonly validate: AuthenticatePasswordValidateAction
+    readonly validate: ValidateAuthenticateAction
     readonly clear: ClearAction
 }
 
-export type AuthenticatePasswordValidateAction = ValidateBoardAction<AuthenticatePasswordFields>
+export type ValidateAuthenticateAction = ValidateBoardAction<AuthenticateFields>
 
 interface ClearAction {
     (): void

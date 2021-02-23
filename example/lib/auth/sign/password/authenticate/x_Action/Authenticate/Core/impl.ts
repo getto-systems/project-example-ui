@@ -2,81 +2,74 @@ import { ApplicationAbstractStateAction } from "../../../../../../../z_getto/app
 
 import { startContinuousRenewAuthnInfo } from "../../../../../kernel/authnInfo/common/startContinuousRenew/impl"
 import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
-import { authenticatePassword } from "../../../impl"
+import { authenticate } from "../../../impl"
 
-import { AuthenticatePasswordInfra } from "../../../infra"
+import { AuthenticateInfra } from "../../../infra"
 import { StartContinuousRenewAuthnInfoInfra } from "../../../../../kernel/authnInfo/common/startContinuousRenew/infra"
 import { GetSecureScriptPathInfra } from "../../../../../common/secureScriptPath/get/infra"
 
 import {
-    AuthenticatePasswordCoreMaterial,
-    AuthenticatePasswordCoreAction,
-    AuthenticatePasswordCoreState,
-    AuthenticatePasswordCoreForeground,
-    AuthenticatePasswordCoreBackground,
+    CoreMaterial,
+    CoreAction,
+    CoreState,
+    CoreForegroundMaterial,
+    CoreBackgroundMaterial,
 } from "./action"
 
 import { GetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/method"
 
 import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
-import { AuthenticatePasswordFields } from "../../../data"
+import { AuthenticateFields } from "../../../data"
 import { AuthnInfo } from "../../../../../kernel/authnInfo/kernel/data"
 import { BoardConvertResult } from "../../../../../../../z_getto/board/kernel/data"
 
-export type AuthenticatePasswordCoreBase = AuthenticatePasswordCoreForegroundBase &
-    AuthenticatePasswordCoreBackgroundBase
+export type CoreBase = CoreForegroundBase & CoreBackgroundBase
 
-export type AuthenticatePasswordCoreForegroundBase = Readonly<{
+export type CoreForegroundBase = Readonly<{
     startContinuousRenew: StartContinuousRenewAuthnInfoInfra
     getSecureScriptPath: GetSecureScriptPathInfra
 }>
-export type AuthenticatePasswordCoreBackgroundBase = Readonly<{
-    authenticate: AuthenticatePasswordInfra
+export type CoreBackgroundBase = Readonly<{
+    authenticate: AuthenticateInfra
 }>
 
-export function initAuthenticatePasswordCoreMaterial(
-    base: AuthenticatePasswordCoreBase,
+export function initCoreMaterial(
+    base: CoreBase,
     locationInfo: GetSecureScriptPathLocationInfo,
-): AuthenticatePasswordCoreMaterial {
+): CoreMaterial {
     return {
-        ...initForegroundMaterial(base, locationInfo),
-        ...initBackgroundMaterial(base),
+        ...initCoreForegroundMaterial(base, locationInfo),
+        ...initCoreBackgroundMaterial(base),
     }
 }
-export function initForegroundMaterial(
-    base: AuthenticatePasswordCoreForegroundBase,
+export function initCoreForegroundMaterial(
+    base: CoreForegroundBase,
     locationInfo: GetSecureScriptPathLocationInfo,
-): AuthenticatePasswordCoreForeground {
+): CoreForegroundMaterial {
     return {
         startContinuousRenew: startContinuousRenewAuthnInfo(base.startContinuousRenew),
         getSecureScriptPath: getSecureScriptPath(base.getSecureScriptPath)(locationInfo),
     }
 }
-export function initBackgroundMaterial(
-    base: AuthenticatePasswordCoreBackgroundBase,
-): AuthenticatePasswordCoreBackground {
+export function initCoreBackgroundMaterial(base: CoreBackgroundBase): CoreBackgroundMaterial {
     return {
-        authenticate: authenticatePassword(base.authenticate),
+        authenticate: authenticate(base.authenticate),
     }
 }
 
-export function initAuthenticatePasswordCoreAction(
-    material: AuthenticatePasswordCoreMaterial,
-): AuthenticatePasswordCoreAction {
+export function initCoreAction(material: CoreMaterial): CoreAction {
     return new Action(material)
 }
 
-class Action
-    extends ApplicationAbstractStateAction<AuthenticatePasswordCoreState>
-    implements AuthenticatePasswordCoreAction {
-    material: AuthenticatePasswordCoreMaterial
+class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAction {
+    material: CoreMaterial
 
-    constructor(material: AuthenticatePasswordCoreMaterial) {
+    constructor(material: CoreMaterial) {
         super()
         this.material = material
     }
 
-    submit(fields: BoardConvertResult<AuthenticatePasswordFields>): void {
+    submit(fields: BoardConvertResult<AuthenticateFields>): void {
         this.material.authenticate(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-login":

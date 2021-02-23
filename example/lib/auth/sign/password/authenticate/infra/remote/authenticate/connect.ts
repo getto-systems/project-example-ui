@@ -1,13 +1,13 @@
 import { initConnectRemoteAccess } from "../../../../../../../z_getto/remote/connect"
 
 import {
-    AuthenticatePasswordRemote,
-    AuthenticatePasswordResponse,
+    AuthenticateRemote,
+    AuthenticateResponse,
 } from "../../../infra"
 
 import {
-    AuthenticatePasswordFields,
-    AuthenticatePasswordRemoteError,
+    AuthenticateFields,
+    AuthenticateRemoteError,
 } from "../../../data"
 import { RawRemote, RemoteError } from "../../../../../../../z_getto/remote/infra"
 import { markAuthAt, markAuthnNonce } from "../../../../../kernel/authnInfo/kernel/data"
@@ -16,19 +16,19 @@ import {
     markApiRoles,
 } from "../../../../../../../common/apiCredential/data"
 
-type Raw = RawRemote<AuthenticatePasswordFields, RawAuthnInfo>
+type Raw = RawRemote<AuthenticateFields, RawAuthnInfo>
 type RawAuthnInfo = Readonly<{
     authnNonce: string
     api: Readonly<{ apiNonce: string; apiRoles: string[] }>
 }>
 
-export function initAuthenticatePasswordConnect(
+export function initAuthenticateConnect(
     access: Raw
-): AuthenticatePasswordRemote {
+): AuthenticateRemote {
     return initConnectRemoteAccess(access, {
-        message: (fields: AuthenticatePasswordFields): AuthenticatePasswordFields =>
+        message: (fields: AuthenticateFields): AuthenticateFields =>
             fields,
-        value: (response: RawAuthnInfo): AuthenticatePasswordResponse => ({
+        value: (response: RawAuthnInfo): AuthenticateResponse => ({
             auth: {
                 authnNonce: markAuthnNonce(response.authnNonce),
                 authAt: markAuthAt(new Date()),
@@ -38,7 +38,7 @@ export function initAuthenticatePasswordConnect(
                 apiRoles: markApiRoles(response.api.apiRoles),
             },
         }),
-        error: (err: RemoteError): AuthenticatePasswordRemoteError => {
+        error: (err: RemoteError): AuthenticateRemoteError => {
             switch (err.type) {
                 case "bad-request":
                 case "invalid-password-login":
@@ -52,7 +52,7 @@ export function initAuthenticatePasswordConnect(
                     return { type: "infra-error", err: err.detail }
             }
         },
-        unknown: (err: unknown): AuthenticatePasswordRemoteError => ({
+        unknown: (err: unknown): AuthenticateRemoteError => ({
             type: "infra-error",
             err: `${err}`,
         }),

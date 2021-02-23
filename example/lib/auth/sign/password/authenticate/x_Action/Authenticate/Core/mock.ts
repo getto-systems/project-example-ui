@@ -1,14 +1,12 @@
 import { MockStateAction_simple } from "../../../../../../../z_getto/application/mock"
 
-import { AuthenticatePasswordCoreAction, AuthenticatePasswordCoreState } from "./action"
+import { CoreAction, CoreState } from "./action"
 
-export function initMockAuthenticatePasswordCoreAction(): AuthenticatePasswordCoreAction {
+export function initMockCoreAction(): CoreAction {
     return new Action()
 }
 
-class Action
-    extends MockStateAction_simple<AuthenticatePasswordCoreState>
-    implements AuthenticatePasswordCoreAction {
+class Action extends MockStateAction_simple<CoreState> implements CoreAction {
     submit(): void {
         // mock では特に何もしない
     }

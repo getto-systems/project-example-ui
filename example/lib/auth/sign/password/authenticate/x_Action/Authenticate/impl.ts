@@ -1,10 +1,10 @@
 import { newAuthSignLinkResource } from "../../../../common/searchParams/x_Action/Link/impl"
 
 import { AuthenticatePasswordAction, AuthenticatePasswordEntryPoint } from "./action"
-import { AuthenticatePasswordCoreAction } from "./Core/action"
-import { AuthenticatePasswordFormAction } from "./Form/action"
+import { CoreAction } from "./Core/action"
+import { FormAction } from "./Form/action"
 
-export function toAuthenticatePasswordEntryPoint(
+export function toEntryPoint(
     action: AuthenticatePasswordAction,
 ): AuthenticatePasswordEntryPoint {
     return {
@@ -15,10 +15,10 @@ export function toAuthenticatePasswordEntryPoint(
     }
 }
 
-export function toAuthenticatePasswordAction(
+export function toAction(
     actions: Readonly<{
-        core: AuthenticatePasswordCoreAction
-        form: AuthenticatePasswordFormAction
+        core: CoreAction
+        form: FormAction
     }>,
 ): AuthenticatePasswordAction {
     return {
