@@ -12,5 +12,6 @@ export function initMockResetPasswordFormAction(): ResetPasswordFormAction {
         password: initMockPasswordBoardFieldAction(emptyBoardValue, { multiByte: false }),
         validate: initMockValidateBoardAction(),
         clear: () => null,
+        terminate: () => null,
     }
 }

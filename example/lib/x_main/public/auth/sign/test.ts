@@ -42,7 +42,10 @@ import {
 } from "../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/impl"
 import { newCheckPasswordResetSendingStatusLocationInfo } from "../../../../auth/sign/password/reset/checkStatus/impl"
 import { initResetPasswordCoreAction } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/Core/impl"
-import { toResetPasswordEntryPoint } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/impl"
+import {
+    toResetPasswordAction,
+    toResetPasswordEntryPoint,
+} from "../../../../auth/sign/password/reset/reset/x_Action/Reset/impl"
 import { initResetPasswordSimulate } from "../../../../auth/sign/password/reset/reset/infra/remote/reset/simulate"
 import { initResetPasswordFormAction } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/Form/impl"
 import { initRequestPasswordResetTokenSimulate } from "../../../../auth/sign/password/reset/requestToken/infra/remote/requestToken/simulate"
@@ -500,46 +503,48 @@ function standardPasswordResetResource(
     authnInfos: AuthnInfoRepository,
     clock: Clock,
 ) {
-    return toResetPasswordEntryPoint({
-        core: initResetPasswordCoreAction(
-            {
-                startContinuousRenew: {
-                    apiCredentials,
-                    authnInfos,
-                    renew: initRenewAuthnInfoSimulate(simulateRenew, {
-                        wait_millisecond: 0,
-                    }),
-                    config: {
-                        delay: { delay_millisecond: 1 },
-                        interval: { interval_millisecond: 1 },
+    return toResetPasswordEntryPoint(
+        toResetPasswordAction({
+            core: initResetPasswordCoreAction(
+                {
+                    startContinuousRenew: {
+                        apiCredentials,
+                        authnInfos,
+                        renew: initRenewAuthnInfoSimulate(simulateRenew, {
+                            wait_millisecond: 0,
+                        }),
+                        config: {
+                            delay: { delay_millisecond: 1 },
+                            interval: { interval_millisecond: 1 },
+                        },
+                        clock,
                     },
-                    clock,
-                },
-                getSecureScriptPath: {
-                    config: {
-                        secureServerHost: standardSecureHost(),
+                    getSecureScriptPath: {
+                        config: {
+                            secureServerHost: standardSecureHost(),
+                        },
+                    },
+                    reset: {
+                        reset: initResetPasswordSimulate(simulateReset, {
+                            wait_millisecond: 0,
+                        }),
+                        config: {
+                            delay: { delay_millisecond: 1 },
+                        },
+                        delayed,
                     },
                 },
-                reset: {
-                    reset: initResetPasswordSimulate(simulateReset, {
-                        wait_millisecond: 0,
-                    }),
-                    config: {
-                        delay: { delay_millisecond: 1 },
-                    },
-                    delayed,
+                {
+                    ...newGetSecureScriptPathLocationInfo(currentURL),
+                    ...newResetPasswordLocationInfo(currentURL),
                 },
-            },
-            {
-                ...newGetSecureScriptPathLocationInfo(currentURL),
-                ...newResetPasswordLocationInfo(currentURL),
-            },
-        ),
+            ),
 
-        form: initResetPasswordFormAction({
-            stack: newBoardValidateStack(),
+            form: initResetPasswordFormAction({
+                stack: newBoardValidateStack(),
+            }),
         }),
-    })
+    )
 }
 function standardRequestPasswordResetTokenResource() {
     return toRequestPasswordResetTokenEntryPoint(

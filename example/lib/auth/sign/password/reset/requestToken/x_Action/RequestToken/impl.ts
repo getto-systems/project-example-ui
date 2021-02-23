@@ -8,11 +8,7 @@ export function toRequestPasswordResetTokenEntryPoint(
 ): RequestPasswordResetTokenEntryPoint {
     return {
         resource: { request: action, ...newAuthSignLinkResource() },
-        terminate: () => {
-            action.core.terminate()
-            action.form.validate.terminate()
-            action.form.loginID.terminate()
-        },
+        terminate: () => action.terminate(),
     }
 }
 

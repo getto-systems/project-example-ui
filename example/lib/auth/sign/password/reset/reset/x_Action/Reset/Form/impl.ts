@@ -6,6 +6,8 @@ import { ValidateBoardInfra } from "../../../../../../../../z_getto/board/valida
 import { ValidateBoardFieldInfra } from "../../../../../../../../z_getto/board/validateField/infra"
 
 import { ResetPasswordFormAction } from "./action"
+import { PasswordResetFields } from "../../../data"
+import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
 
 export type ResetPasswordFormBase = ValidateBoardInfra & ValidateBoardFieldInfra
 
@@ -15,23 +17,7 @@ export function initResetPasswordFormAction(infra: ResetPasswordFormBase): Reset
     const validate = initValidateBoardAction(
         {
             fields: [loginID.validate.name, password.validate.name],
-            converter: () => {
-                loginID.validate.check()
-                password.validate.check()
-
-                const loginIDResult = loginID.validate.get()
-                const passwordResult = password.validate.get()
-                if (!loginIDResult.success || !passwordResult.success) {
-                    return { success: false }
-                }
-                return {
-                    success: true,
-                    value: {
-                        loginID: loginIDResult.value,
-                        password: passwordResult.value,
-                    },
-                }
-            },
+            converter,
         },
         infra,
     )
@@ -39,10 +25,35 @@ export function initResetPasswordFormAction(infra: ResetPasswordFormBase): Reset
     loginID.input.addInputHandler(() => validate.check())
     password.input.addInputHandler(() => validate.check())
 
-    return { loginID, password, validate, clear }
+    return {
+        loginID,
+        password,
+        validate,
+        clear: () => {
+            loginID.clear()
+            password.clear()
+        },
+        terminate: () => {
+            loginID.terminate()
+            password.terminate()
+        },
+    }
 
-    function clear() {
-        loginID.clear()
-        password.clear()
+    function converter(): BoardConvertResult<PasswordResetFields> {
+        loginID.validate.check()
+        password.validate.check()
+
+        const loginIDResult = loginID.validate.get()
+        const passwordResult = password.validate.get()
+        if (!loginIDResult.success || !passwordResult.success) {
+            return { success: false }
+        }
+        return {
+            success: true,
+            value: {
+                loginID: loginIDResult.value,
+                password: passwordResult.value,
+            },
+        }
     }
 }
