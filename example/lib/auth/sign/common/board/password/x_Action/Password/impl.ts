@@ -1,7 +1,7 @@
-import { initValidateBoardFieldAction } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/impl"
-import { newInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/impl"
+import { initValidateBoardFieldAction } from "../../../../../../../z_getto/board/validateField/x_Action/ValidateField/impl"
+import { newInputBoardValueAction } from "../../../../../../../z_getto/board/input/x_Action/Input/impl"
 
-import { ValidateBoardFieldInfra } from "../../../../../../z_getto/board/validateField/infra"
+import { ValidateBoardFieldInfra } from "../../../../../../../z_getto/board/validateField/infra"
 
 import {
     CheckPasswordCharacterAction,
@@ -9,7 +9,7 @@ import {
     PasswordBoardFieldAction,
 } from "./action"
 
-import { BoardConvertResult, BoardValue } from "../../../../../../z_getto/board/kernel/data"
+import { BoardConvertResult, BoardValue } from "../../../../../../../z_getto/board/kernel/data"
 import { markPassword, Password } from "../../../../password/data"
 import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "./data"
 import { checkPasswordCharacter } from "../../checkCharacter/impl"

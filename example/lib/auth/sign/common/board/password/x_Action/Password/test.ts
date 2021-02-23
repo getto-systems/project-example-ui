@@ -1,13 +1,13 @@
-import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
-import { newBoardValidateStack } from "../../../../../../z_getto/board/kernel/infra/stack"
-import { ValidateBoardFieldState } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
+import { markBoardValue } from "../../../../../../../z_getto/board/kernel/data"
+import { newBoardValidateStack } from "../../../../../../../z_getto/board/kernel/infra/stack"
+import { ValidateBoardFieldState } from "../../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
 import {
     initSyncActionChecker_simple,
     initSyncActionTestRunner,
-} from "../../../../../../z_getto/application/testHelper"
+} from "../../../../../../../z_getto/application/testHelper"
 import { ValidatePasswordError } from "./data"
 import { initPasswordBoardFieldAction } from "./impl"
-import { standardBoardValueStore } from "../../../../../../z_getto/board/input/x_Action/Input/testHelper"
+import { standardBoardValueStore } from "../../../../../../../z_getto/board/input/x_Action/Input/testHelper"
 
 describe("PasswordBoard", () => {
     test("validate; valid input", () => {

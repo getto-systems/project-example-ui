@@ -1,5 +1,5 @@
-import { initLoginIDBoardFieldAction } from "../../../../../../../common/board/loginID/x_Action/LoginID/impl"
-import { initPasswordBoardFieldAction } from "../../../../../../../common/board/password/x_Action/Password/impl"
+import { initLoginIDBoardFieldAction } from "../../../../../../common/board/loginID/x_Action/LoginID/impl"
+import { initPasswordBoardFieldAction } from "../../../../../../common/board/password/x_Action/Password/impl"
 import { initValidateBoardAction } from "../../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/impl"
 
 import { ValidateBoardInfra } from "../../../../../../../../z_getto/board/validateBoard/infra"
