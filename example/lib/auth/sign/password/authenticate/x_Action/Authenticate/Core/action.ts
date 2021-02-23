@@ -1,43 +1,43 @@
 import { ApplicationStateAction } from "../../../../../../../z_getto/application/action"
 
-import { AuthenticatePasswordMethod } from "../../../method"
+import { AuthenticateMethod } from "../../../method"
 import { GetSecureScriptPathMethod } from "../../../../../common/secureScriptPath/get/method"
 import { StartContinuousRenewAuthnInfoMethod } from "../../../../../kernel/authnInfo/common/startContinuousRenew/method"
 
-import { AuthenticatePasswordEvent } from "../../../event"
+import { AuthenticateEvent } from "../../../event"
 import { StartContinuousRenewAuthnInfoEvent } from "../../../../../kernel/authnInfo/common/startContinuousRenew/event"
 
 import {
     SecureScriptPath,
     LoadSecureScriptError,
 } from "../../../../../common/secureScriptPath/get/data"
-import { AuthenticatePasswordFields } from "../../../data"
+import { AuthenticateFields } from "../../../data"
 import { BoardConvertResult } from "../../../../../../../z_getto/board/kernel/data"
 
-export interface AuthenticatePasswordCoreAction
-    extends ApplicationStateAction<AuthenticatePasswordCoreState> {
-    submit(fields: BoardConvertResult<AuthenticatePasswordFields>): void
+export interface CoreAction
+    extends ApplicationStateAction<CoreState> {
+    submit(fields: BoardConvertResult<AuthenticateFields>): void
     loadError(err: LoadSecureScriptError): void
 }
 
-export type AuthenticatePasswordCoreMaterial = AuthenticatePasswordCoreForeground &
-    AuthenticatePasswordCoreBackground
+export type CoreMaterial = CoreForegroundMaterial &
+    CoreBackgroundMaterial
 
-export type AuthenticatePasswordCoreForeground = Readonly<{
+export type CoreForegroundMaterial = Readonly<{
     startContinuousRenew: StartContinuousRenewAuthnInfoMethod
     getSecureScriptPath: GetSecureScriptPathMethod
 }>
-export type AuthenticatePasswordCoreBackground = Readonly<{
-    authenticate: AuthenticatePasswordMethod
+export type CoreBackgroundMaterial = Readonly<{
+    authenticate: AuthenticateMethod
 }>
 
-export type AuthenticatePasswordCoreState =
+export type CoreState =
     | Readonly<{ type: "initial-login" }>
-    | Exclude<AuthenticatePasswordEvent, { type: "succeed-to-login" }>
+    | Exclude<AuthenticateEvent, { type: "succeed-to-login" }>
     | Exclude<StartContinuousRenewAuthnInfoEvent, { type: "succeed-to-start-continuous-renew" }>
     | Readonly<{ type: "try-to-load"; scriptPath: SecureScriptPath }>
     | Readonly<{ type: "load-error"; err: LoadSecureScriptError }>
 
-export const initialAuthenticatePasswordCoreState: AuthenticatePasswordCoreState = {
+export const initialCoreState: CoreState = {
     type: "initial-login",
 }

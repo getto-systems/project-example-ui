@@ -5,11 +5,11 @@ import {
 } from "../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/action"
 import { AuthSignLinkResource } from "../../../../common/searchParams/x_Action/Link/action"
 import {
-    AuthenticatePasswordCoreAction,
-    AuthenticatePasswordCoreState,
-    initialAuthenticatePasswordCoreState,
+    CoreAction,
+    CoreState,
+    initialCoreState,
 } from "./Core/action"
-import { AuthenticatePasswordFormAction } from "./Form/action"
+import { FormAction } from "./Form/action"
 
 export type AuthenticatePasswordEntryPoint = Readonly<{
     resource: AuthenticatePasswordResource
@@ -20,15 +20,15 @@ export type AuthenticatePasswordResource = AuthSignLinkResource &
     Readonly<{ authenticate: AuthenticatePasswordAction }>
 
 export interface AuthenticatePasswordAction extends ApplicationAction {
-    readonly core: AuthenticatePasswordCoreAction
-    readonly form: AuthenticatePasswordFormAction
+    readonly core: CoreAction
+    readonly form: FormAction
 }
 
 export type AuthenticatePasswordResourceState = Readonly<{
-    core: AuthenticatePasswordCoreState
+    core: CoreState
     form: ValidateBoardState
 }>
 export const initialAuthenticatePasswordState: AuthenticatePasswordResourceState = {
-    core: initialAuthenticatePasswordCoreState,
+    core: initialCoreState,
     form: initialValidateBoardState,
 }

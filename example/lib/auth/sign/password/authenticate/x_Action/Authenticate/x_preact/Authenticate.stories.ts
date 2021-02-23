@@ -7,26 +7,26 @@ import { AuthenticatePasswordProps, View } from "./Authenticate"
 import { initMockAuthenticatePasswordResource } from "../mock"
 import { validateBoardOptions } from "../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/mock"
 
-import { AuthenticatePasswordCoreState } from "../Core/action"
+import { CoreState } from "../Core/action"
 import { ValidateBoardState } from "../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/action"
 
-const authenticateOptions = [
-    "initial",
-    "try",
-    "delayed",
-    "validation-error",
-    "bad-request",
-    "invalid",
-    "server-error",
-    "bad-response",
-    "infra-error",
-] as const
+const authenticateOptions = {
+    initial: true,
+    try: true,
+    delayed: true,
+    "validation-error": true,
+    "bad-request": true,
+    invalid: true,
+    "server-error": true,
+    "bad-response": true,
+    "infra-error": true,
+} as const
 
 export default {
     title: "library/Auth/Sign/Password/Authenticate",
     argTypes: {
         authenticate: {
-            control: { type: "select", options: authenticateOptions },
+            control: { type: "select", options: Object.keys(authenticateOptions) },
         },
         form: {
             control: { type: "select", options: validateBoardOptions },
@@ -35,16 +35,7 @@ export default {
 }
 
 export type Props = Readonly<{
-    authenticate:
-        | "initial"
-        | "try"
-        | "delayed"
-        | "validation-error"
-        | "bad-request"
-        | "invalid"
-        | "server-error"
-        | "bad-response"
-        | "infra-error"
+    authenticate: keyof typeof authenticateOptions
     form: ValidateBoardState
     err: string
 }>
@@ -54,7 +45,7 @@ const template = storyTemplate<Props>((props) => {
         state: { core: state(), form: props.form },
     })
 
-    function state(): AuthenticatePasswordCoreState {
+    function state(): CoreState {
         switch (props.authenticate) {
             case "initial":
                 return { type: "initial-login" }

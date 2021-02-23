@@ -1,16 +1,16 @@
 import { LoginID } from "../../../common/loginID/data"
 import { Password } from "../../../common/password/data"
 
-export type AuthenticatePasswordFields = Readonly<{
+export type AuthenticateFields = Readonly<{
     loginID: LoginID
     password: Password
 }>
 
-export type AuthenticatePasswordError =
+export type AuthenticateError =
     | Readonly<{ type: "validation-error" }>
-    | AuthenticatePasswordRemoteError
+    | AuthenticateRemoteError
 
-export type AuthenticatePasswordRemoteError =
+export type AuthenticateRemoteError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "invalid-password-login" }>
     | Readonly<{ type: "server-error" }>

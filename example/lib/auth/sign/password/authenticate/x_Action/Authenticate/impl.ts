@@ -1,22 +1,24 @@
 import { newAuthSignLinkResource } from "../../../../common/searchParams/x_Action/Link/impl"
 
-import { AuthenticatePasswordEntryPoint, AuthenticatePasswordAction } from "./action"
-import { AuthenticatePasswordCoreAction } from "./Core/action"
-import { AuthenticatePasswordFormAction } from "./Form/action"
+import { AuthenticatePasswordAction, AuthenticatePasswordEntryPoint } from "./action"
+import { CoreAction } from "./Core/action"
+import { FormAction } from "./Form/action"
 
-export function toAuthenticatePasswordEntryPoint(
+export function toEntryPoint(
     action: AuthenticatePasswordAction,
 ): AuthenticatePasswordEntryPoint {
     return {
+        // TODO newAuthSignLinkResource ではなく、 href: newSignHrefMaterial にしたい
+        // TODO あるいは、引数で渡されるべきなのかも
         resource: { authenticate: action, ...newAuthSignLinkResource() },
         terminate: () => action.terminate(),
     }
 }
 
-export function toAuthenticatePasswordAction(
+export function toAction(
     actions: Readonly<{
-        core: AuthenticatePasswordCoreAction
-        form: AuthenticatePasswordFormAction
+        core: CoreAction
+        form: FormAction
     }>,
 ): AuthenticatePasswordAction {
     return {

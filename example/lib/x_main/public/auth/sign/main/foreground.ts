@@ -1,4 +1,4 @@
-import { newAuthenticatePassword } from "../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/core"
+import { newAuthenticatePassword } from "../../../../../auth/sign/password/authenticate/x_Action/Authenticate/init/foreground"
 import { newRenewAuthnInfo } from "../../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/main"
 
 import { initLoginViewLocationInfo, toAuthSignEntryPoint, View } from "../impl"

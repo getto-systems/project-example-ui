@@ -1,7 +1,7 @@
 import {
     AuthenticatePasswordProxyMessage,
     AuthenticatePasswordProxyResponse,
-} from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/main/worker/message"
+} from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/init/worker/message"
 import {
     CheckPasswordResetSendingStatusProxyMessage,
     CheckPasswordResetSendingStatusProxyResponse,

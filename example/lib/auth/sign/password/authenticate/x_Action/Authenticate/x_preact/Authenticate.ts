@@ -30,7 +30,7 @@ import {
     initialAuthenticatePasswordState,
 } from "../action"
 
-import { AuthenticatePasswordError } from "../../../data"
+import { AuthenticateError } from "../../../data"
 
 export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
@@ -39,11 +39,11 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
         state: {
             core: useApplicationAction(
                 resource.authenticate.core,
-                initialAuthenticatePasswordState.core
+                initialAuthenticatePasswordState.core,
             ),
             form: useApplicationAction(
                 resource.authenticate.form.validate,
-                initialAuthenticatePasswordState.form
+                initialAuthenticatePasswordState.form,
             ),
         },
     })
@@ -70,13 +70,13 @@ export function View(props: AuthenticatePasswordProps): VNode {
 
     switch (props.state.core.type) {
         case "initial-login":
-            return loginForm({ state: "login" })
+            return authenticateForm({ state: "login" })
 
         case "failed-to-login":
-            return loginForm({ state: "login", error: loginError(props.state.core.err) })
+            return authenticateForm({ state: "login", error: loginError(props.state.core.err) })
 
         case "try-to-login":
-            return loginForm({ state: "connecting" })
+            return authenticateForm({ state: "connecting" })
 
         case "delayed-to-login":
             return delayedMessage()
@@ -90,27 +90,30 @@ export function View(props: AuthenticatePasswordProps): VNode {
             return h(ApplicationError, { err: props.state.core.err.err })
     }
 
-    type LoginFormState = "login" | "connecting"
+    type AuthenticateFormState = "login" | "connecting"
 
-    type LoginFormContent = LoginFormContent_base | (LoginFormContent_base & LoginFormContent_error)
-    type LoginFormContent_base = Readonly<{ state: LoginFormState }>
-    type LoginFormContent_error = Readonly<{ error: VNodeContent[] }>
+    type AuthenticateFormContent =
+        | AuthenticateFormContent_base
+        | (AuthenticateFormContent_base & AuthenticateFormContent_error)
 
-    function loginTitle() {
+    type AuthenticateFormContent_base = Readonly<{ state: AuthenticateFormState }>
+    type AuthenticateFormContent_error = Readonly<{ error: VNodeContent[] }>
+
+    function authenticateTitle() {
         return "ログイン"
     }
 
-    function loginForm(content: LoginFormContent): VNode {
+    function authenticateForm(content: AuthenticateFormContent): VNode {
         return form(
             loginBox(siteInfo(), {
-                title: loginTitle(),
+                title: authenticateTitle(),
                 body: [
                     h(LoginIDBoard, { field: props.authenticate.form.loginID, help: [] }),
                     h(PasswordBoard, { field: props.authenticate.form.password, help: [] }),
                     buttons({ right: clearButton() }),
                 ],
                 footer: [buttons({ left: button(), right: resetLink() }), error()],
-            })
+            }),
         )
 
         function clearButton() {
@@ -183,7 +186,7 @@ export function View(props: AuthenticatePasswordProps): VNode {
     }
     function delayedMessage() {
         return loginBox(siteInfo(), {
-            title: loginTitle(),
+            title: authenticateTitle(),
             body: [
                 html`<p>${spinner} 認証中です</p>`,
                 html`<p>
@@ -203,7 +206,7 @@ export function View(props: AuthenticatePasswordProps): VNode {
     }
 }
 
-function loginError(err: AuthenticatePasswordError): VNodeContent[] {
+function loginError(err: AuthenticateError): VNodeContent[] {
     switch (err.type) {
         case "validation-error":
             return ["正しく入力してください"]

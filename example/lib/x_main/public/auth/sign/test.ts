@@ -2,11 +2,11 @@ import { initLoginViewLocationInfo, View } from "./impl"
 
 import { newBoardValidateStack } from "../../../../z_getto/board/kernel/infra/stack"
 import { initStaticClock } from "../../../../z_getto/infra/clock/simulate"
-import { initAuthenticatePasswordSimulate } from "../../../../auth/sign/password/authenticate/infra/remote/authenticate/simulate"
+import { initAuthenticateSimulate } from "../../../../auth/sign/password/authenticate/infra/remote/authenticate/simulate"
 import { initRenewAuthnInfoSimulate } from "../../../../auth/sign/kernel/authnInfo/kernel/infra/remote/renew/simulate"
 
 import { Clock } from "../../../../z_getto/infra/clock/infra"
-import { AuthenticatePasswordResult } from "../../../../auth/sign/password/authenticate/infra"
+import { AuthenticateResult } from "../../../../auth/sign/password/authenticate/infra"
 
 import { AuthSignActionState } from "./entryPoint"
 
@@ -25,11 +25,10 @@ import {
     initRenewAuthnInfoAction,
     toRenewAuthnInfoEntryPoint,
 } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/impl"
-import { initAuthenticatePasswordFormAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Form/impl"
-import { initAuthenticatePasswordCoreAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Core/impl"
+import { initFormAction as initAuthenticatePasswordFormAction } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Form/impl"
 import {
-    toAuthenticatePasswordAction,
-    toAuthenticatePasswordEntryPoint,
+    toAction as toAuthenticatePasswordAction,
+    toEntryPoint as toAuthenticatePasswordEntryPoint,
 } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/impl"
 import {
     toRequestPasswordResetTokenAction,
@@ -60,6 +59,10 @@ import {
     SendPasswordResetTokenResult,
 } from "../../../../auth/sign/password/reset/checkStatus/infra"
 import { newResetPasswordLocationInfo } from "../../../../auth/sign/password/reset/reset/impl"
+import {
+    initCoreAction as initAuthenticatePasswordCoreAction,
+    initCoreMaterial as initAuthenticatePasswordCoreMaterial,
+} from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/Core/impl"
 
 const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
 const SUCCEED_TO_AUTH_AT = new Date("2020-01-01 10:00:00")
@@ -460,40 +463,40 @@ function standardPasswordLoginEntryPoint(
     return toAuthenticatePasswordEntryPoint(
         toAuthenticatePasswordAction({
             core: initAuthenticatePasswordCoreAction(
-                {
-                    startContinuousRenew: {
-                        apiCredentials,
-                        authnInfos,
-                        renew: initRenewAuthnInfoSimulate(simulateRenew, {
-                            wait_millisecond: 0,
-                        }),
-                        config: {
-                            delay: { delay_millisecond: 1 },
-                            interval: { interval_millisecond: 1 },
+                initAuthenticatePasswordCoreMaterial(
+                    {
+                        startContinuousRenew: {
+                            apiCredentials,
+                            authnInfos,
+                            renew: initRenewAuthnInfoSimulate(simulateRenew, {
+                                wait_millisecond: 0,
+                            }),
+                            config: {
+                                delay: { delay_millisecond: 1 },
+                                interval: { interval_millisecond: 1 },
+                            },
+                            clock,
                         },
-                        clock,
-                    },
-                    getSecureScriptPath: {
-                        config: {
-                            secureServerHost: standardSecureHost(),
+                        getSecureScriptPath: {
+                            config: {
+                                secureServerHost: standardSecureHost(),
+                            },
+                        },
+                        authenticate: {
+                            authenticate: initAuthenticateSimulate(simulateLogin, {
+                                wait_millisecond: 0,
+                            }),
+                            config: {
+                                delay: { delay_millisecond: 1 },
+                            },
+                            delayed,
                         },
                     },
-                    authenticate: {
-                        login: initAuthenticatePasswordSimulate(simulateLogin, {
-                            wait_millisecond: 0,
-                        }),
-                        config: {
-                            delay: { delay_millisecond: 1 },
-                        },
-                        delayed,
-                    },
-                },
-                newGetSecureScriptPathLocationInfo(currentURL),
+                    newGetSecureScriptPathLocationInfo(currentURL),
+                ),
             ),
 
-            form: initAuthenticatePasswordFormAction({
-                stack: newBoardValidateStack(),
-            }),
+            form: initAuthenticatePasswordFormAction(),
         }),
     )
 }
@@ -651,7 +654,7 @@ function standardSecureHost(): string {
     return "secure.example.com"
 }
 
-function simulateLogin(): AuthenticatePasswordResult {
+function simulateLogin(): AuthenticateResult {
     return {
         success: true,
         value: {

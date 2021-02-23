@@ -5,31 +5,28 @@ import { DelayTime } from "../../../../z_getto/infra/config/infra"
 
 import { AuthnInfo } from "../../kernel/authnInfo/kernel/data"
 
-import { AuthenticatePasswordFields, AuthenticatePasswordRemoteError } from "./data"
+import { AuthenticateFields, AuthenticateRemoteError } from "./data"
 
-export type AuthenticatePasswordInfra = Readonly<{
-    login: AuthenticatePasswordRemote
+export type AuthenticateInfra = Readonly<{
+    authenticate: AuthenticateRemote
     delayed: Delayed
     config: Readonly<{
         delay: DelayTime
     }>
 }>
 
-export type AuthenticatePasswordRemote = Remote<
-    AuthenticatePasswordFields,
-    AuthenticatePasswordResponse,
-    AuthenticatePasswordRemoteError
+export type AuthenticateRemote = Remote<
+    AuthenticateFields,
+    AuthenticateResponse,
+    AuthenticateRemoteError
 >
-export type AuthenticatePasswordResult = RemoteResult<
-    AuthenticatePasswordResponse,
-    AuthenticatePasswordRemoteError
+export type AuthenticateResult = RemoteResult<AuthenticateResponse, AuthenticateRemoteError>
+export type AuthenticateSimulator = RemoteSimulator<
+    AuthenticateFields,
+    AuthenticateResponse,
+    AuthenticateRemoteError
 >
-export type AuthenticatePasswordSimulator = RemoteSimulator<
-    AuthenticatePasswordFields,
-    AuthenticatePasswordResponse,
-    AuthenticatePasswordRemoteError
->
-export type AuthenticatePasswordResponse = Readonly<{
+export type AuthenticateResponse = Readonly<{
     auth: AuthnInfo
     api: ApiCredential
 }>
