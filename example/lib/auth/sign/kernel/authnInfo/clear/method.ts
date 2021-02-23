@@ -1,7 +1,7 @@
-import { ClearAuthnInfoEvent } from "./event"
+import { ClearEvent } from "./event"
 
-export interface ClearAuthnInfoMethod {
-    (post: Post<ClearAuthnInfoEvent>): void
+export interface ClearMethod {
+    (post: Post<ClearEvent>): void
 }
 
 interface Post<E> {

@@ -1,6 +1,6 @@
 import { newMainOutlineAction } from "../../../../../auth/permission/outline/load/main/main"
 import { newErrorAction } from "../../../../../availability/unexpectedError/main"
-import { newClearAuthnInfoAction } from "../../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/main"
+import { newLogoutAction } from "../../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/init"
 
 import { initAuthProfileResource, toAuthProfileEntryPoint } from "../impl"
 
@@ -29,7 +29,7 @@ export function newForeground(feature: OutsideFeature): AuthProfileEntryPoint {
         },
     }
     const resource = initAuthProfileResource(factory, {
-        logout: newClearAuthnInfoAction(webStorage),
+        logout: newLogoutAction(webStorage),
     })
     return toAuthProfileEntryPoint(resource)
 }

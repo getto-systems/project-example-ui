@@ -1,11 +1,12 @@
 import { initMemoryApiCredentialRepository } from "../../../../../../../common/apiCredential/infra/repository/memory"
 import { initMemoryAuthnInfoRepository } from "../../../kernel/infra/repository/authnInfo/memory"
-import { initClearAuthnInfoAction } from "./impl"
+import { initLogoutAction } from "./impl"
 
 import { LogoutState } from "./action"
 
 import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
 import { markAuthAt, markAuthnNonce } from "../../../kernel/data"
+import { initSyncActionTestRunner } from "../../../../../../../z_getto/application/testHelper"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
 const STORED_AUTH_AT = new Date("2020-01-01 09:00:00")
@@ -44,13 +45,35 @@ describe("Logout", () => {
             }
         }
     })
+
+    test("terminate", (done) => {
+        const { resource } = standardResource()
+
+        const ignition = resource.clear.ignition()
+
+        const runner = initSyncActionTestRunner()
+
+        runner.addTestCase(
+            () => {
+                resource.clear.terminate()
+                resource.clear.submit()
+            },
+            (stack) => {
+                // no input/validate event after terminate
+                expect(stack).toEqual([])
+            },
+        )
+
+        const handler = runner.run(done)
+        ignition.subscribe(handler)
+    })
 })
 
 function standardResource() {
     const repository = standardRepository()
 
     const resource = {
-        clear: initClearAuthnInfoAction(repository),
+        clear: initLogoutAction(repository),
     }
 
     return { repository, resource }

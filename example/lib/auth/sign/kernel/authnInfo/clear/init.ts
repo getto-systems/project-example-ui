@@ -1,9 +1,9 @@
 import { newApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/main"
 import { newAuthnInfoRepository } from "../kernel/infra/repository/authnInfo/main"
 
-import { ClearAuthnInfoInfra } from "./infra"
+import { ClearInfra } from "./infra"
 
-export function newClearAuthnInfoInfra(webStorage: Storage): ClearAuthnInfoInfra {
+export function newClearInfra(webStorage: Storage): ClearInfra {
     return {
         apiCredentials: newApiCredentialRepository(webStorage),
         authnInfos: newAuthnInfoRepository(webStorage),
