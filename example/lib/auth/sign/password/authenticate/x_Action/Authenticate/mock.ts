@@ -9,6 +9,7 @@ export function initMockAuthenticatePasswordResource(): AuthenticatePasswordReso
         authenticate: {
             core: initMockAuthenticatePasswordCoreAction(),
             form: initMockAuthenticatePasswordFormAction(),
+            terminate: () => null,
         },
         ...newAuthSignLinkResource(),
     }

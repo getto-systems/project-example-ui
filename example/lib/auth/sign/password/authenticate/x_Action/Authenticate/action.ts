@@ -1,3 +1,4 @@
+import { ApplicationAction } from "../../../../../../z_getto/application/action"
 import {
     initialValidateBoardState,
     ValidateBoardState,
@@ -18,7 +19,7 @@ export type AuthenticatePasswordEntryPoint = Readonly<{
 export type AuthenticatePasswordResource = AuthSignLinkResource &
     Readonly<{ authenticate: AuthenticatePasswordAction }>
 
-export interface AuthenticatePasswordAction {
+export interface AuthenticatePasswordAction extends ApplicationAction {
     readonly core: AuthenticatePasswordCoreAction
     readonly form: AuthenticatePasswordFormAction
 }

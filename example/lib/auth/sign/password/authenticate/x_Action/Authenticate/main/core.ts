@@ -11,7 +11,7 @@ import {
     initAuthenticatePasswordCoreAction_merge,
     initAuthenticatePasswordCoreBackground,
 } from "../Core/impl"
-import { toAuthenticatePasswordEntryPoint } from "../impl"
+import { toAuthenticatePasswordAction, toAuthenticatePasswordEntryPoint } from "../impl"
 
 import { AuthenticatePasswordEntryPoint, AuthenticatePasswordAction } from "../action"
 import { AuthenticatePasswordCoreAction, AuthenticatePasswordCoreBackground } from "../Core/action"
@@ -40,7 +40,7 @@ export function newAuthenticatePassword_proxy(
     )
 }
 function mergeAction(core: AuthenticatePasswordCoreAction): AuthenticatePasswordAction {
-    return { core, form: newFormAction() }
+    return toAuthenticatePasswordAction({ core, form: newFormAction() })
 }
 
 export function newAuthenticatePasswordCoreBackground(): AuthenticatePasswordCoreBackground {

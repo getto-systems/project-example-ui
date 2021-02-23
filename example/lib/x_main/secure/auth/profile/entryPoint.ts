@@ -14,11 +14,9 @@ import {
     ErrorForegroundAction,
     ErrorResource,
 } from "../../../../availability/x_Resource/Error/resource"
+import { ApplicationEntryPoint } from "../../../../z_getto/application/action"
 
-export type AuthProfileEntryPoint = Readonly<{
-    resource: AuthProfileResource
-    terminate: Terminate
-}>
+export type AuthProfileEntryPoint = ApplicationEntryPoint<AuthProfileResource>
 
 export type AuthProfileResource = Readonly<{
     seasonInfo: SeasonInfoComponent
@@ -38,7 +36,3 @@ export type ProfileFactory = Readonly<{
         seasonInfo: SeasonInfoComponentFactory
     }>
 }>
-
-interface Terminate {
-    (): void
-}
