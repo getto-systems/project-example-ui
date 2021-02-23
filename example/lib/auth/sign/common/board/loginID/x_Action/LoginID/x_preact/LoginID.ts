@@ -1,21 +1,21 @@
 import { h, VNode } from "preact"
 
-import { VNodeContent } from "../../../../../../../z_vendor/getto-css/preact/common"
+import { VNodeContent } from "../../../../../../../../z_vendor/getto-css/preact/common"
 import {
     field,
     field_error,
     label_text_fill,
-} from "../../../../../../../z_vendor/getto-css/preact/design/form"
+} from "../../../../../../../../z_vendor/getto-css/preact/design/form"
 
-import { useApplicationAction } from "../../../../../../../x_preact/common/hooks"
+import { useApplicationAction } from "../../../../../../../../x_preact/common/hooks"
 
-import { InputBoard } from "../../../../../../../z_getto/board/input/x_Action/Input/x_preact/Input"
+import { InputBoard } from "../../../../../../../../z_getto/board/input/x_Action/Input/x_preact/Input"
 
-import { initialValidateBoardFieldState } from "../../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
+import { initialValidateBoardFieldState } from "../../../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
 import { LoginIDBoardFieldResource, ValidateLoginIDState } from "../action"
 
 import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "../data"
-import { BoardFieldValidateResult } from "../../../../../../../z_getto/board/validateField/data"
+import { BoardFieldValidateResult } from "../../../../../../../../z_getto/board/validateField/data"
 
 type Resource = LoginIDBoardFieldResource & Readonly<{ help: VNodeContent[] }>
 export function LoginIDBoard(resource: Resource): VNode {

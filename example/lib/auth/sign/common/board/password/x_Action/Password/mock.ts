@@ -1,5 +1,5 @@
-import { initMockInputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/mock"
-import { MockStateAction_simple } from "../../../../../../z_getto/application/mock"
+import { initMockInputBoardValueAction } from "../../../../../../../z_getto/board/input/x_Action/Input/mock"
+import { MockStateAction_simple } from "../../../../../../../z_getto/application/mock"
 
 import {
     CheckPasswordCharacterAction,
@@ -8,7 +8,7 @@ import {
     ValidatePasswordState,
 } from "./action"
 
-import { BoardConvertResult, BoardValue } from "../../../../../../z_getto/board/kernel/data"
+import { BoardConvertResult, BoardValue } from "../../../../../../../z_getto/board/kernel/data"
 import { Password } from "../../../../password/data"
 import { PasswordCharacterState } from "./data"
 

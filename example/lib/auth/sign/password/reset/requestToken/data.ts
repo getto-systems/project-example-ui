@@ -1,4 +1,4 @@
-import { LoginID } from "../../../../common/loginID/data"
+import { LoginID } from "../../../common/loginID/data"
 
 export type PasswordResetRequestFields = Readonly<{
     loginID: LoginID

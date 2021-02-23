@@ -1,9 +1,9 @@
-import { ApplicationAction } from "../../../../../../z_getto/application/action"
-import { InputBoardValueAction } from "../../../../../../z_getto/board/input/x_Action/Input/action"
+import { ApplicationAction } from "../../../../../../../z_getto/application/action"
+import { InputBoardValueAction } from "../../../../../../../z_getto/board/input/x_Action/Input/action"
 import {
     ValidateBoardFieldAction,
     ValidateBoardFieldState,
-} from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
+} from "../../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
 
 import { LoginID } from "../../../../loginID/data"
 import { ValidateLoginIDError } from "./data"

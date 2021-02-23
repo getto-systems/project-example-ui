@@ -19,8 +19,8 @@ import { icon, spinner } from "../../../../../../../../x_preact/common/icon"
 import { appendScript } from "../../../../../../../../x_preact/auth/Sign/script"
 
 import { ApplicationError } from "../../../../../../../../x_preact/common/System/ApplicationError"
-import { LoginIDBoard } from "../../../../../../../common/board/loginID/x_Action/LoginID/x_preact/LoginID"
-import { PasswordBoard } from "../../../../../../../common/board/password/x_Action/Password/x_preact/Password"
+import { LoginIDBoard } from "../../../../../../common/board/loginID/x_Action/LoginID/x_preact/LoginID"
+import { PasswordBoard } from "../../../../../../common/board/password/x_Action/Password/x_preact/Password"
 
 import {
     initialResetPasswordState,
