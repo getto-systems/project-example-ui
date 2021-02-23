@@ -1,7 +1,10 @@
 import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
 import { newBoardValidateStack } from "../../../../../../z_getto/board/kernel/infra/stack"
 import { ValidateBoardFieldState } from "../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
-import { initSyncActionChecker_simple } from "../../../../../../z_getto/application/testHelper"
+import {
+    initSyncActionChecker_simple,
+    initSyncActionTestRunner,
+} from "../../../../../../z_getto/application/testHelper"
 import { ValidatePasswordError } from "./data"
 import { initPasswordBoardFieldAction } from "./impl"
 import { standardBoardValueStore } from "../../../../../../z_getto/board/input/x_Action/Input/testHelper"
@@ -70,7 +73,7 @@ describe("PasswordBoard", () => {
         const checker = initSyncActionChecker_simple<
             ValidateBoardFieldState<ValidatePasswordError>
         >()
-        
+
         const ignition = resource.validate.ignition()
         ignition.addStateHandler(checker.handler)
 
@@ -142,6 +145,29 @@ describe("PasswordBoard", () => {
         resource.clear()
 
         expect(resource.input.get()).toEqual("")
+    })
+
+    test("terminate", (done) => {
+        const { resource } = standardResource()
+
+        const ignition = resource.validate.ignition()
+
+        const runner = initSyncActionTestRunner()
+
+        runner.addTestCase(
+            () => {
+                resource.terminate()
+                resource.input.set(markBoardValue("valid"))
+            },
+            (stack) => {
+                // no input/validate event after terminate
+                expect(stack).toEqual([])
+            },
+        )
+
+        const handler = runner.run(done)
+        resource.input.addInputHandler(() => handler(resource.input.get()))
+        ignition.addStateHandler(handler)
     })
 })
 

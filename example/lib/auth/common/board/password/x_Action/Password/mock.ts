@@ -21,6 +21,7 @@ export function initMockPasswordBoardFieldAction(
         validate: new Action(),
         clear: () => null,
         passwordCharacter: new CheckAction(characterState),
+        terminate: () => null,
     }
 }
 
