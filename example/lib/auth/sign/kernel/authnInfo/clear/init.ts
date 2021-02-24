@@ -1,5 +1,5 @@
 import { newApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/main"
-import { newAuthnInfoRepository } from "../kernel/infra/repository/authnInfo/main"
+import { newAuthnInfoRepository } from "../kernel/infra/repository/authnInfo/init"
 
 import { ClearInfra } from "./infra"
 

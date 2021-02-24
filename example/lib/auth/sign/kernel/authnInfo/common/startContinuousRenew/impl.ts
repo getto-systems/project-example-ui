@@ -1,16 +1,13 @@
-import { StartContinuousRenewAuthnInfoInfra } from "./infra"
+import { StartContinuousRenewInfra } from "./infra"
 
-import {
-    ForceStartContinuousRenewAuthnInfoMethod,
-    StartContinuousRenewAuthnInfoMethod,
-} from "./method"
+import { ForceStartContinuousRenewMethod, StartContinuousRenewMethod } from "./method"
 
 import { hasExpired } from "../../kernel/data"
 
 interface Start {
-    (infra: StartContinuousRenewAuthnInfoInfra): StartContinuousRenewAuthnInfoMethod
+    (infra: StartContinuousRenewInfra): StartContinuousRenewMethod
 }
-export const startContinuousRenewAuthnInfo: Start = (infra) => (authnInfo, post) => {
+export const startContinuousRenew: Start = (infra) => (authnInfo, post) => {
     const { authnInfos } = infra
 
     const storeResult = authnInfos.store(authnInfo)
@@ -25,15 +22,15 @@ export const startContinuousRenewAuthnInfo: Start = (infra) => (authnInfo, post)
 }
 
 export interface ForceStart {
-    (infra: StartContinuousRenewAuthnInfoInfra): ForceStartContinuousRenewAuthnInfoMethod
+    (infra: StartContinuousRenewInfra): ForceStartContinuousRenewMethod
 }
-export const forceStartContinuousRenewAuthnInfo: ForceStart = (infra) => (post) => {
+export const forceStartContinuousRenew: ForceStart = (infra) => (post) => {
     start(infra)
 
     post({ type: "succeed-to-start-continuous-renew" })
 }
 
-function start(infra: StartContinuousRenewAuthnInfoInfra) {
+function start(infra: StartContinuousRenewInfra) {
     const { config } = infra
 
     const timer = setInterval(async () => {

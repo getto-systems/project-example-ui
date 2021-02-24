@@ -19,17 +19,15 @@ export function markAuthAt(date: Date): AuthAt {
 }
 export function hasExpired(
     authAt: AuthAt,
-    target: { now: Date; expire_millisecond: number }
+    target: { now: Date; expire_millisecond: number },
 ): boolean {
     return target.now.getTime() > authAt.getTime() + target.expire_millisecond
 }
 
-export type RenewAuthnInfoError =
+export type RenewError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export type RenewAuthnInfoRemoteError =
-    | RenewAuthnInfoError
-    | Readonly<{ type: "invalid-ticket" }>
+export type RenewRemoteError = RenewError | Readonly<{ type: "invalid-ticket" }>

@@ -1,11 +1,11 @@
 import { ApplicationAbstractStateAction } from "../../../../../../../z_getto/application/impl"
 
-import { startContinuousRenewAuthnInfo } from "../../../../../kernel/authnInfo/common/startContinuousRenew/impl"
+import { startContinuousRenew } from "../../../../../kernel/authnInfo/common/startContinuousRenew/impl"
 import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
 import { authenticate } from "../../../impl"
 
 import { AuthenticateInfra } from "../../../infra"
-import { StartContinuousRenewAuthnInfoInfra } from "../../../../../kernel/authnInfo/common/startContinuousRenew/infra"
+import { StartContinuousRenewInfra } from "../../../../../kernel/authnInfo/common/startContinuousRenew/infra"
 import { GetSecureScriptPathInfra } from "../../../../../common/secureScriptPath/get/infra"
 
 import {
@@ -26,7 +26,7 @@ import { BoardConvertResult } from "../../../../../../../z_getto/board/kernel/da
 export type CoreInfra = CoreForegroundInfra & CoreBackgroundInfra
 
 export type CoreForegroundInfra = Readonly<{
-    startContinuousRenew: StartContinuousRenewAuthnInfoInfra
+    startContinuousRenew: StartContinuousRenewInfra
     getSecureScriptPath: GetSecureScriptPathInfra
 }>
 export type CoreBackgroundInfra = Readonly<{
@@ -47,7 +47,7 @@ export function initCoreForegroundMaterial(
     locationInfo: GetSecureScriptPathLocationInfo,
 ): CoreForegroundMaterial {
     return {
-        startContinuousRenew: startContinuousRenewAuthnInfo(infra.startContinuousRenew),
+        startContinuousRenew: startContinuousRenew(infra.startContinuousRenew),
         getSecureScriptPath: getSecureScriptPath(infra.getSecureScriptPath)(locationInfo),
     }
 }

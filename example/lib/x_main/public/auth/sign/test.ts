@@ -1,7 +1,7 @@
 import { initLoginViewLocationInfo, View } from "./impl"
 
 import { initStaticClock } from "../../../../z_getto/infra/clock/simulate"
-import { initRenewAuthnInfoSimulate } from "../../../../auth/sign/kernel/authnInfo/kernel/infra/remote/renew/simulate"
+import { initRenewSimulate } from "../../../../auth/sign/kernel/authnInfo/kernel/infra/remote/renew/simulate"
 
 import { Clock } from "../../../../z_getto/infra/clock/infra"
 
@@ -12,7 +12,7 @@ import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/memory"
 import {
     AuthnInfoRepository,
-    RenewAuthnInfoResult,
+    RenewResult,
 } from "../../../../auth/sign/kernel/authnInfo/kernel/infra"
 import { delayed } from "../../../../z_getto/infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../../../auth/sign/kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
@@ -395,7 +395,7 @@ function standardRenewCredentialEntryPoint(
                 renew: {
                     apiCredentials,
                     authnInfos,
-                    renew: initRenewAuthnInfoSimulate(simulateRenew, {
+                    renew: initRenewSimulate(simulateRenew, {
                         wait_millisecond: 0,
                     }),
                     config: {
@@ -408,7 +408,7 @@ function standardRenewCredentialEntryPoint(
                 startContinuousRenew: {
                     apiCredentials,
                     authnInfos: authnInfos,
-                    renew: initRenewAuthnInfoSimulate(simulateRenew, {
+                    renew: initRenewSimulate(simulateRenew, {
                         wait_millisecond: 0,
                     }),
                     config: {
@@ -445,7 +445,7 @@ function standardSecureHost(): string {
     return "secure.example.com"
 }
 
-function simulateRenew(): RenewAuthnInfoResult {
+function simulateRenew(): RenewResult {
     return {
         success: false,
         err: { type: "invalid-ticket" },

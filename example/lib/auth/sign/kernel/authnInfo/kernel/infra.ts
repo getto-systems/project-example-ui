@@ -3,7 +3,7 @@ import { StoreResult } from "../../../../../z_getto/storage/infra"
 
 import { StorageError } from "../../../../../z_getto/storage/data"
 import { ApiCredential } from "../../../../../common/apiCredential/data"
-import { AuthnInfo, LastAuth, RenewAuthnInfoRemoteError, AuthnNonce } from "./data"
+import { AuthnInfo, LastAuth, RenewRemoteError, AuthnNonce } from "./data"
 
 export interface AuthnInfoRepository {
     load(): LoadLastAuthResult
@@ -16,21 +16,10 @@ export type LoadLastAuthResult =
     | Readonly<{ success: true; found: false }>
     | Readonly<{ success: false; err: StorageError }>
 
-export type RenewAuthnInfoRemote = Remote<
-    AuthnNonce,
-    RenewAuthnInfoResponse,
-    RenewAuthnInfoRemoteError
->
-export type RenewAuthnInfoResult = RemoteResult<
-    RenewAuthnInfoResponse,
-    RenewAuthnInfoRemoteError
->
-export type RenewAuthnInfoSimulator = RemoteSimulator<
-    AuthnNonce,
-    RenewAuthnInfoResponse,
-    RenewAuthnInfoRemoteError
->
-export type RenewAuthnInfoResponse = Readonly<{
+export type RenewRemote = Remote<AuthnNonce, RenewResponse, RenewRemoteError>
+export type RenewResult = RemoteResult<RenewResponse, RenewRemoteError>
+export type RenewSimulator = RemoteSimulator<AuthnNonce, RenewResponse, RenewRemoteError>
+export type RenewResponse = Readonly<{
     auth: AuthnInfo
     api: ApiCredential
 }>
