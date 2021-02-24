@@ -1,6 +1,6 @@
 import { newMainOutlineAction } from "../../../../../auth/permission/outline/load/main/main"
 import { newErrorAction } from "../../../../../availability/unexpectedError/main"
-import { newLogoutAction } from "../../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/init"
+import { newLogoutResource } from "../../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/init"
 
 import { initAuthProfileResource, toAuthProfileEntryPoint } from "../impl"
 
@@ -28,8 +28,6 @@ export function newForeground(feature: OutsideFeature): AuthProfileEntryPoint {
             seasonInfo: initSeasonInfoComponent,
         },
     }
-    const resource = initAuthProfileResource(factory, {
-        logout: newLogoutAction(webStorage),
-    })
+    const resource = initAuthProfileResource(factory, newLogoutResource(webStorage))
     return toAuthProfileEntryPoint(resource)
 }

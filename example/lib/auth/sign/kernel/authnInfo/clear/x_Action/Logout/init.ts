@@ -1,9 +1,10 @@
 import { newClearInfra } from "../../init"
 
-import { initLogoutAction } from "./impl"
+import { toLogoutResource } from "./impl"
 
-import { LogoutAction } from "./action"
+import { LogoutResource } from "./action"
+import { initCoreAction, initCoreMaterial } from "./Core/impl"
 
-export function newLogoutAction(webStorage: Storage): LogoutAction {
-    return initLogoutAction(newClearInfra(webStorage))
+export function newLogoutResource(webStorage: Storage): LogoutResource {
+    return toLogoutResource(initCoreAction(initCoreMaterial(newClearInfra(webStorage))))
 }
