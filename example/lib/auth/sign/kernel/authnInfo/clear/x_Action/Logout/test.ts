@@ -1,12 +1,13 @@
 import { initMemoryApiCredentialRepository } from "../../../../../../../common/apiCredential/infra/repository/memory"
 import { initMemoryAuthnInfoRepository } from "../../../kernel/infra/repository/authnInfo/memory"
-import { initLogoutAction } from "./impl"
 
 import { LogoutState } from "./action"
 
 import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
 import { markAuthAt, markAuthnNonce } from "../../../kernel/data"
 import { initSyncActionTestRunner } from "../../../../../../../z_getto/application/testHelper"
+import { initCoreAction, initCoreMaterial } from "./Core/impl"
+import { toLogoutResource } from "./impl"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
 const STORED_AUTH_AT = new Date("2020-01-01 09:00:00")
@@ -15,10 +16,10 @@ describe("Logout", () => {
     test("clear", (done) => {
         const { resource } = standardResource()
 
-        const ignition = resource.clear.ignition()        
+        const ignition = resource.logout.ignition()
         ignition.subscribe(stateHandler())
 
-        resource.clear.submit()
+        resource.logout.submit()
 
         function stateHandler(): Post<LogoutState> {
             const stack: LogoutState[] = []
@@ -49,14 +50,14 @@ describe("Logout", () => {
     test("terminate", (done) => {
         const { resource } = standardResource()
 
-        const ignition = resource.clear.ignition()
+        const ignition = resource.logout.ignition()
 
         const runner = initSyncActionTestRunner()
 
         runner.addTestCase(
             () => {
-                resource.clear.terminate()
-                resource.clear.submit()
+                resource.logout.terminate()
+                resource.logout.submit()
             },
             (stack) => {
                 // no input/validate event after terminate
@@ -72,9 +73,7 @@ describe("Logout", () => {
 function standardResource() {
     const repository = standardRepository()
 
-    const resource = {
-        clear: initLogoutAction(repository),
-    }
+    const resource = toLogoutResource(initCoreAction(initCoreMaterial(repository)))
 
     return { repository, resource }
 }

@@ -1,4 +1,4 @@
-import { initMockLogoutAction } from "../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/mock"
+import { initMockLogoutResource } from "../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/mock"
 import { initMockErrorResource } from "../../../../availability/x_Resource/Error/mock"
 import {
     BreadcrumbListMockPropsPasser,
@@ -24,10 +24,10 @@ export function initMockAuthProfileResource(
     passer: AuthProfileMockPropsPasser,
 ): AuthProfileResource {
     return {
-        ...initMockErrorResource(),
-        logout: initMockLogoutAction(),
         seasonInfo: initMockSeasonInfoComponent(passer.seasonInfo),
         menu: initMockMenuComponent(passer.menu),
         breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),
+        ...initMockErrorResource(),
+        ...initMockLogoutResource(),
     }
 }
