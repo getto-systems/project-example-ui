@@ -74,7 +74,7 @@ export class View extends ApplicationAbstractStateAction<AuthSignActionState> im
             const entryPoint = this.entryPoints.renew()
 
             // TODO ここで ignition を取得したくない、けどどうしようか
-            entryPoint.resource.renew.ignition().subscribe((state) => {
+            entryPoint.resource.core.ignition().subscribe((state) => {
                 switch (state.type) {
                     case "required-to-login":
                         this.post(this.mapViewType(this.locationInfo.getAuthSignViewType()))

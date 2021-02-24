@@ -4,7 +4,7 @@ import { DelayTime, ExpireTime } from "../../../../../z_getto/infra/config/infra
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
 import { AuthnInfoRepository, RenewRemote } from "../kernel/infra"
 
-export type RenewAuthnInfoInfra = Readonly<{
+export type RenewInfra = Readonly<{
     apiCredentials: ApiCredentialRepository
     authnInfos: AuthnInfoRepository
     renew: RenewRemote

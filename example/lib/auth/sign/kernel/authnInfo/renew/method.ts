@@ -1,11 +1,11 @@
-import { ForceRenewAuthnInfoEvent, RenewAuthnInfoEvent } from "./event"
+import { ForceRenewEvent, RenewEvent } from "./event"
 
-export interface RenewAuthnInfoMethod {
-    (post: Post<RenewAuthnInfoEvent>): void
+export interface RenewMethod {
+    (post: Post<RenewEvent>): void
 }
 
-export interface ForceRenewAuthnInfoMethod {
-    (post: Post<ForceRenewAuthnInfoEvent>): void
+export interface ForceRenewMethod {
+    (post: Post<ForceRenewEvent>): void
 }
 
 interface Post<E> {

@@ -1,15 +1,16 @@
 import { StoreResult } from "../../../../../z_getto/storage/infra"
-import { RenewAuthnInfoInfra } from "./infra"
+import { RenewInfra } from "./infra"
 
-import { ForceRenewAuthnInfoEvent } from "./event"
+import { ForceRenewMethod, RenewMethod } from "./method"
+
+import { ForceRenewEvent } from "./event"
 
 import { hasExpired, LastAuth } from "../kernel/data"
-import { ForceRenewAuthnInfoMethod, RenewAuthnInfoMethod } from "./method"
 
 interface Renew {
-    (infra: RenewAuthnInfoInfra): RenewAuthnInfoMethod
+    (infra: RenewInfra): RenewMethod
 }
-export const renewAuthnInfo: Renew = (infra) => async (post) => {
+export const renew: Renew = (infra) => async (post) => {
     const { clock, config } = infra
 
     loadLastAuth(infra, post, (lastAuth) => {
@@ -18,7 +19,7 @@ export const renewAuthnInfo: Renew = (infra) => async (post) => {
             expire_millisecond: config.instantLoadExpire.expire_millisecond,
         }
         if (hasExpired(lastAuth.lastAuthAt, time)) {
-            renew(infra, lastAuth, post)
+            requestRenew(infra, lastAuth, post)
             return
         }
 
@@ -27,18 +28,18 @@ export const renewAuthnInfo: Renew = (infra) => async (post) => {
 }
 
 interface ForceRenew {
-    (infra: RenewAuthnInfoInfra): ForceRenewAuthnInfoMethod
+    (infra: RenewInfra): ForceRenewMethod
 }
-export const forceRenewAuthnInfo: ForceRenew = (infra) => async (post) => {
+export const forceRenew: ForceRenew = (infra) => async (post) => {
     loadLastAuth(infra, post, (lastAuth) => {
-        renew(infra, lastAuth, post)
+        requestRenew(infra, lastAuth, post)
     })
 }
 
 function loadLastAuth(
-    infra: RenewAuthnInfoInfra,
-    post: Post<ForceRenewAuthnInfoEvent>,
-    hook: { (lastAuth: LastAuth): void }
+    infra: RenewInfra,
+    post: Post<ForceRenewEvent>,
+    hook: { (lastAuth: LastAuth): void },
 ) {
     const { authnInfos } = infra
 
@@ -54,18 +55,14 @@ function loadLastAuth(
 
     hook(findResult.lastAuth)
 }
-async function renew(
-    infra: RenewAuthnInfoInfra,
-    lastAuth: LastAuth,
-    post: Post<ForceRenewAuthnInfoEvent>
-) {
+async function requestRenew(infra: RenewInfra, lastAuth: LastAuth, post: Post<ForceRenewEvent>) {
     const { apiCredentials, authnInfos, renew, config, delayed } = infra
 
     post({ type: "try-to-renew" })
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const response = await delayed(renew(lastAuth.authnNonce), config.delay, () =>
-        post({ type: "delayed-to-renew" })
+        post({ type: "delayed-to-renew" }),
     )
     if (!response.success) {
         if (response.err.type === "invalid-ticket") {

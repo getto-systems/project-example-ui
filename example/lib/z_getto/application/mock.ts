@@ -22,6 +22,39 @@ export class MockStateAction_simple<S> implements ApplicationStateAction<S> {
     }
 }
 
+interface Ignite<S> {
+    (): S
+}
+export class MockStateAction_ignite<S> implements ApplicationStateAction<S> {
+    ignite: Ignite<S>
+
+    handler: ApplicationStateHandler<S> | null = null
+
+    constructor(ignite: Ignite<S>) {
+        this.ignite = ignite
+    }
+
+    ignition(): ApplicationStateIgnition<S> {
+        return {
+            subscribe: (handler: ApplicationStateHandler<S>) => {
+                this.handler = handler
+            },
+            unsubscribe: () => {
+                this.handler = null
+            },
+            ignite: () => {
+                if (this.handler) {
+                    this.handler(this.ignite())
+                }
+            },
+        }
+    }
+
+    terminate(): void {
+        this.handler = null
+    }
+}
+
 export class MockAction<S> implements ApplicationStateAction<S> {
     state: S | null = null
 
