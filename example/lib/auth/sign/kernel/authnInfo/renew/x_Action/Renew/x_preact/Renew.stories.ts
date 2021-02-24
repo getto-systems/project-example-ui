@@ -4,38 +4,37 @@ import { storyTemplate } from "../../../../../../../../z_vendor/storybook/preact
 
 import { RenewAuthnInfoProps, View } from "./Renew"
 
-import { initMockRenewAuthnInfoAction } from "../mock"
+import { RenewAuthnInfoResourceState } from "../action"
+import { initMockRenewAuthnInfoResource } from "../mock"
 
-import { RenewAuthnInfoState } from "../action"
-
-const renewOptions = [
-    "delayed",
-    "bad-request",
-    "server-error",
-    "bad-response",
-    "infra-error",
-] as const
+const renewOptions = {
+    delayed: true,
+    "bad-request": true,
+    "server-error": true,
+    "bad-response": true,
+    "infra-error": true,
+} as const
 
 export default {
     title: "library/Auth/Sign/AuthInfo/Renew",
     argTypes: {
         renew: {
-            control: { type: "select", options: renewOptions },
+            control: { type: "select", options: Object.keys(renewOptions) },
         },
     },
 }
 
 type Props = Readonly<{
-    renew: "delayed" | "bad-request" | "server-error" | "bad-response" | "infra-error"
+    renew: keyof typeof renewOptions
     err: string
 }>
 const template = storyTemplate<Props>((props) => {
     return h(View, <RenewAuthnInfoProps>{
-        renew: initMockRenewAuthnInfoAction(),
+        ...initMockRenewAuthnInfoResource(),
         state: state(),
     })
 
-    function state(): RenewAuthnInfoState {
+    function state(): RenewAuthnInfoResourceState {
         switch (props.renew) {
             case "delayed":
                 return { type: "delayed-to-renew" }

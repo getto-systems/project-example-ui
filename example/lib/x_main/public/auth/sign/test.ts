@@ -1,34 +1,12 @@
 import { initLoginViewLocationInfo, View } from "./impl"
 
-import { initStaticClock } from "../../../../z_getto/infra/clock/simulate"
-import { initRenewSimulate } from "../../../../auth/sign/kernel/authnInfo/kernel/infra/remote/renew/simulate"
-
-import { Clock } from "../../../../z_getto/infra/clock/infra"
-
 import { AuthSignActionState } from "./entryPoint"
 
-import { markApiNonce, markApiRoles } from "../../../../common/apiCredential/data"
-import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
-import { initMemoryApiCredentialRepository } from "../../../../common/apiCredential/infra/repository/memory"
-import {
-    AuthnInfoRepository,
-    RenewResult,
-} from "../../../../auth/sign/kernel/authnInfo/kernel/infra"
-import { delayed } from "../../../../z_getto/infra/delayed/core"
-import { initMemoryAuthnInfoRepository } from "../../../../auth/sign/kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
-import { newGetSecureScriptPathLocationInfo } from "../../../../auth/sign/common/secureScriptPath/get/impl"
-import {
-    initRenewAuthnInfoAction,
-    toRenewAuthnInfoEntryPoint,
-} from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/impl"
 import { initMockAuthenticatePasswordResource } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/mock"
 import { initMockRequestPasswordResetTokenResource } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/mock"
 import { initMockResetPasswordResource } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/mock"
 import { initMockStartPasswordResetSessionResource } from "../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/mock"
-
-// renew リクエストを投げるべきかの判定に使用する
-// SUCCEED_TO_AUTH_AT と setContinuousRenew の delay との間でうまく調整する
-const NOW = new Date("2020-01-01 10:00:30")
+import { initMockRenewAuthnInfoResource } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/mock"
 
 describe("LoginView", () => {
     test("redirect login view", (done) => {
@@ -53,7 +31,7 @@ describe("LoginView", () => {
                     case "renew-credential":
                         terminates.push(state.entryPoint.terminate)
 
-                        state.entryPoint.resource.renew.ignition().ignite()
+                        state.entryPoint.resource.core.ignition().ignite()
                         break
 
                     case "password-authenticate":
@@ -105,7 +83,7 @@ describe("LoginView", () => {
                     case "renew-credential":
                         terminates.push(state.entryPoint.terminate)
 
-                        state.entryPoint.resource.renew.ignition().ignite()
+                        state.entryPoint.resource.core.ignition().ignite()
                         break
 
                     case "password-reset-requestToken":
@@ -157,7 +135,7 @@ describe("LoginView", () => {
                     case "renew-credential":
                         terminates.push(state.entryPoint.terminate)
 
-                        state.entryPoint.resource.renew.ignition().ignite()
+                        state.entryPoint.resource.core.ignition().ignite()
                         break
 
                     case "password-reset-checkStatus":
@@ -209,7 +187,7 @@ describe("LoginView", () => {
                     case "renew-credential":
                         terminates.push(state.entryPoint.terminate)
 
-                        state.entryPoint.resource.renew.ignition().ignite()
+                        state.entryPoint.resource.core.ignition().ignite()
                         break
 
                     case "password-reset":
@@ -280,16 +258,8 @@ describe("LoginView", () => {
 
 function standardLoginView() {
     const currentURL = standardURL()
-    const repository = standardRepository()
-    const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        renew: () =>
-            standardRenewCredentialEntryPoint(
-                currentURL,
-                repository.apiCredentials,
-                repository.authnInfos,
-                clock,
-            ),
+        renew: () => standardRenewCredentialEntryPoint(),
         password_authenticate: () => standardPasswordLoginEntryPoint(),
         password_reset: () => standardPasswordResetResource(),
         password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
@@ -300,16 +270,8 @@ function standardLoginView() {
 }
 function passwordResetSessionLoginView() {
     const currentURL = passwordResetSessionURL()
-    const repository = standardRepository()
-    const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        renew: () =>
-            standardRenewCredentialEntryPoint(
-                currentURL,
-                repository.apiCredentials,
-                repository.authnInfos,
-                clock,
-            ),
+        renew: () => standardRenewCredentialEntryPoint(),
         password_authenticate: () => standardPasswordLoginEntryPoint(),
         password_reset: () => standardPasswordResetResource(),
         password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
@@ -320,16 +282,8 @@ function passwordResetSessionLoginView() {
 }
 function passwordResetCheckStatusLoginView() {
     const currentURL = passwordResetCheckStatusURL()
-    const repository = standardRepository()
-    const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        renew: () =>
-            standardRenewCredentialEntryPoint(
-                currentURL,
-                repository.apiCredentials,
-                repository.authnInfos,
-                clock,
-            ),
+        renew: () => standardRenewCredentialEntryPoint(),
         password_authenticate: () => standardPasswordLoginEntryPoint(),
         password_reset: () => standardPasswordResetResource(),
         password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
@@ -340,16 +294,8 @@ function passwordResetCheckStatusLoginView() {
 }
 function passwordResetLoginView() {
     const currentURL = passwordResetURL()
-    const repository = standardRepository()
-    const clock = standardClock()
     const view = new View(initLoginViewLocationInfo(currentURL), {
-        renew: () =>
-            standardRenewCredentialEntryPoint(
-                currentURL,
-                repository.apiCredentials,
-                repository.authnInfos,
-                clock,
-            ),
+        renew: () => standardRenewCredentialEntryPoint(),
         password_authenticate: () => standardPasswordLoginEntryPoint(),
         password_reset: () => standardPasswordResetResource(),
         password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
@@ -383,49 +329,11 @@ function standardCheckPasswordResetSendingStatusResource() {
         terminate: () => null,
     }
 }
-function standardRenewCredentialEntryPoint(
-    currentURL: URL,
-    apiCredentials: ApiCredentialRepository,
-    authnInfos: AuthnInfoRepository,
-    clock: Clock,
-) {
-    return toRenewAuthnInfoEntryPoint(
-        initRenewAuthnInfoAction(
-            {
-                renew: {
-                    apiCredentials,
-                    authnInfos,
-                    renew: initRenewSimulate(simulateRenew, {
-                        wait_millisecond: 0,
-                    }),
-                    config: {
-                        instantLoadExpire: { expire_millisecond: 20 * 1000 },
-                        delay: { delay_millisecond: 1 },
-                    },
-                    delayed,
-                    clock,
-                },
-                startContinuousRenew: {
-                    apiCredentials,
-                    authnInfos: authnInfos,
-                    renew: initRenewSimulate(simulateRenew, {
-                        wait_millisecond: 0,
-                    }),
-                    config: {
-                        delay: { delay_millisecond: 1 },
-                        interval: { interval_millisecond: 1 },
-                    },
-                    clock,
-                },
-                getSecureScriptPath: {
-                    config: {
-                        secureServerHost: standardSecureHost(),
-                    },
-                },
-            },
-            newGetSecureScriptPathLocationInfo(currentURL),
-        ),
-    )
+function standardRenewCredentialEntryPoint() {
+    return {
+        resource: initMockRenewAuthnInfoResource(),
+        terminate: () => null,
+    }
 }
 
 function standardURL(): URL {
@@ -439,37 +347,6 @@ function passwordResetCheckStatusURL(): URL {
 }
 function passwordResetURL(): URL {
     return new URL("https://example.com/index.html?_password_reset=reset")
-}
-
-function standardSecureHost(): string {
-    return "secure.example.com"
-}
-
-function simulateRenew(): RenewResult {
-    return {
-        success: false,
-        err: { type: "invalid-ticket" },
-    }
-}
-
-function standardRepository() {
-    return {
-        apiCredentials: initMemoryApiCredentialRepository({
-            set: true,
-            value: {
-                apiNonce: markApiNonce("api-nonce"),
-                apiRoles: markApiRoles(["role"]),
-            },
-        }),
-        authnInfos: initMemoryAuthnInfoRepository({
-            authnNonce: { set: false },
-            lastAuthAt: { set: false },
-        }),
-    }
-}
-
-function standardClock(): Clock {
-    return initStaticClock(NOW)
 }
 
 interface Handler<T> {

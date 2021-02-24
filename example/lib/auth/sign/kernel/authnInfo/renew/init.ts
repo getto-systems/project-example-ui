@@ -6,9 +6,9 @@ import { newClock } from "../../../../../z_getto/infra/clock/main"
 import { delayed } from "../../../../../z_getto/infra/delayed/core"
 
 import { delaySecond, expireMinute } from "../../../../../z_getto/infra/config/infra"
-import { RenewAuthnInfoInfra } from "./infra"
+import { RenewInfra } from "./infra"
 
-export function newRenewAuthnInfoInfra(webStorage: Storage): RenewAuthnInfoInfra {
+export function newRenewInfra(webStorage: Storage): RenewInfra {
     return {
         apiCredentials: newApiCredentialRepository(webStorage),
         authnInfos: newAuthnInfoRepository(webStorage),

@@ -3,22 +3,21 @@ import { initRenewSimulate } from "../../../kernel/infra/remote/renew/simulate"
 
 import { Clock } from "../../../../../../../z_getto/infra/clock/infra"
 
-import { RenewAuthnInfoResource, RenewAuthnInfoState } from "./action"
+import { RenewAuthnInfoResource, RenewAuthnInfoResourceState } from "./action"
 
 import { markSecureScriptPath } from "../../../../../common/secureScriptPath/get/data"
 import { markAuthAt, markAuthnNonce } from "../../../kernel/data"
 import { ApiCredentialRepository } from "../../../../../../../common/apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
-import {
-    AuthnInfoRepository,
-    RenewRemote,
-    RenewResult,
-} from "../../../kernel/infra"
+import { AuthnInfoRepository, RenewRemote, RenewResult } from "../../../kernel/infra"
 import { delayed } from "../../../../../../../z_getto/infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../../kernel/infra/repository/authnInfo/memory"
 import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
-import { initRenewAuthnInfoAction, toRenewAuthnInfoEntryPoint } from "./impl"
+import { toEntryPoint } from "./impl"
+import { initCoreAction, initCoreMaterial } from "./Core/impl"
+import { initSyncActionTestRunner } from "../../../../../../../z_getto/application/testHelper"
+import { initMockCoreAction } from "./Core/mock"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
 const STORED_AUTH_AT = new Date("2020-01-01 09:00:00")
@@ -39,13 +38,13 @@ describe("RenewAuthInfo", () => {
     test("instant load", (done) => {
         const { repository, clock, resource } = instantRenewCredentialResource()
 
-        const ignition = resource.renew.ignition()
+        const ignition = resource.core.ignition()
         ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
-        function stateHandler(): Post<RenewAuthnInfoState> {
-            const stack: RenewAuthnInfoState[] = []
+        function stateHandler(): Post<RenewAuthnInfoResourceState> {
+            const stack: RenewAuthnInfoResourceState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -57,7 +56,7 @@ describe("RenewAuthInfo", () => {
                         break
 
                     case "try-to-instant-load":
-                        resource.renew.succeedToInstantLoad()
+                        resource.core.succeedToInstantLoad()
                         break
 
                     case "succeed-to-start-continuous-renew":
@@ -98,13 +97,13 @@ describe("RenewAuthInfo", () => {
     test("instant load failed", (done) => {
         const { repository, clock, resource } = instantRenewCredentialResource()
 
-        const ignition = resource.renew.ignition()
+        const ignition = resource.core.ignition()
         ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
-        function stateHandler(): Post<RenewAuthnInfoState> {
-            const stack: RenewAuthnInfoState[] = []
+        function stateHandler(): Post<RenewAuthnInfoResourceState> {
+            const stack: RenewAuthnInfoResourceState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -116,7 +115,7 @@ describe("RenewAuthInfo", () => {
                         break
 
                     case "try-to-instant-load":
-                        resource.renew.failedToInstantLoad()
+                        resource.core.failedToInstantLoad()
                         break
 
                     case "required-to-login":
@@ -163,13 +162,13 @@ describe("RenewAuthInfo", () => {
     test("renew stored credential", (done) => {
         const { repository, clock, resource } = standardRenewCredentialResource()
 
-        const ignition = resource.renew.ignition()
+        const ignition = resource.core.ignition()
         ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
-        function stateHandler(): Post<RenewAuthnInfoState> {
-            const stack: RenewAuthnInfoState[] = []
+        function stateHandler(): Post<RenewAuthnInfoResourceState> {
+            const stack: RenewAuthnInfoResourceState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -220,13 +219,13 @@ describe("RenewAuthInfo", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitRenewCredentialResource()
 
-        const ignition = resource.renew.ignition()
+        const ignition = resource.core.ignition()
         ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
-        function stateHandler(): Post<RenewAuthnInfoState> {
-            const stack: RenewAuthnInfoState[] = []
+        function stateHandler(): Post<RenewAuthnInfoResourceState> {
+            const stack: RenewAuthnInfoResourceState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -278,13 +277,13 @@ describe("RenewAuthInfo", () => {
         // empty credential
         const { repository, resource } = emptyRenewCredentialResource()
 
-        const ignition = resource.renew.ignition()
+        const ignition = resource.core.ignition()
         ignition.subscribe(stateHandler())
 
         ignition.ignite()
 
-        function stateHandler(): Post<RenewAuthnInfoState> {
-            const stack: RenewAuthnInfoState[] = []
+        function stateHandler(): Post<RenewAuthnInfoResourceState> {
+            const stack: RenewAuthnInfoResourceState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -323,13 +322,13 @@ describe("RenewAuthInfo", () => {
     test("load error", (done) => {
         const { resource } = standardRenewCredentialResource()
 
-        const ignition = resource.renew.ignition()
+        const ignition = resource.core.ignition()
         ignition.subscribe(stateHandler())
 
-        resource.renew.loadError({ type: "infra-error", err: "load error" })
+        resource.core.loadError({ type: "infra-error", err: "load error" })
 
-        function stateHandler(): Post<RenewAuthnInfoState> {
-            const stack: RenewAuthnInfoState[] = []
+        function stateHandler(): Post<RenewAuthnInfoResourceState> {
+            const stack: RenewAuthnInfoResourceState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -367,6 +366,28 @@ describe("RenewAuthInfo", () => {
                 }
             }
         }
+    })
+
+    test("terminate", (done) => {
+        const entryPoint = toEntryPoint(initMockCoreAction())
+
+        const ignition = entryPoint.resource.core.ignition()
+
+        const runner = initSyncActionTestRunner()
+
+        runner.addTestCase(
+            () => {
+                entryPoint.terminate()
+                ignition.ignite()
+            },
+            (stack) => {
+                // no input/validate event after terminate
+                expect(stack).toEqual([])
+            },
+        )
+
+        const handler = runner.run(done)
+        ignition.subscribe(handler)
     })
 })
 
@@ -422,27 +443,29 @@ function newTestRenewAuthnInfoResource(
     clock: Clock,
 ): RenewAuthnInfoResource {
     const config = standardConfig()
-    return toRenewAuthnInfoEntryPoint(
-        initRenewAuthnInfoAction(
-            {
-                renew: {
-                    ...repository,
-                    ...remote,
-                    config: config.renew,
-                    delayed,
-                    clock,
+    return toEntryPoint(
+        initCoreAction(
+            initCoreMaterial(
+                {
+                    renew: {
+                        ...repository,
+                        ...remote,
+                        config: config.renew,
+                        delayed,
+                        clock,
+                    },
+                    startContinuousRenew: {
+                        ...repository,
+                        ...remote,
+                        config: config.continuousRenew,
+                        clock,
+                    },
+                    getSecureScriptPath: {
+                        config: config.location,
+                    },
                 },
-                startContinuousRenew: {
-                    ...repository,
-                    ...remote,
-                    config: config.continuousRenew,
-                    clock,
-                },
-                getSecureScriptPath: {
-                    config: config.location,
-                },
-            },
-            newGetSecureScriptPathLocationInfo(currentURL),
+                newGetSecureScriptPathLocationInfo(currentURL),
+            ),
         ),
     ).resource
 }

@@ -14,24 +14,18 @@ import { appendScript } from "../../../../../../../../x_preact/auth/Sign/script"
 
 import { ApplicationError } from "../../../../../../../../x_preact/common/System/ApplicationError"
 
-import {
-    initialRenewAuthnInfoState,
-    RenewAuthnInfoEntryPoint,
-    RenewAuthnInfoResource,
-    RenewAuthnInfoState,
-} from "../action"
-
-import { RenewAuthnInfoError } from "../../../data"
+import { initialRenewAuthnInfoResourceState, RenewAuthnInfoEntryPoint, RenewAuthnInfoResource, RenewAuthnInfoResourceState } from "../action"
+import { RenewError } from "../../../../kernel/data"
 
 export function RenewAuthInfo(entryPoint: RenewAuthnInfoEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
     return h(View, <RenewAuthnInfoProps>{
         ...resource,
-        state: useApplicationAction(resource.renew, initialRenewAuthnInfoState),        
+        state: useApplicationAction(resource.core, initialRenewAuthnInfoResourceState),
     })
 }
 
-export type RenewAuthnInfoProps = RenewAuthnInfoResource & Readonly<{ state: RenewAuthnInfoState }>
+export type RenewAuthnInfoProps = RenewAuthnInfoResource & Readonly<{ state: RenewAuthnInfoResourceState }>
 export function View(props: RenewAuthnInfoProps): VNode {
     useLayoutEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
@@ -39,10 +33,10 @@ export function View(props: RenewAuthnInfoProps): VNode {
             case "try-to-instant-load":
                 appendScript(props.state.scriptPath, (script) => {
                     script.onload = () => {
-                        props.renew.succeedToInstantLoad()
+                        props.core.succeedToInstantLoad()
                     }
                     script.onerror = () => {
-                        props.renew.failedToInstantLoad()
+                        props.core.failedToInstantLoad()
                     }
                 })
                 break
@@ -50,7 +44,7 @@ export function View(props: RenewAuthnInfoProps): VNode {
             case "try-to-load":
                 appendScript(props.state.scriptPath, (script) => {
                     script.onerror = () => {
-                        props.renew.loadError({
+                        props.core.loadError({
                             type: "infra-error",
                             err: `スクリプトのロードに失敗しました: ${props.state.type}`,
                         })
@@ -102,7 +96,7 @@ export function View(props: RenewAuthnInfoProps): VNode {
             ],
         })
     }
-    function errorMessage(err: RenewAuthnInfoError): VNode {
+    function errorMessage(err: RenewError): VNode {
         return loginBox(siteInfo(), {
             title: "認証に失敗しました",
             body: [
@@ -114,7 +108,7 @@ export function View(props: RenewAuthnInfoProps): VNode {
     }
 }
 
-function renewError(err: RenewAuthnInfoError): VNodeContent[] {
+function renewError(err: RenewError): VNodeContent[] {
     switch (err.type) {
         case "bad-request":
             return ["認証情報の送信処理でエラーが発生しました"]
