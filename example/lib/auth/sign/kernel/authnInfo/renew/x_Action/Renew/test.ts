@@ -1,4 +1,7 @@
-import { initStaticClock, StaticClock } from "../../../../../../../z_vendor/getto-application/infra/clock/simulate"
+import {
+    initStaticClock,
+    StaticClock,
+} from "../../../../../../../z_vendor/getto-application/infra/clock/simulate"
 import { initRenewSimulate } from "../../../kernel/infra/remote/renew/simulate"
 
 import { Clock } from "../../../../../../../z_vendor/getto-application/infra/clock/infra"
@@ -365,21 +368,20 @@ describe("RenewAuthInfo", () => {
     test("terminate", (done) => {
         const entryPoint = toEntryPoint(initMockCoreAction())
 
-        const runner = initSyncActionTestRunner()
-
-        runner.addTestCase(
-            () => {
-                entryPoint.terminate()
-                entryPoint.resource.core.ignite()
+        const runner = initSyncActionTestRunner([
+            {
+                statement: () => {
+                    entryPoint.terminate()
+                    entryPoint.resource.core.ignite()
+                },
+                examine: (stack) => {
+                    // no input/validate event after terminate
+                    expect(stack).toEqual([])
+                },
             },
-            (stack) => {
-                // no input/validate event after terminate
-                expect(stack).toEqual([])
-            },
-        )
+        ])
 
-        const handler = runner.run(done)
-        entryPoint.resource.core.subscriber.subscribe(handler)
+        entryPoint.resource.core.subscriber.subscribe(runner(done))
     })
 })
 

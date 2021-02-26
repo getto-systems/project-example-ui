@@ -49,21 +49,20 @@ describe("Logout", () => {
     test("terminate", (done) => {
         const { resource } = standardResource()
 
-        const runner = initSyncActionTestRunner()
-
-        runner.addTestCase(
-            () => {
-                resource.logout.terminate()
-                resource.logout.submit()
+        const runner = initSyncActionTestRunner([
+            {
+                statement: () => {
+                    resource.logout.terminate()
+                    resource.logout.submit()
+                },
+                examine: (stack) => {
+                    // no input/validate event after terminate
+                    expect(stack).toEqual([])
+                },
             },
-            (stack) => {
-                // no input/validate event after terminate
-                expect(stack).toEqual([])
-            },
-        )
+        ])
 
-        const handler = runner.run(done)
-        resource.logout.subscriber.subscribe(handler)
+        resource.logout.subscriber.subscribe(runner(done))
     })
 })
 

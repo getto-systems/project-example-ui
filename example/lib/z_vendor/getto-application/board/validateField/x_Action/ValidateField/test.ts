@@ -5,7 +5,7 @@ import { newBoardValidateStack } from "../../../kernel/infra/stack"
 
 import { initValidateBoardFieldAction } from "./impl"
 
-import { ValidateBoardFieldAction, ValidateBoardFieldState } from "./action"
+import { ValidateBoardFieldAction } from "./action"
 
 import { BoardConvertResult, markBoardValue } from "../../../kernel/data"
 
@@ -13,45 +13,45 @@ describe("ValidateBoardField", () => {
     test("validate; valid input", (done) => {
         const { action, store, validateStack } = standardResource()
 
-        const checker = initSyncActionTestRunner<ValidateBoardFieldState<ValidateError>>()
+        const runner = initSyncActionTestRunner([
+            {
+                statement: () => {
+                    // valid input
+                    store.set(markBoardValue("valid"))
 
-        checker.addTestCase(
-            () => {
-                // valid input
-                store.set(markBoardValue("valid"))
-
-                action.check()
+                    action.check()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([{ valid: true }])
+                    expect(validateStack.get("field")).toEqual({ found: true, state: true })
+                    expect(action.get()).toEqual({ success: true, value: "valid" })
+                },
             },
-            (stack) => {
-                expect(stack).toEqual([{ valid: true }])
-                expect(validateStack.get("field")).toEqual({ found: true, state: true })
-                expect(action.get()).toEqual({ success: true, value: "valid" })
-            },
-        )
+        ])
 
-        action.subscriber.subscribe(checker.run(done))
+        action.subscriber.subscribe(runner(done))
     })
 
     test("validate; invalid input", (done) => {
         const { action, store, validateStack } = standardResource()
 
-        const checker = initSyncActionTestRunner<ValidateBoardFieldState<ValidateError>>()
+        const runner = initSyncActionTestRunner([
+            {
+                statement: () => {
+                    // invalid input : see validator()
+                    store.set(markBoardValue(""))
 
-        checker.addTestCase(
-            () => {
-                // invalid input : see validator()
-                store.set(markBoardValue(""))
-
-                action.check()
+                    action.check()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([{ valid: false, err: ["empty"] }])
+                    expect(validateStack.get("field")).toEqual({ found: true, state: false })
+                    expect(action.get()).toEqual({ success: false })
+                },
             },
-            (stack) => {
-                expect(stack).toEqual([{ valid: false, err: ["empty"] }])
-                expect(validateStack.get("field")).toEqual({ found: true, state: false })
-                expect(action.get()).toEqual({ success: false })
-            },
-        )
+        ])
 
-        action.subscriber.subscribe(checker.run(done))
+        action.subscriber.subscribe(runner(done))
     })
 })
 
