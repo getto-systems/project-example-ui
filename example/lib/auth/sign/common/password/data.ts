@@ -1,5 +1,5 @@
 import { BoardValue } from "../../../../z_vendor/getto-application/board/kernel/data"
-import { BoardFieldConvertResult } from "../../../../z_vendor/getto-application/board/validateField/data"
+import { ConvertBoardFieldResult } from "../../../../z_vendor/getto-application/board/validateField/data"
 
 export type Password = string & { Password: never }
 
@@ -10,7 +10,7 @@ export type ValidatePasswordError = "empty" | "too-long"
 
 export function convertPassword(
     value: BoardValue,
-): BoardFieldConvertResult<Password, ValidatePasswordError> {
+): ConvertBoardFieldResult<Password, ValidatePasswordError> {
     if (value.length === 0) {
         return { valid: false, err: EMPTY }
     }

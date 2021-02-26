@@ -7,7 +7,7 @@ import { ValidateBoardFieldAction } from "./Core/action"
 
 import { BoardValue, markBoardValue } from "../../kernel/data"
 import { initValidateBoardInfra } from "../../kernel/impl"
-import { BoardFieldConvertResult } from "../data"
+import { ConvertBoardFieldResult } from "../data"
 
 describe("ValidateBoardField", () => {
     test("validate; valid input", (done) => {
@@ -64,7 +64,7 @@ function standardResource() {
         ValidateError
     > = initValidateBoardFieldAction({ name: "field", getter: () => store.get(), converter }, infra)
 
-    function converter(value: BoardValue): BoardFieldConvertResult<FieldValue, ValidateError> {
+    function converter(value: BoardValue): ConvertBoardFieldResult<FieldValue, ValidateError> {
         if (value === "") {
             return { valid: false, err: ["empty"] }
         }

@@ -2,13 +2,13 @@ import { ValidateBoardInfra } from "../kernel/infra"
 
 import { ConvertBoardFieldMethod } from "./method"
 
-import { BoardFieldConvertResult } from "./data"
+import { ConvertBoardFieldResult } from "./data"
 import { BoardValue } from "../kernel/data"
 
 export type ValidateBoardFieldEmbed<N extends string, T, E> = Readonly<{
     name: N
     getter: { (): BoardValue }
-    converter: { (value: BoardValue): BoardFieldConvertResult<T, E> }
+    converter: { (value: BoardValue): ConvertBoardFieldResult<T, E> }
 }>
 
 interface Convert {

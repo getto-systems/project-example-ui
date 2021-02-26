@@ -1,4 +1,4 @@
-import { BoardValidateStackFound, ValidateBoardInfra } from "../kernel/infra"
+import { ValidateBoardStateFound, ValidateBoardInfra } from "../kernel/infra"
 
 import { ConvertBoardMethod, ValidateBoardMethod } from "./method"
 
@@ -33,7 +33,7 @@ export const validateBoard: Validate = (embed, infra) => () => {
     return compose(fields.map((field) => stack.get(field)))
 }
 
-function compose(results: BoardValidateStackFound[]): BoardValidateState {
+function compose(results: ValidateBoardStateFound[]): BoardValidateState {
     if (results.some((result) => result.found && !result.state)) {
         return "invalid"
     }

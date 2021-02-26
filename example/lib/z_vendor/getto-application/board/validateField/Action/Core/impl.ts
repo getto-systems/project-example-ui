@@ -10,7 +10,7 @@ import {
     ValidateBoardFieldMaterial,
 } from "./action"
 
-import { BoardFieldConvertResult } from "../../data"
+import { ConvertBoardFieldResult } from "../../data"
 
 export function initValidateBoardFieldAction<N extends string, T, E>(
     embed: ValidateBoardFieldEmbed<N, T, E>,
@@ -35,7 +35,7 @@ class Action<T, E>
         this.material = material
     }
 
-    get(): BoardFieldConvertResult<T, E> {
+    get(): ConvertBoardFieldResult<T, E> {
         const result = this.material.convert()
         if (!result.valid) {
             this.post(map(result))
@@ -47,7 +47,7 @@ class Action<T, E>
     }
 }
 
-function map<T, E>(result: BoardFieldConvertResult<T, E>): ValidateBoardFieldState<E> {
+function map<T, E>(result: ConvertBoardFieldResult<T, E>): ValidateBoardFieldState<E> {
     if (result.valid) {
         // omit value
         return { valid: true }
