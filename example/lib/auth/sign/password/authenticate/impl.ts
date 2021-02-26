@@ -7,7 +7,7 @@ interface Authenticate {
     (infra: AuthenticateInfra): AuthenticateMethod
 }
 export const authenticate: Authenticate = (infra) => async (fields, post) => {
-    if (!fields.success) {
+    if (!fields.valid) {
         post({ type: "failed-to-login", err: { type: "validation-error" } })
         return
     }

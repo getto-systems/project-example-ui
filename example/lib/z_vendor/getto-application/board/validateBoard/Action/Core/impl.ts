@@ -34,7 +34,7 @@ class Action<T>
         switch (this.material.validate()) {
             case "initial":
             case "invalid":
-                return { success: false }
+                return { valid: false }
 
             case "valid":
                 return this.material.convert()

@@ -1,77 +1,97 @@
-import { initSyncActionChecker_simple } from "../../../action/testHelper"
-import { ConvertBoardResult } from "../../kernel/data"
+import { initSyncActionTestRunner } from "../../../action/testHelper"
+
 import { initValidateBoardInfra } from "../../kernel/impl"
-import { ValidateBoardActionState } from "./Core/action"
+
 import { initValidateBoardAction } from "./Core/impl"
 
+import { ConvertBoardResult } from "../../kernel/data"
+
 describe("ValidateBoard", () => {
-    test("validate; all valid state", () => {
+    test("validate; all valid state", (done) => {
         const { action, validateStack } = standardResource()
 
-        const checker = initSyncActionChecker_simple<ValidateBoardActionState>()
+        const runner = initSyncActionTestRunner([
+            {
+                statement: () => {
+                    // all valid
+                    validateStack.update("name", true)
+                    validateStack.update("value", true)
 
-        action.subscriber.subscribe(checker.handler)
+                    action.check()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual(["valid"])
+                    expect(action.get()).toEqual({
+                        valid: true,
+                        value: { name: "valid-name", value: "valid-value" },
+                    })
+                },
+            },
+        ])
 
-        // all valid
-        validateStack.update("name", true)
-        validateStack.update("value", true)
-
-        action.check()
-        checker.check((stack) => {
-            expect(stack).toEqual(["valid"])
-        })
-        expect(action.get()).toEqual({
-            success: true,
-            value: { name: "valid-name", value: "valid-value" },
-        })
+        action.subscriber.subscribe(runner(done))
     })
 
-    test("validate; invalid exists", () => {
+    test("validate; invalid exists", (done) => {
         const { action, validateStack } = standardResource()
 
-        const checker = initSyncActionChecker_simple<ValidateBoardActionState>()
+        const runner = initSyncActionTestRunner([
+            {
+                statement: () => {
+                    validateStack.update("name", false) // invalid
+                    validateStack.update("value", true)
 
-        action.subscriber.subscribe(checker.handler)
+                    action.check()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual(["invalid"])
+                    expect(action.get()).toEqual({ valid: false })
+                },
+            },
+        ])
 
-        validateStack.update("name", false) // invalid
-        validateStack.update("value", true)
-
-        action.check()
-        checker.check((stack) => {
-            expect(stack).toEqual(["invalid"])
-        })
-        expect(action.get()).toEqual({ success: false })
+        action.subscriber.subscribe(runner(done))
     })
 
-    test("validate; initial exists", () => {
+    test("validate; initial exists", (done) => {
         const { action, validateStack } = standardResource()
 
-        const checker = initSyncActionChecker_simple<ValidateBoardActionState>()
+        const runner = initSyncActionTestRunner([
+            {
+                statement: () => {
+                    validateStack.update("name", true)
+                    // validateStack.update("value", true) // initial
 
-        action.subscriber.subscribe(checker.handler)
+                    action.check()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual(["initial"])
+                    expect(action.get()).toEqual({ valid: false })
+                },
+            },
+        ])
 
-        validateStack.update("name", true)
-        // validateStack.update("value", true) // initial
-
-        action.check()
-        checker.check((stack) => {
-            expect(stack).toEqual(["initial"])
-        })
-        expect(action.get()).toEqual({ success: false })
+        action.subscriber.subscribe(runner(done))
     })
 
-    test("validate; all initial", () => {
+    test("validate; all initial", (done) => {
         const { action } = standardResource()
 
-        const checker = initSyncActionChecker_simple<ValidateBoardActionState>()
+        const runner = initSyncActionTestRunner([
+            {
+                statement: () => {
+                    // all initial
 
-        action.subscriber.subscribe(checker.handler)
+                    action.check()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual(["initial"])
+                    expect(action.get()).toEqual({ valid: false })
+                },
+            },
+        ])
 
-        action.check()
-        checker.check((stack) => {
-            expect(stack).toEqual(["initial"])
-        })
-        expect(action.get()).toEqual({ success: false })
+        action.subscriber.subscribe(runner(done))
     })
 })
 
@@ -85,6 +105,6 @@ function standardResource() {
     type Fields = Readonly<{ name: string; value: string }>
 
     function converter(): ConvertBoardResult<Fields> {
-        return { success: true, value: { name: "valid-name", value: "valid-value" } }
+        return { valid: true, value: { name: "valid-name", value: "valid-value" } }
     }
 }
