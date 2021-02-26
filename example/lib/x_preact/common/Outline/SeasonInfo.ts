@@ -6,10 +6,7 @@ import { label_alert } from "../../../z_vendor/getto-css/preact/design/highlight
 
 import { useApplicationAction } from "../hooks"
 
-import {
-    SeasonInfoComponent,
-    initialSeasonInfoComponentState,
-} from "../../../example/x_components/Outline/seasonInfo/component"
+import { SeasonInfoComponent } from "../../../example/x_components/Outline/seasonInfo/component"
 
 import { Season, SeasonError } from "../../../example/shared/season/data"
 
@@ -17,7 +14,7 @@ type Props = Readonly<{
     seasonInfo: SeasonInfoComponent
 }>
 export function SeasonInfo(resource: Props): VNode {
-    const state = useApplicationAction(resource.seasonInfo, initialSeasonInfoComponentState)
+    const state = useApplicationAction(resource.seasonInfo)
 
     switch (state.type) {
         case "initial-season":

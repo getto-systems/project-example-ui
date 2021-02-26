@@ -1,4 +1,4 @@
-import { ApplicationAbstractStateAction } from "../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../z_getto/action/impl"
 
 import {
     ExampleMaterial,
@@ -12,6 +12,8 @@ export const initExampleComponent: ExampleComponentFactory = (material) => new C
 class Component
     extends ApplicationAbstractStateAction<ExampleComponentState>
     implements ExampleComponent {
+    readonly initialState: ExampleComponentState = { type: "initial-example" }
+
     material: ExampleMaterial
 
     constructor(material: ExampleMaterial) {

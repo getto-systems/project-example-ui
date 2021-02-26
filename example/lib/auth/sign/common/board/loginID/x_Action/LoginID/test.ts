@@ -1,7 +1,7 @@
 import {
     initSyncActionChecker_simple,
     initSyncActionTestRunner,
-} from "../../../../../../../z_getto/application/testHelper"
+} from "../../../../../../../z_getto/action/testHelper"
 import { standardBoardValueStore } from "../../../../../../../z_getto/board/input/x_Action/Input/testHelper"
 
 import { newBoardValidateStack } from "../../../../../../../z_getto/board/kernel/infra/stack"
@@ -21,8 +21,7 @@ describe("LoginIDBoard", () => {
             ValidateBoardFieldState<ValidateLoginIDError>
         >()
 
-        const ignition = resource.validate.ignition()
-        ignition.subscribe(checker.handler)
+        resource.validate.subscriber.subscribe(checker.handler)
 
         // valid input
         resource.input.set(markBoardValue("valid"))
@@ -40,8 +39,7 @@ describe("LoginIDBoard", () => {
             ValidateBoardFieldState<ValidateLoginIDError>
         >()
 
-        const ignition = resource.validate.ignition()
-        ignition.subscribe(checker.handler)
+        resource.validate.subscriber.subscribe(checker.handler)
 
         // empty
         resource.input.set(markBoardValue(""))
@@ -59,8 +57,7 @@ describe("LoginIDBoard", () => {
             ValidateBoardFieldState<ValidateLoginIDError>
         >()
 
-        const ignition = resource.validate.ignition()
-        ignition.subscribe(checker.handler)
+        resource.validate.subscriber.subscribe(checker.handler)
 
         // too-long
         resource.input.set(markBoardValue("a".repeat(100 + 1)))
@@ -78,8 +75,7 @@ describe("LoginIDBoard", () => {
             ValidateBoardFieldState<ValidateLoginIDError>
         >()
 
-        const ignition = resource.validate.ignition()
-        ignition.subscribe(checker.handler)
+        resource.validate.subscriber.subscribe(checker.handler)
 
         // just max-length
         resource.input.set(markBoardValue("a".repeat(100)))
@@ -102,8 +98,6 @@ describe("LoginIDBoard", () => {
     test("terminate", (done) => {
         const { resource } = standardResource()
 
-        const ignition = resource.validate.ignition()
-
         const runner = initSyncActionTestRunner()
 
         runner.addTestCase(
@@ -119,7 +113,7 @@ describe("LoginIDBoard", () => {
 
         const handler = runner.run(done)
         resource.input.subscribeInputEvent(() => handler(resource.input.get()))
-        ignition.subscribe(handler)
+        resource.validate.subscriber.subscribe(handler)
     })
 })
 

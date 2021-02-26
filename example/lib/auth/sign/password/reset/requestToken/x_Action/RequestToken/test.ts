@@ -1,7 +1,7 @@
 import {
     initAsyncActionTester_legacy,
     initSyncActionTestRunner,
-} from "../../../../../../../z_getto/application/testHelper"
+} from "../../../../../../../z_getto/action/testHelper"
 import { standardBoardValueStore } from "../../../../../../../z_getto/board/input/x_Action/Input/testHelper"
 
 import { initCoreMaterial, initCoreAction } from "./Core/impl"
@@ -28,8 +28,7 @@ describe("RequestPasswordResetToken", () => {
     test("submit valid login-id", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
-        const ignition = resource.core.ignition()
-        ignition.subscribe(initTester())
+        resource.core.subscriber.subscribe(initTester())
 
         resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
 
@@ -53,8 +52,7 @@ describe("RequestPasswordResetToken", () => {
         // wait for delayed timeout
         const { resource } = waitPasswordResetSessionResource()
 
-        const ignition = resource.core.ignition()
-        ignition.subscribe(initTester())
+        resource.core.subscriber.subscribe(initTester())
 
         resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
 
@@ -78,8 +76,7 @@ describe("RequestPasswordResetToken", () => {
     test("submit without fields", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
-        const ignition = resource.core.ignition()
-        ignition.subscribe(initTester())
+        resource.core.subscriber.subscribe(initTester())
 
         // try to request token without fields
         resource.core.submit(resource.form.validate.get())
@@ -107,10 +104,10 @@ describe("RequestPasswordResetToken", () => {
         const { resource } = standardPasswordResetSessionResource()
         const entryPoint = toEntryPoint(resource)
 
-        const ignition = {
-            core: resource.core.ignition(),
-            form: resource.form.validate.ignition(),
-            loginID: resource.form.loginID.validate.ignition(),
+        const subscriber = {
+            core: resource.core.subscriber,
+            form: resource.form.validate.subscriber,
+            loginID: resource.form.loginID.validate.subscriber,
         }
 
         const runner = initSyncActionTestRunner()
@@ -127,9 +124,9 @@ describe("RequestPasswordResetToken", () => {
         )
 
         const handler = runner.run(done)
-        ignition.core.subscribe(handler)
-        ignition.form.subscribe(handler)
-        ignition.loginID.subscribe(handler)
+        subscriber.core.subscribe(handler)
+        subscriber.form.subscribe(handler)
+        subscriber.loginID.subscribe(handler)
         resource.form.loginID.input.subscribeInputEvent(() => handler("input"))
     })
 })

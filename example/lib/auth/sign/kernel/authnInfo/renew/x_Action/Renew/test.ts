@@ -16,7 +16,7 @@ import { initMemoryAuthnInfoRepository } from "../../../kernel/infra/repository/
 import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
 import { toEntryPoint } from "./impl"
 import { initCoreAction, initCoreMaterial } from "./Core/impl"
-import { initSyncActionTestRunner } from "../../../../../../../z_getto/application/testHelper"
+import { initSyncActionTestRunner } from "../../../../../../../z_getto/action/testHelper"
 import { initMockCoreAction } from "./Core/mock"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
@@ -38,10 +38,9 @@ describe("RenewAuthInfo", () => {
     test("instant load", (done) => {
         const { repository, clock, resource } = instantRenewCredentialResource()
 
-        const ignition = resource.core.ignition()
-        ignition.subscribe(stateHandler())
+        resource.core.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.core.ignite()
 
         function stateHandler(): Post<RenewAuthnInfoResourceState> {
             const stack: RenewAuthnInfoResourceState[] = []
@@ -97,10 +96,9 @@ describe("RenewAuthInfo", () => {
     test("instant load failed", (done) => {
         const { repository, clock, resource } = instantRenewCredentialResource()
 
-        const ignition = resource.core.ignition()
-        ignition.subscribe(stateHandler())
+        resource.core.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.core.ignite()
 
         function stateHandler(): Post<RenewAuthnInfoResourceState> {
             const stack: RenewAuthnInfoResourceState[] = []
@@ -162,10 +160,9 @@ describe("RenewAuthInfo", () => {
     test("renew stored credential", (done) => {
         const { repository, clock, resource } = standardRenewCredentialResource()
 
-        const ignition = resource.core.ignition()
-        ignition.subscribe(stateHandler())
+        resource.core.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.core.ignite()
 
         function stateHandler(): Post<RenewAuthnInfoResourceState> {
             const stack: RenewAuthnInfoResourceState[] = []
@@ -219,10 +216,9 @@ describe("RenewAuthInfo", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitRenewCredentialResource()
 
-        const ignition = resource.core.ignition()
-        ignition.subscribe(stateHandler())
+        resource.core.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.core.ignite()
 
         function stateHandler(): Post<RenewAuthnInfoResourceState> {
             const stack: RenewAuthnInfoResourceState[] = []
@@ -277,10 +273,9 @@ describe("RenewAuthInfo", () => {
         // empty credential
         const { repository, resource } = emptyRenewCredentialResource()
 
-        const ignition = resource.core.ignition()
-        ignition.subscribe(stateHandler())
+        resource.core.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.core.ignite()
 
         function stateHandler(): Post<RenewAuthnInfoResourceState> {
             const stack: RenewAuthnInfoResourceState[] = []
@@ -322,8 +317,7 @@ describe("RenewAuthInfo", () => {
     test("load error", (done) => {
         const { resource } = standardRenewCredentialResource()
 
-        const ignition = resource.core.ignition()
-        ignition.subscribe(stateHandler())
+        resource.core.subscriber.subscribe(stateHandler())
 
         resource.core.loadError({ type: "infra-error", err: "load error" })
 
@@ -371,14 +365,12 @@ describe("RenewAuthInfo", () => {
     test("terminate", (done) => {
         const entryPoint = toEntryPoint(initMockCoreAction())
 
-        const ignition = entryPoint.resource.core.ignition()
-
         const runner = initSyncActionTestRunner()
 
         runner.addTestCase(
             () => {
                 entryPoint.terminate()
-                ignition.ignite()
+                entryPoint.resource.core.ignite()
             },
             (stack) => {
                 // no input/validate event after terminate
@@ -387,7 +379,7 @@ describe("RenewAuthInfo", () => {
         )
 
         const handler = runner.run(done)
-        ignition.subscribe(handler)
+        entryPoint.resource.core.subscriber.subscribe(handler)
     })
 })
 

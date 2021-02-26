@@ -1,4 +1,4 @@
-import { ApplicationAbstractStateAction } from "../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../z_getto/action/impl"
 
 import {
     SeasonInfoComponentFactory,
@@ -13,6 +13,8 @@ export const initSeasonInfoComponent: SeasonInfoComponentFactory = (material) =>
 class Component
     extends ApplicationAbstractStateAction<SeasonInfoComponentState>
     implements SeasonInfoComponent {
+    readonly initialState: SeasonInfoComponentState = { type: "initial-season" }
+
     material: SeasonInfoMaterial
 
     constructor(material: SeasonInfoMaterial) {

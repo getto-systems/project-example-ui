@@ -4,7 +4,7 @@ import { ValidateBoardFieldState } from "../../../../../../../z_getto/board/vali
 import {
     initSyncActionChecker_simple,
     initSyncActionTestRunner,
-} from "../../../../../../../z_getto/application/testHelper"
+} from "../../../../../../../z_getto/action/testHelper"
 import { ValidatePasswordError } from "./data"
 import { initPasswordBoardFieldAction } from "./impl"
 import { standardBoardValueStore } from "../../../../../../../z_getto/board/input/x_Action/Input/testHelper"
@@ -17,8 +17,7 @@ describe("PasswordBoard", () => {
             ValidateBoardFieldState<ValidatePasswordError>
         >()
 
-        const ignition = resource.validate.ignition()
-        ignition.subscribe(checker.handler)
+        resource.validate.subscriber.subscribe(checker.handler)
 
         // valid input
         resource.input.set(markBoardValue("valid"))
@@ -36,8 +35,7 @@ describe("PasswordBoard", () => {
             ValidateBoardFieldState<ValidatePasswordError>
         >()
 
-        const ignition = resource.validate.ignition()
-        ignition.subscribe(checker.handler)
+        resource.validate.subscriber.subscribe(checker.handler)
 
         // empty
         resource.input.set(markBoardValue(""))
@@ -55,8 +53,7 @@ describe("PasswordBoard", () => {
             ValidateBoardFieldState<ValidatePasswordError>
         >()
 
-        const ignition = resource.validate.ignition()
-        ignition.subscribe(checker.handler)
+        resource.validate.subscriber.subscribe(checker.handler)
 
         // too-long
         resource.input.set(markBoardValue("a".repeat(72 + 1)))
@@ -74,8 +71,7 @@ describe("PasswordBoard", () => {
             ValidateBoardFieldState<ValidatePasswordError>
         >()
 
-        const ignition = resource.validate.ignition()
-        ignition.subscribe(checker.handler)
+        resource.validate.subscriber.subscribe(checker.handler)
 
         // just max-length
         resource.input.set(markBoardValue("a".repeat(72)))
@@ -93,8 +89,7 @@ describe("PasswordBoard", () => {
             ValidateBoardFieldState<ValidatePasswordError>
         >()
 
-        const ignition = resource.validate.ignition()
-        ignition.subscribe(checker.handler)
+        resource.validate.subscriber.subscribe(checker.handler)
 
         // too-long : "あ"(UTF8) is 3 bytes character
         resource.input.set(markBoardValue("あ".repeat(24) + "a"))
@@ -112,8 +107,7 @@ describe("PasswordBoard", () => {
             ValidateBoardFieldState<ValidatePasswordError>
         >()
 
-        const ignition = resource.validate.ignition()
-        ignition.subscribe(checker.handler)
+        resource.validate.subscriber.subscribe(checker.handler)
 
         // just max-length : "あ"(UTF8) is 3 bytes character
         resource.input.set(markBoardValue("あ".repeat(24)))
@@ -150,8 +144,6 @@ describe("PasswordBoard", () => {
     test("terminate", (done) => {
         const { resource } = standardResource()
 
-        const ignition = resource.validate.ignition()
-
         const runner = initSyncActionTestRunner()
 
         runner.addTestCase(
@@ -167,7 +159,7 @@ describe("PasswordBoard", () => {
 
         const handler = runner.run(done)
         resource.input.subscribeInputEvent(() => handler(resource.input.get()))
-        ignition.subscribe(handler)
+        resource.validate.subscriber.subscribe(handler)
     })
 })
 

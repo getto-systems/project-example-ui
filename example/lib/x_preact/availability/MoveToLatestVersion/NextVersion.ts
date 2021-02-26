@@ -11,12 +11,11 @@ import { spinner } from "../../common/icon"
 import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { NextVersionResource } from "../../../availability/z_EntryPoint/MoveToNextVersion/entryPoint"
-import { initialNextVersionComponentState } from "../../../availability/x_Resource/MoveToNextVersion/nextVersion/component"
 
 import { appTargetToPath, FindError } from "../../../availability/nextVersion/data"
 
 export function NextVersion(resource: NextVersionResource): VNode {
-    const state = useApplicationAction(resource.nextVersion, initialNextVersionComponentState)
+    const state = useApplicationAction(resource.nextVersion)
 
     useLayoutEffect(() => {
         switch (state.type) {

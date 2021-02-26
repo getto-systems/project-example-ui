@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../../../z_getto/application/action"
+import { ApplicationAction } from "../../../../../../z_getto/action/action"
 import {
     initialValidateBoardState,
     ValidateBoardState,

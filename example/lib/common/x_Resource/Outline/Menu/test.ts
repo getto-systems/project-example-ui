@@ -12,7 +12,7 @@ import {
 } from "../../../../auth/permission/outline/load/infra"
 import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"
 import { initMemoryOutlineMenuExpandRepository } from "../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/memory"
-import { initAsyncActionTester_legacy } from "../../../../z_getto/application/testHelper"
+import { initAsyncActionTester_legacy } from "../../../../z_getto/action/testHelper"
 import { markApiNonce, markApiRoles } from "../../../apiCredential/data"
 import { ApiCredentialRepository } from "../../../apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../apiCredential/infra/repository/memory"
@@ -25,10 +25,9 @@ describe("BreadcrumbList", () => {
     test("load breadcrumb", (done) => {
         const { resource } = standardMenuResource()
 
-        const ignition = resource.breadcrumbList.ignition()
-        ignition.subscribe(initTester())
+        resource.breadcrumbList.subscriber.subscribe(initTester())
 
-        ignition.ignite()
+        resource.breadcrumbList.ignite()
 
         function initTester() {
             return initAsyncBreadcrumbListTester()((stack) => {
@@ -46,10 +45,9 @@ describe("BreadcrumbList", () => {
     test("load empty breadcrumb; unknown menu target", (done) => {
         const { resource } = unknownMenuResource()
 
-        const ignition = resource.breadcrumbList.ignition()
-        ignition.subscribe(initTester())
+        resource.breadcrumbList.subscriber.subscribe(initTester())
 
-        ignition.ignite()
+        resource.breadcrumbList.ignite()
 
         function initTester() {
             return initAsyncBreadcrumbListTester()((stack) => {
@@ -76,10 +74,9 @@ describe("Menu", () => {
     test("load menu", (done) => {
         const { resource } = standardMenuResource()
 
-        const ignition = resource.menu.ignition()
-        ignition.subscribe(initTester())
+        resource.menu.subscriber.subscribe(initTester())
 
-        ignition.ignite()
+        resource.menu.ignite()
 
         function initTester() {
             return initAsyncMenuTester()((stack) => {
@@ -123,10 +120,9 @@ describe("Menu", () => {
     test("load menu; empty roles", (done) => {
         const { resource } = emptyMenuResource()
 
-        const ignition = resource.menu.ignition()
-        ignition.subscribe(initTester())
+        resource.menu.subscriber.subscribe(initTester())
 
-        ignition.ignite()
+        resource.menu.ignite()
 
         function initTester() {
             return initAsyncMenuTester()((stack) => {
@@ -171,10 +167,9 @@ describe("Menu", () => {
     test("load menu; saved expands", (done) => {
         const { resource } = expandMenuResource()
 
-        const ignition = resource.menu.ignition()
-        ignition.subscribe(initTester())
+        resource.menu.subscriber.subscribe(initTester())
 
-        ignition.ignite()
+        resource.menu.ignite()
 
         function initTester() {
             return initAsyncMenuTester()((stack) => {
@@ -218,10 +213,9 @@ describe("Menu", () => {
     test("load menu; toggle expands", (done) => {
         const { repository, resource } = standardMenuResource()
 
-        const ignition = resource.menu.ignition()
-        ignition.subscribe(initNoopTester())
+        resource.menu.subscriber.subscribe(initNoopTester())
 
-        ignition.ignite()
+        resource.menu.ignite()
 
         function initNoopTester() {
             return initAsyncMenuTester()((stack) => {
@@ -230,7 +224,7 @@ describe("Menu", () => {
                     if (last.type === "succeed-to-load") {
                         resource.menu.terminate()
 
-                        ignition.subscribe(initFirstToggleTester())
+                        resource.menu.subscriber.subscribe(initFirstToggleTester())
                         resource.menu.toggle(last.menu, [markOutlineMenuCategoryLabel("DOCUMENT")])
                     }
                 }
@@ -261,7 +255,7 @@ describe("Menu", () => {
                     if (last.type === "succeed-to-toggle") {
                         resource.menu.terminate()
 
-                        ignition.subscribe(initSecondToggleTester())
+                        resource.menu.subscriber.subscribe(initSecondToggleTester())
                         resource.menu.toggle(last.menu, [
                             markOutlineMenuCategoryLabel("DOCUMENT"),
                             markOutlineMenuCategoryLabel("DETAIL"),
@@ -298,10 +292,9 @@ describe("Menu", () => {
     test("load menu; development document", (done) => {
         const { resource } = developmentDocumentMenuResource()
 
-        const ignition = resource.menu.ignition()
-        ignition.subscribe(initTester())
+        resource.menu.subscriber.subscribe(initTester())
 
-        ignition.ignite()
+        resource.menu.ignite()
 
         function initTester() {
             return initAsyncMenuTester()((stack) => {

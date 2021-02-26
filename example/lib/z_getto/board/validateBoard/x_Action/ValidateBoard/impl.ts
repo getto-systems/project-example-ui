@@ -1,4 +1,4 @@
-import { ApplicationAbstractStateAction } from "../../../../application/impl"
+import { ApplicationAbstractStateAction } from "../../../../action/impl"
 
 import { convertBoard, validateBoard, ValidateBoardEmbed } from "../../impl"
 
@@ -10,7 +10,7 @@ import { BoardConvertResult } from "../../../kernel/data"
 
 export function initValidateBoardAction<N extends string, T>(
     embed: ValidateBoardEmbed<N, T>,
-    infra: ValidateBoardInfra
+    infra: ValidateBoardInfra,
 ): ValidateBoardAction<T> {
     return new Action({
         convert: convertBoard(embed),
@@ -21,6 +21,8 @@ export function initValidateBoardAction<N extends string, T>(
 class Action<T>
     extends ApplicationAbstractStateAction<ValidateBoardState>
     implements ValidateBoardAction<T> {
+    readonly initialState: ValidateBoardState = "initial"
+
     material: ValidateBoardMaterial<T>
 
     constructor(material: ValidateBoardMaterial<T>) {

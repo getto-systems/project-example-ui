@@ -18,7 +18,6 @@ import { siteInfo } from "../../../../../../../../x_preact/common/site"
 import { icon, spinner } from "../../../../../../../../x_preact/common/icon"
 
 import {
-    initialRequestPasswordResetTokenState,
     RequestPasswordResetTokenEntryPoint,
     RequestPasswordResetTokenResource,
     RequestPasswordResetTokenResourceState,
@@ -32,14 +31,8 @@ export function RequestPasswordResetToken(entryPoint: RequestPasswordResetTokenE
     return h(View, <RequestPasswordResetTokenProps>{
         ...resource,
         state: {
-            core: useApplicationAction(
-                resource.requestToken.core,
-                initialRequestPasswordResetTokenState.core,
-            ),
-            form: useApplicationAction(
-                resource.requestToken.form.validate,
-                initialRequestPasswordResetTokenState.form,
-            ),
+            core: useApplicationAction(resource.requestToken.core),
+            form: useApplicationAction(resource.requestToken.form.validate),
         },
     })
 }

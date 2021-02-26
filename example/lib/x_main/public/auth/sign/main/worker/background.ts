@@ -3,7 +3,7 @@ import { newRequestPasswordResetTokenHandler } from "../../../../../../auth/sign
 import { newCheckPasswordResetSendingStatusWorkerHandler } from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/init/worker/background"
 import { newResetPasswordHandler } from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/init/worker/background"
 
-import { WorkerHandler } from "../../../../../../z_getto/application/worker/background"
+import { WorkerHandler } from "../../../../../../z_getto/action/worker/background"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
 import { AuthenticatePasswordProxyMessage } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/init/worker/message"

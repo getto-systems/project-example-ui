@@ -27,7 +27,6 @@ import {
     AuthenticatePasswordEntryPoint,
     AuthenticatePasswordResource,
     AuthenticatePasswordResourceState,
-    initialAuthenticatePasswordState,
 } from "../action"
 
 import { AuthenticateError } from "../../../data"
@@ -37,14 +36,8 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
     return h(View, <AuthenticatePasswordProps>{
         ...resource,
         state: {
-            core: useApplicationAction(
-                resource.authenticate.core,
-                initialAuthenticatePasswordState.core,
-            ),
-            form: useApplicationAction(
-                resource.authenticate.form.validate,
-                initialAuthenticatePasswordState.form,
-            ),
+            core: useApplicationAction(resource.authenticate.core),
+            form: useApplicationAction(resource.authenticate.form.validate),
         },
     })
 }

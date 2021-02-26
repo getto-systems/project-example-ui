@@ -9,10 +9,7 @@ import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 
 import { useApplicationAction } from "../../common/hooks"
 
-import {
-    ExampleComponent,
-    initialExampleComponentState,
-} from "../../../example/x_components/Dashboard/example/component"
+import { ExampleComponent } from "../../../example/x_components/Dashboard/example/component"
 
 import { Season, SeasonError } from "../../../example/shared/season/data"
 
@@ -20,7 +17,7 @@ type Props = Readonly<{
     example: ExampleComponent
 }>
 export function Example(resource: Props): VNode {
-    const state = useApplicationAction(resource.example, initialExampleComponentState)
+    const state = useApplicationAction(resource.example)
 
     switch (state.type) {
         case "initial-example":

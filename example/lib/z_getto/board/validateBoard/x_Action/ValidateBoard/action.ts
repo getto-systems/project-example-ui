@@ -1,4 +1,4 @@
-import { ApplicationStateAction } from "../../../../application/action"
+import { ApplicationStateAction } from "../../../../action/action"
 
 import { ConvertBoardMethod, ValidateBoardMethod } from "../../method"
 

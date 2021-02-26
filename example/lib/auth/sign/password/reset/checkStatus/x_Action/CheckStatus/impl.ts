@@ -1,4 +1,4 @@
-import { ApplicationAbstractStateAction } from "../../../../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../../../../z_getto/action/impl"
 
 import { newAuthSignLinkResource } from "../../../../../common/searchParams/x_Action/Link/impl"
 
@@ -49,6 +49,8 @@ export function initCheckSendingStatusAction(
 class Action
     extends ApplicationAbstractStateAction<CheckSendingStatusState>
     implements CheckPasswordResetSendingStatusAction {
+    readonly initialState: CheckSendingStatusState = { type: "initial-check-status" }
+
     material: CheckSendingStatusMaterial
 
     constructor(material: CheckSendingStatusMaterial) {

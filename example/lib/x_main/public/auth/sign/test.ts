@@ -12,10 +12,9 @@ describe("LoginView", () => {
     test("redirect login view", (done) => {
         const { view } = standardLoginView()
 
-        const ignition = view.ignition()
-        ignition.subscribe(stateHandler())
+        view.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        view.ignite()
 
         function stateHandler(): Handler<AuthSignActionState> {
             const stack: AuthSignActionState[] = []
@@ -31,7 +30,7 @@ describe("LoginView", () => {
                     case "renew-credential":
                         terminates.push(state.entryPoint.terminate)
 
-                        state.entryPoint.resource.core.ignition().ignite()
+                        state.entryPoint.resource.core.ignite()
                         break
 
                     case "password-authenticate":
@@ -64,10 +63,9 @@ describe("LoginView", () => {
     test("password reset request token", (done) => {
         const { view } = passwordResetSessionLoginView()
 
-        const ignition = view.ignition()
-        ignition.subscribe(stateHandler())
+        view.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        view.ignite()
 
         function stateHandler(): Handler<AuthSignActionState> {
             const stack: AuthSignActionState[] = []
@@ -83,7 +81,7 @@ describe("LoginView", () => {
                     case "renew-credential":
                         terminates.push(state.entryPoint.terminate)
 
-                        state.entryPoint.resource.core.ignition().ignite()
+                        state.entryPoint.resource.core.ignite()
                         break
 
                     case "password-reset-requestToken":
@@ -116,10 +114,9 @@ describe("LoginView", () => {
     test("password reset check status", (done) => {
         const { view } = passwordResetCheckStatusLoginView()
 
-        const ignition = view.ignition()
-        ignition.subscribe(stateHandler())
+        view.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        view.ignite()
 
         function stateHandler(): Handler<AuthSignActionState> {
             const stack: AuthSignActionState[] = []
@@ -135,7 +132,7 @@ describe("LoginView", () => {
                     case "renew-credential":
                         terminates.push(state.entryPoint.terminate)
 
-                        state.entryPoint.resource.core.ignition().ignite()
+                        state.entryPoint.resource.core.ignite()
                         break
 
                     case "password-reset-checkStatus":
@@ -168,10 +165,9 @@ describe("LoginView", () => {
     test("password reset", (done) => {
         const { view } = passwordResetLoginView()
 
-        const ignition = view.ignition()
-        ignition.subscribe(stateHandler())
+        view.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        view.ignite()
 
         function stateHandler(): Handler<AuthSignActionState> {
             const stack: AuthSignActionState[] = []
@@ -187,7 +183,7 @@ describe("LoginView", () => {
                     case "renew-credential":
                         terminates.push(state.entryPoint.terminate)
 
-                        state.entryPoint.resource.core.ignition().ignite()
+                        state.entryPoint.resource.core.ignite()
                         break
 
                     case "password-reset":
@@ -220,8 +216,7 @@ describe("LoginView", () => {
     test("error", (done) => {
         const { view } = standardLoginView()
 
-        const ignition = view.ignition()
-        ignition.subscribe(stateHandler())
+        view.subscriber.subscribe(stateHandler())
 
         view.error("view error")
 

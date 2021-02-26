@@ -14,7 +14,6 @@ import {
     CheckPasswordResetSendingStatusEntryPoint,
     CheckPasswordResetSendingStatusResource,
     CheckSendingStatusState,
-    initialCheckSendingStatusState,
 } from "../action"
 
 import { SendingStatus, CheckSendingStatusError, SendTokenError } from "../../../data"
@@ -25,7 +24,7 @@ export function CheckPasswordResetSendingStatus(
     const resource = useEntryPoint(entryPoint)
     return h(View, <CheckPasswordResetSendingStatusProps>{
         ...resource,
-        state: useApplicationAction(resource.checkStatus, initialCheckSendingStatusState),
+        state: useApplicationAction(resource.checkStatus),
     })
 }
 

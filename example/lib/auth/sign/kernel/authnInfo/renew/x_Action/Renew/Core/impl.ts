@@ -1,4 +1,4 @@
-import { ApplicationAbstractStateAction } from "../../../../../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../../../../../z_getto/action/impl"
 
 import { getSecureScriptPath } from "../../../../../../common/secureScriptPath/get/impl"
 import {
@@ -42,6 +42,8 @@ export function initCoreAction(material: CoreMaterial): CoreAction {
 }
 
 class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAction {
+    readonly initialState: CoreState = { type: "initial-renew" }
+
     material: CoreMaterial
 
     constructor(material: CoreMaterial) {

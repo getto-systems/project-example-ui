@@ -1,4 +1,4 @@
-import { ApplicationAbstractStateAction } from "../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../z_getto/action/impl"
 
 import {
     AuthSignAction,
@@ -61,7 +61,11 @@ function detectViewState(currentURL: URL): AuthSignViewType {
     }
 }
 
-export class View extends ApplicationAbstractStateAction<AuthSignActionState> implements AuthSignAction {
+export class View
+    extends ApplicationAbstractStateAction<AuthSignActionState>
+    implements AuthSignAction {
+    readonly initialState: AuthSignActionState = { type: "initial-view" }
+
     locationInfo: AuthSignViewLocationInfo
     entryPoints: AuthSignSubEntryPoint
 
@@ -73,8 +77,8 @@ export class View extends ApplicationAbstractStateAction<AuthSignActionState> im
         this.igniteHook(() => {
             const entryPoint = this.entryPoints.renew()
 
-            // TODO ここで ignition を取得したくない、けどどうしようか
-            entryPoint.resource.core.ignition().subscribe((state) => {
+            // TODO ここで subscriber を取得したくない。初期化時に hook を受け取るようにするべき
+            entryPoint.resource.core.subscriber.subscribe((state) => {
                 switch (state.type) {
                     case "required-to-login":
                         this.post(this.mapViewType(this.locationInfo.getAuthSignViewType()))

@@ -1,7 +1,7 @@
 // この infra は UI で実行時に構築されるので、例外的に action で参照していい
 import { BoardValueStore } from "../../infra"
 
-import { ApplicationAction } from "../../../../application/action"
+import { ApplicationAction } from "../../../../action/action"
 
 import { BoardValue } from "../../../kernel/data"
 import { InputBoardValueType } from "../../data"

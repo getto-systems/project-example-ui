@@ -6,10 +6,9 @@ describe("NotFound", () => {
     test("load current version", (done) => {
         const { resource } = standardResource()
 
-        const ignition = resource.currentVersion.ignition()
-        ignition.subscribe(stateHandler())
+        resource.currentVersion.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.currentVersion.ignite()
 
         function stateHandler(): Post<CurrentVersionComponentState> {
             const stack: CurrentVersionComponentState[] = []

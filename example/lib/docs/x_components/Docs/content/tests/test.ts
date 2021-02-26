@@ -14,10 +14,9 @@ describe("Content", () => {
     test("load content", (done) => {
         const { resource } = standardResource()
 
-        const ignition = resource.content.ignition()
-        ignition.subscribe(stateHandler())
+        resource.content.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.content.ignite()
 
         function stateHandler(): Post<ContentComponentState> {
             const stack: ContentComponentState[] = []

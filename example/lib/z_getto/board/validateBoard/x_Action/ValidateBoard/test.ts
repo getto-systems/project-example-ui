@@ -1,4 +1,4 @@
-import { initSyncActionChecker_simple } from "../../../../application/testHelper"
+import { initSyncActionChecker_simple } from "../../../../action/testHelper"
 import { BoardConvertResult } from "../../../kernel/data"
 import { newBoardValidateStack } from "../../../kernel/infra/stack"
 import { ValidateBoardState } from "./action"
@@ -10,8 +10,7 @@ describe("ValidateBoard", () => {
 
         const checker = initSyncActionChecker_simple<ValidateBoardState>()
 
-        const ignition = action.ignition()
-        ignition.subscribe(checker.handler)
+        action.subscriber.subscribe(checker.handler)
 
         // all valid
         validateStack.update("name", true)
@@ -32,8 +31,7 @@ describe("ValidateBoard", () => {
 
         const checker = initSyncActionChecker_simple<ValidateBoardState>()
 
-        const ignition = action.ignition()
-        ignition.subscribe(checker.handler)
+        action.subscriber.subscribe(checker.handler)
 
         validateStack.update("name", false) // invalid
         validateStack.update("value", true)
@@ -50,8 +48,7 @@ describe("ValidateBoard", () => {
 
         const checker = initSyncActionChecker_simple<ValidateBoardState>()
 
-        const ignition = action.ignition()
-        ignition.subscribe(checker.handler)
+        action.subscriber.subscribe(checker.handler)
 
         validateStack.update("name", true)
         // validateStack.update("value", true) // initial
@@ -68,8 +65,7 @@ describe("ValidateBoard", () => {
 
         const checker = initSyncActionChecker_simple<ValidateBoardState>()
 
-        const ignition = action.ignition()
-        ignition.subscribe(checker.handler)
+        action.subscriber.subscribe(checker.handler)
 
         action.check()
         checker.check((stack) => {

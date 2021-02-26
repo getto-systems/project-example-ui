@@ -16,7 +16,7 @@ import {
 import { Menu } from "./Menu"
 import { SeasonInfo } from "./SeasonInfo"
 
-import { initMockPropsPasser } from "../../../z_getto/application/mock"
+import { initMockPropsPasser } from "../../../z_getto/action/mock"
 import {
     initMockMenuComponent,
     MenuMockProps,

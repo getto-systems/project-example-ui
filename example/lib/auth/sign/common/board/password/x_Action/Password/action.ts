@@ -7,7 +7,7 @@ import {
 import { Password } from "../../../../password/data"
 import { PasswordCharacterState, ValidatePasswordError } from "./data"
 import { CheckPasswordCharacterMethod } from "../../checkCharacter/method"
-import { ApplicationAction } from "../../../../../../../z_getto/application/action"
+import { ApplicationAction } from "../../../../../../../z_getto/action/action"
 
 export type PasswordBoardFieldResource = Readonly<{
     field: PasswordBoardFieldAction
