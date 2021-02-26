@@ -1,25 +1,6 @@
 import { ApplicationStateAction, ActionStateSubscriber, ActionStateHandler } from "./action"
 
-export abstract class MockStateAction_simple<S> implements ApplicationStateAction<S> {
-    abstract readonly initialState: S
-
-    subscriber: ActionStateSubscriber<S> = {
-        subscribe() {
-            // mock では特に何もしない
-        },
-        unsubscribe() {
-            // mock では特に何もしない
-        },
-    }
-
-    ignite(): void {
-        // mock では特に何もしない
-    }
-    terminate(): void {
-        // mock では特に何もしない
-    }
-}
-
+// TODO ApplicationMockAction に置き換えて削除
 export abstract class MockAction<S> implements ApplicationStateAction<S> {
     abstract readonly initialState: S
 

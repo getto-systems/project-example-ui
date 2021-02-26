@@ -34,7 +34,7 @@ export function newAuthenticatePasswordProxy(
 }
 
 class Proxy
-    extends WorkerAbstractProxy<AuthenticatePasswordProxyMessage>
+    extends WorkerAbstractProxy<AuthenticatePasswordProxyMessage, AuthenticatePasswordProxyResponse>
     implements AuthenticatePasswordProxy {
     material: AuthenticatePasswordProxyMaterial
 

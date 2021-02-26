@@ -27,7 +27,10 @@ export function newCheckPasswordResetSendingStatusProxy(
 }
 
 class Proxy
-    extends WorkerAbstractProxy<CheckPasswordResetSendingStatusProxyMessage>
+    extends WorkerAbstractProxy<
+        CheckPasswordResetSendingStatusProxyMessage,
+        CheckPasswordResetSendingStatusProxyResponse
+    >
     implements CheckPasswordResetSendingStatusProxy {
     material: CheckPasswordResetSendingStatusProxyMaterial
 

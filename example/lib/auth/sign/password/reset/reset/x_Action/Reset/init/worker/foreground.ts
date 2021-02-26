@@ -36,7 +36,9 @@ export function newResetPasswordProxy(post: Post<ResetPasswordProxyMessage>): Re
     return new Proxy(post)
 }
 
-class Proxy extends WorkerAbstractProxy<ResetPasswordProxyMessage> implements ResetPasswordProxy {
+class Proxy
+    extends WorkerAbstractProxy<ResetPasswordProxyMessage, ResetPasswordProxyResponse>
+    implements ResetPasswordProxy {
     material: ResetPasswordProxyMaterial
 
     constructor(post: Post<ResetPasswordProxyMessage>) {
