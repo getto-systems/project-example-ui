@@ -31,10 +31,10 @@ export function initFormAction(): FormAction {
     function converter(): ConvertBoardResult<RequestTokenFields> {
         const loginIDResult = loginID.validate.get()
         if (!loginIDResult.valid) {
-            return { success: false }
+            return { valid: false }
         }
         return {
-            success: true,
+            valid: true,
             value: {
                 loginID: loginIDResult.value,
             },

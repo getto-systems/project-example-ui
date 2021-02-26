@@ -23,7 +23,7 @@ interface Reset {
     (infra: ResetInfra): ResetPod
 }
 export const reset: Reset = (infra) => (locationInfo) => async (fields, post) => {
-    if (!fields.success) {
+    if (!fields.valid) {
         post({ type: "failed-to-reset", err: { type: "validation-error" } })
         return
     }

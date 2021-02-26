@@ -44,10 +44,10 @@ export function initFormAction(): FormAction {
         const loginIDResult = loginID.validate.get()
         const passwordResult = password.validate.get()
         if (!loginIDResult.valid || !passwordResult.valid) {
-            return { success: false }
+            return { valid: false }
         }
         return {
-            success: true,
+            valid: true,
             value: {
                 loginID: loginIDResult.value,
                 password: passwordResult.value,

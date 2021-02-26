@@ -14,7 +14,7 @@ class Action<T>
     readonly initialState: ValidateBoardActionState = initialValidateBoardState
 
     get(): ConvertBoardResult<T> {
-        return { success: false }
+        return { valid: false }
     }
     check() {
         // mock では特に何もしない

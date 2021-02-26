@@ -10,7 +10,7 @@ interface RequestToken {
     (infra: RequestTokenInfra): RequestTokenMethod
 }
 export const requestToken: RequestToken = (infra) => async (fields, post) => {
-    if (!fields.success) {
+    if (!fields.valid) {
         post({ type: "failed-to-request-token", err: { type: "validation-error" } })
         return
     }
