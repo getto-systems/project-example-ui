@@ -5,6 +5,7 @@ export function markBoardValue(input: string): BoardValue {
 
 export const emptyBoardValue: BoardValue = markBoardValue("")
 
-export type BoardConvertResult<T> =
+// board の中ではほとんど使われていないが、変換結果として外に返す構造なので kernel で定義
+export type ConvertBoardResult<T> =
     | Readonly<{ success: true; value: T }>
     | Readonly<{ success: false }>

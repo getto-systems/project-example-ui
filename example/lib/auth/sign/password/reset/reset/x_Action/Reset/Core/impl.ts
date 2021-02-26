@@ -23,7 +23,7 @@ import { ResetLocationInfo } from "../../../method"
 import { LoadSecureScriptError } from "../../../../../../common/secureScriptPath/get/data"
 import { ResetFields } from "../../../data"
 import { AuthnInfo } from "../../../../../../kernel/authnInfo/kernel/data"
-import { BoardConvertResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
+import { ConvertBoardResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
 
 export type CoreInfra = CoreForegroundInfra & CoreBackgroundInfra
 
@@ -84,7 +84,7 @@ class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAc
         this.material = material
     }
 
-    submit(fields: BoardConvertResult<ResetFields>): void {
+    submit(fields: ConvertBoardResult<ResetFields>): void {
         this.material.reset(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-reset":

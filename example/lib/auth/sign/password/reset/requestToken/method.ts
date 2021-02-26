@@ -1,10 +1,10 @@
 import { RequestTokenEvent } from "./event"
 
-import { BoardConvertResult } from "../../../../../z_vendor/getto-application/board/kernel/data"
+import { ConvertBoardResult } from "../../../../../z_vendor/getto-application/board/kernel/data"
 import { RequestTokenFields } from "./data"
 
 export interface RequestTokenMethod {
-    (fields: BoardConvertResult<RequestTokenFields>, post: Post<RequestTokenEvent>): void
+    (fields: ConvertBoardResult<RequestTokenFields>, post: Post<RequestTokenEvent>): void
 }
 
 interface Post<T> {

@@ -12,10 +12,10 @@ import {
     SecureScriptPath,
     LoadSecureScriptError,
 } from "../../../../../../common/secureScriptPath/get/data"
-import { BoardConvertResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
+import { ConvertBoardResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
 
 export interface CoreAction extends ApplicationStateAction<CoreState> {
-    submit(fields: BoardConvertResult<ResetFields>): void
+    submit(fields: ConvertBoardResult<ResetFields>): void
     loadError(err: LoadSecureScriptError): void
 }
 

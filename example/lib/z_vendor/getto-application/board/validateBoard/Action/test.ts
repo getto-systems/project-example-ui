@@ -1,14 +1,14 @@
-import { initSyncActionChecker_simple } from "../../../../action/testHelper"
-import { BoardConvertResult } from "../../../kernel/data"
-import { initValidateBoardInfra } from "../../../kernel/impl"
-import { ValidateBoardState } from "./action"
-import { initValidateBoardAction } from "./impl"
+import { initSyncActionChecker_simple } from "../../../action/testHelper"
+import { ConvertBoardResult } from "../../kernel/data"
+import { initValidateBoardInfra } from "../../kernel/impl"
+import { ValidateBoardActionState } from "./Core/action"
+import { initValidateBoardAction } from "./Core/impl"
 
 describe("ValidateBoard", () => {
     test("validate; all valid state", () => {
         const { action, validateStack } = standardResource()
 
-        const checker = initSyncActionChecker_simple<ValidateBoardState>()
+        const checker = initSyncActionChecker_simple<ValidateBoardActionState>()
 
         action.subscriber.subscribe(checker.handler)
 
@@ -29,7 +29,7 @@ describe("ValidateBoard", () => {
     test("validate; invalid exists", () => {
         const { action, validateStack } = standardResource()
 
-        const checker = initSyncActionChecker_simple<ValidateBoardState>()
+        const checker = initSyncActionChecker_simple<ValidateBoardActionState>()
 
         action.subscriber.subscribe(checker.handler)
 
@@ -46,7 +46,7 @@ describe("ValidateBoard", () => {
     test("validate; initial exists", () => {
         const { action, validateStack } = standardResource()
 
-        const checker = initSyncActionChecker_simple<ValidateBoardState>()
+        const checker = initSyncActionChecker_simple<ValidateBoardActionState>()
 
         action.subscriber.subscribe(checker.handler)
 
@@ -63,7 +63,7 @@ describe("ValidateBoard", () => {
     test("validate; all initial", () => {
         const { action } = standardResource()
 
-        const checker = initSyncActionChecker_simple<ValidateBoardState>()
+        const checker = initSyncActionChecker_simple<ValidateBoardActionState>()
 
         action.subscriber.subscribe(checker.handler)
 
@@ -84,7 +84,7 @@ function standardResource() {
 
     type Fields = Readonly<{ name: string; value: string }>
 
-    function converter(): BoardConvertResult<Fields> {
+    function converter(): ConvertBoardResult<Fields> {
         return { success: true, value: { name: "valid-name", value: "valid-value" } }
     }
 }

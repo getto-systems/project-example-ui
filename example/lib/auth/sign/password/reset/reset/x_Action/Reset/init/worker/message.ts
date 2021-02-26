@@ -2,7 +2,7 @@ import { WorkerProxySpec } from "../../../../../../../../../z_vendor/getto-appli
 
 import { ResetEvent } from "../../../../event"
 
-import { BoardConvertResult } from "../../../../../../../../../z_vendor/getto-application/board/kernel/data"
+import { ConvertBoardResult } from "../../../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { ResetFields } from "../../../../data"
 import { ResetToken } from "../../../../../kernel/data"
 
@@ -14,6 +14,6 @@ export type ResetPasswordProxyResponse = Reset["response"]
 
 type Reset = WorkerProxySpec<
     "reset",
-    Readonly<{ fields: BoardConvertResult<ResetFields>; resetToken: ResetToken }>,
+    Readonly<{ fields: ConvertBoardResult<ResetFields>; resetToken: ResetToken }>,
     ResetEvent
 >

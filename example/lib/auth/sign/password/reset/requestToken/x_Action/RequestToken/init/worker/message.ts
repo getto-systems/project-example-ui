@@ -2,7 +2,7 @@ import { WorkerProxySpec } from "../../../../../../../../../z_vendor/getto-appli
 
 import { RequestTokenEvent } from "../../../../event"
 
-import { BoardConvertResult } from "../../../../../../../../../z_vendor/getto-application/board/kernel/data"
+import { ConvertBoardResult } from "../../../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { RequestTokenFields } from "../../../../data"
 
 export type RequestPasswordResetTokenProxyMaterial = Readonly<{
@@ -13,6 +13,6 @@ export type RequestPasswordResetTokenProxyResponse = RequestToken["response"]
 
 type RequestToken = WorkerProxySpec<
     "requestToken",
-    Readonly<{ fields: BoardConvertResult<RequestTokenFields> }>,
+    Readonly<{ fields: ConvertBoardResult<RequestTokenFields> }>,
     RequestTokenEvent
 >
