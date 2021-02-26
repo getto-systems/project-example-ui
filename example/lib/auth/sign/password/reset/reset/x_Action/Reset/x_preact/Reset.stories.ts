@@ -5,9 +5,9 @@ import { storyTemplate } from "../../../../../../../../z_vendor/storybook/preact
 import { ResetPasswordProps, View } from "./Reset"
 
 import { initMockResetPasswordResource } from "../mock"
-import { validateBoardOptions } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/mock"
+import { validateBoardOptions } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/mock"
 
-import { ValidateBoardState } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/action"
+import { ValidateBoardActionState } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
 import { CoreState } from "../Core/action"
 
 const resetOptions = [
@@ -45,7 +45,7 @@ type Props = Readonly<{
         | "server-error"
         | "bad-response"
         | "infra-error"
-    form: ValidateBoardState
+    form: ValidateBoardActionState
     err: string
 }>
 const template = storyTemplate<Props>((props) => {

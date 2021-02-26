@@ -1,6 +1,6 @@
 import { initMockInputLoginIDAction } from "../../../../../common/board/loginID/Action/Core/mock"
 import { initMockInputPasswordAction } from "../../../../../common/board/password/Action/Core/mock"
-import { initMockValidateBoardAction } from "../../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/mock"
+import { initMockValidateBoardAction } from "../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/mock"
 
 import { FormAction } from "./action"
 

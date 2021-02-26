@@ -1,10 +1,10 @@
-import { BoardConvertResult } from "../kernel/data"
-import { BoardValidateState } from "./data"
+import { ConvertBoardResult } from "../kernel/data"
+import { ValidateBoardState } from "./data"
 
 export interface ConvertBoardMethod<T> {
-    (): BoardConvertResult<T>
+    (): ConvertBoardResult<T>
 }
 
 export interface ValidateBoardMethod {
-    (): BoardValidateState
+    (): ValidateBoardState
 }

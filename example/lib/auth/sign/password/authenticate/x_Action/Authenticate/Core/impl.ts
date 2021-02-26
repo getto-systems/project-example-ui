@@ -21,7 +21,7 @@ import { GetSecureScriptPathLocationInfo } from "../../../../../common/secureScr
 import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
 import { AuthenticateFields } from "../../../data"
 import { AuthnInfo } from "../../../../../kernel/authnInfo/kernel/data"
-import { BoardConvertResult } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
+import { ConvertBoardResult } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 
 export type CoreInfra = CoreForegroundInfra & CoreBackgroundInfra
 
@@ -71,7 +71,7 @@ class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAc
         this.material = material
     }
 
-    submit(fields: BoardConvertResult<AuthenticateFields>): void {
+    submit(fields: ConvertBoardResult<AuthenticateFields>): void {
         this.material.authenticate(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-login":

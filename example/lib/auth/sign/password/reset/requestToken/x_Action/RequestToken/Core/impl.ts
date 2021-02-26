@@ -7,7 +7,7 @@ import { RequestTokenInfra } from "../../../infra"
 import { CoreMaterial, CoreAction, CoreState } from "./action"
 
 import { RequestTokenFields } from "../../../data"
-import { BoardConvertResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
+import { ConvertBoardResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
 
 export function initCoreMaterial(infra: RequestTokenInfra): CoreMaterial {
     return {
@@ -29,7 +29,7 @@ class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAc
         this.material = material
     }
 
-    submit(fields: BoardConvertResult<RequestTokenFields>): void {
+    submit(fields: ConvertBoardResult<RequestTokenFields>): void {
         this.material.requestToken(fields, this.post)
     }
 }

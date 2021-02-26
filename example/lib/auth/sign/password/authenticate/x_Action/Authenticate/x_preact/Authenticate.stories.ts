@@ -5,10 +5,10 @@ import { storyTemplate } from "../../../../../../../z_vendor/storybook/preact/st
 import { AuthenticatePasswordProps, View } from "./Authenticate"
 
 import { initMockAuthenticatePasswordResource } from "../mock"
-import { validateBoardOptions } from "../../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/mock"
+import { validateBoardOptions } from "../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/mock"
 
 import { CoreState } from "../Core/action"
-import { ValidateBoardState } from "../../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/action"
+import { ValidateBoardActionState } from "../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
 
 const authenticateOptions = {
     initial: true,
@@ -36,7 +36,7 @@ export default {
 
 export type Props = Readonly<{
     authenticate: keyof typeof authenticateOptions
-    form: ValidateBoardState
+    form: ValidateBoardActionState
     err: string
 }>
 const template = storyTemplate<Props>((props) => {

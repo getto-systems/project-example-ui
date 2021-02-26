@@ -1,8 +1,8 @@
 import { ApplicationAction } from "../../../../../../z_vendor/getto-application/action/action"
 import {
     initialValidateBoardState,
-    ValidateBoardState,
-} from "../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/action"
+    ValidateBoardActionState,
+} from "../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
 import { AuthSignLinkResource } from "../../../../common/searchParams/x_Action/Link/action"
 import {
     CoreAction,
@@ -26,7 +26,7 @@ export interface AuthenticatePasswordAction extends ApplicationAction {
 
 export type AuthenticatePasswordResourceState = Readonly<{
     core: CoreState
-    form: ValidateBoardState
+    form: ValidateBoardActionState
 }>
 export const initialAuthenticatePasswordState: AuthenticatePasswordResourceState = {
     core: initialCoreState,

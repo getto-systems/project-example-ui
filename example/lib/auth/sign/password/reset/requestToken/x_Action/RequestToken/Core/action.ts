@@ -4,11 +4,11 @@ import { RequestTokenMethod } from "../../../method"
 
 import { RequestTokenEvent } from "../../../event"
 
-import { BoardConvertResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
+import { ConvertBoardResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { RequestTokenFields } from "../../../data"
 
 export interface CoreAction extends ApplicationStateAction<CoreState> {
-    submit(fields: BoardConvertResult<RequestTokenFields>): void
+    submit(fields: ConvertBoardResult<RequestTokenFields>): void
 }
 
 export type CoreMaterial = Readonly<{
