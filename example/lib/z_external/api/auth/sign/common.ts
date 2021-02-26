@@ -22,7 +22,7 @@ export async function parseAuthnInfo(
             value: { authnNonce: nonce, api: apiCredential(result) },
         }
     } catch (err) {
-        return { success: false, err: { type: "bad-response", detail: `${err}` } }
+        return { success: false, err: { type: "bad-response", err: `${err}` } }
     }
 
     function getHeader(header: string) {
@@ -44,9 +44,9 @@ export async function parseError(response: Response): Promise<ApiError> {
     // TODO エラーも protobuf にしよう
     const result = await parseMessage(response)
     if (!result.success) {
-        return { type: "bad-response", detail: result.err }
+        return { type: "bad-response", err: result.err }
     }
-    return { type: result.message || "server-error", detail: "" }
+    return { type: result.message || "server-error", err: "" }
 
     async function parseMessage(response: Response) {
         try {

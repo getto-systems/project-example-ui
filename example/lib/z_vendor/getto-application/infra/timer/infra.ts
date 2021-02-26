@@ -1,9 +1,9 @@
 import { DelayTime, WaitTime } from "../config/infra"
 
-export interface Delayed {
+export interface DelayedChecker {
     <T>(promise: Promise<T>, time: DelayTime, handler: DelayedHandler): Promise<T>
 }
-export interface Wait {
+export interface Ticker {
     <T>(time: WaitTime, content: WaitContent<T>): Promise<T>
 }
 

@@ -21,10 +21,10 @@ export function initRequestTokenConnect(access: Raw): RequestTokenRemote {
                     return { type: err.type }
 
                 case "bad-response":
-                    return { type: "bad-response", err: err.detail }
+                    return { type: "bad-response", err: err.err }
 
                 default:
-                    return { type: "infra-error", err: err.detail }
+                    return { type: "infra-error", err: err.err }
             }
         },
         unknown: (err: unknown): RequestTokenRemoteError => ({

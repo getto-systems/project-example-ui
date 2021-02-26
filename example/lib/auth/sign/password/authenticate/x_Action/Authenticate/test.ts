@@ -26,7 +26,7 @@ import {
 } from "../../../../kernel/authnInfo/kernel/infra"
 import { initMemoryAuthnInfoRepository } from "../../../../kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
 import { newGetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/impl"
-import { delayed, wait } from "../../../../../../z_vendor/getto-application/infra/delayed/core"
+import { delayedChecker, ticker } from "../../../../../../z_vendor/getto-application/infra/timer/impl"
 import { authenticateEventHasDone } from "../../impl"
 import {
     initAsyncActionTestRunner,
@@ -81,7 +81,7 @@ describe("AuthenticatePassword", () => {
             {
                 statement: (check) => {
                     // after setContinuousRenew interval and delay
-                    wait({ wait_millisecond: 1 }, check)
+                    ticker({ wait_millisecond: 1 }, check)
                 },
                 examine: () => {
                     expectToSaveRenewed(repository.authnInfos)
@@ -120,7 +120,7 @@ describe("AuthenticatePassword", () => {
             {
                 statement: (check) => {
                     // after setContinuousRenew interval and delay
-                    wait({ wait_millisecond: 1 }, check)
+                    ticker({ wait_millisecond: 1 }, check)
                 },
                 examine: () => {
                     expectToSaveRenewed(repository.authnInfos)
@@ -267,7 +267,7 @@ function newTestPasswordLoginResource(
                     authenticate: {
                         ...remote,
                         config: config.login,
-                        delayed,
+                        delayed: delayedChecker,
                     },
                 },
                 newGetSecureScriptPathLocationInfo(currentURL),

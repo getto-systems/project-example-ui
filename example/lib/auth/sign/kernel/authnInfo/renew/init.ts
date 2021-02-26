@@ -3,7 +3,7 @@ import { newAuthnInfoRepository } from "../kernel/infra/repository/authnInfo/ini
 import { newRenewAuthnInfoRemote } from "../kernel/infra/remote/renew/init"
 
 import { newClock } from "../../../../../z_vendor/getto-application/infra/clock/init"
-import { delayed } from "../../../../../z_vendor/getto-application/infra/delayed/core"
+import { delayedChecker } from "../../../../../z_vendor/getto-application/infra/timer/impl"
 
 import { delaySecond, expireMinute } from "../../../../../z_vendor/getto-application/infra/config/infra"
 import { RenewInfra } from "./infra"
@@ -14,7 +14,7 @@ export function newRenewInfra(webStorage: Storage): RenewInfra {
         authnInfos: newAuthnInfoRepository(webStorage),
         renew: newRenewAuthnInfoRemote(),
         clock: newClock(),
-        delayed,
+        delayed: delayedChecker,
         config: {
             instantLoadExpire: expireMinute(3),
             delay: delaySecond(0.5),

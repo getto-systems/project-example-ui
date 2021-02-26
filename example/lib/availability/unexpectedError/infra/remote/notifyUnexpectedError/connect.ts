@@ -12,6 +12,6 @@ export function initNotifyUnexpectedErrorConnectRemoteAccess(
         message: (err: unknown): unknown => err,
         value: (response: true): true => response,
         error: (err: RemoteError): RemoteError => err,
-        unknown: (err: unknown): RemoteError => ({ type: "infra-error", detail: `${err}` }),
+        unknown: (err: unknown): RemoteError => ({ type: "infra-error", err: `${err}` }),
     })
 }

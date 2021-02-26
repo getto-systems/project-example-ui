@@ -8,7 +8,7 @@ type RawNotifyResult =
     | Readonly<{ success: false; err: RawError }>
     | Readonly<{ success: true; value: true }>
 
-type RawError = Readonly<{ type: string; detail: string }>
+type RawError = Readonly<{ type: string; err: string }>
 
 export function initApiAvailableNotify(apiServerURL: string): ApiAvailableNotify {
     return async (err: SendError): Promise<RawNotifyResult> => {

@@ -1,4 +1,4 @@
-import { Delayed } from "../../z_vendor/getto-application/infra/delayed/infra"
+import { DelayedChecker } from "../../z_vendor/getto-application/infra/timer/infra"
 import { Remote, RemoteResult, RemoteSimulator } from "../../z_vendor/getto-application/remote/infra"
 import { DelayTime } from "../../z_vendor/getto-application/infra/config/infra"
 
@@ -11,7 +11,7 @@ export type NextVersionActionConfig = Readonly<{
 export type FindInfra = Readonly<{
     config: FindConfig
     check: CheckRemoteAccess
-    delayed: Delayed
+    delayed: DelayedChecker
 }>
 
 export type FindConfig = Readonly<{

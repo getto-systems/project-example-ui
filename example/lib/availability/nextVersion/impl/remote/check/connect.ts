@@ -21,7 +21,7 @@ export function initCheckConnectRemoteAccess(access: CheckRawRemoteAccess): Chec
                     return { type: err.type }
 
                 default:
-                    return { type: "infra-error", err: err.detail }
+                    return { type: "infra-error", err: err.err }
             }
         },
         unknown: (err: unknown): CheckRemoteError => ({ type: "infra-error", err: `${err}` }),
