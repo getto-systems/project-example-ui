@@ -27,7 +27,7 @@ import { authenticateEventHasDone } from "../../impl"
 import {
     initAsyncActionTestRunner,
     initSyncActionTestRunner,
-} from "../../../../../../z_getto/application/testHelper"
+} from "../../../../../../z_getto/action/testHelper"
 import { initFormAction } from "./Form/impl"
 import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
 import { standardBoardValueStore } from "../../../../../../z_getto/board/input/x_Action/Input/testHelper"
@@ -55,7 +55,6 @@ describe("AuthenticatePassword", () => {
         const { repository, clock, resource } = standardPasswordLoginResource()
 
         const checker = initAsyncRunner()
-        const ignition = resource.core.ignition()
 
         checker.addTestCase(
             () => {
@@ -86,7 +85,7 @@ describe("AuthenticatePassword", () => {
             },
         )
 
-        ignition.subscribe(checker.run(done))
+        resource.core.subscriber.subscribe(checker.run(done))
     })
 
     test("submit valid login-id and password; with delayed", (done) => {
@@ -94,7 +93,6 @@ describe("AuthenticatePassword", () => {
         const { repository, clock, resource } = waitPasswordLoginResource()
 
         const checker = initAsyncRunner()
-        const ignition = resource.core.ignition()
 
         checker.addTestCase(
             () => {
@@ -126,14 +124,13 @@ describe("AuthenticatePassword", () => {
             },
         )
 
-        ignition.subscribe(checker.run(done))
+        resource.core.subscriber.subscribe(checker.run(done))
     })
 
     test("submit without fields", (done) => {
         const { repository, resource } = standardPasswordLoginResource()
 
         const checker = initAsyncRunner()
-        const ignition = resource.core.ignition()
 
         checker.addTestCase(
             () => {
@@ -151,7 +148,7 @@ describe("AuthenticatePassword", () => {
             },
         )
 
-        ignition.subscribe(checker.run(done))
+        resource.core.subscriber.subscribe(checker.run(done))
     })
 
     test("clear", () => {
@@ -169,7 +166,6 @@ describe("AuthenticatePassword", () => {
         const { resource } = standardPasswordLoginResource()
 
         const checker = initAsyncRunner()
-        const ignition = resource.core.ignition()
 
         checker.addTestCase(
             () => {
@@ -185,18 +181,18 @@ describe("AuthenticatePassword", () => {
             },
         )
 
-        ignition.subscribe(checker.run(done))
+        resource.core.subscriber.subscribe(checker.run(done))
     })
 
     test("terminate", (done) => {
         const { resource } = standardPasswordLoginResource()
         const entryPoint = toEntryPoint(resource)
 
-        const ignition = {
-            core: resource.core.ignition(),
-            form: resource.form.validate.ignition(),
-            loginID: resource.form.loginID.validate.ignition(),
-            password: resource.form.password.validate.ignition(),
+        const subscriber = {
+            core: resource.core.subscriber,
+            form: resource.form.validate.subscriber,
+            loginID: resource.form.loginID.validate.subscriber,
+            password: resource.form.password.validate.subscriber,
         }
 
         const runner = initSyncActionTestRunner()
@@ -214,10 +210,10 @@ describe("AuthenticatePassword", () => {
         )
 
         const handler = runner.run(done)
-        ignition.core.subscribe(handler)
-        ignition.form.subscribe(handler)
-        ignition.loginID.subscribe(handler)
-        ignition.password.subscribe(handler)
+        subscriber.core.subscribe(handler)
+        subscriber.form.subscribe(handler)
+        subscriber.loginID.subscribe(handler)
+        subscriber.password.subscribe(handler)
         resource.form.loginID.input.subscribeInputEvent(() => handler("input"))
         resource.form.password.input.subscribeInputEvent(() => handler("input"))
     })

@@ -1,21 +1,28 @@
 import { iconClass, lnir } from "../../../../../z_external/icon/core"
-import { MockAction, MockPropsPasser } from "../../../../../z_getto/application/mock"
+import { MockAction, MockPropsPasser } from "../../../../../z_getto/action/mock"
 
 import { BreadcrumbListComponent, BreadcrumbListComponentState } from "./component"
 
-import { markOutlineMenuCategoryLabel, markOutlineMenuItem } from "../../../../../auth/permission/outline/load/data"
+import {
+    markOutlineMenuCategoryLabel,
+    markOutlineMenuItem,
+} from "../../../../../auth/permission/outline/load/data"
 
 export type BreadcrumbListMockPropsPasser = MockPropsPasser<BreadcrumbListMockProps>
 
 export type BreadcrumbListMockProps = Readonly<{ type: "success"; label: string; icon: string }>
 
 export function initMockBreadcrumbListComponent(
-    passer: BreadcrumbListMockPropsPasser
+    passer: BreadcrumbListMockPropsPasser,
 ): BreadcrumbListComponent {
     return new Component(passer)
 }
 
-class Component extends MockAction<BreadcrumbListComponentState> implements BreadcrumbListComponent {
+class Component
+    extends MockAction<BreadcrumbListComponentState>
+    implements BreadcrumbListComponent {
+    readonly initialState: BreadcrumbListComponentState = { type: "initial-breadcrumb-list" }
+
     constructor(passer: BreadcrumbListMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {

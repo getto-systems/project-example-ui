@@ -1,4 +1,4 @@
-import { MockAction, MockPropsPasser } from "../../../../z_getto/application/mock"
+import { MockAction, MockPropsPasser } from "../../../../z_getto/action/mock"
 
 import { CurrentVersionComponent, CurrentVersionComponentState } from "./component"
 
@@ -9,7 +9,7 @@ export type CurrentVersionMockPropsPasser = MockPropsPasser<CurrentVersionMockPr
 export type CurrentVersionMockProps = Readonly<{ type: "success" }>
 
 export function initMockCurrentVersionComponent(
-    passer: CurrentVersionMockPropsPasser
+    passer: CurrentVersionMockPropsPasser,
 ): CurrentVersionComponent {
     return new CurrentVersionMockComponent(passer)
 }
@@ -17,6 +17,8 @@ export function initMockCurrentVersionComponent(
 class CurrentVersionMockComponent
     extends MockAction<CurrentVersionComponentState>
     implements CurrentVersionComponent {
+    readonly initialState: CurrentVersionComponentState = { type: "initial-current-version" }
+
     constructor(passer: CurrentVersionMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {

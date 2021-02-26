@@ -1,4 +1,4 @@
-import { ApplicationAbstractStateAction } from "../../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../../z_getto/action/impl"
 
 import {
     BreadcrumbListComponentFactory,
@@ -13,6 +13,8 @@ export const initBreadcrumbListComponent: BreadcrumbListComponentFactory = (mate
 class Component
     extends ApplicationAbstractStateAction<BreadcrumbListComponentState>
     implements BreadcrumbListComponent {
+    readonly initialState: BreadcrumbListComponentState = { type: "initial-breadcrumb-list" }
+    
     material: BreadcrumbListMaterial
 
     constructor(material: BreadcrumbListMaterial) {

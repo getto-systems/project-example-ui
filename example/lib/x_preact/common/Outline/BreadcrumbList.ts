@@ -13,10 +13,7 @@ import { icon } from "../icon"
 
 import { MENU_ID } from "./Menu"
 
-import {
-    BreadcrumbListComponent,
-    initialBreadcrumbListComponentState,
-} from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/component"
+import { BreadcrumbListComponent } from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/component"
 
 import {
     OutlineBreadcrumb,
@@ -30,7 +27,7 @@ type Props = Readonly<{
     breadcrumbList: BreadcrumbListComponent
 }>
 export function BreadcrumbList(resource: Props): VNode {
-    const state = useApplicationAction(resource.breadcrumbList, initialBreadcrumbListComponentState)
+    const state = useApplicationAction(resource.breadcrumbList)
 
     switch (state.type) {
         case "initial-breadcrumb-list":

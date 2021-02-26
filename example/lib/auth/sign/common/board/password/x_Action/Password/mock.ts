@@ -1,5 +1,4 @@
 import { initMockInputBoardValueAction } from "../../../../../../../z_getto/board/input/x_Action/Input/mock"
-import { MockStateAction_simple } from "../../../../../../../z_getto/application/mock"
 
 import {
     CheckPasswordCharacterAction,
@@ -11,10 +10,11 @@ import {
 import { BoardConvertResult, BoardValue } from "../../../../../../../z_getto/board/kernel/data"
 import { Password } from "../../../../password/data"
 import { PasswordCharacterState } from "./data"
+import { ApplicationMockStateAction } from "../../../../../../../z_getto/action/impl"
 
 export function initMockPasswordBoardFieldAction(
     password: BoardValue,
-    characterState: PasswordCharacterState
+    characterState: PasswordCharacterState,
 ): PasswordBoardFieldAction {
     return {
         input: initMockInputBoardValueAction(password),
@@ -25,7 +25,10 @@ export function initMockPasswordBoardFieldAction(
     }
 }
 
-class Action extends MockStateAction_simple<ValidatePasswordState> implements ValidatePasswordAction {
+class Action
+    extends ApplicationMockStateAction<ValidatePasswordState>
+    implements ValidatePasswordAction {
+    readonly initialState: ValidatePasswordState = { valid: true }
     readonly name = "password"
 
     get(): BoardConvertResult<Password> {

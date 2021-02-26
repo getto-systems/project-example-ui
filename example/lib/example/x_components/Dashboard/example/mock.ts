@@ -1,4 +1,4 @@
-import { MockAction, MockPropsPasser } from "../../../../z_getto/application/mock"
+import { MockAction, MockPropsPasser } from "../../../../z_getto/action/mock"
 
 import { ExampleComponent, ExampleComponentState } from "./component"
 
@@ -15,6 +15,8 @@ export function initMockExampleComponent(passer: ExampleMockPropsPasser): Exampl
 }
 
 class ExampleMockComponent extends MockAction<ExampleComponentState> implements ExampleComponent {
+    readonly initialState: ExampleComponentState = { type: "initial-example" }
+
     constructor(passer: ExampleMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {

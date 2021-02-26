@@ -1,4 +1,4 @@
-import { ApplicationAbstractStateAction } from "../../../../../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../../../../../z_getto/action/impl"
 
 import { requestToken } from "../../../impl"
 
@@ -20,6 +20,8 @@ export function initCoreAction(material: CoreMaterial): CoreAction {
 }
 
 class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAction {
+    readonly initialState: CoreState = { type: "initial-request-token" }
+
     material: CoreMaterial
 
     constructor(material: CoreMaterial) {

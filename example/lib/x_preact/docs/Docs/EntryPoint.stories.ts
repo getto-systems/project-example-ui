@@ -6,7 +6,7 @@ import { noPaddedStory } from "../../../z_vendor/storybook/preact/display"
 
 import { EntryPoint } from "./EntryPoint"
 
-import { initMockPropsPasser } from "../../../z_getto/application/mock"
+import { initMockPropsPasser } from "../../../z_getto/action/mock"
 import {
     DocumentMockPropsPasser,
     newMockDocument,

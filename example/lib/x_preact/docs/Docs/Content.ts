@@ -14,10 +14,7 @@ import { copyright } from "../../common/site"
 
 import { BreadcrumbList } from "../../common/Outline/BreadcrumbList"
 
-import {
-    ContentComponent,
-    initialContentComponentState,
-} from "../../../docs/x_components/Docs/content/component"
+import { ContentComponent } from "../../../docs/x_components/Docs/content/component"
 import { BreadcrumbListComponent } from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/component"
 
 import { ContentPath } from "../../../docs/content/data"
@@ -28,7 +25,7 @@ type Props = Readonly<{
     breadcrumbList: BreadcrumbListComponent
 }>
 export function Content(resource: Props): VNode {
-    const state = useApplicationAction(resource.content, initialContentComponentState)
+    const state = useApplicationAction(resource.content)
     const [loadContentState, setLoadContentState] = useState(initialLoadContentState)
 
     useLayoutEffect(() => {
@@ -101,9 +98,7 @@ const contentMap: Record<ContentPath, ContentEntry> = {
         (await import("./contents/z_dev/auth/login")).content_development_auth_login(),
     ),
     "/docs/z_dev/auth/permission.html": entry("アクセス制限", async () =>
-        (
-            await import("./contents/z_dev/auth/permission")
-        ).content_development_auth_permission(),
+        (await import("./contents/z_dev/auth/permission")).content_development_auth_permission(),
     ),
     "/docs/z_dev/auth/user.html": entry("ユーザー管理", async () =>
         (await import("./contents/z_dev/auth/user")).content_development_auth_user(),

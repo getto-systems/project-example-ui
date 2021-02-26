@@ -1,9 +1,13 @@
 import { lnir, iconClass } from "../../../../../z_external/icon/core"
-import { MockAction, MockPropsPasser } from "../../../../../z_getto/application/mock"
+import { MockAction, MockPropsPasser } from "../../../../../z_getto/action/mock"
 
 import { MenuComponent, MenuComponentState } from "./component"
 
-import { markOutlineMenuCategoryLabel, markOutlineMenuItem, OutlineMenu } from "../../../../../auth/permission/outline/load/data"
+import {
+    markOutlineMenuCategoryLabel,
+    markOutlineMenuItem,
+    OutlineMenu,
+} from "../../../../../auth/permission/outline/load/data"
 
 export type MenuMockPropsPasser = MockPropsPasser<MenuMockProps>
 
@@ -20,10 +24,12 @@ export function initMockMenuComponent(passer: MenuMockPropsPasser): MenuComponen
 }
 
 class Component extends MockAction<MenuComponentState> implements MenuComponent {
+    readonly initialState: MenuComponentState = { type: "initial-menu" }
+
     constructor(passer: MenuMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {
-            this.post(mapProps(props))            
+            this.post(mapProps(props))
         })
 
         function mapProps(props: MenuMockProps): MenuComponentState {

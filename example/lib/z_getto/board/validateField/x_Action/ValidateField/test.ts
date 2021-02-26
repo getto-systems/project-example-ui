@@ -1,4 +1,4 @@
-import { initSyncActionTestRunner } from "../../../../application/testHelper"
+import { initSyncActionTestRunner } from "../../../../action/testHelper"
 import { standardBoardValueStore } from "../../../input/x_Action/Input/testHelper"
 
 import { newBoardValidateStack } from "../../../kernel/infra/stack"
@@ -14,7 +14,6 @@ describe("ValidateBoardField", () => {
         const { action, store, validateStack } = standardResource()
 
         const checker = initSyncActionTestRunner<ValidateBoardFieldState<ValidateError>>()
-        const ignition = action.ignition()
 
         checker.addTestCase(
             () => {
@@ -30,14 +29,13 @@ describe("ValidateBoardField", () => {
             },
         )
 
-        ignition.subscribe(checker.run(done))
+        action.subscriber.subscribe(checker.run(done))
     })
 
     test("validate; invalid input", (done) => {
         const { action, store, validateStack } = standardResource()
 
         const checker = initSyncActionTestRunner<ValidateBoardFieldState<ValidateError>>()
-        const ignition = action.ignition()
 
         checker.addTestCase(
             () => {
@@ -53,7 +51,7 @@ describe("ValidateBoardField", () => {
             },
         )
 
-        ignition.subscribe(checker.run(done))
+        action.subscriber.subscribe(checker.run(done))
     })
 })
 

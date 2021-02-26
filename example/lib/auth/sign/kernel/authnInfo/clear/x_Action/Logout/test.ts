@@ -5,7 +5,7 @@ import { LogoutState } from "./action"
 
 import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
 import { markAuthAt, markAuthnNonce } from "../../../kernel/data"
-import { initSyncActionTestRunner } from "../../../../../../../z_getto/application/testHelper"
+import { initSyncActionTestRunner } from "../../../../../../../z_getto/action/testHelper"
 import { initCoreAction, initCoreMaterial } from "./Core/impl"
 import { toLogoutResource } from "./impl"
 
@@ -16,8 +16,7 @@ describe("Logout", () => {
     test("clear", (done) => {
         const { resource } = standardResource()
 
-        const ignition = resource.logout.ignition()
-        ignition.subscribe(stateHandler())
+        resource.logout.subscriber.subscribe(stateHandler())
 
         resource.logout.submit()
 
@@ -50,8 +49,6 @@ describe("Logout", () => {
     test("terminate", (done) => {
         const { resource } = standardResource()
 
-        const ignition = resource.logout.ignition()
-
         const runner = initSyncActionTestRunner()
 
         runner.addTestCase(
@@ -66,7 +63,7 @@ describe("Logout", () => {
         )
 
         const handler = runner.run(done)
-        ignition.subscribe(handler)
+        resource.logout.subscriber.subscribe(handler)
     })
 })
 

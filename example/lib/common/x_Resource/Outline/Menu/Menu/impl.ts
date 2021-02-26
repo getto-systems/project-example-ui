@@ -1,4 +1,4 @@
-import { ApplicationAbstractStateAction } from "../../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../../z_getto/action/impl"
 
 import { MenuComponentFactory, MenuMaterial, MenuComponent, MenuComponentState } from "./component"
 
@@ -9,7 +9,11 @@ import {
 
 export const initMenuComponent: MenuComponentFactory = (material) => new Component(material)
 
-class Component extends ApplicationAbstractStateAction<MenuComponentState> implements MenuComponent {
+class Component
+    extends ApplicationAbstractStateAction<MenuComponentState>
+    implements MenuComponent {
+    readonly initialState: MenuComponentState = { type: "initial-menu" }
+
     material: MenuMaterial
 
     constructor(material: MenuMaterial) {

@@ -1,4 +1,4 @@
-import { WorkerProxySpec } from "../../../../../../../../../z_getto/application/worker/message"
+import { WorkerProxySpec } from "../../../../../../../../../z_getto/action/worker/message"
 
 import { ResetEvent } from "../../../../event"
 

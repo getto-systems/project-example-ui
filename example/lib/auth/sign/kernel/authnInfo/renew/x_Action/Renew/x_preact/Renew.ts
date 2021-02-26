@@ -14,18 +14,23 @@ import { appendScript } from "../../../../../../../../x_preact/auth/Sign/script"
 
 import { ApplicationError } from "../../../../../../../../x_preact/common/System/ApplicationError"
 
-import { initialRenewAuthnInfoResourceState, RenewAuthnInfoEntryPoint, RenewAuthnInfoResource, RenewAuthnInfoResourceState } from "../action"
+import {
+    RenewAuthnInfoEntryPoint,
+    RenewAuthnInfoResource,
+    RenewAuthnInfoResourceState,
+} from "../action"
 import { RenewError } from "../../../../kernel/data"
 
 export function RenewAuthInfo(entryPoint: RenewAuthnInfoEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
     return h(View, <RenewAuthnInfoProps>{
         ...resource,
-        state: useApplicationAction(resource.core, initialRenewAuthnInfoResourceState),
+        state: useApplicationAction(resource.core),
     })
 }
 
-export type RenewAuthnInfoProps = RenewAuthnInfoResource & Readonly<{ state: RenewAuthnInfoResourceState }>
+export type RenewAuthnInfoProps = RenewAuthnInfoResource &
+    Readonly<{ state: RenewAuthnInfoResourceState }>
 export function View(props: RenewAuthnInfoProps): VNode {
     useLayoutEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う

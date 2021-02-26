@@ -1,4 +1,4 @@
-import { initSyncActionTestRunner } from "../../../../application/testHelper"
+import { initSyncActionTestRunner } from "../../../../action/testHelper"
 import { standardBoardValueStore } from "./testHelper"
 
 import { newInputBoardValueAction } from "./impl"

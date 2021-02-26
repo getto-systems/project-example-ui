@@ -1,4 +1,4 @@
-import { ApplicationAbstractStateAction } from "../../../../../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../../../../../z_getto/action/impl"
 import { clear } from "../../../impl"
 import { ClearInfra } from "../../../infra"
 
@@ -15,6 +15,8 @@ export function initCoreAction(material: CoreMaterial): CoreAction {
 }
 
 class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAction {
+    readonly initialState: CoreState = { type: "initial-logout" }
+
     material: CoreMaterial
 
     constructor(material: CoreMaterial) {

@@ -4,7 +4,7 @@ import { CoreBackgroundInfra } from "../../Core/impl"
 
 import { authenticateEventHasDone } from "../../../../impl"
 
-import { WorkerHandler } from "../../../../../../../../z_getto/application/worker/background"
+import { WorkerHandler } from "../../../../../../../../z_getto/action/worker/background"
 
 import { AuthenticatePasswordProxyMessage, AuthenticatePasswordProxyResponse } from "./message"
 

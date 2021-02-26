@@ -1,7 +1,7 @@
 import {
     initAsyncActionTester_legacy,
     initSyncActionTestRunner,
-} from "../../../../../../../z_getto/application/testHelper"
+} from "../../../../../../../z_getto/action/testHelper"
 import { WaitTime } from "../../../../../../../z_getto/infra/config/infra"
 import { wait } from "../../../../../../../z_getto/infra/delayed/core"
 import { checkSessionStatusEventHasDone, initCheckSendingStatusLocationInfo } from "../../impl"
@@ -21,10 +21,9 @@ describe("CheckPasswordResetSendingStatus", () => {
     test("valid session-id", (done) => {
         const { resource } = standardPasswordResetSessionResource()
 
-        const ignition = resource.ignition()
-        ignition.subscribe(initTester())
+        resource.subscriber.subscribe(initTester())
 
-        ignition.ignite()
+        resource.ignite()
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -41,10 +40,9 @@ describe("CheckPasswordResetSendingStatus", () => {
         // wait for send token check limit
         const { resource } = longSendingPasswordResetSessionResource()
 
-        const ignition = resource.ignition()
-        ignition.subscribe(initTester())
+        resource.subscriber.subscribe(initTester())
 
-        ignition.ignite()
+        resource.ignite()
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -68,10 +66,9 @@ describe("CheckPasswordResetSendingStatus", () => {
     test("check without session id", (done) => {
         const { resource } = noSessionIDPasswordResetSessionResource()
 
-        const ignition = resource.ignition()
-        ignition.subscribe(initTester())
+        resource.subscriber.subscribe(initTester())
 
-        ignition.ignite()
+        resource.ignite()
 
         function initTester() {
             return initAsyncTester()((stack) => {
@@ -87,16 +84,14 @@ describe("CheckPasswordResetSendingStatus", () => {
         const { resource } = standardPasswordResetSessionResource()
         const entryPoint = toEntryPoint(resource)
 
-        const ignition = resource.ignition()
-
         const runner = initSyncActionTestRunner()
 
         runner.addTestCase(
             (check) => {
                 entryPoint.terminate()
-                ignition.ignite()
+                resource.ignite()
 
-                // checkStatus の処理が終わるのを待つ                
+                // checkStatus の処理が終わるのを待つ
                 setTimeout(check, 32)
             },
             (stack) => {
@@ -106,7 +101,7 @@ describe("CheckPasswordResetSendingStatus", () => {
         )
 
         const handler = runner.run(done)
-        ignition.subscribe(handler)
+        resource.subscriber.subscribe(handler)
     })
 })
 

@@ -1,4 +1,4 @@
-import { MockAction, MockPropsPasser } from "../../../../z_getto/application/mock"
+import { MockAction, MockPropsPasser } from "../../../../z_getto/action/mock"
 import { ContentComponent, ContentComponentState } from "./component"
 
 export type ContentMockPropsPasser = MockPropsPasser<ContentMockProps>
@@ -10,6 +10,8 @@ export function initMockContentComponent(passer: ContentMockPropsPasser): Conten
 }
 
 class ContentMockComponent extends MockAction<ContentComponentState> implements ContentComponent {
+    readonly initialState: ContentComponentState = { type: "initial-content" }
+
     constructor(passer: ContentMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {

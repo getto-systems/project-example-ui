@@ -24,10 +24,9 @@ describe("Example", () => {
     test("load season", (done) => {
         const { resource } = standardResource()
 
-        const ignition = resource.example.ignition()
-        ignition.subscribe(stateHandler())
+        resource.example.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.example.ignite()
 
         function stateHandler(): Post<ExampleComponentState> {
             const stack: ExampleComponentState[] = []

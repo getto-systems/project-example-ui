@@ -23,7 +23,6 @@ import { LoginIDBoard } from "../../../../../../common/board/loginID/x_Action/Lo
 import { PasswordBoard } from "../../../../../../common/board/password/x_Action/Password/x_preact/Password"
 
 import {
-    initialResetPasswordState,
     ResetPasswordEntryPoint,
     ResetPasswordResource,
     ResetPasswordResourceState,
@@ -36,11 +35,8 @@ export function ResetPassword(entryPoint: ResetPasswordEntryPoint): VNode {
     return h(View, <ResetPasswordProps>{
         ...resource,
         state: {
-            core: useApplicationAction(resource.reset.core, initialResetPasswordState.core),
-            form: useApplicationAction(
-                resource.reset.form.validate,
-                initialResetPasswordState.form,
-            ),
+            core: useApplicationAction(resource.reset.core),
+            form: useApplicationAction(resource.reset.form.validate),
         },
     })
 }

@@ -11,12 +11,7 @@ import { RequestPasswordResetToken } from "../../../../../auth/sign/password/res
 import { CheckPasswordResetSendingStatus } from "../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/x_preact/CheckStatus"
 import { ResetPassword } from "../../../../../auth/sign/password/reset/reset/x_Action/Reset/x_preact/Reset"
 
-import {
-    AuthSignEntryPoint,
-    AuthSignResource,
-    AuthSignActionState,
-    initialAuthSignViewState,
-} from "../entryPoint"
+import { AuthSignEntryPoint, AuthSignResource, AuthSignActionState } from "../entryPoint"
 
 export function EntryPoint(entryPoint: AuthSignEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
@@ -31,7 +26,7 @@ export function EntryPoint(entryPoint: AuthSignEntryPoint): VNode {
 
     return h(View, <AuthSignProps>{
         ...resource,
-        state: useApplicationAction(resource.view, initialAuthSignViewState),
+        state: useApplicationAction(resource.view),
     })
 }
 

@@ -1,4 +1,4 @@
-import { MockAction, MockPropsPasser } from "../../../../z_getto/application/mock"
+import { MockAction, MockPropsPasser } from "../../../../z_getto/action/mock"
 
 import { SeasonInfoComponent, SeasonInfoComponentState } from "./component"
 
@@ -9,13 +9,17 @@ export type SeasonInfoMockProps =
     | Readonly<{ type: "success"; year: number }>
     | Readonly<{ type: "failed"; err: string }>
 
-export function initMockSeasonInfoComponent(passer: SeasonInfoMockPropsPasser): SeasonInfoMockComponent {
+export function initMockSeasonInfoComponent(
+    passer: SeasonInfoMockPropsPasser,
+): SeasonInfoMockComponent {
     return new SeasonInfoMockComponent(passer)
 }
 
 class SeasonInfoMockComponent
     extends MockAction<SeasonInfoComponentState>
     implements SeasonInfoComponent {
+    readonly initialState: SeasonInfoComponentState = { type: "initial-season" }
+
     constructor(passer: SeasonInfoMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {

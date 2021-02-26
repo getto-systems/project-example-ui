@@ -1,4 +1,4 @@
-import { ApplicationAction } from "../../../../../../../../z_getto/application/action"
+import { ApplicationAction } from "../../../../../../../../z_getto/action/action"
 import { ValidateBoardAction } from "../../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/action"
 import { LoginIDBoardFieldAction } from "../../../../../../common/board/loginID/x_Action/LoginID/action"
 

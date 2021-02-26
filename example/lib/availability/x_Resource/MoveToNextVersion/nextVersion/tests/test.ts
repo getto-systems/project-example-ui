@@ -12,10 +12,9 @@ describe("NextVersion", () => {
     test("up to date", (done) => {
         const { resource } = standardNextVersionResource()
 
-        const ignition = resource.nextVersion.ignition()
-        ignition.subscribe(stateHandler())
+        resource.nextVersion.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -51,7 +50,7 @@ describe("NextVersion", () => {
                             },
                         ])
                         expect(appTargetToPath(state.target)).toBe(
-                            "/1.0.0/index.html?search=parameter#hash"
+                            "/1.0.0/index.html?search=parameter#hash",
                         )
                         done()
                         break
@@ -70,10 +69,9 @@ describe("NextVersion", () => {
     test("up to date; delayed", (done) => {
         const { resource } = waitNextVersionResource()
 
-        const ignition = resource.nextVersion.ignition()
-        ignition.subscribe(stateHandler())
+        resource.nextVersion.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -110,7 +108,7 @@ describe("NextVersion", () => {
                             },
                         ])
                         expect(appTargetToPath(state.target)).toBe(
-                            "/1.0.0/index.html?search=parameter#hash"
+                            "/1.0.0/index.html?search=parameter#hash",
                         )
                         done()
                         break
@@ -129,10 +127,9 @@ describe("NextVersion", () => {
     test("found next minor version", (done) => {
         const { resource } = foundNextVersionResource(["1.1.0"])
 
-        const ignition = resource.nextVersion.ignition()
-        ignition.subscribe(stateHandler())
+        resource.nextVersion.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -168,7 +165,7 @@ describe("NextVersion", () => {
                             },
                         ])
                         expect(appTargetToPath(state.target)).toBe(
-                            "/1.1.0/index.html?search=parameter#hash"
+                            "/1.1.0/index.html?search=parameter#hash",
                         )
                         done()
                         break
@@ -187,10 +184,9 @@ describe("NextVersion", () => {
     test("found next patch version", (done) => {
         const { resource } = foundNextVersionResource(["1.0.1"])
 
-        const ignition = resource.nextVersion.ignition()
-        ignition.subscribe(stateHandler())
+        resource.nextVersion.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -226,7 +222,7 @@ describe("NextVersion", () => {
                             },
                         ])
                         expect(appTargetToPath(state.target)).toBe(
-                            "/1.0.1/index.html?search=parameter#hash"
+                            "/1.0.1/index.html?search=parameter#hash",
                         )
                         done()
                         break
@@ -245,10 +241,9 @@ describe("NextVersion", () => {
     test("found next minor version; recursive", (done) => {
         const { resource } = foundNextVersionResource(["1.1.0", "1.2.0"])
 
-        const ignition = resource.nextVersion.ignition()
-        ignition.subscribe(stateHandler())
+        resource.nextVersion.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -284,7 +279,7 @@ describe("NextVersion", () => {
                             },
                         ])
                         expect(appTargetToPath(state.target)).toBe(
-                            "/1.2.0/index.html?search=parameter#hash"
+                            "/1.2.0/index.html?search=parameter#hash",
                         )
                         done()
                         break
@@ -303,10 +298,9 @@ describe("NextVersion", () => {
     test("found next patch version; recursive", (done) => {
         const { resource } = foundNextVersionResource(["1.0.1", "1.0.2"])
 
-        const ignition = resource.nextVersion.ignition()
-        ignition.subscribe(stateHandler())
+        resource.nextVersion.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -342,7 +336,7 @@ describe("NextVersion", () => {
                             },
                         ])
                         expect(appTargetToPath(state.target)).toBe(
-                            "/1.0.2/index.html?search=parameter#hash"
+                            "/1.0.2/index.html?search=parameter#hash",
                         )
                         done()
                         break
@@ -361,10 +355,9 @@ describe("NextVersion", () => {
     test("found next patch version; complex", (done) => {
         const { resource } = foundNextVersionResource(["1.1.0", "1.1.1"])
 
-        const ignition = resource.nextVersion.ignition()
-        ignition.subscribe(stateHandler())
+        resource.nextVersion.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -400,7 +393,7 @@ describe("NextVersion", () => {
                             },
                         ])
                         expect(appTargetToPath(state.target)).toBe(
-                            "/1.1.1/index.html?search=parameter#hash"
+                            "/1.1.1/index.html?search=parameter#hash",
                         )
                         done()
                         break
@@ -419,10 +412,9 @@ describe("NextVersion", () => {
     test("found next patch version; complex skipped", (done) => {
         const { resource } = foundNextVersionResource(["1.1.0", "1.1.1", "1.1.3"])
 
-        const ignition = resource.nextVersion.ignition()
-        ignition.subscribe(stateHandler())
+        resource.nextVersion.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -458,7 +450,7 @@ describe("NextVersion", () => {
                             },
                         ])
                         expect(appTargetToPath(state.target)).toBe(
-                            "/1.1.1/index.html?search=parameter#hash"
+                            "/1.1.1/index.html?search=parameter#hash",
                         )
                         done()
                         break
@@ -477,10 +469,9 @@ describe("NextVersion", () => {
     test("found next minor version; complex current version", (done) => {
         const { resource } = foundComplexNextVersionResource(["1.1.0"])
 
-        const ignition = resource.nextVersion.ignition()
-        ignition.subscribe(stateHandler())
+        resource.nextVersion.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -516,7 +507,7 @@ describe("NextVersion", () => {
                             },
                         ])
                         expect(appTargetToPath(state.target)).toBe(
-                            "/1.1.0/index.html?search=parameter#hash"
+                            "/1.1.0/index.html?search=parameter#hash",
                         )
                         done()
                         break
@@ -535,10 +526,9 @@ describe("NextVersion", () => {
     test("invalid version url", (done) => {
         const { resource } = invalidVersionNextVersionResource()
 
-        const ignition = resource.nextVersion.ignition()
-        ignition.subscribe(stateHandler())
+        resource.nextVersion.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        resource.nextVersion.ignite()
 
         function stateHandler(): Post<NextVersionComponentState> {
             const stack: NextVersionComponentState[] = []
@@ -671,7 +661,7 @@ function foundSimulator(versions: string[]): NextVersionRemoteAccess {
                 }
                 return { success: true, value: { found: true, version } }
             },
-            { wait_millisecond: 0 }
+            { wait_millisecond: 0 },
         ),
     }
 }

@@ -26,7 +26,7 @@ import { delayed } from "../../../../../../../z_getto/infra/delayed/core"
 import {
     initAsyncActionTester_legacy,
     initSyncActionTestRunner,
-} from "../../../../../../../z_getto/application/testHelper"
+} from "../../../../../../../z_getto/action/testHelper"
 import { markBoardValue } from "../../../../../../../z_getto/board/kernel/data"
 import { initFormAction } from "./Form/impl"
 import { standardBoardValueStore } from "../../../../../../../z_getto/board/input/x_Action/Input/testHelper"
@@ -53,8 +53,7 @@ describe("RegisterPassword", () => {
     test("submit valid login-id and password", (done) => {
         const { repository, clock, resource } = standardPasswordResetResource()
 
-        const ignition = resource.core.ignition()
-        ignition.subscribe(initTester())
+        resource.core.subscriber.subscribe(initTester())
 
         resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
         resource.form.password.input.set(markBoardValue(VALID_LOGIN.password))
@@ -84,8 +83,7 @@ describe("RegisterPassword", () => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitPasswordResetResource()
 
-        const ignition = resource.core.ignition()
-        ignition.subscribe(initTester())
+        resource.core.subscriber.subscribe(initTester())
 
         resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
         resource.form.password.input.set(markBoardValue(VALID_LOGIN.password))
@@ -115,8 +113,7 @@ describe("RegisterPassword", () => {
     test("submit without fields", (done) => {
         const { repository, resource } = standardPasswordResetResource()
 
-        const ignition = resource.core.ignition()
-        ignition.subscribe(initTester())
+        resource.core.subscriber.subscribe(initTester())
 
         // try to reset without fields
 
@@ -136,8 +133,7 @@ describe("RegisterPassword", () => {
     test("submit without resetToken", (done) => {
         const { repository, resource } = emptyResetTokenPasswordResetResource()
 
-        const ignition = resource.core.ignition()
-        ignition.subscribe(initTester())
+        resource.core.subscriber.subscribe(initTester())
 
         resource.form.loginID.input.set(markBoardValue(VALID_LOGIN.loginID))
         resource.form.password.input.set(markBoardValue(VALID_LOGIN.password))
@@ -169,8 +165,7 @@ describe("RegisterPassword", () => {
     test("load error", (done) => {
         const { resource } = standardPasswordResetResource()
 
-        const ignition = resource.core.ignition()
-        ignition.subscribe(initTester())
+        resource.core.subscriber.subscribe(initTester())
 
         resource.core.loadError({ type: "infra-error", err: "load error" })
 
@@ -191,11 +186,11 @@ describe("RegisterPassword", () => {
         const { resource } = standardPasswordResetResource()
         const entryPoint = toEntryPoint(resource)
 
-        const ignition = {
-            core: resource.core.ignition(),
-            form: resource.form.validate.ignition(),
-            loginID: resource.form.loginID.validate.ignition(),
-            password: resource.form.password.validate.ignition(),
+        const subscriber = {
+            core: resource.core.subscriber,
+            form: resource.form.validate.subscriber,
+            loginID: resource.form.loginID.validate.subscriber,
+            password: resource.form.password.validate.subscriber,
         }
 
         const runner = initSyncActionTestRunner()
@@ -213,10 +208,10 @@ describe("RegisterPassword", () => {
         )
 
         const handler = runner.run(done)
-        ignition.core.subscribe(handler)
-        ignition.form.subscribe(handler)
-        ignition.loginID.subscribe(handler)
-        ignition.password.subscribe(handler)
+        subscriber.core.subscribe(handler)
+        subscriber.form.subscribe(handler)
+        subscriber.loginID.subscribe(handler)
+        subscriber.password.subscribe(handler)
         resource.form.loginID.input.subscribeInputEvent(() => handler("input"))
         resource.form.password.input.subscribeInputEvent(() => handler("input"))
     })

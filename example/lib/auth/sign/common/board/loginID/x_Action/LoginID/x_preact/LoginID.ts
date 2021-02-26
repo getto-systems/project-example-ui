@@ -11,7 +11,6 @@ import { useApplicationAction } from "../../../../../../../../x_preact/common/ho
 
 import { InputBoard } from "../../../../../../../../z_getto/board/input/x_Action/Input/x_preact/Input"
 
-import { initialValidateBoardFieldState } from "../../../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
 import { LoginIDBoardFieldResource, ValidateLoginIDState } from "../action"
 
 import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "../data"
@@ -21,7 +20,7 @@ type Resource = LoginIDBoardFieldResource & Readonly<{ help: VNodeContent[] }>
 export function LoginIDBoard(resource: Resource): VNode {
     return h(View, <LoginIDBoardFieldProps>{
         ...resource,
-        state: useApplicationAction(resource.field.validate, initialValidateBoardFieldState),
+        state: useApplicationAction(resource.field.validate),
     })
 }
 

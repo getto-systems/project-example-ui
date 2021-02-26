@@ -11,7 +11,6 @@ import { useApplicationAction } from "../../../../../../../../x_preact/common/ho
 
 import { InputBoard } from "../../../../../../../../z_getto/board/input/x_Action/Input/x_preact/Input"
 
-import { initialValidateBoardFieldState } from "../../../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
 import { PasswordBoardFieldResource, ValidatePasswordState } from "../action"
 
 import { BoardFieldValidateResult } from "../../../../../../../../z_getto/board/validateField/data"
@@ -21,7 +20,7 @@ type Resource = PasswordBoardFieldResource & Readonly<{ help: VNodeContent[] }>
 export function PasswordBoard(resource: Resource): VNode {
     return h(View, <PasswordBoardFieldProps>{
         ...resource,
-        state: useApplicationAction(resource.field.validate, initialValidateBoardFieldState),
+        state: useApplicationAction(resource.field.validate),
     })
 }
 

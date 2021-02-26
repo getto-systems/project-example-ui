@@ -1,7 +1,4 @@
-import {
-    MockAction,
-    MockPropsPasser,
-} from "../../../../z_getto/application/mock"
+import { MockAction, MockPropsPasser } from "../../../../z_getto/action/mock"
 
 import { NextVersionComponent, NextVersionComponentState } from "./component"
 
@@ -10,13 +7,17 @@ export type NextVersionMockProps =
     | Readonly<{ type: "delayed" }>
     | Readonly<{ type: "failed"; err: string }>
 
-export function initMockNextVersionComponent(passer: NextVersionMockPropsPasser): NextVersionComponent {
+export function initMockNextVersionComponent(
+    passer: NextVersionMockPropsPasser,
+): NextVersionComponent {
     return new NextVersionMockComponent(passer)
 }
 
 class NextVersionMockComponent
     extends MockAction<NextVersionComponentState>
     implements NextVersionComponent {
+    readonly initialState: NextVersionComponentState = { type: "initial-next-version" }
+
     constructor(passer: NextVersionMockPropsPasser) {
         super()
         passer.addPropsHandler((props) => {
@@ -31,7 +32,10 @@ class NextVersionMockComponent
                 case "failed":
                     return {
                         type: "failed-to-find",
-                        err: { type: "failed-to-check", err: { type: "infra-error", err: props.err } },
+                        err: {
+                            type: "failed-to-check",
+                            err: { type: "infra-error", err: props.err },
+                        },
                     }
             }
         }

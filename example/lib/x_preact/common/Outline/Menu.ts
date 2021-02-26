@@ -14,10 +14,7 @@ import { badge_alert, notice_alert } from "../../../z_vendor/getto-css/preact/de
 import { useApplicationAction } from "../hooks"
 import { poweredBy } from "../site"
 
-import {
-    MenuComponent,
-    initialMenuComponentState,
-} from "../../../common/x_Resource/Outline/Menu/Menu/component"
+import { MenuComponent } from "../../../common/x_Resource/Outline/Menu/Menu/component"
 
 import {
     OutlineMenu,
@@ -32,7 +29,7 @@ type Props = Readonly<{
     menu: MenuComponent
 }>
 export function Menu(resource: Props): VNode {
-    const state = useApplicationAction(resource.menu, initialMenuComponentState)
+    const state = useApplicationAction(resource.menu)
 
     switch (state.type) {
         case "initial-menu":

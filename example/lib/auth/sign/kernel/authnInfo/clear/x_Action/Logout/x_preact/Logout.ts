@@ -9,14 +9,14 @@ import { v_small } from "../../../../../../../../z_vendor/getto-css/preact/desig
 
 import { useApplicationAction } from "../../../../../../../../x_preact/common/hooks"
 
-import { initialLogoutState, LogoutResource, LogoutState } from "../action"
+import { LogoutResource, LogoutState } from "../action"
 
 import { StorageError } from "../../../../../../../../z_getto/storage/data"
 
 export function Logout(resource: LogoutResource): VNode {
     return h(View, <LogoutProps>{
         ...resource,
-        state: useApplicationAction(resource.logout, initialLogoutState),
+        state: useApplicationAction(resource.logout),
     })
 }
 

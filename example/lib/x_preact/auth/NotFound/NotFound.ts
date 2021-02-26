@@ -17,10 +17,7 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { NotFoundEntryPoint } from "../../../availability/z_EntryPoint/NotFound/entryPoint"
 
-import {
-    CurrentVersionComponent,
-    initialCurrentVersionComponentState,
-} from "../../../availability/x_Resource/GetCurrentVersion/currentVersion/component"
+import { CurrentVersionComponent } from "../../../availability/x_Resource/GetCurrentVersion/currentVersion/component"
 
 export function EntryPoint({ resource, terminate }: NotFoundEntryPoint): VNode {
     useTermination_deprecated(terminate)
@@ -42,7 +39,7 @@ type ContentProps = Readonly<{
     currentVersion: CurrentVersionComponent
 }>
 function Content({ currentVersion }: ContentProps): VNode {
-    const state = useApplicationAction(currentVersion, initialCurrentVersionComponentState)
+    const state = useApplicationAction(currentVersion)
 
     return loginBox(siteInfo(), {
         title: "リンクが切れていました",

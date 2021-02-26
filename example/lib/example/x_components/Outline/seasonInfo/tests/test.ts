@@ -16,10 +16,9 @@ describe("SeasonInfo", () => {
     test("load from repository", (done) => {
         const { seasonInfo } = standardSeasonInfoComponent()
 
-        const ignition = seasonInfo.ignition()
-        ignition.subscribe(stateHandler())
+        seasonInfo.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        seasonInfo.ignite()
 
         function stateHandler(): Post<SeasonInfoComponentState> {
             const stack: SeasonInfoComponentState[] = []
@@ -50,10 +49,9 @@ describe("SeasonInfo", () => {
     test("not found; use default", (done) => {
         const { seasonInfo } = emptySeasonInfoComponent()
 
-        const ignition = seasonInfo.ignition()
-        ignition.subscribe(stateHandler())
+        seasonInfo.subscriber.subscribe(stateHandler())
 
-        ignition.ignite()
+        seasonInfo.ignite()
 
         function stateHandler(): Post<SeasonInfoComponentState> {
             const stack: SeasonInfoComponentState[] = []

@@ -1,4 +1,4 @@
-import { ApplicationAbstractStateAction } from "../../../../z_getto/application/impl"
+import { ApplicationAbstractStateAction } from "../../../../z_getto/action/impl"
 
 import {
     CurrentVersionMaterial,
@@ -13,6 +13,8 @@ export const initCurrentVersionComponent: CurrentVersionComponentFactory = (mate
 class Component
     extends ApplicationAbstractStateAction<CurrentVersionComponentState>
     implements CurrentVersionComponent {
+    readonly initialState: CurrentVersionComponentState = { type: "initial-current-version" }
+
     material: CurrentVersionMaterial
 
     constructor(material: CurrentVersionMaterial) {

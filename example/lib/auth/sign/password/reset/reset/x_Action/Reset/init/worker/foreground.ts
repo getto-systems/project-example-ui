@@ -12,7 +12,7 @@ import { initFormAction } from "../../Form/impl"
 import {
     WorkerAbstractProxy,
     WorkerProxy,
-} from "../../../../../../../../../z_getto/application/worker/foreground"
+} from "../../../../../../../../../z_getto/action/worker/foreground"
 
 import {
     ResetPasswordProxyMaterial,
