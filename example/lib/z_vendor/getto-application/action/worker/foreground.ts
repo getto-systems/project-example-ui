@@ -5,14 +5,8 @@ import {
     WorkerProxyCallResponse,
 } from "./message"
 
-export interface WorkerProxyContainer<M> {
+export interface WorkerProxy<M, R> {
     method<N, P, E>(method: N, map: WorkerProxyMessageMapper<N, M, P>): WorkerProxyMethod<N, P, E>
-}
-export interface WorkerProxy<M, R> extends WorkerProxyContainer<M> {
-    resolve(response: R): void
-}
-export interface WorkerProxy_legacy<P, M, R> extends WorkerProxyContainer<M> {
-    pod(): P
     resolve(response: R): void
 }
 
@@ -20,7 +14,7 @@ export interface WorkerProxyMessageMapper<N, M, T> {
     (message: WorkerProxyCallMessage<N, T>): M
 }
 
-export class WorkerAbstractProxy<M> implements WorkerProxyContainer<M> {
+export abstract class WorkerAbstractProxy<M, R> implements WorkerProxy<M, R> {
     post: Post<M>
 
     constructor(post: Post<M>) {
@@ -30,6 +24,8 @@ export class WorkerAbstractProxy<M> implements WorkerProxyContainer<M> {
     method<N, T, E>(method: N, map: WorkerProxyMessageMapper<N, M, T>): WorkerProxyMethod<N, T, E> {
         return new ProxyMethod(method, (message) => this.post(map(message)))
     }
+
+    abstract resolve(response: R): void
 }
 class ProxyMethod<N, M, E> implements WorkerProxyMethod<N, M, E> {
     readonly method: N

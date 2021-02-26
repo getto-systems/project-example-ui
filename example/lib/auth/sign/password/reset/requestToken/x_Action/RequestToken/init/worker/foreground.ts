@@ -32,7 +32,10 @@ export function newRequestPasswordResetTokenProxy(
 }
 
 class Proxy
-    extends WorkerAbstractProxy<RequestPasswordResetTokenProxyMessage>
+    extends WorkerAbstractProxy<
+        RequestPasswordResetTokenProxyMessage,
+        RequestPasswordResetTokenProxyResponse
+    >
     implements RequestPasswordResetTokenProxy {
     material: RequestPasswordResetTokenProxyMaterial
 
