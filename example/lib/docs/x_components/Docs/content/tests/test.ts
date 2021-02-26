@@ -1,6 +1,6 @@
 import { DocumentRemoteAccess, newTestDocumentResource } from "../../EntryPoint/tests/core"
 
-import { initMemoryTypedStorage } from "../../../../../z_getto/storage/typed/memory"
+import { initMemoryTypedStorage } from "../../../../../z_vendor/getto-application/storage/typed/memory"
 import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"
 import { initOutlineMenuExpandRepository } from "../../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/core"
 

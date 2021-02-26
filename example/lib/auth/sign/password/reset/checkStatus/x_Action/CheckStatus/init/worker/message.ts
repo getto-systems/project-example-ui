@@ -1,4 +1,4 @@
-import { WorkerProxySpec } from "../../../../../../../../../z_getto/action/worker/message"
+import { WorkerProxySpec } from "../../../../../../../../../z_vendor/getto-application/action/worker/message"
 import { ResetSessionID } from "../../../../../kernel/data"
 
 import { CheckSendingStatusEvent } from "../../../../event"

@@ -1,7 +1,7 @@
-import { Remote, RemoteResult, RemoteSimulator } from "../../../../../z_getto/remote/infra"
-import { StoreResult } from "../../../../../z_getto/storage/infra"
+import { Remote, RemoteResult, RemoteSimulator } from "../../../../../z_vendor/getto-application/remote/infra"
+import { StoreResult } from "../../../../../z_vendor/getto-application/storage/infra"
 
-import { StorageError } from "../../../../../z_getto/storage/data"
+import { StorageError } from "../../../../../z_vendor/getto-application/storage/data"
 import { ApiCredential } from "../../../../../common/apiCredential/data"
 import { AuthnInfo, LastAuth, RenewRemoteError, AuthnNonce } from "./data"
 

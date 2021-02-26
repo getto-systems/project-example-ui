@@ -5,7 +5,7 @@ import { LogoutState } from "./action"
 
 import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
 import { markAuthAt, markAuthnNonce } from "../../../kernel/data"
-import { initSyncActionTestRunner } from "../../../../../../../z_getto/action/testHelper"
+import { initSyncActionTestRunner } from "../../../../../../../z_vendor/getto-application/action/testHelper"
 import { initCoreAction, initCoreMaterial } from "./Core/impl"
 import { toLogoutResource } from "./impl"
 

@@ -1,15 +1,15 @@
-import { newBoardValidateStack } from "../../../../../../../z_getto/board/kernel/infra/stack"
+import { newBoardValidateStack } from "../../../../../../../z_vendor/getto-application/board/kernel/infra/stack"
 
 import { initLoginIDBoardFieldAction } from "../../../../../common/board/loginID/x_Action/LoginID/impl"
 import { initPasswordBoardFieldAction } from "../../../../../common/board/password/x_Action/Password/impl"
 
-import { initValidateBoardAction } from "../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/impl"
+import { initValidateBoardAction } from "../../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/impl"
 
-import { ValidateBoardInfra } from "../../../../../../../z_getto/board/kernel/infra"
+import { ValidateBoardInfra } from "../../../../../../../z_vendor/getto-application/board/kernel/infra"
 
 import { FormAction } from "./action"
 
-import { BoardConvertResult } from "../../../../../../../z_getto/board/kernel/data"
+import { BoardConvertResult } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { AuthenticateFields } from "../../../data"
 
 export function initFormAction(): FormAction {

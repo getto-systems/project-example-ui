@@ -1,8 +1,8 @@
-import { TypedStorage } from "../../../../z_getto/storage/typed/infra"
-import { StoreResult } from "../../../../z_getto/storage/infra"
+import { TypedStorage } from "../../../../z_vendor/getto-application/storage/typed/infra"
+import { StoreResult } from "../../../../z_vendor/getto-application/storage/infra"
 import { ApiCredentialRepository, LoadApiCredentialResult } from "../../infra"
 
-import { StorageError } from "../../../../z_getto/storage/data"
+import { StorageError } from "../../../../z_vendor/getto-application/storage/data"
 import { ApiCredential } from "../../data"
 
 export type ApiCredentialStorage = Readonly<{

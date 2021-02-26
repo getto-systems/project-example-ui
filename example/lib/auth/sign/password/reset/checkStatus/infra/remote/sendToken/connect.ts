@@ -1,6 +1,6 @@
-import { initConnectRemoteAccess } from "../../../../../../../../z_getto/remote/connect"
+import { initConnectRemoteAccess } from "../../../../../../../../z_vendor/getto-application/remote/connect"
 
-import { RawRemote, RemoteError } from "../../../../../../../../z_getto/remote/infra"
+import { RawRemote, RemoteError } from "../../../../../../../../z_vendor/getto-application/remote/infra"
 import { SendTokenRemote } from "../../../infra"
 
 import { CheckSendingStatusRemoteError } from "../../../data"

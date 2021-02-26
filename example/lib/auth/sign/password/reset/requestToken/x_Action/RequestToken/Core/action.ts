@@ -1,10 +1,10 @@
-import { ApplicationStateAction } from "../../../../../../../../z_getto/action/action"
+import { ApplicationStateAction } from "../../../../../../../../z_vendor/getto-application/action/action"
 
 import { RequestTokenMethod } from "../../../method"
 
 import { RequestTokenEvent } from "../../../event"
 
-import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
+import { BoardConvertResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { RequestTokenFields } from "../../../data"
 
 export interface CoreAction extends ApplicationStateAction<CoreState> {

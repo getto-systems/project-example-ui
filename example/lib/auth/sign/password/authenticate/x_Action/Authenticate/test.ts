@@ -1,9 +1,9 @@
-import { initStaticClock, StaticClock } from "../../../../../../z_getto/infra/clock/simulate"
+import { initStaticClock, StaticClock } from "../../../../../../z_vendor/getto-application/infra/clock/simulate"
 import { initAuthenticateSimulate } from "../../infra/remote/authenticate/simulate"
 import { initRenewSimulate } from "../../../../kernel/authnInfo/kernel/infra/remote/renew/simulate"
 
 import { AuthenticateRemote, AuthenticateResult } from "../../infra"
-import { Clock } from "../../../../../../z_getto/infra/clock/infra"
+import { Clock } from "../../../../../../z_vendor/getto-application/infra/clock/infra"
 
 import { AuthenticatePasswordAction } from "./action"
 
@@ -22,15 +22,15 @@ import {
 } from "../../../../kernel/authnInfo/kernel/infra"
 import { initMemoryAuthnInfoRepository } from "../../../../kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
 import { newGetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/impl"
-import { delayed, wait } from "../../../../../../z_getto/infra/delayed/core"
+import { delayed, wait } from "../../../../../../z_vendor/getto-application/infra/delayed/core"
 import { authenticateEventHasDone } from "../../impl"
 import {
     initAsyncActionTestRunner,
     initSyncActionTestRunner,
-} from "../../../../../../z_getto/action/testHelper"
+} from "../../../../../../z_vendor/getto-application/action/testHelper"
 import { initFormAction } from "./Form/impl"
-import { markBoardValue } from "../../../../../../z_getto/board/kernel/data"
-import { standardBoardValueStore } from "../../../../../../z_getto/board/input/x_Action/Input/testHelper"
+import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/data"
+import { standardBoardValueStore } from "../../../../../../z_vendor/getto-application/board/input/x_Action/Input/testHelper"
 import { toAction, toEntryPoint } from "./impl"
 import { initCoreAction, initCoreMaterial } from "./Core/impl"
 

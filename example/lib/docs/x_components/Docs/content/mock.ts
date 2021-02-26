@@ -1,4 +1,4 @@
-import { MockAction, MockPropsPasser } from "../../../../z_getto/action/mock"
+import { MockAction, MockPropsPasser } from "../../../../z_vendor/getto-application/action/mock"
 import { ContentComponent, ContentComponentState } from "./component"
 
 export type ContentMockPropsPasser = MockPropsPasser<ContentMockProps>

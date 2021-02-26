@@ -1,4 +1,4 @@
-import { ApplicationStateAction } from "../../../../../../../z_getto/action/action"
+import { ApplicationStateAction } from "../../../../../../../z_vendor/getto-application/action/action"
 
 import { AuthenticateMethod } from "../../../method"
 import { GetSecureScriptPathMethod } from "../../../../../common/secureScriptPath/get/method"
@@ -12,7 +12,7 @@ import {
     LoadSecureScriptError,
 } from "../../../../../common/secureScriptPath/get/data"
 import { AuthenticateFields } from "../../../data"
-import { BoardConvertResult } from "../../../../../../../z_getto/board/kernel/data"
+import { BoardConvertResult } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 
 export interface CoreAction extends ApplicationStateAction<CoreState> {
     submit(fields: BoardConvertResult<AuthenticateFields>): void

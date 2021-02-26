@@ -1,6 +1,6 @@
-import { StoreResult } from "../../z_getto/storage/infra"
+import { StoreResult } from "../../z_vendor/getto-application/storage/infra"
 
-import { StorageError } from "../../z_getto/storage/data"
+import { StorageError } from "../../z_vendor/getto-application/storage/data"
 import { ApiCredential } from "./data"
 
 export interface ApiCredentialRepository {

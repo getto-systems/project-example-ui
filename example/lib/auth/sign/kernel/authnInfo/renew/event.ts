@@ -1,4 +1,4 @@
-import { StorageError } from "../../../../../z_getto/storage/data"
+import { StorageError } from "../../../../../z_vendor/getto-application/storage/data"
 import { AuthnInfo, RenewError } from "../kernel/data"
 
 export type RenewEvent = Readonly<{ type: "try-to-instant-load" }> | ForceRenewEvent

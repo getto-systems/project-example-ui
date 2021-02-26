@@ -1,9 +1,9 @@
 import {
     initAsyncActionTester_legacy,
     initSyncActionTestRunner,
-} from "../../../../../../../z_getto/action/testHelper"
-import { WaitTime } from "../../../../../../../z_getto/infra/config/infra"
-import { wait } from "../../../../../../../z_getto/infra/delayed/core"
+} from "../../../../../../../z_vendor/getto-application/action/testHelper"
+import { WaitTime } from "../../../../../../../z_vendor/getto-application/infra/config/infra"
+import { wait } from "../../../../../../../z_vendor/getto-application/infra/delayed/core"
 import { checkSessionStatusEventHasDone, initCheckSendingStatusLocationInfo } from "../../impl"
 import {
     GetSendingStatusRemote,

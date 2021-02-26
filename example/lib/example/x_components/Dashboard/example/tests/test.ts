@@ -4,13 +4,13 @@ import {
     newTestDashboardResource,
 } from "../../EntryPoint/tests/core"
 
-import { initMemoryTypedStorage } from "../../../../../z_getto/storage/typed/memory"
-import { initStaticClock } from "../../../../../z_getto/infra/clock/simulate"
+import { initMemoryTypedStorage } from "../../../../../z_vendor/getto-application/storage/typed/memory"
+import { initStaticClock } from "../../../../../z_vendor/getto-application/infra/clock/simulate"
 import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"
 import { initOutlineMenuExpandRepository } from "../../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/core"
 import { initMemorySeasonRepository } from "../../../../shared/season/impl/repository/season/memory"
 
-import { Clock } from "../../../../../z_getto/infra/clock/infra"
+import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
 import { OutlineMenuTree } from "../../../../../auth/permission/outline/load/infra"
 
 import { ExampleComponentState } from "../component"

@@ -8,7 +8,7 @@ import { EntryPoint } from "./NotFound"
 
 import { newMockNotFound } from "../../../availability/z_EntryPoint/NotFound/mock"
 
-import { initMockPropsPasser } from "../../../z_getto/action/mock"
+import { initMockPropsPasser } from "../../../z_vendor/getto-application/action/mock"
 
 import { CurrentVersionMockProps } from "../../../availability/x_Resource/GetCurrentVersion/currentVersion/mock"
 

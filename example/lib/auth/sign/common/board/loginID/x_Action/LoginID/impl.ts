@@ -1,11 +1,11 @@
-import { initValidateBoardFieldAction } from "../../../../../../../z_getto/board/validateField/x_Action/ValidateField/impl"
-import { newInputBoardValueAction } from "../../../../../../../z_getto/board/input/x_Action/Input/impl"
+import { initValidateBoardFieldAction } from "../../../../../../../z_vendor/getto-application/board/validateField/x_Action/ValidateField/impl"
+import { newInputBoardValueAction } from "../../../../../../../z_vendor/getto-application/board/input/x_Action/Input/impl"
 
-import { ValidateBoardInfra } from "../../../../../../../z_getto/board/kernel/infra"
+import { ValidateBoardInfra } from "../../../../../../../z_vendor/getto-application/board/kernel/infra"
 
 import { LoginIDBoardFieldAction } from "./action"
 
-import { BoardConvertResult, BoardValue } from "../../../../../../../z_getto/board/kernel/data"
+import { BoardConvertResult, BoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { LoginID, markLoginID } from "../../../../loginID/data"
 import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "./data"
 

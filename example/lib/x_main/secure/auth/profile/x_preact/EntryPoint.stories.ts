@@ -7,7 +7,7 @@ import { View } from "./EntryPoint"
 
 import { AuthProfileMockPropsPasser, initMockAuthProfileResource } from "../mock"
 
-import { initMockPropsPasser } from "../../../../../z_getto/action/mock"
+import { initMockPropsPasser } from "../../../../../z_vendor/getto-application/action/mock"
 
 import { SeasonInfoMockProps } from "../../../../../example/x_components/Outline/seasonInfo/mock"
 import { MenuMockProps } from "../../../../../common/x_Resource/Outline/Menu/Menu/mock"

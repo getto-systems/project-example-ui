@@ -1,4 +1,4 @@
-import { ApplicationAbstractStateAction } from "../../../../../../../z_getto/action/impl"
+import { ApplicationAbstractStateAction } from "../../../../../../../z_vendor/getto-application/action/impl"
 
 import { startContinuousRenew } from "../../../../../kernel/authnInfo/common/startContinuousRenew/impl"
 import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
@@ -21,7 +21,7 @@ import { GetSecureScriptPathLocationInfo } from "../../../../../common/secureScr
 import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
 import { AuthenticateFields } from "../../../data"
 import { AuthnInfo } from "../../../../../kernel/authnInfo/kernel/data"
-import { BoardConvertResult } from "../../../../../../../z_getto/board/kernel/data"
+import { BoardConvertResult } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 
 export type CoreInfra = CoreForegroundInfra & CoreBackgroundInfra
 

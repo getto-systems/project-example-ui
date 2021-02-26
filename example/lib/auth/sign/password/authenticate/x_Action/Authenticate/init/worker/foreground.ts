@@ -11,7 +11,7 @@ import { initFormAction } from "../../Form/impl"
 import {
     WorkerProxy,
     WorkerAbstractProxy,
-} from "../../../../../../../../z_getto/action/worker/foreground"
+} from "../../../../../../../../z_vendor/getto-application/action/worker/foreground"
 
 import {
     AuthenticatePasswordProxyMaterial,

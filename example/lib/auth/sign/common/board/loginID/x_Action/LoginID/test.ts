@@ -1,16 +1,16 @@
 import {
     initSyncActionChecker_simple,
     initSyncActionTestRunner,
-} from "../../../../../../../z_getto/action/testHelper"
-import { standardBoardValueStore } from "../../../../../../../z_getto/board/input/x_Action/Input/testHelper"
+} from "../../../../../../../z_vendor/getto-application/action/testHelper"
+import { standardBoardValueStore } from "../../../../../../../z_vendor/getto-application/board/input/x_Action/Input/testHelper"
 
-import { newBoardValidateStack } from "../../../../../../../z_getto/board/kernel/infra/stack"
+import { newBoardValidateStack } from "../../../../../../../z_vendor/getto-application/board/kernel/infra/stack"
 
 import { initLoginIDBoardFieldAction } from "./impl"
 
-import { ValidateBoardFieldState } from "../../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
+import { ValidateBoardFieldState } from "../../../../../../../z_vendor/getto-application/board/validateField/x_Action/ValidateField/action"
 
-import { markBoardValue } from "../../../../../../../z_getto/board/kernel/data"
+import { markBoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { ValidateLoginIDError } from "./data"
 
 describe("LoginIDBoard", () => {

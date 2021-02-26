@@ -1,8 +1,8 @@
-import { TypedStorage } from "../../../../../../../../z_getto/storage/typed/infra"
-import { StoreResult } from "../../../../../../../../z_getto/storage/infra"
+import { TypedStorage } from "../../../../../../../../z_vendor/getto-application/storage/typed/infra"
+import { StoreResult } from "../../../../../../../../z_vendor/getto-application/storage/infra"
 import { AuthnInfoRepository, LoadLastAuthResult } from "../../../infra"
 
-import { StorageError } from "../../../../../../../../z_getto/storage/data"
+import { StorageError } from "../../../../../../../../z_vendor/getto-application/storage/data"
 import {
     AuthAt,
     AuthnInfo,

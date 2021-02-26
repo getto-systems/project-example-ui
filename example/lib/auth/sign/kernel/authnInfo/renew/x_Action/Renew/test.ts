@@ -1,7 +1,7 @@
-import { initStaticClock, StaticClock } from "../../../../../../../z_getto/infra/clock/simulate"
+import { initStaticClock, StaticClock } from "../../../../../../../z_vendor/getto-application/infra/clock/simulate"
 import { initRenewSimulate } from "../../../kernel/infra/remote/renew/simulate"
 
-import { Clock } from "../../../../../../../z_getto/infra/clock/infra"
+import { Clock } from "../../../../../../../z_vendor/getto-application/infra/clock/infra"
 
 import { RenewAuthnInfoResource, RenewAuthnInfoResourceState } from "./action"
 
@@ -11,12 +11,12 @@ import { ApiCredentialRepository } from "../../../../../../../common/apiCredenti
 import { initMemoryApiCredentialRepository } from "../../../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
 import { AuthnInfoRepository, RenewRemote, RenewResult } from "../../../kernel/infra"
-import { delayed } from "../../../../../../../z_getto/infra/delayed/core"
+import { delayed } from "../../../../../../../z_vendor/getto-application/infra/delayed/core"
 import { initMemoryAuthnInfoRepository } from "../../../kernel/infra/repository/authnInfo/memory"
 import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
 import { toEntryPoint } from "./impl"
 import { initCoreAction, initCoreMaterial } from "./Core/impl"
-import { initSyncActionTestRunner } from "../../../../../../../z_getto/action/testHelper"
+import { initSyncActionTestRunner } from "../../../../../../../z_vendor/getto-application/action/testHelper"
 import { initMockCoreAction } from "./Core/mock"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const

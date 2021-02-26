@@ -5,7 +5,7 @@ import { initFormAction } from "../../Form/impl"
 import {
     WorkerAbstractProxy,
     WorkerProxy,
-} from "../../../../../../../../../z_getto/action/worker/foreground"
+} from "../../../../../../../../../z_vendor/getto-application/action/worker/foreground"
 
 import {
     RequestPasswordResetTokenProxyMaterial,

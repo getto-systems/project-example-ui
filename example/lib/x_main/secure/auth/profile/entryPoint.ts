@@ -14,7 +14,7 @@ import {
     ErrorForegroundAction,
     ErrorResource,
 } from "../../../../availability/x_Resource/Error/resource"
-import { ApplicationEntryPoint } from "../../../../z_getto/action/action"
+import { ApplicationEntryPoint } from "../../../../z_vendor/getto-application/action/action"
 
 export type AuthProfileEntryPoint = ApplicationEntryPoint<AuthProfileResource>
 

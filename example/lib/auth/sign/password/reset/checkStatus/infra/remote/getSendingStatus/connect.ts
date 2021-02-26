@@ -1,5 +1,5 @@
-import { initConnectRemoteAccess } from "../../../../../../../../z_getto/remote/connect"
-import { RawRemote, RemoteError } from "../../../../../../../../z_getto/remote/infra"
+import { initConnectRemoteAccess } from "../../../../../../../../z_vendor/getto-application/remote/connect"
+import { RawRemote, RemoteError } from "../../../../../../../../z_vendor/getto-application/remote/infra"
 import { ResetSessionID } from "../../../../kernel/data"
 
 import { CheckSendingStatusRemoteError } from "../../../data"

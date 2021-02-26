@@ -3,13 +3,13 @@ import { env } from "../../../../../y_environment/env"
 import { initApiAuthSignResetGetStatus } from "../../../../../z_external/api/auth/sign/reset/getStatus"
 import { initApiAuthSignResetSendToken } from "../../../../../z_external/api/auth/sign/reset/sendToken"
 
-import { wait } from "../../../../../z_getto/infra/delayed/core"
+import { wait } from "../../../../../z_vendor/getto-application/infra/delayed/core"
 import { initGetSendingStatusConnect } from "./infra/remote/getSendingStatus/connect"
 import { initSendTokenConnect } from "./infra/remote/sendToken/connect"
 
 import { initCheckSendingStatusLocationInfo } from "./impl"
 
-import { limit, waitSecond } from "../../../../../z_getto/infra/config/infra"
+import { limit, waitSecond } from "../../../../../z_vendor/getto-application/infra/config/infra"
 import { CheckSendingStatusInfra } from "./infra"
 
 import { CheckSendingStatusLocationInfo } from "./method"

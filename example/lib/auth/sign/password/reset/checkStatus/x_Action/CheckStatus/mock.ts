@@ -5,7 +5,7 @@ import {
     CheckPasswordResetSendingStatusResource,
     CheckSendingStatusState,
 } from "./action"
-import { ApplicationMockStateAction } from "../../../../../../../z_getto/action/impl"
+import { ApplicationMockStateAction } from "../../../../../../../z_vendor/getto-application/action/impl"
 
 export function initMockStartPasswordResetSessionResource(): CheckPasswordResetSendingStatusResource {
     return {

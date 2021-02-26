@@ -11,7 +11,7 @@ import { useApplicationAction } from "../../../../../../../../x_preact/common/ho
 
 import { LogoutResource, LogoutState } from "../action"
 
-import { StorageError } from "../../../../../../../../z_getto/storage/data"
+import { StorageError } from "../../../../../../../../z_vendor/getto-application/storage/data"
 
 export function Logout(resource: LogoutResource): VNode {
     return h(View, <LogoutProps>{

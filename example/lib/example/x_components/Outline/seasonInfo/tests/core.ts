@@ -1,6 +1,6 @@
 import { initSeasonInfoComponent } from "../impl"
 
-import { Clock } from "../../../../../z_getto/infra/clock/infra"
+import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
 import { SeasonRepository } from "../../../../shared/season/infra"
 
 import { SeasonInfoComponent } from "../component"
