@@ -2,12 +2,12 @@ import { ApplicationStateAction } from "../../../../action/action"
 
 import { ConvertBoardFieldMethod } from "../../method"
 
-import { BoardFieldConvertResult } from "../../data"
+import { ConvertBoardFieldResult } from "../../data"
 
 export interface ValidateBoardFieldAction<T, E>
     extends ApplicationStateAction<ValidateBoardFieldState<E>> {
     readonly name: string
-    get(): BoardFieldConvertResult<T, E>
+    get(): ConvertBoardFieldResult<T, E>
     check(): void
 }
 

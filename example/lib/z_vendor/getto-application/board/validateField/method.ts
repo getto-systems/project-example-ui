@@ -1,5 +1,5 @@
-import { BoardFieldConvertResult } from "./data"
+import { ConvertBoardFieldResult } from "./data"
 
 export interface ConvertBoardFieldMethod<T, E> {
-    (): BoardFieldConvertResult<T, E>
+    (): ConvertBoardFieldResult<T, E>
 }

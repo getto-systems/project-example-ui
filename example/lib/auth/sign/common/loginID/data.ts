@@ -1,5 +1,5 @@
 import { BoardValue } from "../../../../z_vendor/getto-application/board/kernel/data"
-import { BoardFieldConvertResult } from "../../../../z_vendor/getto-application/board/validateField/data"
+import { ConvertBoardFieldResult } from "../../../../z_vendor/getto-application/board/validateField/data"
 
 export type LoginID = string & { LoginID: never }
 
@@ -10,7 +10,7 @@ export type ValidateLoginIDError = "empty" | "too-long"
 
 export function convertLoginID(
     value: BoardValue,
-): BoardFieldConvertResult<LoginID, ValidateLoginIDError> {
+): ConvertBoardFieldResult<LoginID, ValidateLoginIDError> {
     if (value.length === 0) {
         return { valid: false, err: EMPTY }
     }
