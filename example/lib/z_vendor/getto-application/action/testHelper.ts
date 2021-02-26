@@ -23,7 +23,7 @@ export function initAsyncActionTestRunner<S>(
                 return (state) => {
                     checker.pushState(state)
 
-                    // 非同期的なアクションの場合、完了状態に変更した時点で試験する
+                    // 非同期的なアクションの場合、完了状態に到達した時点で試験を開始する
                     if (hasDone(state)) {
                         checker.examine()
                     }
@@ -42,7 +42,7 @@ export function initSyncActionTestRunner<S>(testCases: ActionTestCase<S>[]): Act
                 runner.enqueue({
                     statement: (check) => {
                         if (testCase.statement.length > 0) {
-                            // 同期的なテストだが、done 判定をテストケース側でやりたい
+                            // 同期的なテストだが、done 判定をテストケース側でやりたいこともある
                             testCase.statement(check)
                             return
                         }
