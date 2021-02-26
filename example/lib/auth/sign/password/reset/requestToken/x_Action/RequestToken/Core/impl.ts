@@ -1,4 +1,4 @@
-import { ApplicationAbstractStateAction } from "../../../../../../../../z_getto/action/impl"
+import { ApplicationAbstractStateAction } from "../../../../../../../../z_vendor/getto-application/action/impl"
 
 import { requestToken } from "../../../impl"
 
@@ -7,7 +7,7 @@ import { RequestTokenInfra } from "../../../infra"
 import { CoreMaterial, CoreAction, CoreState } from "./action"
 
 import { RequestTokenFields } from "../../../data"
-import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
+import { BoardConvertResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
 
 export function initCoreMaterial(infra: RequestTokenInfra): CoreMaterial {
     return {

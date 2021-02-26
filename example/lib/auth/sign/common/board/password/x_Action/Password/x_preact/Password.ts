@@ -9,11 +9,11 @@ import {
 
 import { useApplicationAction } from "../../../../../../../../x_preact/common/hooks"
 
-import { InputBoard } from "../../../../../../../../z_getto/board/input/x_Action/Input/x_preact/Input"
+import { InputBoard } from "../../../../../../../../z_vendor/getto-application/board/input/x_Action/Input/x_preact/Input"
 
 import { PasswordBoardFieldResource, ValidatePasswordState } from "../action"
 
-import { BoardFieldValidateResult } from "../../../../../../../../z_getto/board/validateField/data"
+import { BoardFieldValidateResult } from "../../../../../../../../z_vendor/getto-application/board/validateField/data"
 import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "../data"
 
 type Resource = PasswordBoardFieldResource & Readonly<{ help: VNodeContent[] }>

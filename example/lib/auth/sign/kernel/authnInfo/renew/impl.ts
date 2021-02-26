@@ -1,4 +1,4 @@
-import { StoreResult } from "../../../../../z_getto/storage/infra"
+import { StoreResult } from "../../../../../z_vendor/getto-application/storage/infra"
 import { RenewInfra } from "./infra"
 
 import { ForceRenewMethod, RenewMethod } from "./method"

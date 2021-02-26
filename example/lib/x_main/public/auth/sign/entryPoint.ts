@@ -1,4 +1,4 @@
-import { ApplicationStateAction } from "../../../../z_getto/action/action"
+import { ApplicationStateAction } from "../../../../z_vendor/getto-application/action/action"
 import { RenewAuthnInfoEntryPoint } from "../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/action"
 import { AuthenticatePasswordEntryPoint } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/action"
 import { RequestPasswordResetTokenEntryPoint } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/action"

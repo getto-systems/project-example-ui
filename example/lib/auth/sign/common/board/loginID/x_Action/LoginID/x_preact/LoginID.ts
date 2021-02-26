@@ -9,12 +9,12 @@ import {
 
 import { useApplicationAction } from "../../../../../../../../x_preact/common/hooks"
 
-import { InputBoard } from "../../../../../../../../z_getto/board/input/x_Action/Input/x_preact/Input"
+import { InputBoard } from "../../../../../../../../z_vendor/getto-application/board/input/x_Action/Input/x_preact/Input"
 
 import { LoginIDBoardFieldResource, ValidateLoginIDState } from "../action"
 
 import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "../data"
-import { BoardFieldValidateResult } from "../../../../../../../../z_getto/board/validateField/data"
+import { BoardFieldValidateResult } from "../../../../../../../../z_vendor/getto-application/board/validateField/data"
 
 type Resource = LoginIDBoardFieldResource & Readonly<{ help: VNodeContent[] }>
 export function LoginIDBoard(resource: Resource): VNode {

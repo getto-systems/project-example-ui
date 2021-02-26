@@ -1,13 +1,13 @@
-import { InputBoardValueAction } from "../../../../../../../z_getto/board/input/x_Action/Input/action"
+import { InputBoardValueAction } from "../../../../../../../z_vendor/getto-application/board/input/x_Action/Input/action"
 import {
     ValidateBoardFieldAction,
     ValidateBoardFieldState,
-} from "../../../../../../../z_getto/board/validateField/x_Action/ValidateField/action"
+} from "../../../../../../../z_vendor/getto-application/board/validateField/x_Action/ValidateField/action"
 
 import { Password } from "../../../../password/data"
 import { PasswordCharacterState, ValidatePasswordError } from "./data"
 import { CheckPasswordCharacterMethod } from "../../checkCharacter/method"
-import { ApplicationAction } from "../../../../../../../z_getto/action/action"
+import { ApplicationAction } from "../../../../../../../z_vendor/getto-application/action/action"
 
 export type PasswordBoardFieldResource = Readonly<{
     field: PasswordBoardFieldAction

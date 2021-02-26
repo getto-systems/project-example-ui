@@ -1,6 +1,6 @@
-import { Clock } from "../../../../../z_getto/infra/clock/infra"
-import { Delayed } from "../../../../../z_getto/infra/delayed/infra"
-import { DelayTime, ExpireTime } from "../../../../../z_getto/infra/config/infra"
+import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
+import { Delayed } from "../../../../../z_vendor/getto-application/infra/delayed/infra"
+import { DelayTime, ExpireTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
 import { AuthnInfoRepository, RenewRemote } from "../kernel/infra"
 

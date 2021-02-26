@@ -1,6 +1,6 @@
 import { ResetEvent } from "./event"
 
-import { BoardConvertResult } from "../../../../../z_getto/board/kernel/data"
+import { BoardConvertResult } from "../../../../../z_vendor/getto-application/board/kernel/data"
 import { ResetToken } from "../kernel/data"
 import { ResetFields } from "./data"
 

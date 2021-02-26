@@ -1,6 +1,6 @@
 import { render, h } from "preact"
 
-import { newWorker } from "../../../../../z_getto/action/init/worker"
+import { newWorker } from "../../../../../z_vendor/getto-application/action/init/worker"
 import { newWorkerForeground } from "../main/worker/foreground"
 
 import { EntryPoint } from "../x_preact/EntryPoint"

@@ -1,6 +1,6 @@
 import { h } from "preact"
 
-import { storyTemplate } from "../../../../../../z_vendor/storybook/preact/story"
+import { storyTemplate } from "../../../../../../storybook/preact/story"
 
 import { InputBoard, InputBoardProps } from "./Input"
 

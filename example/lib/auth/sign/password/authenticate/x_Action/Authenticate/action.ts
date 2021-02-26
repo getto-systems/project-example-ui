@@ -1,8 +1,8 @@
-import { ApplicationAction } from "../../../../../../z_getto/action/action"
+import { ApplicationAction } from "../../../../../../z_vendor/getto-application/action/action"
 import {
     initialValidateBoardState,
     ValidateBoardState,
-} from "../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/action"
+} from "../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/action"
 import { AuthSignLinkResource } from "../../../../common/searchParams/x_Action/Link/action"
 import {
     CoreAction,

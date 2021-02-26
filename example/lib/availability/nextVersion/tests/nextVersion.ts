@@ -1,4 +1,4 @@
-import { delayed } from "../../../z_getto/infra/delayed/core"
+import { delayed } from "../../../z_vendor/getto-application/infra/delayed/core"
 
 import { find } from "../impl/core"
 

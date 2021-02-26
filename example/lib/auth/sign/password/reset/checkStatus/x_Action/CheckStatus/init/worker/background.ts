@@ -1,6 +1,6 @@
 import { checkSessionStatusEventHasDone } from "../../../../impl"
 
-import { WorkerHandler } from "../../../../../../../../../z_getto/action/worker/background"
+import { WorkerHandler } from "../../../../../../../../../z_vendor/getto-application/action/worker/background"
 
 import {
     CheckPasswordResetSendingStatusProxyMessage,

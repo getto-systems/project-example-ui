@@ -1,13 +1,13 @@
 import {
     initAsyncActionTester_legacy,
     initSyncActionTestRunner,
-} from "../../../../../../../z_getto/action/testHelper"
-import { standardBoardValueStore } from "../../../../../../../z_getto/board/input/x_Action/Input/testHelper"
+} from "../../../../../../../z_vendor/getto-application/action/testHelper"
+import { standardBoardValueStore } from "../../../../../../../z_vendor/getto-application/board/input/x_Action/Input/testHelper"
 
 import { initCoreMaterial, initCoreAction } from "./Core/impl"
 import { initFormAction } from "./Form/impl"
 
-import { delayed } from "../../../../../../../z_getto/infra/delayed/core"
+import { delayed } from "../../../../../../../z_vendor/getto-application/infra/delayed/core"
 import { initRequestTokenSimulate } from "../../infra/remote/requestToken/simulate"
 
 import { requestTokenEventHasDone } from "../../impl"
@@ -17,7 +17,7 @@ import { RequestTokenRemote, RequestTokenResult } from "../../infra"
 import { RequestPasswordResetTokenAction } from "./action"
 import { CoreState } from "./Core/action"
 
-import { markBoardValue } from "../../../../../../../z_getto/board/kernel/data"
+import { markBoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { markResetSessionID } from "../../../kernel/data"
 import { toAction, toEntryPoint } from "./impl"
 

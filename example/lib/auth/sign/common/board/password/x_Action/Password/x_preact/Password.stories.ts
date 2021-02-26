@@ -8,7 +8,7 @@ import { initMockPasswordBoardFieldAction } from "../mock"
 
 import { ValidatePasswordState } from "../action"
 
-import { markBoardValue } from "../../../../../../../../z_getto/board/kernel/data"
+import { markBoardValue } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { PasswordCharacterState } from "../data"
 
 const typeOptions = ["valid", "empty", "too-long"] as const

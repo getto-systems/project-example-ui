@@ -1,6 +1,6 @@
 import { AuthenticateEvent } from "./event"
 
-import { BoardConvertResult } from "../../../../z_getto/board/kernel/data"
+import { BoardConvertResult } from "../../../../z_vendor/getto-application/board/kernel/data"
 import { AuthenticateFields } from "./data"
 
 export interface AuthenticateMethod {

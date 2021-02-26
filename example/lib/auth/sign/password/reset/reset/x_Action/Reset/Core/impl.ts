@@ -1,4 +1,4 @@
-import { ApplicationAbstractStateAction } from "../../../../../../../../z_getto/action/impl"
+import { ApplicationAbstractStateAction } from "../../../../../../../../z_vendor/getto-application/action/impl"
 
 import { reset } from "../../../impl"
 import { getSecureScriptPath } from "../../../../../../common/secureScriptPath/get/impl"
@@ -23,7 +23,7 @@ import { ResetLocationInfo } from "../../../method"
 import { LoadSecureScriptError } from "../../../../../../common/secureScriptPath/get/data"
 import { ResetFields } from "../../../data"
 import { AuthnInfo } from "../../../../../../kernel/authnInfo/kernel/data"
-import { BoardConvertResult } from "../../../../../../../../z_getto/board/kernel/data"
+import { BoardConvertResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
 
 export type CoreInfra = CoreForegroundInfra & CoreBackgroundInfra
 

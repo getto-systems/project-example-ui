@@ -5,9 +5,9 @@ import { storyTemplate } from "../../../../../../../../z_vendor/storybook/preact
 import { ResetPasswordProps, View } from "./Reset"
 
 import { initMockResetPasswordResource } from "../mock"
-import { validateBoardOptions } from "../../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/mock"
+import { validateBoardOptions } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/mock"
 
-import { ValidateBoardState } from "../../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/action"
+import { ValidateBoardState } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/action"
 import { CoreState } from "../Core/action"
 
 const resetOptions = [

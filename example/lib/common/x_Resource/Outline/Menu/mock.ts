@@ -1,4 +1,4 @@
-import { MockPropsPasser } from "../../../../z_getto/action/mock"
+import { MockPropsPasser } from "../../../../z_vendor/getto-application/action/mock"
 
 import { BreadcrumbListMockProps, initMockBreadcrumbListComponent } from "./BreadcrumbList/mock"
 import { initMockMenuComponent, MenuMockProps } from "./Menu/mock"

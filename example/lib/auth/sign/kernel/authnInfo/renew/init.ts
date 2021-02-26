@@ -2,10 +2,10 @@ import { newApiCredentialRepository } from "../../../../../common/apiCredential/
 import { newAuthnInfoRepository } from "../kernel/infra/repository/authnInfo/init"
 import { newRenewAuthnInfoRemote } from "../kernel/infra/remote/renew/init"
 
-import { newClock } from "../../../../../z_getto/infra/clock/main"
-import { delayed } from "../../../../../z_getto/infra/delayed/core"
+import { newClock } from "../../../../../z_vendor/getto-application/infra/clock/main"
+import { delayed } from "../../../../../z_vendor/getto-application/infra/delayed/core"
 
-import { delaySecond, expireMinute } from "../../../../../z_getto/infra/config/infra"
+import { delaySecond, expireMinute } from "../../../../../z_vendor/getto-application/infra/config/infra"
 import { RenewInfra } from "./infra"
 
 export function newRenewInfra(webStorage: Storage): RenewInfra {

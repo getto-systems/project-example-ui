@@ -5,10 +5,10 @@ import { storyTemplate } from "../../../../../../../z_vendor/storybook/preact/st
 import { AuthenticatePasswordProps, View } from "./Authenticate"
 
 import { initMockAuthenticatePasswordResource } from "../mock"
-import { validateBoardOptions } from "../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/mock"
+import { validateBoardOptions } from "../../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/mock"
 
 import { CoreState } from "../Core/action"
-import { ValidateBoardState } from "../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/action"
+import { ValidateBoardState } from "../../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/action"
 
 const authenticateOptions = {
     initial: true,

@@ -1,5 +1,5 @@
-import { TypedStorage } from "../../../../../../../z_getto/storage/typed/infra"
-import { StoreResult } from "../../../../../../../z_getto/storage/infra"
+import { TypedStorage } from "../../../../../../../z_vendor/getto-application/storage/typed/infra"
+import { StoreResult } from "../../../../../../../z_vendor/getto-application/storage/infra"
 import { OutlineMenuExpand, OutlineMenuExpandRepository, OutlineMenuExpandResponse } from "../../../infra"
 
 export type OutlineMenuExpandStorage = Readonly<{

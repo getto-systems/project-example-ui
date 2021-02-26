@@ -1,6 +1,6 @@
-import { initSimulateRemoteAccess } from "../../../../../../../../z_getto/remote/simulate"
+import { initSimulateRemoteAccess } from "../../../../../../../../z_vendor/getto-application/remote/simulate"
 
-import { WaitTime } from "../../../../../../../../z_getto/infra/config/infra"
+import { WaitTime } from "../../../../../../../../z_vendor/getto-application/infra/config/infra"
 import { RequestTokenRemote, RequestTokenSimulator } from "../../../infra"
 
 export function initRequestTokenSimulate(

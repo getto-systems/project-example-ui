@@ -1,10 +1,10 @@
 import { initMockLoginIDBoardFieldAction } from "../../../../../../common/board/loginID/x_Action/LoginID/mock"
 import { initMockPasswordBoardFieldAction } from "../../../../../../common/board/password/x_Action/Password/mock"
-import { initMockValidateBoardAction } from "../../../../../../../../z_getto/board/validateBoard/x_Action/ValidateBoard/mock"
+import { initMockValidateBoardAction } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/mock"
 
 import { FormAction } from "./action"
 
-import { emptyBoardValue } from "../../../../../../../../z_getto/board/kernel/data"
+import { emptyBoardValue } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
 
 export function initMockFormAction(): FormAction {
     return {

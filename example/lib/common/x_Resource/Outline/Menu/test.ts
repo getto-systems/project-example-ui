@@ -12,7 +12,7 @@ import {
 } from "../../../../auth/permission/outline/load/infra"
 import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"
 import { initMemoryOutlineMenuExpandRepository } from "../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/memory"
-import { initAsyncActionTester_legacy } from "../../../../z_getto/action/testHelper"
+import { initAsyncActionTester_legacy } from "../../../../z_vendor/getto-application/action/testHelper"
 import { markApiNonce, markApiRoles } from "../../../apiCredential/data"
 import { ApiCredentialRepository } from "../../../apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../apiCredential/infra/repository/memory"

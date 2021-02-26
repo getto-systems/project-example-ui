@@ -5,7 +5,7 @@ import { storyTemplate } from "../../../z_vendor/storybook/preact/story"
 
 import { Example } from "./Example"
 
-import { initMockPropsPasser } from "../../../z_getto/action/mock"
+import { initMockPropsPasser } from "../../../z_vendor/getto-application/action/mock"
 import {
     ExampleMockProps,
     initMockExampleComponent,
