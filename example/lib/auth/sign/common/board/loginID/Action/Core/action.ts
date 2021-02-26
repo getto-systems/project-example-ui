@@ -3,16 +3,11 @@ import { InputBoardValueResource } from "../../../../../../../z_vendor/getto-app
 import {
     ValidateBoardFieldAction,
     ValidateBoardFieldState,
-} from "../../../../../../../z_vendor/getto-application/board/validateField/x_Action/ValidateField/action"
+} from "../../../../../../../z_vendor/getto-application/board/validateField/Action/Core/action"
 
-import { LoginID } from "../../../../loginID/data"
-import { ValidateLoginIDError } from "./data"
+import { LoginID, ValidateLoginIDError } from "../../../../loginID/data"
 
-export type LoginIDBoardFieldResource = Readonly<{
-    field: LoginIDBoardFieldAction
-}>
-
-export interface LoginIDBoardFieldAction extends ApplicationAction {
+export interface InputLoginIDAction extends ApplicationAction {
     readonly resource: InputBoardValueResource
     readonly validate: ValidateLoginIDAction
     readonly clear: ClearAction

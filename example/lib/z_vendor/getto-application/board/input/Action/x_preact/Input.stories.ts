@@ -4,7 +4,7 @@ import { enumKeys, storyTemplate } from "../../../../../storybook/preact/story"
 
 import { InputBoard, InputBoardProps } from "./Input"
 
-import { initMockInputBoardValueAction } from "../Core/impl"
+import { initMockInputBoardValueAction } from "../Core/mock"
 
 import { markBoardValue } from "../../../kernel/data"
 import { InputBoardValueType, InputBoardValueTypeEnum } from "../../data"

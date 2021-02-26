@@ -1,9 +1,7 @@
-import { newBoardValidateStack } from "../../../../../../../../z_vendor/getto-application/board/kernel/infra/stack"
+import { initValidateBoardInfra } from "../../../../../../../../z_vendor/getto-application/board/kernel/impl"
 
-import { initLoginIDBoardFieldAction } from "../../../../../../common/board/loginID/x_Action/LoginID/impl"
+import { initInputLoginIDAction } from "../../../../../../common/board/loginID/Action/Core/impl"
 import { initValidateBoardAction } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/impl"
-
-import { ValidateBoardInfra } from "../../../../../../../../z_vendor/getto-application/board/kernel/infra"
 
 import { FormAction } from "./action"
 
@@ -11,8 +9,8 @@ import { BoardConvertResult } from "../../../../../../../../z_vendor/getto-appli
 import { RequestTokenFields } from "../../../data"
 
 export function initFormAction(): FormAction {
-    const infra: ValidateBoardInfra = { stack: newBoardValidateStack() }
-    const loginID = initLoginIDBoardFieldAction({ name: "loginID" }, infra)
+    const infra = initValidateBoardInfra()
+    const loginID = initInputLoginIDAction(infra)
     const validate = initValidateBoardAction(
         {
             fields: [loginID.validate.name],
@@ -31,10 +29,8 @@ export function initFormAction(): FormAction {
     }
 
     function converter(): BoardConvertResult<RequestTokenFields> {
-        loginID.validate.check()
-
         const loginIDResult = loginID.validate.get()
-        if (!loginIDResult.success) {
+        if (!loginIDResult.valid) {
             return { success: false }
         }
         return {

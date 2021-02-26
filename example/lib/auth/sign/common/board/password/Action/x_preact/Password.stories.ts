@@ -1,40 +1,47 @@
 import { h } from "preact"
 
-import { storyTemplate } from "../../../../../../../../z_vendor/storybook/preact/story"
+import { enumKeys, storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
 
-import { PasswordBoardFieldProps, View } from "./Password"
+import { InputPasswordProps, View } from "./Password"
 
-import { initMockPasswordBoardFieldAction } from "../mock"
+import { initMockInputPasswordAction } from "../Core/mock"
 
-import { ValidatePasswordState } from "../action"
+import { ValidatePasswordState } from "../Core/action"
 
-import { markBoardValue } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
+import { markBoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { PasswordCharacterState } from "../data"
 
-const typeOptions = ["valid", "empty", "too-long"] as const
-const characterOptions = ["singleByte", "multiByte"] as const
+enum ValidateEnum {
+    "valid",
+    "empty",
+    "too-long",
+}
+enum CharacterEnum {
+    "singleByte",
+    "multiByte",
+}
 
 export default {
     title: "library/Auth/Common/Board/Password",
     argTypes: {
         validate: {
-            control: { type: "select", options: typeOptions },
+            control: { type: "select", options: enumKeys(ValidateEnum) },
         },
         character: {
-            control: { type: "select", options: characterOptions },
+            control: { type: "select", options: enumKeys(CharacterEnum) },
         },
     },
 }
 
 type Props = Readonly<{
     password: string
-    validate: "valid" | "empty" | "too-long"
-    character: "singleByte" | "multiByte"
+    validate: keyof typeof ValidateEnum
+    character: keyof typeof CharacterEnum
     help: string
 }>
 const template = storyTemplate<Props>((props) => {
-    return h(View, <PasswordBoardFieldProps>{
-        field: initMockPasswordBoardFieldAction(markBoardValue(props.password), characterState()),
+    return h(View, <InputPasswordProps>{
+        field: initMockInputPasswordAction(markBoardValue(props.password), characterState()),
         help: [props.help],
         state: validateState(),
     })

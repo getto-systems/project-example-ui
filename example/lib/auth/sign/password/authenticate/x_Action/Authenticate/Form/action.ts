@@ -1,13 +1,13 @@
 import { ApplicationAction } from "../../../../../../../z_vendor/getto-application/action/action"
 import { ValidateBoardAction } from "../../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/action"
-import { LoginIDBoardFieldAction } from "../../../../../common/board/loginID/x_Action/LoginID/action"
-import { PasswordBoardFieldAction } from "../../../../../common/board/password/x_Action/Password/action"
+import { InputLoginIDAction } from "../../../../../common/board/loginID/Action/Core/action"
+import { InputPasswordAction } from "../../../../../common/board/password/Action/Core/action"
 
 import { AuthenticateFields } from "../../../data"
 
 export interface FormAction extends ApplicationAction {
-    readonly loginID: LoginIDBoardFieldAction
-    readonly password: PasswordBoardFieldAction
+    readonly loginID: InputLoginIDAction
+    readonly password: InputPasswordAction
     readonly validate: ValidateAuthenticateAction
     readonly clear: ClearAction
 }

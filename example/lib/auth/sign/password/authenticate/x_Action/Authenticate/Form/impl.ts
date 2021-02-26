@@ -1,11 +1,8 @@
-import { newBoardValidateStack } from "../../../../../../../z_vendor/getto-application/board/kernel/infra/stack"
+import { initValidateBoardInfra } from "../../../../../../../z_vendor/getto-application/board/kernel/impl"
 
-import { initLoginIDBoardFieldAction } from "../../../../../common/board/loginID/x_Action/LoginID/impl"
-import { initPasswordBoardFieldAction } from "../../../../../common/board/password/x_Action/Password/impl"
-
+import { initInputLoginIDAction } from "../../../../../common/board/loginID/Action/Core/impl"
+import { initInputPasswordAction } from "../../../../../common/board/password/Action/Core/impl"
 import { initValidateBoardAction } from "../../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/impl"
-
-import { ValidateBoardInfra } from "../../../../../../../z_vendor/getto-application/board/kernel/infra"
 
 import { FormAction } from "./action"
 
@@ -13,9 +10,9 @@ import { BoardConvertResult } from "../../../../../../../z_vendor/getto-applicat
 import { AuthenticateFields } from "../../../data"
 
 export function initFormAction(): FormAction {
-    const infra: ValidateBoardInfra = { stack: newBoardValidateStack() }
-    const loginID = initLoginIDBoardFieldAction({ name: "loginID" }, infra)
-    const password = initPasswordBoardFieldAction({ name: "password" }, infra)
+    const infra = initValidateBoardInfra()
+    const loginID = initInputLoginIDAction(infra)
+    const password = initInputPasswordAction(infra)
 
     const validate = initValidateBoardAction(
         {
@@ -44,12 +41,9 @@ export function initFormAction(): FormAction {
     }
 
     function converter(): BoardConvertResult<AuthenticateFields> {
-        loginID.validate.check()
-        password.validate.check()
-
         const loginIDResult = loginID.validate.get()
         const passwordResult = password.validate.get()
-        if (!loginIDResult.success || !passwordResult.success) {
+        if (!loginIDResult.valid || !passwordResult.valid) {
             return { success: false }
         }
         return {

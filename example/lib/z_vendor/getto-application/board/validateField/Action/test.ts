@@ -1,13 +1,13 @@
-import { initSyncActionTestRunner } from "../../../../action/testHelper"
-import { standardBoardValueStore } from "../../../input/Action/testHelper"
+import { initSyncActionTestRunner } from "../../../action/testHelper"
+import { standardBoardValueStore } from "../../input/Action/testHelper"
 
-import { newBoardValidateStack } from "../../../kernel/infra/stack"
+import { initValidateBoardFieldAction } from "./Core/impl"
 
-import { initValidateBoardFieldAction } from "./impl"
+import { ValidateBoardFieldAction } from "./Core/action"
 
-import { ValidateBoardFieldAction } from "./action"
-
-import { BoardConvertResult, markBoardValue } from "../../../kernel/data"
+import { BoardValue, markBoardValue } from "../../kernel/data"
+import { initValidateBoardInfra } from "../../kernel/impl"
+import { BoardFieldConvertResult } from "../data"
 
 describe("ValidateBoardField", () => {
     test("validate; valid input", (done) => {
@@ -24,7 +24,7 @@ describe("ValidateBoardField", () => {
                 examine: (stack) => {
                     expect(stack).toEqual([{ valid: true }])
                     expect(validateStack.get("field")).toEqual({ found: true, state: true })
-                    expect(action.get()).toEqual({ success: true, value: "valid" })
+                    expect(action.get()).toEqual({ valid: true, value: "valid" })
                 },
             },
         ])
@@ -46,7 +46,7 @@ describe("ValidateBoardField", () => {
                 examine: (stack) => {
                     expect(stack).toEqual([{ valid: false, err: ["empty"] }])
                     expect(validateStack.get("field")).toEqual({ found: true, state: false })
-                    expect(action.get()).toEqual({ success: false })
+                    expect(action.get()).toEqual({ valid: false, err: ["empty"] })
                 },
             },
         ])
@@ -57,24 +57,21 @@ describe("ValidateBoardField", () => {
 
 function standardResource() {
     const store = standardBoardValueStore()
-    const stack = newBoardValidateStack()
+    const infra = initValidateBoardInfra()
 
     const action: ValidateBoardFieldAction<
         FieldValue,
         ValidateError
-    > = initValidateBoardFieldAction({ name: "field", converter, validator }, { stack })
+    > = initValidateBoardFieldAction({ name: "field", getter: () => store.get(), converter }, infra)
 
-    function converter(): BoardConvertResult<FieldValue> {
-        return { success: true, value: store.get() }
-    }
-    function validator(): ValidateError[] {
-        if (store.get() === "") {
-            return ["empty"]
+    function converter(value: BoardValue): BoardFieldConvertResult<FieldValue, ValidateError> {
+        if (value === "") {
+            return { valid: false, err: ["empty"] }
         }
-        return []
+        return { valid: true, value: store.get() }
     }
 
-    return { store, validateStack: stack, action }
+    return { store, validateStack: infra.stack, action }
 }
 
 type FieldValue = string

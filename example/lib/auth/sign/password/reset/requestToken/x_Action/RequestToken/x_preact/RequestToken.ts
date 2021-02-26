@@ -24,7 +24,7 @@ import {
 } from "../action"
 
 import { RequestTokenError } from "../../../data"
-import { LoginIDBoard } from "../../../../../../common/board/loginID/x_Action/LoginID/x_preact/LoginID"
+import { InputLoginID } from "../../../../../../common/board/loginID/Action/x_preact/LoginID"
 
 export function RequestPasswordResetToken(entryPoint: RequestPasswordResetTokenEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
@@ -86,7 +86,7 @@ export function View(props: RequestPasswordResetTokenProps): VNode {
             loginBox(siteInfo(), {
                 title: startSessionTitle(),
                 body: [
-                    h(LoginIDBoard, {
+                    h(InputLoginID, {
                         field: props.requestToken.form.loginID,
                         help: ["このログインIDに設定された送信先にリセットトークンを送信します"],
                     }),

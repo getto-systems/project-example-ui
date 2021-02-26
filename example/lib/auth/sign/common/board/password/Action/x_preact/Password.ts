@@ -1,31 +1,32 @@
 import { h, VNode } from "preact"
 
-import { VNodeContent } from "../../../../../../../../z_vendor/getto-css/preact/common"
+import { VNodeContent } from "../../../../../../../z_vendor/getto-css/preact/common"
 import {
     field,
     field_error,
     label_password_fill,
-} from "../../../../../../../../z_vendor/getto-css/preact/design/form"
+} from "../../../../../../../z_vendor/getto-css/preact/design/form"
 
-import { useApplicationAction } from "../../../../../../../../x_preact/common/hooks"
+import { useApplicationAction } from "../../../../../../../x_preact/common/hooks"
 
-import { InputBoard } from "../../../../../../../../z_vendor/getto-application/board/input/Action/x_preact/Input"
+import { InputBoard } from "../../../../../../../z_vendor/getto-application/board/input/Action/x_preact/Input"
 
-import { PasswordBoardFieldResource, ValidatePasswordState } from "../action"
+import { ValidateBoardFieldState } from "../../../../../../../z_vendor/getto-application/board/validateField/Action/Core/action"
+import { InputPasswordResource, InputPasswordResourceState } from "../action"
 
-import { BoardFieldValidateResult } from "../../../../../../../../z_vendor/getto-application/board/validateField/data"
-import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "../data"
+import { PasswordCharacterState } from "../data"
+import { PASSWORD_MAX_BYTES, ValidatePasswordError } from "../../../../password/data"
 
-type Resource = PasswordBoardFieldResource & Readonly<{ help: VNodeContent[] }>
-export function PasswordBoard(resource: Resource): VNode {
-    return h(View, <PasswordBoardFieldProps>{
+type Resource = InputPasswordResource & Readonly<{ help: VNodeContent[] }>
+export function InputPassword(resource: Resource): VNode {
+    return h(View, <InputPasswordProps>{
         ...resource,
         state: useApplicationAction(resource.field.validate),
     })
 }
 
-export type PasswordBoardFieldProps = Resource & Readonly<{ state: ValidatePasswordState }>
-export function View(props: PasswordBoardFieldProps): VNode {
+export type InputPasswordProps = Resource & InputPasswordResourceState
+export function View(props: InputPasswordProps): VNode {
     return label_password_fill(content())
 
     function content() {
@@ -40,13 +41,13 @@ export function View(props: PasswordBoardFieldProps): VNode {
         } else {
             return field_error({
                 ...content,
-                notice: passwordValidationError(props.state, props.field.passwordCharacter.check()),
+                notice: passwordValidationError(props.state, props.field.checkCharacter()),
             })
         }
     }
 
     function characterHelp(): string {
-        if (props.field.passwordCharacter.check().multiByte) {
+        if (props.field.checkCharacter().multiByte) {
             return "(マルチバイト文字が含まれています)"
         } else {
             return ""
@@ -55,7 +56,7 @@ export function View(props: PasswordBoardFieldProps): VNode {
 }
 
 function passwordValidationError(
-    result: BoardFieldValidateResult<ValidatePasswordError>,
+    result: ValidateBoardFieldState<ValidatePasswordError>,
     character: PasswordCharacterState,
 ): VNodeContent[] {
     if (result.valid) {
