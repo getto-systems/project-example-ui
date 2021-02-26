@@ -7,7 +7,7 @@ import {
 } from "../../../../../../../z_vendor/getto-application/action/testHelper"
 import { ValidatePasswordError } from "./data"
 import { initPasswordBoardFieldAction } from "./impl"
-import { standardBoardValueStore } from "../../../../../../../z_vendor/getto-application/board/input/x_Action/Input/testHelper"
+import { standardBoardValueStore } from "../../../../../../../z_vendor/getto-application/board/input/Action/testHelper"
 
 describe("PasswordBoard", () => {
     test("validate; valid input", () => {
@@ -20,7 +20,7 @@ describe("PasswordBoard", () => {
         resource.validate.subscriber.subscribe(checker.handler)
 
         // valid input
-        resource.input.set(markBoardValue("valid"))
+        resource.resource.input.set(markBoardValue("valid"))
 
         checker.check((stack) => {
             expect(stack).toEqual([{ valid: true }])
@@ -38,7 +38,7 @@ describe("PasswordBoard", () => {
         resource.validate.subscriber.subscribe(checker.handler)
 
         // empty
-        resource.input.set(markBoardValue(""))
+        resource.resource.input.set(markBoardValue(""))
 
         checker.check((stack) => {
             expect(stack).toEqual([{ valid: false, err: ["empty"] }])
@@ -56,7 +56,7 @@ describe("PasswordBoard", () => {
         resource.validate.subscriber.subscribe(checker.handler)
 
         // too-long
-        resource.input.set(markBoardValue("a".repeat(72 + 1)))
+        resource.resource.input.set(markBoardValue("a".repeat(72 + 1)))
 
         checker.check((stack) => {
             expect(stack).toEqual([{ valid: false, err: ["too-long"] }])
@@ -74,7 +74,7 @@ describe("PasswordBoard", () => {
         resource.validate.subscriber.subscribe(checker.handler)
 
         // just max-length
-        resource.input.set(markBoardValue("a".repeat(72)))
+        resource.resource.input.set(markBoardValue("a".repeat(72)))
 
         checker.check((stack) => {
             expect(stack).toEqual([{ valid: true }])
@@ -92,7 +92,7 @@ describe("PasswordBoard", () => {
         resource.validate.subscriber.subscribe(checker.handler)
 
         // too-long : "あ"(UTF8) is 3 bytes character
-        resource.input.set(markBoardValue("あ".repeat(24) + "a"))
+        resource.resource.input.set(markBoardValue("あ".repeat(24) + "a"))
 
         checker.check((stack) => {
             expect(stack).toEqual([{ valid: false, err: ["too-long"] }])
@@ -110,7 +110,7 @@ describe("PasswordBoard", () => {
         resource.validate.subscriber.subscribe(checker.handler)
 
         // just max-length : "あ"(UTF8) is 3 bytes character
-        resource.input.set(markBoardValue("あ".repeat(24)))
+        resource.resource.input.set(markBoardValue("あ".repeat(24)))
 
         checker.check((stack) => {
             expect(stack).toEqual([{ valid: true }])
@@ -121,24 +121,24 @@ describe("PasswordBoard", () => {
     test("password character state : single byte", () => {
         const { resource } = standardResource()
 
-        resource.input.set(markBoardValue("password"))
+        resource.resource.input.set(markBoardValue("password"))
         expect(resource.passwordCharacter.check()).toEqual({ multiByte: false })
     })
 
     test("password character state : multi byte", () => {
         const { resource } = standardResource()
 
-        resource.input.set(markBoardValue("パスワード"))
+        resource.resource.input.set(markBoardValue("パスワード"))
         expect(resource.passwordCharacter.check()).toEqual({ multiByte: true })
     })
 
     test("clear", () => {
         const { resource } = standardResource()
 
-        resource.input.set(markBoardValue("valid"))
+        resource.resource.input.set(markBoardValue("valid"))
         resource.clear()
 
-        expect(resource.input.get()).toEqual("")
+        expect(resource.resource.input.get()).toEqual("")
     })
 
     test("terminate", (done) => {
@@ -148,7 +148,7 @@ describe("PasswordBoard", () => {
             {
                 statement: () => {
                     resource.terminate()
-                    resource.input.set(markBoardValue("valid"))
+                    resource.resource.input.set(markBoardValue("valid"))
                 },
                 examine: (stack) => {
                     // no input/validate event after terminate
@@ -158,7 +158,7 @@ describe("PasswordBoard", () => {
         ])
 
         const handler = runner(done)
-        resource.input.subscribeInputEvent(() => handler(resource.input.get()))
+        resource.resource.input.subscribeInputEvent(() => handler(resource.resource.input.get()))
         resource.validate.subscriber.subscribe(handler)
     })
 })
@@ -167,7 +167,7 @@ function standardResource() {
     const stack = newBoardValidateStack()
 
     const resource = initPasswordBoardFieldAction({ name: "field" }, { stack })
-    resource.input.linkStore(standardBoardValueStore())
+    resource.resource.input.storeLinker.link(standardBoardValueStore())
 
     return { resource }
 }

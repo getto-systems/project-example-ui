@@ -9,7 +9,7 @@ import {
 
 import { useApplicationAction } from "../../../../../../../../x_preact/common/hooks"
 
-import { InputBoard } from "../../../../../../../../z_vendor/getto-application/board/input/x_Action/Input/x_preact/Input"
+import { InputBoard } from "../../../../../../../../z_vendor/getto-application/board/input/Action/x_preact/Input"
 
 import { PasswordBoardFieldResource, ValidatePasswordState } from "../action"
 
@@ -31,7 +31,7 @@ export function View(props: PasswordBoardFieldProps): VNode {
     function content() {
         const content = {
             title: "パスワード",
-            body: h(InputBoard, { type: "password", ...props.field }),
+            body: h(InputBoard, props.field.resource),
             help: [...props.help, characterHelp()],
         }
 

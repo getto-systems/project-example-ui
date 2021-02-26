@@ -1,5 +1,5 @@
 import { initSyncActionTestRunner } from "../../../../action/testHelper"
-import { standardBoardValueStore } from "../../../input/x_Action/Input/testHelper"
+import { standardBoardValueStore } from "../../../input/Action/testHelper"
 
 import { newBoardValidateStack } from "../../../kernel/infra/stack"
 

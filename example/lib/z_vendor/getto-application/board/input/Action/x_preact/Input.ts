@@ -2,9 +2,10 @@ import { VNode } from "preact"
 import { useLayoutEffect, useRef } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { InputBoardValueAction, InputBoardValueResource } from "../action"
+import { InputBoardValueAction } from "../Core/action"
 
-import { BoardValue, emptyBoardValue, markBoardValue } from "../../../../kernel/data"
+import { BoardValue, emptyBoardValue, markBoardValue } from "../../../kernel/data"
+import { InputBoardValueResource } from "../action"
 
 export type InputBoardProps = InputBoardValueResource
 export function InputBoard(props: InputBoardProps): VNode {
@@ -22,23 +23,24 @@ export function InputBoard(props: InputBoardProps): VNode {
 function useBoardValueStore(input: InputBoardValueAction) {
     const REF = useRef<HTMLInputElement>()
     useLayoutEffect(() => {
-        input.linkStore({
-            get,
-            set,
-        })
+        input.storeLinker.link(store())
+        return () => input.storeLinker.unlink()
     }, [])
 
     return REF
 
-    function get() {
-        if (!REF.current) {
-            return emptyBoardValue
+    function store() {
+        return { get, set }
+        function get() {
+            if (!REF.current) {
+                return emptyBoardValue
+            }
+            return markBoardValue(REF.current.value)
         }
-        return markBoardValue(REF.current.value)
-    }
-    function set(value: BoardValue) {
-        if (REF.current) {
-            REF.current.value = value
+        function set(value: BoardValue) {
+            if (REF.current) {
+                REF.current.value = value
+            }
         }
     }
 }

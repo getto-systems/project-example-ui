@@ -1,11 +1,14 @@
+import { initInputBoardValueResource } from "../../../../../../../z_vendor/getto-application/board/input/Action/impl"
 import { initValidateBoardFieldAction } from "../../../../../../../z_vendor/getto-application/board/validateField/x_Action/ValidateField/impl"
-import { newInputBoardValueAction } from "../../../../../../../z_vendor/getto-application/board/input/x_Action/Input/impl"
 
 import { ValidateBoardInfra } from "../../../../../../../z_vendor/getto-application/board/kernel/infra"
 
 import { LoginIDBoardFieldAction } from "./action"
 
-import { BoardConvertResult, BoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
+import {
+    BoardConvertResult,
+    BoardValue,
+} from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { LoginID, markLoginID } from "../../../../loginID/data"
 import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "./data"
 
@@ -17,25 +20,25 @@ export function initLoginIDBoardFieldAction<N extends string>(
     embed: LoginIDBoardEmbed<N>,
     infra: ValidateBoardInfra,
 ): LoginIDBoardFieldAction {
-    const input = newInputBoardValueAction()
+    const resource = initInputBoardValueResource("text")
 
     const validate = initValidateBoardFieldAction(
         {
             name: embed.name,
-            converter: () => convertLoginID(input.get()),
-            validator: () => validateLoginID(input.get()),
+            converter: () => convertLoginID(resource.input.get()),
+            validator: () => validateLoginID(resource.input.get()),
         },
         infra,
     )
 
-    input.subscribeInputEvent(() => validate.check())
+    resource.input.subscribeInputEvent(() => validate.check())
 
     return {
-        input,
+        resource,
         validate,
-        clear: () => input.clear(),
+        clear: () => resource.input.clear(),
         terminate: () => {
-            input.terminate()
+            resource.input.terminate()
             validate.terminate()
         },
     }

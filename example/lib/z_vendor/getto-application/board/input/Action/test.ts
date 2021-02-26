@@ -1,22 +1,22 @@
-import { initSyncActionTestRunner } from "../../../../action/testHelper"
+import { initSyncActionTestRunner } from "../../../action/testHelper"
 import { standardBoardValueStore } from "./testHelper"
 
-import { newInputBoardValueAction } from "./impl"
+import { initInputBoardValueAction } from "./Core/impl"
 
-import { markBoardValue } from "../../../kernel/data"
+import { markBoardValue } from "../../kernel/data"
 
 describe("InputBoardValue", () => {
     test("get / set / clear; store linked", (done) => {
         const { action, store } = standardResource()
 
-        action.linkStore(store)
+        action.storeLinker.link(store)
 
         const runner = initSyncActionTestRunner([
             {
                 statement: () => {
                     action.set(markBoardValue("value"))
                 },
-                examine: (stack: unknown[]) => {
+                examine: (stack) => {
                     expect(stack).toEqual(["value"])
                 },
             },
@@ -24,7 +24,7 @@ describe("InputBoardValue", () => {
                 statement: () => {
                     action.clear()
                 },
-                examine: (stack: unknown[]) => {
+                examine: (stack) => {
                     expect(stack).toEqual([""])
                 },
             },
@@ -58,7 +58,7 @@ describe("InputBoardValue", () => {
     test("terminate", (done) => {
         const { action, store } = standardResource()
 
-        action.linkStore(store)
+        action.storeLinker.link(store)
 
         const runner = initSyncActionTestRunner([
             {
@@ -79,7 +79,7 @@ describe("InputBoardValue", () => {
 })
 
 function standardResource() {
-    const action = newInputBoardValueAction()
+    const action = initInputBoardValueAction()
     const store = standardBoardValueStore()
 
     return { action, store }

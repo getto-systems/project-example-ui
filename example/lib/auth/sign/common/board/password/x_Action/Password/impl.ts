@@ -1,5 +1,5 @@
+import { initInputBoardValueResource } from "../../../../../../../z_vendor/getto-application/board/input/Action/impl"
 import { initValidateBoardFieldAction } from "../../../../../../../z_vendor/getto-application/board/validateField/x_Action/ValidateField/impl"
-import { newInputBoardValueAction } from "../../../../../../../z_vendor/getto-application/board/input/x_Action/Input/impl"
 
 import { checkPasswordCharacter } from "../../checkCharacter/impl"
 
@@ -11,7 +11,10 @@ import {
     PasswordBoardFieldAction,
 } from "./action"
 
-import { BoardConvertResult, BoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
+import {
+    BoardConvertResult,
+    BoardValue,
+} from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { markPassword, Password } from "../../../../password/data"
 import { PasswordCharacterState, PASSWORD_MAX_BYTES, ValidatePasswordError } from "./data"
 
@@ -23,34 +26,34 @@ export function initPasswordBoardFieldAction<N extends string>(
     embed: PasswordBoardEmbed<N>,
     infra: ValidateBoardInfra,
 ): PasswordBoardFieldAction {
-    const input = newInputBoardValueAction()
+    const resource = initInputBoardValueResource("password")
 
     const validate = initValidateBoardFieldAction(
         {
             name: embed.name,
-            validator: () => validatePassword(input.get()),
-            converter: () => convertPassword(input.get()),
+            validator: () => validatePassword(resource.input.get()),
+            converter: () => convertPassword(resource.input.get()),
         },
         infra,
     )
 
-    const clear = () => input.clear()
+    const clear = () => resource.input.clear()
 
-    const passwordCharacter = new CheckAction(() => input.get(), {
+    const passwordCharacter = new CheckAction(() => resource.input.get(), {
         check: checkPasswordCharacter,
     })
 
-    input.subscribeInputEvent(() => {
+    resource.input.subscribeInputEvent(() => {
         validate.check()
     })
 
     return {
-        input,
+        resource,
         validate,
         clear,
         passwordCharacter,
         terminate: () => {
-            input.terminate()
+            resource.input.terminate()
             validate.terminate()
         },
     }

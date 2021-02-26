@@ -25,8 +25,8 @@ export function initFormAction(): FormAction {
         infra,
     )
 
-    loginID.input.subscribeInputEvent(() => validate.check())
-    password.input.subscribeInputEvent(() => validate.check())
+    loginID.resource.input.subscribeInputEvent(() => validate.check())
+    password.resource.input.subscribeInputEvent(() => validate.check())
 
     return {
         loginID,

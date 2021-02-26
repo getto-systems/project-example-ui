@@ -2,7 +2,7 @@ import {
     initSyncActionChecker_simple,
     initSyncActionTestRunner,
 } from "../../../../../../../z_vendor/getto-application/action/testHelper"
-import { standardBoardValueStore } from "../../../../../../../z_vendor/getto-application/board/input/x_Action/Input/testHelper"
+import { standardBoardValueStore } from "../../../../../../../z_vendor/getto-application/board/input/Action/testHelper"
 
 import { newBoardValidateStack } from "../../../../../../../z_vendor/getto-application/board/kernel/infra/stack"
 
@@ -24,7 +24,7 @@ describe("LoginIDBoard", () => {
         resource.validate.subscriber.subscribe(checker.handler)
 
         // valid input
-        resource.input.set(markBoardValue("valid"))
+        resource.resource.input.set(markBoardValue("valid"))
 
         checker.check((stack) => {
             expect(stack).toEqual([{ valid: true }])
@@ -42,7 +42,7 @@ describe("LoginIDBoard", () => {
         resource.validate.subscriber.subscribe(checker.handler)
 
         // empty
-        resource.input.set(markBoardValue(""))
+        resource.resource.input.set(markBoardValue(""))
 
         checker.check((stack) => {
             expect(stack).toEqual([{ valid: false, err: ["empty"] }])
@@ -60,7 +60,7 @@ describe("LoginIDBoard", () => {
         resource.validate.subscriber.subscribe(checker.handler)
 
         // too-long
-        resource.input.set(markBoardValue("a".repeat(100 + 1)))
+        resource.resource.input.set(markBoardValue("a".repeat(100 + 1)))
 
         checker.check((stack) => {
             expect(stack).toEqual([{ valid: false, err: ["too-long"] }])
@@ -78,7 +78,7 @@ describe("LoginIDBoard", () => {
         resource.validate.subscriber.subscribe(checker.handler)
 
         // just max-length
-        resource.input.set(markBoardValue("a".repeat(100)))
+        resource.resource.input.set(markBoardValue("a".repeat(100)))
 
         checker.check((stack) => {
             expect(stack).toEqual([{ valid: true }])
@@ -89,10 +89,10 @@ describe("LoginIDBoard", () => {
     test("clear", () => {
         const { resource } = standardResource()
 
-        resource.input.set(markBoardValue("valid"))
+        resource.resource.input.set(markBoardValue("valid"))
         resource.clear()
 
-        expect(resource.input.get()).toEqual("")
+        expect(resource.resource.input.get()).toEqual("")
     })
 
     test("terminate", (done) => {
@@ -102,7 +102,7 @@ describe("LoginIDBoard", () => {
             {
                 statement: () => {
                     resource.terminate()
-                    resource.input.set(markBoardValue("valid"))
+                    resource.resource.input.set(markBoardValue("valid"))
                 },
                 examine: (stack) => {
                     // no input/validate event after terminate
@@ -112,7 +112,7 @@ describe("LoginIDBoard", () => {
         ])
 
         const handler = runner(done)
-        resource.input.subscribeInputEvent(() => handler(resource.input.get()))
+        resource.resource.input.subscribeInputEvent(() => handler(resource.resource.input.get()))
         resource.validate.subscriber.subscribe(handler)
     })
 })
@@ -121,7 +121,7 @@ function standardResource() {
     const stack = newBoardValidateStack()
 
     const resource = initLoginIDBoardFieldAction({ name: "field" }, { stack })
-    resource.input.linkStore(standardBoardValueStore())
+    resource.resource.input.storeLinker.link(standardBoardValueStore())
 
     return { resource }
 }

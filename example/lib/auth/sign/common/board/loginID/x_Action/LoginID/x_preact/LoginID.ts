@@ -9,7 +9,7 @@ import {
 
 import { useApplicationAction } from "../../../../../../../../x_preact/common/hooks"
 
-import { InputBoard } from "../../../../../../../../z_vendor/getto-application/board/input/x_Action/Input/x_preact/Input"
+import { InputBoard } from "../../../../../../../../z_vendor/getto-application/board/input/Action/x_preact/Input"
 
 import { LoginIDBoardFieldResource, ValidateLoginIDState } from "../action"
 
@@ -31,7 +31,7 @@ export function View(props: LoginIDBoardFieldProps): VNode {
     function content() {
         const content = {
             title: "ログインID",
-            body: h(InputBoard, { type: "text", ...props.field }),
+            body: h(InputBoard, props.field.resource),
             help: props.help,
         }
 
@@ -44,7 +44,7 @@ export function View(props: LoginIDBoardFieldProps): VNode {
 }
 
 function loginIDValidationError(
-    result: BoardFieldValidateResult<ValidateLoginIDError>
+    result: BoardFieldValidateResult<ValidateLoginIDError>,
 ): VNodeContent[] {
     if (result.valid) {
         return []

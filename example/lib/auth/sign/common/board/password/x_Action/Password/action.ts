@@ -1,4 +1,4 @@
-import { InputBoardValueAction } from "../../../../../../../z_vendor/getto-application/board/input/x_Action/Input/action"
+import { InputBoardValueResource } from "../../../../../../../z_vendor/getto-application/board/input/Action/action"
 import {
     ValidateBoardFieldAction,
     ValidateBoardFieldState,
@@ -14,7 +14,7 @@ export type PasswordBoardFieldResource = Readonly<{
 }>
 
 export interface PasswordBoardFieldAction extends ApplicationAction {
-    readonly input: InputBoardValueAction
+    readonly resource: InputBoardValueResource
     readonly validate: ValidatePasswordAction
     readonly clear: ClearAction
     readonly passwordCharacter: CheckPasswordCharacterAction
