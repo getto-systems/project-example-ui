@@ -1,6 +1,7 @@
 import {
+    ClockSubscriber,
     initStaticClock,
-    StaticClock,
+    staticClockPubSub,
 } from "../../../../../../../z_vendor/getto-application/infra/clock/simulate"
 import { initRenewSimulate } from "../../../kernel/infra/remote/renew/simulate"
 
@@ -389,34 +390,38 @@ function standardRenewCredentialResource() {
     const currentURL = standardURL()
     const repository = standardRepository()
     const simulator = standardSimulator()
-    const clock = standardClock()
+    const clockPubSub = staticClockPubSub()
+    const clock = standardClock(clockPubSub)
     const resource = newTestRenewAuthnInfoResource(currentURL, repository, simulator, clock)
 
-    return { repository, clock, resource }
+    return { repository, clock: clockPubSub, resource }
 }
 function instantRenewCredentialResource() {
     const currentURL = standardURL()
     const repository = standardRepository()
     const simulator = standardSimulator()
-    const clock = instantAvailableClock()
+    const clockPubSub = staticClockPubSub()
+    const clock = instantAvailableClock(clockPubSub)
     const resource = newTestRenewAuthnInfoResource(currentURL, repository, simulator, clock)
 
-    return { repository, clock, resource }
+    return { repository, clock: clockPubSub, resource }
 }
 function waitRenewCredentialResource() {
     const currentURL = standardURL()
     const repository = standardRepository()
     const simulator = waitSimulator()
-    const clock = standardClock()
+    const clockPubSub = staticClockPubSub()
+    const clock = standardClock(clockPubSub)
     const resource = newTestRenewAuthnInfoResource(currentURL, repository, simulator, clock)
 
-    return { repository, clock, resource }
+    return { repository, clock: clockPubSub, resource }
 }
 function emptyRenewCredentialResource() {
     const currentURL = standardURL()
     const repository = emptyRepository()
     const simulator = standardSimulator()
-    const clock = standardClock()
+    const clockPubSub = staticClockPubSub()
+    const clock = standardClock(clockPubSub)
     const resource = newTestRenewAuthnInfoResource(currentURL, repository, simulator, clock)
 
     return { repository, resource }
@@ -547,11 +552,11 @@ function renewRemoteAccess(waitTime: WaitTime): RenewRemote {
     }, waitTime)
 }
 
-function standardClock(): StaticClock {
-    return initStaticClock(NOW_INSTANT_LOAD_DISABLED)
+function standardClock(subscriber: ClockSubscriber): Clock {
+    return initStaticClock(NOW_INSTANT_LOAD_DISABLED, subscriber)
 }
-function instantAvailableClock(): StaticClock {
-    return initStaticClock(NOW_INSTANT_LOAD_AVAILABLE)
+function instantAvailableClock(subscriber: ClockSubscriber): Clock {
+    return initStaticClock(NOW_INSTANT_LOAD_AVAILABLE, subscriber)
 }
 
 function expectToSaveRenewed(authnInfos: AuthnInfoRepository) {

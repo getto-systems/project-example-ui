@@ -1,6 +1,6 @@
 import { loadSeason } from "../impl/core"
 
-import { newClock } from "../../../../z_vendor/getto-application/infra/clock/main"
+import { newClock } from "../../../../z_vendor/getto-application/infra/clock/init"
 import { initMemorySeasonRepository } from "../impl/repository/season/memory"
 
 import { SeasonAction } from "../action"

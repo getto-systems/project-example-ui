@@ -1,6 +1,7 @@
 import {
+    ClockSubscriber,
     initStaticClock,
-    StaticClock,
+    staticClockPubSub,
 } from "../../../../../../z_vendor/getto-application/infra/clock/simulate"
 import { initAuthenticateSimulate } from "../../infra/remote/authenticate/simulate"
 import { initRenewSimulate } from "../../../../kernel/authnInfo/kernel/infra/remote/renew/simulate"
@@ -217,19 +218,21 @@ function standardPasswordLoginResource() {
     const currentURL = standardURL()
     const repository = standardRepository()
     const simulator = standardSimulator()
-    const clock = standardClock()
+    const clockPubSub = staticClockPubSub()
+    const clock = standardClock(clockPubSub)
     const resource = newTestPasswordLoginResource(currentURL, repository, simulator, clock)
 
-    return { repository, clock, resource }
+    return { repository, clock: clockPubSub, resource }
 }
 function waitPasswordLoginResource() {
     const currentURL = standardURL()
     const repository = standardRepository()
     const simulator = waitSimulator()
-    const clock = standardClock()
+    const clockPubSub = staticClockPubSub()
+    const clock = standardClock(clockPubSub)
     const resource = newTestPasswordLoginResource(currentURL, repository, simulator, clock)
 
-    return { repository, clock, resource }
+    return { repository, clock: clockPubSub, resource }
 }
 
 type PasswordLoginTestRepository = Readonly<{
@@ -372,8 +375,8 @@ function renewRemoteAccess(): RenewRemote {
     )
 }
 
-function standardClock(): StaticClock {
-    return initStaticClock(NOW)
+function standardClock(subscriber: ClockSubscriber): Clock {
+    return initStaticClock(NOW, subscriber)
 }
 
 function expectToSaveLastAuth(authnInfos: AuthnInfoRepository) {
