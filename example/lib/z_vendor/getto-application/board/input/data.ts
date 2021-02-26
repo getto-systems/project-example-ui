@@ -1,4 +1,4 @@
-export const inputBoardValueTypes = [
+export enum InputBoardValueTypeEnum {
     "text",
     "password",
     "search",
@@ -7,14 +7,5 @@ export const inputBoardValueTypes = [
     "email",
     "date",
     "time",
-] as const
-// variant 追加時 : typeof boardInputTypes[*] からの quick fix で展開できる
-export type InputBoardValueType =
-    | "number"
-    | "text"
-    | "password"
-    | "search"
-    | "tel"
-    | "email"
-    | "date"
-    | "time"
+}
+export type InputBoardValueType = keyof typeof InputBoardValueTypeEnum

@@ -1,11 +1,11 @@
 import { ApplicationAction } from "../../../../../../../../z_vendor/getto-application/action/action"
 import { ValidateBoardAction } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/x_Action/ValidateBoard/action"
-import { LoginIDBoardFieldAction } from "../../../../../../common/board/loginID/x_Action/LoginID/action"
+import { InputLoginIDAction } from "../../../../../../common/board/loginID/Action/Core/action"
 
 import { RequestTokenFields } from "../../../data"
 
 export interface FormAction extends ApplicationAction {
-    readonly loginID: LoginIDBoardFieldAction
+    readonly loginID: InputLoginIDAction
     readonly validate: ValidateRequestTokenAction
     readonly clear: ClearAction
 }

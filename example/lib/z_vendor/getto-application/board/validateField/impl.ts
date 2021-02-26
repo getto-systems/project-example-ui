@@ -1,41 +1,26 @@
 import { ValidateBoardInfra } from "../kernel/infra"
 
-import { ConvertBoardFieldMethod, ValidateBoardFieldMethod } from "./method"
+import { ConvertBoardFieldMethod } from "./method"
 
-import { boardFieldValidateResult } from "./data"
-import { BoardConvertResult } from "../kernel/data"
+import { BoardFieldConvertResult } from "./data"
+import { BoardValue } from "../kernel/data"
 
-export type ValidateBoardFieldEmbed<N extends string, T, E> = ConvertEmbed<T> & ValidateEmbed<N, E>
-type ConvertEmbed<T> = Readonly<{
-    converter: BoardFieldConverter<T>
-}>
-type ValidateEmbed<N extends string, E> = Readonly<{
+export type ValidateBoardFieldEmbed<N extends string, T, E> = Readonly<{
     name: N
-    validator: BoardFieldValidator<E>
+    getter: { (): BoardValue }
+    converter: { (value: BoardValue): BoardFieldConvertResult<T, E> }
 }>
-
-export interface BoardFieldConverter<T> {
-    (): BoardConvertResult<T>
-}
-export interface BoardFieldValidator<E> {
-    (): E[]
-}
 
 interface Convert {
-    <T>(embed: ConvertEmbed<T>): ConvertBoardFieldMethod<T>
-}
-export const convertBoardField: Convert = (embed) => embed.converter
-
-interface Validate {
-    <N extends string, E>(
-        embed: ValidateEmbed<N, E>,
+    <N extends string, T, E>(
+        embed: ValidateBoardFieldEmbed<N, T, E>,
         infra: ValidateBoardInfra,
-    ): ValidateBoardFieldMethod<E>
+    ): ConvertBoardFieldMethod<T, E>
 }
-export const validateBoardField: Validate = (embed, infra) => () => {
-    const { name, validator } = embed
+export const convertBoardField: Convert = (embed, infra) => () => {
+    const { name, getter, converter } = embed
     const { stack } = infra
-    const result = boardFieldValidateResult(validator())
+    const result = converter(getter())
     stack.update(name, result.valid)
     return result
 }

@@ -1,6 +1,6 @@
 import { initSyncActionChecker_simple } from "../../../../action/testHelper"
 import { BoardConvertResult } from "../../../kernel/data"
-import { newBoardValidateStack } from "../../../kernel/infra/stack"
+import { initValidateBoardInfra } from "../../../kernel/impl"
 import { ValidateBoardState } from "./action"
 import { initValidateBoardAction } from "./impl"
 
@@ -76,11 +76,11 @@ describe("ValidateBoard", () => {
 })
 
 function standardResource() {
-    const stack = newBoardValidateStack()
+    const infra = initValidateBoardInfra()
 
-    const action = initValidateBoardAction({ fields: ["name", "value"], converter }, { stack })
+    const action = initValidateBoardAction({ fields: ["name", "value"], converter }, infra)
 
-    return { validateStack: stack, action }
+    return { validateStack: infra.stack, action }
 
     type Fields = Readonly<{ name: string; value: string }>
 

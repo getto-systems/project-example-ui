@@ -20,8 +20,8 @@ import { icon, spinner } from "../../../../../../../x_preact/common/icon"
 import { appendScript } from "../../../../../../../x_preact/auth/Sign/script"
 
 import { ApplicationError } from "../../../../../../../x_preact/common/System/ApplicationError"
-import { LoginIDBoard } from "../../../../../common/board/loginID/x_Action/LoginID/x_preact/LoginID"
-import { PasswordBoard } from "../../../../../common/board/password/x_Action/Password/x_preact/Password"
+import { InputLoginID } from "../../../../../common/board/loginID/Action/x_preact/LoginID"
+import { InputPassword } from "../../../../../common/board/password/Action/x_preact/Password"
 
 import {
     AuthenticatePasswordEntryPoint,
@@ -101,8 +101,8 @@ export function View(props: AuthenticatePasswordProps): VNode {
             loginBox(siteInfo(), {
                 title: authenticateTitle(),
                 body: [
-                    h(LoginIDBoard, { field: props.authenticate.form.loginID, help: [] }),
-                    h(PasswordBoard, { field: props.authenticate.form.password, help: [] }),
+                    h(InputLoginID, { field: props.authenticate.form.loginID, help: [] }),
+                    h(InputPassword, { field: props.authenticate.form.password, help: [] }),
                     buttons({ right: clearButton() }),
                 ],
                 footer: [buttons({ left: button(), right: resetLink() }), error()],

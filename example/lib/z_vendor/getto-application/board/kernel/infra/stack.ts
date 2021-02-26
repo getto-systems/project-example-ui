@@ -1,6 +1,6 @@
 import { BoardValidateStack, BoardValidateStackFound } from "../infra"
 
-export function newBoardValidateStack(): BoardValidateStack {
+export function initBoardValidateStack(): BoardValidateStack {
     return new Stack()
 }
 

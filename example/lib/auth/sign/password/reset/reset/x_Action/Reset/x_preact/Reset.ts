@@ -19,8 +19,8 @@ import { icon, spinner } from "../../../../../../../../x_preact/common/icon"
 import { appendScript } from "../../../../../../../../x_preact/auth/Sign/script"
 
 import { ApplicationError } from "../../../../../../../../x_preact/common/System/ApplicationError"
-import { LoginIDBoard } from "../../../../../../common/board/loginID/x_Action/LoginID/x_preact/LoginID"
-import { PasswordBoard } from "../../../../../../common/board/password/x_Action/Password/x_preact/Password"
+import { InputLoginID } from "../../../../../../common/board/loginID/Action/x_preact/LoginID"
+import { InputPassword } from "../../../../../../common/board/password/Action/x_preact/Password"
 
 import {
     ResetPasswordEntryPoint,
@@ -97,11 +97,11 @@ export function View(props: ResetPasswordProps): VNode {
             loginBox(siteInfo(), {
                 title: resetTitle(),
                 body: [
-                    h(LoginIDBoard, {
+                    h(InputLoginID, {
                         field: props.reset.form.loginID,
                         help: ["最初に入力したログインIDを入力してください"],
                     }),
-                    h(PasswordBoard, {
+                    h(InputPassword, {
                         field: props.reset.form.password,
                         help: ["新しいパスワードを入力してください"],
                     }),
