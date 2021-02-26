@@ -26,7 +26,7 @@ import {
 import { initMemoryAuthnInfoRepository } from "../../../../../kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
 import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
 import { initResetLocationInfo, resetEventHasDone } from "../../impl"
-import { delayed } from "../../../../../../../z_vendor/getto-application/infra/delayed/core"
+import { delayedChecker } from "../../../../../../../z_vendor/getto-application/infra/timer/impl"
 import {
     initAsyncActionTester_legacy,
     initSyncActionTestRunner,
@@ -277,7 +277,7 @@ function newPasswordResetTestResource(
                     reset: {
                         ...remote,
                         config: config.reset,
-                        delayed,
+                        delayed: delayedChecker,
                     },
                 },
                 {

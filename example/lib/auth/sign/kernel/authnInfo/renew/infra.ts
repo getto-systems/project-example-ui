@@ -1,5 +1,5 @@
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
-import { Delayed } from "../../../../../z_vendor/getto-application/infra/delayed/infra"
+import { DelayedChecker } from "../../../../../z_vendor/getto-application/infra/timer/infra"
 import { DelayTime, ExpireTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
 import { AuthnInfoRepository, RenewRemote } from "../kernel/infra"
@@ -9,7 +9,7 @@ export type RenewInfra = Readonly<{
     authnInfos: AuthnInfoRepository
     renew: RenewRemote
     clock: Clock
-    delayed: Delayed
+    delayed: DelayedChecker
     config: Readonly<{
         instantLoadExpire: ExpireTime
         delay: DelayTime

@@ -1,4 +1,4 @@
-import { Delayed } from "../../../../../z_vendor/getto-application/infra/delayed/infra"
+import { DelayedChecker } from "../../../../../z_vendor/getto-application/infra/timer/infra"
 import { Remote, RemoteResult, RemoteSimulator } from "../../../../../z_vendor/getto-application/remote/infra"
 import { DelayTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
 
@@ -7,7 +7,7 @@ import { ResetSessionID } from "../kernel/data"
 
 export type RequestTokenInfra = Readonly<{
     request: RequestTokenRemote
-    delayed: Delayed
+    delayed: DelayedChecker
     config: Readonly<{
         delay: DelayTime
     }>

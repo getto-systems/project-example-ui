@@ -1,4 +1,4 @@
-import { delayed } from "../../../z_vendor/getto-application/infra/delayed/core"
+import { delayedChecker } from "../../../z_vendor/getto-application/infra/timer/impl"
 
 import { find } from "../impl/core"
 
@@ -14,7 +14,7 @@ export function initTestNextVersionAction(
         find: find({
             config: config.find,
             check: remote,
-            delayed,
+            delayed: delayedChecker,
         }),
     }
 }

@@ -3,7 +3,7 @@ import { env } from "../../../../../y_environment/env"
 import { initApiAuthSignResetGetStatus } from "../../../../../z_external/api/auth/sign/reset/getStatus"
 import { initApiAuthSignResetSendToken } from "../../../../../z_external/api/auth/sign/reset/sendToken"
 
-import { wait } from "../../../../../z_vendor/getto-application/infra/delayed/core"
+import { ticker } from "../../../../../z_vendor/getto-application/infra/timer/impl"
 import { initGetSendingStatusConnect } from "./infra/remote/getSendingStatus/connect"
 import { initSendTokenConnect } from "./infra/remote/sendToken/connect"
 
@@ -28,6 +28,6 @@ export function newCheckSendingStatusInfra(): CheckSendingStatusInfra {
             wait: waitSecond(0.25),
             limit: limit(40),
         },
-        wait,
+        wait: ticker,
     }
 }

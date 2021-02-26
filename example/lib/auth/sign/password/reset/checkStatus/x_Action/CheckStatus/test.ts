@@ -3,7 +3,7 @@ import {
     initSyncActionTestRunner,
 } from "../../../../../../../z_vendor/getto-application/action/testHelper"
 import { WaitTime } from "../../../../../../../z_vendor/getto-application/infra/config/infra"
-import { wait } from "../../../../../../../z_vendor/getto-application/infra/delayed/core"
+import { ticker } from "../../../../../../../z_vendor/getto-application/infra/timer/impl"
 import { checkSessionStatusEventHasDone, initCheckSendingStatusLocationInfo } from "../../impl"
 import {
     GetSendingStatusRemote,
@@ -151,7 +151,7 @@ function newTestPasswordResetSessionResource(
             {
                 ...remote,
                 config: config.session.checkStatus,
-                wait,
+                wait: ticker,
             },
             initCheckSendingStatusLocationInfo(currentURL),
         ),
