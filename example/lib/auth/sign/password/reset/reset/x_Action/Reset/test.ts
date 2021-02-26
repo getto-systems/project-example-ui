@@ -1,6 +1,7 @@
 import {
+    ClockSubscriber,
     initStaticClock,
-    StaticClock,
+    staticClockPubSub,
 } from "../../../../../../../z_vendor/getto-application/infra/clock/simulate"
 import { initRenewSimulate } from "../../../../../kernel/authnInfo/kernel/infra/remote/renew/simulate"
 import { initResetSimulate } from "../../infra/remote/reset/simulate"
@@ -217,25 +218,28 @@ function standardPasswordResetResource() {
     const currentURL = standardURL()
     const repository = standardRepository()
     const simulator = standardRemoteAccess()
-    const clock = standardClock()
+    const clockPubSub = staticClockPubSub()
+    const clock = standardClock(clockPubSub)
     const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
 
-    return { repository, clock, resource }
+    return { repository, clock: clockPubSub, resource }
 }
 function waitPasswordResetResource() {
     const currentURL = standardURL()
     const repository = standardRepository()
     const simulator = waitRemoteAccess()
-    const clock = standardClock()
+    const clockPubSub = staticClockPubSub()
+    const clock = standardClock(clockPubSub)
     const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
 
-    return { repository, clock, resource }
+    return { repository, clock: clockPubSub, resource }
 }
 function emptyResetTokenPasswordResetResource() {
     const currentURL = emptyResetTokenURL()
     const repository = standardRepository()
     const simulator = standardRemoteAccess()
-    const clock = standardClock()
+    const clockPubSub = staticClockPubSub()
+    const clock = standardClock(clockPubSub)
     const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
 
     return { repository, resource }
@@ -387,8 +391,8 @@ function renewRemoteAccess(): RenewRemote {
     )
 }
 
-function standardClock(): StaticClock {
-    return initStaticClock(NOW)
+function standardClock(subscriber: ClockSubscriber): Clock {
+    return initStaticClock(NOW, subscriber)
 }
 
 function expectToSaveLastAuth(authnInfos: AuthnInfoRepository) {

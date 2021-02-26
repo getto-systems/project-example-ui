@@ -2,7 +2,7 @@ import { newApiCredentialRepository } from "../../../../../common/apiCredential/
 import { newAuthnInfoRepository } from "../kernel/infra/repository/authnInfo/init"
 import { newRenewAuthnInfoRemote } from "../kernel/infra/remote/renew/init"
 
-import { newClock } from "../../../../../z_vendor/getto-application/infra/clock/main"
+import { newClock } from "../../../../../z_vendor/getto-application/infra/clock/init"
 import { delayed } from "../../../../../z_vendor/getto-application/infra/delayed/core"
 
 import { delaySecond, expireMinute } from "../../../../../z_vendor/getto-application/infra/config/infra"

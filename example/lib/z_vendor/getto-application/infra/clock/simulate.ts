@@ -1,20 +1,34 @@
 import { Clock } from "./infra"
 
-export function initStaticClock(staticNow: Date): StaticClock {
-    return new StaticClock(staticNow)
+export function initStaticClock(initial: Date, subscriber: ClockSubscriber): Clock {
+    let now: Date = initial
+
+    subscriber.subscribe((current: Date) => {
+        now = current
+    })
+
+    return {
+        now: () => now,
+    }
 }
+export function staticClockPubSub(): ClockPubSub {
+    let handlers: Handler[] = []
 
-export class StaticClock implements Clock {
-    staticNow: Date
-
-    constructor(staticNow: Date) {
-        this.staticNow = staticNow
+    return {
+        update: (current: Date) => {
+            handlers.forEach((handler) => handler(current))
+        },
+        subscribe: (handler: Handler) => {
+            handlers = [...handlers, handler]
+        },
     }
-
-    now(): Date {
-        return this.staticNow
-    }
-    update(updatedNow: Date): void {
-        this.staticNow = updatedNow
-    }
+}
+export interface ClockPubSub extends ClockSubscriber {
+    update(current: Date): void
+}
+export interface ClockSubscriber {
+    subscribe(handler: Handler): void
+}
+interface Handler {
+    (current: Date): void
 }
