@@ -104,29 +104,23 @@ describe("RequestPasswordResetToken", () => {
         const { resource } = standardPasswordResetSessionResource()
         const entryPoint = toEntryPoint(resource)
 
-        const subscriber = {
-            core: resource.core.subscriber,
-            form: resource.form.validate.subscriber,
-            loginID: resource.form.loginID.validate.subscriber,
-        }
-
-        const runner = initSyncActionTestRunner()
-
-        runner.addTestCase(
-            () => {
-                entryPoint.terminate()
-                resource.form.loginID.input.set(markBoardValue("login-id"))
+        const runner = initSyncActionTestRunner([
+            {
+                statement: () => {
+                    entryPoint.terminate()
+                    resource.form.loginID.input.set(markBoardValue("login-id"))
+                },
+                examine: (stack) => {
+                    // no input/validate event after terminate
+                    expect(stack).toEqual([])
+                },
             },
-            (stack) => {
-                // no input/validate event after terminate
-                expect(stack).toEqual([])
-            },
-        )
+        ])
 
-        const handler = runner.run(done)
-        subscriber.core.subscribe(handler)
-        subscriber.form.subscribe(handler)
-        subscriber.loginID.subscribe(handler)
+        const handler = runner(done)
+        resource.core.subscriber.subscribe(handler)
+        resource.form.validate.subscriber.subscribe(handler)
+        resource.form.loginID.validate.subscriber.subscribe(handler)
         resource.form.loginID.input.subscribeInputEvent(() => handler("input"))
     })
 })

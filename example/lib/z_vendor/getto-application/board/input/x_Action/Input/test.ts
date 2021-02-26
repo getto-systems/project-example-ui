@@ -3,7 +3,7 @@ import { standardBoardValueStore } from "./testHelper"
 
 import { newInputBoardValueAction } from "./impl"
 
-import { BoardValue, markBoardValue } from "../../../kernel/data"
+import { markBoardValue } from "../../../kernel/data"
 
 describe("InputBoardValue", () => {
     test("get / set / clear; store linked", (done) => {
@@ -11,27 +11,26 @@ describe("InputBoardValue", () => {
 
         action.linkStore(store)
 
-        const checker = initSyncActionTestRunner<BoardValue>()
+        const runner = initSyncActionTestRunner([
+            {
+                statement: () => {
+                    action.set(markBoardValue("value"))
+                },
+                examine: (stack: unknown[]) => {
+                    expect(stack).toEqual(["value"])
+                },
+            },
+            {
+                statement: () => {
+                    action.clear()
+                },
+                examine: (stack: unknown[]) => {
+                    expect(stack).toEqual([""])
+                },
+            },
+        ])
 
-        checker.addTestCase(
-            () => {
-                action.set(markBoardValue("value"))
-            },
-            (stack) => {
-                expect(stack).toEqual(["value"])
-            },
-        )
-
-        checker.addTestCase(
-            () => {
-                action.clear()
-            },
-            (stack) => {
-                expect(stack).toEqual([""])
-            },
-        )
-
-        const handler = checker.run(done)
+        const handler = runner(done)
         action.subscribeInputEvent(() => handler(action.get()))
     })
 
@@ -40,19 +39,19 @@ describe("InputBoardValue", () => {
 
         // no linked store
 
-        const checker = initSyncActionTestRunner<BoardValue>()
-
-        checker.addTestCase(
-            () => {
-                action.set(markBoardValue("value"))
+        const runner = initSyncActionTestRunner([
+            {
+                statement: () => {
+                    action.set(markBoardValue("value"))
+                },
+                examine: (stack) => {
+                    // event triggered, got empty value
+                    expect(stack).toEqual([""])
+                },
             },
-            (stack) => {
-                // event triggered, got empty value
-                expect(stack).toEqual([""])
-            },
-        )
+        ])
 
-        const handler = checker.run(done)
+        const handler = runner(done)
         action.subscribeInputEvent(() => handler(action.get()))
     })
 
@@ -61,20 +60,20 @@ describe("InputBoardValue", () => {
 
         action.linkStore(store)
 
-        const checker = initSyncActionTestRunner<BoardValue>()
-
-        checker.addTestCase(
-            () => {
-                action.terminate()
-                action.set(markBoardValue("value"))
+        const runner = initSyncActionTestRunner([
+            {
+                statement: () => {
+                    action.terminate()
+                    action.set(markBoardValue("value"))
+                },
+                examine: (stack) => {
+                    // no event after terminate
+                    expect(stack).toEqual([])
+                },
             },
-            (stack) => {
-                // no event after terminate
-                expect(stack).toEqual([])
-            },
-        )
+        ])
 
-        const handler = checker.run(done)
+        const handler = runner(done)
         action.subscribeInputEvent(() => handler(action.get()))
     })
 })

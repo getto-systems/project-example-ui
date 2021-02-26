@@ -84,24 +84,23 @@ describe("CheckPasswordResetSendingStatus", () => {
         const { resource } = standardPasswordResetSessionResource()
         const entryPoint = toEntryPoint(resource)
 
-        const runner = initSyncActionTestRunner()
+        const runner = initSyncActionTestRunner([
+            {
+                statement: (check) => {
+                    entryPoint.terminate()
+                    resource.ignite()
 
-        runner.addTestCase(
-            (check) => {
-                entryPoint.terminate()
-                resource.ignite()
-
-                // checkStatus の処理が終わるのを待つ
-                setTimeout(check, 32)
+                    // checkStatus の処理が終わるのを待つ
+                    setTimeout(check, 32)
+                },
+                examine: (stack) => {
+                    // no input/validate event after terminate
+                    expect(stack).toEqual([])
+                },
             },
-            (stack) => {
-                // no input/validate event after terminate
-                expect(stack).toEqual([])
-            },
-        )
+        ])
 
-        const handler = runner.run(done)
-        resource.subscriber.subscribe(handler)
+        resource.subscriber.subscribe(runner(done))
     })
 })
 

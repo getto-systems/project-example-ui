@@ -98,20 +98,20 @@ describe("LoginIDBoard", () => {
     test("terminate", (done) => {
         const { resource } = standardResource()
 
-        const runner = initSyncActionTestRunner()
-
-        runner.addTestCase(
-            () => {
-                resource.terminate()
-                resource.input.set(markBoardValue("valid"))
+        const runner = initSyncActionTestRunner([
+            {
+                statement: () => {
+                    resource.terminate()
+                    resource.input.set(markBoardValue("valid"))
+                },
+                examine: (stack) => {
+                    // no input/validate event after terminate
+                    expect(stack).toEqual([])
+                },
             },
-            (stack) => {
-                // no input/validate event after terminate
-                expect(stack).toEqual([])
-            },
-        )
+        ])
 
-        const handler = runner.run(done)
+        const handler = runner(done)
         resource.input.subscribeInputEvent(() => handler(resource.input.get()))
         resource.validate.subscriber.subscribe(handler)
     })

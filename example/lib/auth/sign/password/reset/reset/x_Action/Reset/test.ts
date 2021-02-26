@@ -1,4 +1,7 @@
-import { initStaticClock, StaticClock } from "../../../../../../../z_vendor/getto-application/infra/clock/simulate"
+import {
+    initStaticClock,
+    StaticClock,
+} from "../../../../../../../z_vendor/getto-application/infra/clock/simulate"
 import { initRenewSimulate } from "../../../../../kernel/authnInfo/kernel/infra/remote/renew/simulate"
 import { initResetSimulate } from "../../infra/remote/reset/simulate"
 
@@ -186,32 +189,25 @@ describe("RegisterPassword", () => {
         const { resource } = standardPasswordResetResource()
         const entryPoint = toEntryPoint(resource)
 
-        const subscriber = {
-            core: resource.core.subscriber,
-            form: resource.form.validate.subscriber,
-            loginID: resource.form.loginID.validate.subscriber,
-            password: resource.form.password.validate.subscriber,
-        }
-
-        const runner = initSyncActionTestRunner()
-
-        runner.addTestCase(
-            () => {
-                entryPoint.terminate()
-                resource.form.loginID.input.set(markBoardValue("login-id"))
-                resource.form.password.input.set(markBoardValue("password"))
+        const runner = initSyncActionTestRunner([
+            {
+                statement: () => {
+                    entryPoint.terminate()
+                    resource.form.loginID.input.set(markBoardValue("login-id"))
+                    resource.form.password.input.set(markBoardValue("password"))
+                },
+                examine: (stack) => {
+                    // no input/validate event after terminate
+                    expect(stack).toEqual([])
+                },
             },
-            (stack) => {
-                // no input/validate event after terminate
-                expect(stack).toEqual([])
-            },
-        )
+        ])
 
-        const handler = runner.run(done)
-        subscriber.core.subscribe(handler)
-        subscriber.form.subscribe(handler)
-        subscriber.loginID.subscribe(handler)
-        subscriber.password.subscribe(handler)
+        const handler = runner(done)
+        resource.core.subscriber.subscribe(handler)
+        resource.form.validate.subscriber.subscribe(handler)
+        resource.form.loginID.validate.subscriber.subscribe(handler)
+        resource.form.password.validate.subscriber.subscribe(handler)
         resource.form.loginID.input.subscribeInputEvent(() => handler("input"))
         resource.form.password.input.subscribeInputEvent(() => handler("input"))
     })
