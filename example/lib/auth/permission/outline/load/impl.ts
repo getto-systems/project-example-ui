@@ -13,6 +13,7 @@ import {
     ToggleOutlineMenuExpand,
     OutlineBreadcrumbListActionInfra,
     OutlineMenuPermission,
+    OutlineMenuBadgeItem,
 } from "./infra"
 
 import {
@@ -36,11 +37,13 @@ import {
     OutlineMenuCategoryLabel,
     markOutlineMenuTarget,
     LoadOutlineMenuBadgeError,
+    LoadOutlineMenuBadgeRemoteError,
 } from "./data"
+import { unwrapRemoteError } from "../../../../z_vendor/getto-application/infra/remote/helper"
 
 export function initOutlineActionLocationInfo(
     version: string,
-    currentURL: URL
+    currentURL: URL,
 ): LoadOutlineActionLocationInfo {
     return {
         getOutlineMenuTarget: () => detectMenuTarget(version, currentURL),
@@ -62,7 +65,7 @@ function detectMenuTarget(version: string, currentURL: URL): OutlineMenuTarget {
 
 export function initOutlineBreadcrumbListAction(
     locationInfo: LoadOutlineActionLocationInfo,
-    infra: OutlineBreadcrumbListActionInfra
+    infra: OutlineBreadcrumbListActionInfra,
 ): LoadOutlineBreadcrumbListAction {
     return {
         loadBreadcrumbList: loadBreadcrumbList(infra)(locationInfo),
@@ -71,7 +74,7 @@ export function initOutlineBreadcrumbListAction(
 
 export function initOutlineMenuAction(
     locationInfo: LoadOutlineActionLocationInfo,
-    infra: OutlineMenuActionInfra
+    infra: OutlineMenuActionInfra,
 ): LoadOutlineMenuAction {
     return {
         loadMenu: loadMenu(infra)(locationInfo),
@@ -116,7 +119,7 @@ const loadBreadcrumbList: LoadOutlineBreadcrumbList = (infra) => (locationInfo) 
         }
         function categoryNode(
             category: OutlineMenuTreeCategory,
-            children: OutlineMenuTree
+            children: OutlineMenuTree,
         ): OutlineBreadcrumbNode[] {
             const breadcrumb = toBreadcrumb(children)
             if (breadcrumb.length === 0) {
@@ -163,13 +166,19 @@ const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
         return
     }
 
-    const menuBadgeResponse = await loadMenuBadge(apiCredentialLoadResult.apiCredential.apiNonce)
+    const menuBadgeResponse = await unwrapRemoteError(
+        loadMenuBadge(apiCredentialLoadResult.apiCredential.apiNonce),
+        infraError,
+    )
     if (!menuBadgeResponse.success) {
         failed(apiRoles, menuExpand, menuBadgeResponse.err)
         return
     }
 
-    post({ type: "succeed-to-load", menu: buildMenu(apiRoles, menuExpand, menuBadgeResponse.value) })
+    post({
+        type: "succeed-to-load",
+        menu: buildMenu(apiRoles, menuExpand, toMenuBadge(menuBadgeResponse.value)),
+    })
 
     function toApiRoles(result: LoadApiCredentialResult) {
         if (result.success && result.found) {
@@ -177,19 +186,32 @@ const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
         }
         return emptyApiRoles()
     }
+    function toMenuBadge(items: OutlineMenuBadgeItem[]): OutlineMenuBadge {
+        return items.reduce((acc, item) => {
+            acc[item.path] = item.count
+            return acc
+        }, <OutlineMenuBadge>{})
+    }
 
     function failed(
         permittedRoles: ApiRoles,
         menuExpand: OutlineMenuExpand,
-        err: LoadOutlineMenuBadgeError
+        err: LoadOutlineMenuBadgeError,
     ): void {
-        post({ type: "failed-to-load", menu: buildMenu(permittedRoles, menuExpand, EMPTY_BADGE), err })
+        post({
+            type: "failed-to-load",
+            menu: buildMenu(permittedRoles, menuExpand, EMPTY_BADGE),
+            err,
+        })
+    }
+    function infraError(err: unknown): LoadOutlineMenuBadgeRemoteError {
+        return { type: "infra-error", err: `${err}` }
     }
 
     function buildMenu(
         permittedRoles: ApiRoles,
         menuExpand: OutlineMenuExpand,
-        menuBadge: OutlineMenuBadge
+        menuBadge: OutlineMenuBadge,
     ): OutlineMenu {
         const { menuTree } = infra
         const menuTarget = locationInfo.getOutlineMenuTarget()
@@ -199,12 +221,15 @@ const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
 
         return toMenu(menuTree, [])
 
-        function toMenu(menuTree: OutlineMenuTree, categoryPath: OutlineMenuCategoryPath): OutlineMenu {
+        function toMenu(
+            menuTree: OutlineMenuTree,
+            categoryPath: OutlineMenuCategoryPath,
+        ): OutlineMenu {
             return menuTree.flatMap((node) => nodes(node, categoryPath))
         }
         function nodes(
             node: OutlineMenuTreeNode,
-            categoryPath: OutlineMenuCategoryPath
+            categoryPath: OutlineMenuCategoryPath,
         ): OutlineMenuNode[] {
             switch (node.type) {
                 case "category":
@@ -219,7 +244,7 @@ const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
         function categoryNode(
             category: OutlineMenuTreeCategory,
             menuTree: OutlineMenuTree,
-            path: OutlineMenuCategoryPath
+            path: OutlineMenuCategoryPath,
         ): OutlineMenuNode[] {
             if (!isAllow(category.permission)) {
                 return EMPTY_MENU
@@ -285,7 +310,7 @@ function toOutlineMenuCategory(category: OutlineMenuTreeCategory): OutlineMenuCa
 }
 function toOutlineMenuItem(
     { label, icon, path }: OutlineMenuTreeItem,
-    version: string
+    version: string,
 ): OutlineMenuItem {
     return markOutlineMenuItem({ label, icon, href: `/${version}${path}` })
 }
@@ -303,7 +328,10 @@ const toggleMenuExpand: ToggleOutlineMenuExpand = (infra) => (menu, path, post) 
 
     post({ type: "succeed-to-toggle", menu: updatedMenu })
 
-    function gatherMenuExpand(target: OutlineMenu, path: OutlineMenuCategoryPath): OutlineMenuExpand {
+    function gatherMenuExpand(
+        target: OutlineMenu,
+        path: OutlineMenuCategoryPath,
+    ): OutlineMenuExpand {
         const expand: OutlineMenuExpand = []
         target.forEach((node) => {
             switch (node.type) {

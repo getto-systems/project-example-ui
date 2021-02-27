@@ -1,8 +1,4 @@
-import {
-    Remote,
-    RemoteResult,
-    RemoteSimulator,
-} from "../../../../z_vendor/getto-application/remote/infra"
+import { RemoteTypes } from "../../../../z_vendor/getto-application/infra/remote/infra"
 import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
 
 import { ApiNonce } from "../../../../common/apiCredential/data"
@@ -27,7 +23,7 @@ export interface LoadOutlineBreadcrumbList {
 }
 
 export type LoadOutlineMenuInfra = Readonly<{
-    loadMenuBadge: LoadOutlineMenuBadgeRemoteAccess
+    loadMenuBadge: LoadOutlineMenuBadgeRemote
     apiCredentials: ApiCredentialRepository
     menuExpands: OutlineMenuExpandRepository
     menuTree: OutlineMenuTree
@@ -124,17 +120,13 @@ export type OutlineMenuExpandResponse =
     | Readonly<{ success: true; menuExpand: OutlineMenuExpand }>
     | Readonly<{ success: false; err: StorageError }>
 
-export type LoadOutlineMenuBadgeRemoteAccess = Remote<
+type LoadOutlineMenuBadgeRemoteTypes = RemoteTypes<
     ApiNonce,
-    OutlineMenuBadge,
+    OutlineMenuBadgeItem[],
     LoadOutlineMenuBadgeRemoteError
 >
-export type LoadOutlineMenuBadgeRemoteAccessResult = RemoteResult<
-    OutlineMenuBadge,
-    LoadOutlineMenuBadgeRemoteError
->
-export type LoadOutlineMenuBadgeSimulator = RemoteSimulator<
-    ApiNonce,
-    OutlineMenuBadge,
-    LoadOutlineMenuBadgeRemoteError
->
+export type LoadOutlineMenuBadgeRemote = LoadOutlineMenuBadgeRemoteTypes["remote"]
+export type LoadOutlineMenuBadgeRemoteResult = LoadOutlineMenuBadgeRemoteTypes["result"]
+export type LoadOutlineMenuBadgeSimulator = LoadOutlineMenuBadgeRemoteTypes["simulator"]
+
+export type OutlineMenuBadgeItem = Readonly<{ path: string; count: number }>

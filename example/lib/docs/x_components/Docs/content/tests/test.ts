@@ -1,7 +1,6 @@
 import { DocumentRemoteAccess, newTestDocumentResource } from "../../EntryPoint/tests/core"
 
 import { initMemoryTypedStorage } from "../../../../../z_vendor/getto-application/storage/typed/memory"
-import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"
 import { initOutlineMenuExpandRepository } from "../../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/core"
 
 import { OutlineMenuTree } from "../../../../../auth/permission/outline/load/infra"
@@ -9,6 +8,7 @@ import { OutlineMenuTree } from "../../../../../auth/permission/outline/load/inf
 import { ContentComponentState } from "../component"
 import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../common/apiCredential/data"
+import { newLoadOutlineMenuBadgeNoopRemote } from "../../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/noop"
 
 describe("Content", () => {
     test("load content", (done) => {
@@ -80,9 +80,7 @@ function standardRepository() {
 
 function standardSimulator(): DocumentRemoteAccess {
     return {
-        loadMenuBadge: initLoadOutlineMenuBadgeSimulateRemoteAccess(() => ({ success: true, value: {} }), {
-            wait_millisecond: 0,
-        }),
+        loadMenuBadge: newLoadOutlineMenuBadgeNoopRemote(),
     }
 }
 

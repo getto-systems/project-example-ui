@@ -1,11 +1,7 @@
-import { initSimulateRemoteAccess } from "../../../../../../../z_vendor/getto-application/remote/simulate"
+import { LoadOutlineMenuBadgeRemote, OutlineMenuBadgeItem } from "../../../infra"
 
-import { OutlineMenuBadge, LoadOutlineMenuBadgeRemoteAccess } from "../../../infra"
-
-export function newLoadOutlineMenuBadgeNoopRemoteAccess(): LoadOutlineMenuBadgeRemoteAccess {
-    return initSimulateRemoteAccess(() => ({ success: true, value: EMPTY_BADGE }), {
-        wait_millisecond: 0,
-    })
+export function newLoadOutlineMenuBadgeNoopRemote(): LoadOutlineMenuBadgeRemote {
+    return async () => ({ success: true, value: EMPTY_BADGE })
 }
 
-const EMPTY_BADGE: OutlineMenuBadge = {}
+const EMPTY_BADGE: OutlineMenuBadgeItem[] = []

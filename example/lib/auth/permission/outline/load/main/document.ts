@@ -1,4 +1,4 @@
-import { newLoadOutlineMenuBadgeNoopRemoteAccess } from "../infra/remote/loadOutlineMenuBadge/noop"
+import { newLoadOutlineMenuBadgeNoopRemote } from "../infra/remote/loadOutlineMenuBadge/noop"
 import { newDocumentOutlineMenuExpandRepository } from "../infra/repository/outlineMenuExpand/main"
 
 import { lnir } from "../../../../../z_external/icon/core"
@@ -18,7 +18,7 @@ export function newDocumentOutlineAction(webStorage: Storage, currentURL: URL): 
             currentURL,
             newDocumentOutlineMenuExpandRepository,
             menuTree,
-            newLoadOutlineMenuBadgeNoopRemoteAccess()
+            newLoadOutlineMenuBadgeNoopRemote()
         ),
     }
 }

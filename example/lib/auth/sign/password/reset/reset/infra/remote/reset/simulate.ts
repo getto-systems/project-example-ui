@@ -1,8 +1,8 @@
-import { initSimulateRemoteAccess } from "../../../../../../../../z_vendor/getto-application/remote/simulate"
+import { initRemoteSimulator } from "../../../../../../../../z_vendor/getto-application/infra/remote/simulate"
 
 import { WaitTime } from "../../../../../../../../z_vendor/getto-application/infra/config/infra"
 import { ResetRemote, ResetSimulator } from "../../../infra"
 
 export function initResetSimulate(simulator: ResetSimulator, time: WaitTime): ResetRemote {
-    return initSimulateRemoteAccess(simulator, time)
+    return initRemoteSimulator(simulator, time)
 }

@@ -2,7 +2,7 @@ import {
     Remote,
     RemoteResult,
     RemoteSimulator,
-} from "../../../../../z_vendor/getto-application/remote/infra"
+} from "../../../../../z_vendor/getto-application/infra/remote/infra"
 import { Limit, WaitTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
 
 import { CheckSendingStatusRemoteError, SendingStatus } from "./data"

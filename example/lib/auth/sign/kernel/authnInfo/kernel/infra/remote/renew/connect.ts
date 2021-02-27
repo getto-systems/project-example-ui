@@ -1,6 +1,6 @@
-import { initConnectRemoteAccess } from "../../../../../../../../z_vendor/getto-application/remote/connect"
+import { initConnectRemoteAccess } from "../../../../../../../../z_vendor/getto-application/infra/remote/connect"
 
-import { RawRemote, RemoteError } from "../../../../../../../../z_vendor/getto-application/remote/infra"
+import { RawRemote, RemoteError } from "../../../../../../../../z_vendor/getto-application/infra/remote/infra"
 import { RenewRemote, RenewResponse } from "../../../infra"
 
 import { markAuthAt, markAuthnNonce, RenewRemoteError, AuthnNonce } from "../../../data"

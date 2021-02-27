@@ -5,8 +5,10 @@ import {
 } from "../../EntryPoint/tests/core"
 
 import { initMemoryTypedStorage } from "../../../../../z_vendor/getto-application/storage/typed/memory"
-import { initStaticClock, staticClockPubSub } from "../../../../../z_vendor/getto-application/infra/clock/simulate"
-import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"
+import {
+    initStaticClock,
+    staticClockPubSub,
+} from "../../../../../z_vendor/getto-application/infra/clock/simulate"
 import { initOutlineMenuExpandRepository } from "../../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/core"
 import { initMemorySeasonRepository } from "../../../../shared/season/impl/repository/season/memory"
 
@@ -16,6 +18,7 @@ import { OutlineMenuTree } from "../../../../../auth/permission/outline/load/inf
 import { ExampleComponentState } from "../component"
 import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../common/apiCredential/data"
+import { newLoadOutlineMenuBadgeNoopRemote } from "../../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/noop"
 
 // デフォルトの season を取得する
 const NOW = new Date("2021-01-01 10:00:00")
@@ -94,9 +97,7 @@ function standardRepository(): DashboardRepository {
 
 function standardSimulator(): DashboardRemoteAccess {
     return {
-        loadMenuBadge: initLoadOutlineMenuBadgeSimulateRemoteAccess(() => ({ success: true, value: {} }), {
-            wait_millisecond: 0,
-        }),
+        loadMenuBadge: newLoadOutlineMenuBadgeNoopRemote(),
     }
 }
 
