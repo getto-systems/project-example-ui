@@ -1,8 +1,6 @@
 import { initSyncActionTestRunner } from "../../../../../../z_vendor/getto-application/action/testHelper"
 import { standardBoardValueStore } from "../../../../../../z_vendor/getto-application/board/input/Action/testHelper"
 
-import { initValidateBoardInfra } from "../../../../../../z_vendor/getto-application/board/kernel/impl"
-
 import { initInputPasswordAction } from "./Core/impl"
 
 import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/data"
@@ -169,7 +167,7 @@ describe("InputPassword", () => {
 })
 
 function standardElements() {
-    const resource = initInputPasswordAction(initValidateBoardInfra())
+    const resource = initInputPasswordAction()
     resource.resource.input.storeLinker.link(standardBoardValueStore())
 
     return { resource }

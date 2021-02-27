@@ -1,14 +1,14 @@
 import { h } from "preact"
 
-import { storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
+import { enumKeys, storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
 
 import { AuthenticatePasswordProps, View } from "./Authenticate"
 
 import { initMockAuthenticatePasswordResource } from "../mock"
-import { validateBoardOptions } from "../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/mock"
 
 import { CoreState } from "../Core/action"
 import { ValidateBoardActionState } from "../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
+import { ValidateBoardStateEnum } from "../../../../../../../z_vendor/getto-application/board/validateBoard/data"
 
 const authenticateOptions = {
     initial: true,
@@ -29,7 +29,7 @@ export default {
             control: { type: "select", options: Object.keys(authenticateOptions) },
         },
         form: {
-            control: { type: "select", options: validateBoardOptions },
+            control: { type: "select", options: enumKeys(ValidateBoardStateEnum) },
         },
     },
 }

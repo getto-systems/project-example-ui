@@ -12,7 +12,13 @@ export interface FormAction extends ApplicationAction {
     readonly clear: ClearAction
 }
 
-export type ValidateAuthenticateAction = ValidateBoardAction<AuthenticateFields>
+export enum AuthenticatePasswordFieldsEnum {
+    "loginID" = "loginID",
+    "password" = "password",
+}
+type Fields = keyof typeof AuthenticatePasswordFieldsEnum
+
+export type ValidateAuthenticateAction = ValidateBoardAction<Fields, AuthenticateFields>
 
 interface ClearAction {
     (): void

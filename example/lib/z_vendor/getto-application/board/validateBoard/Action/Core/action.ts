@@ -1,18 +1,20 @@
 import { ApplicationStateAction } from "../../../../action/action"
 
-import { ConvertBoardMethod, ValidateBoardMethod } from "../../method"
+import { ValidateBoardFieldStateHandler } from "../../../validateField/Action/Core/action"
+
+import { UpdateBoardValidateStateMethod } from "../../method"
 
 import { ValidateBoardState } from "../../data"
 import { ConvertBoardResult } from "../../../kernel/data"
 
-export interface ValidateBoardAction<T> extends ApplicationStateAction<ValidateBoardActionState> {
+export interface ValidateBoardAction<N extends string, T>
+    extends ApplicationStateAction<ValidateBoardActionState> {
+    updateValidateState<E>(name: N): ValidateBoardFieldStateHandler<E>
     get(): ConvertBoardResult<T>
-    check(): void
 }
 
-export type ValidateBoardMaterial<T> = Readonly<{
-    convert: ConvertBoardMethod<T>
-    validate: ValidateBoardMethod
+export type ValidateBoardMaterial<N extends string> = Readonly<{
+    updateValidateState: UpdateBoardValidateStateMethod<N>
 }>
 
 export type ValidateBoardActionState = ValidateBoardState

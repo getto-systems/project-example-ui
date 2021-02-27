@@ -1,10 +1,9 @@
-import { ConvertBoardResult } from "../kernel/data"
 import { ValidateBoardState } from "./data"
 
-export interface ConvertBoardMethod<T> {
-    (): ConvertBoardResult<T>
+export interface UpdateBoardValidateStateMethod<N extends string> {
+    (name: N, valid: boolean, post: Post<ValidateBoardState>): void
 }
 
-export interface ValidateBoardMethod {
-    (): ValidateBoardState
+interface Post<E> {
+    (event: E): void
 }

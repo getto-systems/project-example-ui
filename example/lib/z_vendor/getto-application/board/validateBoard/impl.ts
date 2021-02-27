@@ -1,31 +1,26 @@
-import { ValidateBoardStateFound, ValidateBoardInfra } from "../kernel/infra"
+import { initValidateBoardStack } from "./infra/stack"
 
-import { ConvertBoardMethod, ValidateBoardMethod } from "./method"
+import { ValidateBoardStateFound, ValidateBoardInfra } from "./infra"
 
-import { ConvertBoardResult } from "../kernel/data"
+import { UpdateBoardValidateStateMethod } from "./method"
+
 import { ValidateBoardState } from "./data"
 
-export type ValidateBoardEmbed<N extends string, T> = ConvertEmbed<T> & ValidateEmbed<N>
-
-type ConvertEmbed<T> = Readonly<{
-    converter: { (): ConvertBoardResult<T> }
-}>
-interface Convert {
-    <T>(embed: ConvertEmbed<T>): ConvertBoardMethod<T>
+export function initValidateBoardInfra<N extends string>(fields: N[]): ValidateBoardInfra<N> {
+    return {
+        fields,
+        stack: initValidateBoardStack(),
+    }
 }
-export const convertBoard: Convert = (embed) => embed.converter
 
-type ValidateEmbed<N extends string> = Readonly<{
-    fields: N[]
-}>
-interface Validate {
-    <N extends string>(embed: ValidateEmbed<N>, infra: ValidateBoardInfra): ValidateBoardMethod
+interface UpdateValidateState {
+    <N extends string>(infra: ValidateBoardInfra<N>): UpdateBoardValidateStateMethod<N>
 }
-export const validateBoard: Validate = (embed, infra) => () => {
-    const { fields } = embed
-    const { stack } = infra
+export const updateBoardValidateState: UpdateValidateState = (infra) => (name, valid, post) => {
+    const { fields, stack } = infra
 
-    return compose(fields.map((field) => stack.get(field)))
+    stack.update(name, valid)
+    post(compose(fields.map((field) => stack.get(field))))
 }
 
 function compose(results: ValidateBoardStateFound[]): ValidateBoardState {

@@ -1,8 +1,6 @@
 import { initSyncActionTestRunner } from "../../../../../../z_vendor/getto-application/action/testHelper"
 import { standardBoardValueStore } from "../../../../../../z_vendor/getto-application/board/input/Action/testHelper"
 
-import { initValidateBoardInfra } from "../../../../../../z_vendor/getto-application/board/kernel/impl"
-
 import { initInputLoginIDAction } from "./Core/impl"
 
 import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/data"
@@ -116,7 +114,7 @@ describe("InputLoginID", () => {
 })
 
 function standardElements() {
-    const action = initInputLoginIDAction(initValidateBoardInfra())
+    const action = initInputLoginIDAction()
     action.resource.input.storeLinker.link(standardBoardValueStore())
 
     return { action }

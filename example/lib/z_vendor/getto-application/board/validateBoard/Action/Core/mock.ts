@@ -2,21 +2,19 @@ import { ApplicationMockStateAction } from "../../../../action/impl"
 import { ConvertBoardResult } from "../../../kernel/data"
 import { initialValidateBoardState, ValidateBoardAction, ValidateBoardActionState } from "./action"
 
-export const validateBoardOptions: ValidateBoardActionState[] = ["initial", "valid", "invalid"]
-
-export function initMockValidateBoardAction<T>(): ValidateBoardAction<T> {
+export function initMockValidateBoardAction<N extends string, T>(): ValidateBoardAction<N, T> {
     return new Action()
 }
 
-class Action<T>
+class Action<N extends string, T>
     extends ApplicationMockStateAction<ValidateBoardActionState>
-    implements ValidateBoardAction<T> {
+    implements ValidateBoardAction<N, T> {
     readonly initialState: ValidateBoardActionState = initialValidateBoardState
 
+    updateValidateState() {
+        return () => null
+    }
     get(): ConvertBoardResult<T> {
         return { valid: false }
-    }
-    check() {
-        // mock では特に何もしない
     }
 }
