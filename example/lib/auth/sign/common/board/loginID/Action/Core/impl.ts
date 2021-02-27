@@ -1,23 +1,16 @@
 import { initInputBoardValueResource } from "../../../../../../../z_vendor/getto-application/board/input/Action/impl"
 import { initValidateBoardFieldAction } from "../../../../../../../z_vendor/getto-application/board/validateField/Action/Core/impl"
 
-import { ValidateBoardInfra } from "../../../../../../../z_vendor/getto-application/board/kernel/infra"
-
 import { InputLoginIDAction } from "./action"
 
-import { convertLoginID } from "../../../../loginID/data"
+import { convertLoginIDFromBoardValue } from "../../../../loginID/data"
 
-export function initInputLoginIDAction(infra: ValidateBoardInfra): InputLoginIDAction {
+export function initInputLoginIDAction(): InputLoginIDAction {
     const resource = initInputBoardValueResource("text")
 
-    const validate = initValidateBoardFieldAction(
-        {
-            name: "loginID",
-            getter: () => resource.input.get(),
-            converter: convertLoginID,
-        },
-        infra,
-    )
+    const validate = initValidateBoardFieldAction({
+        converter: () => convertLoginIDFromBoardValue(resource.input.get()),
+    })
 
     resource.input.subscribeInputEvent(() => validate.check())
 

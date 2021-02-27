@@ -1,46 +1,54 @@
 import { ApplicationAbstractStateAction } from "../../../../action/impl"
 
-import { convertBoard, validateBoard, ValidateBoardEmbed } from "../../impl"
+import { initValidateBoardInfra, updateBoardValidateState } from "../../impl"
 
-import { ValidateBoardInfra } from "../../../kernel/infra"
+import { BoardConverter } from "../../infra"
 
-import { initialValidateBoardState, ValidateBoardAction, ValidateBoardMaterial, ValidateBoardActionState } from "./action"
+import {
+    initialValidateBoardState,
+    ValidateBoardAction,
+    ValidateBoardMaterial,
+    ValidateBoardActionState,
+} from "./action"
 
 import { ConvertBoardResult } from "../../../kernel/data"
+import { ValidateBoardFieldStateHandler } from "../../../validateField/Action/Core/action"
 
-export function initValidateBoardAction<N extends string, T>(
-    embed: ValidateBoardEmbed<N, T>,
-    infra: ValidateBoardInfra,
-): ValidateBoardAction<T> {
-    return new Action({
-        convert: convertBoard(embed),
-        validate: validateBoard(embed, infra),
+export type ValidateBoardActionParams<N extends string, T> = Readonly<{
+    fields: N[]
+    converter: BoardConverter<T>
+}>
+export function initValidateBoardAction<N extends string, T>({
+    fields,
+    converter,
+}: ValidateBoardActionParams<N, T>): ValidateBoardAction<N, T> {
+    const infra = initValidateBoardInfra(fields)
+    return new Action(converter, {
+        updateValidateState: updateBoardValidateState(infra),
     })
 }
 
-class Action<T>
+class Action<N extends string, T>
     extends ApplicationAbstractStateAction<ValidateBoardActionState>
-    implements ValidateBoardAction<T> {
+    implements ValidateBoardAction<N, T> {
     readonly initialState: ValidateBoardActionState = initialValidateBoardState
 
-    material: ValidateBoardMaterial<T>
+    converter: BoardConverter<T>
+    material: ValidateBoardMaterial<N>
 
-    constructor(material: ValidateBoardMaterial<T>) {
+    constructor(converter: BoardConverter<T>, material: ValidateBoardMaterial<N>) {
         super()
+        this.converter = converter
         this.material = material
     }
 
-    get(): ConvertBoardResult<T> {
-        switch (this.material.validate()) {
-            case "initial":
-            case "invalid":
-                return { valid: false }
-
-            case "valid":
-                return this.material.convert()
+    updateValidateState<E>(name: N): ValidateBoardFieldStateHandler<E> {
+        return (result) => {
+            this.material.updateValidateState(name, result.valid, this.post)
         }
     }
-    check(): void {
-        this.post(this.material.validate())
+
+    get(): ConvertBoardResult<T> {
+        return this.converter()
     }
 }

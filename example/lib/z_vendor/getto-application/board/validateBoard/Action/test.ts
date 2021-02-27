@@ -1,30 +1,20 @@
 import { initSyncActionTestRunner } from "../../../action/testHelper"
 
-import { initValidateBoardInfra } from "../../kernel/impl"
-
 import { initValidateBoardAction } from "./Core/impl"
-
-import { ConvertBoardResult } from "../../kernel/data"
 
 describe("ValidateBoard", () => {
     test("validate; all valid state", (done) => {
-        const { action, validateStack } = standardResource()
+        const { action, handler } = standardElements()
 
         const runner = initSyncActionTestRunner([
             {
                 statement: () => {
                     // all valid
-                    validateStack.update("name", true)
-                    validateStack.update("value", true)
-
-                    action.check()
+                    handler.name({ valid: true })
+                    handler.description({ valid: true })
                 },
                 examine: (stack) => {
-                    expect(stack).toEqual(["valid"])
-                    expect(action.get()).toEqual({
-                        valid: true,
-                        value: { name: "valid-name", value: "valid-value" },
-                    })
+                    expect(stack).toEqual(["initial", "valid"])
                 },
             },
         ])
@@ -33,19 +23,16 @@ describe("ValidateBoard", () => {
     })
 
     test("validate; invalid exists", (done) => {
-        const { action, validateStack } = standardResource()
+        const { action, handler } = standardElements()
 
         const runner = initSyncActionTestRunner([
             {
                 statement: () => {
-                    validateStack.update("name", false) // invalid
-                    validateStack.update("value", true)
-
-                    action.check()
+                    handler.name({ valid: false, err: ["invalid"] }) // invalid
+                    handler.description({ valid: true })
                 },
                 examine: (stack) => {
-                    expect(stack).toEqual(["invalid"])
-                    expect(action.get()).toEqual({ valid: false })
+                    expect(stack).toEqual(["invalid", "invalid"])
                 },
             },
         ])
@@ -54,19 +41,16 @@ describe("ValidateBoard", () => {
     })
 
     test("validate; initial exists", (done) => {
-        const { action, validateStack } = standardResource()
+        const { action, handler } = standardElements()
 
         const runner = initSyncActionTestRunner([
             {
                 statement: () => {
-                    validateStack.update("name", true)
-                    // validateStack.update("value", true) // initial
-
-                    action.check()
+                    handler.name({ valid: true })
+                    // description: initial state
                 },
                 examine: (stack) => {
                     expect(stack).toEqual(["initial"])
-                    expect(action.get()).toEqual({ valid: false })
                 },
             },
         ])
@@ -74,37 +58,26 @@ describe("ValidateBoard", () => {
         action.subscriber.subscribe(runner(done))
     })
 
-    test("validate; all initial", (done) => {
-        const { action } = standardResource()
+    test("get", () => {
+        const { action } = standardElements()
 
-        const runner = initSyncActionTestRunner([
-            {
-                statement: () => {
-                    // all initial
-
-                    action.check()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual(["initial"])
-                    expect(action.get()).toEqual({ valid: false })
-                },
-            },
-        ])
-
-        action.subscriber.subscribe(runner(done))
+        expect(action.get()).toEqual({
+            valid: true,
+            value: { name: "valid-name", value: "valid-value" },
+        })
     })
 })
 
-function standardResource() {
-    const infra = initValidateBoardInfra()
+function standardElements() {
+    const action = initValidateBoardAction({
+        fields: ["name", "description"],
+        converter: () => ({ valid: true, value: { name: "valid-name", value: "valid-value" } }),
+    })
 
-    const action = initValidateBoardAction({ fields: ["name", "value"], converter }, infra)
-
-    return { validateStack: infra.stack, action }
-
-    type Fields = Readonly<{ name: string; value: string }>
-
-    function converter(): ConvertBoardResult<Fields> {
-        return { valid: true, value: { name: "valid-name", value: "valid-value" } }
+    const handler = {
+        name: action.updateValidateState("name"),
+        description: action.updateValidateState("description"),
     }
+
+    return { action, handler }
 }

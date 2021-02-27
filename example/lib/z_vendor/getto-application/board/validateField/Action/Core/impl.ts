@@ -1,8 +1,6 @@
 import { ApplicationAbstractStateAction } from "../../../../action/impl"
 
-import { convertBoardField, ValidateBoardFieldEmbed } from "../../impl"
-
-import { ValidateBoardInfra } from "../../../kernel/infra"
+import { convertBoardField } from "../../impl"
 
 import {
     ValidateBoardFieldAction,
@@ -11,13 +9,13 @@ import {
 } from "./action"
 
 import { ConvertBoardFieldResult } from "../../data"
+import { ValidateBoardFieldInfra } from "../../infra"
 
-export function initValidateBoardFieldAction<N extends string, T, E>(
-    embed: ValidateBoardFieldEmbed<N, T, E>,
-    infra: ValidateBoardInfra,
+export function initValidateBoardFieldAction<T, E>(
+    infra: ValidateBoardFieldInfra<T, E>,
 ): ValidateBoardFieldAction<T, E> {
-    return new Action(embed.name, {
-        convert: convertBoardField(embed, infra),
+    return new Action({
+        convert: convertBoardField(infra),
     })
 }
 
@@ -26,31 +24,17 @@ class Action<T, E>
     implements ValidateBoardFieldAction<T, E> {
     readonly initialState: ValidateBoardFieldState<E> = { valid: true }
 
-    readonly name: string
     material: ValidateBoardFieldMaterial<T, E>
 
-    constructor(name: string, material: ValidateBoardFieldMaterial<T, E>) {
+    constructor(material: ValidateBoardFieldMaterial<T, E>) {
         super()
-        this.name = name
         this.material = material
     }
 
     get(): ConvertBoardFieldResult<T, E> {
-        const result = this.material.convert()
-        if (!result.valid) {
-            this.post(map(result))
-        }
-        return result
+        return this.material.convert(this.post)
     }
     check(): void {
-        this.post(map(this.material.convert()))
+        this.material.convert(this.post)
     }
-}
-
-function map<T, E>(result: ConvertBoardFieldResult<T, E>): ValidateBoardFieldState<E> {
-    if (result.valid) {
-        // omit value
-        return { valid: true }
-    }
-    return result
 }

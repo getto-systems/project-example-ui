@@ -1,29 +1,23 @@
-import { initValidateBoardInfra } from "../../../../../../../z_vendor/getto-application/board/kernel/impl"
-
 import { initInputLoginIDAction } from "../../../../../common/board/loginID/Action/Core/impl"
 import { initInputPasswordAction } from "../../../../../common/board/password/Action/Core/impl"
 import { initValidateBoardAction } from "../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/impl"
 
-import { FormAction } from "./action"
+import { AuthenticatePasswordFieldsEnum, FormAction } from "./action"
 
 import { ConvertBoardResult } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { AuthenticateFields } from "../../../data"
 
 export function initFormAction(): FormAction {
-    const infra = initValidateBoardInfra()
-    const loginID = initInputLoginIDAction(infra)
-    const password = initInputPasswordAction(infra)
+    const loginID = initInputLoginIDAction()
+    const password = initInputPasswordAction()
 
-    const validate = initValidateBoardAction(
-        {
-            fields: [loginID.validate.name, password.validate.name],
-            converter,
-        },
-        infra,
-    )
+    const validate = initValidateBoardAction({
+        fields: Object.keys(AuthenticatePasswordFieldsEnum),
+        converter,
+    })
 
-    loginID.resource.input.subscribeInputEvent(() => validate.check())
-    password.resource.input.subscribeInputEvent(() => validate.check())
+    loginID.validate.subscriber.subscribe(validate.updateValidateState("loginID"))
+    password.validate.subscriber.subscribe(validate.updateValidateState("password"))
 
     return {
         loginID,
@@ -41,16 +35,18 @@ export function initFormAction(): FormAction {
     }
 
     function converter(): ConvertBoardResult<AuthenticateFields> {
-        const loginIDResult = loginID.validate.get()
-        const passwordResult = password.validate.get()
-        if (!loginIDResult.valid || !passwordResult.valid) {
+        const result = {
+            loginID: loginID.validate.get(),
+            password: password.validate.get()
+        }
+        if (!result.loginID.valid || !result.password.valid) {
             return { valid: false }
         }
         return {
             valid: true,
             value: {
-                loginID: loginIDResult.value,
-                password: passwordResult.value,
+                loginID: result.loginID.value,
+                password: result.password.value,
             },
         }
     }
