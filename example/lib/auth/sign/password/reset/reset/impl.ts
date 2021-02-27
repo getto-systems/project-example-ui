@@ -1,3 +1,5 @@
+import { delayedChecker } from "../../../../../z_vendor/getto-application/infra/timer/helper"
+
 import { ResetInfra } from "./infra"
 
 import { ResetLocationInfo, ResetPod } from "./method"
@@ -36,10 +38,10 @@ export const reset: Reset = (infra) => (locationInfo) => async (fields, post) =>
 
     post({ type: "try-to-reset" })
 
-    const { reset: register, config, delayed } = infra
+    const { reset: register, config } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(
+    const response = await delayedChecker(
         register({ resetToken, fields: fields.value }),
         config.delay,
         () => post({ type: "delayed-to-reset" }),

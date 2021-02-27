@@ -1,5 +1,8 @@
-import { Ticker } from "../../../../../z_vendor/getto-application/infra/timer/infra"
-import { Remote, RemoteResult, RemoteSimulator } from "../../../../../z_vendor/getto-application/remote/infra"
+import {
+    Remote,
+    RemoteResult,
+    RemoteSimulator,
+} from "../../../../../z_vendor/getto-application/remote/infra"
 import { Limit, WaitTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
 
 import { CheckSendingStatusRemoteError, SendingStatus } from "./data"
@@ -8,7 +11,6 @@ import { ResetSessionID } from "../kernel/data"
 export type CheckSendingStatusInfra = Readonly<{
     sendToken: SendTokenRemote
     getStatus: GetSendingStatusRemote
-    wait: Ticker
     config: Readonly<{
         wait: WaitTime
         limit: Limit

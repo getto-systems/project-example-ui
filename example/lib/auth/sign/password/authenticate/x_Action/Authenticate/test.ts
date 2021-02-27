@@ -26,7 +26,7 @@ import {
 } from "../../../../kernel/authnInfo/kernel/infra"
 import { initMemoryAuthnInfoRepository } from "../../../../kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
 import { newGetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/impl"
-import { delayedChecker, ticker } from "../../../../../../z_vendor/getto-application/infra/timer/impl"
+import { ticker } from "../../../../../../z_vendor/getto-application/infra/timer/helper"
 import { authenticateEventHasDone } from "../../impl"
 import {
     initAsyncActionTestRunner,
@@ -267,7 +267,6 @@ function newTestPasswordLoginResource(
                     authenticate: {
                         ...remote,
                         config: config.login,
-                        delayed: delayedChecker,
                     },
                 },
                 newGetSecureScriptPathLocationInfo(currentURL),

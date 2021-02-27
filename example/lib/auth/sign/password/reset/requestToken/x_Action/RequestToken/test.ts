@@ -7,7 +7,6 @@ import { standardBoardValueStore } from "../../../../../../../z_vendor/getto-app
 import { initCoreMaterial, initCoreAction } from "./Core/impl"
 import { initFormAction } from "./Form/impl"
 
-import { delayedChecker } from "../../../../../../../z_vendor/getto-application/infra/timer/impl"
 import { initRequestTokenSimulate } from "../../infra/remote/requestToken/simulate"
 
 import { requestTokenEventHasDone } from "../../impl"
@@ -149,9 +148,8 @@ function newTestPasswordResetSessionResource(
     const action = toAction({
         core: initCoreAction(
             initCoreMaterial({
-                ...remote,
                 config: config.session.request,
-                delayed: delayedChecker,
+                ...remote,
             }),
         ),
 

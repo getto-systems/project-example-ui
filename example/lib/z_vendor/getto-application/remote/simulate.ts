@@ -1,4 +1,4 @@
-import { ticker } from "../infra/timer/impl"
+import { ticker } from "../infra/timer/helper"
 import { WaitTime } from "../infra/config/infra"
 
 import { Remote, RemoteSimulator } from "./infra"
