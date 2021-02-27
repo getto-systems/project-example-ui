@@ -1,3 +1,5 @@
+import { ticker } from "../../../../../z_vendor/getto-application/infra/timer/helper"
+
 import { CheckSendingStatusInfra } from "./infra"
 
 import { CheckSendingStatusLocationInfo, CheckSendingStatusMethodPod } from "./method"
@@ -26,7 +28,7 @@ interface CheckStatus {
     (infra: CheckSendingStatusInfra): CheckSendingStatusMethodPod
 }
 export const checkSendingStatus: CheckStatus = (infra) => (locationInfo) => async (post) => {
-    const { getStatus, sendToken, config, wait } = infra
+    const { getStatus, sendToken, config } = infra
 
     const sessionID = locationInfo.getPasswordResetSessionID()
     if (sessionID.length === 0) {
@@ -77,7 +79,7 @@ export const checkSendingStatus: CheckStatus = (infra) => (locationInfo) => asyn
 
         post({ type: "retry-to-check-status", status: result.status })
 
-        await wait(config.wait, () => true)
+        await ticker(config.wait, () => true)
     }
 
     post({

@@ -15,7 +15,6 @@ import { ApiCredentialRepository } from "../../../../../../../common/apiCredenti
 import { initMemoryApiCredentialRepository } from "../../../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
 import { AuthnInfoRepository, RenewRemote, RenewResult } from "../../../kernel/infra"
-import { delayedChecker } from "../../../../../../../z_vendor/getto-application/infra/timer/impl"
 import { initMemoryAuthnInfoRepository } from "../../../kernel/infra/repository/authnInfo/memory"
 import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
 import { toEntryPoint } from "./impl"
@@ -450,7 +449,6 @@ function newTestRenewAuthnInfoResource(
                         ...repository,
                         ...remote,
                         config: config.renew,
-                        delayed: delayedChecker,
                         clock,
                     },
                     startContinuousRenew: {

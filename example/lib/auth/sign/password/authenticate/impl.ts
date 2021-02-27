@@ -1,3 +1,5 @@
+import { delayedChecker } from "../../../../z_vendor/getto-application/infra/timer/helper"
+
 import { AuthenticateInfra } from "./infra"
 
 import { AuthenticateMethod } from "./method"
@@ -14,10 +16,10 @@ export const authenticate: Authenticate = (infra) => async (fields, post) => {
 
     post({ type: "try-to-login" })
 
-    const { authenticate: login, config, delayed } = infra
+    const { authenticate: login, config } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(login(fields.value), config.delay, () =>
+    const response = await delayedChecker(login(fields.value), config.delay, () =>
         post({ type: "delayed-to-login" }),
     )
     if (!response.success) {

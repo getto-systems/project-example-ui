@@ -1,3 +1,5 @@
+import { delayedChecker } from "../../../../../z_vendor/getto-application/infra/timer/helper"
+
 import { RequestTokenInfra } from "./infra"
 
 import { RequestTokenMethod } from "./method"
@@ -17,10 +19,10 @@ export const requestToken: RequestToken = (infra) => async (fields, post) => {
 
     post({ type: "try-to-request-token" })
 
-    const { request: startSession, config, delayed } = infra
+    const { request: startSession, config } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(startSession(fields.value), config.delay, () =>
+    const response = await delayedChecker(startSession(fields.value), config.delay, () =>
         post({ type: "delayed-to-request-token" }),
     )
     if (!response.success) {

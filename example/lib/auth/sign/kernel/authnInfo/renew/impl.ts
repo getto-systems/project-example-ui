@@ -1,3 +1,5 @@
+import { delayedChecker } from "../../../../../z_vendor/getto-application/infra/timer/helper"
+
 import { StoreResult } from "../../../../../z_vendor/getto-application/storage/infra"
 import { RenewInfra } from "./infra"
 
@@ -56,12 +58,12 @@ function loadLastAuth(
     hook(findResult.lastAuth)
 }
 async function requestRenew(infra: RenewInfra, lastAuth: LastAuth, post: Post<ForceRenewEvent>) {
-    const { apiCredentials, authnInfos, renew, config, delayed } = infra
+    const { apiCredentials, authnInfos, renew, config } = infra
 
     post({ type: "try-to-renew" })
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayed(renew(lastAuth.authnNonce), config.delay, () =>
+    const response = await delayedChecker(renew(lastAuth.authnNonce), config.delay, () =>
         post({ type: "delayed-to-renew" }),
     )
     if (!response.success) {

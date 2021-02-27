@@ -1,6 +1,5 @@
 import { initApiAvailableCheck } from "../../../z_external/api/availability/check"
 
-import { delayedChecker } from "../../../z_vendor/getto-application/infra/timer/impl"
 import { initCheckConnectRemoteAccess } from "../impl/remote/check/connect"
 
 import { find } from "../impl/core"
@@ -14,7 +13,6 @@ export function initNextVersionAction(): NextVersionAction {
                 delay: { delay_millisecond: 300 },
             },
             check: initCheckConnectRemoteAccess(initApiAvailableCheck()),
-            delayed: delayedChecker,
         }),
     }
 }

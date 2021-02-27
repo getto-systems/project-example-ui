@@ -1,6 +1,9 @@
 import { ApiCredential } from "../../../../../common/apiCredential/data"
-import { DelayedChecker } from "../../../../../z_vendor/getto-application/infra/timer/infra"
-import { Remote, RemoteResult, RemoteSimulator } from "../../../../../z_vendor/getto-application/remote/infra"
+import {
+    Remote,
+    RemoteResult,
+    RemoteSimulator,
+} from "../../../../../z_vendor/getto-application/remote/infra"
 import { DelayTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
 import { AuthnInfo } from "../../../kernel/authnInfo/kernel/data"
 
@@ -9,7 +12,6 @@ import { ResetToken } from "../kernel/data"
 
 export type ResetInfra = Readonly<{
     reset: ResetRemote
-    delayed: DelayedChecker
     config: Readonly<{
         delay: DelayTime
     }>

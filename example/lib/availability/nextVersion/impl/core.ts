@@ -1,3 +1,5 @@
+import { delayedChecker } from "../../../z_vendor/getto-application/infra/timer/helper"
+
 import { CheckRemoteAccess, CheckRemoteAccessResult, FindInfra } from "../infra"
 
 import { FindPod } from "../action"
@@ -5,13 +7,13 @@ import { FindPod } from "../action"
 import { markVersion, Version } from "../data"
 
 export const find = (infra: FindInfra): FindPod => (locationInfo) => async (post) => {
-    const { check, config, delayed } = infra
+    const { check, config } = infra
 
     const current = locationInfo.getAppTarget()
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const next = await delayed(findNext(check, current.version), config.delay, () =>
-        post({ type: "delayed-to-find" })
+    const next = await delayedChecker(findNext(check, current.version), config.delay, () =>
+        post({ type: "delayed-to-find" }),
     )
     if (!next.success) {
         post({ type: "failed-to-find", err: { type: "failed-to-check", err: next.err } })
@@ -30,7 +32,10 @@ export const find = (infra: FindInfra): FindPod => (locationInfo) => async (post
     }
 }
 
-async function findNext(check: CheckRemoteAccess, current: Version): Promise<CheckRemoteAccessResult> {
+async function findNext(
+    check: CheckRemoteAccess,
+    current: Version,
+): Promise<CheckRemoteAccessResult> {
     let result = await checkNext(current)
 
     while (result.success && result.value.found) {
