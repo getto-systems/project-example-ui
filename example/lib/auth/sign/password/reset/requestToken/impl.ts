@@ -6,8 +6,9 @@ import { RequestTokenMethod } from "./method"
 
 import { RequestTokenEvent } from "./event"
 
+import { convertResetSessionIDFromRemoteValue } from "../kernel/convert"
+
 import { authSignHref_password_reset_checkStatus } from "../../../common/searchParams/data"
-import { convertResetSessionIDFromRemoteValue } from "../kernel/data"
 
 interface RequestToken {
     (infra: RequestTokenInfra): RequestTokenMethod

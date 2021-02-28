@@ -14,7 +14,7 @@ import { InputBoard } from "../../../../../../../z_vendor/getto-application/boar
 import { ValidateBoardFieldState } from "../../../../../../../z_vendor/getto-application/board/validateField/Action/Core/action"
 import { InputLoginIDResource, InputLoginIDResourceState } from "../action"
 
-import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "../../../../loginID/data"
+import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "../../../../loginID/convert"
 
 type Resource = InputLoginIDResource & Readonly<{ help: VNodeContent[] }>
 export function InputLoginID(resource: Resource): VNode {
