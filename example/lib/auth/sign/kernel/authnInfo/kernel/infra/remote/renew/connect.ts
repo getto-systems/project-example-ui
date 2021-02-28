@@ -4,7 +4,7 @@ import { RawRemote, RemoteError } from "../../../../../../../../z_vendor/getto-a
 import { RenewRemote, RenewResponse } from "../../../infra"
 
 import { markAuthAt, markAuthnNonce, RenewRemoteError, AuthnNonce } from "../../../data"
-import { markApiNonce, markApiRoles } from "../../../../../../../../common/apiCredential/data"
+import { markApiNonce_legacy, markApiRoles_legacy } from "../../../../../../../../common/authz/data"
 
 type Raw = RawRemote<AuthnNonce, RawAuthnInfo>
 type RawAuthnInfo = Readonly<{
@@ -22,8 +22,8 @@ export function initRenewConnect(access: Raw): RenewRemote {
                     authAt: markAuthAt(new Date()),
                 },
                 api: {
-                    apiNonce: markApiNonce(response.api.apiNonce),
-                    apiRoles: markApiRoles(response.api.apiRoles),
+                    nonce: markApiNonce_legacy(response.api.apiNonce),
+                    roles: markApiRoles_legacy(response.api.apiRoles),
                 },
             }
         },

@@ -1,7 +1,7 @@
-import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
+import { AuthzRepository } from "../../../../../common/authz/infra"
 import { AuthnInfoRepository } from "../kernel/infra"
 
 export type ClearInfra = Readonly<{
-    apiCredentials: ApiCredentialRepository
+    authz: AuthzRepository
     authnInfos: AuthnInfoRepository
 }>

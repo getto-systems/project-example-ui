@@ -1,7 +1,7 @@
 #!/bin/sh
 
 protobuf_main(){
-    protobuf_generate_all "example/lib/z_external/converter"
+    protobuf_generate_all "example/lib/z_external/db"
     protobuf_generate_all "example/lib/z_external/api"
 }
 

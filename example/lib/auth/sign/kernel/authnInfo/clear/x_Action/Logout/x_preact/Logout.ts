@@ -11,7 +11,7 @@ import { useApplicationAction } from "../../../../../../../../x_preact/common/ho
 
 import { LogoutResource, LogoutState } from "../action"
 
-import { StorageError } from "../../../../../../../../z_vendor/getto-application/storage/data"
+import { RepositoryError } from "../../../../../../../../z_vendor/getto-application/infra/repository/data"
 
 export function Logout(resource: LogoutResource): VNode {
     return h(View, <LogoutProps>{
@@ -42,7 +42,7 @@ export function View(props: LogoutProps): VNode {
 
     type LogoutBoxContent =
         | Readonly<{ success: true }>
-        | Readonly<{ success: false; err: StorageError }>
+        | Readonly<{ success: false; err: RepositoryError }>
 
     function logoutBox(content: LogoutBoxContent): VNode {
         return box({
@@ -71,7 +71,7 @@ export function View(props: LogoutProps): VNode {
                 ...detail(content.err),
             ]
 
-            function detail(err: StorageError): VNode[] {
+            function detail(err: RepositoryError): VNode[] {
                 if (err.err.length === 0) {
                     return []
                 }

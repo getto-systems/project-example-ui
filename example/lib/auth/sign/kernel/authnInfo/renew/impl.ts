@@ -1,6 +1,6 @@
 import { delayedChecker } from "../../../../../z_vendor/getto-application/infra/timer/helper"
 
-import { StoreResult } from "../../../../../z_vendor/getto-application/storage/infra"
+import { RepositoryStoreResult } from "../../../../../z_vendor/getto-application/infra/repository/infra"
 import { RenewInfra } from "./infra"
 
 import { ForceRenewMethod, RenewMethod } from "./method"
@@ -47,7 +47,7 @@ function loadLastAuth(
 
     const findResult = authnInfos.load()
     if (!findResult.success) {
-        post({ type: "storage-error", err: findResult.err })
+        post({ type: "repository-error", err: findResult.err })
         return
     }
     if (!findResult.found) {
@@ -58,7 +58,7 @@ function loadLastAuth(
     hook(findResult.lastAuth)
 }
 async function requestRenew(infra: RenewInfra, lastAuth: LastAuth, post: Post<ForceRenewEvent>) {
-    const { apiCredentials, authnInfos, renew, config } = infra
+    const { authz, authnInfos, renew, config } = infra
 
     post({ type: "try-to-renew" })
 
@@ -70,7 +70,7 @@ async function requestRenew(infra: RenewInfra, lastAuth: LastAuth, post: Post<Fo
         if (response.err.type === "invalid-ticket") {
             const removeResult = authnInfos.remove()
             if (!removeResult.success) {
-                post({ type: "storage-error", err: removeResult.err })
+                post({ type: "repository-error", err: removeResult.err })
                 return
             }
             post({ type: "required-to-login" })
@@ -83,15 +83,15 @@ async function requestRenew(infra: RenewInfra, lastAuth: LastAuth, post: Post<Fo
     if (!checkStorageError(authnInfos.store(response.value.auth))) {
         return
     }
-    if (!checkStorageError(apiCredentials.store(response.value.api))) {
+    if (!checkStorageError(authz.set(response.value.api))) {
         return
     }
 
     post({ type: "succeed-to-renew", authnInfo: response.value.auth })
 
-    function checkStorageError(result: StoreResult): boolean {
+    function checkStorageError(result: RepositoryStoreResult): boolean {
         if (!result.success) {
-            post({ type: "storage-error", err: result.err })
+            post({ type: "repository-error", err: result.err })
         }
         return result.success
     }

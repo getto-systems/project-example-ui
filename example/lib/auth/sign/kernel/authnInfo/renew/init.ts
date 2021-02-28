@@ -1,5 +1,5 @@
-import { newApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/main"
 import { newAuthnInfoRepository } from "../kernel/infra/repository/authnInfo/init"
+import { newAuthzRepository } from "../../../../../common/authz/infra/repository/authz"
 import { newRenewAuthnInfoRemote } from "../kernel/infra/remote/renew/init"
 
 import { newClock } from "../../../../../z_vendor/getto-application/infra/clock/init"
@@ -12,7 +12,7 @@ import { RenewInfra } from "./infra"
 
 export function newRenewInfra(webStorage: Storage): RenewInfra {
     return {
-        apiCredentials: newApiCredentialRepository(webStorage),
+        authz: newAuthzRepository(webStorage),
         authnInfos: newAuthnInfoRepository(webStorage),
         renew: newRenewAuthnInfoRemote(),
         clock: newClock(),

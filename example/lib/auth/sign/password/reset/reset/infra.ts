@@ -1,4 +1,4 @@
-import { ApiCredential } from "../../../../../common/apiCredential/data"
+import { Authz } from "../../../../../common/authz/data"
 import {
     Remote,
     RemoteResult,
@@ -26,5 +26,5 @@ export type ResetMessage = Readonly<{
 }>
 export type ResetResponse = Readonly<{
     auth: AuthnInfo // TODO キーを authn にする
-    api: ApiCredential // キーを authz にする
+    api: Authz // キーを authz にする
 }>

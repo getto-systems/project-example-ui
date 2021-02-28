@@ -21,6 +21,7 @@ import {
     OutlineMenuCategoryNode,
     OutlineMenuItemNode,
     LoadOutlineMenuBadgeError,
+    FetchAuthzRepositoryError,
 } from "../../../auth/permission/outline/load/data"
 
 export const MENU_ID = "menu"
@@ -42,7 +43,10 @@ export function Menu(resource: Props): VNode {
 
         case "failed-to-load":
         case "failed-to-toggle":
-            return menu([error(state.err), content(state.menu)])
+            return menu([menuBox(error(state.err)), content(state.menu)])
+
+        case "failed-to-fetch-repository":
+            return menu([menuBox(fetchError(state.err))])
     }
 
     function menu(content: VNode[]) {
@@ -114,14 +118,20 @@ function badge(badgeCount: number) {
     return badge_alert(html`${badgeCount}`)
 }
 
-function error(err: LoadOutlineMenuBadgeError): VNode {
-    return menuBox(loadMenuError(err))
-}
-function loadMenuError(err: LoadOutlineMenuBadgeError): VNode[] {
+function fetchError(err: FetchAuthzRepositoryError): VNode[] {
     switch (err.type) {
-        case "empty-nonce":
-            return [notice_alert("認証エラー"), ...detail("もう一度ログインしてください")]
+        case "not-found":
+            return [
+                notice_alert("認証エラー"),
+                html`<small><p>もう一度ログインしてください</p></small>`,
+            ]
 
+        case "infra-error":
+            return [notice_alert("ストレージエラー"), ...errorDetail(err.err)]
+    }
+}
+function error(err: LoadOutlineMenuBadgeError): VNode[] {
+    switch (err.type) {
         case "bad-request":
             return [notice_alert("アプリケーションエラー")]
 
@@ -129,18 +139,17 @@ function loadMenuError(err: LoadOutlineMenuBadgeError): VNode[] {
             return [notice_alert("サーバーエラー")]
 
         case "bad-response":
-            return [notice_alert("レスポンスエラー"), ...detail(err.err)]
+            return [notice_alert("レスポンスエラー"), ...errorDetail(err.err)]
 
         case "infra-error":
-            return [notice_alert("ネットワークエラー"), ...detail(err.err)]
+            return [notice_alert("ネットワークエラー"), ...errorDetail(err.err)]
     }
-
-    function detail(err: string): VNode[] {
-        if (err.length === 0) {
-            return []
-        }
-        return [html`<small><p>詳細: ${err}</p></small>`]
+}
+function errorDetail(err: string): VNode[] {
+    if (err.length === 0) {
+        return []
     }
+    return [html`<small><p>詳細: ${err}</p></small>`]
 }
 
 const EMPTY_CONTENT = html``

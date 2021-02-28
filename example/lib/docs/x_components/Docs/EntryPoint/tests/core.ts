@@ -17,12 +17,12 @@ import {
 
 import { DocumentResource } from "../entryPoint"
 import { initTestContentAction } from "../../../../content/tests/content"
-import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
 import { initUnexpectedErrorAction } from "../../../../../availability/unexpectedError/impl"
 import { initNotifyUnexpectedErrorSimulator } from "../../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/testHelper"
+import { AuthzRepository } from "../../../../../common/authz/infra"
 
 export type DocumentRepository = Readonly<{
-    apiCredentials: ApiCredentialRepository
+    authz: AuthzRepository
     menuExpands: OutlineMenuExpandRepository
 }>
 export type DocumentRemoteAccess = Readonly<{

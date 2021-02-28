@@ -78,7 +78,7 @@ export function View(props: AuthenticatePasswordProps): VNode {
             // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
             return EMPTY_CONTENT
 
-        case "storage-error":
+        case "repository-error":
         case "load-error":
             return h(ApplicationError, { err: props.state.core.err.err })
     }

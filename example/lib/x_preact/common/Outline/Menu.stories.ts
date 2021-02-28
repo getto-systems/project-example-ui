@@ -52,13 +52,14 @@ const template = storyTemplate<MockProps>((args) => {
                     copyright: copyright(),
                 }),
                 menu: h(Menu, menuProps),
-            })
+            }),
         )
     }
 })
 
 export const Success = template({ type: "success", label: "ホーム", badgeCount: 99 })
-export const EmptyNonce = template({ type: "empty-nonce" })
+export const FetchNotFound = template({ type: "fetch-not-found" })
+export const FetchFailed = template({ type: "fetch-failed", err: "fetch error" })
 export const BadRequest = template({ type: "bad-request" })
 export const ServerError = template({ type: "server-error" })
 export const BadResponse = template({ type: "bad-response", err: "response error" })

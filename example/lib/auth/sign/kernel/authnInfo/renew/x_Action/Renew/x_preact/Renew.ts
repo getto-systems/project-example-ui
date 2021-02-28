@@ -83,7 +83,7 @@ export function View(props: RenewAuthnInfoProps): VNode {
         case "failed-to-renew":
             return errorMessage(props.state.err)
 
-        case "storage-error":
+        case "repository-error":
         case "load-error":
             return h(ApplicationError, { err: props.state.err.err })
     }

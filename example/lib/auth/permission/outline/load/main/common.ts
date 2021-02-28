@@ -3,6 +3,8 @@ import { StaticMenuPath } from "../../../../../y_environment/path"
 
 import { Icon, iconClass } from "../../../../../z_external/icon/core"
 
+import { newAuthzRepository } from "../../../../../common/authz/infra/repository/authz"
+
 import {
     LoadOutlineMenuBadgeRemote,
     OutlineMenuExpandRepository,
@@ -16,7 +18,6 @@ import {
     LoadOutlineBreadcrumbListAction,
     LoadOutlineMenuAction,
 } from "../action"
-import { newApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/main"
 import {
     initOutlineMenuAction,
     initOutlineActionLocationInfo,
@@ -41,7 +42,7 @@ export function newOutlineMenuAction(
 ): LoadOutlineMenuAction {
     return initOutlineMenuAction(newLocationInfo(currentURL), {
         loadMenuBadge,
-        apiCredentials: newApiCredentialRepository(webStorage),
+        authz: newAuthzRepository(webStorage),
         menuExpands: newMenuExpandRepository(webStorage),
         menuTree,
     })

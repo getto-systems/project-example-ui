@@ -11,9 +11,6 @@ import { RenewAuthnInfoResource, RenewAuthnInfoResourceState } from "./action"
 
 import { markSecureScriptPath } from "../../../../../common/secureScriptPath/get/data"
 import { markAuthAt, markAuthnNonce } from "../../../kernel/data"
-import { ApiCredentialRepository } from "../../../../../../../common/apiCredential/infra"
-import { initMemoryApiCredentialRepository } from "../../../../../../../common/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
 import { AuthnInfoRepository, RenewRemote, RenewResult } from "../../../kernel/infra"
 import { initMemoryAuthnInfoRepository } from "../../../kernel/infra/repository/authnInfo/memory"
 import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
@@ -21,6 +18,9 @@ import { toEntryPoint } from "./impl"
 import { initCoreAction, initCoreMaterial } from "./Core/impl"
 import { initSyncActionTestRunner } from "../../../../../../../z_vendor/getto-application/action/testHelper"
 import { initMockCoreAction } from "./Core/mock"
+import { initMemoryRepository } from "../../../../../../../z_vendor/getto-application/infra/repository/memory"
+import { AuthzRepository, AuthzRepositoryResponse } from "../../../../../../../common/authz/infra"
+import { markApiNonce_legacy, markApiRoles_legacy } from "../../../../../../../common/authz/data"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
 const STORED_AUTH_AT = new Date("2020-01-01 09:00:00")
@@ -84,7 +84,7 @@ describe("RenewAuthInfo", () => {
                         break
 
                     case "failed-to-renew":
-                    case "storage-error":
+                    case "repository-error":
                     case "load-error":
                         done(new Error(state.type))
                         break
@@ -148,7 +148,7 @@ describe("RenewAuthInfo", () => {
                         break
 
                     case "failed-to-renew":
-                    case "storage-error":
+                    case "repository-error":
                     case "load-error":
                         done(new Error(state.type))
                         break
@@ -203,7 +203,7 @@ describe("RenewAuthInfo", () => {
                         break
 
                     case "failed-to-renew":
-                    case "storage-error":
+                    case "repository-error":
                     case "load-error":
                         done(new Error(state.type))
                         break
@@ -260,7 +260,7 @@ describe("RenewAuthInfo", () => {
                         break
 
                     case "failed-to-renew":
-                    case "storage-error":
+                    case "repository-error":
                     case "load-error":
                         done(new Error(state.type))
                         break
@@ -305,7 +305,7 @@ describe("RenewAuthInfo", () => {
                         break
 
                     case "failed-to-renew":
-                    case "storage-error":
+                    case "repository-error":
                     case "load-error":
                         done(new Error(state.type))
                         break
@@ -344,7 +344,7 @@ describe("RenewAuthInfo", () => {
                         break
 
                     case "failed-to-renew":
-                    case "storage-error":
+                    case "repository-error":
                         done(new Error(state.type))
                         break
 
@@ -427,7 +427,7 @@ function emptyRenewCredentialResource() {
 }
 
 type RenewCredentialTestRepository = Readonly<{
-    apiCredentials: ApiCredentialRepository
+    authz: AuthzRepository
     authnInfos: AuthnInfoRepository
 }>
 type RenewCredentialTestRemoteAccess = Readonly<{
@@ -487,14 +487,14 @@ function standardConfig() {
 }
 
 function standardRepository(): RenewCredentialTestRepository {
+    const authz = initMemoryRepository<AuthzRepositoryResponse>()
+    authz.set({
+        nonce: "api-nonce",
+        roles: ["role"],
+    })
+
     return {
-        apiCredentials: initMemoryApiCredentialRepository({
-            set: true,
-            value: {
-                apiNonce: markApiNonce("api-nonce"),
-                apiRoles: markApiRoles(["role"]),
-            },
-        }),
+        authz,
         authnInfos: initMemoryAuthnInfoRepository({
             authnNonce: { set: true, value: markAuthnNonce(STORED_AUTHN_NONCE) },
             lastAuthAt: { set: true, value: markAuthAt(STORED_AUTH_AT) },
@@ -503,9 +503,7 @@ function standardRepository(): RenewCredentialTestRepository {
 }
 function emptyRepository(): RenewCredentialTestRepository {
     return {
-        apiCredentials: initMemoryApiCredentialRepository({
-            set: false,
-        }),
+        authz: initMemoryRepository<AuthzRepositoryResponse>(),
         authnInfos: initMemoryAuthnInfoRepository({
             authnNonce: { set: false },
             lastAuthAt: { set: false },
@@ -542,8 +540,8 @@ function renewRemoteAccess(waitTime: WaitTime): RenewRemote {
                     authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
                 },
                 api: {
-                    apiNonce: markApiNonce("api-nonce"),
-                    apiRoles: markApiRoles(["role"]),
+                    nonce: markApiNonce_legacy("api-nonce"),
+                    roles: markApiRoles_legacy(["role"]),
                 },
             },
         }

@@ -1,11 +1,11 @@
-import { newApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/main"
+import { newAuthzRepository } from "../../../../../common/authz/infra/repository/authz"
 import { newAuthnInfoRepository } from "../kernel/infra/repository/authnInfo/init"
 
 import { ClearInfra } from "./infra"
 
 export function newClearInfra(webStorage: Storage): ClearInfra {
     return {
-        apiCredentials: newApiCredentialRepository(webStorage),
+        authz: newAuthzRepository(webStorage),
         authnInfos: newAuthnInfoRepository(webStorage),
     }
 }
