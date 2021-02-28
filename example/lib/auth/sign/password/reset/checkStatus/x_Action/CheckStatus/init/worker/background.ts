@@ -1,4 +1,7 @@
-import { checkSessionStatusEventHasDone } from "../../../../impl"
+import {
+    checkSessionStatusEventHasDone,
+    buildCheckSendingStatusLocationInfo,
+} from "../../../../impl"
 
 import { WorkerHandler } from "../../../../../../../../../z_vendor/getto-application/action/worker/background"
 
@@ -15,15 +18,17 @@ export function newCheckPasswordResetSendingStatusWorkerHandler(
     return (message) => {
         switch (message.method) {
             case "checkStatus":
-                pod.initCheckStatus({ getPasswordResetSessionID: () => message.params.sessionID })(
-                    (event) => {
-                        post({
-                            ...message,
-                            done: checkSessionStatusEventHasDone(event),
-                            event,
-                        })
-                    },
-                )
+                pod.initCheckStatus(
+                    buildCheckSendingStatusLocationInfo({
+                        sessionID: () => message.params.sessionID,
+                    }),
+                )((event) => {
+                    post({
+                        ...message,
+                        done: checkSessionStatusEventHasDone(event),
+                        event,
+                    })
+                })
                 return
         }
     }

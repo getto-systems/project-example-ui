@@ -7,20 +7,33 @@ import { CheckSendingStatusLocationInfo, CheckSendingStatusMethodPod } from "./m
 import { CheckSendingStatusEvent } from "./event"
 
 import { CheckSendingStatusError } from "./data"
-import { markResetSessionID, ResetSessionID } from "../kernel/data"
+import { convertResetSessionIDFromLocation, ResetSessionID } from "../kernel/data"
 import { authSignSearchKey_password_reset_sessionID } from "../../../common/searchParams/data"
+import { ConvertLocationResult } from "../../../../../z_vendor/getto-application/location/data"
 
 export function initCheckSendingStatusLocationInfo(
     currentURL: URL,
 ): CheckSendingStatusLocationInfo {
+    return buildCheckSendingStatusLocationInfo({
+        sessionID: () => detectSessionID(currentURL),
+    })
+}
+
+type CheckSendingStatusLocationInfoParams = Readonly<{
+    sessionID: { (): ConvertLocationResult<ResetSessionID> }
+}>
+export function buildCheckSendingStatusLocationInfo(
+    params: CheckSendingStatusLocationInfoParams,
+): CheckSendingStatusLocationInfo {
     return {
-        getPasswordResetSessionID: () => detectSessionID(currentURL),
+        getPasswordResetSessionID: params.sessionID,
     }
 }
 
-function detectSessionID(currentURL: URL): ResetSessionID {
-    return markResetSessionID(
-        currentURL.searchParams.get(authSignSearchKey_password_reset_sessionID()) || "",
+// TODO Location から取得しないといけない
+function detectSessionID(currentURL: URL): ConvertLocationResult<ResetSessionID> {
+    return convertResetSessionIDFromLocation(
+        currentURL.searchParams.get(authSignSearchKey_password_reset_sessionID()),
     )
 }
 
@@ -31,7 +44,7 @@ export const checkSendingStatus: CheckStatus = (infra) => (locationInfo) => asyn
     const { getStatus, sendToken, config } = infra
 
     const sessionID = locationInfo.getPasswordResetSessionID()
-    if (sessionID.length === 0) {
+    if (!sessionID.valid) {
         post({ type: "failed-to-check-status", err: { type: "empty-session-id" } })
         return
     }
@@ -57,7 +70,7 @@ export const checkSendingStatus: CheckStatus = (infra) => (locationInfo) => asyn
             return
         }
 
-        const response = await getStatus(sessionID)
+        const response = await getStatus(sessionID.value)
         if (!response.success) {
             post({ type: "failed-to-check-status", err: response.err })
             return

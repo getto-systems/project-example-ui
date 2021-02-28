@@ -1,3 +1,5 @@
+import { ResetSessionID } from "../../password/reset/kernel/data"
+
 // ログイン前画面ではアンダースコアから始まるクエリを使用する
 const authSignSearchParams = {
     password: {
@@ -30,7 +32,7 @@ function markAuthSignHref(href: string): AuthSignHref {
 export function authSignHref_password_authenticate(): AuthSignHref {
     return searchQuery(authSignSearchParams.password.authenticate, "authenticate", [])
 }
-export function authSignHref_password_reset_checkStatus(sessionID: string): AuthSignHref {
+export function authSignHref_password_reset_checkStatus(sessionID: ResetSessionID): AuthSignHref {
     const search = authSignSearchParams.password.reset
     return searchQuery(search, "checkStatus", [[search.sessionID, sessionID]])
 }
