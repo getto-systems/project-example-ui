@@ -27,12 +27,12 @@ function envContent() {
         apiServerURL: process.env.API_SERVER_URL,
 
         storageKey: {
-            authnNonce: process.env.STORAGE_KEY_AUTHN_NONCE,
-            apiCredential: process.env.STORAGE_KEY_API_CREDENTIAL,
-            lastAuthAt: process.env.STORAGE_KEY_LAST_AUTH_AT,
+            authnNonce: "GETTO-EXAMPLE-AUTHN-NONCE",
+            lastAuthAt: "GETTO-EXAMPLE-AUTHN-LAST-AUTH-AT",
+            authz: "GETTO-EXAMPLE-AUTHZ",
             menuExpand: {
-                main: process.env.STORAGE_KEY_MENU_EXPAND_MAIN,
-                document: process.env.STORAGE_KEY_MENU_EXPAND_DOCUMENT,
+                main: "GETTO-EXAMPLE-MENU-EXPAND-MAIN", // TODO キーに main を使いたくない
+                document: "GETTO-EXAMPLE-MENU-EXPAND-DOCS", // TODO キーを docs にしたい
             },
         },
     }

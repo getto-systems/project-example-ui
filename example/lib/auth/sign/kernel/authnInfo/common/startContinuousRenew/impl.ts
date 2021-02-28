@@ -12,7 +12,7 @@ export const startContinuousRenew: Start = (infra) => (authnInfo, post) => {
 
     const storeResult = authnInfos.store(authnInfo)
     if (!storeResult.success) {
-        post({ type: "storage-error", err: storeResult.err })
+        post({ type: "repository-error", err: storeResult.err })
         return
     }
 
@@ -43,7 +43,7 @@ function start(infra: StartContinuousRenewInfra) {
 
     async function continuousRenew(): Promise<{ next: boolean }> {
         // 継続更新は本体が置き換わってから実行されるので、イベント通知しない
-        const { apiCredentials, authnInfos, renew, clock, config } = infra
+        const { authz, authnInfos, renew, clock, config } = infra
 
         const CANCEL = { next: false }
         const NEXT = { next: true }
@@ -73,7 +73,7 @@ function start(infra: StartContinuousRenewInfra) {
         if (!authnInfos.store(response.value.auth).success) {
             return CANCEL
         }
-        if (!apiCredentials.store(response.value.api).success) {
+        if (!authz.set(response.value.api).success) {
             return CANCEL
         }
 

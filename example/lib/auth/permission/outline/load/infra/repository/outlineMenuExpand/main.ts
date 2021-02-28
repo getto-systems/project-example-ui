@@ -1,6 +1,6 @@
 import { env } from "../../../../../../../y_environment/env"
 
-import { initWebTypedStorage } from "../../../../../../../z_vendor/getto-application/storage/typed/web"
+import { initWebTypedStorage } from "../../../../../../../z_vendor/getto-application/infra/storage/typed/web"
 
 import { initOutlineMenuExpandConverter } from "./converter"
 import { initOutlineMenuExpandRepository } from "./core"

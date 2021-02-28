@@ -2,7 +2,14 @@ import { ApplicationStateAction } from "../../../../../z_vendor/getto-applicatio
 
 import { LoadOutlineMenuAction } from "../../../../../auth/permission/outline/load/action"
 
-import { OutlineMenu, LoadOutlineMenuBadgeError, OutlineMenuCategoryPath } from "../../../../../auth/permission/outline/load/data"
+import {
+    OutlineMenu,
+    OutlineMenuCategoryPath,
+} from "../../../../../auth/permission/outline/load/data"
+import {
+    LoadOutlineMenuEvent,
+    ToggleOutlineMenuExpandEvent,
+} from "../../../../../auth/permission/outline/load/event"
 
 export interface MenuComponentFactory {
     (material: MenuMaterial): MenuComponent
@@ -17,10 +24,7 @@ export interface MenuComponent extends ApplicationStateAction<MenuComponentState
 
 export type MenuComponentState =
     | Readonly<{ type: "initial-menu" }>
-    | Readonly<{ type: "succeed-to-instant-load"; menu: OutlineMenu }>
-    | Readonly<{ type: "succeed-to-load"; menu: OutlineMenu }>
-    | Readonly<{ type: "failed-to-load"; menu: OutlineMenu; err: LoadOutlineMenuBadgeError }>
-    | Readonly<{ type: "succeed-to-toggle"; menu: OutlineMenu }>
-    | Readonly<{ type: "failed-to-toggle"; menu: OutlineMenu; err: LoadOutlineMenuBadgeError }>
+    | LoadOutlineMenuEvent
+    | ToggleOutlineMenuExpandEvent
 
 export const initialMenuComponentState: MenuComponentState = { type: "initial-menu" }

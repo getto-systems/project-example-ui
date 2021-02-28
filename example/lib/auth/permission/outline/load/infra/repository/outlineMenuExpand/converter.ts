@@ -1,4 +1,4 @@
-import { TypedStorageConverter } from "../../../../../../../z_vendor/getto-application/storage/typed/infra"
+import { TypedStorageConverter } from "../../../../../../../z_vendor/getto-application/infra/storage/typed/infra"
 import { OutlineMenuExpand } from "../../../infra"
 
 export function initOutlineMenuExpandConverter(): TypedStorageConverter<OutlineMenuExpand> {

@@ -1,4 +1,4 @@
-import { ApiCredential } from "../../../../common/apiCredential/data"
+import { Authz } from "../../../../common/authz/data"
 import { Remote, RemoteResult, RemoteSimulator } from "../../../../z_vendor/getto-application/infra/remote/infra"
 import { DelayTime } from "../../../../z_vendor/getto-application/infra/config/infra"
 
@@ -26,5 +26,5 @@ export type AuthenticateSimulator = RemoteSimulator<
 >
 export type AuthenticateResponse = Readonly<{
     auth: AuthnInfo
-    api: ApiCredential
+    api: Authz
 }>

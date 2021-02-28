@@ -1,14 +1,14 @@
 import { DocumentRemoteAccess, newTestDocumentResource } from "../../EntryPoint/tests/core"
 
-import { initMemoryTypedStorage } from "../../../../../z_vendor/getto-application/storage/typed/memory"
+import { initMemoryTypedStorage } from "../../../../../z_vendor/getto-application/infra/storage/typed/memory"
 import { initOutlineMenuExpandRepository } from "../../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/core"
 
 import { OutlineMenuTree } from "../../../../../auth/permission/outline/load/infra"
 
 import { ContentComponentState } from "../component"
-import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../../../common/apiCredential/data"
 import { newLoadOutlineMenuBadgeNoopRemote } from "../../../../../auth/permission/outline/load/infra/remote/loadMenuBadge/noop"
+import { AuthzRepositoryResponse } from "../../../../../common/authz/infra"
+import { initMemoryRepository } from "../../../../../z_vendor/getto-application/infra/repository/memory"
 
 describe("Content", () => {
     test("load content", (done) => {
@@ -67,11 +67,11 @@ function standardMenuTree(): OutlineMenuTree {
 }
 
 function standardRepository() {
+    const authz = initMemoryRepository<AuthzRepositoryResponse>()
+    authz.set({ nonce: "api-nonce", roles: ["role"] })
+
     return {
-        apiCredentials: initMemoryApiCredentialRepository({
-            set: true,
-            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
-        }),
+        authz,
         menuExpands: initOutlineMenuExpandRepository({
             menuExpand: initMemoryTypedStorage({ set: false }),
         }),

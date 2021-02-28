@@ -1,15 +1,19 @@
 import { RemoteTypes } from "../../../../z_vendor/getto-application/infra/remote/infra"
-import { ApiCredentialRepository } from "../../../../common/apiCredential/infra"
 
-import { ApiNonce } from "../../../../common/apiCredential/data"
-import { LoadOutlineMenuBadgeRemoteError, OutlineMenuCategoryPath } from "./data"
+import {
+    StorageError,
+    StoreResult,
+} from "../../../../z_vendor/getto-application/infra/storage/data"
+import { AuthzRepository } from "../../../../common/authz/infra"
+
 import {
     LoadOutlineBreadcrumbListPod,
     LoadOutlineMenuPod,
     ToggleOutlineMenuExpandMethod,
 } from "./action"
-import { StoreResult } from "../../../../z_vendor/getto-application/storage/infra"
-import { StorageError } from "../../../../z_vendor/getto-application/storage/data"
+
+import { AuthzNonce } from "../../../../common/authz/data"
+import { LoadOutlineMenuBadgeRemoteError, OutlineMenuCategoryPath } from "./data"
 
 export type OutlineBreadcrumbListActionInfra = LoadOutlineBreadcrumbListInfra
 export type OutlineMenuActionInfra = LoadOutlineMenuInfra & ToggleOutlineMenuExpandInfra
@@ -24,7 +28,7 @@ export interface LoadOutlineBreadcrumbList {
 
 export type LoadOutlineMenuInfra = Readonly<{
     loadMenuBadge: LoadOutlineMenuBadgeRemote
-    apiCredentials: ApiCredentialRepository
+    authz: AuthzRepository
     menuExpands: OutlineMenuExpandRepository
     menuTree: OutlineMenuTree
 }>
@@ -121,7 +125,7 @@ export type OutlineMenuExpandResponse =
     | Readonly<{ success: false; err: StorageError }>
 
 type LoadOutlineMenuBadgeRemoteTypes = RemoteTypes<
-    ApiNonce,
+    AuthzNonce,
     OutlineMenuBadgeItem[],
     LoadOutlineMenuBadgeRemoteError
 >

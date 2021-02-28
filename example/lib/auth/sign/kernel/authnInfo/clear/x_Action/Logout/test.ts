@@ -1,13 +1,13 @@
-import { initMemoryApiCredentialRepository } from "../../../../../../../common/apiCredential/infra/repository/memory"
 import { initMemoryAuthnInfoRepository } from "../../../kernel/infra/repository/authnInfo/memory"
 
 import { LogoutState } from "./action"
 
-import { markApiNonce, markApiRoles } from "../../../../../../../common/apiCredential/data"
 import { markAuthAt, markAuthnNonce } from "../../../kernel/data"
 import { initSyncActionTestRunner } from "../../../../../../../z_vendor/getto-application/action/testHelper"
 import { initCoreAction, initCoreMaterial } from "./Core/impl"
 import { toLogoutResource } from "./impl"
+import { initMemoryRepository } from "../../../../../../../z_vendor/getto-application/infra/repository/memory"
+import { AuthzRepositoryResponse } from "../../../../../../../common/authz/infra"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
 const STORED_AUTH_AT = new Date("2020-01-01 09:00:00")
@@ -75,14 +75,11 @@ function standardResource() {
 }
 
 function standardRepository() {
+    const authz = initMemoryRepository<AuthzRepositoryResponse>()
+    authz.set({ nonce: "nonce", roles: ["role"] })    
+
     return {
-        apiCredentials: initMemoryApiCredentialRepository({
-            set: true,
-            value: {
-                apiNonce: markApiNonce("api-nonce"),
-                apiRoles: markApiRoles(["role"]),
-            },
-        }),
+        authz,
         authnInfos: initMemoryAuthnInfoRepository({
             authnNonce: { set: true, value: markAuthnNonce(STORED_AUTHN_NONCE) },
             lastAuthAt: { set: true, value: markAuthAt(STORED_AUTH_AT) },

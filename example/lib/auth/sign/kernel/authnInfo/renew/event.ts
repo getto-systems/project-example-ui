@@ -1,4 +1,4 @@
-import { StorageError } from "../../../../../z_vendor/getto-application/storage/data"
+import { RepositoryError } from "../../../../../z_vendor/getto-application/infra/repository/data"
 import { AuthnInfo, RenewError } from "../kernel/data"
 
 export type RenewEvent = Readonly<{ type: "try-to-instant-load" }> | ForceRenewEvent
@@ -8,5 +8,5 @@ export type ForceRenewEvent =
     | Readonly<{ type: "try-to-renew" }>
     | Readonly<{ type: "delayed-to-renew" }>
     | Readonly<{ type: "failed-to-renew"; err: RenewError }>
-    | Readonly<{ type: "storage-error"; err: StorageError }>
+    | Readonly<{ type: "repository-error"; err: RepositoryError }>
     | Readonly<{ type: "succeed-to-renew"; authnInfo: AuthnInfo }>

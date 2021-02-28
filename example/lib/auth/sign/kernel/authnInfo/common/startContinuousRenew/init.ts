@@ -1,4 +1,4 @@
-import { newApiCredentialRepository } from "../../../../../../common/apiCredential/infra/repository/main"
+import { newAuthzRepository } from "../../../../../../common/authz/infra/repository/authz"
 import { newAuthnInfoRepository } from "../../kernel/infra/repository/authnInfo/init"
 import { newRenewAuthnInfoRemote } from "../../kernel/infra/remote/renew/init"
 
@@ -12,7 +12,7 @@ export function newStartContinuousRenewAuthnInfoInfra(
     webStorage: Storage
 ): StartContinuousRenewInfra {
     return {
-        apiCredentials: newApiCredentialRepository(webStorage),
+        authz: newAuthzRepository(webStorage),
         authnInfos: newAuthnInfoRepository(webStorage),
         renew: newRenewAuthnInfoRemote(),
         clock: newClock(),

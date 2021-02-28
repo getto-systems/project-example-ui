@@ -1,4 +1,4 @@
-import { markApiNonce, markApiRoles } from "../../../../../../../../common/apiCredential/data"
+import { markApiNonce_legacy, markApiRoles_legacy } from "../../../../../../../../common/authz/data"
 import { initConnectRemoteAccess } from "../../../../../../../../z_vendor/getto-application/infra/remote/connect"
 import { RawRemote, RemoteError } from "../../../../../../../../z_vendor/getto-application/infra/remote/infra"
 import { markAuthAt, markAuthnNonce } from "../../../../../../kernel/authnInfo/kernel/data"
@@ -21,8 +21,8 @@ export function initResetConnect(access: Raw): ResetRemote {
                     authAt: markAuthAt(new Date()),
                 },
                 api: {
-                    apiNonce: markApiNonce(response.api.apiNonce),
-                    apiRoles: markApiRoles(response.api.apiRoles),
+                    nonce: markApiNonce_legacy(response.api.apiNonce),
+                    roles: markApiRoles_legacy(response.api.apiRoles),
                 },
             }
         },

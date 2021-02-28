@@ -12,9 +12,9 @@ import {
 import { RawRemote, RemoteError } from "../../../../../../../z_vendor/getto-application/infra/remote/infra"
 import { markAuthAt, markAuthnNonce } from "../../../../../kernel/authnInfo/kernel/data"
 import {
-    markApiNonce,
-    markApiRoles,
-} from "../../../../../../../common/apiCredential/data"
+    markApiNonce_legacy,
+    markApiRoles_legacy,
+} from "../../../../../../../common/authz/data"
 
 type Raw = RawRemote<AuthenticateFields, RawAuthnInfo>
 type RawAuthnInfo = Readonly<{
@@ -34,8 +34,8 @@ export function initAuthenticateConnect(
                 authAt: markAuthAt(new Date()),
             },
             api: {
-                apiNonce: markApiNonce(response.api.apiNonce),
-                apiRoles: markApiRoles(response.api.apiRoles),
+                nonce: markApiNonce_legacy(response.api.apiNonce),
+                roles: markApiRoles_legacy(response.api.apiRoles),
             },
         }),
         error: (err: RemoteError): AuthenticateRemoteError => {

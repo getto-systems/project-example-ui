@@ -1,3 +1,5 @@
+import { RepositoryError } from "../../../../z_vendor/getto-application/infra/repository/data"
+
 export type OutlineMenuTarget = OutlineMenuTarget_data & { MenuTarget: never }
 type OutlineMenuTarget_data =
     | Readonly<{ versioned: false; version: string }>
@@ -49,10 +51,11 @@ export function markOutlineMenuItem(item: OutlineMenuItem_data): OutlineMenuItem
     return item as OutlineMenuItem
 }
 
-export type LoadOutlineMenuBadgeError =
-    | Readonly<{ type: "empty-nonce" }>
-    | LoadOutlineMenuBadgeRemoteError
+export type FetchAuthzRepositoryError =
+    | Readonly<{ type: "not-found" }>
+    | Exclude<RepositoryError, { type: "transform-error" }>
 
+export type LoadOutlineMenuBadgeError = LoadOutlineMenuBadgeRemoteError
 export type LoadOutlineMenuBadgeRemoteError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "server-error" }>

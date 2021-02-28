@@ -14,9 +14,8 @@ import {
 import { initMemoryOutlineMenuExpandRepository } from "../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/memory"
 import { initAsyncActionTester_legacy } from "../../../../z_vendor/getto-application/action/testHelper"
 import { initRemoteSimulator } from "../../../../z_vendor/getto-application/infra/remote/simulate"
-import { markApiNonce, markApiRoles } from "../../../apiCredential/data"
-import { ApiCredentialRepository } from "../../../apiCredential/infra"
-import { initMemoryApiCredentialRepository } from "../../../apiCredential/infra/repository/memory"
+import { initMemoryRepository } from "../../../../z_vendor/getto-application/infra/repository/memory"
+import { AuthzRepository, AuthzRepositoryResponse } from "../../../authz/infra"
 import { BreadcrumbListComponentState } from "./BreadcrumbList/component"
 import { initMenuResource } from "./impl"
 import { MenuComponentState } from "./Menu/component"
@@ -129,35 +128,8 @@ describe("Menu", () => {
             return initAsyncMenuTester()((stack) => {
                 expect(stack).toEqual([
                     {
-                        type: "succeed-to-instant-load",
-                        menu: [
-                            category("MAIN", ["MAIN"], true, 0, [
-                                item("ホーム", "home", "/1.0.0/index.html", true, 0),
-                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 0),
-                            ]),
-                            category("DOCUMENT", ["DOCUMENT"], false, 0, [
-                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
-                                category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
-                                ]),
-                            ]),
-                        ],
-                    },
-                    {
-                        type: "failed-to-load",
-                        err: { type: "empty-nonce" },
-                        menu: [
-                            category("MAIN", ["MAIN"], true, 0, [
-                                item("ホーム", "home", "/1.0.0/index.html", true, 0),
-                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 0),
-                            ]),
-                            category("DOCUMENT", ["DOCUMENT"], false, 0, [
-                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
-                                category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
-                                ]),
-                            ]),
-                        ],
+                        type: "failed-to-fetch-repository",
+                        err: { type: "not-found" },
                     },
                 ])
                 done()
@@ -438,7 +410,7 @@ function expandMenuResource() {
 }
 
 type Repository = Readonly<{
-    apiCredentials: ApiCredentialRepository
+    authz: AuthzRepository
     menuExpands: OutlineMenuExpandRepository
 }>
 
@@ -530,40 +502,38 @@ function standardMenuTree(): OutlineMenuTree {
 }
 
 function standardRepository(): Repository {
+    const authz = initMemoryRepository<AuthzRepositoryResponse>()
+    authz.set({ nonce: "api-nonce", roles: ["admin"] })
+
     return {
-        apiCredentials: initMemoryApiCredentialRepository({
-            set: true,
-            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["admin"]) },
-        }),
+        authz,
         menuExpands: standardMenuExpandRepository([]),
     }
 }
 function emptyRepository(): Repository {
     return {
-        apiCredentials: initMemoryApiCredentialRepository({
-            set: false,
-        }),
+        authz: initMemoryRepository<AuthzRepositoryResponse>(),
         menuExpands: standardMenuExpandRepository([]),
     }
 }
 function developmentDocumentRepository(): Repository {
+    const authz = initMemoryRepository<AuthzRepositoryResponse>()
+    authz.set({
+        nonce: "api-nonce",
+        roles: ["admin", "development-document"],
+    })
+
     return {
-        apiCredentials: initMemoryApiCredentialRepository({
-            set: true,
-            value: {
-                apiNonce: markApiNonce("api-nonce"),
-                apiRoles: markApiRoles(["admin", "development-document"]),
-            },
-        }),
+        authz,
         menuExpands: standardMenuExpandRepository([]),
     }
 }
 function expandRepository(): Repository {
+    const authz = initMemoryRepository<AuthzRepositoryResponse>()
+    authz.set({ nonce: "api-nonce", roles: ["admin"] })
+
     return {
-        apiCredentials: initMemoryApiCredentialRepository({
-            set: true,
-            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["admin"]) },
-        }),
+        authz,
         menuExpands: standardMenuExpandRepository([[markOutlineMenuCategoryLabel("DOCUMENT")]]),
     }
 }
@@ -607,6 +577,7 @@ function initAsyncMenuTester() {
 
             case "succeed-to-load":
             case "failed-to-load":
+            case "failed-to-fetch-repository":
             case "succeed-to-toggle":
             case "failed-to-toggle":
                 return true

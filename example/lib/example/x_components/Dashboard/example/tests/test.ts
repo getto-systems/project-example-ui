@@ -4,7 +4,7 @@ import {
     newTestDashboardResource,
 } from "../../EntryPoint/tests/core"
 
-import { initMemoryTypedStorage } from "../../../../../z_vendor/getto-application/storage/typed/memory"
+import { initMemoryTypedStorage } from "../../../../../z_vendor/getto-application/infra/storage/typed/memory"
 import {
     initStaticClock,
     staticClockPubSub,
@@ -16,9 +16,9 @@ import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/inf
 import { OutlineMenuTree } from "../../../../../auth/permission/outline/load/infra"
 
 import { ExampleComponentState } from "../component"
-import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../../../common/apiCredential/data"
 import { newLoadOutlineMenuBadgeNoopRemote } from "../../../../../auth/permission/outline/load/infra/remote/loadMenuBadge/noop"
+import { AuthzRepositoryResponse } from "../../../../../common/authz/infra"
+import { initMemoryRepository } from "../../../../../z_vendor/getto-application/infra/repository/memory"
 
 // デフォルトの season を取得する
 const NOW = new Date("2021-01-01 10:00:00")
@@ -83,11 +83,11 @@ function standardMenuTree(): OutlineMenuTree {
 }
 
 function standardRepository(): DashboardRepository {
+    const authz = initMemoryRepository<AuthzRepositoryResponse>()
+    authz.set({ nonce: "api-nonce", roles: ["role"] })
+
     return {
-        apiCredentials: initMemoryApiCredentialRepository({
-            set: true,
-            value: { apiNonce: markApiNonce("api-nonce"), apiRoles: markApiRoles(["role"]) },
-        }),
+        authz,
         menuExpands: initOutlineMenuExpandRepository({
             menuExpand: initMemoryTypedStorage({ set: false }),
         }),

@@ -1,8 +1,14 @@
-import { Remote, RemoteResult, RemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/infra"
-import { StoreResult } from "../../../../../z_vendor/getto-application/storage/infra"
+import {
+    Remote,
+    RemoteResult,
+    RemoteSimulator,
+} from "../../../../../z_vendor/getto-application/infra/remote/infra"
 
-import { StorageError } from "../../../../../z_vendor/getto-application/storage/data"
-import { ApiCredential } from "../../../../../common/apiCredential/data"
+import {
+    StorageError,
+    StoreResult,
+} from "../../../../../z_vendor/getto-application/infra/storage/data"
+import { Authz } from "../../../../../common/authz/data"
 import { AuthnInfo, LastAuth, RenewRemoteError, AuthnNonce } from "./data"
 
 export interface AuthnInfoRepository {
@@ -21,5 +27,5 @@ export type RenewResult = RemoteResult<RenewResponse, RenewRemoteError>
 export type RenewSimulator = RemoteSimulator<AuthnNonce, RenewResponse, RenewRemoteError>
 export type RenewResponse = Readonly<{
     auth: AuthnInfo
-    api: ApiCredential
+    api: Authz
 }>

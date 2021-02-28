@@ -7,25 +7,25 @@ const $Reader = $protobuf.Reader, $Writer = $protobuf.Writer, $util = $protobuf.
 // Exported root namespace
 const $root = $protobuf.roots["default"] || ($protobuf.roots["default"] = {});
 
-export const ApiCredentialMessage = $root.ApiCredentialMessage = (() => {
+export const AuthzMessage = $root.AuthzMessage = (() => {
 
     /**
-     * Properties of an ApiCredentialMessage.
-     * @exports IApiCredentialMessage
-     * @interface IApiCredentialMessage
-     * @property {string|null} [nonce] ApiCredentialMessage nonce
-     * @property {Array.<string>|null} [roles] ApiCredentialMessage roles
+     * Properties of an AuthzMessage.
+     * @exports IAuthzMessage
+     * @interface IAuthzMessage
+     * @property {string|null} [nonce] AuthzMessage nonce
+     * @property {Array.<string>|null} [roles] AuthzMessage roles
      */
 
     /**
-     * Constructs a new ApiCredentialMessage.
-     * @exports ApiCredentialMessage
-     * @classdesc Represents an ApiCredentialMessage.
-     * @implements IApiCredentialMessage
+     * Constructs a new AuthzMessage.
+     * @exports AuthzMessage
+     * @classdesc Represents an AuthzMessage.
+     * @implements IAuthzMessage
      * @constructor
-     * @param {IApiCredentialMessage=} [properties] Properties to set
+     * @param {IAuthzMessage=} [properties] Properties to set
      */
-    function ApiCredentialMessage(properties) {
+    function AuthzMessage(properties) {
         this.roles = [];
         if (properties)
             for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
@@ -34,43 +34,43 @@ export const ApiCredentialMessage = $root.ApiCredentialMessage = (() => {
     }
 
     /**
-     * ApiCredentialMessage nonce.
+     * AuthzMessage nonce.
      * @member {string} nonce
-     * @memberof ApiCredentialMessage
+     * @memberof AuthzMessage
      * @instance
      */
-    ApiCredentialMessage.prototype.nonce = "";
+    AuthzMessage.prototype.nonce = "";
 
     /**
-     * ApiCredentialMessage roles.
+     * AuthzMessage roles.
      * @member {Array.<string>} roles
-     * @memberof ApiCredentialMessage
+     * @memberof AuthzMessage
      * @instance
      */
-    ApiCredentialMessage.prototype.roles = $util.emptyArray;
+    AuthzMessage.prototype.roles = $util.emptyArray;
 
     /**
-     * Creates a new ApiCredentialMessage instance using the specified properties.
+     * Creates a new AuthzMessage instance using the specified properties.
      * @function create
-     * @memberof ApiCredentialMessage
+     * @memberof AuthzMessage
      * @static
-     * @param {IApiCredentialMessage=} [properties] Properties to set
-     * @returns {ApiCredentialMessage} ApiCredentialMessage instance
+     * @param {IAuthzMessage=} [properties] Properties to set
+     * @returns {AuthzMessage} AuthzMessage instance
      */
-    ApiCredentialMessage.create = function create(properties) {
-        return new ApiCredentialMessage(properties);
+    AuthzMessage.create = function create(properties) {
+        return new AuthzMessage(properties);
     };
 
     /**
-     * Encodes the specified ApiCredentialMessage message. Does not implicitly {@link ApiCredentialMessage.verify|verify} messages.
+     * Encodes the specified AuthzMessage message. Does not implicitly {@link AuthzMessage.verify|verify} messages.
      * @function encode
-     * @memberof ApiCredentialMessage
+     * @memberof AuthzMessage
      * @static
-     * @param {IApiCredentialMessage} message ApiCredentialMessage message or plain object to encode
+     * @param {IAuthzMessage} message AuthzMessage message or plain object to encode
      * @param {$protobuf.Writer} [writer] Writer to encode to
      * @returns {$protobuf.Writer} Writer
      */
-    ApiCredentialMessage.encode = function encode(message, writer) {
+    AuthzMessage.encode = function encode(message, writer) {
         if (!writer)
             writer = $Writer.create();
         if (message.nonce != null && Object.hasOwnProperty.call(message, "nonce"))
@@ -82,33 +82,33 @@ export const ApiCredentialMessage = $root.ApiCredentialMessage = (() => {
     };
 
     /**
-     * Encodes the specified ApiCredentialMessage message, length delimited. Does not implicitly {@link ApiCredentialMessage.verify|verify} messages.
+     * Encodes the specified AuthzMessage message, length delimited. Does not implicitly {@link AuthzMessage.verify|verify} messages.
      * @function encodeDelimited
-     * @memberof ApiCredentialMessage
+     * @memberof AuthzMessage
      * @static
-     * @param {IApiCredentialMessage} message ApiCredentialMessage message or plain object to encode
+     * @param {IAuthzMessage} message AuthzMessage message or plain object to encode
      * @param {$protobuf.Writer} [writer] Writer to encode to
      * @returns {$protobuf.Writer} Writer
      */
-    ApiCredentialMessage.encodeDelimited = function encodeDelimited(message, writer) {
+    AuthzMessage.encodeDelimited = function encodeDelimited(message, writer) {
         return this.encode(message, writer).ldelim();
     };
 
     /**
-     * Decodes an ApiCredentialMessage message from the specified reader or buffer.
+     * Decodes an AuthzMessage message from the specified reader or buffer.
      * @function decode
-     * @memberof ApiCredentialMessage
+     * @memberof AuthzMessage
      * @static
      * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
      * @param {number} [length] Message length if known beforehand
-     * @returns {ApiCredentialMessage} ApiCredentialMessage
+     * @returns {AuthzMessage} AuthzMessage
      * @throws {Error} If the payload is not a reader or valid buffer
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
-    ApiCredentialMessage.decode = function decode(reader, length) {
+    AuthzMessage.decode = function decode(reader, length) {
         if (!(reader instanceof $Reader))
             reader = $Reader.create(reader);
-        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.ApiCredentialMessage();
+        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.AuthzMessage();
         while (reader.pos < end) {
             let tag = reader.uint32();
             switch (tag >>> 3) {
@@ -129,30 +129,30 @@ export const ApiCredentialMessage = $root.ApiCredentialMessage = (() => {
     };
 
     /**
-     * Decodes an ApiCredentialMessage message from the specified reader or buffer, length delimited.
+     * Decodes an AuthzMessage message from the specified reader or buffer, length delimited.
      * @function decodeDelimited
-     * @memberof ApiCredentialMessage
+     * @memberof AuthzMessage
      * @static
      * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @returns {ApiCredentialMessage} ApiCredentialMessage
+     * @returns {AuthzMessage} AuthzMessage
      * @throws {Error} If the payload is not a reader or valid buffer
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
-    ApiCredentialMessage.decodeDelimited = function decodeDelimited(reader) {
+    AuthzMessage.decodeDelimited = function decodeDelimited(reader) {
         if (!(reader instanceof $Reader))
             reader = new $Reader(reader);
         return this.decode(reader, reader.uint32());
     };
 
     /**
-     * Verifies an ApiCredentialMessage message.
+     * Verifies an AuthzMessage message.
      * @function verify
-     * @memberof ApiCredentialMessage
+     * @memberof AuthzMessage
      * @static
      * @param {Object.<string,*>} message Plain object to verify
      * @returns {string|null} `null` if valid, otherwise the reason why it is not
      */
-    ApiCredentialMessage.verify = function verify(message) {
+    AuthzMessage.verify = function verify(message) {
         if (typeof message !== "object" || message === null)
             return "object expected";
         if (message.nonce != null && message.hasOwnProperty("nonce"))
@@ -169,22 +169,22 @@ export const ApiCredentialMessage = $root.ApiCredentialMessage = (() => {
     };
 
     /**
-     * Creates an ApiCredentialMessage message from a plain object. Also converts values to their respective internal types.
+     * Creates an AuthzMessage message from a plain object. Also converts values to their respective internal types.
      * @function fromObject
-     * @memberof ApiCredentialMessage
+     * @memberof AuthzMessage
      * @static
      * @param {Object.<string,*>} object Plain object
-     * @returns {ApiCredentialMessage} ApiCredentialMessage
+     * @returns {AuthzMessage} AuthzMessage
      */
-    ApiCredentialMessage.fromObject = function fromObject(object) {
-        if (object instanceof $root.ApiCredentialMessage)
+    AuthzMessage.fromObject = function fromObject(object) {
+        if (object instanceof $root.AuthzMessage)
             return object;
-        let message = new $root.ApiCredentialMessage();
+        let message = new $root.AuthzMessage();
         if (object.nonce != null)
             message.nonce = String(object.nonce);
         if (object.roles) {
             if (!Array.isArray(object.roles))
-                throw TypeError(".ApiCredentialMessage.roles: array expected");
+                throw TypeError(".AuthzMessage.roles: array expected");
             message.roles = [];
             for (let i = 0; i < object.roles.length; ++i)
                 message.roles[i] = String(object.roles[i]);
@@ -193,15 +193,15 @@ export const ApiCredentialMessage = $root.ApiCredentialMessage = (() => {
     };
 
     /**
-     * Creates a plain object from an ApiCredentialMessage message. Also converts values to other types if specified.
+     * Creates a plain object from an AuthzMessage message. Also converts values to other types if specified.
      * @function toObject
-     * @memberof ApiCredentialMessage
+     * @memberof AuthzMessage
      * @static
-     * @param {ApiCredentialMessage} message ApiCredentialMessage
+     * @param {AuthzMessage} message AuthzMessage
      * @param {$protobuf.IConversionOptions} [options] Conversion options
      * @returns {Object.<string,*>} Plain object
      */
-    ApiCredentialMessage.toObject = function toObject(message, options) {
+    AuthzMessage.toObject = function toObject(message, options) {
         if (!options)
             options = {};
         let object = {};
@@ -220,17 +220,17 @@ export const ApiCredentialMessage = $root.ApiCredentialMessage = (() => {
     };
 
     /**
-     * Converts this ApiCredentialMessage to JSON.
+     * Converts this AuthzMessage to JSON.
      * @function toJSON
-     * @memberof ApiCredentialMessage
+     * @memberof AuthzMessage
      * @instance
      * @returns {Object.<string,*>} JSON object
      */
-    ApiCredentialMessage.prototype.toJSON = function toJSON() {
+    AuthzMessage.prototype.toJSON = function toJSON() {
         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
 
-    return ApiCredentialMessage;
+    return AuthzMessage;
 })();
 
 export { $root as default };

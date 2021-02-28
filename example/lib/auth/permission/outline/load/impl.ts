@@ -1,4 +1,3 @@
-import { LoadApiCredentialResult } from "../../../../common/apiCredential/infra"
 import {
     OutlineMenuBadge,
     OutlineMenuExpand,
@@ -22,7 +21,7 @@ import {
     LoadOutlineActionLocationInfo,
 } from "./action"
 
-import { ApiRoles, emptyApiRoles } from "../../../../common/apiCredential/data"
+import { AuthzRoles, convertAuthzFromRepositoryResult } from "../../../../common/authz/data"
 import {
     OutlineBreadcrumb,
     OutlineBreadcrumbNode,
@@ -36,7 +35,6 @@ import {
     markOutlineMenuCategoryLabel,
     OutlineMenuCategoryLabel,
     markOutlineMenuTarget,
-    LoadOutlineMenuBadgeError,
 } from "./data"
 
 export function initOutlineActionLocationInfo(
@@ -135,14 +133,36 @@ const loadBreadcrumbList: LoadOutlineBreadcrumbList = (infra) => (locationInfo) 
 }
 
 const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
-    const { apiCredentials, menuExpands, loadMenuBadge } = infra
+    const { authz, menuExpands, loadMenuBadge } = infra
 
-    const apiCredentialLoadResult = apiCredentials.load()
-    const apiRoles = toApiRoles(apiCredentialLoadResult)
+    const authzResult = convertAuthzFromRepositoryResult(authz.get())
+    if (!authzResult.success) {
+        switch (authzResult.err.type) {
+            case "transform-error":
+                authz.remove()
+                post({ type: "failed-to-fetch-repository", err: { type: "not-found" } })
+                return
+
+            case "infra-error":
+                post({ type: "failed-to-fetch-repository", err: authzResult.err })
+                return
+        }
+    }
+    if (!authzResult.found) {
+        post({ type: "failed-to-fetch-repository", err: { type: "not-found" } })
+        return
+    }
+
+    const nonce = authzResult.value.nonce
+    const roles = authzResult.value.roles
 
     const menuExpandResponse = menuExpands.load()
     if (!menuExpandResponse.success) {
-        failed(apiRoles, EMPTY_EXPAND, menuExpandResponse.err)
+        post({
+            type: "failed-to-load",
+            menu: buildMenu(roles, EMPTY_EXPAND, EMPTY_BADGE),
+            err: menuExpandResponse.err,
+        })
         return
     }
 
@@ -152,35 +172,24 @@ const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
     // expand の取得には時間がかからないはずなので expand の取得前には返さない
     post({
         type: "succeed-to-instant-load",
-        menu: buildMenu(apiRoles, menuExpand, EMPTY_BADGE),
+        menu: buildMenu(roles, menuExpand, EMPTY_BADGE),
     })
 
-    if (!apiCredentialLoadResult.success) {
-        failed(apiRoles, menuExpand, apiCredentialLoadResult.err)
-        return
-    }
-    if (!apiCredentialLoadResult.found) {
-        failed(apiRoles, menuExpand, { type: "empty-nonce" })
-        return
-    }
-
-    const menuBadgeResponse = await loadMenuBadge(apiCredentialLoadResult.apiCredential.apiNonce)
+    const menuBadgeResponse = await loadMenuBadge(nonce)
     if (!menuBadgeResponse.success) {
-        failed(apiRoles, menuExpand, menuBadgeResponse.err)
+        post({
+            type: "failed-to-load",
+            menu: buildMenu(roles, menuExpand, EMPTY_BADGE),
+            err: menuBadgeResponse.err,
+        })
         return
     }
 
     post({
         type: "succeed-to-load",
-        menu: buildMenu(apiRoles, menuExpand, toMenuBadge(menuBadgeResponse.value)),
+        menu: buildMenu(roles, menuExpand, toMenuBadge(menuBadgeResponse.value)),
     })
 
-    function toApiRoles(result: LoadApiCredentialResult) {
-        if (result.success && result.found) {
-            return result.apiCredential.apiRoles
-        }
-        return emptyApiRoles()
-    }
     function toMenuBadge(items: OutlineMenuBadgeItem[]): OutlineMenuBadge {
         return items.reduce((acc, item) => {
             acc[item.path] = item.count
@@ -188,20 +197,8 @@ const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
         }, <OutlineMenuBadge>{})
     }
 
-    function failed(
-        permittedRoles: ApiRoles,
-        menuExpand: OutlineMenuExpand,
-        err: LoadOutlineMenuBadgeError,
-    ): void {
-        post({
-            type: "failed-to-load",
-            menu: buildMenu(permittedRoles, menuExpand, EMPTY_BADGE),
-            err,
-        })
-    }
-
     function buildMenu(
-        permittedRoles: ApiRoles,
+        permittedRoles: AuthzRoles,
         menuExpand: OutlineMenuExpand,
         menuBadge: OutlineMenuBadge,
     ): OutlineMenu {

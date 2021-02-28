@@ -1,5 +1,5 @@
-import { StorageError } from "../../../../../z_vendor/getto-application/storage/data"
+import { RepositoryError } from "../../../../../z_vendor/getto-application/infra/repository/data"
 
 export type ClearEvent =
-    | Readonly<{ type: "failed-to-logout"; err: StorageError }>
+    | Readonly<{ type: "failed-to-logout"; err: RepositoryError }>
     | Readonly<{ type: "succeed-to-logout" }>

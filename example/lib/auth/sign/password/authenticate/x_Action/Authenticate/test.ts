@@ -16,9 +16,7 @@ import { CoreState } from "./Core/action"
 import { markSecureScriptPath } from "../../../../common/secureScriptPath/get/data"
 import { AuthenticateFields } from "../../data"
 import { markAuthAt, markAuthnNonce } from "../../../../kernel/authnInfo/kernel/data"
-import { ApiCredentialRepository } from "../../../../../../common/apiCredential/infra"
-import { initMemoryApiCredentialRepository } from "../../../../../../common/apiCredential/infra/repository/memory"
-import { markApiNonce, markApiRoles } from "../../../../../../common/apiCredential/data"
+import { markApiNonce_legacy, markApiRoles_legacy } from "../../../../../../common/authz/data"
 import {
     AuthnInfoRepository,
     RenewRemote,
@@ -37,6 +35,8 @@ import { markBoardValue } from "../../../../../../z_vendor/getto-application/boa
 import { standardBoardValueStore } from "../../../../../../z_vendor/getto-application/board/input/Action/testHelper"
 import { toAction, toEntryPoint } from "./impl"
 import { initCoreAction, initCoreMaterial } from "./Core/impl"
+import { AuthzRepository, AuthzRepositoryResponse } from "../../../../../../common/authz/infra"
+import { initMemoryRepository } from "../../../../../../z_vendor/getto-application/infra/repository/memory"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -236,7 +236,7 @@ function waitPasswordLoginResource() {
 }
 
 type PasswordLoginTestRepository = Readonly<{
-    apiCredentials: ApiCredentialRepository
+    authz: AuthzRepository
     authnInfos: AuthnInfoRepository
 }>
 type PasswordLoginTestRemoteAccess = Readonly<{
@@ -300,14 +300,14 @@ function standardConfig() {
     }
 }
 function standardRepository(): PasswordLoginTestRepository {
+    const authz = initMemoryRepository<AuthzRepositoryResponse>()
+    authz.set({
+        nonce: "api-nonce",
+        roles: ["role"],
+    })
+
     return {
-        apiCredentials: initMemoryApiCredentialRepository({
-            set: true,
-            value: {
-                apiNonce: markApiNonce("api-nonce"),
-                apiRoles: markApiRoles(["role"]),
-            },
-        }),
+        authz,
         authnInfos: initMemoryAuthnInfoRepository({
             authnNonce: { set: false },
             lastAuthAt: { set: false },
@@ -340,8 +340,8 @@ function simulateLogin(_fields: AuthenticateFields): AuthenticateResult {
                 authAt: markAuthAt(SUCCEED_TO_AUTH_AT),
             },
             api: {
-                apiNonce: markApiNonce("api-nonce"),
-                apiRoles: markApiRoles(["role"]),
+                nonce: markApiNonce_legacy("api-nonce"),
+                roles: markApiRoles_legacy(["role"]),
             },
         },
     }
@@ -364,8 +364,8 @@ function renewRemoteAccess(): RenewRemote {
                         authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
                     },
                     api: {
-                        apiNonce: markApiNonce("api-nonce"),
-                        apiRoles: markApiRoles(["role"]),
+                        nonce: markApiNonce_legacy("api-nonce"),
+                        roles: markApiRoles_legacy(["role"]),
                     },
                 },
             }
@@ -411,7 +411,7 @@ function actionHasDone(state: CoreState): boolean {
             return false
 
         case "try-to-load":
-        case "storage-error":
+        case "repository-error":
         case "load-error":
             return true
 

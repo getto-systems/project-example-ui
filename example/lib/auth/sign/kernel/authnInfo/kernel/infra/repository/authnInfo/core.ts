@@ -1,16 +1,11 @@
-import { TypedStorage } from "../../../../../../../../z_vendor/getto-application/storage/typed/infra"
-import { StoreResult } from "../../../../../../../../z_vendor/getto-application/storage/infra"
+import { TypedStorage } from "../../../../../../../../z_vendor/getto-application/infra/storage/typed/infra"
 import { AuthnInfoRepository, LoadLastAuthResult } from "../../../infra"
 
-import { StorageError } from "../../../../../../../../z_vendor/getto-application/storage/data"
 import {
-    AuthAt,
-    AuthnInfo,
-    markAuthAt,
-    markAuthnNonce,
-    AuthnNonce,
-    LastAuth,
-} from "../../../data"
+    StorageError,
+    StoreResult,
+} from "../../../../../../../../z_vendor/getto-application/infra/storage/data"
+import { AuthAt, AuthnInfo, markAuthAt, markAuthnNonce, AuthnNonce, LastAuth } from "../../../data"
 
 export type AuthnInfoStorage = Readonly<{
     authnNonce: TypedStorage<AuthnNonce>

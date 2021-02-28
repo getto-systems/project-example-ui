@@ -13,7 +13,8 @@ export type MenuMockPropsPasser = MockPropsPasser<MenuMockProps>
 
 export type MenuMockProps =
     | Readonly<{ type: "success"; label: string; badgeCount: number }>
-    | Readonly<{ type: "empty-nonce" }>
+    | Readonly<{ type: "fetch-not-found" }>
+    | Readonly<{ type: "fetch-failed"; err: string }>
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>
@@ -36,6 +37,15 @@ class Component extends MockAction<MenuComponentState> implements MenuComponent 
             switch (props.type) {
                 case "success":
                     return { type: "succeed-to-load", menu: menu(props.label, props.badgeCount) }
+
+                case "fetch-not-found":
+                    return { type: "failed-to-fetch-repository", err: { type: "not-found" } }
+
+                case "fetch-failed":
+                    return {
+                        type: "failed-to-fetch-repository",
+                        err: { type: "infra-error", err: props.err },
+                    }
 
                 default:
                     return { type: "failed-to-load", menu: menu("ホーム", 0), err: props }

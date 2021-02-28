@@ -1,11 +1,17 @@
-import { TypedStorage } from "../../../../../../../z_vendor/getto-application/storage/typed/infra"
-import { StoreResult } from "../../../../../../../z_vendor/getto-application/storage/infra"
-import { OutlineMenuExpand, OutlineMenuExpandRepository, OutlineMenuExpandResponse } from "../../../infra"
+import { TypedStorage } from "../../../../../../../z_vendor/getto-application/infra/storage/typed/infra"
+import { StoreResult } from "../../../../../../../z_vendor/getto-application/infra/storage/data"
+import {
+    OutlineMenuExpand,
+    OutlineMenuExpandRepository,
+    OutlineMenuExpandResponse,
+} from "../../../infra"
 
 export type OutlineMenuExpandStorage = Readonly<{
     menuExpand: TypedStorage<OutlineMenuExpand>
 }>
-export function initOutlineMenuExpandRepository(storage: OutlineMenuExpandStorage): OutlineMenuExpandRepository {
+export function initOutlineMenuExpandRepository(
+    storage: OutlineMenuExpandStorage,
+): OutlineMenuExpandRepository {
     return new Repository(storage)
 }
 
