@@ -1,12 +1,14 @@
-import { RemoteResult } from "./infra"
+import { Remote } from "./infra"
 
-export async function unwrapRemoteError<V, E>(
-    result: Promise<RemoteResult<V, E>>,
+export function unwrapRemoteError<M, V, E>(
+    remote: Remote<M, V, E>,
     errorHandler: { (err: unknown): E },
-): Promise<RemoteResult<V, E>> {
-    try {
-        return await result
-    } catch (err) {
-        return { success: false, err: errorHandler(err) }
+): Remote<M, V, E> {
+    return async (message) => {
+        try {
+            return await remote(message)
+        } catch (err) {
+            return { success: false, err: errorHandler(err) }
+        }
     }
 }

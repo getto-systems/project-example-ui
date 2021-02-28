@@ -37,9 +37,7 @@ import {
     OutlineMenuCategoryLabel,
     markOutlineMenuTarget,
     LoadOutlineMenuBadgeError,
-    LoadOutlineMenuBadgeRemoteError,
 } from "./data"
-import { unwrapRemoteError } from "../../../../z_vendor/getto-application/infra/remote/helper"
 
 export function initOutlineActionLocationInfo(
     version: string,
@@ -166,10 +164,7 @@ const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
         return
     }
 
-    const menuBadgeResponse = await unwrapRemoteError(
-        loadMenuBadge(apiCredentialLoadResult.apiCredential.apiNonce),
-        infraError,
-    )
+    const menuBadgeResponse = await loadMenuBadge(apiCredentialLoadResult.apiCredential.apiNonce)
     if (!menuBadgeResponse.success) {
         failed(apiRoles, menuExpand, menuBadgeResponse.err)
         return
@@ -203,9 +198,6 @@ const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
             menu: buildMenu(permittedRoles, menuExpand, EMPTY_BADGE),
             err,
         })
-    }
-    function infraError(err: unknown): LoadOutlineMenuBadgeRemoteError {
-        return { type: "infra-error", err: `${err}` }
     }
 
     function buildMenu(

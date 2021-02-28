@@ -354,53 +354,6 @@ describe("Menu", () => {
         }
     })
 
-    test("load menu; load menu badge error", (done) => {
-        const { resource } = errorMenuResource()
-
-        resource.menu.subscriber.subscribe(initTester())
-
-        resource.menu.ignite()
-
-        function initTester() {
-            return initAsyncMenuTester()((stack) => {
-                expect(stack).toEqual([
-                    {
-                        type: "succeed-to-instant-load",
-                        menu: [
-                            category("MAIN", ["MAIN"], true, 0, [
-                                item("ホーム", "home", "/1.0.0/index.html", true, 0),
-                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 0),
-                            ]),
-                            category("DOCUMENT", ["DOCUMENT"], false, 0, [
-                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
-                                category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
-                                ]),
-                            ]),
-                        ],
-                    },
-                    {
-                        type: "failed-to-load",
-                        err: { type: "infra-error", err: "Error: infra error" },
-                        menu: [
-                            category("MAIN", ["MAIN"], true, 0, [
-                                item("ホーム", "home", "/1.0.0/index.html", true, 0),
-                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 0),
-                            ]),
-                            category("DOCUMENT", ["DOCUMENT"], false, 0, [
-                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
-                                category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
-                                ]),
-                            ]),
-                        ],
-                    },
-                ])
-                done()
-            })
-        }
-    })
-
     type MenuNode =
         | Readonly<{
               type: "category"
@@ -483,13 +436,6 @@ function expandMenuResource() {
 
     return { resource }
 }
-function errorMenuResource() {
-    const locationInfo = standardLocationInfo()
-    const repository = standardRepository()
-    const resource = newErrorMenuResource(locationInfo, repository)
-
-    return { repository, resource }
-}
 
 type Repository = Readonly<{
     apiCredentials: ApiCredentialRepository
@@ -509,23 +455,6 @@ function newTestMenuResource(
         menu: initOutlineMenuAction(locationInfo, {
             menuTree,
             loadMenuBadge: standardLoadMenuBadgeRemote(),
-            ...repository,
-        }),
-    })
-}
-function newErrorMenuResource(
-    locationInfo: LoadOutlineActionLocationInfo,
-    repository: Repository,
-): MenuResource {
-    const menuTree = standardMenuTree()
-
-    return initMenuResource({
-        breadcrumbList: initOutlineBreadcrumbListAction(locationInfo, {
-            menuTree,
-        }),
-        menu: initOutlineMenuAction(locationInfo, {
-            menuTree,
-            loadMenuBadge: errorLoadMenuBadgeRemote(),
             ...repository,
         }),
     })
@@ -647,12 +576,6 @@ function standardLoadMenuBadgeRemote() {
             { path: "/docs/index.html", count: 20 },
         ],
     })
-    return initRemoteSimulator(simulator, { wait_millisecond: 0 })
-}
-function errorLoadMenuBadgeRemote() {
-    const simulator: LoadOutlineMenuBadgeSimulator = () => {
-        throw new Error("infra error")
-    }
     return initRemoteSimulator(simulator, { wait_millisecond: 0 })
 }
 
