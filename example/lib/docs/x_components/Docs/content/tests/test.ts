@@ -8,7 +8,7 @@ import { OutlineMenuTree } from "../../../../../auth/permission/outline/load/inf
 import { ContentComponentState } from "../component"
 import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../common/apiCredential/data"
-import { newLoadOutlineMenuBadgeNoopRemote } from "../../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/noop"
+import { newLoadOutlineMenuBadgeNoopRemote } from "../../../../../auth/permission/outline/load/infra/remote/loadMenuBadge/noop"
 
 describe("Content", () => {
     test("load content", (done) => {

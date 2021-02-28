@@ -18,7 +18,7 @@ import { OutlineMenuTree } from "../../../../../auth/permission/outline/load/inf
 import { ExampleComponentState } from "../component"
 import { initMemoryApiCredentialRepository } from "../../../../../common/apiCredential/infra/repository/memory"
 import { markApiNonce, markApiRoles } from "../../../../../common/apiCredential/data"
-import { newLoadOutlineMenuBadgeNoopRemote } from "../../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/noop"
+import { newLoadOutlineMenuBadgeNoopRemote } from "../../../../../auth/permission/outline/load/infra/remote/loadMenuBadge/noop"
 
 // デフォルトの season を取得する
 const NOW = new Date("2021-01-01 10:00:00")
