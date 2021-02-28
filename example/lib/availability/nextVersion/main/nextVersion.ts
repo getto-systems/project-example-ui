@@ -1,6 +1,4 @@
-import { initApiAvailableCheck } from "../../../z_external/api/availability/check"
-
-import { initCheckConnectRemoteAccess } from "../impl/remote/check/connect"
+import { newCheckDeployExistsRemote } from "../impl/remote/checkDeployExists"
 
 import { find } from "../impl/core"
 
@@ -12,7 +10,7 @@ export function initNextVersionAction(): NextVersionAction {
             config: {
                 delay: { delay_millisecond: 300 },
             },
-            check: initCheckConnectRemoteAccess(initApiAvailableCheck()),
+            check: newCheckDeployExistsRemote(),
         }),
     }
 }
