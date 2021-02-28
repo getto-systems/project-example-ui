@@ -5,7 +5,7 @@ import { checkPasswordCharacter } from "../../checkCharacter/impl"
 
 import { InputPasswordAction } from "./action"
 
-import { convertPasswordFromBoardValue } from "../../../../password/data"
+import { convertPasswordFromBoardValue } from "../../../../password/convert"
 
 export function initInputPasswordAction(): InputPasswordAction {
     const resource = initInputBoardValueResource("password")

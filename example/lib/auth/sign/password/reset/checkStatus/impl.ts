@@ -6,8 +6,10 @@ import { CheckSendingStatusLocationInfo, CheckSendingStatusMethodPod } from "./m
 
 import { CheckSendingStatusEvent } from "./event"
 
+import { convertResetSessionIDFromLocation } from "../kernel/convert"
+
 import { CheckSendingStatusError } from "./data"
-import { convertResetSessionIDFromLocation, ResetSessionID } from "../kernel/data"
+import { ResetSessionID } from "../kernel/data"
 import { authSignSearchKey_password_reset_sessionID } from "../../../common/searchParams/data"
 import { ConvertLocationResult } from "../../../../../z_vendor/getto-application/location/data"
 

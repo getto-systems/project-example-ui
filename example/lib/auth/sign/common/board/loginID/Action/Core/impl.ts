@@ -3,7 +3,7 @@ import { initValidateBoardFieldAction } from "../../../../../../../z_vendor/gett
 
 import { InputLoginIDAction } from "./action"
 
-import { convertLoginIDFromBoardValue } from "../../../../loginID/data"
+import { convertLoginIDFromBoardValue } from "../../../../loginID/convert"
 
 export function initInputLoginIDAction(): InputLoginIDAction {
     const resource = initInputBoardValueResource("text")

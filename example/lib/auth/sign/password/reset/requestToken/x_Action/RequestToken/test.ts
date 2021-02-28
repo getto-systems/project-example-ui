@@ -14,8 +14,9 @@ import { RequestTokenRemote, RequestTokenResult } from "../../infra"
 import { RequestPasswordResetTokenAction } from "./action"
 import { CoreState } from "./Core/action"
 
+import { convertResetSessionIDFromRemoteValue } from "../../../kernel/convert"
+
 import { markBoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
-import { convertResetSessionIDFromRemoteValue } from "../../../kernel/data"
 import { toAction, toEntryPoint } from "./impl"
 import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
 

@@ -21,7 +21,7 @@ import {
     LoadOutlineActionLocationInfo,
 } from "./action"
 
-import { AuthzRoles, convertAuthzFromRepositoryResult } from "../../../../common/authz/data"
+import { AuthzRoles } from "../../../../common/authz/data"
 import {
     OutlineBreadcrumb,
     OutlineBreadcrumbNode,
@@ -36,6 +36,7 @@ import {
     OutlineMenuCategoryLabel,
     markOutlineMenuTarget,
 } from "./data"
+import { convertAuthzFromRepositoryResult } from "../../../../common/authz/infra/convert"
 
 export function initOutlineActionLocationInfo(
     version: string,

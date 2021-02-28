@@ -4,7 +4,9 @@ import {
     ValidateBoardFieldState,
 } from "../../../../../../../z_vendor/getto-application/board/validateField/Action/Core/action"
 
-import { Password, ValidatePasswordError } from "../../../../password/data"
+import { ValidatePasswordError } from "../../../../password/convert"
+
+import { Password } from "../../../../password/data"
 import { PasswordCharacterState } from "../data"
 import { ApplicationAction } from "../../../../../../../z_vendor/getto-application/action/action"
 
