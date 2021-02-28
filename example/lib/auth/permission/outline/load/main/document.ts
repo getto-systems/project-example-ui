@@ -1,4 +1,4 @@
-import { newLoadOutlineMenuBadgeNoopRemote } from "../infra/remote/loadOutlineMenuBadge/noop"
+import { newLoadOutlineMenuBadgeNoopRemote } from "../infra/remote/loadMenuBadge/noop"
 import { newDocumentOutlineMenuExpandRepository } from "../infra/repository/outlineMenuExpand/main"
 
 import { lnir } from "../../../../../z_external/icon/core"

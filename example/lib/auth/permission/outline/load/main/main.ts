@@ -1,5 +1,5 @@
 import { newMainOutlineMenuExpandRepository } from "../infra/repository/outlineMenuExpand/main"
-import { newLoadOutlineMenuBadgeRemote } from "../infra/remote/loadOutlineMenuBadge/main"
+import { newLoadOutlineMenuBadgeRemote } from "../infra/remote/loadMenuBadge/main"
 
 import { lnir } from "../../../../../z_external/icon/core"
 
