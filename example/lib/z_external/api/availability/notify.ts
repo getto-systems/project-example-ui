@@ -1,17 +1,15 @@
-export interface ApiAvailableNotify {
-    (err: SendError): Promise<RawNotifyResult>
-}
+import { ApiAccessResult } from "../data"
 
 type SendError = unknown
+type NotifyResult = ApiAccessResult<true, NotifyError>
+type NotifyError = Readonly<{ type: "infra-error"; err: string }>
 
-type RawNotifyResult =
-    | Readonly<{ success: false; err: RawError }>
-    | Readonly<{ success: true; value: true }>
-
-type RawError = Readonly<{ type: string; err: string }>
-
-export function initApiAvailableNotify(apiServerURL: string): ApiAvailableNotify {
-    return async (err: SendError): Promise<RawNotifyResult> => {
+interface Notify {
+    (err: SendError): Promise<NotifyResult>
+}
+export function initApiAvailableNotify(apiServerURL: string): Notify {
+    return async (err: SendError): Promise<NotifyResult> => {
+        // TODO ちゃんとしたところに送る
         await fetch(apiServerURL, {
             method: "POST",
             headers: [["Content-Type", "application/json"]],

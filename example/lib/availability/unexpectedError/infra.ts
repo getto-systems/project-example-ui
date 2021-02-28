@@ -1,22 +1,20 @@
-import {
-    Remote,
-    RemoteError,
-    RemoteResult,
-    RemoteSimulator,
-} from "../../z_vendor/getto-application/infra/remote/infra"
+import { RemoteTypes } from "../../z_vendor/getto-application/infra/remote/infra"
 
 import { NotifyUnexpectedErrorPod } from "./action"
+
+import { NotifyUnexpectedErrorRemoteError } from "./data"
 
 export type UnexpectedErrorInfra = UnexpectedNotifyInfra
 
 export type UnexpectedNotifyInfra = Readonly<{
-    notify: NotifyUnexpectedErrorRemoteAccess
+    notify: NotifyUnexpectedErrorRemote
 }>
 
 export interface NotifyUnexpectedError {
     (infra: UnexpectedNotifyInfra): NotifyUnexpectedErrorPod
 }
 
-export type NotifyUnexpectedErrorRemoteAccess = Remote<unknown, true, RemoteError>
-export type NotifyUnexpectedErrorRemoteAccessResult = RemoteResult<true, RemoteError>
-export type NotifyUnexpectedErrorSimulator = RemoteSimulator<unknown, true, RemoteError>
+type NotifyUnexpectedErrorRemoteTypes = RemoteTypes<unknown, true, NotifyUnexpectedErrorRemoteError>
+export type NotifyUnexpectedErrorRemote = NotifyUnexpectedErrorRemoteTypes["remote"]
+export type NotifyUnexpectedErrorRemoteResult = NotifyUnexpectedErrorRemoteTypes["result"]
+export type NotifyUnexpectedErrorSimulator = NotifyUnexpectedErrorRemoteTypes["simulator"]

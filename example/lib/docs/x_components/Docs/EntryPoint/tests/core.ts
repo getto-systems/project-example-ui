@@ -18,8 +18,8 @@ import {
 import { DocumentResource } from "../entryPoint"
 import { initTestContentAction } from "../../../../content/tests/content"
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
-import { initNotifyUnexpectedErrorSimulateRemoteAccess } from "../../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/simulate"
 import { initUnexpectedErrorAction } from "../../../../../availability/unexpectedError/impl"
+import { initNotifyUnexpectedErrorSimulator } from "../../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/testHelper"
 
 export type DocumentRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
@@ -33,13 +33,13 @@ export function newTestDocumentResource(
     currentURL: URL,
     menuTree: OutlineMenuTree,
     repository: DocumentRepository,
-    remote: DocumentRemoteAccess
+    remote: DocumentRemoteAccess,
 ): DocumentResource {
     const locationInfo = initOutlineActionLocationInfo(version, currentURL)
     const factory: DocumentFactory = {
         actions: {
             error: initUnexpectedErrorAction({
-                notify: initNotifyUnexpectedErrorSimulateRemoteAccess(),
+                notify: initNotifyUnexpectedErrorSimulator(),
             }),
             breadcrumbList: initOutlineBreadcrumbListAction(locationInfo, { menuTree }),
             menu: initOutlineMenuAction(locationInfo, {

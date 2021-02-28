@@ -2,10 +2,13 @@ import { env } from "../../../../../y_environment/env"
 
 import { initApiAvailableNotify } from "../../../../../z_external/api/availability/notify"
 
-import { initNotifyUnexpectedErrorConnectRemoteAccess } from "./connect"
+import { unwrapRemoteError } from "../../../../../z_vendor/getto-application/infra/remote/helper"
 
-import { NotifyUnexpectedErrorRemoteAccess } from "../../../infra"
+import { NotifyUnexpectedErrorRemote } from "../../../infra"
 
-export function newNotifyUnexpectedErrorRemoteAccess(): NotifyUnexpectedErrorRemoteAccess {
-    return initNotifyUnexpectedErrorConnectRemoteAccess(initApiAvailableNotify(env.apiServerURL))
+export function newNotifyUnexpectedErrorRemoteAccess(): NotifyUnexpectedErrorRemote {
+    return unwrapRemoteError(initApiAvailableNotify(env.apiServerURL), (err) => ({
+        type: "infra-error",
+        err: `${err}`,
+    }))
 }
