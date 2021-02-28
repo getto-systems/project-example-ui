@@ -1,4 +1,4 @@
-import { newNotifyUnexpectedErrorRemoteAccess } from "./infra/remote/notifyUnexpectedError/main"
+import { newNotifyUnexpectedErrorRemote } from "./infra/remote/notifyUnexpectedError/init"
 
 import { initUnexpectedErrorAction } from "./impl"
 
@@ -6,6 +6,6 @@ import { UnexpectedErrorAction } from "./action"
 
 export function newErrorAction(): UnexpectedErrorAction {
     return initUnexpectedErrorAction({
-        notify: newNotifyUnexpectedErrorRemoteAccess(),
+        notify: newNotifyUnexpectedErrorRemote(),
     })
 }

@@ -1,9 +1,4 @@
-import {
-    Remote,
-    RemoteResult,
-    RemoteSimulator,
-    RemoteTypes,
-} from "../../../../../z_vendor/getto-application/infra/remote/infra"
+import { RemoteTypes } from "../../../../../z_vendor/getto-application/infra/remote/infra"
 import { Limit, WaitTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
 
 import { CheckSendingStatusRemoteError, SendingTokenStatus } from "./data"
@@ -18,9 +13,10 @@ export type CheckSendingStatusInfra = Readonly<{
     }>
 }>
 
-export type SendTokenRemote = Remote<null, true, CheckSendingStatusRemoteError>
-export type SendTokenResult = RemoteResult<true, CheckSendingStatusRemoteError>
-export type SendTokenSimulator = RemoteSimulator<null, true, CheckSendingStatusRemoteError>
+type SendTokenRemoteTypes = RemoteTypes<null, true, CheckSendingStatusRemoteError>
+export type SendTokenRemote = SendTokenRemoteTypes["remote"]
+export type SendTokenResult = SendTokenRemoteTypes["result"]
+export type SendTokenSimulator = SendTokenRemoteTypes["simulator"]
 
 type GetSendingStatusRemoteTypes = RemoteTypes<
     ResetSessionID,
