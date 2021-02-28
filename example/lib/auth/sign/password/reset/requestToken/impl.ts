@@ -7,6 +7,7 @@ import { RequestTokenMethod } from "./method"
 import { RequestTokenEvent } from "./event"
 
 import { authSignHref_password_reset_checkStatus } from "../../../common/searchParams/data"
+import { convertResetSessionIDFromRemoteValue } from "../kernel/data"
 
 interface RequestToken {
     (infra: RequestTokenInfra): RequestTokenMethod
@@ -19,10 +20,10 @@ export const requestToken: RequestToken = (infra) => async (fields, post) => {
 
     post({ type: "try-to-request-token" })
 
-    const { request: startSession, config } = infra
+    const { requestToken, config } = infra
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayedChecker(startSession(fields.value), config.delay, () =>
+    const response = await delayedChecker(requestToken(fields.value), config.delay, () =>
         post({ type: "delayed-to-request-token" }),
     )
     if (!response.success) {
@@ -32,7 +33,9 @@ export const requestToken: RequestToken = (infra) => async (fields, post) => {
 
     post({
         type: "succeed-to-request-token",
-        href: authSignHref_password_reset_checkStatus(response.value),
+        href: authSignHref_password_reset_checkStatus(
+            convertResetSessionIDFromRemoteValue(response.value),
+        ),
     })
 }
 

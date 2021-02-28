@@ -7,8 +7,6 @@ import { standardBoardValueStore } from "../../../../../../../z_vendor/getto-app
 import { initCoreMaterial, initCoreAction } from "./Core/impl"
 import { initFormAction } from "./Form/impl"
 
-import { initRequestTokenSimulate } from "../../infra/remote/requestToken/simulate"
-
 import { requestTokenEventHasDone } from "../../impl"
 
 import { RequestTokenRemote, RequestTokenResult } from "../../infra"
@@ -17,8 +15,9 @@ import { RequestPasswordResetTokenAction } from "./action"
 import { CoreState } from "./Core/action"
 
 import { markBoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
-import { markResetSessionID } from "../../../kernel/data"
+import { convertResetSessionIDFromRemoteValue } from "../../../kernel/data"
 import { toAction, toEntryPoint } from "./impl"
+import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
 
 const VALID_LOGIN = { loginID: "login-id" } as const
 const SESSION_ID = "session-id" as const
@@ -125,31 +124,27 @@ describe("RequestPasswordResetToken", () => {
 })
 
 function standardPasswordResetSessionResource() {
-    const simulator = standardRemoteAccess()
+    const simulator = standardRequestTokenRemote()
     const resource = newTestPasswordResetSessionResource(simulator)
 
     return { resource }
 }
 function waitPasswordResetSessionResource() {
-    const simulator = waitRemoteAccess()
+    const simulator = waitRequestTokenRemote()
     const resource = newTestPasswordResetSessionResource(simulator)
 
     return { resource }
 }
 
-type PasswordResetSessionTestRemoteAccess = Readonly<{
-    request: RequestTokenRemote
-}>
-
 function newTestPasswordResetSessionResource(
-    remote: PasswordResetSessionTestRemoteAccess,
+    remote: RequestTokenRemote,
 ): RequestPasswordResetTokenAction {
     const config = standardConfig()
     const action = toAction({
         core: initCoreAction(
             initCoreMaterial({
+                requestToken: remote,
                 config: config.session.request,
-                ...remote,
             }),
         ),
 
@@ -170,23 +165,19 @@ function standardConfig() {
         },
     }
 }
-function standardRemoteAccess(): PasswordResetSessionTestRemoteAccess {
-    return {
-        request: initRequestTokenSimulate(simulateRequestToken, {
-            wait_millisecond: 0,
-        }),
-    }
+function standardRequestTokenRemote(): RequestTokenRemote {
+    return initRemoteSimulator(simulateRequestToken, {
+        wait_millisecond: 0,
+    })
 }
-function waitRemoteAccess(): PasswordResetSessionTestRemoteAccess {
-    return {
-        request: initRequestTokenSimulate(simulateRequestToken, {
-            wait_millisecond: 3,
-        }),
-    }
+function waitRequestTokenRemote(): RequestTokenRemote {
+    return initRemoteSimulator(simulateRequestToken, {
+        wait_millisecond: 3,
+    })
 }
 
 function simulateRequestToken(): RequestTokenResult {
-    return { success: true, value: markResetSessionID(SESSION_ID) }
+    return { success: true, value: convertResetSessionIDFromRemoteValue(SESSION_ID) }
 }
 
 function initAsyncTester() {
