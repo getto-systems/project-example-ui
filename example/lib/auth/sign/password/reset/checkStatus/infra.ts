@@ -2,10 +2,11 @@ import {
     Remote,
     RemoteResult,
     RemoteSimulator,
+    RemoteTypes,
 } from "../../../../../z_vendor/getto-application/infra/remote/infra"
 import { Limit, WaitTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
 
-import { CheckSendingStatusRemoteError, SendingStatus } from "./data"
+import { CheckSendingStatusRemoteError, SendingTokenStatus } from "./data"
 import { ResetSessionID } from "../kernel/data"
 
 export type CheckSendingStatusInfra = Readonly<{
@@ -21,22 +22,11 @@ export type SendTokenRemote = Remote<null, true, CheckSendingStatusRemoteError>
 export type SendTokenResult = RemoteResult<true, CheckSendingStatusRemoteError>
 export type SendTokenSimulator = RemoteSimulator<null, true, CheckSendingStatusRemoteError>
 
-export type GetSendingStatusRemote = Remote<
+type GetSendingStatusRemoteTypes = RemoteTypes<
     ResetSessionID,
-    GetSendingStatusResponse,
+    SendingTokenStatus,
     CheckSendingStatusRemoteError
 >
-export type GetSendingStatusResult = RemoteResult<
-    GetSendingStatusResponse,
-    CheckSendingStatusRemoteError
->
-export type GetSendingStatusSimulator = RemoteSimulator<
-    ResetSessionID,
-    GetSendingStatusResponse,
-    CheckSendingStatusRemoteError
->
-
-export type GetSendingStatusResponse =
-    | Readonly<{ done: false; status: SendingStatus }>
-    | Readonly<{ done: true; send: false; err: string }>
-    | Readonly<{ done: true; send: true }>
+export type GetSendingStatusRemote = GetSendingStatusRemoteTypes["remote"]
+export type GetSendingStatusResult = GetSendingStatusRemoteTypes["result"]
+export type GetSendingStatusSimulator = GetSendingStatusRemoteTypes["simulator"]

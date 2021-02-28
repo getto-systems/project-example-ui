@@ -3,15 +3,15 @@ import {
     initSyncActionTestRunner,
 } from "../../../../../../../z_vendor/getto-application/action/testHelper"
 import { WaitTime } from "../../../../../../../z_vendor/getto-application/infra/config/infra"
+import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { SendingTokenStatus } from "../../data"
 import { checkSessionStatusEventHasDone, initCheckSendingStatusLocationInfo } from "../../impl"
 import {
     GetSendingStatusRemote,
-    GetSendingStatusResponse,
     GetSendingStatusResult,
     SendTokenRemote,
     SendTokenResult,
 } from "../../infra"
-import { initGetSendingStatusSimulate } from "../../infra/remote/getSendingStatus/simulate"
 import { initSendTokenSimulate } from "../../infra/remote/sendToken/simulate"
 import { CheckPasswordResetSendingStatusAction, CheckSendingStatusState } from "./action"
 import { initCheckSendingStatusAction, initMaterial, toEntryPoint } from "./impl"
@@ -187,11 +187,11 @@ function simulateSendToken(): SendTokenResult {
     return { success: true, value: true }
 }
 function getStatusRemoteAccess(
-    responseCollection: GetSendingStatusResponse[],
+    responseCollection: SendingTokenStatus[],
     interval: WaitTime,
 ): GetSendingStatusRemote {
     let position = 0
-    return initGetSendingStatusSimulate((): GetSendingStatusResult => {
+    return initRemoteSimulator((): GetSendingStatusResult => {
         if (responseCollection.length === 0) {
             return { success: false, err: { type: "infra-error", err: "no response" } }
         }
@@ -201,17 +201,17 @@ function getStatusRemoteAccess(
         return { success: true, value: response }
     }, interval)
 
-    function getResponse(): GetSendingStatusResponse {
+    function getResponse(): SendingTokenStatus {
         if (position < responseCollection.length) {
             return responseCollection[position]
         }
         return responseCollection[responseCollection.length - 1]
     }
 }
-function standardGetStatusResponse(): GetSendingStatusResponse[] {
+function standardGetStatusResponse(): SendingTokenStatus[] {
     return [{ done: true, send: true }]
 }
-function longSendingGetStatusResponse(): GetSendingStatusResponse[] {
+function longSendingGetStatusResponse(): SendingTokenStatus[] {
     // 完了するまでに 5回以上かかる
     return [
         { done: false, status: { sending: true } },
