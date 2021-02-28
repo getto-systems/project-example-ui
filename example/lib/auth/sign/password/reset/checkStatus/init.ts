@@ -1,9 +1,8 @@
 import { env } from "../../../../../y_environment/env"
 
-import { initApiAuthSignResetGetStatus } from "../../../../../z_external/api/auth/sign/reset/getStatus"
+import { newGetSendingStatusRemote } from "./infra/remote/getSendingStatus"
 import { initApiAuthSignResetSendToken } from "../../../../../z_external/api/auth/sign/reset/sendToken"
 
-import { initGetSendingStatusConnect } from "./infra/remote/getSendingStatus/connect"
 import { initSendTokenConnect } from "./infra/remote/sendToken/connect"
 
 import { initCheckSendingStatusLocationInfo } from "./impl"
@@ -22,7 +21,7 @@ export function newCheckSendingStatusLocationInfo(
 export function newCheckSendingStatusInfra(): CheckSendingStatusInfra {
     return {
         sendToken: initSendTokenConnect(initApiAuthSignResetSendToken(env.apiServerURL)),
-        getStatus: initGetSendingStatusConnect(initApiAuthSignResetGetStatus(env.apiServerURL)),
+        getStatus: newGetSendingStatusRemote(),
         config: {
             wait: waitSecond(0.25),
             limit: limit(40),

@@ -1,22 +1,25 @@
-import { ApiResult } from "../../../data"
+import { ApiAccessResult, ApiError } from "../../../data"
 import { parseError } from "../common"
 
-export interface ApiAuthSignResetGetStatus {
-    (sessionID: SendSessionID): Promise<RawGetStatusResult>
-}
-
 type SendSessionID = string
-type RawGetStatusResult = ApiResult<SessionStatus>
-type SessionStatus =
-    | Readonly<{ dest: RawDestination; done: false; status: SendingStatus }>
-    | Readonly<{ dest: RawDestination; done: true; send: false; err: string }>
-    | Readonly<{ dest: RawDestination; done: true; send: true }>
+type RemoteResult = ApiAccessResult<SendingTokenStatus, RemoteError>
+type SendingTokenStatus =
+    | Readonly<{ done: false; status: Readonly<{ sending: boolean }> }>
+    | Readonly<{ done: true; send: false; err: string }>
+    | Readonly<{ done: true; send: true }>
 
-type RawDestination = Readonly<{ type: "log" }>
-type SendingStatus = Readonly<{ sending: boolean }>
+type RemoteError =
+    | Readonly<{ type: "bad-request" }>
+    | Readonly<{ type: "invalid-password-reset" }>
+    | Readonly<{ type: "server-error" }>
+    | Readonly<{ type: "bad-response"; err: string }>
+    | Readonly<{ type: "infra-error"; err: string }>
 
-export function initApiAuthSignResetGetStatus(apiServerURL: string): ApiAuthSignResetGetStatus {
-    return async (_sessionID: SendSessionID): Promise<RawGetStatusResult> => {
+interface GetSendingStatus {
+    (sessionID: SendSessionID): Promise<RemoteResult>
+}
+export function initApiAuthSignResetGetStatus(apiServerURL: string): GetSendingStatus {
+    return async (_sessionID: SendSessionID): Promise<RemoteResult> => {
         const response = await fetch(apiServerURL, {
             method: "POST",
             credentials: "include",
@@ -29,13 +32,27 @@ export function initApiAuthSignResetGetStatus(apiServerURL: string): ApiAuthSign
             return {
                 success: true,
                 value: {
-                    dest: { type: "log" },
                     done: true,
                     send: true,
                 },
             }
         } else {
-            return { success: false, err: await parseError(response) }
+            return { success: false, err: toRemoteError(await parseError(response)) }
+        }
+    }
+
+    function toRemoteError(err: ApiError): RemoteError {
+        switch (err.type) {
+            case "bad-request":
+            case "invalid-password-reset":
+            case "server-error":
+                return { type: err.type }
+
+            case "bad-response":
+                return { type: err.type, err: err.err }
+
+            default:
+                return { type: "infra-error", err: err.err }
         }
     }
 }
