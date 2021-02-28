@@ -12,7 +12,6 @@ import {
     SendTokenRemote,
     SendTokenResult,
 } from "../../infra"
-import { initSendTokenSimulate } from "../../infra/remote/sendToken/simulate"
 import { CheckPasswordResetSendingStatusAction, CheckSendingStatusState } from "./action"
 import { initCheckSendingStatusAction, initMaterial, toEntryPoint } from "./impl"
 
@@ -168,17 +167,13 @@ function standardConfig() {
 }
 function standardRemoteAccess(): PasswordResetSessionTestRemoteAccess {
     return {
-        sendToken: initSendTokenSimulate(simulateSendToken, {
-            wait_millisecond: 0,
-        }),
+        sendToken: initRemoteSimulator(simulateSendToken, { wait_millisecond: 0 }),
         getStatus: getStatusRemoteAccess(standardGetStatusResponse(), { wait_millisecond: 0 }),
     }
 }
 function longSendingSimulator(): PasswordResetSessionTestRemoteAccess {
     return {
-        sendToken: initSendTokenSimulate(simulateSendToken, {
-            wait_millisecond: 3,
-        }),
+        sendToken: initRemoteSimulator(simulateSendToken, { wait_millisecond: 3 }),
         getStatus: getStatusRemoteAccess(longSendingGetStatusResponse(), { wait_millisecond: 0 }),
     }
 }

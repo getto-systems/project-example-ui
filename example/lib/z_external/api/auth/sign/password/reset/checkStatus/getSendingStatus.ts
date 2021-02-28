@@ -1,5 +1,5 @@
-import { ApiAccessResult, ApiError } from "../../../data"
-import { parseError } from "../common"
+import { ApiAccessResult, ApiError } from "../../../../../data"
+import { parseError } from "../../../common"
 
 type SendSessionID = string
 type RemoteResult = ApiAccessResult<SendingTokenStatus, RemoteError>
@@ -18,7 +18,7 @@ type RemoteError =
 interface GetSendingStatus {
     (sessionID: SendSessionID): Promise<RemoteResult>
 }
-export function initApiAuthSignResetGetStatus(apiServerURL: string): GetSendingStatus {
+export function newApiGetSendingStatus(apiServerURL: string): GetSendingStatus {
     return async (_sessionID: SendSessionID): Promise<RemoteResult> => {
         const response = await fetch(apiServerURL, {
             method: "POST",

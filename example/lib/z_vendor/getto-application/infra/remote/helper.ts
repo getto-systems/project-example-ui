@@ -1,6 +1,6 @@
 import { Remote } from "./infra"
 
-export function unwrapRemoteError<M, V, E>(
+export function wrapRemoteError<M, V, E>(
     remote: Remote<M, V, E>,
     errorHandler: { (err: unknown): E },
 ): Remote<M, V, E> {
