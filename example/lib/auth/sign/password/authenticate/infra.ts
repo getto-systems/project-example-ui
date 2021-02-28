@@ -1,5 +1,5 @@
 import { ApiCredential } from "../../../../common/apiCredential/data"
-import { Remote, RemoteResult, RemoteSimulator } from "../../../../z_vendor/getto-application/remote/infra"
+import { Remote, RemoteResult, RemoteSimulator } from "../../../../z_vendor/getto-application/infra/remote/infra"
 import { DelayTime } from "../../../../z_vendor/getto-application/infra/config/infra"
 
 import { AuthnInfo } from "../../kernel/authnInfo/kernel/data"

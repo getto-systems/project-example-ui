@@ -1,4 +1,4 @@
-import { Remote, RemoteResult, RemoteSimulator } from "../../../../../z_vendor/getto-application/remote/infra"
+import { Remote, RemoteResult, RemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/infra"
 import { StoreResult } from "../../../../../z_vendor/getto-application/storage/infra"
 
 import { StorageError } from "../../../../../z_vendor/getto-application/storage/data"

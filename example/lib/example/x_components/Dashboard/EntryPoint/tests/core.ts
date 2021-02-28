@@ -12,7 +12,7 @@ import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initExampleComponent } from "../../example/impl"
 
 import {
-    LoadOutlineMenuBadgeRemoteAccess,
+    LoadOutlineMenuBadgeRemote,
     OutlineMenuExpandRepository,
     OutlineMenuTree,
 } from "../../../../../auth/permission/outline/load/infra"
@@ -30,7 +30,7 @@ export type DashboardRepository = Readonly<{
     seasons: SeasonRepository
 }>
 export type DashboardRemoteAccess = Readonly<{
-    loadMenuBadge: LoadOutlineMenuBadgeRemoteAccess
+    loadMenuBadge: LoadOutlineMenuBadgeRemote
 }>
 export function newTestDashboardResource(
     version: string,

@@ -6,13 +6,14 @@ import {
     initOutlineActionLocationInfo,
 } from "../../../../auth/permission/outline/load/impl"
 import {
+    LoadOutlineMenuBadgeSimulator,
     OutlineMenuExpand,
     OutlineMenuExpandRepository,
     OutlineMenuTree,
 } from "../../../../auth/permission/outline/load/infra"
-import { initLoadOutlineMenuBadgeSimulateRemoteAccess } from "../../../../auth/permission/outline/load/infra/remote/loadOutlineMenuBadge/simulate"
 import { initMemoryOutlineMenuExpandRepository } from "../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/memory"
 import { initAsyncActionTester_legacy } from "../../../../z_vendor/getto-application/action/testHelper"
+import { initRemoteSimulator } from "../../../../z_vendor/getto-application/infra/remote/simulate"
 import { markApiNonce, markApiRoles } from "../../../apiCredential/data"
 import { ApiCredentialRepository } from "../../../apiCredential/infra"
 import { initMemoryApiCredentialRepository } from "../../../apiCredential/infra/repository/memory"
@@ -353,6 +354,53 @@ describe("Menu", () => {
         }
     })
 
+    test("load menu; load menu badge error", (done) => {
+        const { resource } = errorMenuResource()
+
+        resource.menu.subscriber.subscribe(initTester())
+
+        resource.menu.ignite()
+
+        function initTester() {
+            return initAsyncMenuTester()((stack) => {
+                expect(stack).toEqual([
+                    {
+                        type: "succeed-to-instant-load",
+                        menu: [
+                            category("MAIN", ["MAIN"], true, 0, [
+                                item("ホーム", "home", "/1.0.0/index.html", true, 0),
+                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 0),
+                            ]),
+                            category("DOCUMENT", ["DOCUMENT"], false, 0, [
+                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
+                                category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
+                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
+                                ]),
+                            ]),
+                        ],
+                    },
+                    {
+                        type: "failed-to-load",
+                        err: { type: "infra-error", err: "Error: infra error" },
+                        menu: [
+                            category("MAIN", ["MAIN"], true, 0, [
+                                item("ホーム", "home", "/1.0.0/index.html", true, 0),
+                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 0),
+                            ]),
+                            category("DOCUMENT", ["DOCUMENT"], false, 0, [
+                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
+                                category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
+                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
+                                ]),
+                            ]),
+                        ],
+                    },
+                ])
+                done()
+            })
+        }
+    })
+
     type MenuNode =
         | Readonly<{
               type: "category"
@@ -435,6 +483,13 @@ function expandMenuResource() {
 
     return { resource }
 }
+function errorMenuResource() {
+    const locationInfo = standardLocationInfo()
+    const repository = standardRepository()
+    const resource = newErrorMenuResource(locationInfo, repository)
+
+    return { repository, resource }
+}
 
 type Repository = Readonly<{
     apiCredentials: ApiCredentialRepository
@@ -452,9 +507,26 @@ function newTestMenuResource(
             menuTree,
         }),
         menu: initOutlineMenuAction(locationInfo, {
-            ...standardRemoteAccess(),
-            ...repository,
             menuTree,
+            loadMenuBadge: standardLoadMenuBadgeRemote(),
+            ...repository,
+        }),
+    })
+}
+function newErrorMenuResource(
+    locationInfo: LoadOutlineActionLocationInfo,
+    repository: Repository,
+): MenuResource {
+    const menuTree = standardMenuTree()
+
+    return initMenuResource({
+        breadcrumbList: initOutlineBreadcrumbListAction(locationInfo, {
+            menuTree,
+        }),
+        menu: initOutlineMenuAction(locationInfo, {
+            menuTree,
+            loadMenuBadge: errorLoadMenuBadgeRemote(),
+            ...repository,
         }),
     })
 }
@@ -567,19 +639,21 @@ function expandRepository(): Repository {
     }
 }
 
-function standardRemoteAccess() {
-    return {
-        loadMenuBadge: initLoadOutlineMenuBadgeSimulateRemoteAccess(
-            () => ({
-                success: true,
-                value: {
-                    "/index.html": 10,
-                    "/docs/index.html": 20,
-                },
-            }),
-            { wait_millisecond: 0 },
-        ),
+function standardLoadMenuBadgeRemote() {
+    const simulator: LoadOutlineMenuBadgeSimulator = () => ({
+        success: true,
+        value: [
+            { path: "/index.html", count: 10 },
+            { path: "/docs/index.html", count: 20 },
+        ],
+    })
+    return initRemoteSimulator(simulator, { wait_millisecond: 0 })
+}
+function errorLoadMenuBadgeRemote() {
+    const simulator: LoadOutlineMenuBadgeSimulator = () => {
+        throw new Error("infra error")
     }
+    return initRemoteSimulator(simulator, { wait_millisecond: 0 })
 }
 
 function standardMenuExpandRepository(menuExpand: OutlineMenuExpand): OutlineMenuExpandRepository {

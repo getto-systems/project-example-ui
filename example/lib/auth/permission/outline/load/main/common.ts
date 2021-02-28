@@ -4,7 +4,7 @@ import { StaticMenuPath } from "../../../../../y_environment/path"
 import { Icon, iconClass } from "../../../../../z_external/icon/core"
 
 import {
-    LoadOutlineMenuBadgeRemoteAccess,
+    LoadOutlineMenuBadgeRemote,
     OutlineMenuExpandRepository,
     OutlineMenuPermission,
     OutlineMenuTree,
@@ -37,7 +37,7 @@ export function newOutlineMenuAction(
     currentURL: URL,
     newMenuExpandRepository: { (webStorage: Storage): OutlineMenuExpandRepository },
     menuTree: OutlineMenuTree,
-    loadMenuBadge: LoadOutlineMenuBadgeRemoteAccess,
+    loadMenuBadge: LoadOutlineMenuBadgeRemote,
 ): LoadOutlineMenuAction {
     return initOutlineMenuAction(newLocationInfo(currentURL), {
         loadMenuBadge,

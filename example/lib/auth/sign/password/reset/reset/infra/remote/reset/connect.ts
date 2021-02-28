@@ -1,6 +1,6 @@
 import { markApiNonce, markApiRoles } from "../../../../../../../../common/apiCredential/data"
-import { initConnectRemoteAccess } from "../../../../../../../../z_vendor/getto-application/remote/connect"
-import { RawRemote, RemoteError } from "../../../../../../../../z_vendor/getto-application/remote/infra"
+import { initConnectRemoteAccess } from "../../../../../../../../z_vendor/getto-application/infra/remote/connect"
+import { RawRemote, RemoteError } from "../../../../../../../../z_vendor/getto-application/infra/remote/infra"
 import { markAuthAt, markAuthnNonce } from "../../../../../../kernel/authnInfo/kernel/data"
 import { ResetRemoteError } from "../../../data"
 import { ResetRemote, ResetMessage, ResetResponse } from "../../../infra"

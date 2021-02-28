@@ -1,4 +1,4 @@
-import { initSimulateRemoteAccess } from "../../../../../../../../z_vendor/getto-application/remote/simulate"
+import { initRemoteSimulator } from "../../../../../../../../z_vendor/getto-application/infra/remote/simulate"
 
 import { WaitTime } from "../../../../../../../../z_vendor/getto-application/infra/config/infra"
 import { SendTokenRemote, SendTokenSimulator } from "../../../infra"
@@ -7,5 +7,5 @@ export function initSendTokenSimulate(
     simulator: SendTokenSimulator,
     time: WaitTime,
 ): SendTokenRemote {
-    return initSimulateRemoteAccess(simulator, time)
+    return initRemoteSimulator(simulator, time)
 }

@@ -1,16 +1,22 @@
-import { ApiResult } from "../../data"
+import { ApiAccessResult } from "../../data"
 
-export interface ApiAuthPermissionLoadMenuBadge {
-    (nonce: SendApiNonce): Promise<RawLoadMenuBadgeResult>
+interface Load {
+    (nonce: ApiNonce): Promise<LoadResult>
 }
 
-type SendApiNonce = string
-type RawLoadMenuBadgeResult = ApiResult<MenuBadge>
-type MenuBadge = Record<string, number>
+type ApiNonce = string
+type LoadResult = ApiAccessResult<MenuBadgeItem[], LoadError>
+type MenuBadgeItem = Readonly<{ path: string; count: number }>
 
-export function initApiAuthPermissionLoadMenuBadge(_apiServerURL: string): ApiAuthPermissionLoadMenuBadge {
-    return async (_nonce: SendApiNonce): Promise<RawLoadMenuBadgeResult> => {
+type LoadError =
+    | Readonly<{ type: "bad-request" }>
+    | Readonly<{ type: "server-error" }>
+    | Readonly<{ type: "bad-response"; err: string }>
+    | Readonly<{ type: "infra-error"; err: string }>
+
+export function initApiLoadOutlineMenuBadge(_apiServerURL: string): Load {
+    return async (_nonce: ApiNonce): Promise<LoadResult> => {
         // TODO ちゃんと実装する
-        return { success: true, value: {} }
+        return { success: true, value: [] }
     }
 }

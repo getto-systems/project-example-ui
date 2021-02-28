@@ -1,5 +1,5 @@
 import { newMainOutlineMenuExpandRepository } from "../infra/repository/outlineMenuExpand/main"
-import { newLoadOutlineMenuBadgeRemoteAccess } from "../infra/remote/loadOutlineMenuBadge/main"
+import { newLoadOutlineMenuBadgeRemote } from "../infra/remote/loadOutlineMenuBadge/main"
 
 import { lnir } from "../../../../../z_external/icon/core"
 
@@ -18,7 +18,7 @@ export function newMainOutlineAction(webStorage: Storage, currentURL: URL): Load
             currentURL,
             newMainOutlineMenuExpandRepository,
             menuTree,
-            newLoadOutlineMenuBadgeRemoteAccess()
+            newLoadOutlineMenuBadgeRemote()
         ),
     }
 }
