@@ -21,8 +21,8 @@ import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/inf
 
 import { DashboardResource } from "../entryPoint"
 import { ApiCredentialRepository } from "../../../../../common/apiCredential/infra"
-import { initNotifyUnexpectedErrorSimulateRemoteAccess } from "../../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/simulate"
 import { initUnexpectedErrorAction } from "../../../../../availability/unexpectedError/impl"
+import { initNotifyUnexpectedErrorSimulator } from "../../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/testHelper"
 
 export type DashboardRepository = Readonly<{
     apiCredentials: ApiCredentialRepository
@@ -38,13 +38,13 @@ export function newTestDashboardResource(
     menuTree: OutlineMenuTree,
     repository: DashboardRepository,
     remote: DashboardRemoteAccess,
-    clock: Clock
+    clock: Clock,
 ): DashboardResource {
     const locationInfo = initOutlineActionLocationInfo(version, currentURL)
     const factory: DashboardFactory = {
         actions: {
             error: initUnexpectedErrorAction({
-                notify: initNotifyUnexpectedErrorSimulateRemoteAccess(),
+                notify: initNotifyUnexpectedErrorSimulator(),
             }),
             breadcrumbList: initOutlineBreadcrumbListAction(locationInfo, { menuTree }),
             menu: initOutlineMenuAction(locationInfo, {
