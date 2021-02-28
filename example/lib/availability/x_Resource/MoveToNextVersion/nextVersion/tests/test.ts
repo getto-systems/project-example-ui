@@ -1,12 +1,11 @@
 import { newTestNextVersionResource, NextVersionRemoteAccess } from "./core"
 
-import { initCheckSimulateRemoteAccess } from "../../../../nextVersion/impl/remote/check/simulate"
-
 import { NextVersionActionConfig } from "../../../../nextVersion/infra"
 
 import { NextVersionComponentState } from "../component"
 
-import { appTargetToPath, versionToString } from "../../../../nextVersion/data"
+import { appTargetToPath } from "../../../../nextVersion/data"
+import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
 
 describe("NextVersion", () => {
     test("up to date", (done) => {
@@ -125,7 +124,7 @@ describe("NextVersion", () => {
     })
 
     test("found next minor version", (done) => {
-        const { resource } = foundNextVersionResource(["1.1.0"])
+        const { resource } = foundNextVersionResource(["/1.1.0/index.html"])
 
         resource.nextVersion.subscriber.subscribe(stateHandler())
 
@@ -182,7 +181,7 @@ describe("NextVersion", () => {
     })
 
     test("found next patch version", (done) => {
-        const { resource } = foundNextVersionResource(["1.0.1"])
+        const { resource } = foundNextVersionResource(["/1.0.1/index.html"])
 
         resource.nextVersion.subscriber.subscribe(stateHandler())
 
@@ -239,7 +238,7 @@ describe("NextVersion", () => {
     })
 
     test("found next minor version; recursive", (done) => {
-        const { resource } = foundNextVersionResource(["1.1.0", "1.2.0"])
+        const { resource } = foundNextVersionResource(["/1.1.0/index.html", "/1.2.0/index.html"])
 
         resource.nextVersion.subscriber.subscribe(stateHandler())
 
@@ -296,7 +295,7 @@ describe("NextVersion", () => {
     })
 
     test("found next patch version; recursive", (done) => {
-        const { resource } = foundNextVersionResource(["1.0.1", "1.0.2"])
+        const { resource } = foundNextVersionResource(["/1.0.1/index.html", "/1.0.2/index.html"])
 
         resource.nextVersion.subscriber.subscribe(stateHandler())
 
@@ -353,7 +352,7 @@ describe("NextVersion", () => {
     })
 
     test("found next patch version; complex", (done) => {
-        const { resource } = foundNextVersionResource(["1.1.0", "1.1.1"])
+        const { resource } = foundNextVersionResource(["/1.1.0/index.html", "/1.1.1/index.html"])
 
         resource.nextVersion.subscriber.subscribe(stateHandler())
 
@@ -410,7 +409,11 @@ describe("NextVersion", () => {
     })
 
     test("found next patch version; complex skipped", (done) => {
-        const { resource } = foundNextVersionResource(["1.1.0", "1.1.1", "1.1.3"])
+        const { resource } = foundNextVersionResource([
+            "/1.1.0/index.html",
+            "/1.1.1/index.html",
+            "/1.1.3/index.html",
+        ])
 
         resource.nextVersion.subscriber.subscribe(stateHandler())
 
@@ -467,7 +470,7 @@ describe("NextVersion", () => {
     })
 
     test("found next minor version; complex current version", (done) => {
-        const { resource } = foundComplexNextVersionResource(["1.1.0"])
+        const { resource } = foundComplexNextVersionResource(["/1.1.0/index.html"])
 
         resource.nextVersion.subscriber.subscribe(stateHandler())
 
@@ -647,19 +650,16 @@ function standardConfig(): NextVersionActionConfig {
 
 function standardSimulator(): NextVersionRemoteAccess {
     return {
-        check: initCheckSimulateRemoteAccess(() => ({ success: true, value: { found: false } }), {
+        check: initRemoteSimulator(() => ({ success: true, value: { found: false } }), {
             wait_millisecond: 0,
         }),
     }
 }
 function foundSimulator(versions: string[]): NextVersionRemoteAccess {
     return {
-        check: initCheckSimulateRemoteAccess(
+        check: initRemoteSimulator(
             (version) => {
-                if (!versions.includes(versionToString(version))) {
-                    return { success: true, value: { found: false } }
-                }
-                return { success: true, value: { found: true, version } }
+                return { success: true, value: { found: versions.includes(version) } }
             },
             { wait_millisecond: 0 },
         ),
@@ -667,7 +667,7 @@ function foundSimulator(versions: string[]): NextVersionRemoteAccess {
 }
 function waitSimulator(): NextVersionRemoteAccess {
     return {
-        check: initCheckSimulateRemoteAccess(() => ({ success: true, value: { found: false } }), {
+        check: initRemoteSimulator(() => ({ success: true, value: { found: false } }), {
             wait_millisecond: 2,
         }),
     }

@@ -1,11 +1,7 @@
-import {
-    Remote,
-    RemoteResult,
-    RemoteSimulator,
-} from "../../z_vendor/getto-application/infra/remote/infra"
+import { RemoteTypes } from "../../z_vendor/getto-application/infra/remote/infra"
 import { DelayTime } from "../../z_vendor/getto-application/infra/config/infra"
 
-import { CheckRemoteError, Version } from "./data"
+import { CheckRemoteError } from "./data"
 
 export type NextVersionActionConfig = Readonly<{
     find: FindConfig
@@ -13,15 +9,21 @@ export type NextVersionActionConfig = Readonly<{
 
 export type FindInfra = Readonly<{
     config: FindConfig
-    check: CheckRemoteAccess
+    check: CheckDeployExistsRemote
 }>
 
 export type FindConfig = Readonly<{
     delay: DelayTime
 }>
 
-export type CheckRemoteAccess = Remote<Version, CheckResponse, CheckRemoteError>
-export type CheckRemoteAccessResult = RemoteResult<CheckResponse, CheckRemoteError>
-export type CheckSimulator = RemoteSimulator<Version, CheckResponse, CheckRemoteError>
+type CheckDeployExistsRemoteTypes = RemoteTypes<
+    CheckDeployExistsURL,
+    CheckDeployExistsResponse,
+    CheckRemoteError
+>
+export type CheckDeployExistsRemote = CheckDeployExistsRemoteTypes["remote"]
+export type CheckDeployExistsRemoteResult = CheckDeployExistsRemoteTypes["result"]
+export type CheckDeployExistsSimulator = CheckDeployExistsRemoteTypes["simulator"]
 
-export type CheckResponse = Readonly<{ found: false }> | Readonly<{ found: true; version: Version }>
+export type CheckDeployExistsURL = string
+export type CheckDeployExistsResponse = Readonly<{ found: boolean }>

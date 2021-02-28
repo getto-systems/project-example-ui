@@ -1,10 +1,10 @@
 import { delayedChecker } from "../../../z_vendor/getto-application/infra/timer/helper"
 
-import { CheckRemoteAccess, CheckRemoteAccessResult, FindInfra } from "../infra"
+import { CheckDeployExistsRemote, FindInfra } from "../infra"
 
 import { FindPod } from "../action"
 
-import { markVersion, Version } from "../data"
+import { CheckRemoteError, markVersion, Version, versionToString } from "../data"
 
 export const find = (infra: FindInfra): FindPod => (locationInfo) => async (post) => {
     const { check, config } = infra
@@ -20,27 +20,28 @@ export const find = (infra: FindInfra): FindPod => (locationInfo) => async (post
         return
     }
 
-    const result = next.value
-    if (!result.found) {
+    if (!next.found) {
         post({ type: "succeed-to-find", upToDate: true, target: current })
     } else {
         post({
             type: "succeed-to-find",
             upToDate: false,
-            target: { ...current, version: result.version },
+            target: { ...current, version: next.version },
         })
     }
 }
 
-async function findNext(
-    check: CheckRemoteAccess,
-    current: Version,
-): Promise<CheckRemoteAccessResult> {
+type FindNextResult =
+    | Readonly<{ success: true; found: true; version: Version }>
+    | Readonly<{ success: true; found: false }>
+    | Readonly<{ success: false; err: CheckRemoteError }>
+
+async function findNext(check: CheckDeployExistsRemote, current: Version): Promise<FindNextResult> {
     let result = await checkNext(current)
 
-    while (result.success && result.value.found) {
-        const next = await checkNext(result.value.version)
-        if (!next.success || !next.value.found) {
+    while (result.success && result.found) {
+        const next = await checkNext(result.version)
+        if (!next.success || !next.found) {
             break
         }
         result = next
@@ -48,18 +49,27 @@ async function findNext(
 
     return result
 
-    async function checkNext(version: Version): Promise<CheckRemoteAccessResult> {
-        // 自動で major バージョンアップをするとまずいので次の major バージョンの情報は返さない
-        const response = await check(nextMinorVersion(version))
+    async function checkNext(current: Version): Promise<FindNextResult> {
+        // 自動で major バージョンアップをするとまずいので minor バージョンのチェックから行う
+        const response = await checkVersion(nextMinorVersion(current))
         if (!response.success) {
             return response
         }
-        const result = response.value
-        if (!result.found) {
-            // 見つからなかったら次の patch バージョンの情報を返す
-            return await check(nextPatchVersion(version))
+        if (response.found) {
+            return response
         }
-        return response
+        // minor バージョンが見つからなかったら patch バージョンのチェックを行う
+        return await checkVersion(nextPatchVersion(current))
+    }
+    async function checkVersion(version: Version): Promise<FindNextResult> {
+        const response = await check(checkURL(version))
+        if (!response.success) {
+            return response
+        }
+        if (!response.value.found) {
+            return { success: true, found: false }
+        }
+        return { success: true, found: true, version }
     }
 }
 
@@ -86,4 +96,8 @@ function nextPatchVersion(version: Version): Version {
         patch: version.patch + 1,
         suffix: "",
     })
+}
+
+function checkURL(version: Version): string {
+    return `/${versionToString(version)}/index.html`
 }

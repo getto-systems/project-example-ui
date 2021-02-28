@@ -1,12 +1,12 @@
 import { find } from "../impl/core"
 
-import { CheckRemoteAccess, NextVersionActionConfig } from "../infra"
+import { CheckDeployExistsRemote, NextVersionActionConfig } from "../infra"
 
 import { NextVersionAction } from "../action"
 
 export function initTestNextVersionAction(
     config: NextVersionActionConfig,
-    remote: CheckRemoteAccess,
+    remote: CheckDeployExistsRemote,
 ): NextVersionAction {
     return {
         find: find({
