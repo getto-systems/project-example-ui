@@ -5,13 +5,13 @@ import { checkPasswordCharacter } from "../../checkCharacter/impl"
 
 import { InputPasswordAction } from "./action"
 
-import { convertPasswordFromBoardValue } from "../../../../password/convert"
+import { convertPasswordFromBoard } from "../../../../password/convert"
 
 export function initInputPasswordAction(): InputPasswordAction {
     const resource = initInputBoardValueResource("password")
 
     const validate = initValidateBoardFieldAction({
-        converter: () => convertPasswordFromBoardValue(resource.input.get()),
+        converter: () => convertPasswordFromBoard(resource.input.get()),
     })
 
     const clear = () => resource.input.clear()

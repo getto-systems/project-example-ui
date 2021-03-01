@@ -13,9 +13,10 @@ import {
 } from "../../../../auth/permission/outline/load/infra"
 import { initMemoryOutlineMenuExpandRepository } from "../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/memory"
 import { initAsyncActionTester_legacy } from "../../../../z_vendor/getto-application/action/testHelper"
-import { initRemoteSimulator } from "../../../../z_vendor/getto-application/infra/remote/simulate"
-import { initMemoryRepository } from "../../../../z_vendor/getto-application/infra/repository/memory"
-import { AuthzRepository, AuthzRepositoryResponse } from "../../../authz/infra"
+import { initRemoteSimulator_legacy } from "../../../../z_vendor/getto-application/infra/remote/simulate"
+import { wrapRepository } from "../../../../z_vendor/getto-application/infra/repository/helper"
+import { initMemoryDB } from "../../../../z_vendor/getto-application/infra/repository/memory"
+import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../authz/infra"
 import { BreadcrumbListComponentState } from "./BreadcrumbList/component"
 import { initMenuResource } from "./impl"
 import { MenuComponentState } from "./Menu/component"
@@ -410,7 +411,7 @@ function expandMenuResource() {
 }
 
 type Repository = Readonly<{
-    authz: AuthzRepository
+    authz: AuthzRepositoryPod
     menuExpands: OutlineMenuExpandRepository
 }>
 
@@ -502,38 +503,38 @@ function standardMenuTree(): OutlineMenuTree {
 }
 
 function standardRepository(): Repository {
-    const authz = initMemoryRepository<AuthzRepositoryResponse>()
+    const authz = initMemoryDB<AuthzRepositoryValue>()
     authz.set({ nonce: "api-nonce", roles: ["admin"] })
 
     return {
-        authz,
+        authz: wrapRepository(authz),
         menuExpands: standardMenuExpandRepository([]),
     }
 }
 function emptyRepository(): Repository {
     return {
-        authz: initMemoryRepository<AuthzRepositoryResponse>(),
+        authz: wrapRepository(initMemoryDB<AuthzRepositoryValue>()),
         menuExpands: standardMenuExpandRepository([]),
     }
 }
 function developmentDocumentRepository(): Repository {
-    const authz = initMemoryRepository<AuthzRepositoryResponse>()
+    const authz = initMemoryDB<AuthzRepositoryValue>()
     authz.set({
         nonce: "api-nonce",
         roles: ["admin", "development-document"],
     })
 
     return {
-        authz,
+        authz: wrapRepository(authz),
         menuExpands: standardMenuExpandRepository([]),
     }
 }
 function expandRepository(): Repository {
-    const authz = initMemoryRepository<AuthzRepositoryResponse>()
+    const authz = initMemoryDB<AuthzRepositoryValue>()
     authz.set({ nonce: "api-nonce", roles: ["admin"] })
 
     return {
-        authz,
+        authz: wrapRepository(authz),
         menuExpands: standardMenuExpandRepository([[markOutlineMenuCategoryLabel("DOCUMENT")]]),
     }
 }
@@ -546,7 +547,7 @@ function standardLoadMenuBadgeRemote() {
             { path: "/docs/index.html", count: 20 },
         ],
     })
-    return initRemoteSimulator(simulator, { wait_millisecond: 0 })
+    return initRemoteSimulator_legacy(simulator, { wait_millisecond: 0 })
 }
 
 function standardMenuExpandRepository(menuExpand: OutlineMenuExpand): OutlineMenuExpandRepository {

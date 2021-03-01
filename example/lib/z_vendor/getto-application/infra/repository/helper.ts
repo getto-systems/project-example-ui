@@ -1,36 +1,52 @@
 import { RepositoryError } from "./data"
-import { Repository, RepositoryFetchResult, RepositoryStoreResult } from "./infra"
+import {
+    DB,
+    Repository,
+    RepositoryConverter,
+    RepositoryFetchResult,
+    RepositoryPod,
+    RepositoryStoreResult,
+} from "./infra"
 
-export function wrapRepository<T>(db: DB<T>): Repository<T> {
-    return new Wrapped(db)
+export function wrapRepository<V, R>(db: DB<R>): RepositoryPod<V, R> {
+    return (converter) => new Wrapped(db, converter)
 }
 
-class Wrapped<T> implements Repository<T> {
-    db: DB<T>
+class Wrapped<V, R> implements Repository<V> {
+    db: DB<R>
+    converter: RepositoryConverter<V, R>
 
-    constructor(db: DB<T>) {
+    constructor(db: DB<R>, converter: RepositoryConverter<V, R>) {
         this.db = db
+        this.converter = converter
     }
 
-    get(): RepositoryFetchResult<T> {
+    get(): RepositoryFetchResult<V> {
+        const fetchResult = this.fetch()
+        if (!fetchResult.success || !fetchResult.found) {
+            return fetchResult
+        }
+
+        const convertResult = this.converter.fromRepository(fetchResult.value)
+        if (!convertResult.success) {
+            return { success: true, found: false }
+        }
+
+        return { success: true, found: true, value: convertResult.value }
+    }
+    fetch(): RepositoryFetchResult<R> {
         try {
-            const response = this.db.get()
-            if (!response.found) {
-                return { success: true, found: false }
-            }
-            if (!response.result.success) {
-                return { success: false, err: response.result.err }
-            }
-            return { success: true, found: true, value: response.result.value }
+            return { success: true, ...this.db.get() }
         } catch (err) {
-            return storageError(err)
+            return repositoryError(err)
         }
     }
-    set(value: T): RepositoryStoreResult {
+    set(value: V): RepositoryStoreResult {
         try {
-            return this.db.set(value)
+            this.db.set(this.converter.toRepository(value))
+            return { success: true }
         } catch (err) {
-            return storageError(err)
+            return repositoryError(err)
         }
     }
     remove(): RepositoryStoreResult {
@@ -38,32 +54,11 @@ class Wrapped<T> implements Repository<T> {
             this.db.remove()
             return { success: true }
         } catch (err) {
-            return storageError(err)
+            return repositoryError(err)
         }
     }
 }
 
-function storageError(err: unknown): Readonly<{ success: false; err: RepositoryError }> {
+function repositoryError(err: unknown): Readonly<{ success: false; err: RepositoryError }> {
     return { success: false, err: { type: "infra-error", err: `${err}` } }
 }
-
-// z_external/db のインターフェイスと合わせる
-interface DB<T> {
-    get(): DBFetchResult<T>
-    set(value: T): DBStoreResult
-    remove(): void
-}
-
-type DBFetchResult<T> =
-    | Readonly<{ found: true; result: DBTransformResult<T> }>
-    | Readonly<{ found: false }>
-
-type DBStoreResult =
-    | Readonly<{ success: true }>
-    | Readonly<{ success: false; err: DBTransformError }>
-
-type DBTransformResult<T> =
-    | Readonly<{ success: true; value: T }>
-    | Readonly<{ success: false; err: DBTransformError }>
-
-type DBTransformError = Readonly<{ type: "transform-error"; err: string }>

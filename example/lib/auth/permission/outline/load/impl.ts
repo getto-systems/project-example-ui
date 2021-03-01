@@ -21,6 +21,8 @@ import {
     LoadOutlineActionLocationInfo,
 } from "./action"
 
+import { authzRepositoryConverter } from "../../../../common/authz/convert"
+
 import { AuthzRoles } from "../../../../common/authz/data"
 import {
     OutlineBreadcrumb,
@@ -36,7 +38,6 @@ import {
     OutlineMenuCategoryLabel,
     markOutlineMenuTarget,
 } from "./data"
-import { convertAuthzFromRepositoryResult } from "../../../../common/authz/infra/convert"
 
 export function initOutlineActionLocationInfo(
     version: string,
@@ -134,22 +135,19 @@ const loadBreadcrumbList: LoadOutlineBreadcrumbList = (infra) => (locationInfo) 
 }
 
 const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
-    const { authz, menuExpands, loadMenuBadge } = infra
+    const { menuExpands, loadMenuBadge } = infra
+    const authz = infra.authz(authzRepositoryConverter)
 
-    const authzResult = convertAuthzFromRepositoryResult(authz.get())
+    const authzResult = authz.get()
     if (!authzResult.success) {
         switch (authzResult.err.type) {
-            case "transform-error":
-                authz.remove()
-                post({ type: "failed-to-fetch-repository", err: { type: "not-found" } })
-                return
-
             case "infra-error":
                 post({ type: "failed-to-fetch-repository", err: authzResult.err })
                 return
         }
     }
     if (!authzResult.found) {
+        authz.remove()
         post({ type: "failed-to-fetch-repository", err: { type: "not-found" } })
         return
     }

@@ -1,9 +1,9 @@
-import { ApiAccessResult, ApiError } from "../../../../../data"
-import { parseError } from "../../../common"
+import { ApiResult } from "../../../../../data"
+import { parseErrorMessage } from "../../../common"
+import { ParseErrorResult } from "../../../data"
 
-type RawSendTokenResult = ApiAccessResult<true, RemoteError>
+type RawSendTokenResult = ApiResult<true, RemoteError>
 type RemoteError =
-    | Readonly<{ type: "empty-session-id" }>
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "invalid-password-reset" }>
     | Readonly<{ type: "server-error" }>
@@ -27,22 +27,21 @@ export function newApiSendToken(apiServerURL: string): SendToken {
                 value: true,
             }
         } else {
-            return { success: false, err: toRemoteError(await parseError(response)) }
+            return { success: false, err: toRemoteError(await parseErrorMessage(response)) }
         }
     }
-    
-    function toRemoteError(err: ApiError): RemoteError {
-        switch (err.type) {
+
+    function toRemoteError(result: ParseErrorResult): RemoteError {
+        if (!result.success) {
+            return { type: "bad-response", err: result.err }
+        }
+        switch (result.message) {
             case "bad-request":
             case "invalid-password-reset":
-            case "server-error":
-                return { type: err.type }
-
-            case "bad-response":
-                return { type: err.type, err: err.err }
+                return { type: result.message }
 
             default:
-                return { type: "infra-error", err: err.err }
+                return { type: "server-error" }
         }
     }
 }

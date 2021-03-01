@@ -1,4 +1,4 @@
-import { RemoteTypes } from "../../../../../z_vendor/getto-application/infra/remote/infra"
+import { RemoteTypes_legacy } from "../../../../../z_vendor/getto-application/infra/remote/infra"
 import { DelayTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
 
 import { RequestTokenFields, RequestTokenRemoteError } from "./data"
@@ -10,7 +10,7 @@ export type RequestTokenInfra = Readonly<{
     }>
 }>
 
-type RequestTokenRemoteTypes = RemoteTypes<
+type RequestTokenRemoteTypes = RemoteTypes_legacy<
     RequestTokenFields,
     string,
     RequestTokenRemoteError

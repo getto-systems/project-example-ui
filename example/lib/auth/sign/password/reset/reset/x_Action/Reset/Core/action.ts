@@ -2,10 +2,10 @@ import { ApplicationStateAction } from "../../../../../../../../z_vendor/getto-a
 
 import { ResetMethod, ResetPod } from "../../../method"
 import { GetSecureScriptPathMethod } from "../../../../../../common/secureScriptPath/get/method"
-import { StartContinuousRenewMethod } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/method"
+import { StartContinuousRenewMethod } from "../../../../../../kernel/authn/common/startContinuousRenew/method"
 
 import { ResetEvent } from "../../../event"
-import { StartContinuousRenewEvent } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/event"
+import { StartContinuousRenewEvent } from "../../../../../../kernel/authn/common/startContinuousRenew/event"
 
 import { ResetFields } from "../../../data"
 import {

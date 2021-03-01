@@ -7,7 +7,7 @@ export const LOGIN_ID_MAX_LENGTH = 100
 
 export type ValidateLoginIDError = "empty" | "too-long"
 
-export function convertLoginIDFromBoardValue(
+export function convertLoginIDFromBoard(
     value: BoardValue,
 ): ConvertBoardFieldResult<LoginID, ValidateLoginIDError> {
     if (value.length === 0) {

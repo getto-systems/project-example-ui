@@ -5,7 +5,7 @@ import {
     RemoteSimulator,
 } from "../../../../../z_vendor/getto-application/infra/remote/infra"
 import { DelayTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
-import { AuthnInfo } from "../../../kernel/authnInfo/kernel/data"
+import { Authn } from "../../../kernel/authn/kernel/data"
 
 import { ResetFields, ResetRemoteError } from "./data"
 import { ResetToken } from "../kernel/data"
@@ -25,6 +25,6 @@ export type ResetMessage = Readonly<{
     fields: ResetFields
 }>
 export type ResetResponse = Readonly<{
-    auth: AuthnInfo // TODO キーを authn にする
-    api: Authz // キーを authz にする
+    authn: Authn
+    authz: Authz
 }>

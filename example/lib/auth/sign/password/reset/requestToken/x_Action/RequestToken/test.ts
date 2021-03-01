@@ -14,11 +14,11 @@ import { RequestTokenRemote, RequestTokenResult } from "../../infra"
 import { RequestPasswordResetTokenAction } from "./action"
 import { CoreState } from "./Core/action"
 
-import { convertResetSessionIDFromRemoteValue } from "../../../kernel/convert"
+import { convertResetSessionIDFromRemote } from "../../../kernel/convert"
 
 import { markBoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { toAction, toEntryPoint } from "./impl"
-import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { initRemoteSimulator_legacy } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
 
 const VALID_LOGIN = { loginID: "login-id" } as const
 const SESSION_ID = "session-id" as const
@@ -167,18 +167,18 @@ function standardConfig() {
     }
 }
 function standardRequestTokenRemote(): RequestTokenRemote {
-    return initRemoteSimulator(simulateRequestToken, {
+    return initRemoteSimulator_legacy(simulateRequestToken, {
         wait_millisecond: 0,
     })
 }
 function waitRequestTokenRemote(): RequestTokenRemote {
-    return initRemoteSimulator(simulateRequestToken, {
+    return initRemoteSimulator_legacy(simulateRequestToken, {
         wait_millisecond: 3,
     })
 }
 
 function simulateRequestToken(): RequestTokenResult {
-    return { success: true, value: convertResetSessionIDFromRemoteValue(SESSION_ID) }
+    return { success: true, value: convertResetSessionIDFromRemote(SESSION_ID) }
 }
 
 function initAsyncTester() {

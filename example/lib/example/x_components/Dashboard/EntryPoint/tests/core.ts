@@ -18,14 +18,14 @@ import {
 } from "../../../../../auth/permission/outline/load/infra"
 import { SeasonRepository } from "../../../../shared/season/infra"
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
-import { AuthzRepository } from "../../../../../common/authz/infra"
+import { AuthzRepositoryPod } from "../../../../../common/authz/infra"
 
 import { DashboardResource } from "../entryPoint"
 import { initUnexpectedErrorAction } from "../../../../../availability/unexpectedError/impl"
 import { initNotifyUnexpectedErrorSimulator } from "../../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/testHelper"
 
 export type DashboardRepository = Readonly<{
-    authz: AuthzRepository
+    authz: AuthzRepositoryPod
     menuExpands: OutlineMenuExpandRepository
     seasons: SeasonRepository
 }>

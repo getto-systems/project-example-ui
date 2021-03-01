@@ -5,7 +5,7 @@ import { NextVersionActionConfig } from "../../../../nextVersion/infra"
 import { NextVersionComponentState } from "../component"
 
 import { appTargetToPath } from "../../../../nextVersion/data"
-import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { initRemoteSimulator_legacy } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
 
 describe("NextVersion", () => {
     test("up to date", (done) => {
@@ -650,14 +650,14 @@ function standardConfig(): NextVersionActionConfig {
 
 function standardSimulator(): NextVersionRemoteAccess {
     return {
-        check: initRemoteSimulator(() => ({ success: true, value: { found: false } }), {
+        check: initRemoteSimulator_legacy(() => ({ success: true, value: { found: false } }), {
             wait_millisecond: 0,
         }),
     }
 }
 function foundSimulator(versions: string[]): NextVersionRemoteAccess {
     return {
-        check: initRemoteSimulator(
+        check: initRemoteSimulator_legacy(
             (version) => {
                 return { success: true, value: { found: versions.includes(version) } }
             },
@@ -667,7 +667,7 @@ function foundSimulator(versions: string[]): NextVersionRemoteAccess {
 }
 function waitSimulator(): NextVersionRemoteAccess {
     return {
-        check: initRemoteSimulator(() => ({ success: true, value: { found: false } }), {
+        check: initRemoteSimulator_legacy(() => ({ success: true, value: { found: false } }), {
             wait_millisecond: 2,
         }),
     }

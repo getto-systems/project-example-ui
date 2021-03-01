@@ -19,10 +19,10 @@ import { DocumentResource } from "../entryPoint"
 import { initTestContentAction } from "../../../../content/tests/content"
 import { initUnexpectedErrorAction } from "../../../../../availability/unexpectedError/impl"
 import { initNotifyUnexpectedErrorSimulator } from "../../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/testHelper"
-import { AuthzRepository } from "../../../../../common/authz/infra"
+import { AuthzRepositoryPod } from "../../../../../common/authz/infra"
 
 export type DocumentRepository = Readonly<{
-    authz: AuthzRepository
+    authz: AuthzRepositoryPod
     menuExpands: OutlineMenuExpandRepository
 }>
 export type DocumentRemoteAccess = Readonly<{

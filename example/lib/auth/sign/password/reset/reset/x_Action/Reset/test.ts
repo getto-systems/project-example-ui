@@ -1,9 +1,9 @@
 import {
+    ClockPubSub,
     ClockSubscriber,
     initStaticClock,
     staticClockPubSub,
 } from "../../../../../../../z_vendor/getto-application/infra/clock/simulate"
-import { initRenewSimulate } from "../../../../../kernel/authnInfo/kernel/infra/remote/renew/simulate"
 import { initResetSimulate } from "../../infra/remote/reset/simulate"
 
 import { Clock } from "../../../../../../../z_vendor/getto-application/infra/clock/infra"
@@ -14,14 +14,13 @@ import { ResetPasswordAction } from "./action"
 import { CoreState } from "./Core/action"
 
 import { markSecureScriptPath } from "../../../../../common/secureScriptPath/get/data"
-import { markAuthAt, markAuthnNonce } from "../../../../../kernel/authnInfo/kernel/data"
+import { markAuthAt_legacy, markAuthnNonce_legacy } from "../../../../../kernel/authn/kernel/data"
 import { markApiNonce_legacy, markApiRoles_legacy } from "../../../../../../../common/authz/data"
 import {
-    AuthnInfoRepository,
-    RenewRemote,
-    RenewResult,
-} from "../../../../../kernel/authnInfo/kernel/infra"
-import { initMemoryAuthnInfoRepository } from "../../../../../kernel/authnInfo/kernel/infra/repository/authnInfo/memory"
+    LastAuthRepositoryPod,
+    LastAuthRepositoryValue,
+    RenewRemotePod,
+} from "../../../../../kernel/authn/kernel/infra"
 import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
 import { initResetLocationInfo, resetEventHasDone } from "../../impl"
 import {
@@ -33,8 +32,11 @@ import { initFormAction } from "./Form/impl"
 import { standardBoardValueStore } from "../../../../../../../z_vendor/getto-application/board/input/Action/testHelper"
 import { toAction, toEntryPoint } from "./impl"
 import { initCoreAction, initCoreMaterial } from "./Core/impl"
-import { AuthzRepository, AuthzRepositoryResponse } from "../../../../../../../common/authz/infra"
-import { initMemoryRepository } from "../../../../../../../z_vendor/getto-application/infra/repository/memory"
+import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../../common/authz/infra"
+import { initMemoryDB } from "../../../../../../../z_vendor/getto-application/infra/repository/memory"
+import { wrapRepository } from "../../../../../../../z_vendor/getto-application/infra/repository/helper"
+import { lastAuthRepositoryConverter } from "../../../../../kernel/authn/kernel/convert"
+import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -42,7 +44,13 @@ const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
 const SUCCEED_TO_AUTH_AT = new Date("2020-01-01 10:00:00")
 
 const RENEWED_AUTHN_NONCE = "renewed-authn-nonce" as const
-const SUCCEED_TO_RENEW_AT = new Date("2020-01-01 10:01:00")
+const SUCCEED_TO_RENEW_AT = [
+    new Date("2020-01-01 10:01:00"),
+    new Date("2020-01-01 10:01:01"),
+    new Date("2020-01-01 11:00:00"),
+]
+
+const FINISHED = new Date("2020-01-01 11:00:00")
 
 // renew リクエストを投げるべきかの判定に使用する
 // SUCCEED_TO_AUTH_AT と setContinuousRenew の delay との間でうまく調整する
@@ -55,6 +63,7 @@ const COMPLETED_NOW = new Date("2020-01-01 11:00:00")
 describe("RegisterPassword", () => {
     test("submit valid login-id and password", (done) => {
         const { repository, clock, resource } = standardPasswordResetResource()
+        const lastAuth = repository.lastAuth(lastAuthRepositoryConverter)
 
         resource.core.subscriber.subscribe(initTester())
 
@@ -73,9 +82,23 @@ describe("RegisterPassword", () => {
                         scriptPath: markSecureScriptPath("https://secure.example.com/index.js"),
                     },
                 ])
-                expectToSaveLastAuth(repository.authnInfos)
+                expect(lastAuth.get()).toEqual({
+                    success: true,
+                    found: true,
+                    value: {
+                        nonce: AUTHORIZED_AUTHN_NONCE,
+                        lastAuthAt: SUCCEED_TO_AUTH_AT,
+                    },
+                })
                 setTimeout(() => {
-                    expectToSaveRenewed(repository.authnInfos)
+                    expect(lastAuth.get()).toEqual({
+                        success: true,
+                        found: true,
+                        value: {
+                            nonce: RENEWED_AUTHN_NONCE,
+                            lastAuthAt: SUCCEED_TO_RENEW_AT[0],
+                        },
+                    })
                     done()
                 }, 1) // after setContinuousRenew interval and delay
             })
@@ -85,6 +108,7 @@ describe("RegisterPassword", () => {
     test("submit valid login-id and password; with delayed", (done) => {
         // wait for delayed timeout
         const { repository, clock, resource } = waitPasswordResetResource()
+        const lastAuth = repository.lastAuth(lastAuthRepositoryConverter)
 
         resource.core.subscriber.subscribe(initTester())
 
@@ -104,9 +128,23 @@ describe("RegisterPassword", () => {
                         scriptPath: markSecureScriptPath("https://secure.example.com/index.js"),
                     },
                 ])
-                expectToSaveLastAuth(repository.authnInfos)
+                expect(lastAuth.get()).toEqual({
+                    success: true,
+                    found: true,
+                    value: {
+                        nonce: AUTHORIZED_AUTHN_NONCE,
+                        lastAuthAt: SUCCEED_TO_AUTH_AT,
+                    },
+                })
                 setTimeout(() => {
-                    expectToSaveRenewed(repository.authnInfos)
+                    expect(lastAuth.get()).toEqual({
+                        success: true,
+                        found: true,
+                        value: {
+                            nonce: RENEWED_AUTHN_NONCE,
+                            lastAuthAt: SUCCEED_TO_RENEW_AT[0],
+                        },
+                    })
                     done()
                 }, 1) // after setContinuousRenew interval and delay
             })
@@ -115,6 +153,7 @@ describe("RegisterPassword", () => {
 
     test("submit without fields", (done) => {
         const { repository, resource } = standardPasswordResetResource()
+        const lastAuth = repository.lastAuth(lastAuthRepositoryConverter)
 
         resource.core.subscriber.subscribe(initTester())
 
@@ -127,7 +166,10 @@ describe("RegisterPassword", () => {
                 expect(stack).toEqual([
                     { type: "failed-to-reset", err: { type: "validation-error" } },
                 ])
-                expectToEmptyLastAuth(repository.authnInfos)
+                expect(lastAuth.get()).toEqual({
+                    success: true,
+                    found: false,
+                })
                 done()
             })
         }
@@ -135,6 +177,7 @@ describe("RegisterPassword", () => {
 
     test("submit without resetToken", (done) => {
         const { repository, resource } = emptyResetTokenPasswordResetResource()
+        const lastAuth = repository.lastAuth(lastAuthRepositoryConverter)
 
         resource.core.subscriber.subscribe(initTester())
 
@@ -148,7 +191,10 @@ describe("RegisterPassword", () => {
                 expect(stack).toEqual([
                     { type: "failed-to-reset", err: { type: "empty-reset-token" } },
                 ])
-                expectToEmptyLastAuth(repository.authnInfos)
+                expect(lastAuth.get()).toEqual({
+                    success: true,
+                    found: false,
+                })
                 done()
             })
         }
@@ -216,8 +262,8 @@ describe("RegisterPassword", () => {
 function standardPasswordResetResource() {
     const currentURL = standardURL()
     const repository = standardRepository()
-    const simulator = standardRemoteAccess()
     const clockPubSub = staticClockPubSub()
+    const simulator = standardRemoteAccess(clockPubSub)
     const clock = standardClock(clockPubSub)
     const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
 
@@ -226,8 +272,8 @@ function standardPasswordResetResource() {
 function waitPasswordResetResource() {
     const currentURL = standardURL()
     const repository = standardRepository()
-    const simulator = waitRemoteAccess()
     const clockPubSub = staticClockPubSub()
+    const simulator = waitRemoteAccess(clockPubSub)
     const clock = standardClock(clockPubSub)
     const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
 
@@ -236,8 +282,8 @@ function waitPasswordResetResource() {
 function emptyResetTokenPasswordResetResource() {
     const currentURL = emptyResetTokenURL()
     const repository = standardRepository()
-    const simulator = standardRemoteAccess()
     const clockPubSub = staticClockPubSub()
+    const simulator = standardRemoteAccess(clockPubSub)
     const clock = standardClock(clockPubSub)
     const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
 
@@ -245,12 +291,12 @@ function emptyResetTokenPasswordResetResource() {
 }
 
 type PasswordResetTestRepository = Readonly<{
-    authz: AuthzRepository
-    authnInfos: AuthnInfoRepository
+    authz: AuthzRepositoryPod
+    lastAuth: LastAuthRepositoryPod
 }>
 type PasswordResetTestRemoteAccess = Readonly<{
     reset: ResetRemote
-    renew: RenewRemote
+    renew: RenewRemotePod
 }>
 
 function newPasswordResetTestResource(
@@ -315,34 +361,33 @@ function standardConfig() {
     }
 }
 function standardRepository() {
-    const authz = initMemoryRepository<AuthzRepositoryResponse>()
+    const authz = initMemoryDB<AuthzRepositoryValue>()
     authz.set({
         nonce: "api-nonce",
         roles: ["role"],
     })
 
+    const lastAuth = initMemoryDB<LastAuthRepositoryValue>()
+
     return {
-        authz,
-        authnInfos: initMemoryAuthnInfoRepository({
-            authnNonce: { set: false },
-            lastAuthAt: { set: false },
-        }),
+        authz: <AuthzRepositoryPod>wrapRepository(authz),
+        lastAuth: <LastAuthRepositoryPod>wrapRepository(lastAuth),
     }
 }
-function standardRemoteAccess(): PasswordResetTestRemoteAccess {
+function standardRemoteAccess(clock: ClockPubSub): PasswordResetTestRemoteAccess {
     return {
         reset: initResetSimulate(simulateReset, {
             wait_millisecond: 0,
         }),
-        renew: renewRemoteAccess(),
+        renew: renewRemoteAccess(clock),
     }
 }
-function waitRemoteAccess(): PasswordResetTestRemoteAccess {
+function waitRemoteAccess(clock: ClockPubSub): PasswordResetTestRemoteAccess {
     return {
         reset: initResetSimulate(simulateReset, {
             wait_millisecond: 3,
         }),
-        renew: renewRemoteAccess(),
+        renew: renewRemoteAccess(clock),
     }
 }
 
@@ -350,37 +395,43 @@ function simulateReset(): ResetResult {
     return {
         success: true,
         value: {
-            auth: {
-                authnNonce: markAuthnNonce(AUTHORIZED_AUTHN_NONCE),
-                authAt: markAuthAt(SUCCEED_TO_AUTH_AT),
+            authn: {
+                nonce: markAuthnNonce_legacy(AUTHORIZED_AUTHN_NONCE),
+                authAt: markAuthAt_legacy(SUCCEED_TO_AUTH_AT),
             },
-            api: {
+            authz: {
                 nonce: markApiNonce_legacy("api-nonce"),
                 roles: markApiRoles_legacy(["role"]),
             },
         },
     }
 }
-function renewRemoteAccess(): RenewRemote {
+function renewRemoteAccess(clock: ClockPubSub): RenewRemotePod {
     let renewed = false
-    return initRenewSimulate(
-        (): RenewResult => {
+    return initRemoteSimulator(
+        () => {
             if (renewed) {
                 // 最初の一回だけ renew して、あとは renew を cancel するために null を返す
+                clock.update(FINISHED)
                 return { success: false, err: { type: "invalid-ticket" } }
             }
             renewed = true
 
+            // 現在時刻を動かす
+            const now = SUCCEED_TO_RENEW_AT[0]
+            const nextNow = SUCCEED_TO_RENEW_AT[1]
+            clock.update(now)
+            setTimeout(() => clock.update(nextNow))
+
             return {
                 success: true,
                 value: {
-                    auth: {
-                        authnNonce: markAuthnNonce(RENEWED_AUTHN_NONCE),
-                        authAt: markAuthAt(SUCCEED_TO_RENEW_AT),
+                    authn: {
+                        nonce: RENEWED_AUTHN_NONCE,
                     },
-                    api: {
-                        nonce: markApiNonce_legacy("api-nonce"),
-                        roles: markApiRoles_legacy(["role"]),
+                    authz: {
+                        nonce: "api-nonce",
+                        roles: ["role"],
                     },
                 },
             }
@@ -391,33 +442,6 @@ function renewRemoteAccess(): RenewRemote {
 
 function standardClock(subscriber: ClockSubscriber): Clock {
     return initStaticClock(NOW, subscriber)
-}
-
-function expectToSaveLastAuth(authnInfos: AuthnInfoRepository) {
-    expect(authnInfos.load()).toEqual({
-        success: true,
-        found: true,
-        lastAuth: {
-            authnNonce: markAuthnNonce(AUTHORIZED_AUTHN_NONCE),
-            lastAuthAt: markAuthAt(SUCCEED_TO_AUTH_AT),
-        },
-    })
-}
-function expectToSaveRenewed(authnInfos: AuthnInfoRepository) {
-    expect(authnInfos.load()).toEqual({
-        success: true,
-        found: true,
-        lastAuth: {
-            authnNonce: markAuthnNonce(RENEWED_AUTHN_NONCE),
-            lastAuthAt: markAuthAt(SUCCEED_TO_RENEW_AT),
-        },
-    })
-}
-function expectToEmptyLastAuth(authnInfos: AuthnInfoRepository) {
-    expect(authnInfos.load()).toEqual({
-        success: true,
-        found: false,
-    })
 }
 
 function initAsyncTester() {

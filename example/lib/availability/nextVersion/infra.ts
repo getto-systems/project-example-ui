@@ -1,4 +1,4 @@
-import { RemoteTypes } from "../../z_vendor/getto-application/infra/remote/infra"
+import { RemoteTypes_legacy } from "../../z_vendor/getto-application/infra/remote/infra"
 import { DelayTime } from "../../z_vendor/getto-application/infra/config/infra"
 
 import { CheckRemoteError } from "./data"
@@ -16,7 +16,7 @@ export type FindConfig = Readonly<{
     delay: DelayTime
 }>
 
-type CheckDeployExistsRemoteTypes = RemoteTypes<
+type CheckDeployExistsRemoteTypes = RemoteTypes_legacy<
     CheckDeployExistsURL,
     CheckDeployExistsResponse,
     CheckRemoteError

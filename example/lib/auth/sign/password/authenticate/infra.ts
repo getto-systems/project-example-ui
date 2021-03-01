@@ -2,7 +2,7 @@ import { Authz } from "../../../../common/authz/data"
 import { Remote, RemoteResult, RemoteSimulator } from "../../../../z_vendor/getto-application/infra/remote/infra"
 import { DelayTime } from "../../../../z_vendor/getto-application/infra/config/infra"
 
-import { AuthnInfo } from "../../kernel/authnInfo/kernel/data"
+import { Authn } from "../../kernel/authn/kernel/data"
 
 import { AuthenticateFields, AuthenticateRemoteError } from "./data"
 
@@ -25,6 +25,6 @@ export type AuthenticateSimulator = RemoteSimulator<
     AuthenticateRemoteError
 >
 export type AuthenticateResponse = Readonly<{
-    auth: AuthnInfo
+    auth: Authn
     api: Authz
 }>

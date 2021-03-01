@@ -17,8 +17,9 @@ import { OutlineMenuTree } from "../../../../../auth/permission/outline/load/inf
 
 import { ExampleComponentState } from "../component"
 import { newLoadOutlineMenuBadgeNoopRemote } from "../../../../../auth/permission/outline/load/infra/remote/loadMenuBadge/noop"
-import { AuthzRepositoryResponse } from "../../../../../common/authz/infra"
-import { initMemoryRepository } from "../../../../../z_vendor/getto-application/infra/repository/memory"
+import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../common/authz/infra"
+import { initMemoryDB } from "../../../../../z_vendor/getto-application/infra/repository/memory"
+import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
 
 // デフォルトの season を取得する
 const NOW = new Date("2021-01-01 10:00:00")
@@ -83,11 +84,11 @@ function standardMenuTree(): OutlineMenuTree {
 }
 
 function standardRepository(): DashboardRepository {
-    const authz = initMemoryRepository<AuthzRepositoryResponse>()
+    const authz = initMemoryDB<AuthzRepositoryValue>()
     authz.set({ nonce: "api-nonce", roles: ["role"] })
 
     return {
-        authz,
+        authz: <AuthzRepositoryPod>wrapRepository(authz),
         menuExpands: initOutlineMenuExpandRepository({
             menuExpand: initMemoryTypedStorage({ set: false }),
         }),

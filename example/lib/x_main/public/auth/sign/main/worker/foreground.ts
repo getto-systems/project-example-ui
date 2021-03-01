@@ -1,4 +1,4 @@
-import { newRenewAuthnInfo } from "../../../../../../auth/sign/kernel/authnInfo/renew/x_Action/Renew/init"
+import { newRenewAuthnInfo } from "../../../../../../auth/sign/kernel/authn/renew/x_Action/Renew/init"
 
 import { initLoginViewLocationInfo, toAuthSignEntryPoint, View } from "../../impl"
 
