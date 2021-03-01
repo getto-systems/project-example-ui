@@ -1,4 +1,4 @@
-import { initMockLogoutResource } from "../../../../auth/sign/kernel/authnInfo/clear/x_Action/Logout/mock"
+import { initMockLogoutResource } from "../../../../auth/sign/kernel/authn/clear/x_Action/Logout/mock"
 import { initMockErrorResource } from "../../../../availability/x_Resource/Error/mock"
 import {
     BreadcrumbListMockPropsPasser,

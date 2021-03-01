@@ -7,8 +7,9 @@ import { OutlineMenuTree } from "../../../../../auth/permission/outline/load/inf
 
 import { ContentComponentState } from "../component"
 import { newLoadOutlineMenuBadgeNoopRemote } from "../../../../../auth/permission/outline/load/infra/remote/loadMenuBadge/noop"
-import { AuthzRepositoryResponse } from "../../../../../common/authz/infra"
-import { initMemoryRepository } from "../../../../../z_vendor/getto-application/infra/repository/memory"
+import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../common/authz/infra"
+import { initMemoryDB } from "../../../../../z_vendor/getto-application/infra/repository/memory"
+import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
 
 describe("Content", () => {
     test("load content", (done) => {
@@ -67,11 +68,11 @@ function standardMenuTree(): OutlineMenuTree {
 }
 
 function standardRepository() {
-    const authz = initMemoryRepository<AuthzRepositoryResponse>()
+    const authz = initMemoryDB<AuthzRepositoryValue>()
     authz.set({ nonce: "api-nonce", roles: ["role"] })
 
     return {
-        authz,
+        authz: <AuthzRepositoryPod>wrapRepository(authz),
         menuExpands: initOutlineMenuExpandRepository({
             menuExpand: initMemoryTypedStorage({ set: false }),
         }),

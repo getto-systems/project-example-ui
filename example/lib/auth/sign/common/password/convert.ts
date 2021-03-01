@@ -7,7 +7,7 @@ export const PASSWORD_MAX_BYTES = 72
 
 export type ValidatePasswordError = "empty" | "too-long"
 
-export function convertPasswordFromBoardValue(
+export function convertPasswordFromBoard(
     value: BoardValue,
 ): ConvertBoardFieldResult<Password, ValidatePasswordError> {
     if (value.length === 0) {

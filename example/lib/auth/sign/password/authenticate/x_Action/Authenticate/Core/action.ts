@@ -2,10 +2,10 @@ import { ApplicationStateAction } from "../../../../../../../z_vendor/getto-appl
 
 import { AuthenticateMethod } from "../../../method"
 import { GetSecureScriptPathMethod } from "../../../../../common/secureScriptPath/get/method"
-import { StartContinuousRenewMethod } from "../../../../../kernel/authnInfo/common/startContinuousRenew/method"
+import { StartContinuousRenewMethod } from "../../../../../kernel/authn/common/startContinuousRenew/method"
 
 import { AuthenticateEvent } from "../../../event"
-import { StartContinuousRenewEvent } from "../../../../../kernel/authnInfo/common/startContinuousRenew/event"
+import { StartContinuousRenewEvent } from "../../../../../kernel/authn/common/startContinuousRenew/event"
 
 import {
     SecureScriptPath,

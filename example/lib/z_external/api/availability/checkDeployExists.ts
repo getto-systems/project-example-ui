@@ -1,8 +1,8 @@
-import { ApiAccessResult } from "../data"
+import { ApiResult } from "../data"
 
 type CheckURL = string
 
-type RemoteResult = ApiAccessResult<RemoteResponse, RemoteError>
+type RemoteResult = ApiResult<RemoteResponse, RemoteError>
 type RemoteResponse = Readonly<{ found: boolean }>
 type RemoteError =
     | Readonly<{ type: "server-error" }>

@@ -1,10 +1,10 @@
 import { env } from "../../../../y_environment/env"
-import { newDB_Authz } from "../../../../z_external/db/authz"
+import { newDB_Authz } from "../../../../z_external/db/auth/authz"
 
 import { wrapRepository } from "../../../../z_vendor/getto-application/infra/repository/helper"
 
-import { AuthzRepository } from "../../infra"
+import { AuthzRepositoryPod } from "../../infra"
 
-export function newAuthzRepository(storage: Storage): AuthzRepository {
+export function newAuthzRepository(storage: Storage): AuthzRepositoryPod {
     return wrapRepository(newDB_Authz(storage, env.storageKey.authz))
 }

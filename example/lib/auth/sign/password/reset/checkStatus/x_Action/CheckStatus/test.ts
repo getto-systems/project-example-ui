@@ -3,7 +3,7 @@ import {
     initSyncActionTestRunner,
 } from "../../../../../../../z_vendor/getto-application/action/testHelper"
 import { WaitTime } from "../../../../../../../z_vendor/getto-application/infra/config/infra"
-import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { initRemoteSimulator_legacy } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
 import { SendingTokenStatus } from "../../data"
 import { checkSessionStatusEventHasDone, initCheckSendingStatusLocationInfo } from "../../impl"
 import {
@@ -167,13 +167,13 @@ function standardConfig() {
 }
 function standardRemoteAccess(): PasswordResetSessionTestRemoteAccess {
     return {
-        sendToken: initRemoteSimulator(simulateSendToken, { wait_millisecond: 0 }),
+        sendToken: initRemoteSimulator_legacy(simulateSendToken, { wait_millisecond: 0 }),
         getStatus: getStatusRemoteAccess(standardGetStatusResponse(), { wait_millisecond: 0 }),
     }
 }
 function longSendingSimulator(): PasswordResetSessionTestRemoteAccess {
     return {
-        sendToken: initRemoteSimulator(simulateSendToken, { wait_millisecond: 3 }),
+        sendToken: initRemoteSimulator_legacy(simulateSendToken, { wait_millisecond: 3 }),
         getStatus: getStatusRemoteAccess(longSendingGetStatusResponse(), { wait_millisecond: 0 }),
     }
 }
@@ -186,7 +186,7 @@ function getStatusRemoteAccess(
     interval: WaitTime,
 ): GetSendingStatusRemote {
     let position = 0
-    return initRemoteSimulator((): GetSendingStatusResult => {
+    return initRemoteSimulator_legacy((): GetSendingStatusResult => {
         if (responseCollection.length === 0) {
             return { success: false, err: { type: "infra-error", err: "no response" } }
         }

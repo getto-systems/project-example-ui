@@ -1,10 +1,10 @@
-import { RemoteTypes } from "../../../../z_vendor/getto-application/infra/remote/infra"
+import { RemoteTypes_legacy } from "../../../../z_vendor/getto-application/infra/remote/infra"
 
 import {
     StorageError,
     StoreResult,
 } from "../../../../z_vendor/getto-application/infra/storage/data"
-import { AuthzRepository } from "../../../../common/authz/infra"
+import { AuthzRepositoryPod } from "../../../../common/authz/infra"
 
 import {
     LoadOutlineBreadcrumbListPod,
@@ -28,7 +28,7 @@ export interface LoadOutlineBreadcrumbList {
 
 export type LoadOutlineMenuInfra = Readonly<{
     loadMenuBadge: LoadOutlineMenuBadgeRemote
-    authz: AuthzRepository
+    authz: AuthzRepositoryPod
     menuExpands: OutlineMenuExpandRepository
     menuTree: OutlineMenuTree
 }>
@@ -124,7 +124,7 @@ export type OutlineMenuExpandResponse =
     | Readonly<{ success: true; menuExpand: OutlineMenuExpand }>
     | Readonly<{ success: false; err: StorageError }>
 
-type LoadOutlineMenuBadgeRemoteTypes = RemoteTypes<
+type LoadOutlineMenuBadgeRemoteTypes = RemoteTypes_legacy<
     AuthzNonce,
     OutlineMenuBadgeItem[],
     LoadOutlineMenuBadgeRemoteError

@@ -1,26 +1,19 @@
-import { Repository, RepositoryFetchResult, RepositoryStoreResult } from "./infra"
+import { DB, DBFetchResult } from "./infra"
 
-export function initMemoryRepository<T>(): Repository<T> {
+export function initMemoryDB<T>(): DB<T> {
     return new Memory()
 }
 
-class Memory<T> implements Repository<T> {
-    store: Store<T> = { set: false }
+class Memory<T> implements DB<T> {
+    store: DBFetchResult<T> = { found: false }
 
-    get(): RepositoryFetchResult<T> {
-        if (!this.store.set) {
-            return { success: true, found: false }
-        }
-        return { success: true, found: true, value: this.store.value }
+    get(): DBFetchResult<T> {
+        return this.store
     }
-    set(value: T): RepositoryStoreResult {
-        this.store = { set: true, value }
-        return { success: true }
+    set(value: T): void {
+        this.store = { found: true, value }
     }
-    remove(): RepositoryStoreResult {
-        this.store = { set: false }
-        return { success: true }
+    remove(): void {
+        this.store = { found: false }
     }
 }
-
-type Store<T> = Readonly<{ set: false }> | Readonly<{ set: true; value: T }>

@@ -6,7 +6,7 @@ import { RequestTokenMethod } from "./method"
 
 import { RequestTokenEvent } from "./event"
 
-import { convertResetSessionIDFromRemoteValue } from "../kernel/convert"
+import { convertResetSessionIDFromRemote } from "../kernel/convert"
 
 import { authSignHref_password_reset_checkStatus } from "../../../common/searchParams/data"
 
@@ -35,7 +35,7 @@ export const requestToken: RequestToken = (infra) => async (fields, post) => {
     post({
         type: "succeed-to-request-token",
         href: authSignHref_password_reset_checkStatus(
-            convertResetSessionIDFromRemoteValue(response.value),
+            convertResetSessionIDFromRemote(response.value),
         ),
     })
 }

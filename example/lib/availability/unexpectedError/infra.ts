@@ -1,4 +1,4 @@
-import { RemoteTypes } from "../../z_vendor/getto-application/infra/remote/infra"
+import { RemoteTypes_legacy } from "../../z_vendor/getto-application/infra/remote/infra"
 
 import { NotifyUnexpectedErrorPod } from "./action"
 
@@ -14,7 +14,7 @@ export interface NotifyUnexpectedError {
     (infra: UnexpectedNotifyInfra): NotifyUnexpectedErrorPod
 }
 
-type NotifyUnexpectedErrorRemoteTypes = RemoteTypes<unknown, true, NotifyUnexpectedErrorRemoteError>
+type NotifyUnexpectedErrorRemoteTypes = RemoteTypes_legacy<unknown, true, NotifyUnexpectedErrorRemoteError>
 export type NotifyUnexpectedErrorRemote = NotifyUnexpectedErrorRemoteTypes["remote"]
 export type NotifyUnexpectedErrorRemoteResult = NotifyUnexpectedErrorRemoteTypes["result"]
 export type NotifyUnexpectedErrorSimulator = NotifyUnexpectedErrorRemoteTypes["simulator"]

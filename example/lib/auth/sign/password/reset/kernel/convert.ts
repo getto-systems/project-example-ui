@@ -13,7 +13,7 @@ export function convertResetSessionIDFromLocation(
     return { valid: true, value: markResetSessionID(sessionID) }
 }
 
-export function convertResetSessionIDFromRemoteValue(sessionID: string): ResetSessionID {
+export function convertResetSessionIDFromRemote(sessionID: string): ResetSessionID {
     // remote からの値は validation チェックなしで受け入れる
     return markResetSessionID(sessionID)
 }

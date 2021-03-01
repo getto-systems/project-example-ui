@@ -2,9 +2,9 @@ import { ApplicationAbstractStateAction } from "../../../../../../../../z_vendor
 
 import { reset } from "../../../impl"
 import { getSecureScriptPath } from "../../../../../../common/secureScriptPath/get/impl"
-import { startContinuousRenew } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/impl"
+import { startContinuousRenew } from "../../../../../../kernel/authn/common/startContinuousRenew/impl"
 
-import { StartContinuousRenewInfra } from "../../../../../../kernel/authnInfo/common/startContinuousRenew/infra"
+import { StartContinuousRenewInfra } from "../../../../../../kernel/authn/common/startContinuousRenew/infra"
 import { GetSecureScriptPathInfra } from "../../../../../../common/secureScriptPath/get/infra"
 import { ResetInfra } from "../../../infra"
 
@@ -22,7 +22,7 @@ import { ResetLocationInfo } from "../../../method"
 
 import { LoadSecureScriptError } from "../../../../../../common/secureScriptPath/get/data"
 import { ResetFields } from "../../../data"
-import { AuthnInfo } from "../../../../../../kernel/authnInfo/kernel/data"
+import { Authn } from "../../../../../../kernel/authn/kernel/data"
 import { ConvertBoardResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
 
 export type CoreInfra = CoreForegroundInfra & CoreBackgroundInfra
@@ -97,7 +97,7 @@ class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAc
             }
         })
     }
-    startContinuousRenew(authnInfo: AuthnInfo): void {
+    startContinuousRenew(authnInfo: Authn): void {
         this.material.startContinuousRenew(authnInfo, (event) => {
             switch (event.type) {
                 case "succeed-to-start-continuous-renew":

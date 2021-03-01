@@ -1,4 +1,4 @@
-import { DB, DBFetchResult, DBStoreResult, DBTransformer } from "./infra"
+import { DB, DBFetchResult, DBTransformer } from "./infra"
 
 export function initDB<T>(storage: Storage, key: string, transformer: DBTransformer<T>): DB<T> {
     return new Impl(storage, key, transformer)
@@ -21,15 +21,10 @@ class Impl<T> implements DB<T> {
         if (!value) {
             return { found: false }
         }
-        return { found: true, result: this.transformer.fromString(value) }
+        return { found: true, value: this.transformer.fromString(value) }
     }
-    set(value: T): DBStoreResult {
-        const result = this.transformer.toString(value)
-        if (!result.success) {
-            return result
-        }
-        this.storage.setItem(this.key, result.value)
-        return { success: true }
+    set(value: T): void {
+        this.storage.setItem(this.key, this.transformer.toString(value))
     }
     remove(): void {
         this.storage.removeItem(this.key)

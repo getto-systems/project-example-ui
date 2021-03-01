@@ -1,7 +1,7 @@
-import { ApiAccessResult } from "../data"
+import { ApiResult } from "../data"
 
 type SendError = unknown
-type NotifyResult = ApiAccessResult<true, NotifyError>
+type NotifyResult = ApiResult<true, NotifyError>
 type NotifyError = Readonly<{ type: "infra-error"; err: string }>
 
 interface Notify {

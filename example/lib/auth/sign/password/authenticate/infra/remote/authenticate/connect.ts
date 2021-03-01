@@ -1,41 +1,32 @@
 import { initConnectRemoteAccess } from "../../../../../../../z_vendor/getto-application/infra/remote/connect"
 
-import {
-    AuthenticateRemote,
-    AuthenticateResponse,
-} from "../../../infra"
+import { AuthenticateRemote, AuthenticateResponse } from "../../../infra"
 
+import { AuthenticateFields, AuthenticateRemoteError } from "../../../data"
 import {
-    AuthenticateFields,
-    AuthenticateRemoteError,
-} from "../../../data"
-import { RawRemote, RemoteError } from "../../../../../../../z_vendor/getto-application/infra/remote/infra"
-import { markAuthAt, markAuthnNonce } from "../../../../../kernel/authnInfo/kernel/data"
-import {
-    markApiNonce_legacy,
-    markApiRoles_legacy,
-} from "../../../../../../../common/authz/data"
+    RawRemote,
+    RemoteError,
+} from "../../../../../../../z_vendor/getto-application/infra/remote/infra"
+import { markAuthAt_legacy, markAuthnNonce_legacy } from "../../../../../kernel/authn/kernel/data"
+import { markApiNonce_legacy, markApiRoles_legacy } from "../../../../../../../common/authz/data"
 
 type Raw = RawRemote<AuthenticateFields, RawAuthnInfo>
 type RawAuthnInfo = Readonly<{
-    authnNonce: string
-    api: Readonly<{ apiNonce: string; apiRoles: string[] }>
+    authn: Readonly<{ nonce: string }>
+    authz: Readonly<{ nonce: string; roles: string[] }>
 }>
 
-export function initAuthenticateConnect(
-    access: Raw
-): AuthenticateRemote {
+export function initAuthenticateConnect(access: Raw): AuthenticateRemote {
     return initConnectRemoteAccess(access, {
-        message: (fields: AuthenticateFields): AuthenticateFields =>
-            fields,
+        message: (fields: AuthenticateFields): AuthenticateFields => fields,
         value: (response: RawAuthnInfo): AuthenticateResponse => ({
             auth: {
-                authnNonce: markAuthnNonce(response.authnNonce),
-                authAt: markAuthAt(new Date()),
+                nonce: markAuthnNonce_legacy(response.authn.nonce),
+                authAt: markAuthAt_legacy(new Date()),
             },
             api: {
-                nonce: markApiNonce_legacy(response.api.apiNonce),
-                roles: markApiRoles_legacy(response.api.apiRoles),
+                nonce: markApiNonce_legacy(response.authz.nonce),
+                roles: markApiRoles_legacy(response.authz.roles),
             },
         }),
         error: (err: RemoteError): AuthenticateRemoteError => {

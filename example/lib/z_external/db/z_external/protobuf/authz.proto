@@ -1,6 +1,0 @@
-syntax = "proto3";
-
-message AuthzMessage {
-  string nonce = 1;
-  repeated string roles = 2;
-}

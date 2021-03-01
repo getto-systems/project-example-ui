@@ -1,7 +1,7 @@
-import { ApiAccessResult } from "../../data"
+import { ApiResult } from "../../data"
 
 type ApiNonce = string
-type LoadResult = ApiAccessResult<MenuBadgeItem[], LoadError>
+type LoadResult = ApiResult<MenuBadgeItem[], LoadError>
 type MenuBadgeItem = Readonly<{ path: string; count: number }>
 
 type LoadError =
