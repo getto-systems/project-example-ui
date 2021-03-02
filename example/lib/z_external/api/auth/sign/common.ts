@@ -1,6 +1,6 @@
 import { ApiCredentialMessage } from "../../y_protobuf/credential_pb.js"
 
-import { decodeBase64StringToUint8Array } from "../../../../z_vendor/protobuf/transform"
+import { decodeBase64StringToUint8Array } from "../../../../z_vendor/base64/transform"
 
 import { AuthResponse, ParseErrorResult } from "./data"
 import { ApiError, ApiResult } from "../../data"

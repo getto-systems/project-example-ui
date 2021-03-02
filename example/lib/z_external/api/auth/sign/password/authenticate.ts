@@ -1,6 +1,6 @@
 import { PasswordLoginMessage } from "../../../y_protobuf/password_login_pb.js"
 
-import { encodeUint8ArrayToBase64String } from "../../../../../z_vendor/protobuf/transform"
+import { encodeUint8ArrayToBase64String } from "../../../../../z_vendor/base64/transform"
 
 import { parseAuthResponse_legacy, parseError } from "../common"
 

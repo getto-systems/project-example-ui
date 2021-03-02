@@ -6,7 +6,7 @@ import { DB } from "../infra"
 import {
     decodeBase64StringToUint8Array,
     encodeUint8ArrayToBase64String,
-} from "../../../z_vendor/protobuf/transform"
+} from "../../../z_vendor/base64/transform"
 
 type LastAuth = Readonly<{
     nonce: string
