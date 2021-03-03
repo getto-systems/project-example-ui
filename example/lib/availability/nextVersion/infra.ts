@@ -1,4 +1,4 @@
-import { RemoteTypes_legacy } from "../../z_vendor/getto-application/infra/remote/infra"
+import { RemoteTypes } from "../../z_vendor/getto-application/infra/remote/infra"
 import { DelayTime } from "../../z_vendor/getto-application/infra/config/infra"
 
 import { CheckRemoteError } from "./data"
@@ -9,18 +9,20 @@ export type NextVersionActionConfig = Readonly<{
 
 export type FindInfra = Readonly<{
     config: FindConfig
-    check: CheckDeployExistsRemote
+    check: CheckDeployExistsRemotePod
 }>
 
 export type FindConfig = Readonly<{
     delay: DelayTime
 }>
 
-type CheckDeployExistsRemoteTypes = RemoteTypes_legacy<
+type CheckDeployExistsRemoteTypes = RemoteTypes<
     CheckDeployExistsURL,
+    CheckDeployExistsResponse,
     CheckDeployExistsResponse,
     CheckRemoteError
 >
+export type CheckDeployExistsRemotePod = CheckDeployExistsRemoteTypes["pod"]
 export type CheckDeployExistsRemote = CheckDeployExistsRemoteTypes["remote"]
 export type CheckDeployExistsRemoteResult = CheckDeployExistsRemoteTypes["result"]
 export type CheckDeployExistsSimulator = CheckDeployExistsRemoteTypes["simulator"]

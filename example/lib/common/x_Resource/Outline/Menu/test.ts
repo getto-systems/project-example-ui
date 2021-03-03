@@ -6,6 +6,7 @@ import {
     initOutlineActionLocationInfo,
 } from "../../../../auth/permission/outline/load/impl"
 import {
+    LoadOutlineMenuBadgeRemotePod,
     LoadOutlineMenuBadgeSimulator,
     OutlineMenuExpand,
     OutlineMenuExpandRepository,
@@ -13,7 +14,7 @@ import {
 } from "../../../../auth/permission/outline/load/infra"
 import { initMemoryOutlineMenuExpandRepository } from "../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/memory"
 import { initAsyncActionTester_legacy } from "../../../../z_vendor/getto-application/action/testHelper"
-import { initRemoteSimulator_legacy } from "../../../../z_vendor/getto-application/infra/remote/simulate"
+import { initRemoteSimulator } from "../../../../z_vendor/getto-application/infra/remote/simulate"
 import { wrapRepository } from "../../../../z_vendor/getto-application/infra/repository/helper"
 import { initMemoryDB } from "../../../../z_vendor/getto-application/infra/repository/memory"
 import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../authz/infra"
@@ -539,7 +540,7 @@ function expandRepository(): Repository {
     }
 }
 
-function standardLoadMenuBadgeRemote() {
+function standardLoadMenuBadgeRemote(): LoadOutlineMenuBadgeRemotePod {
     const simulator: LoadOutlineMenuBadgeSimulator = () => ({
         success: true,
         value: [
@@ -547,7 +548,7 @@ function standardLoadMenuBadgeRemote() {
             { path: "/docs/index.html", count: 20 },
         ],
     })
-    return initRemoteSimulator_legacy(simulator, { wait_millisecond: 0 })
+    return initRemoteSimulator(simulator, { wait_millisecond: 0 })
 }
 
 function standardMenuExpandRepository(menuExpand: OutlineMenuExpand): OutlineMenuExpandRepository {

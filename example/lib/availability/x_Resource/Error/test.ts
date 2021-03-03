@@ -1,4 +1,4 @@
-import { initRemoteSimulator_legacy } from "../../../z_vendor/getto-application/infra/remote/simulate"
+import { initRemoteSimulator } from "../../../z_vendor/getto-application/infra/remote/simulate"
 import { initUnexpectedErrorAction } from "../../unexpectedError/impl"
 
 import { initErrorResource } from "./impl"
@@ -22,7 +22,7 @@ function standardResource() {
 function newTestNotifyErrorResource() {
     return initErrorResource({
         error: initUnexpectedErrorAction({
-            notify: initRemoteSimulator_legacy(() => ({ success: true, value: true }), {
+            notify: initRemoteSimulator(() => ({ success: true, value: true }), {
                 wait_millisecond: 0,
             }),
         }),
