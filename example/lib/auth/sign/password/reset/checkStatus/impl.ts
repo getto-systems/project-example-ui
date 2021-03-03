@@ -12,6 +12,7 @@ import { CheckSendingStatusError } from "./data"
 import { ResetSessionID } from "../kernel/data"
 import { authSignSearchKey_password_reset_sessionID } from "../../../common/searchParams/data"
 import { ConvertLocationResult } from "../../../../../z_vendor/getto-application/location/data"
+import { passThroughRemoteConverter } from "../../../../../z_vendor/getto-application/infra/remote/helper"
 
 export function initCheckSendingStatusLocationInfo(
     currentURL: URL,
@@ -44,8 +45,8 @@ interface CheckStatus {
 }
 export const checkSendingStatus: CheckStatus = (infra) => (locationInfo) => async (post) => {
     const { config } = infra
-    const sendToken = infra.sendToken((value) => value) // TODO converter を用意するべきか？
-    const getStatus = infra.getStatus((value) => value) // TODO converter を用意するべきか？    
+    const sendToken = infra.sendToken(passThroughRemoteConverter)
+    const getStatus = infra.getStatus(passThroughRemoteConverter)
 
     const sessionID = locationInfo.getPasswordResetSessionID()
     if (!sessionID.valid) {

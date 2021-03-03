@@ -39,6 +39,7 @@ import {
     markOutlineMenuTarget,
 } from "./data"
 import { outlineMenuExpandRepositoryConverter } from "./convert"
+import { passThroughRemoteConverter } from "../../../../z_vendor/getto-application/infra/remote/helper"
 
 export function initOutlineActionLocationInfo(
     version: string,
@@ -138,7 +139,7 @@ const loadBreadcrumbList: LoadOutlineBreadcrumbList = (infra) => (locationInfo) 
 const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
     const authz = infra.authz(authzRepositoryConverter)
     const menuExpands = infra.menuExpands(outlineMenuExpandRepositoryConverter)
-    const loadMenuBadge = infra.loadMenuBadge((value) => value) // TODO converter を用意するべきか？
+    const loadMenuBadge = infra.loadMenuBadge(passThroughRemoteConverter)
 
     const authzResult = authz.get()
     if (!authzResult.success) {
