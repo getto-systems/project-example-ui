@@ -26,8 +26,8 @@ import {
     initAsyncActionTestRunner,
     initSyncActionTestRunner,
 } from "../../../../../../z_vendor/getto-application/action/testHelper"
+import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/testHelper"
 import { initFormAction } from "./Form/impl"
-import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/data"
 import { standardBoardValueStore } from "../../../../../../z_vendor/getto-application/board/input/Action/testHelper"
 import { toAction, toEntryPoint } from "./impl"
 import { initCoreAction, initCoreMaterial } from "./Core/impl"

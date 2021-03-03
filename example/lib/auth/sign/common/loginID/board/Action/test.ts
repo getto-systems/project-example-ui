@@ -3,7 +3,7 @@ import { standardBoardValueStore } from "../../../../../../z_vendor/getto-applic
 
 import { initInputLoginIDAction } from "./Core/impl"
 
-import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/data"
+import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/testHelper"
 
 describe("InputLoginID", () => {
     test("validate; valid input", (done) => {

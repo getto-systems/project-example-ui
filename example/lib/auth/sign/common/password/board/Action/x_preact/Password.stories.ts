@@ -4,11 +4,12 @@ import { enumKeys, storyTemplate } from "../../../../../../../z_vendor/storybook
 
 import { InputPasswordProps, View } from "./Password"
 
+import { markBoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/testHelper"
+
 import { initMockInputPasswordAction } from "../Core/mock"
 
 import { ValidatePasswordState } from "../Core/action"
 
-import { markBoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { PasswordCharacterState } from "../../../data"
 
 enum ValidateEnum {

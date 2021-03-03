@@ -1,11 +1,8 @@
 export type BoardValue = string & { BoardValue: never }
-export function markBoardValue(input: string): BoardValue {
-    return input as BoardValue
-}
 
-export const emptyBoardValue: BoardValue = markBoardValue("")
+export const emptyBoardValue: BoardValue = "" as BoardValue
 
-// board の中ではほとんど使われていないが、変換結果として外に返す構造なので kernel で定義
+// validate board で参照されているが、変換結果として外に返す構造なので kernel で定義している
 export type ConvertBoardResult<T> =
     | Readonly<{ valid: true; value: T }>
     | Readonly<{ valid: false }>
