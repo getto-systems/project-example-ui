@@ -1,4 +1,4 @@
-import { StorageError } from "../../../../z_vendor/getto-application/infra/storage/data"
+import { RepositoryError } from "../../../../z_vendor/getto-application/infra/repository/data"
 import {
     OutlineBreadcrumb,
     LoadOutlineMenuBadgeError,
@@ -19,4 +19,4 @@ export type LoadOutlineMenuEvent =
 
 export type ToggleOutlineMenuExpandEvent =
     | Readonly<{ type: "succeed-to-toggle"; menu: OutlineMenu }>
-    | Readonly<{ type: "failed-to-toggle"; menu: OutlineMenu; err: StorageError }>
+    | Readonly<{ type: "failed-to-toggle"; menu: OutlineMenu; err: RepositoryError }>

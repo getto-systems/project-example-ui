@@ -85,16 +85,16 @@ async function renew(infra: CheckAuthInfoInfra, info: LastAuth, post: Post<Renew
         return
     }
 
-    if (!checkStorageError(lastAuth.set(toLastAuth(response.value.authn)))) {
+    if (!checkRepositoryError(lastAuth.set(toLastAuth(response.value.authn)))) {
         return
     }
-    if (!checkStorageError(authz.set(response.value.authz))) {
+    if (!checkRepositoryError(authz.set(response.value.authz))) {
         return
     }
 
     post({ type: "succeed-to-renew", auth: response.value })
 
-    function checkStorageError(result: RepositoryStoreResult): boolean {
+    function checkRepositoryError(result: RepositoryStoreResult): boolean {
         if (!result.success) {
             post({ type: "repository-error", err: result.err })
         }
