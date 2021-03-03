@@ -1,3 +1,10 @@
+import { Authz } from "../../../../../common/authz/data"
+
+export type AuthInfo = Readonly<{
+    authn: Authn
+    authz: Authz
+}>
+
 export type Authn = Readonly<{
     nonce: AuthnNonce
     authAt: AuthAt

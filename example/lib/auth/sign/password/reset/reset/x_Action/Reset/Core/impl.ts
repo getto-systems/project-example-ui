@@ -22,7 +22,7 @@ import { ResetLocationInfo } from "../../../method"
 
 import { LoadSecureScriptError } from "../../../../../../common/secureScriptPath/get/data"
 import { ResetFields } from "../../../data"
-import { Authn } from "../../../../../../kernel/authn/kernel/data"
+import { AuthInfo } from "../../../../../../kernel/authn/kernel/data"
 import { ConvertBoardResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
 
 export type CoreInfra = CoreForegroundInfra & CoreBackgroundInfra
@@ -76,7 +76,7 @@ export function initCoreAction(material: CoreMaterial): CoreAction {
 
 class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAction {
     readonly initialState: CoreState = { type: "initial-reset" }
-    
+
     material: CoreMaterial
 
     constructor(material: CoreMaterial) {
@@ -88,7 +88,7 @@ class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAc
         this.material.reset(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-reset":
-                    this.startContinuousRenew(event.authnInfo)
+                    this.startContinuousRenew(event.auth)
                     return
 
                 default:
@@ -97,8 +97,8 @@ class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAc
             }
         })
     }
-    startContinuousRenew(authnInfo: Authn): void {
-        this.material.startContinuousRenew(authnInfo, (event) => {
+    startContinuousRenew(auth: AuthInfo): void {
+        this.material.startContinuousRenew(auth, (event) => {
             switch (event.type) {
                 case "succeed-to-start-continuous-renew":
                     this.post({

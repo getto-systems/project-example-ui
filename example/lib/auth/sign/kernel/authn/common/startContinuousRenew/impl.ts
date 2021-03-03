@@ -12,10 +12,16 @@ interface Start {
 }
 export const startContinuousRenew: Start = (infra) => (info, post) => {
     const lastAuth = infra.lastAuth(lastAuthRepositoryConverter)
+    const authz = infra.authz(authzRepositoryConverter)
 
-    const result = lastAuth.set(toLastAuth(info))
-    if (!result.success) {
-        post({ type: "repository-error", err: result.err })
+    const authnResult = lastAuth.set(toLastAuth(info.authn))
+    if (!authnResult.success) {
+        post({ type: "repository-error", err: authnResult.err })
+        return
+    }
+    const authzResult = authz.set(info.authz)
+    if (!authzResult.success) {
+        post({ type: "repository-error", err: authzResult.err })
         return
     }
 

@@ -5,11 +5,12 @@ import {
     RemoteError,
 } from "../../../../../../../../z_vendor/getto-application/infra/remote/infra"
 import {
+    AuthInfo,
     markAuthAt_legacy,
     markAuthnNonce_legacy,
 } from "../../../../../../kernel/authn/kernel/data"
 import { ResetRemoteError } from "../../../data"
-import { ResetRemote, ResetMessage, ResetResponse } from "../../../infra"
+import { ResetRemote, ResetMessage } from "../../../infra"
 
 type Raw = RawRemote<ResetMessage, RawAuthnInfo>
 type RawAuthnInfo = Readonly<{
@@ -20,7 +21,7 @@ type RawAuthnInfo = Readonly<{
 export function initResetConnect(access: Raw): ResetRemote {
     return initConnectRemoteAccess(access, {
         message: (message: ResetMessage): ResetMessage => message,
-        value: (response: RawAuthnInfo): ResetResponse => {
+        value: (response: RawAuthnInfo): AuthInfo => {
             return {
                 authn: {
                     nonce: markAuthnNonce_legacy(response.authn.nonce),

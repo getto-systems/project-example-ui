@@ -370,11 +370,11 @@ function simulateLogin(_fields: AuthenticateFields): AuthenticateResult {
     return {
         success: true,
         value: {
-            auth: {
+            authn: {
                 nonce: markAuthnNonce_legacy(AUTHORIZED_AUTHN_NONCE),
                 authAt: markAuthAt_legacy(SUCCEED_TO_AUTH_AT),
             },
-            api: {
+            authz: {
                 nonce: markApiNonce_legacy("api-nonce"),
                 roles: markApiRoles_legacy(["role"]),
             },
