@@ -1,19 +1,19 @@
-import { ApplicationStateAction } from "../../../../../../../../z_vendor/getto-application/action/action"
+import { ApplicationStateAction } from "../../../../../../../z_vendor/getto-application/action/action"
 
-import { GetSecureScriptPathMethod } from "../../../../../../common/secureScriptPath/get/method"
+import { GetSecureScriptPathMethod } from "../../../../../common/secureScriptPath/get/method"
 import {
     ForceStartContinuousRenewMethod,
     StartContinuousRenewMethod,
-} from "../../../../common/startContinuousRenew/method"
-import { ForceRenewMethod, RenewMethod } from "../../../method"
+} from "../../../common/startContinuousRenew/method"
+import { RenewAuthInfoMethod, CheckAuthInfoMethod } from "../../method"
 
-import { StartContinuousRenewEvent } from "../../../../common/startContinuousRenew/event"
-import { RenewEvent } from "../../../event"
+import { StartContinuousRenewEvent } from "../../../common/startContinuousRenew/event"
+import { CheckAuthInfoEvent } from "../../event"
 
 import {
     LoadSecureScriptError,
     SecureScriptPath,
-} from "../../../../../../common/secureScriptPath/get/data"
+} from "../../../../../common/secureScriptPath/get/data"
 
 export interface CoreAction extends ApplicationStateAction<CoreState> {
     succeedToInstantLoad(): void
@@ -22,8 +22,8 @@ export interface CoreAction extends ApplicationStateAction<CoreState> {
 }
 
 export type CoreMaterial = Readonly<{
-    renew: RenewMethod
-    forceRenew: ForceRenewMethod
+    renew: CheckAuthInfoMethod
+    forceRenew: RenewAuthInfoMethod
     startContinuousRenew: StartContinuousRenewMethod
     forceStartContinuousRenew: ForceStartContinuousRenewMethod
     getSecureScriptPath: GetSecureScriptPathMethod
@@ -31,7 +31,7 @@ export type CoreMaterial = Readonly<{
 
 export type CoreState =
     | Readonly<{ type: "initial-renew" }>
-    | Exclude<RenewEvent, { type: "try-to-instant-load" } | { type: "succeed-to-renew" }>
+    | Exclude<CheckAuthInfoEvent, { type: "try-to-instant-load" } | { type: "succeed-to-renew" }>
     | StartContinuousRenewEvent
     | Readonly<{ type: "try-to-instant-load"; scriptPath: SecureScriptPath }>
     | Readonly<{ type: "try-to-load"; scriptPath: SecureScriptPath }>

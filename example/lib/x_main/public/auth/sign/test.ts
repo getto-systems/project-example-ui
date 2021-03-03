@@ -6,7 +6,7 @@ import { initMockAuthenticatePasswordResource } from "../../../../auth/sign/pass
 import { initMockRequestPasswordResetTokenResource } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/mock"
 import { initMockResetPasswordResource } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/mock"
 import { initMockStartPasswordResetSessionResource } from "../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/mock"
-import { initMockRenewAuthnInfoResource } from "../../../../auth/sign/kernel/authn/renew/x_Action/Renew/mock"
+import { initMockRenewAuthnInfoResource } from "../../../../auth/sign/kernel/authInfo/check/Action/mock"
 
 describe("LoginView", () => {
     test("redirect login view", (done) => {

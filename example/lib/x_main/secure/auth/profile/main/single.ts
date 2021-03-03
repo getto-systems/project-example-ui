@@ -1,6 +1,6 @@
 import { newMainOutlineAction } from "../../../../../auth/permission/outline/load/main/main"
 import { newErrorAction } from "../../../../../availability/unexpectedError/main"
-import { newLogoutResource } from "../../../../../auth/sign/kernel/authn/clear/x_Action/Logout/init"
+import { newLogoutResource } from "../../../../../auth/sign/kernel/authInfo/clear/x_Action/Logout/init"
 
 import { initAuthProfileResource, toAuthProfileEntryPoint } from "../impl"
 

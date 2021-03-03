@@ -1,4 +1,4 @@
-import { AuthInfo } from "../../kernel/authn/kernel/data"
+import { AuthInfo } from "../../kernel/authInfo/kernel/data"
 import { AuthenticateError } from "./data"
 
 export type AuthenticateEvent =

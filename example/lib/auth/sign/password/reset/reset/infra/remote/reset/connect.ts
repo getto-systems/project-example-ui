@@ -8,7 +8,7 @@ import {
     AuthInfo,
     markAuthAt_legacy,
     markAuthnNonce_legacy,
-} from "../../../../../../kernel/authn/kernel/data"
+} from "../../../../../../kernel/authInfo/kernel/data"
 import { ResetRemoteError } from "../../../data"
 import { ResetRemote, ResetMessage } from "../../../infra"
 

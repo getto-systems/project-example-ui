@@ -7,10 +7,10 @@ import {
     delaySecond,
     expireMinute,
 } from "../../../../../z_vendor/getto-application/infra/config/infra"
-import { RenewInfra } from "./infra"
+import { CheckAuthInfoInfra } from "./infra"
 import { newLastAuthRepository } from "../kernel/infra/repository/lastAuth"
 
-export function newRenewInfra(webStorage: Storage): RenewInfra {
+export function newCheckAuthInfoInfra(webStorage: Storage): CheckAuthInfoInfra {
     return {
         authz: newAuthzRepository(webStorage),
         lastAuth: newLastAuthRepository(webStorage),

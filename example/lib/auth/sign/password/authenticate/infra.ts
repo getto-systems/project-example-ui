@@ -5,7 +5,7 @@ import {
 } from "../../../../z_vendor/getto-application/infra/remote/infra"
 import { DelayTime } from "../../../../z_vendor/getto-application/infra/config/infra"
 
-import { AuthInfo } from "../../kernel/authn/kernel/data"
+import { AuthInfo } from "../../kernel/authInfo/kernel/data"
 
 import { AuthenticateFields, AuthenticateRemoteError } from "./data"
 

@@ -1,9 +1,9 @@
 import { RepositoryError } from "../../../../../z_vendor/getto-application/infra/repository/data"
 import { AuthInfo, RenewError } from "../kernel/data"
 
-export type RenewEvent = Readonly<{ type: "try-to-instant-load" }> | ForceRenewEvent
+export type CheckAuthInfoEvent = Readonly<{ type: "try-to-instant-load" }> | RenewAuthInfoEvent
 
-export type ForceRenewEvent =
+export type RenewAuthInfoEvent =
     | Readonly<{ type: "required-to-login" }>
     | Readonly<{ type: "try-to-renew" }>
     | Readonly<{ type: "delayed-to-renew" }>

@@ -1,20 +1,20 @@
 import { delayedChecker } from "../../../../../z_vendor/getto-application/infra/timer/helper"
 
 import { RepositoryStoreResult } from "../../../../../z_vendor/getto-application/infra/repository/infra"
-import { RenewInfra } from "./infra"
+import { CheckAuthInfoInfra } from "./infra"
 
-import { ForceRenewMethod, RenewMethod } from "./method"
+import { RenewAuthInfoMethod, CheckAuthInfoMethod } from "./method"
 
-import { ForceRenewEvent } from "./event"
+import { RenewAuthInfoEvent } from "./event"
 
 import { hasExpired, LastAuth, toLastAuth } from "../kernel/data"
 import { lastAuthRepositoryConverter, renewRemoteConverter } from "../kernel/convert"
 import { authzRepositoryConverter } from "../../../../../common/authz/convert"
 
-interface Renew {
-    (infra: RenewInfra): RenewMethod
+interface CheckAuthInfo {
+    (infra: CheckAuthInfoInfra): CheckAuthInfoMethod
 }
-export const renew: Renew = (infra) => async (post) => {
+export const checkAuthInfo: CheckAuthInfo = (infra) => async (post) => {
     const { clock, config } = infra
 
     loadLastAuth(infra, post, (lastAuth) => {
@@ -23,7 +23,7 @@ export const renew: Renew = (infra) => async (post) => {
             expire_millisecond: config.instantLoadExpire.expire_millisecond,
         }
         if (hasExpired(lastAuth.lastAuthAt, time)) {
-            requestRenew(infra, lastAuth, post)
+            renew(infra, lastAuth, post)
             return
         }
 
@@ -31,18 +31,18 @@ export const renew: Renew = (infra) => async (post) => {
     })
 }
 
-interface ForceRenew {
-    (infra: RenewInfra): ForceRenewMethod
+interface RenewAuthInfo {
+    (infra: CheckAuthInfoInfra): RenewAuthInfoMethod
 }
-export const forceRenew: ForceRenew = (infra) => async (post) => {
+export const renewAuthInfo: RenewAuthInfo = (infra) => async (post) => {
     loadLastAuth(infra, post, (lastAuth) => {
-        requestRenew(infra, lastAuth, post)
+        renew(infra, lastAuth, post)
     })
 }
 
 function loadLastAuth(
-    infra: RenewInfra,
-    post: Post<ForceRenewEvent>,
+    infra: CheckAuthInfoInfra,
+    post: Post<RenewAuthInfoEvent>,
     hook: { (lastAuth: LastAuth): void },
 ) {
     const lastAuth = infra.lastAuth(lastAuthRepositoryConverter)
@@ -59,7 +59,7 @@ function loadLastAuth(
 
     hook(findResult.value)
 }
-async function requestRenew(infra: RenewInfra, info: LastAuth, post: Post<ForceRenewEvent>) {
+async function renew(infra: CheckAuthInfoInfra, info: LastAuth, post: Post<RenewAuthInfoEvent>) {
     const { clock, config } = infra
     const lastAuth = infra.lastAuth(lastAuthRepositoryConverter)
     const authz = infra.authz(authzRepositoryConverter)

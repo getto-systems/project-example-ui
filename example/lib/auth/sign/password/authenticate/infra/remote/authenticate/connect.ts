@@ -7,7 +7,7 @@ import {
     RawRemote,
     RemoteError,
 } from "../../../../../../../z_vendor/getto-application/infra/remote/infra"
-import { AuthInfo, markAuthAt_legacy, markAuthnNonce_legacy } from "../../../../../kernel/authn/kernel/data"
+import { AuthInfo, markAuthAt_legacy, markAuthnNonce_legacy } from "../../../../../kernel/authInfo/kernel/data"
 import { markApiNonce_legacy, markApiRoles_legacy } from "../../../../../../../common/authz/data"
 
 type Raw = RawRemote<AuthenticateFields, RawAuthnInfo>
