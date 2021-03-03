@@ -9,7 +9,7 @@ import { initFormAction } from "./Form/impl"
 
 import { requestTokenEventHasDone } from "../../impl"
 
-import { RequestTokenRemote, RequestTokenResult } from "../../infra"
+import { RequestTokenRemotePod, RequestTokenResult } from "../../infra"
 
 import { RequestPasswordResetTokenAction } from "./action"
 import { CoreState } from "./Core/action"
@@ -18,7 +18,7 @@ import { convertResetSessionIDFromRemote } from "../../../kernel/convert"
 
 import { markBoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { toAction, toEntryPoint } from "./impl"
-import { initRemoteSimulator_legacy } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
 
 const VALID_LOGIN = { loginID: "login-id" } as const
 const SESSION_ID = "session-id" as const
@@ -138,7 +138,7 @@ function waitPasswordResetSessionResource() {
 }
 
 function newTestPasswordResetSessionResource(
-    remote: RequestTokenRemote,
+    remote: RequestTokenRemotePod,
 ): RequestPasswordResetTokenAction {
     const config = standardConfig()
     const action = toAction({
@@ -166,13 +166,13 @@ function standardConfig() {
         },
     }
 }
-function standardRequestTokenRemote(): RequestTokenRemote {
-    return initRemoteSimulator_legacy(simulateRequestToken, {
+function standardRequestTokenRemote(): RequestTokenRemotePod {
+    return initRemoteSimulator(simulateRequestToken, {
         wait_millisecond: 0,
     })
 }
-function waitRequestTokenRemote(): RequestTokenRemote {
-    return initRemoteSimulator_legacy(simulateRequestToken, {
+function waitRequestTokenRemote(): RequestTokenRemotePod {
+    return initRemoteSimulator(simulateRequestToken, {
         wait_millisecond: 3,
     })
 }

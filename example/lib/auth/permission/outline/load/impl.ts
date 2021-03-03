@@ -135,8 +135,9 @@ const loadBreadcrumbList: LoadOutlineBreadcrumbList = (infra) => (locationInfo) 
 }
 
 const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
-    const { menuExpands, loadMenuBadge } = infra
+    const { menuExpands } = infra
     const authz = infra.authz(authzRepositoryConverter)
+    const loadMenuBadge = infra.loadMenuBadge((value) => value) // TODO converter を用意するべきか？
 
     const authzResult = authz.get()
     if (!authzResult.success) {

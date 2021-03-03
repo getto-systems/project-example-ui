@@ -4,18 +4,15 @@ import {
     initStaticClock,
     staticClockPubSub,
 } from "../../../../../../../z_vendor/getto-application/infra/clock/simulate"
-import { initResetSimulate } from "../../infra/remote/reset/simulate"
 
 import { Clock } from "../../../../../../../z_vendor/getto-application/infra/clock/infra"
-import { ResetRemote, ResetResult } from "../../infra"
+import { ResetRemotePod, ResetResult } from "../../infra"
 
 import { ResetPasswordAction } from "./action"
 
 import { CoreState } from "./Core/action"
 
 import { markSecureScriptPath } from "../../../../../common/secureScriptPath/get/data"
-import { markAuthAt_legacy, markAuthnNonce_legacy } from "../../../../../kernel/authInfo/kernel/data"
-import { markApiNonce_legacy, markApiRoles_legacy } from "../../../../../../../common/authz/data"
 import {
     LastAuthRepositoryPod,
     LastAuthRepositoryValue,
@@ -41,7 +38,6 @@ import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-applica
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
 const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
-const SUCCEED_TO_AUTH_AT = new Date("2020-01-01 10:00:00")
 
 const RENEWED_AUTHN_NONCE = "renewed-authn-nonce" as const
 const SUCCEED_TO_RENEW_AT = [
@@ -87,7 +83,7 @@ describe("RegisterPassword", () => {
                     found: true,
                     value: {
                         nonce: AUTHORIZED_AUTHN_NONCE,
-                        lastAuthAt: SUCCEED_TO_AUTH_AT,
+                        lastAuthAt: NOW,
                     },
                 })
                 setTimeout(() => {
@@ -133,7 +129,7 @@ describe("RegisterPassword", () => {
                     found: true,
                     value: {
                         nonce: AUTHORIZED_AUTHN_NONCE,
-                        lastAuthAt: SUCCEED_TO_AUTH_AT,
+                        lastAuthAt: NOW,
                     },
                 })
                 setTimeout(() => {
@@ -295,7 +291,7 @@ type PasswordResetTestRepository = Readonly<{
     lastAuth: LastAuthRepositoryPod
 }>
 type PasswordResetTestRemoteAccess = Readonly<{
-    reset: ResetRemote
+    reset: ResetRemotePod
     renew: RenewRemotePod
 }>
 
@@ -322,6 +318,7 @@ function newPasswordResetTestResource(
                     reset: {
                         ...remote,
                         config: config.reset,
+                        clock,
                     },
                 },
                 {
@@ -376,7 +373,7 @@ function standardRepository() {
 }
 function standardRemoteAccess(clock: ClockPubSub): PasswordResetTestRemoteAccess {
     return {
-        reset: initResetSimulate(simulateReset, {
+        reset: initRemoteSimulator(simulateReset, {
             wait_millisecond: 0,
         }),
         renew: renewRemoteAccess(clock),
@@ -384,7 +381,7 @@ function standardRemoteAccess(clock: ClockPubSub): PasswordResetTestRemoteAccess
 }
 function waitRemoteAccess(clock: ClockPubSub): PasswordResetTestRemoteAccess {
     return {
-        reset: initResetSimulate(simulateReset, {
+        reset: initRemoteSimulator(simulateReset, {
             wait_millisecond: 3,
         }),
         renew: renewRemoteAccess(clock),
@@ -396,12 +393,11 @@ function simulateReset(): ResetResult {
         success: true,
         value: {
             authn: {
-                nonce: markAuthnNonce_legacy(AUTHORIZED_AUTHN_NONCE),
-                authAt: markAuthAt_legacy(SUCCEED_TO_AUTH_AT),
+                nonce: AUTHORIZED_AUTHN_NONCE,
             },
             authz: {
-                nonce: markApiNonce_legacy("api-nonce"),
-                roles: markApiRoles_legacy(["role"]),
+                nonce: "api-nonce",
+                roles: ["role"],
             },
         },
     }

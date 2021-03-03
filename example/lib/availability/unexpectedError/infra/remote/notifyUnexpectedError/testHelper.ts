@@ -1,7 +1,7 @@
-import { initRemoteSimulator_legacy } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
 
-import { NotifyUnexpectedErrorRemote } from "../../../infra"
+import { NotifyUnexpectedErrorRemotePod } from "../../../infra"
 
-export function initNotifyUnexpectedErrorSimulator(): NotifyUnexpectedErrorRemote {
-    return initRemoteSimulator_legacy(() => ({ success: true, value: true }), { wait_millisecond: 0 })
+export function initNotifyUnexpectedErrorSimulator(): NotifyUnexpectedErrorRemotePod {
+    return initRemoteSimulator(() => ({ success: true, value: true }), { wait_millisecond: 0 })
 }

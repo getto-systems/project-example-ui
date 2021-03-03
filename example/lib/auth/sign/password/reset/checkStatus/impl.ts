@@ -43,7 +43,9 @@ interface CheckStatus {
     (infra: CheckSendingStatusInfra): CheckSendingStatusMethodPod
 }
 export const checkSendingStatus: CheckStatus = (infra) => (locationInfo) => async (post) => {
-    const { getStatus, sendToken, config } = infra
+    const { config } = infra
+    const sendToken = infra.sendToken((value) => value) // TODO converter を用意するべきか？
+    const getStatus = infra.getStatus((value) => value) // TODO converter を用意するべきか？    
 
     const sessionID = locationInfo.getPasswordResetSessionID()
     if (!sessionID.valid) {

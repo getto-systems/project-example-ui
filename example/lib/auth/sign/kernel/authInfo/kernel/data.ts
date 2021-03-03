@@ -21,14 +21,8 @@ export function toLastAuth(info: Authn): LastAuth {
 }
 
 export type AuthnNonce = string & { AuthnNonce: never }
-export function markAuthnNonce_legacy(nonce: string): AuthnNonce {
-    return nonce as AuthnNonce
-}
-
 export type AuthAt = Date & { AuthAt: never }
-export function markAuthAt_legacy(date: Date): AuthAt {
-    return date as AuthAt
-}
+
 export function hasExpired(
     authAt: AuthAt,
     target: { now: Date; expire_millisecond: number },

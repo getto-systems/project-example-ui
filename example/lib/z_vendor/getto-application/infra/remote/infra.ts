@@ -1,5 +1,6 @@
 export type RemoteTypes<M, V, R, E> = {
     pod: RemotePod<M, V, R, E>
+    remote: Remote<M, V, E>
     result: RemoteResult<R, E>
     simulator: RemoteSimulator<M, R, E>
 }
@@ -27,8 +28,3 @@ export type RemoteResult<V, E> =
 export interface RemoteConverter<V, R> {
     (raw: R): V
 }
-
-export type RawRemote<M, V> = Remote<M, V, RemoteError>
-export type RawRemoteResult<V> = RemoteResult<V, RemoteError>
-
-export type RemoteError = Readonly<{ type: string; err: string }>

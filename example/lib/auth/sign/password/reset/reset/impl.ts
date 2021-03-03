@@ -8,6 +8,7 @@ import { ResetEvent } from "./event"
 
 import { authSignSearchKey_password_reset_token } from "../../../common/searchParams/data"
 import { markResetToken, ResetToken } from "../kernel/data"
+import { authRemoteConverter } from "../../../kernel/authInfo/kernel/convert"
 
 export function initResetLocationInfo(currentURL: URL): ResetLocationInfo {
     return {
@@ -38,11 +39,12 @@ export const reset: Reset = (infra) => (locationInfo) => async (fields, post) =>
 
     post({ type: "try-to-reset" })
 
-    const { reset: register, config } = infra
+    const { clock, config } = infra
+    const reset = infra.reset(authRemoteConverter(clock))
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const response = await delayedChecker(
-        register({ resetToken, fields: fields.value }),
+        reset({ resetToken, fields: fields.value }),
         config.delay,
         () => post({ type: "delayed-to-reset" }),
     )

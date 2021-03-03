@@ -8,7 +8,7 @@ export function initUnexpectedErrorAction(infra: UnexpectedErrorInfra): Unexpect
 }
 
 const notify: NotifyUnexpectedError = (infra) => () => async (err) => {
-    const { notify } = infra
+    const notify = infra.notify((value) => value)
     const result = await notify(err)
     if (!result.success) {
         // エラーの通知に失敗したらもうどうしようもないので console.log しておく

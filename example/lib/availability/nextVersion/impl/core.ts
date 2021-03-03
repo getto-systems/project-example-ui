@@ -7,7 +7,8 @@ import { FindPod } from "../action"
 import { CheckRemoteError, markVersion, Version, versionToString } from "../data"
 
 export const find = (infra: FindInfra): FindPod => (locationInfo) => async (post) => {
-    const { check, config } = infra
+    const { config } = infra
+    const check = infra.check((value) => value) // TODO converter を用意するべきか？
 
     const current = locationInfo.getAppTarget()
 

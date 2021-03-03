@@ -1,12 +1,12 @@
 import { env } from "../../../../../../../y_environment/env"
 
 import { initApiLoadOutlineMenuBadge } from "../../../../../../../z_external/api/auth/permission/loadMenuBadge"
-import { wrapRemoteError } from "../../../../../../../z_vendor/getto-application/infra/remote/helper"
+import { wrapRemote } from "../../../../../../../z_vendor/getto-application/infra/remote/helper"
 
-import { LoadOutlineMenuBadgeRemote } from "../../../infra"
+import { LoadOutlineMenuBadgeRemotePod } from "../../../infra"
 
-export function newLoadOutlineMenuBadgeRemote(): LoadOutlineMenuBadgeRemote {
-    return wrapRemoteError(initApiLoadOutlineMenuBadge(env.apiServerURL), (err) => ({
+export function newLoadOutlineMenuBadgeRemote(): LoadOutlineMenuBadgeRemotePod {
+    return wrapRemote(initApiLoadOutlineMenuBadge(env.apiServerURL), (err) => ({
         type: "infra-error",
         err: `${err}`,
     }))

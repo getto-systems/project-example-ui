@@ -6,7 +6,7 @@ import { Icon, iconClass } from "../../../../../z_external/icon/core"
 import { newAuthzRepository } from "../../../../../common/authz/infra/repository/authz"
 
 import {
-    LoadOutlineMenuBadgeRemote,
+    LoadOutlineMenuBadgeRemotePod,
     OutlineMenuExpandRepository,
     OutlineMenuPermission,
     OutlineMenuTree,
@@ -38,7 +38,7 @@ export function newOutlineMenuAction(
     currentURL: URL,
     newMenuExpandRepository: { (webStorage: Storage): OutlineMenuExpandRepository },
     menuTree: OutlineMenuTree,
-    loadMenuBadge: LoadOutlineMenuBadgeRemote,
+    loadMenuBadge: LoadOutlineMenuBadgeRemotePod,
 ): LoadOutlineMenuAction {
     return initOutlineMenuAction(newLocationInfo(currentURL), {
         loadMenuBadge,

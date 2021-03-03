@@ -21,7 +21,8 @@ export const requestToken: RequestToken = (infra) => async (fields, post) => {
 
     post({ type: "try-to-request-token" })
 
-    const { requestToken, config } = infra
+    const { config } = infra
+    const requestToken = infra.requestToken((value) => value) // TODO converter を用意するべきか？
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const response = await delayedChecker(requestToken(fields.value), config.delay, () =>

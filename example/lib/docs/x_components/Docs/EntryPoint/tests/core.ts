@@ -10,7 +10,7 @@ import { DocumentFactory, initDocumentResource } from "../impl/core"
 import { initContentComponent } from "../../content/impl"
 
 import {
-    LoadOutlineMenuBadgeRemote,
+    LoadOutlineMenuBadgeRemotePod,
     OutlineMenuExpandRepository,
     OutlineMenuTree,
 } from "../../../../../auth/permission/outline/load/infra"
@@ -26,7 +26,7 @@ export type DocumentRepository = Readonly<{
     menuExpands: OutlineMenuExpandRepository
 }>
 export type DocumentRemoteAccess = Readonly<{
-    loadMenuBadge: LoadOutlineMenuBadgeRemote
+    loadMenuBadge: LoadOutlineMenuBadgeRemotePod
 }>
 export function newTestDocumentResource(
     version: string,

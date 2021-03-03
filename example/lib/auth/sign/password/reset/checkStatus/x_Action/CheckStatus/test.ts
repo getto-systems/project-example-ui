@@ -3,13 +3,13 @@ import {
     initSyncActionTestRunner,
 } from "../../../../../../../z_vendor/getto-application/action/testHelper"
 import { WaitTime } from "../../../../../../../z_vendor/getto-application/infra/config/infra"
-import { initRemoteSimulator_legacy } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
 import { SendingTokenStatus } from "../../data"
 import { checkSessionStatusEventHasDone, initCheckSendingStatusLocationInfo } from "../../impl"
 import {
-    GetSendingStatusRemote,
+    GetSendingStatusRemotePod,
     GetSendingStatusResult,
-    SendTokenRemote,
+    SendTokenRemotePod,
     SendTokenResult,
 } from "../../infra"
 import { CheckPasswordResetSendingStatusAction, CheckSendingStatusState } from "./action"
@@ -135,8 +135,8 @@ function noSessionID_URL() {
 }
 
 type PasswordResetSessionTestRemoteAccess = Readonly<{
-    sendToken: SendTokenRemote
-    getStatus: GetSendingStatusRemote
+    sendToken: SendTokenRemotePod
+    getStatus: GetSendingStatusRemotePod
 }>
 
 function newTestPasswordResetSessionResource(
@@ -167,13 +167,13 @@ function standardConfig() {
 }
 function standardRemoteAccess(): PasswordResetSessionTestRemoteAccess {
     return {
-        sendToken: initRemoteSimulator_legacy(simulateSendToken, { wait_millisecond: 0 }),
+        sendToken: initRemoteSimulator(simulateSendToken, { wait_millisecond: 0 }),
         getStatus: getStatusRemoteAccess(standardGetStatusResponse(), { wait_millisecond: 0 }),
     }
 }
 function longSendingSimulator(): PasswordResetSessionTestRemoteAccess {
     return {
-        sendToken: initRemoteSimulator_legacy(simulateSendToken, { wait_millisecond: 3 }),
+        sendToken: initRemoteSimulator(simulateSendToken, { wait_millisecond: 3 }),
         getStatus: getStatusRemoteAccess(longSendingGetStatusResponse(), { wait_millisecond: 0 }),
     }
 }
@@ -184,9 +184,9 @@ function simulateSendToken(): SendTokenResult {
 function getStatusRemoteAccess(
     responseCollection: SendingTokenStatus[],
     interval: WaitTime,
-): GetSendingStatusRemote {
+): GetSendingStatusRemotePod {
     let position = 0
-    return initRemoteSimulator_legacy((): GetSendingStatusResult => {
+    return initRemoteSimulator((): GetSendingStatusResult => {
         if (responseCollection.length === 0) {
             return { success: false, err: { type: "infra-error", err: "no response" } }
         }

@@ -5,12 +5,12 @@ import { initNextVersionComponent } from "../impl"
 
 import { initTestNextVersionAction } from "../../../../nextVersion/tests/nextVersion"
 
-import { CheckDeployExistsRemote, NextVersionActionConfig } from "../../../../nextVersion/infra"
+import { CheckDeployExistsRemotePod, NextVersionActionConfig } from "../../../../nextVersion/infra"
 
 import { NextVersionResource } from "../../../../z_EntryPoint/MoveToNextVersion/entryPoint"
 
 export type NextVersionRemoteAccess = Readonly<{
-    check: CheckDeployExistsRemote
+    check: CheckDeployExistsRemotePod
 }>
 
 export function newTestNextVersionResource(
