@@ -4,6 +4,7 @@ import { AuthenticateInfra } from "./infra"
 
 import { AuthenticateMethod } from "./method"
 import { AuthenticateEvent } from "./event"
+import { authRemoteConverter } from "../../kernel/authInfo/kernel/convert"
 
 interface Authenticate {
     (infra: AuthenticateInfra): AuthenticateMethod
@@ -16,7 +17,8 @@ export const authenticate: Authenticate = (infra) => async (fields, post) => {
 
     post({ type: "try-to-login" })
 
-    const { authenticate, config } = infra
+    const { clock, config } = infra
+    const authenticate = infra.authenticate(authRemoteConverter(clock))
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const response = await delayedChecker(authenticate(fields.value), config.delay, () =>

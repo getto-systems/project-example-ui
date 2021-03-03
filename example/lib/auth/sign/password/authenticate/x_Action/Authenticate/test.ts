@@ -4,9 +4,8 @@ import {
     initStaticClock,
     staticClockPubSub,
 } from "../../../../../../z_vendor/getto-application/infra/clock/simulate"
-import { initAuthenticateSimulate } from "../../infra/remote/authenticate/simulate"
 
-import { AuthenticateRemote, AuthenticateResult } from "../../infra"
+import { AuthenticateRemotePod, AuthenticateResult } from "../../infra"
 import { Clock } from "../../../../../../z_vendor/getto-application/infra/clock/infra"
 
 import { AuthenticatePasswordAction } from "./action"
@@ -15,8 +14,6 @@ import { CoreState } from "./Core/action"
 
 import { markSecureScriptPath } from "../../../../common/secureScriptPath/get/data"
 import { AuthenticateFields } from "../../data"
-import { markAuthAt_legacy, markAuthnNonce_legacy } from "../../../../kernel/authInfo/kernel/data"
-import { markApiNonce_legacy, markApiRoles_legacy } from "../../../../../../common/authz/data"
 import {
     LastAuthRepositoryPod,
     LastAuthRepositoryValue,
@@ -43,13 +40,12 @@ import { initRemoteSimulator } from "../../../../../../z_vendor/getto-applicatio
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
 const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
-const SUCCEED_TO_AUTH_AT = new Date("2020-01-01 10:00:00")
 
 const RENEWED_AUTHN_NONCE = "renewed-authn-nonce" as const
 const SUCCEED_TO_RENEW_AT = [new Date("2020-01-01 10:01:00"), new Date("2020-01-01 11:00:00")]
 
 // renew リクエストを投げるべきかの判定に使用する
-// SUCCEED_TO_AUTH_AT と setContinuousRenew の delay との間でうまく調整する
+// setContinuousRenew の delay との間でうまく調整する
 const NOW = new Date("2020-01-01 10:00:30")
 
 // continuous renew リクエストを投げるべきかの判定に使用する
@@ -83,7 +79,7 @@ describe("AuthenticatePassword", () => {
                         found: true,
                         value: {
                             nonce: AUTHORIZED_AUTHN_NONCE,
-                            lastAuthAt: SUCCEED_TO_AUTH_AT,
+                            lastAuthAt: NOW,
                         },
                     })
                 },
@@ -137,7 +133,7 @@ describe("AuthenticatePassword", () => {
                         found: true,
                         value: {
                             nonce: AUTHORIZED_AUTHN_NONCE,
-                            lastAuthAt: SUCCEED_TO_AUTH_AT,
+                            lastAuthAt: NOW,
                         },
                     })
                 },
@@ -276,7 +272,7 @@ type PasswordLoginTestRepository = Readonly<{
     lastAuth: LastAuthRepositoryPod
 }>
 type PasswordLoginTestRemoteAccess = Readonly<{
-    authenticate: AuthenticateRemote
+    authenticate: AuthenticateRemotePod
     renew: RenewRemotePod
 }>
 
@@ -303,6 +299,7 @@ function newTestPasswordLoginResource(
                     authenticate: {
                         ...remote,
                         config: config.login,
+                        clock,
                     },
                 },
                 newGetSecureScriptPathLocationInfo(currentURL),
@@ -351,7 +348,7 @@ function standardRepository(): PasswordLoginTestRepository {
 }
 function standardSimulator(clock: ClockPubSub): PasswordLoginTestRemoteAccess {
     return {
-        authenticate: initAuthenticateSimulate(simulateLogin, {
+        authenticate: initRemoteSimulator(simulateLogin, {
             wait_millisecond: 0,
         }),
         renew: renewRemoteAccess(clock),
@@ -359,7 +356,7 @@ function standardSimulator(clock: ClockPubSub): PasswordLoginTestRemoteAccess {
 }
 function waitSimulator(clock: ClockPubSub): PasswordLoginTestRemoteAccess {
     return {
-        authenticate: initAuthenticateSimulate(simulateLogin, {
+        authenticate: initRemoteSimulator(simulateLogin, {
             wait_millisecond: 3,
         }),
         renew: renewRemoteAccess(clock),
@@ -371,12 +368,11 @@ function simulateLogin(_fields: AuthenticateFields): AuthenticateResult {
         success: true,
         value: {
             authn: {
-                nonce: markAuthnNonce_legacy(AUTHORIZED_AUTHN_NONCE),
-                authAt: markAuthAt_legacy(SUCCEED_TO_AUTH_AT),
+                nonce: AUTHORIZED_AUTHN_NONCE,
             },
             authz: {
-                nonce: markApiNonce_legacy("api-nonce"),
-                roles: markApiRoles_legacy(["role"]),
+                nonce: "api-nonce",
+                roles: ["role"],
             },
         },
     }

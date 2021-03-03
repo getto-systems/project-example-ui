@@ -4,7 +4,7 @@ import {
     RepositoryConverter,
 } from "../../../../../z_vendor/getto-application/infra/repository/infra"
 
-import { LastAuthRepositoryValue, RenewRemoteValue } from "./infra"
+import { LastAuthRepositoryValue, AuthRemoteValue } from "./infra"
 
 import { AuthAt, AuthInfo, AuthnNonce, LastAuth } from "./data"
 import { RemoteConverter } from "../../../../../z_vendor/getto-application/infra/remote/infra"
@@ -33,10 +33,10 @@ export const lastAuthRepositoryConverter: RepositoryConverter<LastAuth, LastAuth
     },
 }
 
-interface RenewConverter {
-    (clock: Clock): RemoteConverter<AuthInfo, RenewRemoteValue>
+interface AuthConverter {
+    (clock: Clock): RemoteConverter<AuthInfo, AuthRemoteValue>
 }
-export const renewRemoteConverter: RenewConverter = (clock) => (value) => {
+export const authRemoteConverter: AuthConverter = (clock) => (value) => {
     // remote からの値はバリデーションせずに受け取る
     return {
         authn: {

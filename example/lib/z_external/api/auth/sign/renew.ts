@@ -1,11 +1,14 @@
 import { parseAuthResponse, parseErrorMessage } from "./common"
 
-import { AuthError, AuthResponse, ParseErrorResult } from "./data"
-import { ApiResult } from "../../data"
+import { AuthResponse, ParseErrorResult } from "./data"
+import { ApiError, ApiResult } from "../../data"
 
 type SendAuthnNonce = string
 type RemoteResult = ApiResult<AuthResponse, RemoteError>
-type RemoteError = AuthError
+type RemoteError =
+    | ApiError
+    | Readonly<{ type: "invalid-ticket" }>
+    | Readonly<{ type: "bad-request" }>
 
 interface Renew {
     (apiServerURL: string): { (nonce: SendAuthnNonce): Promise<RemoteResult> }
