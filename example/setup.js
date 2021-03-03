@@ -27,8 +27,7 @@ function envContent() {
         apiServerURL: process.env.API_SERVER_URL,
 
         storageKey: {
-            authnNonce: "GETTO-EXAMPLE-AUTHN-NONCE",
-            lastAuthAt: "GETTO-EXAMPLE-AUTHN-LAST-AUTH-AT",
+            authn: "GETTO-EXAMPLE-AUTHN",
             authz: "GETTO-EXAMPLE-AUTHZ",
             menuExpand: {
                 main: "GETTO-EXAMPLE-MENU-EXPAND-MAIN", // TODO キーに main を使いたくない

@@ -51,7 +51,7 @@ export const reset: Reset = (infra) => (locationInfo) => async (fields, post) =>
         return
     }
 
-    post({ type: "succeed-to-reset", authnInfo: response.value.authn })
+    post({ type: "succeed-to-reset", auth: response.value })
 }
 
 export function resetEventHasDone(event: ResetEvent): boolean {

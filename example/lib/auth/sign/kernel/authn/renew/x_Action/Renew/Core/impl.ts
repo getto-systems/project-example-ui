@@ -15,7 +15,7 @@ import { CoreAction, CoreMaterial, CoreState } from "./action"
 
 import { GetSecureScriptPathLocationInfo } from "../../../../../../common/secureScriptPath/get/method"
 
-import { Authn } from "../../../../kernel/data"
+import { AuthInfo } from "../../../../kernel/data"
 import { LoadSecureScriptError } from "../../../../../../common/secureScriptPath/get/data"
 
 export type CoreInfra = Readonly<{
@@ -61,7 +61,7 @@ class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAc
                         return
 
                     case "succeed-to-renew":
-                        this.startContinuousRenew(event.authnInfo)
+                        this.startContinuousRenew(event.auth)
                         return
 
                     default:
@@ -79,7 +79,7 @@ class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAc
         this.material.forceRenew((event) => {
             switch (event.type) {
                 case "succeed-to-renew":
-                    this.startContinuousRenew(event.authnInfo)
+                    this.startContinuousRenew(event.auth)
                     return
 
                 default:
@@ -96,8 +96,8 @@ class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAc
         return this.material.getSecureScriptPath()
     }
 
-    startContinuousRenew(authCredential: Authn) {
-        this.material.startContinuousRenew(authCredential, (event) => {
+    startContinuousRenew(auth: AuthInfo) {
+        this.material.startContinuousRenew(auth, (event) => {
             switch (event.type) {
                 case "succeed-to-start-continuous-renew":
                     this.post({

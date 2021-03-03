@@ -1,11 +1,10 @@
-import { Authz } from "../../../../../common/authz/data"
 import {
     Remote,
     RemoteResult,
     RemoteSimulator,
 } from "../../../../../z_vendor/getto-application/infra/remote/infra"
 import { DelayTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
-import { Authn } from "../../../kernel/authn/kernel/data"
+import { AuthInfo } from "../../../kernel/authn/kernel/data"
 
 import { ResetFields, ResetRemoteError } from "./data"
 import { ResetToken } from "../kernel/data"
@@ -17,14 +16,10 @@ export type ResetInfra = Readonly<{
     }>
 }>
 
-export type ResetRemote = Remote<ResetMessage, ResetResponse, ResetRemoteError>
-export type ResetResult = RemoteResult<ResetResponse, ResetRemoteError>
-export type ResetSimulator = RemoteSimulator<ResetMessage, ResetResponse, ResetRemoteError>
+export type ResetRemote = Remote<ResetMessage, AuthInfo, ResetRemoteError>
+export type ResetResult = RemoteResult<AuthInfo, ResetRemoteError>
+export type ResetSimulator = RemoteSimulator<ResetMessage, AuthInfo, ResetRemoteError>
 export type ResetMessage = Readonly<{
     resetToken: ResetToken
     fields: ResetFields
-}>
-export type ResetResponse = Readonly<{
-    authn: Authn
-    authz: Authz
 }>

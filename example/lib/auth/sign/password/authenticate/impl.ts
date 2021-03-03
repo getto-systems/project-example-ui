@@ -27,7 +27,7 @@ export const authenticate: Authenticate = (infra) => async (fields, post) => {
         return
     }
 
-    post({ type: "succeed-to-login", authnInfo: response.value.auth })
+    post({ type: "succeed-to-login", auth: response.value })
 }
 
 export function authenticateEventHasDone(event: AuthenticateEvent): boolean {

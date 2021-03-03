@@ -92,7 +92,7 @@ async function requestRenew(infra: RenewInfra, info: LastAuth, post: Post<ForceR
         return
     }
 
-    post({ type: "succeed-to-renew", authnInfo: response.value.authn })
+    post({ type: "succeed-to-renew", auth: response.value })
 
     function checkStorageError(result: RepositoryStoreResult): boolean {
         if (!result.success) {

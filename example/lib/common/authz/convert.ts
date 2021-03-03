@@ -5,12 +5,14 @@ import { Authz, AuthzNonce, AuthzRoles } from "./data"
 
 export const authzRepositoryConverter: RepositoryConverter<Authz, AuthzRepositoryValue> = {
     toRepository: (value) => value,
-    fromRepository: (raw) => {
-        const nonce = raw.nonce
-        const roles = raw.roles
+    fromRepository: (value) => {
+        const nonce = value.nonce
+        const roles = value.roles
+
+        console.log("AUTHZ REPOSITORY VALUE", value)
 
         if (!nonce) {
-            return { success: false, err: { type: "transform-error" } }
+            return { success: false }
         }
 
         // roles のバリデーションは特にしない

@@ -7,5 +7,5 @@ import { wrapRepository } from "../../../../../../../z_vendor/getto-application/
 import { LastAuthRepositoryPod } from "../../infra"
 
 export function newLastAuthRepository(storage: Storage): LastAuthRepositoryPod {
-    return wrapRepository(newDB_LastAuth(storage, env.storageKey.authz))
+    return wrapRepository(newDB_LastAuth(storage, env.storageKey.authn))
 }

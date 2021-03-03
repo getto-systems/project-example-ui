@@ -1,8 +1,8 @@
-import { Authn } from "../../kernel/data"
+import { AuthInfo } from "../../kernel/data"
 import { ForceStartContinuousRenewEvent, StartContinuousRenewEvent } from "./event"
 
 export interface StartContinuousRenewMethod {
-    (authnInfo: Authn, post: Post<StartContinuousRenewEvent>): void
+    (auth: AuthInfo, post: Post<StartContinuousRenewEvent>): void
 }
 
 export interface ForceStartContinuousRenewMethod {

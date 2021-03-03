@@ -20,7 +20,7 @@ import { GetSecureScriptPathLocationInfo } from "../../../../../common/secureScr
 
 import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
 import { AuthenticateFields } from "../../../data"
-import { Authn } from "../../../../../kernel/authn/kernel/data"
+import { AuthInfo } from "../../../../../kernel/authn/kernel/data"
 import { ConvertBoardResult } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 
 export type CoreInfra = CoreForegroundInfra & CoreBackgroundInfra
@@ -75,7 +75,7 @@ class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAc
         this.material.authenticate(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-login":
-                    this.startContinuousRenew(event.authnInfo)
+                    this.startContinuousRenew(event.auth)
                     return
 
                 default:
@@ -84,8 +84,8 @@ class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAc
             }
         })
     }
-    startContinuousRenew(authnInfo: Authn): void {
-        this.material.startContinuousRenew(authnInfo, (event) => {
+    startContinuousRenew(auth: AuthInfo): void {
+        this.material.startContinuousRenew(auth, (event) => {
             switch (event.type) {
                 case "succeed-to-start-continuous-renew":
                     this.post({

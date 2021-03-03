@@ -24,8 +24,8 @@ export function newDB_Authz(storage: Storage, key: string): DB<Authz> {
             const arr = f.encode(message).finish()
             return encodeUint8ArrayToBase64String(arr)
         },
-        fromString: (raw: string) => {
-            return AuthzMessage.decode(decodeBase64StringToUint8Array(raw))
+        fromString: (value: string) => {
+            return AuthzMessage.decode(decodeBase64StringToUint8Array(value))
         },
     })
 }
