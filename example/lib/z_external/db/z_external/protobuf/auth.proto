@@ -9,3 +9,9 @@ message LastAuthMessage {
   string nonce = 1;
   string lastAuthAt = 2;
 }
+
+message OutlineMenuExpandMessage {
+  message Path { repeated string labels = 1; }
+
+  repeated Path paths = 1;
+}

@@ -33,7 +33,7 @@
     "postcss": "^7.0.32",
     "postcss-cli": "^7.1.1",
     "preact": "^10.5.12",
-    "protobufjs": "^6.10.1",
+    "protobufjs": "^6.10.2",
     "terser-webpack-plugin": "^5.1.0",
     "ts-jest": "^26.5.1",
     "ts-loader": "^7.0.5",

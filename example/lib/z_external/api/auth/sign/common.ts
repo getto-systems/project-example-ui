@@ -13,11 +13,17 @@ export async function parseAuthResponse(
         const nonce = getHeader("X-GETTO-EXAMPLE-ID-TICKET-NONCE")
         const credential = getHeader("X-GETTO-EXAMPLE-ID-API-CREDENTIAL")
 
-        const result = ApiCredentialMessage.decode(decodeBase64StringToUint8Array(credential))
+        const message = ApiCredentialMessage.decode(decodeBase64StringToUint8Array(credential))
 
         return {
             success: true,
-            value: { authn: { nonce }, authz: result },
+            value: {
+                authn: { nonce },
+                authz: {
+                    nonce: message.nonce || "",
+                    roles: message.roles || [],                
+                },
+            },
         }
     } catch (err) {
         return { success: false, err: { type: "bad-response", err: `${err}` } }

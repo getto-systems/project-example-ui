@@ -25,7 +25,11 @@ export function newDB_LastAuth(storage: Storage, key: string): DB<LastAuth> {
             return encodeUint8ArrayToBase64String(arr)
         },
         fromString: (raw: string) => {
-            return LastAuthMessage.decode(decodeBase64StringToUint8Array(raw))
+            const message = LastAuthMessage.decode(decodeBase64StringToUint8Array(raw))
+            return {
+                nonce: message.nonce || "",
+                lastAuthAt: message.lastAuthAt || "",
+            }
         },
     })
 }

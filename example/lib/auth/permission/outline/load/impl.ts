@@ -34,10 +34,11 @@ import {
     OutlineMenuNode,
     OutlineMenuTarget,
     OutlineMenuCategoryPath,
-    markOutlineMenuCategoryLabel,
+    markOutlineMenuCategoryLabel_legacy,
     OutlineMenuCategoryLabel,
     markOutlineMenuTarget,
 } from "./data"
+import { outlineMenuExpandRepositoryConverter } from "./convert"
 
 export function initOutlineActionLocationInfo(
     version: string,
@@ -135,8 +136,8 @@ const loadBreadcrumbList: LoadOutlineBreadcrumbList = (infra) => (locationInfo) 
 }
 
 const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
-    const { menuExpands } = infra
     const authz = infra.authz(authzRepositoryConverter)
+    const menuExpands = infra.menuExpands(outlineMenuExpandRepositoryConverter)
     const loadMenuBadge = infra.loadMenuBadge((value) => value) // TODO converter を用意するべきか？
 
     const authzResult = authz.get()
@@ -156,7 +157,7 @@ const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
     const nonce = authzResult.value.nonce
     const roles = authzResult.value.roles
 
-    const menuExpandResponse = menuExpands.load()
+    const menuExpandResponse = menuExpands.get()
     if (!menuExpandResponse.success) {
         post({
             type: "failed-to-load",
@@ -166,7 +167,7 @@ const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
         return
     }
 
-    const menuExpand = menuExpandResponse.menuExpand
+    const menuExpand = menuExpandResponse.found ? menuExpandResponse.value : EMPTY_EXPAND
 
     // badge の取得には時間がかかる可能性があるのでまず空 badge で返す
     // expand の取得には時間がかからないはずなので expand の取得前には返さない
@@ -224,7 +225,7 @@ const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
                 case "category":
                     return categoryNode(node.category, node.children, [
                         ...categoryPath,
-                        markOutlineMenuCategoryLabel(node.category.label),
+                        markOutlineMenuCategoryLabel_legacy(node.category.label),
                     ])
                 case "item":
                     return [itemNode(node.item)]
@@ -294,7 +295,7 @@ const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
 
 function toOutlineMenuCategory(category: OutlineMenuTreeCategory): OutlineMenuCategory {
     return {
-        label: markOutlineMenuCategoryLabel(category.label),
+        label: markOutlineMenuCategoryLabel_legacy(category.label),
     }
 }
 function toOutlineMenuItem(
@@ -305,11 +306,11 @@ function toOutlineMenuItem(
 }
 
 const toggleMenuExpand: ToggleOutlineMenuExpand = (infra) => (menu, path, post) => {
-    const { menuExpands } = infra
+    const menuExpands = infra.menuExpands(outlineMenuExpandRepositoryConverter)
 
     const updatedMenu = toggleMenu(menu, path)
 
-    const response = menuExpands.store(gatherMenuExpand(updatedMenu, []))
+    const response = menuExpands.set(gatherMenuExpand(updatedMenu, []))
     if (!response.success) {
         post({ type: "failed-to-toggle", menu: updatedMenu, err: response.err })
         return

@@ -443,4 +443,415 @@ export const LastAuthMessage = $root.LastAuthMessage = (() => {
     return LastAuthMessage;
 })();
 
+export const OutlineMenuExpandMessage = $root.OutlineMenuExpandMessage = (() => {
+
+    /**
+     * Properties of an OutlineMenuExpandMessage.
+     * @exports IOutlineMenuExpandMessage
+     * @interface IOutlineMenuExpandMessage
+     * @property {Array.<OutlineMenuExpandMessage.IPath>|null} [paths] OutlineMenuExpandMessage paths
+     */
+
+    /**
+     * Constructs a new OutlineMenuExpandMessage.
+     * @exports OutlineMenuExpandMessage
+     * @classdesc Represents an OutlineMenuExpandMessage.
+     * @implements IOutlineMenuExpandMessage
+     * @constructor
+     * @param {IOutlineMenuExpandMessage=} [properties] Properties to set
+     */
+    function OutlineMenuExpandMessage(properties) {
+        this.paths = [];
+        if (properties)
+            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * OutlineMenuExpandMessage paths.
+     * @member {Array.<OutlineMenuExpandMessage.IPath>} paths
+     * @memberof OutlineMenuExpandMessage
+     * @instance
+     */
+    OutlineMenuExpandMessage.prototype.paths = $util.emptyArray;
+
+    /**
+     * Creates a new OutlineMenuExpandMessage instance using the specified properties.
+     * @function create
+     * @memberof OutlineMenuExpandMessage
+     * @static
+     * @param {IOutlineMenuExpandMessage=} [properties] Properties to set
+     * @returns {OutlineMenuExpandMessage} OutlineMenuExpandMessage instance
+     */
+    OutlineMenuExpandMessage.create = function create(properties) {
+        return new OutlineMenuExpandMessage(properties);
+    };
+
+    /**
+     * Encodes the specified OutlineMenuExpandMessage message. Does not implicitly {@link OutlineMenuExpandMessage.verify|verify} messages.
+     * @function encode
+     * @memberof OutlineMenuExpandMessage
+     * @static
+     * @param {IOutlineMenuExpandMessage} message OutlineMenuExpandMessage message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    OutlineMenuExpandMessage.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.paths != null && message.paths.length)
+            for (let i = 0; i < message.paths.length; ++i)
+                $root.OutlineMenuExpandMessage.Path.encode(message.paths[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+        return writer;
+    };
+
+    /**
+     * Encodes the specified OutlineMenuExpandMessage message, length delimited. Does not implicitly {@link OutlineMenuExpandMessage.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof OutlineMenuExpandMessage
+     * @static
+     * @param {IOutlineMenuExpandMessage} message OutlineMenuExpandMessage message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    OutlineMenuExpandMessage.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes an OutlineMenuExpandMessage message from the specified reader or buffer.
+     * @function decode
+     * @memberof OutlineMenuExpandMessage
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {OutlineMenuExpandMessage} OutlineMenuExpandMessage
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    OutlineMenuExpandMessage.decode = function decode(reader, length) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.OutlineMenuExpandMessage();
+        while (reader.pos < end) {
+            let tag = reader.uint32();
+            switch (tag >>> 3) {
+            case 1:
+                if (!(message.paths && message.paths.length))
+                    message.paths = [];
+                message.paths.push($root.OutlineMenuExpandMessage.Path.decode(reader, reader.uint32()));
+                break;
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes an OutlineMenuExpandMessage message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof OutlineMenuExpandMessage
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {OutlineMenuExpandMessage} OutlineMenuExpandMessage
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    OutlineMenuExpandMessage.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies an OutlineMenuExpandMessage message.
+     * @function verify
+     * @memberof OutlineMenuExpandMessage
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    OutlineMenuExpandMessage.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.paths != null && message.hasOwnProperty("paths")) {
+            if (!Array.isArray(message.paths))
+                return "paths: array expected";
+            for (let i = 0; i < message.paths.length; ++i) {
+                let error = $root.OutlineMenuExpandMessage.Path.verify(message.paths[i]);
+                if (error)
+                    return "paths." + error;
+            }
+        }
+        return null;
+    };
+
+    /**
+     * Creates an OutlineMenuExpandMessage message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof OutlineMenuExpandMessage
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {OutlineMenuExpandMessage} OutlineMenuExpandMessage
+     */
+    OutlineMenuExpandMessage.fromObject = function fromObject(object) {
+        if (object instanceof $root.OutlineMenuExpandMessage)
+            return object;
+        let message = new $root.OutlineMenuExpandMessage();
+        if (object.paths) {
+            if (!Array.isArray(object.paths))
+                throw TypeError(".OutlineMenuExpandMessage.paths: array expected");
+            message.paths = [];
+            for (let i = 0; i < object.paths.length; ++i) {
+                if (typeof object.paths[i] !== "object")
+                    throw TypeError(".OutlineMenuExpandMessage.paths: object expected");
+                message.paths[i] = $root.OutlineMenuExpandMessage.Path.fromObject(object.paths[i]);
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Creates a plain object from an OutlineMenuExpandMessage message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof OutlineMenuExpandMessage
+     * @static
+     * @param {OutlineMenuExpandMessage} message OutlineMenuExpandMessage
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    OutlineMenuExpandMessage.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        let object = {};
+        if (options.arrays || options.defaults)
+            object.paths = [];
+        if (message.paths && message.paths.length) {
+            object.paths = [];
+            for (let j = 0; j < message.paths.length; ++j)
+                object.paths[j] = $root.OutlineMenuExpandMessage.Path.toObject(message.paths[j], options);
+        }
+        return object;
+    };
+
+    /**
+     * Converts this OutlineMenuExpandMessage to JSON.
+     * @function toJSON
+     * @memberof OutlineMenuExpandMessage
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    OutlineMenuExpandMessage.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    OutlineMenuExpandMessage.Path = (function() {
+
+        /**
+         * Properties of a Path.
+         * @memberof OutlineMenuExpandMessage
+         * @interface IPath
+         * @property {Array.<string>|null} [labels] Path labels
+         */
+
+        /**
+         * Constructs a new Path.
+         * @memberof OutlineMenuExpandMessage
+         * @classdesc Represents a Path.
+         * @implements IPath
+         * @constructor
+         * @param {OutlineMenuExpandMessage.IPath=} [properties] Properties to set
+         */
+        function Path(properties) {
+            this.labels = [];
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * Path labels.
+         * @member {Array.<string>} labels
+         * @memberof OutlineMenuExpandMessage.Path
+         * @instance
+         */
+        Path.prototype.labels = $util.emptyArray;
+
+        /**
+         * Creates a new Path instance using the specified properties.
+         * @function create
+         * @memberof OutlineMenuExpandMessage.Path
+         * @static
+         * @param {OutlineMenuExpandMessage.IPath=} [properties] Properties to set
+         * @returns {OutlineMenuExpandMessage.Path} Path instance
+         */
+        Path.create = function create(properties) {
+            return new Path(properties);
+        };
+
+        /**
+         * Encodes the specified Path message. Does not implicitly {@link OutlineMenuExpandMessage.Path.verify|verify} messages.
+         * @function encode
+         * @memberof OutlineMenuExpandMessage.Path
+         * @static
+         * @param {OutlineMenuExpandMessage.IPath} message Path message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Path.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.labels != null && message.labels.length)
+                for (let i = 0; i < message.labels.length; ++i)
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.labels[i]);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified Path message, length delimited. Does not implicitly {@link OutlineMenuExpandMessage.Path.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof OutlineMenuExpandMessage.Path
+         * @static
+         * @param {OutlineMenuExpandMessage.IPath} message Path message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Path.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a Path message from the specified reader or buffer.
+         * @function decode
+         * @memberof OutlineMenuExpandMessage.Path
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {OutlineMenuExpandMessage.Path} Path
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Path.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.OutlineMenuExpandMessage.Path();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    if (!(message.labels && message.labels.length))
+                        message.labels = [];
+                    message.labels.push(reader.string());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a Path message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof OutlineMenuExpandMessage.Path
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {OutlineMenuExpandMessage.Path} Path
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Path.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a Path message.
+         * @function verify
+         * @memberof OutlineMenuExpandMessage.Path
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        Path.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.labels != null && message.hasOwnProperty("labels")) {
+                if (!Array.isArray(message.labels))
+                    return "labels: array expected";
+                for (let i = 0; i < message.labels.length; ++i)
+                    if (!$util.isString(message.labels[i]))
+                        return "labels: string[] expected";
+            }
+            return null;
+        };
+
+        /**
+         * Creates a Path message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof OutlineMenuExpandMessage.Path
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {OutlineMenuExpandMessage.Path} Path
+         */
+        Path.fromObject = function fromObject(object) {
+            if (object instanceof $root.OutlineMenuExpandMessage.Path)
+                return object;
+            let message = new $root.OutlineMenuExpandMessage.Path();
+            if (object.labels) {
+                if (!Array.isArray(object.labels))
+                    throw TypeError(".OutlineMenuExpandMessage.Path.labels: array expected");
+                message.labels = [];
+                for (let i = 0; i < object.labels.length; ++i)
+                    message.labels[i] = String(object.labels[i]);
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a Path message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof OutlineMenuExpandMessage.Path
+         * @static
+         * @param {OutlineMenuExpandMessage.Path} message Path
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        Path.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.arrays || options.defaults)
+                object.labels = [];
+            if (message.labels && message.labels.length) {
+                object.labels = [];
+                for (let j = 0; j < message.labels.length; ++j)
+                    object.labels[j] = message.labels[j];
+            }
+            return object;
+        };
+
+        /**
+         * Converts this Path to JSON.
+         * @function toJSON
+         * @memberof OutlineMenuExpandMessage.Path
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        Path.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return Path;
+    })();
+
+    return OutlineMenuExpandMessage;
+})();
+
 export { $root as default };

@@ -13,7 +13,7 @@ import { initExampleComponent } from "../../example/impl"
 
 import {
     LoadOutlineMenuBadgeRemotePod,
-    OutlineMenuExpandRepository,
+    OutlineMenuExpandRepositoryPod,
     OutlineMenuTree,
 } from "../../../../../auth/permission/outline/load/infra"
 import { SeasonRepository } from "../../../../shared/season/infra"
@@ -26,7 +26,7 @@ import { initNotifyUnexpectedErrorSimulator } from "../../../../../availability/
 
 export type DashboardRepository = Readonly<{
     authz: AuthzRepositoryPod
-    menuExpands: OutlineMenuExpandRepository
+    menuExpands: OutlineMenuExpandRepositoryPod
     seasons: SeasonRepository
 }>
 export type DashboardRemoteAccess = Readonly<{

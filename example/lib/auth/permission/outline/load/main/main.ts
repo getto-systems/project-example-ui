@@ -1,5 +1,6 @@
-import { newMainOutlineMenuExpandRepository } from "../infra/repository/outlineMenuExpand/main"
+import { env } from "../../../../../y_environment/env"
 import { newLoadOutlineMenuBadgeRemote } from "../infra/remote/loadMenuBadge/main"
+import { newOutlineMenuExpandRepository } from "../infra/repository/menuExpand"
 
 import { lnir } from "../../../../../z_external/icon/core"
 
@@ -16,9 +17,9 @@ export function newMainOutlineAction(webStorage: Storage, currentURL: URL): Load
         menu: newOutlineMenuAction(
             webStorage,
             currentURL,
-            newMainOutlineMenuExpandRepository,
+            newOutlineMenuExpandRepository(webStorage, env.storageKey.menuExpand.main),
             menuTree,
-            newLoadOutlineMenuBadgeRemote()
+            newLoadOutlineMenuBadgeRemote(),
         ),
     }
 }

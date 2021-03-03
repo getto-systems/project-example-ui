@@ -1,5 +1,4 @@
 import { newLoadOutlineMenuBadgeNoopRemote } from "../infra/remote/loadMenuBadge/noop"
-import { newDocumentOutlineMenuExpandRepository } from "../infra/repository/outlineMenuExpand/main"
 
 import { lnir } from "../../../../../z_external/icon/core"
 
@@ -8,6 +7,8 @@ import { category, newOutlineMenuAction, item, newOutlineBreadcrumbListAction } 
 import { OutlineMenuPermission, OutlineMenuTree } from "../infra"
 
 import { LoadOutlineAction } from "../action"
+import { newOutlineMenuExpandRepository } from "../infra/repository/menuExpand"
+import { env } from "../../../../../y_environment/env"
 
 export function newDocumentOutlineAction(webStorage: Storage, currentURL: URL): LoadOutlineAction {
     const menuTree = documentMenuTree()
@@ -16,9 +17,9 @@ export function newDocumentOutlineAction(webStorage: Storage, currentURL: URL): 
         menu: newOutlineMenuAction(
             webStorage,
             currentURL,
-            newDocumentOutlineMenuExpandRepository,
+            newOutlineMenuExpandRepository(webStorage, env.storageKey.menuExpand.document),
             menuTree,
-            newLoadOutlineMenuBadgeNoopRemote()
+            newLoadOutlineMenuBadgeNoopRemote(),
         ),
     }
 }
