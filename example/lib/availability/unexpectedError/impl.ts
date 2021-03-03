@@ -1,3 +1,4 @@
+import { passThroughRemoteConverter } from "../../z_vendor/getto-application/infra/remote/helper"
 import { UnexpectedErrorAction } from "./action"
 import { UnexpectedErrorInfra, NotifyUnexpectedError } from "./infra"
 
@@ -8,7 +9,7 @@ export function initUnexpectedErrorAction(infra: UnexpectedErrorInfra): Unexpect
 }
 
 const notify: NotifyUnexpectedError = (infra) => () => async (err) => {
-    const notify = infra.notify((value) => value)
+    const notify = infra.notify(passThroughRemoteConverter)
     const result = await notify(err)
     if (!result.success) {
         // エラーの通知に失敗したらもうどうしようもないので console.log しておく

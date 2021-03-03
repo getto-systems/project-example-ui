@@ -5,10 +5,11 @@ import { CheckDeployExistsRemote, FindInfra } from "../infra"
 import { FindPod } from "../action"
 
 import { CheckRemoteError, markVersion, Version, versionToString } from "../data"
+import { passThroughRemoteConverter } from "../../../z_vendor/getto-application/infra/remote/helper"
 
 export const find = (infra: FindInfra): FindPod => (locationInfo) => async (post) => {
     const { config } = infra
-    const check = infra.check((value) => value) // TODO converter を用意するべきか？
+    const check = infra.check(passThroughRemoteConverter)
 
     const current = locationInfo.getAppTarget()
 
