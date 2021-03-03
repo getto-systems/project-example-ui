@@ -29,7 +29,7 @@ describe("RequestPasswordResetToken", () => {
 
         resource.core.subscriber.subscribe(initTester())
 
-        resource.form.loginID.resource.input.set(markBoardValue(VALID_LOGIN.loginID))
+        resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
 
         resource.core.submit(resource.form.validate.get())
 
@@ -53,7 +53,7 @@ describe("RequestPasswordResetToken", () => {
 
         resource.core.subscriber.subscribe(initTester())
 
-        resource.form.loginID.resource.input.set(markBoardValue(VALID_LOGIN.loginID))
+        resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
 
         resource.core.submit(resource.form.validate.get())
 
@@ -93,10 +93,10 @@ describe("RequestPasswordResetToken", () => {
     test("clear", () => {
         const { resource } = standardPasswordResetSessionResource()
 
-        resource.form.loginID.resource.input.set(markBoardValue(VALID_LOGIN.loginID))
+        resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
         resource.form.clear()
 
-        expect(resource.form.loginID.resource.input.get()).toEqual("")
+        expect(resource.form.loginID.board.input.get()).toEqual("")
     })
 
     test("terminate", (done) => {
@@ -107,7 +107,7 @@ describe("RequestPasswordResetToken", () => {
             {
                 statement: () => {
                     entryPoint.terminate()
-                    resource.form.loginID.resource.input.set(markBoardValue("login-id"))
+                    resource.form.loginID.board.input.set(markBoardValue("login-id"))
                 },
                 examine: (stack) => {
                     // no input/validate event after terminate
@@ -120,7 +120,7 @@ describe("RequestPasswordResetToken", () => {
         resource.core.subscriber.subscribe(handler)
         resource.form.validate.subscriber.subscribe(handler)
         resource.form.loginID.validate.subscriber.subscribe(handler)
-        resource.form.loginID.resource.input.subscribeInputEvent(() => handler("input"))
+        resource.form.loginID.board.input.subscribeInputEvent(() => handler("input"))
     })
 })
 
@@ -152,7 +152,7 @@ function newTestPasswordResetSessionResource(
         form: initFormAction(),
     })
 
-    action.form.loginID.resource.input.storeLinker.link(standardBoardValueStore())
+    action.form.loginID.board.input.storeLinker.link(standardBoardValueStore())
 
     return action
 }

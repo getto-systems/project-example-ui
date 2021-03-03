@@ -60,8 +60,8 @@ describe("AuthenticatePassword", () => {
         const runner = initAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
-                    resource.form.loginID.resource.input.set(markBoardValue(VALID_LOGIN.loginID))
-                    resource.form.password.resource.input.set(markBoardValue(VALID_LOGIN.password))
+                    resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
+                    resource.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
 
                     resource.core.submit(resource.form.validate.get())
                 },
@@ -113,8 +113,8 @@ describe("AuthenticatePassword", () => {
         const runner = initAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
-                    resource.form.loginID.resource.input.set(markBoardValue(VALID_LOGIN.loginID))
-                    resource.form.password.resource.input.set(markBoardValue(VALID_LOGIN.password))
+                    resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
+                    resource.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
 
                     resource.core.submit(resource.form.validate.get())
                 },
@@ -188,12 +188,12 @@ describe("AuthenticatePassword", () => {
     test("clear", () => {
         const { resource } = standardPasswordLoginResource()
 
-        resource.form.loginID.resource.input.set(markBoardValue(VALID_LOGIN.loginID))
-        resource.form.password.resource.input.set(markBoardValue(VALID_LOGIN.password))
+        resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
+        resource.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
         resource.form.clear()
 
-        expect(resource.form.loginID.resource.input.get()).toEqual("")
-        expect(resource.form.password.resource.input.get()).toEqual("")
+        expect(resource.form.loginID.board.input.get()).toEqual("")
+        expect(resource.form.password.board.input.get()).toEqual("")
     })
 
     test("load error", (done) => {
@@ -226,8 +226,8 @@ describe("AuthenticatePassword", () => {
             {
                 statement: () => {
                     entryPoint.terminate()
-                    resource.form.loginID.resource.input.set(markBoardValue("login-id"))
-                    resource.form.password.resource.input.set(markBoardValue("password"))
+                    resource.form.loginID.board.input.set(markBoardValue("login-id"))
+                    resource.form.password.board.input.set(markBoardValue("password"))
                 },
                 examine: (stack) => {
                     // no input/validate event after terminate
@@ -241,8 +241,8 @@ describe("AuthenticatePassword", () => {
         resource.form.validate.subscriber.subscribe(handler)
         resource.form.loginID.validate.subscriber.subscribe(handler)
         resource.form.password.validate.subscriber.subscribe(handler)
-        resource.form.loginID.resource.input.subscribeInputEvent(() => handler("input"))
-        resource.form.password.resource.input.subscribeInputEvent(() => handler("input"))
+        resource.form.loginID.board.input.subscribeInputEvent(() => handler("input"))
+        resource.form.password.board.input.subscribeInputEvent(() => handler("input"))
     })
 })
 
@@ -309,8 +309,8 @@ function newTestPasswordLoginResource(
         form: initFormAction(),
     })
 
-    action.form.loginID.resource.input.storeLinker.link(standardBoardValueStore())
-    action.form.password.resource.input.storeLinker.link(standardBoardValueStore())
+    action.form.loginID.board.input.storeLinker.link(standardBoardValueStore())
+    action.form.password.board.input.storeLinker.link(standardBoardValueStore())
 
     return action
 }

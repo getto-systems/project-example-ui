@@ -4,14 +4,14 @@ import { initMockValidateBoardFieldAction } from "../../../../../../../z_vendor/
 import { InputPasswordAction } from "./action"
 
 import { BoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
-import { PasswordCharacterState } from "../data"
+import { PasswordCharacterState } from "../../../data"
 
 export function initMockInputPasswordAction(
     password: BoardValue,
     characterState: PasswordCharacterState,
 ): InputPasswordAction {
     return {
-        resource: initMockInputBoardValueResource("password", password),
+        board: initMockInputBoardValueResource("password", password),
         validate: initMockValidateBoardFieldAction("password", { valid: false, err: [] }),
         clear: () => null,
         checkCharacter: () => characterState,

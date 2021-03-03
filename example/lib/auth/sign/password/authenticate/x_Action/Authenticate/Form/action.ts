@@ -1,7 +1,7 @@
 import { ApplicationAction } from "../../../../../../../z_vendor/getto-application/action/action"
 import { ValidateBoardAction } from "../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
-import { InputLoginIDAction } from "../../../../../common/board/loginID/Action/Core/action"
-import { InputPasswordAction } from "../../../../../common/board/password/Action/Core/action"
+import { InputLoginIDAction } from "../../../../../common/loginID/board/Action/Core/action"
+import { InputPasswordAction } from "../../../../../common/password/board/Action/Core/action"
 
 import { AuthenticateFields } from "../../../data"
 

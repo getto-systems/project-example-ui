@@ -9,7 +9,7 @@ import { initMockInputPasswordAction } from "../Core/mock"
 import { ValidatePasswordState } from "../Core/action"
 
 import { markBoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
-import { PasswordCharacterState } from "../data"
+import { PasswordCharacterState } from "../../../data"
 
 enum ValidateEnum {
     "valid",

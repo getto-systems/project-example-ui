@@ -3,23 +3,23 @@ import { initValidateBoardFieldAction } from "../../../../../../../z_vendor/gett
 
 import { InputLoginIDAction } from "./action"
 
-import { convertLoginIDFromBoard } from "../../../../loginID/convert"
+import { convertLoginIDFromBoard } from "../../../convert"
 
 export function initInputLoginIDAction(): InputLoginIDAction {
-    const resource = initInputBoardValueResource("text")
+    const board = initInputBoardValueResource("text")
 
     const validate = initValidateBoardFieldAction({
-        converter: () => convertLoginIDFromBoard(resource.input.get()),
+        converter: () => convertLoginIDFromBoard(board.input.get()),
     })
 
-    resource.input.subscribeInputEvent(() => validate.check())
+    board.input.subscribeInputEvent(() => validate.check())
 
     return {
-        resource,
+        board,
         validate,
-        clear: () => resource.input.clear(),
+        clear: () => board.input.clear(),
         terminate: () => {
-            resource.input.terminate()
+            board.input.terminate()
             validate.terminate()
         },
     }

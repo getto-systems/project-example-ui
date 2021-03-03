@@ -13,7 +13,7 @@ describe("InputLoginID", () => {
             {
                 statement: () => {
                     // valid input
-                    action.resource.input.set(markBoardValue("valid"))
+                    action.board.input.set(markBoardValue("valid"))
                 },
                 examine: (stack) => {
                     expect(stack).toEqual([{ valid: true }])
@@ -32,7 +32,7 @@ describe("InputLoginID", () => {
             {
                 statement: () => {
                     // empty
-                    action.resource.input.set(markBoardValue(""))
+                    action.board.input.set(markBoardValue(""))
                 },
                 examine: (stack) => {
                     expect(stack).toEqual([{ valid: false, err: ["empty"] }])
@@ -51,7 +51,7 @@ describe("InputLoginID", () => {
             {
                 statement: () => {
                     // too-long
-                    action.resource.input.set(markBoardValue("a".repeat(100 + 1)))
+                    action.board.input.set(markBoardValue("a".repeat(100 + 1)))
                 },
                 examine: (stack) => {
                     expect(stack).toEqual([{ valid: false, err: ["too-long"] }])
@@ -70,7 +70,7 @@ describe("InputLoginID", () => {
             {
                 statement: () => {
                     // just max-length
-                    action.resource.input.set(markBoardValue("a".repeat(100)))
+                    action.board.input.set(markBoardValue("a".repeat(100)))
                 },
                 examine: (stack) => {
                     expect(stack).toEqual([{ valid: true }])
@@ -85,10 +85,10 @@ describe("InputLoginID", () => {
     test("clear", () => {
         const { action } = standardElements()
 
-        action.resource.input.set(markBoardValue("valid"))
+        action.board.input.set(markBoardValue("valid"))
         action.clear()
 
-        expect(action.resource.input.get()).toEqual("")
+        expect(action.board.input.get()).toEqual("")
     })
 
     test("terminate", (done) => {
@@ -98,7 +98,7 @@ describe("InputLoginID", () => {
             {
                 statement: () => {
                     action.terminate()
-                    action.resource.input.set(markBoardValue("valid"))
+                    action.board.input.set(markBoardValue("valid"))
                 },
                 examine: (stack) => {
                     // no input/validate event after terminate
@@ -108,14 +108,14 @@ describe("InputLoginID", () => {
         ])
 
         const handler = runner(done)
-        action.resource.input.subscribeInputEvent(() => handler(action.resource.input.get()))
+        action.board.input.subscribeInputEvent(() => handler(action.board.input.get()))
         action.validate.subscriber.subscribe(handler)
     })
 })
 
 function standardElements() {
     const action = initInputLoginIDAction()
-    action.resource.input.storeLinker.link(standardBoardValueStore())
+    action.board.input.storeLinker.link(standardBoardValueStore())
 
     return { action }
 }
