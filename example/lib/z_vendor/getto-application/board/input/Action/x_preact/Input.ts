@@ -4,8 +4,9 @@ import { html } from "htm/preact"
 
 import { InputBoardValueAction } from "../Core/action"
 
-import { BoardValue, emptyBoardValue, markBoardValue } from "../../../kernel/data"
+import { BoardValue, emptyBoardValue } from "../../../kernel/data"
 import { InputBoardValueResource } from "../action"
+import { readBoardValue } from "../../../kernel/convert"
 
 export type InputBoardProps = InputBoardValueResource
 export function InputBoard(props: InputBoardProps): VNode {
@@ -35,7 +36,7 @@ function useBoardValueStore(input: InputBoardValueAction) {
             if (!REF.current) {
                 return emptyBoardValue
             }
-            return markBoardValue(REF.current.value)
+            return readBoardValue(REF.current)
         }
         function set(value: BoardValue) {
             if (REF.current) {

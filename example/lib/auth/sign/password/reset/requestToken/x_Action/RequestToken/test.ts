@@ -3,6 +3,7 @@ import {
     initSyncActionTestRunner,
 } from "../../../../../../../z_vendor/getto-application/action/testHelper"
 import { standardBoardValueStore } from "../../../../../../../z_vendor/getto-application/board/input/Action/testHelper"
+import { markBoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/testHelper"
 
 import { initCoreMaterial, initCoreAction } from "./Core/impl"
 import { initFormAction } from "./Form/impl"
@@ -16,7 +17,6 @@ import { CoreState } from "./Core/action"
 
 import { convertResetSessionIDFromRemote } from "../../../kernel/convert"
 
-import { markBoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { toAction, toEntryPoint } from "./impl"
 import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
 
