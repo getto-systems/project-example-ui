@@ -13,7 +13,7 @@ describe("InputPassword", () => {
             {
                 statement: () => {
                     // valid input
-                    action.resource.input.set(markBoardValue("valid"))
+                    action.board.input.set(markBoardValue("valid"))
                 },
                 examine: (stack) => {
                     expect(stack).toEqual([{ valid: true }])
@@ -32,7 +32,7 @@ describe("InputPassword", () => {
             {
                 statement: () => {
                     // empty
-                    action.resource.input.set(markBoardValue(""))
+                    action.board.input.set(markBoardValue(""))
                 },
                 examine: (stack) => {
                     expect(stack).toEqual([{ valid: false, err: ["empty"] }])
@@ -51,7 +51,7 @@ describe("InputPassword", () => {
             {
                 statement: () => {
                     // too-long
-                    action.resource.input.set(markBoardValue("a".repeat(72 + 1)))
+                    action.board.input.set(markBoardValue("a".repeat(72 + 1)))
                 },
                 examine: (stack) => {
                     expect(stack).toEqual([{ valid: false, err: ["too-long"] }])
@@ -70,7 +70,7 @@ describe("InputPassword", () => {
             {
                 statement: () => {
                     // just max-length
-                    action.resource.input.set(markBoardValue("a".repeat(72)))
+                    action.board.input.set(markBoardValue("a".repeat(72)))
                 },
                 examine: (stack) => {
                     expect(stack).toEqual([{ valid: true }])
@@ -89,7 +89,7 @@ describe("InputPassword", () => {
             {
                 statement: () => {
                     // too-long : "あ"(UTF8) is 3 bytes character
-                    action.resource.input.set(markBoardValue("あ".repeat(24) + "a"))
+                    action.board.input.set(markBoardValue("あ".repeat(24) + "a"))
                 },
                 examine: (stack) => {
                     expect(stack).toEqual([{ valid: false, err: ["too-long"] }])
@@ -108,7 +108,7 @@ describe("InputPassword", () => {
             {
                 statement: () => {
                     // just max-length : "あ"(UTF8) is 3 bytes character
-                    action.resource.input.set(markBoardValue("あ".repeat(24)))
+                    action.board.input.set(markBoardValue("あ".repeat(24)))
                 },
                 examine: (stack) => {
                     expect(stack).toEqual([{ valid: true }])
@@ -123,7 +123,7 @@ describe("InputPassword", () => {
     test("password character state : single byte", () => {
         const { resource: action } = standardElements()
 
-        action.resource.input.set(markBoardValue("password"))
+        action.board.input.set(markBoardValue("password"))
 
         expect(action.checkCharacter()).toEqual({ multiByte: false })
     })
@@ -131,17 +131,17 @@ describe("InputPassword", () => {
     test("password character state : multi byte", () => {
         const { resource: action } = standardElements()
 
-        action.resource.input.set(markBoardValue("パスワード"))
+        action.board.input.set(markBoardValue("パスワード"))
         expect(action.checkCharacter()).toEqual({ multiByte: true })
     })
 
     test("clear", () => {
         const { resource: action } = standardElements()
 
-        action.resource.input.set(markBoardValue("valid"))
+        action.board.input.set(markBoardValue("valid"))
         action.clear()
 
-        expect(action.resource.input.get()).toEqual("")
+        expect(action.board.input.get()).toEqual("")
     })
 
     test("terminate", (done) => {
@@ -151,7 +151,7 @@ describe("InputPassword", () => {
             {
                 statement: () => {
                     action.terminate()
-                    action.resource.input.set(markBoardValue("valid"))
+                    action.board.input.set(markBoardValue("valid"))
                 },
                 examine: (stack) => {
                     // no input/validate event after terminate
@@ -161,14 +161,14 @@ describe("InputPassword", () => {
         ])
 
         const handler = runner(done)
-        action.resource.input.subscribeInputEvent(() => handler(action.resource.input.get()))
+        action.board.input.subscribeInputEvent(() => handler(action.board.input.get()))
         action.validate.subscriber.subscribe(handler)
     })
 })
 
 function standardElements() {
     const resource = initInputPasswordAction()
-    resource.resource.input.storeLinker.link(standardBoardValueStore())
+    resource.board.input.storeLinker.link(standardBoardValueStore())
 
     return { resource }
 }

@@ -14,9 +14,9 @@ import { InputBoard } from "../../../../../../../z_vendor/getto-application/boar
 import { ValidateBoardFieldState } from "../../../../../../../z_vendor/getto-application/board/validateField/Action/Core/action"
 import { InputPasswordResource, InputPasswordResourceState } from "../action"
 
-import { PASSWORD_MAX_BYTES, ValidatePasswordError } from "../../../../password/convert"
+import { PASSWORD_MAX_BYTES, ValidatePasswordError } from "../../../convert"
 
-import { PasswordCharacterState } from "../data"
+import { PasswordCharacterState } from "../../../data"
 
 type Resource = InputPasswordResource & Readonly<{ help: VNodeContent[] }>
 export function InputPassword(resource: Resource): VNode {
@@ -33,7 +33,7 @@ export function View(props: InputPasswordProps): VNode {
     function content() {
         const content = {
             title: "パスワード",
-            body: h(InputBoard, props.field.resource),
+            body: h(InputBoard, props.field.board),
             help: [...props.help, characterHelp()],
         }
 

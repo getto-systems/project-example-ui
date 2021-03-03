@@ -4,14 +4,13 @@ import {
     ValidateBoardFieldState,
 } from "../../../../../../../z_vendor/getto-application/board/validateField/Action/Core/action"
 
-import { ValidatePasswordError } from "../../../../password/convert"
+import { ValidatePasswordError } from "../../../convert"
 
-import { Password } from "../../../../password/data"
-import { PasswordCharacterState } from "../data"
+import { Password, PasswordCharacterState } from "../../../data"
 import { ApplicationAction } from "../../../../../../../z_vendor/getto-application/action/action"
 
 export interface InputPasswordAction extends ApplicationAction {
-    readonly resource: InputBoardValueResource
+    readonly board: InputBoardValueResource
     readonly validate: ValidatePasswordAction
     readonly clear: ClearAction
     readonly checkCharacter: CheckPasswordCharacterAction

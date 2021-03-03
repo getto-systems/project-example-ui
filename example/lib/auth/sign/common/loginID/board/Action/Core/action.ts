@@ -5,12 +5,12 @@ import {
     ValidateBoardFieldState,
 } from "../../../../../../../z_vendor/getto-application/board/validateField/Action/Core/action"
 
-import { ValidateLoginIDError } from "../../../../loginID/convert"
+import { ValidateLoginIDError } from "../../../convert"
 
-import { LoginID } from "../../../../loginID/data"
+import { LoginID } from "../../../data"
 
 export interface InputLoginIDAction extends ApplicationAction {
-    readonly resource: InputBoardValueResource
+    readonly board: InputBoardValueResource
     readonly validate: ValidateLoginIDAction
     readonly clear: ClearAction
 }

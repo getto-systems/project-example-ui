@@ -7,7 +7,7 @@ import { emptyBoardValue } from "../../../../../../../z_vendor/getto-application
 
 export function initMockInputLoginIDAction(): InputLoginIDAction {
     return {
-        resource: initMockInputBoardValueResource("text", emptyBoardValue),
+        board: initMockInputBoardValueResource("text", emptyBoardValue),
         validate: initMockValidateBoardFieldAction("loginID", { valid: false, err: [] }),
         clear: () => null,
         terminate: () => null,
