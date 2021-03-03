@@ -8,7 +8,7 @@ import { RenewAuthInfoMethod, CheckAuthInfoMethod } from "./method"
 import { RenewAuthInfoEvent } from "./event"
 
 import { hasExpired, LastAuth, toLastAuth } from "../kernel/data"
-import { lastAuthRepositoryConverter, renewRemoteConverter } from "../kernel/convert"
+import { lastAuthRepositoryConverter, authRemoteConverter } from "../kernel/convert"
 import { authzRepositoryConverter } from "../../../../../common/authz/convert"
 
 interface CheckAuthInfo {
@@ -63,7 +63,7 @@ async function renew(infra: CheckAuthInfoInfra, info: LastAuth, post: Post<Renew
     const { clock, config } = infra
     const lastAuth = infra.lastAuth(lastAuthRepositoryConverter)
     const authz = infra.authz(authzRepositoryConverter)
-    const renew = infra.renew(renewRemoteConverter(clock))
+    const renew = infra.renew(authRemoteConverter(clock))
 
     post({ type: "try-to-renew" })
 

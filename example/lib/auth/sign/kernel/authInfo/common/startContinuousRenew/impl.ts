@@ -3,7 +3,7 @@ import { StartContinuousRenewInfra } from "./infra"
 import { ForceStartContinuousRenewMethod, StartContinuousRenewMethod } from "./method"
 
 import { authzRepositoryConverter } from "../../../../../../common/authz/convert"
-import { lastAuthRepositoryConverter, renewRemoteConverter } from "../../kernel/convert"
+import { lastAuthRepositoryConverter, authRemoteConverter } from "../../kernel/convert"
 
 import { hasExpired, toLastAuth } from "../../kernel/data"
 
@@ -55,7 +55,7 @@ function start(infra: StartContinuousRenewInfra) {
         const { clock, config } = infra
         const authz = infra.authz(authzRepositoryConverter)
         const lastAuth = infra.lastAuth(lastAuthRepositoryConverter)
-        const renew = infra.renew(renewRemoteConverter(clock))
+        const renew = infra.renew(authRemoteConverter(clock))
 
         const CANCEL = { next: false }
         const NEXT = { next: true }

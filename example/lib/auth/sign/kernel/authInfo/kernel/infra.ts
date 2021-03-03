@@ -10,12 +10,12 @@ export type LastAuthRepositoryValue = Readonly<{
     lastAuthAt: string
 }>
 
-type RenewRemoteTypes = RemoteTypes<AuthnNonce, AuthInfo, RenewRemoteValue, RenewRemoteError>
+type RenewRemoteTypes = RemoteTypes<AuthnNonce, AuthInfo, AuthRemoteValue, RenewRemoteError>
 export type RenewRemotePod = RenewRemoteTypes["pod"]
 export type RenewResult = RenewRemoteTypes["result"]
 export type RenewSimulator = RenewRemoteTypes["simulator"]
 
-export type RenewRemoteValue = Readonly<{
+export type AuthRemoteValue = Readonly<{
     authn: Readonly<{ nonce: string }>
     authz: AuthzRemoteValue
 }>

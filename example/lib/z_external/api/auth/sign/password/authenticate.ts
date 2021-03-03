@@ -2,22 +2,22 @@ import { PasswordLoginMessage } from "../../../y_protobuf/password_login_pb.js"
 
 import { encodeUint8ArrayToBase64String } from "../../../../../z_vendor/base64/transform"
 
-import { parseAuthResponse_legacy, parseError } from "../common"
+import { parseAuthResponse, parseErrorMessage } from "../common"
 
-import { AuthResponse } from "../data"
-import { ApiResult } from "../../../data"
-
-export interface ApiAuthSignPasswordAuthenticate {
-    (fields: LoginFields): Promise<LoginResult>
-}
+import { AuthResponse, ParseErrorResult } from "../data"
+import { ApiError, ApiResult } from "../../../data"
 
 type LoginFields = Readonly<{ loginID: string; password: string }>
-type LoginResult = ApiResult<AuthResponse, RawError>
-type RawError = Readonly<{ type: string; err: string }>
+type LoginResult = ApiResult<AuthResponse, RemoteError>
+type RemoteError =
+    | ApiError
+    | Readonly<{ type: "invalid-password-login" }>
+    | Readonly<{ type: "bad-request" }>
 
-export function newApiAuthSignPasswordAuthenticate(
-    apiServerURL: string,
-): ApiAuthSignPasswordAuthenticate {
+interface Authenticate {
+    (fields: LoginFields): Promise<LoginResult>
+}
+export function newApi_AuthenticatePassword(apiServerURL: string): Authenticate {
     return async (fields: LoginFields): Promise<LoginResult> => {
         const response = await fetch(apiServerURL, {
             method: "POST",
@@ -27,9 +27,9 @@ export function newApiAuthSignPasswordAuthenticate(
         })
 
         if (response.ok) {
-            return parseAuthResponse_legacy(response)
+            return parseAuthResponse(response)
         } else {
-            return { success: false, err: await parseError(response) }
+            return { success: false, err: toRemoteError(await parseErrorMessage(response)) }
         }
 
         function body() {
@@ -41,6 +41,20 @@ export function newApiAuthSignPasswordAuthenticate(
 
             const arr = f.encode(passwordLogin).finish()
             return encodeUint8ArrayToBase64String(arr)
+        }
+    }
+
+    function toRemoteError(result: ParseErrorResult): RemoteError {
+        if (!result.success) {
+            return { type: "bad-response", err: result.err }
+        }
+        switch (result.message) {
+            case "bad-request":
+            case "invalid-password-login":
+                return { type: result.message }
+
+            default:
+                return { type: "server-error" }
         }
     }
 }

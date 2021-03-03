@@ -1,6 +1,6 @@
 export type RemoteTypes<M, V, R, E> = {
     pod: RemotePod<M, V, R, E>
-    result: RemoteResult<V, E>
+    result: RemoteResult<R, E>
     simulator: RemoteSimulator<M, R, E>
 }
 
