@@ -1,11 +1,11 @@
 import { ApplicationAbstractStateAction } from "../../../../../../../z_vendor/getto-application/action/impl"
 
-import { startContinuousRenew } from "../../../../../kernel/authn/common/startContinuousRenew/impl"
+import { startContinuousRenew } from "../../../../../kernel/authInfo/common/startContinuousRenew/impl"
 import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
 import { authenticate } from "../../../impl"
 
 import { AuthenticateInfra } from "../../../infra"
-import { StartContinuousRenewInfra } from "../../../../../kernel/authn/common/startContinuousRenew/infra"
+import { StartContinuousRenewInfra } from "../../../../../kernel/authInfo/common/startContinuousRenew/infra"
 import { GetSecureScriptPathInfra } from "../../../../../common/secureScriptPath/get/infra"
 
 import {
@@ -20,7 +20,7 @@ import { GetSecureScriptPathLocationInfo } from "../../../../../common/secureScr
 
 import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
 import { AuthenticateFields } from "../../../data"
-import { AuthInfo } from "../../../../../kernel/authn/kernel/data"
+import { AuthInfo } from "../../../../../kernel/authInfo/kernel/data"
 import { ConvertBoardResult } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 
 export type CoreInfra = CoreForegroundInfra & CoreBackgroundInfra

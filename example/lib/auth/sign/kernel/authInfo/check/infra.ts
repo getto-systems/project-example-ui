@@ -3,7 +3,7 @@ import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/inf
 import { DelayTime, ExpireTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
 import { LastAuthRepositoryPod, RenewRemotePod } from "../kernel/infra"
 
-export type RenewInfra = Readonly<{
+export type CheckAuthInfoInfra = Readonly<{
     authz: AuthzRepositoryPod
     lastAuth: LastAuthRepositoryPod
     renew: RenewRemotePod

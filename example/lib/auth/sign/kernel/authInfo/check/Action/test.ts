@@ -3,28 +3,28 @@ import {
     ClockSubscriber,
     initStaticClock,
     staticClockPubSub,
-} from "../../../../../../../z_vendor/getto-application/infra/clock/simulate"
+} from "../../../../../../z_vendor/getto-application/infra/clock/simulate"
 
-import { Clock } from "../../../../../../../z_vendor/getto-application/infra/clock/infra"
+import { Clock } from "../../../../../../z_vendor/getto-application/infra/clock/infra"
 
-import { RenewAuthnInfoResource, RenewAuthnInfoResourceState } from "./action"
+import { CheckAuthInfoResource, CheckAuthInfoResourceState } from "./action"
 
-import { markSecureScriptPath } from "../../../../../common/secureScriptPath/get/data"
+import { markSecureScriptPath } from "../../../../common/secureScriptPath/get/data"
 import {
     LastAuthRepositoryPod,
     LastAuthRepositoryValue,
     RenewRemotePod,
-} from "../../../kernel/infra"
-import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
+} from "../../kernel/infra"
+import { newGetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/impl"
 import { toEntryPoint } from "./impl"
 import { initCoreAction, initCoreMaterial } from "./Core/impl"
-import { initSyncActionTestRunner } from "../../../../../../../z_vendor/getto-application/action/testHelper"
+import { initSyncActionTestRunner } from "../../../../../../z_vendor/getto-application/action/testHelper"
 import { initMockCoreAction } from "./Core/mock"
-import { initMemoryDB } from "../../../../../../../z_vendor/getto-application/infra/repository/memory"
-import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../../common/authz/infra"
-import { wrapRepository } from "../../../../../../../z_vendor/getto-application/infra/repository/helper"
-import { lastAuthRepositoryConverter } from "../../../kernel/convert"
-import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { initMemoryDB } from "../../../../../../z_vendor/getto-application/infra/repository/memory"
+import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../common/authz/infra"
+import { wrapRepository } from "../../../../../../z_vendor/getto-application/infra/repository/helper"
+import { lastAuthRepositoryConverter } from "../../kernel/convert"
+import { initRemoteSimulator } from "../../../../../../z_vendor/getto-application/infra/remote/simulate"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
 const STORED_AUTH_AT = new Date("2020-01-01 09:00:00").toISOString()
@@ -54,8 +54,8 @@ describe("RenewAuthInfo", () => {
 
         resource.core.ignite()
 
-        function stateHandler(): Post<RenewAuthnInfoResourceState> {
-            const stack: RenewAuthnInfoResourceState[] = []
+        function stateHandler(): Post<CheckAuthInfoResourceState> {
+            const stack: CheckAuthInfoResourceState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -120,8 +120,8 @@ describe("RenewAuthInfo", () => {
 
         resource.core.ignite()
 
-        function stateHandler(): Post<RenewAuthnInfoResourceState> {
-            const stack: RenewAuthnInfoResourceState[] = []
+        function stateHandler(): Post<CheckAuthInfoResourceState> {
+            const stack: CheckAuthInfoResourceState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -192,8 +192,8 @@ describe("RenewAuthInfo", () => {
 
         resource.core.ignite()
 
-        function stateHandler(): Post<RenewAuthnInfoResourceState> {
-            const stack: RenewAuthnInfoResourceState[] = []
+        function stateHandler(): Post<CheckAuthInfoResourceState> {
+            const stack: CheckAuthInfoResourceState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -256,8 +256,8 @@ describe("RenewAuthInfo", () => {
 
         resource.core.ignite()
 
-        function stateHandler(): Post<RenewAuthnInfoResourceState> {
-            const stack: RenewAuthnInfoResourceState[] = []
+        function stateHandler(): Post<CheckAuthInfoResourceState> {
+            const stack: CheckAuthInfoResourceState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -321,8 +321,8 @@ describe("RenewAuthInfo", () => {
 
         resource.core.ignite()
 
-        function stateHandler(): Post<RenewAuthnInfoResourceState> {
-            const stack: RenewAuthnInfoResourceState[] = []
+        function stateHandler(): Post<CheckAuthInfoResourceState> {
+            const stack: CheckAuthInfoResourceState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -368,8 +368,8 @@ describe("RenewAuthInfo", () => {
 
         resource.core.loadError({ type: "infra-error", err: "load error" })
 
-        function stateHandler(): Post<RenewAuthnInfoResourceState> {
-            const stack: RenewAuthnInfoResourceState[] = []
+        function stateHandler(): Post<CheckAuthInfoResourceState> {
+            const stack: CheckAuthInfoResourceState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -483,7 +483,7 @@ function newTestRenewAuthnInfoResource(
     repository: RenewCredentialTestRepository,
     remote: RenewCredentialTestRemoteAccess,
     clock: Clock,
-): RenewAuthnInfoResource {
+): CheckAuthInfoResource {
     const config = standardConfig()
     return toEntryPoint(
         initCoreAction(

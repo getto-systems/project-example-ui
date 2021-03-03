@@ -1,25 +1,25 @@
-import { ApplicationAbstractStateAction } from "../../../../../../../../z_vendor/getto-application/action/impl"
+import { ApplicationAbstractStateAction } from "../../../../../../../z_vendor/getto-application/action/impl"
 
-import { getSecureScriptPath } from "../../../../../../common/secureScriptPath/get/impl"
+import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
 import {
     forceStartContinuousRenew,
     startContinuousRenew,
-} from "../../../../common/startContinuousRenew/impl"
-import { forceRenew, renew } from "../../../impl"
+} from "../../../common/startContinuousRenew/impl"
+import { renewAuthInfo, checkAuthInfo } from "../../impl"
 
-import { GetSecureScriptPathInfra } from "../../../../../../common/secureScriptPath/get/infra"
-import { StartContinuousRenewInfra } from "../../../../common/startContinuousRenew/infra"
-import { RenewInfra } from "../../../infra"
+import { GetSecureScriptPathInfra } from "../../../../../common/secureScriptPath/get/infra"
+import { StartContinuousRenewInfra } from "../../../common/startContinuousRenew/infra"
+import { CheckAuthInfoInfra } from "../../infra"
 
 import { CoreAction, CoreMaterial, CoreState } from "./action"
 
-import { GetSecureScriptPathLocationInfo } from "../../../../../../common/secureScriptPath/get/method"
+import { GetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/method"
 
-import { AuthInfo } from "../../../../kernel/data"
-import { LoadSecureScriptError } from "../../../../../../common/secureScriptPath/get/data"
+import { AuthInfo } from "../../../kernel/data"
+import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
 
 export type CoreInfra = Readonly<{
-    renew: RenewInfra
+    renew: CheckAuthInfoInfra
     startContinuousRenew: StartContinuousRenewInfra
     getSecureScriptPath: GetSecureScriptPathInfra
 }>
@@ -29,8 +29,8 @@ export function initCoreMaterial(
     locationInfo: GetSecureScriptPathLocationInfo,
 ): CoreMaterial {
     return {
-        renew: renew(infra.renew),
-        forceRenew: forceRenew(infra.renew),
+        renew: checkAuthInfo(infra.renew),
+        forceRenew: renewAuthInfo(infra.renew),
         startContinuousRenew: startContinuousRenew(infra.startContinuousRenew),
         forceStartContinuousRenew: forceStartContinuousRenew(infra.startContinuousRenew),
         getSecureScriptPath: getSecureScriptPath(infra.getSecureScriptPath)(locationInfo),

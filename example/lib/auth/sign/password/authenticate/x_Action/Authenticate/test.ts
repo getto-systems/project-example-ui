@@ -15,13 +15,13 @@ import { CoreState } from "./Core/action"
 
 import { markSecureScriptPath } from "../../../../common/secureScriptPath/get/data"
 import { AuthenticateFields } from "../../data"
-import { markAuthAt_legacy, markAuthnNonce_legacy } from "../../../../kernel/authn/kernel/data"
+import { markAuthAt_legacy, markAuthnNonce_legacy } from "../../../../kernel/authInfo/kernel/data"
 import { markApiNonce_legacy, markApiRoles_legacy } from "../../../../../../common/authz/data"
 import {
     LastAuthRepositoryPod,
     LastAuthRepositoryValue,
     RenewRemotePod,
-} from "../../../../kernel/authn/kernel/infra"
+} from "../../../../kernel/authInfo/kernel/infra"
 import { newGetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/impl"
 import { ticker } from "../../../../../../z_vendor/getto-application/infra/timer/helper"
 import { authenticateEventHasDone } from "../../impl"
@@ -37,7 +37,7 @@ import { initCoreAction, initCoreMaterial } from "./Core/impl"
 import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../common/authz/infra"
 import { initMemoryDB } from "../../../../../../z_vendor/getto-application/infra/repository/memory"
 import { wrapRepository } from "../../../../../../z_vendor/getto-application/infra/repository/helper"
-import { lastAuthRepositoryConverter } from "../../../../kernel/authn/kernel/convert"
+import { lastAuthRepositoryConverter } from "../../../../kernel/authInfo/kernel/convert"
 import { initRemoteSimulator } from "../../../../../../z_vendor/getto-application/infra/remote/simulate"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const

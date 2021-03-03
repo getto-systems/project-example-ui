@@ -9,8 +9,6 @@ export const authzRepositoryConverter: RepositoryConverter<Authz, AuthzRepositor
         const nonce = value.nonce
         const roles = value.roles
 
-        console.log("AUTHZ REPOSITORY VALUE", value)
-
         if (!nonce) {
             return { success: false }
         }

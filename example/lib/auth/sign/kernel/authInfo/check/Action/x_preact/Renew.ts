@@ -2,26 +2,26 @@ import { h, VNode } from "preact"
 import { useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../../../../../../z_vendor/getto-css/preact/common"
-import { loginBox } from "../../../../../../../../z_vendor/getto-css/preact/layout/login"
-import { v_medium } from "../../../../../../../../z_vendor/getto-css/preact/design/alignment"
+import { VNodeContent } from "../../../../../../../z_vendor/getto-css/preact/common"
+import { loginBox } from "../../../../../../../z_vendor/getto-css/preact/layout/login"
+import { v_medium } from "../../../../../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useApplicationAction, useEntryPoint } from "../../../../../../../../x_preact/common/hooks"
-import { siteInfo } from "../../../../../../../../x_preact/common/site"
-import { spinner } from "../../../../../../../../x_preact/common/icon"
+import { useApplicationAction, useEntryPoint } from "../../../../../../../x_preact/common/hooks"
+import { siteInfo } from "../../../../../../../x_preact/common/site"
+import { spinner } from "../../../../../../../x_preact/common/icon"
 
-import { appendScript } from "../../../../../../../../x_preact/auth/Sign/script"
+import { appendScript } from "../../../../../../../x_preact/auth/Sign/script"
 
-import { ApplicationError } from "../../../../../../../../x_preact/common/System/ApplicationError"
+import { ApplicationError } from "../../../../../../../x_preact/common/System/ApplicationError"
 
 import {
-    RenewAuthnInfoEntryPoint,
-    RenewAuthnInfoResource,
-    RenewAuthnInfoResourceState,
+    CheckAuthInfoEntryPoint,
+    CheckAuthInfoResource,
+    CheckAuthInfoResourceState,
 } from "../action"
-import { RenewError } from "../../../../kernel/data"
+import { RenewError } from "../../../kernel/data"
 
-export function RenewAuthInfo(entryPoint: RenewAuthnInfoEntryPoint): VNode {
+export function RenewAuthInfo(entryPoint: CheckAuthInfoEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
     return h(View, <RenewAuthnInfoProps>{
         ...resource,
@@ -29,8 +29,8 @@ export function RenewAuthInfo(entryPoint: RenewAuthnInfoEntryPoint): VNode {
     })
 }
 
-export type RenewAuthnInfoProps = RenewAuthnInfoResource &
-    Readonly<{ state: RenewAuthnInfoResourceState }>
+export type RenewAuthnInfoProps = CheckAuthInfoResource &
+    Readonly<{ state: CheckAuthInfoResourceState }>
 export function View(props: RenewAuthnInfoProps): VNode {
     useLayoutEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う

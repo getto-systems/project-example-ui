@@ -1,10 +1,10 @@
 import { h } from "preact"
 
-import { storyTemplate } from "../../../../../../../../z_vendor/storybook/preact/story"
+import { storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
 
 import { RenewAuthnInfoProps, View } from "./Renew"
 
-import { RenewAuthnInfoResourceState } from "../action"
+import { CheckAuthInfoResourceState } from "../action"
 import { initMockRenewAuthnInfoResource } from "../mock"
 
 const renewOptions = {
@@ -34,7 +34,7 @@ const template = storyTemplate<Props>((props) => {
         state: state(),
     })
 
-    function state(): RenewAuthnInfoResourceState {
+    function state(): CheckAuthInfoResourceState {
         switch (props.renew) {
             case "delayed":
                 return { type: "delayed-to-renew" }

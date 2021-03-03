@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { useApplicationAction, useEntryPoint } from "../../../../../x_preact/common/hooks"
 
 import { ApplicationError } from "../../../../../x_preact/common/System/ApplicationError"
-import { RenewAuthInfo } from "../../../../../auth/sign/kernel/authn/renew/x_Action/Renew/x_preact/Renew"
+import { RenewAuthInfo } from "../../../../../auth/sign/kernel/authInfo/check/Action/x_preact/Renew"
 import { AuthenticatePassword } from "../../../../../auth/sign/password/authenticate/x_Action/Authenticate/x_preact/Authenticate"
 import { RequestPasswordResetToken } from "../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/x_preact/RequestToken"
 import { CheckPasswordResetSendingStatus } from "../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/x_preact/CheckStatus"

@@ -1,5 +1,5 @@
 import { ApplicationStateAction } from "../../../../z_vendor/getto-application/action/action"
-import { RenewAuthnInfoEntryPoint } from "../../../../auth/sign/kernel/authn/renew/x_Action/Renew/action"
+import { CheckAuthInfoEntryPoint } from "../../../../auth/sign/kernel/authInfo/check/Action/action"
 import { AuthenticatePasswordEntryPoint } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/action"
 import { RequestPasswordResetTokenEntryPoint } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/action"
 import { CheckPasswordResetSendingStatusEntryPoint } from "../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/action"
@@ -14,7 +14,7 @@ export type AuthSignResource = Readonly<{
 }>
 
 export interface AuthSignSubEntryPoint {
-    renew(): RenewAuthnInfoEntryPoint
+    renew(): CheckAuthInfoEntryPoint
 
     password_authenticate(): AuthenticatePasswordEntryPoint
 
@@ -33,7 +33,7 @@ export interface AuthSignAction extends ApplicationStateAction<AuthSignActionSta
 
 export type AuthSignActionState =
     | Readonly<{ type: "initial-view" }>
-    | Readonly<{ type: "renew-credential"; entryPoint: RenewAuthnInfoEntryPoint }>
+    | Readonly<{ type: "renew-credential"; entryPoint: CheckAuthInfoEntryPoint }>
     | Readonly<{ type: "password-authenticate"; entryPoint: AuthenticatePasswordEntryPoint }>
     | Readonly<{
           type: "password-reset-requestToken"
