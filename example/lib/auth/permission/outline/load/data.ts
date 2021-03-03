@@ -36,7 +36,7 @@ export type OutlineMenuItemNode = Readonly<{
 }>
 
 export type OutlineMenuCategoryLabel = string & { MenuCategoryLabel: never }
-export function markOutlineMenuCategoryLabel(label: string): OutlineMenuCategoryLabel {
+export function markOutlineMenuCategoryLabel_legacy(label: string): OutlineMenuCategoryLabel {
     return label as OutlineMenuCategoryLabel
 }
 export type OutlineMenuCategoryPath = OutlineMenuCategoryLabel[]

@@ -4,7 +4,7 @@ import { MockAction, MockPropsPasser } from "../../../../../z_vendor/getto-appli
 import { BreadcrumbListComponent, BreadcrumbListComponentState } from "./component"
 
 import {
-    markOutlineMenuCategoryLabel,
+    markOutlineMenuCategoryLabel_legacy,
     markOutlineMenuItem,
 } from "../../../../../auth/permission/outline/load/data"
 
@@ -37,7 +37,7 @@ class Component
                         breadcrumb: [
                             {
                                 type: "category",
-                                category: { label: markOutlineMenuCategoryLabel("MAIN") },
+                                category: { label: markOutlineMenuCategoryLabel_legacy("MAIN") },
                             },
                             {
                                 type: "item",

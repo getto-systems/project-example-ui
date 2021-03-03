@@ -1,9 +1,5 @@
 import { RemoteTypes } from "../../../../z_vendor/getto-application/infra/remote/infra"
 
-import {
-    StorageError,
-    StoreResult,
-} from "../../../../z_vendor/getto-application/infra/storage/data"
 import { AuthzRepositoryPod } from "../../../../common/authz/infra"
 
 import {
@@ -14,6 +10,7 @@ import {
 
 import { AuthzNonce } from "../../../../common/authz/data"
 import { LoadOutlineMenuBadgeRemoteError, OutlineMenuCategoryPath } from "./data"
+import { RepositoryPod } from "../../../../z_vendor/getto-application/infra/repository/infra"
 
 export type OutlineBreadcrumbListActionInfra = LoadOutlineBreadcrumbListInfra
 export type OutlineMenuActionInfra = LoadOutlineMenuInfra & ToggleOutlineMenuExpandInfra
@@ -29,7 +26,7 @@ export interface LoadOutlineBreadcrumbList {
 export type LoadOutlineMenuInfra = Readonly<{
     loadMenuBadge: LoadOutlineMenuBadgeRemotePod
     authz: AuthzRepositoryPod
-    menuExpands: OutlineMenuExpandRepository
+    menuExpands: OutlineMenuExpandRepositoryPod
     menuTree: OutlineMenuTree
 }>
 
@@ -38,7 +35,7 @@ export interface LoadOutlineMenu {
 }
 
 export type ToggleOutlineMenuExpandInfra = Readonly<{
-    menuExpands: OutlineMenuExpandRepository
+    menuExpands: OutlineMenuExpandRepositoryPod
 }>
 
 export interface ToggleOutlineMenuExpand {
@@ -115,14 +112,11 @@ export class OutlineMenuCategoryPathSet extends ArraySet<OutlineMenuCategoryPath
     }
 }
 
-export interface OutlineMenuExpandRepository {
-    load(): OutlineMenuExpandResponse
-    store(menuExpand: OutlineMenuExpand): StoreResult
-}
-
-export type OutlineMenuExpandResponse =
-    | Readonly<{ success: true; menuExpand: OutlineMenuExpand }>
-    | Readonly<{ success: false; err: StorageError }>
+export type OutlineMenuExpandRepositoryPod = RepositoryPod<
+    OutlineMenuExpand,
+    OutlineMenuExpandRepositoryValue
+>
+export type OutlineMenuExpandRepositoryValue = string[][]
 
 type LoadOutlineMenuBadgeRemoteTypes = RemoteTypes<
     AuthzNonce,

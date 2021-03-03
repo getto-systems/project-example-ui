@@ -7,7 +7,7 @@ import { newAuthzRepository } from "../../../../../common/authz/infra/repository
 
 import {
     LoadOutlineMenuBadgeRemotePod,
-    OutlineMenuExpandRepository,
+    OutlineMenuExpandRepositoryPod,
     OutlineMenuPermission,
     OutlineMenuTree,
     OutlineMenuTreeNode,
@@ -36,14 +36,14 @@ export function newOutlineBreadcrumbListAction(
 export function newOutlineMenuAction(
     webStorage: Storage,
     currentURL: URL,
-    newMenuExpandRepository: { (webStorage: Storage): OutlineMenuExpandRepository },
+    menuExpandRepositoryPod: OutlineMenuExpandRepositoryPod,
     menuTree: OutlineMenuTree,
     loadMenuBadge: LoadOutlineMenuBadgeRemotePod,
 ): LoadOutlineMenuAction {
     return initOutlineMenuAction(newLocationInfo(currentURL), {
         loadMenuBadge,
         authz: newAuthzRepository(webStorage),
-        menuExpands: newMenuExpandRepository(webStorage),
+        menuExpands: menuExpandRepositoryPod,
         menuTree,
     })
 }

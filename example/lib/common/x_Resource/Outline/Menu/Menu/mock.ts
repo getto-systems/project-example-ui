@@ -4,7 +4,7 @@ import { MockAction, MockPropsPasser } from "../../../../../z_vendor/getto-appli
 import { MenuComponent, MenuComponentState } from "./component"
 
 import {
-    markOutlineMenuCategoryLabel,
+    markOutlineMenuCategoryLabel_legacy,
     markOutlineMenuItem,
     OutlineMenu,
 } from "../../../../../auth/permission/outline/load/data"
@@ -57,8 +57,8 @@ class Component extends MockAction<MenuComponentState> implements MenuComponent 
                         type: "category",
                         isExpand: true,
                         badgeCount,
-                        category: { label: markOutlineMenuCategoryLabel("MAIN") },
-                        path: [markOutlineMenuCategoryLabel("MAIN")],
+                        category: { label: markOutlineMenuCategoryLabel_legacy("MAIN") },
+                        path: [markOutlineMenuCategoryLabel_legacy("MAIN")],
                         children: [
                             {
                                 type: "item",

@@ -4,16 +4,18 @@ import {
     newTestDashboardResource,
 } from "../../EntryPoint/tests/core"
 
-import { initMemoryTypedStorage } from "../../../../../z_vendor/getto-application/infra/storage/typed/memory"
 import {
     initStaticClock,
     staticClockPubSub,
 } from "../../../../../z_vendor/getto-application/infra/clock/simulate"
-import { initOutlineMenuExpandRepository } from "../../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/core"
 import { initMemorySeasonRepository } from "../../../../shared/season/impl/repository/season/memory"
 
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
-import { OutlineMenuTree } from "../../../../../auth/permission/outline/load/infra"
+import {
+    OutlineMenuExpandRepositoryPod,
+    OutlineMenuExpandRepositoryValue,
+    OutlineMenuTree,
+} from "../../../../../auth/permission/outline/load/infra"
 
 import { ExampleComponentState } from "../component"
 import { newLoadOutlineMenuBadgeNoopRemote } from "../../../../../auth/permission/outline/load/infra/remote/loadMenuBadge/noop"
@@ -87,11 +89,11 @@ function standardRepository(): DashboardRepository {
     const authz = initMemoryDB<AuthzRepositoryValue>()
     authz.set({ nonce: "api-nonce", roles: ["role"] })
 
+    const menuExpands = initMemoryDB<OutlineMenuExpandRepositoryValue>()
+
     return {
         authz: <AuthzRepositoryPod>wrapRepository(authz),
-        menuExpands: initOutlineMenuExpandRepository({
-            menuExpand: initMemoryTypedStorage({ set: false }),
-        }),
+        menuExpands: <OutlineMenuExpandRepositoryPod>wrapRepository(menuExpands),
         seasons: initMemorySeasonRepository({ stored: false }),
     }
 }

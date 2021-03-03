@@ -1,9 +1,10 @@
 import { DocumentRemoteAccess, newTestDocumentResource } from "../../EntryPoint/tests/core"
 
-import { initMemoryTypedStorage } from "../../../../../z_vendor/getto-application/infra/storage/typed/memory"
-import { initOutlineMenuExpandRepository } from "../../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/core"
-
-import { OutlineMenuTree } from "../../../../../auth/permission/outline/load/infra"
+import {
+    OutlineMenuExpandRepositoryPod,
+    OutlineMenuExpandRepositoryValue,
+    OutlineMenuTree,
+} from "../../../../../auth/permission/outline/load/infra"
 
 import { ContentComponentState } from "../component"
 import { newLoadOutlineMenuBadgeNoopRemote } from "../../../../../auth/permission/outline/load/infra/remote/loadMenuBadge/noop"
@@ -71,11 +72,11 @@ function standardRepository() {
     const authz = initMemoryDB<AuthzRepositoryValue>()
     authz.set({ nonce: "api-nonce", roles: ["role"] })
 
+    const menuExpands = initMemoryDB<OutlineMenuExpandRepositoryValue>()
+
     return {
         authz: <AuthzRepositoryPod>wrapRepository(authz),
-        menuExpands: initOutlineMenuExpandRepository({
-            menuExpand: initMemoryTypedStorage({ set: false }),
-        }),
+        menuExpands: <OutlineMenuExpandRepositoryPod>wrapRepository(menuExpands),
     }
 }
 

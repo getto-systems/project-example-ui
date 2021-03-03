@@ -1,5 +1,6 @@
 import { LoadOutlineActionLocationInfo } from "../../../../auth/permission/outline/load/action"
-import { markOutlineMenuCategoryLabel } from "../../../../auth/permission/outline/load/data"
+import { outlineMenuExpandRepositoryConverter } from "../../../../auth/permission/outline/load/convert"
+import { markOutlineMenuCategoryLabel_legacy } from "../../../../auth/permission/outline/load/data"
 import {
     initOutlineBreadcrumbListAction,
     initOutlineMenuAction,
@@ -9,13 +10,14 @@ import {
     LoadOutlineMenuBadgeRemotePod,
     LoadOutlineMenuBadgeSimulator,
     OutlineMenuExpand,
-    OutlineMenuExpandRepository,
+    OutlineMenuExpandRepositoryPod,
+    OutlineMenuExpandRepositoryValue,
     OutlineMenuTree,
 } from "../../../../auth/permission/outline/load/infra"
-import { initMemoryOutlineMenuExpandRepository } from "../../../../auth/permission/outline/load/infra/repository/outlineMenuExpand/memory"
 import { initAsyncActionTester_legacy } from "../../../../z_vendor/getto-application/action/testHelper"
 import { initRemoteSimulator } from "../../../../z_vendor/getto-application/infra/remote/simulate"
 import { wrapRepository } from "../../../../z_vendor/getto-application/infra/repository/helper"
+import { RepositoryFetchResult } from "../../../../z_vendor/getto-application/infra/repository/infra"
 import { initMemoryDB } from "../../../../z_vendor/getto-application/infra/repository/memory"
 import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../authz/infra"
 import { BreadcrumbListComponentState } from "./BreadcrumbList/component"
@@ -187,6 +189,7 @@ describe("Menu", () => {
 
     test("load menu; toggle expands", (done) => {
         const { repository, resource } = standardMenuResource()
+        const menuExpands = repository.menuExpands(outlineMenuExpandRepositoryConverter)
 
         resource.menu.subscriber.subscribe(initNoopTester())
 
@@ -200,7 +203,9 @@ describe("Menu", () => {
                         resource.menu.terminate()
 
                         resource.menu.subscriber.subscribe(initFirstToggleTester())
-                        resource.menu.toggle(last.menu, [markOutlineMenuCategoryLabel("DOCUMENT")])
+                        resource.menu.toggle(last.menu, [
+                            markOutlineMenuCategoryLabel_legacy("DOCUMENT"),
+                        ])
                     }
                 }
             })
@@ -232,8 +237,8 @@ describe("Menu", () => {
 
                         resource.menu.subscriber.subscribe(initSecondToggleTester())
                         resource.menu.toggle(last.menu, [
-                            markOutlineMenuCategoryLabel("DOCUMENT"),
-                            markOutlineMenuCategoryLabel("DETAIL"),
+                            markOutlineMenuCategoryLabel_legacy("DOCUMENT"),
+                            markOutlineMenuCategoryLabel_legacy("DETAIL"),
                         ])
                     }
                 }
@@ -258,7 +263,11 @@ describe("Menu", () => {
                         ],
                     },
                 ])
-                expectToSaveExpand(repository, [["MAIN"], ["DOCUMENT"], ["DOCUMENT", "DETAIL"]])
+                expectToSaveExpand(menuExpands.get(), [
+                    ["MAIN"],
+                    ["DOCUMENT"],
+                    ["DOCUMENT", "DETAIL"],
+                ])
                 done()
             })
         }
@@ -413,7 +422,7 @@ function expandMenuResource() {
 
 type Repository = Readonly<{
     authz: AuthzRepositoryPod
-    menuExpands: OutlineMenuExpandRepository
+    menuExpands: OutlineMenuExpandRepositoryPod
 }>
 
 function newTestMenuResource(
@@ -536,7 +545,9 @@ function expandRepository(): Repository {
 
     return {
         authz: wrapRepository(authz),
-        menuExpands: standardMenuExpandRepository([[markOutlineMenuCategoryLabel("DOCUMENT")]]),
+        menuExpands: standardMenuExpandRepository([
+            [markOutlineMenuCategoryLabel_legacy("DOCUMENT")],
+        ]),
     }
 }
 
@@ -551,12 +562,19 @@ function standardLoadMenuBadgeRemote(): LoadOutlineMenuBadgeRemotePod {
     return initRemoteSimulator(simulator, { wait_millisecond: 0 })
 }
 
-function standardMenuExpandRepository(menuExpand: OutlineMenuExpand): OutlineMenuExpandRepository {
-    return initMemoryOutlineMenuExpandRepository({ menuExpand: { set: true, value: menuExpand } })
+function standardMenuExpandRepository(
+    menuExpand: OutlineMenuExpand,
+): OutlineMenuExpandRepositoryPod {
+    const menuExpands = initMemoryDB<OutlineMenuExpandRepositoryValue>()
+    menuExpands.set(menuExpand)
+    return wrapRepository(menuExpands)
 }
 
-function expectToSaveExpand(repository: Repository, menuExpand: string[][]) {
-    expect(repository.menuExpands.load()).toEqual({ success: true, menuExpand })
+function expectToSaveExpand(
+    result: RepositoryFetchResult<OutlineMenuExpand>,
+    menuExpand: OutlineMenuExpandRepositoryValue,
+) {
+    expect(result).toEqual({ success: true, found: true, value: menuExpand })
 }
 
 function initAsyncBreadcrumbListTester() {

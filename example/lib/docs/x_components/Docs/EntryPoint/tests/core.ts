@@ -11,7 +11,7 @@ import { initContentComponent } from "../../content/impl"
 
 import {
     LoadOutlineMenuBadgeRemotePod,
-    OutlineMenuExpandRepository,
+    OutlineMenuExpandRepositoryPod,
     OutlineMenuTree,
 } from "../../../../../auth/permission/outline/load/infra"
 
@@ -23,7 +23,7 @@ import { AuthzRepositoryPod } from "../../../../../common/authz/infra"
 
 export type DocumentRepository = Readonly<{
     authz: AuthzRepositoryPod
-    menuExpands: OutlineMenuExpandRepository
+    menuExpands: OutlineMenuExpandRepositoryPod
 }>
 export type DocumentRemoteAccess = Readonly<{
     loadMenuBadge: LoadOutlineMenuBadgeRemotePod
