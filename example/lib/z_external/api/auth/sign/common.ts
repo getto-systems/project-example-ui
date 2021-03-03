@@ -86,9 +86,9 @@ export async function parseError(response: Response): Promise<RawError> {
 export async function parseErrorMessage(response: Response): Promise<ParseErrorResult> {
     try {
         const json = await response.json()
-        return { success: true as const, message: json.message }
+        return { success: true, message: json.message }
     } catch (err) {
-        return { success: false as const, err: `${err}` }
+        return { success: false, err: `${err}` }
     }
 }
 
