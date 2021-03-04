@@ -1,15 +1,21 @@
 import { newResetPasswordRemote } from "./infra/remote/reset"
 import { newClock } from "../../../../../z_vendor/getto-application/infra/clock/init"
+import { newLocationDetecter } from "../../../../../z_vendor/getto-application/location/init"
 
-import { initResetLocationInfo } from "./impl"
+import { detectResetToken } from "./impl"
 
 import { delaySecond } from "../../../../../z_vendor/getto-application/infra/config/infra"
 import { ResetInfra } from "./infra"
 
-import { ResetLocationInfo } from "./method"
+import { ResetLocationDetecter } from "./method"
 
-export function newResetLocationInfo(currentLocation: Location): ResetLocationInfo {
-    return initResetLocationInfo(new URL(currentLocation.toString()))
+import { authSignSearchParams } from "../../../common/searchParams/data"
+
+export function newResetLocationDetecter(currentLocation: Location): ResetLocationDetecter {
+    return newLocationDetecter(
+        currentLocation,
+        detectResetToken(authSignSearchParams.password.reset),
+    )
 }
 
 export function newResetInfra(): ResetInfra {

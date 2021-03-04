@@ -1,5 +1,6 @@
 export type LocationTypes<K, T> = {
     detecter: LocationDetecter<T>
+    method: LocationDetectMethod<T>
     info: T
     keys: K
 }
