@@ -10,13 +10,16 @@ import { LoadOutlineAction } from "../action"
 import { newOutlineMenuExpandRepository } from "../infra/repository/menuExpand"
 import { env } from "../../../../../y_environment/env"
 
-export function newDocumentOutlineAction(webStorage: Storage, currentURL: URL): LoadOutlineAction {
+export function newDocumentOutlineAction(
+    webStorage: Storage,
+    currentLocation: Location,
+): LoadOutlineAction {
     const menuTree = documentMenuTree()
     return {
-        breadcrumbList: newOutlineBreadcrumbListAction(currentURL, menuTree),
+        breadcrumbList: newOutlineBreadcrumbListAction(currentLocation, menuTree),
         menu: newOutlineMenuAction(
             webStorage,
-            currentURL,
+            currentLocation,
             newOutlineMenuExpandRepository(webStorage, env.storageKey.menuExpand.document),
             menuTree,
             newLoadOutlineMenuBadgeNoopRemote(),

@@ -1,12 +1,6 @@
 import { RepositoryError } from "../../../../z_vendor/getto-application/infra/repository/data"
 
-export type OutlineMenuTarget = OutlineMenuTarget_data & { MenuTarget: never }
-type OutlineMenuTarget_data =
-    | Readonly<{ versioned: false; version: string }>
-    | Readonly<{ versioned: true; version: string; currentPath: string }>
-export function markOutlineMenuTarget(menuTarget: OutlineMenuTarget_data): OutlineMenuTarget {
-    return menuTarget as OutlineMenuTarget
-}
+export type OutlineMenuTarget = string & { MenuTarget: never }
 
 export type OutlineBreadcrumb = OutlineBreadcrumbNode[]
 

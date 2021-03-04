@@ -3,7 +3,6 @@ import { initTestSeasonAction } from "../../../../shared/season/tests/season"
 import {
     initOutlineBreadcrumbListAction,
     initOutlineMenuAction,
-    initOutlineActionLocationInfo,
 } from "../../../../../auth/permission/outline/load/impl"
 
 import { DashboardFactory, initDashboardResource } from "../impl/core"
@@ -23,6 +22,7 @@ import { AuthzRepositoryPod } from "../../../../../common/authz/infra"
 import { DashboardResource } from "../entryPoint"
 import { initUnexpectedErrorAction } from "../../../../../availability/unexpectedError/impl"
 import { initNotifyUnexpectedErrorSimulator } from "../../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/testHelper"
+import { initLoadOutlineMenuLocationDetecter } from "../../../../../auth/permission/outline/load/testHelper"
 
 export type DashboardRepository = Readonly<{
     authz: AuthzRepositoryPod
@@ -40,16 +40,17 @@ export function newTestDashboardResource(
     remote: DashboardRemoteAccess,
     clock: Clock,
 ): DashboardResource {
-    const locationInfo = initOutlineActionLocationInfo(version, currentURL)
+    const detecter = initLoadOutlineMenuLocationDetecter(currentURL, version)
     const factory: DashboardFactory = {
         actions: {
             error: initUnexpectedErrorAction({
                 notify: initNotifyUnexpectedErrorSimulator(),
             }),
-            breadcrumbList: initOutlineBreadcrumbListAction(locationInfo, { menuTree }),
-            menu: initOutlineMenuAction(locationInfo, {
+            breadcrumbList: initOutlineBreadcrumbListAction(detecter, { version, menuTree }),
+            menu: initOutlineMenuAction(detecter, {
                 ...repository,
                 ...remote,
+                version,
                 menuTree,
             }),
 

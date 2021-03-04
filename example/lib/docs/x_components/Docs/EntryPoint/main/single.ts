@@ -16,14 +16,15 @@ import { newDocumentOutlineAction } from "../../../../../auth/permission/outline
 type OutsideFeature = Readonly<{
     webStorage: Storage
     currentURL: URL
+    currentLocation: Location
 }>
 export function newForeground(feature: OutsideFeature): DocumentEntryPoint {
-    const { webStorage, currentURL } = feature
+    const { webStorage, currentURL, currentLocation } = feature
 
     const factory: DocumentFactory = {
         actions: {
             error: newErrorAction(),
-            ...newDocumentOutlineAction(webStorage, currentURL),
+            ...newDocumentOutlineAction(webStorage, currentLocation),
 
             content: initContentAction(),
         },

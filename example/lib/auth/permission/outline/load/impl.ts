@@ -18,7 +18,9 @@ import {
 import {
     LoadOutlineBreadcrumbListAction,
     LoadOutlineMenuAction,
-    LoadOutlineActionLocationInfo,
+    LoadOutlineMenuLocationDetecter,
+    LoadOutlineMenuLocationDetectMethod,
+    LoadOutlineMenuLocationKeys,
 } from "./action"
 
 import { authzRepositoryConverter } from "../../../../common/authz/convert"
@@ -32,39 +34,23 @@ import {
     OutlineMenuItem,
     markOutlineMenuItem,
     OutlineMenuNode,
-    OutlineMenuTarget,
     OutlineMenuCategoryPath,
     markOutlineMenuCategoryLabel_legacy,
     OutlineMenuCategoryLabel,
-    markOutlineMenuTarget,
+    OutlineMenuTarget,
 } from "./data"
-import { outlineMenuExpandRepositoryConverter } from "./convert"
+import { outlineMenuExpandRepositoryConverter, outlineMenuTargetLocationConverter } from "./convert"
 import { passThroughRemoteConverter } from "../../../../z_vendor/getto-application/infra/remote/helper"
 
-export function initOutlineActionLocationInfo(
-    version: string,
-    currentURL: URL,
-): LoadOutlineActionLocationInfo {
-    return {
-        getOutlineMenuTarget: () => detectMenuTarget(version, currentURL),
-    }
+interface Detecter {
+    (keys: LoadOutlineMenuLocationKeys): LoadOutlineMenuLocationDetectMethod
 }
-
-function detectMenuTarget(version: string, currentURL: URL): OutlineMenuTarget {
-    const pathname = currentURL.pathname
-    const versionPrefix = `/${version}/`
-    if (!pathname.startsWith(versionPrefix)) {
-        return markOutlineMenuTarget({ versioned: false, version })
-    }
-    return markOutlineMenuTarget({
-        versioned: true,
-        version,
-        currentPath: pathname.replace(versionPrefix, "/"),
-    })
+export const detectMenuTarget: Detecter = (keys) => (currentURL) => {
+    return outlineMenuTargetLocationConverter(currentURL, keys.version)
 }
 
 export function initOutlineBreadcrumbListAction(
-    locationInfo: LoadOutlineActionLocationInfo,
+    locationInfo: LoadOutlineMenuLocationDetecter,
     infra: OutlineBreadcrumbListActionInfra,
 ): LoadOutlineBreadcrumbListAction {
     return {
@@ -73,7 +59,7 @@ export function initOutlineBreadcrumbListAction(
 }
 
 export function initOutlineMenuAction(
-    locationInfo: LoadOutlineActionLocationInfo,
+    locationInfo: LoadOutlineMenuLocationDetecter,
     infra: OutlineMenuActionInfra,
 ): LoadOutlineMenuAction {
     return {
@@ -82,20 +68,17 @@ export function initOutlineMenuAction(
     }
 }
 
-const loadBreadcrumbList: LoadOutlineBreadcrumbList = (infra) => (locationInfo) => async (post) => {
-    const target = locationInfo.getOutlineMenuTarget()
-    if (!target.versioned) {
+const loadBreadcrumbList: LoadOutlineBreadcrumbList = (infra) => (detecter) => async (post) => {
+    const { version } = infra
+    const target = detecter()
+    if (!target.valid) {
         post({ type: "succeed-to-load", breadcrumb: EMPTY_BREADCRUMB })
         return
     }
 
-    post({ type: "succeed-to-load", breadcrumb: buildBreadcrumb(target) })
+    post({ type: "succeed-to-load", breadcrumb: buildBreadcrumb(target.value) })
 
-    type TargetInfo = Readonly<{
-        version: string
-        currentPath: string
-    }>
-    function buildBreadcrumb({ version, currentPath }: TargetInfo): OutlineBreadcrumb {
+    function buildBreadcrumb(currentPath: OutlineMenuTarget): OutlineBreadcrumb {
         const { menuTree } = infra
 
         return toBreadcrumb(menuTree)
@@ -136,7 +119,8 @@ const loadBreadcrumbList: LoadOutlineBreadcrumbList = (infra) => (locationInfo) 
     }
 }
 
-const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
+const loadMenu: LoadOutlineMenu = (infra) => (detecter) => async (post) => {
+    const { version } = infra
     const authz = infra.authz(authzRepositoryConverter)
     const menuExpands = infra.menuExpands(outlineMenuExpandRepositoryConverter)
     const loadMenuBadge = infra.loadMenuBadge(passThroughRemoteConverter)
@@ -205,7 +189,7 @@ const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
         menuBadge: OutlineMenuBadge,
     ): OutlineMenu {
         const { menuTree } = infra
-        const menuTarget = locationInfo.getOutlineMenuTarget()
+        const menuTarget = detecter()
 
         const menuExpandSet = new OutlineMenuCategoryPathSet()
         menuExpandSet.init(menuExpand)
@@ -286,9 +270,9 @@ const loadMenu: LoadOutlineMenu = (infra) => (locationInfo) => async (post) => {
         function itemNode(item: OutlineMenuTreeItem): OutlineMenuNode {
             return {
                 type: "item",
-                isActive: menuTarget.versioned ? item.path === menuTarget.currentPath : false,
+                isActive: menuTarget.valid ? item.path === menuTarget.value : false,
                 badgeCount: menuBadge[item.path] || 0,
-                item: toOutlineMenuItem(item, menuTarget.version),
+                item: toOutlineMenuItem(item, version),
             }
         }
     }

@@ -16,6 +16,7 @@ export type OutlineBreadcrumbListActionInfra = LoadOutlineBreadcrumbListInfra
 export type OutlineMenuActionInfra = LoadOutlineMenuInfra & ToggleOutlineMenuExpandInfra
 
 export type LoadOutlineBreadcrumbListInfra = Readonly<{
+    version: string
     menuTree: OutlineMenuTree
 }>
 
@@ -24,6 +25,7 @@ export interface LoadOutlineBreadcrumbList {
 }
 
 export type LoadOutlineMenuInfra = Readonly<{
+    version: string
     loadMenuBadge: LoadOutlineMenuBadgeRemotePod
     authz: AuthzRepositoryPod
     menuExpands: OutlineMenuExpandRepositoryPod

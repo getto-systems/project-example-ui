@@ -14,33 +14,32 @@ import {
 } from "../infra"
 
 import {
-    LoadOutlineActionLocationInfo,
+    LoadOutlineMenuLocationDetecter,
     LoadOutlineBreadcrumbListAction,
     LoadOutlineMenuAction,
 } from "../action"
-import {
-    initOutlineMenuAction,
-    initOutlineActionLocationInfo,
-    initOutlineBreadcrumbListAction,
-} from "../impl"
+import { initOutlineMenuAction, initOutlineBreadcrumbListAction } from "../impl"
+import { newLoadOutlineMenuLocationDetecter } from "../init"
 
 export function newOutlineBreadcrumbListAction(
-    currentURL: URL,
+    currentLocation: Location,
     menuTree: OutlineMenuTree,
 ): LoadOutlineBreadcrumbListAction {
-    return initOutlineBreadcrumbListAction(newLocationInfo(currentURL), {
+    return initOutlineBreadcrumbListAction(newLocationDetecter(currentLocation), {
+        version: env.version,
         menuTree,
     })
 }
 
 export function newOutlineMenuAction(
     webStorage: Storage,
-    currentURL: URL,
+    currentLocation: Location,
     menuExpandRepositoryPod: OutlineMenuExpandRepositoryPod,
     menuTree: OutlineMenuTree,
     loadMenuBadge: LoadOutlineMenuBadgeRemotePod,
 ): LoadOutlineMenuAction {
-    return initOutlineMenuAction(newLocationInfo(currentURL), {
+    return initOutlineMenuAction(newLocationDetecter(currentLocation), {
+        version: env.version,
         loadMenuBadge,
         authz: newAuthzRepository(webStorage),
         menuExpands: menuExpandRepositoryPod,
@@ -48,8 +47,8 @@ export function newOutlineMenuAction(
     })
 }
 
-function newLocationInfo(currentURL: URL): LoadOutlineActionLocationInfo {
-    return initOutlineActionLocationInfo(env.version, currentURL)
+function newLocationDetecter(currentLocation: Location): LoadOutlineMenuLocationDetecter {
+    return newLoadOutlineMenuLocationDetecter(currentLocation)
 }
 
 export function category(

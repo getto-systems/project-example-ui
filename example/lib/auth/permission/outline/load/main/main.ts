@@ -10,13 +10,16 @@ import { OutlineMenuPermission, OutlineMenuTree } from "../infra"
 
 import { LoadOutlineAction } from "../action"
 
-export function newMainOutlineAction(webStorage: Storage, currentURL: URL): LoadOutlineAction {
+export function newMainOutlineAction(
+    webStorage: Storage,
+    currentLocation: Location,
+): LoadOutlineAction {
     const menuTree = mainMenuTree()
     return {
-        breadcrumbList: newOutlineBreadcrumbListAction(currentURL, menuTree),
+        breadcrumbList: newOutlineBreadcrumbListAction(currentLocation, menuTree),
         menu: newOutlineMenuAction(
             webStorage,
-            currentURL,
+            currentLocation,
             newOutlineMenuExpandRepository(webStorage, env.storageKey.menuExpand.main),
             menuTree,
             newLoadOutlineMenuBadgeRemote(),
