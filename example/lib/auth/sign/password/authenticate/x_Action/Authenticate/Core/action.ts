@@ -8,8 +8,8 @@ import { AuthenticateEvent } from "../../../event"
 import { StartContinuousRenewEvent } from "../../../../../kernel/authInfo/common/startContinuousRenew/event"
 
 import {
-    SecureScriptPath,
     LoadSecureScriptError,
+    ConvertSecureScriptResult,
 } from "../../../../../common/secureScriptPath/get/data"
 import { AuthenticateFields } from "../../../data"
 import { ConvertBoardResult } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
@@ -33,7 +33,7 @@ export type CoreState =
     | Readonly<{ type: "initial-login" }>
     | Exclude<AuthenticateEvent, { type: "succeed-to-login" }>
     | Exclude<StartContinuousRenewEvent, { type: "succeed-to-start-continuous-renew" }>
-    | Readonly<{ type: "try-to-load"; scriptPath: SecureScriptPath }>
+    | Readonly<{ type: "try-to-load"; scriptPath: ConvertSecureScriptResult }>
     | Readonly<{ type: "load-error"; err: LoadSecureScriptError }>
 
 export const initialCoreState: CoreState = {

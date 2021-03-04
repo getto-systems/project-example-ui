@@ -14,14 +14,13 @@ import { ResetPasswordAction } from "./action"
 
 import { CoreState } from "./Core/action"
 
-import { markSecureScriptPath } from "../../../../../common/secureScriptPath/get/data"
+import { initSecureScriptPathLocationDetecter } from "../../../../../common/secureScriptPath/get/testHelper"
 import {
     LastAuthRepositoryPod,
     LastAuthRepositoryValue,
     RenewRemotePod,
 } from "../../../../../kernel/authInfo/kernel/infra"
-import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
-import { detectResetToken, resetEventHasDone } from "../../impl"
+import { resetEventHasDone } from "../../impl"
 import {
     initAsyncActionTester_legacy,
     initSyncActionTestRunner,
@@ -35,8 +34,7 @@ import { initMemoryDB } from "../../../../../../../z_vendor/getto-application/in
 import { wrapRepository } from "../../../../../../../z_vendor/getto-application/infra/repository/helper"
 import { lastAuthRepositoryConverter } from "../../../../../kernel/authInfo/kernel/convert"
 import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
-import { initLocationDetecter } from "../../../../../../../z_vendor/getto-application/location/testHelper"
-import { authSignSearchParams } from "../../../../../common/searchParams/data"
+import { initResetLocationDetecter } from "../../testHelper"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -78,7 +76,7 @@ describe("RegisterPassword", () => {
                     { type: "try-to-reset" },
                     {
                         type: "try-to-load",
-                        scriptPath: markSecureScriptPath("https://secure.example.com/index.js"),
+                        scriptPath: { valid: true, value: "https://secure.example.com/index.js" },
                     },
                 ])
                 expect(lastAuth.get()).toEqual({
@@ -124,7 +122,7 @@ describe("RegisterPassword", () => {
                     { type: "delayed-to-reset" }, // delayed event
                     {
                         type: "try-to-load",
-                        scriptPath: markSecureScriptPath("https://secure.example.com/index.js"),
+                        scriptPath: { valid: true, value: "https://secure.example.com/index.js" },
                     },
                 ])
                 expect(lastAuth.get()).toEqual({
@@ -325,11 +323,8 @@ function newPasswordResetTestResource(
                     },
                 },
                 {
-                    getSecureScriptPath: newGetSecureScriptPathLocationInfo(currentURL),
-                    reset: initLocationDetecter(
-                        currentURL,
-                        detectResetToken(authSignSearchParams.password.reset),
-                    ),
+                    getSecureScriptPath: initSecureScriptPathLocationDetecter(currentURL),
+                    reset: initResetLocationDetecter(currentURL),
                 },
             ),
         ),
@@ -352,7 +347,7 @@ function emptyResetTokenURL(): URL {
 function standardConfig() {
     return {
         location: {
-            secureServerHost: "secure.example.com",
+            secureServerURL: "https://secure.example.com",
         },
         reset: {
             delay: { delay_millisecond: 1 },

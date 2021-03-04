@@ -16,7 +16,7 @@ import {
     CoreBackgroundMaterial,
 } from "./action"
 
-import { GetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/method"
+import { GetSecureScriptPathLocationDetecter } from "../../../../../common/secureScriptPath/get/method"
 
 import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
 import { AuthenticateFields } from "../../../data"
@@ -35,7 +35,7 @@ export type CoreBackgroundInfra = Readonly<{
 
 export function initCoreMaterial(
     infra: CoreInfra,
-    locationInfo: GetSecureScriptPathLocationInfo,
+    locationInfo: GetSecureScriptPathLocationDetecter,
 ): CoreMaterial {
     return {
         ...initCoreForegroundMaterial(infra, locationInfo),
@@ -44,7 +44,7 @@ export function initCoreMaterial(
 }
 export function initCoreForegroundMaterial(
     infra: CoreForegroundInfra,
-    locationInfo: GetSecureScriptPathLocationInfo,
+    locationInfo: GetSecureScriptPathLocationDetecter,
 ): CoreForegroundMaterial {
     return {
         startContinuousRenew: startContinuousRenew(infra.startContinuousRenew),

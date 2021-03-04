@@ -17,7 +17,7 @@ import {
     CoreBackgroundMaterial,
 } from "./action"
 
-import { GetSecureScriptPathLocationInfo } from "../../../../../../common/secureScriptPath/get/method"
+import { GetSecureScriptPathLocationDetecter } from "../../../../../../common/secureScriptPath/get/method"
 import { ResetLocationDetecter } from "../../../method"
 
 import { LoadSecureScriptError } from "../../../../../../common/secureScriptPath/get/data"
@@ -36,7 +36,7 @@ export type CoreBackgroundInfra = Readonly<{
 }>
 
 export type CoreForegroundDetecter = Readonly<{
-    getSecureScriptPath: GetSecureScriptPathLocationInfo
+    getSecureScriptPath: GetSecureScriptPathLocationDetecter
 }>
 export type CoreBackgroundDetecter = Readonly<{
     reset: ResetLocationDetecter

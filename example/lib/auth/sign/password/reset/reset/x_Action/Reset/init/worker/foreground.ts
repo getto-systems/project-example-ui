@@ -26,11 +26,7 @@ import { FormAction } from "../../Form/action"
 
 export interface ResetPasswordProxy
     extends WorkerProxy<ResetPasswordProxyMessage, ResetPasswordProxyResponse> {
-    entryPoint(
-        webStorage: Storage,
-        currentURL: URL,
-        currentLocation: Location,
-    ): ResetPasswordEntryPoint
+    entryPoint(webStorage: Storage, currentLocation: Location): ResetPasswordEntryPoint
 }
 export function newResetPasswordProxy(post: Post<ResetPasswordProxyMessage>): ResetPasswordProxy {
     return new Proxy(post)
@@ -48,12 +44,8 @@ class Proxy
         }
     }
 
-    entryPoint(
-        webStorage: Storage,
-        currentURL: URL,
-        currentLocation: Location,
-    ): ResetPasswordEntryPoint {
-        const foreground = newCoreForegroundMaterial(webStorage, currentURL)
+    entryPoint(webStorage: Storage, currentLocation: Location): ResetPasswordEntryPoint {
+        const foreground = newCoreForegroundMaterial(webStorage, currentLocation)
         const detecter = newResetLocationDetecter(currentLocation)
         return newEntryPoint(
             initCoreAction({

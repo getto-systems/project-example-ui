@@ -23,7 +23,7 @@ function envContent() {
     const env = {
         version,
 
-        secureServerHost: process.env.SECURE_SERVER_HOST,
+        secureServerURL: process.env.SECURE_SERVER_URL,
         apiServerURL: process.env.API_SERVER_URL,
 
         storageKey: {

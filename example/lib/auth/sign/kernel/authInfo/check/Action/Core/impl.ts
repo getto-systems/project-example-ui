@@ -13,7 +13,7 @@ import { CheckAuthInfoInfra } from "../../infra"
 
 import { CoreAction, CoreMaterial, CoreState } from "./action"
 
-import { GetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/method"
+import { GetSecureScriptPathLocationDetecter } from "../../../../../common/secureScriptPath/get/method"
 
 import { AuthInfo } from "../../../kernel/data"
 import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
@@ -26,7 +26,7 @@ export type CoreInfra = Readonly<{
 
 export function initCoreMaterial(
     infra: CoreInfra,
-    locationInfo: GetSecureScriptPathLocationInfo,
+    locationInfo: GetSecureScriptPathLocationDetecter,
 ): CoreMaterial {
     return {
         renew: checkAuthInfo(infra.renew),

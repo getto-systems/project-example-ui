@@ -11,8 +11,8 @@ import { StartContinuousRenewEvent } from "../../../common/startContinuousRenew/
 import { CheckAuthInfoEvent } from "../../event"
 
 import {
+    ConvertSecureScriptResult,
     LoadSecureScriptError,
-    SecureScriptPath,
 } from "../../../../../common/secureScriptPath/get/data"
 
 export interface CoreAction extends ApplicationStateAction<CoreState> {
@@ -33,8 +33,8 @@ export type CoreState =
     | Readonly<{ type: "initial-renew" }>
     | Exclude<CheckAuthInfoEvent, { type: "try-to-instant-load" } | { type: "succeed-to-renew" }>
     | StartContinuousRenewEvent
-    | Readonly<{ type: "try-to-instant-load"; scriptPath: SecureScriptPath }>
-    | Readonly<{ type: "try-to-load"; scriptPath: SecureScriptPath }>
+    | Readonly<{ type: "try-to-instant-load"; scriptPath: ConvertSecureScriptResult }>
+    | Readonly<{ type: "try-to-load"; scriptPath: ConvertSecureScriptResult }>
     | Readonly<{ type: "load-error"; err: LoadSecureScriptError }>
 
 export const initialCoreState: CoreState = {

@@ -5,7 +5,7 @@ import { GetSecureScriptPathInfra } from "./infra"
 export function newGetSecureScriptPathInfra(): GetSecureScriptPathInfra {
     return {
         config: {
-            secureServerHost: env.secureServerHost,
+            secureServerURL: env.secureServerURL,
         },
     }
 }

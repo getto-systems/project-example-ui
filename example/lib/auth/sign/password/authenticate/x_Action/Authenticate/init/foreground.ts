@@ -7,9 +7,9 @@ import { newCoreBackgroundMaterial, newCoreForegroundMaterial } from "./common"
 
 export function newAuthenticatePassword(
     webStorage: Storage,
-    currentURL: URL,
+    currentLocation: Location,
 ): AuthenticatePasswordEntryPoint {
-    const foreground = newCoreForegroundMaterial(webStorage, currentURL)
+    const foreground = newCoreForegroundMaterial(webStorage, currentLocation)
     const background = newCoreBackgroundMaterial()
 
     return newEntryPoint(

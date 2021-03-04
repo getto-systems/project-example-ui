@@ -12,14 +12,13 @@ import { AuthenticatePasswordAction } from "./action"
 
 import { CoreState } from "./Core/action"
 
-import { markSecureScriptPath } from "../../../../common/secureScriptPath/get/data"
+import { initSecureScriptPathLocationDetecter } from "../../../../common/secureScriptPath/get/testHelper"
 import { AuthenticateFields } from "../../data"
 import {
     LastAuthRepositoryPod,
     LastAuthRepositoryValue,
     RenewRemotePod,
 } from "../../../../kernel/authInfo/kernel/infra"
-import { newGetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/impl"
 import { ticker } from "../../../../../../z_vendor/getto-application/infra/timer/helper"
 import { authenticateEventHasDone } from "../../impl"
 import {
@@ -71,7 +70,10 @@ describe("AuthenticatePassword", () => {
                         { type: "try-to-login" },
                         {
                             type: "try-to-load",
-                            scriptPath: markSecureScriptPath("https://secure.example.com/index.js"),
+                            scriptPath: {
+                                valid: true,
+                                value: "https://secure.example.com/index.js",
+                            },
                         },
                     ])
                     expect(lastAuth.get()).toEqual({
@@ -125,7 +127,10 @@ describe("AuthenticatePassword", () => {
                         { type: "delayed-to-login" }, // delayed event
                         {
                             type: "try-to-load",
-                            scriptPath: markSecureScriptPath("https://secure.example.com/index.js"),
+                            scriptPath: {
+                                valid: true,
+                                value: "https://secure.example.com/index.js",
+                            },
                         },
                     ])
                     expect(lastAuth.get()).toEqual({
@@ -302,7 +307,7 @@ function newTestPasswordLoginResource(
                         clock,
                     },
                 },
-                newGetSecureScriptPathLocationInfo(currentURL),
+                initSecureScriptPathLocationDetecter(currentURL),
             ),
         ),
 
@@ -321,7 +326,7 @@ function standardURL(): URL {
 function standardConfig() {
     return {
         location: {
-            secureServerHost: "secure.example.com",
+            secureServerURL: "https://secure.example.com",
         },
         login: {
             delay: { delay_millisecond: 1 },

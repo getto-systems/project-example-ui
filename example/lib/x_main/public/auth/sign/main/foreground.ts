@@ -17,13 +17,13 @@ export function newForeground(feature: OutsideFeature): AuthSignEntryPoint {
     const { webStorage, currentURL, currentLocation } = feature
     return toAuthSignEntryPoint(
         new View(initLoginViewLocationInfo(currentURL), {
-            renew: () => newRenewAuthnInfo(webStorage, currentURL),
+            renew: () => newRenewAuthnInfo(webStorage, currentLocation),
 
-            password_authenticate: () => newAuthenticatePassword(webStorage, currentURL),
+            password_authenticate: () => newAuthenticatePassword(webStorage, currentLocation),
 
             password_reset_requestToken: () => newRequestPasswordResetToken(),
             password_reset_checkStatus: () => newCheckPasswordResetSendingStatus(currentLocation),
-            password_reset: () => newResetPassword(webStorage, currentURL, currentLocation),
+            password_reset: () => newResetPassword(webStorage, currentLocation),
         }),
     )
 }

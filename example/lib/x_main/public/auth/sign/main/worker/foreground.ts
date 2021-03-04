@@ -31,17 +31,17 @@ type OutsideFeature = Readonly<{
 }>
 export function newWorkerForeground(feature: OutsideFeature): AuthSignEntryPoint {
     const { webStorage, currentURL, currentLocation, worker } = feature
-    const proxy = initProxy(webStorage, currentURL, postForegroundMessage)
+    const proxy = initProxy(postForegroundMessage)
 
     const view: AuthSignAction = new View(initLoginViewLocationInfo(currentURL), {
-        renew: () => newRenewAuthnInfo(webStorage, currentURL),
+        renew: () => newRenewAuthnInfo(webStorage, currentLocation),
 
-        password_authenticate: () => proxy.password.authenticate.entryPoint(webStorage, currentURL),
+        password_authenticate: () =>
+            proxy.password.authenticate.entryPoint(webStorage, currentLocation),
         password_reset_requestToken: () => proxy.password.reset.requestToken.entryPoint(),
         password_reset_checkStatus: () =>
             proxy.password.reset.checkStatus.entryPoint(currentLocation),
-        password_reset: () =>
-            proxy.password.reset.reset.entryPoint(webStorage, currentURL, currentLocation),
+        password_reset: () => proxy.password.reset.reset.entryPoint(webStorage, currentLocation),
     })
 
     const messageHandler = initBackgroundMessageHandler(proxy, (err: string) => {
@@ -76,7 +76,7 @@ type Proxy = Readonly<{
         }>
     }>
 }>
-function initProxy(webStorage: Storage, currentURL: URL, post: Post<ForegroundMessage>): Proxy {
+function initProxy(post: Post<ForegroundMessage>): Proxy {
     return {
         password: {
             authenticate: newAuthenticatePasswordProxy((message) =>

@@ -49,7 +49,14 @@ export function View(props: AuthenticatePasswordProps): VNode {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
         switch (props.state.core.type) {
             case "try-to-load":
-                appendScript(props.state.core.scriptPath, (script) => {
+                if (!props.state.core.scriptPath.valid) {
+                    props.authenticate.core.loadError({
+                        type: "infra-error",
+                        err: `スクリプトのロードに失敗しました: ${props.state.core.type}`,
+                    })
+                    break
+                }
+                appendScript(props.state.core.scriptPath.value, (script) => {
                     script.onerror = () => {
                         props.authenticate.core.loadError({
                             type: "infra-error",
