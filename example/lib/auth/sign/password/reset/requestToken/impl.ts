@@ -6,10 +6,7 @@ import { RequestTokenMethod } from "./method"
 
 import { RequestTokenEvent } from "./event"
 
-import { convertResetSessionIDFromRemote } from "../kernel/convert"
-
-import { authSignHref_password_reset_checkStatus } from "../../../common/searchParams/data"
-import { passThroughRemoteConverter } from "../../../../../z_vendor/getto-application/infra/remote/helper"
+import { sessionIDRemoteConverter } from "../kernel/convert"
 
 interface RequestToken {
     (infra: RequestTokenInfra): RequestTokenMethod
@@ -23,7 +20,7 @@ export const requestToken: RequestToken = (infra) => async (fields, post) => {
     post({ type: "try-to-request-token" })
 
     const { config } = infra
-    const requestToken = infra.requestToken(passThroughRemoteConverter)
+    const requestToken = infra.requestToken(sessionIDRemoteConverter)
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const response = await delayedChecker(requestToken(fields.value), config.delay, () =>
@@ -34,12 +31,7 @@ export const requestToken: RequestToken = (infra) => async (fields, post) => {
         return
     }
 
-    post({
-        type: "succeed-to-request-token",
-        href: authSignHref_password_reset_checkStatus(
-            convertResetSessionIDFromRemote(response.value),
-        ),
-    })
+    post({ type: "succeed-to-request-token", sessionID: response.value })
 }
 
 export function requestTokenEventHasDone(event: RequestTokenEvent): boolean {

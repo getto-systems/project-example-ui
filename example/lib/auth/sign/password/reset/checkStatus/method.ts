@@ -1,4 +1,4 @@
-import { LocationDetecter } from "../../../../../z_vendor/getto-application/location/detecter"
+import { LocationTypes } from "../../../../../z_vendor/getto-application/location/detecter"
 
 import { CheckSendingStatusEvent } from "./event"
 
@@ -7,11 +7,14 @@ import { ResetSessionID } from "../kernel/data"
 export interface CheckSendingStatusMethodPod {
     (detecter: CheckSendingStatusLocationDetecter): CheckSendingStatusMethod
 }
-export type CheckSendingStatusLocationDetecter = LocationDetecter<CheckSendingStatusLocationInfo>
-export type CheckSendingStatusLocationInfo = ResetSessionID
-export type CheckSendingStatusLocationKeys = Readonly<{
-    sessionID: string
-}>
+
+type CheckSendingStatusLocationTypes = LocationTypes<
+    Readonly<{ sessionID: string }>,
+    ResetSessionID
+>
+export type CheckSendingStatusLocationDetecter = CheckSendingStatusLocationTypes["detecter"]
+export type CheckSendingStatusLocationInfo = CheckSendingStatusLocationTypes["info"]
+export type CheckSendingStatusLocationKeys = CheckSendingStatusLocationTypes["keys"]
 
 export interface CheckSendingStatusMethod {
     (post: Post<CheckSendingStatusEvent>): void
