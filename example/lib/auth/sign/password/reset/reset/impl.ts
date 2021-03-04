@@ -2,37 +2,30 @@ import { delayedChecker } from "../../../../../z_vendor/getto-application/infra/
 
 import { ResetInfra } from "./infra"
 
-import { ResetLocationInfo, ResetPod } from "./method"
+import { ResetLocationDetectMethod, ResetLocationKeys, ResetPod } from "./method"
 
 import { ResetEvent } from "./event"
 
-import { authSignSearchKey_password_reset_token } from "../../../common/searchParams/data"
-import { markResetToken, ResetToken } from "../kernel/data"
 import { authRemoteConverter } from "../../../kernel/authInfo/kernel/convert"
+import { resetTokenLocationConverter } from "../kernel/convert"
 
-export function initResetLocationInfo(currentURL: URL): ResetLocationInfo {
-    return {
-        getResetToken: () => detectResetToken(currentURL),
-    }
+interface Detecter {
+    (keys: ResetLocationKeys): ResetLocationDetectMethod
 }
-
-export function detectResetToken(currentURL: URL): ResetToken {
-    return markResetToken(
-        currentURL.searchParams.get(authSignSearchKey_password_reset_token()) || "",
-    )
-}
+export const detectResetToken: Detecter = (keys) => (currentURL) =>
+    resetTokenLocationConverter(currentURL.searchParams.get(keys.token))
 
 interface Reset {
     (infra: ResetInfra): ResetPod
 }
-export const reset: Reset = (infra) => (locationInfo) => async (fields, post) => {
+export const reset: Reset = (infra) => (detecter) => async (fields, post) => {
     if (!fields.valid) {
         post({ type: "failed-to-reset", err: { type: "validation-error" } })
         return
     }
 
-    const resetToken = locationInfo.getResetToken()
-    if (!resetToken) {
+    const resetToken = detecter()
+    if (!resetToken.valid) {
         post({ type: "failed-to-reset", err: { type: "empty-reset-token" } })
         return
     }
@@ -44,7 +37,7 @@ export const reset: Reset = (infra) => (locationInfo) => async (fields, post) =>
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const response = await delayedChecker(
-        reset({ resetToken, fields: fields.value }),
+        reset({ resetToken: resetToken.value, fields: fields.value }),
         config.delay,
         () => post({ type: "delayed-to-reset" }),
     )

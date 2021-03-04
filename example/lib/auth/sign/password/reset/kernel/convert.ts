@@ -1,5 +1,17 @@
 import { ConvertLocationResult } from "../../../../../z_vendor/getto-application/location/detecter"
-import { ResetSessionID } from "./data"
+import { ResetSessionID, ResetToken } from "./data"
+
+export function resetTokenLocationConverter(
+    resetToken: string | null,
+): ConvertLocationResult<ResetToken> {
+    if (resetToken === null) {
+        return { valid: false }
+    }
+    if (resetToken.length === 0) {
+        return { valid: false }
+    }
+    return { valid: true, value: markResetToken(resetToken) }
+}
 
 export function sessionIDLocationConverter(
     sessionID: string | null,
@@ -20,4 +32,7 @@ export function sessionIDRemoteConverter(sessionID: string): ResetSessionID {
 
 function markResetSessionID(sessionID: string): ResetSessionID {
     return sessionID as ResetSessionID
+}
+function markResetToken(resetToken: string): ResetToken {
+    return resetToken as ResetToken
 }

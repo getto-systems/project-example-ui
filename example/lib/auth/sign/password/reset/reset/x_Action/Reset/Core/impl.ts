@@ -18,7 +18,7 @@ import {
 } from "./action"
 
 import { GetSecureScriptPathLocationInfo } from "../../../../../../common/secureScriptPath/get/method"
-import { ResetLocationInfo } from "../../../method"
+import { ResetLocationDetecter } from "../../../method"
 
 import { LoadSecureScriptError } from "../../../../../../common/secureScriptPath/get/data"
 import { ResetFields } from "../../../data"
@@ -35,31 +35,38 @@ export type CoreBackgroundInfra = Readonly<{
     reset: ResetInfra
 }>
 
+export type CoreForegroundDetecter = Readonly<{
+    getSecureScriptPath: GetSecureScriptPathLocationInfo
+}>
+export type CoreBackgroundDetecter = Readonly<{
+    reset: ResetLocationDetecter
+}>
+
 export function initCoreMaterial(
     infra: CoreInfra,
-    locationInfo: GetSecureScriptPathLocationInfo & ResetLocationInfo,
+    detecter: CoreForegroundDetecter & CoreBackgroundDetecter,
 ): CoreMaterial {
     return {
-        ...initCoreForegroundMaterial(infra, locationInfo),
-        ...initCoreBackgroundMaterial(infra, locationInfo),
+        ...initCoreForegroundMaterial(infra, detecter),
+        ...initCoreBackgroundMaterial(infra, detecter),
     }
 }
 export function initCoreForegroundMaterial(
     infra: CoreForegroundInfra,
-    locationInfo: GetSecureScriptPathLocationInfo,
+    detecter: CoreForegroundDetecter,
 ): CoreForegroundMaterial {
     return {
         startContinuousRenew: startContinuousRenew(infra.startContinuousRenew),
-        getSecureScriptPath: getSecureScriptPath(infra.getSecureScriptPath)(locationInfo),
+        getSecureScriptPath: getSecureScriptPath(infra.getSecureScriptPath)(detecter.getSecureScriptPath),
     }
 }
 export function initCoreBackgroundMaterial(
     infra: CoreBackgroundInfra,
-    locationInfo: ResetLocationInfo,
+    detecter: CoreBackgroundDetecter,
 ): CoreBackgroundMaterial {
     const pod = initCoreBackgroundMaterialPod(infra)
     return {
-        reset: pod.initReset(locationInfo),
+        reset: pod.initReset(detecter.reset),
     }
 }
 export function initCoreBackgroundMaterialPod(

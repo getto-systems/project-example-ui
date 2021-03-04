@@ -21,7 +21,7 @@ import {
     RenewRemotePod,
 } from "../../../../../kernel/authInfo/kernel/infra"
 import { newGetSecureScriptPathLocationInfo } from "../../../../../common/secureScriptPath/get/impl"
-import { initResetLocationInfo, resetEventHasDone } from "../../impl"
+import { detectResetToken, resetEventHasDone } from "../../impl"
 import {
     initAsyncActionTester_legacy,
     initSyncActionTestRunner,
@@ -35,6 +35,8 @@ import { initMemoryDB } from "../../../../../../../z_vendor/getto-application/in
 import { wrapRepository } from "../../../../../../../z_vendor/getto-application/infra/repository/helper"
 import { lastAuthRepositoryConverter } from "../../../../../kernel/authInfo/kernel/convert"
 import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { initLocationDetecter } from "../../../../../../../z_vendor/getto-application/location/testHelper"
+import { authSignSearchParams } from "../../../../../common/searchParams/data"
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
@@ -323,8 +325,11 @@ function newPasswordResetTestResource(
                     },
                 },
                 {
-                    ...newGetSecureScriptPathLocationInfo(currentURL),
-                    ...initResetLocationInfo(currentURL),
+                    getSecureScriptPath: newGetSecureScriptPathLocationInfo(currentURL),
+                    reset: initLocationDetecter(
+                        currentURL,
+                        detectResetToken(authSignSearchParams.password.reset),
+                    ),
                 },
             ),
         ),

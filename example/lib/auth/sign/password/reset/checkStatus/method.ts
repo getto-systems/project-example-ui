@@ -13,6 +13,7 @@ type CheckSendingStatusLocationTypes = LocationTypes<
     ResetSessionID
 >
 export type CheckSendingStatusLocationDetecter = CheckSendingStatusLocationTypes["detecter"]
+export type CheckSendingStatusLocationDetectMethod = CheckSendingStatusLocationTypes["method"]
 export type CheckSendingStatusLocationInfo = CheckSendingStatusLocationTypes["info"]
 export type CheckSendingStatusLocationKeys = CheckSendingStatusLocationTypes["keys"]
 

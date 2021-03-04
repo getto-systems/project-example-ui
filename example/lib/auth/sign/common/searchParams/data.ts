@@ -60,10 +60,6 @@ function searchQuery<K extends string>(
     )
 }
 
-export function authSignSearchKey_password_reset_token(): string {
-    return authSignSearchParams.password.reset.token
-}
-
 export type AuthSignSearchVariant<K extends string> = Readonly<{
     key: string
     variant: { (key: string): AuthSignSearchKeyFound<K> }

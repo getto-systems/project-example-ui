@@ -1,11 +1,10 @@
 import { ticker } from "../../../../../z_vendor/getto-application/infra/timer/helper"
 import { passThroughRemoteConverter } from "../../../../../z_vendor/getto-application/infra/remote/helper"
-import { LocationDetectMethod } from "../../../../../z_vendor/getto-application/location/detecter"
 
 import { CheckSendingStatusInfra } from "./infra"
 
 import {
-    CheckSendingStatusLocationInfo,
+    CheckSendingStatusLocationDetectMethod,
     CheckSendingStatusLocationKeys,
     CheckSendingStatusMethodPod,
 } from "./method"
@@ -17,7 +16,7 @@ import { sessionIDLocationConverter } from "../kernel/convert"
 import { CheckSendingStatusError } from "./data"
 
 interface Detecter {
-    (keys: CheckSendingStatusLocationKeys): LocationDetectMethod<CheckSendingStatusLocationInfo>
+    (keys: CheckSendingStatusLocationKeys): CheckSendingStatusLocationDetectMethod
 }
 export const detectSessionID: Detecter = (keys) => (currentURL) =>
     sessionIDLocationConverter(currentURL.searchParams.get(keys.sessionID))

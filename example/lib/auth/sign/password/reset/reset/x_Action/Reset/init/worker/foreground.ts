@@ -3,7 +3,7 @@ import { newCoreForegroundMaterial } from "../common"
 import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../../../kernel/authInfo/common/startContinuousRenew/init"
 import { newGetSecureScriptPathInfra } from "../../../../../../../common/secureScriptPath/get/main"
 
-import { newResetLocationInfo } from "../../../../init"
+import { newResetLocationDetecter } from "../../../../init"
 
 import { toAction, toEntryPoint } from "../../impl"
 import { CoreForegroundInfra, initCoreAction } from "../../Core/impl"
@@ -54,14 +54,11 @@ class Proxy
         currentLocation: Location,
     ): ResetPasswordEntryPoint {
         const foreground = newCoreForegroundMaterial(webStorage, currentURL)
-        const locationInfo = newResetLocationInfo(currentLocation)
+        const detecter = newResetLocationDetecter(currentLocation)
         return newEntryPoint(
             initCoreAction({
                 reset: (fields, post) =>
-                    this.material.reset.call(
-                        { fields, resetToken: locationInfo.getResetToken() },
-                        post,
-                    ),
+                    this.material.reset.call({ fields, resetToken: detecter() }, post),
                 ...foreground,
             }),
         )

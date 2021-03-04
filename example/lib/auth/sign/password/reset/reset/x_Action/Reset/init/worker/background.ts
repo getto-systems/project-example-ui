@@ -9,6 +9,7 @@ import { WorkerHandler } from "../../../../../../../../../z_vendor/getto-applica
 import { CoreBackgroundInfra } from "../../Core/impl"
 
 import { ResetPasswordProxyMessage, ResetPasswordProxyResponse } from "./message"
+import { backgroundLocationDetecter } from "../../../../../../../../../z_vendor/getto-application/location/helper"
 
 export function newResetPasswordHandler(
     post: Post<ResetPasswordProxyResponse>,
@@ -17,7 +18,7 @@ export function newResetPasswordHandler(
     return (message) => {
         switch (message.method) {
             case "reset":
-                pod.initReset({ getResetToken: () => message.params.resetToken })(
+                pod.initReset(backgroundLocationDetecter(message.params.resetToken))(
                     message.params.fields,
                     (event) => {
                         post({
