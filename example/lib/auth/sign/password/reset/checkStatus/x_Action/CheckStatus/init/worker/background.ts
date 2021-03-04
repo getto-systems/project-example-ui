@@ -1,7 +1,4 @@
-import {
-    checkSessionStatusEventHasDone,
-    buildCheckSendingStatusLocationInfo,
-} from "../../../../impl"
+import { checkSessionStatusEventHasDone } from "../../../../impl"
 
 import { WorkerHandler } from "../../../../../../../../../z_vendor/getto-application/action/worker/background"
 
@@ -10,6 +7,7 @@ import {
     CheckPasswordResetSendingStatusProxyResponse,
 } from "./message"
 import { newCheckSendingStatusMaterialPod } from "../common"
+import { backgroundLocationDetecter } from "../../../../../../../../../z_vendor/getto-application/location/helper"
 
 export function newCheckPasswordResetSendingStatusWorkerHandler(
     post: Post<CheckPasswordResetSendingStatusProxyResponse>,
@@ -18,17 +16,15 @@ export function newCheckPasswordResetSendingStatusWorkerHandler(
     return (message) => {
         switch (message.method) {
             case "checkStatus":
-                pod.initCheckStatus(
-                    buildCheckSendingStatusLocationInfo({
-                        sessionID: () => message.params.sessionID,
-                    }),
-                )((event) => {
-                    post({
-                        ...message,
-                        done: checkSessionStatusEventHasDone(event),
-                        event,
-                    })
-                })
+                pod.initCheckStatus(backgroundLocationDetecter(message.params))(
+                    (event) => {
+                        post({
+                            ...message,
+                            done: checkSessionStatusEventHasDone(event),
+                            event,
+                        })
+                    },
+                )
                 return
         }
     }

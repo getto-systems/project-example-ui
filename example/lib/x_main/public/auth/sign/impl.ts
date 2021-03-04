@@ -28,7 +28,7 @@ export function initLoginViewLocationInfo(currentURL: URL): AuthSignViewLocation
 
 const viewTypes = {
     reset: {
-        request: "password-reset-requestToken",
+        requestToken: "password-reset-requestToken",
         checkStatus: "password-reset-checkStatus",
         reset: "password-reset",
     },

@@ -1,6 +1,6 @@
 import { newCheckSendingStatusMaterial } from "./common"
 
-import { newCheckSendingStatusLocationInfo } from "../../../init"
+import { newCheckSendingStatusLocationDetecter } from "../../../init"
 
 import { initCheckSendingStatusAction, toEntryPoint } from "../impl"
 
@@ -11,7 +11,7 @@ export function newCheckPasswordResetSendingStatus(
 ): CheckPasswordResetSendingStatusEntryPoint {
     return toEntryPoint(
         initCheckSendingStatusAction(
-            newCheckSendingStatusMaterial(newCheckSendingStatusLocationInfo(currentLocation)),
+            newCheckSendingStatusMaterial(newCheckSendingStatusLocationDetecter(currentLocation)),
         ),
     )
 }

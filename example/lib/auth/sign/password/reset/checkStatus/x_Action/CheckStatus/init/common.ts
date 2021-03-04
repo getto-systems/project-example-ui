@@ -4,12 +4,12 @@ import { initMaterial, initMaterialPod } from "../impl"
 
 import { CheckSendingStatusMaterial, CheckSendingStatusMaterialPod } from "../action"
 
-import { CheckSendingStatusLocationInfo } from "../../../method"
+import { CheckSendingStatusLocationDetecter,  } from "../../../method"
 
 export function newCheckSendingStatusMaterial(
-    locationInfo: CheckSendingStatusLocationInfo,
+    detecter: CheckSendingStatusLocationDetecter,
 ): CheckSendingStatusMaterial {
-    return initMaterial(newCheckSendingStatusInfra(), locationInfo)
+    return initMaterial(newCheckSendingStatusInfra(), detecter)
 }
 export function newCheckSendingStatusMaterialPod(): CheckSendingStatusMaterialPod {
     return initMaterialPod(newCheckSendingStatusInfra())

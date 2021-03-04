@@ -1,54 +1,36 @@
 import { ticker } from "../../../../../z_vendor/getto-application/infra/timer/helper"
+import { passThroughRemoteConverter } from "../../../../../z_vendor/getto-application/infra/remote/helper"
+import { LocationDetectMethod } from "../../../../../z_vendor/getto-application/location/detecter"
 
 import { CheckSendingStatusInfra } from "./infra"
 
-import { CheckSendingStatusLocationInfo, CheckSendingStatusMethodPod } from "./method"
+import {
+    CheckSendingStatusLocationInfo,
+    CheckSendingStatusLocationKeys,
+    CheckSendingStatusMethodPod,
+} from "./method"
 
 import { CheckSendingStatusEvent } from "./event"
 
 import { convertResetSessionIDFromLocation } from "../kernel/convert"
 
 import { CheckSendingStatusError } from "./data"
-import { ResetSessionID } from "../kernel/data"
-import { authSignSearchKey_password_reset_sessionID } from "../../../common/searchParams/data"
-import { ConvertLocationResult } from "../../../../../z_vendor/getto-application/location/data"
-import { passThroughRemoteConverter } from "../../../../../z_vendor/getto-application/infra/remote/helper"
 
-export function initCheckSendingStatusLocationInfo(
-    currentURL: URL,
-): CheckSendingStatusLocationInfo {
-    return buildCheckSendingStatusLocationInfo({
-        sessionID: () => detectSessionID(currentURL),
-    })
+interface Detecter {
+    (keys: CheckSendingStatusLocationKeys): LocationDetectMethod<CheckSendingStatusLocationInfo>
 }
-
-type CheckSendingStatusLocationInfoParams = Readonly<{
-    sessionID: { (): ConvertLocationResult<ResetSessionID> }
-}>
-export function buildCheckSendingStatusLocationInfo(
-    params: CheckSendingStatusLocationInfoParams,
-): CheckSendingStatusLocationInfo {
-    return {
-        getPasswordResetSessionID: params.sessionID,
-    }
-}
-
-// TODO Location から取得しないといけない
-function detectSessionID(currentURL: URL): ConvertLocationResult<ResetSessionID> {
-    return convertResetSessionIDFromLocation(
-        currentURL.searchParams.get(authSignSearchKey_password_reset_sessionID()),
-    )
-}
+export const detectSessionID: Detecter = (keys) => (currentURL) =>
+    convertResetSessionIDFromLocation(currentURL.searchParams.get(keys.sessionID))
 
 interface CheckStatus {
     (infra: CheckSendingStatusInfra): CheckSendingStatusMethodPod
 }
-export const checkSendingStatus: CheckStatus = (infra) => (locationInfo) => async (post) => {
+export const checkSendingStatus: CheckStatus = (infra) => (detecter) => async (post) => {
     const { config } = infra
     const sendToken = infra.sendToken(passThroughRemoteConverter)
     const getStatus = infra.getStatus(passThroughRemoteConverter)
 
-    const sessionID = locationInfo.getPasswordResetSessionID()
+    const sessionID = detecter()
     if (!sessionID.valid) {
         post({ type: "failed-to-check-status", err: { type: "empty-session-id" } })
         return
