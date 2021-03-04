@@ -43,7 +43,7 @@ export function View(props: RequestPasswordResetTokenProps): VNode {
     useLayoutEffect(() => {
         switch (props.state.core.type) {
             case "succeed-to-request-token":
-                location.href = props.state.core.href
+                location.href = props.href.password_reset_checkStatus(props.state.core.sessionID)
                 return
         }
     }, [props.state.core])

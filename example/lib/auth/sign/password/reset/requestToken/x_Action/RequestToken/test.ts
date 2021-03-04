@@ -15,7 +15,7 @@ import { RequestTokenRemotePod, RequestTokenResult } from "../../infra"
 import { RequestPasswordResetTokenAction } from "./action"
 import { CoreState } from "./Core/action"
 
-import { convertResetSessionIDFromRemote } from "../../../kernel/convert"
+import { sessionIDRemoteConverter } from "../../../kernel/convert"
 
 import { toAction, toEntryPoint } from "./impl"
 import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
@@ -37,10 +37,7 @@ describe("RequestPasswordResetToken", () => {
             return initAsyncTester()((stack) => {
                 expect(stack).toEqual([
                     { type: "try-to-request-token" },
-                    {
-                        type: "succeed-to-request-token",
-                        href: "?_password_reset=checkStatus&_password_reset_session_id=session-id",
-                    },
+                    { type: "succeed-to-request-token", sessionID: "session-id" },
                 ])
                 done()
             })
@@ -62,10 +59,7 @@ describe("RequestPasswordResetToken", () => {
                 expect(stack).toEqual([
                     { type: "try-to-request-token" },
                     { type: "delayed-to-request-token" }, // delayed event
-                    {
-                        type: "succeed-to-request-token",
-                        href: "?_password_reset=checkStatus&_password_reset_session_id=session-id",
-                    },
+                    { type: "succeed-to-request-token", sessionID: "session-id" },
                 ])
                 done()
             })
@@ -178,7 +172,7 @@ function waitRequestTokenRemote(): RequestTokenRemotePod {
 }
 
 function simulateRequestToken(): RequestTokenResult {
-    return { success: true, value: convertResetSessionIDFromRemote(SESSION_ID) }
+    return { success: true, value: sessionIDRemoteConverter(SESSION_ID) }
 }
 
 function initAsyncTester() {

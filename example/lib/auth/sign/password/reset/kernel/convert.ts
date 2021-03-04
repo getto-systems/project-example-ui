@@ -1,7 +1,7 @@
 import { ConvertLocationResult } from "../../../../../z_vendor/getto-application/location/detecter"
 import { ResetSessionID } from "./data"
 
-export function convertResetSessionIDFromLocation(
+export function sessionIDLocationConverter(
     sessionID: string | null,
 ): ConvertLocationResult<ResetSessionID> {
     if (sessionID === null) {
@@ -13,7 +13,7 @@ export function convertResetSessionIDFromLocation(
     return { valid: true, value: markResetSessionID(sessionID) }
 }
 
-export function convertResetSessionIDFromRemote(sessionID: string): ResetSessionID {
+export function sessionIDRemoteConverter(sessionID: string): ResetSessionID {
     // remote からの値は validation チェックなしで受け入れる
     return markResetSessionID(sessionID)
 }
