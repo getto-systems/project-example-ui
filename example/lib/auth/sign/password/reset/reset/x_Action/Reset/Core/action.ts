@@ -9,8 +9,8 @@ import { StartContinuousRenewEvent } from "../../../../../../kernel/authInfo/com
 
 import { ResetFields } from "../../../data"
 import {
-    SecureScriptPath,
     LoadSecureScriptError,
+    ConvertSecureScriptResult,
 } from "../../../../../../common/secureScriptPath/get/data"
 import { ConvertBoardResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
 
@@ -36,7 +36,7 @@ export type CoreState =
     | Readonly<{ type: "initial-reset" }>
     | Exclude<ResetEvent, { type: "succeed-to-reset" }>
     | Exclude<StartContinuousRenewEvent, { type: "succeed-to-start-continuous-renew" }>
-    | Readonly<{ type: "try-to-load"; scriptPath: SecureScriptPath }>
+    | Readonly<{ type: "try-to-load"; scriptPath: ConvertSecureScriptResult }>
     | Readonly<{ type: "load-error"; err: LoadSecureScriptError }>
 
 export const initialCoreState: CoreState = {

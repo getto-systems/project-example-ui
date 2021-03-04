@@ -1,8 +1,8 @@
 import { newCoreForegroundInfra, newEntryPoint } from "./worker/foreground"
 import { newCoreBackgroundInfra } from "./worker/background"
 
-import { newGetSecureScriptPathLocationInfo } from "../../../../../../common/secureScriptPath/get/impl"
 import { newResetLocationDetecter } from "../../../init"
+import { newSecureScriptPathLocationDetecter } from "../../../../../../common/secureScriptPath/get/init"
 
 import { initCoreAction, initCoreMaterial } from "../Core/impl"
 
@@ -10,7 +10,6 @@ import { ResetPasswordEntryPoint } from "../action"
 
 export function newResetPassword(
     webStorage: Storage,
-    currentURL: URL,
     currentLocation: Location,
 ): ResetPasswordEntryPoint {
     return newEntryPoint(
@@ -18,7 +17,7 @@ export function newResetPassword(
             initCoreMaterial(
                 { ...newCoreForegroundInfra(webStorage), ...newCoreBackgroundInfra() },
                 {
-                    getSecureScriptPath: newGetSecureScriptPathLocationInfo(currentURL),
+                    getSecureScriptPath: newSecureScriptPathLocationDetecter(currentLocation),
                     reset: newResetLocationDetecter(currentLocation),
                 },
             ),

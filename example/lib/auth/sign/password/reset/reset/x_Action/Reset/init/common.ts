@@ -1,5 +1,5 @@
-import { newGetSecureScriptPathLocationInfo } from "../../../../../../common/secureScriptPath/get/impl"
 import { newResetLocationDetecter } from "../../../init"
+import { newSecureScriptPathLocationDetecter } from "../../../../../../common/secureScriptPath/get/init"
 
 import { newCoreBackgroundInfra } from "./worker/background"
 import { newCoreForegroundInfra } from "./worker/foreground"
@@ -10,15 +10,19 @@ import {
     initCoreForegroundMaterial,
 } from "../Core/impl"
 
-import { CoreBackgroundMaterial, CoreBackgroundMaterialPod, CoreForegroundMaterial } from "../Core/action"
+import {
+    CoreBackgroundMaterial,
+    CoreBackgroundMaterialPod,
+    CoreForegroundMaterial,
+} from "../Core/action"
 
 export function newCoreForegroundMaterial(
     webStorage: Storage,
-    currentURL: URL,
+    currentLocation: Location,
 ): CoreForegroundMaterial {
     const infra = newCoreForegroundInfra(webStorage)
     return initCoreForegroundMaterial(infra, {
-        getSecureScriptPath: newGetSecureScriptPathLocationInfo(currentURL)
+        getSecureScriptPath: newSecureScriptPathLocationDetecter(currentLocation),
     })
 }
 
@@ -28,6 +32,6 @@ export function newCoreBackgroundPod(): CoreBackgroundMaterialPod {
 export function newCoreBackgroundMaterial(currentLocation: Location): CoreBackgroundMaterial {
     const infra = newCoreBackgroundInfra()
     return initCoreBackgroundMaterial(infra, {
-        reset: newResetLocationDetecter(currentLocation)
+        reset: newResetLocationDetecter(currentLocation),
     })
 }

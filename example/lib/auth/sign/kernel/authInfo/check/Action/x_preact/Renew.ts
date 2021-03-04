@@ -36,7 +36,14 @@ export function View(props: RenewAuthnInfoProps): VNode {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
         switch (props.state.type) {
             case "try-to-instant-load":
-                appendScript(props.state.scriptPath, (script) => {
+                if (!props.state.scriptPath.valid) {
+                    props.core.loadError({
+                        type: "infra-error",
+                        err: `スクリプトのロードに失敗しました: ${props.state.type}`,
+                    })
+                    break
+                }
+                appendScript(props.state.scriptPath.value, (script) => {
                     script.onload = () => {
                         props.core.succeedToInstantLoad()
                     }
@@ -47,7 +54,14 @@ export function View(props: RenewAuthnInfoProps): VNode {
                 break
 
             case "try-to-load":
-                appendScript(props.state.scriptPath, (script) => {
+                if (!props.state.scriptPath.valid) {
+                    props.core.loadError({
+                        type: "infra-error",
+                        err: `スクリプトのロードに失敗しました: ${props.state.type}`,
+                    })
+                    break
+                }
+                appendScript(props.state.scriptPath.value, (script) => {
                     script.onerror = () => {
                         props.core.loadError({
                             type: "infra-error",

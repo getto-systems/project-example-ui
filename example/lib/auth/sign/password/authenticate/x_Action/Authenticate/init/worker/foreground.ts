@@ -25,7 +25,7 @@ import { FormAction } from "../../Form/action"
 
 export interface AuthenticatePasswordProxy
     extends WorkerProxy<AuthenticatePasswordProxyMessage, AuthenticatePasswordProxyResponse> {
-    entryPoint(webStorage: Storage, currentURL: URL): AuthenticatePasswordEntryPoint
+    entryPoint(webStorage: Storage, currentLocation: Location): AuthenticatePasswordEntryPoint
 }
 export function newAuthenticatePasswordProxy(
     post: Post<AuthenticatePasswordProxyMessage>,
@@ -45,8 +45,8 @@ class Proxy
         }
     }
 
-    entryPoint(webStorage: Storage, currentURL: URL): AuthenticatePasswordEntryPoint {
-        const foreground = newCoreForegroundMaterial(webStorage, currentURL)
+    entryPoint(webStorage: Storage, currentLocation: Location): AuthenticatePasswordEntryPoint {
+        const foreground = newCoreForegroundMaterial(webStorage, currentLocation)
         return newEntryPoint(
             initCoreAction({
                 authenticate: (fields, post) => this.material.authenticate.call({ fields }, post),

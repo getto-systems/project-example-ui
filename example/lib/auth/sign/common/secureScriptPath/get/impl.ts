@@ -1,32 +1,22 @@
-import { GetSecureScriptPathLocationInfo, GetSecureScriptPathPod } from "./method"
+import { pathnameLocationConverter, secureScriptPathConverter } from "./converter"
 
-import { markLocationPathname, markSecureScriptPath, LocationPathname } from "./data"
+import { GetSecureScriptPathLocationMethod, GetSecureScriptPathPod } from "./method"
+
 import { GetSecureScriptPathInfra } from "./infra"
 
-export function newGetSecureScriptPathLocationInfo(
-    currentURL: URL,
-): GetSecureScriptPathLocationInfo {
-    return {
-        getLocationPathname: () => detectPathname(currentURL),
-    }
-}
-
-function detectPathname(currentURL: URL): LocationPathname {
-    return markLocationPathname(currentURL.pathname)
-}
+export const detectPathname: GetSecureScriptPathLocationMethod = (currentURL: URL) =>
+    pathnameLocationConverter(currentURL)
 
 interface GetSecureScriptPath {
     (infra: GetSecureScriptPathInfra): GetSecureScriptPathPod
 }
-export const getSecureScriptPath: GetSecureScriptPath = (infra) => (locationInfo) => () => {
-    const {
-        config: { secureServerHost },
-    } = infra
+export const getSecureScriptPath: GetSecureScriptPath = (infra) => (detecter) => () => {
+    const { config } = infra
 
-    const pagePathname = locationInfo.getLocationPathname()
+    const pathname = detecter()
+    if (!pathname.valid) {
+        return { valid: false }
+    }
 
-    // アクセス中の html と同じパスで secure host に js がホストされている
-    return markSecureScriptPath(
-        `https://${secureServerHost}${pagePathname.replace(/\.html$/, "")}.js`,
-    )
+    return secureScriptPathConverter(config.secureServerURL, pathname.value)
 }

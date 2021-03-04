@@ -9,13 +9,8 @@ import { Clock } from "../../../../../../z_vendor/getto-application/infra/clock/
 
 import { CheckAuthInfoResource, CheckAuthInfoResourceState } from "./action"
 
-import { markSecureScriptPath } from "../../../../common/secureScriptPath/get/data"
-import {
-    LastAuthRepositoryPod,
-    LastAuthRepositoryValue,
-    RenewRemotePod,
-} from "../../kernel/infra"
-import { newGetSecureScriptPathLocationInfo } from "../../../../common/secureScriptPath/get/impl"
+import { initSecureScriptPathLocationDetecter } from "../../../../common/secureScriptPath/get/testHelper"
+import { LastAuthRepositoryPod, LastAuthRepositoryValue, RenewRemotePod } from "../../kernel/infra"
 import { toEntryPoint } from "./impl"
 import { initCoreAction, initCoreMaterial } from "./Core/impl"
 import { initSyncActionTestRunner } from "../../../../../../z_vendor/getto-application/action/testHelper"
@@ -75,9 +70,10 @@ describe("RenewAuthInfo", () => {
                         expect(stack).toEqual([
                             {
                                 type: "try-to-instant-load",
-                                scriptPath: markSecureScriptPath(
-                                    "https://secure.example.com/index.js",
-                                ),
+                                scriptPath: {
+                                    valid: true,
+                                    value: "https://secure.example.com/index.js",
+                                },
                             },
                             { type: "succeed-to-start-continuous-renew" },
                         ])
@@ -146,16 +142,18 @@ describe("RenewAuthInfo", () => {
                         expect(stack).toEqual([
                             {
                                 type: "try-to-instant-load",
-                                scriptPath: markSecureScriptPath(
-                                    "https://secure.example.com/index.js",
-                                ),
+                                scriptPath: {
+                                    valid: true,
+                                    value: "https://secure.example.com/index.js",
+                                },
                             },
                             { type: "try-to-renew" },
                             {
                                 type: "try-to-load",
-                                scriptPath: markSecureScriptPath(
-                                    "https://secure.example.com/index.js",
-                                ),
+                                scriptPath: {
+                                    valid: true,
+                                    value: "https://secure.example.com/index.js",
+                                },
                             },
                         ])
                         setTimeout(() => {
@@ -216,9 +214,10 @@ describe("RenewAuthInfo", () => {
                             { type: "try-to-renew" },
                             {
                                 type: "try-to-load",
-                                scriptPath: markSecureScriptPath(
-                                    "https://secure.example.com/index.js",
-                                ),
+                                scriptPath: {
+                                    valid: true,
+                                    value: "https://secure.example.com/index.js",
+                                },
                             },
                         ])
                         setTimeout(() => {
@@ -281,9 +280,10 @@ describe("RenewAuthInfo", () => {
                             { type: "delayed-to-renew" }, // delayed event
                             {
                                 type: "try-to-load",
-                                scriptPath: markSecureScriptPath(
-                                    "https://secure.example.com/index.js",
-                                ),
+                                scriptPath: {
+                                    valid: true,
+                                    value: "https://secure.example.com/index.js",
+                                },
                             },
                         ])
                         setTimeout(() => {
@@ -505,7 +505,7 @@ function newTestRenewAuthnInfoResource(
                         config: config.location,
                     },
                 },
-                newGetSecureScriptPathLocationInfo(currentURL),
+                initSecureScriptPathLocationDetecter(currentURL),
             ),
         ),
     ).resource
@@ -517,7 +517,7 @@ function standardURL(): URL {
 function standardConfig() {
     return {
         location: {
-            secureServerHost: "secure.example.com",
+            secureServerURL: "https://secure.example.com",
         },
         renew: {
             instantLoadExpire: { expire_millisecond: 20 * 1000 },
