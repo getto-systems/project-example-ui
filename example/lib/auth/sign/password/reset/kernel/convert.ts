@@ -1,4 +1,4 @@
-import { ConvertLocationResult } from "../../../../../z_vendor/getto-application/location/data"
+import { ConvertLocationResult } from "../../../../../z_vendor/getto-application/location/detecter"
 import { ResetSessionID } from "./data"
 
 export function convertResetSessionIDFromLocation(

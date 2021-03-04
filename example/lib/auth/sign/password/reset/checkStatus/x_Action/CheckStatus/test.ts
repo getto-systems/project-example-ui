@@ -4,8 +4,10 @@ import {
 } from "../../../../../../../z_vendor/getto-application/action/testHelper"
 import { WaitTime } from "../../../../../../../z_vendor/getto-application/infra/config/infra"
 import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { initLocationDetecter } from "../../../../../../../z_vendor/getto-application/location/testHelper"
+import { authSignSearchParams } from "../../../../../common/searchParams/data"
 import { SendingTokenStatus } from "../../data"
-import { checkSessionStatusEventHasDone, initCheckSendingStatusLocationInfo } from "../../impl"
+import { checkSessionStatusEventHasDone, detectSessionID } from "../../impl"
 import {
     GetSendingStatusRemotePod,
     GetSendingStatusResult,
@@ -150,7 +152,7 @@ function newTestPasswordResetSessionResource(
                 ...remote,
                 config: config.session.checkStatus,
             },
-            initCheckSendingStatusLocationInfo(currentURL),
+            initLocationDetecter(currentURL, detectSessionID(authSignSearchParams.password.reset)),
         ),
     )
 }

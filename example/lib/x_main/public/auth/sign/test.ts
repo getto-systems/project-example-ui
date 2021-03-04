@@ -335,7 +335,7 @@ function standardURL(): URL {
     return new URL("https://example.com/index.html")
 }
 function passwordResetSessionURL(): URL {
-    return new URL("https://example.com/index.html?_password_reset=request")
+    return new URL("https://example.com/index.html?_password_reset=requestToken")
 }
 function passwordResetCheckStatusURL(): URL {
     return new URL("https://example.com/index.html?_password_reset=checkStatus")

@@ -14,7 +14,7 @@ import {
     CheckSendingStatusState,
 } from "./action"
 
-import { CheckSendingStatusLocationInfo } from "../../method"
+import { CheckSendingStatusLocationDetecter } from "../../method"
 
 export function toEntryPoint(
     action: CheckPasswordResetSendingStatusAction,
@@ -27,11 +27,11 @@ export function toEntryPoint(
 
 export function initMaterial(
     infra: CheckSendingStatusInfra,
-    locationInfo: CheckSendingStatusLocationInfo,
+    detecter: CheckSendingStatusLocationDetecter,
 ): CheckSendingStatusMaterial {
     const pod = initMaterialPod(infra)
     return {
-        checkStatus: pod.initCheckStatus(locationInfo),
+        checkStatus: pod.initCheckStatus(detecter),
     }
 }
 export function initMaterialPod(infra: CheckSendingStatusInfra): CheckSendingStatusMaterialPod {

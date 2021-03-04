@@ -1,17 +1,24 @@
 import { newSendTokenRemote } from "./infra/remote/sendToken"
 import { newGetSendingStatusRemote } from "./infra/remote/getSendingStatus"
 
-import { initCheckSendingStatusLocationInfo } from "./impl"
+import { newLocationDetecter } from "../../../../../z_vendor/getto-application/location/init"
+
+import { detectSessionID } from "./impl"
 
 import { limit, waitSecond } from "../../../../../z_vendor/getto-application/infra/config/infra"
 import { CheckSendingStatusInfra } from "./infra"
 
-import { CheckSendingStatusLocationInfo } from "./method"
+import { CheckSendingStatusLocationDetecter } from "./method"
 
-export function newCheckSendingStatusLocationInfo(
+import { authSignSearchParams } from "../../../common/searchParams/data"
+
+export function newCheckSendingStatusLocationDetecter(
     currentLocation: Location,
-): CheckSendingStatusLocationInfo {
-    return initCheckSendingStatusLocationInfo(new URL(currentLocation.toString()))
+): CheckSendingStatusLocationDetecter {
+    return newLocationDetecter(
+        currentLocation,
+        detectSessionID(authSignSearchParams.password.reset),
+    )
 }
 
 export function newCheckSendingStatusInfra(): CheckSendingStatusInfra {

@@ -5,6 +5,6 @@ describe("AuthSignLink", () => {
         const resource = newAuthSignLinkResource()
 
         expect(resource.href.password_authenticate()).toEqual("?_password_authenticate=authenticate")
-        expect(resource.href.password_reset()).toEqual("?_password_reset=request")
+        expect(resource.href.password_reset()).toEqual("?_password_reset=requestToken")
     })
 })

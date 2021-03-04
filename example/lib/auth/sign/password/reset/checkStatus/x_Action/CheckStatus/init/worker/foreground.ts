@@ -11,7 +11,7 @@ import {
 
 import { CheckPasswordResetSendingStatusEntryPoint } from "../../action"
 import { initCheckSendingStatusAction, toEntryPoint } from "../../impl"
-import { newCheckSendingStatusLocationInfo } from "../../../../init"
+import { newCheckSendingStatusLocationDetecter } from "../../../../init"
 
 export interface CheckPasswordResetSendingStatusProxy
     extends WorkerProxy<
@@ -42,14 +42,10 @@ class Proxy
     }
 
     entryPoint(currentLocation: Location): CheckPasswordResetSendingStatusEntryPoint {
-        const locationInfo = newCheckSendingStatusLocationInfo(currentLocation)
+        const detecter = newCheckSendingStatusLocationDetecter(currentLocation)
         return toEntryPoint(
             initCheckSendingStatusAction({
-                checkStatus: (post) =>
-                    this.material.checkStatus.call(
-                        { sessionID: locationInfo.getPasswordResetSessionID() },
-                        post,
-                    ),
+                checkStatus: (post) => this.material.checkStatus.call(detecter(), post),
             }),
         )
     }

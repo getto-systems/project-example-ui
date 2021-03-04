@@ -1,13 +1,18 @@
 import { ResetSessionID } from "../../password/reset/kernel/data"
 
 // ログイン前画面ではアンダースコアから始まるクエリを使用する
-const authSignSearchParams = {
+export const authSignSearchParams = {
     password: {
-        authenticate: { key: "_password_authenticate", variant: { authenticate: "authenticate" } },
+        authenticate: {
+            key: "_password_authenticate",
+            variant: {
+                authenticate: "authenticate",
+            },
+        },
         reset: {
             key: "_password_reset",
             variant: {
-                request: "request",
+                requestToken: "requestToken",
                 checkStatus: "checkStatus",
                 reset: "reset",
             },
@@ -55,9 +60,6 @@ function searchQuery<K extends string>(
     )
 }
 
-export function authSignSearchKey_password_reset_sessionID(): string {
-    return authSignSearchParams.password.reset.sessionID
-}
 export function authSignSearchKey_password_reset_token(): string {
     return authSignSearchParams.password.reset.token
 }
