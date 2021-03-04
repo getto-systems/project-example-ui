@@ -10,6 +10,7 @@ render(
         newForeground({
             webStorage: localStorage,
             currentURL: new URL(location.toString()),
+            currentLocation: location,
         }),
     ),
     document.body,

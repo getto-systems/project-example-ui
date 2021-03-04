@@ -1,10 +1,9 @@
-import { LoadOutlineActionLocationInfo } from "../../../../auth/permission/outline/load/action"
+import { LoadOutlineMenuLocationDetecter } from "../../../../auth/permission/outline/load/action"
 import { outlineMenuExpandRepositoryConverter } from "../../../../auth/permission/outline/load/convert"
 import { markOutlineMenuCategoryLabel_legacy } from "../../../../auth/permission/outline/load/data"
 import {
     initOutlineBreadcrumbListAction,
     initOutlineMenuAction,
-    initOutlineActionLocationInfo,
 } from "../../../../auth/permission/outline/load/impl"
 import {
     LoadOutlineMenuBadgeRemotePod,
@@ -14,6 +13,7 @@ import {
     OutlineMenuExpandRepositoryValue,
     OutlineMenuTree,
 } from "../../../../auth/permission/outline/load/infra"
+import { initLoadOutlineMenuLocationDetecter } from "../../../../auth/permission/outline/load/testHelper"
 import { initAsyncActionTester_legacy } from "../../../../z_vendor/getto-application/action/testHelper"
 import { initRemoteSimulator } from "../../../../z_vendor/getto-application/infra/remote/simulate"
 import { wrapRepository } from "../../../../z_vendor/getto-application/infra/repository/helper"
@@ -426,16 +426,19 @@ type Repository = Readonly<{
 }>
 
 function newTestMenuResource(
-    locationInfo: LoadOutlineActionLocationInfo,
+    locationInfo: LoadOutlineMenuLocationDetecter,
     repository: Repository,
 ): MenuResource {
+    const version = standardVersion()
     const menuTree = standardMenuTree()
 
     return initMenuResource({
         breadcrumbList: initOutlineBreadcrumbListAction(locationInfo, {
+            version,
             menuTree,
         }),
         menu: initOutlineMenuAction(locationInfo, {
+            version,
             menuTree,
             loadMenuBadge: standardLoadMenuBadgeRemote(),
             ...repository,
@@ -443,16 +446,16 @@ function newTestMenuResource(
     })
 }
 
-function standardLocationInfo(): LoadOutlineActionLocationInfo {
-    return initOutlineActionLocationInfo(
-        standardVersion(),
+function standardLocationInfo(): LoadOutlineMenuLocationDetecter {
+    return initLoadOutlineMenuLocationDetecter(
         new URL("https://example.com/1.0.0/index.html"),
+        standardVersion(),
     )
 }
-function unknownLocationInfo(): LoadOutlineActionLocationInfo {
-    return initOutlineActionLocationInfo(
-        standardVersion(),
+function unknownLocationInfo(): LoadOutlineMenuLocationDetecter {
+    return initLoadOutlineMenuLocationDetecter(
         new URL("https://example.com/1.0.0/unknown.html"),
+        standardVersion(),
     )
 }
 function standardVersion(): string {

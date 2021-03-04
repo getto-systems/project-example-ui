@@ -12,15 +12,15 @@ import { AuthProfileEntryPoint, ProfileFactory } from "../entryPoint"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
-    currentURL: URL
+    currentLocation: Location
 }>
 export function newForeground(feature: OutsideFeature): AuthProfileEntryPoint {
-    const { webStorage, currentURL } = feature
+    const { webStorage, currentLocation } = feature
 
     const factory: ProfileFactory = {
         actions: {
             error: newErrorAction(),
-            ...newMainOutlineAction(webStorage, currentURL),
+            ...newMainOutlineAction(webStorage, currentLocation),
 
             season: initSeasonAction(),
         },

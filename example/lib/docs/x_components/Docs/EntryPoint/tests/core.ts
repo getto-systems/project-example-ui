@@ -1,7 +1,6 @@
 import {
     initOutlineBreadcrumbListAction,
     initOutlineMenuAction,
-    initOutlineActionLocationInfo,
 } from "../../../../../auth/permission/outline/load/impl"
 import { detectContentPath } from "../../../../content/impl/location"
 
@@ -20,6 +19,7 @@ import { initTestContentAction } from "../../../../content/tests/content"
 import { initUnexpectedErrorAction } from "../../../../../availability/unexpectedError/impl"
 import { initNotifyUnexpectedErrorSimulator } from "../../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/testHelper"
 import { AuthzRepositoryPod } from "../../../../../common/authz/infra"
+import { initLoadOutlineMenuLocationDetecter } from "../../../../../auth/permission/outline/load/testHelper"
 
 export type DocumentRepository = Readonly<{
     authz: AuthzRepositoryPod
@@ -35,16 +35,17 @@ export function newTestDocumentResource(
     repository: DocumentRepository,
     remote: DocumentRemoteAccess,
 ): DocumentResource {
-    const locationInfo = initOutlineActionLocationInfo(version, currentURL)
+    const locationInfo = initLoadOutlineMenuLocationDetecter(currentURL, version)
     const factory: DocumentFactory = {
         actions: {
             error: initUnexpectedErrorAction({
                 notify: initNotifyUnexpectedErrorSimulator(),
             }),
-            breadcrumbList: initOutlineBreadcrumbListAction(locationInfo, { menuTree }),
+            breadcrumbList: initOutlineBreadcrumbListAction(locationInfo, { version, menuTree }),
             menu: initOutlineMenuAction(locationInfo, {
                 ...repository,
                 ...remote,
+                version,
                 menuTree,
             }),
 
