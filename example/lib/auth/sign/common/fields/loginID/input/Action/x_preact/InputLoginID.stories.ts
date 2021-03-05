@@ -6,6 +6,8 @@ import { InputLoginIDProps, View } from "./InputLoginID"
 
 import { initMockInputLoginIDAction } from "../Core/mock"
 
+import { LOGIN_ID_MAX_LENGTH } from "../../../convert"
+
 import { ValidateLoginIDState } from "../Core/action"
 
 enum ValidateEnum {
@@ -31,7 +33,7 @@ const template = storyTemplate<Props>((props) => {
     return h(View, <InputLoginIDProps>{
         field: initMockInputLoginIDAction(),
         help: [props.help],
-        state: state(),        
+        state: state(),
     })
 
     function state(): ValidateLoginIDState {
@@ -40,8 +42,13 @@ const template = storyTemplate<Props>((props) => {
                 return { valid: true }
 
             case "empty":
+                return { valid: false, err: [{ type: props.validate }] }
+
             case "too-long":
-                return { valid: false, err: [props.validate] }
+                return {
+                    valid: false,
+                    err: [{ type: props.validate, maxLength: LOGIN_ID_MAX_LENGTH }],
+                }
         }
     }
 })
