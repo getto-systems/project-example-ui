@@ -1,4 +1,4 @@
-import { newAuthSignLinkResource } from "../../../../../common/searchParams/x_Action/Link/impl"
+import { newSignSearchResource } from "../../../../../common/search/Action/impl"
 
 import { initMockCoreAction } from "./Core/mock"
 import { initMockFormAction } from "./Form/mock"
@@ -12,6 +12,6 @@ export function initMockRequestPasswordResetTokenResource(): RequestPasswordRese
             form: initMockFormAction(),
             terminate: () => null,
         },
-        ...newAuthSignLinkResource(),
+        ...newSignSearchResource(),
     }
 }

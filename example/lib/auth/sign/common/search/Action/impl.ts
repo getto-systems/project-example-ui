@@ -1,9 +1,9 @@
-import { AuthSignLinkResource } from "./action"
+import { SignSearchResource } from "./action"
 
-import { AuthSignHref, authSignSearchParams } from "../../data"
-import { ResetSessionID } from "../../../../password/reset/kernel/data"
+import { AuthSignHref, authSignSearchParams } from "../data"
+import { ResetSessionID } from "../../../password/reset/kernel/data"
 
-export function newAuthSignLinkResource(): AuthSignLinkResource {
+export function newSignSearchResource(): SignSearchResource {
     return {
         href: {
             password_authenticate: () => password_authenticate(),

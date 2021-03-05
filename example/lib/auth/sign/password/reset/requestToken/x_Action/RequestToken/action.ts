@@ -3,7 +3,7 @@ import {
     initialValidateBoardState,
     ValidateBoardActionState,
 } from "../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
-import { AuthSignLinkResource } from "../../../../../common/searchParams/x_Action/Link/action"
+import { SignSearchResource } from "../../../../../common/search/Action/action"
 import { initialCoreState, CoreAction, CoreState } from "./Core/action"
 import { FormAction } from "./Form/action"
 
@@ -12,7 +12,7 @@ export type RequestPasswordResetTokenEntryPoint = Readonly<{
     terminate: { (): void }
 }>
 
-export type RequestPasswordResetTokenResource = AuthSignLinkResource &
+export type RequestPasswordResetTokenResource = SignSearchResource &
     Readonly<{ requestToken: RequestPasswordResetTokenAction }>
 
 export interface RequestPasswordResetTokenAction extends ApplicationAction {

@@ -1,6 +1,6 @@
 import { ApplicationStateAction } from "../../../../../../../z_vendor/getto-application/action/action"
 
-import { AuthSignLinkResource } from "../../../../../common/searchParams/x_Action/Link/action"
+import { SignSearchResource } from "../../../../../common/search/Action/action"
 
 import { CheckSendingStatusMethod, CheckSendingStatusMethodPod } from "../../method"
 
@@ -11,7 +11,7 @@ export type CheckPasswordResetSendingStatusEntryPoint = Readonly<{
     terminate: { (): void }
 }>
 
-export type CheckPasswordResetSendingStatusResource = AuthSignLinkResource &
+export type CheckPasswordResetSendingStatusResource = SignSearchResource &
     Readonly<{ checkStatus: CheckPasswordResetSendingStatusAction }>
 
 export type CheckPasswordResetSendingStatusAction = ApplicationStateAction<CheckSendingStatusState>

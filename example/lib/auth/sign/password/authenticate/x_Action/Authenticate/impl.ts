@@ -1,4 +1,4 @@
-import { newAuthSignLinkResource } from "../../../../common/searchParams/x_Action/Link/impl"
+import { newSignSearchResource } from "../../../../common/search/Action/impl"
 
 import { AuthenticatePasswordAction, AuthenticatePasswordEntryPoint } from "./action"
 import { CoreAction } from "./Core/action"
@@ -8,7 +8,7 @@ export function toEntryPoint(action: AuthenticatePasswordAction): AuthenticatePa
     return {
         // TODO newAuthSignLinkResource ではなく、 href: newSignHrefMaterial にしたい
         // TODO あるいは、引数で渡されるべきなのかも
-        resource: { authenticate: action, ...newAuthSignLinkResource() },
+        resource: { authenticate: action, ...newSignSearchResource() },
         terminate: () => action.terminate(),
     }
 }

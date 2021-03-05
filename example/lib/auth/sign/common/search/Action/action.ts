@@ -1,6 +1,6 @@
-import { ResetSessionID } from "../../../../password/reset/kernel/data"
+import { ResetSessionID } from "../../../password/reset/kernel/data"
 
-export type AuthSignLinkResource = Readonly<{
+export type SignSearchResource = Readonly<{
     href: {
         password_authenticate(): string
         password_reset_requestToken(): string

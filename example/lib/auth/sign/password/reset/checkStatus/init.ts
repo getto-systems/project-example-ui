@@ -10,7 +10,7 @@ import { CheckSendingStatusInfra } from "./infra"
 
 import { CheckSendingStatusLocationDetecter } from "./method"
 
-import { authSignSearchParams } from "../../../common/searchParams/data"
+import { authSignSearchParams } from "../../../common/search/data"
 
 export function newCheckSendingStatusLocationDetecter(
     currentLocation: Location,
