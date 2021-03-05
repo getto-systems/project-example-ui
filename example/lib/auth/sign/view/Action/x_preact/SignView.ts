@@ -7,7 +7,7 @@ import { useApplicationAction, useEntryPoint } from "../../../../../x_preact/com
 import { ApplicationError } from "../../../../../x_preact/common/System/ApplicationError"
 import { CheckAuthInfo } from "../../../kernel/authInfo/check/Action/x_preact/CheckAuthInfo"
 import { AuthenticatePassword } from "../../../password/authenticate/Action/x_preact/Authenticate"
-import { RequestPasswordResetToken } from "../../../password/reset/requestToken/x_Action/RequestToken/x_preact/RequestToken"
+import { RequestResetToken } from "../../../password/reset/requestToken/Action/x_preact/RequestResetToken"
 import { CheckPasswordResetSendingStatus } from "../../../password/reset/checkStatus/x_Action/CheckStatus/x_preact/CheckStatus"
 import { ResetPassword } from "../../../password/reset/reset/x_Action/Reset/x_preact/Reset"
 
@@ -43,7 +43,7 @@ export function SignComponent(props: SignProps): VNode {
             return h(AuthenticatePassword, props.state.entryPoint)
 
         case "password-reset-requestToken":
-            return h(RequestPasswordResetToken, props.state.entryPoint)
+            return h(RequestResetToken, props.state.entryPoint)
 
         case "password-reset-checkStatus":
             return h(CheckPasswordResetSendingStatus, props.state.entryPoint)

@@ -21,7 +21,7 @@ export const authenticatePassword: Authenticate = (infra) => async (fields, post
     const authenticate = infra.authenticate(authRemoteConverter(clock))
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayedChecker(authenticate(fields.value), config.delay, () =>
+    const response = await delayedChecker(authenticate(fields.value), config.takeLongTimeThreshold, () =>
         post({ type: "delayed-to-login" }),
     )
     if (!response.success) {

@@ -1,22 +1,22 @@
 import { RemoteTypes } from "../../../../../z_vendor/getto-application/infra/remote/infra"
 import { DelayTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
 
-import { RequestTokenFields, RequestTokenRemoteError } from "./data"
+import { RequestResetTokenFields, RequestResetTokenRemoteError } from "./data"
 import { ResetSessionID } from "../kernel/data"
 
-export type RequestTokenInfra = Readonly<{
-    requestToken: RequestTokenRemotePod
+export type RequestResetTokenInfra = Readonly<{
+    requestToken: RequestResetTokenRemotePod
     config: Readonly<{
         delay: DelayTime
     }>
 }>
 
-type RequestTokenRemoteTypes = RemoteTypes<
-    RequestTokenFields,
+type RequestResetTokenRemoteTypes = RemoteTypes<
+    RequestResetTokenFields,
     ResetSessionID,
     string,
-    RequestTokenRemoteError
+    RequestResetTokenRemoteError
 >
-export type RequestTokenRemotePod = RequestTokenRemoteTypes["pod"]
-export type RequestTokenResult = RequestTokenRemoteTypes["result"]
-export type RequestTokenSimulator = RequestTokenRemoteTypes["simulator"]
+export type RequestResetTokenRemotePod = RequestResetTokenRemoteTypes["pod"]
+export type RequestResetTokenResult = RequestResetTokenRemoteTypes["result"]
+export type RequestResetTokenSimulator = RequestResetTokenRemoteTypes["simulator"]

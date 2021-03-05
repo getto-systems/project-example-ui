@@ -10,7 +10,7 @@ export function newAuthenticatePasswordInfra(): AuthenticatePasswordInfra {
         authenticate: newAuthenticatePasswordRemote(),
         clock: newClock(),
         config: {
-            delay: delaySecond(1),
+            takeLongTimeThreshold: delaySecond(1),
         },
     }
 }

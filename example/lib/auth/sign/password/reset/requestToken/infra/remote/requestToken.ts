@@ -4,9 +4,9 @@ import { newApiRequestToken } from "../../../../../../../z_external/api/auth/sig
 
 import { wrapRemote } from "../../../../../../../z_vendor/getto-application/infra/remote/helper"
 
-import { RequestTokenRemotePod } from "../../infra"
+import { RequestResetTokenRemotePod } from "../../infra"
 
-export function newRequestTokenRemote(): RequestTokenRemotePod {
+export function newRequestResetTokenRemote(): RequestResetTokenRemotePod {
     return wrapRemote(newApiRequestToken(env.apiServerURL), (err) => ({
         type: "infra-error",
         err: `${err}`,

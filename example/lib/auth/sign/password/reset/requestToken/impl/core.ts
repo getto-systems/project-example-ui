@@ -1,17 +1,17 @@
-import { delayedChecker } from "../../../../../z_vendor/getto-application/infra/timer/helper"
+import { delayedChecker } from "../../../../../../z_vendor/getto-application/infra/timer/helper"
 
-import { RequestTokenInfra } from "./infra"
+import { RequestResetTokenInfra } from "../infra"
 
-import { RequestTokenMethod } from "./method"
+import { RequestResetTokenMethod } from "../method"
 
-import { RequestTokenEvent } from "./event"
+import { RequestResetTokenEvent } from "../event"
 
-import { sessionIDRemoteConverter } from "../kernel/convert"
+import { resetSessionIDRemoteConverter } from "../../kernel/convert"
 
 interface RequestToken {
-    (infra: RequestTokenInfra): RequestTokenMethod
+    (infra: RequestResetTokenInfra): RequestResetTokenMethod
 }
-export const requestToken: RequestToken = (infra) => async (fields, post) => {
+export const requestResetToken: RequestToken = (infra) => async (fields, post) => {
     if (!fields.valid) {
         post({ type: "failed-to-request-token", err: { type: "validation-error" } })
         return
@@ -20,7 +20,7 @@ export const requestToken: RequestToken = (infra) => async (fields, post) => {
     post({ type: "try-to-request-token" })
 
     const { config } = infra
-    const requestToken = infra.requestToken(sessionIDRemoteConverter)
+    const requestToken = infra.requestToken(resetSessionIDRemoteConverter)
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
     const response = await delayedChecker(requestToken(fields.value), config.delay, () =>
@@ -34,7 +34,7 @@ export const requestToken: RequestToken = (infra) => async (fields, post) => {
     post({ type: "succeed-to-request-token", sessionID: response.value })
 }
 
-export function requestTokenEventHasDone(event: RequestTokenEvent): boolean {
+export function requestResetTokenEventHasDone(event: RequestResetTokenEvent): boolean {
     switch (event.type) {
         case "succeed-to-request-token":
         case "failed-to-request-token":

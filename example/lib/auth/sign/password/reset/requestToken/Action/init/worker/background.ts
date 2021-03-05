@@ -1,25 +1,25 @@
-import { newCoreMaterial } from "../common"
+import { newRequestResetTokenCoreMaterial } from "../common"
 
-import { requestTokenEventHasDone } from "../../../../impl"
+import { requestResetTokenEventHasDone } from "../../../impl/core"
 
-import { WorkerHandler } from "../../../../../../../../../z_vendor/getto-application/action/worker/background"
+import { WorkerHandler } from "../../../../../../../../z_vendor/getto-application/action/worker/background"
 
 import {
     RequestPasswordResetTokenProxyMessage,
     RequestPasswordResetTokenProxyResponse,
 } from "./message"
 
-export function newRequestPasswordResetTokenHandler(
+export function newRequestResetTokenHandler(
     post: Post<RequestPasswordResetTokenProxyResponse>,
 ): WorkerHandler<RequestPasswordResetTokenProxyMessage> {
-    const material = newCoreMaterial()
+    const material = newRequestResetTokenCoreMaterial()
     return (message) => {
         switch (message.method) {
             case "requestToken":
                 material.requestToken(message.params.fields, (event) => {
                     post({
                         ...message,
-                        done: requestTokenEventHasDone(event),
+                        done: requestResetTokenEventHasDone(event),
                         event,
                     })
                 })

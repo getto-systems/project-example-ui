@@ -9,7 +9,7 @@ import {
 import {
     RequestPasswordResetTokenProxyMessage,
     RequestPasswordResetTokenProxyResponse,
-} from "../../../../password/reset/requestToken/x_Action/RequestToken/init/worker/message"
+} from "../../../../password/reset/requestToken/Action/init/worker/message"
 import {
     ResetPasswordProxyMessage,
     ResetPasswordProxyResponse,

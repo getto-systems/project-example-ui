@@ -3,7 +3,7 @@ import { ApplicationStateAction } from "../../../../../z_vendor/getto-applicatio
 import { CheckAuthInfoEntryPoint } from "../../../kernel/authInfo/check/Action/entryPoint"
 import { AuthenticatePasswordEntryPoint } from "../../../password/authenticate/Action/entryPoint"
 import { CheckPasswordResetSendingStatusEntryPoint } from "../../../password/reset/checkStatus/x_Action/CheckStatus/action"
-import { RequestPasswordResetTokenEntryPoint } from "../../../password/reset/requestToken/x_Action/RequestToken/action"
+import { RequestResetTokenEntryPoint } from "../../../password/reset/requestToken/Action/action"
 import { ResetPasswordEntryPoint } from "../../../password/reset/reset/x_Action/Reset/action"
 
 export interface SignAction extends ApplicationStateAction<SignActionState> {
@@ -15,7 +15,7 @@ export interface SignSubEntryPoint {
 
     password_authenticate(): AuthenticatePasswordEntryPoint
 
-    password_reset_requestToken(): RequestPasswordResetTokenEntryPoint
+    password_reset_requestToken(): RequestResetTokenEntryPoint
     password_reset_checkStatus(): CheckPasswordResetSendingStatusEntryPoint
     password_reset(): ResetPasswordEntryPoint
 }
@@ -26,7 +26,7 @@ export type SignActionState =
     | Readonly<{ type: "password-authenticate"; entryPoint: AuthenticatePasswordEntryPoint }>
     | Readonly<{
           type: "password-reset-requestToken"
-          entryPoint: RequestPasswordResetTokenEntryPoint
+          entryPoint: RequestResetTokenEntryPoint
       }>
     | Readonly<{
           type: "password-reset-checkStatus"

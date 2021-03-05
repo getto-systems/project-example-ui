@@ -277,7 +277,7 @@ function newEntryPoint(
                     authenticate: {
                         authenticate,
                         config: {
-                            delay: { delay_millisecond: 32 },
+                            takeLongTimeThreshold: { delay_millisecond: 32 },
                         },
                         clock,
                     },
