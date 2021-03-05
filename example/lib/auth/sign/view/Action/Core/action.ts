@@ -1,6 +1,6 @@
 import { ApplicationStateAction } from "../../../../../z_vendor/getto-application/action/action"
 
-import { CheckAuthInfoEntryPoint } from "../../../kernel/authInfo/check/Action/action"
+import { CheckAuthInfoEntryPoint } from "../../../kernel/authInfo/check/Action/entryPoint"
 import { AuthenticatePasswordEntryPoint } from "../../../password/authenticate/x_Action/Authenticate/action"
 import { CheckPasswordResetSendingStatusEntryPoint } from "../../../password/reset/checkStatus/x_Action/CheckStatus/action"
 import { RequestPasswordResetTokenEntryPoint } from "../../../password/reset/requestToken/x_Action/RequestToken/action"

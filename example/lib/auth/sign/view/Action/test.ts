@@ -2,7 +2,7 @@ import { initMockAuthenticatePasswordResource } from "../../password/authenticat
 import { initMockRequestPasswordResetTokenResource } from "../../password/reset/requestToken/x_Action/RequestToken/mock"
 import { initMockResetPasswordResource } from "../../password/reset/reset/x_Action/Reset/mock"
 import { initMockStartPasswordResetSessionResource } from "../../password/reset/checkStatus/x_Action/CheckStatus/mock"
-import { initMockRenewAuthnInfoResource } from "../../kernel/authInfo/check/Action/mock"
+import { initMockCheckAuthInfoResource } from "../../kernel/authInfo/check/Action/mock"
 import { initSignViewLocationDetecter } from "../impl/testHelper"
 import { SignAction, SignActionState } from "./Core/action"
 import { initSignAction } from "./Core/impl"
@@ -332,7 +332,7 @@ function standardCheckPasswordResetSendingStatusResource() {
 }
 function standardRenewCredentialEntryPoint() {
     return {
-        resource: initMockRenewAuthnInfoResource(),
+        resource: initMockCheckAuthInfoResource(),
         terminate: () => null,
     }
 }

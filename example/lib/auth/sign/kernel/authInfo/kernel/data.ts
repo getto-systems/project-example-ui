@@ -30,10 +30,10 @@ export function hasExpired(
     return target.now.getTime() > authAt.getTime() + target.expire_millisecond
 }
 
-export type RenewError =
+export type RenewAuthInfoError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export type RenewRemoteError = RenewError | Readonly<{ type: "invalid-ticket" }>
+export type RenewAuthInfoRemoteError = RenewAuthInfoError | Readonly<{ type: "invalid-ticket" }>

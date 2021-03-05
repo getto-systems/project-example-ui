@@ -1,4 +1,4 @@
-import { newRenewAuthnInfo } from "../../../../kernel/authInfo/check/Action/init"
+import { newCheckAuthInfoEntryPoint } from "../../../../kernel/authInfo/check/Action/init"
 import { newSignViewLocationDetecter } from "../../../impl/init"
 
 import {
@@ -35,7 +35,7 @@ export function newSignWorkerForeground(feature: OutsideFeature): SignEntryPoint
     const proxy = initProxy(postForegroundMessage)
 
     const view = initSignAction(newSignViewLocationDetecter(currentLocation), {
-        renew: () => newRenewAuthnInfo(webStorage, currentLocation),
+        renew: () => newCheckAuthInfoEntryPoint(webStorage, currentLocation),
 
         password_authenticate: () =>
             proxy.password.authenticate.entryPoint(webStorage, currentLocation),

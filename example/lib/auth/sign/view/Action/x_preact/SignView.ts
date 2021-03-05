@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { useApplicationAction, useEntryPoint } from "../../../../../x_preact/common/hooks"
 
 import { ApplicationError } from "../../../../../x_preact/common/System/ApplicationError"
-import { RenewAuthInfo } from "../../../kernel/authInfo/check/Action/x_preact/Renew"
+import { CheckAuthInfo } from "../../../kernel/authInfo/check/Action/x_preact/CheckAuthInfo"
 import { AuthenticatePassword } from "../../../password/authenticate/x_Action/Authenticate/x_preact/Authenticate"
 import { RequestPasswordResetToken } from "../../../password/reset/requestToken/x_Action/RequestToken/x_preact/RequestToken"
 import { CheckPasswordResetSendingStatus } from "../../../password/reset/checkStatus/x_Action/CheckStatus/x_preact/CheckStatus"
@@ -13,7 +13,7 @@ import { ResetPassword } from "../../../password/reset/reset/x_Action/Reset/x_pr
 
 import { SignEntryPoint, SignResource, SignResourceState } from "../entryPoint"
 
-export function SignEntryPoint(entryPoint: SignEntryPoint): VNode {
+export function SignView(entryPoint: SignEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
 
     const [err] = useErrorBoundary((err) => {
@@ -24,20 +24,20 @@ export function SignEntryPoint(entryPoint: SignEntryPoint): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    return h(SignView, <SignProps>{
+    return h(SignComponent, {
         state: useApplicationAction(resource.view),
         ...resource,
     })
 }
 
 export type SignProps = SignResource & SignResourceState
-export function SignView(props: SignProps): VNode {
+export function SignComponent(props: SignProps): VNode {
     switch (props.state.type) {
         case "initial-view":
             return EMPTY_CONTENT
 
         case "renew-credential":
-            return h(RenewAuthInfo, props.state.entryPoint)
+            return h(CheckAuthInfo, props.state.entryPoint)
 
         case "password-authenticate":
             return h(AuthenticatePassword, props.state.entryPoint)

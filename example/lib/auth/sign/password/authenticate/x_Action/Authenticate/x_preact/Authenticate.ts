@@ -85,6 +85,14 @@ export function View(props: AuthenticatePasswordProps): VNode {
             // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
             return EMPTY_CONTENT
 
+        case "succeed-to-continuous-renew":
+        case "lastAuth-not-expired":
+        case "required-to-login":
+        case "failed-to-continuous-renew":
+            // これらはスクリプトがロードされた後に発行される
+            // したがって、un-mount されているのでここには来ない
+            return EMPTY_CONTENT
+
         case "repository-error":
         case "load-error":
             return h(ApplicationError, { err: props.state.core.err.err })

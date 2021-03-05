@@ -1,422 +1,274 @@
 import {
+    initAsyncActionTestRunner,
+    initSyncActionTestRunner,
+} from "../../../../../../z_vendor/getto-application/action/testHelper"
+
+import {
     ClockPubSub,
-    ClockSubscriber,
     initStaticClock,
     staticClockPubSub,
 } from "../../../../../../z_vendor/getto-application/infra/clock/simulate"
-
-import { Clock } from "../../../../../../z_vendor/getto-application/infra/clock/infra"
-
-import { CheckAuthInfoResource, CheckAuthInfoResourceState } from "./action"
-
-import { initGetScriptPathLocationDetecter } from "../../../../common/secure/getScriptPath/impl/testHelper"
-import { LastAuthRepositoryPod, LastAuthRepositoryValue, RenewAuthInfoRemotePod } from "../../kernel/infra"
-import { toEntryPoint } from "./impl"
-import { initCoreAction, initCoreMaterial } from "./Core/impl"
-import { initSyncActionTestRunner } from "../../../../../../z_vendor/getto-application/action/testHelper"
-import { initMockCoreAction } from "./Core/mock"
 import { initMemoryDB } from "../../../../../../z_vendor/getto-application/infra/repository/memory"
-import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../common/authz/infra"
-import { wrapRepository } from "../../../../../../z_vendor/getto-application/infra/repository/helper"
-import { lastAuthRepositoryConverter } from "../../kernel/convert"
 import { initRemoteSimulator } from "../../../../../../z_vendor/getto-application/infra/remote/simulate"
 
-const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
-const STORED_AUTH_AT = new Date("2020-01-01 09:00:00").toISOString()
+import { initGetScriptPathLocationDetecter } from "../../../../common/secure/getScriptPath/impl/testHelper"
 
-const RENEWED_AUTHN_NONCE = "renewed-authn-nonce" as const
-const SUCCEED_TO_RENEW_AT = [
-    new Date("2020-01-01 10:00:00"),
-    new Date("2020-01-01 10:00:01"),
+import { wrapRepository } from "../../../../../../z_vendor/getto-application/infra/repository/helper"
+import { toCheckAuthInfoEntryPoint } from "./impl"
+import { initCheckAuthInfoCoreAction, initCheckAuthInfoCoreMaterial } from "./Core/impl"
+
+import { startContinuousRenewEventHasDone } from "../../common/startContinuousRenew/impl/core"
+import { checkAuthInfoEventHasDone } from "../impl/core"
+
+import { Clock } from "../../../../../../z_vendor/getto-application/infra/clock/infra"
+import { WaitTime } from "../../../../../../z_vendor/getto-application/infra/config/infra"
+import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../common/authz/infra"
+import {
+    LastAuthRepositoryPod,
+    LastAuthRepositoryValue,
+    RenewAuthInfoRemotePod,
+} from "../../kernel/infra"
+
+import { CheckAuthInfoEntryPoint } from "./entryPoint"
+
+import { CheckAuthInfoCoreState } from "./Core/action"
+
+// last auth at : テスト開始時刻と expire 設定によって instant load の可否が決まる
+const STORED_LAST_AUTH_AT = new Date("2020-01-01 10:00:00").toISOString()
+
+// テスト開始時刻
+const START_AT_INSTANT_LOAD_AVAILABLE = new Date("2020-01-01 10:00:10")
+const START_AT = new Date("2020-01-01 10:00:30")
+
+// renew 設定時刻 : succeed-to-start-continuous-renew でこの時刻に移行
+const CONTINUOUS_RENEW_START_AT = new Date("2020-01-01 10:00:40")
+
+// renew ごとに次の時刻に移行
+const CONTINUOUS_RENEW_AT = [
+    new Date("2020-01-01 10:01:00"),
+    new Date("2020-01-01 10:02:00"),
     new Date("2020-01-01 11:00:00"),
 ]
 
-// renew リクエストを投げるべきか、instant load していいかの判定に使用する
-// SUCCEED_TO_AUTH_AT と setContinuousRenew の delay との間でうまく調整する
-const NOW_INSTANT_LOAD_AVAILABLE = new Date("2020-01-01 09:00:10")
-const NOW_INSTANT_LOAD_DISABLED = new Date("2020-01-01 09:00:30")
-
-// continuous renew リクエストを投げるべきかの判定に使用する
-// テストが完了したら clock が返す値をこっちにする
-const COMPLETED_NOW = new Date("2020-01-01 11:00:00")
-
-describe("RenewAuthInfo", () => {
+describe("CheckAuthInfo", () => {
     test("instant load", (done) => {
-        const { repository, clock, resource } = instantRenewCredentialResource()
-        const lastAuth = repository.lastAuth(lastAuthRepositoryConverter)
+        const { clock, entryPoint } = instantLoadable_elements()
+        const resource = entryPoint.resource
 
-        resource.core.subscriber.subscribe(stateHandler())
-
-        resource.core.ignite()
-
-        function stateHandler(): Post<CheckAuthInfoResourceState> {
-            const stack: CheckAuthInfoResourceState[] = []
-            return (state) => {
-                stack.push(state)
-
-                switch (state.type) {
-                    case "initial-renew":
-                    case "try-to-renew":
-                    case "delayed-to-renew":
-                        // work in progress...
-                        break
-
-                    case "try-to-instant-load":
-                        resource.core.succeedToInstantLoad()
-                        break
-
-                    case "succeed-to-start-continuous-renew":
-                        clock.update(COMPLETED_NOW)
-                        expect(stack).toEqual([
-                            {
-                                type: "try-to-instant-load",
-                                scriptPath: {
-                                    valid: true,
-                                    value: "https://secure.example.com/index.js",
-                                },
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.core.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        {
+                            type: "try-to-instant-load",
+                            scriptPath: {
+                                valid: true,
+                                value: "https://secure.example.com/index.js",
                             },
-                            { type: "succeed-to-start-continuous-renew" },
-                        ])
-                        setTimeout(() => {
-                            expect(lastAuth.get()).toEqual({
-                                success: true,
-                                found: true,
-                                value: {
-                                    nonce: RENEWED_AUTHN_NONCE,
-                                    lastAuthAt: SUCCEED_TO_RENEW_AT[0],
-                                },
-                            })
-                            done()
-                        }, 1) // after setContinuousRenew interval and delay
-                        break
+                        },
+                    ])
+                },
+            },
+            {
+                statement: () => {
+                    clock.update(CONTINUOUS_RENEW_START_AT)
+                    resource.core.succeedToInstantLoad()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        { type: "succeed-to-start-continuous-renew" },
+                        { type: "succeed-to-continuous-renew" },
+                        { type: "succeed-to-continuous-renew" },
+                        { type: "succeed-to-continuous-renew" },
+                        { type: "required-to-login" },
+                    ])
+                },
+            },
+        ])
 
-                    case "try-to-load":
-                    case "required-to-login":
-                        done(new Error(state.type))
-                        break
-
-                    case "failed-to-renew":
-                    case "repository-error":
-                    case "load-error":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
-                }
-            }
-        }
+        resource.core.subscriber.subscribe(runner(done))
     })
 
     test("instant load failed", (done) => {
-        const { repository, clock, resource } = instantRenewCredentialResource()
-        const lastAuth = repository.lastAuth(lastAuthRepositoryConverter)
+        const { clock, entryPoint } = instantLoadable_elements()
+        const resource = entryPoint.resource
 
-        resource.core.subscriber.subscribe(stateHandler())
-
-        resource.core.ignite()
-
-        function stateHandler(): Post<CheckAuthInfoResourceState> {
-            const stack: CheckAuthInfoResourceState[] = []
-            return (state) => {
-                stack.push(state)
-
-                switch (state.type) {
-                    case "initial-renew":
-                    case "try-to-renew":
-                    case "delayed-to-renew":
-                        // work in progress...
-                        break
-
-                    case "try-to-instant-load":
-                        resource.core.failedToInstantLoad()
-                        break
-
-                    case "required-to-login":
-                    case "succeed-to-start-continuous-renew":
-                        done(new Error(state.type))
-                        break
-
-                    case "try-to-load":
-                        clock.update(COMPLETED_NOW)
-                        expect(stack).toEqual([
-                            {
-                                type: "try-to-instant-load",
-                                scriptPath: {
-                                    valid: true,
-                                    value: "https://secure.example.com/index.js",
-                                },
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.core.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        {
+                            type: "try-to-instant-load",
+                            scriptPath: {
+                                valid: true,
+                                value: "https://secure.example.com/index.js",
                             },
-                            { type: "try-to-renew" },
-                            {
-                                type: "try-to-load",
-                                scriptPath: {
-                                    valid: true,
-                                    value: "https://secure.example.com/index.js",
-                                },
+                        },
+                    ])
+                },
+            },
+            {
+                statement: () => {
+                    clock.update(CONTINUOUS_RENEW_START_AT)
+                    resource.core.failedToInstantLoad()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        { type: "try-to-renew" },
+                        {
+                            type: "try-to-load",
+                            scriptPath: {
+                                valid: true,
+                                value: "https://secure.example.com/index.js",
                             },
-                        ])
-                        setTimeout(() => {
-                            expect(lastAuth.get()).toEqual({
-                                success: true,
-                                found: true,
-                                value: {
-                                    nonce: RENEWED_AUTHN_NONCE,
-                                    lastAuthAt: SUCCEED_TO_RENEW_AT[1],
-                                },
-                            })
-                            done()
-                        }, 1) // after setContinuousRenew interval and delay
-                        break
+                        },
+                        { type: "succeed-to-continuous-renew" },
+                        { type: "succeed-to-continuous-renew" },
+                        { type: "required-to-login" },
+                    ])
+                },
+            },
+        ])
 
-                    case "failed-to-renew":
-                    case "repository-error":
-                    case "load-error":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
-                }
-            }
-        }
+        resource.core.subscriber.subscribe(runner(done))
     })
 
     test("renew stored credential", (done) => {
-        const { repository, clock, resource } = standardRenewCredentialResource()
-        const lastAuth = repository.lastAuth(lastAuthRepositoryConverter)
+        const { clock, entryPoint } = standard_elements()
+        const resource = entryPoint.resource
 
-        resource.core.subscriber.subscribe(stateHandler())
-
-        resource.core.ignite()
-
-        function stateHandler(): Post<CheckAuthInfoResourceState> {
-            const stack: CheckAuthInfoResourceState[] = []
-            return (state) => {
-                stack.push(state)
-
-                switch (state.type) {
-                    case "initial-renew":
-                    case "try-to-renew":
-                    case "delayed-to-renew":
-                        // work in progress...
-                        break
-
-                    case "try-to-instant-load":
-                    case "required-to-login":
-                    case "succeed-to-start-continuous-renew":
-                        done(new Error(state.type))
-                        break
-
-                    case "try-to-load":
-                        clock.update(COMPLETED_NOW)
-                        expect(stack).toEqual([
-                            { type: "try-to-renew" },
-                            {
-                                type: "try-to-load",
-                                scriptPath: {
-                                    valid: true,
-                                    value: "https://secure.example.com/index.js",
-                                },
-                            },
-                        ])
-                        setTimeout(() => {
-                            expect(lastAuth.get()).toEqual({
-                                success: true,
-                                found: true,
-                                value: {
-                                    nonce: RENEWED_AUTHN_NONCE,
-                                    lastAuthAt: SUCCEED_TO_RENEW_AT[1],
-                                },
-                            })
-                            done()
-                        }, 1) // after setContinuousRenew interval and delay
-                        break
-
-                    case "failed-to-renew":
-                    case "repository-error":
-                    case "load-error":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
-                }
+        resource.core.subscriber.subscribe((state) => {
+            switch (state.type) {
+                case "try-to-load":
+                    clock.update(CONTINUOUS_RENEW_START_AT)
+                    break
             }
-        }
+        })
+
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.core.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        { type: "try-to-renew" },
+                        {
+                            type: "try-to-load",
+                            scriptPath: {
+                                valid: true,
+                                value: "https://secure.example.com/index.js",
+                            },
+                        },
+                        { type: "succeed-to-continuous-renew" },
+                        { type: "succeed-to-continuous-renew" },
+                        { type: "required-to-login" },
+                    ])
+                },
+            },
+        ])
+
+        resource.core.subscriber.subscribe(runner(done))
     })
 
     test("renew stored credential; with delayed", (done) => {
         // wait for delayed timeout
-        const { repository, clock, resource } = waitRenewCredentialResource()
-        const lastAuth = repository.lastAuth(lastAuthRepositoryConverter)
+        const { clock, entryPoint } = takeLongTime_elements()
+        const resource = entryPoint.resource
 
-        resource.core.subscriber.subscribe(stateHandler())
-
-        resource.core.ignite()
-
-        function stateHandler(): Post<CheckAuthInfoResourceState> {
-            const stack: CheckAuthInfoResourceState[] = []
-            return (state) => {
-                stack.push(state)
-
-                switch (state.type) {
-                    case "initial-renew":
-                    case "try-to-renew":
-                    case "delayed-to-renew":
-                        // work in progress...
-                        break
-
-                    case "try-to-instant-load":
-                    case "required-to-login":
-                    case "succeed-to-start-continuous-renew":
-                        done(new Error(state.type))
-                        break
-
-                    case "try-to-load":
-                        clock.update(COMPLETED_NOW)
-                        expect(stack).toEqual([
-                            { type: "try-to-renew" },
-                            { type: "delayed-to-renew" }, // delayed event
-                            {
-                                type: "try-to-load",
-                                scriptPath: {
-                                    valid: true,
-                                    value: "https://secure.example.com/index.js",
-                                },
-                            },
-                        ])
-                        setTimeout(() => {
-                            expect(lastAuth.get()).toEqual({
-                                success: true,
-                                found: true,
-                                value: {
-                                    nonce: RENEWED_AUTHN_NONCE,
-                                    lastAuthAt: SUCCEED_TO_RENEW_AT[0],
-                                },
-                            })
-                            done()
-                        }, 1) // after setContinuousRenew interval and delay
-                        break
-
-                    case "failed-to-renew":
-                    case "repository-error":
-                    case "load-error":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
-                }
+        resource.core.subscriber.subscribe((state) => {
+            switch (state.type) {
+                case "try-to-load":
+                    clock.update(CONTINUOUS_RENEW_START_AT)
+                    break
             }
-        }
+        })
+
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.core.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        { type: "try-to-renew" },
+                        { type: "delayed-to-renew" }, // delayed event
+                        {
+                            type: "try-to-load",
+                            scriptPath: {
+                                valid: true,
+                                value: "https://secure.example.com/index.js",
+                            },
+                        },
+                        { type: "succeed-to-continuous-renew" },
+                        { type: "succeed-to-continuous-renew" },
+                        { type: "required-to-login" },
+                    ])
+                },
+            },
+        ])
+
+        resource.core.subscriber.subscribe(runner(done))
     })
 
     test("renew without stored credential", (done) => {
         // empty credential
-        const { repository, resource } = emptyRenewCredentialResource()
-        const lastAuth = repository.lastAuth(lastAuthRepositoryConverter)
+        const { entryPoint } = noStored_elements()
+        const resource = entryPoint.resource
 
-        resource.core.subscriber.subscribe(stateHandler())
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.core.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([{ type: "required-to-login" }])
+                },
+            },
+        ])
 
-        resource.core.ignite()
-
-        function stateHandler(): Post<CheckAuthInfoResourceState> {
-            const stack: CheckAuthInfoResourceState[] = []
-            return (state) => {
-                stack.push(state)
-
-                switch (state.type) {
-                    case "initial-renew":
-                    case "try-to-renew":
-                    case "delayed-to-renew":
-                        // work in progress...
-                        break
-
-                    case "try-to-instant-load":
-                    case "succeed-to-start-continuous-renew":
-                    case "try-to-load":
-                        done(new Error(state.type))
-                        break
-
-                    case "required-to-login":
-                        expect(stack).toEqual([{ type: "required-to-login" }])
-                        expect(lastAuth.get()).toEqual({
-                            success: true,
-                            found: false,
-                        })
-                        done()
-                        break
-
-                    case "failed-to-renew":
-                    case "repository-error":
-                    case "load-error":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
-                }
-            }
-        }
+        resource.core.subscriber.subscribe(runner(done))
     })
 
     test("load error", (done) => {
-        const { resource } = standardRenewCredentialResource()
-
-        resource.core.subscriber.subscribe(stateHandler())
-
-        resource.core.loadError({ type: "infra-error", err: "load error" })
-
-        function stateHandler(): Post<CheckAuthInfoResourceState> {
-            const stack: CheckAuthInfoResourceState[] = []
-            return (state) => {
-                stack.push(state)
-
-                switch (state.type) {
-                    case "initial-renew":
-                    case "try-to-renew":
-                    case "delayed-to-renew":
-                        // work in progress...
-                        break
-
-                    case "try-to-instant-load":
-                    case "succeed-to-start-continuous-renew":
-                    case "required-to-login":
-                    case "try-to-load":
-                        done(new Error(state.type))
-                        break
-
-                    case "failed-to-renew":
-                    case "repository-error":
-                        done(new Error(state.type))
-                        break
-
-                    case "load-error":
-                        expect(stack).toEqual([
-                            {
-                                type: "load-error",
-                                err: { type: "infra-error", err: "load error" },
-                            },
-                        ])
-                        done()
-                        break
-
-                    default:
-                        assertNever(state)
-                }
-            }
-        }
-    })
-
-    test("terminate", (done) => {
-        const entryPoint = toEntryPoint(initMockCoreAction())
+        const { entryPoint } = standard_elements()
+        const resource = entryPoint.resource
 
         const runner = initSyncActionTestRunner([
             {
                 statement: () => {
+                    resource.core.loadError({ type: "infra-error", err: "load error" })
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        {
+                            type: "load-error",
+                            err: { type: "infra-error", err: "load error" },
+                        },
+                    ])
+                },
+            },
+        ])
+
+        resource.core.subscriber.subscribe(runner(done))
+    })
+
+    test("terminate", (done) => {
+        const { entryPoint } = standard_elements()
+
+        const runner = initSyncActionTestRunner([
+            {
+                statement: (check) => {
                     entryPoint.terminate()
                     entryPoint.resource.core.ignite()
+
+                    setTimeout(check, 256) // wait for some event
                 },
                 examine: (stack) => {
                     // no input/validate event after terminate
@@ -429,164 +281,142 @@ describe("RenewAuthInfo", () => {
     })
 })
 
-function standardRenewCredentialResource() {
-    const currentURL = standardURL()
-    const repository = standardRepository()
+function standard_elements() {
     const clockPubSub = staticClockPubSub()
-    const simulator = standardSimulator(clockPubSub)
-    const clock = standardClock(clockPubSub)
-    const resource = newTestRenewAuthnInfoResource(currentURL, repository, simulator, clock)
+    const entryPoint = newCheckAuthInfoEntryPoint(
+        standard_lastAuth(),
+        standard_authz(),
+        standard_renew(clockPubSub),
+        initStaticClock(START_AT, clockPubSub),
+    )
 
-    return { repository, clock: clockPubSub, resource }
+    return { clock: clockPubSub, entryPoint }
 }
-function instantRenewCredentialResource() {
-    const currentURL = standardURL()
-    const repository = standardRepository()
+function instantLoadable_elements() {
     const clockPubSub = staticClockPubSub()
-    const simulator = standardSimulator(clockPubSub)
-    const clock = instantAvailableClock(clockPubSub)
-    const resource = newTestRenewAuthnInfoResource(currentURL, repository, simulator, clock)
+    const entryPoint = newCheckAuthInfoEntryPoint(
+        standard_lastAuth(),
+        standard_authz(),
+        standard_renew(clockPubSub),
+        initStaticClock(START_AT_INSTANT_LOAD_AVAILABLE, clockPubSub),
+    )
 
-    return { repository, clock: clockPubSub, resource }
+    return { clock: clockPubSub, entryPoint }
 }
-function waitRenewCredentialResource() {
-    const currentURL = standardURL()
-    const repository = standardRepository()
+function takeLongTime_elements() {
     const clockPubSub = staticClockPubSub()
-    const simulator = waitSimulator(clockPubSub)
-    const clock = standardClock(clockPubSub)
-    const resource = newTestRenewAuthnInfoResource(currentURL, repository, simulator, clock)
-
-    return { repository, clock: clockPubSub, resource }
+    const entryPoint = newCheckAuthInfoEntryPoint(
+        standard_lastAuth(),
+        standard_authz(),
+        wait_renew(clockPubSub),
+        initStaticClock(START_AT, clockPubSub),
+    )
+    return { clock: clockPubSub, entryPoint }
 }
-function emptyRenewCredentialResource() {
-    const currentURL = standardURL()
-    const repository = emptyRepository()
+function noStored_elements() {
     const clockPubSub = staticClockPubSub()
-    const simulator = standardSimulator(clockPubSub)
-    const clock = standardClock(clockPubSub)
-    const resource = newTestRenewAuthnInfoResource(currentURL, repository, simulator, clock)
-
-    return { repository, resource }
+    const entryPoint = newCheckAuthInfoEntryPoint(
+        noStored_lastAuth(),
+        noStored_authz(),
+        standard_renew(clockPubSub),
+        initStaticClock(START_AT, clockPubSub),
+    )
+    return { entryPoint }
 }
 
-type RenewCredentialTestRepository = Readonly<{
-    authz: AuthzRepositoryPod
-    lastAuth: LastAuthRepositoryPod
-}>
-type RenewCredentialTestRemoteAccess = Readonly<{
-    renew: RenewAuthInfoRemotePod
-}>
-
-function newTestRenewAuthnInfoResource(
-    currentURL: URL,
-    repository: RenewCredentialTestRepository,
-    remote: RenewCredentialTestRemoteAccess,
+function newCheckAuthInfoEntryPoint(
+    lastAuth: LastAuthRepositoryPod,
+    authz: AuthzRepositoryPod,
+    renew: RenewAuthInfoRemotePod,
     clock: Clock,
-): CheckAuthInfoResource {
-    const config = standardConfig()
-    return toEntryPoint(
-        initCoreAction(
-            initCoreMaterial(
+): CheckAuthInfoEntryPoint {
+    const currentURL = new URL("https://example.com/index.html")
+    const getScriptPathDetecter = initGetScriptPathLocationDetecter(currentURL)
+    return toCheckAuthInfoEntryPoint(
+        initCheckAuthInfoCoreAction(
+            initCheckAuthInfoCoreMaterial(
                 {
-                    renew: {
-                        ...repository,
-                        ...remote,
-                        config: config.renew,
+                    check: {
+                        lastAuth,
+                        authz,
+                        renew,
+                        config: {
+                            instantLoadExpire: { expire_millisecond: 20 * 1000 },
+                            takeLongTimeThreshold: { delay_millisecond: 32 },
+                        },
                         clock,
                     },
                     startContinuousRenew: {
-                        ...repository,
-                        ...remote,
-                        config: config.continuousRenew,
+                        lastAuth,
+                        authz,
+                        renew,
+                        config: {
+                            interval: { interval_millisecond: 128 },
+                            lastAuthExpire: { expire_millisecond: 1 * 1000 },
+                        },
                         clock,
                     },
                     getSecureScriptPath: {
-                        config: config.location,
+                        config: {
+                            secureServerURL: "https://secure.example.com",
+                        },
                     },
                 },
-                initGetScriptPathLocationDetecter(currentURL),
+                getScriptPathDetecter,
             ),
         ),
-    ).resource
+    )
 }
 
-function standardURL(): URL {
-    return new URL("https://example.com/index.html")
+function standard_lastAuth(): LastAuthRepositoryPod {
+    const lastAuth = initMemoryDB<LastAuthRepositoryValue>()
+    lastAuth.set({
+        nonce: "stored-authn-nonce",
+        lastAuthAt: STORED_LAST_AUTH_AT,
+    })
+    return wrapRepository(lastAuth)
 }
-function standardConfig() {
-    return {
-        location: {
-            secureServerURL: "https://secure.example.com",
-        },
-        renew: {
-            instantLoadExpire: { expire_millisecond: 20 * 1000 },
-            delay: { delay_millisecond: 1 },
-        },
-        continuousRenew: {
-            interval: { interval_millisecond: 1 },
-            delay: { delay_millisecond: 1 },
-        },
-    }
+function noStored_lastAuth(): LastAuthRepositoryPod {
+    return wrapRepository(initMemoryDB())
 }
 
-function standardRepository(): RenewCredentialTestRepository {
-    const authz = initMemoryDB<AuthzRepositoryValue>()
-    authz.set({
+function standard_authz(): AuthzRepositoryPod {
+    const lastAuth = initMemoryDB<AuthzRepositoryValue>()
+    lastAuth.set({
         nonce: "api-nonce",
         roles: ["role"],
     })
-
-    const lastAuth = initMemoryDB<LastAuthRepositoryValue>()
-    lastAuth.set({
-        nonce: STORED_AUTHN_NONCE,
-        lastAuthAt: STORED_AUTH_AT,
-    })
-
-    return {
-        authz: <AuthzRepositoryPod>wrapRepository(authz),
-        lastAuth: <LastAuthRepositoryPod>wrapRepository(lastAuth),
-    }
+    return wrapRepository(lastAuth)
 }
-function emptyRepository(): RenewCredentialTestRepository {
-    return {
-        authz: wrapRepository(initMemoryDB<AuthzRepositoryValue>()),
-        lastAuth: wrapRepository(initMemoryDB<LastAuthRepositoryValue>()),
-    }
-}
-function standardSimulator(clock: ClockPubSub): RenewCredentialTestRemoteAccess {
-    return {
-        renew: renewRemoteAccess(clock, { wait_millisecond: 0 }),
-    }
-}
-function waitSimulator(clock: ClockPubSub): RenewCredentialTestRemoteAccess {
-    return {
-        // wait for delayed timeout
-        renew: renewRemoteAccess(clock, { wait_millisecond: 3 }),
-    }
+function noStored_authz(): AuthzRepositoryPod {
+    return wrapRepository(initMemoryDB())
 }
 
-function renewRemoteAccess(clock: ClockPubSub, waitTime: WaitTime): RenewAuthInfoRemotePod {
-    let renewedCount = 0
+function standard_renew(clock: ClockPubSub): RenewAuthInfoRemotePod {
+    return renewPod(clock, { wait_millisecond: 0 })
+}
+function wait_renew(clock: ClockPubSub): RenewAuthInfoRemotePod {
+    // wait for delayed timeout
+    return renewPod(clock, { wait_millisecond: 64 })
+}
+function renewPod(clock: ClockPubSub, waitTime: WaitTime): RenewAuthInfoRemotePod {
+    let count = 0
     return initRemoteSimulator(() => {
-        // 初回 renew と continuous renew 一回目の 2回だけ正しく返す
-        // 以降は invalid-ticket でタイマーを止める
-        if (renewedCount > 1) {
+        if (count > 2) {
+            // 最初の 3回だけ renew して、あとは renew を cancel するための invalid-ticket
             return { success: false, err: { type: "invalid-ticket" } }
         }
 
-        // 現在時刻と、直後の時刻を動かす
-        const now = SUCCEED_TO_RENEW_AT[renewedCount]
-        const nextNow = SUCCEED_TO_RENEW_AT[renewedCount + 1]
-        clock.update(now)
-        setTimeout(() => clock.update(nextNow))
+        // 現在時刻を動かす
+        const nextTime = CONTINUOUS_RENEW_AT[count]
+        setTimeout(() => clock.update(nextTime))
 
-        renewedCount++
+        count++
         return {
             success: true,
             value: {
                 authn: {
-                    nonce: RENEWED_AUTHN_NONCE,
+                    nonce: "renewed-authn-nonce",
                 },
                 authz: {
                     nonce: "api-nonce",
@@ -597,19 +427,27 @@ function renewRemoteAccess(clock: ClockPubSub, waitTime: WaitTime): RenewAuthInf
     }, waitTime)
 }
 
-function standardClock(subscriber: ClockSubscriber): Clock {
-    return initStaticClock(NOW_INSTANT_LOAD_DISABLED, subscriber)
-}
-function instantAvailableClock(subscriber: ClockSubscriber): Clock {
-    return initStaticClock(NOW_INSTANT_LOAD_AVAILABLE, subscriber)
-}
+function actionHasDone(state: CheckAuthInfoCoreState): boolean {
+    switch (state.type) {
+        case "initial-check":
+        case "try-to-load":
+            return false
 
-interface Post<T> {
-    (state: T): void
-}
+        case "load-error":
+            return true
 
-type WaitTime = { wait_millisecond: number }
+        case "try-to-instant-load":
+        case "try-to-renew":
+        case "delayed-to-renew":
+        case "required-to-login":
+        case "failed-to-renew":
+        case "repository-error":
+            return checkAuthInfoEventHasDone(state)
 
-function assertNever(_: never): never {
-    throw new Error("NEVER")
+        case "succeed-to-start-continuous-renew":
+        case "succeed-to-continuous-renew":
+        case "lastAuth-not-expired":
+        case "failed-to-continuous-renew":
+            return startContinuousRenewEventHasDone(state)
+    }
 }

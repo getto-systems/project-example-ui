@@ -18,20 +18,19 @@ import {
     CheckAuthInfoEntryPoint,
     CheckAuthInfoResource,
     CheckAuthInfoResourceState,
-} from "../action"
-import { RenewError } from "../../../kernel/data"
+} from "../entryPoint"
+import { RenewAuthInfoError } from "../../../kernel/data"
 
-export function RenewAuthInfo(entryPoint: CheckAuthInfoEntryPoint): VNode {
+export function CheckAuthInfo(entryPoint: CheckAuthInfoEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
-    return h(View, <RenewAuthnInfoProps>{
+    return h(CheckAuthInfoComponent, {
         ...resource,
         state: useApplicationAction(resource.core),
     })
 }
 
-export type RenewAuthnInfoProps = CheckAuthInfoResource &
-    Readonly<{ state: CheckAuthInfoResourceState }>
-export function View(props: RenewAuthnInfoProps): VNode {
+export type CheckAuthInfoProps = CheckAuthInfoResource & CheckAuthInfoResourceState
+export function CheckAuthInfoComponent(props: CheckAuthInfoProps): VNode {
     useLayoutEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
         switch (props.state.type) {
@@ -74,7 +73,7 @@ export function View(props: RenewAuthnInfoProps): VNode {
     }, [props.state])
 
     switch (props.state.type) {
-        case "initial-renew":
+        case "initial-check":
         case "required-to-login":
             return EMPTY_CONTENT
 
@@ -84,11 +83,16 @@ export function View(props: RenewAuthnInfoProps): VNode {
             return EMPTY_CONTENT
 
         case "succeed-to-start-continuous-renew":
-            // このイベントは instant load 後に設定が完了したことを通知するものなので特に何もしない
+        case "succeed-to-continuous-renew":
+        case "lastAuth-not-expired":
+        case "failed-to-continuous-renew":
+            // これらはスクリプトがロードされた後に発行される
+            // したがって、un-mount されているのでここには来ない
             return EMPTY_CONTENT
 
         case "try-to-renew":
-            // すぐに帰ってくるはずなので何も描画しない
+            // すぐに帰ってくることを想定
+            // 時間がかかると delayed-to-renew が発行される
             return EMPTY_CONTENT
 
         case "delayed-to-renew":
@@ -115,7 +119,7 @@ export function View(props: RenewAuthnInfoProps): VNode {
             ],
         })
     }
-    function errorMessage(err: RenewError): VNode {
+    function errorMessage(err: RenewAuthInfoError): VNode {
         return loginBox(siteInfo(), {
             title: "認証に失敗しました",
             body: [
@@ -127,7 +131,7 @@ export function View(props: RenewAuthnInfoProps): VNode {
     }
 }
 
-function renewError(err: RenewError): VNodeContent[] {
+function renewError(err: RenewAuthInfoError): VNodeContent[] {
     switch (err.type) {
         case "bad-request":
             return ["認証情報の送信処理でエラーが発生しました"]

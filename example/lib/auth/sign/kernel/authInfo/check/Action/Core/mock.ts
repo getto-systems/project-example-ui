@@ -1,13 +1,15 @@
 import { ApplicationMockStateAction } from "../../../../../../../z_vendor/getto-application/action/impl"
 
-import { CoreAction, CoreState } from "./action"
+import { CheckAuthInfoCoreAction, CheckAuthInfoCoreState, initialCheckAuthInfoCoreState } from "./action"
 
-export function initMockCoreAction(): CoreAction {
+export function initMockCheckAuthInfoCoreAction(): CheckAuthInfoCoreAction {
     return new Action()
 }
 
-class Action extends ApplicationMockStateAction<CoreState> implements CoreAction {
-    readonly initialState: CoreState = { type: "initial-renew" }
+class Action
+    extends ApplicationMockStateAction<CheckAuthInfoCoreState>
+    implements CheckAuthInfoCoreAction {
+    readonly initialState = initialCheckAuthInfoCoreState
 
     constructor() {
         super()

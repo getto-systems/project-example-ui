@@ -35,32 +35,30 @@ import { wrapRepository } from "../../../../../../../z_vendor/getto-application/
 import { lastAuthRepositoryConverter } from "../../../../../kernel/authInfo/kernel/convert"
 import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
 import { initResetLocationDetecter } from "../../testHelper"
+import { startContinuousRenewEventHasDone } from "../../../../../kernel/authInfo/common/startContinuousRenew/impl/core"
+
+// テスト開始時刻
+const START_AT = new Date("2020-01-01 10:00:00")
+
+// renew 設定時刻 : succeed-to-start-continuous-renew でこの時刻に移行
+const CONTINUOUS_RENEW_START_AT = new Date("2020-01-01 10:00:01")
+
+// renew ごとに次の時刻に移行
+const CONTINUOUS_RENEW_AT = [new Date("2020-01-01 10:01:00"), new Date("2020-01-01 11:00:00")]
 
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
-const AUTHORIZED_AUTHN_NONCE = "authn-nonce" as const
-
-const RENEWED_AUTHN_NONCE = "renewed-authn-nonce" as const
-const SUCCEED_TO_RENEW_AT = [
-    new Date("2020-01-01 10:01:00"),
-    new Date("2020-01-01 10:01:01"),
-    new Date("2020-01-01 11:00:00"),
-]
-
-const FINISHED = new Date("2020-01-01 11:00:00")
-
-// renew リクエストを投げるべきかの判定に使用する
-// SUCCEED_TO_AUTH_AT と setContinuousRenew の delay との間でうまく調整する
-const NOW = new Date("2020-01-01 10:00:30")
-
-// continuous renew リクエストを投げるべきかの判定に使用する
-// テストが完了したら clock が返す値をこっちにする
-const COMPLETED_NOW = new Date("2020-01-01 11:00:00")
-
 describe("RegisterPassword", () => {
     test("submit valid login-id and password", (done) => {
-        const { repository, clock, resource } = standardPasswordResetResource()
-        const lastAuth = repository.lastAuth(lastAuthRepositoryConverter)
+        const { clock, resource } = standardPasswordResetResource()
+
+        resource.core.subscriber.subscribe((state) => {
+            switch (state.type) {
+                case "try-to-load":
+                    clock.update(CONTINUOUS_RENEW_START_AT)
+                    break
+            }
+        })
 
         resource.core.subscriber.subscribe(initTester())
 
@@ -71,41 +69,32 @@ describe("RegisterPassword", () => {
 
         function initTester() {
             return initAsyncTester()((stack) => {
-                clock.update(COMPLETED_NOW)
                 expect(stack).toEqual([
                     { type: "try-to-reset" },
                     {
                         type: "try-to-load",
                         scriptPath: { valid: true, value: "https://secure.example.com/index.js" },
                     },
+                    { type: "succeed-to-continuous-renew" },
+                    { type: "succeed-to-continuous-renew" },
+                    { type: "required-to-login" },
                 ])
-                expect(lastAuth.get()).toEqual({
-                    success: true,
-                    found: true,
-                    value: {
-                        nonce: AUTHORIZED_AUTHN_NONCE,
-                        lastAuthAt: NOW,
-                    },
-                })
-                setTimeout(() => {
-                    expect(lastAuth.get()).toEqual({
-                        success: true,
-                        found: true,
-                        value: {
-                            nonce: RENEWED_AUTHN_NONCE,
-                            lastAuthAt: SUCCEED_TO_RENEW_AT[0],
-                        },
-                    })
-                    done()
-                }, 1) // after setContinuousRenew interval and delay
+                done()
             })
         }
     })
 
     test("submit valid login-id and password; with delayed", (done) => {
         // wait for delayed timeout
-        const { repository, clock, resource } = waitPasswordResetResource()
-        const lastAuth = repository.lastAuth(lastAuthRepositoryConverter)
+        const { clock, resource } = waitPasswordResetResource()
+
+        resource.core.subscriber.subscribe((state) => {
+            switch (state.type) {
+                case "try-to-load":
+                    clock.update(CONTINUOUS_RENEW_START_AT)
+                    break
+            }
+        })
 
         resource.core.subscriber.subscribe(initTester())
 
@@ -116,7 +105,6 @@ describe("RegisterPassword", () => {
 
         function initTester() {
             return initAsyncTester()((stack) => {
-                clock.update(COMPLETED_NOW)
                 expect(stack).toEqual([
                     { type: "try-to-reset" },
                     { type: "delayed-to-reset" }, // delayed event
@@ -124,26 +112,11 @@ describe("RegisterPassword", () => {
                         type: "try-to-load",
                         scriptPath: { valid: true, value: "https://secure.example.com/index.js" },
                     },
+                    { type: "succeed-to-continuous-renew" },
+                    { type: "succeed-to-continuous-renew" },
+                    { type: "required-to-login" },
                 ])
-                expect(lastAuth.get()).toEqual({
-                    success: true,
-                    found: true,
-                    value: {
-                        nonce: AUTHORIZED_AUTHN_NONCE,
-                        lastAuthAt: NOW,
-                    },
-                })
-                setTimeout(() => {
-                    expect(lastAuth.get()).toEqual({
-                        success: true,
-                        found: true,
-                        value: {
-                            nonce: RENEWED_AUTHN_NONCE,
-                            lastAuthAt: SUCCEED_TO_RENEW_AT[0],
-                        },
-                    })
-                    done()
-                }, 1) // after setContinuousRenew interval and delay
+                done()
             })
         }
     })
@@ -353,8 +326,8 @@ function standardConfig() {
             delay: { delay_millisecond: 1 },
         },
         continuousRenew: {
-            interval: { interval_millisecond: 1 },
-            delay: { delay_millisecond: 1 },
+            interval: { interval_millisecond: 64 },
+            lastAuthExpire: { expire_millisecond: 1 },
         },
     }
 }
@@ -394,7 +367,7 @@ function simulateReset(): ResetResult {
         success: true,
         value: {
             authn: {
-                nonce: AUTHORIZED_AUTHN_NONCE,
+                nonce: "authn-nonce",
             },
             authz: {
                 nonce: "api-nonce",
@@ -404,27 +377,24 @@ function simulateReset(): ResetResult {
     }
 }
 function renewRemoteAccess(clock: ClockPubSub): RenewAuthInfoRemotePod {
-    let renewed = false
+    let count = 0
     return initRemoteSimulator(
         () => {
-            if (renewed) {
-                // 最初の一回だけ renew して、あとは renew を cancel するために null を返す
-                clock.update(FINISHED)
+            if (count > 1) {
+                // 最初の 2回だけ renew して、あとは renew を cancel するための invalid-ticket
                 return { success: false, err: { type: "invalid-ticket" } }
             }
-            renewed = true
 
             // 現在時刻を動かす
-            const now = SUCCEED_TO_RENEW_AT[0]
-            const nextNow = SUCCEED_TO_RENEW_AT[1]
-            clock.update(now)
-            setTimeout(() => clock.update(nextNow))
+            const nextTime = CONTINUOUS_RENEW_AT[count]
+            setTimeout(() => clock.update(nextTime))
 
+            count++
             return {
                 success: true,
                 value: {
                     authn: {
-                        nonce: RENEWED_AUTHN_NONCE,
+                        nonce: "renewed-authn-nonce",
                     },
                     authz: {
                         nonce: "api-nonce",
@@ -438,19 +408,25 @@ function renewRemoteAccess(clock: ClockPubSub): RenewAuthInfoRemotePod {
 }
 
 function standardClock(subscriber: ClockSubscriber): Clock {
-    return initStaticClock(NOW, subscriber)
+    return initStaticClock(START_AT, subscriber)
 }
 
 function initAsyncTester() {
     return initAsyncActionTester_legacy((state: CoreState) => {
         switch (state.type) {
             case "initial-reset":
+            case "try-to-load":
                 return false
 
-            case "try-to-load":
             case "repository-error":
             case "load-error":
                 return true
+
+            case "succeed-to-continuous-renew":
+            case "lastAuth-not-expired":
+            case "required-to-login":
+            case "failed-to-continuous-renew":
+                return startContinuousRenewEventHasDone(state)
 
             default:
                 return resetEventHasDone(state)

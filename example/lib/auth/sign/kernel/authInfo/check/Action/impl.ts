@@ -1,7 +1,7 @@
-import { CheckAuthInfoEntryPoint } from "./action"
-import { CoreAction } from "./Core/action"
+import { CheckAuthInfoEntryPoint } from "./entryPoint"
+import { CheckAuthInfoCoreAction } from "./Core/action"
 
-export function toEntryPoint(action: CoreAction): CheckAuthInfoEntryPoint {
+export function toCheckAuthInfoEntryPoint(action: CheckAuthInfoCoreAction): CheckAuthInfoEntryPoint {
     return {
         resource: { core: action },
         terminate: () => action.terminate(),

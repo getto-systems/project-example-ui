@@ -1,12 +1,14 @@
-import { AuthInfo } from "../../kernel/data"
-import { ForceStartContinuousRenewEvent, StartContinuousRenewEvent } from "./event"
+import { StartContinuousRenewEvent } from "./event"
 
-export interface StartContinuousRenewMethod {
-    (auth: AuthInfo, post: Post<StartContinuousRenewEvent>): void
+import { AuthInfo } from "../../kernel/data"
+import { SaveAuthInfoResult } from "./data"
+
+export interface SaveAuthInfoMethod {
+    (auth: AuthInfo): SaveAuthInfoResult
 }
 
-export interface ForceStartContinuousRenewMethod {
-    (post: Post<ForceStartContinuousRenewEvent>): void
+export interface StartContinuousRenewMethod {
+    (post: Post<StartContinuousRenewEvent>): void
 }
 
 interface Post<E> {

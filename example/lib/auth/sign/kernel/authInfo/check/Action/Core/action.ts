@@ -2,7 +2,7 @@ import { ApplicationStateAction } from "../../../../../../../z_vendor/getto-appl
 
 import { GetScriptPathMethod } from "../../../../../common/secure/getScriptPath/method"
 import {
-    ForceStartContinuousRenewMethod,
+    SaveAuthInfoMethod,
     StartContinuousRenewMethod,
 } from "../../../common/startContinuousRenew/method"
 import { RenewAuthInfoMethod, CheckAuthInfoMethod } from "../../method"
@@ -15,28 +15,28 @@ import {
     LoadScriptError,
 } from "../../../../../common/secure/getScriptPath/data"
 
-export interface CoreAction extends ApplicationStateAction<CoreState> {
+export interface CheckAuthInfoCoreAction extends ApplicationStateAction<CheckAuthInfoCoreState> {
     succeedToInstantLoad(): void
     failedToInstantLoad(): void
     loadError(err: LoadScriptError): void
 }
 
-export type CoreMaterial = Readonly<{
+export type CheckAuthInfoCoreMaterial = Readonly<{
     renew: CheckAuthInfoMethod
     forceRenew: RenewAuthInfoMethod
+    saveAuthInfo: SaveAuthInfoMethod
     startContinuousRenew: StartContinuousRenewMethod
-    forceStartContinuousRenew: ForceStartContinuousRenewMethod
     getSecureScriptPath: GetScriptPathMethod
 }>
 
-export type CoreState =
-    | Readonly<{ type: "initial-renew" }>
-    | Exclude<CheckAuthInfoEvent, { type: "try-to-instant-load" } | { type: "succeed-to-renew" }>
+export type CheckAuthInfoCoreState =
+    | Readonly<{ type: "initial-check" }>
+    | Exclude<CheckAuthInfoEvent, { type: "try-to-instant-load" | "succeed-to-renew" }>
     | StartContinuousRenewEvent
     | Readonly<{ type: "try-to-instant-load"; scriptPath: ConvertScriptPathResult }>
     | Readonly<{ type: "try-to-load"; scriptPath: ConvertScriptPathResult }>
     | Readonly<{ type: "load-error"; err: LoadScriptError }>
 
-export const initialCoreState: CoreState = {
-    type: "initial-renew",
+export const initialCheckAuthInfoCoreState: CheckAuthInfoCoreState = {
+    type: "initial-check",
 }

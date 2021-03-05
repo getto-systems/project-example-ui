@@ -1,7 +1,7 @@
 import { RemoteTypes } from "../../../../../z_vendor/getto-application/infra/remote/infra"
 import { RepositoryPod } from "../../../../../z_vendor/getto-application/infra/repository/infra"
 
-import { RenewRemoteError, AuthnNonce, LastAuth, AuthInfo } from "./data"
+import { RenewAuthInfoRemoteError, AuthnNonce, LastAuth, AuthInfo } from "./data"
 import { AuthzRemoteValue } from "../../../../../common/authz/infra"
 
 export type LastAuthRepositoryPod = RepositoryPod<LastAuth, LastAuthRepositoryValue>
@@ -10,7 +10,7 @@ export type LastAuthRepositoryValue = Readonly<{
     lastAuthAt: string
 }>
 
-type RenewRemoteTypes = RemoteTypes<AuthnNonce, AuthInfo, AuthRemoteValue, RenewRemoteError>
+type RenewRemoteTypes = RemoteTypes<AuthnNonce, AuthInfo, AuthRemoteValue, RenewAuthInfoRemoteError>
 export type RenewAuthInfoRemotePod = RenewRemoteTypes["pod"]
 export type RenewAuthInfoResult = RenewRemoteTypes["result"]
 export type RenewAuthInfoSimulator = RenewRemoteTypes["simulator"]
