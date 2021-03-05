@@ -1,5 +1,5 @@
 import { newAuthzRepository } from "../../../../../common/authz/infra/repository/authz"
-import { newRenewRemote } from "../kernel/infra/remote/renew"
+import { newRenewAuthInfoRemote } from "../kernel/infra/remote/renew"
 
 import { newClock } from "../../../../../z_vendor/getto-application/infra/clock/init"
 
@@ -14,7 +14,7 @@ export function newCheckAuthInfoInfra(webStorage: Storage): CheckAuthInfoInfra {
     return {
         authz: newAuthzRepository(webStorage),
         lastAuth: newLastAuthRepository(webStorage),
-        renew: newRenewRemote(),
+        renew: newRenewAuthInfoRemote(),
         clock: newClock(),
         config: {
             instantLoadExpire: expireMinute(3),

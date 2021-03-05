@@ -10,7 +10,7 @@ import { Clock } from "../../../../../../z_vendor/getto-application/infra/clock/
 import { CheckAuthInfoResource, CheckAuthInfoResourceState } from "./action"
 
 import { initGetScriptPathLocationDetecter } from "../../../../common/secure/getScriptPath/impl/testHelper"
-import { LastAuthRepositoryPod, LastAuthRepositoryValue, RenewRemotePod } from "../../kernel/infra"
+import { LastAuthRepositoryPod, LastAuthRepositoryValue, RenewAuthInfoRemotePod } from "../../kernel/infra"
 import { toEntryPoint } from "./impl"
 import { initCoreAction, initCoreMaterial } from "./Core/impl"
 import { initSyncActionTestRunner } from "../../../../../../z_vendor/getto-application/action/testHelper"
@@ -475,7 +475,7 @@ type RenewCredentialTestRepository = Readonly<{
     lastAuth: LastAuthRepositoryPod
 }>
 type RenewCredentialTestRemoteAccess = Readonly<{
-    renew: RenewRemotePod
+    renew: RenewAuthInfoRemotePod
 }>
 
 function newTestRenewAuthnInfoResource(
@@ -566,7 +566,7 @@ function waitSimulator(clock: ClockPubSub): RenewCredentialTestRemoteAccess {
     }
 }
 
-function renewRemoteAccess(clock: ClockPubSub, waitTime: WaitTime): RenewRemotePod {
+function renewRemoteAccess(clock: ClockPubSub, waitTime: WaitTime): RenewAuthInfoRemotePod {
     let renewedCount = 0
     return initRemoteSimulator(() => {
         // 初回 renew と continuous renew 一回目の 2回だけ正しく返す

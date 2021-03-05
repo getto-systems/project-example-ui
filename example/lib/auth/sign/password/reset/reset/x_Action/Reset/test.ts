@@ -18,7 +18,7 @@ import { initGetScriptPathLocationDetecter } from "../../../../../common/secure/
 import {
     LastAuthRepositoryPod,
     LastAuthRepositoryValue,
-    RenewRemotePod,
+    RenewAuthInfoRemotePod,
 } from "../../../../../kernel/authInfo/kernel/infra"
 import { resetEventHasDone } from "../../impl"
 import {
@@ -293,7 +293,7 @@ type PasswordResetTestRepository = Readonly<{
 }>
 type PasswordResetTestRemoteAccess = Readonly<{
     reset: ResetRemotePod
-    renew: RenewRemotePod
+    renew: RenewAuthInfoRemotePod
 }>
 
 function newPasswordResetTestResource(
@@ -403,7 +403,7 @@ function simulateReset(): ResetResult {
         },
     }
 }
-function renewRemoteAccess(clock: ClockPubSub): RenewRemotePod {
+function renewRemoteAccess(clock: ClockPubSub): RenewAuthInfoRemotePod {
     let renewed = false
     return initRemoteSimulator(
         () => {
