@@ -194,7 +194,7 @@ export function View(props: ResetPasswordProps): VNode {
     }
 
     function sendLink() {
-        return html`<a href="${props.href.password_reset()}">
+        return html`<a href="${props.href.password_reset_requestToken()}">
             ${icon("question-circle")} リセットトークンをもう一度送信する
         </a>`
     }

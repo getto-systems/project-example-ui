@@ -9,7 +9,7 @@ describe("AuthSignLink", () => {
         expect(resource.href.password_authenticate()).toEqual(
             "?_password_authenticate=authenticate",
         )
-        expect(resource.href.password_reset()).toEqual("?_password_reset=requestToken")
+        expect(resource.href.password_reset_requestToken()).toEqual("?_password_reset=requestToken")
         expect(resource.href.password_reset_checkStatus(markResetSessionID("session-id"))).toEqual(
             "?_password_reset=checkStatus&_password_reset_session_id=session-id",
         )
