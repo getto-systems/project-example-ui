@@ -62,7 +62,6 @@ export class View
         this.igniteHook(() => {
             const entryPoint = this.entryPoints.renew()
 
-            // TODO ここで subscriber を取得したくない。初期化時に hook を受け取るようにするべき
             entryPoint.resource.core.subscriber.subscribe((state) => {
                 switch (state.type) {
                     case "required-to-login":

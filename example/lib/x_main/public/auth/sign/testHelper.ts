@@ -4,8 +4,8 @@ import { detectAuthSignViewType } from "./impl"
 
 import { AuthSignViewLocationDetecter } from "./entryPoint"
 
-import { authSignSearchParams } from "../../../../auth/sign/common/search/data"
+import { authSignLinkParams } from "../../../../auth/sign/common/link/data"
 
 export function initAuthSignViewLocationDetecter(currentURL: URL): AuthSignViewLocationDetecter {
-    return initLocationDetecter(currentURL, detectAuthSignViewType(authSignSearchParams))
+    return initLocationDetecter(currentURL, detectAuthSignViewType(authSignLinkParams))
 }

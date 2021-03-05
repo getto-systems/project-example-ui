@@ -12,7 +12,7 @@ import { AuthenticatePasswordAction } from "./action"
 
 import { CoreState } from "./Core/action"
 
-import { initSecureScriptPathLocationDetecter } from "../../../../common/secureScriptPath/get/testHelper"
+import { initGetScriptPathLocationDetecter } from "../../../../common/secure/getScriptPath/impl/testHelper"
 import { AuthenticateFields } from "../../data"
 import {
     LastAuthRepositoryPod,
@@ -307,7 +307,7 @@ function newTestPasswordLoginResource(
                         clock,
                     },
                 },
-                initSecureScriptPathLocationDetecter(currentURL),
+                initGetScriptPathLocationDetecter(currentURL),
             ),
         ),
 

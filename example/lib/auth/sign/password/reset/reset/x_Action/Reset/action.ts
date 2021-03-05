@@ -3,7 +3,7 @@ import {
     initialValidateBoardState,
     ValidateBoardActionState,
 } from "../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
-import { SignSearchResource } from "../../../../../common/search/Action/action"
+import { SignLinkResource } from "../../../../../common/link/Action/action"
 import {
     initialCoreState,
     CoreAction,
@@ -16,7 +16,7 @@ export type ResetPasswordEntryPoint = Readonly<{
     terminate: { (): void }
 }>
 
-export type ResetPasswordResource = SignSearchResource & Readonly<{ reset: ResetPasswordAction }>
+export type ResetPasswordResource = SignLinkResource & Readonly<{ reset: ResetPasswordAction }>
 
 export interface ResetPasswordAction extends ApplicationAction {
     readonly core: CoreAction

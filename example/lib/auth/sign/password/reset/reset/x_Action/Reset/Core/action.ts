@@ -1,7 +1,7 @@
 import { ApplicationStateAction } from "../../../../../../../../z_vendor/getto-application/action/action"
 
 import { ResetMethod, ResetPod } from "../../../method"
-import { GetSecureScriptPathMethod } from "../../../../../../common/secureScriptPath/get/method"
+import { GetScriptPathMethod } from "../../../../../../common/secure/getScriptPath/method"
 import { StartContinuousRenewMethod } from "../../../../../../kernel/authInfo/common/startContinuousRenew/method"
 
 import { ResetEvent } from "../../../event"
@@ -9,21 +9,21 @@ import { StartContinuousRenewEvent } from "../../../../../../kernel/authInfo/com
 
 import { ResetFields } from "../../../data"
 import {
-    LoadSecureScriptError,
-    ConvertSecureScriptResult,
-} from "../../../../../../common/secureScriptPath/get/data"
+    LoadScriptError,
+    ConvertScriptPathResult,
+} from "../../../../../../common/secure/getScriptPath/data"
 import { ConvertBoardResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
 
 export interface CoreAction extends ApplicationStateAction<CoreState> {
     submit(fields: ConvertBoardResult<ResetFields>): void
-    loadError(err: LoadSecureScriptError): void
+    loadError(err: LoadScriptError): void
 }
 
 export type CoreMaterial = CoreForegroundMaterial & CoreBackgroundMaterial
 
 export type CoreForegroundMaterial = Readonly<{
     startContinuousRenew: StartContinuousRenewMethod
-    getSecureScriptPath: GetSecureScriptPathMethod
+    getSecureScriptPath: GetScriptPathMethod
 }>
 export type CoreBackgroundMaterial = Readonly<{
     reset: ResetMethod
@@ -36,8 +36,8 @@ export type CoreState =
     | Readonly<{ type: "initial-reset" }>
     | Exclude<ResetEvent, { type: "succeed-to-reset" }>
     | Exclude<StartContinuousRenewEvent, { type: "succeed-to-start-continuous-renew" }>
-    | Readonly<{ type: "try-to-load"; scriptPath: ConvertSecureScriptResult }>
-    | Readonly<{ type: "load-error"; err: LoadSecureScriptError }>
+    | Readonly<{ type: "try-to-load"; scriptPath: ConvertScriptPathResult }>
+    | Readonly<{ type: "load-error"; err: LoadScriptError }>
 
 export const initialCoreState: CoreState = {
     type: "initial-reset",

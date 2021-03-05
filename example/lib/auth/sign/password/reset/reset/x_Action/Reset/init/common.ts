@@ -1,5 +1,5 @@
 import { newResetLocationDetecter } from "../../../init"
-import { newSecureScriptPathLocationDetecter } from "../../../../../../common/secureScriptPath/get/init"
+import { newGetScriptPathLocationDetecter } from "../../../../../../common/secure/getScriptPath/impl/init"
 
 import { newCoreBackgroundInfra } from "./worker/background"
 import { newCoreForegroundInfra } from "./worker/foreground"
@@ -22,7 +22,7 @@ export function newCoreForegroundMaterial(
 ): CoreForegroundMaterial {
     const infra = newCoreForegroundInfra(webStorage)
     return initCoreForegroundMaterial(infra, {
-        getSecureScriptPath: newSecureScriptPathLocationDetecter(currentLocation),
+        getSecureScriptPath: newGetScriptPathLocationDetecter(currentLocation),
     })
 }
 

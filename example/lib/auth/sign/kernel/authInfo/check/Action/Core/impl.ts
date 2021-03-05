@@ -1,39 +1,39 @@
 import { ApplicationAbstractStateAction } from "../../../../../../../z_vendor/getto-application/action/impl"
 
-import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
+import { getScriptPath } from "../../../../../common/secure/getScriptPath/impl/core"
 import {
     forceStartContinuousRenew,
     startContinuousRenew,
 } from "../../../common/startContinuousRenew/impl"
 import { renewAuthInfo, checkAuthInfo } from "../../impl"
 
-import { GetSecureScriptPathInfra } from "../../../../../common/secureScriptPath/get/infra"
+import { GetScriptPathInfra } from "../../../../../common/secure/getScriptPath/infra"
 import { StartContinuousRenewInfra } from "../../../common/startContinuousRenew/infra"
 import { CheckAuthInfoInfra } from "../../infra"
 
 import { CoreAction, CoreMaterial, CoreState } from "./action"
 
-import { GetSecureScriptPathLocationDetecter } from "../../../../../common/secureScriptPath/get/method"
+import { GetScriptPathLocationDetecter } from "../../../../../common/secure/getScriptPath/method"
 
 import { AuthInfo } from "../../../kernel/data"
-import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
+import { LoadScriptError } from "../../../../../common/secure/getScriptPath/data"
 
 export type CoreInfra = Readonly<{
     renew: CheckAuthInfoInfra
     startContinuousRenew: StartContinuousRenewInfra
-    getSecureScriptPath: GetSecureScriptPathInfra
+    getSecureScriptPath: GetScriptPathInfra
 }>
 
 export function initCoreMaterial(
     infra: CoreInfra,
-    locationInfo: GetSecureScriptPathLocationDetecter,
+    locationInfo: GetScriptPathLocationDetecter,
 ): CoreMaterial {
     return {
         renew: checkAuthInfo(infra.renew),
         forceRenew: renewAuthInfo(infra.renew),
         startContinuousRenew: startContinuousRenew(infra.startContinuousRenew),
         forceStartContinuousRenew: forceStartContinuousRenew(infra.startContinuousRenew),
-        getSecureScriptPath: getSecureScriptPath(infra.getSecureScriptPath)(locationInfo),
+        getSecureScriptPath: getScriptPath(infra.getSecureScriptPath)(locationInfo),
     }
 }
 
@@ -88,7 +88,7 @@ class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAc
             }
         })
     }
-    loadError(err: LoadSecureScriptError): void {
+    loadError(err: LoadScriptError): void {
         this.post({ type: "load-error", err })
     }
 

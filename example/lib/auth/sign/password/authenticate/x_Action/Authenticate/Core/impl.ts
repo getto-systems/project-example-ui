@@ -1,12 +1,12 @@
 import { ApplicationAbstractStateAction } from "../../../../../../../z_vendor/getto-application/action/impl"
 
 import { startContinuousRenew } from "../../../../../kernel/authInfo/common/startContinuousRenew/impl"
-import { getSecureScriptPath } from "../../../../../common/secureScriptPath/get/impl"
+import { getScriptPath } from "../../../../../common/secure/getScriptPath/impl/core"
 import { authenticate } from "../../../impl"
 
 import { AuthenticateInfra } from "../../../infra"
 import { StartContinuousRenewInfra } from "../../../../../kernel/authInfo/common/startContinuousRenew/infra"
-import { GetSecureScriptPathInfra } from "../../../../../common/secureScriptPath/get/infra"
+import { GetScriptPathInfra } from "../../../../../common/secure/getScriptPath/infra"
 
 import {
     CoreMaterial,
@@ -16,9 +16,9 @@ import {
     CoreBackgroundMaterial,
 } from "./action"
 
-import { GetSecureScriptPathLocationDetecter } from "../../../../../common/secureScriptPath/get/method"
+import { GetScriptPathLocationDetecter } from "../../../../../common/secure/getScriptPath/method"
 
-import { LoadSecureScriptError } from "../../../../../common/secureScriptPath/get/data"
+import { LoadScriptError } from "../../../../../common/secure/getScriptPath/data"
 import { AuthenticateFields } from "../../../data"
 import { AuthInfo } from "../../../../../kernel/authInfo/kernel/data"
 import { ConvertBoardResult } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
@@ -27,7 +27,7 @@ export type CoreInfra = CoreForegroundInfra & CoreBackgroundInfra
 
 export type CoreForegroundInfra = Readonly<{
     startContinuousRenew: StartContinuousRenewInfra
-    getSecureScriptPath: GetSecureScriptPathInfra
+    getSecureScriptPath: GetScriptPathInfra
 }>
 export type CoreBackgroundInfra = Readonly<{
     authenticate: AuthenticateInfra
@@ -35,7 +35,7 @@ export type CoreBackgroundInfra = Readonly<{
 
 export function initCoreMaterial(
     infra: CoreInfra,
-    locationInfo: GetSecureScriptPathLocationDetecter,
+    locationInfo: GetScriptPathLocationDetecter,
 ): CoreMaterial {
     return {
         ...initCoreForegroundMaterial(infra, locationInfo),
@@ -44,11 +44,11 @@ export function initCoreMaterial(
 }
 export function initCoreForegroundMaterial(
     infra: CoreForegroundInfra,
-    locationInfo: GetSecureScriptPathLocationDetecter,
+    locationInfo: GetScriptPathLocationDetecter,
 ): CoreForegroundMaterial {
     return {
         startContinuousRenew: startContinuousRenew(infra.startContinuousRenew),
-        getSecureScriptPath: getSecureScriptPath(infra.getSecureScriptPath)(locationInfo),
+        getSecureScriptPath: getScriptPath(infra.getSecureScriptPath)(locationInfo),
     }
 }
 export function initCoreBackgroundMaterial(infra: CoreBackgroundInfra): CoreBackgroundMaterial {
@@ -101,7 +101,7 @@ class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAc
         })
     }
 
-    loadError(err: LoadSecureScriptError): void {
+    loadError(err: LoadScriptError): void {
         this.post({ type: "load-error", err })
     }
 

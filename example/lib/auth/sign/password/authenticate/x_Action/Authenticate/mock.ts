@@ -2,7 +2,7 @@ import { initMockFormAction } from "./Form/mock"
 import { initMockCoreAction } from "./Core/mock"
 
 import { AuthenticatePasswordResource } from "./action"
-import { newSignSearchResource } from "../../../../common/search/Action/impl"
+import { newSignLinkResource } from "../../../../common/link/Action/impl"
 
 export function initMockAuthenticatePasswordResource(): AuthenticatePasswordResource {
     return {
@@ -11,6 +11,6 @@ export function initMockAuthenticatePasswordResource(): AuthenticatePasswordReso
             form: initMockFormAction(),
             terminate: () => null,
         },
-        ...newSignSearchResource(),
+        ...newSignLinkResource(),
     }
 }

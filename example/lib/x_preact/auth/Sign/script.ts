@@ -1,6 +1,6 @@
-import { SecureScriptPath } from "../../../auth/sign/common/secureScriptPath/get/data"
+import { ScriptPath } from "../../../auth/sign/common/secure/getScriptPath/data"
 
-export function appendScript(scriptPath: SecureScriptPath, setup: Setup<HTMLScriptElement>): void {
+export function appendScript(scriptPath: ScriptPath, setup: Setup<HTMLScriptElement>): void {
     const script = document.createElement("script")
     script.src = scriptPath
     setup(script)

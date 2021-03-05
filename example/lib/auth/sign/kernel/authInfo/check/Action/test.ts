@@ -9,7 +9,7 @@ import { Clock } from "../../../../../../z_vendor/getto-application/infra/clock/
 
 import { CheckAuthInfoResource, CheckAuthInfoResourceState } from "./action"
 
-import { initSecureScriptPathLocationDetecter } from "../../../../common/secureScriptPath/get/testHelper"
+import { initGetScriptPathLocationDetecter } from "../../../../common/secure/getScriptPath/impl/testHelper"
 import { LastAuthRepositoryPod, LastAuthRepositoryValue, RenewRemotePod } from "../../kernel/infra"
 import { toEntryPoint } from "./impl"
 import { initCoreAction, initCoreMaterial } from "./Core/impl"
@@ -505,7 +505,7 @@ function newTestRenewAuthnInfoResource(
                         config: config.location,
                     },
                 },
-                initSecureScriptPathLocationDetecter(currentURL),
+                initGetScriptPathLocationDetecter(currentURL),
             ),
         ),
     ).resource

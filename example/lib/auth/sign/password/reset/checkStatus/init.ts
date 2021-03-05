@@ -10,14 +10,14 @@ import { CheckSendingStatusInfra } from "./infra"
 
 import { CheckSendingStatusLocationDetecter } from "./method"
 
-import { authSignSearchParams } from "../../../common/search/data"
+import { authSignLinkParams } from "../../../common/link/data"
 
 export function newCheckSendingStatusLocationDetecter(
     currentLocation: Location,
 ): CheckSendingStatusLocationDetecter {
     return newLocationDetecter(
         currentLocation,
-        detectSessionID(authSignSearchParams.password.reset),
+        detectSessionID(authSignLinkParams.password.reset),
     )
 }
 

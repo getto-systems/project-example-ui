@@ -1,4 +1,4 @@
-import { LoginID } from "../../../common/loginID/data"
+import { LoginID } from "../../../common/fields/loginID/data"
 
 export type RequestTokenFields = Readonly<{
     loginID: LoginID

@@ -1,4 +1,4 @@
-import { newSignSearchResource } from "../../../../../common/search/Action/impl"
+import { newSignLinkResource } from "../../../../../common/link/Action/impl"
 
 import { ResetPasswordAction, ResetPasswordEntryPoint } from "./action"
 import { CoreAction } from "./Core/action"
@@ -6,7 +6,7 @@ import { FormAction } from "./Form/action"
 
 export function toEntryPoint(action: ResetPasswordAction): ResetPasswordEntryPoint {
     return {
-        resource: { reset: action, ...newSignSearchResource() },
+        resource: { reset: action, ...newSignLinkResource() },
         terminate: () => action.terminate(),
     }
 }
