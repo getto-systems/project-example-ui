@@ -11,7 +11,7 @@ import {
 
 import { CheckSendingStatusEvent } from "./event"
 
-import { sessionIDLocationConverter } from "../kernel/convert"
+import { resetSessionIDLocationConverter } from "../kernel/convert"
 
 import { CheckSendingStatusError } from "./data"
 
@@ -19,7 +19,7 @@ interface Detecter {
     (keys: CheckSendingStatusLocationKeys): CheckSendingStatusLocationDetectMethod
 }
 export const detectSessionID: Detecter = (keys) => (currentURL) =>
-    sessionIDLocationConverter(currentURL.searchParams.get(keys.sessionID))
+    resetSessionIDLocationConverter(currentURL.searchParams.get(keys.sessionID))
 
 interface CheckStatus {
     (infra: CheckSendingStatusInfra): CheckSendingStatusMethodPod

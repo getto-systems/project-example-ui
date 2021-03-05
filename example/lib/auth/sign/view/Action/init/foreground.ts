@@ -4,7 +4,7 @@ import { newCheckAuthInfoEntryPoint } from "../../../kernel/authInfo/check/Actio
 import { toSignEntryPoint } from "../impl"
 
 import { SignEntryPoint } from "../entryPoint"
-import { newRequestPasswordResetToken } from "../../../password/reset/requestToken/x_Action/RequestToken/init/foreground"
+import { newRequestResetTokenEntryPoint } from "../../../password/reset/requestToken/Action/init/foreground"
 import { newResetPassword } from "../../../password/reset/reset/x_Action/Reset/init/foreground"
 import { newCheckPasswordResetSendingStatus } from "../../../password/reset/checkStatus/x_Action/CheckStatus/init/foreground"
 import { newSignViewLocationDetecter } from "../../impl/init"
@@ -22,7 +22,7 @@ export function newSignForeground(feature: OutsideFeature): SignEntryPoint {
 
             password_authenticate: () => newAuthenticatePasswordEntryPoint(webStorage, currentLocation),
 
-            password_reset_requestToken: () => newRequestPasswordResetToken(),
+            password_reset_requestToken: () => newRequestResetTokenEntryPoint(),
             password_reset_checkStatus: () => newCheckPasswordResetSendingStatus(currentLocation),
             password_reset: () => newResetPassword(webStorage, currentLocation),
         }),

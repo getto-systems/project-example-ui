@@ -1,16 +1,16 @@
 import { h } from "preact"
 
-import { enumKeys, storyTemplate } from "../../../../../../../../z_vendor/storybook/preact/story"
+import { enumKeys, storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
 
-import { RequestPasswordResetTokenProps, View } from "./RequestToken"
+import { RequestResetTokenComponent } from "./RequestResetToken"
 
-import { initMockRequestPasswordResetTokenResource } from "../mock"
+import { initMockRequestResetTokenResource } from "../mock"
 
-import { ValidateBoardActionState } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
-import { CoreState } from "../Core/action"
-import { ValidateBoardStateEnum } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/data"
+import { ValidateBoardActionState } from "../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
+import { RequestResetTokenCoreState } from "../Core/action"
+import { ValidateBoardStateEnum } from "../../../../../../../z_vendor/getto-application/board/validateBoard/data"
 
-const requestOptions = [
+enum RequestEnum {
     "initial",
     "try",
     "delayed",
@@ -20,13 +20,13 @@ const requestOptions = [
     "server-error",
     "bad-response",
     "infra-error",
-] as const
+}
 
 export default {
     title: "library/Auth/Sign/Password/Reset/RequestToken",
     argTypes: {
         request: {
-            control: { type: "select", options: requestOptions },
+            control: { type: "select", options: enumKeys(RequestEnum) },
         },
         form: {
             control: { type: "select", options: enumKeys(ValidateBoardStateEnum) },
@@ -35,30 +35,20 @@ export default {
 }
 
 type Props = Readonly<{
-    request:
-        | "initial"
-        | "try"
-        | "delayed"
-        | "validation-error"
-        | "bad-request"
-        | "invalid"
-        | "server-error"
-        | "bad-response"
-        | "infra-error"
+    request: keyof typeof RequestEnum
     form: ValidateBoardActionState
     err: string
 }>
 const template = storyTemplate<Props>((props) => {
-    const resource = initMockRequestPasswordResetTokenResource()
-    return h(View, <RequestPasswordResetTokenProps>{
-        ...resource,
+    return h(RequestResetTokenComponent, {
+        ...initMockRequestResetTokenResource(),
         state: {
             core: state(),
             form: props.form,
         },
     })
 
-    function state(): CoreState {
+    function state(): RequestResetTokenCoreState {
         switch (props.request) {
             case "initial":
                 return { type: "initial-request-token" }

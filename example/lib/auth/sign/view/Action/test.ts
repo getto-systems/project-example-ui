@@ -1,5 +1,5 @@
 import { initMockAuthenticatePasswordResource } from "../../password/authenticate/Action/mock"
-import { initMockRequestPasswordResetTokenResource } from "../../password/reset/requestToken/x_Action/RequestToken/mock"
+import { initMockRequestResetTokenResource } from "../../password/reset/requestToken/Action/mock"
 import { initMockResetPasswordResource } from "../../password/reset/reset/x_Action/Reset/mock"
 import { initMockStartPasswordResetSessionResource } from "../../password/reset/checkStatus/x_Action/CheckStatus/mock"
 import { initMockCheckAuthInfoResource } from "../../kernel/authInfo/check/Action/mock"
@@ -320,7 +320,7 @@ function standardPasswordResetResource() {
 }
 function standardRequestPasswordResetTokenResource() {
     return {
-        resource: initMockRequestPasswordResetTokenResource(),
+        resource: initMockRequestResetTokenResource(),
         terminate: () => null,
     }
 }

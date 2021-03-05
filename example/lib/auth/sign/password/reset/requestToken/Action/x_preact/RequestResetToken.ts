@@ -2,7 +2,7 @@ import { h, VNode } from "preact"
 import { useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../../../../../../z_vendor/getto-css/preact/common"
+import { VNodeContent } from "../../../../../../../z_vendor/getto-css/preact/common"
 import {
     buttons,
     button_disabled,
@@ -10,25 +10,25 @@ import {
     button_undo,
     fieldError,
     form,
-} from "../../../../../../../../z_vendor/getto-css/preact/design/form"
-import { loginBox } from "../../../../../../../../z_vendor/getto-css/preact/layout/login"
+} from "../../../../../../../z_vendor/getto-css/preact/design/form"
+import { loginBox } from "../../../../../../../z_vendor/getto-css/preact/layout/login"
 
-import { useApplicationAction, useEntryPoint } from "../../../../../../../../x_preact/common/hooks"
-import { siteInfo } from "../../../../../../../../x_preact/common/site"
-import { icon, spinner } from "../../../../../../../../x_preact/common/icon"
+import { useApplicationAction, useEntryPoint } from "../../../../../../../x_preact/common/hooks"
+import { siteInfo } from "../../../../../../../x_preact/common/site"
+import { icon, spinner } from "../../../../../../../x_preact/common/icon"
 
 import {
-    RequestPasswordResetTokenEntryPoint,
-    RequestPasswordResetTokenResource,
-    RequestPasswordResetTokenResourceState,
+    RequestResetTokenEntryPoint,
+    RequestResetTokenResource,
+    RequestResetTokenResourceState,
 } from "../action"
 
-import { RequestTokenError } from "../../../data"
-import { InputLoginID } from "../../../../../../common/fields/loginID/input/Action/x_preact/InputLoginID"
+import { RequestResetTokenError } from "../../data"
+import { InputLoginID } from "../../../../../common/fields/loginID/input/Action/x_preact/InputLoginID"
 
-export function RequestPasswordResetToken(entryPoint: RequestPasswordResetTokenEntryPoint): VNode {
+export function RequestResetToken(entryPoint: RequestResetTokenEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
-    return h(View, <RequestPasswordResetTokenProps>{
+    return h(RequestResetTokenComponent, {
         ...resource,
         state: {
             core: useApplicationAction(resource.requestToken.core),
@@ -37,9 +37,8 @@ export function RequestPasswordResetToken(entryPoint: RequestPasswordResetTokenE
     })
 }
 
-export type RequestPasswordResetTokenProps = RequestPasswordResetTokenResource &
-    Readonly<{ state: RequestPasswordResetTokenResourceState }>
-export function View(props: RequestPasswordResetTokenProps): VNode {
+export type RequestResetTokenProps = RequestResetTokenResource & RequestResetTokenResourceState
+export function RequestResetTokenComponent(props: RequestResetTokenProps): VNode {
     useLayoutEffect(() => {
         switch (props.state.core.type) {
             case "succeed-to-request-token":
@@ -178,7 +177,7 @@ export function View(props: RequestPasswordResetTokenProps): VNode {
     }
 }
 
-function requestTokenError(err: RequestTokenError): VNodeContent[] {
+function requestTokenError(err: RequestResetTokenError): VNodeContent[] {
     switch (err.type) {
         case "validation-error":
             return ["正しく入力してください"]

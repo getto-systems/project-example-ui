@@ -1,11 +1,11 @@
-import { toAction, toEntryPoint } from "../../impl"
-import { initCoreAction } from "../../Core/impl"
-import { initFormAction } from "../../Form/impl"
+import { toRequestResetTokenEntryPoint } from "../../impl"
+import { initRequestResetTokenCoreAction } from "../../Core/impl"
+import { initRequestResetTokenFormAction } from "../../Form/impl"
 
 import {
     WorkerAbstractProxy,
     WorkerProxy,
-} from "../../../../../../../../../z_vendor/getto-application/action/worker/foreground"
+} from "../../../../../../../../z_vendor/getto-application/action/worker/foreground"
 
 import {
     RequestPasswordResetTokenProxyMaterial,
@@ -13,17 +13,16 @@ import {
     RequestPasswordResetTokenProxyResponse,
 } from "./message"
 
-import { CoreAction } from "../../Core/action"
+import { RequestResetTokenCoreAction } from "../../Core/action"
 
-import { RequestPasswordResetTokenEntryPoint } from "../../action"
-import { FormAction } from "../../Form/action"
+import { RequestResetTokenEntryPoint } from "../../action"
 
 export interface RequestPasswordResetTokenProxy
     extends WorkerProxy<
         RequestPasswordResetTokenProxyMessage,
         RequestPasswordResetTokenProxyResponse
     > {
-    entryPoint(): RequestPasswordResetTokenEntryPoint
+    entryPoint(): RequestResetTokenEntryPoint
 }
 export function newRequestPasswordResetTokenProxy(
     post: Post<RequestPasswordResetTokenProxyMessage>,
@@ -46,9 +45,9 @@ class Proxy
         }
     }
 
-    entryPoint(): RequestPasswordResetTokenEntryPoint {
-        return newEntryPoint(
-            initCoreAction({
+    entryPoint(): RequestResetTokenEntryPoint {
+        return initRequestResetTokenEntryPoint(
+            initRequestResetTokenCoreAction({
                 requestToken: (fields, post) => this.material.requestToken.call({ fields }, post),
             }),
         )
@@ -62,17 +61,13 @@ class Proxy
     }
 }
 
-export function newEntryPoint(action: CoreAction): RequestPasswordResetTokenEntryPoint {
-    return toEntryPoint(
-        toAction({
-            core: action,
-            form: newFormAction(),
-        }),
-    )
-}
-
-function newFormAction(): FormAction {
-    return initFormAction()
+export function initRequestResetTokenEntryPoint(
+    action: RequestResetTokenCoreAction,
+): RequestResetTokenEntryPoint {
+    return toRequestResetTokenEntryPoint({
+        core: action,
+        form: initRequestResetTokenFormAction(),
+    })
 }
 
 interface Post<M> {

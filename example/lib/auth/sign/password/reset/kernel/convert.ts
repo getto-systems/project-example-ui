@@ -13,7 +13,7 @@ export function resetTokenLocationConverter(
     return { valid: true, value: markResetToken(resetToken) }
 }
 
-export function sessionIDLocationConverter(
+export function resetSessionIDLocationConverter(
     sessionID: string | null,
 ): ConvertLocationResult<ResetSessionID> {
     if (sessionID === null) {
@@ -25,7 +25,7 @@ export function sessionIDLocationConverter(
     return { valid: true, value: markResetSessionID(sessionID) }
 }
 
-export function sessionIDRemoteConverter(sessionID: string): ResetSessionID {
+export function resetSessionIDRemoteConverter(sessionID: string): ResetSessionID {
     // remote からの値は validation チェックなしで受け入れる
     return markResetSessionID(sessionID)
 }

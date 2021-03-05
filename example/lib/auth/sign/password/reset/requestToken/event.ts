@@ -1,8 +1,8 @@
 import { ResetSessionID } from "../kernel/data"
-import { RequestTokenError } from "./data"
+import { RequestResetTokenError } from "./data"
 
-export type RequestTokenEvent =
+export type RequestResetTokenEvent =
     | Readonly<{ type: "try-to-request-token" }>
     | Readonly<{ type: "delayed-to-request-token" }>
-    | Readonly<{ type: "failed-to-request-token"; err: RequestTokenError }>
+    | Readonly<{ type: "failed-to-request-token"; err: RequestResetTokenError }>
     | Readonly<{ type: "succeed-to-request-token"; sessionID: ResetSessionID }>

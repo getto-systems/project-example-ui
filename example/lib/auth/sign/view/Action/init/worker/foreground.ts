@@ -8,7 +8,7 @@ import {
 import {
     newRequestPasswordResetTokenProxy,
     RequestPasswordResetTokenProxy,
-} from "../../../../password/reset/requestToken/x_Action/RequestToken/init/worker/foreground"
+} from "../../../../password/reset/requestToken/Action/init/worker/foreground"
 import {
     CheckPasswordResetSendingStatusProxy,
     newCheckPasswordResetSendingStatusProxy,
