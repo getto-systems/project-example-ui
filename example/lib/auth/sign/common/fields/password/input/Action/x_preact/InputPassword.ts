@@ -18,14 +18,14 @@ import { ValidatePasswordError } from "../../../data"
 
 type Resource = InputPasswordResource & Readonly<{ help: VNodeContent[] }>
 export function InputPassword(resource: Resource): VNode {
-    return h(View, <InputPasswordProps>{
+    return h(InputPasswordView, <InputPasswordProps>{
         ...resource,
         state: useApplicationAction(resource.field.validate),
     })
 }
 
 export type InputPasswordProps = Resource & InputPasswordResourceState
-export function View(props: InputPasswordProps): VNode {
+export function InputPasswordView(props: InputPasswordProps): VNode {
     return label_password_fill(content())
 
     function content() {

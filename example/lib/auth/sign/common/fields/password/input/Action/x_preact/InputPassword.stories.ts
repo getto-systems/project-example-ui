@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { enumKeys, storyTemplate } from "../../../../../../../../z_vendor/storybook/preact/story"
 
-import { InputPasswordProps, View } from "./InputPassword"
+import { InputPasswordProps, InputPasswordView } from "./InputPassword"
 
 import { markBoardValue } from "../../../../../../../../z_vendor/getto-application/board/kernel/testHelper"
 
@@ -43,7 +43,7 @@ type Props = Readonly<{
     help: string
 }>
 const template = storyTemplate<Props>((props) => {
-    return h(View, <InputPasswordProps>{
+    return h(InputPasswordView, <InputPasswordProps>{
         field: initMockInputPasswordAction(markBoardValue(props.password), characterState()),
         help: [props.help],
         state: validateState(),
