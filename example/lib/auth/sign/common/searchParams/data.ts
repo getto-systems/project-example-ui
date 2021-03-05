@@ -6,15 +6,15 @@ export const authSignSearchParams = {
         authenticate: {
             key: "_password_authenticate",
             variant: {
-                authenticate: "authenticate",
+                authenticate: true,
             },
         },
         reset: {
             key: "_password_reset",
             variant: {
-                requestToken: "requestToken",
-                checkStatus: "checkStatus",
-                reset: "reset",
+                requestToken: true,
+                checkStatus: true,
+                reset: true,
             },
             sessionID: "_password_reset_session_id",
             token: "_password_reset_token",
@@ -24,7 +24,7 @@ export const authSignSearchParams = {
 
 type Search<K extends string> = Readonly<{
     key: string
-    variant: Record<K, string>
+    variant: Record<K, true>
 }>
 
 type Variant_password_reset = keyof typeof authSignSearchParams["password"]["reset"]["variant"]
@@ -51,37 +51,11 @@ function searchQuery<K extends string>(
 ): AuthSignHref {
     return markAuthSignHref(
         [
-            `?${keys.key}=${keys.variant[target]}`,
+            `?${keys.key}=${target}`,
             ...query.map((param) => {
                 const [key, value] = param
                 return `${key}=${value}`
             }),
         ].join("&"),
     )
-}
-
-export type AuthSignSearchVariant<K extends string> = Readonly<{
-    key: string
-    variant: { (key: string): AuthSignSearchKeyFound<K> }
-}>
-export type AuthSignSearchKeyFound<K> =
-    | Readonly<{ found: false }>
-    | Readonly<{ found: true; key: K }>
-
-export function authSignSearchVariant_password_reset(): AuthSignSearchVariant<
-    Variant_password_reset
-> {
-    return authSignSearchVariant(authSignSearchParams.password.reset)
-}
-function authSignSearchVariant<K extends string>(search: Search<K>): AuthSignSearchVariant<K> {
-    return {
-        key: search.key,
-        variant: (key) => {
-            if (key in search.variant) {
-                // key が variant のキーとして存在するなら key は K である : see Search["variant"]
-                return { found: true, key: key as K }
-            }
-            return { found: false }
-        },
-    }
 }
