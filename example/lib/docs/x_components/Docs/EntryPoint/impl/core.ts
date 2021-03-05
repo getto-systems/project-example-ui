@@ -2,7 +2,7 @@ import { DocumentResource } from "../entryPoint"
 
 import { ContentComponentFactory } from "../../content/component"
 
-import { ContentAction, LoadContentLocationInfo } from "../../../../content/action"
+import { ContentAction, LoadContentLocationDetecter } from "../../../../content/action"
 import { MenuForegroundAction } from "../../../../../common/x_Resource/Outline/Menu/resource"
 import { initMenuResource } from "../../../../../common/x_Resource/Outline/Menu/impl"
 import { initErrorResource } from "../../../../../availability/x_Resource/Error/impl"
@@ -19,7 +19,7 @@ export type DocumentFactory = Readonly<{
     }>
 }>
 export type DocumentLocationInfo = Readonly<{
-    content: LoadContentLocationInfo
+    content: LoadContentLocationDetecter
 }>
 export function initDocumentResource(
     factory: DocumentFactory,

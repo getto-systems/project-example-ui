@@ -21,7 +21,10 @@ class ContentMockComponent extends MockAction<ContentComponentState> implements 
         function mapProps(props: ContentMockProps): ContentComponentState {
             switch (props.type) {
                 case "success":
-                    return { type: "succeed-to-load", path: "/docs/index.html" }
+                    return {
+                        type: "succeed-to-load",
+                        path: { valid: true, value: "/docs/index.html" },
+                    }
             }
         }
     }

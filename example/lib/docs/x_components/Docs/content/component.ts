@@ -2,7 +2,7 @@ import { ApplicationStateAction } from "../../../../z_vendor/getto-application/a
 
 import { LoadContent } from "../../../content/action"
 
-import { ContentPath } from "../../../content/data"
+import { LoadContentEvent } from "../../../content/event"
 
 export interface ContentComponentFactory {
     (material: ContentMaterial): ContentComponent
@@ -13,8 +13,6 @@ export type ContentMaterial = Readonly<{
 
 export type ContentComponent = ApplicationStateAction<ContentComponentState>
 
-export type ContentComponentState =
-    | Readonly<{ type: "initial-content" }>
-    | Readonly<{ type: "succeed-to-load"; path: ContentPath }>
+export type ContentComponentState = Readonly<{ type: "initial-content" }> | LoadContentEvent
 
 export const initialContentComponentState: ContentComponentState = { type: "initial-content" }

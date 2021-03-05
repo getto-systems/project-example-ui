@@ -19,6 +19,7 @@ import { BreadcrumbListComponent } from "../../../common/x_Resource/Outline/Menu
 
 import { ContentPath } from "../../../docs/content/data"
 import { useApplicationAction } from "../../common/hooks"
+import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/detecter"
 
 type Props = Readonly<{
     content: ContentComponent
@@ -63,10 +64,12 @@ type LoadContentState =
     | Readonly<{ loaded: true; content: VNodeContent }>
 const initialLoadContentState: LoadContentState = { loaded: false }
 
-function documentTitle(path: ContentPath): string {
+function documentTitle(result: ConvertLocationResult<ContentPath>): string {
+    const path = unwrapContentPath(result)
     return findEntry(path).title
 }
-async function loadContent(path: ContentPath, post: Post<VNodeContent>) {
+async function loadContent(result: ConvertLocationResult<ContentPath>, post: Post<VNodeContent>) {
+    const path = unwrapContentPath(result)
     post(await findEntry(path).content())
 }
 function findEntry(path: ContentPath): ContentEntry {
@@ -75,6 +78,13 @@ function findEntry(path: ContentPath): ContentEntry {
         return indexEntry
     }
     return entry
+}
+
+function unwrapContentPath(path: ConvertLocationResult<ContentPath>): ContentPath {
+    if (!path.valid) {
+        return "/docs/index.html"
+    }
+    return path.value
 }
 
 type ContentEntry = Readonly<{ title: string; content: ContentFactory<VNodeContent> }>
