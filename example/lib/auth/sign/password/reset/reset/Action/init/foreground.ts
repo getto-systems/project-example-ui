@@ -6,7 +6,7 @@ import { newGetScriptPathLocationDetecter } from "../../../../../common/secure/g
 
 import { initResetPasswordCoreAction, initResetPasswordCoreMaterial } from "../Core/impl"
 
-import { ResetPasswordEntryPoint } from "../action"
+import { ResetPasswordEntryPoint } from "../entryPoint"
 
 export function newResetPassword(
     webStorage: Storage,

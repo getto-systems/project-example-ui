@@ -4,7 +4,7 @@ import { CheckAuthInfoEntryPoint } from "../../../kernel/authInfo/check/Action/e
 import { AuthenticatePasswordEntryPoint } from "../../../password/authenticate/Action/entryPoint"
 import { CheckResetTokenSendingStatusEntryPoint } from "../../../password/reset/checkStatus/Action/entryPoint"
 import { RequestResetTokenEntryPoint } from "../../../password/reset/requestToken/Action/entryPoint"
-import { ResetPasswordEntryPoint } from "../../../password/reset/reset/Action/action"
+import { ResetPasswordEntryPoint } from "../../../password/reset/reset/Action/entryPoint"
 
 export interface SignAction extends ApplicationStateAction<SignActionState> {
     error(err: string): void

@@ -1,41 +1,41 @@
-import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/testHelper"
+import {
+    initAsyncActionTestRunner,
+    initSyncActionTestRunner,
+} from "../../../../../../z_vendor/getto-application/action/testHelper"
 
+import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/testHelper"
+import { initMemoryDB } from "../../../../../../z_vendor/getto-application/infra/repository/memory"
 import {
     ClockPubSub,
-    ClockSubscriber,
     initStaticClock,
     staticClockPubSub,
 } from "../../../../../../z_vendor/getto-application/infra/clock/simulate"
+import { standardBoardValueStore } from "../../../../../../z_vendor/getto-application/board/input/Action/testHelper"
+import { initRemoteSimulator } from "../../../../../../z_vendor/getto-application/infra/remote/simulate"
+
+import { initGetScriptPathLocationDetecter } from "../../../../common/secure/getScriptPath/impl/testHelper"
+import { initResetPasswordLocationDetecter } from "../impl/testHelper"
+
+import { wrapRepository } from "../../../../../../z_vendor/getto-application/infra/repository/helper"
+
+import { toResetPasswordEntryPoint } from "./impl"
+import { initResetPasswordCoreAction, initResetPasswordCoreMaterial } from "./Core/impl"
+import { initResetPasswordFormAction } from "./Form/impl"
+
+import { resetPasswordEventHasDone } from "../impl/core"
+import { startContinuousRenewEventHasDone } from "../../../../kernel/authInfo/common/startContinuousRenew/impl/core"
 
 import { Clock } from "../../../../../../z_vendor/getto-application/infra/clock/infra"
 import { ResetPasswordRemotePod, ResetPasswordResult } from "../infra"
-
-import { ResetPasswordAction } from "./action"
-
-import { ResetPasswordCoreState } from "./Core/action"
-
-import { initGetScriptPathLocationDetecter } from "../../../../common/secure/getScriptPath/impl/testHelper"
+import { AuthzRepositoryPod } from "../../../../../../common/authz/infra"
 import {
     LastAuthRepositoryPod,
-    LastAuthRepositoryValue,
     RenewAuthInfoRemotePod,
 } from "../../../../kernel/authInfo/kernel/infra"
-import { resetPasswordEventHasDone } from "../impl/core"
-import {
-    initAsyncActionTester_legacy,
-    initSyncActionTestRunner,
-} from "../../../../../../z_vendor/getto-application/action/testHelper"
-import { initResetPasswordFormAction } from "./Form/impl"
-import { standardBoardValueStore } from "../../../../../../z_vendor/getto-application/board/input/Action/testHelper"
-import { toAction, toResetPasswordEntryPoint } from "./impl"
-import { initResetPasswordCoreAction, initResetPasswordCoreMaterial } from "./Core/impl"
-import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../common/authz/infra"
-import { initMemoryDB } from "../../../../../../z_vendor/getto-application/infra/repository/memory"
-import { wrapRepository } from "../../../../../../z_vendor/getto-application/infra/repository/helper"
-import { lastAuthRepositoryConverter } from "../../../../kernel/authInfo/kernel/convert"
-import { initRemoteSimulator } from "../../../../../../z_vendor/getto-application/infra/remote/simulate"
-import { initResetPasswordLocationDetecter } from "../impl/testHelper"
-import { startContinuousRenewEventHasDone } from "../../../../kernel/authInfo/common/startContinuousRenew/impl/core"
+
+import { ResetPasswordEntryPoint } from "./entryPoint"
+
+import { ResetPasswordCoreState } from "./Core/action"
 
 // テスト開始時刻
 const START_AT = new Date("2020-01-01 10:00:00")
@@ -50,7 +50,8 @@ const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
 describe("RegisterPassword", () => {
     test("submit valid login-id and password", (done) => {
-        const { clock, resource } = standardPasswordResetResource()
+        const { clock, entryPoint } = standardPasswordResetResource()
+        const resource = entryPoint.resource.reset
 
         resource.core.subscriber.subscribe((state) => {
             switch (state.type) {
@@ -60,33 +61,39 @@ describe("RegisterPassword", () => {
             }
         })
 
-        resource.core.subscriber.subscribe(initTester())
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
+                    resource.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
 
-        resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
-        resource.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
+                    resource.core.submit(resource.form.validate.get())
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        { type: "try-to-reset" },
+                        {
+                            type: "try-to-load",
+                            scriptPath: {
+                                valid: true,
+                                value: "https://secure.example.com/index.js",
+                            },
+                        },
+                        { type: "succeed-to-continuous-renew" },
+                        { type: "succeed-to-continuous-renew" },
+                        { type: "required-to-login" },
+                    ])
+                },
+            },
+        ])
 
-        resource.core.submit(resource.form.validate.get())
-
-        function initTester() {
-            return initAsyncTester()((stack) => {
-                expect(stack).toEqual([
-                    { type: "try-to-reset" },
-                    {
-                        type: "try-to-load",
-                        scriptPath: { valid: true, value: "https://secure.example.com/index.js" },
-                    },
-                    { type: "succeed-to-continuous-renew" },
-                    { type: "succeed-to-continuous-renew" },
-                    { type: "required-to-login" },
-                ])
-                done()
-            })
-        }
+        resource.core.subscriber.subscribe(runner(done))
     })
 
     test("submit valid login-id and password; with delayed", (done) => {
         // wait for delayed timeout
-        const { clock, resource } = waitPasswordResetResource()
+        const { clock, entryPoint } = waitPasswordResetResource()
+        const resource = entryPoint.resource.reset
 
         resource.core.subscriber.subscribe((state) => {
             switch (state.type) {
@@ -96,82 +103,84 @@ describe("RegisterPassword", () => {
             }
         })
 
-        resource.core.subscriber.subscribe(initTester())
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
+                    resource.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
 
-        resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
-        resource.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
+                    resource.core.submit(resource.form.validate.get())
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        { type: "try-to-reset" },
+                        { type: "delayed-to-reset" }, // delayed event
+                        {
+                            type: "try-to-load",
+                            scriptPath: {
+                                valid: true,
+                                value: "https://secure.example.com/index.js",
+                            },
+                        },
+                        { type: "succeed-to-continuous-renew" },
+                        { type: "succeed-to-continuous-renew" },
+                        { type: "required-to-login" },
+                    ])
+                },
+            },
+        ])
 
-        resource.core.submit(resource.form.validate.get())
-
-        function initTester() {
-            return initAsyncTester()((stack) => {
-                expect(stack).toEqual([
-                    { type: "try-to-reset" },
-                    { type: "delayed-to-reset" }, // delayed event
-                    {
-                        type: "try-to-load",
-                        scriptPath: { valid: true, value: "https://secure.example.com/index.js" },
-                    },
-                    { type: "succeed-to-continuous-renew" },
-                    { type: "succeed-to-continuous-renew" },
-                    { type: "required-to-login" },
-                ])
-                done()
-            })
-        }
+        resource.core.subscriber.subscribe(runner(done))
     })
 
     test("submit without fields", (done) => {
-        const { repository, resource } = standardPasswordResetResource()
-        const lastAuth = repository.lastAuth(lastAuthRepositoryConverter)
+        const { entryPoint } = standardPasswordResetResource()
+        const resource = entryPoint.resource.reset
 
-        resource.core.subscriber.subscribe(initTester())
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    // try to reset without fields
 
-        // try to reset without fields
+                    resource.core.submit(resource.form.validate.get())
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        { type: "failed-to-reset", err: { type: "validation-error" } },
+                    ])
+                },
+            },
+        ])
 
-        resource.core.submit(resource.form.validate.get())
-
-        function initTester() {
-            return initAsyncTester()((stack) => {
-                expect(stack).toEqual([
-                    { type: "failed-to-reset", err: { type: "validation-error" } },
-                ])
-                expect(lastAuth.get()).toEqual({
-                    success: true,
-                    found: false,
-                })
-                done()
-            })
-        }
+        resource.core.subscriber.subscribe(runner(done))
     })
 
     test("submit without resetToken", (done) => {
-        const { repository, resource } = emptyResetTokenPasswordResetResource()
-        const lastAuth = repository.lastAuth(lastAuthRepositoryConverter)
+        const { entryPoint } = emptyResetTokenPasswordResetResource()
+        const resource = entryPoint.resource.reset
 
-        resource.core.subscriber.subscribe(initTester())
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
+                    resource.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
 
-        resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
-        resource.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
+                    resource.core.submit(resource.form.validate.get())
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        { type: "failed-to-reset", err: { type: "empty-reset-token" } },
+                    ])
+                },
+            },
+        ])
 
-        resource.core.submit(resource.form.validate.get())
-
-        function initTester() {
-            return initAsyncTester()((stack) => {
-                expect(stack).toEqual([
-                    { type: "failed-to-reset", err: { type: "empty-reset-token" } },
-                ])
-                expect(lastAuth.get()).toEqual({
-                    success: true,
-                    found: false,
-                })
-                done()
-            })
-        }
+        resource.core.subscriber.subscribe(runner(done))
     })
 
     test("clear", () => {
-        const { resource } = standardPasswordResetResource()
+        const { entryPoint } = standardPasswordResetResource()
+        const resource = entryPoint.resource.reset
 
         resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
         resource.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
@@ -182,35 +191,40 @@ describe("RegisterPassword", () => {
     })
 
     test("load error", (done) => {
-        const { resource } = standardPasswordResetResource()
+        const { entryPoint } = standardPasswordResetResource()
+        const resource = entryPoint.resource.reset
 
-        resource.core.subscriber.subscribe(initTester())
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.core.loadError({ type: "infra-error", err: "load error" })
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        {
+                            type: "load-error",
+                            err: { type: "infra-error", err: "load error" },
+                        },
+                    ])
+                },
+            },
+        ])
 
-        resource.core.loadError({ type: "infra-error", err: "load error" })
-
-        function initTester() {
-            return initAsyncTester()((stack) => {
-                expect(stack).toEqual([
-                    {
-                        type: "load-error",
-                        err: { type: "infra-error", err: "load error" },
-                    },
-                ])
-                done()
-            })
-        }
+        resource.core.subscriber.subscribe(runner(done))
     })
 
     test("terminate", (done) => {
-        const { resource } = standardPasswordResetResource()
-        const entryPoint = toResetPasswordEntryPoint(resource)
+        const { entryPoint } = standardPasswordResetResource()
+        const resource = entryPoint.resource.reset
 
         const runner = initSyncActionTestRunner([
             {
-                statement: () => {
+                statement: (check) => {
                     entryPoint.terminate()
                     resource.form.loginID.board.input.set(markBoardValue("login-id"))
                     resource.form.password.board.input.set(markBoardValue("password"))
+
+                    setTimeout(check, 256) // wait for events...
                 },
                 examine: (stack) => {
                     // no input/validate event after terminate
@@ -230,138 +244,118 @@ describe("RegisterPassword", () => {
 })
 
 function standardPasswordResetResource() {
-    const currentURL = standardURL()
-    const repository = standardRepository()
     const clockPubSub = staticClockPubSub()
-    const simulator = standardRemoteAccess(clockPubSub)
-    const clock = standardClock(clockPubSub)
-    const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
+    const entryPoint = newEntryPoint(
+        standard_URL(),
+        standard_reset(),
+        standard_renew(clockPubSub),
+        initStaticClock(START_AT, clockPubSub),
+    )
 
-    return { repository, clock: clockPubSub, resource }
+    return { clock: clockPubSub, entryPoint }
 }
 function waitPasswordResetResource() {
-    const currentURL = standardURL()
-    const repository = standardRepository()
     const clockPubSub = staticClockPubSub()
-    const simulator = waitRemoteAccess(clockPubSub)
-    const clock = standardClock(clockPubSub)
-    const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
+    const entryPoint = newEntryPoint(
+        standard_URL(),
+        takeLongTime_reset(),
+        standard_renew(clockPubSub),
+        initStaticClock(START_AT, clockPubSub),
+    )
 
-    return { repository, clock: clockPubSub, resource }
+    return { clock: clockPubSub, entryPoint }
 }
 function emptyResetTokenPasswordResetResource() {
-    const currentURL = emptyResetTokenURL()
-    const repository = standardRepository()
     const clockPubSub = staticClockPubSub()
-    const simulator = standardRemoteAccess(clockPubSub)
-    const clock = standardClock(clockPubSub)
-    const resource = newPasswordResetTestResource(currentURL, repository, simulator, clock)
+    const entryPoint = newEntryPoint(
+        emptyResetToken_URL(),
+        standard_reset(),
+        standard_renew(clockPubSub),
+        initStaticClock(START_AT, clockPubSub),
+    )
 
-    return { repository, resource }
+    return { entryPoint }
 }
 
-type PasswordResetTestRepository = Readonly<{
-    authz: AuthzRepositoryPod
-    lastAuth: LastAuthRepositoryPod
-}>
-type PasswordResetTestRemoteAccess = Readonly<{
-    reset: ResetPasswordRemotePod
-    renew: RenewAuthInfoRemotePod
-}>
-
-function newPasswordResetTestResource(
+function newEntryPoint(
     currentURL: URL,
-    repository: PasswordResetTestRepository,
-    remote: PasswordResetTestRemoteAccess,
+    reset: ResetPasswordRemotePod,
+    renew: RenewAuthInfoRemotePod,
     clock: Clock,
-): ResetPasswordAction {
-    const config = standardConfig()
-    const action = toAction({
+): ResetPasswordEntryPoint {
+    const lastAuth = standard_lastAuth()
+    const authz = standard_authz()
+
+    const detecter = {
+        getSecureScriptPath: initGetScriptPathLocationDetecter(currentURL),
+        reset: initResetPasswordLocationDetecter(currentURL),
+    }
+
+    const entryPoint = toResetPasswordEntryPoint({
         core: initResetPasswordCoreAction(
             initResetPasswordCoreMaterial(
                 {
                     startContinuousRenew: {
-                        ...repository,
-                        ...remote,
-                        config: config.continuousRenew,
+                        lastAuth,
+                        authz,
+                        renew,
+                        config: {
+                            interval: { interval_millisecond: 64 },
+                            lastAuthExpire: { expire_millisecond: 500 },
+                        },
                         clock,
                     },
                     getSecureScriptPath: {
-                        config: config.location,
+                        config: {
+                            secureServerURL: "https://secure.example.com",
+                        },
                     },
                     reset: {
-                        ...remote,
-                        config: config.reset,
+                        reset,
+                        config: {
+                            delay: { delay_millisecond: 32 },
+                        },
                         clock,
                     },
                 },
-                {
-                    getSecureScriptPath: initGetScriptPathLocationDetecter(currentURL),
-                    reset: initResetPasswordLocationDetecter(currentURL),
-                },
+                detecter,
             ),
         ),
 
         form: initResetPasswordFormAction(),
     })
 
-    action.form.loginID.board.input.storeLinker.link(standardBoardValueStore())
-    action.form.password.board.input.storeLinker.link(standardBoardValueStore())
+    entryPoint.resource.reset.form.loginID.board.input.storeLinker.link(standardBoardValueStore())
+    entryPoint.resource.reset.form.password.board.input.storeLinker.link(standardBoardValueStore())
 
-    return action
+    return entryPoint
 }
 
-function standardURL(): URL {
+function standard_URL(): URL {
     return new URL("https://example.com/index.html?_password_reset_token=reset-token")
 }
-function emptyResetTokenURL(): URL {
+function emptyResetToken_URL(): URL {
     return new URL("https://example.com/index.html")
 }
-function standardConfig() {
-    return {
-        location: {
-            secureServerURL: "https://secure.example.com",
-        },
-        reset: {
-            delay: { delay_millisecond: 1 },
-        },
-        continuousRenew: {
-            interval: { interval_millisecond: 64 },
-            lastAuthExpire: { expire_millisecond: 1 },
-        },
-    }
+
+function standard_lastAuth(): LastAuthRepositoryPod {
+    return wrapRepository(initMemoryDB())
 }
-function standardRepository() {
-    const authz = initMemoryDB<AuthzRepositoryValue>()
+function standard_authz(): AuthzRepositoryPod {
+    const authz = initMemoryDB()
     authz.set({
         nonce: "api-nonce",
         roles: ["role"],
     })
-
-    const lastAuth = initMemoryDB<LastAuthRepositoryValue>()
-
-    return {
-        authz: <AuthzRepositoryPod>wrapRepository(authz),
-        lastAuth: <LastAuthRepositoryPod>wrapRepository(lastAuth),
-    }
-}
-function standardRemoteAccess(clock: ClockPubSub): PasswordResetTestRemoteAccess {
-    return {
-        reset: initRemoteSimulator(simulateReset, {
-            wait_millisecond: 0,
-        }),
-        renew: renewRemoteAccess(clock),
-    }
-}
-function waitRemoteAccess(clock: ClockPubSub): PasswordResetTestRemoteAccess {
-    return {
-        reset: initRemoteSimulator(simulateReset, {
-            wait_millisecond: 3,
-        }),
-        renew: renewRemoteAccess(clock),
-    }
+    return wrapRepository(authz)
 }
 
+function standard_reset(): ResetPasswordRemotePod {
+    return initRemoteSimulator(simulateReset, { wait_millisecond: 0 })
+}
+function takeLongTime_reset(): ResetPasswordRemotePod {
+    return initRemoteSimulator(simulateReset, { wait_millisecond: 64 })
+}
 function simulateReset(): ResetPasswordResult {
     return {
         success: true,
@@ -376,7 +370,8 @@ function simulateReset(): ResetPasswordResult {
         },
     }
 }
-function renewRemoteAccess(clock: ClockPubSub): RenewAuthInfoRemotePod {
+
+function standard_renew(clock: ClockPubSub): RenewAuthInfoRemotePod {
     let count = 0
     return initRemoteSimulator(
         () => {
@@ -407,29 +402,23 @@ function renewRemoteAccess(clock: ClockPubSub): RenewAuthInfoRemotePod {
     )
 }
 
-function standardClock(subscriber: ClockSubscriber): Clock {
-    return initStaticClock(START_AT, subscriber)
-}
+function actionHasDone(state: ResetPasswordCoreState): boolean {
+    switch (state.type) {
+        case "initial-reset":
+        case "try-to-load":
+            return false
 
-function initAsyncTester() {
-    return initAsyncActionTester_legacy((state: ResetPasswordCoreState) => {
-        switch (state.type) {
-            case "initial-reset":
-            case "try-to-load":
-                return false
+        case "repository-error":
+        case "load-error":
+            return true
 
-            case "repository-error":
-            case "load-error":
-                return true
+        case "succeed-to-continuous-renew":
+        case "lastAuth-not-expired":
+        case "required-to-login":
+        case "failed-to-continuous-renew":
+            return startContinuousRenewEventHasDone(state)
 
-            case "succeed-to-continuous-renew":
-            case "lastAuth-not-expired":
-            case "required-to-login":
-            case "failed-to-continuous-renew":
-                return startContinuousRenewEventHasDone(state)
-
-            default:
-                return resetPasswordEventHasDone(state)
-        }
-    })
+        default:
+            return resetPasswordEventHasDone(state)
+    }
 }

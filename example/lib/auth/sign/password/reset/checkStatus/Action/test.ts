@@ -30,7 +30,7 @@ import { ResetTokenSendingResult } from "../data"
 
 describe("CheckPasswordResetSendingStatus", () => {
     test("valid session-id", (done) => {
-        const { entryPoint } = standardPasswordResetSessionResource()
+        const { entryPoint } = standard_elements()
         const resource = entryPoint.resource.checkStatus
 
         const runner = initAsyncActionTestRunner(actionHasDone, [
@@ -52,7 +52,7 @@ describe("CheckPasswordResetSendingStatus", () => {
 
     test("submit valid login-id; with long sending", (done) => {
         // wait for send token check limit
-        const { entryPoint } = longSendingPasswordResetSessionResource()
+        const { entryPoint } = takeLongTime_elements()
         const resource = entryPoint.resource.checkStatus
 
         const runner = initAsyncActionTestRunner(actionHasDone, [
@@ -81,7 +81,7 @@ describe("CheckPasswordResetSendingStatus", () => {
     })
 
     test("check without session id", (done) => {
-        const { entryPoint } = noSessionIDPasswordResetSessionResource()
+        const { entryPoint } = noSessionID_elements()
         const resource = entryPoint.resource.checkStatus
 
         const runner = initAsyncActionTestRunner(actionHasDone, [
@@ -101,7 +101,7 @@ describe("CheckPasswordResetSendingStatus", () => {
     })
 
     test("terminate", (done) => {
-        const { entryPoint } = standardPasswordResetSessionResource()
+        const { entryPoint } = standard_elements()
         const resource = entryPoint.resource.checkStatus
 
         const runner = initSyncActionTestRunner([
@@ -123,12 +123,12 @@ describe("CheckPasswordResetSendingStatus", () => {
     })
 })
 
-function standardPasswordResetSessionResource() {
+function standard_elements() {
     const entryPoint = newEntryPoint(standard_URL(), standard_sendToken(), standard_getStatus())
 
     return { entryPoint }
 }
-function longSendingPasswordResetSessionResource() {
+function takeLongTime_elements() {
     const entryPoint = newEntryPoint(
         standard_URL(),
         takeLongTime_sendToken(),
@@ -137,7 +137,7 @@ function longSendingPasswordResetSessionResource() {
 
     return { entryPoint }
 }
-function noSessionIDPasswordResetSessionResource() {
+function noSessionID_elements() {
     const entryPoint = newEntryPoint(noSessionID_URL(), standard_sendToken(), standard_getStatus())
 
     return { entryPoint }

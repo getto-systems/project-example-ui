@@ -26,7 +26,7 @@ import {
     ResetPasswordEntryPoint,
     ResetPasswordResource,
     ResetPasswordResourceState,
-} from "../action"
+} from "../entryPoint"
 
 import { ResetPasswordError } from "../../data"
 

@@ -5,7 +5,7 @@ import { newGetSecureScriptPathInfra } from "../../../../../../common/secure/get
 
 import { newResetPasswordLocationDetecter } from "../../../impl/init"
 
-import { toAction, toResetPasswordEntryPoint } from "../../impl"
+import { toResetPasswordEntryPoint } from "../../impl"
 import { ResetPasswordCoreForegroundInfra, initResetPasswordCoreAction } from "../../Core/impl"
 import { initResetPasswordFormAction } from "../../Form/impl"
 
@@ -20,7 +20,7 @@ import {
     ResetPasswordProxyResponse,
 } from "./message"
 
-import { ResetPasswordEntryPoint } from "../../action"
+import { ResetPasswordEntryPoint } from "../../entryPoint"
 import { ResetPasswordCoreAction } from "../../Core/action"
 import { ResetPasswordFormAction } from "../../Form/action"
 
@@ -72,7 +72,7 @@ export function newCoreForegroundInfra(webStorage: Storage): ResetPasswordCoreFo
 }
 
 export function newEntryPoint(core: ResetPasswordCoreAction): ResetPasswordEntryPoint {
-    return toResetPasswordEntryPoint(toAction({ core, form: newFormAction() }))
+    return toResetPasswordEntryPoint({ core, form: newFormAction() })
 }
 
 function newFormAction(): ResetPasswordFormAction {
