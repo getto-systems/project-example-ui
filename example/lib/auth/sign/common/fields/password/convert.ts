@@ -1,11 +1,9 @@
 import { BoardValue } from "../../../../../z_vendor/getto-application/board/kernel/data"
 import { ConvertBoardFieldResult } from "../../../../../z_vendor/getto-application/board/validateField/data"
-import { Password } from "./data"
+import { Password, ValidatePasswordError } from "./data"
 
 // bcrypt を想定しているので、72 バイト以上ではいけない
 export const PASSWORD_MAX_BYTES = 72
-
-export type ValidatePasswordError = "empty" | "too-long"
 
 export function convertPasswordFromBoard(
     value: BoardValue,
@@ -14,15 +12,18 @@ export function convertPasswordFromBoard(
         return { valid: false, err: EMPTY }
     }
 
-    if (new TextEncoder().encode(value).byteLength > PASSWORD_MAX_BYTES) {
-        return { valid: false, err: TOO_LONG }
+    const byteLength = new TextEncoder().encode(value).byteLength
+    if (byteLength > PASSWORD_MAX_BYTES) {
+        return { valid: false, err: TOO_LONG(byteLength > value.length) }
     }
 
     return { valid: true, value: markPassword(value) }
 }
 
-const EMPTY: ValidatePasswordError[] = ["empty"]
-const TOO_LONG: ValidatePasswordError[] = ["too-long"]
+const EMPTY: ValidatePasswordError[] = [{ type: "empty" }]
+function TOO_LONG(multiByte: boolean): ValidatePasswordError[] {
+    return [{ type: "too-long", maxBytes: PASSWORD_MAX_BYTES, multiByte }]
+}
 
 function markPassword(password: string): Password {
     return password as Password

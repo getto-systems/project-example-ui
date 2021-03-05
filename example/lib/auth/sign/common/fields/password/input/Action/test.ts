@@ -35,8 +35,11 @@ describe("InputPassword", () => {
                     action.board.input.set(markBoardValue(""))
                 },
                 examine: (stack) => {
-                    expect(stack).toEqual([{ valid: false, err: ["empty"] }])
-                    expect(action.validate.get()).toEqual({ valid: false, err: ["empty"] })
+                    expect(stack).toEqual([{ valid: false, err: [{ type: "empty" }] }])
+                    expect(action.validate.get()).toEqual({
+                        valid: false,
+                        err: [{ type: "empty" }],
+                    })
                 },
             },
         ])
@@ -54,8 +57,16 @@ describe("InputPassword", () => {
                     action.board.input.set(markBoardValue("a".repeat(72 + 1)))
                 },
                 examine: (stack) => {
-                    expect(stack).toEqual([{ valid: false, err: ["too-long"] }])
-                    expect(action.validate.get()).toEqual({ valid: false, err: ["too-long"] })
+                    expect(stack).toEqual([
+                        {
+                            valid: false,
+                            err: [{ type: "too-long", maxBytes: 72, multiByte: false }],
+                        },
+                    ])
+                    expect(action.validate.get()).toEqual({
+                        valid: false,
+                        err: [{ type: "too-long", maxBytes: 72, multiByte: false }],
+                    })
                 },
             },
         ])
@@ -92,8 +103,16 @@ describe("InputPassword", () => {
                     action.board.input.set(markBoardValue("あ".repeat(24) + "a"))
                 },
                 examine: (stack) => {
-                    expect(stack).toEqual([{ valid: false, err: ["too-long"] }])
-                    expect(action.validate.get()).toEqual({ valid: false, err: ["too-long"] })
+                    expect(stack).toEqual([
+                        {
+                            valid: false,
+                            err: [{ type: "too-long", maxBytes: 72, multiByte: true }],
+                        },
+                    ])
+                    expect(action.validate.get()).toEqual({
+                        valid: false,
+                        err: [{ type: "too-long", maxBytes: 72, multiByte: true }],
+                    })
                 },
             },
         ])
