@@ -14,7 +14,7 @@ import { ResetPasswordAction } from "./action"
 
 import { CoreState } from "./Core/action"
 
-import { initSecureScriptPathLocationDetecter } from "../../../../../common/secureScriptPath/get/testHelper"
+import { initGetScriptPathLocationDetecter } from "../../../../../common/secure/getScriptPath/impl/testHelper"
 import {
     LastAuthRepositoryPod,
     LastAuthRepositoryValue,
@@ -323,7 +323,7 @@ function newPasswordResetTestResource(
                     },
                 },
                 {
-                    getSecureScriptPath: initSecureScriptPathLocationDetecter(currentURL),
+                    getSecureScriptPath: initGetScriptPathLocationDetecter(currentURL),
                     reset: initResetLocationDetecter(currentURL),
                 },
             ),

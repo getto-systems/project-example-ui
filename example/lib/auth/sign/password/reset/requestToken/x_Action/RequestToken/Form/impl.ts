@@ -1,4 +1,4 @@
-import { initInputLoginIDAction } from "../../../../../../common/fields/loginID/board/Action/Core/impl"
+import { initInputLoginIDAction } from "../../../../../../common/fields/loginID/input/Action/Core/impl"
 import { initValidateBoardAction } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/impl"
 
 import { FormAction, RequestPasswordResetTokenFieldsEnum } from "./action"

@@ -1,7 +1,7 @@
 import { newCoreForegroundMaterial } from "../common"
 
 import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../../../kernel/authInfo/common/startContinuousRenew/init"
-import { newGetSecureScriptPathInfra } from "../../../../../../../common/secureScriptPath/get/main"
+import { newGetSecureScriptPathInfra } from "../../../../../../../common/secure/getScriptPath/impl/init"
 
 import { newResetLocationDetecter } from "../../../../init"
 

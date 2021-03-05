@@ -1,5 +1,5 @@
-import { ConvertLocationResult } from "../../../../../z_vendor/getto-application/location/detecter"
-import { ConvertSecureScriptResult, LocationPathname, SecureScriptPath } from "./data"
+import { ConvertLocationResult } from "../../../../../../z_vendor/getto-application/location/detecter"
+import { ConvertScriptPathResult, LocationPathname, ScriptPath } from "../data"
 
 export function pathnameLocationConverter(
     currentURL: URL,
@@ -11,10 +11,10 @@ export function pathnameLocationConverter(
     return { valid: true, value: markLocationPathname(pathname) }
 }
 
-export function secureScriptPathConverter(
+export function scriptPathConverter(
     secureServerURL: string,
     pathname: LocationPathname,
-): ConvertSecureScriptResult {
+): ConvertScriptPathResult {
     // アクセス中の html と同じパスで secure host に js がホストされている
     const scriptPath = pathname.replace(/\.html$/, ".js")
     return {
@@ -26,6 +26,6 @@ export function secureScriptPathConverter(
 function markLocationPathname(pathname: string): LocationPathname {
     return pathname as LocationPathname
 }
-function markSecureScriptPath(path: string): SecureScriptPath {
-    return path as SecureScriptPath
+function markSecureScriptPath(path: string): ScriptPath {
+    return path as ScriptPath
 }

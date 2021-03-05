@@ -24,7 +24,7 @@ import {
 } from "../action"
 
 import { RequestTokenError } from "../../../data"
-import { InputLoginID } from "../../../../../../common/fields/loginID/board/Action/x_preact/InputLoginID"
+import { InputLoginID } from "../../../../../../common/fields/loginID/input/Action/x_preact/InputLoginID"
 
 export function RequestPasswordResetToken(entryPoint: RequestPasswordResetTokenEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)

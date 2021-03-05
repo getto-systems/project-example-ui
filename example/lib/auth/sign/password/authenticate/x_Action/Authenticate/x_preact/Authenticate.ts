@@ -20,8 +20,8 @@ import { icon, spinner } from "../../../../../../../x_preact/common/icon"
 import { appendScript } from "../../../../../../../x_preact/auth/Sign/script"
 
 import { ApplicationError } from "../../../../../../../x_preact/common/System/ApplicationError"
-import { InputLoginID } from "../../../../../common/fields/loginID/board/Action/x_preact/InputLoginID"
-import { InputPassword } from "../../../../../common/fields/password/board/Action/x_preact/InputPassword"
+import { InputLoginID } from "../../../../../common/fields/loginID/input/Action/x_preact/InputLoginID"
+import { InputPassword } from "../../../../../common/fields/password/input/Action/x_preact/InputPassword"
 
 import {
     AuthenticatePasswordEntryPoint,

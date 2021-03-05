@@ -1,11 +1,11 @@
 import { ApplicationAbstractStateAction } from "../../../../../../../../z_vendor/getto-application/action/impl"
 
 import { reset } from "../../../impl"
-import { getSecureScriptPath } from "../../../../../../common/secureScriptPath/get/impl"
+import { getScriptPath } from "../../../../../../common/secure/getScriptPath/impl/core"
 import { startContinuousRenew } from "../../../../../../kernel/authInfo/common/startContinuousRenew/impl"
 
 import { StartContinuousRenewInfra } from "../../../../../../kernel/authInfo/common/startContinuousRenew/infra"
-import { GetSecureScriptPathInfra } from "../../../../../../common/secureScriptPath/get/infra"
+import { GetScriptPathInfra } from "../../../../../../common/secure/getScriptPath/infra"
 import { ResetInfra } from "../../../infra"
 
 import {
@@ -17,10 +17,10 @@ import {
     CoreBackgroundMaterial,
 } from "./action"
 
-import { GetSecureScriptPathLocationDetecter } from "../../../../../../common/secureScriptPath/get/method"
+import { GetScriptPathLocationDetecter } from "../../../../../../common/secure/getScriptPath/method"
 import { ResetLocationDetecter } from "../../../method"
 
-import { LoadSecureScriptError } from "../../../../../../common/secureScriptPath/get/data"
+import { LoadScriptError } from "../../../../../../common/secure/getScriptPath/data"
 import { ResetFields } from "../../../data"
 import { AuthInfo } from "../../../../../../kernel/authInfo/kernel/data"
 import { ConvertBoardResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
@@ -29,14 +29,14 @@ export type CoreInfra = CoreForegroundInfra & CoreBackgroundInfra
 
 export type CoreForegroundInfra = Readonly<{
     startContinuousRenew: StartContinuousRenewInfra
-    getSecureScriptPath: GetSecureScriptPathInfra
+    getSecureScriptPath: GetScriptPathInfra
 }>
 export type CoreBackgroundInfra = Readonly<{
     reset: ResetInfra
 }>
 
 export type CoreForegroundDetecter = Readonly<{
-    getSecureScriptPath: GetSecureScriptPathLocationDetecter
+    getSecureScriptPath: GetScriptPathLocationDetecter
 }>
 export type CoreBackgroundDetecter = Readonly<{
     reset: ResetLocationDetecter
@@ -57,7 +57,7 @@ export function initCoreForegroundMaterial(
 ): CoreForegroundMaterial {
     return {
         startContinuousRenew: startContinuousRenew(infra.startContinuousRenew),
-        getSecureScriptPath: getSecureScriptPath(infra.getSecureScriptPath)(detecter.getSecureScriptPath),
+        getSecureScriptPath: getScriptPath(infra.getSecureScriptPath)(detecter.getSecureScriptPath),
     }
 }
 export function initCoreBackgroundMaterial(
@@ -121,7 +121,7 @@ class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAc
         })
     }
 
-    loadError(err: LoadSecureScriptError): void {
+    loadError(err: LoadScriptError): void {
         this.post({ type: "load-error", err })
     }
 

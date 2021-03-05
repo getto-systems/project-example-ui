@@ -1,4 +1,4 @@
-import { newSecureScriptPathLocationDetecter } from "../../../../../common/secureScriptPath/get/init"
+import { newGetScriptPathLocationDetecter } from "../../../../../common/secure/getScriptPath/impl/init"
 
 import { newCoreBackgroundInfra } from "./worker/background"
 import { newCoreForegroundInfra } from "./worker/foreground"
@@ -12,7 +12,7 @@ export function newCoreForegroundMaterial(
     currentLocation: Location,
 ): CoreForegroundMaterial {
     const infra = newCoreForegroundInfra(webStorage)
-    const detecter = newSecureScriptPathLocationDetecter(currentLocation)
+    const detecter = newGetScriptPathLocationDetecter(currentLocation)
     return initCoreForegroundMaterial(infra, detecter)
 }
 

@@ -1,4 +1,4 @@
-export type GetSecureScriptPathInfra = Readonly<{
+export type GetScriptPathInfra = Readonly<{
     config: Readonly<{
         secureServerURL: string
     }>
