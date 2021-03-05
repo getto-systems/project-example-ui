@@ -1,14 +1,14 @@
 import { h } from "preact"
 
-import { storyTemplate } from "../../../../../../../../z_vendor/storybook/preact/story"
+import { enumKeys, storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
 
-import { CheckPasswordResetSendingStatusProps, View } from "./CheckStatus"
+import { CheckPasswordResetSendingStatusProps, View } from "./CheckResetTokenSendingStatus"
 
 import { initMockStartPasswordResetSessionResource } from "../mock"
 
-import { CheckSendingStatusState } from "../action"
+import { CheckResetTokenSendingStatusCoreState } from "../Core/action"
 
-const checkStatusOptions = [
+enum CheckStatusEnum {
     "initial",
     "check",
     "waiting",
@@ -20,30 +20,19 @@ const checkStatusOptions = [
     "infra-error",
     "send-error",
     "send",
-] as const
+}
 
 export default {
-    title: "library/Auth/Sign/Password/ResetSession/Start",
+    title: "library/Auth/Sign/Password/Reset/CheckStatus",
     argTypes: {
         checkStatus: {
-            control: { type: "select", options: checkStatusOptions },
+            control: { type: "select", options: enumKeys(CheckStatusEnum) },
         },
     },
 }
 
 type Props = Readonly<{
-    checkStatus:
-        | "initial"
-        | "check"
-        | "waiting"
-        | "sending"
-        | "bad-request"
-        | "invalid"
-        | "server-error"
-        | "bad-response"
-        | "infra-error"
-        | "send-error"
-        | "send"
+    checkStatus: keyof typeof CheckStatusEnum
     err: string
 }>
 const template = storyTemplate<Props>((props) => {
@@ -53,7 +42,7 @@ const template = storyTemplate<Props>((props) => {
         state: state(),
     })
 
-    function state(): CheckSendingStatusState {
+    function state(): CheckResetTokenSendingStatusCoreState {
         switch (props.checkStatus) {
             case "initial":
                 return { type: "initial-check-status" }

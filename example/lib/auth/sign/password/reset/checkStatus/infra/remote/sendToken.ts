@@ -1,13 +1,13 @@
 import { env } from "../../../../../../../y_environment/env"
 
-import { newApiSendToken } from "../../../../../../../z_external/api/auth/sign/password/reset/checkStatus/sendToken"
+import { newApi_SendResetToken } from "../../../../../../../z_external/api/auth/sign/password/reset/checkStatus/sendToken"
 
 import { wrapRemote } from "../../../../../../../z_vendor/getto-application/infra/remote/helper"
 
-import { SendTokenRemotePod } from "../../infra"
+import { SendResetTokenRemotePod } from "../../infra"
 
-export function newSendTokenRemote(): SendTokenRemotePod {
-    return wrapRemote(newApiSendToken(env.apiServerURL), (err) => ({
+export function newSendResetTokenRemote(): SendResetTokenRemotePod {
+    return wrapRemote(newApi_SendResetToken(env.apiServerURL), (err) => ({
         type: "infra-error",
         err: `${err}`,
     }))

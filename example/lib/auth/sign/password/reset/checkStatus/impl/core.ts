@@ -1,28 +1,28 @@
-import { ticker } from "../../../../../z_vendor/getto-application/infra/timer/helper"
-import { passThroughRemoteConverter } from "../../../../../z_vendor/getto-application/infra/remote/helper"
+import { ticker } from "../../../../../../z_vendor/getto-application/infra/timer/helper"
+import { passThroughRemoteConverter } from "../../../../../../z_vendor/getto-application/infra/remote/helper"
 
-import { CheckSendingStatusInfra } from "./infra"
+import { CheckResetTokenSendingStatusInfra } from "../infra"
 
 import {
-    CheckSendingStatusLocationDetectMethod,
-    CheckSendingStatusLocationKeys,
-    CheckSendingStatusMethodPod,
-} from "./method"
+    CheckResetTokenSendingStatusLocationDetectMethod,
+    CheckResetTokenSendingStatusLocationKeys,
+    CheckResetTokenSendingStatusPod,
+} from "../method"
 
-import { CheckSendingStatusEvent } from "./event"
+import { CheckResetTokenSendingStatusEvent } from "../event"
 
-import { resetSessionIDLocationConverter } from "../kernel/convert"
+import { resetSessionIDLocationConverter } from "../../kernel/convert"
 
-import { CheckSendingStatusError } from "./data"
+import { CheckResetTokenSendingStatusError } from "../data"
 
 interface Detecter {
-    (keys: CheckSendingStatusLocationKeys): CheckSendingStatusLocationDetectMethod
+    (keys: CheckResetTokenSendingStatusLocationKeys): CheckResetTokenSendingStatusLocationDetectMethod
 }
 export const detectSessionID: Detecter = (keys) => (currentURL) =>
     resetSessionIDLocationConverter(currentURL.searchParams.get(keys.sessionID))
 
 interface CheckStatus {
-    (infra: CheckSendingStatusInfra): CheckSendingStatusMethodPod
+    (infra: CheckResetTokenSendingStatusInfra): CheckResetTokenSendingStatusPod
 }
 export const checkSendingStatus: CheckStatus = (infra) => (detecter) => async (post) => {
     const { config } = infra
@@ -37,7 +37,7 @@ export const checkSendingStatus: CheckStatus = (infra) => (detecter) => async (p
 
     type SendTokenState =
         | Readonly<{ type: "initial" }>
-        | Readonly<{ type: "failed"; err: CheckSendingStatusError }>
+        | Readonly<{ type: "failed"; err: CheckResetTokenSendingStatusError }>
         | Readonly<{ type: "success" }>
 
     let sendTokenState: SendTokenState = { type: "initial" }
@@ -96,7 +96,7 @@ export const checkSendingStatus: CheckStatus = (infra) => (detecter) => async (p
     }
 }
 
-export function checkSessionStatusEventHasDone(event: CheckSendingStatusEvent): boolean {
+export function checkSessionStatusEventHasDone(event: CheckResetTokenSendingStatusEvent): boolean {
     switch (event.type) {
         case "succeed-to-send-token":
         case "failed-to-check-status":

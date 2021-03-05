@@ -4,7 +4,7 @@ import { initRequestResetTokenEntryPoint } from "./worker/foreground"
 
 import { initRequestResetTokenCoreAction, initRequestResetTokenCoreMaterial } from "../Core/impl"
 
-import { RequestResetTokenEntryPoint } from "../action"
+import { RequestResetTokenEntryPoint } from "../entryPoint"
 
 export function newRequestResetTokenEntryPoint(): RequestResetTokenEntryPoint {
     return initRequestResetTokenEntryPoint(

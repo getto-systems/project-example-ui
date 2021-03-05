@@ -1,7 +1,12 @@
+import { newCheckSendingStatusLocationDetecter } from "../../../impl/init"
+
+import { toCheckResetTokenSendingStatusEntryPoint } from "../../impl"
+import { initCheckResetTokenSendingStatusCoreAction } from "../../Core/impl"
+
 import {
     WorkerAbstractProxy,
     WorkerProxy,
-} from "../../../../../../../../../z_vendor/getto-application/action/worker/foreground"
+} from "../../../../../../../../z_vendor/getto-application/action/worker/foreground"
 
 import {
     CheckPasswordResetSendingStatusProxyMaterial,
@@ -9,16 +14,14 @@ import {
     CheckPasswordResetSendingStatusProxyResponse,
 } from "./message"
 
-import { CheckPasswordResetSendingStatusEntryPoint } from "../../action"
-import { initCheckSendingStatusAction, toEntryPoint } from "../../impl"
-import { newCheckSendingStatusLocationDetecter } from "../../../../init"
+import { CheckResetTokenSendingStatusEntryPoint } from "../../entryPoint"
 
 export interface CheckPasswordResetSendingStatusProxy
     extends WorkerProxy<
         CheckPasswordResetSendingStatusProxyMessage,
         CheckPasswordResetSendingStatusProxyResponse
     > {
-    entryPoint(currentLocation: Location): CheckPasswordResetSendingStatusEntryPoint
+    entryPoint(currentLocation: Location): CheckResetTokenSendingStatusEntryPoint
 }
 export function newCheckPasswordResetSendingStatusProxy(
     post: Post<CheckPasswordResetSendingStatusProxyMessage>,
@@ -41,10 +44,10 @@ class Proxy
         }
     }
 
-    entryPoint(currentLocation: Location): CheckPasswordResetSendingStatusEntryPoint {
+    entryPoint(currentLocation: Location): CheckResetTokenSendingStatusEntryPoint {
         const detecter = newCheckSendingStatusLocationDetecter(currentLocation)
-        return toEntryPoint(
-            initCheckSendingStatusAction({
+        return toCheckResetTokenSendingStatusEntryPoint(
+            initCheckResetTokenSendingStatusCoreAction({
                 checkStatus: (post) => this.material.checkStatus.call(detecter(), post),
             }),
         )

@@ -3,7 +3,7 @@ import {
     initialValidateBoardState,
     ValidateBoardActionState,
 } from "../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
-import { SignLinkResource } from "../../../../../common/link/Action/action"
+import { SignLinkResource } from "../../../../../common/link/Action/resource"
 import {
     initialCoreState,
     CoreAction,

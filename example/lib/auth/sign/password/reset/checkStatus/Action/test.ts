@@ -1,21 +1,28 @@
 import {
     initAsyncActionTester_legacy,
     initSyncActionTestRunner,
-} from "../../../../../../../z_vendor/getto-application/action/testHelper"
-import { WaitTime } from "../../../../../../../z_vendor/getto-application/infra/config/infra"
-import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
-import { initLocationDetecter } from "../../../../../../../z_vendor/getto-application/location/testHelper"
-import { signLinkParams } from "../../../../../common/link/data"
-import { SendingTokenStatus } from "../../data"
-import { checkSessionStatusEventHasDone, detectSessionID } from "../../impl"
+} from "../../../../../../z_vendor/getto-application/action/testHelper"
+import { WaitTime } from "../../../../../../z_vendor/getto-application/infra/config/infra"
+import { initRemoteSimulator } from "../../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { initLocationDetecter } from "../../../../../../z_vendor/getto-application/location/testHelper"
+import { signLinkParams } from "../../../../common/link/data"
+import { ResetTokenSendingResult } from "../data"
+import { checkSessionStatusEventHasDone, detectSessionID } from "../impl/core"
 import {
-    GetSendingStatusRemotePod,
-    GetSendingStatusResult,
-    SendTokenRemotePod,
-    SendTokenResult,
-} from "../../infra"
-import { CheckPasswordResetSendingStatusAction, CheckSendingStatusState } from "./action"
-import { initCheckSendingStatusAction, initMaterial, toEntryPoint } from "./impl"
+    GetResetTokenSendingStatusRemotePod,
+    GetResetTokenSendingStatusResult,
+    SendResetTokenRemotePod,
+    SendResetTokenResult,
+} from "../infra"
+import {
+    CheckResetTokenSendingStatusCoreAction,
+    CheckResetTokenSendingStatusCoreState,
+} from "./Core/action"
+import {
+    initCheckResetTokenSendingStatusCoreAction,
+    initCheckResetTokenSendingStatusCoreMaterial,
+} from "./Core/impl"
+import { toCheckResetTokenSendingStatusEntryPoint } from "./impl"
 
 describe("CheckPasswordResetSendingStatus", () => {
     test("valid session-id", (done) => {
@@ -82,7 +89,7 @@ describe("CheckPasswordResetSendingStatus", () => {
 
     test("terminate", (done) => {
         const { resource } = standardPasswordResetSessionResource()
-        const entryPoint = toEntryPoint(resource)
+        const entryPoint = toCheckResetTokenSendingStatusEntryPoint(resource)
 
         const runner = initSyncActionTestRunner([
             {
@@ -137,17 +144,17 @@ function noSessionID_URL() {
 }
 
 type PasswordResetSessionTestRemoteAccess = Readonly<{
-    sendToken: SendTokenRemotePod
-    getStatus: GetSendingStatusRemotePod
+    sendToken: SendResetTokenRemotePod
+    getStatus: GetResetTokenSendingStatusRemotePod
 }>
 
 function newTestPasswordResetSessionResource(
     currentURL: URL,
     remote: PasswordResetSessionTestRemoteAccess,
-): CheckPasswordResetSendingStatusAction {
+): CheckResetTokenSendingStatusCoreAction {
     const config = standardConfig()
-    return initCheckSendingStatusAction(
-        initMaterial(
+    return initCheckResetTokenSendingStatusCoreAction(
+        initCheckResetTokenSendingStatusCoreMaterial(
             {
                 ...remote,
                 config: config.session.checkStatus,
@@ -180,15 +187,15 @@ function longSendingSimulator(): PasswordResetSessionTestRemoteAccess {
     }
 }
 
-function simulateSendToken(): SendTokenResult {
+function simulateSendToken(): SendResetTokenResult {
     return { success: true, value: true }
 }
 function getStatusRemoteAccess(
-    responseCollection: SendingTokenStatus[],
+    responseCollection: ResetTokenSendingResult[],
     interval: WaitTime,
-): GetSendingStatusRemotePod {
+): GetResetTokenSendingStatusRemotePod {
     let position = 0
-    return initRemoteSimulator((): GetSendingStatusResult => {
+    return initRemoteSimulator((): GetResetTokenSendingStatusResult => {
         if (responseCollection.length === 0) {
             return { success: false, err: { type: "infra-error", err: "no response" } }
         }
@@ -198,17 +205,17 @@ function getStatusRemoteAccess(
         return { success: true, value: response }
     }, interval)
 
-    function getResponse(): SendingTokenStatus {
+    function getResponse(): ResetTokenSendingResult {
         if (position < responseCollection.length) {
             return responseCollection[position]
         }
         return responseCollection[responseCollection.length - 1]
     }
 }
-function standardGetStatusResponse(): SendingTokenStatus[] {
+function standardGetStatusResponse(): ResetTokenSendingResult[] {
     return [{ done: true, send: true }]
 }
-function longSendingGetStatusResponse(): SendingTokenStatus[] {
+function longSendingGetStatusResponse(): ResetTokenSendingResult[] {
     // 完了するまでに 5回以上かかる
     return [
         { done: false, status: { sending: true } },
@@ -221,7 +228,7 @@ function longSendingGetStatusResponse(): SendingTokenStatus[] {
 }
 
 function initAsyncTester() {
-    return initAsyncActionTester_legacy((state: CheckSendingStatusState) => {
+    return initAsyncActionTester_legacy((state: CheckResetTokenSendingStatusCoreState) => {
         switch (state.type) {
             case "initial-check-status":
                 return false

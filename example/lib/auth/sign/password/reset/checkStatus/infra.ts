@@ -1,29 +1,29 @@
 import { RemoteTypes } from "../../../../../z_vendor/getto-application/infra/remote/infra"
 import { Limit, WaitTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
 
-import { CheckSendingStatusRemoteError, SendingTokenStatus } from "./data"
+import { CheckResetTokenSendingStatusRemoteError, ResetTokenSendingResult } from "./data"
 import { ResetSessionID } from "../kernel/data"
 
-export type CheckSendingStatusInfra = Readonly<{
-    sendToken: SendTokenRemotePod
-    getStatus: GetSendingStatusRemotePod
+export type CheckResetTokenSendingStatusInfra = Readonly<{
+    sendToken: SendResetTokenRemotePod
+    getStatus: GetResetTokenSendingStatusRemotePod
     config: Readonly<{
         wait: WaitTime
         limit: Limit
     }>
 }>
 
-type SendTokenRemoteTypes = RemoteTypes<null, true, true, CheckSendingStatusRemoteError>
-export type SendTokenRemotePod = SendTokenRemoteTypes["pod"]
-export type SendTokenResult = SendTokenRemoteTypes["result"]
-export type SendTokenSimulator = SendTokenRemoteTypes["simulator"]
+type SendRemoteTypes = RemoteTypes<null, true, true, CheckResetTokenSendingStatusRemoteError>
+export type SendResetTokenRemotePod = SendRemoteTypes["pod"]
+export type SendResetTokenResult = SendRemoteTypes["result"]
+export type SendResetTokenSimulator = SendRemoteTypes["simulator"]
 
 type GetSendingStatusRemoteTypes = RemoteTypes<
     ResetSessionID,
-    SendingTokenStatus,
-    SendingTokenStatus,
-    CheckSendingStatusRemoteError
+    ResetTokenSendingResult,
+    ResetTokenSendingResult,
+    CheckResetTokenSendingStatusRemoteError
 >
-export type GetSendingStatusRemotePod = GetSendingStatusRemoteTypes["pod"]
-export type GetSendingStatusResult = GetSendingStatusRemoteTypes["result"]
-export type GetSendingStatusSimulator = GetSendingStatusRemoteTypes["simulator"]
+export type GetResetTokenSendingStatusRemotePod = GetSendingStatusRemoteTypes["pod"]
+export type GetResetTokenSendingStatusResult = GetSendingStatusRemoteTypes["result"]
+export type GetResetTokenSendingStatusSimulator = GetSendingStatusRemoteTypes["simulator"]

@@ -1,4 +1,4 @@
-import { SignLinkResource } from "./action"
+import { SignLinkResource } from "./resource"
 
 import { SignHref, signLinkParams } from "../data"
 import { ResetSessionID } from "../../../password/reset/kernel/data"

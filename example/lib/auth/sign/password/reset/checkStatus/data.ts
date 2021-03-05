@@ -1,13 +1,14 @@
-// TODO send err をちゃんとしたい : たぶんメール送信サービスに接続できなかった、とかの variant になる
-export type SendingTokenStatus =
-    | Readonly<{ done: false; status: SendingStatus }>
-    | Readonly<{ done: true; send: false; err: string }>
+export type ResetTokenSendingResult =
+    | Readonly<{ done: false; status: ResetTokenSendingStatus }>
+    | Readonly<{ done: true; send: false; err: ResetTokenSendingError }>
     | Readonly<{ done: true; send: true }>
 
-export type SendingStatus = Readonly<{ sending: boolean }>
+export type ResetTokenSendingStatus = Readonly<{ sending: boolean }>
 
-export type CheckSendingStatusError = CheckSendingStatusRemoteError
-export type CheckSendingStatusRemoteError =
+export type ResetTokenSendingError = "failed-to-connect-message-service"
+
+export type CheckResetTokenSendingStatusError = CheckResetTokenSendingStatusRemoteError
+export type CheckResetTokenSendingStatusRemoteError =
     | Readonly<{ type: "empty-session-id" }>
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "invalid-password-reset" }>
@@ -15,4 +16,4 @@ export type CheckSendingStatusRemoteError =
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
 
-export type SendTokenError = Readonly<{ type: "infra-error"; err: string }>
+export type SendResetTokenError = Readonly<{ type: "infra-error"; err: string }>

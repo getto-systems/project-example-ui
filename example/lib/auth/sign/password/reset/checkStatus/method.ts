@@ -1,24 +1,21 @@
 import { LocationTypes } from "../../../../../z_vendor/getto-application/location/detecter"
 
-import { CheckSendingStatusEvent } from "./event"
+import { CheckResetTokenSendingStatusEvent } from "./event"
 
 import { ResetSessionID } from "../kernel/data"
 
-export interface CheckSendingStatusMethodPod {
-    (detecter: CheckSendingStatusLocationDetecter): CheckSendingStatusMethod
+export interface CheckResetTokenSendingStatusPod {
+    (detecter: CheckResetTokenSendingStatusLocationDetecter): CheckSendingStatusMethod
 }
 
-type CheckSendingStatusLocationTypes = LocationTypes<
-    Readonly<{ sessionID: string }>,
-    ResetSessionID
->
-export type CheckSendingStatusLocationDetecter = CheckSendingStatusLocationTypes["detecter"]
-export type CheckSendingStatusLocationDetectMethod = CheckSendingStatusLocationTypes["method"]
-export type CheckSendingStatusLocationInfo = CheckSendingStatusLocationTypes["info"]
-export type CheckSendingStatusLocationKeys = CheckSendingStatusLocationTypes["keys"]
+type CheckStatusLocationTypes = LocationTypes<Readonly<{ sessionID: string }>, ResetSessionID>
+export type CheckResetTokenSendingStatusLocationDetecter = CheckStatusLocationTypes["detecter"]
+export type CheckResetTokenSendingStatusLocationDetectMethod = CheckStatusLocationTypes["method"]
+export type CheckResetTokenSendingStatusLocationInfo = CheckStatusLocationTypes["info"]
+export type CheckResetTokenSendingStatusLocationKeys = CheckStatusLocationTypes["keys"]
 
 export interface CheckSendingStatusMethod {
-    (post: Post<CheckSendingStatusEvent>): void
+    (post: Post<CheckResetTokenSendingStatusEvent>): void
 }
 
 interface Post<T> {

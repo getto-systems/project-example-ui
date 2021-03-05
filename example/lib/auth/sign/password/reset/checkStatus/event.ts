@@ -1,8 +1,12 @@
-import { CheckSendingStatusError, SendingStatus, SendTokenError } from "./data"
+import {
+    CheckResetTokenSendingStatusError,
+    ResetTokenSendingStatus,
+    SendResetTokenError,
+} from "./data"
 
-export type CheckSendingStatusEvent =
+export type CheckResetTokenSendingStatusEvent =
     | Readonly<{ type: "try-to-check-status" }>
-    | Readonly<{ type: "retry-to-check-status"; status: SendingStatus }>
-    | Readonly<{ type: "failed-to-check-status"; err: CheckSendingStatusError }>
-    | Readonly<{ type: "failed-to-send-token"; err: SendTokenError }>
+    | Readonly<{ type: "retry-to-check-status"; status: ResetTokenSendingStatus }>
+    | Readonly<{ type: "failed-to-check-status"; err: CheckResetTokenSendingStatusError }>
+    | Readonly<{ type: "failed-to-send-token"; err: SendResetTokenError }>
     | Readonly<{ type: "succeed-to-send-token" }>
