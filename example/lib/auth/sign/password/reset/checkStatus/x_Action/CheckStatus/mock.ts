@@ -1,4 +1,4 @@
-import { newAuthSignLinkResource } from "../../../../../common/searchParams/x_Action/Link/impl"
+import { newSignSearchResource } from "../../../../../common/search/Action/impl"
 
 import {
     CheckPasswordResetSendingStatusAction,
@@ -10,7 +10,7 @@ import { ApplicationMockStateAction } from "../../../../../../../z_vendor/getto-
 export function initMockStartPasswordResetSessionResource(): CheckPasswordResetSendingStatusResource {
     return {
         checkStatus: new Action(),
-        ...newAuthSignLinkResource(),
+        ...newSignSearchResource(),
     }
 }
 

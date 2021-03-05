@@ -9,7 +9,7 @@ import { ResetInfra } from "./infra"
 
 import { ResetLocationDetecter } from "./method"
 
-import { authSignSearchParams } from "../../../common/searchParams/data"
+import { authSignSearchParams } from "../../../common/search/data"
 
 export function newResetLocationDetecter(currentLocation: Location): ResetLocationDetecter {
     return newLocationDetecter(

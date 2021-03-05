@@ -1,10 +1,10 @@
-import { markResetSessionID } from "../../../../password/reset/kernel/testHelper"
+import { markResetSessionID } from "../../../password/reset/kernel/testHelper"
 
-import { newAuthSignLinkResource } from "./impl"
+import { newSignSearchResource } from "./impl"
 
-describe("AuthSignLink", () => {
+describe("SignSearch", () => {
     test("link", () => {
-        const resource = newAuthSignLinkResource()
+        const resource = newSignSearchResource()
 
         expect(resource.href.password_authenticate()).toEqual(
             "?_password_authenticate=authenticate",

@@ -4,7 +4,7 @@ import { detectResetToken } from "./impl"
 
 import { ResetLocationDetecter } from "./method"
 
-import { authSignSearchParams } from "../../../common/searchParams/data"
+import { authSignSearchParams } from "../../../common/search/data"
 
 export function initResetLocationDetecter(currentURL: URL): ResetLocationDetecter {
     return initLocationDetecter(currentURL, detectResetToken(authSignSearchParams.password.reset))

@@ -5,7 +5,7 @@ import {
 import { WaitTime } from "../../../../../../../z_vendor/getto-application/infra/config/infra"
 import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
 import { initLocationDetecter } from "../../../../../../../z_vendor/getto-application/location/testHelper"
-import { authSignSearchParams } from "../../../../../common/searchParams/data"
+import { authSignSearchParams } from "../../../../../common/search/data"
 import { SendingTokenStatus } from "../../data"
 import { checkSessionStatusEventHasDone, detectSessionID } from "../../impl"
 import {
