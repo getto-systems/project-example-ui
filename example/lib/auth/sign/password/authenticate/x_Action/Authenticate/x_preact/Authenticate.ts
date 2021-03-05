@@ -200,7 +200,7 @@ export function View(props: AuthenticatePasswordProps): VNode {
     }
 
     function resetLink() {
-        return html`<a href="${props.href.password_reset()}">
+        return html`<a href="${props.href.password_reset_requestToken()}">
             ${icon("question-circle")} パスワードがわからない方
         </a>`
     }
